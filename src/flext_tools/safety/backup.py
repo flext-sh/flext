@@ -52,7 +52,7 @@ class BackupManager:
 
         """
         if not project_path.exists():
-            msg = f"Project not found: {project_path}"
+            msg: str = f"Project not found: {project_path}"
             raise FileNotFoundError(msg)
 
         backup_id = f"backup_{self.session_id}_{len(self.operations_log)}"
@@ -114,7 +114,7 @@ class BackupManager:
 
         """
         if not file_path.exists():
-            msg = f"File not found: {file_path}"
+            msg: str = f"File not found: {file_path}"
             raise FileNotFoundError(msg)
 
         # Generate unique ID for this backup
@@ -227,17 +227,19 @@ class BackupManager:
 
     def verify_backup_integrity(self, backup_id: str) -> bool:
         """Verify backup integrity."""
+        result = False
+
         operation = self.get_backup_info(backup_id)
         if not operation:
-            return False
+            return result
 
         backup_path_str = operation["backup_path"]
         if not isinstance(backup_path_str, str):
-            return False
+            return result
 
         backup_path = Path(backup_path_str)
         if not backup_path.exists():
-            return False
+            return result
 
         try:
             # Check file size
@@ -246,18 +248,20 @@ class BackupManager:
                 not isinstance(file_size, int)
                 or backup_path.stat().st_size != file_size
             ):
-                return False
+                return result
 
             # Check hash
             file_hash = operation["file_hash"]
             if not isinstance(file_hash, str):
-                return False
+                return result
 
             backup_hash = self._calculate_hash(backup_path)
-            return bool(backup_hash == file_hash)
+            result = backup_hash == file_hash
 
         except (OSError, ValueError, KeyError):
-            return False
+            pass
+
+        return result
 
     def validate_poetry_environment(self, project_path: Path) -> bool:
         """Validate Poetry environment before critical modifications.

@@ -215,7 +215,7 @@ Example:
     >>>
     >>> manager = WorkspaceManager()
     >>> result = manager.create_workspace("/path/to/workspace")
-    >>> if result.is_success:
+    >>> if result.success:
     ...     print(f"Workspace created: {result.data.path}")
 
 Architecture:
@@ -260,7 +260,7 @@ class WorkspaceManager:
 
         >>> manager = WorkspaceManager("/home/user/flext")
         >>> result = manager.validate_all_projects()
-        >>> if result.is_success:
+        >>> if result.success:
         ...     print(f"All {len(result.data)} projects validated successfully")
         >>> else:
         ...     print(f"Validation failed: {result.error}")
@@ -318,7 +318,7 @@ def create_workspace(
 
         >>> manager = WorkspaceManager()
         >>> result = manager.create_workspace("/home/user/my-flext-workspace")
-        >>> if result.is_success:
+        >>> if result.success:
         ...     workspace = result.data
         ...     print(f"Created workspace with {len(workspace.projects_initialized)} projects")
         ...     print(f"Workspace path: {workspace.workspace_path}")
@@ -462,7 +462,7 @@ from .cli_patterns import BaseCLI
 from flext_core import FlextResult, FlextLogger, get_logger
 
 # Public API list for type checking and documentation
-__all__ = [
+__all__: list[str] = [
     # Version info
     "__version__",
     "__author__",
@@ -577,14 +577,14 @@ class TestWorkspaceManager:
         Expected Behavior:
             - Workspace directory created with proper permissions
             - All 32 ecosystem projects initialized
-            - FlextResult.is_success returns True
+            - FlextResult.success returns True
             - Validation passes without errors
         """
         # Test implementation
         manager = WorkspaceManager()
         result = manager.create_workspace(str(clean_workspace), config=sample_config)
 
-        assert result.is_success, f"Workspace creation failed: {result.error}"
+        assert result.success, f"Workspace creation failed: {result.error}"
         assert result.data.workspace_path == str(clean_workspace)
         assert len(result.data.projects_initialized) == 32
         assert result.data.validation_status.is_valid

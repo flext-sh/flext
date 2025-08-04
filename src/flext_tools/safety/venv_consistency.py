@@ -417,7 +417,7 @@ class VenvConsistencyValidator:
         if isinstance(dep_spec, dict):
             name = dep_spec.get("name", "unknown")
             version = dep_spec.get("version", "*")
-            return name.lower(), str(version)
+            return str(name).lower(), str(version)
 
         # Simple string like "package^1.0.0" or "package"
         if "^" in dep_spec:

@@ -183,7 +183,7 @@ class TransitiveDependencyResolver:
         max_depth: int = 3,
     ) -> TransitiveDependencies:
         """Resolve transitive dependencies for a project through path dependency analysis.
-
+        
         Performs comprehensive dependency resolution by traversing path dependencies
         to discover both direct and transitive dependencies with circular dependency
         detection and intelligent caching for performance optimization.
@@ -304,11 +304,13 @@ class TransitiveDependencyResolver:
         dependencies: set[str] = set()
 
         if "package" in data:
-            for package in data["package"]:
-                if "dependencies" in package:
-                    deps = package["dependencies"]
-                    if isinstance(deps, dict):
-                        dependencies.update(deps.keys())
+            packages = data["package"]
+            if isinstance(packages, list):
+                for package in packages:
+                    if "dependencies" in package:
+                        deps = package["dependencies"]
+                        if isinstance(deps, dict):
+                            dependencies.update(deps.keys())
 
         return dependencies
 
@@ -333,7 +335,13 @@ class TransitiveDependencyResolver:
         path_deps = []
 
         # Poetry path dependencies
-        poetry_deps = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
+        tool_section = data.get("tool", {})
+        if not isinstance(tool_section, dict):
+            return []
+        poetry_section = tool_section.get("poetry", {})
+        if not isinstance(poetry_section, dict):
+            return []
+        poetry_deps = poetry_section.get("dependencies", {})
         for dep_name, dep_spec in poetry_deps.items():
             if isinstance(dep_spec, dict) and "path" in dep_spec:
                 path = project_path / dep_spec["path"]
@@ -341,7 +349,7 @@ class TransitiveDependencyResolver:
                 path_deps.append(PathDependency(dep_name, path.resolve(), develop))
 
         # Poetry group path dependencies
-        groups = data.get("tool", {}).get("poetry", {}).get("group", {})
+        groups = poetry_section.get("group", {})
         for group_data in groups.values():
             group_deps = group_data.get("dependencies", {})
             for dep_name, dep_spec in group_deps.items():

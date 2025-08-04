@@ -68,11 +68,11 @@ func TestServerDependencies(t *testing.T) {
 	// Test that all required dependencies are available
 	t.Run("Config package available", func(t *testing.T) {
 		// Just importing the package should work
-		_ = "github.com/flext-sh/flext/pkg/config"
+		_ = "github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
 	})
 
 	t.Run("Container package available", func(t *testing.T) {
-		_ = "github.com/flext-sh/flext/pkg/container"
+		_ = "github.com/flext-sh/flext/pkg/controlpanel/management/container"
 	})
 
 	t.Run("Logging package available", func(t *testing.T) {

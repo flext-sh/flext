@@ -82,4 +82,4 @@ License: MIT
 
 from flext_tools.monitoring.health_check import HealthCheckService
 
-__all__ = ["HealthCheckService"]
+__all__: list[str] = ["HealthCheckService"]

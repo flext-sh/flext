@@ -1,13 +1,15 @@
 """FLEXT Python Import Discovery - Enterprise Dependency Analysis.
 
-Provides comprehensive dependency discovery through Python import analysis for the
-FLEXT ecosystem. This module analyzes Python source files to extract import statements,
-map them to PyPI packages, and categorize dependencies for accurate dependency management
+Provides comprehensive dependency discovery through Python import analysis for
+the FLEXT ecosystem. This module analyzes Python source files to extract import
+statements, map them to PyPI packages, and categorize dependencies for accurate
+dependency management
 across the distributed FLEXT project environment.
 
-The discovery engine handles complex import mapping scenarios including package aliases,
-submodule mappings, and standard library detection. All analysis integrates with FLEXT
-quality gates to ensure accurate dependency detection and management across multi-project
+The discovery engine handles complex import mapping scenarios including package
+aliases, submodule mappings, and standard library detection. All analysis
+integrates with FLEXT quality gates to ensure accurate dependency detection and
+management across multi-project
 workspaces.
 
 Key Components:

@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
-	"github.com/flext-sh/flext/pkg/config"
+	"github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
 	"github.com/flext-sh/flext/pkg/logging"
+	"github.com/gin-gonic/gin"
 )
 
 // Server represents the HTTP server for FLEXT Service
@@ -44,22 +44,33 @@ func NewServer(cfg *config.Config, logger logging.Logger) *Server {
 func (s *Server) SetupBasicRoutes() {
 	s.router.GET("/health", s.healthCheck)
 	s.router.GET("/api/v1/health", s.healthCheck)
-	
-	// FLEXT Service specific routes
+
+	// FLEXT Service basic routes (detailed routes registered by handlers)
 	v1 := s.router.Group("/api/v1")
 	{
 		v1.GET("/status", s.statusCheck)
-		v1.GET("/plugins", s.listPlugins)
-		v1.GET("/meltano/projects", s.listMeltanoProjects)
-		v1.GET("/singer/taps", s.listSingerTaps)
-		v1.GET("/dbt/models", s.listDBTModels)
-		v1.GET("/flexcore/health", s.flexcoreHealth)
+		v1.GET("/info", s.getServiceInfo)
 	}
 }
 
-// RegisterHandler registers a handler (placeholder)
+// HandlerRegistrar interface for handlers that can register routes
+type HandlerRegistrar interface {
+	RegisterRoutes(router *gin.RouterGroup)
+}
+
+// RegisterHandler registers a handler with route registration
 func (s *Server) RegisterHandler(handler interface{}) {
-	s.logger.Info("Handler registered", logging.F("handler", fmt.Sprintf("%T", handler)))
+	if handlerRegistrar, ok := handler.(HandlerRegistrar); ok {
+		// Register routes for handlers that implement HandlerRegistrar interface
+		v1 := s.router.Group("/api/v1")
+		handlerRegistrar.RegisterRoutes(v1)
+		s.logger.Info("Handler registered with routes", 
+			logging.F("handler", fmt.Sprintf("%T", handler)),
+			logging.F("routes", "✅ Routes registered"))
+	} else {
+		s.logger.Info("Handler registered (no routes)", 
+			logging.F("handler", fmt.Sprintf("%T", handler)))
+	}
 }
 
 // RegisterCleanHandler registers a clean handler (placeholder)
@@ -70,7 +81,7 @@ func (s *Server) RegisterCleanHandler(name string, handler interface{}) {
 // Start starts the HTTP server
 func (s *Server) Start() error {
 	addr := fmt.Sprintf("%s:%d", s.config.Server.Host, s.config.Server.Port)
-	
+
 	s.httpServer = &http.Server{
 		Addr:         addr,
 		Handler:      s.router,
@@ -114,54 +125,39 @@ func (s *Server) statusCheck(c *gin.Context) {
 		"debug":       s.config.Server.Debug,
 		"timestamp":   time.Now().Format(time.RFC3339),
 		"endpoints": gin.H{
-			"health":    "/health",
-			"status":    "/api/v1/status",
-			"plugins":   "/api/v1/plugins",
-			"meltano":   "/api/v1/meltano",
-			"singer":    "/api/v1/singer",
-			"dbt":       "/api/v1/dbt",
-			"flexcore":  "/api/v1/flexcore",
+			"health":   "/health",
+			"status":   "/api/v1/status",
+			"info":     "/api/v1/info",
+			"meltano":  "/api/v1/meltano",
+			"singer":   "/api/v1/singer", 
+			"dbt":      "/api/v1/dbt",
+			"flexcore": "/api/v1/flexcore",
 		},
 	})
 }
 
-// listPlugins handles plugin list requests (placeholder)
-func (s *Server) listPlugins(c *gin.Context) {
+// getServiceInfo handles service info requests
+func (s *Server) getServiceInfo(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
-		"plugins": []gin.H{},
-		"message": "Plugin list endpoint - implementation pending",
+		"service":     "flext-control-panel",
+		"version":     "2.0.0",
+		"description": "FLEXT Service Control Panel - Manages and coordinates FlexCore distributed runtime services",
+		"architecture": "Clean Architecture + DDD + CQRS",
+		"environment": s.config.Server.Environment,
+		"debug":       s.config.Server.Debug,
+		"timestamp":   time.Now().Format(time.RFC3339),
+		"capabilities": []string{
+			"flexcore_coordination",
+			"meltano_orchestration",
+			"singer_tap_management",
+			"dbt_model_execution",
+			"distributed_runtime_monitoring",
+		},
+		"handlers": gin.H{
+			"flexcore": "FlexCore coordination and monitoring",
+			"meltano":  "Meltano + Singer + DBT orchestration",
+		},
 	})
 }
 
-// listMeltanoProjects handles Meltano project list requests (placeholder)
-func (s *Server) listMeltanoProjects(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"projects": []gin.H{},
-		"message":  "Meltano projects list endpoint - implementation pending",
-	})
-}
-
-// listSingerTaps handles Singer taps list requests (placeholder)
-func (s *Server) listSingerTaps(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"taps":    []gin.H{},
-		"message": "Singer taps list endpoint - implementation pending",
-	})
-}
-
-// listDBTModels handles DBT models list requests (placeholder)
-func (s *Server) listDBTModels(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"models":  []gin.H{},
-		"message": "DBT models list endpoint - implementation pending",
-	})
-}
-
-// flexcoreHealth handles FlexCore health check requests (placeholder)
-func (s *Server) flexcoreHealth(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"flexcore_status": "unknown",
-		"message":         "FlexCore health check endpoint - implementation pending",
-		"flexcore_url":    s.config.FlexCore.URL,
-	})
-}
+// Placeholder methods removed - implemented by real handlers

@@ -3,7 +3,7 @@ package container
 import (
 	"testing"
 
-	"github.com/flext-sh/flext/pkg/config"
+	"github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
 )
 
 func TestNewContainer(t *testing.T) {
@@ -27,12 +27,12 @@ func TestNewContainer(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			container, err := NewContainer(tt.config)
-			
+
 			if (err != nil) != tt.expectError {
 				t.Errorf("NewContainer() error = %v, expectError %v", err, tt.expectError)
 				return
 			}
-			
+
 			if !tt.expectError {
 				if container == nil {
 					t.Error("Expected non-nil container")
@@ -115,7 +115,7 @@ func TestContainerWithRealConfig(t *testing.T) {
 // Benchmark tests
 func BenchmarkNewContainer(b *testing.B) {
 	cfg := &config.Config{}
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		container, err := NewContainer(cfg)
@@ -132,7 +132,7 @@ func BenchmarkContainerHandlers(b *testing.B) {
 	if err != nil {
 		b.Fatalf("Failed to create container: %v", err)
 	}
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = container.GetPluginHandler()

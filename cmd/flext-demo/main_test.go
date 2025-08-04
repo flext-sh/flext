@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/flext-sh/flext/pkg/config"
+	"github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
 	"github.com/flext-sh/flext/pkg/logging"
 )
 
@@ -14,8 +14,8 @@ func TestNewDemoServer(t *testing.T) {
 	logger := logging.GetLogger()
 
 	cfg := &DemoConfig{
-		Config: &config.Config{},
-		NodeID: "test-node",
+		Config:      &config.Config{},
+		NodeID:      "test-node",
 		ClusterName: "test-cluster",
 	}
 
@@ -53,8 +53,8 @@ func TestDemoConfig(t *testing.T) {
 	baseCfg.Server.Environment = "test"
 
 	demoCfg := &DemoConfig{
-		Config: baseCfg,
-		NodeID: "demo-001",
+		Config:      baseCfg,
+		NodeID:      "demo-001",
 		ClusterName: "flext-demo",
 	}
 
@@ -130,8 +130,8 @@ func TestDemoServerMethods(t *testing.T) {
 	logger := logging.GetLogger()
 
 	cfg := &DemoConfig{
-		Config: &config.Config{},
-		NodeID: "test-node",
+		Config:      &config.Config{},
+		NodeID:      "test-node",
 		ClusterName: "test-cluster",
 	}
 
@@ -144,7 +144,7 @@ func TestDemoServerMethods(t *testing.T) {
 				t.Errorf("setupDemoRoutes panicked: %v", r)
 			}
 		}()
-		
+
 		demoServer.setupDemoRoutes()
 	})
 }
@@ -152,13 +152,13 @@ func TestDemoServerMethods(t *testing.T) {
 func TestDemoServerDependencies(t *testing.T) {
 	// Test that all required dependencies are available
 	t.Run("Config package available", func(t *testing.T) {
-		_ = "github.com/flext-sh/flext/pkg/config"
+		_ = "github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
 	})
-	
+
 	t.Run("Logging package available", func(t *testing.T) {
 		_ = "github.com/flext-sh/flext/pkg/logging"
 	})
-	
+
 	t.Run("Server package available", func(t *testing.T) {
 		_ = "github.com/flext-sh/flext/pkg/server"
 	})
@@ -167,9 +167,9 @@ func TestDemoServerDependencies(t *testing.T) {
 func TestHealthResponseStructure(t *testing.T) {
 	// Test the data structures are properly defined
 	healthResp := &HealthResponse{
-		Status: "ok",
+		Status:  "ok",
 		Version: "2.0.0",
-		Mode: "demo",
+		Mode:    "demo",
 		Features: map[string]bool{
 			"clustering": true,
 			"monitoring": true,
@@ -195,11 +195,11 @@ func TestHealthResponseStructure(t *testing.T) {
 
 func TestClusterStatusStructure(t *testing.T) {
 	clusterStatus := &ClusterStatus{
-		NodeID: "demo-001",
+		NodeID:      "demo-001",
 		ClusterName: "flext-demo",
-		Role: "primary",
-		Status: "active",
-		Nodes: []string{"demo-001", "demo-002"},
+		Role:        "primary",
+		Status:      "active",
+		Nodes:       []string{"demo-001", "demo-002"},
 	}
 
 	if clusterStatus.NodeID != "demo-001" {
@@ -214,17 +214,17 @@ func TestClusterStatusStructure(t *testing.T) {
 func TestMetricsResponseStructure(t *testing.T) {
 	metricsResp := &MetricsResponse{
 		Requests: 100,
-		Uptime: "1h30m",
+		Uptime:   "1h30m",
 		Memory: map[string]string{
-			"used": "64MB",
+			"used":  "64MB",
 			"total": "128MB",
 		},
 		WorkerPool: map[string]int{
 			"active": 5,
-			"idle": 3,
+			"idle":   3,
 		},
 		DistributedOps: map[string]int64{
-			"total": 1000,
+			"total":   1000,
 			"success": 950,
 		},
 	}

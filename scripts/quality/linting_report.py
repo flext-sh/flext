@@ -149,7 +149,7 @@ class LintingReport(FlextScript):
         try:
             # Ruff check com formato JSON
             result = subprocess.run(
-                ["ruff", "check", ".", "--output-format=json"],
+                ["ruff", "check", ".", "--output-format=json"],  # noqa: S607
                 check=False,
                 cwd=project_path,
                 capture_output=True,
@@ -191,7 +191,7 @@ class LintingReport(FlextScript):
         try:
             # MyPy check com formato JSON
             result = subprocess.run(
-                ["mypy", ".", "--no-error-summary"],
+                ["mypy", ".", "--no-error-summary"],  # noqa: S607
                 check=False,
                 cwd=project_path,
                 capture_output=True,

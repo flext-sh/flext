@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/flext-sh/flext/pkg/config"
+	"github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
 	"github.com/flext-sh/flext/pkg/logging"
 )
 
@@ -66,7 +66,7 @@ func TestServerRoutes(t *testing.T) {
 		},
 		{
 			name:           "API health check",
-			method:         "GET", 
+			method:         "GET",
 			path:           "/api/v1/health",
 			expectedStatus: http.StatusOK,
 			expectedFields: []string{"status", "timestamp", "service", "version", "port"},

@@ -206,9 +206,10 @@ class LockConsistencyAnalyzer:
     ) -> dict[str, list[LockInconsistency]]:
         """Analyze all Poetry lock files in the workspace for consistency.
 
-        Performs comprehensive analysis of all Poetry lock files within the workspace
-        to detect version conflicts, hash inconsistencies, and missing dependencies
-        with detailed categorization and severity classification for prioritized resolution.
+        Performs comprehensive analysis of all Poetry lock files within the
+        workspace to detect version conflicts, hash inconsistencies, and missing
+        dependencies with detailed categorization and severity classification for
+        prioritized resolution.
 
         Args:
             workspace_path: Path to workspace root directory containing Poetry projects
@@ -216,7 +217,8 @@ class LockConsistencyAnalyzer:
         Returns:
             Dictionary containing categorized inconsistencies:
             - critical: Issues requiring immediate attention (major version conflicts)
-            - warning: Issues requiring review (minor version conflicts, hash mismatches)
+            - warning: Issues requiring review (minor version conflicts, hash
+                mismatches)
             - info: Informational items for awareness (missing optional dependencies)
 
         Analysis Process:

@@ -12,7 +12,7 @@ from flext_tools.analysis.version import (
     suggest_version_resolution,
 )
 
-__all__ = [
+__all__: list[str] = [
     "CodeDuplicateAnalyzer",
     "ConflictAnalyzer",
     "LockConsistencyAnalyzer",

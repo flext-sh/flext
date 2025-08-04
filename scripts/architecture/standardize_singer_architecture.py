@@ -22,7 +22,7 @@ def main() -> None:
     flext_root = Path("/home/marlonsc/flext")
 
     if not flext_root.exists():
-        msg = f"FLEXT root directory not found: {flext_root}"
+        msg: str = f"FLEXT root directory not found: {flext_root}"
         raise RuntimeError(msg)
 
     standardizer = FlextSingerArchitectureStandardizer(flext_root)
