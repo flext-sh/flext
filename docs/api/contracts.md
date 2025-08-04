@@ -947,7 +947,7 @@ FLEXT_ECOSYSTEM_SECRET=${ECOSYSTEM_SECRET}
 version: "3.8"
 services:
   flexcore:
-    image: flext/flexcore:2.0.0
+    image: flext-sh/flexcore:2.0.0
     ports:
       - "8080:8080"
     environment:
