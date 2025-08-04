@@ -1,5 +1,4 @@
-"""
-FLEXT Workspace Management - Enterprise Multi-Project Coordination
+"""FLEXT Workspace Management - Enterprise Multi-Project Coordination
 
 Provides comprehensive workspace management capabilities for the FLEXT data
 integration ecosystem, implementing Clean Architecture and Domain-Driven Design
@@ -50,17 +49,16 @@ Example:
 Author: FLEXT Development Team
 Version: 2.0.0
 License: MIT
+
 """
 
 import os
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Union
 
 
 class WorkspaceManager:
-    """
-    Enterprise workspace manager for FLEXT ecosystem coordination.
+    """Enterprise workspace manager for FLEXT ecosystem coordination.
 
     Manages workspace lifecycle, project coordination, and dependency management
     across the 32-project FLEXT ecosystem. Implements Clean Architecture patterns
@@ -106,11 +104,11 @@ class WorkspaceManager:
     Performance:
         Project discovery is cached after initial scan. Use refresh_projects()
         to update project registry when workspace structure changes.
+
     """
 
-    def __init__(self, workspace_root: Optional[Union[str, Path]] = None) -> None:
-        """
-        Initialize workspace manager with comprehensive project discovery.
+    def __init__(self, workspace_root: str | Path | None = None) -> None:
+        """Initialize workspace manager with comprehensive project discovery.
 
         Creates a new WorkspaceManager instance and performs initial project
         discovery within the specified workspace. If no workspace is provided,
@@ -146,6 +144,7 @@ class WorkspaceManager:
             >>> os.chdir("/home/user/flext-workspace")
             >>> manager = WorkspaceManager()
             >>> print(f"Auto-detected workspace: {manager.workspace_root}")
+
         """
         if isinstance(workspace_root, str):
             self.workspace_root = Path(workspace_root)
@@ -153,11 +152,10 @@ class WorkspaceManager:
             self.workspace_root = workspace_root or Path.cwd()
 
         self.projects = self._discover_projects()
-        self.project_registry: Dict[str, Dict[str, str]] = {}
+        self.project_registry: dict[str, dict[str, str]] = {}
 
-    def _discover_projects(self) -> List[Path]:
-        """
-        Discover and catalog all FLEXT projects within the workspace.
+    def _discover_projects(self) -> list[Path]:
+        """Discover and catalog all FLEXT projects within the workspace.
 
         Performs comprehensive project discovery by scanning the workspace
         directory for FLEXT ecosystem projects, including Python packages,
@@ -191,6 +189,7 @@ class WorkspaceManager:
             Found project: flext-api
             Found project: flexcore
             [... additional projects ...]
+
         """
         projects = []
 
@@ -227,9 +226,8 @@ class WorkspaceManager:
 
         return sorted(projects, key=lambda p: p.name)
 
-    def get_project_info(self, project_name: str) -> Optional[Dict[str, str]]:
-        """
-        Retrieve comprehensive information about a specific project.
+    def get_project_info(self, project_name: str) -> dict[str, str] | None:
+        """Retrieve comprehensive information about a specific project.
 
         Provides detailed metadata about a project including type, path,
         dependencies, and integration status. Uses cached project registry
@@ -278,6 +276,7 @@ class WorkspaceManager:
             >>> info = manager.get_project_info("nonexistent-project")
             >>> if not info:
             ...     print("Project not found in workspace")
+
         """
         for project_path in self.projects:
             if project_path.name == project_name:
@@ -291,9 +290,8 @@ class WorkspaceManager:
                 }
         return None
 
-    def list_projects(self) -> List[str]:
-        """
-        List all discovered projects in the workspace.
+    def list_projects(self) -> list[str]:
+        """List all discovered projects in the workspace.
 
         Returns a comprehensive list of all FLEXT ecosystem projects
         found in the workspace, including Python packages, Go services,
@@ -325,12 +323,12 @@ class WorkspaceManager:
               - flext-auth
               - flext-core
               [... additional projects ...]
+
         """
         return [project.name for project in self.projects]
 
-    def get_project_dependencies(self, project_name: str) -> List[str]:
-        """
-        Analyze and return dependencies for a specific project.
+    def get_project_dependencies(self, project_name: str) -> list[str]:
+        """Analyze and return dependencies for a specific project.
 
         Performs comprehensive dependency analysis by parsing project
         configuration files (pyproject.toml for Python, go.mod for Go)
@@ -368,17 +366,17 @@ class WorkspaceManager:
             >>> print(f"Singer tap dependencies: {deps}")
             flext-tap-oracle dependencies: ['flext-core', 'flext-db-oracle', 'singer-sdk']
 
-        TODO:
+        Todo:
             Currently returns empty list. Implementation needed to parse
             pyproject.toml and go.mod files for complete dependency analysis.
+
         """
         # This would analyze pyproject.toml files
         # For now, return empty list
         return []
 
     def validate_workspace(self) -> bool:
-        """
-        Perform comprehensive workspace structure and health validation.
+        """Perform comprehensive workspace structure and health validation.
 
         Validates the workspace for proper FLEXT ecosystem structure,
         configuration completeness, dependency consistency, and project
@@ -423,6 +421,7 @@ class WorkspaceManager:
         Integration:
             Can be extended with detailed validation reporting by
             integrating with flext-observability health check systems.
+
         """
         # Check if workspace directory exists
         if not self.workspace_root.exists():
@@ -457,8 +456,7 @@ class WorkspaceManager:
         return True
 
     def setup_environment(self) -> None:
-        """
-        Configure comprehensive development environment for workspace.
+        """Configure comprehensive development environment for workspace.
 
         Sets up all necessary environment variables, Python paths, and
         system configuration required for FLEXT ecosystem development.
@@ -497,6 +495,7 @@ class WorkspaceManager:
         Integration:
             Environment setup integrates with flext-core configuration
             management and flext-observability monitoring setup.
+
         """
         # Core workspace environment
         os.environ["FLEXT_WORKSPACE_ROOT"] = str(self.workspace_root)
@@ -519,8 +518,7 @@ class WorkspaceManager:
                 sys.path.insert(0, str(project_src))
 
     def _determine_project_type(self, project_path: Path) -> str:
-        """
-        Determine the type of a FLEXT project based on its characteristics.
+        """Determine the type of a FLEXT project based on its characteristics.
 
         Analyzes project structure and naming to classify projects into
         appropriate categories for proper handling and coordination.
@@ -530,6 +528,7 @@ class WorkspaceManager:
 
         Returns:
             str: Project type classification
+
         """
         project_name = project_path.name
 
@@ -576,14 +575,14 @@ class WorkspaceManager:
         return "flext-module"
 
     def _get_project_version(self, project_path: Path) -> str:
-        """
-        Extract version information from project configuration.
+        """Extract version information from project configuration.
 
         Args:
             project_path (Path): Path to the project directory
 
         Returns:
             str: Project version or "unknown" if not found
+
         """
         # Try to read version from pyproject.toml
         pyproject = project_path / "pyproject.toml"
@@ -605,14 +604,14 @@ class WorkspaceManager:
         return "2.0.0"  # Default version
 
     def _validate_project_structure(self, project_path: Path) -> bool:
-        """
-        Validate that a project has proper structure and configuration.
+        """Validate that a project has proper structure and configuration.
 
         Args:
             project_path (Path): Path to the project directory
 
         Returns:
             bool: True if project structure is valid
+
         """
         # Check for configuration files
         has_pyproject = (project_path / "pyproject.toml").exists()

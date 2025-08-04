@@ -1,5 +1,4 @@
-"""
-FLEXT Workspace Management - Multi-Project Coordination and Discovery
+"""FLEXT Workspace Management - Multi-Project Coordination and Discovery
 
 Provides comprehensive workspace management capabilities for coordinating
 multiple FLEXT ecosystem projects within a unified development environment.
@@ -67,6 +66,7 @@ Quality Standards:
 Author: FLEXT Development Team
 Version: 2.0.0
 License: MIT
+
 """
 
 from __future__ import annotations

@@ -1,5 +1,4 @@
-"""
-FLEXT Development Tools Manager - Enterprise Development Operations
+"""FLEXT Development Tools Manager - Enterprise Development Operations
 
 Provides comprehensive development tooling and automation for the FLEXT
 data integration ecosystem, implementing enterprise-grade development
@@ -61,22 +60,21 @@ Security:
 Author: FLEXT Development Team
 Version: 2.0.0
 License: MIT
+
 """
 
 from __future__ import annotations
 
-import subprocess
 import logging
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
+import subprocess
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
 class DevToolsManager:
-    """
-    Enterprise development tools coordinator for FLEXT ecosystem operations.
+    """Enterprise development tools coordinator for FLEXT ecosystem operations.
 
     Manages comprehensive development operations across the 32-project FLEXT
     ecosystem, providing automated testing, code quality enforcement, formatting
@@ -132,11 +130,11 @@ class DevToolsManager:
         Uses parallel processing for independent operations while respecting
         system resources. Configurable worker pool size and operation timeouts
         for optimal performance in different environments.
+
     """
 
-    def __init__(self, workspace_root: Optional[Union[str, "Path"]] = None) -> None:
-        """
-        Initialize development tools manager with comprehensive configuration.
+    def __init__(self, workspace_root: str | Path | None = None) -> None:
+        """Initialize development tools manager with comprehensive configuration.
 
         Creates a new DevToolsManager instance with workspace discovery,
         logging setup, and development environment configuration. Prepares
@@ -171,6 +169,7 @@ class DevToolsManager:
             >>> os.chdir("/home/user/flext-workspace")
             >>> dev_tools = DevToolsManager()
             >>> print(f"Auto-detected workspace: {dev_tools.workspace_root}")
+
         """
         from pathlib import Path
 
@@ -191,9 +190,8 @@ class DevToolsManager:
             "build": 600,  # 10 minutes for build operations
         }
 
-    def run_tests(self, project: Optional[str] = None) -> int:
-        """
-        Execute comprehensive test suite for specific project or entire workspace.
+    def run_tests(self, project: str | None = None) -> int:
+        """Execute comprehensive test suite for specific project or entire workspace.
 
         Runs unit tests, integration tests, and end-to-end tests with proper
         reporting and error handling. Supports both single-project testing
@@ -248,6 +246,7 @@ class DevToolsManager:
         Integration:
             Results integrate with flext-observability for monitoring
             and can trigger quality gate enforcement based on outcomes.
+
         """
         if project:
             project_path = self.workspace_root / project
@@ -257,9 +256,8 @@ class DevToolsManager:
         # Run tests for all projects
         return self._run_all_tests()
 
-    def _run_project_tests(self, project_path: "Path") -> int:
-        """
-        Execute test suite for a single project with comprehensive reporting.
+    def _run_project_tests(self, project_path: Path) -> int:
+        """Execute test suite for a single project with comprehensive reporting.
 
         Runs complete test suite for an individual project including unit,
         integration, and end-to-end tests with proper isolation, reporting,
@@ -305,6 +303,7 @@ class DevToolsManager:
         Security:
             Uses secure subprocess execution with shell=False and proper
             timeout management to prevent hanging or security issues.
+
         """
         try:
             tests_dir = project_path / "tests"
@@ -362,8 +361,7 @@ class DevToolsManager:
             return 1
 
     def _run_all_tests(self) -> int:
-        """
-        Execute comprehensive test suite across all workspace projects.
+        """Execute comprehensive test suite across all workspace projects.
 
         Coordinates test execution across all discovered projects in the
         workspace with parallel processing, aggregated reporting, and
@@ -414,6 +412,7 @@ class DevToolsManager:
             Optimizes execution order based on project dependencies and
             historical execution times. Uses parallel processing while
             respecting system resource limits.
+
         """
         exit_code = 0
         test_projects = []
@@ -461,8 +460,7 @@ class DevToolsManager:
         return exit_code
 
     def lint_all(self) -> int:
-        """
-        Execute comprehensive code quality analysis across entire workspace.
+        """Execute comprehensive code quality analysis across entire workspace.
 
         Performs static code analysis, style checking, security scanning,
         and quality validation across all projects in the workspace using
@@ -512,6 +510,7 @@ class DevToolsManager:
         Integration:
             Results integrate with quality gates and can block deployments
             or commits when critical issues are detected.
+
         """
         try:
             self.logger.info("Starting comprehensive code quality analysis")
@@ -555,8 +554,7 @@ class DevToolsManager:
             return 1
 
     def format_all(self) -> int:
-        """
-        Apply comprehensive code formatting across entire workspace.
+        """Apply comprehensive code formatting across entire workspace.
 
         Automatically formats all source code according to FLEXT ecosystem
         standards, ensuring consistent style, formatting, and organization
@@ -606,6 +604,7 @@ class DevToolsManager:
         Performance:
             Uses incremental formatting when possible to minimize execution
             time. Processes files in parallel where safe to do so.
+
         """
         try:
             self.logger.info("Starting code formatting across workspace")
