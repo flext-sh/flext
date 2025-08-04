@@ -245,7 +245,7 @@ go get github.com/flext-sh/flexcore@v0.9.0
 ### Docker Images
 
 ```bash
-docker pull flext/flexcore:0.9.0
+docker pull flext-sh/flexcore:0.9.0
 docker pull flext/flext-service:0.9.0
 ```
 

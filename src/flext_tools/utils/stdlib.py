@@ -1,7 +1,23 @@
-"""Utilitários para identificar módulos da standard library.
+"""FLEXT Tools Python Standard Library Utilities - Module Identification.
+
+This utility module provides functions to identify Python standard library modules
+for dependency analysis in the FLEXT ecosystem. Used by workspace tools to
+distinguish between stdlib and third-party dependencies.
+
+Key Components:
+    - get_stdlib_modules: Returns comprehensive set of Python stdlib modules
+    - Module categorization for better dependency analysis
+
+Integration:
+    - Core utility used by FLEXT workspace dependency discovery
+    - Enables accurate separation of stdlib vs external dependencies
 
 Copyright (c) 2025 Flext. All rights reserved.
 SPDX-License-Identifier: MIT
+
+Author: FLEXT Development Team
+Version: 2.0.0
+License: MIT
 """
 
 from __future__ import annotations
@@ -10,78 +26,78 @@ import sys
 
 
 def get_stdlib_modules() -> set[str]:
-    """Retorna conjunto de módulos da standard library do Python.
+    """Return comprehensive set of Python standard library modules.
 
     Returns:
-        Set com nomes dos módulos da stdlib
+        Set containing names of all Python standard library modules
 
     """
     try:
-        # Usa builtin_module_names do sistema atual (mais seguro que subprocess)
+        # Use builtin_module_names from current system (safer than subprocess)
         builtin_modules = set(sys.builtin_module_names)
 
-        # Adiciona módulos conhecidos da stdlib que não estão em builtin_module_names
+        # Add known stdlib modules not included in builtin_module_names
         stdlib_extras = {
-            # Coleções e estruturas
+            # Collections and data structures
             "collections",
             "functools",
             "itertools",
             "operator",
-            # Tipos e abstrações
+            # Types and abstractions
             "typing",
             "dataclasses",
             "enum",
             "abc",
             "types",
-            # IO e arquivos
+            # I/O and file system
             "pathlib",
             "io",
             "os",
             "sys",
             "shutil",
             "tempfile",
-            # Data e tempo
+            # Date and time
             "datetime",
             "time",
             "calendar",
             "zoneinfo",
-            # Formatos de dados
+            # Data formats
             "json",
             "csv",
             "configparser",
             "tomllib",
             "xml",
             "html",
-            # Matemática e números
+            # Mathematics and numbers
             "math",
             "decimal",
             "fractions",
             "statistics",
             "random",
-            # Texto e strings
+            # Text and string processing
             "string",
             "re",
             "textwrap",
             "difflib",
             "unicodedata",
-            # Sistema e processos
+            # System and processes
             "subprocess",
             "threading",
             "multiprocessing",
             "asyncio",
             "concurrent",
-            # Rede
+            # Network and communication
             "socket",
             "http",
             "urllib",
             "email",
             "ipaddress",
-            # Segurança
+            # Security and cryptography
             "hashlib",
             "secrets",
             "uuid",
             "hmac",
-            # Utilitários
+            # General utilities
             "logging",
             "warnings",
             "traceback",
@@ -94,7 +110,7 @@ def get_stdlib_modules() -> set[str]:
             "gc",
             "getpass",
             "fnmatch",
-            # Desenvolvimento
+            # Development and testing
             "unittest",
             "doctest",
             "pdb",
