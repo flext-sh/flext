@@ -42,7 +42,8 @@ Example:
     >>> result = gateway.validate_all_projects()
     >>> if result.success:
     ...     print(
-    ...         f"Quality validation passed for {result.value.projects_validated} projects"
+    ...         f"Quality validation passed for "
+    ...         f"{result.value.projects_validated} projects"
     ...     )
     ...     print(f"Overall quality score: {result.value.quality_score}")
     >>> else:
@@ -81,4 +82,4 @@ from flext_tools.quality.gateway import QualityGateway
 from flext_tools.quality.lint_fixer import GradualLintFixer
 from flext_tools.quality.mypy_checker import MyPyChecker
 
-__all__ = ["GradualLintFixer", "MyPyChecker", "QualityGateway"]
+__all__: list[str] = ["GradualLintFixer", "MyPyChecker", "QualityGateway"]

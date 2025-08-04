@@ -194,7 +194,7 @@ class FlextConfigStandardizer:
 
     def standardize_mypy_config(
         self,
-        project_name: str,
+        project_name: str,  # noqa: ARG002
         config: dict[str, object],
     ) -> bool:
         """Standardize MyPy configuration."""

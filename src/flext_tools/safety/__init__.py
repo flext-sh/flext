@@ -5,7 +5,7 @@ from flext_tools.safety.rollback import RollbackManager
 from flext_tools.safety.validator import SafetyValidator
 from flext_tools.safety.venv_consistency import VenvConsistencyValidator
 
-__all__ = [
+__all__: list[str] = [
     "BackupManager",
     "RollbackManager",
     "SafetyValidator",

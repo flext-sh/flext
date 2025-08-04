@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
+	sharedConfig "github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
 	"github.com/flext-sh/flext/pkg/infrastructure/config"
-	sharedConfig "github.com/flext-sh/flext/pkg/config"
 )
 
 // ConfigAdapter adapts UnifiedConfig to existing config.Config interface

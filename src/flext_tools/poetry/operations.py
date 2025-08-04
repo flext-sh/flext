@@ -206,10 +206,12 @@ class PoetryOperations:
 
         Addition Process:
             1. Safety Backup: Create backup before modifications if safety enabled
-            2. Category Processing: Process dependencies by category (runtime, dev, test)
+            2. Category Processing: Process dependencies by category (runtime,
+               dev, test)
             3. Individual Addition: Add each dependency with appropriate Poetry group
             4. Error Handling: Handle individual dependency failures gracefully
-            5. Result Aggregation: Compile results with detailed success/failure reporting
+            5. Result Aggregation: Compile results with detailed success/failure
+              reporting
 
         Architecture:
             Uses safe subprocess execution with proper error handling and

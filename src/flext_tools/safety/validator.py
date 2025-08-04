@@ -185,7 +185,7 @@ class SafetyValidator:
         # Check if file exists (for operations that need it)
         if operation in {"read", "write", "delete"} and not file_path.exists():
             result["safe"] = False
-            result["issues"].append("File not found")
+            issues.append("File not found")
             return result
 
         # Check if it's a critical file
@@ -200,24 +200,24 @@ class SafetyValidator:
         }
 
         if file_path.name in critical_files:
-            result["recommendations"].append("Critical file - backup recommended")
+            recommendations.append("Critical file - backup recommended")
 
             if backup_requirement == BackupRequirement.REQUIRED and operation in {
                 "write",
                 "delete",
             }:
-                result["recommendations"].append(
+                recommendations.append(
                     "Backup required for this operation",
                 )
 
         # Check permissions
         if operation == "write" and not self._can_write_file(file_path):
             result["safe"] = False
-            result["issues"].append("No write permission")
+            issues.append("No write permission")
 
         if operation == "delete" and not self._can_delete_file(file_path):
             result["safe"] = False
-            result["issues"].append("No delete permission")
+            issues.append("No delete permission")
 
         return result
 
@@ -245,7 +245,7 @@ class SafetyValidator:
 
         if not command:
             result["safe"] = False
-            result["issues"].append("Empty command")
+            result["issues"].append("Empty command")  # type: ignore[attr-defined]
             return result
 
         executable = command[0]
@@ -267,15 +267,19 @@ class SafetyValidator:
 
         if executable not in safe_executables:
             result["safe"] = False
-            result["issues"].append(
-                f"Executable '{executable}' is not in the safe commands list",
-            )
+            issues_list = result["issues"]
+            if isinstance(issues_list, list):
+                issues_list.append(
+                    f"Executable '{executable}' is not in the safe commands list",
+                )
             return result
 
         # Check if executable exists
         if not shutil.which(executable):
             result["safe"] = False
-            result["issues"].append(f"Executable '{executable}' not found in PATH")
+            issues_list = result["issues"]
+            if isinstance(issues_list, list):
+                issues_list.append(f"Executable '{executable}' not found in PATH")
 
         # Check dangerous arguments
         dangerous_args = {"rm", "delete", "--force", "-f", "sudo", "su"}
@@ -283,12 +287,12 @@ class SafetyValidator:
 
         if command_args & dangerous_args:
             result["safe"] = False
-            result["issues"].append("Dangerous arguments detected")
+            result["issues"].append("Dangerous arguments detected")  # type: ignore[attr-defined]
 
         # Check working directory
         if working_dir and not working_dir.exists():
             result["safe"] = False
-            result["issues"].append("Working directory does not exist")
+            result["issues"].append("Working directory does not exist")  # type: ignore[attr-defined]
 
         return result
 
@@ -321,7 +325,7 @@ class SafetyValidator:
         pyproject_path = project_path / "pyproject.toml"
         if not pyproject_path.exists():
             result["safe"] = False
-            result["issues"].append("pyproject.toml not found")
+            result["issues"].append("pyproject.toml not found")  # type: ignore[attr-defined]
             return result
 
         try:
@@ -330,14 +334,18 @@ class SafetyValidator:
 
             if "tool" not in data or "poetry" not in data["tool"]:
                 result["safe"] = False
-                result["issues"].append(
-                    "Poetry configuration not found in pyproject.toml",
-                )
+                issues_list = result["issues"]
+                if isinstance(issues_list, list):
+                        issues_list.append(
+                            "Poetry configuration not found in pyproject.toml",
+                        )
                 return result
 
         except (OSError, tomllib.TOMLDecodeError, UnicodeDecodeError) as e:
             result["safe"] = False
-            result["issues"].append(f"Error reading pyproject.toml: {e}")
+            issues_list = result["issues"]
+            if isinstance(issues_list, list):
+                issues_list.append(f"Error reading pyproject.toml: {e}")
             return result
 
         # Validate packages if provided
@@ -346,20 +354,24 @@ class SafetyValidator:
                 package_validation = self.validate_package_safety(package)
                 if not package_validation["safe"]:
                     result["safe"] = False
-                    result["issues"].extend(
-                        [
-                            f"Package '{package}': {issue}"
-                            for issue in package_validation["issues"]
-                        ],
-                    )
+                    package_issues = package_validation["issues"]
+                    if isinstance(package_issues, list):
+                        issues_list = result["issues"]
+                        if isinstance(issues_list, list):
+                            issues_list.extend(
+                                [
+                                    f"Package '{package}': {issue}"
+                                    for issue in package_issues
+                                ],
+                            )
 
         # Specific recommendations by operation
         if operation == "add":
-            result["recommendations"].append("Check version compatibility")
+            result["recommendations"].append("Check version compatibility")  # type: ignore[attr-defined]
         elif operation == "update":
-            result["recommendations"].append("Create backup before updating")
+            result["recommendations"].append("Create backup before updating")  # type: ignore[attr-defined]
         elif operation == "remove":
-            result["recommendations"].append("Check dependencies before removing")
+            result["recommendations"].append("Check dependencies before removing")  # type: ignore[attr-defined]
 
         return result
 

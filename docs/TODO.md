@@ -496,7 +496,7 @@ Example:
     >>> from flext import WorkspaceManager, FlextResult
     >>> manager = WorkspaceManager("/path/to/workspace")
     >>> result = manager.validate_all_projects()
-    >>> if result.is_success:
+    >>> if result.success:
     ...     print(f"Validated {len(result.data)} projects successfully")
 
 Dependencies:
@@ -557,7 +557,7 @@ Example:
     >>> from flext_tools.analysis import ConflictAnalyzer
     >>> analyzer = ConflictAnalyzer("/path/to/workspace")
     >>> result = analyzer.analyze_all_projects()
-    >>> if result.is_success:
+    >>> if result.success:
     ...     conflicts = result.data
     ...     print(f"Found {len(conflicts)} conflicts")
     ...     for conflict in conflicts:

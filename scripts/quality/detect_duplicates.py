@@ -875,11 +875,11 @@ class FlextDuplicateDetector:
             ),
             (
                 r"if\s+result\[0\]\s*:",
-                "Manual tuple unpacking instead of FlextResult.is_success",
+                "Manual tuple unpacking instead of FlextResult.success",
             ),
             (
                 r'if\s+result\[["\']success["\']\]\s*:',
-                "Manual dict access instead of FlextResult.is_success",
+                "Manual dict access instead of FlextResult.success",
             ),
         ]
 

@@ -41,7 +41,7 @@ class OracleE2ETestRunner(FlextScript):
 
         # Check Docker availability
         try:
-            subprocess.run(
+            subprocess.run(  # noqa: S607
                 ["docker", "--version"],
                 capture_output=True,
                 check=True,
@@ -61,7 +61,7 @@ class OracleE2ETestRunner(FlextScript):
 
         # Check Docker Compose availability
         try:
-            subprocess.run(
+            subprocess.run(  # noqa: S607
                 ["docker", "compose", "version"],
                 capture_output=True,
                 check=True,

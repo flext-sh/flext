@@ -3,7 +3,7 @@
 import logging
 from collections.abc import Callable
 from enum import Enum
-from typing import Any
+from typing import ParamSpec
 
 
 class LogLevel(Enum):
@@ -48,18 +48,19 @@ def get_logger(name: str) -> DetailedLogger:
     return DetailedLogger(name)
 
 
-def log_operation(func: Callable[..., Any]) -> Callable[..., Any]:
-    """Decorator to log operations."""
+# F = TypeVar("F", bound=Callable[..., object])  # Not used
+P = ParamSpec("P")
 
-    def wrapper(*args: object, **kwargs: object) -> object:
+def log_operation[**P](func: Callable[P, object]) -> Callable[P, object]:
+    """Decorator to log operations."""
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> object:
         logger = get_logger(func.__name__)
-        logger.info("Starting operation: %s", func.__name__)
+        logger.info(f"Starting operation: {func.__name__}")
         try:
             result = func(*args, **kwargs)
-            logger.info("Completed operation: %s", func.__name__)
+            logger.info(f"Completed operation: {func.__name__}")
             return result
         except Exception:
-            logger.exception("Failed operation: %s", func.__name__)
+            logger.exception(f"Failed operation: {func.__name__}")
             raise
-
     return wrapper

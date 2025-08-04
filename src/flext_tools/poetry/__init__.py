@@ -3,4 +3,4 @@
 from flext_tools.poetry.operations import PoetryOperations
 from flext_tools.poetry.validator import PoetryValidator
 
-__all__ = ["PoetryOperations", "PoetryValidator"]
+__all__: list[str] = ["PoetryOperations", "PoetryValidator"]
