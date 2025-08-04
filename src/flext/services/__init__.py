@@ -1,5 +1,4 @@
-"""
-FLEXT Services - Enterprise Service Layer Components
+"""FLEXT Services - Enterprise Service Layer Components
 
 Provides comprehensive service layer implementation following Clean Architecture
 and Domain-Driven Design patterns. This module orchestrates application services,
@@ -61,6 +60,7 @@ Quality Standards:
 Author: FLEXT Development Team
 Version: 2.0.0
 License: MIT
+
 """
 
 # Re-export commonly used service components

@@ -183,7 +183,7 @@ class TransitiveDependencyResolver:
         max_depth: int = 3,
     ) -> TransitiveDependencies:
         """Resolve transitive dependencies for a project through path dependency analysis.
-        
+
         Performs comprehensive dependency resolution by traversing path dependencies
         to discover both direct and transitive dependencies with circular dependency
         detection and intelligent caching for performance optimization.

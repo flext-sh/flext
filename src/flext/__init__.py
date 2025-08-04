@@ -1,5 +1,4 @@
-"""
-FLEXT Control Panel - Enterprise Data Integration Platform
+"""FLEXT Control Panel - Enterprise Data Integration Platform
 
 The FLEXT Control Panel serves as the central orchestration hub for the FLEXT
 data integration ecosystem, providing enterprise-grade workspace management,
@@ -46,6 +45,7 @@ Dependencies:
 Author: FLEXT Development Team
 Version: 2.0.0
 License: MIT
+
 """
 
 __version__ = "2.0.0"
@@ -59,8 +59,8 @@ __homepage__ = "https://github.com/flext-sh/flext"
 # TODO: Restore full public API exports after migration completion
 
 __all__ = [
-    "__version__",
     "__author__",
     "__license__",
+    "__version__",
     "services",
 ]

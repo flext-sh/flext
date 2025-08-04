@@ -285,6 +285,16 @@ func (si *ServiceInitializer) performGracefulShutdown() ServiceInitializationRes
 	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer shutdownCancel()
 
+	// Stop DI container services (which includes plugin system)
+	if si.container != nil {
+		si.logger.Info("🔌 Stopping DI container services...")
+		if err := si.container.Stop(); err != nil {
+			si.logger.Error("⚠️ Error stopping DI container", logging.F("error", err))
+		} else {
+			si.logger.Info("✅ DI container services stopped")
+		}
+	}
+
 	// Execute graceful shutdown
 	if err := si.server.Stop(shutdownCtx); err != nil {
 		si.logger.Error("❌ Error during server shutdown", logging.F("error", err))

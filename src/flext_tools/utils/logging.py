@@ -51,6 +51,7 @@ def get_logger(name: str) -> DetailedLogger:
 # F = TypeVar("F", bound=Callable[..., object])  # Not used
 P = ParamSpec("P")
 
+
 def log_operation[**P](func: Callable[P, object]) -> Callable[P, object]:
     """Decorator to log operations."""
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> object:
