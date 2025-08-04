@@ -1,5 +1,4 @@
-"""
-FLEXT Control Panel CLI - Unified Command-Line Interface
+"""FLEXT Control Panel CLI - Unified Command-Line Interface
 
 Provides comprehensive command-line interface for FLEXT Control Panel operations,
 including workspace management, development tools, quality gates, and ecosystem
@@ -46,10 +45,10 @@ Example:
 Author: FLEXT Development Team
 Version: 2.0.0
 License: MIT
+
 """
 
 from pathlib import Path
-from typing import Optional
 
 import click
 
@@ -65,9 +64,8 @@ from flext.workspace.cli import cli as workspace_cli
     help="Workspace root path",
 )
 @click.pass_context
-def main(ctx: click.Context, workspace: Optional[str]) -> None:
-    """
-    FLEXT Control Panel - Enterprise Data Integration Platform
+def main(ctx: click.Context, workspace: str | None) -> None:
+    """FLEXT Control Panel - Enterprise Data Integration Platform
 
     Unified command-line interface for managing FLEXT ecosystem operations,
     providing comprehensive workspace management, development tooling, and
@@ -99,6 +97,7 @@ def main(ctx: click.Context, workspace: Optional[str]) -> None:
         >>> cd /home/user/flext-workspace
         >>> flext info
         >>> flext test
+
     """
     ctx.ensure_object(dict)
     ctx.obj["workspace"] = Path(workspace) if workspace else None
@@ -107,8 +106,7 @@ def main(ctx: click.Context, workspace: Optional[str]) -> None:
 @main.command()
 @click.pass_context
 def dev(ctx: click.Context) -> None:
-    """
-    Launch development tools for workspace operations.
+    """Launch development tools for workspace operations.
 
     Provides access to comprehensive development tooling including testing,
     linting, formatting, and quality validation across all projects in the
@@ -132,6 +130,7 @@ def dev(ctx: click.Context) -> None:
         ✅ All tests passed across 32 projects
         ✅ Code quality checks completed
         ✅ Development environment validated
+
     """
     workspace = ctx.obj.get("workspace")
     dev_tools = DevToolsManager(workspace)
@@ -142,8 +141,7 @@ def dev(ctx: click.Context) -> None:
 @main.command()
 @click.pass_context
 def test(ctx: click.Context) -> None:
-    """
-    Execute comprehensive test suite across all workspace projects.
+    """Execute comprehensive test suite across all workspace projects.
 
     Runs unit tests, integration tests, and end-to-end tests for all projects
     in the workspace, providing aggregated results and detailed reporting.
@@ -182,6 +180,7 @@ def test(ctx: click.Context) -> None:
         ❌ flext-auth: 12/15 tests passed (3 failures)
         ❌ Some tests failed!
         See detailed logs for failure analysis.
+
     """
     workspace = ctx.obj.get("workspace")
     dev_tools = DevToolsManager(workspace)
@@ -196,8 +195,7 @@ def test(ctx: click.Context) -> None:
 @main.command()
 @click.pass_context
 def lint(ctx: click.Context) -> None:
-    """
-    Execute comprehensive linting and code quality analysis.
+    """Execute comprehensive linting and code quality analysis.
 
     Performs static code analysis across all projects in the workspace,
     checking for code style violations, potential bugs, security issues,
@@ -238,6 +236,7 @@ def lint(ctx: click.Context) -> None:
         ❌ flexcore: 2 security warnings
         ❌ Linting failed!
         Run 'flext format' to auto-fix style issues.
+
     """
     workspace = ctx.obj.get("workspace")
     dev_tools = DevToolsManager(workspace)
@@ -252,8 +251,7 @@ def lint(ctx: click.Context) -> None:
 @main.command("format")
 @click.pass_context
 def format_code(ctx: click.Context) -> None:
-    """
-    Auto-format code across all workspace projects.
+    """Auto-format code across all workspace projects.
 
     Automatically formats source code according to FLEXT coding standards,
     ensuring consistent style and formatting across all projects in the
@@ -292,6 +290,7 @@ def format_code(ctx: click.Context) -> None:
         >>> flext format
         ✅ All code already properly formatted
         ✅ Formatting completed!
+
     """
     workspace = ctx.obj.get("workspace")
     dev_tools = DevToolsManager(workspace)
@@ -306,8 +305,7 @@ def format_code(ctx: click.Context) -> None:
 @main.command()
 @click.pass_context
 def info(ctx: click.Context) -> None:
-    """
-    Display comprehensive workspace information and status.
+    """Display comprehensive workspace information and status.
 
     Provides detailed information about the current workspace including
     project inventory, dependency status, configuration health, and
@@ -358,6 +356,7 @@ def info(ctx: click.Context) -> None:
           ✅ Configuration validated
           ✅ Services accessible
           ✅ Quality gates passing
+
     """
     workspace = ctx.obj.get("workspace")
     workspace_manager = WorkspaceManager(workspace)
