@@ -2,4 +2,4 @@
 
 from flext_tools.config.manager import ConfigurationManager
 
-__all__ = ["ConfigurationManager"]
+__all__: list[str] = ["ConfigurationManager"]

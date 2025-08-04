@@ -30,7 +30,7 @@ class RollbackManager:
             self.backup_dir = Path.cwd() / ".flext_backups"
 
         if not self.backup_dir.exists():
-            msg = f"Backup directory not found: {self.backup_dir}"
+            msg: str = f"Backup directory not found: {self.backup_dir}"
             raise FileNotFoundError(msg)
 
     def list_sessions(self) -> list[dict[str, str | int | list[str]]]:
@@ -77,8 +77,8 @@ class RollbackManager:
             print_colored(f"❌ Backup {backup_id} not found", Colors.RED)
             return False
 
-        backup_path = Path(operation["backup_path"])
-        original_path = Path(operation["original_path"])
+        backup_path = Path(str(operation["backup_path"]))
+        original_path = Path(str(operation["original_path"]))
 
         if not backup_path.exists():
             print_colored(f"❌ Backup file does not exist: {backup_path}", Colors.RED)
@@ -243,17 +243,22 @@ class RollbackManager:
         session_dir = self.backup_dir / f"session_{session_id}"
         log_file = session_dir / "operations_log.json"
 
+        issues: list[str] = []
+        missing_backups: list[str] = []
+        integrity_issues: list[str] = []
+        conflicts: list[str] = []
+
         result: dict[str, object] = {
             "feasible": True,
-            "issues": [],
-            "missing_backups": [],
-            "integrity_issues": [],
-            "conflicts": [],
+            "issues": issues,
+            "missing_backups": missing_backups,
+            "integrity_issues": integrity_issues,
+            "conflicts": conflicts,
         }
 
         if not log_file.exists():
             result["feasible"] = False
-            result["issues"].append("Operations log not found")
+            issues.append("Operations log not found")
             return result
 
         with log_file.open(encoding="utf-8") as f:
@@ -265,18 +270,18 @@ class RollbackManager:
 
             # Check if backup exists
             if not backup_path.exists():
-                result["missing_backups"].append(operation["original_path"])
+                missing_backups.append(str(operation["original_path"]))
                 result["feasible"] = False
 
             # Check integrity
             elif not self._verify_backup_integrity(backup_path, operation):
-                result["integrity_issues"].append(operation["original_path"])
+                integrity_issues.append(str(operation["original_path"]))
 
             # Check conflicts (file was modified after backup)
             elif original_path.exists():
                 current_hash = self._calculate_hash(original_path)
                 if current_hash != operation["file_hash"]:
-                    result["conflicts"].append(operation["original_path"])
+                    conflicts.append(str(operation["original_path"]))
 
         return result
 

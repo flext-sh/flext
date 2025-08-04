@@ -29,7 +29,7 @@ from flext_tools.utils.logging import (
 from flext_tools.utils.paths import should_ignore_path
 from flext_tools.utils.stdlib import get_stdlib_modules
 
-__all__ = [
+__all__: list[str] = [
     "Colors",
     "DetailedLogger",
     "LogLevel",

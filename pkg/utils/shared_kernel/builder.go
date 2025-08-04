@@ -6,7 +6,7 @@ import (
 
 	"github.com/flext-sh/flext/pkg/infrastructure/config"
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
-	sharedApp "github.com/flext-sh/flext/pkg/utils/shared_kernel"
+	// sharedApp "github.com/flext-sh/flext/pkg/utils/shared_kernel" // Removed - import cycle
 )
 
 // ContainerType define o tipo de container

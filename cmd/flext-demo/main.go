@@ -10,9 +10,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/config"
+	"github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
+	"github.com/flext-sh/flext/pkg/controlpanel/monitoring/server"
 	"github.com/flext-sh/flext/pkg/logging"
-	"github.com/flext-sh/flext/pkg/server"
 )
 
 // DemoConfig extends the base config for demo-specific settings
@@ -37,7 +37,7 @@ type DemoServer struct {
 func NewDemoServer(nodeID, clusterName string, log logging.Logger, cfg *DemoConfig) *DemoServer {
 	// Create server instance
 	srv := server.NewServer(cfg.Config, log)
-	
+
 	return &DemoServer{
 		nodeID:      nodeID,
 		clusterName: clusterName,
@@ -83,7 +83,7 @@ type MetricsResponse struct {
 func (ds *DemoServer) Start() error {
 	// Setup demo-specific routes
 	ds.setupDemoRoutes()
-	
+
 	// Start the server
 	return ds.server.Start()
 }
@@ -100,9 +100,8 @@ func (ds *DemoServer) setupDemoRoutes() {
 	ds.server.SetupBasicRoutes()
 }
 
-
 func main() {
-	// Parse command line flags  
+	// Parse command line flags
 	port := flag.Int("port", 8080, "Server port")
 	host := flag.String("host", "0.0.0.0", "Server host")
 	nodeID := flag.String("node-id", "demo-001", "Node ID")
@@ -124,7 +123,7 @@ func main() {
 	baseCfg.Server.Environment = *env
 	baseCfg.Server.Debug = (*env != "production")
 	baseCfg.FlexCore.URL = "http://localhost:8080"
-	
+
 	cfg := &DemoConfig{
 		Config:      baseCfg,
 		NodeID:      *nodeID,
@@ -133,8 +132,8 @@ func main() {
 
 	// Create demo server
 	demoServer := NewDemoServer(*nodeID, *cluster, logger, cfg)
-	
-	logger.Info("Starting FLEXT Demo Server", 
+
+	logger.Info("Starting FLEXT Demo Server",
 		logging.F("port", *port),
 		logging.F("host", *host),
 		logging.F("node_id", *nodeID),

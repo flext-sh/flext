@@ -91,7 +91,7 @@ from flext_tools.utils import (
     should_ignore_path,
 )
 
-__all__ = [
+__all__: list[str] = [
     "BackupManager",
     "CacheManager",
     "Colors",

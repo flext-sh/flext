@@ -39,7 +39,7 @@ def add_config_todos_to_file(file_path: str) -> bool:
         changes_made = False
 
         # Add TODO for manual env vars
-        # TODO(flext): Consolidate to FLEXT config patterns
+        # TODO(flext): Consolidate to FLEXT config patterns  # noqa: TD003, FIX002
         # Issue: https://github.com/flext-sh/flexcore/issues/config-patterns
         if (
             "os.getenv(" in content or "os.environ.get(" in content
