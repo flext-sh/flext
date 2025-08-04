@@ -12,10 +12,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/flext-sh/flexcore/pkg/config"
-	"github.com/flext-sh/flexcore/pkg/container"
-	"github.com/flext-sh/flexcore/pkg/logging"
-	"github.com/flext-sh/flexcore/pkg/server"
+	"github.com/flext-sh/flext/pkg/config"
+	"github.com/flext-sh/flext/pkg/container"
+	"github.com/flext-sh/flext/pkg/logging"
+	"github.com/flext-sh/flext/pkg/server"
 )
 
 // Version information (set by build flags)

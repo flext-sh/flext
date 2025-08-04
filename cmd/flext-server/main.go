@@ -1,95 +1,86 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
+	"context"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
-	"github.com/flext-sh/flexcore/pkg/container"
-	"github.com/flext-sh/flexcore/pkg/logging"
-	"github.com/flext-sh/flexcore/pkg/server"
-	"github.com/flext-sh/flext/pkg/utils/shared_kernel"
+	"github.com/flext-sh/flext/pkg/config"
+	"github.com/flext-sh/flext/pkg/container"
+	"github.com/flext-sh/flext/pkg/logging"
+	"github.com/flext-sh/flext/pkg/server"
 )
 
 func main() {
 	// Parse command line flags
-	var (
-		configPath = flag.String("config", "", "Path to configuration file")
-		port       = flag.Int("port", 0, "Server port (overrides config)")
-	)
+	port := flag.Int("port", 8082, "Server port")
+	host := flag.String("host", "0.0.0.0", "Server host")
+	env := flag.String("env", "development", "Environment (development/production)")
 	flag.Parse()
 
-	// Create server bootstrap
-	bootstrap := application.NewAppBootstrap(application.AppTypeServer, "flext-server", "2.0.0")
-	if *configPath != "" {
-		bootstrap = bootstrap.WithConfigPath(*configPath)
-	}
+	// Initialize configuration
+	cfg := &config.Config{}
+	cfg.Server.Host = *host
+	cfg.Server.Port = *port
+	cfg.Server.Environment = *env
+	cfg.Server.Debug = (*env != "production")
+	cfg.FlexCore.URL = "http://localhost:8080"
 
-	// Initialize application
-	appConfig, err := bootstrap.Initialize()
-	if err != nil {
-		fmt.Printf("Failed to initialize application: %v\n", err)
+	// Initialize logging
+	if err := logging.Initialize("flext-server", "info"); err != nil {
+		fmt.Printf("Failed to initialize logging: %v\n", err)
 		os.Exit(1)
 	}
+	logger := logging.GetLogger()
 
-	// Override port if specified
-	if *port > 0 {
-		appConfig.Config.Server.Port = *port
-	}
-
-	// Create container with all features
-	appContainer, err := container.NewContainer(appConfig.Config)
+	// Initialize DI container
+	containerInstance, err := container.NewContainer(cfg)
 	if err != nil {
-		appConfig.Logger.Error("Failed to initialize container", logging.F("error", err.Error()))
-		os.Exit(1)
+		logger.Fatal("Failed to create container", logging.F("error", err))
 	}
 
 	// Create and configure server
-	srv := server.NewServer(appConfig.Config, appConfig.Logger)
-	srv.SetupBasicRoutes() // Setup basic routes
+	srv := server.NewServer(cfg, logger)
+	srv.SetupBasicRoutes()
 
-	// Register all handlers from container (disabled temporarily for compilation)
-	// if pipelineHandler := appContainer.GetPipelineHandler(); pipelineHandler != nil {
-	//	srv.RegisterHandler(pipelineHandler)
-	//	appConfig.Logger.Info("Pipeline handler registered")
-	// }
-	// if pluginHandler := appContainer.GetPluginHandler(); pluginHandler != nil {
-	//	srv.RegisterHandler(pluginHandler)
-	//	appConfig.Logger.Info("Plugin handler registered")
-	// }
-	if meltanoHandler := appContainer.GetMeltanoHandler(); meltanoHandler != nil {
-		srv.RegisterHandler(meltanoHandler)
-		appConfig.Logger.Info("Meltano handler registered")
-	}
-	if dbtHandler := appContainer.GetDBTHandler(); dbtHandler != nil {
-		srv.RegisterHandler(dbtHandler)
-		appConfig.Logger.Info("DBT handler registered")
-	}
-	if connectorsHandler := appContainer.GetConnectorsHandler(); connectorsHandler != nil {
-		srv.RegisterHandler(connectorsHandler)
-		appConfig.Logger.Info("Connectors handler registered")
-	}
+	// Register handlers with container
+	srv.RegisterHandler(containerInstance.GetPluginHandler())
+	srv.RegisterCleanHandler("meltano", containerInstance.GetUnifiedMeltanoHandler())
+	srv.RegisterCleanHandler("flexcore", containerInstance.GetFlexcoreHandler())
+	srv.RegisterCleanHandler("pipeline", containerInstance.GetPipelineHandler())
 
-	// Setup graceful shutdown
-	shutdown := application.NewGracefulShutdownHandler(appConfig.Logger, appConfig.Config.Server.ShutdownTimeout)
-	shutdown.AddShutdownFunc("server", srv.Stop)
-	shutdown.AddShutdownFunc("container", func(ctx context.Context) error {
-		return appContainer.Shutdown()
-	})
+	logger.Info("Starting FLEXT Server", 
+		logging.F("port", *port),
+		logging.F("host", *host),
+		logging.F("environment", *env))
 
-	// Start server
+	// Start server in a goroutine
 	go func() {
-		appConfig.Logger.Info("Starting FLEXT server",
-			logging.F("address", appConfig.Config.Address()),
-			logging.F("mode", "server"),
-			logging.F("version", "2.0.0"))
 		if err := srv.Start(); err != nil {
-			appConfig.Logger.Error("Server failed to start", logging.F("error", err.Error()))
+			logger.Error("Server failed to start", logging.F("error", err))
 			os.Exit(1)
 		}
 	}()
 
-	// Wait for shutdown
-	shutdown.WaitForShutdown()
+	// Wait for interrupt signal to gracefully shutdown
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	logger.Info("Shutting down FLEXT Server...")
+
+	// Create context with timeout for graceful shutdown
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	if err := srv.Stop(ctx); err != nil {
+		logger.Error("Server shutdown failed", logging.F("error", err))
+		os.Exit(1)
+	}
+
+	logger.Info("FLEXT Server shutdown complete")
 }

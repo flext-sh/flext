@@ -1,0 +1,101 @@
+version: "3.8"
+
+services:
+  # Test Database
+  postgres-test:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: flext_test
+      POSTGRES_USER: flext_test
+      POSTGRES_PASSWORD: test_password
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flext_test -d flext_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Test Redis
+  redis-test:
+    image: redis:7-alpine
+    ports:
+      - "6381:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FlexCore Test Service
+  flexcore-test:
+    build:
+      context: ./flexcore
+      dockerfile: Dockerfile.test
+    environment:
+      - DB_HOST=postgres-test
+      - REDIS_HOST=redis-test
+      - TEST_MODE=true
+    ports:
+      - "8090:8080"
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+    volumes:
+      - ./flexcore:/app
+      - flexcore_test_coverage:/app/coverage
+
+  # FLEXT Test Service
+  flext-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      - DB_HOST=postgres-test
+      - REDIS_HOST=redis-test
+      - FLEXCORE_URL=http://flexcore-test:8080
+      - TEST_MODE=true
+    ports:
+      - "8091:8081"
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+      flexcore-test:
+        condition: service_started
+    volumes:
+      - .:/app
+      - flext_test_coverage:/app/coverage
+
+  # Test Runner Container
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.testrunner
+    environment:
+      - DB_HOST=postgres-test
+      - REDIS_HOST=redis-test
+      - FLEXCORE_URL=http://flexcore-test:8080
+      - FLEXT_URL=http://flext-test:8081
+    depends_on:
+      - flexcore-test
+      - flext-test
+    volumes:
+      - .:/app
+      - test_results:/app/test-results
+    command: ["./scripts/run-all-tests.sh"]
+
+volumes:
+  postgres_test_data:
+  flexcore_test_coverage:
+  flext_test_coverage:
+  test_results:
+
+networks:
+  default:
+    name: flext-test-network
