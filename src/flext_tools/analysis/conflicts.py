@@ -59,7 +59,7 @@ License: MIT
 from __future__ import annotations
 
 import tomllib
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from flext_tools.analysis.lock_consistency import LockConsistencyAnalyzer
 from flext_tools.analysis.version import VersionAnalyzer
@@ -153,13 +153,14 @@ class ConflictAnalyzer:
             >>> analyzer = ConflictAnalyzer()
             >>> print(f"Analyzer ready for workspace analysis")
             >>> print(
-            ...     f"Minimum projects for analysis: {analyzer.MIN_PROJECTS_FOR_ANALYSIS}"
+            ...     f"Minimum projects for analysis: "
+            ...     f"{analyzer.MIN_PROJECTS_FOR_ANALYSIS}"
             ... )
 
         """
         self.version_analyzer = VersionAnalyzer()
 
-    def analyze_workspace_conflicts(self, workspace_path: Path) -> dict[str, Any]:
+    def analyze_workspace_conflicts(self, workspace_path: Path) -> dict[str, object]:
         """Perform comprehensive dependency conflict analysis across workspace.
 
         Analyzes all projects in the workspace for dependency conflicts,
@@ -400,7 +401,7 @@ class ConflictAnalyzer:
 
             return deps
 
-    def _extract_version_string(self, spec: str | dict[str, Any]) -> str:
+    def _extract_version_string(self, spec: str | dict[str, object]) -> str:
         """Extract version string from Poetry dependency specification.
 
         Handles both simple string version specifications and complex
@@ -497,13 +498,20 @@ class ConflictAnalyzer:
                 for constraint, projects in constraints.items():
                     if self._is_restrictive_constraint(constraint):
                         if package not in blockers:
+                            blocking_projects: list[str] = []
+                            constraint_dict: dict[str, list[str]] = {}
                             blockers[package] = {
-                                "blocking_projects": [],
-                                "constraints": {},
+                                "blocking_projects": blocking_projects,
+                                "constraints": constraint_dict,
                             }
 
-                        blockers[package]["blocking_projects"].extend(projects)
-                        blockers[package]["constraints"][constraint] = projects
+                        blocking_list = blockers[package]["blocking_projects"]
+                        if isinstance(blocking_list, list):
+                            blocking_list.extend(projects)
+
+                        constraints_dict = blockers[package]["constraints"]
+                        if isinstance(constraints_dict, dict):
+                            constraints_dict[constraint] = projects
 
         return blockers
 
@@ -548,7 +556,7 @@ class ConflictAnalyzer:
     def _calculate_stats(
         self,
         workspace_deps: dict[str, dict[str, str]],
-        conflicts: dict[str, object],
+        conflicts: dict[str, list[dict[str, object]]],
         blockers: dict[str, dict[str, object]],
     ) -> dict[str, int]:
         """Calculate analysis statistics.
@@ -595,12 +603,13 @@ class ConflictAnalyzer:
                 {
                     project
                     for blocker_data in blockers.values()
-                    for project in blocker_data["blocking_projects"]
+                    if isinstance(blocker_data, dict) and "blocking_projects" in blocker_data
+                    for project in (blocker_data["blocking_projects"] if isinstance(blocker_data["blocking_projects"], list) else [])
                 },
             ),
         }
 
-    def generate_conflict_report(self, analysis: dict[str, Any]) -> str:
+    def generate_conflict_report(self, analysis: dict[str, object]) -> str:
         r"""Generate comprehensive formatted conflict analysis report.
 
         Creates detailed Markdown report summarizing all dependency conflicts,
@@ -651,15 +660,17 @@ class ConflictAnalyzer:
 
         # General statistics
         stats = analysis["stats"]
+        if not isinstance(stats, dict):
+            stats = {}
         lines.extend(
             (
                 "## 📈 General Statistics\n",
                 f"- **Total projects**: {analysis['total_projects']}",
-                f"- **Total dependencies**: {stats['total_dependencies']}",
-                f"- **Unique packages**: {stats['unique_packages']}",
-                f"- **Packages with conflicts**: {stats['packages_with_conflicts']}",
-                f"- **Blocking packages**: {stats['blocking_packages']}",
-                f"- **Affected projects**: {stats['affected_projects']}\n",
+                f"- **Total dependencies**: {stats.get('total_dependencies', 0)}",
+                f"- **Unique packages**: {stats.get('unique_packages', 0)}",
+                f"- **Packages with conflicts**: {stats.get('packages_with_conflicts', 0)}",
+                f"- **Blocking packages**: {stats.get('blocking_packages', 0)}",
+                f"- **Affected projects**: {stats.get('affected_projects', 0)}\n",
             ),
         )
 
@@ -667,41 +678,45 @@ class ConflictAnalyzer:
         if analysis["version_conflicts"]:
             lines.append("## ⚠️ Version Conflicts\n")
 
-            for package, conflict_data in sorted(analysis["version_conflicts"].items()):
-                severity = conflict_data.get("severity", "medium")
-                icon = "🔴" if severity == "high" else "🟡"
+            version_conflicts = analysis.get("version_conflicts", {})
+            if isinstance(version_conflicts, dict):
+                for package, conflict_data in sorted(version_conflicts.items()):
+                    severity = conflict_data.get("severity", "medium")
+                    icon = "🔴" if severity == "high" else "🟡"
 
-                lines.extend((f"### {icon} {package}\n", "**Projects and versions:**"))
+                    lines.extend((f"### {icon} {package}\n", "**Projects and versions:**"))
 
-                for project, version in conflict_data["projects"].items():
-                    lines.append(f"- `{project}`: {version}")
+                    for project, version in conflict_data["projects"].items():
+                        lines.append(f"- `{project}`: {version}")
 
-                if conflict_data["analysis"]["issues"]:
-                    lines.append("\n**Issues:**")
-                    lines.extend(
-                        f"- {issue}" for issue in conflict_data["analysis"]["issues"]
-                    )
+                    if conflict_data["analysis"]["issues"]:
+                        lines.append("\n**Issues:**")
+                        lines.extend(
+                            f"- {issue}" for issue in conflict_data["analysis"]["issues"]
+                        )
 
-                lines.append("")
+                    lines.append("")
 
         # Update blockers
         if analysis["update_blockers"]:
             lines.append("## 🚫 Update Blockers\n")
 
-            for package, blocker_data in sorted(analysis["update_blockers"].items()):
-                lines.extend((f"### {package}\n", "**Blocking projects:**"))
+            update_blockers = analysis.get("update_blockers", {})
+            if isinstance(update_blockers, dict):
+                for package, blocker_data in sorted(update_blockers.items()):
+                    lines.extend((f"### {package}\n", "**Blocking projects:**"))
 
-                for constraint, projects in blocker_data["constraints"].items():
-                    lines.append(f"- Constraint `{constraint}`: {', '.join(projects)}")
+                    for constraint, projects in blocker_data["constraints"].items():
+                        lines.append(f"- Constraint `{constraint}`: {', '.join(projects)}")
 
-                lines.append("")
+                    lines.append("")
 
         # Suggested resolutions
         if analysis["suggested_resolutions"]:
             lines.append("## 💡 Suggested Resolutions\n")
 
             for package, suggestion in sorted(
-                analysis["suggested_resolutions"].items(),
+                                    analysis.get("suggested_resolutions", {}).items() if isinstance(analysis.get("suggested_resolutions"), dict) else [],
             ):
                 lines.append(f"- **{package}**: `{suggestion}`")
 

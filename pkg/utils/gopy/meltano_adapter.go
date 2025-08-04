@@ -7,15 +7,15 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/domain/meltano/application/services"
+	// "github.com/flext-sh/flexcore/pkg/runtimes/meltano/application/services" // Disabled - cross-module dependency
 	"github.com/flext-sh/flext/pkg/infrastructure/config"
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
 )
 
 // MeltanoAdapter provides a gopy-compatible interface to Meltano functionality
 type MeltanoAdapter struct {
-	service *services.MeltanoService
-	logger  logging.Logger
+	// service *services.MeltanoService // Disabled - cross-module dependency
+	logger logging.Logger
 }
 
 // Result represents a standard result format for gopy compatibility

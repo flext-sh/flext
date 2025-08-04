@@ -79,7 +79,6 @@ License: MIT
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
 from flext_core.result import FlextResult
 
@@ -106,7 +105,8 @@ class CodeDuplicateAnalyzer:
         Args:
             workspace_path: Root path for analysis, defaults to current directory
             min_block_size: Minimum number of lines to consider as duplicate block
-            similarity_threshold: Minimum similarity score (0.0-1.0) for duplicate detection
+            similarity_threshold: Minimum similarity score (0.0-1.0) for duplicate
+                detection
             exclude_patterns: List of file patterns to exclude from analysis
 
         Example:
@@ -123,7 +123,7 @@ class CodeDuplicateAnalyzer:
         self.similarity_threshold = similarity_threshold
         self.exclude_patterns = exclude_patterns or []
 
-    def analyze_duplicates(self) -> FlextResult[dict[str, Any]]:
+    def analyze_duplicates(self) -> FlextResult[dict[str, object]]:
         """Perform comprehensive code duplication analysis across the workspace.
 
         Analyzes all supported files in the workspace to identify duplicate
@@ -144,7 +144,8 @@ class CodeDuplicateAnalyzer:
             >>> if result.success:
             ...     data = result.value
             ...     print(
-            ...         f"Analysis complete: {data['duplicates_found']} duplicates found"
+            ...         f"Analysis complete: {data['duplicates_found']} "
+            ...         f"duplicates found"
             ...     )
             ...     for block in data["duplicate_blocks"]:
             ...         print(f"Duplicate in files: {block['affected_files']}")
@@ -153,7 +154,8 @@ class CodeDuplicateAnalyzer:
         print_colored("🔍 Analyzing code duplications across workspace...", Colors.BLUE)
 
         try:
-            # Implementation will be enhanced when full analysis algorithms are developed
+            # Implementation will be enhanced when full analysis algorithms are
+            # developed
             results = {
                 "duplicates_found": 0,
                 "duplicate_blocks": [],
@@ -176,13 +178,13 @@ class CodeDuplicateAnalyzer:
                 "✅ Code duplication analysis completed successfully",
                 Colors.GREEN,
             )
-            return FlextResult.success(results)
+            return FlextResult(data=results)
 
         except Exception as e:
             print_colored(f"❌ Code duplication analysis failed: {e}", Colors.RED)
-            return FlextResult.fail(f"Analysis failed: {e!s}")
+            return FlextResult(error=f"Analysis failed: {e!s}")
 
-    def find_duplicate_functions(self) -> FlextResult[list[dict[str, Any]]]:
+    def find_duplicate_functions(self) -> FlextResult[list[dict[str, object]]]:
         """Identify duplicate function implementations across the codebase.
 
         Analyzes function signatures, implementations, and logic patterns
@@ -206,12 +208,12 @@ class CodeDuplicateAnalyzer:
         """
         try:
             # Placeholder for sophisticated function analysis algorithm
-            duplicate_functions = []
-            return FlextResult.success(duplicate_functions)
+            duplicate_functions: list[dict[str, object]] = []
+            return FlextResult(data=duplicate_functions)
         except Exception as e:
-            return FlextResult.fail(f"Function analysis failed: {e!s}")
+            return FlextResult(error=f"Function analysis failed: {e!s}")
 
-    def find_duplicate_classes(self) -> FlextResult[list[dict[str, Any]]]:
+    def find_duplicate_classes(self) -> FlextResult[list[dict[str, object]]]:
         """Detect duplicate class structures and implementations.
 
         Examines class definitions, method signatures, and implementation
@@ -232,18 +234,19 @@ class CodeDuplicateAnalyzer:
             ...     for duplicate in result.value:
             ...         print(f"Similar class pattern: {duplicate['class_name']}")
             ...         print(
-            ...             f"Refactoring potential: {duplicate['design_recommendations']}"
+            ...             f"Refactoring potential: "
+            ...             f"{duplicate['design_recommendations']}"
             ...         )
 
         """
         try:
             # Placeholder for comprehensive class analysis algorithm
-            duplicate_classes = []
-            return FlextResult.success(duplicate_classes)
+            duplicate_classes: list[dict[str, object]] = []
+            return FlextResult(data=duplicate_classes)
         except Exception as e:
-            return FlextResult.fail(f"Class analysis failed: {e!s}")
+            return FlextResult(error=f"Class analysis failed: {e!s}")
 
-    def generate_refactoring_report(self) -> FlextResult[dict[str, Any]]:
+    def generate_refactoring_report(self) -> FlextResult[dict[str, object]]:
         """Generate comprehensive refactoring report with actionable recommendations.
 
         Combines all analysis results to provide prioritized refactoring
@@ -278,9 +281,9 @@ class CodeDuplicateAnalyzer:
                 "impact_analysis": {},
                 "implementation_guidance": [],
             }
-            return FlextResult.success(report)
+            return FlextResult(data=dict(report))  # type: ignore[arg-type]
         except Exception as e:
-            return FlextResult.fail(f"Report generation failed: {e!s}")
+            return FlextResult(error=f"Report generation failed: {e!s}")
 
 
-__all__ = ["CodeDuplicateAnalyzer"]
+__all__: list[str] = ["CodeDuplicateAnalyzer"]

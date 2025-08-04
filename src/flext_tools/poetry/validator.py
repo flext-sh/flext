@@ -175,9 +175,11 @@ class PoetryValidator:
             - info: Dictionary containing extracted project metadata and statistics
 
         Validation Process:
-            1. Project Structure Validation: Verify pyproject.toml existence and accessibility
+            1. Project Structure Validation: Verify pyproject.toml existence and
+               accessibility
             2. TOML Syntax Validation: Parse and validate TOML syntax and structure
-            3. Poetry Structure Validation: Verify required Poetry configuration sections
+            3. Poetry Structure Validation: Verify required Poetry configuration
+               sections
             4. Project Metadata Validation: Validate project metadata and compliance
             5. Dependency Validation: Analyze dependency specifications and constraints
             6. Lock File Validation: Verify Poetry lock file consistency and currency
@@ -190,25 +192,29 @@ class PoetryValidator:
             without impacting project functionality.
 
         """
+        errors: list[str] = []
+        warnings: list[str] = []
+        info: list[str] = []
+
         results: dict[str, object] = {
             "valid": True,
-            "errors": [],
-            "warnings": [],
-            "info": [],
+            "errors": errors,
+            "warnings": warnings,
+            "info": info,
         }
 
         # Check pyproject.toml existence and accessibility
         pyproject_path = project_path / "pyproject.toml"
         if not pyproject_path.exists():
             results["valid"] = False
-            results["errors"].append("pyproject.toml not found")
+            errors.append("pyproject.toml not found")
             return results
 
         # Validate TOML syntax and structure
         toml_valid, toml_error = self._validate_toml_syntax(pyproject_path)
         if not toml_valid:
             results["valid"] = False
-            results["errors"].append(f"TOML syntax error: {toml_error}")
+            errors.append(f"TOML syntax error: {toml_error}")
             return results
 
         try:
@@ -219,29 +225,29 @@ class PoetryValidator:
             poetry_valid, poetry_issues = self._validate_poetry_structure(data)
             if not poetry_valid:
                 results["valid"] = False
-                results["errors"].extend(poetry_issues)
+                errors.extend(poetry_issues)
 
             # Validate project metadata and compliance
             metadata_valid, metadata_issues = self._validate_project_metadata(data)
             if not metadata_valid:
-                results["warnings"].extend(metadata_issues)
+                warnings.extend(metadata_issues)
 
             # Validate dependency specifications and constraints
             deps_valid, deps_issues = self._validate_dependencies(data)
             if not deps_valid:
-                results["warnings"].extend(deps_issues)
+                warnings.extend(deps_issues)
 
             # Collect comprehensive project information
             results["info"] = self._collect_project_info(data)
 
         except (OSError, tomllib.TOMLDecodeError, KeyError, TypeError) as e:
             results["valid"] = False
-            results["errors"].append(f"Error processing pyproject.toml: {e}")
+            errors.append(f"Error processing pyproject.toml: {e}")
 
         # Validate Poetry lock file consistency
         lock_valid, lock_issues = self._validate_lock_file(project_path)
         if not lock_valid:
-            results["warnings"].extend(lock_issues)
+            warnings.extend(lock_issues)
 
         return results
 
@@ -287,11 +293,16 @@ class PoetryValidator:
         issues = []
 
         # Check [tool.poetry] section presence
-        if "tool" not in data or "poetry" not in data["tool"]:
+        if "tool" not in data:
             issues.append("Section [tool.poetry] not found")
             return False, issues
 
-        poetry = data["tool"]["poetry"]
+        tool_section = data["tool"]
+        if not isinstance(tool_section, dict) or "poetry" not in tool_section:
+            issues.append("Section [tool.poetry] not found")
+            return False, issues
+
+        poetry = tool_section["poetry"]
 
         # Required fields validation
         required_fields = ["name", "version", "description"]
@@ -326,7 +337,10 @@ class PoetryValidator:
             Tuple containing validation status and list of metadata issues
 
         """
-        poetry = data.get("tool", {}).get("poetry", {})
+        tool_section = data.get("tool", {})
+        if not isinstance(tool_section, dict):
+            return True, []
+        poetry = tool_section.get("poetry", {})
 
         # Recommended fields for complete project metadata
         recommended_fields = ["authors", "readme", "homepage", "repository", "keywords"]
@@ -369,7 +383,10 @@ class PoetryValidator:
 
         """
         issues = []
-        poetry = data.get("tool", {}).get("poetry", {})
+        tool_section = data.get("tool", {})
+        if not isinstance(tool_section, dict):
+            return True, []
+        poetry = tool_section.get("poetry", {})
 
         # Check main dependencies
         deps = poetry.get("dependencies", {})
@@ -397,7 +414,8 @@ class PoetryValidator:
                     and "path" not in spec
                 ):
                     issues.append(
-                        f"Dependency '{name}' in group '{group_name}' missing specification",
+                        f"Dependency '{name}' in group '{group_name}' missing "
+                        f"specification",
                     )
 
         return len(issues) == 0, issues
@@ -462,7 +480,10 @@ class PoetryValidator:
             Dictionary containing comprehensive project information and statistics
 
         """
-        poetry = data.get("tool", {}).get("poetry", {})
+        tool_section = data.get("tool", {})
+        if not isinstance(tool_section, dict):
+            return {}
+        poetry = tool_section.get("poetry", {})
 
         info = {
             "name": poetry.get("name", "unknown"),
@@ -551,11 +572,14 @@ class PoetryValidator:
                 print_colored("    ✅ Project valid", Colors.GREEN)
             else:
                 print_colored("    ❌ Project invalid", Colors.RED)
-                for error in validation["errors"]:
-                    print_colored(f"      - {error}", Colors.RED)
+                errors = validation["errors"]
+                if isinstance(errors, list):
+                    for error in errors:
+                        print_colored(f"      - {error}", Colors.RED)
 
-            if validation["warnings"]:
-                for warning in validation["warnings"]:
+            warnings_list = validation["warnings"]
+            if isinstance(warnings_list, list) and warnings_list:
+                for warning in warnings_list:
                     print_colored(f"      ⚠️ {warning}", Colors.YELLOW)
 
             validations[project_name] = validation

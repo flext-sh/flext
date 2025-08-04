@@ -216,7 +216,8 @@ class VersionAnalyzer:
 
         Example:
             >>> check_version_compatibility(">=1.0.0", "<2.0.0")
-            {'compatible': True, 'conflict': False, 'recommended': '>=1.0.0,<2.0.0', 'issues': []}
+            {'compatible': True, 'conflict': False, 'recommended': '>=1.0.0,<2.0.0',
+             'issues': []}
 
         """
         if not spec1 or not spec2:
@@ -300,7 +301,8 @@ class VersionAnalyzer:
             unique_constraints[0],
             unique_constraints[1],
         )
-        return result.get("recommended")
+        recommended = result.get("recommended")
+        return str(recommended) if recommended is not None else None
 
     @staticmethod
     def _collect_package_versions(
@@ -324,7 +326,11 @@ class VersionAnalyzer:
 
         for project_name, data in projects_data.items():
             # PEP 621 dependencies
-            pep621_deps = data.get("project", {}).get("dependencies", [])
+            project_section = data.get("project", {})
+            if isinstance(project_section, dict):
+                pep621_deps = project_section.get("dependencies", [])
+            else:
+                pep621_deps = []
             for dep_spec in pep621_deps:
                 package_name, version_spec = VersionAnalyzer.parse_version_spec(
                     dep_spec,
@@ -335,7 +341,15 @@ class VersionAnalyzer:
                     package_versions[package_name][project_name] = version_spec or "*"
 
             # Poetry dependencies
-            poetry_deps = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
+            tool_section = data.get("tool", {})
+            if isinstance(tool_section, dict):
+                poetry_section = tool_section.get("poetry", {})
+                if isinstance(poetry_section, dict):
+                    poetry_deps = poetry_section.get("dependencies", {})
+                else:
+                    poetry_deps = {}
+            else:
+                poetry_deps = {}
             for package_name, dep_spec in poetry_deps.items():
                 if isinstance(dep_spec, str):
                     version_spec = dep_spec
@@ -448,7 +462,10 @@ class VersionAnalyzer:
             project_specs = conflict_data["projects"]
 
             # Try to find most recent compatible version
-            all_specs = list(project_specs.values())
+            if isinstance(project_specs, dict):
+                all_specs = list(project_specs.values())
+            else:
+                all_specs = []
 
             # Remove empty specifications or "*"
             valid_specs = [s for s in all_specs if s and s != "*"]
@@ -463,7 +480,10 @@ class VersionAnalyzer:
                 continue
 
             # Try to find intersection
-            common_range = VersionAnalyzer.find_common_version_range(project_specs)
+            if isinstance(project_specs, dict):
+                common_range = VersionAnalyzer.find_common_version_range(project_specs)
+            else:
+                common_range = None
             if common_range:
                 suggestions[package] = common_range
             else:

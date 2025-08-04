@@ -12,8 +12,10 @@ accurate dependency management across complex multi-project environments.
 
 Key Components:
     - DependencyDiscovery: Main dependency analysis coordination engine
-    - Multi-Strategy Discovery: Python imports, configuration files, transitive resolution
-    - Dependency Categorization: Runtime, development, and test dependency classification
+    - Multi-Strategy Discovery: Python imports, configuration files, transitive
+        resolution
+    - Dependency Categorization: Runtime, development, and test dependency
+        classification
     - Transitive Resolution: Automatic transitive dependency detection and optimization
     - Package Normalization: Intelligent package name normalization and matching
 
@@ -133,7 +135,8 @@ class DependencyDiscovery:
         >>> for category, category_deps in deps.items():
         ...     if category_deps:
         ...         print(
-        ...             f"{category.title()} ({len(category_deps)}): {sorted(category_deps)}"
+        ...             f"{category.title()} ({len(category_deps)}): "
+        ...             f"{sorted(category_deps)}"
         ...         )
 
     Integration:

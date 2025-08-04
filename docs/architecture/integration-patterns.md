@@ -713,7 +713,7 @@ def main():
         else:
             result = FlextResult.fail(f"Unknown method: {method}")
 
-        if result.is_success:
+        if result.success:
             print(json.dumps({"result": result.data}))
         else:
             print(json.dumps({"error": result.error}))

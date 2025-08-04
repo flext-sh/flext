@@ -94,14 +94,16 @@ import argparse
 import logging
 import time
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from flext_tools.utils.colors import Colors, print_colored
 from flext_tools.utils.logging import get_logger
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+
 
 logger = get_logger(__name__)
 
@@ -266,7 +268,7 @@ class FlextScript(ABC):
         return self.run(**vars(args))
 
 
-def create_simple_script(  # noqa: PLR0913
+def create_simple_script(  # noqa: PLR0913  # type: ignore[misc]
     name: str,
     description: str,
     category: str,
@@ -307,4 +309,4 @@ def create_simple_script(  # noqa: PLR0913
         def cleanup(self) -> None:
             pass
 
-    return SimpleScript
+    return cast("type[FlextScript]", SimpleScript)

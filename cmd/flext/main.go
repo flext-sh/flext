@@ -12,10 +12,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/config"
-	"github.com/flext-sh/flext/pkg/container"
+	"github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
+	"github.com/flext-sh/flext/pkg/controlpanel/management/container"
+	"github.com/flext-sh/flext/pkg/controlpanel/monitoring/server"
 	"github.com/flext-sh/flext/pkg/logging"
-	"github.com/flext-sh/flext/pkg/server"
 )
 
 // Version information (set by build flags)
@@ -202,7 +202,7 @@ func (si *ServiceInitializer) setupGracefulShutdown() ServiceInitializationResul
 // createDIContainer creates and initializes the DI container
 func (si *ServiceInitializer) createDIContainer() ServiceInitializationResult {
 	si.logger.Info("📦 Creating FLEXT DI Container...")
-	
+
 	realContainer, err := container.NewContainer(si.config)
 	if err != nil {
 		return ServiceInitializationResult{
@@ -237,7 +237,7 @@ func (si *ServiceInitializer) logArchitectureStatus() ServiceInitializationResul
 // createAndConfigureServer creates HTTP server and registers handlers
 func (si *ServiceInitializer) createAndConfigureServer() ServiceInitializationResult {
 	si.logger.Info("🌐 Creating HTTP server...")
-	
+
 	srv := server.NewServer(si.config, si.logger)
 	srv.SetupBasicRoutes()
 
