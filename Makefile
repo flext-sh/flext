@@ -21,7 +21,12 @@ PYTHON_DBT_PROJECTS := flext-dbt-ldap flext-dbt-ldif flext-dbt-oracle flext-dbt-
 PYTHON_EXT_PROJECTS := flext-ldap flext-ldif flext-meltano flext-plugin flext-cli flext-grpc flext-oracle-oic-ext gruponos-meltano-native
 
 # Go Projects
-GO_PROJECTS := cmd/flext cmd/flext-cli cmd/flext-server cmd/flext-demo flexcore
+GO_CMD_PROJECTS := cmd/flext cmd/flext-cli cmd/flext-server cmd/flext-demo
+GO_FLEXCORE_PROJECT := flexcore
+
+# Build Configuration
+BIN_DIR := bin
+BUILD_DIR := build
 
 # All Python Projects
 ALL_PYTHON_PROJECTS := $(PYTHON_CORE_PROJECTS) $(PYTHON_APP_PROJECTS) $(PYTHON_TAP_PROJECTS) $(PYTHON_TARGET_PROJECTS) $(PYTHON_DBT_PROJECTS) $(PYTHON_EXT_PROJECTS)
@@ -215,12 +220,18 @@ build-python: ## Build all Python projects
 .PHONY: build-go
 build-go: ## Build all Go projects
 	@echo "🐹 Building Go projects..."
-	@for project in $(GO_PROJECTS); do \
+	@mkdir -p $(BIN_DIR)
+	@for project in $(GO_CMD_PROJECTS); do \
 		if [ -d "$$project" ] && [ -f "$$project/main.go" ]; then \
 			echo "Building $$project..."; \
-			cd $$project && go build -o $$(basename $$project) . && cd ..; \
+			binary_name=$$(basename $$project); \
+			cd $$project && go build -o ../../$(BIN_DIR)/$$binary_name . && chmod +x ../../$(BIN_DIR)/$$binary_name && cd ..; \
 		fi \
 	done
+	@if [ -d "$(GO_FLEXCORE_PROJECT)" ]; then \
+		echo "Building $(GO_FLEXCORE_PROJECT)..."; \
+		cd $(GO_FLEXCORE_PROJECT) && make build; \
+	fi
 
 # =============================================================================
 # MAINTENANCE & CLEANUP

@@ -7,7 +7,8 @@
 # Project Configuration
 PROJECT_NAME := flext
 BINARY_NAME := flext
-BUILD_DIR := bin
+BUILD_DIR := ../../bin
+LOCAL_BUILD_DIR := bin
 GO_VERSION := 1.24
 MIN_COVERAGE := 80
 
@@ -64,10 +65,16 @@ verify: ## Verify Go modules
 # =============================================================================
 
 .PHONY: build
-build: ## Build the application
+build: ## Build the application (workspace bin/)
 	@echo "🏗️ Building $(BINARY_NAME)..."
 	@mkdir -p $(BUILD_DIR)
 	@go build -o $(BUILD_DIR)/$(BINARY_NAME) .
+
+.PHONY: build-local
+build-local: ## Build locally (cmd/flext/bin/)
+	@echo "🏗️ Building $(BINARY_NAME) locally..."
+	@mkdir -p $(LOCAL_BUILD_DIR)
+	@go build -o $(LOCAL_BUILD_DIR)/$(BINARY_NAME) .
 
 .PHONY: build-release
 build-release: ## Build optimized release
