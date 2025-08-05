@@ -6,7 +6,7 @@ import (
 
 	"github.com/flext-sh/flext/pkg/infrastructure/config"
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
-	// sharedApp "github.com/flext-sh/flext/pkg/utils/shared_kernel" // Removed - import cycle
+	"github.com/flext-sh/flext/pkg/utils/shared_kernel/application"
 )
 
 // ContainerType define o tipo de container
@@ -139,7 +139,7 @@ func (cb *ContainerBuilder) IsFeatureEnabled(feature Feature) bool {
 }
 
 // Build constrói o container final
-func (cb *ContainerBuilder) Build() (sharedApp.ContainerInterface, error) {
+func (cb *ContainerBuilder) Build() (application.ContainerInterface, error) {
 	cb.logger.Info("Building container with features",
 		logging.F("features", cb.getEnabledFeatures()))
 
@@ -505,7 +505,7 @@ func (fc *FlexibleContainer) GetConfig() *config.Config {
 type ContainerFactory struct{}
 
 // CreateBasicContainer cria container básico
-func (cf *ContainerFactory) CreateBasicContainer(cfg *config.Config) (sharedApp.ContainerInterface, error) {
+func (cf *ContainerFactory) CreateBasicContainer(cfg *config.Config) (application.ContainerInterface, error) {
 	return NewContainerBuilder(cfg).
 		WithFeature(FeaturePipeline).
 		WithFeature(FeaturePlugin).
@@ -515,14 +515,14 @@ func (cf *ContainerFactory) CreateBasicContainer(cfg *config.Config) (sharedApp.
 }
 
 // CreateAdvancedContainer cria container avançado
-func (cf *ContainerFactory) CreateAdvancedContainer(cfg *config.Config) (sharedApp.ContainerInterface, error) {
+func (cf *ContainerFactory) CreateAdvancedContainer(cfg *config.Config) (application.ContainerInterface, error) {
 	return NewContainerBuilder(cfg).
 		AutoDetectFeatures().
 		Build()
 }
 
 // CreateCustomContainer cria container customizado
-func (cf *ContainerFactory) CreateCustomContainer(cfg *config.Config, features []Feature) (sharedApp.ContainerInterface, error) {
+func (cf *ContainerFactory) CreateCustomContainer(cfg *config.Config, features []Feature) (application.ContainerInterface, error) {
 	builder := NewContainerBuilder(cfg)
 
 	for _, feature := range features {

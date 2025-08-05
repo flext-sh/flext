@@ -3,7 +3,7 @@ package entities
 import (
 	"time"
 
-	"github.com/flext-sh/flext/pkg/utils/shared_kernel/value_objects"
+	"github.com/flext-sh/flext/pkg/utils/shared_kernel/errors"
 	"github.com/google/uuid"
 )
 
@@ -180,10 +180,10 @@ func (p *BasePipelineEntity) GetName() string {
 // SetName define o nome do pipeline
 func (p *BasePipelineEntity) SetName(name string) error {
 	if name == "" {
-		return &value_objects.DomainError{
+		return &errors.DomainError{
 			Code:        "INVALID_PIPELINE_NAME",
 			Message:     "Pipeline name cannot be empty",
-			Description: "All pipelines must have a valid name",
+			Details: "All pipelines must have a valid name",
 		}
 	}
 	p.Name = name
@@ -218,10 +218,10 @@ func (p *BasePipelineEntity) SetStatus(status string) error {
 		}
 	}
 
-	return &value_objects.DomainError{
+	return &errors.DomainError{
 		Code:        "INVALID_PIPELINE_STATUS",
 		Message:     "Invalid pipeline status",
-		Description: "Pipeline status must be one of: active, inactive, running, failed, completed",
+		Details: "Pipeline status must be one of: active, inactive, running, failed, completed",
 	}
 }
 
@@ -300,10 +300,10 @@ func (p *BasePluginEntity) GetName() string {
 // SetName define o nome do plugin
 func (p *BasePluginEntity) SetName(name string) error {
 	if name == "" {
-		return &value_objects.DomainError{
+		return &errors.DomainError{
 			Code:        "INVALID_PLUGIN_NAME",
 			Message:     "Plugin name cannot be empty",
-			Description: "All plugins must have a valid name",
+			Details: "All plugins must have a valid name",
 		}
 	}
 	p.Name = name
@@ -327,10 +327,10 @@ func (p *BasePluginEntity) SetType(pluginType string) error {
 		}
 	}
 
-	return &value_objects.DomainError{
+	return &errors.DomainError{
 		Code:        "INVALID_PLUGIN_TYPE",
 		Message:     "Invalid plugin type",
-		Description: "Plugin type must be one of: tap, target, transformer, extractor, loader",
+		Details: "Plugin type must be one of: tap, target, transformer, extractor, loader",
 	}
 }
 
@@ -342,10 +342,10 @@ func (p *BasePluginEntity) GetPluginVersion() string {
 // SetPluginVersion define a versão do plugin
 func (p *BasePluginEntity) SetPluginVersion(version string) error {
 	if version == "" {
-		return &value_objects.DomainError{
+		return &errors.DomainError{
 			Code:        "INVALID_PLUGIN_VERSION",
 			Message:     "Plugin version cannot be empty",
-			Description: "All plugins must have a valid version",
+			Details: "All plugins must have a valid version",
 		}
 	}
 	p.Version = version
@@ -451,10 +451,10 @@ func (e *BaseExecutionEntity) SetStatus(status string) error {
 		}
 	}
 
-	return &value_objects.DomainError{
+	return &errors.DomainError{
 		Code:        "INVALID_EXECUTION_STATUS",
 		Message:     "Invalid execution status",
-		Description: "Execution status must be one of: pending, running, completed, failed, cancelled",
+		Details: "Execution status must be one of: pending, running, completed, failed, cancelled",
 	}
 }
 
@@ -488,10 +488,10 @@ func (e *BaseExecutionEntity) GetProgress() float64 {
 // SetProgress define o progresso da execução
 func (e *BaseExecutionEntity) SetProgress(progress float64) error {
 	if progress < 0.0 || progress > 100.0 {
-		return &value_objects.DomainError{
+		return &errors.DomainError{
 			Code:        "INVALID_PROGRESS",
 			Message:     "Progress must be between 0 and 100",
-			Description: "Execution progress must be a valid percentage",
+			Details: "Execution progress must be a valid percentage",
 		}
 	}
 	e.Progress = progress
@@ -512,10 +512,10 @@ func (e *BaseExecutionEntity) GetStepsCompleted() int {
 // SetStepsCompleted define os passos completados
 func (e *BaseExecutionEntity) SetStepsCompleted(completed int) error {
 	if completed < 0 {
-		return &value_objects.DomainError{
+		return &errors.DomainError{
 			Code:        "INVALID_STEPS_COMPLETED",
 			Message:     "Steps completed cannot be negative",
-			Description: "Steps completed must be a non-negative number",
+			Details: "Steps completed must be a non-negative number",
 		}
 	}
 	e.StepsCompleted = completed
