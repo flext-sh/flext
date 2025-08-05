@@ -281,7 +281,7 @@ class CodeDuplicateAnalyzer:
                 "impact_analysis": {},
                 "implementation_guidance": [],
             }
-            return FlextResult(data=dict(report))  # type: ignore[arg-type]
+            return FlextResult(data=dict(report))
         except Exception as e:
             return FlextResult(error=f"Report generation failed: {e!s}")
 
