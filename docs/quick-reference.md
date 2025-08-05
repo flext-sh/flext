@@ -68,26 +68,26 @@ result: FlextTypes.Core.Result
 
 ## 🎯 Common Tasks
 
-| Task | Documentation |
-|------|---------------|
-| Setup development | [Getting Started](./guides/getting-started/README.md) |
-| Deploy application | [Deployment Guide](./guides/deployment/README.md) |
-| Configure service | [Configuration](./guides/configuration/README.md) |
-| Debug issues | [Troubleshooting](./guides/troubleshooting/README.md) |
-| Understand architecture | [Architecture](./architecture/overview.md) |
-| Use patterns | [Patterns](./patterns/README.md) |
-| API reference | [API Docs](./api/README.md) |
+| Task                    | Documentation                                         |
+| ----------------------- | ----------------------------------------------------- |
+| Setup development       | [Getting Started](./guides/getting-started/README.md) |
+| Deploy application      | [Deployment Guide](./guides/deployment/README.md)     |
+| Configure service       | [Configuration](./guides/configuration/README.md)     |
+| Debug issues            | [Troubleshooting](./guides/troubleshooting/README.md) |
+| Understand architecture | [Architecture](./architecture/overview.md)            |
+| Use patterns            | [Patterns](./patterns/README.md)                      |
+| API reference           | [API Docs](./api/README.md)                           |
 
 ## 📚 Pattern References
 
-| Pattern | File | Purpose |
-|---------|------|---------|
-| Foundation | [patterns/foundation.md](./patterns/foundation.md) | Base models & results |
-| Types | [patterns/types.md](./patterns/types.md) | Type system |
-| Config/CLI | [patterns/config-cli.md](./patterns/config-cli.md) | Configuration |
-| Errors | [patterns/error-observability.md](./patterns/error-observability.md) | Error handling |
-| Constants | [patterns/constants.md](./patterns/constants.md) | Semantic constants |
-| Utilities | [patterns/utilities.md](./patterns/utilities.md) | Helper functions |
+| Pattern    | File                                                                 | Purpose               |
+| ---------- | -------------------------------------------------------------------- | --------------------- |
+| Foundation | [patterns/foundation.md](./patterns/foundation.md)                   | Base models & results |
+| Types      | [patterns/types.md](./patterns/types.md)                             | Type system           |
+| Config/CLI | [patterns/config-cli.md](./patterns/config-cli.md)                   | Configuration         |
+| Errors     | [patterns/error-observability.md](./patterns/error-observability.md) | Error handling        |
+| Constants  | [patterns/constants.md](./patterns/constants.md)                     | Semantic constants    |
+| Utilities  | [patterns/utilities.md](./patterns/utilities.md)                     | Helper functions      |
 
 ## 🔧 CLI Commands
 

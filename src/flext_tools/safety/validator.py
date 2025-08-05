@@ -336,9 +336,9 @@ class SafetyValidator:
                 result["safe"] = False
                 issues_list = result["issues"]
                 if isinstance(issues_list, list):
-                        issues_list.append(
-                            "Poetry configuration not found in pyproject.toml",
-                        )
+                    issues_list.append(
+                        "Poetry configuration not found in pyproject.toml",
+                    )
                 return result
 
         except (OSError, tomllib.TOMLDecodeError, UnicodeDecodeError) as e:
