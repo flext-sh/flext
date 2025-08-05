@@ -261,7 +261,7 @@ exclude = [
     "dist/",
     "node_modules/",
     "vendor/",
-    "flexcore/flexcore$",    # Exclude the Go binary in flexcore directory
+    "flexcore/",    # Exclude entire flexcore directory (Go project with separate MyPy config)
 ]
 
 [tool.pydantic-mypy]

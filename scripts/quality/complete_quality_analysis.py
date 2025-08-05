@@ -21,12 +21,11 @@ class QualityReport:
     test_failures: int = 0
     coverage_percentage: float = 0.0
     poetry_issues: int = 0
-    issues: list[str] = None
+    issues: list[str] | None = None
 
-
-def __post_init__(self: QualityReport) -> None:  # noqa: N807
-    if self.issues is None:
-        self.issues = []
+    def __post_init__(self) -> None:
+        if self.issues is None:
+            self.issues = []
 
 
 def run_command(

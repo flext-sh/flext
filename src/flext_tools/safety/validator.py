@@ -245,7 +245,7 @@ class SafetyValidator:
 
         if not command:
             result["safe"] = False
-            result["issues"].append("Empty command")  # type: ignore[attr-defined]
+            result["issues"].append("Empty command")
             return result
 
         executable = command[0]
@@ -287,12 +287,12 @@ class SafetyValidator:
 
         if command_args & dangerous_args:
             result["safe"] = False
-            result["issues"].append("Dangerous arguments detected")  # type: ignore[attr-defined]
+            result["issues"].append("Dangerous arguments detected")
 
         # Check working directory
         if working_dir and not working_dir.exists():
             result["safe"] = False
-            result["issues"].append("Working directory does not exist")  # type: ignore[attr-defined]
+            result["issues"].append("Working directory does not exist")
 
         return result
 
@@ -325,7 +325,7 @@ class SafetyValidator:
         pyproject_path = project_path / "pyproject.toml"
         if not pyproject_path.exists():
             result["safe"] = False
-            result["issues"].append("pyproject.toml not found")  # type: ignore[attr-defined]
+            result["issues"].append("pyproject.toml not found")
             return result
 
         try:
@@ -367,11 +367,11 @@ class SafetyValidator:
 
         # Specific recommendations by operation
         if operation == "add":
-            result["recommendations"].append("Check version compatibility")  # type: ignore[attr-defined]
+            result["recommendations"].append("Check version compatibility")
         elif operation == "update":
-            result["recommendations"].append("Create backup before updating")  # type: ignore[attr-defined]
+            result["recommendations"].append("Create backup before updating")
         elif operation == "remove":
-            result["recommendations"].append("Check dependencies before removing")  # type: ignore[attr-defined]
+            result["recommendations"].append("Check dependencies before removing")
 
         return result
 
