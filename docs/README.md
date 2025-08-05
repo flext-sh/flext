@@ -1,17 +1,14 @@
-# FLEXT Documentation
+# FLEXT Documentation Hub
 
-**Version**: 1.0.0 | **Status**: Production Ready | **Last Updated**: 2025-01-08
+**Version**: 2.0.0-dev | **Status**: Active Development | **Last Updated**: 2025-08-05
 
-## Overview
+This documentation hub provides comprehensive technical documentation for the FLEXT ecosystem. For project overview and quick start, see the [main README](../README.md).
 
-FLEXT is an enterprise-grade data integration control panel that orchestrates, monitors, and manages distributed data pipelines. Built with a hybrid Go/Python architecture implementing Clean Architecture, DDD, and CQRS patterns.
+> ⚠️ **Documentation Status**: Currently being standardized and aligned with actual code state. Some documentation may be ahead of implementation.
 
-## 🚀 Quick Start
+## 📑 Documentation Navigation
 
-- **New Developers**: [Getting Started Guide](./guides/getting-started/README.md)
-- **Quick Reference**: [Patterns & API Quick Reference](./quick-reference.md)
-- **Architecture Overview**: [System Architecture](./architecture/overview.md)
-- **Python-Go Integration**: [Integration Architecture](./architecture/python-go-integration.md)
+Start here for comprehensive technical documentation:
 
 ## 📚 Documentation Index
 
@@ -70,46 +67,12 @@ Development planning and status.
 - [Implementation Plan](./development/implementation-plan.md) - Roadmap
 - [Documentation Status](./development/documentation-status.md) - Current status
 
-## 🏗️ Technology Stack
+## 🏗️ Core Architecture Documentation
 
-- **Go 1.24+**: Control plane and orchestration
-- **Python 3.13+**: Data processing (Singer SDK, Meltano, DBT)
-- **PostgreSQL 15**: Primary data store
-- **Redis 7**: Caching and message broker
-- **Docker**: Containerization
+For system overview, technology stack, and architecture details, see:
 
-## 🌐 Ecosystem Components
-
-### Core Services
-
-- **FLEXT Control Panel** (`flext-sh/flext`) - Port 8081
-- **FlexCore Runtime** (`flext-sh/flexcore`) - Port 8080
-
-### Library Ecosystem (33 Projects)
-
-- **Foundation**: flext-core, flext-observability
-- **Singer Taps/Targets**: LDAP, LDIF, Oracle, Oracle-OIC, Oracle-WMS
-- **DBT Projects**: LDAP, LDIF, Oracle, Oracle-WMS
-- **Infrastructure**: DB-Oracle, LDAP, LDIF, Oracle-WMS, gRPC
-- **Application Services**: API, Auth, Web, CLI, Meltano, Plugin, Quality
-
-## 🔗 Integration Architecture
-
-### Python-Go Integration
-
-FLEXT implements a hybrid architecture where Go services orchestrate Python libraries:
-
-- **Go Control Plane**: Service orchestration, API management, workflow coordination
-- **Python Ecosystem**: Data processing, ETL operations, domain-specific logic
-- **Integration Patterns**: gRPC, HTTP/REST, subprocess execution
-- **Service Coordination**: Distributed tracing, load balancing, failover
-
-### Key Integration Points
-
-- **gRPC Services**: High-performance service-to-service communication
-- **REST APIs**: External API exposure with Go as gateway
-- **Subprocess Execution**: Direct Python script execution from Go
-- **Event Coordination**: Distributed event streaming across services
+- **Main README**: [Project Overview](../README.md) - Current status, quick setup, architecture summary
+- **Architecture Documentation**: [System Architecture](./architecture/README.md) - Detailed design patterns and decisions
 
 ## 📋 Contributing
 

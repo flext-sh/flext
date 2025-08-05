@@ -32,35 +32,35 @@ from enum import StrEnum, IntEnum
 
 class FlextSemanticConstants:
     """Foundation semantic constants for FLEXT ecosystem."""
-    
+
     class Core:
         """Core system constants."""
-        
+
         # Identity
         NAME: Final[str] = "FLEXT"
         VERSION: Final[str] = "1.0.0"
         ECOSYSTEM_SIZE: Final[int] = 33
-        
+
         # Architecture
         ARCHITECTURE: Final[str] = "clean_architecture"
         PATTERN: Final[str] = "domain_driven_design"
         PRINCIPLES: Final[tuple[str, ...]] = ("SOLID", "DRY", "KISS", "YAGNI")
-        
+
         # Environment
         PYTHON_VERSION: Final[str] = "3.13+"
         GO_VERSION: Final[str] = "1.24+"
         ENCODING: Final[str] = "utf-8"
         TIMEZONE: Final[str] = "UTC"
-    
+
     class Errors:
         """Standard error codes and messages."""
-        
+
         # Error Code Ranges
         BUSINESS_ERROR_RANGE: Final[tuple[int, int]] = (1000, 1999)
         TECHNICAL_ERROR_RANGE: Final[tuple[int, int]] = (2000, 2999)
         VALIDATION_ERROR_RANGE: Final[tuple[int, int]] = (3000, 3999)
         SECURITY_ERROR_RANGE: Final[tuple[int, int]] = (4000, 4999)
-        
+
         # Common Error Codes
         GENERIC_ERROR: Final[str] = "FLEXT_0001"
         VALIDATION_ERROR: Final[str] = "FLEXT_3001"
@@ -72,7 +72,7 @@ class FlextSemanticConstants:
         CONNECTION_ERROR: Final[str] = "FLEXT_2001"
         TIMEOUT_ERROR: Final[str] = "FLEXT_2002"
         CONFIGURATION_ERROR: Final[str] = "FLEXT_2003"
-        
+
         # Error Messages
         MESSAGES: ClassVar[dict[str, str]] = {
             GENERIC_ERROR: "An error occurred",
@@ -86,34 +86,34 @@ class FlextSemanticConstants:
             TIMEOUT_ERROR: "Operation timed out",
             CONFIGURATION_ERROR: "Configuration error"
         }
-    
+
     class Messages:
         """User-facing messages."""
-        
+
         # Success Messages
         SUCCESS_GENERIC: Final[str] = "Operation completed successfully"
         SUCCESS_CREATED: Final[str] = "Resource created successfully"
         SUCCESS_UPDATED: Final[str] = "Resource updated successfully"
         SUCCESS_DELETED: Final[str] = "Resource deleted successfully"
-        
+
         # Info Messages
         INFO_PROCESSING: Final[str] = "Processing request..."
         INFO_LOADING: Final[str] = "Loading data..."
         INFO_VALIDATING: Final[str] = "Validating input..."
-        
+
         # Warning Messages
         WARN_DEPRECATED: Final[str] = "This feature is deprecated"
         WARN_SLOW_OPERATION: Final[str] = "This operation may take time"
-        
+
         # Error Messages
         ERROR_INVALID_INPUT: Final[str] = "Invalid input provided"
         ERROR_UNAUTHORIZED: Final[str] = "You are not authorized to perform this action"
         ERROR_NOT_FOUND: Final[str] = "The requested resource was not found"
         ERROR_INTERNAL: Final[str] = "An internal error occurred. Please try again later"
-    
+
     class Status:
         """Standard status values."""
-        
+
         # Lifecycle Status
         ACTIVE: Final[str] = "active"
         INACTIVE: Final[str] = "inactive"
@@ -123,105 +123,105 @@ class FlextSemanticConstants:
         FAILED: Final[str] = "failed"
         CANCELLED: Final[str] = "cancelled"
         ARCHIVED: Final[str] = "archived"
-        
+
         # Health Status
         HEALTHY: Final[str] = "healthy"
         DEGRADED: Final[str] = "degraded"
         UNHEALTHY: Final[str] = "unhealthy"
-        
+
         # Connection Status
         CONNECTED: Final[str] = "connected"
         DISCONNECTED: Final[str] = "disconnected"
         CONNECTING: Final[str] = "connecting"
-    
+
     class Patterns:
         """Validation regex patterns."""
-        
+
         # Identifiers
         UUID_PATTERN: Final[str] = r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
         SLUG_PATTERN: Final[str] = r"^[a-z0-9]+(?:-[a-z0-9]+)*$"
-        
+
         # Authentication
         EMAIL_PATTERN: Final[str] = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         USERNAME_PATTERN: Final[str] = r"^[a-zA-Z0-9_-]{3,32}$"
         PASSWORD_PATTERN: Final[str] = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-        
+
         # Network
         IPV4_PATTERN: Final[str] = r"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
         HOSTNAME_PATTERN: Final[str] = r"^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
-        
+
         # Versioning
         SEMVER_PATTERN: Final[str] = r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
-    
+
     class Defaults:
         """Default operational values."""
-        
+
         # Timeouts (seconds)
         TIMEOUT: Final[int] = 30
         CONNECTION_TIMEOUT: Final[int] = 10
         READ_TIMEOUT: Final[int] = 30
         WRITE_TIMEOUT: Final[int] = 30
-        
+
         # Retries
         MAX_RETRIES: Final[int] = 3
         RETRY_DELAY: Final[float] = 1.0
         RETRY_BACKOFF: Final[float] = 2.0
-        
+
         # Pagination
         PAGE_SIZE: Final[int] = 100
         MAX_PAGE_SIZE: Final[int] = 1000
         DEFAULT_PAGE: Final[int] = 1
-        
+
         # Caching
         CACHE_TTL: Final[int] = 3600  # 1 hour
         CACHE_MAX_SIZE: Final[int] = 1000
-        
+
         # Database
         DB_POOL_SIZE: Final[int] = 10
         DB_POOL_TIMEOUT: Final[int] = 30
-        
+
         # API
         API_VERSION: Final[str] = "v1"
         API_PREFIX: Final[str] = "/api"
         API_RATE_LIMIT: Final[int] = 100
-    
+
     class Limits:
         """System limits and constraints."""
-        
+
         # String Limits
         MIN_STRING_LENGTH: Final[int] = 1
         MAX_STRING_LENGTH: Final[int] = 255
         MAX_TEXT_LENGTH: Final[int] = 65535
-        
+
         # Numeric Limits
         MIN_PORT: Final[int] = 1
         MAX_PORT: Final[int] = 65535
-        
+
         # Collection Limits
         MAX_ARRAY_SIZE: Final[int] = 10000
         MAX_BATCH_SIZE: Final[int] = 1000
-        
+
         # File Limits
         MAX_FILE_SIZE: Final[int] = 104857600  # 100MB
         MAX_UPLOAD_SIZE: Final[int] = 52428800  # 50MB
-        
+
         # Request Limits
         MAX_REQUEST_SIZE: Final[int] = 10485760  # 10MB
         MAX_URL_LENGTH: Final[int] = 2048
-        
+
         # Resource Limits
         MAX_CONNECTIONS: Final[int] = 1000
         MAX_THREADS: Final[int] = 100
-    
+
     class Performance:
         """Performance tuning constants."""
-        
+
         # Thresholds
         SLOW_QUERY_THRESHOLD: Final[float] = 1.0  # seconds
         SLOW_REQUEST_THRESHOLD: Final[float] = 2.0  # seconds
         HIGH_MEMORY_THRESHOLD: Final[float] = 0.8  # 80%
         HIGH_CPU_THRESHOLD: Final[float] = 0.8  # 80%
-        
+
         # Monitoring
         METRICS_INTERVAL: Final[int] = 60  # seconds
         HEALTH_CHECK_INTERVAL: Final[int] = 30  # seconds
@@ -232,7 +232,7 @@ class FlextSemanticConstants:
 ```python
 class FlextStatus(StrEnum):
     """Enumeration for status values."""
-    
+
     # Lifecycle
     ACTIVE = "active"
     INACTIVE = "inactive"
@@ -242,12 +242,12 @@ class FlextStatus(StrEnum):
     FAILED = "failed"
     CANCELLED = "cancelled"
     ARCHIVED = "archived"
-    
+
     @classmethod
     def is_terminal(cls, status: 'FlextStatus') -> bool:
         """Check if status is terminal (no further changes expected)."""
         return status in {cls.COMPLETED, cls.FAILED, cls.CANCELLED, cls.ARCHIVED}
-    
+
     @classmethod
     def is_active(cls, status: 'FlextStatus') -> bool:
         """Check if status represents active processing."""
@@ -255,7 +255,7 @@ class FlextStatus(StrEnum):
 
 class FlextLogLevel(StrEnum):
     """Enumeration for log levels."""
-    
+
     TRACE = "TRACE"
     DEBUG = "DEBUG"
     INFO = "INFO"
@@ -263,7 +263,7 @@ class FlextLogLevel(StrEnum):
     ERROR = "ERROR"
     FATAL = "FATAL"
     AUDIT = "AUDIT"
-    
+
     @classmethod
     def to_numeric(cls, level: 'FlextLogLevel') -> int:
         """Convert log level to numeric value for comparison."""
@@ -280,17 +280,17 @@ class FlextLogLevel(StrEnum):
 
 class FlextEnvironment(StrEnum):
     """Enumeration for deployment environments."""
-    
+
     DEVELOPMENT = "development"
     TESTING = "testing"
     STAGING = "staging"
     PRODUCTION = "production"
-    
+
     @classmethod
     def is_production(cls, env: 'FlextEnvironment') -> bool:
         """Check if environment is production."""
         return env == cls.PRODUCTION
-    
+
     @classmethod
     def allows_debug(cls, env: 'FlextEnvironment') -> bool:
         """Check if environment allows debug features."""
@@ -304,32 +304,32 @@ class FlextEnvironment(StrEnum):
 ```python
 class FlextOracleWmsConstants(FlextSemanticConstants):
     """Oracle WMS specific constants extending base."""
-    
+
     class Api:
         """Oracle WMS API constants."""
-        
+
         # Versions
         VERSIONS: Final[tuple[str, ...]] = ("v10", "v9", "v8")
         DEFAULT_VERSION: Final[str] = "v10"
-        
+
         # Endpoints
         BASE_PATH: Final[str] = "/wms/lgfapi"
         AUTH_ENDPOINT: Final[str] = "/auth/login"
         ENTITIES_ENDPOINT: Final[str] = "/entity/{entity_name}"
-    
+
     class Entities:
         """WMS entity constants."""
-        
+
         # Core Entities
         CORE_ENTITIES: Final[tuple[str, ...]] = (
             "company", "facility", "location", "item", "user"
         )
-        
+
         # Inventory Entities
         INVENTORY_ENTITIES: Final[tuple[str, ...]] = (
             "inventory", "allocation", "lock", "adjustment", "cycle_count"
         )
-        
+
         # All Entities
         ALL_ENTITIES: Final[tuple[str, ...]] = (
             *CORE_ENTITIES,
@@ -372,13 +372,13 @@ from flext_core.constants import FlextSemanticConstants
 
 class DatabaseConfig(FlextBaseSettings):
     """Database configuration using semantic constants."""
-    
+
     host: str = "localhost"
     port: int = 5432
     pool_size: int = FlextSemanticConstants.Defaults.DB_POOL_SIZE
     pool_timeout: int = FlextSemanticConstants.Defaults.DB_POOL_TIMEOUT
     max_connections: int = FlextSemanticConstants.Limits.MAX_CONNECTIONS
-    
+
     class Config:
         env_prefix = "DB_"
 ```
@@ -392,7 +392,7 @@ import re
 
 class Validator:
     """Validator using semantic patterns."""
-    
+
     @staticmethod
     def validate_email(email: str) -> FlextResult[str]:
         """Validate email format."""
@@ -402,7 +402,7 @@ class Validator:
                 error_code=FlextSemanticConstants.Errors.VALIDATION_ERROR
             )
         return FlextResult.ok(email)
-    
+
     @staticmethod
     def validate_port(port: int) -> FlextResult[int]:
         """Validate port number."""
@@ -423,15 +423,15 @@ import time
 
 class PerformanceMonitor:
     """Monitor system performance using constants."""
-    
+
     def __init__(self):
         self.metrics = get_metrics()
         self.logger = get_logger()
-    
+
     def check_query_performance(self, query_time: float, query: str) -> None:
         """Check if query is slow."""
         threshold = FlextSemanticConstants.Performance.SLOW_QUERY_THRESHOLD
-        
+
         if query_time > threshold:
             self.logger.warn(
                 "Slow query detected",
@@ -439,7 +439,7 @@ class PerformanceMonitor:
                 threshold=threshold,
                 query=query
             )
-            
+
             self.metrics.increment(
                 "database.slow_queries",
                 tags={"threshold": str(threshold)}

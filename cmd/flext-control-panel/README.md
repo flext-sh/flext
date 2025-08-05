@@ -1,92 +1,262 @@
 # FLEXT Control Panel
 
-**FLEXT Control Panel** é o serviço central de gerenciamento e monitoramento do ecossistema FLEXT. Ele coordena e monitora instâncias distribuídas do **FlexCore Runtime** através de APIs gRPC e fornece interfaces REST e CLI para gerenciamento.
+**Type**: Go Service | **Status**: Development | **Dependencies**: Go 1.24+, pkg/flextservice
 
-## Arquitetura
+FLEXT Control Panel service launcher using the common flextservice framework. This service provides a standardized launch mechanism for control panel functionality within the FLEXT ecosystem.
 
-```
-FLEXT Control Panel (Porta 8081)
-    ├── Management: Gerencia instâncias FlexCore  
-    ├── Monitoring: Monitora saúde e métricas
-    ├── Configuration: Gerencia configurações
-    └── Coordination: Coordena múltiplas instâncias
-                ↓ (gRPC)
-FlexCore Runtime (Porta 8080)
-    └── Executa workflows via Windmill
-```
+> **⚠️ Current Status**: Basic service launcher implemented, full control panel features in development
 
-## Responsabilidades
-
-### 🎯 Control Panel (Este Serviço)
-
-- **NÃO executa** runtimes diretamente
-- **Gerencia** instâncias FlexCore (start/stop/configure)
-- **Monitora** saúde, performance, logs
-- **Coordena** orchestração multi-FlexCore
-- **Fornece** APIs REST, Dashboard, CLI
-
-### 🚀 FlexCore Runtime (Projeto Separado)
-
-- **Executa** todos os runtimes via workflows Windmill
-- **Runtimes disponíveis**:
-  - ✅ Meltano (via flext-core/flext-meltano) - **IMPLEMENTADO**
-  - 📝 Ray (via flext-core/flext-ray) - **STUB/DOC**
-  - 📝 Kubernetes - **STUB/DOC**
-  - 🔮 Outros runtimes - **EXPANSÃO FUTURA**
-
-## Executando
+## Quick Start
 
 ```bash
-# Iniciar Control Panel (porta 8081)
-./flext-control-panel --port 8081 --env development
+# Build Control Panel
+cd /home/marlonsc/flext/cmd/flext-control-panel
+go build -o flext-control-panel main.go
 
-# FlexCore deve estar rodando em separado (porta 8080)
-# Ver: flexcore/README.md para instruções
+# Run service (default port 8081)
+./flext-control-panel
 ```
 
-## Endpoints API
+## Current Reality
+
+**What Actually Works:**
+
+- ✅ **Service Launcher**: Basic service launcher using pkg/flextservice
+- ✅ **Port Configuration**: Configured for port 8081 (control panel standard)
+- ✅ **Service Registration**: Proper service information registration
+- ✅ **Common Framework**: Uses shared flextservice.LaunchService pattern
+
+**What Needs Work:**
+
+- ❌ **Control Panel Features**: Full management interface not implemented
+- ❌ **FlexCore Integration**: gRPC communication with FlexCore not implemented
+- ❌ **Web Dashboard**: Management interface missing
+- ❌ **API Endpoints**: Control panel specific APIs not implemented
+
+## Architecture Role in FLEXT Ecosystem
+
+### **Service Launcher Component**
+
+FLEXT Control Panel provides centralized management interface for ecosystem services:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    FLEXT ECOSYSTEM (32 Projects)                 │
+├─────────────────────────────────────────────────────────────────┤
+│ Services: FLEXT Service:8081 | FlexCore:8080 | [CONTROL-PANEL]  │
+├─────────────────────────────────────────────────────────────────┤
+│ Applications: API | Auth | Web | CLI | Quality | Observability  │
+├─────────────────────────────────────────────────────────────────┤
+│ Infrastructure: Oracle | LDAP | LDIF | gRPC | Plugin | WMS      │
+├─────────────────────────────────────────────────────────────────┤
+│ Singer Ecosystem: Taps(5) | Targets(5) | DBT(4) | Extensions(1) │
+├─────────────────────────────────────────────────────────────────┤
+│ Foundation: FLEXT-CORE (FlextResult | DI | Domain Patterns)     │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### **Core Responsibilities**
+
+1. **Service Management**: Centralized control for FLEXT ecosystem services
+2. **Monitoring Interface**: Dashboard for service health and metrics
+3. **Configuration Management**: Centralized configuration coordination
+
+## Key Features
+
+### **Current Implementation**
+
+```go
+// main.go - Current working implementation
+func main() {
+    // Service configuration
+    serviceInfo := flextservice.ServiceInfo{
+        Name:        "flext-control-panel",
+        DefaultPort: 8081,
+        Description: "FLEXT Control Panel",
+    }
+
+    // Launch using common framework
+    flextservice.LaunchService(serviceInfo)
+}
+```
+
+### **Package Dependencies**
+
+- `github.com/flext-sh/flext/pkg/flextservice` - Common service framework
+- Standard Go libraries for service operation
+- Port 8081 configuration (control panel standard)
+
+## Installation & Usage
+
+### Build and Run
 
 ```bash
-# Health checks
-GET /health                     # Status do Control Panel
-GET /api/v1/flexcore/health    # Status das instâncias FlexCore
+# Build control panel
+cd /home/marlonsc/flext/cmd/flext-control-panel
+go build -o flext-control-panel main.go
 
-# Gerenciamento
-GET /api/v1/plugins            # Plugins disponíveis
-GET /api/v1/meltano/projects   # Projetos Meltano
-GET /api/v1/singer/taps        # Singer taps
-GET /api/v1/dbt/models         # Modelos DBT
+# Run service
+./flext-control-panel
+
+# Service will start on port 8081
+# Health check: curl http://localhost:8081/health (when implemented)
 ```
 
-## Arquitetura Interna
+### Configuration
 
+Currently uses the flextservice framework configuration:
+
+```go
+// Service configuration
+serviceInfo := flextservice.ServiceInfo{
+    Name:        "flext-control-panel",    // Service name
+    DefaultPort: 8081,                     // Control panel port
+    Description: "FLEXT Control Panel",    // Service description
+}
 ```
-pkg/controlpanel/
-├── management/        # Gerencia instâncias FlexCore + DI container
-├── monitoring/        # APIs de monitoramento + servidor HTTP
-├── configuration/     # Gerenciamento de configurações  
-└── coordination/      # Coordenação multi-instância
+
+## Development Commands
+
+### Build Operations
+
+```bash
+# Build control panel binary
+go build -o flext-control-panel main.go
+
+# Cross-platform builds
+GOOS=linux GOARCH=amd64 go build -o flext-control-panel-linux main.go
+GOOS=darwin GOARCH=amd64 go build -o flext-control-panel-darwin main.go
 ```
 
-## Diferenças da Arquitetura Anterior
+### Testing
 
-**ANTES (Incorreto)**:
+```bash
+# Run Go tests
+go test ./...
 
-- FLEXT executava runtimes diretamente
-- Mistura de responsabilidades
-- Runtime e controle no mesmo processo
+# Test with coverage
+go test -cover ./...
 
-**AGORA (Correto)**:
+# Run service locally for testing
+./flext-control-panel
+```
 
-- **FLEXT Control Panel**: Puro controle e coordenação
-- **FlexCore Runtime**: Pura execução via Windmill
-- **Separação clara** de responsabilidades
-- **Comunicação gRPC** entre Control Panel ↔ FlexCore
+## Quality Standards
 
-## Próximos Passos
+### **Current Code Quality**
 
-1. ✅ **Control Panel funcional** - Compilando e estruturado
-2. 🔄 **Integração gRPC** - Comunicação com FlexCore
-3. 📊 **Dashboard Web** - Interface de monitoramento
-4. 🔧 **CLI avançado** - Comandos de gerenciamento
-5. 📈 **Métricas avançadas** - Observabilidade completa
+- **Go 1.24+**: Modern Go with proper package structure
+- **Service Framework**: Uses established flextservice patterns
+- **Configuration**: Proper service configuration via ServiceInfo
+- **Simplicity**: Clean, minimal launcher implementation
+
+### **Development Standards**
+
+- **Go Best Practices**: Follow Go conventions and idioms
+- **Common Framework**: Use flextservice for consistency
+- **Error Handling**: Proper Go error handling patterns
+- **Testing**: Add tests for new functionality
+
+## Integration with FLEXT Ecosystem
+
+### **Service Framework Integration**
+
+```bash
+# Control panel integrates with ecosystem via flextservice
+# (Implementation details in pkg/flextservice)
+```
+
+### **Package Structure**
+
+- **main.go**: Service launcher using flextservice framework
+- **pkg/flextservice**: Common service framework (shared)
+- Port 8081: Control panel standard port (distinct from FLEXT Service)
+
+## Current Status
+
+**Version**: 2.0.0 (Development - Service Launcher)
+
+**Completed**:
+
+- ✅ Go service launcher implementation
+- ✅ flextservice framework integration
+- ✅ Port 8081 configuration
+- ✅ Service information registration
+
+**Critical Gaps**:
+
+- ❌ Control panel management features missing
+- ❌ Web dashboard interface not implemented
+- ❌ API endpoints for service management missing
+- ❌ FlexCore gRPC integration not implemented
+
+**Planned Development**:
+
+- 📋 Implement control panel management APIs
+- 📋 Add web dashboard interface
+- 📋 Create FlexCore integration via gRPC
+- 📋 Add service monitoring and health checks
+
+## Future Architecture
+
+### **Planned Control Panel Features**
+
+**Service Management:**
+
+- FlexCore instance management (start/stop/configure)
+- Service health monitoring and metrics
+- Configuration management and distribution
+- Multi-instance coordination
+
+**Web Interface:**
+
+- Management dashboard
+- Service status visualization
+- Configuration interface
+- Monitoring and alerting
+
+**API Integration:**
+
+- RESTful management APIs
+- gRPC communication with FlexCore
+- Service discovery and registration
+- Health check and monitoring endpoints
+
+## Contributing
+
+### Development Workflow
+
+```bash
+# Setup and build
+cd cmd/flext-control-panel
+go build -o flext-control-panel main.go
+./flext-control-panel
+
+# Development cycle
+# 1. Implement new features
+# 2. Test locally
+# 3. Add tests
+# 4. Build and validate
+```
+
+### Architecture Guidelines
+
+- **Service Framework**: Use flextservice patterns for consistency
+- **Go Standards**: Follow Go best practices and conventions
+- **Error Handling**: Implement proper error handling
+- **Testing**: Add comprehensive tests for new features
+
+## License
+
+MIT License - See [LICENSE](../../LICENSE) file for details.
+
+## Links
+
+- **[FLEXT Hub](../../docs/NAVIGATION.md)**: Complete ecosystem navigation
+- **[FLEXT Service](../flext/)**: Main data integration service
+- **[FlexCore](../../flexcore/)**: Go runtime service
+- **[FLEXT Core](../../flext-core/)**: Foundation library
+
+---
+
+_Control panel service launcher within the FLEXT ecosystem - Enterprise data integration platform_

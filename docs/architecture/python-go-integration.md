@@ -115,10 +115,10 @@ from flext_core.types import FlextTypes
 
 class PipelineService:
     """gRPC service for pipeline execution."""
-    
+
     def __init__(self, meltano_runner: MeltanoRunner):
         self._meltano_runner = meltano_runner
-    
+
     async def execute_pipeline(
         self,
         pipeline_id: str,
@@ -183,13 +183,13 @@ async def create_pipeline(pipeline: PipelineCreate):
     """Create new pipeline."""
     manager = MeltanoManager()
     result = await manager.create_pipeline(pipeline)
-    
+
     if result.is_failure:
         raise HTTPException(
             status_code=400,
             detail=result.error
         )
-    
+
     return result.data
 ```
 
@@ -221,7 +221,7 @@ func (e *PythonExecutor) ExecuteScript(ctx context.Context, script string, args 
     defer cancel()
 
     err := cmd.Run()
-    
+
     return &ExecutionResult{
         ExitCode: cmd.ProcessState.ExitCode(),
         Stdout:   stdout.String(),
@@ -248,19 +248,19 @@ def main():
             "error": "Pipeline ID required"
         }))
         sys.exit(1)
-    
+
     pipeline_id = sys.argv[1]
     config = json.loads(sys.argv[2]) if len(sys.argv) > 2 else {}
-    
+
     runner = MeltanoRunner()
     result = runner.run_pipeline(pipeline_id, config)
-    
+
     print(json.dumps({
         "success": result.success,
         "data": result.data if result.success else None,
         "error": result.error if not result.success else None
     }))
-    
+
     sys.exit(0 if result.success else 1)
 
 if __name__ == "__main__":
@@ -293,11 +293,11 @@ func (s *PipelineService) ExecutePipeline(ctx context.Context, req *PipelineRequ
     resp, err := s.pythonService.ExecutePipeline(ctx, req)
     if err != nil {
         // 2. Handle Python service errors
-        s.logger.Error("Python service error", 
+        s.logger.Error("Python service error",
             "error", err,
             "pipeline_id", req.PipelineID,
             "correlation_id", req.CorrelationID)
-        
+
         // 3. Transform to Go error
         return nil, &PythonServiceError{
             Message: err.Error(),
@@ -328,7 +328,7 @@ from flext_core.result import FlextResult
 
 class PipelineExecutor:
     """Execute pipelines with proper error handling."""
-    
+
     async def execute_pipeline(self, pipeline_id: str, config: dict) -> FlextResult[dict]:
         try:
             # 1. Validate pipeline
@@ -338,11 +338,11 @@ class PipelineExecutor:
                     f"Pipeline validation failed: {validation_result.error}",
                     error_code="PIPELINE_VALIDATION_ERROR"
                 )
-            
+
             # 2. Execute pipeline
             result = await self._run_pipeline(pipeline_id, config)
             return FlextResult.ok(result)
-            
+
         except FlextBusinessError as e:
             # 3. Business errors (user action required)
             return FlextResult.fail(
@@ -385,19 +385,19 @@ from flext_core.config import FlextConfigHierarchical
 
 class PythonServiceConfig(FlextConfigHierarchical):
     """Configuration for Python services."""
-    
+
     def __init__(self):
         super().__init__()
-        
+
         # Register Go configuration provider
         self.register_provider(GoConfigProvider())
         self.register_provider(EnvironmentProvider("PYTHON_"))
         self.register_provider(ConfigFileProvider("python-config.yaml"))
-    
+
     def get_service_url(self, service_name: str) -> str:
         """Get service URL from Go configuration."""
         return self.get_config(f"services.{service_name}").unwrap_or("")
-    
+
     def get_timeout(self) -> int:
         """Get timeout from Go configuration."""
         return self.get_config("timeout").unwrap_or(30)
@@ -442,7 +442,7 @@ func (s *PipelineService) ExecutePipeline(ctx context.Context, req *PipelineRequ
 
     // 4. Execute Python service
     resp, err := s.pythonService.ExecutePipeline(ctx, req)
-    
+
     // 5. Record span attributes
     span.SetAttributes(
         attribute.Bool("success", err == nil),
@@ -459,26 +459,26 @@ from flext_core.observability import get_tracer, get_logger
 
 class PipelineService:
     """Service with distributed tracing."""
-    
+
     def __init__(self):
         self.tracer = get_tracer()
         self.logger = get_logger()
-    
+
     async def execute_pipeline(self, request: PipelineRequest) -> PipelineResponse:
         # 1. Extract trace context from Go
         context = self.tracer.extract_context(request.trace_context)
-        
+
         # 2. Create span
         with self.tracer.start_span("python.pipeline.execute", context=context) as span:
             span.set_attribute("pipeline.id", request.pipeline_id)
             span.set_attribute("service.type", "python")
-            
+
             # 3. Execute pipeline
             result = await self._execute_pipeline(request)
-            
+
             # 4. Record results
             span.set_attribute("success", result.success)
-            
+
             return result
 ```
 
@@ -495,7 +495,7 @@ type PythonMetrics struct {
 func (m *PythonMetrics) RecordPipelineExecution(pipelineID string, duration time.Duration, success bool) {
     m.pipelineExecutions.WithLabelValues(pipelineID).Inc()
     m.pipelineDuration.WithLabelValues(pipelineID).Observe(duration.Seconds())
-    
+
     if !success {
         m.pythonServiceErrors.WithLabelValues(pipelineID).Inc()
     }
@@ -508,17 +508,17 @@ from flext_core.observability import get_metrics
 
 class PipelineMetrics:
     """Metrics for pipeline execution."""
-    
+
     def __init__(self):
         self.metrics = get_metrics()
-    
+
     def record_execution(self, pipeline_id: str, duration: float, success: bool):
         """Record pipeline execution metrics."""
         self.metrics.increment(
             "python.pipeline.executions",
             tags={"pipeline_id": pipeline_id, "success": str(success)}
         )
-        
+
         self.metrics.histogram(
             "python.pipeline.duration",
             value=duration,
@@ -547,7 +547,7 @@ func TestPipelineExecution_Integration(t *testing.T) {
     }
 
     resp, err := goService.ExecutePipeline(context.Background(), req)
-    
+
     // 4. Assert results
     assert.NoError(t, err)
     assert.True(t, resp.Success)
@@ -562,21 +562,21 @@ from flext_core.testing import MockGoService
 
 class TestPipelineIntegration:
     """Integration tests with Go service."""
-    
+
     @pytest.fixture
     def go_service(self):
         """Mock Go service for testing."""
         return MockGoService()
-    
+
     async def test_pipeline_execution(self, go_service):
         """Test pipeline execution with Go integration."""
         # 1. Setup pipeline
         pipeline_id = "test-pipeline"
         config = {"test": True}
-        
+
         # 2. Execute pipeline
         result = await go_service.execute_pipeline(pipeline_id, config)
-        
+
         # 3. Assert results
         assert result.success
         assert result.data["pipeline_id"] == pipeline_id

@@ -54,7 +54,7 @@ class ErrorCode(StrEnum):
     AUTHORIZATION_DENIED = "FLEXT_1003"
     RESOURCE_NOT_FOUND = "FLEXT_1004"
     DUPLICATE_RESOURCE = "FLEXT_1005"
-    
+
     # Technical Errors (2xxx)
     CONNECTION_ERROR = "FLEXT_2001"
     TIMEOUT_ERROR = "FLEXT_2002"
@@ -64,10 +64,10 @@ class ErrorCode(StrEnum):
 
 class FlextError(Exception):
     """Universal base exception with full observability support."""
-    
+
     __error_family__: ClassVar[str] = "FLEXT"
     __error_type__: ClassVar[str] = "GENERIC"
-    
+
     def __init__(
         self,
         message: str,
@@ -88,12 +88,12 @@ class FlextError(Exception):
         self.recoverable = recoverable if recoverable is not None else self._is_recoverable()
         self.alert_level = alert_level
         self.timestamp = datetime.utcnow()
-        
+
         # Automatic observability integration
         self._log_error()
         self._emit_metrics()
         self._create_trace_span()
-    
+
     def to_result(self) -> 'FlextResult[None]':
         """Convert exception to FlextResult for consistent handling."""
         from flext_core.result import FlextResult
@@ -103,7 +103,7 @@ class FlextError(Exception):
             correlation_id=self.correlation_id,
             **self.context
         )
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Serialize exception for cross-service communication."""
         return {
@@ -120,14 +120,14 @@ class FlextError(Exception):
 class FlextBusinessError(FlextError):
     """Business logic violations requiring user action."""
     __error_type__ = "BUSINESS"
-    
+
     def _is_recoverable(self) -> bool:
         return False  # Business errors typically require user intervention
 
 class FlextTechnicalError(FlextError):
     """Technical/infrastructure errors potentially recoverable."""
     __error_type__ = "TECHNICAL"
-    
+
     def _is_recoverable(self) -> bool:
         return True  # Technical errors often recoverable with retry
 ```
@@ -139,11 +139,11 @@ class FlextTechnicalError(FlextError):
 ```python
 class FlextData:
     """Namespace for data-related errors."""
-    
+
     class ConnectionError(FlextTechnicalError):
         """Database/service connection failures."""
         __error_type__ = "DATA_CONNECTION"
-        
+
         def __init__(self, message: str, *, connection_type: str, host: Optional[str] = None, **kwargs):
             super().__init__(
                 message,
@@ -152,11 +152,11 @@ class FlextData:
                 alert_level="warning",
                 **kwargs
             )
-    
+
     class ValidationError(FlextBusinessError):
         """Data validation failures."""
         __error_type__ = "DATA_VALIDATION"
-        
+
         def __init__(self, message: str, *, field_name: Optional[str] = None, field_value: Any = None, **kwargs):
             super().__init__(
                 message,
@@ -172,11 +172,11 @@ class FlextData:
 ```python
 class FlextAuth:
     """Namespace for authentication errors."""
-    
+
     class TokenExpiredError(FlextTechnicalError):
         """JWT or session token expiration."""
         __error_type__ = "AUTH_TOKEN_EXPIRED"
-        
+
         def __init__(self, message: str = "Authentication token expired", *, token_type: str = "JWT", **kwargs):
             super().__init__(
                 message,
@@ -185,11 +185,11 @@ class FlextAuth:
                 alert_level="info",
                 **kwargs
             )
-    
+
     class UnauthorizedError(FlextBusinessError):
         """Access denied for resource."""
         __error_type__ = "AUTH_UNAUTHORIZED"
-        
+
         def __init__(self, message: str, *, resource: Optional[str] = None, action: Optional[str] = None, **kwargs):
             super().__init__(
                 message,
@@ -208,7 +208,7 @@ from typing import Protocol, runtime_checkable, Any, Dict, Optional, ContextMana
 @runtime_checkable
 class FlextLoggerProtocol(Protocol):
     """Protocol for structured logging."""
-    
+
     def trace(self, message: str, **context: Any) -> None: ...
     def debug(self, message: str, **context: Any) -> None: ...
     def info(self, message: str, **context: Any) -> None: ...
@@ -219,7 +219,7 @@ class FlextLoggerProtocol(Protocol):
 @runtime_checkable
 class FlextTracerProtocol(Protocol):
     """Protocol for distributed tracing."""
-    
+
     def start_span(self, operation_name: str, *, kind: str = "INTERNAL", attributes: Optional[Dict[str, Any]] = None) -> ContextManager: ...
     def get_current_span(self) -> Optional[Any]: ...
     def inject_context(self, carrier: Dict[str, Any]) -> None: ...
@@ -228,7 +228,7 @@ class FlextTracerProtocol(Protocol):
 @runtime_checkable
 class FlextMetricsProtocol(Protocol):
     """Protocol for metrics collection."""
-    
+
     def increment(self, metric_name: str, value: float = 1, tags: Optional[Dict[str, str]] = None) -> None: ...
     def gauge(self, metric_name: str, value: float, tags: Optional[Dict[str, str]] = None) -> None: ...
     def histogram(self, metric_name: str, value: float, tags: Optional[Dict[str, str]] = None) -> None: ...
@@ -237,13 +237,13 @@ class FlextMetricsProtocol(Protocol):
 @runtime_checkable
 class FlextObservabilityProtocol(Protocol):
     """Complete observability interface."""
-    
+
     @property
     def log(self) -> FlextLoggerProtocol: ...
-    
+
     @property
     def trace(self) -> FlextTracerProtocol: ...
-    
+
     @property
     def metrics(self) -> FlextMetricsProtocol: ...
 ```
@@ -257,37 +257,37 @@ from datetime import datetime
 
 class ConsoleLogger:
     """Simple console logger for development."""
-    
+
     def _format_message(self, level: str, message: str, **context: Any) -> str:
         timestamp = datetime.utcnow().isoformat()
         context_str = " ".join(f"{k}={v}" for k, v in context.items())
         return f"[{timestamp}] {level}: {message} {context_str}".strip()
-    
+
     def trace(self, message: str, **context: Any) -> None:
         print(self._format_message("TRACE", message, **context))
-    
+
     def debug(self, message: str, **context: Any) -> None:
         print(self._format_message("DEBUG", message, **context))
-    
+
     def info(self, message: str, **context: Any) -> None:
         print(self._format_message("INFO", message, **context))
-    
+
     def warn(self, message: str, **context: Any) -> None:
         print(self._format_message("WARN", message, **context), file=sys.stderr)
-    
+
     def error(self, message: str, **context: Any) -> None:
         print(self._format_message("ERROR", message, **context), file=sys.stderr)
-    
+
     def audit(self, message: str, **context: Any) -> None:
         print(self._format_message("AUDIT", message, **context))
 
 class MinimalObservability:
     """Minimal observability for development."""
-    
+
     def __init__(self):
         self._log = ConsoleLogger()
         # NoOp implementations for trace and metrics...
-    
+
     @property
     def log(self) -> FlextLoggerProtocol:
         return self._log
@@ -320,19 +320,19 @@ def connect_to_database(config: Dict[str, Any]) -> FlextResult[Connection]:
                 "Missing required configuration",
                 field_name="host"
             )
-        
+
         # Attempt connection
         connection = create_connection(config)
-        
+
         if not connection.is_alive():
             raise FlextData.ConnectionError(
                 "Failed to establish database connection",
                 connection_type="postgresql",
                 host=config['host']
             )
-        
+
         return FlextResult.ok(connection)
-        
+
     except FlextError as e:
         # FlextErrors already logged and tracked
         return e.to_result()
@@ -352,20 +352,20 @@ from flext_core.observability import get_logger, get_metrics, get_tracer
 
 class UserService:
     """Service with integrated observability."""
-    
+
     def __init__(self):
         self.logger = get_logger()
         self.metrics = get_metrics()
         self.tracer = get_tracer()
-    
+
     async def create_user(self, user_data: Dict[str, Any]) -> FlextResult[User]:
         """Create user with full observability."""
-        
+
         with self.tracer.start_span("user.create") as span:
             span.set_attribute("user.email", user_data.get("email"))
-            
+
             self.logger.info("Creating new user", email=user_data.get("email"))
-            
+
             with self.metrics.timer("user.creation.duration"):
                 try:
                     # Validate user data
@@ -375,15 +375,15 @@ class UserService:
                             field_name="email",
                             field_value=user_data.get("email")
                         )
-                    
+
                     # Create user
                     user = await self._create_user_record(user_data)
-                    
+
                     self.logger.info("User created successfully", user_id=user.id)
                     self.metrics.increment("users.created")
-                    
+
                     return FlextResult.ok(user)
-                    
+
                 except FlextError as e:
                     span.set_attribute("error", True)
                     self.metrics.increment("users.creation.failed", tags={"error_type": e.__class__.__name__})
@@ -395,41 +395,41 @@ class UserService:
 ```python
 class RetryStrategy:
     """Retry strategy for recoverable errors."""
-    
+
     def __init__(self, max_retries: int = 3, base_delay: float = 1.0):
         self.max_retries = max_retries
         self.base_delay = base_delay
-    
+
     async def execute_with_retry(
         self,
         operation: Callable[[], FlextResult[T]],
         recoverable_errors: tuple = (FlextTechnicalError,)
     ) -> FlextResult[T]:
         """Execute operation with exponential backoff retry."""
-        
+
         for attempt in range(self.max_retries + 1):
             try:
                 result = await operation()
-                
+
                 if result.is_success:
                     return result
-                
+
                 # Check if error is recoverable
                 if hasattr(result, 'error') and isinstance(result.error, recoverable_errors):
                     if result.error.recoverable and attempt < self.max_retries:
                         delay = self.base_delay * (2 ** attempt)
                         await asyncio.sleep(delay)
                         continue
-                
+
                 return result
-                
+
             except recoverable_errors as e:
                 if e.recoverable and attempt < self.max_retries:
                     delay = self.base_delay * (2 ** attempt)
                     await asyncio.sleep(delay)
                 else:
                     raise
-        
+
         return FlextResult.fail("Max retries exceeded")
 ```
 

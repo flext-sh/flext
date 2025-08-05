@@ -603,8 +603,13 @@ class ConflictAnalyzer:
                 {
                     project
                     for blocker_data in blockers.values()
-                    if isinstance(blocker_data, dict) and "blocking_projects" in blocker_data
-                    for project in (blocker_data["blocking_projects"] if isinstance(blocker_data["blocking_projects"], list) else [])
+                    if isinstance(blocker_data, dict)
+                    and "blocking_projects" in blocker_data
+                    for project in (
+                        blocker_data["blocking_projects"]
+                        if isinstance(blocker_data["blocking_projects"], list)
+                        else []
+                    )
                 },
             ),
         }
@@ -684,7 +689,9 @@ class ConflictAnalyzer:
                     severity = conflict_data.get("severity", "medium")
                     icon = "🔴" if severity == "high" else "🟡"
 
-                    lines.extend((f"### {icon} {package}\n", "**Projects and versions:**"))
+                    lines.extend(
+                        (f"### {icon} {package}\n", "**Projects and versions:**"),
+                    )
 
                     for project, version in conflict_data["projects"].items():
                         lines.append(f"- `{project}`: {version}")
@@ -692,7 +699,8 @@ class ConflictAnalyzer:
                     if conflict_data["analysis"]["issues"]:
                         lines.append("\n**Issues:**")
                         lines.extend(
-                            f"- {issue}" for issue in conflict_data["analysis"]["issues"]
+                            f"- {issue}"
+                            for issue in conflict_data["analysis"]["issues"]
                         )
 
                     lines.append("")
@@ -707,7 +715,9 @@ class ConflictAnalyzer:
                     lines.extend((f"### {package}\n", "**Blocking projects:**"))
 
                     for constraint, projects in blocker_data["constraints"].items():
-                        lines.append(f"- Constraint `{constraint}`: {', '.join(projects)}")
+                        lines.append(
+                            f"- Constraint `{constraint}`: {', '.join(projects)}",
+                        )
 
                     lines.append("")
 
@@ -716,7 +726,9 @@ class ConflictAnalyzer:
             lines.append("## 💡 Suggested Resolutions\n")
 
             for package, suggestion in sorted(
-                                    analysis.get("suggested_resolutions", {}).items() if isinstance(analysis.get("suggested_resolutions"), dict) else [],
+                analysis.get("suggested_resolutions", {}).items()
+                if isinstance(analysis.get("suggested_resolutions"), dict)
+                else [],
             ):
                 lines.append(f"- **{package}**: `{suggestion}`")
 
