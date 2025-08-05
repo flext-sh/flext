@@ -98,6 +98,12 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, cast
 
+try:
+    from flext_core.flext_types import TAnyObject
+except ImportError:
+    # Fallback if flext-core is not available
+    TAnyObject = dict[str, object]
+
 from flext_tools.utils.colors import Colors, print_colored
 from flext_tools.utils.logging import get_logger
 
@@ -268,13 +274,13 @@ class FlextScript(ABC):
         return self.run(**vars(args))
 
 
-def create_simple_script(  # noqa: PLR0913  # type: ignore[misc]
+def create_simple_script(  # noqa: PLR0913
     name: str,
     description: str,
     category: str,
     main_func: Callable[..., bool],
-    setup_func: Callable[..., bool] | None = None,
-    validate_func: Callable[..., bool] | None = None,
+    setup_func: Callable[[], bool] | None = None,
+    validate_func: Callable[[], bool] | None = None,
 ) -> type[FlextScript]:
     """Create a simple script class from functions.
 
