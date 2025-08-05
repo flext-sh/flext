@@ -1,33 +1,43 @@
-# API Documentation
+# FLEXT API Documentation
 
-**Version**: 0.9.0  
-**Last Updated**: 2025-08-01  
-**Status**: 🚧 Under Development
+**Version**: 1.0.0 | **Status**: Active
+
+## Overview
+
+Complete API documentation for the FLEXT ecosystem, including REST endpoints, contracts, and integration guidelines.
+
+## API Documentation
+
+### [API Contracts](./contracts.md)
+
+Service integration contracts between FLEXT Control Panel and FlexCore Runtime.
+
+### OpenAPI Specifications
+
+Machine-readable API specifications (coming soon).
+
+## API Overview
+
+### REST Endpoints
+
+- **Base URL**: `http://localhost:8081/api/v1`
+- **Authentication**: Bearer token
+- **Content-Type**: `application/json`
+
+### Core Resources
+
+- `/pipelines` - Pipeline management
+- `/taps` - Data source connectors
+- `/targets` - Data destination connectors
+- `/transformations` - Data transformations
+- `/executions` - Pipeline executions
+
+### Health & Monitoring
+
+- `/health` - Service health check
+- `/metrics` - Prometheus metrics
+- `/ready` - Readiness probe
 
 ---
 
-## 📡 FLEXT API Documentation Hub
-
-This directory contains comprehensive API documentation for the FLEXT ecosystem.
-
-### 📋 Available Content
-
-- **[API Contracts](contracts.md)** - FlexCore ↔ FLEXT Service integration contracts
-
-### 📋 Planned Content
-
-- **[REST API Reference](rest-api.md)** - Complete REST API endpoint documentation
-- **[OpenAPI Specifications](openapi/)** - Machine-readable API specifications
-- **[CLI Reference](cli.md)** - Command-line interface documentation
-- **[Integration SDK](sdk.md)** - Client SDK usage and examples
-- **[Health Endpoints](health-endpoints.md)** - Service health monitoring
-
-### 🔗 Related Documentation
-
-- **[flext-api Project](../flext-api/README.md)** - REST API service implementation
-- **[Architecture Overview](../architecture/overview.md)** - System architecture
-- **[Integration Patterns](../architecture/integration-patterns.md)** - API integration patterns
-
----
-
-**Status**: Content planned for future releases. See [TODO.md](../TODO.md) for development roadmap.
+See [Architecture](../architecture/README.md) for system design details.

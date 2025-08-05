@@ -223,10 +223,7 @@ func (r *SqlxPipelineRepository) rowToPipeline(row PipelineRow) (*entities.Pipel
 	}
 
 	// Create pipeline using proper domain constructor
-	pipeline, err := entities.NewPipeline(row.Name, description)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create pipeline entity: %w", err)
-	}
+	pipeline := entities.NewPipeline(row.Name, description)
 
 	// Set ID manually since NewPipeline generates a new one
 	pipeline.ID = id

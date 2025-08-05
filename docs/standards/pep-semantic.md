@@ -306,12 +306,8 @@ def flext_create_result[T]() -> FlextResult[T]:
 ```toml
 [tool.ruff]
 # Todas as regras PEP ativadas
-select = ["ALL"]
-
-[tool.ruff.lint.pep8-naming]
-# Enforce FLEXT semantic patterns
-classmethod-decorators = ["classmethod"]
-staticmethod-decorators = ["staticmethod"]
+extend = "../.ruff-shared.toml"
+lint.isort.known-first-party = ["project_name"]
 ```
 
 ### MyPy Configuration

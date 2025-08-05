@@ -1,32 +1,41 @@
-# Integration Documentation
+# FLEXT Integration
 
-**Version**: 0.9.0  
-**Last Updated**: 2025-08-01  
-**Status**: 🚧 Under Development
+**Version**: 1.0.0 | **Status**: Active
+
+## Overview
+
+Integration documentation for connecting FLEXT with external systems and services.
+
+## Integration Documents
+
+### [Service Coordination](./service-coordination.md)
+
+Coordination between FLEXT Control Panel and FlexCore Runtime Engine.
+
+## Integration Points
+
+### Data Sources (Taps)
+
+- LDAP/LDIF
+- Oracle Database
+- Oracle WMS
+- Oracle OIC
+- Custom sources via Singer SDK
+
+### Data Destinations (Targets)
+
+- LDAP/LDIF
+- Oracle Database
+- Oracle WMS
+- Oracle OIC
+- Custom targets via Singer SDK
+
+### Transformation Layer
+
+- DBT models
+- Custom transformations
+- Pipeline orchestration
 
 ---
 
-## 🔗 FLEXT Integration Guides
-
-This directory contains comprehensive integration documentation for FLEXT ecosystem components.
-
-### 📋 Planned Content
-
-- **[FlexCore Integration](flexcore-integration.md)** - Integrating with FlexCore runtime
-- **[Plugin Development](plugin-development.md)** - Creating custom plugins
-- **[Singer Integration](singer-integration.md)** - Singer taps and targets integration
-- **[DBT Integration](dbt-integration.md)** - DBT transformation integration
-- **[Meltano Integration](meltano-integration.md)** - Meltano orchestration integration
-- **[External APIs](external-apis.md)** - Integrating with external systems
-- **[Event Streaming](event-streaming.md)** - Event-driven integration patterns
-- **[Message Queues](message-queues.md)** - Queue-based integration
-
-### 🔗 Related Documentation
-
-- **[Architecture Integration Patterns](../architecture/integration-patterns.md)** - System integration patterns
-- **[API Documentation](../api/)** - API integration endpoints
-- **[Examples](../examples/)** - Integration examples and templates
-
----
-
-**Status**: Content planned for future releases. See [TODO.md](../TODO.md) for development roadmap.
+See [Architecture](../architecture/integration.md) for integration patterns.

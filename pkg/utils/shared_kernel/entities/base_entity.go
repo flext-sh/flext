@@ -3,7 +3,7 @@ package entities
 import (
 	"time"
 
-	"github.com/flext-sh/flext/pkg/utils/shared_kernel/value_objects"
+	"github.com/flext-sh/flext/pkg/utils/shared_kernel/errors"
 	"github.com/google/uuid"
 )
 
@@ -135,10 +135,10 @@ func (e *BaseEntity) IsDeleted() bool {
 // Delete marca a entidade como excluída (soft delete)
 func (e *BaseEntity) Delete() error {
 	if e.IsDeleted() {
-		return &value_objects.DomainError{
+		return &errors.DomainError{
 			Code:        "ENTITY_ALREADY_DELETED",
 			Message:     "Entity is already deleted",
-			Description: "Cannot delete an entity that is already marked as deleted",
+			Details: "Cannot delete an entity that is already marked as deleted",
 		}
 	}
 
@@ -152,10 +152,10 @@ func (e *BaseEntity) Delete() error {
 // Restore restaura uma entidade excluída
 func (e *BaseEntity) Restore() error {
 	if !e.IsDeleted() {
-		return &value_objects.DomainError{
+		return &errors.DomainError{
 			Code:        "ENTITY_NOT_DELETED",
 			Message:     "Entity is not deleted",
-			Description: "Cannot restore an entity that is not marked as deleted",
+			Details: "Cannot restore an entity that is not marked as deleted",
 		}
 	}
 
@@ -173,34 +173,34 @@ func (e *BaseEntity) GetDeletedAt() *time.Time {
 // Validate valida a entidade
 func (e *BaseEntity) Validate() error {
 	if e.ID == uuid.Nil {
-		return &value_objects.DomainError{
+		return &errors.DomainError{
 			Code:        "INVALID_ENTITY_ID",
 			Message:     "Entity ID cannot be empty",
-			Description: "All entities must have a valid UUID",
+			Details: "All entities must have a valid UUID",
 		}
 	}
 
 	if e.CreatedAt.IsZero() {
-		return &value_objects.DomainError{
+		return &errors.DomainError{
 			Code:        "INVALID_CREATED_AT",
 			Message:     "Created at cannot be zero",
-			Description: "All entities must have a valid creation timestamp",
+			Details: "All entities must have a valid creation timestamp",
 		}
 	}
 
 	if e.UpdatedAt.IsZero() {
-		return &value_objects.DomainError{
+		return &errors.DomainError{
 			Code:        "INVALID_UPDATED_AT",
 			Message:     "Updated at cannot be zero",
-			Description: "All entities must have a valid update timestamp",
+			Details: "All entities must have a valid update timestamp",
 		}
 	}
 
 	if e.Version <= 0 {
-		return &value_objects.DomainError{
+		return &errors.DomainError{
 			Code:        "INVALID_VERSION",
 			Message:     "Version must be positive",
-			Description: "Entity version must be a positive number",
+			Details: "Entity version must be a positive number",
 		}
 	}
 
@@ -307,10 +307,10 @@ func (a *BaseAggregateRoot) CreateSnapshot() (*AggregateSnapshot, error) {
 // LoadFromSnapshot carrega o agregado a partir de um snapshot
 func (a *BaseAggregateRoot) LoadFromSnapshot(snapshot *AggregateSnapshot) error {
 	if snapshot.AggregateID != a.ID {
-		return &value_objects.DomainError{
+		return &errors.DomainError{
 			Code:        "SNAPSHOT_MISMATCH",
 			Message:     "Snapshot aggregate ID does not match",
-			Description: "Cannot load snapshot from different aggregate",
+			Details: "Cannot load snapshot from different aggregate",
 		}
 	}
 

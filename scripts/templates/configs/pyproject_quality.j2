@@ -1,87 +1,8 @@
 # Quality configuration template for pyproject.toml
 
 [tool.ruff]
-line-length = {{ line_length | default(88) }}
-target-version = "{{ python_version | default('py311') }}"
-extend-include = ["*.pyi"]
-
-[tool.ruff.lint]
-# Enable comprehensive rule set
-select = [
-    "E",      # pycodestyle errors
-    "W",      # pycodestyle warnings
-    "F",      # Pyflakes
-    "I",      # isort
-    "N",      # pep8-naming
-    "D",      # pydocstyle
-    "UP",     # pyupgrade
-    "YTT",    # flake8-2020
-    "ANN",    # flake8-annotations
-    "ASYNC",  # flake8-async
-    "S",      # flake8-bandit
-    "BLE",    # flake8-blind-except
-    "FBT",    # flake8-boolean-trap
-    "B",      # flake8-bugbear
-    "A",      # flake8-builtins
-    "COM",    # flake8-commas
-    "C4",     # flake8-comprehensions
-    "DTZ",    # flake8-datetimez
-    "T10",    # flake8-debugger
-    "DJ",     # flake8-django
-    "EM",     # flake8-errmsg
-    "EXE",    # flake8-executable
-    "FA",     # flake8-future-annotations
-    "ISC",    # flake8-implicit-str-concat
-    "ICN",    # flake8-import-conventions
-    "G",      # flake8-logging-format
-    "INP",    # flake8-no-pep420
-    "PIE",    # flake8-pie
-    "T20",    # flake8-print
-    "PYI",    # flake8-pyi
-    "PT",     # flake8-pytest-style
-    "Q",      # flake8-quotes
-    "RSE",    # flake8-raise
-    "RET",    # flake8-return
-    "SLF",    # flake8-self
-    "SLOT",   # flake8-slots
-    "SIM",    # flake8-simplify
-    "TID",    # flake8-tidy-imports
-    "TCH",    # flake8-type-checking
-    "INT",    # flake8-gettext
-    "ARG",    # flake8-unused-arguments
-    "PTH",    # flake8-use-pathlib
-    "ERA",    # eradicate
-    "PD",     # pandas-vet
-    "PGH",    # pygrep-hooks
-    "PL",     # Pylint
-    "TRY",    # tryceratops
-    "FLY",    # flynt
-    "NPY",    # NumPy-specific rules
-    "PERF",   # Perflint
-    "FURB",   # refurb
-    "LOG",    # flake8-logging
-    "RUF",    # Ruff-specific rules
-]
-
-ignore = [
-    {% for ignore_rule in ignore_rules | default([]) %}
-    "{{ ignore_rule }}",  # {{ ignore_comments.get(ignore_rule, 'Project-specific ignore') }}
-    {% endfor %}
-]
-
-[tool.ruff.lint.per-file-ignores]
-{% for pattern, ignores in per_file_ignores.items() %}
-"{{ pattern }}" = [{{ ignores | map('quote') | join(', ') }}]
-{% endfor %}
-
-[tool.ruff.lint.pydocstyle]
-convention = "{{ docstring_convention | default('google') }}"
-
-[tool.ruff.lint.isort]
-known-first-party = ["{{ package_name }}"]
-{% if extra_dependencies %}
-known-third-party = [{{ extra_dependencies | map('quote') | join(', ') }}]
-{% endif %}
+extend = "../.ruff-shared.toml"
+lint.isort.known-first-party = ["{{ pyproject }}"]
 
 [tool.mypy]
 python_version = "{{ python_version_for_mypy | default('3.11') }}"
