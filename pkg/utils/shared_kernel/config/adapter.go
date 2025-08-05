@@ -5,20 +5,19 @@ import (
 	"os"
 	"time"
 
-	sharedConfig "github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
 	"github.com/flext-sh/flext/pkg/infrastructure/config"
 )
 
 // ConfigAdapter adapts UnifiedConfig to existing config.Config interface
 type ConfigAdapter struct {
-	unified *sharedConfig.UnifiedConfig
+	unified *UnifiedConfig
 	legacy  *config.Config
 }
 
 // NewConfigAdapter creates a new configuration adapter
 func NewConfigAdapter() (*ConfigAdapter, error) {
 	// Load unified configuration
-	unified, err := sharedConfig.NewUnifiedConfig()
+	unified, err := NewUnifiedConfig()
 	if err != nil {
 		return nil, fmt.Errorf("failed to load unified config: %w", err)
 	}
@@ -71,7 +70,7 @@ func NewConfigAdapter() (*ConfigAdapter, error) {
 }
 
 // GetUnifiedConfig returns the unified configuration
-func (a *ConfigAdapter) GetUnifiedConfig() *sharedConfig.UnifiedConfig {
+func (a *ConfigAdapter) GetUnifiedConfig() *UnifiedConfig {
 	return a.unified
 }
 
@@ -83,7 +82,7 @@ func (a *ConfigAdapter) GetLegacyConfig() *config.Config {
 // UpdateFromEnvironment reloads configuration from environment variables
 func (a *ConfigAdapter) UpdateFromEnvironment() error {
 	// Reload unified config
-	unified, err := sharedConfig.NewUnifiedConfig()
+	unified, err := NewUnifiedConfig()
 	if err != nil {
 		return fmt.Errorf("failed to reload unified config: %w", err)
 	}
@@ -162,47 +161,47 @@ func (a *ConfigAdapter) IsTest() bool {
 }
 
 // GetAuthConfig returns authentication configuration
-func (a *ConfigAdapter) GetAuthConfig() sharedConfig.AuthConfig {
+func (a *ConfigAdapter) GetAuthConfig() AuthConfig {
 	return a.unified.Auth
 }
 
 // GetPipelineConfig returns pipeline configuration
-func (a *ConfigAdapter) GetPipelineConfig() sharedConfig.PipelineConfig {
+func (a *ConfigAdapter) GetPipelineConfig() PipelineConfig {
 	return a.unified.Pipeline
 }
 
 // GetPluginConfig returns plugin configuration
-func (a *ConfigAdapter) GetPluginConfig() sharedConfig.PluginConfig {
+func (a *ConfigAdapter) GetPluginConfig() PluginConfig {
 	return a.unified.Plugin
 }
 
 // GetMeltanoConfig returns Meltano configuration
-func (a *ConfigAdapter) GetMeltanoConfig() sharedConfig.MeltanoConfig {
+func (a *ConfigAdapter) GetMeltanoConfig() MeltanoConfig {
 	return a.unified.Meltano
 }
 
 // GetDBTConfig returns dbt configuration
-func (a *ConfigAdapter) GetDBTConfig() sharedConfig.DBTConfig {
+func (a *ConfigAdapter) GetDBTConfig() DBTConfig {
 	return a.unified.DBT
 }
 
 // GetObservabilityConfig returns observability configuration
-func (a *ConfigAdapter) GetObservabilityConfig() sharedConfig.ObservabilityConfig {
+func (a *ConfigAdapter) GetObservabilityConfig() ObservabilityConfig {
 	return a.unified.Observability
 }
 
 // GetExternalServicesConfig returns external services configuration
-func (a *ConfigAdapter) GetExternalServicesConfig() sharedConfig.ExternalServicesConfig {
+func (a *ConfigAdapter) GetExternalServicesConfig() ExternalServicesConfig {
 	return a.unified.External
 }
 
 // GetCacheConfig returns cache configuration
-func (a *ConfigAdapter) GetCacheConfig() sharedConfig.CacheConfig {
+func (a *ConfigAdapter) GetCacheConfig() CacheConfig {
 	return a.unified.Cache
 }
 
 // GetFeatureFlags returns feature flags
-func (a *ConfigAdapter) GetFeatureFlags() sharedConfig.FeatureFlags {
+func (a *ConfigAdapter) GetFeatureFlags() FeatureFlags {
 	return a.unified.Features
 }
 

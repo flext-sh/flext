@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
-	"github.com/flext-sh/flext/pkg/utils/shared_kernel/value_objects"
+	"github.com/flext-sh/flext/pkg/utils/shared_kernel/errors"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
@@ -69,10 +69,10 @@ func (p *BasicAuthProvider) GetProviderType() string {
 // Authenticate authenticates user with username/password
 func (p *BasicAuthProvider) Authenticate(ctx context.Context, credentials Credentials) (*AuthResult, error) {
 	if credentials.Username == "" || credentials.Password == "" {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "INVALID_CREDENTIALS",
 			Message:     "Username and password are required",
-			Description: "Both username and password must be provided for basic authentication",
+			Details: "Both username and password must be provided for basic authentication",
 		}
 	}
 
@@ -81,18 +81,18 @@ func (p *BasicAuthProvider) Authenticate(ctx context.Context, credentials Creden
 		p.logger.Warn("User not found",
 			logging.F("username", credentials.Username),
 		)
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "AUTHENTICATION_FAILED",
 			Message:     "Invalid username or password",
-			Description: "The provided credentials are incorrect",
+			Details: "The provided credentials are incorrect",
 		}
 	}
 
 	if !user.IsActive {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "USER_INACTIVE",
 			Message:     "User account is inactive",
-			Description: "The user account has been deactivated",
+			Details: "The user account has been deactivated",
 		}
 	}
 
@@ -101,10 +101,10 @@ func (p *BasicAuthProvider) Authenticate(ctx context.Context, credentials Creden
 		p.logger.Warn("Password verification failed",
 			logging.F("username", credentials.Username),
 		)
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "AUTHENTICATION_FAILED",
 			Message:     "Invalid username or password",
-			Description: "The provided credentials are incorrect",
+			Details: "The provided credentials are incorrect",
 		}
 	}
 
@@ -120,29 +120,29 @@ func (p *BasicAuthProvider) Authenticate(ctx context.Context, credentials Creden
 // Validate validates a basic auth token (base64 encoded username:password)
 func (p *BasicAuthProvider) Validate(ctx context.Context, token string) (*UserContext, error) {
 	if !strings.HasPrefix(token, "Basic ") {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "INVALID_TOKEN_FORMAT",
 			Message:     "Invalid basic auth token format",
-			Description: "Basic auth token must start with 'Basic '",
+			Details: "Basic auth token must start with 'Basic '",
 		}
 	}
 
 	encodedCredentials := strings.TrimPrefix(token, "Basic ")
 	decodedBytes, err := base64.StdEncoding.DecodeString(encodedCredentials)
 	if err != nil {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "INVALID_TOKEN_ENCODING",
 			Message:     "Invalid token encoding",
-			Description: "Failed to decode base64 credentials",
+			Details: "Failed to decode base64 credentials",
 		}
 	}
 
 	credentials := strings.SplitN(string(decodedBytes), ":", 2)
 	if len(credentials) != 2 {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "INVALID_CREDENTIALS_FORMAT",
 			Message:     "Invalid credentials format",
-			Description: "Credentials must be in format 'username:password'",
+			Details: "Credentials must be in format 'username:password'",
 		}
 	}
 
@@ -186,10 +186,10 @@ func (p *JWTProvider) GetProviderType() string {
 // Authenticate authenticates using JWT token
 func (p *JWTProvider) Authenticate(ctx context.Context, credentials Credentials) (*AuthResult, error) {
 	if credentials.Token == "" {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "TOKEN_REQUIRED",
 			Message:     "JWT token is required",
-			Description: "A valid JWT token must be provided",
+			Details: "A valid JWT token must be provided",
 		}
 	}
 
@@ -217,54 +217,54 @@ func (p *JWTProvider) Validate(ctx context.Context, tokenString string) (*UserCo
 	})
 
 	if err != nil {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "TOKEN_PARSE_ERROR",
 			Message:     "Failed to parse JWT token",
-			Description: err.Error(),
+			Details: err.Error(),
 		}
 	}
 
 	if !token.Valid {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "INVALID_TOKEN",
 			Message:     "JWT token is invalid",
-			Description: "The provided JWT token is not valid",
+			Details: "The provided JWT token is not valid",
 		}
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "INVALID_CLAIMS",
 			Message:     "Invalid JWT claims",
-			Description: "Unable to parse JWT token claims",
+			Details: "Unable to parse JWT token claims",
 		}
 	}
 
 	// Verify token type (should be access token for authentication)
 	if tokenType, ok := claims["type"].(string); ok && tokenType != "access" {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "INVALID_TOKEN_TYPE",
 			Message:     "Invalid token type",
-			Description: fmt.Sprintf("Expected access token, got %s", tokenType),
+			Details: fmt.Sprintf("Expected access token, got %s", tokenType),
 		}
 	}
 
 	userIDStr, ok := claims["sub"].(string)
 	if !ok {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "MISSING_USER_ID",
 			Message:     "User ID not found in token",
-			Description: "JWT token must contain a valid user ID in the 'sub' claim",
+			Details: "JWT token must contain a valid user ID in the 'sub' claim",
 		}
 	}
 
 	userID, err := uuid.Parse(userIDStr)
 	if err != nil {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "INVALID_USER_ID_FORMAT",
 			Message:     "Invalid user ID format",
-			Description: "User ID must be a valid UUID",
+			Details: "User ID must be a valid UUID",
 		}
 	}
 
@@ -358,10 +358,10 @@ func (p *APIKeyProvider) GetProviderType() string {
 // Authenticate authenticates using API key
 func (p *APIKeyProvider) Authenticate(ctx context.Context, credentials Credentials) (*AuthResult, error) {
 	if credentials.Token == "" {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "API_KEY_REQUIRED",
 			Message:     "API key is required",
-			Description: "A valid API key must be provided",
+			Details: "A valid API key must be provided",
 		}
 	}
 
@@ -385,26 +385,26 @@ func (p *APIKeyProvider) Validate(ctx context.Context, apiKey string) (*UserCont
 		p.logger.Warn("API key not found",
 			logging.F("key_prefix", apiKey[:min(len(apiKey), 10)]+"..."),
 		)
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "INVALID_API_KEY",
 			Message:     "Invalid API key",
-			Description: "The provided API key is not valid",
+			Details: "The provided API key is not valid",
 		}
 	}
 
 	if !keyInfo.IsActive {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "API_KEY_INACTIVE",
 			Message:     "API key is inactive",
-			Description: "The API key has been deactivated",
+			Details: "The API key has been deactivated",
 		}
 	}
 
 	if time.Now().After(keyInfo.ExpiresAt) {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "API_KEY_EXPIRED",
 			Message:     "API key has expired",
-			Description: "The API key has passed its expiration date",
+			Details: "The API key has passed its expiration date",
 		}
 	}
 
@@ -426,10 +426,10 @@ type OAuth2Provider struct {
 // NewOAuth2Provider creates a new OAuth2 provider
 func NewOAuth2Provider(config OAuth2Config, logger logging.Logger) (*OAuth2Provider, error) {
 	if config.ClientID == "" || config.ClientSecret == "" {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "OAUTH2_CONFIG_ERROR",
 			Message:     "OAuth2 client ID and secret are required",
-			Description: "OAuth2 provider requires valid client credentials",
+			Details: "OAuth2 provider requires valid client credentials",
 		}
 	}
 
@@ -449,10 +449,10 @@ func (p *OAuth2Provider) Authenticate(ctx context.Context, credentials Credentia
 	// This is a simplified implementation
 	// In production, you would validate the OAuth2 token with the provider
 	if credentials.Token == "" {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "OAUTH2_TOKEN_REQUIRED",
 			Message:     "OAuth2 token is required",
-			Description: "A valid OAuth2 access token must be provided",
+			Details: "A valid OAuth2 access token must be provided",
 		}
 	}
 

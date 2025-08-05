@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
-	"github.com/flext-sh/flext/pkg/utils/shared_kernel"
+	"github.com/flext-sh/flext/pkg/utils/shared_kernel/application"
 	"github.com/flext-sh/flext/pkg/utils/shared_kernel/value_objects"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"

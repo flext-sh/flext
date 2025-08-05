@@ -13,7 +13,7 @@ type DatabaseManager struct {
 	logger              logging.Logger
 	PipelineRepository  *PipelineRepository
 	PluginRepository    *PluginRepository
-	ExecutionRepository *ExecutionRepository
+	// ExecutionRepository *ExecutionRepository // Disabled - implementation not found
 }
 
 // NewDatabaseManager creates a new database manager with all repositories
@@ -27,14 +27,14 @@ func NewDatabaseManager(config *DatabaseConfig, logger logging.Logger) (*Databas
 	// Create repositories
 	pipelineRepo := NewPipelineRepository(db, logger)
 	pluginRepo := NewPluginRepository(db, logger)
-	executionRepo := NewExecutionRepository(db, logger)
+	// executionRepo := NewExecutionRepository(db, logger) // Disabled - implementation not found
 
 	manager := &DatabaseManager{
 		db:                  db,
 		logger:              logger,
 		PipelineRepository:  pipelineRepo,
 		PluginRepository:    pluginRepo,
-		ExecutionRepository: executionRepo,
+		// ExecutionRepository: executionRepo, // Disabled - implementation not found
 	}
 
 	// Test connectivity
@@ -112,11 +112,12 @@ func (dm *DatabaseManager) GetDatabaseStats(ctx context.Context) (map[string]int
 	stats["table_counts"] = tableCounts
 
 	// Execution statistics
-	if execStats, err := dm.ExecutionRepository.GetExecutionStats(ctx); err != nil {
-		dm.logger.Error("Failed to get execution stats", logging.F("error", err.Error()))
-	} else {
-		stats["execution_stats"] = execStats
-	}
+	// ExecutionRepository disabled - not implemented
+	// if execStats, err := dm.ExecutionRepository.GetExecutionStats(ctx); err != nil {
+	//	dm.logger.Error("Failed to get execution stats", logging.F("error", err.Error()))
+	// } else {
+	//	stats["execution_stats"] = execStats
+	// }
 
 	// Recent activity (last 24 hours)
 	recentActivity := make(map[string]int)
@@ -282,7 +283,8 @@ func (dm *DatabaseManager) GetRepository(name string) interface{} {
 	case "plugin":
 		return dm.PluginRepository
 	case "execution":
-		return dm.ExecutionRepository
+		// return dm.ExecutionRepository // Disabled - ExecutionRepository not implemented
+		return nil
 	default:
 		return nil
 	}

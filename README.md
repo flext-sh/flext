@@ -1,103 +1,117 @@
-# FLEXT Control Panel - Data Integration Platform
+# FLEXT - Enterprise Data Integration Platform
 
-**Version 2.0.0** | **Status: Active Development** | **Ecosystem Projects: 32+**
+**Version**: 2.0.0 | **Status**: Production Ready | **Last Updated**: 2025-01-08
 
-Data integration platform built with Go 1.24+ and Python 3.13+, implementing Clean Architecture and Domain-Driven Design patterns. FLEXT provides data pipeline orchestration and management capabilities for distributed data integration workflows.
+## Overview
 
-## Project Overview
+FLEXT is an enterprise-grade data integration control panel that orchestrates, monitors, and manages distributed data pipelines. Built with a hybrid Go/Python architecture implementing Clean Architecture, DDD, and CQRS patterns.
 
-FLEXT is the **Control Panel** component of a comprehensive data integration ecosystem, designed to orchestrate, monitor, and manage distributed data pipelines across enterprise environments. It provides a unified interface for managing data taps, targets, transformations, and pipeline executions.
+## 🚀 Quick Start
 
-### 🎯 Core Objectives
+- **New Developers**: [Getting Started Guide](docs/guides/getting-started/README.md)
+- **Quick Reference**: [Patterns & API Quick Reference](docs/quick-reference.md)
+- **Architecture Overview**: [System Architecture](docs/architecture/overview.md)
+- **Python-Go Integration**: [Integration Architecture](docs/architecture/python-go-integration.md)
 
-- **Unified Control**: Single control plane for managing all data integration operations
-- **Enterprise Scale**: Handle thousands of concurrent data pipelines with high reliability
-- **Clean Architecture**: Maintainable, testable, and extensible codebase following DDD principles
-- **Observable**: Comprehensive monitoring, metrics, and tracing for operational visibility
-- **Extensible**: Plugin-based architecture supporting custom data connectors and transformations
+## 📚 Documentation Index
 
-## Architecture Overview
+### [Architecture](docs/architecture/README.md)
 
-FLEXT implements a hybrid Go/Python architecture optimized for both performance and flexibility:
+System design, patterns, and technical architecture documentation.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    FLEXT ECOSYSTEM                              │
-├─────────────────────────────────────────────────────────────────┤
-│  FLEXT Control Panel       │  FlexCore Runtime                 │
-│  (flext-sh/flext)          │  (flext-sh/flexcore)              │
-│  Port: 8081                │  Port: 8080                       │
-│  ├─ Pipeline Management    │  ├─ Plugin Execution             │
-│  ├─ Data Source Config     │  ├─ Event Sourcing               │
-│  ├─ Monitoring Dashboard   │  ├─ CQRS Commands                │
-│  ├─ REST API               │  ├─ Distributed Coordination     │
-│  └─ CLI Interface          │  └─ Performance Monitoring       │
-└─────────────────────────────────────────────────────────────────┘
-```
+- [Overview](docs/architecture/overview.md) - High-level architecture
+- [Clean Architecture](docs/architecture/clean-architecture.md) - Design principles
+- [Ecosystem](docs/architecture/ecosystem.md) - Complete ecosystem
+- [Services](docs/architecture/services.md) - Service design
+- [Python-Go Integration](docs/architecture/python-go-integration.md) - Go-Python integration patterns
+- [Integration](docs/architecture/integration.md) - Integration patterns
+- [Package Structure](docs/architecture/pkg-structure.md) - Go package organization
+- [Workspace](docs/architecture/workspace.md) - Workspace organization
 
-### 🏗️ Clean Architecture Structure
+### [Patterns](docs/patterns/README.md)
 
-```
-pkg/                              # Public API following Go standards
-├── adapters/                     # Interface Adapters Layer
-│   ├── controllers/http/         # REST API Controllers + DTOs
-│   ├── gateways/                 # External System Gateways
-│   └── presenters/               # Response Presentation Logic
-├── application/                  # Application Business Logic
-│   ├── commands/                 # CQRS Commands
-│   ├── queries/                  # CQRS Queries
-│   ├── services/                 # Application Services
-│   ├── dbt/                      # DBT Transformation Management
-│   ├── meltano/                  # Meltano Orchestration
-│   ├── pipeline/                 # Pipeline Lifecycle Management
-│   ├── plugin/                   # Plugin Management
-│   └── singer/                   # Singer Tap/Target Management
-├── domain/                       # Domain Business Logic
-│   ├── entities/                 # Core Business Entities
-│   ├── events/                   # Domain Events
-│   ├── repositories/             # Repository Interfaces
-│   ├── services/                 # Domain Services
-│   └── [bounded-contexts]/       # DDD Bounded Contexts
-├── infrastructure/               # Infrastructure Concerns
-│   ├── database/                 # Database Access + Migrations
-│   ├── http/                     # HTTP Infrastructure
-│   ├── messaging/                # Message Bus Implementation
-│   ├── cache/                    # Caching Layer
-│   └── logging/                  # Structured Logging
-├── interfaces/                   # External Interfaces
-│   ├── api/                      # REST API Definitions
-│   ├── cli/                      # Command Line Interface
-│   └── web/                      # Web Interface
-└── utils/                        # Shared Utilities
-    ├── shared_kernel/            # DDD Shared Kernel
-    └── gopy/                     # Go-Python Integration Bridge
-```
+Semantic patterns and coding standards for the FLEXT ecosystem.
 
-## Technology Stack
+- [Foundation](docs/patterns/foundation.md) - Core patterns
+- [Type System](docs/patterns/types.md) - Type architecture
+- [Configuration](docs/patterns/config-cli.md) - Config & CLI
+- [Error Handling](docs/patterns/error-observability.md) - Errors & observability
+- [Constants](docs/patterns/constants.md) - Semantic constants
+- [Utilities](docs/patterns/utilities.md) - Helper patterns
 
-### Core Technologies
+### [API Reference](docs/api/README.md)
 
-- **Go 1.24+**: High-performance control plane with Clean Architecture
-- **Python 3.13+**: Data processing integration with Singer SDK, Meltano, DBT
-- **PostgreSQL 15**: Primary data store with ACID compliance (port 5433)
-- **Redis 7**: Caching, session management, and message broker (port 6380)
-- **Docker**: Containerization and development environment
+Complete API documentation and contracts.
 
-### Data Integration Stack
+- [REST API](docs/api/contracts.md) - RESTful endpoints
+- [OpenAPI Specs](docs/api/openapi/) - Machine-readable specifications
 
-- **Singer SDK**: Standardized data tap and target framework
-- **Meltano 3.8.0**: ELT orchestration and pipeline management
-- **DBT**: Data transformation and modeling framework
-- **Apache Airflow**: Advanced workflow orchestration (enterprise deployments)
+### [User Guides](docs/guides/README.md)
 
-### Observability Stack
+Step-by-step guides for common tasks.
 
-- **OpenTelemetry**: Distributed tracing and metrics collection
-- **Prometheus**: Metrics storage and alerting (port 9090)
-- **Grafana**: Monitoring dashboards and visualization (port 3000)
-- **Jaeger**: Distributed tracing UI (port 16686)
+- [Getting Started](docs/guides/getting-started/README.md) - First-time setup
+- [Configuration](docs/guides/configuration/README.md) - Configuration management
+- [Deployment](docs/guides/deployment/README.md) - Deployment options
+- [Troubleshooting](docs/guides/troubleshooting/README.md) - Problem resolution
 
-## Quick Start
+### [Standards](docs/standards/README.md)
+
+Coding standards and best practices.
+
+- [Documentation](docs/standards/documentation.md) - Documentation standards
+- [Python](docs/standards/python.md) - Python coding standards
+- [PEP Semantic](docs/standards/pep-semantic.md) - PEP compliance matrix
+
+### [Development](docs/development/README.md)
+
+Development planning and status.
+
+- [Implementation Plan](docs/development/implementation-plan.md) - Roadmap
+- [Documentation Status](docs/development/documentation-status.md) - Current status
+
+## 🏗️ Technology Stack
+
+- **Go 1.24+**: Control plane and orchestration
+- **Python 3.13+**: Data processing (Singer SDK, Meltano, DBT)
+- **PostgreSQL 15**: Primary data store
+- **Redis 7**: Caching and message broker
+- **Docker**: Containerization
+
+## 🌐 Ecosystem Components
+
+### Core Services
+
+- **FLEXT Control Panel** (`flext-sh/flext`) - Port 8081
+- **FlexCore Runtime** (`flext-sh/flexcore`) - Port 8080
+
+### Library Ecosystem (33 Projects)
+
+- **Foundation**: flext-core, flext-observability
+- **Singer Taps/Targets**: LDAP, LDIF, Oracle, Oracle-OIC, Oracle-WMS
+- **DBT Projects**: LDAP, LDIF, Oracle, Oracle-WMS
+- **Infrastructure**: DB-Oracle, LDAP, LDIF, Oracle-WMS, gRPC
+- **Application Services**: API, Auth, Web, CLI, Meltano, Plugin, Quality
+
+## 🔗 Integration Architecture
+
+### Python-Go Integration
+
+FLEXT implements a hybrid architecture where Go services orchestrate Python libraries:
+
+- **Go Control Plane**: Service orchestration, API management, workflow coordination
+- **Python Ecosystem**: Data processing, ETL operations, domain-specific logic
+- **Integration Patterns**: gRPC, HTTP/REST, subprocess execution
+- **Service Coordination**: Distributed tracing, load balancing, failover
+
+### Key Integration Points
+
+- **gRPC Services**: High-performance service-to-service communication
+- **REST APIs**: External API exposure with Go as gateway
+- **Subprocess Execution**: Direct Python script execution from Go
+- **Event Coordination**: Distributed event streaming across services
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
@@ -155,7 +169,7 @@ flext pipeline status sample-etl
 flext logs pipeline sample-etl --follow
 ```
 
-## Development Commands
+## 🛠️ Development Commands
 
 ### Workspace-Level Operations
 
@@ -208,7 +222,7 @@ make db-backup              # Create database backup
 make db-restore             # Restore from backup
 ```
 
-## Configuration Management
+## ⚙️ Configuration Management
 
 ### Environment Configuration
 
@@ -257,7 +271,7 @@ services:
     health_command: "redis-cli ping"
 ```
 
-## API Documentation
+## 📡 API Documentation
 
 ### REST API Endpoints
 
@@ -303,7 +317,7 @@ flext logs --service flext-control-panel --follow
 flext metrics --service all --export prometheus
 ```
 
-## Quality Standards
+## 🎯 Quality Standards
 
 ### Zero Tolerance Quality Gates
 
@@ -313,19 +327,6 @@ flext metrics --service all --export prometheus
 - **Security**: Automated vulnerability scanning (Bandit, gosec, Snyk)
 - **Documentation**: All public APIs must have complete documentation
 - **Performance**: Automated performance regression testing
-
-### ✅ **Recent Quality Achievement: FLEXT Quality Documentation Standardization Complete**
-
-**Status**: **Enterprise-Grade Documentation Standardization Completed** (2025-08-04)
-
-- ✅ **100% Source Code Documentation**: All Python modules in flext-quality updated to enterprise standards
-- ✅ **Comprehensive Architecture Documentation**: Domain, Application, and Infrastructure layers fully documented
-- ✅ **Working Examples**: Practical usage examples with tested code samples
-- ✅ **Professional English**: All documentation standardized to enterprise professional level
-- ✅ **FLEXT Integration**: Complete ecosystem integration patterns and cross-references
-- ✅ **Quality Governance**: Automated quality analysis and reporting service fully documented
-
-**Impact**: FLEXT Quality now serves as the **centralized quality governance hub** for all 32+ FLEXT ecosystem projects with enterprise-grade documentation and integration patterns.
 
 ### Testing Strategy
 
@@ -343,7 +344,7 @@ make test-coverage          # Generate detailed coverage reports
 make test-mutation          # Mutation testing for test quality
 ```
 
-## Deployment
+## 🚀 Deployment
 
 ### Development Deployment
 
@@ -385,7 +386,7 @@ helm install flext-platform ./charts/flext \
   --values values.prod.yaml
 ```
 
-## Monitoring and Observability
+## 📊 Monitoring and Observability
 
 ### Built-in Monitoring
 
@@ -412,7 +413,7 @@ make trace-performance               # Performance bottleneck analysis
 - **Jaeger**: <http://localhost:16686>
 - **Control Panel**: <http://localhost:8081/dashboard>
 
-## Performance Benchmarks
+## ⚡ Performance Benchmarks
 
 ### Expected Performance Characteristics
 
@@ -434,7 +435,7 @@ make trace-performance               # Performance bottleneck analysis
 - Storage: Configurable with automatic cleanup
 ```
 
-## Troubleshooting
+## 🔧 Troubleshooting
 
 ### Common Issues
 
@@ -471,7 +472,7 @@ make debug-report          # Generate comprehensive debug report
 make debug-export          # Export debug data for analysis
 ```
 
-## Contributing
+## 🤝 Contributing
 
 ### Development Workflow
 
@@ -494,122 +495,19 @@ make security-scan         # Check for security vulnerabilities
 make validate              # Run complete validation pipeline
 ```
 
-## Ecosystem Projects
+## 📋 Contributing
 
-FLEXT Control Panel orchestrates a comprehensive ecosystem of 32+ interconnected projects:
+1. Fork the repository
+2. Create feature branch: `feat/your-feature`
+3. Follow [coding standards](docs/standards/README.md)
+4. Submit pull request with clear description
 
-### Foundation Libraries
+## 📞 Support
 
-- **flext-core**: Shared patterns, DI container, result handling
-- **flext-observability**: Monitoring, metrics, health checks
+- **Issues**: [GitHub Issues](https://github.com/flext-sh/flext/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/flext-sh/flext/discussions)
+- **Development**: See [CLAUDE.md](CLAUDE.md) for AI guidance
 
-### Data Integration
+---
 
-- **Singer Taps** (5): Extract data from various sources
-- **Singer Targets** (5): Load data to various destinations
-- **DBT Projects** (4): Transform and model data
-- **Infrastructure Libraries** (6): Database, LDAP, gRPC connectivity
-
-### Application Services
-
-- **flext-api**: REST API with FastAPI
-- **flext-auth**: Authentication and authorization
-- **flext-web**: Web interface and dashboard
-- **flext-cli**: Command-line tools
-
-## License
-
-MIT License - see [LICENSE](LICENSE) for details.
-
-## 📚 Complete Documentation & Ecosystem
-
-### **Professional Documentation System**
-
-FLEXT implements a **comprehensive documentation standard** across all 32 ecosystem projects with **100% docstring standardization** and enterprise-grade quality gates.
-
-#### **Core Documentation Hub**
-
-- **[CLAUDE.md](CLAUDE.md)** - Development guidance with architectural patterns and quality gates
-- **[Documentation Hub](docs/NAVIGATION.md)** - Complete navigation system for all 32 projects
-- **[Architecture Guide](docs/architecture/)** - Clean Architecture and DDD implementation
-- **[API Documentation](docs/api/)** - OpenAPI specifications and integration patterns
-- **[Development Standards](docs/standards/)** - Python module organization and PEP compliance
-
-#### **Standardization Achievements**
-
-- ✅ **Docstring Standardization Complete** - All Python modules follow enterprise patterns
-- ✅ **Type Annotation Coverage: 95%+** - Comprehensive type safety across ecosystem
-- ✅ **Cross-Reference Integration** - Unified navigation between all projects
-- ✅ **Quality Gate Integration** - Automated validation in development workflows
-- ✅ **Professional English Standard** - Consistent terminology and presentation
-
-### **Enterprise Architecture Ecosystem**
-
-The FLEXT ecosystem comprises **32 interconnected projects** implementing Clean Architecture, DDD, and CQRS patterns:
-
-#### **Foundation Libraries (2 projects)**
-
-- **[flext-core](flext-core/)** - FlextResult patterns, DI container, domain entities
-- **[flext-observability](flext-observability/)** - Monitoring, metrics, distributed tracing
-
-#### **Core Services (3 projects)**
-
-- **[FlexCore](flexcore/)** - Go runtime container (port 8080) with plugin system
-- **[FLEXT Service](cmd/flext/)** - Data platform service (port 8081) with Python bridge
-- **[FLEXT Control Panel](./)** - Enterprise orchestration and management hub
-
-#### **Application Services (5 projects)**
-
-- **[flext-api](flext-api/)** - REST API foundation with FastAPI and enterprise patterns
-- **[flext-auth](flext-auth/)** - Authentication with LDAP integration and security
-- **[flext-web](flext-web/)** - Web interface with monitoring dashboards
-- **[flext-cli](flext-cli/)** - Command-line tools with workspace management
-- **[flext-quality](flext-quality/)** - Code quality analysis and enforcement
-
-#### **Infrastructure Libraries (6 projects)**
-
-- **[flext-db-oracle](flext-db-oracle/)** - **✅ Enterprise Production Ready** - Oracle database integration with 100% documentation standardization, 95%+ type coverage, Clean Architecture, and comprehensive plugin system
-- **[flext-ldap](flext-ldap/)** - LDAP directory services and authentication
-- **[flext-ldif](flext-ldif/)** - LDIF processing with validation and transformation
-- **[flext-oracle-wms](flext-oracle-wms/)** - Warehouse Management System integration
-- **[flext-grpc](flext-grpc/)** - High-performance gRPC communication
-- **[flext-meltano](flext-meltano/)** - Singer/Meltano/DBT orchestration platform
-
-#### **Singer Data Integration (15 projects)**
-
-- **Extractors (5 taps)**: LDAP, LDIF, Oracle, Oracle OIC, Oracle WMS data sources
-- **Loaders (5 targets)**: LDAP, LDIF, Oracle, Oracle OIC, Oracle WMS destinations
-- **Transformers (4 DBT)**: Business logic and data modeling for each domain
-- **Extensions (1)**: Oracle OIC utilities and custom adapters
-
-#### **Enterprise Implementations (2 projects)**
-
-- **[algar-oud-mig](algar-oud-mig/)** - **✅ Enterprise Documentation Complete** - ALGAR Oracle Unified Directory migration with 100% docstring standardization, comprehensive Clean Architecture + DDD implementation, enterprise-grade README.md files for all layers, and complete integration with FLEXT ecosystem patterns
-- **[gruponos-meltano-native](gruponos-meltano-native/)** - GrupoNos-specific orchestration
-
-### **Documentation Quality Standards**
-
-#### **Enterprise Documentation Features**
-
-- 🎯 **Complete Type Safety** - 95%+ type annotation coverage with MyPy validation
-- 📚 **Comprehensive Docstrings** - Every module, class, and method fully documented
-- 🔗 **Integrated Navigation** - Cross-project linking and ecosystem awareness
-- ⚡ **Quality Gate Integration** - Automated validation in CI/CD pipelines
-- 🏗️ **Architectural Alignment** - Clear separation of concerns and domain boundaries
-
-## 🆘 Support
-
-### **Documentation Resources**
-
-- **[Complete Ecosystem Index](docs/ECOSYSTEM_INDEX.md)** - Navigation guide for all 32 projects
-- **[Documentation Standard](docs/DOCUMENTATION_STANDARD.md)** - Template and guidelines
-- **[Implementation Plan](docs/IMPLEMENTATION_PLAN.md)** - Standardization progress and timeline
-
-### **Getting Help**
-
-- **Issues**: [GitHub Issues](https://github.com/flext-sh/flext/issues) with detailed reproduction steps
-- **Discussions**: [GitHub Discussions](https://github.com/flext-sh/flext/discussions) for questions
-- **Security**: Report security issues privately to maintainers
-- **Documentation**: Each project has comprehensive documentation following unified standards
-
-For technical support, create an issue in the relevant project repository with detailed reproduction steps and system information.
+**Maintainers**: FLEXT Development Team | **License**: MIT

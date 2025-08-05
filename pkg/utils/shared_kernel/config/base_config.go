@@ -191,8 +191,8 @@ func (s ServerConfig) Validate() error {
 	return nil
 }
 
-// DatabaseConfig configuração base para banco de dados
-type DatabaseConfig struct {
+// BaseDatabaseConfig configuração base para banco de dados
+type BaseDatabaseConfig struct {
 	Driver          string        `mapstructure:"driver" envconfig:"DRIVER" default:"memory"`
 	Host            string        `mapstructure:"host" envconfig:"HOST" default:"localhost"`
 	Port            int           `mapstructure:"port" envconfig:"PORT" default:"5432"`
@@ -207,7 +207,7 @@ type DatabaseConfig struct {
 }
 
 // ConnectionString retorna a string de conexão
-func (d DatabaseConfig) ConnectionString() string {
+func (d BaseDatabaseConfig) ConnectionString() string {
 	switch d.Driver {
 	case "postgres":
 		return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
@@ -225,7 +225,7 @@ func (d DatabaseConfig) ConnectionString() string {
 }
 
 // Validate valida a configuração do banco
-func (d DatabaseConfig) Validate() error {
+func (d BaseDatabaseConfig) Validate() error {
 	validDrivers := []string{"postgres", "mysql", "sqlite", "memory"}
 	if !contains(validDrivers, d.Driver) {
 		return fmt.Errorf("invalid driver: %s, must be one of %v", d.Driver, validDrivers)
