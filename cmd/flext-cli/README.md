@@ -1,193 +1,245 @@
-# FLEXT CLI
+# flext-cli
 
-Command-line interface for FLEXT data integration platform.
+**Type**: Go Service | **Status**: Development | **Dependencies**: Go 1.24+
 
-## Overview
+Command-line interface service for FLEXT data integration platform.
 
-The FLEXT CLI provides command-line access to all FLEXT platform functionality including pipeline management, plugin operations, and system REDACTED_LDAP_BIND_PASSWORDistration.
+> **⚠️ Development Status**: Basic CLI bootstrap working, shared_kernel package conflicts, pipeline commands not implemented yet
 
-## Features
-
-- **Pipeline Management**: Create, configure, and execute data pipelines
-- **Plugin Operations**: Install, configure, and manage data connectors
-- **System Administration**: Monitor system health and configuration
-- **Interactive Mode**: Interactive command-line interface for exploration
-- **Configuration Management**: Manage environment and connection settings
-
-## Installation
-
-### From Binary
+## Quick Start
 
 ```bash
-# Download latest release
-curl -LO https://github.com/flext-sh/flext/releases/latest/download/flext-cli
-chmod +x flext-cli
-sudo mv flext-cli /usr/local/bin/
-```
-
-### From Source
-
-```bash
+# Build CLI
 cd /home/marlonsc/flext/cmd/flext-cli
 go build -o flext-cli main.go
+
+# Test basic functionality
+./flext-cli --help
+
+# Development setup
+make build
 ```
 
-## Usage
+## Current Reality
 
-### Basic Commands
+**What Actually Works:**
+
+- Basic CLI application bootstrap with context support
+- Simple logging with INFO/ERROR levels
+- Command-line argument parsing with flag package
+- Graceful shutdown handling
+
+**What Needs Work:**
+
+- shared_kernel package conflicts (TODOs in main.go)
+- Pipeline management commands not implemented
+- Plugin operations not available
+- System REDACTED_LDAP_BIND_PASSWORDistration features missing
+- Interactive mode not implemented
+
+## Architecture Role in FLEXT Ecosystem
+
+### **Go Service Component**
+
+FLEXT CLI provides command-line access to ecosystem services:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    FLEXT ECOSYSTEM (32 Projects)                 │
+├─────────────────────────────────────────────────────────────────┤
+│ Services: FlexCore(Go) | FLEXT Service(Go/Python) | [FLEXT-CLI] │
+├─────────────────────────────────────────────────────────────────┤
+│ Applications: API | Auth | Web | CLI | Quality | Observability  │
+├─────────────────────────────────────────────────────────────────┤
+│ Infrastructure: Oracle | LDAP | LDIF | gRPC | Plugin | WMS      │
+├─────────────────────────────────────────────────────────────────┤
+│ Singer Ecosystem: Taps(5) | Targets(5) | DBT(4) | Extensions(1) │
+├─────────────────────────────────────────────────────────────────┤
+│ Foundation: FLEXT-CORE (FlextResult | DI | Domain Patterns)     │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### **Core Responsibilities**
+
+1. **CLI Interface**: Command-line access to FLEXT platform
+2. **Service Coordination**: Interface with Go and Python services
+3. **Development Tools**: Developer utilities and REDACTED_LDAP_BIND_PASSWORDistration
+
+## Key Features
+
+### **Current Implementation**
+
+```go
+// main.go - Current working implementation
+func main() {
+    // Parse command line flags
+    flag.Parse()
+
+    // Basic logging (temporary implementation)
+    appConfig.Logger = &basicLogger{}
+
+    // Create CLI with enhanced error handling
+    cliApp := cli.NewCLI()
+
+    // Run with graceful shutdown
+    if err := cliApp.Run(ctx, os.Args); err != nil {
+        // Error handling
+    }
+}
+```
+
+### **Package Dependencies**
+
+- `github.com/flext-sh/flext/pkg/interfaces/cli`
+- Basic flag parsing and context support
+- Commented out logging and shared_kernel (conflicts)
+
+## Installation & Usage
+
+### Build from Source
 
 ```bash
-# Show help
-flext-cli --help
-
-# Enable verbose logging
-flext-cli --verbose
-
-# Use custom configuration
-flext-cli --config /path/to/config.yaml
-```
-
-### Pipeline Operations
-
-```bash
-# List all pipelines
-flext-cli pipeline list
-
-# Create new pipeline
-flext-cli pipeline create --name "data-sync" --extractor tap-postgres --loader target-snowflake
-
-# Run pipeline
-flext-cli pipeline run --id pipeline-uuid
-
-# Show pipeline status
-flext-cli pipeline status --id pipeline-uuid
-```
-
-### Plugin Management
-
-```bash
-# List available plugins
-flext-cli plugin list
-
-# Install plugin
-flext-cli plugin install tap-postgres
-
-# Configure plugin
-flext-cli plugin configure tap-postgres --config config.json
-```
-
-### System Operations
-
-```bash
-# Check system health
-flext-cli system health
-
-# Show system statistics
-flext-cli system stats
-
-# View logs
-flext-cli system logs --follow
-```
-
-## Configuration
-
-The CLI supports configuration via:
-
-1. **Configuration File**: `--config` flag or `FLEXT_CONFIG_PATH` environment variable
-2. **Environment Variables**: All settings can be overridden with `FLEXT_` prefixed variables
-3. **Command Line Flags**: Runtime overrides for common settings
-
-### Configuration File Example
-
-```yaml
-# flext-config.yaml
-server:
-  host: localhost
-  port: 8080
-  timeout: 30s
-
-logging:
-  level: info
-  format: json
-
-database:
-  url: postgresql://localhost/flext
-  pool_size: 20
-```
-
-## Environment Variables
-
-| Variable             | Description                              | Default   |
-| -------------------- | ---------------------------------------- | --------- |
-| `FLEXT_CONFIG_PATH`  | Path to configuration file               | -         |
-| `FLEXT_SERVER_HOST`  | FLEXT server hostname                    | localhost |
-| `FLEXT_SERVER_PORT`  | FLEXT server port                        | 8080      |
-| `FLEXT_LOG_LEVEL`    | Logging level (debug, info, warn, error) | info      |
-| `FLEXT_DATABASE_URL` | Database connection URL                  | -         |
-
-## Architecture
-
-The CLI is built using:
-
-- **Go 1.24+**: Modern Go with generics and enhanced error handling
-- **Clean Architecture**: Separation of concerns with clear boundaries
-- **Cobra CLI Framework**: Powerful command-line interface framework
-- **Structured Logging**: JSON-formatted logs with contextual information
-- **Graceful Shutdown**: Proper cleanup on interruption
-
-## Development
-
-### Building
-
-```bash
-# Build for current platform
+# Clone and build
+cd /home/marlonsc/flext/cmd/flext-cli
 go build -o flext-cli main.go
 
-# Build for multiple platforms
+# Run basic CLI
+./flext-cli --help
+```
+
+### Current Usage
+
+```bash
+# Basic execution (what actually works)
+./flext-cli
+
+# With arguments (parsed but limited functionality)
+./flext-cli --verbose
+```
+
+## Development Commands
+
+### Build Operations
+
+```bash
+# Build CLI binary
+go build -o flext-cli main.go
+
+# Build with Makefile
+make build
+
+# Cross-platform builds (if configured)
 make build-cli
 ```
 
 ### Testing
 
 ```bash
-# Run all tests
+# Run Go tests
 go test ./...
 
-# Run with coverage
+# Test with coverage
 go test -cover ./...
 ```
 
-### Contributing
+## Configuration
 
-1. Follow Go conventions and best practices
-2. Add tests for new functionality
-3. Update documentation for new commands
-4. Ensure all quality gates pass
+### Current Configuration
 
-## Troubleshooting
+```go
+// Basic app configuration (from main.go)
+var appConfig struct {
+    Logger interface {
+        Info(msg string, fields ...interface{})
+        Error(msg string, fields ...interface{})
+    }
+}
+```
 
-### Common Issues
-
-1. **Connection Refused**: Ensure FLEXT server is running and accessible
-2. **Authentication Failed**: Check credentials and server configuration
-3. **Command Not Found**: Verify CLI is installed and in PATH
-
-### Debug Mode
+### Environment Variables
 
 ```bash
-# Enable debug logging
-flext-cli --verbose command
+# Basic environment support
+export FLEXT_LOG_LEVEL="debug"  # May be supported by CLI framework
+```
 
-# Show detailed error information
-FLEXT_LOG_LEVEL=debug flext-cli command
+## Quality Standards
+
+### **Current Code Quality**
+
+- **Go 1.24+**: Modern Go with generics support
+- **Context Support**: Proper context handling for cancellation
+- **Error Handling**: Basic error handling with os.Exit(1)
+- **Logging**: Temporary basic logging implementation
+
+## Integration with FLEXT Ecosystem
+
+### **Service Integration**
+
+```bash
+# CLI interfaces with ecosystem services
+# (Implementation pending - currently basic bootstrap)
+```
+
+### **Package Structure**
+
+- **pkg/interfaces/cli**: CLI framework interfaces
+- **pkg/logging**: Logging package (conflicts, commented out)
+- **pkg/utils/shared_kernel**: Shared utilities (conflicts)
+
+## Current Status
+
+**Version**: 2.0.0 (Development - Basic Bootstrap)
+
+**Completed**:
+
+- ✅ Go CLI application bootstrap
+- ✅ Basic command-line argument parsing
+- ✅ Context support for graceful shutdown
+- ✅ Simple logging implementation
+
+**Critical Issues**:
+
+- ❌ shared_kernel package conflicts (TODOs in code)
+- ❌ Pipeline commands not implemented
+- ❌ Plugin management missing
+- ❌ System REDACTED_LDAP_BIND_PASSWORDistration features absent
+
+**Planned**:
+
+- 📋 Resolve shared_kernel package conflicts
+- 📋 Implement pipeline management commands
+- 📋 Add plugin operations
+- 📋 Build system REDACTED_LDAP_BIND_PASSWORDistration features
+
+## Contributing
+
+### Development Standards
+
+- **Go Best Practices**: Follow Go conventions
+- **Error Handling**: Use proper Go error handling patterns
+- **Testing**: Add tests for new functionality
+- **CLI Framework**: Use established CLI patterns
+
+### Development Workflow
+
+```bash
+# Setup and build
+cd cmd/flext-cli
+go build -o flext-cli main.go
+./flext-cli
 ```
 
 ## License
 
-MIT License - see [LICENSE](../../LICENSE) for details.
+MIT License - See [LICENSE](../../LICENSE) file for details.
 
-## Related
+## Links
 
-- [FLEXT Server](../flext-server/) - Main API server
-- [FLEXT Demo](../flext-demo/) - Demo application
-- [FLEXT Core](../../flext-core/) - Core framework library
+- **[FlexCore](../../flexcore/)**: Go runtime service
+- **[FLEXT Service](../flext/)**: Main Go/Python service
+- **[FLEXT Core](../../flext-core/)**: Foundation library
+
+---
+
+_Go service within the FLEXT ecosystem - Enterprise data integration platform_

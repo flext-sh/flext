@@ -1,10 +1,12 @@
 # FLEXT - Enterprise Data Integration Platform
 
-**Version**: 2.0.0 | **Status**: Production Ready | **Last Updated**: 2025-01-08
+**Version**: 2.0.0-dev | **Status**: Active Development | **Last Updated**: 2025-08-05
 
 ## Overview
 
-FLEXT is an enterprise-grade data integration control panel that orchestrates, monitors, and manages distributed data pipelines. Built with a hybrid Go/Python architecture implementing Clean Architecture, DDD, and CQRS patterns.
+FLEXT is an enterprise-grade data integration platform under active development that will orchestrate, monitor, and manage distributed data pipelines. Built with a hybrid Go/Python architecture implementing Clean Architecture, DDD, and CQRS patterns.
+
+> ⚠️ **Development Status**: This project is currently under active development with significant architectural work in progress. See individual project READMEs and TODO.md files for current status and limitations.
 
 ## 🚀 Quick Start
 
@@ -85,7 +87,7 @@ Development planning and status.
 - **FLEXT Control Panel** (`flext-sh/flext`) - Port 8081
 - **FlexCore Runtime** (`flext-sh/flexcore`) - Port 8080
 
-### Library Ecosystem (33 Projects)
+### Library Ecosystem (30+ Projects)
 
 - **Foundation**: flext-core, flext-observability
 - **Singer Taps/Targets**: LDAP, LDIF, Oracle, Oracle-OIC, Oracle-WMS
@@ -111,7 +113,32 @@ FLEXT implements a hybrid architecture where Go services orchestrate Python libr
 - **Subprocess Execution**: Direct Python script execution from Go
 - **Event Coordination**: Distributed event streaming across services
 
-## 🚀 Quick Start
+## 📊 Current Development Status
+
+### Architecture Progress
+
+- **flext-core (Foundation)**: Significant progress - 1,249 MyPy errors (71% reduction, only 4 in src/)
+- **FlexCore (Go Runtime)**: Clean Architecture violations being fixed - 30% compliance
+- **FLEXT Service (Go Control Panel)**: Multi-modal architecture in development
+- **Python Ecosystem**: Singer/Meltano/DBT integration in progress
+- **Documentation**: Being standardized and aligned with actual code state
+
+### Ready for Development Use
+
+- **Core Patterns**: FlextResult, FlextContainer, basic DDD patterns working
+- **Docker Environment**: Development infrastructure operational
+- **CI/CD Pipeline**: Quality gates and validation working
+- **Basic Services**: HTTP APIs and database connectivity functional
+
+### Not Yet Production Ready
+
+- **Clean Architecture**: Significant refactoring needed across services
+- **Type Safety**: Major MyPy error resolution in progress
+- **Event Sourcing**: Foundation exists but needs complete implementation
+- **Plugin System**: Basic framework exists, security and isolation needed
+- **Cross-Service Integration**: APIs exist but need comprehensive testing
+
+## 🚀 Development Setup
 
 ### Prerequisites
 

@@ -54,6 +54,7 @@ P = ParamSpec("P")
 
 def log_operation[**P](func: Callable[P, object]) -> Callable[P, object]:
     """Decorator to log operations."""
+
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> object:
         logger = get_logger(func.__name__)
         logger.info(f"Starting operation: {func.__name__}")
@@ -64,4 +65,5 @@ def log_operation[**P](func: Callable[P, object]) -> Callable[P, object]:
         except Exception:
             logger.exception(f"Failed operation: {func.__name__}")
             raise
+
     return wrapper

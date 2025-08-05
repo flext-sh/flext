@@ -1,44 +1,28 @@
 # FLEXT Architecture
 
-**Version**: 1.0.0 | **Status**: Production Ready | **Last Updated**: 2025-01-08
+**Version**: 2.0.0-dev | **Status**: Under Development | **Last Updated**: 2025-08-05
 
 ## Overview
 
-FLEXT implements a hybrid Go-Python architecture with Clean Architecture principles, Domain-Driven Design, and distributed execution patterns. This section covers all architectural aspects of the system.
+FLEXT implements a dual-service distributed architecture with Clean Architecture principles, Domain-Driven Design, CQRS, and Event Sourcing patterns. This section covers the core architectural decisions and current implementation status.
 
 ## Architecture Documentation
 
 ### [Overview](./overview.md)
 
-High-level system architecture and design principles.
+**Primary Document**: Complete system architecture, service status, and development roadmap.
 
 ### [Clean Architecture](./clean-architecture.md)
 
-Implementation of Clean Architecture patterns in FLEXT.
+**Implementation Guide**: Detailed Clean Architecture patterns with Go code examples.
 
-### [Ecosystem](./ecosystem.md)
+### [FlexCore Current State](./flexcore-current-state.md)
 
-Complete ecosystem structure with all 33 projects.
-
-### [Services](./services.md)
-
-Microservices design and communication patterns.
+**Current Reality**: Honest assessment of FlexCore's architectural compliance and critical issues.
 
 ### [Python-Go Integration](./python-go-integration.md)
 
-Comprehensive integration patterns between Go control plane and Python ecosystem.
-
-### [Integration](./integration.md)
-
-External system integration and data flow patterns.
-
-### [Package Structure](./pkg-structure.md)
-
-Go package organization following professional standards.
-
-### [Workspace](./workspace.md)
-
-Workspace organization and project structure.
+**Integration Patterns**: Cross-language integration patterns and communication protocols.
 
 ## Key Concepts
 

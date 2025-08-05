@@ -11,26 +11,26 @@ mkdir -p test-results/{coverage,logs,reports}
 echo "⏳ Waiting for dependencies..."
 echo "Waiting for database..."
 while ! pg_isready -h $DB_HOST -p 5432 -U flext_test; do
-  echo "  • Waiting for postgres..."
-  sleep 2
+	echo "  • Waiting for postgres..."
+	sleep 2
 done
 
 echo "Waiting for Redis..."
 while ! redis-cli -h $REDIS_HOST ping; do
-  echo "  • Waiting for redis..."
-  sleep 2
+	echo "  • Waiting for redis..."
+	sleep 2
 done
 
 echo "Waiting for FlexCore..."
 while ! curl -f $FLEXCORE_URL/health; do
-  echo "  • Waiting for FlexCore..."
-  sleep 5
+	echo "  • Waiting for FlexCore..."
+	sleep 5
 done
 
 echo "Waiting for FLEXT Service..."
 while ! curl -f $FLEXT_URL/health; do
-  echo "  • Waiting for FLEXT Service..."
-  sleep 5
+	echo "  • Waiting for FLEXT Service..."
+	sleep 5
 done
 
 echo "✅ All dependencies ready!"
@@ -38,33 +38,33 @@ echo ""
 
 # Function to run tests with proper error handling
 run_test_suite() {
-    local suite_name="$1"
-    local test_command="$2"
-    local coverage_file="$3"
-    
-    echo "🧪 Running $suite_name Tests"
-    echo "-----------------------------------"
-    
-    if eval "$test_command"; then
-        echo "✅ $suite_name tests PASSED"
-        
-        # Generate coverage report if coverage file exists
-        if [[ -n "$coverage_file" && -f "$coverage_file" ]]; then
-            base_name=$(basename "$coverage_file" .out)
-            go tool cover -html="$coverage_file" -o "test-results/coverage/${base_name}.html"
-            coverage_percent=$(go tool cover -func="$coverage_file" | tail -1 | awk '{print $3}')
-            echo "📊 Coverage for $suite_name: $coverage_percent"
-        fi
-    else
-        echo "❌ $suite_name tests FAILED"
-        return 1
-    fi
-    echo ""
+	local suite_name="$1"
+	local test_command="$2"
+	local coverage_file="$3"
+
+	echo "🧪 Running $suite_name Tests"
+	echo "-----------------------------------"
+
+	if eval "$test_command"; then
+		echo "✅ $suite_name tests PASSED"
+
+		# Generate coverage report if coverage file exists
+		if [[ -n $coverage_file && -f $coverage_file ]]; then
+			base_name=$(basename "$coverage_file" .out)
+			go tool cover -html="$coverage_file" -o "test-results/coverage/${base_name}.html"
+			coverage_percent=$(go tool cover -func="$coverage_file" | tail -1 | awk '{print $3}')
+			echo "📊 Coverage for $suite_name: $coverage_percent"
+		fi
+	else
+		echo "❌ $suite_name tests FAILED"
+		return 1
+	fi
+	echo ""
 }
 
 # Store test results summary
-echo "# FLEXT Test Results" > test-results/summary.md
-echo "Generated: $(date)" >> test-results/summary.md
+echo "# FLEXT Test Results" >test-results/summary.md
+echo "Generated: $(date)" >>test-results/summary.md
 echo ""
 
 # Unit tests for each service
@@ -72,69 +72,69 @@ echo "📋 Phase 1: Unit Tests"
 echo "======================"
 
 run_test_suite "FLEXT Core Service" \
-    "go test -v -race -coverprofile=test-results/coverage/flext-core.out ./cmd/flext/..." \
-    "test-results/coverage/flext-core.out"
+	"go test -v -race -coverprofile=test-results/coverage/flext-core.out ./cmd/flext/..." \
+	"test-results/coverage/flext-core.out"
 
 run_test_suite "FLEXT CLI" \
-    "go test -v -race -coverprofile=test-results/coverage/flext-cli.out ./cmd/flext-cli/..." \
-    "test-results/coverage/flext-cli.out"
+	"go test -v -race -coverprofile=test-results/coverage/flext-cli.out ./cmd/flext-cli/..." \
+	"test-results/coverage/flext-cli.out"
 
 run_test_suite "FLEXT Demo" \
-    "go test -v -race -coverprofile=test-results/coverage/flext-demo.out ./cmd/flext-demo/..." \
-    "test-results/coverage/flext-demo.out"
+	"go test -v -race -coverprofile=test-results/coverage/flext-demo.out ./cmd/flext-demo/..." \
+	"test-results/coverage/flext-demo.out"
 
 run_test_suite "FLEXT Server" \
-    "go test -v -race -coverprofile=test-results/coverage/flext-server.out ./cmd/flext-server/..." \
-    "test-results/coverage/flext-server.out"
+	"go test -v -race -coverprofile=test-results/coverage/flext-server.out ./cmd/flext-server/..." \
+	"test-results/coverage/flext-server.out"
 
 run_test_suite "Package Tests" \
-    "go test -v -race -coverprofile=test-results/coverage/packages.out ./pkg/..." \
-    "test-results/coverage/packages.out"
+	"go test -v -race -coverprofile=test-results/coverage/packages.out ./pkg/..." \
+	"test-results/coverage/packages.out"
 
 # Integration tests
-echo "🔗 Phase 2: Integration Tests"  
+echo "🔗 Phase 2: Integration Tests"
 echo "=============================="
 
 run_test_suite "Integration Tests" \
-    "go test -v -race -tags=integration -coverprofile=test-results/coverage/integration.out ./tests/integration/..." \
-    "test-results/coverage/integration.out"
+	"go test -v -race -tags=integration -coverprofile=test-results/coverage/integration.out ./tests/integration/..." \
+	"test-results/coverage/integration.out"
 
 # End-to-End tests
 echo "🌐 Phase 3: End-to-End Tests"
 echo "============================="
 
 run_test_suite "End-to-End Tests" \
-    "go test -v -race -tags=e2e -coverprofile=test-results/coverage/e2e.out ./tests/e2e/..." \
-    "test-results/coverage/e2e.out"
+	"go test -v -race -tags=e2e -coverprofile=test-results/coverage/e2e.out ./tests/e2e/..." \
+	"test-results/coverage/e2e.out"
 
 # API Health checks
 echo "🏥 Phase 4: API Health Checks"
 echo "=============================="
 
 echo "Testing FLEXT Service endpoints..."
-curl -f $FLEXT_URL/health | jq '.' > test-results/logs/flext-health.json
-curl -f $FLEXT_URL/api/v1/status | jq '.' > test-results/logs/flext-status.json
+curl -f $FLEXT_URL/health | jq '.' >test-results/logs/flext-health.json
+curl -f $FLEXT_URL/api/v1/status | jq '.' >test-results/logs/flext-status.json
 
 echo "Testing FlexCore endpoints..."
-curl -f $FLEXCORE_URL/health | jq '.' > test-results/logs/flexcore-health.json
+curl -f $FLEXCORE_URL/health | jq '.' >test-results/logs/flexcore-health.json
 
 # Performance benchmarks
 echo "🚀 Phase 5: Performance Benchmarks"
 echo "==================================="
 
 run_test_suite "Benchmark Tests" \
-    "go test -v -bench=. -benchmem -cpuprofile=test-results/reports/cpu.prof -memprofile=test-results/reports/mem.prof ./..."
+	"go test -v -bench=. -benchmem -cpuprofile=test-results/reports/cpu.prof -memprofile=test-results/reports/mem.prof ./..."
 
 # Combine all coverage files
 echo "📊 Phase 6: Coverage Analysis"
 echo "=============================="
 
 echo "Combining coverage reports..."
-echo "mode: set" > test-results/coverage/combined.out
+echo "mode: set" >test-results/coverage/combined.out
 for coverage_file in test-results/coverage/*.out; do
-  if [[ -f "$coverage_file" && "$coverage_file" != "test-results/coverage/combined.out" ]]; then
-    tail -n +2 "$coverage_file" >> test-results/coverage/combined.out
-  fi
+	if [[ -f $coverage_file && $coverage_file != "test-results/coverage/combined.out" ]]; then
+		tail -n +2 "$coverage_file" >>test-results/coverage/combined.out
+	fi
 done
 
 # Generate combined coverage report
@@ -142,18 +142,18 @@ go tool cover -html=test-results/coverage/combined.out -o test-results/coverage/
 combined_coverage=$(go tool cover -func=test-results/coverage/combined.out | tail -1 | awk '{print $3}')
 
 echo "🎯 Combined Test Coverage: $combined_coverage"
-echo "Combined Test Coverage: $combined_coverage" >> test-results/summary.md
+echo "Combined Test Coverage: $combined_coverage" >>test-results/summary.md
 
 # Generate final test report
 echo ""
-echo "📊 Test Summary" >> test-results/summary.md
-echo "===============" >> test-results/summary.md
-echo "- All unit tests: ✅ PASSED" >> test-results/summary.md
-echo "- Integration tests: ✅ PASSED" >> test-results/summary.md  
-echo "- E2E tests: ✅ PASSED" >> test-results/summary.md
-echo "- API health checks: ✅ PASSED" >> test-results/summary.md
-echo "- Performance benchmarks: ✅ COMPLETED" >> test-results/summary.md
-echo "- Combined coverage: $combined_coverage" >> test-results/summary.md
+echo "📊 Test Summary" >>test-results/summary.md
+echo "===============" >>test-results/summary.md
+echo "- All unit tests: ✅ PASSED" >>test-results/summary.md
+echo "- Integration tests: ✅ PASSED" >>test-results/summary.md
+echo "- E2E tests: ✅ PASSED" >>test-results/summary.md
+echo "- API health checks: ✅ PASSED" >>test-results/summary.md
+echo "- Performance benchmarks: ✅ COMPLETED" >>test-results/summary.md
+echo "- Combined coverage: $combined_coverage" >>test-results/summary.md
 
 echo ""
 echo "🎉 All FLEXT tests completed successfully!"

@@ -163,7 +163,7 @@ func (r *PythonServiceRegistry) RegisterPythonService(info *PythonServiceInfo) e
 func (r *PythonServiceRegistry) GetPythonService(name string) (*PythonServiceInfo, bool) {
     r.mutex.RLock()
     defer r.mutex.RUnlock()
-    
+
     info, exists := r.services[name]
     return info, exists
 }
@@ -171,7 +171,7 @@ func (r *PythonServiceRegistry) GetPythonService(name string) (*PythonServiceInf
 func (r *PythonServiceRegistry) ListPythonServices() []*PythonServiceInfo {
     r.mutex.RLock()
     defer r.mutex.RUnlock()
-    
+
     services := make([]*PythonServiceInfo, 0, len(r.services))
     for _, service := range r.services {
         services = append(services, service)
@@ -230,32 +230,32 @@ from flext_meltano import MeltanoRunner
 
 class PipelineService(pb.PipelineServiceServicer):
     """gRPC service for pipeline execution."""
-    
+
     def __init__(self, meltano_runner: MeltanoRunner):
         self._meltano_runner = meltano_runner
         self._logger = get_logger()
-    
+
     def ExecutePipeline(self, request, context):
         """Execute pipeline via gRPC."""
         try:
             # Extract trace context from Go
             trace_context = request.trace_context
             if trace_context:
-                self._logger.info("Received trace context", 
+                self._logger.info("Received trace context",
                     correlation_id=trace_context.get("correlation_id"))
-            
+
             # Execute pipeline
             result = await self._meltano_runner.run_pipeline(
                 pipeline_id=request.pipeline_id,
                 config=request.config
             )
-            
+
             return pb.PipelineResponse(
                 success=result.success,
                 data=result.data if result.success else None,
                 error=result.error if not result.success else None
             )
-            
+
         except Exception as e:
             self._logger.error("Pipeline execution failed",
                 pipeline_id=request.pipeline_id,
@@ -291,20 +291,20 @@ func (c *PythonHTTPClient) ExecutePipeline(ctx context.Context, req *PipelineReq
         "config":      req.Config,
         "trace_context": req.TraceContext,
     }
-    
+
     jsonData, err := json.Marshal(payload)
     if err != nil {
         return nil, fmt.Errorf("failed to marshal request: %w", err)
     }
 
     // 2. Create HTTP request
-    httpReq, err := http.NewRequestWithContext(ctx, "POST", 
-        fmt.Sprintf("%s/api/v1/pipelines/execute", c.baseURL), 
+    httpReq, err := http.NewRequestWithContext(ctx, "POST",
+        fmt.Sprintf("%s/api/v1/pipelines/execute", c.baseURL),
         bytes.NewBuffer(jsonData))
     if err != nil {
         return nil, fmt.Errorf("failed to create request: %w", err)
     }
-    
+
     httpReq.Header.Set("Content-Type", "application/json")
     httpReq.Header.Set("Authorization", fmt.Sprintf("Bearer %s", req.AuthToken))
 
@@ -340,26 +340,26 @@ async def execute_pipeline(request: PipelineExecuteRequest):
         # Validate request
         if not request.pipeline_id:
             raise HTTPException(status_code=400, detail="Pipeline ID required")
-        
+
         # Execute pipeline
         runner = MeltanoRunner()
         result = await runner.run_pipeline(
             pipeline_id=request.pipeline_id,
             config=request.config
         )
-        
+
         if result.is_failure:
             raise HTTPException(
                 status_code=400,
                 detail=result.error
             )
-        
+
         return {
             "success": True,
             "data": result.data,
             "pipeline_id": request.pipeline_id
         }
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -386,10 +386,10 @@ func (m *PythonSubprocessManager) ExecuteScript(ctx context.Context, script stri
     // 1. Prepare command
     cmd := exec.CommandContext(ctx, m.pythonPath, append([]string{script}, args...)...)
     cmd.Dir = m.workDir
-    
+
     // 2. Set environment variables
     cmd.Env = m.buildEnvironment()
-    
+
     // 3. Capture output
     var stdout, stderr bytes.Buffer
     cmd.Stdout = &stdout
@@ -439,7 +439,7 @@ func (m *PythonSubprocessManager) ExecutePipeline(ctx context.Context, pipelineI
 
     // 3. Parse result
     if result.ExitCode != 0 {
-        return nil, fmt.Errorf("pipeline failed with exit code %d: %s", 
+        return nil, fmt.Errorf("pipeline failed with exit code %d: %s",
             result.ExitCode, result.Stderr)
     }
 
@@ -472,15 +472,15 @@ def main():
             "error": "Pipeline ID required"
         }))
         sys.exit(1)
-    
+
     pipeline_id = sys.argv[1]
     config = json.loads(sys.argv[2]) if len(sys.argv) > 2 else {}
-    
+
     try:
         # Execute pipeline
         runner = MeltanoRunner()
         result = asyncio.run(runner.run_pipeline(pipeline_id, config))
-        
+
         # Output result as JSON
         output = {
             "success": result.success,
@@ -488,10 +488,10 @@ def main():
             "error": result.error if not result.success else None,
             "pipeline_id": pipeline_id
         }
-        
+
         print(json.dumps(output))
         sys.exit(0 if result.success else 1)
-        
+
     except Exception as e:
         print(json.dumps({
             "success": False,
@@ -578,18 +578,18 @@ func (m *PythonServiceHealthMonitor) StartMonitoring() {
 
 func (m *PythonServiceHealthMonitor) checkAllServices() {
     services := m.registry.ListPythonServices()
-    
+
     for _, service := range services {
         go func(s *PythonServiceInfo) {
             if err := m.checkServiceHealth(s); err != nil {
                 m.logger.Warn("Python service health check failed",
                     "service", s.Name,
                     "error", err.Error())
-                
+
                 // Mark service as unhealthy
                 s.Status = "unhealthy"
                 s.LastSeen = time.Now()
-                
+
                 // Trigger failover if needed
                 m.triggerFailover(s)
             } else {
@@ -603,17 +603,17 @@ func (m *PythonServiceHealthMonitor) checkAllServices() {
 
 func (m *PythonServiceHealthMonitor) checkServiceHealth(service *PythonServiceInfo) error {
     client := &http.Client{Timeout: 5 * time.Second}
-    
+
     resp, err := client.Get(service.HealthURL)
     if err != nil {
         return fmt.Errorf("health check request failed: %w", err)
     }
     defer resp.Body.Close()
-    
+
     if resp.StatusCode != http.StatusOK {
         return fmt.Errorf("health check returned status %d", resp.StatusCode)
     }
-    
+
     return nil
 }
 
@@ -624,7 +624,7 @@ func (m *PythonServiceHealthMonitor) triggerFailover(service *PythonServiceInfo)
         m.logger.Info("Triggering failover",
             "from_service", service.Name,
             "to_service", alternatives[0].Name)
-        
+
         // Update routing to use alternative service
         m.updateServiceRouting(service.Name, alternatives[0].Name)
     }
@@ -653,14 +653,14 @@ type RoundRobinStrategy struct {
 func (r *RoundRobinStrategy) SelectService(services []*PythonServiceInfo, request *PipelineRequest) *PythonServiceInfo {
     r.mutex.Lock()
     defer r.mutex.Unlock()
-    
+
     if len(services) == 0 {
         return nil
     }
-    
+
     service := services[r.current%len(services)]
     r.current++
-    
+
     return service
 }
 
@@ -672,7 +672,7 @@ func (w *WeightedStrategy) SelectService(services []*PythonServiceInfo, request 
     if len(services) == 0 {
         return nil
     }
-    
+
     // Calculate total weight
     totalWeight := 0
     for _, service := range services {
@@ -682,23 +682,23 @@ func (w *WeightedStrategy) SelectService(services []*PythonServiceInfo, request 
         }
         totalWeight += weight
     }
-    
+
     // Select service based on weight
     random := rand.Intn(totalWeight)
     currentWeight := 0
-    
+
     for _, service := range services {
         weight := w.weights[service.Name]
         if weight == 0 {
             weight = 1
         }
         currentWeight += weight
-        
+
         if random < currentWeight {
             return service
         }
     }
-    
+
     return services[0] // Fallback
 }
 ```
@@ -714,18 +714,18 @@ coordination:
     enabled: true
     interval: "30s"
     timeout: "10s"
-  
+
   python_services:
     registration:
       enabled: true
       auto_discovery: true
       health_check_interval: "60s"
-    
+
     load_balancing:
       strategy: "round_robin" # round_robin, weighted, least_connections
       health_check_timeout: "5s"
       failover_enabled: true
-    
+
     scaling:
       auto_scaling: true
       min_instances: 1
@@ -745,13 +745,13 @@ python_services:
     health_url: "http://localhost:8001/health"
     capabilities: ["pipeline_execution", "data_extraction", "data_loading"]
     weight: 3
-  
+
   api:
     endpoint: "http://localhost:8000"
     health_url: "http://localhost:8000/health"
     capabilities: ["rest_api", "authentication"]
     weight: 2
-  
+
   grpc:
     endpoint: "localhost:50051"
     health_url: "http://localhost:50052/health"
@@ -805,7 +805,7 @@ func (c *Coordinator) ExecutePipelineWithTracing(ctx context.Context, req *Pipel
 
     // 4. Execute pipeline with tracing
     result, err := c.executePipeline(ctx, req)
-    
+
     // 5. Record span attributes
     span.SetAttributes(
         attribute.Bool("success", err == nil),

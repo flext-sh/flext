@@ -85,13 +85,13 @@ def flext_data_safe_int_conversion(
     """Safely convert value to integer."""
     if value is None:
         return FlextResult.ok(default)
-    
+
     try:
         if isinstance(value, str):
             value = value.strip()
             if not value:
                 return FlextResult.ok(default)
-        
+
         return FlextResult.ok(int(value))
     except (ValueError, TypeError) as e:
         return FlextResult.fail(f"Cannot convert '{value}' to integer: {e}")
@@ -103,13 +103,13 @@ def flext_data_safe_bool_conversion(
     """Safely convert value to boolean."""
     if value is None:
         return default
-    
+
     if isinstance(value, str):
         return value.lower() in ('true', 'yes', '1', 'on', 't', 'y')
-    
+
     if isinstance(value, (int, float)):
         return value != 0
-    
+
     return bool(value)
 ```
 
@@ -131,10 +131,10 @@ def flext_text_truncate(
     """Truncate text to maximum length with suffix."""
     if len(text) <= max_length:
         return text
-    
+
     if max_length <= len(suffix):
         return text[:max_length]
-    
+
     return text[:max_length - len(suffix)] + suffix
 
 def flext_text_slugify(text: str) -> str:
@@ -154,7 +154,7 @@ def flext_text_mask_sensitive(
     """Mask sensitive information in text."""
     if len(text) <= visible_start + visible_end:
         return mask_char * len(text)
-    
+
     masked_length = len(text) - visible_start - visible_end
     return text[:visible_start] + (mask_char * masked_length) + text[-visible_end:]
 ```
@@ -171,7 +171,7 @@ def flext_time_parse_iso8601(date_string: str) -> FlextResult[datetime]:
     try:
         if date_string.endswith('Z'):
             date_string = date_string[:-1] + '+00:00'
-        
+
         return FlextResult.ok(datetime.fromisoformat(date_string))
     except ValueError as e:
         return FlextResult.fail(f"Invalid ISO8601 date format: {e}")
@@ -205,7 +205,7 @@ def flext_collection_chunk(
     """Split list into chunks of specified size."""
     if chunk_size <= 0:
         return []
-    
+
     return [
         items[i:i + chunk_size]
         for i in range(0, len(items), chunk_size)
@@ -277,7 +277,7 @@ def flext_auth_generate_jwt(
         payload = payload.copy()
         payload['exp'] = datetime.utcnow() + timedelta(seconds=expires_in)
         payload['iat'] = datetime.utcnow()
-        
+
         token = jwt.encode(payload, secret_key, algorithm='HS256')
         return FlextResult.ok(token)
     except Exception as e:
@@ -305,7 +305,7 @@ def flext_data_parse_json_stream(
         line = line.strip()
         if not line:
             continue
-        
+
         try:
             obj = json.loads(line)
             yield FlextResult.ok(obj)
@@ -319,10 +319,10 @@ def flext_data_flatten_record(
 ) -> dict:
     """Flatten nested dictionary with separator."""
     flattened = {}
-    
+
     for key, value in record.items():
         new_key = f"{prefix}{separator}{key}" if prefix else key
-        
+
         if isinstance(value, dict):
             flattened.update(
                 flext_data_flatten_record(value, separator, new_key)
@@ -339,7 +339,7 @@ def flext_data_flatten_record(
                     flattened[f"{new_key}[{i}]"] = item
         else:
             flattened[new_key] = value
-    
+
     return flattened
 
 def flext_data_batch_records(
@@ -348,14 +348,14 @@ def flext_data_batch_records(
 ) -> Iterator[List[dict]]:
     """Batch records into chunks."""
     batch = []
-    
+
     for record in records:
         batch.append(record)
-        
+
         if len(batch) >= batch_size:
             yield batch
             batch = []
-    
+
     if batch:
         yield batch
 ```
@@ -374,10 +374,10 @@ def flext_ldap_escape_filter_chars(value: str) -> str:
         '\0': r'\00',
         '/': r'\2f'
     }
-    
+
     for char, escaped in escape_chars.items():
         value = value.replace(char, escaped)
-    
+
     return value
 
 def flext_ldap_parse_dn(dn: str) -> FlextResult[List[Dict[str, str]]]:
@@ -385,18 +385,18 @@ def flext_ldap_parse_dn(dn: str) -> FlextResult[List[Dict[str, str]]]:
     try:
         components = []
         parts = re.split(r'(?<!\\),', dn)
-        
+
         for part in parts:
             part = part.strip()
             if '=' not in part:
                 return FlextResult.fail(f"Invalid DN component: {part}")
-            
+
             key, value = part.split('=', 1)
             components.append({
                 'type': key.strip(),
                 'value': value.strip()
             })
-        
+
         return FlextResult.ok(components)
     except Exception as e:
         return FlextResult.fail(f"DN parse error: {e}")
@@ -446,26 +446,26 @@ def process_json_stream(lines: List[str]) -> FlextResult[List[dict]]:
     """Process JSON lines with transformation."""
     processed_records = []
     errors = []
-    
+
     # Parse JSON stream
     for result in flext_data_parse_json_stream(iter(lines)):
         if result.is_failure:
             errors.append(result.error)
             continue
-        
+
         record = result.data
-        
+
         # Flatten nested structure
         flattened = flext_data_flatten_record(record)
         processed_records.append(flattened)
-    
+
     if errors:
         return FlextResult.fail(
             f"Processing completed with {len(errors)} errors",
             errors=errors,
             partial_result=processed_records
         )
-    
+
     return FlextResult.ok(processed_records)
 
 # Batch processing
@@ -487,38 +487,38 @@ from flext_auth.utils import (
 class AuthService:
     def __init__(self, secret_key: str):
         self.secret_key = secret_key
-    
+
     async def register_user(self, username: str, password: str) -> FlextResult[User]:
         # Hash password
         hash_result = flext_auth_hash_password(password)
         if hash_result.is_failure:
             return FlextResult.fail(f"Password hashing failed: {hash_result.error}")
-        
+
         # Create user
         user = User(username=username, password_hash=hash_result.data)
         return FlextResult.ok(user)
-    
+
     async def login(self, username: str, password: str) -> FlextResult[dict]:
         # Get user
         user = await self.get_user_by_username(username)
         if not user:
             return FlextResult.fail("Invalid credentials")
-        
+
         # Verify password
         verify_result = flext_auth_verify_password(password, user.password_hash)
         if verify_result.is_failure or not verify_result.data:
             return FlextResult.fail("Invalid credentials")
-        
+
         # Generate token
         token_result = flext_auth_generate_jwt(
             {"user_id": user.id, "username": user.username},
             self.secret_key,
             expires_in=3600
         )
-        
+
         if token_result.is_failure:
             return FlextResult.fail("Token generation failed")
-        
+
         return FlextResult.ok({
             "access_token": token_result.data,
             "token_type": "Bearer"
