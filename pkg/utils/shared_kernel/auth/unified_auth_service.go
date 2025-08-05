@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
-	"github.com/flext-sh/flext/pkg/utils/shared_kernel/value_objects"
+	"github.com/flext-sh/flext/pkg/utils/shared_kernel/errors"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
@@ -83,10 +83,10 @@ type OAuth2Config struct {
 // NewUnifiedAuthService creates a new unified authentication service
 func NewUnifiedAuthService(config UnifiedAuthConfig, logger logging.Logger) (*UnifiedAuthService, error) {
 	if config.JWTSecret == "" {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "AUTH_CONFIG_ERROR",
 			Message:     "JWT secret is required",
-			Description: "JWT secret must be provided for token signing",
+			Details: "JWT secret must be provided for token signing",
 		}
 	}
 
@@ -147,10 +147,10 @@ func (s *UnifiedAuthService) RegisterProvider(provider AuthProvider) {
 func (s *UnifiedAuthService) Authenticate(ctx context.Context, credentials Credentials) (*AuthResult, error) {
 	provider, exists := s.providers[credentials.Type]
 	if !exists {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "AUTH_PROVIDER_NOT_FOUND",
 			Message:     fmt.Sprintf("Authentication provider '%s' not found", credentials.Type),
-			Description: "The requested authentication provider is not registered",
+			Details: "The requested authentication provider is not registered",
 		}
 	}
 
@@ -215,10 +215,10 @@ func (s *UnifiedAuthService) ValidateToken(ctx context.Context, token string) (*
 		}
 	}
 
-	return nil, &value_objects.DomainError{
+	return nil, &errors.DomainError{
 		Code:        "TOKEN_VALIDATION_FAILED",
 		Message:     "Token validation failed",
-		Description: "The provided token is invalid or expired",
+		Details: "The provided token is invalid or expired",
 	}
 }
 
@@ -233,37 +233,37 @@ func (s *UnifiedAuthService) RefreshToken(ctx context.Context, refreshToken stri
 	})
 
 	if err != nil || !token.Valid {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "INVALID_REFRESH_TOKEN",
 			Message:     "Invalid refresh token",
-			Description: "The provided refresh token is invalid or expired",
+			Details: "The provided refresh token is invalid or expired",
 		}
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "INVALID_TOKEN_CLAIMS",
 			Message:     "Invalid token claims",
-			Description: "Unable to parse token claims",
+			Details: "Unable to parse token claims",
 		}
 	}
 
 	userIDStr, ok := claims["sub"].(string)
 	if !ok {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "INVALID_USER_ID",
 			Message:     "Invalid user ID in token",
-			Description: "User ID not found in token claims",
+			Details: "User ID not found in token claims",
 		}
 	}
 
 	userID, err := uuid.Parse(userIDStr)
 	if err != nil {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "INVALID_USER_ID_FORMAT",
 			Message:     "Invalid user ID format",
-			Description: "User ID is not a valid UUID",
+			Details: "User ID is not a valid UUID",
 		}
 	}
 
@@ -329,10 +329,10 @@ func (s *UnifiedAuthService) GetUserContext(ctx context.Context) (*UserContext, 
 		return userContext, nil
 	}
 
-	return nil, &value_objects.DomainError{
+	return nil, &errors.DomainError{
 		Code:        "USER_CONTEXT_NOT_FOUND",
 		Message:     "User context not found",
-		Description: "No authenticated user context found in request",
+		Details: "No authenticated user context found in request",
 	}
 }
 

@@ -76,7 +76,7 @@ func (ab *AppBootstrap) Initialize() (*AppConfig, error) {
 	cfg, err := ab.loadConfiguration()
 	if err != nil {
 		// Configura logging básico para erros de configuração
-		logging.InitLogger(config.LoggingConfig{
+		logging.InitLogger(logging.LoggingConfig{
 			Level:  "error",
 			Format: "json",
 		})
@@ -88,8 +88,13 @@ func (ab *AppBootstrap) Initialize() (*AppConfig, error) {
 	// 2. Valida configuração
 	if err := cfg.Validate(); err != nil {
 		// Usa configuração carregada mas com nível de erro
-		errorConfig := cfg.Logging
-		errorConfig.Level = "error"
+		errorConfig := logging.LoggingConfig{
+			Level:       "error",
+			Format:      cfg.Logging.Format,
+			Output:      cfg.Logging.Output,
+			Structured:  cfg.Logging.Structured,
+			ServiceName: ab.AppName,
+		}
 		logging.InitLogger(errorConfig)
 		logger := logging.GetLogger()
 		logger.Error("Configuration validation failed", logging.F("error", err.Error()))
@@ -152,7 +157,15 @@ func (ab *AppBootstrap) setupLogging(cfg *config.Config) error {
 		cfg.Logging.Level = "debug"
 	}
 
-	logging.InitLogger(cfg.Logging)
+	// Convert config.LoggingConfig to logging.LoggingConfig
+	loggingCfg := logging.LoggingConfig{
+		Level:       cfg.Logging.Level,
+		Format:      cfg.Logging.Format,
+		Output:      cfg.Logging.Output,
+		Structured:  cfg.Logging.Structured,
+		ServiceName: ab.AppName,
+	}
+	logging.InitLogger(loggingCfg)
 	return nil
 }
 

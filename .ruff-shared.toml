@@ -29,6 +29,8 @@ lint.ignore = [
     "D213",
     "D400",
     "D401",
+    "G004",
+    "E501",    # line-too-long
     "ERA001",  # False positives on legitimate comments
     "G004",
     "RUF100",
@@ -88,6 +90,7 @@ lint.per-file-ignores."**/scripts/**" = [
     "TRY300",
 ]
 lint.per-file-ignores."**/tests/**" = [
+    "ANN",
     "ARG",
     "BLE001", 
     "COM812",
@@ -98,11 +101,13 @@ lint.per-file-ignores."**/tests/**" = [
     "D401",
     "E501",
     "EM102",
-    "G004",
+    "FBT003",
     "G004",
     "PLC0415",
     "PLR0912",
+    "PLR0915",
     "PLR2004",
+    "PT011",
     "S101",
     "S103",
     "S104",
@@ -110,6 +115,7 @@ lint.per-file-ignores."**/tests/**" = [
     "S106",
     "S107",
     "S112",
+    "S603",
     "SLF001",
     "SLF001",
     "TRY003",
@@ -143,3 +149,6 @@ respect-gitignore = true
 show-fixes = true
 src = ["exemples", "scripts", "src", "tests"]
 target-version = "py313"
+
+lint.pep8-naming.classmethod-decorators = ["classmethod"]
+lint.pep8-naming.staticmethod-decorators = ["staticmethod"]

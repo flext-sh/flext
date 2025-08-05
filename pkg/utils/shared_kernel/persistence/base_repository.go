@@ -2,10 +2,10 @@ package persistence
 
 import (
 	"context"
-	"errors"
+	stderrors "errors"
 	"reflect"
 
-	"github.com/flext-sh/flext/pkg/utils/shared_kernel"
+	"github.com/flext-sh/flext/pkg/utils/shared_kernel/errors"
 	"github.com/flext-sh/flext/pkg/utils/shared_kernel/value_objects"
 	"gorm.io/gorm"
 )
@@ -44,10 +44,10 @@ func (r *BaseRepository[T]) Update(ctx context.Context, entity T) error {
 		return r.handleError(result.Error)
 	}
 	if result.RowsAffected == 0 {
-		return &value_objects.DomainError{
+		return &errors.DomainError{
 			Code:        "ENTITY_NOT_FOUND",
 			Message:     "Entity not found for update",
-			Description: "No rows were affected during update operation",
+			Details: "No rows were affected during update operation",
 		}
 	}
 	return nil
@@ -61,10 +61,10 @@ func (r *BaseRepository[T]) Delete(ctx context.Context, id string) error {
 		return r.handleError(result.Error)
 	}
 	if result.RowsAffected == 0 {
-		return &value_objects.DomainError{
+		return &errors.DomainError{
 			Code:        "ENTITY_NOT_FOUND",
 			Message:     "Entity not found for deletion",
-			Description: "No rows were affected during delete operation",
+			Details: "No rows were affected during delete operation",
 		}
 	}
 	return nil
@@ -75,11 +75,11 @@ func (r *BaseRepository[T]) FindByID(ctx context.Context, id string) (T, error) 
 	var entity T
 	result := r.db.WithContext(ctx).First(&entity, "id = ?", id)
 	if result.Error != nil {
-		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return entity, &value_objects.DomainError{
+		if stderrors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return entity, &errors.DomainError{
 				Code:        "ENTITY_NOT_FOUND",
 				Message:     "Entity not found",
-				Description: "No entity found with the provided ID",
+				Details: "No entity found with the provided ID",
 			}
 		}
 		return entity, r.handleError(result.Error)
@@ -207,35 +207,35 @@ func (r *BaseRepository[T]) handleError(err error) error {
 	}
 
 	// Tratar erros específicos do GORM
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return &value_objects.DomainError{
+	if stderrors.Is(err, gorm.ErrRecordNotFound) {
+		return &errors.DomainError{
 			Code:        "ENTITY_NOT_FOUND",
 			Message:     "Entity not found",
-			Description: "The requested entity does not exist",
+			Details: "The requested entity does not exist",
 		}
 	}
 
-	if errors.Is(err, gorm.ErrDuplicatedKey) {
-		return &value_objects.DomainError{
+	if stderrors.Is(err, gorm.ErrDuplicatedKey) {
+		return &errors.DomainError{
 			Code:        "ENTITY_ALREADY_EXISTS",
 			Message:     "Entity already exists",
-			Description: "An entity with the same unique identifier already exists",
+			Details: "An entity with the same unique identifier already exists",
 		}
 	}
 
-	if errors.Is(err, gorm.ErrInvalidTransaction) {
-		return &value_objects.DomainError{
+	if stderrors.Is(err, gorm.ErrInvalidTransaction) {
+		return &errors.DomainError{
 			Code:        "TRANSACTION_ERROR",
 			Message:     "Transaction error",
-			Description: "Database transaction failed",
+			Details: "Database transaction failed",
 		}
 	}
 
 	// Erro genérico
-	return &value_objects.DomainError{
+	return &errors.DomainError{
 		Code:        "DATABASE_ERROR",
 		Message:     "Database operation failed",
-		Description: err.Error(),
+		Details: err.Error(),
 	}
 }
 
@@ -256,7 +256,7 @@ func toSnakeCase(s string) string {
 }
 
 // WithTransaction executa operações dentro de uma transação
-func (r *BaseRepository[T]) WithTransaction(ctx context.Context, fn func(repo application.Repository[T]) error) error {
+func (r *BaseRepository[T]) WithTransaction(ctx context.Context, fn func(repo *BaseRepository[T]) error) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		txRepo := &BaseRepository[T]{
 			db:        tx,

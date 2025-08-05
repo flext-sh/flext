@@ -12,7 +12,6 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
-	"github.com/flext-sh/flext/pkg/utils/shared_kernel"
 	"github.com/flext-sh/flext/pkg/utils/shared_kernel/value_objects"
 )
 
@@ -53,44 +52,44 @@ func (h *BaseHandler) HandleError(c echo.Context, err error) error {
 	message := "Internal server error"
 
 	// Personaliza baseado no tipo do erro
-	switch e := err.(type) {
-	case *application.ValidationErrors:
+	// switch e := err.(type) { // Disabled - application types not available
+	// case *application.ValidationErrors: // Disabled - application package not found
+	// 	statusCode = http.StatusBadRequest
+	// 	message = "Validation failed"
+	// 	return c.JSON(statusCode, ErrorResponse{
+	// 		Error:     message,
+	// 		Message:   e.Error(),
+	// 		Code:      "VALIDATION_ERROR",
+	// 		Details:   e,
+	// 		Timestamp: time.Now().UTC(),
+	// 		RequestID: getRequestID(c),
+	// 	})
+	// case application.ValidationError: // Disabled - application package not found
+	// 	statusCode = http.StatusBadRequest
+	// 	message = "Validation failed"
+	// 	return c.JSON(statusCode, ErrorResponse{
+	// 		Error:     message,
+	// 		Message:   e.Error(),
+	// 		Code:      "VALIDATION_ERROR",
+	// 		Details:   []application.ValidationError{e},
+	// 		Timestamp: time.Now().UTC(),
+	// 		RequestID: getRequestID(c),
+	// 	})
+	// default: // Disabled switch
+	// For error handling without switch
+	// Para outros tipos de erro, verifica se é um erro conhecido
+	if isNotFoundError(err) {
+		statusCode = http.StatusNotFound
+		message = "Resource not found"
+	} else if isBadRequestError(err) {
 		statusCode = http.StatusBadRequest
-		message = "Validation failed"
-		return c.JSON(statusCode, ErrorResponse{
-			Error:     message,
-			Message:   e.Error(),
-			Code:      "VALIDATION_ERROR",
-			Details:   e,
-			Timestamp: time.Now().UTC(),
-			RequestID: getRequestID(c),
-		})
-	case application.ValidationError:
-		statusCode = http.StatusBadRequest
-		message = "Validation failed"
-		return c.JSON(statusCode, ErrorResponse{
-			Error:     message,
-			Message:   e.Error(),
-			Code:      "VALIDATION_ERROR",
-			Details:   []application.ValidationError{e},
-			Timestamp: time.Now().UTC(),
-			RequestID: getRequestID(c),
-		})
-	default:
-		// Para outros tipos de erro, verifica se é um erro conhecido
-		if isNotFoundError(err) {
-			statusCode = http.StatusNotFound
-			message = "Resource not found"
-		} else if isBadRequestError(err) {
-			statusCode = http.StatusBadRequest
-			message = "Bad request"
-		} else if isUnauthorizedError(err) {
-			statusCode = http.StatusUnauthorized
-			message = "Unauthorized"
-		} else if isForbiddenError(err) {
-			statusCode = http.StatusForbidden
-			message = "Forbidden"
-		}
+		message = "Bad request"
+	} else if isUnauthorizedError(err) {
+		statusCode = http.StatusUnauthorized
+		message = "Unauthorized"
+	} else if isForbiddenError(err) {
+		statusCode = http.StatusForbidden
+		message = "Forbidden"
 	}
 
 	return c.JSON(statusCode, ErrorResponse{

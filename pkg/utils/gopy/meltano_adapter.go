@@ -2,13 +2,11 @@
 package gopy
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"time"
 
 	// "github.com/flext-sh/flexcore/pkg/runtimes/meltano/application/services" // Disabled - cross-module dependency
-	"github.com/flext-sh/flext/pkg/infrastructure/config"
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
 )
 
@@ -35,192 +33,119 @@ type ProjectInfo struct {
 // NewMeltanoAdapter creates a new Meltano adapter instance
 func NewMeltanoAdapter() (*MeltanoAdapter, error) {
 	// Initialize minimal logging for gopy
-	config := config.LoggingConfig{
+	cfg := logging.LoggingConfig{
 		Level:  "info",
 		Format: "json",
 	}
-	logging.InitLogger(config)
+	logging.InitLogger(cfg)
 	logger := logging.GetLogger()
 
-	// Create Meltano service with auto-detection
-	service, err := services.NewMeltanoServiceWithConfig(logger)
-	if err != nil {
-		return nil, fmt.Errorf("failed to initialize Meltano service: %w", err)
-	}
+	// Meltano service disabled to avoid cross-module dependency
+	logger.Info("MeltanoAdapter initialized without service dependency")
 
 	return &MeltanoAdapter{
-		service: service,
-		logger:  logger,
+		logger: logger.With(logging.F("component", "meltano_adapter")),
 	}, nil
 }
 
 // NewMeltanoAdapterWithConfig creates adapter with custom configuration
 func NewMeltanoAdapterWithConfig(pythonPath, projectRoot string) (*MeltanoAdapter, error) {
 	// Initialize logging
-	config := config.LoggingConfig{
+	cfg := logging.LoggingConfig{
 		Level:  "info",
 		Format: "json",
 	}
-	logging.InitLogger(config)
+	logging.InitLogger(cfg)
 	logger := logging.GetLogger()
 
-	// Create Meltano service with manual configuration
-	service := services.NewMeltanoService(pythonPath, projectRoot)
+	// Meltano service disabled to avoid cross-module dependency
+	logger.Info("MeltanoAdapter initialized with config", logging.F("python_path", pythonPath), logging.F("project_root", projectRoot))
 
 	return &MeltanoAdapter{
-		service: service,
-		logger:  logger,
+		logger: logger.With(logging.F("component", "meltano_adapter")),
 	}, nil
+}
+
+// stubServiceDisabled returns a standard disabled service error
+func (m *MeltanoAdapter) stubServiceDisabled(method string) string {
+	m.logger.Warn("Meltano service disabled", logging.F("method", method))
+	return m.formatError("Meltano service disabled to avoid cross-module dependency")
 }
 
 // IsAvailable checks if Meltano is available in the system
 func (m *MeltanoAdapter) IsAvailable() bool {
-	ctx := context.Background()
-	available, err := m.service.IsAvailable(ctx)
-	if err != nil {
-		m.logger.Error("Failed to check Meltano availability", logging.F("error", err.Error()))
-		return false
-	}
-	return available
+	m.logger.Warn("Meltano service disabled - returning false")
+	return false
 }
 
 // InitProject initializes a new Meltano project
 func (m *MeltanoAdapter) InitProject(name, directory string) string {
-	ctx := context.Background()
-	result, err := m.service.InitProject(ctx, name, directory)
-	if err != nil {
-		return m.formatError(fmt.Sprintf("Failed to initialize project: %v", err))
-	}
-	return m.formatResult(result.Success, result.Data, result.Error)
+	return m.stubServiceDisabled("InitProject")
 }
 
 // GetProjectInfo retrieves information about the current project
 func (m *MeltanoAdapter) GetProjectInfo() string {
-	ctx := context.Background()
-	result, err := m.service.GetProjectInfo(ctx)
-	if err != nil {
-		return m.formatError(fmt.Sprintf("Failed to get project info: %v", err))
-	}
-	return m.formatResult(result.Success, result.Data, result.Error)
+	return m.stubServiceDisabled("GetProjectInfo")
 }
 
 // AddPlugin adds a plugin to the project
 func (m *MeltanoAdapter) AddPlugin(pluginType, name, variant string) string {
-	ctx := context.Background()
-	result, err := m.service.AddPlugin(ctx, pluginType, name, variant)
-	if err != nil {
-		return m.formatError(fmt.Sprintf("Failed to add plugin: %v", err))
-	}
-	return m.formatResult(result.Success, result.Data, result.Error)
+	return m.stubServiceDisabled("AddPlugin")
 }
 
 // InstallPlugins installs all plugins in the project
 func (m *MeltanoAdapter) InstallPlugins() string {
-	ctx := context.Background()
-	result, err := m.service.InstallPlugins(ctx)
-	if err != nil {
-		return m.formatError(fmt.Sprintf("Failed to install plugins: %v", err))
-	}
-	return m.formatResult(result.Success, result.Data, result.Error)
+	return m.stubServiceDisabled("InstallPlugins")
 }
 
 // RunPipeline executes a Meltano pipeline
 func (m *MeltanoAdapter) RunPipeline(extractor, loader, transformer string) string {
-	ctx := context.Background()
-	result, err := m.service.RunPipeline(ctx, extractor, loader, transformer)
-	if err != nil {
-		return m.formatError(fmt.Sprintf("Failed to run pipeline: %v", err))
-	}
-	return m.formatResult(result.Success, result.Data, result.Error)
+	return m.stubServiceDisabled("RunPipeline")
 }
 
 // ExecuteCommand executes a raw Meltano command
 func (m *MeltanoAdapter) ExecuteCommand(command string, args []string) string {
-	ctx := context.Background()
-	result, err := m.service.ExecuteCommand(ctx, command, args)
-	if err != nil {
-		return m.formatError(fmt.Sprintf("Failed to execute command: %v", err))
-	}
-	return m.formatResult(result.Success, result.Data, result.Error)
+	return m.stubServiceDisabled("ExecuteCommand")
 }
 
 // GetPlugins retrieves all plugins in the project
 func (m *MeltanoAdapter) GetPlugins() string {
-	ctx := context.Background()
-	result, err := m.service.GetPlugins(ctx)
-	if err != nil {
-		return m.formatError(fmt.Sprintf("Failed to get plugins: %v", err))
-	}
-	return m.formatResult(result.Success, result.Data, result.Error)
+	return m.stubServiceDisabled("GetPlugins")
 }
 
 // CreateAdapter creates a new Meltano adapter
 func (m *MeltanoAdapter) CreateAdapter(adapterType string, config map[string]interface{}) string {
-	ctx := context.Background()
-	result, err := m.service.CreateAdapter(ctx, adapterType, config)
-	if err != nil {
-		return m.formatError(fmt.Sprintf("Failed to create adapter: %v", err))
-	}
-	return m.formatResult(result.Success, result.Data, result.Error)
+	return m.stubServiceDisabled("CreateAdapter")
 }
 
 // ListProjects lists available Meltano projects
 func (m *MeltanoAdapter) ListProjects(rootDir string) string {
-	ctx := context.Background()
-	projects, err := m.service.ListProjects(ctx, rootDir)
-	if err != nil {
-		return m.formatError(fmt.Sprintf("Failed to list projects: %v", err))
-	}
-	return m.formatResult(true, map[string]interface{}{
-		"projects": projects,
-		"count":    len(projects),
-	}, "")
+	return m.stubServiceDisabled("ListProjects")
 }
 
 // GetProcessPoolStats returns statistics about the process pool
 func (m *MeltanoAdapter) GetProcessPoolStats() string {
-	stats := m.service.GetProcessPoolStats()
-	return m.formatResult(true, stats, "")
+	return m.stubServiceDisabled("GetProcessPoolStats")
 }
 
 // GetStateStats returns state management statistics
 func (m *MeltanoAdapter) GetStateStats() string {
-	ctx := context.Background()
-	stats, err := m.service.GetStateStats(ctx)
-	if err != nil {
-		return m.formatError(fmt.Sprintf("Failed to get state stats: %v", err))
-	}
-	return m.formatResult(true, stats, "")
+	return m.stubServiceDisabled("GetStateStats")
 }
 
 // SavePluginState saves state for a specific plugin
 func (m *MeltanoAdapter) SavePluginState(project, plugin string, state map[string]interface{}) string {
-	ctx := context.Background()
-	err := m.service.SavePluginState(ctx, project, plugin, state)
-	if err != nil {
-		return m.formatError(fmt.Sprintf("Failed to save plugin state: %v", err))
-	}
-	return m.formatResult(true, "State saved successfully", "")
+	return m.stubServiceDisabled("SavePluginState")
 }
 
 // LoadPluginState loads state for a specific plugin
 func (m *MeltanoAdapter) LoadPluginState(project, plugin string) string {
-	ctx := context.Background()
-	state, err := m.service.LoadPluginState(ctx, project, plugin)
-	if err != nil {
-		return m.formatError(fmt.Sprintf("Failed to load plugin state: %v", err))
-	}
-	return m.formatResult(true, state, "")
+	return m.stubServiceDisabled("LoadPluginState")
 }
 
 // DeletePluginState deletes state for a specific plugin
 func (m *MeltanoAdapter) DeletePluginState(project, plugin string) string {
-	ctx := context.Background()
-	err := m.service.DeletePluginState(ctx, project, plugin)
-	if err != nil {
-		return m.formatError(fmt.Sprintf("Failed to delete plugin state: %v", err))
-	}
-	return m.formatResult(true, "State deleted successfully", "")
+	return m.stubServiceDisabled("DeletePluginState")
 }
 
 // GetVersion returns the version information

@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/utils/shared_kernel/value_objects"
+	"github.com/flext-sh/flext/pkg/utils/shared_kernel/errors"
 	"github.com/google/uuid"
 )
 
@@ -361,10 +361,10 @@ type ExecutionMetric struct {
 
 // Repository error types
 var (
-	ErrEntityNotFound    = &value_objects.DomainError{Code: "ENTITY_NOT_FOUND", Message: "Entity not found"}
-	ErrEntityExists      = &value_objects.DomainError{Code: "ENTITY_EXISTS", Message: "Entity already exists"}
-	ErrInvalidInput      = &value_objects.DomainError{Code: "INVALID_INPUT", Message: "Invalid input provided"}
-	ErrTransactionFailed = &value_objects.DomainError{Code: "TRANSACTION_FAILED", Message: "Transaction failed"}
-	ErrConnectionFailed  = &value_objects.DomainError{Code: "CONNECTION_FAILED", Message: "Database connection failed"}
-	ErrQueryTimeout      = &value_objects.DomainError{Code: "QUERY_TIMEOUT", Message: "Query execution timeout"}
+	ErrEntityNotFound    = &errors.DomainError{Code: "ENTITY_NOT_FOUND", Message: "Entity not found"}
+	ErrEntityExists      = &errors.DomainError{Code: "ENTITY_EXISTS", Message: "Entity already exists"}
+	ErrInvalidInput      = &errors.DomainError{Code: "INVALID_INPUT", Message: "Invalid input provided"}
+	ErrTransactionFailed = &errors.DomainError{Code: "TRANSACTION_FAILED", Message: "Transaction failed"}
+	ErrConnectionFailed  = &errors.DomainError{Code: "CONNECTION_FAILED", Message: "Database connection failed"}
+	ErrQueryTimeout      = &errors.DomainError{Code: "QUERY_TIMEOUT", Message: "Query execution timeout"}
 )

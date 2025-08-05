@@ -5,8 +5,16 @@ import (
 	"strings"
 
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
-	"github.com/flext-sh/flext/pkg/utils/shared_kernel/value_objects"
+	"github.com/flext-sh/flext/pkg/utils/shared_kernel/errors"
 	"github.com/labstack/echo/v4"
+)
+
+// ContextKey defines a custom type for context keys to avoid collisions
+type ContextKey string
+
+const (
+	// UserContextKey is the key for storing user context in request context
+	UserContextKey ContextKey = "user_context"
 )
 
 // UnifiedAuthMiddleware provides authentication middleware for Echo
@@ -87,7 +95,7 @@ func (m *UnifiedAuthMiddleware) Middleware() echo.MiddlewareFunc {
 			}
 
 			// Set user context in request context
-			ctx := context.WithValue(c.Request().Context(), "user_context", userContext)
+			ctx := context.WithValue(c.Request().Context(), UserContextKey, userContext)
 			c.SetRequest(c.Request().WithContext(ctx))
 
 			// Set user information in Echo context for easy access
@@ -212,10 +220,10 @@ func (m *UnifiedAuthMiddleware) shouldSkipPath(path string) bool {
 func (m *UnifiedAuthMiddleware) getUserContext(c echo.Context) (*UserContext, error) {
 	userContext, ok := c.Request().Context().Value("user_context").(*UserContext)
 	if !ok {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "USER_CONTEXT_NOT_FOUND",
 			Message:     "User context not found",
-			Description: "Authentication middleware was not applied or user is not authenticated",
+			Details: "Authentication middleware was not applied or user is not authenticated",
 		}
 	}
 	return userContext, nil
@@ -293,10 +301,10 @@ func (m *UnifiedAuthMiddleware) RequireAdmin(next echo.HandlerFunc) echo.Handler
 func GetUserFromContext(c echo.Context) (*UserContext, error) {
 	userContext, ok := c.Request().Context().Value("user_context").(*UserContext)
 	if !ok {
-		return nil, &value_objects.DomainError{
+		return nil, &errors.DomainError{
 			Code:        "USER_CONTEXT_NOT_FOUND",
 			Message:     "User context not found",
-			Description: "No authenticated user found in request context",
+			Details: "No authenticated user found in request context",
 		}
 	}
 	return userContext, nil
