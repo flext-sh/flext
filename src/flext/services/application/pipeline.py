@@ -150,3 +150,38 @@ class PipelineQueryHandler:
         """Handle list pipelines query."""
         # Simplified implementation - to be implemented when Pipeline domain exists
         return FlextResult.ok(data=[])
+
+
+class PipelineService:
+    """High-level pipeline orchestration service.
+    
+    Provides enterprise-grade pipeline management capabilities including
+    creation, execution, monitoring, and lifecycle management. Integrates
+    with Singer ecosystem and DBT transformations.
+    
+    Architecture:
+        Implements application service patterns coordinating between pipeline
+        domain entities, infrastructure concerns, and external integrations.
+        Uses FlextResult patterns for consistent error handling.
+    """
+    
+    def __init__(self) -> None:
+        """Initialize pipeline service with dependency injection support."""
+        self._command_handler = PipelineCommandHandler()
+        self._query_handler = PipelineQueryHandler()
+    
+    def create_pipeline(self, command: CreatePipelineCommand) -> FlextResult[dict[str, Any]]:
+        """Create new data pipeline with validation."""
+        return self._command_handler.handle_create(command)
+    
+    def execute_pipeline(self, command: ExecutePipelineCommand) -> FlextResult[dict[str, Any]]:
+        """Execute existing pipeline with monitoring."""
+        return self._command_handler.handle_execute(command)
+    
+    def get_pipeline(self, query: GetPipelineQuery) -> FlextResult[dict[str, Any]]:
+        """Retrieve pipeline configuration and status."""
+        return self._query_handler.handle_get(query)
+    
+    async def list_pipelines(self, query: ListPipelinesQuery) -> FlextResult[list[dict[str, object]]]:
+        """List all available pipelines with metadata."""
+        return await self._query_handler.handle_list(query)
