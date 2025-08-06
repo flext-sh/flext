@@ -72,10 +72,15 @@ import tomllib
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from flext_core import FlextResult, get_logger
+from pydantic import BaseModel, Field
+
 from flext_tools.utils import Colors, print_colored
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+logger = get_logger(__name__)
 
 MIN_VALID_PROJECTS = 2
 MAX_INCONSISTENCIES_DISPLAY = 10
@@ -138,6 +143,22 @@ class LockInconsistency:
     type: str  # "version", "missing", "hash"
     details: dict[str, str]  # project -> version/status
     severity: str  # "critical", "warning", "info"
+
+
+class WorkspaceSummary(BaseModel):
+    """Comprehensive workspace dependency analysis summary.
+    
+    Contains statistical summary of workspace analysis including project
+    counts, package inventory, and inconsistency classification.
+    """
+
+    total_projects: int = Field(..., description="Total number of projects analyzed")
+    projects_with_lock: int = Field(..., description="Number of projects with valid poetry.lock files")
+    total_packages: int = Field(..., description="Total number of unique packages across all projects")
+    total_inconsistencies: int = Field(..., description="Total number of inconsistencies detected")
+    critical_inconsistencies: int = Field(..., description="Number of critical inconsistencies")
+    warning_inconsistencies: int = Field(..., description="Number of warning inconsistencies")
+    info_inconsistencies: int = Field(..., description="Number of informational inconsistencies")
 
 
 class LockConsistencyAnalyzer:
@@ -203,7 +224,7 @@ class LockConsistencyAnalyzer:
     def analyze_workspace(
         self,
         workspace_path: Path,
-    ) -> dict[str, list[LockInconsistency]]:
+    ) -> FlextResult[dict[str, list[LockInconsistency]]]:
         """Analyze all Poetry lock files in the workspace for consistency.
 
         Performs comprehensive analysis of all Poetry lock files within the
@@ -233,24 +254,33 @@ class LockConsistencyAnalyzer:
             consistency validation across large workspaces without performance impact.
 
         """
-        print_colored(
-            "🔍 Analyzing Poetry lock file consistency across workspace...",
-            Colors.BLUE,
-        )
+        try:
+            print_colored(
+                "🔍 Analyzing Poetry lock file consistency across workspace...",
+                Colors.BLUE,
+            )
 
-        # Discover all projects with Poetry configuration
-        projects = self._discover_projects(workspace_path)
-        print_colored(f"  📁 Found {len(projects)} projects", Colors.CYAN)
+            # Discover all projects with Poetry configuration
+            projects = self._discover_projects(workspace_path)
+            logger.info(f"Found {len(projects)} projects")
+            print_colored(f"  📁 Found {len(projects)} projects", Colors.CYAN)
 
-        # Load lock file information from each project
-        for project_path in projects:
-            self._load_project_lock(project_path)
+            # Load lock file information from each project
+            for project_path in projects:
+                self._load_project_lock(project_path)
 
-        # Analyze dependency inconsistencies across projects
-        self._analyze_inconsistencies()
+            # Analyze dependency inconsistencies across projects
+            self._analyze_inconsistencies()
 
-        # Categorize results by severity for prioritized resolution
-        return self._categorize_inconsistencies()
+            # Categorize results by severity for prioritized resolution
+            categories = self._categorize_inconsistencies()
+
+            return FlextResult.ok(categories)
+
+        except Exception as e:
+            error_msg = f"Failed to analyze workspace: {e}"
+            logger.error(error_msg)
+            return FlextResult.fail(error_msg)
 
     def _discover_projects(self, workspace_path: Path) -> list[Path]:
         """Discover Poetry projects in the workspace with pyproject.toml files.
@@ -468,7 +498,7 @@ class LockConsistencyAnalyzer:
 
         return categories
 
-    def get_workspace_summary(self) -> dict[str, object]:
+    def get_workspace_summary(self) -> FlextResult[WorkspaceSummary]:
         """Return comprehensive workspace dependency analysis summary.
 
         Generates statistical summary of workspace analysis including project
@@ -485,21 +515,29 @@ class LockConsistencyAnalyzer:
         )
         total_packages = sum(len(info.packages) for info in self.project_locks.values())
 
-        return {
-            "total_projects": total_projects,
-            "projects_with_lock": projects_with_lock,
-            "total_packages": total_packages,
-            "total_inconsistencies": len(self.inconsistencies),
-            "critical_inconsistencies": len(
-                [i for i in self.inconsistencies if i.severity == "critical"],
-            ),
-            "warning_inconsistencies": len(
-                [i for i in self.inconsistencies if i.severity == "warning"],
-            ),
-            "info_inconsistencies": len(
-                [i for i in self.inconsistencies if i.severity == "info"],
-            ),
-        }
+        try:
+            summary = WorkspaceSummary(
+                total_projects=total_projects,
+                projects_with_lock=projects_with_lock,
+                total_packages=total_packages,
+                total_inconsistencies=len(self.inconsistencies),
+                critical_inconsistencies=len(
+                    [i for i in self.inconsistencies if i.severity == "critical"],
+                ),
+                warning_inconsistencies=len(
+                    [i for i in self.inconsistencies if i.severity == "warning"],
+                ),
+                info_inconsistencies=len(
+                    [i for i in self.inconsistencies if i.severity == "info"],
+                ),
+            )
+
+            return FlextResult.ok(summary)
+
+        except Exception as e:
+            error_msg = f"Failed to generate workspace summary: {e}"
+            logger.error(error_msg)
+            return FlextResult.fail(error_msg)
 
     def print_detailed_report(
         self,

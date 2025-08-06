@@ -81,17 +81,71 @@ from __future__ import annotations
 import subprocess
 from typing import TYPE_CHECKING
 
+from flext_core import FlextEntity, FlextResult, get_flext_container, get_logger
+
 from flext_tools.safety.backup import BackupManager
 from flext_tools.safety.validator import SafetyValidator
 from flext_tools.utils.colors import Colors, print_colored
-from flext_tools.utils.logging import get_logger
 
 if TYPE_CHECKING:
-    from logging import Logger
     from pathlib import Path
 
 
+# Constants
 MIN_PARTS_COUNT = 3
+
+# Initialize logger
+logger = get_logger(__name__)
+
+
+class OperationResult(FlextEntity):
+    """Poetry operation result entity for structured operation reporting.
+
+    This entity encapsulates complete Poetry operation results including
+    success status, detailed operation information, and performance metrics
+    for comprehensive operation tracking and analysis.
+
+    Attributes:
+        success: Primary success indicator for the operation
+        operation_type: Type of Poetry operation performed
+        packages_affected: List of packages affected by the operation
+        execution_time: Operation execution time in seconds
+        details: Additional operation details and context
+
+    """
+
+    def __init__(
+        self,
+        success: bool,
+        operation_type: str,
+        packages_affected: list[str] | None = None,
+        execution_time: float = 0.0,
+        details: dict[str, object] | None = None
+    ) -> None:
+        """Initialize operation result with comprehensive operation information."""
+        super().__init__(id=f"operation_{operation_type}_{success}")
+        self.success = success
+        self.operation_type = operation_type
+        self.packages_affected = packages_affected or []
+        self.execution_time = execution_time
+        self.details = details or {}
+
+    def get_summary(self) -> str:
+        """Get human-readable operation summary."""
+        status = "SUCCESS" if self.success else "FAILED"
+        package_count = len(self.packages_affected)
+        return f"{self.operation_type} {status}: {package_count} packages affected in {self.execution_time:.2f}s"
+
+    def validate_business_rules(self) -> FlextResult[None]:
+        """Validate business rules for operation result."""
+        issues = []
+        if not self.operation_type:
+            issues.append("Operation type is required")
+        if self.execution_time < 0:
+            issues.append("Execution time cannot be negative")
+        if issues:
+            return FlextResult.fail("; ".join(issues))
+        return FlextResult.ok(None)
 
 
 class PoetryOperations:
@@ -164,20 +218,109 @@ class PoetryOperations:
         *,
         dry_run: bool = True,
         enable_safety: bool = True,
-        logger: Logger | None = None,
     ) -> None:
-        """Initialize Poetry operations with safety system."""
+        """Initialize Poetry operations with comprehensive safety and DI integration.
+
+        Creates a new PoetryOperations instance with integrated safety systems,
+        dependency injection configuration, and operational monitoring for
+        enterprise-grade Poetry operations across FLEXT projects.
+
+        Args:
+            dry_run: Flag for dry-run mode execution without actual changes
+            enable_safety: Flag for enabling integrated safety systems
+
+        Architecture:
+            Uses dependency injection patterns for safety system configuration
+            and integrates with monitoring systems for comprehensive operational
+            visibility and reliability.
+
+        """
         self.dry_run = dry_run
         self.enable_safety = enable_safety
-        self.logger = logger or get_logger(__name__)
+        self.logger = logger
+        self.container = get_flext_container()
 
         if self.enable_safety:
             self.backup_manager = BackupManager()
             self.safety_validator = SafetyValidator()
             self.logger.info(
-                f"INIT: Safety system activated (dry_run={dry_run})",
+                "Poetry operations safety system activated",
+                dry_run=dry_run,
+                safety_enabled=enable_safety
             )
-            print_colored("🛡️ Safety system activated", Colors.CYAN)
+            print_colored("🛡️ Poetry operations safety system activated", Colors.CYAN)
+
+        self.logger.info("Poetry operations manager initialized",
+                        dry_run=dry_run,
+                        safety_enabled=enable_safety)
+
+    def add_dependencies_safe(
+        self,
+        project_path: Path,
+        dependencies: dict[str, list[str]],
+        *,
+        auto_confirm: bool = False,
+    ) -> FlextResult[OperationResult]:
+        """Safely add dependencies using railway-oriented programming.
+
+        Performs comprehensive dependency addition with integrated backup systems,
+        safety validation, and structured result reporting using FlextResult patterns
+        for consistent error handling and operational monitoring.
+
+        Args:
+            project_path: Path to Poetry project root directory
+            dependencies: Dictionary mapping dependency categories to dependency lists
+            auto_confirm: Automatic confirmation flag for batch operations
+
+        Returns:
+            FlextResult containing OperationResult with comprehensive operation status
+
+        Architecture:
+            Uses railway-oriented programming with proper error handling to ensure
+            reliable dependency management with comprehensive monitoring and safety.
+
+        """
+        try:
+            import time
+            start_time = time.time()
+
+            self.logger.info("Starting safe dependency addition",
+                           project_path=str(project_path),
+                           dependency_categories=list(dependencies.keys()),
+                           total_dependencies=sum(len(deps) for deps in dependencies.values()))
+
+            # Use existing implementation but wrap in FlextResult
+            legacy_result = self.add_dependencies(project_path, dependencies, _auto_confirm=auto_confirm)
+
+            execution_time = time.time() - start_time
+            packages_affected = sum(len(deps) for deps in legacy_result.values())
+
+            result = OperationResult(
+                success=packages_affected > 0,
+                operation_type="add_dependencies",
+                packages_affected=[
+                    dep for deps_list in legacy_result.values() for dep in deps_list
+                ],
+                execution_time=execution_time,
+                details={
+                    "categories": legacy_result,
+                    "dry_run": self.dry_run,
+                    "safety_enabled": self.enable_safety
+                }
+            )
+
+            self.logger.info("Safe dependency addition completed",
+                           project_path=str(project_path),
+                           packages_affected=packages_affected,
+                           execution_time=execution_time,
+                           success=result.success)
+
+            return FlextResult.ok(result)
+
+        except Exception as e:
+            self.logger.exception("Safe dependency addition failed",
+                            project_path=str(project_path), error=str(e))
+            return FlextResult.fail(f"Dependency addition failed: {e}")
 
     def add_dependencies(
         self,
@@ -332,6 +475,66 @@ class PoetryOperations:
             print_colored(f"    ❌ Error executing poetry: {e}", Colors.RED)
             return False
 
+    def remove_dependencies_safe(
+        self,
+        project_path: Path,
+        dependencies: list[str],
+        *,
+        auto_confirm: bool = False,
+    ) -> FlextResult[OperationResult]:
+        """Safely remove dependencies using railway-oriented programming.
+
+        Performs comprehensive dependency removal with integrated backup systems
+        and safety validation using FlextResult patterns for operational reliability.
+
+        Args:
+            project_path: Path to Poetry project root directory
+            dependencies: List of dependency names to remove
+            auto_confirm: Automatic confirmation flag for batch operations
+
+        Returns:
+            FlextResult containing OperationResult with comprehensive operation status
+
+        """
+        try:
+            import time
+            start_time = time.time()
+
+            self.logger.info("Starting safe dependency removal",
+                           project_path=str(project_path),
+                           dependencies=dependencies,
+                           total_dependencies=len(dependencies))
+
+            # Use existing implementation but wrap in FlextResult
+            legacy_result = self.remove_dependencies(project_path, dependencies, _auto_confirm=auto_confirm)
+
+            execution_time = time.time() - start_time
+
+            result = OperationResult(
+                success=len(legacy_result) > 0,
+                operation_type="remove_dependencies",
+                packages_affected=legacy_result,
+                execution_time=execution_time,
+                details={
+                    "removed_packages": legacy_result,
+                    "dry_run": self.dry_run,
+                    "safety_enabled": self.enable_safety
+                }
+            )
+
+            self.logger.info("Safe dependency removal completed",
+                           project_path=str(project_path),
+                           packages_removed=len(legacy_result),
+                           execution_time=execution_time,
+                           success=result.success)
+
+            return FlextResult.ok(result)
+
+        except Exception as e:
+            self.logger.exception("Safe dependency removal failed",
+                            project_path=str(project_path), error=str(e))
+            return FlextResult.fail(f"Dependency removal failed: {e}")
+
     def remove_dependencies(
         self,
         project_path: Path,
@@ -452,6 +655,55 @@ class PoetryOperations:
             print_colored(f"    ❌ Error executing poetry: {e}", Colors.RED)
             return False
 
+    def update_project_safe(self, project_path: Path) -> FlextResult[OperationResult]:
+        """Safely update Poetry project using railway-oriented programming.
+
+        Performs comprehensive project update with integrated backup systems
+        and safety validation using FlextResult patterns for operational reliability.
+
+        Args:
+            project_path: Path to Poetry project root directory
+
+        Returns:
+            FlextResult containing OperationResult with comprehensive operation status
+
+        """
+        try:
+            import time
+            start_time = time.time()
+
+            self.logger.info("Starting safe project update",
+                           project_path=str(project_path))
+
+            # Use existing implementation but wrap in FlextResult
+            legacy_success = self.update_project(project_path)
+
+            execution_time = time.time() - start_time
+
+            result = OperationResult(
+                success=legacy_success,
+                operation_type="update_project",
+                packages_affected=[],  # Update affects all packages
+                execution_time=execution_time,
+                details={
+                    "project_updated": legacy_success,
+                    "dry_run": self.dry_run,
+                    "safety_enabled": self.enable_safety
+                }
+            )
+
+            self.logger.info("Safe project update completed",
+                           project_path=str(project_path),
+                           execution_time=execution_time,
+                           success=result.success)
+
+            return FlextResult.ok(result)
+
+        except Exception as e:
+            self.logger.exception("Safe project update failed",
+                            project_path=str(project_path), error=str(e))
+            return FlextResult.fail(f"Project update failed: {e}")
+
     def update_project(self, project_path: Path) -> bool:
         """Update all dependencies in a Poetry project with safety validation.
 
@@ -525,6 +777,54 @@ class PoetryOperations:
             print_colored(f"❌ Error executing poetry update: {e}", Colors.RED)
             return False
 
+    def lock_project_safe(self, project_path: Path) -> FlextResult[OperationResult]:
+        """Safely generate Poetry lock file using railway-oriented programming.
+
+        Performs Poetry lock file generation with comprehensive error handling
+        and structured result reporting using FlextResult patterns.
+
+        Args:
+            project_path: Path to Poetry project root directory
+
+        Returns:
+            FlextResult containing OperationResult with comprehensive operation status
+
+        """
+        try:
+            import time
+            start_time = time.time()
+
+            self.logger.info("Starting safe project lock",
+                           project_path=str(project_path))
+
+            # Use existing implementation but wrap in FlextResult
+            legacy_success = self.lock_project(project_path)
+
+            execution_time = time.time() - start_time
+
+            result = OperationResult(
+                success=legacy_success,
+                operation_type="lock_project",
+                packages_affected=[],  # Lock affects all dependencies
+                execution_time=execution_time,
+                details={
+                    "lock_generated": legacy_success,
+                    "dry_run": self.dry_run
+                }
+            )
+
+            self.logger.info("Safe project lock completed",
+                           project_path=str(project_path),
+                           execution_time=execution_time,
+                           success=result.success)
+
+            return FlextResult.ok(result)
+
+        except Exception as e:
+            self.logger.exception("Safe project lock failed",
+                            project_path=str(project_path), error=str(e))
+            return FlextResult.fail(f"Project lock failed: {e}")
+
     def lock_project(self, project_path: Path) -> bool:
         """Generate or update poetry.lock file with dependency resolution.
 
@@ -579,6 +879,54 @@ class PoetryOperations:
         except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
             print_colored(f"❌ Error executing poetry lock: {e}", Colors.RED)
             return False
+
+    def validate_project_safe(self, project_path: Path) -> FlextResult[OperationResult]:
+        """Safely validate Poetry project using railway-oriented programming.
+
+        Performs comprehensive Poetry project validation with structured result
+        reporting using FlextResult patterns for consistent error handling.
+
+        Args:
+            project_path: Path to Poetry project root directory
+
+        Returns:
+            FlextResult containing OperationResult with comprehensive validation status
+
+        """
+        try:
+            import time
+            start_time = time.time()
+
+            self.logger.info("Starting safe project validation",
+                           project_path=str(project_path))
+
+            # Use existing implementation but wrap in FlextResult
+            legacy_success = self.validate_project(project_path)
+
+            execution_time = time.time() - start_time
+
+            result = OperationResult(
+                success=legacy_success,
+                operation_type="validate_project",
+                packages_affected=[],  # Validation doesn't affect packages
+                execution_time=execution_time,
+                details={
+                    "validation_passed": legacy_success,
+                    "project_path": str(project_path)
+                }
+            )
+
+            self.logger.info("Safe project validation completed",
+                           project_path=str(project_path),
+                           execution_time=execution_time,
+                           success=result.success)
+
+            return FlextResult.ok(result)
+
+        except Exception as e:
+            self.logger.exception("Safe project validation failed",
+                            project_path=str(project_path), error=str(e))
+            return FlextResult.fail(f"Project validation failed: {e}")
 
     def validate_project(self, project_path: Path) -> bool:
         """Validate Poetry project configuration for compliance and integrity.

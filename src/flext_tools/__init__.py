@@ -75,6 +75,9 @@ License: MIT
 
 __version__ = "2.0.0"
 
+# Core patterns integration
+from flext_core import FlextContainer, get_flext_container
+
 # Exporta módulos principais
 from flext_tools.analysis import ConflictAnalyzer, VersionAnalyzer
 from flext_tools.cache import CacheManager, cache_result, cached
@@ -84,12 +87,44 @@ from flext_tools.safety import BackupManager, RollbackManager, SafetyValidator
 from flext_tools.utils import (
     Colors,
     DetailedLogger,
-    LogLevel,
     get_logger,
     get_stdlib_modules,
     print_colored,
     should_ignore_path,
 )
+
+
+def get_flext_tools_container() -> FlextContainer:
+    """Get or create the FlextTools service container."""
+    container = get_flext_container()
+
+    # Register core services
+    try:
+        container.get("conflict_analyzer")
+    except KeyError:
+        container.register("conflict_analyzer", ConflictAnalyzer)
+
+    try:
+        container.get("cache_manager")
+    except KeyError:
+        container.register("cache_manager", CacheManager)
+
+    try:
+        container.get("dependency_discovery")
+    except KeyError:
+        container.register("dependency_discovery", DependencyDiscovery)
+
+    try:
+        container.get("poetry_operations")
+    except KeyError:
+        container.register("poetry_operations", PoetryOperations)
+
+    try:
+        container.get("safety_validator")
+    except KeyError:
+        container.register("safety_validator", SafetyValidator)
+
+    return container
 
 __all__: list[str] = [
     "BackupManager",
@@ -98,7 +133,7 @@ __all__: list[str] = [
     "ConflictAnalyzer",
     "DependencyDiscovery",
     "DetailedLogger",
-    "LogLevel",
+    "FlextContainer",
     "PoetryOperations",
     "PoetryValidator",
     "RollbackManager",
@@ -106,6 +141,8 @@ __all__: list[str] = [
     "VersionAnalyzer",
     "cache_result",
     "cached",
+    "get_flext_container",
+    "get_flext_tools_container",
     "get_logger",
     "get_stdlib_modules",
     "print_colored",

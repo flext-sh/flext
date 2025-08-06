@@ -8,14 +8,19 @@ do workspace FLEXT usando flext_tools para máxima reutilização.
 from __future__ import annotations
 
 import importlib.util
+import inspect
 import sys
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from scripts.core.script_registry import ScriptRegistry
 
 from flext_tools import Colors, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
+
+if TYPE_CHECKING:
+    from argparse import ArgumentParser
 
 
 class ScriptRunner(FlextScript):
@@ -59,7 +64,10 @@ class ScriptRunner(FlextScript):
                     return True
 
                 if script_name:
-                    return self._run_script(registry, script_name, kwargs)
+                    # Pass script_name as positional and kwargs as keyword arguments
+                    return self._run_script(
+                        registry, script_name, **kwargs
+                    )  # Pass kwargs correctly
                 print_colored(
                     "❌ No script specified. Use --list to see available scripts.",
                     Colors.RED,
@@ -74,7 +82,7 @@ class ScriptRunner(FlextScript):
             print_colored(f"❌ Error in script runner: {e}", Colors.RED)
             return False
 
-    def _list_all_scripts(self, registry: object) -> None:
+    def _list_all_scripts(self, registry: ScriptRegistry) -> None:  # Typed registry
         """List all available scripts."""
         print_colored("📋 AVAILABLE SCRIPTS", Colors.BLUE)
         print_colored("=" * 40, Colors.BLUE)
@@ -86,7 +94,9 @@ class ScriptRunner(FlextScript):
             return
 
         # Group by category
-        by_category: dict[str, list[Any]] = {}
+        by_category: dict[
+            str, list[ScriptMetadata]
+        ] = {}  # Changed Any to ScriptMetadata
         for script in scripts:
             category = (
                 script.category.value
@@ -112,8 +122,9 @@ class ScriptRunner(FlextScript):
 
     def _run_script(
         self,
-        registry: object,
+        registry: ScriptRegistry,  # Typed registry
         script_name: str,
+        **kwargs: object,  # Accept additional keyword arguments
     ) -> bool:
         """Run a specific script."""
         script_metadata = registry.get_script(script_name)
@@ -143,7 +154,13 @@ class ScriptRunner(FlextScript):
 
             # Find and run main function
             if hasattr(module, "main"):
-                result = module.main()
+                # Pass kwargs to main function if it accepts them
+                if isinstance(module.main, Callable) and _accepts_kwargs(
+                    module.main
+                ):  # Added check for kwargs
+                    result = module.main(**kwargs)  # Pass kwargs to main
+                else:
+                    result = module.main()  # No kwargs expected
                 return bool(result == 0)
             print_colored(f"❌ Script {script_name} has no main() function", Colors.RED)
             return False
@@ -152,7 +169,7 @@ class ScriptRunner(FlextScript):
             print_colored(f"❌ Error running script {script_name}: {e}", Colors.RED)
             return False
 
-    def create_parser(self) -> object:
+    def create_parser(self) -> ArgumentParser:  # Changed return type
         """Create parser with specific arguments."""
         parser = super().create_parser()
 
@@ -168,6 +185,12 @@ class ScriptRunner(FlextScript):
 
     def cleanup(self) -> None:
         """Limpeza após execução."""
+
+
+# Helper to check if a function accepts arbitrary keyword arguments
+def _accepts_kwargs(func: Callable[..., Any]) -> bool:  # Helper function
+    sig = inspect.signature(func)
+    return any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
 
 
 def main() -> int:

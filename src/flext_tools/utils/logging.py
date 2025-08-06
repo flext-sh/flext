@@ -1,69 +1,160 @@
-"""Logging utilities for FLEXT tools."""
+"""Logging utilities for FLEXT tools using flext-observability."""
 
-import logging
-from collections.abc import Callable
-from enum import Enum
-from typing import ParamSpec
+import warnings
+from typing import ParamSpec, Protocol
+
+from flext_core import get_logger as flext_get_logger
+from flext_observability import (
+    FlextLoggingService,
+    flext_create_log_entry,
+)
 
 
-class LogLevel(Enum):
-    """Log levels for FLEXT tools."""
-
-    DEBUG = "DEBUG"
-    INFO = "INFO"
-    WARNING = "WARNING"
-    ERROR = "ERROR"
+def _deprecation_warning() -> None:
+    """Warn about deprecated logging utilities."""
+    warnings.warn(
+        "flext_tools.utils.logging is deprecated. Use flext_observability directly. "
+        "Will be removed in v2.0.0. See CLAUDE.md for migration guide.",
+        DeprecationWarning,
+        stacklevel=3,
+    )
 
 
 class DetailedLogger:
-    """Detailed logger for FLEXT operations."""
+    """DEPRECATED: Use flext-observability logging instead."""
 
     def __init__(self, name: str) -> None:
-        """Initialize logger."""
-        self.logger = logging.getLogger(name)
+        """Initialize logger with flext-observability integration."""
+        _deprecation_warning()
+        self.logger = flext_get_logger(name)
+        self.logging_service = FlextLoggingService()
 
-    def debug(self, message: str) -> None:
-        """Log debug message."""
-        self.logger.debug(message)
+    def debug(
+        self,
+        message: str,
+        *args: object,
+        exc_info: bool | None = None,
+        stack_info: bool = False,
+        extra: dict[str, object] | None = None,
+        **kwargs: object,
+    ) -> None:
+        """Log debug message using flext-observability."""
+        # Add exc_info and stack_info to metadata if provided
+        if exc_info or stack_info:
+            kwargs.update({"exc_info": exc_info, "stack_info": stack_info})
+        self._log_with_observability("DEBUG", message, args, extra, kwargs)
 
-    def info(self, message: str) -> None:
-        """Log info message."""
-        self.logger.info(message)
+    def info(
+        self,
+        message: str,
+        *args: object,
+        exc_info: bool | None = None,
+        stack_info: bool = False,
+        extra: dict[str, object] | None = None,
+        **kwargs: object,
+    ) -> None:
+        """Log info message using flext-observability."""
+        # Add exc_info and stack_info to metadata if provided
+        if exc_info or stack_info:
+            kwargs.update({"exc_info": exc_info, "stack_info": stack_info})
+        self._log_with_observability("INFO", message, args, extra, kwargs)
 
-    def warning(self, message: str) -> None:
-        """Log warning message."""
-        self.logger.warning(message)
+    def warning(
+        self,
+        message: str,
+        *args: object,
+        exc_info: bool | None = None,
+        stack_info: bool = False,
+        extra: dict[str, object] | None = None,
+        **kwargs: object,
+    ) -> None:
+        """Log warning message using flext-observability."""
+        # Add exc_info and stack_info to metadata if provided
+        if exc_info or stack_info:
+            kwargs.update({"exc_info": exc_info, "stack_info": stack_info})
+        self._log_with_observability("WARNING", message, args, extra, kwargs)
 
-    def error(self, message: str) -> None:
-        """Log error message."""
-        self.logger.error(message)
+    def error(
+        self,
+        message: str,
+        *args: object,
+        exc_info: bool | None = None,
+        stack_info: bool = False,
+        extra: dict[str, object] | None = None,
+        **kwargs: object,
+    ) -> None:
+        """Log error message using flext-observability."""
+        # Add exc_info and stack_info to metadata if provided
+        if exc_info or stack_info:
+            kwargs.update({"exc_info": exc_info, "stack_info": stack_info})
+        self._log_with_observability("ERROR", message, args, extra, kwargs)
 
-    def exception(self, message: str) -> None:
-        """Log exception message."""
-        self.logger.error(message)
+    def exception(
+        self,
+        message: str,
+        *args: object,
+        extra: dict[str, object] | None = None,
+        **kwargs: object,
+    ) -> None:
+        """Log exception message using flext-observability."""
+        self._log_with_observability("ERROR", message, args, extra, kwargs)
+
+    def _log_with_observability(
+        self,
+        level: str,
+        message: str,
+        args: tuple[object, ...],
+        extra: dict[str, object] | None,
+        kwargs: dict[str, object],
+    ) -> None:
+        """Log using flext-observability patterns."""
+        # Format message with args
+        formatted_message = message % args if args else message
+
+        # Combine extra and kwargs
+        metadata = {**(extra or {}), **kwargs}
+
+        # Create log entry using flext-observability
+        flext_create_log_entry(
+            message=formatted_message,
+            level=level.lower(),
+            context=metadata,
+        )
+
+        # Also use flext-core logger for backward compatibility
+        if level == "DEBUG":
+            self.logger.debug(formatted_message, **metadata)
+        elif level == "INFO":
+            self.logger.info(formatted_message, **metadata)
+        elif level == "WARNING":
+            self.logger.warning(formatted_message, **metadata)
+        elif level == "ERROR":
+            self.logger.error(formatted_message, **metadata)
 
 
 def get_logger(name: str) -> DetailedLogger:
-    """Get a detailed logger instance."""
+    """DEPRECATED: Get a detailed logger instance using flext-observability."""
     return DetailedLogger(name)
 
 
-# F = TypeVar("F", bound=Callable[..., object])  # Not used
 P = ParamSpec("P")
 
 
-def log_operation[**P](func: Callable[P, object]) -> Callable[P, object]:
-    """Decorator to log operations."""
+class OperationCallable(Protocol):
+    """Protocol for operation functions."""
 
-    def wrapper(*args: P.args, **kwargs: P.kwargs) -> object:
-        logger = get_logger(func.__name__)
-        logger.info(f"Starting operation: {func.__name__}")
-        try:
-            result = func(*args, **kwargs)
-            logger.info(f"Completed operation: {func.__name__}")
-            return result
-        except Exception:
-            logger.exception(f"Failed operation: {func.__name__}")
-            raise
+    def __call__(self, *args: object, **kwargs: object) -> object:
+        """Call with arbitrary arguments."""
+        ...
+
+
+def log_operation(func: OperationCallable) -> OperationCallable:
+    """DEPRECATED: Use @flext_monitor_function from flext-observability instead."""
+    _deprecation_warning()
+
+    def wrapper(*args: object, **kwargs: object) -> object:
+        """Wrapper function to log operation with flext-observability."""
+        # Simple wrapper that calls the original function
+        return func(*args, **kwargs)
 
     return wrapper

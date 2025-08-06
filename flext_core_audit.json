@@ -1,0 +1,241 @@
+{
+  "scan_summary": {
+    "total_violations": 24,
+    "risk_breakdown": {
+      "CRITICAL": 11,
+      "HIGH": 13,
+      "MEDIUM": 0,
+      "LOW": 0
+    },
+    "violation_types": {
+      "silent_failure": 8,
+      "fake_data_generation": 13,
+      "exception_swallowing": 3
+    }
+  },
+  "violations": [
+    {
+      "file_path": "flext-core/src/flext_core/version.py",
+      "line_number": 427,
+      "violation_type": "silent_failure",
+      "risk_level": "CRITICAL",
+      "code_snippet": "except (ValueError, AttributeError):",
+      "description": "Retorno de valor fake em caso de falha",
+      "suggested_fix": "Usar FlextResult.fail() ou propagar exce\u00e7\u00e3o apropriadamente"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/version.py",
+      "line_number": 427,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 427",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/flext_types.py",
+      "line_number": 307,
+      "violation_type": "silent_failure",
+      "risk_level": "CRITICAL",
+      "code_snippet": "except (TypeError, AttributeError):",
+      "description": "Retorno de valor fake em caso de falha",
+      "suggested_fix": "Usar FlextResult.fail() ou propagar exce\u00e7\u00e3o apropriadamente"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/flext_types.py",
+      "line_number": 307,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 307",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/fields.py",
+      "line_number": 684,
+      "violation_type": "silent_failure",
+      "risk_level": "CRITICAL",
+      "code_snippet": "except ValueError:",
+      "description": "Retorno de valor fake em caso de falha",
+      "suggested_fix": "Usar FlextResult.fail() ou propagar exce\u00e7\u00e3o apropriadamente"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/fields.py",
+      "line_number": 698,
+      "violation_type": "silent_failure",
+      "risk_level": "CRITICAL",
+      "code_snippet": "except (ValueError, TypeError):",
+      "description": "Retorno de valor fake em caso de falha",
+      "suggested_fix": "Usar FlextResult.fail() ou propagar exce\u00e7\u00e3o apropriadamente"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/fields.py",
+      "line_number": 684,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 684",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/fields.py",
+      "line_number": 698,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 698",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/_delegation_system.py",
+      "line_number": 264,
+      "violation_type": "exception_swallowing",
+      "risk_level": "CRITICAL",
+      "code_snippet": "except (AttributeError, ValueError):",
+      "description": "Exce\u00e7\u00e3o engolida silenciosamente",
+      "suggested_fix": "Especificar tipo de exce\u00e7\u00e3o e tratar adequadamente ou usar FlextResult.fail()"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/_delegation_system.py",
+      "line_number": 264,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 264",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/result.py",
+      "line_number": 304,
+      "violation_type": "exception_swallowing",
+      "risk_level": "CRITICAL",
+      "code_snippet": "except (TypeError, AttributeError):",
+      "description": "Exce\u00e7\u00e3o engolida silenciosamente",
+      "suggested_fix": "Especificar tipo de exce\u00e7\u00e3o e tratar adequadamente ou usar FlextResult.fail()"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/result.py",
+      "line_number": 304,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 304",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/models.py",
+      "line_number": 932,
+      "violation_type": "silent_failure",
+      "risk_level": "CRITICAL",
+      "code_snippet": "except Exception:",
+      "description": "Retorno de valor fake em caso de falha",
+      "suggested_fix": "Usar FlextResult.fail() ou propagar exce\u00e7\u00e3o apropriadamente"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/handlers.py",
+      "line_number": 378,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 378",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/value_objects.py",
+      "line_number": 461,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 461",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/payload.py",
+      "line_number": 850,
+      "violation_type": "exception_swallowing",
+      "risk_level": "CRITICAL",
+      "code_snippet": "except (ValueError, TypeError):",
+      "description": "Exce\u00e7\u00e3o engolida silenciosamente",
+      "suggested_fix": "Especificar tipo de exce\u00e7\u00e3o e tratar adequadamente ou usar FlextResult.fail()"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/payload.py",
+      "line_number": 709,
+      "violation_type": "silent_failure",
+      "risk_level": "CRITICAL",
+      "code_snippet": "except (TypeError, ValueError, OverflowError):",
+      "description": "Retorno de valor fake em caso de falha",
+      "suggested_fix": "Usar FlextResult.fail() ou propagar exce\u00e7\u00e3o apropriadamente"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/payload.py",
+      "line_number": 1514,
+      "violation_type": "silent_failure",
+      "risk_level": "CRITICAL",
+      "code_snippet": "except (ValueError, TypeError):",
+      "description": "Retorno de valor fake em caso de falha",
+      "suggested_fix": "Usar FlextResult.fail() ou propagar exce\u00e7\u00e3o apropriadamente"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/payload.py",
+      "line_number": 709,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 709",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/payload.py",
+      "line_number": 850,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 850",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/payload.py",
+      "line_number": 1514,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 1514",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/utilities.py",
+      "line_number": 352,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 352",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/config_models.py",
+      "line_number": 893,
+      "violation_type": "silent_failure",
+      "risk_level": "CRITICAL",
+      "code_snippet": "except (RuntimeError, ValueError, TypeError, KeyError):",
+      "description": "Retorno de valor fake em caso de falha",
+      "suggested_fix": "Usar FlextResult.fail() ou propagar exce\u00e7\u00e3o apropriadamente"
+    },
+    {
+      "file_path": "flext-core/src/flext_core/config_models.py",
+      "line_number": 893,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 893",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    }
+  ],
+  "scan_config": {
+    "target_paths": [
+      "flext-core/src"
+    ],
+    "risk_threshold": "LOW",
+    "output_format": "json"
+  }
+}

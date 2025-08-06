@@ -1,4 +1,4 @@
-"""FLEXT Control Panel CLI - Unified Command-Line Interface
+"""FLEXT Control Panel CLI - Unified Command-Line Interface using flext-cli patterns
 
 Provides comprehensive command-line interface for FLEXT Control Panel operations,
 including workspace management, development tools, quality gates, and ecosystem
@@ -51,7 +51,14 @@ License: MIT
 from pathlib import Path
 
 import click
+from flext_cli import (
+    FlextCliConfig,
+    create_flext_cli_config,
+    setup_flext_cli,
+)
+from flext_core import get_logger
 
+from flext.cli_helpers import FlextCliHelperExtended
 from flext.dev import DevToolsManager
 from flext.workspace import WorkspaceManager
 from flext.workspace.cli import cli as workspace_cli
@@ -63,8 +70,20 @@ from flext.workspace.cli import cli as workspace_cli
     type=click.Path(exists=True),
     help="Workspace root path",
 )
+@click.option(
+    "--profile",
+    default="default",
+    help="Configuration profile to use",
+    envvar="FLEXT_PROFILE"
+)
+@click.option(
+    "--debug/--no-debug",
+    default=False,
+    help="Enable debug mode",
+    envvar="FLEXT_DEBUG"
+)
 @click.pass_context
-def main(ctx: click.Context, workspace: str | None) -> None:
+def main(ctx: click.Context, workspace: str | None, profile: str, debug: bool) -> None:
     """FLEXT Control Panel - Enterprise Data Integration Platform
 
     Unified command-line interface for managing FLEXT ecosystem operations,
@@ -99,8 +118,27 @@ def main(ctx: click.Context, workspace: str | None) -> None:
         >>> flext test
 
     """
+    # Initialize flext-cli configuration
+    config_result = create_flext_cli_config(
+        profile=profile,
+        debug=debug,
+        workspace_path=workspace
+    )
+
+    if not config_result.success:
+        click.echo(f"❌ Configuration error: {config_result.error}")
+        ctx.exit(1)
+
     ctx.ensure_object(dict)
+    ctx.obj["config"] = config_result.data
     ctx.obj["workspace"] = Path(workspace) if workspace else None
+    ctx.obj["helper"] = FlextCliHelperExtended()
+
+    # Setup flext-cli with proper error handling
+    setup_result = setup_flext_cli(config_result.data)
+    if not setup_result.success:
+        click.echo(f"❌ Setup error: {setup_result.error}")
+        ctx.exit(1)
 
 
 @main.command()
@@ -133,9 +171,21 @@ def dev(ctx: click.Context) -> None:
 
     """
     workspace = ctx.obj.get("workspace")
+    helper: FlextCliHelperExtended = ctx.obj["helper"]
+
+    # Use flext-cli helper for consistent operations
     dev_tools = DevToolsManager(workspace)
-    click.echo("Running development tools...")
-    dev_tools.run_tests()
+
+    result = helper.execute_with_progress(
+        lambda: dev_tools.run_tests(),
+        "Executing development tools"
+    )
+
+    if result.success:
+        click.echo("✅ Development tools completed successfully")
+    else:
+        click.echo(f"❌ Development tools failed: {result.error}")
+        ctx.exit(1)
 
 
 @main.command()
@@ -183,13 +233,22 @@ def test(ctx: click.Context) -> None:
 
     """
     workspace = ctx.obj.get("workspace")
+    helper: FlextCliHelperExtended = ctx.obj["helper"]
+
+    # Use flext-cli patterns for test execution
     dev_tools = DevToolsManager(workspace)
-    exit_code = dev_tools.run_tests()
-    if exit_code == 0:
+
+    result = helper.execute_with_validation(
+        lambda: dev_tools.run_tests(),
+        "Test execution"
+    )
+
+    if result.success and result.data == 0:
         click.echo("✅ All tests passed!")
     else:
-        click.echo("❌ Some tests failed!")
-        ctx.exit(exit_code)
+        error_msg = result.error or f"Tests failed with code: {result.data}"
+        click.echo(f"❌ {error_msg}")
+        ctx.exit(result.data or 1)
 
 
 @main.command()
@@ -239,13 +298,22 @@ def lint(ctx: click.Context) -> None:
 
     """
     workspace = ctx.obj.get("workspace")
+    helper: FlextCliHelperExtended = ctx.obj["helper"]
+
+    # Use flext-cli patterns for linting operations
     dev_tools = DevToolsManager(workspace)
-    exit_code = dev_tools.lint_all()
-    if exit_code == 0:
+
+    result = helper.execute_with_validation(
+        lambda: dev_tools.lint_all(),
+        "Code quality analysis"
+    )
+
+    if result.success and result.data == 0:
         click.echo("✅ Linting passed!")
     else:
-        click.echo("❌ Linting failed!")
-        ctx.exit(exit_code)
+        error_msg = result.error or f"Linting failed with code: {result.data}"
+        click.echo(f"❌ {error_msg}")
+        ctx.exit(result.data or 1)
 
 
 @main.command("format")
@@ -293,13 +361,22 @@ def format_code(ctx: click.Context) -> None:
 
     """
     workspace = ctx.obj.get("workspace")
+    helper: FlextCliHelperExtended = ctx.obj["helper"]
+
+    # Use flext-cli patterns for formatting operations
     dev_tools = DevToolsManager(workspace)
-    exit_code = dev_tools.format_all()
-    if exit_code == 0:
+
+    result = helper.execute_with_validation(
+        lambda: dev_tools.format_all(),
+        "Code formatting"
+    )
+
+    if result.success and result.data == 0:
         click.echo("✅ Formatting completed!")
     else:
-        click.echo("❌ Formatting failed!")
-        ctx.exit(exit_code)
+        error_msg = result.error or f"Formatting failed with code: {result.data}"
+        click.echo(f"❌ {error_msg}")
+        ctx.exit(result.data or 1)
 
 
 @main.command()
@@ -359,13 +436,25 @@ def info(ctx: click.Context) -> None:
 
     """
     workspace = ctx.obj.get("workspace")
+    config: FlextCliConfig = ctx.obj["config"]
+    helper: FlextCliHelperExtended = ctx.obj["helper"]
+
+    # Use flext-cli patterns for information display
     workspace_manager = WorkspaceManager(workspace)
 
-    click.echo(f"Workspace root: {workspace_manager.workspace_root}")
-    click.echo(f"Projects found: {len(workspace_manager.projects)}")
+    # Display workspace information using flext-cli helper
+    info_result = helper.format_workspace_info({
+        "workspace_root": str(workspace_manager.workspace_root),
+        "projects_count": len(workspace_manager.projects),
+        "projects": workspace_manager.list_projects(),
+        "profile": config.profile if hasattr(config, "profile") else "default",
+        "debug_mode": config.debug if hasattr(config, "debug") else False
+    })
 
-    for project in workspace_manager.list_projects():
-        click.echo(f"  - {project}")
+    if info_result.success:
+        click.echo(info_result.data)
+    else:
+        click.echo(f"❌ Failed to format workspace info: {info_result.error}")
 
 
 # Add workspace management commands as a group
