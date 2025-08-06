@@ -1,4 +1,4 @@
-#!/usr/bin/env python3  # noqa: EXE001
+#!/usr/bin/env python3
 """FLEXT Poetry Operations - Enterprise Poetry Management with Safety Systems.
 
 Provides comprehensive Poetry operations management with integrated safety systems
@@ -300,7 +300,7 @@ class PoetryOperations:
         try:
             print_colored(f"    [+] Adding {dependency}...", Colors.GREEN)
 
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 cmd,
                 check=False,
                 cwd=project_path,
@@ -419,7 +419,7 @@ class PoetryOperations:
         try:
             print_colored(f"    [-] Removing {dependency}...", Colors.YELLOW)
 
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 cmd,
                 check=False,
                 cwd=project_path,
@@ -495,7 +495,7 @@ class PoetryOperations:
             cmd.append("--dry-run")
 
         try:
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 cmd,
                 check=False,
                 cwd=project_path,
@@ -556,7 +556,7 @@ class PoetryOperations:
         cmd = ["poetry", "lock"]
 
         try:
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 cmd,
                 check=False,
                 cwd=project_path,
@@ -612,7 +612,7 @@ class PoetryOperations:
         cmd = ["poetry", "check"]
 
         try:
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 cmd,
                 check=False,
                 cwd=project_path,

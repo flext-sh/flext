@@ -300,7 +300,7 @@ class WorkspaceStatus(FlextScript):
         print_colored(
             f"\n{'🎉' if health['score'] >= 80 else '⚠️'} "
             "Workspace Status: "
-            f"{'EXCELLENT' if health['score'] >= 90 else 'GOOD' if health['score'] >= 80 else 'NEEDS IMPROVEMENT' if health['score'] >= 60 else 'CRITICAL'}",  # noqa: E501
+            f"{'EXCELLENT' if health['score'] >= 90 else 'GOOD' if health['score'] >= 80 else 'NEEDS IMPROVEMENT' if health['score'] >= 60 else 'CRITICAL'}",
             score_color,
         )
 

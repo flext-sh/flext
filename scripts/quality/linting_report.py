@@ -149,7 +149,7 @@ class LintingReport(FlextScript):
         try:
             # Ruff check com formato JSON
             result = subprocess.run(
-                ["ruff", "check", ".", "--output-format=json"],  # noqa: S607
+                ["ruff", "check", ".", "--output-format=json"],
                 check=False,
                 cwd=project_path,
                 capture_output=True,
@@ -191,7 +191,7 @@ class LintingReport(FlextScript):
         try:
             # MyPy check com formato JSON
             result = subprocess.run(
-                ["mypy", ".", "--no-error-summary"],  # noqa: S607
+                ["mypy", ".", "--no-error-summary"],
                 check=False,
                 cwd=project_path,
                 capture_output=True,
@@ -230,10 +230,10 @@ class LintingReport(FlextScript):
 
     def _print_project_summary(
         self,
-        project_name: str,  # noqa: ARG002
+        project_name: str,
         stats: dict[str, object],
         *,
-        detailed: bool,  # noqa: ARG002
+        detailed: bool,
     ) -> None:
         """Imprimir resumo do projeto."""
         total_issues = stats["ruff_issues"] + stats["mypy_errors"]
@@ -278,7 +278,7 @@ class LintingReport(FlextScript):
     def _print_final_summary(
         self,
         total_stats: dict[str, object],
-        project_results: dict[str, object],  # noqa: ARG002
+        project_results: dict[str, object],
     ) -> None:
         """Imprimir resumo final."""
         print_colored("\n📊 RESUMO FINAL DO LINTING", Colors.BLUE)

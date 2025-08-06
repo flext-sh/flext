@@ -1,4 +1,4 @@
-#!/usr/bin/env python3  # noqa: EXE001
+#!/usr/bin/env python3
 """FLEXT Core Scripts - Enterprise Script Foundation Framework.
 
 Provides comprehensive base classes and utilities for creating FLEXT scripts with
@@ -274,7 +274,7 @@ class FlextScript(ABC):
         return self.run(**vars(args))
 
 
-def create_simple_script(  # noqa: PLR0913
+def create_simple_script(
     name: str,
     description: str,
     category: str,
