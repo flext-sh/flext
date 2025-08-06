@@ -60,7 +60,7 @@ class ProductionSecretsGenerator(BaseSecurityScript):
                 # Display summary
                 print_colored("🔑 Generated secrets:", Colors.BLUE)
                 for secret_type, secret_value in secrets_result.items():
-                    if secret_type != "details":  # noqa: S105
+                    if secret_type != "details":
                         print(f"  • {secret_type}: {'*' * len(secret_value)}")
 
                 # Save to file if requested

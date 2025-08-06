@@ -190,7 +190,7 @@ class PythonImportDiscovery:
 
         return dependencies
 
-    def _categorize_imports(  # noqa: C901
+    def _categorize_imports(
         self,
         file_imports: set[str],
         dependencies: dict[str, set[str]],
