@@ -81,10 +81,53 @@ import subprocess
 import tomllib
 from typing import TYPE_CHECKING
 
+from flext_core import FlextResult, get_logger
+from pydantic import BaseModel, Field
+
 from flext_tools.utils import Colors, print_colored
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+logger = get_logger(__name__)
+
+
+class ProjectValidationResult(BaseModel):
+    """Poetry project validation results.
+    
+    Contains validation status, errors, warnings, and project information.
+    """
+
+    valid: bool = Field(default=False, description="Overall project validation status")
+    errors: list[str] = Field(default_factory=list, description="Validation errors found")
+    warnings: list[str] = Field(default_factory=list, description="Validation warnings found")
+    info: dict[str, object] = Field(default_factory=dict, description="Project information and metadata")
+
+
+class ProjectInfo(BaseModel):
+    """Poetry project information.
+    
+    Contains project metadata extracted from pyproject.toml.
+    """
+
+    name: str = Field(default="unknown", description="Project name")
+    version: str = Field(default="0.0.0", description="Project version")
+    description: str = Field(default="", description="Project description")
+    dependency_count: int = Field(default=0, description="Number of dependencies")
+    dev_dependency_count: int = Field(default=0, description="Number of development dependencies")
+
+
+class WorkspaceValidationResult(BaseModel):
+    """Workspace validation results.
+    
+    Contains validation results for all projects in a workspace.
+    """
+
+    project_results: dict[str, ProjectValidationResult] = Field(default_factory=dict, description="Results per project")
+    total_projects: int = Field(default=0, description="Total number of projects")
+    valid_projects: int = Field(default=0, description="Number of valid projects")
+    total_errors: int = Field(default=0, description="Total number of errors across all projects")
+    total_warnings: int = Field(default=0, description="Total number of warnings across all projects")
 
 
 class PoetryValidator:
@@ -155,7 +198,7 @@ class PoetryValidator:
 
     """
 
-    def validate_project(self, project_path: Path) -> dict[str, object]:
+    def validate_project(self, project_path: Path) -> FlextResult[ProjectValidationResult]:
         """Validate comprehensive Poetry project configuration and compliance.
 
         Performs thorough validation of Poetry project configuration including
@@ -194,28 +237,28 @@ class PoetryValidator:
         """
         errors: list[str] = []
         warnings: list[str] = []
-        info: list[str] = []
-
-        results: dict[str, object] = {
-            "valid": True,
-            "errors": errors,
-            "warnings": warnings,
-            "info": info,
-        }
 
         # Check pyproject.toml existence and accessibility
         pyproject_path = project_path / "pyproject.toml"
         if not pyproject_path.exists():
-            results["valid"] = False
-            errors.append("pyproject.toml not found")
-            return results
+            result = ProjectValidationResult(
+                valid=False,
+                errors=["pyproject.toml not found"],
+                warnings=[],
+                info={}
+            )
+            return FlextResult.ok(result)
 
         # Validate TOML syntax and structure
         toml_valid, toml_error = self._validate_toml_syntax(pyproject_path)
         if not toml_valid:
-            results["valid"] = False
-            errors.append(f"TOML syntax error: {toml_error}")
-            return results
+            result = ProjectValidationResult(
+                valid=False,
+                errors=[f"TOML syntax error: {toml_error}"],
+                warnings=[],
+                info={}
+            )
+            return FlextResult.ok(result)
 
         try:
             with pyproject_path.open("rb") as f:
@@ -224,7 +267,6 @@ class PoetryValidator:
             # Validate Poetry structure and configuration
             poetry_valid, poetry_issues = self._validate_poetry_structure(data)
             if not poetry_valid:
-                results["valid"] = False
                 errors.extend(poetry_issues)
 
             # Validate project metadata and compliance
@@ -238,18 +280,31 @@ class PoetryValidator:
                 warnings.extend(deps_issues)
 
             # Collect comprehensive project information
-            results["info"] = self._collect_project_info(data)
+            project_info = self._collect_project_info(data)
 
         except (OSError, tomllib.TOMLDecodeError, KeyError, TypeError) as e:
-            results["valid"] = False
-            errors.append(f"Error processing pyproject.toml: {e}")
+            result = ProjectValidationResult(
+                valid=False,
+                errors=[f"Error processing pyproject.toml: {e}"],
+                warnings=[],
+                info={}
+            )
+            return FlextResult.ok(result)
 
         # Validate Poetry lock file consistency
         lock_valid, lock_issues = self._validate_lock_file(project_path)
         if not lock_valid:
             warnings.extend(lock_issues)
 
-        return results
+        # Create final validation result
+        result = ProjectValidationResult(
+            valid=len(errors) == 0,
+            errors=errors,
+            warnings=warnings,
+            info=project_info.model_dump() if isinstance(project_info, ProjectInfo) else {}
+        )
+
+        return FlextResult.ok(result)
 
     def _validate_toml_syntax(self, file_path: Path) -> tuple[bool, str | None]:
         """Validate TOML syntax and structure of configuration file.
@@ -466,7 +521,7 @@ class PoetryValidator:
 
         return len(issues) == 0, issues
 
-    def _collect_project_info(self, data: dict[str, object]) -> dict[str, object]:
+    def _collect_project_info(self, data: dict[str, object]) -> ProjectInfo:
         """Collect comprehensive project information and statistics.
 
         Extracts detailed project metadata, dependency information, and
@@ -477,33 +532,32 @@ class PoetryValidator:
             data: Parsed TOML configuration data from pyproject.toml
 
         Returns:
-            Dictionary containing comprehensive project information and statistics
+            ProjectInfo entity containing comprehensive project information and statistics
 
         """
         tool_section = data.get("tool", {})
         if not isinstance(tool_section, dict):
-            return {}
+            return ProjectInfo()
         poetry = tool_section.get("poetry", {})
 
-        info = {
-            "name": poetry.get("name", "unknown"),
-            "version": poetry.get("version", "unknown"),
-            "description": poetry.get("description", ""),
-            "python_version": poetry.get("dependencies", {}).get("python", "unknown"),
-            "dependency_count": len(poetry.get("dependencies", {}))
-            - 1,  # exclude python
-            "group_count": len(poetry.get("group", {})),
-            "has_scripts": bool(poetry.get("scripts", {})),
-            "has_plugins": bool(poetry.get("plugins", {})),
-        }
+        # Count main dependencies (excluding python)
+        dependencies = poetry.get("dependencies", {})
+        dependency_count = len(dependencies) - (1 if "python" in dependencies else 0)
 
-        # Count dependencies by group
+        # Count dev dependencies
+        dev_dependency_count = 0
         groups = poetry.get("group", {})
-        for group_name, group_data in groups.items():
-            deps_count = len(group_data.get("dependencies", {}))
-            info[f"group_{group_name}_count"] = deps_count
+        for group_data in groups.values():
+            if isinstance(group_data, dict):
+                dev_dependency_count += len(group_data.get("dependencies", {}))
 
-        return info
+        return ProjectInfo(
+            name=str(poetry.get("name", "unknown")),
+            version=str(poetry.get("version", "0.0.0")),
+            description=str(poetry.get("description", "")),
+            dependency_count=dependency_count,
+            dev_dependency_count=dev_dependency_count
+        )
 
     def _is_valid_version(self, version: str) -> bool:
         """Check if version follows semantic versioning pattern.
@@ -522,7 +576,7 @@ class PoetryValidator:
         pattern = r"^\d+\.\d+\.\d+([.-].*)?$"
         return bool(re.match(pattern, version))
 
-    def validate_workspace(self, workspace_path: Path) -> dict[str, dict[str, object]]:
+    def validate_workspace(self, workspace_path: Path) -> FlextResult[WorkspaceValidationResult]:
         """Validate all Poetry projects in the workspace for comprehensive compliance.
 
         Performs systematic validation of all Poetry projects within the workspace
@@ -535,9 +589,8 @@ class PoetryValidator:
                            multiple Poetry projects for batch validation
 
         Returns:
-            Dictionary mapping project names to their validation results:
-            - Key: Project directory name
-            - Value: Complete validation result dictionary from validate_project()
+            FlextResult containing WorkspaceValidationResult with comprehensive
+            validation status and project-specific results
 
         Validation Process:
             1. Project Discovery: Recursively locate all pyproject.toml files
@@ -552,36 +605,71 @@ class PoetryValidator:
             without impacting project functionality or performance.
 
         """
-        validations: dict[str, dict[str, object]] = {}
+        try:
+            project_results: dict[str, ProjectValidationResult] = {}
+            total_projects = 0
+            valid_projects = 0
+            total_errors = 0
+            total_warnings = 0
 
-        print_colored("🔍 Validating Poetry projects in workspace...", Colors.BLUE)
+            print_colored("🔍 Validating Poetry projects in workspace...", Colors.BLUE)
+            logger.info(f"Starting workspace validation at {workspace_path}")
 
-        for pyproject in workspace_path.rglob("pyproject.toml"):
-            # Exclude special directories from validation
-            excluded_dirs = ["archive", "backup", "node_modules", ".git"]
-            if any(p in pyproject.parts for p in excluded_dirs):
-                continue
+            for pyproject in workspace_path.rglob("pyproject.toml"):
+                # Exclude special directories from validation
+                excluded_dirs = ["archive", "backup", "node_modules", ".git"]
+                if any(p in pyproject.parts for p in excluded_dirs):
+                    continue
 
-            project_path = pyproject.parent
-            project_name = project_path.name
+                project_path = pyproject.parent
+                project_name = project_path.name
+                total_projects += 1
 
-            print_colored(f"\n  📁 Validating {project_name}...", Colors.CYAN)
-            validation = self.validate_project(project_path)
+                print_colored(f"\n  📁 Validating {project_name}...", Colors.CYAN)
+                validation_result = self.validate_project(project_path)
 
-            if validation["valid"]:
-                print_colored("    ✅ Project valid", Colors.GREEN)
-            else:
-                print_colored("    ❌ Project invalid", Colors.RED)
-                errors = validation["errors"]
-                if isinstance(errors, list):
-                    for error in errors:
-                        print_colored(f"      - {error}", Colors.RED)
+                if validation_result.is_success and validation_result.data is not None:
+                    project_validation = validation_result.data
+                    project_results[project_name] = project_validation
 
-            warnings_list = validation["warnings"]
-            if isinstance(warnings_list, list) and warnings_list:
-                for warning in warnings_list:
-                    print_colored(f"      ⚠️ {warning}", Colors.YELLOW)
+                    if project_validation.valid:
+                        valid_projects += 1
+                        print_colored("    ✅ Project valid", Colors.GREEN)
+                    else:
+                        print_colored("    ❌ Project invalid", Colors.RED)
+                        total_errors += len(project_validation.errors)
+                        for error in project_validation.errors:
+                            print_colored(f"      - {error}", Colors.RED)
 
-            validations[project_name] = validation
+                    total_warnings += len(project_validation.warnings)
+                    for warning in project_validation.warnings:
+                        print_colored(f"      ⚠️ {warning}", Colors.YELLOW)
+                else:
+                    # Handle validation failure
+                    failed_result = ProjectValidationResult(
+                        valid=False,
+                        errors=[f"Validation failed: {validation_result.error}"],
+                        warnings=[],
+                        info={}
+                    )
+                    project_results[project_name] = failed_result
+                    total_errors += 1
 
-        return validations
+            # Create workspace validation result
+            workspace_result = WorkspaceValidationResult(
+                project_results=project_results,
+                total_projects=total_projects,
+                valid_projects=valid_projects,
+                total_errors=total_errors,
+                total_warnings=total_warnings
+            )
+
+            print_colored(f"\n📊 Workspace validation completed: {valid_projects}/{total_projects} projects valid", Colors.BLUE)
+            logger.info(f"Workspace validation completed - {valid_projects}/{total_projects} valid, {total_errors} errors, {total_warnings} warnings")
+
+            return FlextResult.ok(workspace_result)
+
+        except Exception as e:
+            error_msg = f"Workspace validation failed: {e}"
+            logger.error(error_msg)
+            return FlextResult.fail(error_msg)

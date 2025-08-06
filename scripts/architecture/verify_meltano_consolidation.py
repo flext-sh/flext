@@ -14,8 +14,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-# Import consolidated components from flext-meltano
-from flext_meltano.architecture import FlextMeltanoConsolidationVerifier
+from flext_meltano.architecture import (
+    FlextMeltanoConsolidationVerifier,
+)
 
 
 def main() -> None:

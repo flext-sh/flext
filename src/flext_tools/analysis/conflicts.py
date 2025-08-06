@@ -59,7 +59,10 @@ License: MIT
 from __future__ import annotations
 
 import tomllib
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
+
+from flext_core import FlextResult, get_logger
+from pydantic import BaseModel
 
 from flext_tools.analysis.lock_consistency import LockConsistencyAnalyzer
 from flext_tools.analysis.version import VersionAnalyzer
@@ -73,6 +76,51 @@ if TYPE_CHECKING:
 MIN_PROJECTS_FOR_ANALYSIS = (
     2  # Minimum projects required for meaningful conflict analysis
 )
+
+# Initialize logger
+logger = get_logger(__name__)
+
+
+from pydantic import Field
+
+
+class ConflictAnalysisResult(BaseModel):
+    """Comprehensive conflict analysis result using FlextEntity for enterprise domain modeling.
+
+    This entity represents the complete result of dependency conflict analysis
+    across the FLEXT ecosystem, providing structured data for conflict resolution
+    and decision-making with proper domain modeling patterns.
+
+    Attributes:
+        total_projects: Number of projects analyzed in the workspace
+        version_conflicts: Detailed version conflict information by package
+        circular_dependencies: List of detected circular dependency patterns
+        update_blockers: Projects and packages blocking dependency updates
+        suggested_resolutions: AI-generated resolution recommendations
+        analysis_summary: Statistical summary and analysis metadata
+
+    """
+
+    total_projects: int = Field(default=0, description="Number of projects analyzed in the workspace")
+    version_conflicts: dict[str, dict[str, object]] = Field(default_factory=dict, description="Detailed version conflict information by package")
+    circular_dependencies: list[str] = Field(default_factory=list, description="List of detected circular dependency patterns")
+    update_blockers: dict[str, dict[str, object]] = Field(default_factory=dict, description="Projects and packages blocking dependency updates")
+    suggested_resolutions: dict[str, str] = Field(default_factory=dict, description="AI-generated resolution recommendations")
+    analysis_summary: dict[str, object] = Field(default_factory=dict, description="Statistical summary and analysis metadata")
+
+    def has_conflicts(self) -> bool:
+        """Check if analysis found any conflicts."""
+        return bool(self.version_conflicts or self.circular_dependencies or self.update_blockers)
+
+    def conflict_count(self) -> int:
+        """Get total number of conflicts found."""
+        return len(self.version_conflicts) + len(self.circular_dependencies) + len(self.update_blockers)
+
+    def validate_business_rules(self) -> FlextResult[None]:
+        """Validate business rules for conflict analysis result."""
+        if self.total_projects < 0:
+            return FlextResult.fail("Total projects cannot be negative")
+        return FlextResult.ok(None)
 
 
 class ConflictAnalyzer:
@@ -160,7 +208,7 @@ class ConflictAnalyzer:
         """
         self.version_analyzer = VersionAnalyzer()
 
-    def analyze_workspace_conflicts(self, workspace_path: Path) -> dict[str, object]:
+    def analyze_workspace_conflicts(self, workspace_path: Path) -> FlextResult[ConflictAnalysisResult]:
         """Perform comprehensive dependency conflict analysis across workspace.
 
         Analyzes all projects in the workspace for dependency conflicts,
@@ -174,12 +222,12 @@ class ConflictAnalyzer:
                 directory with FLEXT ecosystem projects.
 
         Returns:
-            Dict[str, Any]: Comprehensive analysis results containing:
+            FlextResult[ConflictAnalysisResult]: Railway-oriented programming result containing:
                 - total_projects: Number of projects analyzed
                 - version_conflicts: Detailed conflict information by package
                 - update_blockers: Projects blocking dependency updates
                 - suggested_resolutions: Recommended version resolutions
-                - stats: Analysis statistics and metrics
+                - analysis_summary: Analysis statistics and metrics
 
         Analysis Process:
             1. Project Discovery: Scans workspace for Python projects
@@ -221,60 +269,124 @@ class ConflictAnalyzer:
             are detected.
 
         """
-        print_colored("🔍 Analyzing dependency conflicts...", Colors.BLUE)
+        try:
+            logger.info("Starting workspace conflict analysis", workspace_path=str(workspace_path))
 
-        # Collect data from all projects
-        projects_data = {}
-        for project_path in workspace_path.iterdir():
-            if project_path.is_dir() and not project_path.name.startswith("."):
-                pyproject_path = project_path / "pyproject.toml"
-                if pyproject_path.exists():
-                    try:
-                        with pyproject_path.open("rb") as f:
-                            data = tomllib.load(f)
-                        projects_data[project_path.name] = data
-                    except (OSError, tomllib.TOMLDecodeError) as e:
-                        print_colored(
-                            f"  ⚠️ Error reading {project_path.name}: {e}",
-                            Colors.YELLOW,
-                        )
+            if not workspace_path.exists() or not workspace_path.is_dir():
+                return FlextResult.fail(f"Workspace path does not exist or is not a directory: {workspace_path}")
 
-        if len(projects_data) < MIN_PROJECTS_FOR_ANALYSIS:
-            print_colored("  [INFO] Less than 2 projects found", Colors.CYAN)
-            return {"conflicts": [], "summary": {"total": 0}}
+            print_colored("🔍 Analyzing dependency conflicts...", Colors.BLUE)
 
-        # Collect workspace dependencies
-        workspace_deps = self._collect_workspace_dependencies(workspace_path)
+            # Collect data from all projects using railway-oriented approach
+            projects_collection_result = self._collect_projects_data(workspace_path)
+            if not projects_collection_result.success:
+                return FlextResult.fail(projects_collection_result.error or "Failed to collect projects data")
 
-        # Analyze version conflicts
-        version_conflicts = self.version_analyzer.analyze_version_conflicts(
-            projects_data,
-        )
+            projects_data = projects_collection_result.data
+            if projects_data is None:
+                return FlextResult.fail("No projects data collected")
 
-        # Analyze lock conflicts
-        lock_analyzer = self._get_lock_analyzer()
-        lock_analyzer.analyze_workspace(workspace_path)
+            if len(projects_data) < MIN_PROJECTS_FOR_ANALYSIS:
+                logger.info("Insufficient projects for analysis", project_count=len(projects_data))
+                result = ConflictAnalysisResult(
+                    total_projects=len(projects_data),
+                    analysis_summary={"message": "Less than 2 projects found", "total": len(projects_data)}
+                )
+                return FlextResult.ok(result)
 
-        # Identify blockers
-        blockers = self._identify_update_blockers(workspace_deps)
+            # Collect workspace dependencies
+            workspace_deps_result = self._collect_workspace_dependencies_safe(workspace_path)
+            if not workspace_deps_result.success:
+                return FlextResult.fail(workspace_deps_result.error or "Failed to collect workspace dependencies")
 
-        # Suggest resolutions - convert conflict format
-        conflicts_for_resolution = {}
-        for package, conflict_list in version_conflicts.items():
-            if conflict_list:
-                conflicts_for_resolution[package] = conflict_list[0]
+            workspace_deps = workspace_deps_result.data
+            if workspace_deps is None:
+                return FlextResult.fail("No workspace dependencies collected")
 
-        resolutions = self.version_analyzer.suggest_version_resolution(
-            conflicts_for_resolution,
-        )
+            # Analyze version conflicts using FlextResult pattern
+            projects_data_typed = cast("dict[str, dict[str, object]]", projects_data)
+            version_conflicts = self.version_analyzer.analyze_version_conflicts(projects_data_typed)
+            if not version_conflicts:
+                version_conflicts = {}
 
-        return {
-            "total_projects": len(projects_data),
-            "version_conflicts": version_conflicts,
-            "update_blockers": blockers,
-            "suggested_resolutions": resolutions,
-            "stats": self._calculate_stats(workspace_deps, version_conflicts, blockers),
-        }
+            # Analyze lock conflicts using railway-oriented programming
+            lock_analyzer = self._get_lock_analyzer()
+            try:
+                _ = lock_analyzer.analyze_workspace(workspace_path)
+            except Exception as e:
+                logger.warning("Lock analysis failed", error=str(e))
+
+            # Identify update blockers
+            blockers_result = self._identify_update_blockers_safe(workspace_deps)
+            if not blockers_result.success:
+                return FlextResult.fail(blockers_result.error or "Failed to identify update blockers")
+
+            blockers = blockers_result.data
+            if blockers is None:
+                return FlextResult.fail("No update blockers data returned")
+
+            # Suggest resolutions using railway-oriented approach
+            resolutions_result = self._suggest_resolutions_safe(version_conflicts)
+            if not resolutions_result.success:
+                logger.warning("Resolution suggestions failed", error=resolutions_result.error)
+                resolutions: dict[str, str] = {}
+            else:
+                resolutions = resolutions_result.data or {}
+
+            # Build result using FlextEntity with comprehensive data
+            version_conflicts_typed = cast("dict[str, dict[str, object]]", version_conflicts)
+            result = ConflictAnalysisResult(
+                total_projects=len(projects_data),
+                version_conflicts=version_conflicts_typed,
+                update_blockers=blockers,
+                suggested_resolutions=resolutions,
+                analysis_summary={
+                    "message": "Analysis completed successfully",
+                    "total_projects": len(projects_data),
+                    "conflicts_detected": len(version_conflicts),
+                    "blockers_identified": len(blockers),
+                    "resolutions_suggested": len(resolutions)
+                }
+            )
+
+            logger.info("Conflict analysis completed",
+                       total_projects=result.total_projects,
+                       conflicts_found=result.conflict_count())
+
+            return FlextResult.ok(result)
+
+        except Exception as e:
+            logger.exception("Conflict analysis failed", error=str(e))
+            return FlextResult.fail(f"Analysis failed: {e}")
+
+    def _collect_projects_data(self, workspace_path: Path) -> FlextResult[dict[str, object]]:
+        """Collect project data safely using FlextResult."""
+        try:
+            projects_data = {}
+            for project_path in workspace_path.iterdir():
+                if project_path.is_dir() and not project_path.name.startswith("."):
+                    pyproject_path = project_path / "pyproject.toml"
+                    if pyproject_path.exists():
+                        try:
+                            with pyproject_path.open("rb") as f:
+                                data = tomllib.load(f)
+                            projects_data[project_path.name] = data
+                        except (OSError, tomllib.TOMLDecodeError) as e:
+                            logger.warning(f"Error reading {project_path.name}", error=str(e))
+                            # Continue with other projects instead of failing completely
+
+            projects_data_typed: dict[str, object] = dict(projects_data)
+            return FlextResult.ok(projects_data_typed)
+        except Exception as e:
+            return FlextResult.fail(f"Failed to collect project data: {e}")
+
+    def _collect_workspace_dependencies_safe(self, workspace_path: Path) -> FlextResult[dict[str, dict[str, str]]]:
+        """Safely collect workspace dependencies using FlextResult."""
+        try:
+            workspace_deps = self._collect_workspace_dependencies(workspace_path)
+            return FlextResult.ok(workspace_deps)
+        except Exception as e:
+            return FlextResult.fail(f"Failed to collect workspace dependencies: {e}")
 
     def _collect_workspace_dependencies(
         self,
@@ -401,7 +513,7 @@ class ConflictAnalyzer:
 
             return deps
 
-    def _extract_version_string(self, spec: str | dict[str, object]) -> str:
+    def _extract_version_string(self, spec: str | dict[str, object] | object) -> str:
         """Extract version string from Poetry dependency specification.
 
         Handles both simple string version specifications and complex
@@ -444,9 +556,33 @@ class ConflictAnalyzer:
         if isinstance(spec, dict):
             version = spec.get("version", "*")
             return str(version)
+        # Default fallback for any other type
         return "*"
 
-    def _identify_update_blockers(
+    def _identify_update_blockers_safe(
+        self,
+        workspace_deps: dict[str, dict[str, str]],
+    ) -> FlextResult[dict[str, dict[str, object]]]:
+        """Safely identify update blockers using railway-oriented programming.
+
+        This method wraps the blocker identification logic in FlextResult
+        for consistent error handling and railway-oriented programming patterns.
+
+        Args:
+            workspace_deps: Dictionary mapping project names to their dependencies
+
+        Returns:
+            FlextResult containing blocker information or error details
+
+        """
+        try:
+            blockers = self._identify_update_blockers_impl(workspace_deps)
+            return FlextResult.ok(blockers)
+        except Exception as e:
+            logger.exception("Failed to identify update blockers", error=str(e))
+            return FlextResult.fail(f"Update blocker identification failed: {e}")
+
+    def _identify_update_blockers_impl(
         self,
         workspace_deps: dict[str, dict[str, str]],
     ) -> dict[str, dict[str, object]]:
@@ -614,7 +750,7 @@ class ConflictAnalyzer:
             ),
         }
 
-    def generate_conflict_report(self, analysis: dict[str, object]) -> str:
+    def generate_conflict_report(self, analysis: dict[str, dict[str, object] | list[object] | str | int]) -> str:
         r"""Generate comprehensive formatted conflict analysis report.
 
         Creates detailed Markdown report summarizing all dependency conflicts,
@@ -685,7 +821,8 @@ class ConflictAnalyzer:
 
             version_conflicts = analysis.get("version_conflicts", {})
             if isinstance(version_conflicts, dict):
-                for package, conflict_data in sorted(version_conflicts.items()):
+                for package, conflict_data_obj in sorted(version_conflicts.items()):
+                    conflict_data = cast("dict[str, object]", conflict_data_obj)
                     severity = conflict_data.get("severity", "medium")
                     icon = "🔴" if severity == "high" else "🟡"
 
@@ -693,15 +830,20 @@ class ConflictAnalyzer:
                         (f"### {icon} {package}\n", "**Projects and versions:**"),
                     )
 
-                    for project, version in conflict_data["projects"].items():
-                        lines.append(f"- `{project}`: {version}")
+                    projects_data = conflict_data.get("projects", {})
+                    if isinstance(projects_data, dict):
+                        for project, version in projects_data.items():
+                            lines.append(f"- `{project}`: {version}")
 
-                    if conflict_data["analysis"]["issues"]:
-                        lines.append("\n**Issues:**")
-                        lines.extend(
-                            f"- {issue}"
-                            for issue in conflict_data["analysis"]["issues"]
-                        )
+                    analysis_data = conflict_data.get("analysis", {})
+                    if isinstance(analysis_data, dict):
+                        issues = analysis_data.get("issues", [])
+                        if issues:
+                            lines.append("\n**Issues:**")
+                            lines.extend(
+                                f"- {issue}"
+                                for issue in issues
+                            )
 
                     lines.append("")
 
@@ -711,28 +853,58 @@ class ConflictAnalyzer:
 
             update_blockers = analysis.get("update_blockers", {})
             if isinstance(update_blockers, dict):
-                for package, blocker_data in sorted(update_blockers.items()):
-                    lines.extend((f"### {package}\n", "**Blocking projects:**"))
+                for package, blocker_data_obj in sorted(update_blockers.items()):
+                    if isinstance(blocker_data_obj, dict):
+                        lines.extend((f"### {package}\n", "**Blocking projects:**"))
 
-                    for constraint, projects in blocker_data["constraints"].items():
-                        lines.append(
-                            f"- Constraint `{constraint}`: {', '.join(projects)}",
-                        )
+                        constraints = blocker_data_obj.get("constraints", {})
+                        if isinstance(constraints, dict):
+                            for constraint, projects in constraints.items():
+                                if isinstance(projects, (list, tuple)):
+                                    lines.append(
+                                        f"- Constraint `{constraint}`: {', '.join(str(p) for p in projects)}",
+                                    )
 
                     lines.append("")
 
         # Suggested resolutions
-        if analysis["suggested_resolutions"]:
+        suggested_resolutions = analysis.get("suggested_resolutions", {})
+        if isinstance(suggested_resolutions, dict) and suggested_resolutions:
             lines.append("## 💡 Suggested Resolutions\n")
 
-            for package, suggestion in sorted(
-                analysis.get("suggested_resolutions", {}).items()
-                if isinstance(analysis.get("suggested_resolutions"), dict)
-                else [],
-            ):
+            for package, suggestion in sorted(suggested_resolutions.items()):
                 lines.append(f"- **{package}**: `{suggestion}`")
 
         return "\n".join(lines)
+
+    def _suggest_resolutions_safe(
+        self,
+        version_conflicts: dict[str, list[dict[str, object]]]
+    ) -> FlextResult[dict[str, str]]:
+        """Safely generate resolution suggestions using railway-oriented programming.
+
+        Args:
+            version_conflicts: Version conflicts detected during analysis
+
+        Returns:
+            FlextResult containing resolution suggestions or error details
+
+        """
+        try:
+            # Convert conflict format for resolution generation
+            conflicts_for_resolution = {}
+            for package, conflict_list in version_conflicts.items():
+                if conflict_list:
+                    conflicts_for_resolution[package] = conflict_list[0]
+
+            resolutions = self.version_analyzer.suggest_version_resolution(
+                conflicts_for_resolution
+            )
+
+            return FlextResult.ok(resolutions)
+        except Exception as e:
+            logger.exception("Failed to generate resolution suggestions", error=str(e))
+            return FlextResult.fail(f"Resolution suggestion failed: {e}")
 
     def _get_lock_analyzer(self) -> LockConsistencyAnalyzer:
         """Get Poetry lock file consistency analyzer instance.

@@ -84,7 +84,6 @@ from __future__ import annotations
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any
 
 import click
 from pydantic import BaseModel, Field
@@ -144,14 +143,14 @@ class BaseCLI(ABC):
         cli()
 
 
-def with_config(f: Any) -> Any:
+def with_config(f: object) -> object:
     """Decorator to add config options to commands."""
     f = click.option("--verbose", is_flag=True, help="Enable verbose output")(f)
     f = click.option("--debug", is_flag=True, help="Enable debug mode")(f)
     return click.option("--quiet", is_flag=True, help="Suppress non-error output")(f)
 
 
-def with_output_format(f: Any) -> Any:
+def with_output_format(f: object) -> object:
     """Decorator to add output format options."""
     return click.option(
         "--output-format",

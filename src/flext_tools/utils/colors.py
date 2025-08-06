@@ -40,6 +40,6 @@ class Colors:
 def print_colored(message: str, color: str = "") -> None:
     """Print colored message to terminal with ANSI color formatting."""
     if color:
-        pass
+        print(f"{color}{message}{Colors.ENDC}")
     else:
-        pass
+        print(message)

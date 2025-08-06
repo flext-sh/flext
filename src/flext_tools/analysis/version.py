@@ -72,14 +72,50 @@ from __future__ import annotations
 
 import re
 
+from flext_core import FlextResult, get_logger
 from packaging import version
 from packaging.specifiers import SpecifierSet
+from pydantic import BaseModel, Field
 
 from flext_tools.utils import Colors, print_colored
 
 GROUPS_WITH_EXTRA = 3
 GROUPS_WITHOUT_EXTRA = 2
 MIN_PROJECTS_HIGH_SEVERITY = 2
+
+# Initialize logger
+logger = get_logger(__name__)
+
+
+class VersionCompatibilityResult(BaseModel):
+    """Version compatibility analysis result using FlextEntity for type safety.
+
+    This entity represents the result of version compatibility analysis between
+    two package version specifications, providing structured data for compatibility
+    assessment and conflict resolution.
+
+    Attributes:
+        compatible: Whether the version specifications are compatible
+        spec1: First version specification analyzed
+        spec2: Second version specification analyzed
+        overlap_version: Common version that satisfies both specifications (if any)
+        issues: List of compatibility issues found
+        recommendations: List of recommended actions for resolution
+
+    """
+
+    compatible: bool = Field(description="Whether the version specifications are compatible")
+    spec1: str = Field(description="First version specification analyzed")
+    spec2: str = Field(description="Second version specification analyzed")
+    overlap_version: str | None = Field(default=None, description="Common version that satisfies both specifications")
+    issues: list[str] = Field(default_factory=list, description="List of compatibility issues found")
+    recommendations: list[str] = Field(default_factory=list, description="List of recommended actions for resolution")
+
+    def validate_business_rules(self) -> FlextResult[None]:
+        """Validate business rules for version compatibility result."""
+        if not self.spec1 or not self.spec2:
+            return FlextResult.fail("Both version specifications must be provided")
+        return FlextResult.ok(None)
 
 
 class VersionAnalyzer:
@@ -545,18 +581,38 @@ def normalize_constraint(constraint: str) -> str:
     return VersionAnalyzer.normalize_constraint(constraint)
 
 
-def check_version_compatibility(spec1: str, spec2: str) -> dict[str, object]:
-    """Check compatibility between two version specifications.
+def check_version_compatibility(spec1: str, spec2: str) -> FlextResult[VersionCompatibilityResult]:
+    """Check compatibility between two version specifications using FlextResult.
 
     Args:
         spec1: First version specification
         spec2: Second version specification
 
     Returns:
-        Compatibility analysis dict
+        FlextResult containing VersionCompatibilityResult with compatibility analysis
 
     """
-    return VersionAnalyzer.check_version_compatibility(spec1, spec2)
+    try:
+        legacy_result = VersionAnalyzer.check_version_compatibility(spec1, spec2)
+
+        # Convert legacy dict result to VersionCompatibilityResult
+        overlap_version = legacy_result.get("overlap_version")
+        issues = legacy_result.get("issues", [])
+        recommendations = legacy_result.get("recommendations", [])
+
+        result = VersionCompatibilityResult(
+            compatible=bool(legacy_result.get("compatible", False)),
+            spec1=spec1,
+            spec2=spec2,
+            overlap_version=str(overlap_version) if overlap_version is not None else None,
+            issues=list(issues) if isinstance(issues, (list, tuple)) else [],
+            recommendations=list(recommendations) if isinstance(recommendations, (list, tuple)) else []
+        )
+
+        return FlextResult.ok(result)
+    except Exception as e:
+        logger.exception("Version compatibility check failed", spec1=spec1, spec2=spec2, error=str(e))
+        return FlextResult.fail(f"Version compatibility check failed: {e}")
 
 
 def analyze_version_conflicts(

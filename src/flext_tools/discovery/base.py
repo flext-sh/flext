@@ -199,13 +199,22 @@ class DependencyDiscovery:
         print_colored(f"  📦 Installed dependencies: {len(installed)}", Colors.CYAN)
 
         # Discover Python import dependencies
-        python_deps = self.python_discovery.discover(project_path, installed)
+        python_deps_result = self.python_discovery.discover(project_path, installed)
 
         # Discover configuration file dependencies
         config_deps = self.config_discovery.discover_dependencies(
             project_path,
             installed,
         )
+
+        # Handle FlextResult for python_deps
+        if python_deps_result.success and python_deps_result.data:
+            python_deps = {
+                "runtime": python_deps_result.data.runtime,
+                "test": python_deps_result.data.test
+            }
+        else:
+            python_deps = {"runtime": set(), "test": set()}
 
         # Combine discovery results with proper categorization
         result = {

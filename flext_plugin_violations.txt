@@ -1,0 +1,138 @@
+FLEXT Security AntiPattern Scan Report
+==================================================
+
+Total Violations: 14
+Risk Threshold: HIGH
+
+Risk Level Breakdown:
+  CRITICAL: 7
+  HIGH: 7
+  MEDIUM: 0
+  LOW: 0
+
+Violation #1
+  File: flext-plugin/src/flext_plugin/hot_reload.py
+  Line: 484
+  Type: exception_swallowing
+  Risk: CRITICAL
+  Code: except (OSError, RuntimeError, ValueError, ImportError, AttributeError):
+  Description: Exceção engolida silenciosamente
+  Fix: Especificar tipo de exceção e tratar adequadamente ou usar FlextResult.fail()
+----------------------------------------
+Violation #2
+  File: flext-plugin/src/flext_plugin/hot_reload.py
+  Line: 496
+  Type: exception_swallowing
+  Risk: CRITICAL
+  Code: except (OSError, RuntimeError, ValueError, ImportError, AttributeError):
+  Description: Exceção engolida silenciosamente
+  Fix: Especificar tipo de exceção e tratar adequadamente ou usar FlextResult.fail()
+----------------------------------------
+Violation #3
+  File: flext-plugin/src/flext_plugin/hot_reload.py
+  Line: 509
+  Type: exception_swallowing
+  Risk: CRITICAL
+  Code: except (RuntimeError, ValueError, AttributeError, KeyError):
+  Description: Exceção engolida silenciosamente
+  Fix: Especificar tipo de exceção e tratar adequadamente ou usar FlextResult.fail()
+----------------------------------------
+Violation #4
+  File: flext-plugin/src/flext_plugin/hot_reload.py
+  Line: 484
+  Type: fake_data_generation
+  Risk: HIGH
+  Code: except handler at line 484
+  Description: Padrão de manipulação de exceção potencialmente perigoso
+  Fix: Implementar tratamento adequado com FlextResult ou logging apropriado
+----------------------------------------
+Violation #5
+  File: flext-plugin/src/flext_plugin/hot_reload.py
+  Line: 496
+  Type: fake_data_generation
+  Risk: HIGH
+  Code: except handler at line 496
+  Description: Padrão de manipulação de exceção potencialmente perigoso
+  Fix: Implementar tratamento adequado com FlextResult ou logging apropriado
+----------------------------------------
+Violation #6
+  File: flext-plugin/src/flext_plugin/hot_reload.py
+  Line: 509
+  Type: fake_data_generation
+  Risk: HIGH
+  Code: except handler at line 509
+  Description: Padrão de manipulação de exceção potencialmente perigoso
+  Fix: Implementar tratamento adequado com FlextResult ou logging apropriado
+----------------------------------------
+Violation #7
+  File: flext-plugin/src/flext_plugin/domain/entities.py
+  Line: 994
+  Type: silent_failure
+  Risk: CRITICAL
+  Code: except ValueError:
+  Description: Retorno de valor fake em caso de falha
+  Fix: Usar FlextResult.fail() ou propagar exceção apropriadamente
+----------------------------------------
+Violation #8
+  File: flext-plugin/src/flext_plugin/domain/entities.py
+  Line: 1010
+  Type: silent_failure
+  Risk: CRITICAL
+  Code: except ValueError:
+  Description: Retorno de valor fake em caso de falha
+  Fix: Usar FlextResult.fail() ou propagar exceção apropriadamente
+----------------------------------------
+Violation #9
+  File: flext-plugin/src/flext_plugin/domain/entities.py
+  Line: 994
+  Type: fake_data_generation
+  Risk: HIGH
+  Code: except handler at line 994
+  Description: Padrão de manipulação de exceção potencialmente perigoso
+  Fix: Implementar tratamento adequado com FlextResult ou logging apropriado
+----------------------------------------
+Violation #10
+  File: flext-plugin/src/flext_plugin/domain/entities.py
+  Line: 1010
+  Type: fake_data_generation
+  Risk: HIGH
+  Code: except handler at line 1010
+  Description: Padrão de manipulação de exceção potencialmente perigoso
+  Fix: Implementar tratamento adequado com FlextResult ou logging apropriado
+----------------------------------------
+Violation #11
+  File: flext-plugin/src/flext_plugin/core/discovery.py
+  Line: 180
+  Type: exception_swallowing
+  Risk: CRITICAL
+  Code: except (json.JSONDecodeError, OSError):
+  Description: Exceção engolida silenciosamente
+  Fix: Especificar tipo de exceção e tratar adequadamente ou usar FlextResult.fail()
+----------------------------------------
+Violation #12
+  File: flext-plugin/src/flext_plugin/core/discovery.py
+  Line: 189
+  Type: silent_failure
+  Risk: CRITICAL
+  Code: except (RuntimeError, ValueError, TypeError):
+  Description: Retorno de valor fake em caso de falha
+  Fix: Usar FlextResult.fail() ou propagar exceção apropriadamente
+----------------------------------------
+Violation #13
+  File: flext-plugin/src/flext_plugin/core/discovery.py
+  Line: 189
+  Type: fake_data_generation
+  Risk: HIGH
+  Code: except handler at line 189
+  Description: Padrão de manipulação de exceção potencialmente perigoso
+  Fix: Implementar tratamento adequado com FlextResult ou logging apropriado
+----------------------------------------
+Violation #14
+  File: flext-plugin/src/flext_plugin/core/discovery.py
+  Line: 180
+  Type: fake_data_generation
+  Risk: HIGH
+  Code: except handler at line 180
+  Description: Padrão de manipulação de exceção potencialmente perigoso
+  Fix: Implementar tratamento adequado com FlextResult ou logging apropriado
+----------------------------------------

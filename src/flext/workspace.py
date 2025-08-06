@@ -593,7 +593,16 @@ class WorkspaceManager:
                 with open(pyproject, "rb") as f:
                     data = tomllib.load(f)
                     return data.get("project", {}).get("version", "2.0.0")
-            except (ImportError, Exception):
+            except ImportError:
+                # tomllib não disponível em Python < 3.11
+                pass
+            except (FileNotFoundError, PermissionError) as e:
+                # Arquivo não encontrado ou sem permissão
+                print(f"Warning: Could not read {pyproject}: {e}")
+                pass
+            except (tomllib.TOMLDecodeError, KeyError, ValueError) as e:
+                # Erro de parsing ou estrutura inválida
+                print(f"Warning: Invalid TOML format in {pyproject}: {e}")
                 pass
 
         # Try to read version from go.mod for Go projects

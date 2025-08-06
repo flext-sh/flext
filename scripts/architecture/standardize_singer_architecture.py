@@ -14,7 +14,9 @@ from __future__ import annotations
 from pathlib import Path
 
 # Import consolidated components from flext-meltano
-from flext_meltano.architecture import FlextSingerArchitectureStandardizer
+from flext_meltano.architecture import (
+    FlextSingerArchitectureStandardizer,  # type: ignore[attr-defined]
+)
 
 
 def main() -> None:
