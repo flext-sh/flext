@@ -243,7 +243,7 @@ class QualityGateway(FlextScript):
                     "error": "Ruff not found",
                 }
 
-            ruff_result = subprocess.run(  # noqa: S603
+            ruff_result = subprocess.run(
                 ruff_cmd,
                 check=False,
                 cwd=project_path,
@@ -271,7 +271,7 @@ class QualityGateway(FlextScript):
                     "error": "MyPy not found",
                 }
 
-            mypy_result = subprocess.run(  # noqa: S603
+            mypy_result = subprocess.run(
                 mypy_cmd,
                 check=False,
                 cwd=project_path,
@@ -414,7 +414,7 @@ class QualityGateway(FlextScript):
         self,
         total_stats: dict[str, object],
         failed_projects: list[str],
-        strict_mode: bool,  # noqa: FBT001
+        strict_mode: bool,
     ) -> None:
         """Imprimir resumo final do gateway."""
         print_colored("\n📊 RESUMO DO QUALITY GATEWAY", Colors.BLUE)

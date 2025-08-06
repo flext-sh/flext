@@ -1526,7 +1526,7 @@ class FlextDuplicateDetector:
 
         print(f"   🚨 Duplicações exatas (≥99%): {len(exact_matches)}")
         print(f"   ⚠️  Alta similaridade (90-99%): {len(high_similarity)}")
-        print(f"   ℹ️  Média similaridade (80-90%): {len(medium_similarity)}")  # noqa: RUF001
+        print(f"   ℹ️  Média similaridade (80-90%): {len(medium_similarity)}")
 
         # Agrupar anti-patterns por severidade e tipo
         critical_patterns = [
