@@ -444,7 +444,7 @@ class PoetryValidator:
         try:
             # S603: Use shell=False explicitly for security
             result = subprocess.run(
-                ["poetry", "check"],  # Validated command list  # noqa: S607
+                ["poetry", "check"],  # Validated command list
                 check=False,
                 cwd=project_path,
                 capture_output=True,

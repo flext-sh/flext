@@ -21,7 +21,7 @@ MAKEFILE_TARGET_NOT_FOUND = 2
 COMMAND_FAILED = 1
 
 # Status constants (not passwords, just status indicators)
-STATUS_PASS = "✅ PASS"  # noqa: S105
+STATUS_PASS = "✅ PASS"
 STATUS_FAIL = "❌ FAIL"
 STATUS_NO_TARGET = "⚠️  NO_TARGET"
 STATUS_SKIP = "SKIP"
@@ -99,7 +99,7 @@ class FlextDiagnostic:
         """Execute command and return (return_code, stdout, stderr)."""
         try:
             # Security: cmd is validated input, not user-provided
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 cmd,
                 check=False,
                 cwd=cwd or self.workspace_root,
