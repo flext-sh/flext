@@ -54,13 +54,31 @@ __email__ = "team@flext.sh"
 __license__ = "MIT"
 __homepage__ = "https://github.com/flext-sh/flext"
 
-# Note: Import optimization to avoid circular dependencies during migration
-# Full imports will be restored after service migration is complete
-# TODO: Restore full public API exports after migration completion
+# Core FLEXT imports - enterprise integration patterns
+from flext.web_integration import FlextWebIntegration, WebServiceSetupResult
+from flext.grpc_integration import FlextGrpcIntegration, GrpcServiceSetupResult
+from flext.auth_integration import FlextAuthIntegration, AuthServiceSetupResult
+
+# CLI integration
+from flext.cli_helpers import FlextCliHelperExtended
+
+# Note: Import optimization to avoid circular dependencies
+# Public API exports optimized for performance and maintainability
 
 __all__ = [
     "__author__",
     "__license__",
     "__version__",
     "services",
+    # Web integration
+    "FlextWebIntegration",
+    "WebServiceSetupResult", 
+    # gRPC integration
+    "FlextGrpcIntegration",
+    "GrpcServiceSetupResult",
+    # Authentication integration
+    "FlextAuthIntegration",
+    "AuthServiceSetupResult",
+    # CLI integration
+    "FlextCliHelperExtended",
 ]

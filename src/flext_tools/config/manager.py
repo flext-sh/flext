@@ -52,7 +52,25 @@ License: MIT
 
 from pathlib import Path
 
+from flext_core import FlextResult, get_logger
+from pydantic import BaseModel, Field
+
 from flext_tools.utils import Colors, print_colored
+
+logger = get_logger(__name__)
+
+
+class Configuration(BaseModel):
+    """Configuration data structure for FLEXT ecosystem.
+    
+    Contains comprehensive configuration settings including environment
+    specification, debug settings, timeouts, and component-specific details.
+    """
+
+    environment: str = Field(default="staging", description="Deployment environment (dev, staging, production)")
+    debug: bool = Field(default=True, description="Debug mode flag for development and troubleshooting")
+    timeout: int = Field(default=30, description="Default timeout values for operations")
+    details: dict[str, object] = Field(default_factory=dict, description="Nested configuration for specific components")
 
 
 class ConfigurationManager:
@@ -117,7 +135,7 @@ class ConfigurationManager:
         """
         self.config_path = config_path or Path.cwd() / "config"
 
-    def load_config(self, **_kwargs: object) -> dict[str, object]:
+    def load_config(self, **_kwargs: object) -> FlextResult[Configuration]:
         """Load configuration from files with environment-specific settings.
 
         Loads and processes configuration files from the configured directory,
@@ -144,9 +162,24 @@ class ConfigurationManager:
             configuration management across all deployment scenarios.
 
         """
-        print_colored("📋 Loading configuration...", Colors.BLUE)
+        try:
+            print_colored("📋 Loading configuration...", Colors.BLUE)
+            logger.info("Loading configuration from path", extra={"config_path": str(self.config_path)})
 
-        config = {"environment": "staging", "debug": True, "timeout": 30, "details": {}}
+            # For now, using default configuration - in production this would load from files
+            config = Configuration(
+                environment="staging",
+                debug=True,
+                timeout=30,
+                details={}
+            )
 
-        print_colored("✅ Configuration loaded successfully", Colors.GREEN)
-        return config
+            print_colored("✅ Configuration loaded successfully", Colors.GREEN)
+            logger.info("Configuration loaded successfully")
+
+            return FlextResult.ok(config)
+
+        except Exception as e:
+            error_msg = f"Failed to load configuration: {e}"
+            logger.error(error_msg)
+            return FlextResult.fail(error_msg)

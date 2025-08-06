@@ -94,29 +94,28 @@ import argparse
 import logging
 import time
 from abc import ABC, abstractmethod
-from collections.abc import Callable
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, ParamSpec
 
-try:
-    from flext_core.flext_types import TAnyObject
-except ImportError:
-    # Fallback if flext-core is not available
-    TAnyObject = dict[str, object]
+from flext_core import (
+    FlextResult,
+    FlextValue,
+    get_flext_container,
+    get_logger,
+)
 
 from flext_tools.utils.colors import Colors, print_colored
-from flext_tools.utils.logging import get_logger
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
+P_main_func = ParamSpec("P_main_func")
 
+# Use flext-core logger
 logger = get_logger(__name__)
 
 
-@dataclass
-class ScriptMetadata:
-    """Metadata for a FLEXT script."""
+class ScriptMetadata(FlextValue):
+    """Metadata for a FLEXT script using flext-core value object pattern."""
 
     name: str
     description: str
@@ -125,53 +124,79 @@ class ScriptMetadata:
     requires_confirmation: bool = False
     dry_run_supported: bool = True
 
+    def validate_business_rules(self) -> FlextResult[None]:
+        """Validate script metadata business rules."""
+        if not self.name.strip():
+            return FlextResult.fail("Script name cannot be empty")
+
+        if not self.description.strip():
+            return FlextResult.fail("Script description cannot be empty")
+
+        if not self.category.strip():
+            return FlextResult.fail("Script category cannot be empty")
+
+        return FlextResult.ok(None)
+
 
 class FlextScript(ABC):
-    """Base class for FLEXT scripts following enterprise patterns."""
+    """Base class for FLEXT scripts using flext-core enterprise patterns.
+    
+    Implements Clean Architecture patterns with FlextResult for error handling,
+    dependency injection container integration, and structured logging.
+    """
 
     def __init__(self) -> None:
-        """Initialize the script."""
+        """Initialize the script with flext-core infrastructure."""
         self.logger = get_logger(self.__class__.__name__)
         self.start_time = time.time()
+        self.container = get_flext_container()
 
     @property
     @abstractmethod
     def metadata(self) -> ScriptMetadata:
-        """Return script metadata."""
+        """Return script metadata as flext-core value object."""
 
     @abstractmethod
-    def validate_preconditions(self) -> bool:
-        """Validate that script can run successfully.
+    def validate_preconditions(self) -> FlextResult[None]:
+        """Validate that script can run successfully using FlextResult pattern.
 
         Returns:
-            True if preconditions are met, False otherwise
+            FlextResult[None] indicating validation success or failure with context
 
         """
 
     @abstractmethod
-    def execute_main_logic(self) -> bool:
-        """Execute the main script logic.
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+        """Execute the main script logic with railway-oriented programming.
+
+        Args:
+            **kwargs: Additional arguments for script execution
 
         Returns:
-            True if execution was successful, False otherwise
+            FlextResult containing execution result or error information
 
         """
 
-    @abstractmethod
-    def cleanup(self) -> None:
-        """Perform cleanup operations after execution."""
+    def cleanup(self) -> FlextResult[None]:
+        """Perform cleanup operations after execution.
+        
+        Returns:
+            FlextResult indicating cleanup success or failure
 
-    def setup(self) -> bool:
+        """
+        return FlextResult.ok(None)
+
+    def setup(self) -> FlextResult[None]:
         """Perform any setup operations before main execution.
 
         Returns:
-            True if setup was successful, False otherwise
+            FlextResult indicating setup success or failure
 
         """
-        return True
+        return FlextResult.ok(None)
 
-    def run(self, **_kwargs: object) -> int:
-        """Run the complete script with error handling.
+    def run(self, **kwargs: object) -> int:
+        """Run the complete script with FlextResult railway-oriented programming.
 
         Args:
             **kwargs: Additional arguments passed to execute_main_logic
@@ -183,21 +208,21 @@ class FlextScript(ABC):
         try:
             self._print_header()
 
-            # Validate preconditions
-            if not self.validate_preconditions():
-                print_colored("❌ Preconditions not met", Colors.RED)
-                return 1
+            # Chain operations using FlextResult pattern
+            result = (
+                self.validate_preconditions()
+                .flat_map(lambda _: self.setup())
+                .flat_map(lambda _: self.execute_main_logic(**kwargs))
+                .map(lambda _: self._print_success())
+            )
 
-            # Setup
-            if not self.setup():
-                print_colored("❌ Setup failed", Colors.RED)
-                return 1
-
-            # Execute main logic
-            if self.execute_main_logic():
-                self._print_success()
+            if result.success:
                 return 0
-            print_colored("❌ Execution failed", Colors.RED)
+
+            # Handle failure with detailed context
+            error_msg = result.error or "Unknown error occurred"
+            print_colored(f"❌ Script failed: {error_msg}", Colors.RED)
+            self.logger.error(f"Script execution failed: {error_msg}")
             return 1
 
         except KeyboardInterrupt:
@@ -208,7 +233,10 @@ class FlextScript(ABC):
             self.logger.exception("Script failed with exception")
             return 1
         finally:
-            self.cleanup()
+            # Cleanup with error handling
+            cleanup_result = self.cleanup()
+            if not cleanup_result.success:
+                self.logger.warning(f"Cleanup failed: {cleanup_result.error}")
 
     def _print_header(self) -> None:
         """Print script header with metadata."""
@@ -274,26 +302,26 @@ class FlextScript(ABC):
         return self.run(**vars(args))
 
 
-def create_simple_script(
+def create_simple_script[**P_main_func](
     name: str,
     description: str,
     category: str,
-    main_func: Callable[..., bool],
-    setup_func: Callable[[], bool] | None = None,
-    validate_func: Callable[[], bool] | None = None,
+    main_func: Callable[P_main_func, FlextResult[object]],
+    setup_func: Callable[[], FlextResult[None]] | None = None,
+    validate_func: Callable[[], FlextResult[None]] | None = None,
 ) -> type[FlextScript]:
-    """Create a simple script class from functions.
+    """Create a simple script class from functions using flext-core patterns.
 
     Args:
         name: Script name
         description: Script description
         category: Script category
-        main_func: Main execution function
-        setup_func: Optional setup function
-        validate_func: Optional validation function
+        main_func: Main execution function returning FlextResult
+        setup_func: Optional setup function returning FlextResult
+        validate_func: Optional validation function returning FlextResult
 
     Returns:
-        FlextScript subclass
+        FlextScript subclass with flext-core integration
 
     """
 
@@ -302,17 +330,28 @@ def create_simple_script(
         def metadata(self) -> ScriptMetadata:
             return ScriptMetadata(name=name, description=description, category=category)
 
-        def validate_preconditions(self) -> bool:
-            return validate_func() if validate_func else True
+        def validate_preconditions(self) -> FlextResult[None]:
+            if validate_func:
+                return validate_func()
+            return FlextResult.ok(None)
 
-        def setup(self) -> bool:
-            return setup_func() if setup_func else True
+        def setup(self) -> FlextResult[None]:
+            if setup_func:
+                return setup_func()
+            return FlextResult.ok(None)
 
-        def execute_main_logic(self, **kwargs: object) -> bool:
-            result = main_func(**kwargs)
-            return bool(result)
+        def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+            try:
+                # Try with kwargs first
+                return main_func(**kwargs)  # type: ignore[call-arg,arg-type]
+            except TypeError:
+                # Fallback for callables with no arguments
+                try:
+                    return main_func()  # type: ignore[call-arg]
+                except TypeError as e:
+                    return FlextResult.fail(f"Function signature mismatch: {e}")
 
-        def cleanup(self) -> None:
-            pass
+        def cleanup(self) -> FlextResult[None]:
+            return FlextResult.ok(None)
 
-    return cast("type[FlextScript]", SimpleScript)
+    return SimpleScript
