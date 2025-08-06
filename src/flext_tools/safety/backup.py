@@ -9,11 +9,11 @@ import tomllib
 from datetime import UTC, datetime
 from pathlib import Path
 
-import structlog
+from flext_observability import get_logger
 
 from flext_tools.utils import Colors, print_colored
 
-logger = structlog.get_logger(__name__)
+logger = get_logger(__name__)
 
 MIN_CONTENT_LENGTH = 100
 
@@ -258,8 +258,11 @@ class BackupManager:
             backup_hash = self._calculate_hash(backup_path)
             result = backup_hash == file_hash
 
-        except (OSError, ValueError, KeyError):
-            pass
+        except (OSError, ValueError, KeyError) as e:
+            # Log hash verification failure but return existing result
+            import logging
+            logging.getLogger(__name__).warning(f"Hash verification failed: {e}")
+            # Keep existing result value
 
         return result
 

@@ -14,14 +14,18 @@ Usando flext_tools para máxima confiabilidade enterprise.
 
 from __future__ import annotations
 
-import subprocess  # moved to top for PLC0415
+import subprocess
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from flext_tools import Colors, PoetryValidator, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
 from flext_tools.infrastructure import MonitoringManager, SSLManager
 from flext_tools.quality import MyPyChecker
+
+if TYPE_CHECKING:
+    import argparse
 
 
 class ComprehensiveWorkspaceManager(FlextScript):
@@ -227,7 +231,9 @@ class ComprehensiveWorkspaceManager(FlextScript):
         self._print_summary(len(projects), total_linked, failed_projects)
         return len(failed_projects) == 0
 
-    def _complete_workspace_setup(self, workspace_root: Path, **_kwargs: object) -> bool:
+    def _complete_workspace_setup(
+        self, workspace_root: Path, **_kwargs: object
+    ) -> bool:
         """Complete workspace setup with Poetry dependency management."""
         print_colored("\n🏗️ COMPLETE WORKSPACE SETUP", Colors.BLUE)
         print_colored("-" * 40, Colors.BLUE)
@@ -365,7 +371,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
             print_colored(f"❌ Error during monitoring setup: {e}", Colors.RED)
             return False
 
-    def create_parser(self) -> object:
+    def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with comprehensive arguments."""
         parser = super().create_parser()
 

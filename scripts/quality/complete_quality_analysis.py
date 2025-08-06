@@ -6,9 +6,10 @@ Analisa TODOS os projetos Python para identificar problemas de qualidade.
 import json
 import subprocess
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import cast
 
 
 @dataclass
@@ -21,11 +22,7 @@ class QualityReport:
     test_failures: int = 0
     coverage_percentage: float = 0.0
     poetry_issues: int = 0
-    issues: list[str] | None = None
-
-    def __post_init__(self) -> None:
-        if self.issues is None:
-            self.issues = []
+    issues: list[str] = field(default_factory=list)
 
 
 def run_command(
@@ -78,7 +75,7 @@ def analyze_project(project_path: str) -> QualityReport:
         warnings = [line for line in lines if "W" in line and ":" in line]
         report.lint_errors = len(errors)
         report.lint_warnings = len(warnings)
-        report.issues.extend(
+        cast("list[str]", report.issues).extend(
             [f"❌ Lint Error: {e}" for e in errors[:5]]
         )  # Primeiros 5 erros
         print(f"  ❌ Lint: {report.lint_errors} erros, {report.lint_warnings} warnings")
@@ -98,7 +95,7 @@ def analyze_project(project_path: str) -> QualityReport:
         warnings = [line for line in lines if "note:" in line]
         report.mypy_errors = len(errors)
         report.mypy_warnings = len(warnings)
-        report.issues.extend(
+        cast("list[str]", report.issues).extend(
             [f"❌ MyPy Error: {e}" for e in errors[:5]]
         )  # Primeiros 5 erros
         print(f"  ❌ MyPy: {report.mypy_errors} erros, {report.mypy_warnings} warnings")
@@ -116,7 +113,7 @@ def analyze_project(project_path: str) -> QualityReport:
         lines = stdout.split("\n") if stdout else []
         failures = [line for line in lines if "FAILED" in line or "ERROR" in line]
         report.test_failures = len(failures)
-        report.issues.extend(
+        cast("list[str]", report.issues).extend(
             [f"❌ Test Failure: {f}" for f in failures[:3]]
         )  # Primeiros 3
         print(f"  ❌ Testes: {report.test_failures} falhas")
@@ -147,7 +144,7 @@ def analyze_project(project_path: str) -> QualityReport:
 
     if exit_code != 0:
         report.poetry_issues = 1
-        report.issues.append(f"❌ Poetry: {stderr.strip()}")
+        cast("list[str]", report.issues).append(f"❌ Poetry: {stderr.strip()}")
         print("  ❌ Poetry: Problemas encontrados")
     else:
         print("  ✅ Poetry: OK")
@@ -183,7 +180,7 @@ def main() -> int:
         try:
             report = analyze_project(project)
             reports.append(report)
-            total_issues += len(report.issues)
+            total_issues += len(cast("list[str]", report.issues))
         except Exception as e:
             print(f"❌ Erro ao analisar {project}: {e}")
 
@@ -218,10 +215,12 @@ def main() -> int:
         print(f"\n⚠️  PROJETOS COM PROBLEMAS ({len(problematic_projects)}):")
         for report in problematic_projects:
             print(f"\n🔴 {report.project}:")
-            for issue in report.issues[:3]:  # Primeiros 3 problemas
+            for issue in cast("list[str]", report.issues)[:3]:
                 print(f"   {issue}")
-            if len(report.issues) > 3:
-                print(f"   ... e mais {len(report.issues) - 3} problemas")
+            if len(cast("list[str]", report.issues)) > 3:
+                print(
+                    f"   ... e mais {len(cast('list[str]', report.issues)) - 3} problemas"
+                )
     else:
         print("\n✅ TODOS OS PROJETOS ESTÃO PERFEITOS!")
 
@@ -242,7 +241,7 @@ def main() -> int:
                     "test_failures": r.test_failures,
                     "coverage_percentage": r.coverage_percentage,
                     "poetry_issues": r.poetry_issues,
-                    "issues": r.issues,
+                    "issues": cast("list[str]", r.issues),
                 }
                 for r in reports
             ],

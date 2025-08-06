@@ -82,7 +82,26 @@ License: MIT
 
 """
 
+from flext_tools.security.antipattern_scanner import (
+    AntipatternScanner,
+    ScanConfig,
+    SecurityViolation,
+    ViolationType,
+    RiskLevel,
+    create_security_scanner,
+    scan_flext_ecosystem,
+)
 from flext_tools.security.secret_generator import SecretGenerator
 from flext_tools.security.secret_vault import SecretVaultDecryptor
 
-__all__: list[str] = ["SecretGenerator", "SecretVaultDecryptor"]
+__all__: list[str] = [
+    "AntipatternScanner",
+    "ScanConfig", 
+    "SecurityViolation",
+    "ViolationType",
+    "RiskLevel",
+    "SecretGenerator",
+    "SecretVaultDecryptor",
+    "create_security_scanner",
+    "scan_flext_ecosystem",
+]

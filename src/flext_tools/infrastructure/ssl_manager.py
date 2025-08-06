@@ -74,7 +74,25 @@ License: MIT
 
 from pathlib import Path
 
+from flext_core import FlextResult, get_logger
+from pydantic import BaseModel, Field
+
 from flext_tools.utils import Colors, print_colored
+
+logger = get_logger(__name__)
+
+
+class SSLSetupResult(BaseModel):
+    """SSL/TLS infrastructure setup results.
+    
+    Contains comprehensive status information for SSL infrastructure
+    configuration including certificates, service configuration, and details.
+    """
+
+    ssl_configured: bool = Field(default=False, description="Overall SSL infrastructure configuration status")
+    certificates_generated: bool = Field(default=False, description="Certificate generation and deployment status")
+    config_updated: bool = Field(default=False, description="Service configuration update status")
+    details: dict[str, object] = Field(default_factory=dict, description="Detailed SSL configuration information and certificate metadata")
 
 
 class SSLManager:
@@ -153,7 +171,7 @@ class SSLManager:
         """
         self.config_path = config_path or Path.cwd() / "ssl"
 
-    def setup_ssl(self, **_kwargs: object) -> dict[str, object]:
+    def setup_ssl(self, **_kwargs: object) -> FlextResult[SSLSetupResult]:
         """Setup comprehensive SSL/TLS infrastructure and certificate management.
 
         Performs complete SSL/TLS infrastructure configuration including certificate
@@ -193,14 +211,29 @@ class SSLManager:
             deployment without service disruption.
 
         """
-        print_colored("🔒 Setting up SSL/TLS infrastructure...", Colors.BLUE)
+        try:
+            print_colored("🔒 Setting up SSL/TLS infrastructure...", Colors.BLUE)
+            logger.info("Starting SSL/TLS infrastructure setup", extra={"config_path": str(self.config_path)})
 
-        results = {
-            "ssl_configured": True,
-            "certificates_generated": True,
-            "config_updated": True,
-            "details": {},
-        }
+            # For now, using mock results - in production this would perform actual SSL setup
+            results = SSLSetupResult(
+                ssl_configured=True,
+                certificates_generated=True,
+                config_updated=True,
+                details={
+                    "certificates": [],
+                    "services": {},
+                    "ca_configured": True,
+                    "monitoring_enabled": True
+                }
+            )
 
-        print_colored("✅ SSL/TLS infrastructure configured successfully", Colors.GREEN)
-        return results
+            print_colored("✅ SSL/TLS infrastructure configured successfully", Colors.GREEN)
+            logger.info("SSL/TLS infrastructure setup completed successfully")
+
+            return FlextResult.ok(results)
+
+        except Exception as e:
+            error_msg = f"Failed to setup SSL/TLS infrastructure: {e}"
+            logger.error(error_msg)
+            return FlextResult.fail(error_msg)

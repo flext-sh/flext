@@ -211,12 +211,12 @@ def status() -> None:
             pyproject = makefile = src = tests = "-"
 
         table.add_row(
-            module_info["name"],
-            status,
-            pyproject,
-            makefile,
-            src,
-            tests,
+            str(module_info["name"]),
+            str(status),
+            str(pyproject),
+            str(makefile),
+            str(src),
+            str(tests),
         )
 
     console.print(table)

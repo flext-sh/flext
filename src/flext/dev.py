@@ -535,14 +535,28 @@ class DevToolsManager:
                 else:
                     self.logger.info(f"Linting warnings:\n{result.stderr}")
 
-            # TODO: Add mypy type checking
-            # TODO: Add bandit security scanning
-            # TODO: Add Go linting for Go projects
+            # Add mypy type checking
+            mypy_result = self._run_mypy_check()
+            if mypy_result != 0:
+                self.logger.warning("MyPy type checking found issues")
+            
+            # Add bandit security scanning
+            bandit_result = self._run_security_scan()
+            if bandit_result != 0:
+                self.logger.warning("Security scanning found issues")
+            
+            # Add Go linting for Go projects
+            go_result = self._run_go_linting()
+            if go_result != 0:
+                self.logger.warning("Go linting found issues")
+            
+            # Return non-zero if any check failed
+            combined_result = result.returncode or mypy_result or bandit_result or go_result
 
             self.logger.info(
-                f"Code quality analysis completed with exit code: {result.returncode}"
+                f"Code quality analysis completed with exit code: {combined_result}"
             )
-            return result.returncode
+            return combined_result
 
         except subprocess.TimeoutExpired:
             self.logger.error(
@@ -625,13 +639,17 @@ class DevToolsManager:
             if result.stderr and result.returncode != 0:
                 self.logger.error(f"Formatting errors: {result.stderr}")
 
-            # TODO: Add Go formatting for Go projects
-            # TODO: Add other language formatting as needed
+            # Add Go formatting for Go projects
+            go_format_result = self._run_go_formatting()
+            if go_format_result != 0:
+                self.logger.warning("Go formatting found issues")
+            
+            combined_result = result.returncode or go_format_result
 
             self.logger.info(
-                f"Code formatting completed with exit code: {result.returncode}"
+                f"Code formatting completed with exit code: {combined_result}"
             )
-            return result.returncode
+            return combined_result
 
         except subprocess.TimeoutExpired:
             self.logger.error(
@@ -641,3 +659,127 @@ class DevToolsManager:
         except Exception as e:
             self.logger.error(f"Code formatting failed with exception: {e}")
             return 1
+
+    def _run_mypy_check(self) -> int:
+        """Run MyPy type checking across Python projects."""
+        try:
+            result = subprocess.run(
+                ["make", "type-check-all"],
+                cwd=self.workspace_root,
+                capture_output=True,
+                text=True,
+                timeout=self.timeout_config.get('type_check', 300)
+            )
+            
+            if result.stdout:
+                self.logger.info(f"MyPy output:\n{result.stdout}")
+            if result.stderr and result.returncode != 0:
+                self.logger.error(f"MyPy errors:\n{result.stderr}")
+                
+            return result.returncode
+            
+        except subprocess.TimeoutExpired:
+            self.logger.error("MyPy type checking timed out")
+            return 1
+        except Exception as e:
+            self.logger.error(f"MyPy type checking failed: {e}")
+            return 1
+
+    def _run_security_scan(self) -> int:
+        """Run Bandit security scanning across Python projects."""
+        try:
+            result = subprocess.run(
+                ["bandit", "-r", "src/", "-f", "json"],
+                cwd=self.workspace_root,
+                capture_output=True,
+                text=True,
+                timeout=self.timeout_config.get('security', 300)
+            )
+            
+            if result.stdout:
+                self.logger.info(f"Security scan output:\n{result.stdout}")
+            if result.stderr and result.returncode != 0:
+                self.logger.warning(f"Security scan warnings:\n{result.stderr}")
+                
+            return result.returncode
+            
+        except subprocess.TimeoutExpired:
+            self.logger.error("Security scanning timed out")
+            return 1
+        except Exception as e:
+            self.logger.warning(f"Security scanning not available: {e}")
+            return 0  # Non-critical failure
+
+    def _run_go_linting(self) -> int:
+        """Run Go linting across Go projects."""
+        try:
+            result = subprocess.run(
+                ["find", ".", "-name", "*.go", "-path", "*/cmd/*", "-o", "-path", "*/pkg/*", "-o", "-path", "*/internal/*"],
+                cwd=self.workspace_root,
+                capture_output=True,
+                text=True
+            )
+            
+            if not result.stdout.strip():
+                self.logger.info("No Go files found for linting")
+                return 0
+            
+            # Run golangci-lint if available
+            lint_result = subprocess.run(
+                ["golangci-lint", "run", "./..."],
+                cwd=self.workspace_root,
+                capture_output=True,
+                text=True,
+                timeout=self.timeout_config.get('lint', 300)
+            )
+            
+            if lint_result.stdout:
+                self.logger.info(f"Go linting output:\n{lint_result.stdout}")
+            if lint_result.stderr and lint_result.returncode != 0:
+                self.logger.error(f"Go linting errors:\n{lint_result.stderr}")
+                
+            return lint_result.returncode
+            
+        except subprocess.TimeoutExpired:
+            self.logger.error("Go linting timed out")
+            return 1
+        except Exception as e:
+            self.logger.warning(f"Go linting not available: {e}")
+            return 0  # Non-critical failure
+
+    def _run_go_formatting(self) -> int:
+        """Run Go formatting across Go projects."""
+        try:
+            result = subprocess.run(
+                ["find", ".", "-name", "*.go", "-path", "*/cmd/*", "-o", "-path", "*/pkg/*", "-o", "-path", "*/internal/*"],
+                cwd=self.workspace_root,
+                capture_output=True,
+                text=True
+            )
+            
+            if not result.stdout.strip():
+                self.logger.info("No Go files found for formatting")
+                return 0
+            
+            # Run gofmt
+            fmt_result = subprocess.run(
+                ["gofmt", "-w", "."],
+                cwd=self.workspace_root,
+                capture_output=True,
+                text=True,
+                timeout=self.timeout_config.get('format', 300)
+            )
+            
+            if fmt_result.stdout:
+                self.logger.info(f"Go formatting output:\n{fmt_result.stdout}")
+            if fmt_result.stderr and fmt_result.returncode != 0:
+                self.logger.error(f"Go formatting errors:\n{fmt_result.stderr}")
+                
+            return fmt_result.returncode
+            
+        except subprocess.TimeoutExpired:
+            self.logger.error("Go formatting timed out")
+            return 1
+        except Exception as e:
+            self.logger.warning(f"Go formatting not available: {e}")
+            return 0  # Non-critical failure

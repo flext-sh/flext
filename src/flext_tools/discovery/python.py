@@ -68,10 +68,25 @@ import ast
 import re
 from pathlib import Path
 
+from flext_core import FlextResult, get_logger
+from pydantic import BaseModel, Field
+
 from flext_tools.utils import Colors, print_colored, should_ignore_path
+
+logger = get_logger(__name__)
 
 MIN_PACKAGE_LENGTH = 2
 MAX_SEPARATORS = 2
+
+
+class PythonDependencies(BaseModel):
+    """Python dependencies categorized by type.
+    
+    Contains runtime and test dependencies discovered from Python import analysis.
+    """
+
+    runtime: set[str] = Field(default_factory=set, description="Runtime dependency package names")
+    test: set[str] = Field(default_factory=set, description="Test dependency package names")
 
 
 class PythonImportDiscovery:
@@ -155,7 +170,7 @@ class PythonImportDiscovery:
             "pathlib2": None,  # Standard library, not external package
         }
 
-    def discover(self, project_path: Path, installed: set[str]) -> dict[str, set[str]]:
+    def discover(self, project_path: Path, installed: set[str]) -> FlextResult[PythonDependencies]:
         """Discover Python dependencies by analyzing import statements.
 
         Analyzes all Python files in the specified project path to extract import
@@ -177,18 +192,32 @@ class PythonImportDiscovery:
             package mapping for accurate PyPI package name resolution.
 
         """
-        # Initialize dependency structure
-        dependencies: dict[str, set[str]] = {"runtime": set(), "test": set()}
+        try:
+            # Initialize dependency structure
+            dependencies: dict[str, set[str]] = {"runtime": set(), "test": set()}
 
-        # Analyze each Python file in the project
-        for py_file in project_path.rglob("*.py"):
-            if should_ignore_path(py_file):
-                continue
+            logger.info(f"Analyzing Python dependencies in {project_path}")
 
-            file_imports = self._extract_imports(py_file)
-            self._categorize_imports(file_imports, dependencies, installed)
+            # Analyze each Python file in the project
+            for py_file in project_path.rglob("*.py"):
+                if should_ignore_path(py_file):
+                    continue
 
-        return dependencies
+                file_imports = self._extract_imports(py_file)
+                self._categorize_imports(file_imports, dependencies, installed)
+
+            result = PythonDependencies(
+                runtime=dependencies["runtime"],
+                test=dependencies["test"]
+            )
+
+            logger.info(f"Found {len(result.runtime)} runtime and {len(result.test)} test dependencies")
+            return FlextResult.ok(result)
+
+        except Exception as e:
+            error_msg = f"Failed to discover Python dependencies: {e}"
+            logger.error(error_msg)
+            return FlextResult.fail(error_msg)
 
     def _categorize_imports(
         self,
