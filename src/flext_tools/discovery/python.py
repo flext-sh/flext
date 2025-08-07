@@ -81,7 +81,7 @@ MAX_SEPARATORS = 2
 
 class PythonDependencies(BaseModel):
     """Python dependencies categorized by type.
-    
+
     Contains runtime and test dependencies discovered from Python import analysis.
     """
 
@@ -208,7 +208,7 @@ class PythonImportDiscovery:
 
             result = PythonDependencies(
                 runtime=dependencies["runtime"],
-                test=dependencies["test"]
+                test=dependencies["test"],
             )
 
             logger.info(f"Found {len(result.runtime)} runtime and {len(result.test)} test dependencies")
@@ -216,7 +216,7 @@ class PythonImportDiscovery:
 
         except Exception as e:
             error_msg = f"Failed to discover Python dependencies: {e}"
-            logger.error(error_msg)
+            logger.exception(error_msg)
             return FlextResult.fail(error_msg)
 
     def _categorize_imports(

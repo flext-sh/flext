@@ -211,7 +211,7 @@ class DependencyDiscovery:
         if python_deps_result.success and python_deps_result.data:
             python_deps = {
                 "runtime": python_deps_result.data.runtime,
-                "test": python_deps_result.data.test
+                "test": python_deps_result.data.test,
             }
         else:
             python_deps = {"runtime": set(), "test": set()}

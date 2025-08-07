@@ -9,12 +9,18 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+from flext_core import FlextResult
 
 from flext_tools import Colors, print_colored
 from flext_tools.core.script_base import ScriptMetadata
 from flext_tools.security import SecretGenerator
 
 from ._base_security_script import BaseSecurityScript
+
+if TYPE_CHECKING:
+    import argparse
 
 
 class ProductionSecretsGenerator(BaseSecurityScript):
@@ -31,7 +37,7 @@ class ProductionSecretsGenerator(BaseSecurityScript):
 
     # validate_preconditions is inherited from BaseSecurityScript
 
-    def execute_main_logic(self, **kwargs: object) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute secrets generation."""
         try:
             workspace_root = Path.cwd()
@@ -65,7 +71,7 @@ class ProductionSecretsGenerator(BaseSecurityScript):
 
                 # Save to file if requested
                 if output_file:
-                    output_path = workspace_root / output_file
+                    output_path = workspace_root / str(output_file)
                     # Save secrets to file (implementation would go here)
                     print_colored(f"💾 Secrets saved to: {output_path}", Colors.CYAN)
                 else:
@@ -79,15 +85,18 @@ class ProductionSecretsGenerator(BaseSecurityScript):
                 print("• Rotate secrets regularly")
                 print("• Use different secrets per environment")
 
-                return True
+                return FlextResult.ok(
+                    {"secrets_result": secrets_result, "environment": environment}
+                )
+
             print_colored("❌ Failed to generate production secrets", Colors.RED)
-            return False
+            return FlextResult.fail("Failed to generate production secrets")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during secrets generation: {e}", Colors.RED)
-            return False
+            return FlextResult.fail(f"Secrets generation error: {e}")
 
-    def create_parser(self) -> object:
+    def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
         parser = super().create_parser()
 
@@ -117,8 +126,9 @@ class ProductionSecretsGenerator(BaseSecurityScript):
         kwargs["encrypt"] = not getattr(args, "no_encrypt", False)
         return kwargs
 
-    def cleanup(self) -> None:
+    def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
+        return FlextResult.ok(None)
 
 
 def main() -> int:

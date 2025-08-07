@@ -45,12 +45,12 @@ Example:
     >>> )
     >>>
     >>> if quality_result.success:
-    ...     results = quality_result.data
-    ...     if results.all_passed():
+    ...     quality_data = quality_result.data
+    ...     if all_quality_checks_passed(quality_data):
     ...         print("✅ All quality checks passed")
     ...     else:
-    ...         print(f"❌ Quality issues found: {results.get_failure_summary()}")
-    ...         for issue in results.get_issues():
+    ...         print(f"❌ Quality issues found: {get_quality_failure_summary(quality_data)}")
+    ...         for issue in get_quality_issues(quality_data):
     ...             print(f"  - {issue.tool}: {issue.message}")
 
 Integration:
@@ -68,6 +68,7 @@ License: MIT
 from __future__ import annotations
 
 import subprocess
+import time
 from typing import TYPE_CHECKING
 
 from flext_core import FlextEntity, FlextResult, get_flext_container, get_logger
@@ -95,14 +96,14 @@ class QualityIssue(FlextEntity):
 
     """
 
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         tool: str,
         severity: str,
         message: str,
         file_path: str | None = None,
         line_number: int | None = None,
-        rule_code: str | None = None
+        rule_code: str | None = None,
     ) -> None:
         """Initialize quality issue with comprehensive issue information."""
         super().__init__(id=f"issue_{tool}_{severity}")
@@ -125,103 +126,69 @@ class QualityIssue(FlextEntity):
         return FlextResult.ok(None)
 
 
-class QualityCheckResults(FlextEntity):
-    """Comprehensive quality check results entity for enterprise reporting.
+# REMOVED: QualityCheckResults class (MASSIVE DRY VIOLATION)
+# This class duplicates FlextResult functionality by providing custom result handling
+# All quality results must use FlextResult from flext-core instead to maintain
+# consistency and avoid duplication of generic result functionality
 
-    This entity encapsulates complete quality check results including pass/fail
-    status, detailed issue information, performance metrics, and actionable
-    recommendations for maintaining code quality across the FLEXT ecosystem.
+# Type alias for quality check data
+QualityCheckData = dict[str, object]
 
-    Attributes:
-        lint_passed: Linting quality check status
-        types_passed: Type checking quality check status
-        tests_passed: Test execution quality check status
-        coverage_passed: Coverage threshold quality check status
-        security_passed: Security scanning quality check status
-        issues: List of quality issues detected during checks
-        execution_time: Total quality check execution time in seconds
-        details: Additional quality check details and metrics
 
-    """
+# Utility functions for quality check data (moved from removed QualityCheckResults class)
+def all_quality_checks_passed(quality_data: QualityCheckData) -> bool:
+    """Check if all quality checks passed successfully."""
+    return (
+        bool(quality_data.get("lint_passed", True)) and
+        bool(quality_data.get("types_passed", True)) and
+        bool(quality_data.get("tests_passed", True)) and
+        bool(quality_data.get("coverage_passed", True)) and
+        bool(quality_data.get("security_passed", True))
+    )
 
-    def __init__(
-        self,
-        lint_passed: bool = True,
-        types_passed: bool = True,
-        tests_passed: bool = True,
-        coverage_passed: bool = True,
-        security_passed: bool = True,
-        issues: list[QualityIssue] | None = None,
-        execution_time: float = 0.0,
-        details: dict[str, object] | None = None
-    ) -> None:
-        """Initialize quality check results with comprehensive status information."""
-        super().__init__(id=f"quality_results_{lint_passed}_{types_passed}")
-        self.lint_passed = lint_passed
-        self.types_passed = types_passed
-        self.tests_passed = tests_passed
-        self.coverage_passed = coverage_passed
-        self.security_passed = security_passed
-        self.issues = issues or []
-        self.execution_time = execution_time
-        self.details = details or {}
 
-    def all_passed(self) -> bool:
-        """Check if all quality checks passed successfully."""
-        return (
-            self.lint_passed and
-            self.types_passed and
-            self.tests_passed and
-            self.coverage_passed and
-            self.security_passed
-        )
+def get_quality_failure_count(quality_data: QualityCheckData) -> int:
+    """Get total number of failed quality checks."""
+    failures = 0
+    if not quality_data.get("lint_passed", True):
+        failures += 1
+    if not quality_data.get("types_passed", True):
+        failures += 1
+    if not quality_data.get("tests_passed", True):
+        failures += 1
+    if not quality_data.get("coverage_passed", True):
+        failures += 1
+    if not quality_data.get("security_passed", True):
+        failures += 1
+    return failures
 
-    def get_failure_count(self) -> int:
-        """Get total number of failed quality checks."""
-        failures = 0
-        if not self.lint_passed:
-            failures += 1
-        if not self.types_passed:
-            failures += 1
-        if not self.tests_passed:
-            failures += 1
-        if not self.coverage_passed:
-            failures += 1
-        if not self.security_passed:
-            failures += 1
-        return failures
 
-    def get_failure_summary(self) -> str:
-        """Get human-readable summary of quality check failures."""
-        failures = []
-        if not self.lint_passed:
-            failures.append("linting")
-        if not self.types_passed:
-            failures.append("type checking")
-        if not self.tests_passed:
-            failures.append("tests")
-        if not self.coverage_passed:
-            failures.append("coverage")
-        if not self.security_passed:
-            failures.append("security")
+def get_quality_failure_summary(quality_data: QualityCheckData) -> str:
+    """Get human-readable summary of quality check failures."""
+    failures = []
+    if not quality_data.get("lint_passed", True):
+        failures.append("linting")
+    if not quality_data.get("types_passed", True):
+        failures.append("type checking")
+    if not quality_data.get("tests_passed", True):
+        failures.append("tests")
+    if not quality_data.get("coverage_passed", True):
+        failures.append("coverage")
+    if not quality_data.get("security_passed", True):
+        failures.append("security")
 
-        if not failures:
-            return "All quality checks passed"
+    if not failures:
+        return "All quality checks passed"
 
-        return f"Failed: {', '.join(failures)}"
+    return f"Failed: {', '.join(failures)}"
 
-    def get_issues(self) -> list[QualityIssue]:
-        """Get all quality issues detected during checks."""
-        return self.issues.copy()
 
-    def validate_business_rules(self) -> FlextResult[None]:
-        """Validate business rules for quality check results."""
-        issues = []
-        if self.execution_time < 0:
-            issues.append("Execution time cannot be negative")
-        if issues:
-            return FlextResult.fail("; ".join(issues))
-        return FlextResult.ok(None)
+def get_quality_issues(quality_data: QualityCheckData) -> list[QualityIssue]:
+    """Get all quality issues detected during checks."""
+    issues = quality_data.get("issues", [])
+    if isinstance(issues, list):
+        return issues.copy()
+    return []
 
 
 class QualityGateway:
@@ -263,7 +230,7 @@ class QualityGateway:
         ...     enable_types=True,
         ...     coverage_threshold=90.0
         >>> )
-        >>> if result.success and result.data.all_passed():
+        >>> if result.success and all_quality_checks_passed(result.data):
         ...     print("✅ Quality gates passed")
 
     Integration:
@@ -302,7 +269,7 @@ class QualityGateway:
         self.logger.info("Quality gateway initialized", workspace_path=str(workspace_path))
         print_colored(f"🔍 Quality gateway initialized: {workspace_path.name}", Colors.BLUE)
 
-    def run_quality_checks_safe(
+    def run_quality_checks_safe(  # noqa: PLR0913, PLR0912
         self,
         *,
         enable_lint: bool = True,
@@ -311,8 +278,8 @@ class QualityGateway:
         enable_coverage: bool = True,
         enable_security: bool = True,
         coverage_threshold: float = 90.0,
-        parallel_execution: bool = True
-    ) -> FlextResult[QualityCheckResults]:
+        parallel_execution: bool = True,  # noqa: ARG002
+    ) -> FlextResult[QualityCheckData]:
         """Run comprehensive quality checks with railway-oriented programming.
 
         Executes comprehensive quality checks including linting, type checking,
@@ -329,7 +296,7 @@ class QualityGateway:
             parallel_execution: Enable parallel execution for performance
 
         Returns:
-            FlextResult containing QualityCheckResults with comprehensive status
+            FlextResult containing QualityCheckData with comprehensive status
 
         Quality Checks:
             1. Linting: Code style and quality checks with Ruff
@@ -346,7 +313,6 @@ class QualityGateway:
 
         """
         try:
-            import time
             start_time = time.time()
 
             self.logger.info("Starting comprehensive quality checks",
@@ -359,66 +325,77 @@ class QualityGateway:
 
             print_colored("🔍 Running comprehensive quality checks...", Colors.BLUE)
 
-            # Initialize results with default passing status
-            results = QualityCheckResults()
+            # Initialize results with default passing status using QualityCheckData (DRY principle)
+            quality_data: QualityCheckData = {
+                "lint_passed": True,
+                "types_passed": True,
+                "tests_passed": True,
+                "coverage_passed": True,
+                "security_passed": True,
+                "issues": [],
+                "execution_time": 0.0,
+                "details": {},
+            }
             issues: list[QualityIssue] = []
 
             # Execute quality checks based on configuration
             if enable_lint:
                 lint_result = self._run_lint_check()
                 if not lint_result.success:
-                    results.lint_passed = False
+                    quality_data["lint_passed"] = False
                     issues.extend(lint_result.data or [])
 
             if enable_types:
                 types_result = self._run_type_check()
                 if not types_result.success:
-                    results.types_passed = False
+                    quality_data["types_passed"] = False
                     issues.extend(types_result.data or [])
 
             if enable_tests:
                 tests_result = self._run_test_check()
                 if not tests_result.success:
-                    results.tests_passed = False
+                    quality_data["tests_passed"] = False
                     issues.extend(tests_result.data or [])
 
             if enable_coverage:
                 coverage_result = self._run_coverage_check(coverage_threshold)
                 if not coverage_result.success:
-                    results.coverage_passed = False
+                    quality_data["coverage_passed"] = False
                     issues.extend(coverage_result.data or [])
 
             if enable_security:
                 security_result = self._run_security_check()
                 if not security_result.success:
-                    results.security_passed = False
+                    quality_data["security_passed"] = False
                     issues.extend(security_result.data or [])
 
             # Calculate execution time and finalize results
             execution_time = time.time() - start_time
-            results.execution_time = execution_time
-            results.issues = issues
-            results.details = {
+            quality_data["execution_time"] = execution_time
+            quality_data["issues"] = issues
+            quality_data["details"] = {
                 "total_checks": sum([enable_lint, enable_types, enable_tests, enable_coverage, enable_security]),
                 "issues_found": len(issues),
-                "execution_time_ms": int(execution_time * 1000)
+                "execution_time_ms": int(execution_time * 1000),
             }
 
-            # Report final status
-            if results.all_passed():
+            # Report final status using utility functions
+            if all_quality_checks_passed(quality_data):
                 print_colored("✅ All quality checks passed", Colors.GREEN)
+                details = quality_data["details"]
+                total_checks = details.get("total_checks", 0) if isinstance(details, dict) else 0
                 self.logger.info("Quality checks completed successfully",
                                execution_time=execution_time,
-                               total_checks=results.details["total_checks"])
+                               total_checks=total_checks)
             else:
-                failure_summary = results.get_failure_summary()
+                failure_summary = get_quality_failure_summary(quality_data)
                 print_colored(f"❌ Quality checks failed: {failure_summary}", Colors.RED)
                 self.logger.warning("Quality checks failed",
                                   failure_summary=failure_summary,
                                   issues_count=len(issues),
                                   execution_time=execution_time)
 
-            return FlextResult.ok(results)
+            return FlextResult.ok(quality_data)
 
         except Exception as e:
             self.logger.exception("Quality check execution failed", error=str(e))
@@ -428,25 +405,22 @@ class QualityGateway:
         """Run linting check with Ruff."""
         try:
             result = subprocess.run(
-                ["ruff", "check", "."],
+                ["ruff", "check", "."],  # noqa: S607
                 check=False, cwd=self.workspace_path,
                 capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
 
             if result.returncode == 0:
                 return FlextResult.ok([])
 
             # Parse Ruff output for issues
-            issues = []
-            for line in result.stdout.splitlines():
-                if line.strip():
-                    issues.append(QualityIssue(
+            issues = [QualityIssue(
                         tool="ruff",
                         severity="error",
-                        message=line.strip()
-                    ))
+                        message=line.strip(),
+                    ) for line in result.stdout.splitlines() if line.strip()]
 
             return FlextResult.fail(f"Linting issues found: {len(issues)} issues")
 
@@ -457,25 +431,22 @@ class QualityGateway:
         """Run type checking with MyPy."""
         try:
             result = subprocess.run(
-                ["mypy", "src"],
+                ["mypy", "src"],  # noqa: S607
                 check=False, cwd=self.workspace_path,
                 capture_output=True,
                 text=True,
-                timeout=120
+                timeout=120,
             )
 
             if result.returncode == 0:
                 return FlextResult.ok([])
 
             # Parse MyPy output for issues
-            issues = []
-            for line in result.stdout.splitlines():
-                if line.strip() and ":" in line:
-                    issues.append(QualityIssue(
+            issues = [QualityIssue(
                         tool="mypy",
                         severity="error",
-                        message=line.strip()
-                    ))
+                        message=line.strip(),
+                    ) for line in result.stdout.splitlines() if line.strip() and ":" in line]
 
             return FlextResult.fail(f"Type checking issues found: {len(issues)} issues")
 
@@ -486,11 +457,11 @@ class QualityGateway:
         """Run test execution with Pytest."""
         try:
             result = subprocess.run(
-                ["pytest", "-v"],
+                ["pytest", "-v"],  # noqa: S607
                 check=False, cwd=self.workspace_path,
                 capture_output=True,
                 text=True,
-                timeout=300
+                timeout=300,
             )
 
             if result.returncode == 0:
@@ -500,7 +471,7 @@ class QualityGateway:
             issues = [QualityIssue(
                 tool="pytest",
                 severity="error",
-                message="Test failures detected"
+                message="Test failures detected",
             )]
 
             return FlextResult.fail(f"Test failures found: {len(issues)} issues")
@@ -520,7 +491,7 @@ class QualityGateway:
             issues = [QualityIssue(
                 tool="coverage",
                 severity="warning",
-                message=f"Coverage {coverage:.1f}% below threshold {threshold:.1f}%"
+                message=f"Coverage {coverage:.1f}% below threshold {threshold:.1f}%",
             )]
 
             return FlextResult.fail(f"Coverage below threshold: {len(issues)} issues")
@@ -538,7 +509,7 @@ class QualityGateway:
         except Exception as e:
             return FlextResult.fail(f"Security check failed: {e}")
 
-    def run_quality_checks(self, **kwargs: object) -> dict[str, object]:
+    def run_quality_checks(self, **kwargs: object) -> dict[str, object]:  # noqa: ARG002
         """Legacy method for backward compatibility - use run_quality_checks_safe() instead."""
         print_colored("🔍 Running legacy quality checks...", Colors.BLUE)
 

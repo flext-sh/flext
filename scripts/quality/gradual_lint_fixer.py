@@ -11,6 +11,8 @@ import shutil
 import sys
 from pathlib import Path
 
+from flext_core import FlextResult
+
 from flext_tools import Colors, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
 from flext_tools.quality import GradualLintFixer
@@ -28,14 +30,14 @@ class GradualLintFixerScript(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> bool:
+    def validate_preconditions(self) -> FlextResult[None]:
         """Validate preconditions."""
         workspace_root = Path.cwd()
 
         # Check if we're in FLEXT workspace
         if not (workspace_root / "pyproject.toml").exists():
             print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return False
+            return FlextResult.fail("Not in FLEXT workspace root")
 
         # Check Ruff availability
         if shutil.which("ruff") is None:
@@ -43,17 +45,17 @@ class GradualLintFixerScript(FlextScript):
                 "❌ Ruff not found - install with: pip install ruff",
                 Colors.RED,
             )
-            return False
+            return FlextResult.fail("Ruff not found")
         print_colored("✅ Ruff available", Colors.GREEN)
 
         # Check Git availability
         if shutil.which("git") is None:
             print_colored("❌ Git not found - required for safe branching", Colors.RED)
-            return False
+            return FlextResult.fail("Git not found")
         print_colored("✅ Git available", Colors.GREEN)
-        return True
+        return FlextResult.ok(None)
 
-    def execute_main_logic(self, **kwargs: object) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute gradual lint fixing."""
         try:
             workspace_root = Path.cwd()
@@ -63,12 +65,12 @@ class GradualLintFixerScript(FlextScript):
 
             if not project:
                 print_colored("❌ Project name is required", Colors.RED)
-                return False
+                return FlextResult.fail("Project name is required")
 
-            project_path = workspace_root / project
+            project_path = workspace_root / str(project)
             if not project_path.exists():
                 print_colored(f"❌ Project {project} not found", Colors.RED)
-                return False
+                return FlextResult.fail(f"Project {project} not found")
 
             print_colored("🔧 GRADUAL LINT FIXER", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
@@ -88,7 +90,7 @@ class GradualLintFixerScript(FlextScript):
 
                 # Print summary
                 fixes_applied = fix_result.get("fixed_issues", 0)
-                if fixes_applied > 0:
+                if int(fixes_applied) > 0:
                     print_colored(f"🔧 Applied {fixes_applied} lint fixes", Colors.CYAN)
                 else:
                     print_colored(
@@ -96,7 +98,8 @@ class GradualLintFixerScript(FlextScript):
                         Colors.GREEN,
                     )
 
-                return True
+                return FlextResult.ok({"fix_result": fix_result, "project": project})
+
             print_colored("❌ Gradual lint fixing failed", Colors.RED)
             return False
 

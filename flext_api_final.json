@@ -1,0 +1,20 @@
+{
+  "scan_summary": {
+    "total_violations": 0,
+    "risk_breakdown": {
+      "CRITICAL": 0,
+      "HIGH": 0,
+      "MEDIUM": 0,
+      "LOW": 0
+    },
+    "violation_types": {}
+  },
+  "violations": [],
+  "scan_config": {
+    "target_paths": [
+      "flext-api/src"
+    ],
+    "risk_threshold": "LOW",
+    "output_format": "json"
+  }
+}

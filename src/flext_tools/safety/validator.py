@@ -77,7 +77,6 @@ from urllib.parse import urlparse
 
 import requests
 from flext_core import FlextResult, get_logger
-from flext_core.models import FlextEntity
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -91,50 +90,37 @@ HTTP_OK_STATUS = 200
 logger = get_logger(__name__)
 
 
-from pydantic import Field
+# REMOVED: ValidationResult class (MASSIVE DRY VIOLATION)
+# This class duplicates FlextResult functionality:
+# - safe: bool -> FlextResult.success: bool
+# - issues: list[str] -> FlextResult.error: str (join issues)
+# - operation, recommendations, confidence, risk_level -> FlextResult.data: dict
+#
+# All safety validation results must use FlextResult from flext-core instead
+# to maintain consistency and avoid duplication of generic result functionality
+
+# Type alias for validation data
+ValidationData = dict[str, object]
 
 
-class ValidationResult(FlextEntity):
-    """Comprehensive validation result entity for security assessment.
+# Utility functions for validation data (moved from removed ValidationResult class)
+def has_validation_issues(validation_data: ValidationData) -> bool:
+    """Check if validation found any security issues."""
+    issues = validation_data.get("issues", [])
+    return isinstance(issues, list) and len(issues) > 0
 
-    This entity encapsulates complete security validation results including
-    safety status, detailed issue information, actionable recommendations,
-    and operational context for maintaining security across FLEXT operations.
 
-    Attributes:
-        safe: Primary safety indicator for the validated operation
-        operation: Description of the operation being validated
-        issues: List of security issues and concerns identified
-        recommendations: List of actionable security recommendations
-        confidence: Validation confidence level (high, medium, low)
-        risk_level: Assessed risk level for the operation
+def get_risk_assessment(validation_data: ValidationData) -> str:
+    """Get human-readable risk assessment summary."""
+    safe = validation_data.get("safe", False)
+    issues = validation_data.get("issues", [])
+    issue_count = len(issues) if isinstance(issues, list) else 0
 
-    """
-
-    safe: bool = Field(description="Primary safety indicator for the validated operation")
-    operation: str = Field(default="", description="Description of the operation being validated")
-    issues: list[str] = Field(default_factory=list, description="List of security issues and concerns identified")
-    recommendations: list[str] = Field(default_factory=list, description="List of actionable security recommendations")
-    confidence: str = Field(default="medium", description="Validation confidence level (high, medium, low)")
-    risk_level: str = Field(default="low", description="Assessed risk level for the operation")
-
-    def has_issues(self) -> bool:
-        """Check if validation found any security issues."""
-        return len(self.issues) > 0
-
-    def get_risk_assessment(self) -> str:
-        """Get human-readable risk assessment summary."""
-        if not self.safe:
-            return f"HIGH RISK: {len(self.issues)} security issues found"
-        if self.has_issues():
-            return f"MEDIUM RISK: {len(self.issues)} warnings identified"
-        return "LOW RISK: Operation validated as safe"
-
-    def validate_business_rules(self) -> FlextResult[None]:
-        """Validate business rules for validation result."""
-        if not hasattr(self, "safe"):
-            return FlextResult.fail("ValidationResult must have 'safe' field")
-        return FlextResult.ok(None)
+    if not safe:
+        return f"HIGH RISK: {issue_count} security issues found"
+    if issue_count > 0:
+        return f"MEDIUM RISK: {issue_count} warnings identified"
+    return "LOW RISK: Operation validated as safe"
 
 
 class BackupRequirement(Enum):
@@ -257,7 +243,7 @@ class SafetyValidator:
                    known_safe_count=len(self.known_safe_packages),
                    dangerous_count=len(self.dangerous_packages))
 
-    def validate_package_safety_safe(self, package_name: str) -> FlextResult[ValidationResult]:
+    def validate_package_safety_safe(self, package_name: str) -> FlextResult[ValidationData]:
         """Safely validate package safety using railway-oriented programming.
 
         Performs comprehensive package safety validation including name validation,
@@ -268,7 +254,7 @@ class SafetyValidator:
             package_name: Name of the package to validate for safety
 
         Returns:
-            FlextResult containing ValidationResult with comprehensive safety assessment
+            FlextResult containing ValidationData with comprehensive safety assessment
 
         Validation Process:
             1. Name Validation: Check package name format and length
@@ -301,7 +287,7 @@ class SafetyValidator:
                 safe = False
                 risk_level = "high"
                 issues.append(
-                    f"Package '{package_name}' is blacklisted as potentially dangerous"
+                    f"Package '{package_name}' is blacklisted as potentially dangerous",
                 )
                 logger.warning("Package blacklisted", package_name=package_name)
 
@@ -324,7 +310,7 @@ class SafetyValidator:
                 safe = False
                 risk_level = "high"
                 issues.append(
-                    f"Suspicious characters detected: {suspicious_chars}"
+                    f"Suspicious characters detected: {suspicious_chars}",
                 )
                 confidence = "high"
 
@@ -349,18 +335,19 @@ class SafetyValidator:
                 recommendations.extend([
                     "Review package source and maintainer reputation",
                     "Consider alternative packages with better security profiles",
-                    "Use virtual environment for installation isolation"
+                    "Use virtual environment for installation isolation",
                 ])
 
-            result = ValidationResult(
-                id=f"validation_{package_name}_{safe}",
-                safe=safe,
-                operation=f"package_validation:{package_name}",
-                issues=issues,
-                recommendations=recommendations,
-                confidence=confidence,
-                risk_level=risk_level
-            )
+            # Using FlextResult pattern with ValidationData (DRY - no custom classes)
+            validation_data: ValidationData = {
+                "id": f"validation_{package_name}_{safe}",
+                "safe": safe,
+                "operation": f"package_validation:{package_name}",
+                "issues": issues,
+                "recommendations": recommendations,
+                "confidence": confidence,
+                "risk_level": risk_level,
+            }
 
             logger.info("Package safety validation completed",
                        package_name=package_name,
@@ -368,7 +355,7 @@ class SafetyValidator:
                        issues_count=len(issues),
                        risk_level=risk_level)
 
-            return FlextResult.ok(result)
+            return FlextResult.ok(validation_data)
 
         except Exception as e:
             logger.exception("Package safety validation failed", package_name=package_name, error=str(e))
@@ -380,7 +367,7 @@ class SafetyValidator:
         operation: str,
         *,
         backup_requirement: BackupRequirement = BackupRequirement.REQUIRED,
-    ) -> FlextResult[ValidationResult]:
+    ) -> FlextResult[ValidationData]:
         """Safely validate file operation using railway-oriented programming.
 
         Performs comprehensive file operation validation including existence checks,
@@ -393,7 +380,7 @@ class SafetyValidator:
             backup_requirement: Backup requirement level (REQUIRED or OPTIONAL)
 
         Returns:
-            FlextResult containing ValidationResult with comprehensive safety assessment
+            FlextResult containing ValidationData with comprehensive safety assessment
 
         Validation Process:
             1. Path Validation: Verify file path accessibility and format
@@ -424,22 +411,23 @@ class SafetyValidator:
                 issues.append(f"File not found: {file_path}")
                 logger.warning("File not found for operation", file_path=str(file_path), operation=operation)
 
-                result = ValidationResult(
-                    id=f"file_op_{operation}_{file_path.name}_{safe}",
-                    safe=safe,
-                    operation=f"file_operation:{operation}:{file_path.name}",
-                    issues=issues,
-                    recommendations=["Verify file path and existence before operation"],
-                    confidence="high",
-                    risk_level=risk_level
-                )
-                return FlextResult.ok(result)
+                # Using FlextResult pattern with ValidationData (DRY - no custom classes)
+                error_validation_data: ValidationData = {
+                    "id": f"file_op_{operation}_{file_path.name}_{safe}",
+                    "safe": safe,
+                    "operation": f"file_operation:{operation}:{file_path.name}",
+                    "issues": issues,
+                    "recommendations": ["Verify file path and existence before operation"],
+                    "confidence": "high",
+                    "risk_level": risk_level,
+                }
+                return FlextResult.ok(error_validation_data)
 
             # Critical file detection and protection
             critical_files = {
                 "pyproject.toml", "poetry.lock", "Makefile", ".gitignore",
                 "requirements.txt", "setup.py", "setup.cfg", "package.json",
-                "go.mod", "Cargo.toml", "composer.json"
+                "go.mod", "Cargo.toml", "composer.json",
             }
 
             if file_path.name in critical_files:
@@ -448,7 +436,7 @@ class SafetyValidator:
 
                 if backup_requirement == BackupRequirement.REQUIRED and operation in {"write", "delete"}:
                     recommendations.append(
-                        "Backup required for critical file modification/deletion"
+                        "Backup required for critical file modification/deletion",
                     )
                     logger.info("Backup required for critical file", file_path=str(file_path))
 
@@ -470,18 +458,19 @@ class SafetyValidator:
                 recommendations.extend([
                     "Use version control to track changes",
                     "Validate file integrity after operation",
-                    "Consider atomic operations to prevent corruption"
+                    "Consider atomic operations to prevent corruption",
                 ])
 
-            result = ValidationResult(
-                id=f"file_op_{operation}_{file_path.name}_{safe}",
-                safe=safe,
-                operation=f"file_operation:{operation}:{file_path.name}",
-                issues=issues,
-                recommendations=recommendations,
-                confidence="high",
-                risk_level=risk_level
-            )
+            # Using FlextResult pattern with ValidationData (DRY - no custom classes)
+            success_validation_data: ValidationData = {
+                "id": f"file_op_{operation}_{file_path.name}_{safe}",
+                "safe": safe,
+                "operation": f"file_operation:{operation}:{file_path.name}",
+                "issues": issues,
+                "recommendations": recommendations,
+                "confidence": "high",
+                "risk_level": risk_level,
+            }
 
             logger.info("File operation validation completed",
                        file_path=str(file_path),
@@ -489,7 +478,7 @@ class SafetyValidator:
                        safe=safe,
                        risk_level=risk_level)
 
-            return FlextResult.ok(result)
+            return FlextResult.ok(success_validation_data)
 
         except Exception as e:
             logger.exception("File operation validation failed",
@@ -500,7 +489,7 @@ class SafetyValidator:
         self,
         command: list[str],
         working_dir: Path | None = None,
-    ) -> FlextResult[ValidationResult]:
+    ) -> FlextResult[ValidationData]:
         """Validate system command execution with comprehensive security checks.
 
         Args:
@@ -514,11 +503,16 @@ class SafetyValidator:
         if not command:
             return FlextResult.fail("Empty command provided")
 
-        validation = ValidationResult(
-            id=f"cmd_validation_{len(command)}",
-            safe=True,
-            operation=" ".join(command)
-        )
+        # Using ValidationData instead of ValidationResult class (DRY principle)
+        validation_data: ValidationData = {
+            "id": f"cmd_validation_{len(command)}",
+            "safe": True,
+            "operation": " ".join(command),
+            "issues": [],
+            "recommendations": [],
+            "confidence": "high",
+            "risk_level": "low",
+        }
 
         executable = command[0]
 
@@ -538,37 +532,47 @@ class SafetyValidator:
         }
 
         if executable not in safe_executables:
-            validation.safe = False
-            validation.issues.append(
-                f"Executable '{executable}' is not in the safe commands list"
-            )
+            validation_data["safe"] = False
+            validation_data["risk_level"] = "high"
+            issues = validation_data["issues"]
+            if isinstance(issues, list):
+                issues.append(f"Executable '{executable}' is not in the safe commands list")
 
         # Check if executable exists
         if not shutil.which(executable):
-            validation.safe = False
-            validation.issues.append(f"Executable '{executable}' not found in PATH")
+            validation_data["safe"] = False
+            validation_data["risk_level"] = "high"
+            issues = validation_data["issues"]
+            if isinstance(issues, list):
+                issues.append(f"Executable '{executable}' not found in PATH")
 
         # Check dangerous arguments
         dangerous_args = {"rm", "delete", "--force", "-f", "sudo", "su"}
         command_args = set(command)
 
         if command_args & dangerous_args:
-            validation.safe = False
-            validation.issues.append("Dangerous arguments detected")
+            validation_data["safe"] = False
+            validation_data["risk_level"] = "high"
+            issues = validation_data["issues"]
+            if isinstance(issues, list):
+                issues.append("Dangerous arguments detected")
 
         # Check working directory
         if working_dir and not working_dir.exists():
-            validation.safe = False
-            validation.issues.append("Working directory does not exist")
+            validation_data["safe"] = False
+            validation_data["risk_level"] = "medium"
+            issues = validation_data["issues"]
+            if isinstance(issues, list):
+                issues.append("Working directory does not exist")
 
-        return FlextResult.ok(validation)
+        return FlextResult.ok(validation_data)
 
     def validate_poetry_operation(
         self,
         project_path: Path,
         operation: str,
         packages: list[str] | None = None,
-    ) -> FlextResult[ValidationResult]:
+    ) -> FlextResult[ValidationData]:
         """Validate specific Poetry operation.
 
         Args:
@@ -580,11 +584,16 @@ class SafetyValidator:
             FlextResult with ValidationResult
 
         """
-        validation = ValidationResult(
-            id=f"poetry_{operation}_validation",
-            safe=True,
-            operation=f"poetry {operation}"
-        )
+        # Using ValidationData instead of ValidationResult class (DRY principle)
+        validation_data: ValidationData = {
+            "id": f"poetry_{operation}_validation",
+            "safe": True,
+            "operation": f"poetry {operation}",
+            "issues": [],
+            "recommendations": [],
+            "confidence": "high",
+            "risk_level": "low",
+        }
 
         # Check if Poetry project is valid
         pyproject_path = project_path / "pyproject.toml"
@@ -606,25 +615,30 @@ class SafetyValidator:
             for package in packages:
                 package_validation = self.validate_package_safety(package)
                 if not package_validation["safe"]:
-                    validation.safe = False
+                    validation_data["safe"] = False
+                    validation_data["risk_level"] = "high"
                     package_issues = package_validation["issues"]
                     if isinstance(package_issues, list):
-                        validation.issues.extend(
-                            [
-                                f"Package '{package}': {issue}"
-                                for issue in package_issues
-                            ]
-                        )
+                        issues = validation_data["issues"]
+                        if isinstance(issues, list):
+                            issues.extend(
+                                [
+                                    f"Package '{package}': {issue}"
+                                    for issue in package_issues
+                                ],
+                            )
 
         # Specific recommendations by operation
-        if operation == "add":
-            validation.recommendations.append("Check version compatibility")
-        elif operation == "update":
-            validation.recommendations.append("Create backup before updating")
-        elif operation == "remove":
-            validation.recommendations.append("Check dependencies before removing")
+        recommendations = validation_data["recommendations"]
+        if isinstance(recommendations, list):
+            if operation == "add":
+                recommendations.append("Check version compatibility")
+            elif operation == "update":
+                recommendations.append("Create backup before updating")
+            elif operation == "remove":
+                recommendations.append("Check dependencies before removing")
 
-        return FlextResult.ok(validation)
+        return FlextResult.ok(validation_data)
 
     def get_safety_recommendations_safe(
         self,
@@ -679,20 +693,20 @@ class SafetyValidator:
                     "Package safety validation with PyPI verification",
                     "File operation security with critical file protection",
                     "Command execution validation with security controls",
-                    "Poetry operation safety with dependency validation"
+                    "Poetry operation safety with dependency validation",
                 ],
                 "security_policies": {
                     "package_validation": "Comprehensive blacklist and whitelist checking",
                     "file_protection": "Critical file backup requirement enforcement",
                     "command_security": "Safe executable validation and argument filtering",
-                    "operation_monitoring": "Integrated observability and audit logging"
+                    "operation_monitoring": "Integrated observability and audit logging",
                 },
                 "recommendations": [
                     "Always validate packages before installation",
                     "Use backup systems for critical file operations",
                     "Maintain updated security blacklists and whitelists",
-                    "Monitor security validation metrics and trends"
-                ]
+                    "Monitor security validation metrics and trends",
+                ],
             }
 
             logger.info("Generated comprehensive validation summary",

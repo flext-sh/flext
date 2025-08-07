@@ -15,11 +15,16 @@ import sys
 from collections import defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import TYPE_CHECKING
 
+from flext_core import FlextResult
 from scripts.common import discover_projects
 
 from flext_tools import Colors, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
+
+if TYPE_CHECKING:
+    import argparse
 
 
 class LintingReport(FlextScript):
@@ -40,20 +45,27 @@ class LintingReport(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> bool:
+    def validate_preconditions(self) -> FlextResult[None]:
         """Validar ferramentas necessárias."""
         required_tools = ["ruff", "mypy"]
+        missing_tools = []
 
         for tool in required_tools:
             if shutil.which(tool) is None:
                 print_colored(f"❌ {tool.title()} não encontrado", Colors.RED)
                 print_colored(f"   Instale com: pip install {tool}", Colors.YELLOW)
-                return False
-            print_colored(f"✅ {tool.title()} encontrado", Colors.GREEN)
+                missing_tools.append(tool)
+            else:
+                print_colored(f"✅ {tool.title()} encontrado", Colors.GREEN)
 
-        return True
+        if missing_tools:
+            return FlextResult.fail(
+                f"Missing required tools: {', '.join(missing_tools)}"
+            )
 
-    def execute_main_logic(self, **kwargs: object) -> bool:
+        return FlextResult.ok(None)
+
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Executar análise completa de qualidade."""
         try:
             workspace_root = Path.cwd()
@@ -65,10 +77,12 @@ class LintingReport(FlextScript):
             print_colored("=" * 60, Colors.CYAN)
 
             # Descobrir projetos
-            projects = self._discover_projects(workspace_root, projects_filter)
+            projects = self._discover_projects(
+                workspace_root, str(projects_filter) if projects_filter else None
+            )
 
             # Análise agregada
-            total_stats = {
+            total_stats: dict[str, object] = {
                 "projects_analyzed": 0,
                 "total_files": 0,
                 "ruff_issues": 0,
@@ -76,7 +90,7 @@ class LintingReport(FlextScript):
                 "projects_with_issues": 0,
             }
 
-            project_results = {}
+            project_results: dict[str, object] = {}
 
             # Analisar cada projeto
             for project_path in projects:
@@ -95,8 +109,8 @@ class LintingReport(FlextScript):
                     "python_files": len(list(project_path.rglob("*.py"))),
                     "ruff_issues": ruff_result["total_issues"],
                     "mypy_errors": mypy_result["total_errors"],
-                    "has_issues": ruff_result["total_issues"] > 0
-                    or mypy_result["total_errors"] > 0,
+                    "has_issues": int(ruff_result["total_issues"]) > 0
+                    or int(mypy_result["total_errors"]) > 0,
                 }
 
                 project_results[project_name] = {
@@ -106,12 +120,22 @@ class LintingReport(FlextScript):
                 }
 
                 # Atualizar totais
-                total_stats["projects_analyzed"] += 1
-                total_stats["total_files"] += project_stats["python_files"]
-                total_stats["ruff_issues"] += project_stats["ruff_issues"]
-                total_stats["mypy_errors"] += project_stats["mypy_errors"]
+                total_stats["projects_analyzed"] = (
+                    int(total_stats["projects_analyzed"]) + 1
+                )
+                total_stats["total_files"] = int(total_stats["total_files"]) + int(
+                    project_stats["python_files"]
+                )
+                total_stats["ruff_issues"] = int(total_stats["ruff_issues"]) + int(
+                    project_stats["ruff_issues"]
+                )
+                total_stats["mypy_errors"] = int(total_stats["mypy_errors"]) + int(
+                    project_stats["mypy_errors"]
+                )
                 if project_stats["has_issues"]:
-                    total_stats["projects_with_issues"] += 1
+                    total_stats["projects_with_issues"] = (
+                        int(total_stats["projects_with_issues"]) + 1
+                    )
 
                 # Mostrar resultado do projeto
                 self._print_project_summary(
@@ -130,11 +154,13 @@ class LintingReport(FlextScript):
             elif output_format == "html":
                 self._save_html_report(total_stats, project_results)
 
-            return True
+            return FlextResult.ok(
+                {"total_stats": total_stats, "project_results": project_results}
+            )
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
-            return False
+            return FlextResult.fail(f"Analysis error: {e}")
 
     def _discover_projects(
         self,
@@ -391,7 +417,7 @@ class LintingReport(FlextScript):
 
         print_colored(f"\n💾 Relatório HTML salvo: {report_path}", Colors.GREEN)
 
-    def create_parser(self) -> object:
+    def create_parser(self) -> argparse.ArgumentParser:
         """Criar parser com argumentos específicos."""
         parser = super().create_parser()
 
@@ -409,8 +435,9 @@ class LintingReport(FlextScript):
 
         return parser
 
-    def cleanup(self) -> None:
+    def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
+        return FlextResult.ok(None)
 
 
 def main() -> int:

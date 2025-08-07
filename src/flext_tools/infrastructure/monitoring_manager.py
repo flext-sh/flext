@@ -75,24 +75,18 @@ License: MIT
 from pathlib import Path
 
 from flext_core import FlextResult, get_logger
-from pydantic import BaseModel, Field
 
 from flext_tools.utils import Colors, print_colored
 
 logger = get_logger(__name__)
 
 
-class MonitoringSetupResult(BaseModel):
-    """Monitoring infrastructure setup results.
-    
-    Contains comprehensive status information for monitoring infrastructure
-    configuration including metrics, alerts, dashboards, and system details.
-    """
+# REMOVED: MonitoringSetupResult class (violation of DRY principle)
+# All monitoring setup results must use FlextResult from flext-core instead
+# to maintain consistency and avoid duplication of generic result functionality
 
-    monitoring_configured: bool = Field(default=False, description="Overall monitoring infrastructure status")
-    metrics_enabled: bool = Field(default=False, description="Metrics collection and aggregation status")
-    alerts_setup: bool = Field(default=False, description="Alerting system configuration status")
-    details: dict[str, object] = Field(default_factory=dict, description="Detailed monitoring configuration and system metadata")
+# Type alias for monitoring setup data
+MonitoringSetupData = dict[str, object]
 
 
 class MonitoringManager:
@@ -169,7 +163,7 @@ class MonitoringManager:
         """
         self.config_path = config_path or Path.cwd() / "monitoring"
 
-    def setup_monitoring(self, **_kwargs: object) -> FlextResult[MonitoringSetupResult]:
+    def setup_monitoring(self, **_kwargs: object) -> FlextResult[MonitoringSetupData]:
         """Setup comprehensive monitoring and observability infrastructure.
 
         Performs complete monitoring infrastructure configuration including metrics
@@ -215,18 +209,19 @@ class MonitoringManager:
             logger.info("Starting monitoring infrastructure setup", extra={"config_path": str(self.config_path)})
 
             # For now, using mock results - in production this would perform actual monitoring setup
-            results = MonitoringSetupResult(
-                monitoring_configured=True,
-                metrics_enabled=True,
-                alerts_setup=True,
-                details={
+            # Using FlextResult pattern (DRY - no custom classes)
+            results_data: MonitoringSetupData = {
+                "monitoring_configured": True,
+                "metrics_enabled": True,
+                "alerts_setup": True,
+                "details": {
                     "metrics_count": 0,
                     "alert_rules": 0,
                     "dashboards": [],
                     "tracing_enabled": True,
-                    "log_aggregation": True
-                }
-            )
+                    "log_aggregation": True,
+                },
+            }
 
             print_colored(
                 "✅ Monitoring infrastructure configured successfully",
@@ -234,9 +229,9 @@ class MonitoringManager:
             )
             logger.info("Monitoring infrastructure setup completed successfully")
 
-            return FlextResult.ok(results)
+            return FlextResult.ok(results_data)
 
         except Exception as e:
             error_msg = f"Failed to setup monitoring infrastructure: {e}"
-            logger.error(error_msg)
+            logger.exception(error_msg)
             return FlextResult.fail(error_msg)

@@ -1,0 +1,60 @@
+{
+  "scan_summary": {
+    "total_violations": 4,
+    "risk_breakdown": {
+      "CRITICAL": 2,
+      "HIGH": 2,
+      "MEDIUM": 0,
+      "LOW": 0
+    },
+    "violation_types": {
+      "exception_swallowing": 2,
+      "fake_data_generation": 2
+    }
+  },
+  "violations": [
+    {
+      "file_path": "flext-observability/src/flext_observability/flext_monitor.py",
+      "line_number": 434,
+      "violation_type": "exception_swallowing",
+      "risk_level": "CRITICAL",
+      "code_snippet": "except (ValueError, TypeError, AttributeError):",
+      "description": "Exce\u00e7\u00e3o engolida silenciosamente",
+      "suggested_fix": "Especificar tipo de exce\u00e7\u00e3o e tratar adequadamente ou usar FlextResult.fail()"
+    },
+    {
+      "file_path": "flext-observability/src/flext_observability/flext_monitor.py",
+      "line_number": 434,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 434",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    },
+    {
+      "file_path": "flext-observability/src/flext_observability/services.py",
+      "line_number": 1172,
+      "violation_type": "exception_swallowing",
+      "risk_level": "CRITICAL",
+      "code_snippet": "except (AttributeError, TypeError):",
+      "description": "Exce\u00e7\u00e3o engolida silenciosamente",
+      "suggested_fix": "Especificar tipo de exce\u00e7\u00e3o e tratar adequadamente ou usar FlextResult.fail()"
+    },
+    {
+      "file_path": "flext-observability/src/flext_observability/services.py",
+      "line_number": 1172,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 1172",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    }
+  ],
+  "scan_config": {
+    "target_paths": [
+      "flext-observability/src"
+    ],
+    "risk_threshold": "MEDIUM",
+    "output_format": "json"
+  }
+}
