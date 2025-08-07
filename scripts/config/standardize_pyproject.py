@@ -9,11 +9,16 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 
+from flext_core import FlextResult
 from scripts.common import discover_projects
 
 from flext_tools import Colors, PoetryValidator, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
+
+if TYPE_CHECKING:
+    import argparse
 
 
 class PyprojectStandardizer(FlextScript):
@@ -28,7 +33,7 @@ class PyprojectStandardizer(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> bool:
+    def validate_preconditions(self) -> FlextResult[None]:
         """Validate preconditions."""
         workspace_root = Path.cwd()
 
@@ -43,12 +48,12 @@ class PyprojectStandardizer(FlextScript):
 
         if not flext_projects:
             print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return False
+            return FlextResult.fail("Not in FLEXT workspace root")
 
         print_colored(f"✅ Found {len(flext_projects)} FLEXT projects", Colors.GREEN)
-        return True
+        return FlextResult.ok(None)
 
-    def execute_main_logic(self, **kwargs: object) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute pyproject.toml standardization."""
         try:
             workspace_root = Path.cwd()
@@ -58,7 +63,9 @@ class PyprojectStandardizer(FlextScript):
             print_colored("=" * 60, Colors.CYAN)
 
             # Discover projects
-            projects = self._discover_projects(workspace_root, projects_filter)
+            projects = self._discover_projects(
+                workspace_root, str(projects_filter) if projects_filter else None
+            )
 
             # Use flext_tools.poetry for operations
             poetry_ops = PoetryValidator()
@@ -96,11 +103,17 @@ class PyprojectStandardizer(FlextScript):
             # Summary
             self._print_summary(len(projects), total_standardized, failed_projects)
 
-            return len(failed_projects) == 0
+            return FlextResult.ok(
+                {
+                    "total_projects": len(projects),
+                    "standardized": total_standardized,
+                    "failed_projects": failed_projects,
+                }
+            )
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during standardization: {e}", Colors.RED)
-            return False
+            return FlextResult.fail(f"Standardization error: {e}")
 
     def _discover_projects(
         self,
@@ -151,7 +164,7 @@ class PyprojectStandardizer(FlextScript):
                 status_color,
             )
 
-    def create_parser(self) -> object:
+    def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
         parser = super().create_parser()
 
@@ -162,8 +175,9 @@ class PyprojectStandardizer(FlextScript):
 
         return parser
 
-    def cleanup(self) -> None:
+    def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
+        return FlextResult.ok(None)
 
 
 def main() -> int:

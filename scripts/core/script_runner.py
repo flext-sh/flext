@@ -14,6 +14,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from flext_core import FlextResult
 from scripts.core.script_registry import ScriptRegistry
 
 from flext_tools import Colors, print_colored
@@ -35,18 +36,18 @@ class ScriptRunner(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> bool:
+    def validate_preconditions(self) -> FlextResult[None]:
         """Validate preconditions."""
         scripts_dir = Path(__file__).parent.parent
 
         if not scripts_dir.exists():
             print_colored("❌ Scripts directory not found", Colors.RED)
-            return False
+            return FlextResult.fail("Scripts directory not found")
 
         print_colored("✅ Scripts directory found", Colors.GREEN)
-        return True
+        return FlextResult.ok(None)
 
-    def execute_main_logic(self, **kwargs: object) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute script runner logic."""
         try:
             list_scripts = kwargs.get("list", False)
@@ -61,26 +62,34 @@ class ScriptRunner(FlextScript):
 
                 if list_scripts:
                     self._list_all_scripts(registry)
-                    return True
+                    return FlextResult.ok({"action": "list_scripts"})
 
                 if script_name:
                     # Pass script_name as positional and kwargs as keyword arguments
-                    return self._run_script(
-                        registry, script_name, **kwargs
+                    result = self._run_script(
+                        registry, str(script_name), **kwargs
                     )  # Pass kwargs correctly
+                    return FlextResult.ok(
+                        {
+                            "action": "run_script",
+                            "script_name": script_name,
+                            "result": result,
+                        }
+                    )
+
                 print_colored(
                     "❌ No script specified. Use --list to see available scripts.",
                     Colors.RED,
                 )
-                return False
+                return FlextResult.fail("No script specified")
 
             except ImportError as e:
                 print_colored(f"❌ Failed to import script registry: {e}", Colors.RED)
-                return False
+                return FlextResult.fail(f"Failed to import script registry: {e}")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error in script runner: {e}", Colors.RED)
-            return False
+            return FlextResult.fail(f"Script runner error: {e}")
 
     def _list_all_scripts(self, registry: ScriptRegistry) -> None:  # Typed registry
         """List all available scripts."""
@@ -183,8 +192,9 @@ class ScriptRunner(FlextScript):
 
         return parser
 
-    def cleanup(self) -> None:
+    def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
+        return FlextResult.ok(None)
 
 
 # Helper to check if a function accepts arbitrary keyword arguments

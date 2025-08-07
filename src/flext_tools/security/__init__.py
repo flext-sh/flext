@@ -84,10 +84,10 @@ License: MIT
 
 from flext_tools.security.antipattern_scanner import (
     AntipatternScanner,
+    RiskLevel,
     ScanConfig,
     SecurityViolation,
     ViolationType,
-    RiskLevel,
     create_security_scanner,
     scan_flext_ecosystem,
 )
@@ -96,12 +96,12 @@ from flext_tools.security.secret_vault import SecretVaultDecryptor
 
 __all__: list[str] = [
     "AntipatternScanner",
-    "ScanConfig", 
-    "SecurityViolation",
-    "ViolationType",
     "RiskLevel",
+    "ScanConfig",
     "SecretGenerator",
     "SecretVaultDecryptor",
+    "SecurityViolation",
+    "ViolationType",
     "create_security_scanner",
     "scan_flext_ecosystem",
 ]

@@ -7,6 +7,7 @@ Usa flext_tools para validação consistente em todo o workspace.
 
 from __future__ import annotations
 
+import argparse
 import json
 import shutil
 import subprocess
@@ -14,6 +15,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from flext_core import FlextResult
 from scripts.common import discover_projects
 
 from flext_tools import (
@@ -66,7 +68,7 @@ class QualityGateway(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> bool:
+    def validate_preconditions(self) -> FlextResult[None]:
         """Validar ferramentas necessárias."""
         workspace_root = Path.cwd()
 
@@ -81,7 +83,7 @@ class QualityGateway(FlextScript):
 
         if not flext_projects:
             print_colored("❌ Execute do diretório raiz do workspace FLEXT", Colors.RED)
-            return False
+            return FlextResult.fail("Not in FLEXT workspace root")
 
         print_colored(
             f"✅ Encontrados {len(flext_projects)} projetos FLEXT",
@@ -104,11 +106,13 @@ class QualityGateway(FlextScript):
                 f"Instale as ferramentas faltantes: {', '.join(missing_tools)}",
                 Colors.YELLOW,
             )
-            return False
+            return FlextResult.fail(
+                f"Missing required tools: {', '.join(missing_tools)}"
+            )
 
-        return True
+        return FlextResult.ok(None)
 
-    def execute_main_logic(self, **kwargs: object) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Executar gateway de qualidade completo."""
         try:
             workspace_root = Path.cwd()
@@ -119,10 +123,12 @@ class QualityGateway(FlextScript):
             print_colored("=" * 60, Colors.CYAN)
 
             # Descobrir projetos
-            projects = self._discover_projects(workspace_root, projects_filter)
+            projects = self._discover_projects(
+                workspace_root, str(projects_filter) if projects_filter else None
+            )
 
             # Estatísticas agregadas
-            total_stats = {
+            total_stats: dict[str, object] = {
                 "projects_analyzed": 0,
                 "passed": 0,
                 "failed": 0,
@@ -130,7 +136,7 @@ class QualityGateway(FlextScript):
                 "critical_issues": 0,
             }
 
-            failed_projects = []
+            failed_projects: list[str] = []
 
             # Executar análise em cada projeto
             for project_path in projects:
@@ -162,17 +168,23 @@ class QualityGateway(FlextScript):
                     project_name,
                     analysis_results,
                 )  # Atualizar estatísticas
-                total_stats["projects_analyzed"] += 1
+                total_stats["projects_analyzed"] = (
+                    int(total_stats["projects_analyzed"]) + 1
+                )
                 if project_result["passed"]:
-                    total_stats["passed"] += 1
+                    total_stats["passed"] = int(total_stats["passed"]) + 1
                     print_colored(f"  ✅ {project_name}: APROVADO", Colors.GREEN)
                 else:
-                    total_stats["failed"] += 1
+                    total_stats["failed"] = int(total_stats["failed"]) + 1
                     failed_projects.append(project_name)
                     print_colored(f"  ❌ {project_name}: REPROVADO", Colors.RED)
 
-                total_stats["total_issues"] += project_result["total_issues"]
-                total_stats["critical_issues"] += project_result["critical_issues"]
+                total_stats["total_issues"] = int(total_stats["total_issues"]) + int(
+                    project_result["total_issues"]
+                )
+                total_stats["critical_issues"] = int(
+                    total_stats["critical_issues"]
+                ) + int(project_result["critical_issues"])
 
                 # Mostrar detalhes se há falhas
                 if not project_result["passed"]:
@@ -182,18 +194,24 @@ class QualityGateway(FlextScript):
             self._print_final_summary(total_stats, failed_projects, strict_mode)
 
             # Gateway aprovado apenas se todos os projetos passaram
-            gateway_passed = total_stats["failed"] == 0
+            gateway_passed = int(total_stats["failed"]) == 0
 
             if gateway_passed:
                 print_colored("\n🎉 QUALITY GATEWAY: APROVADO", Colors.GREEN)
             else:
                 print_colored("\n🚫 QUALITY GATEWAY: REPROVADO", Colors.RED)
 
+            return FlextResult.ok(
+                {
+                    "gateway_passed": gateway_passed,
+                    "stats": total_stats,
+                    "failed_projects": failed_projects,
+                }
+            )
+
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
-            return False
-        else:
-            return gateway_passed
+            return FlextResult.fail(f"Analysis error: {e}")
 
     def _discover_projects(
         self,
@@ -456,7 +474,7 @@ class QualityGateway(FlextScript):
                 score_color,
             )
 
-    def create_parser(self) -> object:
+    def create_parser(self) -> argparse.ArgumentParser:
         """Criar parser com argumentos específicos."""
         parser = super().create_parser()
 
@@ -473,8 +491,9 @@ class QualityGateway(FlextScript):
 
         return parser
 
-    def cleanup(self) -> None:
+    def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
+        return FlextResult.ok(None)
 
 
 def main() -> int:

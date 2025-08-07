@@ -94,6 +94,7 @@ import argparse
 import logging
 import time
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, ParamSpec
 
 from flext_core import (
@@ -140,7 +141,7 @@ class ScriptMetadata(FlextValue):
 
 class FlextScript(ABC):
     """Base class for FLEXT scripts using flext-core enterprise patterns.
-    
+
     Implements Clean Architecture patterns with FlextResult for error handling,
     dependency injection container integration, and structured logging.
     """
@@ -179,7 +180,7 @@ class FlextScript(ABC):
 
     def cleanup(self) -> FlextResult[None]:
         """Perform cleanup operations after execution.
-        
+
         Returns:
             FlextResult indicating cleanup success or failure
 
@@ -302,23 +303,25 @@ class FlextScript(ABC):
         return self.run(**vars(args))
 
 
+@dataclass
+class ScriptConfig[**P_main_func]:
+    """Configuration for creating simple scripts."""
+
+    name: str
+    description: str
+    category: str
+    main_func: Callable[P_main_func, FlextResult[object]]
+    setup_func: Callable[[], FlextResult[None]] | None = None
+    validate_func: Callable[[], FlextResult[None]] | None = None
+
+
 def create_simple_script[**P_main_func](
-    name: str,
-    description: str,
-    category: str,
-    main_func: Callable[P_main_func, FlextResult[object]],
-    setup_func: Callable[[], FlextResult[None]] | None = None,
-    validate_func: Callable[[], FlextResult[None]] | None = None,
+    config: ScriptConfig[P_main_func],
 ) -> type[FlextScript]:
-    """Create a simple script class from functions using flext-core patterns.
+    """Create a simple script class from configuration using flext-core patterns.
 
     Args:
-        name: Script name
-        description: Script description
-        category: Script category
-        main_func: Main execution function returning FlextResult
-        setup_func: Optional setup function returning FlextResult
-        validate_func: Optional validation function returning FlextResult
+        config: Script configuration containing all required parameters
 
     Returns:
         FlextScript subclass with flext-core integration
@@ -328,26 +331,30 @@ def create_simple_script[**P_main_func](
     class SimpleScript(FlextScript):
         @property
         def metadata(self) -> ScriptMetadata:
-            return ScriptMetadata(name=name, description=description, category=category)
+            return ScriptMetadata(
+                name=config.name,
+                description=config.description,
+                category=config.category,
+            )
 
         def validate_preconditions(self) -> FlextResult[None]:
-            if validate_func:
-                return validate_func()
+            if config.validate_func:
+                return config.validate_func()
             return FlextResult.ok(None)
 
         def setup(self) -> FlextResult[None]:
-            if setup_func:
-                return setup_func()
+            if config.setup_func:
+                return config.setup_func()
             return FlextResult.ok(None)
 
         def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
             try:
                 # Try with kwargs first
-                return main_func(**kwargs)  # type: ignore[call-arg,arg-type]
+                return config.main_func(**kwargs)  # type: ignore[call-arg,arg-type]
             except TypeError:
                 # Fallback for callables with no arguments
                 try:
-                    return main_func()  # type: ignore[call-arg]
+                    return config.main_func()  # type: ignore[call-arg]
                 except TypeError as e:
                     return FlextResult.fail(f"Function signature mismatch: {e}")
 

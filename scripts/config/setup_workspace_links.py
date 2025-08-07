@@ -19,6 +19,8 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from flext_core import FlextResult
+
 from flext_tools import Colors, PoetryValidator, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
 from flext_tools.infrastructure import MonitoringManager, SSLManager
@@ -43,7 +45,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
             version="3.0.0",
         )
 
-    def validate_preconditions(self) -> bool:
+    def validate_preconditions(self) -> FlextResult[None]:
         """Validate preconditions."""
         workspace_root = Path.cwd()
 
@@ -58,7 +60,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
 
         if not flext_projects:
             print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return False
+            return FlextResult.fail("Not in FLEXT workspace root")
 
         print_colored(f"✅ Found {len(flext_projects)} FLEXT projects", Colors.GREEN)
 
@@ -72,16 +74,16 @@ class ComprehensiveWorkspaceManager(FlextScript):
                 timeout=5,
             )
             print_colored("✅ Poetry available", Colors.GREEN)
-            return True
+            return FlextResult.ok(None)
         except (
             subprocess.CalledProcessError,
             FileNotFoundError,
             subprocess.TimeoutExpired,
         ):
             print_colored("❌ Poetry not found", Colors.RED)
-            return False
+            return FlextResult.fail("Poetry not found")
 
-    def execute_main_logic(self, **kwargs: object) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute comprehensive workspace management."""
         try:
             workspace_root = Path.cwd()
@@ -432,8 +434,9 @@ class ComprehensiveWorkspaceManager(FlextScript):
 
         return parser
 
-    def cleanup(self) -> None:
+    def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
+        return FlextResult.ok(None)
 
 
 def main() -> int:
