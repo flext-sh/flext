@@ -344,61 +344,80 @@ class VersionAnalyzer:
     def _collect_package_versions(
         projects_data: dict[str, dict[str, object]],
     ) -> dict[str, dict[str, str]]:
-        """Collect package versions from project data.
-
-        Extracts version constraints for each package from multiple projects,
-        supporting both PEP 621 (project.dependencies) and Poetry-style
-        (tool.poetry.dependencies) dependency specifications.
-
-        Args:
-            projects_data: Dictionary of project data parsed from pyproject.toml files
-
-        Returns:
-            Dictionary mapping package names to project-specific version constraints
-            Format: {package_name: {project_name: version_constraint}}
-
-        """
+        """Collect package versions from project data."""
         package_versions: dict[str, dict[str, str]] = {}
 
         for project_name, data in projects_data.items():
-            # PEP 621 dependencies
-            project_section = data.get("project", {})
-            if isinstance(project_section, dict):
-                pep621_deps = project_section.get("dependencies", [])
-            else:
-                pep621_deps = []
-            for dep_spec in pep621_deps:
-                package_name, version_spec = VersionAnalyzer.parse_version_spec(
-                    dep_spec,
-                )
-                if package_name and version_spec:
-                    if package_name not in package_versions:
-                        package_versions[package_name] = {}
-                    package_versions[package_name][project_name] = version_spec or "*"
-
-            # Poetry dependencies
-            tool_section = data.get("tool", {})
-            if isinstance(tool_section, dict):
-                poetry_section = tool_section.get("poetry", {})
-                if isinstance(poetry_section, dict):
-                    poetry_deps = poetry_section.get("dependencies", {})
-                else:
-                    poetry_deps = {}
-            else:
-                poetry_deps = {}
-            for package_name, dep_spec in poetry_deps.items():
-                if isinstance(dep_spec, str):
-                    version_spec = dep_spec
-                elif isinstance(dep_spec, dict):
-                    version_spec = dep_spec.get("version", "*")
-                else:
-                    continue
-
-                if package_name not in package_versions:
-                    package_versions[package_name] = {}
-                package_versions[package_name][project_name] = version_spec or "*"
+            VersionAnalyzer._collect_pep621_dependencies(data, project_name, package_versions)
+            VersionAnalyzer._collect_poetry_dependencies(data, project_name, package_versions)
 
         return package_versions
+
+    @staticmethod
+    def _collect_pep621_dependencies(
+        data: dict[str, object],
+        project_name: str,
+        package_versions: dict[str, dict[str, str]],
+    ) -> None:
+        """Collect PEP 621 dependencies from project data."""
+        project_section = data.get("project", {})
+        if not isinstance(project_section, dict):
+            return
+
+        pep621_deps = project_section.get("dependencies", [])
+        if not isinstance(pep621_deps, list):
+            return
+
+        for dep_spec in pep621_deps:
+            package_name, version_spec = VersionAnalyzer.parse_version_spec(dep_spec)
+            if package_name and version_spec:
+                VersionAnalyzer._add_package_version(package_name, project_name, version_spec, package_versions)
+
+    @staticmethod
+    def _collect_poetry_dependencies(
+        data: dict[str, object],
+        project_name: str,
+        package_versions: dict[str, dict[str, str]],
+    ) -> None:
+        """Collect Poetry dependencies from project data."""
+        tool_section = data.get("tool", {})
+        if not isinstance(tool_section, dict):
+            return
+
+        poetry_section = tool_section.get("poetry", {})
+        if not isinstance(poetry_section, dict):
+            return
+
+        poetry_deps = poetry_section.get("dependencies", {})
+        if not isinstance(poetry_deps, dict):
+            return
+
+        for package_name, dep_spec in poetry_deps.items():
+            version_spec = VersionAnalyzer._parse_poetry_version_spec(dep_spec)
+            if version_spec:
+                VersionAnalyzer._add_package_version(package_name, project_name, version_spec, package_versions)
+
+    @staticmethod
+    def _parse_poetry_version_spec(dep_spec: object) -> str | None:
+        """Parse Poetry dependency specification to extract version."""
+        if isinstance(dep_spec, str):
+            return dep_spec
+        if isinstance(dep_spec, dict):
+            version = dep_spec.get("version", "*")
+            return str(version) if version is not None else "*"
+        return None
+
+    @staticmethod
+    def _add_package_version(
+        package_name: str,
+        project_name: str,
+        version_spec: str,
+        package_versions: dict[str, dict[str, str]],
+    ) -> None:
+        """Add a package version to the collection."""
+        if package_name not in package_versions:
+            package_versions[package_name] = {}
+        package_versions[package_name][project_name] = version_spec or "*"
 
     @staticmethod
     def _detect_version_conflicts(
@@ -606,7 +625,7 @@ def check_version_compatibility(spec1: str, spec2: str) -> FlextResult[VersionCo
             spec2=spec2,
             overlap_version=str(overlap_version) if overlap_version is not None else None,
             issues=list(issues) if isinstance(issues, (list, tuple)) else [],
-            recommendations=list(recommendations) if isinstance(recommendations, (list, tuple)) else []
+            recommendations=list(recommendations) if isinstance(recommendations, (list, tuple)) else [],
         )
 
         return FlextResult.ok(result)

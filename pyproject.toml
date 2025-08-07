@@ -12,10 +12,10 @@ readme = "README.md"
 requires-python = ">=3.13,<3.14"
 version = "0.9.0"
 urls.Homepage = "https://github.com/flext-sh/flext"
-urls.Documentation = "https://github.com/flext-sh/flext/blob/main/README.md"
+urls.Documentation = "https://docs.flext.sh"
 urls.Repository = "https://github.com/flext-sh/flext"
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
@@ -108,6 +108,37 @@ test = [
     "pytest-timeout>=2.4.0",
     "pytest-xdist>=3.8.0",
 ]
+docs = [
+    "mkdocs-autolinks-plugin>=0.8.0",
+    "mkdocs-awesome-list>=0.1.0",
+    "mkdocs-awesome-pages-plugin>=2.9.0",
+    "mkdocs-blog>=0.1.0",
+    "mkdocs-encryptcontent-plugin>=2.0.0",
+    "mkdocs-exclude>=1.0.0",
+    "mkdocs-get-deps>=0.2.0",
+    "mkdocs-git-revision-date-localized-plugin>=1.2.0",
+    "mkdocs-literate-nav>=0.6.0",
+    "mkdocs-macros-plugin>=1.0.0",
+    "mkdocs-material-extensions>=1.3.1",
+    "mkdocs-material>=9.5.0",
+    "mkdocs-mermaid2-plugin>=1.1.0",
+    "mkdocs-minify-plugin>=0.7.0",
+    "mkdocs-newsletter>=0.1.0",
+    "mkdocs-pdf-export-plugin>=0.6.0",
+    "mkdocs-print-site-plugin>=0.8.0",
+    "mkdocs-redirects>=1.2.0",
+    "mkdocs-roamlinks-plugin>=0.6.0",
+    "mkdocs-rtd-dropdown>=1.2.0",
+    "mkdocs-search>=0.1.0",
+    "mkdocs-section-index>=0.3.0",
+    # "mkdocs-simple-hooks>=0.3.0",
+    # "mkdocs-tooltipster-links>=0.1.0",
+    "mkdocs-versioning>=0.2.0",
+    "mkdocs>=1.6.0",
+    # "mkdocstrings-golang>=0.1.0",
+    "mkdocstrings-python>=1.7.0",
+    "mkdocstrings>=0.24.0",
+]
 typings = [
     "django-stubs>=5.2.2",
     "types-ldap3>=2.9.13.20250622",
@@ -126,6 +157,7 @@ security = ["bandit>=1.8.0", "pip-audit>=2.7.3"]
 [project.scripts]
 flext-dev = "flext.dev:main"
 flext-workspace = "flext.workspace:main"
+flext-docs = "flext.docs:main"
 
 [tool.poetry]
 packages = [
@@ -185,7 +217,7 @@ exclude = [
 extend_exclude = ["client-a-.*/", "flexcore/", "flext-.*/", "client-b-.*/"]
 known_first_party = ["flext", "flext_tools"]
 # package_module_name_map.flext_tools = "flext_tools"
-pep621_dev_dependency_groups = ["dev", "security", "test", "typings"]
+pep621_dev_dependency_groups = ["dev", "security", "test", "typings", "docs"]
 
 [tool.mypy]
 # Strict mode - enables all recommended checks

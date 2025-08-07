@@ -10,6 +10,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+from flext_core import FlextResult
+
 from flext_tools import Colors, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
 
@@ -26,7 +28,7 @@ class WorkspaceStatus(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> bool:
+    def validate_preconditions(self) -> FlextResult[None]:
         """Validar se estamos no workspace FLEXT."""
         workspace_root = Path.cwd()
         flext_projects = [
@@ -37,11 +39,11 @@ class WorkspaceStatus(FlextScript):
 
         if not flext_projects:
             print_colored("❌ Execute do diretório raiz do workspace FLEXT", Colors.RED)
-            return False
+            return FlextResult.fail("Not in FLEXT workspace root")
 
-        return True
+        return FlextResult.ok(None)
 
-    def execute_main_logic(self) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Executar análise completa do workspace."""
         try:
             workspace_root = Path.cwd()
@@ -69,11 +71,18 @@ class WorkspaceStatus(FlextScript):
             )
             self._print_health_score(health_score)
 
-            return True
+            return FlextResult.ok(
+                {
+                    "projects_info": projects_info,
+                    "quality_info": quality_info,
+                    "deps_info": deps_info,
+                    "health_score": health_score,
+                }
+            )
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
-            return False
+            return FlextResult.fail(f"Analysis error: {e}")
 
     def _analyze_projects(self, workspace_root: Path) -> dict[str, object]:
         """Analisar projetos do workspace."""
@@ -304,8 +313,9 @@ class WorkspaceStatus(FlextScript):
             score_color,
         )
 
-    def cleanup(self) -> None:
+    def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
+        return FlextResult.ok(None)
 
 
 def main() -> int:

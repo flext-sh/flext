@@ -35,11 +35,13 @@ class Colors:
     MAGENTA = "\033[95m"
     ORANGE = "\033[38;5;208m"
     GRAY = "\033[90m"
+    WHITE = "\033[37m"
+    RESET = "\033[0m"
 
 
 def print_colored(message: str, color: str = "") -> None:
     """Print colored message to terminal with ANSI color formatting."""
     if color:
-        print(f"{color}{message}{Colors.ENDC}")
+        print(f"{color}{message}{Colors.RESET}")  # noqa: T201
     else:
-        print(message)
+        print(message)  # noqa: T201

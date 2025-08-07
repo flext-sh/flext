@@ -62,7 +62,7 @@ logger = get_logger(__name__)
 
 class Configuration(BaseModel):
     """Configuration data structure for FLEXT ecosystem.
-    
+
     Contains comprehensive configuration settings including environment
     specification, debug settings, timeouts, and component-specific details.
     """
@@ -171,7 +171,7 @@ class ConfigurationManager:
                 environment="staging",
                 debug=True,
                 timeout=30,
-                details={}
+                details={},
             )
 
             print_colored("✅ Configuration loaded successfully", Colors.GREEN)
@@ -181,5 +181,5 @@ class ConfigurationManager:
 
         except Exception as e:
             error_msg = f"Failed to load configuration: {e}"
-            logger.error(error_msg)
+            logger.exception(error_msg)
             return FlextResult.fail(error_msg)

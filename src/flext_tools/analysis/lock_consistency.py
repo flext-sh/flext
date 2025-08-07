@@ -147,7 +147,7 @@ class LockInconsistency:
 
 class WorkspaceSummary(BaseModel):
     """Comprehensive workspace dependency analysis summary.
-    
+
     Contains statistical summary of workspace analysis including project
     counts, package inventory, and inconsistency classification.
     """
@@ -279,7 +279,7 @@ class LockConsistencyAnalyzer:
 
         except Exception as e:
             error_msg = f"Failed to analyze workspace: {e}"
-            logger.error(error_msg)
+            logger.exception(error_msg)
             return FlextResult.fail(error_msg)
 
     def _discover_projects(self, workspace_path: Path) -> list[Path]:
@@ -536,7 +536,7 @@ class LockConsistencyAnalyzer:
 
         except Exception as e:
             error_msg = f"Failed to generate workspace summary: {e}"
-            logger.error(error_msg)
+            logger.exception(error_msg)
             return FlextResult.fail(error_msg)
 
     def print_detailed_report(

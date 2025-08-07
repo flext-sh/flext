@@ -179,7 +179,7 @@ class FlextConfigStandardizer:
                 else:
                     # Add coverage threshold if not present
                     addopts.append(f"--cov-fail-under={target_coverage}")
-                    print("  ➕ Added coverage threshold: %s", target_coverage)
+                    print("  ➕ Added coverage threshold: %s", target_coverage)  # noqa: RUF001
                     changed = True
 
         # Add reference to shared pytest config
