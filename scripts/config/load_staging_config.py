@@ -7,8 +7,11 @@ para máxima confiabilidade e padronização enterprise.
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
+
+from flext_core import FlextResult
 
 from flext_tools import Colors, print_colored
 from flext_tools.config import ConfigurationManager
@@ -27,29 +30,29 @@ class StagingConfigLoader(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> bool:
+    def validate_preconditions(self) -> FlextResult[None]:
         """Validate preconditions."""
         project_root = Path.cwd()
 
         # Check if we're in FLEXT workspace
         if not (project_root / "flext-api").exists():
             print_colored("❌ flext-api directory not found", Colors.RED)
-            return False
+            return FlextResult.fail("flext-api directory not found")
 
         # Check if staging config exists
         staging_env = project_root / "flext-api" / ".env.staging"
         if not staging_env.exists():
             print_colored("❌ .env.staging file not found in flext-api/", Colors.RED)
-            return False
+            return FlextResult.fail(".env.staging file not found in flext-api/")
 
         print_colored("✅ Staging configuration files found", Colors.GREEN)
-        return True
+        return FlextResult.ok(None)
 
-    def execute_main_logic(self, **kwargs: object) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute staging config loading logic."""
         try:
             project_root = Path.cwd()
-            kwargs.get("validate_only", False)
+            validate_only = kwargs.get("validate_only", False)
 
             print_colored("⚙️ STAGING CONFIGURATION LOADER", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
@@ -69,16 +72,17 @@ class StagingConfigLoader(FlextScript):
                     Colors.GREEN,
                 )
                 print_colored("📋 All environment variables validated", Colors.CYAN)
-                return True
+                return FlextResult.ok({"success": True, "validate_only": validate_only})
+
             print_colored("❌ Failed to load staging configuration", Colors.RED)
             print_colored("Check .env.staging file for errors", Colors.YELLOW)
-            return False
+            return FlextResult.fail("Failed to load staging configuration")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during config loading: {e}", Colors.RED)
-            return False
+            return FlextResult.fail(f"Config loading error: {e}")
 
-    def create_parser(self) -> object:
+    def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
         parser = super().create_parser()
 
@@ -90,8 +94,9 @@ class StagingConfigLoader(FlextScript):
 
         return parser
 
-    def cleanup(self) -> None:
+    def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
+        return FlextResult.ok(None)
 
 
 def main() -> int:

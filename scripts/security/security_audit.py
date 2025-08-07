@@ -57,7 +57,6 @@ License: MIT
 
 from __future__ import annotations
 
-import argparse
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -70,19 +69,20 @@ from flext_core import FlextResult
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
 from flext_tools.security import (
     AntipatternScanner,
-    RiskLevel,
     ScanConfig,
     scan_flext_ecosystem,
 )
 from flext_tools.utils.colors import Colors, print_colored
 
 if TYPE_CHECKING:
+    import argparse
+
     from flext_tools.security import SecurityViolation
 
 
 class SecurityAuditScript(FlextScript):
     """Enterprise security audit script for FLEXT ecosystem analysis.
-    
+
     Implements comprehensive security scanning with configurable analysis
     parameters, multi-format reporting, and integration with FLEXT quality gates.
     """
@@ -101,19 +101,19 @@ class SecurityAuditScript(FlextScript):
 
     def validate_preconditions(self) -> FlextResult[None]:
         """Validate that security audit can run successfully.
-        
+
         Returns:
             FlextResult indicating validation success or failure with context
-            
+
         """
         try:
             # Verify we can import required modules
             from flext_tools.security import AntipatternScanner
-            
+
             # Basic validation - no specific preconditions for security scan
             self.logger.info("Security audit preconditions validated")
             return FlextResult.ok(None)
-            
+
         except ImportError as e:
             return FlextResult.fail(f"Failed to import security modules: {e}")
         except Exception as e:
@@ -121,13 +121,13 @@ class SecurityAuditScript(FlextScript):
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute security audit with comprehensive analysis.
-        
+
         Args:
             **kwargs: CLI arguments including paths, output format, thresholds
-            
+
         Returns:
             FlextResult containing scan results or error information
-            
+
         """
         try:
             # Extract CLI arguments
@@ -145,7 +145,7 @@ class SecurityAuditScript(FlextScript):
                 return FlextResult.fail("No valid target paths found for scanning")
 
             self.logger.info(f"Starting security audit of {len(validated_paths)} paths")
-            
+
             if verbose:
                 print_colored(f"🔍 Scanning paths: {', '.join(validated_paths)}", Colors.BLUE)
                 print_colored(f"🎯 Risk threshold: {risk_threshold}", Colors.BLUE)
@@ -168,7 +168,7 @@ class SecurityAuditScript(FlextScript):
             # Create and run scanner
             scanner = AntipatternScanner(config)
             scan_result = scanner.scan_ecosystem()
-            
+
             if not scan_result.success:
                 return FlextResult.fail(f"Security scan failed: {scan_result.error}")
 
@@ -195,42 +195,42 @@ class SecurityAuditScript(FlextScript):
 
         except Exception as e:
             error_msg = f"Security audit execution failed: {e}"
-            self.logger.error(error_msg)
+            self.logger.exception(error_msg)
             return FlextResult.fail(error_msg)
 
     def _validate_target_paths(self, paths: object) -> list[str]:
         """Validate and filter target paths for scanning.
-        
+
         Args:
             paths: List of path strings to validate
-            
+
         Returns:
             List of validated path strings that exist
-            
+
         """
         if not isinstance(paths, list):
             paths = [str(paths)] if paths else ["src/"]
-            
+
         validated_paths: list[str] = []
-        
+
         for path_str in paths:
             path = Path(path_str)
             if path.exists():
                 validated_paths.append(str(path))
             else:
                 self.logger.warning(f"Target path does not exist: {path}")
-                
+
         return validated_paths
 
     def _get_risk_breakdown(self, violations: list[SecurityViolation]) -> dict[str, int]:
         """Get breakdown of violations by risk level.
-        
+
         Args:
             violations: List of security violations
-            
+
         Returns:
             Dictionary with risk level counts
-            
+
         """
         breakdown = {"CRITICAL": 0, "HIGH": 0, "MEDIUM": 0, "LOW": 0}
         for violation in violations:
@@ -239,13 +239,13 @@ class SecurityAuditScript(FlextScript):
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create argument parser for security audit script.
-        
+
         Returns:
             Configured ArgumentParser with security-specific options
-            
+
         """
         parser = super().create_parser()
-        
+
         # Security-specific arguments
         parser.add_argument(
             "--paths",
@@ -253,40 +253,40 @@ class SecurityAuditScript(FlextScript):
             default=["src/"],
             help="Target paths to scan for security violations (default: src/)",
         )
-        
+
         parser.add_argument(
             "--output-format",
             choices=["summary", "detailed", "json"],
             default="summary",
             help="Output format for security report (default: summary)",
         )
-        
+
         parser.add_argument(
             "--output-file",
             type=str,
             help="Output file path for detailed or JSON reports",
         )
-        
+
         parser.add_argument(
             "--risk-threshold",
             choices=["LOW", "MEDIUM", "HIGH", "CRITICAL"],
             default="MEDIUM",
             help="Minimum risk level to report (default: MEDIUM)",
         )
-        
+
         parser.add_argument(
             "--include-deps",
             action="store_true",
             help="Include dependencies (.venv) in scan",
         )
-        
+
         parser.add_argument(
             "--max-workers",
             type=int,
             default=4,
             help="Maximum parallel workers for scanning (default: 4)",
         )
-        
+
         parser.add_argument(
             "--ecosystem",
             action="store_true",
@@ -301,10 +301,10 @@ class SecurityAuditScript(FlextScript):
             # Handle ecosystem scan mode
             if kwargs.get("ecosystem"):
                 return self._execute_ecosystem_scan(**kwargs)
-            
+
             # Regular custom path scanning
             return self._execute_custom_scan(**kwargs)
-            
+
         except Exception as e:
             return FlextResult.fail(f"Security audit execution failed: {e}")
 
@@ -312,27 +312,27 @@ class SecurityAuditScript(FlextScript):
         """Execute predefined ecosystem scan."""
         try:
             output_file = kwargs.get("output_file")
-            
+
             self.logger.info("Starting FLEXT ecosystem security scan")
             print_colored("🌐 Scanning entire FLEXT ecosystem...", Colors.CYAN)
-            
+
             # Use convenience function for ecosystem scan
             scan_result = scan_flext_ecosystem(
                 workspace_path=".",
                 output_file=str(output_file) if output_file else None,
             )
-            
+
             if not scan_result.success:
                 return FlextResult.fail(f"Ecosystem scan failed: {scan_result.error}")
-                
+
             violations = scan_result.data or []
-            
+
             return FlextResult.ok({
                 "violations": violations,
                 "total_count": len(violations),
                 "risk_breakdown": self._get_risk_breakdown(violations),
             })
-            
+
         except Exception as e:
             return FlextResult.fail(f"Ecosystem scan failed: {e}")
 
@@ -354,7 +354,7 @@ class SecurityAuditScript(FlextScript):
                 return FlextResult.fail("No valid target paths found for scanning")
 
             self.logger.info(f"Starting security audit of {len(validated_paths)} paths")
-            
+
             if verbose:
                 print_colored(f"🔍 Scanning paths: {', '.join(validated_paths)}", Colors.BLUE)
                 print_colored(f"🎯 Risk threshold: {risk_threshold}", Colors.BLUE)
@@ -377,7 +377,7 @@ class SecurityAuditScript(FlextScript):
             # Create and run scanner
             scanner = AntipatternScanner(config)
             scan_result = scanner.scan_ecosystem()
-            
+
             if not scan_result.success:
                 return FlextResult.fail(f"Security scan failed: {scan_result.error}")
 
@@ -404,16 +404,16 @@ class SecurityAuditScript(FlextScript):
 
         except Exception as e:
             error_msg = f"Custom security scan failed: {e}"
-            self.logger.error(error_msg)
+            self.logger.exception(error_msg)
             return FlextResult.fail(error_msg)
 
 
 def main() -> int:
     """Main entry point for security audit script.
-    
+
     Returns:
         Exit code (0 for success, non-zero for failure)
-        
+
     """
     script = SecurityAuditScript()
     return script.main()

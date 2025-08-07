@@ -7,9 +7,12 @@ usando flext_tools.testing para máxima confiabilidade.
 
 from __future__ import annotations
 
+import argparse
 import subprocess
 import sys
 from pathlib import Path
+
+from flext_core import FlextResult
 
 from flext_tools import Colors, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
@@ -28,14 +31,14 @@ class OracleE2ETestRunner(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> bool:
+    def validate_preconditions(self) -> FlextResult[None]:
         """Validate preconditions."""
         project_root = Path.cwd()
 
         # Check if we're in FLEXT workspace
         if not (project_root / "flext-core").exists():
             print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return False
+            return FlextResult.fail("Execute from FLEXT workspace root")
 
         print_colored("✅ FLEXT workspace detected", Colors.GREEN)
 
@@ -57,7 +60,7 @@ class OracleE2ETestRunner(FlextScript):
                 "❌ Docker not found - required for Oracle E2E tests",
                 Colors.RED,
             )
-            return False
+            return FlextResult.fail("Docker not found - required for Oracle E2E tests")
 
         # Check Docker Compose availability
         try:
@@ -68,16 +71,16 @@ class OracleE2ETestRunner(FlextScript):
                 timeout=5,
             )
             print_colored("✅ Docker Compose available", Colors.GREEN)
-            return True
+            return FlextResult.ok(None)
         except (
             subprocess.CalledProcessError,
             FileNotFoundError,
             subprocess.TimeoutExpired,
         ):
             print_colored("❌ Docker Compose not found", Colors.RED)
-            return False
+            return FlextResult.fail("Docker Compose not found")
 
-    def execute_main_logic(self, **kwargs: object) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute Oracle E2E testing logic."""
         try:
             project_root = Path.cwd()
@@ -104,16 +107,16 @@ class OracleE2ETestRunner(FlextScript):
                     Colors.GREEN,
                 )
                 print_colored("📊 Test reports generated in .flext_logs/", Colors.CYAN)
-                return True
+                return FlextResult.ok(None)
             print_colored("❌ Oracle E2E tests failed", Colors.RED)
             print_colored("📋 Check logs in .flext_logs/ for details", Colors.YELLOW)
-            return False
+            return FlextResult.fail("Oracle E2E tests failed")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during E2E testing: {e}", Colors.RED)
-            return False
+            return FlextResult.fail(f"Error during E2E testing: {e}")
 
-    def create_parser(self) -> object:
+    def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
         parser = super().create_parser()
 
@@ -137,8 +140,9 @@ class OracleE2ETestRunner(FlextScript):
 
         return parser
 
-    def cleanup(self) -> None:
+    def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
+        return FlextResult.ok(None)
 
 
 def main() -> int:

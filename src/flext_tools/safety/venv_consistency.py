@@ -296,7 +296,7 @@ class VenvConsistencyValidator:
         try:
             # Use pip list to get installed packages
             # Safe: using sys.executable with hardcoded arguments
-            result = subprocess.run(
+            result = subprocess.run(  # noqa: S603
                 [sys.executable, "-m", "pip", "list", "--format=json"],
                 capture_output=True,
                 text=True,

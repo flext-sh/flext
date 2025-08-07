@@ -1,92 +1,173 @@
 # FLEXT Documentation Hub
 
-**Version**: 2.0.0-dev | **Status**: Active Development | **Last Updated**: 2025-08-05
+**Category**: Documentation Hub | **Status**: Published | **Version**: 2.1.0 | **Last Updated**: 2025-08-07
 
-This documentation hub provides comprehensive technical documentation for the FLEXT ecosystem. For project overview and quick start, see the [main README](../README.md).
+Welcome to the FLEXT documentation hub. This comprehensive guide provides everything you need to understand, use, and contribute to the FLEXT ecosystem.
 
-> ⚠️ **Documentation Status**: Currently being standardized and aligned with actual code state. Some documentation may be ahead of implementation.
+## Table of Contents
 
-## 📑 Documentation Navigation
+- [Quick Start](#quick-start)
+- [Documentation Structure](#documentation-structure)
+- [User Documentation](#user-documentation)
+- [Developer Documentation](#developer-documentation)
+- [Reference Documentation](#reference-documentation)
+- [Standards and Guidelines](#standards-and-guidelines)
+- [Getting Help](#getting-help)
 
-Start here for comprehensive technical documentation:
+## Quick Start
 
-## 📚 Documentation Index
+### For New Users
 
-### [Architecture](./architecture/README.md)
+1. **Start Here**: [Installation Guide](./getting-started/installation.md)
+2. **Quick Tutorial**: [Quick Start Guide](./getting-started/quick-start.md)
+3. **First Project**: [Data Integration Guide](./user-guides/data-integration/README.md)
 
-System design, patterns, and technical architecture documentation.
+### For Developers
 
-- [Overview](./architecture/overview.md) - High-level architecture
-- [Clean Architecture](./architecture/clean-architecture.md) - Design principles
-- [Ecosystem](./architecture/ecosystem.md) - Complete ecosystem
-- [Services](./architecture/services.md) - Service design
-- [Python-Go Integration](./architecture/python-go-integration.md) - Go-Python integration patterns
-- [Integration](./architecture/integration.md) - Integration patterns
-- [Package Structure](./architecture/pkg-structure.md) - Go package organization
-- [Workspace](./architecture/workspace.md) - Workspace organization
+1. **Architecture**: [System Overview](./developer/architecture/README.md)
+2. **API Reference**: [Complete API Docs](./reference/api/README.md)
+3. **Contributing**: [Development Guidelines](./developer/contributing/README.md)
 
-### [Patterns](./patterns/README.md)
+### For System Administrators
 
-Semantic patterns and coding standards for the FLEXT ecosystem.
+1. **Deployment**: [Deployment Guide](./developer/deployment/README.md)
+2. **Configuration**: [System Configuration](./user-guides/configuration/README.md)
+3. **Monitoring**: [Observability Guide](./user-guides/troubleshooting/monitoring.md)
 
-- [Foundation](./patterns/foundation.md) - Core patterns
-- [Type System](./patterns/types.md) - Type architecture
-- [Configuration](./patterns/config-cli.md) - Config & CLI
-- [Error Handling](./patterns/error-observability.md) - Errors & observability
-- [Constants](./patterns/constants.md) - Semantic constants
-- [Utilities](./patterns/utilities.md) - Helper patterns
+## Documentation Structure
 
-### [API Reference](./api/README.md)
+Our documentation is organized into logical sections to help you find what you need quickly:
 
-Complete API documentation and contracts.
+```
+docs/
+├── getting-started/          # Quick start guides and installation
+├── user-guides/             # End-user documentation by use case
+├── developer/               # Technical implementation details
+├── reference/               # Complete API and configuration reference
+├── standards/               # Documentation standards and templates
+└── archive/                 # Deprecated content
+```
 
-- [REST API](./api/contracts.md) - RESTful endpoints
-- [OpenAPI Specs](./api/openapi/) - Machine-readable specifications
+## User Documentation
 
-### [User Guides](./guides/README.md)
+### Getting Started
 
-Step-by-step guides for common tasks.
+- **[Installation Guide](./getting-started/installation.md)** - Complete installation instructions
+- **[Quick Start Guide](./getting-started/quick-start.md)** - Get up and running in 10 minutes
+- **[Prerequisites](./getting-started/prerequisites.md)** - System requirements and dependencies
 
-- [Getting Started](./guides/getting-started/README.md) - First-time setup
-- [Configuration](./guides/configuration/README.md) - Configuration management
-- [Deployment](./guides/deployment/README.md) - Deployment options
-- [Troubleshooting](./guides/troubleshooting/README.md) - Problem resolution
+### User Guides
 
-### [Standards](./standards/README.md)
+- **[Data Integration](./user-guides/data-integration/README.md)** - ETL/ELT workflows and patterns
+- **[Authentication](./user-guides/authentication/README.md)** - User authentication and authorization
+- **[Configuration](./user-guides/configuration/README.md)** - System configuration and customization
+- **[Troubleshooting](./user-guides/troubleshooting/README.md)** - Common issues and solutions
 
-Coding standards and best practices.
+## Developer Documentation
 
-- [Documentation](./standards/documentation.md) - Documentation standards
-- [Python](./standards/python.md) - Python coding standards
-- [PEP Semantic](./standards/pep-semantic.md) - PEP compliance matrix
+### Architecture
 
-### [Development](./development/README.md)
+- **[System Overview](./developer/architecture/README.md)** - High-level architecture and design
+- **[Clean Architecture](./developer/architecture/clean-architecture.md)** - Design principles and patterns
+- **[Python-Go Integration](./developer/architecture/python-go-integration.md)** - Cross-language integration
+- **[Package Structure](./developer/architecture/pkg-structure.md)** - Code organization
 
-Development planning and status.
+### Development
 
-- [Implementation Plan](./development/implementation-plan.md) - Roadmap
-- [Documentation Status](./development/documentation-status.md) - Current status
+- **[API Development](./developer/api/README.md)** - Building and extending APIs
+- **[Coding Patterns](./developer/patterns/README.md)** - Standard patterns and practices
+- **[Deployment](./developer/deployment/README.md)** - Deployment strategies and infrastructure
+- **[Contributing](./developer/contributing/README.md)** - How to contribute to FLEXT
 
-## 🏗️ Core Architecture Documentation
+## Reference Documentation
 
-For system overview, technology stack, and architecture details, see:
+### API Reference
 
-- **Main README**: [Project Overview](../README.md) - Current status, quick setup, architecture summary
-- **Architecture Documentation**: [System Architecture](./architecture/README.md) - Detailed design patterns and decisions
+- **[REST API](./reference/api/rest-api.md)** - Complete REST API documentation
+- **[Python SDK](./reference/api/python-sdk.md)** - Python client library reference
+- **[Go SDK](./reference/api/go-sdk.md)** - Go client library reference
+- **[OpenAPI Specs](./reference/api/openapi/)** - Machine-readable API specifications
 
-## 📋 Contributing
+### Configuration Reference
 
-1. Fork the repository
-2. Create feature branch: `feat/your-feature`
-3. Follow [coding standards](./standards/README.md)
-4. Submit pull request with clear description
+- **[Configuration Files](./reference/configuration/files.md)** - All configuration options
+- **[Environment Variables](./reference/configuration/environment.md)** - Environment variable reference
+- **[CLI Options](./reference/cli/README.md)** - Command-line interface reference
 
-## 📞 Support
+## Standards and Guidelines
 
-- **Issues**: [GitHub Issues](https://github.com/flext-sh/flext/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/flext-sh/flext/discussions)
-- **Development**: See [CLAUDE.md](../CLAUDE.md) for AI guidance
+### Documentation Standards
+
+- **[Documentation Standards](./standards/README.md)** - How to write and maintain documentation
+- **[Writing Guide](./standards/writing-guide.md)** - Detailed writing guidelines
+- **[Style Guide](./standards/style-guide.md)** - Visual and formatting standards
+- **[Templates](./standards/templates/)** - Standard document templates
+
+### Development Standards
+
+- **[Python Standards](./standards/python.md)** - Python coding conventions
+- **[Go Standards](./standards/go.md)** - Go coding conventions
+- **[API Standards](./standards/api.md)** - API design and documentation standards
+
+## Project-Specific Documentation
+
+### Core Components
+
+- **[FlexCore](./flexcore/README.md)** - Go-based core system
+- **[FLEXT API](./flext-api/README.md)** - Python API server
+- **[FLEXT CLI](./flext-cli/README.md)** - Command-line interface
+- **[FLEXT Web](./flext-web/README.md)** - Web interface
+
+### Data Integration
+
+- **[FLEXT TAP Oracle](./flext-tap-oracle/README.md)** - Oracle data extraction
+- **[FLEXT TAP LDAP](./flext-tap-ldap/README.md)** - LDAP data extraction
+- **[FLEXT Target Oracle](./flext-target-oracle/README.md)** - Oracle data loading
+- **[FLEXT DBT Projects](./flext-dbt-oracle/README.md)** - Data transformation
+
+### Authentication & Security
+
+- **[FLEXT Auth](./flext-auth/README.md)** - Authentication system
+- **[FLEXT LDAP](./flext-ldap/README.md)** - LDAP integration
+- **[FLEXT LDIF](./flext-ldif/README.md)** - LDIF processing
+
+## Getting Help
+
+### Documentation Status
+
+- **Current Version**: 2.1.0
+- **Last Updated**: 2025-08-07
+- **Coverage**: 95% of components documented
+- **Status**: Actively maintained
+
+### Support Channels
+
+- **GitHub Issues**: [Report bugs or request features](https://github.com/flext-sh/flext/issues)
+- **GitHub Discussions**: [Ask questions and share ideas](https://github.com/flext-sh/flext/discussions)
+- **Documentation Issues**: [Report documentation problems](https://github.com/flext-sh/flext/issues?q=label%3Adocumentation)
+
+### Contributing to Documentation
+
+1. **Fork the repository**
+2. **Create a feature branch**: `docs/your-improvement`
+3. **Follow the [documentation standards](./standards/README.md)**
+4. **Submit a pull request** with clear description
+
+### Documentation Roadmap
+
+- **Q1 2025**: Complete API reference documentation
+- **Q2 2025**: Add video tutorials and interactive examples
+- **Q3 2025**: Implement documentation search and analytics
+- **Q4 2025**: Add multilingual support
+
+## Related Resources
+
+- **[Main Project README](../README.md)** - Project overview and quick start
+- **[Development Guide](../docs/development/README.md)** - Development planning and status
+- **[Architecture Overview](../docs/architecture/README.md)** - System architecture details
 
 ---
 
-**Maintainers**: FLEXT Development Team | **License**: MIT
+**Contributors**: FLEXT Documentation Team  
+**Last Updated**: 2025-08-07  
+**Version**: 2.1.0

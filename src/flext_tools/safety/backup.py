@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import shutil
 import tomllib
 from datetime import UTC, datetime
@@ -260,7 +261,6 @@ class BackupManager:
 
         except (OSError, ValueError, KeyError) as e:
             # Log hash verification failure but return existing result
-            import logging
             logging.getLogger(__name__).warning(f"Hash verification failed: {e}")
             # Keep existing result value
 

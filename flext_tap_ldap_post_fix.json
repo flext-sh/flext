@@ -1,0 +1,41 @@
+{
+  "scan_summary": {
+    "total_violations": 2,
+    "risk_breakdown": {
+      "CRITICAL": 0,
+      "HIGH": 2,
+      "MEDIUM": 0,
+      "LOW": 0
+    },
+    "violation_types": {
+      "fake_data_generation": 2
+    }
+  },
+  "violations": [
+    {
+      "file_path": "flext-tap-ldap/src/flext_tap_ldap/client.py",
+      "line_number": 316,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 316",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    },
+    {
+      "file_path": "flext-tap-ldap/src/flext_tap_ldap/client.py",
+      "line_number": 289,
+      "violation_type": "fake_data_generation",
+      "risk_level": "HIGH",
+      "code_snippet": "except handler at line 289",
+      "description": "Padr\u00e3o de manipula\u00e7\u00e3o de exce\u00e7\u00e3o potencialmente perigoso",
+      "suggested_fix": "Implementar tratamento adequado com FlextResult ou logging apropriado"
+    }
+  ],
+  "scan_config": {
+    "target_paths": [
+      "flext-tap-ldap/src"
+    ],
+    "risk_threshold": "MEDIUM",
+    "output_format": "json"
+  }
+}

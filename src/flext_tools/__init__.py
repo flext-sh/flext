@@ -16,6 +16,7 @@ Core Modules:
     - config: Configuration management and validation
     - core: Base framework patterns and script infrastructure
     - discovery: Project and dependency discovery with transitive analysis
+    - documentation: Documentation generation with Jinja2 templates and MkDocs
     - infrastructure: Monitoring, SSL management, and system operations
     - monitoring: Health checks and system monitoring
     - poetry: Poetry operations and dependency validation
@@ -44,6 +45,7 @@ Example:
 
     >>> from flext_tools import ConflictAnalyzer, CacheManager, get_logger
     >>> from flext_tools.quality import QualityGateway
+    >>> from flext_tools.documentation import DocumentationGenerator
     >>>
     >>> # Analyze dependency conflicts
     >>> analyzer = ConflictAnalyzer("/path/to/workspace")
@@ -58,6 +60,10 @@ Example:
     >>> # Enforce quality gates
     >>> gateway = QualityGateway()
     >>> result = gateway.validate_all_projects()
+    >>>
+    >>> # Generate documentation
+    >>> doc_gen = DocumentationGenerator("/path/to/workspace")
+    >>> doc_result = doc_gen.generate_complete_documentation()
 
 Quality Standards:
     - 100% type annotation coverage across all modules
@@ -82,6 +88,7 @@ from flext_core import FlextContainer, get_flext_container
 from flext_tools.analysis import ConflictAnalyzer, VersionAnalyzer
 from flext_tools.cache import CacheManager, cache_result, cached
 from flext_tools.discovery import DependencyDiscovery
+from flext_tools.documentation import DocumentationGenerator, TemplateManager
 from flext_tools.poetry import PoetryOperations, PoetryValidator
 from flext_tools.safety import BackupManager, RollbackManager, SafetyValidator
 from flext_tools.utils import (
@@ -115,6 +122,11 @@ def get_flext_tools_container() -> FlextContainer:
         container.register("dependency_discovery", DependencyDiscovery)
 
     try:
+        container.get("documentation_generator")
+    except KeyError:
+        container.register("documentation_generator", DocumentationGenerator)
+
+    try:
         container.get("poetry_operations")
     except KeyError:
         container.register("poetry_operations", PoetryOperations)
@@ -126,6 +138,7 @@ def get_flext_tools_container() -> FlextContainer:
 
     return container
 
+
 __all__: list[str] = [
     "BackupManager",
     "CacheManager",
@@ -133,11 +146,13 @@ __all__: list[str] = [
     "ConflictAnalyzer",
     "DependencyDiscovery",
     "DetailedLogger",
+    "DocumentationGenerator",
     "FlextContainer",
     "PoetryOperations",
     "PoetryValidator",
     "RollbackManager",
     "SafetyValidator",
+    "TemplateManager",
     "VersionAnalyzer",
     "cache_result",
     "cached",
