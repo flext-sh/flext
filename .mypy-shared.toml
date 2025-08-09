@@ -70,11 +70,8 @@ warn_incomplete_stub = true
 
 exclude = [
     "__pycache__/",
-    ".*/examples/",
     ".*/generate_config.py",
     ".*/manage.py",
-    ".*/scripts/",
-    ".*/tests/",
     ".coverage.*",
     ".git/",
     ".mypy_cache/",

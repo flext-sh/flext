@@ -151393,7 +151393,7 @@
       "suggested_fix": "Usar FlextResult.fail() ou propagar exce\u00e7\u00e3o"
     },
     {
-      "file": "/home/marlonsc/flext/flext-core/src/flext_core/flext_types.py",
+      "file": "/home/marlonsc/flext/flext-core/src/flext_core/types.py",
       "line": 307,
       "type": "silent_failure",
       "risk": "CRITICAL",
@@ -155254,7 +155254,7 @@
       "suggested_fix": "Usar FlextResult.fail() ou propagar exce\u00e7\u00e3o"
     },
     {
-      "file": "/home/marlonsc/flext/algar-oud-mig/.venv/lib/python3.13/site-packages/flext_core/flext_types.py",
+      "file": "/home/marlonsc/flext/algar-oud-mig/.venv/lib/python3.13/site-packages/flext_core/types.py",
       "line": 296,
       "type": "silent_failure",
       "risk": "CRITICAL",

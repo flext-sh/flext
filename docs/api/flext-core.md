@@ -23,7 +23,7 @@ from flext_core import (
     FlextAggregateRoot,  # DDD aggregates
 
     # Configuration
-    FlextBaseSettings,   # Environment-aware config
+    FlextSettings,   # Environment-aware config
 )
 ```
 
@@ -169,12 +169,12 @@ class Order(FlextAggregateRoot):
 
 ## ⚙️ Configuration Management
 
-### FlextBaseSettings - Environment-Aware Config
+### FlextSettings - Environment-Aware Config
 
 ```python
-from flext_core import FlextBaseSettings
+from flext_core import FlextSettings
 
-class AppSettings(FlextBaseSettings):
+class AppSettings(FlextSettings):
     database_url: str = "postgresql://localhost/app"
     log_level: str = "INFO"
     debug: bool = False

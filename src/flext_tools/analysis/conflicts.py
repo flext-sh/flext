@@ -98,20 +98,41 @@ class ConflictAnalysisResult(BaseModel):
 
     """
 
-    total_projects: int = Field(default=0, description="Number of projects analyzed in the workspace")
-    version_conflicts: dict[str, dict[str, object]] = Field(default_factory=dict, description="Detailed version conflict information by package")
-    circular_dependencies: list[str] = Field(default_factory=list, description="List of detected circular dependency patterns")
-    update_blockers: dict[str, dict[str, object]] = Field(default_factory=dict, description="Projects and packages blocking dependency updates")
-    suggested_resolutions: dict[str, str] = Field(default_factory=dict, description="AI-generated resolution recommendations")
-    analysis_summary: dict[str, object] = Field(default_factory=dict, description="Statistical summary and analysis metadata")
+    total_projects: int = Field(
+        default=0, description="Number of projects analyzed in the workspace"
+    )
+    version_conflicts: dict[str, dict[str, object]] = Field(
+        default_factory=dict,
+        description="Detailed version conflict information by package",
+    )
+    circular_dependencies: list[str] = Field(
+        default_factory=list,
+        description="List of detected circular dependency patterns",
+    )
+    update_blockers: dict[str, dict[str, object]] = Field(
+        default_factory=dict,
+        description="Projects and packages blocking dependency updates",
+    )
+    suggested_resolutions: dict[str, str] = Field(
+        default_factory=dict, description="AI-generated resolution recommendations"
+    )
+    analysis_summary: dict[str, object] = Field(
+        default_factory=dict, description="Statistical summary and analysis metadata"
+    )
 
     def has_conflicts(self) -> bool:
         """Check if analysis found any conflicts."""
-        return bool(self.version_conflicts or self.circular_dependencies or self.update_blockers)
+        return bool(
+            self.version_conflicts or self.circular_dependencies or self.update_blockers
+        )
 
     def conflict_count(self) -> int:
         """Get total number of conflicts found."""
-        return len(self.version_conflicts) + len(self.circular_dependencies) + len(self.update_blockers)
+        return (
+            len(self.version_conflicts)
+            + len(self.circular_dependencies)
+            + len(self.update_blockers)
+        )
 
     def validate_business_rules(self) -> FlextResult[None]:
         """Validate business rules for conflict analysis result."""
@@ -205,26 +226,37 @@ class ConflictAnalyzer:
         """
         self.version_analyzer = VersionAnalyzer()
 
-    def analyze_workspace_conflicts(self, workspace_path: Path) -> FlextResult[ConflictAnalysisResult]:
+    def analyze_workspace_conflicts(
+        self, workspace_path: Path
+    ) -> FlextResult[ConflictAnalysisResult]:
         """Perform comprehensive dependency conflict analysis across workspace."""
         return self._perform_analysis_pipeline(workspace_path)
 
-    def _perform_analysis_pipeline(self, workspace_path: Path) -> FlextResult[ConflictAnalysisResult]:
+    def _perform_analysis_pipeline(
+        self, workspace_path: Path
+    ) -> FlextResult[ConflictAnalysisResult]:
         """Execute the complete analysis pipeline using railway-oriented programming."""
         try:
-            logger.info("Starting workspace conflict analysis", workspace_path=str(workspace_path))
+            logger.info(
+                "Starting workspace conflict analysis",
+                workspace_path=str(workspace_path),
+            )
 
             # Step 1: Validate workspace
             validation_result = self._validate_workspace(workspace_path)
             if not validation_result.success:
-                return FlextResult.fail(f"Workspace validation failed: {validation_result.error}")
+                return FlextResult.fail(
+                    f"Workspace validation failed: {validation_result.error}"
+                )
 
             print_colored("🔍 Analyzing dependency conflicts...", Colors.BLUE)
 
             # Step 2: Collect and validate projects data
             projects_result = self._collect_and_validate_projects(workspace_path)
             if not projects_result.success:
-                return FlextResult.fail(f"Project collection failed: {projects_result.error}")
+                return FlextResult.fail(
+                    f"Project collection failed: {projects_result.error}"
+                )
 
             projects_data = projects_result.data
             if projects_data is None:
@@ -240,38 +272,56 @@ class ConflictAnalyzer:
     def _validate_workspace(self, workspace_path: Path) -> FlextResult[None]:
         """Validate workspace path exists and is accessible."""
         if not workspace_path.exists() or not workspace_path.is_dir():
-            return FlextResult.fail(f"Workspace path does not exist or is not a directory: {workspace_path}")
+            return FlextResult.fail(
+                f"Workspace path does not exist or is not a directory: {workspace_path}"
+            )
         return FlextResult.ok(None)
 
-    def _collect_and_validate_projects(self, workspace_path: Path) -> FlextResult[dict[str, object]]:
+    def _collect_and_validate_projects(
+        self, workspace_path: Path
+    ) -> FlextResult[dict[str, object]]:
         """Collect and validate projects data from workspace."""
         projects_collection_result = self._collect_projects_data(workspace_path)
         if not projects_collection_result.success:
-            return FlextResult.fail(projects_collection_result.error or "Failed to collect projects data")
+            return FlextResult.fail(
+                projects_collection_result.error or "Failed to collect projects data"
+            )
 
         projects_data = projects_collection_result.data
         if projects_data is None:
             return FlextResult.fail("No projects data collected")
 
         if len(projects_data) < MIN_PROJECTS_FOR_ANALYSIS:
-            logger.info("Insufficient projects for analysis", project_count=len(projects_data))
+            logger.info(
+                "Insufficient projects for analysis", project_count=len(projects_data)
+            )
             # Return projects data anyway - the caller will handle the insufficient projects case
 
         return FlextResult.ok(projects_data)
 
-    def _analyze_conflicts(self, workspace_path: Path, projects_data: dict[str, object]) -> FlextResult[ConflictAnalysisResult]:
+    def _analyze_conflicts(
+        self, workspace_path: Path, projects_data: dict[str, object]
+    ) -> FlextResult[ConflictAnalysisResult]:
         """Perform the actual conflict analysis on validated data."""
         # Handle insufficient projects case
         if len(projects_data) < MIN_PROJECTS_FOR_ANALYSIS:
             result = ConflictAnalysisResult(
                 total_projects=len(projects_data),
-                analysis_summary={"message": "Less than 2 projects found", "total": len(projects_data)},
+                analysis_summary={
+                    "message": "Less than 2 projects found",
+                    "total": len(projects_data),
+                },
             )
             return FlextResult.ok(result)
         # Collect workspace dependencies
-        workspace_deps_result = self._collect_workspace_dependencies_safe(workspace_path)
+        workspace_deps_result = self._collect_workspace_dependencies_safe(
+            workspace_path
+        )
         if not workspace_deps_result.success:
-            return FlextResult.fail(workspace_deps_result.error or "Failed to collect workspace dependencies")
+            return FlextResult.fail(
+                workspace_deps_result.error
+                or "Failed to collect workspace dependencies"
+            )
 
         workspace_deps = workspace_deps_result.data
         if workspace_deps is None:
@@ -279,7 +329,9 @@ class ConflictAnalyzer:
 
         # Analyze version conflicts
         projects_data_for_analysis = cast("dict[str, dict[str, object]]", projects_data)
-        version_conflicts = self.version_analyzer.analyze_version_conflicts(projects_data_for_analysis)
+        version_conflicts = self.version_analyzer.analyze_version_conflicts(
+            projects_data_for_analysis
+        )
         if not version_conflicts:
             version_conflicts = {}
 
@@ -289,7 +341,9 @@ class ConflictAnalyzer:
         # Identify update blockers
         blockers_result = self._identify_update_blockers_safe(workspace_deps)
         if not blockers_result.success:
-            return FlextResult.fail(blockers_result.error or "Failed to identify update blockers")
+            return FlextResult.fail(
+                blockers_result.error or "Failed to identify update blockers"
+            )
 
         blockers = blockers_result.data or {}
 
@@ -297,7 +351,9 @@ class ConflictAnalyzer:
         resolutions = self._generate_resolutions_safe(version_conflicts)
 
         # Build final result
-        return self._build_analysis_result(projects_data_for_analysis, version_conflicts, blockers, resolutions)
+        return self._build_analysis_result(
+            projects_data_for_analysis, version_conflicts, blockers, resolutions
+        )
 
     def _analyze_lock_conflicts_safe(self, workspace_path: Path) -> None:
         """Analyze lock conflicts safely without failing the pipeline."""
@@ -307,11 +363,15 @@ class ConflictAnalyzer:
         except Exception as e:
             logger.warning("Lock analysis failed", error=str(e))
 
-    def _generate_resolutions_safe(self, version_conflicts: dict[str, list[dict[str, object]]]) -> dict[str, str]:
+    def _generate_resolutions_safe(
+        self, version_conflicts: dict[str, list[dict[str, object]]]
+    ) -> dict[str, str]:
         """Generate resolution suggestions safely."""
         resolutions_result = self._suggest_resolutions_safe(version_conflicts)
         if not resolutions_result.success:
-            logger.warning("Resolution suggestions failed", error=resolutions_result.error)
+            logger.warning(
+                "Resolution suggestions failed", error=resolutions_result.error
+            )
             return {}
         return resolutions_result.data or {}
 
@@ -323,7 +383,9 @@ class ConflictAnalyzer:
         resolutions: dict[str, str],
     ) -> FlextResult[ConflictAnalysisResult]:
         """Build the final analysis result."""
-        version_conflicts_typed = cast("dict[str, dict[str, object]]", version_conflicts)
+        version_conflicts_typed = cast(
+            "dict[str, dict[str, object]]", version_conflicts
+        )
         result = ConflictAnalysisResult(
             total_projects=len(projects_data),
             version_conflicts=version_conflicts_typed,
@@ -338,13 +400,17 @@ class ConflictAnalyzer:
             },
         )
 
-        logger.info("Conflict analysis completed",
-                       total_projects=result.total_projects,
-                       conflicts_found=result.conflict_count())
+        logger.info(
+            "Conflict analysis completed",
+            total_projects=result.total_projects,
+            conflicts_found=result.conflict_count(),
+        )
 
         return FlextResult.ok(result)
 
-    def _collect_projects_data(self, workspace_path: Path) -> FlextResult[dict[str, object]]:
+    def _collect_projects_data(
+        self, workspace_path: Path
+    ) -> FlextResult[dict[str, object]]:
         """Collect project data safely using FlextResult."""
         try:
             projects_data = {}
@@ -357,7 +423,9 @@ class ConflictAnalyzer:
                                 data = tomllib.load(f)
                             projects_data[project_path.name] = data
                         except (OSError, tomllib.TOMLDecodeError) as e:
-                            logger.warning(f"Error reading {project_path.name}", error=str(e))
+                            logger.warning(
+                                f"Error reading {project_path.name}", error=str(e)
+                            )
                             # Continue with other projects instead of failing completely
 
             projects_data_typed: dict[str, object] = dict(projects_data)
@@ -365,7 +433,9 @@ class ConflictAnalyzer:
         except Exception as e:
             return FlextResult.fail(f"Failed to collect project data: {e}")
 
-    def _collect_workspace_dependencies_safe(self, workspace_path: Path) -> FlextResult[dict[str, dict[str, str]]]:
+    def _collect_workspace_dependencies_safe(
+        self, workspace_path: Path
+    ) -> FlextResult[dict[str, dict[str, str]]]:
         """Safely collect workspace dependencies using FlextResult."""
         try:
             workspace_deps = self._collect_workspace_dependencies(workspace_path)
@@ -735,7 +805,9 @@ class ConflictAnalyzer:
             ),
         }
 
-    def generate_conflict_report(self, analysis: dict[str, dict[str, object] | list[object] | str | int]) -> str:  # noqa: PLR0912
+    def generate_conflict_report(
+        self, analysis: dict[str, dict[str, object] | list[object] | str | int]
+    ) -> str:
         r"""Generate comprehensive formatted conflict analysis report.
 
         Creates detailed Markdown report summarizing all dependency conflicts,
@@ -825,10 +897,7 @@ class ConflictAnalyzer:
                         issues = analysis_data.get("issues", [])
                         if issues:
                             lines.append("\n**Issues:**")
-                            lines.extend(
-                                f"- {issue}"
-                                for issue in issues
-                            )
+                            lines.extend(f"- {issue}" for issue in issues)
 
                     lines.append("")
 
