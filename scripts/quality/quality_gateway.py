@@ -7,13 +7,13 @@ Usa flext_tools para validação consistente em todo o workspace.
 
 from __future__ import annotations
 
-import argparse
 import json
 import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from flext_core import FlextResult
 from scripts.common import discover_projects
@@ -26,6 +26,9 @@ from flext_tools import (
     print_colored,
 )
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
+
+if TYPE_CHECKING:
+    import argparse
 
 # Constantes para análise de qualidade
 CRITICAL_DEPENDENCY_THRESHOLD = 5
@@ -268,6 +271,7 @@ class QualityGateway(FlextScript):
                 capture_output=True,
                 text=True,
                 timeout=30,
+                shell=False,
             )
 
             ruff_issues = 0
@@ -296,6 +300,7 @@ class QualityGateway(FlextScript):
                 capture_output=True,
                 text=True,
                 timeout=60,
+                shell=False,
             )
 
             mypy_errors = 0
@@ -432,7 +437,8 @@ class QualityGateway(FlextScript):
         self,
         total_stats: dict[str, object],
         failed_projects: list[str],
-        strict_mode: bool,
+        *,
+        strict_mode: bool = False,
     ) -> None:
         """Imprimir resumo final do gateway."""
         print_colored("\n📊 RESUMO DO QUALITY GATEWAY", Colors.BLUE)

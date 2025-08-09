@@ -232,9 +232,9 @@ port = config.get_config("port").unwrap_or(5432)
 
 ```python
 from pydantic import Field
-from flext_core.config import FlextBaseSettings
+from flext_core.config import FlextSettings
 
-class DatabaseSettings(FlextBaseSettings):
+class DatabaseSettings(FlextSettings):
     """Database configuration with hierarchy support."""
 
     host: str = Field("localhost", description="Database host")

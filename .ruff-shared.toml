@@ -40,7 +40,12 @@ lint.ignore = [
 lint.isort.force-single-line = false
 lint.isort.split-on-trailing-comma = true
 lint.isort.combine-as-imports = true
-# lint.per-file-ignores."**/__init__.py" = ["F401"]
+lint.per-file-ignores."**/__init__.py" = [
+    "F401",    # Unused imports (common in __init__.py)
+    "I001",    # Import sorting
+    "RUF022",  # __all__ sorting
+    "E402",    # Import not at top of file
+]
 lint.per-file-ignores."**/*_pb2_grpc.py" = ["ALL"]
 lint.per-file-ignores."**/*_pb2.py" = ["ALL"]
 lint.per-file-ignores."**/generated/**/*.py" = ["ALL"]
@@ -140,6 +145,8 @@ lint.per-file-ignores."**/test_*.py" = [
     "S106",
     "S107",
     "S112",
+    "S607",
+    "S608",
     "SLF001",
     "TRY003",
     "TRY300",

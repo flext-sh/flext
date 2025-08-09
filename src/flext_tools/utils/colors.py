@@ -42,6 +42,6 @@ class Colors:
 def print_colored(message: str, color: str = "") -> None:
     """Print colored message to terminal with ANSI color formatting."""
     if color:
-        print(f"{color}{message}{Colors.RESET}")  # noqa: T201
+        print(f"{color}{message}{Colors.RESET}")
     else:
-        print(message)  # noqa: T201
+        print(message)

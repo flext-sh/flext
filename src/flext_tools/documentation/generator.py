@@ -10,6 +10,7 @@ import argparse
 import shutil
 import subprocess
 import sys
+import tomllib
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -73,6 +74,8 @@ class DocumentationGenerator(FlextScript):
             ("git", "git --version"),
         ]
 
+        missing_tools_errors = []
+
         for tool_name, command in required_tools:
             try:
                 result = subprocess.run(
@@ -80,27 +83,33 @@ class DocumentationGenerator(FlextScript):
                     capture_output=True,
                     text=True,
                     check=True,
+                    shell=False,
                 )
                 self.logger.info(f"✓ {tool_name}: {result.stdout.strip()}")
             except (subprocess.CalledProcessError, FileNotFoundError):
                 error_msg = f"✗ {tool_name} not found or not working"
                 self.logger.exception(error_msg)
-                return FlextResult.fail(error_msg)
+                missing_tools_errors.append(error_msg)
 
         # Validate MkDocs configuration
         if not self.mkdocs_config.exists():
             error_msg = "mkdocs.yml not found in project root"
             self.logger.error(error_msg)
-            return FlextResult.fail(error_msg)
+            missing_tools_errors.append(error_msg)
 
         # Validate templates
         templates_result = self.template_manager.list_templates()
         if not templates_result.success:
+            error_msg = f"Template validation failed: {templates_result.error}"
+            self.logger.error(error_msg)
+            missing_tools_errors.append(error_msg)
+
+        if missing_tools_errors:
             return FlextResult.fail(
-                f"Template validation failed: {templates_result.error}",
+                "Precondition validation failed: " + "; ".join(missing_tools_errors)
             )
 
-        self.logger.info("Environment validation completed successfully")
+        self.logger.info("All preconditions validated successfully!")
         return FlextResult.ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
@@ -361,14 +370,13 @@ class DocumentationGenerator(FlextScript):
         pyproject_path = project_path / "pyproject.toml"
         if pyproject_path.exists():
             try:
-                import tomllib
-
-                with open(pyproject_path, "rb") as f:
+                with pyproject_path.open("rb") as f:
                     data = tomllib.load(f)
                     version = data.get("project", {}).get("version", "0.9.0")
                     return str(version)
             except Exception:
-                pass
+                self.logger.exception("Failed to extract version from pyproject.toml")
+                raise
 
         return "0.9.0"
 
@@ -480,7 +488,7 @@ class DocumentationGenerator(FlextScript):
     def _generate_component_api_docs(
         self,
         project_name: str,
-        project_path: Path,
+        _project_path: Path,
         docs_dir: Path,
     ) -> FlextResult[None]:
         """Generate API documentation for a component.
@@ -864,8 +872,8 @@ print(f"Pipeline status: {result.status}")"""
             subprocess.run(["mkdocs", "serve"], cwd=self.project_root, check=True)
         except KeyboardInterrupt:
             self.logger.info("Documentation server stopped")
-        except subprocess.CalledProcessError as e:
-            self.logger.exception(f"Failed to start documentation server: {e}")
+        except subprocess.CalledProcessError:
+            self.logger.exception("Failed to start documentation server")
 
 
 def main() -> int:

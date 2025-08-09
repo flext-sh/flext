@@ -8,6 +8,7 @@ Este script instala todos os projetos FLEXT em modo de desenvolvimento
 com suas dependências completas via Poetry.
 """
 
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -43,14 +44,20 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
         if not pyproject_path.exists():
             return False, f"pyproject.toml não encontrado em {project_dir}"
 
+        # Encontrar o caminho completo para o executável 'poetry'
+        poetry_executable = shutil.which("poetry")
+        if not poetry_executable:
+            return False, "❌ Erro: Executável 'poetry' não encontrado no PATH"
+
         # Executar poetry install
         result = subprocess.run(
-            ["poetry", "install"],
+            [poetry_executable, "install"],
             check=False,
             cwd=project_dir,
             capture_output=True,
             text=True,
             timeout=300,  # 5 minutos timeout
+            shell=False,
         )
 
         if result.returncode == 0:

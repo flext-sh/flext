@@ -31,7 +31,7 @@ Example:
     >>> from flext_tools.security.antipattern_scanner import (
     ...     AntipatternScanner,
     ...     ScanConfig,
-    ...     create_security_scanner
+    ...     create_security_scanner,
     ... )
     >>>
     >>> # Enterprise configuration
@@ -39,7 +39,7 @@ Example:
     ...     target_paths=["src/", "flext-core/src/"],
     ...     exclude_patterns=[".venv", "__pycache__", "*.pyc"],
     ...     output_format="detailed",
-    ...     risk_threshold="MEDIUM"
+    ...     risk_threshold="MEDIUM",
     ... )
     >>>
     >>> scanner = AntipatternScanner(config)
@@ -139,8 +139,15 @@ class ScanConfig(FlextValue):
 
     target_paths: list[str]
     exclude_patterns: ClassVar[list[str]] = [
-        ".venv", "__pycache__", "*.pyc", "*.pyo",
-        ".git", ".pytest_cache", "htmlcov", "dist", "build",
+        ".venv",
+        "__pycache__",
+        "*.pyc",
+        "*.pyo",
+        ".git",
+        ".pytest_cache",
+        "htmlcov",
+        "dist",
+        "build",
     ]
     include_dependencies: bool = False
     output_format: str = "summary"  # summary, detailed, json
@@ -156,7 +163,9 @@ class ScanConfig(FlextValue):
             return FlextResult.fail("Output format must be: summary, detailed, or json")
 
         if self.risk_threshold not in {"LOW", "MEDIUM", "HIGH", "CRITICAL"}:
-            return FlextResult.fail("Risk threshold must be: LOW, MEDIUM, HIGH, or CRITICAL")
+            return FlextResult.fail(
+                "Risk threshold must be: LOW, MEDIUM, HIGH, or CRITICAL"
+            )
 
         if self.max_workers < 1:
             return FlextResult.fail("Max workers must be at least 1")
@@ -200,7 +209,9 @@ class AntipatternScanner:
             # Collect Python files to scan
             files_result = self._collect_python_files()
             if not files_result.success:
-                return FlextResult.fail(f"Failed to collect files: {files_result.error}")
+                return FlextResult.fail(
+                    f"Failed to collect files: {files_result.error}"
+                )
 
             python_files = files_result.data or []
             self.logger.info(f"Scanning {len(python_files)} Python files")
@@ -211,7 +222,9 @@ class AntipatternScanner:
             # Filter by risk threshold
             filtered_violations = self._filter_by_risk_threshold(violations)
 
-            self.logger.info(f"Found {len(filtered_violations)} violations above {self.config.risk_threshold} risk level")
+            self.logger.info(
+                f"Found {len(filtered_violations)} violations above {self.config.risk_threshold} risk level"
+            )
 
             return FlextResult.ok(filtered_violations)
 
@@ -235,7 +248,11 @@ class AntipatternScanner:
                     python_files.append(path)
                 elif path.is_dir():
                     # Recursively find Python files
-                    python_files.extend(py_file for py_file in path.rglob("*.py") if self._should_include_file(py_file))
+                    python_files.extend(
+                        py_file
+                        for py_file in path.rglob("*.py")
+                        if self._should_include_file(py_file)
+                    )
 
             return FlextResult.ok(python_files)
 
@@ -259,8 +276,7 @@ class AntipatternScanner:
 
         with ThreadPoolExecutor(max_workers=self.config.max_workers) as executor:
             future_to_file = {
-                executor.submit(self._scan_single_file, file): file
-                for file in files
+                executor.submit(self._scan_single_file, file): file for file in files
             }
 
             for future in as_completed(future_to_file):
@@ -309,32 +325,36 @@ class AntipatternScanner:
         lines = content.split("\n")
 
         for match in swallow_pattern.finditer(content):
-            line_num = content[:match.start()].count("\n") + 1
+            line_num = content[: match.start()].count("\n") + 1
             line_content = lines[line_num - 1].strip() if line_num <= len(lines) else ""
 
-            violations.append(SecurityViolation(
-                file_path=str(file_path),
-                line_number=line_num,
-                violation_type=ViolationType.EXCEPTION_SWALLOWING,
-                risk_level=RiskLevel.CRITICAL,
-                code_snippet=line_content,
-                description="Exceção engolida silenciosamente",
-                suggested_fix="Especificar tipo de exceção e tratar adequadamente ou usar FlextResult.fail()",
-            ))
+            violations.append(
+                SecurityViolation(
+                    file_path=str(file_path),
+                    line_number=line_num,
+                    violation_type=ViolationType.EXCEPTION_SWALLOWING,
+                    risk_level=RiskLevel.CRITICAL,
+                    code_snippet=line_content,
+                    description="Exceção engolida silenciosamente",
+                    suggested_fix="Especificar tipo de exceção e tratar adequadamente ou usar FlextResult.fail()",
+                )
+            )
 
         for match in silent_pattern.finditer(content):
-            line_num = content[:match.start()].count("\n") + 1
+            line_num = content[: match.start()].count("\n") + 1
             line_content = lines[line_num - 1].strip() if line_num <= len(lines) else ""
 
-            violations.append(SecurityViolation(
-                file_path=str(file_path),
-                line_number=line_num,
-                violation_type=ViolationType.SILENT_FAILURE,
-                risk_level=RiskLevel.CRITICAL,
-                code_snippet=line_content,
-                description="Retorno de valor fake em caso de falha",
-                suggested_fix="Usar FlextResult.fail() ou propagar exceção apropriadamente",
-            ))
+            violations.append(
+                SecurityViolation(
+                    file_path=str(file_path),
+                    line_number=line_num,
+                    violation_type=ViolationType.SILENT_FAILURE,
+                    risk_level=RiskLevel.CRITICAL,
+                    code_snippet=line_content,
+                    description="Retorno de valor fake em caso de falha",
+                    suggested_fix="Usar FlextResult.fail() ou propagar exceção apropriadamente",
+                )
+            )
 
         return violations
 
@@ -346,8 +366,11 @@ class AntipatternScanner:
             tree = ast.parse(content)
 
             for node in ast.walk(tree):
-                if isinstance(node, ast.ExceptHandler) and self._is_dangerous_except_handler(node):
-                    violations.append(SecurityViolation(  # noqa: PERF401
+                if isinstance(
+                    node, ast.ExceptHandler
+                ) and self._is_dangerous_except_handler(node):
+                    violations.append(
+                        SecurityViolation(
                             file_path=str(file_path),
                             line_number=node.lineno,
                             violation_type=ViolationType.FAKE_DATA_GENERATION,
@@ -355,7 +378,8 @@ class AntipatternScanner:
                             code_snippet=f"except handler at line {node.lineno}",
                             description="Padrão de manipulação de exceção potencialmente perigoso",
                             suggested_fix="Implementar tratamento adequado com FlextResult ou logging apropriado",
-                        ))
+                        )
+                    )
 
         except SyntaxError:
             # Skip files with syntax errors
@@ -376,23 +400,29 @@ class AntipatternScanner:
 
         # Check for return statements with literal values
         for stmt in node.body:
-            if (isinstance(stmt, ast.Return) and stmt.value and
-                isinstance(stmt.value, (ast.Constant, ast.NameConstant, ast.Num, ast.Str))):
+            if (
+                isinstance(stmt, ast.Return)
+                and stmt.value
+                and isinstance(
+                    stmt.value, (ast.Constant, ast.NameConstant, ast.Num, ast.Str)
+                )
+            ):
                 return True
 
         return False
 
-    def _filter_by_risk_threshold(self, violations: list[SecurityViolation]) -> list[SecurityViolation]:
+    def _filter_by_risk_threshold(
+        self, violations: list[SecurityViolation]
+    ) -> list[SecurityViolation]:
         """Filter violations by risk threshold configuration."""
         risk_order = {"LOW": 0, "MEDIUM": 1, "HIGH": 2, "CRITICAL": 3}
         min_risk = risk_order[self.config.risk_threshold]
 
-        return [
-            v for v in violations
-            if risk_order[v.risk_level.value] >= min_risk
-        ]
+        return [v for v in violations if risk_order[v.risk_level.value] >= min_risk]
 
-    def generate_report(self, violations: list[SecurityViolation], output_file: str) -> FlextResult[None]:
+    def generate_report(
+        self, violations: list[SecurityViolation], output_file: str
+    ) -> FlextResult[None]:
         """Generate comprehensive security report.
 
         Args:
@@ -413,7 +443,9 @@ class AntipatternScanner:
         except Exception as e:
             return FlextResult.fail(f"Report generation failed: {e}")
 
-    def _generate_json_report(self, violations: list[SecurityViolation], output_file: str) -> FlextResult[None]:
+    def _generate_json_report(
+        self, violations: list[SecurityViolation], output_file: str
+    ) -> FlextResult[None]:
         """Generate JSON format security report."""
         try:
             report_data = {
@@ -439,7 +471,9 @@ class AntipatternScanner:
         except Exception as e:
             return FlextResult.fail(f"JSON report generation failed: {e}")
 
-    def _generate_detailed_report(self, violations: list[SecurityViolation], output_file: str) -> FlextResult[None]:
+    def _generate_detailed_report(
+        self, violations: list[SecurityViolation], output_file: str
+    ) -> FlextResult[None]:
         """Generate detailed text format report."""
         try:
             with Path(output_file).open("w", encoding="utf-8") as f:
@@ -452,7 +486,9 @@ class AntipatternScanner:
                 # Risk breakdown
                 risk_breakdown = self._get_risk_breakdown(violations)
                 f.write("Risk Level Breakdown:\n")
-                f.writelines(f"  {risk}: {count}\n" for risk, count in risk_breakdown.items())
+                f.writelines(
+                    f"  {risk}: {count}\n" for risk, count in risk_breakdown.items()
+                )
                 f.write("\n")
 
                 # Detailed violations
@@ -473,7 +509,9 @@ class AntipatternScanner:
         except Exception as e:
             return FlextResult.fail(f"Detailed report generation failed: {e}")
 
-    def _generate_summary_report(self, violations: list[SecurityViolation]) -> FlextResult[None]:
+    def _generate_summary_report(
+        self, violations: list[SecurityViolation]
+    ) -> FlextResult[None]:
         """Generate summary report to console."""
         try:
             print_colored("=" * 60, Colors.CYAN)
@@ -505,7 +543,9 @@ class AntipatternScanner:
                 file_path = violation.file_path
                 file_breakdown[file_path] = file_breakdown.get(file_path, 0) + 1
 
-            top_files = sorted(file_breakdown.items(), key=operator.itemgetter(1), reverse=True)[:5]
+            top_files = sorted(
+                file_breakdown.items(), key=operator.itemgetter(1), reverse=True
+            )[:5]
             print_colored("\n📁 Top Files with Violations:", Colors.BLUE)
             for file_path, count in top_files:
                 print_colored(f"  {Path(file_path).name}: {count}", Colors.YELLOW)
@@ -517,14 +557,18 @@ class AntipatternScanner:
         except Exception as e:
             return FlextResult.fail(f"Summary report generation failed: {e}")
 
-    def _get_risk_breakdown(self, violations: list[SecurityViolation]) -> dict[str, int]:
+    def _get_risk_breakdown(
+        self, violations: list[SecurityViolation]
+    ) -> dict[str, int]:
         """Get breakdown of violations by risk level."""
         breakdown = {"CRITICAL": 0, "HIGH": 0, "MEDIUM": 0, "LOW": 0}
         for violation in violations:
             breakdown[violation.risk_level.value] += 1
         return breakdown
 
-    def _get_type_breakdown(self, violations: list[SecurityViolation]) -> dict[str, int]:
+    def _get_type_breakdown(
+        self, violations: list[SecurityViolation]
+    ) -> dict[str, int]:
         """Get breakdown of violations by type."""
         breakdown: dict[str, int] = {}
         for violation in violations:
@@ -545,7 +589,7 @@ class AntipatternScanner:
 
 def create_security_scanner(
     target_paths: list[str],
-    exclude_dependencies: bool = True,  # noqa: FBT001, FBT002
+    exclude_dependencies: bool = True,
     output_format: str = "summary",
     risk_threshold: str = "MEDIUM",
 ) -> FlextResult[AntipatternScanner]:

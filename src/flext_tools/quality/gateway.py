@@ -49,7 +49,9 @@ Example:
     ...     if all_quality_checks_passed(quality_data):
     ...         print("✅ All quality checks passed")
     ...     else:
-    ...         print(f"❌ Quality issues found: {get_quality_failure_summary(quality_data)}")
+    ...         print(
+    ...             f"❌ Quality issues found: {get_quality_failure_summary(quality_data)}"
+    ...         )
     ...         for issue in get_quality_issues(quality_data):
     ...             print(f"  - {issue.tool}: {issue.message}")
 
@@ -96,7 +98,7 @@ class QualityIssue(FlextEntity):
 
     """
 
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
         tool: str,
         severity: str,
@@ -139,11 +141,11 @@ QualityCheckData = dict[str, object]
 def all_quality_checks_passed(quality_data: QualityCheckData) -> bool:
     """Check if all quality checks passed successfully."""
     return (
-        bool(quality_data.get("lint_passed", True)) and
-        bool(quality_data.get("types_passed", True)) and
-        bool(quality_data.get("tests_passed", True)) and
-        bool(quality_data.get("coverage_passed", True)) and
-        bool(quality_data.get("security_passed", True))
+        bool(quality_data.get("lint_passed", True))
+        and bool(quality_data.get("types_passed", True))
+        and bool(quality_data.get("tests_passed", True))
+        and bool(quality_data.get("coverage_passed", True))
+        and bool(quality_data.get("security_passed", True))
     )
 
 
@@ -266,10 +268,14 @@ class QualityGateway:
         self.logger = get_logger(__name__)
         self.container = get_flext_container()
 
-        self.logger.info("Quality gateway initialized", workspace_path=str(workspace_path))
-        print_colored(f"🔍 Quality gateway initialized: {workspace_path.name}", Colors.BLUE)
+        self.logger.info(
+            "Quality gateway initialized", workspace_path=str(workspace_path)
+        )
+        print_colored(
+            f"🔍 Quality gateway initialized: {workspace_path.name}", Colors.BLUE
+        )
 
-    def run_quality_checks_safe(  # noqa: PLR0913, PLR0912
+    def run_quality_checks_safe(
         self,
         *,
         enable_lint: bool = True,
@@ -278,7 +284,7 @@ class QualityGateway:
         enable_coverage: bool = True,
         enable_security: bool = True,
         coverage_threshold: float = 90.0,
-        parallel_execution: bool = True,  # noqa: ARG002
+        parallel_execution: bool = True,
     ) -> FlextResult[QualityCheckData]:
         """Run comprehensive quality checks with railway-oriented programming.
 
@@ -315,13 +321,15 @@ class QualityGateway:
         try:
             start_time = time.time()
 
-            self.logger.info("Starting comprehensive quality checks",
-                           workspace=str(self.workspace_path),
-                           lint=enable_lint,
-                           types=enable_types,
-                           tests=enable_tests,
-                           coverage=enable_coverage,
-                           security=enable_security)
+            self.logger.info(
+                "Starting comprehensive quality checks",
+                workspace=str(self.workspace_path),
+                lint=enable_lint,
+                types=enable_types,
+                tests=enable_tests,
+                coverage=enable_coverage,
+                security=enable_security,
+            )
 
             print_colored("🔍 Running comprehensive quality checks...", Colors.BLUE)
 
@@ -374,7 +382,15 @@ class QualityGateway:
             quality_data["execution_time"] = execution_time
             quality_data["issues"] = issues
             quality_data["details"] = {
-                "total_checks": sum([enable_lint, enable_types, enable_tests, enable_coverage, enable_security]),
+                "total_checks": sum(
+                    [
+                        enable_lint,
+                        enable_types,
+                        enable_tests,
+                        enable_coverage,
+                        enable_security,
+                    ]
+                ),
                 "issues_found": len(issues),
                 "execution_time_ms": int(execution_time * 1000),
             }
@@ -383,17 +399,25 @@ class QualityGateway:
             if all_quality_checks_passed(quality_data):
                 print_colored("✅ All quality checks passed", Colors.GREEN)
                 details = quality_data["details"]
-                total_checks = details.get("total_checks", 0) if isinstance(details, dict) else 0
-                self.logger.info("Quality checks completed successfully",
-                               execution_time=execution_time,
-                               total_checks=total_checks)
+                total_checks = (
+                    details.get("total_checks", 0) if isinstance(details, dict) else 0
+                )
+                self.logger.info(
+                    "Quality checks completed successfully",
+                    execution_time=execution_time,
+                    total_checks=total_checks,
+                )
             else:
                 failure_summary = get_quality_failure_summary(quality_data)
-                print_colored(f"❌ Quality checks failed: {failure_summary}", Colors.RED)
-                self.logger.warning("Quality checks failed",
-                                  failure_summary=failure_summary,
-                                  issues_count=len(issues),
-                                  execution_time=execution_time)
+                print_colored(
+                    f"❌ Quality checks failed: {failure_summary}", Colors.RED
+                )
+                self.logger.warning(
+                    "Quality checks failed",
+                    failure_summary=failure_summary,
+                    issues_count=len(issues),
+                    execution_time=execution_time,
+                )
 
             return FlextResult.ok(quality_data)
 
@@ -405,8 +429,9 @@ class QualityGateway:
         """Run linting check with Ruff."""
         try:
             result = subprocess.run(
-                ["ruff", "check", "."],  # noqa: S607
-                check=False, cwd=self.workspace_path,
+                ["ruff", "check", "."],
+                check=False,
+                cwd=self.workspace_path,
                 capture_output=True,
                 text=True,
                 timeout=60,
@@ -416,23 +441,32 @@ class QualityGateway:
                 return FlextResult.ok([])
 
             # Parse Ruff output for issues
-            issues = [QualityIssue(
-                        tool="ruff",
-                        severity="error",
-                        message=line.strip(),
-                    ) for line in result.stdout.splitlines() if line.strip()]
+            issues = [
+                QualityIssue(
+                    tool="ruff",
+                    severity="error",
+                    message=line.strip(),
+                )
+                for line in result.stdout.splitlines()
+                if line.strip()
+            ]
 
             return FlextResult.fail(f"Linting issues found: {len(issues)} issues")
 
-        except (subprocess.TimeoutExpired, subprocess.SubprocessError, FileNotFoundError) as e:
+        except (
+            subprocess.TimeoutExpired,
+            subprocess.SubprocessError,
+            FileNotFoundError,
+        ) as e:
             return FlextResult.fail(f"Lint check failed: {e}")
 
     def _run_type_check(self) -> FlextResult[list[QualityIssue]]:
         """Run type checking with MyPy."""
         try:
             result = subprocess.run(
-                ["mypy", "src"],  # noqa: S607
-                check=False, cwd=self.workspace_path,
+                ["mypy", "src"],
+                check=False,
+                cwd=self.workspace_path,
                 capture_output=True,
                 text=True,
                 timeout=120,
@@ -442,23 +476,32 @@ class QualityGateway:
                 return FlextResult.ok([])
 
             # Parse MyPy output for issues
-            issues = [QualityIssue(
-                        tool="mypy",
-                        severity="error",
-                        message=line.strip(),
-                    ) for line in result.stdout.splitlines() if line.strip() and ":" in line]
+            issues = [
+                QualityIssue(
+                    tool="mypy",
+                    severity="error",
+                    message=line.strip(),
+                )
+                for line in result.stdout.splitlines()
+                if line.strip() and ":" in line
+            ]
 
             return FlextResult.fail(f"Type checking issues found: {len(issues)} issues")
 
-        except (subprocess.TimeoutExpired, subprocess.SubprocessError, FileNotFoundError) as e:
+        except (
+            subprocess.TimeoutExpired,
+            subprocess.SubprocessError,
+            FileNotFoundError,
+        ) as e:
             return FlextResult.fail(f"Type check failed: {e}")
 
     def _run_test_check(self) -> FlextResult[list[QualityIssue]]:
         """Run test execution with Pytest."""
         try:
             result = subprocess.run(
-                ["pytest", "-v"],  # noqa: S607
-                check=False, cwd=self.workspace_path,
+                ["pytest", "-v"],
+                check=False,
+                cwd=self.workspace_path,
                 capture_output=True,
                 text=True,
                 timeout=300,
@@ -468,15 +511,21 @@ class QualityGateway:
                 return FlextResult.ok([])
 
             # Parse test failures
-            issues = [QualityIssue(
-                tool="pytest",
-                severity="error",
-                message="Test failures detected",
-            )]
+            issues = [
+                QualityIssue(
+                    tool="pytest",
+                    severity="error",
+                    message="Test failures detected",
+                )
+            ]
 
             return FlextResult.fail(f"Test failures found: {len(issues)} issues")
 
-        except (subprocess.TimeoutExpired, subprocess.SubprocessError, FileNotFoundError) as e:
+        except (
+            subprocess.TimeoutExpired,
+            subprocess.SubprocessError,
+            FileNotFoundError,
+        ) as e:
             return FlextResult.fail(f"Test execution failed: {e}")
 
     def _run_coverage_check(self, threshold: float) -> FlextResult[list[QualityIssue]]:
@@ -488,11 +537,13 @@ class QualityGateway:
             if coverage >= threshold:
                 return FlextResult.ok([])
 
-            issues = [QualityIssue(
-                tool="coverage",
-                severity="warning",
-                message=f"Coverage {coverage:.1f}% below threshold {threshold:.1f}%",
-            )]
+            issues = [
+                QualityIssue(
+                    tool="coverage",
+                    severity="warning",
+                    message=f"Coverage {coverage:.1f}% below threshold {threshold:.1f}%",
+                )
+            ]
 
             return FlextResult.fail(f"Coverage below threshold: {len(issues)} issues")
 
@@ -509,7 +560,7 @@ class QualityGateway:
         except Exception as e:
             return FlextResult.fail(f"Security check failed: {e}")
 
-    def run_quality_checks(self, **kwargs: object) -> dict[str, object]:  # noqa: ARG002
+    def run_quality_checks(self, **kwargs: object) -> dict[str, object]:
         """Legacy method for backward compatibility - use run_quality_checks_safe() instead."""
         print_colored("🔍 Running legacy quality checks...", Colors.BLUE)
 

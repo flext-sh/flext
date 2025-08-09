@@ -48,7 +48,7 @@ from flext_core.config import FlextConfigHierarchical
 from flext_core.errors import FlextBusinessError, FlextTechnicalError
 
 # Constants
-from flext_core.constants import FlextSemanticConstants
+from flext_core.constants import FlextConstants
 
 # Utilities
 from flext_auth.utils import flext_auth_hash_password

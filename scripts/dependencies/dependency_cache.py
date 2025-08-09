@@ -7,9 +7,12 @@ para máxima performance e confiabilidade enterprise.
 
 from __future__ import annotations
 
-import argparse
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import argparse
 
 from flext_core import FlextResult
 
