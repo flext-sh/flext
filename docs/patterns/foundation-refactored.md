@@ -222,9 +222,9 @@ class DatabaseConfig:
 
 ```python
 # NEW: 4 lines with automatic validation
-from flext_core import FlextBaseSettings
+from flext_core import FlextSettings
 
-class AppConfig(FlextBaseSettings):
+class AppConfig(FlextSettings):
     database_url: str
     redis_url: str = "redis://localhost"
     # Automatic: env loading, validation, type conversion
@@ -389,7 +389,7 @@ result = Order.create(**order_data).flat_map(lambda o: o.process())
 
 ```python
 # Replace scattered imports
-from flext_core import FlextEntity, FlextResult, FlextBaseSettings
+from flext_core import FlextEntity, FlextResult, FlextSettings
 ```
 
 ### Step 2: Refactor Entities

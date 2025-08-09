@@ -16,7 +16,7 @@ This document tracks systematic pattern validation and correction across the FLE
 ### HIGH (🟠) - Fix Within Sprint  
 - Configuration Patterns - FlextConfig hierarchical structure violations
 - Error Patterns - Improper error handling, missing observability patterns
-- Constants - Hardcoded values that should use FlextSemanticConstants
+- Constants - Hardcoded values that should use FlextConstants
 
 ### MEDIUM (🟡) - Fix Within Iteration
 - Utility Patterns - Inconsistent naming, missing domain-specific utilities

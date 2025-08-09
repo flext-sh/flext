@@ -31,7 +31,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "FlextConnectionError(\"Database unreachable\", host=\"db.example.com\", port=5432),",
-          "recommended_fix": "FlextConnectionError(\"Database unreachable\", host=\"db.example.com\", FlextSemanticConstants.Services.DEFAULT_PORT),",
+          "recommended_fix": "FlextConnectionError(\"Database unreachable\", host=\"db.example.com\", FlextConstants.Services.DEFAULT_PORT),",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -91,7 +91,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=1521,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -101,7 +101,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=1521,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -111,7 +111,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=389,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -141,7 +141,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=5432,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -151,7 +151,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "smtp_port=587,",
-          "recommended_fix": "smtp_FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "smtp_FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -161,7 +161,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "result = process_with_retry(retry_user, max_retries=3)",
-          "recommended_fix": "result = process_with_retry(retry_user, FlextSemanticConstants.Defaults.MAX_RETRIES)",
+          "recommended_fix": "result = process_with_retry(retry_user, FlextConstants.Defaults.MAX_RETRIES)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -1791,7 +1791,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "rpc_proxy = ServerProxy(self.url, timeout=3.0)",
-          "recommended_fix": "rpc_proxy = ServerProxy(self.url, FlextSemanticConstants.Defaults.TIMEOUT.0)",
+          "recommended_fix": "rpc_proxy = ServerProxy(self.url, FlextConstants.Defaults.TIMEOUT.0)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -2101,7 +2101,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "client = ServerProxy(url, timeout=3.0)",
-          "recommended_fix": "client = ServerProxy(url, FlextSemanticConstants.Defaults.TIMEOUT.0)",
+          "recommended_fix": "client = ServerProxy(url, FlextConstants.Defaults.TIMEOUT.0)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -2111,7 +2111,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "self.client = ServerProxy(url, timeout=3.0)",
-          "recommended_fix": "self.client = ServerProxy(url, FlextSemanticConstants.Defaults.TIMEOUT.0)",
+          "recommended_fix": "self.client = ServerProxy(url, FlextConstants.Defaults.TIMEOUT.0)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -2121,7 +2121,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "SimpleScrapingLocator('https://pypi.org/simple/', timeout=3.0),",
-          "recommended_fix": "SimpleScrapingLocator('https://pypi.org/simple/', FlextSemanticConstants.Defaults.TIMEOUT.0),",
+          "recommended_fix": "SimpleScrapingLocator('https://pypi.org/simple/', FlextConstants.Defaults.TIMEOUT.0),",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -6531,7 +6531,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": ">>> a = requests.adapters.HTTPAdapter(max_retries=3)",
-          "recommended_fix": ">>> a = requests.adapters.HTTPAdapter(FlextSemanticConstants.Defaults.MAX_RETRIES)",
+          "recommended_fix": ">>> a = requests.adapters.HTTPAdapter(FlextConstants.Defaults.MAX_RETRIES)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -10181,7 +10181,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "return wait_for_read(sock, timeout=0.0)",
-          "recommended_fix": "return wait_for_read(sock, FlextSemanticConstants.Defaults.TIMEOUT.0)",
+          "recommended_fix": "return wait_for_read(sock, FlextConstants.Defaults.TIMEOUT.0)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -10881,7 +10881,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "Url(scheme=None, host='google.com', port=80, path=None, ...)",
-          "recommended_fix": "Url(scheme=None, host='google.com', FlextSemanticConstants.Services.DEFAULT_PORT, path=None, ...)",
+          "recommended_fix": "Url(scheme=None, host='google.com', FlextConstants.Services.DEFAULT_PORT, path=None, ...)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -11581,7 +11581,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "#  args: ['--timeout=5', 'install', '--user', 'INITools']",
-          "recommended_fix": "#  args: ['--FlextSemanticConstants.Defaults.TIMEOUT', 'install', '--user', 'INITools']",
+          "recommended_fix": "#  args: ['--FlextConstants.Defaults.TIMEOUT', 'install', '--user', 'INITools']",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -11841,7 +11841,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "[\"rustc\", \"--version\"], stderr=subprocess.STDOUT, timeout=0.5",
-          "recommended_fix": "[\"rustc\", \"--version\"], stderr=subprocess.STDOUT, FlextSemanticConstants.Defaults.TIMEOUT.5",
+          "recommended_fix": "[\"rustc\", \"--version\"], stderr=subprocess.STDOUT, FlextConstants.Defaults.TIMEOUT.5",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -11951,7 +11951,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "timeout=60,  # Prevent hanging",
-          "recommended_fix": "FlextSemanticConstants.Defaults.TIMEOUT,  # Prevent hanging",
+          "recommended_fix": "FlextConstants.Defaults.TIMEOUT,  # Prevent hanging",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -11961,7 +11961,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "settings = TestSettings(app_name=\"custom\", port=9000)",
-          "recommended_fix": "settings = TestSettings(app_name=\"custom\", FlextSemanticConstants.Services.DEFAULT_PORT)",
+          "recommended_fix": "settings = TestSettings(app_name=\"custom\", FlextConstants.Services.DEFAULT_PORT)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -11971,7 +11971,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "result = TestSettings.create_with_validation(debug=True, timeout=60)",
-          "recommended_fix": "result = TestSettings.create_with_validation(debug=True, FlextSemanticConstants.Defaults.TIMEOUT)",
+          "recommended_fix": "result = TestSettings.create_with_validation(debug=True, FlextConstants.Defaults.TIMEOUT)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -11981,7 +11981,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "result = TestSettings.create_with_validation(debug=True, timeout=60)",
-          "recommended_fix": "result = TestSettings.create_with_validation(debug=True, FlextSemanticConstants.Defaults.TIMEOUT)",
+          "recommended_fix": "result = TestSettings.create_with_validation(debug=True, FlextConstants.Defaults.TIMEOUT)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -11991,7 +11991,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "timeout=60,",
-          "recommended_fix": "FlextSemanticConstants.Defaults.TIMEOUT,",
+          "recommended_fix": "FlextConstants.Defaults.TIMEOUT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12011,7 +12011,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=3306,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12021,7 +12021,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "FlextDatabaseConfig(port=70000)  # Invalid port",
-          "recommended_fix": "FlextDatabaseConfig(FlextSemanticConstants.Services.DEFAULT_PORT)  # Invalid port",
+          "recommended_fix": "FlextDatabaseConfig(FlextConstants.Services.DEFAULT_PORT)  # Invalid port",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12031,7 +12031,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "config = FlextDatabaseConfig(host=\"test.com\", port=5432)",
-          "recommended_fix": "config = FlextDatabaseConfig(host=\"test.com\", FlextSemanticConstants.Services.DEFAULT_PORT)",
+          "recommended_fix": "config = FlextDatabaseConfig(host=\"test.com\", FlextConstants.Services.DEFAULT_PORT)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12041,7 +12041,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=6380,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12051,7 +12051,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "config = FlextRedisConfig(host=\"redis.com\", port=6379)",
-          "recommended_fix": "config = FlextRedisConfig(host=\"redis.com\", FlextSemanticConstants.Services.DEFAULT_PORT)",
+          "recommended_fix": "config = FlextRedisConfig(host=\"redis.com\", FlextConstants.Services.DEFAULT_PORT)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12061,7 +12061,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=1522,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12071,7 +12071,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=636,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12081,7 +12081,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "config1 = FlextDatabaseConfig(host=\"db1.com\", port=5432)",
-          "recommended_fix": "config1 = FlextDatabaseConfig(host=\"db1.com\", FlextSemanticConstants.Services.DEFAULT_PORT)",
+          "recommended_fix": "config1 = FlextDatabaseConfig(host=\"db1.com\", FlextConstants.Services.DEFAULT_PORT)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12091,7 +12091,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "config2 = FlextRedisConfig(host=\"redis1.com\", port=6379)",
-          "recommended_fix": "config2 = FlextRedisConfig(host=\"redis1.com\", FlextSemanticConstants.Services.DEFAULT_PORT)",
+          "recommended_fix": "config2 = FlextRedisConfig(host=\"redis1.com\", FlextConstants.Services.DEFAULT_PORT)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12101,7 +12101,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "FlextDatabaseConfig(port=70000)  # Invalid port",
-          "recommended_fix": "FlextDatabaseConfig(FlextSemanticConstants.Services.DEFAULT_PORT)  # Invalid port",
+          "recommended_fix": "FlextDatabaseConfig(FlextConstants.Services.DEFAULT_PORT)  # Invalid port",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12111,7 +12111,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "FlextDatabaseConfig(port=0)  # Below minimum",
-          "recommended_fix": "FlextDatabaseConfig(FlextSemanticConstants.Services.DEFAULT_PORT)  # Below minimum",
+          "recommended_fix": "FlextDatabaseConfig(FlextConstants.Services.DEFAULT_PORT)  # Below minimum",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12121,7 +12121,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "FlextDatabaseConfig(port=99999)  # Above maximum",
-          "recommended_fix": "FlextDatabaseConfig(FlextSemanticConstants.Services.DEFAULT_PORT)  # Above maximum",
+          "recommended_fix": "FlextDatabaseConfig(FlextConstants.Services.DEFAULT_PORT)  # Above maximum",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12131,7 +12131,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "db_config = FlextDatabaseConfig(host=\"db1.com\", port=5432)",
-          "recommended_fix": "db_config = FlextDatabaseConfig(host=\"db1.com\", FlextSemanticConstants.Services.DEFAULT_PORT)",
+          "recommended_fix": "db_config = FlextDatabaseConfig(host=\"db1.com\", FlextConstants.Services.DEFAULT_PORT)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12141,7 +12141,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "redis_config = FlextRedisConfig(host=\"redis1.com\", port=6379)",
-          "recommended_fix": "redis_config = FlextRedisConfig(host=\"redis1.com\", FlextSemanticConstants.Services.DEFAULT_PORT)",
+          "recommended_fix": "redis_config = FlextRedisConfig(host=\"redis1.com\", FlextConstants.Services.DEFAULT_PORT)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12151,7 +12151,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=5432,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12161,7 +12161,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "host=\"custom.host\", port=3306, username=\"REDACTED_LDAP_BIND_PASSWORD\"",
-          "recommended_fix": "host=\"custom.host\", FlextSemanticConstants.Services.DEFAULT_PORT, username=\"REDACTED_LDAP_BIND_PASSWORD\"",
+          "recommended_fix": "host=\"custom.host\", FlextConstants.Services.DEFAULT_PORT, username=\"REDACTED_LDAP_BIND_PASSWORD\"",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12171,7 +12171,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "host=\"oracle.host\", port=1522, username=\"oracle_user\"",
-          "recommended_fix": "host=\"oracle.host\", FlextSemanticConstants.Services.DEFAULT_PORT, username=\"oracle_user\"",
+          "recommended_fix": "host=\"oracle.host\", FlextConstants.Services.DEFAULT_PORT, username=\"oracle_user\"",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12181,7 +12181,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "service_name=\"test-service\", host=\"localhost\", port=8080, version=\"1.0.0\"",
-          "recommended_fix": "service_name=\"test-service\", host=\"localhost\", FlextSemanticConstants.Services.DEFAULT_PORT, version=\"1.0.0\"",
+          "recommended_fix": "service_name=\"test-service\", host=\"localhost\", FlextConstants.Services.DEFAULT_PORT, version=\"1.0.0\"",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12191,7 +12191,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=5432,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12201,7 +12201,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=5432,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12211,7 +12211,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=1521,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12221,7 +12221,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=1521,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12231,7 +12231,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=8080,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12241,7 +12241,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=8080,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12261,7 +12261,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=1521,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12271,7 +12271,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=1521,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12281,7 +12281,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "custom_db = create_database_model(host=\"custom\", port=3306)",
-          "recommended_fix": "custom_db = create_database_model(host=\"custom\", FlextSemanticConstants.Services.DEFAULT_PORT)",
+          "recommended_fix": "custom_db = create_database_model(host=\"custom\", FlextConstants.Services.DEFAULT_PORT)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12291,7 +12291,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "custom_oracle = create_oracle_model(host=\"oracle.host\", port=1522)",
-          "recommended_fix": "custom_oracle = create_oracle_model(host=\"oracle.host\", FlextSemanticConstants.Services.DEFAULT_PORT)",
+          "recommended_fix": "custom_oracle = create_oracle_model(host=\"oracle.host\", FlextConstants.Services.DEFAULT_PORT)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12301,7 +12301,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "service_name=\"test-service\", host=\"localhost\", port=8080",
-          "recommended_fix": "service_name=\"test-service\", host=\"localhost\", FlextSemanticConstants.Services.DEFAULT_PORT",
+          "recommended_fix": "service_name=\"test-service\", host=\"localhost\", FlextConstants.Services.DEFAULT_PORT",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12311,7 +12311,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=8080,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12321,7 +12321,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "error = FlextTimeoutError(\"Operation timed out\", timeout=30, duration=45)",
-          "recommended_fix": "error = FlextTimeoutError(\"Operation timed out\", FlextSemanticConstants.Defaults.TIMEOUT, duration=45)",
+          "recommended_fix": "error = FlextTimeoutError(\"Operation timed out\", FlextConstants.Defaults.TIMEOUT, duration=45)",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12381,7 +12381,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "timeout=5000,",
-          "recommended_fix": "FlextSemanticConstants.Defaults.TIMEOUT,",
+          "recommended_fix": "FlextConstants.Defaults.TIMEOUT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12701,7 +12701,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=1521,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12721,7 +12721,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "port=5433,",
-          "recommended_fix": "FlextSemanticConstants.Services.DEFAULT_PORT,",
+          "recommended_fix": "FlextConstants.Services.DEFAULT_PORT,",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },
@@ -12751,7 +12751,7 @@
           "violation_type": "Constants Pattern - Hardcoded Values",
           "severity": "HIGH",
           "current_code": "logger.info(\"Service started\", port=8080, version=\"0.9.0\")",
-          "recommended_fix": "logger.info(\"Service started\", FlextSemanticConstants.Services.DEFAULT_PORT, version=\"0.9.0\")",
+          "recommended_fix": "logger.info(\"Service started\", FlextConstants.Services.DEFAULT_PORT, version=\"0.9.0\")",
           "pattern_reference": "docs/patterns/constants.md",
           "context": "Use semantic constants instead of hardcoded values"
         },

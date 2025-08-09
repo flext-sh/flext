@@ -350,11 +350,11 @@ def create_simple_script[**P_main_func](
         def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
             try:
                 # Try with kwargs first
-                return config.main_func(**kwargs)  # type: ignore[call-arg,arg-type]
+                return config.main_func(**kwargs)
             except TypeError:
                 # Fallback for callables with no arguments
                 try:
-                    return config.main_func()  # type: ignore[call-arg]
+                    return config.main_func()
                 except TypeError as e:
                     return FlextResult.fail(f"Function signature mismatch: {e}")
 

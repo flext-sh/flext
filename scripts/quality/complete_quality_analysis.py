@@ -40,6 +40,7 @@ def run_command(
             capture_output=capture_output,
             text=True,
             timeout=300,
+            shell=False,  # Adicionado explicitamente por segurança
         )
         return result.returncode, result.stdout, result.stderr
     except subprocess.TimeoutExpired:

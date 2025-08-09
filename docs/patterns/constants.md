@@ -30,7 +30,7 @@ All constants are strongly typed.
 from typing import ClassVar, Final, Literal
 from enum import StrEnum, IntEnum
 
-class FlextSemanticConstants:
+class FlextConstants:
     """Foundation semantic constants for FLEXT ecosystem."""
 
     class Core:
@@ -302,7 +302,7 @@ class FlextEnvironment(StrEnum):
 ### Example: Oracle WMS Constants
 
 ```python
-class FlextOracleWmsConstants(FlextSemanticConstants):
+class FlextOracleWmsConstants(FlextConstants):
     """Oracle WMS specific constants extending base."""
 
     class Api:
@@ -342,15 +342,15 @@ class FlextOracleWmsConstants(FlextSemanticConstants):
 ### Basic Constant Usage
 
 ```python
-from flext_core.constants import FlextSemanticConstants, FlextStatus
+from flext_core.constants import FlextConstants, FlextStatus
 
 # Access core constants
-version = FlextSemanticConstants.Core.VERSION
-timeout = FlextSemanticConstants.Defaults.TIMEOUT
+version = FlextConstants.Core.VERSION
+timeout = FlextConstants.Defaults.TIMEOUT
 
 # Use error codes
-error_code = FlextSemanticConstants.Errors.VALIDATION_ERROR
-error_message = FlextSemanticConstants.Errors.MESSAGES[error_code]
+error_code = FlextConstants.Errors.VALIDATION_ERROR
+error_message = FlextConstants.Errors.MESSAGES[error_code]
 
 # Use status enums
 status = FlextStatus.PROCESSING
@@ -360,24 +360,24 @@ if FlextStatus.is_active(status):
 # Pattern validation
 import re
 email = "user@example.com"
-if re.match(FlextSemanticConstants.Patterns.EMAIL_PATTERN, email):
+if re.match(FlextConstants.Patterns.EMAIL_PATTERN, email):
     print("Valid email address")
 ```
 
 ### Configuration with Constants
 
 ```python
-from flext_core.config import FlextBaseSettings
-from flext_core.constants import FlextSemanticConstants
+from flext_core.config import FlextSettings
+from flext_core.constants import FlextConstants
 
-class DatabaseConfig(FlextBaseSettings):
+class DatabaseConfig(FlextSettings):
     """Database configuration using semantic constants."""
 
     host: str = "localhost"
     port: int = 5432
-    pool_size: int = FlextSemanticConstants.Defaults.DB_POOL_SIZE
-    pool_timeout: int = FlextSemanticConstants.Defaults.DB_POOL_TIMEOUT
-    max_connections: int = FlextSemanticConstants.Limits.MAX_CONNECTIONS
+    pool_size: int = FlextConstants.Defaults.DB_POOL_SIZE
+    pool_timeout: int = FlextConstants.Defaults.DB_POOL_TIMEOUT
+    max_connections: int = FlextConstants.Limits.MAX_CONNECTIONS
 
     class Config:
         env_prefix = "DB_"
@@ -386,7 +386,7 @@ class DatabaseConfig(FlextBaseSettings):
 ### Validation with Patterns
 
 ```python
-from flext_core.constants import FlextSemanticConstants
+from flext_core.constants import FlextConstants
 from flext_core.result import FlextResult
 import re
 
@@ -396,20 +396,20 @@ class Validator:
     @staticmethod
     def validate_email(email: str) -> FlextResult[str]:
         """Validate email format."""
-        if not re.match(FlextSemanticConstants.Patterns.EMAIL_PATTERN, email):
+        if not re.match(FlextConstants.Patterns.EMAIL_PATTERN, email):
             return FlextResult.fail(
                 "Invalid email format",
-                error_code=FlextSemanticConstants.Errors.VALIDATION_ERROR
+                error_code=FlextConstants.Errors.VALIDATION_ERROR
             )
         return FlextResult.ok(email)
 
     @staticmethod
     def validate_port(port: int) -> FlextResult[int]:
         """Validate port number."""
-        if not FlextSemanticConstants.Limits.MIN_PORT <= port <= FlextSemanticConstants.Limits.MAX_PORT:
+        if not FlextConstants.Limits.MIN_PORT <= port <= FlextConstants.Limits.MAX_PORT:
             return FlextResult.fail(
-                f"Port must be between {FlextSemanticConstants.Limits.MIN_PORT} and {FlextSemanticConstants.Limits.MAX_PORT}",
-                error_code=FlextSemanticConstants.Errors.VALIDATION_ERROR
+                f"Port must be between {FlextConstants.Limits.MIN_PORT} and {FlextConstants.Limits.MAX_PORT}",
+                error_code=FlextConstants.Errors.VALIDATION_ERROR
             )
         return FlextResult.ok(port)
 ```
@@ -417,7 +417,7 @@ class Validator:
 ### Performance Monitoring
 
 ```python
-from flext_core.constants import FlextSemanticConstants
+from flext_core.constants import FlextConstants
 from flext_core.observability import get_metrics, get_logger
 import time
 
@@ -430,7 +430,7 @@ class PerformanceMonitor:
 
     def check_query_performance(self, query_time: float, query: str) -> None:
         """Check if query is slow."""
-        threshold = FlextSemanticConstants.Performance.SLOW_QUERY_THRESHOLD
+        threshold = FlextConstants.Performance.SLOW_QUERY_THRESHOLD
 
         if query_time > threshold:
             self.logger.warn(

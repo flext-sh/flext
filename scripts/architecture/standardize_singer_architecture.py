@@ -15,7 +15,7 @@ from pathlib import Path
 
 # Import consolidated components from flext-meltano
 from flext_meltano.architecture import (
-    FlextSingerArchitectureStandardizer,  # type: ignore[attr-defined]
+    FlextSingerArchitectureStandardizer,
 )
 
 
