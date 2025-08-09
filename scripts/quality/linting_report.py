@@ -174,13 +174,23 @@ class LintingReport(FlextScript):
         """Executar análise Ruff."""
         try:
             # Ruff check com formato JSON
+            ruff_executable = shutil.which("ruff")
+            if not ruff_executable:
+                return {
+                    "total_issues": 0,
+                    "by_category": {},
+                    "by_file": {},
+                    "issues": [],
+                }
+
             result = subprocess.run(
-                ["ruff", "check", ".", "--output-format=json"],
+                [ruff_executable, "check", ".", "--output-format=json"],
                 check=False,
                 cwd=project_path,
                 capture_output=True,
                 text=True,
                 timeout=30,
+                shell=False,
             )
 
             issues_by_category: dict[str, int] = defaultdict(int)
@@ -216,13 +226,18 @@ class LintingReport(FlextScript):
         """Executar análise MyPy."""
         try:
             # MyPy check com formato JSON
+            mypy_executable = shutil.which("mypy")
+            if not mypy_executable:
+                return {"total_errors": 0, "by_type": {}, "by_file": {}, "output": ""}
+
             result = subprocess.run(
-                ["mypy", ".", "--no-error-summary"],
+                [mypy_executable, ".", "--no-error-summary"],
                 check=False,
                 cwd=project_path,
                 capture_output=True,
                 text=True,
                 timeout=60,
+                shell=False,
             )
 
             errors_by_type: dict[str, int] = defaultdict(int)

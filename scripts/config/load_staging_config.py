@@ -7,15 +7,18 @@ para máxima confiabilidade e padronização enterprise.
 
 from __future__ import annotations
 
-import argparse
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from flext_core import FlextResult
 
 from flext_tools import Colors, print_colored
 from flext_tools.config import ConfigurationManager
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
+
+if TYPE_CHECKING:
+    import argparse
 
 
 class StagingConfigLoader(FlextScript):

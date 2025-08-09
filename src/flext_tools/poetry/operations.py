@@ -226,9 +226,11 @@ class PoetryOperations:
             )
             print_colored("🛡️ Poetry operations safety system activated", Colors.CYAN)
 
-        self.logger.info("Poetry operations manager initialized",
-                        dry_run=dry_run,
-                        safety_enabled=enable_safety)
+        self.logger.info(
+            "Poetry operations manager initialized",
+            dry_run=dry_run,
+            safety_enabled=enable_safety,
+        )
 
     def add_dependencies_safe(
         self,
@@ -259,13 +261,17 @@ class PoetryOperations:
         try:
             start_time = time.time()
 
-            self.logger.info("Starting safe dependency addition",
-                           project_path=str(project_path),
-                           dependency_categories=list(dependencies.keys()),
-                           total_dependencies=sum(len(deps) for deps in dependencies.values()))
+            self.logger.info(
+                "Starting safe dependency addition",
+                project_path=str(project_path),
+                dependency_categories=list(dependencies.keys()),
+                total_dependencies=sum(len(deps) for deps in dependencies.values()),
+            )
 
             # Use existing implementation but wrap in FlextResult
-            legacy_result = self.add_dependencies(project_path, dependencies, _auto_confirm=auto_confirm)
+            legacy_result = self.add_dependencies(
+                project_path, dependencies, _auto_confirm=auto_confirm
+            )
 
             execution_time = time.time() - start_time
             packages_affected = sum(len(deps) for deps in legacy_result.values())
@@ -286,17 +292,22 @@ class PoetryOperations:
             }
 
             success = bool(operation_data["success"])
-            self.logger.info("Safe dependency addition completed",
-                           project_path=str(project_path),
-                           packages_affected=packages_affected,
-                           execution_time=execution_time,
-                           success=success)
+            self.logger.info(
+                "Safe dependency addition completed",
+                project_path=str(project_path),
+                packages_affected=packages_affected,
+                execution_time=execution_time,
+                success=success,
+            )
 
             return FlextResult.ok(operation_data)
 
         except Exception as e:
-            self.logger.exception("Safe dependency addition failed",
-                            project_path=str(project_path), error=str(e))
+            self.logger.exception(
+                "Safe dependency addition failed",
+                project_path=str(project_path),
+                error=str(e),
+            )
             return FlextResult.fail(f"Dependency addition failed: {e}")
 
     def add_dependencies(
@@ -420,7 +431,7 @@ class PoetryOperations:
         try:
             print_colored(f"    [+] Adding {dependency}...", Colors.GREEN)
 
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 cmd,
                 check=False,
                 cwd=project_path,
@@ -476,13 +487,17 @@ class PoetryOperations:
         try:
             start_time = time.time()
 
-            self.logger.info("Starting safe dependency removal",
-                           project_path=str(project_path),
-                           dependencies=dependencies,
-                           total_dependencies=len(dependencies))
+            self.logger.info(
+                "Starting safe dependency removal",
+                project_path=str(project_path),
+                dependencies=dependencies,
+                total_dependencies=len(dependencies),
+            )
 
             # Use existing implementation but wrap in FlextResult
-            legacy_result = self.remove_dependencies(project_path, dependencies, _auto_confirm=auto_confirm)
+            legacy_result = self.remove_dependencies(
+                project_path, dependencies, _auto_confirm=auto_confirm
+            )
 
             execution_time = time.time() - start_time
 
@@ -500,17 +515,22 @@ class PoetryOperations:
             }
 
             success = bool(operation_data["success"])
-            self.logger.info("Safe dependency removal completed",
-                           project_path=str(project_path),
-                           packages_removed=len(legacy_result),
-                           execution_time=execution_time,
-                           success=success)
+            self.logger.info(
+                "Safe dependency removal completed",
+                project_path=str(project_path),
+                packages_removed=len(legacy_result),
+                execution_time=execution_time,
+                success=success,
+            )
 
             return FlextResult.ok(operation_data)
 
         except Exception as e:
-            self.logger.exception("Safe dependency removal failed",
-                            project_path=str(project_path), error=str(e))
+            self.logger.exception(
+                "Safe dependency removal failed",
+                project_path=str(project_path),
+                error=str(e),
+            )
             return FlextResult.fail(f"Dependency removal failed: {e}")
 
     def remove_dependencies(
@@ -600,7 +620,7 @@ class PoetryOperations:
         try:
             print_colored(f"    [-] Removing {dependency}...", Colors.YELLOW)
 
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 cmd,
                 check=False,
                 cwd=project_path,
@@ -649,8 +669,9 @@ class PoetryOperations:
         try:
             start_time = time.time()
 
-            self.logger.info("Starting safe project update",
-                           project_path=str(project_path))
+            self.logger.info(
+                "Starting safe project update", project_path=str(project_path)
+            )
 
             # Use existing implementation but wrap in FlextResult
             legacy_success = self.update_project(project_path)
@@ -671,16 +692,21 @@ class PoetryOperations:
             }
 
             success = bool(operation_data["success"])
-            self.logger.info("Safe project update completed",
-                           project_path=str(project_path),
-                           execution_time=execution_time,
-                           success=success)
+            self.logger.info(
+                "Safe project update completed",
+                project_path=str(project_path),
+                execution_time=execution_time,
+                success=success,
+            )
 
             return FlextResult.ok(operation_data)
 
         except Exception as e:
-            self.logger.exception("Safe project update failed",
-                            project_path=str(project_path), error=str(e))
+            self.logger.exception(
+                "Safe project update failed",
+                project_path=str(project_path),
+                error=str(e),
+            )
             return FlextResult.fail(f"Project update failed: {e}")
 
     def update_project(self, project_path: Path) -> bool:
@@ -726,7 +752,7 @@ class PoetryOperations:
             cmd.append("--dry-run")
 
         try:
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 cmd,
                 check=False,
                 cwd=project_path,
@@ -772,8 +798,9 @@ class PoetryOperations:
         try:
             start_time = time.time()
 
-            self.logger.info("Starting safe project lock",
-                           project_path=str(project_path))
+            self.logger.info(
+                "Starting safe project lock", project_path=str(project_path)
+            )
 
             # Use existing implementation but wrap in FlextResult
             legacy_success = self.lock_project(project_path)
@@ -793,16 +820,19 @@ class PoetryOperations:
             }
 
             success = bool(operation_data["success"])
-            self.logger.info("Safe project lock completed",
-                           project_path=str(project_path),
-                           execution_time=execution_time,
-                           success=success)
+            self.logger.info(
+                "Safe project lock completed",
+                project_path=str(project_path),
+                execution_time=execution_time,
+                success=success,
+            )
 
             return FlextResult.ok(operation_data)
 
         except Exception as e:
-            self.logger.exception("Safe project lock failed",
-                            project_path=str(project_path), error=str(e))
+            self.logger.exception(
+                "Safe project lock failed", project_path=str(project_path), error=str(e)
+            )
             return FlextResult.fail(f"Project lock failed: {e}")
 
     def lock_project(self, project_path: Path) -> bool:
@@ -836,7 +866,7 @@ class PoetryOperations:
         cmd = ["poetry", "lock"]
 
         try:
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 cmd,
                 check=False,
                 cwd=project_path,
@@ -876,8 +906,9 @@ class PoetryOperations:
         try:
             start_time = time.time()
 
-            self.logger.info("Starting safe project validation",
-                           project_path=str(project_path))
+            self.logger.info(
+                "Starting safe project validation", project_path=str(project_path)
+            )
 
             # Use existing implementation but wrap in FlextResult
             legacy_success = self.validate_project(project_path)
@@ -897,16 +928,21 @@ class PoetryOperations:
             }
 
             success = bool(operation_data["success"])
-            self.logger.info("Safe project validation completed",
-                           project_path=str(project_path),
-                           execution_time=execution_time,
-                           success=success)
+            self.logger.info(
+                "Safe project validation completed",
+                project_path=str(project_path),
+                execution_time=execution_time,
+                success=success,
+            )
 
             return FlextResult.ok(operation_data)
 
         except Exception as e:
-            self.logger.exception("Safe project validation failed",
-                            project_path=str(project_path), error=str(e))
+            self.logger.exception(
+                "Safe project validation failed",
+                project_path=str(project_path),
+                error=str(e),
+            )
             return FlextResult.fail(f"Project validation failed: {e}")
 
     def validate_project(self, project_path: Path) -> bool:
@@ -941,7 +977,7 @@ class PoetryOperations:
         cmd = ["poetry", "check"]
 
         try:
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 cmd,
                 check=False,
                 cwd=project_path,

@@ -108,7 +108,9 @@ class ProjectInfo(BaseModel):
     version: str = Field(default="0.0.0", description="Project version")
     description: str = Field(default="", description="Project description")
     dependency_count: int = Field(default=0, description="Number of dependencies")
-    dev_dependency_count: int = Field(default=0, description="Number of development dependencies")
+    dev_dependency_count: int = Field(
+        default=0, description="Number of development dependencies"
+    )
 
 
 # REMOVED: WorkspaceValidationResult class (violation of DRY principle)
@@ -188,7 +190,9 @@ class PoetryValidator:
 
     """
 
-    def validate_project(self, project_path: Path) -> FlextResult[ProjectValidationData]:
+    def validate_project(
+        self, project_path: Path
+    ) -> FlextResult[ProjectValidationData]:
         """Validate comprehensive Poetry project configuration and compliance.
 
         Performs thorough validation of Poetry project configuration including
@@ -291,7 +295,9 @@ class PoetryValidator:
             "valid": len(errors) == 0,
             "errors": errors,
             "warnings": warnings,
-            "info": project_info.model_dump() if isinstance(project_info, ProjectInfo) else {},
+            "info": project_info.model_dump()
+            if isinstance(project_info, ProjectInfo)
+            else {},
         }
 
         return FlextResult.ok(final_result_data)
@@ -493,7 +499,7 @@ class PoetryValidator:
                 issues.append("Poetry command not found in PATH")
                 return False, issues
 
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 [poetry_cmd, "check"],  # Full path to command for security
                 check=False,
                 cwd=project_path,
@@ -571,7 +577,9 @@ class PoetryValidator:
         pattern = r"^\d+\.\d+\.\d+([.-].*)?$"
         return bool(re.match(pattern, version))
 
-    def validate_workspace(self, workspace_path: Path) -> FlextResult[WorkspaceValidationData]:
+    def validate_workspace(
+        self, workspace_path: Path
+    ) -> FlextResult[WorkspaceValidationData]:
         """Validate all Poetry projects in the workspace for comprehensive compliance.
 
         Performs systematic validation of all Poetry projects within the workspace
@@ -663,8 +671,13 @@ class PoetryValidator:
                 "total_warnings": total_warnings,
             }
 
-            print_colored(f"\n📊 Workspace validation completed: {valid_projects}/{total_projects} projects valid", Colors.BLUE)
-            logger.info(f"Workspace validation completed - {valid_projects}/{total_projects} valid, {total_errors} errors, {total_warnings} warnings")
+            print_colored(
+                f"\n📊 Workspace validation completed: {valid_projects}/{total_projects} projects valid",
+                Colors.BLUE,
+            )
+            logger.info(
+                f"Workspace validation completed - {valid_projects}/{total_projects} valid, {total_errors} errors, {total_warnings} warnings"
+            )
 
             return FlextResult.ok(workspace_result_data)
 

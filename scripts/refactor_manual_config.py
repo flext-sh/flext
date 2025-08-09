@@ -53,7 +53,9 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
             return FlextResult.fail("find or grep not found")
 
         # Security: cmd is hardcoded, not user input
-        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        result = subprocess.run(
+            cmd, capture_output=True, text=True, check=False, shell=False
+        )
         if result.returncode == 0:
             patterns["manual_env_vars"] = [
                 f.strip() for f in result.stdout.split("\n") if f.strip()
@@ -75,7 +77,9 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
             ";",
         ]
         # Security: cmd is hardcoded, not user input
-        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        result = subprocess.run(
+            cmd, capture_output=True, text=True, check=False, shell=False
+        )
         if result.returncode == 0:
             patterns["manual_pydantic"] = [
                 f.strip() for f in result.stdout.split("\n") if f.strip()
@@ -97,7 +101,9 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
             ";",
         ]
         # Security: cmd is hardcoded, not user input
-        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        result = subprocess.run(
+            cmd, capture_output=True, text=True, check=False, shell=False
+        )
         if result.returncode == 0:
             patterns["manual_file_loading"] = [
                 f.strip() for f in result.stdout.split("\n") if f.strip()
@@ -119,7 +125,9 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
             ";",
         ]
         # Security: cmd is hardcoded, not user input
-        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        result = subprocess.run(
+            cmd, capture_output=True, text=True, check=False, shell=False
+        )
         if result.returncode == 0:
             patterns["manual_validation"] = [
                 f.strip() for f in result.stdout.split("\n") if f.strip()

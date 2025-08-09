@@ -129,7 +129,9 @@ class TemplateManager:
             return FlextResult.fail(error_msg)
 
     def render_template(
-        self, template_name: str, context: dict[str, object],
+        self,
+        template_name: str,
+        context: dict[str, object],
     ) -> FlextResult[str]:
         """Render a template with context.
 
@@ -157,7 +159,8 @@ class TemplateManager:
             return FlextResult.fail(error_msg)
 
     def render_component_readme(
-        self, component_data: dict[str, object],
+        self,
+        component_data: dict[str, object],
     ) -> FlextResult[str]:
         """Render component README template.
 
@@ -169,7 +172,8 @@ class TemplateManager:
 
         """
         return self.render_template(
-            "component_readme.md.j2", {"component": component_data},
+            "component_readme.md.j2",
+            {"component": component_data},
         )
 
     def render_api_reference(self, api_data: dict[str, object]) -> FlextResult[str]:
@@ -185,7 +189,8 @@ class TemplateManager:
         return self.render_template("api_reference.md.j2", {"api": api_data})
 
     def render_architecture_diagram(
-        self, diagram_data: dict[str, object],
+        self,
+        diagram_data: dict[str, object],
     ) -> FlextResult[str]:
         """Render architecture diagram template.
 
@@ -197,7 +202,8 @@ class TemplateManager:
 
         """
         return self.render_template(
-            "architecture_diagram.md.j2", {"diagram": diagram_data},
+            "architecture_diagram.md.j2",
+            {"diagram": diagram_data},
         )
 
     def list_templates(self) -> FlextResult[list[str]]:
@@ -208,7 +214,9 @@ class TemplateManager:
 
         """
         try:
-            templates = [file_path.name for file_path in self.templates_dir.rglob("*.j2")]
+            templates = [
+                file_path.name for file_path in self.templates_dir.rglob("*.j2")
+            ]
             return FlextResult.ok(templates)
         except Exception as e:
             error_msg = f"Failed to list templates: {e}"
@@ -227,5 +235,5 @@ class TemplateManager:
         """
         template_result = self.get_template(template_name)
         if template_result.success:
-            return FlextResult.ok(True)
+            return FlextResult.ok(data=True)
         return FlextResult.fail(template_result.error or "Template validation failed")

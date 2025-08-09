@@ -7,16 +7,20 @@ usando flext_tools.testing para máxima confiabilidade.
 
 from __future__ import annotations
 
-import argparse
+import shutil
 import subprocess
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from flext_core import FlextResult
 
 from flext_tools import Colors, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
 from flext_tools.testing import OracleE2ETestManager
+
+if TYPE_CHECKING:
+    import argparse
 
 
 class OracleE2ETestRunner(FlextScript):
@@ -44,11 +48,17 @@ class OracleE2ETestRunner(FlextScript):
 
         # Check Docker availability
         try:
+            docker_executable = shutil.which("docker")
+            if not docker_executable:
+                msg = "Docker executable not found."
+                raise FileNotFoundError(msg)
+
             subprocess.run(
-                ["docker", "--version"],
+                [docker_executable, "--version"],
                 capture_output=True,
                 check=True,
                 timeout=5,
+                shell=False,  # Addressed S603
             )
             print_colored("✅ Docker available", Colors.GREEN)
         except (
@@ -64,11 +74,19 @@ class OracleE2ETestRunner(FlextScript):
 
         # Check Docker Compose availability
         try:
+            docker_executable = shutil.which(
+                "docker"
+            )  # Reusing docker_executable for 'docker compose'
+            if not docker_executable:
+                msg = "Docker executable not found for compose."
+                raise FileNotFoundError(msg)
+
             subprocess.run(
-                ["docker", "compose", "version"],
+                [docker_executable, "compose", "version"],
                 capture_output=True,
                 check=True,
                 timeout=5,
+                shell=False,  # Addressed S603
             )
             print_colored("✅ Docker Compose available", Colors.GREEN)
             return FlextResult.ok(None)
