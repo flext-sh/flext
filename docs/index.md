@@ -5,13 +5,12 @@ description: "Enterprise Data Integration Platform - Complete Documentation Hub"
 
 # FLEXT Documentation Hub
 
-**Category**: Documentation Hub | **Status**: Published | **Version**: 0.9.0 | **Last Updated**: {{ git_revision_date_localized }}
+**Category**: Documentation Hub | **Status**: Active Development | **Version**: 2.0.0-dev | **Last Updated**: {{ git_revision_date_localized }}
 
 Welcome to the FLEXT documentation hub. This comprehensive guide provides everything you need to understand, use, and contribute to the FLEXT ecosystem.
 
 !!! info "Documentation Status"
-    This documentation is actively maintained and covers **95%** of the FLEXT ecosystem components.
-    We're continuously improving and adding new content.
+    This documentation is under active development. Major components are covered; several sections are being expanded and aligned with the current codebase.
 
 ## 🚀 Quick Start
 
