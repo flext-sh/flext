@@ -1,6 +1,6 @@
 # FLEXT Service - Enterprise Data Integration Engine
 
-**Type**: Core Service | **Status**: Production Ready | **Dependencies**: Go 1.24+, Python 3.13+, PostgreSQL, Redis
+**Type**: Core Service | **Status**: Active Development | **Dependencies**: Go 1.24+, Python 3.13+, PostgreSQL, Redis
 
 FLEXT Service is the enterprise-grade data integration engine serving as the primary Python bridge and multi-modal interface for the entire FLEXT ecosystem. Built with Go/Python hybrid architecture, it implements Clean Architecture, Domain-Driven Design, and Railway-oriented programming for production scalability.
 
@@ -160,7 +160,7 @@ curl http://localhost:8081/api/v1/flexcore/health    # FlexCore integration stat
 curl http://localhost:8081/metrics                   # Prometheus metrics
 ```
 
-### API Endpoints (Production)
+### API Endpoints (Development)
 
 ```bash
 # Core service endpoints

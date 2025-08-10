@@ -1,6 +1,6 @@
 # FLEXT Documentation Hub
 
-**Category**: Documentation Hub | **Status**: Published | **Version**: 2.1.0 | **Last Updated**: 2025-08-07
+**Category**: Documentation Hub | **Status**: Active Development | **Version**: 2.0.0-dev | **Last Updated**: 2025-08-10
 
 Welcome to the FLEXT documentation hub. This comprehensive guide provides everything you need to understand, use, and contribute to the FLEXT ecosystem.
 
@@ -135,10 +135,10 @@ docs/
 
 ### Documentation Status
 
-- **Current Version**: 2.1.0
-- **Last Updated**: 2025-08-07
-- **Coverage**: 95% of components documented
-- **Status**: Actively maintained
+- **Current Version**: 2.0.0-dev
+- **Last Updated**: 2025-08-10
+- **Coverage**: Major components documented; sections in progress
+- **Status**: Active development
 
 ### Support Channels
 
