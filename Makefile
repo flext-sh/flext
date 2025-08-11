@@ -173,7 +173,14 @@ type-check-all: ## Run type checking on all Python projects
 	@for project in $(ALL_PYTHON_PROJECTS); do \
 		if [ -d "$$project" ] && [ -f "$$project/pyproject.toml" ]; then \
 			echo "Type checking $$project..."; \
-			cd $$project && poetry run mypy . && cd ..; \
+			cd $$project; \
+			if [ -d "src" ]; then \
+				echo "(scoped to src)"; \
+				poetry run mypy src; \
+			else \
+				poetry run mypy .; \
+			fi; \
+			cd ..; \
 		fi \
 	done
 
