@@ -1,85 +1,67 @@
-"""FLEXT Tools Quality - Enterprise Code Quality Gates and Enforcement.
+"""FLEXT Tools Quality - Enterprise Quality Integration Bridge.
 
-Provides comprehensive code quality assurance utilities for the FLEXT ecosystem,
-implementing automated quality gates, linting enforcement, type checking, and
-quality metrics collection across all 32 FLEXT projects. This module ensures
-consistent code quality standards and automated validation throughout the
-distributed development environment.
+**ARCHITECTURAL DECISION: DELEGATION TO flext-quality**
 
-Quality tools integrate with CI/CD pipelines to enforce enterprise-grade
-standards, providing detailed reporting, automated fixes, and gradual quality
-improvement strategies. All quality operations support both individual project
-validation and ecosystem-wide quality coordination.
+This module serves as an INTEGRATION BRIDGE to the authoritative flext-quality
+service, which provides the complete quality analysis implementation with Django
++ Clean Architecture. This delegation pattern eliminates code duplication and
+establishes flext-quality as the single source of truth for quality analysis.
 
-Key Components:
-    - QualityGateway: Centralized quality gate coordination and enforcement
-    - GradualLintFixer: Progressive linting improvement with automated fixes
-    - MyPyChecker: Type checking validation with comprehensive error reporting
-    - Quality Metrics: Code quality measurement and trend analysis
-    - Standards Enforcement: Consistent application of quality standards
+Integration Pattern:
+    flext_tools.quality (THIS MODULE) = Gateway/Bridge for workspace integration
+    flext-quality (SEPARATE PROJECT) = Authoritative quality analysis service
 
-Architecture:
-    Implements quality assurance patterns with proper abstraction layers,
-    supporting both development workflows and production quality gates.
-    Integrates with external tools while providing consistent interfaces
-    and comprehensive error handling throughout the quality process.
+Key Design Decisions:
+    - NO duplication of quality analysis logic (delegated to flext-quality)
+    - Workspace integration patterns for FLEXT ecosystem coordination
+    - Bridge between workspace tools and dedicated quality service
+    - Gateway patterns for CI/CD pipeline integration
 
 Example:
-    Quality gate enforcement for development workflows:
+    Quality analysis with proper delegation:
 
-    >>> from flext_tools.quality import QualityGateway, MyPyChecker
-    >>> from flext_tools.quality import GradualLintFixer
+    >>> from flext_tools.quality import QualityBridge
     >>> from pathlib import Path
     >>>
-    >>> # Initialize quality gateway for ecosystem validation
-    >>> gateway = QualityGateway(
-    ...     workspace_root=Path("/home/developer/flext-workspace"),
-    ...     enforce_strict=True,
-    ...     generate_reports=True,
-    ... )
+    >>> # Bridge to authoritative flext-quality service
+    >>> bridge = QualityBridge(workspace_root=Path("/workspace"))
+    >>> result = bridge.delegate_to_quality_service(project_path="flext-api")
     >>>
-    >>> # Run comprehensive quality validation
-    >>> result = gateway.validate_all_projects()
-    >>> if result.success:
-    ...     print(
-    ...         f"Quality validation passed for "
-    ...         f"{result.value.projects_validated} projects"
-    ...     )
-    ...     print(f"Overall quality score: {result.value.quality_score}")
-    >>> else:
-    ...     print(f"Quality issues found: {result.error}")
-    >>>
-    >>> # Progressive linting improvement
-    >>> linter = GradualLintFixer(target_project="flext-core")
-    >>> fix_result = linter.apply_gradual_fixes(max_changes=50)
-    >>>
-    >>> # Type checking validation
-    >>> type_checker = MyPyChecker()
-    >>> type_result = type_checker.validate_project("flext-api")
-    >>> print(f"Type coverage: {type_result.value.coverage_percentage}%")
+    >>> # Integration with workspace patterns
+    >>> workspace_result = bridge.validate_workspace_quality()
+    >>> if workspace_result.success:
+    ...     print(f"Workspace quality score: {workspace_result.data.score}")
+
+Architecture:
+    Implements proper delegation patterns to avoid duplication while providing
+    workspace-specific integration capabilities for FLEXT ecosystem coordination.
 
 Integration:
-    - Built on flext-core patterns with FlextResult error handling
-    - Integrates with flext-observability for quality metrics and monitoring
-    - Coordinates with CI/CD pipelines for automated quality enforcement
-    - Supports multiple linting tools (Ruff, Black, MyPy) with unified interface
-    - Provides foundation for quality-driven development workflows
+    - Delegates ALL quality analysis to flext-quality service
+    - Provides workspace integration patterns for ecosystem coordination
+    - Bridges workspace tools with dedicated quality analysis service
+    - Maintains consistency through proper delegation patterns
 
-Quality Standards:
-    - Comprehensive error handling with detailed validation context
-    - Full type annotation coverage for enhanced development experience
-    - Extensive integration testing with real project scenarios
-    - Performance optimization for large-scale quality operations
-    - Security-conscious tool execution and result processing
+DEPRECATION NOTICE:
+    Direct quality analysis functionality is deprecated in favor of delegation
+    to the authoritative flext-quality service. Use QualityBridge for proper
+    integration with the dedicated quality analysis service.
 
 Author: FLEXT Development Team
-Version: 2.0.0
+Version: 2.0.0-bridge
 License: MIT
 
 """
 
-from flext_tools.quality.gateway import QualityGateway
-from flext_tools.quality.lint_fixer import GradualLintFixer
-from flext_tools.quality.mypy_checker import MyPyChecker
+from flext_tools.quality.bridge import QualityBridge
+from flext_tools.quality.gateway import QualityGateway  # Legacy compatibility
+from flext_tools.quality.lint_fixer import GradualLintFixer  # Legacy compatibility
+from flext_tools.quality.mypy_checker import MyPyChecker  # Legacy compatibility
 
-__all__: list[str] = ["GradualLintFixer", "MyPyChecker", "QualityGateway"]
+__all__: list[str] = [
+    "QualityBridge",  # Primary integration bridge
+    # Legacy compatibility exports (deprecated)
+    "GradualLintFixer",
+    "MyPyChecker", 
+    "QualityGateway",
+]
