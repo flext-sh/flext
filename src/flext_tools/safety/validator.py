@@ -232,11 +232,11 @@ class SafetyValidator:
             # Potentially dangerous or problematic packages
             "os-sys",
             "setup-tools",
-            "urllib",  # Typosquatting comum
-            "request",  # Typosquatting comum
-            "beautifulsoup",  # Nome correto é beautifulsoup4
-            "PIL",  # Nome correto é Pillow
-            "yaml",  # Nome correto é pyyaml
+            "urllib",  # Common typosquatting
+            "request",  # Common typosquatting
+            "beautifulsoup",  # Correct name is beautifulsoup4
+            "PIL",  # Correct name is Pillow
+            "yaml",  # Correct name is pyyaml
         }
 
         logger.info("Safety validator initialized",

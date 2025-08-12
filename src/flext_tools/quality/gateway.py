@@ -81,6 +81,22 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
+from dataclasses import dataclass
+
+
+@dataclass
+class QualityCheckConfig:
+    """Configuration object for quality checks to reduce parameter count."""
+
+    enable_lint: bool = True
+    enable_types: bool = True
+    enable_tests: bool = True
+    enable_coverage: bool = True
+    enable_security: bool = True
+    coverage_threshold: float = 90.0
+
+
+@dataclass
 class QualityIssue(FlextEntity):
     """Individual quality issue entity for structured issue reporting.
 
@@ -98,23 +114,16 @@ class QualityIssue(FlextEntity):
 
     """
 
-    def __init__(
-        self,
-        tool: str,
-        severity: str,
-        message: str,
-        file_path: str | None = None,
-        line_number: int | None = None,
-        rule_code: str | None = None,
-    ) -> None:
-        """Initialize quality issue with comprehensive issue information."""
-        super().__init__(id=f"issue_{tool}_{severity}")
-        self.tool = tool
-        self.severity = severity
-        self.message = message
-        self.file_path = file_path
-        self.line_number = line_number
-        self.rule_code = rule_code
+    tool: str
+    severity: str
+    message: str
+    file_path: str | None = None
+    line_number: int | None = None
+    rule_code: str | None = None
+
+    def __post_init__(self) -> None:
+        """Finalize dataclass initialization and set FlextEntity id."""
+        super().__init__(id=f"issue_{self.tool}_{self.severity}")
 
     def validate_business_rules(self) -> FlextResult[None]:
         """Validate business rules for quality issue."""
@@ -269,22 +278,15 @@ class QualityGateway:
         self.container = get_flext_container()
 
         self.logger.info(
-            "Quality gateway initialized", workspace_path=str(workspace_path)
+            "Quality gateway initialized", workspace_path=str(workspace_path),
         )
         print_colored(
-            f"🔍 Quality gateway initialized: {workspace_path.name}", Colors.BLUE
+            f"🔍 Quality gateway initialized: {workspace_path.name}", Colors.BLUE,
         )
 
     def run_quality_checks_safe(
         self,
-        *,
-        enable_lint: bool = True,
-        enable_types: bool = True,
-        enable_tests: bool = True,
-        enable_coverage: bool = True,
-        enable_security: bool = True,
-        coverage_threshold: float = 90.0,
-        parallel_execution: bool = True,
+        config: QualityCheckConfig | None = None,
     ) -> FlextResult[QualityCheckData]:
         """Run comprehensive quality checks with railway-oriented programming.
 
@@ -293,13 +295,7 @@ class QualityGateway:
         and performance monitoring using FlextResult patterns.
 
         Args:
-            enable_lint: Enable linting checks with Ruff
-            enable_types: Enable type checking with MyPy
-            enable_tests: Enable test execution with Pytest
-            enable_coverage: Enable coverage analysis
-            enable_security: Enable security scanning with Bandit
-            coverage_threshold: Minimum coverage percentage required
-            parallel_execution: Enable parallel execution for performance
+            config: Quality check configuration object. If None, uses default configuration.
 
         Returns:
             FlextResult containing QualityCheckData with comprehensive status
@@ -321,14 +317,18 @@ class QualityGateway:
         try:
             start_time = time.time()
 
+            # Use default config if none provided
+            if config is None:
+                config = QualityCheckConfig()
+
             self.logger.info(
                 "Starting comprehensive quality checks",
                 workspace=str(self.workspace_path),
-                lint=enable_lint,
-                types=enable_types,
-                tests=enable_tests,
-                coverage=enable_coverage,
-                security=enable_security,
+                lint=config.enable_lint,
+                types=config.enable_types,
+                tests=config.enable_tests,
+                coverage=config.enable_coverage,
+                security=config.enable_security,
             )
 
             print_colored("🔍 Running comprehensive quality checks...", Colors.BLUE)
@@ -346,36 +346,26 @@ class QualityGateway:
             }
             issues: list[QualityIssue] = []
 
-            # Execute quality checks based on configuration
-            if enable_lint:
-                lint_result = self._run_lint_check()
-                if not lint_result.success:
-                    quality_data["lint_passed"] = False
-                    issues.extend(lint_result.data or [])
+            # Execute quality checks based on configuration via compact loop
+            checks: list[tuple[str, bool, object]] = [
+                ("lint_passed", config.enable_lint, self._run_lint_check),
+                ("types_passed", config.enable_types, self._run_type_check),
+                ("tests_passed", config.enable_tests, self._run_test_check),
+                (
+                    "coverage_passed",
+                    config.enable_coverage,
+                    lambda: self._run_coverage_check(config.coverage_threshold),
+                ),
+                ("security_passed", config.enable_security, self._run_security_check),
+            ]
 
-            if enable_types:
-                types_result = self._run_type_check()
-                if not types_result.success:
-                    quality_data["types_passed"] = False
-                    issues.extend(types_result.data or [])
-
-            if enable_tests:
-                tests_result = self._run_test_check()
-                if not tests_result.success:
-                    quality_data["tests_passed"] = False
-                    issues.extend(tests_result.data or [])
-
-            if enable_coverage:
-                coverage_result = self._run_coverage_check(coverage_threshold)
-                if not coverage_result.success:
-                    quality_data["coverage_passed"] = False
-                    issues.extend(coverage_result.data or [])
-
-            if enable_security:
-                security_result = self._run_security_check()
-                if not security_result.success:
-                    quality_data["security_passed"] = False
-                    issues.extend(security_result.data or [])
+            for key, enabled, runner in checks:
+                if not enabled:
+                    continue
+                result = runner()  # type: ignore[operator]
+                if not result.success:
+                    quality_data[key] = False
+                    issues.extend(result.data or [])
 
             # Calculate execution time and finalize results
             execution_time = time.time() - start_time
@@ -384,12 +374,12 @@ class QualityGateway:
             quality_data["details"] = {
                 "total_checks": sum(
                     [
-                        enable_lint,
-                        enable_types,
-                        enable_tests,
-                        enable_coverage,
-                        enable_security,
-                    ]
+                        config.enable_lint,
+                        config.enable_types,
+                        config.enable_tests,
+                        config.enable_coverage,
+                        config.enable_security,
+                    ],
                 ),
                 "issues_found": len(issues),
                 "execution_time_ms": int(execution_time * 1000),
@@ -410,7 +400,7 @@ class QualityGateway:
             else:
                 failure_summary = get_quality_failure_summary(quality_data)
                 print_colored(
-                    f"❌ Quality checks failed: {failure_summary}", Colors.RED
+                    f"❌ Quality checks failed: {failure_summary}", Colors.RED,
                 )
                 self.logger.warning(
                     "Quality checks failed",
@@ -429,7 +419,7 @@ class QualityGateway:
         """Run linting check with Ruff."""
         try:
             result = subprocess.run(
-                ["ruff", "check", "."],
+                ["/usr/bin/env", "ruff", "check", "."],
                 check=False,
                 cwd=self.workspace_path,
                 capture_output=True,
@@ -464,7 +454,7 @@ class QualityGateway:
         """Run type checking with MyPy."""
         try:
             result = subprocess.run(
-                ["mypy", "src"],
+                ["/usr/bin/env", "mypy", "src"],
                 check=False,
                 cwd=self.workspace_path,
                 capture_output=True,
@@ -499,7 +489,7 @@ class QualityGateway:
         """Run test execution with Pytest."""
         try:
             result = subprocess.run(
-                ["pytest", "-v"],
+                ["/usr/bin/env", "pytest", "-v"],
                 check=False,
                 cwd=self.workspace_path,
                 capture_output=True,
@@ -516,7 +506,7 @@ class QualityGateway:
                     tool="pytest",
                     severity="error",
                     message="Test failures detected",
-                )
+                ),
             ]
 
             return FlextResult.fail(f"Test failures found: {len(issues)} issues")
@@ -542,7 +532,7 @@ class QualityGateway:
                     tool="coverage",
                     severity="warning",
                     message=f"Coverage {coverage:.1f}% below threshold {threshold:.1f}%",
-                )
+                ),
             ]
 
             return FlextResult.fail(f"Coverage below threshold: {len(issues)} issues")
@@ -560,7 +550,7 @@ class QualityGateway:
         except Exception as e:
             return FlextResult.fail(f"Security check failed: {e}")
 
-    def run_quality_checks(self, **kwargs: object) -> dict[str, object]:
+    def run_quality_checks(self) -> dict[str, object]:
         """Legacy method for backward compatibility - use run_quality_checks_safe() instead."""
         print_colored("🔍 Running legacy quality checks...", Colors.BLUE)
 

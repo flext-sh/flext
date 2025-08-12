@@ -1,4 +1,4 @@
-"""FLEXT CLI Patterns - Enterprise Command-Line Interface Framework
+"""FLEXT CLI Patterns - Enterprise Command-Line Interface Framework.
 
 Provides comprehensive base classes and patterns for building consistent,
 enterprise-grade command-line interfaces across all FLEXT ecosystem projects.
@@ -125,7 +125,7 @@ class BaseCLI(ABC):
         self.config: CLIConfig | None = None
 
     def setup_logging(self, config: CLIConfig) -> None:
-        """Setup logging configuration."""
+        """Set up logging configuration."""
         logging.basicConfig(
             level=getattr(logging, config.log_level.upper()),
             format="%(message)s",
@@ -144,14 +144,14 @@ class BaseCLI(ABC):
 
 
 def with_config(f: object) -> object:
-    """Decorator to add config options to commands."""
+    """Add config options to commands (decorator)."""
     f = click.option("--verbose", is_flag=True, help="Enable verbose output")(f)
     f = click.option("--debug", is_flag=True, help="Enable debug mode")(f)
     return click.option("--quiet", is_flag=True, help="Suppress non-error output")(f)
 
 
 def with_output_format(f: object) -> object:
-    """Decorator to add output format options."""
+    """Add output format options to commands (decorator)."""
     return click.option(
         "--output-format",
         type=click.Choice(["table", "json", "yaml"]),

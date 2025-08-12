@@ -147,6 +147,12 @@ class DependencyDiscovery:
     """
 
     def __init__(self, *, resolve_transitive: bool = True) -> None:
+        """Initialize dependency discovery with configuration options.
+
+        Args:
+            resolve_transitive: Whether to resolve transitive dependencies.
+
+        """
         self.stdlib_modules = get_stdlib_modules()
         self.python_discovery = PythonImportDiscovery(self.stdlib_modules)
         self.config_discovery = ConfigFileDiscovery()

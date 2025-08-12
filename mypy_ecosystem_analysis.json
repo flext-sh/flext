@@ -1,0 +1,321 @@
+{
+  "metadata": {
+    "total_projects": 29,
+    "analyzed_projects": 29,
+    "projects_with_zero_errors": 13,
+    "total_errors": 716,
+    "success_rate": 44.827586206896555,
+    "analysis_timestamp": "2025-08-12 09:46:54"
+  },
+  "top_error_types": {
+    "no-error-code": 716
+  },
+  "most_problematic_projects": [
+    [
+      "flext-ldap",
+      123
+    ],
+    [
+      "flext-target-oracle-oic",
+      105
+    ],
+    [
+      "flext-oracle-wms",
+      94
+    ],
+    [
+      "flext-cli",
+      83
+    ],
+    [
+      "flext-dbt-oracle",
+      82
+    ],
+    [
+      "flext-dbt-oracle-wms",
+      81
+    ],
+    [
+      "flext-target-oracle",
+      42
+    ],
+    [
+      "flext-grpc",
+      30
+    ],
+    [
+      "flext-ldif",
+      26
+    ],
+    [
+      "flext-core",
+      10
+    ]
+  ],
+  "projects": [
+    {
+      "name": "flext-api",
+      "path": "/home/marlonsc/flext/flext-api",
+      "total_errors": 0,
+      "error_categories": {},
+      "analysis_successful": true,
+      "analysis_time": 2.259944200515747
+    },
+    {
+      "name": "flext-auth",
+      "path": "/home/marlonsc/flext/flext-auth",
+      "total_errors": 0,
+      "error_categories": {},
+      "analysis_successful": true,
+      "analysis_time": 2.1180484294891357
+    },
+    {
+      "name": "flext-cli",
+      "path": "/home/marlonsc/flext/flext-cli",
+      "total_errors": 83,
+      "error_categories": {
+        "no-error-code": 83
+      },
+      "analysis_successful": true,
+      "analysis_time": 2.6649787425994873
+    },
+    {
+      "name": "flext-core",
+      "path": "/home/marlonsc/flext/flext-core",
+      "total_errors": 10,
+      "error_categories": {
+        "no-error-code": 10
+      },
+      "analysis_successful": true,
+      "analysis_time": 2.7342898845672607
+    },
+    {
+      "name": "flext-db-oracle",
+      "path": "/home/marlonsc/flext/flext-db-oracle",
+      "total_errors": 0,
+      "error_categories": {},
+      "analysis_successful": true,
+      "analysis_time": 3.450435161590576
+    },
+    {
+      "name": "flext-dbt-ldap",
+      "path": "/home/marlonsc/flext/flext-dbt-ldap",
+      "total_errors": 0,
+      "error_categories": {},
+      "analysis_successful": true,
+      "analysis_time": 6.507067680358887
+    },
+    {
+      "name": "flext-dbt-ldif",
+      "path": "/home/marlonsc/flext/flext-dbt-ldif",
+      "total_errors": 10,
+      "error_categories": {
+        "no-error-code": 10
+      },
+      "analysis_successful": true,
+      "analysis_time": 4.4110801219940186
+    },
+    {
+      "name": "flext-dbt-oracle",
+      "path": "/home/marlonsc/flext/flext-dbt-oracle",
+      "total_errors": 82,
+      "error_categories": {
+        "no-error-code": 82
+      },
+      "analysis_successful": true,
+      "analysis_time": 5.973093748092651
+    },
+    {
+      "name": "flext-dbt-oracle-wms",
+      "path": "/home/marlonsc/flext/flext-dbt-oracle-wms",
+      "total_errors": 81,
+      "error_categories": {
+        "no-error-code": 81
+      },
+      "analysis_successful": true,
+      "analysis_time": 4.169708728790283
+    },
+    {
+      "name": "flext-grpc",
+      "path": "/home/marlonsc/flext/flext-grpc",
+      "total_errors": 30,
+      "error_categories": {
+        "no-error-code": 30
+      },
+      "analysis_successful": true,
+      "analysis_time": 1.6519842147827148
+    },
+    {
+      "name": "flext-ldap",
+      "path": "/home/marlonsc/flext/flext-ldap",
+      "total_errors": 123,
+      "error_categories": {
+        "no-error-code": 123
+      },
+      "analysis_successful": true,
+      "analysis_time": 2.025455951690674
+    },
+    {
+      "name": "flext-ldif",
+      "path": "/home/marlonsc/flext/flext-ldif",
+      "total_errors": 26,
+      "error_categories": {
+        "no-error-code": 26
+      },
+      "analysis_successful": true,
+      "analysis_time": 1.977079153060913
+    },
+    {
+      "name": "flext-meltano",
+      "path": "/home/marlonsc/flext/flext-meltano",
+      "total_errors": 0,
+      "error_categories": {},
+      "analysis_successful": true,
+      "analysis_time": 7.030306816101074
+    },
+    {
+      "name": "flext-observability",
+      "path": "/home/marlonsc/flext/flext-observability",
+      "total_errors": 0,
+      "error_categories": {},
+      "analysis_successful": true,
+      "analysis_time": 2.132591485977173
+    },
+    {
+      "name": "flext-oracle-oic-ext",
+      "path": "/home/marlonsc/flext/flext-oracle-oic-ext",
+      "total_errors": 9,
+      "error_categories": {
+        "no-error-code": 9
+      },
+      "analysis_successful": true,
+      "analysis_time": 1.816002368927002
+    },
+    {
+      "name": "flext-oracle-wms",
+      "path": "/home/marlonsc/flext/flext-oracle-wms",
+      "total_errors": 94,
+      "error_categories": {
+        "no-error-code": 94
+      },
+      "analysis_successful": true,
+      "analysis_time": 2.5261728763580322
+    },
+    {
+      "name": "flext-plugin",
+      "path": "/home/marlonsc/flext/flext-plugin",
+      "total_errors": 0,
+      "error_categories": {},
+      "analysis_successful": true,
+      "analysis_time": 1.9258458614349365
+    },
+    {
+      "name": "flext-quality",
+      "path": "/home/marlonsc/flext/flext-quality",
+      "total_errors": 0,
+      "error_categories": {},
+      "analysis_successful": true,
+      "analysis_time": 2.2560982704162598
+    },
+    {
+      "name": "flext-tap-ldap",
+      "path": "/home/marlonsc/flext/flext-tap-ldap",
+      "total_errors": 6,
+      "error_categories": {
+        "no-error-code": 6
+      },
+      "analysis_successful": true,
+      "analysis_time": 4.6856043338775635
+    },
+    {
+      "name": "flext-tap-ldif",
+      "path": "/home/marlonsc/flext/flext-tap-ldif",
+      "total_errors": 0,
+      "error_categories": {},
+      "analysis_successful": true,
+      "analysis_time": 5.070809841156006
+    },
+    {
+      "name": "flext-tap-oracle",
+      "path": "/home/marlonsc/flext/flext-tap-oracle",
+      "total_errors": 0,
+      "error_categories": {},
+      "analysis_successful": true,
+      "analysis_time": 5.841277837753296
+    },
+    {
+      "name": "flext-tap-oracle-oic",
+      "path": "/home/marlonsc/flext/flext-tap-oracle-oic",
+      "total_errors": 9,
+      "error_categories": {
+        "no-error-code": 9
+      },
+      "analysis_successful": true,
+      "analysis_time": 3.438673496246338
+    },
+    {
+      "name": "flext-tap-oracle-wms",
+      "path": "/home/marlonsc/flext/flext-tap-oracle-wms",
+      "total_errors": 1,
+      "error_categories": {
+        "no-error-code": 1
+      },
+      "analysis_successful": true,
+      "analysis_time": 3.4142508506774902
+    },
+    {
+      "name": "flext-target-ldap",
+      "path": "/home/marlonsc/flext/flext-target-ldap",
+      "total_errors": 0,
+      "error_categories": {},
+      "analysis_successful": true,
+      "analysis_time": 3.2223541736602783
+    },
+    {
+      "name": "flext-target-ldif",
+      "path": "/home/marlonsc/flext/flext-target-ldif",
+      "total_errors": 0,
+      "error_categories": {},
+      "analysis_successful": true,
+      "analysis_time": 4.213727712631226
+    },
+    {
+      "name": "flext-target-oracle",
+      "path": "/home/marlonsc/flext/flext-target-oracle",
+      "total_errors": 42,
+      "error_categories": {
+        "no-error-code": 42
+      },
+      "analysis_successful": true,
+      "analysis_time": 3.7842471599578857
+    },
+    {
+      "name": "flext-target-oracle-oic",
+      "path": "/home/marlonsc/flext/flext-target-oracle-oic",
+      "total_errors": 105,
+      "error_categories": {
+        "no-error-code": 105
+      },
+      "analysis_successful": true,
+      "analysis_time": 3.9448413848876953
+    },
+    {
+      "name": "flext-target-oracle-wms",
+      "path": "/home/marlonsc/flext/flext-target-oracle-wms",
+      "total_errors": 5,
+      "error_categories": {
+        "no-error-code": 5
+      },
+      "analysis_successful": true,
+      "analysis_time": 3.088833808898926
+    },
+    {
+      "name": "flext-web",
+      "path": "/home/marlonsc/flext/flext-web",
+      "total_errors": 0,
+      "error_categories": {},
+      "analysis_successful": true,
+      "analysis_time": 1.0349528789520264
+    }
+  ]
+}

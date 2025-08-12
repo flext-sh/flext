@@ -23,7 +23,7 @@ from flext_tools.security import (
     AntipatternScanner,
     RiskLevel,
     ScanConfig,
-    Violation,
+    SecurityViolation,
     create_security_scanner,
     scan_flext_ecosystem,
 )
@@ -180,7 +180,7 @@ def example_custom_reporting() -> None:
     print_colored("📈 Custom Analysis Results:", Colors.GREEN)
 
     # Group by file
-    file_violations: dict[str, list[Violation]] = {}
+    file_violations: dict[str, list[SecurityViolation]] = {}
     for violation in violations:
         file_path = Path(violation.file_path).name
         if file_path not in file_violations:

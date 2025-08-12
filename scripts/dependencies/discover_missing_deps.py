@@ -118,7 +118,6 @@ class MissingDependenciesDiscoverer(FlextScript):
         projects_filter: str | None = None,
     ) -> list[Path]:
         """Descobrir projetos para analisar."""
-
         return discover_projects(workspace_root, projects_filter)
 
     def _print_detailed_missing(self, missing_deps: dict[str, set[str]]) -> None:

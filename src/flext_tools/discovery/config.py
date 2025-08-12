@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Descoberta de dependências em arquivos de configuração.
+"""Dependency discovery in configuration files.
 
-Módulo responsável por analisar arquivos de configuração diversos
-para descobrir dependências implícitas e explícitas.
+Module responsible for analyzing various configuration files
+to discover implicit and explicit dependencies.
 """
 
 from __future__ import annotations
@@ -23,21 +23,21 @@ logger = logging.getLogger(__name__)
 
 
 class ConfigFileDiscovery:
-    """Descobre dependências mencionadas em arquivos de configuração."""
+    """Discovers dependencies mentioned in configuration files."""
 
     def discover_dependencies(
         self,
         project_path: Path,
         installed: set[str],
     ) -> dict[str, set[str]]:
-        """Descobre dependências em arquivos de configuração."""
+        """Discover dependencies in configuration files."""
         dependencies: dict[str, set[str]] = {
             "runtime": set(),
             "test": set(),
             "dev": set(),
         }
 
-        # Analisa diferentes tipos de arquivos de configuração
+        # Analyze different types of configuration files
         self._analyze_pytest_config(project_path, dependencies, installed)
         self._analyze_precommit_config(project_path, dependencies, installed)
         self._analyze_tox_config(project_path, dependencies, installed)
@@ -52,7 +52,7 @@ class ConfigFileDiscovery:
         deps: dict[str, set[str]],
         installed: set[str],
     ) -> None:
-        """Analisa configuração do pytest em pyproject.toml."""
+        """Analyze pytest configuration in pyproject.toml."""
         pyproject_path = project_path / "pyproject.toml"
         if not pyproject_path.exists():
             return
@@ -65,7 +65,7 @@ class ConfigFileDiscovery:
                 data.get("tool", {}).get("pytest", {}).get("ini_options", {})
             )
 
-            # Procura por plugins do pytest
+            # Look for pytest plugins
             if "plugins" in pytest_config:
                 plugins = pytest_config["plugins"]
                 if isinstance(plugins, list):
@@ -85,7 +85,7 @@ class ConfigFileDiscovery:
         deps: dict[str, set[str]],
         installed: set[str],
     ) -> None:
-        """Analisa .pre-commit-config.yaml."""
+        """Analyze .pre-commit-config.yaml."""
         precommit_file = project_path / ".pre-commit-config.yaml"
         if not precommit_file.exists():
             return
@@ -95,7 +95,7 @@ class ConfigFileDiscovery:
                 data = yaml.safe_load(f)
 
             if data and "repos" in data:
-                # Mapeamento de hooks conhecidos para pacotes
+                # Mapping of known hooks to packages
                 hook_to_package = {
                     "black": "black",
                     "isort": "isort",
