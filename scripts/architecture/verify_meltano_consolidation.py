@@ -14,29 +14,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-# Conditional import since the architecture module may not exist yet
-try:
-    from flext_meltano.architecture import (
-        FlextMeltanoConsolidationVerifier,
-    )
-    ARCHITECTURE_MODULE_AVAILABLE = True
-except ImportError:
-    # Create stub implementation when module is not available
-    class FlextMeltanoConsolidationVerifier:
-        def __init__(self, flext_root: Path) -> None:
-            self.flext_root = flext_root
-
-        def verify_consolidation(self) -> dict[str, object]:
-            return {
-                "consolidation_successful": True,
-                "status": "architecture module not available",
-                "message": "flext-meltano architecture module not found - verification skipped"
-            }
-
-        def report_verification(self, results: dict[str, object]) -> None:
-            print(f"⚠️  Architecture verification skipped: {results.get('message')}")
-
-    ARCHITECTURE_MODULE_AVAILABLE = False
+from flext_meltano.architecture import (
+    FlextMeltanoConsolidationVerifier,
+)
 
 
 def main() -> None:
@@ -49,10 +29,7 @@ def main() -> None:
 
     # Exit with appropriate code
     if results["consolidation_successful"]:
-        if ARCHITECTURE_MODULE_AVAILABLE:
-            print("🎉 CONSOLIDATION VERIFICATION PASSED!")
-        else:
-            print("⚠️ Verification skipped - architecture module not available")
+        print("🎉 CONSOLIDATION VERIFICATION PASSED!")
     else:
         print("⚠️ Consolidation needs additional work")
 
