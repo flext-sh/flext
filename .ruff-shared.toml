@@ -23,12 +23,6 @@ lint.ignore = [
     "BLE001", 
     "B017",
     "COM812",
-    "C901",    # Function is too complex (allow during refactoring)
-    "D107",
-    "D203",
-    "D213",
-    "D400",
-    "D401",
     "G004",
     "E501",    # line-too-long
     "ERA001",  # False positives on legitimate comments
@@ -36,6 +30,10 @@ lint.ignore = [
     "RUF100",
     "SLF001",
     "TRY300",
+    # Docstring tuning
+    "D401",    # non-imperative-mood: too opinionated in multilingual codebase
+    "D203",    # conflicting with D211 (blank line before class)
+    "D213",    # conflicting with D212 (summary line position)
 ]
 lint.isort.force-single-line = false
 lint.isort.split-on-trailing-comma = true
@@ -54,10 +52,6 @@ lint.per-file-ignores."**/proto/*_pb2.py" = ["ALL"]
 lint.per-file-ignores."**/examples/**" = [
     "BLE001", 
     "COM812",
-    "D203",
-    "D213",
-    "D400",
-    "D401",
     "G004",
     "SLF001",
     "TRY300",
@@ -73,15 +67,10 @@ lint.per-file-ignores."**/examples/**" = [
 lint.per-file-ignores."**/scripts/**" = [
     "BLE001", 
     "COM812",
-    "D203",
-    "D213",
-    "D400",
-    "D401",
     "G004",
     "SLF001",
     "TRY300",
     "C901",
-    "D",
     "EXE001",
     "G004",
     "N999",
@@ -99,11 +88,6 @@ lint.per-file-ignores."**/tests/**" = [
     "ARG",
     "BLE001", 
     "COM812",
-    "D",
-    "D203",
-    "D213",
-    "D400",
-    "D401",
     "E501",
     "EM102",
     "FBT003",
@@ -131,7 +115,6 @@ lint.per-file-ignores."**/test_*.py" = [
     "ARG",
     "BLE001", 
     "COM812",
-    "D",
     "E501",
     "EM102",
     "G004",

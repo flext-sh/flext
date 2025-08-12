@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from flext_core import FlextResult, get_logger
-from jinja2 import Environment, FileSystemLoader, Template
+from jinja2 import Environment, FileSystemLoader, Template, select_autoescape
 
 
 class TemplateManager:
@@ -45,7 +45,7 @@ class TemplateManager:
         """
         env = Environment(
             loader=FileSystemLoader(str(self.templates_dir)),
-            autoescape=False,  # Markdown doesn't need HTML escaping
+            autoescape=select_autoescape(["html", "xml"]),  # Secure autoescape for appropriate formats
             trim_blocks=True,
             lstrip_blocks=True,
             keep_trailing_newline=True,

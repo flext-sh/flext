@@ -31,8 +31,10 @@ class DocumentationGenerator(FlextScript):
     def __init__(self, project_root: Path) -> None:
         """Initialize documentation generator.
 
-        Args:
-            project_root: Root directory of the FLEXT workspace.
+        Parameters
+        ----------
+        project_root:
+            Root directory of the FLEXT workspace.
 
         """
         super().__init__()
@@ -46,8 +48,10 @@ class DocumentationGenerator(FlextScript):
     def metadata(self) -> ScriptMetadata:
         """Get script metadata.
 
-        Returns:
-            ScriptMetadata: Script metadata.
+        Returns
+        -------
+        ScriptMetadata
+            Script metadata for CLI integration and discovery.
 
         """
         return ScriptMetadata(
@@ -61,25 +65,27 @@ class DocumentationGenerator(FlextScript):
     def validate_preconditions(self) -> FlextResult[None]:
         """Validate that all required tools are available.
 
-        Returns:
-            FlextResult indicating validation success or failure.
+        Returns
+        -------
+        FlextResult[None]
+            Validation result indicating success or failure.
 
         """
         self.logger.info("Validating documentation generation environment...")
 
         # Validate required tools
         required_tools = [
-            ("mkdocs", "mkdocs --version"),
-            ("python", "python --version"),
-            ("git", "git --version"),
+            ("mkdocs", ["mkdocs", "--version"]),
+            ("python", ["python", "--version"]),
+            ("git", ["git", "--version"]),
         ]
 
         missing_tools_errors = []
 
         for tool_name, command in required_tools:
             try:
-                result = subprocess.run(
-                    command.split(),
+                result = subprocess.run(  # noqa: S603
+                    command,  # Validated: uses hardcoded version check commands
                     capture_output=True,
                     text=True,
                     check=True,
@@ -106,7 +112,7 @@ class DocumentationGenerator(FlextScript):
 
         if missing_tools_errors:
             return FlextResult.fail(
-                "Precondition validation failed: " + "; ".join(missing_tools_errors)
+                "Precondition validation failed: " + "; ".join(missing_tools_errors),
             )
 
         self.logger.info("All preconditions validated successfully!")
@@ -115,11 +121,15 @@ class DocumentationGenerator(FlextScript):
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute documentation generation.
 
-        Args:
-            **kwargs: Additional arguments for generation.
+        Parameters
+        ----------
+        **kwargs:
+            Additional keyword arguments to configure generation.
 
-        Returns:
-            FlextResult containing generation result or error.
+        Returns
+        -------
+        FlextResult[object]
+            Result containing generation details or error.
 
         """
         try:
@@ -127,7 +137,7 @@ class DocumentationGenerator(FlextScript):
 
             # Get arguments
             clean = kwargs.get("clean", False)
-            serve = kwargs.get("serve", False)
+            serve = bool(kwargs.get("serve"))
             components_only = kwargs.get("components_only", False)
 
             # Step 1: Clean previous build if requested
@@ -145,48 +155,58 @@ class DocumentationGenerator(FlextScript):
                 self.logger.info("Component documentation generation completed")
                 return FlextResult.ok({"status": "components_generated"})
 
-            # Step 3: Generate API documentation
-            api_result = self._generate_api_docs()
-            if not api_result.success:
-                return FlextResult.fail(api_result.error or "API generation failed")
-
-            # Step 4: Generate architecture diagrams
-            diagrams_result = self._generate_architecture_diagrams()
-            if not diagrams_result.success:
-                return FlextResult.fail(
-                    diagrams_result.error or "Diagram generation failed",
-                )
-
-            # Step 5: Build documentation
-            build_result = self._build_docs()
-            if not build_result.success:
-                return FlextResult.fail(build_result.error or "Build failed")
-
-            # Step 6: Serve documentation if requested
-            if serve:
-                self._serve_docs()
-
-            self.logger.info("Documentation generation completed successfully!")
-            return FlextResult.ok(
-                {
-                    "status": "success",
-                    "message": "Documentation generated",
-                    "components": components_result.data,
-                    "apis": api_result.data,
-                    "diagrams": diagrams_result.data,
-                },
-            )
+            # Execute full generation pipeline
+            # Use type: ignore for the variance issue (dict[str, object] is compatible with object)
+            return self._execute_full_generation_pipeline(components_result, serve=serve)  # type: ignore[arg-type]
 
         except Exception as e:
             error_msg = f"Documentation generation failed: {e}"
             self.logger.exception(error_msg)
             return FlextResult.fail(error_msg)
 
+    def _execute_full_generation_pipeline(
+        self, components_result: FlextResult[object], *, serve: bool,
+    ) -> FlextResult[object]:
+        """Execute the full documentation generation pipeline."""
+        # Step 3: Generate API documentation
+        api_result = self._generate_api_docs()
+        if not api_result.success:
+            return FlextResult.fail(api_result.error or "API generation failed")
+
+        # Step 4: Generate architecture diagrams
+        diagrams_result = self._generate_architecture_diagrams()
+        if not diagrams_result.success:
+            return FlextResult.fail(
+                diagrams_result.error or "Diagram generation failed",
+            )
+
+        # Step 5: Build documentation
+        build_result = self._build_docs()
+        if not build_result.success:
+            return FlextResult.fail(build_result.error or "Build failed")
+
+        # Step 6: Serve documentation if requested
+        if serve:
+            self._serve_docs()
+
+        self.logger.info("Documentation generation completed successfully!")
+        return FlextResult.ok(
+            {
+                "status": "success",
+                "message": "Documentation generated",
+                "components": components_result.data,
+                "apis": api_result.data,
+                "diagrams": diagrams_result.data,
+            },
+        )
+
     def create_parser(self) -> argparse.ArgumentParser:
         """Create argument parser for documentation generation.
 
-        Returns:
-            Configured ArgumentParser instance.
+        Returns
+        -------
+        argparse.ArgumentParser
+            Configured parser with generator options.
 
         """
         parser = super().create_parser()
@@ -233,8 +253,10 @@ class DocumentationGenerator(FlextScript):
     def _generate_component_docs(self) -> FlextResult[dict[str, object]]:
         """Generate documentation for individual components.
 
-        Returns:
-            FlextResult containing component generation results.
+        Returns
+        -------
+        FlextResult[dict[str, object]]
+            Component generation results keyed by project name.
 
         """
         self.logger.info("Generating component documentation...")
@@ -302,12 +324,17 @@ class DocumentationGenerator(FlextScript):
     ) -> dict[str, object]:
         """Extract component data for template rendering.
 
-        Args:
-            project_path: Path to the project.
-            project_name: Name of the project.
+        Parameters
+        ----------
+        project_path:
+            Path to the project.
+        project_name:
+            Name of the project.
 
-        Returns:
-            Component data dictionary.
+        Returns
+        -------
+        dict[str, object]
+            Component data dictionary for templates.
 
         """
         # Try to read existing README for data extraction
@@ -339,12 +366,17 @@ class DocumentationGenerator(FlextScript):
     def _extract_description(self, content: str, project_name: str) -> str:
         """Extract description from README content.
 
-        Args:
-            content: README content.
-            project_name: Project name.
+        Parameters
+        ----------
+        content:
+            README content.
+        project_name:
+            Project name.
 
-        Returns:
-            Extracted description.
+        Returns
+        -------
+        str
+            Extracted description text.
 
         """
         # Simple extraction - look for first heading or description
@@ -360,11 +392,15 @@ class DocumentationGenerator(FlextScript):
     def _extract_version(self, project_path: Path) -> str:
         """Extract version from pyproject.toml.
 
-        Args:
-            project_path: Path to the project.
+        Parameters
+        ----------
+        project_path:
+            Path to the project.
 
-        Returns:
-            Extracted version.
+        Returns
+        -------
+        str
+            Extracted version string.
 
         """
         pyproject_path = project_path / "pyproject.toml"
@@ -383,11 +419,15 @@ class DocumentationGenerator(FlextScript):
     def _determine_status(self, project_path: Path) -> str:
         """Determine component status based on project structure.
 
-        Args:
-            project_path: Path to the project.
+        Parameters
+        ----------
+        project_path:
+            Path to the project.
 
-        Returns:
-            Component status.
+        Returns
+        -------
+        str
+            Component status label.
 
         """
         # Check for indicators of status
@@ -400,11 +440,15 @@ class DocumentationGenerator(FlextScript):
     def _extract_features(self, project_path: Path) -> list[str]:
         """Extract features from project structure.
 
-        Args:
-            project_path: Path to the project.
+        Parameters
+        ----------
+        project_path:
+            Path to the project.
 
-        Returns:
-            List of features.
+        Returns
+        -------
+        list[str]
+            List of feature labels.
 
         """
         features = []
@@ -423,11 +467,15 @@ class DocumentationGenerator(FlextScript):
     def _extract_installation(self, project_path: Path) -> str:
         """Extract installation instructions.
 
-        Args:
-            project_path: Path to the project.
+        Parameters
+        ----------
+        project_path:
+            Path to the project.
 
-        Returns:
-            Installation instructions.
+        Returns
+        -------
+        str
+            Installation instructions snippet.
 
         """
         pyproject_path = project_path / "pyproject.toml"
@@ -438,11 +486,15 @@ class DocumentationGenerator(FlextScript):
     def _extract_usage(self, project_path: Path) -> str:
         """Extract usage examples.
 
-        Args:
-            project_path: Path to the project.
+        Parameters
+        ----------
+        project_path:
+            Path to the project.
 
-        Returns:
-            Usage examples.
+        Returns
+        -------
+        str
+            Usage examples summary.
 
         """
         examples_dir = project_path / "examples"
@@ -456,11 +508,15 @@ class DocumentationGenerator(FlextScript):
     def _extract_configuration(self, project_path: Path) -> str:
         """Extract configuration information.
 
-        Args:
-            project_path: Path to the project.
+        Parameters
+        ----------
+        project_path:
+            Path to the project.
 
-        Returns:
-            Configuration information.
+        Returns
+        -------
+        str
+            Configuration information summary.
 
         """
         config_files = list(project_path.glob("*.yaml")) + list(
@@ -474,11 +530,15 @@ class DocumentationGenerator(FlextScript):
     def _is_python_component(self, project_path: Path) -> bool:
         """Check if project is a Python component.
 
-        Args:
-            project_path: Path to the project.
+        Parameters
+        ----------
+        project_path:
+            Path to the project.
 
-        Returns:
-            True if Python component.
+        Returns
+        -------
+        bool
+            True if a Python component is detected.
 
         """
         return (project_path / "src").exists() or (
@@ -493,13 +553,17 @@ class DocumentationGenerator(FlextScript):
     ) -> FlextResult[None]:
         """Generate API documentation for a component.
 
-        Args:
-            project_name: Name of the project.
-            project_path: Path to the project.
-            docs_dir: Documentation directory.
+        Parameters
+        ----------
+        project_name:
+            Name of the project.
+        docs_dir:
+            Target documentation directory.
 
-        Returns:
-            FlextResult indicating success or failure.
+        Returns
+        -------
+        FlextResult[None]
+            Result indicating success or failure.
 
         """
         self.logger.info(f"Generating API docs for {project_name}")
@@ -535,11 +599,14 @@ class DocumentationGenerator(FlextScript):
         return FlextResult.ok(None)
 
     def _copy_existing_docs(self, source: Path, target: Path) -> None:
-        """Copy existing documentation from component.
+        """Copy existing documentation from a component.
 
-        Args:
-            source: Source directory.
-            target: Target directory.
+        Parameters
+        ----------
+        source:
+            Source directory containing documentation.
+        target:
+            Target directory to receive copied files.
 
         """
         self.logger.info(f"Copying existing documentation from {source} to {target}")
@@ -553,8 +620,10 @@ class DocumentationGenerator(FlextScript):
     def _generate_api_docs(self) -> FlextResult[dict[str, object]]:
         """Generate comprehensive API documentation.
 
-        Returns:
-            FlextResult containing API generation results.
+        Returns
+        -------
+        FlextResult[dict[str, object]]
+            Mapping of API documentation sections and metadata.
 
         """
         self.logger.info("Generating API documentation...")
@@ -610,8 +679,10 @@ class DocumentationGenerator(FlextScript):
     def _get_rest_api_quick_start(self) -> str:
         """Get REST API quick start example.
 
-        Returns:
-            Quick start example code.
+        Returns
+        -------
+        str
+            Example code snippet.
 
         """
         return """from flext import FlextClient
@@ -633,8 +704,10 @@ print(f"Pipeline status: {result.status}")"""
     def _get_python_sdk_quick_start(self) -> str:
         """Get Python SDK quick start example.
 
-        Returns:
-            Quick start example code.
+        Returns
+        -------
+        str
+            Example code snippet.
 
         """
         return """from flext import FlextClient
@@ -656,8 +729,10 @@ print(f"Pipeline status: {result.status}")"""
     def _generate_architecture_diagrams(self) -> FlextResult[dict[str, object]]:
         """Generate architecture diagrams using templates.
 
-        Returns:
-            FlextResult containing diagram generation results.
+        Returns
+        -------
+        FlextResult[dict[str, object]]
+            Diagram generation results and metadata.
 
         """
         self.logger.info("Generating architecture diagrams...")
@@ -755,7 +830,9 @@ print(f"Pipeline status: {result.status}")"""
     def _get_system_overview_mermaid(self) -> str:
         """Get system overview Mermaid diagram.
 
-        Returns:
+        Returns
+        -------
+        str
             Mermaid diagram code.
 
         """
@@ -806,7 +883,9 @@ print(f"Pipeline status: {result.status}")"""
     def _get_component_interaction_mermaid(self) -> str:
         """Get component interaction Mermaid diagram.
 
-        Returns:
+        Returns
+        -------
+        str
             Mermaid diagram code.
 
         """
@@ -840,15 +919,17 @@ print(f"Pipeline status: {result.status}")"""
     def _build_docs(self) -> FlextResult[dict[str, object]]:
         """Build the documentation using MkDocs.
 
-        Returns:
-            FlextResult containing build results.
+        Returns
+        -------
+        FlextResult[dict[str, object]]
+            Build results with status and output logs.
 
         """
         self.logger.info("Building documentation with MkDocs...")
 
         try:
             result = subprocess.run(
-                ["mkdocs", "build", "--clean"],
+                ["/usr/bin/env", "mkdocs", "build", "--clean"],
                 cwd=self.project_root,
                 capture_output=True,
                 text=True,
@@ -869,7 +950,7 @@ print(f"Pipeline status: {result.status}")"""
         self.logger.info("Press Ctrl+C to stop the server")
 
         try:
-            subprocess.run(["mkdocs", "serve"], cwd=self.project_root, check=True)
+            subprocess.run(["/usr/bin/env", "mkdocs", "serve"], cwd=self.project_root, check=True)
         except KeyboardInterrupt:
             self.logger.info("Documentation server stopped")
         except subprocess.CalledProcessError:
@@ -877,7 +958,7 @@ print(f"Pipeline status: {result.status}")"""
 
 
 def main() -> int:
-    """Main entry point for the documentation generator."""
+    """Run the documentation generator entry point."""
     parser = argparse.ArgumentParser(description="Generate FLEXT documentation")
     parser.add_argument(
         "--clean",

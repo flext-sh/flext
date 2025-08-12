@@ -392,7 +392,7 @@ def integration_test(env: str) -> None:
 
 @cli.command()
 def setup() -> None:
-    """Setup the workspace environment."""
+    """Set up the workspace environment."""
     console.print("[bold]Setting up FLEXT workspace[/bold]")
 
     with Progress() as progress:

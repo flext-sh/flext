@@ -60,7 +60,8 @@ class FlextConfigStandardizer:
 
         try:
             with Path(pyproject_file).open(encoding="utf-8") as f:
-                return tomlkit.load(f)
+                data = tomlkit.load(f)
+                return dict(data)  # Convert to regular dict for better type compatibility
         except (OSError, ValueError, TypeError) as e:
             print(f"❌ Error loading {pyproject_file}: {e}")
             return None
@@ -89,10 +90,13 @@ class FlextConfigStandardizer:
 
         if "tool" not in config:
             config["tool"] = {}
-        if "ruff" not in config["tool"]:
-            config["tool"]["ruff"] = {}
+        tool_config = config["tool"]
+        assert isinstance(tool_config, dict), "tool section must be a dict"
 
-        ruff_config = config["tool"]["ruff"]
+        if "ruff" not in tool_config:
+            tool_config["ruff"] = {}
+        ruff_config = tool_config["ruff"]
+        assert isinstance(ruff_config, dict), "ruff section must be a dict"
 
         # Get target line length for this project
         target_length = self.special_configs.get(project_name, {}).get(
@@ -146,12 +150,18 @@ class FlextConfigStandardizer:
 
         if "tool" not in config:
             config["tool"] = {}
-        if "pytest" not in config["tool"]:
-            config["tool"]["pytest"] = {}
-        if "ini_options" not in config["tool"]["pytest"]:
-            config["tool"]["pytest"]["ini_options"] = {}
+        tool_config = config["tool"]
+        assert isinstance(tool_config, dict), "tool section must be a dict"
 
-        pytest_config = config["tool"]["pytest"]["ini_options"]
+        if "pytest" not in tool_config:
+            tool_config["pytest"] = {}
+        pytest_section = tool_config["pytest"]
+        assert isinstance(pytest_section, dict), "pytest section must be a dict"
+
+        if "ini_options" not in pytest_section:
+            pytest_section["ini_options"] = {}
+        pytest_config = pytest_section["ini_options"]
+        assert isinstance(pytest_config, dict), "ini_options section must be a dict"
 
         # Get target coverage threshold
         target_coverage = self.special_configs.get(project_name, {}).get(
@@ -170,16 +180,14 @@ class FlextConfigStandardizer:
                         if int(old_threshold) != target_coverage:
                             addopts[i] = f"--cov-fail-under={target_coverage}"
                             print(
-                                "  📊 Updated coverage threshold: %s%% → %s%%",
-                                old_threshold,
-                                target_coverage,
+                                f"  📊 Updated coverage threshold: {old_threshold}%% → {target_coverage}%%"
                             )
                             changed = True
                         break
                 else:
                     # Add coverage threshold if not present
                     addopts.append(f"--cov-fail-under={target_coverage}")
-                    print("  ➕ Added coverage threshold: %s", target_coverage)
+                    print(f"  ➕ Added coverage threshold: {target_coverage}")
                     changed = True
 
         # Add reference to shared pytest config
@@ -187,7 +195,7 @@ class FlextConfigStandardizer:
         # standards
         if "minversion" not in pytest_config or pytest_config["minversion"] != "8.0":
             pytest_config["minversion"] = "8.0"
-            print("  🔧 Standardized pytest minversion],to 8.0")
+            print("  🔧 Standardized pytest minversion to 8.0")
             changed = True
 
         return changed
@@ -202,10 +210,13 @@ class FlextConfigStandardizer:
 
         if "tool" not in config:
             config["tool"] = {}
-        if "mypy" not in config["tool"]:
-            config["tool"]["mypy"] = {}
+        tool_config = config["tool"]
+        assert isinstance(tool_config, dict), "tool section must be a dict"
 
-        mypy_config = config["tool"]["mypy"]
+        if "mypy" not in tool_config:
+            tool_config["mypy"] = {}
+        mypy_config = tool_config["mypy"]
+        assert isinstance(mypy_config, dict), "mypy section must be a dict"
 
         # Ensure strict mode is enabled
         if mypy_config.get("strict") is not True:

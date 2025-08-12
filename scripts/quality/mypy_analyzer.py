@@ -30,8 +30,8 @@ def run_command(cmd: list[str], cwd: Path | None = None) -> tuple[int, str, str]
         return 1, "", f"Command not found: {cmd[0] if cmd else 'None'}"
 
     try:
-        result = subprocess.run(
-            cmd,
+        result = subprocess.run(  # noqa: S603
+            cmd,  # Validated: first element checked with shutil.which()
             cwd=cwd,
             capture_output=True,
             text=True,

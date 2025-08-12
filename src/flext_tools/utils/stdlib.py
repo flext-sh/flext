@@ -116,7 +116,7 @@ def get_stdlib_modules() -> set[str]:
             "pdb",
             "profile",
             "timeit",
-            # Outros
+            # Other utilities
             "pickle",
             "shelve",
             "sqlite3",
@@ -201,7 +201,7 @@ def get_stdlib_modules() -> set[str]:
         return builtin_modules | stdlib_extras
 
     except (AttributeError, ImportError):
-        # Fallback para lista mínima se algo falhar
+        # Fallback to minimal list if something fails
         return {
             "os",
             "sys",
