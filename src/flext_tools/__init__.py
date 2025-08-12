@@ -154,6 +154,7 @@ __all__: list[str] = [
     "SafetyValidator",
     "TemplateManager",
     "VersionAnalyzer",
+    "__version__",
     "cache_result",
     "cached",
     "get_flext_container",

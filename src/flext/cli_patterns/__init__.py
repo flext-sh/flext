@@ -1,4 +1,4 @@
-"""FLEXT CLI Patterns - Enterprise Command-Line Interface Framework
+"""FLEXT CLI Patterns - Enterprise Command-Line Interface Framework.
 
 Provides comprehensive base classes and patterns for building consistent,
 enterprise-grade command-line interfaces across all FLEXT ecosystem projects.

@@ -62,6 +62,6 @@ __all__: list[str] = [
     "QualityBridge",  # Primary integration bridge
     # Legacy compatibility exports (deprecated)
     "GradualLintFixer",
-    "MyPyChecker", 
+    "MyPyChecker",
     "QualityGateway",
 ]
