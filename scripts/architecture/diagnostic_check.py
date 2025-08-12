@@ -21,7 +21,7 @@ MAKEFILE_TARGET_NOT_FOUND = 2
 COMMAND_FAILED = 1
 
 # Status constants (not passwords, just status indicators)
-STATUS_PASS = "✅ PASS"
+STATUS_PASS = "✅ PASS"  # noqa: S105
 STATUS_FAIL = "❌ FAIL"
 STATUS_NO_TARGET = "⚠️  NO_TARGET"
 STATUS_SKIP = "SKIP"
@@ -99,8 +99,8 @@ class FlextDiagnostic:
         """Execute command and return (return_code, stdout, stderr)."""
         try:
             # Security: cmd is validated input, not user-provided
-            result = subprocess.run(
-                cmd,
+            result = subprocess.run(  # noqa: S603
+                cmd,  # Validated: cmd is constructed with controlled input, not user-provided
                 check=False,
                 cwd=cwd or self.workspace_root,
                 capture_output=True,
@@ -277,26 +277,33 @@ class FlextDiagnostic:
         print("=" * 60)
 
         # Summary
-        summary = report["summary"]
+        summary_obj = report["summary"]
+        if not isinstance(summary_obj, dict):
+            print("\n❌ Error: Invalid summary format")
+            return
+        summary = summary_obj
         print("\n📈 RESUMO GERAL:")
-        print(f"   Total de projetos: {summary['total_projects']}")
-        print(f"   Com Makefile: {summary['projects_with_makefile']}")
-        print(f"   Com pyproject.toml: {summary['projects_with_pyproject']}")
-        print(f"   Lint passou: {summary['lint_passed']}")
-        print(f"   MyPy passou: {summary['mypy_passed']}")
-        print(f"   Testes passaram: {summary['tests_passed']}")
-        print(f"   Poetry install passou: {summary['poetry_passed']}")
-        print(f"   Projetos com erros: {summary['projects_with_errors']}")
+        print(f"   Total de projetos: {summary.get('total_projects', 0)}")
+        print(f"   Com Makefile: {summary.get('projects_with_makefile', 0)}")
+        print(f"   Com pyproject.toml: {summary.get('projects_with_pyproject', 0)}")
+        print(f"   Lint passou: {summary.get('lint_passed', 0)}")
+        print(f"   MyPy passou: {summary.get('mypy_passed', 0)}")
+        print(f"   Testes passaram: {summary.get('tests_passed', 0)}")
+        print(f"   Poetry install passou: {summary.get('poetry_passed', 0)}")
+        print(f"   Projetos com erros: {summary.get('projects_with_errors', 0)}")
 
         # Project details
         print("\n🔍 DETALHES POR PROJETO:")
         print("-" * 60)
 
         for level in range(1, 7):
+            projects_obj = report["projects"]
+            if not isinstance(projects_obj, dict):
+                continue
             level_projects = [
                 (name, data)
-                for name, data in report["projects"].items()
-                if data["level"] == level
+                for name, data in projects_obj.items()
+                if isinstance(data, dict) and data.get("level") == level
             ]
 
             if level_projects:
@@ -311,27 +318,32 @@ class FlextDiagnostic:
 
                 print(f"\n{level_name}:")
                 for name, data in level_projects:
+                    if not isinstance(data, dict):
+                        continue
                     status_icons = [
-                        data["lint_status"],
-                        data["mypy_status"],
-                        data["test_status"],
-                        data["poetry_install"],
+                        str(data.get("lint_status", "UNKNOWN")),
+                        str(data.get("mypy_status", "UNKNOWN")),
+                        str(data.get("test_status", "UNKNOWN")),
+                        str(data.get("poetry_install", "UNKNOWN")),
                     ]
                     status_str = " | ".join(status_icons)
                     print(f"  {name:<25} {status_str}")
 
-                    if data["errors"]:
-                        for error in data["errors"][:2]:  # Show only first 2 errors
-                            print(f"    ❌ {error[:80]}...")
+                    errors = data.get("errors", [])
+                    if isinstance(errors, list) and errors:
+                        for error in errors[:2]:  # Show only first 2 errors
+                            print(f"    ❌ {str(error)[:80]}...")
 
         # Architecture violations
-        if report["architecture_violations"]:
+        violations_obj = report.get("architecture_violations", {})
+        if isinstance(violations_obj, dict) and violations_obj:
             print("\n🚨 VIOLAÇÕES ARQUITETURAIS:")
             print("-" * 60)
-            for project, violations in report["architecture_violations"].items():
+            for project, violations in violations_obj.items():
                 print(f"\n{project}:")
-                for violation in violations:
-                    print(f"  ❌ {violation}")
+                if isinstance(violations, list):
+                    for violation in violations:
+                        print(f"  ❌ {violation}")
 
         print("\n" + "=" * 60)
         print("✅ DIAGNÓSTICO CONCLUÍDO")
@@ -353,10 +365,12 @@ def main() -> None:
     print(f"\n💾 Relatório salvo em: {report_file}")
 
     # Return exit code based on errors
-    if report["summary"]["projects_with_errors"] > 0:
-        sys.exit(1)
-    else:
-        sys.exit(0)
+    summary_obj = report.get("summary", {})
+    if isinstance(summary_obj, dict):
+        projects_with_errors = summary_obj.get("projects_with_errors", 0)
+        if isinstance(projects_with_errors, (int, str)) and int(projects_with_errors) > 0:
+            sys.exit(1)
+    sys.exit(0)
 
 
 if __name__ == "__main__":

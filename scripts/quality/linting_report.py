@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""FLEXT Linting Report - Relatório Completo de Qualidade de Código.
+"""FLEXT Linting Report - Complete Code Quality Report.
 
-Script para gerar relatórios detalhados de qualidade de código usando Ruff,
-MyPy e outras ferramentas de linting no workspace FLEXT.
+Script to generate detailed code quality reports using Ruff,
+MyPy and other linting tools in the FLEXT workspace.
 """
 
 from __future__ import annotations
@@ -183,8 +183,8 @@ class LintingReport(FlextScript):
                     "issues": [],
                 }
 
-            result = subprocess.run(
-                [ruff_executable, "check", ".", "--output-format=json"],
+            result = subprocess.run(  # noqa: S603
+                [ruff_executable, "check", ".", "--output-format=json"],  # Validated: uses ruff from shutil.which
                 check=False,
                 cwd=project_path,
                 capture_output=True,
@@ -230,8 +230,8 @@ class LintingReport(FlextScript):
             if not mypy_executable:
                 return {"total_errors": 0, "by_type": {}, "by_file": {}, "output": ""}
 
-            result = subprocess.run(
-                [mypy_executable, ".", "--no-error-summary"],
+            result = subprocess.run(  # noqa: S603
+                [mypy_executable, ".", "--no-error-summary"],  # Validated: uses mypy from shutil.which
                 check=False,
                 cwd=project_path,
                 capture_output=True,

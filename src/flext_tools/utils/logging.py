@@ -133,7 +133,7 @@ class DetailedLogger:
 
 
 def get_logger(name: str) -> DetailedLogger:
-    """DEPRECATED: Get a detailed logger instance using flext-observability."""
+    """Return a detailed logger instance using flext-observability (deprecated)."""
     return DetailedLogger(name)
 
 
@@ -149,11 +149,14 @@ class OperationCallable(Protocol):
 
 
 def log_operation(func: OperationCallable) -> OperationCallable:
-    """DEPRECATED: Use @flext_monitor_function from flext-observability instead."""
+    """Log an operation with flext-observability (deprecated).
+
+    Use ``@flext_monitor_function`` from ``flext_observability`` instead.
+    """
     _deprecation_warning()
 
     def wrapper(*args: object, **kwargs: object) -> object:
-        """Wrapper function to log operation with flext-observability."""
+        """Log operation with flext-observability wrapper."""
         # Simple wrapper that calls the original function
         return func(*args, **kwargs)
 

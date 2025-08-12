@@ -9,7 +9,6 @@ import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import cast
 
 
 @dataclass
@@ -31,10 +30,10 @@ def run_command(
     *,
     capture_output: bool = True,
 ) -> tuple[int, str, str]:
-    """Executa um comando e retorna (exit_code, stdout, stderr)"""
+    """Executa um comando e retorna (exit_code, stdout, stderr)."""
     try:
-        result = subprocess.run(
-            cmd,
+        result = subprocess.run(  # noqa: S603
+            cmd,  # Validated: utility function for controlled command execution
             check=False,
             cwd=cwd,
             capture_output=capture_output,
@@ -50,7 +49,7 @@ def run_command(
 
 
 def analyze_project(project_path: str) -> QualityReport:
-    """Analisa um projeto específico"""
+    """Analisa um projeto específico."""
     report = QualityReport(project=Path(project_path).name)
 
     print(f"\n🔍 Analisando: {project_path}")
@@ -76,7 +75,7 @@ def analyze_project(project_path: str) -> QualityReport:
         warnings = [line for line in lines if "W" in line and ":" in line]
         report.lint_errors = len(errors)
         report.lint_warnings = len(warnings)
-        cast("list[str]", report.issues).extend(
+        report.issues.extend(
             [f"❌ Lint Error: {e}" for e in errors[:5]]
         )  # Primeiros 5 erros
         print(f"  ❌ Lint: {report.lint_errors} erros, {report.lint_warnings} warnings")
@@ -96,7 +95,7 @@ def analyze_project(project_path: str) -> QualityReport:
         warnings = [line for line in lines if "note:" in line]
         report.mypy_errors = len(errors)
         report.mypy_warnings = len(warnings)
-        cast("list[str]", report.issues).extend(
+        report.issues.extend(
             [f"❌ MyPy Error: {e}" for e in errors[:5]]
         )  # Primeiros 5 erros
         print(f"  ❌ MyPy: {report.mypy_errors} erros, {report.mypy_warnings} warnings")
@@ -114,7 +113,7 @@ def analyze_project(project_path: str) -> QualityReport:
         lines = stdout.split("\n") if stdout else []
         failures = [line for line in lines if "FAILED" in line or "ERROR" in line]
         report.test_failures = len(failures)
-        cast("list[str]", report.issues).extend(
+        report.issues.extend(
             [f"❌ Test Failure: {f}" for f in failures[:3]]
         )  # Primeiros 3
         print(f"  ❌ Testes: {report.test_failures} falhas")
@@ -145,7 +144,7 @@ def analyze_project(project_path: str) -> QualityReport:
 
     if exit_code != 0:
         report.poetry_issues = 1
-        cast("list[str]", report.issues).append(f"❌ Poetry: {stderr.strip()}")
+        report.issues.append(f"❌ Poetry: {stderr.strip()}")
         print("  ❌ Poetry: Problemas encontrados")
     else:
         print("  ✅ Poetry: OK")
@@ -154,7 +153,7 @@ def analyze_project(project_path: str) -> QualityReport:
 
 
 def main() -> int:
-    """Função principal"""
+    """Função principal."""
     print("🚀 ANÁLISE COMPLETA DE QUALIDADE - FLEXT WORKSPACE")
     print("=" * 60)
 
@@ -181,7 +180,7 @@ def main() -> int:
         try:
             report = analyze_project(project)
             reports.append(report)
-            total_issues += len(cast("list[str]", report.issues))
+            total_issues += len(report.issues)
         except Exception as e:
             print(f"❌ Erro ao analisar {project}: {e}")
 
@@ -216,11 +215,11 @@ def main() -> int:
         print(f"\n⚠️  PROJETOS COM PROBLEMAS ({len(problematic_projects)}):")
         for report in problematic_projects:
             print(f"\n🔴 {report.project}:")
-            for issue in cast("list[str]", report.issues)[:3]:
+            for issue in report.issues[:3]:
                 print(f"   {issue}")
-            if len(cast("list[str]", report.issues)) > 3:
+            if len(report.issues) > 3:
                 print(
-                    f"   ... e mais {len(cast('list[str]', report.issues)) - 3} problemas"
+                    f"   ... e mais {len(report.issues) - 3} problemas"
                 )
     else:
         print("\n✅ TODOS OS PROJETOS ESTÃO PERFEITOS!")
@@ -242,7 +241,7 @@ def main() -> int:
                     "test_failures": r.test_failures,
                     "coverage_percentage": r.coverage_percentage,
                     "poetry_issues": r.poetry_issues,
-                    "issues": cast("list[str]", r.issues),
+                    "issues": r.issues,
                 }
                 for r in reports
             ],

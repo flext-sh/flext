@@ -53,8 +53,8 @@ class OracleE2ETestRunner(FlextScript):
                 msg = "Docker executable not found."
                 raise FileNotFoundError(msg)
 
-            subprocess.run(
-                [docker_executable, "--version"],
+            subprocess.run(  # noqa: S603
+                [docker_executable, "--version"],  # Validated: uses docker from shutil.which
                 capture_output=True,
                 check=True,
                 timeout=5,
@@ -81,8 +81,8 @@ class OracleE2ETestRunner(FlextScript):
                 msg = "Docker executable not found for compose."
                 raise FileNotFoundError(msg)
 
-            subprocess.run(
-                [docker_executable, "compose", "version"],
+            subprocess.run(  # noqa: S603
+                [docker_executable, "compose", "version"],  # Validated: uses docker from shutil.which
                 capture_output=True,
                 check=True,
                 timeout=5,

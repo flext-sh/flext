@@ -50,6 +50,7 @@ Integration:
 Author: FLEXT Development Team
 Version: 2.0.0
 License: MIT
+
 """
 
 import argparse
@@ -488,6 +489,9 @@ class PatternAuditSystem:
         self.logger = logging.getLogger(__name__)
         self.analyzer = PatternViolationAnalyzer()
         self.workspace_path = Path(__file__).parent.parent.parent
+        # Add metadata for audit reporting
+        from types import SimpleNamespace
+        self.metadata = SimpleNamespace(version="2.0.0")
 
     def validate_preconditions(self) -> bool:
         """Validate system is ready for pattern audit."""

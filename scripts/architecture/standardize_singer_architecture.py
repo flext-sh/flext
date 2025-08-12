@@ -13,10 +13,23 @@ from __future__ import annotations
 
 from pathlib import Path
 
-# Import consolidated components from flext-meltano
-from flext_meltano.architecture import (
-    FlextSingerArchitectureStandardizer,
-)
+# Conditional import since the architecture module may not exist yet
+try:
+    from flext_meltano.architecture import (
+        FlextSingerArchitectureStandardizer,
+    )
+    ARCHITECTURE_MODULE_AVAILABLE = True
+except ImportError:
+    # Create stub implementation when module is not available
+    class FlextSingerArchitectureStandardizer:
+        def __init__(self, flext_root: Path) -> None:
+            self.flext_root = flext_root
+
+        def standardize_architecture(self) -> None:
+            print("⚠️  Architecture standardization skipped - module not available")
+            print("   flext-meltano architecture module not found")
+
+    ARCHITECTURE_MODULE_AVAILABLE = False
 
 
 def main() -> None:
@@ -29,6 +42,9 @@ def main() -> None:
 
     standardizer = FlextSingerArchitectureStandardizer(flext_root)
     standardizer.standardize_architecture()
+
+    if not ARCHITECTURE_MODULE_AVAILABLE:
+        print("⚠️  Note: This script requires the flext-meltano architecture module")
 
 
 if __name__ == "__main__":
