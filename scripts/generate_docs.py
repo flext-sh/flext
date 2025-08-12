@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-FLEXT Documentation Generator Script
+"""FLEXT Documentation Generator Script.
 
 This script uses the FLEXT documentation generation framework to create
 comprehensive documentation for the FLEXT ecosystem using Jinja2 templates,

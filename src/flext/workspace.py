@@ -1,4 +1,4 @@
-"""FLEXT Workspace Management - Enterprise Multi-Project Coordination
+"""FLEXT Workspace Management - Enterprise Multi-Project Coordination.
 
 Provides comprehensive workspace management capabilities for the FLEXT data
 integration ecosystem, implementing Clean Architecture and Domain-Driven Design
@@ -594,14 +594,14 @@ class WorkspaceManager:
                     data = tomllib.load(f)
                     return data.get("project", {}).get("version", "2.0.0")
             except ImportError:
-                # tomllib não disponível em Python < 3.11
+                # tomllib not available in Python < 3.11
                 pass
             except (FileNotFoundError, PermissionError) as e:
-                # Arquivo não encontrado ou sem permissão
+                # File not found or permission error
                 print(f"Warning: Could not read {pyproject}: {e}")
                 pass
             except (tomllib.TOMLDecodeError, KeyError, ValueError) as e:
-                # Erro de parsing ou estrutura inválida
+                # TOML parsing error or invalid structure
                 print(f"Warning: Invalid TOML format in {pyproject}: {e}")
                 pass
 

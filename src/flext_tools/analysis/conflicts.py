@@ -71,7 +71,6 @@ from flext_tools.utils import Colors, print_colored
 if TYPE_CHECKING:
     from pathlib import Path
 
-
 # Analysis Configuration Constants
 MIN_PROJECTS_FOR_ANALYSIS = (
     2  # Minimum projects required for meaningful conflict analysis
@@ -99,7 +98,7 @@ class ConflictAnalysisResult(BaseModel):
     """
 
     total_projects: int = Field(
-        default=0, description="Number of projects analyzed in the workspace"
+        default=0, description="Number of projects analyzed in the workspace",
     )
     version_conflicts: dict[str, dict[str, object]] = Field(
         default_factory=dict,
@@ -114,16 +113,16 @@ class ConflictAnalysisResult(BaseModel):
         description="Projects and packages blocking dependency updates",
     )
     suggested_resolutions: dict[str, str] = Field(
-        default_factory=dict, description="AI-generated resolution recommendations"
+        default_factory=dict, description="AI-generated resolution recommendations",
     )
     analysis_summary: dict[str, object] = Field(
-        default_factory=dict, description="Statistical summary and analysis metadata"
+        default_factory=dict, description="Statistical summary and analysis metadata",
     )
 
     def has_conflicts(self) -> bool:
         """Check if analysis found any conflicts."""
         return bool(
-            self.version_conflicts or self.circular_dependencies or self.update_blockers
+            self.version_conflicts or self.circular_dependencies or self.update_blockers,
         )
 
     def conflict_count(self) -> int:
@@ -227,13 +226,13 @@ class ConflictAnalyzer:
         self.version_analyzer = VersionAnalyzer()
 
     def analyze_workspace_conflicts(
-        self, workspace_path: Path
+        self, workspace_path: Path,
     ) -> FlextResult[ConflictAnalysisResult]:
         """Perform comprehensive dependency conflict analysis across workspace."""
         return self._perform_analysis_pipeline(workspace_path)
 
     def _perform_analysis_pipeline(
-        self, workspace_path: Path
+        self, workspace_path: Path,
     ) -> FlextResult[ConflictAnalysisResult]:
         """Execute the complete analysis pipeline using railway-oriented programming."""
         try:
@@ -246,7 +245,7 @@ class ConflictAnalyzer:
             validation_result = self._validate_workspace(workspace_path)
             if not validation_result.success:
                 return FlextResult.fail(
-                    f"Workspace validation failed: {validation_result.error}"
+                    f"Workspace validation failed: {validation_result.error}",
                 )
 
             print_colored("🔍 Analyzing dependency conflicts...", Colors.BLUE)
@@ -255,7 +254,7 @@ class ConflictAnalyzer:
             projects_result = self._collect_and_validate_projects(workspace_path)
             if not projects_result.success:
                 return FlextResult.fail(
-                    f"Project collection failed: {projects_result.error}"
+                    f"Project collection failed: {projects_result.error}",
                 )
 
             projects_data = projects_result.data
@@ -273,18 +272,18 @@ class ConflictAnalyzer:
         """Validate workspace path exists and is accessible."""
         if not workspace_path.exists() or not workspace_path.is_dir():
             return FlextResult.fail(
-                f"Workspace path does not exist or is not a directory: {workspace_path}"
+                f"Workspace path does not exist or is not a directory: {workspace_path}",
             )
         return FlextResult.ok(None)
 
     def _collect_and_validate_projects(
-        self, workspace_path: Path
+        self, workspace_path: Path,
     ) -> FlextResult[dict[str, object]]:
         """Collect and validate projects data from workspace."""
         projects_collection_result = self._collect_projects_data(workspace_path)
         if not projects_collection_result.success:
             return FlextResult.fail(
-                projects_collection_result.error or "Failed to collect projects data"
+                projects_collection_result.error or "Failed to collect projects data",
             )
 
         projects_data = projects_collection_result.data
@@ -293,14 +292,14 @@ class ConflictAnalyzer:
 
         if len(projects_data) < MIN_PROJECTS_FOR_ANALYSIS:
             logger.info(
-                "Insufficient projects for analysis", project_count=len(projects_data)
+                "Insufficient projects for analysis", project_count=len(projects_data),
             )
             # Return projects data anyway - the caller will handle the insufficient projects case
 
         return FlextResult.ok(projects_data)
 
     def _analyze_conflicts(
-        self, workspace_path: Path, projects_data: dict[str, object]
+        self, workspace_path: Path, projects_data: dict[str, object],
     ) -> FlextResult[ConflictAnalysisResult]:
         """Perform the actual conflict analysis on validated data."""
         # Handle insufficient projects case
@@ -315,12 +314,12 @@ class ConflictAnalyzer:
             return FlextResult.ok(result)
         # Collect workspace dependencies
         workspace_deps_result = self._collect_workspace_dependencies_safe(
-            workspace_path
+            workspace_path,
         )
         if not workspace_deps_result.success:
             return FlextResult.fail(
                 workspace_deps_result.error
-                or "Failed to collect workspace dependencies"
+                or "Failed to collect workspace dependencies",
             )
 
         workspace_deps = workspace_deps_result.data
@@ -330,7 +329,7 @@ class ConflictAnalyzer:
         # Analyze version conflicts
         projects_data_for_analysis = cast("dict[str, dict[str, object]]", projects_data)
         version_conflicts = self.version_analyzer.analyze_version_conflicts(
-            projects_data_for_analysis
+            projects_data_for_analysis,
         )
         if not version_conflicts:
             version_conflicts = {}
@@ -342,7 +341,7 @@ class ConflictAnalyzer:
         blockers_result = self._identify_update_blockers_safe(workspace_deps)
         if not blockers_result.success:
             return FlextResult.fail(
-                blockers_result.error or "Failed to identify update blockers"
+                blockers_result.error or "Failed to identify update blockers",
             )
 
         blockers = blockers_result.data or {}
@@ -352,7 +351,7 @@ class ConflictAnalyzer:
 
         # Build final result
         return self._build_analysis_result(
-            projects_data_for_analysis, version_conflicts, blockers, resolutions
+            projects_data_for_analysis, version_conflicts, blockers, resolutions,
         )
 
     def _analyze_lock_conflicts_safe(self, workspace_path: Path) -> None:
@@ -364,13 +363,13 @@ class ConflictAnalyzer:
             logger.warning("Lock analysis failed", error=str(e))
 
     def _generate_resolutions_safe(
-        self, version_conflicts: dict[str, list[dict[str, object]]]
+        self, version_conflicts: dict[str, list[dict[str, object]]],
     ) -> dict[str, str]:
         """Generate resolution suggestions safely."""
         resolutions_result = self._suggest_resolutions_safe(version_conflicts)
         if not resolutions_result.success:
             logger.warning(
-                "Resolution suggestions failed", error=resolutions_result.error
+                "Resolution suggestions failed", error=resolutions_result.error,
             )
             return {}
         return resolutions_result.data or {}
@@ -384,7 +383,7 @@ class ConflictAnalyzer:
     ) -> FlextResult[ConflictAnalysisResult]:
         """Build the final analysis result."""
         version_conflicts_typed = cast(
-            "dict[str, dict[str, object]]", version_conflicts
+            "dict[str, dict[str, object]]", version_conflicts,
         )
         result = ConflictAnalysisResult(
             total_projects=len(projects_data),
@@ -409,7 +408,7 @@ class ConflictAnalyzer:
         return FlextResult.ok(result)
 
     def _collect_projects_data(
-        self, workspace_path: Path
+        self, workspace_path: Path,
     ) -> FlextResult[dict[str, object]]:
         """Collect project data safely using FlextResult."""
         try:
@@ -424,7 +423,7 @@ class ConflictAnalyzer:
                             projects_data[project_path.name] = data
                         except (OSError, tomllib.TOMLDecodeError) as e:
                             logger.warning(
-                                f"Error reading {project_path.name}", error=str(e)
+                                f"Error reading {project_path.name}", error=str(e),
                             )
                             # Continue with other projects instead of failing completely
 
@@ -434,7 +433,7 @@ class ConflictAnalyzer:
             return FlextResult.fail(f"Failed to collect project data: {e}")
 
     def _collect_workspace_dependencies_safe(
-        self, workspace_path: Path
+        self, workspace_path: Path,
     ) -> FlextResult[dict[str, dict[str, str]]]:
         """Safely collect workspace dependencies using FlextResult."""
         try:
@@ -806,7 +805,7 @@ class ConflictAnalyzer:
         }
 
     def generate_conflict_report(
-        self, analysis: dict[str, dict[str, object] | list[object] | str | int]
+        self, analysis: dict[str, dict[str, object] | list[object] | str | int],
     ) -> str:
         r"""Generate comprehensive formatted conflict analysis report.
 
@@ -853,83 +852,122 @@ class ConflictAnalyzer:
             conflict detection and stakeholder notification.
 
         """
-        lines = []
-        lines.append("# 📊 Dependency Conflict Analysis Report\n")
+        lines = ["# 📊 Dependency Conflict Analysis Report\n"]
 
-        # General statistics
-        stats = analysis["stats"]
-        if not isinstance(stats, dict):
-            stats = {}
-        lines.extend(
-            (
-                "## 📈 General Statistics\n",
-                f"- **Total projects**: {analysis['total_projects']}",
-                f"- **Total dependencies**: {stats.get('total_dependencies', 0)}",
-                f"- **Unique packages**: {stats.get('unique_packages', 0)}",
-                f"- **Packages with conflicts**: {stats.get('packages_with_conflicts', 0)}",
-                f"- **Blocking packages**: {stats.get('blocking_packages', 0)}",
-                f"- **Affected projects**: {stats.get('affected_projects', 0)}\n",
-            ),
-        )
-
-        # Version conflicts
-        if analysis["version_conflicts"]:
-            lines.append("## ⚠️ Version Conflicts\n")
-
-            version_conflicts = analysis.get("version_conflicts", {})
-            if isinstance(version_conflicts, dict):
-                for package, conflict_data_obj in sorted(version_conflicts.items()):
-                    conflict_data = cast("dict[str, object]", conflict_data_obj)
-                    severity = conflict_data.get("severity", "medium")
-                    icon = "🔴" if severity == "high" else "🟡"
-
-                    lines.extend(
-                        (f"### {icon} {package}\n", "**Projects and versions:**"),
-                    )
-
-                    projects_data = conflict_data.get("projects", {})
-                    if isinstance(projects_data, dict):
-                        for project, version in projects_data.items():
-                            lines.append(f"- `{project}`: {version}")
-
-                    analysis_data = conflict_data.get("analysis", {})
-                    if isinstance(analysis_data, dict):
-                        issues = analysis_data.get("issues", [])
-                        if issues:
-                            lines.append("\n**Issues:**")
-                            lines.extend(f"- {issue}" for issue in issues)
-
-                    lines.append("")
-
-        # Update blockers
-        if analysis["update_blockers"]:
-            lines.append("## 🚫 Update Blockers\n")
-
-            update_blockers = analysis.get("update_blockers", {})
-            if isinstance(update_blockers, dict):
-                for package, blocker_data_obj in sorted(update_blockers.items()):
-                    if isinstance(blocker_data_obj, dict):
-                        lines.extend((f"### {package}\n", "**Blocking projects:**"))
-
-                        constraints = blocker_data_obj.get("constraints", {})
-                        if isinstance(constraints, dict):
-                            for constraint, projects in constraints.items():
-                                if isinstance(projects, (list, tuple)):
-                                    lines.append(
-                                        f"- Constraint `{constraint}`: {', '.join(str(p) for p in projects)}",
-                                    )
-
-                    lines.append("")
-
-        # Suggested resolutions
-        suggested_resolutions = analysis.get("suggested_resolutions", {})
-        if isinstance(suggested_resolutions, dict) and suggested_resolutions:
-            lines.append("## 💡 Suggested Resolutions\n")
-
-            for package, suggestion in sorted(suggested_resolutions.items()):
-                lines.append(f"- **{package}**: `{suggestion}`")
+        lines.extend(self._generate_statistics_section(analysis))
+        lines.extend(self._generate_conflicts_section(analysis))
+        lines.extend(self._generate_blockers_section(analysis))
+        lines.extend(self._generate_resolutions_section(analysis))
 
         return "\n".join(lines)
+
+    def _generate_statistics_section(
+        self, analysis: dict[str, dict[str, object] | list[object] | str | int],
+    ) -> list[str]:
+        """Generate statistics section for conflict report."""
+        stats = analysis.get("stats", {})
+        if not isinstance(stats, dict):
+            stats = {}
+
+        return [
+            "## 📈 General Statistics\n",
+            f"- **Total projects**: {analysis.get('total_projects', 0)}",
+            f"- **Total dependencies**: {stats.get('total_dependencies', 0)}",
+            f"- **Unique packages**: {stats.get('unique_packages', 0)}",
+            f"- **Packages with conflicts**: {stats.get('packages_with_conflicts', 0)}",
+            f"- **Blocking packages**: {stats.get('blocking_packages', 0)}",
+            f"- **Affected projects**: {stats.get('affected_projects', 0)}\n",
+        ]
+
+    def _generate_conflicts_section(
+        self, analysis: dict[str, dict[str, object] | list[object] | str | int],
+    ) -> list[str]:
+        """Generate version conflicts section for conflict report."""
+        lines: list[str] = []
+        version_conflicts = analysis.get("version_conflicts", {})
+
+        if not version_conflicts or not isinstance(version_conflicts, dict):
+            return lines
+
+        lines.append("## ⚠️ Version Conflicts\n")
+
+        for package, conflict_data_obj in sorted(version_conflicts.items()):
+            conflict_data = cast("dict[str, object]", conflict_data_obj)
+            lines.extend(self._format_conflict_entry(package, conflict_data))
+
+        return lines
+
+    def _format_conflict_entry(self, package: str, conflict_data: dict[str, object]) -> list[str]:
+        """Format individual conflict entry."""
+        severity = conflict_data.get("severity", "medium")
+        icon = "🔴" if severity == "high" else "🟡"
+
+        lines = [f"### {icon} {package}\n", "**Projects and versions:**"]
+
+        projects_data = conflict_data.get("projects", {})
+        if isinstance(projects_data, dict):
+            lines.extend(f"- `{project}`: {version}" for project, version in projects_data.items())
+
+        analysis_data = conflict_data.get("analysis", {})
+        if isinstance(analysis_data, dict):
+            issues = analysis_data.get("issues", [])
+            if issues:
+                lines.append("\n**Issues:**")
+                lines.extend(f"- {issue}" for issue in issues)
+
+        lines.append("")
+        return lines
+
+    def _generate_blockers_section(
+        self, analysis: dict[str, dict[str, object] | list[object] | str | int],
+    ) -> list[str]:
+        """Generate update blockers section for conflict report."""
+        lines: list[str] = []
+        update_blockers = analysis.get("update_blockers", {})
+
+        if not update_blockers or not isinstance(update_blockers, dict):
+            return lines
+
+        lines.append("## 🚫 Update Blockers\n")
+
+        for package, blocker_data_obj in sorted(update_blockers.items()):
+            if isinstance(blocker_data_obj, dict):
+                lines.extend(self._format_blocker_entry(package, blocker_data_obj))
+
+        return lines
+
+    def _format_blocker_entry(self, package: str, blocker_data: dict[str, object]) -> list[str]:
+        """Format individual blocker entry."""
+        lines = [f"### {package}\n", "**Blocking projects:**"]
+
+        constraints = blocker_data.get("constraints", {})
+        if isinstance(constraints, dict):
+            for constraint, projects in constraints.items():
+                if isinstance(projects, (list, tuple)):
+                    lines.append(
+                        f"- Constraint `{constraint}`: {', '.join(str(p) for p in projects)}",
+                    )
+
+        lines.append("")
+        return lines
+
+    def _generate_resolutions_section(
+        self, analysis: dict[str, dict[str, object] | list[object] | str | int],
+    ) -> list[str]:
+        """Generate suggested resolutions section for conflict report."""
+        lines: list[str] = []
+        suggested_resolutions = analysis.get("suggested_resolutions", {})
+
+        if not isinstance(suggested_resolutions, dict) or not suggested_resolutions:
+            return lines
+
+        lines.append("## 💡 Suggested Resolutions\n")
+        lines.extend(
+            f"- **{package}**: `{suggestion}`"
+            for package, suggestion in sorted(suggested_resolutions.items())
+        )
+
+        return lines
 
     def _suggest_resolutions_safe(
         self,

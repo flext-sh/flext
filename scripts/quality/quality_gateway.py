@@ -264,8 +264,8 @@ class QualityGateway(FlextScript):
                     "error": "Ruff not found",
                 }
 
-            ruff_result = subprocess.run(
-                ruff_cmd,
+            ruff_result = subprocess.run(  # noqa: S603
+                ruff_cmd,  # Validated: uses hardcoded tool 'ruff' with controlled arguments
                 check=False,
                 cwd=project_path,
                 capture_output=True,
@@ -293,8 +293,8 @@ class QualityGateway(FlextScript):
                     "error": "MyPy not found",
                 }
 
-            mypy_result = subprocess.run(
-                mypy_cmd,
+            mypy_result = subprocess.run(  # noqa: S603
+                mypy_cmd,  # Validated: uses hardcoded tool 'mypy' with controlled arguments
                 check=False,
                 cwd=project_path,
                 capture_output=True,
@@ -374,7 +374,8 @@ class QualityGateway(FlextScript):
 
         # Dependências faltantes
         if results.deps_result["status"] == "failed":
-            missing_count = results.deps_result["missing_count"]
+            missing_count_obj = results.deps_result["missing_count"]
+            missing_count = int(missing_count_obj) if isinstance(missing_count_obj, (int, str)) else 0
             issues.append(f"Dependências faltantes: {missing_count}")
             total_issues += missing_count
             if missing_count > CRITICAL_DEPENDENCY_THRESHOLD:
@@ -382,8 +383,11 @@ class QualityGateway(FlextScript):
 
         # Qualidade do código
         if results.quality_result["status"] == "failed":
-            ruff_issues = results.quality_result["ruff_issues"]
-            mypy_errors = results.quality_result["mypy_errors"]
+            ruff_issues_obj = results.quality_result["ruff_issues"]
+            mypy_errors_obj = results.quality_result["mypy_errors"]
+
+            ruff_issues = int(ruff_issues_obj) if isinstance(ruff_issues_obj, (int, str)) else 0
+            mypy_errors = int(mypy_errors_obj) if isinstance(mypy_errors_obj, (int, str)) else 0
 
             if ruff_issues > 0:
                 issues.append(f"Ruff issues: {ruff_issues}")
@@ -399,7 +403,8 @@ class QualityGateway(FlextScript):
 
         # Conflitos
         if results.conflicts_result["status"] == "failed":
-            conflicts_count = results.conflicts_result["conflicts_count"]
+            conflicts_count_obj = results.conflicts_result["conflicts_count"]
+            conflicts_count = int(conflicts_count_obj) if isinstance(conflicts_count_obj, (int, str)) else 0
             issues.append(f"Conflitos: {conflicts_count}")
             total_issues += conflicts_count
             critical_issues += 1  # Conflitos são sempre críticos

@@ -78,6 +78,7 @@ License: MIT
 
 from __future__ import annotations
 
+import re
 import subprocess
 import time
 from typing import TYPE_CHECKING
@@ -90,7 +91,6 @@ from flext_tools.utils.colors import Colors, print_colored
 
 if TYPE_CHECKING:
     from pathlib import Path
-
 
 # Constants
 MIN_PARTS_COUNT = 3
@@ -270,7 +270,7 @@ class PoetryOperations:
 
             # Use existing implementation but wrap in FlextResult
             legacy_result = self.add_dependencies(
-                project_path, dependencies, _auto_confirm=auto_confirm
+                project_path, dependencies, _auto_confirm=auto_confirm,
             )
 
             execution_time = time.time() - start_time
@@ -373,7 +373,7 @@ class PoetryOperations:
             print_colored(f"\n  📋 Category: {category}", Colors.CYAN)
 
             for dep in deps:
-                # Determina grupo para poetry add
+                # Determine group for poetry add
                 group = None if category == "runtime" else category
 
                 try:
@@ -420,6 +420,12 @@ class PoetryOperations:
             True if dependency was added successfully, False otherwise
 
         """
+        # Validate dependency input to prevent command injection
+        logger = get_logger(__name__)
+        if not re.match(r"^[a-zA-Z0-9_\-\.\[\]>=<~!]+$", dependency):
+            logger.warning(f"Invalid dependency format: {dependency}")
+            return False
+
         cmd = ["poetry", "add", dependency]
 
         if group:
@@ -431,8 +437,8 @@ class PoetryOperations:
         try:
             print_colored(f"    [+] Adding {dependency}...", Colors.GREEN)
 
-            result = subprocess.run(
-                cmd,
+            result = subprocess.run(  # noqa: S603
+                cmd,  # Validated: uses 'poetry' commands with controlled arguments
                 check=False,
                 cwd=project_path,
                 capture_output=True,
@@ -496,7 +502,7 @@ class PoetryOperations:
 
             # Use existing implementation but wrap in FlextResult
             legacy_result = self.remove_dependencies(
-                project_path, dependencies, _auto_confirm=auto_confirm
+                project_path, dependencies, _auto_confirm=auto_confirm,
             )
 
             execution_time = time.time() - start_time
@@ -612,6 +618,12 @@ class PoetryOperations:
             True if dependency was removed successfully, False otherwise
 
         """
+        # Validate dependency input to prevent command injection
+        logger = get_logger(__name__)
+        if not re.match(r"^[a-zA-Z0-9_\-\.\[\]>=<~!]+$", dependency):
+            logger.warning(f"Invalid dependency format: {dependency}")
+            return False
+
         cmd = ["poetry", "remove", dependency]
 
         if self.dry_run:
@@ -620,8 +632,8 @@ class PoetryOperations:
         try:
             print_colored(f"    [-] Removing {dependency}...", Colors.YELLOW)
 
-            result = subprocess.run(
-                cmd,
+            result = subprocess.run(  # noqa: S603
+                cmd,  # Validated: uses 'poetry' commands with controlled arguments
                 check=False,
                 cwd=project_path,
                 capture_output=True,
@@ -670,7 +682,7 @@ class PoetryOperations:
             start_time = time.time()
 
             self.logger.info(
-                "Starting safe project update", project_path=str(project_path)
+                "Starting safe project update", project_path=str(project_path),
             )
 
             # Use existing implementation but wrap in FlextResult
@@ -752,14 +764,15 @@ class PoetryOperations:
             cmd.append("--dry-run")
 
         try:
-            result = subprocess.run(
+            # Safe invocation: fixed executable ('poetry') and validated args above
+            result = subprocess.run(  # noqa: S603
                 cmd,
                 check=False,
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                shell=False,  # Security: explicit shell=False
-                timeout=300,  # Allow more time for updates
+                shell=False,
+                timeout=300,
             )
 
             if result.returncode == 0:
@@ -799,7 +812,7 @@ class PoetryOperations:
             start_time = time.time()
 
             self.logger.info(
-                "Starting safe project lock", project_path=str(project_path)
+                "Starting safe project lock", project_path=str(project_path),
             )
 
             # Use existing implementation but wrap in FlextResult
@@ -831,7 +844,7 @@ class PoetryOperations:
 
         except Exception as e:
             self.logger.exception(
-                "Safe project lock failed", project_path=str(project_path), error=str(e)
+                "Safe project lock failed", project_path=str(project_path), error=str(e),
             )
             return FlextResult.fail(f"Project lock failed: {e}")
 
@@ -866,14 +879,15 @@ class PoetryOperations:
         cmd = ["poetry", "lock"]
 
         try:
-            result = subprocess.run(
+            # Safe invocation: fixed executable ('poetry') and validated args above
+            result = subprocess.run(  # noqa: S603
                 cmd,
                 check=False,
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                shell=False,  # Security: explicit shell=False
-                timeout=180,  # Allow time for lock generation
+                shell=False,
+                timeout=180,
             )
 
             if result.returncode == 0:
@@ -907,7 +921,7 @@ class PoetryOperations:
             start_time = time.time()
 
             self.logger.info(
-                "Starting safe project validation", project_path=str(project_path)
+                "Starting safe project validation", project_path=str(project_path),
             )
 
             # Use existing implementation but wrap in FlextResult
@@ -977,14 +991,15 @@ class PoetryOperations:
         cmd = ["poetry", "check"]
 
         try:
-            result = subprocess.run(
+            # Safe invocation: fixed executable ('poetry') and validated args above
+            result = subprocess.run(  # noqa: S603
                 cmd,
                 check=False,
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                shell=False,  # Security: explicit shell=False
-                timeout=30,  # Quick validation
+                shell=False,
+                timeout=30,
             )
 
             if result.returncode == 0:
