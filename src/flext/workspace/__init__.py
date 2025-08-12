@@ -1,4 +1,4 @@
-"""FLEXT Workspace Management - Multi-Project Coordination and Discovery
+"""FLEXT Workspace Management - Multi-Project Coordination and Discovery.
 
 Provides comprehensive workspace management capabilities for coordinating
 multiple FLEXT ecosystem projects within a unified development environment.
@@ -127,7 +127,7 @@ class WorkspaceManager:
         return len(self.projects) > 0
 
     def setup_environment(self) -> None:
-        """Setup workspace environment variables."""
+        """Set up workspace environment variables."""
         os.environ["FLEXT_WORKSPACE_ROOT"] = str(self.workspace_root)
 
         # Add workspace to Python path
