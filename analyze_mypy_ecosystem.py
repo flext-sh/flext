@@ -11,6 +11,7 @@ import subprocess
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
+from typing import ClassVar
 
 
 @dataclass
@@ -37,7 +38,7 @@ class ProjectResult:
 class FlextMypyAnalyzer:
     """Analyze MyPy errors across all FLEXT Python projects in the monorepo."""
 
-    PYTHON_PROJECTS = [
+    PYTHON_PROJECTS: ClassVar[list[str]] = [
         # Core libraries
         "flext-core", "flext-api", "flext-auth", "flext-web", "flext-cli",
 
@@ -64,7 +65,7 @@ class FlextMypyAnalyzer:
         "algar-oud-mig", "gruponos-meltano-native",
     ]
 
-    ERROR_PATTERNS = {
+    ERROR_PATTERNS: ClassVar[dict[str, str]] = {
         "missing_imports": r"Cannot find implementation or library stub for module",
         "untyped_imports": r"Skipping analyzing .* untyped",
         "missing_return_type": r"Function is missing a return type annotation",
@@ -166,7 +167,7 @@ class FlextMypyAnalyzer:
                 "--no-error-summary",
             ]
 
-            result = subprocess.run(
+            result = subprocess.run(  # noqa: S603
                 cmd,
                 check=False, cwd=str(project_path),
                 capture_output=True,
@@ -313,13 +314,14 @@ class FlextMypyAnalyzer:
             "📋" if project["has_config"] else "❌"
 
         if report["clean_projects"]:
-            for project in report["clean_projects"][:10]:  # Show first 10
+            for _ in report["clean_projects"][:10]:  # Show first 10
                 pass
-            if len(report["clean_projects"]) > 10:
+            DISPLAY_LIMIT = 10
+            if len(report["clean_projects"]) > DISPLAY_LIMIT:
                 pass
 
         if report["failed_projects"]:
-            for project in report["failed_projects"]:
+            for _ in report["failed_projects"]:
                 pass
 
 
@@ -338,8 +340,7 @@ def main() -> None:
 
     # Save detailed report
     report_path = "/home/marlonsc/flext/mypy_ecosystem_analysis.json"
-    with open(report_path, "w", encoding="utf-8") as f:
-        json.dump(report, f, indent=2)
+    Path(report_path).write_text(json.dumps(report, indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":
