@@ -1,4 +1,4 @@
-"""FLEXT Service Utilities - Cross-Cutting Service Concerns
+"""FLEXT Service Utilities - Cross-Cutting Service Concerns.
 
 Provides utility functions and shared infrastructure for service layer operations
 within the FLEXT data integration platform. This module contains cross-cutting

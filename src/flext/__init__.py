@@ -1,4 +1,4 @@
-"""FLEXT Control Panel - Enterprise Data Integration Platform
+"""FLEXT Control Panel - Enterprise Data Integration Platform.
 
 The FLEXT Control Panel serves as the central orchestration hub for the FLEXT
 data integration ecosystem, providing enterprise-grade workspace management,
@@ -65,20 +65,8 @@ from flext.cli_helpers import FlextCliHelperExtended
 # Note: Import optimization to avoid circular dependencies
 # Public API exports optimized for performance and maintainability
 
-__all__ = [
-    "__author__",
-    "__license__",
-    "__version__",
-    "services",
-    # Web integration
-    "FlextWebIntegration",
-    "WebServiceSetupResult", 
-    # gRPC integration
-    "FlextGrpcIntegration",
-    "GrpcServiceSetupResult",
-    # Authentication integration
-    "FlextAuthIntegration",
-    "AuthServiceSetupResult",
-    # CLI integration
-    "FlextCliHelperExtended",
+__all__: list[str] = [
+    "__author__", "__license__", "__version__", "services", "FlextWebIntegration",
+    "WebServiceSetupResult", "FlextGrpcIntegration", "GrpcServiceSetupResult", "FlextAuthIntegration",
+    "AuthServiceSetupResult", "FlextCliHelperExtended",
 ]
