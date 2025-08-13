@@ -10,6 +10,7 @@ import argparse
 import contextlib
 import io
 import shutil
+
 # Removed subprocess dependency; serving/building uses mkdocs Python API
 import sys
 import tomllib
@@ -153,7 +154,8 @@ class DocumentationGenerator(FlextScript):
             # Execute full generation pipeline
             # Use type: ignore for the variance issue (dict[str, object] is compatible with object)
             return self._execute_full_generation_pipeline(
-                components_result, serve=serve,
+                components_result,
+                serve=serve,
             )  # type: ignore[arg-type]
 
         except Exception as e:
@@ -936,13 +938,22 @@ print(f"Pipeline status: {result.status}")"""
 
                 stdout = io.StringIO()
                 stderr = io.StringIO()
-                with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                with (
+                    contextlib.redirect_stdout(stdout),
+                    contextlib.redirect_stderr(stderr),
+                ):
                     try:
-                        exit_code = int(mkdocs_main(["build", "-f", str(self.mkdocs_config), "--clean"]))
+                        exit_code = int(
+                            mkdocs_main(
+                                ["build", "-f", str(self.mkdocs_config), "--clean"],
+                            ),
+                        )
                     except SystemExit as exc:
                         exit_code = int(getattr(exc, "code", 0) or 0)
                 if exit_code != 0:
-                    return FlextResult.fail(f"MkDocs build failed: {stderr.getvalue().strip()}")
+                    return FlextResult.fail(
+                        f"MkDocs build failed: {stderr.getvalue().strip()}",
+                    )
                 self.logger.info("Documentation built successfully")
                 return FlextResult.ok({"status": "built", "output": stdout.getvalue()})
             except Exception as e:
@@ -962,6 +973,7 @@ print(f"Pipeline status: {result.status}")"""
                 from mkdocs.__main__ import (
                     main as mkdocs_main,  # type: ignore[import-not-found]
                 )
+
                 mkdocs_main(["serve", "-f", str(self.mkdocs_config)])  # type: ignore[arg-type]
                 return
             except Exception as e:

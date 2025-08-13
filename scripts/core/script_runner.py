@@ -67,7 +67,9 @@ class ScriptRunner(FlextScript):
                 if script_name:
                     # Pass script_name as positional and kwargs as keyword arguments
                     result = self._run_script(
-                        registry, str(script_name), **kwargs,
+                        registry,
+                        str(script_name),
+                        **kwargs,
                     )  # Pass kwargs correctly
                     return FlextResult.ok(
                         {
@@ -104,7 +106,8 @@ class ScriptRunner(FlextScript):
 
         # Group by category
         by_category: dict[
-            str, list[ScriptMetadata],
+            str,
+            list[ScriptMetadata],
         ] = {}  # Changed Any to ScriptMetadata
         for script in scripts:
             category = (

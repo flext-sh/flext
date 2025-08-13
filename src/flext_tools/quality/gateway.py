@@ -431,7 +431,9 @@ class QualityGateway:
                     # Run ruff against workspace_path
                     exit_code = 0
                     try:
-                        exit_code = int(ruff_main.main(["check", str(self.workspace_path)]))  # type: ignore[arg-type]
+                        exit_code = int(
+                            ruff_main.main(["check", str(self.workspace_path)]),
+                        )  # type: ignore[arg-type]
                     except SystemExit as exc:
                         exit_code = int(getattr(exc, "code", 0) or 0)
                 except Exception as e:
@@ -455,7 +457,9 @@ class QualityGateway:
         try:
             from mypy import api as mypy_api  # type: ignore[import-not-found]
 
-            stdout, _stderr, exit_status = mypy_api.run([str(self.workspace_path / "src")])
+            stdout, _stderr, exit_status = mypy_api.run(
+                [str(self.workspace_path / "src")],
+            )
             if int(exit_status) == 0:
                 return FlextResult.ok([])
 
@@ -477,7 +481,13 @@ class QualityGateway:
             exit_code = pytest.main([str(self.workspace_path)])
             if int(exit_code) == 0:
                 return FlextResult.ok([])
-            issues = [QualityIssue(tool="pytest", severity="error", message="Test failures detected")]
+            issues = [
+                QualityIssue(
+                    tool="pytest",
+                    severity="error",
+                    message="Test failures detected",
+                ),
+            ]
             return FlextResult.fail(f"Test failures found: {len(issues)} issues")
         except Exception as e:
             return FlextResult.fail(f"Test execution failed: {e}")

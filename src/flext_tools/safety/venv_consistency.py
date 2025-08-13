@@ -69,6 +69,7 @@ import json
 import tomllib
 from collections import defaultdict
 from dataclasses import dataclass
+from importlib.metadata import distributions  # Python 3.8+
 from typing import TYPE_CHECKING
 
 from flext_tools.utils import Colors, print_colored
@@ -294,8 +295,6 @@ class VenvConsistencyValidator:
         try:
             # Prefer Python API for installed distributions when available
             try:
-                from importlib.metadata import distributions  # Python 3.8+
-
                 packages_data = [
                     {"name": dist.metadata["Name"], "version": dist.version}
                     for dist in distributions()

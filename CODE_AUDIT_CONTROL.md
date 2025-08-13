@@ -7,13 +7,16 @@
 ## PROJETOS IDENTIFICADOS PARA AUDITORIA
 
 ### ✅ PROJETO PRINCIPAL
+
 - [ ] **FLEXT** (src/flext/ + src/flext_tools/) - 0/100%
 
 ### 🔧 PROJETOS CORE (2 projetos)
-- [ ] **flext-core** - 0/100%  
+
+- [ ] **flext-core** - 0/100%
 - [ ] **flext-observability** - 0/100%
 
 ### 🏗️ INFRAESTRUTURA (6 projetos)
+
 - [ ] **flext-db-oracle** - 0/100%
 - [ ] **flext-ldap** - 0/100%
 - [ ] **flext-ldif** - 0/100%
@@ -22,6 +25,7 @@
 - [ ] **flext-meltano** - 0/100%
 
 ### 🎯 SERVIÇOS (5 projetos)
+
 - [ ] **flext-api** - 0/100%
 - [ ] **flext-auth** - 0/100%
 - [ ] **flext-web** - 0/100%
@@ -31,6 +35,7 @@
 ### 🎵 SINGER ECOSYSTEM (15 projetos)
 
 #### Taps (5 projetos)
+
 - [ ] **flext-tap-ldap** - 0/100%
 - [ ] **flext-tap-ldif** - 0/100%
 - [ ] **flext-tap-oracle** - 0/100%
@@ -38,6 +43,7 @@
 - [ ] **flext-tap-oracle-wms** - 0/100%
 
 #### Targets (5 projetos)
+
 - [ ] **flext-target-ldap** - 0/100%
 - [ ] **flext-target-ldif** - 0/100%
 - [ ] **flext-target-oracle** - 0/100%
@@ -45,15 +51,18 @@
 - [ ] **flext-target-oracle-wms** - 0/100%
 
 #### DBT Projects (4 projetos)
+
 - [ ] **flext-dbt-ldap** - 0/100%
 - [ ] **flext-dbt-ldif** - 0/100%
 - [ ] **flext-dbt-oracle** - 0/100%
 - [ ] **flext-dbt-oracle-wms** - 0/100%
 
 #### Extensions (1 projeto)
+
 - [ ] **flext-oracle-oic-ext** - 0/100%
 
 ### 🏢 ESPECIALIZADOS (3 projetos)
+
 - [ ] **client-a-oud-mig** - 0/100%
 - [ ] **client-b-meltano-native** - 0/100%
 - [ ] **flext-plugin** - 0/100%
@@ -61,6 +70,7 @@
 ## ANTI-PADRÕES IDENTIFICADOS
 
 ### 🚨 CRÍTICOS (Prioridade 1)
+
 - [ ] **TODOs não implementados** - deixam funcionalidade incompleta
 - [ ] **Código morto** - funções/classes não utilizadas
 - [ ] **Parâmetros não usados** - indicam design problemático
@@ -68,6 +78,7 @@
 - [ ] **Fallbacks inadequados** - usar bibliotecas corretas ao invés
 
 ### ⚠️ IMPORTANTES (Prioridade 2)
+
 - [ ] **Validações manuais** - migrar para Pydantic
 - [ ] **Exception handling incorreto** - padronizar com FlextResult
 - [ ] **Checagens incompletas** - validações que não cobrem todos os casos
@@ -75,6 +86,7 @@
 - [ ] **Imports desnecessários** - limpar imports não utilizados
 
 ### 📊 MELHORIAS (Prioridade 3)
+
 - [ ] **Docstrings faltantes** - documentação incompleta
 - [ ] **Type hints inconsistentes** - padronizar anotações
 - [ ] **Logs inadequados** - usar sistema estruturado
@@ -83,6 +95,7 @@
 ## METODOLOGIA DE CORREÇÃO
 
 ### FASE 1: DETECÇÃO AUTOMATIZADA
+
 1. **Scan de TODOs**: `grep -r "TODO\|FIXME\|XXX\|HACK" src/`
 2. **Código morto**: análise AST para funções não referenciadas
 3. **Parâmetros não usados**: análise estática com pylint/ruff
@@ -90,6 +103,7 @@
 5. **Validações manuais**: buscar por `if.*validate\|assert\|raise.*not`
 
 ### FASE 2: CORREÇÃO SISTEMÁTICA
+
 1. **Implementar TODOs** ou remover se desnecessários
 2. **Remover código morto** após confirmação
 3. **Corrigir assinaturas** removendo parâmetros não usados
@@ -99,6 +113,7 @@
 7. **Padronizar exceptions** com FlextResult
 
 ### FASE 3: VALIDAÇÃO E TESTES
+
 1. **Lint**: `ruff check --fix`
 2. **Type check**: `mypy --strict`
 3. **Tests**: `pytest --cov=90`
@@ -107,19 +122,23 @@
 ## PROGRESS TRACKER
 
 ### PROJETOS AUDITADOS: 1/32 (3%)
+
 ### ANTI-PADRÕES CORRIGIDOS: 8/116+ (~7%)
+
 ### STATUS ATUAL: AUDITORIA DO PROJETO PRINCIPAL EM PROGRESSO
 
 ## LOGS DE PROGRESSO
 
 **2025-01-08 - INÍCIO**
+
 - Arquivo de controle criado
 - 32 projetos identificados para auditoria
 - Sistema de tracking implementado
 
 **2025-01-08 - PROJETO PRINCIPAL PARCIAL**
+
 - ✅ 4 TODOs implementados (dev.py): MyPy, Bandit, Go linting/formatting
-- ✅ 1 TODO removido (__init__.py): Comentário de migração desnecessário
+- ✅ 1 TODO removido (**init**.py): Comentário de migração desnecessário
 - ✅ 2 variáveis não utilizadas corrigidas (validator.py, logging.py)
 - ✅ 4 parâmetros não utilizados corrigidos (logging.py: exc_info, stack_info)
 - ⚠️ 116 problemas lint detectados, 43 corrigidos automaticamente, 73 restantes
@@ -128,6 +147,7 @@
 ---
 
 **NOTAS IMPORTANTES**:
+
 - NUNCA pular validação em nenhum arquivo
 - SEMPRE testar após correções
 - MANTER backward compatibility

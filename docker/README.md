@@ -7,7 +7,7 @@
 ### Production Services
 
 - **Dockerfile.flext** - Main FLEXT service container (Go/Python hybrid)
-- **Dockerfile.distributed** - Distributed cluster configuration  
+- **Dockerfile.distributed** - Distributed cluster configuration
 - **Dockerfile.oracle-e2e** - Oracle integration testing
 - **Dockerfile.e2e-test** - End-to-end testing container
 
@@ -26,7 +26,7 @@ docker build -f docker/Dockerfile.flext -t flext:latest .
 # Build distributed cluster
 docker build -f docker/Dockerfile.distributed -t flext-distributed:latest .
 
-# Run development stack  
+# Run development stack
 docker-compose -f docker/docker-compose.yml up -d
 ```
 
@@ -35,7 +35,7 @@ docker-compose -f docker/docker-compose.yml up -d
 All Docker configurations now centralized in `/docker` directory:
 
 - Nginx reverse proxy configuration
-- PostgreSQL initialization scripts  
+- PostgreSQL initialization scripts
 - Prometheus monitoring setup
 - Grafana dashboards
 
