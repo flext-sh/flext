@@ -193,7 +193,7 @@ def main() -> int:
 
     print(
         "\n🎉 Instalação concluída! "
-        f"{successful}/{len(results)} projetos instalados com sucesso."
+        f"{successful}/{len(results)} projetos instalados com sucesso.",
     )
 
     return 0 if failed == 0 else 1

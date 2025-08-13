@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Análise Completa de Qualidade de Código - FLEXT Workspace
+"""Análise Completa de Qualidade de Código - FLEXT Workspace.
+
 Analisa TODOS os projetos Python para identificar problemas de qualidade.
 """
 
@@ -13,6 +14,8 @@ from pathlib import Path
 
 @dataclass
 class QualityReport:
+    """Quality report for a project."""
+
     project: str
     lint_errors: int = 0
     lint_warnings: int = 0
@@ -63,7 +66,7 @@ def analyze_project(project_path: str) -> QualityReport:
     # 1. Análise de Lint (ruff)
     print("  📋 Executando lint...")
     exit_code, stdout, stderr = run_command(
-        ["python", "-m", "ruff", "check", "."], cwd=project_path
+        ["python", "-m", "ruff", "check", "."], cwd=project_path,
     )
 
     if exit_code == 0:
@@ -76,14 +79,14 @@ def analyze_project(project_path: str) -> QualityReport:
         report.lint_errors = len(errors)
         report.lint_warnings = len(warnings)
         report.issues.extend(
-            [f"❌ Lint Error: {e}" for e in errors[:5]]
+            [f"❌ Lint Error: {e}" for e in errors[:5]],
         )  # Primeiros 5 erros
         print(f"  ❌ Lint: {report.lint_errors} erros, {report.lint_warnings} warnings")
 
     # 2. Análise de MyPy
     print("  🔍 Executando mypy...")
     exit_code, stdout, stderr = run_command(
-        ["python", "-m", "mypy", "."], cwd=project_path
+        ["python", "-m", "mypy", "."], cwd=project_path,
     )
 
     if exit_code == 0:
@@ -96,14 +99,14 @@ def analyze_project(project_path: str) -> QualityReport:
         report.mypy_errors = len(errors)
         report.mypy_warnings = len(warnings)
         report.issues.extend(
-            [f"❌ MyPy Error: {e}" for e in errors[:5]]
+            [f"❌ MyPy Error: {e}" for e in errors[:5]],
         )  # Primeiros 5 erros
         print(f"  ❌ MyPy: {report.mypy_errors} erros, {report.mypy_warnings} warnings")
 
     # 3. Análise de Testes
     print("  🧪 Executando testes...")
     exit_code, stdout, stderr = run_command(
-        ["python", "-m", "pytest", "--tb=short", "-q"], cwd=project_path
+        ["python", "-m", "pytest", "--tb=short", "-q"], cwd=project_path,
     )
 
     if exit_code == 0:
@@ -114,7 +117,7 @@ def analyze_project(project_path: str) -> QualityReport:
         failures = [line for line in lines if "FAILED" in line or "ERROR" in line]
         report.test_failures = len(failures)
         report.issues.extend(
-            [f"❌ Test Failure: {f}" for f in failures[:3]]
+            [f"❌ Test Failure: {f}" for f in failures[:3]],
         )  # Primeiros 3
         print(f"  ❌ Testes: {report.test_failures} falhas")
 
@@ -218,9 +221,7 @@ def main() -> int:
             for issue in report.issues[:3]:
                 print(f"   {issue}")
             if len(report.issues) > 3:
-                print(
-                    f"   ... e mais {len(report.issues) - 3} problemas"
-                )
+                print(f"   ... e mais {len(report.issues) - 3} problemas")
     else:
         print("\n✅ TODOS OS PROJETOS ESTÃO PERFEITOS!")
 

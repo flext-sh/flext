@@ -239,11 +239,15 @@ class SafetyValidator:
             "yaml",  # Correct name is pyyaml
         }
 
-        logger.info("Safety validator initialized",
-                   known_safe_count=len(self.known_safe_packages),
-                   dangerous_count=len(self.dangerous_packages))
+        logger.info(
+            "Safety validator initialized",
+            known_safe_count=len(self.known_safe_packages),
+            dangerous_count=len(self.dangerous_packages),
+        )
 
-    def validate_package_safety_safe(self, package_name: str) -> FlextResult[ValidationData]:
+    def validate_package_safety_safe(
+        self, package_name: str,
+    ) -> FlextResult[ValidationData]:
         """Safely validate package safety using railway-oriented programming.
 
         Performs comprehensive package safety validation including name validation,
@@ -332,11 +336,13 @@ class SafetyValidator:
             if not issues:
                 recommendations.append("Package passed all security validations")
             else:
-                recommendations.extend([
-                    "Review package source and maintainer reputation",
-                    "Consider alternative packages with better security profiles",
-                    "Use virtual environment for installation isolation",
-                ])
+                recommendations.extend(
+                    [
+                        "Review package source and maintainer reputation",
+                        "Consider alternative packages with better security profiles",
+                        "Use virtual environment for installation isolation",
+                    ],
+                )
 
             # Using FlextResult pattern with ValidationData (DRY - no custom classes)
             validation_data: ValidationData = {
@@ -349,16 +355,22 @@ class SafetyValidator:
                 "risk_level": risk_level,
             }
 
-            logger.info("Package safety validation completed",
-                       package_name=package_name,
-                       safe=safe,
-                       issues_count=len(issues),
-                       risk_level=risk_level)
+            logger.info(
+                "Package safety validation completed",
+                package_name=package_name,
+                safe=safe,
+                issues_count=len(issues),
+                risk_level=risk_level,
+            )
 
             return FlextResult.ok(validation_data)
 
         except Exception as e:
-            logger.exception("Package safety validation failed", package_name=package_name, error=str(e))
+            logger.exception(
+                "Package safety validation failed",
+                package_name=package_name,
+                error=str(e),
+            )
             return FlextResult.fail(f"Package validation failed: {e}")
 
     def validate_file_operation_safe(
@@ -396,8 +408,11 @@ class SafetyValidator:
 
         """
         try:
-            logger.info("Starting file operation validation",
-                       file_path=str(file_path), operation=operation)
+            logger.info(
+                "Starting file operation validation",
+                file_path=str(file_path),
+                operation=operation,
+            )
 
             issues: list[str] = []
             recommendations: list[str] = []
@@ -409,7 +424,11 @@ class SafetyValidator:
                 safe = False
                 risk_level = "high"
                 issues.append(f"File not found: {file_path}")
-                logger.warning("File not found for operation", file_path=str(file_path), operation=operation)
+                logger.warning(
+                    "File not found for operation",
+                    file_path=str(file_path),
+                    operation=operation,
+                )
 
                 # Using FlextResult pattern with ValidationData (DRY - no custom classes)
                 error_validation_data: ValidationData = {
@@ -417,7 +436,9 @@ class SafetyValidator:
                     "safe": safe,
                     "operation": f"file_operation:{operation}:{file_path.name}",
                     "issues": issues,
-                    "recommendations": ["Verify file path and existence before operation"],
+                    "recommendations": [
+                        "Verify file path and existence before operation",
+                    ],
                     "confidence": "high",
                     "risk_level": risk_level,
                 }
@@ -425,20 +446,35 @@ class SafetyValidator:
 
             # Critical file detection and protection
             critical_files = {
-                "pyproject.toml", "poetry.lock", "Makefile", ".gitignore",
-                "requirements.txt", "setup.py", "setup.cfg", "package.json",
-                "go.mod", "Cargo.toml", "composer.json",
+                "pyproject.toml",
+                "poetry.lock",
+                "Makefile",
+                ".gitignore",
+                "requirements.txt",
+                "setup.py",
+                "setup.cfg",
+                "package.json",
+                "go.mod",
+                "Cargo.toml",
+                "composer.json",
             }
 
             if file_path.name in critical_files:
                 risk_level = "medium"
-                recommendations.append("Critical file detected - backup strongly recommended")
+                recommendations.append(
+                    "Critical file detected - backup strongly recommended",
+                )
 
-                if backup_requirement == BackupRequirement.REQUIRED and operation in {"write", "delete"}:
+                if backup_requirement == BackupRequirement.REQUIRED and operation in {
+                    "write",
+                    "delete",
+                }:
                     recommendations.append(
                         "Backup required for critical file modification/deletion",
                     )
-                    logger.info("Backup required for critical file", file_path=str(file_path))
+                    logger.info(
+                        "Backup required for critical file", file_path=str(file_path),
+                    )
 
             # Permission validation
             if operation == "write" and not self._can_write_file(file_path):
@@ -451,15 +487,19 @@ class SafetyValidator:
                 safe = False
                 risk_level = "high"
                 issues.append("Insufficient delete permissions for file operation")
-                recommendations.append("Check directory permissions and user access rights")
+                recommendations.append(
+                    "Check directory permissions and user access rights",
+                )
 
             # Generate additional security recommendations
             if operation in {"write", "delete"} and file_path.name in critical_files:
-                recommendations.extend([
-                    "Use version control to track changes",
-                    "Validate file integrity after operation",
-                    "Consider atomic operations to prevent corruption",
-                ])
+                recommendations.extend(
+                    [
+                        "Use version control to track changes",
+                        "Validate file integrity after operation",
+                        "Consider atomic operations to prevent corruption",
+                    ],
+                )
 
             # Using FlextResult pattern with ValidationData (DRY - no custom classes)
             success_validation_data: ValidationData = {
@@ -472,17 +512,23 @@ class SafetyValidator:
                 "risk_level": risk_level,
             }
 
-            logger.info("File operation validation completed",
-                       file_path=str(file_path),
-                       operation=operation,
-                       safe=safe,
-                       risk_level=risk_level)
+            logger.info(
+                "File operation validation completed",
+                file_path=str(file_path),
+                operation=operation,
+                safe=safe,
+                risk_level=risk_level,
+            )
 
             return FlextResult.ok(success_validation_data)
 
         except Exception as e:
-            logger.exception("File operation validation failed",
-                        file_path=str(file_path), operation=operation, error=str(e))
+            logger.exception(
+                "File operation validation failed",
+                file_path=str(file_path),
+                operation=operation,
+                error=str(e),
+            )
             return FlextResult.fail(f"File operation validation failed: {e}")
 
     def validate_command_execution(
@@ -536,7 +582,9 @@ class SafetyValidator:
             validation_data["risk_level"] = "high"
             issues = validation_data["issues"]
             if isinstance(issues, list):
-                issues.append(f"Executable '{executable}' is not in the safe commands list")
+                issues.append(
+                    f"Executable '{executable}' is not in the safe commands list",
+                )
 
         # Check if executable exists
         if not shutil.which(executable):
@@ -605,7 +653,9 @@ class SafetyValidator:
                 data = tomllib.load(f)
 
             if "tool" not in data or "poetry" not in data["tool"]:
-                return FlextResult.fail("Poetry configuration not found in pyproject.toml")
+                return FlextResult.fail(
+                    "Poetry configuration not found in pyproject.toml",
+                )
 
         except (OSError, tomllib.TOMLDecodeError, UnicodeDecodeError) as e:
             return FlextResult.fail(f"Error reading pyproject.toml: {e}")
@@ -660,19 +710,26 @@ class SafetyValidator:
         """
         try:
             context = context or {}
-            logger.debug("Generating safety recommendations", operation_type=operation_type)
+            logger.debug(
+                "Generating safety recommendations", operation_type=operation_type,
+            )
 
             recommendations = self.get_safety_recommendations(operation_type, context)
 
-            logger.debug("Safety recommendations generated",
-                        operation_type=operation_type,
-                        recommendations_count=len(recommendations))
+            logger.debug(
+                "Safety recommendations generated",
+                operation_type=operation_type,
+                recommendations_count=len(recommendations),
+            )
 
             return FlextResult.ok(recommendations)
 
         except Exception as e:
-            logger.exception("Failed to generate safety recommendations",
-                        operation_type=operation_type, error=str(e))
+            logger.exception(
+                "Failed to generate safety recommendations",
+                operation_type=operation_type,
+                error=str(e),
+            )
             return FlextResult.fail(f"Recommendation generation failed: {e}")
 
     def get_comprehensive_validation_summary(self) -> FlextResult[dict[str, object]]:
@@ -709,9 +766,11 @@ class SafetyValidator:
                 ],
             }
 
-            logger.info("Generated comprehensive validation summary",
-                       safe_packages=summary["known_safe_packages"],
-                       dangerous_packages=summary["dangerous_packages"])
+            logger.info(
+                "Generated comprehensive validation summary",
+                safe_packages=summary["known_safe_packages"],
+                dangerous_packages=summary["dangerous_packages"],
+            )
 
             return FlextResult.ok(summary)
 

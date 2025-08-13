@@ -60,7 +60,7 @@ class LintingReport(FlextScript):
 
         if missing_tools:
             return FlextResult.fail(
-                f"Missing required tools: {', '.join(missing_tools)}"
+                f"Missing required tools: {', '.join(missing_tools)}",
             )
 
         return FlextResult.ok(None)
@@ -78,7 +78,8 @@ class LintingReport(FlextScript):
 
             # Descobrir projetos
             projects = self._discover_projects(
-                workspace_root, str(projects_filter) if projects_filter else None
+                workspace_root,
+                str(projects_filter) if projects_filter else None,
             )
 
             # Análise agregada
@@ -124,13 +125,13 @@ class LintingReport(FlextScript):
                     int(total_stats["projects_analyzed"]) + 1
                 )
                 total_stats["total_files"] = int(total_stats["total_files"]) + int(
-                    project_stats["python_files"]
+                    project_stats["python_files"],
                 )
                 total_stats["ruff_issues"] = int(total_stats["ruff_issues"]) + int(
-                    project_stats["ruff_issues"]
+                    project_stats["ruff_issues"],
                 )
                 total_stats["mypy_errors"] = int(total_stats["mypy_errors"]) + int(
-                    project_stats["mypy_errors"]
+                    project_stats["mypy_errors"],
                 )
                 if project_stats["has_issues"]:
                     total_stats["projects_with_issues"] = (
@@ -139,7 +140,9 @@ class LintingReport(FlextScript):
 
                 # Mostrar resultado do projeto
                 self._print_project_summary(
-                    project_name, project_stats, detailed=detailed
+                    project_name,
+                    project_stats,
+                    detailed=detailed,
                 )
 
                 if detailed:
@@ -155,7 +158,7 @@ class LintingReport(FlextScript):
                 self._save_html_report(total_stats, project_results)
 
             return FlextResult.ok(
-                {"total_stats": total_stats, "project_results": project_results}
+                {"total_stats": total_stats, "project_results": project_results},
             )
 
         except (OSError, ValueError, TypeError) as e:
@@ -184,7 +187,12 @@ class LintingReport(FlextScript):
                 }
 
             result = subprocess.run(  # noqa: S603
-                [ruff_executable, "check", ".", "--output-format=json"],  # Validated: uses ruff from shutil.which
+                [
+                    ruff_executable,
+                    "check",
+                    ".",
+                    "--output-format=json",
+                ],  # Validated: uses ruff from shutil.which
                 check=False,
                 cwd=project_path,
                 capture_output=True,
@@ -231,7 +239,11 @@ class LintingReport(FlextScript):
                 return {"total_errors": 0, "by_type": {}, "by_file": {}, "output": ""}
 
             result = subprocess.run(  # noqa: S603
-                [mypy_executable, ".", "--no-error-summary"],  # Validated: uses mypy from shutil.which
+                [
+                    mypy_executable,
+                    ".",
+                    "--no-error-summary",
+                ],  # Validated: uses mypy from shutil.which
                 check=False,
                 cwd=project_path,
                 capture_output=True,
@@ -271,10 +283,10 @@ class LintingReport(FlextScript):
 
     def _print_project_summary(
         self,
-        project_name: str,
+        project_name: str,  # noqa: ARG002
         stats: dict[str, object],
         *,
-        detailed: bool,
+        detailed: bool,  # noqa: ARG002
     ) -> None:
         """Imprimir resumo do projeto."""
         total_issues = stats["ruff_issues"] + stats["mypy_errors"]
@@ -319,7 +331,7 @@ class LintingReport(FlextScript):
     def _print_final_summary(
         self,
         total_stats: dict[str, object],
-        project_results: dict[str, object],
+        project_results: dict[str, object],  # noqa: ARG002
     ) -> None:
         """Imprimir resumo final."""
         print_colored("\n📊 RESUMO FINAL DO LINTING", Colors.BLUE)

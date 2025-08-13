@@ -86,7 +86,7 @@ class ProductionSecretsGenerator(BaseSecurityScript):
                 print("• Use different secrets per environment")
 
                 return FlextResult.ok(
-                    {"secrets_result": secrets_result, "environment": environment}
+                    {"secrets_result": secrets_result, "environment": environment},
                 )
 
             print_colored("❌ Failed to generate production secrets", Colors.RED)

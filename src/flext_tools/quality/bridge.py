@@ -90,7 +90,8 @@ class QualityBridge:
         )
 
     def analyze_project_via_service(
-        self, project_name: str,
+        self,
+        project_name: str,
     ) -> FlextResult[dict[str, object]]:
         """Delegate project quality analysis to flext-quality service.
 
@@ -115,7 +116,9 @@ class QualityBridge:
             # Note: QualityAPI likely provides async methods; this bridge remains sync for now
             # and returns a clear message until a proper async bridge is implemented.
             _ = QualityAPI  # Ensures import is used for type-checking and availability
-            return FlextResult.fail("Quality API integration requires async implementation")
+            return FlextResult.fail(
+                "Quality API integration requires async implementation",
+            )
 
         except Exception as e:
             self.logger.exception(
@@ -137,7 +140,9 @@ class QualityBridge:
 
         """
         try:
-            self.logger.info("Starting workspace quality validation via service delegation")
+            self.logger.info(
+                "Starting workspace quality validation via service delegation",
+            )
 
             workspace_results: dict[str, object] = {
                 "projects_analyzed": 0,
@@ -151,7 +156,8 @@ class QualityBridge:
 
             # Find all Python projects in workspace
             python_projects = [
-                p for p in self.workspace_root.iterdir()
+                p
+                for p in self.workspace_root.iterdir()
                 if p.is_dir() and (p / "pyproject.toml").exists()
             ]
 
@@ -176,7 +182,9 @@ class QualityBridge:
                         else 0.0
                     )
                     issues_data = project_data.get("issues", [])
-                    project_issues = len(issues_data) if hasattr(issues_data, "__len__") else 0
+                    project_issues = (
+                        len(issues_data) if hasattr(issues_data, "__len__") else 0
+                    )
 
                     project_results[project_name] = {
                         "quality_score": project_score,
@@ -191,7 +199,9 @@ class QualityBridge:
                         "quality_score": 0.0,
                         "issues_count": 0,
                         "status": "failed",
-                        "error": analysis_result.error if not analysis_result.success else "Unknown error",
+                        "error": analysis_result.error
+                        if not analysis_result.success
+                        else "Unknown error",
                     }
 
             # Calculate workspace metrics
@@ -224,11 +234,13 @@ class QualityBridge:
         try:
             # Instantiate to verify availability
             _ = QualityAPI()
-            return FlextResult.ok({
-                "service_available": True,
-                "service_type": "flext-quality",
-                "delegation_status": "active",
-                "workspace_root": str(self.workspace_root),
-            })
+            return FlextResult.ok(
+                {
+                    "service_available": True,
+                    "service_type": "flext-quality",
+                    "delegation_status": "active",
+                    "workspace_root": str(self.workspace_root),
+                },
+            )
         except Exception as e:
             return FlextResult.fail(f"Failed to check service status: {e}")

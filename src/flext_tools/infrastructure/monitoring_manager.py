@@ -206,7 +206,10 @@ class MonitoringManager:
         """
         try:
             print_colored("📊 Setting up monitoring infrastructure...", Colors.BLUE)
-            logger.info("Starting monitoring infrastructure setup", extra={"config_path": str(self.config_path)})
+            logger.info(
+                "Starting monitoring infrastructure setup",
+                extra={"config_path": str(self.config_path)},
+            )
 
             # For now, using mock results - in production this would perform actual monitoring setup
             # Using FlextResult pattern (DRY - no custom classes)

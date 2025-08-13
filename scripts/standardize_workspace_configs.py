@@ -61,7 +61,9 @@ class FlextConfigStandardizer:
         try:
             with Path(pyproject_file).open(encoding="utf-8") as f:
                 data = tomlkit.load(f)
-                return dict(data)  # Convert to regular dict for better type compatibility
+                return dict(
+                    data,
+                )  # Convert to regular dict for better type compatibility
         except (OSError, ValueError, TypeError) as e:
             print(f"❌ Error loading {pyproject_file}: {e}")
             return None
@@ -91,12 +93,16 @@ class FlextConfigStandardizer:
         if "tool" not in config:
             config["tool"] = {}
         tool_config = config["tool"]
-        assert isinstance(tool_config, dict), "tool section must be a dict"
+        if not isinstance(tool_config, dict):
+            print(f"  ⚠️  Warning: tool section must be a dict in {project_name}")
+            return False
 
         if "ruff" not in tool_config:
             tool_config["ruff"] = {}
         ruff_config = tool_config["ruff"]
-        assert isinstance(ruff_config, dict), "ruff section must be a dict"
+        if not isinstance(ruff_config, dict):
+            print(f"  ⚠️  Warning: ruff section must be a dict in {project_name}")
+            return False
 
         # Get target line length for this project
         target_length = self.special_configs.get(project_name, {}).get(
@@ -151,17 +157,23 @@ class FlextConfigStandardizer:
         if "tool" not in config:
             config["tool"] = {}
         tool_config = config["tool"]
-        assert isinstance(tool_config, dict), "tool section must be a dict"
+        if not isinstance(tool_config, dict):
+            print(f"  ⚠️  Warning: tool section must be a dict in {project_name}")
+            return False
 
         if "pytest" not in tool_config:
             tool_config["pytest"] = {}
         pytest_section = tool_config["pytest"]
-        assert isinstance(pytest_section, dict), "pytest section must be a dict"
+        if not isinstance(pytest_section, dict):
+            print(f"  ⚠️  Warning: pytest section must be a dict in {project_name}")
+            return False
 
         if "ini_options" not in pytest_section:
             pytest_section["ini_options"] = {}
         pytest_config = pytest_section["ini_options"]
-        assert isinstance(pytest_config, dict), "ini_options section must be a dict"
+        if not isinstance(pytest_config, dict):
+            print(f"  ⚠️  Warning: ini_options section must be a dict in {project_name}")
+            return False
 
         # Get target coverage threshold
         target_coverage = self.special_configs.get(project_name, {}).get(
@@ -180,14 +192,14 @@ class FlextConfigStandardizer:
                         if int(old_threshold) != target_coverage:
                             addopts[i] = f"--cov-fail-under={target_coverage}"
                             print(
-                                f"  📊 Updated coverage threshold: {old_threshold}%% → {target_coverage}%%"
+                                f"  📊 Updated coverage threshold: {old_threshold}%% → {target_coverage}%%",
                             )
                             changed = True
                         break
                 else:
                     # Add coverage threshold if not present
                     addopts.append(f"--cov-fail-under={target_coverage}")
-                    print(f"  ➕ Added coverage threshold: {target_coverage}")
+                    print(f"  ➕ Added coverage threshold: {target_coverage}")  # noqa: RUF001
                     changed = True
 
         # Add reference to shared pytest config
