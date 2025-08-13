@@ -10,7 +10,7 @@ import argparse
 import contextlib
 import io
 import shutil
-import subprocess  # legacy import kept only for typing
+# Removed subprocess dependency; serving/building uses mkdocs Python API
 import sys
 import tomllib
 from datetime import UTC, datetime
@@ -975,7 +975,7 @@ print(f"Pipeline status: {result.status}")"""
             self.logger.info("Run 'mkdocs serve' manually if needed")
         except KeyboardInterrupt:
             self.logger.info("Documentation server stopped")
-        except subprocess.CalledProcessError:
+        except Exception:
             self.logger.exception("Failed to start documentation server")
 
 
