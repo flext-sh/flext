@@ -34,6 +34,12 @@ lint.ignore = [
     "D401",    # non-imperative-mood: too opinionated in multilingual codebase
     "D203",    # conflicting with D211 (blank line before class)
     "D213",    # conflicting with D212 (summary line position)
+    "D107",    # Missing docstring in __init__
+    "PLC0415",  # Import should be at top-level of file (needed for lazy imports)
+    "PLR0913",  # Too many arguments in function definition (sometimes necessary)
+    "C901",     # Too complex (some functions need complexity)
+    "D102",     # Missing docstring in public method (test methods don't need them)
+    "D104",     # Missing docstring in public package
 ]
 lint.isort.force-single-line = false
 lint.isort.split-on-trailing-comma = true

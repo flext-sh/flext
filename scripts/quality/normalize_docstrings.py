@@ -60,8 +60,8 @@ def run_pyment_on_file(path: Path) -> subprocess.CompletedProcess:
 
     """
     # Pyment per-file; overwrite in-place to google style
-    return subprocess.run(
-        ["pyment", "-w", "-o", "google", str(path)],
+    return subprocess.run(  # noqa: S603 - Internal tool for code quality
+        ["pyment", "-w", "-o", "google", str(path)],  # noqa: S607 - Internal tool for code quality
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
@@ -76,8 +76,8 @@ def has_command(cmd: str) -> bool:
     Raises:
 
     """
-    res = subprocess.run(
-        [cmd, "--version"],
+    res = subprocess.run(  # noqa: S603 - Safe internal command check
+        [cmd, "--version"],  # noqa: S607 - Safe internal command check
         check=False,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
@@ -120,9 +120,9 @@ def main(argv: list[str]) -> int:
 
     if not args.no_ruff and has_command("ruff"):
         print("Running Ruff docstring fixes (D rules)...")
-        subprocess.run(
+        subprocess.run(  # noqa: S603 - Internal linting tool
             [
-                "ruff",
+                "ruff",  # noqa: S607 - Internal linting tool
                 "--select",
                 "D",
                 "--fix",
