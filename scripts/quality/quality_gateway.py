@@ -7,10 +7,11 @@ Usa flext_tools para validação consistente em todo o workspace.
 
 from __future__ import annotations
 
+import io
 import json
 import shutil
-import subprocess
 import sys
+from contextlib import redirect_stderr, redirect_stdout, suppress
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -253,64 +254,59 @@ class QualityGateway(FlextScript):
     def _analyze_code_quality(self, project_path: Path) -> dict[str, object]:
         """Analisar qualidade do código."""
         try:
-            # Ruff check
-            ruff_cmd = ["ruff", "check", ".", "--output-format=json"]
-            if not shutil.which("ruff"):
+            # Ruff check via API (no subprocess)
+            try:
+                from ruff.__main__ import (
+                    main as ruff_main,  # type: ignore[import-not-found]
+                )
+            except Exception:
                 return {
                     "ruff_issues": -1,
                     "mypy_errors": -1,
                     "total_issues": -1,
                     "status": "error",
-                    "error": "Ruff not found",
+                    "error": "Ruff module not available",
                 }
 
-            ruff_result = subprocess.run(  # noqa: S603
-                ruff_cmd,  # Validated: uses hardcoded tool 'ruff' with controlled arguments
-                check=False,
-                cwd=project_path,
-                capture_output=True,
-                text=True,
-                timeout=30,
-                shell=False,
-            )
+            if not project_path.is_dir():
+                return {
+                    "ruff_issues": -1,
+                    "mypy_errors": -1,
+                    "total_issues": -1,
+                    "status": "error",
+                    "error": "Invalid project path",
+                }
+
+            stdout_buf = io.StringIO()
+            with redirect_stdout(stdout_buf), redirect_stderr(io.StringIO()), suppress(SystemExit):
+                ruff_main(["check", str(project_path), "--output-format=json"])  # type: ignore[arg-type]
 
             ruff_issues = 0
-            if ruff_result.stdout:
+            ruff_output = stdout_buf.getvalue()
+            if ruff_output:
                 try:
-                    issues = json.loads(ruff_result.stdout)
+                    issues = json.loads(ruff_output)
                     ruff_issues = len(issues)
                 except json.JSONDecodeError:
-                    pass
+                    ruff_issues = 0
 
-            # MyPy check
-            mypy_cmd = ["mypy", ".", "--no-error-summary"]
-            if not shutil.which("mypy"):
+            # MyPy check via API (no subprocess)
+            try:
+                from mypy import api as mypy_api  # type: ignore[import-not-found]
+            except Exception:
                 return {
                     "ruff_issues": ruff_issues,
                     "mypy_errors": -1,
                     "total_issues": ruff_issues,
                     "status": "error",
-                    "error": "MyPy not found",
+                    "error": "MyPy module not available",
                 }
 
-            mypy_result = subprocess.run(  # noqa: S603
-                mypy_cmd,  # Validated: uses hardcoded tool 'mypy' with controlled arguments
-                check=False,
-                cwd=project_path,
-                capture_output=True,
-                text=True,
-                timeout=60,
-                shell=False,
-            )
-
+            mypy_stdout, _mypy_stderr, _status = mypy_api.run([str(project_path), "--no-error-summary"])  # type: ignore[arg-type]
             mypy_errors = 0
-            if mypy_result.stdout:
+            if mypy_stdout:
                 mypy_errors = len(
-                    [
-                        line
-                        for line in mypy_result.stdout.split("\n")
-                        if line and ":" in line
-                    ],
+                    [line for line in mypy_stdout.split("\n") if line and ":" in line],
                 )
 
             total_issues = ruff_issues + mypy_errors

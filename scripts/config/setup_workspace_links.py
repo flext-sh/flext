@@ -14,7 +14,7 @@ Usando flext_tools para máxima confiabilidade enterprise.
 
 from __future__ import annotations
 
-import subprocess
+import shutil
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -65,23 +65,12 @@ class ComprehensiveWorkspaceManager(FlextScript):
         print_colored(f"✅ Found {len(flext_projects)} FLEXT projects", Colors.GREEN)
 
         # Check Poetry availability
-        try:
-            # Security: poetry is a trusted executable in PATH
-            subprocess.run(
-                ["poetry", "--version"],  # noqa: S607
-                capture_output=True,
-                check=True,
-                timeout=5,
-            )
+        poetry_path = shutil.which("poetry")
+        if poetry_path:
             print_colored("✅ Poetry available", Colors.GREEN)
             return FlextResult.ok(None)
-        except (
-            subprocess.CalledProcessError,
-            FileNotFoundError,
-            subprocess.TimeoutExpired,
-        ):
-            print_colored("❌ Poetry not found", Colors.RED)
-            return FlextResult.fail("Poetry not found")
+        print_colored("❌ Poetry not found", Colors.RED)
+        return FlextResult.fail("Poetry not found")
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute comprehensive workspace management."""

@@ -7,12 +7,13 @@ MyPy and other linting tools in the FLEXT workspace.
 
 from __future__ import annotations
 
+import io
 import json
 import operator
 import shutil
-import subprocess
 import sys
 from collections import defaultdict
+from contextlib import redirect_stderr, redirect_stdout
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -176,38 +177,33 @@ class LintingReport(FlextScript):
     def _run_ruff_analysis(self, project_path: Path) -> dict[str, object]:
         """Executar análise Ruff."""
         try:
-            # Ruff check com formato JSON
-            ruff_executable = shutil.which("ruff")
-            if not ruff_executable:
-                return {
-                    "total_issues": 0,
-                    "by_category": {},
-                    "by_file": {},
-                    "issues": [],
-                }
+            # Executa Ruff em processo (sem subprocess) capturando a saída JSON
+            try:
+                from ruff.__main__ import (
+                    main as ruff_main,  # type: ignore[import-not-found]
+                )
+            except Exception:
+                # Fallback: se ruff não estiver disponível como módulo
+                return {"total_issues": 0, "by_category": {}, "by_file": {}, "issues": []}
 
-            result = subprocess.run(  # noqa: S603
-                [
-                    ruff_executable,
-                    "check",
-                    ".",
-                    "--output-format=json",
-                ],  # Validated: uses ruff from shutil.which
-                check=False,
-                cwd=project_path,
-                capture_output=True,
-                text=True,
-                timeout=30,
-                shell=False,
-            )
+            if not project_path.is_dir():
+                return {"total_issues": 0, "by_category": {}, "by_file": {}, "issues": []}
+
+            stdout_buf, stderr_buf = io.StringIO(), io.StringIO()
+            with redirect_stdout(stdout_buf), redirect_stderr(stderr_buf):
+                try:
+                    ruff_main(["check", str(project_path), "--output-format=json"])  # type: ignore[arg-type]
+                except SystemExit as e:  # Ruff chama sys.exit
+                    _ = e.code if isinstance(e.code, int) else 1
 
             issues_by_category: dict[str, int] = defaultdict(int)
             issues_by_file: dict[str, int] = defaultdict(int)
             all_issues = []
 
-            if result.stdout:
+            output_text = stdout_buf.getvalue()
+            if output_text:
                 try:
-                    issues = json.loads(result.stdout)
+                    issues = json.loads(output_text)
                     for issue in issues:
                         category = issue.get("code", "Unknown")
                         filename = issue.get("filename", "Unknown")
@@ -215,7 +211,6 @@ class LintingReport(FlextScript):
                         issues_by_category[category] += 1
                         issues_by_file[filename] += 1
                         all_issues.append(issue)
-
                 except json.JSONDecodeError:
                     pass
 
@@ -226,38 +221,30 @@ class LintingReport(FlextScript):
                 "issues": all_issues,
             }
 
-        except (subprocess.TimeoutExpired, Exception) as e:
+        except Exception as e:
             print_colored(f"    ⚠️ Erro no Ruff: {e}", Colors.YELLOW)
             return {"total_issues": 0, "by_category": {}, "by_file": {}, "issues": []}
 
     def _run_mypy_analysis(self, project_path: Path) -> dict[str, object]:
         """Executar análise MyPy."""
         try:
-            # MyPy check com formato JSON
-            mypy_executable = shutil.which("mypy")
-            if not mypy_executable:
+            # Executa MyPy via API Python (sem subprocess)
+            try:
+                from mypy import api as mypy_api  # type: ignore[import-not-found]
+            except Exception:
                 return {"total_errors": 0, "by_type": {}, "by_file": {}, "output": ""}
 
-            result = subprocess.run(  # noqa: S603
-                [
-                    mypy_executable,
-                    ".",
-                    "--no-error-summary",
-                ],  # Validated: uses mypy from shutil.which
-                check=False,
-                cwd=project_path,
-                capture_output=True,
-                text=True,
-                timeout=60,
-                shell=False,
-            )
+            if not project_path.is_dir():
+                return {"total_errors": 0, "by_type": {}, "by_file": {}, "output": ""}
+
+            stdout_text, _stderr_text, _status = mypy_api.run([str(project_path), "--no-error-summary"])  # type: ignore[arg-type]
 
             errors_by_type: dict[str, int] = defaultdict(int)
             errors_by_file: dict[str, int] = defaultdict(int)
             total_errors = 0
 
-            if result.stdout:
-                for line in result.stdout.strip().split("\n"):
+            if stdout_text:
+                for line in stdout_text.strip().split("\n"):
                     if line and ":" in line:
                         parts = line.split(":")
                         if len(parts) >= 4:
@@ -274,10 +261,10 @@ class LintingReport(FlextScript):
                 "total_errors": total_errors,
                 "by_type": dict(errors_by_type),
                 "by_file": dict(errors_by_file),
-                "output": result.stdout,
+                "output": stdout_text,
             }
 
-        except (subprocess.TimeoutExpired, Exception) as e:
+        except Exception as e:
             print_colored(f"    ⚠️ Erro no MyPy: {e}", Colors.YELLOW)
             return {"total_errors": 0, "by_type": {}, "by_file": {}, "output": ""}
 
