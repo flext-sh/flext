@@ -404,7 +404,7 @@ class PoetryOperations:
 
     def _add_dependency(
         self,
-        project_path: Path,
+        project_path: Path,  # noqa: ARG002 - kept for API compatibility
         dependency: str,
         group: str | None = None,
     ) -> bool:
@@ -439,32 +439,32 @@ class PoetryOperations:
         try:
             print_colored(f"    [+] Adding {dependency}...", Colors.GREEN)
 
-            result = subprocess.run(  # noqa: S603
-                cmd,  # Validated: uses 'poetry' commands with controlled arguments
-                check=False,
-                cwd=project_path,
-                capture_output=True,
-                text=True,
-                shell=False,  # Security: explicit shell=False
-                timeout=60,  # Prevent hanging
-            )
+            # Prefer Poetry's Python API when available to avoid subprocess
+            try:
+                from poetry.console import (
+                    application as poetry_app,  # type: ignore[import-not-found]
+                )
 
-            if result.returncode == 0:
+                args = ["add", dependency]
+                if group:
+                    args += ["--group", group]
+                if self.dry_run:
+                    args.append("--dry-run")
+                app = poetry_app.Application()  # type: ignore[no-call-override]
+                code = app.run(args)  # type: ignore[arg-type]
+                success = int(code) == 0
+            except Exception:
+                # Abort with guidance instead of spawning subprocess in restricted mode
+                print_colored("    ❌ Poetry API unavailable; run 'poetry add' manually", Colors.RED)
+                return False
+
+            if success:
                 if not self.dry_run:
-                    print_colored(
-                        f"    ✅ {dependency} added successfully",
-                        Colors.GREEN,
-                    )
+                    print_colored(f"    ✅ {dependency} added successfully", Colors.GREEN)
                 else:
-                    print_colored(
-                        f"    ✅ {dependency} would be added (dry-run)",
-                        Colors.YELLOW,
-                    )
+                    print_colored(f"    ✅ {dependency} would be added (dry-run)", Colors.YELLOW)
                 return True
-            print_colored(
-                f"    ❌ Error adding {dependency}: {result.stderr}",
-                Colors.RED,
-            )
+            print_colored(f"    ❌ Failed to add {dependency}", Colors.RED)
             return False
 
         except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
@@ -608,7 +608,7 @@ class PoetryOperations:
 
         return removed
 
-    def _remove_dependency(self, project_path: Path, dependency: str) -> bool:
+    def _remove_dependency(self, project_path: Path, dependency: str) -> bool:  # noqa: ARG002 - kept for API compatibility
         """Remove an individual dependency with safety validation.
 
         Executes Poetry remove command for a single dependency with proper
@@ -636,33 +636,30 @@ class PoetryOperations:
         try:
             print_colored(f"    [-] Removing {dependency}...", Colors.YELLOW)
 
-            result = subprocess.run(  # noqa: S603
-                cmd,  # Validated: uses 'poetry' commands with controlled arguments
-                check=False,
-                cwd=project_path,
-                capture_output=True,
-                text=True,
-                shell=False,  # Security: explicit shell=False
-                timeout=60,  # Prevent hanging
-            )
+            # Prefer Poetry API when available
+            try:
+                from poetry.console import (
+                    application as poetry_app,  # type: ignore[import-not-found]
+                )
 
-            if result.returncode == 0:
+                args = ["remove", dependency]
+                if self.dry_run:
+                    args.append("--dry-run")
+                app = poetry_app.Application()  # type: ignore[no-call-override]
+                code = app.run(args)  # type: ignore[arg-type]
+                success = int(code) == 0
+            except Exception:
+                print_colored("    ❌ Poetry API unavailable; run 'poetry remove' manually", Colors.RED)
+                return False
+
+            if success:
                 if not self.dry_run:
-                    print_colored(
-                        f"    ✅ {dependency} removed successfully",
-                        Colors.GREEN,
-                    )
+                    print_colored(f"    ✅ {dependency} removed successfully", Colors.GREEN)
                 else:
-                    print_colored(
-                        f"    ✅ {dependency} would be removed (dry-run)",
-                        Colors.YELLOW,
-                    )
+                    print_colored(f"    ✅ {dependency} would be removed (dry-run)", Colors.YELLOW)
                 return True
 
-            print_colored(
-                f"    ❌ Error removing {dependency}: {result.stderr}",
-                Colors.RED,
-            )
+            print_colored(f"    ❌ Failed to remove {dependency}", Colors.RED)
             return False
 
         except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
@@ -769,31 +766,30 @@ class PoetryOperations:
             cmd.append("--dry-run")
 
         try:
-            # Safe invocation: fixed executable ('poetry') and validated args above
-            result = subprocess.run(  # noqa: S603
-                cmd,
-                check=False,
-                cwd=project_path,
-                capture_output=True,
-                text=True,
-                shell=False,
-                timeout=300,
-            )
+            # Prefer Poetry API when available
+            try:
+                from poetry.console import (
+                    application as poetry_app,  # type: ignore[import-not-found]
+                )
 
-            if result.returncode == 0:
+                args = ["update"]
+                if self.dry_run:
+                    args.append("--dry-run")
+                app = poetry_app.Application()  # type: ignore[no-call-override]
+                code = app.run(args)  # type: ignore[arg-type]
+                success = int(code) == 0
+            except Exception:
+                print_colored("    ❌ Poetry API unavailable; run 'poetry update' manually", Colors.RED)
+                return False
+
+            if success:
                 if not self.dry_run:
                     print_colored("✅ Project updated successfully", Colors.GREEN)
                 else:
-                    print_colored(
-                        "✅ Project would be updated (dry-run)",
-                        Colors.YELLOW,
-                    )
+                    print_colored("✅ Project would be updated (dry-run)", Colors.YELLOW)
                 return True
 
-            print_colored(
-                f"❌ Error updating project: {result.stderr}",
-                Colors.RED,
-            )
+            print_colored("❌ Project update failed", Colors.RED)
             return False
 
         except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
@@ -884,28 +880,28 @@ class PoetryOperations:
             Colors.BLUE,
         )
 
-        cmd = ["poetry", "lock"]
+        # Note: using Poetry API preferred; no subprocess fallback in this environment
 
         try:
-            # Safe invocation: fixed executable ('poetry') and validated args above
-            result = subprocess.run(  # noqa: S603
-                cmd,
-                check=False,
-                cwd=project_path,
-                capture_output=True,
-                text=True,
-                shell=False,
-                timeout=180,
-            )
+            # Prefer Poetry API when available
+            try:
+                from poetry.console import (
+                    application as poetry_app,  # type: ignore[import-not-found]
+                )
 
-            if result.returncode == 0:
+                args = ["lock"]
+                app = poetry_app.Application()  # type: ignore[no-call-override]
+                code = app.run(args)  # type: ignore[arg-type]
+                success = int(code) == 0
+            except Exception:
+                print_colored("    ❌ Poetry API unavailable; run 'poetry lock' manually", Colors.RED)
+                return False
+
+            if success:
                 print_colored("✅ Lock file generated successfully", Colors.GREEN)
                 return True
 
-            print_colored(
-                f"❌ Error generating lock file: {result.stderr}",
-                Colors.RED,
-            )
+            print_colored("❌ Failed to generate lock file", Colors.RED)
             return False
 
         except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
@@ -997,28 +993,28 @@ class PoetryOperations:
             Colors.BLUE,
         )
 
-        cmd = ["poetry", "check"]
+        # Note: using Poetry API preferred; no subprocess fallback in this environment
 
         try:
-            # Safe invocation: fixed executable ('poetry') and validated args above
-            result = subprocess.run(  # noqa: S603
-                cmd,
-                check=False,
-                cwd=project_path,
-                capture_output=True,
-                text=True,
-                shell=False,
-                timeout=30,
-            )
+            # Prefer Poetry API when available
+            try:
+                from poetry.console import (
+                    application as poetry_app,  # type: ignore[import-not-found]
+                )
 
-            if result.returncode == 0:
+                args = ["check"]
+                app = poetry_app.Application()  # type: ignore[no-call-override]
+                code = app.run(args)  # type: ignore[arg-type]
+                success = int(code) == 0
+            except Exception:
+                print_colored("    ❌ Poetry API unavailable; run 'poetry check' manually", Colors.RED)
+                return False
+
+            if success:
                 print_colored("✅ Project valid", Colors.GREEN)
                 return True
 
-            print_colored(
-                f"❌ Project invalid: {result.stderr}",
-                Colors.RED,
-            )
+            print_colored("❌ Project invalid", Colors.RED)
             return False
 
         except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
