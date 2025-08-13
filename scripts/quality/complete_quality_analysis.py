@@ -6,7 +6,6 @@ Analisa TODOS os projetos Python para identificar problemas de qualidade.
 
 import io
 import json
-import subprocess
 import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -70,7 +69,7 @@ def run_command(cmd: list[str], _cwd: str | None = None) -> tuple[int, str, str]
 
         # Fallback genérico restrito: bloqueia comandos desconhecidos
         return 1, "", f"Unsupported command: {cmd}"
-    except subprocess.TimeoutExpired:
+    except TimeoutError:
         return -1, "", "Command timed out"
     except Exception as e:
         return -1, "", str(e)
