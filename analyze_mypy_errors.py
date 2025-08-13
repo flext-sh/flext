@@ -58,8 +58,8 @@ def run_mypy_analysis(project_path: Path) -> tuple[int, list[str], str]:
         os.chdir(project_path)
 
         # Run MyPy
-        result = subprocess.run(
-            ["mypy", str(src_dir), "--show-error-codes", "--no-error-summary"],
+        result = subprocess.run(  # noqa: S603 - Internal development tool
+            ["mypy", str(src_dir), "--show-error-codes", "--no-error-summary"],  # noqa: S607 - Internal development tool
             check=False, capture_output=True,
             text=True,
             timeout=60,

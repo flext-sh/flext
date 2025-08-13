@@ -78,7 +78,7 @@ class FinalMyPyAnalyzer:
                 "--show-absolute-path",
             ]
 
-            result = subprocess.run(
+            result = subprocess.run(  # noqa: S603 - Internal development tool
                 cmd,
                 check=False, cwd=project_path,
                 env=env,

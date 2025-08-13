@@ -2,59 +2,59 @@ version: 1
 default_environment: dev
 project_id: flext-workspace
 environments:
-  - name: dev
-    config:
-      plugins:
-        extractors:
-          - name: tap-csv
-            config:
-              files:
-                - entity: test_data
-                  path: test_data.csv
-                  keys:
-                    - name
-        loaders:
-          - name: target-csv
-            config:
-              destination_path: output.csv
+- name: dev
+  config:
+    plugins:
+      extractors:
+      - name: tap-csv
+        config:
+          files:
+          - entity: test_data
+            path: test_data.csv
+            keys:
+            - name
+      loaders:
+      - name: target-csv
+        config:
+          destination_path: output.csv
 plugins:
   extractors:
-    - name: tap-csv
-      variant: meltanolabs
-      pip_url: git+https://github.com/MeltanoLabs/tap-csv.git
-    - name: tap-oracle
-      variant: flext-consolidated
-      pip_url: -e flext-tap-oracle
-      description: "FLEXT consolidated Oracle tap (wrapper for flext-meltano implementation)"
-    - name: tap-ldap
-      variant: flext-consolidated
-      pip_url: -e flext-tap-ldap
-      description: "FLEXT consolidated LDAP tap (wrapper for flext-meltano implementation)"
-    - name: tap-ldif
-      variant: flext-consolidated
-      pip_url: -e flext-tap-ldif
-      description: "FLEXT consolidated LDIF tap (wrapper for flext-meltano implementation)"
+  - name: tap-oracle
+    description: FLEXT consolidated Oracle tap (wrapper for flext-meltano implementation)
+    variant: flext-consolidated
+    pip_url: -e flext-tap-oracle
+  - name: tap-ldap
+    description: FLEXT consolidated LDAP tap (wrapper for flext-meltano implementation)
+    variant: flext-consolidated
+    pip_url: -e flext-tap-ldap
+  - name: tap-ldif
+    description: FLEXT consolidated LDIF tap (wrapper for flext-meltano implementation)
+    variant: flext-consolidated
+    pip_url: -e flext-tap-ldif
+  - name: tap-csv
+    variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/tap-csv.git
   loaders:
-    - name: target-csv
-      variant: meltanolabs
-      pip_url: meltanolabs-target-csv
-    - name: target-oracle
-      variant: flext-consolidated
-      pip_url: -e flext-target-oracle
-      description: "FLEXT consolidated Oracle target (wrapper for flext-meltano implementation)"
-    - name: target-ldap
-      variant: flext-consolidated
-      pip_url: -e flext-target-ldap
-      description: "FLEXT consolidated LDAP target (wrapper for flext-meltano implementation)"
-    - name: target-ldif
-      variant: flext-consolidated
-      pip_url: -e flext-target-ldif
-      description: "FLEXT consolidated LDIF target (wrapper for flext-meltano implementation)"
+  - name: target-csv
+    variant: meltanolabs
+    pip_url: meltanolabs-target-csv
+  - name: target-oracle
+    description: FLEXT consolidated Oracle target (wrapper for flext-meltano implementation)
+    variant: flext-consolidated
+    pip_url: -e flext-target-oracle
+  - name: target-ldap
+    description: FLEXT consolidated LDAP target (wrapper for flext-meltano implementation)
+    variant: flext-consolidated
+    pip_url: -e flext-target-ldap
+  - name: target-ldif
+    description: FLEXT consolidated LDIF target (wrapper for flext-meltano implementation)
+    variant: flext-consolidated
+    pip_url: -e flext-target-ldif
   transformers:
-    - name: dbt-postgres
-      variant: dbt-labs
-      pip_url: dbt-core~=1.3.0 dbt-postgres~=1.3.0
-    - name: dbt-flext
-      variant: flext-consolidated
-      pip_url: -e flext-meltano
-      description: "FLEXT consolidated DBT transformations"
+  - name: dbt-postgres
+    variant: dbt-labs
+    pip_url: dbt-core~=1.3.0 dbt-postgres~=1.3.0
+  - name: dbt-flext
+    description: FLEXT consolidated DBT transformations
+    variant: flext-consolidated
+    pip_url: -e flext-meltano
