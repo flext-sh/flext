@@ -77,8 +77,6 @@ License: MIT
 from __future__ import annotations
 
 import re
-import shutil
-import subprocess  # legacy import kept only for type references
 import tomllib
 from typing import TYPE_CHECKING
 
@@ -496,7 +494,9 @@ class PoetryValidator:
 
         try:
             # Prefer Poetry Python API to avoid subprocess usage
-            from poetry.console import application as poetry_app  # type: ignore[import-not-found]
+            from poetry.console import (
+                application as poetry_app,  # type: ignore[import-not-found]
+            )
 
             app = poetry_app.Application()  # type: ignore[no-call-override]
             code = app.run(["check"])  # type: ignore[arg-type]
