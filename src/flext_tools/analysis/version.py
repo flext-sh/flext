@@ -110,13 +110,16 @@ class VersionCompatibilityResult(BaseModel):
     spec1: str = Field(description="First version specification analyzed")
     spec2: str = Field(description="Second version specification analyzed")
     overlap_version: str | None = Field(
-        default=None, description="Common version that satisfies both specifications",
+        default=None,
+        description="Common version that satisfies both specifications",
     )
     issues: list[str] = Field(
-        default_factory=list, description="List of compatibility issues found",
+        default_factory=list,
+        description="List of compatibility issues found",
     )
     recommendations: list[str] = Field(
-        default_factory=list, description="List of recommended actions for resolution",
+        default_factory=list,
+        description="List of recommended actions for resolution",
     )
 
     def validate_business_rules(self) -> FlextResult[None]:
@@ -357,10 +360,14 @@ class VersionAnalyzer:
 
         for project_name, data in projects_data.items():
             VersionAnalyzer._collect_pep621_dependencies(
-                data, project_name, package_versions,
+                data,
+                project_name,
+                package_versions,
             )
             VersionAnalyzer._collect_poetry_dependencies(
-                data, project_name, package_versions,
+                data,
+                project_name,
+                package_versions,
             )
 
         return package_versions
@@ -384,7 +391,10 @@ class VersionAnalyzer:
             package_name, version_spec = VersionAnalyzer.parse_version_spec(dep_spec)
             if package_name and version_spec:
                 VersionAnalyzer._add_package_version(
-                    package_name, project_name, version_spec, package_versions,
+                    package_name,
+                    project_name,
+                    version_spec,
+                    package_versions,
                 )
 
     @staticmethod
@@ -410,7 +420,10 @@ class VersionAnalyzer:
             version_spec = VersionAnalyzer._parse_poetry_version_spec(dep_spec)
             if version_spec:
                 VersionAnalyzer._add_package_version(
-                    package_name, project_name, version_spec, package_versions,
+                    package_name,
+                    project_name,
+                    version_spec,
+                    package_versions,
                 )
 
     @staticmethod
@@ -617,7 +630,8 @@ def normalize_constraint(constraint: str) -> str:
 
 
 def check_version_compatibility(
-    spec1: str, spec2: str,
+    spec1: str,
+    spec2: str,
 ) -> FlextResult[VersionCompatibilityResult]:
     """Check compatibility between two version specifications using FlextResult.
 
@@ -653,7 +667,10 @@ def check_version_compatibility(
         return FlextResult.ok(result)
     except Exception as e:
         logger.exception(
-            "Version compatibility check failed", spec1=spec1, spec2=spec2, error=str(e),
+            "Version compatibility check failed",
+            spec1=spec1,
+            spec2=spec2,
+            error=str(e),
         )
         return FlextResult.fail(f"Version compatibility check failed: {e}")
 

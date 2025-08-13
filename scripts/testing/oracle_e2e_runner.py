@@ -57,14 +57,19 @@ class OracleE2ETestRunner(FlextScript):
                 "❌ Docker not available - required for Oracle E2E tests",
                 Colors.RED,
             )
-            return FlextResult.fail("Docker not available - required for Oracle E2E tests")
+            return FlextResult.fail(
+                "Docker not available - required for Oracle E2E tests",
+            )
 
         # Docker Compose check: best-effort via engine info (compose is a CLI plugin)
         try:
             info = client.info()
             engine_ok = bool(info and info.get("ServerVersion"))
             if engine_ok:
-                print_colored("✅ Docker engine healthy (compose plugin not required)", Colors.GREEN)
+                print_colored(
+                    "✅ Docker engine healthy (compose plugin not required)",
+                    Colors.GREEN,
+                )
                 return FlextResult.ok(None)
             print_colored("❌ Docker engine info unavailable", Colors.RED)
             return FlextResult.fail("Docker engine info unavailable")

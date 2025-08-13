@@ -10,7 +10,7 @@ description: "Enterprise Data Integration Platform - Complete Documentation Hub"
 Welcome to the FLEXT documentation hub. This comprehensive guide provides everything you need to understand, use, and contribute to the FLEXT ecosystem.
 
 !!! info "Documentation Status"
-    This documentation is under active development. Major components are covered; several sections are being expanded and aligned with the current codebase.
+This documentation is under active development. Major components are covered; several sections are being expanded and aligned with the current codebase.
 
 ## 🚀 Quick Start
 
@@ -42,20 +42,20 @@ graph TB
         FCLI[FLEXT CLI]
         FW[FLEXT Web]
     end
-    
+
     subgraph "Data Integration"
         TAPO[FLEXT TAP Oracle]
         TAPL[FLEXT TAP LDAP]
         TARGO[FLEXT Target Oracle]
         DBT[FLEXT DBT Projects]
     end
-    
+
     subgraph "Authentication & Security"
         AUTH[FLEXT Auth]
         LDAP[FLEXT LDAP]
         LDIF[FLEXT LDIF]
     end
-    
+
     FC --> FA
     FA --> FCLI
     FA --> FW
@@ -87,14 +87,14 @@ FLEXT follows Clean Architecture principles with clear separation of concerns:
 
 ### Implementation Progress
 
-| Component | Status | Coverage | Notes |
-|-----------|--------|----------|-------|
-| FlexCore (Go) | 🟡 Beta | 75% | Core services implemented |
-| FLEXT API | 🟢 Stable | 90% | REST API complete |
-| FLEXT CLI | 🟢 Stable | 85% | Command interface ready |
-| Data Integration | 🟡 Beta | 70% | Oracle/LDAP working |
-| Authentication | 🟢 Stable | 95% | LDAP integration complete |
-| Documentation | 🟡 Beta | 95% | This site |
+| Component        | Status    | Coverage | Notes                     |
+| ---------------- | --------- | -------- | ------------------------- |
+| FlexCore (Go)    | 🟡 Beta   | 75%      | Core services implemented |
+| FLEXT API        | 🟢 Stable | 90%      | REST API complete         |
+| FLEXT CLI        | 🟢 Stable | 85%      | Command interface ready   |
+| Data Integration | 🟡 Beta   | 70%      | Oracle/LDAP working       |
+| Authentication   | 🟢 Stable | 95%      | LDAP integration complete |
+| Documentation    | 🟡 Beta   | 95%      | This site                 |
 
 ### Quality Metrics
 
@@ -156,22 +156,11 @@ docs/
 
 ## 🚀 What's New in 0.9.0
 
-!!! success "New Features"
-    - **Enhanced Oracle Integration**: Improved performance and reliability
-    - **LDAP Authentication**: Complete LDAP/Active Directory support
-    - **API Documentation**: Auto-generated OpenAPI specifications
-    - **Monitoring**: Prometheus metrics and Grafana dashboards
+!!! success "New Features" - **Enhanced Oracle Integration**: Improved performance and reliability - **LDAP Authentication**: Complete LDAP/Active Directory support - **API Documentation**: Auto-generated OpenAPI specifications - **Monitoring**: Prometheus metrics and Grafana dashboards
 
-!!! warning "Breaking Changes"
-    - **Configuration Format**: Updated configuration file format
-    - **API Endpoints**: Some REST endpoints have changed
-    - **CLI Commands**: Updated command-line interface
+!!! warning "Breaking Changes" - **Configuration Format**: Updated configuration file format - **API Endpoints**: Some REST endpoints have changed - **CLI Commands**: Updated command-line interface
 
-!!! info "Improvements"
-    - **Performance**: 40% improvement in data processing speed
-    - **Security**: Enhanced authentication and authorization
-    - **Documentation**: Complete documentation overhaul
-    - **Testing**: Increased test coverage to 85%
+!!! info "Improvements" - **Performance**: 40% improvement in data processing speed - **Security**: Enhanced authentication and authorization - **Documentation**: Complete documentation overhaul - **Testing**: Increased test coverage to 85%
 
 ## 📋 Roadmap
 
