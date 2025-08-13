@@ -4,7 +4,7 @@
 
 Command-line interface service for FLEXT data integration platform.
 
-> ⚠️ Development Status: Basic CLI bootstrap working; shared_kernel package conflicts; pipeline commands não implementados ainda.
+> ⚠️ Development Status: Basic CLI bootstrap working; shared_kernel package conflicts; pipeline commands not implemented yet.
 
 ## Quick Start
 

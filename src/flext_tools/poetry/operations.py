@@ -270,7 +270,9 @@ class PoetryOperations:
 
             # Use existing implementation but wrap in FlextResult
             legacy_result = self.add_dependencies(
-                project_path, dependencies, _auto_confirm=auto_confirm,
+                project_path,
+                dependencies,
+                _auto_confirm=auto_confirm,
             )
 
             execution_time = time.time() - start_time
@@ -502,7 +504,9 @@ class PoetryOperations:
 
             # Use existing implementation but wrap in FlextResult
             legacy_result = self.remove_dependencies(
-                project_path, dependencies, _auto_confirm=auto_confirm,
+                project_path,
+                dependencies,
+                _auto_confirm=auto_confirm,
             )
 
             execution_time = time.time() - start_time
@@ -682,7 +686,8 @@ class PoetryOperations:
             start_time = time.time()
 
             self.logger.info(
-                "Starting safe project update", project_path=str(project_path),
+                "Starting safe project update",
+                project_path=str(project_path),
             )
 
             # Use existing implementation but wrap in FlextResult
@@ -812,7 +817,8 @@ class PoetryOperations:
             start_time = time.time()
 
             self.logger.info(
-                "Starting safe project lock", project_path=str(project_path),
+                "Starting safe project lock",
+                project_path=str(project_path),
             )
 
             # Use existing implementation but wrap in FlextResult
@@ -844,7 +850,9 @@ class PoetryOperations:
 
         except Exception as e:
             self.logger.exception(
-                "Safe project lock failed", project_path=str(project_path), error=str(e),
+                "Safe project lock failed",
+                project_path=str(project_path),
+                error=str(e),
             )
             return FlextResult.fail(f"Project lock failed: {e}")
 
@@ -921,7 +929,8 @@ class PoetryOperations:
             start_time = time.time()
 
             self.logger.info(
-                "Starting safe project validation", project_path=str(project_path),
+                "Starting safe project validation",
+                project_path=str(project_path),
             )
 
             # Use existing implementation but wrap in FlextResult
