@@ -67,7 +67,6 @@ from __future__ import annotations
 
 import json
 import subprocess
-import sys
 import tomllib
 from collections import defaultdict
 from dataclasses import dataclass
@@ -294,23 +293,22 @@ class VenvConsistencyValidator:
         print_colored("  📦 Scanning installed packages...", Colors.CYAN)
 
         try:
-            # Use pip list to get installed packages
-            # Safe: using sys.executable with hardcoded arguments
-            result = subprocess.run(  # noqa: S603
-                [
-                    sys.executable,
-                    "-m",
-                    "pip",
-                    "list",
-                    "--format=json",
-                ],  # Validated: uses sys.executable
-                capture_output=True,
-                text=True,
-                check=True,
-                cwd=self.workspace_path,
-            )
+            # Prefer Python API for installed distributions when available
+            try:
+                from importlib.metadata import distributions  # Python 3.8+
 
-            packages_data = json.loads(result.stdout)
+                packages_data = [
+                    {"name": dist.metadata["Name"], "version": dist.version}
+                    for dist in distributions()
+                    if dist.metadata and dist.metadata.get("Name")
+                ]
+            except Exception:
+                # If importlib.metadata is not available, abort with guidance
+                print_colored(
+                    "    ⚠️ Unable to read installed packages; please ensure Python 3.8+",
+                    Colors.YELLOW,
+                )
+                packages_data = []
 
             for package_data in packages_data:
                 name = package_data["name"].lower()

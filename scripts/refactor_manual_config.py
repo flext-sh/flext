@@ -10,8 +10,6 @@ from __future__ import annotations
 import functools
 import operator
 import re
-import shutil
-import subprocess
 from pathlib import Path
 
 from flext_core import FlextResult, get_logger
@@ -34,120 +32,53 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
             "manual_validation": [],
         }
 
-        # Find manual os.getenv() usage
-        cmd = [
-            "find",
-            ".",
-            "-name",
-            "*.py",
-            "-type",
-            "f",
-            "-exec",
-            "grep",
-            "-l",
-            "os\\.getenv\\|os\\.environ\\.get",
-            "{}",
-            ";",
-        ]
-        if not shutil.which("find") or not shutil.which("grep"):
-            return FlextResult.fail("find or grep not found")
-
-        # Security: cmd is hardcoded, not user input
-        result = subprocess.run(  # noqa: S603
-            cmd,
-            capture_output=True,
-            text=True,
-            check=False,
-            shell=False,  # Validated: cmd is hardcoded
-        )
-        if result.returncode == 0:
-            patterns["manual_env_vars"] = [
-                f.strip() for f in result.stdout.split("\n") if f.strip()
-            ]
+        # Find manual os.getenv() usage without external commands
+        env_var_files: list[str] = []
+        for path in Path.cwd().rglob("*.py"):
+            try:
+                text = path.read_text(encoding="utf-8")
+            except Exception as e:  # noqa: S110
+                logger.debug(f"Skipping {path}: {e}")
+                continue
+            if ("os.getenv(" in text) or ("os.environ.get" in text):
+                env_var_files.append(str(path))
+        patterns["manual_env_vars"] = env_var_files
 
         # Find manual Pydantic instantiation (Config(), Settings(), etc.)
-        cmd = [
-            "find",
-            ".",
-            "-name",
-            "*.py",
-            "-type",
-            "f",
-            "-exec",
-            "grep",
-            "-l",
-            "Settings()\\|Config()\\|.*Config()",
-            "{}",
-            ";",
-        ]
-        # Security: cmd is hardcoded, not user input
-        result = subprocess.run(  # noqa: S603
-            cmd,
-            capture_output=True,
-            text=True,
-            check=False,
-            shell=False,  # Validated: cmd is hardcoded
-        )
-        if result.returncode == 0:
-            patterns["manual_pydantic"] = [
-                f.strip() for f in result.stdout.split("\n") if f.strip()
-            ]
+        pyd_files: list[str] = []
+        for path in Path.cwd().rglob("*.py"):
+            try:
+                text = path.read_text(encoding="utf-8")
+            except Exception as e:  # noqa: S110
+                logger.debug(f"Skipping {path}: {e}")
+                continue
+            if re.search(r"\b(Settings\(\)|[A-Za-z0-9_]*Config\(\))", text):
+                pyd_files.append(str(path))
+        patterns["manual_pydantic"] = pyd_files
 
         # Find manual file loading (json.load, yaml.load)
-        cmd = [
-            "find",
-            ".",
-            "-name",
-            "*.py",
-            "-type",
-            "f",
-            "-exec",
-            "grep",
-            "-l",
-            "json\\.load\\|yaml\\.load\\|yaml\\.safe_load",
-            "{}",
-            ";",
-        ]
-        # Security: cmd is hardcoded, not user input
-        result = subprocess.run(  # noqa: S603
-            cmd,
-            capture_output=True,
-            text=True,
-            check=False,
-            shell=False,  # Validated: cmd is hardcoded
-        )
-        if result.returncode == 0:
-            patterns["manual_file_loading"] = [
-                f.strip() for f in result.stdout.split("\n") if f.strip()
-            ]
+        file_loading: list[str] = []
+        for path in Path.cwd().rglob("*.py"):
+            try:
+                text = path.read_text(encoding="utf-8")
+            except Exception as e:  # noqa: S110
+                logger.debug(f"Skipping {path}: {e}")
+                continue
+            if re.search(r"\b(json\.load\(|yaml\.load\(|yaml\.safe_load\()", text):
+                file_loading.append(str(path))
+        patterns["manual_file_loading"] = file_loading
 
         # Find manual validation patterns
-        cmd = [
-            "find",
-            ".",
-            "-name",
-            "*.py",
-            "-type",
-            "f",
-            "-exec",
-            "grep",
-            "-l",
-            "if not.*config\\|assert.*config",
-            "{}",
-            ";",
-        ]
-        # Security: cmd is hardcoded, not user input
-        result = subprocess.run(  # noqa: S603
-            cmd,
-            capture_output=True,
-            text=True,
-            check=False,
-            shell=False,  # Validated: cmd is hardcoded
-        )
-        if result.returncode == 0:
-            patterns["manual_validation"] = [
-                f.strip() for f in result.stdout.split("\n") if f.strip()
-            ]
+        manual_valid: list[str] = []
+        for path in Path.cwd().rglob("*.py"):
+            try:
+                text = path.read_text(encoding="utf-8")
+            except Exception as e:  # noqa: S110
+                logger.debug(f"Skipping {path}: {e}")
+                continue
+            if re.search(r"if\s+not\s+.*config|assert\s+.*config", text):
+                manual_valid.append(str(path))
+        patterns["manual_validation"] = manual_valid
 
         total_files = len(set(functools.reduce(operator.iadd, patterns.values(), [])))
         logger.info(f"Found {total_files} files with manual config patterns")
