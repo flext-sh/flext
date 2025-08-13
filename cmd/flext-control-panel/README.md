@@ -259,4 +259,4 @@ MIT License - See [LICENSE](../../LICENSE) file for details.
 
 ---
 
-_Control panel service launcher within the FLEXT ecosystem - Enterprise data integration platform_
+ 

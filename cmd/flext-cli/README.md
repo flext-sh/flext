@@ -242,4 +242,4 @@ MIT License - See [LICENSE](../../LICENSE) file for details.
 
 ---
 
-_Go service within the FLEXT ecosystem - Enterprise data integration platform_
+ 
