@@ -110,7 +110,7 @@ class QualityGateway(FlextScript):
                 Colors.YELLOW,
             )
             return FlextResult.fail(
-                f"Missing required tools: {', '.join(missing_tools)}"
+                f"Missing required tools: {', '.join(missing_tools)}",
             )
 
         return FlextResult.ok(None)
@@ -127,7 +127,7 @@ class QualityGateway(FlextScript):
 
             # Descobrir projetos
             projects = self._discover_projects(
-                workspace_root, str(projects_filter) if projects_filter else None
+                workspace_root, str(projects_filter) if projects_filter else None,
             )
 
             # Estatísticas agregadas
@@ -183,10 +183,10 @@ class QualityGateway(FlextScript):
                     print_colored(f"  ❌ {project_name}: REPROVADO", Colors.RED)
 
                 total_stats["total_issues"] = int(total_stats["total_issues"]) + int(
-                    project_result["total_issues"]
+                    project_result["total_issues"],
                 )
                 total_stats["critical_issues"] = int(
-                    total_stats["critical_issues"]
+                    total_stats["critical_issues"],
                 ) + int(project_result["critical_issues"])
 
                 # Mostrar detalhes se há falhas
@@ -209,7 +209,7 @@ class QualityGateway(FlextScript):
                     "gateway_passed": gateway_passed,
                     "stats": total_stats,
                     "failed_projects": failed_projects,
-                }
+                },
             )
 
         except (OSError, ValueError, TypeError) as e:
@@ -375,7 +375,11 @@ class QualityGateway(FlextScript):
         # Dependências faltantes
         if results.deps_result["status"] == "failed":
             missing_count_obj = results.deps_result["missing_count"]
-            missing_count = int(missing_count_obj) if isinstance(missing_count_obj, (int, str)) else 0
+            missing_count = (
+                int(missing_count_obj)
+                if isinstance(missing_count_obj, (int, str))
+                else 0
+            )
             issues.append(f"Dependências faltantes: {missing_count}")
             total_issues += missing_count
             if missing_count > CRITICAL_DEPENDENCY_THRESHOLD:
@@ -386,8 +390,12 @@ class QualityGateway(FlextScript):
             ruff_issues_obj = results.quality_result["ruff_issues"]
             mypy_errors_obj = results.quality_result["mypy_errors"]
 
-            ruff_issues = int(ruff_issues_obj) if isinstance(ruff_issues_obj, (int, str)) else 0
-            mypy_errors = int(mypy_errors_obj) if isinstance(mypy_errors_obj, (int, str)) else 0
+            ruff_issues = (
+                int(ruff_issues_obj) if isinstance(ruff_issues_obj, (int, str)) else 0
+            )
+            mypy_errors = (
+                int(mypy_errors_obj) if isinstance(mypy_errors_obj, (int, str)) else 0
+            )
 
             if ruff_issues > 0:
                 issues.append(f"Ruff issues: {ruff_issues}")
@@ -404,7 +412,11 @@ class QualityGateway(FlextScript):
         # Conflitos
         if results.conflicts_result["status"] == "failed":
             conflicts_count_obj = results.conflicts_result["conflicts_count"]
-            conflicts_count = int(conflicts_count_obj) if isinstance(conflicts_count_obj, (int, str)) else 0
+            conflicts_count = (
+                int(conflicts_count_obj)
+                if isinstance(conflicts_count_obj, (int, str))
+                else 0
+            )
             issues.append(f"Conflitos: {conflicts_count}")
             total_issues += conflicts_count
             critical_issues += 1  # Conflitos são sempre críticos

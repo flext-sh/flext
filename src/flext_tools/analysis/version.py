@@ -104,12 +104,20 @@ class VersionCompatibilityResult(BaseModel):
 
     """
 
-    compatible: bool = Field(description="Whether the version specifications are compatible")
+    compatible: bool = Field(
+        description="Whether the version specifications are compatible",
+    )
     spec1: str = Field(description="First version specification analyzed")
     spec2: str = Field(description="Second version specification analyzed")
-    overlap_version: str | None = Field(default=None, description="Common version that satisfies both specifications")
-    issues: list[str] = Field(default_factory=list, description="List of compatibility issues found")
-    recommendations: list[str] = Field(default_factory=list, description="List of recommended actions for resolution")
+    overlap_version: str | None = Field(
+        default=None, description="Common version that satisfies both specifications",
+    )
+    issues: list[str] = Field(
+        default_factory=list, description="List of compatibility issues found",
+    )
+    recommendations: list[str] = Field(
+        default_factory=list, description="List of recommended actions for resolution",
+    )
 
     def validate_business_rules(self) -> FlextResult[None]:
         """Validate business rules for version compatibility result."""
@@ -348,8 +356,12 @@ class VersionAnalyzer:
         package_versions: dict[str, dict[str, str]] = {}
 
         for project_name, data in projects_data.items():
-            VersionAnalyzer._collect_pep621_dependencies(data, project_name, package_versions)
-            VersionAnalyzer._collect_poetry_dependencies(data, project_name, package_versions)
+            VersionAnalyzer._collect_pep621_dependencies(
+                data, project_name, package_versions,
+            )
+            VersionAnalyzer._collect_poetry_dependencies(
+                data, project_name, package_versions,
+            )
 
         return package_versions
 
@@ -371,7 +383,9 @@ class VersionAnalyzer:
         for dep_spec in pep621_deps:
             package_name, version_spec = VersionAnalyzer.parse_version_spec(dep_spec)
             if package_name and version_spec:
-                VersionAnalyzer._add_package_version(package_name, project_name, version_spec, package_versions)
+                VersionAnalyzer._add_package_version(
+                    package_name, project_name, version_spec, package_versions,
+                )
 
     @staticmethod
     def _collect_poetry_dependencies(
@@ -395,7 +409,9 @@ class VersionAnalyzer:
         for package_name, dep_spec in poetry_deps.items():
             version_spec = VersionAnalyzer._parse_poetry_version_spec(dep_spec)
             if version_spec:
-                VersionAnalyzer._add_package_version(package_name, project_name, version_spec, package_versions)
+                VersionAnalyzer._add_package_version(
+                    package_name, project_name, version_spec, package_versions,
+                )
 
     @staticmethod
     def _parse_poetry_version_spec(dep_spec: object) -> str | None:
@@ -600,7 +616,9 @@ def normalize_constraint(constraint: str) -> str:
     return VersionAnalyzer.normalize_constraint(constraint)
 
 
-def check_version_compatibility(spec1: str, spec2: str) -> FlextResult[VersionCompatibilityResult]:
+def check_version_compatibility(
+    spec1: str, spec2: str,
+) -> FlextResult[VersionCompatibilityResult]:
     """Check compatibility between two version specifications using FlextResult.
 
     Args:
@@ -623,14 +641,20 @@ def check_version_compatibility(spec1: str, spec2: str) -> FlextResult[VersionCo
             compatible=bool(legacy_result.get("compatible", False)),
             spec1=spec1,
             spec2=spec2,
-            overlap_version=str(overlap_version) if overlap_version is not None else None,
+            overlap_version=str(overlap_version)
+            if overlap_version is not None
+            else None,
             issues=list(issues) if isinstance(issues, (list, tuple)) else [],
-            recommendations=list(recommendations) if isinstance(recommendations, (list, tuple)) else [],
+            recommendations=list(recommendations)
+            if isinstance(recommendations, (list, tuple))
+            else [],
         )
 
         return FlextResult.ok(result)
     except Exception as e:
-        logger.exception("Version compatibility check failed", spec1=spec1, spec2=spec2, error=str(e))
+        logger.exception(
+            "Version compatibility check failed", spec1=spec1, spec2=spec2, error=str(e),
+        )
         return FlextResult.fail(f"Version compatibility check failed: {e}")
 
 

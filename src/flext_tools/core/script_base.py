@@ -358,7 +358,11 @@ def create_simple_script[**P_main_func](
                 else:
                     # Function expects no parameters
                     result = config.main_func()  # type: ignore[call-arg]
-                return result if isinstance(result, FlextResult) else FlextResult.ok(result)
+                return (
+                    result
+                    if isinstance(result, FlextResult)
+                    else FlextResult.ok(result)
+                )
             except TypeError as e:
                 return FlextResult.fail(f"Function signature mismatch: {e}")
 

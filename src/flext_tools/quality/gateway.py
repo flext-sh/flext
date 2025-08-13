@@ -278,10 +278,12 @@ class QualityGateway:
         self.container = get_flext_container()
 
         self.logger.info(
-            "Quality gateway initialized", workspace_path=str(workspace_path),
+            "Quality gateway initialized",
+            workspace_path=str(workspace_path),
         )
         print_colored(
-            f"🔍 Quality gateway initialized: {workspace_path.name}", Colors.BLUE,
+            f"🔍 Quality gateway initialized: {workspace_path.name}",
+            Colors.BLUE,
         )
 
     def run_quality_checks_safe(
@@ -400,7 +402,8 @@ class QualityGateway:
             else:
                 failure_summary = get_quality_failure_summary(quality_data)
                 print_colored(
-                    f"❌ Quality checks failed: {failure_summary}", Colors.RED,
+                    f"❌ Quality checks failed: {failure_summary}",
+                    Colors.RED,
                 )
                 self.logger.warning(
                     "Quality checks failed",

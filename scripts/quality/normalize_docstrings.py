@@ -39,10 +39,13 @@ IGNORED_DIRS = {
 
 
 def iter_python_files(root: Path) -> Iterable[Path]:
-    """Args:
-        root (Path):
+    """Iterate over Python files in the given root directory.
+
+    Args:
+        root (Path): Root directory to search for Python files.
 
     Raises:
+        None.
 
     """
     for path in root.rglob("*.py"):
@@ -53,10 +56,13 @@ def iter_python_files(root: Path) -> Iterable[Path]:
 
 
 def run_pyment_on_file(path: Path) -> subprocess.CompletedProcess:
-    """Args:
-        path (Path):
+    """Run pyment on a single Python file.
+
+    Args:
+        path (Path): Path to the Python file to process.
 
     Raises:
+        None.
 
     """
     # Pyment per-file; overwrite in-place to google style
@@ -70,10 +76,13 @@ def run_pyment_on_file(path: Path) -> subprocess.CompletedProcess:
 
 
 def has_command(cmd: str) -> bool:
-    """Args:
-        cmd (str):
+    """Check if a command is available in the system.
+
+    Args:
+        cmd (str): Command name to check.
 
     Raises:
+        None.
 
     """
     res = subprocess.run(  # noqa: S603 - Safe internal command check
@@ -86,15 +95,18 @@ def has_command(cmd: str) -> bool:
 
 
 def main(argv: list[str]) -> int:
-    """Args:
-        argv (List[str]):
+    """Main function to normalize docstrings in Python files.
+
+    Args:
+        argv (List[str]): Command line arguments.
 
     Raises:
+        None.
 
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--no-ruff", action="store_true", help="Skip running Ruff docstring fixes"
+        "--no-ruff", action="store_true", help="Skip running Ruff docstring fixes",
     )
     args = parser.parse_args(argv)
 
