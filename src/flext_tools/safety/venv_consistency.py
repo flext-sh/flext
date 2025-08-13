@@ -66,7 +66,6 @@ License: MIT
 from __future__ import annotations
 
 import json
-import subprocess
 import tomllib
 from collections import defaultdict
 from dataclasses import dataclass
@@ -324,9 +323,7 @@ class VenvConsistencyValidator:
                 Colors.GREEN,
             )
 
-        except subprocess.CalledProcessError as e:
-            print_colored(f"    ⚠️ Error scanning packages: {e}", Colors.YELLOW)
-        except (json.JSONDecodeError, OSError, ValueError) as e:
+        except (json.JSONDecodeError, OSError, ValueError, Exception) as e:
             print_colored(f"    ⚠️ Unexpected error: {e}", Colors.YELLOW)
 
     def _collect_project_requirements(self) -> None:
