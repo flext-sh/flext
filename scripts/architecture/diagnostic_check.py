@@ -4,10 +4,9 @@
 Comprehensive diagnostic tool for FLEXT workspace architecture validation.
 """
 
-import json
-import io
 import contextlib
-import subprocess  # legacy import removed from use; kept only for type references
+import io
+import json
 import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -147,7 +146,9 @@ class FlextDiagnostic:
     def _run_poetry_install(self, project_path: Path) -> tuple[int, str, str]:
         """Attempt Poetry install via Poetry's Python API; no subprocess spawn."""
         try:
-            from poetry.console import application as poetry_app  # type: ignore[import-not-found]
+            from poetry.console import (
+                application as poetry_app,  # type: ignore[import-not-found]
+            )
 
             app = poetry_app.Application()  # type: ignore[no-call-override]
             code = app.run(["install"])  # type: ignore[arg-type]

@@ -69,9 +69,8 @@ License: MIT
 
 from __future__ import annotations
 
-import io
 import contextlib
-import subprocess  # legacy import kept only for typing
+import io
 import time
 from typing import TYPE_CHECKING
 
