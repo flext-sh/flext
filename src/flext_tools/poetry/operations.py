@@ -79,7 +79,6 @@ License: MIT
 from __future__ import annotations
 
 import re
-import subprocess
 import time
 from typing import TYPE_CHECKING
 
@@ -381,7 +380,7 @@ class PoetryOperations:
                 try:
                     if self._add_dependency(project_path, dep, group):
                         added[category].append(dep)
-                except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
+                except (OSError, FileNotFoundError) as e:
                     print_colored(
                         f"    ❌ Error adding {dep}: {e}",
                         Colors.RED,
@@ -467,7 +466,7 @@ class PoetryOperations:
             print_colored(f"    ❌ Failed to add {dependency}", Colors.RED)
             return False
 
-        except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
+        except (OSError, FileNotFoundError) as e:
             print_colored(f"    ❌ Error executing poetry: {e}", Colors.RED)
             return False
 
@@ -662,7 +661,7 @@ class PoetryOperations:
             print_colored(f"    ❌ Failed to remove {dependency}", Colors.RED)
             return False
 
-        except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
+        except (OSError, FileNotFoundError) as e:
             print_colored(f"    ❌ Error executing poetry: {e}", Colors.RED)
             return False
 
@@ -792,7 +791,7 @@ class PoetryOperations:
             print_colored("❌ Project update failed", Colors.RED)
             return False
 
-        except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
+        except (OSError, FileNotFoundError) as e:
             print_colored(f"❌ Error executing poetry update: {e}", Colors.RED)
             return False
 
@@ -904,7 +903,7 @@ class PoetryOperations:
             print_colored("❌ Failed to generate lock file", Colors.RED)
             return False
 
-        except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
+        except (OSError, FileNotFoundError) as e:
             print_colored(f"❌ Error executing poetry lock: {e}", Colors.RED)
             return False
 
@@ -1017,6 +1016,6 @@ class PoetryOperations:
             print_colored("❌ Project invalid", Colors.RED)
             return False
 
-        except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
+        except (OSError, FileNotFoundError) as e:
             print_colored(f"❌ Error validating project: {e}", Colors.RED)
             return False
