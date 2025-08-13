@@ -86,10 +86,12 @@ class PythonDependencies(BaseModel):
     """
 
     runtime: set[str] = Field(
-        default_factory=set, description="Runtime dependency package names",
+        default_factory=set,
+        description="Runtime dependency package names",
     )
     test: set[str] = Field(
-        default_factory=set, description="Test dependency package names",
+        default_factory=set,
+        description="Test dependency package names",
     )
 
 
@@ -175,7 +177,9 @@ class PythonImportDiscovery:
         }
 
     def discover(
-        self, project_path: Path, installed: set[str],
+        self,
+        project_path: Path,
+        installed: set[str],
     ) -> FlextResult[PythonDependencies]:
         """Discover Python dependencies by analyzing import statements.
 

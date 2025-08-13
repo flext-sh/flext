@@ -59,6 +59,7 @@ def run_command(cmd: list[str], _cwd: str | None = None) -> tuple[int, str, str]
             if cmd[0] != "python" or cmd[1] != "-m" or cmd[2] != "pytest":
                 return 1, "", "Unsupported pytest invocation"
             import pytest  # type: ignore[import-not-found]
+
             # Executa pytest em processo; captura saída mínima
             # Nota: para manter simplicidade, delegamos para subprocess apenas quando pytest não disponível
             try:
@@ -90,7 +91,8 @@ def analyze_project(project_path: str) -> QualityReport:
     # 1. Análise de Lint (ruff)
     print("  📋 Executando lint...")
     exit_code, stdout, stderr = run_command(
-        ["python", "-m", "ruff", "check", "."], cwd=project_path,
+        ["python", "-m", "ruff", "check", "."],
+        cwd=project_path,
     )
 
     if exit_code == 0:
@@ -110,7 +112,8 @@ def analyze_project(project_path: str) -> QualityReport:
     # 2. Análise de MyPy
     print("  🔍 Executando mypy...")
     exit_code, stdout, stderr = run_command(
-        ["python", "-m", "mypy", "."], cwd=project_path,
+        ["python", "-m", "mypy", "."],
+        cwd=project_path,
     )
 
     if exit_code == 0:
@@ -130,7 +133,8 @@ def analyze_project(project_path: str) -> QualityReport:
     # 3. Análise de Testes
     print("  🧪 Executando testes...")
     exit_code, stdout, stderr = run_command(
-        ["python", "-m", "pytest", "--tb=short", "-q"], cwd=project_path,
+        ["python", "-m", "pytest", "--tb=short", "-q"],
+        cwd=project_path,
     )
 
     if exit_code == 0:

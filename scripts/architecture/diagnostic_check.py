@@ -212,7 +212,11 @@ class FlextDiagnostic:
                 status.poetry_install = "✅ PASS"
             else:
                 status.poetry_install = "❌ FAIL"
-                status.errors.append(f"Poetry: {stderr.strip()}" if stderr else "Poetry install failed via API")
+                status.errors.append(
+                    f"Poetry: {stderr.strip()}"
+                    if stderr
+                    else "Poetry install failed via API",
+                )
 
         return status
 

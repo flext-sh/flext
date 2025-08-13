@@ -33,22 +33,23 @@ python scripts/security/security_audit.py --risk-threshold HIGH --verbose
 
 ### Command Line Options
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `--paths` | Target paths to scan | `src/` |
-| `--output-format` | Output format (summary, detailed, json) | `summary` |
-| `--output-file` | Output file for reports | Console output |
-| `--risk-threshold` | Minimum risk level (LOW, MEDIUM, HIGH, CRITICAL) | `MEDIUM` |
-| `--include-deps` | Include dependencies (.venv) in scan | `False` |
-| `--max-workers` | Maximum parallel workers | `4` |
-| `--ecosystem` | Scan entire FLEXT ecosystem | `False` |
-| `--verbose` | Enable verbose output | `False` |
+| Option             | Description                                      | Default        |
+| ------------------ | ------------------------------------------------ | -------------- |
+| `--paths`          | Target paths to scan                             | `src/`         |
+| `--output-format`  | Output format (summary, detailed, JSON)          | `summary`      |
+| `--output-file`    | Output file for reports                          | Console output |
+| `--risk-threshold` | Minimum risk level (LOW, MEDIUM, HIGH, CRITICAL) | `MEDIUM`       |
+| `--include-deps`   | Include dependencies (.venv) in scan             | `False`        |
+| `--max-workers`    | Maximum parallel workers                         | `4`            |
+| `--ecosystem`      | Scan entire FLEXT ecosystem                      | `False`        |
+| `--verbose`        | Enable verbose output                            | `False`        |
 
 ## 📋 Security Violation Types
 
 The scanner detects three critical categories of security violations:
 
 ### 1. Silent Failures (CRITICAL Risk)
+
 ```python
 # ❌ DANGEROUS - Silent failure pattern
 try:
@@ -65,6 +66,7 @@ except Exception as e:
 ```
 
 ### 2. Exception Swallowing (CRITICAL Risk)
+
 ```python
 # ❌ DANGEROUS - Exception swallowing
 try:
@@ -81,6 +83,7 @@ except SpecificException as e:
 ```
 
 ### 3. Fake Data Generation (HIGH Risk)
+
 ```python
 # ❌ DANGEROUS - Fake data generation
 def get_user_data(user_id):
@@ -103,18 +106,21 @@ def get_user_data(user_id) -> FlextResult[UserData]:
 ## 🛡️ Security Best Practices
 
 ### Fail-Fast Principles
+
 - **Never return fake data**: Always propagate errors or return FlextResult.fail()
 - **Specific exception handling**: Catch specific exceptions, not broad Exception classes
 - **Proper logging**: Log errors with context before handling or propagating
 - **State validation**: Validate state before operations, fail early if invalid
 
 ### FLEXT-Specific Patterns
+
 - **Use FlextResult[T]**: Type-safe error handling without exceptions
 - **Leverage flext-core logging**: Structured logging with correlation IDs
 - **Follow Clean Architecture**: Proper error boundaries between layers
 - **Domain validation**: Validate business rules early in domain layer
 
 ### Production Readiness
+
 - **No silent failures**: All errors must be logged and handled appropriately
 - **Comprehensive testing**: Test all error paths with proper assertions
 - **Monitoring integration**: Integrate with observability for error tracking
@@ -123,6 +129,7 @@ def get_user_data(user_id) -> FlextResult[UserData]:
 ## 📊 Integration with CI/CD
 
 ### GitHub Actions Example
+
 ```yaml
 - name: Security Audit
   run: |
@@ -130,7 +137,7 @@ def get_user_data(user_id) -> FlextResult[UserData]:
       --output-format json \
       --output-file security_report.json \
       --risk-threshold HIGH
-    
+
     # Fail if critical violations found
     if grep -q '"CRITICAL"' security_report.json; then
       echo "Critical security violations found!"
@@ -139,6 +146,7 @@ def get_user_data(user_id) -> FlextResult[UserData]:
 ```
 
 ### Quality Gate Integration
+
 ```bash
 # As part of make validate
 make security-audit  # Should be integrated into Makefile
@@ -163,6 +171,7 @@ make security-audit  # Should be integrated into Makefile
 ### Error Handling
 
 All operations use FlextResult patterns:
+
 - Type-safe error handling without exceptions
 - Detailed error context for troubleshooting
 - Graceful degradation for partial scan failures
@@ -171,6 +180,7 @@ All operations use FlextResult patterns:
 ## 🚀 Usage Examples
 
 ### Development Workflow
+
 ```bash
 # Quick check during development
 python scripts/security/security_audit.py --paths src/
@@ -180,6 +190,7 @@ python scripts/security/security_audit.py --risk-threshold CRITICAL --verbose
 ```
 
 ### Production Monitoring
+
 ```bash
 # Comprehensive ecosystem scan
 python scripts/security/security_audit.py \
@@ -190,6 +201,7 @@ python scripts/security/security_audit.py \
 ```
 
 ### Specific Project Analysis
+
 ```bash
 # Focus on specific project
 python scripts/security/security_audit.py \
@@ -217,6 +229,7 @@ python scripts/security/security_audit.py \
 ### Trend Analysis
 
 Use JSON reports to track security metrics over time:
+
 - Monitor violation trends across releases
 - Identify problematic code areas requiring refactoring
 - Validate security improvements with quantitative metrics
@@ -248,6 +261,7 @@ result = scanner.scan_ecosystem()
 The security scanner is designed for extensibility:
 
 ### Adding New Violation Types
+
 ```python
 class NewViolationType(Enum):
     SQL_INJECTION = "sql_injection"
@@ -256,6 +270,7 @@ class NewViolationType(Enum):
 ```
 
 ### Custom Risk Assessment
+
 ```python
 def assess_custom_risk(violation: SecurityViolation) -> RiskLevel:
     # Custom risk logic based on file path, pattern, etc.
@@ -263,6 +278,7 @@ def assess_custom_risk(violation: SecurityViolation) -> RiskLevel:
 ```
 
 ### Integration with External Tools
+
 ```python
 # Export to external security systems
 def export_to_sonarqube(violations: list[SecurityViolation]):

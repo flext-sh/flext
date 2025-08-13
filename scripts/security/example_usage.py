@@ -57,7 +57,8 @@ def example_basic_scan() -> None:
     if result.success:
         violations = result.data or []
         print_colored(
-            f"✅ Scan completed: {len(violations)} violations found", Colors.GREEN,
+            f"✅ Scan completed: {len(violations)} violations found",
+            Colors.GREEN,
         )
 
         # Generate summary report
@@ -86,7 +87,8 @@ def example_advanced_configuration() -> None:
     validation_result = config.validate_business_rules()
     if not validation_result.success:
         print_colored(
-            f"❌ Invalid configuration: {validation_result.error}", Colors.RED,
+            f"❌ Invalid configuration: {validation_result.error}",
+            Colors.RED,
         )
         return
 
@@ -157,7 +159,8 @@ def example_custom_reporting() -> None:
 
     # Simple scan for demonstration
     scanner_result = create_security_scanner(
-        target_paths=["src/flext_tools/"], risk_threshold="LOW",
+        target_paths=["src/flext_tools/"],
+        risk_threshold="LOW",
     )
 
     if not scanner_result.success:
@@ -226,12 +229,15 @@ def example_ci_cd_integration() -> None:
 
     # Scan with focus on critical violations for CI/CD
     scanner_result = create_security_scanner(
-        target_paths=["src/"], risk_threshold="CRITICAL", output_format="json",
+        target_paths=["src/"],
+        risk_threshold="CRITICAL",
+        output_format="json",
     )
 
     if not scanner_result.success:
         print_colored(
-            f"❌ CI/CD scanner creation failed: {scanner_result.error}", Colors.RED,
+            f"❌ CI/CD scanner creation failed: {scanner_result.error}",
+            Colors.RED,
         )
         return
 
@@ -269,7 +275,8 @@ def example_ci_cd_integration() -> None:
 
     else:
         print_colored(
-            "✅ BUILD CAN PROCEED: No critical security violations", Colors.GREEN,
+            "✅ BUILD CAN PROCEED: No critical security violations",
+            Colors.GREEN,
         )
 
     # Generate JSON report for CI/CD artifacts
@@ -296,7 +303,8 @@ def main() -> None:
         example_ci_cd_integration()
 
         print_colored(
-            "✅ All security scanner examples completed successfully!", Colors.GREEN,
+            "✅ All security scanner examples completed successfully!",
+            Colors.GREEN,
         )
 
     except KeyboardInterrupt:
