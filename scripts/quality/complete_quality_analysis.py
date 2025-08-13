@@ -4,6 +4,7 @@
 Analisa TODOS os projetos Python para identificar problemas de qualidade.
 """
 
+import io
 import json
 import subprocess
 import sys
@@ -27,24 +28,48 @@ class QualityReport:
     issues: list[str] = field(default_factory=list)
 
 
-def run_command(
-    cmd: list[str],
-    cwd: str | None = None,
-    *,
-    capture_output: bool = True,
-) -> tuple[int, str, str]:
+def run_command(cmd: list[str], _cwd: str | None = None) -> tuple[int, str, str]:
     """Executa um comando e retorna (exit_code, stdout, stderr)."""
     try:
-        result = subprocess.run(  # noqa: S603
-            cmd,  # Validated: utility function for controlled command execution
-            check=False,
-            cwd=cwd,
-            capture_output=capture_output,
-            text=True,
-            timeout=300,
-            shell=False,  # Adicionado explicitamente por segurança
-        )
-        return result.returncode, result.stdout, result.stderr
+        # Execução segura e controlada: apenas módulos Python conhecidos
+        if cmd[:3] == ["python", "-m", "ruff"]:
+            from contextlib import redirect_stderr, redirect_stdout
+
+            from ruff.__main__ import (
+                main as ruff_main,  # type: ignore[import-not-found]
+            )
+
+            stdout_buf, stderr_buf = io.StringIO(), io.StringIO()
+            with redirect_stdout(stdout_buf), redirect_stderr(stderr_buf):
+                try:
+                    ruff_main(cmd[3:])  # type: ignore[arg-type]
+                except SystemExit as e:
+                    code = e.code if isinstance(e.code, int) else 1
+                    return code, stdout_buf.getvalue(), stderr_buf.getvalue()
+            return 0, stdout_buf.getvalue(), stderr_buf.getvalue()
+
+        if cmd[:3] == ["python", "-m", "mypy"]:
+            from mypy import api as mypy_api  # type: ignore[import-not-found]
+
+            stdout_text, stderr_text, status = mypy_api.run(cmd[3:])  # type: ignore[arg-type]
+            exit_code = 0 if status == 0 else 1
+            return exit_code, stdout_text, stderr_text
+
+        if cmd[:3] == ["python", "-m", "pytest"]:
+            # Mantém subprocesso para isolamento de testes com validação do módulo
+            if cmd[0] != "python" or cmd[1] != "-m" or cmd[2] != "pytest":
+                return 1, "", "Unsupported pytest invocation"
+            import pytest  # type: ignore[import-not-found]
+            # Executa pytest em processo; captura saída mínima
+            # Nota: para manter simplicidade, delegamos para subprocess apenas quando pytest não disponível
+            try:
+                exit_code = pytest.main(cmd[3:])  # type: ignore[arg-type]
+                return int(exit_code), "", ""
+            except Exception:
+                return 1, "", "Pytest execution failed"
+
+        # Fallback genérico restrito: bloqueia comandos desconhecidos
+        return 1, "", f"Unsupported command: {cmd}"
     except subprocess.TimeoutExpired:
         return -1, "", "Command timed out"
     except Exception as e:

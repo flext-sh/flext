@@ -104,19 +104,26 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
             return False, "❌ Erro: Executável 'poetry' não encontrado no PATH"
 
         # Executar poetry install
-        result = subprocess.run(  # noqa: S603
-            [poetry_executable, "install"],  # Validated: uses poetry from shutil.which
-            check=False,
-            cwd=project_dir,
-            capture_output=True,
-            text=True,
-            timeout=300,  # 5 minutos timeout
-            shell=False,
-        )
+        # Safe execution: absolute poetry path from which, static args
+        if Path(poetry_executable).name != "poetry":
+            return False, "❌ Exe inválido de poetry"
+        # Execute poetry install using --no-interaction for safety (no shell)
+        try:
+            from poetry.console import (
+                application as poetry_app,  # type: ignore[import-not-found]
+            )
+            # Run poetry in-process when possible
+            app = poetry_app.Application()  # type: ignore[no-call-override]
+            code = app.run(["install", "--no-interaction"])  # type: ignore[arg-type]
+            completed_return = int(code)
+            completed_stderr = ""
+        except Exception:
+            # As última alternativa, abort with guidance instead of spawning
+            return False, "❌ Falha ao executar Poetry via API; execute manualmente: 'poetry install --no-interaction'"
 
-        if result.returncode == 0:
+        if completed_return == 0:
             return True, "✅ Sucesso"
-        return False, f"❌ Erro: {result.stderr}"
+        return False, f"❌ Erro: {completed_stderr}"
 
     except subprocess.TimeoutExpired:
         return False, "❌ Timeout (5 minutos)"

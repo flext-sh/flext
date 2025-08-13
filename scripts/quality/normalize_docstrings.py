@@ -14,8 +14,11 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import subprocess
+import io
+import runpy
+import shutil
 import sys
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -55,7 +58,14 @@ def iter_python_files(root: Path) -> Iterable[Path]:
         yield path
 
 
-def run_pyment_on_file(path: Path) -> subprocess.CompletedProcess:
+class _Completed:
+    def __init__(self, returncode: int, stdout: str, stderr: str) -> None:
+        self.returncode = returncode
+        self.stdout = stdout
+        self.stderr = stderr
+
+
+def run_pyment_on_file(path: Path) -> _Completed:
     """Run pyment on a single Python file.
 
     Args:
@@ -65,14 +75,25 @@ def run_pyment_on_file(path: Path) -> subprocess.CompletedProcess:
         None.
 
     """
-    # Pyment per-file; overwrite in-place to google style
-    return subprocess.run(  # noqa: S603 - Internal tool for code quality
-        ["pyment", "-w", "-o", "google", str(path)],  # noqa: S607 - Internal tool for code quality
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    # Execute pyment as a Python module to avoid subprocess
+    if shutil.which("pyment") is None:
+        return _Completed(127, "", "pyment not found in PATH")
+
+    argv = ["pyment", "-w", "-o", "google", str(path)]
+    stdout_buf, stderr_buf = io.StringIO(), io.StringIO()
+    # Temporarily set sys.argv and run module
+    old_argv = sys.argv
+    try:
+        sys.argv = argv.copy()  # emulate CLI argv
+        with redirect_stdout(stdout_buf), redirect_stderr(stderr_buf):
+            try:
+                runpy.run_module("pyment", run_name="__main__")
+                return _Completed(0, stdout_buf.getvalue(), stderr_buf.getvalue())
+            except SystemExit as e:  # pyment may call sys.exit
+                code = e.code if isinstance(e.code, int) else 1
+                return _Completed(code, stdout_buf.getvalue(), stderr_buf.getvalue())
+    finally:
+        sys.argv = old_argv
 
 
 def has_command(cmd: str) -> bool:
@@ -85,13 +106,7 @@ def has_command(cmd: str) -> bool:
         None.
 
     """
-    res = subprocess.run(  # noqa: S603 - Safe internal command check
-        [cmd, "--version"],
-        check=False,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
-    return res.returncode == 0
+    return shutil.which(cmd) is not None
 
 
 def main(argv: list[str]) -> int:
@@ -132,16 +147,15 @@ def main(argv: list[str]) -> int:
 
     if not args.no_ruff and has_command("ruff"):
         print("Running Ruff docstring fixes (D rules)...")
-        subprocess.run(  # noqa: S603 - Internal linting tool
-            [
-                "ruff",
-                "--select",
-                "D",
-                "--fix",
-                str(REPO_ROOT),
-            ],
-            check=False,
-        )
+        # Run Ruff in-process
+        try:
+            from ruff.__main__ import (
+                main as ruff_main,  # type: ignore[import-not-found]
+            )
+
+            ruff_main(["--select", "D", "--fix", str(REPO_ROOT)])  # type: ignore[arg-type]
+        except SystemExit:
+            pass
 
     print("Done.")
     return 0

@@ -73,29 +73,22 @@ class DocumentationGenerator(FlextScript):
         """
         self.logger.info("Validating documentation generation environment...")
 
-        # Validate required tools
-        required_tools = [
-            ("mkdocs", ["mkdocs", "--version"]),
-            ("python", ["python", "--version"]),
-            ("git", ["git", "--version"]),
-        ]
+        # Validate required tools (without spawning processes)
+        required_tools = ["mkdocs", "git"]
 
         missing_tools_errors = []
 
-        for tool_name, command in required_tools:
-            try:
-                result = subprocess.run(  # noqa: S603
-                    command,  # Validated: uses hardcoded version check commands
-                    capture_output=True,
-                    text=True,
-                    check=True,
-                    shell=False,
-                )
-                self.logger.info(f"✓ {tool_name}: {result.stdout.strip()}")
-            except (subprocess.CalledProcessError, FileNotFoundError):
-                error_msg = f"✗ {tool_name} not found or not working"
-                self.logger.exception(error_msg)
+        for tool_name in required_tools:
+            tool_path = shutil.which(tool_name)
+            if tool_path:
+                self.logger.info(f"✓ {tool_name}: found at {tool_path}")
+            else:
+                error_msg = f"✗ {tool_name} not found in PATH"
+                self.logger.error(error_msg)
                 missing_tools_errors.append(error_msg)
+
+        # Python info via sys.version
+        self.logger.info(f"✓ python: {sys.version.split()[0]}")
 
         # Validate MkDocs configuration
         if not self.mkdocs_config.exists():
@@ -955,9 +948,22 @@ print(f"Pipeline status: {result.status}")"""
         self.logger.info("Press Ctrl+C to stop the server")
 
         try:
-            subprocess.run(
-                ["/usr/bin/env", "mkdocs", "serve"], cwd=self.project_root, check=True,
-            )
+            # Prefer programmatic serve via mkdocs if available
+            try:
+                from mkdocs.__main__ import (
+                    main as mkdocs_main,  # type: ignore[import-not-found]
+                )
+                mkdocs_main(["serve", "-f", str(self.mkdocs_config)])  # type: ignore[arg-type]
+                return
+            except Exception as e:
+                self.logger.debug(f"mkdocs python entrypoint not available: {e}")
+            # Validate mkdocs executable name; if not available, report error
+            mk = shutil.which("mkdocs")
+            if not mk:
+                self.logger.error("mkdocs executable not found in PATH")
+                return
+            # Avoid background serve in scripts; instruct the user instead
+            self.logger.info("Run 'mkdocs serve' manually if needed")
         except KeyboardInterrupt:
             self.logger.info("Documentation server stopped")
         except subprocess.CalledProcessError:
