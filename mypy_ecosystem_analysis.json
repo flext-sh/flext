@@ -11,46 +11,16 @@
     "no-error-code": 716
   },
   "most_problematic_projects": [
-    [
-      "flext-ldap",
-      123
-    ],
-    [
-      "flext-target-oracle-oic",
-      105
-    ],
-    [
-      "flext-oracle-wms",
-      94
-    ],
-    [
-      "flext-cli",
-      83
-    ],
-    [
-      "flext-dbt-oracle",
-      82
-    ],
-    [
-      "flext-dbt-oracle-wms",
-      81
-    ],
-    [
-      "flext-target-oracle",
-      42
-    ],
-    [
-      "flext-grpc",
-      30
-    ],
-    [
-      "flext-ldif",
-      26
-    ],
-    [
-      "flext-core",
-      10
-    ]
+    ["flext-ldap", 123],
+    ["flext-target-oracle-oic", 105],
+    ["flext-oracle-wms", 94],
+    ["flext-cli", 83],
+    ["flext-dbt-oracle", 82],
+    ["flext-dbt-oracle-wms", 81],
+    ["flext-target-oracle", 42],
+    ["flext-grpc", 30],
+    ["flext-ldif", 26],
+    ["flext-core", 10]
   ],
   "projects": [
     {
