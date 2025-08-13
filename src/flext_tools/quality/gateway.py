@@ -69,7 +69,9 @@ License: MIT
 
 from __future__ import annotations
 
-import subprocess
+import io
+import contextlib
+import subprocess  # legacy import kept only for typing
 import time
 from typing import TYPE_CHECKING
 
@@ -421,104 +423,64 @@ class QualityGateway:
     def _run_lint_check(self) -> FlextResult[list[QualityIssue]]:
         """Run linting check with Ruff."""
         try:
-            result = subprocess.run(
-                ["/usr/bin/env", "ruff", "check", "."],
-                check=False,
-                cwd=self.workspace_path,
-                capture_output=True,
-                text=True,
-                timeout=60,
-            )
+            import ruff.__main__ as ruff_main  # type: ignore[import-not-found]
 
-            if result.returncode == 0:
+            stdout = io.StringIO()
+            stderr = io.StringIO()
+            with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                try:
+                    # Run ruff against workspace_path
+                    exit_code = 0
+                    try:
+                        exit_code = int(ruff_main.main(["check", str(self.workspace_path)]))  # type: ignore[arg-type]
+                    except SystemExit as exc:
+                        exit_code = int(getattr(exc, "code", 0) or 0)
+                except Exception as e:
+                    return FlextResult.fail(f"Lint check failed: {e}")
+
+            if exit_code == 0:
                 return FlextResult.ok([])
 
-            # Parse Ruff output for issues
+            # Parse Ruff output for issues (stdout text format)
             issues = [
-                QualityIssue(
-                    tool="ruff",
-                    severity="error",
-                    message=line.strip(),
-                )
-                for line in result.stdout.splitlines()
+                QualityIssue(tool="ruff", severity="error", message=line.strip())
+                for line in stdout.getvalue().splitlines()
                 if line.strip()
             ]
-
             return FlextResult.fail(f"Linting issues found: {len(issues)} issues")
-
-        except (
-            subprocess.TimeoutExpired,
-            subprocess.SubprocessError,
-            FileNotFoundError,
-        ) as e:
+        except Exception as e:
             return FlextResult.fail(f"Lint check failed: {e}")
 
     def _run_type_check(self) -> FlextResult[list[QualityIssue]]:
         """Run type checking with MyPy."""
         try:
-            result = subprocess.run(
-                ["/usr/bin/env", "mypy", "src"],
-                check=False,
-                cwd=self.workspace_path,
-                capture_output=True,
-                text=True,
-                timeout=120,
-            )
+            from mypy import api as mypy_api  # type: ignore[import-not-found]
 
-            if result.returncode == 0:
+            stdout, _stderr, exit_status = mypy_api.run([str(self.workspace_path / "src")])
+            if int(exit_status) == 0:
                 return FlextResult.ok([])
 
-            # Parse MyPy output for issues
             issues = [
-                QualityIssue(
-                    tool="mypy",
-                    severity="error",
-                    message=line.strip(),
-                )
-                for line in result.stdout.splitlines()
+                QualityIssue(tool="mypy", severity="error", message=line.strip())
+                for line in stdout.splitlines()
                 if line.strip() and ":" in line
             ]
-
             return FlextResult.fail(f"Type checking issues found: {len(issues)} issues")
-
-        except (
-            subprocess.TimeoutExpired,
-            subprocess.SubprocessError,
-            FileNotFoundError,
-        ) as e:
+        except Exception as e:
             return FlextResult.fail(f"Type check failed: {e}")
 
     def _run_test_check(self) -> FlextResult[list[QualityIssue]]:
         """Run test execution with Pytest."""
         try:
-            result = subprocess.run(
-                ["/usr/bin/env", "pytest", "-v"],
-                check=False,
-                cwd=self.workspace_path,
-                capture_output=True,
-                text=True,
-                timeout=300,
-            )
+            import pytest  # type: ignore[import-not-found]
 
-            if result.returncode == 0:
+            # Capture output using in-process run
+            exit_code = pytest.main([str(self.workspace_path)])
+            if int(exit_code) == 0:
                 return FlextResult.ok([])
-
-            # Parse test failures
-            issues = [
-                QualityIssue(
-                    tool="pytest",
-                    severity="error",
-                    message="Test failures detected",
-                ),
-            ]
-
+            issues = [QualityIssue(tool="pytest", severity="error", message="Test failures detected")]
             return FlextResult.fail(f"Test failures found: {len(issues)} issues")
-
-        except (
-            subprocess.TimeoutExpired,
-            subprocess.SubprocessError,
-            FileNotFoundError,
-        ) as e:
+        except Exception as e:
             return FlextResult.fail(f"Test execution failed: {e}")
 
     def _run_coverage_check(self, threshold: float) -> FlextResult[list[QualityIssue]]:
