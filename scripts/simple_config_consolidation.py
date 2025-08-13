@@ -2,7 +2,6 @@
 """Simple script to consolidate manual configuration handlers."""
 
 import re
-import subprocess
 from pathlib import Path
 
 print("🔍 Starting manual configuration consolidation...")
@@ -10,30 +9,17 @@ print("🔍 Starting manual configuration consolidation...")
 
 def find_manual_env_vars() -> list[str]:
     """Find files with manual os.getenv() usage."""
-    cmd = [
-        "find",
-        ".",
-        "-name",
-        "*.py",
-        "-type",
-        "f",
-        "-exec",
-        "grep",
-        "-l",
-        "os\\.getenv\\|os\\.environ\\.get",
-        "{}",
-        ";",
-    ]
-    result = subprocess.run(  # noqa: S603
-        cmd,
-        capture_output=True,
-        text=True,
-        check=False,
-        shell=False,  # Validated: hardcoded find command
-    )
-    if result.returncode == 0:
-        return [f.strip() for f in result.stdout.split("\n") if f.strip()]
-    return []
+    # Avoid spawning shell tools; scan with pathlib
+    matches: list[str] = []
+    for path in Path.cwd().rglob("*.py"):
+        try:
+            text = path.read_text(encoding="utf-8")
+        except Exception as e:  # noqa: S110
+            print(f"Skipping {path}: {e}")
+            continue
+        if ("os.getenv(" in text) or ("os.environ.get" in text):
+            matches.append(str(path))
+    return matches
 
 
 def add_config_todos_to_file(file_path: str) -> bool:
