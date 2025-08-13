@@ -17,29 +17,20 @@ import argparse
 import operator
 import re
 import shutil
-import subprocess
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
 
-def run_command(cmd: list[str], cwd: Path | None = None) -> tuple[int, str, str]:
-    """Execute command and return exit code, stdout, stderr."""
-    # Validate command exists
-    if not cmd or not shutil.which(cmd[0]):
-        return 1, "", f"Command not found: {cmd[0] if cmd else 'None'}"
-
+def _run_mypy_api(args: list[str]) -> tuple[int, str, str]:
+    """Run MyPy using its Python API and return (exit_code, stdout, stderr)."""
     try:
-        result = subprocess.run(  # noqa: S603
-            cmd,  # Validated: first element checked with shutil.which()
-            cwd=cwd,
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        return result.returncode, result.stdout, result.stderr
-    except FileNotFoundError:
-        return 1, "", f"Command not found: {cmd[0]}"
+        from mypy import api as mypy_api  # type: ignore[import-not-found]
+
+        stdout, stderr, exit_status = mypy_api.run(args)
+        return int(exit_status), stdout, stderr
+    except Exception as e:
+        return 1, "", f"MyPy API execution failed: {e}"
 
 
 def parse_mypy_errors(output: str) -> list[dict[str, object]]:
@@ -85,7 +76,7 @@ def analyze_project_with_stats(
     """Analisa projeto específico e retorna estatísticas detalhadas."""
     print(f"🔍 Analyzing {project_path.name}...")
 
-    exit_code, stdout, stderr = run_command(["mypy", "."], cwd=project_path)
+    exit_code, stdout, stderr = _run_mypy_api([str(project_path)])
 
     errors = parse_mypy_errors(stdout + stderr)
 
@@ -117,10 +108,9 @@ def analyze_workspace_with_stats() -> tuple[int, list[dict[str, object]]]:
         print("❌ No directories found for analysis")
         return 1, []
 
-    exit_code, stdout, stderr = run_command(
-        ["mypy", *dirs_to_analyze],
-        cwd=workspace_root,
-    )
+    # Build absolute paths for analysis to avoid cwd dependency
+    abs_args = [str(workspace_root / d) for d in dirs_to_analyze]
+    exit_code, stdout, stderr = _run_mypy_api(abs_args)
 
     errors = parse_mypy_errors(stdout + stderr)
 
@@ -196,7 +186,7 @@ def analyze_project(project_path: Path) -> int:
     """Analisa projeto específico com seu pyproject.toml."""
     print(f"🔍 Analyzing {project_path.name}...")
 
-    exit_code, stdout, stderr = run_command(["mypy", "."], cwd=project_path)
+    exit_code, stdout, stderr = _run_mypy_api([str(project_path)])
 
     if stdout:
         print(stdout)

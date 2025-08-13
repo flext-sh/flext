@@ -80,6 +80,7 @@ License: MIT
 """
 
 __version__ = "2.0.0"
+__version_info__ = tuple(int(x) for x in __version__.split(".") if x.isdigit())
 
 # Core patterns integration
 from flext_core import FlextContainer, get_flext_container
@@ -155,6 +156,7 @@ __all__: list[str] = [
     "TemplateManager",
     "VersionAnalyzer",
     "__version__",
+    "__version_info__",
     "cache_result",
     "cached",
     "get_flext_container",
