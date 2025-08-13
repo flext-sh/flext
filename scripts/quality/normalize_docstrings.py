@@ -77,7 +77,7 @@ def has_command(cmd: str) -> bool:
 
     """
     res = subprocess.run(  # noqa: S603 - Safe internal command check
-        [cmd, "--version"],  # noqa: S607 - Safe internal command check
+        [cmd, "--version"],
         check=False,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
@@ -122,7 +122,7 @@ def main(argv: list[str]) -> int:
         print("Running Ruff docstring fixes (D rules)...")
         subprocess.run(  # noqa: S603 - Internal linting tool
             [
-                "ruff",  # noqa: S607 - Internal linting tool
+                "ruff",
                 "--select",
                 "D",
                 "--fix",

@@ -1,6 +1,6 @@
 # FLEXT Control Panel
 
-**Type**: Go Service | **Status**: Development | **Dependencies**: Go 1.24+, pkg/flextservice
+**Type**: Go Service | **Status**: Active Development | **Dependencies**: Go 1.24+, pkg/flextservice
 
 FLEXT Control Panel service launcher using the common flextservice framework. This service provides a standardized launch mechanism for control panel functionality within the FLEXT ecosystem.
 
