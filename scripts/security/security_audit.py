@@ -151,7 +151,8 @@ class SecurityAuditScript(FlextScript):
         return validated_paths
 
     def _get_risk_breakdown(
-        self, violations: list[SecurityViolation],
+        self,
+        violations: list[SecurityViolation],
     ) -> dict[str, int]:
         """Get breakdown of violations by risk level.
 
@@ -276,7 +277,8 @@ class SecurityAuditScript(FlextScript):
 
             if verbose:
                 print_colored(
-                    f"🔍 Scanning paths: {', '.join(validated_paths)}", Colors.BLUE,
+                    f"🔍 Scanning paths: {', '.join(validated_paths)}",
+                    Colors.BLUE,
                 )
                 print_colored(f"🎯 Risk threshold: {risk_threshold}", Colors.BLUE)
                 print_colored(f"📊 Output format: {output_format}", Colors.BLUE)

@@ -921,7 +921,9 @@ class ConflictAnalyzer:
         return lines
 
     def _format_conflict_entry(
-        self, package: str, conflict_data: dict[str, object],
+        self,
+        package: str,
+        conflict_data: dict[str, object],
     ) -> list[str]:
         """Format individual conflict entry."""
         severity = conflict_data.get("severity", "medium")
@@ -966,7 +968,9 @@ class ConflictAnalyzer:
         return lines
 
     def _format_blocker_entry(
-        self, package: str, blocker_data: dict[str, object],
+        self,
+        package: str,
+        blocker_data: dict[str, object],
     ) -> list[str]:
         """Format individual blocker entry."""
         lines = [f"### {package}\n", "**Blocking projects:**"]

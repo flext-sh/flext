@@ -227,7 +227,8 @@ class SSLManager:
             }
 
             print_colored(
-                "✅ SSL/TLS infrastructure configured successfully", Colors.GREEN,
+                "✅ SSL/TLS infrastructure configured successfully",
+                Colors.GREEN,
             )
             logger.info("SSL/TLS infrastructure setup completed successfully")
 

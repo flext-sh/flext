@@ -154,22 +154,28 @@ class WorkspaceSummary(BaseModel):
 
     total_projects: int = Field(..., description="Total number of projects analyzed")
     projects_with_lock: int = Field(
-        ..., description="Number of projects with valid poetry.lock files",
+        ...,
+        description="Number of projects with valid poetry.lock files",
     )
     total_packages: int = Field(
-        ..., description="Total number of unique packages across all projects",
+        ...,
+        description="Total number of unique packages across all projects",
     )
     total_inconsistencies: int = Field(
-        ..., description="Total number of inconsistencies detected",
+        ...,
+        description="Total number of inconsistencies detected",
     )
     critical_inconsistencies: int = Field(
-        ..., description="Number of critical inconsistencies",
+        ...,
+        description="Number of critical inconsistencies",
     )
     warning_inconsistencies: int = Field(
-        ..., description="Number of warning inconsistencies",
+        ...,
+        description="Number of warning inconsistencies",
     )
     info_inconsistencies: int = Field(
-        ..., description="Number of informational inconsistencies",
+        ...,
+        description="Number of informational inconsistencies",
     )
 
 

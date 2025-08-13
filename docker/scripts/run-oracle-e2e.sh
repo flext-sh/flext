@@ -111,7 +111,7 @@ initialize_oracle_test_db() {
 	log_info "Initializing Oracle test database..."
 
 	# Create FLEXT test user and schema if needed
-	cat <<EOF | sqlplus -s sys/Oracle123!@"${ORACLE_HOST}":"${ORACLE_PORT}"/${ORACLE_SERVICE_NAME} as sysdba
+	cat <<EOF | sqlplus -s sys/Oracle123!@"${ORACLE_HOST}":"${ORACLE_PORT}"/"${ORACLE_SERVICE_NAME}" as sysdba
     -- Create FLEXT test user
     CREATE USER ${ORACLE_USERNAME} IDENTIFIED BY ${ORACLE_PASSWORD};
     GRANT CONNECT, RESOURCE, CREATE VIEW, CREATE SEQUENCE TO ${ORACLE_USERNAME};
