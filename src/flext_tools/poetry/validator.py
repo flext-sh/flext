@@ -78,7 +78,7 @@ from __future__ import annotations
 
 import re
 import shutil
-import subprocess
+import subprocess  # legacy import kept only for type references
 import tomllib
 from typing import TYPE_CHECKING
 
@@ -495,32 +495,15 @@ class PoetryValidator:
             return False, issues
 
         try:
-            # Use full path to poetry command for security (fixes S607)
-            poetry_cmd = shutil.which("poetry")
-            if poetry_cmd is None:
-                issues.append("Poetry command not found in PATH")
-                return False, issues
+            # Prefer Poetry Python API to avoid subprocess usage
+            from poetry.console import application as poetry_app  # type: ignore[import-not-found]
 
-            result = subprocess.run(  # noqa: S603
-                [poetry_cmd, "check"],  # Validated: uses full path to poetry from PATH
-                check=False,
-                cwd=project_path,
-                capture_output=True,
-                text=True,
-                shell=False,  # Explicit security setting
-                timeout=30,  # Prevent hanging
-            )
-
-            if result.returncode != 0:
+            app = poetry_app.Application()  # type: ignore[no-call-override]
+            code = app.run(["check"])  # type: ignore[arg-type]
+            if int(code) != 0:
                 issues.append("poetry.lock is outdated - run 'poetry lock'")
-
-        except (
-            subprocess.SubprocessError,
-            OSError,
-            FileNotFoundError,
-            subprocess.TimeoutExpired,
-        ):
-            issues.append("Unable to verify poetry.lock status")
+        except Exception:
+            issues.append("Unable to verify poetry.lock status via Poetry API")
 
         return len(issues) == 0, issues
 
