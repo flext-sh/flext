@@ -18,6 +18,7 @@ try:
     from flext_meltano.architecture import (
         FlextSingerArchitectureStandardizer,
     )
+
     ARCHITECTURE_MODULE_AVAILABLE = True
 except ImportError:
     # Create stub implementation when module is not available

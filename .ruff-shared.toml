@@ -20,29 +20,33 @@ format.line-ending = "lf"
 format.quote-style = "double"
 line-length = 88
 lint.ignore = [
-    "BLE001", 
     "B017",
+    "BLE001", 
+    "C901",     # Too complex (some functions need complexity)
     "COM812",
-    "G004",
+    "D102",     # Missing docstring in public method (test methods don't need them)
+    "D104",     # Missing docstring in public package
+    "D107",    # Missing docstring in __init__
+    "D203",    # conflicting with D211 (blank line before class)
+    "D213",    # conflicting with D212 (summary line position)
+    "D401",    # non-imperative-mood: too opinionated in multilingual codebase
     "E501",    # line-too-long
     "ERA001",  # False positives on legitimate comments
     "G004",
+    "PLC0415",  # Import should be at top-level of file (needed for lazy imports)
+    "PLR0913",  # Too many arguments in function definition (sometimes necessary)
     "RUF100",
     "SLF001",
     "TRY300",
-    # Docstring tuning
-    "D401",    # non-imperative-mood: too opinionated in multilingual codebase
-    "D203",    # conflicting with D211 (blank line before class)
-    "D213",    # conflicting with D212 (summary line position)
 ]
 lint.isort.force-single-line = false
 lint.isort.split-on-trailing-comma = true
 lint.isort.combine-as-imports = true
 lint.per-file-ignores."**/__init__.py" = [
+    "E402",    # Import not at top of file
     "F401",    # Unused imports (common in __init__.py)
     "I001",    # Import sorting
     "RUF022",  # __all__ sorting
-    "E402",    # Import not at top of file
 ]
 lint.per-file-ignores."**/*_pb2_grpc.py" = ["ALL"]
 lint.per-file-ignores."**/*_pb2.py" = ["ALL"]
@@ -50,49 +54,25 @@ lint.per-file-ignores."**/generated/**/*.py" = ["ALL"]
 lint.per-file-ignores."**/proto/*_pb2_grpc.py" = ["ALL"]
 lint.per-file-ignores."**/proto/*_pb2.py" = ["ALL"]
 lint.per-file-ignores."**/examples/**" = [
-    "BLE001", 
-    "COM812",
-    "G004",
-    "SLF001",
-    "TRY300",
-    "C901",
-    "D107",
     "EXE001",
-    "G004",
     "N999",
-    "SLF001",
     "T201",
-    "TRY300",
 ]
 lint.per-file-ignores."**/scripts/**" = [
-    "BLE001", 
-    "COM812",
-    "G004",
-    "SLF001",
-    "TRY300",
-    "C901",
     "EXE001",
-    "G004",
     "N999",
     "PLR0911",
     "PLR0912",
     "PLR0915",
     "PLR2004",
     "S107",
-    "SLF001",
     "T201",
-    "TRY300",
 ]
 lint.per-file-ignores."**/tests/**" = [
     "ANN",
     "ARG",
-    "BLE001", 
-    "COM812",
-    "E501",
     "EM102",
     "FBT003",
-    "G004",
-    "PLC0415",
     "PLR0912",
     "PLR0915",
     "PLR2004",
@@ -105,22 +85,17 @@ lint.per-file-ignores."**/tests/**" = [
     "S107",
     "S112",
     "S603",
-    "SLF001",
-    "SLF001",
     "TRY003",
-    "TRY300",
-    
 ]
 lint.per-file-ignores."**/test_*.py" = [
+    "ANN",
     "ARG",
-    "BLE001", 
-    "COM812",
-    "E501",
     "EM102",
-    "G004",
-    "PLC0415",
+    "FBT003",
     "PLR0912",
+    "PLR0915",
     "PLR2004",
+    "PT011",
     "S101",
     "S103",
     "S104",
@@ -128,17 +103,13 @@ lint.per-file-ignores."**/test_*.py" = [
     "S106",
     "S107",
     "S112",
-    "S607",
-    "S608",
-    "SLF001",
+    "S603",
     "TRY003",
-    "TRY300",
 ]
 lint.select = ["ALL"]
 respect-gitignore = true
 show-fixes = true
-src = ["exemples", "scripts", "src", "tests"]
+src = ["examples", "scripts", "src", "tests"]
 target-version = "py313"
-
 lint.pep8-naming.classmethod-decorators = ["classmethod"]
 lint.pep8-naming.staticmethod-decorators = ["staticmethod"]

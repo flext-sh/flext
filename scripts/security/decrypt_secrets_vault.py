@@ -94,7 +94,7 @@ class SecretsVaultDecryptor(BaseSecurityScript):
                 print("• Re-encrypt vault immediately after use")
 
                 return FlextResult.ok(
-                    {"decrypt_result": decrypt_result, "output_format": output_format}
+                    {"decrypt_result": decrypt_result, "output_format": output_format},
                 )
 
             print_colored("❌ Failed to decrypt vault", Colors.RED)

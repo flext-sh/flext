@@ -85,8 +85,12 @@ class PythonDependencies(BaseModel):
     Contains runtime and test dependencies discovered from Python import analysis.
     """
 
-    runtime: set[str] = Field(default_factory=set, description="Runtime dependency package names")
-    test: set[str] = Field(default_factory=set, description="Test dependency package names")
+    runtime: set[str] = Field(
+        default_factory=set, description="Runtime dependency package names",
+    )
+    test: set[str] = Field(
+        default_factory=set, description="Test dependency package names",
+    )
 
 
 class PythonImportDiscovery:
@@ -170,7 +174,9 @@ class PythonImportDiscovery:
             "pathlib2": None,  # Standard library, not external package
         }
 
-    def discover(self, project_path: Path, installed: set[str]) -> FlextResult[PythonDependencies]:
+    def discover(
+        self, project_path: Path, installed: set[str],
+    ) -> FlextResult[PythonDependencies]:
         """Discover Python dependencies by analyzing import statements.
 
         Analyzes all Python files in the specified project path to extract import
@@ -211,7 +217,9 @@ class PythonImportDiscovery:
                 test=dependencies["test"],
             )
 
-            logger.info(f"Found {len(result.runtime)} runtime and {len(result.test)} test dependencies")
+            logger.info(
+                f"Found {len(result.runtime)} runtime and {len(result.test)} test dependencies",
+            )
             return FlextResult.ok(result)
 
         except Exception as e:

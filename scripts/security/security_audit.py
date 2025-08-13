@@ -151,7 +151,7 @@ class SecurityAuditScript(FlextScript):
         return validated_paths
 
     def _get_risk_breakdown(
-        self, violations: list[SecurityViolation]
+        self, violations: list[SecurityViolation],
     ) -> dict[str, int]:
         """Get breakdown of violations by risk level.
 
@@ -249,7 +249,7 @@ class SecurityAuditScript(FlextScript):
                     "violations": violations,
                     "total_count": len(violations),
                     "risk_breakdown": self._get_risk_breakdown(violations),
-                }
+                },
             )
 
         except Exception as e:
@@ -276,7 +276,7 @@ class SecurityAuditScript(FlextScript):
 
             if verbose:
                 print_colored(
-                    f"🔍 Scanning paths: {', '.join(validated_paths)}", Colors.BLUE
+                    f"🔍 Scanning paths: {', '.join(validated_paths)}", Colors.BLUE,
                 )
                 print_colored(f"🎯 Risk threshold: {risk_threshold}", Colors.BLUE)
                 print_colored(f"📊 Output format: {output_format}", Colors.BLUE)
@@ -294,7 +294,7 @@ class SecurityAuditScript(FlextScript):
             config_validation = config.validate_business_rules()
             if not config_validation.success:
                 return FlextResult.fail(
-                    f"Invalid configuration: {config_validation.error}"
+                    f"Invalid configuration: {config_validation.error}",
                 )
 
             # Create and run scanner
@@ -306,7 +306,7 @@ class SecurityAuditScript(FlextScript):
 
             violations = scan_result.data or []
             self.logger.info(
-                f"Security scan completed: {len(violations)} violations found"
+                f"Security scan completed: {len(violations)} violations found",
             )
 
             # Generate report
@@ -314,7 +314,7 @@ class SecurityAuditScript(FlextScript):
                 report_result = scanner.generate_report(violations, str(output_file))
                 if not report_result.success:
                     self.logger.warning(
-                        f"Report generation failed: {report_result.error}"
+                        f"Report generation failed: {report_result.error}",
                     )
                 else:
                     print_colored(f"📄 Report saved to: {output_file}", Colors.GREEN)
@@ -328,7 +328,7 @@ class SecurityAuditScript(FlextScript):
                     "violations": violations,
                     "total_count": len(violations),
                     "risk_breakdown": self._get_risk_breakdown(violations),
-                }
+                },
             )
 
         except Exception as e:

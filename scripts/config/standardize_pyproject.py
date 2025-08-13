@@ -64,7 +64,7 @@ class PyprojectStandardizer(FlextScript):
 
             # Discover projects
             projects = self._discover_projects(
-                workspace_root, str(projects_filter) if projects_filter else None
+                workspace_root, str(projects_filter) if projects_filter else None,
             )
 
             # Use flext_tools.poetry for operations
@@ -108,7 +108,7 @@ class PyprojectStandardizer(FlextScript):
                     "total_projects": len(projects),
                     "standardized": total_standardized,
                     "failed_projects": failed_projects,
-                }
+                },
             )
 
         except (OSError, ValueError, TypeError) as e:

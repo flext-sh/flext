@@ -1,10 +1,10 @@
 # flext-cli
 
-**Type**: Go Service | **Status**: Development | **Dependencies**: Go 1.24+
+**Type**: Go Service | **Status**: Active Development | **Dependencies**: Go 1.24+
 
 Command-line interface service for FLEXT data integration platform.
 
-> **⚠️ Development Status**: Basic CLI bootstrap working, shared_kernel package conflicts, pipeline commands not implemented yet
+> ⚠️ Development Status: Basic CLI bootstrap working; shared_kernel package conflicts; pipeline commands not implemented yet.
 
 ## Quick Start
 

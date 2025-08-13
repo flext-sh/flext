@@ -67,10 +67,19 @@ class Configuration(BaseModel):
     specification, debug settings, timeouts, and component-specific details.
     """
 
-    environment: str = Field(default="staging", description="Deployment environment (dev, staging, production)")
-    debug: bool = Field(default=True, description="Debug mode flag for development and troubleshooting")
-    timeout: int = Field(default=30, description="Default timeout values for operations")
-    details: dict[str, object] = Field(default_factory=dict, description="Nested configuration for specific components")
+    environment: str = Field(
+        default="staging",
+        description="Deployment environment (dev, staging, production)",
+    )
+    debug: bool = Field(
+        default=True, description="Debug mode flag for development and troubleshooting",
+    )
+    timeout: int = Field(
+        default=30, description="Default timeout values for operations",
+    )
+    details: dict[str, object] = Field(
+        default_factory=dict, description="Nested configuration for specific components",
+    )
 
 
 class ConfigurationManager:
@@ -164,7 +173,10 @@ class ConfigurationManager:
         """
         try:
             print_colored("📋 Loading configuration...", Colors.BLUE)
-            logger.info("Loading configuration from path", extra={"config_path": str(self.config_path)})
+            logger.info(
+                "Loading configuration from path",
+                extra={"config_path": str(self.config_path)},
+            )
 
             # For now, using default configuration - in production this would load from files
             config = Configuration(

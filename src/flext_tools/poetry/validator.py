@@ -109,7 +109,8 @@ class ProjectInfo(BaseModel):
     description: str = Field(default="", description="Project description")
     dependency_count: int = Field(default=0, description="Number of dependencies")
     dev_dependency_count: int = Field(
-        default=0, description="Number of development dependencies",
+        default=0,
+        description="Number of development dependencies",
     )
 
 
@@ -191,7 +192,8 @@ class PoetryValidator:
     """
 
     def validate_project(
-        self, project_path: Path,
+        self,
+        project_path: Path,
     ) -> FlextResult[ProjectValidationData]:
         """Validate comprehensive Poetry project configuration and compliance.
 
@@ -578,7 +580,8 @@ class PoetryValidator:
         return bool(re.match(pattern, version))
 
     def validate_workspace(
-        self, workspace_path: Path,
+        self,
+        workspace_path: Path,
     ) -> FlextResult[WorkspaceValidationData]:
         """Validate all Poetry projects in the workspace for comprehensive compliance.
 
