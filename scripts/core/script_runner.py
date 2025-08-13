@@ -67,14 +67,14 @@ class ScriptRunner(FlextScript):
                 if script_name:
                     # Pass script_name as positional and kwargs as keyword arguments
                     result = self._run_script(
-                        registry, str(script_name), **kwargs
+                        registry, str(script_name), **kwargs,
                     )  # Pass kwargs correctly
                     return FlextResult.ok(
                         {
                             "action": "run_script",
                             "script_name": script_name,
                             "result": result,
-                        }
+                        },
                     )
 
                 print_colored(
@@ -104,7 +104,7 @@ class ScriptRunner(FlextScript):
 
         # Group by category
         by_category: dict[
-            str, list[ScriptMetadata]
+            str, list[ScriptMetadata],
         ] = {}  # Changed Any to ScriptMetadata
         for script in scripts:
             category = (
@@ -165,7 +165,7 @@ class ScriptRunner(FlextScript):
             if hasattr(module, "main"):
                 # Pass kwargs to main function if it accepts them
                 if isinstance(module.main, Callable) and _accepts_kwargs(
-                    module.main
+                    module.main,
                 ):  # Added check for kwargs
                     result = module.main(**kwargs)  # Pass kwargs to main
                 else:

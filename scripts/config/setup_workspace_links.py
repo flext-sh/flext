@@ -68,7 +68,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
         try:
             # Security: poetry is a trusted executable in PATH
             subprocess.run(
-                ["poetry", "--version"],
+                ["poetry", "--version"],  # noqa: S607
                 capture_output=True,
                 check=True,
                 timeout=5,
@@ -234,7 +234,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
         return len(failed_projects) == 0
 
     def _complete_workspace_setup(
-        self, workspace_root: Path, **_kwargs: object
+        self, workspace_root: Path, **_kwargs: object,
     ) -> bool:
         """Complete workspace setup with Poetry dependency management."""
         print_colored("\n🏗️ COMPLETE WORKSPACE SETUP", Colors.BLUE)

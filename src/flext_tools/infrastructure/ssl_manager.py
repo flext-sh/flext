@@ -207,7 +207,10 @@ class SSLManager:
         """
         try:
             print_colored("🔒 Setting up SSL/TLS infrastructure...", Colors.BLUE)
-            logger.info("Starting SSL/TLS infrastructure setup", extra={"config_path": str(self.config_path)})
+            logger.info(
+                "Starting SSL/TLS infrastructure setup",
+                extra={"config_path": str(self.config_path)},
+            )
 
             # For now, using mock results - in production this would perform actual SSL setup
             # Using FlextResult pattern (DRY - no custom classes)
@@ -223,7 +226,9 @@ class SSLManager:
                 },
             }
 
-            print_colored("✅ SSL/TLS infrastructure configured successfully", Colors.GREEN)
+            print_colored(
+                "✅ SSL/TLS infrastructure configured successfully", Colors.GREEN,
+            )
             logger.info("SSL/TLS infrastructure setup completed successfully")
 
             return FlextResult.ok(results_data)

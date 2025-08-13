@@ -368,7 +368,10 @@ def main() -> None:
     summary_obj = report.get("summary", {})
     if isinstance(summary_obj, dict):
         projects_with_errors = summary_obj.get("projects_with_errors", 0)
-        if isinstance(projects_with_errors, (int, str)) and int(projects_with_errors) > 0:
+        if (
+            isinstance(projects_with_errors, (int, str))
+            and int(projects_with_errors) > 0
+        ):
             sys.exit(1)
     sys.exit(0)
 
