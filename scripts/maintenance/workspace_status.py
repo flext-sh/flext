@@ -43,7 +43,7 @@ class WorkspaceStatus(FlextScript):
 
         return FlextResult.ok(None)
 
-    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:  # noqa: ARG002
         """Executar análise completa do workspace."""
         try:
             workspace_root = Path.cwd()
@@ -77,7 +77,7 @@ class WorkspaceStatus(FlextScript):
                     "quality_info": quality_info,
                     "deps_info": deps_info,
                     "health_score": health_score,
-                }
+                },
             )
 
         except (OSError, ValueError, TypeError) as e:

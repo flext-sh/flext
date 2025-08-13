@@ -45,7 +45,9 @@ class TemplateManager:
         """
         env = Environment(
             loader=FileSystemLoader(str(self.templates_dir)),
-            autoescape=select_autoescape(["html", "xml"]),  # Secure autoescape for appropriate formats
+            autoescape=select_autoescape(
+                ["html", "xml"],
+            ),  # Secure autoescape for appropriate formats
             trim_blocks=True,
             lstrip_blocks=True,
             keep_trailing_newline=True,

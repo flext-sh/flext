@@ -25,7 +25,11 @@ def find_manual_env_vars() -> list[str]:
         ";",
     ]
     result = subprocess.run(  # noqa: S603
-        cmd, capture_output=True, text=True, check=False, shell=False  # Validated: hardcoded find command
+        cmd,
+        capture_output=True,
+        text=True,
+        check=False,
+        shell=False,  # Validated: hardcoded find command
     )
     if result.returncode == 0:
         return [f.strip() for f in result.stdout.split("\n") if f.strip()]

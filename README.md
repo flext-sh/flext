@@ -346,14 +346,14 @@ flext metrics --service all --export prometheus
 
 ## 🎯 Quality Standards
 
-### Zero Tolerance Quality Gates
+### Quality Targets
 
-- **Test Coverage**: Minimum 90% coverage enforced for all packages
-- **Type Safety**: Strict type checking (MyPy for Python, Go's type system)
+- **Test Coverage**: 90% target across packages
+- **Type Safety**: MyPy strict mode for Python; Go static typing
 - **Code Quality**: Comprehensive linting (Ruff for Python, golangci-lint for Go)
-- **Security**: Automated vulnerability scanning (Bandit, gosec, Snyk)
-- **Documentation**: All public APIs must have complete documentation
-- **Performance**: Automated performance regression testing
+- **Security**: Vulnerability scanning (Bandit, gosec, Snyk)
+- **Documentation**: Public APIs documented and kept current
+- **Performance**: Performance testing with thresholds tracked
 
 ### Testing Strategy
 
