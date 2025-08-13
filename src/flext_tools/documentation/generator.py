@@ -157,7 +157,9 @@ class DocumentationGenerator(FlextScript):
 
             # Execute full generation pipeline
             # Use type: ignore for the variance issue (dict[str, object] is compatible with object)
-            return self._execute_full_generation_pipeline(components_result, serve=serve)  # type: ignore[arg-type]
+            return self._execute_full_generation_pipeline(
+                components_result, serve=serve,
+            )  # type: ignore[arg-type]
 
         except Exception as e:
             error_msg = f"Documentation generation failed: {e}"
@@ -165,7 +167,10 @@ class DocumentationGenerator(FlextScript):
             return FlextResult.fail(error_msg)
 
     def _execute_full_generation_pipeline(
-        self, components_result: FlextResult[object], *, serve: bool,
+        self,
+        components_result: FlextResult[object],
+        *,
+        serve: bool,
     ) -> FlextResult[object]:
         """Execute the full documentation generation pipeline."""
         # Step 3: Generate API documentation
@@ -950,7 +955,9 @@ print(f"Pipeline status: {result.status}")"""
         self.logger.info("Press Ctrl+C to stop the server")
 
         try:
-            subprocess.run(["/usr/bin/env", "mkdocs", "serve"], cwd=self.project_root, check=True)
+            subprocess.run(
+                ["/usr/bin/env", "mkdocs", "serve"], cwd=self.project_root, check=True,
+            )
         except KeyboardInterrupt:
             self.logger.info("Documentation server stopped")
         except subprocess.CalledProcessError:

@@ -11,7 +11,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, NoReturn
 
 from flext_core import FlextResult
 
@@ -50,11 +50,18 @@ class OracleE2ETestRunner(FlextScript):
         try:
             docker_executable = shutil.which("docker")
             if not docker_executable:
-                msg = "Docker executable not found."
-                raise FileNotFoundError(msg)
+
+                def _raise_docker_not_found() -> NoReturn:
+                    msg = "Docker executable not found."
+                    raise FileNotFoundError(msg)
+
+                _raise_docker_not_found()
 
             subprocess.run(  # noqa: S603
-                [docker_executable, "--version"],  # Validated: uses docker from shutil.which
+                [
+                    docker_executable,
+                    "--version",
+                ],  # Validated: uses docker from shutil.which
                 capture_output=True,
                 check=True,
                 timeout=5,
@@ -75,14 +82,22 @@ class OracleE2ETestRunner(FlextScript):
         # Check Docker Compose availability
         try:
             docker_executable = shutil.which(
-                "docker"
+                "docker",
             )  # Reusing docker_executable for 'docker compose'
             if not docker_executable:
-                msg = "Docker executable not found for compose."
-                raise FileNotFoundError(msg)
+
+                def _raise_docker_compose_not_found() -> NoReturn:
+                    msg = "Docker executable not found for compose."
+                    raise FileNotFoundError(msg)
+
+                _raise_docker_compose_not_found()
 
             subprocess.run(  # noqa: S603
-                [docker_executable, "compose", "version"],  # Validated: uses docker from shutil.which
+                [
+                    docker_executable,
+                    "compose",
+                    "version",
+                ],  # Validated: uses docker from shutil.which
                 capture_output=True,
                 check=True,
                 timeout=5,

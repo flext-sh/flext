@@ -35,7 +35,7 @@ info: ## Show project information
 	@echo "Architecture: Clean Architecture + DDD + CQRS"
 
 # =============================================================================
-# DEPENDENCIES & SETUP
+# SETUP & DEPENDENCIES
 # =============================================================================
 
 .PHONY: setup
@@ -96,39 +96,7 @@ install: ## Install binary to GOPATH
 	@go install .
 
 # =============================================================================
-# TESTING
-# =============================================================================
-
-.PHONY: test
-test: ## Run all tests with coverage
-	@echo "🧪 Running tests..."
-	@go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
-	@go tool cover -func=coverage.out
-
-.PHONY: test-unit
-test-unit: ## Run unit tests only
-	@go test -v -short ./...
-
-.PHONY: test-integration
-test-integration: ## Run integration tests
-	@go test -v -run Integration ./...
-
-.PHONY: test-race
-test-race: ## Run tests with race detection
-	@go test -v -race ./...
-
-.PHONY: bench
-bench: ## Run benchmark tests
-	@go test -v -bench=. -benchmem ./...
-
-.PHONY: coverage
-coverage: ## Generate HTML coverage report
-	@go test -coverprofile=coverage.out ./...
-	@go tool cover -html=coverage.out -o coverage.html
-	@echo "📊 Coverage report: coverage.html"
-
-# =============================================================================
-# QUALITY GATES
+# QUALITY GATES (MANDATORY)
 # =============================================================================
 
 .PHONY: validate
@@ -176,6 +144,38 @@ security: ## Security scanning
 fix: ## Auto-fix issues
 	@make format
 	@golangci-lint run --fix
+
+# =============================================================================
+# TESTING
+# =============================================================================
+
+.PHONY: test
+test: ## Run all tests with coverage
+	@echo "🧪 Running tests..."
+	@go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
+	@go tool cover -func=coverage.out
+
+.PHONY: test-unit
+test-unit: ## Run unit tests only
+	@go test -v -short ./...
+
+.PHONY: test-integration
+test-integration: ## Run integration tests
+	@go test -v -run Integration ./...
+
+.PHONY: test-race
+test-race: ## Run tests with race detection
+	@go test -v -race ./...
+
+.PHONY: bench
+bench: ## Run benchmark tests
+	@go test -v -bench=. -benchmem ./...
+
+.PHONY: coverage
+coverage: ## Generate HTML coverage report
+	@go test -coverprofile=coverage.out ./...
+	@go tool cover -html=coverage.out -o coverage.html
+	@echo "📊 Coverage report: coverage.html"
 
 # =============================================================================
 # RUN OPERATIONS
@@ -267,7 +267,7 @@ doctor: ## Complete health check
 	@make check
 
 # =============================================================================
-# ALIASES
+# ALIASES (SINGLE LETTER SHORTCUTS)
 # =============================================================================
 
 .PHONY: t l f b c r v
@@ -278,5 +278,9 @@ b: build
 c: clean
 r: run
 v: validate
+
+# =============================================================================
+# CONFIGURATION
+# =============================================================================
 
 .DEFAULT_GOAL := help

@@ -297,7 +297,13 @@ class VenvConsistencyValidator:
             # Use pip list to get installed packages
             # Safe: using sys.executable with hardcoded arguments
             result = subprocess.run(  # noqa: S603
-                [sys.executable, "-m", "pip", "list", "--format=json"],  # Validated: uses sys.executable
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "list",
+                    "--format=json",
+                ],  # Validated: uses sys.executable
                 capture_output=True,
                 text=True,
                 check=True,

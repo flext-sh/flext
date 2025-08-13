@@ -54,7 +54,11 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
 
         # Security: cmd is hardcoded, not user input
         result = subprocess.run(  # noqa: S603
-            cmd, capture_output=True, text=True, check=False, shell=False  # Validated: cmd is hardcoded
+            cmd,
+            capture_output=True,
+            text=True,
+            check=False,
+            shell=False,  # Validated: cmd is hardcoded
         )
         if result.returncode == 0:
             patterns["manual_env_vars"] = [
@@ -78,7 +82,11 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
         ]
         # Security: cmd is hardcoded, not user input
         result = subprocess.run(  # noqa: S603
-            cmd, capture_output=True, text=True, check=False, shell=False  # Validated: cmd is hardcoded
+            cmd,
+            capture_output=True,
+            text=True,
+            check=False,
+            shell=False,  # Validated: cmd is hardcoded
         )
         if result.returncode == 0:
             patterns["manual_pydantic"] = [
@@ -102,7 +110,11 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
         ]
         # Security: cmd is hardcoded, not user input
         result = subprocess.run(  # noqa: S603
-            cmd, capture_output=True, text=True, check=False, shell=False  # Validated: cmd is hardcoded
+            cmd,
+            capture_output=True,
+            text=True,
+            check=False,
+            shell=False,  # Validated: cmd is hardcoded
         )
         if result.returncode == 0:
             patterns["manual_file_loading"] = [
@@ -126,7 +138,11 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
         ]
         # Security: cmd is hardcoded, not user input
         result = subprocess.run(  # noqa: S603
-            cmd, capture_output=True, text=True, check=False, shell=False  # Validated: cmd is hardcoded
+            cmd,
+            capture_output=True,
+            text=True,
+            check=False,
+            shell=False,  # Validated: cmd is hardcoded
         )
         if result.returncode == 0:
             patterns["manual_validation"] = [
