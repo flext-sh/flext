@@ -5,7 +5,9 @@ Comprehensive diagnostic tool for FLEXT workspace architecture validation.
 """
 
 import json
-import subprocess
+import io
+import contextlib
+import subprocess  # legacy import removed from use; kept only for type references
 import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -91,27 +93,68 @@ class FlextDiagnostic:
             "client-b-meltano-native": 6,
         }
 
-    def run_command(
-        self,
-        cmd: list[str],
-        cwd: Path | None = None,
-    ) -> tuple[int, str, str]:
-        """Execute command and return (return_code, stdout, stderr)."""
+    def _run_lint(self, project_path: Path) -> tuple[int, str, str]:
+        """Run Ruff lint using Python API in-process."""
         try:
-            # Security: cmd is validated input, not user-provided
-            result = subprocess.run(  # noqa: S603
-                cmd,  # Validated: cmd is constructed with controlled input, not user-provided
-                check=False,
-                cwd=cwd or self.workspace_root,
-                capture_output=True,
-                text=True,
-                timeout=300,
-            )
-            return result.returncode, result.stdout, result.stderr
-        except subprocess.TimeoutExpired:
-            return -1, "", "Timeout expired"
-        except (OSError, subprocess.SubprocessError) as e:
-            return -1, "", str(e)
+            import ruff.__main__ as ruff_main  # type: ignore[import-not-found]
+
+            stdout = io.StringIO()
+            stderr = io.StringIO()
+            with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                # Run "ruff check ." inside the project
+                prev = Path.cwd()
+                try:
+                    # Execute within project directory
+                    # ruff honors CWD for relative paths
+                    import os
+
+                    os.chdir(project_path)
+                    ruff_main.main(["check", "."])  # exit via sys.exit inside ruff
+                except SystemExit as exc:  # ruff uses sys.exit
+                    code = int(getattr(exc, "code", 0) or 0)
+                    return code, stdout.getvalue(), stderr.getvalue()
+                finally:
+                    os.chdir(prev)
+            return 0, stdout.getvalue(), stderr.getvalue()
+        except Exception as e:
+            return 1, "", f"Ruff execution failed: {e}"
+
+    def _run_mypy(self, project_path: Path) -> tuple[int, str, str]:
+        """Run MyPy using its Python API in-process."""
+        try:
+            from mypy import api as mypy_api  # type: ignore[import-not-found]
+
+            # Analyze the project directory
+            stdout, stderr, exit_status = mypy_api.run([str(project_path)])
+            return int(exit_status), stdout, stderr
+        except Exception as e:
+            return 1, "", f"MyPy execution failed: {e}"
+
+    def _run_tests(self, project_path: Path) -> tuple[int, str, str]:
+        """Run pytest in-process and capture output."""
+        try:
+            import pytest  # type: ignore[import-not-found]
+
+            stdout = io.StringIO()
+            stderr = io.StringIO()
+            with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                # Run tests within project path
+                code = pytest.main([str(project_path)])
+            return int(code), stdout.getvalue(), stderr.getvalue()
+        except Exception as e:
+            return 1, "", f"Pytest execution failed: {e}"
+
+    def _run_poetry_install(self, project_path: Path) -> tuple[int, str, str]:
+        """Attempt Poetry install via Poetry's Python API; no subprocess spawn."""
+        try:
+            from poetry.console import application as poetry_app  # type: ignore[import-not-found]
+
+            app = poetry_app.Application()  # type: ignore[no-call-override]
+            code = app.run(["install"])  # type: ignore[arg-type]
+            return (0 if int(code) == 0 else 1), "", ""
+        except Exception as e:
+            # Do not fallback to subprocess; advise manual execution
+            return 1, "", f"Poetry API unavailable for install: {e}"
 
     def check_project(self, project_name: str) -> ProjectStatus:
         """Check status of a project."""
@@ -138,43 +181,37 @@ class FlextDiagnostic:
         # Check Makefile
         if status.has_makefile:
             # Check lint
-            rc, stdout, stderr = self.run_command(["make", "lint"], project_path)
+            rc, stdout, stderr = self._run_lint(project_path)
             if rc == SUCCESS_CODE:
                 status.lint_status = STATUS_PASS
-            elif rc == MAKEFILE_TARGET_NOT_FOUND:
-                status.lint_status = STATUS_NO_TARGET
             else:
                 status.lint_status = STATUS_FAIL
                 status.errors.append(f"Lint: {stderr.strip()}")
 
             # Check mypy
-            rc, stdout, stderr = self.run_command(["make", "mypy-check"], project_path)
+            rc, stdout, stderr = self._run_mypy(project_path)
             if rc == SUCCESS_CODE:
                 status.mypy_status = STATUS_PASS
-            elif rc == MAKEFILE_TARGET_NOT_FOUND:
-                status.mypy_status = STATUS_NO_TARGET
             else:
                 status.mypy_status = STATUS_FAIL
                 status.errors.append(f"MyPy: {stderr.strip()}")
 
             # Check tests
-            rc, stdout, stderr = self.run_command(["make", "test"], project_path)
+            rc, stdout, stderr = self._run_tests(project_path)
             if rc == SUCCESS_CODE:
                 status.test_status = STATUS_PASS
-            elif rc == MAKEFILE_TARGET_NOT_FOUND:
-                status.test_status = STATUS_NO_TARGET
             else:
                 status.test_status = STATUS_FAIL
                 status.errors.append(f"Tests: {stderr.strip()}")
 
         # Check Poetry install
         if status.has_pyproject:
-            rc, _stdout, stderr = self.run_command(["poetry", "install"], project_path)
+            rc, _stdout, stderr = self._run_poetry_install(project_path)
             if rc == 0:
                 status.poetry_install = "✅ PASS"
             else:
                 status.poetry_install = "❌ FAIL"
-                status.errors.append(f"Poetry: {stderr.strip()}")
+                status.errors.append(f"Poetry: {stderr.strip()}" if stderr else "Poetry install failed via API")
 
         return status
 
@@ -187,18 +224,18 @@ class FlextDiagnostic:
         if core_path.exists():
             violations["flext-core"] = []
 
-            # Search problematic imports
+            # Search problematic imports by scanning files directly
             keywords = ["meltano", "oracle", "ldap", "singer", "client-a", "client-b"]
-            for keyword in keywords:
-                rc, stdout, _stderr = self.run_command(
-                    ["grep", "-r", keyword, "--include=*.py", "."],
-                    core_path,
-                )
-
-                if rc == 0 and stdout.strip():
-                    violations["flext-core"].append(
-                        f"Import {keyword}: {stdout.strip()}",
-                    )
+            for file_path in core_path.rglob("*.py"):
+                try:
+                    content = file_path.read_text(encoding="utf-8", errors="ignore")
+                except OSError:
+                    continue
+                for keyword in keywords:
+                    if keyword in content:
+                        violations["flext-core"].append(
+                            f"Import {keyword}: {file_path}",
+                        )
 
         return violations
 
