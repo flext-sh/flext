@@ -226,23 +226,17 @@ class TestCompleteWorkflows:
         workspace_path = workspace_setup
 
         # Setup phase
-        result = subprocess.run([
-            "flext", "workspace", "setup",
-            "--path", str(workspace_path)
-        ], capture_output=True, text=True)
+        rc, out, err = run_cli(["flext", "workspace", "setup", "--path", str(workspace_path)])
+        assert rc == 0
         assert result.returncode == 0
 
         # Development phase
-        result = subprocess.run([
-            "flext", "dev", "install", "--all"
-        ], capture_output=True, text=True)
-        assert result.returncode == 0
+        rc, out, err = run_cli(["flext", "dev", "install", "--all"]) 
+        assert rc == 0
 
         # Quality validation phase
-        result = subprocess.run([
-            "flext", "quality", "validate", "--strict"
-        ], capture_output=True, text=True)
-        assert result.returncode == 0
+        rc, out, err = run_cli(["flext", "quality", "validate", "--strict"]) 
+        assert rc == 0
 
         # Verify workspace state
         assert (workspace_path / ".venv").exists()

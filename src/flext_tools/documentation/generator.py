@@ -7,9 +7,9 @@ using Jinja2 templates, MkDocs integration, and automated content generation.
 from __future__ import annotations
 
 import argparse
-import shutil
-import io
 import contextlib
+import io
+import shutil
 import subprocess  # legacy import kept only for typing
 import sys
 import tomllib
@@ -930,7 +930,9 @@ print(f"Pipeline status: {result.status}")"""
         try:
             # Prefer in-process mkdocs entrypoint
             try:
-                from mkdocs.__main__ import main as mkdocs_main  # type: ignore[import-not-found]
+                from mkdocs.__main__ import (
+                    main as mkdocs_main,  # type: ignore[import-not-found]
+                )
 
                 stdout = io.StringIO()
                 stderr = io.StringIO()
