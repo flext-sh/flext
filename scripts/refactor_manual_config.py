@@ -37,7 +37,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
-            except Exception as e:  # noqa: S110
+            except Exception as e:
                 logger.debug(f"Skipping {path}: {e}")
                 continue
             if ("os.getenv(" in text) or ("os.environ.get" in text):
@@ -49,7 +49,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
-            except Exception as e:  # noqa: S110
+            except Exception as e:
                 logger.debug(f"Skipping {path}: {e}")
                 continue
             if re.search(r"\b(Settings\(\)|[A-Za-z0-9_]*Config\(\))", text):
@@ -61,7 +61,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
-            except Exception as e:  # noqa: S110
+            except Exception as e:
                 logger.debug(f"Skipping {path}: {e}")
                 continue
             if re.search(r"\b(json\.load\(|yaml\.load\(|yaml\.safe_load\()", text):
@@ -73,7 +73,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
-            except Exception as e:  # noqa: S110
+            except Exception as e:
                 logger.debug(f"Skipping {path}: {e}")
                 continue
             if re.search(r"if\s+not\s+.*config|assert\s+.*config", text):

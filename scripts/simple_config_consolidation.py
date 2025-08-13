@@ -14,7 +14,7 @@ def find_manual_env_vars() -> list[str]:
     for path in Path.cwd().rglob("*.py"):
         try:
             text = path.read_text(encoding="utf-8")
-        except Exception as e:  # noqa: S110
+        except Exception as e:
             print(f"Skipping {path}: {e}")
             continue
         if ("os.getenv(" in text) or ("os.environ.get" in text):
