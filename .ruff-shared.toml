@@ -33,7 +33,6 @@ lint.ignore = [
     "E501",    # line-too-long
     "ERA001",  # False positives on legitimate comments
     "G004",
-    "PLC0415",  # Import should be at top-level of file (needed for lazy imports)
     "PLR0913",  # Too many arguments in function definition (sometimes necessary)
     "RUF100",
     "SLF001",
