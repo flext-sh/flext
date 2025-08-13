@@ -63,29 +63,9 @@ docs/
 
 ---
 
-## 🏷️ Badge System Standard
+## 🏷️ Badge Usage
 
-### **Required Badges (All Projects)**
-
-Every README.md MUST include these badges in order:
-
-```markdown
-[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
-[![Version](https://img.shields.io/badge/version-X.X.X-orange.svg)](https://github.com/flext-sh/{project})
-[![FlextCore](https://img.shields.io/badge/FlextCore-Integrated-purple.svg)](https://github.com/flext-sh/flext)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Code style: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-```
-
-### **Optional Specialized Badges**
-
-Add these based on project type:
-
-- **Go Projects**: `[![Go 1.24+](https://img.shields.io/badge/go-1.24+-blue.svg)](https://golang.org/)`
-- **FastAPI Projects**: `[![FastAPI](https://img.shields.io/badge/FastAPI-0.116+-green.svg)](https://fastapi.tiangolo.com/)`
-- **Singer Projects**: `[![Singer](https://img.shields.io/badge/Singer-SDK-blue.svg)](https://sdk.meltano.com/)`
-- **DBT Projects**: `[![dbt](https://img.shields.io/badge/dbt-Core-orange.svg)](https://getdbt.com/)`
-- **Compliance Status**: `[![Compliance](https://img.shields.io/badge/Compliance-XX%25-color.svg)](docs/TODO.md)`
+Avoid promotional badges. Include only essential technical badges when they convey critical information for developers.
 
 ---
 
