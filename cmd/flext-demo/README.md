@@ -334,4 +334,4 @@ MIT License - See [LICENSE](../../LICENSE) file for details.
 
 ---
 
-_Demo server within the FLEXT ecosystem - Enterprise data integration platform_
+ 
