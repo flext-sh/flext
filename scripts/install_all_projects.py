@@ -9,7 +9,6 @@ com suas dependências completas via Poetry.
 """
 
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 
@@ -125,7 +124,7 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
             return True, "✅ Sucesso"
         return False, f"❌ Erro: {completed_stderr}"
 
-    except subprocess.TimeoutExpired:
+    except TimeoutError:
         return False, "❌ Timeout (5 minutos)"
     except (OSError, ValueError, TypeError) as e:
         return False, f"❌ Exceção: {e!s}"
