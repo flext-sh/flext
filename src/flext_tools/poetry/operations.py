@@ -454,14 +454,23 @@ class PoetryOperations:
                 success = int(code) == 0
             except Exception:
                 # Abort with guidance instead of spawning subprocess in restricted mode
-                print_colored("    ❌ Poetry API unavailable; run 'poetry add' manually", Colors.RED)
+                print_colored(
+                    "    ❌ Poetry API unavailable; run 'poetry add' manually",
+                    Colors.RED,
+                )
                 return False
 
             if success:
                 if not self.dry_run:
-                    print_colored(f"    ✅ {dependency} added successfully", Colors.GREEN)
+                    print_colored(
+                        f"    ✅ {dependency} added successfully",
+                        Colors.GREEN,
+                    )
                 else:
-                    print_colored(f"    ✅ {dependency} would be added (dry-run)", Colors.YELLOW)
+                    print_colored(
+                        f"    ✅ {dependency} would be added (dry-run)",
+                        Colors.YELLOW,
+                    )
                 return True
             print_colored(f"    ❌ Failed to add {dependency}", Colors.RED)
             return False
@@ -648,14 +657,23 @@ class PoetryOperations:
                 code = app.run(args)  # type: ignore[arg-type]
                 success = int(code) == 0
             except Exception:
-                print_colored("    ❌ Poetry API unavailable; run 'poetry remove' manually", Colors.RED)
+                print_colored(
+                    "    ❌ Poetry API unavailable; run 'poetry remove' manually",
+                    Colors.RED,
+                )
                 return False
 
             if success:
                 if not self.dry_run:
-                    print_colored(f"    ✅ {dependency} removed successfully", Colors.GREEN)
+                    print_colored(
+                        f"    ✅ {dependency} removed successfully",
+                        Colors.GREEN,
+                    )
                 else:
-                    print_colored(f"    ✅ {dependency} would be removed (dry-run)", Colors.YELLOW)
+                    print_colored(
+                        f"    ✅ {dependency} would be removed (dry-run)",
+                        Colors.YELLOW,
+                    )
                 return True
 
             print_colored(f"    ❌ Failed to remove {dependency}", Colors.RED)
@@ -778,14 +796,20 @@ class PoetryOperations:
                 code = app.run(args)  # type: ignore[arg-type]
                 success = int(code) == 0
             except Exception:
-                print_colored("    ❌ Poetry API unavailable; run 'poetry update' manually", Colors.RED)
+                print_colored(
+                    "    ❌ Poetry API unavailable; run 'poetry update' manually",
+                    Colors.RED,
+                )
                 return False
 
             if success:
                 if not self.dry_run:
                     print_colored("✅ Project updated successfully", Colors.GREEN)
                 else:
-                    print_colored("✅ Project would be updated (dry-run)", Colors.YELLOW)
+                    print_colored(
+                        "✅ Project would be updated (dry-run)",
+                        Colors.YELLOW,
+                    )
                 return True
 
             print_colored("❌ Project update failed", Colors.RED)
@@ -893,7 +917,10 @@ class PoetryOperations:
                 code = app.run(args)  # type: ignore[arg-type]
                 success = int(code) == 0
             except Exception:
-                print_colored("    ❌ Poetry API unavailable; run 'poetry lock' manually", Colors.RED)
+                print_colored(
+                    "    ❌ Poetry API unavailable; run 'poetry lock' manually",
+                    Colors.RED,
+                )
                 return False
 
             if success:
@@ -1006,7 +1033,10 @@ class PoetryOperations:
                 code = app.run(args)  # type: ignore[arg-type]
                 success = int(code) == 0
             except Exception:
-                print_colored("    ❌ Poetry API unavailable; run 'poetry check' manually", Colors.RED)
+                print_colored(
+                    "    ❌ Poetry API unavailable; run 'poetry check' manually",
+                    Colors.RED,
+                )
                 return False
 
             if success:

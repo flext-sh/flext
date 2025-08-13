@@ -128,7 +128,8 @@ class QualityGateway(FlextScript):
 
             # Descobrir projetos
             projects = self._discover_projects(
-                workspace_root, str(projects_filter) if projects_filter else None,
+                workspace_root,
+                str(projects_filter) if projects_filter else None,
             )
 
             # Estatísticas agregadas
@@ -278,7 +279,11 @@ class QualityGateway(FlextScript):
                 }
 
             stdout_buf = io.StringIO()
-            with redirect_stdout(stdout_buf), redirect_stderr(io.StringIO()), suppress(SystemExit):
+            with (
+                redirect_stdout(stdout_buf),
+                redirect_stderr(io.StringIO()),
+                suppress(SystemExit),
+            ):
                 ruff_main(["check", str(project_path), "--output-format=json"])  # type: ignore[arg-type]
 
             ruff_issues = 0
@@ -302,7 +307,9 @@ class QualityGateway(FlextScript):
                     "error": "MyPy module not available",
                 }
 
-            mypy_stdout, _mypy_stderr, _status = mypy_api.run([str(project_path), "--no-error-summary"])  # type: ignore[arg-type]
+            mypy_stdout, _mypy_stderr, _status = mypy_api.run(
+                [str(project_path), "--no-error-summary"],
+            )  # type: ignore[arg-type]
             mypy_errors = 0
             if mypy_stdout:
                 mypy_errors = len(

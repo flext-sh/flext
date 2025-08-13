@@ -129,7 +129,8 @@ class ProjectAuditResult:
             )
             # Base score calculation with file normalization
             base_score = max(
-                0, 100 - (weighted_violations / max(self.total_files_analyzed, 1)) * 20,
+                0,
+                100 - (weighted_violations / max(self.total_files_analyzed, 1)) * 20,
             )
             self.compliance_score = round(base_score, 1)
 
@@ -271,7 +272,8 @@ class PatternViolationAnalyzer:
         }
 
     def analyze_project_compliance(
-        self, project_path: Path,
+        self,
+        project_path: Path,
     ) -> FlextResult[ProjectAuditResult]:
         """Analyze pattern compliance for a single project."""
         try:
@@ -291,7 +293,8 @@ class PatternViolationAnalyzer:
             if not python_files:
                 # Return empty result for projects without Python files
                 result = ProjectAuditResult(
-                    project_name=project_path.name, total_files_analyzed=0,
+                    project_name=project_path.name,
+                    total_files_analyzed=0,
                 )
                 result.calculate_compliance_metrics()
                 return FlextResult.ok(result)
@@ -299,7 +302,8 @@ class PatternViolationAnalyzer:
             violations = []
             for python_file in python_files:
                 file_violations_result = self._analyze_file_patterns(
-                    python_file, project_path.name,
+                    python_file,
+                    project_path.name,
                 )
                 if file_violations_result.success and file_violations_result.data:
                     violations.extend(file_violations_result.data)
@@ -321,7 +325,9 @@ class PatternViolationAnalyzer:
             return FlextResult.fail(f"Analysis failed: {e}")
 
     def _analyze_file_patterns(
-        self, file_path: Path, project_name: str,
+        self,
+        file_path: Path,
+        project_name: str,
     ) -> FlextResult[list[PatternViolation]]:
         """Analyze patterns in a single file."""
         try:
@@ -335,7 +341,10 @@ class PatternViolationAnalyzer:
             try:
                 tree = ast.parse(content)
                 ast_violations = self._analyze_ast_patterns(
-                    tree, file_path, lines, project_name,
+                    tree,
+                    file_path,
+                    lines,
+                    project_name,
                 )
                 violations.extend(ast_violations)
             except SyntaxError:
@@ -344,7 +353,9 @@ class PatternViolationAnalyzer:
 
             # Text-based pattern analysis
             text_violations = self._analyze_text_patterns(
-                file_path, lines, project_name,
+                file_path,
+                lines,
+                project_name,
             )
             violations.extend(text_violations)
 
@@ -542,7 +553,8 @@ class PatternAuditSystem:
             return False
 
     def audit_ecosystem_compliance(
-        self, workspace_path: Path,
+        self,
+        workspace_path: Path,
     ) -> FlextResult[EcosystemAuditResult]:
         """Audit pattern compliance across entire FLEXT ecosystem."""
         try:
@@ -602,7 +614,8 @@ class PatternAuditSystem:
 
             # Create ecosystem result
             ecosystem_result = EcosystemAuditResult(
-                total_projects_audited=len(results), projects_results=results,
+                total_projects_audited=len(results),
+                projects_results=results,
             )
             ecosystem_result.calculate_ecosystem_metrics()
 
@@ -612,7 +625,8 @@ class PatternAuditSystem:
             return FlextResult.fail(f"Ecosystem audit failed: {e}")
 
     def generate_compliance_report(
-        self, ecosystem_result: EcosystemAuditResult,
+        self,
+        ecosystem_result: EcosystemAuditResult,
     ) -> FlextResult[Path]:
         """Generate comprehensive compliance report."""
         try:
@@ -684,7 +698,8 @@ class PatternAuditSystem:
             return FlextResult.fail(f"Report generation failed: {e}")
 
     def _generate_remediation_recommendations(
-        self, ecosystem_result: EcosystemAuditResult,
+        self,
+        ecosystem_result: EcosystemAuditResult,
     ) -> dict[str, str]:
         """Generate prioritized remediation recommendations."""
         recommendations = {}

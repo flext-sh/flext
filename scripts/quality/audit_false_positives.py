@@ -292,7 +292,8 @@ class FalsePositiveAuditor:
         return "Requer investigação manual"
 
     def _print_audit_results(
-        self, analysis: dict[str, list[dict[str, object]]],
+        self,
+        analysis: dict[str, list[dict[str, object]]],
     ) -> None:
         """Imprime resultados da auditoria de forma organizada."""
         total = sum(len(items) for items in analysis.values())

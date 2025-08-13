@@ -121,7 +121,9 @@ def main(argv: list[str]) -> int:
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--no-ruff", action="store_true", help="Skip running Ruff docstring fixes",
+        "--no-ruff",
+        action="store_true",
+        help="Skip running Ruff docstring fixes",
     )
     args = parser.parse_args(argv)
 

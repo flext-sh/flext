@@ -231,11 +231,11 @@ class TestCompleteWorkflows:
         assert result.returncode == 0
 
         # Development phase
-        rc, out, err = run_cli(["flext", "dev", "install", "--all"]) 
+        rc, out, err = run_cli(["flext", "dev", "install", "--all"])
         assert rc == 0
 
         # Quality validation phase
-        rc, out, err = run_cli(["flext", "quality", "validate", "--strict"]) 
+        rc, out, err = run_cli(["flext", "quality", "validate", "--strict"])
         assert rc == 0
 
         # Verify workspace state

@@ -152,7 +152,7 @@ Brief description of what this document covers and who it's for.
 
 ### Code Block Standards
 
-```markdown
+````markdown
 ```python
 # Clear, descriptive comment
 def example_function():
@@ -161,6 +161,7 @@ def example_function():
     result = process_data()
     return result
 ```
+````
 
 ### Code Example Requirements
 

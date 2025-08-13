@@ -10,25 +10,25 @@ mkdir -p test-results/{coverage,logs,reports}
 # Wait for dependencies
 echo "⏳ Waiting for dependencies..."
 echo "Waiting for database..."
-while ! pg_isready -h $DB_HOST -p 5432 -U flext_test; do
+while ! pg_isready -h "$DB_HOST" -p 5432 -U flext_test; do
 	echo "  • Waiting for postgres..."
 	sleep 2
 done
 
 echo "Waiting for Redis..."
-while ! redis-cli -h $REDIS_HOST ping; do
+while ! redis-cli -h "$REDIS_HOST" ping; do
 	echo "  • Waiting for redis..."
 	sleep 2
 done
 
 echo "Waiting for FlexCore..."
-while ! curl -f $FLEXCORE_URL/health; do
+while ! curl -f "$FLEXCORE_URL"/health; do
 	echo "  • Waiting for FlexCore..."
 	sleep 5
 done
 
 echo "Waiting for FLEXT Service..."
-while ! curl -f $FLEXT_URL/health; do
+while ! curl -f "$FLEXT_URL"/health; do
 	echo "  • Waiting for FLEXT Service..."
 	sleep 5
 done
@@ -112,11 +112,11 @@ echo "🏥 Phase 4: API Health Checks"
 echo "=============================="
 
 echo "Testing FLEXT Service endpoints..."
-curl -f $FLEXT_URL/health | jq '.' >test-results/logs/flext-health.json
+curl -f "$FLEXT_URL"/health | jq '.' >test-results/logs/flext-health.json
 curl -f $FLEXT_URL/api/v1/status | jq '.' >test-results/logs/flext-status.json
 
 echo "Testing FlexCore endpoints..."
-curl -f $FLEXCORE_URL/health | jq '.' >test-results/logs/flexcore-health.json
+curl -f "$FLEXCORE_URL"/health | jq '.' >test-results/logs/flexcore-health.json
 
 # Performance benchmarks
 echo "🚀 Phase 5: Performance Benchmarks"

@@ -246,7 +246,8 @@ class SafetyValidator:
         )
 
     def validate_package_safety_safe(
-        self, package_name: str,
+        self,
+        package_name: str,
     ) -> FlextResult[ValidationData]:
         """Safely validate package safety using railway-oriented programming.
 
@@ -473,7 +474,8 @@ class SafetyValidator:
                         "Backup required for critical file modification/deletion",
                     )
                     logger.info(
-                        "Backup required for critical file", file_path=str(file_path),
+                        "Backup required for critical file",
+                        file_path=str(file_path),
                     )
 
             # Permission validation
@@ -711,7 +713,8 @@ class SafetyValidator:
         try:
             context = context or {}
             logger.debug(
-                "Generating safety recommendations", operation_type=operation_type,
+                "Generating safety recommendations",
+                operation_type=operation_type,
             )
 
             recommendations = self.get_safety_recommendations(operation_type, context)

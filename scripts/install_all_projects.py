@@ -111,6 +111,7 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
             from poetry.console import (
                 application as poetry_app,  # type: ignore[import-not-found]
             )
+
             # Run poetry in-process when possible
             app = poetry_app.Application()  # type: ignore[no-call-override]
             code = app.run(["install", "--no-interaction"])  # type: ignore[arg-type]
@@ -118,7 +119,10 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
             completed_stderr = ""
         except Exception:
             # As última alternativa, abort with guidance instead of spawning
-            return False, "❌ Falha ao executar Poetry via API; execute manualmente: 'poetry install --no-interaction'"
+            return (
+                False,
+                "❌ Falha ao executar Poetry via API; execute manualmente: 'poetry install --no-interaction'",
+            )
 
         if completed_return == 0:
             return True, "✅ Sucesso"
