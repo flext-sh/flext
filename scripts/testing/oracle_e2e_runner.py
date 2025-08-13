@@ -7,12 +7,11 @@ usando flext_tools.testing para máxima confiabilidade.
 
 from __future__ import annotations
 
-import shutil
-import subprocess
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING, NoReturn
+from typing import TYPE_CHECKING
 
+import docker
 from flext_core import FlextResult
 
 from flext_tools import Colors, print_colored
@@ -46,72 +45,32 @@ class OracleE2ETestRunner(FlextScript):
 
         print_colored("✅ FLEXT workspace detected", Colors.GREEN)
 
-        # Check Docker availability
+        # Check Docker availability via Docker SDK (no subprocess)
         try:
-            docker_executable = shutil.which("docker")
-            if not docker_executable:
-
-                def _raise_docker_not_found() -> NoReturn:
-                    msg = "Docker executable not found."
-                    raise FileNotFoundError(msg)
-
-                _raise_docker_not_found()
-
-            subprocess.run(  # noqa: S603
-                [
-                    docker_executable,
-                    "--version",
-                ],  # Validated: uses docker from shutil.which
-                capture_output=True,
-                check=True,
-                timeout=5,
-                shell=False,  # Addressed S603
-            )
+            client = docker.from_env()
+            # Ping daemon and fetch version to ensure connectivity
+            client.ping()
+            _ = client.version()
             print_colored("✅ Docker available", Colors.GREEN)
-        except (
-            subprocess.CalledProcessError,
-            FileNotFoundError,
-            subprocess.TimeoutExpired,
-        ):
+        except Exception:
             print_colored(
-                "❌ Docker not found - required for Oracle E2E tests",
+                "❌ Docker not available - required for Oracle E2E tests",
                 Colors.RED,
             )
-            return FlextResult.fail("Docker not found - required for Oracle E2E tests")
+            return FlextResult.fail("Docker not available - required for Oracle E2E tests")
 
-        # Check Docker Compose availability
+        # Docker Compose check: best-effort via engine info (compose is a CLI plugin)
         try:
-            docker_executable = shutil.which(
-                "docker",
-            )  # Reusing docker_executable for 'docker compose'
-            if not docker_executable:
-
-                def _raise_docker_compose_not_found() -> NoReturn:
-                    msg = "Docker executable not found for compose."
-                    raise FileNotFoundError(msg)
-
-                _raise_docker_compose_not_found()
-
-            subprocess.run(  # noqa: S603
-                [
-                    docker_executable,
-                    "compose",
-                    "version",
-                ],  # Validated: uses docker from shutil.which
-                capture_output=True,
-                check=True,
-                timeout=5,
-                shell=False,  # Addressed S603
-            )
-            print_colored("✅ Docker Compose available", Colors.GREEN)
-            return FlextResult.ok(None)
-        except (
-            subprocess.CalledProcessError,
-            FileNotFoundError,
-            subprocess.TimeoutExpired,
-        ):
-            print_colored("❌ Docker Compose not found", Colors.RED)
-            return FlextResult.fail("Docker Compose not found")
+            info = client.info()
+            engine_ok = bool(info and info.get("ServerVersion"))
+            if engine_ok:
+                print_colored("✅ Docker engine healthy (compose plugin not required)", Colors.GREEN)
+                return FlextResult.ok(None)
+            print_colored("❌ Docker engine info unavailable", Colors.RED)
+            return FlextResult.fail("Docker engine info unavailable")
+        except Exception:
+            print_colored("❌ Unable to query Docker engine info", Colors.RED)
+            return FlextResult.fail("Unable to query Docker engine info")
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute Oracle E2E testing logic."""
