@@ -8,7 +8,9 @@ from __future__ import annotations
 
 import argparse
 import shutil
-import subprocess
+import io
+import contextlib
+import subprocess  # legacy import kept only for typing
 import sys
 import tomllib
 from datetime import UTC, datetime
@@ -926,20 +928,25 @@ print(f"Pipeline status: {result.status}")"""
         self.logger.info("Building documentation with MkDocs...")
 
         try:
-            result = subprocess.run(
-                ["/usr/bin/env", "mkdocs", "build", "--clean"],
-                cwd=self.project_root,
-                capture_output=True,
-                text=True,
-                check=True,
-            )
-            self.logger.info("Documentation built successfully")
-            return FlextResult.ok({"status": "built", "output": result.stdout})
-        except subprocess.CalledProcessError as e:
-            error_msg = f"MkDocs build failed: {e}"
-            self.logger.exception(error_msg)
-            self.logger.exception(f"Error output: {e.stderr}")
-            return FlextResult.fail(error_msg)
+            # Prefer in-process mkdocs entrypoint
+            try:
+                from mkdocs.__main__ import main as mkdocs_main  # type: ignore[import-not-found]
+
+                stdout = io.StringIO()
+                stderr = io.StringIO()
+                with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                    try:
+                        exit_code = int(mkdocs_main(["build", "-f", str(self.mkdocs_config), "--clean"]))
+                    except SystemExit as exc:
+                        exit_code = int(getattr(exc, "code", 0) or 0)
+                if exit_code != 0:
+                    return FlextResult.fail(f"MkDocs build failed: {stderr.getvalue().strip()}")
+                self.logger.info("Documentation built successfully")
+                return FlextResult.ok({"status": "built", "output": stdout.getvalue()})
+            except Exception as e:
+                return FlextResult.fail(f"MkDocs build API unavailable: {e}")
+        except Exception as e:
+            return FlextResult.fail(f"MkDocs build failed: {e}")
 
     def _serve_docs(self) -> None:
         """Serve the documentation locally."""
