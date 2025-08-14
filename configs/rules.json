@@ -1,0 +1,32 @@
+{
+  "migration_rules": {
+    "categorization_rules": {
+      "users": {
+        "objectclass_patterns": ["inetOrgPerson", "organizationalPerson", "orclUser", "orclUserV2"],
+        "dn_patterns": [".*dc=ctbc.*"]
+      },
+      "groups": {
+        "objectclass_patterns": ["groupOfUniqueNames", "groupOfNames"]
+      },
+      "hierarchy": {
+        "objectclass_patterns": ["domain", "organizationalUnit", "orclContainer"]
+      }
+    },
+    "file_mapping": {
+      "hierarchy": "01_base_hierarchy_oud.ldif",
+      "users": "02_users_real_migration.ldif",
+      "groups": "03_groups_real_migration.ldif"
+    }
+  },
+  "attribute_filtering": {
+    "forbidden_attributes": [
+      "orclentrylevelaci",
+      "orclaci",
+      "pwdpolicysubentry",
+      "orclpassword",
+      "orclpwdverifierparams;orclpasswordverifier",
+      "authpassword;oid",
+      "authpassword;orclcommonpwd"
+    ]
+  }
+}
