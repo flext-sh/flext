@@ -5,7 +5,13 @@ to the ecosystem's standard formatting conventions. Prefer using these helpers
 for consistent UX across scripts and tools.
 """
 
-from flext_cli.core.formatters import PlainFormatter
+try:
+    from flext_cli.core.formatters import PlainFormatter
+except Exception:  # pragma: no cover - optional dependency during tooling import
+    class PlainFormatter:  # fallback minimal formatter
+        @staticmethod
+        def strip_ansi(text: str) -> str:
+            return text
 from flext_core import get_logger
 from rich.console import Console
 
