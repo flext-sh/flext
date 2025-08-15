@@ -268,25 +268,25 @@ class PoetryOperations:
             )
 
             # Use existing implementation but wrap in FlextResult
-            legacy_result = self.add_dependencies(
+            operation_result = self.add_dependencies(
                 project_path,
                 dependencies,
                 _auto_confirm=auto_confirm,
             )
 
             execution_time = time.time() - start_time
-            packages_affected = sum(len(deps) for deps in legacy_result.values())
+            packages_affected = sum(len(deps) for deps in operation_result.values())
 
             # Using OperationData with FlextResult (DRY - no custom classes)
             operation_data: OperationData = {
                 "success": packages_affected > 0,
                 "operation_type": "add_dependencies",
                 "packages_affected": [
-                    dep for deps_list in legacy_result.values() for dep in deps_list
+                    dep for deps_list in operation_result.values() for dep in deps_list
                 ],
                 "execution_time": execution_time,
                 "details": {
-                    "categories": legacy_result,
+                    "categories": operation_result,
                     "dry_run": self.dry_run,
                     "safety_enabled": self.enable_safety,
                 },
@@ -403,7 +403,7 @@ class PoetryOperations:
 
     def _add_dependency(
         self,
-        project_path: Path,  # noqa: ARG002 - kept for API compatibility
+        project_path: Path,  # noqa: ARG002 - kept for convenience
         dependency: str,
         group: str | None = None,
     ) -> bool:
@@ -511,7 +511,7 @@ class PoetryOperations:
             )
 
             # Use existing implementation but wrap in FlextResult
-            legacy_result = self.remove_dependencies(
+            operation_result = self.remove_dependencies(
                 project_path,
                 dependencies,
                 _auto_confirm=auto_confirm,
@@ -521,12 +521,12 @@ class PoetryOperations:
 
             # Using OperationData with FlextResult (DRY - no custom classes)
             operation_data: OperationData = {
-                "success": len(legacy_result) > 0,
+                "success": len(operation_result) > 0,
                 "operation_type": "remove_dependencies",
-                "packages_affected": legacy_result,
+                "packages_affected": operation_result,
                 "execution_time": execution_time,
                 "details": {
-                    "removed_packages": legacy_result,
+                    "removed_packages": operation_result,
                     "dry_run": self.dry_run,
                     "safety_enabled": self.enable_safety,
                 },
@@ -536,7 +536,7 @@ class PoetryOperations:
             self.logger.info(
                 "Safe dependency removal completed",
                 project_path=str(project_path),
-                packages_removed=len(legacy_result),
+                packages_removed=len(operation_result),
                 execution_time=execution_time,
                 success=success,
             )
@@ -616,7 +616,7 @@ class PoetryOperations:
 
         return removed
 
-    def _remove_dependency(self, project_path: Path, dependency: str) -> bool:  # noqa: ARG002 - kept for API compatibility
+    def _remove_dependency(self, project_path: Path, dependency: str) -> bool:  # noqa: ARG002 - kept for convenience
         """Remove an individual dependency with safety validation.
 
         Executes Poetry remove command for a single dependency with proper
@@ -705,18 +705,18 @@ class PoetryOperations:
             )
 
             # Use existing implementation but wrap in FlextResult
-            legacy_success = self.update_project(project_path)
+            operation_success = self.update_project(project_path)
 
             execution_time = time.time() - start_time
 
             # Using OperationData with FlextResult (DRY - no custom classes)
             operation_data: OperationData = {
-                "success": legacy_success,
+                "success": operation_success,
                 "operation_type": "update_project",
                 "packages_affected": [],  # Update affects all packages
                 "execution_time": execution_time,
                 "details": {
-                    "project_updated": legacy_success,
+                    "project_updated": operation_success,
                     "dry_run": self.dry_run,
                     "safety_enabled": self.enable_safety,
                 },
@@ -841,18 +841,18 @@ class PoetryOperations:
             )
 
             # Use existing implementation but wrap in FlextResult
-            legacy_success = self.lock_project(project_path)
+            operation_success = self.lock_project(project_path)
 
             execution_time = time.time() - start_time
 
             # Using OperationData with FlextResult (DRY - no custom classes)
             operation_data: OperationData = {
-                "success": legacy_success,
+                "success": operation_success,
                 "operation_type": "lock_project",
                 "packages_affected": [],  # Lock affects all dependencies
                 "execution_time": execution_time,
                 "details": {
-                    "lock_generated": legacy_success,
+                    "lock_generated": operation_success,
                     "dry_run": self.dry_run,
                 },
             }
@@ -956,18 +956,18 @@ class PoetryOperations:
             )
 
             # Use existing implementation but wrap in FlextResult
-            legacy_success = self.validate_project(project_path)
+            operation_success = self.validate_project(project_path)
 
             execution_time = time.time() - start_time
 
             # Using OperationData with FlextResult (DRY - no custom classes)
             operation_data: OperationData = {
-                "success": legacy_success,
+                "success": operation_success,
                 "operation_type": "validate_project",
                 "packages_affected": [],  # Validation doesn't affect packages
                 "execution_time": execution_time,
                 "details": {
-                    "validation_passed": legacy_success,
+                    "validation_passed": operation_success,
                     "project_path": str(project_path),
                 },
             }
