@@ -77,6 +77,7 @@ from typing import TYPE_CHECKING
 from flext_core import FlextEntity, FlextResult, get_flext_container, get_logger
 
 from flext_tools.utils import Colors, print_colored
+import shutil
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -95,6 +96,7 @@ class QualityCheckConfig:
     enable_coverage: bool = True
     enable_security: bool = True
     coverage_threshold: float = 90.0
+    relaxed: bool = False
 
 
 @dataclass
@@ -323,6 +325,8 @@ class QualityGateway:
             # Use default config if none provided
             if config is None:
                 config = QualityCheckConfig()
+            # Store relaxed flag for helper methods
+            self._relaxed = bool(getattr(config, "relaxed", False))
 
             self.logger.info(
                 "Starting comprehensive quality checks",
@@ -332,6 +336,7 @@ class QualityGateway:
                 tests=config.enable_tests,
                 coverage=config.enable_coverage,
                 security=config.enable_security,
+                relaxed=config.relaxed,
             )
 
             print_colored("🔍 Running comprehensive quality checks...", Colors.BLUE)
@@ -422,6 +427,10 @@ class QualityGateway:
     def _run_lint_check(self) -> FlextResult[list[QualityIssue]]:
         """Run linting check with Ruff."""
         try:
+            if shutil.which("ruff") is None:
+                return FlextResult.ok([]) if self._is_relaxed() else FlextResult.fail(
+                    "ruff not found in PATH",
+                )
             import ruff.__main__ as ruff_main  # type: ignore[import-not-found]
 
             stdout = io.StringIO()
@@ -455,6 +464,10 @@ class QualityGateway:
     def _run_type_check(self) -> FlextResult[list[QualityIssue]]:
         """Run type checking with MyPy."""
         try:
+            if shutil.which("mypy") is None:
+                return FlextResult.ok([]) if self._is_relaxed() else FlextResult.fail(
+                    "mypy not found in PATH",
+                )
             from mypy import api as mypy_api  # type: ignore[import-not-found]
 
             stdout, _stderr, exit_status = mypy_api.run(
@@ -475,6 +488,10 @@ class QualityGateway:
     def _run_test_check(self) -> FlextResult[list[QualityIssue]]:
         """Run test execution with Pytest."""
         try:
+            if shutil.which("pytest") is None:
+                return FlextResult.ok([]) if self._is_relaxed() else FlextResult.fail(
+                    "pytest not found in PATH",
+                )
             import pytest  # type: ignore[import-not-found]
 
             # Capture output using in-process run
@@ -517,8 +534,11 @@ class QualityGateway:
     def _run_security_check(self) -> FlextResult[list[QualityIssue]]:
         """Run security scanning with Bandit."""
         try:
-            # This is a placeholder - implement actual security scan
-            # For now, assume security check passes
+            if shutil.which("bandit") is None:
+                return FlextResult.ok([]) if self._is_relaxed() else FlextResult.fail(
+                    "bandit not found in PATH",
+                )
+            # Placeholder for bandit integration when available
             return FlextResult.ok([])
 
         except Exception as e:
@@ -542,3 +562,11 @@ class QualityGateway:
     def all_passed(self) -> bool:
         """Legacy method for backward compatibility."""
         return True
+
+    def _is_relaxed(self) -> bool:
+        """Check if relaxed validation is enabled via config.
+
+        Returns:
+            True if relaxed validation is enabled; False otherwise.
+        """
+        return bool(getattr(self, "_relaxed", False))

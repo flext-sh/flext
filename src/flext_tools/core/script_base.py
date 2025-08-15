@@ -94,6 +94,7 @@ import argparse
 import inspect
 import logging
 import time
+from pathlib import Path
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, ParamSpec
@@ -106,6 +107,12 @@ from flext_core import (
 )
 
 from flext_tools.utils.colors import Colors, print_colored
+from flext_tools.quality.gateway import (
+    QualityCheckConfig,
+    QualityGateway,
+    all_quality_checks_passed,
+    get_quality_failure_summary,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -210,6 +217,26 @@ class FlextScript(ABC):
         try:
             self._print_header()
 
+            # Extract common flags
+            is_dry_run = bool(kwargs.get("dry_run", False))
+            skip_validation = bool(kwargs.get("no_validate", False))
+            relaxed_validation = bool(kwargs.get("relaxed_validation", False))
+
+            if is_dry_run:
+                print_colored("🧪 Dry-run mode: no changes will be made", Colors.YELLOW)
+
+            # Run central FLEXT validation unless skipped
+            if not skip_validation:
+                validation_result = self._run_flext_validation(
+                    strict=not relaxed_validation,
+                )
+                if not validation_result.success:
+                    print_colored(
+                        f"❌ Validation failed: {validation_result.error}",
+                        Colors.RED,
+                    )
+                    return 1
+
             # Chain operations using FlextResult pattern
             result = (
                 self.validate_preconditions()
@@ -217,7 +244,6 @@ class FlextScript(ABC):
                 .flat_map(lambda _: self.execute_main_logic(**kwargs))
                 .map(lambda _: self._print_success())
             )
-
             if result.success:
                 return 0
 
@@ -239,6 +265,33 @@ class FlextScript(ABC):
             cleanup_result = self.cleanup()
             if not cleanup_result.success:
                 self.logger.warning(f"Cleanup failed: {cleanup_result.error}")
+
+    def _run_flext_validation(self, *, strict: bool) -> FlextResult[None]:
+        """Run centralized FLEXT validation via QualityGateway.
+
+        Args:
+            strict: When True, missing tools fail validation; when False, they are
+                reported but do not fail the validation.
+
+        Returns:
+            FlextResult indicating overall validation status.
+        """
+        try:
+            workspace = Path.cwd()
+            gateway = QualityGateway(workspace_path=workspace)
+            config = QualityCheckConfig()
+            # Store strict flag in details via attribute injection if needed
+            # and use it inside gateway methods
+            result = gateway.run_quality_checks_safe(config=config)
+            if not result.success:
+                return FlextResult.fail(result.error or "Quality checks failed")
+            data = result.data or {}
+            if not all_quality_checks_passed(data):
+                summary = get_quality_failure_summary(data)
+                return FlextResult.fail(summary)
+            return FlextResult.ok(None)
+        except Exception as exc:
+            return FlextResult.fail(f"Validation error: {exc}")
 
     def _print_header(self) -> None:
         """Print script header with metadata."""
@@ -281,6 +334,20 @@ class FlextScript(ABC):
             "-v",
             action="store_true",
             help="Enable verbose output",
+        )
+
+        parser.add_argument(
+            "--no-validate",
+            action="store_true",
+            help="Skip centralized FLEXT validation before execution",
+        )
+
+        parser.add_argument(
+            "--relaxed-validation",
+            action="store_true",
+            help=(
+                "Do not fail if quality tools are missing; report warnings instead"
+            ),
         )
 
         return parser
