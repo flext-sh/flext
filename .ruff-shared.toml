@@ -39,6 +39,8 @@ lint.ignore = [
     "RUF003",
     "RUF100",
     "SLF001",
+    "TC001",   # Pydantic requirement
+    "TC002",   # Pydantic requirement
     "TRY300",
 ]
 lint.isort.force-single-line = false
