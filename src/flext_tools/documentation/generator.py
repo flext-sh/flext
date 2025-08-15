@@ -135,13 +135,18 @@ class DocumentationGenerator(FlextScript):
             clean = kwargs.get("clean", False)
             serve = bool(kwargs.get("serve"))
             components_only = kwargs.get("components_only", False)
+            dry_run = bool(kwargs.get("dry_run", False))
 
             # Step 1: Clean previous build if requested
             if clean:
                 self._clean_build()
 
             # Step 2: Generate component documentation
-            components_result = self._generate_component_docs()
+            if dry_run:
+                self.logger.info("[dry-run] Would generate component documentation")
+                components_result = FlextResult.ok({})
+            else:
+                components_result = self._generate_component_docs()
             if not components_result.success:
                 return FlextResult.fail(
                     components_result.error or "Component generation failed",
@@ -153,10 +158,20 @@ class DocumentationGenerator(FlextScript):
 
             # Execute full generation pipeline
             # Use type: ignore for the variance issue (dict[str, object] is compatible with object)
-            return self._execute_full_generation_pipeline(
-                components_result,
-                serve=serve,
-            )  # type: ignore[arg-type]
+            if dry_run:
+                self.logger.info("[dry-run] Would generate API docs, diagrams and build")
+                return FlextResult.ok(
+                    {
+                        "status": "dry_run",
+                        "message": "Documentation steps validated",
+                        "components": components_result.data,
+                    },
+                )
+            else:
+                return self._execute_full_generation_pipeline(
+                    components_result,
+                    serve=serve,
+                )  # type: ignore[arg-type]
 
         except Exception as e:
             error_msg = f"Documentation generation failed: {e}"

@@ -644,15 +644,15 @@ def check_version_compatibility(
 
     """
     try:
-        legacy_result = VersionAnalyzer.check_version_compatibility(spec1, spec2)
+        analyzer_result = VersionAnalyzer.check_version_compatibility(spec1, spec2)
 
-        # Convert legacy dict result to VersionCompatibilityResult
-        overlap_version = legacy_result.get("overlap_version")
-        issues = legacy_result.get("issues", [])
-        recommendations = legacy_result.get("recommendations", [])
+        # Convert analyzer dict result to VersionCompatibilityResult
+        overlap_version = analyzer_result.get("overlap_version")
+        issues = analyzer_result.get("issues", [])
+        recommendations = analyzer_result.get("recommendations", [])
 
         result = VersionCompatibilityResult(
-            compatible=bool(legacy_result.get("compatible", False)),
+            compatible=bool(analyzer_result.get("compatible", False)),
             spec1=spec1,
             spec2=spec2,
             overlap_version=str(overlap_version)
