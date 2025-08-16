@@ -13,8 +13,12 @@ from flext_tools.documentation import DocumentationGenerator
 
 
 def main() -> int:
-    """Main entry point for the documentation generator script."""
-    # Initialize generator with current directory
+    """Main entry point for the documentation generator script.
+
+    Returns:
+        int: Description.
+
+    """    # Initialize generator with current directory
     generator = DocumentationGenerator(Path.cwd())
 
     # Run documentation generation

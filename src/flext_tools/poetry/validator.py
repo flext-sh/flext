@@ -85,6 +85,11 @@ from pydantic import BaseModel, Field
 
 from flext_tools.utils import Colors, print_colored
 
+try:  # pragma: no cover - optional dependency
+    import poetry.console as poetry_console  # type: ignore[import-not-found]
+except Exception:  # pragma: no cover - optional dependency
+    poetry_console = None  # type: ignore[assignment]
+
 if TYPE_CHECKING:
     from pathlib import Path
 
@@ -492,18 +497,16 @@ class PoetryValidator:
             issues.append("poetry.lock not found - run 'poetry lock'")
             return False, issues
 
-        try:
-            # Prefer Poetry Python API to avoid subprocess usage
-            from poetry.console import (
-                application as poetry_app,  # type: ignore[import-not-found]
-            )
-
-            app = poetry_app.Application()  # type: ignore[no-call-override]
-            code = app.run(["check"])  # type: ignore[arg-type]
-            if int(code) != 0:
-                issues.append("poetry.lock is outdated - run 'poetry lock'")
-        except Exception:
+        if poetry_console is None:
             issues.append("Unable to verify poetry.lock status via Poetry API")
+        else:
+            try:
+                app = poetry_console.application.Application()  # type: ignore[no-call-override]
+                code = app.run(["check"])  # type: ignore[arg-type]
+                if int(code) != 0:
+                    issues.append("poetry.lock is outdated - run 'poetry lock'")
+            except Exception:
+                issues.append("Unable to verify poetry.lock status via Poetry API")
 
         return len(issues) == 0, issues
 

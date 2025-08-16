@@ -30,7 +30,7 @@ IGNORE_DIRS: set[str] = {
     "backup",
     "old",
     "deprecated",
-    "legacy",
+    "outdated",
     "temp",
     "tmp",
     # Version control systems

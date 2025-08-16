@@ -8,10 +8,26 @@ for consistent UX across scripts and tools.
 try:
     from flext_cli.core.formatters import PlainFormatter
 except Exception:  # pragma: no cover - optional dependency during tooling import
-    class PlainFormatter:  # fallback minimal formatter
+    class PlainFormatter:  # fallback minimal formatter with console support
+        """Minimal fallback formatter used when flext-cli is unavailable."""
+
         @staticmethod
         def strip_ansi(text: str) -> str:
             return text
+
+        def format(self, text: str, console: "Console | None" = None) -> None:
+            """Render text to the given console or stdout as a fallback.
+
+            Args:
+                text: The text to render (may include ANSI codes).
+                console: Optional rich Console instance.
+
+            """
+            if console is not None:
+                console.print(text, end="\n")
+            else:
+                # Delegate to rich Console for consistent output; avoid bare print
+                Console().print(text, end="\n")
 from flext_core import get_logger
 from rich.console import Console
 

@@ -1,15 +1,5 @@
 #!/usr/bin/env python3
-"""Normalize docstrings across the monorepo to Google style and PEP257.
-
-Process:
-- Walk all tracked Python files under the workspace.
-- Run Pyment per-file to convert docstrings to Google style.
-- Ignore files that cause Pyment to crash; log them.
-- Optionally, run Ruff to auto-fix docstring nitpicks (D rules).
-
-Usage:
-    python scripts/quality/normalize_docstrings.py [--no-ruff]
-"""
+"""Normalize docstrings across the monorepo to Google style and PEP257."""
 
 from __future__ import annotations
 
@@ -18,9 +8,11 @@ import io
 import runpy
 import shutil
 import sys
-from contextlib import redirect_stderr, redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout, suppress
 from pathlib import Path
 from typing import TYPE_CHECKING
+
+from ruff.__main__ import main as ruff_main
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -150,14 +142,8 @@ def main(argv: list[str]) -> int:
     if not args.no_ruff and has_command("ruff"):
         print("Running Ruff docstring fixes (D rules)...")
         # Run Ruff in-process
-        try:
-            from ruff.__main__ import (
-                main as ruff_main,  # type: ignore[import-not-found]
-            )
-
-            ruff_main(["--select", "D", "--fix", str(REPO_ROOT)])  # type: ignore[arg-type]
-        except SystemExit:
-            pass
+        with suppress(SystemExit):
+            ruff_main(["--select", "D", "--fix", str(REPO_ROOT)])
 
     print("Done.")
     return 0

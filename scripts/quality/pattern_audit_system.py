@@ -1,57 +1,5 @@
 #!/usr/bin/env python3
-"""FLEXT Pattern Audit System - Enterprise Pattern Compliance Analysis.
-
-Provides comprehensive pattern compliance auditing across the FLEXT ecosystem
-according to documented architectural patterns in docs/patterns/. This system
-implements enterprise-grade analysis capabilities with detailed violation
-detection, severity classification, and actionable reporting for maintaining
-ecosystem-wide pattern consistency.
-
-The audit system analyzes foundation patterns, type system patterns, configuration
-patterns, error handling patterns, constants patterns, and utility patterns to
-ensure architectural compliance across all 32 FLEXT ecosystem projects.
-
-Key Components:
-    - PatternViolationAnalyzer: Core analysis engine for pattern detection
-    - AuditReportGenerator: Comprehensive reporting with actionable recommendations
-    - ProjectScanner: Multi-project scanning with performance optimization
-    - ViolationClassifier: Severity-based classification system
-    - ComplianceTracker: Historical compliance trend analysis
-
-Architecture:
-    Implements Clean Architecture patterns with proper separation between
-    analysis logic, data models, and reporting. Uses AST analysis for
-    structural patterns and regex patterns for textual compliance.
-    Integrates with FLEXT observability for audit tracking and metrics.
-
-Example:
-    Enterprise pattern compliance audit:
-
-    >>> from scripts.quality.pattern_audit_system import PatternAuditSystem
-    >>> from pathlib import Path
-    >>>
-    >>> auditor = PatternAuditSystem()
-    >>> workspace = Path("/home/marlonsc/flext")
-    >>> audit_result = auditor.audit_ecosystem_compliance(workspace)
-    >>>
-    >>> print(f"Critical violations: {audit_result.critical_count}")
-    >>> print(f"Overall compliance: {audit_result.compliance_percentage:.1f}%")
-    >>>
-    >>> # Generate detailed compliance report
-    >>> report_path = auditor.generate_compliance_report(audit_result)
-    >>> print(f"Detailed report: {report_path}")
-
-Integration:
-    - Built on flext_core foundation patterns for consistency
-    - Uses FlextResult for error handling and railway-oriented programming
-    - Integrates with FLEXT observability for audit trail and metrics
-    - Coordinates with quality gateway for automated compliance validation
-
-Author: FLEXT Development Team
-Version: 2.0.0
-License: MIT
-
-"""
+"""FLEXT Pattern Audit System - Enterprise Pattern Compliance Analysis."""
 
 import argparse
 import ast
@@ -62,6 +10,7 @@ import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
+from types import SimpleNamespace
 
 from flext_core.result import FlextResult
 
@@ -370,7 +319,7 @@ class PatternViolationAnalyzer:
         tree: ast.AST,
         file_path: Path,
         lines: list[str],
-        project_name: str,
+        project_name: str,  # noqa: ARG002
     ) -> list[PatternViolation]:
         """Analyze AST for structural pattern violations."""
         violations = []
@@ -433,7 +382,7 @@ class PatternViolationAnalyzer:
         self,
         file_path: Path,
         lines: list[str],
-        project_name: str,
+        project_name: str,  # noqa: ARG002
     ) -> list[PatternViolation]:
         """Analyze text patterns for violations."""
         violations = []
@@ -501,7 +450,6 @@ class PatternAuditSystem:
         self.analyzer = PatternViolationAnalyzer()
         self.workspace_path = Path(__file__).parent.parent.parent
         # Add metadata for audit reporting
-        from types import SimpleNamespace
 
         self.metadata = SimpleNamespace(version="2.0.0")
 
