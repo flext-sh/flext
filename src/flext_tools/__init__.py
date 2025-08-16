@@ -87,7 +87,7 @@ from flext_core import FlextContainer, get_flext_container
 
 # Exporta módulos principais
 from flext_tools.analysis import ConflictAnalyzer, VersionAnalyzer
-from flext_tools.cache import CacheManager, cache_result, cached
+# Cache module removed - not implemented yet
 from flext_tools.discovery import DependencyDiscovery
 from flext_tools.documentation import DocumentationGenerator, TemplateManager
 from flext_tools.poetry import PoetryOperations, PoetryValidator
@@ -157,8 +157,8 @@ __all__: list[str] = [
     "VersionAnalyzer",
     "__version__",
     "__version_info__",
-    "cache_result",
-    "cached",
+            # "cache_result",  # Cache module removed
+        # "cached",        # Cache module removed
     "get_flext_container",
     "get_flext_tools_container",
     "get_logger",
