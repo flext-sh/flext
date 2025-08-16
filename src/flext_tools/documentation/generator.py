@@ -23,6 +23,12 @@ from flext_tools.core.script_base import FlextScript, ScriptMetadata
 from flext_tools.discovery import DependencyDiscovery
 from flext_tools.documentation.templates import TemplateManager
 
+# Optional dependency: mkdocs
+try:  # pragma: no cover - optional dependency
+    import mkdocs.__main__ as mkdocs_main  # type: ignore[import-not-found]
+except Exception:  # pragma: no cover - optional dependency
+    mkdocs_main = None  # type: ignore[assignment]
+
 
 class DocumentationGenerator(FlextScript):
     """FLEXT Documentation Generator using enterprise patterns.
@@ -135,11 +141,14 @@ class DocumentationGenerator(FlextScript):
             clean = kwargs.get("clean", False)
             serve = bool(kwargs.get("serve"))
             components_only = kwargs.get("components_only", False)
-            dry_run = bool(kwargs.get("dry_run", False))
+            dry_run = bool(kwargs.get("dry_run"))
 
             # Step 1: Clean previous build if requested
             if clean:
-                self._clean_build()
+                if dry_run:
+                    self.logger.info("[dry-run] Would clean previous build directories")
+                else:
+                    self._clean_build()
 
             # Step 2: Generate component documentation
             if dry_run:
@@ -167,11 +176,10 @@ class DocumentationGenerator(FlextScript):
                         "components": components_result.data,
                     },
                 )
-            else:
-                return self._execute_full_generation_pipeline(
-                    components_result,
-                    serve=serve,
-                )  # type: ignore[arg-type]
+            return self._execute_full_generation_pipeline(
+                components_result,
+                serve=serve,
+            )  # type: ignore[arg-type]
 
         except Exception as e:
             error_msg = f"Documentation generation failed: {e}"
@@ -946,33 +954,29 @@ print(f"Pipeline status: {result.status}")"""
 
         try:
             # Prefer in-process mkdocs entrypoint
-            try:
-                from mkdocs.__main__ import (
-                    main as mkdocs_main,  # type: ignore[import-not-found]
-                )
+            if mkdocs_main is None:
+                return FlextResult.fail("MkDocs build API unavailable: mkdocs not installed")
 
-                stdout = io.StringIO()
-                stderr = io.StringIO()
-                with (
-                    contextlib.redirect_stdout(stdout),
-                    contextlib.redirect_stderr(stderr),
-                ):
-                    try:
-                        exit_code = int(
-                            mkdocs_main(
-                                ["build", "-f", str(self.mkdocs_config), "--clean"],
-                            ),
-                        )
-                    except SystemExit as exc:
-                        exit_code = int(getattr(exc, "code", 0) or 0)
-                if exit_code != 0:
-                    return FlextResult.fail(
-                        f"MkDocs build failed: {stderr.getvalue().strip()}",
+            stdout = io.StringIO()
+            stderr = io.StringIO()
+            with (
+                contextlib.redirect_stdout(stdout),
+                contextlib.redirect_stderr(stderr),
+            ):
+                try:
+                    exit_code = int(
+                        mkdocs_main.main(
+                            ["build", "-f", str(self.mkdocs_config), "--clean"],
+                        ),
                     )
-                self.logger.info("Documentation built successfully")
-                return FlextResult.ok({"status": "built", "output": stdout.getvalue()})
-            except Exception as e:
-                return FlextResult.fail(f"MkDocs build API unavailable: {e}")
+                except SystemExit as exc:
+                    exit_code = int(getattr(exc, "code", 0) or 0)
+            if exit_code != 0:
+                return FlextResult.fail(
+                    f"MkDocs build failed: {stderr.getvalue().strip()}",
+                )
+            self.logger.info("Documentation built successfully")
+            return FlextResult.ok({"status": "built", "output": stdout.getvalue()})
         except Exception as e:
             return FlextResult.fail(f"MkDocs build failed: {e}")
 
@@ -985,12 +989,9 @@ print(f"Pipeline status: {result.status}")"""
         try:
             # Prefer programmatic serve via mkdocs if available
             try:
-                from mkdocs.__main__ import (
-                    main as mkdocs_main,  # type: ignore[import-not-found]
-                )
-
-                mkdocs_main(["serve", "-f", str(self.mkdocs_config)])  # type: ignore[arg-type]
-                return
+                if mkdocs_main is not None:
+                    mkdocs_main.main(["serve", "-f", str(self.mkdocs_config)])  # type: ignore[arg-type]
+                    return
             except Exception as e:
                 self.logger.debug(f"mkdocs python entrypoint not available: {e}")
             # Validate mkdocs executable name; if not available, report error

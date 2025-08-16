@@ -7,12 +7,19 @@ Comprehensive diagnostic tool for FLEXT workspace architecture validation.
 import contextlib
 import io
 import json
+import os
 import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 
+import pytest
+import ruff.__main__ as ruff_main
 from flext_core import get_logger
+from mypy import api as mypy_api
+from poetry.console import (
+    application as poetry_app,
+)
 
 logger = get_logger(__name__)
 
@@ -43,7 +50,7 @@ class ProjectStatus:
     errors: list[str] = field(default_factory=list)
 
     def __post_init__(self) -> None:
-        pass
+        """Initialize post-creation setup for ProjectStatus."""
 
 
 class FlextDiagnostic:
@@ -95,7 +102,8 @@ class FlextDiagnostic:
     def _run_lint(self, project_path: Path) -> tuple[int, str, str]:
         """Run Ruff lint using Python API in-process."""
         try:
-            import ruff.__main__ as ruff_main  # type: ignore[import-not-found]
+            if ruff_main is None:
+                return 1, "", "Ruff not available"
 
             stdout = io.StringIO()
             stderr = io.StringIO()
@@ -105,8 +113,6 @@ class FlextDiagnostic:
                 try:
                     # Execute within project directory
                     # ruff honors CWD for relative paths
-                    import os
-
                     os.chdir(project_path)
                     ruff_main.main(["check", "."])  # exit via sys.exit inside ruff
                 except SystemExit as exc:  # ruff uses sys.exit
@@ -121,7 +127,8 @@ class FlextDiagnostic:
     def _run_mypy(self, project_path: Path) -> tuple[int, str, str]:
         """Run MyPy using its Python API in-process."""
         try:
-            from mypy import api as mypy_api  # type: ignore[import-not-found]
+            if mypy_api is None:
+                return 1, "", "MyPy not available"
 
             # Analyze the project directory
             stdout, stderr, exit_status = mypy_api.run([str(project_path)])
@@ -132,7 +139,8 @@ class FlextDiagnostic:
     def _run_tests(self, project_path: Path) -> tuple[int, str, str]:
         """Run pytest in-process and capture output."""
         try:
-            import pytest  # type: ignore[import-not-found]
+            if pytest is None:
+                return 1, "", "Pytest not available"
 
             stdout = io.StringIO()
             stderr = io.StringIO()
@@ -143,12 +151,11 @@ class FlextDiagnostic:
         except Exception as e:
             return 1, "", f"Pytest execution failed: {e}"
 
-    def _run_poetry_install(self, project_path: Path) -> tuple[int, str, str]:
+    def _run_poetry_install(self) -> tuple[int, str, str]:
         """Attempt Poetry install via Poetry's Python API; no subprocess spawn."""
         try:
-            from poetry.console import (
-                application as poetry_app,  # type: ignore[import-not-found]
-            )
+            if poetry_app is None:
+                return 1, "", "Poetry not available"
 
             app = poetry_app.Application()  # type: ignore[no-call-override]
             code = app.run(["install"])  # type: ignore[arg-type]
@@ -207,7 +214,7 @@ class FlextDiagnostic:
 
         # Check Poetry install
         if status.has_pyproject:
-            rc, _stdout, stderr = self._run_poetry_install(project_path)
+            rc, _stdout, stderr = self._run_poetry_install()
             if rc == 0:
                 status.poetry_install = "✅ PASS"
             else:

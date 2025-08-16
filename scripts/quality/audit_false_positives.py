@@ -11,9 +11,6 @@ import importlib.util
 import sys
 from pathlib import Path
 
-# Adiciona scripts ao path para importar flext_tools
-sys.path.insert(0, str(Path(__file__).parent))
-
 from flext_tools import Colors, DependencyDiscovery, get_stdlib_modules, print_colored
 
 

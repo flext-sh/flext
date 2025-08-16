@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""Script to consolidate manual configuration handlers to use FLEXT patterns.
-
-This script identifies and refactors manual configuration handling patterns
-to use standardized FLEXT configuration management from flext-core.
-"""
+"""Script to consolidate manual configuration handlers to use FLEXT patterns."""
 
 from __future__ import annotations
 

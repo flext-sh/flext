@@ -19,6 +19,8 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from flext_core import FlextResult
+from mypy import api as mypy_api
+from ruff.__main__ import main as ruff_main
 from scripts.common import discover_projects
 
 from flext_tools import Colors, print_colored
@@ -177,20 +179,6 @@ class LintingReport(FlextScript):
     def _run_ruff_analysis(self, project_path: Path) -> dict[str, object]:
         """Executar análise Ruff."""
         try:
-            # Executa Ruff em processo (sem subprocess) capturando a saída JSON
-            try:
-                from ruff.__main__ import (
-                    main as ruff_main,  # type: ignore[import-not-found]
-                )
-            except Exception:
-                # Fallback: se ruff não estiver disponível como módulo
-                return {
-                    "total_issues": 0,
-                    "by_category": {},
-                    "by_file": {},
-                    "issues": [],
-                }
-
             if not project_path.is_dir():
                 return {
                     "total_issues": 0,
@@ -202,7 +190,7 @@ class LintingReport(FlextScript):
             stdout_buf, stderr_buf = io.StringIO(), io.StringIO()
             with redirect_stdout(stdout_buf), redirect_stderr(stderr_buf):
                 try:
-                    ruff_main(["check", str(project_path), "--output-format=json"])  # type: ignore[arg-type]
+                    ruff_main(["check", str(project_path), "--output-format=json"])
                 except SystemExit as e:  # Ruff chama sys.exit
                     _ = e.code if isinstance(e.code, int) else 1
 
@@ -238,18 +226,12 @@ class LintingReport(FlextScript):
     def _run_mypy_analysis(self, project_path: Path) -> dict[str, object]:
         """Executar análise MyPy."""
         try:
-            # Executa MyPy via API Python (sem subprocess)
-            try:
-                from mypy import api as mypy_api  # type: ignore[import-not-found]
-            except Exception:
-                return {"total_errors": 0, "by_type": {}, "by_file": {}, "output": ""}
-
             if not project_path.is_dir():
                 return {"total_errors": 0, "by_type": {}, "by_file": {}, "output": ""}
 
             stdout_text, _stderr_text, _status = mypy_api.run(
                 [str(project_path), "--no-error-summary"],
-            )  # type: ignore[arg-type]
+            )
 
             errors_by_type: dict[str, int] = defaultdict(int)
             errors_by_file: dict[str, int] = defaultdict(int)

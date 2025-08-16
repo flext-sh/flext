@@ -113,7 +113,7 @@ echo "=============================="
 
 echo "Testing FLEXT Service endpoints..."
 curl -f "$FLEXT_URL"/health | jq '.' >test-results/logs/flext-health.json
-curl -f $FLEXT_URL/api/v1/status | jq '.' >test-results/logs/flext-status.json
+curl -f "$FLEXT_URL"/api/v1/status | jq '.' >test-results/logs/flext-status.json
 
 echo "Testing FlexCore endpoints..."
 curl -f "$FLEXCORE_URL"/health | jq '.' >test-results/logs/flexcore-health.json
