@@ -7,9 +7,14 @@ Analisa TODOS os projetos Python para identificar problemas de qualidade.
 import io
 import json
 import sys
+from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
+
+import pytest
+from mypy import api as mypy_api
+from ruff.__main__ import main as ruff_main
 
 
 @dataclass
@@ -32,25 +37,17 @@ def run_command(cmd: list[str], _cwd: str | None = None) -> tuple[int, str, str]
     try:
         # Execução segura e controlada: apenas módulos Python conhecidos
         if cmd[:3] == ["python", "-m", "ruff"]:
-            from contextlib import redirect_stderr, redirect_stdout
-
-            from ruff.__main__ import (
-                main as ruff_main,  # type: ignore[import-not-found]
-            )
-
             stdout_buf, stderr_buf = io.StringIO(), io.StringIO()
             with redirect_stdout(stdout_buf), redirect_stderr(stderr_buf):
                 try:
-                    ruff_main(cmd[3:])  # type: ignore[arg-type]
+                    ruff_main(cmd[3:])
                 except SystemExit as e:
                     code = e.code if isinstance(e.code, int) else 1
                     return code, stdout_buf.getvalue(), stderr_buf.getvalue()
             return 0, stdout_buf.getvalue(), stderr_buf.getvalue()
 
         if cmd[:3] == ["python", "-m", "mypy"]:
-            from mypy import api as mypy_api  # type: ignore[import-not-found]
-
-            stdout_text, stderr_text, status = mypy_api.run(cmd[3:])  # type: ignore[arg-type]
+            stdout_text, stderr_text, status = mypy_api.run(cmd[3:])
             exit_code = 0 if status == 0 else 1
             return exit_code, stdout_text, stderr_text
 
@@ -58,12 +55,11 @@ def run_command(cmd: list[str], _cwd: str | None = None) -> tuple[int, str, str]
             # Mantém subprocesso para isolamento de testes com validação do módulo
             if cmd[0] != "python" or cmd[1] != "-m" or cmd[2] != "pytest":
                 return 1, "", "Unsupported pytest invocation"
-            import pytest  # type: ignore[import-not-found]
 
             # Executa pytest em processo; captura saída mínima
             # Nota: para manter simplicidade, delegamos para subprocess apenas quando pytest não disponível
             try:
-                exit_code = pytest.main(cmd[3:])  # type: ignore[arg-type]
+                exit_code = pytest.main(cmd[3:])
                 return int(exit_code), "", ""
             except Exception:
                 return 1, "", "Pytest execution failed"
@@ -92,7 +88,7 @@ def analyze_project(project_path: str) -> QualityReport:
     print("  📋 Executando lint...")
     exit_code, stdout, stderr = run_command(
         ["python", "-m", "ruff", "check", "."],
-        cwd=project_path,
+        _cwd=project_path,
     )
 
     if exit_code == 0:
@@ -113,7 +109,7 @@ def analyze_project(project_path: str) -> QualityReport:
     print("  🔍 Executando mypy...")
     exit_code, stdout, stderr = run_command(
         ["python", "-m", "mypy", "."],
-        cwd=project_path,
+        _cwd=project_path,
     )
 
     if exit_code == 0:
@@ -134,7 +130,7 @@ def analyze_project(project_path: str) -> QualityReport:
     print("  🧪 Executando testes...")
     exit_code, stdout, stderr = run_command(
         ["python", "-m", "pytest", "--tb=short", "-q"],
-        cwd=project_path,
+        _cwd=project_path,
     )
 
     if exit_code == 0:
@@ -153,7 +149,7 @@ def analyze_project(project_path: str) -> QualityReport:
     print("  📊 Executando cobertura...")
     exit_code, stdout, stderr = run_command(
         ["python", "-m", "pytest", "--cov=src", "--cov-report=term-missing", "-q"],
-        cwd=project_path,
+        _cwd=project_path,
     )
 
     if exit_code == 0 and stdout:
@@ -171,7 +167,7 @@ def analyze_project(project_path: str) -> QualityReport:
 
     # 5. Análise de Poetry
     print("  📦 Verificando Poetry...")
-    exit_code, stdout, stderr = run_command(["poetry", "check"], cwd=project_path)
+    exit_code, stdout, stderr = run_command(["poetry", "check"], _cwd=project_path)
 
     if exit_code != 0:
         report.poetry_issues = 1

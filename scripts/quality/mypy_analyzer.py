@@ -20,12 +20,12 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from mypy import api as mypy_api
+
 
 def _run_mypy_api(args: list[str]) -> tuple[int, str, str]:
     """Run MyPy using its Python API and return (exit_code, stdout, stderr)."""
     try:
-        from mypy import api as mypy_api  # type: ignore[import-not-found]
-
         stdout, stderr, exit_status = mypy_api.run(args)
         return int(exit_status), stdout, stderr
     except Exception as e:
@@ -141,10 +141,7 @@ def analyze_workspace() -> int:
         print("❌ No directories found for analysis")
         return 1
 
-    exit_code, stdout, stderr = run_command(
-        ["mypy", *dirs_to_analyze],
-        cwd=workspace_root,
-    )
+    exit_code, stdout, stderr = _run_mypy_api(dirs_to_analyze)
 
     if stdout:
         print(stdout)

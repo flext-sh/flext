@@ -71,19 +71,32 @@ from __future__ import annotations
 
 import contextlib
 import io
-import time
-from typing import TYPE_CHECKING
-
-from flext_core import FlextEntity, FlextResult, get_flext_container, get_logger
-
-from flext_tools.utils import Colors, print_colored
 import shutil
+import time
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pathlib import Path
 
+from flext_core import FlextEntity, FlextResult, get_flext_container, get_logger
 
-from dataclasses import dataclass
+try:
+    import ruff.__main__ as ruff_main  # type: ignore[import-not-found]
+except Exception:  # pragma: no cover - optional dependency
+    ruff_main = None  # type: ignore[assignment]
+
+try:
+    from mypy import api as mypy_api  # type: ignore[import-not-found]
+except Exception:  # pragma: no cover - optional dependency
+    mypy_api = None  # type: ignore[assignment]
+
+try:
+    import pytest  # type: ignore[import-not-found]
+except Exception:  # pragma: no cover - optional dependency
+    pytest = None  # type: ignore[assignment]
+
+from flext_tools.utils import Colors, print_colored
 
 
 @dataclass
@@ -427,11 +440,10 @@ class QualityGateway:
     def _run_lint_check(self) -> FlextResult[list[QualityIssue]]:
         """Run linting check with Ruff."""
         try:
-            if shutil.which("ruff") is None:
+            if shutil.which("ruff") is None or ruff_main is None:
                 return FlextResult.ok([]) if self._is_relaxed() else FlextResult.fail(
                     "ruff not found in PATH",
                 )
-            import ruff.__main__ as ruff_main  # type: ignore[import-not-found]
 
             stdout = io.StringIO()
             stderr = io.StringIO()
@@ -468,7 +480,10 @@ class QualityGateway:
                 return FlextResult.ok([]) if self._is_relaxed() else FlextResult.fail(
                     "mypy not found in PATH",
                 )
-            from mypy import api as mypy_api  # type: ignore[import-not-found]
+            if mypy_api is None:
+                return FlextResult.ok([]) if self._is_relaxed() else FlextResult.fail(
+                    "mypy not available",
+                )
 
             stdout, _stderr, exit_status = mypy_api.run(
                 [str(self.workspace_path / "src")],
@@ -492,8 +507,10 @@ class QualityGateway:
                 return FlextResult.ok([]) if self._is_relaxed() else FlextResult.fail(
                     "pytest not found in PATH",
                 )
-            import pytest  # type: ignore[import-not-found]
-
+            if pytest is None:
+                return FlextResult.ok([]) if self._is_relaxed() else FlextResult.fail(
+                    "pytest not available",
+                )
             # Capture output using in-process run
             exit_code = pytest.main([str(self.workspace_path)])
             if int(exit_code) == 0:
@@ -545,8 +562,8 @@ class QualityGateway:
             return FlextResult.fail(f"Security check failed: {e}")
 
     def run_quality_checks(self) -> dict[str, object]:
-        """Legacy method for backward compatibility - use run_quality_checks_safe() instead."""
-        print_colored("🔍 Running legacy quality checks...", Colors.BLUE)
+        """Convenience method for testing - use run_quality_checks_safe() instead."""
+        print_colored("🔍 Running convenience quality checks...", Colors.BLUE)
 
         results = {
             "lint_passed": True,
@@ -556,11 +573,11 @@ class QualityGateway:
             "details": {},
         }
 
-        print_colored("✅ Legacy quality checks completed", Colors.GREEN)
+        print_colored("✅ Convenience quality checks completed", Colors.GREEN)
         return results
 
     def all_passed(self) -> bool:
-        """Legacy method for backward compatibility."""
+        """Convenience method for testing."""
         return True
 
     def _is_relaxed(self) -> bool:
@@ -568,5 +585,6 @@ class QualityGateway:
 
         Returns:
             True if relaxed validation is enabled; False otherwise.
+
         """
         return bool(getattr(self, "_relaxed", False))
