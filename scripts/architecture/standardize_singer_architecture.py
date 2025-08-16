@@ -13,24 +13,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-# Conditional import since the architecture module may not exist yet
-try:
-    from flext_meltano.architecture import (
-        FlextSingerArchitectureStandardizer,
-    )
+from flext_meltano.architecture import FlextSingerArchitectureStandardizer
 
-    ARCHITECTURE_MODULE_AVAILABLE = True
-except ImportError:
-    # Create stub implementation when module is not available
-    class FlextSingerArchitectureStandardizer:
-        def __init__(self, flext_root: Path) -> None:
-            self.flext_root = flext_root
-
-        def standardize_architecture(self) -> None:
-            print("⚠️  Architecture standardization skipped - module not available")
-            print("   flext-meltano architecture module not found")
-
-    ARCHITECTURE_MODULE_AVAILABLE = False
+ARCHITECTURE_MODULE_AVAILABLE = True
 
 
 def main() -> None:

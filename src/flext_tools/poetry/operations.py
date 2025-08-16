@@ -82,14 +82,21 @@ import re
 import time
 from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from pathlib import Path
+
 from flext_core import FlextResult, get_flext_container, get_logger
 
 from flext_tools.safety.backup import BackupManager
 from flext_tools.safety.validator import SafetyValidator
 from flext_tools.utils.colors import Colors, print_colored
 
-if TYPE_CHECKING:
-    from pathlib import Path
+try:
+    from poetry.console import (
+        application as poetry_app,  # type: ignore[import-not-found]
+    )
+except Exception:  # pragma: no cover - optional dependency
+    poetry_app = None  # type: ignore[assignment]
 
 # Constants
 MIN_PARTS_COUNT = 3
@@ -439,26 +446,20 @@ class PoetryOperations:
             print_colored(f"    [+] Adding {dependency}...", Colors.GREEN)
 
             # Prefer Poetry's Python API when available to avoid subprocess
-            try:
-                from poetry.console import (
-                    application as poetry_app,  # type: ignore[import-not-found]
-                )
-
-                args = ["add", dependency]
-                if group:
-                    args += ["--group", group]
-                if self.dry_run:
-                    args.append("--dry-run")
-                app = poetry_app.Application()  # type: ignore[no-call-override]
-                code = app.run(args)  # type: ignore[arg-type]
-                success = int(code) == 0
-            except Exception:
-                # Abort with guidance instead of spawning subprocess in restricted mode
+            if poetry_app is None:
                 print_colored(
                     "    ❌ Poetry API unavailable; run 'poetry add' manually",
                     Colors.RED,
                 )
                 return False
+            args = ["add", dependency]
+            if group:
+                args += ["--group", group]
+            if self.dry_run:
+                args.append("--dry-run")
+            app = poetry_app.Application()  # type: ignore[no-call-override]
+            code = app.run(args)  # type: ignore[arg-type]
+            success = int(code) == 0
 
             if success:
                 if not self.dry_run:
@@ -645,23 +646,18 @@ class PoetryOperations:
             print_colored(f"    [-] Removing {dependency}...", Colors.YELLOW)
 
             # Prefer Poetry API when available
-            try:
-                from poetry.console import (
-                    application as poetry_app,  # type: ignore[import-not-found]
-                )
-
-                args = ["remove", dependency]
-                if self.dry_run:
-                    args.append("--dry-run")
-                app = poetry_app.Application()  # type: ignore[no-call-override]
-                code = app.run(args)  # type: ignore[arg-type]
-                success = int(code) == 0
-            except Exception:
+            if poetry_app is None:
                 print_colored(
                     "    ❌ Poetry API unavailable; run 'poetry remove' manually",
                     Colors.RED,
                 )
                 return False
+            args = ["remove", dependency]
+            if self.dry_run:
+                args.append("--dry-run")
+            app = poetry_app.Application()  # type: ignore[no-call-override]
+            code = app.run(args)  # type: ignore[arg-type]
+            success = int(code) == 0
 
             if success:
                 if not self.dry_run:
@@ -784,23 +780,18 @@ class PoetryOperations:
 
         try:
             # Prefer Poetry API when available
-            try:
-                from poetry.console import (
-                    application as poetry_app,  # type: ignore[import-not-found]
-                )
-
-                args = ["update"]
-                if self.dry_run:
-                    args.append("--dry-run")
-                app = poetry_app.Application()  # type: ignore[no-call-override]
-                code = app.run(args)  # type: ignore[arg-type]
-                success = int(code) == 0
-            except Exception:
+            if poetry_app is None:
                 print_colored(
                     "    ❌ Poetry API unavailable; run 'poetry update' manually",
                     Colors.RED,
                 )
                 return False
+            args = ["update"]
+            if self.dry_run:
+                args.append("--dry-run")
+            app = poetry_app.Application()  # type: ignore[no-call-override]
+            code = app.run(args)  # type: ignore[arg-type]
+            success = int(code) == 0
 
             if success:
                 if not self.dry_run:
@@ -907,21 +898,16 @@ class PoetryOperations:
 
         try:
             # Prefer Poetry API when available
-            try:
-                from poetry.console import (
-                    application as poetry_app,  # type: ignore[import-not-found]
-                )
-
-                args = ["lock"]
-                app = poetry_app.Application()  # type: ignore[no-call-override]
-                code = app.run(args)  # type: ignore[arg-type]
-                success = int(code) == 0
-            except Exception:
+            if poetry_app is None:
                 print_colored(
                     "    ❌ Poetry API unavailable; run 'poetry lock' manually",
                     Colors.RED,
                 )
                 return False
+            args = ["lock"]
+            app = poetry_app.Application()  # type: ignore[no-call-override]
+            code = app.run(args)  # type: ignore[arg-type]
+            success = int(code) == 0
 
             if success:
                 print_colored("✅ Lock file generated successfully", Colors.GREEN)
@@ -1023,21 +1009,16 @@ class PoetryOperations:
 
         try:
             # Prefer Poetry API when available
-            try:
-                from poetry.console import (
-                    application as poetry_app,  # type: ignore[import-not-found]
-                )
-
-                args = ["check"]
-                app = poetry_app.Application()  # type: ignore[no-call-override]
-                code = app.run(args)  # type: ignore[arg-type]
-                success = int(code) == 0
-            except Exception:
+            if poetry_app is None:
                 print_colored(
                     "    ❌ Poetry API unavailable; run 'poetry check' manually",
                     Colors.RED,
                 )
                 return False
+            args = ["check"]
+            app = poetry_app.Application()  # type: ignore[no-call-override]
+            code = app.run(args)  # type: ignore[arg-type]
+            success = int(code) == 0
 
             if success:
                 print_colored("✅ Project valid", Colors.GREEN)

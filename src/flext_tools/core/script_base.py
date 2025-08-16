@@ -94,9 +94,9 @@ import argparse
 import inspect
 import logging
 import time
-from pathlib import Path
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from pathlib import Path
 from typing import TYPE_CHECKING, ParamSpec
 
 from flext_core import (
@@ -106,13 +106,13 @@ from flext_core import (
     get_logger,
 )
 
-from flext_tools.utils.colors import Colors, print_colored
 from flext_tools.quality.gateway import (
     QualityCheckConfig,
     QualityGateway,
     all_quality_checks_passed,
     get_quality_failure_summary,
 )
+from flext_tools.utils.colors import Colors, print_colored
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -218,9 +218,9 @@ class FlextScript(ABC):
             self._print_header()
 
             # Extract common flags
-            is_dry_run = bool(kwargs.get("dry_run", False))
-            skip_validation = bool(kwargs.get("no_validate", False))
-            relaxed_validation = bool(kwargs.get("relaxed_validation", False))
+            is_dry_run = bool(kwargs.get("dry_run"))
+            skip_validation = bool(kwargs.get("no_validate"))
+            relaxed_validation = bool(kwargs.get("relaxed_validation"))
 
             if is_dry_run:
                 print_colored("🧪 Dry-run mode: no changes will be made", Colors.YELLOW)
@@ -275,13 +275,12 @@ class FlextScript(ABC):
 
         Returns:
             FlextResult indicating overall validation status.
+
         """
         try:
             workspace = Path.cwd()
             gateway = QualityGateway(workspace_path=workspace)
-            config = QualityCheckConfig()
-            # Store strict flag in details via attribute injection if needed
-            # and use it inside gateway methods
+            config = QualityCheckConfig(relaxed=not strict)
             result = gateway.run_quality_checks_safe(config=config)
             if not result.success:
                 return FlextResult.fail(result.error or "Quality checks failed")
