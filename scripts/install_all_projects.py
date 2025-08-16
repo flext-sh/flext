@@ -1,16 +1,11 @@
 #!/usr/bin/env python3
-"""Script para instalar todos os projetos FLEXT em modo de desenvolvimento.
-
-Copyright (c) 2025 FLEXT Contributors
-SPDX-License-Identifier: MIT
-
-Este script instala todos os projetos FLEXT em modo de desenvolvimento
-com suas dependências completas via Poetry.
-"""
+"""Script para instalar todos os projetos FLEXT em modo de desenvolvimento."""
 
 import shutil
 import sys
 from pathlib import Path
+
+from poetry.console import application as poetry_app
 
 
 def get_project_directories() -> list[str]:
@@ -108,13 +103,9 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
             return False, "❌ Exe inválido de poetry"
         # Execute poetry install using --no-interaction for safety (no shell)
         try:
-            from poetry.console import (
-                application as poetry_app,  # type: ignore[import-not-found]
-            )
-
             # Run poetry in-process when possible
-            app = poetry_app.Application()  # type: ignore[no-call-override]
-            code = app.run(["install", "--no-interaction"])  # type: ignore[arg-type]
+            app = poetry_app.Application()
+            code = app.run(["install", "--no-interaction"])
             completed_return = int(code)
             completed_stderr = ""
         except Exception:

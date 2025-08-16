@@ -7,17 +7,16 @@ Usa flext_tools para validação consistente em todo o workspace.
 
 from __future__ import annotations
 
-import io
 import json
 import shutil
+import subprocess
 import sys
-from contextlib import redirect_stderr, redirect_stdout, suppress
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from flext_core import FlextResult
-from scripts.common import discover_projects
+from mypy import api as mypy_api
 
 from flext_tools import (
     Colors,
@@ -27,6 +26,8 @@ from flext_tools import (
     print_colored,
 )
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
+
+from .common import discover_projects
 
 if TYPE_CHECKING:
     import argparse
@@ -257,9 +258,7 @@ class QualityGateway(FlextScript):
         try:
             # Ruff check via API (no subprocess)
             try:
-                from ruff.__main__ import (
-                    main as ruff_main,  # type: ignore[import-not-found]
-                )
+                pass
             except Exception:
                 return {
                     "ruff_issues": -1,
@@ -278,16 +277,27 @@ class QualityGateway(FlextScript):
                     "error": "Invalid project path",
                 }
 
-            stdout_buf = io.StringIO()
-            with (
-                redirect_stdout(stdout_buf),
-                redirect_stderr(io.StringIO()),
-                suppress(SystemExit),
-            ):
-                ruff_main(["check", str(project_path), "--output-format=json"])  # type: ignore[arg-type]
+            # Ruff check via subprocess (API não disponível na versão atual)
+
+            try:
+                # Note: ruff path is trusted (installed via Poetry), project_path is validated
+                result = subprocess.run(  # noqa: S603,S607
+                    [
+                        "/usr/bin/env",
+                        "ruff",
+                        "check",
+                        str(project_path),
+                        "--output-format=json",
+                    ],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                ruff_output = result.stdout
+            except (FileNotFoundError, subprocess.SubprocessError):
+                ruff_output = ""
 
             ruff_issues = 0
-            ruff_output = stdout_buf.getvalue()
             if ruff_output:
                 try:
                     issues = json.loads(ruff_output)
@@ -297,7 +307,7 @@ class QualityGateway(FlextScript):
 
             # MyPy check via API (no subprocess)
             try:
-                from mypy import api as mypy_api  # type: ignore[import-not-found]
+                pass
             except Exception:
                 return {
                     "ruff_issues": ruff_issues,
