@@ -214,7 +214,7 @@ class FlextConfigStandardizer:
 
     def standardize_mypy_config(
         self,
-        project_name: str,
+        project_name: str,  # noqa: ARG002
         config: dict[str, object],
     ) -> bool:
         """Standardize MyPy configuration."""
@@ -223,12 +223,16 @@ class FlextConfigStandardizer:
         if "tool" not in config:
             config["tool"] = {}
         tool_config = config["tool"]
-        assert isinstance(tool_config, dict), "tool section must be a dict"
+        if not isinstance(tool_config, dict):
+            print("  ❌ tool section must be a dict")
+            return False
 
         if "mypy" not in tool_config:
             tool_config["mypy"] = {}
         mypy_config = tool_config["mypy"]
-        assert isinstance(mypy_config, dict), "mypy section must be a dict"
+        if not isinstance(mypy_config, dict):
+            print("  ❌ mypy section must be a dict")
+            return False
 
         # Ensure strict mode is enabled
         if mypy_config.get("strict") is not True:
