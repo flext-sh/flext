@@ -275,11 +275,13 @@ monitor_resource_usage() {
 	# Monitor for 60 seconds during peak load
 	for ((i = 1; i <= 60; i++)); do
 		# Get memory usage (RSS in KB)
-		local memory_kb=$(ps -o rss= -p "$server_pid" 2>/dev/null || echo "0")
-		local memory_mb=$(echo "scale=2; $memory_kb / 1024" | bc)
+		local memory_kb, memory_mb
+		memory_kb=$(ps -o rss= -p "$server_pid" 2>/dev/null || echo "0")
+		memory_mb=$(echo "scale=2; $memory_kb / 1024" | bc)
 
 		# Get CPU usage
-		local cpu_percent=$(ps -o %cpu= -p "$server_pid" 2>/dev/null || echo "0")
+		local cpu_percent
+		cpu_percent=$(ps -o %cpu= -p "$server_pid" 2>/dev/null || echo "0")
 
 		echo "$(date '+%H:%M:%S') Memory: ${memory_mb}MB CPU: ${cpu_percent}%" >>"$monitoring_file"
 
@@ -287,10 +289,11 @@ monitor_resource_usage() {
 	done
 
 	# Calculate averages and peaks
-	local avg_memory=$(awk '{sum+=$3} END {print sum/NR}' "$monitoring_file" 2>/dev/null || echo "0")
-	local peak_memory=$(awk '{if($3>max) max=$3} END {print max}' "$monitoring_file" 2>/dev/null || echo "0")
-	local avg_cpu=$(awk '{sum+=$5} END {print sum/NR}' "$monitoring_file" 2>/dev/null || echo "0")
-	local peak_cpu=$(awk '{if($5>max) max=$5} END {print max}' "$monitoring_file" 2>/dev/null || echo "0")
+	local avg_memory, peak_memory, avg_cpu, peak_cpu
+	avg_memory=$(awk '{sum+=$3} END {print sum/NR}' "$monitoring_file" 2>/dev/null || echo "0")
+	peak_memory=$(awk '{if($3>max) max=$3} END {print max}' "$monitoring_file" 2>/dev/null || echo "0")
+	avg_cpu=$(awk '{sum+=$5} END {print sum/NR}' "$monitoring_file" 2>/dev/null || echo "0")
+	peak_cpu=$(awk '{if($5>max) max=$5} END {print max}' "$monitoring_file" 2>/dev/null || echo "0")
 
 	info "Resource Usage Summary:"
 	info "  Average Memory: ${avg_memory}MB"

@@ -16,9 +16,6 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-# Add FLEXT tools to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
-
 from flext_tools.security import (
     AntipatternScanner,
     RiskLevel,
