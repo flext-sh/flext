@@ -281,7 +281,7 @@ class QualityGateway(FlextScript):
 
             try:
                 # Note: ruff path is trusted (installed via Poetry), project_path is validated
-                result = subprocess.run(  # noqa: S603,S607
+                result = subprocess.run(  # noqa: S603
                     [
                         "/usr/bin/env",
                         "ruff",
