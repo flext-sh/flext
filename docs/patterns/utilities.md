@@ -226,7 +226,7 @@ def flext_collection_group_by(
     key_func: Callable[[T], Any]
 ) -> Dict[Any, List[T]]:
     """Group items by key function."""
-    from collections import defaultdict
+from collections import defaultdict
     groups = defaultdict(list)
     for item in items:
         key = key_func(item)
@@ -285,7 +285,7 @@ def flext_auth_generate_jwt(
 
 def flext_auth_generate_api_key(prefix: str = "flext") -> str:
     """Generate API key with prefix."""
-    from flext_core.utils import flext_crypto_generate_token
+from flext_core.utils import flext_crypto_generate_token
     token = flext_crypto_generate_token(32)
     return f"{prefix}_{token}"
 ```

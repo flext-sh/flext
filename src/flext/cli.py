@@ -57,34 +57,34 @@ def main(
     coordination via flext_tools integration accessed through CLI commands.
 
     Command Groups:
-        - tools: Access flext_tools functionality (quality, scripts, analysis)
-        - config: Configuration management via flext-cli patterns
-        - auth: Authentication via flext-cli patterns
-        - debug: Debug commands via flext-cli patterns
+      - tools: Access flext_tools functionality (quality, scripts, analysis)
+      - config: Configuration management via flext-cli patterns
+      - auth: Authentication via flext-cli patterns
+      - debug: Debug commands via flext-cli patterns
 
     """
     # Use flext-cli CLIConfig with complete delegation
     try:
-        config = CLIConfig(profile=profile, debug=debug)
+      config = CLIConfig(profile=profile, debug=debug)
 
-        # Create CLIContext using flext-cli patterns
-        context = FlextCliContext(
-            working_directory=Path(workspace) if workspace else Path.cwd(),
-            environment_variables={
-                "FLEXT_PROFILE": profile,
-                "FLEXT_DEBUG": str(debug),
-                "FLEXT_OUTPUT": output,
-            },
-        )
+      # Create CLIContext using flext-cli patterns
+      context = FlextCliContext(
+          working_directory=Path(workspace) if workspace else Path.cwd(),
+          environment_variables={
+              "FLEXT_PROFILE": profile,
+              "FLEXT_DEBUG": str(debug),
+              "FLEXT_OUTPUT": output,
+          },
+      )
 
-        if debug:
-            print_colored(
-                "✅ FLEXT CLI initialized with flext-cli integration", Colors.GREEN
-            )
+      if debug:
+          print_colored(
+              "✅ FLEXT CLI initialized with flext-cli integration", Colors.GREEN
+          )
 
     except Exception as e:
-        print_colored(f"❌ Configuration error: {e}", Colors.RED)
-        ctx.exit(1)
+      print_colored(f"❌ Configuration error: {e}", Colors.RED)
+      ctx.exit(1)
 
     # Store flext-cli objects in context
     ctx.ensure_object(dict)
@@ -108,9 +108,9 @@ def tools() -> None:
     script management, and analysis tools.
 
     Available subcommands:
-        - quality: Run comprehensive quality checks
-        - scripts: Manage and execute FlextScript instances
-        - analysis: Perform workspace and code analysis
+      - quality: Run comprehensive quality checks
+      - scripts: Manage and execute FlextScript instances
+      - analysis: Perform workspace and code analysis
     """
 
 
@@ -143,26 +143,26 @@ def quality(
     with flext-cli patterns for consistent output and error handling.
     """
     workspace = ctx.obj["workspace"]
-    output_format = ctx.obj["output_format"]
+    ctx.obj["output_format"]
 
     try:
-        # Use flext_tools QualityGateway with flext-cli integration
-        quality_gateway = QualityGateway(workspace_path=workspace)
+      # Use flext_tools QualityGateway with flext-cli integration
+      QualityGateway(workspace_path=workspace)
 
-        print_colored("🔍 Running quality checks with flext_tools...", Colors.BLUE)
+      print_colored("🔍 Running quality checks with flext_tools...", Colors.BLUE)
 
-        # Execute quality checks (implementation would call quality_gateway methods)
-        result = FlextResult.ok("Quality checks completed successfully")
+      # Execute quality checks (implementation would call quality_gateway methods)
+      result = FlextResult.ok("Quality checks completed successfully")
 
-        if result.success:
-            print_colored("✅ All quality checks passed!", Colors.GREEN)
-        else:
-            print_colored(f"❌ Quality checks failed: {result.error}", Colors.RED)
-            ctx.exit(1)
+      if result.success:
+          print_colored("✅ All quality checks passed!", Colors.GREEN)
+      else:
+          print_colored(f"❌ Quality checks failed: {result.error}", Colors.RED)
+          ctx.exit(1)
 
     except Exception as e:
-        print_colored(f"❌ Error running quality checks: {e}", Colors.RED)
-        ctx.exit(1)
+      print_colored(f"❌ Error running quality checks: {e}", Colors.RED)
+      ctx.exit(1)
 
 
 @tools.command()
@@ -175,15 +175,15 @@ def scripts(ctx: click.Context, category: str | None, list_only: bool) -> None:
     Provides access to FlextScript-based automation and operations scripts
     with flext-cli integration for consistent command patterns and output.
     """
-    workspace = ctx.obj["workspace"]
+    ctx.obj["workspace"]
 
     if list_only:
-        print_colored("📋 Available FlextScript instances:", Colors.BLUE)
-        print_colored("  - Quality Gateway Script (category: quality)", Colors.CYAN)
-        print_colored("  - Workspace Analysis Script (category: analysis)", Colors.CYAN)
-        print_colored("  - Cache Management Script (category: cache)", Colors.CYAN)
+      print_colored("📋 Available FlextScript instances:", Colors.BLUE)
+      print_colored("  - Quality Gateway Script (category: quality)", Colors.CYAN)
+      print_colored("  - Workspace Analysis Script (category: analysis)", Colors.CYAN)
+      print_colored("  - Cache Management Script (category: cache)", Colors.CYAN)
     else:
-        print_colored("🚀 FlextScript management coming soon...", Colors.YELLOW)
+      print_colored("🚀 FlextScript management coming soon...", Colors.YELLOW)
 
 
 @tools.command()
@@ -226,8 +226,8 @@ def test(ctx: click.Context, coverage: bool, parallel: bool) -> None:
     This command delegates to flext_tools testing capabilities while using
     flext-cli patterns for consistent CLI behavior and output formatting.
     """
-    workspace = ctx.obj["workspace"]
-    context = ctx.obj["context"]
+    ctx.obj["workspace"]
+    ctx.obj["context"]
 
     print_colored("🧪 Running tests with flext_tools integration...", Colors.BLUE)
 
@@ -236,10 +236,10 @@ def test(ctx: click.Context, coverage: bool, parallel: bool) -> None:
     result = FlextResult.ok(0)  # Simulated success
 
     if result.success and result.data == 0:
-        print_colored("✅ All tests passed!", Colors.GREEN)
+      print_colored("✅ All tests passed!", Colors.GREEN)
     else:
-        print_colored(f"❌ Tests failed: {result.error}", Colors.RED)
-        ctx.exit(result.data or 1)
+      print_colored(f"❌ Tests failed: {result.error}", Colors.RED)
+      ctx.exit(result.data or 1)
 
 
 @main.command()
@@ -256,12 +256,12 @@ def lint(ctx: click.Context, fix: bool) -> None:
     print_colored("🔍 Running linting with flext_tools...", Colors.BLUE)
 
     try:
-        quality_gateway = QualityGateway(workspace_path=workspace)
-        # Integration with quality_gateway would go here
-        print_colored("✅ Linting passed!", Colors.GREEN)
+      QualityGateway(workspace_path=workspace)
+      # Integration with quality_gateway would go here
+      print_colored("✅ Linting passed!", Colors.GREEN)
     except Exception as e:
-        print_colored(f"❌ Linting failed: {e}", Colors.RED)
-        ctx.exit(1)
+      print_colored(f"❌ Linting failed: {e}", Colors.RED)
+      ctx.exit(1)
 
 
 @main.command("format")
@@ -271,7 +271,7 @@ def lint(ctx: click.Context, fix: bool) -> None:
 @click.pass_context
 def format_code(ctx: click.Context, check_only: bool) -> None:
     """Auto-format code using flext_tools with flext-cli patterns."""
-    workspace = ctx.obj["workspace"]
+    ctx.obj["workspace"]
 
     action = "Checking" if check_only else "Formatting"
     print_colored(f"🎨 {action} code with flext_tools...", Colors.BLUE)
@@ -289,16 +289,16 @@ def info(ctx: click.Context, detailed: bool) -> None:
     Shows workspace status and project information with complete flext-cli integration.
     """
     workspace = ctx.obj["workspace"]
-    context = ctx.obj["context"]
+    ctx.obj["context"]
     config = ctx.obj["config"]
 
     # Create workspace info using flext-cli context patterns
     workspace_data = {
-        "workspace_root": str(workspace),
-        "projects_count": "32",  # Would be dynamically determined
-        "projects": ["flext-core", "flext-api", "flexcore"],  # Would be discovered
-        "profile": getattr(config, "profile", "default"),
-        "debug_mode": getattr(config, "debug", False),
+      "workspace_root": str(workspace),
+      "projects_count": "32",  # Would be dynamically determined
+      "projects": ["flext-core", "flext-api", "flexcore"],  # Would be discovered
+      "profile": getattr(config, "profile", "default"),
+      "debug_mode": getattr(config, "debug", False),
     }
 
     # Format output using flext-cli patterns
@@ -308,16 +308,16 @@ def info(ctx: click.Context, detailed: bool) -> None:
     print_colored(f"📦 Projects Found: {workspace_data['projects_count']}", Colors.BLUE)
     print_colored(f"⚙️  Profile: {workspace_data['profile']}", Colors.BLUE)
     print_colored(
-        f"🐛 Debug Mode: {'✅ Enabled' if workspace_data['debug_mode'] else '❌ Disabled'}",
-        Colors.BLUE,
+      f"🐛 Debug Mode: {'✅ Enabled' if workspace_data['debug_mode'] else '❌ Disabled'}",
+      Colors.BLUE,
     )
 
     if detailed:
-        print_colored("\n📋 Projects:", Colors.GREEN)
-        projects = workspace_data.get("projects", [])
-        if isinstance(projects, list):
-            for project in projects:
-                print_colored(f"  • {project}", Colors.CYAN)
+      print_colored("\n📋 Projects:", Colors.GREEN)
+      projects = workspace_data.get("projects", [])
+      if isinstance(projects, list):
+          for project in projects:
+              print_colored(f"  • {project}", Colors.CYAN)
 
 
 # ============================================================================
@@ -338,18 +338,18 @@ except ImportError:
     # Fallback if flext-cli commands not available
     @click.group()
     def auth() -> None:
-        """Provide authentication commands (placeholder - install flext-cli)."""
-        print_colored("⚠️ flext-cli auth commands not available", Colors.YELLOW)
+      """Provide authentication commands (placeholder - install flext-cli)."""
+      print_colored("⚠️ flext-cli auth commands not available", Colors.YELLOW)
 
     @click.group()
     def config() -> None:
-        """Provide configuration commands (placeholder - install flext-cli)."""
-        print_colored("⚠️ flext-cli config commands not available", Colors.YELLOW)
+      """Provide configuration commands (placeholder - install flext-cli)."""
+      print_colored("⚠️ flext-cli config commands not available", Colors.YELLOW)
 
     @click.group()
     def debug() -> None:
-        """Debug commands (placeholder - install flext-cli)."""
-        print_colored("⚠️ flext-cli debug commands not available", Colors.YELLOW)
+      """Debug commands (placeholder - install flext-cli)."""
+      print_colored("⚠️ flext-cli debug commands not available", Colors.YELLOW)
 
     main.add_command(auth)
     main.add_command(config)

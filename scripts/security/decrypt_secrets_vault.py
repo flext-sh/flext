@@ -5,23 +5,16 @@ Descriptografa cofre de secrets de produção usando flext_tools.security
 para máxima segurança e padronização enterprise.
 """
 
-from __future__ import annotations
-
-import json
+import argparse
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from flext_core import FlextResult
 
-from flext_tools import Colors, print_colored
-from flext_tools.core.script_base import ScriptMetadata
+from flext_tools import Colors, ScriptMetadata, print_colored
 from flext_tools.security import SecretVaultDecryptor
 
 from ._base_security_script import BaseSecurityScript
-
-if TYPE_CHECKING:
-    import argparse
 
 
 class SecretsVaultDecryptor(BaseSecurityScript):

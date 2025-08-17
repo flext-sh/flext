@@ -7,18 +7,22 @@ using flext_tools.poetry for professional enterprise standardization.
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from flext_core import FlextResult
 from scripts.common import discover_projects
 
-from flext_tools import Colors, PoetryValidator, print_colored
-from flext_tools.core.script_base import FlextScript, ScriptMetadata
+from flext_tools import (
+    Colors,
+    FlextScript,
+    PoetryValidator,
+    ScriptMetadata,
+    print_colored,
+)
 
-if TYPE_CHECKING:
-    import argparse
+# manter apenas stdlib; argparse já importado acima
 
 
 class PyprojectStandardizer(FlextScript):
@@ -64,7 +68,8 @@ class PyprojectStandardizer(FlextScript):
 
             # Discover projects
             projects = self._discover_projects(
-                workspace_root, str(projects_filter) if projects_filter else None,
+                workspace_root,
+                str(projects_filter) if projects_filter else None,
             )
 
             # Use flext_tools.poetry for operations

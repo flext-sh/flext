@@ -7,21 +7,18 @@ do workspace FLEXT usando flext_tools para máxima reutilização.
 
 from __future__ import annotations
 
+import argparse
 import importlib.util
 import inspect
 import sys
 from collections.abc import Callable
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from flext_core import FlextResult
 from scripts.core.script_registry import ScriptRegistry
 
-from flext_tools import Colors, print_colored
-from flext_tools.core.script_base import FlextScript, ScriptMetadata
-
-if TYPE_CHECKING:
-    from argparse import ArgumentParser
+from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
 
 class ScriptRunner(FlextScript):
@@ -181,7 +178,7 @@ class ScriptRunner(FlextScript):
             print_colored(f"❌ Error running script {script_name}: {e}", Colors.RED)
             return False
 
-    def create_parser(self) -> ArgumentParser:  # Changed return type
+    def create_parser(self) -> argparse.ArgumentParser:  # Changed return type
         """Create parser with specific arguments."""
         parser = super().create_parser()
 
