@@ -39,9 +39,7 @@ def discover_projects(
           ['flext-api', 'flext-auth', 'flext-core', ...]
           >>>
           >>> # Filter specific projects
-          >>> core_projects = discover_projects(
-          ...     workspace, ["flext-core", "flext-api"]
-          ... )
+          >>> core_projects = discover_projects(workspace, ["flext-core", "flext-api"])
           >>> print([p.name for p in core_projects])
           ['flext-api', 'flext-core']
 
@@ -66,19 +64,19 @@ def discover_projects(
 
     # Find all directories with pyproject.toml
     all_projects = [
-      item
-      for item in workspace_root.iterdir()
-      if item.is_dir()
-      and (item / "pyproject.toml").exists()
-      and item.name not in ignore_list
-      and not any(skip in item.name for skip in [".git", ".venv", "__pycache__"])
+        item
+        for item in workspace_root.iterdir()
+        if item.is_dir()
+        and (item / "pyproject.toml").exists()
+        and item.name not in ignore_list
+        and not any(skip in item.name for skip in [".git", ".venv", "__pycache__"])
     ]
 
     # Apply filter if provided
     if projects_filter:
-      filtered_projects = [
-          project for project in all_projects if project.name in projects_filter
-      ]
-      return sorted(filtered_projects, key=lambda p: p.name)
+        filtered_projects = [
+            project for project in all_projects if project.name in projects_filter
+        ]
+        return sorted(filtered_projects, key=lambda p: p.name)
 
     return sorted(all_projects, key=lambda p: p.name)

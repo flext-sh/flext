@@ -9,19 +9,19 @@ class GradualLintFixer:
     """Gradual lint fixing for projects."""
 
     def __init__(self, workspace_path: Path) -> None:
-      """Initialize the lint fixer."""
-      self.workspace_path = workspace_path
+        """Initialize the lint fixer."""
+        self.workspace_path = workspace_path
 
     def fix_gradually(self, **_kwargs: object) -> dict[str, object]:
-      """Fix lint issues gradually."""
-      print_colored("🔧 Fixing lint issues gradually...", Colors.BLUE)
+        """Fix lint issues gradually."""
+        print_colored("🔧 Fixing lint issues gradually...", Colors.BLUE)
 
-      results = {
-          "fixed_issues": 0,
-          "remaining_issues": 0,
-          "files_processed": 0,
-          "details": {},
-      }
+        results = {
+            "fixed_issues": 0,
+            "remaining_issues": 0,
+            "files_processed": 0,
+            "details": {},
+        }
 
-      print_colored("✅ Gradual fixing completed", Colors.GREEN)
-      return results
+        print_colored("✅ Gradual fixing completed", Colors.GREEN)
+        return results

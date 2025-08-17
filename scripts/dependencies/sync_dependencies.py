@@ -34,14 +34,14 @@ def check_validation_lock() -> bool:
 def parse_args() -> dict[str, bool]:
     """Parseia argumentos de linha de comando."""
     return {
-      "dry_run": "--dry-run" in sys.argv,
-      "auto": "--auto" in sys.argv,
-      "validate_only": "--validate" in sys.argv,
-      "conflicts_only": "--conflicts" in sys.argv,
-      "discover_only": "--discover" in sys.argv,
-      "verbose": "-v" in sys.argv or "--verbose" in sys.argv,
-      "help": "--help" in sys.argv or "-h" in sys.argv,
-      "force_unlock": "--force-unlock" in sys.argv,  # Só para emergências
+        "dry_run": "--dry-run" in sys.argv,
+        "auto": "--auto" in sys.argv,
+        "validate_only": "--validate" in sys.argv,
+        "conflicts_only": "--conflicts" in sys.argv,
+        "discover_only": "--discover" in sys.argv,
+        "verbose": "-v" in sys.argv or "--verbose" in sys.argv,
+        "help": "--help" in sys.argv or "-h" in sys.argv,
+        "force_unlock": "--force-unlock" in sys.argv,  # Só para emergências
     }
 
 
@@ -67,14 +67,14 @@ def get_workspace_projects(workspace_path: Path) -> list[Path]:
     """Obtém lista de projetos do workspace."""
     # Busca apenas no primeiro nível para evitar recursão pesada
     projects = [
-      item
-      for item in workspace_path.iterdir()
-      if item.is_dir()
-      and (item / "pyproject.toml").exists()
-      and not any(
-          skip in item.name
-          for skip in ["archive", "backup", "node_modules", ".git", ".venv"]
-      )
+        item
+        for item in workspace_path.iterdir()
+        if item.is_dir()
+        and (item / "pyproject.toml").exists()
+        and not any(
+            skip in item.name
+            for skip in ["archive", "backup", "node_modules", ".git", ".venv"]
+        )
     ]
 
     return sorted(projects)
@@ -91,28 +91,28 @@ def validate_projects(
 
     all_valid = True
     for project in projects:
-      if verbose:
-          print_colored(f"\n📁 Validando {project.name}...", Colors.CYAN)
+        if verbose:
+            print_colored(f"\n📁 Validando {project.name}...", Colors.CYAN)
 
-      validation = validator.validate_project(project)
+        validation = validator.validate_project(project)
 
-      if validation["valid"]:
-          if verbose:
-              print_colored(f"  ✅ {project.name}: Válido", Colors.GREEN)
-      else:
-          all_valid = False
-          print_colored(f"  ❌ {project.name}: Inválido", Colors.RED)
-          for error in validation["errors"]:
-              print_colored(f"    - {error}", Colors.RED)
+        if validation["valid"]:
+            if verbose:
+                print_colored(f"  ✅ {project.name}: Válido", Colors.GREEN)
+        else:
+            all_valid = False
+            print_colored(f"  ❌ {project.name}: Inválido", Colors.RED)
+            for error in validation["errors"]:
+                print_colored(f"    - {error}", Colors.RED)
 
-      if validation["warnings"] and verbose:
-          for warning in validation["warnings"]:
-              print_colored(f"    ⚠️ {warning}", Colors.YELLOW)
+        if validation["warnings"] and verbose:
+            for warning in validation["warnings"]:
+                print_colored(f"    ⚠️ {warning}", Colors.YELLOW)
 
     if all_valid:
-      print_colored("\n✅ Todos os projetos são válidos!", Colors.GREEN)
+        print_colored("\n✅ Todos os projetos são válidos!", Colors.GREEN)
     else:
-      print_colored("\n❌ Alguns projetos têm problemas de validação", Colors.RED)
+        print_colored("\n❌ Alguns projetos têm problemas de validação", Colors.RED)
 
     return all_valid
 
@@ -128,38 +128,38 @@ def discover_missing_dependencies(
 
     # Removemos o decorator @cached que estava causando problemas de tipagem
     def get_project_deps(project_path: Path) -> dict[str, list[str]]:
-      deps = discovery.discover_project_dependencies(
-          project_path,
-          include_dev=True,
-          include_test=True,
-      )
-      # Converter set para list se necessário
-      return {k: list(v) if isinstance(v, set) else v for k, v in deps.items()}
+        deps = discovery.discover_project_dependencies(
+            project_path,
+            include_dev=True,
+            include_test=True,
+        )
+        # Converter set para list se necessário
+        return {k: list(v) if isinstance(v, set) else v for k, v in deps.items()}
 
     missing_by_project: dict[Path, dict[str, list[str]]] = {}
     total_missing = 0
 
     for project in projects:
-      if verbose:
-          print_colored(f"\n📁 Analisando {project.name}...", Colors.CYAN)
+        if verbose:
+            print_colored(f"\n📁 Analisando {project.name}...", Colors.CYAN)
 
-      missing_deps = get_project_deps(project)
-      project_total = sum(len(deps) for deps in missing_deps.values())
+        missing_deps = get_project_deps(project)
+        project_total = sum(len(deps) for deps in missing_deps.values())
 
-      if project_total > 0:
-          missing_by_project[project] = missing_deps
-          total_missing += project_total
-          print_colored(
-              f"  ⚠️ {project.name}: {project_total} dependências faltantes",
-              Colors.YELLOW,
-          )
-      elif verbose:
-          print_colored(f"  ✅ {project.name}: Completo", Colors.GREEN)
+        if project_total > 0:
+            missing_by_project[project] = missing_deps
+            total_missing += project_total
+            print_colored(
+                f"  ⚠️ {project.name}: {project_total} dependências faltantes",
+                Colors.YELLOW,
+            )
+        elif verbose:
+            print_colored(f"  ✅ {project.name}: Completo", Colors.GREEN)
 
     print_colored(f"\n📊 Total de dependências faltantes: {total_missing}", Colors.CYAN)
     print_colored(
-      f"📊 Projetos afetados: {len(missing_by_project)}/{len(projects)}",
-      Colors.CYAN,
+        f"📊 Projetos afetados: {len(missing_by_project)}/{len(projects)}",
+        Colors.CYAN,
     )
 
     return missing_by_project
@@ -176,7 +176,7 @@ def analyze_conflicts(
 
     @cached(namespace="conflicts", ttl=600)
     def get_conflicts() -> dict[str, object]:
-      return analyzer.analyze_workspace_conflicts(workspace_path)
+        return analyzer.analyze_workspace_conflicts(workspace_path)
 
     analysis: dict[str, object] = get_conflicts()
     stats = analysis["stats"]
@@ -188,15 +188,15 @@ def analyze_conflicts(
     print(f"  • Bloqueadores: {stats['blocking_packages']}")
 
     if analysis["version_conflicts"] and verbose:
-      print_colored("\n⚠️ Top 5 conflitos:", Colors.YELLOW)
-      conflicts_sorted = sorted(
-          analysis["version_conflicts"].items(),
-          key=lambda x: len(x[1]["projects"]),
-          reverse=True,
-      )
+        print_colored("\n⚠️ Top 5 conflitos:", Colors.YELLOW)
+        conflicts_sorted = sorted(
+            analysis["version_conflicts"].items(),
+            key=lambda x: len(x[1]["projects"]),
+            reverse=True,
+        )
 
-      for i, (package, data) in enumerate(conflicts_sorted[:5]):
-          print(f"  {i + 1}. {package}: {len(data['projects'])} projetos")
+        for i, (package, data) in enumerate(conflicts_sorted[:5]):
+            print(f"  {i + 1}. {package}: {len(data['projects'])} projetos")
 
     return analysis
 
@@ -209,37 +209,37 @@ def add_missing_dependencies(
 ) -> bool:
     """Adiciona dependências faltantes aos projetos."""
     if not missing_by_project:
-      print_colored("\n✅ Nenhuma dependência faltante!", Colors.GREEN)
-      return True
+        print_colored("\n✅ Nenhuma dependência faltante!", Colors.GREEN)
+        return True
 
     print_colored("\n4️⃣ Adicionando dependências faltantes...", Colors.BLUE)
 
     if not auto:
-      total_deps = sum(
-          sum(len(deps) for deps in missing_deps.values())
-          for missing_deps in missing_by_project.values()
-      )
-      print_colored(
-          f"\n💡 {total_deps} dependências serão adicionadas",
-          Colors.YELLOW,
-      )
-      response = input("Continuar? (s/N): ")
-      if response.lower() not in {"s", "sim", "y", "yes"}:
-          print_colored("❌ Operação cancelada", Colors.YELLOW)
-          return False
+        total_deps = sum(
+            sum(len(deps) for deps in missing_deps.values())
+            for missing_deps in missing_by_project.values()
+        )
+        print_colored(
+            f"\n💡 {total_deps} dependências serão adicionadas",
+            Colors.YELLOW,
+        )
+        response = input("Continuar? (s/N): ")
+        if response.lower() not in {"s", "sim", "y", "yes"}:
+            print_colored("❌ Operação cancelada", Colors.YELLOW)
+            return False
 
     success = True
     for project, missing_deps in missing_by_project.items():
-      print_colored(f"\n📦 Processando {project.name}...", Colors.CYAN)
+        print_colored(f"\n📦 Processando {project.name}...", Colors.CYAN)
 
-      added = poetry_ops.add_dependencies(project, missing_deps, auto_confirm=auto)
+        added = poetry_ops.add_dependencies(project, missing_deps, auto_confirm=auto)
 
-      total_added = sum(len(deps) for deps in added.values())
-      if total_added > 0:
-          print_colored(f"  ✅ {total_added} dependências adicionadas", Colors.GREEN)
-      else:
-          print_colored("  ⚠️ Nenhuma dependência foi adicionada", Colors.YELLOW)
-          success = False
+        total_added = sum(len(deps) for deps in added.values())
+        if total_added > 0:
+            print_colored(f"  ✅ {total_added} dependências adicionadas", Colors.GREEN)
+        else:
+            print_colored("  ⚠️ Nenhuma dependência foi adicionada", Colors.YELLOW)
+            success = False
 
     return success
 
@@ -249,186 +249,186 @@ def main() -> int:
     args = parse_args()
 
     if args["help"]:
-      show_help()
-      return 0
+        show_help()
+        return 0
 
     # Inicializa sistema de logging detalhado
     logger = DetailedLogger("sync_dependencies")
 
     try:
-      logger.info(
-          "Starting SYNC_DEPENDENCIES: Sincronização completa de dependências FLEXT",
-      )
+        logger.info(
+            "Starting SYNC_DEPENDENCIES: Sincronização completa de dependências FLEXT",
+        )
 
-      print_colored("🔄 Sincronização de dependências FLEXT", Colors.BLUE)
-      print_colored("=" * 50, Colors.BLUE)
+        print_colored("🔄 Sincronização de dependências FLEXT", Colors.BLUE)
+        print_colored("=" * 50, Colors.BLUE)
 
-      # VERIFICAÇÃO CRÍTICA DE SEGURANÇA
-      if check_validation_lock() and not args["dry_run"] and not args["force_unlock"]:
-          print_colored("🚨 BLOQUEIO DE SEGURANÇA ATIVO", Colors.RED)
-          print_colored("=" * 50, Colors.RED)
-          print_colored("❌ EXECUÇÃO SEM DRY-RUN BLOQUEADA", Colors.RED)
-          print_colored("", Colors.RED)
-          print_colored(
-              "MOTIVO: Sistema ainda não foi validado completamente",
-              Colors.YELLOW,
-          )
-          print_colored("", Colors.RED)
-          print_colored("AÇÕES REQUERIDAS ANTES DE DESBLOQUEAR:", Colors.YELLOW)
-          print_colored(
-              "1. ✅ Auditoria manual dos 147 falsos positivos detectados",
-              Colors.YELLOW,
-          )
-          print_colored(
-              "2. ✅ Validação de detecção de módulos internos",
-              Colors.YELLOW,
-          )
-          print_colored(
-              "3. ✅ Teste completo do sistema de backup/rollback",
-              Colors.YELLOW,
-          )
-          print_colored("4. ✅ Teste em projeto isolado", Colors.YELLOW)
-          print_colored("", Colors.RED)
-          print_colored("OPÇÕES SEGURAS:", Colors.GREEN)
-          print_colored("• Use --dry-run para simulação segura", Colors.GREEN)
-          print_colored(
-              "• Use --discover para análise sem modificações",
-              Colors.GREEN,
-          )
-          print_colored("• Use --validate para verificação de projetos", Colors.GREEN)
-          print_colored("", Colors.RED)
-          print_colored(
-              "⚠️ REMOVER scripts/VALIDATION_REQUIRED.lock"
-              " apenas após validação completa",
-              Colors.YELLOW,
-          )
+        # VERIFICAÇÃO CRÍTICA DE SEGURANÇA
+        if check_validation_lock() and not args["dry_run"] and not args["force_unlock"]:
+            print_colored("🚨 BLOQUEIO DE SEGURANÇA ATIVO", Colors.RED)
+            print_colored("=" * 50, Colors.RED)
+            print_colored("❌ EXECUÇÃO SEM DRY-RUN BLOQUEADA", Colors.RED)
+            print_colored("", Colors.RED)
+            print_colored(
+                "MOTIVO: Sistema ainda não foi validado completamente",
+                Colors.YELLOW,
+            )
+            print_colored("", Colors.RED)
+            print_colored("AÇÕES REQUERIDAS ANTES DE DESBLOQUEAR:", Colors.YELLOW)
+            print_colored(
+                "1. ✅ Auditoria manual dos 147 falsos positivos detectados",
+                Colors.YELLOW,
+            )
+            print_colored(
+                "2. ✅ Validação de detecção de módulos internos",
+                Colors.YELLOW,
+            )
+            print_colored(
+                "3. ✅ Teste completo do sistema de backup/rollback",
+                Colors.YELLOW,
+            )
+            print_colored("4. ✅ Teste em projeto isolado", Colors.YELLOW)
+            print_colored("", Colors.RED)
+            print_colored("OPÇÕES SEGURAS:", Colors.GREEN)
+            print_colored("• Use --dry-run para simulação segura", Colors.GREEN)
+            print_colored(
+                "• Use --discover para análise sem modificações",
+                Colors.GREEN,
+            )
+            print_colored("• Use --validate para verificação de projetos", Colors.GREEN)
+            print_colored("", Colors.RED)
+            print_colored(
+                "⚠️ REMOVER scripts/VALIDATION_REQUIRED.lock"
+                " apenas após validação completa",
+                Colors.YELLOW,
+            )
 
-          logger.warning(
-              "EXECUTION_BLOCKED: Tentativa de execução sem dry-run bloqueada "
-              "por lock de validação",
-          )
+            logger.warning(
+                "EXECUTION_BLOCKED: Tentativa de execução sem dry-run bloqueada "
+                "por lock de validação",
+            )
 
-          logger.error(
-              "Operation failed: Execução bloqueada por lock de validação "
-              "de segurança",
-          )
-          return 1
+            logger.error(
+                "Operation failed: Execução bloqueada por lock de validação "
+                "de segurança",
+            )
+            return 1
 
-      if args["dry_run"]:
-          print_colored(
-              "⚠️ Modo DRY-RUN: Nenhuma modificação será feita",
-              Colors.YELLOW,
-          )
-      elif check_validation_lock() and args["force_unlock"]:
-          print_colored(
-              "⚠️ ATENÇÃO: Force unlock ativo - ALTA RESPONSABILIDADE",
-              Colors.RED,
-          )
+        if args["dry_run"]:
+            print_colored(
+                "⚠️ Modo DRY-RUN: Nenhuma modificação será feita",
+                Colors.YELLOW,
+            )
+        elif check_validation_lock() and args["force_unlock"]:
+            print_colored(
+                "⚠️ ATENÇÃO: Force unlock ativo - ALTA RESPONSABILIDADE",
+                Colors.RED,
+            )
 
-      # Detecta workspace
-      workspace_path = Path.cwd()
-      if not any(
-          p.name.startswith("flext-") for p in workspace_path.iterdir() if p.is_dir()
-      ):
-          print_colored(
-              "❌ Execute o script do diretório raiz do workspace FLEXT",
-              Colors.RED,
-          )
-          return 1
+        # Detecta workspace
+        workspace_path = Path.cwd()
+        if not any(
+            p.name.startswith("flext-") for p in workspace_path.iterdir() if p.is_dir()
+        ):
+            print_colored(
+                "❌ Execute o script do diretório raiz do workspace FLEXT",
+                Colors.RED,
+            )
+            return 1
 
-      # Obtém projetos
-      projects = get_workspace_projects(workspace_path)
-      if not projects:
-          print_colored("❌ Nenhum projeto Python encontrado!", Colors.RED)
-          return 1
+        # Obtém projetos
+        projects = get_workspace_projects(workspace_path)
+        if not projects:
+            print_colored("❌ Nenhum projeto Python encontrado!", Colors.RED)
+            return 1
 
-      print_colored(f"📁 Encontrados {len(projects)} projetos", Colors.CYAN)
+        print_colored(f"📁 Encontrados {len(projects)} projetos", Colors.CYAN)
 
-      # Inicializa ferramentas com logger integrado
-      validator = PoetryValidator()
-      discovery = DependencyDiscovery()
-      analyzer = ConflictAnalyzer()
-      poetry_ops = PoetryOperations(dry_run=args["dry_run"], logger=logger)
+        # Inicializa ferramentas com logger integrado
+        validator = PoetryValidator()
+        discovery = DependencyDiscovery()
+        analyzer = ConflictAnalyzer()
+        poetry_ops = PoetryOperations(dry_run=args["dry_run"], logger=logger)
 
-      # Executa operações baseado nos argumentos
-      if args["validate_only"]:
-          validate_projects(projects, validator, args["verbose"])
-          return 0
+        # Executa operações baseado nos argumentos
+        if args["validate_only"]:
+            validate_projects(projects, validator, args["verbose"])
+            return 0
 
-      if args["conflicts_only"]:
-          analyze_conflicts(workspace_path, analyzer, args["verbose"])
-          return 0
+        if args["conflicts_only"]:
+            analyze_conflicts(workspace_path, analyzer, args["verbose"])
+            return 0
 
-      if args["discover_only"]:
-          missing_by_project = discover_missing_dependencies(
-              projects,
-              discovery,
-              args["verbose"],
-          )
-          return 0
+        if args["discover_only"]:
+            missing_by_project = discover_missing_dependencies(
+                projects,
+                discovery,
+                args["verbose"],
+            )
+            return 0
 
-      # Execução completa
-      print_colored("\n🚀 Execução completa iniciada...", Colors.BLUE)
+        # Execução completa
+        print_colored("\n🚀 Execução completa iniciada...", Colors.BLUE)
 
-      # 1. Validação
-      if not validate_projects(projects, validator, args["verbose"]):
-          print_colored(
-              "\n⚠️ Alguns projetos têm problemas, mas continuando...",
-              Colors.YELLOW,
-          )
+        # 1. Validação
+        if not validate_projects(projects, validator, args["verbose"]):
+            print_colored(
+                "\n⚠️ Alguns projetos têm problemas, mas continuando...",
+                Colors.YELLOW,
+            )
 
-      # 2. Descoberta
-      missing_by_project = discover_missing_dependencies(
-          projects,
-          discovery,
-          args["verbose"],
-      )
+        # 2. Descoberta
+        missing_by_project = discover_missing_dependencies(
+            projects,
+            discovery,
+            args["verbose"],
+        )
 
-      # 3. Conflitos
-      conflicts = analyze_conflicts(workspace_path, analyzer, args["verbose"])
+        # 3. Conflitos
+        conflicts = analyze_conflicts(workspace_path, analyzer, args["verbose"])
 
-      # 4. Adição de dependências
-      if missing_by_project:
-          add_missing_dependencies(missing_by_project, poetry_ops, args["auto"])
+        # 4. Adição de dependências
+        if missing_by_project:
+            add_missing_dependencies(missing_by_project, poetry_ops, args["auto"])
 
-      # 5. Relatório final
-      print_colored("\n📊 Relatório Final:", Colors.BLUE)
-      print(f"  ✅ Projetos validados: {len(projects)}")
-      print(f"  📦 Dependências faltantes descobertas: {len(missing_by_project)}")
-      print(
-          f"  ⚠️ Conflitos encontrados: {len(conflicts.get('version_conflicts', {}))}",
-      )
+        # 5. Relatório final
+        print_colored("\n📊 Relatório Final:", Colors.BLUE)
+        print(f"  ✅ Projetos validados: {len(projects)}")
+        print(f"  📦 Dependências faltantes descobertas: {len(missing_by_project)}")
+        print(
+            f"  ⚠️ Conflitos encontrados: {len(conflicts.get('version_conflicts', {}))}",
+        )
 
-      # Estatísticas de cache se verboso
-      if args["verbose"]:
-          # Aqui poderia mostrar estatísticas de cache se necessário
-          print_colored("\n📊 Cache utilizado para melhor performance", Colors.CYAN)
+        # Estatísticas de cache se verboso
+        if args["verbose"]:
+            # Aqui poderia mostrar estatísticas de cache se necessário
+            print_colored("\n📊 Cache utilizado para melhor performance", Colors.CYAN)
 
-      # Finaliza operação com sucesso
-      logger.info(
-          f"Operation completed successfully: {len(projects)} projects validated",
-      )
+        # Finaliza operação com sucesso
+        logger.info(
+            f"Operation completed successfully: {len(projects)} projects validated",
+        )
 
-      print_colored("\n✨ Sincronização concluída!", Colors.GREEN)
+        print_colored("\n✨ Sincronização concluída!", Colors.GREEN)
     except (OSError, ValueError, TypeError) as e:
-      # Log erro crítico
-      logger.exception(
-          f"SYNC_ERROR: Erro crítico durante sincronização "
-          f"(tipo: {type(e).__name__})",
-      )
+        # Log erro crítico
+        logger.exception(
+            f"SYNC_ERROR: Erro crítico durante sincronização "
+            f"(tipo: {type(e).__name__})",
+        )
 
-      # Finaliza operação com falha
-      logger.exception("Operation failed: Erro crítico")
+        # Finaliza operação com falha
+        logger.exception("Operation failed: Erro crítico")
 
-      print_colored(f"\n❌ Erro crítico: {e!s}", Colors.RED)
-      print_colored("📋 Logs detalhados salvos em .flext_logs/", Colors.CYAN)
-      return 1
+        print_colored(f"\n❌ Erro crítico: {e!s}", Colors.RED)
+        print_colored("📋 Logs detalhados salvos em .flext_logs/", Colors.CYAN)
+        return 1
     else:
-      return 0
+        return 0
 
     finally:
-      # Logger cleanup (no close method needed)
-      pass
+        # Logger cleanup (no close method needed)
+        pass
 
 
 if __name__ == "__main__":
