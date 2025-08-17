@@ -13,8 +13,7 @@ from pathlib import Path
 
 from flext_core import FlextResult
 
-from flext_tools import Colors, print_colored
-from flext_tools.core.script_base import FlextScript, ScriptMetadata
+from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 from flext_tools.quality import GradualLintFixer
 
 
@@ -23,122 +22,122 @@ class GradualLintFixerScript(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
-        return ScriptMetadata(
-            name="gradual_lint_fixer",
-            description="Apply safe gradual lint fixes to projects",
-            category="quality",
-            version="2.0.0",
-        )
+      return ScriptMetadata(
+          name="gradual_lint_fixer",
+          description="Apply safe gradual lint fixes to projects",
+          category="quality",
+          version="2.0.0",
+      )
 
     def validate_preconditions(self) -> FlextResult[None]:
-        """Validate preconditions."""
-        workspace_root = Path.cwd()
+      """Validate preconditions."""
+      workspace_root = Path.cwd()
 
-        # Check if we're in FLEXT workspace
-        if not (workspace_root / "pyproject.toml").exists():
-            print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return FlextResult.fail("Not in FLEXT workspace root")
+      # Check if we're in FLEXT workspace
+      if not (workspace_root / "pyproject.toml").exists():
+          print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
+          return FlextResult.fail("Not in FLEXT workspace root")
 
-        # Check Ruff availability
-        if shutil.which("ruff") is None:
-            print_colored(
-                "❌ Ruff not found - install with: pip install ruff",
-                Colors.RED,
-            )
-            return FlextResult.fail("Ruff not found")
-        print_colored("✅ Ruff available", Colors.GREEN)
+      # Check Ruff availability
+      if shutil.which("ruff") is None:
+          print_colored(
+              "❌ Ruff not found - install with: pip install ruff",
+              Colors.RED,
+          )
+          return FlextResult.fail("Ruff not found")
+      print_colored("✅ Ruff available", Colors.GREEN)
 
-        # Check Git availability
-        if shutil.which("git") is None:
-            print_colored("❌ Git not found - required for safe branching", Colors.RED)
-            return FlextResult.fail("Git not found")
-        print_colored("✅ Git available", Colors.GREEN)
-        return FlextResult.ok(None)
+      # Check Git availability
+      if shutil.which("git") is None:
+          print_colored("❌ Git not found - required for safe branching", Colors.RED)
+          return FlextResult.fail("Git not found")
+      print_colored("✅ Git available", Colors.GREEN)
+      return FlextResult.ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
-        """Execute gradual lint fixing."""
-        try:
-            workspace_root = Path.cwd()
-            project = kwargs.get("project")
-            safe_only = kwargs.get("safe_only", True)
-            run_tests = kwargs.get("run_tests", True)
+      """Execute gradual lint fixing."""
+      try:
+          workspace_root = Path.cwd()
+          project = kwargs.get("project")
+          safe_only = kwargs.get("safe_only", True)
+          run_tests = kwargs.get("run_tests", True)
 
-            if not project:
-                print_colored("❌ Project name is required", Colors.RED)
-                return FlextResult.fail("Project name is required")
+          if not project:
+              print_colored("❌ Project name is required", Colors.RED)
+              return FlextResult.fail("Project name is required")
 
-            project_path = workspace_root / str(project)
-            if not project_path.exists():
-                print_colored(f"❌ Project {project} not found", Colors.RED)
-                return FlextResult.fail(f"Project {project} not found")
+          project_path = workspace_root / str(project)
+          if not project_path.exists():
+              print_colored(f"❌ Project {project} not found", Colors.RED)
+              return FlextResult.fail(f"Project {project} not found")
 
-            print_colored("🔧 GRADUAL LINT FIXER", Colors.CYAN)
-            print_colored("=" * 60, Colors.CYAN)
+          print_colored("🔧 GRADUAL LINT FIXER", Colors.CYAN)
+          print_colored("=" * 60, Colors.CYAN)
 
-            # Use flext_tools.quality for lint fixing
-            lint_fixer = GradualLintFixer(workspace_path=workspace_root)
+          # Use flext_tools.quality for lint fixing
+          lint_fixer = GradualLintFixer(workspace_path=workspace_root)
 
-            # Apply gradual lint fixes
-            fix_result = lint_fixer.fix_gradually(
-                project_path=project_path,
-                safe_only=safe_only,
-                run_tests=run_tests,
-            )
+          # Apply gradual lint fixes
+          fix_result = lint_fixer.fix_gradually(
+              project_path=project_path,
+              safe_only=safe_only,
+              run_tests=run_tests,
+          )
 
-            if fix_result:
-                print_colored("✅ Gradual lint fixes completed", Colors.GREEN)
+          if fix_result:
+              print_colored("✅ Gradual lint fixes completed", Colors.GREEN)
 
-                # Print summary
-                fixes_applied = fix_result.get("fixed_issues", 0)
-                if int(fixes_applied) > 0:
-                    print_colored(f"🔧 Applied {fixes_applied} lint fixes", Colors.CYAN)
-                else:
-                    print_colored(
-                        "✨ No lint fixes needed - code is already clean!",
-                        Colors.GREEN,
-                    )
+              # Print summary
+              fixes_applied = fix_result.get("fixed_issues", 0)
+              if int(fixes_applied) > 0:
+                  print_colored(f"🔧 Applied {fixes_applied} lint fixes", Colors.CYAN)
+              else:
+                  print_colored(
+                      "✨ No lint fixes needed - code is already clean!",
+                      Colors.GREEN,
+                  )
 
-                return FlextResult.ok({"fix_result": fix_result, "project": project})
+              return FlextResult.ok({"fix_result": fix_result, "project": project})
 
-            print_colored("❌ Gradual lint fixing failed", Colors.RED)
-            return False
+          print_colored("❌ Gradual lint fixing failed", Colors.RED)
+          return False
 
-        except (OSError, ValueError, TypeError) as e:
-            print_colored(f"❌ Error during lint fixing: {e}", Colors.RED)
-            return False
+      except (OSError, ValueError, TypeError) as e:
+          print_colored(f"❌ Error during lint fixing: {e}", Colors.RED)
+          return False
 
     def create_parser(self) -> object:
-        """Create parser with specific arguments."""
-        parser = super().create_parser()
+      """Create parser with specific arguments."""
+      parser = super().create_parser()
 
-        parser.add_argument(
-            "project",
-            help="Target project name (e.g., flext-core, flext-api)",
-        )
+      parser.add_argument(
+          "project",
+          help="Target project name (e.g., flext-core, flext-api)",
+      )
 
-        parser.add_argument(
-            "--unsafe",
-            action="store_true",
-            help="Allow potentially unsafe fixes (default: safe only)",
-        )
+      parser.add_argument(
+          "--unsafe",
+          action="store_true",
+          help="Allow potentially unsafe fixes (default: safe only)",
+      )
 
-        parser.add_argument(
-            "--skip-tests",
-            action="store_true",
-            help="Skip running tests after applying fixes",
-        )
+      parser.add_argument(
+          "--skip-tests",
+          action="store_true",
+          help="Skip running tests after applying fixes",
+      )
 
-        return parser
+      return parser
 
     def _process_kwargs(self, args: object) -> dict[str, object]:
-        """Process arguments into kwargs."""
-        kwargs: dict[str, object] = {}
-        kwargs["safe_only"] = not getattr(args, "unsafe", False)
-        kwargs["run_tests"] = not getattr(args, "skip_tests", False)
-        return kwargs
+      """Process arguments into kwargs."""
+      kwargs: dict[str, object] = {}
+      kwargs["safe_only"] = not getattr(args, "unsafe", False)
+      kwargs["run_tests"] = not getattr(args, "skip_tests", False)
+      return kwargs
 
     def cleanup(self) -> None:
-        """Limpeza após execução."""
+      """Limpeza após execução."""
 
 
 def main() -> int:

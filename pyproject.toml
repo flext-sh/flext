@@ -34,38 +34,6 @@ dependencies = [
     "rich (>=14.0.0)",
     "structlog (>=25.4.0)",
     "tomlkit (>=0.13.3)",
-    "client-a-oud-mig @ file://./client-a-oud-mig",
-    "flexcore @ file://./flexcore",
-    "flext-api @ file://./flext-api",
-    "flext-auth @ file://./flext-auth",
-    "flext-cli @ file://./flext-cli",
-    "flext-core @ file://./flext-core",
-    "flext-db-oracle @ file://./flext-db-oracle",
-    "flext-dbt-ldap @ file://./flext-dbt-ldap",
-    "flext-dbt-ldif @ file://./flext-dbt-ldif",
-    "flext-dbt-oracle @ file://./flext-dbt-oracle",
-    "flext-dbt-oracle-wms @ file://./flext-dbt-oracle-wms",
-    "flext-grpc @ file://./flext-grpc",
-    "flext-ldap @ file://./flext-ldap",
-    "flext-ldif @ file://./flext-ldif",
-    "flext-meltano @ file://./flext-meltano",
-    "flext-observability @ file://./flext-observability",
-    "flext-oracle-oic-ext @ file://./flext-oracle-oic-ext",
-    "flext-oracle-wms @ file://./flext-oracle-wms",
-    "flext-plugin @ file://./flext-plugin",
-    "flext-quality @ file://./flext-quality",
-    "flext-tap-ldap @ file://./flext-tap-ldap",
-    "flext-tap-ldif @ file://./flext-tap-ldif",
-    "flext-tap-oracle @ file://./flext-tap-oracle",
-    "flext-tap-oracle-oic @ file://./flext-tap-oracle-oic",
-    "flext-tap-oracle-wms @ file://./flext-tap-oracle-wms",
-    "flext-target-ldap @ file://./flext-target-ldap",
-    "flext-target-ldif @ file://./flext-target-ldif",
-    "flext-target-oracle @ file://./flext-target-oracle",
-    "flext-target-oracle-oic @ file://./flext-target-oracle-oic",
-    "flext-target-oracle-wms @ file://./flext-target-oracle-wms",
-    "flext-web @ file://./flext-web",
-    "client-b-meltano-native @ file://./client-b-meltano-native",
 ]
 keywords = [
     "async",
@@ -271,13 +239,13 @@ platform = "linux"
 explicit_package_bases = true
 namespace_packages = true
 mypy_path = ["src"]
-files = ["src", "tests"]
+files = ["src", "tests", "scripts"]
 
 # Plugins
 plugins = ["pydantic.mypy"]
 
 # Cache
-sqlite_cache = true
+# sqlite_cache = true
 cache_dir = ".mypy_cache"
 
 # Advanced checks
@@ -304,6 +272,12 @@ exclude = [
     "dist/",
     "node_modules/",
     "vendor/",
+    ".*/examples/",  # Exclui todos os diretórios 'examples' em qualquer nível (regex corrigida)
+    ".*/tests/",     # Exclui todos os diretórios 'tests' em qualquer nível (regex corrigida)
+    ".*/scripts/",   # Exclui todos os diretórios 'scripts' em qualquer nível (regex corrigida)
+    # Arquivos de módulos duplicados específicos, se o problema persistir após exclusões gerais
+    "flext-api/examples/__init__.py",
+    "client-a-oud-mig/examples/__init__.py",
 ]
 [tool.pydantic-mypy]
 init_forbid_extra = true
@@ -341,3 +315,39 @@ min_confidence = 80
 paths = ["src"]
 sort_by_size = true
 verbose = false
+
+
+[tool.poetry.dependencies]
+client-a-oud-mig = { path = "./client-a-oud-mig", develop = true }
+flexcore = { path = "./flexcore", develop = true }
+flext-api = { path = "./flext-api", develop = true }
+flext-auth = { path = "./flext-auth", develop = true }
+flext-cli = { path = "./flext-cli", develop = true }
+flext-core = { path = "./flext-core", develop = true }
+flext-db-oracle = { path = "./flext-db-oracle", develop = true }
+flext-dbt-ldap = { path = "./flext-dbt-ldap", develop = true }
+flext-dbt-ldif = { path = "./flext-dbt-ldif", develop = true }
+flext-dbt-oracle = { path = "./flext-dbt-oracle", develop = true }
+flext-dbt-oracle-wms = { path = "./flext-dbt-oracle-wms", develop = true }
+flext-grpc = { path = "./flext-grpc", develop = true }
+flext-ldap = { path = "./flext-ldap", develop = true }
+flext-ldif = { path = "./flext-ldif", develop = true }
+flext-meltano = { path = "./flext-meltano", develop = true }
+flext-observability = { path = "./flext-observability", develop = true }
+flext-oracle-oic-ext = { path = "./flext-oracle-oic-ext", develop = true }
+flext-oracle-wms = { path = "./flext-oracle-wms", develop = true }
+flext-plugin = { path = "./flext-plugin", develop = true }
+flext-quality = { path = "./flext-quality", develop = true }
+flext-tap-ldap = { path = "./flext-tap-ldap", develop = true }
+flext-tap-ldif = { path = "./flext-tap-ldif", develop = true }
+flext-tap-oracle = { path = "./flext-tap-oracle", develop = true }
+flext-tap-oracle-oic = { path = "./flext-tap-oracle-oic", develop = true }
+flext-tap-oracle-wms = { path = "./flext-tap-oracle-wms", develop = true }
+flext-target-ldap = { path = "./flext-target-ldap", develop = true }
+flext-target-ldif = { path = "./flext-target-ldif", develop = true }
+flext-target-oracle = { path = "./flext-target-oracle", develop = true }
+flext-target-oracle-oic = { path = "./flext-target-oracle-oic", develop = true }
+flext-target-oracle-wms = { path = "./flext-target-oracle-wms", develop = true }
+flext-web = { path = "./flext-web", develop = true }
+client-b-meltano-native = { path = "./client-b-meltano-native", develop = true }
+

@@ -55,18 +55,44 @@ __license__ = "MIT"
 __homepage__ = "https://github.com/flext-sh/flext"
 
 # Core FLEXT imports - enterprise integration patterns
-from flext.web_integration import FlextWebIntegration, WebServiceSetupResult
-from flext.grpc_integration import FlextGrpcIntegration, GrpcServiceSetupResult
-from flext.auth_integration import FlextAuthIntegration, AuthServiceSetupResult
+from flext_web import (
+    create_service as create_web_service,
+    create_app as create_web_app,
+    FlextWebApp,
+    FlextWebService,
+)
+from flext_grpc import (
+    FlextGrpcClientService,
+    FlextGrpcService,
+    create_service as create_grpc_service,
+)
+from flext_auth import FlextAuth, FlextAuthService, create_auth_service
 
 # CLI integration
-from flext.cli_helpers import FlextCliHelperExtended
+from flext_cli.core.helpers import CLIHelper
+from flext_cli.simple_api import setup_cli
 
 # Note: Import optimization to avoid circular dependencies
 # Public API exports optimized for performance and maintainability
 
 __all__: list[str] = [
-    "__author__", "__license__", "__version__", "services", "FlextWebIntegration",
-    "WebServiceSetupResult", "FlextGrpcIntegration", "GrpcServiceSetupResult", "FlextAuthIntegration",
-    "AuthServiceSetupResult", "FlextCliHelperExtended",
+    "__author__",
+    "__license__",
+    "__version__",
+    # Web
+    "create_web_service",
+    "create_web_app",
+    "FlextWebApp",
+    "FlextWebService",
+    # gRPC
+    "FlextGrpcClientService",
+    "FlextGrpcService",
+    "create_grpc_service",
+    # Auth
+    "FlextAuth",
+    "FlextAuthService",
+    "create_auth_service",
+    # CLI
+    "CLIHelper",
+    "setup_cli",
 ]

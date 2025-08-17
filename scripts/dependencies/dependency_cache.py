@@ -7,17 +7,13 @@ para máxima performance e confiabilidade enterprise.
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    import argparse
 
 from flext_core import FlextResult
 
-from flext_tools import CacheManager, Colors, print_colored
-from flext_tools.core.script_base import FlextScript, ScriptMetadata
+from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
 
 class DependencyCacheManager(FlextScript):
@@ -54,8 +50,7 @@ class DependencyCacheManager(FlextScript):
             print_colored("💾 DEPENDENCY CACHE MANAGER", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
 
-            # Use flext_tools.cache for operations
-            CacheManager()
+            # Cache module was removed; keep behavior informational only
 
             # Execute cache operation
             if operation == "status":

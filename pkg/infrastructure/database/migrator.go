@@ -134,7 +134,7 @@ func (m *Migrator) loadMigrations() ([]*Migration, error) {
 	// if err != nil {
 	//     return nil, fmt.Errorf("failed to read migrations directory: %w", err)
 	// }
-	
+
 	// Return empty migrations for now - system works without SQL migrations
 	return []*Migration{}, nil
 }
@@ -161,7 +161,7 @@ func (m *Migrator) parseMigrationFile(filename string) (*Migration, error) {
 	// if err != nil {
 	//     return nil, fmt.Errorf("failed to read migration file %s: %w", filename, err)
 	// }
-	
+
 	// Placeholder implementation
 	content := []byte("")
 

@@ -1,24 +1,16 @@
 #!/usr/bin/env python3
-"""Load and test staging configuration.
+"""Load and validate staging configuration."""
 
-Carrega e valida configurações de staging usando flext_tools.config
-para máxima confiabilidade e padronização enterprise.
-"""
-
-from __future__ import annotations
-
+import argparse
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from flext_core import FlextResult
 
-from flext_tools import Colors, print_colored
+from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 from flext_tools.config import ConfigurationManager
-from flext_tools.core.script_base import FlextScript, ScriptMetadata
 
-if TYPE_CHECKING:
-    import argparse
+# Apenas tipos internos de Python; argparse já importado acima
 
 
 class StagingConfigLoader(FlextScript):

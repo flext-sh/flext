@@ -108,8 +108,8 @@ class CLIConfig(BaseModel):
     # Environment settings
     profile: str = Field(default="default", description="Configuration profile")
     config_dir: Path = Field(
-        default=Path.home() / ".flext",
-        description="Config directory",
+      default=Path.home() / ".flext",
+      description="Config directory",
     )
 
 
@@ -117,30 +117,30 @@ class BaseCLI(ABC):
     """Base class for all FLEXT CLI applications."""
 
     def __init__(self, name: str, version: str, description: str) -> None:
-        """Initialize BaseCLI with basic information."""
-        self.name = name
-        self.version = version
-        self.description = description
-        self.console = Console()
-        self.config: CLIConfig | None = None
+      """Initialize BaseCLI with basic information."""
+      self.name = name
+      self.version = version
+      self.description = description
+      self.console = Console()
+      self.config: CLIConfig | None = None
 
     def setup_logging(self, config: CLIConfig) -> None:
-        """Set up logging configuration."""
-        logging.basicConfig(
-            level=getattr(logging, config.log_level.upper()),
-            format="%(message)s",
-            datefmt="[%X]",
-            handlers=[RichHandler(console=self.console, rich_tracebacks=True)],
-        )
+      """Set up logging configuration."""
+      logging.basicConfig(
+          level=getattr(logging, config.log_level.upper()),
+          format="%(message)s",
+          datefmt="[%X]",
+          handlers=[RichHandler(console=self.console, rich_tracebacks=True)],
+      )
 
     @abstractmethod
     def create_cli(self) -> click.Group:
-        """Create the CLI group."""
+      """Create the CLI group."""
 
     def run(self) -> None:
-        """Run the CLI application."""
-        cli = self.create_cli()
-        cli()
+      """Run the CLI application."""
+      cli = self.create_cli()
+      cli()
 
 
 def with_config(f: object) -> object:
@@ -153,8 +153,8 @@ def with_config(f: object) -> object:
 def with_output_format(f: object) -> object:
     """Add output format options to commands (decorator)."""
     return click.option(
-        "--output-format",
-        type=click.Choice(["table", "json", "yaml"]),
-        default="table",
-        help="Output format",
+      "--output-format",
+      type=click.Choice(["table", "json", "yaml"]),
+      default="table",
+      help="Output format",
     )(f)

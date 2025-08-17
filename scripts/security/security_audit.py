@@ -57,24 +57,14 @@ License: MIT
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from flext_core import FlextResult
 
-from flext_tools.core.script_base import FlextScript, ScriptMetadata
-from flext_tools.security import (
-    AntipatternScanner,
-    ScanConfig,
-    scan_flext_ecosystem,
-)
+from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 from flext_tools.utils.colors import Colors, print_colored
-
-if TYPE_CHECKING:
-    import argparse
-
-    from flext_tools.security import SecurityViolation
 
 
 class SecurityAuditScript(FlextScript):
@@ -343,7 +333,7 @@ def main() -> int:
     """Main entry point for security audit script.
 
     Returns:
-        Exit code (0 for success, non-zero for failure)
+      Exit code (0 for success, non-zero for failure)
 
     """
     script = SecurityAuditScript()
