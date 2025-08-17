@@ -12,82 +12,82 @@ def find_manual_env_vars() -> list[str]:
     # Avoid spawning shell tools; scan with pathlib
     matches: list[str] = []
     for path in Path.cwd().rglob("*.py"):
-      try:
-          text = path.read_text(encoding="utf-8")
-      except Exception as e:
-          print(f"Skipping {path}: {e}")
-          continue
-      if ("os.getenv(" in text) or ("os.environ.get" in text):
-          matches.append(str(path))
+        try:
+            text = path.read_text(encoding="utf-8")
+        except Exception as e:
+            print(f"Skipping {path}: {e}")
+            continue
+        if ("os.getenv(" in text) or ("os.environ.get" in text):
+            matches.append(str(path))
     return matches
 
 
 def add_config_todos_to_file(file_path: str) -> bool:
     """Add TODO comments for manual configuration patterns."""
     try:
-      with Path(file_path).open(encoding="utf-8") as f:
-          content = f.read()
+        with Path(file_path).open(encoding="utf-8") as f:
+            content = f.read()
 
-      changes_made = False
+        changes_made = False
 
-      # Add TODO for manual env vars
-      # Consolidate to FLEXT config patterns
-      # This is an architectural issue, not a direct linting fix to be done by AI.
-      if (
-          "os.getenv(" in content or "os.environ.get(" in content
-      ) and "config patterns" not in content:
-          # Find good insertion point (after imports)
-          lines = content.split("\n")
-          insert_line = -1
+        # Add TODO for manual env vars
+        # Consolidate to FLEXT config patterns
+        # This is an architectural issue, not a direct linting fix to be done by AI.
+        if (
+            "os.getenv(" in content or "os.environ.get(" in content
+        ) and "config patterns" not in content:
+            # Find good insertion point (after imports)
+            lines = content.split("\n")
+            insert_line = -1
 
-          for i, line in enumerate(lines):
-              if line.startswith("from __future__ import annotations"):
-                  insert_line = i + 1
-                  break
-              if line.startswith(("import", "from")):
-                  insert_line = i + 1
+            for i, line in enumerate(lines):
+                if line.startswith("from __future__ import annotations"):
+                    insert_line = i + 1
+                    break
+                if line.startswith(("import", "from")):
+                    insert_line = i + 1
 
-          if insert_line > 0:
-              lines.insert(
-                  insert_line,
-                  "\n# TODO: Consolidate manual config to FLEXT patterns",
-              )
-              content = "\n".join(lines)
-              changes_made = True
+            if insert_line > 0:
+                lines.insert(
+                    insert_line,
+                    "\n# TODO: Consolidate manual config to FLEXT patterns",
+                )
+                content = "\n".join(lines)
+                changes_made = True
 
-      # Add inline TODOs for specific patterns
-      env_pattern = (
-          r'(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*os\.getenv\(["\']([^"\']+)["\']'
-          r'(?:,\s*["\']?([^"\']*)["\']?)?\)'
-      )
+        # Add inline TODOs for specific patterns
+        env_pattern = (
+            r'(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*os\.getenv\(["\']([^"\']+)["\']'
+            r'(?:,\s*["\']?([^"\']*)["\']?)?\)'
+        )
 
-      def replace_env_var(match: re.Match[str]) -> str:
-          indent = match.group(1)
-          var_name = match.group(2)
-          env_name = match.group(3)
-          default_val = match.group(4) or '""'
+        def replace_env_var(match: re.Match[str]) -> str:
+            indent = match.group(1)
+            var_name = match.group(2)
+            env_name = match.group(3)
+            default_val = match.group(4) or '""'
 
-          return (
-              f"{indent}# TODO: Move {env_name} to FLEXT settings class\n"
-              f"{indent}{var_name} = os.getenv('{env_name}', {default_val!r})"
-          )
+            return (
+                f"{indent}# TODO: Move {env_name} to FLEXT settings class\n"
+                f"{indent}{var_name} = os.getenv('{env_name}', {default_val!r})"
+            )
 
-      new_content = re.sub(env_pattern, replace_env_var, content)
-      if new_content != content:
-          content = new_content
-          changes_made = True
+        new_content = re.sub(env_pattern, replace_env_var, content)
+        if new_content != content:
+            content = new_content
+            changes_made = True
 
-      if changes_made:
-          with Path(file_path).open("w", encoding="utf-8") as f:
-              f.write(content)
-          print(f"✅ Added FLEXT config TODOs to: {file_path}")
-          return True
-      print(f"⏭️ No changes needed: {file_path}")
-      return False
+        if changes_made:
+            with Path(file_path).open("w", encoding="utf-8") as f:
+                f.write(content)
+            print(f"✅ Added FLEXT config TODOs to: {file_path}")
+            return True
+        print(f"⏭️ No changes needed: {file_path}")
+        return False
 
     except (OSError, ValueError, TypeError) as e:
-      print(f"❌ Error processing {file_path}: {e}")
-      return False
+        print(f"❌ Error processing {file_path}: {e}")
+        return False
 
 
 def main() -> None:
@@ -97,8 +97,8 @@ def main() -> None:
     env_var_files = find_manual_env_vars()
 
     if not env_var_files:
-      print("✅ No manual environment variable usage found!")
-      return
+        print("✅ No manual environment variable usage found!")
+        return
 
     print(f"📄 Found {len(env_var_files)} files with manual env vars")
 
@@ -107,9 +107,9 @@ def main() -> None:
     modified = 0
 
     for file_path in env_var_files[:50]:
-      if add_config_todos_to_file(file_path):
-          modified += 1
-      processed += 1
+        if add_config_todos_to_file(file_path):
+            modified += 1
+        processed += 1
 
     print("\n✅ Configuration consolidation completed!")
     print(f"📊 Processed {processed} files, modified {modified}")

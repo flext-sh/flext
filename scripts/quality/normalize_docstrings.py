@@ -13,9 +13,7 @@ from contextlib import redirect_stderr, redirect_stdout, suppress
 from importlib import import_module
 from pathlib import Path
 
-from ruff.__main__ import main as ruff_main  # type: ignore[import-untyped]
-
-# Import ruff dynamically
+# Import ruff dynamically (call via import_module to allow runtime fallback)
 _ruff_mod = import_module("ruff.__main__")
 ruff_main = getattr(_ruff_mod, "main", None)
 
@@ -144,8 +142,11 @@ def main(argv: list[str]) -> int:
     if not args.no_ruff and has_command("ruff"):
         print("Running Ruff docstring fixes (D rules)...")
         # Run Ruff in-process
-        with suppress(SystemExit):
+    with suppress(SystemExit):
+        if callable(ruff_main):
             ruff_main(["--select", "D", "--fix", str(REPO_ROOT)])
+        else:
+            print("ruff not available in-process; skip in-process fix")
 
     print("Done.")
     return 0

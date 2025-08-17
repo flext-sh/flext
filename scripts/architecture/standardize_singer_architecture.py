@@ -28,21 +28,21 @@ def main() -> None:
     flext_root = Path.cwd()
 
     if not flext_root.exists():
-      msg = f"FLEXT root directory not found: {flext_root}"
-      raise RuntimeError(msg)
+        msg = f"FLEXT root directory not found: {flext_root}"
+        raise RuntimeError(msg)
 
     # Import flext_meltano.architecture dynamically to avoid import-time errors
     try:
-      _mod = import_module("flext_meltano.architecture")
-      _standardizer_cls = _mod.FlextSingerArchitectureStandardizer
+        mod = import_module("flext_meltano.architecture")
+        standardizer_cls = mod.FlextSingerArchitectureStandardizer
     except Exception as exc:  # pragma: no cover - environment dependent
-      _msg = (
-          "Missing dependency: flext_meltano.architecture. "
-          "Install the package or run from the monorepo workspace."
-      )
-      raise RuntimeError(_msg) from exc
+        msg_ = (
+            "Missing dependency: flext_meltano.architecture. "
+            "Install the package or run from the monorepo workspace."
+        )
+        raise RuntimeError(msg_) from exc
 
-    standardizer = _standardizer_cls(flext_root)
+    standardizer = standardizer_cls(flext_root)
     standardizer.standardize_architecture()
 
 
