@@ -16,7 +16,7 @@ def main() -> int:
     """Main entry point for the documentation generator script.
 
     Returns:
-        int: Description.
+      int: Description.
 
     """    # Initialize generator with current directory
     generator = DocumentationGenerator(Path.cwd())

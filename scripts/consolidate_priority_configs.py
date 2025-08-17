@@ -12,44 +12,44 @@ def consolidate_client-a_config() -> bool | None:
     print(f"🔧 Consolidating {config_file}...")
 
     try:
-        with Path(config_file).open(encoding="utf-8") as f:
-            content = f.read()
+      with Path(config_file).open(encoding="utf-8") as f:
+          content = f.read()
 
-        original_content = content
+      original_content = content
 
-        # Add flext-core import if not present
-        if "FlextCoreSettings" not in content:
-            # Find the import section
-            import_pattern = r"(from pydantic import BaseSettings.*?\n)"
-            match = re.search(import_pattern, content, re.DOTALL)
-            if match:
-                content = content.replace(
-                    match.group(1),
-                    f"{match.group(1)}FlextCoreSettings\n",
-                )
+      # Add flext-core import if not present
+      if "FlextCoreSettings" not in content:
+          # Find the import section
+          import_pattern = r"(from pydantic import BaseSettings.*?\n)"
+          match = re.search(import_pattern, content, re.DOTALL)
+          if match:
+              content = content.replace(
+                  match.group(1),
+                  f"{match.group(1)}FlextCoreSettings\n",
+              )
 
-        # Replace BaseSettings with FlextCoreSettings
-        content = re.sub(
-            r"class\s+([A-Z][a-zA-Z0-9_]*Settings)\(BaseSettings\)",
-            r"class \1(FlextCoreSettings)",
-            content,
-        )
+      # Replace BaseSettings with FlextCoreSettings
+      content = re.sub(
+          r"class\s+([A-Z][a-zA-Z0-9_]*Settings)\(BaseSettings\)",
+          r"class \1(FlextCoreSettings)",
+          content,
+      )
 
-        # Add TODO comment for standardization
-        if "# TODO: Consolidated to use FLEXT config patterns" not in content:
-            content = "# TODO: Consolidated to use FLEXT config patterns\n" + content
+      # Add TODO comment for standardization
+      if "# TODO: Consolidated to use FLEXT config patterns" not in content:
+          content = "# TODO: Consolidated to use FLEXT config patterns\n" + content
 
-        if content != original_content:
-            with Path(config_file).open("w", encoding="utf-8") as f:
-                f.write(content)
-            print(f"✅ Consolidated {config_file}")
-            return True
-        print(f"⏭️ No changes needed for {config_file}")
-        return False
+      if content != original_content:
+          with Path(config_file).open("w", encoding="utf-8") as f:
+              f.write(content)
+          print(f"✅ Consolidated {config_file}")
+          return True
+      print(f"⏭️ No changes needed for {config_file}")
+      return False
 
     except (OSError, ValueError, TypeError) as e:
-        print(f"❌ Error consolidating {config_file}: {e}")
-        return False
+      print(f"❌ Error consolidating {config_file}: {e}")
+      return False
 
 
 def consolidate_flext_auth_config() -> bool | None:
@@ -59,48 +59,48 @@ def consolidate_flext_auth_config() -> bool | None:
     print(f"🔧 Consolidating {config_file}...")
 
     try:
-        with Path(config_file).open(encoding="utf-8") as f:
-            content = f.read()
+      with Path(config_file).open(encoding="utf-8") as f:
+          content = f.read()
 
-        original_content = content
+      original_content = content
 
-        # Add flext-core import if not present
-        if (
-            "FlextCoreSettings" not in content
-            and "from pydantic import BaseSettings" in content
-        ):
-            content = content.replace(
-                "from pydantic import BaseSettings",
-                "from pydantic import BaseSettings\nFlextCoreSettings",
-            )
+      # Add flext-core import if not present
+      if (
+          "FlextCoreSettings" not in content
+          and "from pydantic import BaseSettings" in content
+      ):
+          content = content.replace(
+              "from pydantic import BaseSettings",
+              "from pydantic import BaseSettings\nFlextCoreSettings",
+          )
 
-        # Replace BaseSettings with FlextCoreSettings for config classes
-        config_classes = re.findall(
-            r"class\s+([A-Z][a-zA-Z0-9_]*Config)\(BaseSettings\)",
-            content,
-        )
-        for class_name in config_classes:
-            content = re.sub(
-                f"class\\s+{class_name}\\(BaseSettings\\)",
-                f"class {class_name}(FlextCoreSettings)",
-                content,
-            )
+      # Replace BaseSettings with FlextCoreSettings for config classes
+      config_classes = re.findall(
+          r"class\s+([A-Z][a-zA-Z0-9_]*Config)\(BaseSettings\)",
+          content,
+      )
+      for class_name in config_classes:
+          content = re.sub(
+              f"class\\s+{class_name}\\(BaseSettings\\)",
+              f"class {class_name}(FlextCoreSettings)",
+              content,
+          )
 
-        # Add TODO comment for standardization
-        if "# TODO: Consolidated to use FLEXT config patterns" not in content:
-            content = "# TODO: Consolidated to use FLEXT config patterns\n" + content
+      # Add TODO comment for standardization
+      if "# TODO: Consolidated to use FLEXT config patterns" not in content:
+          content = "# TODO: Consolidated to use FLEXT config patterns\n" + content
 
-        if content != original_content:
-            with Path(config_file).open("w", encoding="utf-8") as f:
-                f.write(content)
-            print(f"✅ Consolidated {config_file}")
-            return True
-        print(f"⏭️ No changes needed for {config_file}")
-        return False
+      if content != original_content:
+          with Path(config_file).open("w", encoding="utf-8") as f:
+              f.write(content)
+          print(f"✅ Consolidated {config_file}")
+          return True
+      print(f"⏭️ No changes needed for {config_file}")
+      return False
 
     except (OSError, ValueError, TypeError) as e:
-        print(f"❌ Error consolidating {config_file}: {e}")
-        return False
+      print(f"❌ Error consolidating {config_file}: {e}")
+      return False
 
 
 def consolidate_flext_api_config() -> bool | None:
@@ -110,46 +110,46 @@ def consolidate_flext_api_config() -> bool | None:
     print(f"🔧 Consolidating {config_file}...")
 
     try:
-        with Path(config_file).open(encoding="utf-8") as f:
-            content = f.read()
+      with Path(config_file).open(encoding="utf-8") as f:
+          content = f.read()
 
-        original_content = content
+      original_content = content
 
-        # Replace manual os.getenv() with TODO comments
-        env_vars = re.findall(r'os\.getenv\(["\']([^"\']+)["\']', content)
-        # Combine nested if statements
-        if (
-            env_vars
-            and "# TODO: Replace manual os.getenv() with Pydantic Fields" not in content
-        ):
-            content = (
-                "# TODO: Replace manual os.getenv() with Pydantic Fields\n" + content
-            )
+      # Replace manual os.getenv() with TODO comments
+      env_vars = re.findall(r'os\.getenv\(["\']([^"\']+)["\']', content)
+      # Combine nested if statements
+      if (
+          env_vars
+          and "# TODO: Replace manual os.getenv() with Pydantic Fields" not in content
+      ):
+          content = (
+              "# TODO: Replace manual os.getenv() with Pydantic Fields\n" + content
+          )
 
-            # Add inline TODOs for each env var
-            for env_var in env_vars:
-                pattern = f"os\\.getenv\\([\"']{re.escape(env_var)}[\"'](.*?)\\)"
-                replacement = (
-                    f"# TODO: Move {env_var} to FLEXT settings class\n"
-                    f'os.getenv("{env_var}"\\1)'
-                )
-                content = re.sub(pattern, replacement, content, count=1)
+          # Add inline TODOs for each env var
+          for env_var in env_vars:
+              pattern = f"os\\.getenv\\([\"']{re.escape(env_var)}[\"'](.*?)\\)"
+              replacement = (
+                  f"# TODO: Move {env_var} to FLEXT settings class\n"
+                  f'os.getenv("{env_var}"\\1)'
+              )
+              content = re.sub(pattern, replacement, content, count=1)
 
-        # Add TODO comment for standardization
-        if "# TODO: Consolidated to use FLEXT config patterns" not in content:
-            content = "# TODO: Consolidated to use FLEXT config patterns\n" + content
+      # Add TODO comment for standardization
+      if "# TODO: Consolidated to use FLEXT config patterns" not in content:
+          content = "# TODO: Consolidated to use FLEXT config patterns\n" + content
 
-        if content != original_content:
-            with Path(config_file).open("w", encoding="utf-8") as f:
-                f.write(content)
-            print(f"✅ Consolidated {config_file}")
-            return True
-        print(f"⏭️ No changes needed for {config_file}")
-        return False
+      if content != original_content:
+          with Path(config_file).open("w", encoding="utf-8") as f:
+              f.write(content)
+          print(f"✅ Consolidated {config_file}")
+          return True
+      print(f"⏭️ No changes needed for {config_file}")
+      return False
 
     except (OSError, ValueError, TypeError) as e:
-        print(f"❌ Error consolidating {config_file}: {e}")
-        return False
+      print(f"❌ Error consolidating {config_file}: {e}")
+      return False
 
 
 def create_consolidation_template() -> bool | None:
@@ -185,57 +185,57 @@ class ConsolidatedProjectSettings(FlextCoreSettings):
     """
 
     model_config = SettingsConfigDict(
-        # Inherit from FlextCoreSettings
-        **FlextCoreSettings.model_config,
-        # Project-specific overrides
-        env_prefix="PROJECT_",
+      # Inherit from FlextCoreSettings
+      **FlextCoreSettings.model_config,
+      # Project-specific overrides
+      env_prefix="PROJECT_",
     )
 
     # Server configuration
     host: str = Field(
-        default="localhost",
-        description="Server hostname",
-        json_schema_extra={"env": "PROJECT_HOST"}
+      default="localhost",
+      description="Server hostname",
+      json_schema_extra={"env": "PROJECT_HOST"}
     )
     port: int = Field(
-        default=8080,
-        ge=1,
-        le=65535,
-        description="Server port",
-        json_schema_extra={"env": "PROJECT_PORT"}
+      default=8080,
+      ge=1,
+      le=65535,
+      description="Server port",
+      json_schema_extra={"env": "PROJECT_PORT"}
     )
     debug_mode: bool = Field(
-        default=False,
-        description="Enable debug mode",
-        json_schema_extra={"env": "PROJECT_DEBUG"}
+      default=False,
+      description="Enable debug mode",
+      json_schema_extra={"env": "PROJECT_DEBUG"}
     )
 
     # Database configuration (replacing manual os.getenv calls)
     db_host: str = Field(
-        default="localhost",
-        description="Database host",
-        json_schema_extra={"env": "PROJECT_DB_HOST"}
+      default="localhost",
+      description="Database host",
+      json_schema_extra={"env": "PROJECT_DB_HOST"}
     )
     db_port: int = Field(
-        default=5432,
-        ge=1,
-        le=65535,
-        description="Database port",
-        json_schema_extra={"env": "PROJECT_DB_PORT"}
+      default=5432,
+      ge=1,
+      le=65535,
+      description="Database port",
+      json_schema_extra={"env": "PROJECT_DB_PORT"}
     )
     db_name: str = Field(
-        description="Database name",
-        json_schema_extra={"env": "PROJECT_DB_NAME"}
+      description="Database name",
+      json_schema_extra={"env": "PROJECT_DB_NAME"}
     )
 
     # Security settings
     secret_key: str = Field(
-        description="Application secret key",
-        json_schema_extra={"env": "PROJECT_SECRET_KEY"}
+      description="Application secret key",
+      json_schema_extra={"env": "PROJECT_SECRET_KEY"}
     )
     jwt_secret: str = Field(
-        description="JWT signing secret",
-        json_schema_extra={"env": "PROJECT_JWT_SECRET"}
+      description="JWT signing secret",
+      json_schema_extra={"env": "PROJECT_JWT_SECRET"}
     )
 
 
@@ -247,11 +247,11 @@ def get_project_settings() -> ConsolidatedProjectSettings:
     """Get project settings instance.
 
     Returns:
-        ConsolidatedProjectSettings instance using FLEXT patterns.
+      ConsolidatedProjectSettings instance using FLEXT patterns.
     """
     global _settings_instance
     if _settings_instance is None:
-        _settings_instance = ConsolidatedProjectSettings()
+      _settings_instance = ConsolidatedProjectSettings()
     return _settings_instance
 
 
@@ -281,13 +281,13 @@ def get_project_settings() -> ConsolidatedProjectSettings:
 '''
 
     try:
-        with Path(template_path).open("w", encoding="utf-8") as f:
-            f.write(template_content)
-        print(f"✅ Created consolidation template: {template_path}")
-        return True
+      with Path(template_path).open("w", encoding="utf-8") as f:
+          f.write(template_content)
+      print(f"✅ Created consolidation template: {template_path}")
+      return True
     except (OSError, ValueError, TypeError) as e:
-        print(f"❌ Error creating template: {e}")
-        return False
+      print(f"❌ Error creating template: {e}")
+      return False
 
 
 def main() -> None:
@@ -298,18 +298,18 @@ def main() -> None:
 
     # Create template
     if create_consolidation_template():
-        consolidated_count += 1
+      consolidated_count += 1
 
     # Consolidate priority config files
     consolidation_functions = [
-        consolidate_client-a_config,
-        consolidate_flext_auth_config,
-        consolidate_flext_api_config,
+      consolidate_client-a_config,
+      consolidate_flext_auth_config,
+      consolidate_flext_api_config,
     ]
 
     for consolidate_func in consolidation_functions:
-        if consolidate_func():
-            consolidated_count += 1
+      if consolidate_func():
+          consolidated_count += 1
 
     print("\n✅ Configuration consolidation completed!")
     print(f"📊 Successfully consolidated {consolidated_count} configurations")
