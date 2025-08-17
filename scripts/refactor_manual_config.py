@@ -21,68 +21,68 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
 
     """
     try:
-      patterns: dict[str, list[str]] = {
-          "manual_env_vars": [],
-          "manual_pydantic": [],
-          "manual_file_loading": [],
-          "manual_validation": [],
-      }
+        patterns: dict[str, list[str]] = {
+            "manual_env_vars": [],
+            "manual_pydantic": [],
+            "manual_file_loading": [],
+            "manual_validation": [],
+        }
 
-      # Find manual os.getenv() usage without external commands
-      env_var_files: list[str] = []
-      for path in Path.cwd().rglob("*.py"):
-          try:
-              text = path.read_text(encoding="utf-8")
-          except Exception as e:
-              logger.debug(f"Skipping {path}: {e}")
-              continue
-          if ("os.getenv(" in text) or ("os.environ.get" in text):
-              env_var_files.append(str(path))
-      patterns["manual_env_vars"] = env_var_files
+        # Find manual os.getenv() usage without external commands
+        env_var_files: list[str] = []
+        for path in Path.cwd().rglob("*.py"):
+            try:
+                text = path.read_text(encoding="utf-8")
+            except Exception as e:
+                logger.debug(f"Skipping {path}: {e}")
+                continue
+            if ("os.getenv(" in text) or ("os.environ.get" in text):
+                env_var_files.append(str(path))
+        patterns["manual_env_vars"] = env_var_files
 
-      # Find manual Pydantic instantiation (Config(), Settings(), etc.)
-      pyd_files: list[str] = []
-      for path in Path.cwd().rglob("*.py"):
-          try:
-              text = path.read_text(encoding="utf-8")
-          except Exception as e:
-              logger.debug(f"Skipping {path}: {e}")
-              continue
-          if re.search(r"\b(Settings\(\)|[A-Za-z0-9_]*Config\(\))", text):
-              pyd_files.append(str(path))
-      patterns["manual_pydantic"] = pyd_files
+        # Find manual Pydantic instantiation (Config(), Settings(), etc.)
+        pyd_files: list[str] = []
+        for path in Path.cwd().rglob("*.py"):
+            try:
+                text = path.read_text(encoding="utf-8")
+            except Exception as e:
+                logger.debug(f"Skipping {path}: {e}")
+                continue
+            if re.search(r"\b(Settings\(\)|[A-Za-z0-9_]*Config\(\))", text):
+                pyd_files.append(str(path))
+        patterns["manual_pydantic"] = pyd_files
 
-      # Find manual file loading (json.load, yaml.load)
-      file_loading: list[str] = []
-      for path in Path.cwd().rglob("*.py"):
-          try:
-              text = path.read_text(encoding="utf-8")
-          except Exception as e:
-              logger.debug(f"Skipping {path}: {e}")
-              continue
-          if re.search(r"\b(json\.load\(|yaml\.load\(|yaml\.safe_load\()", text):
-              file_loading.append(str(path))
-      patterns["manual_file_loading"] = file_loading
+        # Find manual file loading (json.load, yaml.load)
+        file_loading: list[str] = []
+        for path in Path.cwd().rglob("*.py"):
+            try:
+                text = path.read_text(encoding="utf-8")
+            except Exception as e:
+                logger.debug(f"Skipping {path}: {e}")
+                continue
+            if re.search(r"\b(json\.load\(|yaml\.load\(|yaml\.safe_load\()", text):
+                file_loading.append(str(path))
+        patterns["manual_file_loading"] = file_loading
 
-      # Find manual validation patterns
-      manual_valid: list[str] = []
-      for path in Path.cwd().rglob("*.py"):
-          try:
-              text = path.read_text(encoding="utf-8")
-          except Exception as e:
-              logger.debug(f"Skipping {path}: {e}")
-              continue
-          if re.search(r"if\s+not\s+.*config|assert\s+.*config", text):
-              manual_valid.append(str(path))
-      patterns["manual_validation"] = manual_valid
+        # Find manual validation patterns
+        manual_valid: list[str] = []
+        for path in Path.cwd().rglob("*.py"):
+            try:
+                text = path.read_text(encoding="utf-8")
+            except Exception as e:
+                logger.debug(f"Skipping {path}: {e}")
+                continue
+            if re.search(r"if\s+not\s+.*config|assert\s+.*config", text):
+                manual_valid.append(str(path))
+        patterns["manual_validation"] = manual_valid
 
-      total_files = len(set(functools.reduce(operator.iadd, patterns.values(), [])))
-      logger.info(f"Found {total_files} files with manual config patterns")
+        total_files = len(set(functools.reduce(operator.iadd, patterns.values(), [])))
+        logger.info(f"Found {total_files} files with manual config patterns")
 
-      return FlextResult.ok(patterns)
+        return FlextResult.ok(patterns)
 
     except (OSError, ValueError, TypeError) as e:
-      return FlextResult.fail(f"Failed to find manual config patterns: {e}")
+        return FlextResult.fail(f"Failed to find manual config patterns: {e}")
 
 
 def refactor_manual_env_vars(file_path: str) -> FlextResult[bool]:
@@ -96,63 +96,63 @@ def refactor_manual_env_vars(file_path: str) -> FlextResult[bool]:
 
     """
     try:
-      with Path(file_path).open(encoding="utf-8") as f:
-          content = f.read()
+        with Path(file_path).open(encoding="utf-8") as f:
+            content = f.read()
 
-      changes_made = False
+        changes_made = False
 
-      # Pattern 1: os.getenv("VAR", default) -> use Pydantic Field
-      env_pattern = r'os\.getenv\(["\']([^"\']+)["\'],\s*["\']?([^"\']*)["\']?\)'
-      matches = re.findall(env_pattern, content)
+        # Pattern 1: os.getenv("VAR", default) -> use Pydantic Field
+        env_pattern = r'os\.getenv\(["\']([^"\']+)["\'],\s*["\']?([^"\']*)["\']?\)'
+        matches = re.findall(env_pattern, content)
 
-      # Combine nested if statements
-      if matches and "# TODO: Consolidate to FLEXT config patterns" not in content:
-          # Find import section and add comment
-          import_section = re.search(
-              r"(from __future__ import annotations\n\n)",
-              content,
-          )
-          if import_section:
-              content = content.replace(
-                  import_section.group(1),
-                  f"{import_section.group(1)}"
-                  f"# TODO: Consolidate manual env vars to FLEXT config patterns\n",
-              )
-              changes_made = True
+        # Combine nested if statements
+        if matches and "# TODO: Consolidate to FLEXT config patterns" not in content:
+            # Find import section and add comment
+            import_section = re.search(
+                r"(from __future__ import annotations\n\n)",
+                content,
+            )
+            if import_section:
+                content = content.replace(
+                    import_section.group(1),
+                    f"{import_section.group(1)}"
+                    f"# TODO: Consolidate manual env vars to FLEXT config patterns\n",
+                )
+                changes_made = True
 
-      # Pattern 2: Replace simple os.getenv() with commented alternatives
-      simple_env_pattern = (
-          r'(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*os\.getenv\(["\']([^"\']+)["\']'
-          r'(?:,\s*["\']?([^"\']*)["\']?)?\)'
-      )
+        # Pattern 2: Replace simple os.getenv() with commented alternatives
+        simple_env_pattern = (
+            r'(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*os\.getenv\(["\']([^"\']+)["\']'
+            r'(?:,\s*["\']?([^"\']*)["\']?)?\)'
+        )
 
-      def replace_env_var(match: re.Match[str]) -> str:
-          indent = match.group(1)
-          var_name = match.group(2)
-          env_name = match.group(3)
-          default_val = match.group(4) or '""'
+        def replace_env_var(match: re.Match[str]) -> str:
+            indent = match.group(1)
+            var_name = match.group(2)
+            env_name = match.group(3)
+            default_val = match.group(4) or '""'
 
-          return (
-              f"{indent}# TODO: Move to FLEXT settings class: {env_name}\n"
-              f"{indent}{var_name} = os.getenv('{env_name}', {default_val!r})"
-          )
+            return (
+                f"{indent}# TODO: Move to FLEXT settings class: {env_name}\n"
+                f"{indent}{var_name} = os.getenv('{env_name}', {default_val!r})"
+            )
 
-      new_content = re.sub(simple_env_pattern, replace_env_var, content)
-      if new_content != content:
-          content = new_content
-          changes_made = True
+        new_content = re.sub(simple_env_pattern, replace_env_var, content)
+        if new_content != content:
+            content = new_content
+            changes_made = True
 
-      if changes_made:
-          with Path(file_path).open("w", encoding="utf-8") as f:
-              f.write(content)
-          logger.info(f"✅ Added FLEXT config TODOs to: {file_path}")
-          return FlextResult.ok(data=True)
-      logger.info(f"⏭️ No env var changes needed: {file_path}")
-      return FlextResult.ok(data=False)
+        if changes_made:
+            with Path(file_path).open("w", encoding="utf-8") as f:
+                f.write(content)
+            logger.info(f"✅ Added FLEXT config TODOs to: {file_path}")
+            return FlextResult.ok(data=True)
+        logger.info(f"⏭️ No env var changes needed: {file_path}")
+        return FlextResult.ok(data=False)
 
     except (OSError, ValueError, TypeError) as e:
-      logger.exception(f"❌ Error refactoring env vars in {file_path}")
-      return FlextResult.fail(f"Failed to refactor env vars: {e}")
+        logger.exception(f"❌ Error refactoring env vars in {file_path}")
+        return FlextResult.fail(f"Failed to refactor env vars: {e}")
 
 
 def refactor_manual_pydantic(file_path: str) -> FlextResult[bool]:
@@ -166,47 +166,47 @@ def refactor_manual_pydantic(file_path: str) -> FlextResult[bool]:
 
     """
     try:
-      with Path(file_path).open(encoding="utf-8") as f:
-          content = f.read()
+        with Path(file_path).open(encoding="utf-8") as f:
+            content = f.read()
 
-      changes_made = False
+        changes_made = False
 
-      # Pattern: direct Settings/Config instantiation
-      config_instantiation = (
-          r"(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*"
-          r"([A-Z][a-zA-Z0-9_]*(?:Settings|Config))\(\)"
-      )
+        # Pattern: direct Settings/Config instantiation
+        config_instantiation = (
+            r"(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*"
+            r"([A-Z][a-zA-Z0-9_]*(?:Settings|Config))\(\)"
+        )
 
-      def replace_config_instantiation(match: re.Match[str]) -> str:
-          indent = match.group(1)
-          var_name = match.group(2)
-          class_name = match.group(3)
+        def replace_config_instantiation(match: re.Match[str]) -> str:
+            indent = match.group(1)
+            var_name = match.group(2)
+            class_name = match.group(3)
 
-          return (
-              f"{indent}# TODO: Use FLEXT configuration factory pattern\n"
-              f"{indent}{var_name} = {class_name}()"
-          )
+            return (
+                f"{indent}# TODO: Use FLEXT configuration factory pattern\n"
+                f"{indent}{var_name} = {class_name}()"
+            )
 
-      new_content = re.sub(
-          config_instantiation,
-          replace_config_instantiation,
-          content,
-      )
-      if new_content != content:
-          content = new_content
-          changes_made = True
+        new_content = re.sub(
+            config_instantiation,
+            replace_config_instantiation,
+            content,
+        )
+        if new_content != content:
+            content = new_content
+            changes_made = True
 
-      if changes_made:
-          with Path(file_path).open("w", encoding="utf-8") as f:
-              f.write(content)
-          logger.info(f"✅ Added FLEXT config TODOs to: {file_path}")
-          return FlextResult.ok(data=True)
-      logger.info(f"⏭️ No Pydantic changes needed: {file_path}")
-      return FlextResult.ok(data=False)
+        if changes_made:
+            with Path(file_path).open("w", encoding="utf-8") as f:
+                f.write(content)
+            logger.info(f"✅ Added FLEXT config TODOs to: {file_path}")
+            return FlextResult.ok(data=True)
+        logger.info(f"⏭️ No Pydantic changes needed: {file_path}")
+        return FlextResult.ok(data=False)
 
     except (OSError, ValueError, TypeError) as e:
-      logger.exception(f"❌ Error refactoring Pydantic in {file_path}")
-      return FlextResult.fail(f"Failed to refactor Pydantic: {e}")
+        logger.exception(f"❌ Error refactoring Pydantic in {file_path}")
+        return FlextResult.fail(f"Failed to refactor Pydantic: {e}")
 
 
 def refactor_manual_file_loading(file_path: str) -> FlextResult[bool]:
@@ -220,43 +220,43 @@ def refactor_manual_file_loading(file_path: str) -> FlextResult[bool]:
 
     """
     try:
-      with Path(file_path).open(encoding="utf-8") as f:
-          content = f.read()
+        with Path(file_path).open(encoding="utf-8") as f:
+            content = f.read()
 
-      changes_made = False
+        changes_made = False
 
-      # Pattern: json.load() or yaml.load()
-      file_load_pattern = (
-          r"(\s+)(.*?)\s*=\s*(json\.load|yaml\.load|yaml\.safe_load)\((.*?)\)"
-      )
+        # Pattern: json.load() or yaml.load()
+        file_load_pattern = (
+            r"(\s+)(.*?)\s*=\s*(json\.load|yaml\.load|yaml\.safe_load)\((.*?)\)"
+        )
 
-      def replace_file_loading(match: re.Match[str]) -> str:
-          indent = match.group(1)
-          var_assignment = match.group(2)
-          load_func = match.group(3)
-          load_args = match.group(4)
+        def replace_file_loading(match: re.Match[str]) -> str:
+            indent = match.group(1)
+            var_assignment = match.group(2)
+            load_func = match.group(3)
+            load_args = match.group(4)
 
-          return (
-              f"{indent}# TODO: Use FLEXT config file loading patterns\n"
-              f"{indent}{var_assignment} = {load_func}({load_args})"
-          )
+            return (
+                f"{indent}# TODO: Use FLEXT config file loading patterns\n"
+                f"{indent}{var_assignment} = {load_func}({load_args})"
+            )
 
-      new_content = re.sub(file_load_pattern, replace_file_loading, content)
-      if new_content != content:
-          content = new_content
-          changes_made = True
+        new_content = re.sub(file_load_pattern, replace_file_loading, content)
+        if new_content != content:
+            content = new_content
+            changes_made = True
 
-      if changes_made:
-          with Path(file_path).open("w", encoding="utf-8") as f:
-              f.write(content)
-          logger.info(f"✅ Added FLEXT config TODOs to: {file_path}")
-          return FlextResult.ok(data=True)
-      logger.info(f"⏭️ No file loading changes needed: {file_path}")
-      return FlextResult.ok(data=False)
+        if changes_made:
+            with Path(file_path).open("w", encoding="utf-8") as f:
+                f.write(content)
+            logger.info(f"✅ Added FLEXT config TODOs to: {file_path}")
+            return FlextResult.ok(data=True)
+        logger.info(f"⏭️ No file loading changes needed: {file_path}")
+        return FlextResult.ok(data=False)
 
     except (OSError, ValueError, TypeError) as e:
-      logger.exception(f"❌ Error refactoring file loading in {file_path}")
-      return FlextResult.fail(f"Failed to refactor file loading: {e}")
+        logger.exception(f"❌ Error refactoring file loading in {file_path}")
+        return FlextResult.fail(f"Failed to refactor file loading: {e}")
 
 
 def create_flext_config_template(output_path: str) -> FlextResult[None]:
@@ -270,7 +270,7 @@ def create_flext_config_template(output_path: str) -> FlextResult[None]:
 
     """
     try:
-      template_content = '''"""FLEXT Configuration Consolidation Template.
+        template_content = '''"""FLEXT Configuration Consolidation Template.
 
 This template shows how to consolidate manual configuration handlers
 to use standardized FLEXT configuration management patterns.
@@ -343,14 +343,14 @@ def get_project_settings() -> ProjectSpecificSettings:
 # Use: class Settings with env_file="config.json" or json_file="config.json"
 '''
 
-      with Path(output_path).open("w", encoding="utf-8") as f:
-          f.write(template_content)
+        with Path(output_path).open("w", encoding="utf-8") as f:
+            f.write(template_content)
 
-      logger.info(f"✅ Created FLEXT config template: {output_path}")
-      return FlextResult.ok(None)
+        logger.info(f"✅ Created FLEXT config template: {output_path}")
+        return FlextResult.ok(None)
 
     except (OSError, ValueError, TypeError) as e:
-      return FlextResult.fail(f"Failed to create template: {e}")
+        return FlextResult.fail(f"Failed to create template: {e}")
 
 
 def main() -> None:
@@ -360,19 +360,19 @@ def main() -> None:
     # Create template
     template_result = create_flext_config_template("flext_config_template.py")
     if not template_result.success:
-      logger.error(f"Failed to create template: {template_result.error}")
-      return
+        logger.error(f"Failed to create template: {template_result.error}")
+        return
 
     # Find manual config patterns
     patterns_result = find_manual_config_patterns()
     if not patterns_result.success:
-      logger.error(f"Failed to find patterns: {patterns_result.error}")
-      return
+        logger.error(f"Failed to find patterns: {patterns_result.error}")
+        return
 
     patterns = patterns_result.data
     if not patterns:
-      logger.info("✅ No manual configuration patterns found!")
-      return
+        logger.info("✅ No manual configuration patterns found!")
+        return
 
     # Process files by pattern type
     total_processed = 0
@@ -381,26 +381,26 @@ def main() -> None:
     # Priority 1: Manual environment variables (security critical)
     logger.info("🔧 Processing manual environment variables...")
     for file_path in patterns["manual_env_vars"][:20]:  # Process first 20 files
-      result = refactor_manual_env_vars(file_path)
-      total_processed += 1
-      if result.success and result.data:
-          total_modified += 1
+        result = refactor_manual_env_vars(file_path)
+        total_processed += 1
+        if result.success and result.data:
+            total_modified += 1
 
     # Priority 2: Manual Pydantic instantiation
     logger.info("🔧 Processing manual Pydantic instantiation...")
     for file_path in patterns["manual_pydantic"][:15]:  # Process first 15 files
-      result = refactor_manual_pydantic(file_path)
-      total_processed += 1
-      if result.success and result.data:
-          total_modified += 1
+        result = refactor_manual_pydantic(file_path)
+        total_processed += 1
+        if result.success and result.data:
+            total_modified += 1
 
     # Priority 3: Manual file loading
     logger.info("🔧 Processing manual file loading...")
     for file_path in patterns["manual_file_loading"][:10]:  # Process first 10 files
-      result = refactor_manual_file_loading(file_path)
-      total_processed += 1
-      if result.success and result.data:
-          total_modified += 1
+        result = refactor_manual_file_loading(file_path)
+        total_processed += 1
+        if result.success and result.data:
+            total_modified += 1
 
     logger.info("✅ Manual configuration consolidation completed!")
     logger.info(f"📊 Processed {total_processed} files, modified {total_modified}")
