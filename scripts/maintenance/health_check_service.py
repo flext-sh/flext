@@ -5,18 +5,12 @@ Serviço de monitoramento de saúde usando flext_tools.monitoring
 para máxima confiabilidade e padronização enterprise.
 """
 
-from __future__ import annotations
-
+import argparse
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-from flext_tools import Colors, print_colored
-from flext_tools.core.script_base import FlextScript, ScriptMetadata
+from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 from flext_tools.monitoring import HealthCheckService
-
-if TYPE_CHECKING:
-    import argparse
 
 
 class HealthCheckServiceRunner(FlextScript):

@@ -63,14 +63,6 @@ License: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from flext.cli_patterns.base_cli import BaseCLI
 
-if TYPE_CHECKING:
-    from flext.cli_patterns.base_cli import BaseCLI
-else:
-    try:
-        from flext.cli_patterns.base_cli import BaseCLI
-    except ImportError:
-        # Fallback for missing module
-        BaseCLI = None
 __all__ = ["BaseCLI"]

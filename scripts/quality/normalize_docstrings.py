@@ -8,14 +8,16 @@ import io
 import runpy
 import shutil
 import sys
+from collections.abc import Iterable
 from contextlib import redirect_stderr, redirect_stdout, suppress
+from importlib import import_module
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-from ruff.__main__ import main as ruff_main
+from ruff.__main__ import main as ruff_main  # type: ignore[import-untyped]
 
-if TYPE_CHECKING:
-    from collections.abc import Iterable
+# Import ruff dynamically
+_ruff_mod = import_module("ruff.__main__")
+ruff_main = getattr(_ruff_mod, "main", None)
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -37,10 +39,10 @@ def iter_python_files(root: Path) -> Iterable[Path]:
     """Iterate over Python files in the given root directory.
 
     Args:
-        root (Path): Root directory to search for Python files.
+      root (Path): Root directory to search for Python files.
 
     Raises:
-        None.
+      None.
 
     """
     for path in root.rglob("*.py"):
@@ -61,10 +63,10 @@ def run_pyment_on_file(path: Path) -> _Completed:
     """Run pyment on a single Python file.
 
     Args:
-        path (Path): Path to the Python file to process.
+      path (Path): Path to the Python file to process.
 
     Raises:
-        None.
+      None.
 
     """
     # Execute pyment as a Python module to avoid subprocess
@@ -92,10 +94,10 @@ def has_command(cmd: str) -> bool:
     """Check if a command is available in the system.
 
     Args:
-        cmd (str): Command name to check.
+      cmd (str): Command name to check.
 
     Raises:
-        None.
+      None.
 
     """
     return shutil.which(cmd) is not None
@@ -105,10 +107,10 @@ def main(argv: list[str]) -> int:
     """Main function to normalize docstrings in Python files.
 
     Args:
-        argv (List[str]): Command line arguments.
+      argv (List[str]): Command line arguments.
 
     Raises:
-        None.
+      None.
 
     """
     parser = argparse.ArgumentParser()

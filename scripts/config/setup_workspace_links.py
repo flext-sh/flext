@@ -12,22 +12,15 @@ Script unificado para configuração completa do workspace FLEXT:
 Usando flext_tools para máxima confiabilidade enterprise.
 """
 
-from __future__ import annotations
-
-import shutil
+import argparse
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from flext_core import FlextResult
 
-from flext_tools import Colors, PoetryValidator, print_colored
-from flext_tools.core.script_base import FlextScript, ScriptMetadata
-from flext_tools.infrastructure import MonitoringManager, SSLManager
-from flext_tools.quality import MyPyChecker
+from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
-if TYPE_CHECKING:
-    import argparse
+"""Somente tipos stdlib aqui; argparse já importado acima."""
 
 
 class ComprehensiveWorkspaceManager(FlextScript):
@@ -133,7 +126,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
         print_colored("\n📊 WORKSPACE LINKS SUMMARY", Colors.BLUE)
         print_colored("=" * 40, Colors.BLUE)
 
-        print(f"  📁 Projects processed: {total_projects}")
+        print(f"  �� Projects processed: {total_projects}")
         print(f"  ✅ Successfully linked: {linked}")
         print(f"  ❌ Failed: {len(failed_projects)}")
 
@@ -223,7 +216,9 @@ class ComprehensiveWorkspaceManager(FlextScript):
         return len(failed_projects) == 0
 
     def _complete_workspace_setup(
-        self, workspace_root: Path, **_kwargs: object,
+        self,
+        workspace_root: Path,
+        **_kwargs: object,
     ) -> bool:
         """Complete workspace setup with Poetry dependency management."""
         print_colored("\n🏗️ COMPLETE WORKSPACE SETUP", Colors.BLUE)

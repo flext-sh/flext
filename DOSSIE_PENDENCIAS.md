@@ -42,7 +42,7 @@
 ```python
 # Padrão problemático encontrado:
 try:
-    from flext_core import Something
+from flext_core import Something
 except ImportError:
     # Fallback implementation
     class Something:

@@ -19,80 +19,80 @@ def fix_indentation_errors(content: str) -> str:
     """Fix indentation errors caused by import fixes."""
     # Fix pattern: if TYPE_CHECKING:\n# comment\nfrom module import
     content = re.sub(
-        r"(if TYPE_CHECKING:)\n(\s*# [^\n]+)\nfrom (\w+) import",
-        r"\1\n\2\n    from \3 import",
-        content,
+      r"(if TYPE_CHECKING:)\n(\s*# [^\n]+)\nfrom (\w+) import",
+      r"\1\n\2\n    from \3 import",
+      content,
     )
 
     # Fix dangling imports after if blocks
     return re.sub(
-        r"(if TYPE_CHECKING:[^\n]*\n(?:\s*#[^\n]*\n)*)\n"
-        r"from (\w+) import([^\n]+)\n\n(\s+from \w+)",
-        r"\1    from \2 import\3\n\n\4",
-        content,
+      r"(if TYPE_CHECKING:[^\n]*\n(?:\s*#[^\n]*\n)*)\n"
+      r"from (\w+) import([^\n]+)\n\n(\s+from \w+)",
+      r"\1    from \2 import\3\n\n\4",
+      content,
     )
 
 
 def fix_syntax_errors_in_file(file_path: Path) -> bool:
     """Fix architectural violations and syntax errors in a single file."""
     try:
-        content = file_path.read_text(encoding="utf-8")
-        original_content = content
+      content = file_path.read_text(encoding="utf-8")
+      original_content = content
 
-        # Fix indentation issues
-        content = fix_indentation_errors(content)
+      # Fix indentation issues
+      content = fix_indentation_errors(content)
 
-        # Fix specific patterns that break syntax
-        fixes = [
-            # Pattern 1: TYPE_CHECKING block with misplaced imports
-            (
-                r"(if TYPE_CHECKING:)\s*\n\s*# [^\n]+\nfrom (\w+) import",
-                r"\1\n    # 🚨 ARCHITECTURAL COMPLIANCE: "
-                r"Using módulo raiz imports\n    from \2 import",
-            ),
-            # Pattern 2: Dangling imports after TYPE_CHECKING
-            (
-                r"(# 🚨 ARCHITECTURAL COMPLIANCE[^\n]*)\n"
-                r"from (\w+) import([^\n]+)\n\n(\s+from)",
-                r"\1\n    from \2 import\3\n\n\4",
-            ),
-            # Pattern 3: Missing indentation in TYPE_CHECKING blocks
-            (
-                r"if TYPE_CHECKING:\n(\s*# [^\n]+)\n([^\s].*from \w+ import)",
-                r"if TYPE_CHECKING:\n\1\n    \2",
-            ),
-        ]
+      # Fix specific patterns that break syntax
+      fixes = [
+          # Pattern 1: TYPE_CHECKING block with misplaced imports
+          (
+              r"(if TYPE_CHECKING:)\s*\n\s*# [^\n]+\nfrom (\w+) import",
+              r"\1\n    # 🚨 ARCHITECTURAL COMPLIANCE: "
+              r"Using módulo raiz imports\n    from \2 import",
+          ),
+          # Pattern 2: Dangling imports after TYPE_CHECKING
+          (
+              r"(# 🚨 ARCHITECTURAL COMPLIANCE[^\n]*)\n"
+              r"from (\w+) import([^\n]+)\n\n(\s+from)",
+              r"\1\n    from \2 import\3\n\n\4",
+          ),
+          # Pattern 3: Missing indentation in TYPE_CHECKING blocks
+          (
+              r"if TYPE_CHECKING:\n(\s*# [^\n]+)\n([^\s].*from \w+ import)",
+              r"if TYPE_CHECKING:\n\1\n    \2",
+          ),
+      ]
 
-        for pattern, replacement in fixes:
-            content = re.sub(pattern, replacement, content, flags=re.MULTILINE)
+      for pattern, replacement in fixes:
+          content = re.sub(pattern, replacement, content, flags=re.MULTILINE)
 
-        # Ensure proper indentation in TYPE_CHECKING blocks
-        lines = content.split("\n")
-        fixed_lines = []
-        in_type_checking = False
+      # Ensure proper indentation in TYPE_CHECKING blocks
+      lines = content.split("\n")
+      fixed_lines = []
+      in_type_checking = False
 
-        for line in lines:
-            if "if TYPE_CHECKING:" in line:
-                in_type_checking = True
-                fixed_lines.append(line)
-            elif in_type_checking and (line.startswith(("from ", "import "))):
-                # Ensure imports in TYPE_CHECKING are indented
-                fixed_lines.append("    " + line.strip())
-            elif in_type_checking and line.strip() and not line.startswith(" "):
-                # End of TYPE_CHECKING block
-                in_type_checking = False
-                fixed_lines.append(line)
-            else:
-                fixed_lines.append(line)
+      for line in lines:
+          if "if TYPE_CHECKING:" in line:
+              in_type_checking = True
+              fixed_lines.append(line)
+          elif in_type_checking and (line.startswith(("from ", "import "))):
+              # Ensure imports in TYPE_CHECKING are indented
+              fixed_lines.append("    " + line.strip())
+          elif in_type_checking and line.strip() and not line.startswith(" "):
+              # End of TYPE_CHECKING block
+              in_type_checking = False
+              fixed_lines.append(line)
+          else:
+              fixed_lines.append(line)
 
-        content = "\n".join(fixed_lines)
+      content = "\n".join(fixed_lines)
 
-        if content != original_content:
-            file_path.write_text(content, encoding="utf-8")
-            return True
+      if content != original_content:
+          file_path.write_text(content, encoding="utf-8")
+          return True
 
     except (OSError, UnicodeDecodeError) as e:
-        print(f"ERROR processing {file_path}: {e}")
+      print(f"ERROR processing {file_path}: {e}")
 
     return False
 
@@ -103,13 +103,13 @@ def main() -> None:
 
     # Focus on projects with errors identified
     error_projects = [
-        "flext-meltano",
-        "flext-api",
-        "flext-ldap",
-        "flext-auth",
-        "flext-grpc",
-        "flext-observability",
-        "flext-cli",
+      "flext-meltano",
+      "flext-api",
+      "flext-ldap",
+      "flext-auth",
+      "flext-grpc",
+      "flext-observability",
+      "flext-cli",
     ]
 
     total_fixed = 0
@@ -118,32 +118,32 @@ def main() -> None:
     print(f"📂 Processing {len(error_projects)} projects...")
 
     for project in error_projects:
-        project_path = workspace / project
-        if not project_path.exists():
-            print(f"⚠️  Project not found: {project}")
-            continue
+      project_path = workspace / project
+      if not project_path.exists():
+          print(f"⚠️  Project not found: {project}")
+          continue
 
-        print(f"\n🔍 Processing {project}...")
+      print(f"\n🔍 Processing {project}...")
 
-        # Find all Python files
-        python_files: list[Path] = []
-        for pattern in ["src/**/*.py", "tests/**/*.py"]:
-            python_files.extend(project_path.glob(pattern))
+      # Find all Python files
+      python_files: list[Path] = []
+      for pattern in ["src/**/*.py", "tests/**/*.py"]:
+          python_files.extend(project_path.glob(pattern))
 
-        fixed_in_project = 0
-        for py_file in python_files:
-            if py_file.name.startswith(".") or ".venv" in str(py_file):
-                continue
+      fixed_in_project = 0
+      for py_file in python_files:
+          if py_file.name.startswith(".") or ".venv" in str(py_file):
+              continue
 
-            if fix_syntax_errors_in_file(py_file):
-                fixed_in_project += 1
-                print(f"  ✅ Fixed: {py_file.relative_to(project_path)}")
+          if fix_syntax_errors_in_file(py_file):
+              fixed_in_project += 1
+              print(f"  ✅ Fixed: {py_file.relative_to(project_path)}")
 
-        if fixed_in_project > 0:
-            print(f"  📊 {fixed_in_project} files fixed in {project}")
-            total_fixed += fixed_in_project
-        else:
-            print(f"  ✨ {project} syntax already correct")
+      if fixed_in_project > 0:
+          print(f"  📊 {fixed_in_project} files fixed in {project}")
+          total_fixed += fixed_in_project
+      else:
+          print(f"  ✨ {project} syntax already correct")
 
     print("\n🎉 SYNTAX ERRORS FIXED!")
     print(f"📊 Total files fixed: {total_fixed}")
