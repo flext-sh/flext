@@ -142,73 +142,73 @@ class HealthCheckService:
     """
 
     def __init__(self, workspace_path: Path) -> None:
-      """Initialize health check service with workspace coordination.
+        """Initialize health check service with workspace coordination.
 
-      Sets up the health check service with workspace-wide monitoring
-      capabilities, preparing for comprehensive health validation across
-      all FLEXT ecosystem components and services.
+        Sets up the health check service with workspace-wide monitoring
+        capabilities, preparing for comprehensive health validation across
+        all FLEXT ecosystem components and services.
 
-      Args:
-          workspace_path: Path to the workspace root directory containing
-                         all FLEXT projects and services for health monitoring
+        Args:
+            workspace_path: Path to the workspace root directory containing
+                           all FLEXT projects and services for health monitoring
 
-      """
-      self.workspace_path = workspace_path
+        """
+        self.workspace_path = workspace_path
 
     def run_health_checks(self, **_kwargs: object) -> dict[str, object]:
-      """Execute comprehensive health checks across the entire FLEXT workspace.
+        """Execute comprehensive health checks across the entire FLEXT workspace.
 
-      Performs systematic health validation of all workspace components including
-      services, dependencies, resources, and system health with detailed reporting
-      and automated alerting integration for proactive system monitoring.
+        Performs systematic health validation of all workspace components including
+        services, dependencies, resources, and system health with detailed reporting
+        and automated alerting integration for proactive system monitoring.
 
-      Args:
-          **_kwargs: Health check configuration parameters including:
-                    - check_services: Enable service health validation
-                    - check_dependencies: Enable dependency health checks
-                    - check_resources: Enable system resource monitoring
-                    - check_databases: Enable database connectivity validation
-                    - check_apis: Enable API endpoint health validation
-                    - alert_on_failure: Enable automated alerting for failures
-                    - detailed_reporting: Enable comprehensive health reporting
-                    - remediation_suggestions: Include automated fix suggestions
+        Args:
+            **_kwargs: Health check configuration parameters including:
+                      - check_services: Enable service health validation
+                      - check_dependencies: Enable dependency health checks
+                      - check_resources: Enable system resource monitoring
+                      - check_databases: Enable database connectivity validation
+                      - check_apis: Enable API endpoint health validation
+                      - alert_on_failure: Enable automated alerting for failures
+                      - detailed_reporting: Enable comprehensive health reporting
+                      - remediation_suggestions: Include automated fix suggestions
 
-      Returns:
-          Dictionary containing comprehensive health check results:
-          - overall_health: Overall system health status (healthy/degraded/critical)
-          - services_checked: Total number of services validated
-          - services_healthy: Number of services in healthy state
-          - services_unhealthy: Number of services with health issues
-          - details: Detailed health information for each checked component
-          - recommendations: Automated remediation suggestions for issues
-          - timestamp: Health check execution timestamp
-          - execution_time_ms: Total health check execution time
+        Returns:
+            Dictionary containing comprehensive health check results:
+            - overall_health: Overall system health status (healthy/degraded/critical)
+            - services_checked: Total number of services validated
+            - services_healthy: Number of services in healthy state
+            - services_unhealthy: Number of services with health issues
+            - details: Detailed health information for each checked component
+            - recommendations: Automated remediation suggestions for issues
+            - timestamp: Health check execution timestamp
+            - execution_time_ms: Total health check execution time
 
-      Health Check Process:
-          1. Service Discovery: Identify all workspace services and components
-          2. Health Validation: Execute health checks for each component
-          3. Resource Monitoring: Validate system resource availability
-          4. Dependency Checks: Verify external dependency health
-          5. Status Aggregation: Calculate overall system health status
-          6. Report Generation: Create comprehensive health status report
-          7. Alert Processing: Trigger alerts for health degradation
-          8. Remediation Suggestions: Generate automated fix recommendations
+        Health Check Process:
+            1. Service Discovery: Identify all workspace services and components
+            2. Health Validation: Execute health checks for each component
+            3. Resource Monitoring: Validate system resource availability
+            4. Dependency Checks: Verify external dependency health
+            5. Status Aggregation: Calculate overall system health status
+            6. Report Generation: Create comprehensive health status report
+            7. Alert Processing: Trigger alerts for health degradation
+            8. Remediation Suggestions: Generate automated fix recommendations
 
-      Architecture:
-          Uses parallel health check execution with proper error handling
-          and timeout management to ensure reliable health monitoring
-          without impacting system performance.
+        Architecture:
+            Uses parallel health check execution with proper error handling
+            and timeout management to ensure reliable health monitoring
+            without impacting system performance.
 
-      """
-      print_colored("🏥 Executing comprehensive health checks...", Colors.BLUE)
+        """
+        print_colored("🏥 Executing comprehensive health checks...", Colors.BLUE)
 
-      results = {
-          "overall_health": "healthy",
-          "services_checked": 0,
-          "services_healthy": 0,
-          "services_unhealthy": 0,
-          "details": {},
-      }
+        results = {
+            "overall_health": "healthy",
+            "services_checked": 0,
+            "services_healthy": 0,
+            "services_unhealthy": 0,
+            "details": {},
+        }
 
-      print_colored("✅ Health checks completed successfully", Colors.GREEN)
-      return results
+        print_colored("✅ Health checks completed successfully", Colors.GREEN)
+        return results

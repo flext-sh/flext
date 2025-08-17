@@ -15,9 +15,8 @@ from pathlib import Path
 
 import pytest
 from mypy import api as mypy_api
-from ruff.__main__ import main as ruff_main  # type: ignore[import-untyped]
 
-# Import ruff dynamically
+# Import ruff dynamically (we call it via import_module to allow runtime fallback)
 _ruff_mod = import_module("ruff.__main__")
 ruff_main = getattr(_ruff_mod, "main", None)
 
@@ -45,7 +44,11 @@ def run_command(cmd: list[str], _cwd: str | None = None) -> tuple[int, str, str]
             stdout_buf, stderr_buf = io.StringIO(), io.StringIO()
             with redirect_stdout(stdout_buf), redirect_stderr(stderr_buf):
                 try:
-                    ruff_main(cmd[3:])
+                    if callable(ruff_main):
+                        ruff_main(cmd[3:])
+                    else:
+                        # ruff not available in-process
+                        return 1, "", "ruff not available in-process"
                 except SystemExit as e:
                     code = e.code if isinstance(e.code, int) else 1
                     return code, stdout_buf.getvalue(), stderr_buf.getvalue()
@@ -190,7 +193,7 @@ def main() -> int:
     print("=" * 60)
 
     # Listar todos os projetos Python
-    projects = []
+    projects: list[str] = []
     for pyproject in Path().rglob("pyproject.toml"):
         project_path = str(pyproject.parent)
         # Filtrar apenas projetos ativos
@@ -205,8 +208,8 @@ def main() -> int:
     print(f"📁 Encontrados {len(projects)} projetos Python")
 
     # Analisar cada projeto
-    reports = []
-    total_issues = 0
+    reports: list[QualityReport] = []
+    total_issues: int = 0
 
     for project in projects:
         try:
@@ -242,7 +245,7 @@ def main() -> int:
     print(f"   • Cobertura Média: {avg_coverage:.1f}%")
 
     # Projetos com problemas
-    problematic_projects = [r for r in reports if r.issues]
+    problematic_projects: list[QualityReport] = [r for r in reports if r.issues]
     if problematic_projects:
         print(f"\n⚠️  PROJETOS COM PROBLEMAS ({len(problematic_projects)}):")
         for report in problematic_projects:

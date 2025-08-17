@@ -38,15 +38,15 @@ def get_project_directories() -> list[str]:
 
     # Projetos principais (excluindo backups e arquivos temporários)
     for pyproject in workspace_root.rglob("pyproject.toml"):
-      if any(
-          exclude in str(pyproject)
-          for exclude in [".venv", ".flext_backups", "test_failures"]
-      ):
-          continue
+        if any(
+            exclude in str(pyproject)
+            for exclude in [".venv", ".flext_backups", "test_failures"]
+        ):
+            continue
 
-      project_dir = pyproject.parent
-      if project_dir != workspace_root:  # Excluir workspace root
-          projects.append(str(project_dir))
+        project_dir = pyproject.parent
+        if project_dir != workspace_root:  # Excluir workspace root
+            projects.append(str(project_dir))
 
     return sorted(projects)
 
@@ -85,44 +85,44 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
 
     """
     try:
-      print(f"📦 Instalando {Path(project_dir).name}...")
+        print(f"📦 Instalando {Path(project_dir).name}...")
 
-      # Verificar se existe pyproject.toml
-      pyproject_path = Path(project_dir) / "pyproject.toml"  # PTH118
-      if not pyproject_path.exists():
-          return False, f"pyproject.toml não encontrado em {project_dir}"
+        # Verificar se existe pyproject.toml
+        pyproject_path = Path(project_dir) / "pyproject.toml"  # PTH118
+        if not pyproject_path.exists():
+            return False, f"pyproject.toml não encontrado em {project_dir}"
 
-      # Encontrar o caminho completo para o executável 'poetry'
-      poetry_executable = shutil.which("poetry")
-      if not poetry_executable:
-          return False, "❌ Erro: Executável 'poetry' não encontrado no PATH"
+        # Encontrar o caminho completo para o executável 'poetry'
+        poetry_executable = shutil.which("poetry")
+        if not poetry_executable:
+            return False, "❌ Erro: Executável 'poetry' não encontrado no PATH"
 
-      # Executar poetry install
-      # Safe execution: absolute poetry path from which, static args
-      if Path(poetry_executable).name != "poetry":
-          return False, "❌ Exe inválido de poetry"
-      # Execute poetry install using --no-interaction for safety (no shell)
-      try:
-          # Run poetry in-process when possible
-          app = poetry_app.Application()
-          code = app.run(["install", "--no-interaction"])
-          completed_return = int(code)
-          completed_stderr = ""
-      except Exception:
-          # As última alternativa, abort with guidance instead of spawning
-          return (
-              False,
-              "❌ Falha ao executar Poetry via API; execute manualmente: 'poetry install --no-interaction'",
-          )
+        # Executar poetry install
+        # Safe execution: absolute poetry path from which, static args
+        if Path(poetry_executable).name != "poetry":
+            return False, "❌ Exe inválido de poetry"
+        # Execute poetry install using --no-interaction for safety (no shell)
+        try:
+            # Run poetry in-process when possible
+            app = poetry_app.Application()
+            code = app.run(["install", "--no-interaction"])
+            completed_return = int(code)
+            completed_stderr = ""
+        except Exception:
+            # As última alternativa, abort with guidance instead of spawning
+            return (
+                False,
+                "❌ Falha ao executar Poetry via API; execute manualmente: 'poetry install --no-interaction'",
+            )
 
-      if completed_return == 0:
-          return True, "✅ Sucesso"
-      return False, f"❌ Erro: {completed_stderr}"
+        if completed_return == 0:
+            return True, "✅ Sucesso"
+        return False, f"❌ Erro: {completed_stderr}"
 
     except TimeoutError:
-      return False, "❌ Timeout (5 minutos)"
+        return False, "❌ Timeout (5 minutos)"
     except (OSError, ValueError, TypeError) as e:
-      return False, f"❌ Exceção: {e!s}"
+        return False, f"❌ Exceção: {e!s}"
 
 
 def main() -> int:
@@ -165,16 +165,16 @@ def main() -> int:
     print(f"📋 Encontrados {len(projects)} projetos para instalar:")
 
     for project in projects:
-      print(f"  - {Path(project).name}")
+        print(f"  - {Path(project).name}")
 
     print("\n" + "=" * 50)
 
     # Instalar projetos
     results = []
     for project in projects:
-      success, message = run_poetry_install(project)
-      results.append((project, success, message))
-      print(f"  {Path(project).name}: {message}")
+        success, message = run_poetry_install(project)
+        results.append((project, success, message))
+        print(f"  {Path(project).name}: {message}")
 
     # Resumo
     print("\n" + "=" * 50)
@@ -187,14 +187,14 @@ def main() -> int:
     print(f"❌ Falhas: {failed}")
 
     if failed > 0:
-      print("\n❌ PROJETOS COM FALHA:")
-      for project, success, message in results:
-          if not success:
-              print(f"  - {Path(project).name}: {message}")
+        print("\n❌ PROJETOS COM FALHA:")
+        for project, success, message in results:
+            if not success:
+                print(f"  - {Path(project).name}: {message}")
 
     print(
-      "\n🎉 Instalação concluída! "
-      f"{successful}/{len(results)} projetos instalados com sucesso.",
+        "\n🎉 Instalação concluída! "
+        f"{successful}/{len(results)} projetos instalados com sucesso.",
     )
 
     return 0 if failed == 0 else 1

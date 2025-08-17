@@ -18,7 +18,7 @@ def main() -> int:
     Returns:
       int: Description.
 
-    """    # Initialize generator with current directory
+    """  # Initialize generator with current directory
     generator = DocumentationGenerator(Path.cwd())
 
     # Run documentation generation

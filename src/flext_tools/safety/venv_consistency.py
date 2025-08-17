@@ -186,425 +186,425 @@ class VenvConsistencyValidator:
     """
 
     def __init__(self, workspace_path: Path) -> None:
-      """Initialize validator with workspace path."""
-      self.workspace_path = workspace_path
-      self.venv_path = workspace_path / ".venv"
-      self.installed_packages: dict[str, PackageInfo] = {}
-      self.project_requirements: dict[str, dict[str, str]] = {}
-      self.conflicts: list[VenvConflict] = []
+        """Initialize validator with workspace path."""
+        self.workspace_path = workspace_path
+        self.venv_path = workspace_path / ".venv"
+        self.installed_packages: dict[str, PackageInfo] = {}
+        self.project_requirements: dict[str, dict[str, str]] = {}
+        self.conflicts: list[VenvConflict] = []
 
     def validate_venv_consistency(self) -> dict[str, list[VenvConflict]]:
-      """Validate consistency of shared virtual environment.
+        """Validate consistency of shared virtual environment.
 
-      Performs comprehensive validation of the workspace virtual environment
-      against all project requirements, identifying conflicts, missing packages,
-      version inconsistencies, and optimization opportunities.
+        Performs comprehensive validation of the workspace virtual environment
+        against all project requirements, identifying conflicts, missing packages,
+        version inconsistencies, and optimization opportunities.
 
-      Returns:
-          Dictionary mapping severity levels to lists of conflicts:
-          - 'critical': Issues that must be resolved (missing venv, missing packages)
-          - 'warning': Issues that should be addressed (version conflicts)
-          - 'info': Optimization opportunities (orphaned packages)
+        Returns:
+            Dictionary mapping severity levels to lists of conflicts:
+            - 'critical': Issues that must be resolved (missing venv, missing packages)
+            - 'warning': Issues that should be addressed (version conflicts)
+            - 'info': Optimization opportunities (orphaned packages)
 
-      Validation Process:
-          1. Verify virtual environment exists and is accessible
-          2. Scan all installed packages with metadata extraction
-          3. Collect requirements from all project Poetry configurations
-          4. Analyze conflicts between installed packages and requirements
-          5. Organize conflicts by severity for prioritized resolution
-          6. Generate comprehensive validation summary report
+        Validation Process:
+            1. Verify virtual environment exists and is accessible
+            2. Scan all installed packages with metadata extraction
+            3. Collect requirements from all project Poetry configurations
+            4. Analyze conflicts between installed packages and requirements
+            5. Organize conflicts by severity for prioritized resolution
+            6. Generate comprehensive validation summary report
 
-      Architecture:
-          Uses pipeline pattern for validation steps with proper error handling
-          and recovery at each stage to ensure comprehensive analysis even
-          with partial failures.
+        Architecture:
+            Uses pipeline pattern for validation steps with proper error handling
+            and recovery at each stage to ensure comprehensive analysis even
+            with partial failures.
 
-      """
-      print_colored(
-          "🔍 Validating virtual environment consistency...",
-          Colors.BLUE,
-      )
+        """
+        print_colored(
+            "🔍 Validating virtual environment consistency...",
+            Colors.BLUE,
+        )
 
-      # 1. Check if virtual environment exists
-      if not self._check_venv_exists():
-          return {
-              "critical": [
-                  VenvConflict(
-                      type="missing_venv",
-                      package="",
-                      details="Virtual environment not found",
-                      severity="critical",
-                      affected_projects=[],
-                  ),
-              ],
-          }
+        # 1. Check if virtual environment exists
+        if not self._check_venv_exists():
+            return {
+                "critical": [
+                    VenvConflict(
+                        type="missing_venv",
+                        package="",
+                        details="Virtual environment not found",
+                        severity="critical",
+                        affected_projects=[],
+                    ),
+                ],
+            }
 
-      # 2. Scan installed packages
-      self._scan_installed_packages()
+        # 2. Scan installed packages
+        self._scan_installed_packages()
 
-      # 3. Collect project requirements
-      self._collect_project_requirements()
+        # 3. Collect project requirements
+        self._collect_project_requirements()
 
-      # 4. Analyze conflicts
-      self._analyze_conflicts()
+        # 4. Analyze conflicts
+        self._analyze_conflicts()
 
-      # 5. Organize conflicts by severity
-      conflicts_by_severity = self._organize_conflicts_by_severity()
+        # 5. Organize conflicts by severity
+        conflicts_by_severity = self._organize_conflicts_by_severity()
 
-      # 6. Generate validation report
-      self._print_validation_summary(conflicts_by_severity)
+        # 6. Generate validation report
+        self._print_validation_summary(conflicts_by_severity)
 
-      return conflicts_by_severity
+        return conflicts_by_severity
 
     def _check_venv_exists(self) -> bool:
-      """Check if the virtual environment exists.
+        """Check if the virtual environment exists.
 
-      Validates that the expected virtual environment directory exists
-      and is accessible for package analysis and validation.
+        Validates that the expected virtual environment directory exists
+        and is accessible for package analysis and validation.
 
-      Returns:
-          True if virtual environment exists and is accessible,
-          False if missing or inaccessible
+        Returns:
+            True if virtual environment exists and is accessible,
+            False if missing or inaccessible
 
-      """
-      if not self.venv_path.exists():
-          print_colored("❌ Virtual environment not found!", Colors.RED)
-          print_colored(f"    Expected at: {self.venv_path}", Colors.YELLOW)
-          return False
+        """
+        if not self.venv_path.exists():
+            print_colored("❌ Virtual environment not found!", Colors.RED)
+            print_colored(f"    Expected at: {self.venv_path}", Colors.YELLOW)
+            return False
 
-      print_colored(
-          f"✅ Virtual environment found: {self.venv_path}",
-          Colors.GREEN,
-      )
-      return True
+        print_colored(
+            f"✅ Virtual environment found: {self.venv_path}",
+            Colors.GREEN,
+        )
+        return True
 
     def _scan_installed_packages(self) -> None:
-      """Scan packages installed in the virtual environment.
+        """Scan packages installed in the virtual environment.
 
-      Uses pip list to discover all installed packages with their
-      versions and metadata for comprehensive environment analysis.
+        Uses pip list to discover all installed packages with their
+        versions and metadata for comprehensive environment analysis.
 
-      Updates the installed_packages dictionary with PackageInfo
-      objects containing package metadata for conflict analysis.
-      """
-      print_colored("  📦 Scanning installed packages...", Colors.CYAN)
+        Updates the installed_packages dictionary with PackageInfo
+        objects containing package metadata for conflict analysis.
+        """
+        print_colored("  📦 Scanning installed packages...", Colors.CYAN)
 
-      try:
-          # Prefer Python API for installed distributions when available
-          try:
-              packages_data = [
-                  {"name": dist.metadata["Name"], "version": dist.version}
-                  for dist in distributions()
-                  if dist.metadata and dist.metadata.get("Name")
-              ]
-          except Exception:
-              # If importlib.metadata is not available, abort with guidance
-              print_colored(
-                  "    ⚠️ Unable to read installed packages; please ensure Python 3.8+",
-                  Colors.YELLOW,
-              )
-              packages_data = []
+        try:
+            # Prefer Python API for installed distributions when available
+            try:
+                packages_data = [
+                    {"name": dist.metadata["Name"], "version": dist.version}
+                    for dist in distributions()
+                    if dist.metadata and dist.metadata.get("Name")
+                ]
+            except Exception:
+                # If importlib.metadata is not available, abort with guidance
+                print_colored(
+                    "    ⚠️ Unable to read installed packages; please ensure Python 3.8+",
+                    Colors.YELLOW,
+                )
+                packages_data = []
 
-          for package_data in packages_data:
-              name = package_data["name"].lower()
-              version = package_data["version"]
+            for package_data in packages_data:
+                name = package_data["name"].lower()
+                version = package_data["version"]
 
-              self.installed_packages[name] = PackageInfo(
-                  name=name,
-                  version=version,
-              )
+                self.installed_packages[name] = PackageInfo(
+                    name=name,
+                    version=version,
+                )
 
-          print_colored(
-              f"    ✅ {len(self.installed_packages)} packages found",
-              Colors.GREEN,
-          )
+            print_colored(
+                f"    ✅ {len(self.installed_packages)} packages found",
+                Colors.GREEN,
+            )
 
-      except (json.JSONDecodeError, OSError, ValueError, Exception) as e:
-          print_colored(f"    ⚠️ Unexpected error: {e}", Colors.YELLOW)
+        except (json.JSONDecodeError, OSError, ValueError, Exception) as e:
+            print_colored(f"    ⚠️ Unexpected error: {e}", Colors.YELLOW)
 
     def _collect_project_requirements(self) -> None:
-      """Collect requirements from all projects in workspace.
+        """Collect requirements from all projects in workspace.
 
-      Scans all project directories for pyproject.toml files and extracts
-      Poetry dependency specifications including main dependencies and
-      development group dependencies for comprehensive requirement analysis.
+        Scans all project directories for pyproject.toml files and extracts
+        Poetry dependency specifications including main dependencies and
+        development group dependencies for comprehensive requirement analysis.
 
-      Updates the project_requirements dictionary with project-specific
-      dependency specifications for conflict detection.
-      """
-      print_colored("  📋 Collecting project requirements...", Colors.CYAN)
+        Updates the project_requirements dictionary with project-specific
+        dependency specifications for conflict detection.
+        """
+        print_colored("  📋 Collecting project requirements...", Colors.CYAN)
 
-      projects = [
-          d
-          for d in self.workspace_path.iterdir()
-          if d.is_dir()
-          and not d.name.startswith(".")
-          and (d / "pyproject.toml").exists()
-      ]
+        projects = [
+            d
+            for d in self.workspace_path.iterdir()
+            if d.is_dir()
+            and not d.name.startswith(".")
+            and (d / "pyproject.toml").exists()
+        ]
 
-      for project_path in projects:
-          project_name = project_path.name
+        for project_path in projects:
+            project_name = project_path.name
 
-          # Process pyproject.toml
-          pyproject_path = project_path / "pyproject.toml"
+            # Process pyproject.toml
+            pyproject_path = project_path / "pyproject.toml"
 
-          try:
-              with pyproject_path.open("rb") as f:
-                  data = tomllib.load(f)
+            try:
+                with pyproject_path.open("rb") as f:
+                    data = tomllib.load(f)
 
-              self.project_requirements[project_name] = {}
+                self.project_requirements[project_name] = {}
 
-              # Main dependencies
-              deps = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
-              for dep_name, dep_spec in deps.items():
-                  if dep_name != "python":
-                      name, version = self._parse_dependency_spec(str(dep_spec))
-                      self.project_requirements[project_name][name] = version
+                # Main dependencies
+                deps = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
+                for dep_name, dep_spec in deps.items():
+                    if dep_name != "python":
+                        name, version = self._parse_dependency_spec(str(dep_spec))
+                        self.project_requirements[project_name][name] = version
 
-              # Development dependencies
-              dev_deps = (
-                  data.get("tool", {})
-                  .get("poetry", {})
-                  .get("group", {})
-                  .get("dev", {})
-                  .get("dependencies", {})
-              )
-              for dep_spec in dev_deps.values():
-                  name, version = self._parse_dependency_spec(str(dep_spec))
-                  self.project_requirements[project_name][f"{name}[dev]"] = version
+                # Development dependencies
+                dev_deps = (
+                    data.get("tool", {})
+                    .get("poetry", {})
+                    .get("group", {})
+                    .get("dev", {})
+                    .get("dependencies", {})
+                )
+                for dep_spec in dev_deps.values():
+                    name, version = self._parse_dependency_spec(str(dep_spec))
+                    self.project_requirements[project_name][f"{name}[dev]"] = version
 
-          except (
-              OSError,
-              tomllib.TOMLDecodeError,
-              KeyError,
-              UnicodeDecodeError,
-          ) as e:
-              print_colored(
-                  f"    ⚠️ Error reading {project_name}: {e}",
-                  Colors.YELLOW,
-              )
+            except (
+                OSError,
+                tomllib.TOMLDecodeError,
+                KeyError,
+                UnicodeDecodeError,
+            ) as e:
+                print_colored(
+                    f"    ⚠️ Error reading {project_name}: {e}",
+                    Colors.YELLOW,
+                )
 
-      total_reqs = sum(len(reqs) for reqs in self.project_requirements.values())
-      print_colored(
-          f"    ✅ {total_reqs} requirements across {len(projects)} projects",
-          Colors.GREEN,
-      )
+        total_reqs = sum(len(reqs) for reqs in self.project_requirements.values())
+        print_colored(
+            f"    ✅ {total_reqs} requirements across {len(projects)} projects",
+            Colors.GREEN,
+        )
 
     def _parse_dependency_spec(
-      self,
-      dep_spec: str | dict[str, object],
+        self,
+        dep_spec: str | dict[str, object],
     ) -> tuple[str, str]:
-      """Parse a PEP 621 dependency specification.
+        """Parse a PEP 621 dependency specification.
 
-      Processes dependency specifications from Poetry configuration files,
-      handling both simple string formats and complex dictionary formats
-      with proper normalization and version extraction.
+        Processes dependency specifications from Poetry configuration files,
+        handling both simple string formats and complex dictionary formats
+        with proper normalization and version extraction.
 
-      Args:
-          dep_spec: Dependency specification (string or dict format)
+        Args:
+            dep_spec: Dependency specification (string or dict format)
 
-      Returns:
-          Tuple containing normalized package name and version constraint
+        Returns:
+            Tuple containing normalized package name and version constraint
 
-      Supported Formats:
-          - Simple strings: "package", "package^1.0.0", "package>=1.0.0"
-          - Dictionary format: {"name": "package", "version": "^1.0.0"}
+        Supported Formats:
+            - Simple strings: "package", "package^1.0.0", "package>=1.0.0"
+            - Dictionary format: {"name": "package", "version": "^1.0.0"}
 
-      """
-      if isinstance(dep_spec, dict):
-          name = dep_spec.get("name", "unknown")
-          version = dep_spec.get("version", "*")
-          return str(name).lower(), str(version)
+        """
+        if isinstance(dep_spec, dict):
+            name = dep_spec.get("name", "unknown")
+            version = dep_spec.get("version", "*")
+            return str(name).lower(), str(version)
 
-      # Simple string like "package^1.0.0" or "package"
-      if "^" in dep_spec:
-          name, version = dep_spec.split("^", 1)
-          return name.lower().strip(), f"^{version.strip()}"
-      if "==" in dep_spec:
-          name, version = dep_spec.split("==", 1)
-          return name.lower().strip(), f"=={version.strip()}"
-      if ">=" in dep_spec:
-          name, version = dep_spec.split(">=", 1)
-          return name.lower().strip(), f">={version.strip()}"
-      return dep_spec.lower().strip(), "*"
+        # Simple string like "package^1.0.0" or "package"
+        if "^" in dep_spec:
+            name, version = dep_spec.split("^", 1)
+            return name.lower().strip(), f"^{version.strip()}"
+        if "==" in dep_spec:
+            name, version = dep_spec.split("==", 1)
+            return name.lower().strip(), f"=={version.strip()}"
+        if ">=" in dep_spec:
+            name, version = dep_spec.split(">=", 1)
+            return name.lower().strip(), f">={version.strip()}"
+        return dep_spec.lower().strip(), "*"
 
     def _analyze_conflicts(self) -> None:
-      """Analyze conflicts between installed packages and requirements.
+        """Analyze conflicts between installed packages and requirements.
 
-      Performs comprehensive conflict analysis by comparing installed packages
-      against project requirements, identifying version conflicts, missing
-      packages, and orphaned installations for structured conflict resolution.
+        Performs comprehensive conflict analysis by comparing installed packages
+        against project requirements, identifying version conflicts, missing
+        packages, and orphaned installations for structured conflict resolution.
 
-      Analysis Types:
-          - Version conflicts: Same package with different version requirements
-          - Missing packages: Required packages not installed in environment
-          - Orphaned packages: Installed packages not required by any project
+        Analysis Types:
+            - Version conflicts: Same package with different version requirements
+            - Missing packages: Required packages not installed in environment
+            - Orphaned packages: Installed packages not required by any project
 
-      Updates the conflicts list with structured conflict information
-      including severity assessment and affected project identification.
-      """
-      print_colored("  🔍 Analyzing conflicts...", Colors.CYAN)
+        Updates the conflicts list with structured conflict information
+        including severity assessment and affected project identification.
+        """
+        print_colored("  🔍 Analyzing conflicts...", Colors.CYAN)
 
-      # Map which package is requested by which projects
-      package_requesters: dict[str, list[str]] = defaultdict(list)
-      package_versions: dict[str, set[str]] = defaultdict(set)
+        # Map which package is requested by which projects
+        package_requesters: dict[str, list[str]] = defaultdict(list)
+        package_versions: dict[str, set[str]] = defaultdict(set)
 
-      for project, requirements in self.project_requirements.items():
-          for package, version in requirements.items():
-              # Remove markers like [dev]
-              clean_package = package.split("[")[0]
-              package_requesters[clean_package].append(project)
-              package_versions[clean_package].add(version)
+        for project, requirements in self.project_requirements.items():
+            for package, version in requirements.items():
+                # Remove markers like [dev]
+                clean_package = package.split("[")[0]
+                package_requesters[clean_package].append(project)
+                package_versions[clean_package].add(version)
 
-      # 1. Version conflicts
-      for package, versions in package_versions.items():
-          if len(versions) > 1:
-              self.conflicts.append(
-                  VenvConflict(
-                      type="version",
-                      package=package,
-                      details=f"Conflicting versions: {', '.join(versions)}",
-                      severity="warning",
-                      affected_projects=package_requesters[package],
-                  ),
-              )
+        # 1. Version conflicts
+        for package, versions in package_versions.items():
+            if len(versions) > 1:
+                self.conflicts.append(
+                    VenvConflict(
+                        type="version",
+                        package=package,
+                        details=f"Conflicting versions: {', '.join(versions)}",
+                        severity="warning",
+                        affected_projects=package_requesters[package],
+                    ),
+                )
 
-      # 2. Packages missing
-      for package, requesters in package_requesters.items():
-          if package not in self.installed_packages:
-              self.conflicts.append(
-                  VenvConflict(
-                      type="missing",
-                      package=package,
-                      details="Package required but not installed",
-                      severity="critical",
-                      affected_projects=requesters,
-                  ),
-              )
+        # 2. Packages missing
+        for package, requesters in package_requesters.items():
+            if package not in self.installed_packages:
+                self.conflicts.append(
+                    VenvConflict(
+                        type="missing",
+                        package=package,
+                        details="Package required but not installed",
+                        severity="critical",
+                        affected_projects=requesters,
+                    ),
+                )
 
-      # 3. Orphaned packages
-      all_required = set(package_requesters.keys())
-      installed_names = set(self.installed_packages.keys())
-      orphans = installed_names - all_required
+        # 3. Orphaned packages
+        all_required = set(package_requesters.keys())
+        installed_names = set(self.installed_packages.keys())
+        orphans = installed_names - all_required
 
-      # Remove known system packages
-      system_packages = {
-          "pip",
-          "setuptools",
-          "wheel",
-          "poetry",
-          "poetry-core",
-          "pkg-resources",
-          "pkg_resources",
-          "distlib",
-          "virtualenv",
-      }
-      orphans -= system_packages
+        # Remove known system packages
+        system_packages = {
+            "pip",
+            "setuptools",
+            "wheel",
+            "poetry",
+            "poetry-core",
+            "pkg-resources",
+            "pkg_resources",
+            "distlib",
+            "virtualenv",
+        }
+        orphans -= system_packages
 
-      for orphan in orphans:
-          self.conflicts.append(
-              VenvConflict(
-                  type="orphan",
-                  package=orphan,
-                  details="Package installed but not required by any project",
-                  severity="info",
-                  affected_projects=[],
-              ),
-          )
+        for orphan in orphans:
+            self.conflicts.append(
+                VenvConflict(
+                    type="orphan",
+                    package=orphan,
+                    details="Package installed but not required by any project",
+                    severity="info",
+                    affected_projects=[],
+                ),
+            )
 
-      print_colored(
-          f"    ✅ {len(self.conflicts)} conflicts identified",
-          Colors.GREEN,
-      )
+        print_colored(
+            f"    ✅ {len(self.conflicts)} conflicts identified",
+            Colors.GREEN,
+        )
 
     def _organize_conflicts_by_severity(self) -> dict[str, list[VenvConflict]]:
-      """Organize conflicts by severity level.
+        """Organize conflicts by severity level.
 
-      Groups identified conflicts into severity categories for prioritized
-      resolution and structured reporting. Critical issues require immediate
-      attention, warnings should be addressed, and info items are optimization
-      opportunities.
+        Groups identified conflicts into severity categories for prioritized
+        resolution and structured reporting. Critical issues require immediate
+        attention, warnings should be addressed, and info items are optimization
+        opportunities.
 
-      Returns:
-          Dictionary mapping severity levels to conflict lists:
-          - 'critical': Issues that must be resolved immediately
-          - 'warning': Issues that should be addressed
-          - 'info': Optimization opportunities and minor issues
+        Returns:
+            Dictionary mapping severity levels to conflict lists:
+            - 'critical': Issues that must be resolved immediately
+            - 'warning': Issues that should be addressed
+            - 'info': Optimization opportunities and minor issues
 
-      """
-      organized: dict[str, list[VenvConflict]] = {
-          "critical": [],
-          "warning": [],
-          "info": [],
-      }
+        """
+        organized: dict[str, list[VenvConflict]] = {
+            "critical": [],
+            "warning": [],
+            "info": [],
+        }
 
-      for conflict in self.conflicts:
-          organized[conflict.severity].append(conflict)
+        for conflict in self.conflicts:
+            organized[conflict.severity].append(conflict)
 
-      return organized
+        return organized
 
     def _print_validation_summary(
-      self,
-      conflicts_by_severity: dict[str, list[VenvConflict]],
+        self,
+        conflicts_by_severity: dict[str, list[VenvConflict]],
     ) -> None:
-      """Print comprehensive validation summary report.
+        """Print comprehensive validation summary report.
 
-      Generates detailed console output summarizing the virtual environment
-      validation results including statistics, conflict breakdown by severity,
-      and actionable information for conflict resolution.
+        Generates detailed console output summarizing the virtual environment
+        validation results including statistics, conflict breakdown by severity,
+        and actionable information for conflict resolution.
 
-      Args:
-          conflicts_by_severity: Organized conflicts grouped by severity level
-          for structured reporting and prioritized resolution planning
+        Args:
+            conflicts_by_severity: Organized conflicts grouped by severity level
+            for structured reporting and prioritized resolution planning
 
-      """
-      print_colored("\n" + "=" * 60, Colors.CYAN)
-      print_colored(
-          "📊 VIRTUAL ENVIRONMENT CONSISTENCY VALIDATION SUMMARY",
-          Colors.CYAN,
-      )
-      print_colored("=" * 60, Colors.CYAN)
+        """
+        print_colored("\n" + "=" * 60, Colors.CYAN)
+        print_colored(
+            "📊 VIRTUAL ENVIRONMENT CONSISTENCY VALIDATION SUMMARY",
+            Colors.CYAN,
+        )
+        print_colored("=" * 60, Colors.CYAN)
 
-      total_installed = len(self.installed_packages)
-      total_projects = len(self.project_requirements)
-      total_conflicts = len(self.conflicts)
+        total_installed = len(self.installed_packages)
+        total_projects = len(self.project_requirements)
+        total_conflicts = len(self.conflicts)
 
-      print_colored(f"📦 Packages installed: {total_installed}", Colors.BLUE)
-      print_colored(f"📂 Projects scanned: {total_projects}", Colors.BLUE)
-      print_colored(f"⚠️ Conflicts found: {total_conflicts}", Colors.BLUE)
+        print_colored(f"📦 Packages installed: {total_installed}", Colors.BLUE)
+        print_colored(f"📂 Projects scanned: {total_projects}", Colors.BLUE)
+        print_colored(f"⚠️ Conflicts found: {total_conflicts}", Colors.BLUE)
 
-      # Display conflicts by severity
-      for severity, conflicts in conflicts_by_severity.items():
-          if not conflicts:
-              continue
+        # Display conflicts by severity
+        for severity, conflicts in conflicts_by_severity.items():
+            if not conflicts:
+                continue
 
-          if severity == "critical":
-              icon, color = "🔴", Colors.RED
-          elif severity == "warning":
-              icon, color = "🟡", Colors.YELLOW
-          else:
-              icon, color = "[INFO]", Colors.CYAN
+            if severity == "critical":
+                icon, color = "🔴", Colors.RED
+            elif severity == "warning":
+                icon, color = "🟡", Colors.YELLOW
+            else:
+                icon, color = "[INFO]", Colors.CYAN
 
-          print_colored(
-              f"\n{icon} {severity.upper()}: {len(conflicts)} conflicts",
-              color,
-          )
+            print_colored(
+                f"\n{icon} {severity.upper()}: {len(conflicts)} conflicts",
+                color,
+            )
 
-          for conflict in conflicts[:MAX_CONFLICTS_DISPLAY]:
-              print_colored(f"  • {conflict.package}: {conflict.details}", color)
+            for conflict in conflicts[:MAX_CONFLICTS_DISPLAY]:
+                print_colored(f"  • {conflict.package}: {conflict.details}", color)
 
-              if conflict.affected_projects:
-                  projects_str = ", ".join(
-                      conflict.affected_projects[:MAX_PROJECTS_DISPLAY],
-                  )
-                  if len(conflict.affected_projects) > MAX_PROJECTS_DISPLAY:
-                      projects_str += (
-                          f" and {len(conflict.affected_projects) - 5} more"
-                      )
-                  print_colored(f"    🎯 Affected projects: {projects_str}", color)
+                if conflict.affected_projects:
+                    projects_str = ", ".join(
+                        conflict.affected_projects[:MAX_PROJECTS_DISPLAY],
+                    )
+                    if len(conflict.affected_projects) > MAX_PROJECTS_DISPLAY:
+                        projects_str += (
+                            f" and {len(conflict.affected_projects) - 5} more"
+                        )
+                    print_colored(f"    🎯 Affected projects: {projects_str}", color)
 
-          if len(conflicts) > MAX_CONFLICTS_DISPLAY:
-              print_colored(
-                  f"    ... and {len(conflicts) - 10} more conflicts",
-                  color,
-              )
+            if len(conflicts) > MAX_CONFLICTS_DISPLAY:
+                print_colored(
+                    f"    ... and {len(conflicts) - 10} more conflicts",
+                    color,
+                )

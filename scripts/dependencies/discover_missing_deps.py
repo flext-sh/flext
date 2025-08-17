@@ -26,154 +26,154 @@ class MissingDependenciesDiscoverer(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
-      return ScriptMetadata(
-          name="discover_missing_deps",
-          description="Descobrir e analisar dependências faltantes em projetos FLEXT",
-          category="dependencies",
-          version="2.0.0",
-      )
+        return ScriptMetadata(
+            name="discover_missing_deps",
+            description="Descobrir e analisar dependências faltantes em projetos FLEXT",
+            category="dependencies",
+            version="2.0.0",
+        )
 
     def validate_preconditions(self) -> bool:
-      """Validar pré-condições."""
-      workspace_root = Path.cwd()
+        """Validar pré-condições."""
+        workspace_root = Path.cwd()
 
-      # Verificar se estamos no workspace FLEXT
-      flext_projects = [
-          p
-          for p in workspace_root.iterdir()
-          if p.is_dir()
-          and p.name.startswith("flext-")
-          and (p / "pyproject.toml").exists()
-      ]
+        # Verificar se estamos no workspace FLEXT
+        flext_projects = [
+            p
+            for p in workspace_root.iterdir()
+            if p.is_dir()
+            and p.name.startswith("flext-")
+            and (p / "pyproject.toml").exists()
+        ]
 
-      if not flext_projects:
-          print_colored("❌ Execute do diretório raiz do workspace FLEXT", Colors.RED)
-          return False
+        if not flext_projects:
+            print_colored("❌ Execute do diretório raiz do workspace FLEXT", Colors.RED)
+            return False
 
-      print_colored(
-          f"✅ Encontrados {len(flext_projects)} projetos FLEXT",
-          Colors.GREEN,
-      )
-      return True
+        print_colored(
+            f"✅ Encontrados {len(flext_projects)} projetos FLEXT",
+            Colors.GREEN,
+        )
+        return True
 
     def execute_main_logic(self, **kwargs: object) -> bool:
-      """Executar descoberta de dependências faltantes."""
-      try:
-          workspace_root = Path.cwd()
-          detailed = kwargs.get("verbose", False)
-          projects_filter = kwargs.get("projects")
+        """Executar descoberta de dependências faltantes."""
+        try:
+            workspace_root = Path.cwd()
+            detailed = kwargs.get("verbose", False)
+            projects_filter = kwargs.get("projects")
 
-          print_colored("🔍 DESCOBERTA DE DEPENDÊNCIAS FALTANTES", Colors.CYAN)
-          print_colored("=" * 60, Colors.CYAN)
+            print_colored("🔍 DESCOBERTA DE DEPENDÊNCIAS FALTANTES", Colors.CYAN)
+            print_colored("=" * 60, Colors.CYAN)
 
-          # Usar DependencyDiscovery do flext_tools
-          discovery = DependencyDiscovery(resolve_transitive=True)
+            # Usar DependencyDiscovery do flext_tools
+            discovery = DependencyDiscovery(resolve_transitive=True)
 
-          # Descobrir projetos
-          projects = self._discover_projects(workspace_root, projects_filter)
+            # Descobrir projetos
+            projects = self._discover_projects(workspace_root, projects_filter)
 
-          total_missing = 0
-          projects_with_issues = 0
+            total_missing = 0
+            projects_with_issues = 0
 
-          # Analisar cada projeto
-          for project_path in projects:
-              project_name = project_path.name
+            # Analisar cada projeto
+            for project_path in projects:
+                project_name = project_path.name
 
-              print_colored(f"\n📦 Analisando {project_name}...", Colors.BLUE)
+                print_colored(f"\n📦 Analisando {project_name}...", Colors.BLUE)
 
-              # Usar flext_tools para descobrir dependências
-              missing_deps = discovery.discover_project_dependencies(
-                  project_path,
-                  include_dev=True,
-                  include_test=True,
-              )
+                # Usar flext_tools para descobrir dependências
+                missing_deps = discovery.discover_project_dependencies(
+                    project_path,
+                    include_dev=True,
+                    include_test=True,
+                )
 
-              # Processar resultados
-              project_total = sum(len(deps) for deps in missing_deps.values())
+                # Processar resultados
+                project_total = sum(len(deps) for deps in missing_deps.values())
 
-              if project_total > 0:
-                  projects_with_issues += 1
-                  total_missing += project_total
+                if project_total > 0:
+                    projects_with_issues += 1
+                    total_missing += project_total
 
-                  print_colored(
-                      f"  ⚠️ {project_total} dependências faltantes encontradas",
-                      Colors.YELLOW,
-                  )
+                    print_colored(
+                        f"  ⚠️ {project_total} dependências faltantes encontradas",
+                        Colors.YELLOW,
+                    )
 
-                  if detailed:
-                      self._print_detailed_missing(missing_deps)
-              else:
-                  print_colored(
-                      "  ✅ Todas as dependências estão presentes",
-                      Colors.GREEN,
-                  )
+                    if detailed:
+                        self._print_detailed_missing(missing_deps)
+                else:
+                    print_colored(
+                        "  ✅ Todas as dependências estão presentes",
+                        Colors.GREEN,
+                    )
 
-          # Resumo final
-          self._print_summary(len(projects), projects_with_issues, total_missing)
+            # Resumo final
+            self._print_summary(len(projects), projects_with_issues, total_missing)
 
-          return True
+            return True
 
-      except (OSError, ValueError, TypeError) as e:
-          print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
-          return False
+        except (OSError, ValueError, TypeError) as e:
+            print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
+            return False
 
     def _discover_projects(
-      self,
-      workspace_root: Path,
-      projects_filter: str | None = None,
+        self,
+        workspace_root: Path,
+        projects_filter: str | None = None,
     ) -> list[Path]:
-      """Descobrir projetos para analisar."""
-      return discover_projects(workspace_root, projects_filter)
+        """Descobrir projetos para analisar."""
+        return discover_projects(workspace_root, projects_filter)
 
     def _print_detailed_missing(self, missing_deps: dict[str, set[str]]) -> None:
-      """Imprimir detalhes das dependências faltantes."""
-      for category, deps in missing_deps.items():
-          if deps:
-              print_colored(f"    📋 {category.title()}:", Colors.CYAN)
-              for dep in sorted(deps):
-                  print(f"      • {dep}")
+        """Imprimir detalhes das dependências faltantes."""
+        for category, deps in missing_deps.items():
+            if deps:
+                print_colored(f"    📋 {category.title()}:", Colors.CYAN)
+                for dep in sorted(deps):
+                    print(f"      • {dep}")
 
     def _print_summary(
-      self,
-      total_projects: int,
-      projects_with_issues: int,
-      total_missing: int,
+        self,
+        total_projects: int,
+        projects_with_issues: int,
+        total_missing: int,
     ) -> None:
-      """Imprimir resumo final."""
-      print_colored("\n📊 RESUMO DA ANÁLISE", Colors.BLUE)
-      print_colored("=" * 40, Colors.BLUE)
+        """Imprimir resumo final."""
+        print_colored("\n📊 RESUMO DA ANÁLISE", Colors.BLUE)
+        print_colored("=" * 40, Colors.BLUE)
 
-      print(f"  📁 Projetos analisados: {total_projects}")
-      print(f"  ⚠️ Projetos com issues: {projects_with_issues}")
-      print(f"  📦 Total de dependências faltantes: {total_missing}")
+        print(f"  📁 Projetos analisados: {total_projects}")
+        print(f"  ⚠️ Projetos com issues: {projects_with_issues}")
+        print(f"  📦 Total de dependências faltantes: {total_missing}")
 
-      if total_missing == 0:
-          print_colored(
-              "\n🎉 Todos os projetos estão com dependências completas!",
-              Colors.GREEN,
-          )
-      else:
-          print_colored(
-              f"\n⚠️ {projects_with_issues} projetos precisam de atenção",
-              Colors.YELLOW,
-          )
-          print_colored("\n💡 Sugestões:", Colors.CYAN)
-          print("  • Use: python scripts/dependencies/sync_dependencies.py --auto")
-          print("  • Para projetos específicos: poetry add <dependência>")
+        if total_missing == 0:
+            print_colored(
+                "\n🎉 Todos os projetos estão com dependências completas!",
+                Colors.GREEN,
+            )
+        else:
+            print_colored(
+                f"\n⚠️ {projects_with_issues} projetos precisam de atenção",
+                Colors.YELLOW,
+            )
+            print_colored("\n💡 Sugestões:", Colors.CYAN)
+            print("  • Use: python scripts/dependencies/sync_dependencies.py --auto")
+            print("  • Para projetos específicos: poetry add <dependência>")
 
     def create_parser(self) -> object:
-      """Criar parser com argumentos específicos."""
-      parser = super().create_parser()
+        """Criar parser com argumentos específicos."""
+        parser = super().create_parser()
 
-      parser.add_argument(
-          "--projects",
-          help="Filtrar projetos específicos (separados por vírgula)",
-      )
+        parser.add_argument(
+            "--projects",
+            help="Filtrar projetos específicos (separados por vírgula)",
+        )
 
-      return parser
+        return parser
 
     def cleanup(self) -> None:
-      """Limpeza após execução."""
+        """Limpeza após execução."""
 
 
 def main() -> int:

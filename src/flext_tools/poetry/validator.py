@@ -111,8 +111,8 @@ class ProjectInfo(BaseModel):
     description: str = Field(default="", description="Project description")
     dependency_count: int = Field(default=0, description="Number of dependencies")
     dev_dependency_count: int = Field(
-      default=0,
-      description="Number of development dependencies",
+        default=0,
+        description="Number of development dependencies",
     )
 
 
@@ -194,482 +194,482 @@ class PoetryValidator:
     """
 
     def validate_project(
-      self,
-      project_path: Path,
+        self,
+        project_path: Path,
     ) -> FlextResult[ProjectValidationData]:
-      """Validate comprehensive Poetry project configuration and compliance.
+        """Validate comprehensive Poetry project configuration and compliance.
 
-      Performs thorough validation of Poetry project configuration including
-      TOML syntax validation, project metadata verification, dependency analysis,
-      and lock file consistency checking with detailed error reporting and
-      remediation guidance for enterprise-grade project standards.
+        Performs thorough validation of Poetry project configuration including
+        TOML syntax validation, project metadata verification, dependency analysis,
+        and lock file consistency checking with detailed error reporting and
+        remediation guidance for enterprise-grade project standards.
 
-      Args:
-          project_path: Path to the Poetry project root directory containing
-                       pyproject.toml and related configuration files
+        Args:
+            project_path: Path to the Poetry project root directory containing
+                         pyproject.toml and related configuration files
 
-      Returns:
-          Dictionary containing comprehensive validation results:
-          - valid: Boolean indicating overall project validation status
-          - errors: List of critical validation errors requiring immediate attention
-          - warnings: List of validation warnings and improvement recommendations
-          - info: Dictionary containing extracted project metadata and statistics
+        Returns:
+            Dictionary containing comprehensive validation results:
+            - valid: Boolean indicating overall project validation status
+            - errors: List of critical validation errors requiring immediate attention
+            - warnings: List of validation warnings and improvement recommendations
+            - info: Dictionary containing extracted project metadata and statistics
 
-      Validation Process:
-          1. Project Structure Validation: Verify pyproject.toml existence and
-             accessibility
-          2. TOML Syntax Validation: Parse and validate TOML syntax and structure
-          3. Poetry Structure Validation: Verify required Poetry configuration
-             sections
-          4. Project Metadata Validation: Validate project metadata and compliance
-          5. Dependency Validation: Analyze dependency specifications and constraints
-          6. Lock File Validation: Verify Poetry lock file consistency and currency
-          7. Information Collection: Extract project statistics and metadata
-          8. Report Generation: Compile comprehensive validation report
+        Validation Process:
+            1. Project Structure Validation: Verify pyproject.toml existence and
+               accessibility
+            2. TOML Syntax Validation: Parse and validate TOML syntax and structure
+            3. Poetry Structure Validation: Verify required Poetry configuration
+               sections
+            4. Project Metadata Validation: Validate project metadata and compliance
+            5. Dependency Validation: Analyze dependency specifications and constraints
+            6. Lock File Validation: Verify Poetry lock file consistency and currency
+            7. Information Collection: Extract project statistics and metadata
+            8. Report Generation: Compile comprehensive validation report
 
-      Architecture:
-          Uses comprehensive validation pipeline with proper error handling
-          and detailed reporting to ensure reliable project validation
-          without impacting project functionality.
+        Architecture:
+            Uses comprehensive validation pipeline with proper error handling
+            and detailed reporting to ensure reliable project validation
+            without impacting project functionality.
 
-      """
-      errors: list[str] = []
-      warnings: list[str] = []
+        """
+        errors: list[str] = []
+        warnings: list[str] = []
 
-      # Check pyproject.toml existence and accessibility
-      pyproject_path = project_path / "pyproject.toml"
-      if not pyproject_path.exists():
-          error_result: ProjectValidationData = {
-              "valid": False,
-              "errors": ["pyproject.toml not found"],
-              "warnings": [],
-              "info": {},
-          }
-          return FlextResult.ok(error_result)
+        # Check pyproject.toml existence and accessibility
+        pyproject_path = project_path / "pyproject.toml"
+        if not pyproject_path.exists():
+            error_result: ProjectValidationData = {
+                "valid": False,
+                "errors": ["pyproject.toml not found"],
+                "warnings": [],
+                "info": {},
+            }
+            return FlextResult.ok(error_result)
 
-      # Validate TOML syntax and structure
-      toml_valid, toml_error = self._validate_toml_syntax(pyproject_path)
-      if not toml_valid:
-          toml_error_result: ProjectValidationData = {
-              "valid": False,
-              "errors": [f"TOML syntax error: {toml_error}"],
-              "warnings": [],
-              "info": {},
-          }
-          return FlextResult.ok(toml_error_result)
+        # Validate TOML syntax and structure
+        toml_valid, toml_error = self._validate_toml_syntax(pyproject_path)
+        if not toml_valid:
+            toml_error_result: ProjectValidationData = {
+                "valid": False,
+                "errors": [f"TOML syntax error: {toml_error}"],
+                "warnings": [],
+                "info": {},
+            }
+            return FlextResult.ok(toml_error_result)
 
-      try:
-          with pyproject_path.open("rb") as f:
-              data = tomllib.load(f)
+        try:
+            with pyproject_path.open("rb") as f:
+                data = tomllib.load(f)
 
-          # Validate Poetry structure and configuration
-          poetry_valid, poetry_issues = self._validate_poetry_structure(data)
-          if not poetry_valid:
-              errors.extend(poetry_issues)
+            # Validate Poetry structure and configuration
+            poetry_valid, poetry_issues = self._validate_poetry_structure(data)
+            if not poetry_valid:
+                errors.extend(poetry_issues)
 
-          # Validate project metadata and compliance
-          metadata_valid, metadata_issues = self._validate_project_metadata(data)
-          if not metadata_valid:
-              warnings.extend(metadata_issues)
+            # Validate project metadata and compliance
+            metadata_valid, metadata_issues = self._validate_project_metadata(data)
+            if not metadata_valid:
+                warnings.extend(metadata_issues)
 
-          # Validate dependency specifications and constraints
-          deps_valid, deps_issues = self._validate_dependencies(data)
-          if not deps_valid:
-              warnings.extend(deps_issues)
+            # Validate dependency specifications and constraints
+            deps_valid, deps_issues = self._validate_dependencies(data)
+            if not deps_valid:
+                warnings.extend(deps_issues)
 
-          # Collect comprehensive project information
-          project_info = self._collect_project_info(data)
+            # Collect comprehensive project information
+            project_info = self._collect_project_info(data)
 
-      except (OSError, tomllib.TOMLDecodeError, KeyError, TypeError) as e:
-          processing_error_result: ProjectValidationData = {
-              "valid": False,
-              "errors": [f"Error processing pyproject.toml: {e}"],
-              "warnings": [],
-              "info": {},
-          }
-          return FlextResult.ok(processing_error_result)
+        except (OSError, tomllib.TOMLDecodeError, KeyError, TypeError) as e:
+            processing_error_result: ProjectValidationData = {
+                "valid": False,
+                "errors": [f"Error processing pyproject.toml: {e}"],
+                "warnings": [],
+                "info": {},
+            }
+            return FlextResult.ok(processing_error_result)
 
-      # Validate Poetry lock file consistency
-      lock_valid, lock_issues = self._validate_lock_file(project_path)
-      if not lock_valid:
-          warnings.extend(lock_issues)
+        # Validate Poetry lock file consistency
+        lock_valid, lock_issues = self._validate_lock_file(project_path)
+        if not lock_valid:
+            warnings.extend(lock_issues)
 
-      # Create final validation result using FlextResult pattern (no custom classes)
-      final_result_data: ProjectValidationData = {
-          "valid": len(errors) == 0,
-          "errors": errors,
-          "warnings": warnings,
-          "info": project_info.model_dump()
-          if isinstance(project_info, ProjectInfo)
-          else {},
-      }
+        # Create final validation result using FlextResult pattern (no custom classes)
+        final_result_data: ProjectValidationData = {
+            "valid": len(errors) == 0,
+            "errors": errors,
+            "warnings": warnings,
+            "info": project_info.model_dump()
+            if isinstance(project_info, ProjectInfo)
+            else {},
+        }
 
-      return FlextResult.ok(final_result_data)
+        return FlextResult.ok(final_result_data)
 
     def _validate_toml_syntax(self, file_path: Path) -> tuple[bool, str | None]:
-      """Validate TOML syntax and structure of configuration file.
+        """Validate TOML syntax and structure of configuration file.
 
-      Performs comprehensive TOML syntax validation to ensure proper file
-      structure and parsing capability before proceeding with content validation.
+        Performs comprehensive TOML syntax validation to ensure proper file
+        structure and parsing capability before proceeding with content validation.
 
-      Args:
-          file_path: Path to TOML file for syntax validation
+        Args:
+            file_path: Path to TOML file for syntax validation
 
-      Returns:
-          Tuple containing validation status and error message if validation failed
+        Returns:
+            Tuple containing validation status and error message if validation failed
 
-      """
-      try:
-          with file_path.open("rb") as f:
-              tomllib.load(f)
-          return True, None
-      except tomllib.TOMLDecodeError as e:
-          return False, str(e)
-      except (OSError, UnicodeDecodeError) as e:
-          return False, f"Error reading file: {e}"
+        """
+        try:
+            with file_path.open("rb") as f:
+                tomllib.load(f)
+            return True, None
+        except tomllib.TOMLDecodeError as e:
+            return False, str(e)
+        except (OSError, UnicodeDecodeError) as e:
+            return False, f"Error reading file: {e}"
 
     def _validate_poetry_structure(
-      self,
-      data: dict[str, object],
+        self,
+        data: dict[str, object],
     ) -> tuple[bool, list[str]]:
-      """Validate Poetry structure and configuration in pyproject.toml.
+        """Validate Poetry structure and configuration in pyproject.toml.
 
-      Verifies that all required Poetry configuration sections and fields
-      are present and properly structured according to Poetry standards
-      and best practices for enterprise project configuration.
+        Verifies that all required Poetry configuration sections and fields
+        are present and properly structured according to Poetry standards
+        and best practices for enterprise project configuration.
 
-      Args:
-          data: Parsed TOML configuration data from pyproject.toml
+        Args:
+            data: Parsed TOML configuration data from pyproject.toml
 
-      Returns:
-          Tuple containing validation status and list of structural issues
+        Returns:
+            Tuple containing validation status and list of structural issues
 
-      """
-      issues = []
+        """
+        issues = []
 
-      # Check [tool.poetry] section presence
-      if "tool" not in data:
-          issues.append("Section [tool.poetry] not found")
-          return False, issues
+        # Check [tool.poetry] section presence
+        if "tool" not in data:
+            issues.append("Section [tool.poetry] not found")
+            return False, issues
 
-      tool_section = data["tool"]
-      if not isinstance(tool_section, dict) or "poetry" not in tool_section:
-          issues.append("Section [tool.poetry] not found")
-          return False, issues
+        tool_section = data["tool"]
+        if not isinstance(tool_section, dict) or "poetry" not in tool_section:
+            issues.append("Section [tool.poetry] not found")
+            return False, issues
 
-      poetry = tool_section["poetry"]
+        poetry = tool_section["poetry"]
 
-      # Required fields validation
-      required_fields = ["name", "version", "description"]
-      issues.extend(
-          f"Required field '{field}' not found in [tool.poetry]"
-          for field in required_fields
-          if field not in poetry
-      )
+        # Required fields validation
+        required_fields = ["name", "version", "description"]
+        issues.extend(
+            f"Required field '{field}' not found in [tool.poetry]"
+            for field in required_fields
+            if field not in poetry
+        )
 
-      # Check dependencies section
-      if "dependencies" not in poetry:
-          issues.append("Section [tool.poetry.dependencies] not found")
-      elif "python" not in poetry["dependencies"]:
-          issues.append("Python version not specified in dependencies")
+        # Check dependencies section
+        if "dependencies" not in poetry:
+            issues.append("Section [tool.poetry.dependencies] not found")
+        elif "python" not in poetry["dependencies"]:
+            issues.append("Python version not specified in dependencies")
 
-      return len(issues) == 0, issues
+        return len(issues) == 0, issues
 
     def _validate_project_metadata(
-      self,
-      data: dict[str, object],
+        self,
+        data: dict[str, object],
     ) -> tuple[bool, list[str]]:
-      """Validate project metadata and compliance with best practices.
+        """Validate project metadata and compliance with best practices.
 
-      Verifies project metadata completeness and adherence to Poetry
-      best practices including author information, documentation links,
-      and version formatting for enterprise-grade project standards.
+        Verifies project metadata completeness and adherence to Poetry
+        best practices including author information, documentation links,
+        and version formatting for enterprise-grade project standards.
 
-      Args:
-          data: Parsed TOML configuration data from pyproject.toml
+        Args:
+            data: Parsed TOML configuration data from pyproject.toml
 
-      Returns:
-          Tuple containing validation status and list of metadata issues
+        Returns:
+            Tuple containing validation status and list of metadata issues
 
-      """
-      tool_section = data.get("tool", {})
-      if not isinstance(tool_section, dict):
-          return True, []
-      poetry = tool_section.get("poetry", {})
+        """
+        tool_section = data.get("tool", {})
+        if not isinstance(tool_section, dict):
+            return True, []
+        poetry = tool_section.get("poetry", {})
 
-      # Recommended fields for complete project metadata
-      recommended_fields = ["authors", "readme", "homepage", "repository", "keywords"]
-      issues = [
-          f"Recommended field '{field}' not found"
-          for field in recommended_fields
-          if field not in poetry
-      ]
+        # Recommended fields for complete project metadata
+        recommended_fields = ["authors", "readme", "homepage", "repository", "keywords"]
+        issues = [
+            f"Recommended field '{field}' not found"
+            for field in recommended_fields
+            if field not in poetry
+        ]
 
-      # Validate authors field format
-      if "authors" in poetry:
-          authors = poetry["authors"]
-          if not isinstance(authors, list):
-              issues.append("Field 'authors' must be a list")
-          elif len(authors) == 0:
-              issues.append("Authors list is empty")
+        # Validate authors field format
+        if "authors" in poetry:
+            authors = poetry["authors"]
+            if not isinstance(authors, list):
+                issues.append("Field 'authors' must be a list")
+            elif len(authors) == 0:
+                issues.append("Authors list is empty")
 
-      # Validate version format
-      if "version" in poetry:
-          version = poetry["version"]
-          if not self._is_valid_version(version):
-              issues.append(
-                  f"Version '{version}' does not follow semantic versioning (x.y.z)",
-              )
+        # Validate version format
+        if "version" in poetry:
+            version = poetry["version"]
+            if not self._is_valid_version(version):
+                issues.append(
+                    f"Version '{version}' does not follow semantic versioning (x.y.z)",
+                )
 
-      return len(issues) == 0, issues
+        return len(issues) == 0, issues
 
     def _validate_dependencies(self, data: dict[str, object]) -> tuple[bool, list[str]]:
-      """Validate project dependencies and version specifications.
+        """Validate project dependencies and version specifications.
 
-      Analyzes dependency specifications to ensure proper version constraints
-      and specification formats according to Poetry standards and best practices
-      for enterprise-grade dependency management.
+        Analyzes dependency specifications to ensure proper version constraints
+        and specification formats according to Poetry standards and best practices
+        for enterprise-grade dependency management.
 
-      Args:
-          data: Parsed TOML configuration data from pyproject.toml
+        Args:
+            data: Parsed TOML configuration data from pyproject.toml
 
-      Returns:
-          Tuple containing validation status and list of dependency issues
+        Returns:
+            Tuple containing validation status and list of dependency issues
 
-      """
-      issues = []
-      tool_section = data.get("tool", {})
-      if not isinstance(tool_section, dict):
-          return True, []
-      poetry = tool_section.get("poetry", {})
+        """
+        issues = []
+        tool_section = data.get("tool", {})
+        if not isinstance(tool_section, dict):
+            return True, []
+        poetry = tool_section.get("poetry", {})
 
-      # Check main dependencies
-      deps = poetry.get("dependencies", {})
-      for name, spec in deps.items():
-          if name == "python":
-              continue
+        # Check main dependencies
+        deps = poetry.get("dependencies", {})
+        for name, spec in deps.items():
+            if name == "python":
+                continue
 
-          if (
-              isinstance(spec, dict)
-              and "version" not in spec
-              and "git" not in spec
-              and "path" not in spec
-          ):
-              issues.append(f"Dependency '{name}' missing version specification")
+            if (
+                isinstance(spec, dict)
+                and "version" not in spec
+                and "git" not in spec
+                and "path" not in spec
+            ):
+                issues.append(f"Dependency '{name}' missing version specification")
 
-      # Check dependency groups
-      groups = poetry.get("group", {})
-      for group_name, group_data in groups.items():
-          group_deps = group_data.get("dependencies", {})
-          for name, spec in group_deps.items():
-              if (
-                  isinstance(spec, dict)
-                  and "version" not in spec
-                  and "git" not in spec
-                  and "path" not in spec
-              ):
-                  issues.append(
-                      f"Dependency '{name}' in group '{group_name}' missing "
-                      f"specification",
-                  )
+        # Check dependency groups
+        groups = poetry.get("group", {})
+        for group_name, group_data in groups.items():
+            group_deps = group_data.get("dependencies", {})
+            for name, spec in group_deps.items():
+                if (
+                    isinstance(spec, dict)
+                    and "version" not in spec
+                    and "git" not in spec
+                    and "path" not in spec
+                ):
+                    issues.append(
+                        f"Dependency '{name}' in group '{group_name}' missing "
+                        f"specification",
+                    )
 
-      return len(issues) == 0, issues
+        return len(issues) == 0, issues
 
     def _validate_lock_file(self, project_path: Path) -> tuple[bool, list[str]]:
-      """Validate Poetry lock file consistency and currency.
+        """Validate Poetry lock file consistency and currency.
 
-      Verifies that Poetry lock file exists and is consistent with project
-      configuration using Poetry's built-in validation tools for ensuring
-      reliable dependency resolution and deployment consistency.
+        Verifies that Poetry lock file exists and is consistent with project
+        configuration using Poetry's built-in validation tools for ensuring
+        reliable dependency resolution and deployment consistency.
 
-      Args:
-          project_path: Path to project root directory containing poetry.lock
+        Args:
+            project_path: Path to project root directory containing poetry.lock
 
-      Returns:
-          Tuple containing validation status and list of lock file issues
+        Returns:
+            Tuple containing validation status and list of lock file issues
 
-      """
-      issues = []
-      lock_path = project_path / "poetry.lock"
+        """
+        issues = []
+        lock_path = project_path / "poetry.lock"
 
-      if not lock_path.exists():
-          issues.append("poetry.lock not found - run 'poetry lock'")
-          return False, issues
+        if not lock_path.exists():
+            issues.append("poetry.lock not found - run 'poetry lock'")
+            return False, issues
 
-      if poetry_console is None:
-          issues.append("Unable to verify poetry.lock status via Poetry API")
-      else:
-          try:
-              app = poetry_console.application.Application()  # type: ignore[no-call-override]
-              code = app.run(["check"])  # type: ignore[arg-type]
-              if int(code) != 0:
-                  issues.append("poetry.lock is outdated - run 'poetry lock'")
-          except Exception:
-              issues.append("Unable to verify poetry.lock status via Poetry API")
+        if poetry_console is None:
+            issues.append("Unable to verify poetry.lock status via Poetry API")
+        else:
+            try:
+                app = poetry_console.application.Application()  # type: ignore[no-call-override]
+                code = app.run(["check"])  # type: ignore[arg-type]
+                if int(code) != 0:
+                    issues.append("poetry.lock is outdated - run 'poetry lock'")
+            except Exception:
+                issues.append("Unable to verify poetry.lock status via Poetry API")
 
-      return len(issues) == 0, issues
+        return len(issues) == 0, issues
 
     def _collect_project_info(self, data: dict[str, object]) -> ProjectInfo:
-      """Collect comprehensive project information and statistics.
+        """Collect comprehensive project information and statistics.
 
-      Extracts detailed project metadata, dependency information, and
-      configuration statistics for comprehensive project analysis and
-      reporting purposes with enterprise-grade information collection.
+        Extracts detailed project metadata, dependency information, and
+        configuration statistics for comprehensive project analysis and
+        reporting purposes with enterprise-grade information collection.
 
-      Args:
-          data: Parsed TOML configuration data from pyproject.toml
+        Args:
+            data: Parsed TOML configuration data from pyproject.toml
 
-      Returns:
-          ProjectInfo entity containing comprehensive project information and statistics
+        Returns:
+            ProjectInfo entity containing comprehensive project information and statistics
 
-      """
-      tool_section = data.get("tool", {})
-      if not isinstance(tool_section, dict):
-          return ProjectInfo()
-      poetry = tool_section.get("poetry", {})
+        """
+        tool_section = data.get("tool", {})
+        if not isinstance(tool_section, dict):
+            return ProjectInfo()
+        poetry = tool_section.get("poetry", {})
 
-      # Count main dependencies (excluding python)
-      dependencies = poetry.get("dependencies", {})
-      dependency_count = len(dependencies) - (1 if "python" in dependencies else 0)
+        # Count main dependencies (excluding python)
+        dependencies = poetry.get("dependencies", {})
+        dependency_count = len(dependencies) - (1 if "python" in dependencies else 0)
 
-      # Count dev dependencies
-      dev_dependency_count = 0
-      groups = poetry.get("group", {})
-      for group_data in groups.values():
-          if isinstance(group_data, dict):
-              dev_dependency_count += len(group_data.get("dependencies", {}))
+        # Count dev dependencies
+        dev_dependency_count = 0
+        groups = poetry.get("group", {})
+        for group_data in groups.values():
+            if isinstance(group_data, dict):
+                dev_dependency_count += len(group_data.get("dependencies", {}))
 
-      return ProjectInfo(
-          name=str(poetry.get("name", "unknown")),
-          version=str(poetry.get("version", "0.0.0")),
-          description=str(poetry.get("description", "")),
-          dependency_count=dependency_count,
-          dev_dependency_count=dev_dependency_count,
-      )
+        return ProjectInfo(
+            name=str(poetry.get("name", "unknown")),
+            version=str(poetry.get("version", "0.0.0")),
+            description=str(poetry.get("description", "")),
+            dependency_count=dependency_count,
+            dev_dependency_count=dev_dependency_count,
+        )
 
     def _is_valid_version(self, version: str) -> bool:
-      """Check if version follows semantic versioning pattern.
+        """Check if version follows semantic versioning pattern.
 
-      Validates version string format against semantic versioning standards
-      to ensure consistent version specification across all projects.
+        Validates version string format against semantic versioning standards
+        to ensure consistent version specification across all projects.
 
-      Args:
-          version: Version string to validate
+        Args:
+            version: Version string to validate
 
-      Returns:
-          True if version follows semantic versioning pattern, False otherwise
+        Returns:
+            True if version follows semantic versioning pattern, False otherwise
 
-      """
-      # Basic semantic versioning pattern
-      pattern = r"^\d+\.\d+\.\d+([.-].*)?$"
-      return bool(re.match(pattern, version))
+        """
+        # Basic semantic versioning pattern
+        pattern = r"^\d+\.\d+\.\d+([.-].*)?$"
+        return bool(re.match(pattern, version))
 
     def validate_workspace(
-      self,
-      workspace_path: Path,
+        self,
+        workspace_path: Path,
     ) -> FlextResult[WorkspaceValidationData]:
-      """Validate all Poetry projects in the workspace for comprehensive compliance.
+        """Validate all Poetry projects in the workspace for comprehensive compliance.
 
-      Performs systematic validation of all Poetry projects within the workspace
-      directory structure with parallel processing capabilities, detailed reporting,
-      and comprehensive project discovery for maintaining consistent project
-      standards across the entire FLEXT ecosystem.
+        Performs systematic validation of all Poetry projects within the workspace
+        directory structure with parallel processing capabilities, detailed reporting,
+        and comprehensive project discovery for maintaining consistent project
+        standards across the entire FLEXT ecosystem.
 
-      Args:
-          workspace_path: Path to the workspace root directory containing
-                         multiple Poetry projects for batch validation
+        Args:
+            workspace_path: Path to the workspace root directory containing
+                           multiple Poetry projects for batch validation
 
-      Returns:
-          FlextResult containing WorkspaceValidationResult with comprehensive
-          validation status and project-specific results
+        Returns:
+            FlextResult containing WorkspaceValidationResult with comprehensive
+            validation status and project-specific results
 
-      Validation Process:
-          1. Project Discovery: Recursively locate all pyproject.toml files
-          2. Directory Filtering: Exclude archive, backup, and system directories
-          3. Project Validation: Execute comprehensive validation for each project
-          4. Result Aggregation: Compile validation results with detailed reporting
-          5. Status Reporting: Display validation progress and summary information
+        Validation Process:
+            1. Project Discovery: Recursively locate all pyproject.toml files
+            2. Directory Filtering: Exclude archive, backup, and system directories
+            3. Project Validation: Execute comprehensive validation for each project
+            4. Result Aggregation: Compile validation results with detailed reporting
+            5. Status Reporting: Display validation progress and summary information
 
-      Architecture:
-          Uses recursive file discovery with proper filtering and parallel
-          processing capabilities for efficient workspace-wide validation
-          without impacting project functionality or performance.
+        Architecture:
+            Uses recursive file discovery with proper filtering and parallel
+            processing capabilities for efficient workspace-wide validation
+            without impacting project functionality or performance.
 
-      """
-      try:
-          project_results: dict[str, ProjectValidationData] = {}
-          total_projects = 0
-          valid_projects = 0
-          total_errors = 0
-          total_warnings = 0
+        """
+        try:
+            project_results: dict[str, ProjectValidationData] = {}
+            total_projects = 0
+            valid_projects = 0
+            total_errors = 0
+            total_warnings = 0
 
-          print_colored("🔍 Validating Poetry projects in workspace...", Colors.BLUE)
-          logger.info(f"Starting workspace validation at {workspace_path}")
+            print_colored("🔍 Validating Poetry projects in workspace...", Colors.BLUE)
+            logger.info(f"Starting workspace validation at {workspace_path}")
 
-          for pyproject in workspace_path.rglob("pyproject.toml"):
-              # Exclude special directories from validation
-              excluded_dirs = ["archive", "backup", "node_modules", ".git"]
-              if any(p in pyproject.parts for p in excluded_dirs):
-                  continue
+            for pyproject in workspace_path.rglob("pyproject.toml"):
+                # Exclude special directories from validation
+                excluded_dirs = ["archive", "backup", "node_modules", ".git"]
+                if any(p in pyproject.parts for p in excluded_dirs):
+                    continue
 
-              project_path = pyproject.parent
-              project_name = project_path.name
-              total_projects += 1
+                project_path = pyproject.parent
+                project_name = project_path.name
+                total_projects += 1
 
-              print_colored(f"\n  📁 Validating {project_name}...", Colors.CYAN)
-              validation_result = self.validate_project(project_path)
+                print_colored(f"\n  📁 Validating {project_name}...", Colors.CYAN)
+                validation_result = self.validate_project(project_path)
 
-              if validation_result.is_success and validation_result.data is not None:
-                  project_validation = validation_result.data
-                  project_results[project_name] = project_validation
+                if validation_result.is_success and validation_result.data is not None:
+                    project_validation = validation_result.data
+                    project_results[project_name] = project_validation
 
-                  if project_validation["valid"]:
-                      valid_projects += 1
-                      print_colored("    ✅ Project valid", Colors.GREEN)
-                  else:
-                      print_colored("    ❌ Project invalid", Colors.RED)
-                      errors = project_validation["errors"]
-                      if isinstance(errors, list):
-                          total_errors += len(errors)
-                          for error in errors:
-                              print_colored(f"      - {error}", Colors.RED)
+                    if project_validation["valid"]:
+                        valid_projects += 1
+                        print_colored("    ✅ Project valid", Colors.GREEN)
+                    else:
+                        print_colored("    ❌ Project invalid", Colors.RED)
+                        errors = project_validation["errors"]
+                        if isinstance(errors, list):
+                            total_errors += len(errors)
+                            for error in errors:
+                                print_colored(f"      - {error}", Colors.RED)
 
-                  warnings = project_validation["warnings"]
-                  if isinstance(warnings, list):
-                      total_warnings += len(warnings)
-                      for warning in warnings:
-                          print_colored(f"      ⚠️ {warning}", Colors.YELLOW)
-              else:
-                  # Handle validation failure using dictionary (DRY pattern)
-                  failed_result_data: ProjectValidationData = {
-                      "valid": False,
-                      "errors": [f"Validation failed: {validation_result.error}"],
-                      "warnings": [],
-                      "info": {},
-                  }
-                  project_results[project_name] = failed_result_data
-                  total_errors += 1
+                    warnings = project_validation["warnings"]
+                    if isinstance(warnings, list):
+                        total_warnings += len(warnings)
+                        for warning in warnings:
+                            print_colored(f"      ⚠️ {warning}", Colors.YELLOW)
+                else:
+                    # Handle validation failure using dictionary (DRY pattern)
+                    failed_result_data: ProjectValidationData = {
+                        "valid": False,
+                        "errors": [f"Validation failed: {validation_result.error}"],
+                        "warnings": [],
+                        "info": {},
+                    }
+                    project_results[project_name] = failed_result_data
+                    total_errors += 1
 
-          # Create workspace validation result using dictionary (DRY pattern - no custom classes)
-          workspace_result_data: WorkspaceValidationData = {
-              "project_results": project_results,
-              "total_projects": total_projects,
-              "valid_projects": valid_projects,
-              "total_errors": total_errors,
-              "total_warnings": total_warnings,
-          }
+            # Create workspace validation result using dictionary (DRY pattern - no custom classes)
+            workspace_result_data: WorkspaceValidationData = {
+                "project_results": project_results,
+                "total_projects": total_projects,
+                "valid_projects": valid_projects,
+                "total_errors": total_errors,
+                "total_warnings": total_warnings,
+            }
 
-          print_colored(
-              f"\n📊 Workspace validation completed: {valid_projects}/{total_projects} projects valid",
-              Colors.BLUE,
-          )
-          logger.info(
-              f"Workspace validation completed - {valid_projects}/{total_projects} valid, {total_errors} errors, {total_warnings} warnings",
-          )
+            print_colored(
+                f"\n📊 Workspace validation completed: {valid_projects}/{total_projects} projects valid",
+                Colors.BLUE,
+            )
+            logger.info(
+                f"Workspace validation completed - {valid_projects}/{total_projects} valid, {total_errors} errors, {total_warnings} warnings",
+            )
 
-          return FlextResult.ok(workspace_result_data)
+            return FlextResult.ok(workspace_result_data)
 
-      except Exception as e:
-          error_msg = f"Workspace validation failed: {e}"
-          logger.exception(error_msg)
-          return FlextResult.fail(error_msg)
+        except Exception as e:
+            error_msg = f"Workspace validation failed: {e}"
+            logger.exception(error_msg)
+            return FlextResult.fail(error_msg)

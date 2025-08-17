@@ -1,8 +1,45 @@
-"""FLEXT Control Panel CLI - Complete flext-cli Integration.
+"""FLEXT Control Panel CLI - Enterprise Command-Line Interface Integration.
 
-This file contains the complete integrated CLI implementation that fully delegates
-to flext-cli patterns while exposing flext_tools functionality through organized
-command groups.
+Provides comprehensive command-line interface for the FLEXT Control Panel with
+complete delegation to flext-cli patterns and seamless integration with flext_tools
+functionality. This module implements enterprise-grade CLI capabilities for workspace
+management, development tooling, and orchestration across the FLEXT ecosystem.
+
+The CLI implementation uses Clean Architecture patterns with proper separation
+between command definitions, business logic, and infrastructure concerns while
+maintaining consistent output formatting and error handling throughout the interface.
+
+Key Components:
+    - Main CLI: Unified command-line interface with workspace and profile management
+    - Tools Group: Access to flext_tools functionality (quality, scripts, analysis)
+    - Integrated Commands: Direct delegation to flext-cli specialized command groups
+    - Configuration: Profile-based configuration with environment variable support
+
+Architecture:
+    Implements command delegation patterns with comprehensive error handling,
+    input validation, and output formatting via flext-cli infrastructure while
+    exposing flext_tools capabilities through organized command hierarchies.
+
+Example:
+    Basic CLI usage with workspace management:
+
+    >>> # Run quality checks on workspace
+    >>> flext --workspace /path/to/workspace tools quality
+    >>> # Display workspace information
+    >>> flext --profile production info --detailed
+    >>> # Execute comprehensive testing
+    >>> flext test --coverage --parallel
+
+Integration:
+    - Built on flext-cli patterns for consistent command behavior
+    - Integrates flext_tools functionality via organized command groups
+    - Provides enterprise-grade CLI experience with proper error handling
+    - Supports configuration profiles and environment-based settings
+
+Author: FLEXT Development Team
+Version: 2.0.0
+License: MIT
+
 """
 
 from pathlib import Path
@@ -50,17 +87,42 @@ from flext_tools.utils.colors import Colors, print_colored
 def main(
     ctx: click.Context, workspace: str | None, profile: str, debug: bool, output: str
 ) -> None:
-    """FLEXT Control Panel - Complete flext-cli Integration.
+    """FLEXT Control Panel main command with enterprise-grade CLI integration.
 
-    Unified command-line interface completely delegating to flext-cli patterns,
-    providing comprehensive workspace management, development tooling, and
-    coordination via flext_tools integration accessed through CLI commands.
+    Initializes the unified command-line interface with complete delegation to
+    flext-cli patterns, providing comprehensive workspace management, development
+    tooling, and coordination capabilities. Sets up CLI context with proper
+    configuration, validation, and error handling.
+
+    Args:
+        ctx: Click context object for command state management and configuration.
+        workspace: Optional workspace root path for project operations. Defaults
+                  to current working directory if not specified.
+        profile: Configuration profile name for environment-specific settings.
+                Default is "default" profile.
+        debug: Enable debug mode for verbose output and troubleshooting features.
+               Can be set via FLEXT_DEBUG environment variable.
+        output: Output format for command results (table, json, yaml, csv).
+               Default is "table" format.
+
+    Raises:
+        SystemExit: When configuration initialization fails or validation errors occur.
 
     Command Groups:
-      - tools: Access flext_tools functionality (quality, scripts, analysis)
-      - config: Configuration management via flext-cli patterns
-      - auth: Authentication via flext-cli patterns
-      - debug: Debug commands via flext-cli patterns
+        - tools: Access flext_tools functionality (quality, scripts, analysis)
+        - config: Configuration management via flext-cli patterns
+        - auth: Authentication via flext-cli patterns
+        - debug: Debug commands via flext-cli patterns
+
+    Example:
+        Initialize CLI with specific workspace and debug mode:
+
+        >>> flext --workspace /app/workspace --debug --profile production
+        >>> flext tools quality --enable-coverage
+
+    Note:
+        Uses flext-cli CLIConfig and FlextCliContext for complete integration
+        with enterprise CLI patterns and consistent error handling.
 
     """
     # Use flext-cli CLIConfig with complete delegation
@@ -101,16 +163,35 @@ def main(
 
 @click.group()
 def tools() -> None:
-    """Access flext_tools functionality via organized CLI commands.
+    """Access flext_tools functionality via organized CLI command group.
 
-    This command group exposes flext_tools capabilities through flext-cli
-    patterns, providing comprehensive development tooling, quality gates,
-    script management, and analysis tools.
+    Provides access to comprehensive development tooling, quality gates,
+    script management, and analysis capabilities from flext_tools through
+    organized CLI commands with consistent flext-cli integration patterns.
+
+    This command group serves as the primary interface for accessing
+    flext_tools capabilities while maintaining enterprise-grade CLI
+    patterns and proper error handling throughout all subcommands.
 
     Available subcommands:
-      - quality: Run comprehensive quality checks
-      - scripts: Manage and execute FlextScript instances
-      - analysis: Perform workspace and code analysis
+        quality: Run comprehensive quality checks including linting, type
+                checking, testing, coverage analysis, and security scanning
+        scripts: Manage and execute FlextScript instances with category
+                filtering and listing capabilities
+        analysis: Perform workspace and code analysis including dependency
+                 analysis, conflict detection, and structure validation
+
+    Example:
+        Access quality checks with specific options:
+
+        >>> flext tools quality --enable-coverage --coverage-threshold 95
+        >>> flext tools scripts --category quality --list-only
+        >>> flext tools analysis --type dependencies
+
+    Note:
+        All subcommands integrate with flext-cli patterns for consistent
+        output formatting and error handling across the tool ecosystem.
+
     """
 
 
@@ -136,11 +217,35 @@ def quality(
     enable_security: bool,
     coverage_threshold: float,
 ) -> None:
-    """Run comprehensive quality checks using flext_tools QualityGateway.
+    """Execute comprehensive quality checks using flext_tools QualityGateway.
 
-    Executes quality checks including linting, type checking, testing,
-    coverage analysis, and security scanning via flext_tools integration
-    with flext-cli patterns for consistent output and error handling.
+    Runs a complete quality validation pipeline including linting, type checking,
+    testing, coverage analysis, and security scanning with configurable options
+    for each check type. Integrates with flext_tools QualityGateway for enterprise
+    quality validation with consistent CLI patterns.
+
+    Args:
+        ctx: Click context containing workspace and configuration information.
+        enable_lint: Enable linting checks with ruff for code quality validation.
+        enable_types: Enable MyPy type checking for static type validation.
+        enable_tests: Enable pytest test execution with comprehensive test suite.
+        enable_coverage: Enable coverage analysis with configurable thresholds.
+        enable_security: Enable bandit security scanning for vulnerability detection.
+        coverage_threshold: Minimum coverage percentage required for validation success.
+
+    Raises:
+        SystemExit: When quality checks fail or configuration errors occur.
+
+    Example:
+        Run quality checks with specific coverage requirements:
+
+        >>> flext tools quality --coverage-threshold 95 --enable-security
+        >>> flext tools quality --no-tests --enable-lint --enable-types
+
+    Note:
+        Uses flext_tools QualityGateway with flext-cli integration for
+        consistent error handling and output formatting.
+
     """
     workspace = ctx.obj["workspace"]
     ctx.obj["output_format"]
@@ -172,8 +277,29 @@ def quality(
 def scripts(ctx: click.Context, category: str | None, list_only: bool) -> None:
     """Manage FlextScript instances using flext_tools script framework.
 
-    Provides access to FlextScript-based automation and operations scripts
-    with flext-cli integration for consistent command patterns and output.
+    Provides comprehensive access to FlextScript-based automation and operations
+    scripts with category filtering, listing capabilities, and execution management.
+    Integrates with flext_tools script framework while maintaining flext-cli
+    patterns for consistent command behavior and output formatting.
+
+    Args:
+        ctx: Click context containing workspace and configuration information.
+        category: Optional category filter for scripts (e.g., 'quality', 'analysis',
+                 'cache'). When specified, only scripts in that category are shown.
+        list_only: When True, only displays available scripts without executing.
+                  Useful for discovery and documentation purposes.
+
+    Example:
+        List scripts by category and execute specific scripts:
+
+        >>> flext tools scripts --list-only
+        >>> flext tools scripts --category quality
+        >>> flext tools scripts --category analysis --list-only
+
+    Note:
+        Integrates with flext_tools FlextScript framework for enterprise-grade
+        script management with proper lifecycle and error handling.
+
     """
     ctx.obj["workspace"]
 
@@ -197,8 +323,29 @@ def scripts(ctx: click.Context, category: str | None, list_only: bool) -> None:
 def analysis(ctx: click.Context, type: str) -> None:
     """Perform workspace and code analysis using flext_tools analysis modules.
 
-    Provides comprehensive analysis capabilities from flext_tools including
-    dependency analysis, conflict detection, and workspace structure analysis.
+    Executes comprehensive analysis operations on workspace structure, dependencies,
+    and code quality using flext_tools analysis modules. Provides detailed insights
+    into project health, dependency conflicts, and structural issues with proper
+    reporting and actionable recommendations.
+
+    Args:
+        ctx: Click context containing workspace path and configuration settings.
+        type: Type of analysis to perform. Options include:
+              - 'dependencies': Analyze project dependencies and version conflicts
+              - 'conflicts': Detect dependency conflicts and resolution strategies
+              - 'structure': Validate workspace structure and project organization
+
+    Example:
+        Run different types of analysis:
+
+        >>> flext tools analysis --type dependencies
+        >>> flext tools analysis --type conflicts
+        >>> flext tools analysis --type structure
+
+    Note:
+        Integrates with flext_tools analysis modules including ConflictAnalyzer,
+        VersionAnalyzer, and workspace structure validation tools.
+
     """
     workspace = ctx.obj["workspace"]
 
