@@ -26,10 +26,10 @@ from mypy import api as mypy_api
 def _run_mypy_api(args: list[str]) -> tuple[int, str, str]:
     """Run MyPy using its Python API and return (exit_code, stdout, stderr)."""
     try:
-      stdout, stderr, exit_status = mypy_api.run(args)
-      return int(exit_status), stdout, stderr
+        stdout, stderr, exit_status = mypy_api.run(args)
+        return int(exit_status), stdout, stderr
     except Exception as e:
-      return 1, "", f"MyPy API execution failed: {e}"
+        return 1, "", f"MyPy API execution failed: {e}"
 
 
 def parse_mypy_errors(output: str) -> list[dict[str, object]]:
@@ -40,18 +40,18 @@ def parse_mypy_errors(output: str) -> list[dict[str, object]]:
     error_pattern = r"([^:]+):(\d+): error: (.+?) \[([^\]]+)\]"
 
     for line in output.split("\n"):
-      match = re.match(error_pattern, line)
-      if match:
-          file_path, line_num, message, error_code = match.groups()
-          errors.append(
-              {
-                  "file": file_path.strip(),
-                  "line": int(line_num),
-                  "message": message.strip(),
-                  "error_code": error_code.strip(),
-                  "project": get_project_from_path(file_path),
-              },
-          )
+        match = re.match(error_pattern, line)
+        if match:
+            file_path, line_num, message, error_code = match.groups()
+            errors.append(
+                {
+                    "file": file_path.strip(),
+                    "line": int(line_num),
+                    "message": message.strip(),
+                    "error_code": error_code.strip(),
+                    "project": get_project_from_path(file_path),
+                },
+            )
 
     return errors
 
@@ -62,8 +62,8 @@ def get_project_from_path(file_path: str) -> str:
 
     # Se está em um subdiretório de projeto
     for part in path_parts:
-      if part.startswith(("flext-", "client-a-", "client-b-", "flexcore")):
-          return part
+        if part.startswith(("flext-", "client-a-", "client-b-", "flexcore")):
+            return part
 
     # Se está no workspace raiz
     return "workspace"
@@ -80,9 +80,9 @@ def analyze_project_with_stats(
     errors = parse_mypy_errors(stdout + stderr)
 
     if stdout and not errors:  # Se há output mas não são erros
-      print(stdout)
+        print(stdout)
     if stderr and "error:" not in stderr:  # Se há stderr mas não são erros
-      print(stderr, file=sys.stderr)
+        print(stderr, file=sys.stderr)
 
     return exit_code, errors
 
@@ -96,16 +96,16 @@ def analyze_workspace_with_stats() -> tuple[int, list[dict[str, object]]]:
     # Verificar quais diretórios existem para análise
     dirs_to_analyze = []
     for dir_name in ["src", "tests", "scripts", "examples"]:
-      dir_path = workspace_root / dir_name
-      if dir_path.exists() and dir_path.is_dir():
-          dirs_to_analyze.append(dir_name)
-          print(f"📁 Found directory: {dir_name}")
-      else:
-          print(f"⚠️  Directory not found: {dir_name}")
+        dir_path = workspace_root / dir_name
+        if dir_path.exists() and dir_path.is_dir():
+            dirs_to_analyze.append(dir_name)
+            print(f"📁 Found directory: {dir_name}")
+        else:
+            print(f"⚠️  Directory not found: {dir_name}")
 
     if not dirs_to_analyze:
-      print("❌ No directories found for analysis")
-      return 1, []
+        print("❌ No directories found for analysis")
+        return 1, []
 
     # Build absolute paths for analysis to avoid cwd dependency
     abs_args = [str(workspace_root / d) for d in dirs_to_analyze]
@@ -114,9 +114,9 @@ def analyze_workspace_with_stats() -> tuple[int, list[dict[str, object]]]:
     errors = parse_mypy_errors(stdout + stderr)
 
     if stdout and not errors:  # Se há output mas não são erros
-      print(stdout)
+        print(stdout)
     if stderr and "error:" not in stderr:  # Se há stderr mas não são erros
-      print(stderr, file=sys.stderr)
+        print(stderr, file=sys.stderr)
 
     return exit_code, errors
 
@@ -130,28 +130,28 @@ def analyze_workspace() -> int:
     # Verificar quais diretórios existem para análise
     dirs_to_analyze = []
     for dir_name in ["src", "tests", "scripts", "examples"]:
-      dir_path = workspace_root / dir_name
-      if dir_path.exists() and dir_path.is_dir():
-          dirs_to_analyze.append(dir_name)
-          print(f"📁 Found directory: {dir_name}")
-      else:
-          print(f"⚠️  Directory not found: {dir_name}")
+        dir_path = workspace_root / dir_name
+        if dir_path.exists() and dir_path.is_dir():
+            dirs_to_analyze.append(dir_name)
+            print(f"📁 Found directory: {dir_name}")
+        else:
+            print(f"⚠️  Directory not found: {dir_name}")
 
     if not dirs_to_analyze:
-      print("❌ No directories found for analysis")
-      return 1
+        print("❌ No directories found for analysis")
+        return 1
 
     exit_code, stdout, stderr = _run_mypy_api(dirs_to_analyze)
 
     if stdout:
-      print(stdout)
+        print(stdout)
     if stderr:
-      print(stderr, file=sys.stderr)
+        print(stderr, file=sys.stderr)
 
     if exit_code == 0:
-      print("✅ Workspace analysis completed successfully!")
+        print("✅ Workspace analysis completed successfully!")
     else:
-      print("❌ Workspace analysis found issues.")
+        print("❌ Workspace analysis found issues.")
 
     return exit_code
 
@@ -165,15 +165,15 @@ def get_python_projects() -> list[Path]:
     project_patterns = ["flext-*", "client-a-*", "client-b-*", "flexcore"]
 
     for pattern in project_patterns:
-      projects.extend(
-          project_dir
-          for project_dir in workspace_root.glob(pattern)
-          if (
-              project_dir.is_dir()
-              and (project_dir / "pyproject.toml").exists()
-              and (project_dir / "src").exists()
-          )
-      )
+        projects.extend(
+            project_dir
+            for project_dir in workspace_root.glob(pattern)
+            if (
+                project_dir.is_dir()
+                and (project_dir / "pyproject.toml").exists()
+                and (project_dir / "src").exists()
+            )
+        )
 
     return sorted(projects)
 
@@ -185,9 +185,9 @@ def analyze_project(project_path: Path) -> int:
     exit_code, stdout, stderr = _run_mypy_api([str(project_path)])
 
     if stdout:
-      print(stdout)
+        print(stdout)
     if stderr:
-      print(stderr, file=sys.stderr)
+        print(stderr, file=sys.stderr)
 
     return exit_code
 
@@ -198,22 +198,22 @@ def analyze_all_projects() -> int:
 
     projects = get_python_projects()
     if not projects:
-      print("⚠️  No Python projects found with pyproject.toml")
-      return 0
+        print("⚠️  No Python projects found with pyproject.toml")
+        return 0
 
     total_errors = 0
     success_count = 0
 
     for project in projects:
-      print(f"\n📦 Project: {project.name}")
-      exit_code = analyze_project(project)
+        print(f"\n📦 Project: {project.name}")
+        exit_code = analyze_project(project)
 
-      if exit_code == 0:
-          success_count += 1
-          print(f"✅ {project.name} - OK")
-      else:
-          total_errors += 1
-          print(f"❌ {project.name} - Issues found")
+        if exit_code == 0:
+            success_count += 1
+            print(f"✅ {project.name} - OK")
+        else:
+            total_errors += 1
+            print(f"❌ {project.name} - Issues found")
 
     print(f"\n📊 Summary: {success_count} OK, {total_errors} with issues")
     return total_errors
@@ -236,9 +236,9 @@ def analyze_comprehensive() -> int:
     print(f"🏁 Total Issues: {total_errors}")
 
     if total_errors == 0:
-      print("✅ All analysis completed successfully!")
+        print("✅ All analysis completed successfully!")
     else:
-      print("❌ Issues found in analysis.")
+        print("❌ Issues found in analysis.")
 
     return total_errors
 
@@ -249,12 +249,12 @@ def analyze_specific_project(project_name: str) -> int:
     project_path = workspace_root / project_name
 
     if not project_path.exists():
-      print(f"❌ Project '{project_name}' not found")
-      return 1
+        print(f"❌ Project '{project_name}' not found")
+        return 1
 
     if not (project_path / "pyproject.toml").exists():
-      print(f"❌ Project '{project_name}' has no pyproject.toml")
-      return 1
+        print(f"❌ Project '{project_name}' has no pyproject.toml")
+        return 1
 
     return analyze_project(project_path)
 
@@ -266,8 +266,8 @@ def stats_by_project() -> int:
 
     projects = get_python_projects()
     if not projects:
-      print("⚠️  No Python projects found with pyproject.toml")
-      return 0
+        print("⚠️  No Python projects found with pyproject.toml")
+        return 0
 
     all_errors = []
     project_stats = {}
@@ -284,11 +284,11 @@ def stats_by_project() -> int:
     # Analisar cada projeto
     print("\n📦 Individual Projects:")
     for project in projects:
-      _, project_errors = analyze_project_with_stats(project)
-      all_errors.extend(project_errors)
-      error_count = len(project_errors)
-      project_stats[project.name] = error_count
-      print(f"   {project.name}: {error_count} errors")
+        _, project_errors = analyze_project_with_stats(project)
+        all_errors.extend(project_errors)
+        error_count = len(project_errors)
+        project_stats[project.name] = error_count
+        print(f"   {project.name}: {error_count} errors")
 
     # Estatísticas resumidas
     total_errors = len(all_errors)
@@ -300,17 +300,17 @@ def stats_by_project() -> int:
 
     # Ordenar projetos por número de erros (decrescente)
     sorted_projects = sorted(
-      project_stats.items(),
-      key=operator.itemgetter(1),
-      reverse=True,
+        project_stats.items(),
+        key=operator.itemgetter(1),
+        reverse=True,
     )
 
     for project_name, error_count in sorted_projects:
-      percentage = (error_count / total_errors * 100) if total_errors > 0 else 0
-      bar_length = int(percentage / 5)  # Escala de 0-20 caracteres
-      bar = "█" * bar_length + "░" * (20 - bar_length)
+        percentage = (error_count / total_errors * 100) if total_errors > 0 else 0
+        bar_length = int(percentage / 5)  # Escala de 0-20 caracteres
+        bar = "█" * bar_length + "░" * (20 - bar_length)
 
-      print(f"{project_name:25} {error_count:4d} errors [{bar}] {percentage:5.1f}%")
+        print(f"{project_name:25} {error_count:4d} errors [{bar}] {percentage:5.1f}%")
 
     print(f"\n🏁 Total: {total_errors} errors across {total_projects} projects")
 
@@ -330,22 +330,22 @@ def stats_by_error_type() -> int:
     # Analisar todos os projetos
     projects = get_python_projects()
     for project in projects:
-      _, project_errors = analyze_project_with_stats(project)
-      all_errors.extend(project_errors)
+        _, project_errors = analyze_project_with_stats(project)
+        all_errors.extend(project_errors)
 
     if not all_errors:
-      print("✅ No MyPy errors found!")
-      return 0
+        print("✅ No MyPy errors found!")
+        return 0
 
     # Contar erros por tipo
     error_type_counts = Counter(error["error_code"] for error in all_errors)
 
     # Contar erros por projeto para cada tipo
     error_by_project_type: dict[str, dict[str, int]] = defaultdict(
-      lambda: defaultdict(int),
+        lambda: defaultdict(int),
     )
     for error in all_errors:
-      error_by_project_type[str(error["error_code"])][str(error["project"])] += 1
+        error_by_project_type[str(error["error_code"])][str(error["project"])] += 1
 
     total_errors = len(all_errors)
 
@@ -356,31 +356,31 @@ def stats_by_error_type() -> int:
 
     # Ordenar tipos de erro por frequência
     for error_type, count in error_type_counts.most_common():
-      percentage = count / total_errors * 100
-      bar_length = int(percentage / 2)  # Escala de 0-50 caracteres
-      bar = "█" * bar_length + "░" * (max(0, 25 - bar_length))
+        percentage = count / total_errors * 100
+        bar_length = int(percentage / 2)  # Escala de 0-50 caracteres
+        bar = "█" * bar_length + "░" * (max(0, 25 - bar_length))
 
-      print(f"\n{error_type:30} {count:4d} errors [{bar}] {percentage:5.1f}%")
+        print(f"\n{error_type:30} {count:4d} errors [{bar}] {percentage:5.1f}%")
 
-      # Mostrar distribuição por projeto para este tipo de erro
-      project_distribution = error_by_project_type[error_type]
-      sorted_projects = sorted(
-          project_distribution.items(),
-          key=operator.itemgetter(1),
-          reverse=True,
-      )
+        # Mostrar distribuição por projeto para este tipo de erro
+        project_distribution = error_by_project_type[error_type]
+        sorted_projects = sorted(
+            project_distribution.items(),
+            key=operator.itemgetter(1),
+            reverse=True,
+        )
 
-      print("  Projects:")
-      for project_name, project_count in sorted_projects[:5]:  # Top 5 projetos
-          project_percentage = project_count / count * 100
-          print(
-              f"    {project_name:20} {project_count:3d}"
-              f" ({project_percentage:4.1f}%)",
-          )
+        print("  Projects:")
+        for project_name, project_count in sorted_projects[:5]:  # Top 5 projetos
+            project_percentage = project_count / count * 100
+            print(
+                f"    {project_name:20} {project_count:3d}"
+                f" ({project_percentage:4.1f}%)",
+            )
 
-      if len(sorted_projects) > 5:
-          remaining = len(sorted_projects) - 5
-          print(f"    ... and {remaining} more projects")
+        if len(sorted_projects) > 5:
+            remaining = len(sorted_projects) - 5
+            print(f"    ... and {remaining} more projects")
 
     print("\n" + "=" * 80)
     print("🎯 Top Error Types Summary:")
@@ -388,8 +388,8 @@ def stats_by_error_type() -> int:
 
     top_5_errors = error_type_counts.most_common(5)
     for i, (error_type, count) in enumerate(top_5_errors, 1):
-      percentage = count / total_errors * 100
-      print(f"{i}. {error_type:25} {count:4d} errors ({percentage:5.1f}%)")
+        percentage = count / total_errors * 100
+        print(f"{i}. {error_type:25} {count:4d} errors ({percentage:5.1f}%)")
 
     return total_errors
 
@@ -397,53 +397,53 @@ def stats_by_error_type() -> int:
 def main() -> int:
     """Função principal do script."""
     parser = argparse.ArgumentParser(
-      description="MyPy Analyzer - PEP 518 Compliant",
-      formatter_class=argparse.RawDescriptionHelpFormatter,
-      epilog=__doc__,
+        description="MyPy Analyzer - PEP 518 Compliant",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__,
     )
 
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument(
-      "--workspace",
-      action="store_true",
-      help="Analyze workspace only",
+        "--workspace",
+        action="store_true",
+        help="Analyze workspace only",
     )
     group.add_argument(
-      "--all-projects",
-      action="store_true",
-      help="Analyze all individual projects",
+        "--all-projects",
+        action="store_true",
+        help="Analyze all individual projects",
     )
     group.add_argument(
-      "--comprehensive",
-      action="store_true",
-      help="Comprehensive analysis (workspace + all projects)",
+        "--comprehensive",
+        action="store_true",
+        help="Comprehensive analysis (workspace + all projects)",
     )
     group.add_argument("--project", type=str, help="Analyze specific project by name")
     group.add_argument(
-      "--stats-by-project",
-      action="store_true",
-      help="Show error statistics by project",
+        "--stats-by-project",
+        action="store_true",
+        help="Show error statistics by project",
     )
     group.add_argument(
-      "--stats-by-type",
-      action="store_true",
-      help="Show error statistics by error type",
+        "--stats-by-type",
+        action="store_true",
+        help="Show error statistics by error type",
     )
 
     args = parser.parse_args()
 
     if args.workspace:
-      return analyze_workspace()
+        return analyze_workspace()
     if args.all_projects:
-      return analyze_all_projects()
+        return analyze_all_projects()
     if args.comprehensive:
-      return analyze_comprehensive()
+        return analyze_comprehensive()
     if args.project:
-      return analyze_specific_project(args.project)
+        return analyze_specific_project(args.project)
     if args.stats_by_project:
-      return stats_by_project()
+        return stats_by_project()
     if args.stats_by_type:
-      return stats_by_error_type()
+        return stats_by_error_type()
 
     return 1
 

@@ -30,6 +30,7 @@ Integration:
 Author: FLEXT Development Team
 Version: 2.0.0
 License: MIT
+
 """
 
 from flext_cli.core.formatters import PlainFormatter
@@ -76,6 +77,7 @@ class Colors:
     Note:
         Always use RESET after applying colors to prevent formatting from
         bleeding into subsequent output.
+
     """
 
     HEADER = "\033[95m"
@@ -97,7 +99,7 @@ class Colors:
 
 
 def colorize(message: str, color: str = "") -> str:
-    """Wrap message with ANSI color codes for terminal formatting.
+    r"""Wrap message with ANSI color codes for terminal formatting.
 
     This function is side-effect free and preferred for composing output
     that will be used in multiple contexts or stored for later use. It
@@ -125,6 +127,7 @@ def colorize(message: str, color: str = "") -> str:
     Note:
         This function does not perform any output - it only returns the
         formatted string for use elsewhere.
+
     """
     return f"{color}{message}{Colors.RESET}" if color else message
 
@@ -163,6 +166,7 @@ def print_colored(message: str, color: str = "") -> None:
     Note:
         This function has side effects (console output and logging).
         Use colorize() if you only need the formatted string without output.
+
     """
     _plain_formatter.format(colorize(message, color), _console)
     _logger.info(colorize(message, color))

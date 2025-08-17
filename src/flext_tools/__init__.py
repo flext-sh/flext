@@ -112,31 +112,31 @@ def get_flext_tools_container() -> FlextContainer:
 
     # Register core services
     try:
-      container.get("conflict_analyzer")
+        container.get("conflict_analyzer")
     except KeyError:
-      container.register("conflict_analyzer", ConflictAnalyzer)
+        container.register("conflict_analyzer", ConflictAnalyzer)
 
     # Cache module removed - not implemented yet
 
     try:
-      container.get("dependency_discovery")
+        container.get("dependency_discovery")
     except KeyError:
-      container.register("dependency_discovery", DependencyDiscovery)
+        container.register("dependency_discovery", DependencyDiscovery)
 
     try:
-      container.get("documentation_generator")
+        container.get("documentation_generator")
     except KeyError:
-      container.register("documentation_generator", DocumentationGenerator)
+        container.register("documentation_generator", DocumentationGenerator)
 
     try:
-      container.get("poetry_operations")
+        container.get("poetry_operations")
     except KeyError:
-      container.register("poetry_operations", PoetryOperations)
+        container.register("poetry_operations", PoetryOperations)
 
     try:
-      container.get("safety_validator")
+        container.get("safety_validator")
     except KeyError:
-      container.register("safety_validator", SafetyValidator)
+        container.register("safety_validator", SafetyValidator)
 
     return container
 

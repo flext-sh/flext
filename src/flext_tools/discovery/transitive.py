@@ -170,276 +170,276 @@ class TransitiveDependencyResolver:
     """
 
     def __init__(self) -> None:
-      """Initialize resolver."""
-      self._cache: dict[str, TransitiveDependencies] = {}
-      self._resolving: set[str] = set()  # Prevent circular dependencies
+        """Initialize resolver."""
+        self._cache: dict[str, TransitiveDependencies] = {}
+        self._resolving: set[str] = set()  # Prevent circular dependencies
 
     def resolve_transitive_dependencies(
-      self,
-      project_path: Path,
-      max_depth: int = 3,
+        self,
+        project_path: Path,
+        max_depth: int = 3,
     ) -> TransitiveDependencies:
-      """Resolve transitive dependencies for a project through path dependency analysis.
+        """Resolve transitive dependencies for a project through path dependency analysis.
 
-      Performs comprehensive dependency resolution by traversing path dependencies
-      to discover both direct and transitive dependencies with circular dependency
-      detection and intelligent caching for performance optimization.
+        Performs comprehensive dependency resolution by traversing path dependencies
+        to discover both direct and transitive dependencies with circular dependency
+        detection and intelligent caching for performance optimization.
 
-      Args:
-          project_path: Path to the project root directory for dependency analysis
-          max_depth: Maximum recursion depth to prevent infinite loops (default: 3)
+        Args:
+            project_path: Path to the project root directory for dependency analysis
+            max_depth: Maximum recursion depth to prevent infinite loops (default: 3)
 
-      Returns:
-          TransitiveDependencies containing complete dependency resolution results
-          including direct dependencies, transitive dependencies, and path metadata
+        Returns:
+            TransitiveDependencies containing complete dependency resolution results
+            including direct dependencies, transitive dependencies, and path metadata
 
-      Resolution Process:
-          1. Check cache for previously resolved results
-          2. Detect circular dependencies to prevent infinite loops
-          3. Parse project Poetry configuration for dependencies
-          4. Extract path dependencies and traverse recursively
-          5. Aggregate direct and transitive dependencies
-          6. Cache results for performance optimization
+        Resolution Process:
+            1. Check cache for previously resolved results
+            2. Detect circular dependencies to prevent infinite loops
+            3. Parse project Poetry configuration for dependencies
+            4. Extract path dependencies and traverse recursively
+            5. Aggregate direct and transitive dependencies
+            6. Cache results for performance optimization
 
-      Architecture:
-          Uses depth-first traversal with memoization and cycle detection
-          to ensure safe and efficient dependency graph resolution.
+        Architecture:
+            Uses depth-first traversal with memoization and cycle detection
+            to ensure safe and efficient dependency graph resolution.
 
-      """
-      project_key = str(project_path.resolve())
+        """
+        project_key = str(project_path.resolve())
 
-      # Cache hit
-      if project_key in self._cache:
-          return self._cache[project_key]
+        # Cache hit
+        if project_key in self._cache:
+            return self._cache[project_key]
 
-      # Circular dependency detection
-      if project_key in self._resolving:
-          print_colored(
-              f"  ⚠️ Circular dependency detected: {project_path.name}",
-              Colors.YELLOW,
-          )
-          return TransitiveDependencies(set(), set(), [])
+        # Circular dependency detection
+        if project_key in self._resolving:
+            print_colored(
+                f"  ⚠️ Circular dependency detected: {project_path.name}",
+                Colors.YELLOW,
+            )
+            return TransitiveDependencies(set(), set(), [])
 
-      self._resolving.add(project_key)
+        self._resolving.add(project_key)
 
-      try:
-          result = self._resolve_recursive(project_path, max_depth)
-          self._cache[project_key] = result
-          return result
-      finally:
-          self._resolving.discard(project_key)
+        try:
+            result = self._resolve_recursive(project_path, max_depth)
+            self._cache[project_key] = result
+            return result
+        finally:
+            self._resolving.discard(project_key)
 
     def _resolve_recursive(
-      self,
-      project_path: Path,
-      depth: int,
+        self,
+        project_path: Path,
+        depth: int,
     ) -> TransitiveDependencies:
-      """Resolve dependencies recursively with depth-limited traversal.
+        """Resolve dependencies recursively with depth-limited traversal.
 
-      Performs recursive dependency resolution through path dependency traversal
-      with proper depth limiting to prevent infinite loops and stack overflow
-      in complex dependency graphs.
+        Performs recursive dependency resolution through path dependency traversal
+        with proper depth limiting to prevent infinite loops and stack overflow
+        in complex dependency graphs.
 
-      Args:
-          project_path: Path to project for recursive dependency analysis
-          depth: Maximum remaining recursion depth for safe traversal
+        Args:
+            project_path: Path to project for recursive dependency analysis
+            depth: Maximum remaining recursion depth for safe traversal
 
-      Returns:
-          TransitiveDependencies containing resolved dependency information
+        Returns:
+            TransitiveDependencies containing resolved dependency information
 
-      """
-      if depth <= 0:
-          return TransitiveDependencies(set(), set(), [])
+        """
+        if depth <= 0:
+            return TransitiveDependencies(set(), set(), [])
 
-      pyproject_path = project_path / "pyproject.toml"
-      if not pyproject_path.exists():
-          return TransitiveDependencies(set(), set(), [])
+        pyproject_path = project_path / "pyproject.toml"
+        if not pyproject_path.exists():
+            return TransitiveDependencies(set(), set(), [])
 
-      try:
-          with pyproject_path.open("rb") as f:
-              data = tomllib.load(f)
-      except (OSError, tomllib.TOMLDecodeError) as e:
-          print_colored(f"  ⚠️ Error reading {pyproject_path}: {e}", Colors.YELLOW)
-          return TransitiveDependencies(set(), set(), [])
+        try:
+            with pyproject_path.open("rb") as f:
+                data = tomllib.load(f)
+        except (OSError, tomllib.TOMLDecodeError) as e:
+            print_colored(f"  ⚠️ Error reading {pyproject_path}: {e}", Colors.YELLOW)
+            return TransitiveDependencies(set(), set(), [])
 
-      # Extract direct dependencies from project configuration
-      direct_deps = self._extract_direct_dependencies(data)
+        # Extract direct dependencies from project configuration
+        direct_deps = self._extract_direct_dependencies(data)
 
-      # Extract path dependencies for recursive analysis
-      path_deps = self._extract_path_dependencies(data, project_path)
+        # Extract path dependencies for recursive analysis
+        path_deps = self._extract_path_dependencies(data, project_path)
 
-      # Resolve transitive dependencies through path dependency traversal
-      transitive_deps = set()
+        # Resolve transitive dependencies through path dependency traversal
+        transitive_deps = set()
 
-      for path_dep in path_deps:
-          if path_dep.path.exists():
-              child_result = self._resolve_recursive(path_dep.path, depth - 1)
-              # Add direct dependencies from path dependency as transitive
-              transitive_deps.update(child_result.direct)
-              # Add transitive dependencies from path dependency
-              transitive_deps.update(child_result.transitive)
+        for path_dep in path_deps:
+            if path_dep.path.exists():
+                child_result = self._resolve_recursive(path_dep.path, depth - 1)
+                # Add direct dependencies from path dependency as transitive
+                transitive_deps.update(child_result.direct)
+                # Add transitive dependencies from path dependency
+                transitive_deps.update(child_result.transitive)
 
-      return TransitiveDependencies(
-          direct=direct_deps,
-          transitive=transitive_deps,
-          path_dependencies=path_deps,
-      )
+        return TransitiveDependencies(
+            direct=direct_deps,
+            transitive=transitive_deps,
+            path_dependencies=path_deps,
+        )
 
     def _extract_direct_dependencies(self, data: dict[str, object]) -> set[str]:
-      """Extract direct dependencies from poetry.lock file.
+        """Extract direct dependencies from poetry.lock file.
 
-      Parses Poetry lock file data to extract all direct dependency names
-      for accurate dependency resolution and conflict detection.
+        Parses Poetry lock file data to extract all direct dependency names
+        for accurate dependency resolution and conflict detection.
 
-      Args:
-          data: Parsed Poetry lock file data structure
+        Args:
+            data: Parsed Poetry lock file data structure
 
-      Returns:
-          Set of direct dependency package names
+        Returns:
+            Set of direct dependency package names
 
-      """
-      dependencies: set[str] = set()
+        """
+        dependencies: set[str] = set()
 
-      if "package" in data:
-          packages = data["package"]
-          if isinstance(packages, list):
-              for package in packages:
-                  if "dependencies" in package:
-                      deps = package["dependencies"]
-                      if isinstance(deps, dict):
-                          dependencies.update(deps.keys())
+        if "package" in data:
+            packages = data["package"]
+            if isinstance(packages, list):
+                for package in packages:
+                    if "dependencies" in package:
+                        deps = package["dependencies"]
+                        if isinstance(deps, dict):
+                            dependencies.update(deps.keys())
 
-      return dependencies
+        return dependencies
 
     def _extract_path_dependencies(
-      self,
-      data: dict[str, object],
-      project_path: Path,
+        self,
+        data: dict[str, object],
+        project_path: Path,
     ) -> list[PathDependency]:
-      """Extract path dependencies from pyproject.toml configuration.
+        """Extract path dependencies from pyproject.toml configuration.
 
-      Parses Poetry configuration to identify path-based dependencies including
-      both regular dependencies and dependency groups with path specifications.
+        Parses Poetry configuration to identify path-based dependencies including
+        both regular dependencies and dependency groups with path specifications.
 
-      Args:
-          data: Parsed pyproject.toml configuration data
-          project_path: Base path for resolving relative dependency paths
+        Args:
+            data: Parsed pyproject.toml configuration data
+            project_path: Base path for resolving relative dependency paths
 
-      Returns:
-          List of PathDependency objects with resolved paths and metadata
+        Returns:
+            List of PathDependency objects with resolved paths and metadata
 
-      """
-      path_deps = []
+        """
+        path_deps = []
 
-      # Poetry path dependencies
-      tool_section = data.get("tool", {})
-      if not isinstance(tool_section, dict):
-          return []
-      poetry_section = tool_section.get("poetry", {})
-      if not isinstance(poetry_section, dict):
-          return []
-      poetry_deps = poetry_section.get("dependencies", {})
-      for dep_name, dep_spec in poetry_deps.items():
-          if isinstance(dep_spec, dict) and "path" in dep_spec:
-              path = project_path / dep_spec["path"]
-              develop = dep_spec.get("develop", False)
-              path_deps.append(PathDependency(dep_name, path.resolve(), develop))
+        # Poetry path dependencies
+        tool_section = data.get("tool", {})
+        if not isinstance(tool_section, dict):
+            return []
+        poetry_section = tool_section.get("poetry", {})
+        if not isinstance(poetry_section, dict):
+            return []
+        poetry_deps = poetry_section.get("dependencies", {})
+        for dep_name, dep_spec in poetry_deps.items():
+            if isinstance(dep_spec, dict) and "path" in dep_spec:
+                path = project_path / dep_spec["path"]
+                develop = dep_spec.get("develop", False)
+                path_deps.append(PathDependency(dep_name, path.resolve(), develop))
 
-      # Poetry group path dependencies
-      groups = poetry_section.get("group", {})
-      for group_data in groups.values():
-          group_deps = group_data.get("dependencies", {})
-          for dep_name, dep_spec in group_deps.items():
-              if isinstance(dep_spec, dict) and "path" in dep_spec:
-                  path = project_path / dep_spec["path"]
-                  develop = dep_spec.get("develop", False)
-                  path_deps.append(PathDependency(dep_name, path.resolve(), develop))
+        # Poetry group path dependencies
+        groups = poetry_section.get("group", {})
+        for group_data in groups.values():
+            group_deps = group_data.get("dependencies", {})
+            for dep_name, dep_spec in group_deps.items():
+                if isinstance(dep_spec, dict) and "path" in dep_spec:
+                    path = project_path / dep_spec["path"]
+                    develop = dep_spec.get("develop", False)
+                    path_deps.append(PathDependency(dep_name, path.resolve(), develop))
 
-      return path_deps
+        return path_deps
 
     def _extract_package_name(self, dep_spec: str) -> str:
-      """Extract package name from dependency specification string.
+        """Extract package name from dependency specification string.
 
-      Parses dependency specification to extract the core package name
-      by removing version constraints and other specification metadata.
+        Parses dependency specification to extract the core package name
+        by removing version constraints and other specification metadata.
 
-      Args:
-          dep_spec: Dependency specification string from Poetry configuration
+        Args:
+            dep_spec: Dependency specification string from Poetry configuration
 
-      Returns:
-          Extracted package name without version constraints
+        Returns:
+            Extracted package name without version constraints
 
-      """
-      dep_spec = dep_spec.strip().replace("(", "").replace(")", "")
-      match = re.match(r"^([a-zA-Z0-9_-]+)", dep_spec)
-      if match:
-          return match.group(1)
-      return ""
+        """
+        dep_spec = dep_spec.strip().replace("(", "").replace(")", "")
+        match = re.match(r"^([a-zA-Z0-9_-]+)", dep_spec)
+        if match:
+            return match.group(1)
+        return ""
 
     def get_all_available_dependencies(self, project_path: Path) -> set[str]:
-      """Get all available dependencies for a project.
+        """Get all available dependencies for a project.
 
-      Combines direct and transitive dependencies discovered through path
-      dependency resolution to provide complete dependency availability.
+        Combines direct and transitive dependencies discovered through path
+        dependency resolution to provide complete dependency availability.
 
-      Args:
-          project_path: Path to project for dependency analysis
+        Args:
+            project_path: Path to project for dependency analysis
 
-      Returns:
-          Set containing all available dependency names (direct + transitive)
+        Returns:
+            Set containing all available dependency names (direct + transitive)
 
-      """
-      result = self.resolve_transitive_dependencies(project_path)
-      return result.direct | result.transitive
+        """
+        result = self.resolve_transitive_dependencies(project_path)
+        return result.direct | result.transitive
 
     def is_dependency_available_transitively(
-      self,
-      project_path: Path,
-      package_name: str,
+        self,
+        project_path: Path,
+        package_name: str,
     ) -> bool:
-      """Check if a dependency is available transitively through path dependencies.
+        """Check if a dependency is available transitively through path dependencies.
 
-      Determines if a specific package is available either directly or
-      transitively through path dependency resolution with normalized
-      package name comparison for accurate matching.
+        Determines if a specific package is available either directly or
+        transitively through path dependency resolution with normalized
+        package name comparison for accurate matching.
 
-      Args:
-          project_path: Path to project for dependency analysis
-          package_name: Name of package to check for availability
+        Args:
+            project_path: Path to project for dependency analysis
+            package_name: Name of package to check for availability
 
-      Returns:
-          True if package is available directly or transitively, False otherwise
+        Returns:
+            True if package is available directly or transitively, False otherwise
 
-      """
-      available = self.get_all_available_dependencies(project_path)
+        """
+        available = self.get_all_available_dependencies(project_path)
 
-      # Normalize package names for accurate comparison
-      normalized_available = {self._normalize_name(dep) for dep in available}
-      normalized_package = self._normalize_name(package_name)
+        # Normalize package names for accurate comparison
+        normalized_available = {self._normalize_name(dep) for dep in available}
+        normalized_package = self._normalize_name(package_name)
 
-      return normalized_package in normalized_available
+        return normalized_package in normalized_available
 
     def _normalize_name(self, name: str) -> str:
-      """Normalize package name for accurate comparison.
+        """Normalize package name for accurate comparison.
 
-      Converts package names to standardized format by removing case
-      differences and normalizing separators for reliable matching.
+        Converts package names to standardized format by removing case
+        differences and normalizing separators for reliable matching.
 
-      Args:
-          name: Package name to normalize
+        Args:
+            name: Package name to normalize
 
-      Returns:
-          Normalized package name for comparison
+        Returns:
+            Normalized package name for comparison
 
-      """
-      return name.lower().replace("_", "").replace("-", "")
+        """
+        return name.lower().replace("_", "").replace("-", "")
 
     def clear_cache(self) -> None:
-      """Clear resolution cache and reset resolver state.
+        """Clear resolution cache and reset resolver state.
 
-      Clears all cached resolution results and resets internal state
-      for fresh dependency analysis, useful when project configurations
-      have changed or when memory cleanup is needed.
-      """
-      self._cache.clear()
-      self._resolving.clear()
+        Clears all cached resolution results and resets internal state
+        for fresh dependency analysis, useful when project configurations
+        have changed or when memory cleanup is needed.
+        """
+        self._cache.clear()
+        self._resolving.clear()

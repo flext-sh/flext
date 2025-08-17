@@ -1,0 +1,20 @@
+{
+    "include": [
+        "."
+    ],
+    "executionEnvironments": [
+        {
+            "root": ".",
+            "venv": ".venv",
+            "extraPaths": [
+                "flext-core/src",
+                "client-a-oud-mig/src",
+                "src"
+            ],
+            "pythonVersion": "3.13"
+        }
+    ],
+    "typeCheckingMode": "strict",
+    "reportOptionalMemberAccess": true,
+    "reportMissingTypeStubs": false
+}

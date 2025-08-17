@@ -20,69 +20,69 @@ def test_imports() -> bool:
 
     # Test flext-core
     try:
-      print("📦 Testing flext-core imports...")
+        print("📦 Testing flext-core imports...")
 
-      results["flext-core"] = "✅ SUCCESS"
-      print("   ✅ flext-core imports working")
+        results["flext-core"] = "✅ SUCCESS"
+        print("   ✅ flext-core imports working")
     except (OSError, ValueError, TypeError) as e:
-      results["flext-core"] = f"❌ FAILED: {e}"
-      print(f"   ❌ flext-core failed: {e}")
-      traceback.print_exc()
+        results["flext-core"] = f"❌ FAILED: {e}"
+        print(f"   ❌ flext-core failed: {e}")
+        traceback.print_exc()
 
     # Test flext-cli
     try:
-      print("📦 Testing flext-cli imports...")
+        print("📦 Testing flext-cli imports...")
 
-      results["flext-cli"] = "✅ SUCCESS"
-      print("   ✅ flext-cli imports working")
+        results["flext-cli"] = "✅ SUCCESS"
+        print("   ✅ flext-cli imports working")
     except (OSError, ValueError, TypeError) as e:
-      results["flext-cli"] = f"❌ FAILED: {e}"
-      print(f"   ❌ flext-cli failed: {e}")
-      traceback.print_exc()
+        results["flext-cli"] = f"❌ FAILED: {e}"
+        print(f"   ❌ flext-cli failed: {e}")
+        traceback.print_exc()
 
     # Test flext-observability
     try:
-      print("📦 Testing flext-observability imports...")
+        print("📦 Testing flext-observability imports...")
 
-      results["flext-observability"] = "✅ SUCCESS"
-      print("   ✅ flext-observability imports working")
+        results["flext-observability"] = "✅ SUCCESS"
+        print("   ✅ flext-observability imports working")
     except (OSError, ValueError, TypeError) as e:
-      results["flext-observability"] = f"❌ FAILED: {e}"
-      print(f"   ❌ flext-observability failed: {e}")
-      traceback.print_exc()
+        results["flext-observability"] = f"❌ FAILED: {e}"
+        print(f"   ❌ flext-observability failed: {e}")
+        traceback.print_exc()
 
     # Test flext-meltano - use actual available exports
     try:
-      print("📦 Testing flext-meltano imports...")
+        print("📦 Testing flext-meltano imports...")
 
-      results["flext-meltano"] = "✅ SUCCESS"
-      print("   ✅ flext-meltano imports working")
+        results["flext-meltano"] = "✅ SUCCESS"
+        print("   ✅ flext-meltano imports working")
     except (OSError, ValueError, TypeError) as e:
-      results["flext-meltano"] = f"❌ FAILED: {e}"
-      print(f"   ❌ flext-meltano failed: {e}")
-      traceback.print_exc()
+        results["flext-meltano"] = f"❌ FAILED: {e}"
+        print(f"   ❌ flext-meltano failed: {e}")
+        traceback.print_exc()
 
     # Test flext-ldif
     try:
-      print("📦 Testing flext-ldif imports...")
+        print("📦 Testing flext-ldif imports...")
 
-      results["flext-ldif"] = "✅ SUCCESS"
-      print("   ✅ flext-ldif imports working")
+        results["flext-ldif"] = "✅ SUCCESS"
+        print("   ✅ flext-ldif imports working")
     except (OSError, ValueError, TypeError) as e:
-      results["flext-ldif"] = f"❌ FAILED: {e}"
-      print(f"   ❌ flext-ldif failed: {e}")
-      traceback.print_exc()
+        results["flext-ldif"] = f"❌ FAILED: {e}"
+        print(f"   ❌ flext-ldif failed: {e}")
+        traceback.print_exc()
 
     # Test flext-ldap
     try:
-      print("📦 Testing flext-ldap imports...")
+        print("📦 Testing flext-ldap imports...")
 
-      results["flext-ldap"] = "✅ SUCCESS"
-      print("   ✅ flext-ldap imports working")
+        results["flext-ldap"] = "✅ SUCCESS"
+        print("   ✅ flext-ldap imports working")
     except (OSError, ValueError, TypeError) as e:
-      results["flext-ldap"] = f"❌ FAILED: {e}"
-      print(f"   ❌ flext-ldap failed: {e}")
-      traceback.print_exc()
+        results["flext-ldap"] = f"❌ FAILED: {e}"
+        print(f"   ❌ flext-ldap failed: {e}")
+        traceback.print_exc()
 
     print("=" * 60)
     print("📊 IMPORT VALIDATION RESULTS:")
@@ -92,17 +92,17 @@ def test_imports() -> bool:
     total_count = len(results)
 
     for project, result in results.items():
-      print(f"{project:20} | {result}")
-      if "SUCCESS" in result:
-          success_count += 1
+        print(f"{project:20} | {result}")
+        if "SUCCESS" in result:
+            success_count += 1
 
     print("=" * 60)
     print(f"✅ SUCCESS: {success_count}/{total_count} projects")
     print(f"❌ FAILED:  {total_count - success_count}/{total_count} projects")
 
     if success_count == total_count:
-      print("🎉 ALL PROJECTS SYNCHRONIZED! Cross-project imports working perfectly!")
-      return True
+        print("🎉 ALL PROJECTS SYNCHRONIZED! Cross-project imports working perfectly!")
+        return True
     print("🚨 SYNCHRONIZATION ISSUES DETECTED! Some imports failed!")
     return False
 

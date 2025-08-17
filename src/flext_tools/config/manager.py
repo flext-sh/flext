@@ -85,7 +85,7 @@ class Configuration(BaseModel):
         ...     environment="production",
         ...     debug=False,
         ...     timeout=60,
-        ...     details={"database": {"pool_size": 10}}
+        ...     details={"database": {"pool_size": 10}},
         ... )
         >>> print(f"Environment: {config.environment}")
         'Environment: production'
@@ -95,20 +95,24 @@ class Configuration(BaseModel):
     Note:
         Uses Pydantic validation to ensure configuration integrity
         and provides automatic type conversion where appropriate.
+
     """
 
     environment: str = Field(
-      default="staging",
-      description="Deployment environment (dev, staging, production)",
+        default="staging",
+        description="Deployment environment (dev, staging, production)",
     )
     debug: bool = Field(
-      default=True, description="Debug mode flag for development and troubleshooting",
+        default=True,
+        description="Debug mode flag for development and troubleshooting",
     )
     timeout: int = Field(
-      default=30, description="Default timeout values for operations",
+        default=30,
+        description="Default timeout values for operations",
     )
     details: dict[str, object] = Field(
-      default_factory=dict, description="Nested configuration for specific components",
+        default_factory=dict,
+        description="Nested configuration for specific components",
     )
 
 
@@ -161,67 +165,67 @@ class ConfigurationManager:
     """
 
     def __init__(self, config_path: Path | None = None) -> None:
-      """Initialize configuration manager with specified configuration path.
+        """Initialize configuration manager with specified configuration path.
 
-      Sets up the configuration manager with the specified configuration
-      directory path, defaulting to a 'config' subdirectory in the current
-      working directory if no path is provided.
+        Sets up the configuration manager with the specified configuration
+        directory path, defaulting to a 'config' subdirectory in the current
+        working directory if no path is provided.
 
-      Args:
-          config_path: Optional path to configuration directory. Defaults
-                      to './config' if not specified.
+        Args:
+            config_path: Optional path to configuration directory. Defaults
+                        to './config' if not specified.
 
-      """
-      self.config_path = config_path or Path.cwd() / "config"
+        """
+        self.config_path = config_path or Path.cwd() / "config"
 
     def load_config(self, **_kwargs: object) -> FlextResult[Configuration]:
-      """Load configuration from files with environment-specific settings.
+        """Load configuration from files with environment-specific settings.
 
-      Loads and processes configuration files from the configured directory,
-      applying environment-specific overrides and validation to ensure
-      consistent configuration across the FLEXT ecosystem.
+        Loads and processes configuration files from the configured directory,
+        applying environment-specific overrides and validation to ensure
+        consistent configuration across the FLEXT ecosystem.
 
-      Args:
-          **_kwargs: Configuration parameters including environment specification,
-                    validation options, and loading preferences
+        Args:
+            **_kwargs: Configuration parameters including environment specification,
+                      validation options, and loading preferences
 
-      Returns:
-          Dictionary containing processed configuration with environment-specific
-          settings, validation results, and structured configuration data
+        Returns:
+            Dictionary containing processed configuration with environment-specific
+            settings, validation results, and structured configuration data
 
-      Configuration Structure:
-          - environment: Deployment environment (dev, staging, production)
-          - debug: Debug mode flag for development and troubleshooting
-          - timeout: Default timeout values for operations
-          - details: Nested configuration for specific components
+        Configuration Structure:
+            - environment: Deployment environment (dev, staging, production)
+            - debug: Debug mode flag for development and troubleshooting
+            - timeout: Default timeout values for operations
+            - details: Nested configuration for specific components
 
-      Architecture:
-          Uses configuration loading pipeline with proper error handling,
-          environment resolution, and validation to ensure reliable
-          configuration management across all deployment scenarios.
+        Architecture:
+            Uses configuration loading pipeline with proper error handling,
+            environment resolution, and validation to ensure reliable
+            configuration management across all deployment scenarios.
 
-      """
-      try:
-          print_colored("📋 Loading configuration...", Colors.BLUE)
-          logger.info(
-              "Loading configuration from path",
-              extra={"config_path": str(self.config_path)},
-          )
+        """
+        try:
+            print_colored("📋 Loading configuration...", Colors.BLUE)
+            logger.info(
+                "Loading configuration from path",
+                extra={"config_path": str(self.config_path)},
+            )
 
-          # For now, using default configuration - in production this would load from files
-          config = Configuration(
-              environment="staging",
-              debug=True,
-              timeout=30,
-              details={},
-          )
+            # For now, using default configuration - in production this would load from files
+            config = Configuration(
+                environment="staging",
+                debug=True,
+                timeout=30,
+                details={},
+            )
 
-          print_colored("✅ Configuration loaded successfully", Colors.GREEN)
-          logger.info("Configuration loaded successfully")
+            print_colored("✅ Configuration loaded successfully", Colors.GREEN)
+            logger.info("Configuration loaded successfully")
 
-          return FlextResult.ok(config)
+            return FlextResult.ok(config)
 
-      except Exception as e:
-          error_msg = f"Failed to load configuration: {e}"
-          logger.exception(error_msg)
-          return FlextResult.fail(error_msg)
+        except Exception as e:
+            error_msg = f"Failed to load configuration: {e}"
+            logger.exception(error_msg)
+            return FlextResult.fail(error_msg)
