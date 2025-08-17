@@ -149,92 +149,92 @@ class MonitoringManager:
     """
 
     def __init__(self, config_path: Path | None = None) -> None:
-      """Initialize monitoring manager with observability infrastructure coordination.
+        """Initialize monitoring manager with observability infrastructure coordination.
 
-      Sets up the monitoring management system with configurable data storage
-      and configuration paths, preparing for comprehensive observability
-      infrastructure management across all FLEXT ecosystem services.
+        Sets up the monitoring management system with configurable data storage
+        and configuration paths, preparing for comprehensive observability
+        infrastructure management across all FLEXT ecosystem services.
 
-      Args:
-          config_path: Path to monitoring configuration directory for metrics
-                      storage, dashboard configurations, and alert rules.
-                      Defaults to current directory 'monitoring' subdirectory.
+        Args:
+            config_path: Path to monitoring configuration directory for metrics
+                        storage, dashboard configurations, and alert rules.
+                        Defaults to current directory 'monitoring' subdirectory.
 
-      """
-      self.config_path = config_path or Path.cwd() / "monitoring"
+        """
+        self.config_path = config_path or Path.cwd() / "monitoring"
 
     def setup_monitoring(self, **_kwargs: object) -> FlextResult[MonitoringSetupData]:
-      """Set up comprehensive monitoring and observability infrastructure.
+        """Set up comprehensive monitoring and observability infrastructure.
 
-      Performs complete monitoring infrastructure configuration including metrics
-      collection setup, alerting coordination, dashboard provisioning, and
-      distributed tracing with enterprise-grade observability standards.
+        Performs complete monitoring infrastructure configuration including metrics
+        collection setup, alerting coordination, dashboard provisioning, and
+        distributed tracing with enterprise-grade observability standards.
 
-      Args:
-          **_kwargs: Monitoring configuration parameters including:
-                    - enable_metrics: Enable comprehensive metrics collection
-                    - configure_alerts: Enable intelligent alerting system
-                    - provision_dashboards: Enable automated dashboard creation
-                    - enable_distributed_tracing: Enable end-to-end request tracing
-                    - log_aggregation: Enable centralized log collection
-                    - performance_monitoring: Enable performance analysis
-                    - anomaly_detection: Enable automated anomaly detection
-                    - slo_tracking: Enable service level objective monitoring
+        Args:
+            **_kwargs: Monitoring configuration parameters including:
+                      - enable_metrics: Enable comprehensive metrics collection
+                      - configure_alerts: Enable intelligent alerting system
+                      - provision_dashboards: Enable automated dashboard creation
+                      - enable_distributed_tracing: Enable end-to-end request tracing
+                      - log_aggregation: Enable centralized log collection
+                      - performance_monitoring: Enable performance analysis
+                      - anomaly_detection: Enable automated anomaly detection
+                      - slo_tracking: Enable service level objective monitoring
 
-      Returns:
-          Dictionary containing comprehensive monitoring setup results:
-          - monitoring_configured: Overall monitoring infrastructure status
-          - metrics_enabled: Metrics collection and aggregation status
-          - alerts_setup: Alerting system configuration status
-          - details: Detailed monitoring configuration and system metadata
+        Returns:
+            Dictionary containing comprehensive monitoring setup results:
+            - monitoring_configured: Overall monitoring infrastructure status
+            - metrics_enabled: Metrics collection and aggregation status
+            - alerts_setup: Alerting system configuration status
+            - details: Detailed monitoring configuration and system metadata
 
-      Setup Process:
-          1. Metrics Infrastructure: Configure metrics collection and storage
-          2. Alerting System: Setup alert rules and notification channels
-          3. Dashboard Provisioning: Create and configure monitoring dashboards
-          4. Distributed Tracing: Enable request tracing and performance analysis
-          5. Log Aggregation: Configure centralized logging and correlation
-          6. Performance Monitoring: Setup performance analysis and benchmarking
-          7. Anomaly Detection: Configure automated anomaly detection systems
-          8. Integration Validation: Verify monitoring system integration
+        Setup Process:
+            1. Metrics Infrastructure: Configure metrics collection and storage
+            2. Alerting System: Setup alert rules and notification channels
+            3. Dashboard Provisioning: Create and configure monitoring dashboards
+            4. Distributed Tracing: Enable request tracing and performance analysis
+            5. Log Aggregation: Configure centralized logging and correlation
+            6. Performance Monitoring: Setup performance analysis and benchmarking
+            7. Anomaly Detection: Configure automated anomaly detection systems
+            8. Integration Validation: Verify monitoring system integration
 
-      Architecture:
-          Uses parallel infrastructure provisioning with proper error handling
-          and rollback capabilities to ensure reliable monitoring deployment
-          without impacting service availability.
+        Architecture:
+            Uses parallel infrastructure provisioning with proper error handling
+            and rollback capabilities to ensure reliable monitoring deployment
+            without impacting service availability.
 
-      """
-      try:
-          print_colored("📊 Setting up monitoring infrastructure...", Colors.BLUE)
-          logger.info(
-              "Starting monitoring infrastructure setup",
-              extra={"config_path": str(self.config_path)},
-          )
+        """
+        try:
+            print_colored("📊 Setting up monitoring infrastructure...", Colors.BLUE)
+            logger.info(
+                "Starting monitoring infrastructure setup",
+                extra={"config_path": str(self.config_path)},
+            )
 
-          # For now, using mock results - in production this would perform actual monitoring setup
-          # Using FlextResult pattern (DRY - no custom classes)
-          results_data: MonitoringSetupData = {
-              "monitoring_configured": True,
-              "metrics_enabled": True,
-              "alerts_setup": True,
-              "details": {
-                  "metrics_count": 0,
-                  "alert_rules": 0,
-                  "dashboards": [],
-                  "tracing_enabled": True,
-                  "log_aggregation": True,
-              },
-          }
+            # For now, using mock results - in production this would perform actual monitoring setup
+            # Using FlextResult pattern (DRY - no custom classes)
+            results_data: MonitoringSetupData = {
+                "monitoring_configured": True,
+                "metrics_enabled": True,
+                "alerts_setup": True,
+                "details": {
+                    "metrics_count": 0,
+                    "alert_rules": 0,
+                    "dashboards": [],
+                    "tracing_enabled": True,
+                    "log_aggregation": True,
+                },
+            }
 
-          print_colored(
-              "✅ Monitoring infrastructure configured successfully",
-              Colors.GREEN,
-          )
-          logger.info("Monitoring infrastructure setup completed successfully")
+            print_colored(
+                "✅ Monitoring infrastructure configured successfully",
+                Colors.GREEN,
+            )
+            logger.info("Monitoring infrastructure setup completed successfully")
 
-          return FlextResult.ok(results_data)
+            return FlextResult.ok(results_data)
 
-      except Exception as e:
-          error_msg = f"Failed to setup monitoring infrastructure: {e}"
-          logger.exception(error_msg)
-          return FlextResult.fail(error_msg)
+        except Exception as e:
+            error_msg = f"Failed to setup monitoring infrastructure: {e}"
+            logger.exception(error_msg)
+            return FlextResult.fail(error_msg)

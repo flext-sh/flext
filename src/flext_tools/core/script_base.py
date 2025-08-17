@@ -149,7 +149,7 @@ class ScriptMetadata(FlextValue):
         ...     description="Process FLEXT data with validation",
         ...     category="data-operations",
         ...     version="2.1.0",
-        ...     requires_confirmation=True
+        ...     requires_confirmation=True,
         ... )
         >>> validation = metadata.validate_business_rules()
         >>> if validation.success:
@@ -158,6 +158,7 @@ class ScriptMetadata(FlextValue):
     Note:
         Uses flext-core value object patterns for immutability and
         comprehensive business rule validation.
+
     """
 
     name: str
@@ -168,17 +169,17 @@ class ScriptMetadata(FlextValue):
     dry_run_supported: bool = True
 
     def validate_business_rules(self) -> FlextResult[None]:
-      """Validate script metadata business rules."""
-      if not self.name.strip():
-          return FlextResult.fail("Script name cannot be empty")
+        """Validate script metadata business rules."""
+        if not self.name.strip():
+            return FlextResult.fail("Script name cannot be empty")
 
-      if not self.description.strip():
-          return FlextResult.fail("Script description cannot be empty")
+        if not self.description.strip():
+            return FlextResult.fail("Script description cannot be empty")
 
-      if not self.category.strip():
-          return FlextResult.fail("Script category cannot be empty")
+        if not self.category.strip():
+            return FlextResult.fail("Script category cannot be empty")
 
-      return FlextResult.ok(None)
+        return FlextResult.ok(None)
 
 
 class FlextScript(ABC):
@@ -218,7 +219,7 @@ class FlextScript(ABC):
         ...             name="data-processor",
         ...             description="Process data with enterprise patterns",
         ...             category="data-operations",
-        ...             version="2.0.0"
+        ...             version="2.0.0",
         ...         )
         ...
         ...     def validate_preconditions(self) -> FlextResult[None]:
@@ -235,220 +236,221 @@ class FlextScript(ABC):
     Integration:
         Integrates with flext-core patterns, flext-observability monitoring,
         and quality gateway validation for comprehensive script infrastructure.
+
     """
 
     def __init__(self) -> None:
-      """Initialize the script with flext-core infrastructure."""
-      self.logger = get_logger(self.__class__.__name__)
-      self.start_time = time.time()
-      self.container = get_flext_container()
+        """Initialize the script with flext-core infrastructure."""
+        self.logger = get_logger(self.__class__.__name__)
+        self.start_time = time.time()
+        self.container = get_flext_container()
 
     @property
     @abstractmethod
     def metadata(self) -> ScriptMetadata:
-      """Return script metadata as flext-core value object."""
+        """Return script metadata as flext-core value object."""
 
     @abstractmethod
     def validate_preconditions(self) -> FlextResult[None]:
-      """Validate that script can run successfully using FlextResult pattern.
+        """Validate that script can run successfully using FlextResult pattern.
 
-      Returns:
-          FlextResult[None] indicating validation success or failure with context
+        Returns:
+            FlextResult[None] indicating validation success or failure with context
 
-      """
+        """
 
     @abstractmethod
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
-      """Execute the main script logic with railway-oriented programming.
+        """Execute the main script logic with railway-oriented programming.
 
-      Args:
-          **kwargs: Additional arguments for script execution
+        Args:
+            **kwargs: Additional arguments for script execution
 
-      Returns:
-          FlextResult containing execution result or error information
+        Returns:
+            FlextResult containing execution result or error information
 
-      """
+        """
 
     def cleanup(self) -> FlextResult[None]:
-      """Perform cleanup operations after execution.
+        """Perform cleanup operations after execution.
 
-      Returns:
-          FlextResult indicating cleanup success or failure
+        Returns:
+            FlextResult indicating cleanup success or failure
 
-      """
-      return FlextResult.ok(None)
+        """
+        return FlextResult.ok(None)
 
     def setup(self) -> FlextResult[None]:
-      """Perform any setup operations before main execution.
+        """Perform any setup operations before main execution.
 
-      Returns:
-          FlextResult indicating setup success or failure
+        Returns:
+            FlextResult indicating setup success or failure
 
-      """
-      return FlextResult.ok(None)
+        """
+        return FlextResult.ok(None)
 
     def run(self, **kwargs: object) -> int:
-      """Run the complete script with FlextResult railway-oriented programming.
+        """Run the complete script with FlextResult railway-oriented programming.
 
-      Args:
-          **kwargs: Additional arguments passed to execute_main_logic
+        Args:
+            **kwargs: Additional arguments passed to execute_main_logic
 
-      Returns:
-          0 for success, non-zero for failure
+        Returns:
+            0 for success, non-zero for failure
 
-      """
-      try:
-          self._print_header()
+        """
+        try:
+            self._print_header()
 
-          # Extract common flags
-          is_dry_run = bool(kwargs.get("dry_run"))
-          skip_validation = bool(kwargs.get("no_validate"))
-          relaxed_validation = bool(kwargs.get("relaxed_validation"))
+            # Extract common flags
+            is_dry_run = bool(kwargs.get("dry_run"))
+            skip_validation = bool(kwargs.get("no_validate"))
+            relaxed_validation = bool(kwargs.get("relaxed_validation"))
 
-          if is_dry_run:
-              print_colored("🧪 Dry-run mode: no changes will be made", Colors.YELLOW)
+            if is_dry_run:
+                print_colored("🧪 Dry-run mode: no changes will be made", Colors.YELLOW)
 
-          # Run central FLEXT validation unless skipped
-          if not skip_validation:
-              validation_result = self._run_flext_validation(
-                  strict=not relaxed_validation,
-              )
-              if not validation_result.success:
-                  print_colored(
-                      f"❌ Validation failed: {validation_result.error}",
-                      Colors.RED,
-                  )
-                  return 1
+            # Run central FLEXT validation unless skipped
+            if not skip_validation:
+                validation_result = self._run_flext_validation(
+                    strict=not relaxed_validation,
+                )
+                if not validation_result.success:
+                    print_colored(
+                        f"❌ Validation failed: {validation_result.error}",
+                        Colors.RED,
+                    )
+                    return 1
 
-          # Chain operations using FlextResult pattern
-          result = (
-              self.validate_preconditions()
-              .flat_map(lambda _: self.setup())
-              .flat_map(lambda _: self.execute_main_logic(**kwargs))
-              .map(lambda _: self._print_success())
-          )
-          if result.success:
-              return 0
+            # Chain operations using FlextResult pattern
+            result = (
+                self.validate_preconditions()
+                .flat_map(lambda _: self.setup())
+                .flat_map(lambda _: self.execute_main_logic(**kwargs))
+                .map(lambda _: self._print_success())
+            )
+            if result.success:
+                return 0
 
-          # Handle failure with detailed context
-          error_msg = result.error or "Unknown error occurred"
-          print_colored(f"❌ Script failed: {error_msg}", Colors.RED)
-          self.logger.error(f"Script execution failed: {error_msg}")
-          return 1
+            # Handle failure with detailed context
+            error_msg = result.error or "Unknown error occurred"
+            print_colored(f"❌ Script failed: {error_msg}", Colors.RED)
+            self.logger.error(f"Script execution failed: {error_msg}")
+            return 1
 
-      except KeyboardInterrupt:
-          print_colored("\n❌ Script interrupted by user", Colors.YELLOW)
-          return 1
-      except Exception as e:
-          print_colored(f"❌ Unexpected error: {e}", Colors.RED)
-          self.logger.exception("Script failed with exception")
-          return 1
-      finally:
-          # Cleanup with error handling
-          cleanup_result = self.cleanup()
-          if not cleanup_result.success:
-              self.logger.warning(f"Cleanup failed: {cleanup_result.error}")
+        except KeyboardInterrupt:
+            print_colored("\n❌ Script interrupted by user", Colors.YELLOW)
+            return 1
+        except Exception as e:
+            print_colored(f"❌ Unexpected error: {e}", Colors.RED)
+            self.logger.exception("Script failed with exception")
+            return 1
+        finally:
+            # Cleanup with error handling
+            cleanup_result = self.cleanup()
+            if not cleanup_result.success:
+                self.logger.warning(f"Cleanup failed: {cleanup_result.error}")
 
     def _run_flext_validation(self, *, strict: bool) -> FlextResult[None]:
-      """Run centralized FLEXT validation via QualityGateway.
+        """Run centralized FLEXT validation via QualityGateway.
 
-      Args:
-          strict: When True, missing tools fail validation; when False, they are
-              reported but do not fail the validation.
+        Args:
+            strict: When True, missing tools fail validation; when False, they are
+                reported but do not fail the validation.
 
-      Returns:
-          FlextResult indicating overall validation status.
+        Returns:
+            FlextResult indicating overall validation status.
 
-      """
-      try:
-          workspace = Path.cwd()
-          gateway = QualityGateway(workspace_path=workspace)
-          config = QualityCheckConfig(relaxed=not strict)
-          result = gateway.run_quality_checks_safe(config=config)
-          if not result.success:
-              return FlextResult.fail(result.error or "Quality checks failed")
-          data = result.data or {}
-          if not all_quality_checks_passed(data):
-              summary = get_quality_failure_summary(data)
-              return FlextResult.fail(summary)
-          return FlextResult.ok(None)
-      except Exception as exc:
-          return FlextResult.fail(f"Validation error: {exc}")
+        """
+        try:
+            workspace = Path.cwd()
+            gateway = QualityGateway(workspace_path=workspace)
+            config = QualityCheckConfig(relaxed=not strict)
+            result = gateway.run_quality_checks_safe(config=config)
+            if not result.success:
+                return FlextResult.fail(result.error or "Quality checks failed")
+            data = result.data or {}
+            if not all_quality_checks_passed(data):
+                summary = get_quality_failure_summary(data)
+                return FlextResult.fail(summary)
+            return FlextResult.ok(None)
+        except Exception as exc:
+            return FlextResult.fail(f"Validation error: {exc}")
 
     def _print_header(self) -> None:
-      """Print script header with metadata."""
-      print_colored("=" * 60, Colors.CYAN)
-      print_colored(f"🚀 {self.metadata.name} v{self.metadata.version}", Colors.CYAN)
-      print_colored(f"📋 {self.metadata.description}", Colors.BLUE)
-      print_colored(f"🏷️  Category: {self.metadata.category}", Colors.BLUE)
-      print_colored("=" * 60, Colors.CYAN)
+        """Print script header with metadata."""
+        print_colored("=" * 60, Colors.CYAN)
+        print_colored(f"🚀 {self.metadata.name} v{self.metadata.version}", Colors.CYAN)
+        print_colored(f"📋 {self.metadata.description}", Colors.BLUE)
+        print_colored(f"🏷️  Category: {self.metadata.category}", Colors.BLUE)
+        print_colored("=" * 60, Colors.CYAN)
 
     def _print_success(self) -> None:
-      """Print success message with execution time."""
-      duration = time.time() - self.start_time
-      print_colored("=" * 60, Colors.GREEN)
-      print_colored(f"✅ {self.metadata.name} completed successfully!", Colors.GREEN)
-      print_colored(f"⏱️  Execution time: {duration:.2f}s", Colors.GREEN)
-      print_colored("=" * 60, Colors.GREEN)
+        """Print success message with execution time."""
+        duration = time.time() - self.start_time
+        print_colored("=" * 60, Colors.GREEN)
+        print_colored(f"✅ {self.metadata.name} completed successfully!", Colors.GREEN)
+        print_colored(f"⏱️  Execution time: {duration:.2f}s", Colors.GREEN)
+        print_colored("=" * 60, Colors.GREEN)
 
     def create_parser(self) -> argparse.ArgumentParser:
-      """Create argument parser with common options.
+        """Create argument parser with common options.
 
-      Returns:
-          Configured ArgumentParser instance
+        Returns:
+            Configured ArgumentParser instance
 
-      """
-      parser = argparse.ArgumentParser(
-          description=self.metadata.description,
-          formatter_class=argparse.RawDescriptionHelpFormatter,
-      )
+        """
+        parser = argparse.ArgumentParser(
+            description=self.metadata.description,
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+        )
 
-      # Common arguments
-      if self.metadata.dry_run_supported:
-          parser.add_argument(
-              "--dry-run",
-              action="store_true",
-              help="Show what would be done without making changes",
-          )
+        # Common arguments
+        if self.metadata.dry_run_supported:
+            parser.add_argument(
+                "--dry-run",
+                action="store_true",
+                help="Show what would be done without making changes",
+            )
 
-      parser.add_argument(
-          "--verbose",
-          "-v",
-          action="store_true",
-          help="Enable verbose output",
-      )
+        parser.add_argument(
+            "--verbose",
+            "-v",
+            action="store_true",
+            help="Enable verbose output",
+        )
 
-      parser.add_argument(
-          "--no-validate",
-          action="store_true",
-          help="Skip centralized FLEXT validation before execution",
-      )
+        parser.add_argument(
+            "--no-validate",
+            action="store_true",
+            help="Skip centralized FLEXT validation before execution",
+        )
 
-      parser.add_argument(
-          "--relaxed-validation",
-          action="store_true",
-          help=("Do not fail if quality tools are missing; report warnings instead"),
-      )
+        parser.add_argument(
+            "--relaxed-validation",
+            action="store_true",
+            help=("Do not fail if quality tools are missing; report warnings instead"),
+        )
 
-      return parser
+        return parser
 
     def main(self) -> int:
-      """Execute the script with comprehensive command-line interface.
+        """Execute the script with comprehensive command-line interface.
 
-      Returns:
-          Exit code (0 for success, non-zero for failure)
+        Returns:
+            Exit code (0 for success, non-zero for failure)
 
-      """
-      parser = self.create_parser()
-      args = parser.parse_args()
+        """
+        parser = self.create_parser()
+        args = parser.parse_args()
 
-      # Configure logging level
-      if args.verbose:
-          # Set verbose mode - our logger doesn't have set_level method
+        # Configure logging level
+        if args.verbose:
+            # Set verbose mode - our logger doesn't have set_level method
 
-          logging.getLogger().setLevel(logging.DEBUG)
+            logging.getLogger().setLevel(logging.DEBUG)
 
-      return self.run(**vars(args))
+        return self.run(**vars(args))
 
 
 @dataclass
@@ -485,12 +487,13 @@ class ScriptConfig[**P_main_func]:
         ...     description="Simple data processing script",
         ...     category="automation",
         ...     main_func=process_data,
-        ...     validate_func=validate_environment
+        ...     validate_func=validate_environment,
         ... )
 
     Note:
         Uses generic type parameters to ensure type safety for the
         main function signature and parameter handling.
+
     """
 
     name: str
@@ -538,7 +541,7 @@ def create_simple_script[**P_main_func](
         ...     description="Process enterprise data with validation",
         ...     category="data-operations",
         ...     main_func=process_data,
-        ...     validate_func=validate_environment
+        ...     validate_func=validate_environment,
         ... )
         >>>
         >>> ProcessorScript = create_simple_script(script_config)
@@ -548,46 +551,47 @@ def create_simple_script[**P_main_func](
     Note:
         Uses generic type parameters to ensure type safety for function
         signatures and maintains compatibility with enterprise patterns.
+
     """
 
     class SimpleScript(FlextScript):
-      @property
-      def metadata(self) -> ScriptMetadata:
-          return ScriptMetadata(
-              name=config.name,
-              description=config.description,
-              category=config.category,
-          )
+        @property
+        def metadata(self) -> ScriptMetadata:
+            return ScriptMetadata(
+                name=config.name,
+                description=config.description,
+                category=config.category,
+            )
 
-      def validate_preconditions(self) -> FlextResult[None]:
-          if config.validate_func:
-              return config.validate_func()
-          return FlextResult.ok(None)
+        def validate_preconditions(self) -> FlextResult[None]:
+            if config.validate_func:
+                return config.validate_func()
+            return FlextResult.ok(None)
 
-      def setup(self) -> FlextResult[None]:
-          if config.setup_func:
-              return config.setup_func()
-          return FlextResult.ok(None)
+        def setup(self) -> FlextResult[None]:
+            if config.setup_func:
+                return config.setup_func()
+            return FlextResult.ok(None)
 
-      def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
-          try:
-              # Check function signature to determine if it accepts kwargs
-              sig = inspect.signature(config.main_func)
-              if sig.parameters:
-                  # Function expects parameters, pass kwargs
-                  result = config.main_func(**kwargs)  # type: ignore[call-arg,arg-type]
-              else:
-                  # Function expects no parameters
-                  result = config.main_func()  # type: ignore[call-arg]
-              return (
-                  result
-                  if isinstance(result, FlextResult)
-                  else FlextResult.ok(result)
-              )
-          except TypeError as e:
-              return FlextResult.fail(f"Function signature mismatch: {e}")
+        def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+            try:
+                # Check function signature to determine if it accepts kwargs
+                sig = inspect.signature(config.main_func)
+                if sig.parameters:
+                    # Function expects parameters, pass kwargs
+                    result = config.main_func(**kwargs)  # type: ignore[call-arg,arg-type]
+                else:
+                    # Function expects no parameters
+                    result = config.main_func()  # type: ignore[call-arg]
+                return (
+                    result
+                    if isinstance(result, FlextResult)
+                    else FlextResult.ok(result)
+                )
+            except TypeError as e:
+                return FlextResult.fail(f"Function signature mismatch: {e}")
 
-      def cleanup(self) -> FlextResult[None]:
-          return FlextResult.ok(None)
+        def cleanup(self) -> FlextResult[None]:
+            return FlextResult.ok(None)
 
     return SimpleScript

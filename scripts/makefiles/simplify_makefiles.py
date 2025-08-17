@@ -20,15 +20,15 @@ def main() -> None:
     template_file = workspace_root / ".flext-makefile-template.mk"
 
     if not template_file.exists():
-      print(f"❌ Template file not found: {template_file}")
-      return
+        print(f"❌ Template file not found: {template_file}")
+        return
 
     # Find all FLEXT project Makefiles
     makefile_files = list(workspace_root.glob("*/Makefile"))
     makefile_files = [
-      f
-      for f in makefile_files
-      if not str(f).startswith(str(workspace_root / ".venv"))
+        f
+        for f in makefile_files
+        if not str(f).startswith(str(workspace_root / ".venv"))
     ]
 
     print(f"🔍 Found {len(makefile_files)} Makefiles to simplify")
@@ -40,31 +40,31 @@ def main() -> None:
     simplified_count = 0
 
     for makefile_path in makefile_files:
-      project_name = makefile_path.parent.name
+        project_name = makefile_path.parent.name
 
-      # Skip workspace root and cmd projects (they may need special handling)
-      if project_name in {"flext", "cmd"} or "cmd/" in str(makefile_path):
-          print(f"⏭️  Skipping special project: {project_name}")
-          continue
+        # Skip workspace root and cmd projects (they may need special handling)
+        if project_name in {"flext", "cmd"} or "cmd/" in str(makefile_path):
+            print(f"⏭️  Skipping special project: {project_name}")
+            continue
 
-      print(f"🔧 Simplifying Makefile for: {project_name}")
+        print(f"🔧 Simplifying Makefile for: {project_name}")
 
-      # Backup original complex Makefile
-      backup_path = backup_dir / f"{project_name}_Makefile.bak"
-      shutil.copy2(makefile_path, backup_path)
-      print(f"  💾 Backed up to {backup_path}")
+        # Backup original complex Makefile
+        backup_path = backup_dir / f"{project_name}_Makefile.bak"
+        shutil.copy2(makefile_path, backup_path)
+        print(f"  💾 Backed up to {backup_path}")
 
-      # Create simplified Makefile using template
-      simplified_makefile = _create_simplified_makefile(project_name, template_file)
+        # Create simplified Makefile using template
+        simplified_makefile = _create_simplified_makefile(project_name, template_file)
 
-      # Write simplified Makefile
-      try:
-          with Path(makefile_path).open("w", encoding="utf-8") as f:
-              f.write(simplified_makefile)
-          print(f"  ✅ Simplified Makefile for {project_name}")
-          simplified_count += 1
-      except (OSError, ValueError, TypeError) as e:
-          print(f"  ❌ Failed to write {makefile_path}: {e}")
+        # Write simplified Makefile
+        try:
+            with Path(makefile_path).open("w", encoding="utf-8") as f:
+                f.write(simplified_makefile)
+            print(f"  ✅ Simplified Makefile for {project_name}")
+            simplified_count += 1
+        except (OSError, ValueError, TypeError) as e:
+            print(f"  ❌ Failed to write {makefile_path}: {e}")
 
     print("\n🎉 Makefile simplification completed following KISS principle!")
     print("📋 Summary:")
@@ -96,7 +96,7 @@ include ../.flext-makefile-template.mk
 
     # Add project-specific customizations if any
     if customizations:
-      makefile_content += "\n" + customizations + "\n"
+        makefile_content += "\n" + customizations + "\n"
 
     return makefile_content
 
@@ -105,11 +105,11 @@ def _get_project_customizations(project_name: str) -> str:
     """Get project-specific customizations based on KISS principle."""
     # KISS: Only add customizations for projects that truly need them
     customizations = {
-      "flext-core": """
+        "flext-core": """
 # Core project - foundation module
 PROJECT_NAME := flext_core
 """,
-      "flext-api": """
+        "flext-api": """
 # API project - FastAPI application
 PROJECT_NAME := flext_api
 SRC_MODULE := flext_api
@@ -119,7 +119,7 @@ dev: poetry-check ## Start development server
 	@echo "$(BLUE)🚀 Starting FastAPI development server...$(NC)"
 	@$(POETRY_RUN) uvicorn flext_api.main:app --reload --host 0.0.0.0 --port 8000
 """,
-      "flext-web": """
+        "flext-web": """
 # Web project - Django application
 PROJECT_NAME := flext_web
 SRC_MODULE := flext_web
@@ -133,7 +133,7 @@ collectstatic: poetry-check ## Collect static files
 	@echo "$(BLUE)📦 Collecting static files...$(NC)"
 	@$(POETRY_RUN) python manage.py collectstatic --noinput
 """,
-      "flext-observability": """
+        "flext-observability": """
 # Observability project - Monitoring and logging
 PROJECT_NAME := flext_observability
 SRC_MODULE := flext_observability
@@ -147,7 +147,7 @@ setup-grafana: ## Setup Grafana dashboards
 	@echo "$(BLUE)📈 Setting up Grafana...$(NC)"
 	@$(POETRY_RUN) python -m flext_observability.setup grafana
 """,
-      "client-a-oud-mig": """
+        "client-a-oud-mig": """
 # client-a OUD Migration project
 PROJECT_NAME := client-a_oud_mig
 SRC_MODULE := client-a_oud_mig
