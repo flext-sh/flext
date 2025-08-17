@@ -10,11 +10,16 @@ import sys
 from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+from importlib import import_module
 from pathlib import Path
 
 import pytest
 from mypy import api as mypy_api
-from ruff.__main__ import main as ruff_main
+from ruff.__main__ import main as ruff_main  # type: ignore[import-untyped]
+
+# Import ruff dynamically
+_ruff_mod = import_module("ruff.__main__")
+ruff_main = getattr(_ruff_mod, "main", None)
 
 
 @dataclass

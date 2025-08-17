@@ -87,6 +87,7 @@ from flext_core import FlextContainer, get_flext_container
 
 # Exporta módulos principais
 from flext_tools.analysis import ConflictAnalyzer, VersionAnalyzer
+
 # Cache module removed - not implemented yet
 from flext_tools.discovery import DependencyDiscovery
 from flext_tools.documentation import DocumentationGenerator, TemplateManager
@@ -100,6 +101,9 @@ from flext_tools.utils import (
     print_colored,
     should_ignore_path,
 )
+from flext_tools.core.script_base import FlextScript, ScriptMetadata
+from flext_tools.infrastructure import MonitoringManager, SSLManager
+from flext_tools.quality.mypy_checker import MyPyChecker
 
 
 def get_flext_tools_container() -> FlextContainer:
@@ -108,47 +112,48 @@ def get_flext_tools_container() -> FlextContainer:
 
     # Register core services
     try:
-        container.get("conflict_analyzer")
+      container.get("conflict_analyzer")
     except KeyError:
-        container.register("conflict_analyzer", ConflictAnalyzer)
+      container.register("conflict_analyzer", ConflictAnalyzer)
+
+    # Cache module removed - not implemented yet
 
     try:
-        container.get("cache_manager")
+      container.get("dependency_discovery")
     except KeyError:
-        container.register("cache_manager", CacheManager)
+      container.register("dependency_discovery", DependencyDiscovery)
 
     try:
-        container.get("dependency_discovery")
+      container.get("documentation_generator")
     except KeyError:
-        container.register("dependency_discovery", DependencyDiscovery)
+      container.register("documentation_generator", DocumentationGenerator)
 
     try:
-        container.get("documentation_generator")
+      container.get("poetry_operations")
     except KeyError:
-        container.register("documentation_generator", DocumentationGenerator)
+      container.register("poetry_operations", PoetryOperations)
 
     try:
-        container.get("poetry_operations")
+      container.get("safety_validator")
     except KeyError:
-        container.register("poetry_operations", PoetryOperations)
-
-    try:
-        container.get("safety_validator")
-    except KeyError:
-        container.register("safety_validator", SafetyValidator)
+      container.register("safety_validator", SafetyValidator)
 
     return container
 
 
 __all__: list[str] = [
     "BackupManager",
-    "CacheManager",
+    # "CacheManager",  # Cache module removed
     "Colors",
     "ConflictAnalyzer",
     "DependencyDiscovery",
     "DetailedLogger",
     "DocumentationGenerator",
+    "FlextScript",
     "FlextContainer",
+    "MonitoringManager",
+    "ScriptMetadata",
+    "SSLManager",
     "PoetryOperations",
     "PoetryValidator",
     "RollbackManager",
@@ -157,12 +162,13 @@ __all__: list[str] = [
     "VersionAnalyzer",
     "__version__",
     "__version_info__",
-            # "cache_result",  # Cache module removed
-        # "cached",        # Cache module removed
+    # "cache_result",  # Cache module removed
+    # "cached",        # Cache module removed
     "get_flext_container",
     "get_flext_tools_container",
     "get_logger",
     "get_stdlib_modules",
+    "MyPyChecker",
     "print_colored",
     "should_ignore_path",
 ]

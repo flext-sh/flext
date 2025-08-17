@@ -5,21 +5,15 @@ Orquestra testes E2E completos do ecossistema Oracle Database FLEXT
 usando flext_tools.testing para máxima confiabilidade.
 """
 
-from __future__ import annotations
-
+import argparse
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import docker
 from flext_core import FlextResult
 
-from flext_tools import Colors, print_colored
-from flext_tools.core.script_base import FlextScript, ScriptMetadata
+from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 from flext_tools.testing import OracleE2ETestManager
-
-if TYPE_CHECKING:
-    import argparse
 
 
 class OracleE2ETestRunner(FlextScript):

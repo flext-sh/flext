@@ -70,15 +70,12 @@ from __future__ import annotations
 
 import tomllib
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from flext_core import FlextResult, get_logger
 from pydantic import BaseModel, Field
 
 from flext_tools.utils import Colors, print_colored
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 logger = get_logger(__name__)
 
@@ -106,12 +103,12 @@ class ProjectLockInfo:
     for dependency consistency analysis across workspace projects.
 
     Attributes:
-        project_name: Name of the project directory
-        lock_path: Path to the poetry.lock file
-        exists: Whether the lock file exists and is readable
-        packages: Dictionary of package entries from the lock file
-        lock_version: Poetry lock file format version
-        python_versions: Python version constraints from lock metadata
+      project_name: Name of the project directory
+      lock_path: Path to the poetry.lock file
+      exists: Whether the lock file exists and is readable
+      packages: Dictionary of package entries from the lock file
+      lock_version: Poetry lock file format version
+      python_versions: Python version constraints from lock metadata
 
     """
 
@@ -132,10 +129,10 @@ class LockInconsistency:
     type, affected projects, and severity classification for prioritized resolution.
 
     Attributes:
-        package: Name of the package with detected inconsistency
-        type: Type of inconsistency (version, missing, hash)
-        details: Project-specific details mapping project names to versions/status
-        severity: Severity level (critical, warning, info) for prioritization
+      package: Name of the package with detected inconsistency
+      type: Type of inconsistency (version, missing, hash)
+      details: Project-specific details mapping project names to versions/status
+      severity: Severity level (critical, warning, info) for prioritization
 
     """
 
@@ -154,28 +151,28 @@ class WorkspaceSummary(BaseModel):
 
     total_projects: int = Field(..., description="Total number of projects analyzed")
     projects_with_lock: int = Field(
-        ...,
-        description="Number of projects with valid poetry.lock files",
+      ...,
+      description="Number of projects with valid poetry.lock files",
     )
     total_packages: int = Field(
-        ...,
-        description="Total number of unique packages across all projects",
+      ...,
+      description="Total number of unique packages across all projects",
     )
     total_inconsistencies: int = Field(
-        ...,
-        description="Total number of inconsistencies detected",
+      ...,
+      description="Total number of inconsistencies detected",
     )
     critical_inconsistencies: int = Field(
-        ...,
-        description="Number of critical inconsistencies",
+      ...,
+      description="Number of critical inconsistencies",
     )
     warning_inconsistencies: int = Field(
-        ...,
-        description="Number of warning inconsistencies",
+      ...,
+      description="Number of warning inconsistencies",
     )
     info_inconsistencies: int = Field(
-        ...,
-        description="Number of informational inconsistencies",
+      ...,
+      description="Number of informational inconsistencies",
     )
 
 
@@ -192,417 +189,417 @@ class LockConsistencyAnalyzer:
     issues caused by dependency version conflicts or inconsistent lock states.
 
     Attributes:
-        project_locks: Dictionary of project lock file information
-        inconsistencies: List of detected inconsistencies with severity classification
+      project_locks: Dictionary of project lock file information
+      inconsistencies: List of detected inconsistencies with severity classification
 
     Features:
-        - Comprehensive workspace project discovery and lock file analysis
-        - Version conflict detection with configurable severity thresholds
-        - Hash inconsistency validation for security and integrity
-        - Missing dependency identification across project boundaries
-        - Detailed reporting with categorized inconsistency classification
-        - Performance optimization for large workspace analysis
+      - Comprehensive workspace project discovery and lock file analysis
+      - Version conflict detection with configurable severity thresholds
+      - Hash inconsistency validation for security and integrity
+      - Missing dependency identification across project boundaries
+      - Detailed reporting with categorized inconsistency classification
+      - Performance optimization for large workspace analysis
 
     Architecture:
-        Uses structured analysis pipeline with proper error handling and
-        performance optimization for reliable dependency consistency validation
-        across complex multi-project environments.
+      Uses structured analysis pipeline with proper error handling and
+      performance optimization for reliable dependency consistency validation
+      across complex multi-project environments.
 
     Example:
-        Analyze workspace dependency consistency:
+      Analyze workspace dependency consistency:
 
-        >>> analyzer = LockConsistencyAnalyzer()
-        >>> from pathlib import Path
-        >>> # Analyze complete workspace
-        >>> results = analyzer.analyze_workspace(Path("/workspace"))
-        >>> # Review critical issues requiring immediate attention
-        >>> if results["critical"]:
-        ...     print(f"Critical issues found: {len(results['critical'])}")
-        ...     for issue in results["critical"]:
-        ...         print(f"Package: {issue.package} - Type: {issue.type}")
-        ...         for project, version in issue.details.items():
-        ...             print(f"  {project}: {version}")
-        >>> # Generate comprehensive workspace summary
-        >>> summary = analyzer.get_workspace_summary()
-        >>> print(f"Projects analyzed: {summary['total_projects']}")
-        >>> print(f"Lock files found: {summary['projects_with_lock']}")
+      >>> analyzer = LockConsistencyAnalyzer()
+      >>> from pathlib import Path
+      >>> # Analyze complete workspace
+      >>> results = analyzer.analyze_workspace(Path("/workspace"))
+      >>> # Review critical issues requiring immediate attention
+      >>> if results["critical"]:
+      ...     print(f"Critical issues found: {len(results['critical'])}")
+      ...     for issue in results["critical"]:
+      ...         print(f"Package: {issue.package} - Type: {issue.type}")
+      ...         for project, version in issue.details.items():
+      ...             print(f"  {project}: {version}")
+      >>> # Generate comprehensive workspace summary
+      >>> summary = analyzer.get_workspace_summary()
+      >>> print(f"Projects analyzed: {summary['total_projects']}")
+      >>> print(f"Lock files found: {summary['projects_with_lock']}")
 
     Integration:
-        Integrates with flext-core patterns, quality gates, and dependency
-        management systems for comprehensive workspace consistency validation
-        across the FLEXT ecosystem.
+      Integrates with flext-core patterns, quality gates, and dependency
+      management systems for comprehensive workspace consistency validation
+      across the FLEXT ecosystem.
 
     """
 
     def __init__(self) -> None:
-        """Initialize analyzer."""
-        self.project_locks: dict[str, ProjectLockInfo] = {}
-        self.inconsistencies: list[LockInconsistency] = []
+      """Initialize analyzer."""
+      self.project_locks: dict[str, ProjectLockInfo] = {}
+      self.inconsistencies: list[LockInconsistency] = []
 
     def analyze_workspace(
-        self,
-        workspace_path: Path,
+      self,
+      workspace_path: Path,
     ) -> FlextResult[dict[str, list[LockInconsistency]]]:
-        """Analyze all Poetry lock files in the workspace for consistency.
+      """Analyze all Poetry lock files in the workspace for consistency.
 
-        Performs comprehensive analysis of all Poetry lock files within the
-        workspace to detect version conflicts, hash inconsistencies, and missing
-        dependencies with detailed categorization and severity classification for
-        prioritized resolution.
+      Performs comprehensive analysis of all Poetry lock files within the
+      workspace to detect version conflicts, hash inconsistencies, and missing
+      dependencies with detailed categorization and severity classification for
+      prioritized resolution.
 
-        Args:
-            workspace_path: Path to workspace root directory containing Poetry projects
+      Args:
+          workspace_path: Path to workspace root directory containing Poetry projects
 
-        Returns:
-            Dictionary containing categorized inconsistencies:
-            - critical: Issues requiring immediate attention (major version conflicts)
-            - warning: Issues requiring review (minor version conflicts, hash
-                mismatches)
-            - info: Informational items for awareness (missing optional dependencies)
+      Returns:
+          Dictionary containing categorized inconsistencies:
+          - critical: Issues requiring immediate attention (major version conflicts)
+          - warning: Issues requiring review (minor version conflicts, hash
+              mismatches)
+          - info: Informational items for awareness (missing optional dependencies)
 
-        Analysis Process:
-            1. Project Discovery: Locate all projects with pyproject.toml files
-            2. Lock File Loading: Parse and extract package information from poetry.lock
-            3. Inconsistency Detection: Compare packages across projects for conflicts
-            4. Severity Classification: Categorize issues by impact and urgency
-            5. Report Generation: Compile comprehensive analysis results
+      Analysis Process:
+          1. Project Discovery: Locate all projects with pyproject.toml files
+          2. Lock File Loading: Parse and extract package information from poetry.lock
+          3. Inconsistency Detection: Compare packages across projects for conflicts
+          4. Severity Classification: Categorize issues by impact and urgency
+          5. Report Generation: Compile comprehensive analysis results
 
-        Architecture:
-            Uses parallel analysis with proper error handling to ensure reliable
-            consistency validation across large workspaces without performance impact.
+      Architecture:
+          Uses parallel analysis with proper error handling to ensure reliable
+          consistency validation across large workspaces without performance impact.
 
-        """
-        try:
-            print_colored(
-                "🔍 Analyzing Poetry lock file consistency across workspace...",
-                Colors.BLUE,
-            )
+      """
+      try:
+          print_colored(
+              "🔍 Analyzing Poetry lock file consistency across workspace...",
+              Colors.BLUE,
+          )
 
-            # Discover all projects with Poetry configuration
-            projects = self._discover_projects(workspace_path)
-            logger.info(f"Found {len(projects)} projects")
-            print_colored(f"  📁 Found {len(projects)} projects", Colors.CYAN)
+          # Discover all projects with Poetry configuration
+          projects = self._discover_projects(workspace_path)
+          logger.info(f"Found {len(projects)} projects")
+          print_colored(f"  📁 Found {len(projects)} projects", Colors.CYAN)
 
-            # Load lock file information from each project
-            for project_path in projects:
-                self._load_project_lock(project_path)
+          # Load lock file information from each project
+          for project_path in projects:
+              self._load_project_lock(project_path)
 
-            # Analyze dependency inconsistencies across projects
-            self._analyze_inconsistencies()
+          # Analyze dependency inconsistencies across projects
+          self._analyze_inconsistencies()
 
-            # Categorize results by severity for prioritized resolution
-            categories = self._categorize_inconsistencies()
+          # Categorize results by severity for prioritized resolution
+          categories = self._categorize_inconsistencies()
 
-            return FlextResult.ok(categories)
+          return FlextResult.ok(categories)
 
-        except Exception as e:
-            error_msg = f"Failed to analyze workspace: {e}"
-            logger.exception(error_msg)
-            return FlextResult.fail(error_msg)
+      except Exception as e:
+          error_msg = f"Failed to analyze workspace: {e}"
+          logger.exception(error_msg)
+          return FlextResult.fail(error_msg)
 
     def _discover_projects(self, workspace_path: Path) -> list[Path]:
-        """Discover Poetry projects in the workspace with pyproject.toml files.
+      """Discover Poetry projects in the workspace with pyproject.toml files.
 
-        Scans the workspace directory for subdirectories containing pyproject.toml
-        files, identifying all Poetry projects for dependency analysis.
+      Scans the workspace directory for subdirectories containing pyproject.toml
+      files, identifying all Poetry projects for dependency analysis.
 
-        Args:
-            workspace_path: Path to workspace root directory
+      Args:
+          workspace_path: Path to workspace root directory
 
-        Returns:
-            List of paths to discovered Poetry project directories
+      Returns:
+          List of paths to discovered Poetry project directories
 
-        """
-        projects = []
+      """
+      projects = []
 
-        for item in workspace_path.iterdir():
-            if item.is_dir() and not item.name.startswith("."):
-                pyproject_path = item / "pyproject.toml"
-                if pyproject_path.exists():
-                    projects.append(item)
+      for item in workspace_path.iterdir():
+          if item.is_dir() and not item.name.startswith("."):
+              pyproject_path = item / "pyproject.toml"
+              if pyproject_path.exists():
+                  projects.append(item)
 
-        return sorted(projects)
+      return sorted(projects)
 
     def _load_project_lock(self, project_path: Path) -> None:
-        """Load Poetry lock file information from a project directory.
+      """Load Poetry lock file information from a project directory.
 
-        Parses the poetry.lock file to extract package information, versions,
-        hashes, and metadata for dependency consistency analysis.
+      Parses the poetry.lock file to extract package information, versions,
+      hashes, and metadata for dependency consistency analysis.
 
-        Args:
-            project_path: Path to project directory containing poetry.lock
+      Args:
+          project_path: Path to project directory containing poetry.lock
 
-        """
-        project_name = project_path.name
-        lock_path = project_path / "poetry.lock"
+      """
+      project_name = project_path.name
+      lock_path = project_path / "poetry.lock"
 
-        if not lock_path.exists():
-            self.project_locks[project_name] = ProjectLockInfo(
-                project_name=project_name,
-                lock_path=lock_path,
-                exists=False,
-                packages={},
-            )
-            return
+      if not lock_path.exists():
+          self.project_locks[project_name] = ProjectLockInfo(
+              project_name=project_name,
+              lock_path=lock_path,
+              exists=False,
+              packages={},
+          )
+          return
 
-        try:
-            packages = {}
-            with lock_path.open(encoding="utf-8") as f:
-                data = tomllib.loads(f.read())
+      try:
+          packages = {}
+          with lock_path.open(encoding="utf-8") as f:
+              data = tomllib.loads(f.read())
 
-            # Extract package information from lock file
-            for package_data in data.get("package", []):
-                name = package_data.get("name", "").lower()
-                version = package_data.get("version", "")
+          # Extract package information from lock file
+          for package_data in data.get("package", []):
+              name = package_data.get("name", "").lower()
+              version = package_data.get("version", "")
 
-                # Extract hash if available for integrity validation
-                files = package_data.get("files", [])
-                hash_value = None
-                if files and isinstance(files[0], dict):
-                    hash_value = files[0].get("hash", "")
+              # Extract hash if available for integrity validation
+              files = package_data.get("files", [])
+              hash_value = None
+              if files and isinstance(files[0], dict):
+                  hash_value = files[0].get("hash", "")
 
-                # Extract package dependencies
-                dependencies = package_data.get("dependencies", {})
+              # Extract package dependencies
+              dependencies = package_data.get("dependencies", {})
 
-                packages[name] = LockFileEntry(
-                    name=name,
-                    version=version,
-                    hash=hash_value,
-                    dependencies=dependencies,
-                )
+              packages[name] = LockFileEntry(
+                  name=name,
+                  version=version,
+                  hash=hash_value,
+                  dependencies=dependencies,
+              )
 
-            # Extract lock file metadata
-            metadata = data.get("metadata", {})
-            lock_version = metadata.get("lock-version", "")
-            python_versions = metadata.get("python-versions", "")
+          # Extract lock file metadata
+          metadata = data.get("metadata", {})
+          lock_version = metadata.get("lock-version", "")
+          python_versions = metadata.get("python-versions", "")
 
-            self.project_locks[project_name] = ProjectLockInfo(
-                project_name=project_name,
-                lock_path=lock_path,
-                exists=True,
-                packages=packages,
-                lock_version=lock_version,
-                python_versions=[python_versions] if python_versions else [],
-            )
+          self.project_locks[project_name] = ProjectLockInfo(
+              project_name=project_name,
+              lock_path=lock_path,
+              exists=True,
+              packages=packages,
+              lock_version=lock_version,
+              python_versions=[python_versions] if python_versions else [],
+          )
 
-            print_colored(
-                f"    ✅ {project_name}: {len(packages)} packages",
-                Colors.GREEN,
-            )
-        except (OSError, tomllib.TOMLDecodeError, KeyError) as e:
-            print_colored(
-                f"    ❌ {project_name}: Error reading poetry.lock - {e}",
-                Colors.RED,
-            )
-            self.project_locks[project_name] = ProjectLockInfo(
-                project_name=project_name,
-                lock_path=lock_path,
-                exists=False,
-                packages={},
-            )
+          print_colored(
+              f"    ✅ {project_name}: {len(packages)} packages",
+              Colors.GREEN,
+          )
+      except (OSError, tomllib.TOMLDecodeError, KeyError) as e:
+          print_colored(
+              f"    ❌ {project_name}: Error reading poetry.lock - {e}",
+              Colors.RED,
+          )
+          self.project_locks[project_name] = ProjectLockInfo(
+              project_name=project_name,
+              lock_path=lock_path,
+              exists=False,
+              packages={},
+          )
 
     def _analyze_inconsistencies(self) -> None:
-        """Analyze inconsistencies between project lock files.
+      """Analyze inconsistencies between project lock files.
 
-        Compares package versions, hashes, and dependencies across all loaded
-        project lock files to identify conflicts and inconsistencies requiring
-        attention for maintaining workspace dependency consistency.
-        """
-        if len(self.project_locks) < MIN_VALID_PROJECTS:
-            print_colored(
-                "  ⚠️ Less than 2 projects with valid poetry.lock files",
-                Colors.YELLOW,
-            )
-            return
+      Compares package versions, hashes, and dependencies across all loaded
+      project lock files to identify conflicts and inconsistencies requiring
+      attention for maintaining workspace dependency consistency.
+      """
+      if len(self.project_locks) < MIN_VALID_PROJECTS:
+          print_colored(
+              "  ⚠️ Less than 2 projects with valid poetry.lock files",
+              Colors.YELLOW,
+          )
+          return
 
-        # Collect all unique packages across projects
-        all_packages: set[str] = set()
-        for project_info in self.project_locks.values():
-            all_packages.update(project_info.packages.keys())
+      # Collect all unique packages across projects
+      all_packages: set[str] = set()
+      for project_info in self.project_locks.values():
+          all_packages.update(project_info.packages.keys())
 
-        print_colored(
-            f"  📦 Analyzing {len(all_packages)} unique packages",
-            Colors.CYAN,
-        )
+      print_colored(
+          f"  📦 Analyzing {len(all_packages)} unique packages",
+          Colors.CYAN,
+      )
 
-        # Analyze consistency for each package across projects
-        for package in sorted(all_packages):
-            self._analyze_package_consistency(package, self.project_locks)
+      # Analyze consistency for each package across projects
+      for package in sorted(all_packages):
+          self._analyze_package_consistency(package, self.project_locks)
 
     def _analyze_package_consistency(
-        self,
-        package: str,
-        projects: dict[str, ProjectLockInfo],
+      self,
+      package: str,
+      projects: dict[str, ProjectLockInfo],
     ) -> None:
-        """Analyze consistency of a specific package across projects.
+      """Analyze consistency of a specific package across projects.
 
-        Compares package versions and hashes across all projects to detect
-        inconsistencies that could cause build failures or unexpected behavior.
+      Compares package versions and hashes across all projects to detect
+      inconsistencies that could cause build failures or unexpected behavior.
 
-        Args:
-            package: Package name to analyze for consistency
-            projects: Dictionary of project lock information to compare
+      Args:
+          package: Package name to analyze for consistency
+          projects: Dictionary of project lock information to compare
 
-        """
-        versions: dict[str, str] = {}
-        hashes: dict[str, str] = {}
+      """
+      versions: dict[str, str] = {}
+      hashes: dict[str, str] = {}
 
-        # Collect versions and hashes from each project
-        for project_name, project_info in projects.items():
-            if package in project_info.packages:
-                entry = project_info.packages[package]
-                versions[project_name] = entry.version
-                if entry.hash:
-                    hashes[project_name] = entry.hash
+      # Collect versions and hashes from each project
+      for project_name, project_info in projects.items():
+          if package in project_info.packages:
+              entry = project_info.packages[package]
+              versions[project_name] = entry.version
+              if entry.hash:
+                  hashes[project_name] = entry.hash
 
-        # Detect version and hash inconsistencies
-        unique_versions = set(versions.values())
-        unique_hashes = set(hashes.values())
+      # Detect version and hash inconsistencies
+      unique_versions = set(versions.values())
+      unique_hashes = set(hashes.values())
 
-        if len(unique_versions) > 1:
-            # Version inconsistency detected
-            self.inconsistencies.append(
-                LockInconsistency(
-                    package=package,
-                    type="version",
-                    details=versions,
-                    severity=(
-                        "critical"
-                        if len(unique_versions) > CRITICAL_VERSION_CONFLICT_THRESHOLD
-                        else "warning"
-                    ),
-                ),
-            )
+      if len(unique_versions) > 1:
+          # Version inconsistency detected
+          self.inconsistencies.append(
+              LockInconsistency(
+                  package=package,
+                  type="version",
+                  details=versions,
+                  severity=(
+                      "critical"
+                      if len(unique_versions) > CRITICAL_VERSION_CONFLICT_THRESHOLD
+                      else "warning"
+                  ),
+              ),
+          )
 
-        if len(unique_hashes) > 1:
-            # Hash inconsistency detected
-            self.inconsistencies.append(
-                LockInconsistency(
-                    package=package,
-                    type="hash",
-                    details=hashes,
-                    severity="warning",
-                ),
-            )
+      if len(unique_hashes) > 1:
+          # Hash inconsistency detected
+          self.inconsistencies.append(
+              LockInconsistency(
+                  package=package,
+                  type="hash",
+                  details=hashes,
+                  severity="warning",
+              ),
+          )
 
     def _categorize_inconsistencies(self) -> dict[str, list[LockInconsistency]]:
-        """Categorize inconsistencies by severity for prioritized resolution.
+      """Categorize inconsistencies by severity for prioritized resolution.
 
-        Groups detected inconsistencies into severity categories and generates
-        a comprehensive summary report for workspace dependency management.
+      Groups detected inconsistencies into severity categories and generates
+      a comprehensive summary report for workspace dependency management.
 
-        Returns:
-            Dictionary with inconsistencies categorized by severity level
+      Returns:
+          Dictionary with inconsistencies categorized by severity level
 
-        """
-        categories: dict[str, list[LockInconsistency]] = {
-            "critical": [],
-            "warning": [],
-            "info": [],
-        }
+      """
+      categories: dict[str, list[LockInconsistency]] = {
+          "critical": [],
+          "warning": [],
+          "info": [],
+      }
 
-        for inconsistency in self.inconsistencies:
-            categories[inconsistency.severity].append(inconsistency)
+      for inconsistency in self.inconsistencies:
+          categories[inconsistency.severity].append(inconsistency)
 
-        # Report summary
-        total = len(self.inconsistencies)
-        if total > 0:
-            print_colored(f"\n📊 Inconsistencies found: {total}", Colors.YELLOW)
-            print_colored(f"  🔴 Critical: {len(categories['critical'])}", Colors.RED)
-            print_colored(f"  🟡 Warnings: {len(categories['warning'])}", Colors.YELLOW)
-            print_colored(f"  [INFO] Info: {len(categories['info'])}", Colors.CYAN)
-        else:
-            print_colored("\n✅ No inconsistencies detected", Colors.GREEN)
+      # Report summary
+      total = len(self.inconsistencies)
+      if total > 0:
+          print_colored(f"\n📊 Inconsistencies found: {total}", Colors.YELLOW)
+          print_colored(f"  🔴 Critical: {len(categories['critical'])}", Colors.RED)
+          print_colored(f"  🟡 Warnings: {len(categories['warning'])}", Colors.YELLOW)
+          print_colored(f"  [INFO] Info: {len(categories['info'])}", Colors.CYAN)
+      else:
+          print_colored("\n✅ No inconsistencies detected", Colors.GREEN)
 
-        return categories
+      return categories
 
     def get_workspace_summary(self) -> FlextResult[WorkspaceSummary]:
-        """Return comprehensive workspace dependency analysis summary.
+      """Return comprehensive workspace dependency analysis summary.
 
-        Generates statistical summary of workspace analysis including project
-        counts, package inventory, and inconsistency classification for
-        comprehensive dependency management reporting.
+      Generates statistical summary of workspace analysis including project
+      counts, package inventory, and inconsistency classification for
+      comprehensive dependency management reporting.
 
-        Returns:
-            Dictionary containing workspace analysis statistics and summary data
+      Returns:
+          Dictionary containing workspace analysis statistics and summary data
 
-        """
-        total_projects = len(self.project_locks)
-        projects_with_lock = sum(
-            1 for info in self.project_locks.values() if info.exists
-        )
-        total_packages = sum(len(info.packages) for info in self.project_locks.values())
+      """
+      total_projects = len(self.project_locks)
+      projects_with_lock = sum(
+          1 for info in self.project_locks.values() if info.exists
+      )
+      total_packages = sum(len(info.packages) for info in self.project_locks.values())
 
-        try:
-            summary = WorkspaceSummary(
-                total_projects=total_projects,
-                projects_with_lock=projects_with_lock,
-                total_packages=total_packages,
-                total_inconsistencies=len(self.inconsistencies),
-                critical_inconsistencies=len(
-                    [i for i in self.inconsistencies if i.severity == "critical"],
-                ),
-                warning_inconsistencies=len(
-                    [i for i in self.inconsistencies if i.severity == "warning"],
-                ),
-                info_inconsistencies=len(
-                    [i for i in self.inconsistencies if i.severity == "info"],
-                ),
-            )
+      try:
+          summary = WorkspaceSummary(
+              total_projects=total_projects,
+              projects_with_lock=projects_with_lock,
+              total_packages=total_packages,
+              total_inconsistencies=len(self.inconsistencies),
+              critical_inconsistencies=len(
+                  [i for i in self.inconsistencies if i.severity == "critical"],
+              ),
+              warning_inconsistencies=len(
+                  [i for i in self.inconsistencies if i.severity == "warning"],
+              ),
+              info_inconsistencies=len(
+                  [i for i in self.inconsistencies if i.severity == "info"],
+              ),
+          )
 
-            return FlextResult.ok(summary)
+          return FlextResult.ok(summary)
 
-        except Exception as e:
-            error_msg = f"Failed to generate workspace summary: {e}"
-            logger.exception(error_msg)
-            return FlextResult.fail(error_msg)
+      except Exception as e:
+          error_msg = f"Failed to generate workspace summary: {e}"
+          logger.exception(error_msg)
+          return FlextResult.fail(error_msg)
 
     def print_detailed_report(
-        self,
-        categories: dict[str, list[LockInconsistency]],
+      self,
+      categories: dict[str, list[LockInconsistency]],
     ) -> None:
-        """Print detailed report of detected inconsistencies.
+      """Print detailed report of detected inconsistencies.
 
-        Generates comprehensive report with detailed information about each
-        detected inconsistency including affected packages, projects, and
-        specific version or hash conflicts for resolution guidance.
+      Generates comprehensive report with detailed information about each
+      detected inconsistency including affected packages, projects, and
+      specific version or hash conflicts for resolution guidance.
 
-        Args:
-            categories: Categorized inconsistencies from analysis results
+      Args:
+          categories: Categorized inconsistencies from analysis results
 
-        """
-        for severity, inconsistencies in categories.items():
-            if not inconsistencies:
-                continue
+      """
+      for severity, inconsistencies in categories.items():
+          if not inconsistencies:
+              continue
 
-            color = (
-                Colors.RED
-                if severity == "critical"
-                else Colors.YELLOW
-                if severity == "warning"
-                else Colors.CYAN
-            )
+          color = (
+              Colors.RED
+              if severity == "critical"
+              else Colors.YELLOW
+              if severity == "warning"
+              else Colors.CYAN
+          )
 
-            severity_label = {
-                "critical": "🔴 CRITICAL",
-                "warning": "🟡 WARNINGS",
-                "info": "[INFO] INFORMATION",
-            }.get(severity, severity.upper())
+          severity_label = {
+              "critical": "🔴 CRITICAL",
+              "warning": "🟡 WARNINGS",
+              "info": "[INFO] INFORMATION",
+          }.get(severity, severity.upper())
 
-            print_colored(f"\n{severity_label} ({len(inconsistencies)}):", color)
+          print_colored(f"\n{severity_label} ({len(inconsistencies)}):", color)
 
-            for inconsistency in inconsistencies[:10]:  # Limite de 10 por categoria
-                print_colored(
-                    f"  📦 {inconsistency.package} ({inconsistency.type}):",
-                    color,
-                )
+          for inconsistency in inconsistencies[:10]:  # Limite de 10 por categoria
+              print_colored(
+                  f"  📦 {inconsistency.package} ({inconsistency.type}):",
+                  color,
+              )
 
-                for project, value in sorted(inconsistency.details.items()):
-                    status_emoji = "❌" if value == "missing" else "📌"
-                    print_colored(f"    {status_emoji} {project}: {value}", color)
+              for project, value in sorted(inconsistency.details.items()):
+                  status_emoji = "❌" if value == "missing" else "📌"
+                  print_colored(f"    {status_emoji} {project}: {value}", color)
 
-            if len(inconsistencies) > MAX_INCONSISTENCIES_DISPLAY:
-                print_colored(
-                    f"    ... and {len(inconsistencies) - 10} more items",
-                    color,
-                )
+          if len(inconsistencies) > MAX_INCONSISTENCIES_DISPLAY:
+              print_colored(
+                  f"    ... and {len(inconsistencies) - 10} more items",
+                  color,
+              )
