@@ -28,30 +28,30 @@ def pytest_configure(config: pytest.Config) -> None:
     """Configura pytest com marcadores customizados globais."""
     # Marcadores padrão para todos os projetos
     markers = [
-        "e2e: marca testes como testes de integração end-to-end",
-        "integration: marca testes como testes de integração",
-        "unit: marca testes como testes unitários",
-        "slow: marca testes como execução lenta",
-        "docker: marca testes que requerem Docker",
-        "oracle: marca testes específicos do Oracle",
-        "performance: marca testes de performance",
-        "stress: marca testes de stress",
-        "resilience: marca testes de resiliência",
-        "integrity: marca testes de integridade",
-        "edge_cases: marca testes de casos extremos",
+      "e2e: marca testes como testes de integração end-to-end",
+      "integration: marca testes como testes de integração",
+      "unit: marca testes como testes unitários",
+      "slow: marca testes como execução lenta",
+      "docker: marca testes que requerem Docker",
+      "oracle: marca testes específicos do Oracle",
+      "performance: marca testes de performance",
+      "stress: marca testes de stress",
+      "resilience: marca testes de resiliência",
+      "integrity: marca testes de integridade",
+      "edge_cases: marca testes de casos extremos",
     ]
 
     for marker in markers:
-        config.addinivalue_line("markers", marker)
+      config.addinivalue_line("markers", marker)
 
     # Filtros de warning globais
     config.addinivalue_line(
-        "filterwarnings",
-        "ignore::DeprecationWarning:pyasn1(\\.|$)",
+      "filterwarnings",
+      "ignore::DeprecationWarning:pyasn1(\\.|$)",
     )
     config.addinivalue_line(
-        "filterwarnings",
-        "ignore:PydanticDeprecatedSince20:DeprecationWarning",
+      "filterwarnings",
+      "ignore:PydanticDeprecatedSince20:DeprecationWarning",
     )
 
 

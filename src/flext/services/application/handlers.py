@@ -74,10 +74,9 @@ License: MIT
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, TypeVar
+from typing import TypeVar
 
-if TYPE_CHECKING:  # pragma: no cover
-    from flext_core.result import FlextResult
+from flext_core.result import FlextResult
 
 # Type variables for generic handlers
 TCommand = TypeVar("TCommand")
@@ -94,16 +93,16 @@ class CommandHandler[TCommand, TResult](ABC):
 
     @abstractmethod
     async def handle(self, command: TCommand) -> FlextResult[TResult]:
-        """Handle a command and return a service result.
+      """Handle a command and return a service result.
 
-        Args:
-            command: The command to handle
+      Args:
+          command: The command to handle
 
-        Returns:
-            Service result with the operation outcome
+      Returns:
+          Service result with the operation outcome
 
-        """
-        ...
+      """
+      ...
 
 
 class QueryHandler[TQuery, TResult](ABC):
@@ -114,16 +113,16 @@ class QueryHandler[TQuery, TResult](ABC):
 
     @abstractmethod
     async def handle(self, query: TQuery) -> FlextResult[TResult]:
-        """Handle a query and return a service result.
+      """Handle a query and return a service result.
 
-        Args:
-            query: The query to handle
+      Args:
+          query: The query to handle
 
-        Returns:
-            Service result with the query data
+      Returns:
+          Service result with the query data
 
-        """
-        ...
+      """
+      ...
 
 
 class EventHandler[TEvent, TResult](ABC):
@@ -134,16 +133,16 @@ class EventHandler[TEvent, TResult](ABC):
 
     @abstractmethod
     async def handle(self, event: TEvent) -> FlextResult[TResult]:
-        """Handle an event and return a service result.
+      """Handle an event and return a service result.
 
-        Args:
-            event: The event to handle
+      Args:
+          event: The event to handle
 
-        Returns:
-            Service result with the operation outcome
+      Returns:
+          Service result with the operation outcome
 
-        """
-        ...
+      """
+      ...
 
 
 # Convenience type aliases for common patterns
@@ -152,16 +151,16 @@ class VoidCommandHandler(CommandHandler[TCommand, None]):
 
     @abstractmethod
     async def handle(self, command: TCommand) -> FlextResult[None]:
-        """Handle a command that returns no data.
+      """Handle a command that returns no data.
 
-        Args:
-            command: The command to handle
+      Args:
+          command: The command to handle
 
-        Returns:
-            Service result indicating success or failure
+      Returns:
+          Service result indicating success or failure
 
-        """
-        ...
+      """
+      ...
 
 
 class SimpleQueryHandler(QueryHandler[TQuery, dict[str, object]]):
@@ -169,16 +168,16 @@ class SimpleQueryHandler(QueryHandler[TQuery, dict[str, object]]):
 
     @abstractmethod
     async def handle(self, query: TQuery) -> FlextResult[dict[str, object]]:
-        """Handle a query that returns dictionary data.
+      """Handle a query that returns dictionary data.
 
-        Args:
-            query: The query to handle
+      Args:
+          query: The query to handle
 
-        Returns:
-            Service result with dictionary data
+      Returns:
+          Service result with dictionary data
 
-        """
-        ...
+      """
+      ...
 
 
 __all__ = [

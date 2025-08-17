@@ -5,22 +5,16 @@ Gera secrets criptograficamente seguros para produção usando flext_tools.secur
 para máxima segurança e padronização enterprise.
 """
 
-from __future__ import annotations
-
+import argparse
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from flext_core import FlextResult
 
-from flext_tools import Colors, print_colored
-from flext_tools.core.script_base import ScriptMetadata
-from flext_tools.security import SecretGenerator
+from flext_tools import Colors, ScriptMetadata, print_colored
+from flext_tools.security import ProductionSecretsGenerator
 
 from ._base_security_script import BaseSecurityScript
-
-if TYPE_CHECKING:
-    import argparse
 
 
 class ProductionSecretsGenerator(BaseSecurityScript):
@@ -49,7 +43,7 @@ class ProductionSecretsGenerator(BaseSecurityScript):
             print_colored("=" * 60, Colors.CYAN)
 
             # Use flext_tools.security for secret generation
-            secret_generator = SecretGenerator()
+            secret_generator = ProductionSecretsGenerator()
 
             # Generate complete set of production secrets
             secrets_result = secret_generator.generate_production_secrets(

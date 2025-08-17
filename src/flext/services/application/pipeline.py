@@ -124,68 +124,68 @@ class PipelineCommandHandler:
     """Pipeline command handler."""
 
     async def handle_create(
-        self, command: CreatePipelineCommand
+      self, command: CreatePipelineCommand
     ) -> FlextResult[dict[str, object]]:
-        """Handle create pipeline command."""
-        # Simplified implementation - to be implemented when Pipeline domain exists
-        return FlextResult.ok(data={"message": "Pipeline creation not implemented"})
+      """Handle create pipeline command."""
+      # Simplified implementation - to be implemented when Pipeline domain exists
+      return FlextResult.ok(data={"message": "Pipeline creation not implemented"})
 
     async def handle_execute(
-        self, command: ExecutePipelineCommand
+      self, command: ExecutePipelineCommand
     ) -> FlextResult[dict[str, object]]:
-        """Handle execute pipeline command."""
-        # Simplified implementation - to be implemented when Pipeline domain exists
-        return FlextResult.ok(data={"message": "Pipeline execution not implemented"})
+      """Handle execute pipeline command."""
+      # Simplified implementation - to be implemented when Pipeline domain exists
+      return FlextResult.ok(data={"message": "Pipeline execution not implemented"})
 
 
 class PipelineQueryHandler:
     """Pipeline query handler."""
 
     async def handle_get(
-        self, query: GetPipelineQuery
+      self, query: GetPipelineQuery
     ) -> FlextResult[dict[str, object]]:
-        """Handle get pipeline query."""
-        # Simplified implementation - to be implemented when Pipeline domain exists
-        return FlextResult.ok(data={"message": "Pipeline get not implemented"})
+      """Handle get pipeline query."""
+      # Simplified implementation - to be implemented when Pipeline domain exists
+      return FlextResult.ok(data={"message": "Pipeline get not implemented"})
 
     async def handle_list(
-        self, query: ListPipelinesQuery
+      self, query: ListPipelinesQuery
     ) -> FlextResult[list[dict[str, object]]]:
-        """Handle list pipelines query."""
-        # Simplified implementation - to be implemented when Pipeline domain exists
-        return FlextResult.ok(data=[])
+      """Handle list pipelines query."""
+      # Simplified implementation - to be implemented when Pipeline domain exists
+      return FlextResult.ok(data=[])
 
 
 class PipelineService:
     """High-level pipeline orchestration service.
-    
+
     Provides enterprise-grade pipeline management capabilities including
     creation, execution, monitoring, and lifecycle management. Integrates
     with Singer ecosystem and DBT transformations.
-    
+
     Architecture:
-        Implements application service patterns coordinating between pipeline
-        domain entities, infrastructure concerns, and external integrations.
-        Uses FlextResult patterns for consistent error handling.
+      Implements application service patterns coordinating between pipeline
+      domain entities, infrastructure concerns, and external integrations.
+      Uses FlextResult patterns for consistent error handling.
     """
 
     def __init__(self) -> None:
-        """Initialize pipeline service with dependency injection support."""
-        self._command_handler = PipelineCommandHandler()
-        self._query_handler = PipelineQueryHandler()
+      """Initialize pipeline service with dependency injection support."""
+      self._command_handler = PipelineCommandHandler()
+      self._query_handler = PipelineQueryHandler()
 
     async def create_pipeline(self, command: CreatePipelineCommand) -> FlextResult[dict[str, object]]:
-        """Create new data pipeline with validation."""
-        return await self._command_handler.handle_create(command)
+      """Create new data pipeline with validation."""
+      return await self._command_handler.handle_create(command)
 
     async def execute_pipeline(self, command: ExecutePipelineCommand) -> FlextResult[dict[str, object]]:
-        """Execute existing pipeline with monitoring."""
-        return await self._command_handler.handle_execute(command)
+      """Execute existing pipeline with monitoring."""
+      return await self._command_handler.handle_execute(command)
 
     async def get_pipeline(self, query: GetPipelineQuery) -> FlextResult[dict[str, object]]:
-        """Retrieve pipeline configuration and status."""
-        return await self._query_handler.handle_get(query)
+      """Retrieve pipeline configuration and status."""
+      return await self._query_handler.handle_get(query)
 
     async def list_pipelines(self, query: ListPipelinesQuery) -> FlextResult[list[dict[str, object]]]:
-        """List all available pipelines with metadata."""
-        return await self._query_handler.handle_list(query)
+      """List all available pipelines with metadata."""
+      return await self._query_handler.handle_list(query)

@@ -11,26 +11,39 @@ Implements the architectural directive:
 
 from __future__ import annotations
 
+from importlib import import_module
 from pathlib import Path
 
-from flext_meltano.architecture import FlextSingerArchitectureStandardizer
-
-ARCHITECTURE_MODULE_AVAILABLE = True
+# We'll import the heavy `flext_meltano.architecture` module at runtime inside main()
+ARCHITECTURE_MODULE_AVAILABLE = False
 
 
 def main() -> None:
-    """Main execution function."""
-    flext_root = Path("/home/marlonsc/flext")
+    """Main execution function.
+
+    Import the required flext_meltano.architecture at runtime so importing this
+    shim doesn't fail in environments where the package is not installed.
+    """
+    # Use the current working directory as the flext root when run inside repo
+    flext_root = Path.cwd()
 
     if not flext_root.exists():
-        msg: str = f"FLEXT root directory not found: {flext_root}"
-        raise RuntimeError(msg)
+      msg = f"FLEXT root directory not found: {flext_root}"
+      raise RuntimeError(msg)
 
-    standardizer = FlextSingerArchitectureStandardizer(flext_root)
+    # Import flext_meltano.architecture dynamically to avoid import-time errors
+    try:
+      _mod = import_module("flext_meltano.architecture")
+      _standardizer_cls = _mod.FlextSingerArchitectureStandardizer
+    except Exception as exc:  # pragma: no cover - environment dependent
+      _msg = (
+          "Missing dependency: flext_meltano.architecture. "
+          "Install the package or run from the monorepo workspace."
+      )
+      raise RuntimeError(_msg) from exc
+
+    standardizer = _standardizer_cls(flext_root)
     standardizer.standardize_architecture()
-
-    if not ARCHITECTURE_MODULE_AVAILABLE:
-        print("⚠️  Note: This script requires the flext-meltano architecture module")
 
 
 if __name__ == "__main__":
