@@ -232,9 +232,9 @@ class MonitoringManager:
             )
             logger.info("Monitoring infrastructure setup completed successfully")
 
-            return FlextResult.ok(results_data)
+            return FlextResult[MonitoringSetupData].ok(results_data)
 
         except Exception as e:
             error_msg = f"Failed to setup monitoring infrastructure: {e}"
             logger.exception(error_msg)
-            return FlextResult.fail(error_msg)
+            return FlextResult[MonitoringSetupData].fail(error_msg)

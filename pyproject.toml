@@ -188,6 +188,7 @@ extend_exclude = ["client-a-.*/", "flexcore/", "flext-.*/", "client-b-.*/"]
 known_first_party = ["flext", "flext_tools"]
 # package_module_name_map.flext_tools = "flext_tools"
 pep621_dev_dependency_groups = ["dev", "security", "test", "typings", "docs"]
+
 [tool.mypy]
 # Strict mode - enables all recommended checks
 strict = true
@@ -272,9 +273,13 @@ exclude = [
     "dist/",
     "node_modules/",
     "vendor/",
-    ".*/examples/",  # Exclui todos os diretórios 'examples' em qualquer nível (regex corrigida)
-    ".*/tests/",     # Exclui todos os diretórios 'tests' em qualquer nível (regex corrigida)
-    ".*/scripts/",   # Exclui todos os diretórios 'scripts' em qualquer nível (regex corrigida)
+    ".*/examples/",          # Exclui todos os diretórios 'examples' em qualquer nível (regex corrigida)
+    ".*/tests/",             # Exclui todos os diretórios 'tests' em qualquer nível (regex corrigida)
+    ".*/scripts/",           # Exclui todos os diretórios 'scripts' em qualquer nível (regex corrigida)
+    # Excluir stubs/typings dentro de pacotes para evitar módulos duplicados durante checagem local
+    ".*/typings/.*",
+    # Skip generated or problematic source files
+    "flext-core/src/flext_core/fields.py",
     # Arquivos de módulos duplicados específicos, se o problema persistir após exclusões gerais
     "flext-api/examples/__init__.py",
     "client-a-oud-mig/examples/__init__.py",
@@ -350,4 +355,3 @@ flext-target-oracle-oic = { path = "./flext-target-oracle-oic", develop = true }
 flext-target-oracle-wms = { path = "./flext-target-oracle-wms", develop = true }
 flext-web = { path = "./flext-web", develop = true }
 client-b-meltano-native = { path = "./client-b-meltano-native", develop = true }
-

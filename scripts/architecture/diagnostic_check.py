@@ -14,7 +14,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-import ruff.__main__ as ruff_main  # type: ignore[import-untyped]
+import ruff.__main__ as ruff_main
 from flext_core import get_logger
 from mypy import api as mypy_api
 from poetry.console import (
@@ -157,8 +157,8 @@ class FlextDiagnostic:
             if poetry_app is None:
                 return 1, "", "Poetry not available"
 
-            app = poetry_app.Application()  # type: ignore[no-call-override]
-            code = app.run(["install"])  # type: ignore[arg-type]
+            app = poetry_app.Application()
+            code = app.run(["install"])
             return (0 if int(code) == 0 else 1), "", ""
         except Exception as e:
             # Do not fallback to subprocess; advise manual execution

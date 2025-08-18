@@ -78,7 +78,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import ClassVar, cast
+from typing import ClassVar
 
 from flext_core import FlextResult, FlextValue, get_logger
 
@@ -157,20 +157,22 @@ class ScanConfig(FlextValue):
     def validate_business_rules(self) -> FlextResult[None]:
         """Validate scanner configuration business rules."""
         if not self.target_paths:
-            return FlextResult.fail("At least one target path is required")
+            return FlextResult[None].fail("At least one target path is required")
 
         if self.output_format not in {"summary", "detailed", "json"}:
-            return FlextResult.fail("Output format must be: summary, detailed, or json")
+            return FlextResult[None].fail(
+                "Output format must be: summary, detailed, or json"
+            )
 
         if self.risk_threshold not in {"LOW", "MEDIUM", "HIGH", "CRITICAL"}:
-            return FlextResult.fail(
+            return FlextResult[None].fail(
                 "Risk threshold must be: LOW, MEDIUM, HIGH, or CRITICAL",
             )
 
         if self.max_workers < 1:
-            return FlextResult.fail("Max workers must be at least 1")
+            return FlextResult[None].fail("Max workers must be at least 1")
 
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
 
 class AntipatternScanner:
@@ -226,17 +228,12 @@ class AntipatternScanner:
                 f"Found {len(filtered_violations)} violations above {self.config.risk_threshold} risk level",
             )
 
-            return cast(
-                "FlextResult[list[SecurityViolation]]",
-                FlextResult.ok(filtered_violations),
-            )
+            return FlextResult[list[SecurityViolation]].ok(filtered_violations)
 
         except Exception as e:
             error_msg = f"Security scan failed: {e}"
             self.logger.exception(error_msg)
-            return cast(
-                "FlextResult[list[SecurityViolation]]", FlextResult.fail(error_msg)
-            )
+            return FlextResult[list[SecurityViolation]].fail(error_msg)
 
     def _collect_python_files(self) -> FlextResult[list[Path]]:
         """Collect Python files to scan with filtering."""
@@ -259,13 +256,10 @@ class AntipatternScanner:
                         if self._should_include_file(py_file)
                     )
 
-            return cast("FlextResult[list[Path]]", FlextResult.ok(python_files))
+            return FlextResult[list[Path]].ok(python_files)
 
         except Exception as e:
-            return cast(
-                "FlextResult[list[Path]]",
-                FlextResult.fail(f"Failed to collect Python files: {e}"),
-            )
+            return FlextResult[list[Path]].fail(f"Failed to collect Python files: {e}")
 
     def _should_include_file(self, file_path: Path) -> bool:
         """Check if file should be included in scan based on exclude patterns."""
@@ -447,24 +441,20 @@ class AntipatternScanner:
         try:
             if self.config.output_format == "json":
                 if not output_file:
-                    return cast(
-                        "FlextResult[None]",
-                        FlextResult.fail("Output file required for json report"),
+                    return FlextResult[None].fail(
+                        "Output file required for json report"
                     )
                 return self._generate_json_report(violations, output_file)
             if self.config.output_format == "detailed":
                 if not output_file:
-                    return cast(
-                        "FlextResult[None]",
-                        FlextResult.fail("Output file required for detailed report"),
+                    return FlextResult[None].fail(
+                        "Output file required for detailed report"
                     )
                 return self._generate_detailed_report(violations, output_file)
             return self._generate_summary_report(violations)
 
         except Exception as e:
-            return cast(
-                "FlextResult[None]", FlextResult.fail(f"Report generation failed: {e}")
-            )
+            return FlextResult[None].fail(f"Report generation failed: {e}")
 
     def _generate_json_report(
         self,
@@ -491,13 +481,10 @@ class AntipatternScanner:
                 json.dump(report_data, f, indent=2)
 
             self.logger.info(f"JSON report generated: {output_file}")
-            return cast("FlextResult[None]", FlextResult.ok(None))
+            return FlextResult[None].ok(None)
 
         except Exception as e:
-            return cast(
-                "FlextResult[None]",
-                FlextResult.fail(f"JSON report generation failed: {e}"),
-            )
+            return FlextResult[None].fail(f"JSON report generation failed: {e}")
 
     def _generate_detailed_report(
         self,
@@ -534,13 +521,10 @@ class AntipatternScanner:
                     f.write("-" * 40 + "\n")
 
             self.logger.info(f"Detailed report generated: {output_file}")
-            return cast("FlextResult[None]", FlextResult.ok(None))
+            return FlextResult[None].ok(None)
 
         except Exception as e:
-            return cast(
-                "FlextResult[None]",
-                FlextResult.fail(f"Detailed report generation failed: {e}"),
-            )
+            return FlextResult[None].fail(f"Detailed report generation failed: {e}")
 
     def _generate_summary_report(
         self,
@@ -554,7 +538,7 @@ class AntipatternScanner:
 
             if not violations:
                 print_colored("✅ No security violations found!", Colors.GREEN)
-                return cast("FlextResult[None]", FlextResult.ok(None))
+                return FlextResult[None].ok(None)
 
             print_colored(f"❌ Found {len(violations)} security violations", Colors.RED)
 
@@ -588,10 +572,10 @@ class AntipatternScanner:
 
             print_colored("=" * 60, Colors.CYAN)
 
-            return cast("FlextResult[None]", FlextResult.ok(None))
+            return FlextResult[None].ok(None)
 
         except Exception as e:
-            return FlextResult.fail(f"Summary report generation failed: {e}")
+            return FlextResult[None].fail(f"Summary report generation failed: {e}")
 
     def _get_risk_breakdown(
         self,
@@ -651,15 +635,14 @@ def create_security_scanner(
             include_dependencies=not exclude_dependencies,
             output_format=output_format,
             risk_threshold=risk_threshold,
-        )  # type: ignore[call-arg]
+        )
 
         scanner = AntipatternScanner(config)
-        return cast("FlextResult[AntipatternScanner]", FlextResult.ok(scanner))
+        return FlextResult[AntipatternScanner].ok(scanner)
 
     except Exception as e:
-        return cast(
-            "FlextResult[AntipatternScanner]",
-            FlextResult.fail(f"Failed to create security scanner: {e}"),
+        return FlextResult[AntipatternScanner].fail(
+            f"Failed to create security scanner: {e}"
         )
 
 
@@ -690,9 +673,8 @@ def scan_flext_ecosystem(
     existing_paths = [path for path in target_paths if Path(path).exists()]
 
     if not existing_paths:
-        return cast(
-            "FlextResult[list[SecurityViolation]]",
-            FlextResult.fail("No valid FLEXT project paths found"),
+        return FlextResult[list[SecurityViolation]].fail(
+            "No valid FLEXT project paths found"
         )
 
     scanner_result = create_security_scanner(
@@ -703,22 +685,20 @@ def scan_flext_ecosystem(
     )
 
     if not scanner_result.success:
-        return cast(
-            "FlextResult[list[SecurityViolation]]",
-            FlextResult.fail(f"Scanner creation failed: {scanner_result.error}"),
+        return FlextResult[list[SecurityViolation]].fail(
+            f"Scanner creation failed: {scanner_result.error}"
         )
 
     scanner = scanner_result.data
     if not scanner:
-        return cast(
-            "FlextResult[list[SecurityViolation]]",
-            FlextResult.fail("Scanner creation returned None"),
+        return FlextResult[list[SecurityViolation]].fail(
+            "Scanner creation returned None"
         )
 
     # Perform scan
     scan_result = scanner.scan_ecosystem()
     if not scan_result.success:
-        return cast("FlextResult[list[SecurityViolation]]", scan_result)
+        return scan_result
 
     violations = scan_result.data or []
 
@@ -730,4 +710,4 @@ def scan_flext_ecosystem(
     else:
         # Generate summary report to console via public API
         scanner.generate_report(violations, None)
-    return cast("FlextResult[list[SecurityViolation]]", FlextResult.ok(violations))
+    return FlextResult[list[SecurityViolation]].ok(violations)

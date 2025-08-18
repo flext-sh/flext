@@ -52,10 +52,10 @@ class PyprojectStandardizer(FlextScript):
 
         if not flext_projects:
             print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return FlextResult.fail("Not in FLEXT workspace root")  # type: ignore [reportUnknownVariableType]
+            return FlextResult.fail("Not in FLEXT workspace root")
 
         print_colored(f"✅ Found {len(flext_projects)} FLEXT projects", Colors.GREEN)
-        return FlextResult.ok(None)  # type: ignore [reportUnknownMemberType, reportUnknownVariableType]
+        return FlextResult.ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute pyproject.toml standardization."""
@@ -108,7 +108,7 @@ class PyprojectStandardizer(FlextScript):
             # Summary
             self._print_summary(len(projects), total_standardized, failed_projects)
 
-            return FlextResult.ok(  # type: ignore [reportUnknownMemberType, reportUnknownVariableType]
+            return FlextResult.ok(
                 {
                     "total_projects": len(projects),
                     "standardized": total_standardized,
@@ -118,7 +118,7 @@ class PyprojectStandardizer(FlextScript):
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during standardization: {e}", Colors.RED)
-            return FlextResult.fail(f"Standardization error: {e}")  # type: ignore [reportUnknownVariableType]
+            return FlextResult.fail(f"Standardization error: {e}")
 
     def _discover_projects(
         self,
@@ -182,7 +182,7 @@ class PyprojectStandardizer(FlextScript):
 
     def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
-        return FlextResult.ok(None)  # type: ignore [reportUnknownMemberType, reportUnknownVariableType]
+        return FlextResult.ok(None)
 
 
 def main() -> int:

@@ -78,19 +78,15 @@ from __future__ import annotations
 
 import re
 import tomllib
+from pathlib import Path
+from typing import cast
 
-from flext_core import FlextResult, get_logger
-from pydantic import BaseModel, Field
+import poetry.console as poetry_console
+from flext_core import FlextModel, FlextResult, get_logger
+from flext_core.result import ok_result
+from pydantic import Field
 
 from flext_tools.utils import Colors, print_colored
-
-try:  # pragma: no cover - optional dependency
-    import poetry.console as poetry_console  # type: ignore[import-not-found]
-except Exception:  # pragma: no cover - optional dependency
-    poetry_console = None  # type: ignore[assignment]
-
-
-from pathlib import Path
 
 logger = get_logger(__name__)
 
@@ -100,7 +96,7 @@ logger = get_logger(__name__)
 # to maintain consistency and avoid duplication of generic result functionality
 
 
-class ProjectInfo(BaseModel):
+class ProjectInfo(FlextModel):
     """Poetry project information.
 
     Contains project metadata extracted from pyproject.toml.
@@ -245,7 +241,9 @@ class PoetryValidator:
                 "warnings": [],
                 "info": {},
             }
-            return FlextResult.ok(error_result)
+            return cast(
+                "FlextResult[ProjectValidationData]", FlextResult.ok(error_result)
+            )
 
         # Validate TOML syntax and structure
         toml_valid, toml_error = self._validate_toml_syntax(pyproject_path)
@@ -256,7 +254,9 @@ class PoetryValidator:
                 "warnings": [],
                 "info": {},
             }
-            return FlextResult.ok(toml_error_result)
+            return cast(
+                "FlextResult[ProjectValidationData]", FlextResult.ok(toml_error_result)
+            )
 
         try:
             with pyproject_path.open("rb") as f:
@@ -287,7 +287,10 @@ class PoetryValidator:
                 "warnings": [],
                 "info": {},
             }
-            return FlextResult.ok(processing_error_result)
+            return cast(
+                "FlextResult[ProjectValidationData]",
+                FlextResult.ok(processing_error_result),
+            )
 
         # Validate Poetry lock file consistency
         lock_valid, lock_issues = self._validate_lock_file(project_path)
@@ -303,8 +306,9 @@ class PoetryValidator:
             if isinstance(project_info, ProjectInfo)
             else {},
         }
-
-        return FlextResult.ok(final_result_data)
+        return cast(
+            "FlextResult[ProjectValidationData]", FlextResult.ok(final_result_data)
+        )
 
     def _validate_toml_syntax(self, file_path: Path) -> tuple[bool, str | None]:
         """Validate TOML syntax and structure of configuration file.
@@ -500,8 +504,8 @@ class PoetryValidator:
             issues.append("Unable to verify poetry.lock status via Poetry API")
         else:
             try:
-                app = poetry_console.application.Application()  # type: ignore[no-call-override]
-                code = app.run(["check"])  # type: ignore[arg-type]
+                app = poetry_console.application.Application()
+                code = app.run(["check"])
                 if int(code) != 0:
                     issues.append("poetry.lock is outdated - run 'poetry lock'")
             except Exception:
@@ -667,7 +671,7 @@ class PoetryValidator:
                 f"Workspace validation completed - {valid_projects}/{total_projects} valid, {total_errors} errors, {total_warnings} warnings",
             )
 
-            return FlextResult.ok(workspace_result_data)
+            return ok_result[dict[str, object]](workspace_result_data)
 
         except Exception as e:
             error_msg = f"Workspace validation failed: {e}"

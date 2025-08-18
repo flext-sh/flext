@@ -124,11 +124,11 @@ class TemplateManager:
         """
         try:
             template = self._environment.get_template(template_name)
-            return FlextResult.ok(template)
+            return FlextResult[Template].ok(template)
         except Exception as e:
             error_msg = f"Failed to load template '{template_name}': {e}"
             self.logger.exception(error_msg)
-            return FlextResult.fail(error_msg)
+            return FlextResult[Template].fail(error_msg)
 
     def render_template(
         self,
@@ -147,18 +147,18 @@ class TemplateManager:
         """
         template_result = self.get_template(template_name)
         if not template_result.success:
-            return FlextResult.fail(template_result.error or "Template loading failed")
+            return FlextResult[str].fail(
+                template_result.error or "Template loading failed"
+            )
 
         try:
             template = template_result.data
-            if template is None:
-                return FlextResult.fail(f"Template '{template_name}' is None")
             rendered = template.render(**context)
-            return FlextResult.ok(rendered)
+            return FlextResult[str].ok(rendered)
         except Exception as e:
             error_msg = f"Failed to render template '{template_name}': {e}"
             self.logger.exception(error_msg)
-            return FlextResult.fail(error_msg)
+            return FlextResult[str].fail(error_msg)
 
     def render_component_readme(
         self,
@@ -219,11 +219,11 @@ class TemplateManager:
             templates = [
                 file_path.name for file_path in self.templates_dir.rglob("*.j2")
             ]
-            return FlextResult.ok(templates)
+            return FlextResult[list[str]].ok(templates)
         except Exception as e:
             error_msg = f"Failed to list templates: {e}"
             self.logger.exception(error_msg)
-            return FlextResult.fail(error_msg)
+            return FlextResult[list[str]].fail(error_msg)
 
     def validate_template(self, template_name: str) -> FlextResult[bool]:
         """Validate that a template exists and can be loaded.
@@ -237,5 +237,7 @@ class TemplateManager:
         """
         template_result = self.get_template(template_name)
         if template_result.success:
-            return FlextResult.ok(data=True)
-        return FlextResult.fail(template_result.error or "Template validation failed")
+            return FlextResult[bool].ok(data=True)
+        return FlextResult[bool].fail(
+            template_result.error or "Template validation failed"
+        )

@@ -317,7 +317,7 @@ class QualityGateway(FlextScript):
 
             mypy_stdout, _mypy_stderr, _status = mypy_api.run(
                 [str(project_path), "--no-error-summary"],
-            )  # type: ignore[arg-type]
+            )
             mypy_errors = 0
             if mypy_stdout:
                 mypy_errors = len(
