@@ -72,10 +72,10 @@ from __future__ import annotations
 
 import re
 
-from flext_core import FlextResult, get_logger
+from flext_core import FlextModel, FlextResult, get_logger
 from packaging import version
 from packaging.specifiers import SpecifierSet
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from flext_tools.utils import Colors, print_colored
 
@@ -87,7 +87,7 @@ MIN_PROJECTS_HIGH_SEVERITY = 2
 logger = get_logger(__name__)
 
 
-class VersionCompatibilityResult(BaseModel):
+class VersionCompatibilityResult(FlextModel):
     """Version compatibility analysis result using FlextEntity for type safety.
 
     This entity represents the result of version compatibility analysis between
@@ -125,8 +125,8 @@ class VersionCompatibilityResult(BaseModel):
     def validate_business_rules(self) -> FlextResult[None]:
         """Validate business rules for version compatibility result."""
         if not self.spec1 or not self.spec2:
-            return FlextResult.fail("Both version specifications must be provided")
-        return FlextResult.ok(None)
+            return FlextResult[None].fail("Both version specifications must be provided")
+        return FlextResult[None].ok(None)
 
 
 class VersionAnalyzer:
@@ -664,7 +664,7 @@ def check_version_compatibility(
             else [],
         )
 
-        return FlextResult.ok(result)
+        return FlextResult[VersionCompatibilityResult].ok(result)
     except Exception as e:
         logger.exception(
             "Version compatibility check failed",
@@ -672,7 +672,7 @@ def check_version_compatibility(
             spec2=spec2,
             error=str(e),
         )
-        return FlextResult.fail(f"Version compatibility check failed: {e}")
+        return FlextResult[VersionCompatibilityResult].fail(f"Version compatibility check failed: {e}")
 
 
 def analyze_version_conflicts(

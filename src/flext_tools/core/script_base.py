@@ -98,7 +98,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import ParamSpec
+from typing import ParamSpec, cast
 
 from flext_core import (
     FlextResult,
@@ -107,6 +107,7 @@ from flext_core import (
     get_logger,
 )
 
+# ok_result was intentionally not used here; keep import removed
 from flext_tools.quality.gateway import (
     QualityCheckConfig,
     QualityGateway,
@@ -179,7 +180,8 @@ class ScriptMetadata(FlextValue):
         if not self.category.strip():
             return FlextResult.fail("Script category cannot be empty")
 
-        return FlextResult.ok(None)
+        # Return a typed FlextResult indicating success (use cast fallback)
+        return cast("FlextResult[None]", FlextResult.ok(None))
 
 
 class FlextScript(ABC):
@@ -278,7 +280,8 @@ class FlextScript(ABC):
             FlextResult indicating cleanup success or failure
 
         """
-        return FlextResult.ok(None)
+
+    return cast("FlextResult[None]", FlextResult.ok(None))
 
     def setup(self) -> FlextResult[None]:
         """Perform any setup operations before main execution.
@@ -287,7 +290,8 @@ class FlextScript(ABC):
             FlextResult indicating setup success or failure
 
         """
-        return FlextResult.ok(None)
+
+    return cast("FlextResult[None]", FlextResult.ok(None))
 
     def run(self, **kwargs: object) -> int:
         """Run the complete script with FlextResult railway-oriented programming.
@@ -373,7 +377,7 @@ class FlextScript(ABC):
             if not all_quality_checks_passed(data):
                 summary = get_quality_failure_summary(data)
                 return FlextResult.fail(summary)
-            return FlextResult.ok(None)
+            return cast("FlextResult[None]", FlextResult.ok(None))
         except Exception as exc:
             return FlextResult.fail(f"Validation error: {exc}")
 
@@ -579,10 +583,10 @@ def create_simple_script[**P_main_func](
                 sig = inspect.signature(config.main_func)
                 if sig.parameters:
                     # Function expects parameters, pass kwargs
-                    result = config.main_func(**kwargs)  # type: ignore[call-arg,arg-type]
+                    result = config.main_func(**kwargs)
                 else:
                     # Function expects no parameters
-                    result = config.main_func()  # type: ignore[call-arg]
+                    result = config.main_func()
                 return (
                     result
                     if isinstance(result, FlextResult)

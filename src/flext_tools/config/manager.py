@@ -52,15 +52,15 @@ License: MIT
 
 from pathlib import Path
 
-from flext_core import FlextResult, get_logger
-from pydantic import BaseModel, Field
+from flext_core import FlextModel, FlextResult, get_logger
+from pydantic import Field
 
 from flext_tools.utils import Colors, print_colored
 
 logger = get_logger(__name__)
 
 
-class Configuration(BaseModel):
+class Configuration(FlextModel):
     """Comprehensive configuration model for FLEXT ecosystem components.
 
     Provides structured configuration data with validation for environment

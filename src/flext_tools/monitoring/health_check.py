@@ -202,7 +202,7 @@ class HealthCheckService:
         """
         print_colored("🏥 Executing comprehensive health checks...", Colors.BLUE)
 
-        results = {
+        results: dict[str, object] = {
             "overall_health": "healthy",
             "services_checked": 0,
             "services_healthy": 0,

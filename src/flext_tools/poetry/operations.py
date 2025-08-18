@@ -386,8 +386,8 @@ class PoetryOperations:
                 args += ["--group", group]
             if self.dry_run:
                 args.append("--dry-run")
-            app = poetry_app.Application()  # type: ignore[no-call-override]
-            code = app.run(args)  # type: ignore[arg-type]
+            app = poetry_app.Application()
+            code = app.run(args)
             success = int(code) == 0
 
             if success:
@@ -584,8 +584,8 @@ class PoetryOperations:
             args = ["remove", dependency]
             if self.dry_run:
                 args.append("--dry-run")
-            app = poetry_app.Application()  # type: ignore[no-call-override]
-            code = app.run(args)  # type: ignore[arg-type]
+            app = poetry_app.Application()
+            code = app.run(args)
             success = int(code) == 0
 
             if success:
@@ -718,8 +718,8 @@ class PoetryOperations:
             args = ["update"]
             if self.dry_run:
                 args.append("--dry-run")
-            app = poetry_app.Application()  # type: ignore[no-call-override]
-            code = app.run(args)  # type: ignore[arg-type]
+            app = poetry_app.Application()
+            code = app.run(args)
             success = int(code) == 0
 
             if success:
@@ -834,8 +834,8 @@ class PoetryOperations:
                 )
                 return False
             args = ["lock"]
-            app = poetry_app.Application()  # type: ignore[no-call-override]
-            code = app.run(args)  # type: ignore[arg-type]
+            app = poetry_app.Application()
+            code = app.run(args)
             success = int(code) == 0
 
             if success:
@@ -945,8 +945,8 @@ class PoetryOperations:
                 )
                 return False
             args = ["check"]
-            app = poetry_app.Application()  # type: ignore[no-call-override]
-            code = app.run(args)  # type: ignore[arg-type]
+            app = poetry_app.Application()
+            code = app.run(args)
             success = int(code) == 0
 
             if success:

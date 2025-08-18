@@ -232,9 +232,9 @@ class SSLManager:
             )
             logger.info("SSL/TLS infrastructure setup completed successfully")
 
-            return FlextResult.ok(results_data)
+            return FlextResult[SSLSetupData].ok(results_data)
 
         except Exception as e:
             error_msg = f"Failed to setup SSL/TLS infrastructure: {e}"
             logger.exception(error_msg)
-            return FlextResult.fail(error_msg)
+            return FlextResult[SSLSetupData].fail(error_msg)
