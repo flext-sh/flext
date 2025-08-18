@@ -72,8 +72,8 @@ import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
-from flext_core import FlextResult, get_logger
-from pydantic import BaseModel, Field
+from flext_core import FlextModel, FlextResult, get_logger
+from pydantic import Field
 
 from flext_tools.utils import Colors, print_colored
 
@@ -142,7 +142,7 @@ class LockInconsistency:
     severity: str  # "critical", "warning", "info"
 
 
-class WorkspaceSummary(BaseModel):
+class WorkspaceSummary(FlextModel):
     """Comprehensive workspace dependency analysis summary.
 
     Contains statistical summary of workspace analysis including project
