@@ -68,8 +68,8 @@ import ast
 import re
 from pathlib import Path
 
-from flext_core import FlextResult, get_logger
-from pydantic import BaseModel, Field
+from flext_core import FlextModel, FlextResult, get_logger
+from pydantic import Field
 
 from flext_tools.utils import Colors, print_colored, should_ignore_path
 
@@ -79,7 +79,7 @@ MIN_PACKAGE_LENGTH = 2
 MAX_SEPARATORS = 2
 
 
-class PythonDependencies(BaseModel):
+class PythonDependencies(FlextModel):
     """Python dependencies categorized by type.
 
     Contains runtime and test dependencies discovered from Python import analysis.
@@ -224,12 +224,12 @@ class PythonImportDiscovery:
             logger.info(
                 f"Found {len(result.runtime)} runtime and {len(result.test)} test dependencies",
             )
-            return FlextResult.ok(result)
+            return FlextResult[PythonDependencies].ok(result)
 
         except Exception as e:
             error_msg = f"Failed to discover Python dependencies: {e}"
             logger.exception(error_msg)
-            return FlextResult.fail(error_msg)
+            return FlextResult[PythonDependencies].fail(error_msg)
 
     def _categorize_imports(
         self,

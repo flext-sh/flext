@@ -8,6 +8,11 @@
             "venv": ".venv",
             "extraPaths": [
                 "flext-core/src",
+                "flext-core/typings",
+                "flext-ldif/src",
+                "flext-ldap/src",
+                "flext-cli/src",
+                "flext-observability/src",
                 "client-a-oud-mig/src",
                 "src"
             ],

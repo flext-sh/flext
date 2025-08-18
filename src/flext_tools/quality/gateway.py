@@ -75,11 +75,12 @@ import shutil
 import time
 from dataclasses import dataclass
 from pathlib import Path
+from typing import cast
 
-import pytest  # type: ignore[import-untyped]
-import ruff.__main__ as ruff_main  # type: ignore[import-untyped]
+import pytest
+import ruff.__main__ as ruff_main
 from flext_core import FlextEntity, FlextResult, get_flext_container, get_logger
-from mypy import api as mypy_api  # type: ignore[import-untyped]
+from mypy import api as mypy_api
 
 from flext_tools.utils import Colors, print_colored
 
@@ -368,7 +369,7 @@ class QualityGateway:
             for key, enabled, runner in checks:
                 if not enabled:
                     continue
-                result = runner()  # type: ignore[operator]
+                result = runner()
                 if not result.success:
                     quality_data[key] = False
                     issues.extend(result.data or [])
@@ -416,7 +417,7 @@ class QualityGateway:
                     execution_time=execution_time,
                 )
 
-            return FlextResult.ok(quality_data)
+            return cast("FlextResult[QualityCheckData]", FlextResult.ok(quality_data))
 
         except Exception as e:
             self.logger.exception("Quality check execution failed", error=str(e))
@@ -427,7 +428,7 @@ class QualityGateway:
         try:
             if shutil.which("ruff") is None or ruff_main is None:
                 return (
-                    FlextResult.ok([])
+                    cast("FlextResult[list[QualityIssue]]", FlextResult.ok([]))
                     if self._is_relaxed()
                     else FlextResult.fail(
                         "ruff not found in PATH",
@@ -443,14 +444,14 @@ class QualityGateway:
                     try:
                         exit_code = int(
                             ruff_main.main(["check", str(self.workspace_path)]),
-                        )  # type: ignore[arg-type]
+                        )
                     except SystemExit as exc:
                         exit_code = int(getattr(exc, "code", 0) or 0)
                 except Exception as e:
                     return FlextResult.fail(f"Lint check failed: {e}")
 
             if exit_code == 0:
-                return FlextResult.ok([])
+                return cast("FlextResult[list[QualityIssue]]", FlextResult.ok([]))
 
             # Parse Ruff output for issues (stdout text format)
             issues = [
@@ -467,7 +468,7 @@ class QualityGateway:
         try:
             if shutil.which("mypy") is None:
                 return (
-                    FlextResult.ok([])
+                    cast("FlextResult[list[QualityIssue]]", FlextResult.ok([]))
                     if self._is_relaxed()
                     else FlextResult.fail(
                         "mypy not found in PATH",
@@ -486,7 +487,7 @@ class QualityGateway:
                 [str(self.workspace_path / "src")],
             )
             if int(exit_status) == 0:
-                return FlextResult.ok([])
+                return cast("FlextResult[list[QualityIssue]]", FlextResult.ok([]))
 
             issues = [
                 QualityIssue(tool="mypy", severity="error", message=line.strip())
