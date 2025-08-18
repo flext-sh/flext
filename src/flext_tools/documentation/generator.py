@@ -10,24 +10,18 @@ import argparse
 import contextlib
 import io
 import shutil
-
-# Removed subprocess dependency; serving/building uses mkdocs Python API
 import sys
 import tomllib
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import cast
 
-from flext_core import FlextResult
+import mkdocs.__main__ as mkdocs_main
+from flext_core import FlextResult, get_logger
 
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
 from flext_tools.discovery import DependencyDiscovery
 from flext_tools.documentation.templates import TemplateManager
-
-# Optional dependency: mkdocs
-try:  # pragma: no cover - optional dependency
-    import mkdocs.__main__ as mkdocs_main  # type: ignore[import-not-found]
-except Exception:  # pragma: no cover - optional dependency
-    mkdocs_main = None  # type: ignore[assignment]
 
 
 class DocumentationGenerator(FlextScript):
@@ -52,6 +46,7 @@ class DocumentationGenerator(FlextScript):
         self.mkdocs_config = project_root / "mkdocs.yml"
         self.template_manager = TemplateManager()
         self.discovery = DependencyDiscovery()
+        self.logger = get_logger(__name__)
 
     @property
     def metadata(self) -> ScriptMetadata:
@@ -69,6 +64,7 @@ class DocumentationGenerator(FlextScript):
             category="documentation",
             version="0.9.0",
             dry_run_supported=True,
+            requires_confirmation=False,
         )
 
     def validate_preconditions(self) -> FlextResult[None]:
@@ -113,12 +109,14 @@ class DocumentationGenerator(FlextScript):
             missing_tools_errors.append(error_msg)
 
         if missing_tools_errors:
-            return FlextResult.fail(
+            return FlextResult[None].fail(
                 "Precondition validation failed: " + "; ".join(missing_tools_errors),
             )
 
         self.logger.info("All preconditions validated successfully!")
-        return FlextResult.ok(None)
+        return None
+
+    return cast("FlextResult[None]", FlextResult.ok(None))
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute documentation generation.
@@ -153,17 +151,17 @@ class DocumentationGenerator(FlextScript):
             # Step 2: Generate component documentation
             if dry_run:
                 self.logger.info("[dry-run] Would generate component documentation")
-                components_result = FlextResult.ok({})
+                components_result = FlextResult[dict[str, object]].ok({})
             else:
                 components_result = self._generate_component_docs()
             if not components_result.success:
-                return FlextResult.fail(
+                return FlextResult[object].fail(
                     components_result.error or "Component generation failed",
                 )
 
             if components_only:
                 self.logger.info("Component documentation generation completed")
-                return FlextResult.ok({"status": "components_generated"})
+                return FlextResult[object].ok({"status": "components_generated"})
 
             # Execute full generation pipeline
             # Use type: ignore for the variance issue (dict[str, object] is compatible with object)
@@ -171,7 +169,7 @@ class DocumentationGenerator(FlextScript):
                 self.logger.info(
                     "[dry-run] Would generate API docs, diagrams and build"
                 )
-                return FlextResult.ok(
+                return FlextResult[object].ok(
                     {
                         "status": "dry_run",
                         "message": "Documentation steps validated",
@@ -181,12 +179,12 @@ class DocumentationGenerator(FlextScript):
             return self._execute_full_generation_pipeline(
                 components_result,
                 serve=serve,
-            )  # type: ignore[arg-type]
+            )
 
         except Exception as e:
             error_msg = f"Documentation generation failed: {e}"
             self.logger.exception(error_msg)
-            return FlextResult.fail(error_msg)
+            return FlextResult[object].fail(error_msg)
 
     def _execute_full_generation_pipeline(
         self,
@@ -198,26 +196,26 @@ class DocumentationGenerator(FlextScript):
         # Step 3: Generate API documentation
         api_result = self._generate_api_docs()
         if not api_result.success:
-            return FlextResult.fail(api_result.error or "API generation failed")
+            return FlextResult[object].fail(api_result.error or "API generation failed")
 
         # Step 4: Generate architecture diagrams
         diagrams_result = self._generate_architecture_diagrams()
         if not diagrams_result.success:
-            return FlextResult.fail(
+            return FlextResult[object].fail(
                 diagrams_result.error or "Diagram generation failed",
             )
 
         # Step 5: Build documentation
         build_result = self._build_docs()
         if not build_result.success:
-            return FlextResult.fail(build_result.error or "Build failed")
+            return FlextResult[object].fail(build_result.error or "Build failed")
 
         # Step 6: Serve documentation if requested
         if serve:
             self._serve_docs()
 
         self.logger.info("Documentation generation completed successfully!")
-        return FlextResult.ok(
+        return FlextResult[object].ok(
             {
                 "status": "success",
                 "message": "Documentation generated",
@@ -342,7 +340,7 @@ class DocumentationGenerator(FlextScript):
 
             components_data[project_name] = component_data
 
-        return FlextResult.ok(components_data)
+        return FlextResult[dict[str, object]].ok(components_data)
 
     def _extract_component_data(
         self,
@@ -614,7 +612,7 @@ class DocumentationGenerator(FlextScript):
         # Render API documentation
         api_result = self.template_manager.render_api_reference(api_data)
         if not api_result.success:
-            return FlextResult.fail(
+            return FlextResult[None].fail(
                 f"Failed to render API docs for {project_name}: {api_result.error}",
             )
 
@@ -623,7 +621,7 @@ class DocumentationGenerator(FlextScript):
         if api_result.data is not None:
             api_file.write_text(api_result.data)
 
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
     def _copy_existing_docs(self, source: Path, target: Path) -> None:
         """Copy existing documentation from a component.
@@ -701,7 +699,7 @@ class DocumentationGenerator(FlextScript):
             python_sdk_file.write_text(python_sdk_result.data)
             api_results["python_sdk"] = python_sdk_data
 
-        return FlextResult.ok(api_results)
+        return FlextResult[dict[str, object]].ok(api_results)
 
     def _get_rest_api_quick_start(self) -> str:
         """Get REST API quick start example.
@@ -852,7 +850,7 @@ print(f"Pipeline status: {result.status}")"""
             interaction_file.write_text(interaction_result.data)
             diagram_results["interactions"] = interaction_data
 
-        return FlextResult.ok(diagram_results)
+        return FlextResult[dict[str, object]].ok(diagram_results)
 
     def _get_system_overview_mermaid(self) -> str:
         """Get system overview Mermaid diagram.
@@ -957,7 +955,7 @@ print(f"Pipeline status: {result.status}")"""
         try:
             # Prefer in-process mkdocs entrypoint
             if mkdocs_main is None:
-                return FlextResult.fail(
+                return FlextResult[dict[str, object]].fail(
                     "MkDocs build API unavailable: mkdocs not installed"
                 )
 
@@ -976,13 +974,18 @@ print(f"Pipeline status: {result.status}")"""
                 except SystemExit as exc:
                     exit_code = int(getattr(exc, "code", 0) or 0)
             if exit_code != 0:
-                return FlextResult.fail(
+                return FlextResult[dict[str, object]].fail(
                     f"MkDocs build failed: {stderr.getvalue().strip()}",
                 )
             self.logger.info("Documentation built successfully")
-            return FlextResult.ok({"status": "built", "output": stdout.getvalue()})
+            return FlextResult[dict[str, object]].ok(
+                {
+                    "status": "built",
+                    "output": stdout.getvalue(),
+                }
+            )
         except Exception as e:
-            return FlextResult.fail(f"MkDocs build failed: {e}")
+            return FlextResult[dict[str, object]].fail(f"MkDocs build failed: {e}")
 
     def _serve_docs(self) -> None:
         """Serve the documentation locally."""
@@ -994,7 +997,7 @@ print(f"Pipeline status: {result.status}")"""
             # Prefer programmatic serve via mkdocs if available
             try:
                 if mkdocs_main is not None:
-                    mkdocs_main.main(["serve", "-f", str(self.mkdocs_config)])  # type: ignore[arg-type]
+                    mkdocs_main.main(["serve", "-f", str(self.mkdocs_config)])
                     return
             except Exception as e:
                 self.logger.debug(f"mkdocs python entrypoint not available: {e}")
