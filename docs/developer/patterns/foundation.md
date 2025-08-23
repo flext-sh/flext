@@ -28,7 +28,7 @@ class FlextModel(BaseModel):
     def validate_business_rules(self) -> 'FlextResult[None]':
         """Override to implement business rule validation."""
         from flext_core.result import FlextResult
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 ```
 
 ### FlextEntity
@@ -105,9 +105,9 @@ class FlextConfig(BaseSettings):
             hierarchy = FlextConfigHierarchical()
             config_data = hierarchy.merge_sources(**overrides)
             instance = cls(**config_data)
-            return FlextResult.ok(instance)
+            return FlextResult[None].ok(instance)
         except Exception as e:
-            return FlextResult.fail(f"Configuration error: {e}")
+            return FlextResult[None].fail(f"Configuration error: {e}")
 ```
 
 ## Result Pattern
@@ -149,10 +149,10 @@ class FlextResult(Generic[T]):
         """Transform success value, propagate failure."""
         if self.success:
             try:
-                return FlextResult.ok(func(self.data))
+                return FlextResult[None].ok(func(self.data))
             except Exception as e:
-                return FlextResult.fail(str(e))
-        return FlextResult.fail(self.error, self.error_code, **(self.error_context or {}))
+                return FlextResult[None].fail(str(e))
+        return FlextResult[None].fail(self.error, self.error_code, **(self.error_context or {}))
 
     def unwrap_or(self, default: T) -> T:
         """Get value or return default."""
@@ -180,12 +180,12 @@ class FlextFactory:
     def create(cls, entity_type: str, **kwargs) -> FlextResult[Any]:
         """Create entity using registered creator."""
         if entity_type not in cls._creators:
-            return FlextResult.fail(f"No creator registered for type: {entity_type}")
+            return FlextResult[None].fail(f"No creator registered for type: {entity_type}")
 
         try:
             return cls._creators[entity_type](**kwargs)
         except Exception as e:
-            return FlextResult.fail(f"Creation failed: {str(e)}")
+            return FlextResult[None].fail(f"Creation failed: {str(e)}")
 
     @classmethod
     def create_entity(cls, entity_class: Type[FlextEntity], **kwargs) -> FlextResult[FlextEntity]:
@@ -195,11 +195,11 @@ class FlextFactory:
             validation_result = entity.validate_business_rules()
 
             if not validation_result.success:
-                return FlextResult.fail(f"Validation failed: {validation_result.error}")
+                return FlextResult[None].fail(f"Validation failed: {validation_result.error}")
 
-            return FlextResult.ok(entity)
+            return FlextResult[None].ok(entity)
         except Exception as e:
-            return FlextResult.fail(f"Entity creation failed: {str(e)}")
+            return FlextResult[None].fail(f"Entity creation failed: {str(e)}")
 ```
 
 ## Protocol Patterns
@@ -247,8 +247,8 @@ class Email(FlextValue):
 
     def validate_business_rules(self) -> FlextResult[None]:
         if "@" not in self.address:
-            return FlextResult.fail("Invalid email format")
-        return FlextResult.ok(None)
+            return FlextResult[None].fail("Invalid email format")
+        return FlextResult[None].ok(None)
 
 # Entity
 class User(FlextEntity):
@@ -259,11 +259,11 @@ class User(FlextEntity):
 
     def grant_role(self, role: str) -> FlextResult[None]:
         if role in self.roles:
-            return FlextResult.fail(f"User already has role: {role}")
+            return FlextResult[None].fail(f"User already has role: {role}")
 
         self.roles.append(role)
         self.increment_version()
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
 # Usage
 def create_user(username: str, email: str, full_name: str) -> FlextResult[User]:
@@ -288,11 +288,11 @@ def update_email(user: User, new_email: str) -> FlextResult[User]:
     validation = email_obj.validate_business_rules()
 
     if not validation.success:
-        return FlextResult.fail(f"Invalid email: {validation.error}")
+        return FlextResult[None].fail(f"Invalid email: {validation.error}")
 
     user.email = email_obj
     user.increment_version()
-    return FlextResult.ok(user)
+    return FlextResult[None].ok(user)
 
 # Chain operations
 result = (

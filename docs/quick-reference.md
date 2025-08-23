@@ -42,9 +42,9 @@ from flext_core.errors import FlextBusinessError, FlextResult
 def process() -> FlextResult[str]:
     try:
         # operation
-        return FlextResult.ok("success")
+        return FlextResult[None].ok("success")
     except Exception as e:
-        return FlextResult.fail(str(e))
+        return FlextResult[None].fail(str(e))
 ```
 
 ### Configuration

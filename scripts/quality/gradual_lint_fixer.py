@@ -36,7 +36,7 @@ class GradualLintFixerScript(FlextScript):
         # Check if we're in FLEXT workspace
         if not (workspace_root / "pyproject.toml").exists():
             print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return FlextResult.fail("Not in FLEXT workspace root")
+            return FlextResult[None].fail("Not in FLEXT workspace root")
 
         # Check Ruff availability
         if shutil.which("ruff") is None:
@@ -44,15 +44,15 @@ class GradualLintFixerScript(FlextScript):
                 "❌ Ruff not found - install with: pip install ruff",
                 Colors.RED,
             )
-            return FlextResult.fail("Ruff not found")
+            return FlextResult[None].fail("Ruff not found")
         print_colored("✅ Ruff available", Colors.GREEN)
 
         # Check Git availability
         if shutil.which("git") is None:
             print_colored("❌ Git not found - required for safe branching", Colors.RED)
-            return FlextResult.fail("Git not found")
+            return FlextResult[None].fail("Git not found")
         print_colored("✅ Git available", Colors.GREEN)
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute gradual lint fixing."""
@@ -64,12 +64,12 @@ class GradualLintFixerScript(FlextScript):
 
             if not project:
                 print_colored("❌ Project name is required", Colors.RED)
-                return FlextResult.fail("Project name is required")
+                return FlextResult[None].fail("Project name is required")
 
             project_path = workspace_root / str(project)
             if not project_path.exists():
                 print_colored(f"❌ Project {project} not found", Colors.RED)
-                return FlextResult.fail(f"Project {project} not found")
+                return FlextResult[None].fail(f"Project {project} not found")
 
             print_colored("🔧 GRADUAL LINT FIXER", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
@@ -97,7 +97,9 @@ class GradualLintFixerScript(FlextScript):
                         Colors.GREEN,
                     )
 
-                return FlextResult.ok({"fix_result": fix_result, "project": project})
+                return FlextResult[None].ok(
+                    {"fix_result": fix_result, "project": project}
+                )
 
             print_colored("❌ Gradual lint fixing failed", Colors.RED)
             return False

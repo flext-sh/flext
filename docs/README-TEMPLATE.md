@@ -155,9 +155,9 @@ export PROJECT_OPTIONAL=value
 def operation(self) -> FlextResult[DataType]:
     try:
         result = self._perform_operation()
-        return FlextResult.ok(result)
+        return FlextResult[None].ok(result)
     except Exception as e:
-        return FlextResult.fail(f"Operation failed: {e}")
+        return FlextResult[None].fail(f"Operation failed: {e}")
 ```
 
 ### **Service Integration**

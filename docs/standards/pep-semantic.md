@@ -101,7 +101,7 @@ flextVERSION = "0.9.0"   # mixedCase
 ```python
 # Classes base
 class FlextEntity[TId]:
-class FlextValueObject:
+class FlextValue:
 class FlextAggregateRoot[TId]:
 class FlextDomainService:
 
@@ -111,7 +111,7 @@ TFlextDomainEvent = TypeVar("TFlextDomainEvent")
 
 # Implementações específicas
 class FlextUser(FlextEntity[int]):
-class FlextEmail(FlextValueObject):
+class FlextEmail(FlextValue):
 ```
 
 ### Padrões Arquiteturais
@@ -220,7 +220,7 @@ FLEXT_ENV_PREFIX = "FLEXT_"
 ```python
 # ✅ Correto - Type hints modernos
 def flext_process_data[T](data: T) -> FlextResult[T]:
-    return FlextResult.ok(data)
+    return FlextResult[None].ok(data)
 
 # ✅ Correto - Generic classes
 class FlextRepository[TEntity, TId]:
@@ -286,7 +286,7 @@ class FlextResult[T]:  # ✅ Novo padrão
 flexResult = FlextResult  # Alias deprecated
 
 def flext_create_result[T]() -> FlextResult[T]:  # ✅ Novo padrão
-    return FlextResult.ok()
+    return FlextResult[None].ok()
 
 # Alias deprecated
 CreateFlexResult = flext_create_result
@@ -296,7 +296,7 @@ class FlextResult[T]:
     pass
 
 def flext_create_result[T]() -> FlextResult[T]:
-    return FlextResult.ok()
+    return FlextResult[None].ok()
 ```
 
 ## Quality Gates para Conformidade PEP

@@ -397,21 +397,21 @@ class Validator:
     def validate_email(email: str) -> FlextResult[str]:
         """Validate email format."""
         if not re.match(FlextConstants.Patterns.EMAIL_PATTERN, email):
-            return FlextResult.fail(
+            return FlextResult[None].fail(
                 "Invalid email format",
                 error_code=FlextConstants.Errors.VALIDATION_ERROR
             )
-        return FlextResult.ok(email)
+        return FlextResult[None].ok(email)
 
     @staticmethod
     def validate_port(port: int) -> FlextResult[int]:
         """Validate port number."""
         if not FlextConstants.Limits.MIN_PORT <= port <= FlextConstants.Limits.MAX_PORT:
-            return FlextResult.fail(
+            return FlextResult[None].fail(
                 f"Port must be between {FlextConstants.Limits.MIN_PORT} and {FlextConstants.Limits.MAX_PORT}",
                 error_code=FlextConstants.Errors.VALIDATION_ERROR
             )
-        return FlextResult.ok(port)
+        return FlextResult[None].ok(port)
 ```
 
 ### Performance Monitoring

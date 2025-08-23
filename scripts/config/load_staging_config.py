@@ -32,16 +32,16 @@ class StagingConfigLoader(FlextScript):
         # Check if we're in FLEXT workspace
         if not (project_root / "flext-api").exists():
             print_colored("❌ flext-api directory not found", Colors.RED)
-            return FlextResult.fail("flext-api directory not found")
+            return FlextResult[None].fail("flext-api directory not found")
 
         # Check if staging config exists
         staging_env = project_root / "flext-api" / ".env.staging"
         if not staging_env.exists():
             print_colored("❌ .env.staging file not found in flext-api/", Colors.RED)
-            return FlextResult.fail(".env.staging file not found in flext-api/")
+            return FlextResult[None].fail(".env.staging file not found in flext-api/")
 
         print_colored("✅ Staging configuration files found", Colors.GREEN)
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute staging config loading logic."""
@@ -67,15 +67,17 @@ class StagingConfigLoader(FlextScript):
                     Colors.GREEN,
                 )
                 print_colored("📋 All environment variables validated", Colors.CYAN)
-                return FlextResult.ok({"success": True, "validate_only": validate_only})
+                return FlextResult[None].ok(
+                    {"success": True, "validate_only": validate_only}
+                )
 
             print_colored("❌ Failed to load staging configuration", Colors.RED)
             print_colored("Check .env.staging file for errors", Colors.YELLOW)
-            return FlextResult.fail("Failed to load staging configuration")
+            return FlextResult[None].fail("Failed to load staging configuration")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during config loading: {e}", Colors.RED)
-            return FlextResult.fail(f"Config loading error: {e}")
+            return FlextResult[None].fail(f"Config loading error: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
@@ -91,7 +93,7 @@ class StagingConfigLoader(FlextScript):
 
     def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
 
 def main() -> int:

@@ -58,11 +58,11 @@ class LintingReport(FlextScript):
                 print_colored(f"✅ {tool.title()} encontrado", Colors.GREEN)
 
         if missing_tools:
-            return FlextResult.fail(
+            return FlextResult[None].fail(
                 f"Missing required tools: {', '.join(missing_tools)}",
             )
 
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Executar análise completa de qualidade."""
@@ -156,13 +156,13 @@ class LintingReport(FlextScript):
             elif output_format == "html":
                 self._save_html_report(total_stats, project_results)
 
-            return FlextResult.ok(
+            return FlextResult[None].ok(
                 {"total_stats": total_stats, "project_results": project_results},
             )
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
-            return FlextResult.fail(f"Analysis error: {e}")
+            return FlextResult[None].fail(f"Analysis error: {e}")
 
     def _discover_projects(
         self,
@@ -457,7 +457,7 @@ class LintingReport(FlextScript):
 
     def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
 
 def main() -> int:

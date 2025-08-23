@@ -32,9 +32,9 @@ def process_user_data(user_id, data, validate=True):
 def divide_numbers(a: float, b: float) -> FlextResult[float]:
     """Divide numbers with explicit error handling."""
     if b == 0:
-        return FlextResult.fail("Division by zero not allowed")
+        return FlextResult[None].fail("Division by zero not allowed")
 
-    return FlextResult.ok(a / b)
+    return FlextResult[None].ok(a / b)
 
 # Usage
 result = divide_numbers(10, 2)
@@ -56,9 +56,9 @@ def divide_numbers(a: float, b: float) -> float:
 
 ```python
 # ✅ Excellent - Immutable value object
-from flext_core import FlextValueObject
+from flext_core import FlextValue
 
-class Money(FlextValueObject):
+class Money(FlextValue):
     def __init__(self, amount: float, currency: str):
         if amount < 0:
             raise ValueError("Amount cannot be negative")
@@ -111,10 +111,10 @@ class User(FlextEntity[str]):
     def deactivate(self) -> FlextResult[None]:
         """Business rule: only active users can be deactivated."""
         if not self._is_active:
-            return FlextResult.fail("User is already inactive")
+            return FlextResult[None].fail("User is already inactive")
 
         self._is_active = False
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
 # APPLICATION LAYER - Orchestration
 class DeactivateUserCommand(FlextCommand):
@@ -125,12 +125,12 @@ class DeactivateUserCommand(FlextCommand):
 
     def validate(self) -> FlextResult[None]:
         if not self.user_id:
-            return FlextResult.fail("User ID is required")
+            return FlextResult[None].fail("User ID is required")
 
         if not self.reason:
-            return FlextResult.fail("Reason is required")
+            return FlextResult[None].fail("Reason is required")
 
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
 class DeactivateUserHandler(FlextCommandHandler[DeactivateUserCommand, None]):
     def __init__(self, user_repository: UserRepository):
@@ -141,7 +141,7 @@ class DeactivateUserHandler(FlextCommandHandler[DeactivateUserCommand, None]):
         # Get user
         user_result = self._user_repository.find_by_id(command.user_id)
         if user_result.is_failure:
-            return FlextResult.fail(f"User not found: {command.user_id}")
+            return FlextResult[None].fail(f"User not found: {command.user_id}")
 
         user = user_result.data
 
@@ -220,25 +220,25 @@ class CreateUserCommand(FlextCommand):
     def validate(self) -> FlextResult[None]:
         """Input validation - format and presence."""
         if not self.email or "@" not in self.email:
-            return FlextResult.fail("Valid email is required")
+            return FlextResult[None].fail("Valid email is required")
 
         if not self.name or len(self.name.strip()) < 2:
-            return FlextResult.fail("Name must have at least 2 characters")
+            return FlextResult[None].fail("Name must have at least 2 characters")
 
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
 # 2. BUSINESS VALIDATION - In domain
 class User(FlextEntity[str]):
     def change_email(self, new_email: str) -> FlextResult[None]:
         """Business validation - domain rules."""
         if new_email == self._email:
-            return FlextResult.fail("New email must be different")
+            return FlextResult[None].fail("New email must be different")
 
         if self._is_suspended:
-            return FlextResult.fail("Suspended users cannot change email")
+            return FlextResult[None].fail("Suspended users cannot change email")
 
         self._email = new_email
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
 # 3. SYSTEM VALIDATION - In application
 class CreateUserHandler(FlextCommandHandler[CreateUserCommand, User]):
@@ -246,7 +246,7 @@ class CreateUserHandler(FlextCommandHandler[CreateUserCommand, User]):
         # Check if email already exists
         exists_result = self._user_repository.exists_by_email(command.email)
         if exists_result.success and exists_result.data:
-            return FlextResult.fail("Email already registered")
+            return FlextResult[None].fail("Email already registered")
 
         # Create user
         user = User.create(command.name, command.email)
@@ -271,11 +271,11 @@ def transfer_money(
     # Chain of operations
     from_account_result = account_service.get_account(from_account)
     if from_account_result.is_failure:
-        return FlextResult.fail(f"Source account error: {from_account_result.error}")
+        return FlextResult[None].fail(f"Source account error: {from_account_result.error}")
 
     to_account_result = account_service.get_account(to_account)
     if to_account_result.is_failure:
-        return FlextResult.fail(f"Target account error: {to_account_result.error}")
+        return FlextResult[None].fail(f"Target account error: {to_account_result.error}")
 
     from_acc = from_account_result.data
     to_acc = to_account_result.data
@@ -283,16 +283,16 @@ def transfer_money(
     # Business validation
     withdraw_result = from_acc.withdraw(amount)
     if withdraw_result.is_failure:
-        return FlextResult.fail(f"Withdrawal failed: {withdraw_result.error}")
+        return FlextResult[None].fail(f"Withdrawal failed: {withdraw_result.error}")
 
     deposit_result = to_acc.deposit(amount)
     if deposit_result.is_failure:
         # Rollback withdrawal
         from_acc.deposit(amount)
-        return FlextResult.fail(f"Deposit failed: {deposit_result.error}")
+        return FlextResult[None].fail(f"Deposit failed: {deposit_result.error}")
 
     # Success
-    return FlextResult.ok(TransferResult(from_account, to_account, amount))
+    return FlextResult[None].ok(TransferResult(from_account, to_account, amount))
 ```
 
 ### 2. Error Classification
@@ -323,7 +323,7 @@ def create_user(data: dict) -> FlextResult[User]:
             "Email is required",
             {"field": "email", "value": data.get("email")}
         )
-        return FlextResult.fail(error)
+        return FlextResult[None].fail(error)
 
     # Business rule error
     if user_exists(data["email"]):
@@ -332,19 +332,19 @@ def create_user(data: dict) -> FlextResult[User]:
             "User already exists",
             {"email": data["email"]}
         )
-        return FlextResult.fail(error)
+        return FlextResult[None].fail(error)
 
     # Infrastructure error
     try:
         user = save_user(data)
-        return FlextResult.ok(user)
+        return FlextResult[None].ok(user)
     except DatabaseException as e:
         error = FlextError(
             ErrorType.INFRASTRUCTURE,
             "Database save failed",
             {"original_error": str(e)}
         )
-        return FlextResult.fail(error)
+        return FlextResult[None].fail(error)
 ```
 
 ## 🧪 Testing Best Practices
@@ -361,8 +361,8 @@ def test_user_deactivation_success():
     user_id = "user_123"
     user = User(user_id, "john@test.com", "John Doe")
     mock_repository = Mock(spec=UserRepository)
-    mock_repository.find_by_id.return_value = FlextResult.ok(user)
-    mock_repository.save.return_value = FlextResult.ok(None)
+    mock_repository.find_by_id.return_value = FlextResult[None].ok(user)
+    mock_repository.save.return_value = FlextResult[None].ok(None)
 
     handler = DeactivateUserHandler(mock_repository)
     command = DeactivateUserCommand(user_id, "Account cleanup")
@@ -381,7 +381,7 @@ def test_user_deactivation_user_not_found():
     # ARRANGE
     user_id = "nonexistent"
     mock_repository = Mock(spec=UserRepository)
-    mock_repository.find_by_id.return_value = FlextResult.fail("User not found")
+    mock_repository.find_by_id.return_value = FlextResult[None].fail("User not found")
 
     handler = DeactivateUserHandler(mock_repository)
     command = DeactivateUserCommand(user_id, "Test")
