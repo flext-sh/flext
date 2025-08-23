@@ -1,36 +1,103 @@
 # ============================================================================
-# PYAUTO WORKSPACE - GIT SUBMODULES CONFIGURATION
-# Organized by project category and location
-# Last Updated: 2025-06-29 - HYBRID CONFIGURATION
+# FLEXT WORKSPACE - STANDARDIZED GIT SUBMODULES CONFIGURATION
+# Organized by organization and project category
+# Last Updated: 2025-08-23 - STANDARDIZED CONFIGURATION
 # ============================================================================
 
 # ============================================================================
-# ENTERPRISE INTEGRATION PROJECTS (DATACOSMOS-BR - ORIGINAL)
+# DATACOSMOS-BR ORGANIZATION - Enterprise/Client-Specific Projects
 # ============================================================================
 
 [submodule "client-a-oud-mig"]
 	path = client-a-oud-mig
 	url = git@github.com:datacosmos-br/client-a-oud-mig.git
 
-[submodule "client-b-poc-oic-wms"]
-	path = client-b-poc-oic-wms
-	url = git@github.com:datacosmos-br/client-b-poc-oic-wms.git
+[submodule "client-b-meltano-native"]
+	path = client-b-meltano-native
+	url = git@github.com:datacosmos-br/client-b-meltano-native.git
 
 # ============================================================================
-# SINGER/MELTANO PROTOCOL PROJECTS (FLEXT-SH - MIGRATED)
+# FLEXT-SH ORGANIZATION - Core Platform Projects
 # ============================================================================
 
-[submodule "flext-dbt-ldap"]
-	path = flext-dbt-ldap
-	url = git@github.com:flext-sh/flext-dbt-ldap.git
+# ── Foundation & Core Services ──
+[submodule "flext-core"]
+	path = flext-core
+	url = git@github.com:flext-sh/flext-core.git
+
+[submodule "flexcore"]
+	path = flexcore
+	url = git@github.com:flext-sh/flexcore.git
+
+[submodule "flext-api"]
+	path = flext-api
+	url = git@github.com:flext-sh/flext-api.git
+
+[submodule "flext-auth"]
+	path = flext-auth
+	url = git@github.com:flext-sh/flext-auth.git
+
+[submodule "flext-cli"]
+	path = flext-cli
+	url = git@github.com:flext-sh/flext-cli.git
+
+[submodule "flext-web"]
+	path = flext-web
+	url = git@github.com:flext-sh/flext-web.git
+
+[submodule "flext-observability"]
+	path = flext-observability
+	url = git@github.com:flext-sh/flext-observability.git
+
+[submodule "flext-quality"]
+	path = flext-quality
+	url = git@github.com:flext-sh/flext-quality.git
+
+# ── Infrastructure & Integration Services ──
+[submodule "flext-db-oracle"]
+	path = flext-db-oracle
+	url = git@github.com:flext-sh/flext-db-oracle.git
+
+[submodule "flext-ldap"]
+	path = flext-ldap
+	url = git@github.com:flext-sh/flext-ldap.git
+
+[submodule "flext-ldif"]
+	path = flext-ldif
+	url = git@github.com:flext-sh/flext-ldif.git
+
+[submodule "flext-oracle-wms"]
+	path = flext-oracle-wms
+	url = git@github.com:flext-sh/flext-oracle-wms.git
 
 [submodule "flext-oracle-oic-ext"]
 	path = flext-oracle-oic-ext
 	url = git@github.com:flext-sh/flext-oracle-oic-ext.git
 
+[submodule "flext-grpc"]
+	path = flext-grpc
+	url = git@github.com:flext-sh/flext-grpc.git
+
+[submodule "flext-meltano"]
+	path = flext-meltano
+	url = git@github.com:flext-sh/flext-meltano.git
+
+[submodule "flext-plugin"]
+	path = flext-plugin
+	url = git@github.com:flext-sh/flext-plugin.git
+
+# ── Singer Ecosystem: Taps (Data Extractors) ──
 [submodule "flext-tap-ldap"]
 	path = flext-tap-ldap
 	url = git@github.com:flext-sh/flext-tap-ldap.git
+
+[submodule "flext-tap-ldif"]
+	path = flext-tap-ldif
+	url = git@github.com:flext-sh/flext-tap-ldif.git
+
+[submodule "flext-tap-oracle"]
+	path = flext-tap-oracle
+	url = git@github.com:flext-sh/flext-tap-oracle.git
 
 [submodule "flext-tap-oracle-oic"]
 	path = flext-tap-oracle-oic
@@ -40,9 +107,18 @@
 	path = flext-tap-oracle-wms
 	url = git@github.com:flext-sh/flext-tap-oracle-wms.git
 
+# ── Singer Ecosystem: Targets (Data Loaders) ──
 [submodule "flext-target-ldap"]
 	path = flext-target-ldap
 	url = git@github.com:flext-sh/flext-target-ldap.git
+
+[submodule "flext-target-ldif"]
+	path = flext-target-ldif
+	url = git@github.com:flext-sh/flext-target-ldif.git
+
+[submodule "flext-target-oracle"]
+	path = flext-target-oracle
+	url = git@github.com:flext-sh/flext-target-oracle.git
 
 [submodule "flext-target-oracle-oic"]
 	path = flext-target-oracle-oic
@@ -52,19 +128,30 @@
 	path = flext-target-oracle-wms
 	url = git@github.com:flext-sh/flext-target-oracle-wms.git
 
+# ── DBT Projects (Data Transformers) ──
+[submodule "flext-dbt-ldap"]
+	path = flext-dbt-ldap
+	url = git@github.com:flext-sh/flext-dbt-ldap.git
+
+[submodule "flext-dbt-ldif"]
+	path = flext-dbt-ldif
+	url = git@github.com:flext-sh/flext-dbt-ldif.git
+
+[submodule "flext-dbt-oracle"]
+	path = flext-dbt-oracle
+	url = git@github.com:flext-sh/flext-dbt-oracle.git
+
+[submodule "flext-dbt-oracle-wms"]
+	path = flext-dbt-oracle-wms
+	url = git@github.com:flext-sh/flext-dbt-oracle-wms.git
+
 # ============================================================================
-# FLX EXTENSIONS (FLEXT-SH - MIGRATED)
+# LEGACY PROJECTS (FLEXT-SH - ARCHIVED)
 # ============================================================================
 
-[submodule "flext-ldap"]
-	path = flext-ldap
-	url = git@github.com:flext-sh/flext-ldap.git
-
-
-# ============================================================================
-# LEGACY PROJECTS (FLEXT-SH - MIGRATED)
-# ============================================================================
-
+[submodule "legacy/flx-adapter-example"]
+	path = legacy/flx-adapter-example
+	url = git@github.com:flext-sh/flx-adapter-example.git
 
 [submodule "legacy/flx-database-oracle"]
 	path = legacy/flx-database-oracle
@@ -78,95 +165,26 @@
 	path = legacy/flx-http-oracle-wms
 	url = git@github.com:flext-sh/flx-http-oracle-wms.git
 
-[submodule "legacy/flx-oracle-oic"]
-	path = legacy/flx-oracle-oic
-	url = git@github.com:flext-sh/flx-oracle-oic.git
+[submodule "legacy/flx-ldap"]
+	path = legacy/flx-ldap
+	url = git@github.com:flext-sh/flx-ldap.git
+
+[submodule "legacy/flx-meltano-enterprise"]
+	path = legacy/flx-meltano-enterprise
+	url = git@github.com:flext-sh/flx-meltano-enterprise.git
 
 [submodule "legacy/flx-oracle-wms"]
 	path = legacy/flx-oracle-wms
 	url = git@github.com:flext-sh/flx-oracle-wms.git
 
 # ============================================================================
-# NOTES:
-# - Enterprise projects (client-a-oud-mig, client-b-poc-oic-wms) remain in datacosmos-br
-# - 15 repositories migrated to flext-sh with flext- prefixes
-# - FLX Framework modules (flext-core, flext-auth, etc.) are local directories
+# CONFIGURATION NOTES:
 # ============================================================================
-[submodule "flext-api"]
-	path = flext-api
-	url = https://github.com/flext-sh/flext-api.git
-[submodule "flext-auth"]
-	path = flext-auth
-	url = https://github.com/flext-sh/flext-auth.git
-[submodule "flext-cli"]
-	path = flext-cli
-	url = https://github.com/flext-sh/flext-cli.git
-[submodule "flext-core"]
-	path = flext-core
-	url = https://github.com/flext-sh/flext-core.git
-[submodule "flext-grpc"]
-	path = flext-grpc
-	url = https://github.com/flext-sh/flext-grpc.git
-[submodule "flext-meltano"]
-	path = flext-meltano
-	url = https://github.com/flext-sh/flext-meltano.git
-[submodule "flext-observability"]
-	path = flext-observability
-	url = https://github.com/flext-sh/flext-observability.git
-[submodule "flext-plugin"]
-	path = flext-plugin
-	url = https://github.com/flext-sh/flext-plugin.git
-[submodule "flext-web"]
-	path = flext-web
-	url = https://github.com/flext-sh/flext-web.git
-[submodule "flext-quality"]
-	path = flext-quality
-	url = https://github.com/flext-sh/flext-quality.git
-[submodule "flext-db-oracle"]
-	path = flext-db-oracle
-	url = https://github.com/flext-sh/flext-db-oracle.git
-[submodule "legacy/flx-adapter-example"]
-	path = legacy/flx-adapter-example
-	url = git@github.com:flext-sh/flx-adapter-example.git
-[submodule "legacy/flx-ldap"]
-	path = legacy/flx-ldap
-	url = git@github.com:flext-sh/flx-ldap.git
-[submodule "legacy/flx"]
-	path = legacy/flx
-	url = https://github.com/flext-sh/flx.git
-[submodule "legacy/flx-meltano-enterprise"]
-	path = legacy/flx-meltano-enterprise
-	url = git@github.com:flext-sh/flx-meltano-enterprise.git
-[submodule "flexcore"]
-	path = flexcore
-	url = git@github.com:flext-sh/flexcore.git
-[submodule "client-b-meltano-native"]
-	path = client-b-meltano-native
-	url = git@github.com:datacosmos-br/client-b-meltano-native.git
-[submodule "flext-target-oracle"]
-	path = flext-target-oracle
-	url = git@github.com:flext-sh/flext-target-oracle.git
-[submodule "flext-tap-ldif"]
-	path = flext-tap-ldif
-	url = https://github.com/marlon-costa-dc/flext-tap-ldif.git
-[submodule "flext-target-ldif"]
-	path = flext-target-ldif
-	url = https://github.com/marlon-costa-dc/flext-target-ldif.git
-[submodule "flext-dbt-ldif"]
-	path = flext-dbt-ldif
-	url = https://github.com/marlon-costa-dc/flext-dbt-ldif.git
-[submodule "flext-ldif"]
-	path = flext-ldif
-	url = https://github.com/marlon-costa-dc/flext-ldif.git
-[submodule "flext-tap-oracle"]
-	path = flext-tap-oracle
-	url = git@github.com:flext-sh/flext-tap-oracle.git
-[submodule "flext-oracle-wms"]
-	path = flext-oracle-wms
-	url = git@github.com:flext-sh/flext-oracle-wms.git
-[submodule "flext-dbt-oracle"]
-	path = flext-dbt-oracle
-	url = git@github.com:flext-sh/flext-dbt-oracle.git
-[submodule "flext-dbt-oracle-wms"]
-	path = flext-dbt-oracle-wms
-	url = git@github.com:flext-sh/flext-dbt-oracle-wms.git
+# - All URLs standardized to SSH format (git@github.com:)
+# - Projects organized by organization and category
+# - DataCosmos-BR: Enterprise/client-specific projects
+# - FLEXT-SH: Core platform and ecosystem projects
+# - FlexCore contains third-party windmill submodule for build/test support
+# - Legacy projects maintained for historical reference
+# - Total: 32 active projects + 7 legacy projects = 39 submodules
+# ============================================================================

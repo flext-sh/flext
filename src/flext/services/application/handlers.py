@@ -44,12 +44,12 @@ Example:
     ...     async def handle(self, command: CreateUserCommand) -> FlextResult[int]:
     ...         # Business logic for user creation
     ...         user_id = await self.user_repository.create(command.name, command.email)
-    ...         return FlextResult.success(user_id)
+    ...         return FlextResult[int].ok(user_id)
     >>>
     >>> class GetUserHandler(QueryHandler[GetUserQuery, dict]):
     ...     async def handle(self, query: GetUserQuery) -> FlextResult[dict]:
     ...         user_data = await self.user_repository.get(query.user_id)
-    ...         return FlextResult.success(user_data)
+    ...         return FlextResult[dict].ok(user_data)
 
 Integration:
     - Built on flext-core FlextResult patterns for consistent error handling

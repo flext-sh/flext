@@ -128,14 +128,14 @@ class PipelineCommandHandler:
     ) -> FlextResult[dict[str, object]]:
       """Handle create pipeline command."""
       # Simplified implementation - to be implemented when Pipeline domain exists
-      return FlextResult.ok(data={"message": "Pipeline creation not implemented"})
+      return FlextResult[dict[str, object]].ok({"message": "Pipeline creation not implemented"})
 
     async def handle_execute(
       self, command: ExecutePipelineCommand
     ) -> FlextResult[dict[str, object]]:
       """Handle execute pipeline command."""
       # Simplified implementation - to be implemented when Pipeline domain exists
-      return FlextResult.ok(data={"message": "Pipeline execution not implemented"})
+      return FlextResult[dict[str, object]].ok({"message": "Pipeline execution not implemented"})
 
 
 class PipelineQueryHandler:
@@ -146,14 +146,14 @@ class PipelineQueryHandler:
     ) -> FlextResult[dict[str, object]]:
       """Handle get pipeline query."""
       # Simplified implementation - to be implemented when Pipeline domain exists
-      return FlextResult.ok(data={"message": "Pipeline get not implemented"})
+      return FlextResult[dict[str, object]].ok({"message": "Pipeline get not implemented"})
 
     async def handle_list(
       self, query: ListPipelinesQuery
     ) -> FlextResult[list[dict[str, object]]]:
       """Handle list pipelines query."""
       # Simplified implementation - to be implemented when Pipeline domain exists
-      return FlextResult.ok(data=[])
+      return FlextResult[list[dict[str, object]]].ok([])
 
 
 class PipelineService:

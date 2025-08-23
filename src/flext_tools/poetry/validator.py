@@ -242,7 +242,7 @@ class PoetryValidator:
                 "info": {},
             }
             return cast(
-                "FlextResult[ProjectValidationData]", FlextResult.ok(error_result)
+                "FlextResult[ProjectValidationData]", FlextResult[None].ok(error_result)
             )
 
         # Validate TOML syntax and structure
@@ -255,7 +255,8 @@ class PoetryValidator:
                 "info": {},
             }
             return cast(
-                "FlextResult[ProjectValidationData]", FlextResult.ok(toml_error_result)
+                "FlextResult[ProjectValidationData]",
+                FlextResult[None].ok(toml_error_result),
             )
 
         try:
@@ -289,7 +290,7 @@ class PoetryValidator:
             }
             return cast(
                 "FlextResult[ProjectValidationData]",
-                FlextResult.ok(processing_error_result),
+                FlextResult[None].ok(processing_error_result),
             )
 
         # Validate Poetry lock file consistency
@@ -307,7 +308,8 @@ class PoetryValidator:
             else {},
         }
         return cast(
-            "FlextResult[ProjectValidationData]", FlextResult.ok(final_result_data)
+            "FlextResult[ProjectValidationData]",
+            FlextResult[None].ok(final_result_data),
         )
 
     def _validate_toml_syntax(self, file_path: Path) -> tuple[bool, str | None]:
@@ -623,8 +625,8 @@ class PoetryValidator:
                 print_colored(f"\n  📁 Validating {project_name}...", Colors.CYAN)
                 validation_result = self.validate_project(project_path)
 
-                if validation_result.is_success and validation_result.data is not None:
-                    project_validation = validation_result.data
+                if validation_result.is_success and validation_result.value is not None:
+                    project_validation = validation_result.value
                     project_results[project_name] = project_validation
 
                     if project_validation["valid"]:
@@ -676,4 +678,4 @@ class PoetryValidator:
         except Exception as e:
             error_msg = f"Workspace validation failed: {e}"
             logger.exception(error_msg)
-            return FlextResult.fail(error_msg)
+            return FlextResult[None].fail(error_msg)

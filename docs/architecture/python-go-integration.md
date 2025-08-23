@@ -130,9 +130,9 @@ class PipelineService:
                 pipeline_id=pipeline_id,
                 config=config
             )
-            return FlextResult.ok(result)
+            return FlextResult[None].ok(result)
         except Exception as e:
-            return FlextResult.fail(f"Pipeline execution failed: {e}")
+            return FlextResult[None].fail(f"Pipeline execution failed: {e}")
 ```
 
 ### 2. HTTP/REST API Integration
@@ -334,25 +334,25 @@ class PipelineExecutor:
             # 1. Validate pipeline
             validation_result = await self._validate_pipeline(pipeline_id)
             if validation_result.is_failure:
-                return FlextResult.fail(
+                return FlextResult[None].fail(
                     f"Pipeline validation failed: {validation_result.error}",
                     error_code="PIPELINE_VALIDATION_ERROR"
                 )
 
             # 2. Execute pipeline
             result = await self._run_pipeline(pipeline_id, config)
-            return FlextResult.ok(result)
+            return FlextResult[None].ok(result)
 
         except FlextBusinessError as e:
             # 3. Business errors (user action required)
-            return FlextResult.fail(
+            return FlextResult[None].fail(
                 str(e),
                 error_code=e.error_code,
                 correlation_id=e.correlation_id
             )
         except Exception as e:
             # 4. Technical errors (system issue)
-            return FlextResult.fail(
+            return FlextResult[None].fail(
                 f"Technical error: {str(e)}",
                 error_code="TECHNICAL_ERROR"
             )

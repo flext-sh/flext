@@ -290,12 +290,12 @@ class LockConsistencyAnalyzer:
             # Categorize results by severity for prioritized resolution
             categories = self._categorize_inconsistencies()
 
-            return FlextResult.ok(categories)
+            return FlextResult[dict[str, list[LockInconsistency]]].ok(categories)
 
         except Exception as e:
             error_msg = f"Failed to analyze workspace: {e}"
             logger.exception(error_msg)
-            return FlextResult.fail(error_msg)
+            return FlextResult[dict[str, list[LockInconsistency]]].fail(error_msg)
 
     def _discover_projects(self, workspace_path: Path) -> list[Path]:
         """Discover Poetry projects in the workspace with pyproject.toml files.
@@ -547,12 +547,12 @@ class LockConsistencyAnalyzer:
                 ),
             )
 
-            return FlextResult.ok(summary)
+            return FlextResult[WorkspaceSummary].ok(summary)
 
         except Exception as e:
             error_msg = f"Failed to generate workspace summary: {e}"
             logger.exception(error_msg)
-            return FlextResult.fail(error_msg)
+            return FlextResult[WorkspaceSummary].fail(error_msg)
 
     def print_detailed_report(
         self,

@@ -102,7 +102,7 @@ class User(FlextModel):
     name: str
 
     def validate_business_rules(self) -> FlextResult[None]:
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 ```
 
 #### FlextResult Pattern
@@ -117,8 +117,8 @@ def process_data(data: dict):
 # ✅ CORRECT - FlextResult usage
 def process_data(data: dict) -> FlextResult[ProcessedData]:
     if not data:
-        return FlextResult.fail("Data is required")
-    return FlextResult.ok(processed_result)
+        return FlextResult[None].fail("Data is required")
+    return FlextResult[None].ok(processed_result)
 ```
 
 ### 2. Type System Violations
