@@ -1,6 +1,6 @@
 # FLEXT Service ↔ FlexCore Distributed Coordination
 
-**Version**: 1.0.0 | **Status**: Production Ready | **Last Updated**: 2025-01-08
+**Version**: 0.9.0 | **Status**: Production Ready | **Last Updated**: 2025-01-08
 
 ## Overview
 

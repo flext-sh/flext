@@ -174,7 +174,7 @@ go test -cover ./...
 
 ## Current Status
 
-**Version**: 2.0.0 (Development - Service Launcher)
+**Version**: 0.9.0 (Development - Service Launcher)
 
 **Completed**:
 
