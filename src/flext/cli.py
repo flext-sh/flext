@@ -52,7 +52,7 @@ from flext_cli import (
     cli_validate_inputs,
 )
 
-# from flext_cli.core import FlextCliService  # Not exported, use dict for now
+# FlextCliService not needed for this implementation
 from flext_core import FlextResult
 
 # Import flext_tools functionality to expose via CLI
@@ -257,7 +257,7 @@ def quality(
       print_colored("🔍 Running quality checks with flext_tools...", Colors.BLUE)
 
       # Execute quality checks (implementation would call quality_gateway methods)
-      result = FlextResult.ok("Quality checks completed successfully")
+      result = FlextResult[str].ok("Quality checks completed successfully")
 
       if result.success:
           print_colored("✅ All quality checks passed!", Colors.GREEN)
@@ -380,13 +380,13 @@ def test(ctx: click.Context, coverage: bool, parallel: bool) -> None:
 
     # This would integrate with flext_tools testing modules
     # For now, showing integration pattern
-    result = FlextResult.ok(0)  # Simulated success
+    result = FlextResult[int].ok(0)  # Simulated success
 
-    if result.success and result.data == 0:
+    if result.success and result.value == 0:
       print_colored("✅ All tests passed!", Colors.GREEN)
     else:
       print_colored(f"❌ Tests failed: {result.error}", Colors.RED)
-      ctx.exit(result.data or 1)
+      ctx.exit(result.value or 1)
 
 
 @main.command()
@@ -440,7 +440,7 @@ def info(ctx: click.Context, detailed: bool) -> None:
     config = ctx.obj["config"]
 
     # Create workspace info using flext-cli context patterns
-    workspace_data = {
+    workspace_data: dict[str, str | bool | list[str]] = {
       "workspace_root": str(workspace),
       "projects_count": "32",  # Would be dynamically determined
       "projects": ["flext-core", "flext-api", "flexcore"],  # Would be discovered

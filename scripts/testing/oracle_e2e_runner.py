@@ -35,7 +35,7 @@ class OracleE2ETestRunner(FlextScript):
         # Check if we're in FLEXT workspace
         if not (project_root / "flext-core").exists():
             print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return FlextResult.fail("Execute from FLEXT workspace root")
+            return FlextResult[None].fail("Execute from FLEXT workspace root")
 
         print_colored("✅ FLEXT workspace detected", Colors.GREEN)
 
@@ -51,7 +51,7 @@ class OracleE2ETestRunner(FlextScript):
                 "❌ Docker not available - required for Oracle E2E tests",
                 Colors.RED,
             )
-            return FlextResult.fail(
+            return FlextResult[None].fail(
                 "Docker not available - required for Oracle E2E tests",
             )
 
@@ -64,12 +64,12 @@ class OracleE2ETestRunner(FlextScript):
                     "✅ Docker engine healthy (compose plugin not required)",
                     Colors.GREEN,
                 )
-                return FlextResult.ok(None)
+                return FlextResult[None].ok(None)
             print_colored("❌ Docker engine info unavailable", Colors.RED)
-            return FlextResult.fail("Docker engine info unavailable")
+            return FlextResult[None].fail("Docker engine info unavailable")
         except Exception:
             print_colored("❌ Unable to query Docker engine info", Colors.RED)
-            return FlextResult.fail("Unable to query Docker engine info")
+            return FlextResult[None].fail("Unable to query Docker engine info")
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute Oracle E2E testing logic."""
@@ -98,14 +98,14 @@ class OracleE2ETestRunner(FlextScript):
                     Colors.GREEN,
                 )
                 print_colored("📊 Test reports generated in .flext_logs/", Colors.CYAN)
-                return FlextResult.ok(None)
+                return FlextResult[None].ok(None)
             print_colored("❌ Oracle E2E tests failed", Colors.RED)
             print_colored("📋 Check logs in .flext_logs/ for details", Colors.YELLOW)
-            return FlextResult.fail("Oracle E2E tests failed")
+            return FlextResult[None].fail("Oracle E2E tests failed")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during E2E testing: {e}", Colors.RED)
-            return FlextResult.fail(f"Error during E2E testing: {e}")
+            return FlextResult[None].fail(f"Error during E2E testing: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
@@ -133,7 +133,7 @@ class OracleE2ETestRunner(FlextScript):
 
     def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
 
 def main() -> int:

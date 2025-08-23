@@ -12,7 +12,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
 
-from flext_core.result import FlextResult
+from flext_core import FlextResult
 
 
 @dataclass
@@ -227,7 +227,9 @@ class PatternViolationAnalyzer:
         """Analyze pattern compliance for a single project."""
         try:
             if not project_path.exists():
-                return FlextResult.fail(f"Project path does not exist: {project_path}")
+                return FlextResult[None].fail(
+                    f"Project path does not exist: {project_path}"
+                )
 
             # Find Python files to analyze
             if project_path.name == "main-workspace":
@@ -246,7 +248,7 @@ class PatternViolationAnalyzer:
                     total_files_analyzed=0,
                 )
                 result.calculate_compliance_metrics()
-                return FlextResult.ok(result)
+                return FlextResult[None].ok(result)
 
             violations = []
             for python_file in python_files:
@@ -267,11 +269,11 @@ class PatternViolationAnalyzer:
             self.logger.info(
                 f"Analyzed {project_path.name}: {len(violations)} violations found",
             )
-            return FlextResult.ok(result)
+            return FlextResult[None].ok(result)
 
         except Exception as e:
             self.logger.exception(f"Error analyzing project {project_path.name}")
-            return FlextResult.fail(f"Analysis failed: {e}")
+            return FlextResult[None].fail(f"Analysis failed: {e}")
 
     def _analyze_file_patterns(
         self,
@@ -308,11 +310,11 @@ class PatternViolationAnalyzer:
             )
             violations.extend(text_violations)
 
-            return FlextResult.ok(violations)
+            return FlextResult[None].ok(violations)
 
         except Exception as e:
             self.logger.debug(f"Error analyzing file {file_path}: {e}")
-            return FlextResult.ok([])  # Return empty list on file errors
+            return FlextResult[None].ok([])  # Return empty list on file errors
 
     def _analyze_ast_patterns(
         self,
@@ -567,10 +569,10 @@ class PatternAuditSystem:
             )
             ecosystem_result.calculate_ecosystem_metrics()
 
-            return FlextResult.ok(ecosystem_result)
+            return FlextResult[None].ok(ecosystem_result)
 
         except Exception as e:
-            return FlextResult.fail(f"Ecosystem audit failed: {e}")
+            return FlextResult[None].fail(f"Ecosystem audit failed: {e}")
 
     def generate_compliance_report(
         self,
@@ -640,10 +642,10 @@ class PatternAuditSystem:
             with Path(report_path).open("w", encoding="utf-8") as f:
                 json.dump(report_data, f, indent=2, ensure_ascii=False)
 
-            return FlextResult.ok(report_path)
+            return FlextResult[None].ok(report_path)
 
         except Exception as e:
-            return FlextResult.fail(f"Report generation failed: {e}")
+            return FlextResult[None].fail(f"Report generation failed: {e}")
 
     def _generate_remediation_recommendations(
         self,

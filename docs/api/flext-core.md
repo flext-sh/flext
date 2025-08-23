@@ -19,7 +19,7 @@ from flext_core import (
 
     # Domain modeling
     FlextEntity,         # Rich domain entities
-    FlextValueObject,    # Immutable value objects
+    FlextValue,    # Immutable value objects
     FlextAggregateRoot,  # DDD aggregates
 
     # Configuration
@@ -61,8 +61,8 @@ from flext_core import FlextResult
 
 def divide(a: int, b: int) -> FlextResult[float]:
     if b == 0:
-        return FlextResult.fail("Division by zero")
-    return FlextResult.ok(a / b)
+        return FlextResult[None].fail("Division by zero")
+    return FlextResult[None].ok(a / b)
 
 # Chain operations safely
 result = (
@@ -79,8 +79,8 @@ else:
 
 ### Key Methods
 
-- `FlextResult.ok(value)` - Create success result
-- `FlextResult.fail(error)` - Create failure result
+- `FlextResult[None].ok(value)` - Create success result
+- `FlextResult[None].fail(error)` - Create failure result
 - `.map(func)` - Transform success value
 - `.flat_map(func)` - Chain operations returning FlextResult
 - `.success` - Boolean indicating success
@@ -130,19 +130,19 @@ class User(FlextEntity):
 
     def activate(self) -> FlextResult[None]:
         if self.is_active:
-            return FlextResult.fail("User already active")
+            return FlextResult[None].fail("User already active")
 
         self.is_active = True
         # Domain events can be added here
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 ```
 
-### FlextValueObject - Immutable Values
+### FlextValue - Immutable Values
 
 ```python
-from flext_core import FlextValueObject
+from flext_core import FlextValue
 
-class Email(FlextValueObject):
+class Email(FlextValue):
     address: str
 
     def __post_init__(self):
@@ -164,7 +164,7 @@ class Order(FlextAggregateRoot):
         self.items.append(item)
         self.total += item.price
         # Domain event would be added here
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 ```
 
 ## ⚙️ Configuration Management

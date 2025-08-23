@@ -114,9 +114,8 @@ class DocumentationGenerator(FlextScript):
             )
 
         self.logger.info("All preconditions validated successfully!")
-        return None
 
-    return cast("FlextResult[None]", FlextResult.ok(None))
+        return cast("FlextResult[None]", FlextResult[None].ok(None))
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute documentation generation.
@@ -173,7 +172,7 @@ class DocumentationGenerator(FlextScript):
                     {
                         "status": "dry_run",
                         "message": "Documentation steps validated",
-                        "components": components_result.data,
+                        "components": components_result.value,
                     },
                 )
             return self._execute_full_generation_pipeline(
@@ -188,7 +187,7 @@ class DocumentationGenerator(FlextScript):
 
     def _execute_full_generation_pipeline(
         self,
-        components_result: FlextResult[object],
+        components_result: FlextResult[dict[str, object]],
         *,
         serve: bool,
     ) -> FlextResult[object]:
@@ -219,9 +218,9 @@ class DocumentationGenerator(FlextScript):
             {
                 "status": "success",
                 "message": "Documentation generated",
-                "components": components_result.data,
-                "apis": api_result.data,
-                "diagrams": diagrams_result.data,
+                "components": components_result.value,
+                "apis": api_result.value,
+                "diagrams": diagrams_result.value,
             },
         )
 
@@ -320,8 +319,8 @@ class DocumentationGenerator(FlextScript):
 
             # Write README
             readme_path = component_docs_dir / "README.md"
-            if readme_result.data is not None:
-                readme_path.write_text(readme_result.data)
+            if readme_result.value is not None:
+                readme_path.write_text(readme_result.value)
 
             # Copy existing documentation if available
             existing_docs = project_path / "docs"
@@ -618,8 +617,8 @@ class DocumentationGenerator(FlextScript):
 
         # Write API documentation
         api_file = api_dir / "README.md"
-        if api_result.data is not None:
-            api_file.write_text(api_result.data)
+        if api_result.value is not None:
+            api_file.write_text(api_result.value)
 
         return FlextResult[None].ok(None)
 
@@ -674,9 +673,9 @@ class DocumentationGenerator(FlextScript):
         }
 
         rest_api_result = self.template_manager.render_api_reference(rest_api_data)
-        if rest_api_result.success and rest_api_result.data is not None:
+        if rest_api_result.success and rest_api_result.value is not None:
             rest_api_file = api_ref_dir / "rest-api.md"
-            rest_api_file.write_text(rest_api_result.data)
+            rest_api_file.write_text(rest_api_result.value)
             api_results["rest_api"] = rest_api_data
 
         # Generate Python SDK documentation
@@ -694,9 +693,9 @@ class DocumentationGenerator(FlextScript):
         }
 
         python_sdk_result = self.template_manager.render_api_reference(python_sdk_data)
-        if python_sdk_result.success and python_sdk_result.data is not None:
+        if python_sdk_result.success and python_sdk_result.value is not None:
             python_sdk_file = api_ref_dir / "python-sdk.md"
-            python_sdk_file.write_text(python_sdk_result.data)
+            python_sdk_file.write_text(python_sdk_result.value)
             api_results["python_sdk"] = python_sdk_data
 
         return FlextResult[dict[str, object]].ok(api_results)
@@ -804,9 +803,9 @@ print(f"Pipeline status: {result.status}")"""
         overview_result = self.template_manager.render_architecture_diagram(
             overview_data,
         )
-        if overview_result.success and overview_result.data is not None:
+        if overview_result.success and overview_result.value is not None:
             overview_file = arch_dir / "overview.md"
-            overview_file.write_text(overview_result.data)
+            overview_file.write_text(overview_result.value)
             diagram_results["overview"] = overview_data
 
         # Generate component interaction diagram
@@ -845,9 +844,9 @@ print(f"Pipeline status: {result.status}")"""
         interaction_result = self.template_manager.render_architecture_diagram(
             interaction_data,
         )
-        if interaction_result.success and interaction_result.data is not None:
+        if interaction_result.success and interaction_result.value is not None:
             interaction_file = arch_dir / "component-interactions.md"
-            interaction_file.write_text(interaction_result.data)
+            interaction_file.write_text(interaction_result.value)
             diagram_results["interactions"] = interaction_data
 
         return FlextResult[dict[str, object]].ok(diagram_results)

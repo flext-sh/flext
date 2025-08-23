@@ -59,11 +59,12 @@ lint.per-file-ignores."**/generated/**/*.py" = ["ALL"]
 lint.per-file-ignores."**/proto/*_pb2_grpc.py" = ["ALL"]
 lint.per-file-ignores."**/proto/*_pb2.py" = ["ALL"]
 lint.per-file-ignores."**/examples/**" = [
-    "EXE001", 
-    "INP001", 
-    "N999", 
+    "EXE001",
+    "INP001",
+    "N999",
     "T201",
-    "TID252",]
+    "TID252",
+]
 lint.per-file-ignores."**/scripts/**" = [
     "EXE001",
     "INP001",
@@ -115,6 +116,7 @@ lint.per-file-ignores."**/tests/**" = [
     "TID252",
     "TRY003",
 ]
+lint.per-file-ignores."**/typings/**" = ["PYI001"]
 lint.select = ["ALL"]
 respect-gitignore = true
 show-fixes = true

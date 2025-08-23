@@ -311,7 +311,7 @@ def create_workspace(
 
     Raises:
         This method does not raise exceptions. All errors are returned as
-        FlextResult.fail() with detailed error information.
+        FlextResult[None].fail() with detailed error information.
 
     Example:
         Create standard workspace:
@@ -577,7 +577,7 @@ class TestWorkspaceManager:
         Expected Behavior:
             - Workspace directory created with proper permissions
             - All 32 ecosystem projects initialized
-            - FlextResult.success returns True
+            - FlextResult[None].ok() returns success
             - Validation passes without errors
         """
         # Test implementation

@@ -141,6 +141,12 @@ docker = ">=7.1.0"
 redis = ">=5.0.0"
 psycopg2 = ">=2.9.10"
 jedi-language-server = "^0.45.1"
+types-pyyaml = "^6.0.12.20250809"
+pytest-benchmark = "^5.1.0"
+pytest-xdist = "^3.8.0"
+pytest-cov = "^6.2.1"
+pytest-randomly = "^3.16.0"
+pytest-clarity = "^1.0.1"
 
 
 [tool.poetry.group.typings.dependencies]
@@ -239,7 +245,7 @@ platform = "linux"
 # Package structure
 explicit_package_bases = true
 namespace_packages = true
-mypy_path = ["src"]
+mypy_path = ["src", "flext-core/src", "flext-cli/src"]
 files = ["src", "tests", "scripts"]
 
 # Plugins
@@ -284,6 +290,7 @@ exclude = [
     "flext-api/examples/__init__.py",
     "client-a-oud-mig/examples/__init__.py",
 ]
+
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true

@@ -98,7 +98,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import ParamSpec, cast
+from typing import ParamSpec
 
 from flext_core import (
     FlextResult,
@@ -107,7 +107,6 @@ from flext_core import (
     get_logger,
 )
 
-# ok_result was intentionally not used here; keep import removed
 from flext_tools.quality.gateway import (
     QualityCheckConfig,
     QualityGateway,
@@ -172,16 +171,15 @@ class ScriptMetadata(FlextValue):
     def validate_business_rules(self) -> FlextResult[None]:
         """Validate script metadata business rules."""
         if not self.name.strip():
-            return FlextResult.fail("Script name cannot be empty")
+            return FlextResult[None].fail("Script name cannot be empty")
 
         if not self.description.strip():
-            return FlextResult.fail("Script description cannot be empty")
+            return FlextResult[None].fail("Script description cannot be empty")
 
         if not self.category.strip():
-            return FlextResult.fail("Script category cannot be empty")
+            return FlextResult[None].fail("Script category cannot be empty")
 
-        # Return a typed FlextResult indicating success (use cast fallback)
-        return cast("FlextResult[None]", FlextResult.ok(None))
+        return FlextResult[None].ok(None)
 
 
 class FlextScript(ABC):
@@ -227,13 +225,13 @@ class FlextScript(ABC):
         ...     def validate_preconditions(self) -> FlextResult[None]:
         ...         # Validate environment and dependencies
         ...         if not self.check_database_connectivity():
-        ...             return FlextResult.fail("Database not accessible")
-        ...         return FlextResult.ok(None)
+        ...             return FlextResult[None].fail("Database not accessible")
+        ...         return FlextResult[None].ok(None)
         ...
         ...     def execute_main_logic(self, **kwargs) -> FlextResult[object]:
         ...         # Implement business logic with error handling
         ...         result = self.process_data_safely()
-        ...         return FlextResult.ok(result)
+        ...         return FlextResult[None].ok(result)
 
     Integration:
         Integrates with flext-core patterns, flext-observability monitoring,
@@ -280,8 +278,7 @@ class FlextScript(ABC):
             FlextResult indicating cleanup success or failure
 
         """
-
-    return cast("FlextResult[None]", FlextResult.ok(None))
+        return FlextResult[None].ok(None)
 
     def setup(self) -> FlextResult[None]:
         """Perform any setup operations before main execution.
@@ -290,8 +287,7 @@ class FlextScript(ABC):
             FlextResult indicating setup success or failure
 
         """
-
-    return cast("FlextResult[None]", FlextResult.ok(None))
+        return FlextResult[None].ok(None)
 
     def run(self, **kwargs: object) -> int:
         """Run the complete script with FlextResult railway-oriented programming.
@@ -372,14 +368,14 @@ class FlextScript(ABC):
             config = QualityCheckConfig(relaxed=not strict)
             result = gateway.run_quality_checks_safe(config=config)
             if not result.success:
-                return FlextResult.fail(result.error or "Quality checks failed")
-            data = result.data or {}
+                return FlextResult[None].fail(result.error or "Quality checks failed")
+            data = result.value or {}
             if not all_quality_checks_passed(data):
                 summary = get_quality_failure_summary(data)
-                return FlextResult.fail(summary)
-            return cast("FlextResult[None]", FlextResult.ok(None))
+                return FlextResult[None].fail(summary)
+            return FlextResult[None].ok(None)
         except Exception as exc:
-            return FlextResult.fail(f"Validation error: {exc}")
+            return FlextResult[None].fail(f"Validation error: {exc}")
 
     def _print_header(self) -> None:
         """Print script header with metadata."""
@@ -481,10 +477,10 @@ class ScriptConfig[**P_main_func]:
         Configure simple script with validation:
 
         >>> def process_data() -> FlextResult[str]:
-        ...     return FlextResult.ok("processed")
+        ...     return FlextResult[None].ok("processed")
         >>>
         >>> def validate_environment() -> FlextResult[None]:
-        ...     return FlextResult.ok(None)
+        ...     return FlextResult[None].ok(None)
         >>>
         >>> config = ScriptConfig(
         ...     name="data-processor",
@@ -534,11 +530,11 @@ def create_simple_script[**P_main_func](
         Create script from configuration:
 
         >>> def process_data() -> FlextResult[str]:
-        ...     return FlextResult.ok("Data processed successfully")
+        ...     return FlextResult[None].ok("Data processed successfully")
         >>>
         >>> def validate_environment() -> FlextResult[None]:
         ...     # Validate prerequisites
-        ...     return FlextResult.ok(None)
+        ...     return FlextResult[None].ok(None)
         >>>
         >>> script_config = ScriptConfig(
         ...     name="data-processor",
@@ -570,12 +566,12 @@ def create_simple_script[**P_main_func](
         def validate_preconditions(self) -> FlextResult[None]:
             if config.validate_func:
                 return config.validate_func()
-            return FlextResult.ok(None)
+            return FlextResult[None].ok(None)
 
         def setup(self) -> FlextResult[None]:
             if config.setup_func:
                 return config.setup_func()
-            return FlextResult.ok(None)
+            return FlextResult[None].ok(None)
 
         def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
             try:
@@ -590,12 +586,12 @@ def create_simple_script[**P_main_func](
                 return (
                     result
                     if isinstance(result, FlextResult)
-                    else FlextResult.ok(result)
+                    else FlextResult[None].ok(result)
                 )
             except TypeError as e:
-                return FlextResult.fail(f"Function signature mismatch: {e}")
+                return FlextResult[None].fail(f"Function signature mismatch: {e}")
 
         def cleanup(self) -> FlextResult[None]:
-            return FlextResult.ok(None)
+            return FlextResult[None].ok(None)
 
     return SimpleScript

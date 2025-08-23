@@ -45,7 +45,7 @@ Example:
     >>> )
     >>>
     >>> if quality_result.success:
-    ...     quality_data = quality_result.data
+    ...     quality_data = quality_result.value
     ...     if all_quality_checks_passed(quality_data):
     ...         print("✅ All quality checks passed")
     ...     else:
@@ -75,7 +75,6 @@ import shutil
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import cast
 
 import pytest
 import ruff.__main__ as ruff_main
@@ -135,8 +134,8 @@ class QualityIssue(FlextEntity):
         if not self.message:
             issues.append("Issue message is required")
         if issues:
-            return FlextResult.fail("; ".join(issues))
-        return FlextResult.ok(None)
+            return FlextResult[list[QualityIssue]].fail("; ".join(issues))
+        return FlextResult[None].ok(None)
 
 
 # REMOVED: QualityCheckResults class (MASSIVE DRY VIOLATION)
@@ -243,7 +242,7 @@ class QualityGateway:
       ...     enable_types=True,
       ...     coverage_threshold=90.0
       >>> )
-      >>> if result.success and all_quality_checks_passed(result.data):
+      >>> if result.success and all_quality_checks_passed(result.value):
       ...     print("✅ Quality gates passed")
 
     Integration:
@@ -372,7 +371,7 @@ class QualityGateway:
                 result = runner()
                 if not result.success:
                     quality_data[key] = False
-                    issues.extend(result.data or [])
+                    issues.extend(result.value or [])
 
             # Calculate execution time and finalize results
             execution_time = time.time() - start_time
@@ -417,20 +416,22 @@ class QualityGateway:
                     execution_time=execution_time,
                 )
 
-            return cast("FlextResult[QualityCheckData]", FlextResult.ok(quality_data))
+            return FlextResult[QualityCheckData].ok(quality_data)
 
         except Exception as e:
             self.logger.exception("Quality check execution failed", error=str(e))
-            return FlextResult.fail(f"Quality check execution failed: {e}")
+            return FlextResult[QualityCheckData].fail(
+                f"Quality check execution failed: {e}"
+            )
 
     def _run_lint_check(self) -> FlextResult[list[QualityIssue]]:
         """Run linting check with Ruff."""
         try:
             if shutil.which("ruff") is None or ruff_main is None:
                 return (
-                    cast("FlextResult[list[QualityIssue]]", FlextResult.ok([]))
+                    FlextResult[list[QualityIssue]].ok([])
                     if self._is_relaxed()
-                    else FlextResult.fail(
+                    else FlextResult[list[QualityIssue]].fail(
                         "ruff not found in PATH",
                     )
                 )
@@ -448,10 +449,12 @@ class QualityGateway:
                     except SystemExit as exc:
                         exit_code = int(getattr(exc, "code", 0) or 0)
                 except Exception as e:
-                    return FlextResult.fail(f"Lint check failed: {e}")
+                    return FlextResult[list[QualityIssue]].fail(
+                        f"Lint check failed: {e}"
+                    )
 
             if exit_code == 0:
-                return cast("FlextResult[list[QualityIssue]]", FlextResult.ok([]))
+                return FlextResult[list[QualityIssue]].ok([])
 
             # Parse Ruff output for issues (stdout text format)
             issues = [
@@ -459,26 +462,28 @@ class QualityGateway:
                 for line in stdout.getvalue().splitlines()
                 if line.strip()
             ]
-            return FlextResult.fail(f"Linting issues found: {len(issues)} issues")
+            return FlextResult[list[QualityIssue]].fail(
+                f"Linting issues found: {len(issues)} issues"
+            )
         except Exception as e:
-            return FlextResult.fail(f"Lint check failed: {e}")
+            return FlextResult[list[QualityIssue]].fail(f"Lint check failed: {e}")
 
     def _run_type_check(self) -> FlextResult[list[QualityIssue]]:
         """Run type checking with MyPy."""
         try:
             if shutil.which("mypy") is None:
                 return (
-                    cast("FlextResult[list[QualityIssue]]", FlextResult.ok([]))
+                    FlextResult[list[QualityIssue]].ok([])
                     if self._is_relaxed()
-                    else FlextResult.fail(
+                    else FlextResult[list[QualityIssue]].fail(
                         "mypy not found in PATH",
                     )
                 )
             if mypy_api is None:
                 return (
-                    FlextResult.ok([])
+                    FlextResult[list[QualityIssue]].ok([])
                     if self._is_relaxed()
-                    else FlextResult.fail(
+                    else FlextResult[list[QualityIssue]].fail(
                         "mypy not available",
                     )
                 )
@@ -487,40 +492,42 @@ class QualityGateway:
                 [str(self.workspace_path / "src")],
             )
             if int(exit_status) == 0:
-                return cast("FlextResult[list[QualityIssue]]", FlextResult.ok([]))
+                return FlextResult[list[QualityIssue]].ok([])
 
             issues = [
                 QualityIssue(tool="mypy", severity="error", message=line.strip())
                 for line in stdout.splitlines()
                 if line.strip() and ":" in line
             ]
-            return FlextResult.fail(f"Type checking issues found: {len(issues)} issues")
+            return FlextResult[list[QualityIssue]].fail(
+                f"Type checking issues found: {len(issues)} issues"
+            )
         except Exception as e:
-            return FlextResult.fail(f"Type check failed: {e}")
+            return FlextResult[list[QualityIssue]].fail(f"Type check failed: {e}")
 
     def _run_test_check(self) -> FlextResult[list[QualityIssue]]:
         """Run test execution with Pytest."""
         try:
             if shutil.which("pytest") is None:
                 return (
-                    FlextResult.ok([])
+                    FlextResult[list[QualityIssue]].ok([])
                     if self._is_relaxed()
-                    else FlextResult.fail(
+                    else FlextResult[list[QualityIssue]].fail(
                         "pytest not found in PATH",
                     )
                 )
             if pytest is None:
                 return (
-                    FlextResult.ok([])
+                    FlextResult[list[QualityIssue]].ok([])
                     if self._is_relaxed()
-                    else FlextResult.fail(
+                    else FlextResult[list[QualityIssue]].fail(
                         "pytest not available",
                     )
                 )
             # Capture output using in-process run
             exit_code = pytest.main([str(self.workspace_path)])
             if int(exit_code) == 0:
-                return FlextResult.ok([])
+                return FlextResult[list[QualityIssue]].ok([])
             issues = [
                 QualityIssue(
                     tool="pytest",
@@ -528,9 +535,11 @@ class QualityGateway:
                     message="Test failures detected",
                 ),
             ]
-            return FlextResult.fail(f"Test failures found: {len(issues)} issues")
+            return FlextResult[list[QualityIssue]].fail(
+                f"Test failures found: {len(issues)} issues"
+            )
         except Exception as e:
-            return FlextResult.fail(f"Test execution failed: {e}")
+            return FlextResult[list[QualityIssue]].fail(f"Test execution failed: {e}")
 
     def _run_coverage_check(self, threshold: float) -> FlextResult[list[QualityIssue]]:
         """Run coverage analysis with threshold validation."""
@@ -539,7 +548,7 @@ class QualityGateway:
             coverage = 95.0  # Simulated coverage
 
             if coverage >= threshold:
-                return FlextResult.ok([])
+                return FlextResult[list[QualityIssue]].ok([])
 
             issues = [
                 QualityIssue(
@@ -549,27 +558,29 @@ class QualityGateway:
                 ),
             ]
 
-            return FlextResult.fail(f"Coverage below threshold: {len(issues)} issues")
+            return FlextResult[list[QualityIssue]].fail(
+                f"Coverage below threshold: {len(issues)} issues"
+            )
 
         except Exception as e:
-            return FlextResult.fail(f"Coverage check failed: {e}")
+            return FlextResult[list[QualityIssue]].fail(f"Coverage check failed: {e}")
 
     def _run_security_check(self) -> FlextResult[list[QualityIssue]]:
         """Run security scanning with Bandit."""
         try:
             if shutil.which("bandit") is None:
                 return (
-                    FlextResult.ok([])
+                    FlextResult[list[QualityIssue]].ok([])
                     if self._is_relaxed()
-                    else FlextResult.fail(
+                    else FlextResult[list[QualityIssue]].fail(
                         "bandit not found in PATH",
                     )
                 )
             # Placeholder for bandit integration when available
-            return FlextResult.ok([])
+            return FlextResult[list[QualityIssue]].ok([])
 
         except Exception as e:
-            return FlextResult.fail(f"Security check failed: {e}")
+            return FlextResult[list[QualityIssue]].fail(f"Security check failed: {e}")
 
     def run_quality_checks(self) -> dict[str, object]:
         """Convenience method for testing - use run_quality_checks_safe() instead."""

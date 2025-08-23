@@ -38,7 +38,7 @@ logger = get_logger(__name__)
 # This class duplicates FlextResult functionality:
 # - success: bool -> FlextResult.success: bool
 # - operation details -> FlextResult.data: dict
-# All Poetry operation results must use FlextResult from flext-core instead
+# All Poetry operation results must use FlextResult[Type] from flext-core instead
 # to maintain consistency and avoid duplication of generic result functionality
 
 # Type alias for Poetry operation data
@@ -237,7 +237,7 @@ class PoetryOperations:
                 success=success,
             )
 
-            return FlextResult.ok(operation_data)
+            return FlextResult[None].ok(operation_data)
 
         except Exception as e:
             self.logger.exception(
@@ -245,7 +245,7 @@ class PoetryOperations:
                 project_path=str(project_path),
                 error=str(e),
             )
-            return FlextResult.fail(f"Dependency addition failed: {e}")
+            return FlextResult[None].fail(f"Dependency addition failed: {e}")
 
     def add_dependencies(
         self,
@@ -471,7 +471,7 @@ class PoetryOperations:
                 success=success,
             )
 
-            return FlextResult.ok(operation_data)
+            return FlextResult[None].ok(operation_data)
 
         except Exception as e:
             self.logger.exception(
@@ -479,7 +479,7 @@ class PoetryOperations:
                 project_path=str(project_path),
                 error=str(e),
             )
-            return FlextResult.fail(f"Dependency removal failed: {e}")
+            return FlextResult[None].fail(f"Dependency removal failed: {e}")
 
     def remove_dependencies(
         self,
@@ -655,7 +655,7 @@ class PoetryOperations:
                 success=success,
             )
 
-            return FlextResult.ok(operation_data)
+            return FlextResult[None].ok(operation_data)
 
         except Exception as e:
             self.logger.exception(
@@ -663,7 +663,7 @@ class PoetryOperations:
                 project_path=str(project_path),
                 error=str(e),
             )
-            return FlextResult.fail(f"Project update failed: {e}")
+            return FlextResult[None].fail(f"Project update failed: {e}")
 
     def update_project(self, project_path: Path) -> bool:
         """Update all dependencies in a Poetry project with safety validation.
@@ -785,7 +785,7 @@ class PoetryOperations:
                 success=success,
             )
 
-            return FlextResult.ok(operation_data)
+            return FlextResult[None].ok(operation_data)
 
         except Exception as e:
             self.logger.exception(
@@ -793,7 +793,7 @@ class PoetryOperations:
                 project_path=str(project_path),
                 error=str(e),
             )
-            return FlextResult.fail(f"Project lock failed: {e}")
+            return FlextResult[None].fail(f"Project lock failed: {e}")
 
     def lock_project(self, project_path: Path) -> bool:
         """Generate or update poetry.lock file with dependency resolution.
@@ -895,7 +895,7 @@ class PoetryOperations:
                 success=success,
             )
 
-            return FlextResult.ok(operation_data)
+            return FlextResult[None].ok(operation_data)
 
         except Exception as e:
             self.logger.exception(
@@ -903,7 +903,7 @@ class PoetryOperations:
                 project_path=str(project_path),
                 error=str(e),
             )
-            return FlextResult.fail(f"Project validation failed: {e}")
+            return FlextResult[None].fail(f"Project validation failed: {e}")
 
     def validate_project(self, project_path: Path) -> bool:
         """Validate Poetry project configuration for compliance and integrity.

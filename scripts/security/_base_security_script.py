@@ -23,18 +23,18 @@ class BaseSecurityScript(FlextScript):
         # Check if we're in FLEXT workspace
         if not (workspace_root / "flext-core").exists():
             print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return FlextResult.fail("Not in FLEXT workspace root")
+            return FlextResult[None].fail("Not in FLEXT workspace root")
 
         print_colored("✅ FLEXT workspace detected", Colors.GREEN)
 
         # Check cryptography availability
         try:
             print_colored("✅ Cryptography library available", Colors.GREEN)
-            return FlextResult.ok(None)
+            return FlextResult[None].ok(None)
         except ImportError:
             print_colored(
                 "❌ Cryptography library not found - "
                 "install with: pip install cryptography",
                 Colors.RED,
             )
-            return FlextResult.fail("Cryptography library not found")
+            return FlextResult[None].fail("Cryptography library not found")

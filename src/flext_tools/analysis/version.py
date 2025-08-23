@@ -125,7 +125,9 @@ class VersionCompatibilityResult(FlextModel):
     def validate_business_rules(self) -> FlextResult[None]:
         """Validate business rules for version compatibility result."""
         if not self.spec1 or not self.spec2:
-            return FlextResult[None].fail("Both version specifications must be provided")
+            return FlextResult[None].fail(
+                "Both version specifications must be provided"
+            )
         return FlextResult[None].ok(None)
 
 
@@ -672,7 +674,9 @@ def check_version_compatibility(
             spec2=spec2,
             error=str(e),
         )
-        return FlextResult[VersionCompatibilityResult].fail(f"Version compatibility check failed: {e}")
+        return FlextResult[VersionCompatibilityResult].fail(
+            f"Version compatibility check failed: {e}"
+        )
 
 
 def analyze_version_conflicts(
