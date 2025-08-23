@@ -152,7 +152,7 @@ class TemplateManager:
             )
 
         try:
-            template = template_result.data
+            template = template_result.value
             rendered = template.render(**context)
             return FlextResult[str].ok(rendered)
         except Exception as e:

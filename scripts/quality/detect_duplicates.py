@@ -857,7 +857,7 @@ class FlextDuplicateDetector:
         anti_pattern_indicators = [
             (
                 r"return\s+\(\s*True\s*,\s*[^)]+\s*\)",
-                "Manual tuple result instead of FlextResult.ok()",
+                "Manual tuple result instead of FlextResult[None].ok()",
             ),
             (
                 r"return\s+\(\s*False\s*,\s*[^)]+\s*\)",
@@ -865,7 +865,7 @@ class FlextDuplicateDetector:
             ),
             (
                 r'return\s+\{\s*["\']success["\']\s*:\s*True',
-                "Manual dict result instead of FlextResult.ok()",
+                "Manual dict result instead of FlextResult[None].ok()",
             ),
             (
                 r'return\s+\{\s*["\']success["\']\s*:\s*False',
@@ -877,11 +877,11 @@ class FlextDuplicateDetector:
             ),
             (
                 r"if\s+result\[0\]\s*:",
-                "Manual tuple unpacking instead of FlextResult.success",
+                "Manual tuple unpacking instead of FlextResult[None].ok",
             ),
             (
                 r'if\s+result\[["\']success["\']\]\s*:',
-                "Manual dict access instead of FlextResult.success",
+                "Manual dict access instead of FlextResult[None].ok",
             ),
         ]
 
@@ -1048,8 +1048,7 @@ class FlextDuplicateDetector:
                 if re.search(pattern, line_content):
                     # Verificar se já está usando flext-core
                     if "from flext_core" in content and (
-                        "FlextDomainBaseModel" in content
-                        or "FlextValueObject" in content
+                        "FlextDomainBaseModel" in content or "FlextValue" in content
                     ):
                         continue
 
@@ -1062,7 +1061,7 @@ class FlextDuplicateDetector:
                             file_path=file_path,
                             pattern_type="Manual Domain Models",
                             suggested_replacement="Use FlextDomainBaseModel ou"
-                            f"FlextValueObject from flext-core: {description}",
+                            f"FlextValue from flext-core: {description}",
                             lines=(i + 1, i + 1),
                             content=line_content,
                             severity="medium",

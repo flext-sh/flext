@@ -278,9 +278,11 @@ class ConflictAnalyzer:
                     f"Project collection failed: {projects_result.error}",
                 )
 
-            projects_data = projects_result.data
+            projects_data = projects_result.value
             if projects_data is None:
-                return FlextResult[ConflictAnalysisResult].fail("No projects data collected")
+                return FlextResult[ConflictAnalysisResult].fail(
+                    "No projects data collected"
+                )
 
             # Step 3: Perform comprehensive conflict analysis
             return self._analyze_conflicts(workspace_path, projects_data)
@@ -308,7 +310,7 @@ class ConflictAnalyzer:
                 projects_collection_result.error or "Failed to collect projects data",
             )
 
-        projects_data = projects_collection_result.data
+        projects_data = projects_collection_result.value
         if projects_data is None:
             return FlextResult[dict[str, object]].fail("No projects data collected")
 
@@ -348,9 +350,11 @@ class ConflictAnalyzer:
                 or "Failed to collect workspace dependencies",
             )
 
-        workspace_deps = workspace_deps_result.data
+        workspace_deps = workspace_deps_result.value
         if workspace_deps is None:
-            return FlextResult[ConflictAnalysisResult].fail("No workspace dependencies collected")
+            return FlextResult[ConflictAnalysisResult].fail(
+                "No workspace dependencies collected"
+            )
 
         # Analyze version conflicts
         projects_data_for_analysis = cast("dict[str, dict[str, object]]", projects_data)
@@ -370,7 +374,7 @@ class ConflictAnalyzer:
                 blockers_result.error or "Failed to identify update blockers",
             )
 
-        blockers = blockers_result.data or {}
+        blockers = blockers_result.value or {}
 
         # Generate resolutions
         resolutions = self._generate_resolutions_safe(version_conflicts)
@@ -403,7 +407,7 @@ class ConflictAnalyzer:
                 error=resolutions_result.error,
             )
             return {}
-        return resolutions_result.data or {}
+        return resolutions_result.value or {}
 
     def _build_analysis_result(
         self,
@@ -464,7 +468,9 @@ class ConflictAnalyzer:
             projects_data_typed: dict[str, object] = dict(projects_data)
             return FlextResult[dict[str, object]].ok(projects_data_typed)
         except Exception as e:
-            return FlextResult[dict[str, object]].fail(f"Failed to collect project data: {e}")
+            return FlextResult[dict[str, object]].fail(
+                f"Failed to collect project data: {e}"
+            )
 
     def _collect_workspace_dependencies_safe(
         self,
@@ -475,7 +481,9 @@ class ConflictAnalyzer:
             workspace_deps = self._collect_workspace_dependencies(workspace_path)
             return FlextResult[dict[str, dict[str, str]]].ok(workspace_deps)
         except Exception as e:
-            return FlextResult[dict[str, dict[str, str]]].fail(f"Failed to collect workspace dependencies: {e}")
+            return FlextResult[dict[str, dict[str, str]]].fail(
+                f"Failed to collect workspace dependencies: {e}"
+            )
 
     def _collect_workspace_dependencies(
         self,
@@ -669,7 +677,9 @@ class ConflictAnalyzer:
             return FlextResult[dict[str, dict[str, object]]].ok(blockers)
         except Exception as e:
             logger.exception("Failed to identify update blockers", error=str(e))
-            return FlextResult[dict[str, dict[str, object]]].fail(f"Update blocker identification failed: {e}")
+            return FlextResult[dict[str, dict[str, object]]].fail(
+                f"Update blocker identification failed: {e}"
+            )
 
     def _identify_update_blockers_impl(
         self,
@@ -1047,7 +1057,9 @@ class ConflictAnalyzer:
             return FlextResult[dict[str, str]].ok(resolutions)
         except Exception as e:
             logger.exception("Failed to generate resolution suggestions", error=str(e))
-            return FlextResult[dict[str, str]].fail(f"Resolution suggestion failed: {e}")
+            return FlextResult[dict[str, str]].fail(
+                f"Resolution suggestion failed: {e}"
+            )
 
     def _get_lock_analyzer(self) -> LockConsistencyAnalyzer:
         """Get Poetry lock file consistency analyzer instance.

@@ -43,12 +43,12 @@ class SecretsVaultDecryptor(BaseSecurityScript):
 
             if not vault_file:
                 print_colored("❌ Vault file path is required", Colors.RED)
-                return FlextResult.fail("Vault file path is required")
+                return FlextResult[None].fail("Vault file path is required")
 
             vault_path = workspace_root / str(vault_file)
             if not vault_path.exists():
                 print_colored(f"❌ Vault file not found: {vault_path}", Colors.RED)
-                return FlextResult.fail(f"Vault file not found: {vault_path}")
+                return FlextResult[None].fail(f"Vault file not found: {vault_path}")
 
             print_colored("🔓 SECRETS VAULT DECRYPTOR", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
@@ -87,16 +87,16 @@ class SecretsVaultDecryptor(BaseSecurityScript):
                 print("• Never share or log decrypted secrets")
                 print("• Re-encrypt vault immediately after use")
 
-                return FlextResult.ok(
+                return FlextResult[None].ok(
                     {"decrypt_result": decrypt_result, "output_format": output_format},
                 )
 
             print_colored("❌ Failed to decrypt vault", Colors.RED)
-            return FlextResult.fail("Failed to decrypt vault")
+            return FlextResult[None].fail("Failed to decrypt vault")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during vault decryption: {e}", Colors.RED)
-            return FlextResult.fail(f"Vault decryption error: {e}")
+            return FlextResult[None].fail(f"Vault decryption error: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
@@ -132,7 +132,7 @@ class SecretsVaultDecryptor(BaseSecurityScript):
 
     def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
 
 def main() -> int:

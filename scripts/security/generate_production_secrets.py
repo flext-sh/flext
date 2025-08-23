@@ -79,16 +79,16 @@ class ProductionSecretsGenerator(BaseSecurityScript):
                 print("• Rotate secrets regularly")
                 print("• Use different secrets per environment")
 
-                return FlextResult.ok(
+                return FlextResult[None].ok(
                     {"secrets_result": secrets_result, "environment": environment},
                 )
 
             print_colored("❌ Failed to generate production secrets", Colors.RED)
-            return FlextResult.fail("Failed to generate production secrets")
+            return FlextResult[None].fail("Failed to generate production secrets")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during secrets generation: {e}", Colors.RED)
-            return FlextResult.fail(f"Secrets generation error: {e}")
+            return FlextResult[None].fail(f"Secrets generation error: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
@@ -122,7 +122,7 @@ class ProductionSecretsGenerator(BaseSecurityScript):
 
     def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
 
 def main() -> int:

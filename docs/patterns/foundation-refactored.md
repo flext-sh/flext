@@ -37,8 +37,8 @@ class OldUserEntity(BaseModel):
     def validate_business_rules(self) -> 'FlextResult[None]':
         from flext_core.result import FlextResult
         if not self.email or "@" not in self.email:
-            return FlextResult.fail("Invalid email")
-        return FlextResult.ok(None)
+            return FlextResult[None].fail("Invalid email")
+        return FlextResult[None].ok(None)
 ```
 
 ### Modern Approach (After)
@@ -75,7 +75,7 @@ class Product(FlextEntity):
     # Business logic - clean and focused
     def update_price(self, new_price: int) -> FlextResult[None]:
         if new_price <= 0:
-            return FlextResult.fail("Price must be positive")
+            return FlextResult[None].fail("Price must be positive")
         return self.update(price=new_price)
 
     def categorize(self, category: str) -> FlextResult[None]:
@@ -257,7 +257,7 @@ class User(FlextEntity):
 
     # Custom validation - clean and focused
     def validate_business_rules(self) -> FlextResult[None]:
-        return FlextResult.ok(None) if len(self.name) >= 2 else FlextResult.fail("Name too short")
+        return FlextResult[None].ok(None) if len(self.name) >= 2 else FlextResult[None].fail("Name too short")
 ```
 
 ## Complete Example: Order Processing System
