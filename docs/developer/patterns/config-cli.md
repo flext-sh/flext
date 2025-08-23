@@ -1,6 +1,6 @@
 # Configuration & CLI Patterns
 
-**Version**: 1.0.0 | **Status**: Active | **Python**: 3.13+
+**Version**: 0.9.0 | **Status**: Active | **Python**: 3.13+
 
 ## Overview
 
