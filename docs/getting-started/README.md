@@ -1,6 +1,6 @@
 # Getting Started with FLEXT
 
-**Category**: Getting Started | **Status**: Published | **Version**: 1.0.0 | **Last Updated**: 2025-08-07
+**Category**: Getting Started | **Status**: Published | **Version**: 0.9.0 | **Last Updated**: 2025-08-07
 
 Welcome to FLEXT! This section will help you get up and running quickly, whether you're a new user, developer, or system REDACTED_LDAP_BIND_PASSWORDistrator.
 
@@ -183,4 +183,4 @@ print(f"Pipeline completed: {result.status}")
 
 **Contributors**: FLEXT Documentation Team  
 **Last Updated**: 2025-08-07  
-**Version**: 1.0.0
+**Version**: 0.9.0

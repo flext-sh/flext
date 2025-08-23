@@ -1,6 +1,6 @@
 # Document Template
 
-**Category**: Template | **Status**: Published | **Version**: 1.0.0 | **Last Updated**: 2025-08-07
+**Category**: Template | **Status**: Published | **Version**: 0.9.0 | **Last Updated**: 2025-08-07
 
 This is the standard template for all FLEXT documentation. Copy this template and customize it for your specific document.
 
@@ -14,7 +14,7 @@ title: "Your Document Title"
 description: "Brief description of what this document covers"
 category: "getting-started|user-guides|developer|reference|standards"
 status: "draft|review|published|deprecated"
-version: "1.0.0"
+version: "0.9.0"
 last_updated: "YYYY-MM-DD"
 contributors: ["author1", "author2"]
 dependencies: ["related-doc-1", "related-doc-2"]
@@ -223,4 +223,4 @@ Elements that can be added as needed:
 
 **Contributors**: FLEXT Documentation Team  
 **Last Updated**: 2025-08-07  
-**Version**: 1.0.0
+**Version**: 0.9.0

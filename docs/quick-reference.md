@@ -1,6 +1,6 @@
 # FLEXT Quick Reference
 
-**Version**: 1.0.0 | **Last Updated**: 2025-01-08
+**Version**: 0.9.0 | **Last Updated**: 2025-01-08
 
 ## 🚀 Quick Navigation
 

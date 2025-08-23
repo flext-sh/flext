@@ -1,6 +1,6 @@
 # FLEXT Documentation Standards
 
-**Category**: Standards | **Status**: Published | **Version**: 1.0.0 | **Last Updated**: 2025-08-07
+**Category**: Standards | **Status**: Published | **Version**: 0.9.0 | **Last Updated**: 2025-08-07
 
 This document defines the standards and guidelines for all FLEXT documentation to ensure consistency, quality, and professionalism across the entire documentation ecosystem.
 
@@ -36,7 +36,7 @@ title: "Document Title"
 description: "Brief description of the document"
 category: "getting-started|user-guides|developer|reference|standards"
 status: "draft|review|published|deprecated"
-version: "1.0.0"
+version: "0.9.0"
 last_updated: "YYYY-MM-DD"
 contributors: ["author1", "author2"]
 dependencies: ["related-doc-1", "related-doc-2"]
@@ -267,4 +267,4 @@ Standard templates are available in the `standards/templates/` directory:
 
 **Contributors**: FLEXT Documentation Team  
 **Last Updated**: 2025-08-07  
-**Version**: 1.0.0
+**Version**: 0.9.0
