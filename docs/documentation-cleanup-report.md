@@ -35,7 +35,7 @@
 
 #### ✅ Documentation Standardization
 
-- **README.md** (main): Updated to realistic development status (2.0.0-dev)
+- **README.md** (main): Updated to realistic development status (0.9.0-dev)
 - **docs/README.md**: Transformed from duplicate content to navigation hub
 - **TODO.md**: Created centralized 4-week roadmap replacing scattered TODOs
 - **docs/architecture/overview.md**: Consolidated 3 files into single honest overview

@@ -1,6 +1,6 @@
 # Constants & Semantic Patterns
 
-**Version**: 1.0.0 | **Status**: Active | **Python**: 3.13+
+**Version**: 0.9.0 | **Status**: Active | **Python**: 3.13+
 
 ## Overview
 
@@ -38,7 +38,7 @@ class FlextConstants:
 
         # Identity
         NAME: Final[str] = "FLEXT"
-        VERSION: Final[str] = "1.0.0"
+        VERSION: Final[str] = "0.9.0"
         ECOSYSTEM_SIZE: Final[int] = 33
 
         # Architecture

@@ -1,6 +1,6 @@
 # FLEXT - Enterprise Data Integration Platform
 
-**Version**: 2.0.0-dev | **Status**: ACTIVE DEVELOPMENT | **Last Updated**: 2025-08-13
+**Version**: 0.9.0-dev | **Status**: ACTIVE DEVELOPMENT | **Last Updated**: 2025-08-13
 
 ## Overview
 
@@ -272,7 +272,7 @@ export DBT_PROFILES_DIR="/opt/dbt/profiles"
 
 # Observability Configuration
 export OTEL_SERVICE_NAME="flext-control-panel"
-export OTEL_RESOURCE_ATTRIBUTES="service.version=2.0.0,deployment.environment=development"
+export OTEL_RESOURCE_ATTRIBUTES="service.version=0.9.0,deployment.environment=development"
 export PROMETHEUS_ENDPOINT="http://localhost:9090"
 export JAEGER_COLLECTOR_ENDPOINT="http://localhost:14268/api/traces"
 ```

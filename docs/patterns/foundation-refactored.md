@@ -1,6 +1,6 @@
 # Foundation Patterns - Refactored & Streamlined
 
-**Version**: 2.0.0 | **Status**: Production Ready | **Python**: 3.13+
+**Version**: 0.9.0 | **Status**: Production Ready | **Python**: 3.13+
 
 ## Overview
 

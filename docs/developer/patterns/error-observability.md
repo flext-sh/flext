@@ -1,6 +1,6 @@
 # Error & Observability Patterns
 
-**Version**: 1.0.0 | **Status**: Active | **Python**: 3.13+ | **Go**: 1.24+
+**Version**: 0.9.0 | **Status**: Active | **Python**: 3.13+ | **Go**: 1.24+
 
 ## Overview
 
