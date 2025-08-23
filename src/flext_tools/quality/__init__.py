@@ -30,7 +30,7 @@ Example:
     >>> # Integration with workspace patterns
     >>> workspace_result = bridge.validate_workspace_quality()
     >>> if workspace_result.success:
-    ...     print(f"Workspace quality score: {workspace_result.data.score}")
+    ...     print(f"Workspace quality score: {workspace_result.value['score']}")
 
 Architecture:
     Implements proper delegation patterns to avoid duplication while providing

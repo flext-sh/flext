@@ -39,9 +39,9 @@ class WorkspaceStatus:
 
         if not flext_projects:
             print_colored("❌ Execute do diretório raiz do workspace FLEXT", Colors.RED)
-            return FlextResult.fail("Not in FLEXT workspace root")
+            return FlextResult[None].fail("Not in FLEXT workspace root")
 
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:  # noqa: ARG002
         """Executar análise completa do workspace."""
@@ -71,7 +71,7 @@ class WorkspaceStatus:
             )
             self._print_health_score(health_score)
 
-            return FlextResult.ok(
+            return FlextResult[None].ok(
                 {
                     "projects_info": projects_info,
                     "quality_info": quality_info,
@@ -82,7 +82,7 @@ class WorkspaceStatus:
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
-            return FlextResult.fail(f"Analysis error: {e}")
+            return FlextResult[None].fail(f"Analysis error: {e}")
 
     def _analyze_projects(self, workspace_root: Path) -> dict[str, object]:
         """Analisar projetos do workspace."""

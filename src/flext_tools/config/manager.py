@@ -223,9 +223,9 @@ class ConfigurationManager:
             print_colored("✅ Configuration loaded successfully", Colors.GREEN)
             logger.info("Configuration loaded successfully")
 
-            return FlextResult.ok(config)
+            return FlextResult[Configuration].ok(config)
 
         except Exception as e:
             error_msg = f"Failed to load configuration: {e}"
             logger.exception(error_msg)
-            return FlextResult.fail(error_msg)
+            return FlextResult[Configuration].fail(error_msg)

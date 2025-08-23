@@ -27,7 +27,6 @@ from pathlib import Path
 
 # Use centralized FLEXT patterns
 from flext_core import FlextResult, get_logger
-
 from flext_core_standards import FlextBaseService, FlextStandardResult
 
 logger = get_logger(__name__)
@@ -57,7 +56,7 @@ class FlextEcosystemStandardizer(FlextBaseService):
                 "import_fixes": 0,
                 "type_checking_removals": 0,
                 "result_pattern_fixes": 0,
-                "legacy_migrations": 0
+                "legacy_migrations": 0,
             }
 
             # Get all Python projects
@@ -68,7 +67,9 @@ class FlextEcosystemStandardizer(FlextBaseService):
             for project_path in python_projects:
                 result = self._standardize_project(project_path, stats)
                 if result.failure:
-                    self.logger.warning(f"Issues in project {project_path.name}: {result.error}")
+                    self.logger.warning(
+                        f"Issues in project {project_path.name}: {result.error}"
+                    )
 
             return FlextStandardResult.success(stats)
 
@@ -89,13 +90,19 @@ class FlextEcosystemStandardizer(FlextBaseService):
             projects.append(self.workspace_root)
 
         # Include all flext-* projects
-        projects.extend(item for item in self.workspace_root.iterdir() if item.is_dir() and
-                (item.name.startswith("flext-") or item.name == "client-a-oud-mig") and
-                (item / "src").exists())
+        projects.extend(
+            item
+            for item in self.workspace_root.iterdir()
+            if item.is_dir()
+            and (item.name.startswith("flext-") or item.name == "client-a-oud-mig")
+            and (item / "src").exists()
+        )
 
         return projects
 
-    def _standardize_project(self, project_path: Path, stats: dict[str, int]) -> FlextResult[None]:
+    def _standardize_project(
+        self, project_path: Path, stats: dict[str, int]
+    ) -> FlextResult[None]:
         """Standardize a single project.
 
         Args:
@@ -121,14 +128,18 @@ class FlextEcosystemStandardizer(FlextBaseService):
                 if result.success:
                     stats["processed_files"] += 1
                 else:
-                    self.logger.warning(f"Failed to process {file_path}: {result.error}")
+                    self.logger.warning(
+                        f"Failed to process {file_path}: {result.error}"
+                    )
 
             return FlextStandardResult.success(None)
 
         except Exception as e:
             return self._handle_error(e, f"standardize_project({project_path.name})")
 
-    def _standardize_file(self, file_path: Path, stats: dict[str, int]) -> FlextResult[None]:
+    def _standardize_file(
+        self, file_path: Path, stats: dict[str, int]
+    ) -> FlextResult[None]:
         """Standardize a single Python file.
 
         Args:
@@ -179,14 +190,18 @@ class FlextEcosystemStandardizer(FlextBaseService):
             # Fix docstrings starting with lowercase
             (r'"""([a-z])', r'"""\1'.replace("\1", lambda m: m.group(1).upper())),
             # Add standard format to function docstrings
-            (r'def\s+(\w+)\([^)]*\):\s*\n\s*"""([^"]+)"""',
-             self._enhance_function_docstring),
+            (
+                r'def\s+(\w+)\([^)]*\):\s*\n\s*"""([^"]+)"""',
+                self._enhance_function_docstring,
+            ),
         ]
 
         original_content = content
         for pattern, replacement in docstring_patterns:
             if callable(replacement):
-                content = re.sub(pattern, replacement, content, flags=re.MULTILINE | re.DOTALL)
+                content = re.sub(
+                    pattern, replacement, content, flags=re.MULTILINE | re.DOTALL
+                )
             else:
                 content = re.sub(pattern, replacement, content, flags=re.MULTILINE)
 
@@ -213,7 +228,7 @@ class FlextEcosystemStandardizer(FlextBaseService):
             return match.group(0)
 
         # Create enhanced docstring
-        return f'''def {func_name}({match.group(0).split('(', 1)[1].split(')', 1)[0]}):
+        return f'''def {func_name}({match.group(0).split("(", 1)[1].split(")", 1)[0]}):
     """{docstring}.
 
     This method follows FLEXT ecosystem patterns and returns FlextResult for type-safe error handling.
@@ -234,11 +249,17 @@ class FlextEcosystemStandardizer(FlextBaseService):
 
         # Remove TYPE_CHECKING imports
         content = re.sub(r"from typing import.*TYPE_CHECKING.*\n", "", content)
-        content = re.sub(r"if TYPE_CHECKING:\s*\n((?:\s{4,}.*\n)*)",
-                        self._extract_type_checking_imports, content, flags=re.MULTILINE)
+        content = re.sub(
+            r"if TYPE_CHECKING:\s*\n((?:\s{4,}.*\n)*)",
+            self._extract_type_checking_imports,
+            content,
+            flags=re.MULTILINE,
+        )
 
         # Remove TYPE_CHECKING conditionals
-        content = re.sub(r"if TYPE_CHECKING:.*?\n(?=\S|\Z)", "", content, flags=re.DOTALL)
+        content = re.sub(
+            r"if TYPE_CHECKING:.*?\n(?=\S|\Z)", "", content, flags=re.DOTALL
+        )
 
         if content != original_content:
             stats["type_checking_removals"] += 1
@@ -259,7 +280,11 @@ class FlextEcosystemStandardizer(FlextBaseService):
 
         # Extract individual import lines and dedent them
         # Remove indentation
-        import_lines = [line.lstrip() for line in imports_block.split("\n") if line.strip() and line.strip().startswith(("from ", "import "))]
+        import_lines = [
+            line.lstrip()
+            for line in imports_block.split("\n")
+            if line.strip() and line.strip().startswith(("from ", "import "))
+        ]
 
         return "\n".join(import_lines) + "\n" if import_lines else ""
 
@@ -282,11 +307,9 @@ class FlextEcosystemStandardizer(FlextBaseService):
             r"from flext_core\.loggings import get_logger": "from flext_core import get_logger",
             r"from flext_core\.models import FlextModel": "from flext_core import FlextModel",
             r"from flext_core\.exceptions import .*Error": "from flext_core import FlextError, FlextValidationError",
-
             # Fix common incorrect imports
             r"import structlog": "# Use get_logger from flext_core instead\nfrom flext_core import get_logger",
             r"from structlog import get_logger": "from flext_core import get_logger",
-
             # Standardize to flext-core patterns
             r"from typing import Optional": "# Use T | None instead of Optional[T]",
             r"from typing import Union": "# Use T | U instead of Union[T, U]",
@@ -315,15 +338,16 @@ class FlextEcosystemStandardizer(FlextBaseService):
         # Fix common result patterns
         result_patterns = [
             # Fix return Result patterns
-            (r"return Result\.success\(([^)]+)\)", r"return FlextResult.ok(\1)"),
-            (r"return Result\.failure\(([^)]+)\)", r"return FlextResult.fail(\1)"),
-            (r"return Result\.ok\(([^)]+)\)", r"return FlextResult.ok(\1)"),
-            (r"return Result\.error\(([^)]+)\)", r"return FlextResult.fail(\1)"),
-
+            (r"return Result\.success\(([^)]+)\)", r"return FlextResult[None].ok(\1)"),
+            (
+                r"return Result\.failure\(([^)]+)\)",
+                r"return FlextResult[None].fail(\1)",
+            ),
+            (r"return Result\.ok\(([^)]+)\)", r"return FlextResult[None].ok(\1)"),
+            (r"return Result\.error\(([^)]+)\)", r"return FlextResult[None].fail(\1)"),
             # Fix exception raises to FlextResult
-            (r"raise ValueError\(([^)]+)\)", r"return FlextResult.fail(\1)"),
-            (r"raise Exception\(([^)]+)\)", r"return FlextResult.fail(\1)"),
-
+            (r"raise ValueError\(([^)]+)\)", r"return FlextResult[None].fail(\1)"),
+            (r"raise Exception\(([^)]+)\)", r"return FlextResult[None].fail(\1)"),
             # Fix success/failure checks
             (r"\.is_success\(\)", r".success"),
             (r"\.is_failure\(\)", r".failure"),

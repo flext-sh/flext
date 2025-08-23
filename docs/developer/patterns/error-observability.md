@@ -97,7 +97,7 @@ class FlextError(Exception):
     def to_result(self) -> 'FlextResult[None]':
         """Convert exception to FlextResult for consistent handling."""
         from flext_core.result import FlextResult
-        return FlextResult.fail(
+        return FlextResult[None].fail(
             self.message,
             error_code=self.error_code,
             correlation_id=self.correlation_id,
@@ -331,7 +331,7 @@ def connect_to_database(config: Dict[str, Any]) -> FlextResult[Connection]:
                 host=config['host']
             )
 
-        return FlextResult.ok(connection)
+        return FlextResult[None].ok(connection)
 
     except FlextError as e:
         # FlextErrors already logged and tracked
@@ -382,7 +382,7 @@ class UserService:
                     self.logger.info("User created successfully", user_id=user.id)
                     self.metrics.increment("users.created")
 
-                    return FlextResult.ok(user)
+                    return FlextResult[None].ok(user)
 
                 except FlextError as e:
                     span.set_attribute("error", True)
@@ -430,7 +430,7 @@ class RetryStrategy:
                 else:
                     raise
 
-        return FlextResult.fail("Max retries exceeded")
+        return FlextResult[None].fail("Max retries exceeded")
 ```
 
 ## Quality Standards

@@ -282,8 +282,8 @@ from flext_core.result import FlextResult
 # Using core types
 def validate_data(data: FlextTypes.Core.JsonDict) -> FlextTypes.Core.Result:
     if not isinstance(data, dict):
-        return FlextResult.fail("Data must be a dictionary")
-    return FlextResult.ok(data)
+        return FlextResult[None].fail("Data must be a dictionary")
+    return FlextResult[None].ok(data)
 
 # Using data types
 def create_connection(
@@ -291,10 +291,10 @@ def create_connection(
 ) -> FlextResult[FlextTypes.Data.Connection]:
     required_keys = {'host', 'port', 'database'}
     if not all(key in config for key in required_keys):
-        return FlextResult.fail("Missing required connection parameters")
+        return FlextResult[None].fail("Missing required connection parameters")
 
     connection_string = f"{config['host']}:{config['port']}/{config['database']}"
-    return FlextResult.ok(connection_string)
+    return FlextResult[None].ok(connection_string)
 
 # Using auth types
 def validate_token(
@@ -302,14 +302,14 @@ def validate_token(
     token_type: FlextTypes.Auth.TokenType = 'Bearer'
 ) -> FlextResult[FlextTypes.Auth.TokenPayload]:
     if not token.startswith(f"{token_type} "):
-        return FlextResult.fail(f"Invalid token type, expected {token_type}")
+        return FlextResult[None].fail(f"Invalid token type, expected {token_type}")
 
     payload: FlextTypes.Auth.TokenPayload = {
         'user_id': '12345',
         'scopes': ['read', 'write'],
         'exp': 1234567890
     }
-    return FlextResult.ok(payload)
+    return FlextResult[None].ok(payload)
 ```
 
 ### Type-Safe Data Transformation
@@ -328,14 +328,14 @@ def transform_records(
         validation_result = validator(new_record)
 
         if not validation_result.success:
-            return FlextResult.fail(
+            return FlextResult[None].fail(
                 f"Record validation failed: {validation_result.error}",
                 record=new_record
             )
 
         transformed.append(new_record)
 
-    return FlextResult.ok(transformed)
+    return FlextResult[None].ok(transformed)
 ```
 
 ### Protocol-Based Connection Handling
@@ -358,7 +358,7 @@ class DataSource(Protocol):
 # Implementation
 class PostgresSource:
     def connect(self, config: FlextTypes.Data.ConnectionConfig) -> FlextTypes.Core.Result:
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
     def query(
         self,
@@ -366,10 +366,10 @@ class PostgresSource:
         params: FlextTypes.Data.QueryParams
     ) -> FlextResult[FlextTypes.Data.QueryResult]:
         result: FlextTypes.Data.RecordBatch = []
-        return FlextResult.ok(result)
+        return FlextResult[None].ok(result)
 
     def disconnect(self) -> FlextTypes.Core.Result:
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
 # Type checking
 source: DataSource = PostgresSource()

@@ -86,7 +86,7 @@ class QualityGateway(FlextScript):
 
         if not flext_projects:
             print_colored("❌ Execute do diretório raiz do workspace FLEXT", Colors.RED)
-            return FlextResult.fail("Not in FLEXT workspace root")
+            return FlextResult[None].fail("Not in FLEXT workspace root")
 
         print_colored(
             f"✅ Encontrados {len(flext_projects)} projetos FLEXT",
@@ -109,11 +109,11 @@ class QualityGateway(FlextScript):
                 f"Instale as ferramentas faltantes: {', '.join(missing_tools)}",
                 Colors.YELLOW,
             )
-            return FlextResult.fail(
+            return FlextResult[None].fail(
                 f"Missing required tools: {', '.join(missing_tools)}",
             )
 
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Executar gateway de qualidade completo."""
@@ -205,7 +205,7 @@ class QualityGateway(FlextScript):
             else:
                 print_colored("\n🚫 QUALITY GATEWAY: REPROVADO", Colors.RED)
 
-            return FlextResult.ok(
+            return FlextResult[None].ok(
                 {
                     "gateway_passed": gateway_passed,
                     "stats": total_stats,
@@ -215,7 +215,7 @@ class QualityGateway(FlextScript):
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
-            return FlextResult.fail(f"Analysis error: {e}")
+            return FlextResult[None].fail(f"Analysis error: {e}")
 
     def _discover_projects(
         self,

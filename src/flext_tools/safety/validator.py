@@ -37,7 +37,7 @@ Example:
     >>>
     >>> # Validate package safety
     >>> package_result = validator.validate_package_safety_safe("requests")
-    >>> if package_result.success and package_result.data.safe:
+    >>> if package_result.success and package_result.value["safe"]:
     ...     print("✅ Package is safe for installation")
     >>>
     >>> # Validate file operation
@@ -45,14 +45,14 @@ Example:
     >>> file_result = validator.validate_file_operation_safe(
     ...     file_path, "write", backup_requirement="required"
     >>> )
-    >>> if file_result.success and file_result.data.safe:
+    >>> if file_result.success and file_result.value["safe"]:
     ...     print("✅ File operation is safe to proceed")
     >>>
     >>> # Validate command execution
     >>> cmd_result = validator.validate_command_execution(
     ...     ["poetry", "add", "requests"]
     >>> )
-    >>> if cmd_result.success and cmd_result.data.safe:
+    >>> if cmd_result.success and cmd_result.value["safe"]:
     ...     print("✅ Command execution is safe")
 
 Integration:
@@ -91,9 +91,9 @@ logger = get_logger(__name__)
 # This class duplicates FlextResult functionality:
 # - safe: bool -> FlextResult.success: bool
 # - issues: list[str] -> FlextResult.error: str (join issues)
-# - operation, recommendations, confidence, risk_level -> FlextResult.data: dict
+# - operation, recommendations, confidence, risk_level -> FlextResult.value: dict
 #
-# All safety validation results must use FlextResult from flext-core instead
+# All safety validation results must use FlextResult[Type] from flext-core instead
 # to maintain consistency and avoid duplication of generic result functionality
 
 # Type alias for validation data
@@ -163,7 +163,7 @@ class SafetyValidator:
 
       >>> validator = SafetyValidator()
       >>> result = validator.validate_package_safety_safe("requests")
-      >>> if result.success and result.data.safe:
+      >>> if result.success and result.value["safe"]:
       ...     print("✅ Package validation passed")
 
     Integration:
@@ -361,7 +361,7 @@ class SafetyValidator:
                 risk_level=risk_level,
             )
 
-            return FlextResult.ok(validation_data)
+            return FlextResult[ValidationData].ok(validation_data)
 
         except Exception as e:
             logger.exception(
@@ -369,7 +369,7 @@ class SafetyValidator:
                 package_name=package_name,
                 error=str(e),
             )
-            return FlextResult.fail(f"Package validation failed: {e}")
+            return FlextResult[ValidationData].fail(f"Package validation failed: {e}")
 
     def validate_file_operation_safe(
         self,
@@ -440,7 +440,7 @@ class SafetyValidator:
                     "confidence": "high",
                     "risk_level": risk_level,
                 }
-                return FlextResult.ok(error_validation_data)
+                return FlextResult[ValidationData].ok(error_validation_data)
 
             # Critical file detection and protection
             critical_files = {
@@ -519,7 +519,7 @@ class SafetyValidator:
                 risk_level=risk_level,
             )
 
-            return FlextResult.ok(success_validation_data)
+            return FlextResult[ValidationData].ok(success_validation_data)
 
         except Exception as e:
             logger.exception(
@@ -528,7 +528,9 @@ class SafetyValidator:
                 operation=operation,
                 error=str(e),
             )
-            return FlextResult.fail(f"File operation validation failed: {e}")
+            return FlextResult[ValidationData].fail(
+                f"File operation validation failed: {e}"
+            )
 
     def validate_command_execution(
         self,
@@ -546,7 +548,7 @@ class SafetyValidator:
 
         """
         if not command:
-            return FlextResult.fail("Empty command provided")
+            return FlextResult[ValidationData].fail("Empty command provided")
 
         # Using ValidationData instead of ValidationResult class (DRY principle)
         validation_data: ValidationData = {
@@ -612,7 +614,7 @@ class SafetyValidator:
             if isinstance(issues, list):
                 issues.append("Working directory does not exist")
 
-        return FlextResult.ok(validation_data)
+        return FlextResult[ValidationData].ok(validation_data)
 
     def validate_poetry_operation(
         self,
@@ -645,19 +647,21 @@ class SafetyValidator:
         # Check if Poetry project is valid
         pyproject_path = project_path / "pyproject.toml"
         if not pyproject_path.exists():
-            return FlextResult.fail("pyproject.toml not found")
+            return FlextResult[ValidationData].fail("pyproject.toml not found")
 
         try:
             with pyproject_path.open("rb") as f:
                 data = tomllib.load(f)
 
             if "tool" not in data or "poetry" not in data["tool"]:
-                return FlextResult.fail(
+                return FlextResult[ValidationData].fail(
                     "Poetry configuration not found in pyproject.toml",
                 )
 
         except (OSError, tomllib.TOMLDecodeError, UnicodeDecodeError) as e:
-            return FlextResult.fail(f"Error reading pyproject.toml: {e}")
+            return FlextResult[ValidationData].fail(
+                f"Error reading pyproject.toml: {e}"
+            )
 
         # Validate packages if provided
         if packages:
@@ -687,7 +691,7 @@ class SafetyValidator:
             elif operation == "remove":
                 recommendations.append("Check dependencies before removing")
 
-        return FlextResult.ok(validation_data)
+        return FlextResult[ValidationData].ok(validation_data)
 
     def get_safety_recommendations_safe(
         self,
@@ -722,7 +726,7 @@ class SafetyValidator:
                 recommendations_count=len(recommendations),
             )
 
-            return FlextResult.ok(recommendations)
+            return FlextResult[list[str]].ok(recommendations)
 
         except Exception as e:
             logger.exception(
@@ -730,7 +734,7 @@ class SafetyValidator:
                 operation_type=operation_type,
                 error=str(e),
             )
-            return FlextResult.fail(f"Recommendation generation failed: {e}")
+            return FlextResult[list[str]].fail(f"Recommendation generation failed: {e}")
 
     def get_comprehensive_validation_summary(self) -> FlextResult[dict[str, object]]:
         """Get comprehensive validation summary with statistics and recommendations.
@@ -772,11 +776,13 @@ class SafetyValidator:
                 dangerous_packages=summary["dangerous_packages"],
             )
 
-            return FlextResult.ok(summary)
+            return FlextResult[dict[str, object]].ok(summary)
 
         except Exception as e:
             logger.exception("Failed to generate validation summary", error=str(e))
-            return FlextResult.fail(f"Validation summary generation failed: {e}")
+            return FlextResult[dict[str, object]].fail(
+                f"Validation summary generation failed: {e}"
+            )
 
     def _can_write_file(self, file_path: Path) -> bool:
         """Check if it's possible to write to the file."""

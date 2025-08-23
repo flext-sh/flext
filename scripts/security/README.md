@@ -60,9 +60,9 @@ except Exception:
 # ✅ SECURE - Proper error handling
 try:
     result = risky_operation()
-    return FlextResult.ok(result)
+    return FlextResult[None].ok(result)
 except Exception as e:
-    return FlextResult.fail(f"Operation failed: {e}")
+    return FlextResult[None].fail(f"Operation failed: {e}")
 ```
 
 ### 2. Exception Swallowing (CRITICAL Risk)
@@ -79,7 +79,7 @@ try:
     critical_operation()
 except SpecificException as e:
     logger.error(f"Critical operation failed: {e}")
-    return FlextResult.fail(f"Operation failed: {e}")
+    return FlextResult[None].fail(f"Operation failed: {e}")
 ```
 
 ### 3. Fake Data Generation (HIGH Risk)
@@ -96,18 +96,18 @@ def get_user_data(user_id):
 def get_user_data(user_id) -> FlextResult[UserData]:
     try:
         user_data = database.get_user(user_id)
-        return FlextResult.ok(user_data)
+        return FlextResult[None].ok(user_data)
     except UserNotFoundError as e:
-        return FlextResult.fail(f"User not found: {user_id}")
+        return FlextResult[None].fail(f"User not found: {user_id}")
     except DatabaseError as e:
-        return FlextResult.fail(f"Database error: {e}")
+        return FlextResult[None].fail(f"Database error: {e}")
 ```
 
 ## 🛡️ Security Best Practices
 
 ### Fail-Fast Principles
 
-- **Never return fake data**: Always propagate errors or return FlextResult.fail()
+- **Never return fake data**: Always propagate errors or return FlextResult[None].fail()
 - **Specific exception handling**: Catch specific exceptions, not broad Exception classes
 - **Proper logging**: Log errors with context before handling or propagating
 - **State validation**: Validate state before operations, fail early if invalid

@@ -17,7 +17,7 @@ Violation #1
   Risk: CRITICAL
   Code: except (OSError, RuntimeError, ValueError, ImportError, AttributeError):
   Description: Exceção engolida silenciosamente
-  Fix: Especificar tipo de exceção e tratar adequadamente ou usar FlextResult.fail()
+  Fix: Especificar tipo de exceção e tratar adequadamente ou usar FlextResult[None].fail()
 ----------------------------------------
 Violation #2
   File: flext-plugin/src/flext_plugin/hot_reload.py
@@ -26,7 +26,7 @@ Violation #2
   Risk: CRITICAL
   Code: except (OSError, RuntimeError, ValueError, ImportError, AttributeError):
   Description: Exceção engolida silenciosamente
-  Fix: Especificar tipo de exceção e tratar adequadamente ou usar FlextResult.fail()
+  Fix: Especificar tipo de exceção e tratar adequadamente ou usar FlextResult[None].fail()
 ----------------------------------------
 Violation #3
   File: flext-plugin/src/flext_plugin/hot_reload.py
@@ -35,7 +35,7 @@ Violation #3
   Risk: CRITICAL
   Code: except (RuntimeError, ValueError, AttributeError, KeyError):
   Description: Exceção engolida silenciosamente
-  Fix: Especificar tipo de exceção e tratar adequadamente ou usar FlextResult.fail()
+  Fix: Especificar tipo de exceção e tratar adequadamente ou usar FlextResult[None].fail()
 ----------------------------------------
 Violation #4
   File: flext-plugin/src/flext_plugin/hot_reload.py
@@ -71,7 +71,7 @@ Violation #7
   Risk: CRITICAL
   Code: except ValueError:
   Description: Retorno de valor fake em caso de falha
-  Fix: Usar FlextResult.fail() ou propagar exceção apropriadamente
+  Fix: Usar FlextResult[None].fail() ou propagar exceção apropriadamente
 ----------------------------------------
 Violation #8
   File: flext-plugin/src/flext_plugin/domain/entities.py
@@ -80,7 +80,7 @@ Violation #8
   Risk: CRITICAL
   Code: except ValueError:
   Description: Retorno de valor fake em caso de falha
-  Fix: Usar FlextResult.fail() ou propagar exceção apropriadamente
+  Fix: Usar FlextResult[None].fail() ou propagar exceção apropriadamente
 ----------------------------------------
 Violation #9
   File: flext-plugin/src/flext_plugin/domain/entities.py
@@ -107,7 +107,7 @@ Violation #11
   Risk: CRITICAL
   Code: except (json.JSONDecodeError, OSError):
   Description: Exceção engolida silenciosamente
-  Fix: Especificar tipo de exceção e tratar adequadamente ou usar FlextResult.fail()
+  Fix: Especificar tipo de exceção e tratar adequadamente ou usar FlextResult[None].fail()
 ----------------------------------------
 Violation #12
   File: flext-plugin/src/flext_plugin/core/discovery.py
@@ -116,7 +116,7 @@ Violation #12
   Risk: CRITICAL
   Code: except (RuntimeError, ValueError, TypeError):
   Description: Retorno de valor fake em caso de falha
-  Fix: Usar FlextResult.fail() ou propagar exceção apropriadamente
+  Fix: Usar FlextResult[None].fail() ou propagar exceção apropriadamente
 ----------------------------------------
 Violation #13
   File: flext-plugin/src/flext_plugin/core/discovery.py

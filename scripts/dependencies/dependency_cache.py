@@ -35,10 +35,10 @@ class DependencyCacheManager(FlextScript):
         # Check if we're in FLEXT workspace
         if not (workspace_root / "pyproject.toml").exists():
             print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return FlextResult.fail("Not in FLEXT workspace root")
+            return FlextResult[None].fail("Not in FLEXT workspace root")
 
         print_colored("✅ FLEXT workspace detected", Colors.GREEN)
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute cache management operations."""
@@ -69,13 +69,13 @@ class DependencyCacheManager(FlextScript):
 
             else:
                 print_colored(f"❌ Unknown operation: {operation}", Colors.RED)
-                return FlextResult.fail(f"Unknown operation: {operation}")
+                return FlextResult[None].fail(f"Unknown operation: {operation}")
 
-            return FlextResult.ok({"operation": operation, "projects": projects})
+            return FlextResult[None].ok({"operation": operation, "projects": projects})
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during cache operation: {e}", Colors.RED)
-            return FlextResult.fail(f"Cache operation error: {e}")
+            return FlextResult[None].fail(f"Cache operation error: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
@@ -96,7 +96,7 @@ class DependencyCacheManager(FlextScript):
 
     def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
 
 def main() -> int:
