@@ -39,10 +39,10 @@ class ScriptRunner(FlextScript):
 
         if not scripts_dir.exists():
             print_colored("❌ Scripts directory not found", Colors.RED)
-            return FlextResult.fail("Scripts directory not found")
+            return FlextResult[None].fail("Scripts directory not found")
 
         print_colored("✅ Scripts directory found", Colors.GREEN)
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute script runner logic."""
@@ -59,7 +59,7 @@ class ScriptRunner(FlextScript):
 
                 if list_scripts:
                     self._list_all_scripts(registry)
-                    return FlextResult.ok({"action": "list_scripts"})
+                    return FlextResult[None].ok({"action": "list_scripts"})
 
                 if script_name:
                     # Pass script_name as positional and kwargs as keyword arguments
@@ -68,7 +68,7 @@ class ScriptRunner(FlextScript):
                         str(script_name),
                         **kwargs,
                     )  # Pass kwargs correctly
-                    return FlextResult.ok(
+                    return FlextResult[None].ok(
                         {
                             "action": "run_script",
                             "script_name": script_name,
@@ -80,15 +80,15 @@ class ScriptRunner(FlextScript):
                     "❌ No script specified. Use --list to see available scripts.",
                     Colors.RED,
                 )
-                return FlextResult.fail("No script specified")
+                return FlextResult[None].fail("No script specified")
 
             except ImportError as e:
                 print_colored(f"❌ Failed to import script registry: {e}", Colors.RED)
-                return FlextResult.fail(f"Failed to import script registry: {e}")
+                return FlextResult[None].fail(f"Failed to import script registry: {e}")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error in script runner: {e}", Colors.RED)
-            return FlextResult.fail(f"Script runner error: {e}")
+            return FlextResult[None].fail(f"Script runner error: {e}")
 
     def _list_all_scripts(self, registry: ScriptRegistry) -> None:  # Typed registry
         """List all available scripts."""
@@ -194,7 +194,7 @@ class ScriptRunner(FlextScript):
 
     def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
-        return FlextResult.ok(None)
+        return FlextResult[None].ok(None)
 
 
 # Helper to check if a function accepts arbitrary keyword arguments

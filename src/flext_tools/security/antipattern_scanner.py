@@ -46,7 +46,7 @@ Example:
     >>> result = scanner.scan_ecosystem()
     >>>
     >>> if result.success:
-    ...     violations = result.data
+    ...     violations = result.value
     ...     print(f"Found {len(violations)} security violations")
     ...     scanner.generate_report(violations, "security_report.json")
 
@@ -211,11 +211,11 @@ class AntipatternScanner:
             # Collect Python files to scan
             files_result = self._collect_python_files()
             if not files_result.success:
-                return FlextResult.fail(
+                return FlextResult[list[SecurityViolation]].fail(
                     f"Failed to collect files: {files_result.error}",
                 )
 
-            python_files = files_result.data or []
+            python_files = files_result.value or []
             self.logger.info(f"Scanning {len(python_files)} Python files")
 
             # Scan files in parallel for performance
@@ -338,7 +338,7 @@ class AntipatternScanner:
                     risk_level=RiskLevel.CRITICAL,
                     code_snippet=line_content,
                     description="Exceção engolida silenciosamente",
-                    suggested_fix="Especificar tipo de exceção e tratar adequadamente ou usar FlextResult.fail()",
+                    suggested_fix="Especificar tipo de exceção e tratar adequadamente ou usar FlextResult[None].fail()",
                 ),
             )
 
@@ -354,7 +354,7 @@ class AntipatternScanner:
                     risk_level=RiskLevel.CRITICAL,
                     code_snippet=line_content,
                     description="Retorno de valor fake em caso de falha",
-                    suggested_fix="Usar FlextResult.fail() ou propagar exceção apropriadamente",
+                    suggested_fix="Usar FlextResult[None].fail() ou propagar exceção apropriadamente",
                 ),
             )
 
@@ -689,7 +689,7 @@ def scan_flext_ecosystem(
             f"Scanner creation failed: {scanner_result.error}"
         )
 
-    scanner = scanner_result.data
+    scanner = scanner_result.value
     if not scanner:
         return FlextResult[list[SecurityViolation]].fail(
             "Scanner creation returned None"
@@ -700,7 +700,7 @@ def scan_flext_ecosystem(
     if not scan_result.success:
         return scan_result
 
-    violations = scan_result.data or []
+    violations = scan_result.value or []
 
     # Generate report if output file specified
     if output_file and violations:

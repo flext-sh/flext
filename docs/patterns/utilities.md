@@ -84,17 +84,17 @@ def flext_data_safe_int_conversion(
 ) -> FlextResult[int]:
     """Safely convert value to integer."""
     if value is None:
-        return FlextResult.ok(default)
+        return FlextResult[None].ok(default)
 
     try:
         if isinstance(value, str):
             value = value.strip()
             if not value:
-                return FlextResult.ok(default)
+                return FlextResult[None].ok(default)
 
-        return FlextResult.ok(int(value))
+        return FlextResult[None].ok(int(value))
     except (ValueError, TypeError) as e:
-        return FlextResult.fail(f"Cannot convert '{value}' to integer: {e}")
+        return FlextResult[None].fail(f"Cannot convert '{value}' to integer: {e}")
 
 def flext_data_safe_bool_conversion(
     value: Any,
@@ -172,9 +172,9 @@ def flext_time_parse_iso8601(date_string: str) -> FlextResult[datetime]:
         if date_string.endswith('Z'):
             date_string = date_string[:-1] + '+00:00'
 
-        return FlextResult.ok(datetime.fromisoformat(date_string))
+        return FlextResult[None].ok(datetime.fromisoformat(date_string))
     except ValueError as e:
-        return FlextResult.fail(f"Invalid ISO8601 date format: {e}")
+        return FlextResult[None].fail(f"Invalid ISO8601 date format: {e}")
 
 def flext_time_format_duration(seconds: float) -> str:
     """Format duration in human-readable form."""
@@ -249,9 +249,9 @@ def flext_auth_hash_password(password: str) -> FlextResult[str]:
     try:
         salt = bcrypt.gensalt()
         hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
-        return FlextResult.ok(hashed.decode('utf-8'))
+        return FlextResult[None].ok(hashed.decode('utf-8'))
     except Exception as e:
-        return FlextResult.fail(f"Password hashing failed: {e}")
+        return FlextResult[None].fail(f"Password hashing failed: {e}")
 
 def flext_auth_verify_password(
     password: str,
@@ -263,9 +263,9 @@ def flext_auth_verify_password(
             password.encode('utf-8'),
             hashed_password.encode('utf-8')
         )
-        return FlextResult.ok(result)
+        return FlextResult[None].ok(result)
     except Exception as e:
-        return FlextResult.fail(f"Password verification failed: {e}")
+        return FlextResult[None].fail(f"Password verification failed: {e}")
 
 def flext_auth_generate_jwt(
     payload: dict,
@@ -279,9 +279,9 @@ def flext_auth_generate_jwt(
         payload['iat'] = datetime.utcnow()
 
         token = jwt.encode(payload, secret_key, algorithm='HS256')
-        return FlextResult.ok(token)
+        return FlextResult[None].ok(token)
     except Exception as e:
-        return FlextResult.fail(f"JWT generation failed: {e}")
+        return FlextResult[None].fail(f"JWT generation failed: {e}")
 
 def flext_auth_generate_api_key(prefix: str = "flext") -> str:
     """Generate API key with prefix."""
@@ -308,9 +308,9 @@ def flext_data_parse_json_stream(
 
         try:
             obj = json.loads(line)
-            yield FlextResult.ok(obj)
+            yield FlextResult[None].ok(obj)
         except json.JSONDecodeError as e:
-            yield FlextResult.fail(f"Invalid JSON on line: {e}")
+            yield FlextResult[None].fail(f"Invalid JSON on line: {e}")
 
 def flext_data_flatten_record(
     record: dict,
@@ -389,7 +389,7 @@ def flext_ldap_parse_dn(dn: str) -> FlextResult[List[Dict[str, str]]]:
         for part in parts:
             part = part.strip()
             if '=' not in part:
-                return FlextResult.fail(f"Invalid DN component: {part}")
+                return FlextResult[None].fail(f"Invalid DN component: {part}")
 
             key, value = part.split('=', 1)
             components.append({
@@ -397,9 +397,9 @@ def flext_ldap_parse_dn(dn: str) -> FlextResult[List[Dict[str, str]]]:
                 'value': value.strip()
             })
 
-        return FlextResult.ok(components)
+        return FlextResult[None].ok(components)
     except Exception as e:
-        return FlextResult.fail(f"DN parse error: {e}")
+        return FlextResult[None].fail(f"DN parse error: {e}")
 ```
 
 ## Usage Examples
@@ -460,13 +460,13 @@ def process_json_stream(lines: List[str]) -> FlextResult[List[dict]]:
         processed_records.append(flattened)
 
     if errors:
-        return FlextResult.fail(
+        return FlextResult[None].fail(
             f"Processing completed with {len(errors)} errors",
             errors=errors,
             partial_result=processed_records
         )
 
-    return FlextResult.ok(processed_records)
+    return FlextResult[None].ok(processed_records)
 
 # Batch processing
 def process_in_batches(records: List[dict]) -> None:
@@ -492,22 +492,22 @@ class AuthService:
         # Hash password
         hash_result = flext_auth_hash_password(password)
         if hash_result.is_failure:
-            return FlextResult.fail(f"Password hashing failed: {hash_result.error}")
+            return FlextResult[None].fail(f"Password hashing failed: {hash_result.error}")
 
         # Create user
         user = User(username=username, password_hash=hash_result.data)
-        return FlextResult.ok(user)
+        return FlextResult[None].ok(user)
 
     async def login(self, username: str, password: str) -> FlextResult[dict]:
         # Get user
         user = await self.get_user_by_username(username)
         if not user:
-            return FlextResult.fail("Invalid credentials")
+            return FlextResult[None].fail("Invalid credentials")
 
         # Verify password
         verify_result = flext_auth_verify_password(password, user.password_hash)
         if verify_result.is_failure or not verify_result.data:
-            return FlextResult.fail("Invalid credentials")
+            return FlextResult[None].fail("Invalid credentials")
 
         # Generate token
         token_result = flext_auth_generate_jwt(
@@ -517,9 +517,9 @@ class AuthService:
         )
 
         if token_result.is_failure:
-            return FlextResult.fail("Token generation failed")
+            return FlextResult[None].fail("Token generation failed")
 
-        return FlextResult.ok({
+        return FlextResult[None].ok({
             "access_token": token_result.data,
             "token_type": "Bearer"
         })

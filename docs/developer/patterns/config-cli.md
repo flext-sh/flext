@@ -78,29 +78,29 @@ class FlextConfigHierarchical:
             # Check for duplicate priorities
             existing_priorities = [p.get_priority() for p in self._providers]
             if provider.get_priority() in existing_priorities:
-                return FlextResult.fail(f"Provider with priority {provider.get_priority()} already exists")
+                return FlextResult[None].fail(f"Provider with priority {provider.get_priority()} already exists")
 
             self._providers.append(provider)
             self._providers.sort(key=lambda p: p.get_priority())
             self._cache.clear()
 
-            return FlextResult.ok(None)
+            return FlextResult[None].ok(None)
         except Exception as e:
-            return FlextResult.fail(f"Failed to register provider: {e}")
+            return FlextResult[None].fail(f"Failed to register provider: {e}")
 
     def get_config(self, key: str, default: Any = None) -> FlextResult[Any]:
         """Get configuration value following hierarchical precedence."""
         if key in self._cache:
-            return FlextResult.ok(self._cache[key])
+            return FlextResult[None].ok(self._cache[key])
 
         for provider in self._providers:
             result = provider.get_config(key, None)
             if result.success and result.data is not None:
                 value = self._apply_transformers(key, result.data)
                 self._cache[key] = value
-                return FlextResult.ok(value)
+                return FlextResult[None].ok(value)
 
-        return FlextResult.ok(default)
+        return FlextResult[None].ok(default)
 
     def get_all_configs(self) -> Dict[str, Any]:
         """Get all configuration values merged by precedence."""
@@ -131,7 +131,7 @@ class FlextEnvironmentProvider:
 
         env_key = f"{self.prefix}{key.upper().replace('.', '_')}"
         value = os.environ.get(env_key, default)
-        return FlextResult.ok(value)
+        return FlextResult[None].ok(value)
 
     def get_priority(self) -> int:
         return FlextConfigSemanticConstants.Hierarchy.ENV_PRIORITY
@@ -177,9 +177,9 @@ class FlextConfigFileProvider:
             if isinstance(value, dict) and k in value:
                 value = value[k]
             else:
-                return FlextResult.ok(default)
+                return FlextResult[None].ok(default)
 
-        return FlextResult.ok(value)
+        return FlextResult[None].ok(value)
 
     def get_priority(self) -> int:
         return FlextConfigSemanticConstants.Hierarchy.CONFIG_PRIORITY
@@ -270,9 +270,9 @@ def create_database_config(cli_args: Dict[str, Any]) -> FlextResult[DatabaseSett
 
     try:
         settings = DatabaseSettings(**all_config)
-        return FlextResult.ok(settings)
+        return FlextResult[None].ok(settings)
     except Exception as e:
-        return FlextResult.fail(f"Invalid configuration: {e}")
+        return FlextResult[None].fail(f"Invalid configuration: {e}")
 ```
 
 ### CLI with Subcommands

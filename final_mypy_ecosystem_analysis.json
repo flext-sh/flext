@@ -160,12 +160,12 @@
           "/flext-cli/src/flext_cli/legacy.py:370: error: Unused \"type: ignore\" comment  [unused-ignore]"
         ],
         "attr-defined": [
-          "/flext-cli/src/flext_cli/simple_api.py:94:24: error: \"type[CLIConfig]\" has no attribute \"create_with_hierarchy\"  [attr-defined]",
+          "/flext-cli/src/flext_cli/simple_api.py:94:24: error: \"type[FlextCliConfig]\" has no attribute \"create_with_hierarchy\"  [attr-defined]",
           "/flext-cli/src/flext_cli/cli_auth.py:83:16: error: \"Group\" has no attribute \"get_auth_token\"  [attr-defined]",
           "/flext-cli/src/flext_cli/cli.py:203:25: error: \"Group\" has no attribute \"auth\"  [attr-defined]"
         ],
         "no-any-return": [
-          "/flext-cli/src/flext_cli/simple_api.py:96:9: error: Returning Any from function declared to return \"CLIConfig\"  [no-any-return]",
+          "/flext-cli/src/flext_cli/simple_api.py:96:9: error: Returning Any from function declared to return \"FlextCliConfig\"  [no-any-return]",
           "/flext-cli/src/flext_cli/utils/auth.py:41:9: error: Returning Any from function declared to return \"Path\"  [no-any-return]",
           "/flext-cli/src/flext_cli/utils/auth.py:53:9: error: Returning Any from function declared to return \"Path\"  [no-any-return]"
         ],

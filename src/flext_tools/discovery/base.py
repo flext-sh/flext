@@ -214,10 +214,10 @@ class DependencyDiscovery:
         )
 
         # Handle FlextResult for python_deps
-        if python_deps_result.success and python_deps_result.data:
+        if python_deps_result.success and python_deps_result.value:
             python_deps = {
-                "runtime": python_deps_result.data.runtime,
-                "test": python_deps_result.data.test,
+                "runtime": python_deps_result.value.runtime,
+                "test": python_deps_result.value.test,
             }
         else:
             python_deps = {"runtime": set(), "test": set()}

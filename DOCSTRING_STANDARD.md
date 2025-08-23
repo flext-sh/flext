@@ -221,7 +221,7 @@ def complex_method(self, data: List[Dict[str, Any]]) -> FlextResult[List[str]]:
     # TODO: Consider caching results for performance
     results = [item.get("name", "unknown") for item in transformed_data]
     
-    return FlextResult.ok(results)
+    return FlextResult[None].ok(results)
 ```
 
 ## Type Hints Integration

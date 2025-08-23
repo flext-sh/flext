@@ -84,11 +84,15 @@ from __future__ import annotations
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import Any, Callable, TypeVar
 
 import click
 from pydantic import BaseModel, Field
 from rich.console import Console
 from rich.logging import RichHandler
+
+# Type variable for Click command functions
+F = TypeVar("F", bound=Callable[..., Any])
 
 
 class CLIConfig(BaseModel):
@@ -143,14 +147,14 @@ class BaseCLI(ABC):
       cli()
 
 
-def with_config(f: object) -> object:
+def with_config(f: F) -> F:
     """Add config options to commands (decorator)."""
     f = click.option("--verbose", is_flag=True, help="Enable verbose output")(f)
     f = click.option("--debug", is_flag=True, help="Enable debug mode")(f)
     return click.option("--quiet", is_flag=True, help="Suppress non-error output")(f)
 
 
-def with_output_format(f: object) -> object:
+def with_output_format(f: F) -> F:
     """Add output format options to commands (decorator)."""
     return click.option(
       "--output-format",
