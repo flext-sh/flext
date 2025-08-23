@@ -184,7 +184,7 @@ class TestWorkspacePipelineIntegration:
             project_dir = workspace / project
             project_dir.mkdir()
             (project_dir / "pyproject.toml").write_text(
-                f'[tool.poetry]\nname = "{project}"\nversion = "1.0.0"'
+                f'[tool.poetry]\nname = "{project}"\nversion = "0.9.0"'
             )
 
         return workspace

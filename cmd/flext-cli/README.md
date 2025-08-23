@@ -189,7 +189,7 @@ export FLEXT_LOG_LEVEL="debug"  # May be supported by CLI framework
 
 ## Current Status
 
-**Version**: 2.0.0 (Development - Basic Bootstrap)
+**Version**: 0.9.0 (Development - Basic Bootstrap)
 
 **Completed**:
 

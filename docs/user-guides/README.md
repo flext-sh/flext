@@ -1,6 +1,6 @@
 # FLEXT User Guides
 
-**Version**: 1.0.0 | **Status**: Active
+**Version**: 0.9.0 | **Status**: Active
 
 ## Overview
 

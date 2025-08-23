@@ -433,7 +433,7 @@ Use this checklist to validate documentation compliance:
 
 ---
 
-**Standard Version**: 1.0.0  
+**Standard Version**: 0.9.0  
 **Implementation Deadline**: End of August 2025  
 **Authority**: FLEXT Documentation Team  
 **Compliance Required**: All 32 ecosystem projects

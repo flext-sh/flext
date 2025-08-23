@@ -1,6 +1,6 @@
 # FLEXT Architecture Overview
 
-**Version**: 2.0.0-dev | **Status**: Under Development | **Last Updated**: 2025-08-05
+**Version**: 0.9.0-dev | **Status**: Under Development | **Last Updated**: 2025-08-05
 
 This document provides a comprehensive overview of the FLEXT ecosystem architecture, current implementation status, and development roadmap.
 

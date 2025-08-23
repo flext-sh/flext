@@ -1,6 +1,6 @@
 # FLEXT Architecture
 
-**Version**: 2.0.0-dev | **Status**: Under Development | **Last Updated**: 2025-08-05
+**Version**: 0.9.0-dev | **Status**: Under Development | **Last Updated**: 2025-08-05
 
 ## Overview
 
