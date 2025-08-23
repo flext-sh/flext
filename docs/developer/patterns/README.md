@@ -1,6 +1,6 @@
 # FLEXT Patterns
 
-**Version**: 1.0.0 | **Status**: Active Standard
+**Version**: 0.9.0 | **Status**: Active Standard
 
 ## Overview
 

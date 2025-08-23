@@ -224,7 +224,7 @@ Architecture:
     All operations return FlextResult for consistent error handling.
 
 Author: FLEXT Development Team
-Version: 2.0.0
+Version: 0.9.0
 License: MIT
 """
 ```
@@ -445,7 +445,7 @@ the FLEXT data integration ecosystem.
 """
 
 # Version information
-__version__ = "2.0.0"
+__version__ = "0.9.0"
 __author__ = "FLEXT Development Team"
 __license__ = "MIT"
 
@@ -753,7 +753,7 @@ repos:
 
 ---
 
-**Module Organization Version**: 2.0.0  
+**Module Organization Version**: 0.9.0  
 **Last Updated**: 2025-08-02  
 **Compliance**: FLEXT Ecosystem Standards  
 **Maintained By**: FLEXT Development Team

@@ -47,7 +47,7 @@ Accept: application/json
 {
   "status": "healthy",
   "service": "flexcore",
-  "version": "2.0.0",
+  "version": "0.9.0",
   "timestamp": "2025-08-02T10:00:00Z",
   "uptime": "2h45m30s"
 }
@@ -66,7 +66,7 @@ Accept: application/json
 {
   "status": "healthy",
   "service": "flexcore",
-  "version": "2.0.0",
+  "version": "0.9.0",
   "timestamp": "2025-08-02T10:00:00Z",
   "dependencies": {
     "postgresql": {
@@ -113,7 +113,7 @@ Accept: application/json
 {
   "status": "healthy",
   "service": "flext-service",
-  "version": "2.0.0",
+  "version": "0.9.0",
   "mode": "server",
   "timestamp": "2025-08-02T10:00:00Z",
   "uptime": "2h45m30s",
@@ -134,7 +134,7 @@ Accept: application/json
 {
   "status": "healthy",
   "service": "flext-service",
-  "version": "2.0.0",
+  "version": "0.9.0",
   "mode": "server",
   "timestamp": "2025-08-02T10:00:00Z",
   "dependencies": {
@@ -285,7 +285,7 @@ Content-Type: application/json
   "plugins": [
     {
       "name": "meltano-orchestrator",
-      "version": "2.0.0",
+      "version": "0.9.0",
       "type": "orchestration",
       "capabilities": ["tap_execution", "target_loading", "dbt_transformation"],
       "resource_requirements": {
@@ -302,7 +302,7 @@ Content-Type: application/json
     },
     {
       "name": "singer-tap-coordinator",
-      "version": "2.0.0",
+      "version": "0.9.0",
       "type": "extraction",
       "capabilities": ["oracle_tap", "ldap_tap", "wms_tap"],
       "resource_requirements": {
@@ -700,7 +700,7 @@ Content-Type: application/json
 ```json
 {
   "service_name": "flext-service",
-  "service_version": "2.0.0",
+  "service_version": "0.9.0",
   "client_secret": "${FLEXT_SERVICE_SECRET}",
   "requested_scopes": ["plugin.execute", "events.publish", "health.read"]
 }
@@ -725,7 +725,7 @@ All authenticated requests must include:
 ```http
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 X-Service-Name: flext-service
-X-Service-Version: 2.0.0
+X-Service-Version: 0.9.0
 X-Correlation-ID: corr_abc123def456
 ```
 
@@ -912,7 +912,7 @@ make test-rate-limiting              # Test rate limiting implementation
 
 | FlexCore Version | FLEXT Service Version | API Version | Compatibility            |
 | ---------------- | --------------------- | ----------- | ------------------------ |
-| 2.0.0            | 2.0.0                 | v1          | ✅ Fully Compatible      |
+| 0.9.0            | 0.9.0                 | v1          | ✅ Fully Compatible      |
 | 2.0.x            | 2.0.x                 | v1          | ✅ Patch Compatible      |
 | 2.1.x            | 2.0.x                 | v1          | ⚠️ Limited Compatibility |
 | 3.0.x            | 2.x.x                 | v1          | ❌ Breaking Changes      |
@@ -947,7 +947,7 @@ FLEXT_ECOSYSTEM_SECRET=${ECOSYSTEM_SECRET}
 version: "3.8"
 services:
   flexcore:
-    image: flext-sh/flexcore:2.0.0
+    image: flext-sh/flexcore:0.9.0
     ports:
       - "8080:8080"
     environment:
@@ -957,7 +957,7 @@ services:
       - redis
 
   flext-service:
-    image: flext/service:2.0.0
+    image: flext/service:0.9.0
     ports:
       - "8081:8081"
     environment:
@@ -974,4 +974,4 @@ services:
 
 **Navigation**: [FLEXT Hub](NAVIGATION.md) > Documentation > API Contracts
 **Related Documentation**: [FlexCore CLAUDE.md](../flexcore/CLAUDE.md) | [FLEXT Service CLAUDE.md](../cmd/flext/CLAUDE.md)
-**Version**: 2.0.0 | **Last Updated**: 2025-08-02
+**Version**: 0.9.0 | **Last Updated**: 2025-08-02
