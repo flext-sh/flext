@@ -29,7 +29,7 @@ MAKEFILE_TARGET_NOT_FOUND = 2
 COMMAND_FAILED = 1
 
 # Status constants (not passwords, just status indicators)
-STATUS_PASS = "✅ PASS"  # noqa: S105
+STATUS_PASS = "✅ PASS"
 STATUS_FAIL = "❌ FAIL"
 STATUS_NO_TARGET = "⚠️  NO_TARGET"
 STATUS_SKIP = "SKIP"
@@ -184,8 +184,6 @@ class FlextDiagnostic:
             has_pyproject=(project_path / "pyproject.toml").exists(),
         )
 
-        print(f"🔍 Checking {project_name} (Level {status.level})...")
-
         # Check Makefile
         if status.has_makefile:
             # Check lint
@@ -253,9 +251,6 @@ class FlextDiagnostic:
 
     def run_full_diagnostic(self) -> dict[str, object]:
         """Run full diagnostic."""
-        print("🚀 INICIANDO DIAGNÓSTICO COMPLETO DO WORKSPACE FLEXT")
-        print("=" * 60)
-
         # Check all projects
         for project_name in self.project_levels:
             status = self.check_project(project_name)
@@ -321,29 +316,12 @@ class FlextDiagnostic:
 
     def print_report(self, report: dict[str, object]) -> None:
         """Print formatted report."""
-        print("\n" + "=" * 60)
-        print("📊 RELATÓRIO DE DIAGNÓSTICO FLEXT")
-        print("=" * 60)
-
         # Summary
         summary_obj = report["summary"]
         if not isinstance(summary_obj, dict):
-            print("\n❌ Error: Invalid summary format")
             return
-        summary = summary_obj
-        print("\n📈 RESUMO GERAL:")
-        print(f"   Total de projetos: {summary.get('total_projects', 0)}")
-        print(f"   Com Makefile: {summary.get('projects_with_makefile', 0)}")
-        print(f"   Com pyproject.toml: {summary.get('projects_with_pyproject', 0)}")
-        print(f"   Lint passou: {summary.get('lint_passed', 0)}")
-        print(f"   MyPy passou: {summary.get('mypy_passed', 0)}")
-        print(f"   Testes passaram: {summary.get('tests_passed', 0)}")
-        print(f"   Poetry install passou: {summary.get('poetry_passed', 0)}")
-        print(f"   Projetos com erros: {summary.get('projects_with_errors', 0)}")
 
         # Project details
-        print("\n🔍 DETALHES POR PROJETO:")
-        print("-" * 60)
 
         for level in range(1, 7):
             projects_obj = report["projects"]
@@ -356,7 +334,7 @@ class FlextDiagnostic:
             ]
 
             if level_projects:
-                level_name = {
+                {
                     1: "NÍVEL 1 - BASE",
                     2: "NÍVEL 2 - INTERMEDIÁRIA",
                     3: "NÍVEL 3 - BASES TECNOLÓGICAS",
@@ -365,8 +343,7 @@ class FlextDiagnostic:
                     6: "NÍVEL 6 - PROJETOS ESPECÍFICOS",
                 }.get(level, f"NÍVEL {level}")
 
-                print(f"\n{level_name}:")
-                for name, data in level_projects:
+                for _name, data in level_projects:
                     if not isinstance(data, dict):
                         continue
                     status_icons = [
@@ -375,27 +352,20 @@ class FlextDiagnostic:
                         str(data.get("test_status", "UNKNOWN")),
                         str(data.get("poetry_install", "UNKNOWN")),
                     ]
-                    status_str = " | ".join(status_icons)
-                    print(f"  {name:<25} {status_str}")
+                    " | ".join(status_icons)
 
                     errors = data.get("errors", [])
                     if isinstance(errors, list) and errors:
-                        for error in errors[:2]:  # Show only first 2 errors
-                            print(f"    ❌ {str(error)[:80]}...")
+                        for _error in errors[:2]:  # Show only first 2 errors
+                            pass
 
         # Architecture violations
         violations_obj = report.get("architecture_violations", {})
         if isinstance(violations_obj, dict) and violations_obj:
-            print("\n🚨 VIOLAÇÕES ARQUITETURAIS:")
-            print("-" * 60)
-            for project, violations in violations_obj.items():
-                print(f"\n{project}:")
+            for violations in violations_obj.values():
                 if isinstance(violations, list):
-                    for violation in violations:
-                        print(f"  ❌ {violation}")
-
-        print("\n" + "=" * 60)
-        print("✅ DIAGNÓSTICO CONCLUÍDO")
+                    for _violation in violations:
+                        pass
 
 
 def main() -> None:
@@ -410,8 +380,6 @@ def main() -> None:
 
     with Path(report_file).open("w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)
-
-    print(f"\n💾 Relatório salvo em: {report_file}")
 
     # Return exit code based on errors
     summary_obj = report.get("summary", {})

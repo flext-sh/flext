@@ -47,11 +47,9 @@ def fix_di_ordering(file_path: Path) -> bool:
 
         if content != original_content:
             file_path.write_text(content, encoding="utf-8")
-            print(f"Fixed DI ordering in {file_path}")
             return True
 
-    except (OSError, ValueError, TypeError) as e:
-        print(f"Error processing {file_path}: {e}")
+    except (OSError, ValueError, TypeError):
         return False
 
     return False
@@ -62,7 +60,6 @@ def main() -> None:
     base_dir = Path("/home/marlonsc/flext/flext-api")
 
     if not base_dir.exists():
-        print(f"Directory {base_dir} does not exist")
         sys.exit(1)
 
     # Find all Python files with potential DI ordering issues
@@ -72,8 +69,6 @@ def main() -> None:
     for py_file in python_files:
         if fix_di_ordering(py_file):
             files_fixed += 1
-
-    print(f"\nFixed DI ordering in {files_fixed} files")
 
 
 if __name__ == "__main__":

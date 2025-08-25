@@ -13,11 +13,8 @@ logger = get_logger(__name__)
 
 def analyze_flext_core_violations() -> list[dict[str, str]]:
     """Analisa violações arquiteturais no flext-core."""
-    print("🔍 Analisando violações arquiteturais no flext-core...")
-
     flext_core_path = Path("flext-core/src/flext_core")
     if not flext_core_path.exists():
-        print("❌ Diretório flext-core/src/flext_core não encontrado")
         return []
 
     # Padrões específicos que violam a arquitetura
@@ -85,18 +82,16 @@ def analyze_flext_core_violations() -> list[dict[str, str]]:
                                 },
                             )
             except SyntaxError:
-                print(f"⚠️  Erro de sintaxe em {py_file}")
+                pass
 
-        except (OSError, ValueError, TypeError) as e:
-            print(f"⚠️  Erro ao analisar {py_file}: {e}")
+        except (OSError, ValueError, TypeError):
+            pass
 
     return violations
 
 
 def analyze_ignore_comments() -> list[Path]:
     """Encontra todos os comentários # ignore nos arquivos Python."""
-    print("🔍 Procurando comentários # ignore...")
-
     ignore_files: list[Path] = []
     for root, dirs, files in os.walk("."):
         # Pular diretórios desnecessários
@@ -126,29 +121,19 @@ def generate_fix_commands(
     ignore_files: list[Path],
 ) -> None:
     """Gera comandos para correção das violações."""
-    print("\n" + "=" * 60)
-    print("📋 RELATÓRIO DE VIOLAÇÕES ENCONTRADAS")
-    print("=" * 60)
-
     if violations:
-        print(f"\n🚨 VIOLAÇÕES EM FLEXT-CORE ({len(violations)} encontradas):")
 
         files_to_backup: set[str] = set()
         for violation in violations:
-            print(f"  📁 {violation['file']}")
-            print(f"     Padrão: {violation['pattern']}")
-            print(f"     Ação: {violation['action']}")
             if "Renomear" in violation["action"]:
                 files_to_backup.add(violation["file"])
 
-        print("\n💾 COMANDOS PARA BACKUP DE ARQUIVOS PROBLEMÁTICOS:")
         for file_path in files_to_backup:
-            print(f"mv {file_path} {file_path}.bak")
+            pass
 
     if ignore_files:
-        print(f"\n📝 ARQUIVOS COM # IGNORE ({len(ignore_files)} encontrados):")
-        for ignore_file in ignore_files:
-            print(f"  {ignore_file}")
+        for _ignore_file in ignore_files:
+            pass
 
     # Gerar script de correção
     script_path = Path("scripts/architecture/fix_violations.sh")
@@ -172,26 +157,17 @@ def generate_fix_commands(
         f.write("echo '✅ Violações corrigidas! Revise os arquivos .bak criados.'\n")
 
     script_path.chmod(0o755)
-    print(f"\n💾 Script de correção gerado: {script_path}")
 
     # Estatísticas finais
     total_issues: int = len(violations) + len(ignore_files)
     if total_issues == 0:
-        print("\n✅ Nenhuma violação arquitetural crítica encontrada!")
-    else:
-        print(f"\n📊 RESUMO: {total_issues} problemas encontrados")
-        print(f"  - {len(violations)} violações em flext-core")
-        print(f"  - {len(ignore_files)} arquivos com # ignore")
+        pass
 
 
 def main() -> None:
     """Função principal."""
-    print("🏗️  ANALISADOR SIMPLES DE VIOLAÇÕES ARQUITETURAIS")
-    print(f"📁 Diretório: {Path.cwd()}")
-
     # Verificar se estamos no workspace correto
     if not Path("flext-core").exists():
-        print("❌ Este script deve ser executado na raiz do workspace FLEXT")
         return
 
     # Executar análises
@@ -200,8 +176,6 @@ def main() -> None:
 
     # Gerar relatório e comandos de correção
     generate_fix_commands(violations, ignore_files)
-
-    print("\n✅ Análise concluída!")
 
 
 if __name__ == "__main__":

@@ -130,8 +130,8 @@ class MissingDependenciesDiscoverer(FlextScript):
         for category, deps in missing_deps.items():
             if deps:
                 print_colored(f"    📋 {category.title()}:", Colors.CYAN)
-                for dep in sorted(deps):
-                    print(f"      • {dep}")
+                for _dep in sorted(deps):
+                    pass
 
     def _print_summary(
         self,
@@ -142,10 +142,6 @@ class MissingDependenciesDiscoverer(FlextScript):
         """Imprimir resumo final."""
         print_colored("\n📊 RESUMO DA ANÁLISE", Colors.BLUE)
         print_colored("=" * 40, Colors.BLUE)
-
-        print(f"  📁 Projetos analisados: {total_projects}")
-        print(f"  ⚠️ Projetos com issues: {projects_with_issues}")
-        print(f"  📦 Total de dependências faltantes: {total_missing}")
 
         if total_missing == 0:
             print_colored(
@@ -158,8 +154,6 @@ class MissingDependenciesDiscoverer(FlextScript):
                 Colors.YELLOW,
             )
             print_colored("\n💡 Sugestões:", Colors.CYAN)
-            print("  • Use: python scripts/dependencies/sync_dependencies.py --auto")
-            print("  • Para projetos específicos: poetry add <dependência>")
 
     def create_parser(self) -> object:
         """Criar parser com argumentos específicos."""

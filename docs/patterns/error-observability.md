@@ -255,7 +255,7 @@ import sys
 from contextlib import contextmanager
 from datetime import datetime
 
-class ConsoleLogger:
+class FlextConsole:
     """Simple console logger for development."""
 
     def _format_message(self, level: str, message: str, **context: Any) -> str:
@@ -281,11 +281,11 @@ class ConsoleLogger:
     def audit(self, message: str, **context: Any) -> None:
         print(self._format_message("AUDIT", message, **context))
 
-class MinimalObservability:
+class FlextObservability:
     """Minimal observability for development."""
 
     def __init__(self):
-        self._log = ConsoleLogger()
+        self._log = FlextConsole()
         # NoOp implementations for trace and metrics...
 
     @property
@@ -299,7 +299,7 @@ def get_observability() -> FlextObservabilityProtocol:
     """Get observability instance (singleton)."""
     global _observability_instance
     if _observability_instance is None:
-        _observability_instance = MinimalObservability()
+        _observability_instance = FlextObservability()
     return _observability_instance
 ```
 

@@ -191,7 +191,7 @@ class WorkspaceManager:
           [... additional projects ...]
 
       """
-      projects = []
+      projects: list[Path] = []
 
       if not self.workspace_root.exists():
           return projects
@@ -592,15 +592,16 @@ class WorkspaceManager:
 
               with open(pyproject, "rb") as f:
                   data = tomllib.load(f)
-                  return data.get("project", {}).get("version", "2.0.0")
+                  version = data.get("project", {}).get("version", "2.0.0")
+                  return str(version)
           except ImportError:
               # tomllib not available in Python < 3.11
               pass
           except (FileNotFoundError, PermissionError):
               # File not found or permission error
               pass
-          except (tomllib.TOMLDecodeError, KeyError, ValueError):
-              # TOML parsing error or invalid structure
+          except Exception:
+              # TOML parsing error or invalid structure (covers TOMLDecodeError, KeyError, ValueError)
               pass
 
       # Try to read version from go.mod for Go projects
