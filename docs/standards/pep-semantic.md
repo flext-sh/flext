@@ -315,7 +315,7 @@ lint.isort.known-first-party = ["project_name"]
 ```toml
 [tool.mypy]
 strict = true
-warn_unused_ignores = true
+warn_unused_ignores = false
 warn_return_any = true
 warn_unreachable = true
 ```

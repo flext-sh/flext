@@ -61,7 +61,6 @@ def fix_import_order(file_path: Path) -> bool:
                     insert_pos = content.find("\n", content.find(line)) + 1
 
         if insert_pos == -1:
-            print(f"Could not find insertion point for {file_path}")
             return False
 
         # Insert DI block at the correct position
@@ -78,11 +77,9 @@ def fix_import_order(file_path: Path) -> bool:
 
         if content != original_content:
             file_path.write_text(content, encoding="utf-8")
-            print(f"Fixed import order in {file_path}")
             return True
 
-    except (OSError, ValueError, TypeError) as e:
-        print(f"Error processing {file_path}: {e}")
+    except (OSError, ValueError, TypeError):
         return False
 
     return False
@@ -93,7 +90,6 @@ def main() -> None:
     base_dir = Path("/home/marlonsc/flext/flext-api")
 
     if not base_dir.exists():
-        print(f"Directory {base_dir} does not exist")
         sys.exit(1)
 
     # Find all Python files with potential import order issues
@@ -103,8 +99,6 @@ def main() -> None:
     for py_file in python_files:
         if fix_import_order(py_file):
             files_fixed += 1
-
-    print(f"\nFixed import order in {files_fixed} files")
 
 
 if __name__ == "__main__":

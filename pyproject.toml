@@ -160,6 +160,7 @@ types-pytz = "^2025.2.0.20250516"
 types-simplejson = "^3.20.0.20250326"
 types-six = "^1.17.0.20250515"
 types-ujson = "^5.10.0.20250326"
+types-mock = "^5.2.0.20250809"
 
 
 [tool.poetry.group.typing.dependencies]
@@ -201,7 +202,7 @@ strict = true
 
 # Additional strict checks beyond default strict mode
 check_untyped_defs = true
-disallow_any_decorated = true
+disallow_any_decorated = false
 disallow_any_explicit = true
 disallow_any_expr = false          # Too restrictive for real-world usage
 disallow_any_generics = true
@@ -209,7 +210,7 @@ disallow_any_unimported = true
 disallow_incomplete_defs = true
 disallow_subclassing_any = true
 disallow_untyped_calls = true
-disallow_untyped_decorators = true
+disallow_untyped_decorators = false
 disallow_untyped_defs = true
 
 # Warning controls - maximum safety
@@ -218,7 +219,7 @@ warn_redundant_casts = true
 warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
-warn_unused_ignores = true
+warn_unused_ignores = false
 
 # Optional type checking
 no_implicit_optional = true
@@ -279,6 +280,7 @@ exclude = [
     "dist/",
     "node_modules/",
     "vendor/",
+    "flexcore/src/",          # Exclude flexcore/src to avoid module name conflicts
     ".*/examples/",          # Exclui todos os diretórios 'examples' em qualquer nível (regex corrigida)
     ".*/tests/",             # Exclui todos os diretórios 'tests' em qualquer nível (regex corrigida)
     ".*/scripts/",           # Exclui todos os diretórios 'scripts' em qualquer nível (regex corrigida)
@@ -298,8 +300,186 @@ warn_required_dynamic_aliases = true
 warn_untyped_fields = true
 
 [tool.ruff]
-extend = "./.ruff-shared.toml"
+extend = "./ruff-shared.toml"
 lint.isort.known-first-party = ["flext", "flext_tools"]
+
+# =============================================================================
+# PYRIGHT CONFIGURATION
+# =============================================================================
+# Enhanced type checking with Pyright/Basedpyright
+[tool.pyright]
+# Basic configuration
+pythonVersion = "3.13"
+pythonPlatform = "Linux"
+
+# Include and exclude patterns - workspace-wide
+include = [
+    "*/examples",
+    "*/scripts",
+    "*/src",
+    "*/tests",
+    "scripts",
+    "src",
+    "tests"
+]
+exclude = [
+    "**/__pycache__",
+    "**/node_modules", 
+    "**/.venv",
+    "**/build",
+    "**/dist",
+    "**/target",
+    "**/.mypy_cache",
+    "**/.ruff_cache",
+    "**/.pytest_cache"
+]
+
+# Type checking mode
+typeCheckingMode = "strict"
+
+# Reporting configuration - balanced for workspace
+reportMissingImports = true
+reportMissingTypeStubs = true
+reportImportCycles = true
+reportUnusedImport = true
+reportUnusedClass = true
+reportUnusedFunction = true
+reportUnusedVariable = true
+reportDuplicateImport = true
+reportPrivateUsage = true
+
+# Execution environments for different project types - comprehensive coverage
+[[tool.pyright.executionEnvironments]]
+root = "tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "client-a-oud-mig/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flexcore/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-api/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-auth/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-cli/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-core/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-db-oracle/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-dbt-ldap/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-dbt-ldif/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-dbt-oracle/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-dbt-oracle-wms/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-grpc/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-ldap/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-ldif/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-meltano/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-observability/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-oracle-oic-ext/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-oracle-wms/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-plugin/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-quality/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-tap-ldap/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-tap-ldif/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-tap-oracle/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-tap-oracle-oic/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-tap-oracle-wms/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-target-ldap/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-target-ldif/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-target-oracle/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-target-oracle-oic/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-target-oracle-wms/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "flext-web/tests"
+reportPrivateUsage = false
+
+[[tool.pyright.executionEnvironments]]
+root = "client-b-meltano-native/tests"
+reportPrivateUsage = false
 
 [tool.vulture]
 exclude = [

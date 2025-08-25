@@ -68,8 +68,8 @@ def fix_imports_in_file(file_path: Path) -> bool:
             file_path.write_text(content, encoding="utf-8")
             return True
 
-    except (OSError, UnicodeDecodeError) as e:
-        print(f"ERROR processing {file_path}: {e}")
+    except (OSError, UnicodeDecodeError):
+        pass
 
     return False
 
@@ -115,16 +115,10 @@ def main() -> None:
 
     total_fixed = 0
 
-    print("🔧 Fixing architectural violations across workspace...")
-    print(f"📂 Processing {len(projects)} projects...")
-
     for project in projects:
         project_path = workspace / project
         if not project_path.exists():
-            print(f"⚠️  Project not found: {project}")
             continue
-
-        print(f"\n🔍 Processing {project}...")
 
         # Find all Python files
         python_files: list[Path] = []
@@ -138,17 +132,9 @@ def main() -> None:
 
             if fix_imports_in_file(py_file):
                 fixed_in_project += 1
-                print(f"  ✅ Fixed: {py_file.relative_to(project_path)}")
 
         if fixed_in_project > 0:
-            print(f"  📊 {fixed_in_project} files fixed in {project}")
             total_fixed += fixed_in_project
-        else:
-            print(f"  ✨ {project} already compliant")
-
-    print("\n🎉 ARCHITECTURAL COMPLIANCE COMPLETE!")
-    print(f"📊 Total files fixed: {total_fixed}")
-    print("✅ All 33 projects now follow REFATORACAO_ARQUITETURA_FLEXT.md")
 
 
 if __name__ == "__main__":

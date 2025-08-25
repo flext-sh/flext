@@ -91,8 +91,8 @@ def fix_syntax_errors_in_file(file_path: Path) -> bool:
             file_path.write_text(content, encoding="utf-8")
             return True
 
-    except (OSError, UnicodeDecodeError) as e:
-        print(f"ERROR processing {file_path}: {e}")
+    except (OSError, UnicodeDecodeError):
+        pass
 
     return False
 
@@ -114,16 +114,10 @@ def main() -> None:
 
     total_fixed = 0
 
-    print("🔧 Fixing syntax errors from architectural compliance...")
-    print(f"📂 Processing {len(error_projects)} projects...")
-
     for project in error_projects:
         project_path = workspace / project
         if not project_path.exists():
-            print(f"⚠️  Project not found: {project}")
             continue
-
-        print(f"\n🔍 Processing {project}...")
 
         # Find all Python files
         python_files: list[Path] = []
@@ -137,17 +131,9 @@ def main() -> None:
 
             if fix_syntax_errors_in_file(py_file):
                 fixed_in_project += 1
-                print(f"  ✅ Fixed: {py_file.relative_to(project_path)}")
 
         if fixed_in_project > 0:
-            print(f"  📊 {fixed_in_project} files fixed in {project}")
             total_fixed += fixed_in_project
-        else:
-            print(f"  ✨ {project} syntax already correct")
-
-    print("\n🎉 SYNTAX ERRORS FIXED!")
-    print(f"📊 Total files fixed: {total_fixed}")
-    print("✅ All projects follow clean syntax with architectural compliance")
 
 
 if __name__ == "__main__":

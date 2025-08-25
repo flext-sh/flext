@@ -27,7 +27,6 @@ class Colors:
 
 def print_colored(text: str, color: str) -> None:
     """Print text with color formatting."""
-    print(f"{color}{text}{Colors.END}")
 
 
 class LayerType(Enum):

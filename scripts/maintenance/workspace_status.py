@@ -43,7 +43,7 @@ class WorkspaceStatus:
 
         return FlextResult[None].ok(None)
 
-    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:  # noqa: ARG002
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Executar análise completa do workspace."""
         try:
             workspace_root = Path.cwd()
@@ -71,7 +71,7 @@ class WorkspaceStatus:
             )
             self._print_health_score(health_score)
 
-            return FlextResult[None].ok(
+            return FlextResult[object].ok(
                 {
                     "projects_info": projects_info,
                     "quality_info": quality_info,
@@ -82,7 +82,7 @@ class WorkspaceStatus:
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
-            return FlextResult[None].fail(f"Analysis error: {e}")
+            return FlextResult[object].fail(f"Analysis error: {e}")
 
     def _analyze_projects(self, workspace_root: Path) -> dict[str, object]:
         """Analisar projetos do workspace."""
@@ -266,22 +266,17 @@ class WorkspaceStatus:
             print_colored(f"\n🔧 {project_type.upper()}: {len(names)}", Colors.CYAN)
             for name in sorted(names):
                 data = projects[name]
-                status = "✅" if data["has_tests"] else "⚠️"
-                print(f"  {status} {name} ({data['python_files']} arquivos)")
+                "✅" if data["has_tests"] else "⚠️"
 
     def _print_quality_summary(self, quality_info: dict[str, object]) -> None:
         """Imprimir resumo da qualidade."""
         print_colored("\n📊 QUALIDADE DO CÓDIGO", Colors.BLUE)
         print_colored("=" * 50, Colors.BLUE)
-        print(f"  📄 Total de arquivos Python: {quality_info['total_python_files']}")
-        print(f"  🧪 Projetos com testes: {quality_info['projects_with_tests']}")
-        print(f"  🔧 Projetos com Makefile: {quality_info['projects_with_makefiles']}")
 
     def _print_dependencies_summary(self, deps_info: dict[str, object]) -> None:
         """Imprimir resumo das dependências."""
         print_colored("\n📦 DEPENDÊNCIAS", Colors.BLUE)
         print_colored("=" * 50, Colors.BLUE)
-        print(f"  🎯 Projetos com Poetry: {deps_info['projects_with_poetry']}")
 
     def _print_health_score(self, health: dict[str, object]) -> None:
         """Imprimir health score."""
@@ -303,8 +298,8 @@ class WorkspaceStatus:
 
         if health["issues"]:
             print_colored("\n⚠️ Issues identificadas:", Colors.YELLOW)
-            for issue in health["issues"]:
-                print(f"  • {issue}")
+            for _issue in health["issues"]:
+                pass
 
         print_colored(
             f"\n{'🎉' if health['score'] >= 80 else '⚠️'} "

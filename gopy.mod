@@ -1,6 +1,6 @@
 module github.com/flext-sh/flext/gopy
 
-go 1.21
+go 1.24
 
 replace github.com/flext-sh/flext => ./
 
