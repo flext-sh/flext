@@ -98,14 +98,14 @@ class OracleE2ETestRunner(FlextScript):
                     Colors.GREEN,
                 )
                 print_colored("📊 Test reports generated in .flext_logs/", Colors.CYAN)
-                return FlextResult[None].ok(None)
+                return FlextResult[object].ok(None)
             print_colored("❌ Oracle E2E tests failed", Colors.RED)
             print_colored("📋 Check logs in .flext_logs/ for details", Colors.YELLOW)
-            return FlextResult[None].fail("Oracle E2E tests failed")
+            return FlextResult[object].fail("Oracle E2E tests failed")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during E2E testing: {e}", Colors.RED)
-            return FlextResult[None].fail(f"Error during E2E testing: {e}")
+            return FlextResult[object].fail(f"Error during E2E testing: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""

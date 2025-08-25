@@ -64,8 +64,7 @@ class FlextConfigStandardizer:
                 return dict(
                     data,
                 )  # Convert to regular dict for better type compatibility
-        except (OSError, ValueError, TypeError) as e:
-            print(f"❌ Error loading {pyproject_file}: {e}")
+        except (OSError, ValueError, TypeError):
             return None
 
     def save_pyproject(self, project_path: Path, content: dict[str, object]) -> bool:
@@ -78,8 +77,7 @@ class FlextConfigStandardizer:
             with Path(pyproject_file).open("w", encoding="utf-8") as f:
                 tomlkit.dump(content, f)
             return True
-        except (OSError, ValueError, TypeError) as e:
-            print(f"❌ Error saving {pyproject_file}: {e}")
+        except (OSError, ValueError, TypeError):
             return False
 
     def standardize_ruff_config(
@@ -94,14 +92,12 @@ class FlextConfigStandardizer:
             config["tool"] = {}
         tool_config = config["tool"]
         if not isinstance(tool_config, dict):
-            print(f"  ⚠️  Warning: tool section must be a dict in {project_name}")
             return False
 
         if "ruff" not in tool_config:
             tool_config["ruff"] = {}
         ruff_config = tool_config["ruff"]
         if not isinstance(ruff_config, dict):
-            print(f"  ⚠️  Warning: ruff section must be a dict in {project_name}")
             return False
 
         # Get target line length for this project
@@ -112,9 +108,8 @@ class FlextConfigStandardizer:
 
         # Update line-length
         if ruff_config.get("line-length") != target_length:
-            old_length = ruff_config.get("line-length", "unset")
+            ruff_config.get("line-length", "unset")
             ruff_config["line-length"] = target_length
-            print(f"  📏 Updated line-length: {old_length} → {target_length}")
             changed = True
 
         # Ensure extend reference to shared config
@@ -123,7 +118,6 @@ class FlextConfigStandardizer:
             or ruff_config["extend"] != "../.ruff-shared.toml"
         ):
             ruff_config["extend"] = "../.ruff-shared.toml"
-            print("  🔗 Added reference to shared Ruff config")
             changed = True
 
         # Keep project-specific overrides
@@ -141,7 +135,6 @@ class FlextConfigStandardizer:
             for ignore in project_specific_ignores[project_name]:
                 if ignore not in ruff_config["lint"]["ignore"]:
                     ruff_config["lint"]["ignore"].append(ignore)
-                    print(f"  🎯 Added project-specific ignore: {ignore}")
                     changed = True
 
         return changed
@@ -158,21 +151,18 @@ class FlextConfigStandardizer:
             config["tool"] = {}
         tool_config = config["tool"]
         if not isinstance(tool_config, dict):
-            print(f"  ⚠️  Warning: tool section must be a dict in {project_name}")
             return False
 
         if "pytest" not in tool_config:
             tool_config["pytest"] = {}
         pytest_section = tool_config["pytest"]
         if not isinstance(pytest_section, dict):
-            print(f"  ⚠️  Warning: pytest section must be a dict in {project_name}")
             return False
 
         if "ini_options" not in pytest_section:
             pytest_section["ini_options"] = {}
         pytest_config = pytest_section["ini_options"]
         if not isinstance(pytest_config, dict):
-            print(f"  ⚠️  Warning: ini_options section must be a dict in {project_name}")
             return False
 
         # Get target coverage threshold
@@ -191,15 +181,11 @@ class FlextConfigStandardizer:
                         old_threshold = opt.split("=")[1]
                         if int(old_threshold) != target_coverage:
                             addopts[i] = f"--cov-fail-under={target_coverage}"
-                            print(
-                                f"  📊 Updated coverage threshold: {old_threshold}%% → {target_coverage}%%",
-                            )
                             changed = True
                         break
                 else:
                     # Add coverage threshold if not present
                     addopts.append(f"--cov-fail-under={target_coverage}")
-                    print(f"  ➕ Added coverage threshold: {target_coverage}")  # noqa: RUF001
                     changed = True
 
         # Add reference to shared pytest config
@@ -207,14 +193,13 @@ class FlextConfigStandardizer:
         # standards
         if "minversion" not in pytest_config or pytest_config["minversion"] != "8.0":
             pytest_config["minversion"] = "8.0"
-            print("  🔧 Standardized pytest minversion to 8.0")
             changed = True
 
         return changed
 
     def standardize_mypy_config(
         self,
-        project_name: str,  # noqa: ARG002
+        project_name: str,
         config: dict[str, object],
     ) -> bool:
         """Standardize MyPy configuration."""
@@ -224,26 +209,22 @@ class FlextConfigStandardizer:
             config["tool"] = {}
         tool_config = config["tool"]
         if not isinstance(tool_config, dict):
-            print("  ❌ tool section must be a dict")
             return False
 
         if "mypy" not in tool_config:
             tool_config["mypy"] = {}
         mypy_config = tool_config["mypy"]
         if not isinstance(mypy_config, dict):
-            print("  ❌ mypy section must be a dict")
             return False
 
         # Ensure strict mode is enabled
         if mypy_config.get("strict") is not True:
             mypy_config["strict"] = True
-            print("  🔒 Enabled MyPy strict mode")
             changed = True
 
         # Ensure Python 3.13
         if mypy_config.get("python_version") != "3.13":
             mypy_config["python_version"] = "3.13"
-            print("  🐍 Set Python version to 3.13")
             changed = True
 
         return changed
@@ -251,12 +232,10 @@ class FlextConfigStandardizer:
     def standardize_project(self, project_path: Path) -> bool:
         """Standardize a single project."""
         project_name = project_path.name
-        print(f"\n🔧 Standardizing: {project_name}")
 
         # Load current configuration
         config = self.load_pyproject(project_path)
         if not config:
-            print("  ❌ Could not load pyproject.toml")
             return False
 
         total_changes = 0
@@ -274,46 +253,30 @@ class FlextConfigStandardizer:
         # Save changes
         if total_changes > 0:
             if self.save_pyproject(project_path, config):
-                print(f"  ✅ Applied {total_changes} configuration changes")
                 self.changes_made += total_changes
                 return True
-            print("  ❌ Failed to save changes")
             return False
-        print("  ✨ Already up to date")
         return True
 
     def run_standardization(self, specific_project: str | None = None) -> bool:
         """Run standardization on all or specific project."""
-        print("🚀 FLEXT Workspace Configuration Standardization")
-        print("=" * 50)
-
         if self.dry_run:
-            print("🔍 DRY RUN MODE - No changes will be made")
+            pass
 
         projects = self.find_subprojects()
 
         if specific_project:
             projects = [p for p in projects if p.name == specific_project]
             if not projects:
-                print(f"❌ Project '{specific_project}' not found")
                 return False
-
-        print(f"📦 Found {len(projects)} projects to standardize")
 
         success_count = 0
         for project_path in projects:
             if self.standardize_project(project_path):
                 success_count += 1
 
-        print("\n📊 Standardization Results:")
-        print(f"  ✅ Successful: {success_count}/{len(projects)} projects")
-        print(f"  🔧 Total changes: {self.changes_made}")
-
         if not self.dry_run and self.changes_made > 0:
-            print("\n💡 Next steps:")
-            print("  1. Run: cd /home/marlonsc/flext && poetry install")
-            print("  2. Test: make validate-all-projects")
-            print("  3. Format: ruff format . --config .ruff-shared.toml")
+            pass
 
         return success_count == len(projects)
 
@@ -334,7 +297,6 @@ def main() -> None:
 
     workspace_root = Path("/home/marlonsc/flext")
     if not workspace_root.exists():
-        print(f"❌ Workspace root not found: {workspace_root}")
         sys.exit(1)
 
     standardizer = FlextConfigStandardizer(workspace_root, dry_run=args.dry_run)
@@ -343,10 +305,8 @@ def main() -> None:
         success = standardizer.run_standardization(args.project)
         sys.exit(0 if success else 1)
     except KeyboardInterrupt:
-        print("\n⏹️  Standardization cancelled by user")
         sys.exit(1)
-    except (OSError, ValueError, TypeError) as e:
-        print(f"❌ Unexpected error: {e}")
+    except (OSError, ValueError, TypeError):
         sys.exit(1)
 
 

@@ -20,26 +20,21 @@ from pathlib import Path
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from flext_meltano.adapter import FlextMeltanoCLIBridge
+from flext_meltano.executors_bridge import FlextMeltanoBridge
 
 
 def main() -> None:
     """Main CLI entry point."""
     if len(sys.argv) < 2:
-        print("Usage: python scripts/flext_meltano_bridge.py <command> [args...]")
-        print(
-            "Commands: version, list_plugins, run_pipeline, add_plugin, run_dbt, project_info, discover"
-        )
         sys.exit(1)
 
     command = sys.argv[1]
     args = sys.argv[2:]
 
-    bridge = FlextMeltanoCLIBridge()
-    result = bridge.handle_command(command, args)
+    bridge = FlextMeltanoBridge()
+    bridge.handle_command(command, args)
 
     # Output JSON result for Go consumption
-    print(result)
 
 
 if __name__ == "__main__":

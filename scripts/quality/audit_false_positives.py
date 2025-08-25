@@ -319,11 +319,11 @@ class FalsePositiveAuditor:
 
             print_colored(f"\n{category.upper()}: {count} ({percentage:.1f}%)", color)
 
-            for item in items[:5]:  # Mostra apenas primeiros 5
-                print(f"  • {item['import']} - {item['reason']}")
+            for _item in items[:5]:  # Mostra apenas primeiros 5
+                pass
 
             if len(items) > 5:
-                print(f"  ... e mais {len(items) - 5} items")
+                pass
 
         # Resumo crítico
         false_positives = (
@@ -492,9 +492,6 @@ def main() -> int:
     """Executa auditoria manual."""
     if len(sys.argv) > 1 and sys.argv[1] == "--help":
         print_colored("🔍 Auditoria de Falsos Positivos", Colors.BLUE)
-        print("\nEste script audita manualmente todas as dependências detectadas")
-        print("para identificar falsos positivos antes de permitir modificações reais.")
-        print("\nUso: python audit_false_positives.py")
         return 0
 
     _project_details, _global_analysis = audit_workspace()

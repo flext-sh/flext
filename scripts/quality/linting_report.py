@@ -156,13 +156,13 @@ class LintingReport(FlextScript):
             elif output_format == "html":
                 self._save_html_report(total_stats, project_results)
 
-            return FlextResult[None].ok(
+            return FlextResult[object].ok(
                 {"total_stats": total_stats, "project_results": project_results},
             )
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
-            return FlextResult[None].fail(f"Analysis error: {e}")
+            return FlextResult[object].fail(f"Analysis error: {e}")
 
     def _discover_projects(
         self,
@@ -269,10 +269,10 @@ class LintingReport(FlextScript):
 
     def _print_project_summary(
         self,
-        project_name: str,  # noqa: ARG002
+        project_name: str,
         stats: dict[str, object],
         *,
-        detailed: bool,  # noqa: ARG002
+        detailed: bool,
     ) -> None:
         """Imprimir resumo do projeto."""
         ruff_issues = stats["ruff_issues"]
@@ -294,8 +294,6 @@ class LintingReport(FlextScript):
                 f"  ⚠️ {stats['python_files']} arquivos, {total_issues} issues",
                 Colors.YELLOW,
             )
-            print(f"    • Ruff: {stats['ruff_issues']} issues")
-            print(f"    • MyPy: {stats['mypy_errors']} errors")
 
     def _print_detailed_issues(
         self,
@@ -305,39 +303,30 @@ class LintingReport(FlextScript):
         """Imprimir issues detalhadas."""
         if ruff_result["by_category"]:
             print_colored("    📋 Top Ruff Issues:", Colors.CYAN)
-            for category, count in sorted(
+            for _category, _count in sorted(
                 ruff_result["by_category"].items(),
                 key=operator.itemgetter(1),
                 reverse=True,
             )[:5]:
-                print(f"      • {category}: {count}")
+                pass
 
         if mypy_result["by_type"]:
             print_colored("    📋 Top MyPy Errors:", Colors.CYAN)
-            for error_type, count in sorted(
+            for _error_type, _count in sorted(
                 mypy_result["by_type"].items(),
                 key=operator.itemgetter(1),
                 reverse=True,
             )[:5]:
-                print(f"      • {error_type}: {count}")
+                pass
 
     def _print_final_summary(
         self,
         total_stats: dict[str, object],
-        project_results: dict[str, object],  # noqa: ARG002
+        project_results: dict[str, object],
     ) -> None:
         """Imprimir resumo final."""
         print_colored("\n📊 RESUMO FINAL DO LINTING", Colors.BLUE)
         print_colored("=" * 50, Colors.BLUE)
-
-        print(f"  📁 Projetos analisados: {total_stats['projects_analyzed']}")
-        print(f"  📄 Arquivos Python: {total_stats['total_files']}")
-        print(
-            "  ⚠️ Total de issues:"
-            f" {total_stats['ruff_issues'] + total_stats['mypy_errors']}",
-        )
-        print(f"    • Ruff: {total_stats['ruff_issues']} issues")
-        print(f"    • MyPy: {total_stats['mypy_errors']} errors")
 
         # Score de qualidade
         if total_stats["total_files"] > 0:

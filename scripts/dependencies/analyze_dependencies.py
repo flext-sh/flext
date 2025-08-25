@@ -30,14 +30,8 @@ def main() -> int:
     analysis = get_workspace_analysis()
 
     # Mostra estatísticas
-    stats = analysis["stats"]
+    analysis["stats"]
     print_colored("\n📈 Estatísticas Gerais:", Colors.BLUE)
-    print(f"  • Total de projetos: {analysis['total_projects']}")
-    print(f"  • Total de dependências: {stats['total_dependencies']}")
-    print(f"  • Pacotes únicos: {stats['unique_packages']}")
-    print(f"  • Pacotes com conflitos: {stats['packages_with_conflicts']}")
-    print(f"  • Pacotes bloqueadores: {stats['blocking_packages']}")
-    print(f"  • Projetos afetados: {stats['affected_projects']}")
 
     # Mostra conflitos de versão
     if analysis["version_conflicts"]:
@@ -57,16 +51,12 @@ def main() -> int:
         show_all = "--all" in sys.argv
         limit = len(conflicts_sorted) if show_all else min(10, len(conflicts_sorted))
 
-        for i, (package, conflict_data) in enumerate(conflicts_sorted[:limit]):
-            severity = conflict_data.get("severity", "medium")
-            icon = "🔴" if severity == "high" else "🟡"
-
-            print(f"\n  {icon} {i + 1}. {package}")
-            print(f"     Projetos afetados: {len(conflict_data['projects'])}")
+        for _i, (_package, conflict_data) in enumerate(conflicts_sorted[:limit]):
+            conflict_data.get("severity", "medium")
 
             # Mostra versões
-            for project, version in sorted(conflict_data["projects"].items()):
-                print(f"     • {project}: {version}")
+            for _project, _version in sorted(conflict_data["projects"].items()):
+                pass
 
     # Mostra bloqueadores
     if analysis["update_blockers"]:
@@ -80,28 +70,21 @@ def main() -> int:
         )
 
         # Top 10 bloqueadores
-        for i, (package, blocker_data) in enumerate(blockers_sorted[:10]):
-            print(f"\n  {i + 1}. {package}")
+        for _i, (_package, blocker_data) in enumerate(blockers_sorted[:10]):
 
             # Agrupa por constraint
-            for constraint, projects in blocker_data["constraints"].items():
-                print(
-                    f"     Constraint '{constraint}': {', '.join(projects[:3])}",
-                    end="",
-                )
+            for projects in blocker_data["constraints"].values():
                 if len(projects) > 3:
-                    print(f" e mais {len(projects) - 3}")
-                else:
-                    print()
+                    pass
 
     # Mostra resoluções sugeridas
     if analysis["suggested_resolutions"] and "--suggest" in sys.argv:
         print_colored("\n💡 Resoluções Sugeridas:", Colors.GREEN)
 
-        for package, suggestion in sorted(analysis["suggested_resolutions"].items())[
+        for _package, _suggestion in sorted(analysis["suggested_resolutions"].items())[
             :10
         ]:
-            print(f"  • {package}: {suggestion}")
+            pass
 
     # Gera relatório completo se solicitado
     if "--report" in sys.argv:
@@ -122,10 +105,6 @@ def main() -> int:
 
     # Dicas finais
     print_colored("\n💡 Dicas:", Colors.CYAN)
-    print("  • Use --all para ver todos os conflitos")
-    print("  • Use --suggest para ver resoluções sugeridas")
-    print("  • Use --report para gerar relatório completo")
-    print("  • Use -v para ver estatísticas de cache")
 
     return 0
 

@@ -21,7 +21,6 @@ def main() -> None:
     central_deps_file = workspace_root / ".flext-dev-dependencies.toml"
 
     if not central_deps_file.exists():
-        print(f"❌ Central dependencies file not found: {central_deps_file}")
         return
 
     # Load centralized dependencies
@@ -35,23 +34,17 @@ def main() -> None:
         if not str(f).startswith(str(workspace_root / ".venv"))
     ]
 
-    print(f"🔍 Found {len(pyproject_files)} projects to update")
-
     for pyproject_file in pyproject_files:
         project_name = pyproject_file.parent.name
 
         # Skip workspace root pyproject.toml
         if project_name == "flext":
-            print(f"⏭️  Skipping workspace root: {project_name}")
             continue
-
-        print(f"🔧 Processing project: {project_name}")
 
         # Load project pyproject.toml
         try:
             project_config = toml.load(pyproject_file)
-        except (OSError, ValueError, TypeError) as e:
-            print(f"❌ Failed to load {pyproject_file}: {e}")
+        except (OSError, ValueError, TypeError):
             continue
 
         # Update dependency groups following KISS principle
@@ -66,7 +59,6 @@ def main() -> None:
         ):
             if group_name.startswith("group."):
                 project_config["tool"]["poetry"][group_name] = group_deps
-                print(f"  ✅ Updated {group_name}")
 
         # Ensure dependency groups exist
         if "group.dev.dependencies" not in project_config["tool"]["poetry"]:
@@ -102,16 +94,8 @@ def main() -> None:
         try:
             with Path(pyproject_file).open("w", encoding="utf-8") as f:
                 toml.dump(project_config, f)
-            print(f"  💾 Saved {pyproject_file}")
-        except (OSError, ValueError, TypeError) as e:
-            print(f"❌ Failed to save {pyproject_file}: {e}")
-
-    print("\n🎉 Dependency consolidation completed following KISS principle!")
-    print("📋 Summary:")
-    print("  • Removed duplicate dependencies across projects")
-    print("  • Applied centralized dev/test/typings/security dependencies")
-    print("  • Preserved project-specific dependencies where needed")
-    print("  • Following FLEXT CLAUDE.md standards")
+        except (OSError, ValueError, TypeError):
+            pass
 
 
 if __name__ == "__main__":

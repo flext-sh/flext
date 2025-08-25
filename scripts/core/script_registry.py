@@ -341,21 +341,13 @@ def main() -> int:
     """Função principal para descobrir e listar scripts."""
     registry = ScriptRegistry()
 
-    print("📜 FLEXT Script Registry")
-    print("=" * 50)
-    print(f"Workspace: {registry.scripts_root}")
-    print(f"Scripts encontrados: {registry.get_scripts_count()}")
-    print()
-
     # Lista por categoria
     categories = registry.get_categories()
     for category in sorted(categories):
         scripts = registry.list_scripts(category=category)
         if scripts:
-            print(f"📁 {category.title()}: {len(scripts)} scripts")
-            for script in scripts:
-                print(f"  • {script.name} - {script.description}")
-            print()
+            for _script in scripts:
+                pass
 
     return 0
 

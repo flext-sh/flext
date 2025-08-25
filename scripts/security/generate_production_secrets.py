@@ -59,9 +59,9 @@ class ProductionSecretsGenerator(BaseSecurityScript):
 
                 # Display summary
                 print_colored("🔑 Generated secrets:", Colors.BLUE)
-                for secret_type, secret_value in secrets_result.items():
-                    if secret_type != "details":  # noqa: S105
-                        print(f"  • {secret_type}: {'*' * len(secret_value)}")
+                for secret_type in secrets_result:
+                    if secret_type != "details":
+                        pass
 
                 # Save to file if requested
                 if output_file:
@@ -74,21 +74,17 @@ class ProductionSecretsGenerator(BaseSecurityScript):
 
                 # Security reminders
                 print_colored("\n🛡️ Security Reminders:", Colors.YELLOW)
-                print("• Store vault password securely")
-                print("• Never commit secrets to version control")
-                print("• Rotate secrets regularly")
-                print("• Use different secrets per environment")
 
-                return FlextResult[None].ok(
+                return FlextResult[object].ok(
                     {"secrets_result": secrets_result, "environment": environment},
                 )
 
             print_colored("❌ Failed to generate production secrets", Colors.RED)
-            return FlextResult[None].fail("Failed to generate production secrets")
+            return FlextResult[object].fail("Failed to generate production secrets")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during secrets generation: {e}", Colors.RED)
-            return FlextResult[None].fail(f"Secrets generation error: {e}")
+            return FlextResult[object].fail(f"Secrets generation error: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
