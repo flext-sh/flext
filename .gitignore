@@ -1,7 +1,8 @@
 # ============================================================================
 # FLEXT WORKSPACE - ROOT .gitignore  
-# Multi-language monorepo: Python 3.13 | Go | dbt | Docker | Singer/Meltano
-# Professional standard for enterprise data platform development
+# Multi-language monorepo: Python 3.13+ | Go 1.21+ | Node.js | Docker | Singer/Meltano
+# Enterprise-grade hybrid development environment - 2024/2025 standards
+# Based on research: https://github.com/github/gitignore + modern toolchain practices
 # ============================================================================
 
 # ============================================================================
@@ -153,21 +154,31 @@ venv.bak/
 # PACKAGE MANAGERS AND DEPENDENCIES
 # ============================================================================
 
-# Poetry - keep only root lock file
-**/poetry.lock
-!/poetry.lock
+# Poetry - BEST PRACTICE: Keep poetry.lock for reproducible builds (2024/2025)
+# DO NOT ignore poetry.lock files - they ensure dependency consistency
+# poetry.lock files should be committed for reproducible builds
+poetry.toml
 
 # pip
 pip-wheel-metadata/
 
-# pipenv
+# pipenv (legacy support)
 Pipfile.lock
 
-# pdm
+# pdm (modern alternative)
+.pdm-python
+.pdm-build/
 pdm.lock
 .pdm.toml
 
-# PEP 582
+# uv (next-gen Python package installer - 2024)
+.uv/
+
+# pixi (modern conda alternative - 2024)
+.pixi/
+pixi.lock
+
+# PEP 582 (direct execution from __pypackages__)
 __pypackages__/
 
 # ============================================================================
@@ -260,7 +271,7 @@ $RECYCLE.BIN/
 .nfs*
 
 # ============================================================================
-# DEVELOPMENT TOOLS
+# DEVELOPMENT TOOLS AND QUALITY ASSURANCE (2024/2025)
 # ============================================================================
 
 # Type checkers
@@ -269,24 +280,53 @@ $RECYCLE.BIN/
 dmypy.json
 .pyre/
 .pytype/
+.pyright/
+pyrightconfig.json.bak
 
-# Linting and formatting
+# Modern Python linting and formatting (2024 stack)
 .ruff_cache/
-.black
+.black/
 .isort.cfg
+.flake8.cache
+.bandit/
 
-# Testing frameworks
+# Pre-commit hooks (essential for 2024 workflows)
+.pre-commit-config.yaml.backup
+pre-commit.log
+
+# Testing frameworks and coverage
 .pytest_cache/
+.coverage/
+.tox/
+.nox/
 
-# Documentation
+# Security scanning tools
+.bandit/
+.safety/
+.semgrep/
+
+# Performance profiling
+.prof/
+*.prof
+*.pprof
+
+# Documentation generators
 docs/_build/
 docs/build/
 _build/
 .sphinx/
 /site
+mkdocs_site/
+.mkdocs/
+
+# Code quality tools (2024)
+.qlty/
+.sourcery/
+.regal/
+.trunk/
 
 # ============================================================================
-# GO SPECIFIC
+# GO SPECIFIC (Go 1.24+ Modern Patterns)
 # ============================================================================
 
 # Go build artifacts
@@ -296,32 +336,85 @@ _build/
 *.so
 *.dylib
 
-# Go executables (no extension in root only)
+# Go executables (project-specific naming)
 /flext
+/flexcore
 */flext
+*/flexcore
+cmd/*/flext*
+cmd/*/flexcore*
 
-# Go test binary, built with `go test -c`
+# Go test artifacts
 *.test
+go.test.*
+*.bench
+*.mem
 
-# Go coverage
+# Go coverage and profiling
 *.out
+*.coverprofile
+profile.out
+coverage.out
+cpu.prof
+mem.prof
+trace.out
 
-# Go workspace file  
+# Go workspace files (Go 1.18+)
 go.work
 go.work.sum
 
-# Command binaries
-cmd/*/flext*
+# Go module cache and proxy
+go.sum.backup
+GOCACHE/
+GOMODCACHE/
+
+# Go build cache and temp files
+.go-build-cache/
+go-build*/
+.go/
+
+# Go generics and type inference artifacts (Go 1.20+)
+*.type
+
+# GoReleaser (modern Go release tool)
+.goreleaser/
+dist/
+
+# Air (live reloading for Go - 2024)
+.air/
+tmp/
+
+# Go toolchain and development tools (2024)
+.vscode/go/
+.golangci-cache/
+.govulncheck/
+.gosec/
+
+# Go static analysis tools
+.staticcheck/
+.golint/
+.goimports/
+
+# Delve debugger
+__debug_bin*
+
+# Command binaries - preserve source files only  
 cmd/*/*
 !cmd/*/Makefile
 !cmd/*/*.go
 !cmd/*/*.md
+!cmd/*/README*
+!cmd/*/Dockerfile
+
+# Build artifacts directory
+bin/
+build/
 
 # ============================================================================
-# NODE.JS SPECIFIC
+# NODE.JS AND MODERN FRONTEND (2024/2025)
 # ============================================================================
 
-# Node modules
+# Node modules and package managers
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -329,47 +422,109 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
-# Yarn
+# Modern package managers (2024)
+# pnpm
+.pnpm-store/
+.pnpm-debug.log*
+
+# Bun (fast JavaScript runtime - 2024)
+.bun/
+bun.lockb
+
+# Yarn modern (Yarn 3+)
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+.yarnrc.yml
 
 # npm
-.npm
+.npm/
 .npmrc
 
-# Coverage directory used by tools like istanbul
+# Coverage tools
 coverage/
 *.lcov
+.nyc_output/
 
-# Dependency directories
-jspm_packages/
+# Frontend frameworks and tools
+.next/
+.nuxt/
+.vercel/
+.svelte-kit/
+.turbo/
+.astro/
 
 # Build outputs
 dist/
 build/
 out/
-.next/
-.nuxt/
-.vercel/
+public/build/
+
+# Dependency directories
+jspm_packages/
 vendor/
 
+# TypeScript
+*.tsbuildinfo
+.tsconfig.tsbuildinfo
+
 # ============================================================================
-# DOCKER AND CONTAINERIZATION
+# DOCKER AND CONTAINERIZATION (2024/2025 Standards)
 # ============================================================================
 
-# Docker
+# Docker build context and cache
+.docker/
 .dockerignore
 docker-compose.override.yml
 internal.invalid.yml
+docker-compose.dev.yml
 *.tar.gz
 
-# Kubernetes secrets
+# Docker centralized directory - preserve structure but exclude artifacts  
+docker/logs/
+docker/data/
+docker/cache/
+docker/.build-cache/
+docker/volumes/
+
+# Docker BuildKit cache
+.buildx-cache/
+
+# Container images and exports
+*.tar
+*.tar.gz
+*.tar.xz
+
+# Docker Compose logs
+docker-compose.log
+
+# Kubernetes and container orchestration
 k8s-secrets.yaml
 *.secret.yaml
+kustomization.yaml.bak
+.kube/config
+
+# Helm charts
+.helm/
+
+# Container security scanning
+.trivy/
+.grype/
+
+# Local development containers
+.devcontainer/build-cache/
+
+# Podman (Docker alternative)
+.podman/
+
+# Skaffold (K8s dev tool)
+.skaffold/
+
+# Tilt (dev tool for Kubernetes - 2024)
+.tiltbuild/
 
 # ============================================================================
 # DATABASES
@@ -515,9 +670,20 @@ dbt_project.yml.jinja
 .ruff_cache/
 .pytest_cache/
 
-# Generated content
+# Generated content and build artifacts
 schemas/
 reference/
+
+# FLEXT build and runtime
+bin/flext*
+bin/flexcore*
+*/runtime-plugins/
+
+# Workspace temporary files  
+flext_plugin_violations.txt
+final_mypy_ecosystem_analysis.json
+pyright_scan_workspace.json
+check_flextresult_all.py
 
 # ============================================================================
 # PROJECT SPECIFIC PATTERNS

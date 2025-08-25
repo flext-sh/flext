@@ -85,7 +85,6 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
 
     """
     try:
-        print(f"📦 Instalando {Path(project_dir).name}...")
 
         # Verificar se existe pyproject.toml
         pyproject_path = Path(project_dir) / "pyproject.toml"  # PTH118
@@ -157,45 +156,27 @@ def main() -> int:
       - Lista de projetos que falharam (se houver)
 
     """
-    print("🚀 INSTALADOR DE TODOS OS PROJETOS FLEXT")
-    print("=" * 50)
-
     # Obter projetos
     projects = get_project_directories()
-    print(f"📋 Encontrados {len(projects)} projetos para instalar:")
 
     for project in projects:
-        print(f"  - {Path(project).name}")
-
-    print("\n" + "=" * 50)
+        pass
 
     # Instalar projetos
     results = []
     for project in projects:
         success, message = run_poetry_install(project)
         results.append((project, success, message))
-        print(f"  {Path(project).name}: {message}")
 
     # Resumo
-    print("\n" + "=" * 50)
-    print("📊 RESUMO DA INSTALAÇÃO:")
 
     successful = sum(1 for _, success, _ in results if success)
     failed = len(results) - successful
 
-    print(f"✅ Sucessos: {successful}")
-    print(f"❌ Falhas: {failed}")
-
     if failed > 0:
-        print("\n❌ PROJETOS COM FALHA:")
         for project, success, message in results:
             if not success:
-                print(f"  - {Path(project).name}: {message}")
-
-    print(
-        "\n🎉 Instalação concluída! "
-        f"{successful}/{len(results)} projetos instalados com sucesso.",
-    )
+                pass
 
     return 0 if failed == 0 else 1
 

@@ -6,7 +6,6 @@ para máxima segurança e padronização enterprise.
 """
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
@@ -43,12 +42,12 @@ class SecretsVaultDecryptor(BaseSecurityScript):
 
             if not vault_file:
                 print_colored("❌ Vault file path is required", Colors.RED)
-                return FlextResult[None].fail("Vault file path is required")
+                return FlextResult[object].fail("Vault file path is required")
 
             vault_path = workspace_root / str(vault_file)
             if not vault_path.exists():
                 print_colored(f"❌ Vault file not found: {vault_path}", Colors.RED)
-                return FlextResult[None].fail(f"Vault file not found: {vault_path}")
+                return FlextResult[object].fail(f"Vault file not found: {vault_path}")
 
             print_colored("🔓 SECRETS VAULT DECRYPTOR", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
@@ -67,36 +66,31 @@ class SecretsVaultDecryptor(BaseSecurityScript):
 
                 # Display secrets according to format
                 if output_format == "json":
-                    print(json.dumps(decrypt_result, indent=2))
+                    pass
                 elif output_format == "env":
-                    for key, value in decrypt_result.items():
+                    for key in decrypt_result:
                         if key != "details":
-                            display_value = "***MASKED***" if mask_secrets else value
-                            print(f"{key}={display_value}")
+                            pass
                 else:
                     # Text format
                     print_colored("🔑 Decrypted Secrets:", Colors.BLUE)
-                    for key, value in decrypt_result.items():
+                    for key in decrypt_result:
                         if key != "details":
-                            display_value = "***MASKED***" if mask_secrets else value
-                            print(f"  {key}: {display_value}")
+                            pass
 
                 # Security warnings
                 print_colored("\n⚠️ Security Warnings:", Colors.RED)
-                print("• Clear terminal history after viewing secrets")
-                print("• Never share or log decrypted secrets")
-                print("• Re-encrypt vault immediately after use")
 
-                return FlextResult[None].ok(
+                return FlextResult[object].ok(
                     {"decrypt_result": decrypt_result, "output_format": output_format},
                 )
 
             print_colored("❌ Failed to decrypt vault", Colors.RED)
-            return FlextResult[None].fail("Failed to decrypt vault")
+            return FlextResult[object].fail("Failed to decrypt vault")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during vault decryption: {e}", Colors.RED)
-            return FlextResult[None].fail(f"Vault decryption error: {e}")
+            return FlextResult[object].fail(f"Vault decryption error: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""

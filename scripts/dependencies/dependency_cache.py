@@ -55,8 +55,6 @@ class DependencyCacheManager(FlextScript):
             # Execute cache operation
             if operation == "status":
                 print_colored("📊 Cache Status:", Colors.BLUE)
-                print("  Cache management available")
-                print("  Use cache decorators for automatic caching")
 
             elif operation == "clear":
                 print_colored("🧹 Cache cleared", Colors.GREEN)
@@ -69,13 +67,13 @@ class DependencyCacheManager(FlextScript):
 
             else:
                 print_colored(f"❌ Unknown operation: {operation}", Colors.RED)
-                return FlextResult[None].fail(f"Unknown operation: {operation}")
+                return FlextResult[object].fail(f"Unknown operation: {operation}")
 
-            return FlextResult[None].ok({"operation": operation, "projects": projects})
+            return FlextResult[object].ok({"operation": operation, "projects": projects})
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during cache operation: {e}", Colors.RED)
-            return FlextResult[None].fail(f"Cache operation error: {e}")
+            return FlextResult[object].fail(f"Cache operation error: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
