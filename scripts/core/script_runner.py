@@ -59,7 +59,7 @@ class ScriptRunner(FlextScript):
 
                 if list_scripts:
                     self._list_all_scripts(registry)
-                    return FlextResult[None].ok({"action": "list_scripts"})
+                    return FlextResult[object].ok({"action": "list_scripts"})
 
                 if script_name:
                     # Pass script_name as positional and kwargs as keyword arguments
@@ -68,7 +68,7 @@ class ScriptRunner(FlextScript):
                         str(script_name),
                         **kwargs,
                     )  # Pass kwargs correctly
-                    return FlextResult[None].ok(
+                    return FlextResult[object].ok(
                         {
                             "action": "run_script",
                             "script_name": script_name,
@@ -80,15 +80,15 @@ class ScriptRunner(FlextScript):
                     "❌ No script specified. Use --list to see available scripts.",
                     Colors.RED,
                 )
-                return FlextResult[None].fail("No script specified")
+                return FlextResult[object].fail("No script specified")
 
             except ImportError as e:
                 print_colored(f"❌ Failed to import script registry: {e}", Colors.RED)
-                return FlextResult[None].fail(f"Failed to import script registry: {e}")
+                return FlextResult[object].fail(f"Failed to import script registry: {e}")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error in script runner: {e}", Colors.RED)
-            return FlextResult[None].fail(f"Script runner error: {e}")
+            return FlextResult[object].fail(f"Script runner error: {e}")
 
     def _list_all_scripts(self, registry: ScriptRegistry) -> None:  # Typed registry
         """List all available scripts."""
@@ -120,12 +120,11 @@ class ScriptRunner(FlextScript):
         for category, category_scripts in sorted(by_category.items()):
             print_colored(f"\n📁 {category.title()}:", Colors.CYAN)
             for script in sorted(category_scripts, key=lambda s: s.name):
-                priority = (
+                (
                     script.priority.value
                     if hasattr(script.priority, "value")
                     else str(script.priority)
                 )
-                print(f"  • {script.name} ({priority}) - {script.description}")
 
         print_colored(f"\n📊 Total: {len(scripts)} scripts", Colors.GREEN)
 

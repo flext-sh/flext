@@ -11,8 +11,8 @@ integration operations across Oracle, LDAP, WMS, and other enterprise systems.
 
 Key Components:
     - WorkspaceManager: Complete workspace lifecycle management
-    - PipelineManager: Data pipeline orchestration and monitoring
-    - FlextCLI: Command-line interface for all operations
+    - PipelineService: Data pipeline orchestration and monitoring
+    - BaseCLI: Command-line interface foundation
     - Development Tools: Quality gates, testing, and validation
 
 Architecture:
@@ -41,7 +41,6 @@ Example:
 Dependencies:
     - flext-core: Foundation patterns and error handling
     - flext-observability: Monitoring and metrics
-    - flext-tools: Development and operational tooling
 
 Author: FLEXT Development Team
 Version: 2.0.0
@@ -51,95 +50,43 @@ License: MIT
 
 from __future__ import annotations
 
-from typing import Any, Protocol
+# Import all from each module with proper type handling - FLEXT Pattern
+from flext.application_handlers import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
+from flext.application_pipeline import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
+from flext.base_cli import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
+from flext.cli import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
+from flext.cli_patterns import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
+from flext.dev import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
+from flext.services import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
+from flext.services_utils import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
+from flext.workspace import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
+from flext.workspace_cli import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
 
-# Import flext-core patterns - always available
-from flext_core import FlextResult
+# Combine all __all__ from all modules - FLEXT Pattern
+import flext.application_handlers as _application_handlers  # type: ignore[import-untyped]
+import flext.application_pipeline as _application_pipeline  # type: ignore[import-untyped]
+import flext.base_cli as _base_cli  # type: ignore[import-untyped]
+import flext.cli as _cli  # type: ignore[import-untyped]
+import flext.cli_patterns as _cli_patterns  # type: ignore[import-untyped]
+import flext.dev as _dev  # type: ignore[import-untyped]
+import flext.services as _services  # type: ignore[import-untyped]
+import flext.services_utils as _services_utils  # type: ignore[import-untyped]
+import flext.workspace as _workspace  # type: ignore[import-untyped]
+import flext.workspace_cli as _workspace_cli  # type: ignore[import-untyped]
 
+# Collect all exports from modules - FLEXT Pattern
+_collected_exports: list[str] = []
+for module in [_application_handlers, _application_pipeline, _base_cli, _cli, _cli_patterns, _dev, _services, _services_utils, _workspace, _workspace_cli]:
+    if hasattr(module, "__all__") and module.__all__:
+        module_all = getattr(module, "__all__", [])
+        if isinstance(module_all, list):
+            _collected_exports.extend(module_all)  # type: ignore[arg-type]
 
-class FlextWebAppProtocol(Protocol):
-    def run(self, host: str = "0.0.0.0", port: int = 5000) -> None: ...
-
-
-class FlextWebServiceProtocol(Protocol):
-    def start(self) -> FlextResult[None]: ...
-
-
-class FlextAuthProtocol(Protocol):
-    def authenticate(self, token: str) -> FlextResult[Any]: ...
+# Remove duplicates and sort - FLEXT Pattern
+__all__ = sorted(set(_collected_exports))  # type: ignore[reportUnsupportedDunderAll]
 
 __version__ = "2.0.0"
 __author__ = "FLEXT Development Team"
 __email__ = "team@flext.sh"
 __license__ = "MIT"
 __homepage__ = "https://github.com/flext-sh/flext"
-
-# Optional imports with graceful fallback - using flext-core patterns
-def _optional_import(module_name: str, item_name: str) -> Any:
-    """Import optional dependencies with graceful fallback."""
-    try:
-        module = __import__(module_name, fromlist=[item_name])
-        return getattr(module, item_name)
-    except ImportError:
-        return None
-
-# Web service imports (optional)
-create_web_service = _optional_import("flext_web", "create_service")
-create_web_app = _optional_import("flext_web", "create_app")
-FlextWebApp = _optional_import("flext_web", "FlextWebApp")
-FlextWebService = _optional_import("flext_web", "FlextWebService")
-
-# gRPC service imports (optional)
-FlextGrpcClientService = _optional_import("flext_grpc", "FlextGrpcClientService")
-FlextGrpcService = _optional_import("flext_grpc", "FlextGrpcService")
-create_grpc_service = _optional_import("flext_grpc", "create_service")
-
-# Auth service imports (optional)
-FlextAuth = _optional_import("flext_auth", "FlextAuth")
-FlextAuthService = _optional_import("flext_auth", "FlextAuthService")
-create_auth_service = _optional_import("flext_auth", "create_auth_service")
-
-# CLI integration (optional)
-CLIHelper = _optional_import("flext_cli.core.helpers", "CLIHelper")
-setup_cli = _optional_import("flext_cli.simple_api", "setup_cli")
-
-# Core workspace management (always available)
-class WorkspaceManager:
-    """FLEXT workspace management using flext-core patterns."""
-    
-    def __init__(self, workspace_path: str) -> None:
-        self.workspace_path = workspace_path
-    
-    def validate_all_projects(self) -> FlextResult[list[str]]:
-        """Validate all projects in workspace."""
-        # This would contain actual validation logic
-        project_list: list[str] = ["flext-core", "flext-api", "flext-auth"]
-        return FlextResult[list[str]].ok(project_list)
-
-# Note: Import optimization to avoid circular dependencies
-# Public API exports optimized for performance and maintainability
-
-__all__: list[str] = [
-    "__author__",
-    "__license__",
-    "__version__",
-    # Core patterns
-    "FlextResult",
-    "WorkspaceManager",
-    # Web (optional)
-    "create_web_service",
-    "create_web_app",
-    "FlextWebApp", 
-    "FlextWebService",
-    # gRPC (optional)
-    "FlextGrpcClientService",
-    "FlextGrpcService",
-    "create_grpc_service",
-    # Auth (optional)
-    "FlextAuth",
-    "FlextAuthService",
-    "create_auth_service",
-    # CLI (optional)
-    "CLIHelper",
-    "setup_cli",
-]

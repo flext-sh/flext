@@ -227,7 +227,7 @@ class PatternViolationAnalyzer:
         """Analyze pattern compliance for a single project."""
         try:
             if not project_path.exists():
-                return FlextResult[None].fail(
+                return FlextResult[ProjectAuditResult].fail(
                     f"Project path does not exist: {project_path}"
                 )
 
@@ -248,7 +248,7 @@ class PatternViolationAnalyzer:
                     total_files_analyzed=0,
                 )
                 result.calculate_compliance_metrics()
-                return FlextResult[None].ok(result)
+                return FlextResult[ProjectAuditResult].ok(result)
 
             violations = []
             for python_file in python_files:
@@ -269,11 +269,11 @@ class PatternViolationAnalyzer:
             self.logger.info(
                 f"Analyzed {project_path.name}: {len(violations)} violations found",
             )
-            return FlextResult[None].ok(result)
+            return FlextResult[ProjectAuditResult].ok(result)
 
         except Exception as e:
             self.logger.exception(f"Error analyzing project {project_path.name}")
-            return FlextResult[None].fail(f"Analysis failed: {e}")
+            return FlextResult[ProjectAuditResult].fail(f"Analysis failed: {e}")
 
     def _analyze_file_patterns(
         self,
@@ -310,18 +310,18 @@ class PatternViolationAnalyzer:
             )
             violations.extend(text_violations)
 
-            return FlextResult[None].ok(violations)
+            return FlextResult[list[PatternViolation]].ok(violations)
 
         except Exception as e:
             self.logger.debug(f"Error analyzing file {file_path}: {e}")
-            return FlextResult[None].ok([])  # Return empty list on file errors
+            return FlextResult[list[PatternViolation]].ok([])  # Return empty list on file errors
 
     def _analyze_ast_patterns(
         self,
         tree: ast.AST,
         file_path: Path,
         lines: list[str],
-        project_name: str,  # noqa: ARG002
+        project_name: str,
     ) -> list[PatternViolation]:
         """Analyze AST for structural pattern violations."""
         violations = []
@@ -384,7 +384,7 @@ class PatternViolationAnalyzer:
         self,
         file_path: Path,
         lines: list[str],
-        project_name: str,  # noqa: ARG002
+        project_name: str,
     ) -> list[PatternViolation]:
         """Analyze text patterns for violations."""
         violations = []
@@ -471,35 +471,18 @@ class PatternAuditSystem:
     def run_audit(self) -> bool:
         """Execute comprehensive pattern audit across ecosystem."""
         try:
-            print("Starting FLEXT ecosystem pattern compliance audit")
-
             # Audit ecosystem compliance
             audit_result = self.audit_ecosystem_compliance(self.workspace_path)
             if not audit_result.success:
-                print(f"Audit failed: {audit_result.error}")
                 return False
 
             ecosystem_result = audit_result.data
 
             # Generate comprehensive report
             report_result = self.generate_compliance_report(ecosystem_result)
-            if not report_result.success:
-                print(f"Report generation failed: {report_result.error}")
-                return False
+            return report_result.success
 
-            report_path = report_result.data
-            print("Pattern audit completed successfully")
-            print(f"Compliance report: {report_path}")
-            print(
-                f"Ecosystem compliance score: {ecosystem_result.ecosystem_compliance_score:.1f}%",
-            )
-            print(f"Total violations: {ecosystem_result.total_violations_count}")
-            print(f"Critical violations: {ecosystem_result.critical_violations_count}")
-
-            return True
-
-        except Exception as e:
-            print(f"Pattern audit execution failed: {e}")
+        except Exception:
             return False
 
     def audit_ecosystem_compliance(
@@ -569,10 +552,10 @@ class PatternAuditSystem:
             )
             ecosystem_result.calculate_ecosystem_metrics()
 
-            return FlextResult[None].ok(ecosystem_result)
+            return FlextResult[EcosystemAuditResult].ok(ecosystem_result)
 
         except Exception as e:
-            return FlextResult[None].fail(f"Ecosystem audit failed: {e}")
+            return FlextResult[EcosystemAuditResult].fail(f"Ecosystem audit failed: {e}")
 
     def generate_compliance_report(
         self,
@@ -642,10 +625,10 @@ class PatternAuditSystem:
             with Path(report_path).open("w", encoding="utf-8") as f:
                 json.dump(report_data, f, indent=2, ensure_ascii=False)
 
-            return FlextResult[None].ok(report_path)
+            return FlextResult[Path].ok(report_path)
 
         except Exception as e:
-            return FlextResult[None].fail(f"Report generation failed: {e}")
+            return FlextResult[Path].fail(f"Report generation failed: {e}")
 
     def _generate_remediation_recommendations(
         self,
@@ -705,15 +688,7 @@ def main() -> None:
             project_path = audit_system.workspace_path / args.project
         result = audit_system.analyzer.analyze_project_compliance(project_path)
         if result.success:
-            project_result = result.data
-            print(f"Project: {args.project}")
-            print(f"Compliance Score: {project_result.compliance_score:.1f}%")
-            print(f"Total Violations: {len(project_result.violations)}")
-            print(
-                f"Critical: {project_result.critical_count}, High: {project_result.high_count}",
-            )
-        else:
-            print(f"Audit failed: {result.error}")
+            pass
     else:
         # Full ecosystem audit
         success = audit_system.run_audit()

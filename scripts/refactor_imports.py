@@ -342,8 +342,6 @@ def main() -> None:
         if not target_files:
             continue
 
-        print(f"\n🔧 Refatorando {pkg.project_dir.name} ({pkg.package_name})...")
-
         # 1) Coletar reexports necessários
         export_requests: dict[str, ExportRequest] = {}
         for py_file in target_files:
@@ -363,9 +361,6 @@ def main() -> None:
             list(export_requests.values()),
         ):
             total_init_changed += 1
-            print(
-                f"  🧩 Atualizado reexports em {pkg.init_file.relative_to(workspace)}",
-            )
 
         # 3) Reescrever arquivos alvo
         project_changed = 0
@@ -374,12 +369,8 @@ def main() -> None:
             if rewrite_file_imports(py_file, pkg.package_name):
                 total_changed += 1
                 project_changed += 1
-                print(f"  ✅ {py_file.relative_to(workspace)}")
-
-        print(f"  📊 Arquivos alterados: {project_changed}/{len(target_files)}")
 
     # 4) Passada global para TYPE_CHECKING em TODOS os .py
-    print("\n🧹 Promovendo imports de TYPE_CHECKING em todos os arquivos Python...")
     all_py_files = [
         p
         for p in workspace.glob("**/*.py")
@@ -393,13 +384,6 @@ def main() -> None:
     for py_file in all_py_files:
         if rewrite_type_checking_only(py_file):
             global_changed += 1
-
-    print("\n🎉 REFATORAÇÃO COMPLETA!")
-    print(f"📦 __init__ atualizados: {total_init_changed}")
-    print(
-        f"📊 Arquivos refatorados (imports/tests/examples/scripts): {total_changed}/{total_files}",
-    )
-    print(f"🧩 Arquivos com TYPE_CHECKING promovido (global): {global_changed}")
 
 
 if __name__ == "__main__":

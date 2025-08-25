@@ -1,174 +1,140 @@
-"""FLEXT Tools - Enterprise Development and Operations Toolkit.
+"""FLEXT Workspace - Main Package Initialization.
 
-Comprehensive modular toolkit for FLEXT ecosystem development operations,
-providing enterprise-grade dependency management, code analysis, quality
-validation, and operational tooling across all 32 FLEXT projects with
-consistent patterns and architectural excellence.
+Provides unified access to all FLEXT workspace utilities and tools following
+flattened directory structure and proper PEP8 module naming conventions.
 
-This toolkit implements Clean Architecture and Domain-Driven Design patterns
-to provide maintainable, testable, and extensible development operations
-infrastructure. Each module focuses on specific operational concerns while
-maintaining clear boundaries and consistent integration patterns.
-
-Core Modules:
-    - analysis: Dependency conflict detection and version management
-    - cache: High-performance caching infrastructure with decorators
-    - config: Configuration management and validation
-    - core: Base framework patterns and script infrastructure
-    - discovery: Project and dependency discovery with transitive analysis
-    - documentation: Documentation generation with Jinja2 templates and MkDocs
-    - infrastructure: Monitoring, SSL management, and system operations
-    - monitoring: Health checks and system monitoring
-    - poetry: Poetry operations and dependency validation
-    - quality: Code quality gates and automated enforcement
-    - safety: Backup, rollback, and safety validation systems
-    - security: Secret management and security tooling
-    - testing: Testing infrastructure and E2E validation
-    - utils: Shared utilities for logging, colors, paths, and stdlib
+This module serves as the main entry point for the FLEXT workspace toolkit,
+exposing utilities for code analysis, quality management, project tooling,
+and development infrastructure in a clean, organized interface.
 
 Architecture:
-    Implements Clean Architecture with clear separation between:
-    - Domain Layer: Core business logic and entities
-    - Application Layer: Use cases and orchestration services
-    - Infrastructure Layer: External integrations and technical concerns
-    - Interface Layer: CLI interfaces and external APIs
-
-Integration:
-    - Built on flext-core foundation patterns (FlextResult, FlextContainer)
-    - Integrates with flext-observability for monitoring and metrics
-    - Coordinates with WorkspaceManager for project operations
-    - Provides CLI integration through development commands
-    - Supports quality gate enforcement across ecosystem
+    Following FLEXT ecosystem patterns with flext-core integration,
+    this module aggregates functionality from specialized modules:
+    - Analysis tools (conflicts, duplicates, version management)
+    - Configuration management and discovery utilities
+    - Code quality and safety tooling
+    - Infrastructure and monitoring capabilities
+    - Poetry and dependency management
+    - Security scanning and testing utilities
 
 Example:
-    Basic toolkit usage:
+    Basic usage of workspace utilities:
 
-    >>> from flext_tools import ConflictAnalyzer, CacheManager, get_logger
-    >>> from flext_tools.quality import QualityGateway
-    >>> from flext_tools.documentation import DocumentationGenerator
+    >>> from src.duplicates import CodeDuplicateAnalyzer
+    >>> from src.quality_gateway import QualityGateway
+    >>> from src.colors import Colors, print_colored
     >>>
-    >>> # Analyze dependency conflicts
-    >>> analyzer = ConflictAnalyzer("/path/to/workspace")
-    >>> conflicts = analyzer.analyze_all_projects()
+    >>> # Analyze code duplications
+    >>> analyzer = CodeDuplicateAnalyzer()
+    >>> result = analyzer.analyze_duplicates()
     >>>
-    >>> # Use caching for performance
-    >>> cache = CacheManager()
-    >>> @cache.cached(ttl=3600)
-    >>> def expensive_operation():
-    ...     return "cached result"
-    >>>
-    >>> # Enforce quality gates
+    >>> # Run quality gates
     >>> gateway = QualityGateway()
-    >>> result = gateway.validate_all_projects()
+    >>> quality_result = gateway.validate_all()
     >>>
-    >>> # Generate documentation
-    >>> doc_gen = DocumentationGenerator("/path/to/workspace")
-    >>> doc_result = doc_gen.generate_complete_documentation()
+    >>> # Colored output
+    >>> print_colored("Quality check complete!", Colors.GREEN)
 
-Quality Standards:
-    - 100% type annotation coverage across all modules
-    - Comprehensive docstring coverage with examples
-    - Enterprise-grade error handling with FlextResult patterns
-    - Security-focused implementation with proper validation
-    - Performance optimization with intelligent caching
-    - Comprehensive testing with unit, integration, and E2E coverage
-
-Author: FLEXT Development Team
-Version: 2.0.0
-License: MIT
+Integration:
+    - Built on flext-core patterns for consistent error handling
+    - Integrates with FLEXT ecosystem quality standards
+    - Follows railway-oriented programming with FlextResult
+    - Supports enterprise-grade configuration and monitoring
 
 """
 
-__version__ = "2.0.0"
-__version_info__ = tuple(int(x) for x in __version__.split(".") if x.isdigit())
+from __future__ import annotations
 
-# Core patterns integration
-from flext_core import FlextContainer, get_flext_container
+# Main CLI and workspace tools
+from .cli import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .dev import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .workspace import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
 
-# Exporta módulos principais
-from flext_tools.analysis import ConflictAnalyzer, VersionAnalyzer
+# CLI patterns and base classes
+from .base_cli import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
 
-# Cache module removed - not implemented yet
-from flext_tools.discovery import DependencyDiscovery
-from flext_tools.documentation import DocumentationGenerator, TemplateManager
-from flext_tools.poetry import PoetryOperations, PoetryValidator
-from flext_tools.safety import BackupManager, RollbackManager, SafetyValidator
-from flext_tools.utils import (
-    Colors,
-    DetailedLogger,
-    get_logger,
-    get_stdlib_modules,
-    print_colored,
-    should_ignore_path,
-)
-from flext_tools.core.script_base import FlextScript, ScriptMetadata
-from flext_tools.infrastructure import MonitoringManager, SSLManager
-from flext_tools.quality.mypy_checker import MyPyChecker
+# Services and application layer
+from .handlers import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .pipeline import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
 
+# Workspace CLI
+from .workspace_cli import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
 
-def get_flext_tools_container() -> FlextContainer:
-    """Get or create the FlextTools service container."""
-    container = get_flext_container()
+# Analysis tools
+from .conflicts import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .duplicates import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .lock_consistency import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .version import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
 
-    # Register core services
-    try:
-        container.get("conflict_analyzer")
-    except KeyError:
-        container.register("conflict_analyzer", ConflictAnalyzer)
+# Configuration management
+from .config_manager import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
 
-    # Cache module removed - not implemented yet
+# Core utilities and script base
+from .script_base import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
 
-    try:
-        container.get("dependency_discovery")
-    except KeyError:
-        container.register("dependency_discovery", DependencyDiscovery)
+# Discovery utilities
+from .discovery_base import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .discovery_config import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .discovery_python import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .discovery_transitive import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
 
-    try:
-        container.get("documentation_generator")
-    except KeyError:
-        container.register("documentation_generator", DocumentationGenerator)
+# Documentation generators
+from .documentation_generator import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .documentation_templates import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
 
-    try:
-        container.get("poetry_operations")
-    except KeyError:
-        container.register("poetry_operations", PoetryOperations)
+# Infrastructure management
+from .monitoring_manager import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .ssl_manager import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
 
-    try:
-        container.get("safety_validator")
-    except KeyError:
-        container.register("safety_validator", SafetyValidator)
+# Monitoring and health checks
+from .health_check import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
 
-    return container
+# Poetry operations and validation
+from .poetry_operations import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .poetry_validator import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
 
+# Quality management
+from .quality_bridge import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .quality_gateway import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .lint_fixer import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .mypy_checker import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
 
-__all__: list[str] = [
-    "BackupManager",
-    # "CacheManager",  # Cache module removed
-    "Colors",
-    "ConflictAnalyzer",
-    "DependencyDiscovery",
-    "DetailedLogger",
-    "DocumentationGenerator",
-    "FlextScript",
-    "FlextContainer",
-    "MonitoringManager",
-    "ScriptMetadata",
-    "SSLManager",
-    "PoetryOperations",
-    "PoetryValidator",
-    "RollbackManager",
-    "SafetyValidator",
-    "TemplateManager",
-    "VersionAnalyzer",
-    "__version__",
-    "__version_info__",
-    # "cache_result",  # Cache module removed
-    # "cached",        # Cache module removed
-    "get_flext_container",
-    "get_flext_tools_container",
-    "get_logger",
-    "get_stdlib_modules",
-    "MyPyChecker",
-    "print_colored",
-    "should_ignore_path",
-]
+# Safety and backup tools
+from .backup import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .rollback import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .safety_validator import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .venv_consistency import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+
+# Security scanning
+from .antipattern_scanner import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+
+# Testing utilities
+from .oracle_e2e import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+
+# Utility functions
+from .colors import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .observability import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .paths import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+from .stdlib import *  # type: ignore[misc,unused-ignore,reportWildcardImport,assignment] # noqa: F403
+
+# Build __all__ list from all imported modules
+import sys
+from types import ModuleType
+
+__all__: list[str] = []
+
+# Collect exports from all imported modules
+for name, obj in sys.modules.items():
+    if (
+        name.startswith("flext_")
+        and isinstance(obj, ModuleType)
+        and hasattr(obj, "__all__")
+        and obj.__all__
+    ):
+        __all__ += obj.__all__
+
+# Remove duplicates and sort - explicit list for MyPy
+__all__ = sorted(set(__all__))
+
+# Clean up temporary variables
+del sys, ModuleType, name, obj

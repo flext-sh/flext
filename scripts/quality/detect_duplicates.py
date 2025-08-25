@@ -652,8 +652,6 @@ class FlextDuplicateDetector:
         """Cria assinaturas avançadas para detecção ultra-rápida."""
         signatures = {}
 
-        print(f"🔄 Processando {len(files_content)} arquivos para assinaturas...")
-
         # Use multiprocessing para acelerar a criação de assinaturas
         with ProcessPoolExecutor(max_workers=mp.cpu_count()) as executor:
             future_to_file = {
@@ -670,8 +668,8 @@ class FlextDuplicateDetector:
                     result = future.result()
                     if result:
                         signatures[file_path] = result
-                except (OSError, ValueError, TypeError) as e:
-                    print(f"⚠️ Erro processando {file_path}: {e}")
+                except (OSError, ValueError, TypeError):
+                    pass
 
         return signatures
 
@@ -746,11 +744,6 @@ class FlextDuplicateDetector:
         # Pre-filter: só comparar arquivos com overlap mínimo de n-grams
         candidate_pairs = self._find_candidate_pairs(signatures)
 
-        print(
-            f"🔍 Comparando {len(candidate_pairs)} pares candidatos"
-            f" (filtrados de {len(files_content)}²)",
-        )
-
         # Comparar apenas pares candidatos
         for file1, file2 in candidate_pairs:
             if file1 not in file_blocks or file2 not in file_blocks:
@@ -789,7 +782,6 @@ class FlextDuplicateDetector:
         candidates = []
         file_paths = list(signatures.keys())
 
-        print(f"🚀 Filtrando candidatos com MinHash para {len(file_paths)} arquivos...")
         start_time = time.time()
 
         # Pre-filtro ultra rápido com MinHash
@@ -806,8 +798,7 @@ class FlextDuplicateDetector:
                 if minhash_sim >= self.similarity_threshold * 0.6:
                     candidates.append((file1, file2))
 
-        elapsed = time.time() - start_time
-        print(f"⚡ MinHash filtering: {len(candidates)} candidatos em {elapsed:.2f}s")
+        time.time() - start_time
 
         return candidates
 
@@ -817,8 +808,6 @@ class FlextDuplicateDetector:
     ) -> list[AntiPatternMatch]:
         """Detecta anti-patterns que deveriam usar bibliotecas base do FLEXT."""
         anti_patterns = []
-
-        print("🔍 Detectando anti-patterns FLEXT...")
 
         for file_path, content in files_content.items():
             # Pular arquivos que não são Python
@@ -1243,10 +1232,6 @@ class FlextDuplicateDetector:
         for i in range(0, len(all_candidates), batch_size):
             batch_candidates = all_candidates[i : i + batch_size]
 
-            print(
-                f"📦 Processando lote {i // batch_size + 1}/{(len(all_candidates) + batch_size - 1) // batch_size} ({len(batch_candidates)} pares)...",
-            )
-
             # Processar apenas os candidates deste batch
             batch_files = set()
             for file1, file2 in batch_candidates:
@@ -1316,17 +1301,9 @@ class FlextDuplicateDetector:
                             file_size = file.stat().st_size
 
                             if file_size > max_file_size:
-                                print(
-                                    f"⚠️ Pulando arquivo muito grande: {file_str} "
-                                    f"({file_size // 1024}KB)",
-                                )
                                 continue
 
                             if total_size + file_size > max_total_size:
-                                print(
-                                    "⚠️ Limite de memória atingido, "
-                                    "processando em lotes...",
-                                )
                                 break
 
                             with file.open(
@@ -1365,17 +1342,10 @@ class FlextDuplicateDetector:
 
                         # Skip files that are too large
                         if file_size > max_file_size:
-                            print(
-                                f"⚠️ Pulando arquivo muito grande: {file_path} "
-                                f"({file_size // 1024}KB)",
-                            )
                             continue
 
                         # Check total memory usage
                         if total_size + file_size > max_total_size:
-                            print(
-                                "⚠️ Limite de memória atingido, processando em lotes...",
-                            )
                             break
 
                         # Read file efficiently
@@ -1398,10 +1368,6 @@ class FlextDuplicateDetector:
                     except (OSError, ValueError, TypeError) as e:
                         errors.append(f"Erro ao ler {file_path}: {e}")
 
-        print(
-            f"📁 Coletados {len(files_content)} arquivos "
-            f"({total_size // 1024 // 1024}MB)",
-        )
         return files_content
 
     def _read_file_chunked(self, file_path: str) -> str:
@@ -1420,27 +1386,19 @@ class FlextDuplicateDetector:
 
     def analyze_workspace(self) -> AnalysisResult:
         """Analisa todo o workspace para duplicações."""
-        print("🔍 Analisando workspace Flext para código duplicado...")
-
         # Filtrar módulos existentes
         existing_modules = [m for m in self.flext_modules if Path(m).exists()]
 
         if not existing_modules:
             return AnalysisResult([], [], 0, 0, ["Nenhum módulo encontrado"])
 
-        print(f"📦 Analisando {len(existing_modules)} módulos...")
-
         # Coletar arquivos
         files_content = self._collect_files(existing_modules)
         if not files_content:
             return AnalysisResult([], [], 0, 0, ["Nenhum arquivo válido encontrado"])
 
-        print(f"📄 Analisando {len(files_content)} arquivos...")
-
         # Criar assinaturas para otimização
-        print("🔄 Criando assinaturas de arquivos...")
         signatures = self._create_file_signatures(files_content)
-        print(f"✅ {len(signatures)} assinaturas criadas")
 
         # Encontrar duplicações
         duplicates = []
@@ -1448,11 +1406,9 @@ class FlextDuplicateDetector:
         # 1. Duplicatas exatas
         exact_duplicates = self._find_exact_duplicates(signatures, files_content)
         duplicates.extend(exact_duplicates)
-        print(f"🔍 Encontradas {len(exact_duplicates)} duplicações exatas")
 
         # 2. Blocos similares (sempre usar versão otimizada)
         if len(files_content) > 20:
-            print("⚡ Processando similaridade em lotes ultra-otimizados...")
             similar_blocks = self._find_similar_blocks_batched(
                 signatures,
                 files_content,
@@ -1460,11 +1416,9 @@ class FlextDuplicateDetector:
         else:
             similar_blocks = self._find_similar_blocks(signatures, files_content)
         duplicates.extend(similar_blocks)
-        print(f"🔍 Encontrados {len(similar_blocks)} blocos similares")
 
         # 3. Anti-patterns FLEXT
         anti_patterns = self._detect_flext_anti_patterns(files_content)
-        print(f"🚨 Encontrados {len(anti_patterns)} anti-patterns FLEXT")
 
         return AnalysisResult(
             duplicates=duplicates,
@@ -1476,8 +1430,6 @@ class FlextDuplicateDetector:
 
     def analyze_modules(self, modules: list[str]) -> AnalysisResult:
         """Analisa módulos específicos."""
-        print(f"🔍 Analisando módulos: {', '.join(modules)}")
-
         files_content = self._collect_files(modules)
         if not files_content:
             return AnalysisResult([], [], 0, 0, ["Nenhum arquivo encontrado"])
@@ -1506,28 +1458,13 @@ class FlextDuplicateDetector:
         output_file: str | None = None,
     ) -> None:
         """Gera relatório detalhado."""
-        print("\n" + "=" * 80)
-        print("📊 RELATÓRIO DE CÓDIGO DUPLICADO - FLEXT WORKSPACE")
-        print("=" * 80)
-
-        print("📈 ESTATÍSTICAS:")
-        print(f"   📁 Arquivos analisados: {result.analyzed_files}")
-        print(f"   🔍 Total de duplicações: {len(result.duplicates)}")
-        print(f"   🚨 Total de anti-patterns: {len(result.anti_patterns)}")
-
         if not result.duplicates and not result.anti_patterns:
-            print("✅ Nenhuma duplicação ou anti-pattern encontrado!")
-            print("🎉 O código está bem estruturado!")
             return
 
         # Agrupar por tipo
         exact_matches = [d for d in result.duplicates if d.similarity >= 0.99]
         high_similarity = [d for d in result.duplicates if 0.9 <= d.similarity < 0.99]
         medium_similarity = [d for d in result.duplicates if 0.8 <= d.similarity < 0.9]
-
-        print(f"   🚨 Duplicações exatas (≥99%): {len(exact_matches)}")
-        print(f"   ⚠️  Alta similaridade (90-99%): {len(high_similarity)}")
-        print(f"   i Média similaridade (80-90%): {len(medium_similarity)}")
 
         # Agrupar anti-patterns por severidade e tipo
         critical_patterns = [
@@ -1537,42 +1474,23 @@ class FlextDuplicateDetector:
         medium_patterns = [p for p in result.anti_patterns if p.severity == "medium"]
         low_patterns = [p for p in result.anti_patterns if p.severity == "low"]
 
-        print(f"   🔴 Anti-patterns críticos: {len(critical_patterns)}")
-        print(f"   🟠 Anti-patterns altos: {len(high_patterns)}")
-        print(f"   🟡 Anti-patterns médios: {len(medium_patterns)}")
-        print(f"   🟢 Anti-patterns baixos: {len(low_patterns)}")
-
         # Mostrar duplicações críticas
         if exact_matches:
-            print("\n🚨 DUPLICAÇÕES EXATAS:")
-            for dup in exact_matches[:10]:  # Mostrar apenas as primeiras 10
-                print(f"   📄 {dup.file1}")
-                print(f"   📄 {dup.file2}")
-                print(f"   📊 Similaridade: {dup.similarity:.1%}")
-                print()
+            for _dup in exact_matches[:10]:  # Mostrar apenas as primeiras 10
+                pass
 
         if high_similarity:
-            print("\n⚠️  ALTA SIMILARIDADE:")
-            for dup in high_similarity[:5]:
-                print(f"   📄 {dup.file1} (linhas {dup.lines1[0]}-{dup.lines1[1]})")
-                print(f"   📄 {dup.file2} (linhas {dup.lines2[0]}-{dup.lines2[1]})")
-                print(f"   📊 Similaridade: {dup.similarity:.1%}")
-                print()
+            for _dup in high_similarity[:5]:
+                pass
 
         # Mostrar anti-patterns críticos
         if critical_patterns or high_patterns:
-            print("\n🚨 ANTI-PATTERNS CRÍTICOS/ALTOS:")
             for pattern in (critical_patterns + high_patterns)[
                 :10
             ]:  # Mostrar apenas os primeiros 10
-                print(f"   📄 {pattern.file_path} (linha {pattern.lines[0]})")
-                print(f"   🏷️  Tipo: {pattern.pattern_type}")
-                print(f"   💡 Sugestão: {pattern.suggested_replacement}")
-                print(f"   📝 Código: {pattern.content[:80]}...")
-                print()
+                pass
 
         if medium_patterns:
-            print(f"\n🟡 ANTI-PATTERNS MÉDIOS ({len(medium_patterns)} encontrados):")
             # Agrupar por tipo para melhor visualização
             by_type: dict[str, list[AntiPatternMatch]] = {}
             for pattern in medium_patterns:
@@ -1580,10 +1498,9 @@ class FlextDuplicateDetector:
                     by_type[pattern.pattern_type] = []
                 by_type[pattern.pattern_type].append(pattern)
 
-            for pattern_type, patterns in by_type.items():
-                print(f"   📋 {pattern_type}: {len(patterns)} ocorrências")
+            for patterns in by_type.values():
                 for pattern in patterns[:3]:  # Mostrar apenas 3 exemplos por tipo
-                    print(f"      📄 {pattern.file_path} (linha {pattern.lines[0]})")
+                    pass
 
         # Salvar relatório
         if output_file:
@@ -1627,24 +1544,16 @@ class FlextDuplicateDetector:
                 Path(output_file).parent.mkdir(parents=True, exist_ok=True)
                 with Path(output_file).open("w", encoding="utf-8") as f:
                     json.dump(report_data, f, indent=2)
-                print(f"\n💾 Relatório salvo em: {output_file}")
-            except (OSError, ValueError, TypeError) as e:
-                print(f"\n⚠️  Erro ao salvar relatório: {e}")
+            except (OSError, ValueError, TypeError):
+                pass
 
         # Recomendações
-        print("\n💡 RECOMENDAÇÕES:")
         if exact_matches:
-            print("   🚨 CRÍTICO: Eliminar duplicações exatas imediatamente")
-            print("   🔧 Criar funções/classes compartilhadas")
+            pass
         if high_similarity:
-            print("   ⚠️  Refatorar código com alta similaridade")
-            print("   📚 Usar padrões de design para reutilização")
+            pass
         if len(result.duplicates) > 10:
-            print("   📈 Alto número de duplicações detectadas")
-            print("   🏗️  Considerar refatoração arquitetural")
-
-        print("   🎯 Seguir padrões FLEXT para código limpo")
-        print("   🔄 Implementar revisões de código regulares")
+            pass
 
 
 def main() -> None:
@@ -1708,14 +1617,7 @@ def main() -> None:
             [d for d in result.duplicates if d.similarity >= 0.95],
         )
         if critical_duplicates > 0:
-            print(
-                f"\n❌ CI/CD: {critical_duplicates} duplicações críticas encontradas!",
-            )
             sys.exit(1)
-        else:
-            print("\n✅ CI/CD: Nenhuma duplicação crítica!")
-
-    print("\n✅ Análise concluída!")
 
 
 if __name__ == "__main__":

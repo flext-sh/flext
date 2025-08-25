@@ -29,9 +29,7 @@ def main() -> None:
 
     # Exit with appropriate code
     if results["consolidation_successful"]:
-        print("🎉 CONSOLIDATION VERIFICATION PASSED!")
-    else:
-        print("⚠️ Consolidation needs additional work")
+        pass
 
 
 if __name__ == "__main__":
