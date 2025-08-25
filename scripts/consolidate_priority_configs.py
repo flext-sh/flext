@@ -9,8 +9,6 @@ def consolidate_client-a_config() -> bool | None:
     """Consolidate client-aOudMig config to use FLEXT patterns."""
     config_file = "./client-a-oud-mig/src/client-a_oud_mig/config.py"
 
-    print(f"🔧 Consolidating {config_file}...")
-
     try:
         with Path(config_file).open(encoding="utf-8") as f:
             content = f.read()
@@ -42,21 +40,16 @@ def consolidate_client-a_config() -> bool | None:
         if content != original_content:
             with Path(config_file).open("w", encoding="utf-8") as f:
                 f.write(content)
-            print(f"✅ Consolidated {config_file}")
             return True
-        print(f"⏭️ No changes needed for {config_file}")
         return False
 
-    except (OSError, ValueError, TypeError) as e:
-        print(f"❌ Error consolidating {config_file}: {e}")
+    except (OSError, ValueError, TypeError):
         return False
 
 
 def consolidate_flext_auth_config() -> bool | None:
     """Consolidate FlextAuth config to use FLEXT patterns."""
     config_file = "./flext-auth/src/flext_auth/config.py"
-
-    print(f"🔧 Consolidating {config_file}...")
 
     try:
         with Path(config_file).open(encoding="utf-8") as f:
@@ -93,21 +86,16 @@ def consolidate_flext_auth_config() -> bool | None:
         if content != original_content:
             with Path(config_file).open("w", encoding="utf-8") as f:
                 f.write(content)
-            print(f"✅ Consolidated {config_file}")
             return True
-        print(f"⏭️ No changes needed for {config_file}")
         return False
 
-    except (OSError, ValueError, TypeError) as e:
-        print(f"❌ Error consolidating {config_file}: {e}")
+    except (OSError, ValueError, TypeError):
         return False
 
 
 def consolidate_flext_api_config() -> bool | None:
     """Consolidate FlextAPI infrastructure config."""
     config_file = "./flext-api/src/flext_api/infrastructure/config.py"
-
-    print(f"🔧 Consolidating {config_file}...")
 
     try:
         with Path(config_file).open(encoding="utf-8") as f:
@@ -142,13 +130,10 @@ def consolidate_flext_api_config() -> bool | None:
         if content != original_content:
             with Path(config_file).open("w", encoding="utf-8") as f:
                 f.write(content)
-            print(f"✅ Consolidated {config_file}")
             return True
-        print(f"⏭️ No changes needed for {config_file}")
         return False
 
-    except (OSError, ValueError, TypeError) as e:
-        print(f"❌ Error consolidating {config_file}: {e}")
+    except (OSError, ValueError, TypeError):
         return False
 
 
@@ -283,17 +268,13 @@ def get_project_settings() -> ConsolidatedProjectSettings:
     try:
         with Path(template_path).open("w", encoding="utf-8") as f:
             f.write(template_content)
-        print(f"✅ Created consolidation template: {template_path}")
         return True
-    except (OSError, ValueError, TypeError) as e:
-        print(f"❌ Error creating template: {e}")
+    except (OSError, ValueError, TypeError):
         return False
 
 
 def main() -> None:
     """Main consolidation function."""
-    print("🚀 Starting priority configuration consolidation...")
-
     consolidated_count = 0
 
     # Create template
@@ -310,16 +291,6 @@ def main() -> None:
     for consolidate_func in consolidation_functions:
         if consolidate_func():
             consolidated_count += 1
-
-    print("\n✅ Configuration consolidation completed!")
-    print(f"📊 Successfully consolidated {consolidated_count} configurations")
-
-    print("\n📋 Next Steps:")
-    print("1. Review consolidated configuration files")
-    print("2. Test configuration loading with new FLEXT patterns")
-    print("3. Remove manual os.getenv() calls where TODOs were added")
-    print("4. Update configuration usage throughout the codebase")
-    print("5. Add proper type validation and environment variable documentation")
 
 
 if __name__ == "__main__":

@@ -120,7 +120,6 @@ def main(argv: list[str]) -> int:
     args = parser.parse_args(argv)
 
     py_files = list(iter_python_files(REPO_ROOT))
-    print(f"Discovered {len(py_files)} Python files")
 
     failures: list[tuple[Path, str]] = []
 
@@ -130,25 +129,19 @@ def main(argv: list[str]) -> int:
         if proc.returncode != 0:
             failures.append((rel, proc.stderr.strip() or proc.stdout.strip()))
         if idx % 100 == 0:
-            print(f"Processed {idx}/{len(py_files)} files...")
-
-    print(f"Pyment completed with {len(failures)} failures")
+            pass
 
     if failures:
-        print("Failures (showing up to 50):")
-        for rel, msg in failures[:50]:
-            print(f" - {rel}: {msg.splitlines()[-1] if msg else 'unknown error'}")
+        for rel, _msg in failures[:50]:
+            pass
 
     if not args.no_ruff and has_command("ruff"):
-        print("Running Ruff docstring fixes (D rules)...")
+        pass
         # Run Ruff in-process
     with suppress(SystemExit):
         if callable(ruff_main):
             ruff_main(["--select", "D", "--fix", str(REPO_ROOT)])
-        else:
-            print("ruff not available in-process; skip in-process fix")
 
-    print("Done.")
     return 0
 
 

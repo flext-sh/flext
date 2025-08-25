@@ -64,12 +64,12 @@ class GradualLintFixerScript(FlextScript):
 
             if not project:
                 print_colored("❌ Project name is required", Colors.RED)
-                return FlextResult[None].fail("Project name is required")
+                return FlextResult[object].fail("Project name is required")
 
             project_path = workspace_root / str(project)
             if not project_path.exists():
                 print_colored(f"❌ Project {project} not found", Colors.RED)
-                return FlextResult[None].fail(f"Project {project} not found")
+                return FlextResult[object].fail(f"Project {project} not found")
 
             print_colored("🔧 GRADUAL LINT FIXER", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
@@ -97,7 +97,7 @@ class GradualLintFixerScript(FlextScript):
                         Colors.GREEN,
                     )
 
-                return FlextResult[None].ok(
+                return FlextResult[object].ok(
                     {"fix_result": fix_result, "project": project}
                 )
 

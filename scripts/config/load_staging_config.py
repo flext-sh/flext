@@ -67,17 +67,17 @@ class StagingConfigLoader(FlextScript):
                     Colors.GREEN,
                 )
                 print_colored("📋 All environment variables validated", Colors.CYAN)
-                return FlextResult[None].ok(
+                return FlextResult[object].ok(
                     {"success": True, "validate_only": validate_only}
                 )
 
             print_colored("❌ Failed to load staging configuration", Colors.RED)
             print_colored("Check .env.staging file for errors", Colors.YELLOW)
-            return FlextResult[None].fail("Failed to load staging configuration")
+            return FlextResult[object].fail("Failed to load staging configuration")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during config loading: {e}", Colors.RED)
-            return FlextResult[None].fail(f"Config loading error: {e}")
+            return FlextResult[object].fail(f"Config loading error: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""

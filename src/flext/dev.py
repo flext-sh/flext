@@ -363,7 +363,7 @@ class DevToolsManager:
 
       """
       exit_code = 0
-      test_projects = []
+      test_projects: list[Path] = []
 
       # Discover projects with tests
       for project_dir in self.workspace_root.iterdir():

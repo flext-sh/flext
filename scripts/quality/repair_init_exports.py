@@ -246,12 +246,8 @@ def main() -> None:
         if replace_or_append_all(path, exports):
             changed_files.append(path)
     if changed_files:
-        print("Updated __all__ in:")
         for p in changed_files:
-            rel = p.relative_to(WORKSPACE)
-            print(f" - {rel}")
-    else:
-        print("No changes needed.")
+            p.relative_to(WORKSPACE)
 
 
 if __name__ == "__main__":

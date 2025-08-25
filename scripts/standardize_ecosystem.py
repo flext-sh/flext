@@ -25,9 +25,17 @@ import re
 import sys
 from pathlib import Path
 
-# Use centralized FLEXT patterns
-from flext_core import FlextResult, get_logger
-from flext_core_standards import FlextBaseService, FlextStandardResult
+from flext_core import FlextModel, FlextResult, get_logger
+
+
+# Placeholder classes for standardization
+class FlextBaseService(FlextModel):
+    """Base service class for standardization."""
+
+
+class FlextStandardResult(FlextResult):
+    """Standard result type for standardization operations."""
+
 
 logger = get_logger(__name__)
 

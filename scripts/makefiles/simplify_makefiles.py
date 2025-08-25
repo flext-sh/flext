@@ -20,7 +20,6 @@ def main() -> None:
     template_file = workspace_root / ".flext-makefile-template.mk"
 
     if not template_file.exists():
-        print(f"❌ Template file not found: {template_file}")
         return
 
     # Find all FLEXT project Makefiles
@@ -30,8 +29,6 @@ def main() -> None:
         for f in makefile_files
         if not str(f).startswith(str(workspace_root / ".venv"))
     ]
-
-    print(f"🔍 Found {len(makefile_files)} Makefiles to simplify")
 
     # Create backup directory for complex Makefiles
     backup_dir = workspace_root / "backups" / "makefiles_complex"
@@ -44,15 +41,11 @@ def main() -> None:
 
         # Skip workspace root and cmd projects (they may need special handling)
         if project_name in {"flext", "cmd"} or "cmd/" in str(makefile_path):
-            print(f"⏭️  Skipping special project: {project_name}")
             continue
-
-        print(f"🔧 Simplifying Makefile for: {project_name}")
 
         # Backup original complex Makefile
         backup_path = backup_dir / f"{project_name}_Makefile.bak"
         shutil.copy2(makefile_path, backup_path)
-        print(f"  💾 Backed up to {backup_path}")
 
         # Create simplified Makefile using template
         simplified_makefile = _create_simplified_makefile(project_name, template_file)
@@ -61,18 +54,9 @@ def main() -> None:
         try:
             with Path(makefile_path).open("w", encoding="utf-8") as f:
                 f.write(simplified_makefile)
-            print(f"  ✅ Simplified Makefile for {project_name}")
             simplified_count += 1
-        except (OSError, ValueError, TypeError) as e:
-            print(f"  ❌ Failed to write {makefile_path}: {e}")
-
-    print("\n🎉 Makefile simplification completed following KISS principle!")
-    print("📋 Summary:")
-    print(f"  • Simplified {simplified_count} Makefiles")
-    print("  • Reduced from 62 complex files to 1 template + minimal overrides")
-    print(f"  • Backed up original complex Makefiles to {backup_dir}")
-    print("  • All functionality preserved with ~90% less complexity")
-    print("  • Following FLEXT CLAUDE.md standards")
+        except (OSError, ValueError, TypeError):
+            pass
 
 
 def _create_simplified_makefile(project_name: str, template_file: Path) -> str:

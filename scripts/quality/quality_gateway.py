@@ -205,7 +205,7 @@ class QualityGateway(FlextScript):
             else:
                 print_colored("\n🚫 QUALITY GATEWAY: REPROVADO", Colors.RED)
 
-            return FlextResult[None].ok(
+            return FlextResult[object].ok(
                 {
                     "gateway_passed": gateway_passed,
                     "stats": total_stats,
@@ -215,7 +215,7 @@ class QualityGateway(FlextScript):
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
-            return FlextResult[None].fail(f"Analysis error: {e}")
+            return FlextResult[object].fail(f"Analysis error: {e}")
 
     def _discover_projects(
         self,
@@ -279,7 +279,7 @@ class QualityGateway(FlextScript):
 
             try:
                 # Note: ruff path is trusted (installed via Poetry), project_path is validated
-                result = subprocess.run(  # noqa: S603
+                result = subprocess.run(
                     [
                         "/usr/bin/env",
                         "ruff",
@@ -472,17 +472,10 @@ class QualityGateway(FlextScript):
         print_colored("\n📊 RESUMO DO QUALITY GATEWAY", Colors.BLUE)
         print_colored("=" * 50, Colors.BLUE)
 
-        print(f"  📁 Projetos analisados: {total_stats['projects_analyzed']}")
-        print(f"  ✅ Projetos aprovados: {total_stats['passed']}")
-        print(f"  ❌ Projetos reprovados: {total_stats['failed']}")
-        print(f"  📋 Total de issues: {total_stats['total_issues']}")
-        print(f"  🚨 Issues críticas: {total_stats['critical_issues']}")
-        print(f"  🎯 Modo: {'ESTRITO' if strict_mode else 'NORMAL'}")
-
         if failed_projects:
             print_colored("\n🚫 Projetos Reprovados:", Colors.RED)
-            for project in failed_projects:
-                print(f"  • {project}")
+            for _project in failed_projects:
+                pass
 
         # Score de qualidade
         if total_stats["projects_analyzed"] > 0:

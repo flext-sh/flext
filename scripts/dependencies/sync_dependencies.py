@@ -48,19 +48,6 @@ def parse_args() -> dict[str, bool]:
 def show_help() -> None:
     """Mostra ajuda do script."""
     print_colored("🔄 Sincronização de dependências FLEXT", Colors.BLUE)
-    print("\nUso: python sync_dependencies.py [OPÇÕES]\n")
-    print("Opções:")
-    print("  --dry-run       Simula ações sem modificar arquivos")
-    print("  --auto          Confirma automaticamente todas as ações")
-    print("  --validate      Apenas valida projetos Poetry")
-    print("  --conflicts     Apenas analisa conflitos de versão")
-    print("  --discover      Apenas descobre dependências faltantes")
-    print("  -v, --verbose   Saída detalhada com estatísticas")
-    print("  -h, --help      Mostra esta ajuda")
-    print("\nExemplos:")
-    print("  python sync_dependencies.py --dry-run")
-    print("  python sync_dependencies.py --auto --verbose")
-    print("  python sync_dependencies.py --conflicts --report")
 
 
 def get_workspace_projects(workspace_path: Path) -> list[Path]:
@@ -179,13 +166,9 @@ def analyze_conflicts(
         return analyzer.analyze_workspace_conflicts(workspace_path)
 
     analysis: dict[str, object] = get_conflicts()
-    stats = analysis["stats"]
+    analysis["stats"]
 
     print_colored("\n📊 Estatísticas:", Colors.CYAN)
-    print(f"  • Projetos: {analysis['total_projects']}")
-    print(f"  • Pacotes únicos: {stats['unique_packages']}")
-    print(f"  • Conflitos: {stats['packages_with_conflicts']}")
-    print(f"  • Bloqueadores: {stats['blocking_packages']}")
 
     if analysis["version_conflicts"] and verbose:
         print_colored("\n⚠️ Top 5 conflitos:", Colors.YELLOW)
@@ -195,8 +178,8 @@ def analyze_conflicts(
             reverse=True,
         )
 
-        for i, (package, data) in enumerate(conflicts_sorted[:5]):
-            print(f"  {i + 1}. {package}: {len(data['projects'])} projetos")
+        for _i, (_package, _data) in enumerate(conflicts_sorted[:5]):
+            pass
 
     return analysis
 
@@ -385,7 +368,7 @@ def main() -> int:
         )
 
         # 3. Conflitos
-        conflicts = analyze_conflicts(workspace_path, analyzer, args["verbose"])
+        analyze_conflicts(workspace_path, analyzer, args["verbose"])
 
         # 4. Adição de dependências
         if missing_by_project:
@@ -393,11 +376,6 @@ def main() -> int:
 
         # 5. Relatório final
         print_colored("\n📊 Relatório Final:", Colors.BLUE)
-        print(f"  ✅ Projetos validados: {len(projects)}")
-        print(f"  📦 Dependências faltantes descobertas: {len(missing_by_project)}")
-        print(
-            f"  ⚠️ Conflitos encontrados: {len(conflicts.get('version_conflicts', {}))}",
-        )
 
         # Estatísticas de cache se verboso
         if args["verbose"]:

@@ -289,7 +289,6 @@ def main() -> None:
     print_colored("=" * 60, Colors.CYAN)
     print_colored("🔒 FLEXT Security Tools - API Examples", Colors.CYAN)
     print_colored("=" * 60, Colors.CYAN)
-    print()
 
     try:
         # Run all examples

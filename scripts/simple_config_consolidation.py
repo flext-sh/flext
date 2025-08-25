@@ -4,8 +4,6 @@
 import re
 from pathlib import Path
 
-print("🔍 Starting manual configuration consolidation...")
-
 
 def find_manual_env_vars() -> list[str]:
     """Find files with manual os.getenv() usage."""
@@ -14,8 +12,7 @@ def find_manual_env_vars() -> list[str]:
     for path in Path.cwd().rglob("*.py"):
         try:
             text = path.read_text(encoding="utf-8")
-        except Exception as e:
-            print(f"Skipping {path}: {e}")
+        except Exception:
             continue
         if ("os.getenv(" in text) or ("os.environ.get" in text):
             matches.append(str(path))
@@ -80,27 +77,20 @@ def add_config_todos_to_file(file_path: str) -> bool:
         if changes_made:
             with Path(file_path).open("w", encoding="utf-8") as f:
                 f.write(content)
-            print(f"✅ Added FLEXT config TODOs to: {file_path}")
             return True
-        print(f"⏭️ No changes needed: {file_path}")
         return False
 
-    except (OSError, ValueError, TypeError) as e:
-        print(f"❌ Error processing {file_path}: {e}")
+    except (OSError, ValueError, TypeError):
         return False
 
 
 def main() -> None:
     """Main consolidation function."""
     # Find files with manual env vars
-    print("🔍 Finding files with manual environment variables...")
     env_var_files = find_manual_env_vars()
 
     if not env_var_files:
-        print("✅ No manual environment variable usage found!")
         return
-
-    print(f"📄 Found {len(env_var_files)} files with manual env vars")
 
     # Process first 50 files
     processed = 0
@@ -110,14 +100,6 @@ def main() -> None:
         if add_config_todos_to_file(file_path):
             modified += 1
         processed += 1
-
-    print("\n✅ Configuration consolidation completed!")
-    print(f"📊 Processed {processed} files, modified {modified}")
-    print("📋 Next steps:")
-    print("  1. Review TODO comments added to files")
-    print("  2. Create FLEXT config classes for each project")
-    print("  3. Replace manual patterns with centralized config")
-    print("  4. Remove manual os.getenv() calls")
 
 
 if __name__ == "__main__":

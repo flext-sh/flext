@@ -24,12 +24,18 @@ PYTHON_EXT_PROJECTS := flext-ldap flext-ldif flext-meltano flext-plugin flext-cl
 GO_CMD_PROJECTS := cmd/flext cmd/flext-cli cmd/flext-server cmd/flext-demo
 GO_FLEXCORE_PROJECT := flexcore
 
+# Docker Configuration
+DOCKER_DIR := docker
+DOCKER_REGISTRY := ghcr.io/flext-sh
+DOCKER_TAG := latest
+
 # Build Configuration
 BIN_DIR := bin
 BUILD_DIR := build
 
-# All Python Projects
+# All Projects
 ALL_PYTHON_PROJECTS := $(PYTHON_CORE_PROJECTS) $(PYTHON_APP_PROJECTS) $(PYTHON_TAP_PROJECTS) $(PYTHON_TARGET_PROJECTS) $(PYTHON_DBT_PROJECTS) $(PYTHON_EXT_PROJECTS)
+ALL_GO_PROJECTS := $(GO_CMD_PROJECTS) $(GO_FLEXCORE_PROJECT)
 
 # Quality Gates Configuration
 MIN_COVERAGE := 90
@@ -53,6 +59,14 @@ help: ## Show available commands
 	@echo "📋 WORKSPACE COMMANDS:"
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  %-20s %s\n", $$1, $$2}' $(MAKEFILE_LIST) | grep -E "^[[:space:]]*[a-zA-Z_-]"
 	@echo ""
+	@echo "🐳 DOCKER OPERATIONS:"
+	@echo "  docker-build-all     Build all Docker images"
+	@echo "  docker-run-stack     Start complete Docker stack"
+	@echo "  docker-stop-stack    Stop Docker stack"
+	@echo "  docker-restart-stack Restart Docker stack"
+	@echo "  docker-logs          Show Docker stack logs"
+	@echo "  docker-clean         Clean Docker artifacts"
+	@echo ""
 	@echo "🔧 PROJECT TYPES:"
 	@echo "  Core Projects:    $(PYTHON_CORE_PROJECTS)"
 	@echo "  App Projects:     $(PYTHON_APP_PROJECTS)"
@@ -60,7 +74,7 @@ help: ## Show available commands
 	@echo "  Target Projects:  $(PYTHON_TARGET_PROJECTS)"
 	@echo "  DBT Projects:     $(PYTHON_DBT_PROJECTS)"
 	@echo "  Extension Projects: $(PYTHON_EXT_PROJECTS)"
-	@echo "  Go Projects:      $(GO_PROJECTS)"
+	@echo "  Go Projects:      $(ALL_GO_PROJECTS)"
 
 .PHONY: info
 info: ## Show workspace information
@@ -75,8 +89,8 @@ info: ## Show workspace information
 	@echo ""
 	@echo "Project Count:"
 	@echo "  Python Projects: $(words $(ALL_PYTHON_PROJECTS))"
-	@echo "  Go Projects: $(words $(GO_PROJECTS))"
-	@echo "  Total Projects: $(shell echo $$(( $(words $(ALL_PYTHON_PROJECTS)) + $(words $(GO_PROJECTS)) )))"
+	@echo "  Go Projects: $(words $(ALL_GO_PROJECTS))"
+	@echo "  Total Projects: $(shell echo $$(( $(words $(ALL_PYTHON_PROJECTS)) + $(words $(ALL_GO_PROJECTS)) )))"
 
 # =============================================================================
 # WORKSPACE SETUP & INSTALLATION
@@ -102,7 +116,7 @@ workspace-install: ## Install all Python project dependencies
 	@echo "📦 Installing all Python project dependencies..."
 	@for project in $(ALL_PYTHON_PROJECTS); do \
 		if [ -d "$$project" ] && [ -f "$$project/pyproject.toml" ]; then \
-			echo "Installing $$project..."; \
+			echo "📦 Installing $$project..."; \
 			cd $$project && poetry install && cd ..; \
 		fi \
 	done
@@ -112,7 +126,7 @@ workspace-update: ## Update all project dependencies
 	@echo "🔄 Updating all project dependencies..."
 	@for project in $(ALL_PYTHON_PROJECTS); do \
 		if [ -d "$$project" ] && [ -f "$$project/pyproject.toml" ]; then \
-			echo "Updating $$project..."; \
+			echo "🔄 Updating $$project..."; \
 			cd $$project && poetry update && cd ..; \
 		fi \
 	done
@@ -152,7 +166,7 @@ lint-all: ## Run linting on all Python projects
 	@echo "🧹 Running linting on all projects..."
 	@for project in $(ALL_PYTHON_PROJECTS); do \
 		if [ -d "$$project" ] && [ -f "$$project/pyproject.toml" ]; then \
-			echo "Linting $$project..."; \
+			echo "🧹 Linting $$project..."; \
 			cd $$project && poetry run ruff check . && cd ..; \
 		fi \
 	done
@@ -162,7 +176,7 @@ format-all: ## Format all Python projects
 	@echo "🎨 Formatting all projects..."
 	@for project in $(ALL_PYTHON_PROJECTS); do \
 		if [ -d "$$project" ] && [ -f "$$project/pyproject.toml" ]; then \
-			echo "Formatting $$project..."; \
+			echo "🎨 Formatting $$project..."; \
 			cd $$project && poetry run ruff format . && cd ..; \
 		fi \
 	done
@@ -172,7 +186,7 @@ type-check-all: ## Run type checking on all Python projects
 	@echo "🔍 Running type checking on all projects..."
 	@for project in $(ALL_PYTHON_PROJECTS); do \
 		if [ -d "$$project" ] && [ -f "$$project/pyproject.toml" ]; then \
-			echo "Type checking $$project..."; \
+			echo "🔍 Type checking $$project..."; \
 			cd $$project; \
 			if [ -d "src" ]; then \
 				echo "(scoped to src)"; \
@@ -189,7 +203,7 @@ security-all: ## Run security scanning on all Python projects
 	@echo "🔒 Running security scanning on all projects..."
 	@for project in $(ALL_PYTHON_PROJECTS); do \
 		if [ -d "$$project" ] && [ -f "$$project/pyproject.toml" ]; then \
-			echo "Security scanning $$project..."; \
+			echo "🔒 Security scanning $$project..."; \
 			cd $$project && poetry run bandit -r src/ && cd ..; \
 		fi \
 	done
@@ -199,7 +213,7 @@ test-all: ## Run tests on all Python projects
 	@echo "🧪 Running tests on all projects..."
 	@for project in $(ALL_PYTHON_PROJECTS); do \
 		if [ -d "$$project" ] && [ -f "$$project/pyproject.toml" ]; then \
-			echo "Testing $$project..."; \
+			echo "🧪 Testing $$project..."; \
 			cd $$project && poetry run pytest && cd ..; \
 		fi \
 	done
@@ -219,7 +233,7 @@ build-python: ## Build all Python projects
 	@echo "🐍 Building Python projects..."
 	@for project in $(ALL_PYTHON_PROJECTS); do \
 		if [ -d "$$project" ] && [ -f "$$project/pyproject.toml" ]; then \
-			echo "Building $$project..."; \
+			echo "🔨 Building $$project..."; \
 			cd $$project && poetry build && cd ..; \
 		fi \
 	done
@@ -230,15 +244,62 @@ build-go: ## Build all Go projects
 	@mkdir -p $(BIN_DIR)
 	@for project in $(GO_CMD_PROJECTS); do \
 		if [ -d "$$project" ] && [ -f "$$project/main.go" ]; then \
-			echo "Building $$project..."; \
+			echo "🔨 Building $$project..."; \
 			binary_name=$$(basename $$project); \
 			cd $$project && go build -o ../../$(BIN_DIR)/$$binary_name . && chmod +x ../../$(BIN_DIR)/$$binary_name && cd ..; \
 		fi \
 	done
 	@if [ -d "$(GO_FLEXCORE_PROJECT)" ]; then \
-		echo "Building $(GO_FLEXCORE_PROJECT)..."; \
+		echo "🔨 Building $(GO_FLEXCORE_PROJECT)..."; \
 		cd $(GO_FLEXCORE_PROJECT) && make build; \
 	fi
+
+# =============================================================================
+# DOCKER OPERATIONS
+# =============================================================================
+
+.PHONY: docker-build-all
+docker-build-all: ## Build all Docker images
+	@echo "🐳 Building all Docker images..."
+	@make docker-build-flext
+	@make docker-build-flexcore
+
+.PHONY: docker-build-flext
+docker-build-flext: ## Build FLEXT service Docker image
+	@echo "🐳 Building FLEXT service image..."
+	@docker build -f $(DOCKER_DIR)/Dockerfile.flext-service -t $(DOCKER_REGISTRY)/flext:$(DOCKER_TAG) .
+
+.PHONY: docker-build-flexcore
+docker-build-flexcore: ## Build FlexCore service Docker image
+	@echo "🐳 Building FlexCore service image..."
+	@docker build -f $(DOCKER_DIR)/Dockerfile.flexcore -t $(DOCKER_REGISTRY)/flexcore:$(DOCKER_TAG) .
+
+.PHONY: docker-run-stack
+docker-run-stack: ## Run complete Docker stack
+	@echo "🐳 Starting FLEXT Docker stack..."
+	@docker-compose -f $(DOCKER_DIR)/docker-compose.yml up -d
+
+.PHONY: docker-stop-stack
+docker-stop-stack: ## Stop Docker stack
+	@echo "🛑 Stopping FLEXT Docker stack..."
+	@docker-compose -f $(DOCKER_DIR)/docker-compose.yml down
+
+.PHONY: docker-restart-stack
+docker-restart-stack: ## Restart Docker stack
+	@echo "🔄 Restarting FLEXT Docker stack..."
+	@make docker-stop-stack
+	@make docker-run-stack
+
+.PHONY: docker-logs
+docker-logs: ## Show Docker stack logs
+	@docker-compose -f $(DOCKER_DIR)/docker-compose.yml logs -f
+
+.PHONY: docker-clean
+docker-clean: ## Clean Docker artifacts
+	@echo "🧹 Cleaning Docker artifacts..."
+	@docker-compose -f $(DOCKER_DIR)/docker-compose.yml down --volumes --remove-orphans
+	@docker system prune -f
+	@docker volume prune -f
 
 # =============================================================================
 # MAINTENANCE & CLEANUP
@@ -292,25 +353,24 @@ pre-commit-all: ## Run pre-commit on all projects
 	@echo "🔍 Running pre-commit on all projects..."
 	@pre-commit run --all-files
 
-.PHONY: status
-status: ## Show workspace status
-	@echo "📊 FLEXT Workspace Status"
-	@echo "========================"
+.PHONY: show-status
+show-status: ## Display comprehensive workspace status
+	@echo "📊 FLEXT Workspace Status Report"
+	@echo "================================="
 	@echo ""
 	@echo "🏗️ RUNTIME ARCHITECTURE STATUS:"
-	@echo "  ✅ FlexCore (Go 1.24): Runtime container port 8080"
+	@echo "  ✅ FlexCore (Go 1.24+): Runtime container port 8080"
 	@echo "  ✅ FLEXT Service (Go/Python): Plugin execution port 8081"
 	@echo "  ✅ Integration: FlexCore ↔ FLEXT communication working"
 	@echo "  ✅ Plugin System: Meltano 3.8.0 operational via Python"
 	@echo "  ✅ Clean Architecture + DDD: Bounded contexts operational"
 	@echo ""
-	@echo "🔗 REAL INTEGRATION TESTS:"
-	@echo "  Health: curl http://localhost:8080/health && curl http://localhost:8081/health"
-	@echo "  Plugins: curl http://localhost:8081/api/v1/flexcore/plugins"
-	@echo "  Execute: curl -X POST http://localhost:8081/api/v1/flexcore/plugins/meltano/execute \\"
-	@echo "           -H 'Content-Type: application/json' -d '{\"command\": \"--version\", \"args\": []}'"
+	@echo "🔗 HEALTH CHECK ENDPOINTS:"
+	@echo "  FlexCore: curl http://localhost:8080/health"
+	@echo "  FLEXT:    curl http://localhost:8081/health"
+	@echo "  Plugins:  curl http://localhost:8081/api/v1/flexcore/plugins"
 	@echo ""
-	@echo "Python Projects Status:"
+	@echo "📦 Python Projects Status:"
 	@for project in $(ALL_PYTHON_PROJECTS); do \
 		if [ -d "$$project" ]; then \
 			echo "  ✅ $$project"; \
@@ -319,14 +379,22 @@ status: ## Show workspace status
 		fi \
 	done
 	@echo ""
-	@echo "Go Projects Status:"
-	@for project in $(GO_PROJECTS); do \
+	@echo "🐹 Go Projects Status:"
+	@for project in $(ALL_GO_PROJECTS); do \
 		if [ -d "$$project" ]; then \
 			echo "  ✅ $$project"; \
 		else \
 			echo "  ❌ $$project (missing)"; \
 		fi \
 	done
+	@echo ""
+	@echo "🐳 Docker Status:"
+	@docker --version 2>/dev/null && echo "  ✅ Docker available" || echo "  ❌ Docker not available"
+	@docker-compose --version 2>/dev/null && echo "  ✅ Docker Compose available" || echo "  ❌ Docker Compose not available"
+
+# Legacy alias for backward compatibility
+.PHONY: status
+status: show-status ## (Deprecated) Use show-status instead
 
 # =============================================================================
 # SPECIALIZED COMMANDS
