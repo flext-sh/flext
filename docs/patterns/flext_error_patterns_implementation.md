@@ -6,11 +6,11 @@
 
 ## Summary
 
-Successfully implemented the FLEXT error hierarchy patterns from `docs/patterns/error-observability.md` in the flext-ldap project, replacing generic Python exceptions with semantic, observable, and context-rich FlextError classes.
+Successfully implemented the FLEXT error hierarchy patterns from `docs/patterns/error-observability.md` in the flext-ldap project, replacing generic Python exceptions with semantic, observable, and context-rich FlextExceptions.Error classes.
 
 ## Implementation Details
 
-### 1. FlextError Base Class
+### 1. FlextExceptions.Error Base Class
 
 Created `/home/marlonsc/flext/flext-ldap/src/flext_ldap/errors.py` with:
 
@@ -51,8 +51,8 @@ Implemented structured error codes following FLEXT patterns:
 
 #### Files Modified
 
-- `src/flext_ldap/adapters/directory_adapter.py`: Replaced generic exceptions with FlextError instances
-- `src/flext_ldap/ldap_infrastructure.py`: Updated all exception handling to use FlextError patterns
+- `src/flext_ldap/adapters/directory_adapter.py`: Replaced generic exceptions with FlextExceptions.Error instances
+- `src/flext_ldap/ldap_infrastructure.py`: Updated all exception handling to use FlextExceptions.Error patterns
 - `tests/infrastructure/test_ldap_client.py`: Updated test assertions for new error messages
 
 #### Key Improvements
@@ -89,7 +89,7 @@ extra={'error_code': <FlextLdapErrorCode.LDAP_AUTHENTICATION_ERROR: 'FLEXT_4002'
 
 #### High Priority Projects (Infrastructure)
 
-1. **flext-core**: Extend base FlextError patterns for ecosystem-wide use
+1. **flext-core**: Extend base FlextExceptions.Error patterns for ecosystem-wide use
 2. **flext-db-oracle**: Oracle-specific connection and data errors
 3. **flext-grpc**: gRPC communication errors with rich context
 4. **flext-observability**: Integration with error patterns and metrics

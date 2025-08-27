@@ -230,6 +230,11 @@ class WorkspaceService:
         if cwd is None:
             cwd = WORKSPACE_ROOT
 
+        # Basic input validation for security
+        if not command or not all(isinstance(arg, str) for arg in command):
+            msg = "Command must be a non-empty list of strings"
+            raise ValueError(msg)
+
         console.print(f"[dim]Running: {' '.join(command)} in {cwd}[/dim]")
 
         result = subprocess.run(
@@ -238,6 +243,7 @@ class WorkspaceService:
             capture_output=True,
             text=True,
             check=False,
+            shell=False,  # Security: explicit shell=False
         )
 
         if check and result.returncode != 0:

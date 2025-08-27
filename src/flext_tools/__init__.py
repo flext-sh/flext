@@ -133,8 +133,8 @@ for name, obj in sys.modules.items():
     ):
         __all__ += obj.__all__
 
-# Remove duplicates and sort - explicit list for MyPy
-__all__ = sorted(set(__all__))
+# Remove duplicates and sort - FLEXT Pattern
+__all__ = list(sorted(set(__all__)))  # noqa: C413  # __all__ must be list
 
 # Clean up temporary variables
 del sys, ModuleType, name, obj
