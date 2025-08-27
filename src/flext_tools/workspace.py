@@ -56,6 +56,11 @@ import os
 import sys
 from pathlib import Path
 
+try:
+    import tomllib
+except ImportError:
+    tomllib = None  # type: ignore[assignment]
+
 
 class WorkspaceManager:
     """Enterprise workspace manager for FLEXT ecosystem coordination.
@@ -532,47 +537,42 @@ class WorkspaceManager:
       """
       project_name = project_path.name
 
-      # Foundation libraries
-      if project_name in {"flext-core", "flext-observability"}:
-          return "foundation"
+      # Define project type mappings
+      project_types = {
+          # Foundation libraries
+          "foundation": {"flext-core", "flext-observability"},
+          # Core Go services
+          "go-service": {"flexcore", "flext"},
+          # Application services
+          "service": {"flext-api", "flext-auth", "flext-web", "flext-cli", "flext-quality"},
+          # Specialized projects
+          "specialized": {"client-a-oud-mig", "client-b-meltano-native"},
+      }
 
-      # Core Go services
-      if project_name in {"flexcore", "flext"}:
-          return "go-service"
+      # Check exact name matches
+      for project_type, names in project_types.items():
+          if project_name in names:
+              return project_type
 
-      # Application services
-      if project_name in {
-          "flext-api",
-          "flext-auth",
-          "flext-web",
-          "flext-cli",
-          "flext-quality",
-      }:
-          return "service"
+      # Check prefix/pattern matches
+      prefix_mappings = [
+          ("flext-tap-", "singer-tap"),
+          ("flext-target-", "singer-target"),
+          ("flext-dbt-", "dbt-project"),
+      ]
 
-      # Infrastructure libraries
+      for prefix, project_type in prefix_mappings:
+          if project_name.startswith(prefix):
+              return project_type
+
+      # Infrastructure libraries (has flext- prefix + infrastructure keywords)
       if project_name.startswith("flext-") and any(
           infra in project_name for infra in ["db", "ldap", "ldif", "grpc", "oracle"]
       ):
           return "infrastructure"
 
-      # Singer ecosystem
-      if project_name.startswith("flext-tap-"):
-          return "singer-tap"
-      if project_name.startswith("flext-target-"):
-          return "singer-target"
-      if project_name.startswith("flext-dbt-"):
-          return "dbt-project"
-
-      # Meltano orchestration
-      if "meltano" in project_name:
-          return "orchestration"
-
-      # Specialized projects
-      if project_name in {"client-a-oud-mig", "client-b-meltano-native"}:
-          return "specialized"
-
-      return "flext-module"
+      # Meltano orchestration or default
+      return "orchestration" if "meltano" in project_name else "flext-module"
 
     def _get_project_version(self, project_path: Path) -> str:
       """Extract version information from project configuration.
@@ -586,21 +586,18 @@ class WorkspaceManager:
       """
       # Try to read version from pyproject.toml
       pyproject = project_path / "pyproject.toml"
-      if pyproject.exists():
+      if pyproject.exists() and tomllib is not None:
           try:
-              import tomllib
-
-              with open(pyproject, "rb") as f:
+              with pyproject.open("rb") as f:
                   data = tomllib.load(f)
-                  return data.get("project", {}).get("version", "2.0.0")
-          except ImportError:
-              # tomllib not available in Python < 3.11
-              pass
+                  version = data.get("project", {}).get("version", "2.0.0")
+                  return str(version)
           except (FileNotFoundError, PermissionError):
               # File not found or permission error
               pass
           except Exception:
               # TOML parsing error, key error, or other exceptions
+              # Failed to parse pyproject.toml
               pass
 
       # Try to read version from go.mod for Go projects

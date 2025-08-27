@@ -71,7 +71,8 @@ from pathlib import Path
 from flext_core import FlextModel, FlextResult, get_logger
 from pydantic import Field
 
-from .colors import Colors, print_colored, should_ignore_path
+from .colors import Colors, print_colored
+from .paths import should_ignore_path
 
 logger = get_logger(__name__)
 

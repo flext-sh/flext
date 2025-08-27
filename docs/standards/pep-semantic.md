@@ -137,13 +137,13 @@ class FlextDomainService:
 ```python
 # Core Result Pattern
 class FlextResult[T]:
-class FlextError:
-class FlextValidationError(FlextError):
+class FlextExceptions.Error:
+class FlextExceptions.ValidationError(FlextExceptions.Error):
 
 # Tipos relacionados
 TFlextResult = FlextResult[T]
 TFlextSuccess = T
-TFlextFailure = FlextError
+TFlextFailure = FlextExceptions.Error
 ```
 
 ### HTTP Client e API

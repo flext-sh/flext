@@ -58,7 +58,7 @@ from flext_core import FlextResult
 
 
 class FlextWebAppProtocol(Protocol):
-    def run(self, host: str = "0.0.0.0", port: int = 5000) -> None: ...
+    def run(self, host: str = "localhost", port: int = 5000) -> None: ...
 
 
 class FlextWebServiceProtocol(Protocol):
