@@ -367,10 +367,10 @@ if re.match(FlextConstants.Patterns.EMAIL_PATTERN, email):
 ### Configuration with Constants
 
 ```python
-from flext_core.config import FlextSettings
+from flext_core.config import FlextConfig
 from flext_core.constants import FlextConstants
 
-class DatabaseConfig(FlextSettings):
+class DatabaseConfig(FlextConfig):
     """Database configuration using semantic constants."""
 
     host: str = "localhost"

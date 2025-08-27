@@ -23,7 +23,7 @@ from flext_core import (
     FlextAggregateRoot,  # DDD aggregates
 
     # Configuration
-    FlextSettings,   # Environment-aware config
+    FlextConfig,   # Environment-aware config
 )
 ```
 
@@ -97,7 +97,7 @@ Enterprise dependency injection with type safety.
 from flext_core import FlextContainer, get_flext_container
 
 # Use global container
-container = get_flext_container()
+container = FlextContainer.get_global()
 
 # Register services
 result = container.register("user_service", UserService())
@@ -114,7 +114,7 @@ if service_result.success:
 - `container.register(name, instance)` - Register service instance
 - `container.get(name)` - Retrieve service (returns FlextResult)
 - `container.contains(name)` - Check if service exists
-- `get_flext_container()` - Get global container instance
+- `FlextContainer.get_global()` - Get global container instance
 
 ## 🏛️ Domain Modeling
 
@@ -169,12 +169,12 @@ class Order(FlextAggregateRoot):
 
 ## ⚙️ Configuration Management
 
-### FlextSettings - Environment-Aware Config
+### FlextConfig - Environment-Aware Config
 
 ```python
-from flext_core import FlextSettings
+from flext_core import FlextConfig
 
-class AppSettings(FlextSettings):
+class AppSettings(FlextConfig):
     database_url: str = "postgresql://localhost/app"
     log_level: str = "INFO"
     debug: bool = False

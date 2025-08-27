@@ -78,7 +78,7 @@ from pathlib import Path
 
 import pytest
 import ruff.__main__ as ruff_main  # type: ignore[import-untyped]
-from flext_core import FlextEntity, FlextResult, get_flext_container, get_logger
+from flext_core import FlextEntity, FlextResult, get_logger
 from mypy import api as mypy_api
 
 from .colors import Colors, print_colored
@@ -276,7 +276,7 @@ class QualityGateway:
         """
         self.workspace_path = workspace_path
         self.logger = get_logger(__name__)
-        self.container = get_flext_container()
+        self.container = FlextContainer.get_global()
 
         self.logger.info(
             "Quality gateway initialized",

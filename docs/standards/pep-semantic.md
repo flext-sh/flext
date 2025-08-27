@@ -12,7 +12,7 @@
 class FlextResult[T]:
 class FlextEntity:
 class FlextContainer:
-class FlextSettings:
+class FlextConfig:
 class FlextApiClient:
 class FlextLogContext:
 
@@ -196,9 +196,9 @@ class FlextObservabilityCollector:
 
 ```python
 # Configuration Classes
-class FlextSettings(BaseSettings):
-class FlextDatabaseConfig(FlextSettings):
-class FlextApiConfig(FlextSettings):
+class FlextConfig(BaseSettings):
+class FlextDatabaseConfig(FlextConfig):
+class FlextApiConfig(FlextConfig):
 
 # Constants
 FLEXT_DEFAULT_CONFIG_PATH = "config/flext.yaml"

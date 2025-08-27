@@ -10,7 +10,7 @@ from flext_observability import (
 )
 
 
-def _deprecation_warning() -> None:
+def deprecation_warning() -> None:
     """Issue deprecation warning for legacy logging utilities.
 
     Emits a DeprecationWarning to notify users that flext_tools.utils.logging
@@ -25,7 +25,7 @@ def _deprecation_warning() -> None:
         DeprecationWarning: Always raised to notify about deprecated usage.
 
     Example:
-        >>> _deprecation_warning()
+        >>> deprecation_warning()
         # Emits: "flext_tools.utils.logging is deprecated. Use flext_observability..."
 
     Note:
@@ -77,7 +77,7 @@ class DetailedLogger:
 
     def __init__(self, name: str) -> None:
         """Initialize logger with flext-observability integration."""
-        _deprecation_warning()
+        deprecation_warning()
         self.name = name
         self.logger = flext_get_logger(name)
         self.logging_service = FlextLoggingService()
@@ -293,7 +293,7 @@ def log_operation(func: OperationCallable) -> OperationCallable:
         to flext-observability monitoring decorators.
 
     """
-    _deprecation_warning()
+    deprecation_warning()
 
     def wrapper(*args: object, **kwargs: object) -> object:
         """Log operation with flext-observability wrapper."""
