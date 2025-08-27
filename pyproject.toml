@@ -350,137 +350,22 @@ reportDuplicateImport = true
 reportPrivateUsage = true
 
 # Execution environments for different project types - comprehensive coverage
+ 
+# Allow wildcard imports in __init__.py files across all projects  
 [[tool.pyright.executionEnvironments]]
-root = "tests"
-reportPrivateUsage = false
+root = "."
+extraPaths = ["src"]
+reportWildcardImportFromLibrary = false
+include = ["**/__init__.py"]
 
+# More relaxed rules for test files across all projects
 [[tool.pyright.executionEnvironments]]
-root = "client-a-oud-mig/tests"
+root = "."
+extraPaths = ["tests"]
 reportPrivateUsage = false
+reportWildcardImportFromLibrary = false
+include = ["**/tests/**/*.py", "**/test_*.py", "**/*_test.py"]
 
-[[tool.pyright.executionEnvironments]]
-root = "flexcore/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-api/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-auth/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-cli/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-core/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-db-oracle/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-dbt-ldap/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-dbt-ldif/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-dbt-oracle/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-dbt-oracle-wms/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-grpc/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-ldap/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-ldif/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-meltano/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-observability/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-oracle-oic-ext/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-oracle-wms/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-plugin/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-quality/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-tap-ldap/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-tap-ldif/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-tap-oracle/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-tap-oracle-oic/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-tap-oracle-wms/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-target-ldap/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-target-ldif/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-target-oracle/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-target-oracle-oic/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-target-oracle-wms/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "flext-web/tests"
-reportPrivateUsage = false
-
-[[tool.pyright.executionEnvironments]]
-root = "client-b-meltano-native/tests"
-reportPrivateUsage = false
 
 [tool.vulture]
 exclude = [
