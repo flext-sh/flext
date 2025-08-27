@@ -3,12 +3,11 @@
 Tests for the base CLI functionality following FLEXT testing patterns
 with proper mocking and isolation.
 """
-import pytest
-from unittest.mock import Mock, patch, MagicMock
 from pathlib import Path
-from typing import Any
+from unittest.mock import Mock, patch
 
-from flext_core import FlextResult
+import pytest
+
 from flext.base_cli import BaseCLI
 
 
@@ -20,7 +19,7 @@ class TestBaseCLI:
         """Mock workspace path for testing."""
         return Path("/tmp/test-workspace")
 
-    @pytest.fixture  
+    @pytest.fixture
     def base_cli(self, mock_workspace: Path) -> BaseCLI:
         """Create BaseCLI instance with mocked dependencies."""
         return BaseCLI(workspace=mock_workspace)
@@ -29,7 +28,7 @@ class TestBaseCLI:
         """Test BaseCLI initialization with workspace."""
         # Assert
         assert base_cli.workspace == mock_workspace
-        assert hasattr(base_cli, 'workspace')
+        assert hasattr(base_cli, "workspace")
 
     def test_workspace_property(self, base_cli: BaseCLI, mock_workspace: Path) -> None:
         """Test workspace property access."""
@@ -37,10 +36,10 @@ class TestBaseCLI:
         assert base_cli.workspace == mock_workspace
         assert isinstance(base_cli.workspace, Path)
 
-    @patch('flext.base_cli.WorkspaceManager')
+    @patch("flext.base_cli.WorkspaceManager")
     def test_get_workspace_manager_success(
-        self, 
-        mock_workspace_manager: Mock, 
+        self,
+        mock_workspace_manager: Mock,
         base_cli: BaseCLI
     ) -> None:
         """Test successful workspace manager creation."""
@@ -56,10 +55,10 @@ class TestBaseCLI:
         assert result.value == mock_manager_instance
         mock_workspace_manager.assert_called_once_with(base_cli.workspace)
 
-    @patch('flext.base_cli.WorkspaceManager')
+    @patch("flext.base_cli.WorkspaceManager")
     def test_get_workspace_manager_failure(
-        self, 
-        mock_workspace_manager: Mock, 
+        self,
+        mock_workspace_manager: Mock,
         base_cli: BaseCLI
     ) -> None:
         """Test workspace manager creation failure handling."""
@@ -73,10 +72,10 @@ class TestBaseCLI:
         assert result.is_success is False
         assert "Workspace error" in str(result.error)
 
-    @patch('flext.base_cli.PipelineService')
+    @patch("flext.base_cli.PipelineService")
     def test_get_pipeline_service_success(
-        self, 
-        mock_pipeline_service: Mock, 
+        self,
+        mock_pipeline_service: Mock,
         base_cli: BaseCLI
     ) -> None:
         """Test successful pipeline service creation."""
@@ -92,10 +91,10 @@ class TestBaseCLI:
         assert result.value == mock_service_instance
         mock_pipeline_service.assert_called_once()
 
-    @patch('flext.base_cli.PipelineService')
+    @patch("flext.base_cli.PipelineService")
     def test_get_pipeline_service_failure(
-        self, 
-        mock_pipeline_service: Mock, 
+        self,
+        mock_pipeline_service: Mock,
         base_cli: BaseCLI
     ) -> None:
         """Test pipeline service creation failure handling."""
@@ -156,7 +155,7 @@ class TestBaseCLIErrorHandling:
         with pytest.raises(TypeError):
             BaseCLI(workspace="invalid")  # type: ignore[arg-type]
 
-    @patch('flext.base_cli.WorkspaceManager')
+    @patch("flext.base_cli.WorkspaceManager")
     def test_multiple_service_failures(self, mock_workspace_manager: Mock) -> None:
         """Test handling of multiple consecutive service failures."""
         # Arrange

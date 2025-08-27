@@ -57,46 +57,97 @@ try:
     FLEXT_CLI_AVAILABLE = True
 except ImportError:
     # Fallback if flext-cli functions not available
-    def print_success(msg: str) -> None:
+    try:
+        from rich.console import Console
+    except ImportError:
+        # Create a minimal Console fallback if Rich is not available
+        class Console:  # type: ignore[misc,no-redef]
+            def print(self, *args: object, **kwargs: object) -> None:
+                pass
+
+    def print_success(console: Console, message: str) -> None:
         """Fallback success message function."""
-    def print_info(msg: str) -> None:
+        console.print(f"✓ {message}")
+
+    def print_info(console: Console, message: str) -> None:
         """Fallback info message function."""
-    def print_warning(msg: str) -> None:
+        console.print(f"i {message}")
+
+    def print_warning(console: Console, message: str) -> None:
         """Fallback warning message function."""
-    def print_error(msg: str) -> None:
+        console.print(f"⚠ {message}")
+
+    def print_error(console: Console, message: str, details: str | None = None) -> None:
         """Fallback error message function."""
+        console.print(f"Error: {message}")
+        if details:
+            console.print(details)
+
     FLEXT_CLI_AVAILABLE = False
 
 # Try to import additional flext-cli utilities
 try:
     from flext_cli import FlextCliConfig, FlextCliContext, cli_create_table
 except ImportError:
-    # Fallback implementations
-    def cli_create_table(headers: list[str], data: list[list[str]], title: str = "") -> str:
-        """Simple table fallback."""
-        lines = []
-        if title:
-            lines.extend((title, "=" * len(title)))
+    # Fallback implementations with correct signatures
+    from flext_core import FlextResult
+    try:
+        from rich.table import Table
+    except ImportError:
+        # Fallback if Rich is not available
+        class Table:  # type: ignore[misc,no-redef]
+            def __init__(self, title: str | None = None) -> None:
+                self.title = title
+                self.rows: list[list[str]] = []
 
-        if headers:
-            lines.extend((" | ".join(headers), "-" * len(" | ".join(headers))))
+            def add_column(self, header: str, **kwargs: object) -> None:
+                pass
 
-        for row in data:
-            if isinstance(row, list):
-                lines.append(" | ".join(str(item) for item in row))
-            elif isinstance(row, dict):
-                lines.append(" | ".join(str(row.get(h, "")) for h in headers))
+            def add_row(self, *row: str) -> None:
+                self.rows.append(list(row))
 
-        return "\n".join(lines)
+    def cli_create_table(
+        data: dict[str, object] | list[object] | str | float | None,
+        title: str | None = None,
+        *,
+        show_lines: bool = False,
+        max_width: int | None = None,
+    ) -> FlextResult[Table]:
+        """Fallback table creation function with correct signature."""
+        try:
+            table = Table(title=title)
 
-    class FlextCliConfig:
+            # Simple fallback implementation
+            if isinstance(data, list) and data:
+                if isinstance(data[0], dict):
+                    # List of dicts - create table with keys as columns
+                    first_item = data[0]
+                    headers = list(first_item.keys())
+                    for header in headers:
+                        table.add_column(str(header))
+
+                    for item in data:
+                        if isinstance(item, dict):
+                            row = [str(item.get(h, "")) for h in headers]
+                            table.add_row(*row)
+                else:
+                    # List of values
+                    table.add_column("Value")
+                    for item in data:
+                        table.add_row(str(item))
+
+            return FlextResult[Table].ok(table)
+        except Exception as e:
+            return FlextResult[Table].fail(f"Failed to create table: {e}")
+
+    class FlextCliConfig:  # type: ignore[no-redef]
         """Fallback CLI configuration class."""
 
         def __init__(self) -> None:
             self.profile = "default"
             self.debug = False
 
-    class FlextCliContext:
+    class FlextCliContext:  # type: ignore[no-redef]
         """Fallback CLI context class."""
 
         def __init__(self, working_directory: Path, environment_variables: dict[str, str]) -> None:
@@ -107,26 +158,40 @@ except ImportError:
 try:
     from flext_cli import cli_validate_inputs
 except ImportError:
-    # Simple fallback decorator
-    def cli_validate_inputs(func):
+    from collections.abc import Callable
+    from typing import Any, cast
+
+    # Fallback decorator with simple Any signature
+    def cli_validate_inputs(func: Callable[..., Any]) -> Callable[..., Any]:  # type: ignore[misc,explicit-any]
         """Fallback input validation decorator."""
         return func
 
 # Use flext-core patterns
 from flext_core import FlextResult
 
+# Create default console for print_* functions
+try:
+    from rich.console import Console
+    _default_console = Console()
+except ImportError:
+    class _DefaultConsole:  # type: ignore[misc]
+        def print(self, *args: object, **kwargs: object) -> None:
+            pass
+    _default_console = _DefaultConsole()  # type: ignore[assignment]
+
 # Import flext_tools functionality to expose via CLI
 try:
-    from quality_gateway import QualityGateway
+    from quality_gateway import QualityGateway  # type: ignore[import-not-found]
 except ImportError:
     # Fallback if not in package context
     try:
         from .quality_gateway import QualityGateway
     except ImportError:
         # Simple fallback class
-        class QualityGateway:
+        class QualityGateway:  # type: ignore[no-redef]
             """Fallback quality gateway class."""
-            def __init__(self, workspace_path) -> None:
+
+            def __init__(self, workspace_path: Path) -> None:
                 self.workspace_path = workspace_path
 
 
@@ -211,10 +276,10 @@ def main(
         )
 
         if debug:
-            print_success("✅ FLEXT CLI initialized with flext-cli integration")
+            print_success(_default_console, "✅ FLEXT CLI initialized with flext-cli integration")
 
     except Exception as e:
-        print_error(f"❌ Configuration error: {e}")
+        print_error(_default_console, f"❌ Configuration error: {e}")
         ctx.exit(1)
 
     # Store flext-cli objects in context
@@ -324,33 +389,33 @@ def quality(
         # Use flext_tools QualityGateway with flext-cli integration
         QualityGateway(workspace_path=workspace)
 
-        print_info("🔍 Running quality checks with flext_tools...")
+        print_info(_default_console, "🔍 Running quality checks with flext_tools...")
 
         # Configure gateway based on CLI arguments
         if not enable_lint:
-            print_warning("⚠️  Linting checks disabled")
+            print_warning(_default_console, "⚠️  Linting checks disabled")
         if not enable_types:
-            print_warning("⚠️  Type checking disabled")
+            print_warning(_default_console, "⚠️  Type checking disabled")
         if not enable_tests:
-            print_warning("⚠️  Test execution disabled")
+            print_warning(_default_console, "⚠️  Test execution disabled")
         if not enable_coverage:
-            print_warning("⚠️  Coverage analysis disabled")
+            print_warning(_default_console, "⚠️  Coverage analysis disabled")
         if not enable_security:
-            print_warning("⚠️  Security scanning disabled")
+            print_warning(_default_console, "⚠️  Security scanning disabled")
 
-        print_info(f"📊 Coverage threshold: {coverage_threshold}%")
+        print_info(_default_console, f"📊 Coverage threshold: {coverage_threshold}%")
 
         # Execute quality checks with configured options
         result = FlextResult[str].ok("Quality checks completed successfully")
 
         if result.success:
-            print_success("✅ All quality checks passed!")
+            print_success(_default_console, "✅ All quality checks passed!")
         else:
-            print_error(f"❌ Quality checks failed: {result.error}")
+            print_error(_default_console, f"❌ Quality checks failed: {result.error}")
             ctx.exit(1)
 
     except Exception as e:
-        print_error(f"❌ Error running quality checks: {e}")
+        print_error(_default_console, f"❌ Error running quality checks: {e}")
         ctx.exit(1)
 
 
@@ -395,26 +460,28 @@ def scripts(ctx: click.Context, category: str | None, *, list_only: bool) -> Non
     }
 
     if list_only:
-        print_info("📋 Available FlextScript instances:")
+        print_info(_default_console, "📋 Available FlextScript instances:")
 
         if category:
             if category in scripts_by_category:
-                print_info(f"📂 Category: {category}")
+                print_info(_default_console, f"📂 Category: {category}")
                 # Use flext-cli table formatter for better presentation
                 table_data = [{"Script": script} for script in scripts_by_category[category]]
                 if table_data:
-                    cli_create_table(["Script"], table_data)
+                    result = cli_create_table(cast("list[object]", table_data), title=f"Scripts in {category}")
+                    if result.success:
+                        _default_console.print(result.value)
             else:
-                print_warning(f"Unknown category: {category}")
+                print_warning(_default_console, f"Unknown category: {category}")
         else:
             for cat, scripts in scripts_by_category.items():
-                print_info(f"📂 Category: {cat}")
+                print_info(_default_console, f"📂 Category: {cat}")
                 for script in scripts:
-                    print_info(f"  - {script}")
+                    print_info(_default_console, f"  - {script}")
     elif category:
-        print_info(f"🚀 Executing scripts in category: {category}")
+        print_info(_default_console, f"🚀 Executing scripts in category: {category}")
     else:
-        print_warning("🚀 FlextScript management coming soon...")
+        print_warning(_default_console, "🚀 FlextScript management coming soon...")
 
 
 @tools.command()
@@ -425,7 +492,7 @@ def scripts(ctx: click.Context, category: str | None, *, list_only: bool) -> Non
     help="Type of analysis to perform",
 )
 @click.pass_context
-def analysis(ctx: click.Context, type: str) -> None:
+def analysis(ctx: click.Context, analysis_type: str) -> None:
     """Perform workspace and code analysis using flext_tools analysis modules.
 
     Executes comprehensive analysis operations on workspace structure, dependencies,
@@ -435,7 +502,7 @@ def analysis(ctx: click.Context, type: str) -> None:
 
     Args:
         ctx: Click context containing workspace path and configuration settings.
-        type: Type of analysis to perform. Options include:
+        analysis_type: Type of analysis to perform. Options include:
               - 'dependencies': Analyze project dependencies and version conflicts
               - 'conflicts': Detect dependency conflicts and resolution strategies
               - 'structure': Validate workspace structure and project organization
@@ -454,10 +521,10 @@ def analysis(ctx: click.Context, type: str) -> None:
     """
     workspace = ctx.obj["workspace"]
 
-    print_info(f"🔬 Running {type} analysis on workspace: {workspace}")
+    print_info(_default_console, f"🔬 Running {analysis_type} analysis on workspace: {workspace}")
 
     # This would integrate with flext_tools analysis modules
-    print_success(f"✅ {type.title()} analysis completed")
+    print_success(_default_console, f"✅ {analysis_type.title()} analysis completed")
 
 
 # ============================================================================
@@ -481,22 +548,22 @@ def test(ctx: click.Context, *, coverage: bool, parallel: bool) -> None:  # noqa
     ctx.obj["workspace"]
     ctx.obj["context"]
 
-    print_info("🧪 Running tests with flext_tools integration...")
+    print_info(_default_console, "🧪 Running tests with flext_tools integration...")
 
     # Display configuration based on arguments
     if coverage:
-        print_info("📊 Coverage analysis enabled")
+        print_info(_default_console, "📊 Coverage analysis enabled")
     if parallel:
-        print_info("⚡ Parallel execution enabled")
+        print_info(_default_console, "⚡ Parallel execution enabled")
 
     # This would integrate with flext_tools testing modules
     # For now, showing integration pattern
     result = FlextResult[int].ok(0)  # Simulated success
 
     if result.success and result.value == 0:
-        print_success("✅ All tests passed!")
+        print_success(_default_console, "✅ All tests passed!")
     else:
-        print_error(f"❌ Tests failed: {result.error}")
+        print_error(_default_console, f"❌ Tests failed: {result.error}")
         ctx.exit(result.value or 1)
 
 
@@ -511,18 +578,18 @@ def lint(ctx: click.Context, *, fix: bool) -> None:  # noqa: FBT001
     """
     workspace = ctx.obj["workspace"]
 
-    print_info("🔍 Running linting with flext_tools...")
+    print_info(_default_console, "🔍 Running linting with flext_tools...")
 
     # Display configuration based on arguments
     if fix:
-        print_info("🔧 Auto-fix mode enabled")
+        print_info(_default_console, "🔧 Auto-fix mode enabled")
 
     try:
         QualityGateway(workspace_path=workspace)
         # Integration with quality_gateway would go here
-        print_success("✅ Linting passed!")
+        print_success(_default_console, "✅ Linting passed!")
     except Exception as e:
-        print_error(f"❌ Linting failed: {e}")
+        print_error(_default_console, f"❌ Linting failed: {e}")
         ctx.exit(1)
 
 
@@ -536,10 +603,10 @@ def format_code(ctx: click.Context, *, check_only: bool) -> None:  # noqa: FBT00
     ctx.obj["workspace"]
 
     action = "Checking" if check_only else "Formatting"
-    print_info(f"🎨 {action} code with flext_tools...")
+    print_info(_default_console, f"🎨 {action} code with flext_tools...")
 
     # Integration with flext_tools formatting would go here
-    print_success("✅ Formatting completed!")
+    print_success(_default_console, "✅ Formatting completed!")
 
 
 @main.command()
@@ -564,26 +631,27 @@ def info(ctx: click.Context, *, detailed: bool) -> None:  # noqa: FBT001
     }
 
     # Format output using flext-cli patterns
-    print_info("🏢 FLEXT Control Panel - Workspace Information")
-    print_info("=" * 50)
-    print_info(f"📁 Workspace Root: {workspace_data['workspace_root']}")
-    print_info(f"📦 Projects Found: {workspace_data['projects_count']}")
-    print_info(f"⚙️  Profile: {workspace_data['profile']}")
+    print_info(_default_console, "🏢 FLEXT Control Panel - Workspace Information")
+    print_info(_default_console, "=" * 50)
+    print_info(_default_console, f"📁 Workspace Root: {workspace_data['workspace_root']}")
+    print_info(_default_console, f"📦 Projects Found: {workspace_data['projects_count']}")
+    print_info(_default_console, f"⚙️  Profile: {workspace_data['profile']}")
     print_info(
-        f"🐛 Debug Mode: {'✅ Enabled' if workspace_data['debug_mode'] else '❌ Disabled'}"
+        _default_console, f"🐛 Debug Mode: {'✅ Enabled' if workspace_data['debug_mode'] else '❌ Disabled'}"
     )
 
     if detailed:
-        print_success("\n📋 Projects:")
+        print_success(_default_console, "\n📋 Projects:")
         projects = workspace_data.get("projects", [])
         if isinstance(projects, list):
             # Use flext-cli table formatting for better presentation
-            project_data = [[project] for project in projects]
-            cli_create_table(
-                headers=["Project Name"],
+            project_data = cast("list[object]", list(projects))  # Simple list, not nested
+            result = cli_create_table(
                 data=project_data,
                 title="FLEXT Ecosystem Projects"
             )
+            if result.success:
+                _default_console.print(result.value)
 
 
 # ============================================================================
@@ -611,17 +679,17 @@ except ImportError:
     @click.group()
     def auth() -> None:
         """Provide authentication commands (placeholder - install flext-cli)."""
-        print_warning("⚠️ flext-cli auth commands not available")
+        print_warning(_default_console, "⚠️ flext-cli auth commands not available")
 
     @click.group()
     def config() -> None:
         """Provide configuration commands (placeholder - install flext-cli)."""
-        print_warning("⚠️ flext-cli config commands not available")
+        print_warning(_default_console, "⚠️ flext-cli config commands not available")
 
     @click.group()
     def debug() -> None:
         """Debug commands (placeholder - install flext-cli)."""
-        print_warning("⚠️ flext-cli debug commands not available")
+        print_warning(_default_console, "⚠️ flext-cli debug commands not available")
 
     main.add_command(auth)
     main.add_command(config)

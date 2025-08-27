@@ -635,14 +635,14 @@ grep -r "from flext_core\." src/ --exclude-dir=flext-core --include="*.py"  # Sh
 **ALWAYS CHOOSE: Single CONSOLIDATED class with nested classes (Option B)**
 ```python
 # ✅ CORRECT - Single consolidated class
-class client-aMigExceptions(FlextError):
+class client-aMigExceptions(FlextExceptions.Error):
     """Consolidated class containing ALL project exceptions."""
     
-    class ConfigError(FlextError):
+    class ConfigError(FlextExceptions.Error):
         """Configuration error."""
         pass
     
-    class ConnectionError(FlextError):
+    class ConnectionError(FlextExceptions.Error):
         """Connection error."""  
         pass
     # ... all others as nested classes
@@ -660,18 +660,18 @@ class client-aMigExceptions(FlextError):
 
 ```python
 # src/flext_plugin/exceptions.py - GOOD (Single Consolidated Exception Class)
-class FlextPluginExceptions(FlextError):
+class FlextPluginExceptions(FlextExceptions.Error):
     """Single consolidated class containing ALL plugin exceptions.
     
     Consolidates ALL exception definitions into one class following FLEXT patterns.
     Individual exceptions available as nested classes for organization.
     """
     
-    class DiscoveryError(FlextError):
+    class DiscoveryError(FlextExceptions.Error):
         """Plugin discovery specific error."""
         pass
     
-    class LoadingError(FlextError):
+    class LoadingError(FlextExceptions.Error):
         """Plugin loading specific error."""
         pass
     

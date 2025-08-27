@@ -332,40 +332,65 @@ class TransitiveDependencyResolver:
         """
         path_deps: list[PathDependency] = []
 
-        # Poetry path dependencies
+        poetry_section = self._get_poetry_section(data)
+        if not poetry_section:
+            return []
+
+        # Extract main dependencies
+        path_deps.extend(self._extract_main_path_dependencies(poetry_section, project_path))
+
+        # Extract group dependencies
+        path_deps.extend(self._extract_group_path_dependencies(poetry_section, project_path))
+
+        return path_deps
+
+    def _get_poetry_section(self, data: dict[str, object]) -> dict[str, object] | None:
+        """Get Poetry section from pyproject.toml data."""
         tool_section = data.get("tool", {})
         if not isinstance(tool_section, dict):
-            return []
+            return None
         poetry_section: object = tool_section.get("poetry", {})  # type: ignore[misc]
         if not isinstance(poetry_section, dict):
-            return []
+            return None
+        return poetry_section  # type: ignore[return-value]
+
+    def _extract_main_path_dependencies(
+        self, poetry_section: dict[str, object], project_path: Path
+    ) -> list[PathDependency]:
+        """Extract path dependencies from main dependencies section."""
+        path_deps: list[PathDependency] = []
         poetry_deps: object = poetry_section.get("dependencies", {})  # type: ignore[misc]
         if isinstance(poetry_deps, dict):
-            for dep_name_raw, dep_spec_raw in poetry_deps.items():  # type: ignore[misc]
-                dep_name: str = str(dep_name_raw)  # type: ignore[misc]
-                dep_spec: object = dep_spec_raw  # type: ignore[misc]
-                if isinstance(dep_spec, dict) and "path" in dep_spec:
-                    path_raw: object = dep_spec["path"]  # type: ignore[misc]
-                    develop_raw: object = dep_spec.get("develop", False)  # type: ignore[misc]
-                    if isinstance(path_raw, str) and isinstance(develop_raw, bool):
-                        path_deps.append(PathDependency(dep_name, (project_path / path_raw).resolve(), develop_raw))
+            path_deps.extend(self._process_dependency_dict(poetry_deps, project_path))
+        return path_deps
 
-        # Poetry group path dependencies
+    def _extract_group_path_dependencies(
+        self, poetry_section: dict[str, object], project_path: Path
+    ) -> list[PathDependency]:
+        """Extract path dependencies from dependency groups."""
+        path_deps: list[PathDependency] = []
         groups: object = poetry_section.get("group", {})  # type: ignore[misc]
         if isinstance(groups, dict):
             for group_data in groups.values():  # type: ignore[misc]
                 if isinstance(group_data, dict):
                     group_deps: object = group_data.get("dependencies", {})  # type: ignore[misc]
                     if isinstance(group_deps, dict):
-                        for dep_name_raw, dep_spec_raw in group_deps.items():  # type: ignore[misc]
-                            dep_name: str = str(dep_name_raw)  # type: ignore[misc]
-                            dep_spec: object = dep_spec_raw  # type: ignore[misc]
-                            if isinstance(dep_spec, dict) and "path" in dep_spec:
-                                path_raw: object = dep_spec["path"]  # type: ignore[misc]
-                                develop_raw: object = dep_spec.get("develop", False)  # type: ignore[misc]
-                                if isinstance(path_raw, str) and isinstance(develop_raw, bool):
-                                    path_deps.append(PathDependency(dep_name, (project_path / path_raw).resolve(), develop_raw))
+                        path_deps.extend(self._process_dependency_dict(group_deps, project_path))
+        return path_deps
 
+    def _process_dependency_dict(
+        self, deps: dict[str, object], project_path: Path
+    ) -> list[PathDependency]:
+        """Process a dictionary of dependencies and extract path dependencies."""
+        path_deps: list[PathDependency] = []
+        for dep_name_raw, dep_spec_raw in deps.items():  # type: ignore[misc]
+            dep_name: str = str(dep_name_raw)  # type: ignore[misc]
+            dep_spec: object = dep_spec_raw  # type: ignore[misc]
+            if isinstance(dep_spec, dict) and "path" in dep_spec:
+                path_raw: object = dep_spec["path"]  # type: ignore[misc]
+                develop_raw: object = dep_spec.get("develop", False)  # type: ignore[misc]
+                if isinstance(path_raw, str) and isinstance(develop_raw, bool):
+                    path_deps.append(PathDependency(dep_name, (project_path / path_raw).resolve(), develop_raw))
         return path_deps
 
     def _extract_package_name(self, dep_spec: str) -> str:

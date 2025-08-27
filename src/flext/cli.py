@@ -80,13 +80,13 @@ class FlextCliContext:
         self.config = config
 
 # Fallback decorators for missing flext-cli functionality
-def cli_enhanced(**kwargs) -> Callable[[Callable[..., Any]], Callable[..., Any]]:  # type: ignore[no-untyped-def]
+def cli_enhanced(**kwargs) -> Callable[[Callable[..., Any]], Callable[..., Any]]:  # type: ignore[no-untyped-def,explicit-any]
     """Simple decorator replacement for cli_enhanced."""
-    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:  # type: ignore[explicit-any]
         return func
     return decorator
 
-def cli_validate_inputs(func: Callable[..., Any]) -> Callable[..., Any]:
+def cli_validate_inputs(func: Callable[..., Any]) -> Callable[..., Any]:  # type: ignore[explicit-any]
     """Simple decorator replacement for cli_validate_inputs."""
     return func
 
@@ -345,7 +345,7 @@ def scripts(ctx: click.Context, category: str | None, list_only: bool) -> None:
     help="Type of analysis to perform",
 )
 @click.pass_context
-def analysis(ctx: click.Context, type: str) -> None:
+def analysis(ctx: click.Context, analysis_type: str) -> None:
     """Perform workspace and code analysis using flext_tools analysis modules.
 
     Executes comprehensive analysis operations on workspace structure, dependencies,
@@ -355,10 +355,10 @@ def analysis(ctx: click.Context, type: str) -> None:
 
     Args:
         ctx: Click context containing workspace path and configuration settings.
-        type: Type of analysis to perform. Options include:
-              - 'dependencies': Analyze project dependencies and version conflicts
-              - 'conflicts': Detect dependency conflicts and resolution strategies
-              - 'structure': Validate workspace structure and project organization
+        analysis_type: Type of analysis to perform. Options include:
+                      - 'dependencies': Analyze project dependencies and version conflicts
+                      - 'conflicts': Detect dependency conflicts and resolution strategies
+                      - 'structure': Validate workspace structure and project organization
 
     Example:
         Run different types of analysis:
@@ -374,10 +374,10 @@ def analysis(ctx: click.Context, type: str) -> None:
     """
     workspace = ctx.obj["workspace"]
 
-    print_colored(f"🔬 Running {type} analysis on workspace: {workspace}", Colors.BLUE)
+    print_colored(f"🔬 Running {analysis_type} analysis on workspace: {workspace}", Colors.BLUE)
 
     # This would integrate with flext_tools analysis modules
-    print_colored(f"✅ {type.title()} analysis completed", Colors.GREEN)
+    print_colored(f"✅ {analysis_type.title()} analysis completed", Colors.GREEN)
 
 
 # ============================================================================
