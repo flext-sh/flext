@@ -104,7 +104,6 @@ from flext_core import (
     FlextDomainService,
     FlextResult,
     FlextValue,
-    get_flext_container,
     get_logger,
 )
 
@@ -244,7 +243,7 @@ class FlextScript(FlextDomainService[bool]):
         """Initialize the script with flext-core infrastructure."""
         self.logger = get_logger(self.__class__.__name__)
         self.start_time = time.time()
-        self.container = get_flext_container()
+        self.container = FlextContainer.get_global()
 
     @property
     @abstractmethod
