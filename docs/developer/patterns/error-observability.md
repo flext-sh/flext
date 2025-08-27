@@ -13,7 +13,7 @@ Comprehensive error handling and observability architecture for the FLEXT ecosys
 Clear distinction between error types:
 
 ```
-FlextError                  # Base for all errors
+FlextExceptions.Error                  # Base for all errors
 ├── FlextBusinessError      # Business logic violations
 │   ├── ValidationError     # Data validation failures
 │   └── AuthorizationError  # Permission denied
@@ -62,7 +62,7 @@ class ErrorCode(StrEnum):
     SERIALIZATION_ERROR = "FLEXT_2004"
     EXTERNAL_SERVICE_ERROR = "FLEXT_2005"
 
-class FlextError(Exception):
+class FlextExceptions.Error(Exception):
     """Universal base exception with full observability support."""
 
     __error_family__: ClassVar[str] = "FLEXT"
@@ -117,14 +117,14 @@ class FlextError(Exception):
             "timestamp": self.timestamp.isoformat()
         }
 
-class FlextBusinessError(FlextError):
+class FlextBusinessError(FlextExceptions.Error):
     """Business logic violations requiring user action."""
     __error_type__ = "BUSINESS"
 
     def _is_recoverable(self) -> bool:
         return False  # Business errors typically require user intervention
 
-class FlextTechnicalError(FlextError):
+class FlextTechnicalError(FlextExceptions.Error):
     """Technical/infrastructure errors potentially recoverable."""
     __error_type__ = "TECHNICAL"
 
@@ -308,7 +308,7 @@ def get_observability() -> FlextObservabilityProtocol:
 ### Basic Error Handling
 
 ```python
-from flext_core.errors import FlextData, FlextAuth, FlextError
+from flext_core.errors import FlextData, FlextAuth, FlextExceptions.Error
 from flext_core.result import FlextResult
 
 def connect_to_database(config: Dict[str, Any]) -> FlextResult[Connection]:
@@ -333,8 +333,8 @@ def connect_to_database(config: Dict[str, Any]) -> FlextResult[Connection]:
 
         return FlextResult[None].ok(connection)
 
-    except FlextError as e:
-        # FlextErrors already logged and tracked
+    except FlextExceptions.Error as e:
+        # FlextExceptions.Errors already logged and tracked
         return e.to_result()
     except Exception as e:
         # Wrap unexpected errors
@@ -384,7 +384,7 @@ class UserService:
 
                     return FlextResult[None].ok(user)
 
-                except FlextError as e:
+                except FlextExceptions.Error as e:
                     span.set_attribute("error", True)
                     self.metrics.increment("users.creation.failed", tags={"error_type": e.__class__.__name__})
                     return e.to_result()

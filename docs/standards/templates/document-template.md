@@ -124,12 +124,12 @@ result = client.connect()
 
 ```python
 # Advanced example with error handling
-from flext import FlextClient, FlextError
+from flext import FlextClient, FlextExceptions.Error
 
 try:
     client = FlextClient(config_path="config.yaml")
     result = client.process_data()
-except FlextError as e:
+except FlextExceptions.Error as e:
     print(f"Error: {e}")
 ```
 

@@ -3,18 +3,18 @@
 Tests for pipeline application services following FLEXT testing patterns
 with comprehensive coverage of CQRS commands, queries, and handlers.
 """
-import pytest
-from unittest.mock import Mock, patch, AsyncMock
 from typing import Any
 
+import pytest
 from flext_core import FlextResult
+
 from flext.application_pipeline import (
-    FlextPipelineApplicationServices,
-    PipelineService,
     CreatePipelineCommand,
     ExecutePipelineCommand,
+    FlextPipelineApplicationServices,
     GetPipelineQuery,
     ListPipelinesQuery,
+    PipelineService,
 )
 
 
@@ -27,7 +27,7 @@ class TestFlextPipelineApplicationServices:
         return FlextPipelineApplicationServices()
 
     def test_pipeline_service_initialization(
-        self, 
+        self,
         pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test pipeline service initialization."""
@@ -39,14 +39,14 @@ class TestFlextPipelineApplicationServices:
         """Test that PipelineService alias works correctly."""
         # Assert
         assert PipelineService is FlextPipelineApplicationServices
-        
+
         # Test instantiation through alias
         service = PipelineService()
         assert isinstance(service, FlextPipelineApplicationServices)
 
     @pytest.mark.asyncio
     async def test_create_pipeline_command_handler(
-        self, 
+        self,
         pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test create pipeline command handling."""
@@ -63,7 +63,7 @@ class TestFlextPipelineApplicationServices:
 
     @pytest.mark.asyncio
     async def test_execute_pipeline_command_handler(
-        self, 
+        self,
         pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test execute pipeline command handling."""
@@ -80,7 +80,7 @@ class TestFlextPipelineApplicationServices:
 
     @pytest.mark.asyncio
     async def test_get_pipeline_query_handler(
-        self, 
+        self,
         pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test get pipeline query handling."""
@@ -97,7 +97,7 @@ class TestFlextPipelineApplicationServices:
 
     @pytest.mark.asyncio
     async def test_list_pipelines_query_handler(
-        self, 
+        self,
         pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test list pipelines query handling."""
@@ -114,7 +114,7 @@ class TestFlextPipelineApplicationServices:
 
     @pytest.mark.asyncio
     async def test_create_pipeline_service_method(
-        self, 
+        self,
         pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test high-level create pipeline service method."""
@@ -130,7 +130,7 @@ class TestFlextPipelineApplicationServices:
 
     @pytest.mark.asyncio
     async def test_execute_pipeline_service_method(
-        self, 
+        self,
         pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test high-level execute pipeline service method."""
@@ -146,7 +146,7 @@ class TestFlextPipelineApplicationServices:
 
     @pytest.mark.asyncio
     async def test_get_pipeline_service_method(
-        self, 
+        self,
         pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test high-level get pipeline service method."""
@@ -162,7 +162,7 @@ class TestFlextPipelineApplicationServices:
 
     @pytest.mark.asyncio
     async def test_list_pipelines_service_method(
-        self, 
+        self,
         pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test high-level list pipelines service method."""
@@ -253,7 +253,7 @@ class TestPipelineQueries:
         # Test limit constraints
         with pytest.raises(ValueError):
             ListPipelinesQuery(limit=0)  # Below minimum ge=1
-        
+
         with pytest.raises(ValueError):
             ListPipelinesQuery(limit=101)  # Above maximum le=100
 
@@ -305,9 +305,9 @@ class TestPipelineServiceIntegration:
         """Test pipeline service error handling capabilities."""
         # This test demonstrates the structure for error handling
         # Actual error scenarios would be added as the implementation matures
-        
+
         service = FlextPipelineApplicationServices()
-        
+
         # Test with valid commands - should not raise exceptions
         try:
             command = CreatePipelineCommand(name="error-test")
@@ -320,11 +320,11 @@ class TestPipelineServiceIntegration:
         """Test that all backward compatibility aliases work correctly."""
         # Test service alias
         assert PipelineService is FlextPipelineApplicationServices
-        
-        # Test command aliases  
+
+        # Test command aliases
         assert CreatePipelineCommand is FlextPipelineApplicationServices.CreatePipelineCommand
         assert ExecutePipelineCommand is FlextPipelineApplicationServices.ExecutePipelineCommand
-        
+
         # Test query aliases
         assert GetPipelineQuery is FlextPipelineApplicationServices.GetPipelineQuery
         assert ListPipelinesQuery is FlextPipelineApplicationServices.ListPipelinesQuery
@@ -333,21 +333,21 @@ class TestPipelineServiceIntegration:
         """Test that the consolidated pattern structure is properly implemented."""
         # Verify nested classes exist
         service_class = FlextPipelineApplicationServices
-        
-        assert hasattr(service_class, 'CreatePipelineCommand')
-        assert hasattr(service_class, 'ExecutePipelineCommand') 
-        assert hasattr(service_class, 'GetPipelineQuery')
-        assert hasattr(service_class, 'ListPipelinesQuery')
-        
+
+        assert hasattr(service_class, "CreatePipelineCommand")
+        assert hasattr(service_class, "ExecutePipelineCommand")
+        assert hasattr(service_class, "GetPipelineQuery")
+        assert hasattr(service_class, "ListPipelinesQuery")
+
         # Verify handler methods exist
         service = service_class()
-        assert hasattr(service, 'handle_create_command')
-        assert hasattr(service, 'handle_execute_command')
-        assert hasattr(service, 'handle_get_query')
-        assert hasattr(service, 'handle_list_query')
-        
+        assert hasattr(service, "handle_create_command")
+        assert hasattr(service, "handle_execute_command")
+        assert hasattr(service, "handle_get_query")
+        assert hasattr(service, "handle_list_query")
+
         # Verify high-level service methods exist
-        assert hasattr(service, 'create_pipeline')
-        assert hasattr(service, 'execute_pipeline')
-        assert hasattr(service, 'get_pipeline')
-        assert hasattr(service, 'list_pipelines')
+        assert hasattr(service, "create_pipeline")
+        assert hasattr(service, "execute_pipeline")
+        assert hasattr(service, "get_pipeline")
+        assert hasattr(service, "list_pipelines")

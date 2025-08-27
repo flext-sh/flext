@@ -297,8 +297,8 @@ class FlextScript(FlextDomainService[bool]):
             )
 
         # Return success
-        _success = True
-        return FlextResult[bool].ok(_success)
+        success = True
+        return FlextResult[bool].ok(success)
 
     def cleanup(self) -> FlextResult[None]:
         """Perform cleanup operations after execution.

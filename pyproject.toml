@@ -204,7 +204,7 @@ strict = true
 check_untyped_defs = true
 disallow_any_decorated = false
 disallow_any_explicit = true
-disallow_any_expr = false          # Too restrictive for real-world usage
+disallow_any_expr = false           # Too restrictive for real-world usage
 disallow_any_generics = true
 disallow_any_unimported = true
 disallow_incomplete_defs = true
@@ -280,7 +280,7 @@ exclude = [
     "dist/",
     "node_modules/",
     "vendor/",
-    "flexcore/src/",          # Exclude flexcore/src to avoid module name conflicts
+    "flexcore/src/",         # Exclude flexcore/src to avoid module name conflicts
     ".*/examples/",          # Exclui todos os diretórios 'examples' em qualquer nível (regex corrigida)
     ".*/tests/",             # Exclui todos os diretórios 'tests' em qualquer nível (regex corrigida)
     ".*/scripts/",           # Exclui todos os diretórios 'scripts' em qualquer nível (regex corrigida)
@@ -320,18 +320,19 @@ include = [
     "*/tests",
     "scripts",
     "src",
-    "tests"
+    "tests",
 ]
 exclude = [
     "**/__pycache__",
-    "**/node_modules", 
+    "**/.meltano",
+    "**/.mypy_cache",
+    "**/.pytest_cache",
+    "**/.ruff_cache",
     "**/.venv",
     "**/build",
     "**/dist",
+    "**/node_modules",
     "**/target",
-    "**/.mypy_cache",
-    "**/.ruff_cache",
-    "**/.pytest_cache"
 ]
 
 # Type checking mode

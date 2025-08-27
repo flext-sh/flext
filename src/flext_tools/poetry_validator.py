@@ -443,12 +443,12 @@ class PoetryValidator:
                 if name == "python":
                     continue
 
-            if (
-                isinstance(spec, dict)
-                and "version" not in spec
-                and "git" not in spec
-                and "path" not in spec
-            ):
+                if (
+                    isinstance(spec, dict)
+                    and "version" not in spec
+                    and "git" not in spec
+                    and "path" not in spec
+                ):
                     issues.append(f"Dependency '{name}' missing version specification")
 
         # Check dependency groups
