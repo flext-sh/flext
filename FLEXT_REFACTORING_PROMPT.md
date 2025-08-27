@@ -388,7 +388,7 @@ class FlextBusinessService(FlextDomainService[FlextResult[BusinessData]]):
     def __init__(self):
         super().__init__()  # MANDATORY - call parent constructor
         self._logger = get_logger(__name__)  # Use flext-core logging
-        self._container = get_flext_container()  # Use flext-core DI
+        self._container = FlextContainer.get_global()  # Use flext-core DI
     
     def process_business_logic(self, input_data: FlextModel) -> FlextResult[BusinessData]:
         """Process with proper error handling and logging."""
@@ -497,7 +497,7 @@ from flext_core import (
     FlextModel,              # For ALL Pydantic models across ecosystem
     FlextResult,             # For ALL error handling across ecosystem
     FlextServiceProcessor,   # For ALL data processing across ecosystem  
-    FlextSettings,           # For ALL configuration across ecosystem
+    FlextConfig,           # For ALL configuration across ecosystem
     FlextValidators,         # For ALL validation logic across ecosystem
     FlextValueObject,        # For ALL value objects across ecosystem
     get_flext_container,     # For ALL service registration across ecosystem
@@ -510,7 +510,7 @@ class FlextLdapClient(FlextDomainService[FlextResult[LdapUser]]):
     
     def __init__(self):
         super().__init__()
-        self._container = get_flext_container()  # GENERALIZED DI
+        self._container = FlextContainer.get_global()  # GENERALIZED DI
         self._logger = get_logger(__name__)      # GENERALIZED logging
         self._validators = FlextValidators       # GENERALIZED validation
 
@@ -519,7 +519,7 @@ class FlextAuthService(FlextDomainService[FlextResult[AuthToken]]):
     
     def __init__(self):
         super().__init__()
-        self._container = get_flext_container()  # SAME pattern across projects
+        self._container = FlextContainer.get_global()  # SAME pattern across projects
         self._logger = get_logger(__name__)      # SAME pattern across projects
         self._validators = FlextValidators       # SAME pattern across projects
 ```
@@ -531,10 +531,10 @@ class FlextAuthService(FlextDomainService[FlextResult[AuthToken]]):
 class MyBaseService(ABC): ...             # DELETE - use FlextDomainService
 class MyServiceProtocol(Protocol): ...    # DELETE - use flext-core protocols
 class MyAbstractClient: ...               # DELETE - use FlextDomainService
-class BaseConfig: ...                     # DELETE - use FlextSettings/FlextModel
+class BaseConfig: ...                     # DELETE - use FlextConfig/FlextModel
 class CustomResult: ...                   # DELETE - use FlextResult
 class LocalLogger: ...                    # DELETE - use get_logger()
-class ProjectContainer: ...               # DELETE - use get_flext_container()
+class ProjectContainer: ...               # DELETE - use FlextContainer.get_global()
 class CustomValidator: ...                # DELETE - use FlextValidators
 class ProjectConstants: ...               # DELETE - use FlextConstants
 ```
@@ -1709,7 +1709,7 @@ grep -r "def [A-Z]" src/ | wc -l                  # Should be 0
 ### 🏗️ flext-core Integration Criteria
 * **0 local abstract base classes**: All services inherit from FlextDomainService
 * **0 local model classes**: All models inherit from FlextModel (Pydantic-based)
-* **100% flext-core utilities usage**: get_logger(), get_flext_container() everywhere
+* **100% flext-core utilities usage**: get_logger(), FlextContainer.get_global() everywhere
 * **0 duplicate implementations**: All functionality delegates to flext-core
 
 **Validation Commands:**

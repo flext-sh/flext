@@ -26,7 +26,7 @@ result = (process_data(input_data)
 **Critical**: Always return `FlextResult[T]` instead of raising exceptions. Use `.success`, `.value`, `.error` properties for result handling.
 
 ### Project Structure Patterns
-- **flext-core**: Foundation library (FlextResult, FlextContainer, FlextSettings)
+- **flext-core**: Foundation library (FlextResult, FlextContainer, FlextConfig)
 - **flext-api**: HTTP foundation with FastAPI integration
 - **flext-meltano**: Singer/Meltano/DBT integration hub
 - **flext-db-***: Database abstraction layers
@@ -93,7 +93,7 @@ plugins:
 All Singer components follow FLEXT foundation patterns:
 
 ```python
-from flext_core import FlextResult, FlextSettings
+from flext_core import FlextResult, FlextConfig
 from flext_db_oracle import FlextDbOracleManager
 
 class FlextTapOracle(Tap):
@@ -129,12 +129,12 @@ def process_records(records: Any) -> Any:  # Too generic
 - Achieve 90%+ test coverage
 
 ### Configuration Management
-All projects use `FlextSettings` with Pydantic for configuration:
+All projects use `FlextConfig` with Pydantic for configuration:
 
 ```python
-from flext_core import FlextSettings
+from flext_core import FlextConfig
 
-class MyProjectSettings(FlextSettings):
+class MyProjectSettings(FlextConfig):
     database_url: str
     api_timeout: int = 30
     

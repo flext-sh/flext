@@ -508,8 +508,9 @@ class WorkspaceManager:
       os.environ["FLEXT_LOG_LEVEL"] = "DEBUG"
 
       # Service URLs for local development
-      os.environ["FLEXCORE_URL"] = "http://localhost:8080"
-      os.environ["FLEXT_SERVICE_URL"] = "http://localhost:8081"
+      from flext_core import FlextConstants
+      os.environ["FLEXCORE_URL"] = FlextConstants.Urls.FLEXCORE_BASE_URL
+      os.environ["FLEXT_SERVICE_URL"] = FlextConstants.Urls.FLEXT_SERVICE_BASE_URL
 
       # Add workspace src to Python path
       workspace_src = self.workspace_root / "src"

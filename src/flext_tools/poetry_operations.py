@@ -18,7 +18,7 @@ import re
 import time
 from pathlib import Path
 
-from flext_core import FlextResult, get_flext_container, get_logger
+from flext_core import FlextResult, get_logger
 from poetry.console import (
     application as poetry_app,
 )
@@ -149,7 +149,7 @@ class PoetryOperations:
         self.dry_run = dry_run
         self.enable_safety = enable_safety
         self.logger = logger
-        self.container = get_flext_container()
+        self.container = FlextContainer.get_global()
 
         if self.enable_safety:
             self.backup_manager = BackupManager()
@@ -245,7 +245,9 @@ class PoetryOperations:
                 project_path=str(project_path),
                 error=str(e),
             )
-            return FlextResult[dict[str, object]].fail(f"Dependency addition failed: {e}")
+            return FlextResult[dict[str, object]].fail(
+                f"Dependency addition failed: {e}"
+            )
 
     def add_dependencies(
         self,
@@ -479,7 +481,9 @@ class PoetryOperations:
                 project_path=str(project_path),
                 error=str(e),
             )
-            return FlextResult[dict[str, object]].fail(f"Dependency removal failed: {e}")
+            return FlextResult[dict[str, object]].fail(
+                f"Dependency removal failed: {e}"
+            )
 
     def remove_dependencies(
         self,
@@ -903,7 +907,9 @@ class PoetryOperations:
                 project_path=str(project_path),
                 error=str(e),
             )
-            return FlextResult[dict[str, object]].fail(f"Project validation failed: {e}")
+            return FlextResult[dict[str, object]].fail(
+                f"Project validation failed: {e}"
+            )
 
     def validate_project(self, project_path: Path) -> bool:
         """Validate Poetry project configuration for compliance and integrity.
