@@ -14,7 +14,7 @@ from pathlib import Path
 
 import yaml
 
-from .colors import should_ignore_path
+from .paths import should_ignore_path
 
 logger = logging.getLogger(__name__)
 

@@ -138,6 +138,12 @@ class DevToolsManager:
           "build": 600,  # 10 minutes for build operations
       }
 
+    def _validate_command(self, cmd: list[str]) -> None:
+        """Validate subprocess command for security."""
+        if not cmd or not all(isinstance(arg, str) for arg in cmd):
+            msg = "Command must be a non-empty list of strings"
+            raise ValueError(msg)
+
     def run_tests(self, project: str | None = None) -> int:
       """Execute comprehensive test suite for specific project or entire workspace.
 
@@ -277,6 +283,9 @@ class DevToolsManager:
           if coverage_file.exists():
               cmd.extend(["--cov", str(project_path / "src")])
 
+          # Validate command before execution for security
+          self._validate_command(cmd)
+
           result = subprocess.run(
               cmd,
               cwd=project_path,
@@ -304,8 +313,8 @@ class DevToolsManager:
               f"Tests for {project_path.name} timed out after {self.timeout_config['test']} seconds"
           )
           return 1
-      except Exception as e:
-          self.logger.exception(f"Test execution failed for {project_path.name}: {e}")
+      except Exception:
+          self.logger.exception(f"Test execution failed for {project_path.name}")
           return 1
 
     def _run_all_tests(self) -> int:
@@ -513,8 +522,8 @@ class DevToolsManager:
               f"Linting timed out after {self.timeout_config['lint']} seconds"
           )
           return 1
-      except Exception as e:
-          self.logger.exception(f"Linting failed with exception: {e}")
+      except Exception:
+          self.logger.exception("Linting failed with exception")
           return 1
 
     def format_all(self) -> int:
@@ -606,8 +615,8 @@ class DevToolsManager:
               f"Code formatting timed out after {self.timeout_config['format']} seconds"
           )
           return 1
-      except Exception as e:
-          self.logger.exception(f"Code formatting failed with exception: {e}")
+      except Exception:
+          self.logger.exception("Code formatting failed with exception")
           return 1
 
     def _run_mypy_check(self) -> int:
@@ -632,8 +641,8 @@ class DevToolsManager:
       except subprocess.TimeoutExpired:
           self.logger.exception("MyPy type checking timed out")
           return 1
-      except Exception as e:
-          self.logger.exception(f"MyPy type checking failed: {e}")
+      except Exception:
+          self.logger.exception("MyPy type checking failed")
           return 1
 
     def _run_security_scan(self) -> int:
