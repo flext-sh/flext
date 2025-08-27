@@ -314,7 +314,7 @@ class FlextEcosystemStandardizer(FlextBaseService):
             r"from flext_core\.container import .*": "from flext_core import get_flext_container, FlextContainer",
             r"from flext_core\.loggings import get_logger": "from flext_core import get_logger",
             r"from flext_core\.models import FlextModel": "from flext_core import FlextModel",
-            r"from flext_core\.exceptions import .*Error": "from flext_core import FlextError, FlextValidationError",
+            r"from flext_core\.exceptions import .*Error": "from flext_core import FlextExceptions.Error, FlextExceptions.ValidationError",
             # Fix common incorrect imports
             r"import structlog": "# Use get_logger from flext_core instead\nfrom flext_core import get_logger",
             r"from structlog import get_logger": "from flext_core import get_logger",

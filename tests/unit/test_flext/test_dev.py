@@ -3,11 +3,11 @@
 Tests for development tools manager following FLEXT testing patterns
 with comprehensive mocking of subprocess operations and filesystem interactions.
 """
-import pytest
-from unittest.mock import Mock, patch, MagicMock, mock_open
-from pathlib import Path
 import subprocess
-from typing import Any
+from pathlib import Path
+from unittest.mock import Mock, patch
+
+import pytest
 
 from flext.dev import DevToolsManager
 
@@ -20,13 +20,13 @@ class TestDevToolsManager:
         """Create temporary workspace for testing."""
         workspace = tmp_path / "dev-test-workspace"
         workspace.mkdir()
-        
+
         # Create mock project structure
         flext_core = workspace / "flext-core"
         flext_core.mkdir()
         (flext_core / "tests").mkdir()
         (flext_core / "pyproject.toml").write_text("[tool.poetry]\nname = 'flext-core'")
-        
+
         return workspace
 
     @pytest.fixture
@@ -58,9 +58,9 @@ class TestDevToolsManager:
 
     def test_dev_tools_manager_initialization_default(self) -> None:
         """Test DevToolsManager initialization with default workspace (cwd)."""
-        with patch('pathlib.Path.cwd') as mock_cwd:
+        with patch("pathlib.Path.cwd") as mock_cwd:
             mock_cwd.return_value = Path("/mock/workspace")
-            
+
             # Act
             dev_tools = DevToolsManager()
 
@@ -91,7 +91,7 @@ class TestRunTests:
         """Create mock workspace with test projects."""
         workspace = tmp_path / "test-workspace"
         workspace.mkdir()
-        
+
         # Create projects with tests
         for project_name in ["flext-core", "flext-api", "flexcore"]:
             project_dir = workspace / project_name
@@ -100,7 +100,7 @@ class TestRunTests:
             tests_dir.mkdir()
             # Create a simple test file
             (tests_dir / "test_example.py").write_text("def test_example(): pass")
-        
+
         return workspace
 
     @pytest.fixture
@@ -108,10 +108,10 @@ class TestRunTests:
         """Create DevToolsManager with mock workspace."""
         return DevToolsManager(workspace_root=mock_workspace)
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_run_tests_specific_project_success(
-        self, 
-        mock_subprocess: Mock, 
+        self,
+        mock_subprocess: Mock,
         dev_tools: DevToolsManager
     ) -> None:
         """Test running tests for a specific project successfully."""
@@ -129,10 +129,10 @@ class TestRunTests:
         assert "-m" in args
         assert "pytest" in args
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_run_tests_specific_project_failure(
-        self, 
-        mock_subprocess: Mock, 
+        self,
+        mock_subprocess: Mock,
         dev_tools: DevToolsManager
     ) -> None:
         """Test running tests for a specific project with failures."""
@@ -154,10 +154,10 @@ class TestRunTests:
         # Assert
         assert result == 1
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_run_tests_all_projects_success(
-        self, 
-        mock_subprocess: Mock, 
+        self,
+        mock_subprocess: Mock,
         dev_tools: DevToolsManager
     ) -> None:
         """Test running tests for all projects successfully."""
@@ -172,10 +172,10 @@ class TestRunTests:
         # Should be called multiple times for different projects
         assert mock_subprocess.call_count >= 1
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_run_tests_timeout_handling(
-        self, 
-        mock_subprocess: Mock, 
+        self,
+        mock_subprocess: Mock,
         dev_tools: DevToolsManager
     ) -> None:
         """Test handling of test execution timeout."""
@@ -200,10 +200,10 @@ class TestRunTests:
         # Assert
         assert result == 0  # Not an error if no tests exist
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_run_project_tests_with_coverage(
-        self, 
-        mock_subprocess: Mock, 
+        self,
+        mock_subprocess: Mock,
         dev_tools: DevToolsManager
     ) -> None:
         """Test running project tests with coverage configuration."""
@@ -211,7 +211,7 @@ class TestRunTests:
         project_path = dev_tools.workspace_root / "flext-core"
         coverage_file = project_path / ".coveragerc"
         coverage_file.write_text("[run]\nsource = src/")
-        
+
         mock_subprocess.return_value = Mock(returncode=0, stdout="Coverage output", stderr="")
 
         # Act
@@ -234,7 +234,7 @@ class TestLintAll:
         workspace.mkdir()
         return DevToolsManager(workspace_root=workspace)
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_lint_all_success(self, mock_subprocess: Mock, dev_tools: DevToolsManager) -> None:
         """Test successful linting operation."""
         # Arrange
@@ -248,7 +248,7 @@ class TestLintAll:
         # Should be called multiple times for different tools
         assert mock_subprocess.call_count >= 1
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_lint_all_with_issues(self, mock_subprocess: Mock, dev_tools: DevToolsManager) -> None:
         """Test linting operation with code quality issues."""
         # Arrange
@@ -260,7 +260,7 @@ class TestLintAll:
         # Assert
         assert result != 0
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_lint_all_timeout(self, mock_subprocess: Mock, dev_tools: DevToolsManager) -> None:
         """Test handling of linting timeout."""
         # Arrange
@@ -272,10 +272,10 @@ class TestLintAll:
         # Assert
         assert result == 1
 
-    @patch('flext.dev.DevToolsManager._run_mypy_check')
-    @patch('flext.dev.DevToolsManager._run_security_scan')
-    @patch('flext.dev.DevToolsManager._run_go_linting')
-    @patch('subprocess.run')
+    @patch("flext.dev.DevToolsManager._run_mypy_check")
+    @patch("flext.dev.DevToolsManager._run_security_scan")
+    @patch("flext.dev.DevToolsManager._run_go_linting")
+    @patch("subprocess.run")
     def test_lint_all_comprehensive_checks(
         self,
         mock_subprocess: Mock,
@@ -312,7 +312,7 @@ class TestFormatAll:
         workspace.mkdir()
         return DevToolsManager(workspace_root=workspace)
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_format_all_success(self, mock_subprocess: Mock, dev_tools: DevToolsManager) -> None:
         """Test successful formatting operation."""
         # Arrange
@@ -328,7 +328,7 @@ class TestFormatAll:
         assert "ruff" in args
         assert "format" in args
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_format_all_with_errors(self, mock_subprocess: Mock, dev_tools: DevToolsManager) -> None:
         """Test formatting operation with errors."""
         # Arrange
@@ -340,7 +340,7 @@ class TestFormatAll:
         # Assert
         assert result != 0
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_format_all_timeout(self, mock_subprocess: Mock, dev_tools: DevToolsManager) -> None:
         """Test handling of formatting timeout."""
         # Arrange
@@ -352,8 +352,8 @@ class TestFormatAll:
         # Assert
         assert result == 1
 
-    @patch('flext.dev.DevToolsManager._run_go_formatting')
-    @patch('subprocess.run')
+    @patch("flext.dev.DevToolsManager._run_go_formatting")
+    @patch("subprocess.run")
     def test_format_all_includes_go_formatting(
         self,
         mock_subprocess: Mock,
@@ -384,7 +384,7 @@ class TestPrivateMethods:
         workspace.mkdir()
         return DevToolsManager(workspace_root=workspace)
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_run_mypy_check_success(self, mock_subprocess: Mock, dev_tools: DevToolsManager) -> None:
         """Test successful MyPy type checking."""
         # Arrange
@@ -400,7 +400,7 @@ class TestPrivateMethods:
         assert "make" in args
         assert "type-check-all" in args
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_run_security_scan_success(self, mock_subprocess: Mock, dev_tools: DevToolsManager) -> None:
         """Test successful security scanning."""
         # Arrange
@@ -415,7 +415,7 @@ class TestPrivateMethods:
         args = mock_subprocess.call_args[0][0]
         assert "bandit" in args
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_run_go_linting_no_go_files(self, mock_subprocess: Mock, dev_tools: DevToolsManager) -> None:
         """Test Go linting when no Go files exist."""
         # Arrange
@@ -427,7 +427,7 @@ class TestPrivateMethods:
         # Assert
         assert result == 0
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_run_go_formatting_no_go_files(self, mock_subprocess: Mock, dev_tools: DevToolsManager) -> None:
         """Test Go formatting when no Go files exist."""
         # Arrange
@@ -439,7 +439,7 @@ class TestPrivateMethods:
         # Assert
         assert result == 0
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_private_methods_exception_handling(self, mock_subprocess: Mock, dev_tools: DevToolsManager) -> None:
         """Test that private methods handle exceptions gracefully."""
         # Arrange
@@ -448,13 +448,13 @@ class TestPrivateMethods:
         # Act & Assert
         # MyPy check should return 1 on exception
         assert dev_tools._run_mypy_check() == 1
-        
+
         # Security scan should return 0 (non-critical failure)
         assert dev_tools._run_security_scan() == 0
-        
+
         # Go linting should return 0 (non-critical failure)
         assert dev_tools._run_go_linting() == 0
-        
+
         # Go formatting should return 0 (non-critical failure)
         assert dev_tools._run_go_formatting() == 0
 
@@ -467,7 +467,7 @@ class TestWorkspaceIntegration:
         """Create complex workspace with multiple project types."""
         workspace = tmp_path / "complex-workspace"
         workspace.mkdir()
-        
+
         # Python projects
         for project in ["flext-core", "flext-api"]:
             project_dir = workspace / project
@@ -482,12 +482,12 @@ class TestWorkspaceIntegration:
         flext_service = cmd_dir / "flext"
         flext_service.mkdir()
         (flext_service / "main.go").write_text("package main\nfunc main() {}")
-        
+
         # Special projects
         client-a = workspace / "client-a-oud-mig"
         client-a.mkdir()
         (client-a / "tests").mkdir()
-        
+
         return workspace
 
     def test_complex_workspace_discovery(self, complex_workspace: Path) -> None:
@@ -497,11 +497,11 @@ class TestWorkspaceIntegration:
 
         # Assert
         assert dev_tools.workspace_root == complex_workspace
-        
+
         # Test that we can iterate through projects
         project_dirs = list(dev_tools.workspace_root.iterdir())
         project_names = [d.name for d in project_dirs if d.is_dir()]
-        
+
         assert "flext-core" in project_names
         assert "flext-api" in project_names
         assert "cmd" in project_names

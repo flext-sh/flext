@@ -309,7 +309,7 @@ class ErrorType(str, Enum):
     INFRASTRUCTURE = "infrastructure"
     SECURITY = "security"
 
-class FlextError:
+class FlextExceptions.Error:
     def __init__(self, error_type: ErrorType, message: str, details: dict = None):
         self.error_type = error_type
         self.message = message
@@ -318,7 +318,7 @@ class FlextError:
 def create_user(data: dict) -> FlextResult[User]:
     # Validation error
     if not data.get("email"):
-        error = FlextError(
+        error = FlextExceptions.Error(
             ErrorType.VALIDATION,
             "Email is required",
             {"field": "email", "value": data.get("email")}
@@ -327,7 +327,7 @@ def create_user(data: dict) -> FlextResult[User]:
 
     # Business rule error
     if user_exists(data["email"]):
-        error = FlextError(
+        error = FlextExceptions.Error(
             ErrorType.BUSINESS_RULE,
             "User already exists",
             {"email": data["email"]}
@@ -339,7 +339,7 @@ def create_user(data: dict) -> FlextResult[User]:
         user = save_user(data)
         return FlextResult[None].ok(user)
     except DatabaseException as e:
-        error = FlextError(
+        error = FlextExceptions.Error(
             ErrorType.INFRASTRUCTURE,
             "Database save failed",
             {"original_error": str(e)}

@@ -23,18 +23,18 @@ line-length = 88
 lint.ignore = [
     "B017",
     "BLE001",
-    "C901",    # Too complex (some functions need complexity)
+    "C901",   # Too complex (some functions need complexity)
     "COM812",
-    "D102",    # Missing docstring in public method (test methods don't need them)
-    "D104",    # Missing docstring in public package
-    "D107",    # Missing docstring in __init__
-    "D203",    # conflicting with D211 (blank line before class)
-    "D213",    # conflicting with D212 (summary line position)
-    "D401",    # non-imperative-mood: too opinionated in multilingual codebase
-    "E501",    # line-too-long
-    "ERA001",  # False positives on legitimate comments
+    "D102",   # Missing docstring in public method (test methods don't need them)
+    "D104",   # Missing docstring in public package
+    "D107",   # Missing docstring in __init__
+    "D203",   # conflicting with D211 (blank line before class)
+    "D213",   # conflicting with D212 (summary line position)
+    "D401",   # non-imperative-mood: too opinionated in multilingual codebase
+    "E501",   # line-too-long
+    "ERA001", # False positives on legitimate comments
     "G004",
-#    "N999",    # Invalid module name (examples use numbered prefixes)
+    #    "N999",    # Invalid module name (examples use numbered prefixes)
     "PLR0913", # Too many arguments in function definition (sometimes necessary)
     "RUF002",
     "RUF003",
@@ -51,6 +51,7 @@ lint.isort.combine-as-imports = true
 lint.per-file-ignores."**/__init__.py" = [
     "E402",   # Import not at top of file
     "F401",   # Unused imports (common in __init__.py)
+    "F403",
     "I001",   # Import sorting
     "RUF022", # __all__ sorting
 ]
@@ -69,7 +70,7 @@ lint.per-file-ignores."**/examples/**" = [
 lint.per-file-ignores."**/scripts/**" = [
     "EXE001",
     "INP001",
-#     "N999",
+    #     "N999",
     "PLR0911",
     "PLR0912",
     "PLR0915",

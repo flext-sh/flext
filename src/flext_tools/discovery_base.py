@@ -74,11 +74,7 @@ import re
 import tomllib
 from pathlib import Path
 
-from .colors import (
-    Colors,
-    get_stdlib_modules,
-    print_colored,
-)
+from .colors import Colors, print_colored
 from .discovery_config import ConfigFileDiscovery
 from .discovery_python import PythonImportDiscovery
 from .discovery_transitive import TransitiveDependencyResolver
@@ -153,7 +149,9 @@ class DependencyDiscovery:
             resolve_transitive: Whether to resolve transitive dependencies.
 
         """
-        self.stdlib_modules = get_stdlib_modules()
+        # Use standard library module list
+        import sys
+        self.stdlib_modules = set(sys.stdlib_module_names) if hasattr(sys, "stdlib_module_names") else set()
         self.python_discovery = PythonImportDiscovery(self.stdlib_modules)
         self.config_discovery = ConfigFileDiscovery()
         self.resolve_transitive = resolve_transitive
