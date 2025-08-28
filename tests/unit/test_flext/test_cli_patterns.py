@@ -3,15 +3,16 @@
 Tests for CLI patterns and base CLI functionality following FLEXT testing patterns
 with proper mocking and architectural pattern validation.
 """
+
 from typing import Any
 
 import pytest
 
-try:
-    from flext.cli_patterns import BaseCLI
-except ImportError:
-    # Handle gracefully if flext.base_cli.FlextBaseCLI doesn't exist yet
-    BaseCLI = None
+import flext.cli_patterns
+import flext.cli_patterns as module
+import flext.cli_patterns as patterns
+import flext.cli_patterns as patterns_module
+from flext.cli_patterns import BaseCLI, BaseCLI as ImportedBaseCLI, __all__
 
 
 class TestCliPatterns:
@@ -19,24 +20,25 @@ class TestCliPatterns:
 
     def test_cli_patterns_exports(self) -> None:
         """Test that cli_patterns module exports expected components."""
-        from flext.cli_patterns import __all__
-
         # Assert
         assert "__all__" in dir(__import__("flext.cli_patterns"))
         assert isinstance(__all__, list)
         assert "BaseCLI" in __all__
 
-    @pytest.mark.skipif(BaseCLI is None, reason="BaseCLI not available - import dependency issue")
+    @pytest.mark.skipif(
+        BaseCLI is None, reason="BaseCLI not available - import dependency issue"
+    )
     def test_base_cli_import_from_patterns(self) -> None:
         """Test that BaseCLI can be imported from cli_patterns."""
         # Act
-        from flext.cli_patterns import BaseCLI as ImportedBaseCLI
 
         # Assert
         assert ImportedBaseCLI is not None
         assert ImportedBaseCLI is BaseCLI
 
-    @pytest.mark.skipif(BaseCLI is None, reason="BaseCLI not available - import dependency issue")
+    @pytest.mark.skipif(
+        BaseCLI is None, reason="BaseCLI not available - import dependency issue"
+    )
     def test_base_cli_alias_functionality(self) -> None:
         """Test that BaseCLI alias maintains functionality."""
         # This tests the import alias mechanism
@@ -48,8 +50,6 @@ class TestCliPatterns:
 
     def test_module_structure(self) -> None:
         """Test that cli_patterns module has correct structure."""
-        import flext.cli_patterns as patterns_module
-
         # Assert module properties
         assert hasattr(patterns_module, "__all__")
         assert hasattr(patterns_module, "__doc__")
@@ -58,8 +58,6 @@ class TestCliPatterns:
 
     def test_enterprise_cli_framework_documentation(self) -> None:
         """Test that enterprise CLI framework is properly documented."""
-        import flext.cli_patterns as patterns_module
-
         doc = patterns_module.__doc__ or ""
 
         # Assert key concepts are documented
@@ -73,11 +71,16 @@ class TestCliPatterns:
         # This test verifies that the module can be imported even if dependencies are missing
         try:
             import flext.cli_patterns
+
             assert True  # Module imported successfully
         except ImportError as e:
-            pytest.fail(f"cli_patterns module should handle import failures gracefully: {e}")
+            pytest.fail(
+                f"cli_patterns module should handle import failures gracefully: {e}"
+            )
 
-    @pytest.mark.skipif(BaseCLI is None, reason="BaseCLI not available - import dependency issue")
+    @pytest.mark.skipif(
+        BaseCLI is None, reason="BaseCLI not available - import dependency issue"
+    )
     def test_base_cli_can_be_subclassed(self) -> None:
         """Test that BaseCLI can be used for subclassing."""
         from flext.cli_patterns import BaseCLI
@@ -121,21 +124,21 @@ class TestCliPatternsIntegration:
 
     def test_flext_ecosystem_integration_design(self) -> None:
         """Test that CLI patterns are designed for FLEXT ecosystem integration."""
-        import flext.cli_patterns as patterns
-
         # Check module documentation mentions key integration points
         doc = patterns.__doc__ or ""
         integration_keywords = [
             "flext-core",
             "flext-observability",
             "workspace management",
-            "32-project FLEXT ecosystem"
+            "32-project FLEXT ecosystem",
         ]
 
         for keyword in integration_keywords:
             assert keyword in doc, f"Documentation should mention {keyword} integration"
 
-    @pytest.mark.skipif(BaseCLI is None, reason="BaseCLI not available - import dependency issue")
+    @pytest.mark.skipif(
+        BaseCLI is None, reason="BaseCLI not available - import dependency issue"
+    )
     def test_architectural_pattern_compliance(self) -> None:
         """Test that CLI patterns follow Clean Architecture principles."""
         from flext.cli_patterns import BaseCLI
@@ -159,6 +162,7 @@ class TestErrorHandling:
         # The module should handle missing dependencies without crashing
         try:
             import flext.cli_patterns
+
             # If import succeeds, module should be usable
             assert hasattr(flext.cli_patterns, "__all__")
         except ImportError:
@@ -168,7 +172,6 @@ class TestErrorHandling:
     def test_missing_base_cli_handling(self) -> None:
         """Test handling when base CLI implementation is missing."""
         # This tests the resilience of the patterns module
-        import flext.cli_patterns
 
         # Module should be importable even if underlying implementation is missing
         assert flext.cli_patterns is not None
@@ -212,15 +215,13 @@ class TestDocumentationCompliance:
 
     def test_version_and_metadata(self) -> None:
         """Test that module contains proper version and metadata information."""
-        import flext.cli_patterns as module
-
         doc = module.__doc__ or ""
 
         # Check for metadata in documentation
         metadata_items = [
             "Version: 2.0.0",
             "Author: FLEXT Development Team",
-            "License: MIT"
+            "License: MIT",
         ]
 
         for item in metadata_items:
@@ -238,7 +239,7 @@ class TestDocumentationCompliance:
             "Clean Architecture",
             "error handling",
             "logging integration",
-            "Performance monitoring"
+            "Performance monitoring",
         ]
 
         for concept in enterprise_concepts:
