@@ -41,10 +41,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextResult, get_logger
-from flext_quality import QualityAPI
+import contextlib
+from flext_core import FlextResult, FlextLogger
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
+
+# Optional dependency - flext-quality may not be available
+with contextlib.suppress(ImportError):
+    from flext_quality import QualityAPI
 
 
 class QualityServiceDelegationError(Exception):
@@ -79,7 +83,7 @@ class QualityBridge:
     def __init__(self, workspace_root: Path) -> None:
         """Initialize quality bridge with workspace integration configuration."""
         self.workspace_root = workspace_root
-        self.logger = get_logger(__name__)
+        self.logger = FlextLogger(__name__)
 
         self.logger.info(
             "Quality bridge initialized for workspace integration",

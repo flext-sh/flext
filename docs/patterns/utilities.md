@@ -48,7 +48,8 @@ All operations that can fail return FlextResult.
 ### System Utilities
 
 ```python
-from typing import Any, TypeVar, Dict
+from typing import TypeVar, Dict
+
 from datetime import datetime, timezone
 import uuid
 
@@ -65,10 +66,10 @@ def flext_core_get_timestamp() -> datetime:
     return datetime.now(timezone.utc)
 
 def flext_core_safe_get(
-    dictionary: Dict[str, Any],
+    dictionary: Dict[str, object],
     key: str,
-    default: Any = None
-) -> Any:
+    default: object = None
+) -> object:
     """Safely get value from dictionary with default."""
     return dictionary.get(key, default)
 ```
@@ -79,7 +80,7 @@ def flext_core_safe_get(
 from flext_core.result import FlextResult
 
 def flext_data_safe_int_conversion(
-    value: Any,
+    value: object,
     default: int = 0
 ) -> FlextResult[int]:
     """Safely convert value to integer."""
@@ -97,7 +98,7 @@ def flext_data_safe_int_conversion(
         return FlextResult[None].fail(f"Cannot convert '{value}' to integer: {e}")
 
 def flext_data_safe_bool_conversion(
-    value: Any,
+    value: object,
     default: bool = False
 ) -> bool:
     """Safely convert value to boolean."""
@@ -223,8 +224,8 @@ def flext_collection_unique(items: List[T]) -> List[T]:
 
 def flext_collection_group_by(
     items: List[T],
-    key_func: Callable[[T], Any]
-) -> Dict[Any, List[T]]:
+    key_func: Callable[[T], object]
+) -> Dict[object, List[T]]:
     """Group items by key function."""
 from collections import defaultdict
     groups = defaultdict(list)

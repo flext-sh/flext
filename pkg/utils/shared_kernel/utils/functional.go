@@ -83,8 +83,8 @@ func FindIndex[T any](slice []T, f func(T) bool) int {
 	return -1
 }
 
-// Any returns true if at least one element satisfies predicate f
-func Any[T any](slice []T, f func(T) bool) bool {
+// object returns true if at least one element satisfies predicate f
+func object[T any](slice []T, f func(T) bool) bool {
 	for _, v := range slice {
 		if f(v) {
 			return true
@@ -265,13 +265,13 @@ func NonEmpty(slice []string) []string {
 
 // Contains checks if slice contains specific string
 func Contains(slice []string, target string) bool {
-	return Any(slice, func(s string) bool { return s == target })
+	return object(slice, func(s string) bool { return s == target })
 }
 
 // ContainsIgnoreCase checks if slice contains string (case-insensitive)
 func ContainsIgnoreCase(slice []string, target string) bool {
 	lowerTarget := strings.ToLower(target)
-	return Any(slice, func(s string) bool {
+	return object(slice, func(s string) bool {
 		return strings.ToLower(s) == lowerTarget
 	})
 }

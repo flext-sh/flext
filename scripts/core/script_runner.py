@@ -13,7 +13,8 @@ import inspect
 import sys
 from collections.abc import Callable
 from pathlib import Path
-from typing import Any
+
+object
 
 from flext_core import FlextResult
 from scripts.core.script_registry import ScriptRegistry
@@ -84,7 +85,9 @@ class ScriptRunner(FlextScript):
 
             except ImportError as e:
                 print_colored(f"❌ Failed to import script registry: {e}", Colors.RED)
-                return FlextResult[object].fail(f"Failed to import script registry: {e}")
+                return FlextResult[object].fail(
+                    f"Failed to import script registry: {e}"
+                )
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error in script runner: {e}", Colors.RED)
@@ -105,7 +108,7 @@ class ScriptRunner(FlextScript):
         by_category: dict[
             str,
             list[ScriptMetadata],
-        ] = {}  # Changed Any to ScriptMetadata
+        ] = {}  # Changed object to ScriptMetadata
         for script in scripts:
             category = (
                 script.category.value
@@ -197,7 +200,7 @@ class ScriptRunner(FlextScript):
 
 
 # Helper to check if a function accepts arbitrary keyword arguments
-def _accepts_kwargs(func: Callable[..., Any]) -> bool:  # Helper function
+def _accepts_kwargs(func: Callable[..., object]) -> bool:  # Helper function
     sig = inspect.signature(func)
     return any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
 

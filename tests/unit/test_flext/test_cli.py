@@ -236,8 +236,6 @@ class TestCliFallbackComponents:
 
     def test_colors_fallback_constants(self) -> None:
         """Test that fallback Colors class has all required constants."""
-        from flext.cli import Colors
-
         # Assert all required color constants exist
         required_colors = ["GREEN", "RED", "BLUE", "CYAN", "YELLOW", "RESET"]
 
