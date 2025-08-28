@@ -13,7 +13,8 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
+
+object
 
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
@@ -130,7 +131,7 @@ class FlextResultTypeAuditor(FlextScript):
 
     def _check_flextresult_inconsistencies(
         self, file_path: str
-    ) -> list[dict[str, Any]]:
+    ) -> list[dict[str, object]]:
         """Verifica inconsistências de FlextResult em um arquivo."""
         try:
             with Path(file_path).open(encoding="utf-8") as f:
@@ -162,15 +163,13 @@ class FlextResultTypeAuditor(FlextScript):
                         if lines[j].strip().startswith("def "):  # Próximo método
                             break
                         if re.search(return_pattern, lines[j]):
-                            issues.append(
-                                {
-                                    "file": file_path,
-                                    "line": j + 1,
-                                    "method": method_name,
-                                    "declared_type": return_type,
-                                    "issue": f"Método declara FlextResult[{return_type}] mas retorna FlextResult.success()/error() sem valor",
-                                }
-                            )
+                            issues.append({
+                                "file": file_path,
+                                "line": j + 1,
+                                "method": method_name,
+                                "declared_type": return_type,
+                                "issue": f"Método declara FlextResult[{return_type}] mas retorna FlextResult.success()/error() sem valor",
+                            })
 
         # Procura por outros padrões problemáticos
         for i, line in enumerate(lines):
@@ -188,15 +187,13 @@ class FlextResultTypeAuditor(FlextScript):
                 and "FlextResult[None]" in line
                 and "FlextResult[dict" in line
             ):
-                issues.append(
-                    {
-                        "file": file_path,
-                        "line": i + 1,
-                        "method": "unknown",
-                        "declared_type": "mixed",
-                        "issue": "Possível inconsistência entre FlextResult[None] e FlextResult[dict]",
-                    }
-                )
+                issues.append({
+                    "file": file_path,
+                    "line": i + 1,
+                    "method": "unknown",
+                    "declared_type": "mixed",
+                    "issue": "Possível inconsistência entre FlextResult[None] e FlextResult[dict]",
+                })
 
         return issues
 

@@ -16,7 +16,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import mkdocs.__main__ as mkdocs_main
-from flext_core import FlextResult, get_logger
+from flext_core import FlextResult, FlextLogger
 
 from .discovery_base import DependencyDiscovery
 from .documentation_templates import TemplateManager
@@ -45,7 +45,7 @@ class DocumentationGenerator(FlextScript):
         self.mkdocs_config = project_root / "mkdocs.yml"
         self.template_manager = TemplateManager()
         self.discovery = DependencyDiscovery()
-        self.logger = get_logger(__name__)
+        # Note: logger is provided by FlextScript base class
 
     @property
     def metadata(self) -> ScriptMetadata:

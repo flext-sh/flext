@@ -85,7 +85,6 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
 
     """
     try:
-
         # Verificar se existe pyproject.toml
         pyproject_path = Path(project_dir) / "pyproject.toml"  # PTH118
         if not pyproject_path.exists():
@@ -159,7 +158,7 @@ def main() -> int:
     # Obter projetos
     projects = get_project_directories()
 
-    for project in projects:
+    for _project in projects:
         pass
 
     # Instalar projetos
@@ -174,7 +173,7 @@ def main() -> int:
     failed = len(results) - successful
 
     if failed > 0:
-        for project, success, message in results:
+        for _project, success, _message in results:
             if not success:
                 pass
 

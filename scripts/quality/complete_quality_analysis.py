@@ -198,8 +198,8 @@ def main() -> int:
             report = analyze_project(project)
             reports.append(report)
             total_issues += len(report.issues)
-        except Exception:
-            pass
+        except Exception as e:
+            print_colored(f"⚠️ Error analyzing project {project}: {e}", Colors.YELLOW)
 
     # Relatório final
 
@@ -209,9 +209,7 @@ def main() -> int:
     sum(r.mypy_errors for r in reports)
     sum(r.mypy_warnings for r in reports)
     sum(r.test_failures for r in reports)
-    (
-        sum(r.coverage_percentage for r in reports) / len(reports) if reports else 0
-    )
+    (sum(r.coverage_percentage for r in reports) / len(reports) if reports else 0)
 
     # Projetos com problemas
     problematic_projects: list[QualityReport] = [r for r in reports if r.issues]

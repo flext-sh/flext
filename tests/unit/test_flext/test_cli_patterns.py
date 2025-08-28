@@ -4,7 +4,7 @@ Tests for CLI patterns and base CLI functionality following FLEXT testing patter
 with proper mocking and architectural pattern validation.
 """
 
-from typing import Any
+object
 
 import pytest
 
@@ -12,7 +12,12 @@ import flext.cli_patterns
 import flext.cli_patterns as module
 import flext.cli_patterns as patterns
 import flext.cli_patterns as patterns_module
-from flext.cli_patterns import BaseCLI, BaseCLI as ImportedBaseCLI, __all__
+from flext.cli_patterns import (
+    BaseCLI,
+    BaseCLI as ImportedBaseCLI,
+    BaseCLI as PatternBaseCLI,
+    __all__,
+)
 
 
 class TestCliPatterns:
@@ -42,7 +47,6 @@ class TestCliPatterns:
     def test_base_cli_alias_functionality(self) -> None:
         """Test that BaseCLI alias maintains functionality."""
         # This tests the import alias mechanism
-        from flext.cli_patterns import BaseCLI as PatternBaseCLI
 
         # Assert that the alias points to the same class
         assert PatternBaseCLI is not None
@@ -70,8 +74,6 @@ class TestCliPatterns:
         """Test that import structure handles missing dependencies gracefully."""
         # This test verifies that the module can be imported even if dependencies are missing
         try:
-            import flext.cli_patterns
-
             assert True  # Module imported successfully
         except ImportError as e:
             pytest.fail(
@@ -83,7 +85,6 @@ class TestCliPatterns:
     )
     def test_base_cli_can_be_subclassed(self) -> None:
         """Test that BaseCLI can be used for subclassing."""
-        from flext.cli_patterns import BaseCLI
 
         # Act - Create a subclass
         class TestCLI(BaseCLI):
@@ -107,7 +108,7 @@ class TestCliPatternsIntegration:
     """Integration tests for CLI patterns with broader system."""
 
     @pytest.fixture
-    def temp_workspace(self, tmp_path) -> Any:
+    def temp_workspace(self, tmp_path) -> object:
         """Create temporary workspace for integration testing."""
         workspace = tmp_path / "cli-patterns-integration-test"
         workspace.mkdir()
@@ -141,8 +142,6 @@ class TestCliPatternsIntegration:
     )
     def test_architectural_pattern_compliance(self) -> None:
         """Test that CLI patterns follow Clean Architecture principles."""
-        from flext.cli_patterns import BaseCLI
-
         # This test checks that the architectural patterns are properly structured
         # Actual implementation details would be tested when BaseCLI is fully implemented
 
@@ -161,8 +160,6 @@ class TestErrorHandling:
         """Test graceful handling of import errors."""
         # The module should handle missing dependencies without crashing
         try:
-            import flext.cli_patterns
-
             # If import succeeds, module should be usable
             assert hasattr(flext.cli_patterns, "__all__")
         except ImportError:
@@ -180,8 +177,6 @@ class TestErrorHandling:
     def test_graceful_degradation(self) -> None:
         """Test that CLI patterns degrade gracefully when dependencies are unavailable."""
         try:
-            from flext.cli_patterns import __all__
-
             # Should have expected exports even if some may not be functional
             assert isinstance(__all__, list)
             assert len(__all__) > 0
@@ -229,8 +224,6 @@ class TestDocumentationCompliance:
 
     def test_enterprise_standards_documentation(self) -> None:
         """Test that enterprise standards are properly documented."""
-        import flext.cli_patterns as module
-
         doc = module.__doc__ or ""
 
         # Check for enterprise standards documentation

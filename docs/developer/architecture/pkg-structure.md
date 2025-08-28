@@ -457,7 +457,7 @@ interfaces/ ──→ adapters/ ──→ application/ ──→ domain/
 import (
     "github.com/flext-sh/flext/pkg/domain/pipeline/entities"     // ✅ Application → Domain
     "github.com/flext-sh/flext/pkg/application/pipeline/ports"   // ✅ Same layer
-    "github.com/flext-sh/flext/pkg/utils/shared_kernel"         // ✅ Any layer → Utils
+    "github.com/flext-sh/flext/pkg/utils/shared_kernel"         // ✅ object layer → Utils
 )
 ```
 

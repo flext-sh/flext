@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ARCHITECTURAL FIX: FlextResult[Any] Standardization Across FLEXT Workspace.
+"""ARCHITECTURAL FIX: FlextResult[object] Standardization Across FLEXT Workspace.
 
 This script fixes the FlextResult duplicate/inconsistent usage across all projects:
 

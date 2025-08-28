@@ -80,13 +80,13 @@ import re
 import tomllib
 from pathlib import Path
 
-import poetry.console as poetry_console  # type: ignore[import-untyped]
-from flext_core import FlextModel, FlextResult, get_logger
+import poetry.console as poetry_console
+from flext_core import FlextModels, FlextResult, FlextLogger
 from pydantic import Field
 
 from .colors import Colors, print_colored
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
 # REMOVED: ProjectValidationResult class (violation of DRY principle)
@@ -94,7 +94,7 @@ logger = get_logger(__name__)
 # to maintain consistency and avoid duplication of generic result functionality
 
 
-class ProjectInfo(FlextModel):
+class ProjectInfo(FlextModels.BaseConfig):
     """Poetry project information.
 
     Contains project metadata extracted from pyproject.toml.
@@ -293,9 +293,7 @@ class PoetryValidator:
             "valid": len(errors) == 0,
             "errors": errors,
             "warnings": warnings,
-            "info": project_info.model_dump()
-            if project_info
-            else {},
+            "info": project_info.model_dump() if project_info else {},
         }
         return FlextResult[ProjectValidationData].ok(final_result_data)
 
@@ -524,8 +522,22 @@ class PoetryValidator:
         poetry: object = tool_section.get("poetry", {})
 
         # Count main dependencies (excluding python)
-        dependencies: object = poetry.get("dependencies", {}) if hasattr(poetry, "get") else {}  # type: ignore[misc]
-        dependency_count = (len(dependencies) - (1 if hasattr(dependencies, "__contains__") and "python" in dependencies else 0)) if hasattr(dependencies, "__len__") else 0
+        dependencies: object = (
+            poetry.get("dependencies", {}) if hasattr(poetry, "get") else {}
+        )  # type: ignore[misc]
+        dependency_count = (
+            (
+                len(dependencies)
+                - (
+                    1
+                    if hasattr(dependencies, "__contains__")
+                    and "python" in dependencies
+                    else 0
+                )
+            )
+            if hasattr(dependencies, "__len__")
+            else 0
+        )
 
         # Count dev dependencies
         dev_dependency_count = 0
@@ -538,9 +550,15 @@ class PoetryValidator:
                         dev_dependency_count += len(group_deps)
 
         return ProjectInfo(
-            name=str(poetry.get("name", "unknown") if hasattr(poetry, "get") else "unknown"),  # type: ignore[misc]
-            version=str(poetry.get("version", "0.0.0") if hasattr(poetry, "get") else "0.0.0"),  # type: ignore[misc]
-            description=str(poetry.get("description", "") if hasattr(poetry, "get") else ""),  # type: ignore[misc]
+            name=str(
+                poetry.get("name", "unknown") if hasattr(poetry, "get") else "unknown"
+            ),  # type: ignore[misc]
+            version=str(
+                poetry.get("version", "0.0.0") if hasattr(poetry, "get") else "0.0.0"
+            ),  # type: ignore[misc]
+            description=str(
+                poetry.get("description", "") if hasattr(poetry, "get") else ""
+            ),  # type: ignore[misc]
             dependency_count=dependency_count,
             dev_dependency_count=dev_dependency_count,
         )
