@@ -43,7 +43,7 @@ class WorkspaceStatus:
 
         return FlextResult[None].ok(None)
 
-    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+    def execute_main_logic(self, **_kwargs: object) -> FlextResult[object]:
         """Executar análise completa do workspace."""
         try:
             workspace_root = Path.cwd()
@@ -268,12 +268,12 @@ class WorkspaceStatus:
                 data = projects[name]
                 "✅" if data["has_tests"] else "⚠️"
 
-    def _print_quality_summary(self, quality_info: dict[str, object]) -> None:
+    def _print_quality_summary(self, _quality_info: dict[str, object]) -> None:
         """Imprimir resumo da qualidade."""
         print_colored("\n📊 QUALIDADE DO CÓDIGO", Colors.BLUE)
         print_colored("=" * 50, Colors.BLUE)
 
-    def _print_dependencies_summary(self, deps_info: dict[str, object]) -> None:
+    def _print_dependencies_summary(self, _deps_info: dict[str, object]) -> None:
         """Imprimir resumo das dependências."""
         print_colored("\n📦 DEPENDÊNCIAS", Colors.BLUE)
         print_colored("=" * 50, Colors.BLUE)

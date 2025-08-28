@@ -67,9 +67,10 @@ class StagingConfigLoader(FlextScript):
                     Colors.GREEN,
                 )
                 print_colored("📋 All environment variables validated", Colors.CYAN)
-                return FlextResult[object].ok(
-                    {"success": True, "validate_only": validate_only}
-                )
+                return FlextResult[object].ok({
+                    "success": True,
+                    "validate_only": validate_only,
+                })
 
             print_colored("❌ Failed to load staging configuration", Colors.RED)
             print_colored("Check .env.staging file for errors", Colors.YELLOW)

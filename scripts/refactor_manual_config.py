@@ -82,7 +82,9 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
         return FlextResult[dict[str, list[str]]].ok(patterns)
 
     except (OSError, ValueError, TypeError) as e:
-        return FlextResult[dict[str, list[str]]].fail(f"Failed to find manual config patterns: {e}")
+        return FlextResult[dict[str, list[str]]].fail(
+            f"Failed to find manual config patterns: {e}"
+        )
 
 
 def refactor_manual_env_vars(file_path: str) -> FlextResult[bool]:
@@ -148,7 +150,7 @@ def refactor_manual_env_vars(file_path: str) -> FlextResult[bool]:
             logger.info(f"✅ Added FLEXT config TODOs to: {file_path}")
             return FlextResult[bool].ok(data=True)
         logger.info(f"⏭️ No env var changes needed: {file_path}")
-        return FlextResult[bool].ok(False)
+        return FlextResult[bool].ok(data=False)
 
     except (OSError, ValueError, TypeError) as e:
         logger.exception(f"❌ Error refactoring env vars in {file_path}")
@@ -202,7 +204,7 @@ def refactor_manual_pydantic(file_path: str) -> FlextResult[bool]:
             logger.info(f"✅ Added FLEXT config TODOs to: {file_path}")
             return FlextResult[bool].ok(data=True)
         logger.info(f"⏭️ No Pydantic changes needed: {file_path}")
-        return FlextResult[bool].ok(False)
+        return FlextResult[bool].ok(data=False)
 
     except (OSError, ValueError, TypeError) as e:
         logger.exception(f"❌ Error refactoring Pydantic in {file_path}")
@@ -252,7 +254,7 @@ def refactor_manual_file_loading(file_path: str) -> FlextResult[bool]:
             logger.info(f"✅ Added FLEXT config TODOs to: {file_path}")
             return FlextResult[bool].ok(data=True)
         logger.info(f"⏭️ No file loading changes needed: {file_path}")
-        return FlextResult[bool].ok(False)
+        return FlextResult[bool].ok(data=False)
 
     except (OSError, ValueError, TypeError) as e:
         logger.exception(f"❌ Error refactoring file loading in {file_path}")

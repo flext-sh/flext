@@ -72,12 +72,12 @@ import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
-from flext_core import FlextModel, FlextResult, get_logger
+from flext_core import FlextModels, FlextResult, FlextLogger
 from pydantic import Field
 
 from .colors import Colors, print_colored
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 MIN_VALID_PROJECTS = 2
 MAX_INCONSISTENCIES_DISPLAY = 10
@@ -142,7 +142,7 @@ class LockInconsistency:
     severity: str  # "critical", "warning", "info"
 
 
-class WorkspaceSummary(FlextModel):
+class WorkspaceSummary(FlextModels.BaseConfig):
     """Comprehensive workspace dependency analysis summary.
 
     Contains statistical summary of workspace analysis including project

@@ -61,8 +61,8 @@ Provide a clear overview of what this document covers, why it's important, and w
 List any requirements or knowledge needed before reading this document:
 
 - **Required Knowledge**: What the reader should already know
-- **Required Software**: Any software or tools needed
-- **Required Access**: Any permissions or access needed
+- **Required Software**: object software or tools needed
+- **Required Access**: object permissions or access needed
 - **Related Documentation**: Documents that should be read first
 
 ## Main Section 1

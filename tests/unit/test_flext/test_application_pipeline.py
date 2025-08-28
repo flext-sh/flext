@@ -3,7 +3,8 @@
 Tests for pipeline application services following FLEXT testing patterns
 with comprehensive coverage of CQRS commands, queries, and handlers.
 """
-from typing import Any
+
+object
 
 import pytest
 from flext_core import FlextResult
@@ -27,8 +28,7 @@ class TestFlextPipelineApplicationServices:
         return FlextPipelineApplicationServices()
 
     def test_pipeline_service_initialization(
-        self,
-        pipeline_service: FlextPipelineApplicationServices
+        self, pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test pipeline service initialization."""
         # Assert
@@ -46,8 +46,7 @@ class TestFlextPipelineApplicationServices:
 
     @pytest.mark.asyncio
     async def test_create_pipeline_command_handler(
-        self,
-        pipeline_service: FlextPipelineApplicationServices
+        self, pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test create pipeline command handling."""
         # Arrange
@@ -63,8 +62,7 @@ class TestFlextPipelineApplicationServices:
 
     @pytest.mark.asyncio
     async def test_execute_pipeline_command_handler(
-        self,
-        pipeline_service: FlextPipelineApplicationServices
+        self, pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test execute pipeline command handling."""
         # Arrange
@@ -80,8 +78,7 @@ class TestFlextPipelineApplicationServices:
 
     @pytest.mark.asyncio
     async def test_get_pipeline_query_handler(
-        self,
-        pipeline_service: FlextPipelineApplicationServices
+        self, pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test get pipeline query handling."""
         # Arrange
@@ -97,8 +94,7 @@ class TestFlextPipelineApplicationServices:
 
     @pytest.mark.asyncio
     async def test_list_pipelines_query_handler(
-        self,
-        pipeline_service: FlextPipelineApplicationServices
+        self, pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test list pipelines query handling."""
         # Arrange
@@ -114,8 +110,7 @@ class TestFlextPipelineApplicationServices:
 
     @pytest.mark.asyncio
     async def test_create_pipeline_service_method(
-        self,
-        pipeline_service: FlextPipelineApplicationServices
+        self, pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test high-level create pipeline service method."""
         # Arrange
@@ -130,8 +125,7 @@ class TestFlextPipelineApplicationServices:
 
     @pytest.mark.asyncio
     async def test_execute_pipeline_service_method(
-        self,
-        pipeline_service: FlextPipelineApplicationServices
+        self, pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test high-level execute pipeline service method."""
         # Arrange
@@ -146,8 +140,7 @@ class TestFlextPipelineApplicationServices:
 
     @pytest.mark.asyncio
     async def test_get_pipeline_service_method(
-        self,
-        pipeline_service: FlextPipelineApplicationServices
+        self, pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test high-level get pipeline service method."""
         # Arrange
@@ -162,8 +155,7 @@ class TestFlextPipelineApplicationServices:
 
     @pytest.mark.asyncio
     async def test_list_pipelines_service_method(
-        self,
-        pipeline_service: FlextPipelineApplicationServices
+        self, pipeline_service: FlextPipelineApplicationServices
     ) -> None:
         """Test high-level list pipelines service method."""
         # Arrange
@@ -266,7 +258,7 @@ class TestPipelineServiceIntegration:
     """Integration tests for pipeline service components."""
 
     @pytest.fixture
-    def temp_workspace(self, tmp_path) -> Any:
+    def temp_workspace(self, tmp_path) -> object:
         """Create temporary workspace for integration testing."""
         workspace = tmp_path / "pipeline-integration-test"
         workspace.mkdir()
@@ -322,8 +314,14 @@ class TestPipelineServiceIntegration:
         assert PipelineService is FlextPipelineApplicationServices
 
         # Test command aliases
-        assert CreatePipelineCommand is FlextPipelineApplicationServices.CreatePipelineCommand
-        assert ExecutePipelineCommand is FlextPipelineApplicationServices.ExecutePipelineCommand
+        assert (
+            CreatePipelineCommand
+            is FlextPipelineApplicationServices.CreatePipelineCommand
+        )
+        assert (
+            ExecutePipelineCommand
+            is FlextPipelineApplicationServices.ExecutePipelineCommand
+        )
 
         # Test query aliases
         assert GetPipelineQuery is FlextPipelineApplicationServices.GetPipelineQuery
