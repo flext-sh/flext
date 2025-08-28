@@ -103,9 +103,10 @@ from typing import ParamSpec
 from flext_core import (
     FlextDomainService,
     FlextResult,
-    FlextValue,
-    get_logger,
+    FlextModels,
+    FlextLogger,
 )
+from flext_core.container import FlextContainer
 
 from .colors import Colors, print_colored
 from .quality_gateway import (
@@ -118,14 +119,14 @@ from .quality_gateway import (
 P_main_func = ParamSpec("P_main_func")
 
 # Use flext-core logger
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
-class ScriptMetadata(FlextValue):
+class ScriptMetadata(FlextModels.Value):
     """Comprehensive metadata for FLEXT scripts using value object patterns.
 
     Encapsulates all metadata required for script identification, lifecycle
-    management, and execution control. Built on flext-core FlextValue for
+    management, and execution control. Built on flext-core FlextModels.Value for
     immutability and business rule validation with enterprise-grade metadata
     management for the FLEXT ecosystem.
 
@@ -241,7 +242,7 @@ class FlextScript(FlextDomainService[bool]):
 
     def __init__(self) -> None:
         """Initialize the script with flext-core infrastructure."""
-        self.logger = get_logger(self.__class__.__name__)
+        # Note: logger is provided by FlextDomainService base class
         self.start_time = time.time()
         self.container = FlextContainer.get_global()
 

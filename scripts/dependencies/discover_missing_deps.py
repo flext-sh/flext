@@ -135,7 +135,7 @@ class MissingDependenciesDiscoverer(FlextScript):
 
     def _print_summary(
         self,
-        total_projects: int,
+        _total_projects: int,
         projects_with_issues: int,
         total_missing: int,
     ) -> None:

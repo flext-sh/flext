@@ -12,7 +12,7 @@ import tomllib
 from pathlib import Path
 from typing import cast
 
-from flext_core import FlextModel, FlextResult, get_logger
+from flext_core import FlextLogger, FlextModels, FlextResult
 from pydantic import Field
 
 from .colors import Colors, print_colored
@@ -25,10 +25,10 @@ MIN_PROJECTS_FOR_ANALYSIS = (
 )
 
 # Initialize logger
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
-class ConflictAnalysisResult(FlextModel):
+class ConflictAnalysisResult(FlextModels.BaseConfig):
     """Comprehensive dependency conflict analysis result with enterprise modeling.
 
     Represents the complete outcome of dependency conflict analysis across
@@ -608,7 +608,7 @@ class ConflictAnalyzer:
         handling for robust dependency parsing.
 
         Args:
-            spec (Union[str, Dict[str, Any]]): Dependency specification from
+            spec (Union[str, Dict[str, object]]): Dependency specification from
                 Poetry configuration, either as simple string or complex dict.
 
         Returns:
@@ -849,7 +849,7 @@ class ConflictAnalyzer:
         communication and documentation purposes.
 
         Args:
-            analysis (Dict[str, Any]): Analysis results from workspace conflict
+            analysis (Dict[str, object]): Analysis results from workspace conflict
                 analysis containing conflicts, blockers, and statistics.
 
         Returns:

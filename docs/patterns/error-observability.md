@@ -41,7 +41,8 @@ Seamless error propagation between Python and Go.
 ## Error Hierarchy
 
 ```python
-from typing import Optional, Dict, Any, ClassVar
+from typing import Optional, Dict, ClassVar
+
 from datetime import datetime
 from enum import StrEnum
 import uuid
@@ -74,7 +75,7 @@ class FlextExceptions.Error(Exception):
         *,
         error_code: Optional[str] = None,
         correlation_id: Optional[str] = None,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, object]] = None,
         cause: Optional[Exception] = None,
         recoverable: Optional[bool] = None,
         alert_level: str = "error"
@@ -104,7 +105,7 @@ class FlextExceptions.Error(Exception):
             **self.context
         )
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> Dict[str, object]:
         """Serialize exception for cross-service communication."""
         return {
             "error_type": self.__class__.__name__,
@@ -157,7 +158,7 @@ class FlextData:
         """Data validation failures."""
         __error_type__ = "DATA_VALIDATION"
 
-        def __init__(self, message: str, *, field_name: Optional[str] = None, field_value: Any = None, **kwargs):
+        def __init__(self, message: str, *, field_name: Optional[str] = None, field_value: object = None, **kwargs):
             super().__init__(
                 message,
                 context={"field_name": field_name, "field_value": str(field_value) if field_value else None},
@@ -203,27 +204,28 @@ class FlextAuth:
 ## Observability Protocols
 
 ```python
-from typing import Protocol, runtime_checkable, Any, Dict, Optional, ContextManager
+from typing import Protocol, runtime_checkable, Dict, Optional, ContextManager
+
 
 @runtime_checkable
 class FlextLoggerProtocol(Protocol):
     """Protocol for structured logging."""
 
-    def trace(self, message: str, **context: Any) -> None: ...
-    def debug(self, message: str, **context: Any) -> None: ...
-    def info(self, message: str, **context: Any) -> None: ...
-    def warn(self, message: str, **context: Any) -> None: ...
-    def error(self, message: str, *, error_code: Optional[str] = None, **context: Any) -> None: ...
-    def audit(self, message: str, *, user_id: Optional[str] = None, action: Optional[str] = None, **context: Any) -> None: ...
+    def trace(self, message: str, **context: object) -> None: ...
+    def debug(self, message: str, **context: object) -> None: ...
+    def info(self, message: str, **context: object) -> None: ...
+    def warn(self, message: str, **context: object) -> None: ...
+    def error(self, message: str, *, error_code: Optional[str] = None, **context: object) -> None: ...
+    def audit(self, message: str, *, user_id: Optional[str] = None, action: Optional[str] = None, **context: object) -> None: ...
 
 @runtime_checkable
 class FlextTracerProtocol(Protocol):
     """Protocol for distributed tracing."""
 
-    def start_span(self, operation_name: str, *, kind: str = "INTERNAL", attributes: Optional[Dict[str, Any]] = None) -> ContextManager: ...
-    def get_current_span(self) -> Optional[Any]: ...
-    def inject_context(self, carrier: Dict[str, Any]) -> None: ...
-    def extract_context(self, carrier: Dict[str, Any]) -> Optional[Any]: ...
+    def start_span(self, operation_name: str, *, kind: str = "INTERNAL", attributes: Optional[Dict[str, object]] = None) -> ContextManager: ...
+    def get_current_span(self) -> Optional[object]: ...
+    def inject_context(self, carrier: Dict[str, object]) -> None: ...
+    def extract_context(self, carrier: Dict[str, object]) -> Optional[object]: ...
 
 @runtime_checkable
 class FlextMetricsProtocol(Protocol):
@@ -258,27 +260,27 @@ from datetime import datetime
 class FlextConsole:
     """Simple console logger for development."""
 
-    def _format_message(self, level: str, message: str, **context: Any) -> str:
+    def _format_message(self, level: str, message: str, **context: object) -> str:
         timestamp = datetime.utcnow().isoformat()
         context_str = " ".join(f"{k}={v}" for k, v in context.items())
         return f"[{timestamp}] {level}: {message} {context_str}".strip()
 
-    def trace(self, message: str, **context: Any) -> None:
+    def trace(self, message: str, **context: object) -> None:
         print(self._format_message("TRACE", message, **context))
 
-    def debug(self, message: str, **context: Any) -> None:
+    def debug(self, message: str, **context: object) -> None:
         print(self._format_message("DEBUG", message, **context))
 
-    def info(self, message: str, **context: Any) -> None:
+    def info(self, message: str, **context: object) -> None:
         print(self._format_message("INFO", message, **context))
 
-    def warn(self, message: str, **context: Any) -> None:
+    def warn(self, message: str, **context: object) -> None:
         print(self._format_message("WARN", message, **context), file=sys.stderr)
 
-    def error(self, message: str, **context: Any) -> None:
+    def error(self, message: str, **context: object) -> None:
         print(self._format_message("ERROR", message, **context), file=sys.stderr)
 
-    def audit(self, message: str, **context: Any) -> None:
+    def audit(self, message: str, **context: object) -> None:
         print(self._format_message("AUDIT", message, **context))
 
 class FlextObservability:
@@ -311,7 +313,7 @@ def get_observability() -> FlextObservabilityProtocol:
 from flext_core.errors import FlextData, FlextAuth, FlextExceptions.Error
 from flext_core.result import FlextResult
 
-def connect_to_database(config: Dict[str, Any]) -> FlextResult[Connection]:
+def connect_to_database(config: Dict[str, object]) -> FlextResult[Connection]:
     """Connect to database with proper error handling."""
     try:
         # Validate configuration
@@ -358,7 +360,7 @@ class UserService:
         self.metrics = get_metrics()
         self.tracer = get_tracer()
 
-    async def create_user(self, user_data: Dict[str, Any]) -> FlextResult[User]:
+    async def create_user(self, user_data: Dict[str, object]) -> FlextResult[User]:
         """Create user with full observability."""
 
         with self.tracer.start_span("user.create") as span:

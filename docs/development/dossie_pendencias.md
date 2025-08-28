@@ -18,7 +18,7 @@
 
 - **68 erros em src/** - Era 0 antes das refatorações
 - **4,206 erros em tests/examples** - Redução insuficiente
-- Uso de `Any` explícito ainda presente
+- Uso de `object` explícito ainda presente
 - Type ignores em múltiplos arquivos
 
 #### 2. IMPLEMENTAÇÕES INCOMPLETAS
@@ -80,7 +80,7 @@ except ImportError:
   - `fix_domain_events.py`: Tipos genéricos incorretos
   - Interfaces inconsistentes
   - Testes com assertions incorretas
-  - Uso de Any explícito
+  - Uso de object explícito
 
 ### src/flext (Control Panel - Prioridade 2)
 
@@ -111,7 +111,7 @@ except ImportError:
 1. **Eliminar 68 erros MyPy em src/**
 
    - Corrigir tipos genéricos
-   - Remover Any explícito
+   - Remover object explícito
    - Ajustar interfaces
 
 2. **Corrigir teste falhando**

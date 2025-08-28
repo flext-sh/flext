@@ -3,11 +3,15 @@
 import warnings
 from typing import ParamSpec, Protocol
 
-from flext_core import get_logger as flext_get_logger
-from flext_observability import (
-    FlextLoggingService,
-    flext_create_log_entry,
-)
+import contextlib
+from flext_core import FlextLogger
+
+# Optional dependency - flext-observability may not be available
+with contextlib.suppress(ImportError):
+    from flext_observability import (
+        FlextLoggingService,
+        flext_create_log_entry,
+    )
 
 
 def deprecation_warning() -> None:
@@ -79,7 +83,7 @@ class DetailedLogger:
         """Initialize logger with flext-observability integration."""
         deprecation_warning()
         self.name = name
-        self.logger = flext_get_logger(name)
+        self.logger = FlextLogger(name)
         self.logging_service = FlextLoggingService()
 
     def debug(
@@ -174,18 +178,18 @@ class DetailedLogger:
             level=level.lower(),
         )
 
-        # Also use flext-core logger for backward compatibility
+        # Also use flext-core logger for backward compatibility  
         if level == "DEBUG":
-            self.logger.debug(formatted_message, **metadata)
+            self.logger.debug(formatted_message)
         elif level == "INFO":
-            self.logger.info(formatted_message, **metadata)
+            self.logger.info(formatted_message)
         elif level == "WARNING":
-            self.logger.warning(formatted_message, **metadata)
+            self.logger.warning(formatted_message)
         elif level == "ERROR":
-            self.logger.error(formatted_message, **metadata)
+            self.logger.error(formatted_message)
 
 
-def get_logger(name: str) -> DetailedLogger:
+def create_detailed_logger(name: str) -> DetailedLogger:
     """Create deprecated logger instance with flext-observability integration.
 
     Creates a DetailedLogger instance that wraps flext-observability logging
@@ -202,13 +206,13 @@ def get_logger(name: str) -> DetailedLogger:
     Example:
         Deprecated usage:
 
-        >>> logger = get_logger(__name__)
+        >>> logger = FlextLogger(__name__)
         >>> logger.info("Processing started")
 
         Recommended approach:
 
         >>> from flext_core import get_logger
-        >>> logger = get_logger(__name__)
+        >>> logger = FlextLogger(__name__)
 
     Warning:
         This function is deprecated. Use flext_core.get_logger or

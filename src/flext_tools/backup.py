@@ -10,11 +10,11 @@ import tomllib
 from datetime import UTC, datetime
 from pathlib import Path
 
-from flext_observability import get_logger
+from flext_core import FlextLogger
 
 from .colors import Colors, print_colored
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 MIN_CONTENT_LENGTH = 100
 

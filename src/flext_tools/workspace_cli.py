@@ -132,7 +132,7 @@ class WorkspaceService:
         >>> service = WorkspaceService()
         >>> modules = service.list_modules()
         >>> for module in modules:
-        ...     if module['exists']:
+        ...     if module["exists"]:
         ...         print(f"✓ {module['name']} is available")
         >>>
         >>> # Execute workspace commands
@@ -217,9 +217,7 @@ class WorkspaceService:
             >>> print(f"Exit code: {result.returncode}")
             >>>
             >>> # Run command without automatic exit on failure
-            >>> result = service.run_command(
-            ...     ["make", "lint"], check=False
-            ... )
+            >>> result = service.run_command(["make", "lint"], check=False)
             >>> if result.returncode != 0:
             ...     print(f"Lint failed: {result.stderr}")
 
@@ -295,7 +293,9 @@ class WorkspaceService:
             >>> service = WorkspaceService()
             >>> # Run test target in specific module
             >>> result = service.run_make_target("test", module="flext-core")
-            >>> print(f"flext-core tests: {'passed' if result.returncode == 0 else 'failed'}")
+            >>> print(
+            ...     f"flext-core tests: {'passed' if result.returncode == 0 else 'failed'}"
+            ... )
             >>>
             >>> # Run workspace-wide target
             >>> result = service.run_make_target("lint-all")
@@ -319,7 +319,7 @@ class WorkspaceService:
                 module name from the workspace module registry.
 
         Returns:
-            Dict[str, Any]: Comprehensive module status information containing:
+            Dict[str, object]: Comprehensive module status information containing:
             - exists (bool): Whether module directory exists
             - name (str): Module name for identification
             - path (str): Absolute path to module directory (if exists)
@@ -382,7 +382,7 @@ class WorkspaceService:
         and tooling integration.
 
         Returns:
-            List[Dict[str, Any]]: List of module status dictionaries, each
+            List[Dict[str, object]]: List of module status dictionaries, each
             containing comprehensive status information as returned by
             get_module_status(). Includes all registered modules regardless
             of existence or structure validity.
@@ -411,9 +411,7 @@ class WorkspaceService:
 
             Filter available modules:
 
-            >>> available_modules = [
-            ...     m for m in service.list_modules() if m["exists"]
-            ... ]
+            >>> available_modules = [m for m in service.list_modules() if m["exists"]]
             >>> print(f"Found {len(available_modules)} available modules")
 
         """
@@ -482,24 +480,24 @@ def status() -> None:
     table.add_column("Tests", style="yellow")
 
     for module_info in workspace_service.list_modules():
-      if module_info["exists"]:
-          status = "✓ Found"
-          pyproject = "✓" if module_info["has_pyproject"] else "✗"
-          makefile = "✓" if module_info["has_makefile"] else "✗"
-          src = "✓" if module_info["has_src"] else "✗"
-          tests = "✓" if module_info["has_tests"] else "✗"
-      else:
-          status = "✗ Missing"
-          pyproject = makefile = src = tests = "-"
+        if module_info["exists"]:
+            status = "✓ Found"
+            pyproject = "✓" if module_info["has_pyproject"] else "✗"
+            makefile = "✓" if module_info["has_makefile"] else "✗"
+            src = "✓" if module_info["has_src"] else "✗"
+            tests = "✓" if module_info["has_tests"] else "✗"
+        else:
+            status = "✗ Missing"
+            pyproject = makefile = src = tests = "-"
 
-      table.add_row(
-          str(module_info["name"]),
-          str(status),
-          str(pyproject),
-          str(makefile),
-          str(src),
-          str(tests),
-      )
+        table.add_row(
+            str(module_info["name"]),
+            str(status),
+            str(pyproject),
+            str(makefile),
+            str(src),
+            str(tests),
+        )
 
     console.print(table)
 
@@ -582,27 +580,27 @@ def test(module: str | None, *, integration: bool, coverage: bool) -> None:
         test_cmd += " test-coverage"
 
     if module:
-      console.print(f"[bold]Running tests for {module}[/bold]")
-      console.print(f"[dim]Integration: {integration}, Coverage: {coverage}[/dim]")
-      workspace_service.run_make_target(test_cmd, module=module)
+        console.print(f"[bold]Running tests for {module}[/bold]")
+        console.print(f"[dim]Integration: {integration}, Coverage: {coverage}[/dim]")
+        workspace_service.run_make_target(test_cmd, module=module)
     else:
-      console.print("[bold]Running all workspace tests[/bold]")
-      console.print(f"[dim]Integration: {integration}, Coverage: {coverage}[/dim]")
-      with Progress() as progress:
-          task = progress.add_task("[cyan]Testing modules...", total=len(MODULE_DIRS))
+        console.print("[bold]Running all workspace tests[/bold]")
+        console.print(f"[dim]Integration: {integration}, Coverage: {coverage}[/dim]")
+        with Progress() as progress:
+            task = progress.add_task("[cyan]Testing modules...", total=len(MODULE_DIRS))
 
-          for module_name in MODULE_DIRS:
-              progress.update(task, description=f"[cyan]Testing {module_name}...")
-              result = workspace_service.run_make_target(
-                  test_cmd,
-                  module=module_name,
-                  check=False,
-              )
-              if result.returncode == 0:
-                  console.print(f"[green]✓[/green] {module_name} tests passed")
-              else:
-                  console.print(f"[red]✗[/red] {module_name} tests failed")
-              progress.advance(task)
+            for module_name in MODULE_DIRS:
+                progress.update(task, description=f"[cyan]Testing {module_name}...")
+                result = workspace_service.run_make_target(
+                    test_cmd,
+                    module=module_name,
+                    check=False,
+                )
+                if result.returncode == 0:
+                    console.print(f"[green]✓[/green] {module_name} tests passed")
+                else:
+                    console.print(f"[red]✗[/red] {module_name} tests failed")
+                progress.advance(task)
 
 
 @cli.command()
@@ -673,13 +671,13 @@ def check(module: str | None, *, integration: bool, coverage: bool) -> None:
         check_cmd += " check-coverage"
 
     if module:
-      console.print(f"[bold]Running quality checks for {module}[/bold]")
-      console.print(f"[dim]Integration: {integration}, Coverage: {coverage}[/dim]")
-      workspace_service.run_make_target(check_cmd, module=module)
+        console.print(f"[bold]Running quality checks for {module}[/bold]")
+        console.print(f"[dim]Integration: {integration}, Coverage: {coverage}[/dim]")
+        workspace_service.run_make_target(check_cmd, module=module)
     else:
-      console.print("[bold]Running workspace quality checks[/bold]")
-      console.print(f"[dim]Integration: {integration}, Coverage: {coverage}[/dim]")
-      workspace_service.run_make_target(f"{check_cmd}-all")
+        console.print("[bold]Running workspace quality checks[/bold]")
+        console.print(f"[dim]Integration: {integration}, Coverage: {coverage}[/dim]")
+        workspace_service.run_make_target(f"{check_cmd}-all")
 
 
 @cli.command()
@@ -750,13 +748,13 @@ def build(module: str | None, *, integration: bool, coverage: bool) -> None:
         build_cmd += " build-coverage"
 
     if module:
-      console.print(f"[bold]Building {module}[/bold]")
-      console.print(f"[dim]Integration: {integration}, Coverage: {coverage}[/dim]")
-      workspace_service.run_make_target(build_cmd, module=module)
+        console.print(f"[bold]Building {module}[/bold]")
+        console.print(f"[dim]Integration: {integration}, Coverage: {coverage}[/dim]")
+        workspace_service.run_make_target(build_cmd, module=module)
     else:
-      console.print("[bold]Building entire workspace[/bold]")
-      console.print(f"[dim]Integration: {integration}, Coverage: {coverage}[/dim]")
-      workspace_service.run_make_target(f"{build_cmd}-all")
+        console.print("[bold]Building entire workspace[/bold]")
+        console.print(f"[dim]Integration: {integration}, Coverage: {coverage}[/dim]")
+        workspace_service.run_make_target(f"{build_cmd}-all")
 
 
 @cli.group()
@@ -836,7 +834,7 @@ def docker_up(service: tuple[str, ...], *, integration: bool, coverage: bool) ->
         cmd.extend(["--profile", "coverage"])
 
     if service:
-      cmd.extend(service)
+        cmd.extend(service)
 
     workspace_service.run_command(cmd)
     console.print("[green]Containers started successfully[/green]")
@@ -845,8 +843,8 @@ def docker_up(service: tuple[str, ...], *, integration: bool, coverage: bool) ->
 @docker.command("down")
 def docker_down(
     *,
-    integration: bool,  # noqa: ARG001
-    coverage: bool,  # noqa: ARG001
+    integration: bool,
+    coverage: bool,
 ) -> None:
     """Stop and remove Docker containers with comprehensive cleanup.
 
@@ -910,7 +908,7 @@ def docker_down(
 @docker.command("logs")
 @click.argument("service", required=False)
 @click.option("--follow", "-f", is_flag=True, help="Follow log output")
-def docker_logs(service: str | None, *, follow: bool) -> None:  # noqa: FBT001
+def docker_logs(service: str | None, *, follow: bool) -> None:
     """View and monitor Docker container logs with real-time streaming.
 
     Displays log output from Docker containers with support for real-time
@@ -964,9 +962,9 @@ def docker_logs(service: str | None, *, follow: bool) -> None:  # noqa: FBT001
     """
     cmd = ["docker-compose", "logs"]
     if follow:
-      cmd.append("-f")
+        cmd.append("-f")
     if service:
-      cmd.append(service)
+        cmd.append(service)
 
     workspace_service.run_command(cmd)
 
@@ -1046,25 +1044,25 @@ def integration_test(env: str) -> None:
     # Start required containers
     console.print("[dim]Starting test containers...[/dim]")
     workspace_service.run_command(
-      ["docker-compose", "-f", "docker-compose.yml", "up", "-d"],
+        ["docker-compose", "-f", "docker-compose.yml", "up", "-d"],
     )
     try:
-      # Run integration tests
-      workspace_service.run_command(
-          [
-              str(PYTHON_BIN),
-              "-m",
-              "pytest",
-              "tests/integration",
-              "-v",
-              "--tb=short",
-          ],
-      )
-      console.print("[green]Integration tests passed![/green]")
+        # Run integration tests
+        workspace_service.run_command(
+            [
+                str(PYTHON_BIN),
+                "-m",
+                "pytest",
+                "tests/integration",
+                "-v",
+                "--tb=short",
+            ],
+        )
+        console.print("[green]Integration tests passed![/green]")
     finally:
-      # Clean up containers
-      console.print("[dim]Cleaning up test containers...[/dim]")
-      workspace_service.run_command(["docker-compose", "down"])
+        # Clean up containers
+        console.print("[dim]Cleaning up test containers...[/dim]")
+        workspace_service.run_command(["docker-compose", "down"])
 
 
 @cli.command()
@@ -1123,27 +1121,27 @@ def setup() -> None:
     console.print("[bold]Setting up FLEXT workspace[/bold]")
 
     with Progress() as progress:
-      task = progress.add_task("[cyan]Setting up...", total=4)
+        task = progress.add_task("[cyan]Setting up...", total=4)
 
-      # Install dependencies
-      progress.update(task, description="[cyan]Installing dependencies...")
-      workspace_service.run_make_target("workspace-install")
-      progress.advance(task)
+        # Install dependencies
+        progress.update(task, description="[cyan]Installing dependencies...")
+        workspace_service.run_make_target("workspace-install")
+        progress.advance(task)
 
-      # Sync dependencies
-      progress.update(task, description="[cyan]Syncing dependencies...")
-      workspace_service.run_make_target("sync-deps")
-      progress.advance(task)
+        # Sync dependencies
+        progress.update(task, description="[cyan]Syncing dependencies...")
+        workspace_service.run_make_target("sync-deps")
+        progress.advance(task)
 
-      # Setup pre-commit hooks
-      progress.update(task, description="[cyan]Setting up pre-commit hooks...")
-      workspace_service.run_command(["pre-commit", "install"])
-      progress.advance(task)
+        # Setup pre-commit hooks
+        progress.update(task, description="[cyan]Setting up pre-commit hooks...")
+        workspace_service.run_command(["pre-commit", "install"])
+        progress.advance(task)
 
-      # Final setup
-      progress.update(task, description="[cyan]Finalizing setup...")
-      workspace_service.run_make_target("dev-setup")
-      progress.advance(task)
+        # Final setup
+        progress.update(task, description="[cyan]Finalizing setup...")
+        workspace_service.run_make_target("dev-setup")
+        progress.advance(task)
 
     console.print("[green]Workspace setup complete![/green]")
 
@@ -1199,8 +1197,8 @@ def clean() -> None:
     console.print("[bold]Cleaning workspace[/bold]")
 
     if click.confirm("This will remove all build artifacts and caches. Continue?"):
-      workspace_service.run_make_target("clean-workspace")
-      console.print("[green]Workspace cleaned successfully[/green]")
+        workspace_service.run_make_target("clean-workspace")
+        console.print("[green]Workspace cleaned successfully[/green]")
 
 
 if __name__ == "__main__":

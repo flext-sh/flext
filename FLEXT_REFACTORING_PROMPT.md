@@ -74,7 +74,7 @@ src/project_namespace/
 │
 ├── Domain Layer (DDD Patterns)
 │   ├── models.py              # Pydantic models and JSON schemas
-│   ├── aggregate_root.py      # FlextAggregateRoot with domain events
+│   ├── aggregate_root.py      # FlextAggregates with domain events
 │   ├── domain_services.py     # Domain service patterns and operations
 │   └── root_models.py         # RootModel patterns for validation
 │
@@ -178,7 +178,7 @@ def service_operation() -> FlextResult[Data]:
 
 ```python
 # ✅ CORRECT - Proven patterns from flext-core
-from flext_core import FlextEntity, FlextValueObject, FlextAggregateRoot
+from flext_core import FlextEntity, FlextValueObject, FlextAggregates
 
 class Email(FlextValueObject):
     """Value objects are immutable and compared by value."""
@@ -201,7 +201,7 @@ class User(FlextEntity):
         self.is_active = True
         return FlextResult[None].ok(None)
 
-class UserAggregate(FlextAggregateRoot):
+class UserAggregate(FlextAggregates):
     """Aggregate roots enforce consistency boundaries."""
     user: User
 
