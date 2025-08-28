@@ -76,7 +76,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import requests
-from flext_core import FlextResult, get_logger
+from flext_core import FlextResult, FlextLogger
 
 # Constants for validation
 MIN_NAME_LENGTH = 2
@@ -84,7 +84,7 @@ MAX_NAME_LENGTH = 50
 HTTP_OK_STATUS = 200
 
 # Initialize logger
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
 # REMOVED: ValidationResult class (MASSIVE DRY VIOLATION)

@@ -68,19 +68,19 @@ import ast
 import re
 from pathlib import Path
 
-from flext_core import FlextModel, FlextResult, get_logger
+from flext_core import FlextModels, FlextResult, FlextLogger
 from pydantic import Field
 
 from .colors import Colors, print_colored
 from .paths import should_ignore_path
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 MIN_PACKAGE_LENGTH = 2
 MAX_SEPARATORS = 2
 
 
-class PythonDependencies(FlextModel):
+class PythonDependencies(FlextModels.BaseConfig):
     """Python dependencies categorized by type.
 
     Contains runtime and test dependencies discovered from Python import analysis.

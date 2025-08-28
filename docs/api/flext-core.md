@@ -20,7 +20,7 @@ from flext_core import (
     # Domain modeling
     FlextEntity,         # Rich domain entities
     FlextValue,    # Immutable value objects
-    FlextAggregateRoot,  # DDD aggregates
+    FlextAggregates,  # DDD aggregates
 
     # Configuration
     FlextConfig,   # Environment-aware config
@@ -150,12 +150,12 @@ class Email(FlextValue):
             raise ValueError("Invalid email format")
 ```
 
-### FlextAggregateRoot - DDD Aggregates
+### FlextAggregates - DDD Aggregates
 
 ```python
-from flext_core import FlextAggregateRoot
+from flext_core import FlextAggregates
 
-class Order(FlextAggregateRoot):
+class Order(FlextAggregates):
     customer_id: str
     items: list
     total: float

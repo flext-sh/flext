@@ -3,6 +3,7 @@
 Tests for the base CLI functionality following FLEXT testing patterns
 with proper mocking and isolation.
 """
+
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -24,7 +25,9 @@ class TestBaseCLI:
         """Create BaseCLI instance with mocked dependencies."""
         return BaseCLI(workspace=mock_workspace)
 
-    def test_base_cli_initialization(self, base_cli: BaseCLI, mock_workspace: Path) -> None:
+    def test_base_cli_initialization(
+        self, base_cli: BaseCLI, mock_workspace: Path
+    ) -> None:
         """Test BaseCLI initialization with workspace."""
         # Assert
         assert base_cli.workspace == mock_workspace
@@ -38,9 +41,7 @@ class TestBaseCLI:
 
     @patch("flext.base_cli.WorkspaceManager")
     def test_get_workspace_manager_success(
-        self,
-        mock_workspace_manager: Mock,
-        base_cli: BaseCLI
+        self, mock_workspace_manager: Mock, base_cli: BaseCLI
     ) -> None:
         """Test successful workspace manager creation."""
         # Arrange
@@ -57,9 +58,7 @@ class TestBaseCLI:
 
     @patch("flext.base_cli.WorkspaceManager")
     def test_get_workspace_manager_failure(
-        self,
-        mock_workspace_manager: Mock,
-        base_cli: BaseCLI
+        self, mock_workspace_manager: Mock, base_cli: BaseCLI
     ) -> None:
         """Test workspace manager creation failure handling."""
         # Arrange
@@ -74,9 +73,7 @@ class TestBaseCLI:
 
     @patch("flext.base_cli.PipelineService")
     def test_get_pipeline_service_success(
-        self,
-        mock_pipeline_service: Mock,
-        base_cli: BaseCLI
+        self, mock_pipeline_service: Mock, base_cli: BaseCLI
     ) -> None:
         """Test successful pipeline service creation."""
         # Arrange
@@ -93,9 +90,7 @@ class TestBaseCLI:
 
     @patch("flext.base_cli.PipelineService")
     def test_get_pipeline_service_failure(
-        self,
-        mock_pipeline_service: Mock,
-        base_cli: BaseCLI
+        self, mock_pipeline_service: Mock, base_cli: BaseCLI
     ) -> None:
         """Test pipeline service creation failure handling."""
         # Arrange
@@ -148,12 +143,12 @@ class TestBaseCLIErrorHandling:
     def test_none_workspace_handling(self) -> None:
         """Test BaseCLI behavior with None workspace."""
         with pytest.raises(TypeError):
-            BaseCLI(workspace=None)  # type: ignore[arg-type]
+            BaseCLI(workspace=None)
 
     def test_invalid_workspace_type(self) -> None:
         """Test BaseCLI behavior with invalid workspace type."""
         with pytest.raises(TypeError):
-            BaseCLI(workspace="invalid")  # type: ignore[arg-type]
+            BaseCLI(workspace="invalid")
 
     @patch("flext.base_cli.WorkspaceManager")
     def test_multiple_service_failures(self, mock_workspace_manager: Mock) -> None:

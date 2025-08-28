@@ -174,7 +174,7 @@ class PatternViolationAnalyzer:
 
         # Type system violations
         self.type_system_violations = {
-            "Dict[str, Any]": {
+            "Dict[str, object]": {
                 "severity": "CRITICAL",
                 "pattern": "types.md#FlextTypes",
                 "context": "Use FlextTypes namespace for semantic type definitions",
@@ -314,7 +314,9 @@ class PatternViolationAnalyzer:
 
         except Exception as e:
             self.logger.debug(f"Error analyzing file {file_path}: {e}")
-            return FlextResult[list[PatternViolation]].ok([])  # Return empty list on file errors
+            return FlextResult[
+                list[PatternViolation]
+            ].ok([])  # Return empty list on file errors
 
     def _analyze_ast_patterns(
         self,
@@ -555,7 +557,9 @@ class PatternAuditSystem:
             return FlextResult[EcosystemAuditResult].ok(ecosystem_result)
 
         except Exception as e:
-            return FlextResult[EcosystemAuditResult].fail(f"Ecosystem audit failed: {e}")
+            return FlextResult[EcosystemAuditResult].fail(
+                f"Ecosystem audit failed: {e}"
+            )
 
     def generate_compliance_report(
         self,

@@ -78,7 +78,10 @@ from pathlib import Path
 
 import pytest
 import ruff.__main__ as ruff_main  # type: ignore[import-untyped]
-from flext_core import FlextEntity, FlextResult, get_logger
+from flext_core import FlextModels, FlextResult
+from flext_core import FlextLogger
+
+from flext_core.container import FlextContainer
 from mypy import api as mypy_api
 
 from .colors import Colors, print_colored
@@ -98,7 +101,7 @@ class QualityCheckConfig:
 
 
 @dataclass
-class QualityIssue(FlextEntity):
+class QualityIssue(FlextModels.Entity):
     """Individual quality issue entity for structured issue reporting.
 
     This entity represents a single quality issue detected during quality
@@ -275,7 +278,7 @@ class QualityGateway:
 
         """
         self.workspace_path = workspace_path
-        self.logger = get_logger(__name__)
+        self.logger = FlextLogger(__name__)
         self.container = FlextContainer.get_global()
 
         self.logger.info(

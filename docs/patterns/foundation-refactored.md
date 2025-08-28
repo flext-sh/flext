@@ -175,11 +175,11 @@ def create_user(name: str, email: str) -> FlextResult[User]:
 
 ```python
 # OLD: Scattered, unclear type definitions
-from typing import Dict, List, Optional, Union, Any
+from typing import Dict, List, Optional, Union, object
 
-UserData = Dict[str, Any]
-UserList = List[Dict[str, Any]]
-DatabaseResult = Union[Dict[str, Any], None]
+UserData = Dict[str, object]
+UserList = List[Dict[str, object]]
+DatabaseResult = Union[Dict[str, object], None]
 ValidationResult = Optional[str]
 ```
 
@@ -268,14 +268,14 @@ class User(FlextEntity):
 # OLD: 100+ lines of boilerplate
 import uuid
 from datetime import datetime
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, object
 from dataclasses import dataclass
 
 @dataclass
 class Order:
     id: str
     customer_id: str
-    items: List[Dict[str, Any]]
+    items: List[Dict[str, object]]
     total: float
     status: str
     created_at: datetime
@@ -292,7 +292,7 @@ class OrderService:
         self.payment = payment_service
         self.inventory = inventory_service
 
-    def process_order(self, order_data: Dict[str, Any]):
+    def process_order(self, order_data: Dict[str, object]):
         try:
             # Validate order
             if not order_data.get("customer_id"):
@@ -371,7 +371,7 @@ result = Order.create(**order_data).flat_map(lambda o: o.process())
 
 ### 🎯 Quality Improvements
 
-- **Type Safety**: Complete MyPy compliance with zero `Any` types
+- **Type Safety**: Complete MyPy compliance with zero `object` types
 - **Error Handling**: Railway-oriented programming eliminates exception chaos
 - **Testing**: Built-in test utilities and fixtures
 - **Maintainability**: Self-documenting code with semantic types

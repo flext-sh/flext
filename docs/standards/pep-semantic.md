@@ -102,7 +102,7 @@ flextVERSION = "0.9.0"   # mixedCase
 # Classes base
 class FlextEntity[TId]:
 class FlextValue:
-class FlextAggregateRoot[TId]:
+class FlextAggregates[TId]:
 class FlextDomainService:
 
 # Tipos relacionados
@@ -229,7 +229,7 @@ class FlextRepository[TEntity, TId]:
 
 # ❌ Incorreto - Type hints antigos
 def flext_process_data(data):  # Sem type hints
-def flext_process_data(data: Any) -> Any:  # Muito genérico
+def flext_process_data(data: object) -> object:  # Muito genérico
 ```
 
 ### PEP 563 - Deferred Evaluation

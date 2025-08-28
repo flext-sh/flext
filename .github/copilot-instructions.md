@@ -110,7 +110,7 @@ class FlextTapOracle(Tap):
 
 ### Type Annotations (Required)
 - Use explicit types for all function signatures
-- Avoid `Any` type - use specific types or Union
+- Avoid `object` type - use specific types or Union
 - Add type comments for complex generic patterns:
 
 ```python
@@ -119,7 +119,7 @@ def process_records(records: list[dict[str, str | int]]) -> FlextResult[Processi
     
 # Avoid
 def process_records(records):  # Missing types
-def process_records(records: Any) -> Any:  # Too generic
+def process_records(records: object) -> object:  # Too generic
 ```
 
 ### Testing Patterns

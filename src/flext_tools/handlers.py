@@ -51,52 +51,14 @@ License: MIT
 
 from __future__ import annotations
 
-# Import comprehensive handler patterns from flext-core
 from flext_core import (
-    FlextCommandHandler,
-    FlextCoreHandlers,
-    FlextEventHandler,
-    FlextQueryHandler,
+    FlextHandlers,
     FlextResult,
 )
 
-# Re-export flext-core handlers for backward compatibility
-CommandHandler = FlextCommandHandler
-QueryHandler = FlextQueryHandler
-EventHandler = FlextEventHandler
-
-# Export additional handler patterns for advanced use cases
-Handler = FlextCoreHandlers.Handler
-ValidatingHandler = FlextCoreHandlers.ValidatingHandler
-AuthorizingHandler = FlextCoreHandlers.AuthorizingHandler
-MetricsHandler = FlextCoreHandlers.MetricsHandler
-HandlerChain = FlextCoreHandlers.HandlerChain
-HandlerRegistry = FlextCoreHandlers.HandlerRegistry
-Pipeline = FlextCoreHandlers.Pipeline
-
-# Convenience aliases for common patterns
-VoidCommandHandler = FlextCommandHandler  # Commands that return None
-SimpleQueryHandler = FlextQueryHandler     # Queries that return dict
+# Direct exports from flext-core without unnecessary aliases
 
 __all__ = [
-    "AuthorizingHandler",
-    # Core CQRS handlers (facade to flext-core)
-    "CommandHandler",
-    "EventHandler",
-    # Direct access to flext-core patterns
-    "FlextCommandHandler",
-    "FlextCoreHandlers",
-    "FlextEventHandler",
-    "FlextQueryHandler",
+    "FlextHandlers",
     "FlextResult",
-    # Advanced handler patterns from flext-core
-    "Handler",
-    "HandlerChain",
-    "HandlerRegistry",
-    "MetricsHandler",
-    "Pipeline",
-    "QueryHandler",
-    "SimpleQueryHandler",
-    "ValidatingHandler",
-    "VoidCommandHandler",
 ]

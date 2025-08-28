@@ -18,7 +18,8 @@ import re
 import time
 from pathlib import Path
 
-from flext_core import FlextResult, get_logger
+from flext_core import FlextResult, FlextLogger
+from flext_core.container import FlextContainer
 from poetry.console import (
     application as poetry_app,
 )
@@ -31,7 +32,7 @@ from .safety_validator import SafetyValidator
 MIN_PARTS_COUNT = 3
 
 # Initialize logger
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
 # REMOVED: OperationResult class (MASSIVE DRY VIOLATION)
@@ -341,7 +342,7 @@ class PoetryOperations:
 
     def _add_dependency(
         self,
-        project_path: Path,  # noqa: ARG002
+        project_path: Path,
         dependency: str,
         group: str | None = None,
     ) -> bool:
@@ -360,7 +361,7 @@ class PoetryOperations:
 
         """
         # Validate dependency input to prevent command injection
-        logger = get_logger(__name__)
+        logger = FlextLogger(__name__)
         if not re.match(r"^[a-zA-Z0-9_\-\.\[\]>=<~!]+$", dependency):
             logger.warning(f"Invalid dependency format: {dependency}")
             return False
@@ -389,7 +390,7 @@ class PoetryOperations:
             if self.dry_run:
                 args.append("--dry-run")
             app = poetry_app.Application()
-            code = app.run(args)  # type: ignore[arg-type]
+            code = app.run(args)
             success = int(code) == 0
 
             if success:
@@ -550,7 +551,7 @@ class PoetryOperations:
 
         return removed
 
-    def _remove_dependency(self, project_path: Path, dependency: str) -> bool:  # noqa: ARG002
+    def _remove_dependency(self, project_path: Path, dependency: str) -> bool:
         """Remove an individual dependency with safety validation.
 
         Executes Poetry remove command for a single dependency with proper
@@ -565,7 +566,7 @@ class PoetryOperations:
 
         """
         # Validate dependency input to prevent command injection
-        logger = get_logger(__name__)
+        logger = FlextLogger(__name__)
         if not re.match(r"^[a-zA-Z0-9_\-\.\[\]>=<~!]+$", dependency):
             logger.warning(f"Invalid dependency format: {dependency}")
             return False
@@ -589,7 +590,7 @@ class PoetryOperations:
             if self.dry_run:
                 args.append("--dry-run")
             app = poetry_app.Application()
-            code = app.run(args)  # type: ignore[arg-type]
+            code = app.run(args)
             success = int(code) == 0
 
             if success:
@@ -723,7 +724,7 @@ class PoetryOperations:
             if self.dry_run:
                 args.append("--dry-run")
             app = poetry_app.Application()
-            code = app.run(args)  # type: ignore[arg-type]
+            code = app.run(args)
             success = int(code) == 0
 
             if success:
@@ -839,7 +840,7 @@ class PoetryOperations:
                 return False
             args = ["lock"]
             app = poetry_app.Application()
-            code = app.run(args)  # type: ignore[arg-type]
+            code = app.run(args)
             success = int(code) == 0
 
             if success:
@@ -952,7 +953,7 @@ class PoetryOperations:
                 return False
             args = ["check"]
             app = poetry_app.Application()
-            code = app.run(args)  # type: ignore[arg-type]
+            code = app.run(args)
             success = int(code) == 0
 
             if success:
