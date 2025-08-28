@@ -80,12 +80,12 @@ from enum import Enum
 from pathlib import Path
 from typing import ClassVar
 
-from flext_core import FlextResult, FlextValue, get_logger
+from flext_core import FlextResult, FlextModels, FlextLogger
 
 from .colors import Colors, print_colored
 
 # Use flext-core logger
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
 class ViolationType(Enum):
@@ -134,7 +134,7 @@ class SecurityViolation:
         }
 
 
-class ScanConfig(FlextValue):
+class ScanConfig(FlextModels.Value):
     """Configuration for security scanning operations using flext-core patterns."""
 
     target_paths: list[str]
@@ -190,7 +190,7 @@ class AntipatternScanner:
 
         """
         self.config = config
-        self.logger = get_logger(self.__class__.__name__)
+        self.logger = FlextLogger(self.__class__.__name__)
 
         # Validate configuration
         validation_result = config.validate_business_rules()

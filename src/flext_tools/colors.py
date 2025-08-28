@@ -33,7 +33,7 @@ License: MIT
 
 """
 
-from flext_core import get_logger
+from flext_core import FlextLogger
 
 
 class Colors:
@@ -130,7 +130,7 @@ def colorize(message: str, color: str = "") -> str:
     return f"{color}{message}{Colors.RESET}" if color else message
 
 
-_logger = get_logger("flext_tools.output")
+_logger = FlextLogger("flext_tools.output")
 
 
 def print_colored(message: str, color: str = "") -> None:

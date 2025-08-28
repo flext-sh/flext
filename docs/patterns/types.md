@@ -32,7 +32,8 @@ Use protocols for structural typing instead of deep inheritance.
 ## Core Foundation Types
 
 ```python
-from typing import TypeVar, Union, Dict, Any, Callable, Protocol
+from typing import TypeVar, Union, Dict, Callable, Protocol
+
 from datetime import datetime
 from decimal import Decimal
 
@@ -48,7 +49,7 @@ class FlextTypes:
         V = TypeVar('V')
 
         # JSON Types
-        JsonValue = Union[str, int, float, bool, None, Dict[str, Any], list]
+        JsonValue = Union[str, int, float, bool, None, Dict[str, object], list]
         JsonDict = Dict[str, JsonValue]
         JsonList = list[JsonValue]
 
@@ -87,36 +88,36 @@ class FlextTypes:
 
         # Connection Types
         ConnectionString = str
-        ConnectionConfig = Dict[str, Any]
+        ConnectionConfig = Dict[str, object]
         Connection = Union[ConnectionString, ConnectionConfig]
 
         # Schema Types
         FieldName = str
         FieldType = str  # 'string', 'integer', 'number', 'boolean', 'object', 'array'
-        FieldDefinition = Dict[str, Any]
+        FieldDefinition = Dict[str, object]
         Schema = Dict[FieldName, FieldDefinition]
 
         # Record Types
-        Record = Dict[str, Any]
+        Record = Dict[str, object]
         RecordBatch = list[Record]
         RecordStream = Iterator[Record]
 
         # Transformation Types
         FieldMapping = Dict[FieldName, FieldName]
-        ValueTransformer = Callable[[Any], Any]
+        ValueTransformer = Callable[[object], object]
         RecordTransformer = Callable[[Record], Record]
 
         # Query Types
         Query = str
-        QueryParams = Dict[str, Any]
+        QueryParams = Dict[str, object]
         QueryResult = Union[Record, RecordBatch]
 
         # Metadata Types
         TableName = str
         DatabaseName = str
         SchemaName = str
-        ColumnMetadata = Dict[str, Any]
-        TableMetadata = Dict[str, Any]
+        ColumnMetadata = Dict[str, object]
+        TableMetadata = Dict[str, object]
 ```
 
 ## Authentication Types
@@ -129,7 +130,7 @@ class FlextTypes:
         # Token Types
         Token = str
         TokenType = Literal['Bearer', 'Basic', 'API']
-        TokenPayload = Dict[str, Any]
+        TokenPayload = Dict[str, object]
 
         # Credential Types
         Username = str
@@ -147,7 +148,7 @@ class FlextTypes:
 
         # Session Types
         SessionId = str
-        SessionData = Dict[str, Any]
+        SessionData = Dict[str, object]
         SessionStore = Dict[SessionId, SessionData]
 
         # Permission Types
@@ -160,7 +161,7 @@ class FlextTypes:
         # Context Types
         UserId = str
         TenantId = str
-        AuthContext = Dict[str, Any]
+        AuthContext = Dict[str, object]
 ```
 
 ## Observability Types
@@ -172,8 +173,8 @@ class FlextTypes:
 
         # Logging Types
         LogLevel = Literal['TRACE', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL']
-        LogContext = Dict[str, Any]
-        LogEntry = Dict[str, Any]
+        LogContext = Dict[str, object]
+        LogEntry = Dict[str, object]
 
         # Metrics Types
         MetricName = str
@@ -184,18 +185,18 @@ class FlextTypes:
         # Tracing Types
         TraceId = str
         SpanId = str
-        SpanContext = Dict[str, Any]
+        SpanContext = Dict[str, object]
         SpanKind = Literal['CLIENT', 'SERVER', 'PRODUCER', 'CONSUMER', 'INTERNAL']
 
         # Alert Types
         AlertLevel = Literal['INFO', 'WARNING', 'ERROR', 'CRITICAL']
         AlertName = str
         AlertMessage = str
-        AlertContext = Dict[str, Any]
+        AlertContext = Dict[str, object]
 
         # Health Check Types
         HealthStatus = Literal['HEALTHY', 'DEGRADED', 'UNHEALTHY']
-        HealthCheck = Dict[str, Any]
+        HealthCheck = Dict[str, object]
         HealthReport = Dict[str, HealthCheck]
 ```
 
@@ -208,29 +209,29 @@ class FlextTypes:
 
         # Message Types
         MessageType = Literal['RECORD', 'STATE', 'SCHEMA', 'ACTIVATE_VERSION']
-        Record = Dict[str, Any]
-        State = Dict[str, Any]
-        Schema = Dict[str, Any]
+        Record = Dict[str, object]
+        State = Dict[str, object]
+        Schema = Dict[str, object]
 
         # Stream Types
         StreamName = str
         TapStreamId = str
-        StreamMetadata = Dict[str, Any]
+        StreamMetadata = Dict[str, object]
 
         # Catalog Types
-        CatalogEntry = Dict[str, Any]
+        CatalogEntry = Dict[str, object]
         Catalog = Dict[str, CatalogEntry]
         SelectedStreams = Set[StreamName]
 
         # Configuration Types
-        TapConfig = Dict[str, Any]
-        TargetConfig = Dict[str, Any]
-        StateValue = Any
+        TapConfig = Dict[str, object]
+        TargetConfig = Dict[str, object]
+        StateValue = object
 
         # Replication Types
         ReplicationMethod = Literal['FULL_TABLE', 'INCREMENTAL', 'LOG_BASED']
         ReplicationKey = str
-        BookmarkValue = Any
+        BookmarkValue = object
 ```
 
 ## Bridge Types (Go-Python)
@@ -243,7 +244,7 @@ class FlextTypes:
         # Message Types
         MessageId = str
         MessageType = str
-        MessagePayload = Dict[str, Any]
+        MessagePayload = Dict[str, object]
 
         # Protocol Types
         RequestId = str
@@ -257,7 +258,7 @@ class FlextTypes:
         # Contract Types
         ServiceName = str
         MethodName = str
-        ServiceContract = Dict[MethodName, Dict[str, Any]]
+        ServiceContract = Dict[MethodName, Dict[str, object]]
 
         # Bridge Message Structure
         BridgeMessage = TypedDict('BridgeMessage', {

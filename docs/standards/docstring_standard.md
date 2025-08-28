@@ -25,7 +25,7 @@ Example:
     'processed data'
 
 Note:
-    Any important notes about the module's behavior, dependencies,
+    object important notes about the module's behavior, dependencies,
     or special considerations for usage.
 
 Attributes:
@@ -64,7 +64,7 @@ class FlextExampleClass:
         ...     print(result.data)
 
     Note:
-        Any important behavioral notes, threading considerations,
+        object important behavioral notes, threading considerations,
         or performance characteristics.
     """
 
@@ -95,7 +95,7 @@ class FlextExampleClass:
 ```python
 def process_data(
     self,
-    input_data: Dict[str, Any],
+    input_data: Dict[str, object],
     *,
     validate: bool = True,
     timeout: Optional[int] = None,
@@ -155,7 +155,7 @@ def status(self) -> str:
 
 ```python
 @classmethod
-def create_from_config(cls, config: Dict[str, Any]) -> "FlextExampleClass":
+def create_from_config(cls, config: Dict[str, object]) -> "FlextExampleClass":
     """Create instance from configuration dictionary.
 
     Factory method that creates a new instance using configuration
@@ -179,7 +179,7 @@ def create_from_config(cls, config: Dict[str, Any]) -> "FlextExampleClass":
     """
 
 @staticmethod
-def validate_input(data: Any) -> bool:
+def validate_input(data: object) -> bool:
     """Validate input data format and structure.
 
     Args:
@@ -197,7 +197,7 @@ def validate_input(data: Any) -> bool:
 ## Inline Comments Standards
 
 ```python
-def complex_method(self, data: List[Dict[str, Any]]) -> FlextResult[List[str]]:
+def complex_method(self, data: List[Dict[str, object]]) -> FlextResult[List[str]]:
     """Process complex data with multiple steps."""
     # Step 1: Validate all input data
     validated_data = []
@@ -227,7 +227,8 @@ def complex_method(self, data: List[Dict[str, Any]]) -> FlextResult[List[str]]:
 ## Type Hints Integration
 
 ```python
-from typing import Dict, List, Optional, Union, Any, TypeVar, Generic
+from typing import Dict, List, Optional, Union, TypeVar, Generic
+
 from flext_core import FlextResult
 
 T = TypeVar('T')
@@ -277,7 +278,7 @@ class FlextProcessingError(FlextExceptions.Error):
         self,
         message: str,
         operation: str,
-        data: Optional[Any] = None,
+        data: Optional[object] = None,
     ) -> None:
         """Initialize the processing error.
 

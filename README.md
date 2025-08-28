@@ -154,7 +154,7 @@ FLEXT implements a hybrid architecture where Go services orchestrate Python libr
 go version        # Should show 1.24+
 python --version  # Should show 3.13+
 docker --version  # Should show 24.0+
-make --version    # Any recent version
+make --version    # object recent version
 ```
 
 ### Development Environment Setup

@@ -337,10 +337,14 @@ class TransitiveDependencyResolver:
             return []
 
         # Extract main dependencies
-        path_deps.extend(self._extract_main_path_dependencies(poetry_section, project_path))
+        path_deps.extend(
+            self._extract_main_path_dependencies(poetry_section, project_path)
+        )
 
         # Extract group dependencies
-        path_deps.extend(self._extract_group_path_dependencies(poetry_section, project_path))
+        path_deps.extend(
+            self._extract_group_path_dependencies(poetry_section, project_path)
+        )
 
         return path_deps
 
@@ -375,7 +379,9 @@ class TransitiveDependencyResolver:
                 if isinstance(group_data, dict):
                     group_deps: object = group_data.get("dependencies", {})  # type: ignore[misc]
                     if isinstance(group_deps, dict):
-                        path_deps.extend(self._process_dependency_dict(group_deps, project_path))
+                        path_deps.extend(
+                            self._process_dependency_dict(group_deps, project_path)
+                        )
         return path_deps
 
     def _process_dependency_dict(
@@ -390,7 +396,11 @@ class TransitiveDependencyResolver:
                 path_raw: object = dep_spec["path"]  # type: ignore[misc]
                 develop_raw: object = dep_spec.get("develop", False)  # type: ignore[misc]
                 if isinstance(path_raw, str) and isinstance(develop_raw, bool):
-                    path_deps.append(PathDependency(dep_name, (project_path / path_raw).resolve(), develop_raw))
+                    path_deps.append(
+                        PathDependency(
+                            dep_name, (project_path / path_raw).resolve(), develop_raw
+                        )
+                    )
         return path_deps
 
     def _extract_package_name(self, dep_spec: str) -> str:

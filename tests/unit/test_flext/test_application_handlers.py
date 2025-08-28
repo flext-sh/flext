@@ -3,8 +3,10 @@
 Tests for CQRS handler facade functionality following FLEXT testing patterns
 with proper mocking and verification of flext-core integration.
 """
+
 from dataclasses import dataclass
-from typing import Any
+
+object
 from unittest.mock import Mock, patch
 
 import pytest
@@ -49,7 +51,7 @@ class TestEvent:
     """Test event for handler testing."""
 
     event_type: str
-    data: dict[str, Any]
+    data: dict[str, object]
 
 
 class TestFlextHandlerFacade:
@@ -148,9 +150,9 @@ class TestHandlerImplementation:
     def test_create_query_handler_subclass(self) -> None:
         """Test creating a concrete QueryHandler subclass."""
 
-        class TestQueryHandler(QueryHandler[TestQuery, dict[str, Any]]):
-            def handle_query(self, query: TestQuery) -> FlextResult[dict[str, Any]]:
-                return FlextResult[dict[str, Any]].ok({"query_id": query.query_id})
+        class TestQueryHandler(QueryHandler[TestQuery, dict[str, object]]):
+            def handle_query(self, query: TestQuery) -> FlextResult[dict[str, object]]:
+                return FlextResult[dict[str, object]].ok({"query_id": query.query_id})
 
         # Act
         handler = TestQueryHandler()
@@ -180,7 +182,7 @@ class TestHandlerIntegration:
     """Integration tests for handler patterns with flext-core."""
 
     @pytest.fixture
-    def temp_workspace(self, tmp_path) -> Any:
+    def temp_workspace(self, tmp_path) -> object:
         """Create temporary workspace for integration testing."""
         workspace = tmp_path / "handler-integration-test"
         workspace.mkdir()

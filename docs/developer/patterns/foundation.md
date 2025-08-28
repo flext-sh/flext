@@ -164,7 +164,8 @@ class FlextResult(Generic[T]):
 Semantic factory for creating domain objects.
 
 ```python
-from typing import Type, Dict, Any, Callable
+from typing import Type, Dict, Callable
+
 
 class FlextFactory:
     """Factory for creating and validating domain objects."""
@@ -172,12 +173,12 @@ class FlextFactory:
     _creators: Dict[str, Callable] = {}
 
     @classmethod
-    def register_creator(cls, entity_type: str, creator: Callable[..., FlextResult[Any]]) -> None:
+    def register_creator(cls, entity_type: str, creator: Callable[..., FlextResult[object]]) -> None:
         """Register a creator function for entity type."""
         cls._creators[entity_type] = creator
 
     @classmethod
-    def create(cls, entity_type: str, **kwargs) -> FlextResult[Any]:
+    def create(cls, entity_type: str, **kwargs) -> FlextResult[object]:
         """Create entity using registered creator."""
         if entity_type not in cls._creators:
             return FlextResult[None].fail(f"No creator registered for type: {entity_type}")
@@ -207,16 +208,17 @@ class FlextFactory:
 Base protocol definitions for structural typing.
 
 ```python
-from typing import Protocol, runtime_checkable, Any, Dict
+from typing import Protocol, runtime_checkable, Dict
+
 
 @runtime_checkable
 class FlextSerializable(Protocol):
     """Protocol for serializable objects."""
 
-    def to_dict(self) -> Dict[str, Any]: ...
+    def to_dict(self) -> Dict[str, object]: ...
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'FlextSerializable': ...
+    def from_dict(cls, data: Dict[str, object]) -> 'FlextSerializable': ...
 
 @runtime_checkable
 class FlextValidatable(Protocol):
@@ -232,7 +234,7 @@ class FlextIdentifiable(Protocol):
     @property
     def id(self) -> str: ...
 
-    def equals(self, other: Any) -> bool: ...
+    def equals(self, other: object) -> bool: ...
 ```
 
 ## Usage Examples

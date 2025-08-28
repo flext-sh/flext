@@ -33,7 +33,8 @@ Pluggable configuration sources with consistent interface.
 ## Configuration Foundation
 
 ```python
-from typing import Any, Protocol, runtime_checkable, Dict, List, Optional
+from typing import Protocol, runtime_checkable, Dict, List, Optional
+
 from pathlib import Path
 
 class FlextConfigSemanticConstants:
@@ -69,7 +70,7 @@ class FlextConfigHierarchical:
 
     def __init__(self) -> None:
         self._providers: List[FlextConfigProvider] = []
-        self._cache: Dict[str, Any] = {}
+        self._cache: Dict[str, object] = {}
         self._transformers: Dict[str, Callable] = {}
 
     def register_provider(self, provider: FlextConfigProvider) -> FlextResult[None]:
@@ -88,7 +89,7 @@ class FlextConfigHierarchical:
         except Exception as e:
             return FlextResult[None].fail(f"Failed to register provider: {e}")
 
-    def get_config(self, key: str, default: Any = None) -> FlextResult[Any]:
+    def get_config(self, key: str, default: object = None) -> FlextResult[object]:
         """Get configuration value following hierarchical precedence."""
         if key in self._cache:
             return FlextResult[None].ok(self._cache[key])
@@ -102,7 +103,7 @@ class FlextConfigHierarchical:
 
         return FlextResult[None].ok(default)
 
-    def get_all_configs(self) -> Dict[str, Any]:
+    def get_all_configs(self) -> Dict[str, object]:
         """Get all configuration values merged by precedence."""
         all_configs = {}
 
@@ -125,7 +126,7 @@ class FlextEnvironmentProvider:
     def __init__(self, prefix: str = "FLEXT_") -> None:
         self.prefix = prefix
 
-    def get_config(self, key: str, default: Any = None) -> FlextResult[Any]:
+    def get_config(self, key: str, default: object = None) -> FlextResult[object]:
         """Get configuration from environment variables."""
         import os
 
@@ -145,7 +146,7 @@ class FlextConfigFileProvider:
 
     def __init__(self, config_path: Path) -> None:
         self.config_path = config_path
-        self._config: Dict[str, Any] = {}
+        self._config: Dict[str, object] = {}
         self._load_config()
 
     def _load_config(self) -> None:
@@ -168,7 +169,7 @@ class FlextConfigFileProvider:
         except Exception:
             pass  # Silently fail for optional config files
 
-    def get_config(self, key: str, default: Any = None) -> FlextResult[Any]:
+    def get_config(self, key: str, default: object = None) -> FlextResult[object]:
         """Get configuration value using dot notation."""
         keys = key.split('.')
         value = self._config
@@ -192,8 +193,8 @@ class FlextConfigFileProvider:
 class FlextCliProvider(Protocol):
     """Protocol for CLI argument providers."""
 
-    def parse_args(self, args: Optional[List[str]] = None) -> FlextResult[Dict[str, Any]]: ...
-    def get_config(self, key: str, default: Any = None) -> FlextResult[Any]: ...
+    def parse_args(self, args: Optional[List[str]] = None) -> FlextResult[Dict[str, object]]: ...
+    def get_config(self, key: str, default: object = None) -> FlextResult[object]: ...
     def get_priority(self) -> int: ...
 ```
 
@@ -251,7 +252,7 @@ class DatabaseSettings(FlextConfig):
         case_sensitive = False
 
 # Create settings with hierarchy
-def create_database_config(cli_args: Dict[str, Any]) -> FlextResult[DatabaseSettings]:
+def create_database_config(cli_args: Dict[str, object]) -> FlextResult[DatabaseSettings]:
     config = FlextConfigHierarchical()
 
     # Register providers
