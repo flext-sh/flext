@@ -3,6 +3,7 @@
 Tests for the main CLI interface functionality following FLEXT testing patterns
 with proper mocking and fallback behavior validation.
 """
+
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -10,7 +11,7 @@ import pytest
 from click.testing import CliRunner
 from flext_core import FlextResult
 
-from flext.cli import main
+from flext.cli import Colors, QualityGateway, main, print_colored
 
 
 class TestMainCliFunction:
@@ -30,7 +31,9 @@ class TestMainCliFunction:
         assert result.exit_code == 0
         assert "FLEXT Control Panel main command" in result.output
 
-    def test_main_cli_with_workspace_option(self, cli_runner: CliRunner, tmp_path: Path) -> None:
+    def test_main_cli_with_workspace_option(
+        self, cli_runner: CliRunner, tmp_path: Path
+    ) -> None:
         """Test main CLI with workspace option."""
         # Arrange
         workspace = tmp_path / "test-workspace"
@@ -44,9 +47,7 @@ class TestMainCliFunction:
 
     @patch("flext.cli.CLIConfig")
     def test_main_cli_with_profile(
-        self,
-        mock_config: Mock,
-        cli_runner: CliRunner
+        self, mock_config: Mock, cli_runner: CliRunner
     ) -> None:
         """Test main CLI with profile option."""
         # Arrange
@@ -77,9 +78,7 @@ class TestMainCliFunction:
 
     @patch("flext.cli.CLIConfig")
     def test_main_cli_config_error_handling(
-        self,
-        mock_config: Mock,
-        cli_runner: CliRunner
+        self, mock_config: Mock, cli_runner: CliRunner
     ) -> None:
         """Test main CLI configuration error handling."""
         # Arrange
@@ -111,10 +110,7 @@ class TestCliToolsGroup:
 
     @patch("flext.cli.QualityGateway")
     def test_tools_quality_command(
-        self,
-        mock_gateway: Mock,
-        cli_runner: CliRunner,
-        tmp_path: Path
+        self, mock_gateway: Mock, cli_runner: CliRunner, tmp_path: Path
     ) -> None:
         """Test tools quality command."""
         # Arrange
@@ -126,8 +122,7 @@ class TestCliToolsGroup:
 
         # Act
         result = cli_runner.invoke(
-            main,
-            ["--workspace", str(workspace), "tools", "quality", "--help"]
+            main, ["--workspace", str(workspace), "tools", "quality", "--help"]
         )
 
         # Assert
@@ -141,15 +136,16 @@ class TestCliToolsGroup:
 
         # Act
         result = cli_runner.invoke(
-            main,
-            ["--workspace", str(workspace), "tools", "scripts", "--list-only"]
+            main, ["--workspace", str(workspace), "tools", "scripts", "--list-only"]
         )
 
         # Assert
         assert result.exit_code == 0
         assert "Available FlextScript instances" in result.output
 
-    def test_tools_analysis_command(self, cli_runner: CliRunner, tmp_path: Path) -> None:
+    def test_tools_analysis_command(
+        self, cli_runner: CliRunner, tmp_path: Path
+    ) -> None:
         """Test tools analysis command."""
         # Arrange
         workspace = tmp_path / "test-workspace"
@@ -158,7 +154,7 @@ class TestCliToolsGroup:
         # Act
         result = cli_runner.invoke(
             main,
-            ["--workspace", str(workspace), "tools", "analysis", "--type", "structure"]
+            ["--workspace", str(workspace), "tools", "analysis", "--type", "structure"],
         )
 
         # Assert
@@ -181,8 +177,7 @@ class TestCliBuiltinCommands:
 
         # Act
         result = cli_runner.invoke(
-            main,
-            ["--workspace", str(workspace), "test", "--help"]
+            main, ["--workspace", str(workspace), "test", "--help"]
         )
 
         # Assert
@@ -190,10 +185,7 @@ class TestCliBuiltinCommands:
 
     @patch("flext.cli.QualityGateway")
     def test_lint_command(
-        self,
-        mock_gateway: Mock,
-        cli_runner: CliRunner,
-        tmp_path: Path
+        self, mock_gateway: Mock, cli_runner: CliRunner, tmp_path: Path
     ) -> None:
         """Test lint command."""
         # Arrange
@@ -205,8 +197,7 @@ class TestCliBuiltinCommands:
 
         # Act
         result = cli_runner.invoke(
-            main,
-            ["--workspace", str(workspace), "lint", "--help"]
+            main, ["--workspace", str(workspace), "lint", "--help"]
         )
 
         # Assert
@@ -220,8 +211,7 @@ class TestCliBuiltinCommands:
 
         # Act
         result = cli_runner.invoke(
-            main,
-            ["--workspace", str(workspace), "format", "--help"]
+            main, ["--workspace", str(workspace), "format", "--help"]
         )
 
         # Assert
@@ -234,10 +224,7 @@ class TestCliBuiltinCommands:
         workspace.mkdir()
 
         # Act
-        result = cli_runner.invoke(
-            main,
-            ["--workspace", str(workspace), "info"]
-        )
+        result = cli_runner.invoke(main, ["--workspace", str(workspace), "info"])
 
         # Assert
         assert result.exit_code == 0
@@ -252,9 +239,7 @@ class TestCliFallbackComponents:
         from flext.cli import Colors
 
         # Assert all required color constants exist
-        required_colors = [
-            "GREEN", "RED", "BLUE", "CYAN", "YELLOW", "RESET"
-        ]
+        required_colors = ["GREEN", "RED", "BLUE", "CYAN", "YELLOW", "RESET"]
 
         for color in required_colors:
             assert hasattr(Colors, color)
@@ -272,8 +257,6 @@ class TestCliFallbackComponents:
 
     def test_quality_gateway_fallback(self) -> None:
         """Test QualityGateway fallback implementation."""
-        from flext.cli import QualityGateway
-
         # Arrange
         workspace = Path("/test/workspace")
 
@@ -307,8 +290,6 @@ class TestCliFallbackComponents:
 
     def test_print_colored_fallback(self) -> None:
         """Test print_colored fallback function."""
-        from flext.cli import Colors, print_colored
-
         # This should not raise an exception
         print_colored("Test message", Colors.GREEN)
         print_colored("Test message")  # Default color
