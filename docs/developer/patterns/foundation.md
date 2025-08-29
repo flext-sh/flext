@@ -31,7 +31,7 @@ class FlextModel(BaseModel):
         return FlextResult[None].ok(None)
 ```
 
-### FlextEntity
+### FlextModels.Entity
 
 Identity-based domain entity with lifecycle tracking.
 
@@ -40,7 +40,7 @@ from datetime import datetime
 from typing import Optional
 import uuid
 
-class FlextEntity(FlextModel):
+class FlextModels.Entity(FlextModel):
     """Domain entity with unique identity and version control."""
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -57,12 +57,12 @@ class FlextEntity(FlextModel):
         self.updated_at = datetime.utcnow()
 ```
 
-### FlextValue
+### FlextModels.Value
 
 Immutable value object without identity.
 
 ```python
-class FlextValue(FlextModel):
+class FlextModels.Value(FlextModel):
     """Immutable value object for domain concepts."""
 
     model_config = ConfigDict(
@@ -71,7 +71,7 @@ class FlextValue(FlextModel):
         validate_assignment=True
     )
 
-    def with_updates(self, **kwargs) -> 'FlextValue':
+    def with_updates(self, **kwargs) -> 'FlextModels.Value':
         """Create new instance with updated values."""
         current_data = self.model_dump()
         current_data.update(kwargs)
@@ -189,7 +189,7 @@ class FlextFactory:
             return FlextResult[None].fail(f"Creation failed: {str(e)}")
 
     @classmethod
-    def create_entity(cls, entity_class: Type[FlextEntity], **kwargs) -> FlextResult[FlextEntity]:
+    def create_entity(cls, entity_class: Type[FlextModels.Entity], **kwargs) -> FlextResult[FlextModels.Entity]:
         """Create and validate an entity."""
         try:
             entity = entity_class(**kwargs)
@@ -243,7 +243,7 @@ class FlextIdentifiable(Protocol):
 
 ```python
 # Value Object
-class Email(FlextValue):
+class Email(FlextModels.Value):
     address: str
     verified: bool = False
 
@@ -253,7 +253,7 @@ class Email(FlextValue):
         return FlextResult[None].ok(None)
 
 # Entity
-class User(FlextEntity):
+class User(FlextModels.Entity):
     username: str
     email: Email
     full_name: str

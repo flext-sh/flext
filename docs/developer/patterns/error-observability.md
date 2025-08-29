@@ -350,13 +350,13 @@ def connect_to_database(config: Dict[str, object]) -> FlextResult[Connection]:
 ### Observability Integration
 
 ```python
-from flext_core.observability import get_logger, get_metrics, get_tracer
+from flext_core.observability import FlextLogger, get_metrics, get_tracer
 
 class UserService:
     """Service with integrated observability."""
 
     def __init__(self):
-        self.logger = get_logger()
+        self.logger = FlextLogger()
         self.metrics = get_metrics()
         self.tracer = get_tracer()
 

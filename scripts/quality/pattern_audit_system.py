@@ -161,7 +161,7 @@ class PatternViolationAnalyzer:
             "BaseModel": {
                 "severity": "CRITICAL",
                 "pattern": "foundation.md#FlextModel",
-                "context": "Use FlextModel/FlextValue/FlextEntity instead of direct BaseModel",
+                "context": "Use FlextModel/FlextModels.Value/FlextModels.Entity instead of direct BaseModel",
                 "guidance": "Replace with appropriate FLEXT foundation class",
             },
             "validate_domain_rules": {

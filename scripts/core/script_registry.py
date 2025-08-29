@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
 
-from flext_core import get_logger
+from flext_core import FlextLogger
 
 from flext_tools import ScriptMetadata
 from flext_tools.utils import Colors, print_colored
@@ -260,7 +260,7 @@ class ScriptRegistry:
                         # Docstring de linha única
                         return line.replace("'''", "").replace('"""', "").strip()
                     in_docstring = True
-                    get_logger(__name__).debug("Failed to parse script metadata")
+                    FlextLogger(__name__).debug("Failed to parse script metadata")
                 if in_docstring and (line.endswith(('"""', "'''"))):
                     return line.replace("'''", "").replace('"""', "").strip()
                 if in_docstring and line and not line.startswith("#"):

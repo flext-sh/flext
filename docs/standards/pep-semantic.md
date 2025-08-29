@@ -10,7 +10,7 @@
 ```python
 # ✅ Correto
 class FlextResult[T]:
-class FlextEntity:
+class FlextModels.Entity:
 class FlextContainer:
 class FlextConfig:
 class FlextApiClient:
@@ -41,7 +41,7 @@ TResponse = TypeVar("TResponse")
 
 # ❌ Incorreto
 flext_entity_id = int  # snake_case
-FlextEntityId = int    # Sem prefixo T
+FlextModels.EntityId = int    # Sem prefixo T
 ```
 
 ### 3. **flext\_** - Módulos, Pacotes e Funções
@@ -90,7 +90,7 @@ FLEXT_DB_CONNECTION_STRING = "postgresql://..."
 
 # ❌ Incorreto
 flext_version = "0.9.0"  # snake_case
-FlextVersion = "0.9.0"   # PascalCase
+FlextModels.Version = "0.9.0"   # PascalCase
 flextVERSION = "0.9.0"   # mixedCase
 ```
 
@@ -100,8 +100,8 @@ flextVERSION = "0.9.0"   # mixedCase
 
 ```python
 # Classes base
-class FlextEntity[TId]:
-class FlextValue:
+class FlextModels.Entity[TId]:
+class FlextModels.Value:
 class FlextAggregates[TId]:
 class FlextDomainService:
 
@@ -110,8 +110,8 @@ TFlextEntityId = TypeVar("TFlextEntityId")
 TFlextDomainEvent = TypeVar("TFlextDomainEvent")
 
 # Implementações específicas
-class FlextUser(FlextEntity[int]):
-class FlextEmail(FlextValue):
+class FlextUser(FlextModels.Entity[int]):
+class FlextEmail(FlextModels.Value):
 ```
 
 ### Padrões Arquiteturais

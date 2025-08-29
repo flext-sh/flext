@@ -362,11 +362,10 @@ include = ["**/__init__.py"]
 
 # More relaxed rules for test files across all projects
 [[tool.pyright.executionEnvironments]]
-root = "."
-extraPaths = ["tests"]
+root = "." 
+extraPaths = ["tests", "**/tests/**/*.py", "**/test_*.py", "**/*_test.py"]
 reportPrivateUsage = false
 reportWildcardImportFromLibrary = false
-include = ["**/tests/**/*.py", "**/test_*.py", "**/*_test.py"]
 
 
 [tool.vulture]

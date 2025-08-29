@@ -12,11 +12,11 @@ import tomllib
 from pathlib import Path
 
 import yaml
-from flext_core import get_logger
+from flext_core import FlextLogger
 
 from .paths import should_ignore_path
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
 class ConfigFileDiscovery:
