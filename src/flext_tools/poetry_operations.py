@@ -18,7 +18,7 @@ import re
 import time
 from pathlib import Path
 
-from flext_core import FlextResult, FlextLogger
+from flext_core import FlextResult, get_logger
 from flext_core.container import FlextContainer
 from poetry.console import (
     application as poetry_app,
@@ -32,7 +32,7 @@ from .safety_validator import SafetyValidator
 MIN_PARTS_COUNT = 3
 
 # Initialize logger
-logger = FlextLogger(__name__)
+logger = get_logger(__name__)
 
 
 # REMOVED: OperationResult class (MASSIVE DRY VIOLATION)
@@ -361,7 +361,7 @@ class PoetryOperations:
 
         """
         # Validate dependency input to prevent command injection
-        logger = FlextLogger(__name__)
+        logger = get_logger(__name__)
         if not re.match(r"^[a-zA-Z0-9_\-\.\[\]>=<~!]+$", dependency):
             logger.warning(f"Invalid dependency format: {dependency}")
             return False
@@ -389,9 +389,12 @@ class PoetryOperations:
                 args += ["--group", group]
             if self.dry_run:
                 args.append("--dry-run")
-            app = poetry_app.Application()
-            code = app.run(args)
-            success = int(code) == 0
+            # Use subprocess instead of Poetry Application due to Input type incompatibility
+            import subprocess
+            cmd = ["poetry"] + args
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            code = result.returncode
+            success = code == 0
 
             if success:
                 if not self.dry_run:
@@ -566,7 +569,7 @@ class PoetryOperations:
 
         """
         # Validate dependency input to prevent command injection
-        logger = FlextLogger(__name__)
+        logger = get_logger(__name__)
         if not re.match(r"^[a-zA-Z0-9_\-\.\[\]>=<~!]+$", dependency):
             logger.warning(f"Invalid dependency format: {dependency}")
             return False
@@ -589,9 +592,12 @@ class PoetryOperations:
             args = ["remove", dependency]
             if self.dry_run:
                 args.append("--dry-run")
-            app = poetry_app.Application()
-            code = app.run(args)
-            success = int(code) == 0
+            # Use subprocess instead of Poetry Application due to Input type incompatibility
+            import subprocess
+            cmd = ["poetry"] + args
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            code = result.returncode
+            success = code == 0
 
             if success:
                 if not self.dry_run:
@@ -723,9 +729,12 @@ class PoetryOperations:
             args = ["update"]
             if self.dry_run:
                 args.append("--dry-run")
-            app = poetry_app.Application()
-            code = app.run(args)
-            success = int(code) == 0
+            # Use subprocess instead of Poetry Application due to Input type incompatibility
+            import subprocess
+            cmd = ["poetry"] + args
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            code = result.returncode
+            success = code == 0
 
             if success:
                 if not self.dry_run:
@@ -839,9 +848,12 @@ class PoetryOperations:
                 )
                 return False
             args = ["lock"]
-            app = poetry_app.Application()
-            code = app.run(args)
-            success = int(code) == 0
+            # Use subprocess instead of Poetry Application due to Input type incompatibility
+            import subprocess
+            cmd = ["poetry"] + args
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            code = result.returncode
+            success = code == 0
 
             if success:
                 print_colored("✅ Lock file generated successfully", Colors.GREEN)
@@ -952,9 +964,12 @@ class PoetryOperations:
                 )
                 return False
             args = ["check"]
-            app = poetry_app.Application()
-            code = app.run(args)
-            success = int(code) == 0
+            # Use subprocess instead of Poetry Application due to Input type incompatibility
+            import subprocess
+            cmd = ["poetry"] + args
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            code = result.returncode
+            success = code == 0
 
             if success:
                 print_colored("✅ Project valid", Colors.GREEN)

@@ -94,6 +94,7 @@ import argparse
 import inspect
 import logging
 import time
+from flext_core import get_logger
 from abc import abstractmethod
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -104,7 +105,6 @@ from flext_core import (
     FlextDomainService,
     FlextResult,
     FlextModels,
-    FlextLogger,
 )
 from flext_core.container import FlextContainer
 
@@ -119,7 +119,7 @@ from .quality_gateway import (
 P_main_func = ParamSpec("P_main_func")
 
 # Use flext-core logger
-logger = FlextLogger(__name__)
+logger = get_logger(__name__)
 
 
 class ScriptMetadata(FlextModels.Value):
@@ -475,9 +475,9 @@ class FlextScript(FlextDomainService[bool]):
 
         # Configure logging level
         if args.verbose:
-            # Set verbose mode - our logger doesn't have set_level method
-
-            logging.getLogger().setLevel(logging.DEBUG)
+            # Set verbose mode - use flext-core logging patterns
+            get_logger().setLevel(logging.DEBUG)
+            # TODO: Integrate with flext-core centralized logging configuration
 
         return self.run(**vars(args))
 
