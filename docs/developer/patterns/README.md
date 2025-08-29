@@ -10,7 +10,7 @@ Unified semantic patterns that ensure consistency, type safety, and maintainabil
 
 ### [Foundation Patterns](./foundation.md)
 
-Core architectural patterns including FlextModel, FlextResult, FlextEntity, and FlextValue.
+Core architectural patterns including FlextModel, FlextResult, FlextModels.Entity, and FlextModels.Value.
 
 ### [Type System Patterns](./types.md)
 

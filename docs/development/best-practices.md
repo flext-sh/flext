@@ -56,9 +56,9 @@ def divide_numbers(a: float, b: float) -> float:
 
 ```python
 # ✅ Excellent - Immutable value object
-from flext_core import FlextValue
+from flext_core import FlextModels.Value
 
-class Money(FlextValue):
+class Money(FlextModels.Value):
     def __init__(self, amount: float, currency: str):
         if amount < 0:
             raise ValueError("Amount cannot be negative")
@@ -101,7 +101,7 @@ class Money:
 # ✅ Excellent - Clear layer separation
 
 # DOMAIN LAYER - Pure business logic
-class User(FlextEntity[str]):
+class User(FlextModels.Entity[str]):
     def __init__(self, user_id: str, email: str, name: str):
         super().__init__(user_id)
         self._email = email
@@ -228,7 +228,7 @@ class CreateUserCommand(FlextCommand):
         return FlextResult[None].ok(None)
 
 # 2. BUSINESS VALIDATION - In domain
-class User(FlextEntity[str]):
+class User(FlextModels.Entity[str]):
     def change_email(self, new_email: str) -> FlextResult[None]:
         """Business validation - domain rules."""
         if new_email == self._email:

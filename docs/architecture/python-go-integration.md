@@ -455,14 +455,14 @@ func (s *PipelineService) ExecutePipeline(ctx context.Context, req *PipelineRequ
 
 ```python
 # Python tracing with Go correlation
-from flext_core.observability import get_tracer, get_logger
+from flext_core.observability import get_tracer, FlextLogger
 
 class PipelineService:
     """Service with distributed tracing."""
 
     def __init__(self):
         self.tracer = get_tracer()
-        self.logger = get_logger()
+        self.logger = FlextLogger()
 
     async def execute_pipeline(self, request: PipelineRequest) -> PipelineResponse:
         # 1. Extract trace context from Go

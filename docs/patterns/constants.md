@@ -418,7 +418,7 @@ class Validator:
 
 ```python
 from flext_core.constants import FlextConstants
-from flext_core.observability import get_metrics, get_logger
+from flext_core.observability import get_metrics, FlextLogger
 import time
 
 class PerformanceMonitor:
@@ -426,7 +426,7 @@ class PerformanceMonitor:
 
     def __init__(self):
         self.metrics = get_metrics()
-        self.logger = get_logger()
+        self.logger = FlextLogger()
 
     def check_query_performance(self, query_time: float, query: str) -> None:
         """Check if query is slow."""

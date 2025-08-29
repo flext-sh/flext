@@ -72,7 +72,7 @@ from __future__ import annotations
 
 import re
 
-from flext_core import FlextModels, FlextResult, FlextLogger
+from flext_core import FlextLogger, FlextModels, FlextResult
 from packaging import version
 from packaging.specifiers import SpecifierSet
 from pydantic import Field
@@ -88,7 +88,7 @@ logger = FlextLogger(__name__)
 
 
 class VersionCompatibilityResult(FlextModels.BaseConfig):
-    """Version compatibility analysis result using FlextEntity for type safety.
+    """Version compatibility analysis result using FlextModels.Entity for type safety.
 
     This entity represents the result of version compatibility analysis between
     two package version specifications, providing structured data for compatibility
