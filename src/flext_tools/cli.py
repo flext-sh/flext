@@ -43,7 +43,9 @@ License: MIT
 """
 
 import contextlib
+from collections.abc import Callable
 from pathlib import Path
+from typing import cast
 
 import click
 from flext_core import FlextResult
@@ -51,15 +53,25 @@ from rich.console import Console
 
 # Optional flext_cli imports - handle missing dependency gracefully
 FLEXT_CLI_AVAILABLE = False
-FlextCliConfig = None
-FlextCliContext = None
+FlextCliConfig: type[object] | None = None
+FlextCliContext: type[object] | None = None
+from typing import object
 
-# CLI utility functions - provide fallbacks if flext_cli not available
-cli_create_table = None
+cli_create_table: Callable[..., object] | None = None  # type: ignore[explicit-any]
+
+# Try to import flext_cli components with proper type ignores for untyped library
+with contextlib.suppress(ImportError, AttributeError, SyntaxError):
+    from flext_cli.cli_utils import (
+        cli_create_table,  # type: ignore[import-untyped,assignment]
+    )
+    from flext_cli.config import FlextCliConfig  # type: ignore[import-untyped]
+    from flext_cli.context import FlextCliContext  # type: ignore[import-untyped]
+
+    FLEXT_CLI_AVAILABLE = True
 
 
 # Create a no-op decorator for cli_validate_inputs when flext_cli is not available
-def _no_op_decorator(func):
+def _no_op_decorator(func: Callable[..., object]) -> Callable[..., object]:  # type: ignore[explicit-any]
     """No-op decorator fallback when flext_cli is not available."""
     return func
 
@@ -70,45 +82,74 @@ cli_validate_inputs = _no_op_decorator
 console = Console()
 
 
-def print_error(message: str) -> None:
-    """Print error message using rich console."""
-    console.print(f"[red]✗[/red] {message}")
+def print_error(console_or_message: Console | str, message: str | None = None) -> None:
+    """Print error message using rich console - compatible with flext-cli signatures."""
+    if message is None:
+        # Single argument case: console_or_message is the message
+        console.print(f"[red]✗[/red] {console_or_message}")
+    else:
+        # Two argument case: first arg is console, second is message
+        console.print(f"[red]✗[/red] {message}")
 
 
-def print_info(message: str) -> None:
-    """Print info message using rich console."""
-    console.print(f"[blue]ℹ[/blue] {message}")
+def print_info(console_or_message: Console | str, message: str | None = None) -> None:
+    """Print info message using rich console - compatible with flext-cli signatures."""
+    if message is None:
+        # Single argument case: console_or_message is the message
+        console.print(f"[blue]ℹ[/blue] {console_or_message}")
+    else:
+        # Two argument case: first arg is console, second is message
+        console.print(f"[blue]ℹ[/blue] {message}")
 
 
-def print_success(message: str) -> None:
-    """Print success message using rich console."""
-    console.print(f"[green]✓[/green] {message}")
+def print_success(
+    console_or_message: Console | str, message: str | None = None
+) -> None:
+    """Print success message using rich console - compatible with flext-cli signatures."""
+    if message is None:
+        # Single argument case: console_or_message is the message
+        console.print(f"[green]✓[/green] {console_or_message}")
+    else:
+        # Two argument case: first arg is console, second is message
+        console.print(f"[green]✓[/green] {message}")
 
 
-def print_warning(message: str) -> None:
-    """Print warning message using rich console."""
-    console.print(f"[yellow]⚠[/yellow] {message}")
+def print_warning(
+    console_or_message: Console | str, message: str | None = None
+) -> None:
+    """Print warning message using rich console - compatible with flext-cli signatures."""
+    if message is None:
+        # Single argument case: console_or_message is the message
+        console.print(f"[yellow]⚠[/yellow] {console_or_message}")
+    else:
+        # Two argument case: first arg is console, second is message
+        console.print(f"[yellow]⚠[/yellow] {message}")
 
 
 # Try to import flext_cli functionality if available
 with contextlib.suppress(ImportError, AttributeError):
-    from flext_cli import (
-        FlextCliConfig,
-        FlextCliContext,
-        cli_create_table,
-        cli_validate_inputs,
-        print_error as cli_print_error,
-        print_info as cli_print_info,
-        print_success as cli_print_success,
-        print_warning as cli_print_warning,
-    )
+    try:
+        from flext_cli import FlextCliConfig as _FlextCliConfig
 
-    # Use flext_cli functions if available
-    print_error = cli_print_error
-    print_info = cli_print_info
-    print_success = cli_print_success
-    print_warning = cli_print_warning
-    FLEXT_CLI_AVAILABLE = True
+        FlextCliConfig = _FlextCliConfig
+    except (ImportError, AttributeError):
+        pass
+
+    # FlextCliContext already imported above with contextlib.suppress
+
+    # cli_create_table already imported above with contextlib.suppress
+
+    try:
+        from flext_cli import (
+            cli_validate_inputs as _cli_validate_inputs,  # type: ignore[import-untyped]
+        )
+
+        cli_validate_inputs = _cli_validate_inputs
+    except (ImportError, AttributeError):
+        pass
+
+    # Print functions use fallback implementations defined above
+    # They are compatible with both single and dual argument patterns
 
 from .quality_gateway import QualityGateway
 
@@ -195,14 +236,14 @@ def main(
             and FlextCliContext is not None
         ):
             # Use flext-cli FlextCliConfig with complete delegation
-            config = FlextCliConfig()
-            config.profile = profile
-            config.debug = debug
+            config = FlextCliConfig()  # type: ignore[misc]
+            config.profile = profile  # type: ignore[attr-defined]
+            config.debug = debug  # type: ignore[attr-defined]
 
             # Create CLIContext using flext-cli patterns
-            context = FlextCliContext(
-                working_directory=Path(workspace) if workspace else Path.cwd(),
-                environment_variables={
+            context = FlextCliContext(  # type: ignore[misc]
+                working_directory=Path(workspace) if workspace else Path.cwd(),  # type: ignore[call-arg]
+                environment_variables={  # type: ignore[call-arg]
                     "FLEXT_PROFILE": profile,
                     "FLEXT_DEBUG": str(debug),
                     "FLEXT_OUTPUT": output,
@@ -409,12 +450,19 @@ def scripts(ctx: click.Context, category: str | None, *, list_only: bool) -> Non
                 table_data = [
                     {"Script": script} for script in scripts_by_category[category]
                 ]
-                if table_data:
+                if table_data and cli_create_table is not None:
                     result = cli_create_table(
                         cast("list[object]", table_data), title=f"Scripts in {category}"
                     )
                     if result.success:
                         _default_console.print(result.value)
+                elif table_data:
+                    # Fallback if cli_create_table not available
+                    for script_info in table_data:
+                        print_info(
+                            _default_console,
+                            f"  - {script_info.get('Script', 'Unknown')}",
+                        )
             else:
                 print_warning(_default_console, f"Unknown category: {category}")
         else:
@@ -600,11 +648,16 @@ def info(ctx: click.Context, *, detailed: bool) -> None:
             project_data = cast(
                 "list[object]", list(projects)
             )  # Simple list, not nested
-            result = cli_create_table(
-                data=project_data, title="FLEXT Ecosystem Projects"
-            )
-            if result.success:
-                _default_console.print(result.value)
+            if cli_create_table is not None:
+                result = cli_create_table(
+                    data=project_data, title="FLEXT Ecosystem Projects"
+                )
+                if result.success:
+                    _default_console.print(result.value)
+            else:
+                # Fallback if cli_create_table not available
+                for project in projects:
+                    print_info(_default_console, f"  - {project}")
 
 
 # ============================================================================
@@ -612,40 +665,58 @@ def info(ctx: click.Context, *, detailed: bool) -> None:
 # ============================================================================
 
 # Import and add flext-cli command groups
-try:
+auth_commands: click.Group | None = None
+config_commands: click.Group | None = None
+debug_commands: click.Group | None = None
+
+# Import flext_cli commands with type ignores for untyped modules
+with contextlib.suppress(ImportError, AttributeError, SyntaxError):
     from flext_cli.commands_auth import (
-        auth as auth_commands,  # type: ignore[import-untyped]
+        auth as auth_commands,  # type: ignore[import-untyped,import-not-found,no-redef]
     )
+
+with contextlib.suppress(ImportError, AttributeError, SyntaxError):
     from flext_cli.commands_config import (
-        config as config_commands,  # type: ignore[import-untyped]
+        config as config_commands,  # type: ignore[import-untyped,import-not-found]
     )
+
+with contextlib.suppress(ImportError, AttributeError, SyntaxError):
     from flext_cli.commands_debug import (
-        debug_cmd as debug_commands,  # type: ignore[import-untyped]
+        debug_cmd as debug_commands,  # type: ignore[import-untyped,import-not-found]
     )
 
+# Add commands if they were successfully imported, otherwise add fallbacks
+if auth_commands is not None:
     main.add_command(auth_commands, name="auth")
-    main.add_command(config_commands, name="config")
-    main.add_command(debug_commands, name="debug")
+else:
 
-except ImportError:
-    # Fallback if flext-cli commands not available
     @click.group()
     def auth() -> None:
         """Provide authentication commands (placeholder - install flext-cli)."""
         print_warning(_default_console, "⚠️ flext-cli auth commands not available")
+
+    main.add_command(auth)
+
+if config_commands is not None:
+    main.add_command(config_commands, name="config")
+else:
 
     @click.group()
     def config() -> None:
         """Provide configuration commands (placeholder - install flext-cli)."""
         print_warning(_default_console, "⚠️ flext-cli config commands not available")
 
+    main.add_command(config)
+
+if debug_commands is not None:
+    main.add_command(debug_commands, name="debug")
+else:
+
     @click.group()
     def debug() -> None:
         """Debug commands (placeholder - install flext-cli)."""
         print_warning(_default_console, "⚠️ flext-cli debug commands not available")
 
-    main.add_command(auth)
-    main.add_command(config)
     main.add_command(debug)
 
 # Add the tools command group that exposes flext_tools functionality

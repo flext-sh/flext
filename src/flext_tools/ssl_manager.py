@@ -74,11 +74,11 @@ License: MIT
 
 from pathlib import Path
 
-from flext_core import FlextResult, FlextLogger
+from flext_core import FlextResult, get_logger
 
 from .colors import Colors, print_colored
 
-logger = FlextLogger(__name__)
+logger = get_logger(__name__)
 
 
 # REMOVED: SSLSetupResult class (violation of DRY principle)
