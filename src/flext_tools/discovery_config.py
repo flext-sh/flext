@@ -7,16 +7,16 @@ to discover implicit and explicit dependencies.
 
 from __future__ import annotations
 
-import logging
 import re
 import tomllib
 from pathlib import Path
 
 import yaml
+from flext_core import get_logger
 
 from .paths import should_ignore_path
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class ConfigFileDiscovery:
