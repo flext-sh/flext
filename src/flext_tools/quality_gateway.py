@@ -78,9 +78,7 @@ from pathlib import Path
 
 import pytest
 import ruff.__main__ as ruff_main  # type: ignore[import-untyped]
-from flext_core import FlextModels, FlextResult
-from flext_core import FlextLogger
-
+from flext_core import FlextLogger, FlextModels, FlextResult
 from flext_core.container import FlextContainer
 from mypy import api as mypy_api
 
@@ -126,7 +124,7 @@ class QualityIssue(FlextModels.Entity):
     rule_code: str | None = None
 
     def __post_init__(self) -> None:
-        """Finalize dataclass initialization and set FlextEntity id."""
+        """Finalize dataclass initialization and set FlextModels.Entity id."""
         super().__init__(id=f"issue_{self.tool}_{self.severity}")
 
     def validate_business_rules(self) -> FlextResult[None]:

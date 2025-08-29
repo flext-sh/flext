@@ -6,9 +6,9 @@ import os
 import re
 from pathlib import Path
 
-from flext_core import get_logger
+from flext_core import FlextLogger
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
 def analyze_flext_core_violations() -> list[dict[str, str]]:
@@ -122,7 +122,6 @@ def generate_fix_commands(
 ) -> None:
     """Gera comandos para correção das violações."""
     if violations:
-
         files_to_backup: set[str] = set()
         for violation in violations:
             if "Renomear" in violation["action"]:

@@ -52,12 +52,12 @@ License: MIT
 
 from pathlib import Path
 
-from flext_core import FlextModels, FlextResult, get_logger
+from flext_core import FlextLogger, FlextModels, FlextResult
 from pydantic import Field
 
 from .colors import Colors, print_colored
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
 class Configuration(FlextModels.BaseConfig):

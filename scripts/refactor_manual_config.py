@@ -8,9 +8,9 @@ import operator
 import re
 from pathlib import Path
 
-from flext_core import FlextResult, get_logger
+from flext_core import FlextLogger, FlextResult
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
 def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
