@@ -912,15 +912,15 @@ class FlextDuplicateDetector:
             ),
             (
                 r"logging\.getLogger\s*\(",
-                "Manual logger creation instead of get_logger from flext-core",
+                "Manual logger creation instead of FlextLogger from flext-core",
             ),
             (
                 r"logging\.basicConfig\s*\(",
-                "Manual logging config instead of flext-core get_logger",
+                "Manual logging config instead of flext-core FlextLogger",
             ),
             (
                 r"logger\s*=\s*logging\.getLogger",
-                "Manual logger creation instead of get_logger",
+                "Manual logger creation instead of FlextLogger",
             ),
         ]
 
@@ -1037,7 +1037,8 @@ class FlextDuplicateDetector:
                 if re.search(pattern, line_content):
                     # Verificar se já está usando flext-core
                     if "from flext_core" in content and (
-                        "FlextDomainBaseModel" in content or "FlextValue" in content
+                        "FlextDomainBaseModel" in content
+                        or "FlextModels.Value" in content
                     ):
                         continue
 
@@ -1050,7 +1051,7 @@ class FlextDuplicateDetector:
                             file_path=file_path,
                             pattern_type="Manual Domain Models",
                             suggested_replacement="Use FlextDomainBaseModel ou"
-                            f"FlextValue from flext-core: {description}",
+                            f"FlextModels.Value from flext-core: {description}",
                             lines=(i + 1, i + 1),
                             content=line_content,
                             severity="medium",

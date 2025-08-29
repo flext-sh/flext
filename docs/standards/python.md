@@ -417,7 +417,7 @@ from flext_core import (
     FlextResult,
     FlextLogger,
     FlextContainer,
-    get_logger,
+    FlextLogger,
 )
 from flext_observability import HealthChecker, MetricsCollector
 from flext_quality import QualityGateway
@@ -459,7 +459,7 @@ from .services.application.handlers import CommandHandler, QueryHandler
 from .cli_patterns import BaseCLI
 
 # Re-export essential flext-core components for convenience
-from flext_core import FlextResult, FlextLogger, get_logger
+from flext_core import FlextResult, FlextLogger, FlextLogger
 
 # Public API list for type checking and documentation
 __all__: list[str] = [
@@ -484,11 +484,11 @@ __all__: list[str] = [
     # Re-exported from flext-core
     "FlextResult",
     "FlextLogger",
-    "get_logger",
+    "FlextLogger",
 ]
 
 # Module-level logger
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 logger.info("FLEXT Control Panel initialized", version=__version__)
 ```
 
