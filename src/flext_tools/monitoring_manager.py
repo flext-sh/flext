@@ -74,11 +74,11 @@ License: MIT
 
 from pathlib import Path
 
-from flext_core import FlextResult, get_logger
+from flext_core import FlextLogger, FlextResult
 
 from .colors import Colors, print_colored
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
 # REMOVED: MonitoringSetupResult class (violation of DRY principle)

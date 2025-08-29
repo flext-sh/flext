@@ -23,13 +23,13 @@ docs/
 ### Creating Models
 
 ```python
-from flext_core.foundation import FlextEntity, FlextValue
+from flext_core.foundation import FlextModels.Entity, FlextModels.Value
 
-class User(FlextEntity):
+class User(FlextModels.Entity):
     username: str
     email: Email
 
-class Email(FlextValue):
+class Email(FlextModels.Value):
     address: str
     verified: bool = False
 ```

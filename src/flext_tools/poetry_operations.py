@@ -18,7 +18,7 @@ import re
 import time
 from pathlib import Path
 
-from flext_core import FlextResult, get_logger
+from flext_core import FlextLogger, FlextResult
 from flext_core.container import FlextContainer
 from poetry.console import (
     application as poetry_app,
@@ -32,7 +32,7 @@ from .safety_validator import SafetyValidator
 MIN_PARTS_COUNT = 3
 
 # Initialize logger
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
 # REMOVED: OperationResult class (MASSIVE DRY VIOLATION)
@@ -361,7 +361,7 @@ class PoetryOperations:
 
         """
         # Validate dependency input to prevent command injection
-        logger = get_logger(__name__)
+        logger = FlextLogger(__name__)
         if not re.match(r"^[a-zA-Z0-9_\-\.\[\]>=<~!]+$", dependency):
             logger.warning(f"Invalid dependency format: {dependency}")
             return False
@@ -391,8 +391,9 @@ class PoetryOperations:
                 args.append("--dry-run")
             # Use subprocess instead of Poetry Application due to Input type incompatibility
             import subprocess
+
             cmd = ["poetry"] + args
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            result = subprocess.run(cmd, check=False, capture_output=True, text=True)
             code = result.returncode
             success = code == 0
 
@@ -569,7 +570,7 @@ class PoetryOperations:
 
         """
         # Validate dependency input to prevent command injection
-        logger = get_logger(__name__)
+        logger = FlextLogger(__name__)
         if not re.match(r"^[a-zA-Z0-9_\-\.\[\]>=<~!]+$", dependency):
             logger.warning(f"Invalid dependency format: {dependency}")
             return False
@@ -594,8 +595,9 @@ class PoetryOperations:
                 args.append("--dry-run")
             # Use subprocess instead of Poetry Application due to Input type incompatibility
             import subprocess
+
             cmd = ["poetry"] + args
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            result = subprocess.run(cmd, check=False, capture_output=True, text=True)
             code = result.returncode
             success = code == 0
 
@@ -731,8 +733,9 @@ class PoetryOperations:
                 args.append("--dry-run")
             # Use subprocess instead of Poetry Application due to Input type incompatibility
             import subprocess
+
             cmd = ["poetry"] + args
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            result = subprocess.run(cmd, check=False, capture_output=True, text=True)
             code = result.returncode
             success = code == 0
 
@@ -850,8 +853,9 @@ class PoetryOperations:
             args = ["lock"]
             # Use subprocess instead of Poetry Application due to Input type incompatibility
             import subprocess
+
             cmd = ["poetry"] + args
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            result = subprocess.run(cmd, check=False, capture_output=True, text=True)
             code = result.returncode
             success = code == 0
 
@@ -966,8 +970,9 @@ class PoetryOperations:
             args = ["check"]
             # Use subprocess instead of Poetry Application due to Input type incompatibility
             import subprocess
+
             cmd = ["poetry"] + args
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            result = subprocess.run(cmd, check=False, capture_output=True, text=True)
             code = result.returncode
             success = code == 0
 

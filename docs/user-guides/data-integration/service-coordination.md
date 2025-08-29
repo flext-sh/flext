@@ -233,7 +233,7 @@ class PipelineService(pb.PipelineServiceServicer):
 
     def __init__(self, meltano_runner: MeltanoRunner):
         self._meltano_runner = meltano_runner
-        self._logger = get_logger()
+        self._logger = FlextLogger()
 
     def ExecutePipeline(self, request, context):
         """Execute pipeline via gRPC."""
