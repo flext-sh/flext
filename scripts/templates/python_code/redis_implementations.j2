@@ -36,7 +36,7 @@
         return await self._redis_client.eval(script, 0, "*")
 {% else %}
         # TODO: Implement {{ method_name }} with proper business logic
-        logger = structlog.get_logger(__name__)
+        logger = structlog.FlextLogger(__name__)
         logger.warning("Method {{ method_name }} needs implementation")
         raise ServiceError("NOT_IMPLEMENTED", "Method {{ method_name }} requires implementation")
 {% endif %}

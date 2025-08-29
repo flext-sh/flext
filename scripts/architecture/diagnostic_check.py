@@ -15,13 +15,13 @@ from pathlib import Path
 
 import pytest
 import ruff.__main__ as ruff_main
-from flext_core import get_logger
+from flext_core import FlextLogger
 from mypy import api as mypy_api
 from poetry.console import (
     application as poetry_app,
 )
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 # Constants for return codes
 SUCCESS_CODE = 0

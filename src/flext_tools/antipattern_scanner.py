@@ -80,7 +80,7 @@ from enum import Enum
 from pathlib import Path
 from typing import ClassVar
 
-from flext_core import FlextResult, FlextModels, FlextLogger
+from flext_core import FlextLogger, FlextModels, FlextResult
 
 from .colors import Colors, print_colored
 
@@ -629,7 +629,7 @@ def create_security_scanner(
 
     """
     try:
-        # Some FlextValue subclasses use dynamic constructors; ignore call-arg typing here
+        # Some FlextModels.Value subclasses use dynamic constructors; ignore call-arg typing here
         config = ScanConfig(
             target_paths=target_paths,
             include_dependencies=not exclude_dependencies,

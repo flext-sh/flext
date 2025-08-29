@@ -18,8 +18,8 @@ from flext_core import (
     get_flext_container, # Global container access
 
     # Domain modeling
-    FlextEntity,         # Rich domain entities
-    FlextValue,    # Immutable value objects
+    FlextModels.Entity,         # Rich domain entities
+    FlextModels.Value,    # Immutable value objects
     FlextAggregates,  # DDD aggregates
 
     # Configuration
@@ -46,7 +46,7 @@ from flext_core import (
 
     # Logging
     FlextLogger,
-    get_logger,
+    FlextLogger,
 )
 ```
 
@@ -118,12 +118,12 @@ if service_result.success:
 
 ## 🏛️ Domain Modeling
 
-### FlextEntity - Rich Domain Entities
+### FlextModels.Entity - Rich Domain Entities
 
 ```python
-from flext_core import FlextEntity
+from flext_core import FlextModels.Entity
 
-class User(FlextEntity):
+class User(FlextModels.Entity):
     name: str
     email: str
     is_active: bool = False
@@ -137,12 +137,12 @@ class User(FlextEntity):
         return FlextResult[None].ok(None)
 ```
 
-### FlextValue - Immutable Values
+### FlextModels.Value - Immutable Values
 
 ```python
-from flext_core import FlextValue
+from flext_core import FlextModels.Value
 
-class Email(FlextValue):
+class Email(FlextModels.Value):
     address: str
 
     def __post_init__(self):
@@ -192,9 +192,9 @@ print(settings.database_url)  # Uses APP_DATABASE_URL if set
 ### FlextLogger Usage
 
 ```python
-from flext_core import get_logger
+from flext_core import FlextLogger
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 # Structured logging with context
 logger.info("Processing request",

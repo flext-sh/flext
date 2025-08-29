@@ -21,7 +21,7 @@ Based on the current state of flext-core (version 0.9.0), you MUST:
 * **FOLLOW the Clean Architecture layers** as established in flext-core
 * **IMPLEMENT FlextResult railway pattern** everywhere for error handling
 * **USE dependency injection patterns** via get_flext_container()
-* **INHERIT from proven base classes** (FlextEntity, FlextValueObject, FlextDomainService)
+* **INHERIT from proven base classes** (FlextModels.Entity, FlextValueObject, FlextDomainService)
 * **APPLY strict type safety** with MyPy strict mode and Python 3.13+
 * **MAINTAIN 75%+ test coverage** as proven achievable in flext-core
 * **FOLLOW PEP8 naming** and **layered module organization**
@@ -178,7 +178,7 @@ def service_operation() -> FlextResult[Data]:
 
 ```python
 # ✅ CORRECT - Proven patterns from flext-core
-from flext_core import FlextEntity, FlextValueObject, FlextAggregates
+from flext_core import FlextModels.Entity, FlextValueObject, FlextAggregates
 
 class Email(FlextValueObject):
     """Value objects are immutable and compared by value."""
@@ -189,7 +189,7 @@ class Email(FlextValueObject):
             return FlextResult[None].fail("Invalid email")
         return FlextResult[None].ok(None)
 
-class User(FlextEntity):
+class User(FlextModels.Entity):
     """Entities have identity and lifecycle."""
     name: str
     email: Email
@@ -228,7 +228,7 @@ cat ~/flext/flext-core/Makefile
 # Test actual API signatures (don't assume)
 python -c "from flext_core import FlextResult; help(FlextResult)"
 python -c "from flext_core import get_flext_container; help(get_flext_container)"
-python -c "from flext_core import FlextEntity, FlextValueObject; print('DDD patterns available')"
+python -c "from flext_core import FlextModels.Entity, FlextValueObject; print('DDD patterns available')"
 ```
 
 2. **Map current project vs flext-core standards:**
@@ -331,7 +331,7 @@ class UserService(FlextDomainService[FlextResult[UserModel]]):
     def __init__(self):
         super().__init__()
         self._container = get_flext_container()
-        self._logger = get_logger(__name__)
+        self._logger = FlextLogger(__name__)
     
     def create_user(self, data: dict) -> FlextResult[UserModel]:
         """Create user with proper error handling."""
@@ -364,13 +364,13 @@ class ProjectHandlers(FlextHandlers):
 
 ```python
 # ✅ CORRECT - flext-core proven infrastructure patterns
-from flext_core import get_logger, get_flext_container
+from flext_core import FlextLogger, get_flext_container
 
 class ProjectInfrastructure:
     """Infrastructure using flext-core utilities."""
     
     def __init__(self):
-        self._logger = get_logger(__name__)      # Use flext-core logging
+        self._logger = FlextLogger(__name__)      # Use flext-core logging
         self._container = get_flext_container()   # Use flext-core DI
     
     def setup_services(self):
@@ -683,8 +683,8 @@ pytest tests/ -v    # All pass
 **flext-core provides these - NEVER RECREATE LOCALLY:**
 - FlextResult - Use from flext-core
 - Dependency injection - Use get_flext_container()
-- Logging - Use get_logger() from flext-core
-- Base classes - Use FlextEntity, FlextValueObject, FlextDomainService
+- Logging - Use FlextLogger() from flext-core
+- Base classes - Use FlextModels.Entity, FlextValueObject, FlextDomainService
 - Validation - Use FlextModel with Pydantic
 - Constants - Inherit from FlextConstants
 - Exceptions - Inherit from FlextExceptions

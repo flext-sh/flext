@@ -10,15 +10,15 @@ FlextResult[T] com .value/.unwrap_or() modernos
 FlextResult.ok(), FlextResult.fail(), .map(), .flat_map()
 
 # Domain Foundation
-FlextEntity, FlextValue, FlextAggregates
+FlextModels.Entity, FlextModels.Value, FlextAggregates
 FlextDomainService, FlextPlugin, FlextContainer
 
 # Configuration & Types
 FlextConfig, FlextSingerConfig, FlextDatabaseConfig
-FlextEntityId, FlextTimestamp, FlextMetadata
+FlextModels.EntityId, FlextModels.Timestamp, FlextModels.Metadata
 
 # Observability & Logging  
-FlextLogger, get_logger(), structured logging
+FlextLogger, FlextLogger(), structured logging
 FlextObservabilityConfig
 ```
 
@@ -257,7 +257,7 @@ class FlextMeltanoBaseService(FlextDomainService):
     def __init__(self, config: FlextMeltanoConfig):
         super().__init__()
         self.config = config
-        self.logger = get_logger(self.__class__.__name__)
+        self.logger = FlextLogger(self.__class__.__name__)
     
     @abstractmethod
     def validate_configuration(self) -> FlextResult[bool]:

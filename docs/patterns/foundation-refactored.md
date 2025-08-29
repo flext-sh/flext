@@ -45,9 +45,9 @@ class OldUserEntity(BaseModel):
 
 ```python
 # NEW: 5 lines - 80% boilerplate reduction!
-from flext_core import FlextEntity, FlextResult
+from flext_core import FlextModels.Entity, FlextResult
 
-class User(FlextEntity):
+class User(FlextModels.Entity):
     name: str
     email: str
     is_active: bool = False
@@ -56,15 +56,15 @@ class User(FlextEntity):
         return self.update(is_active=True)
 ```
 
-## Core Pattern: FlextEntity
+## Core Pattern: FlextModels.Entity
 
 ### Streamlined Entity Definition
 
 ```python
-from flext_core import FlextEntity, FlextResult
+from flext_core import FlextModels.Entity, FlextResult
 from flext_core.types import FlextTypes
 
-class Product(FlextEntity):
+class Product(FlextModels.Entity):
     """Product entity with zero boilerplate."""
 
     # Core fields - framework handles ID, timestamps, versioning
@@ -250,8 +250,8 @@ def validate_user(user_data):
 ### Declarative Validation (After)
 
 ```python
-# NEW: Built-in validation with FlextEntity
-class User(FlextEntity):
+# NEW: Built-in validation with FlextModels.Entity
+class User(FlextModels.Entity):
     name: str  # automatically validates non-empty
     email: str  # automatically validates email format
 
@@ -338,9 +338,9 @@ class OrderService:
 
 ```python
 # NEW: 15 lines - 85% reduction!
-from flext_core import FlextEntity, FlextResult, FlextFactory
+from flext_core import FlextModels.Entity, FlextResult, FlextFactory
 
-class Order(FlextEntity):
+class Order(FlextModels.Entity):
     customer_id: str
     items: list[dict]
     total: int = 0
@@ -389,14 +389,14 @@ result = Order.create(**order_data).flat_map(lambda o: o.process())
 
 ```python
 # Replace scattered imports
-from flext_core import FlextEntity, FlextResult, FlextConfig
+from flext_core import FlextModels.Entity, FlextResult, FlextConfig
 ```
 
 ### Step 2: Refactor Entities
 
 ```python
-# Convert dataclasses/BaseModel to FlextEntity
-class User(FlextEntity):  # Removes 20+ lines of boilerplate
+# Convert dataclasses/BaseModel to FlextModels.Entity
+class User(FlextModels.Entity):  # Removes 20+ lines of boilerplate
     name: str
     email: str
 ```

@@ -25,7 +25,7 @@ import re
 import sys
 from pathlib import Path
 
-from flext_core import FlextModel, FlextResult, get_logger
+from flext_core import FlextLogger, FlextModel, FlextResult
 
 
 # Placeholder classes for standardization
@@ -37,7 +37,7 @@ class FlextStandardResult(FlextResult):
     """Standard result type for standardization operations."""
 
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
 class FlextEcosystemStandardizer(FlextBaseService):
@@ -312,12 +312,12 @@ class FlextEcosystemStandardizer(FlextBaseService):
             # flext-core centralizations
             r"from flext_core\.result import FlextResult": "from flext_core import FlextResult",
             r"from flext_core\.container import .*": "from flext_core import get_flext_container, FlextContainer",
-            r"from flext_core\.loggings import get_logger": "from flext_core import get_logger",
+            r"from flext_core\.loggings import FlextLogger": "from flext_core import FlextLogger",
             r"from flext_core\.models import FlextModel": "from flext_core import FlextModel",
             r"from flext_core\.exceptions import .*Error": "from flext_core import FlextExceptions.Error, FlextExceptions.ValidationError",
             # Fix common incorrect imports
-            r"import structlog": "# Use get_logger from flext_core instead\nfrom flext_core import get_logger",
-            r"from structlog import get_logger": "from flext_core import get_logger",
+            r"import structlog": "# Use FlextLogger from flext_core instead\nfrom flext_core import FlextLogger",
+            r"from structlog import FlextLogger": "from flext_core import FlextLogger",
             # Standardize to flext-core patterns
             r"from typing import Optional": "# Use T | None instead of Optional[T]",
             r"from typing import Union": "# Use T | U instead of Union[T, U]",

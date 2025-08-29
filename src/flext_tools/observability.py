@@ -1,9 +1,9 @@
 """Logging utilities for FLEXT tools using flext-observability."""
 
+import contextlib
 import warnings
 from typing import ParamSpec, Protocol
 
-import contextlib
 from flext_core import FlextLogger
 
 # Optional dependency - flext-observability may not be available
@@ -178,7 +178,7 @@ class DetailedLogger:
             level=level.lower(),
         )
 
-        # Also use flext-core logger for backward compatibility  
+        # Also use flext-core logger for backward compatibility
         if level == "DEBUG":
             self.logger.debug(formatted_message)
         elif level == "INFO":
@@ -211,11 +211,11 @@ def create_detailed_logger(name: str) -> DetailedLogger:
 
         Recommended approach:
 
-        >>> from flext_core import get_logger
+        >>> from flext_core import FlextLogger
         >>> logger = FlextLogger(__name__)
 
     Warning:
-        This function is deprecated. Use flext_core.get_logger or
+        This function is deprecated. Use flext_core.FlextLogger or
         flext-observability functions directly for new code.
 
     Note:
