@@ -4,17 +4,16 @@ from __future__ import annotations
 
 import hashlib
 import json
-import logging
 import shutil
 import tomllib
 from datetime import UTC, datetime
 from pathlib import Path
 
-from flext_core import FlextLogger
+from flext_core import get_logger
 
 from .colors import Colors, print_colored
 
-logger = FlextLogger(__name__)
+logger = get_logger(__name__)
 
 MIN_CONTENT_LENGTH = 100
 
@@ -261,7 +260,7 @@ class BackupManager:
 
         except (OSError, ValueError, KeyError) as e:
             # Log hash verification failure but return existing result
-            logging.getLogger(__name__).warning(f"Hash verification failed: {e}")
+            logger.warning(f"Hash verification failed: {e}")
             # Keep existing result value
 
         return result

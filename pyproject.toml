@@ -147,6 +147,7 @@ pytest-xdist = "^3.8.0"
 pytest-cov = "^6.2.1"
 pytest-randomly = "^3.16.0"
 pytest-clarity = "^1.0.1"
+pytest-httpx = "^0.35.0"
 
 
 [tool.poetry.group.typings.dependencies]
@@ -161,6 +162,7 @@ types-simplejson = "^3.20.0.20250326"
 types-six = "^1.17.0.20250515"
 types-ujson = "^5.10.0.20250326"
 types-mock = "^5.2.0.20250809"
+types-factory-boy = "^0.4.1"
 
 
 [tool.poetry.group.typing.dependencies]
