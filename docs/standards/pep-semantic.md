@@ -102,7 +102,7 @@ flextVERSION = "0.9.0"   # mixedCase
 # Classes base
 class FlextModels.Entity[TId]:
 class FlextModels.Value:
-class FlextAggregates[TId]:
+class FlextModels.AggregateRoot[TId]:
 class FlextDomainService:
 
 # Tipos relacionados

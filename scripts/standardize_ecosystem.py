@@ -25,11 +25,11 @@ import re
 import sys
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextModel, FlextResult
+from flext_core import FlextLogger, FlextModels, FlextResult
 
 
 # Placeholder classes for standardization
-class FlextBaseService(FlextModel):
+class FlextBaseService(FlextModels):
     """Base service class for standardization."""
 
 
@@ -313,7 +313,7 @@ class FlextEcosystemStandardizer(FlextBaseService):
             r"from flext_core\.result import FlextResult": "from flext_core import FlextResult",
             r"from flext_core\.container import .*": "from flext_core import get_flext_container, FlextContainer",
             r"from flext_core\.loggings import FlextLogger": "from flext_core import FlextLogger",
-            r"from flext_core\.models import FlextModel": "from flext_core import FlextModel",
+            r"from flext_core\.models import FlextModels": "from flext_core import FlextModels",
             r"from flext_core\.exceptions import .*Error": "from flext_core import FlextExceptions.Error, FlextExceptions.ValidationError",
             # Fix common incorrect imports
             r"import structlog": "# Use FlextLogger from flext_core instead\nfrom flext_core import FlextLogger",

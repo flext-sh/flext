@@ -71,7 +71,6 @@ def main() -> int:
 
         # Top 10 bloqueadores
         for _i, (_package, blocker_data) in enumerate(blockers_sorted[:10]):
-
             # Agrupa por constraint
             for projects in blocker_data["constraints"].values():
                 if len(projects) > 3:

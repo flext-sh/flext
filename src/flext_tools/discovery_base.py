@@ -151,7 +151,12 @@ class DependencyDiscovery:
         """
         # Use standard library module list
         import sys
-        self.stdlib_modules = set(sys.stdlib_module_names) if hasattr(sys, "stdlib_module_names") else set()
+
+        self.stdlib_modules = (
+            set(sys.stdlib_module_names)
+            if hasattr(sys, "stdlib_module_names")
+            else set()
+        )
         self.python_discovery = PythonImportDiscovery(self.stdlib_modules)
         self.config_discovery = ConfigFileDiscovery()
         self.resolve_transitive = resolve_transitive
