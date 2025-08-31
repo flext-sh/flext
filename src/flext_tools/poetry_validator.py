@@ -81,7 +81,7 @@ import tomllib
 from pathlib import Path
 
 import poetry.console as poetry_console
-from flext_core import FlextModels, FlextResult, FlextLogger
+from flext_core import FlextLogger, FlextModels, FlextResult
 from pydantic import Field
 
 from .colors import Colors, print_colored

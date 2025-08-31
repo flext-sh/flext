@@ -260,7 +260,7 @@ class GenericProcessor(Generic[T]):
 ### Exception Classes
 
 ```python
-class FlextProcessingError(FlextExceptions.Error):
+class FlextExceptions.ProcessingError(FlextExceptions.Error):
     """Exception raised during data processing operations.
 
     Attributes:
@@ -270,7 +270,7 @@ class FlextProcessingError(FlextExceptions.Error):
     Example:
         >>> try:
         ...     result = process_data(invalid_data)
-        ... except FlextProcessingError as e:
+        ... except FlextExceptions.ProcessingError as e:
         ...     print(f"Failed during {e.operation}")
     """
 

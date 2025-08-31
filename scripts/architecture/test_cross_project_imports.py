@@ -17,7 +17,6 @@ def test_imports() -> bool:
 
     # Test flext-core
     try:
-
         results["flext-core"] = "✅ SUCCESS"
     except (OSError, ValueError, TypeError) as e:
         results["flext-core"] = f"❌ FAILED: {e}"
@@ -25,7 +24,6 @@ def test_imports() -> bool:
 
     # Test flext-cli
     try:
-
         results["flext-cli"] = "✅ SUCCESS"
     except (OSError, ValueError, TypeError) as e:
         results["flext-cli"] = f"❌ FAILED: {e}"
@@ -33,7 +31,6 @@ def test_imports() -> bool:
 
     # Test flext-observability
     try:
-
         results["flext-observability"] = "✅ SUCCESS"
     except (OSError, ValueError, TypeError) as e:
         results["flext-observability"] = f"❌ FAILED: {e}"
@@ -41,7 +38,6 @@ def test_imports() -> bool:
 
     # Test flext-meltano - use actual available exports
     try:
-
         results["flext-meltano"] = "✅ SUCCESS"
     except (OSError, ValueError, TypeError) as e:
         results["flext-meltano"] = f"❌ FAILED: {e}"
@@ -49,7 +45,6 @@ def test_imports() -> bool:
 
     # Test flext-ldif
     try:
-
         results["flext-ldif"] = "✅ SUCCESS"
     except (OSError, ValueError, TypeError) as e:
         results["flext-ldif"] = f"❌ FAILED: {e}"
@@ -57,7 +52,6 @@ def test_imports() -> bool:
 
     # Test flext-ldap
     try:
-
         results["flext-ldap"] = "✅ SUCCESS"
     except (OSError, ValueError, TypeError) as e:
         results["flext-ldap"] = f"❌ FAILED: {e}"

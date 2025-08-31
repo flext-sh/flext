@@ -78,7 +78,9 @@ class SecurityViolation:
 class ScanConfig:
     """Scanner configuration."""
 
-    def __init__(self, target_paths: list[str], include_dependencies: bool = False) -> None:
+    def __init__(
+        self, target_paths: list[str], include_dependencies: bool = False
+    ) -> None:
         self.target_paths = target_paths
         self.include_dependencies = include_dependencies
 

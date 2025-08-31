@@ -74,7 +74,6 @@ src/project_namespace/
 │
 ├── Domain Layer (DDD Patterns)
 │   ├── models.py              # Pydantic models and JSON schemas
-│   ├── aggregate_root.py      # FlextAggregates with domain events
 │   ├── domain_services.py     # Domain service patterns and operations
 │   └── root_models.py         # RootModel patterns for validation
 │
@@ -178,7 +177,7 @@ def service_operation() -> FlextResult[Data]:
 
 ```python
 # ✅ CORRECT - Proven patterns from flext-core
-from flext_core import FlextModels.Entity, FlextValueObject, FlextAggregates
+from flext_core import FlextModels
 
 class Email(FlextValueObject):
     """Value objects are immutable and compared by value."""
@@ -201,7 +200,7 @@ class User(FlextModels.Entity):
         self.is_active = True
         return FlextResult[None].ok(None)
 
-class UserAggregate(FlextAggregates):
+class UserAggregate(FlextModels.AggregateRoot):
     """Aggregate roots enforce consistency boundaries."""
     user: User
 
@@ -297,14 +296,14 @@ class ProjectExceptions(FlextExceptions.Error):
 
 ### Phase 3 — Domain Layer Implementation (PROVEN PATTERNS)
 
-1. **models.py - Use FlextModel (Pydantic-based)**
+1. **models.py - Use FlextModels (Pydantic-based)**
 
 ```python
 # ✅ CORRECT - flext-core proven Pydantic integration
-from flext_core import FlextModel
+from flext_core import FlextModels
 from pydantic import Field
 
-class UserModel(FlextModel):
+class UserModel(FlextModels):
     """User model with flext-core validation."""
     
     name: str = Field(..., min_length=1, max_length=100)
@@ -621,10 +620,10 @@ python -c "from project_name.constants import ProjectConstants; print('✅ Const
 
 1. **models.py** (Pydantic + flext-core)
 ```python
-from flext_core import FlextModel
+from flext_core import FlextModels
 from pydantic import Field
 
-class ProjectModel(FlextModel):
+class ProjectModel(FlextModels):
     """Project model following flext-core patterns."""
     
     name: str = Field(..., min_length=1)
@@ -685,7 +684,7 @@ pytest tests/ -v    # All pass
 - Dependency injection - Use get_flext_container()
 - Logging - Use FlextLogger() from flext-core
 - Base classes - Use FlextModels.Entity, FlextValueObject, FlextDomainService
-- Validation - Use FlextModel with Pydantic
+- Validation - Use FlextModels with Pydantic
 - Constants - Inherit from FlextConstants
 - Exceptions - Inherit from FlextExceptions
 
@@ -735,7 +734,7 @@ grep -r "FlextResult\[" src/ | wc -l              # Should be > 5
 grep -r "class.*Base.*ABC" src/ | wc -l           # Should be 0
 
 # Pydantic Integration (100% models)
-grep -r "FlextModel" src/ | wc -l                 # Should be > 0
+grep -r "FlextModels" src/ | wc -l                 # Should be > 0
 ```
 
 ### ✅ Development Experience (PROVEN WORKFLOW)

@@ -3,6 +3,7 @@
 Tests for workspace management functionality following FLEXT testing patterns
 with proper mocking and filesystem isolation.
 """
+
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -26,9 +27,7 @@ class TestWorkspaceManager:
         return WorkspaceManager(workspace_root=mock_workspace)
 
     def test_workspace_manager_initialization(
-        self,
-        workspace_manager: WorkspaceManager,
-        mock_workspace: Path
+        self, workspace_manager: WorkspaceManager, mock_workspace: Path
     ) -> None:
         """Test WorkspaceManager initialization."""
         # Assert
@@ -37,9 +36,7 @@ class TestWorkspaceManager:
 
     @patch("flext.workspace.Path.iterdir")
     def test_list_projects_success(
-        self,
-        mock_iterdir: Mock,
-        workspace_manager: WorkspaceManager
+        self, mock_iterdir: Mock, workspace_manager: WorkspaceManager
     ) -> None:
         """Test successful project listing."""
         # Arrange
@@ -65,9 +62,7 @@ class TestWorkspaceManager:
 
     @patch("flext.workspace.Path.iterdir")
     def test_list_projects_no_projects(
-        self,
-        mock_iterdir: Mock,
-        workspace_manager: WorkspaceManager
+        self, mock_iterdir: Mock, workspace_manager: WorkspaceManager
     ) -> None:
         """Test project listing with no valid projects."""
         # Arrange
@@ -82,9 +77,7 @@ class TestWorkspaceManager:
 
     @patch("flext.workspace.Path.iterdir")
     def test_list_projects_filter_invalid(
-        self,
-        mock_iterdir: Mock,
-        workspace_manager: WorkspaceManager
+        self, mock_iterdir: Mock, workspace_manager: WorkspaceManager
     ) -> None:
         """Test project listing filters invalid directories."""
         # Arrange
@@ -95,7 +88,9 @@ class TestWorkspaceManager:
         mock_invalid_dir = Mock()
         mock_invalid_dir.is_dir.return_value = True
         mock_invalid_dir.name = "invalid-dir"
-        mock_invalid_dir.__truediv__.return_value = Path("/test/invalid-dir/pyproject.toml")
+        mock_invalid_dir.__truediv__.return_value = Path(
+            "/test/invalid-dir/pyproject.toml"
+        )
 
         mock_iterdir.return_value = [mock_file, mock_invalid_dir]
 
@@ -108,9 +103,7 @@ class TestWorkspaceManager:
 
     @patch("flext.workspace.Path.exists")
     def test_validate_project_structure_success(
-        self,
-        mock_exists: Mock,
-        workspace_manager: WorkspaceManager
+        self, mock_exists: Mock, workspace_manager: WorkspaceManager
     ) -> None:
         """Test successful project structure validation."""
         # Arrange
@@ -125,9 +118,7 @@ class TestWorkspaceManager:
 
     @patch("flext.workspace.Path.exists")
     def test_validate_project_structure_missing_files(
-        self,
-        mock_exists: Mock,
-        workspace_manager: WorkspaceManager
+        self, mock_exists: Mock, workspace_manager: WorkspaceManager
     ) -> None:
         """Test project structure validation with missing files."""
         # Arrange
@@ -141,8 +132,7 @@ class TestWorkspaceManager:
         assert result.is_success is False
 
     def test_validate_all_projects_no_projects(
-        self,
-        workspace_manager: WorkspaceManager
+        self, workspace_manager: WorkspaceManager
     ) -> None:
         """Test validation when no projects exist."""
         with patch.object(workspace_manager, "list_projects", return_value=[]):
@@ -156,10 +146,7 @@ class TestWorkspaceManager:
     @patch.object(WorkspaceManager, "list_projects")
     @patch.object(WorkspaceManager, "validate_project_structure")
     def test_validate_all_projects_success(
-        self,
-        mock_validate: Mock,
-        mock_list: Mock,
-        workspace_manager: WorkspaceManager
+        self, mock_validate: Mock, mock_list: Mock, workspace_manager: WorkspaceManager
     ) -> None:
         """Test successful validation of all projects."""
         # Arrange
@@ -177,10 +164,7 @@ class TestWorkspaceManager:
     @patch.object(WorkspaceManager, "list_projects")
     @patch.object(WorkspaceManager, "validate_project_structure")
     def test_validate_all_projects_partial_failure(
-        self,
-        mock_validate: Mock,
-        mock_list: Mock,
-        workspace_manager: WorkspaceManager
+        self, mock_validate: Mock, mock_list: Mock, workspace_manager: WorkspaceManager
     ) -> None:
         """Test validation with some project failures."""
         # Arrange
@@ -188,7 +172,7 @@ class TestWorkspaceManager:
         mock_list.return_value = mock_projects
         mock_validate.side_effect = [
             FlextResult[bool].ok(True),
-            FlextResult[bool].fail("Validation failed")
+            FlextResult[bool].fail("Validation failed"),
         ]
 
         # Act
