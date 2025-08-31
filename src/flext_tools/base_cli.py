@@ -35,9 +35,7 @@ Example:
     >>> class ProjectCLI(BaseCLI):
     ...     def __init__(self):
     ...         config = CLIConfig(
-    ...             output_format="table",
-    ...             log_level="INFO",
-    ...             project_root=Path.cwd()
+    ...             output_format="table", log_level="INFO", project_root=Path.cwd()
     ...         )
     ...         super().__init__(name="project-cli", version="2.0.0", config=config)
     ...
@@ -114,8 +112,8 @@ class CLIConfig(BaseModel):
     # Environment settings
     profile: str = Field(default="default", description="Configuration profile")
     config_dir: Path = Field(
-      default=Path.home() / ".flext",
-      description="Config directory",
+        default=Path.home() / ".flext",
+        description="Config directory",
     )
 
 
@@ -123,48 +121,48 @@ class BaseCLI(FlextDomainService[click.Group]):
     """Base class for all FLEXT CLI applications."""
 
     def __init__(self, name: str, version: str, description: str) -> None:
-      """Initialize BaseCLI with basic information."""
-      self.name = name
-      self.version = version
-      self.description = description
-      self.console = Console()
-      self.config: CLIConfig | None = None
+        """Initialize BaseCLI with basic information."""
+        self.name = name
+        self.version = version
+        self.description = description
+        self.console = Console()
+        self.config: CLIConfig | None = None
 
     def setup_logging(self, config: CLIConfig) -> None:
-      """Set up logging configuration."""
-      logging.basicConfig(
-          level=getattr(logging, config.log_level.upper()),
-          format="%(message)s",
-          datefmt="[%X]",
-          handlers=[RichHandler(console=self.console, rich_tracebacks=True)],
-      )
+        """Set up logging configuration."""
+        logging.basicConfig(
+            level=getattr(logging, config.log_level.upper()),
+            format="%(message)s",
+            datefmt="[%X]",
+            handlers=[RichHandler(console=self.console, rich_tracebacks=True)],
+        )
 
     @abstractmethod
     def create_cli(self) -> click.Group:
-      """Create the CLI group."""
+        """Create the CLI group."""
 
     def execute(self) -> FlextResult[click.Group]:
-      """Execute the CLI creation using FlextDomainService pattern.
+        """Execute the CLI creation using FlextDomainService pattern.
 
-      Returns:
-          FlextResult[click.Group] containing the CLI group or error
+        Returns:
+            FlextResult[click.Group] containing the CLI group or error
 
-      """
-      try:
-          cli_group = self.create_cli()
-          return FlextResult[click.Group].ok(cli_group)
-      except Exception as e:
-          return FlextResult[click.Group].fail(f"Failed to create CLI: {e}")
+        """
+        try:
+            cli_group = self.create_cli()
+            return FlextResult[click.Group].ok(cli_group)
+        except Exception as e:
+            return FlextResult[click.Group].fail(f"Failed to create CLI: {e}")
 
     def run(self) -> None:
-      """Run the CLI application."""
-      cli_result = self.execute()
-      if cli_result.is_success:
-          cli_group = cli_result.value
-          cli_group()
-      else:
-          self.console.print(f"[red]Error: {cli_result.error}[/red]")
-          raise SystemExit(1)
+        """Run the CLI application."""
+        cli_result = self.execute()
+        if cli_result.is_success:
+            cli_group = cli_result.value
+            cli_group()
+        else:
+            self.console.print(f"[red]Error: {cli_result.error}[/red]")
+            raise SystemExit(1)
 
 
 def with_config[F: Callable[..., object]](f: F) -> F:  # type: ignore[explicit-any]
@@ -177,8 +175,8 @@ def with_config[F: Callable[..., object]](f: F) -> F:  # type: ignore[explicit-a
 def with_output_format[F: Callable[..., object]](f: F) -> F:  # type: ignore[explicit-any]
     """Add output format options to commands (decorator)."""
     return click.option(
-      "--output-format",
-      type=click.Choice(["table", "json", "yaml"]),
-      default="table",
-      help="Output format",
+        "--output-format",
+        type=click.Choice(["table", "json", "yaml"]),
+        default="table",
+        help="Output format",
     )(f)

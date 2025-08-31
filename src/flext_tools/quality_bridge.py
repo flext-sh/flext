@@ -39,10 +39,10 @@ License: MIT
 
 from __future__ import annotations
 
+import contextlib
 from pathlib import Path
 
-import contextlib
-from flext_core import FlextResult, FlextLogger
+from flext_core import FlextLogger, FlextResult
 
 logger = FlextLogger(__name__)
 

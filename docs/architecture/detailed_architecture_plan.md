@@ -10,7 +10,7 @@ FlextResult[T] com .value/.unwrap_or() modernos
 FlextResult.ok(), FlextResult.fail(), .map(), .flat_map()
 
 # Domain Foundation
-FlextModels.Entity, FlextModels.Value, FlextAggregates
+FlextModels
 FlextDomainService, FlextPlugin, FlextContainer
 
 # Configuration & Types

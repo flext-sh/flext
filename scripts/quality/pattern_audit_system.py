@@ -160,8 +160,8 @@ class PatternViolationAnalyzer:
         self.foundation_violations = {
             "BaseModel": {
                 "severity": "CRITICAL",
-                "pattern": "foundation.md#FlextModel",
-                "context": "Use FlextModel/FlextModels.Value/FlextModels.Entity instead of direct BaseModel",
+                "pattern": "foundation.md#FlextModels",
+                "context": "Use FlextModels/FlextModels.Value/FlextModels.Entity instead of direct BaseModel",
                 "guidance": "Replace with appropriate FLEXT foundation class",
             },
             "validate_domain_rules": {
@@ -314,9 +314,9 @@ class PatternViolationAnalyzer:
 
         except Exception as e:
             self.logger.debug(f"Error analyzing file {file_path}: {e}")
-            return FlextResult[
-                list[PatternViolation]
-            ].ok([])  # Return empty list on file errors
+            return FlextResult[list[PatternViolation]].ok(
+                []
+            )  # Return empty list on file errors
 
     def _analyze_ast_patterns(
         self,
@@ -333,7 +333,7 @@ class PatternViolationAnalyzer:
                 self.analyzer = analyzer
 
             def visit_ClassDef(self, node: ast.ClassDef) -> None:
-                # Check for BaseModel usage instead of FlextModel
+                # Check for BaseModel usage instead of FlextModels
                 for base in node.bases:
                     if (
                         isinstance(base, ast.Name)

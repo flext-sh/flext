@@ -44,6 +44,7 @@ lint.ignore = [
     "TC002",   # Pydantic requirement
     "TC003",   # Pydantic requirement
     "TRY300",
+    "PLC0415", # import-outside-top-level
 ]
 lint.isort.force-single-line = false
 lint.isort.split-on-trailing-comma = true
