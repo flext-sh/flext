@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextResult, FlextLogger
+from flext_core import FlextLogger, FlextResult
 from jinja2 import Environment, FileSystemLoader, Template, select_autoescape
 
 

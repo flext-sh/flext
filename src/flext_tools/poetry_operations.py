@@ -392,7 +392,7 @@ class PoetryOperations:
             # Use subprocess instead of Poetry Application due to Input type incompatibility
             import subprocess
 
-            cmd = ["poetry"] + args
+            cmd = ["poetry", *args]
             result = subprocess.run(cmd, check=False, capture_output=True, text=True)
             code = result.returncode
             success = code == 0
@@ -596,7 +596,7 @@ class PoetryOperations:
             # Use subprocess instead of Poetry Application due to Input type incompatibility
             import subprocess
 
-            cmd = ["poetry"] + args
+            cmd = ["poetry", *args]
             result = subprocess.run(cmd, check=False, capture_output=True, text=True)
             code = result.returncode
             success = code == 0
@@ -734,7 +734,7 @@ class PoetryOperations:
             # Use subprocess instead of Poetry Application due to Input type incompatibility
             import subprocess
 
-            cmd = ["poetry"] + args
+            cmd = ["poetry", *args]
             result = subprocess.run(cmd, check=False, capture_output=True, text=True)
             code = result.returncode
             success = code == 0
@@ -854,7 +854,7 @@ class PoetryOperations:
             # Use subprocess instead of Poetry Application due to Input type incompatibility
             import subprocess
 
-            cmd = ["poetry"] + args
+            cmd = ["poetry", *args]
             result = subprocess.run(cmd, check=False, capture_output=True, text=True)
             code = result.returncode
             success = code == 0
@@ -971,7 +971,7 @@ class PoetryOperations:
             # Use subprocess instead of Poetry Application due to Input type incompatibility
             import subprocess
 
-            cmd = ["poetry"] + args
+            cmd = ["poetry", *args]
             result = subprocess.run(cmd, check=False, capture_output=True, text=True)
             code = result.returncode
             success = code == 0

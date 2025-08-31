@@ -311,7 +311,7 @@ def stats_by_error_type() -> int:
             len(sorted_projects) - 5
 
     top_5_errors = error_type_counts.most_common(5)
-    for (error_type, count) in top_5_errors:
+    for error_type, count in top_5_errors:
         percentage = count / total_errors * 100
 
     return total_errors

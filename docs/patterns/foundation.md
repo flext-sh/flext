@@ -8,14 +8,14 @@ Core architectural patterns that form the base of the FLEXT ecosystem. These pat
 
 ## Model Patterns
 
-### FlextModel
+### FlextModels
 
 Universal base model for all FLEXT domain objects.
 
 ```python
 from pydantic import BaseModel, ConfigDict
 
-class FlextModel(BaseModel):
+class FlextModels(BaseModel):
     """Base model with automatic validation and JSON serialization."""
 
     model_config = ConfigDict(
@@ -40,7 +40,7 @@ from datetime import datetime
 from typing import Optional
 import uuid
 
-class FlextModels.Entity(FlextModel):
+class FlextModels.Entity(FlextModels):
     """Domain entity with unique identity and version control."""
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -62,7 +62,7 @@ class FlextModels.Entity(FlextModel):
 Immutable value object without identity.
 
 ```python
-class FlextModels.Value(FlextModel):
+class FlextModels.Value(FlextModels):
     """Immutable value object for domain concepts."""
 
     model_config = ConfigDict(
