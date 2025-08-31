@@ -69,7 +69,9 @@ class DependencyCacheManager(FlextScript):
                 print_colored(f"❌ Unknown operation: {operation}", Colors.RED)
                 return FlextResult[object].fail(f"Unknown operation: {operation}")
 
-            return FlextResult[object].ok({"operation": operation, "projects": projects})
+            return FlextResult[object].ok(
+                {"operation": operation, "projects": projects}
+            )
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during cache operation: {e}", Colors.RED)
