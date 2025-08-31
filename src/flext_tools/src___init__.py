@@ -120,6 +120,7 @@ class WorkspaceManager:
         project_list: list[str] = ["flext-core", "flext-api", "flext-auth"]
         return FlextResult[list[str]].ok(project_list)
 
+
 # Note: Import optimization to avoid circular dependencies
 # Public API exports optimized for performance and maintainability
 

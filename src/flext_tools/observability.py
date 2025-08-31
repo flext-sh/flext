@@ -169,7 +169,6 @@ class DetailedLogger:
         formatted_message = message % args if args else message
 
         # Combine extra and kwargs
-        metadata = {**(extra or {}), **kwargs}
 
         # Create log entry using flext-observability
         flext_create_log_entry(

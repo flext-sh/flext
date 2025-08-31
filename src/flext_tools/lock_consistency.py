@@ -72,7 +72,7 @@ import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
-from flext_core import FlextModels, FlextResult, FlextLogger
+from flext_core import FlextLogger, FlextModels, FlextResult
 from pydantic import Field
 
 from .colors import Colors, print_colored

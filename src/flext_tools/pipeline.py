@@ -84,8 +84,7 @@ License: MIT
 
 from __future__ import annotations
 
-from flext_core import FlextResult
-from flext_core import FlextLogger
+from flext_core import FlextLogger, FlextResult
 from pydantic import BaseModel, Field
 
 # Initialize logger
@@ -128,18 +127,18 @@ class PipelineCommandHandler:
     ) -> FlextResult[dict[str, object]]:
         """Handle create pipeline command."""
         # Simplified implementation - to be implemented when Pipeline domain exists
-        return FlextResult[dict[str, object]].ok({
-            "message": "Pipeline creation not implemented"
-        })
+        return FlextResult[dict[str, object]].ok(
+            {"message": "Pipeline creation not implemented"}
+        )
 
     async def handle_execute(
         self, _command: ExecutePipelineCommand
     ) -> FlextResult[dict[str, object]]:
         """Handle execute pipeline command."""
         # Simplified implementation - to be implemented when Pipeline domain exists
-        return FlextResult[dict[str, object]].ok({
-            "message": "Pipeline execution not implemented"
-        })
+        return FlextResult[dict[str, object]].ok(
+            {"message": "Pipeline execution not implemented"}
+        )
 
 
 class PipelineQueryHandler:
@@ -150,9 +149,9 @@ class PipelineQueryHandler:
     ) -> FlextResult[dict[str, object]]:
         """Handle get pipeline query."""
         # Simplified implementation - to be implemented when Pipeline domain exists
-        return FlextResult[dict[str, object]].ok({
-            "message": "Pipeline get not implemented"
-        })
+        return FlextResult[dict[str, object]].ok(
+            {"message": "Pipeline get not implemented"}
+        )
 
     async def handle_list(
         self, _query: ListPipelinesQuery

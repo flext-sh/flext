@@ -10,7 +10,7 @@ Unified semantic patterns that ensure consistency, type safety, and maintainabil
 
 ### [Foundation Patterns](./foundation.md)
 
-Core architectural patterns including FlextModel, FlextResult, FlextModels.Entity, and FlextModels.Value.
+Core architectural patterns including FlextModels, FlextResult, FlextModels.Entity, and FlextModels.Value.
 
 ### [Type System Patterns](./types.md)
 
@@ -36,7 +36,7 @@ Domain-specific utility organization with consistent naming conventions.
 
 ```python
 # Foundation
-from flext_core.foundation import FlextModel, FlextResult
+from flext_core.foundation import FlextModels, FlextResult
 
 # Types
 from flext_core.types import FlextTypes
