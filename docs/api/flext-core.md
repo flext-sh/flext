@@ -36,7 +36,7 @@ from flext_core import (
     FlextHandlers,
 
     # Validation
-    FlextValidation,
+    FlextValidations,
     FlextValidators,
     FlextPredicates,
 
