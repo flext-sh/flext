@@ -80,7 +80,7 @@ MIN_PACKAGE_LENGTH = 2
 MAX_SEPARATORS = 2
 
 
-class PythonDependencies(FlextModels):
+class PythonDependencies(FlextModels.Value):
     """Python dependencies categorized by type.
 
     Contains runtime and test dependencies discovered from Python import analysis.
@@ -94,6 +94,15 @@ class PythonDependencies(FlextModels):
         default_factory=set,
         description="Test dependency package names",
     )
+
+    def validate_business_rules(self) -> FlextResult[None]:
+        """Validate Python dependencies business rules."""
+        # Check for package name validity
+        for pkg in self.runtime | self.test:
+            if not pkg or not pkg.replace("-", "").replace("_", "").replace(".", "").isalnum():
+                return FlextResult[None].fail(f"Invalid package name: {pkg}")
+
+        return FlextResult[None].ok(None)
 
 
 class PythonImportDiscovery:

@@ -60,7 +60,7 @@ from .colors import Colors, print_colored
 logger = FlextLogger(__name__)
 
 
-class Configuration(FlextModels):
+class Configuration(FlextModels.Value):
     """Comprehensive configuration model for FLEXT ecosystem components.
 
     Provides structured configuration data with validation for environment
@@ -114,6 +114,17 @@ class Configuration(FlextModels):
         default_factory=dict,
         description="Nested configuration for specific components",
     )
+
+    def validate_business_rules(self) -> FlextResult[None]:
+        """Validate configuration business rules."""
+        valid_environments = ["dev", "development", "staging", "production"]
+        if self.environment not in valid_environments:
+            return FlextResult[None].fail(f"Invalid environment: {self.environment}")
+
+        if self.timeout <= 0:
+            return FlextResult[None].fail("Timeout must be positive")
+
+        return FlextResult[None].ok(None)
 
 
 class ConfigurationManager:
