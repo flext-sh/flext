@@ -122,7 +122,7 @@ P_main_func = ParamSpec("P_main_func")
 logger = FlextLogger(__name__)
 
 
-class ScriptMetadata(FlextModels):
+class ScriptMetadata(FlextModels.Value):
     """Comprehensive metadata for FLEXT scripts using value object patterns.
 
     Encapsulates all metadata required for script identification, lifecycle
@@ -242,7 +242,8 @@ class FlextScript(FlextDomainService[bool]):
 
     def __init__(self) -> None:
         """Initialize the script with flext-core infrastructure."""
-        # Note: logger is provided by FlextDomainService base class
+        # Explicitly initialize logger from flext-core
+        self.logger = FlextLogger(__name__)
         self.start_time = time.time()
         self.container = FlextContainer.get_global()
 
@@ -476,7 +477,7 @@ class FlextScript(FlextDomainService[bool]):
         # Configure logging level
         if args.verbose:
             # Set verbose mode - use flext-core logging patterns
-            FlextLogger().setLevel(logging.DEBUG)
+            FlextLogger(__name__).setLevel(logging.DEBUG)  # type: ignore[attr-defined]
             # TODO: Integrate with flext-core centralized logging configuration
 
         return self.run(**vars(args))
@@ -608,10 +609,10 @@ def create_simple_script[**P_main_func](
                 sig = inspect.signature(config.main_func)
                 if sig.parameters:
                     # Function expects parameters, pass kwargs
-                    result = config.main_func(**kwargs)
+                    result = config.main_func(**kwargs)  # type: ignore[misc]
                 else:
                     # Function expects no parameters
-                    result = config.main_func()
+                    result = config.main_func()  # type: ignore[misc]
                 return (
                     result
                     if isinstance(result, FlextResult)
