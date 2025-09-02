@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 """Simple script to consolidate manual configuration handlers."""
 
+import logging
 import re
 from pathlib import Path
+
+# Configure basic logging
+logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger(__name__)
 
 
 def find_manual_env_vars() -> list[str]:
@@ -12,7 +17,8 @@ def find_manual_env_vars() -> list[str]:
     for path in Path.cwd().rglob("*.py"):
         try:
             text = path.read_text(encoding="utf-8")
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Could not read file {path}: {e}")
             continue
         if ("os.getenv(" in text) or ("os.environ.get" in text):
             matches.append(str(path))
@@ -93,13 +99,12 @@ def main() -> None:
         return
 
     # Process first 50 files
-    processed = 0
     modified = 0
 
-    for file_path in env_var_files[:50]:
+    for _processed, file_path in enumerate(env_var_files[:50]):
         if add_config_todos_to_file(file_path):
             modified += 1
-        processed += 1
+        # processed is now automatically managed by enumerate
 
 
 if __name__ == "__main__":

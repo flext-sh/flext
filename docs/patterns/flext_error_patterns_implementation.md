@@ -14,7 +14,7 @@ Successfully implemented the FLEXT error hierarchy patterns from `docs/patterns/
 
 Created `/home/marlonsc/flext/flext-ldap/src/flext_ldap/errors.py` with:
 
-- **FlextLdapError**: Base exception with full observability support
+- **FlextLDAPError**: Base exception with full observability support
 - **Semantic Classification**: Business vs Technical error categorization
 - **Rich Context Preservation**: Automatic correlation IDs, timestamps, structured context
 - **Observability Integration**: Automatic logging, metrics emission, trace span creation
@@ -22,20 +22,20 @@ Created `/home/marlonsc/flext/flext-ldap/src/flext_ldap/errors.py` with:
 
 ### 2. Domain-Specific Error Hierarchies
 
-#### FlextLdapConnection Namespace
+#### FlextLDAPConnection Namespace
 
 - `ConnectionError`: Server connection failures (recoverable)
 - `AuthenticationError`: Authentication failures (non-recoverable)
 - `TimeoutError`: Operation timeouts (recoverable)
 
-#### FlextLdapData Namespace
+#### FlextLDAPData Namespace
 
 - `ValidationError`: Data validation failures (non-recoverable)
 - `SchemaViolationError`: LDAP schema violations (non-recoverable)
 - `EntryNotFoundError`: Entry not found (non-recoverable, info level)
 - `EntryAlreadyExistsError`: Duplicate entries (non-recoverable, warning level)
 
-#### FlextLdapProtocol Namespace
+#### FlextLDAPProtocol Namespace
 
 - `FilterError`: Invalid search filters (non-recoverable)
 - `DNError`: Invalid distinguished names (non-recoverable)
@@ -74,7 +74,7 @@ Example error log output:
 
 ```
 ERROR flext_ldap.errors [LDAP authentication failed: LDAP error]
-extra={'error_code': <FlextLdapErrorCode.LDAP_AUTHENTICATION_ERROR: 'FLEXT_4002'>,
+extra={'error_code': <FlextLDAPErrorCode.LDAP_AUTHENTICATION_ERROR: 'FLEXT_4002'>,
        'correlation_id': '7198dd3d-4a1b-476a-84e8-6ee050cdd6d4',
        'error_type': 'AUTHENTICATION',
        'recoverable': False,

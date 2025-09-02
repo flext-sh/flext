@@ -94,7 +94,7 @@ logger = FlextLogger(__name__)
 # to maintain consistency and avoid duplication of generic result functionality
 
 
-class ProjectInfo(FlextModels.BaseConfig):
+class ProjectInfo(FlextModels):
     """Poetry project information.
 
     Contains project metadata extracted from pyproject.toml.
@@ -435,9 +435,9 @@ class PoetryValidator:
         poetry: object = tool_section.get("poetry", {})
 
         # Check main dependencies
-        deps: object = poetry.get("dependencies", {}) if hasattr(poetry, "get") else {}  # type: ignore[misc]
+        deps: object = poetry.get("dependencies", {}) if hasattr(poetry, "get") else {}
         if hasattr(deps, "items"):
-            for name, spec in deps.items():  # type: ignore[misc]
+            for name, spec in deps.items():
                 if name == "python":
                     continue
 
@@ -450,13 +450,13 @@ class PoetryValidator:
                     issues.append(f"Dependency '{name}' missing version specification")
 
         # Check dependency groups
-        groups: object = poetry.get("group", {}) if hasattr(poetry, "get") else {}  # type: ignore[misc]
+        groups: object = poetry.get("group", {}) if hasattr(poetry, "get") else {}
         if hasattr(groups, "items"):
-            for group_name, group_data in groups.items():  # type: ignore[misc]
+            for group_name, group_data in groups.items():
                 if hasattr(group_data, "get"):
-                    group_deps: object = group_data.get("dependencies", {})  # type: ignore[misc]
+                    group_deps: object = group_data.get("dependencies", {})
                     if hasattr(group_deps, "items"):
-                        for name, spec in group_deps.items():  # type: ignore[misc]
+                        for name, spec in group_deps.items():
                             if (
                                 isinstance(spec, dict)
                                 and "version" not in spec
@@ -493,8 +493,8 @@ class PoetryValidator:
 
         # poetry_console module is always available after import
         try:
-            app = poetry_console.application.Application()  # type: ignore[attr-defined]
-            code = app.run(["check"])  # type: ignore[arg-type,attr-defined]
+            app = poetry_console.application.Application()
+            code = app.run(["check"])
             if int(code) != 0:
                 issues.append("poetry.lock is outdated - run 'poetry lock'")
         except Exception:
@@ -524,7 +524,7 @@ class PoetryValidator:
         # Count main dependencies (excluding python)
         dependencies: object = (
             poetry.get("dependencies", {}) if hasattr(poetry, "get") else {}
-        )  # type: ignore[misc]
+        )
         dependency_count = (
             (
                 len(dependencies)
@@ -541,24 +541,24 @@ class PoetryValidator:
 
         # Count dev dependencies
         dev_dependency_count = 0
-        groups: object = poetry.get("group", {}) if hasattr(poetry, "get") else {}  # type: ignore[misc]
+        groups: object = poetry.get("group", {}) if hasattr(poetry, "get") else {}
         if hasattr(groups, "values"):
             for group_data in groups.values():
                 if isinstance(group_data, dict):
-                    group_deps = group_data.get("dependencies", {})  # type: ignore[misc]
+                    group_deps = group_data.get("dependencies", {})
                     if hasattr(group_deps, "__len__"):
                         dev_dependency_count += len(group_deps)
 
         return ProjectInfo(
             name=str(
                 poetry.get("name", "unknown") if hasattr(poetry, "get") else "unknown"
-            ),  # type: ignore[misc]
+            ),
             version=str(
                 poetry.get("version", "0.0.0") if hasattr(poetry, "get") else "0.0.0"
-            ),  # type: ignore[misc]
+            ),
             description=str(
                 poetry.get("description", "") if hasattr(poetry, "get") else ""
-            ),  # type: ignore[misc]
+            ),
             dependency_count=dependency_count,
             dev_dependency_count=dev_dependency_count,
         )

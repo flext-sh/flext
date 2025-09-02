@@ -17,7 +17,7 @@ class TestDevToolsManager:
     """Test suite for DevToolsManager following enterprise patterns."""
 
     @pytest.fixture
-    def temp_workspace(self, tmp_path) -> Path:
+    def temp_workspace(self, tmp_path: Path) -> Path:
         """Create temporary workspace for testing."""
         workspace = tmp_path / "dev-test-workspace"
         workspace.mkdir()
@@ -92,7 +92,7 @@ class TestRunTests:
     """Test suite for test execution functionality."""
 
     @pytest.fixture
-    def mock_workspace(self, tmp_path) -> Path:
+    def mock_workspace(self, tmp_path: Path) -> Path:
         """Create mock workspace with test projects."""
         workspace = tmp_path / "test-workspace"
         workspace.mkdir()
@@ -325,7 +325,7 @@ class TestFormatAll:
     """Test suite for code formatting functionality."""
 
     @pytest.fixture
-    def dev_tools(self, tmp_path) -> DevToolsManager:
+    def dev_tools(self, tmp_path: Path) -> DevToolsManager:
         """Create DevToolsManager for formatting tests."""
         workspace = tmp_path / "format-workspace"
         workspace.mkdir()
@@ -406,7 +406,7 @@ class TestPrivateMethods:
     """Test suite for private helper methods."""
 
     @pytest.fixture
-    def dev_tools(self, tmp_path) -> DevToolsManager:
+    def dev_tools(self, tmp_path: Path) -> DevToolsManager:
         """Create DevToolsManager for testing private methods."""
         workspace = tmp_path / "private-methods-workspace"
         workspace.mkdir()
@@ -505,7 +505,7 @@ class TestWorkspaceIntegration:
     """Integration tests for DevToolsManager with real workspace scenarios."""
 
     @pytest.fixture
-    def complex_workspace(self, tmp_path) -> Path:
+    def complex_workspace(self, tmp_path: Path) -> Path:
         """Create complex workspace with multiple project types."""
         workspace = tmp_path / "complex-workspace"
         workspace.mkdir()

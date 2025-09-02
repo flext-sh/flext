@@ -379,7 +379,7 @@ class PoetryOperations:
 
             # Prefer Poetry's Python API when available to avoid subprocess
             if poetry_app is None:
-                print_colored(  # type: ignore[unreachable]
+                print_colored(
                     "    ❌ Poetry API unavailable; run 'poetry add' manually",
                     Colors.RED,
                 )
@@ -585,7 +585,7 @@ class PoetryOperations:
 
             # Prefer Poetry API when available
             if poetry_app is None:
-                print_colored(  # type: ignore[unreachable]
+                print_colored(
                     "    ❌ Poetry API unavailable; run 'poetry remove' manually",
                     Colors.RED,
                 )
@@ -723,7 +723,7 @@ class PoetryOperations:
         try:
             # Prefer Poetry API when available
             if poetry_app is None:
-                print_colored(  # type: ignore[unreachable]
+                print_colored(
                     "    ❌ Poetry API unavailable; run 'poetry update' manually",
                     Colors.RED,
                 )
@@ -845,7 +845,7 @@ class PoetryOperations:
         try:
             # Prefer Poetry API when available
             if poetry_app is None:
-                print_colored(  # type: ignore[unreachable]
+                print_colored(
                     "    ❌ Poetry API unavailable; run 'poetry lock' manually",
                     Colors.RED,
                 )
@@ -962,7 +962,7 @@ class PoetryOperations:
         try:
             # Prefer Poetry API when available
             if poetry_app is None:
-                print_colored(  # type: ignore[unreachable]
+                print_colored(
                     "    ❌ Poetry API unavailable; run 'poetry check' manually",
                     Colors.RED,
                 )

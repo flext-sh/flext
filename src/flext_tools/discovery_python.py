@@ -80,7 +80,7 @@ MIN_PACKAGE_LENGTH = 2
 MAX_SEPARATORS = 2
 
 
-class PythonDependencies(FlextModels.BaseConfig):
+class PythonDependencies(FlextModels):
     """Python dependencies categorized by type.
 
     Contains runtime and test dependencies discovered from Python import analysis.

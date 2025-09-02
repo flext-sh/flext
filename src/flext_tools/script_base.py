@@ -122,11 +122,11 @@ P_main_func = ParamSpec("P_main_func")
 logger = FlextLogger(__name__)
 
 
-class ScriptMetadata(FlextModels.Value):
+class ScriptMetadata(FlextModels):
     """Comprehensive metadata for FLEXT scripts using value object patterns.
 
     Encapsulates all metadata required for script identification, lifecycle
-    management, and execution control. Built on flext-core FlextModels.Value for
+    management, and execution control. Built on flext-core FlextModels for
     immutability and business rule validation with enterprise-grade metadata
     management for the FLEXT ecosystem.
 
@@ -608,10 +608,10 @@ def create_simple_script[**P_main_func](
                 sig = inspect.signature(config.main_func)
                 if sig.parameters:
                     # Function expects parameters, pass kwargs
-                    result = config.main_func(**kwargs)  # type: ignore[call-arg,arg-type]
+                    result = config.main_func(**kwargs)
                 else:
                     # Function expects no parameters
-                    result = config.main_func()  # type: ignore[call-arg]
+                    result = config.main_func()
                 return (
                     result
                     if isinstance(result, FlextResult)

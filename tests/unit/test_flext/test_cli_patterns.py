@@ -4,20 +4,14 @@ Tests for CLI patterns and base CLI functionality following FLEXT testing patter
 with proper mocking and architectural pattern validation.
 """
 
-object
+from __future__ import annotations
+
+from pathlib import Path
 
 import pytest
 
-import flext.cli_patterns
-import flext.cli_patterns as module
-import flext.cli_patterns as patterns
 import flext.cli_patterns as patterns_module
-from flext.cli_patterns import (
-    BaseCLI,
-    BaseCLI as ImportedBaseCLI,
-    BaseCLI as PatternBaseCLI,
-    __all__,
-)
+from flext.cli_patterns import BaseCLI, __all__
 
 
 class TestCliPatterns:
@@ -108,13 +102,13 @@ class TestCliPatternsIntegration:
     """Integration tests for CLI patterns with broader system."""
 
     @pytest.fixture
-    def temp_workspace(self, tmp_path) -> object:
+    def temp_workspace(self, tmp_path: Path) -> Path:
         """Create temporary workspace for integration testing."""
         workspace = tmp_path / "cli-patterns-integration-test"
         workspace.mkdir()
         return workspace
 
-    def test_cli_patterns_module_imports_cleanly(self, temp_workspace) -> None:
+    def test_cli_patterns_module_imports_cleanly(self, temp_workspace: Path) -> None:
         """Test that cli_patterns module imports without side effects."""
         # This test ensures the module can be imported in various contexts
         try:

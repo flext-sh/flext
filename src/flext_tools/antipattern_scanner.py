@@ -134,7 +134,7 @@ class SecurityViolation:
         }
 
 
-class ScanConfig(FlextModels.Value):
+class ScanConfig(FlextModels):
     """Configuration for security scanning operations using flext-core patterns."""
 
     target_paths: list[str]
@@ -629,7 +629,7 @@ def create_security_scanner(
 
     """
     try:
-        # Some FlextModels.Value subclasses use dynamic constructors; ignore call-arg typing here
+        # Some FlextModels subclasses use dynamic constructors; ignore call-arg typing here
         config = ScanConfig(
             target_paths=target_paths,
             include_dependencies=not exclude_dependencies,

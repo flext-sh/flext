@@ -84,34 +84,34 @@ License: MIT
 
 from __future__ import annotations
 
-from flext_core import FlextLogger, FlextResult
-from pydantic import BaseModel, Field
+from flext_core import FlextLogger, FlextModels, FlextResult
+from pydantic import Field
 
 # Initialize logger
 logger = FlextLogger(__name__)
 
 
 # Commands
-class CreatePipelineCommand(BaseModel):
+class CreatePipelineCommand(FlextModels):
     """Create pipeline command."""
 
     name: str = Field(..., description="Pipeline name", max_length=100)
 
 
-class ExecutePipelineCommand(BaseModel):
+class ExecutePipelineCommand(FlextModels):
     """Execute pipeline command."""
 
     pipeline_id: str = Field(..., description="Pipeline ID")
 
 
 # Queries
-class GetPipelineQuery(BaseModel):
+class GetPipelineQuery(FlextModels):
     """Get pipeline query."""
 
     pipeline_id: str = Field(..., description="Pipeline ID")
 
 
-class ListPipelinesQuery(BaseModel):
+class ListPipelinesQuery(FlextModels):
     """List pipelines query."""
 
     limit: int = Field(10, description="Number of results", ge=1, le=100)
