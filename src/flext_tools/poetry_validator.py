@@ -443,10 +443,10 @@ class PoetryValidator:
         tool_section = data.get("tool", {})
         if not isinstance(tool_section, dict):
             return True, []
-        poetry: dict[str, object] = cast(dict[str, object], tool_section.get("poetry", {}))
+        poetry: dict[str, object] = cast("dict[str, object]", tool_section.get("poetry", {}))
 
-        # Check main dependencies  
-        deps: dict[str, object] = cast(dict[str, object], poetry.get("dependencies", {})) if isinstance(poetry, dict) else {}
+        # Check main dependencies
+        deps: dict[str, object] = cast("dict[str, object]", poetry.get("dependencies", {})) if isinstance(poetry, dict) else {}
         if hasattr(deps, "items"):
             for name, spec in deps.items():
                 if name == "python":
@@ -461,7 +461,7 @@ class PoetryValidator:
                     issues.append(f"Dependency '{name}' missing version specification")
 
         # Check dependency groups
-        groups: dict[str, object] = cast(dict[str, object], poetry.get("group", {})) if isinstance(poetry, dict) else {}
+        groups: dict[str, object] = cast("dict[str, object]", poetry.get("group", {})) if isinstance(poetry, dict) else {}
         if isinstance(groups, dict):
             for group_name, group_data in groups.items():
                 if isinstance(group_data, dict):
@@ -530,11 +530,11 @@ class PoetryValidator:
         tool_section = data.get("tool", {})
         if not isinstance(tool_section, dict):
             return ProjectInfo()
-        poetry: dict[str, object] = cast(dict[str, object], tool_section.get("poetry", {}))
+        poetry: dict[str, object] = cast("dict[str, object]", tool_section.get("poetry", {}))
 
         # Count main dependencies (excluding python)
         dependencies: dict[str, object] = (
-            cast(dict[str, object], poetry.get("dependencies", {})) if isinstance(poetry, dict) else {}
+            cast("dict[str, object]", poetry.get("dependencies", {})) if isinstance(poetry, dict) else {}
         )
         dependency_count = (
             (
@@ -552,7 +552,7 @@ class PoetryValidator:
 
         # Count dev dependencies
         dev_dependency_count = 0
-        groups: dict[str, object] = cast(dict[str, object], poetry.get("group", {})) if isinstance(poetry, dict) else {}
+        groups: dict[str, object] = cast("dict[str, object]", poetry.get("group", {})) if isinstance(poetry, dict) else {}
         if hasattr(groups, "values"):
             for group_data in groups.values():
                 if isinstance(group_data, dict):

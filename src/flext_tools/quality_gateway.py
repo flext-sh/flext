@@ -73,9 +73,9 @@ import contextlib
 import io
 import shutil
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
 
 import pytest
 import ruff.__main__
@@ -457,8 +457,8 @@ class QualityGateway:
             # Parse Ruff output for issues (stdout text format)
             issues = [
                 QualityIssue(
-                    tool="ruff", 
-                    severity="error", 
+                    tool="ruff",
+                    severity="error",
                     message=line.strip(),
                     file_path=None,
                     line_number=None,
@@ -501,8 +501,8 @@ class QualityGateway:
 
             issues = [
                 QualityIssue(
-                    tool="mypy", 
-                    severity="error", 
+                    tool="mypy",
+                    severity="error",
                     message=line.strip(),
                     file_path=None,
                     line_number=None,
