@@ -13,12 +13,10 @@ By default, runs in dry-run and prints a mapping. Use `--apply` to rename.
 from __future__ import annotations
 
 import argparse
-import os
 import re
 from collections import defaultdict
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
-
 
 ADJ = {
     "extended",
@@ -122,7 +120,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     ap.add_argument("--project", help="Filter by project name substring", default=None)
     args = ap.parse_args(list(argv) if argv is not None else None)
 
-    roots = [p for p in Path(".").glob("*") if p.is_dir() and (p / "tests").exists()]
+    roots = [p for p in Path().glob("*") if p.is_dir() and (p / "tests").exists()]
     if args.project:
         roots = [r for r in roots if args.project.lower() in r.name.lower()]
 
@@ -139,7 +137,7 @@ def main(argv: Iterable[str] | None = None) -> int:
                 print(f"{src.relative_to(project)} -> {dst.relative_to(project)}")
                 if args.apply:
                     dst.parent.mkdir(parents=True, exist_ok=True)
-                    os.rename(src, dst)
+                    Path(src).rename(dst)
                     total += 1
 
     print(f"\nChanges {('applied' if args.apply else 'proposed')}: {total}")
@@ -148,4 +146,3 @@ def main(argv: Iterable[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
