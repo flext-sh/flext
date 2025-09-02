@@ -29,10 +29,10 @@ MAKEFILE_TARGET_NOT_FOUND = 2
 COMMAND_FAILED = 1
 
 # Status constants (not passwords, just status indicators)
-STATUS_PASS = "✅ PASS"
-STATUS_FAIL = "❌ FAIL"
-STATUS_NO_TARGET = "⚠️  NO_TARGET"
-STATUS_SKIP = "SKIP"
+STATUS_PASS = "✅ PASS"  # nosec B105
+STATUS_FAIL = "❌ FAIL"  # nosec B105
+STATUS_NO_TARGET = "⚠️  NO_TARGET"  # nosec B105
+STATUS_SKIP = "SKIP"  # nosec B105
 
 
 @dataclass

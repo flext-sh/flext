@@ -199,7 +199,7 @@ class FlextConfigStandardizer:
 
     def standardize_mypy_config(
         self,
-        project_name: str,
+        _project_name: str,
         config: dict[str, object],
     ) -> bool:
         """Standardize MyPy configuration."""

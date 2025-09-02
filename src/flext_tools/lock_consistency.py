@@ -142,7 +142,7 @@ class LockInconsistency:
     severity: str  # "critical", "warning", "info"
 
 
-class WorkspaceSummary(FlextModels.BaseConfig):
+class WorkspaceSummary(FlextModels):
     """Comprehensive workspace dependency analysis summary.
 
     Contains statistical summary of workspace analysis including project

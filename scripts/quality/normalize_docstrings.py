@@ -132,7 +132,7 @@ def main(argv: list[str]) -> int:
             pass
 
     if failures:
-        for rel, _msg in failures[:50]:
+        for _rel, _msg in failures[:50]:
             pass
 
     if not args.no_ruff and has_command("ruff"):

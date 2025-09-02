@@ -14,8 +14,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-object
-
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
 
@@ -44,11 +42,16 @@ class FlextResultTypeAuditor(FlextScript):
 
     def _is_ignored_by_git(self, file_path: str, project_dir: str = ".") -> bool:
         """Verifica se um arquivo está ignorado pelo git usando git check-ignore."""
-        try:
+
+        def _validate_git_available() -> str:
             git_path = shutil.which("git")
             if not git_path:
                 msg = "git executable not found"
                 raise FileNotFoundError(msg)
+            return git_path
+
+        try:
+            git_path = _validate_git_available()
 
             # Usa git check-ignore para verificar se o arquivo é ignorado
             result = subprocess.run(

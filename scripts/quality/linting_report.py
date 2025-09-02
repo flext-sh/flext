@@ -269,10 +269,10 @@ class LintingReport(FlextScript):
 
     def _print_project_summary(
         self,
-        project_name: str,
+        _project_name: str,
         stats: dict[str, object],
         *,
-        detailed: bool,
+        _detailed: bool,
     ) -> None:
         """Imprimir resumo do projeto."""
         ruff_issues = stats["ruff_issues"]
@@ -322,7 +322,7 @@ class LintingReport(FlextScript):
     def _print_final_summary(
         self,
         total_stats: dict[str, object],
-        project_results: dict[str, object],
+        _project_results: dict[str, object],
     ) -> None:
         """Imprimir resumo final."""
         print_colored("\n📊 RESUMO FINAL DO LINTING", Colors.BLUE)
