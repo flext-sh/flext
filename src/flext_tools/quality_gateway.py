@@ -77,7 +77,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
-import ruff.__main__ as ruff_main  # type: ignore[import-untyped]
+import ruff.__main__ as ruff_main
 from flext_core import FlextLogger, FlextModels, FlextResult
 from flext_core.container import FlextContainer
 from mypy import api as mypy_api
@@ -99,7 +99,7 @@ class QualityCheckConfig:
 
 
 @dataclass
-class QualityIssue(FlextModels.Entity):
+class QualityIssue(FlextModels):
     """Individual quality issue entity for structured issue reporting.
 
     This entity represents a single quality issue detected during quality
@@ -124,7 +124,7 @@ class QualityIssue(FlextModels.Entity):
     rule_code: str | None = None
 
     def __post_init__(self) -> None:
-        """Finalize dataclass initialization and set FlextModels.Entity id."""
+        """Finalize dataclass initialization and set FlextModels id."""
         super().__init__(id=f"issue_{self.tool}_{self.severity}")
 
     def validate_business_rules(self) -> FlextResult[None]:
@@ -369,7 +369,7 @@ class QualityGateway:
             for key, enabled, runner in checks:
                 if not enabled:
                     continue
-                result = runner()  # type: ignore[operator]
+                result = runner()
                 if not result.success:
                     quality_data[key] = False
                     issues.extend(result.value or [])
@@ -481,7 +481,7 @@ class QualityGateway:
                     )
                 )
             if mypy_api is None:
-                return (  # type: ignore[unreachable]
+                return (
                     FlextResult[list[QualityIssue]].ok([])
                     if self._is_relaxed()
                     else FlextResult[list[QualityIssue]].fail(
@@ -518,7 +518,7 @@ class QualityGateway:
                     )
                 )
             if pytest is None:
-                return (  # type: ignore[unreachable]
+                return (
                     FlextResult[list[QualityIssue]].ok([])
                     if self._is_relaxed()
                     else FlextResult[list[QualityIssue]].fail(

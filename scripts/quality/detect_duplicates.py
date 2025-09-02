@@ -1004,7 +1004,7 @@ class FlextDuplicateDetector:
         file_path: str,
         content: str,
     ) -> list[AntiPatternMatch]:
-        """Detecta modelos de domínio manuais que deveriam usar FlextModels.Entity."""
+        """Detecta modelos de domínio manuais que deveriam usar FlextModels."""
         patterns = []
         lines = content.split("\n")
 
@@ -1012,19 +1012,19 @@ class FlextDuplicateDetector:
         anti_pattern_indicators = [
             (
                 r"from\s+pydantic\s+import\s+BaseModel",
-                "Direct BaseModel import instead of FlextModels.Entity",
+                "Direct BaseModel import instead of FlextModels",
             ),
             (
                 r"class\s+\w+\(BaseModel\)",
-                "Manual BaseModel inheritance instead of FlextModels.Entity",
+                "Manual BaseModel inheritance instead of FlextModels",
             ),
             (
                 r"from\s+dataclasses\s+import\s+dataclass",
-                "Dataclass instead of FlextModels.Entity for domain objects",
+                "Dataclass instead of FlextModels for domain objects",
             ),
             (
                 r"@dataclass",
-                "Dataclass decorator instead of FlextModels.Entity fordomain objects",
+                "Dataclass decorator instead of FlextModels fordomain objects",
             ),
         ]
 
@@ -1037,8 +1037,7 @@ class FlextDuplicateDetector:
                 if re.search(pattern, line_content):
                     # Verificar se já está usando flext-core
                     if "from flext_core" in content and (
-                        "FlextModels.Entity" in content
-                        or "FlextModels.Value" in content
+                        "FlextModels" in content or "FlextModels" in content
                     ):
                         continue
 
@@ -1050,8 +1049,8 @@ class FlextDuplicateDetector:
                         AntiPatternMatch(
                             file_path=file_path,
                             pattern_type="Manual Domain Models",
-                            suggested_replacement="Use FlextModels.Entity ou"
-                            f"FlextModels.Value from flext-core: {description}",
+                            suggested_replacement="Use FlextModels ou"
+                            f"FlextModels from flext-core: {description}",
                             lines=(i + 1, i + 1),
                             content=line_content,
                             severity="medium",
@@ -1486,7 +1485,7 @@ class FlextDuplicateDetector:
 
         # Mostrar anti-patterns críticos
         if critical_patterns or high_patterns:
-            for pattern in (critical_patterns + high_patterns)[
+            for _pattern in (critical_patterns + high_patterns)[
                 :10
             ]:  # Mostrar apenas os primeiros 10
                 pass
@@ -1500,7 +1499,7 @@ class FlextDuplicateDetector:
                 by_type[pattern.pattern_type].append(pattern)
 
             for patterns in by_type.values():
-                for pattern in patterns[:3]:  # Mostrar apenas 3 exemplos por tipo
+                for _pattern in patterns[:3]:  # Mostrar apenas 3 exemplos por tipo
                     pass
 
         # Salvar relatório

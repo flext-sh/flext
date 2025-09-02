@@ -14,8 +14,6 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
-object
-
 from flext_core import FlextResult
 from scripts.core.script_registry import ScriptRegistry
 
