@@ -95,7 +95,7 @@ from rich.logging import RichHandler
 F = TypeVar("F", bound=Callable[..., object])
 
 
-class CLIConfig(FlextModels):
+class CLIConfig(FlextModels.Value):
     """Unified configuration for CLI applications using flext-core patterns."""
 
     # Output settings
@@ -115,6 +115,18 @@ class CLIConfig(FlextModels):
         default=Path.home() / ".flext",
         description="Config directory",
     )
+
+    def validate_business_rules(self) -> FlextResult[None]:
+        """Validate CLI configuration business rules."""
+        valid_formats = ["table", "json", "yaml", "csv"]
+        if self.output_format not in valid_formats:
+            return FlextResult[None].fail(f"Invalid output format: {self.output_format}")
+
+        valid_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+        if self.log_level.upper() not in valid_levels:
+            return FlextResult[None].fail(f"Invalid log level: {self.log_level}")
+
+        return FlextResult[None].ok(None)
 
 
 class BaseCLI(FlextDomainService[click.Group]):

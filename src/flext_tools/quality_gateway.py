@@ -75,12 +75,14 @@ import shutil
 import time
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Callable
 
 import pytest
-import ruff.__main__ as ruff_main
+import ruff.__main__
 from flext_core import FlextLogger, FlextModels, FlextResult
 from flext_core.container import FlextContainer
-from mypy import api as mypy_api
+from mypy import api
+from pydantic import Field
 
 from .colors import Colors, print_colored
 
@@ -98,8 +100,7 @@ class QualityCheckConfig:
     relaxed: bool = False
 
 
-@dataclass
-class QualityIssue(FlextModels):
+class QualityIssue(FlextModels.Value):
     """Individual quality issue entity for structured issue reporting.
 
     This entity represents a single quality issue detected during quality
@@ -116,16 +117,12 @@ class QualityIssue(FlextModels):
 
     """
 
-    tool: str
-    severity: str
-    message: str
-    file_path: str | None = None
-    line_number: int | None = None
-    rule_code: str | None = None
-
-    def __post_init__(self) -> None:
-        """Finalize dataclass initialization and set FlextModels id."""
-        super().__init__(id=f"issue_{self.tool}_{self.severity}")
+    tool: str = Field(..., description="Quality tool that detected the issue")
+    severity: str = Field(..., description="Issue severity level")
+    message: str = Field(..., description="Detailed issue description")
+    file_path: str | None = Field(None, description="File path where issue was detected")
+    line_number: int | None = Field(None, description="Line number where issue occurs")
+    rule_code: str | None = Field(None, description="Quality rule or error code identifier")
 
     def validate_business_rules(self) -> FlextResult[None]:
         """Validate business rules for quality issue."""
@@ -354,7 +351,7 @@ class QualityGateway:
             issues: list[QualityIssue] = []
 
             # Execute quality checks based on configuration via compact loop
-            checks: list[tuple[str, bool, object]] = [
+            checks: list[tuple[str, bool, Callable[[], FlextResult[list[QualityIssue]]]]] = [
                 ("lint_passed", config.enable_lint, self._run_lint_check),
                 ("types_passed", config.enable_types, self._run_type_check),
                 ("tests_passed", config.enable_tests, self._run_test_check),
@@ -428,7 +425,7 @@ class QualityGateway:
     def _run_lint_check(self) -> FlextResult[list[QualityIssue]]:
         """Run linting check with Ruff."""
         try:
-            if shutil.which("ruff") is None or ruff_main is None:
+            if shutil.which("ruff") is None or ruff.__main__ is None:
                 return (
                     FlextResult[list[QualityIssue]].ok([])
                     if self._is_relaxed()
@@ -445,7 +442,7 @@ class QualityGateway:
                     exit_code = 0
                     try:
                         exit_code = int(
-                            ruff_main.main(["check", str(self.workspace_path)]),
+                            ruff.__main__.main(["check", str(self.workspace_path)]),  # type: ignore[attr-defined]
                         )
                     except SystemExit as exc:
                         exit_code = int(getattr(exc, "code", 0) or 0)
@@ -459,7 +456,14 @@ class QualityGateway:
 
             # Parse Ruff output for issues (stdout text format)
             issues = [
-                QualityIssue(tool="ruff", severity="error", message=line.strip())
+                QualityIssue(
+                    tool="ruff", 
+                    severity="error", 
+                    message=line.strip(),
+                    file_path=None,
+                    line_number=None,
+                    rule_code=None
+                )
                 for line in stdout.getvalue().splitlines()
                 if line.strip()
             ]
@@ -480,7 +484,7 @@ class QualityGateway:
                         "mypy not found in PATH",
                     )
                 )
-            if mypy_api is None:
+            if api is None:
                 return (
                     FlextResult[list[QualityIssue]].ok([])
                     if self._is_relaxed()
@@ -489,14 +493,21 @@ class QualityGateway:
                     )
                 )
 
-            stdout, _stderr, exit_status = mypy_api.run(
+            stdout, _stderr, exit_status = api.run(
                 [str(self.workspace_path / "src")],
             )
             if int(exit_status) == 0:
                 return FlextResult[list[QualityIssue]].ok([])
 
             issues = [
-                QualityIssue(tool="mypy", severity="error", message=line.strip())
+                QualityIssue(
+                    tool="mypy", 
+                    severity="error", 
+                    message=line.strip(),
+                    file_path=None,
+                    line_number=None,
+                    rule_code=None
+                )
                 for line in stdout.splitlines()
                 if line.strip() and ":" in line
             ]
@@ -534,6 +545,9 @@ class QualityGateway:
                     tool="pytest",
                     severity="error",
                     message="Test failures detected",
+                    file_path=None,
+                    line_number=None,
+                    rule_code=None
                 ),
             ]
             return FlextResult[list[QualityIssue]].fail(
@@ -556,6 +570,9 @@ class QualityGateway:
                     tool="coverage",
                     severity="warning",
                     message=f"Coverage {coverage:.1f}% below threshold {threshold:.1f}%",
+                    file_path=None,
+                    line_number=None,
+                    rule_code=None
                 ),
             ]
 
