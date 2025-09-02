@@ -15,8 +15,8 @@ import tomllib
 from datetime import UTC, datetime
 from pathlib import Path
 
-import mkdocs.__main__ as mkdocs_main
-from flext_core import FlextResult
+import mkdocs.__main__
+from flext_core import FlextLogger, FlextResult
 
 from .discovery_base import DependencyDiscovery
 from .documentation_templates import TemplateManager
@@ -45,7 +45,8 @@ class DocumentationGenerator(FlextScript):
         self.mkdocs_config = project_root / "mkdocs.yml"
         self.template_manager = TemplateManager()
         self.discovery = DependencyDiscovery()
-        # Note: logger is provided by FlextScript base class
+        # Explicitly initialize logger from flext-core
+        self.logger = FlextLogger(__name__)
 
     @property
     def metadata(self) -> ScriptMetadata:
@@ -952,7 +953,7 @@ print(f"Pipeline status: {result.status}")"""
 
         try:
             # Prefer in-process mkdocs entrypoint
-            if mkdocs_main is None:
+            if mkdocs.__main__ is None:
                 return FlextResult[dict[str, object]].fail(
                     "MkDocs build API unavailable: mkdocs not installed"
                 )
@@ -965,7 +966,7 @@ print(f"Pipeline status: {result.status}")"""
             ):
                 try:
                     exit_code = int(
-                        mkdocs_main.cli(
+                        mkdocs.__main__.cli(
                             ["build", "-f", str(self.mkdocs_config), "--clean"],
                         ),
                     )
@@ -994,8 +995,8 @@ print(f"Pipeline status: {result.status}")"""
         try:
             # Prefer programmatic serve via mkdocs if available
             try:
-                if mkdocs_main is not None:
-                    mkdocs_main.cli(["serve", "-f", str(self.mkdocs_config)])
+                if mkdocs.__main__ is not None:
+                    mkdocs.__main__.cli(["serve", "-f", str(self.mkdocs_config)])
                     return
             except Exception as e:
                 self.logger.debug(f"mkdocs python entrypoint not available: {e}")

@@ -134,7 +134,7 @@ class SecurityViolation:
         }
 
 
-class ScanConfig(FlextModels):
+class ScanConfig(FlextModels.Value):
     """Configuration for security scanning operations using flext-core patterns."""
 
     target_paths: list[str]
