@@ -51,6 +51,8 @@ import click
 from flext_core import FlextResult
 from rich.console import Console
 
+from .quality_gateway import QualityGateway
+
 # Optional flext_cli imports - handle missing dependency gracefully
 FLEXT_CLI_AVAILABLE = False
 FlextCliConfig: type[object] | None = None
@@ -60,9 +62,15 @@ cli_create_table: Callable[..., object] | None = None
 
 # Try to import flext_cli components with proper type ignores for untyped library
 with contextlib.suppress(ImportError, AttributeError, SyntaxError):
-    from flext_cli.cli_utils import cli_create_table as _cli_create_table  # type: ignore[import-untyped]
-    from flext_cli.config import FlextCliConfig as _FlextCliConfig  # type: ignore[import-untyped]
-    from flext_cli.context import FlextCliContext as _FlextCliContext  # type: ignore[import-untyped]
+    from flext_cli.cli_utils import (
+        cli_create_table as _cli_create_table,  # type: ignore[import-untyped]
+    )
+    from flext_cli.config import (
+        FlextCliConfig as _FlextCliConfig,  # type: ignore[import-untyped]
+    )
+    from flext_cli.context import (
+        FlextCliContext as _FlextCliContext,  # type: ignore[import-untyped]
+    )
 
     cli_create_table = _cli_create_table
     FlextCliConfig = _FlextCliConfig
@@ -128,13 +136,13 @@ def print_warning(
 
 # Try to import cli_validate_inputs from flext_cli if available
 with contextlib.suppress(ImportError, AttributeError):
-    from flext_cli import cli_validate_inputs as _cli_validate_inputs  # type: ignore[import-untyped]
+    from flext_cli import (
+        cli_validate_inputs as _cli_validate_inputs,  # type: ignore[import-untyped]
+    )
     cli_validate_inputs = _cli_validate_inputs
 
     # Print functions use fallback implementations defined above
     # They are compatible with both single and dual argument patterns
-
-from .quality_gateway import QualityGateway
 
 _default_console = Console()
 
@@ -220,9 +228,9 @@ def main(
         ):
             # Use flext-cli FlextCliConfig with complete delegation
             config = FlextCliConfig()
-            if hasattr(config, 'profile'):
+            if hasattr(config, "profile"):
                 config.profile = profile  # type: ignore[attr-defined]
-            if hasattr(config, 'debug'):
+            if hasattr(config, "debug"):
                 config.debug = debug  # type: ignore[attr-defined]
 
             # Create CLIContext using flext-cli patterns - try different constructor patterns
@@ -437,9 +445,9 @@ def scripts(ctx: click.Context, category: str | None, *, list_only: bool) -> Non
                         cast("list[object]", table_data), title=f"Scripts in {category}"
                     )
                     # Type assertion for FlextResult-like object
-                    if hasattr(result, 'success') and getattr(result, 'success', False):
-                        if hasattr(result, 'value'):
-                            _default_console.print(getattr(result, 'value'))
+                    if (hasattr(result, "success") and getattr(result, "success", False) and
+                        hasattr(result, "value")):
+                        _default_console.print(getattr(result, "value"))
                 elif table_data:
                     # Fallback if cli_create_table not available
                     for script_info in table_data:
@@ -637,9 +645,9 @@ def info(ctx: click.Context, *, detailed: bool) -> None:
                     data=project_data, title="FLEXT Ecosystem Projects"
                 )
                 # Type assertion for FlextResult-like object
-                if hasattr(result, 'success') and getattr(result, 'success', False):
-                    if hasattr(result, 'value'):
-                        _default_console.print(getattr(result, 'value'))
+                if (hasattr(result, "success") and getattr(result, "success", False) and
+                    hasattr(result, "value")):
+                    _default_console.print(getattr(result, "value"))
             else:
                 # Fallback if cli_create_table not available
                 for project in projects:
@@ -657,15 +665,21 @@ debug_commands: click.Group | None = None
 
 # Import flext_cli commands with type ignores for untyped modules
 with contextlib.suppress(ImportError, AttributeError, SyntaxError):
-    from flext_cli.commands_auth import auth as _auth_commands  # type: ignore[import-untyped]
+    from flext_cli.commands_auth import (
+        auth as _auth_commands,  # type: ignore[import-untyped]
+    )
     auth_commands = _auth_commands
 
 with contextlib.suppress(ImportError, AttributeError, SyntaxError):
-    from flext_cli.commands_config import config as _config_commands  # type: ignore[import-untyped]
+    from flext_cli.commands_config import (
+        config as _config_commands,  # type: ignore[import-untyped]
+    )
     config_commands = _config_commands
 
 with contextlib.suppress(ImportError, AttributeError, SyntaxError):
-    from flext_cli.commands_debug import debug_cmd as _debug_commands  # type: ignore[import-untyped]
+    from flext_cli.commands_debug import (
+        debug_cmd as _debug_commands,  # type: ignore[import-untyped]
+    )
     debug_commands = _debug_commands
 
 # Add commands if they were successfully imported, otherwise add fallbacks
