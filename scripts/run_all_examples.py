@@ -14,6 +14,7 @@ Usage:
 Notes:
 - Per-project "run all" scripts that already exist (e.g., client-a-oud-mig/examples/run_all_examples.py)
   are preserved and can still be used directly. This script is an orchestrator across the repo.
+
 """
 
 from __future__ import annotations
@@ -22,10 +23,9 @@ import argparse
 import os
 import subprocess
 import sys
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
-
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -147,4 +147,3 @@ def main(argv: Iterable[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
