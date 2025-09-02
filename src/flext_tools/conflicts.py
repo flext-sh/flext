@@ -28,7 +28,7 @@ MIN_PROJECTS_FOR_ANALYSIS = (
 logger = FlextLogger(__name__)
 
 
-class ConflictAnalysisResult(FlextModels.BaseConfig):
+class ConflictAnalysisResult(FlextModels):
     """Comprehensive dependency conflict analysis result with enterprise modeling.
 
     Represents the complete outcome of dependency conflict analysis across

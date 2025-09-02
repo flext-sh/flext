@@ -313,6 +313,8 @@ lint.isort.known-first-party = ["flext", "flext_tools"]
 # Basic configuration
 pythonVersion = "3.13"
 pythonPlatform = "Linux"
+venvPath = "."
+venv = ".venv"
 
 # Include and exclude patterns - workspace-wide
 include = [
@@ -354,18 +356,25 @@ typeCheckingMode = "basic"
 # reportUnusedVariable = true
 
 # Execution environments for different project types - comprehensive coverage
- 
+
 # Allow wildcard imports in __init__.py files across all projects  
 [[tool.pyright.executionEnvironments]]
 root = "."
-extraPaths = ["src"]
+extraPaths = ["src", "**/src"]
 include = ["**/__init__.py"]
 reportWildcardImportFromLibrary = false
 
 # Test files environment - disable private usage checking
 [[tool.pyright.executionEnvironments]]
 root = "."
-extraPaths = ["examples", "scripts", "tests"]
+extraPaths = [
+    "examples",
+    "scripts",
+    "tests",
+    "**/examples",
+    "**/scripts",
+    "**/tests",
+]
 reportImplicitRelativeImport = false
 reportPrivateUsage = false
 

@@ -16,6 +16,8 @@ from pathlib import Path
 import pytest
 from mypy import api as mypy_api
 
+from flext_tools import Colors, print_colored
+
 # Import ruff dynamically (we call it via import_module to allow runtime fallback)
 _ruff_mod = import_module("ruff.__main__")
 ruff_main = getattr(_ruff_mod, "main", None)

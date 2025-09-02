@@ -87,8 +87,8 @@ MIN_PROJECTS_HIGH_SEVERITY = 2
 logger = FlextLogger(__name__)
 
 
-class VersionCompatibilityResult(FlextModels.BaseConfig):
-    """Version compatibility analysis result using FlextModels.Entity for type safety.
+class VersionCompatibilityResult(FlextModels):
+    """Version compatibility analysis result using FlextModels for type safety.
 
     This entity represents the result of version compatibility analysis between
     two package version specifications, providing structured data for compatibility
