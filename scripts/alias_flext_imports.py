@@ -38,10 +38,26 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
+import sys
+
+# Ensure local src/ is on sys.path for flext_tools imports when running from repo root
+_ROOT = Path(__file__).resolve().parents[1]
+_SRC = _ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
+
 from flext_core import FlextLogger
 
 from flext_tools.backup import BackupManager
 from flext_tools.paths import should_ignore_path
+from flext_tools.quality_gateway import (
+    QualityGateway,
+    QualityCheckConfig,
+    all_quality_checks_passed,
+    get_quality_failure_summary,
+    get_quality_issues,
+)
+from flext_tools.rollback import RollbackManager, ConfirmationMode
 
 NAME_MAP: dict[str, str] = {
     "FlextModels": "m",
@@ -230,20 +246,32 @@ def main(argv: Iterable[str] | None = None) -> int:
     ap.add_argument(
         "--backup", action="store_true", help="Backup files before applying changes"
     )
+    ap.add_argument(
+        "--quality-guard",
+        action="store_true",
+        help="Run ruff+mypy before/after and rollback if quality degrades",
+    )
+    ap.add_argument(
+        "--relaxed",
+        action="store_true",
+        help="Relaxed guard: if tools are missing, skip failing instead of blocking",
+    )
     args = ap.parse_args(list(argv) if argv is not None else None)
 
     root = Path(args.path).resolve()
     plans: list[FilePlan] = []
+    candidates: list[Path] = []
 
-    backup_mgr = BackupManager() if args.apply and args.backup else None
+    # First pass: compute plans (dry), do not write
     for py in root.rglob("*.py"):
         if should_ignore_path(py):
             continue
         if args.project and args.project.lower() not in str(py).lower():
             continue
-        plan = process_file(py, apply=args.apply, backup=backup_mgr)
+        plan = process_file(py, apply=False, backup=None)
         if plan is not None:
             plans.append(plan)
+            candidates.append(py)
 
     if not plans:
         print("No changes detected")
@@ -259,6 +287,84 @@ def main(argv: Iterable[str] | None = None) -> int:
             print(
                 f"- {p.path}: replacements={changed}, removed_imports={p.removed_import_lines}, added_import={p.added_import}"
             )
+
+    if not args.apply:
+        return 0
+
+    # Optional quality baseline
+    before_ok = True
+    before_issues = 0
+    gw: QualityGateway | None = None
+    cfg: QualityCheckConfig | None = None
+    if args.quality_guard:
+        print("\n🔒 Quality guard baseline (ruff+mypy)...")
+        gw = QualityGateway(workspace_path=root)
+        cfg = QualityCheckConfig(
+            enable_lint=True,
+            enable_types=True,
+            enable_tests=False,
+            enable_coverage=False,
+            enable_security=False,
+            relaxed=args.relaxed,
+        )
+        res_before = gw.run_quality_checks_safe(cfg)
+        if not res_before.success:
+            print(f"❌ Baseline check failed: {res_before.error}")
+            return 2
+        data_b = res_before.value
+        before_ok = all_quality_checks_passed(data_b)
+        before_issues = len(get_quality_issues(data_b))
+        print(
+            f"Baseline: passed={before_ok}, issues={before_issues}; {get_quality_failure_summary(data_b)}"
+        )
+
+    # Apply changes with backup
+    backup_mgr = BackupManager() if args.backup else None
+    applied = 0
+    for py in candidates:
+        plan = process_file(py, apply=True, backup=backup_mgr)
+        if plan is not None:
+            applied += 1
+
+    print(f"\nApplied changes to {applied} files")
+
+    if args.quality_guard:
+        assert gw is not None and cfg is not None
+        print("🔒 Quality guard after changes...")
+        res_after = gw.run_quality_checks_safe(cfg)
+        if not res_after.success:
+            print(f"❌ Post-change check failed: {res_after.error}")
+            if backup_mgr is not None:
+                try:
+                    rb = RollbackManager(backup_dir=backup_mgr.backup_dir)
+                    rb.rollback_session(
+                        backup_mgr.session_id,
+                        confirmation_mode=ConfirmationMode.AUTO_CONFIRM,
+                    )
+                    print("Rollback completed")
+                except Exception as e:
+                    print(f"⚠️ Rollback failed: {e}")
+            return 3
+        data_a = res_after.value
+        after_ok = all_quality_checks_passed(data_a)
+        after_issues = len(get_quality_issues(data_a))
+        print(
+            f"After:    passed={after_ok}, issues={after_issues}; {get_quality_failure_summary(data_a)}"
+        )
+        degraded = (after_issues > before_issues) or (before_ok and not after_ok)
+        if degraded:
+            print("❌ Quality degraded. Rolling back changes...")
+            if backup_mgr is not None:
+                try:
+                    rb = RollbackManager(backup_dir=backup_mgr.backup_dir)
+                    rb.rollback_session(
+                        backup_mgr.session_id,
+                        confirmation_mode=ConfirmationMode.AUTO_CONFIRM,
+                    )
+                    print("Rollback completed")
+                except Exception as e:
+                    print(f"⚠️ Rollback failed: {e}")
+            return 4
 
     return 0
 
