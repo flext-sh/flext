@@ -120,9 +120,13 @@ class QualityIssue(FlextModels.Value):
     tool: str = Field(..., description="Quality tool that detected the issue")
     severity: str = Field(..., description="Issue severity level")
     message: str = Field(..., description="Detailed issue description")
-    file_path: str | None = Field(None, description="File path where issue was detected")
+    file_path: str | None = Field(
+        None, description="File path where issue was detected"
+    )
     line_number: int | None = Field(None, description="Line number where issue occurs")
-    rule_code: str | None = Field(None, description="Quality rule or error code identifier")
+    rule_code: str | None = Field(
+        None, description="Quality rule or error code identifier"
+    )
 
     def validate_business_rules(self) -> FlextResult[None]:
         """Validate business rules for quality issue."""
@@ -351,7 +355,9 @@ class QualityGateway:
             issues: list[QualityIssue] = []
 
             # Execute quality checks based on configuration via compact loop
-            checks: list[tuple[str, bool, Callable[[], FlextResult[list[QualityIssue]]]]] = [
+            checks: list[
+                tuple[str, bool, Callable[[], FlextResult[list[QualityIssue]]]]
+            ] = [
                 ("lint_passed", config.enable_lint, self._run_lint_check),
                 ("types_passed", config.enable_types, self._run_type_check),
                 ("tests_passed", config.enable_tests, self._run_test_check),
@@ -442,7 +448,7 @@ class QualityGateway:
                     exit_code = 0
                     try:
                         exit_code = int(
-                            ruff.__main__.main(["check", str(self.workspace_path)]),  # type: ignore[attr-defined]
+                            ruff.__main__.main(["check", str(self.workspace_path)]),
                         )
                     except SystemExit as exc:
                         exit_code = int(getattr(exc, "code", 0) or 0)
@@ -462,7 +468,7 @@ class QualityGateway:
                     message=line.strip(),
                     file_path=None,
                     line_number=None,
-                    rule_code=None
+                    rule_code=None,
                 )
                 for line in stdout.getvalue().splitlines()
                 if line.strip()
@@ -506,7 +512,7 @@ class QualityGateway:
                     message=line.strip(),
                     file_path=None,
                     line_number=None,
-                    rule_code=None
+                    rule_code=None,
                 )
                 for line in stdout.splitlines()
                 if line.strip() and ":" in line
@@ -547,7 +553,7 @@ class QualityGateway:
                     message="Test failures detected",
                     file_path=None,
                     line_number=None,
-                    rule_code=None
+                    rule_code=None,
                 ),
             ]
             return FlextResult[list[QualityIssue]].fail(
@@ -572,7 +578,7 @@ class QualityGateway:
                     message=f"Coverage {coverage:.1f}% below threshold {threshold:.1f}%",
                     file_path=None,
                     line_number=None,
-                    rule_code=None
+                    rule_code=None,
                 ),
             ]
 

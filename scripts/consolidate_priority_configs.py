@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 def consolidate_client-a_config() -> bool | None:
-    """Consolidate client-aOudMig config to use FLEXT patterns."""
+    """Consolidate client-aMig config to use FLEXT patterns."""
     config_file = "./client-a-oud-mig/src/client-a_oud_mig/config.py"
 
     try:
