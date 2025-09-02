@@ -38,33 +38,28 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
-import sys
-
-# Ensure local src/ is on sys.path for flext_tools imports when running from repo root
-_ROOT = Path(__file__).resolve().parents[1]
-_SRC = _ROOT / "src"
-if str(_SRC) not in sys.path:
-    sys.path.insert(0, str(_SRC))
-
 from flext_core import FlextLogger
 
 from flext_tools.backup import BackupManager
 from flext_tools.paths import should_ignore_path
 from flext_tools.quality_gateway import (
-    QualityGateway,
     QualityCheckConfig,
+    QualityGateway,
     all_quality_checks_passed,
     get_quality_failure_summary,
     get_quality_issues,
 )
-from flext_tools.rollback import RollbackManager, ConfirmationMode
+from flext_tools.rollback import ConfirmationMode, RollbackManager
 
 NAME_MAP: dict[str, str] = {
-    "FlextModels": "m",
-    "FlextTypes": "t",
-    "FlextConstants": "c",
-    "FlextFields": "f",
-    "FlextProtocols": "p",
+    # Aliases must be UPPERCASE (and specific for commands)
+    "FlextModels": "M",
+    "FlextTypes": "T",
+    "FlextConstants": "C",
+    "FlextFields": "F",
+    "FlextProtocols": "P",
+    "FlextResult": "R",
+    "FlextCommands": "Cmd",
 }
 
 ALIAS_ORDER = [
@@ -73,7 +68,11 @@ ALIAS_ORDER = [
     "FlextConstants",
     "FlextFields",
     "FlextProtocols",
+    "FlextResult",
+    "FlextCommands",
 ]
+
+SYMBOL_BY_ALIAS: dict[str, str] = {alias: sym for sym, alias in NAME_MAP.items()}
 
 
 @dataclass
@@ -125,63 +124,46 @@ def tokenize_replace_names(
 FLEXT_IMPORT_RE = re.compile(r"^\s*from\s+flext_core(?:\.[\w_]+)?\s+import\s+(.+)$")
 
 
-def rebuild_imports(code: str, used_aliases: set[str]) -> tuple[str, int, bool]:
-    """Remove existing flext_core symbol imports for target names and add aliased import.
+def rebuild_imports(code: str, sym_to_apply: dict[str, str]) -> tuple[str, int, bool]:
+    """Rewrite flext_core import lines in place, adding aliases without moving lines.
 
-    Returns: (new_code, removed_lines_count, added_import_bool)
+    Returns: (new_code, removed_import_lines, added_import_bool)
     """
     lines = code.splitlines()
-    kept: list[str] = []
+    i = 0
+    changed_any = False
     removed = 0
+    while i < len(lines):
+        line = lines[i]
+        # Detect start of a flext_core import block
+        if FLEXT_IMPORT_RE.match(line):
+            block_start = i
+            block_end = i
+            # Detect multiline using parentheses
+            text = line
+            open_paren = line.count("(") - line.count(")")
+            while open_paren > 0 and block_end + 1 < len(lines):
+                block_end += 1
+                text += "\n" + lines[block_end]
+                open_paren += lines[block_end].count("(") - lines[block_end].count(")")
 
-    # Remove lines that import any of our target symbols from flext_core or submodules
-    for line in lines:
-        m = FLEXT_IMPORT_RE.match(line)
-        if not m:
-            kept.append(line)
-            continue
-        imported = m.group(1)
-        # If any target symbol is present, drop this line
-        if any(sym in imported for sym in NAME_MAP):
-            removed += 1
-            continue
-        kept.append(line)
+            # Apply alias injection within this block
+            new_text, applied = rewrite_import_block_preserve(text, sym_to_apply)
+            if applied:
+                changed_any = True
+                # Replace block lines
+                new_lines_blk = new_text.splitlines()
+                lines[block_start : block_end + 1] = new_lines_blk
+                # Adjust index to end of new block
+                i = block_start + len(new_lines_blk)
+                continue
+        i += 1
 
-    if not used_aliases:
-        return "\n".join(kept) + ("\n" if code.endswith("\n") else ""), removed, False
-
-    # Build consolidated aliased import line with only used aliases and in fixed order
-    specs: list[str] = []
-    for sym in ALIAS_ORDER:
-        alias = NAME_MAP[sym]
-        if alias in used_aliases:
-            specs.append(f"{sym} as {alias}")
-    import_line = f"from flext_core import {', '.join(specs)}"
-
-    # Find insertion point: after module docstring and future imports
-    idx = 0
-    if kept and kept[0].lstrip().startswith("#!/"):
-        idx = 1
-    # Skip module docstring
-    if idx < len(kept) and kept[idx].lstrip().startswith('"""'):
-        # Advance until closing triple quotes
-        i = idx
-        triple = '"""'
-        if kept[idx].count(triple) >= 2:
-            idx = i + 1
-        else:
-            i += 1
-            while i < len(kept):
-                if triple in kept[i]:
-                    idx = i + 1
-                    break
-                i += 1
-    # Skip future imports
-    while idx < len(kept) and kept[idx].startswith("from __future__ import"):
-        idx += 1
-
-    kept.insert(idx, import_line)
-    return "\n".join(kept) + ("\n" if code.endswith("\n") else ""), removed, True
+    return (
+        "\n".join(lines) + ("\n" if code.endswith("\n") else ""),
+        removed,
+        changed_any,
+    )
 
 
 def detect_used_aliases(code: str) -> set[str]:
@@ -193,11 +175,88 @@ def detect_used_aliases(code: str) -> set[str]:
     return used
 
 
+def scan_existing_import_aliases(
+    code_lines: list[str],
+) -> tuple[dict[str, str], dict[str, str]]:
+    """Return mapping symbol->alias already present in import lines to avoid duplicates.
+
+    Also returns alias->symbol via reverse mapping, embedded in the values string as 'alias|symbol'.
+    For simplicity, we only track flext_core imports.
+    """
+    sym_to_alias: dict[str, str] = {}
+    alias_to_sym: dict[str, str] = {}
+    import_re = re.compile(r"^\s*from\s+flext_core(?:\.[\w_]+)?\s+import\s+(.+)$")
+    for line in code_lines:
+        m = import_re.match(line)
+        if not m:
+            continue
+        names = m.group(1)
+        # Split by comma
+        parts = [p.strip() for p in names.split(",")]
+        for p in parts:
+            if not p:
+                continue
+            if " as " in p:
+                name, alias = [x.strip() for x in p.split(" as ", 1)]
+                if name in NAME_MAP:
+                    sym_to_alias[name] = alias
+                    alias_to_sym[alias] = name
+    # ensure no duplicates beyond mapping
+    return sym_to_alias, alias_to_sym
+
+
+def rewrite_import_line_preserve(
+    line: str, sym_to_apply: dict[str, str]
+) -> tuple[str, dict[str, str]]:
+    """Rewrite a single 'from flext_core[.sub] import ...' line, adding aliases for target symbols.
+
+    Returns modified line and dict of symbol->alias actually applied in this line.
+    Preserves module path and overall structure.
+    """
+    applied: dict[str, str] = {}
+    m = re.match(r"^(\s*from\s+flext_core(?:\.[\w_]+)?\s+import\s+)(.+?)(\s*)$", line)
+    if not m:
+        return line, applied
+    prefix, names, suffix = m.groups()
+    parts = [p.strip() for p in names.split(",")]
+    new_parts: list[str] = []
+    for p in parts:
+        if not p:
+            continue
+        base = p
+        alias_existing = None
+        if " as " in p:
+            base, alias_existing = [x.strip() for x in p.split(" as ", 1)]
+        if base in sym_to_apply and not alias_existing:
+            alias = sym_to_apply[base]
+            new_parts.append(f"{base} as {alias}")
+            applied[base] = alias
+        else:
+            new_parts.append(p)
+    return f"{prefix}{', '.join(new_parts)}{suffix}", applied
+
+
+def rewrite_import_block_preserve(
+    block_text: str, sym_to_apply: dict[str, str]
+) -> tuple[str, dict[str, str]]:
+    """Rewrite a multi-line import block preserving formatting and positions.
+
+    It rewrites each line using rewrite_import_line_preserve.
+    """
+    applied_total: dict[str, str] = {}
+    out_lines: list[str] = []
+    for ln in block_text.splitlines():
+        new_ln, applied = rewrite_import_line_preserve(ln, sym_to_apply)
+        out_lines.append(new_ln)
+        applied_total.update(applied)
+    return "\n".join(out_lines), applied_total
+
+
 logger = FlextLogger(__name__)
 
 
 def process_file(
-    path: Path, *, apply: bool, backup: BackupManager | None
+    path: Path, *, apply: bool, backup: BackupManager | None, ast_check: bool = False
 ) -> FilePlan | None:
     try:
         code = path.read_text(encoding="utf-8")
@@ -210,10 +269,56 @@ def process_file(
         return None
 
     import_ranges = collect_import_ranges(tree)
-    new_code, replaced_counts = tokenize_replace_names(code, import_ranges)
+    # Scan for existing aliases to avoid duplicates and conflicts
+    sym_to_alias_existing, alias_to_sym_existing = scan_existing_import_aliases(
+        code.splitlines()
+    )
+    # Ban symbols whose desired alias collides with existing alias on different symbol
+    banned_symbols = set()
+    for sym, alias in NAME_MAP.items():
+        if alias in alias_to_sym_existing and alias_to_sym_existing[alias] != sym:
+            banned_symbols.add(sym)
+        if sym in sym_to_alias_existing and sym_to_alias_existing[sym] != alias:
+            banned_symbols.add(sym)
 
-    used_aliases = detect_used_aliases(new_code)
-    rebuilt_code, removed_count, added_import = rebuild_imports(new_code, used_aliases)
+    # Perform token replacements except for banned symbols
+    replaced_counts: dict[str, int] = dict.fromkeys(NAME_MAP, 0)
+    toks_in = list(tokenize.generate_tokens(io.StringIO(code).readline))
+    toks_out: list[tokenize.TokenInfo] = []
+    for tok in toks_in:
+        if tok.type == tokenize.NAME and tok.string in NAME_MAP:
+            sym = tok.string
+            # Nunca substituir dentro de linhas de import
+            if (
+                not line_in_ranges(tok.start[0], import_ranges)
+                and sym not in banned_symbols
+            ):
+                alias = NAME_MAP[sym]
+                tok = tokenize.TokenInfo(tok.type, alias, tok.start, tok.end, tok.line)
+                replaced_counts[sym] = replaced_counts.get(sym, 0) + 1
+        toks_out.append(tok)
+    partially_rewritten = tokenize.untokenize(toks_out)
+
+    # Build sym_to_apply map based on NAME_MAP excluding banned and already aliased
+    sym_to_apply: dict[str, str] = {}
+    for sym, alias in NAME_MAP.items():
+        if sym in banned_symbols:
+            continue
+        # If already has an alias (any), skip changing it
+        if sym_to_alias_existing.get(sym):
+            continue
+        sym_to_apply[sym] = alias
+
+    rebuilt_code, removed_count, added_import = rebuild_imports(
+        partially_rewritten, sym_to_apply
+    )
+
+    if ast_check:
+        try:
+            ast.parse(rebuilt_code)
+        except Exception:
+            # If AST fails, skip this file change
+            return None
 
     if rebuilt_code != code:
         if apply:
@@ -268,7 +373,7 @@ def main(argv: Iterable[str] | None = None) -> int:
             continue
         if args.project and args.project.lower() not in str(py).lower():
             continue
-        plan = process_file(py, apply=False, backup=None)
+        plan = process_file(py, apply=False, backup=None, ast_check=True)
         if plan is not None:
             plans.append(plan)
             candidates.append(py)
@@ -322,14 +427,15 @@ def main(argv: Iterable[str] | None = None) -> int:
     backup_mgr = BackupManager() if args.backup else None
     applied = 0
     for py in candidates:
-        plan = process_file(py, apply=True, backup=backup_mgr)
+        plan = process_file(py, apply=True, backup=backup_mgr, ast_check=True)
         if plan is not None:
             applied += 1
 
     print(f"\nApplied changes to {applied} files")
 
     if args.quality_guard:
-        assert gw is not None and cfg is not None
+        assert gw is not None
+        assert cfg is not None
         print("🔒 Quality guard after changes...")
         res_after = gw.run_quality_checks_safe(cfg)
         if not res_after.success:

@@ -73,6 +73,10 @@ lint.per-file-ignores."**/examples/**" = [
     "EXE001",
     "INP001",
     "N999",
+    "I001",   # import sorting in examples isn't critical
+    "F401",   # unused imports in examples are acceptable
+    "F821",   # undefined names in pseudo-code examples
+    "PLR2004",# magic numbers in examples
     "S105",
     "S106",
     "T201",
