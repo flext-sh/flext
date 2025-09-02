@@ -90,6 +90,9 @@ from pydantic import Field
 # Initialize logger
 logger = FlextLogger(__name__)
 
+# Constants
+MAX_PIPELINE_LIMIT = 100
+
 
 # Commands
 class CreatePipelineCommand(FlextModels.Value):
@@ -132,13 +135,13 @@ class GetPipelineQuery(FlextModels.Value):
 class ListPipelinesQuery(FlextModels.Value):
     """List pipelines query."""
 
-    limit: int = Field(10, description="Number of results", ge=1, le=100)
+    limit: int = Field(10, description="Number of results", ge=1, le=MAX_PIPELINE_LIMIT)
     offset: int = Field(0, description="Offset for pagination", ge=0)
 
     def validate_business_rules(self) -> FlextResult[None]:
         """Validate list pipelines query business rules."""
-        if self.limit <= 0 or self.limit > 100:
-            return FlextResult[None].fail("Limit must be between 1 and 100")
+        if self.limit <= 0 or self.limit > MAX_PIPELINE_LIMIT:
+            return FlextResult[None].fail(f"Limit must be between 1 and {MAX_PIPELINE_LIMIT}")
         if self.offset < 0:
             return FlextResult[None].fail("Offset cannot be negative")
         return FlextResult[None].ok(None)
