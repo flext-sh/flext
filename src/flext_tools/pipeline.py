@@ -92,30 +92,56 @@ logger = FlextLogger(__name__)
 
 
 # Commands
-class CreatePipelineCommand(FlextModels):
+class CreatePipelineCommand(FlextModels.Value):
     """Create pipeline command."""
 
     name: str = Field(..., description="Pipeline name", max_length=100)
 
+    def validate_business_rules(self) -> FlextResult[None]:
+        """Validate pipeline creation business rules."""
+        if not self.name.strip():
+            return FlextResult[None].fail("Pipeline name cannot be empty")
+        return FlextResult[None].ok(None)
 
-class ExecutePipelineCommand(FlextModels):
+
+class ExecutePipelineCommand(FlextModels.Value):
     """Execute pipeline command."""
 
     pipeline_id: str = Field(..., description="Pipeline ID")
 
+    def validate_business_rules(self) -> FlextResult[None]:
+        """Validate pipeline execution business rules."""
+        if not self.pipeline_id.strip():
+            return FlextResult[None].fail("Pipeline ID cannot be empty")
+        return FlextResult[None].ok(None)
+
 
 # Queries
-class GetPipelineQuery(FlextModels):
+class GetPipelineQuery(FlextModels.Value):
     """Get pipeline query."""
 
     pipeline_id: str = Field(..., description="Pipeline ID")
 
+    def validate_business_rules(self) -> FlextResult[None]:
+        """Validate pipeline query business rules."""
+        if not self.pipeline_id.strip():
+            return FlextResult[None].fail("Pipeline ID cannot be empty")
+        return FlextResult[None].ok(None)
 
-class ListPipelinesQuery(FlextModels):
+
+class ListPipelinesQuery(FlextModels.Value):
     """List pipelines query."""
 
     limit: int = Field(10, description="Number of results", ge=1, le=100)
     offset: int = Field(0, description="Offset for pagination", ge=0)
+
+    def validate_business_rules(self) -> FlextResult[None]:
+        """Validate list pipelines query business rules."""
+        if self.limit <= 0 or self.limit > 100:
+            return FlextResult[None].fail("Limit must be between 1 and 100")
+        if self.offset < 0:
+            return FlextResult[None].fail("Offset cannot be negative")
+        return FlextResult[None].ok(None)
 
 
 # Handlers (simplified stubs)

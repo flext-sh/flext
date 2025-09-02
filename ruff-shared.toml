@@ -21,6 +21,7 @@ format.line-ending = "lf"
 format.quote-style = "double"
 line-length = 88
 lint.ignore = [
+    "B009",
     "B010",
     "B017",
     "BLE001",
@@ -72,6 +73,8 @@ lint.per-file-ignores."**/examples/**" = [
     "EXE001",
     "INP001",
     "N999",
+    "S105",
+    "S106",
     "T201",
     "TID252",
 ]

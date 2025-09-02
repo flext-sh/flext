@@ -79,8 +79,9 @@ from __future__ import annotations
 import re
 import tomllib
 from pathlib import Path
+from typing import cast
 
-import poetry.console as poetry_console
+import poetry.console
 from flext_core import FlextLogger, FlextModels, FlextResult
 from pydantic import Field
 
@@ -94,7 +95,7 @@ logger = FlextLogger(__name__)
 # to maintain consistency and avoid duplication of generic result functionality
 
 
-class ProjectInfo(FlextModels):
+class ProjectInfo(FlextModels.Value):
     """Poetry project information.
 
     Contains project metadata extracted from pyproject.toml.
@@ -108,6 +109,16 @@ class ProjectInfo(FlextModels):
         default=0,
         description="Number of development dependencies",
     )
+
+    def validate_business_rules(self) -> FlextResult[None]:
+        """Validate project info business rules."""
+        if not self.name or self.name == "unknown":
+            return FlextResult[None].fail("Project name must be specified")
+
+        if self.dependency_count < 0 or self.dev_dependency_count < 0:
+            return FlextResult[None].fail("Dependency counts cannot be negative")
+
+        return FlextResult[None].ok(None)
 
 
 # REMOVED: WorkspaceValidationResult class (violation of DRY principle)
@@ -432,10 +443,10 @@ class PoetryValidator:
         tool_section = data.get("tool", {})
         if not isinstance(tool_section, dict):
             return True, []
-        poetry: object = tool_section.get("poetry", {})
+        poetry: dict[str, object] = cast(dict[str, object], tool_section.get("poetry", {}))
 
-        # Check main dependencies
-        deps: object = poetry.get("dependencies", {}) if hasattr(poetry, "get") else {}
+        # Check main dependencies  
+        deps: dict[str, object] = cast(dict[str, object], poetry.get("dependencies", {})) if isinstance(poetry, dict) else {}
         if hasattr(deps, "items"):
             for name, spec in deps.items():
                 if name == "python":
@@ -450,11 +461,11 @@ class PoetryValidator:
                     issues.append(f"Dependency '{name}' missing version specification")
 
         # Check dependency groups
-        groups: object = poetry.get("group", {}) if hasattr(poetry, "get") else {}
-        if hasattr(groups, "items"):
+        groups: dict[str, object] = cast(dict[str, object], poetry.get("group", {})) if isinstance(poetry, dict) else {}
+        if isinstance(groups, dict):
             for group_name, group_data in groups.items():
-                if hasattr(group_data, "get"):
-                    group_deps: object = group_data.get("dependencies", {})
+                if isinstance(group_data, dict):
+                    group_deps: dict[str, object] = group_data.get("dependencies", {})
                     if hasattr(group_deps, "items"):
                         for name, spec in group_deps.items():
                             if (
@@ -491,9 +502,9 @@ class PoetryValidator:
             issues.append("poetry.lock not found - run 'poetry lock'")
             return False, issues
 
-        # poetry_console module is always available after import
+        # poetry.console module is always available after import
         try:
-            app = poetry_console.application.Application()
+            app = poetry.console.application.Application()  # type: ignore[attr-defined]
             code = app.run(["check"])
             if int(code) != 0:
                 issues.append("poetry.lock is outdated - run 'poetry lock'")
@@ -519,11 +530,11 @@ class PoetryValidator:
         tool_section = data.get("tool", {})
         if not isinstance(tool_section, dict):
             return ProjectInfo()
-        poetry: object = tool_section.get("poetry", {})
+        poetry: dict[str, object] = cast(dict[str, object], tool_section.get("poetry", {}))
 
         # Count main dependencies (excluding python)
-        dependencies: object = (
-            poetry.get("dependencies", {}) if hasattr(poetry, "get") else {}
+        dependencies: dict[str, object] = (
+            cast(dict[str, object], poetry.get("dependencies", {})) if isinstance(poetry, dict) else {}
         )
         dependency_count = (
             (
@@ -541,7 +552,7 @@ class PoetryValidator:
 
         # Count dev dependencies
         dev_dependency_count = 0
-        groups: object = poetry.get("group", {}) if hasattr(poetry, "get") else {}
+        groups: dict[str, object] = cast(dict[str, object], poetry.get("group", {})) if isinstance(poetry, dict) else {}
         if hasattr(groups, "values"):
             for group_data in groups.values():
                 if isinstance(group_data, dict):
@@ -551,13 +562,13 @@ class PoetryValidator:
 
         return ProjectInfo(
             name=str(
-                poetry.get("name", "unknown") if hasattr(poetry, "get") else "unknown"
+                poetry.get("name", "unknown") if isinstance(poetry, dict) else "unknown"
             ),
             version=str(
-                poetry.get("version", "0.0.0") if hasattr(poetry, "get") else "0.0.0"
+                poetry.get("version", "0.0.0") if isinstance(poetry, dict) else "0.0.0"
             ),
             description=str(
-                poetry.get("description", "") if hasattr(poetry, "get") else ""
+                poetry.get("description", "") if isinstance(poetry, dict) else ""
             ),
             dependency_count=dependency_count,
             dev_dependency_count=dev_dependency_count,

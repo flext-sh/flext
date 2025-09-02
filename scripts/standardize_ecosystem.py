@@ -29,7 +29,7 @@ from flext_core import FlextLogger, FlextModels, FlextResult
 
 
 # Placeholder classes for standardization
-class FlextBaseService(FlextModels):
+class FlextBaseService(FlextModels.BaseConfig):
     """Base service class for standardization."""
 
 
