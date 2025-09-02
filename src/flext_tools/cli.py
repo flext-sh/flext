@@ -57,21 +57,21 @@ FlextCliConfig: type[object] | None = None
 FlextCliContext: type[object] | None = None
 from typing import object
 
-cli_create_table: Callable[..., object] | None = None  # type: ignore[explicit-any]
+cli_create_table: Callable[..., object] | None = None
 
 # Try to import flext_cli components with proper type ignores for untyped library
 with contextlib.suppress(ImportError, AttributeError, SyntaxError):
     from flext_cli.cli_utils import (
-        cli_create_table,  # type: ignore[import-untyped,assignment]
+        cli_create_table,
     )
-    from flext_cli.config import FlextCliConfig  # type: ignore[import-untyped]
-    from flext_cli.context import FlextCliContext  # type: ignore[import-untyped]
+    from flext_cli.config import FlextCliConfig
+    from flext_cli.context import FlextCliContext
 
     FLEXT_CLI_AVAILABLE = True
 
 
 # Create a no-op decorator for cli_validate_inputs when flext_cli is not available
-def _no_op_decorator(func: Callable[..., object]) -> Callable[..., object]:  # type: ignore[explicit-any]
+def _no_op_decorator(func: Callable[..., object]) -> Callable[..., object]:
     """No-op decorator fallback when flext_cli is not available."""
     return func
 
@@ -141,7 +141,7 @@ with contextlib.suppress(ImportError, AttributeError):
 
     try:
         from flext_cli import (
-            cli_validate_inputs as _cli_validate_inputs,  # type: ignore[import-untyped]
+            cli_validate_inputs as _cli_validate_inputs,
         )
 
         cli_validate_inputs = _cli_validate_inputs
@@ -236,14 +236,14 @@ def main(
             and FlextCliContext is not None
         ):
             # Use flext-cli FlextCliConfig with complete delegation
-            config = FlextCliConfig()  # type: ignore[misc]
-            config.profile = profile  # type: ignore[attr-defined]
-            config.debug = debug  # type: ignore[attr-defined]
+            config = FlextCliConfig()
+            config.profile = profile
+            config.debug = debug
 
             # Create CLIContext using flext-cli patterns
-            context = FlextCliContext(  # type: ignore[misc]
-                working_directory=Path(workspace) if workspace else Path.cwd(),  # type: ignore[call-arg]
-                environment_variables={  # type: ignore[call-arg]
+            context = FlextCliContext(
+                working_directory=Path(workspace) if workspace else Path.cwd(),
+                environment_variables={
                     "FLEXT_PROFILE": profile,
                     "FLEXT_DEBUG": str(debug),
                     "FLEXT_OUTPUT": output,
@@ -672,17 +672,17 @@ debug_commands: click.Group | None = None
 # Import flext_cli commands with type ignores for untyped modules
 with contextlib.suppress(ImportError, AttributeError, SyntaxError):
     from flext_cli.commands_auth import (
-        auth as auth_commands,  # type: ignore[import-untyped,import-not-found,no-redef]
+        auth as auth_commands,
     )
 
 with contextlib.suppress(ImportError, AttributeError, SyntaxError):
     from flext_cli.commands_config import (
-        config as config_commands,  # type: ignore[import-untyped,import-not-found]
+        config as config_commands,
     )
 
 with contextlib.suppress(ImportError, AttributeError, SyntaxError):
     from flext_cli.commands_debug import (
-        debug_cmd as debug_commands,  # type: ignore[import-untyped,import-not-found]
+        debug_cmd as debug_commands,
     )
 
 # Add commands if they were successfully imported, otherwise add fallbacks

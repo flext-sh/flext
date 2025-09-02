@@ -127,7 +127,7 @@ def generate_fix_commands(
             if "Renomear" in violation["action"]:
                 files_to_backup.add(violation["file"])
 
-        for file_path in files_to_backup:
+        for _file_path in files_to_backup:
             pass
 
     if ignore_files:

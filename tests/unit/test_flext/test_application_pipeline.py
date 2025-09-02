@@ -202,7 +202,7 @@ class TestPipelineCommands:
         """Test ExecutePipelineCommand requires pipeline_id."""
         # Act & Assert
         with pytest.raises(ValueError):
-            ExecutePipelineCommand()  # type: ignore[call-arg]
+            ExecutePipelineCommand()
 
 
 class TestPipelineQueries:
@@ -220,7 +220,7 @@ class TestPipelineQueries:
         """Test GetPipelineQuery requires pipeline_id."""
         # Act & Assert
         with pytest.raises(ValueError):
-            GetPipelineQuery()  # type: ignore[call-arg]
+            GetPipelineQuery()
 
     def test_list_pipelines_query_defaults(self) -> None:
         """Test ListPipelinesQuery default values."""

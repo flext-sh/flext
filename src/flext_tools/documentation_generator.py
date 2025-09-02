@@ -953,7 +953,7 @@ print(f"Pipeline status: {result.status}")"""
         try:
             # Prefer in-process mkdocs entrypoint
             if mkdocs_main is None:
-                return FlextResult[dict[str, object]].fail(  # type: ignore[unreachable]
+                return FlextResult[dict[str, object]].fail(
                     "MkDocs build API unavailable: mkdocs not installed"
                 )
 

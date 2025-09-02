@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import subprocess
 from pathlib import Path
-from flext_core import get_logger
+from flext_core import FlextLogger
 
 
 class DevToolsManager:
@@ -127,7 +127,7 @@ class DevToolsManager:
           self.workspace_root = workspace_root or Path.cwd()
 
       # Setup structured logging
-      self.logger = get_logger(f"{__name__}.{self.__class__.__name__}")
+      self.logger = FlextLogger(f"{__name__}.{self.__class__.__name__}")
 
       # Configuration for parallel operations
       self.max_workers = 4  # Configurable based on system resources
