@@ -168,7 +168,7 @@ class DetailedLogger:
         # Format message with args
         formatted_message = message % args if args else message
 
-        # Combine extra and kwargs
+        # Future: Combine extra and kwargs for enhanced logging
 
         # Create log entry using flext-observability
         flext_create_log_entry(

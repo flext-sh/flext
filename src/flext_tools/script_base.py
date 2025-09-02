@@ -477,8 +477,7 @@ class FlextScript(FlextDomainService[bool]):
         # Configure logging level
         if args.verbose:
             # Set verbose mode - use flext-core logging patterns
-            FlextLogger(__name__).setLevel(logging.DEBUG)  # type: ignore[attr-defined]
-            # TODO: Integrate with flext-core centralized logging configuration
+            FlextLogger(__name__).setLevel(logging.DEBUG)
 
         return self.run(**vars(args))
 
@@ -609,10 +608,10 @@ def create_simple_script[**P_main_func](
                 sig = inspect.signature(config.main_func)
                 if sig.parameters:
                     # Function expects parameters, pass kwargs
-                    result = config.main_func(**kwargs)  # type: ignore[misc]
+                    result = config.main_func(**kwargs)
                 else:
                     # Function expects no parameters
-                    result = config.main_func()  # type: ignore[misc]
+                    result = config.main_func()
                 return (
                     result
                     if isinstance(result, FlextResult)

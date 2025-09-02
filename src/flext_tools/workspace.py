@@ -61,6 +61,8 @@ try:
 except ImportError:
     tomllib = None
 
+from flext_core import FlextLogging
+
 
 class WorkspaceManager:
     """Enterprise workspace manager for FLEXT ecosystem coordination.
@@ -601,12 +603,13 @@ class WorkspaceManager:
                     version = data.get("project", {}).get("version", "2.0.0")
                     return str(version)
             except (FileNotFoundError, PermissionError):
-                # File not found or permission error
+                # File not found or permission error - expected in some cases
                 pass
-            except Exception:
+            except Exception as e:
                 # TOML parsing error, key error, or other exceptions
-                # Failed to parse pyproject.toml
-                pass
+                logger = FlextLogging.get_logger(__name__)
+                logger.debug(f"Failed to parse pyproject.toml: {e}")
+                # Continue to try other version sources
 
         # Try to read version from go.mod for Go projects
         go_mod = project_path / "go.mod"
