@@ -12,12 +12,14 @@ from pathlib import Path
 from flext_core import FlextResult
 
 from flext_tools import Colors, ScriptMetadata, print_colored
-from flext_tools.security import ProductionSecretsGenerator
+from flext_tools.security import (
+    ProductionSecretsGenerator as FlextToolsSecretsGenerator,
+)
 
 from ._base_security_script import BaseSecurityScript
 
 
-class ProductionSecretsGenerator(BaseSecurityScript):
+class ProductionSecretsScript(BaseSecurityScript):
     """Generate cryptographically secure secrets for production."""
 
     @property
@@ -43,7 +45,7 @@ class ProductionSecretsGenerator(BaseSecurityScript):
             print_colored("=" * 60, Colors.CYAN)
 
             # Use flext_tools.security for secret generation
-            secret_generator = ProductionSecretsGenerator()
+            secret_generator = FlextToolsSecretsGenerator()
 
             # Generate complete set of production secrets
             secrets_result = secret_generator.generate_production_secrets(
@@ -60,7 +62,7 @@ class ProductionSecretsGenerator(BaseSecurityScript):
                 # Display summary
                 print_colored("🔑 Generated secrets:", Colors.BLUE)
                 for secret_type in secrets_result:
-                    if secret_type != "details":
+                    if secret_type != "details":  # nosec B105 - comparing key name, not password
                         pass
 
                 # Save to file if requested
@@ -123,7 +125,7 @@ class ProductionSecretsGenerator(BaseSecurityScript):
 
 def main() -> int:
     """Main function."""
-    script = ProductionSecretsGenerator()
+    script = ProductionSecretsScript()
     return script.main()
 
 

@@ -161,7 +161,7 @@ class PatternViolationAnalyzer:
             "BaseModel": {
                 "severity": "CRITICAL",
                 "pattern": "foundation.md#FlextModels",
-                "context": "Use FlextModels/FlextModels.Value/FlextModels.Entity instead of direct BaseModel",
+                "context": "Use FlextModels/FlextModels/FlextModels instead of direct BaseModel",
                 "guidance": "Replace with appropriate FLEXT foundation class",
             },
             "validate_domain_rules": {
@@ -323,7 +323,7 @@ class PatternViolationAnalyzer:
         tree: ast.AST,
         file_path: Path,
         lines: list[str],
-        project_name: str,
+        _project_name: str,
     ) -> list[PatternViolation]:
         """Analyze AST for structural pattern violations."""
         violations = []
@@ -386,7 +386,7 @@ class PatternViolationAnalyzer:
         self,
         file_path: Path,
         lines: list[str],
-        project_name: str,
+        _project_name: str,
     ) -> list[PatternViolation]:
         """Analyze text patterns for violations."""
         violations = []

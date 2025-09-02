@@ -466,7 +466,7 @@ class QualityGateway(FlextScript):
         total_stats: dict[str, object],
         failed_projects: list[str],
         *,
-        strict_mode: bool = False,
+        _strict_mode: bool = False,
     ) -> None:
         """Imprimir resumo final do gateway."""
         print_colored("\n📊 RESUMO DO QUALITY GATEWAY", Colors.BLUE)

@@ -59,7 +59,7 @@ from pathlib import Path
 try:
     import tomllib
 except ImportError:
-    tomllib = None  # type: ignore[assignment]
+    tomllib = None
 
 
 class WorkspaceManager:

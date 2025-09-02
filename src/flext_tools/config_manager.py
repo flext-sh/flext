@@ -60,7 +60,7 @@ from .colors import Colors, print_colored
 logger = FlextLogger(__name__)
 
 
-class Configuration(FlextModels.BaseConfig):
+class Configuration(FlextModels):
     """Comprehensive configuration model for FLEXT ecosystem components.
 
     Provides structured configuration data with validation for environment

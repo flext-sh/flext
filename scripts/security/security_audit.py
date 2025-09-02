@@ -79,7 +79,7 @@ class ScanConfig:
     """Scanner configuration."""
 
     def __init__(
-        self, target_paths: list[str], include_dependencies: bool = False
+        self, target_paths: list[str], *, include_dependencies: bool = False
     ) -> None:
         self.target_paths = target_paths
         self.include_dependencies = include_dependencies
@@ -100,7 +100,7 @@ class AntipatternScanner:
 
 
 def scan_flext_ecosystem(
-    workspace_path: str, output_file: str | None = None
+    workspace_path: str, _output_file: str | None = None
 ) -> list[SecurityViolation]:
     """Convenience function for ecosystem scanning."""
     config = ScanConfig([workspace_path])

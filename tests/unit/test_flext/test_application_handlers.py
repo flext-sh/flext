@@ -13,22 +13,21 @@ import pytest
 from flext_core import FlextResult
 
 from flext.application_handlers import (
-    AuthorizingHandler,
     CommandHandler,
     EventHandler,
-    FlextCommandHandler,
-    FlextEventHandler,
-    FlextQueryHandler,
-    Handler,
+    FlextHandlers,
     HandlerChain,
-    HandlerRegistry,
-    MetricsHandler,
     Pipeline,
     QueryHandler,
     SimpleQueryHandler,
-    ValidatingHandler,
     VoidCommandHandler,
 )
+
+# Import the handlers from FlextHandlers namespace
+AuthorizingHandler = FlextHandlers.Implementation.AuthorizingHandler
+MetricsHandler = FlextHandlers.Implementation.MetricsHandler
+ValidatingHandler = FlextHandlers.Implementation.ValidatingHandler
+HandlerRegistry = FlextHandlers.Management.HandlerRegistry
 
 
 @dataclass

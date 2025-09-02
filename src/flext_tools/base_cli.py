@@ -86,16 +86,16 @@ from pathlib import Path
 from typing import TypeVar
 
 import click
-from flext_core import FlextDomainService, FlextResult
-from pydantic import BaseModel, Field
+from flext_core import FlextDomainService, FlextModels, FlextResult
+from pydantic import Field
 from rich.console import Console
 from rich.logging import RichHandler
 
 # Type variable for Click command functions - specific constraint to avoid explicit-any
-F = TypeVar("F", bound=Callable[..., object])  # type: ignore[explicit-any]
+F = TypeVar("F", bound=Callable[..., object])
 
 
-class CLIConfig(BaseModel):
+class CLIConfig(FlextModels):
     """Unified configuration for CLI applications using flext-core patterns."""
 
     # Output settings
@@ -165,14 +165,14 @@ class BaseCLI(FlextDomainService[click.Group]):
             raise SystemExit(1)
 
 
-def with_config[F: Callable[..., object]](f: F) -> F:  # type: ignore[explicit-any]
+def with_config[F: Callable[..., object]](f: F) -> F:
     """Add config options to commands (decorator)."""
     f = click.option("--verbose", is_flag=True, help="Enable verbose output")(f)
     f = click.option("--debug", is_flag=True, help="Enable debug mode")(f)
     return click.option("--quiet", is_flag=True, help="Suppress non-error output")(f)
 
 
-def with_output_format[F: Callable[..., object]](f: F) -> F:  # type: ignore[explicit-any]
+def with_output_format[F: Callable[..., object]](f: F) -> F:
     """Add output format options to commands (decorator)."""
     return click.option(
         "--output-format",
