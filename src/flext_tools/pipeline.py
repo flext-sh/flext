@@ -141,7 +141,9 @@ class ListPipelinesQuery(FlextModels.Value):
     def validate_business_rules(self) -> FlextResult[None]:
         """Validate list pipelines query business rules."""
         if self.limit <= 0 or self.limit > MAX_PIPELINE_LIMIT:
-            return FlextResult[None].fail(f"Limit must be between 1 and {MAX_PIPELINE_LIMIT}")
+            return FlextResult[None].fail(
+                f"Limit must be between 1 and {MAX_PIPELINE_LIMIT}"
+            )
         if self.offset < 0:
             return FlextResult[None].fail("Offset cannot be negative")
         return FlextResult[None].ok(None)
