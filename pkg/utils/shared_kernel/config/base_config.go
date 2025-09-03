@@ -103,8 +103,8 @@ func (cl *ConfigLoader[T]) loadFromEnv(config *T) error {
 	return envconfig.Process(cl.prefix, config)
 }
 
-// BaseConfig configuração base comum
-type BaseConfig struct {
+// Config configuração base comum
+type Config struct {
 	Environment string        `mapstructure:"environment" envconfig:"ENVIRONMENT" default:"development"`
 	Debug       bool          `mapstructure:"debug" envconfig:"DEBUG" default:"false"`
 	Timeout     time.Duration `mapstructure:"timeout" envconfig:"TIMEOUT" default:"30s"`
@@ -112,7 +112,7 @@ type BaseConfig struct {
 }
 
 // Validate valida a configuração base
-func (c BaseConfig) Validate() error {
+func (c Config) Validate() error {
 	validEnvs := []string{"development", "staging", "production", "test"}
 	if !contains(validEnvs, c.Environment) {
 		return fmt.Errorf("invalid environment: %s, must be one of %v", c.Environment, validEnvs)
@@ -131,17 +131,17 @@ func (c BaseConfig) Validate() error {
 }
 
 // IsProduction verifica se está em produção
-func (c BaseConfig) IsProduction() bool {
+func (c Config) IsProduction() bool {
 	return c.Environment == "production"
 }
 
 // IsDevelopment verifica se está em desenvolvimento
-func (c BaseConfig) IsDevelopment() bool {
+func (c Config) IsDevelopment() bool {
 	return c.Environment == "development"
 }
 
 // IsTest verifica se está em teste
-func (c BaseConfig) IsTest() bool {
+func (c Config) IsTest() bool {
 	return c.Environment == "test"
 }
 
