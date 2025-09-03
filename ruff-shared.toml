@@ -27,6 +27,7 @@ lint.ignore = [
     "BLE001",
     "C901",   # Too complex (some functions need complexity)
     "COM812",
+    "F403",   # Star imports are part of flext-core architectural pattern
     "D102",   # Missing docstring in public method (test methods don't need them)
     "D104",   # Missing docstring in public package
     "D107",   # Missing docstring in __init__
