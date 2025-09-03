@@ -120,7 +120,9 @@ class CLIConfig(FlextModels.Value):
         """Validate CLI configuration business rules."""
         valid_formats = ["table", "json", "yaml", "csv"]
         if self.output_format not in valid_formats:
-            return FlextResult[None].fail(f"Invalid output format: {self.output_format}")
+            return FlextResult[None].fail(
+                f"Invalid output format: {self.output_format}"
+            )
 
         valid_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
         if self.log_level.upper() not in valid_levels:

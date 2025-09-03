@@ -87,7 +87,7 @@ def propose(dir_path: Path) -> dict[Path, Path]:
         if should_skip(p):
             continue
         base = p.stem  # test_xxx
-        tail = base[len("test_"):]
+        tail = base[len("test_") :]
         tokens = simplify(tail)
         target = "test_" + "_".join(tokens) + ".py"
         by_target[target].append(p)
@@ -99,10 +99,13 @@ def propose(dir_path: Path) -> dict[Path, Path]:
             continue
         # If multiple map to same target, try to disambiguate by preserving one ADJ token from original
         for idx, p in enumerate(paths, 1):
-            base = p.stem[len("test_"):]
+            base = p.stem[len("test_") :]
             toks = re.split(r"[_\-]+", base)
             # find any non-removed token to differentiate
-            extra = next((t for t in toks if t and t.lower() not in ADJ and t not in target), None)
+            extra = next(
+                (t for t in toks if t and t.lower() not in ADJ and t not in target),
+                None,
+            )
             if extra is None:
                 # fallback to ordinal suffix
                 suffix = f"_{idx}"
@@ -116,7 +119,9 @@ def propose(dir_path: Path) -> dict[Path, Path]:
 
 def main(argv: Iterable[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--apply", action="store_true", help="Apply changes (otherwise dry-run)")
+    ap.add_argument(
+        "--apply", action="store_true", help="Apply changes (otherwise dry-run)"
+    )
     ap.add_argument("--project", help="Filter by project name substring", default=None)
     args = ap.parse_args(list(argv) if argv is not None else None)
 

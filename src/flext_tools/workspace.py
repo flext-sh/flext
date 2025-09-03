@@ -61,7 +61,7 @@ try:
 except ImportError:
     tomllib = None
 
-from flext_core import FlextLogging
+from flext_core import FlextMixins
 
 
 class WorkspaceManager:
@@ -607,7 +607,7 @@ class WorkspaceManager:
                 pass
             except Exception as e:
                 # TOML parsing error, key error, or other exceptions
-                logger = FlextLogging.get_logger(__name__)
+                logger = FlextMixins.get_logger(__name__)
                 logger.debug(f"Failed to parse pyproject.toml: {e}")
                 # Continue to try other version sources
 

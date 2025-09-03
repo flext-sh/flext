@@ -17,7 +17,7 @@ FlextDomainService, FlextPlugin, FlextContainer
 FlextConfig, FlextSingerConfig, FlextDatabaseConfig
 FlextModels.EntityId, FlextModels.Timestamp, FlextModels.Metadata
 
-# Observability & Logging  
+# Observability & Logging
 FlextLogger, FlextLogger(), structured logging
 FlextObservabilityConfig
 ```
@@ -62,7 +62,7 @@ runner.invoke(["run", "--models", "my_model"])
 ```go
 // HTTP Bridge Endpoints
 POST /meltano/execute
-POST /dbt/run  
+POST /dbt/run
 POST /pipeline/run
 GET /plugins/list
 
@@ -81,28 +81,28 @@ type FlextMeltanoPlugin interface {
 ```python
 class MeltanoSingerWrapper:
     """Wrapper principal - adapta Singer SDK para padrões flext-core"""
-    
+
     def create_tap(self, tap_class: type[Tap], config: dict) -> FlextResult[Tap]:
         """Cria tap Singer usando FlextResult pattern"""
-        
+
     def create_target(self, target_class: type[Target], config: dict) -> FlextResult[Target]:
         """Cria target Singer usando FlextResult pattern"""
-        
+
     def run_elt_pipeline(self, tap: Tap, target: Target) -> FlextResult[PipelineResult]:
         """Executa pipeline ELT completo com observabilidade flext-core"""
-        
+
     def discover_catalog(self, tap: Tap) -> FlextResult[FlextCatalog]:
         """Descobre catálogo e adapta para tipos flext-core"""
 
 class FlextSingerAdapter:
     """Adaptador de tipos Singer → FLEXT"""
-    
+
     def adapt_catalog(self, singer_catalog: dict) -> FlextResult[FlextCatalog]:
         """Converte singer catalog para FlextCatalog"""
-        
+
     def adapt_schema(self, singer_schema: dict) -> FlextResult[FlextSchema]:
         """Converte singer schema para FlextSchema"""
-        
+
     def adapt_records(self, singer_records: Iterator[dict]) -> Iterator[FlextRecord]:
         """Converte singer records para FlextRecord"""
 ```
@@ -112,25 +112,25 @@ class FlextSingerAdapter:
 ```python
 class MeltanoBridge:
     """Bridge principal - adapta Meltano Core para padrões flext-core"""
-    
+
     def initialize_project(self, project_root: Path) -> FlextResult[MeltanoProject]:
         """Inicializa projeto Meltano usando Project()"""
-        
+
     def discover_plugins(self, hub_service: MeltanoHubService) -> FlextResult[list[FlextPlugin]]:
         """Descobre plugins do hub e adapta para FlextPlugin"""
-        
+
     def install_plugin(self, project: Project, plugin_type: PluginType, name: str) -> FlextResult[bool]:
         """Instala plugin usando CLI meltano"""
-        
+
     def list_installed_plugins(self, project: Project) -> FlextResult[list[FlextPlugin]]:
         """Lista plugins instalados"""
 
 class FlextMeltanoAdapter:
     """Adaptador de tipos Meltano → FLEXT"""
-    
+
     def adapt_plugin(self, meltano_plugin: dict) -> FlextResult[FlextPlugin]:
         """Converte meltano plugin para FlextPlugin"""
-        
+
     def adapt_project_config(self, meltano_config: dict) -> FlextResult[FlextProjectConfig]:
         """Converte configuração meltano para FlextProjectConfig"""
 ```
@@ -140,25 +140,25 @@ class FlextMeltanoAdapter:
 ```python
 class MeltanoDbtWrapper:
     """Wrapper principal - adapta DBT Core para padrões flext-core"""
-    
+
     def create_runner(self, project_dir: Path) -> FlextResult[dbtRunner]:
         """Cria dbtRunner usando FlextResult pattern"""
-        
+
     def run_models(self, runner: dbtRunner, models: list[str]) -> FlextResult[DbtRunResult]:
         """Executa modelos DBT com observabilidade flext-core"""
-        
+
     def test_models(self, runner: dbtRunner, models: list[str]) -> FlextResult[DbtTestResult]:
         """Testa modelos DBT com resultado estruturado"""
-        
+
     def compile_project(self, runner: dbtRunner) -> FlextResult[DbtCompileResult]:
         """Compila projeto DBT"""
 
 class FlextDbtAdapter:
     """Adaptador de tipos DBT → FLEXT"""
-    
+
     def adapt_run_results(self, dbt_results: dict) -> FlextResult[FlextDbtResults]:
         """Converte resultados DBT para FlextDbtResults"""
-        
+
     def adapt_manifest(self, dbt_manifest: dict) -> FlextResult[FlextDbtManifest]:
         """Converte manifest DBT para FlextDbtManifest"""
 ```
@@ -170,24 +170,24 @@ class FlextDbtAdapter:
 ```python
 class FlextMeltanoExecutor:
     """Executor principal para runtime via subprocess"""
-    
+
     def __init__(self, config: FlextMeltanoConfig):
         self.singer_wrapper = MeltanoSingerWrapper()
         self.dbt_wrapper = MeltanoDbtWrapper()
         self.meltano_bridge = MeltanoBridge()
-    
+
     def execute_meltano_command(self, command: list[str]) -> FlextResult[ExecutionResult]:
         """Executa comando meltano via subprocess"""
-        
+
     def run_singer_pipeline(self, tap_name: str, target_name: str) -> FlextResult[PipelineResult]:
         """Executa pipeline Singer completo"""
-        
+
     def run_dbt_command(self, command: list[str], project_dir: Path) -> FlextResult[DbtResult]:
         """Executa comando DBT"""
-        
+
     def execute_async(self, operation: Callable) -> FlextResult[str]:  # retorna job_id
         """Executa operação assíncrona e retorna job_id"""
-        
+
     def get_execution_status(self, job_id: str) -> FlextResult[ExecutionStatus]:
         """Consulta status de execução assíncrona"""
 ```
@@ -197,23 +197,23 @@ class FlextMeltanoExecutor:
 ```python
 class FlextMeltanoBridge:
     """Bridge para comunicação Go ↔ Python (JSON API)"""
-    
+
     def __init__(self):
         self.executor = FlextMeltanoExecutor()
-    
+
     # Endpoints para FlexCore (Go)
     def get_version(self) -> dict[str, str]:
         """GET /meltano/version - JSON response"""
-        
+
     def list_plugins(self) -> dict[str, object]:
         """GET /meltano/plugins - JSON response"""
-        
+
     def run_pipeline(self, tap_name: str, target_name: str, config: dict) -> dict[str, object]:
         """POST /meltano/pipeline/run - JSON response"""
-        
+
     def run_dbt(self, command: str, args: list[str], project_dir: str) -> dict[str, object]:
         """POST /dbt/run - JSON response"""
-        
+
     def get_job_status(self, job_id: str) -> dict[str, object]:
         """GET /jobs/{job_id}/status - JSON response"""
 
@@ -221,7 +221,7 @@ class FlextMeltanoBridge:
 def main():
     """CLI script chamado pelo FlexCore Go"""
     bridge = FlextMeltanoBridge()
-    
+
     if sys.argv[1] == "version":
         print(json.dumps(bridge.get_version()))
     elif sys.argv[1] == "run_pipeline":
@@ -235,83 +235,83 @@ def main():
 ```python
 class FlextMeltanoCli:
     """Interface CLI para uso direto (não bridge)"""
-    
+
     def run_command(self, args: list[str]) -> FlextResult[CliResult]:
         """Executa comando CLI direto"""
-        
+
     def run_interactive(self) -> None:
         """Modo interativo para desenvolvimento"""
-        
+
     def get_help(self) -> str:
         """Ajuda detalhada de comandos"""
 ```
 
-### **FUNÇÃO 3: BASE COMPONENTS (Para projetos flext-*)**
+### **FUNÇÃO 3: BASE COMPONENTS (Para projetos flext-\*)**
 
 #### **base.py - Services Base**
 
 ```python
 class FlextMeltanoBaseService(FlextDomainService):
     """Base service para todos os serviços Meltano"""
-    
+
     def __init__(self, config: FlextMeltanoConfig):
         super().__init__()
         self.config = config
         self.logger = FlextLogger(self.__class__.__name__)
-    
+
     @abstractmethod
     def validate_configuration(self) -> FlextResult[bool]:
         """Valida configuração do serviço"""
-        
+
     @abstractmethod
     def get_health_status(self) -> FlextResult[HealthStatus]:
         """Status de saúde do serviço"""
 
 class FlextMeltanoTapService(FlextMeltanoBaseService):
     """Base service para taps Singer - usado em flext-tap-*"""
-    
+
     def __init__(self, tap_class: type[Tap], config: FlextMeltanoConfig):
         super().__init__(config)
         self.tap_class = tap_class
         self.singer_wrapper = MeltanoSingerWrapper()
-    
+
     def discover_streams(self) -> FlextResult[list[FlextStream]]:
         """Descobre streams disponíveis"""
-        
+
     def sync_stream(self, stream: FlextStream, state: dict) -> FlextResult[Iterator[FlextRecord]]:
         """Sincroniza stream específico"""
-        
+
     def get_catalog(self) -> FlextResult[FlextCatalog]:
         """Retorna catálogo de streams"""
 
 class FlextMeltanoTargetService(FlextMeltanoBaseService):
     """Base service para targets Singer - usado em flext-target-*"""
-    
+
     def __init__(self, target_class: type[Target], config: FlextMeltanoConfig):
         super().__init__(config)
         self.target_class = target_class
         self.singer_wrapper = MeltanoSingerWrapper()
-    
+
     def process_records(self, stream_name: str, records: Iterator[FlextRecord]) -> FlextResult[ProcessResult]:
         """Processa records de um stream"""
-        
+
     def flush_buffer(self) -> FlextResult[bool]:
         """Força escrita de buffer"""
 
 class FlextMeltanoDbtService(FlextMeltanoBaseService):
     """Base service para projetos DBT - usado em flext-dbt-*"""
-    
+
     def __init__(self, project_dir: Path, config: FlextMeltanoConfig):
         super().__init__(config)
         self.project_dir = project_dir
         self.dbt_wrapper = MeltanoDbtWrapper()
-    
+
     def run_models(self, models: list[str]) -> FlextResult[DbtRunResult]:
         """Executa modelos específicos"""
-        
+
     def test_models(self, models: list[str]) -> FlextResult[DbtTestResult]:
         """Testa modelos específicos"""
-        
+
     def generate_docs(self) -> FlextResult[bool]:
         """Gera documentação DBT"""
 ```
@@ -321,43 +321,43 @@ class FlextMeltanoDbtService(FlextMeltanoBaseService):
 ```python
 class FlextTapPlugin(FlextPlugin):
     """Plugin base para taps - usado em flext-tap-*"""
-    
+
     def __init__(self, plugin_config: FlextPluginConfig):
         super().__init__(plugin_config)
         self.tap_service = FlextMeltanoTapService(self.get_tap_class(), plugin_config)
-    
+
     @abstractmethod
     def get_tap_class(self) -> type[Tap]:
         """Retorna classe Singer Tap específica"""
-        
+
     def discover(self) -> FlextResult[FlextCatalog]:
         """Plugin discover interface"""
         return self.tap_service.get_catalog()
-        
+
     def sync(self, catalog: FlextCatalog, state: dict) -> FlextResult[Iterator[FlextMessage]]:
         """Plugin sync interface"""
 
 class FlextTargetPlugin(FlextPlugin):
     """Plugin base para targets - usado em flext-target-*"""
-    
+
     def __init__(self, plugin_config: FlextPluginConfig):
         super().__init__(plugin_config)
         self.target_service = FlextMeltanoTargetService(self.get_target_class(), plugin_config)
-    
+
     @abstractmethod
     def get_target_class(self) -> type[Target]:
         """Retorna classe Singer Target específica"""
-        
+
     def process_messages(self, messages: Iterator[FlextMessage]) -> FlextResult[ProcessResult]:
         """Plugin process interface"""
 
 class FlextDbtPlugin(FlextPlugin):
     """Plugin base para DBT - usado em flext-dbt-*"""
-    
+
     def __init__(self, plugin_config: FlextPluginConfig):
         super().__init__(plugin_config)
         self.dbt_service = FlextMeltanoDbtService(plugin_config.project_dir, plugin_config)
-    
+
     def run_transformation(self, models: list[str]) -> FlextResult[TransformResult]:
         """Plugin transformation interface"""
 ```
@@ -387,7 +387,7 @@ from flext_meltano import FlextMeltanoDbtService, MeltanoDbtWrapper
 class FlextDbtOracle(FlextMeltanoDbtService):
     def __init__(self, project_dir: Path):
         super().__init__(project_dir, FlextMeltanoConfig())
-    
+
     def run_oracle_models(self) -> FlextResult[DbtRunResult]:
         return self.run_models(["models/oracle/*.sql"])
 ```
@@ -399,10 +399,10 @@ class FlextDbtOracle(FlextMeltanoDbtService):
 func (s *MeltanoService) RunPipeline(tap, target string) error {
     cmd := exec.Command("python", "-m", "flext_meltano.adapter", "run_pipeline", tap, target)
     output, err := cmd.Output()
-    
+
     var result map[string]interface{}
     json.Unmarshal(output, &result)
-    
+
     if !result["success"].(bool) {
         return errors.New(result["error"].(string))
     }
@@ -453,7 +453,7 @@ class TestMeltanoSingerWrapper:
         result = wrapper.create_tap(TapCSV, {"files": ["test.csv"]})
         assert result.is_success
         assert isinstance(result.value, Tap)
-        
+
     def test_run_real_pipeline(self):
         """Test com pipeline CSV → JSONL real"""
         # Setup real files, run real pipeline, verify real output
@@ -505,7 +505,7 @@ func (p *FlextMeltanoPlugin) Execute(ctx context.Context, params map[string]inte
 This architecture provides:
 
 1. ✅ **Complete wrapper** for Meltano/Singer SDK/DBT → flext-core
-2. ✅ **Full runtime** execution via Go bridge  
+2. ✅ **Full runtime** execution via Go bridge
 3. ✅ **Solid base** for all flext-(dbt|tap|target) projects
 4. ✅ **Real implementations** without mocks
 5. ✅ **Clean dependencies** following SOLID principles

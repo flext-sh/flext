@@ -64,7 +64,7 @@ distributed:
   node:
     capabilities:
       - "pipeline"
-      - "plugin" 
+      - "plugin"
       - "meltano"
       - "singer"
       - "ldap"
@@ -94,7 +94,7 @@ distributed:
     enabled: true
     registration_ttl: "60s"
     health_check_interval: "30s"
-    
+
   # Load balancing configuration
   load_balancing:
     enabled: true
@@ -107,7 +107,7 @@ distributed:
     collection_interval: "15s"
     aggregation_interval: "30s"
     retention_period: "24h"
-    
+
   # Alert configuration
   alerts:
     enabled: true
@@ -117,13 +117,13 @@ distributed:
         condition: "greater_than"
         threshold: 0.1
         duration: "5m"
-        
+
       - name: "high_cpu_usage"
         metric_name: "cpu_usage"
-        condition: "greater_than" 
+        condition: "greater_than"
         threshold: 0.8
         duration: "10m"
-        
+
       - name: "low_memory"
         metric_name: "memory_available"
         condition: "less_than"
@@ -138,13 +138,13 @@ distributed:
     connection_timeout: "30s"
     reconnect_interval: "10s"
 
-  # Coordination and task distribution  
+  # Coordination and task distribution
   coordination:
     enabled: true
     task_timeout: "1h"
     max_retries: 3
     default_sharding: "load" # none, round_robin, capability, load
-    
+
   # Distributed tracing
   tracing:
     enabled: true

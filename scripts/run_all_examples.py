@@ -83,20 +83,40 @@ def run_example(project_root: Path, example_file: Path, timeout: int) -> RunResu
         err_tail = (proc.stderr or "").splitlines()[-5:]
         for line in err_tail:
             print(f"  ! {line}")
-    return RunResult(project=project, example=example_file.name, returncode=proc.returncode)
+    return RunResult(
+        project=project, example=example_file.name, returncode=proc.returncode
+    )
 
 
 def main(argv: Iterable[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--project", dest="project_filter", help="Filter by project name substring", default=None)
-    ap.add_argument("--timeout", type=int, default=20, help="Per-example timeout in seconds (default: 20)")
-    ap.add_argument("--include-docker", action="store_true", help="Include docker/integration-heavy examples")
+    ap.add_argument(
+        "--project",
+        dest="project_filter",
+        help="Filter by project name substring",
+        default=None,
+    )
+    ap.add_argument(
+        "--timeout",
+        type=int,
+        default=20,
+        help="Per-example timeout in seconds (default: 20)",
+    )
+    ap.add_argument(
+        "--include-docker",
+        action="store_true",
+        help="Include docker/integration-heavy examples",
+    )
     ap.add_argument("--dry-run", action="store_true", help="Only print what would run")
     args = ap.parse_args(list(argv) if argv is not None else None)
 
     example_dirs = find_example_dirs(REPO_ROOT)
     if args.project_filter:
-        example_dirs = [d for d in example_dirs if args.project_filter.lower() in str(d.parent.name).lower()]
+        example_dirs = [
+            d
+            for d in example_dirs
+            if args.project_filter.lower() in str(d.parent.name).lower()
+        ]
 
     if not example_dirs:
         print("No examples/ directories found")
