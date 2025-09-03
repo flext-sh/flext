@@ -953,7 +953,7 @@ class FlextDuplicateDetector:
         file_path: str,
         content: str,
     ) -> list[AntiPatternMatch]:
-        """Detecta manipulação manual de configuração que deveria usar BaseConfig."""
+        """Detecta manipulação manual de configuração que deveria usar Config."""
         patterns = []
         lines = content.split("\n")
 
@@ -961,17 +961,17 @@ class FlextDuplicateDetector:
         anti_pattern_indicators = [
             (
                 r"os\.environ\.get\s*\(",
-                "Manual environment variable access instead of BaseConfig",
+                "Manual environment variable access instead of Config",
             ),
             (
                 r"os\.getenv\s*\(",
-                "Manual environment variable access instead of BaseConfig",
+                "Manual environment variable access instead of Config",
             ),
             (
                 r"class\s+\w+Config.*:",
-                "Manual config class instead of inheriting from BaseConfig",
+                "Manual config class instead of inheriting from Config",
             ),
-            (r"def\s+load_config\s*\(", "Manual config loading instead of BaseConfig"),
+            (r"def\s+load_config\s*\(", "Manual config loading instead of Config"),
         ]
 
         for i, line in enumerate(lines):
@@ -981,15 +981,15 @@ class FlextDuplicateDetector:
 
             for pattern, description in anti_pattern_indicators:
                 if re.search(pattern, line_content):
-                    # Verificar se já está usando flext-core BaseConfig
-                    if "from flext_core" in content and "BaseConfig" in content:
+                    # Verificar se já está usando flext-core Config
+                    if "from flext_core" in content and "Config" in content:
                         continue
 
                     patterns.append(
                         AntiPatternMatch(
                             file_path=file_path,
                             pattern_type="Manual Config Handling",
-                            suggested_replacement=f"Use BaseConfig from"
+                            suggested_replacement=f"Use Config from"
                             f" flext-core: {description}",
                             lines=(i + 1, i + 1),
                             content=line_content,
