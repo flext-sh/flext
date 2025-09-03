@@ -99,7 +99,10 @@ class PythonDependencies(FlextModels.Value):
         """Validate Python dependencies business rules."""
         # Check for package name validity
         for pkg in self.runtime | self.test:
-            if not pkg or not pkg.replace("-", "").replace("_", "").replace(".", "").isalnum():
+            if (
+                not pkg
+                or not pkg.replace("-", "").replace("_", "").replace(".", "").isalnum()
+            ):
                 return FlextResult[None].fail(f"Invalid package name: {pkg}")
 
         return FlextResult[None].ok(None)

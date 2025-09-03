@@ -205,7 +205,7 @@ def complex_method(self, data: List[Dict[str, object]]) -> FlextResult[List[str]
         if not self._validate_item(item):  # Skip invalid items
             continue
         validated_data.append(item)
-    
+
     # Step 2: Transform data using business rules
     # NOTE: This transformation is required for compliance
     transformed_data = []
@@ -216,11 +216,11 @@ def complex_method(self, data: List[Dict[str, object]]) -> FlextResult[List[str]
             for k, v in item.items()
         }
         transformed_data.append(transformed_item)
-    
+
     # Step 3: Extract processed results
     # TODO: Consider caching results for performance
     results = [item.get("name", "unknown") for item in transformed_data]
-    
+
     return FlextResult[None].ok(results)
 ```
 

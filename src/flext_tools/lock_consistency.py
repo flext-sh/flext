@@ -181,13 +181,20 @@ class WorkspaceSummary(FlextModels.Value):
             return FlextResult[None].fail("Total projects cannot be negative")
 
         if self.projects_with_lock < 0 or self.projects_with_lock > self.total_projects:
-            return FlextResult[None].fail("Projects with lock must be between 0 and total projects")
+            return FlextResult[None].fail(
+                "Projects with lock must be between 0 and total projects"
+            )
 
-        if any(count < 0 for count in [
-            self.total_packages, self.total_inconsistencies,
-            self.critical_inconsistencies, self.warning_inconsistencies,
-            self.info_inconsistencies
-        ]):
+        if any(
+            count < 0
+            for count in [
+                self.total_packages,
+                self.total_inconsistencies,
+                self.critical_inconsistencies,
+                self.warning_inconsistencies,
+                self.info_inconsistencies,
+            ]
+        ):
             return FlextResult[None].fail("All counts must be non-negative")
 
         return FlextResult[None].ok(None)
