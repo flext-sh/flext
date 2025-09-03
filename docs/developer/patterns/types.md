@@ -15,7 +15,6 @@ All types organized under `FlextTypes` with semantic domain grouping:
 ```python
 FlextTypes.Core.*     # Foundation types
 FlextTypes.Data.*     # Data integration types
-FlextTypes.Auth.*     # Authentication types
 FlextTypes.Obs.*      # Observability types
 FlextTypes.Singer.*   # Singer protocol types
 FlextTypes.Bridge.*   # Go-Python bridge types
