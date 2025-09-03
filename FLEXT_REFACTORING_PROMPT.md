@@ -16,29 +16,29 @@ Read calmly, act meticulously, and execute via a continuously updated **TODO Pla
 
 Based on the current state of flext-core (version 0.9.0), you MUST:
 
-* **REPLICATE flext-core patterns** exactly as implemented and proven working
-* **USE ONLY flext-core foundation** - it is now production-ready with 75%+ coverage
-* **FOLLOW the Clean Architecture layers** as established in flext-core
-* **IMPLEMENT FlextResult railway pattern** everywhere for error handling
-* **USE dependency injection patterns** via get_flext_container()
-* **INHERIT from proven base classes** (FlextModels.Entity, FlextValueObject, FlextDomainService)
-* **APPLY strict type safety** with MyPy strict mode and Python 3.13+
-* **MAINTAIN 75%+ test coverage** as proven achievable in flext-core
-* **FOLLOW PEP8 naming** and **layered module organization**
-* **USE root-level imports** only (outside same project) - `from flext_core import X`
-* **VALIDATE with quality gates** after EVERY edit using make commands
-* **NEVER** change `pyproject.toml`, lint configs, or use ignore statements
-* **NEVER** break public APIs; maintain backward compatibility
-* **FIX ROOT CAUSES**, not symptoms - follow flext-core debugging patterns
+- **REPLICATE flext-core patterns** exactly as implemented and proven working
+- **USE ONLY flext-core foundation** - it is now production-ready with 75%+ coverage
+- **FOLLOW the Clean Architecture layers** as established in flext-core
+- **IMPLEMENT FlextResult railway pattern** everywhere for error handling
+- **USE dependency injection patterns** via get_flext_container()
+- **INHERIT from proven base classes** (FlextModels.Entity, FlextValueObject, FlextDomainService)
+- **APPLY strict type safety** with MyPy strict mode and Python 3.13+
+- **MAINTAIN 75%+ test coverage** as proven achievable in flext-core
+- **FOLLOW PEP8 naming** and **layered module organization**
+- **USE root-level imports** only (outside same project) - `from flext_core import X`
+- **VALIDATE with quality gates** after EVERY edit using make commands
+- **NEVER** change `pyproject.toml`, lint configs, or use ignore statements
+- **NEVER** break public APIs; maintain backward compatibility
+- **FIX ROOT CAUSES**, not symptoms - follow flext-core debugging patterns
 
 ---
 
 ## 🔧 Environment Assumptions (Strict)
 
-* Active venv: **`~/flext/.venv`**. Do **not** alter it.
-* **No** use of `PYTHONPATH`.
-* **No** use of `env` prefixes in commands.
-* Commands below rely on PATH resolution inside the activated venv.
+- Active venv: **`~/flext/.venv`**. Do **not** alter it.
+- **No** use of `PYTHONPATH`.
+- **No** use of `env` prefixes in commands.
+- Commands below rely on PATH resolution inside the activated venv.
 
 ---
 
@@ -114,7 +114,7 @@ make validate              # ALL quality gates (lint + type + security + test)
 make check                 # Quick validation (lint + type-check only)
 make test                  # 75%+ coverage requirement (PROVEN achievable)
 make lint                  # Ruff linting - ZERO errors
-make type-check            # MyPy strict mode - ZERO errors  
+make type-check            # MyPy strict mode - ZERO errors
 make format                # Auto-format code (79 char line limit)
 make security              # Bandit + pip-audit scanning
 ```
@@ -166,7 +166,7 @@ def service_operation() -> FlextResult[Data]:
     db_result = container.get("database")
     if db_result.failure:
         return FlextResult[None].fail("Database service unavailable")
-    
+
     db = db_result.unwrap()
     return db.fetch_data()
 ```
@@ -220,7 +220,7 @@ class UserAggregate(FlextModels.AggregateRoot):
 ```bash
 # Read successful implementation patterns
 cat ~/flext/flext-core/src/flext_core/__init__.py
-cat ~/flext/flext-core/src/flext_core/result.py  
+cat ~/flext/flext-core/src/flext_core/result.py
 cat ~/flext/flext-core/src/flext_core/container.py
 cat ~/flext/flext-core/Makefile
 
@@ -266,10 +266,10 @@ from flext_core import FlextConstants
 
 class ProjectConstants(FlextConstants):
     """Project constants inheriting from flext-core."""
-    
+
     DEFAULT_TIMEOUT = 30
     MAX_RETRIES = 3
-    
+
     # Access parent constants
     @property
     def validation_rules(self):
@@ -284,11 +284,11 @@ from flext_core import FlextExceptions
 
 class ProjectExceptions(FlextExceptions.Error):
     """Project exceptions inheriting from flext-core."""
-    
+
     class ConfigurationError(FlextExceptions.Error):
         """Configuration specific error."""
         pass
-    
+
     class ConnectionError(FlextExceptions.Error):
         """Connection specific error."""
         pass
@@ -305,11 +305,11 @@ from pydantic import Field
 
 class UserModel(FlextModels):
     """User model with flext-core validation."""
-    
+
     name: str = Field(..., min_length=1, max_length=100)
     email: str = Field(..., regex=r'^[^@]+@[^@]+\.[^@]+$')
     age: int = Field(..., ge=18, le=120)
-    
+
     # Use Pydantic v2 configuration
     model_config = {
         'str_strip_whitespace': True,
@@ -326,12 +326,12 @@ from flext_core import FlextDomainService, FlextResult
 
 class UserService(FlextDomainService[FlextResult[UserModel]]):
     """User service using flext-core foundation."""
-    
+
     def __init__(self):
         super().__init__()
         self._container = get_flext_container()
         self._logger = FlextLogger(__name__)
-    
+
     def create_user(self, data: dict) -> FlextResult[UserModel]:
         """Create user with proper error handling."""
         try:
@@ -349,7 +349,7 @@ from flext_core import FlextHandlers, FlextResult
 
 class ProjectHandlers(FlextHandlers):
     """Project handlers using flext-core foundation."""
-    
+
     def handle_user_creation(self, command: dict) -> FlextResult[dict]:
         """Handle user creation command."""
         return (
@@ -367,11 +367,11 @@ from flext_core import FlextLogger, get_flext_container
 
 class ProjectInfrastructure:
     """Infrastructure using flext-core utilities."""
-    
+
     def __init__(self):
         self._logger = FlextLogger(__name__)      # Use flext-core logging
         self._container = get_flext_container()   # Use flext-core DI
-    
+
     def setup_services(self):
         """Setup services using dependency injection."""
         self._container.register("user_service", UserService())
@@ -402,7 +402,7 @@ make build                 # Build package
 
 # Single letter aliases (proven useful)
 make t                     # test
-make l                     # lint  
+make l                     # lint
 make f                     # format
 make tc                    # type-check
 make v                     # validate
@@ -451,7 +451,7 @@ MIN_COVERAGE := 75
 .PHONY: validate
 validate: lint type-check security test
 
-.PHONY: check  
+.PHONY: check
 check: lint type-check
 
 .PHONY: lint
@@ -508,7 +508,7 @@ testpaths = ["tests"]
 minversion = "8.0"
 ```
 
-### ✅ MANDATORY __init__.py Pattern (PROVEN from flext-core)
+### ✅ MANDATORY **init**.py Pattern (PROVEN from flext-core)
 
 ```python
 # ✅ COPY this successful pattern from flext-core
@@ -522,7 +522,7 @@ from __future__ import annotations
 
 # Foundation Layer - Import first (proven order)
 from project_name.__version__ import *
-from project_name.constants import *  
+from project_name.constants import *
 from project_name.typings import *
 from project_name.result import *
 from project_name.exceptions import *
@@ -532,7 +532,7 @@ from project_name.protocols import *
 from project_name.models import *
 from project_name.domain_services import *
 
-# Application Layer - Depends on Domain + Foundation  
+# Application Layer - Depends on Domain + Foundation
 from project_name.commands import *
 from project_name.handlers import *
 from project_name.validation import *
@@ -583,7 +583,8 @@ make setup
 
 ### Phase 2: Foundation Implementation (PROVEN ORDER)
 
-1. **__version__.py** (Simple start)
+1. \***\*version**.py\*\* (Simple start)
+
 ```python
 """Version information."""
 __version__ = "0.1.0"
@@ -591,6 +592,7 @@ __all__ = ["__version__"]
 ```
 
 2. **constants.py** (flext-core inheritance)
+
 ```python
 from flext_core import FlextConstants
 
@@ -602,7 +604,8 @@ class ProjectConstants(FlextConstants):
 __all__ = ["ProjectConstants"]
 ```
 
-3. **result.py** (Core pattern)  
+3. **result.py** (Core pattern)
+
 ```python
 # Re-export flext-core result (don't reimplement)
 from flext_core import FlextResult
@@ -611,6 +614,7 @@ __all__ = ["FlextResult"]
 ```
 
 4. **Validate after each module**:
+
 ```bash
 make check          # Quick validation
 python -c "from project_name.constants import ProjectConstants; print('✅ Constants work')"
@@ -619,13 +623,14 @@ python -c "from project_name.constants import ProjectConstants; print('✅ Const
 ### Phase 3: Domain Layer (PROVEN DDD PATTERNS)
 
 1. **models.py** (Pydantic + flext-core)
+
 ```python
 from flext_core import FlextModels
 from pydantic import Field
 
 class ProjectModel(FlextModels):
     """Project model following flext-core patterns."""
-    
+
     name: str = Field(..., min_length=1)
     description: str = Field(default="")
 
@@ -633,12 +638,13 @@ __all__ = ["ProjectModel"]
 ```
 
 2. **domain_services.py** (Business logic)
-```python  
+
+```python
 from flext_core import FlextDomainService, FlextResult
 
 class ProjectService(FlextDomainService[FlextResult[ProjectModel]]):
     """Project service following flext-core patterns."""
-    
+
     def create_project(self, data: dict) -> FlextResult[ProjectModel]:
         """Create project with validation."""
         try:
@@ -672,14 +678,16 @@ pytest tests/ -v    # All pass
 ### ❌ Configuration Modifications (NEVER ALLOWED)
 
 **These files are PROVEN to work - DO NOT MODIFY:**
+
 - `pyproject.toml` - Copy from flext-core with minimal changes
-- Makefile - Copy from flext-core pattern exactly  
+- Makefile - Copy from flext-core pattern exactly
 - Linting configurations - Use flext-core proven settings
 - Test configurations - Use flext-core proven settings
 
 ### ❌ Local Implementations (FORBIDDEN)
 
 **flext-core provides these - NEVER RECREATE LOCALLY:**
+
 - FlextResult - Use from flext-core
 - Dependency injection - Use get_flext_container()
 - Logging - Use FlextLogger() from flext-core
@@ -691,9 +699,10 @@ pytest tests/ -v    # All pass
 ### ❌ Quality Gate Bypassing (ZERO TOLERANCE)
 
 **These practices are FORBIDDEN:**
+
 - `# type: ignore` without specific justification
 - `# noqa` without specific rule codes
-- Relaxing mypy/ruff settings 
+- Relaxing mypy/ruff settings
 - Skipping test coverage requirements
 - Using non-strict type checking
 
@@ -710,7 +719,7 @@ pytest tests/ -v    # All pass
 ruff check src/ tests/ examples/ scripts/  # 0 errors
 
 # Type Safety (flext-core achieved 100% in src/)
-mypy src/ --strict --show-error-codes      # 0 errors  
+mypy src/ --strict --show-error-codes      # 0 errors
 pyright src/ --level error                 # 0 errors
 
 # Test Coverage (flext-core achieved 75%+)
@@ -727,7 +736,7 @@ pip-audit                                  # 0 vulnerabilities
 # flext-core Integration (100% usage)
 grep -r "from flext_core import" src/ | wc -l     # Should be > 10
 
-# FlextResult Usage (100% error handling)  
+# FlextResult Usage (100% error handling)
 grep -r "FlextResult\[" src/ | wc -l              # Should be > 5
 
 # No Local Base Classes (0 violations)
@@ -744,7 +753,7 @@ grep -r "FlextModels" src/ | wc -l                 # Should be > 0
 ```bash
 make setup         # Complete environment setup
 make validate      # All quality gates pass
-make check         # Quick validation passes  
+make check         # Quick validation passes
 make test          # 75%+ coverage achieved
 make build         # Package builds successfully
 make docs          # Documentation generates
@@ -775,7 +784,7 @@ python -c "from project_name import ProjectService; print('✅')"
 
 **ALWAYS verify before asserting anything:**
 
-```bash  
+```bash
 # Before claiming something works:
 python -c "from project_name import ClassName; print('✅')"  # Test actual execution
 
@@ -787,6 +796,7 @@ python -c "from flext_core import FlextResult; help(FlextResult)"  # Verify meth
 ```
 
 **NEVER assume based on:**
+
 - File names or "logical" patterns
 - What "should" work without testing
 - Previous session memory
@@ -796,9 +806,10 @@ python -c "from flext_core import FlextResult; help(FlextResult)"  # Verify meth
 ## 🚨 FINAL REMINDERS
 
 **flext-core is now the PROVEN FOUNDATION with:**
+
 - ✅ 75%+ test coverage achieved
 - ✅ Zero ruff/mypy/pyright errors in src/
-- ✅ Complete Clean Architecture implementation  
+- ✅ Complete Clean Architecture implementation
 - ✅ Production-ready FlextResult railway pattern
 - ✅ Proven dependency injection patterns
 - ✅ Successful DDD implementation
@@ -807,6 +818,7 @@ python -c "from flext_core import FlextResult; help(FlextResult)"  # Verify meth
 **YOUR MISSION: REPLICATE THIS SUCCESS IN ALL OTHER PROJECTS**
 
 **ALWAYS:**
+
 - Copy proven patterns from flext-core exactly
 - Use flext-core as foundation dependency
 - Follow the established layered architecture
@@ -814,6 +826,7 @@ python -c "from flext_core import FlextResult; help(FlextResult)"  # Verify meth
 - Validate continuously with make commands
 
 **NEVER:**
+
 - Reinvent patterns that work in flext-core
 - Relax quality standards below flext-core level
 - Skip validation steps that ensured flext-core success

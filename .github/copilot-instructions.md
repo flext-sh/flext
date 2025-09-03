@@ -7,6 +7,7 @@ FLEXT is an enterprise-grade distributed data integration platform implementing 
 ## Architecture Foundation
 
 ### Railway-Oriented Programming (Critical Pattern)
+
 All FLEXT components use `FlextResult[T]` for type-safe error handling instead of exceptions:
 
 ```python
@@ -26,17 +27,19 @@ result = (process_data(input_data)
 **Critical**: Always return `FlextResult[T]` instead of raising exceptions. Use `.success`, `.value`, `.error` properties for result handling.
 
 ### Project Structure Patterns
+
 - **flext-core**: Foundation library (FlextResult, FlextContainer, FlextConfig)
 - **flext-api**: HTTP foundation with FastAPI integration
 - **flext-meltano**: Singer/Meltano/DBT integration hub
-- **flext-db-***: Database abstraction layers
-- **flext-tap-***: Singer extractors (data sources)
-- **flext-target-***: Singer loaders (data destinations)
-- **flext-dbt-***: DBT transformation projects
+- **flext-db-\***: Database abstraction layers
+- **flext-tap-\***: Singer extractors (data sources)
+- **flext-target-\***: Singer loaders (data destinations)
+- **flext-dbt-\***: DBT transformation projects
 
 ## Essential Development Workflows
 
 ### Quality Gates (Strict Enforcement)
+
 ```bash
 # Run comprehensive checks before committing
 make check                    # All quality checks
@@ -47,6 +50,7 @@ make lint                     # mypy strict mode + ruff
 **Type Safety**: Python 3.13+ with strict mypy/pyright compliance. All code must have explicit type annotations.
 
 ### Workspace Commands
+
 ```bash
 # Development setup
 make install                  # Install all 32+ projects in dev mode
@@ -60,6 +64,7 @@ make ecosystem               # Full ecosystem test
 ```
 
 ### Docker Orchestration
+
 ```bash
 # Start complete platform
 docker compose up -d         # PostgreSQL, Redis, FLEXT services
@@ -72,6 +77,7 @@ cd flexcore && docker compose up -d         # FlexCore runtime
 ## Singer/Meltano Integration Patterns
 
 ### Meltano Configuration (meltano.yml)
+
 FLEXT uses Meltano for orchestrating Singer taps/targets with enterprise patterns:
 
 ```yaml
@@ -90,6 +96,7 @@ plugins:
 ```
 
 ### Singer Development Pattern
+
 All Singer components follow FLEXT foundation patterns:
 
 ```python
@@ -102,13 +109,14 @@ class FlextTapOracle(Tap):
         db_result = self.db_manager.get_schema_metadata()
         if not db_result.success:
             return FlextResult[Catalog].fail(f"Schema discovery failed: {db_result.error}")
-        
+
         return FlextResult[Catalog].ok(self._build_catalog(db_result.value))
 ```
 
 ## Code Quality Standards
 
 ### Type Annotations (Required)
+
 - Use explicit types for all function signatures
 - Avoid `object` type - use specific types or Union
 - Add type comments for complex generic patterns:
@@ -116,19 +124,21 @@ class FlextTapOracle(Tap):
 ```python
 # Good
 def process_records(records: list[dict[str, str | int]]) -> FlextResult[ProcessingResult]:
-    
+
 # Avoid
 def process_records(records):  # Missing types
 def process_records(records: object) -> object:  # Too generic
 ```
 
 ### Testing Patterns
+
 - Use `pytest` with factory-boy for test data
 - Mock external dependencies with `pytest-mock`
 - Test both success and failure paths with FlextResult
 - Achieve 90%+ test coverage
 
 ### Configuration Management
+
 All projects use `FlextConfig` with Pydantic for configuration:
 
 ```python
@@ -137,7 +147,7 @@ from flext_core import FlextConfig
 class MyProjectSettings(FlextConfig):
     database_url: str
     api_timeout: int = 30
-    
+
     class Config:
         env_prefix = "MY_PROJECT_"
 ```
@@ -146,7 +156,7 @@ class MyProjectSettings(FlextConfig):
 
 1. **FlextResult Chains**: Always handle both success/failure cases
 2. **Import Paths**: Use `from flext_core import` not `from flext_core.result import`
-3. **Database Connections**: Use connection pooling patterns from flext-db-* libraries
+3. **Database Connections**: Use connection pooling patterns from flext-db-\* libraries
 4. **Singer Messages**: Follow Singer SDK patterns exactly for tap/target compatibility
 5. **Go Integration**: FlexCore (Go) communicates with FLEXT Service via REST APIs on ports 8080/8081
 
