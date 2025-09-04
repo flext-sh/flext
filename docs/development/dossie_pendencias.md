@@ -37,18 +37,6 @@
 
 #### 3. FALLBACKS INCORRETOS
 
-##### Imports de Fallback Detectados
-
-```python
-# Padrão problemático encontrado:
-try:
-from flext_core import Something
-except ImportError:
-    # Fallback implementation
-    class Something:
-        pass
-```
-
 ##### Problemas Específicos
 
 - Duplicação de código entre projetos

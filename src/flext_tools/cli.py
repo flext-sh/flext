@@ -5,39 +5,8 @@ complete delegation to flext-cli patterns and seamless integration with flext_to
 functionality. This module implements enterprise-grade CLI capabilities for workspace
 management, development tooling, and orchestration across the FLEXT ecosystem.
 
-The CLI implementation uses Clean Architecture patterns with proper separation
-between command definitions, business logic, and infrastructure concerns while
-maintaining consistent output formatting and error handling throughout the interface.
-
-Key Components:
-    - Main CLI: Unified command-line interface with workspace and profile management
-    - Tools Group: Access to flext_tools functionality (quality, scripts, analysis)
-    - Integrated Commands: Direct delegation to flext-cli specialized command groups
-    - Configuration: Profile-based configuration with environment variable support
-
-Architecture:
-    Implements command delegation patterns with comprehensive error handling,
-    input validation, and output formatting via flext-cli infrastructure while
-    exposing flext_tools capabilities through organized command hierarchies.
-
-Example:
-    Basic CLI usage with workspace management:
-
-    >>> # Run quality checks on workspace
-    >>> flext --workspace /path/to/workspace tools quality
-    >>> # Display workspace information
-    >>> flext --profile production info --detailed
-    >>> # Execute comprehensive testing
-    >>> flext test --coverage --parallel
-
-Integration:
-    - Built on flext-cli patterns for consistent command behavior
-    - Integrates flext_tools functionality via organized command groups
-    - Provides enterprise-grade CLI experience with proper error handling
-    - Supports configuration profiles and environment-based settings
-
 Author: FLEXT Development Team
-Version: 2.0.0
+Version: 0.9.0
 License: MIT
 
 """
@@ -48,56 +17,20 @@ from pathlib import Path
 from typing import cast
 
 import click
+from flext_cli import (
+    FlextCliConfig,
+    FlextCliContext,
+    cli_create_table,
+    cli_validate_inputs,
+    flext_cli_create_helper,
+    flext_cli_table,
+)
+from flext_cli.commands_auth import auth
+from flext_cli.commands_config import config
 from flext_core import FlextResult
 from rich.console import Console
 
 from .quality_gateway import QualityGateway
-
-# FlextCli functional API imports - using actual existing functions
-FLEXT_CLI_AVAILABLE = False
-flext_cli_format = None
-flext_cli_table = None
-flext_cli_export = None
-flext_cli_create_helper = None
-FlextCliApiFunctions = None
-
-# Try to import actual FlextCli functions that exist
-with contextlib.suppress(ImportError, AttributeError, SyntaxError):
-    from flext_cli import (
-        FlextCliApiFunctions as _FlextCliApiFunctions,
-        flext_cli_create_helper as _flext_cli_create_helper,
-        flext_cli_export as _flext_cli_export,
-        flext_cli_format as _flext_cli_format,
-        flext_cli_table as _flext_cli_table,
-    )
-
-    flext_cli_format = _flext_cli_format
-    flext_cli_table = _flext_cli_table
-    flext_cli_export = _flext_cli_export
-    flext_cli_create_helper = _flext_cli_create_helper
-    FlextCliApiFunctions = _FlextCliApiFunctions
-    FLEXT_CLI_AVAILABLE = True
-
-# Legacy compatibility imports for older patterns
-FlextCliConfig: type[object] | None = None
-FlextCliContext: type[object] | None = None
-cli_create_table: Callable[..., object] | None = None
-
-# Try to import legacy components for backward compatibility
-with contextlib.suppress(ImportError, AttributeError, SyntaxError):
-    from flext_cli.cli_utils import (
-        cli_create_table as _cli_create_table,
-    )
-    from flext_cli.config import (
-        FlextCliConfig as _FlextCliConfig,
-    )
-    from flext_cli.context import (
-        FlextCliContext as _FlextCliContext,
-    )
-
-    cli_create_table = _cli_create_table
-    FlextCliConfig = _FlextCliConfig
-    FlextCliContext = _FlextCliContext
 
 
 # Create a no-op decorator for cli_validate_inputs when flext_cli is not available
@@ -106,10 +39,9 @@ def _no_op_decorator(func: Callable[..., object]) -> Callable[..., object]:
     return func
 
 
-cli_validate_inputs = _no_op_decorator
-
 # Output functions - use rich console as fallback
 console = Console()
+_default_console = Console()
 
 
 # FlextCli helper instance for consistent CLI operations
@@ -147,20 +79,6 @@ def print_warning(
     """Print warning message using rich console - compatible with flext-cli signatures."""
     warning_msg = message if message is not None else str(console_or_message)
     console.print(f"[yellow]⚠[/yellow] {warning_msg}")
-
-
-# Try to import cli_validate_inputs from flext_cli if available
-with contextlib.suppress(ImportError, AttributeError):
-    from flext_cli import (
-        cli_validate_inputs as _cli_validate_inputs,
-    )
-
-    cli_validate_inputs = _cli_validate_inputs
-
-    # Print functions use fallback implementations defined above
-    # They are compatible with both single and dual argument patterns
-
-_default_console = Console()
 
 
 @click.group()
@@ -234,35 +152,16 @@ def main(
     """
     # Handle FlextCli functional API integration
     try:
-        config = None
-        context = None
+        config = FlextCliConfig()
+        if hasattr(config, "profile"):
+            config.profile = profile
+        if hasattr(config, "debug"):
+            config.debug = debug
 
-        if (
-            FLEXT_CLI_AVAILABLE
-            and FlextCliConfig is not None
-            and FlextCliContext is not None
-        ):
-            # Use flext-cli FlextCliConfig with complete delegation
-            config = FlextCliConfig()
-            if hasattr(config, "profile"):
-                config.profile = profile
-            if hasattr(config, "debug"):
-                config.debug = debug
+        context = FlextCliContext()
 
-            # Create CLIContext using flext-cli patterns
-            try:
-                context = FlextCliContext()
-            except TypeError:
-                # Fallback if constructor needs specific parameters
-                context = None
-
-            if debug:
-                print_success("✅ FLEXT CLI initialized with flext-cli functional API")
-        # Fallback mode without flext-cli dependency
-        elif debug:
-            console.print(
-                "[yellow]⚠️[/yellow] flext-cli not available, using fallback mode"
-            )
+        if debug:
+            print_success("✅ FLEXT CLI initialized with flext-cli functional API")
 
     except Exception as e:
         print_error(f"❌ Configuration error: {e}")
@@ -274,7 +173,7 @@ def main(
     ctx.obj["context"] = context
     ctx.obj["workspace"] = Path(workspace) if workspace else Path.cwd()
     ctx.obj["output_format"] = output
-    ctx.obj["flext_cli_available"] = FLEXT_CLI_AVAILABLE
+    ctx.obj["flext_cli_available"] = True
 
 
 # ============================================================================
@@ -702,38 +601,8 @@ def info(ctx: click.Context, *, detailed: bool) -> None:
                     print_info(_default_console, f"  - {project}")
 
 
-# ============================================================================
-# FLEXT-CLI COMMAND GROUP INTEGRATION
-# ============================================================================
-
-# Import and add flext-cli command groups
-auth_commands: click.Group | None = None
-config_commands: click.Group | None = None
-debug_commands: click.Group | None = None
-
-# Import flext_cli commands with type ignores for untyped modules
-with contextlib.suppress(ImportError, AttributeError, SyntaxError):
-    from flext_cli.commands_auth import (
-        auth as _auth_commands,
-    )
-
-    auth_commands = _auth_commands
-
-with contextlib.suppress(ImportError, AttributeError, SyntaxError):
-    from flext_cli.commands_config import (
-        config as _config_commands,
-    )
-
-    config_commands = _config_commands
-
-with contextlib.suppress(ImportError, AttributeError, SyntaxError):
-    from flext_cli.commands_debug import (
-        debug_cmd as _debug_commands,
-    )
-
-    debug_commands = _debug_commands
-
 # Add commands if they were successfully imported, otherwise add fallbacks
+auth_commands = auth
 if auth_commands is not None:
     main.add_command(auth_commands, name="auth")
 else:
@@ -745,6 +614,7 @@ else:
 
     main.add_command(auth)
 
+config_commands = config
 if config_commands is not None:
     main.add_command(config_commands, name="config")
 else:
@@ -756,6 +626,8 @@ else:
 
     main.add_command(config)
 
+# Note: debug command not imported from flext_cli, using placeholder
+debug_commands = None
 if debug_commands is not None:
     main.add_command(debug_commands, name="debug")
 else:

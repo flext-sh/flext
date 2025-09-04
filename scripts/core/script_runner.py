@@ -54,39 +54,32 @@ class ScriptRunner(FlextScript):
             print_colored("=" * 60, Colors.CYAN)
 
             # Import script registry (lazy import)
-            try:
-                registry = ScriptRegistry()
+            registry = ScriptRegistry()
 
-                if list_scripts:
-                    self._list_all_scripts(registry)
-                    return FlextResult[object].ok({"action": "list_scripts"})
+            if list_scripts:
+                self._list_all_scripts(registry)
+                return FlextResult[object].ok({"action": "list_scripts"})
 
-                if script_name:
-                    # Pass script_name as positional and kwargs as keyword arguments
-                    result = self._run_script(
-                        registry,
-                        str(script_name),
-                        **kwargs,
-                    )  # Pass kwargs correctly
-                    return FlextResult[object].ok(
-                        {
-                            "action": "run_script",
-                            "script_name": script_name,
-                            "result": result,
-                        },
-                    )
-
-                print_colored(
-                    "❌ No script specified. Use --list to see available scripts.",
-                    Colors.RED,
+            if script_name:
+                # Pass script_name as positional and kwargs as keyword arguments
+                result = self._run_script(
+                    registry,
+                    str(script_name),
+                    **kwargs,
+                )  # Pass kwargs correctly
+                return FlextResult[object].ok(
+                    {
+                        "action": "run_script",
+                        "script_name": script_name,
+                        "result": result,
+                    },
                 )
-                return FlextResult[object].fail("No script specified")
 
-            except ImportError as e:
-                print_colored(f"❌ Failed to import script registry: {e}", Colors.RED)
-                return FlextResult[object].fail(
-                    f"Failed to import script registry: {e}"
-                )
+            print_colored(
+                "❌ No script specified. Use --list to see available scripts.",
+                Colors.RED,
+            )
+            return FlextResult[object].fail("No script specified")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error in script runner: {e}", Colors.RED)

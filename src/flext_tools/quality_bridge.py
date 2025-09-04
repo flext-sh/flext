@@ -32,23 +32,19 @@ Example:
     ...     print(f"Issues found: {len(result.value['issues'])}")
 
 Author: FLEXT Development Team
-Version: 2.0.0
+Version: 0.9.0
 License: MIT
 
 """
 
 from __future__ import annotations
 
-import contextlib
 from pathlib import Path
 
 from flext_core import FlextLogger, FlextResult
+from flext_quality import QualityAPI
 
 logger = FlextLogger(__name__)
-
-# Optional dependency - flext-quality may not be available
-with contextlib.suppress(ImportError):
-    from flext_quality import QualityAPI
 
 
 class QualityServiceDelegationError(Exception):
