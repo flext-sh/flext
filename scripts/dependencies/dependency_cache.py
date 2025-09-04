@@ -70,7 +70,10 @@ class DependencyCacheManager(FlextScript):
                 return FlextResult[object].fail(f"Unknown operation: {operation}")
 
             return FlextResult[object].ok(
-                {"operation": operation, "projects": projects}
+                {
+                    "operation": operation,
+                    "projects": projects,
+                }
             )
 
         except (OSError, ValueError, TypeError) as e:

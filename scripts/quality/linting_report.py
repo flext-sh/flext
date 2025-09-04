@@ -21,9 +21,10 @@ from pathlib import Path
 
 from flext_core import FlextResult
 from mypy import api as mypy_api
-from scripts.common import discover_projects
 
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
+
+from ..common import discover_projects
 
 
 class LintingReport(FlextScript):

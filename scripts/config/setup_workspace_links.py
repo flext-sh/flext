@@ -22,13 +22,13 @@ from flext_core import FlextResult
 from flext_tools import (
     Colors,
     FlextScript,
+    MonitoringManager,
+    MyPyChecker,
+    PoetryValidator,
     ScriptMetadata,
+    SSLManager,
     print_colored,
 )
-from flext_tools.infrastructure.monitoring_manager import MonitoringManager
-from flext_tools.infrastructure.ssl_manager import SSLManager
-from flext_tools.poetry import PoetryValidator
-from flext_tools.quality.mypy_checker import MyPyChecker
 
 """Somente tipos stdlib aqui; argparse já importado acima."""
 
