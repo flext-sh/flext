@@ -68,7 +68,7 @@ Quality Standards:
     - Professional English documentation and operational messaging
 
 Author: FLEXT Development Team
-Version: 2.0.0
+Version: 0.9.0
 License: MIT
 
 """

@@ -50,7 +50,7 @@ Quality Standards:
     - Comprehensive logging and audit trail support for security compliance
 
 Author: FLEXT Development Team
-Version: 2.0.0
+Version: 0.9.0
 License: MIT
 
 """
@@ -139,8 +139,6 @@ class SecurityAuditScript(FlextScript):
             self.logger.info("Security audit preconditions validated")
             return FlextResult[None].ok(None)
 
-        except ImportError as e:
-            return FlextResult[None].fail(f"Failed to import security modules: {e}")
         except Exception as e:
             return FlextResult[None].fail(f"Precondition validation failed: {e}")
 

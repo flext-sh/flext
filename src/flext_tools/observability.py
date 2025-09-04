@@ -1,17 +1,13 @@
 """Logging utilities for FLEXT tools using flext-observability."""
 
-import contextlib
 import warnings
 from typing import ParamSpec, Protocol
 
 from flext_core import FlextLogger
-
-# Optional dependency - flext-observability may not be available
-with contextlib.suppress(ImportError):
-    from flext_observability import (
-        FlextLoggingService,
-        flext_create_log_entry,
-    )
+from flext_observability import (
+    FlextLoggingService,
+    flext_create_log_entry,
+)
 
 
 def deprecation_warning() -> None:
