@@ -10,8 +10,13 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
-from flext_tools.quality import QualityGateway
+from flext_tools import (
+    Colors,
+    FlextScript,
+    QualityGateway,
+    ScriptMetadata,
+    print_colored,
+)
 
 
 class QualityGatewayRunner(FlextScript):

@@ -15,9 +15,10 @@ from collections.abc import Callable
 from pathlib import Path
 
 from flext_core import FlextResult
-from scripts.core.script_registry import ScriptRegistry
 
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
+
+from .script_registry import ScriptRegistry
 
 
 class ScriptRunner(FlextScript):

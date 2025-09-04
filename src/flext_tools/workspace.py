@@ -607,7 +607,7 @@ class WorkspaceManager:
                 pass
             except Exception as e:
                 # TOML parsing error, key error, or other exceptions
-                logger = FlextMixins.get_logger(__name__)
+                logger = FlextMixins.FlextLogger(__name__)
                 logger.debug(f"Failed to parse pyproject.toml: {e}")
                 # Continue to try other version sources
 
