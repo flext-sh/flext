@@ -10,8 +10,6 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from scripts.common import discover_projects
-
 from flext_tools import (
     Colors,
     DependencyDiscovery,
@@ -19,6 +17,8 @@ from flext_tools import (
     ScriptMetadata,
     print_colored,
 )
+
+from ..common import discover_projects
 
 
 class MissingDependenciesDiscoverer(FlextScript):

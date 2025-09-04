@@ -12,8 +12,7 @@ from pathlib import Path
 
 from flext_core import FlextResult
 
-from flext_tools import Colors, print_colored
-from flext_tools.core.script_base import ScriptMetadata
+from flext_tools import Colors, ScriptMetadata, print_colored
 
 
 class WorkspaceStatus:

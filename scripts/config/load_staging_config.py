@@ -7,8 +7,13 @@ from pathlib import Path
 
 from flext_core import FlextResult
 
-from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
-from flext_tools.config import ConfigurationManager
+from flext_tools import (
+    Colors,
+    ConfigurationManager,
+    FlextScript,
+    ScriptMetadata,
+    print_colored,
+)
 
 # Apenas tipos internos de Python; argparse já importado acima
 

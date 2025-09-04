@@ -152,7 +152,7 @@ class TestWorkspaceManager:
         # Arrange
         mock_projects = [Path("/test/project1"), Path("/test/project2")]
         mock_list.return_value = mock_projects
-        mock_validate.return_value = FlextResult[bool].ok(True)
+        mock_validate.return_value = FlextResult[bool].ok(data=True)
 
         # Act
         result = workspace_manager.validate_all_projects()
@@ -171,7 +171,7 @@ class TestWorkspaceManager:
         mock_projects = [Path("/test/project1"), Path("/test/project2")]
         mock_list.return_value = mock_projects
         mock_validate.side_effect = [
-            FlextResult[bool].ok(True),
+            FlextResult[bool].ok(data=True),
             FlextResult[bool].fail("Validation failed"),
         ]
 

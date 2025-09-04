@@ -28,7 +28,7 @@ from flext_tools import (
     print_colored,
 )
 
-from .common import discover_projects
+from ..common import discover_projects
 
 # Constantes para análise de qualidade
 CRITICAL_DEPENDENCY_THRESHOLD = 5

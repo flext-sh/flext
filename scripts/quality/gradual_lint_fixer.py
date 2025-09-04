@@ -13,8 +13,13 @@ from pathlib import Path
 
 from flext_core import FlextResult
 
-from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
-from flext_tools.quality import GradualLintFixer
+from flext_tools import (
+    Colors,
+    FlextScript,
+    GradualLintFixer,
+    ScriptMetadata,
+    print_colored,
+)
 
 
 class GradualLintFixerScript(FlextScript):
@@ -98,7 +103,10 @@ class GradualLintFixerScript(FlextScript):
                     )
 
                 return FlextResult[object].ok(
-                    {"fix_result": fix_result, "project": project}
+                    {
+                        "fix_result": fix_result,
+                        "project": project,
+                    }
                 )
 
             print_colored("❌ Gradual lint fixing failed", Colors.RED)
