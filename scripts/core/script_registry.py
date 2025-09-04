@@ -15,8 +15,7 @@ from pathlib import Path
 
 from flext_core import FlextLogger
 
-from flext_tools import ScriptMetadata
-from flext_tools.utils import Colors, print_colored
+from flext_tools import Colors, ScriptMetadata, print_colored
 
 
 class ScriptCategory(StrEnum):

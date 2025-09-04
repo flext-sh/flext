@@ -10,8 +10,13 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
-from flext_tools.analysis import CodeDuplicateAnalyzer
+from flext_tools import (
+    CodeDuplicateAnalyzer,
+    Colors,
+    FlextScript,
+    ScriptMetadata,
+    print_colored,
+)
 
 
 class CodeDuplicatesAnalyzer(FlextScript):
@@ -26,8 +31,10 @@ class CodeDuplicatesAnalyzer(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> bool:
+    def validate_preconditions(self) -> FlextResult[None]:
         """Validate preconditions."""
+        from flext_core import FlextResult
+
         workspace_root = Path.cwd()
 
         # Check if we're in FLEXT workspace
@@ -40,21 +47,23 @@ class CodeDuplicatesAnalyzer(FlextScript):
                 "❌ No Python projects with src/ directories found",
                 Colors.RED,
             )
-            return False
+            return FlextResult[None].fail("No Python projects found")
 
         print_colored(
             f"✅ Found {len(python_projects)} Python projects to analyze",
             Colors.GREEN,
         )
-        return True
+        return FlextResult[None].ok(None)
 
-    def execute_main_logic(self, **kwargs: object) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute code duplicate analysis."""
+        from flext_core import FlextResult
+
         try:
             workspace_root = Path.cwd()
-            projects_filter = kwargs.get("projects")
-            min_lines = kwargs.get("min_lines", 5)
-            similarity_threshold = kwargs.get("similarity_threshold", 0.8)
+            kwargs.get("projects")
+            kwargs.get("min_lines", 5)
+            kwargs.get("similarity_threshold", 0.8)
 
             print_colored("🔍 CODE DUPLICATES ANALYZER", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
@@ -63,41 +72,40 @@ class CodeDuplicatesAnalyzer(FlextScript):
             analyzer = CodeDuplicateAnalyzer(workspace_path=workspace_root)
 
             # Analyze code duplicates across workspace
-            analysis_result = analyzer.analyze_duplicates(
-                projects_filter=projects_filter,
-                min_lines=min_lines,
-                similarity_threshold=similarity_threshold,
-            )
+            analysis_result = analyzer.analyze_duplicates()
 
-            if analysis_result:
+            if analysis_result and analysis_result.is_success:
                 print_colored("✅ Code duplicate analysis completed", Colors.GREEN)
 
                 # Print summary
-                duplicates_found = analysis_result.get("duplicates_found", 0)
-                if duplicates_found > 0:
-                    print_colored(
-                        f"🚨 Found {duplicates_found} duplicate code blocks",
-                        Colors.YELLOW,
-                    )
-                else:
-                    print_colored(
-                        "🎉 No significant code duplicates found!",
-                        Colors.GREEN,
-                    )
+                result_data = analysis_result.data
+                if isinstance(result_data, dict):
+                    duplicates_found = result_data.get("duplicates_found", 0)
+                    if duplicates_found > 0:
+                        print_colored(
+                            f"🚨 Found {duplicates_found} duplicate code blocks",
+                            Colors.YELLOW,
+                        )
+                    else:
+                        print_colored(
+                            "🎉 No significant code duplicates found!",
+                            Colors.GREEN,
+                        )
 
                 # Generate report
                 if kwargs.get("generate_report", True):
                     print_colored("📊 Detailed report generated", Colors.CYAN)
 
-                return True
+                return FlextResult[object].ok(analysis_result.data)
+
             print_colored("❌ Code duplicate analysis failed", Colors.RED)
-            return False
+            return FlextResult[object].fail("Analysis failed")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during duplicate analysis: {e}", Colors.RED)
-            return False
+            return FlextResult[object].fail(f"Error during analysis: {e}")
 
-    def create_parser(self) -> object:
+    def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
         parser = super().create_parser()
 
@@ -134,8 +142,11 @@ class CodeDuplicatesAnalyzer(FlextScript):
         kwargs["generate_report"] = not getattr(args, "no_report", False)
         return kwargs
 
-    def cleanup(self) -> None:
+    def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
+        from flext_core import FlextResult
+
+        return FlextResult[None].ok(None)
 
 
 def main() -> int:

@@ -12,7 +12,6 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextResult
-from scripts.common import discover_projects
 
 from flext_tools import (
     Colors,
@@ -21,6 +20,8 @@ from flext_tools import (
     ScriptMetadata,
     print_colored,
 )
+
+from ..common import discover_projects
 
 # manter apenas stdlib; argparse já importado acima
 

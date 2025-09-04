@@ -38,7 +38,6 @@ lint.ignore = [
     "ERA001", # False positives on legitimate comments
     "G004",
     # "N999",    # Invalid module name (examples use numbered prefixes)
-    "PLC0415", # import-outside-top-level
     "PLR0911", # Many returns allowed in some processors/validators
     "PLR0912", # High complexity acceptable in orchestrators
     "PLR0913", # Too many arguments in function definition (sometimes necessary)
