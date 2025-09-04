@@ -14,6 +14,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from flext_core import FlextResult
+
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
 
@@ -29,12 +31,12 @@ class FlextResultTypeAuditor(FlextScript):
             version="1.0.0",
         )
 
-    def validate_preconditions(self) -> bool:
+    def validate_preconditions(self) -> FlextResult[None]:
         """Validate preconditions."""
         if not self._is_git_repository():
             print_colored("❌ Not in a git repository", Colors.RED)
-            return False
-        return True
+            return FlextResult[None].fail("Not in a git repository")
+        return FlextResult[None].ok(None)
 
     def _is_git_repository(self) -> bool:
         """Check if current directory is a git repository."""
@@ -106,11 +108,12 @@ class FlextResultTypeAuditor(FlextScript):
             return sorted(projects)
         except subprocess.CalledProcessError:
             # Fallback para método antigo se git submodule falhar
-            [
+            fallback_projects = [
                 item.name
                 for item in Path().iterdir()
                 if item.is_dir() and item.name.startswith("flext-")
             ]
+            return sorted(fallback_projects)
 
     def _find_python_files(self, project_dir: str) -> list[str]:
         """Encontra todos os arquivos .py no projeto respeitando .gitignore."""
@@ -166,15 +169,13 @@ class FlextResultTypeAuditor(FlextScript):
                         if lines[j].strip().startswith("def "):  # Próximo método
                             break
                         if re.search(return_pattern, lines[j]):
-                            issues.append(
-                                {
-                                    "file": file_path,
-                                    "line": j + 1,
-                                    "method": method_name,
-                                    "declared_type": return_type,
-                                    "issue": f"Método declara FlextResult[{return_type}] mas retorna FlextResult.success()/error() sem valor",
-                                }
-                            )
+                            issues.append({
+                                "file": file_path,
+                                "line": j + 1,
+                                "method": method_name,
+                                "declared_type": return_type,
+                                "issue": f"Método declara FlextResult[{return_type}] mas retorna FlextResult.success()/error() sem valor",
+                            })
 
         # Procura por outros padrões problemáticos
         for i, line in enumerate(lines):
@@ -192,19 +193,17 @@ class FlextResultTypeAuditor(FlextScript):
                 and "FlextResult[None]" in line
                 and "FlextResult[dict" in line
             ):
-                issues.append(
-                    {
-                        "file": file_path,
-                        "line": i + 1,
-                        "method": "unknown",
-                        "declared_type": "mixed",
-                        "issue": "Possível inconsistência entre FlextResult[None] e FlextResult[dict]",
-                    }
-                )
+                issues.append({
+                    "file": file_path,
+                    "line": i + 1,
+                    "method": "unknown",
+                    "declared_type": "mixed",
+                    "issue": "Possível inconsistência entre FlextResult[None] e FlextResult[dict]",
+                })
 
         return issues
 
-    def execute_main_logic(self) -> int:
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute FlextResult type consistency audit."""
         print_colored(
             "🔍 Verificando inconsistências de FlextResult em todos os projetos flext...",
@@ -243,7 +242,7 @@ class FlextResultTypeAuditor(FlextScript):
             print_colored("\n🔧 PROBLEMAS DETALHADOS:", Colors.YELLOW)
             current_project = None
             for issue in all_issues:
-                project_name = issue["file"].split("/")[0]
+                project_name = str(issue["file"]).split("/")[0]
                 if project_name != current_project:
                     current_project = project_name
                     print_colored(f"\n📁 {project_name}:", Colors.BLUE)
@@ -263,7 +262,7 @@ class FlextResultTypeAuditor(FlextScript):
         color = Colors.GREEN if exit_code == 0 else Colors.YELLOW
         print_colored(f"\n{status_msg}", color)
 
-        return exit_code
+        return FlextResult[object].ok({"issues_count": exit_code, "issues": all_issues})
 
 
 def main() -> int:
