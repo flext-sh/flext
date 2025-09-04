@@ -9,8 +9,13 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
-from flext_tools.monitoring import HealthCheckService
+from flext_tools import (
+    Colors,
+    FlextScript,
+    HealthCheckService,
+    ScriptMetadata,
+    print_colored,
+)
 
 
 class HealthCheckServiceRunner(FlextScript):
