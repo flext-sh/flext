@@ -10,8 +10,15 @@ from pathlib import Path
 
 import pytest
 
+import flext.cli_patterns
+import flext.cli_patterns as module
 import flext.cli_patterns as patterns_module
-from flext.cli_patterns import BaseCLI, __all__
+from flext.cli_patterns import (
+    BaseCLI,
+    BaseCLI as ImportedBaseCLI,
+    BaseCLI as PatternBaseCLI,
+    __all__,
+)
 
 
 class TestCliPatterns:
@@ -64,16 +71,6 @@ class TestCliPatterns:
         assert "BaseCLI" in doc
         assert "FLEXT ecosystem" in doc
 
-    def test_import_structure_resilience(self) -> None:
-        """Test that import structure handles missing dependencies gracefully."""
-        # This test verifies that the module can be imported even if dependencies are missing
-        try:
-            assert True  # Module imported successfully
-        except ImportError as e:
-            pytest.fail(
-                f"cli_patterns module should handle import failures gracefully: {e}"
-            )
-
     @pytest.mark.skipif(
         BaseCLI is None, reason="BaseCLI not available - import dependency issue"
     )
@@ -120,6 +117,8 @@ class TestCliPatternsIntegration:
     def test_flext_ecosystem_integration_design(self) -> None:
         """Test that CLI patterns are designed for FLEXT ecosystem integration."""
         # Check module documentation mentions key integration points
+        import flext.cli_patterns as patterns
+
         doc = patterns.__doc__ or ""
         integration_keywords = [
             "flext-core",
@@ -153,6 +152,7 @@ class TestErrorHandling:
     def test_import_error_handling(self) -> None:
         """Test graceful handling of import errors."""
         # The module should handle missing dependencies without crashing
+
         try:
             # If import succeeds, module should be usable
             assert hasattr(flext.cli_patterns, "__all__")
@@ -163,6 +163,7 @@ class TestErrorHandling:
     def test_missing_base_cli_handling(self) -> None:
         """Test handling when base CLI implementation is missing."""
         # This tests the resilience of the patterns module
+        import flext.cli_patterns
 
         # Module should be importable even if underlying implementation is missing
         assert flext.cli_patterns is not None
@@ -184,8 +185,6 @@ class TestDocumentationCompliance:
 
     def test_module_docstring_quality(self) -> None:
         """Test that module has comprehensive documentation."""
-        import flext.cli_patterns as module
-
         doc = module.__doc__
         assert doc is not None
         assert len(doc) > 100  # Substantial documentation

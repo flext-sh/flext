@@ -9,20 +9,22 @@ MkDocs integration, and automated content generation.
 import sys
 from pathlib import Path
 
-from flext_tools.documentation import DocumentationGenerator
+from flext_tools.documentation_generator import DocumentationGenerator
 
 
 def main() -> int:
     """Main entry point for the documentation generator script.
 
     Returns:
-      int: Description.
+        int: Exit code (0 for success, non-zero for failure).
 
-    """  # Initialize generator with current directory
+    """
+    # Initialize generator with current directory
     generator = DocumentationGenerator(Path.cwd())
 
     # Run documentation generation
-    return generator.main()
+    result = generator.main()
+    return result if isinstance(result, int) else 0
 
 
 if __name__ == "__main__":

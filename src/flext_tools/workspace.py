@@ -5,63 +5,18 @@ integration ecosystem, implementing Clean Architecture and Domain-Driven Design
 patterns for workspace lifecycle management, project organization, and dependency
 coordination across the 32-project ecosystem.
 
-This module serves as the central coordination point for workspace operations,
-managing project discovery, dependency resolution, environment configuration,
-and validation across the entire FLEXT ecosystem. It implements enterprise-grade
-patterns for maintainable and scalable workspace management.
-
-Key Features:
-    - Workspace lifecycle management (create, validate, migrate)
-    - Multi-project dependency coordination
-    - Enterprise configuration management
-    - Quality gate enforcement across projects
-    - Integration with FlexCore and FLEXT Service
-    - Development environment orchestration
-
-Architecture:
-    Implements Clean Architecture with clear separation between domain logic,
-    application services, and infrastructure concerns. All operations use
-    FlextResult patterns for consistent error handling and logging integration.
-
-Integration:
-    - Uses flext-core for foundation patterns (FlextResult, FlextContainer)
-    - Integrates with flext-observability for monitoring and health checks
-    - Coordinates with all 32 ecosystem projects
-    - Manages Singer/Meltano pipeline orchestration
-    - Provides CLI integration through workspace commands
-
-Example:
-    Basic workspace management:
-
-    >>> from flext.workspace import WorkspaceManager
-    >>> from flext_core import FlextResult
-    >>>
-    >>> manager = WorkspaceManager()
-    >>> result = manager.create_workspace("/path/to/workspace")
-    >>> if result.is_success:
-    ...     print(f"Workspace created: {result.data.path}")
-    >>>
-    >>> # Validate workspace structure
-    >>> validation = manager.validate_workspace()
-    >>> if validation.is_success:
-    ...     print(f"Workspace valid: {len(validation.data.projects)} projects")
-
 Author: FLEXT Development Team
-Version: 2.0.0
+Version: 0.9.0
 License: MIT
 
 """
 
 import os
 import sys
+import tomllib
 from pathlib import Path
 
-try:
-    import tomllib
-except ImportError:
-    tomllib = None
-
-from flext_core import FlextMixins
+from flext_core import FlextConstants, FlextMixins
 
 
 class WorkspaceManager:
@@ -510,7 +465,6 @@ class WorkspaceManager:
         os.environ["FLEXT_LOG_LEVEL"] = "DEBUG"
 
         # Service URLs for local development
-        from flext_core import FlextConstants
 
         os.environ["FLEXCORE_URL"] = FlextConstants.Urls.FLEXCORE_BASE_URL
         os.environ["FLEXT_SERVICE_URL"] = FlextConstants.Urls.FLEXT_SERVICE_BASE_URL

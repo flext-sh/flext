@@ -7,8 +7,11 @@ usando flext_tools.analysis para máxima precisão e confiabilidade enterprise.
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
+
+from flext_core import FlextResult
 
 from flext_tools import (
     CodeDuplicateAnalyzer,
@@ -33,8 +36,6 @@ class CodeDuplicatesAnalyzer(FlextScript):
 
     def validate_preconditions(self) -> FlextResult[None]:
         """Validate preconditions."""
-        from flext_core import FlextResult
-
         workspace_root = Path.cwd()
 
         # Check if we're in FLEXT workspace
@@ -57,8 +58,6 @@ class CodeDuplicatesAnalyzer(FlextScript):
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute code duplicate analysis."""
-        from flext_core import FlextResult
-
         try:
             workspace_root = Path.cwd()
             kwargs.get("projects")
@@ -144,8 +143,6 @@ class CodeDuplicatesAnalyzer(FlextScript):
 
     def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
-        from flext_core import FlextResult
-
         return FlextResult[None].ok(None)
 
 
