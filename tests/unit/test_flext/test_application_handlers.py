@@ -5,25 +5,28 @@ with proper mocking and verification of flext-core integration.
 """
 
 from dataclasses import dataclass
-
-object
 from unittest.mock import Mock, patch
 
 import pytest
-from flext_core import FlextResult
 
 from flext.application_handlers import (
     CommandHandler,
     EventHandler,
+    FlextCommandHandler,
+    FlextEventHandler,
     FlextHandlers,
+    FlextQueryHandler,
+    FlextResult,
     HandlerChain,
     Pipeline,
     QueryHandler,
     SimpleQueryHandler,
     VoidCommandHandler,
+    __all__,
 )
 
 # Import the handlers from FlextHandlers namespace
+Handler = FlextHandlers.Handler
 AuthorizingHandler = FlextHandlers.Implementation.AuthorizingHandler
 MetricsHandler = FlextHandlers.Implementation.MetricsHandler
 ValidatingHandler = FlextHandlers.Implementation.ValidatingHandler
@@ -59,35 +62,38 @@ class TestFlextHandlerFacade:
     def test_command_handler_facade_alias(self) -> None:
         """Test that CommandHandler is properly aliased to FlextCommandHandler."""
         # Assert
+        FlextCommandHandler = FlextHandlers.Implementation.CommandHandler
         assert CommandHandler is FlextCommandHandler
         assert issubclass(CommandHandler, FlextCommandHandler)
 
     def test_query_handler_facade_alias(self) -> None:
         """Test that QueryHandler is properly aliased to FlextQueryHandler."""
         # Assert
+        FlextQueryHandler = FlextHandlers.Implementation.QueryHandler
         assert QueryHandler is FlextQueryHandler
         assert issubclass(QueryHandler, FlextQueryHandler)
 
     def test_event_handler_facade_alias(self) -> None:
         """Test that EventHandler is properly aliased to FlextEventHandler."""
         # Assert
+        FlextEventHandler = FlextHandlers.Implementation.EventHandler
         assert EventHandler is FlextEventHandler
         assert issubclass(EventHandler, FlextEventHandler)
 
     def test_void_command_handler_alias(self) -> None:
         """Test VoidCommandHandler alias for commands returning None."""
         # Assert
+        FlextCommandHandler = FlextHandlers.Implementation.CommandHandler
         assert VoidCommandHandler is FlextCommandHandler
 
     def test_simple_query_handler_alias(self) -> None:
         """Test SimpleQueryHandler alias for queries returning dict."""
         # Assert
+        FlextQueryHandler = FlextHandlers.Implementation.QueryHandler
         assert SimpleQueryHandler is FlextQueryHandler
 
     def test_all_exports_available(self) -> None:
         """Test that all expected exports are available from the module."""
-        from flext.application_handlers import __all__
-
         # Essential exports that must be present
         required_exports = [
             "FlextCommandHandler",
@@ -108,9 +114,6 @@ class TestFlextHandlerFacade:
         # Arrange
         mock_instance = Mock()
         mock_handler.return_value = mock_instance
-
-        # Act - Import should work without error
-        from flext.application_handlers import FlextCommandHandler
 
         # Assert
         assert FlextCommandHandler is not None
@@ -193,12 +196,6 @@ class TestHandlerIntegration:
         # More comprehensive integration testing would require actual flext-core setup
 
         # Act - Import all handler types
-        from flext.application_handlers import (
-            FlextCommandHandler,
-            FlextEventHandler,
-            FlextQueryHandler,
-            FlextResult,
-        )
 
         # Assert - All imports successful
         assert FlextCommandHandler is not None
@@ -209,14 +206,6 @@ class TestHandlerIntegration:
     def test_handler_patterns_consistency(self) -> None:
         """Test that handler patterns maintain consistency with flext-core."""
         # Verify that facade aliases point to the same base classes
-        from flext.application_handlers import (
-            CommandHandler,
-            EventHandler,
-            FlextCommandHandler,
-            FlextEventHandler,
-            FlextQueryHandler,
-            QueryHandler,
-        )
 
         # Assert aliases are consistent
         assert CommandHandler is FlextCommandHandler
@@ -233,19 +222,12 @@ class TestHandlerErrorHandling:
         # For now, we verify that the imports are structured to handle failures
 
         # Act & Assert - Module should define its exports clearly
-        from flext.application_handlers import __all__
 
         assert isinstance(__all__, list)
         assert len(__all__) > 0
 
     def test_facade_pattern_consistency(self) -> None:
         """Test that facade pattern maintains consistent behavior."""
-        from flext.application_handlers import (
-            CommandHandler,
-            EventHandler,
-            QueryHandler,
-        )
-
         # Assert that facades maintain proper inheritance
         assert hasattr(CommandHandler, "__mro__")  # Has method resolution order
         assert hasattr(QueryHandler, "__mro__")
