@@ -50,7 +50,9 @@ lint.ignore = [
     "TC002",   # Pydantic requirement
     "TC003",   # Pydantic requirement
     "TRY300",
+    "TRY301",  # Abstract raise
 ]
+
 lint.isort.force-single-line = false
 lint.isort.split-on-trailing-comma = true
 lint.isort.combine-as-imports = true
@@ -95,7 +97,7 @@ lint.per-file-ignores."**/scripts/**" = [
     "TID252",
 
 ]
-lint.per-file-ignores."**/tests*/**" = [
+lint.per-file-ignores."**/*tests*/**" = [
     "ARG001",  # Unused function argument - common in test mocks
     "ARG002",  # Unused method argument - common in test fixtures
     "ARG005",  # Unused lambda argument - common in test helpers
@@ -117,11 +119,11 @@ lint.per-file-ignores."**/tests*/**" = [
     "S112",
     "S311",
     "S603",
+    "S608",
     "SIM105",  # Use contextlib.suppress - tests may prefer explicit try/except
     "TID252",
     "TRY003",
     "TRY004",  # Prefer TypeError - test flexibility over strict exception types
-    "TRY301",  # Abstract raise - tests may have inline raises for clarity
 ]
 lint.per-file-ignores."**/typings/**" = ["PYI001"]
 lint.select = ["ALL"]
