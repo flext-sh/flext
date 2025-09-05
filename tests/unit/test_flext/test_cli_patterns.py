@@ -13,6 +13,7 @@ import pytest
 import flext.cli_patterns
 import flext.cli_patterns as module
 import flext.cli_patterns as patterns_module
+import flext.cli_pattesrns as patterns
 from flext.cli_patterns import (
     BaseCLI,
     BaseCLI as ImportedBaseCLI,
@@ -117,7 +118,6 @@ class TestCliPatternsIntegration:
     def test_flext_ecosystem_integration_design(self) -> None:
         """Test that CLI patterns are designed for FLEXT ecosystem integration."""
         # Check module documentation mentions key integration points
-        import flext.cli_patterns as patterns
 
         doc = patterns.__doc__ or ""
         integration_keywords = [
@@ -163,7 +163,6 @@ class TestErrorHandling:
     def test_missing_base_cli_handling(self) -> None:
         """Test handling when base CLI implementation is missing."""
         # This tests the resilience of the patterns module
-        import flext.cli_patterns
 
         # Module should be importable even if underlying implementation is missing
         assert flext.cli_patterns is not None

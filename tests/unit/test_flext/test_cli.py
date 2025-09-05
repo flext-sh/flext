@@ -11,7 +11,15 @@ import pytest
 from click.testing import CliRunner
 from flext_core import FlextResult
 
-from flext.cli import Colors, QualityGateway, main, print_colored
+from flext.cli import (
+    CLIConfig,
+    Colors,
+    FlextCliContext,
+    QualityGateway,
+    cli_enhanced,
+    main,
+    print_colored,
+)
 
 
 class TestMainCliFunction:
@@ -246,8 +254,6 @@ class TestCliFallbackComponents:
 
     def test_colors_ansi_codes(self) -> None:
         """Test that Colors constants contain proper ANSI codes."""
-        from flext.cli import Colors
-
         # Assert ANSI escape sequences
         assert Colors.GREEN.startswith("\033[")
         assert Colors.RED.startswith("\033[")
@@ -271,8 +277,6 @@ class TestCliFallbackComponents:
 
     def test_cli_enhanced_decorator_fallback(self) -> None:
         """Test cli_enhanced decorator fallback."""
-        from flext.cli import cli_enhanced
-
         # Act
         decorator = cli_enhanced(name="test")
 
@@ -298,8 +302,6 @@ class TestCliContext:
 
     def test_flext_cli_context_creation(self) -> None:
         """Test FlextCliContext creation."""
-        from flext.cli import CLIConfig, FlextCliContext
-
         # Arrange
         config = CLIConfig(profile="test", debug=True)
 

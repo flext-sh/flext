@@ -4,7 +4,7 @@ Tests for pipeline application services following FLEXT testing patterns
 with comprehensive coverage of CQRS commands, queries, and handlers.
 """
 
-object
+from pathlib import Path
 
 import pytest
 from flext_core import FlextResult
@@ -258,14 +258,16 @@ class TestPipelineServiceIntegration:
     """Integration tests for pipeline service components."""
 
     @pytest.fixture
-    def temp_workspace(self, tmp_path) -> object:
+    def temp_workspace(self, tmp_path: Path) -> Path:
         """Create temporary workspace for integration testing."""
         workspace = tmp_path / "pipeline-integration-test"
         workspace.mkdir()
         return workspace
 
     @pytest.mark.asyncio
-    async def test_pipeline_service_complete_workflow(self, temp_workspace) -> None:
+    async def test_pipeline_service_complete_workflow(
+        self, temp_workspace: Path
+    ) -> None:
         """Test complete pipeline service workflow."""
         # Arrange
         service = FlextPipelineApplicationServices()

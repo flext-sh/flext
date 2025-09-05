@@ -4,6 +4,7 @@ Tests for the base CLI functionality following FLEXT testing patterns
 with proper mocking and isolation.
 """
 
+import tempfile
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -18,7 +19,7 @@ class TestBaseCLI:
     @pytest.fixture
     def mock_workspace(self) -> Path:
         """Mock workspace path for testing."""
-        return Path("/tmp/test-workspace")
+        return Path(tempfile.mkdtemp(prefix="test-workspace-"))
 
     @pytest.fixture
     def base_cli(self, mock_workspace: Path) -> BaseCLI:

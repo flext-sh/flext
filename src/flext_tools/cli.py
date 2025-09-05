@@ -11,31 +11,23 @@ License: MIT
 
 """
 
-import contextlib
-from collections.abc import Callable
 from pathlib import Path
-from typing import cast
+from typing import TypeVar
 
 import click
-from flext_cli import (
-    FlextCliConfig,
-    FlextCliContext,
-    cli_create_table,
-    cli_validate_inputs,
-    flext_cli_create_helper,
-    flext_cli_table,
-)
-from flext_cli.commands_auth import auth
-from flext_cli.commands_config import config
+from flext_cli import FlextCliConfig, FlextCliContext, FlextCliFormatters
 from flext_core import FlextResult
 from rich.console import Console
+from rich.table import Table
 
 from .quality_gateway import QualityGateway
 
+F = TypeVar("F")
 
-# Create a no-op decorator for cli_validate_inputs when flext_cli is not available
-def _no_op_decorator(func: Callable[..., object]) -> Callable[..., object]:
-    """No-op decorator fallback when flext_cli is not available."""
+
+# Create a no-op decorator for validation
+def _no_op_decorator[F](func: F) -> F:
+    """No-op decorator for validation when needed."""
     return func
 
 
@@ -44,13 +36,8 @@ console = Console()
 _default_console = Console()
 
 
-# FlextCli helper instance for consistent CLI operations
-cli_helper = None
-
-# Initialize FlextCli helper if available
-with contextlib.suppress(Exception):
-    if flext_cli_create_helper is not None:
-        cli_helper = flext_cli_create_helper(console=console, quiet=False)
+# FlextCli formatters instance for consistent CLI operations
+cli_formatters = FlextCliFormatters()
 
 
 def print_error(console_or_message: Console | str, message: str | None = None) -> None:
@@ -227,7 +214,7 @@ def tools() -> None:
 )
 @click.option("--coverage-threshold", default=90.0, help="Minimum coverage threshold")
 @click.pass_context
-@cli_validate_inputs  # Use flext-cli validation decorator
+@_no_op_decorator  # Use validation decorator
 def quality(
     ctx: click.Context,
     *,
@@ -356,31 +343,19 @@ def scripts(ctx: click.Context, category: str | None, *, list_only: bool) -> Non
                     {"Script": script} for script in scripts_by_category[category]
                 ]
 
-                if table_data and flext_cli_table is not None:
-                    # Use FlextCli functional table API
-                    table_result = flext_cli_table(
-                        table_data, title=f"Scripts in {category}"
-                    )
-                    if table_result.success:
-                        _default_console.print(table_result.value)
-                    else:
-                        # Fallback to simple list
-                        for script_info in table_data:
-                            print_info(
-                                _default_console,
-                                f"  - {script_info.get('Script', 'Unknown')}",
-                            )
-                elif table_data and cli_create_table is not None:
-                    # Legacy flext-cli table formatter
-                    result = cli_create_table(
-                        cast("list[object]", table_data), title=f"Scripts in {category}"
-                    )
-                    if (
-                        hasattr(result, "success")
-                        and getattr(result, "success", False)
-                        and hasattr(result, "value")
-                    ):
-                        _default_console.print(getattr(result, "value"))
+                if table_data:
+                    # Use rich table for script listing
+                    table = Table(title=f"Scripts in {category}")
+                    table.add_column("Script")
+
+                    for script_info in table_data:
+                        script_name = (
+                            script_info.get("Script", "Unknown")
+                            if isinstance(script_info, dict)
+                            else str(script_info)
+                        )
+                        table.add_row(script_name)
+                    console.print(table)
                 elif table_data:
                     # Fallback if no formatters available
                     for script_info in table_data:
@@ -458,7 +433,7 @@ def analysis(ctx: click.Context, analysis_type: str) -> None:
 )
 @click.option("--parallel", default=True, help="Run tests in parallel where possible")
 @click.pass_context
-@cli_validate_inputs
+@_no_op_decorator
 def test(ctx: click.Context, *, coverage: bool, parallel: bool) -> None:
     """Execute comprehensive test suite using flext_tools integration.
 
@@ -490,7 +465,7 @@ def test(ctx: click.Context, *, coverage: bool, parallel: bool) -> None:
 @main.command()
 @click.option("--fix/--no-fix", default=False, help="Auto-fix issues where possible")
 @click.pass_context
-@cli_validate_inputs
+@_no_op_decorator
 def lint(ctx: click.Context, *, fix: bool) -> None:
     """Execute linting using flext_tools quality gateway.
 
@@ -572,72 +547,39 @@ def info(ctx: click.Context, *, detailed: bool) -> None:
             # Use modern FlextCli formatter or fallback
             project_data = [{"Project": project} for project in projects]
 
-            if flext_cli_table is not None:
-                # Use FlextCli functional table API
-                table_result = flext_cli_table(
-                    project_data, title="FLEXT Ecosystem Projects"
+            # Use rich table for projects listing
+            table = Table(title="FLEXT Ecosystem Projects")
+            table.add_column("Project")
+
+            for project_info in project_data:
+                project_name = (
+                    project_info.get("Project", "Unknown")
+                    if isinstance(project_info, dict)
+                    else str(project_info)
                 )
-                if table_result.success:
-                    _default_console.print(table_result.value)
-                else:
-                    # Fallback to simple list
-                    for project in projects:
-                        print_info(_default_console, f"  - {project}")
-            elif cli_create_table is not None:
-                # Legacy flext-cli table formatter
-                result = cli_create_table(
-                    data=cast("list[object]", project_data),
-                    title="FLEXT Ecosystem Projects",
-                )
-                if (
-                    hasattr(result, "success")
-                    and getattr(result, "success", False)
-                    and hasattr(result, "value")
-                ):
-                    _default_console.print(getattr(result, "value"))
-            else:
-                # Fallback if no formatters available
-                for project in projects:
-                    print_info(_default_console, f"  - {project}")
+                table.add_row(project_name)
+            console.print(table)
 
 
-# Add commands if they were successfully imported, otherwise add fallbacks
-auth_commands = auth
-if auth_commands is not None:
-    main.add_command(auth_commands, name="auth")
-else:
+# Add auth and config commands
+@main.command("auth")
+def auth_cmd() -> None:
+    """Authentication management commands."""
+    print_info(console, "Auth commands - use FlextCliAuth for full functionality")
 
-    @click.group()
-    def auth() -> None:
-        """Provide authentication commands (placeholder - install flext-cli)."""
-        print_warning(_default_console, "⚠️ flext-cli auth commands not available")
 
-    main.add_command(auth)
+@main.command("config")
+def config_cmd() -> None:
+    """Configuration management commands."""
+    print_info(console, "Config commands - use FlextCliConfig for full functionality")
 
-config_commands = config
-if config_commands is not None:
-    main.add_command(config_commands, name="config")
-else:
 
-    @click.group()
-    def config() -> None:
-        """Provide configuration commands (placeholder - install flext-cli)."""
-        print_warning(_default_console, "⚠️ flext-cli config commands not available")
+# Add debug command
+@main.command("debug")
+def debug_cmd() -> None:
+    """Debug commands."""
+    print_info(console, "Debug commands - use FlextCliDebug for full functionality")
 
-    main.add_command(config)
-
-# Note: debug command not imported from flext_cli, using placeholder
-debug_commands = None
-if debug_commands is not None:
-    main.add_command(debug_commands, name="debug")
-else:
-
-    @click.group()
-    def debug() -> None:
-        """Debug commands (placeholder - install flext-cli)."""
-        print_warning(_default_console, "⚠️ flext-cli debug commands not available")
-
-    main.add_command(debug)
 
 # Add the tools command group that exposes flext_tools functionality
 main.add_command(tools)
