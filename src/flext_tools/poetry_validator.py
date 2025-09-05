@@ -77,11 +77,11 @@ License: MIT
 from __future__ import annotations
 
 import re
+import subprocess
 import tomllib
 from pathlib import Path
 from typing import cast
 
-import poetry.console
 from flext_core import FlextLogger, FlextModels, FlextResult
 from pydantic import Field
 
@@ -512,14 +512,19 @@ class PoetryValidator:
             issues.append("poetry.lock not found - run 'poetry lock'")
             return False, issues
 
-        # poetry.console module is always available after import
+        # Use subprocess to run poetry check command
         try:
-            app = poetry.console.application.Application()
-            code = app.run(["check"])
-            if int(code) != 0:
+            result = subprocess.run(
+                ["poetry", "check"],
+                check=False,
+                cwd=project_path,
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode != 0:
                 issues.append("poetry.lock is outdated - run 'poetry lock'")
         except Exception:
-            issues.append("Unable to verify poetry.lock status via Poetry API")
+            issues.append("Unable to verify poetry.lock status via Poetry CLI")
 
         return len(issues) == 0, issues
 
