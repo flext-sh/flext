@@ -72,13 +72,13 @@ from __future__ import annotations
 import contextlib
 import io
 import shutil
+import subprocess
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
-import ruff.__main__
 from flext_core import FlextLogger, FlextModels, FlextResult
 from flext_core.container import FlextContainer
 from mypy import api
@@ -431,7 +431,7 @@ class QualityGateway:
     def _run_lint_check(self) -> FlextResult[list[QualityIssue]]:
         """Run linting check with Ruff."""
         try:
-            if shutil.which("ruff") is None or ruff.__main__ is None:
+            if shutil.which("ruff") is None:
                 return (
                     FlextResult[list[QualityIssue]].ok([])
                     if self._is_relaxed()
@@ -444,14 +444,15 @@ class QualityGateway:
             stderr = io.StringIO()
             with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
                 try:
-                    # Run ruff against workspace_path
-                    exit_code = 0
-                    try:
-                        exit_code = int(
-                            ruff.__main__.main(["check", str(self.workspace_path)]),
-                        )
-                    except SystemExit as exc:
-                        exit_code = int(getattr(exc, "code", 0) or 0)
+                    # Run ruff against workspace_path using subprocess
+                    result = subprocess.run(
+                        ["ruff", "check", str(self.workspace_path)],
+                        check=False,
+                        capture_output=True,
+                        text=True,
+                        cwd=self.workspace_path,
+                    )
+                    exit_code = result.returncode
                 except Exception as e:
                     return FlextResult[list[QualityIssue]].fail(
                         f"Lint check failed: {e}"
