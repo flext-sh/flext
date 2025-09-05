@@ -121,9 +121,11 @@ from .stdlib import *
 import sys
 from types import ModuleType
 
-__all__: list[str] = []
+__all__ = []
 
 # Collect exports from all imported modules
+name = None
+obj = None
 for name, obj in sys.modules.items():
     if (
         name.startswith("flext_")
@@ -134,7 +136,11 @@ for name, obj in sys.modules.items():
         __all__ += obj.__all__
 
 # Remove duplicates and sort - FLEXT Pattern
-__all__: list[str] = sorted(set(__all__))
+__all__ = sorted(set(__all__))
 
 # Clean up temporary variables
-del sys, ModuleType, name, obj
+del sys, ModuleType
+if name is not None:
+    del name
+if obj is not None:
+    del obj

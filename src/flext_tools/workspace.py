@@ -16,7 +16,7 @@ import sys
 import tomllib
 from pathlib import Path
 
-from flext_core import FlextConstants, FlextMixins
+from flext_core import FlextConstants, FlextLogger
 
 
 class WorkspaceManager:
@@ -561,7 +561,7 @@ class WorkspaceManager:
                 pass
             except Exception as e:
                 # TOML parsing error, key error, or other exceptions
-                logger = FlextMixins.FlextLogger(__name__)
+                logger = FlextLogger(__name__)
                 logger.debug(f"Failed to parse pyproject.toml: {e}")
                 # Continue to try other version sources
 

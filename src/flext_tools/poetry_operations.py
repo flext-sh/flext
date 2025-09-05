@@ -15,6 +15,7 @@ License: MIT
 from __future__ import annotations
 
 import re
+import subprocess
 import time
 from pathlib import Path
 
@@ -390,7 +391,6 @@ class PoetryOperations:
             if self.dry_run:
                 args.append("--dry-run")
             # Use subprocess instead of Poetry Application due to Input type incompatibility
-            import subprocess
 
             cmd = ["poetry", *args]
             result = subprocess.run(cmd, check=False, capture_output=True, text=True)
@@ -594,7 +594,6 @@ class PoetryOperations:
             if self.dry_run:
                 args.append("--dry-run")
             # Use subprocess instead of Poetry Application due to Input type incompatibility
-            import subprocess
 
             cmd = ["poetry", *args]
             result = subprocess.run(cmd, check=False, capture_output=True, text=True)
@@ -732,7 +731,6 @@ class PoetryOperations:
             if self.dry_run:
                 args.append("--dry-run")
             # Use subprocess instead of Poetry Application due to Input type incompatibility
-            import subprocess
 
             cmd = ["poetry", *args]
             result = subprocess.run(cmd, check=False, capture_output=True, text=True)
@@ -852,7 +850,6 @@ class PoetryOperations:
                 return False
             args = ["lock"]
             # Use subprocess instead of Poetry Application due to Input type incompatibility
-            import subprocess
 
             cmd = ["poetry", *args]
             result = subprocess.run(cmd, check=False, capture_output=True, text=True)
@@ -969,7 +966,6 @@ class PoetryOperations:
                 return False
             args = ["check"]
             # Use subprocess instead of Poetry Application due to Input type incompatibility
-            import subprocess
 
             cmd = ["poetry", *args]
             result = subprocess.run(cmd, check=False, capture_output=True, text=True)
