@@ -18,17 +18,17 @@ try:
 
     DOCKER_AVAILABLE = True
 except ImportError:
-    docker = None  # type: ignore
+    docker = None
     DOCKER_AVAILABLE = False
 
 
 @pytest.fixture(scope="session")
-def docker_client() -> Generator[docker.DockerClient]:  # type: ignore
+def docker_client() -> Generator[docker.DockerClient]:
     """Docker client fixture for tests that need Docker access."""
     if not DOCKER_AVAILABLE:
         pytest.skip("Docker not available")
 
-    client = docker.from_env()  # type: ignore
+    client = docker.from_env()
     try:
         # Test connection
         client.ping()
@@ -38,7 +38,7 @@ def docker_client() -> Generator[docker.DockerClient]:  # type: ignore
 
 
 @pytest.fixture
-def postgres_container(docker_client: docker.DockerClient) -> Generator[str]:  # type: ignore
+def postgres_container(docker_client: docker.DockerClient) -> Generator[str]:
     """PostgreSQL container fixture for database integration tests."""
     if not DOCKER_AVAILABLE:
         pytest.skip("Docker not available")
@@ -46,7 +46,7 @@ def postgres_container(docker_client: docker.DockerClient) -> Generator[str]:  #
     container = None
     try:
         # Create and start PostgreSQL container
-        container = docker_client.containers.run(  # type: ignore
+        container = docker_client.containers.run(
             "postgres:15-alpine",
             environment={
                 "POSTGRES_DB": "testdb",
@@ -62,7 +62,7 @@ def postgres_container(docker_client: docker.DockerClient) -> Generator[str]:  #
         time.sleep(5)
 
         # Get the assigned port
-        container_info = docker_client.api.inspect_container(container.id)  # type: ignore
+        container_info = docker_client.api.inspect_container(container.id)
         port = container_info["NetworkSettings"]["Ports"]["5432/tcp"][0]["HostPort"]
 
         yield f"postgresql://testuser:testpass@localhost:{port}/testdb"
@@ -73,7 +73,7 @@ def postgres_container(docker_client: docker.DockerClient) -> Generator[str]:  #
 
 
 @pytest.fixture
-def ldap_container(docker_client: docker.DockerClient) -> Generator[str]:  # type: ignore
+def ldap_container(docker_client: docker.DockerClient) -> Generator[str]:
     """OpenLDAP container fixture for LDAP integration tests."""
     if not DOCKER_AVAILABLE:
         pytest.skip("Docker not available")
@@ -81,7 +81,7 @@ def ldap_container(docker_client: docker.DockerClient) -> Generator[str]:  # typ
     container = None
     try:
         # Create and start OpenLDAP container
-        container = docker_client.containers.run(  # type: ignore
+        container = docker_client.containers.run(
             "osixia/openldap:1.5.0",
             environment={
                 "LDAP_DOMAIN": "example.com",
@@ -96,7 +96,7 @@ def ldap_container(docker_client: docker.DockerClient) -> Generator[str]:  # typ
         time.sleep(10)
 
         # Get the assigned port
-        container_info = docker_client.api.inspect_container(container.id)  # type: ignore
+        container_info = docker_client.api.inspect_container(container.id)
         port = container_info["NetworkSettings"]["Ports"]["389/tcp"][0]["HostPort"]
 
         yield f"ldap://localhost:{port}"
