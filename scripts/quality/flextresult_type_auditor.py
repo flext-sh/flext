@@ -169,13 +169,15 @@ class FlextResultTypeAuditor(FlextScript):
                         if lines[j].strip().startswith("def "):  # Próximo método
                             break
                         if re.search(return_pattern, lines[j]):
-                            issues.append({
-                                "file": file_path,
-                                "line": j + 1,
-                                "method": method_name,
-                                "declared_type": return_type,
-                                "issue": f"Método declara FlextResult[{return_type}] mas retorna FlextResult.success()/error() sem valor",
-                            })
+                            issues.append(
+                                {
+                                    "file": file_path,
+                                    "line": j + 1,
+                                    "method": method_name,
+                                    "declared_type": return_type,
+                                    "issue": f"Método declara FlextResult[{return_type}] mas retorna FlextResult.success()/error() sem valor",
+                                }
+                            )
 
         # Procura por outros padrões problemáticos
         for i, line in enumerate(lines):
@@ -193,13 +195,15 @@ class FlextResultTypeAuditor(FlextScript):
                 and "FlextResult[None]" in line
                 and "FlextResult[dict" in line
             ):
-                issues.append({
-                    "file": file_path,
-                    "line": i + 1,
-                    "method": "unknown",
-                    "declared_type": "mixed",
-                    "issue": "Possível inconsistência entre FlextResult[None] e FlextResult[dict]",
-                })
+                issues.append(
+                    {
+                        "file": file_path,
+                        "line": i + 1,
+                        "method": "unknown",
+                        "declared_type": "mixed",
+                        "issue": "Possível inconsistência entre FlextResult[None] e FlextResult[dict]",
+                    }
+                )
 
         return issues
 

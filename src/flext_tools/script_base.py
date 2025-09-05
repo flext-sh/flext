@@ -92,13 +92,12 @@ from __future__ import annotations
 
 import argparse
 import inspect
-import logging
 import time
 from abc import abstractmethod
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import ParamSpec
+from typing import Protocol, runtime_checkable
 
 from flext_core import (
     FlextDomainService,
@@ -116,7 +115,16 @@ from .quality_gateway import (
     get_quality_failure_summary,
 )
 
-P_main_func = ParamSpec("P_main_func")
+
+# Protocol for script main functions
+@runtime_checkable
+class ScriptMainFunc(Protocol):
+    """Protocol for script main functions."""
+
+    def __call__(self, **kwargs: object) -> FlextResult[object]:
+        """Execute script with optional keyword arguments."""
+        ...
+
 
 # Use flext-core logger
 logger = FlextLogger(__name__)
@@ -477,13 +485,15 @@ class FlextScript(FlextDomainService[bool]):
         # Configure logging level
         if args.verbose:
             # Set verbose mode - use flext-core logging patterns
-            FlextLogger(__name__).setLevel(logging.DEBUG)
+            # FlextLogger handles debug automatically with proper configuration
+            logger = FlextLogger(__name__)
+            logger.debug("Verbose mode enabled")
 
         return self.run(**vars(args))
 
 
 @dataclass
-class ScriptConfig[**P_main_func]:
+class ScriptConfig:
     """Configuration model for simple script creation and factory patterns.
 
     Encapsulates all configuration required for creating simple FLEXT scripts
@@ -528,13 +538,13 @@ class ScriptConfig[**P_main_func]:
     name: str
     description: str
     category: str
-    main_func: Callable[P_main_func, FlextResult[object]]
+    main_func: ScriptMainFunc
     setup_func: Callable[[], FlextResult[None]] | None = None
     validate_func: Callable[[], FlextResult[None]] | None = None
 
 
-def create_simple_script[**P_main_func](
-    config: ScriptConfig[P_main_func],
+def create_simple_script(
+    config: ScriptConfig,
 ) -> type[FlextScript]:
     """Create enterprise-grade script class from configuration using factory pattern.
 
@@ -604,11 +614,17 @@ def create_simple_script[**P_main_func](
 
         def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
             try:
-                # Check function signature to determine if it accepts kwargs
+                # Use runtime inspection for dynamic function calling
                 sig = inspect.signature(config.main_func)
                 if sig.parameters:
-                    # Function expects parameters, pass kwargs
-                    result = config.main_func(**kwargs)
+                    # Function expects parameters, pass filtered kwargs that match signature
+                    valid_kwargs = {
+                        k: v
+                        for k, v in kwargs.items()
+                        if k in sig.parameters
+                        or any(p.kind == p.VAR_KEYWORD for p in sig.parameters.values())
+                    }
+                    result = config.main_func(**valid_kwargs)
                 else:
                     # Function expects no parameters
                     result = config.main_func()

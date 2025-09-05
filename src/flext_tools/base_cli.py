@@ -81,9 +81,8 @@ from __future__ import annotations
 
 import logging
 from abc import abstractmethod
-from collections.abc import Callable
 from pathlib import Path
-from typing import TypeVar
+from typing import Protocol
 
 import click
 from flext_core import FlextDomainService, FlextModels, FlextResult
@@ -91,8 +90,12 @@ from pydantic import Field
 from rich.console import Console
 from rich.logging import RichHandler
 
-# Type variable for Click command functions - specific constraint to avoid explicit-any
-F = TypeVar("F", bound=Callable[..., object])
+
+# Protocol for Click-compatible functions
+class ClickFunction(Protocol):
+    """Protocol for functions that can be decorated with Click."""
+
+    def __call__(self, *args: object, **kwargs: object) -> object: ...
 
 
 class CLIConfig(FlextModels.Value):
@@ -179,14 +182,19 @@ class BaseCLI(FlextDomainService[click.Group]):
             raise SystemExit(1)
 
 
-def with_config[F: Callable[..., object]](f: F) -> F:
+def with_config(f: ClickFunction) -> ClickFunction:
     """Add config options to commands (decorator)."""
-    f = click.option("--verbose", is_flag=True, help="Enable verbose output")(f)
-    f = click.option("--debug", is_flag=True, help="Enable debug mode")(f)
-    return click.option("--quiet", is_flag=True, help="Suppress non-error output")(f)
+    # Apply decorators in sequence - click changes the function type
+    decorated = click.option("--verbose", is_flag=True, help="Enable verbose output")(f)
+    decorated = click.option("--debug", is_flag=True, help="Enable debug mode")(
+        decorated
+    )
+    return click.option("--quiet", is_flag=True, help="Suppress non-error output")(
+        decorated
+    )
 
 
-def with_output_format[F: Callable[..., object]](f: F) -> F:
+def with_output_format(f: ClickFunction) -> ClickFunction:
     """Add output format options to commands (decorator)."""
     return click.option(
         "--output-format",
