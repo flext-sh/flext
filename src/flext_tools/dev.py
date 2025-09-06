@@ -18,7 +18,9 @@ License: MIT
 
 from __future__ import annotations
 
+import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 from flext_core import FlextLogger
@@ -270,7 +272,7 @@ class DevToolsManager:
 
             # Build pytest command with coverage and reporting
             cmd = [
-                "python",
+                sys.executable,
                 "-m",
                 "pytest",
                 str(tests_dir),
@@ -475,7 +477,7 @@ class DevToolsManager:
 
             # Run ruff linting
             result = subprocess.run(
-                ["python", "-m", "ruff", "check", ".", "--output-format=text"],
+                [sys.executable, "-m", "ruff", "check", ".", "--output-format=text"],
                 cwd=self.workspace_root,
                 check=False,
                 shell=False,  # Security: explicit shell=False
@@ -585,7 +587,7 @@ class DevToolsManager:
 
             # Run ruff format for Python code
             result = subprocess.run(
-                ["python", "-m", "ruff", "format", "."],
+                [sys.executable, "-m", "ruff", "format", "."],
                 cwd=self.workspace_root,
                 check=False,
                 shell=False,  # Security: explicit shell=False
@@ -624,12 +626,13 @@ class DevToolsManager:
         """Run MyPy type checking across Python projects."""
         try:
             result = subprocess.run(
-                ["make", "type-check-all"],
+                [shutil.which("make") or "make", "type-check-all"],
                 check=False,
                 cwd=self.workspace_root,
                 capture_output=True,
                 text=True,
                 timeout=self.timeout_config.get("type_check", 300),
+                shell=False,
             )
 
             if result.stdout:
@@ -650,12 +653,13 @@ class DevToolsManager:
         """Run Bandit security scanning across Python projects."""
         try:
             result = subprocess.run(
-                ["bandit", "-r", "src/", "-f", "json"],
+                [shutil.which("bandit") or "bandit", "-r", "src/", "-f", "json"],
                 check=False,
                 cwd=self.workspace_root,
                 capture_output=True,
                 text=True,
                 timeout=self.timeout_config.get("security", 300),
+                shell=False,
             )
 
             if result.stdout:
@@ -677,7 +681,7 @@ class DevToolsManager:
         try:
             result = subprocess.run(
                 [
-                    "find",
+                    shutil.which("find") or "find",
                     ".",
                     "-name",
                     "*.go",
@@ -694,6 +698,7 @@ class DevToolsManager:
                 cwd=self.workspace_root,
                 capture_output=True,
                 text=True,
+                shell=False,
             )
 
             if not result.stdout.strip():
@@ -702,12 +707,13 @@ class DevToolsManager:
 
             # Run golangci-lint if available
             lint_result = subprocess.run(
-                ["golangci-lint", "run", "./..."],
+                [shutil.which("golangci-lint") or "golangci-lint", "run", "./..."],
                 check=False,
                 cwd=self.workspace_root,
                 capture_output=True,
                 text=True,
                 timeout=self.timeout_config.get("lint", 300),
+                shell=False,
             )
 
             if lint_result.stdout:
@@ -729,7 +735,7 @@ class DevToolsManager:
         try:
             result = subprocess.run(
                 [
-                    "find",
+                    shutil.which("find") or "find",
                     ".",
                     "-name",
                     "*.go",
@@ -746,6 +752,7 @@ class DevToolsManager:
                 cwd=self.workspace_root,
                 capture_output=True,
                 text=True,
+                shell=False,
             )
 
             if not result.stdout.strip():
@@ -754,12 +761,13 @@ class DevToolsManager:
 
             # Run gofmt
             fmt_result = subprocess.run(
-                ["gofmt", "-w", "."],
+                [shutil.which("gofmt") or "gofmt", "-w", "."],
                 check=False,
                 cwd=self.workspace_root,
                 capture_output=True,
                 text=True,
                 timeout=self.timeout_config.get("format", 300),
+                shell=False,
             )
 
             if fmt_result.stdout:
