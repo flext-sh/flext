@@ -157,8 +157,8 @@ class DetailedLogger:
         level: str,
         message: str,
         args: tuple[object, ...],
-        extra: dict[str, object] | None,
-        kwargs: dict[str, object],
+        _extra: dict[str, object] | None,
+        _kwargs: dict[str, object],
     ) -> None:
         """Log using flext-observability patterns."""
         # Format message with args
