@@ -78,8 +78,8 @@ from .discovery_config import *
 from .discovery_python import *
 from .discovery_transitive import *
 
-# Documentation generators
-from .documentation_generator import *
+# Documentation generators - exclude conflicting main function
+from .documentation_generator import DocumentationGenerator
 from .documentation_templates import *
 
 # Infrastructure management
@@ -121,7 +121,7 @@ from .stdlib import *
 import sys
 from types import ModuleType
 
-__all__ = []
+__all__: list[str] = []
 
 # Collect exports from all imported modules
 name = None
@@ -136,7 +136,8 @@ for name, obj in sys.modules.items():
         __all__ += obj.__all__
 
 # Remove duplicates and sort - FLEXT Pattern
-__all__ = sorted(set(__all__))
+_all_exports = sorted(set(__all__))
+__all__ = list(_all_exports)
 
 # Clean up temporary variables
 del sys, ModuleType

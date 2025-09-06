@@ -952,11 +952,7 @@ print(f"Pipeline status: {result.status}")"""
         self.logger.info("Building documentation with MkDocs...")
 
         try:
-            # Prefer in-process mkdocs entrypoint
-            if mkdocs.__main__ is None:
-                return FlextResult[dict[str, object]].fail(
-                    "MkDocs build API unavailable: mkdocs not installed"
-                )
+            # Use in-process mkdocs entrypoint
 
             stdout = io.StringIO()
             stderr = io.StringIO()

@@ -71,6 +71,7 @@ License: MIT
 """
 
 import re
+import sys
 import tomllib
 from pathlib import Path
 
@@ -150,8 +151,6 @@ class DependencyDiscovery:
 
         """
         # Use standard library module list
-        import sys
-
         self.stdlib_modules = (
             set(sys.stdlib_module_names)
             if hasattr(sys, "stdlib_module_names")

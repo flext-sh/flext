@@ -297,7 +297,7 @@ def stats_by_error_type() -> int:
         "█" * bar_length + "░" * (max(0, 25 - bar_length))
 
         # Mostrar distribuição por projeto para este tipo de erro
-        project_distribution = error_by_project_type[error_type]
+        project_distribution = error_by_project_type[str(error_type)]
         sorted_projects = sorted(
             project_distribution.items(),
             key=operator.itemgetter(1),
