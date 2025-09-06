@@ -14,6 +14,10 @@ License: MIT
 import contextlib
 from collections.abc import Callable
 from pathlib import Path
+from typing import TYPE_CHECKING, TypeVar
+
+if TYPE_CHECKING:
+    from click import Group
 
 import click
 
@@ -27,6 +31,9 @@ from flext_tools import (
     print_colored,
 )
 
+# TypeVar para decoradores
+F = TypeVar('F', bound=Callable[..., object])  # type: ignore[explicit-any]
+
 
 # Simple FlextCliContext replacement
 class FlextCliContext:
@@ -38,12 +45,12 @@ class FlextCliContext:
 
 
 # Fallback decorators for missing flext-cli functionality
-def cli_enhanced(
+def cli_enhanced(  # type: ignore[explicit-any]
     **kwargs: object,
-) -> Callable[[Callable[..., object]], Callable[..., object]]:  # type: ignore[no-untyped-def,explicit-any]
+) -> Callable[[F], F]:
     """Simple decorator replacement for cli_enhanced."""
 
-    def decorator(func: Callable[..., object]) -> Callable[..., object]:  # type: ignore[explicit-any]
+    def decorator(func: F) -> F:  # type: ignore[explicit-any]
         # Attach options so they're actually used and visible to tooling/debugging
         with contextlib.suppress(Exception):
             setattr(func, "_cli_options", dict(kwargs))
@@ -52,7 +59,7 @@ def cli_enhanced(
     return decorator
 
 
-def cli_validate_inputs(func: Callable[..., object]) -> Callable[..., object]:  # type: ignore[explicit-any]
+def cli_validate_inputs(func: F) -> F:  # type: ignore[explicit-any]
     """Simple decorator replacement for cli_validate_inputs."""
     return func
 
@@ -521,21 +528,15 @@ def info(ctx: click.Context, *, detailed: bool) -> None:
 # FLEXT-CLI COMMAND GROUP INTEGRATION
 # ============================================================================
 
-# Import and add flext-cli command groups
+# Import and add flext-cli command groups (suppress MyPy import errors)
 try:
-    from flext_cli.commands.auth import (
-        auth as auth_commands,  # type: ignore[import-not-found]
-    )
-    from flext_cli.commands.config import (
-        config as config_commands,  # type: ignore[import-not-found]
-    )
-    from flext_cli.commands.debug import (
-        debug_cmd as debug_commands,  # type: ignore[import-not-found]
-    )
+    from flext_cli.commands.auth import auth as auth_commands  # type: ignore[import-not-found]
+    from flext_cli.commands.config import config as config_commands  # type: ignore[import-not-found]
+    from flext_cli.commands.debug import debug_cmd as debug_commands  # type: ignore[import-not-found]
 
-    main.add_command(auth_commands, name="auth")  # type: ignore[arg-type]
-    main.add_command(config_commands, name="config")  # type: ignore[arg-type]
-    main.add_command(debug_commands, name="debug")  # type: ignore[arg-type]
+    main.add_command(auth_commands, name="auth")
+    main.add_command(config_commands, name="config")
+    main.add_command(debug_commands, name="debug")
 
 except ImportError:
     # Fallback if flext-cli commands not available

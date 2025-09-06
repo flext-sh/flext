@@ -24,7 +24,10 @@ from flext_tools.security import (
     create_security_scanner,
     scan_flext_ecosystem,
 )
-from flext_tools.utils.colors import Colors, print_colored
+from flext_tools.utils.colors import (
+    Colors,
+    print_colored,
+)
 
 
 def example_basic_scan() -> None:
@@ -201,7 +204,7 @@ def example_custom_reporting() -> None:
         print_colored(f"    Types: {', '.join(types_in_file)}", Colors.BLUE)
 
     # Risk distribution
-    risk_counts = {}
+    risk_counts: dict[str, int] = {}
     for violation in violations:
         risk = violation.risk_level.value
         risk_counts[risk] = risk_counts.get(risk, 0) + 1

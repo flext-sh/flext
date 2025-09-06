@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import time
 from collections.abc import Generator
+from typing import Any
 
 import pytest
 
@@ -18,12 +19,11 @@ try:
 
     DOCKER_AVAILABLE = True
 except ImportError:
-    docker = None
     DOCKER_AVAILABLE = False
 
 
 @pytest.fixture(scope="session")
-def docker_client() -> Generator[docker.DockerClient]:
+def docker_client() -> Generator[Any]:
     """Docker client fixture for tests that need Docker access."""
     if not DOCKER_AVAILABLE:
         pytest.skip("Docker not available")
@@ -38,7 +38,7 @@ def docker_client() -> Generator[docker.DockerClient]:
 
 
 @pytest.fixture
-def postgres_container(docker_client: docker.DockerClient) -> Generator[str]:
+def postgres_container(docker_client: Any) -> Generator[str]:
     """PostgreSQL container fixture for database integration tests."""
     if not DOCKER_AVAILABLE:
         pytest.skip("Docker not available")
@@ -73,7 +73,7 @@ def postgres_container(docker_client: docker.DockerClient) -> Generator[str]:
 
 
 @pytest.fixture
-def ldap_container(docker_client: docker.DockerClient) -> Generator[str]:
+def ldap_container(docker_client: Any) -> Generator[str]:
     """OpenLDAP container fixture for LDAP integration tests."""
     if not DOCKER_AVAILABLE:
         pytest.skip("Docker not available")
