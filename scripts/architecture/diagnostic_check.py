@@ -7,19 +7,17 @@ Comprehensive diagnostic tool for FLEXT workspace architecture validation.
 import contextlib
 import io
 import json
-import os
+import subprocess
 import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-import ruff.__main__ as ruff_main
 from flext_core import FlextLogger
+
+# Ruff will be called via subprocess
 from mypy import api as mypy_api
-from poetry.console import (
-    application as poetry_app,
-)
 
 logger = FlextLogger(__name__)
 
@@ -100,36 +98,22 @@ class FlextDiagnostic:
         }
 
     def _run_lint(self, project_path: Path) -> tuple[int, str, str]:
-        """Run Ruff lint using Python API in-process."""
+        """Run Ruff lint using subprocess."""
         try:
-            if ruff_main is None:
-                return 1, "", "Ruff not available"
-
-            stdout = io.StringIO()
-            stderr = io.StringIO()
-            with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
-                # Run "ruff check ." inside the project
-                prev = Path.cwd()
-                try:
-                    # Execute within project directory
-                    # ruff honors CWD for relative paths
-                    os.chdir(project_path)
-                    ruff_main.main(["check", "."])  # exit via sys.exit inside ruff
-                except SystemExit as exc:  # ruff uses sys.exit
-                    code = int(getattr(exc, "code", 0) or 0)
-                    return code, stdout.getvalue(), stderr.getvalue()
-                finally:
-                    os.chdir(prev)
-            return 0, stdout.getvalue(), stderr.getvalue()
+            result = subprocess.run(
+                ["ruff", "check", "."],
+                check=False,
+                capture_output=True,
+                text=True,
+                cwd=project_path,
+            )
+            return result.returncode, result.stdout, result.stderr
         except Exception as e:
             return 1, "", f"Ruff execution failed: {e}"
 
     def _run_mypy(self, project_path: Path) -> tuple[int, str, str]:
         """Run MyPy using its Python API in-process."""
         try:
-            if mypy_api is None:
-                return 1, "", "MyPy not available"
-
             # Analyze the project directory
             stdout, stderr, exit_status = mypy_api.run([str(project_path)])
             return int(exit_status), stdout, stderr
@@ -139,9 +123,6 @@ class FlextDiagnostic:
     def _run_tests(self, project_path: Path) -> tuple[int, str, str]:
         """Run pytest in-process and capture output."""
         try:
-            if pytest is None:
-                return 1, "", "Pytest not available"
-
             stdout = io.StringIO()
             stderr = io.StringIO()
             with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
@@ -152,17 +133,18 @@ class FlextDiagnostic:
             return 1, "", f"Pytest execution failed: {e}"
 
     def _run_poetry_install(self) -> tuple[int, str, str]:
-        """Attempt Poetry install via Poetry's Python API; no subprocess spawn."""
+        """Attempt Poetry install using subprocess."""
         try:
-            if poetry_app is None:
-                return 1, "", "Poetry not available"
-
-            app = poetry_app.Application()
-            code = app.run(["install"])
-            return (0 if int(code) == 0 else 1), "", ""
+            result = subprocess.run(
+                ["poetry", "install", "--no-interaction"],
+                check=False,
+                capture_output=True,
+                text=True,
+                cwd=self.workspace_root,
+            )
+            return result.returncode, result.stdout, result.stderr
         except Exception as e:
-            # Do not fallback to subprocess; advise manual execution
-            return 1, "", f"Poetry API unavailable for install: {e}"
+            return 1, "", f"Poetry install failed: {e}"
 
     def check_project(self, project_name: str) -> ProjectStatus:
         """Check status of a project."""
@@ -344,15 +326,14 @@ class FlextDiagnostic:
                 }.get(level, f"NÍVEL {level}")
 
                 for _name, data in level_projects:
-                    if not isinstance(data, dict):
-                        continue
-                    status_icons = [
-                        str(data.get("lint_status", "UNKNOWN")),
-                        str(data.get("mypy_status", "UNKNOWN")),
-                        str(data.get("test_status", "UNKNOWN")),
-                        str(data.get("poetry_install", "UNKNOWN")),
-                    ]
-                    " | ".join(status_icons)
+                    if isinstance(data, dict):
+                        status_icons = [
+                            str(data.get("lint_status", "UNKNOWN")),
+                            str(data.get("mypy_status", "UNKNOWN")),
+                            str(data.get("test_status", "UNKNOWN")),
+                            str(data.get("poetry_install", "UNKNOWN")),
+                        ]
+                        status_line = " | ".join(status_icons)
 
                     errors = data.get("errors", [])
                     if isinstance(errors, list) and errors:

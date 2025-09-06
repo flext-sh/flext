@@ -112,10 +112,10 @@ class TestWorkspaceManager:
         mock_exists.return_value = True
 
         # Act
-        result = workspace_manager.validate_project_structure(project_path)
+        result = workspace_manager._validate_project_structure(project_path)
 
         # Assert
-        assert result.is_success is True
+        assert result is True
 
     @patch("flext.workspace.Path.exists")
     def test_validate_project_structure_missing_files(
@@ -127,10 +127,10 @@ class TestWorkspaceManager:
         mock_exists.return_value = False
 
         # Act
-        result = workspace_manager.validate_project_structure(project_path)
+        result = workspace_manager._validate_project_structure(project_path)
 
         # Assert
-        assert result.is_success is False
+        assert result is False
 
     def test_validate_all_projects_no_projects(
         self, workspace_manager: WorkspaceManager
@@ -138,11 +138,10 @@ class TestWorkspaceManager:
         """Test validation when no projects exist."""
         with patch.object(workspace_manager, "list_projects", return_value=[]):
             # Act
-            result = workspace_manager.validate_all_projects()
+            result = workspace_manager.validate_workspace()
 
             # Assert
-            assert result.is_success is True
-            assert result.value == []
+            assert result is True
 
     @patch.object(WorkspaceManager, "list_projects")
     @patch.object(WorkspaceManager, "validate_project_structure")
@@ -156,14 +155,14 @@ class TestWorkspaceManager:
         mock_validate.return_value = FlextResult[bool].ok(data=True)
 
         # Act
-        result = workspace_manager.validate_all_projects()
+        result = workspace_manager.validate_workspace()
 
         # Assert
-        assert result.is_success is True
+        assert result is True
         assert mock_validate.call_count == len(mock_projects)
 
     @patch.object(WorkspaceManager, "list_projects")
-    @patch.object(WorkspaceManager, "validate_project_structure")
+    @patch.object(WorkspaceManager, "_validate_project_structure")
     def test_validate_all_projects_partial_failure(
         self, mock_validate: Mock, mock_list: Mock, workspace_manager: WorkspaceManager
     ) -> None:
@@ -177,10 +176,10 @@ class TestWorkspaceManager:
         ]
 
         # Act
-        result = workspace_manager.validate_all_projects()
+        result = workspace_manager.validate_workspace()
 
         # Assert
-        assert result.is_success is False
+        assert result is False
 
 
 class TestWorkspaceManagerIntegration:
@@ -217,7 +216,7 @@ version = "0.1.0"
 
         # Assert
         assert len(projects) == 1
-        assert projects[0].name == "flext-test"
+        assert projects[0] == "flext-test"
 
     def test_project_validation_real_filesystem(self, temp_workspace: Path) -> None:
         """Test project validation with real filesystem."""
@@ -226,7 +225,7 @@ version = "0.1.0"
         project_path = temp_workspace / "flext-test"
 
         # Act
-        result = manager.validate_project_structure(project_path)
+        result = manager._validate_project_structure(project_path)
 
         # Assert
-        assert result.is_success is True
+        assert result is True
