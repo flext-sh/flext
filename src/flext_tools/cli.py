@@ -139,11 +139,7 @@ def main(
     """
     # Handle FlextCli functional API integration
     try:
-        config = FlextCliConfig()
-        if hasattr(config, "profile"):
-            config.profile = profile
-        if hasattr(config, "debug"):
-            config.debug = debug
+        config = FlextCliConfig(profile=profile, debug=debug)
 
         context = FlextCliContext()
 
