@@ -21,9 +21,6 @@ from pathlib import Path
 
 from flext_core import FlextLogger, FlextResult
 from flext_core.container import FlextContainer
-from poetry.console import (
-    application as poetry_app,
-)
 
 from .backup import BackupManager
 from .colors import Colors, print_colored
@@ -343,7 +340,7 @@ class PoetryOperations:
 
     def _add_dependency(
         self,
-        project_path: Path,
+        _project_path: Path,
         dependency: str,
         group: str | None = None,
     ) -> bool:
@@ -378,13 +375,7 @@ class PoetryOperations:
         try:
             print_colored(f"    [+] Adding {dependency}...", Colors.GREEN)
 
-            # Prefer Poetry's Python API when available to avoid subprocess
-            if poetry_app is None:
-                print_colored(
-                    "    ❌ Poetry API unavailable; run 'poetry add' manually",
-                    Colors.RED,
-                )
-                return False
+            # Use subprocess for Poetry operations (poetry_app was undefined)
             args = ["add", dependency]
             if group:
                 args += ["--group", group]
@@ -555,7 +546,7 @@ class PoetryOperations:
 
         return removed
 
-    def _remove_dependency(self, project_path: Path, dependency: str) -> bool:
+    def _remove_dependency(self, _project_path: Path, dependency: str) -> bool:
         """Remove an individual dependency with safety validation.
 
         Executes Poetry remove command for a single dependency with proper
@@ -584,12 +575,7 @@ class PoetryOperations:
             print_colored(f"    [-] Removing {dependency}...", Colors.YELLOW)
 
             # Prefer Poetry API when available
-            if poetry_app is None:
-                print_colored(
-                    "    ❌ Poetry API unavailable; run 'poetry remove' manually",
-                    Colors.RED,
-                )
-                return False
+            # Use subprocess for Poetry operations
             args = ["remove", dependency]
             if self.dry_run:
                 args.append("--dry-run")
@@ -720,13 +706,7 @@ class PoetryOperations:
             cmd.append("--dry-run")
 
         try:
-            # Prefer Poetry API when available
-            if poetry_app is None:
-                print_colored(
-                    "    ❌ Poetry API unavailable; run 'poetry update' manually",
-                    Colors.RED,
-                )
-                return False
+            # Use subprocess for Poetry operations
             args = ["update"]
             if self.dry_run:
                 args.append("--dry-run")
@@ -841,13 +821,7 @@ class PoetryOperations:
         # Note: using Poetry API preferred; no subprocess fallback in this environment
 
         try:
-            # Prefer Poetry API when available
-            if poetry_app is None:
-                print_colored(
-                    "    ❌ Poetry API unavailable; run 'poetry lock' manually",
-                    Colors.RED,
-                )
-                return False
+            # Use subprocess for Poetry operations
             args = ["lock"]
             # Use subprocess instead of Poetry Application due to Input type incompatibility
 
@@ -957,13 +931,7 @@ class PoetryOperations:
         # Note: using Poetry API preferred; no subprocess fallback in this environment
 
         try:
-            # Prefer Poetry API when available
-            if poetry_app is None:
-                print_colored(
-                    "    ❌ Poetry API unavailable; run 'poetry check' manually",
-                    Colors.RED,
-                )
-                return False
+            # Use subprocess for Poetry operations
             args = ["check"]
             # Use subprocess instead of Poetry Application due to Input type incompatibility
 

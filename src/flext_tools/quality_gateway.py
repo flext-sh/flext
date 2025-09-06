@@ -78,10 +78,8 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
-import pytest
 from flext_core import FlextLogger, FlextModels, FlextResult
 from flext_core.container import FlextContainer
-from mypy import api
 from pydantic import Field
 
 from .colors import Colors, print_colored
@@ -491,19 +489,16 @@ class QualityGateway:
                         "mypy not found in PATH",
                     )
                 )
-            if api is None:
-                return (
-                    FlextResult[list[QualityIssue]].ok([])
-                    if self._is_relaxed()
-                    else FlextResult[list[QualityIssue]].fail(
-                        "mypy not available",
-                    )
-                )
-
-            stdout, _stderr, exit_status = api.run(
-                [str(self.workspace_path / "src")],
+            # Run mypy via subprocess
+            result = subprocess.run(
+                ["mypy", "src", "--strict", "--show-error-codes"],
+                check=False, cwd=self.workspace_path,
+                capture_output=True,
+                text=True,
+                timeout=300
             )
-            if int(exit_status) == 0:
+
+            if result.returncode == 0:
                 return FlextResult[list[QualityIssue]].ok([])
 
             issues = [
@@ -515,7 +510,7 @@ class QualityGateway:
                     line_number=None,
                     rule_code=None,
                 )
-                for line in stdout.splitlines()
+                for line in result.stdout.splitlines()
                 if line.strip() and ":" in line
             ]
             return FlextResult[list[QualityIssue]].fail(
@@ -535,18 +530,18 @@ class QualityGateway:
                         "pytest not found in PATH",
                     )
                 )
-            if pytest is None:
-                return (
-                    FlextResult[list[QualityIssue]].ok([])
-                    if self._is_relaxed()
-                    else FlextResult[list[QualityIssue]].fail(
-                        "pytest not available",
-                    )
-                )
-            # Capture output using in-process run
-            exit_code = pytest.main([str(self.workspace_path)])
-            if int(exit_code) == 0:
+            # Run pytest via subprocess
+            result = subprocess.run(
+                ["pytest", "tests", "-v", "--tb=short"],
+                check=False, cwd=self.workspace_path,
+                capture_output=True,
+                text=True,
+                timeout=600
+            )
+
+            if result.returncode == 0:
                 return FlextResult[list[QualityIssue]].ok([])
+
             issues = [
                 QualityIssue(
                     tool="pytest",
