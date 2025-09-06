@@ -33,7 +33,7 @@ class FlextBaseService(FlextModels.Config):
     """Base service class for standardization."""
 
 
-class FlextStandardResult(FlextResult):
+class FlextStandardResult(FlextResult[dict[str, int]]):
     """Standard result type for standardization operations."""
 
 
@@ -47,8 +47,23 @@ class FlextEcosystemStandardizer(FlextBaseService):
         """Initialize standardizer with FLEXT patterns."""
         super().__init__()
         self.workspace_root = Path("/home/marlonsc/flext")
+        self.logger = logger
         self.processed_files = 0
         self.error_count = 0
+
+    def _handle_error(
+        self, error: Exception, operation: str
+    ) -> FlextResult[dict[str, int]]:
+        """Handle errors in standardization operations."""
+        self.logger.error(f"Error in {operation}: {error}")
+        self.error_count += 1
+        return FlextResult(error=str(error))
+
+    def _handle_error_none(self, error: Exception, operation: str) -> FlextResult[None]:
+        """Handle errors in standardization operations that return None."""
+        self.logger.error(f"Error in {operation}: {error}")
+        self.error_count += 1
+        return FlextResult(error=str(error))
 
     def standardize_ecosystem(self) -> FlextResult[dict[str, int]]:
         """Standardize entire FLEXT ecosystem.
@@ -70,7 +85,7 @@ class FlextEcosystemStandardizer(FlextBaseService):
             # Get all Python projects
             python_projects = self._get_python_projects()
             if not python_projects:
-                return FlextStandardResult.failure("No Python projects found")
+                return FlextResult(error="No Python projects found")
 
             for project_path in python_projects:
                 result = self._standardize_project(project_path, stats)
@@ -79,7 +94,7 @@ class FlextEcosystemStandardizer(FlextBaseService):
                         f"Issues in project {project_path.name}: {result.error}"
                     )
 
-            return FlextStandardResult.success(stats)
+            return FlextResult(data=stats)
 
         except Exception as e:
             return self._handle_error(e, "standardize_ecosystem")
@@ -140,10 +155,12 @@ class FlextEcosystemStandardizer(FlextBaseService):
                         f"Failed to process {file_path}: {result.error}"
                     )
 
-            return FlextStandardResult.success(None)
+            return FlextResult(data=None)
 
         except Exception as e:
-            return self._handle_error(e, f"standardize_project({project_path.name})")
+            return self._handle_error_none(
+                e, f"standardize_project({project_path.name})"
+            )
 
     def _standardize_file(
         self, file_path: Path, stats: dict[str, int]
@@ -175,10 +192,10 @@ class FlextEcosystemStandardizer(FlextBaseService):
                 file_path.write_text(content, encoding="utf-8")
                 self.logger.debug(f"Updated file: {file_path}")
 
-            return FlextStandardResult.success(None)
+            return FlextResult(data=None)
 
         except Exception as e:
-            return self._handle_error(e, f"standardize_file({file_path})")
+            return self._handle_error_none(e, f"standardize_file({file_path})")
 
     def _fix_docstrings(self, content: str, stats: dict[str, int]) -> str:
         """Fix docstrings to use Google/PEP8 format.
@@ -196,7 +213,7 @@ class FlextEcosystemStandardizer(FlextBaseService):
             # Fix missing periods in docstrings
             (r'"""([^"]+[^.])\s*"""', r'"""\1."""'),
             # Fix docstrings starting with lowercase
-            (r'"""([a-z])', r'"""\1'.replace("\1", lambda m: m.group(1).upper())),
+            (r'"""([a-z])', lambda m: f'"""{m.group(1).upper()}'),
             # Add standard format to function docstrings
             (
                 r'def\s+(\w+)\([^)]*\):\s*\n\s*"""([^"]+)"""',
@@ -211,7 +228,7 @@ class FlextEcosystemStandardizer(FlextBaseService):
                     pattern, replacement, content, flags=re.MULTILINE | re.DOTALL
                 )
             else:
-                content = re.sub(pattern, replacement, content, flags=re.MULTILINE)
+                content = re.sub(pattern, str(replacement), content, flags=re.MULTILINE)
 
         if content != original_content:
             stats["docstring_fixes"] += 1

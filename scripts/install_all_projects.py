@@ -2,10 +2,9 @@
 """Script para instalar todos os projetos FLEXT em modo de desenvolvimento."""
 
 import shutil
+import subprocess
 import sys
 from pathlib import Path
-
-from poetry.console import application as poetry_app
 
 
 def get_project_directories() -> list[str]:
@@ -99,18 +98,21 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
         # Safe execution: absolute poetry path from which, static args
         if Path(poetry_executable).name != "poetry":
             return False, "❌ Exe inválido de poetry"
-        # Execute poetry install using --no-interaction for safety (no shell)
+        # Execute poetry install using subprocess
         try:
-            # Run poetry in-process when possible
-            app = poetry_app.Application()
-            code = app.run(["install", "--no-interaction"])
-            completed_return = int(code)
-            completed_stderr = ""
-        except Exception:
-            # As última alternativa, abort with guidance instead of spawning
+            result = subprocess.run(
+                ["poetry", "install", "--no-interaction"],
+                check=False,
+                capture_output=True,
+                text=True,
+                cwd=project_dir,
+            )
+            completed_return = result.returncode
+            completed_stderr = result.stderr
+        except Exception as e:
             return (
                 False,
-                "❌ Falha ao executar Poetry via API; execute manualmente: 'poetry install --no-interaction'",
+                f"❌ Falha ao executar Poetry: {e}",
             )
 
         if completed_return == 0:
