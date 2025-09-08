@@ -12,7 +12,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 
 
 @dataclass
@@ -98,8 +98,10 @@ class EcosystemAuditResult:
     total_violations_count: int = 0
     critical_violations_count: int = 0
     high_violations_count: int = 0
-    projects_with_critical_issues: list[str] = field(default_factory=list)
-    fully_compliant_projects: list[str] = field(default_factory=list)
+    projects_with_critical_issues: FlextTypes.Core.StringList = field(
+        default_factory=list
+    )
+    fully_compliant_projects: FlextTypes.Core.StringList = field(default_factory=list)
     audit_timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     def calculate_ecosystem_metrics(self) -> None:
@@ -322,7 +324,7 @@ class PatternViolationAnalyzer:
         self,
         tree: ast.AST,
         file_path: Path,
-        lines: list[str],
+        lines: FlextTypes.Core.StringList,
         _project_name: str,
     ) -> list[PatternViolation]:
         """Analyze AST for structural pattern violations."""
@@ -385,7 +387,7 @@ class PatternViolationAnalyzer:
     def _analyze_text_patterns(
         self,
         file_path: Path,
-        lines: list[str],
+        lines: FlextTypes.Core.StringList,
         _project_name: str,
     ) -> list[PatternViolation]:
         """Analyze text patterns for violations."""
@@ -637,7 +639,7 @@ class PatternAuditSystem:
     def _generate_remediation_recommendations(
         self,
         ecosystem_result: EcosystemAuditResult,
-    ) -> dict[str, str]:
+    ) -> FlextTypes.Core.Headers:
         """Generate prioritized remediation recommendations."""
         recommendations = {}
 

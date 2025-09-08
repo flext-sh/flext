@@ -62,7 +62,7 @@ class ProductionSecretsScript(BaseSecurityScript):
                 # Display summary
                 print_colored("🔑 Generated secrets:", Colors.BLUE)
                 for secret_type in secrets_result:
-                    if secret_type != "details":  # nosec B105 - comparing key name, not password
+                    if secret_type != "details":
                         pass
 
                 # Save to file if requested
@@ -112,9 +112,9 @@ class ProductionSecretsScript(BaseSecurityScript):
 
         return parser
 
-    def _process_kwargs(self, args: object) -> dict[str, object]:
+    def _process_kwargs(self, args: object) -> FlextTypes.Core.Dict:
         """Process arguments into kwargs."""
-        kwargs: dict[str, object] = {}
+        kwargs: FlextTypes.Core.Dict = {}
         kwargs["encrypt"] = not getattr(args, "no_encrypt", False)
         return kwargs
 

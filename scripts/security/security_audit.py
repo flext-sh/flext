@@ -79,7 +79,10 @@ class ScanConfig:
     """Scanner configuration."""
 
     def __init__(
-        self, target_paths: list[str], *, include_dependencies: bool = False
+        self,
+        target_paths: FlextTypes.Core.StringList,
+        *,
+        include_dependencies: bool = False,
     ) -> None:
         self.target_paths = target_paths
         self.include_dependencies = include_dependencies
@@ -155,7 +158,7 @@ class SecurityAuditScript(FlextScript):
         except Exception as e:
             return FlextResult[object].fail(f"Security audit execution failed: {e}")
 
-    def _validate_target_paths(self, paths: object) -> list[str]:
+    def _validate_target_paths(self, paths: object) -> FlextTypes.Core.StringList:
         """Validate and filter target paths for scanning.
 
         Args:
@@ -168,7 +171,7 @@ class SecurityAuditScript(FlextScript):
         if not isinstance(paths, list):
             paths = [str(paths)] if paths else ["src/"]
 
-        validated_paths: list[str] = []
+        validated_paths: FlextTypes.Core.StringList = []
 
         for path_str in paths:
             path = Path(path_str)

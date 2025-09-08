@@ -51,7 +51,8 @@ def postgres_container(docker_client: DockerClient) -> Generator[str]:
         if container.id is not None:
             container_info = docker_client.api.inspect_container(container.id)
         else:
-            raise RuntimeError("Container ID is None")
+            msg = "Container ID is None"
+            raise RuntimeError(msg)
         port = container_info["NetworkSettings"]["Ports"]["5432/tcp"][0]["HostPort"]
 
         yield f"postgresql://testuser:testpass@localhost:{port}/testdb"
@@ -85,7 +86,8 @@ def ldap_container(docker_client: DockerClient) -> Generator[str]:
         if container.id is not None:
             container_info = docker_client.api.inspect_container(container.id)
         else:
-            raise RuntimeError("Container ID is None")
+            msg = "Container ID is None"
+            raise RuntimeError(msg)
         port = container_info["NetworkSettings"]["Ports"]["389/tcp"][0]["HostPort"]
 
         yield f"ldap://localhost:{port}"

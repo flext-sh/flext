@@ -114,7 +114,7 @@ class WorkspaceManager:
             self.workspace_root = workspace_root or Path.cwd()
 
         self.projects = self._discover_projects()
-        self.project_registry: dict[str, dict[str, str]] = {}
+        self.project_registry: dict[str, FlextTypes.Core.Headers] = {}
 
     def _discover_projects(self) -> list[Path]:
         """Discover and catalog all FLEXT projects within the workspace.
@@ -188,7 +188,7 @@ class WorkspaceManager:
 
         return sorted(projects, key=lambda p: p.name)
 
-    def get_project_info(self, project_name: str) -> dict[str, str] | None:
+    def get_project_info(self, project_name: str) -> FlextTypes.Core.Headers | None:
         """Retrieve comprehensive information about a specific project.
 
         Provides detailed metadata about a project including type, path,
@@ -252,7 +252,7 @@ class WorkspaceManager:
                 }
         return None
 
-    def list_projects(self) -> list[str]:
+    def list_projects(self) -> FlextTypes.Core.StringList:
         """List all discovered projects in the workspace.
 
         Returns a comprehensive list of all FLEXT ecosystem projects
@@ -289,7 +289,9 @@ class WorkspaceManager:
         """
         return [project.name for project in self.projects]
 
-    def get_project_dependencies(self, _project_name: str) -> list[str]:
+    def get_project_dependencies(
+        self, _project_name: str
+    ) -> FlextTypes.Core.StringList:
         """Analyze and return dependencies for a specific project.
 
         Performs comprehensive dependency analysis by parsing project

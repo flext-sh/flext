@@ -83,7 +83,7 @@ class WorkspaceStatus:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
             return FlextResult[object].fail(f"Analysis error: {e}")
 
-    def _analyze_projects(self, workspace_root: Path) -> dict[str, object]:
+    def _analyze_projects(self, workspace_root: Path) -> FlextTypes.Core.Dict:
         """Analisar projetos do workspace."""
         projects = {}
 
@@ -132,8 +132,8 @@ class WorkspaceStatus:
     def _analyze_quality(
         self,
         _workspace_root: Path,
-        projects_info: dict[str, object],
-    ) -> dict[str, object]:
+        projects_info: FlextTypes.Core.Dict,
+    ) -> FlextTypes.Core.Dict:
         """Analisar qualidade do código."""
         quality_data = {
             "total_python_files": 0,
@@ -155,8 +155,8 @@ class WorkspaceStatus:
     def _analyze_dependencies(
         self,
         _workspace_root: Path,
-        projects_info: dict[str, object],
-    ) -> dict[str, object]:
+        projects_info: FlextTypes.Core.Dict,
+    ) -> FlextTypes.Core.Dict:
         """Analisar dependências."""
         deps_data = {
             "projects_with_poetry": 0,
@@ -173,10 +173,10 @@ class WorkspaceStatus:
 
     def _calculate_health_score(
         self,
-        projects: dict[str, object],
-        quality: dict[str, object],
-        deps: dict[str, object],
-    ) -> dict[str, object]:
+        projects: FlextTypes.Core.Dict,
+        quality: FlextTypes.Core.Dict,
+        deps: FlextTypes.Core.Dict,
+    ) -> FlextTypes.Core.Dict:
         """Calcular health score do workspace."""
         total_projects = projects["total_count"]
 
@@ -245,7 +245,7 @@ class WorkspaceStatus:
             "max_score": max_score,
         }
 
-    def _print_projects_summary(self, projects_info: dict[str, object]) -> None:
+    def _print_projects_summary(self, projects_info: FlextTypes.Core.Dict) -> None:
         """Imprimir resumo dos projetos."""
         projects = projects_info["projects"]
         total_count = projects_info["total_count"]
@@ -254,7 +254,7 @@ class WorkspaceStatus:
         print_colored("=" * 50, Colors.BLUE)
 
         # Agrupar por tipo
-        by_type: dict[str, list[str]] = {}
+        by_type: dict[str, FlextTypes.Core.StringList] = {}
         for name, data in projects.items():
             project_type = data["type"]
             if project_type not in by_type:
@@ -267,17 +267,17 @@ class WorkspaceStatus:
                 data = projects[name]
                 "✅" if data["has_tests"] else "⚠️"
 
-    def _print_quality_summary(self, _quality_info: dict[str, object]) -> None:
+    def _print_quality_summary(self, _quality_info: FlextTypes.Core.Dict) -> None:
         """Imprimir resumo da qualidade."""
         print_colored("\n📊 QUALIDADE DO CÓDIGO", Colors.BLUE)
         print_colored("=" * 50, Colors.BLUE)
 
-    def _print_dependencies_summary(self, _deps_info: dict[str, object]) -> None:
+    def _print_dependencies_summary(self, _deps_info: FlextTypes.Core.Dict) -> None:
         """Imprimir resumo das dependências."""
         print_colored("\n📦 DEPENDÊNCIAS", Colors.BLUE)
         print_colored("=" * 50, Colors.BLUE)
 
-    def _print_health_score(self, health: dict[str, object]) -> None:
+    def _print_health_score(self, health: FlextTypes.Core.Dict) -> None:
         """Imprimir health score."""
         print_colored("\n🏥 HEALTH SCORE DO WORKSPACE", Colors.BLUE)
 
@@ -290,8 +290,7 @@ class WorkspaceStatus:
             score_color = Colors.RED
 
         print_colored(
-            f"  Score: {health['score']}/{health['max_score']} "
-            f"(Grade: {health['grade']})",
+            f"  Score: {health['score']}/{health['max_score']} (Grade: {health['grade']})",
             score_color,
         )
 

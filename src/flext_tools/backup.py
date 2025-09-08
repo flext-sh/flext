@@ -34,7 +34,7 @@ class BackupManager:
         self.session_dir.mkdir(exist_ok=True)
 
         # Operations log
-        self.operations_log: list[dict[str, object]] = []
+        self.operations_log: list[FlextTypes.Core.Dict] = []
 
     def create_backup(
         self,
@@ -183,7 +183,7 @@ class BackupManager:
 
         return restore_point_id
 
-    def list_backups(self) -> list[dict[str, object]]:
+    def list_backups(self) -> list[FlextTypes.Core.Dict]:
         """List all backups from current session."""
         return self.operations_log.copy()
 
@@ -218,7 +218,7 @@ class BackupManager:
 
         return removed_count
 
-    def get_backup_info(self, backup_id: str) -> dict[str, object] | None:
+    def get_backup_info(self, backup_id: str) -> FlextTypes.Core.Dict | None:
         """Get information for a specific backup."""
         for operation in self.operations_log:
             if operation["backup_id"] == backup_id:

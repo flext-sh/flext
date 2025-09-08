@@ -155,7 +155,7 @@ class HealthCheckService:
         """
         self.workspace_path = workspace_path
 
-    def run_health_checks(self, **_kwargs: object) -> dict[str, object]:
+    def run_health_checks(self, **_kwargs: object) -> FlextTypes.Core.Dict:
         """Execute comprehensive health checks across the entire FLEXT workspace.
 
         Performs systematic health validation of all workspace components including
@@ -202,7 +202,7 @@ class HealthCheckService:
         """
         print_colored("🏥 Executing comprehensive health checks...", Colors.BLUE)
 
-        results: dict[str, object] = {
+        results: FlextTypes.Core.Dict = {
             "overall_health": "healthy",
             "services_checked": 0,
             "services_healthy": 0,
