@@ -71,23 +71,23 @@ class ConflictAnalysisResult(FlextModels.Value):
         default=0,
         description="Number of projects analyzed in the workspace",
     )
-    version_conflicts: dict[str, dict[str, object]] = Field(
+    version_conflicts: dict[str, FlextTypes.Core.Dict] = Field(
         default_factory=dict,
         description="Detailed version conflict information by package",
     )
-    circular_dependencies: list[str] = Field(
+    circular_dependencies: FlextTypes.Core.StringList = Field(
         default_factory=list,
         description="List of detected circular dependency patterns",
     )
-    update_blockers: dict[str, dict[str, object]] = Field(
+    update_blockers: dict[str, FlextTypes.Core.Dict] = Field(
         default_factory=dict,
         description="Projects and packages blocking dependency updates",
     )
-    suggested_resolutions: dict[str, str] = Field(
+    suggested_resolutions: FlextTypes.Core.Headers = Field(
         default_factory=dict,
         description="AI-generated resolution recommendations",
     )
-    analysis_summary: dict[str, object] = Field(
+    analysis_summary: FlextTypes.Core.Dict = Field(
         default_factory=dict,
         description="Statistical summary and analysis metadata",
     )
@@ -298,11 +298,11 @@ class ConflictAnalyzer:
     def _collect_and_validate_projects(
         self,
         workspace_path: Path,
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Collect and validate projects data from workspace."""
         projects_collection_result = self._collect_projects_data(workspace_path)
         if not projects_collection_result.success:
-            return FlextResult[dict[str, object]].fail(
+            return FlextResult[FlextTypes.Core.Dict].fail(
                 projects_collection_result.error or "Failed to collect projects data",
             )
 
@@ -315,12 +315,12 @@ class ConflictAnalyzer:
             )
             # Return projects data anyway - the caller will handle the insufficient projects case
 
-        return FlextResult[dict[str, object]].ok(projects_data)
+        return FlextResult[FlextTypes.Core.Dict].ok(projects_data)
 
     def _analyze_conflicts(
         self,
         workspace_path: Path,
-        projects_data: dict[str, object],
+        projects_data: FlextTypes.Core.Dict,
     ) -> FlextResult[ConflictAnalysisResult]:
         """Perform the actual conflict analysis on validated data."""
         # Handle insufficient projects case
@@ -347,7 +347,9 @@ class ConflictAnalyzer:
         workspace_deps = workspace_deps_result.value
 
         # Analyze version conflicts
-        projects_data_for_analysis = cast("dict[str, dict[str, object]]", projects_data)
+        projects_data_for_analysis = cast(
+            "dict[str, FlextTypes.Core.Dict]", projects_data
+        )
         version_conflicts = self.version_analyzer.analyze_version_conflicts(
             projects_data_for_analysis,
         )
@@ -387,8 +389,8 @@ class ConflictAnalyzer:
 
     def _generate_resolutions_safe(
         self,
-        version_conflicts: dict[str, list[dict[str, object]]],
-    ) -> dict[str, str]:
+        version_conflicts: dict[str, list[FlextTypes.Core.Dict]],
+    ) -> FlextTypes.Core.Headers:
         """Generate resolution suggestions safely."""
         resolutions_result = self._suggest_resolutions_safe(version_conflicts)
         if not resolutions_result.success:
@@ -401,14 +403,14 @@ class ConflictAnalyzer:
 
     def _build_analysis_result(
         self,
-        projects_data: dict[str, dict[str, object]],
-        version_conflicts: dict[str, list[dict[str, object]]],
-        blockers: dict[str, dict[str, object]],
-        resolutions: dict[str, str],
+        projects_data: dict[str, FlextTypes.Core.Dict],
+        version_conflicts: dict[str, list[FlextTypes.Core.Dict]],
+        blockers: dict[str, FlextTypes.Core.Dict],
+        resolutions: FlextTypes.Core.Headers,
     ) -> FlextResult[ConflictAnalysisResult]:
         """Build the final analysis result."""
         version_conflicts_typed = cast(
-            "dict[str, dict[str, object]]",
+            "dict[str, FlextTypes.Core.Dict]",
             version_conflicts,
         )
         result = ConflictAnalysisResult(
@@ -436,7 +438,7 @@ class ConflictAnalyzer:
     def _collect_projects_data(
         self,
         workspace_path: Path,
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Collect project data safely using FlextResult."""
         try:
             projects_data = {}
@@ -455,30 +457,30 @@ class ConflictAnalyzer:
                             )
                             # Continue with other projects instead of failing completely
 
-            projects_data_typed: dict[str, object] = dict(projects_data)
-            return FlextResult[dict[str, object]].ok(projects_data_typed)
+            projects_data_typed: FlextTypes.Core.Dict = dict(projects_data)
+            return FlextResult[FlextTypes.Core.Dict].ok(projects_data_typed)
         except Exception as e:
-            return FlextResult[dict[str, object]].fail(
+            return FlextResult[FlextTypes.Core.Dict].fail(
                 f"Failed to collect project data: {e}"
             )
 
     def _collect_workspace_dependencies_safe(
         self,
         workspace_path: Path,
-    ) -> FlextResult[dict[str, dict[str, str]]]:
+    ) -> FlextResult[dict[str, FlextTypes.Core.Headers]]:
         """Safely collect workspace dependencies using FlextResult."""
         try:
             workspace_deps = self._collect_workspace_dependencies(workspace_path)
-            return FlextResult[dict[str, dict[str, str]]].ok(workspace_deps)
+            return FlextResult[dict[str, FlextTypes.Core.Headers]].ok(workspace_deps)
         except Exception as e:
-            return FlextResult[dict[str, dict[str, str]]].fail(
+            return FlextResult[dict[str, FlextTypes.Core.Headers]].fail(
                 f"Failed to collect workspace dependencies: {e}"
             )
 
     def _collect_workspace_dependencies(
         self,
         workspace_path: Path,
-    ) -> dict[str, dict[str, str]]:
+    ) -> dict[str, FlextTypes.Core.Headers]:
         """Collect comprehensive dependency information from all workspace projects.
 
         Scans the workspace for Python projects and extracts complete dependency
@@ -515,7 +517,7 @@ class ConflictAnalyzer:
             ...         print(f"  {package}: {version}")
 
         """
-        dependencies: dict[str, dict[str, str]] = {}
+        dependencies: dict[str, FlextTypes.Core.Headers] = {}
 
         # Search for Python projects
         for pyproject in workspace_path.rglob("pyproject.toml"):
@@ -534,7 +536,9 @@ class ConflictAnalyzer:
 
         return dependencies
 
-    def _extract_project_dependencies(self, pyproject_path: Path) -> dict[str, str]:
+    def _extract_project_dependencies(
+        self, pyproject_path: Path
+    ) -> FlextTypes.Core.Headers:
         """Extract comprehensive dependency information from pyproject.toml file.
 
         Parses Poetry configuration to extract all project dependencies including
@@ -581,7 +585,7 @@ class ConflictAnalyzer:
             print_colored(f"  ⚠️ Error reading {pyproject_path}: {e}", Colors.YELLOW)
             return {}
         else:
-            deps: dict[str, str] = {}
+            deps: FlextTypes.Core.Headers = {}
 
             # Main dependencies
             main_deps = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
@@ -600,7 +604,7 @@ class ConflictAnalyzer:
 
             return deps
 
-    def _extract_version_string(self, spec: str | dict[str, object] | object) -> str:
+    def _extract_version_string(self, spec: str | FlextTypes.Core.Dict | object) -> str:
         """Extract version string from Poetry dependency specification.
 
         Handles both simple string version specifications and complex
@@ -648,8 +652,8 @@ class ConflictAnalyzer:
 
     def _identify_update_blockers_safe(
         self,
-        workspace_deps: dict[str, dict[str, str]],
-    ) -> FlextResult[dict[str, dict[str, object]]]:
+        workspace_deps: dict[str, FlextTypes.Core.Headers],
+    ) -> FlextResult[dict[str, FlextTypes.Core.Dict]]:
         """Safely identify update blockers using railway-oriented programming.
 
         This method wraps the blocker identification logic in FlextResult
@@ -664,17 +668,17 @@ class ConflictAnalyzer:
         """
         try:
             blockers = self._identify_update_blockers_impl(workspace_deps)
-            return FlextResult[dict[str, dict[str, object]]].ok(blockers)
+            return FlextResult[dict[str, FlextTypes.Core.Dict]].ok(blockers)
         except Exception as e:
             logger.exception("Failed to identify update blockers", error=str(e))
-            return FlextResult[dict[str, dict[str, object]]].fail(
+            return FlextResult[dict[str, FlextTypes.Core.Dict]].fail(
                 f"Update blocker identification failed: {e}"
             )
 
     def _identify_update_blockers_impl(
         self,
-        workspace_deps: dict[str, dict[str, str]],
-    ) -> dict[str, dict[str, object]]:
+        workspace_deps: dict[str, FlextTypes.Core.Headers],
+    ) -> dict[str, FlextTypes.Core.Dict]:
         """Identify projects that block dependency updates.
 
         Analyzes workspace dependencies to identify projects with restrictive
@@ -699,10 +703,10 @@ class ConflictAnalyzer:
             dependency patterns that prevent ecosystem-wide updates.
 
         """
-        blockers: dict[str, dict[str, object]] = {}
+        blockers: dict[str, FlextTypes.Core.Dict] = {}
 
         # Count how many times each constraint appears
-        constraint_usage: dict[str, dict[str, list[str]]] = {}
+        constraint_usage: dict[str, dict[str, FlextTypes.Core.StringList]] = {}
         for project, deps in workspace_deps.items():
             for package, constraint in deps.items():
                 # Remove group suffix [dev], [test], etc
@@ -723,8 +727,8 @@ class ConflictAnalyzer:
                 for constraint, projects in constraints.items():
                     if self._is_restrictive_constraint(constraint):
                         if package not in blockers:
-                            blocking_projects: list[str] = []
-                            constraint_dict: dict[str, list[str]] = {}
+                            blocking_projects: FlextTypes.Core.StringList = []
+                            constraint_dict: dict[str, FlextTypes.Core.StringList] = {}
                             blockers[package] = {
                                 "blocking_projects": blocking_projects,
                                 "constraints": constraint_dict,
@@ -780,9 +784,9 @@ class ConflictAnalyzer:
 
     def _calculate_stats(
         self,
-        workspace_deps: dict[str, dict[str, str]],
-        conflicts: dict[str, list[dict[str, object]]],
-        blockers: dict[str, dict[str, object]],
+        workspace_deps: dict[str, FlextTypes.Core.Headers],
+        conflicts: dict[str, list[FlextTypes.Core.Dict]],
+        blockers: dict[str, FlextTypes.Core.Dict],
     ) -> dict[str, int]:
         """Calculate analysis statistics.
 
@@ -840,7 +844,7 @@ class ConflictAnalyzer:
 
     def generate_conflict_report(
         self,
-        analysis: dict[str, dict[str, object] | list[object] | str | int],
+        analysis: dict[str, FlextTypes.Core.Dict | FlextTypes.Core.List | str | int],
     ) -> str:
         r"""Generate comprehensive formatted conflict analysis report.
 
@@ -898,8 +902,8 @@ class ConflictAnalyzer:
 
     def _generate_statistics_section(
         self,
-        analysis: dict[str, dict[str, object] | list[object] | str | int],
-    ) -> list[str]:
+        analysis: dict[str, FlextTypes.Core.Dict | FlextTypes.Core.List | str | int],
+    ) -> FlextTypes.Core.StringList:
         """Generate statistics section for conflict report."""
         stats = analysis.get("stats", {})
         if not isinstance(stats, dict):
@@ -917,10 +921,10 @@ class ConflictAnalyzer:
 
     def _generate_conflicts_section(
         self,
-        analysis: dict[str, dict[str, object] | list[object] | str | int],
-    ) -> list[str]:
+        analysis: dict[str, FlextTypes.Core.Dict | FlextTypes.Core.List | str | int],
+    ) -> FlextTypes.Core.StringList:
         """Generate version conflicts section for conflict report."""
-        lines: list[str] = []
+        lines: FlextTypes.Core.StringList = []
         version_conflicts = analysis.get("version_conflicts", {})
 
         if not version_conflicts or not isinstance(version_conflicts, dict):
@@ -929,7 +933,7 @@ class ConflictAnalyzer:
         lines.append("## ⚠️ Version Conflicts\n")
 
         for package, conflict_data_obj in sorted(version_conflicts.items()):
-            conflict_data = cast("dict[str, object]", conflict_data_obj)
+            conflict_data = cast("FlextTypes.Core.Dict", conflict_data_obj)
             lines.extend(self._format_conflict_entry(package, conflict_data))
 
         return lines
@@ -937,8 +941,8 @@ class ConflictAnalyzer:
     def _format_conflict_entry(
         self,
         package: str,
-        conflict_data: dict[str, object],
-    ) -> list[str]:
+        conflict_data: FlextTypes.Core.Dict,
+    ) -> FlextTypes.Core.StringList:
         """Format individual conflict entry."""
         severity = conflict_data.get("severity", "medium")
         icon = "🔴" if severity == "high" else "🟡"
@@ -965,10 +969,10 @@ class ConflictAnalyzer:
 
     def _generate_blockers_section(
         self,
-        analysis: dict[str, dict[str, object] | list[object] | str | int],
-    ) -> list[str]:
+        analysis: dict[str, FlextTypes.Core.Dict | FlextTypes.Core.List | str | int],
+    ) -> FlextTypes.Core.StringList:
         """Generate update blockers section for conflict report."""
-        lines: list[str] = []
+        lines: FlextTypes.Core.StringList = []
         update_blockers = analysis.get("update_blockers", {})
 
         if not update_blockers or not isinstance(update_blockers, dict):
@@ -985,8 +989,8 @@ class ConflictAnalyzer:
     def _format_blocker_entry(
         self,
         package: str,
-        blocker_data: dict[str, object],
-    ) -> list[str]:
+        blocker_data: FlextTypes.Core.Dict,
+    ) -> FlextTypes.Core.StringList:
         """Format individual blocker entry."""
         lines = [f"### {package}\n", "**Blocking projects:**"]
 
@@ -1003,10 +1007,10 @@ class ConflictAnalyzer:
 
     def _generate_resolutions_section(
         self,
-        analysis: dict[str, dict[str, object] | list[object] | str | int],
-    ) -> list[str]:
+        analysis: dict[str, FlextTypes.Core.Dict | FlextTypes.Core.List | str | int],
+    ) -> FlextTypes.Core.StringList:
         """Generate suggested resolutions section for conflict report."""
-        lines: list[str] = []
+        lines: FlextTypes.Core.StringList = []
         suggested_resolutions = analysis.get("suggested_resolutions", {})
 
         if not isinstance(suggested_resolutions, dict) or not suggested_resolutions:
@@ -1022,8 +1026,8 @@ class ConflictAnalyzer:
 
     def _suggest_resolutions_safe(
         self,
-        version_conflicts: dict[str, list[dict[str, object]]],
-    ) -> FlextResult[dict[str, str]]:
+        version_conflicts: dict[str, list[FlextTypes.Core.Dict]],
+    ) -> FlextResult[FlextTypes.Core.Headers]:
         """Safely generate resolution suggestions using railway-oriented programming.
 
         Args:
@@ -1044,10 +1048,10 @@ class ConflictAnalyzer:
                 conflicts_for_resolution,
             )
 
-            return FlextResult[dict[str, str]].ok(resolutions)
+            return FlextResult[FlextTypes.Core.Headers].ok(resolutions)
         except Exception as e:
             logger.exception("Failed to generate resolution suggestions", error=str(e))
-            return FlextResult[dict[str, str]].fail(
+            return FlextResult[FlextTypes.Core.Headers].fail(
                 f"Resolution suggestion failed: {e}"
             )
 

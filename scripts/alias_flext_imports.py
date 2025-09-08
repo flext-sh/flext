@@ -1,31 +1,5 @@
 #!/usr/bin/env python3
-"""Standardize flext_core imports to short aliases and update usages.
-
-Goals
-- Replace usages of:
-  - FlextModels -> m
-  - FlextTypes -> t
-  - FlextConstants -> c
-  - FlextFields -> f
-  - FlextProtocols -> p
-- Ensure an aliased import exists in each edited file:
-  from flext_core import FlextModels as m, FlextTypes as t, FlextConstants as c, FlextFields as f, FlextProtocols as p
-  (Only the aliases actually used in the file are included.)
-
-Safety
-- Dry-run by default: prints a concise plan without writing.
-- Skips replacements in import statements themselves.
-- Does not touch strings or comments (token-level replacement).
-
-Usage
-  python scripts/alias_flext_imports.py [--apply] [--path .] [--project SUBSTR]
-
-Notes
------
-- This script targets direct symbol usages. If a file already uses custom aliases,
-  the script will not override them.
-
-"""
+"""Standardize flext_core imports to short aliases and update usages."""
 
 from __future__ import annotations
 
@@ -38,7 +12,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
-from flext_core import FlextLogger
+from flext_core import FlextLogger, FlextTypes
 
 from flext_tools.backup import BackupManager
 from flext_tools.paths import should_ignore_path
@@ -51,7 +25,7 @@ from flext_tools.quality_gateway import (
 )
 from flext_tools.rollback import ConfirmationMode, RollbackManager
 
-NAME_MAP: dict[str, str] = {
+NAME_MAP: FlextTypes.Core.Headers = {
     # Aliases must be UPPERCASE (and specific for commands)
     "FlextModels": "M",
     "FlextTypes": "T",
@@ -72,11 +46,15 @@ ALIAS_ORDER = [
     "FlextCommands",
 ]
 
-SYMBOL_BY_ALIAS: dict[str, str] = {alias: sym for sym, alias in NAME_MAP.items()}
+SYMBOL_BY_ALIAS: FlextTypes.Core.Headers = {
+    alias: sym for sym, alias in NAME_MAP.items()
+}
 
 
 @dataclass
 class FilePlan:
+    """Plan for file modifications during import alias processing."""
+
     path: Path
     replaced: dict[str, int]
     removed_import_lines: int
@@ -84,6 +62,15 @@ class FilePlan:
 
 
 def collect_import_ranges(tree: ast.AST) -> list[tuple[int, int]]:
+    """Collect line ranges for import statements in AST.
+
+    Args:
+        tree: AST tree to analyze
+
+    Returns:
+        List of (start_line, end_line) tuples for import statements
+
+    """
     ranges: list[tuple[int, int]] = []
     for node in ast.walk(tree):
         if isinstance(node, (ast.Import, ast.ImportFrom)):
@@ -97,6 +84,16 @@ def collect_import_ranges(tree: ast.AST) -> list[tuple[int, int]]:
 
 
 def line_in_ranges(lineno: int, ranges: list[tuple[int, int]]) -> bool:
+    """Check if a line number is within any of the given ranges.
+
+    Args:
+        lineno: Line number to check
+        ranges: List of (start, end) line ranges
+
+    Returns:
+        True if line is within any range, False otherwise
+
+    """
     return any(start <= lineno <= end for start, end in ranges)
 
 
@@ -124,7 +121,9 @@ def tokenize_replace_names(
 FLEXT_IMPORT_RE = re.compile(r"^\s*from\s+flext_core(?:\.[\w_]+)?\s+import\s+(.+)$")
 
 
-def rebuild_imports(code: str, sym_to_apply: dict[str, str]) -> tuple[str, int, bool]:
+def rebuild_imports(
+    code: str, sym_to_apply: FlextTypes.Core.Headers
+) -> tuple[str, int, bool]:
     """Rewrite flext_core import lines in place, adding aliases without moving lines.
 
     Returns: (new_code, removed_import_lines, added_import_bool)
@@ -167,6 +166,15 @@ def rebuild_imports(code: str, sym_to_apply: dict[str, str]) -> tuple[str, int, 
 
 
 def detect_used_aliases(code: str) -> set[str]:
+    """Detect which aliases are actually used in the code.
+
+    Args:
+        code: Source code to analyze
+
+    Returns:
+        Set of aliases that are actually used
+
+    """
     used = set()
     # look for alias followed by dot (to avoid variable collisions)
     for alias in NAME_MAP.values():
@@ -176,15 +184,15 @@ def detect_used_aliases(code: str) -> set[str]:
 
 
 def scan_existing_import_aliases(
-    code_lines: list[str],
-) -> tuple[dict[str, str], dict[str, str]]:
+    code_lines: FlextTypes.Core.StringList,
+) -> tuple[FlextTypes.Core.Headers, FlextTypes.Core.Headers]:
     """Return mapping symbol->alias already present in import lines to avoid duplicates.
 
     Also returns alias->symbol via reverse mapping, embedded in the values string as 'alias|symbol'.
     For simplicity, we only track flext_core imports.
     """
-    sym_to_alias: dict[str, str] = {}
-    alias_to_sym: dict[str, str] = {}
+    sym_to_alias: FlextTypes.Core.Headers = {}
+    alias_to_sym: FlextTypes.Core.Headers = {}
     import_re = re.compile(r"^\s*from\s+flext_core(?:\.[\w_]+)?\s+import\s+(.+)$")
     for line in code_lines:
         m = import_re.match(line)
@@ -206,20 +214,20 @@ def scan_existing_import_aliases(
 
 
 def rewrite_import_line_preserve(
-    line: str, sym_to_apply: dict[str, str]
-) -> tuple[str, dict[str, str]]:
+    line: str, sym_to_apply: FlextTypes.Core.Headers
+) -> tuple[str, FlextTypes.Core.Headers]:
     """Rewrite a single 'from flext_core[.sub] import ...' line, adding aliases for target symbols.
 
     Returns modified line and dict of symbol->alias actually applied in this line.
     Preserves module path and overall structure.
     """
-    applied: dict[str, str] = {}
+    applied: FlextTypes.Core.Headers = {}
     m = re.match(r"^(\s*from\s+flext_core(?:\.[\w_]+)?\s+import\s+)(.+?)(\s*)$", line)
     if not m:
         return line, applied
     prefix, names, suffix = m.groups()
     parts = [p.strip() for p in names.split(",")]
-    new_parts: list[str] = []
+    new_parts: FlextTypes.Core.StringList = []
     for p in parts:
         if not p:
             continue
@@ -237,14 +245,14 @@ def rewrite_import_line_preserve(
 
 
 def rewrite_import_block_preserve(
-    block_text: str, sym_to_apply: dict[str, str]
-) -> tuple[str, dict[str, str]]:
+    block_text: str, sym_to_apply: FlextTypes.Core.Headers
+) -> tuple[str, FlextTypes.Core.Headers]:
     """Rewrite a multi-line import block preserving formatting and positions.
 
     It rewrites each line using rewrite_import_line_preserve.
     """
-    applied_total: dict[str, str] = {}
-    out_lines: list[str] = []
+    applied_total: FlextTypes.Core.Headers = {}
+    out_lines: FlextTypes.Core.StringList = []
     for ln in block_text.splitlines():
         new_ln, applied = rewrite_import_line_preserve(ln, sym_to_apply)
         out_lines.append(new_ln)
@@ -258,6 +266,18 @@ logger = FlextLogger(__name__)
 def process_file(
     path: Path, *, apply: bool, backup: BackupManager | None, ast_check: bool = False
 ) -> FilePlan | None:
+    """Process a single file for import alias replacement.
+
+    Args:
+        path: Path to the file to process
+        apply: Whether to actually apply changes
+        backup: Backup manager for file operations
+        ast_check: Whether to perform AST validation
+
+    Returns:
+        FilePlan with modification details, or None if processing failed
+
+    """
     try:
         code = path.read_text(encoding="utf-8")
     except Exception:
@@ -300,7 +320,7 @@ def process_file(
     partially_rewritten = tokenize.untokenize(toks_out)
 
     # Build sym_to_apply map based on NAME_MAP excluding banned and already aliased
-    sym_to_apply: dict[str, str] = {}
+    sym_to_apply: FlextTypes.Core.Headers = {}
     for sym, alias in NAME_MAP.items():
         if sym in banned_symbols:
             continue
@@ -338,6 +358,15 @@ def process_file(
 
 
 def main(argv: Iterable[str] | None = None) -> int:
+    """Main entry point for the import alias processing script.
+
+    Args:
+        argv: Command line arguments
+
+    Returns:
+        Exit code (0 for success, non-zero for failure)
+
+    """
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--apply", action="store_true", help="Apply changes (default: dry-run)"
@@ -434,8 +463,12 @@ def main(argv: Iterable[str] | None = None) -> int:
     print(f"\nApplied changes to {applied} files")
 
     if args.quality_guard:
-        assert gw is not None
-        assert cfg is not None
+        if gw is None:
+            print("❌ Quality gateway not available")
+            return 1
+        if cfg is None:
+            print("❌ Quality configuration not available")
+            return 1
         print("🔒 Quality guard after changes...")
         res_after = gw.run_quality_checks_safe(cfg)
         if not res_after.success:

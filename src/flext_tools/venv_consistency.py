@@ -99,8 +99,8 @@ class PackageInfo:
     name: str
     version: str
     location: str | None = None
-    required_by: list[str] | None = None
-    dependencies: list[str] | None = None
+    required_by: FlextTypes.Core.StringList | None = None
+    dependencies: FlextTypes.Core.StringList | None = None
 
 
 @dataclass
@@ -124,7 +124,7 @@ class VenvConflict:
     package: str
     details: str
     severity: str  # "critical", "warning", "info"
-    affected_projects: list[str]
+    affected_projects: FlextTypes.Core.StringList
 
 
 class VenvConsistencyValidator:
@@ -190,7 +190,7 @@ class VenvConsistencyValidator:
         self.workspace_path = workspace_path
         self.venv_path = workspace_path / ".venv"
         self.installed_packages: dict[str, PackageInfo] = {}
-        self.project_requirements: dict[str, dict[str, str]] = {}
+        self.project_requirements: dict[str, FlextTypes.Core.Headers] = {}
         self.conflicts: list[VenvConflict] = []
 
     def validate_venv_consistency(self) -> dict[str, list[VenvConflict]]:
@@ -392,7 +392,7 @@ class VenvConsistencyValidator:
 
     def _parse_dependency_spec(
         self,
-        dep_spec: str | dict[str, object],
+        dep_spec: str | FlextTypes.Core.Dict,
     ) -> tuple[str, str]:
         """Parse a PEP 621 dependency specification.
 
@@ -446,7 +446,7 @@ class VenvConsistencyValidator:
         print_colored("  🔍 Analyzing conflicts...", Colors.CYAN)
 
         # Map which package is requested by which projects
-        package_requesters: dict[str, list[str]] = defaultdict(list)
+        package_requesters: dict[str, FlextTypes.Core.StringList] = defaultdict(list)
         package_versions: dict[str, set[str]] = defaultdict(set)
 
         for project, requirements in self.project_requirements.items():

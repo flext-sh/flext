@@ -83,7 +83,7 @@ class FlextResultTypeAuditor(FlextScript):
             ]
             return any(pattern in file_path for pattern in ignored_patterns)
 
-    def _find_flext_projects(self) -> list[str]:
+    def _find_flext_projects(self) -> FlextTypes.Core.StringList:
         """Encontra todos os projetos flext no workspace usando git submodules."""
         projects = []
 
@@ -115,7 +115,7 @@ class FlextResultTypeAuditor(FlextScript):
             ]
             return sorted(fallback_projects)
 
-    def _find_python_files(self, project_dir: str) -> list[str]:
+    def _find_python_files(self, project_dir: str) -> FlextTypes.Core.StringList:
         """Encontra todos os arquivos .py no projeto respeitando .gitignore."""
         py_files = []
         project_path = Path(project_dir)
@@ -137,7 +137,7 @@ class FlextResultTypeAuditor(FlextScript):
 
     def _check_flextresult_inconsistencies(
         self, file_path: str
-    ) -> list[dict[str, object]]:
+    ) -> list[FlextTypes.Core.Dict]:
         """Verifica inconsistências de FlextResult em um arquivo."""
         try:
             with Path(file_path).open(encoding="utf-8") as f:

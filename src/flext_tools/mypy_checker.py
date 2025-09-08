@@ -12,7 +12,7 @@ class MyPyChecker:
         """Initialize the MyPy checker."""
         self.workspace_path = workspace_path
 
-    def check_workspace(self, **_kwargs: object) -> dict[str, object]:
+    def check_workspace(self, **_kwargs: object) -> FlextTypes.Core.Dict:
         """Check types across the workspace."""
         print_colored("🔍 Checking types with MyPy...", Colors.BLUE)
 

@@ -173,7 +173,7 @@ class WorkspaceService:
 
     def run_command(
         self,
-        command: list[str],
+        command: FlextTypes.Core.StringList,
         cwd: Path | None = None,
         *,
         check: bool = True,
@@ -306,7 +306,7 @@ class WorkspaceService:
 
         return self.run_command(["make", target], cwd=cwd, check=check)
 
-    def get_module_status(self, module: str) -> dict[str, object]:
+    def get_module_status(self, module: str) -> FlextTypes.Core.Dict:
         """Get comprehensive status information for a specific FLEXT module.
 
         Analyzes module structure and configuration to provide detailed status
@@ -373,7 +373,7 @@ class WorkspaceService:
             "has_tests": has_tests,
         }
 
-    def list_modules(self) -> list[dict[str, object]]:
+    def list_modules(self) -> list[FlextTypes.Core.Dict]:
         """List all workspace modules with comprehensive status information.
 
         Retrieves status information for all registered FLEXT modules in the

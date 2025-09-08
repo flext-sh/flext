@@ -121,7 +121,7 @@ class SecurityViolation:
     description: str
     suggested_fix: str
 
-    def to_dict(self) -> dict[str, object]:
+    def to_dict(self) -> FlextTypes.Core.Dict:
         """Convert violation to dictionary for JSON serialization."""
         return {
             "file_path": self.file_path,
@@ -137,8 +137,8 @@ class SecurityViolation:
 class ScanConfig(FlextModels.Value):
     """Configuration for security scanning operations using flext-core patterns."""
 
-    target_paths: list[str]
-    exclude_patterns: ClassVar[list[str]] = [
+    target_paths: FlextTypes.Core.StringList
+    exclude_patterns: ClassVar[FlextTypes.Core.StringList] = [
         ".venv",
         "__pycache__",
         "*.pyc",
@@ -610,7 +610,7 @@ class AntipatternScanner:
 
 
 def create_security_scanner(
-    target_paths: list[str],
+    target_paths: FlextTypes.Core.StringList,
     *,
     exclude_dependencies: bool = True,
     output_format: str = "summary",

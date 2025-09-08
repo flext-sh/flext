@@ -118,9 +118,9 @@ class SecretsVaultDecryptor(BaseSecurityScript):
 
         return parser
 
-    def _process_kwargs(self, args: object) -> dict[str, object]:
+    def _process_kwargs(self, args: object) -> FlextTypes.Core.Dict:
         """Process arguments into kwargs."""
-        kwargs: dict[str, object] = {}
+        kwargs: FlextTypes.Core.Dict = {}
         kwargs["mask_secrets"] = not getattr(args, "no_mask", False)
         return kwargs
 

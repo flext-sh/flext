@@ -77,7 +77,7 @@ class PyprojectStandardizer(FlextScript):
             poetry_ops = PoetryValidator()
 
             total_standardized = 0
-            failed_projects: list[str] = []
+            failed_projects: FlextTypes.Core.StringList = []
 
             # Standardize each project
             for project_path in projects:
@@ -133,7 +133,7 @@ class PyprojectStandardizer(FlextScript):
         self,
         total_projects: int,
         standardized: int,
-        failed_projects: list[str],
+        failed_projects: FlextTypes.Core.StringList,
     ) -> None:
         """Print standardization summary."""
         print_colored("\n📊 STANDARDIZATION SUMMARY", Colors.BLUE)

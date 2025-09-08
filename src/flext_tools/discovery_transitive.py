@@ -285,7 +285,7 @@ class TransitiveDependencyResolver:
             path_dependencies=path_deps,
         )
 
-    def _extract_direct_dependencies(self, data: dict[str, object]) -> set[str]:
+    def _extract_direct_dependencies(self, data: FlextTypes.Core.Dict) -> set[str]:
         """Extract direct dependencies from poetry.lock file.
 
         Parses Poetry lock file data to extract all direct dependency names
@@ -314,7 +314,7 @@ class TransitiveDependencyResolver:
 
     def _extract_path_dependencies(
         self,
-        data: dict[str, object],
+        data: FlextTypes.Core.Dict,
         project_path: Path,
     ) -> list[PathDependency]:
         """Extract path dependencies from pyproject.toml configuration.
@@ -348,7 +348,9 @@ class TransitiveDependencyResolver:
 
         return path_deps
 
-    def _get_poetry_section(self, data: dict[str, object]) -> dict[str, object] | None:
+    def _get_poetry_section(
+        self, data: FlextTypes.Core.Dict
+    ) -> FlextTypes.Core.Dict | None:
         """Get Poetry section from pyproject.toml data."""
         tool_section = data.get("tool", {})
         if not isinstance(tool_section, dict):
@@ -359,7 +361,7 @@ class TransitiveDependencyResolver:
         return poetry_section
 
     def _extract_main_path_dependencies(
-        self, poetry_section: dict[str, object], project_path: Path
+        self, poetry_section: FlextTypes.Core.Dict, project_path: Path
     ) -> list[PathDependency]:
         """Extract path dependencies from main dependencies section."""
         path_deps: list[PathDependency] = []
@@ -369,7 +371,7 @@ class TransitiveDependencyResolver:
         return path_deps
 
     def _extract_group_path_dependencies(
-        self, poetry_section: dict[str, object], project_path: Path
+        self, poetry_section: FlextTypes.Core.Dict, project_path: Path
     ) -> list[PathDependency]:
         """Extract path dependencies from dependency groups."""
         path_deps: list[PathDependency] = []
@@ -385,7 +387,7 @@ class TransitiveDependencyResolver:
         return path_deps
 
     def _process_dependency_dict(
-        self, deps: dict[str, object], project_path: Path
+        self, deps: FlextTypes.Core.Dict, project_path: Path
     ) -> list[PathDependency]:
         """Process a dictionary of dependencies and extract path dependencies."""
         path_deps: list[PathDependency] = []
