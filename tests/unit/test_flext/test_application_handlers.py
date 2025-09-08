@@ -54,7 +54,7 @@ class TestEvent:
     """Test event for handler testing."""
 
     event_type: str
-    data: dict[str, object]
+    data: FlextTypes.Core.Dict
 
 
 class TestFlextHandlerFacade:
@@ -153,9 +153,13 @@ class TestHandlerImplementation:
     def test_create_query_handler_subclass(self) -> None:
         """Test creating a concrete QueryHandler subclass."""
 
-        class TestQueryHandler(QueryHandler[TestQuery, dict[str, object]]):
-            def handle_query(self, query: TestQuery) -> FlextResult[dict[str, object]]:
-                return FlextResult[dict[str, object]].ok({"query_id": query.query_id})
+        class TestQueryHandler(QueryHandler[TestQuery, FlextTypes.Core.Dict]):
+            def handle_query(
+                self, query: TestQuery
+            ) -> FlextResult[FlextTypes.Core.Dict]:
+                return FlextResult[FlextTypes.Core.Dict].ok(
+                    {"query_id": query.query_id}
+                )
 
         # Act
         handler = TestQueryHandler()

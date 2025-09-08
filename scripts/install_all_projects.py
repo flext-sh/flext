@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 
-def get_project_directories() -> list[str]:
+def get_project_directories() -> FlextTypes.Core.StringList:
     """Obter lista de diretórios de projetos principais FLEXT.
 
     Varre recursivamente o workspace raiz para encontrar todos os projetos
@@ -100,8 +100,12 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
             return False, "❌ Exe inválido de poetry"
         # Execute poetry install using subprocess
         try:
+            poetry_path = shutil.which("poetry")
+            if not poetry_path:
+                return False, "❌ Poetry não encontrado no PATH"
+
             result = subprocess.run(
-                ["poetry", "install", "--no-interaction"],
+                [poetry_path, "install", "--no-interaction"],
                 check=False,
                 capture_output=True,
                 text=True,

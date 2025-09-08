@@ -133,7 +133,7 @@ class TemplateManager:
     def render_template(
         self,
         template_name: str,
-        context: dict[str, object],
+        context: FlextTypes.Core.Dict,
     ) -> FlextResult[str]:
         """Render a template with context.
 
@@ -162,7 +162,7 @@ class TemplateManager:
 
     def render_component_readme(
         self,
-        component_data: dict[str, object],
+        component_data: FlextTypes.Core.Dict,
     ) -> FlextResult[str]:
         """Render component README template.
 
@@ -178,7 +178,7 @@ class TemplateManager:
             {"component": component_data},
         )
 
-    def render_api_reference(self, api_data: dict[str, object]) -> FlextResult[str]:
+    def render_api_reference(self, api_data: FlextTypes.Core.Dict) -> FlextResult[str]:
         """Render API reference template.
 
         Args:
@@ -192,7 +192,7 @@ class TemplateManager:
 
     def render_architecture_diagram(
         self,
-        diagram_data: dict[str, object],
+        diagram_data: FlextTypes.Core.Dict,
     ) -> FlextResult[str]:
         """Render architecture diagram template.
 
@@ -208,7 +208,7 @@ class TemplateManager:
             {"diagram": diagram_data},
         )
 
-    def list_templates(self) -> FlextResult[list[str]]:
+    def list_templates(self) -> FlextResult[FlextTypes.Core.StringList]:
         """List available templates.
 
         Returns:
@@ -219,11 +219,11 @@ class TemplateManager:
             templates = [
                 file_path.name for file_path in self.templates_dir.rglob("*.j2")
             ]
-            return FlextResult[list[str]].ok(templates)
+            return FlextResult[FlextTypes.Core.StringList].ok(templates)
         except Exception as e:
             error_msg = f"Failed to list templates: {e}"
             self.logger.exception(error_msg)
-            return FlextResult[list[str]].fail(error_msg)
+            return FlextResult[FlextTypes.Core.StringList].fail(error_msg)
 
     def validate_template(self, template_name: str) -> FlextResult[bool]:
         """Validate that a template exists and can be loaded.

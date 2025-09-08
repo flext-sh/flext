@@ -15,7 +15,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 from mypy import api as mypy_api
 
 from flext_tools import (
@@ -43,10 +43,10 @@ NEEDS_IMPROVEMENT_THRESHOLD = 60
 class AnalysisResults:
     """Resultados de análise de qualidade."""
 
-    deps_result: dict[str, object]
-    quality_result: dict[str, object]
-    conflicts_result: dict[str, object]
-    poetry_result: dict[str, object]
+    deps_result: FlextTypes.Core.Dict
+    quality_result: FlextTypes.Core.Dict
+    conflicts_result: FlextTypes.Core.Dict
+    poetry_result: FlextTypes.Core.Dict
 
 
 @dataclass
@@ -132,7 +132,7 @@ class QualityGateway(FlextScript):
             )
 
             # Estatísticas agregadas
-            total_stats: dict[str, object] = {
+            total_stats: FlextTypes.Core.Dict = {
                 "projects_analyzed": 0,
                 "passed": 0,
                 "failed": 0,
@@ -140,7 +140,7 @@ class QualityGateway(FlextScript):
                 "critical_issues": 0,
             }
 
-            failed_projects: list[str] = []
+            failed_projects: FlextTypes.Core.StringList = []
 
             # Executar análise em cada projeto
             for project_path in projects:
@@ -225,7 +225,7 @@ class QualityGateway(FlextScript):
         """Descobrir projetos para analisar."""
         return discover_projects(workspace_root, projects_filter)
 
-    def _analyze_dependencies(self, project_path: Path) -> dict[str, object]:
+    def _analyze_dependencies(self, project_path: Path) -> FlextTypes.Core.Dict:
         """Analisar dependências usando flext_tools."""
         try:
             discovery = DependencyDiscovery(resolve_transitive=True)
@@ -251,7 +251,7 @@ class QualityGateway(FlextScript):
                 "error": str(e),
             }
 
-    def _analyze_code_quality(self, project_path: Path) -> dict[str, object]:
+    def _analyze_code_quality(self, project_path: Path) -> FlextTypes.Core.Dict:
         """Analisar qualidade do código."""
         try:
             # Ruff check via API (no subprocess)
@@ -278,15 +278,22 @@ class QualityGateway(FlextScript):
             # Ruff check via subprocess (API não disponível na versão atual)
 
             try:
-                # Note: ruff path is trusted (installed via Poetry), project_path is validated
+                # Validate project path to prevent directory traversal
+                project_path = project_path.resolve()
+                if not project_path.exists() or not project_path.is_dir():
+                    return FlextResult[FlextTypes.Core.Dict].fail(
+                        f"Invalid project path: {project_path}"
+                    )
+
+                # Use absolute path and validate executable
+                ruff_cmd = shutil.which("ruff")
+                if not ruff_cmd:
+                    return FlextResult[FlextTypes.Core.Dict].fail(
+                        "Ruff not found in PATH"
+                    )
+
                 result = subprocess.run(
-                    [
-                        "/usr/bin/env",
-                        "ruff",
-                        "check",
-                        str(project_path),
-                        "--output-format=json",
-                    ],
+                    [ruff_cmd, "check", str(project_path), "--output-format=json"],
                     capture_output=True,
                     text=True,
                     check=False,
@@ -342,7 +349,7 @@ class QualityGateway(FlextScript):
                 "error": str(e),
             }
 
-    def _analyze_conflicts(self, project_path: Path) -> dict[str, object]:
+    def _analyze_conflicts(self, project_path: Path) -> FlextTypes.Core.Dict:
         """Analisar conflitos usando flext_tools."""
         try:
             analyzer = ConflictAnalyzer()
@@ -362,7 +369,7 @@ class QualityGateway(FlextScript):
                 "error": str(e),
             }
 
-    def _validate_poetry_config(self, project_path: Path) -> dict[str, object]:
+    def _validate_poetry_config(self, project_path: Path) -> FlextTypes.Core.Dict:
         """Validar configuração Poetry usando flext_tools."""
         try:
             validator = PoetryValidator()
@@ -377,7 +384,7 @@ class QualityGateway(FlextScript):
         self,
         project_name: str,
         results: AnalysisResults,
-    ) -> dict[str, object]:
+    ) -> FlextTypes.Core.Dict:
         """Calcular resultado final do projeto."""
         issues = []
         critical_issues = 0
@@ -453,7 +460,7 @@ class QualityGateway(FlextScript):
             "poetry_result": results.poetry_result,
         }
 
-    def _print_project_issues(self, project_result: dict[str, object]) -> None:
+    def _print_project_issues(self, project_result: FlextTypes.Core.Dict) -> None:
         """Imprimir issues do projeto."""
         for issue in project_result["issues"]:
             if "Conflitos:" in issue or "Poetry" in issue:
@@ -463,8 +470,8 @@ class QualityGateway(FlextScript):
 
     def _print_final_summary(
         self,
-        total_stats: dict[str, object],
-        failed_projects: list[str],
+        total_stats: FlextTypes.Core.Dict,
+        failed_projects: FlextTypes.Core.StringList,
         *,
         _strict_mode: bool = False,
     ) -> None:

@@ -91,7 +91,7 @@ class LockFileEntry:
     name: str
     version: str
     hash: str | None = None
-    dependencies: dict[str, str] | None = None
+    dependencies: FlextTypes.Core.Headers | None = None
 
 
 @dataclass
@@ -117,7 +117,7 @@ class ProjectLockInfo:
     exists: bool
     packages: dict[str, LockFileEntry]
     lock_version: str | None = None
-    python_versions: list[str] | None = None
+    python_versions: FlextTypes.Core.StringList | None = None
 
 
 @dataclass
@@ -138,7 +138,7 @@ class LockInconsistency:
 
     package: str
     type: str  # "version", "missing", "hash"
-    details: dict[str, str]  # project -> version/status
+    details: FlextTypes.Core.Headers  # project -> version/status
     severity: str  # "critical", "warning", "info"
 
 
@@ -465,8 +465,8 @@ class LockConsistencyAnalyzer:
             projects: Dictionary of project lock information to compare
 
         """
-        versions: dict[str, str] = {}
-        hashes: dict[str, str] = {}
+        versions: FlextTypes.Core.Headers = {}
+        hashes: FlextTypes.Core.Headers = {}
 
         # Collect versions and hashes from each project
         for project_name, project_info in projects.items():

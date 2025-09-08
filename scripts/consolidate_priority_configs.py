@@ -117,10 +117,7 @@ def consolidate_flext_api_config() -> bool | None:
             # Add inline TODOs for each env var
             for env_var in env_vars:
                 pattern = f"os\\.getenv\\([\"']{re.escape(env_var)}[\"'](.*?)\\)"
-                replacement = (
-                    f"# TODO: Move {env_var} to FLEXT settings class\n"
-                    f'os.getenv("{env_var}"\\1)'
-                )
+                replacement = f'# TODO: Move {env_var} to FLEXT settings class\nos.getenv("{env_var}"\\1)'
                 content = re.sub(pattern, replacement, content, count=1)
 
         # Add TODO comment for standardization

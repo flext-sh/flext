@@ -43,7 +43,7 @@ def find_example_dirs(root: Path) -> list[Path]:
     return sorted(results)
 
 
-def list_example_files(examples_dir: Path, include_docker: bool) -> list[Path]:
+def list_example_files(examples_dir: Path, *, include_docker: bool) -> list[Path]:
     """List numerically prefixed example files to run, filtering heavy ones by default."""
     files: list[Path] = []
     for f in examples_dir.glob("[0-9][0-9]_*.py"):
@@ -56,12 +56,15 @@ def list_example_files(examples_dir: Path, include_docker: bool) -> list[Path]:
 
 @dataclass
 class RunResult:
+    """Run result."""
+
     project: str
     example: str
     returncode: int
 
 
 def run_example(project_root: Path, example_file: Path, timeout: int) -> RunResult:
+    """Run example."""
     env = os.environ.copy()
     # Prefer project-local src so examples can import their package
     env["PYTHONPATH"] = "src"
@@ -89,6 +92,7 @@ def run_example(project_root: Path, example_file: Path, timeout: int) -> RunResu
 
 
 def main(argv: Iterable[str] | None = None) -> int:
+    """Main function."""
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--project",

@@ -121,7 +121,7 @@ from .stdlib import *
 import sys
 from types import ModuleType
 
-__all__: list[str] = []
+__all__: FlextTypes.Core.StringList = []
 
 # Collect exports from all imported modules
 name = None

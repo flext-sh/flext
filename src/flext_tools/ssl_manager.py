@@ -86,7 +86,7 @@ logger = FlextLogger(__name__)
 # to maintain consistency and avoid duplication of generic result functionality
 
 # Type alias for SSL setup data
-SSLSetupData = dict[str, object]
+SSLSetupData = FlextTypes.Core.Dict
 
 
 class SSLManager:

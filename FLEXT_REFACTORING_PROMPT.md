@@ -552,7 +552,7 @@ import project_name.constants as _constants
 import project_name.models as _models
 # ... other imports
 
-__all__: list[str] = []
+__all__: FlextTypes.Core.StringList = []
 for module in [_constants, _models]:  # Add all modules
     if hasattr(module, "__all__"):
         __all__.extend(module.__all__)

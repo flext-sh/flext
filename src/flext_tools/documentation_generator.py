@@ -150,7 +150,7 @@ class DocumentationGenerator(FlextScript):
             # Step 2: Generate component documentation
             if dry_run:
                 self.logger.info("[dry-run] Would generate component documentation")
-                components_result = FlextResult[dict[str, object]].ok({})
+                components_result = FlextResult[FlextTypes.Core.Dict].ok({})
             else:
                 components_result = self._generate_component_docs()
             if not components_result.success:
@@ -163,7 +163,7 @@ class DocumentationGenerator(FlextScript):
                 return FlextResult[object].ok({"status": "components_generated"})
 
             # Execute full generation pipeline
-            # Use type: ignore for the variance issue (dict[str, object] is compatible with object)
+            # Use type: ignore for the variance issue (FlextTypes.Core.Dict is compatible with object)
             if dry_run:
                 self.logger.info(
                     "[dry-run] Would generate API docs, diagrams and build"
@@ -187,7 +187,7 @@ class DocumentationGenerator(FlextScript):
 
     def _execute_full_generation_pipeline(
         self,
-        components_result: FlextResult[dict[str, object]],
+        components_result: FlextResult[FlextTypes.Core.Dict],
         *,
         serve: bool,
     ) -> FlextResult[object]:
@@ -274,12 +274,12 @@ class DocumentationGenerator(FlextScript):
                 shutil.rmtree(build_dir)
                 self.logger.info(f"Removed {build_dir}")
 
-    def _generate_component_docs(self) -> FlextResult[dict[str, object]]:
+    def _generate_component_docs(self) -> FlextResult[FlextTypes.Core.Dict]:
         """Generate documentation for individual components.
 
         Returns
         -------
-        FlextResult[dict[str, object]]
+        FlextResult[FlextTypes.Core.Dict]
             Component generation results keyed by project name.
 
         """
@@ -293,7 +293,7 @@ class DocumentationGenerator(FlextScript):
             and (item.name.startswith("flext-") or item.name == "flexcore")
         ]
 
-        components_data: dict[str, object] = {}
+        components_data: FlextTypes.Core.Dict = {}
 
         for project_path in projects:
             project_name = project_path.name
@@ -339,13 +339,13 @@ class DocumentationGenerator(FlextScript):
 
             components_data[project_name] = component_data
 
-        return FlextResult[dict[str, object]].ok(components_data)
+        return FlextResult[FlextTypes.Core.Dict].ok(components_data)
 
     def _extract_component_data(
         self,
         project_path: Path,
         project_name: str,
-    ) -> dict[str, object]:
+    ) -> FlextTypes.Core.Dict:
         """Extract component data for template rendering.
 
         Parameters
@@ -357,7 +357,7 @@ class DocumentationGenerator(FlextScript):
 
         Returns
         -------
-        dict[str, object]
+        FlextTypes.Core.Dict
             Component data dictionary for templates.
 
         """
@@ -461,7 +461,7 @@ class DocumentationGenerator(FlextScript):
             return "beta"
         return "alpha"
 
-    def _extract_features(self, project_path: Path) -> list[str]:
+    def _extract_features(self, project_path: Path) -> FlextTypes.Core.StringList:
         """Extract features from project structure.
 
         Parameters
@@ -471,7 +471,7 @@ class DocumentationGenerator(FlextScript):
 
         Returns
         -------
-        list[str]
+        FlextTypes.Core.StringList
             List of feature labels.
 
         """
@@ -597,7 +597,7 @@ class DocumentationGenerator(FlextScript):
         api_dir.mkdir(exist_ok=True)
 
         # Prepare API data
-        api_data: dict[str, object] = {
+        api_data: FlextTypes.Core.Dict = {
             "name": project_name.title(),
             "status": "published",
             "version": "0.9.0",
@@ -641,12 +641,12 @@ class DocumentationGenerator(FlextScript):
             elif item.is_dir():
                 shutil.copytree(item, target / item.name, dirs_exist_ok=True)
 
-    def _generate_api_docs(self) -> FlextResult[dict[str, object]]:
+    def _generate_api_docs(self) -> FlextResult[FlextTypes.Core.Dict]:
         """Generate comprehensive API documentation.
 
         Returns
         -------
-        FlextResult[dict[str, object]]
+        FlextResult[FlextTypes.Core.Dict]
             Mapping of API documentation sections and metadata.
 
         """
@@ -656,10 +656,10 @@ class DocumentationGenerator(FlextScript):
         api_ref_dir = self.docs_dir / "reference" / "api"
         api_ref_dir.mkdir(parents=True, exist_ok=True)
 
-        api_results: dict[str, object] = {}
+        api_results: FlextTypes.Core.Dict = {}
 
         # Generate REST API documentation
-        rest_api_data: dict[str, object] = {
+        rest_api_data: FlextTypes.Core.Dict = {
             "name": "REST API",
             "status": "published",
             "version": "0.9.0",
@@ -679,7 +679,7 @@ class DocumentationGenerator(FlextScript):
             api_results["rest_api"] = rest_api_data
 
         # Generate Python SDK documentation
-        python_sdk_data: dict[str, object] = {
+        python_sdk_data: FlextTypes.Core.Dict = {
             "name": "Python SDK",
             "status": "published",
             "version": "0.9.0",
@@ -698,7 +698,7 @@ class DocumentationGenerator(FlextScript):
             python_sdk_file.write_text(python_sdk_result.value)
             api_results["python_sdk"] = python_sdk_data
 
-        return FlextResult[dict[str, object]].ok(api_results)
+        return FlextResult[FlextTypes.Core.Dict].ok(api_results)
 
     def _get_rest_api_quick_start(self) -> str:
         """Get REST API quick start example.
@@ -750,12 +750,12 @@ pipeline = client.pipelines.create(
 result = pipeline.run()
 print(f"Pipeline status: {result.status}")"""
 
-    def _generate_architecture_diagrams(self) -> FlextResult[dict[str, object]]:
+    def _generate_architecture_diagrams(self) -> FlextResult[FlextTypes.Core.Dict]:
         """Generate architecture diagrams using templates.
 
         Returns
         -------
-        FlextResult[dict[str, object]]
+        FlextResult[FlextTypes.Core.Dict]
             Diagram generation results and metadata.
 
         """
@@ -765,10 +765,10 @@ print(f"Pipeline status: {result.status}")"""
         arch_dir = self.docs_dir / "developer" / "architecture"
         arch_dir.mkdir(parents=True, exist_ok=True)
 
-        diagram_results: dict[str, object] = {}
+        diagram_results: FlextTypes.Core.Dict = {}
 
         # Generate system overview diagram
-        overview_data: dict[str, object] = {
+        overview_data: FlextTypes.Core.Dict = {
             "title": "System Architecture Overview",
             "status": "published",
             "version": "0.9.0",
@@ -809,7 +809,7 @@ print(f"Pipeline status: {result.status}")"""
             diagram_results["overview"] = overview_data
 
         # Generate component interaction diagram
-        interaction_data: dict[str, object] = {
+        interaction_data: FlextTypes.Core.Dict = {
             "title": "Component Interactions",
             "status": "published",
             "version": "0.9.0",
@@ -849,7 +849,7 @@ print(f"Pipeline status: {result.status}")"""
             interaction_file.write_text(interaction_result.value)
             diagram_results["interactions"] = interaction_data
 
-        return FlextResult[dict[str, object]].ok(diagram_results)
+        return FlextResult[FlextTypes.Core.Dict].ok(diagram_results)
 
     def _get_system_overview_mermaid(self) -> str:
         """Get system overview Mermaid diagram.
@@ -940,12 +940,12 @@ print(f"Pipeline status: {result.status}")"""
     API->>CLI: Success
     CLI->>User: Pipeline Complete"""
 
-    def _build_docs(self) -> FlextResult[dict[str, object]]:
+    def _build_docs(self) -> FlextResult[FlextTypes.Core.Dict]:
         """Build the documentation using MkDocs.
 
         Returns
         -------
-        FlextResult[dict[str, object]]
+        FlextResult[FlextTypes.Core.Dict]
             Build results with status and output logs.
 
         """
@@ -969,18 +969,18 @@ print(f"Pipeline status: {result.status}")"""
                 except SystemExit as exc:
                     exit_code = int(getattr(exc, "code", 0) or 0)
             if exit_code != 0:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Core.Dict].fail(
                     f"MkDocs build failed: {stderr.getvalue().strip()}",
                 )
             self.logger.info("Documentation built successfully")
-            return FlextResult[dict[str, object]].ok(
+            return FlextResult[FlextTypes.Core.Dict].ok(
                 {
                     "status": "built",
                     "output": stdout.getvalue(),
                 }
             )
         except Exception as e:
-            return FlextResult[dict[str, object]].fail(f"MkDocs build failed: {e}")
+            return FlextResult[FlextTypes.Core.Dict].fail(f"MkDocs build failed: {e}")
 
     def _serve_docs(self) -> None:
         """Serve the documentation locally."""

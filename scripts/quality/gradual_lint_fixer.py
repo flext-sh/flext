@@ -11,7 +11,7 @@ import shutil
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 
 from flext_tools import (
     Colors,
@@ -139,9 +139,9 @@ class GradualLintFixerScript(FlextScript):
 
         return parser
 
-    def _process_kwargs(self, args: object) -> dict[str, object]:
+    def _process_kwargs(self, args: object) -> FlextTypes.Core.Dict:
         """Process arguments into kwargs."""
-        kwargs: dict[str, object] = {}
+        kwargs: FlextTypes.Core.Dict = {}
         kwargs["safe_only"] = not getattr(args, "unsafe", False)
         kwargs["run_tests"] = not getattr(args, "skip_tests", False)
         return kwargs

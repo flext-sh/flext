@@ -13,6 +13,8 @@ from contextlib import redirect_stderr, redirect_stdout, suppress
 from importlib import import_module
 from pathlib import Path
 
+from flext_core import FlextTypes
+
 # Import ruff dynamically (call via import_module to allow runtime fallback)
 _ruff_mod = import_module("ruff.__main__")
 ruff_main = getattr(_ruff_mod, "main", None)
@@ -101,7 +103,7 @@ def has_command(cmd: str) -> bool:
     return shutil.which(cmd) is not None
 
 
-def main(argv: list[str]) -> int:
+def main(argv: FlextTypes.Core.StringList) -> int:
     """Main function to normalize docstrings in Python files.
 
     Args:

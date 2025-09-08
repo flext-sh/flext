@@ -33,8 +33,7 @@ class BaseSecurityScript(FlextScript):
             return FlextResult[None].ok(None)
         except ImportError:
             print_colored(
-                "❌ Cryptography library not found - "
-                "install with: pip install cryptography",
+                "❌ Cryptography library not found - install with: pip install cryptography",
                 Colors.RED,
             )
             return FlextResult[None].fail("Cryptography library not found")

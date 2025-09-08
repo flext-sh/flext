@@ -23,7 +23,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from flext_core import FlextLogger
+from flext_core import FlextLogger, FlextResult
 
 
 class DevToolsManager:
@@ -141,7 +141,7 @@ class DevToolsManager:
             "build": 600,  # 10 minutes for build operations
         }
 
-    def _validate_command(self, cmd: list[str]) -> None:
+    def _validate_command(self, cmd: FlextTypes.Core.StringList) -> None:
         """Validate subprocess command for security."""
         if not cmd or not all(isinstance(arg, str) for arg in cmd):
             msg = "Command must be a non-empty list of strings"
@@ -288,6 +288,20 @@ class DevToolsManager:
 
             # Validate command before execution for security
             self._validate_command(cmd)
+
+            # Validate project path to prevent directory traversal
+            project_path = project_path.resolve()
+            if not project_path.exists() or not project_path.is_dir():
+                return FlextResult[FlextTypes.Core.Dict].fail(
+                    f"Invalid project path: {project_path}"
+                )
+
+            # Validate command components
+            for cmd_part in cmd:
+                if not isinstance(cmd_part, str) or not cmd_part.strip():
+                    return FlextResult[FlextTypes.Core.Dict].fail(
+                        f"Invalid command component: {cmd_part}"
+                    )
 
             result = subprocess.run(
                 cmd,
@@ -476,8 +490,12 @@ class DevToolsManager:
             self.logger.info("Starting comprehensive code quality analysis")
 
             # Run ruff linting
+            ruff_cmd = shutil.which("ruff")
+            if not ruff_cmd:
+                return FlextResult[FlextTypes.Core.Dict].fail("Ruff not found in PATH")
+
             result = subprocess.run(
-                [sys.executable, "-m", "ruff", "check", ".", "--output-format=text"],
+                [ruff_cmd, "check", ".", "--output-format=text"],
                 cwd=self.workspace_root,
                 check=False,
                 shell=False,  # Security: explicit shell=False
@@ -586,8 +604,12 @@ class DevToolsManager:
             self.logger.info("Starting code formatting across workspace")
 
             # Run ruff format for Python code
+            ruff_cmd = shutil.which("ruff")
+            if not ruff_cmd:
+                return FlextResult[FlextTypes.Core.Dict].fail("Ruff not found in PATH")
+
             result = subprocess.run(
-                [sys.executable, "-m", "ruff", "format", "."],
+                [ruff_cmd, "format", "."],
                 cwd=self.workspace_root,
                 check=False,
                 shell=False,  # Security: explicit shell=False
@@ -625,8 +647,12 @@ class DevToolsManager:
     def _run_mypy_check(self) -> int:
         """Run MyPy type checking across Python projects."""
         try:
+            make_cmd = shutil.which("make")
+            if not make_cmd:
+                return 1  # make not found
+
             result = subprocess.run(
-                [shutil.which("make") or "make", "type-check-all"],
+                [make_cmd, "type-check-all"],
                 check=False,
                 cwd=self.workspace_root,
                 capture_output=True,
@@ -652,8 +678,12 @@ class DevToolsManager:
     def _run_security_scan(self) -> int:
         """Run Bandit security scanning across Python projects."""
         try:
+            bandit_cmd = shutil.which("bandit")
+            if not bandit_cmd:
+                return 1  # bandit not found
+
             result = subprocess.run(
-                [shutil.which("bandit") or "bandit", "-r", "src/", "-f", "json"],
+                [bandit_cmd, "-r", "src/", "-f", "json"],
                 check=False,
                 cwd=self.workspace_root,
                 capture_output=True,
@@ -679,9 +709,13 @@ class DevToolsManager:
     def _run_go_linting(self) -> int:
         """Run Go linting across Go projects."""
         try:
+            find_cmd = shutil.which("find")
+            if not find_cmd:
+                return 1  # find not found
+
             result = subprocess.run(
                 [
-                    shutil.which("find") or "find",
+                    find_cmd,
                     ".",
                     "-name",
                     "*.go",
@@ -706,8 +740,12 @@ class DevToolsManager:
                 return 0
 
             # Run golangci-lint if available
+            golangci_cmd = shutil.which("golangci-lint")
+            if not golangci_cmd:
+                return 0  # golangci-lint not found, not critical
+
             lint_result = subprocess.run(
-                [shutil.which("golangci-lint") or "golangci-lint", "run", "./..."],
+                [golangci_cmd, "run", "./..."],
                 check=False,
                 cwd=self.workspace_root,
                 capture_output=True,
@@ -733,9 +771,13 @@ class DevToolsManager:
     def _run_go_formatting(self) -> int:
         """Run Go formatting across Go projects."""
         try:
+            find_cmd = shutil.which("find")
+            if not find_cmd:
+                return 1  # find not found
+
             result = subprocess.run(
                 [
-                    shutil.which("find") or "find",
+                    find_cmd,
                     ".",
                     "-name",
                     "*.go",
@@ -760,8 +802,12 @@ class DevToolsManager:
                 return 0
 
             # Run gofmt
+            gofmt_cmd = shutil.which("gofmt")
+            if not gofmt_cmd:
+                return 1  # gofmt not found
+
             fmt_result = subprocess.run(
-                [shutil.which("gofmt") or "gofmt", "-w", "."],
+                [gofmt_cmd, "-w", "."],
                 check=False,
                 cwd=self.workspace_root,
                 capture_output=True,

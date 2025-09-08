@@ -20,6 +20,8 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
+from flext_core import FlextTypes
+
 # ----------------------------- Descoberta do workspace -----------------------------
 
 
@@ -134,7 +136,7 @@ def ensure_reexports(
 
     original = content
 
-    lines_to_add: list[str] = []
+    lines_to_add: FlextTypes.Core.StringList = []
     for req in requests:
         for name in sorted(req.names):
             import_line = f"from {package_name}.{req.submodule} import {name}"
@@ -179,7 +181,7 @@ def _promote_type_checking_imports(updated: str) -> tuple[str, bool]:
         return updated, changed
 
     lines = updated.splitlines(keepends=True)
-    promoted_imports: list[str] = []
+    promoted_imports: FlextTypes.Core.StringList = []
     keep_tc_blocks: list[tuple[int, int, str]] = []  # (start, end, text)
 
     for node in tree.body:
@@ -199,7 +201,7 @@ def _promote_type_checking_imports(updated: str) -> tuple[str, bool]:
             except SyntaxError:
                 continue
 
-            kept_lines: list[str] = []
+            kept_lines: FlextTypes.Core.StringList = []
             for tc_node in tc_tree.body:
                 if isinstance(tc_node, ast.Import):
                     for alias in tc_node.names:
