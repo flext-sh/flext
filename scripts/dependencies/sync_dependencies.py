@@ -109,12 +109,12 @@ def discover_missing_dependencies(
     discovery: "DependencyDiscovery",
     *,
     verbose: bool,
-) -> dict[Path, dict[str, list[str]]]:
+) -> dict[Path, dict[str, FlextTypes.Core.StringList]]:
     """Descobre dependências faltantes em todos os projetos."""
     print_colored("\n2️⃣ Descobrindo dependências faltantes...", Colors.BLUE)
 
     # Removemos o decorator @cached que estava causando problemas de tipagem
-    def get_project_deps(project_path: Path) -> dict[str, list[str]]:
+    def get_project_deps(project_path: Path) -> dict[str, FlextTypes.Core.StringList]:
         deps = discovery.discover_project_dependencies(
             project_path,
             include_dev=True,
@@ -123,7 +123,7 @@ def discover_missing_dependencies(
         # Converter set para list se necessário
         return {k: list(v) if isinstance(v, set) else v for k, v in deps.items()}
 
-    missing_by_project: dict[Path, dict[str, list[str]]] = {}
+    missing_by_project: dict[Path, dict[str, FlextTypes.Core.StringList]] = {}
     total_missing = 0
 
     for project in projects:
@@ -157,15 +157,15 @@ def analyze_conflicts(
     analyzer: ConflictAnalyzer,
     *,
     verbose: bool,
-) -> dict[str, object]:
+) -> FlextTypes.Core.Dict:
     """Analisa conflitos de versão no workspace."""
     print_colored("\n3️⃣ Analisando conflitos de versão...", Colors.BLUE)
 
     @cached(namespace="conflicts", ttl=600)
-    def get_conflicts() -> dict[str, object]:
+    def get_conflicts() -> FlextTypes.Core.Dict:
         return analyzer.analyze_workspace_conflicts(workspace_path)
 
-    analysis: dict[str, object] = get_conflicts()
+    analysis: FlextTypes.Core.Dict = get_conflicts()
     analysis["stats"]
 
     print_colored("\n📊 Estatísticas:", Colors.CYAN)
@@ -185,7 +185,7 @@ def analyze_conflicts(
 
 
 def add_missing_dependencies(
-    missing_by_project: dict[Path, dict[str, list[str]]],
+    missing_by_project: dict[Path, dict[str, FlextTypes.Core.StringList]],
     poetry_ops: PoetryOperations,
     *,
     auto: bool,
@@ -281,8 +281,7 @@ def main() -> int:
             print_colored("• Use --validate para verificação de projetos", Colors.GREEN)
             print_colored("", Colors.RED)
             print_colored(
-                "⚠️ REMOVER scripts/VALIDATION_REQUIRED.lock"
-                " apenas após validação completa",
+                "⚠️ REMOVER scripts/VALIDATION_REQUIRED.lock apenas após validação completa",
                 Colors.YELLOW,
             )
 
@@ -292,8 +291,7 @@ def main() -> int:
             )
 
             logger.error(
-                "Operation failed: Execução bloqueada por lock de validação "
-                "de segurança",
+                "Operation failed: Execução bloqueada por lock de validação de segurança",
             )
             return 1
 
@@ -391,8 +389,7 @@ def main() -> int:
     except (OSError, ValueError, TypeError) as e:
         # Log erro crítico
         logger.exception(
-            f"SYNC_ERROR: Erro crítico durante sincronização "
-            f"(tipo: {type(e).__name__})",
+            f"SYNC_ERROR: Erro crítico durante sincronização (tipo: {type(e).__name__})",
         )
 
         # Finaliza operação com falha

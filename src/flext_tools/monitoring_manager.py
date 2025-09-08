@@ -86,7 +86,7 @@ logger = FlextLogger(__name__)
 # to maintain consistency and avoid duplication of generic result functionality
 
 # Type alias for monitoring setup data
-MonitoringSetupData = dict[str, object]
+MonitoringSetupData = FlextTypes.Core.Dict
 
 
 class MonitoringManager:

@@ -12,7 +12,7 @@ class GradualLintFixer:
         """Initialize the lint fixer."""
         self.workspace_path = workspace_path
 
-    def fix_gradually(self, **_kwargs: object) -> dict[str, object]:
+    def fix_gradually(self, **_kwargs: object) -> FlextTypes.Core.Dict:
         """Fix lint issues gradually."""
         print_colored("🔧 Fixing lint issues gradually...", Colors.BLUE)
 

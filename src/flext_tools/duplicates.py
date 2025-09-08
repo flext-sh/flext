@@ -98,7 +98,7 @@ class CodeDuplicateAnalyzer:
         workspace_path: Path | None = None,
         min_block_size: int = 5,
         similarity_threshold: float = 0.8,
-        exclude_patterns: list[str] | None = None,
+        exclude_patterns: FlextTypes.Core.StringList | None = None,
     ) -> None:
         """Initialize the code duplication analyzer with configuration.
 
@@ -123,7 +123,7 @@ class CodeDuplicateAnalyzer:
         self.similarity_threshold = similarity_threshold
         self.exclude_patterns = exclude_patterns or []
 
-    def analyze_duplicates(self) -> FlextResult[dict[str, object]]:
+    def analyze_duplicates(self) -> FlextResult[FlextTypes.Core.Dict]:
         """Perform comprehensive code duplication analysis across the workspace.
 
         Analyzes all supported files in the workspace to identify duplicate
@@ -184,7 +184,7 @@ class CodeDuplicateAnalyzer:
             print_colored(f"❌ Code duplication analysis failed: {e}", Colors.RED)
             return FlextResult(error=f"Analysis failed: {e!s}")
 
-    def find_duplicate_functions(self) -> FlextResult[list[dict[str, object]]]:
+    def find_duplicate_functions(self) -> FlextResult[list[FlextTypes.Core.Dict]]:
         """Identify duplicate function implementations across the codebase.
 
         Analyzes function signatures, implementations, and logic patterns
@@ -208,12 +208,12 @@ class CodeDuplicateAnalyzer:
         """
         try:
             # Placeholder for sophisticated function analysis algorithm
-            duplicate_functions: list[dict[str, object]] = []
+            duplicate_functions: list[FlextTypes.Core.Dict] = []
             return FlextResult(data=duplicate_functions)
         except Exception as e:
             return FlextResult(error=f"Function analysis failed: {e!s}")
 
-    def find_duplicate_classes(self) -> FlextResult[list[dict[str, object]]]:
+    def find_duplicate_classes(self) -> FlextResult[list[FlextTypes.Core.Dict]]:
         """Detect duplicate class structures and implementations.
 
         Examines class definitions, method signatures, and implementation
@@ -241,12 +241,12 @@ class CodeDuplicateAnalyzer:
         """
         try:
             # Placeholder for comprehensive class analysis algorithm
-            duplicate_classes: list[dict[str, object]] = []
+            duplicate_classes: list[FlextTypes.Core.Dict] = []
             return FlextResult(data=duplicate_classes)
         except Exception as e:
             return FlextResult(error=f"Class analysis failed: {e!s}")
 
-    def generate_refactoring_report(self) -> FlextResult[dict[str, object]]:
+    def generate_refactoring_report(self) -> FlextResult[FlextTypes.Core.Dict]:
         """Generate comprehensive refactoring report with actionable recommendations.
 
         Combines all analysis results to provide prioritized refactoring
@@ -286,4 +286,4 @@ class CodeDuplicateAnalyzer:
             return FlextResult(error=f"Report generation failed: {e!s}")
 
 
-__all__: list[str] = ["CodeDuplicateAnalyzer"]
+__all__: FlextTypes.Core.StringList = ["CodeDuplicateAnalyzer"]

@@ -88,7 +88,7 @@ class DetailedLogger:
         *args: object,
         exc_info: bool | None = None,
         stack_info: bool = False,
-        extra: dict[str, object] | None = None,
+        extra: FlextTypes.Core.Dict | None = None,
         **kwargs: object,
     ) -> None:
         """Log debug message using flext-observability."""
@@ -103,7 +103,7 @@ class DetailedLogger:
         *args: object,
         exc_info: bool | None = None,
         stack_info: bool = False,
-        extra: dict[str, object] | None = None,
+        extra: FlextTypes.Core.Dict | None = None,
         **kwargs: object,
     ) -> None:
         """Log info message using flext-observability."""
@@ -118,7 +118,7 @@ class DetailedLogger:
         *args: object,
         exc_info: bool | None = None,
         stack_info: bool = False,
-        extra: dict[str, object] | None = None,
+        extra: FlextTypes.Core.Dict | None = None,
         **kwargs: object,
     ) -> None:
         """Log warning message using flext-observability."""
@@ -133,7 +133,7 @@ class DetailedLogger:
         *args: object,
         exc_info: bool | None = None,
         stack_info: bool = False,
-        extra: dict[str, object] | None = None,
+        extra: FlextTypes.Core.Dict | None = None,
         **kwargs: object,
     ) -> None:
         """Log error message using flext-observability."""
@@ -146,7 +146,7 @@ class DetailedLogger:
         self,
         message: str,
         *args: object,
-        extra: dict[str, object] | None = None,
+        extra: FlextTypes.Core.Dict | None = None,
         **kwargs: object,
     ) -> None:
         """Log exception message using flext-observability."""
@@ -157,8 +157,8 @@ class DetailedLogger:
         level: str,
         message: str,
         args: tuple[object, ...],
-        _extra: dict[str, object] | None,
-        _kwargs: dict[str, object],
+        _extra: FlextTypes.Core.Dict | None,
+        _kwargs: FlextTypes.Core.Dict,
     ) -> None:
         """Log using flext-observability patterns."""
         # Format message with args

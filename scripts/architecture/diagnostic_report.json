@@ -1,321 +1,437 @@
 {
-  "timestamp": "2025-07-22T14:27:14.946653",
+  "timestamp": "2025-09-07T16:28:44.881615+00:00",
   "workspace_root": "/home/marlonsc/flext",
   "projects": {
     "flext-core": {
       "level": 1,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: "
+      ]
     },
     "flext-cli": {
       "level": 2,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "PASS",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-cli/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-cli/tests/conftest.py'))"
+      ]
     },
     "flext-observability": {
       "level": 2,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "PASS",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "Tests: "
+      ]
     },
     "flext-grpc": {
       "level": 2,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-grpc/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-grpc/tests/conftest.py'))"
+      ]
     },
     "flext-web": {
       "level": 2,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "PASS",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-web/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-web/tests/conftest.py'))"
+      ]
     },
     "flext-api": {
       "level": 2,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: MyPy execution failed: Cannot find component 'FlextUtils' for 'flext_api.FlextUtils'",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-api/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-api/tests/conftest.py'))"
+      ]
     },
     "flext-auth": {
       "level": 2,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "PASS",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "Tests: "
+      ]
     },
     "flext-meltano": {
       "level": 3,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "PASS",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-meltano/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-meltano/tests/conftest.py'))"
+      ]
     },
     "flext-ldif": {
       "level": 3,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-ldif/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-ldif/tests/conftest.py'))"
+      ]
     },
     "flext-ldap": {
       "level": 3,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "PASS",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-ldap/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-ldap/tests/conftest.py'))"
+      ]
     },
     "flext-db-oracle": {
       "level": 3,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u2705 PASS",
+      "lint_status": "FAIL",
+      "mypy_status": "PASS",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-db-oracle/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-db-oracle/tests/conftest.py'))"
+      ]
     },
     "flext-oracle-wms": {
       "level": 3,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-oracle-wms/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-oracle-wms/tests/conftest.py'))"
+      ]
     },
     "flext-oracle-oic-ext": {
       "level": 3,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-oracle-oic-ext/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-oracle-oic-ext/tests/conftest.py'))"
+      ]
     },
     "flext-tap-oracle": {
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-tap-oracle/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-tap-oracle/tests/conftest.py'))"
+      ]
     },
     "flext-tap-ldap": {
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-tap-ldap/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-tap-ldap/tests/conftest.py'))"
+      ]
     },
     "flext-tap-ldif": {
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-tap-ldif/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-tap-ldif/tests/conftest.py'))"
+      ]
     },
     "flext-tap-oracle-wms": {
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-tap-oracle-wms/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-tap-oracle-wms/tests/conftest.py'))"
+      ]
     },
     "flext-tap-oracle-oic": {
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-tap-oracle-oic/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-tap-oracle-oic/tests/conftest.py'))"
+      ]
     },
     "flext-target-oracle": {
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-target-oracle/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-target-oracle/tests/conftest.py'))"
+      ]
     },
     "flext-target-ldap": {
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-target-ldap/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-target-ldap/tests/conftest.py'))"
+      ]
     },
     "flext-target-ldif": {
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "PASS",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-target-ldif/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-target-ldif/tests/conftest.py'))"
+      ]
     },
     "flext-target-oracle-wms": {
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: "
+      ]
     },
     "flext-target-oracle-oic": {
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: "
+      ]
     },
     "flext-dbt-oracle": {
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-dbt-oracle/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-dbt-oracle/tests/conftest.py'))"
+      ]
     },
     "flext-dbt-ldap": {
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-dbt-ldap/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-dbt-ldap/tests/conftest.py'))"
+      ]
     },
     "flext-dbt-ldif": {
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: "
+      ]
     },
     "flext-dbt-oracle-wms": {
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: "
+      ]
     },
     "flext-plugin": {
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-plugin/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-plugin/tests/conftest.py'))"
+      ]
     },
     "client-a-oud-mig": {
       "level": 6,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "PASS",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/client-a-oud-mig/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/client-a-oud-mig/tests/conftest.py'))"
+      ]
     },
     "client-b-meltano-native": {
       "level": 6,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
-      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
-      "test_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "FAIL",
+      "mypy_status": "FAIL",
+      "test_status": "FAIL",
       "poetry_install": "\u2705 PASS",
-      "errors": []
+      "errors": [
+        "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
+        "MyPy: ",
+        "Tests: "
+      ]
     }
   },
   "architecture_violations": {
     "flext-core": [
-      "Import singer: ./flext_core/config/adapters/__init__.py:    singer_items = {\n./flext_core/config/adapters/__init__.py:        \"singer_config_adapter\",\n./flext_core/config/adapters/__init__.py:    if name in singer_items:"
+      "Import meltano: /home/marlonsc/flext/flext-core/src/flext_core/constants.py",
+      "Import oracle: /home/marlonsc/flext/flext-core/src/flext_core/constants.py",
+      "Import ldap: /home/marlonsc/flext/flext-core/src/flext_core/constants.py",
+      "Import singer: /home/marlonsc/flext/flext-core/src/flext_core/constants.py",
+      "Import client-a: /home/marlonsc/flext/flext-core/src/flext_core/constants.py",
+      "Import ldap: /home/marlonsc/flext/flext-core/src/flext_tests/utilities.py"
     ]
   },
   "summary": {
     "total_projects": 30,
     "projects_with_makefile": 30,
     "projects_with_pyproject": 30,
-    "lint_passed": 16,
+    "lint_passed": 0,
     "mypy_passed": 0,
-    "tests_passed": 1,
+    "tests_passed": 0,
     "poetry_passed": 30,
-    "projects_with_errors": 0
+    "projects_with_errors": 30
   }
 }

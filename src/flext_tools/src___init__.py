@@ -114,18 +114,22 @@ class WorkspaceManager:
     def __init__(self, workspace_path: str) -> None:
         self.workspace_path = workspace_path
 
-    def validate_all_projects(self) -> FlextResult[list[str]]:
+    def validate_all_projects(self) -> FlextResult[FlextTypes.Core.StringList]:
         """Validate all projects in workspace."""
         # This would contain actual validation logic
-        project_list: list[str] = ["flext-core", "flext-api", "flext-auth"]
-        return FlextResult[list[str]].ok(project_list)
+        project_list: FlextTypes.Core.StringList = [
+            "flext-core",
+            "flext-api",
+            "flext-auth",
+        ]
+        return FlextResult[FlextTypes.Core.StringList].ok(project_list)
 
 
 # Note: Import optimization to avoid circular dependencies
 # Public API exports optimized for performance and maintainability
 
 
-__all__: list[str] = [
+__all__: FlextTypes.Core.StringList = [
     # CLI (optional)
     "CLIHelper",
     # Auth (optional)

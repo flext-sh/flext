@@ -462,7 +462,7 @@ from .cli_patterns import BaseCLI
 from flext_core import FlextResult, FlextLogger, FlextLogger
 
 # Public API list for type checking and documentation
-__all__: list[str] = [
+__all__: FlextTypes.Core.StringList = [
     # Version info
     "__version__",
     "__author__",

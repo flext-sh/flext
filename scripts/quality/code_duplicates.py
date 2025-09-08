@@ -135,9 +135,9 @@ class CodeDuplicatesAnalyzer(FlextScript):
 
         return parser
 
-    def _process_kwargs(self, args: object) -> dict[str, object]:
+    def _process_kwargs(self, args: object) -> FlextTypes.Core.Dict:
         """Process arguments into kwargs."""
-        kwargs: dict[str, object] = {}
+        kwargs: FlextTypes.Core.Dict = {}
         kwargs["generate_report"] = not getattr(args, "no_report", False)
         return kwargs
 
