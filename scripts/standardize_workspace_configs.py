@@ -8,7 +8,7 @@ This script standardizes configuration across all FLEXT subprojects:
 4. Maintains project-specific settings where appropriate
 
 Usage:
-    python scripts/standardize_workspace_configs.py [--dry-run] [--project PROJECT_NAME]
+    python scripts/standardize_workspace_configs.py [--dry-run] [--project PROJECT_NAME]:
 """
 
 import argparse
@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 import tomlkit
+from flext_core import FlextTypes
 
 
 class FlextConfigStandardizer:
@@ -52,7 +53,7 @@ class FlextConfigStandardizer:
 
         return sorted(projects)
 
-    def load_pyproject(self, project_path: Path) -> dict[str, object] | None:
+    def load_pyproject(self, project_path: Path) -> FlextTypes.Core.Dict | None:
         """Load pyproject.toml file safely."""
         pyproject_file = project_path / "pyproject.toml"
         if not pyproject_file.exists():
@@ -67,7 +68,7 @@ class FlextConfigStandardizer:
         except (OSError, ValueError, TypeError):
             return None
 
-    def save_pyproject(self, project_path: Path, content: dict[str, object]) -> bool:
+    def save_pyproject(self, project_path: Path, content: FlextTypes.Core.Dict) -> bool:
         """Save pyproject.toml file safely."""
         if self.dry_run:
             return True
@@ -83,7 +84,7 @@ class FlextConfigStandardizer:
     def standardize_ruff_config(
         self,
         project_name: str,
-        config: dict[str, object],
+        config: FlextTypes.Core.Dict,
     ) -> bool:
         """Standardize Ruff configuration."""
         changed = False
@@ -142,7 +143,7 @@ class FlextConfigStandardizer:
     def standardize_pytest_config(
         self,
         project_name: str,
-        config: dict[str, object],
+        config: FlextTypes.Core.Dict,
     ) -> bool:
         """Standardize pytest configuration."""
         changed = False
@@ -200,7 +201,7 @@ class FlextConfigStandardizer:
     def standardize_mypy_config(
         self,
         _project_name: str,
-        config: dict[str, object],
+        config: FlextTypes.Core.Dict,
     ) -> bool:
         """Standardize MyPy configuration."""
         changed = False

@@ -3,12 +3,6 @@
 
 Script centralizado para análise MyPy em workspace multi-projeto.
 Segue PEP 518 (pyproject.toml), PEP 420 (namespace packages) e melhores práticas.
-
-Usage:
-    python scripts/mypy_analyzer.py --workspace     # Analisa workspace
-    python scripts/mypy_analyzer.py --all-projects  # Analisa todos projetos
-    python scripts/mypy_analyzer.py --comprehensive # Análise completa
-    python scripts/mypy_analyzer.py --project=name  # Analisa projeto específico
 """
 
 from __future__ import annotations
@@ -20,10 +14,11 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from flext_core import FlextTypes
 from mypy import api as mypy_api
 
 
-def _run_mypy_api(args: list[str]) -> tuple[int, str, str]:
+def _run_mypy_api(args: FlextTypes.Core.StringList) -> tuple[int, str, str]:
     """Run MyPy using its Python API and return (exit_code, stdout, stderr)."""
     try:
         stdout, stderr, exit_status = mypy_api.run(args)
@@ -32,7 +27,7 @@ def _run_mypy_api(args: list[str]) -> tuple[int, str, str]:
         return 1, "", f"MyPy API execution failed: {e}"
 
 
-def parse_mypy_errors(output: str) -> list[dict[str, object]]:
+def parse_mypy_errors(output: str) -> list[FlextTypes.Core.Dict]:
     """Parse MyPy output to extract structured error information."""
     errors = []
 
@@ -71,7 +66,7 @@ def get_project_from_path(file_path: str) -> str:
 
 def analyze_project_with_stats(
     project_path: Path,
-) -> tuple[int, list[dict[str, object]]]:
+) -> tuple[int, list[FlextTypes.Core.Dict]]:
     """Analisa projeto específico e retorna estatísticas detalhadas."""
     exit_code, stdout, stderr = _run_mypy_api([str(project_path)])
 
@@ -85,7 +80,7 @@ def analyze_project_with_stats(
     return exit_code, errors
 
 
-def analyze_workspace_with_stats() -> tuple[int, list[dict[str, object]]]:
+def analyze_workspace_with_stats() -> tuple[int, list[FlextTypes.Core.Dict]]:
     """Analisa workspace e retorna estatísticas detalhadas."""
     workspace_root = Path(__file__).parent.parent
 

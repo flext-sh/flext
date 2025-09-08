@@ -7,6 +7,7 @@ Comprehensive diagnostic tool for FLEXT workspace architecture validation.
 import contextlib
 import io
 import json
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass, field
@@ -14,9 +15,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-from flext_core import FlextLogger
-
-# Ruff will be called via subprocess
+from flext_core import FlextLogger, FlextTypes
 from mypy import api as mypy_api
 
 logger = FlextLogger(__name__)
@@ -27,10 +26,10 @@ MAKEFILE_TARGET_NOT_FOUND = 2
 COMMAND_FAILED = 1
 
 # Status constants (not passwords, just status indicators)
-STATUS_PASS = "✅ PASS"  # nosec B105
-STATUS_FAIL = "❌ FAIL"  # nosec B105
-STATUS_NO_TARGET = "⚠️  NO_TARGET"  # nosec B105
-STATUS_SKIP = "SKIP"  # nosec B105
+STATUS_PASS = "PASS"
+STATUS_FAIL = "FAIL"
+STATUS_NO_TARGET = "NO_TARGET"
+STATUS_SKIP = "SKIP"
 
 
 @dataclass
@@ -45,7 +44,7 @@ class ProjectStatus:
     mypy_status: str = STATUS_SKIP
     test_status: str = STATUS_SKIP
     poetry_install: str = STATUS_SKIP
-    errors: list[str] = field(default_factory=list)
+    errors: FlextTypes.Core.StringList = field(default_factory=list)
 
     def __post_init__(self) -> None:
         """Initialize post-creation setup for ProjectStatus."""
@@ -100,12 +99,25 @@ class FlextDiagnostic:
     def _run_lint(self, project_path: Path) -> tuple[int, str, str]:
         """Run Ruff lint using subprocess."""
         try:
+            ruff_path = shutil.which("ruff")
+            if not ruff_path:
+                return 1, "", "Ruff not found in PATH"
+
+            # Validate project path to prevent directory traversal
+            project_path = project_path.resolve()
+            if not project_path.exists() or not project_path.is_dir():
+                return 1, "", f"Invalid project path: {project_path}"
+
+            # Validate executable path
+            if not ruff_path.is_absolute() or not ruff_path.exists():
+                return 1, "", f"Invalid ruff executable: {ruff_path}"
+
             result = subprocess.run(
-                ["ruff", "check", "."],
+                [str(ruff_path), "check", "."],
                 check=False,
                 capture_output=True,
                 text=True,
-                cwd=project_path,
+                cwd=str(project_path),
             )
             return result.returncode, result.stdout, result.stderr
         except Exception as e:
@@ -135,12 +147,25 @@ class FlextDiagnostic:
     def _run_poetry_install(self) -> tuple[int, str, str]:
         """Attempt Poetry install using subprocess."""
         try:
+            poetry_path = shutil.which("poetry")
+            if not poetry_path:
+                return 1, "", "Poetry not found in PATH"
+
+            # Validate workspace path
+            workspace_path = Path(self.workspace_root).resolve()
+            if not workspace_path.exists() or not workspace_path.is_dir():
+                return 1, "", f"Invalid workspace path: {workspace_path}"
+
+            # Validate executable path
+            if not Path(poetry_path).is_absolute() or not Path(poetry_path).exists():
+                return 1, "", f"Invalid poetry executable: {poetry_path}"
+
             result = subprocess.run(
-                ["poetry", "install", "--no-interaction"],
+                [str(poetry_path), "install", "--no-interaction"],
                 check=False,
                 capture_output=True,
                 text=True,
-                cwd=self.workspace_root,
+                cwd=str(workspace_path),
             )
             return result.returncode, result.stdout, result.stderr
         except Exception as e:
@@ -207,9 +232,9 @@ class FlextDiagnostic:
 
         return status
 
-    def check_architecture_violations(self) -> dict[str, list[str]]:
+    def check_architecture_violations(self) -> dict[str, FlextTypes.Core.StringList]:
         """Check architecture violations."""
-        violations: dict[str, list[str]] = {}
+        violations: dict[str, FlextTypes.Core.StringList] = {}
 
         # Check flext-core (should not have specific imports)
         core_path = self.workspace_root / "flext-core" / "src"
@@ -231,7 +256,7 @@ class FlextDiagnostic:
 
         return violations
 
-    def run_full_diagnostic(self) -> dict[str, object]:
+    def run_full_diagnostic(self) -> FlextTypes.Core.Dict:
         """Run full diagnostic."""
         # Check all projects
         for project_name in self.project_levels:
@@ -262,7 +287,7 @@ class FlextDiagnostic:
             "summary": self.generate_summary(),
         }
 
-    def generate_summary(self) -> dict[str, object]:
+    def generate_summary(self) -> FlextTypes.Core.Dict:
         """Generate summary."""
         total_projects = len(self.results)
         projects_with_makefile = sum(1 for s in self.results.values() if s.has_makefile)
@@ -296,7 +321,7 @@ class FlextDiagnostic:
             "projects_with_errors": projects_with_errors,
         }
 
-    def print_report(self, report: dict[str, object]) -> None:
+    def print_report(self, report: FlextTypes.Core.Dict) -> None:
         """Print formatted report."""
         # Summary
         summary_obj = report["summary"]
@@ -333,7 +358,7 @@ class FlextDiagnostic:
                             str(data.get("test_status", "UNKNOWN")),
                             str(data.get("poetry_install", "UNKNOWN")),
                         ]
-                        status_line = " | ".join(status_icons)
+                        " | ".join(status_icons)
 
                     errors = data.get("errors", [])
                     if isinstance(errors, list) and errors:

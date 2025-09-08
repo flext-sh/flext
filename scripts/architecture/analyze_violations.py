@@ -294,8 +294,7 @@ class ArchitectureAnalyzer:
                             file_path=file_path,
                             violation_type="MISPLACED_MODULE",
                             description=(
-                                f"Módulo com código específico ({pattern}) "
-                                f"em camada base"
+                                f"Módulo com código específico ({pattern}) em camada base"
                             ),
                             severity="HIGH",
                             suggested_action=(
@@ -356,8 +355,7 @@ class ArchitectureAnalyzer:
         with script_path.open("w", encoding="utf-8") as f:
             f.write("#!/bin/bash\n")
             f.write(
-                "# Script gerado automaticamente para correção de "
-                "violações arquiteturais\n\n",
+                "# Script gerado automaticamente para correção de violações arquiteturais\n\n",
             )
 
             for violation in self.violations:

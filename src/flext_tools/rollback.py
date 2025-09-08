@@ -33,7 +33,7 @@ class RollbackManager:
             msg: str = f"Backup directory not found: {self.backup_dir}"
             raise FileNotFoundError(msg)
 
-    def list_sessions(self) -> list[dict[str, str | int | list[str]]]:
+    def list_sessions(self) -> list[dict[str, str | int | FlextTypes.Core.StringList]]:
         """List all available backup sessions."""
         sessions = []
 
@@ -230,7 +230,7 @@ class RollbackManager:
 
         return success_count, failure_count
 
-    def verify_rollback_feasibility(self, session_id: str) -> dict[str, object]:
+    def verify_rollback_feasibility(self, session_id: str) -> FlextTypes.Core.Dict:
         """Verify if rollback of a session is possible.
 
         Args:
@@ -243,12 +243,12 @@ class RollbackManager:
         session_dir = self.backup_dir / f"session_{session_id}"
         log_file = session_dir / "operations_log.json"
 
-        issues: list[str] = []
-        missing_backups: list[str] = []
-        integrity_issues: list[str] = []
-        conflicts: list[str] = []
+        issues: FlextTypes.Core.StringList = []
+        missing_backups: FlextTypes.Core.StringList = []
+        integrity_issues: FlextTypes.Core.StringList = []
+        conflicts: FlextTypes.Core.StringList = []
 
-        result: dict[str, object] = {
+        result: FlextTypes.Core.Dict = {
             "feasible": True,
             "issues": issues,
             "missing_backups": missing_backups,
@@ -285,7 +285,7 @@ class RollbackManager:
 
         return result
 
-    def _find_operation(self, backup_id: str) -> dict[str, object] | None:
+    def _find_operation(self, backup_id: str) -> FlextTypes.Core.Dict | None:
         """Find operation by backup ID."""
         session_id = "_".join(backup_id.split("_")[:2])
         session_dir = self.backup_dir / f"session_{session_id}"
@@ -306,7 +306,7 @@ class RollbackManager:
     def _verify_backup_integrity(
         self,
         backup_path: Path,
-        operation: dict[str, object],
+        operation: FlextTypes.Core.Dict,
     ) -> bool:
         """Verify backup integrity."""
         try:

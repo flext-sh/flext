@@ -11,13 +11,16 @@ License: MIT
 
 """
 
+"""FLEXT - Enterprise Data Integration Platform.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
+
 import contextlib
 from collections.abc import Callable
 from pathlib import Path
-from typing import TYPE_CHECKING, TypeVar
-
-if TYPE_CHECKING:
-    from click import Group
+from typing import TypeVar
 
 import click
 
@@ -32,7 +35,7 @@ from flext_tools import (
 )
 
 # TypeVar para decoradores
-F = TypeVar('F', bound=Callable[..., object])  # type: ignore[explicit-any]
+F = TypeVar("F", bound=Callable[..., object])  # type: ignore[explicit-any]
 
 
 # Simple FlextCliContext replacement
@@ -59,7 +62,7 @@ def cli_enhanced(  # type: ignore[explicit-any]
     return decorator
 
 
-def cli_validate_inputs(func: F) -> F:  # type: ignore[explicit-any]
+def cli_validate_inputs(func: F) -> F:  # type: ignore[explicit-any]:
     """Simple decorator replacement for cli_validate_inputs."""
     return func
 
@@ -530,9 +533,15 @@ def info(ctx: click.Context, *, detailed: bool) -> None:
 
 # Import and add flext-cli command groups (suppress MyPy import errors)
 try:
-    from flext_cli.commands.auth import auth as auth_commands  # type: ignore[import-not-found]
-    from flext_cli.commands.config import config as config_commands  # type: ignore[import-not-found]
-    from flext_cli.commands.debug import debug_cmd as debug_commands  # type: ignore[import-not-found]
+    from flext_cli.commands.auth import (
+        auth as auth_commands,  # type: ignore[import-not-found]
+    )
+    from flext_cli.commands.config import (
+        config as config_commands,  # type: ignore[import-not-found]
+    )
+    from flext_cli.commands.debug import (
+        debug_cmd as debug_commands,  # type: ignore[import-not-found]
+    )
 
     main.add_command(auth_commands, name="auth")
     main.add_command(config_commands, name="config")

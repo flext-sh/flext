@@ -10,10 +10,10 @@ logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
 
 
-def find_manual_env_vars() -> list[str]:
+def find_manual_env_vars() -> FlextTypes.Core.StringList:
     """Find files with manual os.getenv() usage."""
     # Avoid spawning shell tools; scan with pathlib
-    matches: list[str] = []
+    matches: FlextTypes.Core.StringList = []
     for path in Path.cwd().rglob("*.py"):
         try:
             text = path.read_text(encoding="utf-8")

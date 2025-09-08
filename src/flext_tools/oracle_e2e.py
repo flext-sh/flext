@@ -12,7 +12,7 @@ class OracleE2ETestManager:
         """Initialize the test manager."""
         self.workspace_path = workspace_path
 
-    def run_e2e_tests(self, **_kwargs: object) -> dict[str, object]:
+    def run_e2e_tests(self, **_kwargs: object) -> FlextTypes.Core.Dict:
         """Run E2E tests for Oracle components."""
         print_colored("🔍 Running Oracle E2E tests...", Colors.BLUE)
 

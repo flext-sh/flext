@@ -48,7 +48,7 @@ class LegacyScriptMetadata:
     priority: ScriptPriority
     file_path: Path
     requires_venv: bool = True
-    dependencies: list[str] = field(default_factory=list)
+    dependencies: FlextTypes.Core.StringList = field(default_factory=list)
 
     @property
     def makefile_target(self) -> str:

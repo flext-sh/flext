@@ -125,7 +125,7 @@ class PythonImportDiscovery:
 
     Attributes:
       stdlib_modules (set[str]): Set of standard library module names
-      package_mapping (dict[str, str]): Import name to PyPI package mapping
+      package_mapping (FlextTypes.Core.Headers): Import name to PyPI package mapping
       submodules_mapping (dict[str, str|None]): Submodule to parent package mapping
 
     """

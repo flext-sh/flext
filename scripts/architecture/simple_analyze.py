@@ -11,7 +11,7 @@ from flext_core import FlextLogger
 logger = FlextLogger(__name__)
 
 
-def analyze_flext_core_violations() -> list[dict[str, str]]:
+def analyze_flext_core_violations() -> list[FlextTypes.Core.Headers]:
     """Analisa violações arquiteturais no flext-core."""
     flext_core_path = Path("flext-core/src/flext_core")
     if not flext_core_path.exists():
@@ -27,7 +27,7 @@ def analyze_flext_core_violations() -> list[dict[str, str]]:
         "client-b",
     ]
 
-    violations: list[dict[str, str]] = []
+    violations: list[FlextTypes.Core.Headers] = []
 
     for py_file in flext_core_path.rglob("*.py"):
         if py_file.name == "__init__.py" or py_file.name.endswith(".bak"):
@@ -63,8 +63,7 @@ def analyze_flext_core_violations() -> list[dict[str, str]]:
                                     {
                                         "file": str(py_file),
                                         "pattern": f"import {import_name}",
-                                        "action": f"Remover import violador em "
-                                        f"{py_file.name}",
+                                        "action": f"Remover import violador em {py_file.name}",
                                     },
                                 )
                     elif isinstance(node, ast.ImportFrom) and node.module:
@@ -77,8 +76,7 @@ def analyze_flext_core_violations() -> list[dict[str, str]]:
                                 {
                                     "file": str(py_file),
                                     "pattern": f"from {node.module}",
-                                    "action": f"Remover import violador em "
-                                    f"{py_file.name}",
+                                    "action": f"Remover import violador em {py_file.name}",
                                 },
                             )
             except SyntaxError:
@@ -117,7 +115,7 @@ def analyze_ignore_comments() -> list[Path]:
 
 
 def generate_fix_commands(
-    violations: list[dict[str, str]],
+    violations: list[FlextTypes.Core.Headers],
     ignore_files: list[Path],
 ) -> None:
     """Gera comandos para correção das violações."""
@@ -170,7 +168,7 @@ def main() -> None:
         return
 
     # Executar análises
-    violations: list[dict[str, str]] = analyze_flext_core_violations()
+    violations: list[FlextTypes.Core.Headers] = analyze_flext_core_violations()
     ignore_files: list[Path] = analyze_ignore_comments()
 
     # Gerar relatório e comandos de correção

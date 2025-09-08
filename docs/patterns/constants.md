@@ -74,7 +74,7 @@ class FlextConstants:
         CONFIGURATION_ERROR: Final[str] = "FLEXT_2003"
 
         # Error Messages
-        MESSAGES: ClassVar[dict[str, str]] = {
+        MESSAGES: ClassVar[FlextTypes.Core.Headers] = {
             GENERIC_ERROR: "An error occurred",
             VALIDATION_ERROR: "Validation failed",
             BUSINESS_RULE_VIOLATION: "Business rule violation",

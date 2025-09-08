@@ -513,7 +513,7 @@ def info(ctx: click.Context, *, detailed: bool) -> None:
     config = ctx.obj["config"]
 
     # Create workspace info using flext-cli context patterns
-    workspace_data: dict[str, str | bool | list[str]] = {
+    workspace_data: dict[str, str | bool | FlextTypes.Core.StringList] = {
         "workspace_root": str(workspace),
         "projects_count": "32",  # Would be dynamically determined
         "projects": ["flext-core", "flext-api", "flexcore"],  # Would be discovered
