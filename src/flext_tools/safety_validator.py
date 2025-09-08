@@ -90,14 +90,14 @@ logger = FlextLogger(__name__)
 # REMOVED: ValidationResult class (MASSIVE DRY VIOLATION)
 # This class duplicates FlextResult functionality:
 # - safe: bool -> FlextResult.success: bool
-# - issues: list[str] -> FlextResult.error: str (join issues)
+# - issues: FlextTypes.Core.StringList -> FlextResult.error: str (join issues)
 # - operation, recommendations, confidence, risk_level -> FlextResult.value: dict
 #
 # All safety validation results must use FlextResult[Type] from flext-core instead
 # to maintain consistency and avoid duplication of generic result functionality
 
 # Type alias for validation data
-ValidationData = dict[str, object]
+ValidationData = FlextTypes.Core.Dict
 
 
 # Utility functions for validation data (moved from removed ValidationResult class)
@@ -275,8 +275,8 @@ class SafetyValidator:
         try:
             logger.info("Starting package safety validation", package_name=package_name)
 
-            issues: list[str] = []
-            recommendations: list[str] = []
+            issues: FlextTypes.Core.StringList = []
+            recommendations: FlextTypes.Core.StringList = []
             safe = True
             confidence = "high"
             risk_level = "low"
@@ -412,8 +412,8 @@ class SafetyValidator:
                 operation=operation,
             )
 
-            issues: list[str] = []
-            recommendations: list[str] = []
+            issues: FlextTypes.Core.StringList = []
+            recommendations: FlextTypes.Core.StringList = []
             safe = True
             risk_level = "low"
 
@@ -534,7 +534,7 @@ class SafetyValidator:
 
     def validate_command_execution(
         self,
-        command: list[str],
+        command: FlextTypes.Core.StringList,
         working_dir: Path | None = None,
     ) -> FlextResult[ValidationData]:
         """Validate system command execution with comprehensive security checks.
@@ -620,7 +620,7 @@ class SafetyValidator:
         self,
         project_path: Path,
         operation: str,
-        packages: list[str] | None = None,
+        packages: FlextTypes.Core.StringList | None = None,
     ) -> FlextResult[ValidationData]:
         """Validate specific Poetry operation.
 
@@ -696,8 +696,8 @@ class SafetyValidator:
     def get_safety_recommendations_safe(
         self,
         operation_type: str,
-        context: dict[str, object] | None = None,
-    ) -> FlextResult[list[str]]:
+        context: FlextTypes.Core.Dict | None = None,
+    ) -> FlextResult[FlextTypes.Core.StringList]:
         """Safely generate security recommendations using railway-oriented programming.
 
         Provides comprehensive security recommendations based on operation type
@@ -726,7 +726,7 @@ class SafetyValidator:
                 recommendations_count=len(recommendations),
             )
 
-            return FlextResult[list[str]].ok(recommendations)
+            return FlextResult[FlextTypes.Core.StringList].ok(recommendations)
 
         except Exception as e:
             logger.exception(
@@ -734,9 +734,11 @@ class SafetyValidator:
                 operation_type=operation_type,
                 error=str(e),
             )
-            return FlextResult[list[str]].fail(f"Recommendation generation failed: {e}")
+            return FlextResult[FlextTypes.Core.StringList].fail(
+                f"Recommendation generation failed: {e}"
+            )
 
-    def get_comprehensive_validation_summary(self) -> FlextResult[dict[str, object]]:
+    def get_comprehensive_validation_summary(self) -> FlextResult[FlextTypes.Core.Dict]:
         """Get comprehensive validation summary with statistics and recommendations.
 
         Provides detailed validation statistics, security metrics, and operational
@@ -776,11 +778,11 @@ class SafetyValidator:
                 dangerous_packages=summary["dangerous_packages"],
             )
 
-            return FlextResult[dict[str, object]].ok(summary)
+            return FlextResult[FlextTypes.Core.Dict].ok(summary)
 
         except Exception as e:
             logger.exception("Failed to generate validation summary", error=str(e))
-            return FlextResult[dict[str, object]].fail(
+            return FlextResult[FlextTypes.Core.Dict].fail(
                 f"Validation summary generation failed: {e}"
             )
 
@@ -877,12 +879,12 @@ class SafetyValidator:
             return True
 
     # Legacy methods for backward compatibility
-    def validate_package_safety(self, package_name: str) -> dict[str, object]:
+    def validate_package_safety(self, package_name: str) -> FlextTypes.Core.Dict:
         """Legacy method for backward compatibility - use validate_package_safety_safe() instead."""
-        issues: list[str] = []
-        recommendations: list[str] = []
+        issues: FlextTypes.Core.StringList = []
+        recommendations: FlextTypes.Core.StringList = []
 
-        result: dict[str, object] = {
+        result: FlextTypes.Core.Dict = {
             "safe": True,
             "package": package_name,
             "issues": issues,
@@ -941,12 +943,12 @@ class SafetyValidator:
         operation: str,
         *,
         backup_requirement: BackupRequirement = BackupRequirement.REQUIRED,
-    ) -> dict[str, object]:
+    ) -> FlextTypes.Core.Dict:
         """Legacy method for backward compatibility - use validate_file_operation_safe() instead."""
-        issues: list[str] = []
-        recommendations: list[str] = []
+        issues: FlextTypes.Core.StringList = []
+        recommendations: FlextTypes.Core.StringList = []
 
-        result: dict[str, object] = {
+        result: FlextTypes.Core.Dict = {
             "safe": True,
             "file": str(file_path),
             "operation": operation,
@@ -996,8 +998,8 @@ class SafetyValidator:
     def get_safety_recommendations(
         self,
         operation_type: str,
-        _context: dict[str, object],
-    ) -> list[str]:
+        _context: FlextTypes.Core.Dict,
+    ) -> FlextTypes.Core.StringList:
         """Legacy method for backward compatibility - use get_safety_recommendations_safe() instead."""
         recommendations = []
 

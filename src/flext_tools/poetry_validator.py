@@ -126,8 +126,8 @@ class ProjectInfo(FlextModels.Value):
 # to maintain consistency and avoid duplication of generic result functionality
 
 # Type alias for project validation data
-ProjectValidationData = dict[str, object]
-WorkspaceValidationData = dict[str, object]
+ProjectValidationData = FlextTypes.Core.Dict
+WorkspaceValidationData = FlextTypes.Core.Dict
 
 
 class PoetryValidator:
@@ -238,8 +238,8 @@ class PoetryValidator:
             without impacting project functionality.
 
         """
-        errors: list[str] = []
-        warnings: list[str] = []
+        errors: FlextTypes.Core.StringList = []
+        warnings: FlextTypes.Core.StringList = []
 
         # Check pyproject.toml existence and accessibility
         pyproject_path = project_path / "pyproject.toml"
@@ -332,8 +332,8 @@ class PoetryValidator:
 
     def _validate_poetry_structure(
         self,
-        data: dict[str, object],
-    ) -> tuple[bool, list[str]]:
+        data: FlextTypes.Core.Dict,
+    ) -> tuple[bool, FlextTypes.Core.StringList]:
         """Validate Poetry structure and configuration in pyproject.toml.
 
         Verifies that all required Poetry configuration sections and fields
@@ -347,7 +347,7 @@ class PoetryValidator:
             Tuple containing validation status and list of structural issues
 
         """
-        issues: list[str] = []
+        issues: FlextTypes.Core.StringList = []
 
         # Check [tool.poetry] section presence
         if "tool" not in data:
@@ -379,8 +379,8 @@ class PoetryValidator:
 
     def _validate_project_metadata(
         self,
-        data: dict[str, object],
-    ) -> tuple[bool, list[str]]:
+        data: FlextTypes.Core.Dict,
+    ) -> tuple[bool, FlextTypes.Core.StringList]:
         """Validate project metadata and compliance with best practices.
 
         Verifies project metadata completeness and adherence to Poetry
@@ -425,7 +425,9 @@ class PoetryValidator:
 
         return len(issues) == 0, issues
 
-    def _validate_dependencies(self, data: dict[str, object]) -> tuple[bool, list[str]]:
+    def _validate_dependencies(
+        self, data: FlextTypes.Core.Dict
+    ) -> tuple[bool, FlextTypes.Core.StringList]:
         """Validate project dependencies and version specifications.
 
         Analyzes dependency specifications to ensure proper version constraints
@@ -439,17 +441,17 @@ class PoetryValidator:
             Tuple containing validation status and list of dependency issues
 
         """
-        issues: list[str] = []
+        issues: FlextTypes.Core.StringList = []
         tool_section = data.get("tool", {})
         if not isinstance(tool_section, dict):
             return True, []
-        poetry: dict[str, object] = cast(
-            "dict[str, object]", tool_section.get("poetry", {})
+        poetry: FlextTypes.Core.Dict = cast(
+            "FlextTypes.Core.Dict", tool_section.get("poetry", {})
         )
 
         # Check main dependencies
-        deps: dict[str, object] = (
-            cast("dict[str, object]", poetry.get("dependencies", {}))
+        deps: FlextTypes.Core.Dict = (
+            cast("FlextTypes.Core.Dict", poetry.get("dependencies", {}))
             if isinstance(poetry, dict)
             else {}
         )
@@ -467,15 +469,17 @@ class PoetryValidator:
                     issues.append(f"Dependency '{name}' missing version specification")
 
         # Check dependency groups
-        groups: dict[str, object] = (
-            cast("dict[str, object]", poetry.get("group", {}))
+        groups: FlextTypes.Core.Dict = (
+            cast("FlextTypes.Core.Dict", poetry.get("group", {}))
             if isinstance(poetry, dict)
             else {}
         )
         if isinstance(groups, dict):
             for group_name, group_data in groups.items():
                 if isinstance(group_data, dict):
-                    group_deps: dict[str, object] = group_data.get("dependencies", {})
+                    group_deps: FlextTypes.Core.Dict = group_data.get(
+                        "dependencies", {}
+                    )
                     if hasattr(group_deps, "items"):
                         for name, spec in group_deps.items():
                             if (
@@ -491,7 +495,9 @@ class PoetryValidator:
 
         return len(issues) == 0, issues
 
-    def _validate_lock_file(self, project_path: Path) -> tuple[bool, list[str]]:
+    def _validate_lock_file(
+        self, project_path: Path
+    ) -> tuple[bool, FlextTypes.Core.StringList]:
         """Validate Poetry lock file consistency and currency.
 
         Verifies that Poetry lock file exists and is consistent with project
@@ -505,7 +511,7 @@ class PoetryValidator:
             Tuple containing validation status and list of lock file issues
 
         """
-        issues: list[str] = []
+        issues: FlextTypes.Core.StringList = []
         lock_path = project_path / "poetry.lock"
 
         if not lock_path.exists():
@@ -528,7 +534,7 @@ class PoetryValidator:
 
         return len(issues) == 0, issues
 
-    def _collect_project_info(self, data: dict[str, object]) -> ProjectInfo:
+    def _collect_project_info(self, data: FlextTypes.Core.Dict) -> ProjectInfo:
         """Collect comprehensive project information and statistics.
 
         Extracts detailed project metadata, dependency information, and
@@ -545,13 +551,13 @@ class PoetryValidator:
         tool_section = data.get("tool", {})
         if not isinstance(tool_section, dict):
             return ProjectInfo()
-        poetry: dict[str, object] = cast(
-            "dict[str, object]", tool_section.get("poetry", {})
+        poetry: FlextTypes.Core.Dict = cast(
+            "FlextTypes.Core.Dict", tool_section.get("poetry", {})
         )
 
         # Count main dependencies (excluding python)
-        dependencies: dict[str, object] = (
-            cast("dict[str, object]", poetry.get("dependencies", {}))
+        dependencies: FlextTypes.Core.Dict = (
+            cast("FlextTypes.Core.Dict", poetry.get("dependencies", {}))
             if isinstance(poetry, dict)
             else {}
         )
@@ -571,8 +577,8 @@ class PoetryValidator:
 
         # Count dev dependencies
         dev_dependency_count = 0
-        groups: dict[str, object] = (
-            cast("dict[str, object]", poetry.get("group", {}))
+        groups: FlextTypes.Core.Dict = (
+            cast("FlextTypes.Core.Dict", poetry.get("group", {}))
             if isinstance(poetry, dict)
             else {}
         )
@@ -717,9 +723,9 @@ class PoetryValidator:
                 f"Workspace validation completed - {valid_projects}/{total_projects} valid, {total_errors} errors, {total_warnings} warnings",
             )
 
-            return FlextResult[dict[str, object]].ok(workspace_result_data)
+            return FlextResult[FlextTypes.Core.Dict].ok(workspace_result_data)
 
         except Exception as e:
             error_msg = f"Workspace validation failed: {e}"
             logger.exception(error_msg)
-            return FlextResult[dict[str, object]].fail(error_msg)
+            return FlextResult[FlextTypes.Core.Dict].fail(error_msg)

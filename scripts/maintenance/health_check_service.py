@@ -119,9 +119,9 @@ class HealthCheckServiceRunner(FlextScript):
 
         return parser
 
-    def _process_kwargs(self, args: argparse.Namespace) -> dict[str, object]:
+    def _process_kwargs(self, args: argparse.Namespace) -> FlextTypes.Core.Dict:
         """Process arguments into kwargs."""
-        kwargs: dict[str, object] = {}
+        kwargs: FlextTypes.Core.Dict = {}
         kwargs["generate_report"] = not getattr(args, "no_report", False)
         return kwargs
 

@@ -110,7 +110,7 @@ class Configuration(FlextModels.Value):
         default=30,
         description="Default timeout values for operations",
     )
-    details: dict[str, object] = Field(
+    details: FlextTypes.Core.Dict = Field(
         default_factory=dict,
         description="Nested configuration for specific components",
     )

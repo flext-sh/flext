@@ -41,8 +41,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
         return ScriptMetadata(
             name="comprehensive_workspace_manager",
             description=(
-                "Complete workspace setup, links, dependencies, type checking, "
-                "SSL and monitoring"
+                "Complete workspace setup, links, dependencies, type checking, SSL and monitoring"
             ),
             category="config",
             version="3.0.0",
@@ -148,7 +147,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
         self,
         total_projects: int,
         linked: int,
-        failed_projects: list[str],
+        failed_projects: FlextTypes.Core.StringList,
     ) -> None:
         """Print setup summary."""
         print_colored("\n📊 WORKSPACE LINKS SUMMARY", Colors.BLUE)
@@ -205,7 +204,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
         projects = self._discover_projects(workspace_root)
 
         total_linked = 0
-        failed_projects: list[str] = []
+        failed_projects: FlextTypes.Core.StringList = []
 
         # Setup links for each project
         for project_path in projects:

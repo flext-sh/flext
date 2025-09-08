@@ -113,11 +113,11 @@ class VersionCompatibilityResult(FlextModels.Value):
         default=None,
         description="Common version that satisfies both specifications",
     )
-    issues: list[str] = Field(
+    issues: FlextTypes.Core.StringList = Field(
         default_factory=list,
         description="List of compatibility issues found",
     )
-    recommendations: list[str] = Field(
+    recommendations: FlextTypes.Core.StringList = Field(
         default_factory=list,
         description="List of recommended actions for resolution",
     )
@@ -245,7 +245,7 @@ class VersionAnalyzer:
     def check_version_compatibility(
         spec1: str,
         spec2: str,
-    ) -> dict[str, object]:
+    ) -> FlextTypes.Core.Dict:
         """Check compatibility between two version specifications.
 
         Analyzes whether two version constraints can be satisfied simultaneously
@@ -312,7 +312,7 @@ class VersionAnalyzer:
 
     @staticmethod
     def find_common_version_range(
-        project_constraints: dict[str, str],
+        project_constraints: FlextTypes.Core.Headers,
     ) -> str | None:
         """Find common version range across multiple project constraints.
 
@@ -355,10 +355,10 @@ class VersionAnalyzer:
 
     @staticmethod
     def _collect_package_versions(
-        projects_data: dict[str, dict[str, object]],
-    ) -> dict[str, dict[str, str]]:
+        projects_data: dict[str, FlextTypes.Core.Dict],
+    ) -> dict[str, FlextTypes.Core.Headers]:
         """Collect package versions from project data."""
-        package_versions: dict[str, dict[str, str]] = {}
+        package_versions: dict[str, FlextTypes.Core.Headers] = {}
 
         for project_name, data in projects_data.items():
             VersionAnalyzer._collect_pep621_dependencies(
@@ -376,9 +376,9 @@ class VersionAnalyzer:
 
     @staticmethod
     def _collect_pep621_dependencies(
-        data: dict[str, object],
+        data: FlextTypes.Core.Dict,
         project_name: str,
-        package_versions: dict[str, dict[str, str]],
+        package_versions: dict[str, FlextTypes.Core.Headers],
     ) -> None:
         """Collect PEP 621 dependencies from project data."""
         project_section = data.get("project", {})
@@ -401,9 +401,9 @@ class VersionAnalyzer:
 
     @staticmethod
     def _collect_poetry_dependencies(
-        data: dict[str, object],
+        data: FlextTypes.Core.Dict,
         project_name: str,
-        package_versions: dict[str, dict[str, str]],
+        package_versions: dict[str, FlextTypes.Core.Headers],
     ) -> None:
         """Collect Poetry dependencies from project data."""
         tool_section = data.get("tool", {})
@@ -443,7 +443,7 @@ class VersionAnalyzer:
         package_name: str,
         project_name: str,
         version_spec: str,
-        package_versions: dict[str, dict[str, str]],
+        package_versions: dict[str, FlextTypes.Core.Headers],
     ) -> None:
         """Add a package version to the collection."""
         if package_name not in package_versions:
@@ -452,8 +452,8 @@ class VersionAnalyzer:
 
     @staticmethod
     def _detect_version_conflicts(
-        package_versions: dict[str, dict[str, str]],
-    ) -> dict[str, list[dict[str, object]]]:
+        package_versions: dict[str, FlextTypes.Core.Headers],
+    ) -> dict[str, list[FlextTypes.Core.Dict]]:
         """Detect version conflicts between package constraints.
 
         Analyzes collected package versions to identify conflicts where
@@ -468,7 +468,7 @@ class VersionAnalyzer:
             Each conflict includes type, affected projects, analysis, and severity
 
         """
-        conflicts: dict[str, list[dict[str, object]]] = {}
+        conflicts: dict[str, list[FlextTypes.Core.Dict]] = {}
 
         for package_name, versions in package_versions.items():
             if len(versions) > 1:
@@ -497,8 +497,8 @@ class VersionAnalyzer:
 
     @staticmethod
     def analyze_version_conflicts(
-        projects_data: dict[str, dict[str, object]],
-    ) -> dict[str, list[dict[str, object]]]:
+        projects_data: dict[str, FlextTypes.Core.Dict],
+    ) -> dict[str, list[FlextTypes.Core.Dict]]:
         """Analyze version conflicts across FLEXT ecosystem projects.
 
         Performs comprehensive version conflict analysis across multiple projects,
@@ -520,8 +520,8 @@ class VersionAnalyzer:
 
     @staticmethod
     def suggest_version_resolution(
-        conflicts: dict[str, dict[str, object]],
-    ) -> dict[str, str]:
+        conflicts: dict[str, FlextTypes.Core.Dict],
+    ) -> FlextTypes.Core.Headers:
         """Suggest automated resolutions for version conflicts.
 
         Analyzes version conflicts and provides actionable resolution recommendations
@@ -581,7 +581,7 @@ class VersionAnalyzer:
         return suggestions
 
     @staticmethod
-    def _get_most_restrictive_spec(specs: list[str]) -> str:
+    def _get_most_restrictive_spec(specs: FlextTypes.Core.StringList) -> str:
         """Return the most restrictive version specification.
 
         Analyzes multiple version specifications and returns the one with
@@ -680,8 +680,8 @@ def check_version_compatibility(
 
 
 def analyze_version_conflicts(
-    projects_data: dict[str, dict[str, object]],
-) -> dict[str, list[dict[str, object]]]:
+    projects_data: dict[str, FlextTypes.Core.Dict],
+) -> dict[str, list[FlextTypes.Core.Dict]]:
     """Analyze version conflicts between projects.
 
     Args:
@@ -695,8 +695,8 @@ def analyze_version_conflicts(
 
 
 def suggest_version_resolution(
-    conflicts: dict[str, dict[str, object]],
-) -> dict[str, str]:
+    conflicts: dict[str, FlextTypes.Core.Dict],
+) -> FlextTypes.Core.Headers:
     """Suggest resolutions for version conflicts.
 
     Args:

@@ -22,7 +22,7 @@ def main() -> int:
 
     # Usa cache para análise pesada
     @cached(namespace="conflicts", ttl=600)
-    def get_workspace_analysis() -> dict[str, object]:
+    def get_workspace_analysis() -> FlextTypes.Core.Dict:
         return analyzer.analyze_workspace_conflicts(workspace_path)
 
     # Executa análise

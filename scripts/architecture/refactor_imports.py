@@ -59,8 +59,7 @@ def fix_imports_in_file(file_path: Path) -> bool:
             # Add comment at top of changed imports
             content = content.replace(
                 "from flext_core import",
-                "# 🚨 ARCHITECTURAL COMPLIANCE: "
-                "Using módulo raiz imports\nfrom flext_core import",
+                "# 🚨 ARCHITECTURAL COMPLIANCE: Using módulo raiz imports\nfrom flext_core import",
                 1,  # Only first occurrence
             )
 

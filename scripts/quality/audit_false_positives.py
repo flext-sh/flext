@@ -60,7 +60,7 @@ class FalsePositiveAuditor:
     def audit_project_dependencies(
         self,
         project_path: Path,
-    ) -> dict[str, list[dict[str, object]]]:
+    ) -> dict[str, list[FlextTypes.Core.Dict]]:
         """Audita dependências de um projeto específico.
 
         Returns:
@@ -78,7 +78,7 @@ class FalsePositiveAuditor:
         )
 
         # Analisa cada dependência encontrada
-        analysis: dict[str, list[dict[str, object]]] = {
+        analysis: dict[str, list[FlextTypes.Core.Dict]] = {
             "stdlib": [],  # Módulos da standard library
             "flext_internal": [],  # Módulos internos do FLEXT
             "relative_imports": [],  # Imports relativos locais
@@ -290,7 +290,7 @@ class FalsePositiveAuditor:
 
     def _print_audit_results(
         self,
-        analysis: dict[str, list[dict[str, object]]],
+        analysis: dict[str, list[FlextTypes.Core.Dict]],
     ) -> None:
         """Imprime resultados da auditoria de forma organizada."""
         total = sum(len(items) for items in analysis.values())
@@ -349,15 +349,14 @@ class FalsePositiveAuditor:
 
 
 def audit_workspace() -> tuple[
-    dict[str, dict[str, list[dict[str, object]]]],
+    dict[str, dict[str, list[FlextTypes.Core.Dict]]],
     dict[str, set[str]],
 ]:
     """Audita todo o workspace FLEXT."""
     print_colored("🔍 AUDITORIA COMPLETA DE FALSOS POSITIVOS", Colors.BLUE)
     print_colored("=" * 60, Colors.BLUE)
     print_colored(
-        "OBJETIVO: Identificar TODOS os falsos positivos antes de permitir "
-        "modificações",
+        "OBJETIVO: Identificar TODOS os falsos positivos antes de permitir modificações",
         Colors.YELLOW,
     )
     workspace_path = Path.cwd()
@@ -392,7 +391,7 @@ def audit_workspace() -> tuple[
         "unknown": set(),
     }
 
-    project_details: dict[str, dict[str, list[dict[str, object]]]] = {}
+    project_details: dict[str, dict[str, list[FlextTypes.Core.Dict]]] = {}
 
     for project_path in projects:
         try:
@@ -444,13 +443,11 @@ def audit_workspace() -> tuple[
         Colors.GREEN,
     )
     print_colored(
-        "Dependências legítimas faltantes: "
-        f"{legitimate} ({legitimate / total_imports * 100:.1f}%)",
+        f"Dependências legítimas faltantes: {legitimate} ({legitimate / total_imports * 100:.1f}%)",
         Colors.YELLOW,
     )
     print_colored(
-        "Requer investigação manual: "
-        f"{investigation} ({investigation / total_imports * 100:.1f}%)",
+        f"Requer investigação manual: {investigation} ({investigation / total_imports * 100:.1f}%)",
         Colors.MAGENTA,
     )
 

@@ -144,7 +144,7 @@ class QualityIssue(FlextModels.Value):
 # consistency and avoid duplication of generic result functionality
 
 # Type alias for quality check data
-QualityCheckData = dict[str, object]
+QualityCheckData = FlextTypes.Core.Dict
 
 
 # Utility functions for quality check data (moved from removed QualityCheckResults class)
@@ -492,10 +492,11 @@ class QualityGateway:
             # Run mypy via subprocess
             result = subprocess.run(
                 ["mypy", "src", "--strict", "--show-error-codes"],
-                check=False, cwd=self.workspace_path,
+                check=False,
+                cwd=self.workspace_path,
                 capture_output=True,
                 text=True,
-                timeout=300
+                timeout=300,
             )
 
             if result.returncode == 0:
@@ -533,10 +534,11 @@ class QualityGateway:
             # Run pytest via subprocess
             result = subprocess.run(
                 ["pytest", "tests", "-v", "--tb=short"],
-                check=False, cwd=self.workspace_path,
+                check=False,
+                cwd=self.workspace_path,
                 capture_output=True,
                 text=True,
-                timeout=600
+                timeout=600,
             )
 
             if result.returncode == 0:
@@ -602,7 +604,7 @@ class QualityGateway:
         except Exception as e:
             return FlextResult[list[QualityIssue]].fail(f"Security check failed: {e}")
 
-    def run_quality_checks(self) -> dict[str, object]:
+    def run_quality_checks(self) -> FlextTypes.Core.Dict:
         """Convenience method for testing - use run_quality_checks_safe() instead."""
         print_colored("🔍 Running convenience quality checks...", Colors.BLUE)
 
