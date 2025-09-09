@@ -17,6 +17,7 @@ import tomllib
 from pathlib import Path
 
 from flext_core import FlextConstants, FlextLogger
+from flext_core.typings import FlextTypes
 
 
 class WorkspaceManager:

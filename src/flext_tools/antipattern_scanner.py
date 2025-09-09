@@ -81,6 +81,7 @@ from pathlib import Path
 from typing import ClassVar
 
 from flext_core import FlextLogger, FlextModels, FlextResult
+from flext_core.typings import FlextTypes
 
 from .colors import Colors, print_colored
 

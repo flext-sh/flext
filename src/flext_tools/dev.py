@@ -23,7 +23,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextResult
+from flext_core import FlextLogger
+from flext_core.typings import FlextTypes
 
 
 class DevToolsManager:
@@ -292,16 +293,12 @@ class DevToolsManager:
             # Validate project path to prevent directory traversal
             project_path = project_path.resolve()
             if not project_path.exists() or not project_path.is_dir():
-                return FlextResult[FlextTypes.Core.Dict].fail(
-                    f"Invalid project path: {project_path}"
-                )
+                return 1  # Error code for invalid path
 
             # Validate command components
             for cmd_part in cmd:
                 if not isinstance(cmd_part, str) or not cmd_part.strip():
-                    return FlextResult[FlextTypes.Core.Dict].fail(
-                        f"Invalid command component: {cmd_part}"
-                    )
+                    return 1  # Error code for invalid command
 
             result = subprocess.run(
                 cmd,
@@ -492,7 +489,7 @@ class DevToolsManager:
             # Run ruff linting
             ruff_cmd = shutil.which("ruff")
             if not ruff_cmd:
-                return FlextResult[FlextTypes.Core.Dict].fail("Ruff not found in PATH")
+                return 1  # Error code for tool not found
 
             result = subprocess.run(
                 [ruff_cmd, "check", ".", "--output-format=text"],
@@ -606,7 +603,7 @@ class DevToolsManager:
             # Run ruff format for Python code
             ruff_cmd = shutil.which("ruff")
             if not ruff_cmd:
-                return FlextResult[FlextTypes.Core.Dict].fail("Ruff not found in PATH")
+                return 1  # Error code for tool not found
 
             result = subprocess.run(
                 [ruff_cmd, "format", "."],

@@ -35,6 +35,8 @@ dependencies = [
     "structlog (>=25.4.0)",
     "tomlkit (>=0.13.3)",
     "docker (>=7.1.0,<8.0.0)",
+    "toml (>=0.10.2,<0.11.0)",
+    "tomli-w (>=1.2.0,<2.0.0)",
 ]
 keywords = [
     "async",
@@ -164,6 +166,7 @@ types-six = "^1.17.0.20250515"
 types-ujson = "^5.10.0.20250326"
 types-mock = "^5.2.0.20250809"
 types-factory-boy = "^0.4.1"
+aiofiles = "^24.1.0"
 
 
 [tool.poetry.group.typing.dependencies]

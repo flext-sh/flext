@@ -30,6 +30,7 @@ Example:
     >>> from flext.application_pipeline import PipelineService
     >>> from flext.application_pipeline import CreatePipelineCommand
     >>> from flext_core import FlextContainer
+from flext_core.typings import FlextTypes
     >>>
     >>> # Initialize pipeline service with dependency injection
     >>> container = FlextContainer()
@@ -85,6 +86,7 @@ License: MIT
 from __future__ import annotations
 
 from flext_core import FlextLogger, FlextModels, FlextResult
+from flext_core.typings import FlextTypes
 from pydantic import Field
 
 # Initialize logger

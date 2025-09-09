@@ -42,6 +42,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from flext_core import FlextLogger, FlextResult
+from flext_core.typings import FlextTypes
 from flext_quality import QualityAPI
 
 logger = FlextLogger(__name__)
