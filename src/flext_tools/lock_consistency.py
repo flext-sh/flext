@@ -73,6 +73,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from flext_core import FlextLogger, FlextModels, FlextResult
+from flext_core.typings import FlextTypes
 from pydantic import Field
 
 from .colors import Colors, print_colored

@@ -55,6 +55,7 @@ from typing import Protocol
 
 # Import flext-core patterns - always available
 from flext_core import FlextResult
+from flext_core.typings import FlextTypes
 
 
 class FlextWebAppProtocol(Protocol):
