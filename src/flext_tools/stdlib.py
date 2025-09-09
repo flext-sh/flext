@@ -4,20 +4,8 @@ This utility module provides functions to identify Python standard library modul
 for dependency analysis in the FLEXT ecosystem. Used by workspace tools to
 distinguish between stdlib and third-party dependencies.
 
-Key Components:
-    - get_stdlib_modules: Returns comprehensive set of Python stdlib modules
-    - Module categorization for better dependency analysis
-
-Integration:
-    - Core utility used by FLEXT workspace dependency discovery
-    - Enables accurate separation of stdlib vs external dependencies
-
 Copyright (c) 2025 Flext. All rights reserved.
 SPDX-License-Identifier: MIT
-
-Author: FLEXT Development Team
-Version: 0.9.0
-License: MIT
 """
 
 from __future__ import annotations

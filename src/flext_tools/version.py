@@ -6,62 +6,6 @@ sophisticated version constraint analysis, conflict detection, and automated
 resolution strategies for maintaining consistent dependency management across
 all 33 FLEXT projects.
 
-The version analyzer handles complex version constraint scenarios including
-semantic versioning, caret constraints, tilde constraints, and range specifications.
-All analysis operations provide detailed conflict reports and actionable
-resolution recommendations for maintaining ecosystem stability.
-
-Key Components:
-    - VersionAnalyzer: Core version analysis and conflict detection engine
-    - Version Parsing: Comprehensive package specification parsing and normalization
-    - Compatibility Analysis: Cross-project version compatibility validation
-    - Conflict Resolution: Automated version conflict resolution strategies
-    - Helper Functions: Convenient functional interface for version operations
-
-Architecture:
-    Implements enterprise-grade version analysis patterns with proper error
-    handling, constraint normalization, and conflict resolution strategies.
-    Integrates with packaging library for robust version handling and provides
-    comprehensive reporting for operational decision-making.
-
-Example:
-    Version conflict analysis across FLEXT projects:
-
-    >>> from flext_tools.analysis.version import VersionAnalyzer
-    >>> from flext_tools.analysis.version import analyze_version_conflicts
-    >>>
-    >>> # Analyze version conflicts across projects
-    >>> projects_data = {
-    ...     "flext-core": {
-    ...         "project": {"dependencies": ["pydantic>=2.0.0"]},
-    ...         "tool": {"poetry": {"dependencies": {"pydantic": "^2.1.0"}}},
-    ...     },
-    ...     "flext-api": {
-    ...         "project": {"dependencies": ["pydantic>=1.10.0,<2.0.0"]},
-    ...         "tool": {"poetry": {"dependencies": {"pydantic": "^1.10.12"}}},
-    ...     },
-    ... }
-    >>>
-    >>> conflicts = analyze_version_conflicts(projects_data)
-    >>> if conflicts:
-    ...     print(f"Found conflicts in {len(conflicts)} packages")
-    ...     for package, conflict_info in conflicts.items():
-    ...         print(f"Package {package}: {conflict_info[0]['severity']} conflict")
-
-Integration:
-    - Built on packaging library for robust version constraint handling
-    - Integrates with flext-tools utilities for consistent error reporting
-    - Supports both PEP 621 and Poetry dependency specifications
-    - Provides foundation for automated dependency management workflows
-    - Coordinates with quality gates for ecosystem consistency validation
-
-Quality Standards:
-    - Comprehensive error handling with detailed context preservation
-    - Full type annotation coverage for enhanced development experience
-    - Extensive validation of version constraint formats and compatibility
-    - Performance-optimized algorithms for large-scale dependency analysis
-    - Security-conscious version constraint validation and normalization
-
 Author: FLEXT Development Team
 Version: 0.9.0
 License: MIT

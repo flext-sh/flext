@@ -12,8 +12,8 @@ import pytest
 
 import flext.cli_patterns
 import flext.cli_patterns as module
+import flext.cli_patterns as patterns
 import flext.cli_patterns as patterns_module
-import flext.cli_pattesrns as patterns
 from flext.cli_patterns import (
     BaseCLI,
     BaseCLI as ImportedBaseCLI,
@@ -63,13 +63,13 @@ class TestCliPatterns:
         assert "FLEXT CLI Patterns" in patterns_module.__doc__
 
     def test_enterprise_cli_framework_documentation(self) -> None:
-        """Test that enterprise CLI framework is properly documented."""
+        """Test that CLI patterns framework is properly documented."""
         doc = patterns_module.__doc__ or ""
 
-        # Assert key concepts are documented
-        assert "Enterprise Command-Line Interface Framework" in doc
-        assert "Clean Architecture" in doc
-        assert "BaseCLI" in doc
+        # Assert key concepts are documented - facade pattern
+        assert "FLEXT CLI Patterns" in doc
+        assert "facade" in doc.lower()
+        assert "ANTI-DUPLICATION ENFORCEMENT" in doc
         assert "FLEXT ecosystem" in doc
 
     @pytest.mark.skipif(
@@ -121,10 +121,10 @@ class TestCliPatternsIntegration:
 
         doc = patterns.__doc__ or ""
         integration_keywords = [
-            "flext-core",
-            "flext-observability",
-            "workspace management",
-            "32-project FLEXT ecosystem",
+            "FLEXT ecosystem",
+            "flext-cli",
+            "facade",
+            "ZERO TOLERANCE",
         ]
 
         for keyword in integration_keywords:
@@ -188,13 +188,12 @@ class TestDocumentationCompliance:
         assert doc is not None
         assert len(doc) > 100  # Substantial documentation
 
-        # Check for key documentation sections
+        # Check for key documentation sections - facade pattern
         required_sections = [
             "FLEXT CLI Patterns",
-            "Key Components",
-            "Architecture",
-            "Integration",
-            "Example",
+            "ANTI-DUPLICATION ENFORCEMENT",
+            "ZERO TOLERANCE",
+            "facade",
         ]
 
         for section in required_sections:
@@ -204,11 +203,10 @@ class TestDocumentationCompliance:
         """Test that module contains proper version and metadata information."""
         doc = module.__doc__ or ""
 
-        # Check for metadata in documentation
+        # Check for metadata in documentation - facade pattern
         metadata_items = [
-            "Version: 2.0.0",
-            "Author: FLEXT Development Team",
-            "License: MIT",
+            "Copyright (c) 2025 FLEXT Team",
+            "SPDX-License-Identifier: MIT",
         ]
 
         for item in metadata_items:
@@ -218,13 +216,12 @@ class TestDocumentationCompliance:
         """Test that enterprise standards are properly documented."""
         doc = module.__doc__ or ""
 
-        # Check for enterprise standards documentation
+        # Check for enterprise standards documentation - facade pattern
         enterprise_concepts = [
-            "Quality Standards",
-            "Clean Architecture",
-            "error handling",
-            "logging integration",
-            "Performance monitoring",
+            "ANTI-DUPLICATION ENFORCEMENT",
+            "ZERO TOLERANCE",
+            "facade",
+            "flext-cli exclusively",
         ]
 
         for concept in enterprise_concepts:
