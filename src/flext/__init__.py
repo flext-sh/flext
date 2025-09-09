@@ -48,13 +48,13 @@ License: MIT
 
 """
 
+from __future__ import annotations
+
 """FLEXT - Enterprise Data Integration Platform.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
-
-from __future__ import annotations
 
 # Import all from each module with proper type handling - FLEXT Pattern
 from flext.application_handlers import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403

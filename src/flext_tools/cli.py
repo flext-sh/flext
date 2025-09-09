@@ -17,6 +17,7 @@ from typing import TypeVar
 import click
 from flext_cli import FlextCliConfig, FlextCliContext, FlextCliFormatters
 from flext_core import FlextResult
+from flext_core.typings import FlextTypes
 from rich.console import Console
 from rich.table import Table
 

@@ -1,5 +1,7 @@
 """FLEXT Development Tools Manager - Enterprise Development Operations.
 
+from __future__ import annotations
+
 Provides comprehensive development tooling and automation for the FLEXT
 data integration ecosystem, implementing enterprise-grade development
 operations across all 32 projects with consistent quality enforcement,
@@ -16,13 +18,14 @@ License: MIT
 
 """
 
+from __future__ import annotations
+
 """FLEXT - Enterprise Data Integration Platform.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
 
-from __future__ import annotations
 
 import subprocess
 from pathlib import Path

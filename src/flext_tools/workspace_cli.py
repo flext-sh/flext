@@ -71,6 +71,7 @@ import sys
 from pathlib import Path
 
 import click
+from flext_core.typings import FlextTypes
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress
