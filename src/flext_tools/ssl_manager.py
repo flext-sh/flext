@@ -1,70 +1,9 @@
 """FLEXT SSL Management - Enterprise SSL/TLS Infrastructure.
 
-Provides comprehensive SSL/TLS certificate management and configuration
-capabilities for the FLEXT ecosystem with automated certificate generation,
-renewal, and deployment across all 33 projects with enterprise-grade
-security and operational excellence.
-
 The SSL management system implements sophisticated certificate lifecycle
 management including automated generation, renewal tracking, deployment
 coordination, and security compliance validation with integrated monitoring
 and alerting for maintaining optimal SSL/TLS security posture.
-
-Key Components:
-    - SSLManager: Main SSL/TLS certificate management engine
-    - Certificate Generation: Automated SSL certificate creation and configuration
-    - Certificate Renewal: Lifecycle management with automated renewal
-    - Deployment Coordination: Multi-project certificate deployment
-    - Security Validation: SSL/TLS configuration compliance checking
-    - Monitoring Integration: Certificate expiration and health monitoring
-
-Architecture:
-    Implements Clean Architecture patterns with proper separation between
-    certificate management logic, security validation, and deployment interfaces.
-    Integrates with PKI infrastructure and monitoring systems for comprehensive
-    SSL/TLS security management across distributed FLEXT deployments.
-
-Example:
-    Comprehensive SSL/TLS infrastructure management:
-
-    >>> from flext_tools.infrastructure.ssl_manager import SSLManager
-    >>> from pathlib import Path
-    >>>
-    >>> # Initialize SSL manager with configuration
-    >>> ssl_manager = SSLManager(Path("/workspace/ssl"))
-    >>>
-    >>> # Setup complete SSL infrastructure
-    >>> ssl_results = ssl_manager.setup_ssl(
-    ...     generate_certificates=True,
-    ...     configure_services=True,
-    ...     enable_monitoring=True,
-    ...     validate_security=True
-    >>> )
-    >>>
-    >>> print(f"SSL configured: {ssl_results['ssl_configured']}")
-    >>> print(f"Certificates generated: {ssl_results['certificates_generated']}")
-    >>> print(f"Services configured: {ssl_results['config_updated']}")
-    >>>
-    >>> # Review certificate details
-    >>> if ssl_results["details"]:
-    ...     certs = ssl_results["details"].get("certificates", [])
-    ...     print(f"Certificates managed: {len(certs)}")
-    ...     for cert in certs:
-    ...         print(f"Certificate: {cert['name']} - Expires: {cert['expiry']}")
-
-Integration:
-    - Built on industry-standard PKI practices and certificate management
-    - Integrates with Let's Encrypt, internal CA, and certificate authorities
-    - Coordinates with service deployment and configuration management
-    - Provides foundation for enterprise security and compliance
-    - Supports automated certificate lifecycle management in CI/CD pipelines
-
-Quality Standards:
-    - Comprehensive error handling with detailed security context
-    - Performance optimization for large-scale certificate deployment
-    - Configurable security parameters and compliance thresholds
-    - Integration with security monitoring and incident response systems
-    - Professional English documentation and security messaging
 
 Author: FLEXT Development Team
 Version: 0.9.0

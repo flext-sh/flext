@@ -433,6 +433,18 @@ filecache = ["filelock (>=3.8.0)"]
 redis = ["redis (>=2.10.5)"]
 
 [[package]]
+name = "cachetools"
+version = "6.2.0"
+description = "Extensible memoizing collections and decorators"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "cachetools-6.2.0-py3-none-any.whl", hash = "sha256:1c76a8960c0041fcc21097e357f882197c79da0dbff766e7317890a65d7d8ba6"},
+    {file = "cachetools-6.2.0.tar.gz", hash = "sha256:38b328c0889450f05f5e120f56ab68c8abaf424e1275522b138ffc93253f7e32"},
+]
+
+[[package]]
 name = "cattrs"
 version = "25.1.1"
 description = "Composable complex class support for attrs and dataclasses."
@@ -5088,4 +5100,4 @@ typings = ["django-stubs", "types-ldap3", "types-protobuf", "types-psutil", "typ
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "8ecc7a71f94da391ee6a6a031e734fcee1a61ea095d3f40f5a1a269b1cdfb40b"
+content-hash = "890fa683dcddf181bf5ea864d77cc09082c3488db106ed6e37bdd8bcd8e5be37"
