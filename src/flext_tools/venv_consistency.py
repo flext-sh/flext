@@ -4,59 +4,6 @@ Provides comprehensive validation capabilities for shared virtual environment
 consistency across the FLEXT ecosystem. This module ensures that the workspace
 virtual environment maintains consistency with all project requirements,
 identifies conflicts, and provides actionable recommendations for resolution.
-
-The validator analyzes installed packages against project requirements from
-all Poetry configurations, detecting version conflicts, missing dependencies,
-orphaned packages, and other inconsistencies that could impact development
-and deployment stability.
-
-Key Components:
-    - VenvConsistencyValidator: Main validation engine for environment analysis
-    - PackageInfo: Structured representation of installed package metadata
-    - VenvConflict: Detailed conflict information with severity classification
-    - Consistency Analysis: Cross-project requirement validation
-    - Resolution Recommendations: Actionable suggestions for conflict resolution
-
-Architecture:
-    Implements enterprise-grade environment validation with proper error handling,
-    comprehensive scanning capabilities, and detailed reporting. Integrates with
-    Poetry dependency management and provides structured output for automated
-    and manual conflict resolution processes.
-
-Example:
-    Validate workspace virtual environment consistency:
-
-    >>> from flext_tools.safety.venv_consistency import VenvConsistencyValidator
-    >>> from pathlib import Path
-    >>>
-    >>> # Initialize validator for workspace
-    >>> validator = VenvConsistencyValidator(Path("/workspace/flext"))
-    >>>
-    >>> # Perform comprehensive consistency validation
-    >>> conflicts = validator.validate_venv_consistency()
-    >>>
-    >>> # Review critical conflicts
-    >>> if conflicts["critical"]:
-    ...     print(f"Found {len(conflicts['critical'])} critical issues")
-    ...     for conflict in conflicts["critical"]:
-    ...         print(f"Package: {conflict.package}")
-    ...         print(f"Issue: {conflict.details}")
-    ...         print(f"Projects affected: {conflict.affected_projects}")
-
-Integration:
-    - Built on Poetry configuration parsing for accurate requirement extraction
-    - Integrates with pip list for comprehensive package discovery
-    - Coordinates with quality gates for automated environment validation
-    - Provides foundation for automated environment synchronization
-    - Supports workspace-wide dependency management strategies
-
-Quality Standards:
-    - Comprehensive error handling with detailed context preservation
-    - Performance optimization for large workspace environments
-    - Configurable analysis parameters and severity thresholds
-    - Integration with development workflows and CI/CD pipelines
-    - Professional English documentation and user-facing messages
-
 Author: FLEXT Development Team
 Version: 0.9.0
 License: MIT

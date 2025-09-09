@@ -60,13 +60,18 @@ SPDX-License-Identifier: MIT
 from flext.application_handlers import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
 from flext.application_pipeline import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
 from flext.base_cli import FlextBaseCLI, CLIConfig, with_config, with_output_format  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
-from flext.cli import main, quality  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
 from flext.cli_patterns import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
 from flext.dev import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
 from flext.services import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
 from flext.services_utils import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
 from flext.workspace import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
 from flext.workspace_cli import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
+
+# Import CLI module AFTER workspace_cli to avoid namespace collision
+from flext.cli import FlextControlPanelCli, create_cli, main, quality, scripts, analysis, test, lint, format_code, info  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
+
+# Import the CLI module as a module to fix test compatibility
+import flext.cli as cli  # Make cli module available for tests
 
 # Combine all __all__ from all modules - FLEXT Pattern
 import flext.application_handlers as _application_handlers

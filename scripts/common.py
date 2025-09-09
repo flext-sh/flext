@@ -1,82 +1,59 @@
 #!/usr/bin/env python3
-"""Common utilities for FLEXT scripts."""
+"""Common utilities for FLEXT scripts - Facade for flext-core patterns.
+
+ANTI-DUPLICATION ENFORCEMENT: Uses flext-core exclusively, NO local implementations.
+"""
 
 from __future__ import annotations
 
 from collections.abc import Sequence
 from pathlib import Path
 
+# Use flext-core exclusively - NO LOCAL IMPLEMENTATIONS
+from flext_core import FlextLogger, FlextWorkspace
+
+logger = FlextLogger(__name__)
+
 
 def discover_projects(
     workspace_root: Path,
     projects_filter: Sequence[str] | None = None,
 ) -> list[Path]:
-    """Discover FLEXT projects in workspace directory.
+    """Discover FLEXT projects using flext-core workspace management.
 
-      Searches the workspace directory for valid FLEXT projects by looking for
-      directories that contain a pyproject.toml file and are not in the ignore
-      list. Projects are automatically filtered to exclude service directories
-      and system directories.
+    DELEGATES to flext-core FlextWorkspace - NO local implementation.
+    """
+    try:
+        # Use flext-core workspace discovery
+        workspace = FlextWorkspace.create(str(workspace_root))
+        result = workspace.list_projects()
 
-    Args:
-          workspace_root: Root directory of the FLEXT workspace to search.
-          projects_filter: Optional sequence of project names to include.
-                          If provided, only projects matching these names
-                          will be returned. If None, all discovered projects
-                          are returned.
+        if result.is_failure:
+            logger.error(f"Project discovery failed: {result.error}")
+            return []
 
-    Returns:
-          List of Path objects pointing to discovered project directories,
-          sorted alphabetically by project name.
+        project_names = result.value
+        project_paths = []
 
-    Example:
-          >>> from pathlib import Path
-          >>> workspace = Path("/home/user/flext")
-          >>>
-          >>> # Discover all projects
-          >>> all_projects = discover_projects(workspace)
-          >>> print([p.name for p in all_projects])
-          ['flext-api', 'flext-auth', 'flext-core', ...]
-          >>>
-          >>> # Filter specific projects
-          >>> core_projects = discover_projects(workspace, ["flext-core", "flext-api"])
-          >>> print([p.name for p in core_projects])
-          ['flext-api', 'flext-core']
+        for name in project_names:
+            project_path = workspace_root / name
+            if project_path.exists():
+                # Apply filter if provided
+                if projects_filter is None or name in projects_filter:
+                    project_paths.append(project_path)
 
-    Note:
-          The following directories are automatically ignored:
-          - client-a-oud-mig (legacy service)
-          - client-b-meltano-native (specialized service)
-          - flexcore (Go service)
-          - System directories (.git, .venv, __pycache__)
+        return project_paths
+
+    except Exception as e:
+        logger.exception(f"Failed to discover projects: {e}")
+        return []
 
 
-
-    Args:
-      workspace_root (Path): Description.
-      projects_filter (Sequence[str] | None): Description.
-
-    Returns:
-      list[Path]: Description.
-
-    """  # Projects to ignore (these are services, not libraries)
-    ignore_list = {"client-a-oud-mig", "client-b-meltano-native", "flexcore"}
-
-    # Find all directories with pyproject.toml
-    all_projects = [
-        item
-        for item in workspace_root.iterdir()
-        if item.is_dir()
-        and (item / "pyproject.toml").exists()
-        and item.name not in ignore_list
-        and not any(skip in item.name for skip in [".git", ".venv", "__pycache__"])
-    ]
-
-    # Apply filter if provided
-    if projects_filter:
-        filtered_projects = [
-            project for project in all_projects if project.name in projects_filter
-        ]
-        return sorted(filtered_projects, key=lambda p: p.name)
-
-    return sorted(all_projects, key=lambda p: p.name)
+def get_workspace_root() -> Path:
+    """Get workspace root using flext-core discovery."""
+    try:
+        workspace = FlextWorkspace.discover()
+        return Path(workspace.workspace_root)
+    except Exception as e:
+        logger.exception(f"Failed to discover workspace root: {e}")
+        return Path.cwd()
