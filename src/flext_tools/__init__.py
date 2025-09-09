@@ -45,6 +45,8 @@ Integration:
 
 from __future__ import annotations
 
+from flext_core.typings import FlextTypes
+
 # Main CLI and workspace tools
 from .cli import *
 from .dev import *

@@ -9,6 +9,8 @@ import shutil
 from enum import Enum
 from pathlib import Path
 
+from flext_core.typings import FlextTypes
+
 from .colors import Colors, print_colored
 
 
