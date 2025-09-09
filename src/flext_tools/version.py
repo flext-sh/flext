@@ -73,6 +73,7 @@ from __future__ import annotations
 import re
 
 from flext_core import FlextLogger, FlextModels, FlextResult
+from flext_core.typings import FlextTypes
 from packaging import version
 from packaging.specifiers import SpecifierSet
 from pydantic import Field

@@ -4,6 +4,7 @@ import warnings
 from typing import ParamSpec, Protocol
 
 from flext_core import FlextLogger
+from flext_core.typings import FlextTypes
 from flext_observability import (
     FlextLoggingService,
     flext_create_log_entry,
@@ -207,6 +208,7 @@ def create_detailed_logger(name: str) -> DetailedLogger:
         Recommended approach:
 
         >>> from flext_core import FlextLogger
+    from flext_core.typings import FlextTypes
         >>> logger = FlextLogger(__name__)
 
     Warning:
