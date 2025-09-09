@@ -1,348 +1,451 @@
 """Unit tests for flext.cli module.
 
-Tests for the main CLI interface functionality following FLEXT testing patterns
-with proper mocking and fallback behavior validation.
+Tests for the unified CLI interface functionality following FLEXT testing patterns
+with proper verification of flext-cli integration and unified class patterns.
 """
 
 from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
-from click.testing import CliRunner
 from flext_core import FlextResult
 
 from flext.cli import (
-    CLIConfig,
-    Colors,
-    FlextCliContext,
-    QualityGateway,
-    cli_enhanced,
+    FlextControlPanelCli,
+    __all__,
+    analysis,
+    create_cli,
+    format_code,
+    info,
+    lint,
     main,
-    print_colored,
+    # Legacy function exports
+    quality,
+    scripts,
+    test,
 )
 
 
-class TestMainCliFunction:
-    """Test suite for main CLI function."""
+class TestFlextControlPanelCli:
+    """Test suite for unified CLI service with nested class pattern."""
+
+    def test_cli_service_initialization(self) -> None:
+        """Test CLI service initialization with dependency injection."""
+        cli_service = create_cli()
+
+        assert isinstance(cli_service, FlextControlPanelCli)
+        assert hasattr(cli_service, "_logger")
+        assert hasattr(cli_service, "_cli_api")
+        assert hasattr(cli_service, "_config")
+        assert hasattr(cli_service, "_workspace")
+
+    def test_tools_handler_creation(self) -> None:
+        """Test nested tools handler creation."""
+        cli_service = create_cli()
+        tools_handler = cli_service.create_tools_handler()
+
+        assert tools_handler is not None
+        assert hasattr(tools_handler, "quality_check")
+        assert hasattr(tools_handler, "list_scripts")
+        assert hasattr(tools_handler, "run_analysis")
+
+    def test_main_handler_creation(self) -> None:
+        """Test nested main handler creation."""
+        cli_service = create_cli()
+        main_handler = cli_service.create_main_handler()
+
+        assert main_handler is not None
+        assert hasattr(main_handler, "test_command")
+        assert hasattr(main_handler, "lint_command")
+        assert hasattr(main_handler, "format_command")
+        assert hasattr(main_handler, "info_command")
+
+    @patch("flext.cli.FlextCliApi")
+    def test_cli_api_integration(self, mock_cli_api) -> None:
+        """Test integration with flext-cli API."""
+        mock_api_instance = Mock()
+        mock_cli_api.return_value = mock_api_instance
+
+        cli_service = FlextControlPanelCli()
+
+        # Verify flext-cli API was instantiated
+        mock_cli_api.assert_called_once()
+        assert cli_service._cli_api == mock_api_instance
+
+    @patch("flext.cli.FlextCliConfig")
+    @patch("flext.cli.FlextCliMain")
+    def test_cli_initialization(self, mock_cli_main, mock_cli_config) -> None:
+        """Test CLI initialization with flext-cli components."""
+        mock_config_instance = Mock()
+        mock_main_instance = Mock()
+        mock_cli_config.return_value = mock_config_instance
+        mock_cli_main.return_value = mock_main_instance
+
+        cli_service = create_cli()
+        result = cli_service.initialize(workspace="/test/workspace", profile="dev", debug=True)
+
+        assert result.is_success
+        main_cli = result.unwrap()
+        assert main_cli == mock_main_instance
+
+    def test_workspace_path_handling(self) -> None:
+        """Test workspace path handling and validation."""
+        cli_service = create_cli()
+
+        # Test default workspace (current directory)
+        assert isinstance(cli_service._workspace, Path)
+
+        # Test custom workspace initialization
+        custom_workspace = "/custom/workspace"
+        result = cli_service.initialize(workspace=custom_workspace)
+
+        assert result.is_success
+        assert cli_service._workspace == Path(custom_workspace)
+
+
+class TestNestedCommandHandlers:
+    """Test suite for nested command handlers."""
 
     @pytest.fixture
-    def cli_runner(self) -> CliRunner:
-        """Click test runner for CLI testing."""
-        return CliRunner()
-
-    def test_main_cli_help(self, cli_runner: CliRunner) -> None:
-        """Test main CLI help command."""
-        # Act
-        result = cli_runner.invoke(main, ["--help"])
-
-        # Assert
-        assert result.exit_code == 0
-        assert "FLEXT Control Panel main command" in result.output
-
-    def test_main_cli_with_workspace_option(
-        self, cli_runner: CliRunner, tmp_path: Path
-    ) -> None:
-        """Test main CLI with workspace option."""
-        # Arrange
-        workspace = tmp_path / "test-workspace"
-        workspace.mkdir()
-
-        # Act
-        result = cli_runner.invoke(main, ["--workspace", str(workspace), "--help"])
-
-        # Assert
-        assert result.exit_code == 0
-
-    @patch("flext.cli.CLIConfig")
-    def test_main_cli_with_profile(
-        self, mock_config: Mock, cli_runner: CliRunner
-    ) -> None:
-        """Test main CLI with profile option."""
-        # Arrange
-        mock_config.return_value = Mock()
-
-        # Act
-        result = cli_runner.invoke(main, ["--profile", "production", "--help"])
-
-        # Assert
-        assert result.exit_code == 0
-        mock_config.assert_called()
-
-    def test_main_cli_with_debug_flag(self, cli_runner: CliRunner) -> None:
-        """Test main CLI with debug flag."""
-        # Act
-        result = cli_runner.invoke(main, ["--debug", "--help"])
-
-        # Assert
-        assert result.exit_code == 0
-
-    def test_main_cli_with_output_format(self, cli_runner: CliRunner) -> None:
-        """Test main CLI with output format option."""
-        # Act
-        result = cli_runner.invoke(main, ["--output", "json", "--help"])
-
-        # Assert
-        assert result.exit_code == 0
-
-    @patch("flext.cli.CLIConfig")
-    def test_main_cli_config_error_handling(
-        self, mock_config: Mock, cli_runner: CliRunner
-    ) -> None:
-        """Test main CLI configuration error handling."""
-        # Arrange
-        mock_config.side_effect = Exception("Configuration error")
-
-        # Act
-        result = cli_runner.invoke(main, ["--help"])
-
-        # Assert
-        assert result.exit_code == 1
-
-
-class TestCliToolsGroup:
-    """Test suite for tools command group."""
-
-    @pytest.fixture
-    def cli_runner(self) -> CliRunner:
-        """Click test runner for CLI testing."""
-        return CliRunner()
-
-    def test_tools_help(self, cli_runner: CliRunner) -> None:
-        """Test tools group help command."""
-        # Act
-        result = cli_runner.invoke(main, ["tools", "--help"])
-
-        # Assert
-        assert result.exit_code == 0
-        assert "Access flext_tools functionality" in result.output
-
-    @patch("flext.cli.QualityGateway")
-    def test_tools_quality_command(
-        self, mock_gateway: Mock, cli_runner: CliRunner, tmp_path: Path
-    ) -> None:
-        """Test tools quality command."""
-        # Arrange
-        workspace = tmp_path / "test-workspace"
-        workspace.mkdir()
-
-        mock_gateway_instance = Mock()
-        mock_gateway.return_value = mock_gateway_instance
-
-        # Act
-        result = cli_runner.invoke(
-            main, ["--workspace", str(workspace), "tools", "quality", "--help"]
-        )
-
-        # Assert
-        assert result.exit_code == 0
-
-    def test_tools_scripts_command(self, cli_runner: CliRunner, tmp_path: Path) -> None:
-        """Test tools scripts command."""
-        # Arrange
-        workspace = tmp_path / "test-workspace"
-        workspace.mkdir()
-
-        # Act
-        result = cli_runner.invoke(
-            main, ["--workspace", str(workspace), "tools", "scripts", "--list-only"]
-        )
-
-        # Assert
-        assert result.exit_code == 0
-        assert "Available FlextScript instances" in result.output
-
-    def test_tools_analysis_command(
-        self, cli_runner: CliRunner, tmp_path: Path
-    ) -> None:
-        """Test tools analysis command."""
-        # Arrange
-        workspace = tmp_path / "test-workspace"
-        workspace.mkdir()
-
-        # Act
-        result = cli_runner.invoke(
-            main,
-            ["--workspace", str(workspace), "tools", "analysis", "--type", "structure"],
-        )
-
-        # Assert
-        assert result.exit_code == 0
-
-
-class TestCliBuiltinCommands:
-    """Test suite for built-in CLI commands."""
-
-    @pytest.fixture
-    def cli_runner(self) -> CliRunner:
-        """Click test runner for CLI testing."""
-        return CliRunner()
-
-    def test_test_command(self, cli_runner: CliRunner, tmp_path: Path) -> None:
-        """Test test command."""
-        # Arrange
-        workspace = tmp_path / "test-workspace"
-        workspace.mkdir()
-
-        # Act
-        result = cli_runner.invoke(
-            main, ["--workspace", str(workspace), "test", "--help"]
-        )
-
-        # Assert
-        assert result.exit_code == 0
-
-    @patch("flext.cli.QualityGateway")
-    def test_lint_command(
-        self, mock_gateway: Mock, cli_runner: CliRunner, tmp_path: Path
-    ) -> None:
-        """Test lint command."""
-        # Arrange
-        workspace = tmp_path / "test-workspace"
-        workspace.mkdir()
-
-        mock_gateway_instance = Mock()
-        mock_gateway.return_value = mock_gateway_instance
-
-        # Act
-        result = cli_runner.invoke(
-            main, ["--workspace", str(workspace), "lint", "--help"]
-        )
-
-        # Assert
-        assert result.exit_code == 0
-
-    def test_format_command(self, cli_runner: CliRunner, tmp_path: Path) -> None:
-        """Test format command."""
-        # Arrange
-        workspace = tmp_path / "test-workspace"
-        workspace.mkdir()
-
-        # Act
-        result = cli_runner.invoke(
-            main, ["--workspace", str(workspace), "format", "--help"]
-        )
-
-        # Assert
-        assert result.exit_code == 0
-
-    def test_info_command(self, cli_runner: CliRunner, tmp_path: Path) -> None:
-        """Test info command."""
-        # Arrange
-        workspace = tmp_path / "test-workspace"
-        workspace.mkdir()
-
-        # Act
-        result = cli_runner.invoke(main, ["--workspace", str(workspace), "info"])
-
-        # Assert
-        assert result.exit_code == 0
-        assert "FLEXT Control Panel - Workspace Information" in result.output
-
-
-class TestCliFallbackComponents:
-    """Test suite for CLI fallback components."""
-
-    def test_colors_fallback_constants(self) -> None:
-        """Test that fallback Colors class has all required constants."""
-        # Assert all required color constants exist
-        required_colors = ["GREEN", "RED", "BLUE", "CYAN", "YELLOW", "RESET"]
-
-        for color in required_colors:
-            assert hasattr(Colors, color)
-            assert isinstance(getattr(Colors, color), str)
-            assert len(getattr(Colors, color)) > 0
-
-    def test_colors_ansi_codes(self) -> None:
-        """Test that Colors constants contain proper ANSI codes."""
-        # Assert ANSI escape sequences
-        assert Colors.GREEN.startswith("\033[")
-        assert Colors.RED.startswith("\033[")
-        assert Colors.RESET == "\033[0m"
-
-    def test_quality_gateway_fallback(self) -> None:
-        """Test QualityGateway fallback implementation."""
-        # Arrange
-        workspace = Path("/test/workspace")
-
-        # Act
-        gateway = QualityGateway(workspace)
-
-        # Assert
-        assert gateway.workspace_path == workspace
-        assert hasattr(gateway, "run_quality_checks")
-
-        # Test method execution
-        result = gateway.run_quality_checks()
-        assert isinstance(result, FlextResult)
-
-    def test_cli_enhanced_decorator_fallback(self) -> None:
-        """Test cli_enhanced decorator fallback."""
-        # Act
-        decorator = cli_enhanced(name="test")
-
-        # Test that it returns a proper decorator
-        def test_function() -> str:
-            return "test"
-
-        decorated = decorator(test_function)
-
-        # Assert
-        assert callable(decorated)
-        assert decorated() == "test"
-
-    def test_print_colored_fallback(self) -> None:
-        """Test print_colored fallback function."""
-        # This should not raise an exception
-        print_colored("Test message", Colors.GREEN)
-        print_colored("Test message")  # Default color
-
-
-class TestCliContext:
-    """Test suite for CLI context components."""
-
-    def test_flext_cli_context_creation(self) -> None:
-        """Test FlextCliContext creation."""
-        # Arrange
-        config = CLIConfig(profile="test", debug=True)
-
-        # Act
-        context = FlextCliContext(config)
-
-        # Assert
-        assert context.config == config
-
-
-class TestCliIntegration:
-    """Integration tests for CLI components."""
-
-    @pytest.fixture
-    def cli_runner(self) -> CliRunner:
-        """Click test runner for CLI testing."""
-        return CliRunner()
-
-    def test_full_cli_workflow(self, cli_runner: CliRunner, tmp_path: Path) -> None:
-        """Test complete CLI workflow with multiple commands."""
-        # Arrange
-        workspace = tmp_path / "integration-test-workspace"
-        workspace.mkdir()
-
-        # Act & Assert - Test multiple command sequences
-        commands_to_test = [
-            ["--help"],
-            ["--workspace", str(workspace), "info"],
-            ["tools", "--help"],
-            ["tools", "scripts", "--list-only"],
+    def cli_service(self) -> FlextControlPanelCli:
+        """Create CLI service instance for testing."""
+        return create_cli()
+
+    def test_tools_commands_quality_check(self, cli_service: FlextControlPanelCli) -> None:
+        """Test tools commands quality check functionality."""
+        tools_handler = cli_service.create_tools_handler()
+
+        # Test with mock quality config
+        with patch("flext.cli.QualityGateway") as mock_quality:
+            mock_gateway = Mock()
+            mock_quality.return_value = mock_gateway
+            mock_gateway.run_checks.return_value = FlextResult.ok({"status": "passed"})
+
+            from flext_tools import QualityCheckConfig
+            config = QualityCheckConfig(
+                enable_lint=True,
+                enable_types=True,
+                enable_tests=False,
+                coverage_threshold=80.0
+            )
+
+            result = tools_handler.quality_check(config)
+
+            assert result.is_success
+            mock_gateway.run_checks.assert_called_once()
+
+    def test_tools_commands_list_scripts(self, cli_service: FlextControlPanelCli) -> None:
+        """Test tools commands script listing."""
+        tools_handler = cli_service.create_tools_handler()
+
+        with patch("flext.cli.print_colored") as mock_print:
+            tools_handler.list_scripts("development")
+
+            # Verify output was printed
+            mock_print.assert_called()
+
+    def test_main_commands_test_command(self, cli_service: FlextControlPanelCli) -> None:
+        """Test main commands test execution."""
+        main_handler = cli_service.create_main_handler()
+
+        with patch("subprocess.run") as mock_subprocess:
+            mock_subprocess.return_value = Mock(returncode=0, stdout="", stderr="")
+
+            result = main_handler.test_command(coverage=True, parallel=False)
+
+            assert result.is_success
+            mock_subprocess.assert_called()
+
+    def test_main_commands_lint_command(self, cli_service: FlextControlPanelCli) -> None:
+        """Test main commands lint execution."""
+        main_handler = cli_service.create_main_handler()
+
+        with patch("subprocess.run") as mock_subprocess:
+            mock_subprocess.return_value = Mock(returncode=0, stdout="", stderr="")
+
+            result = main_handler.lint_command(fix=False)
+
+            assert result.is_success
+            mock_subprocess.assert_called()
+
+    def test_main_commands_format_command(self, cli_service: FlextControlPanelCli) -> None:
+        """Test main commands format execution."""
+        main_handler = cli_service.create_main_handler()
+
+        with patch("subprocess.run") as mock_subprocess:
+            mock_subprocess.return_value = Mock(returncode=0, stdout="", stderr="")
+
+            main_handler.format_command(check_only=True)
+
+            mock_subprocess.assert_called()
+
+    def test_main_commands_info_command(self, cli_service: FlextControlPanelCli) -> None:
+        """Test main commands info display."""
+        main_handler = cli_service.create_main_handler()
+
+        with patch("flext.cli.print_colored") as mock_print:
+            result = main_handler.info_command(detailed=True)
+
+            assert result.is_success
+            mock_print.assert_called()
+
+            # Verify workspace info was displayed
+            calls = mock_print.call_args_list
+            assert any("FLEXT Control Panel" in str(call) for call in calls)
+
+
+class TestLegacyCompatibilityFunctions:
+    """Test suite for legacy compatibility functions."""
+
+    @patch("flext.cli.create_cli")
+    def test_quality_function_compatibility(self, mock_create_cli) -> None:
+        """Test legacy quality function compatibility."""
+        mock_cli_service = Mock()
+        mock_tools_handler = Mock()
+        mock_cli_service.create_tools_handler.return_value = mock_tools_handler
+        mock_tools_handler.quality_check.return_value = FlextResult.ok({"status": "passed"})
+        mock_create_cli.return_value = mock_cli_service
+
+        # Should not raise an exception
+        quality()
+
+        mock_create_cli.assert_called_once()
+        mock_cli_service.create_tools_handler.assert_called_once()
+
+    @patch("flext.cli.create_cli")
+    def test_scripts_function_compatibility(self, mock_create_cli) -> None:
+        """Test legacy scripts function compatibility."""
+        mock_cli_service = Mock()
+        mock_tools_handler = Mock()
+        mock_cli_service.create_tools_handler.return_value = mock_tools_handler
+        mock_create_cli.return_value = mock_cli_service
+
+        scripts(category="development", list_only=True)
+
+        mock_create_cli.assert_called_once()
+        mock_tools_handler.list_scripts.assert_called_with("development")
+
+    @patch("flext.cli.create_cli")
+    def test_analysis_function_compatibility(self, mock_create_cli) -> None:
+        """Test legacy analysis function compatibility."""
+        mock_cli_service = Mock()
+        mock_tools_handler = Mock()
+        mock_cli_service.create_tools_handler.return_value = mock_tools_handler
+        mock_create_cli.return_value = mock_cli_service
+
+        analysis(analysis_type="dependencies")
+
+        mock_create_cli.assert_called_once()
+        mock_tools_handler.run_analysis.assert_called_with("dependencies")
+
+    @patch("flext.cli.create_cli")
+    def test_test_function_compatibility(self, mock_create_cli) -> None:
+        """Test legacy test function compatibility."""
+        mock_cli_service = Mock()
+        mock_main_handler = Mock()
+        mock_cli_service.create_main_handler.return_value = mock_main_handler
+        mock_main_handler.test_command.return_value = FlextResult.ok({"status": "passed"})
+        mock_create_cli.return_value = mock_cli_service
+
+        test(coverage=True, parallel=False)
+
+        mock_create_cli.assert_called_once()
+        mock_main_handler.test_command.assert_called_with(True, False)
+
+    @patch("flext.cli.create_cli")
+    def test_lint_function_compatibility(self, mock_create_cli) -> None:
+        """Test legacy lint function compatibility."""
+        mock_cli_service = Mock()
+        mock_main_handler = Mock()
+        mock_cli_service.create_main_handler.return_value = mock_main_handler
+        mock_main_handler.lint_command.return_value = FlextResult.ok({"status": "passed"})
+        mock_create_cli.return_value = mock_cli_service
+
+        lint(fix=True)
+
+        mock_create_cli.assert_called_once()
+        mock_main_handler.lint_command.assert_called_with(True)
+
+    @patch("flext.cli.create_cli")
+    def test_format_code_function_compatibility(self, mock_create_cli) -> None:
+        """Test legacy format_code function compatibility."""
+        mock_cli_service = Mock()
+        mock_main_handler = Mock()
+        mock_cli_service.create_main_handler.return_value = mock_main_handler
+        mock_create_cli.return_value = mock_cli_service
+
+        format_code(check_only=True)
+
+        mock_create_cli.assert_called_once()
+        mock_main_handler.format_command.assert_called_with(True)
+
+    @patch("flext.cli.create_cli")
+    def test_info_function_compatibility(self, mock_create_cli) -> None:
+        """Test legacy info function compatibility."""
+        mock_cli_service = Mock()
+        mock_main_handler = Mock()
+        mock_cli_service.create_main_handler.return_value = mock_main_handler
+        mock_create_cli.return_value = mock_cli_service
+
+        info(detailed=True)
+
+        mock_create_cli.assert_called_once()
+        mock_main_handler.info_command.assert_called_with(True)
+
+
+class TestUnifiedClassPatternCompliance:
+    """Test suite for unified class pattern compliance."""
+
+    def test_single_unified_class_per_module(self) -> None:
+        """Test that module has single unified class."""
+        import inspect
+
+        from flext import cli
+
+        # Get all classes defined in the module
+        classes = [
+            name for name, obj in inspect.getmembers(cli)
+            if inspect.isclass(obj) and obj.__module__ == "flext.cli"
         ]
 
-        for cmd in commands_to_test:
-            result = cli_runner.invoke(main, cmd)
-            assert result.exit_code == 0
+        # Should have exactly one main unified class
+        assert "FlextControlPanelCli" in classes
 
-    def test_cli_error_propagation(self, cli_runner: CliRunner) -> None:
-        """Test that CLI properly propagates errors."""
-        # Act - Use invalid workspace path
-        result = cli_runner.invoke(main, ["--workspace", "/invalid/path", "info"])
+        # Should not have multiple loose classes
+        non_nested_classes = [
+            name for name in classes
+            if not name.startswith("_")  # Nested classes start with _
+        ]
+        assert len(non_nested_classes) == 1, f"Found multiple non-nested classes: {non_nested_classes}"
 
-        # Assert - Should handle the error gracefully
-        # The specific exit code depends on implementation details
-        assert isinstance(result.exit_code, int)
+    def test_nested_class_organization(self) -> None:
+        """Test that functionality is organized in nested classes."""
+        cli_service = create_cli()
+
+        # Test that nested classes exist as attributes
+        assert hasattr(cli_service, "_ToolsCommands")
+        assert hasattr(cli_service, "_MainCommands")
+        assert hasattr(cli_service, "_CliContext")
+
+        # Test that nested classes can be instantiated
+        tools_handler = cli_service.create_tools_handler()
+        main_handler = cli_service.create_main_handler()
+
+        assert tools_handler is not None
+        assert main_handler is not None
+
+    def test_no_loose_helper_functions(self) -> None:
+        """Test that no loose helper functions exist outside classes."""
+        import inspect
+
+        from flext import cli
+
+        # Get all functions in module
+        functions = [
+            name for name, obj in inspect.getmembers(cli)
+            if inspect.isfunction(obj) and obj.__module__ == "flext.cli"
+        ]
+
+        # Filter out legacy compatibility functions and main functions
+        allowed_functions = {
+            "create_cli",  # Factory function
+            "main",        # Entry point
+            # Legacy compatibility functions
+            "quality", "scripts", "analysis", "test", "lint", "format_code", "info"
+        }
+
+        unexpected_functions = set(functions) - allowed_functions
+        assert len(unexpected_functions) == 0, f"Found unexpected functions: {unexpected_functions}"
+
+    def test_flext_cli_integration_compliance(self) -> None:
+        """Test compliance with flext-cli integration requirements."""
+        import inspect
+
+        from flext import cli
+
+        source = inspect.getsource(cli)
+
+        # Should use flext-cli components
+        assert "from flext_cli import" in source
+        assert "FlextCliApi" in source
+        assert "FlextCliConfig" in source
+        assert "FlextCliMain" in source
+
+        # Should NOT use direct Click imports (forbidden)
+        assert "import click" not in source
+        assert "from click import" not in source
+
+
+class TestExportsAndAll:
+    """Test suite for module exports and __all__ completeness."""
+
+    def test_all_exports_exist(self) -> None:
+        """Test that all items in __all__ are actually exported."""
+        expected_exports = [
+            "FlextControlPanelCli",
+            "create_cli",
+            "main",
+            # Legacy function exports
+            "quality",
+            "scripts",
+            "analysis",
+            "test",
+            "lint",
+            "format_code",
+            "info",
+        ]
+
+        for export in expected_exports:
+            assert export in __all__, f"Export {export} missing from __all__"
+
+    def test_unified_class_is_primary_export(self) -> None:
+        """Test that unified class is the primary export."""
+        assert "FlextControlPanelCli" in __all__
+        assert "create_cli" in __all__
+
+        # Create instance to verify it works
+        cli_service = create_cli()
+        assert isinstance(cli_service, FlextControlPanelCli)
+
+
+class TestErrorHandling:
+    """Test suite for error handling patterns."""
+
+    def test_cli_initialization_error_handling(self) -> None:
+        """Test CLI initialization with invalid configuration."""
+        cli_service = create_cli()
+
+        with patch("flext.cli.FlextCliConfig", side_effect=Exception("Config error")):
+            result = cli_service.initialize(workspace="/invalid", profile="bad")
+
+            assert result.is_failure
+            assert "Configuration error" in result.error
+
+    def test_command_execution_error_handling(self) -> None:
+        """Test command execution error handling."""
+        cli_service = create_cli()
+        main_handler = cli_service.create_main_handler()
+
+        with patch("subprocess.run") as mock_subprocess:
+            mock_subprocess.side_effect = Exception("Command failed")
+
+            result = main_handler.test_command(coverage=True, parallel=False)
+
+            assert result.is_failure
+            assert "Command failed" in result.error or "Test execution failed" in result.error
+
+
+class TestMainFunctionEntryPoint:
+    """Test suite for main function entry point."""
+
+    @patch("flext.cli.create_cli")
+    def test_main_function_exists(self, mock_create_cli) -> None:
+        """Test that main function exists and can be called."""
+        mock_cli_service = Mock()
+        mock_create_cli.return_value = mock_cli_service
+
+        # Should be callable without errors
+        assert callable(main)
+
+        # Test actual execution would require more complex mocking
+        # This tests that the function exists and is properly defined
