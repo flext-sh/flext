@@ -62,7 +62,7 @@ repos:
         require_serial: true
         args: [--check-only, --diff, --profile=black, --line-length=88]
 
-      # MyPy type checking (project-specific dependencies)
+    
       - id: mypy
         name: "🛡️ MyPy Strict"
         entry: poetry run mypy
