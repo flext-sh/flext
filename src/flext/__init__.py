@@ -59,7 +59,7 @@ SPDX-License-Identifier: MIT
 # Import all from each module with proper type handling - FLEXT Pattern
 from flext.application_handlers import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
 from flext.application_pipeline import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
-from flext.base_cli import FlextBaseCLI, CLIConfig, with_config, with_output_format  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
+from flext.base_cli import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
 from flext.cli_patterns import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
 from flext.dev import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
 from flext.services import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
@@ -71,7 +71,7 @@ from flext.workspace_cli import *  # type: ignore[unused-ignore,reportWildcardIm
 from flext.cli import FlextControlPanelCli, create_cli, main, quality, scripts, analysis, test, lint, format_code, info  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
 
 # Import the CLI module as a module to fix test compatibility
-import flext.cli as cli  # Make cli module available for tests
+import flext.cli as cli_module  # Make cli module available for tests
 
 # Combine all __all__ from all modules - FLEXT Pattern
 import flext.application_handlers as _application_handlers
