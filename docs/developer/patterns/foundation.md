@@ -167,7 +167,7 @@ Semantic factory for creating domain objects.
 from typing import Type, Dict, Callable
 
 
-class FlextFactory:
+class FlextModels:
     """Factory for creating and validating domain objects."""
 
     _creators: Dict[str, Callable] = {}
@@ -270,7 +270,7 @@ class User(FlextModels.Entity):
 # Usage
 def create_user(username: str, email: str, full_name: str) -> FlextResult[User]:
     email_obj = Email(address=email)
-    return FlextFactory.create_entity(
+    return FlextModels.create_entity(
         User,
         username=username,
         email=email_obj,

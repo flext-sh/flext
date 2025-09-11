@@ -134,7 +134,7 @@ def process_user_data(user_data: dict) -> FlextResult[User]:
     )  # Automatic error propagation, no exceptions!
 ```
 
-## FlextFactory: Zero-Boilerplate Creation
+## FlextModels: Zero-Boilerplate Creation
 
 ### Traditional Factory (Before)
 
@@ -161,10 +161,10 @@ class UserFactory:
 ### Modern Factory (After)
 
 ```python
-# NEW: 3 lines using FlextFactory pattern
-from flext_core import FlextFactory
+# NEW: 3 lines using FlextModels pattern
+from flext_core import FlextModels
 
-@FlextFactory.register("user")
+@FlextModels.register("user")
 def create_user(name: str, email: str) -> FlextResult[User]:
     return User.create(name=name, email=email).tap(send_welcome_email)
 ```
@@ -338,7 +338,7 @@ class OrderService:
 
 ```python
 # NEW: 15 lines - 85% reduction!
-from flext_core import FlextModels.Entity, FlextResult, FlextFactory
+from flext_core import FlextModels.Entity, FlextResult, FlextModels
 
 class Order(FlextModels.Entity):
     customer_id: str

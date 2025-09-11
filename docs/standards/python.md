@@ -628,7 +628,7 @@ make docs-coverage                   # Check docstring coverage
 make docs-examples-test              # Test all documentation examples
 
 # Type checking
-make type-check                      # MyPy strict mode validation
+make type-check                    
 make type-coverage
 
 # Import validation
