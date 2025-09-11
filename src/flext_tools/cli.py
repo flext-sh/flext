@@ -16,7 +16,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-# EXCLUSIVE flext-core usage - NO CLI library duplications
 from flext_core import (
     FlextContainer,
     FlextDomainService,
@@ -25,10 +24,8 @@ from flext_core import (
     FlextUtilities,
 )
 
-# from .quality_gateway import QualityGateway  # TEMPORARY disabled for testing
 
-
-class FlextToolsCLI(FlextDomainService):
+class FlextToolsCLI(FlextDomainService[object]):
     """Simplified FLEXT tools service using flext-core exclusively.
 
     ANTI-DUPLICATION: Uses ONLY flext-core utilities, eliminates ALL CLI library
@@ -38,9 +35,10 @@ class FlextToolsCLI(FlextDomainService):
     Uses flext-core logging, utilities, and container directly.
     """
 
-    def __init__(self, workspace_path: str | None = None, **kwargs: object) -> None:
+    def __init__(self, workspace_path: str | None = None) -> None:
         """Initialize tools service with flext-core exclusively."""
-        super().__init__(**kwargs)
+        # Initialize base class with proper defaults
+        super().__init__()
         self._logger = FlextLogger(__name__)
         self._container = FlextContainer.get_global()
         # self._quality_gateway = QualityGateway()  # TEMPORARY disabled
@@ -63,7 +61,7 @@ class FlextToolsCLI(FlextDomainService):
         return FlextResult[Path].ok(workspace)
 
     def run_quality_check(
-        self, fix_issues: bool = False
+        self, *, fix_issues: bool = False
     ) -> FlextResult[dict[str, object]]:
         """Run quality checks - PLACEHOLDER without quality gateway dependency."""
         return FlextResult[dict[str, object]].ok(
@@ -113,7 +111,6 @@ class FlextToolsCLI(FlextDomainService):
             if title:
                 pass
 
-            # Simple key-value display using standard print
             for _key, _value in data.items():
                 pass
 
@@ -122,23 +119,15 @@ class FlextToolsCLI(FlextDomainService):
         except Exception as e:
             return FlextResult[None].fail(f"Data display failed: {e}")
 
-    def execute(
-        self, operation_name: str, operation: object, *args: object, **kwargs: object
-    ) -> FlextResult[object]:
+    def execute(self) -> FlextResult[object]:
         """Execute operation - required by FlextDomainService abstract method."""
-        match operation_name:
-            case "validate_workspace":
-                return self.validate_workspace(*args, **kwargs)
-            case "run_quality_check":
-                return self.run_quality_check(*args, **kwargs)
-            case "print_message":
-                return self.print_message(*args, **kwargs)
-            case "format_data_as_json":
-                return self.format_data_as_json(*args, **kwargs)
-            case "display_simple_data":
-                return self.display_simple_data(*args, **kwargs)
-            case _:
-                return FlextResult[object].fail(f"Unknown operation: {operation_name}")
+        # Default execution returns service status
+        status_data = {
+            "service": "FlextToolsCLI",
+            "workspace": str(self._workspace_path),
+            "status": "ready",
+        }
+        return FlextResult[object].ok(status_data)
 
 
 def create_cli_service(workspace_path: str | None = None) -> FlextToolsCLI:

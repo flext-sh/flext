@@ -15,6 +15,8 @@ from __future__ import annotations
 
 import sys
 
+from flext_core.typings import FlextTypes
+
 from .security_audit import (
     AntipatternScanner,
     ScanConfig,
@@ -69,13 +71,7 @@ def create_security_scanner(
 
     """
     config = ScanConfig(target_paths, include_dependencies=not exclude_dependencies)
-    scanner = AntipatternScanner(config)
-
-    # Store configuration for later use
-    scanner.output_format = output_format
-    scanner.risk_threshold = risk_threshold
-
-    return scanner
+    return AntipatternScanner(config)
 
 
 def example_basic_scan() -> None:
@@ -164,7 +160,6 @@ def example_custom_reporting() -> None:
     """Example 4: Custom reporting and analysis."""
     print_colored("📊 Example 4: Custom Reporting", Colors.CYAN)
 
-    # Simple scan for demonstration
     scanner = create_security_scanner(
         target_paths=["src/flext_tools/"],
         risk_threshold="LOW",

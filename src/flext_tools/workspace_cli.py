@@ -18,37 +18,47 @@ from __future__ import annotations
 from flext_cli import FlextCliApi
 from flext_core import FlextDomainService, FlextResult
 
-from flext.workspace import FlextWorkspaceService, create_workspace_service
-
-# =============================================================================
-# FLEXT WORKSPACE CLI FACADE ALIASES (ELIMINATE CIRCULAR IMPORTS)
-# =============================================================================
+from flext.workspace import FlextWorkspaceService
 
 
 # Lazy loading to avoid circular imports
-def _get_flext_workspace_cli_classes() -> tuple[type, object]:
-    """Lazy load flext workspace classes to avoid circular imports."""
-    return FlextWorkspaceService, create_workspace_service
+def _get_flext_workspace_service() -> type[FlextWorkspaceService]:
+    """Lazy load flext workspace service to avoid circular imports."""
+    return FlextWorkspaceService
 
 
 # Primary workspace CLI API - delegate to flext (lazy loaded)
 class WorkspaceCLI:
     """Lazy wrapper for FlextWorkspaceService to avoid circular imports."""
 
-    def __new__(cls, *args: object, **kwargs: object) -> object:
-        FlextWorkspaceService, _ = _get_flext_workspace_cli_classes()
-        return FlextWorkspaceService(*args, **kwargs)
+    def __init__(self, workspace_path: str | None = None, **data: object) -> None:
+        """Initialize workspace CLI with lazy loading."""
+        self._workspace_path = workspace_path
+        self._data = data
+        self._service: FlextWorkspaceService | None = None
+
+    def _get_service(self) -> FlextWorkspaceService:
+        """Get the underlying workspace service."""
+        if self._service is None:
+            flext_workspace_service = _get_flext_workspace_service()
+            self._service = flext_workspace_service(self._workspace_path, **self._data)
+        return self._service
+
+    def __getattr__(self, name: str) -> object:
+        """Delegate attribute access to the underlying service."""
+        return getattr(self._get_service(), name)
 
 
 # Legacy compatibility factory functions
-def create_workspace_cli(*args: object, **kwargs: object) -> object:
+def create_workspace_cli(
+    workspace_path: str | None = None, **data: object
+) -> WorkspaceCLI:
     """Create workspace CLI using lazy loading."""
-    _, create_workspace_service = _get_flext_workspace_cli_classes()
-    return create_workspace_service(*args, **kwargs)
+    return WorkspaceCLI(workspace_path, **data)
 
 
 # Facade class for legacy workspace CLI compatibility
-class FlextToolsWorkspaceCLIService(FlextDomainService):
+class FlextToolsWorkspaceCLIService(FlextDomainService[str]):
     """Facade to flext workspace CLI service - eliminates CLI code duplication."""
 
     def __init__(self, workspace_path: str | None = None) -> None:
@@ -56,14 +66,18 @@ class FlextToolsWorkspaceCLIService(FlextDomainService):
         super().__init__()
         # Lazy loading to avoid circular imports
         self._workspace_path = workspace_path
-        self._workspace_service = None
+        self._workspace_service: FlextWorkspaceService | None = None
         self._cli_api = FlextCliApi()
 
-    def _get_workspace_service(self) -> object:
+    def _get_workspace_service(self) -> FlextWorkspaceService:
         """Lazy load workspace service to avoid circular imports."""
         if self._workspace_service is None:
-            _, create_workspace_service = _get_flext_workspace_cli_classes()
-            self._workspace_service = create_workspace_service(self._workspace_path)
+            flext_workspace_service = _get_flext_workspace_service()
+            self._workspace_service = flext_workspace_service(self._workspace_path)
+            # Additional safety check after initialization
+            if self._workspace_service is None:
+                msg = "Failed to initialize workspace service"
+                raise RuntimeError(msg)
         return self._workspace_service
 
     def execute(self, _request: str = "") -> FlextResult[str]:

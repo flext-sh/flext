@@ -174,7 +174,6 @@ class PatternViolationAnalyzer:
             },
         }
 
-        # Type system violations
         self.type_system_violations = {
             "Dict[str, object]": {
                 "severity": "CRITICAL",

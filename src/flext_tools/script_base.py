@@ -58,7 +58,6 @@ Example:
     >>>
     >>> # Simple script creation for automation
     >>> def process_pipeline() -> bool:
-    ...     # Simple processing logic
     ...     return True
     >>>
     >>> SimpleProcessorScript = create_simple_script(

@@ -71,7 +71,7 @@ class TestAdvancedWorkspaceOperations:
         context_data = {
             "workspace_root": "/test/workspace",
             "active_projects": ["flext-core", "flext-api"],
-            "status": "ready"
+            "status": "ready",
         }
 
         result = service.create_workspace_context(context_data)
@@ -89,7 +89,7 @@ class TestAdvancedWorkspaceOperations:
         discovery_data = {
             "type": "project_discovery",
             "scan_depth": 2,
-            "include_hidden": False
+            "include_hidden": False,
         }
 
         result = service.create_project_discovery_operation(discovery_data)
@@ -105,7 +105,7 @@ class TestAdvancedWorkspaceOperations:
         # Test validation with invalid data
         invalid_operation = {
             "type": "project_discovery",
-            "scan_depth": -1  # Invalid: negative depth
+            "scan_depth": -1,  # Invalid: negative depth
         }
 
         result = service.create_project_discovery_operation(invalid_operation)
@@ -128,7 +128,9 @@ class TestProjectDiscoveryService:
             project.mkdir()
             (project / "src").mkdir()
             (project / "tests").mkdir()
-            (project / "pyproject.toml").write_text(f'[tool.poetry]\nname = "{project_name}"')
+            (project / "pyproject.toml").write_text(
+                f'[tool.poetry]\nname = "{project_name}"'
+            )
 
         # Create Go project
         cmd_dir = workspace / "cmd"
@@ -148,7 +150,9 @@ class TestProjectDiscoveryService:
         assert hasattr(discovery, "analyze_project_structure")
 
     @patch("pathlib.Path.cwd")
-    def test_workspace_project_discovery(self, mock_cwd: Mock, temp_workspace: Path) -> None:
+    def test_workspace_project_discovery(
+        self, mock_cwd: Mock, temp_workspace: Path
+    ) -> None:
         """Test comprehensive workspace project discovery."""
         mock_cwd.return_value = temp_workspace
 
@@ -197,7 +201,7 @@ class TestWorkspaceValidator:
         workspace_data = {
             "workspace_root": "/test/workspace",
             "required_projects": ["flext-core", "flext-api"],
-            "optional_projects": ["flext-auth"]
+            "optional_projects": ["flext-auth"],
         }
 
         result = validator.validate_workspace_structure(workspace_data)
@@ -229,7 +233,7 @@ class TestWorkspaceOperations:
             "type": "project_discovery",
             "scan_depth": 3,
             "include_hidden": False,
-            "filter_patterns": ["*.git", "node_modules"]
+            "filter_patterns": ["*.git", "node_modules"],
         }
 
         result = service.create_project_discovery_operation(operation_data)
@@ -247,7 +251,7 @@ class TestWorkspaceOperations:
             "type": "workspace_validation",
             "check_dependencies": True,
             "validate_structure": True,
-            "check_permissions": False
+            "check_permissions": False,
         }
 
         result = service.create_workspace_validation_operation(operation_data)
@@ -264,7 +268,7 @@ class TestWorkspaceOperations:
             "type": "environment_setup",
             "python_version": "3.13",
             "install_dependencies": True,
-            "setup_git_hooks": True
+            "setup_git_hooks": True,
         }
 
         result = service.create_environment_setup_operation(operation_data)
@@ -295,7 +299,7 @@ class TestAdvancedPatternsCompliance:
         operations = [
             {"type": "project_discovery", "scan_depth": 2},
             {"type": "workspace_validation", "check_dependencies": True},
-            {"type": "environment_setup", "python_version": "3.13"}
+            {"type": "environment_setup", "python_version": "3.13"},
         ]
 
         for op_data in operations:
@@ -313,7 +317,7 @@ class TestAdvancedPatternsCompliance:
             "workspace_root": "/valid/path",
             "max_projects": 50,  # Integer validation
             "auto_discovery": True,  # Boolean validation
-            "project_patterns": ["flext-*", "cmd/*"]  # List validation
+            "project_patterns": ["flext-*", "cmd/*"],  # List validation
         }
 
         result = service.create_workspace_info(workspace_data)
@@ -347,7 +351,7 @@ class TestModuleExports:
             "FlextAdvancedWorkspaceService",
             "create_workspace_service",
             "FlextAdvancedWorkspaceModels",
-            "WorkspaceStatus"
+            "WorkspaceStatus",
         ]
 
         for export in expected_exports:
@@ -382,7 +386,9 @@ class TestWorkspaceIntegration:
         core_project.mkdir()
         (core_project / "src" / "flext_core").mkdir(parents=True)
         (core_project / "tests" / "unit").mkdir(parents=True)
-        (core_project / "pyproject.toml").write_text("[tool.poetry]\nname = 'flext-core'")
+        (core_project / "pyproject.toml").write_text(
+            "[tool.poetry]\nname = 'flext-core'"
+        )
 
         api_project = workspace / "flext-api"
         api_project.mkdir()
@@ -401,7 +407,9 @@ class TestWorkspaceIntegration:
         return workspace
 
     @patch("pathlib.Path.cwd")
-    def test_complex_workspace_analysis(self, mock_cwd: Mock, complex_workspace: Path) -> None:
+    def test_complex_workspace_analysis(
+        self, mock_cwd: Mock, complex_workspace: Path
+    ) -> None:
         """Test comprehensive analysis of complex workspace."""
         mock_cwd.return_value = complex_workspace
 
@@ -420,7 +428,9 @@ class TestWorkspaceIntegration:
         assert len(python_projects) >= 2
 
     @patch("pathlib.Path.cwd")
-    def test_workspace_health_assessment(self, mock_cwd: Mock, complex_workspace: Path) -> None:
+    def test_workspace_health_assessment(
+        self, mock_cwd: Mock, complex_workspace: Path
+    ) -> None:
         """Test comprehensive workspace health assessment."""
         mock_cwd.return_value = complex_workspace
 
@@ -445,7 +455,7 @@ class TestErrorHandling:
 
         invalid_context = {
             "workspace_root": "/non/existent/path",
-            "active_projects": []
+            "active_projects": [],
         }
 
         result = service.create_workspace_context(invalid_context)
@@ -482,7 +492,7 @@ class TestErrorHandling:
         # Test validation with invalid structure
         invalid_structure = {
             "workspace_root": "",  # Empty path
-            "required_projects": None  # Invalid type
+            "required_projects": None,  # Invalid type
         }
 
         result = validator.validate_workspace_structure(invalid_structure)

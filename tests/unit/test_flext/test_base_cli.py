@@ -99,6 +99,7 @@ class TestFlextCLIFacade:
         import inspect
 
         from flext import base_cli
+
         source_lines = inspect.getsourcelines(base_cli)[0]
         source_code = "".join(source_lines)
 
@@ -153,14 +154,17 @@ class TestFacadePatternCompliance:
 
         # Filter for classes and functions (excluding imports)
         local_definitions = [
-            name for name, obj in members
+            name
+            for name, obj in members
             if (inspect.isclass(obj) or inspect.isfunction(obj))
             and obj.__module__ == "flext.base_cli"
         ]
 
         # Should have no local class or function definitions
         # Everything should be imported from flext-cli
-        assert len(local_definitions) == 0, f"Found local definitions: {local_definitions}"
+        assert len(local_definitions) == 0, (
+            f"Found local definitions: {local_definitions}"
+        )
 
     def test_domain_separation_compliance(self) -> None:
         """Test that module respects domain separation - only CLI functionality."""
@@ -177,9 +181,9 @@ class TestFacadePatternCompliance:
         # Should NOT import from other domains
         forbidden_imports = [
             "from flext_core import",  # Core domain (except FlextResult which is universal)
-            "from flext_api import",   # API domain
+            "from flext_api import",  # API domain
             "from flext_auth import",  # Auth domain
-            "from flext_db import",    # Database domain
+            "from flext_db import",  # Database domain
         ]
 
         for forbidden in forbidden_imports:
@@ -196,13 +200,13 @@ class TestFacadePatternCompliance:
 
         # Forbidden patterns that would indicate local implementation
         forbidden_patterns = [
-            "import click",            # Direct Click usage forbidden
-            "import rich",             # Direct Rich usage forbidden
-            "from click import",       # Click components forbidden
-            "from rich import",        # Rich components forbidden
-            "class.*CLI",              # Local CLI class definitions
-            "def.*command",            # Local command functions
-            "def.*group",              # Local group functions
+            "import click",  # Direct Click usage forbidden
+            "import rich",  # Direct Rich usage forbidden
+            "from click import",  # Click components forbidden
+            "from rich import",  # Rich components forbidden
+            "class.*CLI",  # Local CLI class definitions
+            "def.*command",  # Local command functions
+            "def.*group",  # Local group functions
         ]
 
         for pattern in forbidden_patterns:

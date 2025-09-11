@@ -5,6 +5,8 @@ import logging
 import re
 from pathlib import Path
 
+from flext_core.typings import FlextTypes
+
 # Configure basic logging
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
