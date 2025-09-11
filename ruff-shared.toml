@@ -28,10 +28,6 @@ lint.ignore = [
     "BLE001",
     "C901",    # Too complex (some functions need complexity)
     "COM812",
-    "F403",    # Star imports are part of flext-core architectural pattern
-    "D102",    # Missing docstring in public method (test methods don't need them)
-    "D104",    # Missing docstring in public package
-    "D107",    # Missing docstring in __init__
     "D203",    # conflicting with D211 (blank line before class)
     "D213",    # conflicting with D212 (summary line position)
     "D401",    # non-imperative-mood: too opinionated in multilingual codebase
@@ -42,7 +38,6 @@ lint.ignore = [
     "PLR0912", # High complexity acceptable in orchestrators
     "PLR0913", # Too many arguments in function definition (sometimes necessary)
     "PLR0915", # Many statements in some builder functions
-    "PLR6301", # No method found for class
     "RUF002",
     "RUF003",
     "RUF100",
@@ -68,9 +63,6 @@ lint.per-file-ignores."**/constants.py" = [
 lint.per-file-ignores."**/examples/**" = [
     "EXE001",
     "INP001",
-    "I001",    # import sorting in examples isn't critical
-    "F401",    # unused imports in examples are acceptable
-    "F821",    # undefined names in pseudo-code examples
     "N999",    # Invalid module name (examples use numbered prefixes)
     "PLR2004", # magic numbers in examples
     "S105",
@@ -81,7 +73,6 @@ lint.per-file-ignores."**/examples/**" = [
 lint.per-file-ignores."**/scripts/**" = [
     "EXE001",
     "INP001",
-    # "N999",
     "PLR0911",
     "PLR0912",
     "PLR0915",
@@ -92,9 +83,6 @@ lint.per-file-ignores."**/scripts/**" = [
 
 ]
 lint.per-file-ignores."**/*tests*/**" = [
-    "ARG001",  # Unused function argument - common in test mocks
-    "ARG002",  # Unused method argument - common in test fixtures
-    "ARG005",  # Unused lambda argument - common in test helpers
     "EM102",
     "FBT001",  # Boolean positional argument - acceptable in tests
     "FBT003",
