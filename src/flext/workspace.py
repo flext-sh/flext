@@ -144,6 +144,8 @@ class FlextWorkspaceService(FlextDomainService[str]):
         project_count: int
         total_size_mb: float
         project_types: list[str]
+        projects: list[str]
+        status: str
         
     class ProjectInfo(TypedDict):
         """Project information structure from SOURCE OF TRUTH."""
@@ -227,7 +229,7 @@ class FlextWorkspaceService(FlextDomainService[str]):
             # Use the main discovery method
             discovery_result = self.discover_projects(project_types)
             if discovery_result.is_failure:
-                return FlextResult[list[FlextAdvancedWorkspaceModels.Project]].fail(discovery_result.error)
+                return FlextResult[list[FlextAdvancedWorkspaceModels.Project]].fail(discovery_result.error or "Discovery failed")
                 
             projects_data = discovery_result.value
             project_objects = []
@@ -337,7 +339,7 @@ class FlextWorkspaceService(FlextDomainService[str]):
         return FlextResult[str].ok(f"Workspace service ready: {workspace_info}")
 
     # Methods expected by tests - simple implementations for compatibility
-    def create_workspace_context(self, context_data: dict) -> FlextResult[FlextAdvancedWorkspaceModels.WorkspaceContext]:
+    def create_workspace_context(self, context_data: dict[str, object]) -> FlextResult[FlextAdvancedWorkspaceModels.WorkspaceContext]:
         """Create workspace context from data."""
         try:
             context = FlextAdvancedWorkspaceModels.WorkspaceContext(**context_data)
@@ -345,7 +347,7 @@ class FlextWorkspaceService(FlextDomainService[str]):
         except Exception as e:
             return FlextResult[FlextAdvancedWorkspaceModels.WorkspaceContext].fail(f"Context creation failed: {e}")
 
-    def create_project_discovery_operation(self, operation_data: dict) -> FlextResult[FlextAdvancedWorkspaceModels.WorkspaceOperation]:
+    def create_project_discovery_operation(self, operation_data: dict[str, object]) -> FlextResult[FlextAdvancedWorkspaceModels.WorkspaceOperation]:
         """Create project discovery operation."""
         try:
             operation = FlextAdvancedWorkspaceModels.WorkspaceOperation(**operation_data)
@@ -354,34 +356,34 @@ class FlextWorkspaceService(FlextDomainService[str]):
             return FlextResult[FlextAdvancedWorkspaceModels.WorkspaceOperation].fail(f"Operation creation failed: {e}")
 
     # Additional operation creation methods expected by tests
-    def create_workspace_validation_operation(self, operation_data: dict) -> FlextResult[FlextAdvancedWorkspaceModels.WorkspaceOperation]:
+    def create_workspace_validation_operation(self, operation_data: dict[str, object]) -> FlextResult[FlextAdvancedWorkspaceModels.WorkspaceOperation]:
         """Create workspace validation operation - simple alias for compatibility."""
         return self.create_project_discovery_operation(operation_data)
 
-    def create_environment_setup_operation(self, operation_data: dict) -> FlextResult[FlextAdvancedWorkspaceModels.WorkspaceOperation]:
+    def create_environment_setup_operation(self, operation_data: dict[str, object]) -> FlextResult[FlextAdvancedWorkspaceModels.WorkspaceOperation]:
         """Create environment setup operation - simple alias for compatibility."""
         return self.create_project_discovery_operation(operation_data)
 
-    def create_workspace_operation(self, operation_data: dict) -> FlextResult[FlextAdvancedWorkspaceModels.WorkspaceOperation]:
+    def create_workspace_operation(self, operation_data: dict[str, object]) -> FlextResult[FlextAdvancedWorkspaceModels.WorkspaceOperation]:
         """Create workspace operation - generic operation creator for compatibility."""
         return self.create_project_discovery_operation(operation_data)
 
-    def create_workspace_info(self, workspace_data: dict) -> FlextResult[FlextAdvancedWorkspaceModels.WorkspaceContext]:
+    def create_workspace_info(self, workspace_data: dict[str, object]) -> FlextResult[FlextAdvancedWorkspaceModels.WorkspaceContext]:
         """Create workspace info - simple alias for compatibility."""
         return self.create_workspace_context(workspace_data)
 
     # Nested service creation methods expected by tests
-    def create_project_discovery(self):
+    def create_project_discovery(self) -> object:
         """Create project discovery service for test compatibility."""
         class ProjectDiscoveryService:
-            def __init__(self, parent_service):
+            def __init__(self, parent_service: FlextWorkspaceService) -> None:
                 self._parent = parent_service
                 
-            def discover_projects(self):
+            def discover_projects(self) -> object:
                 """Discover projects using parent service functionality."""
                 return self._parent.discover_projects_as_objects()
             
-            def analyze_project_structure(self, project_path):
+            def analyze_project_structure(self, project_path: str) -> dict[str, object]:
                 """Analyze project structure using parent service functionality."""
                 try:
                     project_path = Path(project_path) if isinstance(project_path, str) else project_path
@@ -402,7 +404,7 @@ class FlextWorkspaceService(FlextDomainService[str]):
                     
                     # Create detailed project info with expected attributes
                     class ProjectStructureInfo:
-                        def __init__(self, project_type_str, has_tests, has_src):
+                        def __init__(self, project_type_str: str, has_tests: bool, has_src: bool) -> None:
                             self.project_type = project_type_str
                             self.has_tests = has_tests
                             self.has_src = has_src
@@ -424,13 +426,13 @@ class FlextWorkspaceService(FlextDomainService[str]):
                 
         return ProjectDiscoveryService(self)
 
-    def create_workspace_validator(self):
+    def create_workspace_validator(self) -> object:
         """Create workspace validator for test compatibility."""
         class WorkspaceValidator:
-            def __init__(self, parent_service):
+            def __init__(self, parent_service: FlextWorkspaceService) -> None:
                 self._parent = parent_service
                 
-            def validate_workspace_structure(self, workspace_data):
+            def validate_workspace_structure(self, workspace_data: object) -> FlextResult[None]:
                 """Validate workspace structure."""
                 if not isinstance(workspace_data, dict):
                     return FlextResult[None].fail("Workspace data must be a dictionary")
