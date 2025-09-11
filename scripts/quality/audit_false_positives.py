@@ -82,7 +82,7 @@ class FalsePositiveAuditor:
             "stdlib": [],  # Módulos da standard library
             "flext_internal": [],  # Módulos internos do FLEXT
             "relative_imports": [],  # Imports relativos locais
-            "aliases": [],  # Aliases conhecidos (cv2, PIL, etc)
+            "aliases": [],
             "legitimate": [],  # Dependências realmente faltantes
             "suspicious": [],  # Possíveis problemas
             "unknown": [],  # Requer investigação manual

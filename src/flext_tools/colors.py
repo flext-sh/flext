@@ -164,7 +164,7 @@ def print_colored(message: str, color: str = "") -> None:
 
     """
     colorize(message, color)
-    _logger.info(message)  # Log without color codes
+    _logger.info(message)  # Log without color codes for clean logs
 
 
 __all__ = ["Colors", "colorize", "print_colored"]

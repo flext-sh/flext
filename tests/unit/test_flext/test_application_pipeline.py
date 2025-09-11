@@ -37,7 +37,7 @@ class TestFlextAdvancedPipelineModels:
             service_name="XEPDB1",
             username="hr",
             password="password123",
-            schema_name="HR"
+            schema_name="HR",
         )
 
         assert oracle_source.type == "oracle"
@@ -53,7 +53,7 @@ class TestFlextAdvancedPipelineModels:
             database="testdb",
             username="postgres",
             password="secret",
-            schema_name="public"
+            schema_name="public",
         )
 
         assert pg_source.type == "postgresql"
@@ -68,7 +68,7 @@ class TestFlextAdvancedPipelineModels:
             bind_password="REDACTED_LDAP_BIND_PASSWORD123",
             base_dn="dc=example,dc=com",
             search_filter="(objectClass=person)",
-            attributes=["cn", "mail", "telephoneNumber"]
+            attributes=["cn", "mail", "telephoneNumber"],
         )
 
         assert ldap_source.type == "ldap"
@@ -78,15 +78,11 @@ class TestFlextAdvancedPipelineModels:
     def test_source_config_discriminated_union(self) -> None:
         """Test SourceConfig discriminated union functionality."""
         oracle_config = FlextAdvancedPipelineModels.OracleSource(
-            host="oracle.test.com",
-            port=1521,
-            service_name="TEST"
+            host="oracle.test.com", port=1521, service_name="TEST"
         )
 
         pg_config = FlextAdvancedPipelineModels.PostgreSQLSource(
-            host="pg.test.com",
-            port=5432,
-            database="testdb"
+            host="pg.test.com", port=5432, database="testdb"
         )
 
         # Test discriminator works correctly
@@ -98,16 +94,14 @@ class TestFlextAdvancedPipelineModels:
     def test_create_pipeline_command_validation(self) -> None:
         """Test CreatePipelineCommand with source configuration."""
         oracle_source = FlextAdvancedPipelineModels.OracleSource(
-            host="oracle.example.com",
-            port=1521,
-            service_name="XEPDB1"
+            host="oracle.example.com", port=1521, service_name="XEPDB1"
         )
 
         command = FlextAdvancedPipelineModels.CreatePipelineCommand(
             name="test_pipeline",
             source=oracle_source,
             target_table="target_table",
-            batch_size=1000
+            batch_size=1000,
         )
 
         assert command.name == "test_pipeline"
@@ -117,25 +111,23 @@ class TestFlextAdvancedPipelineModels:
     def test_create_pipeline_command_batch_size_validation(self) -> None:
         """Test CreatePipelineCommand batch size constraints."""
         oracle_source = FlextAdvancedPipelineModels.OracleSource(
-            host="oracle.example.com",
-            port=1521,
-            service_name="XEPDB1"
+            host="oracle.example.com", port=1521, service_name="XEPDB1"
         )
 
-        with pytest.raises(ValidationError, match="ensure this value is greater than 0"):
+        with pytest.raises(
+            ValidationError, match="ensure this value is greater than 0"
+        ):
             FlextAdvancedPipelineModels.CreatePipelineCommand(
                 name="test_pipeline",
                 source=oracle_source,
                 target_table="target_table",
-                batch_size=0  # Invalid batch size
+                batch_size=0,  # Invalid batch size
             )
 
     def test_execute_pipeline_command_validation(self) -> None:
         """Test ExecutePipelineCommand with execution parameters."""
         command = FlextAdvancedPipelineModels.ExecutePipelineCommand(
-            pipeline_id="pipeline_123",
-            dry_run=False,
-            parallel_workers=4
+            pipeline_id="pipeline_123", dry_run=False, parallel_workers=4
         )
 
         assert command.pipeline_id == "pipeline_123"
@@ -144,9 +136,7 @@ class TestFlextAdvancedPipelineModels:
 
     def test_get_pipeline_query_validation(self) -> None:
         """Test GetPipelineQuery validation."""
-        query = FlextAdvancedPipelineModels.GetPipelineQuery(
-            pipeline_id="pipeline_456"
-        )
+        query = FlextAdvancedPipelineModels.GetPipelineQuery(pipeline_id="pipeline_456")
 
         assert query.pipeline_id == "pipeline_456"
 
@@ -156,7 +146,7 @@ class TestFlextAdvancedPipelineModels:
             status=PipelineStatus.ACTIVE,
             pipeline_type=PipelineType.EXTRACT,
             limit=50,
-            offset=100
+            offset=100,
         )
 
         assert query.status == PipelineStatus.ACTIVE
@@ -198,16 +188,14 @@ class TestFlextAdvancedPipelineService:
         service = create_pipeline_service()
 
         oracle_source = FlextAdvancedPipelineModels.OracleSource(
-            host="oracle.example.com",
-            port=1521,
-            service_name="XEPDB1"
+            host="oracle.example.com", port=1521, service_name="XEPDB1"
         )
 
         command = FlextAdvancedPipelineModels.CreatePipelineCommand(
             name="test_pipeline",
             source=oracle_source,
             target_table="target_table",
-            batch_size=1000
+            batch_size=1000,
         )
 
         result = service.create_pipeline(command)
@@ -223,9 +211,7 @@ class TestFlextAdvancedPipelineService:
         service = create_pipeline_service()
 
         command = FlextAdvancedPipelineModels.ExecutePipelineCommand(
-            pipeline_id="pipeline_123",
-            dry_run=False,
-            parallel_workers=2
+            pipeline_id="pipeline_123", dry_run=False, parallel_workers=2
         )
 
         result = service.execute_pipeline(command)
@@ -240,9 +226,7 @@ class TestFlextAdvancedPipelineService:
         """Test get pipeline query handling."""
         service = create_pipeline_service()
 
-        query = FlextAdvancedPipelineModels.GetPipelineQuery(
-            pipeline_id="pipeline_456"
-        )
+        query = FlextAdvancedPipelineModels.GetPipelineQuery(pipeline_id="pipeline_456")
 
         result = service.get_pipeline(query)
 
@@ -257,9 +241,7 @@ class TestFlextAdvancedPipelineService:
         service = create_pipeline_service()
 
         query = FlextAdvancedPipelineModels.ListPipelinesQuery(
-            status=PipelineStatus.ACTIVE,
-            limit=10,
-            offset=0
+            status=PipelineStatus.ACTIVE, limit=10, offset=0
         )
 
         result = service.list_pipelines(query)
@@ -276,16 +258,14 @@ class TestFlextAdvancedPipelineService:
 
         # Test with empty pipeline name (should be handled gracefully)
         oracle_source = FlextAdvancedPipelineModels.OracleSource(
-            host="oracle.example.com",
-            port=1521,
-            service_name="XEPDB1"
+            host="oracle.example.com", port=1521, service_name="XEPDB1"
         )
 
         command = FlextAdvancedPipelineModels.CreatePipelineCommand(
             name="",  # Empty name should be handled
             source=oracle_source,
             target_table="target_table",
-            batch_size=1000
+            batch_size=1000,
         )
 
         result = service.create_pipeline(command)
@@ -319,15 +299,11 @@ class TestLegacyCompatibility:
     def test_create_pipeline_command_alias(self) -> None:
         """Test CreatePipelineCommand alias."""
         oracle_source = FlextAdvancedPipelineModels.OracleSource(
-            host="oracle.example.com",
-            port=1521,
-            service_name="XEPDB1"
+            host="oracle.example.com", port=1521, service_name="XEPDB1"
         )
 
         command = CreatePipelineCommand(
-            name="test_pipeline",
-            source=oracle_source,
-            target_table="target_table"
+            name="test_pipeline", source=oracle_source, target_table="target_table"
         )
 
         assert isinstance(command, FlextAdvancedPipelineModels.CreatePipelineCommand)
@@ -335,9 +311,7 @@ class TestLegacyCompatibility:
 
     def test_execute_pipeline_command_alias(self) -> None:
         """Test ExecutePipelineCommand alias."""
-        command = ExecutePipelineCommand(
-            pipeline_id="pipeline_123"
-        )
+        command = ExecutePipelineCommand(pipeline_id="pipeline_123")
 
         assert isinstance(command, FlextAdvancedPipelineModels.ExecutePipelineCommand)
         assert command.pipeline_id == "pipeline_123"
@@ -393,22 +367,18 @@ class TestAdvancedPatterns:
     def test_discriminated_union_type_safety(self) -> None:
         """Test discriminated union type safety for sources."""
         oracle_source = FlextAdvancedPipelineModels.OracleSource(
-            host="oracle.test.com",
-            port=1521,
-            service_name="TEST"
+            host="oracle.test.com", port=1521, service_name="TEST"
         )
 
         pg_source = FlextAdvancedPipelineModels.PostgreSQLSource(
-            host="pg.test.com",
-            port=5432,
-            database="testdb"
+            host="pg.test.com", port=5432, database="testdb"
         )
 
         ldap_source = FlextAdvancedPipelineModels.LDAPSource(
             server_url="ldap://ldap.test.com:389",
             bind_dn="cn=REDACTED_LDAP_BIND_PASSWORD,dc=test,dc=com",
             bind_password="secret",
-            base_dn="dc=test,dc=com"
+            base_dn="dc=test,dc=com",
         )
 
         # Test discriminated union works for different source types
@@ -430,7 +400,7 @@ class TestAdvancedPatterns:
             FlextAdvancedPipelineModels.OracleSource(
                 host="oracle.test.com",
                 port=99999,  # Invalid port
-                service_name="TEST"
+                service_name="TEST",
             )
 
     def test_nested_class_pattern_compliance(self) -> None:

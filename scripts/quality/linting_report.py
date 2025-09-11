@@ -197,7 +197,7 @@ class LintingReport(FlextScript):
                 try:
                     if ruff_main is not None:
                         ruff_main(["check", str(project_path), "--output-format=json"])
-                except SystemExit as e:  # Ruff chama sys.exit
+                except SystemExit as e:
                     _ = e.code if isinstance(e.code, int) else 1
 
             issues_by_category: dict[str, int] = defaultdict(int)

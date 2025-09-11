@@ -21,6 +21,7 @@ from flext_core import (
     FlextContainer,
     FlextDomainService, 
     FlextLogger,
+    FlextModels,
     FlextResult,
     FlextUtilities,
 )
@@ -47,21 +48,23 @@ class WorkspaceStatus(str, Enum):
 
 
 class FlextAdvancedWorkspaceModels:
-    """Simple models for test compatibility - using flext-core patterns."""
+    """Simple models for test compatibility - using flext-core as SOURCE OF TRUTH."""
     
-    class WorkspaceContext(BaseModel):
-        """Workspace context model."""
+    # FLEXT-CORE INTEGRATION: Use FlextModels.Config instead of local BaseModel
+    class WorkspaceContext(FlextModels.Config):
+        """Workspace context model using flext-core Config."""
+        
+        # Additional workspace-specific fields beyond base Config
         workspace_root: Path = Field(description="Workspace root path")
         active_projects: list[str] = Field(default_factory=list, description="Active projects")
-        status: str = Field(default="ready", description="Workspace status")
         max_projects: int | None = Field(default=None, description="Maximum projects allowed")
         
-        class Config:
-            """Pydantic configuration."""
-            arbitrary_types_allowed = True
+        # Use status from FlextModels.Config (already has config_environment)
     
-    class WorkspaceOperation(BaseModel):
-        """Workspace operation model."""
+    # FLEXT-CORE INTEGRATION: Use FlextModels.Value for immutable operations  
+    class WorkspaceOperation(FlextModels.Value):
+        """Workspace operation model using flext-core Value."""
+        
         type: str = Field(description="Operation type")
         scan_depth: int = Field(default=1, ge=0, description="Scan depth")
         include_hidden: bool = Field(default=False, description="Include hidden files")
@@ -76,24 +79,46 @@ class FlextAdvancedWorkspaceModels:
         install_dependencies: bool | None = Field(default=None, description="Install dependencies flag")
         setup_git_hooks: bool | None = Field(default=None, description="Setup git hooks flag")
         
-        class Config:
-            """Pydantic configuration."""
-            extra = "allow"  # Allow extra fields
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Implement required abstract method from FlextModels.Value."""
+            if self.scan_depth < 0:
+                return FlextResult[None].fail("Scan depth cannot be negative")
+            return FlextResult[None].ok(None)
     
-    class WorkspaceInfo(BaseModel):
-        """Workspace information model."""
+    # FLEXT-CORE INTEGRATION: Use FlextModels.Value for immutable info
+    class WorkspaceInfo(FlextModels.Value):
+        """Workspace information model using flext-core Value."""
+        
         workspace_root: str = Field(description="Workspace root path")
         project_count: int = Field(default=0, ge=0, description="Number of projects")
         total_size_mb: float = Field(default=0.0, ge=0, description="Total size in MB")
         projects: list[str] | None = Field(default=None, description="List of project names")
         status: str = Field(default="ready", description="Workspace status")
         
-    class Project(BaseModel):
-        """Project model with attributes expected by tests."""
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Implement required abstract method from FlextModels.Value."""
+            if self.project_count < 0:
+                return FlextResult[None].fail("Project count cannot be negative")
+            if self.total_size_mb < 0:
+                return FlextResult[None].fail("Total size cannot be negative")
+            return FlextResult[None].ok(None)
+        
+    # FLEXT-CORE INTEGRATION: Use FlextModels.Value for immutable project
+    class Project(FlextModels.Value):
+        """Project model using flext-core Value."""
+        
         name: str = Field(description="Project name")
         path: str = Field(description="Project path")
         project_type: str = Field(description="Project type as string")
         size_mb: float = Field(default=0.0, description="Project size in MB")
+        
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Implement required abstract method from FlextModels.Value."""
+            if self.size_mb < 0:
+                return FlextResult[None].fail("Project size cannot be negative")
+            if not self.name.strip():
+                return FlextResult[None].fail("Project name cannot be empty")
+            return FlextResult[None].ok(None)
 
 
 class FlextWorkspaceService(FlextDomainService[str]):
@@ -129,7 +154,7 @@ class FlextWorkspaceService(FlextDomainService[str]):
         
     def __init__(self, workspace_path: str | None = None, **data: object) -> None:
         """Initialize workspace service with flext-core dependencies."""
-        super().__init__(**data)
+        super().__init__()
         self._container = FlextContainer.get_global()
         self._logger = FlextLogger(__name__)
         
@@ -301,17 +326,15 @@ class FlextWorkspaceService(FlextDomainService[str]):
         except Exception as e:
             return FlextResult[float].fail(f"Project size calculation failed: {e}")
     
-    def execute(self, operation_name: str, operation: object, *args: object, **kwargs: object) -> FlextResult[object]:
+    def execute(self) -> FlextResult[str]:
         """Execute workspace operation - required by FlextDomainService."""
-        match operation_name:
-            case "validate_workspace_path":
-                return self.validate_workspace_path(*args, **kwargs)
-            case "discover_projects":
-                return self.discover_projects(*args, **kwargs)
-            case "get_workspace_info":
-                return self.get_workspace_info(*args, **kwargs)
-            case _:
-                return FlextResult[object].fail(f"Unknown workspace operation: {operation_name}")
+        # Default execution returns workspace status
+        workspace_info = {
+            "service": "FlextWorkspaceService",
+            "workspace_path": str(self._workspace_path),
+            "status": "ready"
+        }
+        return FlextResult[str].ok(f"Workspace service ready: {workspace_info}")
 
     # Methods expected by tests - simple implementations for compatibility
     def create_workspace_context(self, context_data: dict) -> FlextResult[FlextAdvancedWorkspaceModels.WorkspaceContext]:

@@ -346,7 +346,7 @@ exclude = [
 
 # Type checking mode
 typeCheckingMode = "basic"
-# typeCheckingMode = "recommended"
+
 
 # Reporting configuration - balanced for workspace
 # reportDuplicateImport = true

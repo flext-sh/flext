@@ -11,7 +11,7 @@ This document provides accurate API documentation for FLEXT Core v0.9.0, based o
 ```python
 from flext_core import (
     # Railway-oriented programming
-    FlextResult,          # Type-safe error handling
+    FlextResult,
 
     # Dependency injection
     FlextContainer,       # Enterprise DI container

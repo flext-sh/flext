@@ -30,8 +30,7 @@ class TestFlextAdvancedHandlerModels:
     def test_handler_context_creation(self) -> None:
         """Test HandlerContext with UUID generation and validation."""
         context = FlextAdvancedHandlerModels.HandlerContext(
-            user_id="test_user",
-            priority=Priority.HIGH
+            user_id="test_user", priority=Priority.HIGH
         )
 
         assert context.user_id == "test_user"
@@ -45,7 +44,7 @@ class TestFlextAdvancedHandlerModels:
             data_source="file:///test/data.csv",
             batch_size=1000,
             enable_validation=True,
-            target_format="json"
+            target_format="json",
         )
 
         assert command.type == "data_processing"
@@ -57,8 +56,7 @@ class TestFlextAdvancedHandlerModels:
         """Test DataProcessingCommand URI validation."""
         with pytest.raises(ValidationError, match="Data source must be a valid URI"):
             FlextAdvancedHandlerModels.DataProcessingCommand(
-                data_source="invalid_uri",
-                batch_size=1000
+                data_source="invalid_uri", batch_size=1000
             )
 
     def test_data_processing_command_business_rules(self) -> None:
@@ -66,7 +64,7 @@ class TestFlextAdvancedHandlerModels:
         command = FlextAdvancedHandlerModels.DataProcessingCommand(
             data_source="file:///test/data.csv",
             batch_size=60000,  # Large batch
-            enable_validation=True
+            enable_validation=True,
         )
 
         result = command.validate_business_rules()
@@ -78,7 +76,7 @@ class TestFlextAdvancedHandlerModels:
         command = FlextAdvancedHandlerModels.UserManagementCommand(
             user_email="test@example.com",
             action="create",
-            user_data={"name": "Test User", "role": "user"}
+            user_data={"name": "Test User", "role": "user"},
         )
 
         assert command.type == "user_management"
@@ -89,15 +87,13 @@ class TestFlextAdvancedHandlerModels:
         """Test UserManagementCommand email validation."""
         with pytest.raises(ValidationError, match="regex"):
             FlextAdvancedHandlerModels.UserManagementCommand(
-                user_email="invalid_email",
-                action="create"
+                user_email="invalid_email", action="create"
             )
 
     def test_user_management_command_business_rules(self) -> None:
         """Test UserManagementCommand REDACTED_LDAP_BIND_PASSWORD deletion protection."""
         command = FlextAdvancedHandlerModels.UserManagementCommand(
-            user_email="REDACTED_LDAP_BIND_PASSWORD@REDACTED_LDAP_BIND_PASSWORD.com",
-            action="delete"
+            user_email="REDACTED_LDAP_BIND_PASSWORD@REDACTED_LDAP_BIND_PASSWORD.com", action="delete"
         )
 
         result = command.validate_business_rules()
@@ -111,7 +107,7 @@ class TestFlextAdvancedHandlerModels:
             sort_by="created_at",
             sort_direction="desc",
             limit=50,
-            offset=100
+            offset=100,
         )
 
         assert query.type == "data_retrieval"
@@ -122,9 +118,7 @@ class TestFlextAdvancedHandlerModels:
     def test_aggregation_query_validation(self) -> None:
         """Test AggregationQuery with metric calculation."""
         query = FlextAdvancedHandlerModels.AggregationQuery(
-            group_by=["category", "status"],
-            metrics=["count", "sum"],
-            date_range=30
+            group_by=["category", "status"], metrics=["count", "sum"], date_range=30
         )
 
         assert query.type == "aggregation"
@@ -138,7 +132,7 @@ class TestFlextAdvancedHandlerModels:
             records_processed=1000,
             processing_time_ms=5000,
             error_count=2,
-            success_rate=99.8
+            success_rate=99.8,
         )
 
         assert event.type == "data_processed"
@@ -149,21 +143,22 @@ class TestFlextAdvancedHandlerModels:
     def test_discriminated_unions(self) -> None:
         """Test discriminated union functionality for commands."""
         data_command = FlextAdvancedHandlerModels.DataProcessingCommand(
-            data_source="file:///test.csv",
-            batch_size=1000
+            data_source="file:///test.csv", batch_size=1000
         )
 
         user_command = FlextAdvancedHandlerModels.UserManagementCommand(
-            user_email="test@example.com",
-            action="create",
-            user_data={"name": "Test"}
+            user_email="test@example.com", action="create", user_data={"name": "Test"}
         )
 
         # Test that discriminator works
         assert data_command.type == "data_processing"
         assert user_command.type == "user_management"
-        assert isinstance(data_command, FlextAdvancedHandlerModels.DataProcessingCommand)
-        assert isinstance(user_command, FlextAdvancedHandlerModels.UserManagementCommand)
+        assert isinstance(
+            data_command, FlextAdvancedHandlerModels.DataProcessingCommand
+        )
+        assert isinstance(
+            user_command, FlextAdvancedHandlerModels.UserManagementCommand
+        )
 
 
 class TestFlextAdvancedHandlerService:
@@ -210,7 +205,7 @@ class TestFlextAdvancedHandlerService:
             data_source="file:///test/data.csv",
             batch_size=1000,
             enable_validation=True,
-            target_format="json"
+            target_format="json",
         )
 
         result = service.handle_command(command)
@@ -227,7 +222,7 @@ class TestFlextAdvancedHandlerService:
         command = FlextAdvancedHandlerModels.UserManagementCommand(
             user_email="test@example.com",
             action="create",
-            user_data={"name": "Test User", "role": "user"}
+            user_data={"name": "Test User", "role": "user"},
         )
 
         result = service.handle_command(command)
@@ -246,7 +241,7 @@ class TestFlextAdvancedHandlerService:
             sort_by="created_at",
             sort_direction="desc",
             limit=100,
-            offset=0
+            offset=0,
         )
 
         result = service.handle_query(query)
@@ -261,9 +256,7 @@ class TestFlextAdvancedHandlerService:
         """Test aggregation query handling."""
         service = create_handler_service()
         query = FlextAdvancedHandlerModels.AggregationQuery(
-            group_by=["status"],
-            metrics=["count", "average"],
-            date_range=30
+            group_by=["status"], metrics=["count", "average"], date_range=30
         )
 
         result = service.handle_query(query)
@@ -296,7 +289,7 @@ class TestFlextAdvancedHandlerService:
         command = FlextAdvancedHandlerModels.DataProcessingCommand(
             data_source="file:///test/data.csv",
             batch_size=60000,  # This should trigger business rule failure
-            enable_validation=True
+            enable_validation=True,
         )
 
         # The service should handle this gracefully
@@ -381,14 +374,11 @@ class TestAdvancedPatterns:
         """Test discriminated union type safety."""
         # Create different command types
         data_cmd = FlextAdvancedHandlerModels.DataProcessingCommand(
-            data_source="file:///test.csv",
-            batch_size=1000
+            data_source="file:///test.csv", batch_size=1000
         )
 
         user_cmd = FlextAdvancedHandlerModels.UserManagementCommand(
-            user_email="test@example.com",
-            action="create",
-            user_data={"name": "Test"}
+            user_email="test@example.com", action="create", user_data={"name": "Test"}
         )
 
         service = create_handler_service()
@@ -414,6 +404,6 @@ class TestAdvancedPatterns:
         with pytest.raises(ValidationError, match="Create action requires user data"):
             FlextAdvancedHandlerModels.UserManagementCommand(
                 user_email="test@example.com",
-                action="create"
+                action="create",
                 # Missing user_data
             )

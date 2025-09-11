@@ -430,7 +430,7 @@ jobs:
         run: |
           echo "🔍 Running code quality checks..."
 
-          # Ruff linting
+
           poetry run ruff check . --output-format=json --output-file=ruff-report.json || true
 
           # MyPy type checking

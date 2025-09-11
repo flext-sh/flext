@@ -43,7 +43,7 @@ class FlextTypes:
     class Core:
         """Foundation types used across all domains."""
 
-        # Type Variables
+
         T = TypeVar('T')
         K = TypeVar('K')
         V = TypeVar('V')

@@ -26,7 +26,6 @@ from flext_tools.quality_gateway import (
 from flext_tools.rollback import ConfirmationMode, RollbackManager
 
 NAME_MAP: FlextTypes.Core.Headers = {
-    # Aliases must be UPPERCASE (and specific for commands)
     "FlextModels": "M",
     "FlextTypes": "T",
     "FlextConstants": "C",

@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from flext_core.typings import FlextTypes
+
 
 def get_project_directories() -> FlextTypes.Core.StringList:
     """Obter lista de diretórios de projetos principais FLEXT.
