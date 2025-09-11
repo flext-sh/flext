@@ -67,7 +67,7 @@ make build-python            # Build all Python packages
 
 # Quality gates
 make lint-all                # Lint all projects
-make type-check-all          # Type check all Python projects
+make type-check-all
 make security-all            # Security scan all projects
 ```
 

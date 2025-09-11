@@ -190,9 +190,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
                     Colors.GREEN,
                 )
 
-    def _setup_workspace_links(
-        self, workspace_root: Path, **_kwargs: object
-    ) -> FlextResult[bool]:
+    def _setup_workspace_links(self, workspace_root: Path) -> FlextResult[bool]:
         """Setup development links between workspace projects."""
         print_colored("\n🔗 WORKSPACE LINKS SETUP", Colors.BLUE)
         print_colored("-" * 40, Colors.BLUE)
@@ -267,9 +265,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
         print_colored("Check Poetry logs for details", Colors.YELLOW)
         return FlextResult[bool].fail("Workspace setup failed")
 
-    def _manage_dependencies(
-        self, workspace_root: Path, **_kwargs: object
-    ) -> FlextResult[bool]:
+    def _manage_dependencies(self, workspace_root: Path) -> FlextResult[bool]:
         """Manage workspace dependencies with Poetry validation."""
         print_colored("\n📦 WORKSPACE DEPENDENCY MANAGEMENT", Colors.BLUE)
         print_colored("-" * 40, Colors.BLUE)
@@ -329,7 +325,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
             print_colored(f"❌ Error during MyPy check: {e}", Colors.RED)
             return FlextResult[bool].fail(f"Error during MyPy check: {e}")
 
-    def _setup_ssl(self, workspace_root: Path, **_kwargs: object) -> FlextResult[bool]:
+    def _setup_ssl(self, workspace_root: Path) -> FlextResult[bool]:
         """Setup SSL/TLS certificates for staging environment."""
         print_colored("\n🔐 STAGING SSL SETUP", Colors.BLUE)
         print_colored("-" * 40, Colors.BLUE)

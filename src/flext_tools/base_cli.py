@@ -23,10 +23,6 @@ from flext_cli import (
 )
 from flext_core import FlextDomainService, FlextResult
 
-# =============================================================================
-# FLEXT-CLI FACADE ALIASES (ELIMINATE DUPLICATION)
-# =============================================================================
-
 # Primary CLI API - delegate to flext-cli
 BaseCLI = FlextCliMain  # Main CLI interface
 CLIConfig = FlextCliConfig  # Configuration management
@@ -34,7 +30,7 @@ CLIApi = FlextCliApi  # CLI API interface
 
 
 # Facade class for backward compatibility
-class FlextToolsCliService(FlextDomainService):
+class FlextToolsCliService(FlextDomainService[str]):
     """Facade to flext-cli - eliminates CLI code duplication."""
 
     def __init__(self) -> None:

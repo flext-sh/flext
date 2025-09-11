@@ -69,7 +69,7 @@ src/project_namespace/
 │   ├── container.py           # Dependency injection container with FlextResult
 │   ├── exceptions.py          # Exception hierarchy with error codes and metrics
 │   ├── constants.py           # FlextConstants, enums, error codes, performance metrics
-│   ├── typings.py             # Type definitions and aliases (T, U, V, etc.)
+│   ├── typings.py
 │   └── protocols.py           # Interface definitions and contracts
 │
 ├── Domain Layer (DDD Patterns)
@@ -82,7 +82,7 @@ src/project_namespace/
 │   ├── handlers.py            # Handler implementations and registry
 │   ├── validation.py          # Validation framework with predicates
 │   ├── payload.py             # Message/event patterns for integration
-│   └── guards.py              # Type guards and validation decorators
+│   └── guards.py
 │
 ├── Infrastructure Layer (Cross-cutting)
 │   ├── config.py              # Configuration management with Pydantic Settings
@@ -98,7 +98,7 @@ src/project_namespace/
 │   ├── services.py            # Service layer abstractions
 │   ├── delegation_system.py   # Mixin delegation patterns
 │   ├── schema_processing.py   # Schema validation and processing
-│   ├── type_adapters.py       # Type adaptation utilities
+│   ├── type_adapters.py
 │   └── legacy.py              # Backward compatibility layer
 └── __init__.py                # Wildcard imports with __all__ aggregation
 ```
@@ -113,7 +113,7 @@ make setup                 # Complete dev environment setup
 make validate              # ALL quality gates (lint + type + security + test)
 make check                 # Quick validation (lint + type-check only)
 make test                  # 75%+ coverage requirement (PROVEN achievable)
-make lint                  # Ruff linting - ZERO errors
+make lint
 make type-check            # MyPy strict mode - ZERO errors
 make format                # Auto-format code (79 char line limit)
 make security              # Bandit + pip-audit scanning
@@ -391,7 +391,7 @@ class ProjectInfrastructure:
 make setup                 # Complete dev environment setup
 make validate              # Run ALL quality gates (lint + type + security + test)
 make check                 # Quick validation (lint + type-check only)
-make lint                  # Ruff linting - ZERO tolerance
+make lint
 make type-check            # MyPy strict mode - ZERO tolerance
 make test                  # 75%+ coverage (proven achievable)
 make security              # Bandit + pip-audit scanning
@@ -404,7 +404,7 @@ make build                 # Build package
 make t                     # test
 make l                     # lint
 make f                     # format
-make tc                    # type-check
+make tc                  
 make v                     # validate
 ```
 
@@ -700,8 +700,8 @@ pytest tests/ -v    # All pass
 
 **These practices are FORBIDDEN:**
 
-- `# type: ignore` without specific justification
-- `# noqa` without specific rule codes
+- `
+- `
 - Relaxing mypy/ruff settings
 - Skipping test coverage requirements
 - Using non-strict type checking

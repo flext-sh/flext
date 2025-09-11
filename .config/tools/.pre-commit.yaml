@@ -29,7 +29,7 @@ repos:
         require_serial: true
         args: [--check, --diff, --line-length=88, --target-version=py313]
 
-      # Ruff linting and formatting (comprehensive)
+
       - id: ruff-format
         name: "⚡ Ruff Format"
         entry: poetry run ruff format

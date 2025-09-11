@@ -157,7 +157,7 @@ class HealthCheckService:
         """
         self.workspace_path = workspace_path
 
-    def run_health_checks(self, **_kwargs: object) -> FlextTypes.Core.Dict:
+    def run_health_checks(self) -> FlextTypes.Core.Dict:
         """Execute comprehensive health checks across the entire FLEXT workspace.
 
         Performs systematic health validation of all workspace components including
