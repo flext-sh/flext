@@ -114,7 +114,7 @@ make validate              # ALL quality gates (lint + type + security + test)
 make check                 # Quick validation (lint + type-check only)
 make test                  # 75%+ coverage requirement (PROVEN achievable)
 make lint
-make type-check            # MyPy strict mode - ZERO errors
+make type-check          
 make format                # Auto-format code (79 char line limit)
 make security              # Bandit + pip-audit scanning
 ```
@@ -392,7 +392,7 @@ make setup                 # Complete dev environment setup
 make validate              # Run ALL quality gates (lint + type + security + test)
 make check                 # Quick validation (lint + type-check only)
 make lint
-make type-check            # MyPy strict mode - ZERO tolerance
+make type-check          
 make test                  # 75%+ coverage (proven achievable)
 make security              # Bandit + pip-audit scanning
 make format                # Auto-format code (79 char limit)
