@@ -4,98 +4,87 @@ Tests for the CLI facade functionality following FLEXT testing patterns
 with proper verification of flext-cli integration and facade pattern compliance.
 """
 
-from unittest.mock import Mock, patch
-
 from flext.base_cli import (
-    CLIConfig,
-    # Backward compatibility (deprecated)
-    FlextBaseCLI,
-    FlextCLI,
-    FlextCLICommand,
-    FlextCLIConfig,
-    FlextCLIGroup,
+    FlextCliApi,
+    FlextCliConfig,
+    FlextCliFormatters,
+    FlextCliMain,
+    FlextCliModule,
+    FlextCliServices,
     __all__,
-    with_config,
-    with_output_format,
 )
 
 
-class TestFlextCLIFacade:
-    """Test suite for flext-cli facade functionality."""
+class TestFlextCliDirectExports:
+    """Test suite for flext-cli direct exports - NO facades, NO aliases."""
 
-    def test_flext_cli_import(self) -> None:
-        """Test that FlextCLI is properly imported from flext-cli."""
-        assert FlextCLI is not None
-        assert hasattr(FlextCLI, "__name__")
+    def test_flext_cli_main_import(self) -> None:
+        """Test that FlextCliMain is properly imported from flext-cli."""
+        assert FlextCliMain is not None
+        assert hasattr(FlextCliMain, "__name__")
 
         # Verify it's imported from flext-cli, not local implementation
-        assert "flext_cli" in str(FlextCLI.__module__)
+        assert "flext_cli" in str(FlextCliMain.__module__)
 
     def test_flext_cli_config_import(self) -> None:
-        """Test that FlextCLIConfig is properly imported from flext-cli."""
-        assert FlextCLIConfig is not None
-        assert hasattr(FlextCLIConfig, "__name__")
+        """Test that FlextCliConfig is properly imported from flext-cli."""
+        assert FlextCliConfig is not None
+        assert hasattr(FlextCliConfig, "__name__")
 
         # Verify it's imported from flext-cli
-        assert "flext_cli" in str(FlextCLIConfig.__module__)
+        assert "flext_cli" in str(FlextCliConfig.__module__)
 
-    def test_flext_cli_command_import(self) -> None:
-        """Test that FlextCLICommand is properly imported from flext-cli."""
-        assert FlextCLICommand is not None
-        assert hasattr(FlextCLICommand, "__name__")
-
-        # Verify it's imported from flext-cli
-        assert "flext_cli" in str(FlextCLICommand.__module__)
-
-    def test_flext_cli_group_import(self) -> None:
-        """Test that FlextCLIGroup is properly imported from flext-cli."""
-        assert FlextCLIGroup is not None
-        assert hasattr(FlextCLIGroup, "__name__")
+    def test_flext_cli_module_import(self) -> None:
+        """Test that FlextCliModule is properly imported from flext-cli."""
+        assert FlextCliModule is not None
+        assert hasattr(FlextCliModule, "__name__")
 
         # Verify it's imported from flext-cli
-        assert "flext_cli" in str(FlextCLIGroup.__module__)
+        assert "flext_cli" in str(FlextCliModule.__module__)
 
-    def test_decorators_import(self) -> None:
-        """Test that decorators are properly imported from flext-cli."""
-        assert with_config is not None
-        assert with_output_format is not None
+    def test_flext_cli_services_import(self) -> None:
+        """Test that FlextCliServices is properly imported from flext-cli."""
+        assert FlextCliServices is not None
+        assert hasattr(FlextCliServices, "__name__")
 
-        # Verify they are callable decorators
-        assert callable(with_config)
-        assert callable(with_output_format)
+        # Verify it's imported from flext-cli
+        assert "flext_cli" in str(FlextCliServices.__module__)
 
-    def test_backward_compatibility_aliases(self) -> None:
-        """Test backward compatibility aliases are properly set up."""
-        # Test FlextBaseCLI alias
-        assert FlextBaseCLI is FlextCLI
-        assert FlextBaseCLI == FlextCLI
+    def test_api_import(self) -> None:
+        """Test that FlextCliApi is properly imported from flext-cli."""
+        assert FlextCliApi is not None
+        assert hasattr(FlextCliApi, "__name__")
 
-        # Test CLIConfig alias
-        assert CLIConfig is FlextCLIConfig
-        assert CLIConfig == FlextCLIConfig
+        # Verify it's imported from flext-cli
+        assert "flext_cli" in str(FlextCliApi.__module__)
+
+    def test_formatters_import(self) -> None:
+        """Test that FlextCliFormatters is properly imported from flext-cli."""
+        assert FlextCliFormatters is not None
+        assert hasattr(FlextCliFormatters, "__name__")
+
+        # Verify it's imported from flext-cli
+        assert "flext_cli" in str(FlextCliFormatters.__module__)
 
     def test_all_exports_available(self) -> None:
         """Test that all items in __all__ are actually exported."""
         expected_exports = [
-            # Modern flext-cli patterns
-            "FlextCLI",
-            "FlextCLIConfig",
-            "FlextCLICommand",
-            "FlextCLIGroup",
-            "with_config",
-            "with_output_format",
-            # Backward compatibility (deprecated)
-            "FlextBaseCLI",
-            "CLIConfig",
+            # Direct flext-cli exports
+            "FlextCliApi",
+            "FlextCliConfig",
+            "FlextCliFormatters",
+            "FlextCliMain",
+            "FlextCliModule",
+            "FlextCliServices",
         ]
 
         for export in expected_exports:
             assert export in __all__, f"Export {export} missing from __all__"
 
     def test_no_local_cli_implementation(self) -> None:
-        """Test that no local CLI implementation exists - only facade."""
+        """Test that no local CLI implementation exists - only direct re-exports."""
         # Verify all imports come from flext-cli, not local modules
-        # Check module source to ensure it's just a facade
+        # Check module source to ensure it's just direct re-exports
         import inspect
 
         from flext import base_cli
@@ -110,38 +99,31 @@ class TestFlextCLIFacade:
         assert "class BaseCLI" not in source_code
         assert "class FlextCLI" not in source_code
 
-        # Should contain facade comment
-        assert "facade" in source_code.lower() or "FACADE" in source_code
+        # Should contain direct re-export comment
+        assert "Direct re-export" in source_code or "re-exports" in source_code
 
-    @patch("flext_cli.FlextCLI")
-    def test_flext_cli_instantiation(self, mock_flext_cli) -> None:
-        """Test that FlextCLI can be instantiated through facade."""
-        mock_instance = Mock()
-        mock_flext_cli.return_value = mock_instance
+    def test_classes_are_directly_accessible(self) -> None:
+        """Test that all classes are directly accessible without instantiation."""
+        # Verify all classes exist and are callable
+        assert callable(FlextCliMain)
+        assert callable(FlextCliConfig)
+        assert callable(FlextCliApi)
+        assert callable(FlextCliFormatters)
+        assert callable(FlextCliModule)
+        assert callable(FlextCliServices)
 
-        # Create instance through facade
-        cli_instance = FlextCLI()
-
-        # Verify mock was called
-        mock_flext_cli.assert_called_once()
-        assert cli_instance == mock_instance
-
-    @patch("flext_cli.FlextCLIConfig")
-    def test_flext_cli_config_instantiation(self, mock_config) -> None:
-        """Test that FlextCLIConfig can be instantiated through facade."""
-        mock_instance = Mock()
-        mock_config.return_value = mock_instance
-
-        # Create instance through facade
-        config_instance = FlextCLIConfig()
-
-        # Verify mock was called
-        mock_config.assert_called_once()
-        assert config_instance == mock_instance
+    def test_classes_have_correct_names(self) -> None:
+        """Test that all classes have correct names matching flext-cli."""
+        assert FlextCliMain.__name__ == "FlextCliMain"
+        assert FlextCliConfig.__name__ == "FlextCliConfig"
+        assert FlextCliApi.__name__ == "FlextCliApi"
+        assert FlextCliFormatters.__name__ == "FlextCliFormatters"
+        assert FlextCliModule.__name__ == "FlextCliModule"
+        assert FlextCliServices.__name__ == "FlextCliServices"
 
 
-class TestFacadePatternCompliance:
-    """Test suite for facade pattern compliance and anti-duplication enforcement."""
+class TestDirectImportCompliance:
+    """Test suite for direct import compliance and anti-duplication enforcement."""
 
     def test_no_duplicate_functionality(self) -> None:
         """Test that no functionality is duplicated locally."""
@@ -207,6 +189,9 @@ class TestFacadePatternCompliance:
             "class.*CLI",  # Local CLI class definitions
             "def.*command",  # Local command functions
             "def.*group",  # Local group functions
+            "# Backward compatibility",  # No compatibility aliases
+            "FlextBaseCLI",  # No deprecated aliases
+            "CLIConfig",  # No deprecated aliases
         ]
 
         for pattern in forbidden_patterns:
@@ -221,53 +206,59 @@ class TestFacadePatternCompliance:
         source_lines = inspect.getsourcelines(base_cli)[0]
         source_code = "".join(source_lines)
 
-        # Should contain anti-duplication enforcement messaging
+        # Should contain direct re-export enforcement messaging
         required_comments = [
-            "ANTI-DUPLICATION ENFORCEMENT",
             "ZERO TOLERANCE",
-            "NO LOCAL IMPLEMENTATIONS",
-            "facade",
+            "NO ALIASES",
+            "NO WRAPPERS",
+            "Direct re-exports",
         ]
 
         for comment in required_comments:
             assert comment in source_code, f"Missing required comment: {comment}"
 
 
-class TestBackwardCompatibility:
-    """Test suite for backward compatibility with deprecated aliases."""
+class TestDirectImportValidation:
+    """Test suite for validating direct import approach."""
 
-    def test_deprecated_aliases_work(self) -> None:
-        """Test that deprecated aliases still function for backward compatibility."""
-        # Test FlextBaseCLI alias
-        assert FlextBaseCLI is not None
-        assert FlextBaseCLI == FlextCLI
+    def test_all_imports_are_direct(self) -> None:
+        """Test that all imports are direct from flext-cli with no wrappers."""
+        # Get all classes imported
+        classes = [
+            FlextCliApi,
+            FlextCliConfig,
+            FlextCliFormatters,
+            FlextCliMain,
+            FlextCliModule,
+            FlextCliServices,
+        ]
 
-        # Test CLIConfig alias
-        assert CLIConfig is not None
-        assert CLIConfig == FlextCLIConfig
+        # All classes should be directly from flext_cli module
+        for cls in classes:
+            assert "flext_cli" in str(cls.__module__), (
+                f"{cls} not directly from flext_cli"
+            )
 
-    def test_deprecated_aliases_point_to_modern_equivalents(self) -> None:
-        """Test that deprecated aliases point to modern flext-cli equivalents."""
-        # FlextBaseCLI should be the same object as FlextCLI
-        assert FlextBaseCLI is FlextCLI
-        assert id(FlextBaseCLI) == id(FlextCLI)
+    def test_no_alias_definitions(self) -> None:
+        """Test that no alias definitions exist in the module."""
+        import inspect
 
-        # CLIConfig should be the same object as FlextCLIConfig
-        assert CLIConfig is FlextCLIConfig
-        assert id(CLIConfig) == id(FlextCLIConfig)
+        from flext import base_cli
 
-    @patch("flext_cli.FlextCLI")
-    def test_deprecated_alias_instantiation(self, mock_flext_cli) -> None:
-        """Test that deprecated aliases can still be instantiated."""
-        mock_instance = Mock()
-        mock_flext_cli.return_value = mock_instance
+        source_lines = inspect.getsourcelines(base_cli)[0]
+        source_code = "".join(source_lines)
 
-        # Create instance using deprecated alias
-        cli_instance = FlextBaseCLI()
+        # Should not contain any alias assignments
+        forbidden_aliases = [
+            "FlextBaseCLI =",
+            "CLIConfig =",
+            "FlextCLI =",
+            "with_config =",
+            "with_output_format =",
+        ]
 
-        # Should work the same as modern equivalent
-        mock_flext_cli.assert_called_once()
-        assert cli_instance == mock_instance
+        for alias in forbidden_aliases:
+            assert alias not in source_code, f"Found forbidden alias: {alias}"
 
 
 class TestModuleDocumentation:
@@ -283,7 +274,7 @@ class TestModuleDocumentation:
         # Should contain key information
         doc = base_cli.__doc__
         assert "FLEXT CLI" in doc
-        assert "facade" in doc.lower()
+        assert "Direct Re-export" in doc
         assert "flext-cli" in doc
 
     def test_copyright_and_license(self) -> None:
@@ -295,11 +286,11 @@ class TestModuleDocumentation:
         assert "2025 FLEXT Team" in doc
         assert "SPDX-License-Identifier: MIT" in doc
 
-    def test_anti_duplication_documentation(self) -> None:
-        """Test that anti-duplication policy is documented."""
+    def test_direct_import_documentation(self) -> None:
+        """Test that direct import policy is documented."""
         from flext import base_cli
 
         doc = base_cli.__doc__
-        assert "ANTI-DUPLICATION ENFORCEMENT" in doc
         assert "ZERO TOLERANCE" in doc
-        assert "NO LOCAL IMPLEMENTATIONS" in doc
+        assert "NO ALIASES" in doc
+        assert "NO WRAPPERS" in doc
