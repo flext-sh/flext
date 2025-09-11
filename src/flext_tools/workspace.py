@@ -1,16 +1,10 @@
-"""FLEXT Tools Workspace Facade - ANTI-DUPLICATION flext Integration.
+"""FLEXT Tools Workspace Facade..
 
-CRITICAL: This module is a FACADE to flext workspace functionality. It eliminates
+This module is a FACADE to flext workspace functionality. It eliminates
 ALL workspace duplication by delegating to the established flext workspace service.
-
-ZERO TOLERANCE ENFORCEMENT: NO local workspace implementations. ALL workspace
-functionality MUST use flext workspace service exclusively.
-
-DOMAIN SEPARATION: Workspace patterns belong to flext domain, NOT flext-tools.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
-
 """
 
 from __future__ import annotations
@@ -22,10 +16,6 @@ from flext.workspace import (
     ProjectType,
     create_workspace_service,
 )
-
-# =============================================================================
-# FLEXT WORKSPACE FACADE ALIASES (ELIMINATE CIRCULAR IMPORTS)
-# =============================================================================
 
 
 # Lazy loading to avoid circular imports
@@ -51,7 +41,7 @@ def create_workspace_manager(*args: object, **kwargs: object) -> object:
 
 
 # Facade class for legacy tools compatibility
-class FlextToolsWorkspaceService(FlextDomainService):
+class FlextToolsWorkspaceService(FlextDomainService[str]):
     """Facade to flext workspace service - eliminates workspace code duplication."""
 
     def __init__(self, workspace_path: str | None = None) -> None:

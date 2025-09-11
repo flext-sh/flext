@@ -51,7 +51,6 @@ def run_command(
                     if callable(ruff_main):
                         ruff_main(cmd[3:])
                     else:
-                        # ruff not available in-process
                         return 1, "", "ruff not available in-process"
                 except SystemExit as e:
                     code = e.code if isinstance(e.code, int) else 1

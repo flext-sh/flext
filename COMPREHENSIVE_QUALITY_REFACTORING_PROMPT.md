@@ -38,7 +38,7 @@
 ### ❌ FORBIDDEN PRACTICES
 
 1. **CODE QUALITY VIOLATIONS**:
-   - object use of `# type: ignore` without specific error codes
+   - object use of `
    - object use of `object` types instead of proper type annotations
    - Silencing errors with ignore hints instead of fixing root causes
    - Creating wrappers, aliases, or compatibility facades

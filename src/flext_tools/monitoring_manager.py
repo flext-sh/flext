@@ -164,7 +164,7 @@ class MonitoringManager:
         """
         self.config_path = config_path or Path.cwd() / "monitoring"
 
-    def setup_monitoring(self, **_kwargs: object) -> FlextResult[MonitoringSetupData]:
+    def setup_monitoring(self) -> FlextResult[MonitoringSetupData]:
         """Set up comprehensive monitoring and observability infrastructure.
 
         Performs complete monitoring infrastructure configuration including metrics

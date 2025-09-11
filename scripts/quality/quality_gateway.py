@@ -254,7 +254,6 @@ class QualityGateway(FlextScript):
     def _analyze_code_quality(self, project_path: Path) -> FlextTypes.Core.Dict:
         """Analisar qualidade do código."""
         try:
-            # Ruff check via API (no subprocess)
             try:
                 pass
             except Exception:
@@ -274,8 +273,6 @@ class QualityGateway(FlextScript):
                     "status": "error",
                     "error": "Invalid project path",
                 }
-
-            # Ruff check via subprocess (API não disponível na versão atual)
 
             try:
                 # Validate project path to prevent directory traversal
@@ -310,7 +307,6 @@ class QualityGateway(FlextScript):
                 except json.JSONDecodeError:
                     ruff_issues = 0
 
-            # MyPy check via API (no subprocess)
             try:
                 pass
             except Exception:
