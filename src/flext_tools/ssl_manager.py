@@ -105,7 +105,7 @@ class SSLManager:
         """
         self.config_path = config_path or Path.cwd() / "ssl"
 
-    def setup_ssl(self, **_kwargs: object) -> FlextResult[SSLSetupData]:
+    def setup_ssl(self) -> FlextResult[SSLSetupData]:
         """Set up comprehensive SSL/TLS infrastructure and certificate management.
 
         Performs complete SSL/TLS infrastructure configuration including certificate

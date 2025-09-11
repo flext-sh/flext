@@ -42,7 +42,7 @@ class WorkspaceStatus:
 
         return FlextResult[None].ok(None)
 
-    def execute_main_logic(self, **_kwargs: object) -> FlextResult[object]:
+    def execute_main_logic(self) -> FlextResult[object]:
         """Executar análise completa do workspace."""
         try:
             workspace_root = Path.cwd()

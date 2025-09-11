@@ -82,7 +82,9 @@ class TestFlextControlPanelCli:
         mock_cli_main.return_value = mock_main_instance
 
         cli_service = create_cli()
-        result = cli_service.initialize(workspace="/test/workspace", profile="dev", debug=True)
+        result = cli_service.initialize(
+            workspace="/test/workspace", profile="dev", debug=True
+        )
 
         assert result.is_success
         main_cli = result.unwrap()
@@ -111,7 +113,9 @@ class TestNestedCommandHandlers:
         """Create CLI service instance for testing."""
         return create_cli()
 
-    def test_tools_commands_quality_check(self, cli_service: FlextControlPanelCli) -> None:
+    def test_tools_commands_quality_check(
+        self, cli_service: FlextControlPanelCli
+    ) -> None:
         """Test tools commands quality check functionality."""
         tools_handler = cli_service.create_tools_handler()
 
@@ -122,11 +126,12 @@ class TestNestedCommandHandlers:
             mock_gateway.run_checks.return_value = FlextResult.ok({"status": "passed"})
 
             from flext_tools import QualityCheckConfig
+
             config = QualityCheckConfig(
                 enable_lint=True,
                 enable_types=True,
                 enable_tests=False,
-                coverage_threshold=80.0
+                coverage_threshold=80.0,
             )
 
             result = tools_handler.quality_check(config)
@@ -134,7 +139,9 @@ class TestNestedCommandHandlers:
             assert result.is_success
             mock_gateway.run_checks.assert_called_once()
 
-    def test_tools_commands_list_scripts(self, cli_service: FlextControlPanelCli) -> None:
+    def test_tools_commands_list_scripts(
+        self, cli_service: FlextControlPanelCli
+    ) -> None:
         """Test tools commands script listing."""
         tools_handler = cli_service.create_tools_handler()
 
@@ -144,7 +151,9 @@ class TestNestedCommandHandlers:
             # Verify output was printed
             mock_print.assert_called()
 
-    def test_main_commands_test_command(self, cli_service: FlextControlPanelCli) -> None:
+    def test_main_commands_test_command(
+        self, cli_service: FlextControlPanelCli
+    ) -> None:
         """Test main commands test execution."""
         main_handler = cli_service.create_main_handler()
 
@@ -156,7 +165,9 @@ class TestNestedCommandHandlers:
             assert result.is_success
             mock_subprocess.assert_called()
 
-    def test_main_commands_lint_command(self, cli_service: FlextControlPanelCli) -> None:
+    def test_main_commands_lint_command(
+        self, cli_service: FlextControlPanelCli
+    ) -> None:
         """Test main commands lint execution."""
         main_handler = cli_service.create_main_handler()
 
@@ -168,7 +179,9 @@ class TestNestedCommandHandlers:
             assert result.is_success
             mock_subprocess.assert_called()
 
-    def test_main_commands_format_command(self, cli_service: FlextControlPanelCli) -> None:
+    def test_main_commands_format_command(
+        self, cli_service: FlextControlPanelCli
+    ) -> None:
         """Test main commands format execution."""
         main_handler = cli_service.create_main_handler()
 
@@ -179,7 +192,9 @@ class TestNestedCommandHandlers:
 
             mock_subprocess.assert_called()
 
-    def test_main_commands_info_command(self, cli_service: FlextControlPanelCli) -> None:
+    def test_main_commands_info_command(
+        self, cli_service: FlextControlPanelCli
+    ) -> None:
         """Test main commands info display."""
         main_handler = cli_service.create_main_handler()
 
@@ -203,7 +218,9 @@ class TestLegacyCompatibilityFunctions:
         mock_cli_service = Mock()
         mock_tools_handler = Mock()
         mock_cli_service.create_tools_handler.return_value = mock_tools_handler
-        mock_tools_handler.quality_check.return_value = FlextResult.ok({"status": "passed"})
+        mock_tools_handler.quality_check.return_value = FlextResult.ok(
+            {"status": "passed"}
+        )
         mock_create_cli.return_value = mock_cli_service
 
         # Should not raise an exception
@@ -244,7 +261,9 @@ class TestLegacyCompatibilityFunctions:
         mock_cli_service = Mock()
         mock_main_handler = Mock()
         mock_cli_service.create_main_handler.return_value = mock_main_handler
-        mock_main_handler.test_command.return_value = FlextResult.ok({"status": "passed"})
+        mock_main_handler.test_command.return_value = FlextResult.ok(
+            {"status": "passed"}
+        )
         mock_create_cli.return_value = mock_cli_service
 
         test(coverage=True, parallel=False)
@@ -258,7 +277,9 @@ class TestLegacyCompatibilityFunctions:
         mock_cli_service = Mock()
         mock_main_handler = Mock()
         mock_cli_service.create_main_handler.return_value = mock_main_handler
-        mock_main_handler.lint_command.return_value = FlextResult.ok({"status": "passed"})
+        mock_main_handler.lint_command.return_value = FlextResult.ok(
+            {"status": "passed"}
+        )
         mock_create_cli.return_value = mock_cli_service
 
         lint(fix=True)
@@ -304,7 +325,8 @@ class TestUnifiedClassPatternCompliance:
 
         # Get all classes defined in the module
         classes = [
-            name for name, obj in inspect.getmembers(cli)
+            name
+            for name, obj in inspect.getmembers(cli)
             if inspect.isclass(obj) and obj.__module__ == "flext.cli"
         ]
 
@@ -313,10 +335,13 @@ class TestUnifiedClassPatternCompliance:
 
         # Should not have multiple loose classes
         non_nested_classes = [
-            name for name in classes
+            name
+            for name in classes
             if not name.startswith("_")  # Nested classes start with _
         ]
-        assert len(non_nested_classes) == 1, f"Found multiple non-nested classes: {non_nested_classes}"
+        assert len(non_nested_classes) == 1, (
+            f"Found multiple non-nested classes: {non_nested_classes}"
+        )
 
     def test_nested_class_organization(self) -> None:
         """Test that functionality is organized in nested classes."""
@@ -342,20 +367,29 @@ class TestUnifiedClassPatternCompliance:
 
         # Get all functions in module
         functions = [
-            name for name, obj in inspect.getmembers(cli)
+            name
+            for name, obj in inspect.getmembers(cli)
             if inspect.isfunction(obj) and obj.__module__ == "flext.cli"
         ]
 
         # Filter out legacy compatibility functions and main functions
         allowed_functions = {
             "create_cli",  # Factory function
-            "main",        # Entry point
+            "main",  # Entry point
             # Legacy compatibility functions
-            "quality", "scripts", "analysis", "test", "lint", "format_code", "info"
+            "quality",
+            "scripts",
+            "analysis",
+            "test",
+            "lint",
+            "format_code",
+            "info",
         }
 
         unexpected_functions = set(functions) - allowed_functions
-        assert len(unexpected_functions) == 0, f"Found unexpected functions: {unexpected_functions}"
+        assert len(unexpected_functions) == 0, (
+            f"Found unexpected functions: {unexpected_functions}"
+        )
 
     def test_flext_cli_integration_compliance(self) -> None:
         """Test compliance with flext-cli integration requirements."""
@@ -432,7 +466,10 @@ class TestErrorHandling:
             result = main_handler.test_command(coverage=True, parallel=False)
 
             assert result.is_failure
-            assert "Command failed" in result.error or "Test execution failed" in result.error
+            assert (
+                "Command failed" in result.error
+                or "Test execution failed" in result.error
+            )
 
 
 class TestMainFunctionEntryPoint:

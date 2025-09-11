@@ -38,7 +38,6 @@ lint.ignore = [
     "E501",    # line-too-long
     "ERA001",  # False positives on legitimate comments
     "G004",
-    "N999",    # Invalid module name (examples use numbered prefixes)
     "PLR0911", # Many returns allowed in some processors/validators
     "PLR0912", # High complexity acceptable in orchestrators
     "PLR0913", # Too many arguments in function definition (sometimes necessary)
@@ -58,13 +57,6 @@ lint.ignore = [
 lint.isort.force-single-line = false
 lint.isort.split-on-trailing-comma = true
 lint.isort.combine-as-imports = true
-lint.per-file-ignores."**/__init__.py" = [
-    "E402",   # Import not at top of file
-    "F401",   # Unused imports (common in __init__.py)
-    "F403",
-    "I001",   # Import sorting
-    "RUF022", # __all__ sorting
-]
 lint.per-file-ignores."**/*_pb2_grpc.py" = ["ALL"]
 lint.per-file-ignores."**/*_pb2.py" = ["ALL"]
 lint.per-file-ignores."**/generated/**/*.py" = ["ALL"]
@@ -76,10 +68,10 @@ lint.per-file-ignores."**/constants.py" = [
 lint.per-file-ignores."**/examples/**" = [
     "EXE001",
     "INP001",
-    "N999",
     "I001",    # import sorting in examples isn't critical
     "F401",    # unused imports in examples are acceptable
     "F821",    # undefined names in pseudo-code examples
+    "N999",    # Invalid module name (examples use numbered prefixes)
     "PLR2004", # magic numbers in examples
     "S105",
     "S106",

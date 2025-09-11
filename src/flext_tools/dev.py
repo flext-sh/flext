@@ -17,14 +17,12 @@ from __future__ import annotations
 
 from flext_core import FlextDomainService, FlextResult
 
-# =============================================================================
-# FLEXT DEV FACADE ALIASES (ELIMINATE CIRCULAR IMPORTS)
-# =============================================================================
 
 # Lazy loading to avoid circular imports
 def _get_flext_dev_classes() -> tuple[type, type]:
     """Lazy load flext dev classes to avoid circular imports."""
     from flext.dev import FlextAdvancedDevModels, FlextAdvancedDevToolsManager
+
     return FlextAdvancedDevToolsManager, FlextAdvancedDevModels
 
 
@@ -38,7 +36,7 @@ class DevToolsManager:
 
 
 # Facade class for legacy tools compatibility
-class FlextToolsDevService(FlextDomainService):
+class FlextToolsDevService(FlextDomainService[str]):
     """Facade to flext dev service - eliminates development code duplication."""
 
     def __init__(self, workspace_path: str | None = None, **kwargs: object) -> None:

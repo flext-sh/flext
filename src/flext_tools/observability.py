@@ -298,7 +298,6 @@ def log_operation(func: OperationCallable) -> OperationCallable:
 
     def wrapper(*args: object, **kwargs: object) -> object:
         """Log operation with flext-observability wrapper."""
-        # Simple wrapper that calls the original function
         return func(*args, **kwargs)
 
     return wrapper

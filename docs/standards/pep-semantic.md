@@ -283,7 +283,7 @@ class FlextResult[T]:  # ✅ Novo padrão
     pass
 
 # Backward compatibility (temporário)
-flexResult = FlextResult  # Alias deprecated
+flexResult = FlextResult
 
 def flext_create_result[T]() -> FlextResult[T]:  # ✅ Novo padrão
     return FlextResult[None].ok()
