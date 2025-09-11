@@ -45,34 +45,33 @@ Integration:
 
 from __future__ import annotations
 
+# Build __all__ list from all imported modules
+import sys
+from types import ModuleType
+
 from flext_core.typings import FlextTypes
 
-# Main CLI and workspace tools
-from .cli import *
-from .dev import *
-from .workspace import *
+# Security scanning
+from .antipattern_scanner import *
+
+# Safety and backup tools
+from .backup import *
 
 # CLI patterns and base classes
 from .base_cli import *
 
-# Services and application layer
-from .handlers import *
-from .pipeline import *
+# Main CLI and workspace tools
+from .cli import *
 
-# Workspace CLI
-from .workspace_cli import *
-
-# Analysis tools
-from .conflicts import *
-from .duplicates import *
-from .lock_consistency import *
-from .version import *
+# Utility functions
+from .colors import *
 
 # Configuration management
 from .config_manager import *
 
-# Core utilities and script base
-from .script_base import *
+# Analysis tools
+from .conflicts import *
+from .dev import *
 
 # Discovery utilities
 from .discovery_base import *
@@ -83,13 +82,25 @@ from .discovery_transitive import *
 # Documentation generators - exclude conflicting main function
 from .documentation_generator import DocumentationGenerator
 from .documentation_templates import *
+from .duplicates import *
 
-# Infrastructure management
-from .monitoring_manager import *
-from .ssl_manager import *
+# Services and application layer
+from .handlers import *
 
 # Monitoring and health checks
 from .health_check import *
+from .lint_fixer import *
+from .lock_consistency import *
+
+# Infrastructure management
+from .monitoring_manager import *
+from .mypy_checker import *
+from .observability import *
+
+# Testing utilities
+from .oracle_e2e import *
+from .paths import *
+from .pipeline import *
 
 # Poetry operations and validation
 from .poetry_operations import *
@@ -98,30 +109,19 @@ from .poetry_validator import *
 # Quality management
 from .quality_bridge import *
 from .quality_gateway import *
-from .lint_fixer import *
-from .mypy_checker import *
-
-# Safety and backup tools
-from .backup import *
 from .rollback import *
 from .safety_validator import *
-from .venv_consistency import *
 
-# Security scanning
-from .antipattern_scanner import *
-
-# Testing utilities
-from .oracle_e2e import *
-
-# Utility functions
-from .colors import *
-from .observability import *
-from .paths import *
+# Core utilities and script base
+from .script_base import *
+from .ssl_manager import *
 from .stdlib import *
+from .venv_consistency import *
+from .version import *
+from .workspace import *
 
-# Build __all__ list from all imported modules
-import sys
-from types import ModuleType
+# Workspace CLI
+from .workspace_cli import *
 
 __all__: FlextTypes.Core.StringList = []
 
