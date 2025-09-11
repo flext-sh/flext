@@ -31,7 +31,7 @@ The FLEXT Control Panel implements a **professional Python module organization**
 src/
 ├── flext/                           # Main control panel package
 │   ├── __init__.py                  # Public API exports and version
-│   ├── py.typed                     # Type information marker
+│   ├── py.typed
 │   ├── cli.py                       # Command-line interface
 │   ├── dev.py                       # Development utilities
 │   ├── workspace.py                 # Workspace management
@@ -51,7 +51,7 @@ src/
 │       └── cli.py                   # Workspace CLI commands
 └── flext_tools/                     # Enterprise tooling package
     ├── __init__.py                  # Tools API exports
-    ├── py.typed                     # Type information marker
+    ├── py.typed
     ├── analysis/                    # Analysis and validation tools
     │   ├── __init__.py
     │   ├── conflicts.py             # Dependency conflict analysis
@@ -89,7 +89,7 @@ src/
     │   ├── __init__.py
     │   ├── gateway.py               # Quality gate enforcement
     │   ├── lint_fixer.py            # Automated lint fixing
-    │   └── mypy_checker.py          # Type checking
+    │   └── mypy_checker.py
     ├── safety/                      # Safety and backup tools
     │   ├── __init__.py
     │   ├── backup.py                # Backup management
@@ -629,7 +629,7 @@ make docs-examples-test              # Test all documentation examples
 
 # Type checking
 make type-check                      # MyPy strict mode validation
-make type-coverage                   # Type annotation coverage
+make type-coverage
 
 # Import validation
 make import-check                    # Validate import organization

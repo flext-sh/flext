@@ -17,7 +17,15 @@ from pathlib import Path
 from typing import Annotated, Any, Generic, Literal, Protocol, TypeVar
 from uuid import UUID, uuid4
 
-from flext_core import FlextDomainService, FlextLogger, FlextResult
+from flext_core import (
+    FlextDomainService, 
+    FlextLogger, 
+    FlextResult,
+    FlextModels,
+    FlextValidations,
+    FlextProcessors,
+    FlextUtilities
+)
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from pydantic.functional_validators import BeforeValidator
 
@@ -63,31 +71,22 @@ ProjectPath = Annotated[str, BeforeValidator(validate_project_path)]
 
 
 class FlextAdvancedDevModels:
-    """Advanced development models using Python 3.13 + Pydantic v2 patterns."""
+    """Advanced development models using flext-core as SOURCE OF TRUTH."""
 
-    class DevOperationContext(BaseModel):
-        """Development operation context."""
+    # FLEXT-CORE INTEGRATION: Use FlextModels.Config instead of local BaseModel
+    class DevOperationContext(FlextModels.Config):
+        """Development operation context using flext-core Config."""
 
-        model_config = ConfigDict(
-            validate_assignment=True,
-            use_enum_values=True,
-            arbitrary_types_allowed=False,
-            frozen=True,
-        )
-
+        # Additional dev-specific fields beyond base Config
         operation_id: UUID = Field(default_factory=uuid4, description="Operation identifier")
         workspace_root: ProjectPath = Field(..., description="Workspace root path")
-        timeout_seconds: int = Field(300, ge=10, le=3600, description="Operation timeout")
         parallel_workers: int = Field(4, ge=1, le=16, description="Parallel workers")
+        
+        # Use config from FlextModels.Config (timeout_seconds already exists as timeout_seconds)
 
-    class DevOperation(BaseModel, ABC):
-        """Abstract base for all development operations."""
-
-        model_config = ConfigDict(
-            validate_assignment=True,
-            use_enum_values=True,
-            frozen=True,
-        )
+    # FLEXT-CORE INTEGRATION: Use FlextModels.Value for immutable operations
+    class DevOperation(FlextModels.Value, ABC):
+        """Abstract base for all development operations using flext-core Value."""
 
         operation_id: str = Field(default_factory=lambda: f"op_{uuid4().hex[:8]}",
                                 description="Unique operation identifier")
@@ -96,6 +95,10 @@ class FlextAdvancedDevModels:
         @abstractmethod
         def validate_prerequisites(self) -> FlextResult[None]:
             """Validate operation prerequisites."""
+            
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Implement required abstract method from FlextModels.Value."""
+            return self.validate_prerequisites()
 
     class TestOperation(DevOperation):
         """Test execution operation with advanced configuration."""
@@ -190,8 +193,9 @@ class FlextAdvancedDevModels:
         Field(discriminator="type", description="Development operation union")
     ]
 
-    class ProjectInfo(BaseModel):
-        """Project information with type detection."""
+    # FLEXT-CORE INTEGRATION: Use FlextModels.Value for immutable project info
+    class ProjectInfo(FlextModels.Value):
+        """Project information with type detection using flext-core Value."""
 
         name: str = Field(..., min_length=1, max_length=100)
         path: ProjectPath = Field(..., description="Project path")
@@ -218,8 +222,17 @@ class FlextAdvancedDevModels:
 
             return self
 
-    class OperationResult(BaseModel):
-        """Operation execution result."""
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Implement required abstract method from FlextModels.Value."""
+            try:
+                # Project consistency validation handled by model_validator
+                return FlextResult[None].ok(None)
+            except Exception as e:
+                return FlextResult[None].fail(f"Project validation failed: {e}")
+
+    # FLEXT-CORE INTEGRATION: Use FlextModels.Value for immutable result
+    class OperationResult(FlextModels.Value):
+        """Operation execution result using flext-core Value."""
 
         operation_id: str = Field(..., description="Operation identifier")
         status: OperationStatus = Field(..., description="Execution status")
@@ -237,8 +250,18 @@ class FlextAdvancedDevModels:
                 raise ValueError("Operation duration exceeds reasonable limits")
             return v
 
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Implement required abstract method from FlextModels.Value."""
+            try:
+                # Duration validation handled by field_validator
+                if self.exit_code < 0:
+                    return FlextResult[None].fail("Invalid exit code: must be non-negative")
+                return FlextResult[None].ok(None)
+            except Exception as e:
+                return FlextResult[None].fail(f"Operation result validation failed: {e}")
 
-class FlextAdvancedDevToolsManager(FlextDomainService):
+
+class FlextAdvancedDevToolsManager(FlextDomainService[FlextAdvancedDevModels.OperationResult]):
     """Advanced development tools service using Python 3.13 + Generic patterns.
     
     Implements modern development operations with:
@@ -251,7 +274,7 @@ class FlextAdvancedDevToolsManager(FlextDomainService):
 
     def __init__(self, **data: Any) -> None:
         """Initialize development tools service with advanced patterns."""
-        super().__init__(**data)
+        super().__init__()
         self._logger = FlextLogger(__name__)
         self._models = FlextAdvancedDevModels()
         self._workspace_root = Path.cwd()
@@ -492,12 +515,25 @@ class FlextAdvancedDevToolsManager(FlextDomainService):
         workspace_path = Path(workspace_root) if workspace_root else self._workspace_root
         return discovery_service.discover_projects(workspace_path)
 
+    def execute(self) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
+        """Execute dev tools manager - required by FlextDomainService abstract method."""
+        # Default execution returns service status
+        return FlextResult[FlextAdvancedDevModels.OperationResult].ok(
+            FlextAdvancedDevModels.OperationResult(
+                operation_type="status",
+                status=FlextAdvancedDevModels.OperationStatus.SUCCESS,
+                message="FlextAdvancedDevToolsManager ready",
+                duration_seconds=0.0,
+                metadata={"service": "FlextAdvancedDevToolsManager", "workspace": str(self._workspace_root)}
+            )
+        )
+
 
 
 # Factory function for creating service instances
-def create_dev_tools_manager() -> FlextAdvancedDevToolsManager[BaseModel]:
+def create_dev_tools_manager() -> FlextAdvancedDevToolsManager:
     """Create development tools manager with advanced patterns."""
-    return FlextAdvancedDevToolsManager[BaseModel]()
+    return FlextAdvancedDevToolsManager()
 
 
 # Export main classes and types for external use
@@ -518,4 +554,4 @@ __all__ = [
 ]
 
 # Legacy compatibility aliases
-DevToolsManager = FlextAdvancedDevToolsManager[BaseModel]
+DevToolsManager = FlextAdvancedDevToolsManager

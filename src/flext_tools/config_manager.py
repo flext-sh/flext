@@ -190,7 +190,7 @@ class ConfigurationManager:
         """
         self.config_path = config_path or Path.cwd() / "config"
 
-    def load_config(self, **_kwargs: object) -> FlextResult[Configuration]:
+    def load_config(self) -> FlextResult[Configuration]:
         """Load configuration from files with environment-specific settings.
 
         Loads and processes configuration files from the configured directory,

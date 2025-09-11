@@ -404,7 +404,6 @@ class DocumentationGenerator(FlextScript):
             Extracted description text.
 
         """
-        # Simple extraction - look for first heading or description
         lines = content.split("\n")
         for line in lines:
             if line.startswith("# ") and not line.startswith("# " + project_name):

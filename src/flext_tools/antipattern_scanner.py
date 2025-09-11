@@ -550,7 +550,6 @@ class AntipatternScanner:
                 color = self._get_risk_color(risk)
                 print_colored(f"  {risk}: {count}", color)
 
-            # Type breakdown
             type_breakdown = self._get_type_breakdown(violations)
             print_colored("\n🔍 Violation Types:", Colors.BLUE)
             for vtype, count in type_breakdown.items():

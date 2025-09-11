@@ -91,7 +91,7 @@ class TestAdvancedDevOperations:
             "type": "test",
             "project_filter": "flext-core",
             "coverage_enabled": True,
-            "coverage_threshold": 85.0
+            "coverage_threshold": 85.0,
         }
 
         result = operation_executor.create_test_operation(test_operation_data)
@@ -108,7 +108,7 @@ class TestAdvancedDevOperations:
         # Test validation with invalid data
         invalid_operation = {
             "type": "test",
-            "coverage_threshold": 150.0  # Invalid: > 100
+            "coverage_threshold": 150.0,  # Invalid: > 100
         }
 
         result = operation_executor.create_test_operation(invalid_operation)
@@ -130,7 +130,9 @@ class TestProjectDiscoveryService:
         python_project.mkdir()
         (python_project / "src").mkdir()
         (python_project / "tests").mkdir()
-        (python_project / "pyproject.toml").write_text("[tool.poetry]\nname = 'flext-core'")
+        (python_project / "pyproject.toml").write_text(
+            "[tool.poetry]\nname = 'flext-core'"
+        )
 
         return workspace
 
@@ -195,7 +197,7 @@ class TestOperationExecutor:
         operation_data = {
             "type": "test",
             "project_filter": "flext-core",
-            "coverage_enabled": True
+            "coverage_enabled": True,
         }
 
         op_result = executor.create_test_operation(operation_data)
@@ -219,7 +221,7 @@ class TestOperationExecutor:
         operation_data = {
             "type": "lint",
             "tools": ["ruff", "mypy"],
-            "fix_issues": False
+            "fix_issues": False,
         }
 
         op_result = executor.create_lint_operation(operation_data)
@@ -239,7 +241,7 @@ class TestOperationExecutor:
         # Invalid operation data
         invalid_data = {
             "type": "test",
-            "test_types": []  # Empty list should fail validation
+            "test_types": [],  # Empty list should fail validation
         }
 
         result = executor.create_test_operation(invalid_data)
@@ -269,7 +271,7 @@ class TestAdvancedPatternsCompliance:
         operations = [
             {"type": "test", "coverage_enabled": True},
             {"type": "lint", "tools": ["ruff"]},
-            {"type": "format", "check_only": True}
+            {"type": "format", "check_only": True},
         ]
 
         for op_data in operations:
@@ -288,7 +290,7 @@ class TestAdvancedPatternsCompliance:
             "type": "test",
             "coverage_threshold": 85.5,  # Float validation
             "test_types": ["unit", "integration"],  # List validation
-            "parallel_execution": True  # Boolean validation
+            "parallel_execution": True,  # Boolean validation
         }
 
         result = executor.create_test_operation(operation_data)
@@ -325,7 +327,7 @@ class TestModuleExports:
             "FlextAdvancedDevModels",
             "OperationStatus",
             "OperationType",
-            "ProjectType"
+            "ProjectType",
         ]
 
         for export in expected_exports:
@@ -352,7 +354,9 @@ class TestErrorHandling:
     @patch("subprocess.run")
     def test_operation_execution_failure(self, mock_subprocess: Mock) -> None:
         """Test operation execution failure handling."""
-        mock_subprocess.return_value = Mock(returncode=1, stdout="", stderr="Error occurred")
+        mock_subprocess.return_value = Mock(
+            returncode=1, stdout="", stderr="Error occurred"
+        )
 
         manager = create_dev_tools_manager()
         executor = manager.create_operation_executor()

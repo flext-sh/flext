@@ -31,7 +31,6 @@ def get_stdlib_modules() -> set[str]:
             "functools",
             "itertools",
             "operator",
-            # Types and abstractions
             "typing",
             "dataclasses",
             "enum",

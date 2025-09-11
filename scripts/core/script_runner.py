@@ -85,7 +85,7 @@ class ScriptRunner(FlextScript):
             print_colored(f"❌ Error in script runner: {e}", Colors.RED)
             return FlextResult[object].fail(f"Script runner error: {e}")
 
-    def _list_all_scripts(self, registry: ScriptRegistry) -> None:  # Typed registry
+    def _list_all_scripts(self, registry: ScriptRegistry) -> None:
         """List all available scripts."""
         print_colored("📋 AVAILABLE SCRIPTS", Colors.BLUE)
         print_colored("=" * 40, Colors.BLUE)
@@ -125,7 +125,7 @@ class ScriptRunner(FlextScript):
 
     def _run_script(
         self,
-        registry: ScriptRegistry,  # Typed registry
+        registry: ScriptRegistry,
         script_name: str,
         **kwargs: object,  # Accept additional keyword arguments
     ) -> bool:
