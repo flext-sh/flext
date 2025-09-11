@@ -38,6 +38,7 @@ lint.ignore = [
     "PLR0912", # High complexity acceptable in orchestrators
     "PLR0913", # Too many arguments in function definition (sometimes necessary)
     "PLR0915", # Many statements in some builder functions
+    "PLR6301", # No Self use
     "RUF002",
     "RUF003",
     "RUF100",
