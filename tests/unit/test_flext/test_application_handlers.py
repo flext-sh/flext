@@ -69,6 +69,7 @@ class TestFlextAdvancedHandlerModels:
 
         result = command.validate_business_rules()
         assert result.is_failure
+        assert result.error
         assert "Large batch sizes require validation to be disabled" in result.error
 
     def test_user_management_command_validation(self) -> None:
@@ -98,6 +99,7 @@ class TestFlextAdvancedHandlerModels:
 
         result = command.validate_business_rules()
         assert result.is_failure
+        assert result.error
         assert "Cannot delete REDACTED_LDAP_BIND_PASSWORD users" in result.error
 
     def test_data_retrieval_query_validation(self) -> None:
@@ -278,6 +280,7 @@ class TestFlextAdvancedHandlerService:
         result = service.handle_command(unknown_command)
 
         assert result.is_failure
+        assert result.error
         assert "Unknown command type" in result.error
 
     @patch("flext.application_handlers.FlextLogger")
