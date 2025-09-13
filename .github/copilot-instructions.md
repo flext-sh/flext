@@ -44,7 +44,7 @@ result = (process_data(input_data)
 # Run comprehensive checks before committing
 make check                    # All quality checks
 make test-all                # All test suites (90% minimum coverage)
-make lint                   
+make lint
 ```
 
 **Type Safety**: Python 3.13+ with strict mypy/pyright compliance. All code must have explicit type annotations.

@@ -8,7 +8,7 @@
 
 ## 🚀 FLEXT Deployment Guides
 
-This directory contains comprehensive deployment documentation for FLEXT ecosystem services.
+This directory contains deployment documentation for FLEXT ecosystem services.
 
 ### 📋 Planned Content
 

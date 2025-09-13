@@ -1,13 +1,13 @@
 ---
 title: "FLEXT Documentation"
-description: "Enterprise Data Integration Platform - Complete Documentation Hub"
+description: "Data Integration Platform - Complete Documentation Hub"
 ---
 
 # FLEXT Documentation Hub
 
 **Category**: Documentation Hub | **Status**: Active Development | **Version**: 0.9.0-dev | **Last Updated**: {{ git_revision_date_localized }}
 
-Welcome to the FLEXT documentation hub. This comprehensive guide provides everything you need to understand, use, and contribute to the FLEXT ecosystem.
+Welcome to the FLEXT documentation hub. This guide provides everything you need to understand, use, and contribute to the FLEXT ecosystem.
 
 !!! info "Documentation Status"
 This documentation is under active development. Major components are covered; several sections are being expanded and aligned with the current codebase.
@@ -108,11 +108,11 @@ FLEXT follows Clean Architecture principles with clear separation of concerns:
 ### Data Integration
 
 - **Oracle Integration**: Full Oracle database support
-- **LDAP Integration**: Enterprise directory services
+- **LDAP Integration**: Directory services
 - **ETL/ELT Pipelines**: Flexible data transformation
 - **Real-time Processing**: Stream processing capabilities
 
-### Enterprise Features
+### Key Features
 
 - **Authentication**: LDAP/Active Directory integration
 - **Authorization**: Role-based access control
@@ -176,7 +176,7 @@ docs/
 - [ ] Kubernetes deployment support
 - [ ] Advanced data transformation features
 - [ ] Multi-tenant architecture
-- [ ] Enterprise SSO integration
+- [ ] SSO integration
 
 ### Q1 2026
 

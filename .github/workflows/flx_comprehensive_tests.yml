@@ -433,7 +433,7 @@ jobs:
 
           poetry run ruff check . --output-format=json --output-file=ruff-report.json || true
 
-        
+
           poetry run mypy flext/ --json-report mypy-report || true
 
           # Black formatting check

@@ -10,13 +10,9 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from flext_tools import (
-    Colors,
-    DependencyDiscovery,
-    FlextScript,
-    ScriptMetadata,
-    print_colored,
-)
+from src.flext_tools import Colors, print_colored
+from src.flext_tools.discovery_base import DependencyDiscovery
+from src.flext_tools.script_base import FlextScript, ScriptMetadata
 
 from ..common import discover_projects
 
@@ -62,6 +58,8 @@ class MissingDependenciesDiscoverer(FlextScript):
             workspace_root = Path.cwd()
             detailed = kwargs.get("verbose", False)
             projects_filter = kwargs.get("projects")
+            if projects_filter is not None and not isinstance(projects_filter, str):
+                projects_filter = None
 
             print_colored("🔍 DESCOBERTA DE DEPENDÊNCIAS FALTANTES", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)

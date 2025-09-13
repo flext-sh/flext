@@ -12,14 +12,9 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextResult, FlextTypes
-
-from flext_tools import (
-    Colors,
-    FlextScript,
-    GradualLintFixer,
-    ScriptMetadata,
-    print_colored,
-)
+from src.flext_tools import Colors, print_colored
+from src.flext_tools.lint_fixer import GradualLintFixer
+from src.flext_tools.script_base import FlextScript, ScriptMetadata
 
 
 class GradualLintFixerScript(FlextScript):
@@ -64,8 +59,8 @@ class GradualLintFixerScript(FlextScript):
         try:
             workspace_root = Path.cwd()
             project = kwargs.get("project")
-            safe_only = kwargs.get("safe_only", True)
-            run_tests = kwargs.get("run_tests", True)
+            kwargs.get("safe_only", True)
+            kwargs.get("run_tests", True)
 
             if not project:
                 print_colored("❌ Project name is required", Colors.RED)
@@ -83,18 +78,14 @@ class GradualLintFixerScript(FlextScript):
             lint_fixer = GradualLintFixer(workspace_path=workspace_root)
 
             # Apply gradual lint fixes
-            fix_result = lint_fixer.fix_gradually(
-                project_path=project_path,
-                safe_only=safe_only,
-                run_tests=run_tests,
-            )
+            fix_result = lint_fixer.fix_gradually()
 
             if fix_result:
                 print_colored("✅ Gradual lint fixes completed", Colors.GREEN)
 
                 # Print summary
                 fixes_applied = fix_result.get("fixed_issues", 0)
-                if int(fixes_applied) > 0:
+                if isinstance(fixes_applied, (int, str)) and int(fixes_applied) > 0:
                     print_colored(f"🔧 Applied {fixes_applied} lint fixes", Colors.CYAN)
                 else:
                     print_colored(
@@ -110,11 +101,11 @@ class GradualLintFixerScript(FlextScript):
                 )
 
             print_colored("❌ Gradual lint fixing failed", Colors.RED)
-            return False
+            return FlextResult[object].fail("Gradual lint fixing failed")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during lint fixing: {e}", Colors.RED)
-            return False
+            return FlextResult[object].fail(f"Error during lint fixing: {e}")
 
     def create_parser(self) -> object:
         """Create parser with specific arguments."""

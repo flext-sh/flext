@@ -143,7 +143,7 @@ export PROJECT_OPTIONAL=value
 
 - **Coverage**: 90% test coverage enforced
 - **Type Safety**: Strict MyPy configuration
-- **Linting**: Ruff with comprehensive rules
+- **Linting**: Ruff with rules
 - **Security**: Bandit + pip-audit scanning
 
 ## Integration with FLEXT Ecosystem

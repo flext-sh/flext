@@ -9,13 +9,10 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_tools import (
-    Colors,
-    FlextScript,
-    HealthCheckService,
-    ScriptMetadata,
-    print_colored,
-)
+from flext_core import FlextTypes
+from src.flext_tools import Colors, print_colored
+from src.flext_tools.health_check import HealthCheckService
+from src.flext_tools.script_base import FlextScript, ScriptMetadata
 
 
 class HealthCheckServiceRunner(FlextScript):
@@ -48,7 +45,7 @@ class HealthCheckServiceRunner(FlextScript):
             workspace_root = Path.cwd()
             continuous = kwargs.get("continuous", False)
             interval = kwargs.get("interval", 30)
-            output_format = kwargs.get("format", "json")
+            kwargs.get("format", "json")
 
             print_colored("🏥 HEALTH CHECK SERVICE", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
@@ -62,15 +59,10 @@ class HealthCheckServiceRunner(FlextScript):
                     f"🔄 Starting continuous monitoring (interval: {interval}s)",
                     Colors.BLUE,
                 )
-                health_service.run_health_checks(
-                    interval=interval,
-                    output_format=output_format,
-                )
+                health_service.run_health_checks()
             else:
                 # Single health check
-                health_result = health_service.run_health_checks(
-                    output_format=output_format,
-                )
+                health_result = health_service.run_health_checks()
 
                 if health_result:
                     print_colored("✅ All services healthy", Colors.GREEN)

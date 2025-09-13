@@ -6,7 +6,7 @@ import os
 import re
 from pathlib import Path
 
-from flext_core import FlextLogger
+from flext_core import FlextLogger, FlextTypes
 
 logger = FlextLogger(__name__)
 

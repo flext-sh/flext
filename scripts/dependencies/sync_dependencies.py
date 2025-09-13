@@ -13,16 +13,13 @@ Funcionalidades:
 import sys
 from pathlib import Path
 
-from flext_tools import (
-    Colors,
-    ConflictAnalyzer,
-    DependencyDiscovery,
-    DetailedLogger,
-    PoetryOperations,
-    PoetryValidator,
-    cached,
-    print_colored,
-)
+from flext_core import FlextTypes
+from src.flext_tools import Colors, print_colored
+from src.flext_tools.conflicts import ConflictAnalyzer
+from src.flext_tools.discovery_base import DependencyDiscovery
+from src.flext_tools.observability import DetailedLogger
+from src.flext_tools.poetry_operations import PoetryOperations
+from src.flext_tools.poetry_validator import PoetryValidator
 
 
 def check_validation_lock() -> bool:
@@ -81,7 +78,17 @@ def validate_projects(
         if verbose:
             print_colored(f"\n📁 Validando {project.name}...", Colors.CYAN)
 
-        validation = validator.validate_project(project)
+        validation_result = validator.validate_project(project)
+
+        if validation_result.is_failure:
+            all_valid = False
+            print_colored(
+                f"  ❌ {project.name}: Erro na validação - {validation_result.error}",
+                Colors.RED,
+            )
+            continue
+
+        validation = validation_result.unwrap()
 
         if validation["valid"]:
             if verbose:
@@ -161,9 +168,12 @@ def analyze_conflicts(
     """Analisa conflitos de versão no workspace."""
     print_colored("\n3️⃣ Analisando conflitos de versão...", Colors.BLUE)
 
-    @cached(namespace="conflicts", ttl=600)
     def get_conflicts() -> FlextTypes.Core.Dict:
-        return analyzer.analyze_workspace_conflicts(workspace_path)
+        result = analyzer.analyze_workspace_conflicts(workspace_path)
+        if result.is_success:
+            conflict_result = result.unwrap()
+            return conflict_result.model_dump()
+        return {"error": result.error or "Analysis failed"}
 
     analysis: FlextTypes.Core.Dict = get_conflicts()
     analysis["stats"]
@@ -172,11 +182,15 @@ def analyze_conflicts(
 
     if analysis["version_conflicts"] and verbose:
         print_colored("\n⚠️ Top 5 conflitos:", Colors.YELLOW)
-        conflicts_sorted = sorted(
-            analysis["version_conflicts"].items(),
-            key=lambda x: len(x[1]["projects"]),
-            reverse=True,
-        )
+        version_conflicts = analysis.get("version_conflicts", {})
+        if isinstance(version_conflicts, dict):
+            conflicts_sorted = sorted(
+                version_conflicts.items(),
+                key=lambda x: len(x[1]["projects"]),
+                reverse=True,
+            )
+        else:
+            conflicts_sorted = []
 
         for _i, (_package, _data) in enumerate(conflicts_sorted[:5]):
             pass
@@ -215,7 +229,7 @@ def add_missing_dependencies(
     for project, missing_deps in missing_by_project.items():
         print_colored(f"\n📦 Processando {project.name}...", Colors.CYAN)
 
-        added = poetry_ops.add_dependencies(project, missing_deps, auto_confirm=auto)
+        added = poetry_ops.add_dependencies(project, missing_deps, _auto_confirm=auto)
 
         total_added = sum(len(deps) for deps in added.values())
         if total_added > 0:
@@ -329,22 +343,22 @@ def main() -> int:
         validator = PoetryValidator()
         discovery = DependencyDiscovery()
         analyzer = ConflictAnalyzer()
-        poetry_ops = PoetryOperations(dry_run=args["dry_run"], logger=logger)
+        poetry_ops = PoetryOperations(dry_run=args["dry_run"])
 
         # Executa operações baseado nos argumentos
         if args["validate_only"]:
-            validate_projects(projects, validator, args["verbose"])
+            validate_projects(projects, validator, verbose=args["verbose"])
             return 0
 
         if args["conflicts_only"]:
-            analyze_conflicts(workspace_path, analyzer, args["verbose"])
+            analyze_conflicts(workspace_path, analyzer, verbose=args["verbose"])
             return 0
 
         if args["discover_only"]:
             missing_by_project = discover_missing_dependencies(
                 projects,
                 discovery,
-                args["verbose"],
+                verbose=args["verbose"],
             )
             return 0
 
@@ -352,7 +366,7 @@ def main() -> int:
         print_colored("\n🚀 Execução completa iniciada...", Colors.BLUE)
 
         # 1. Validação
-        if not validate_projects(projects, validator, args["verbose"]):
+        if not validate_projects(projects, validator, verbose=args["verbose"]):
             print_colored(
                 "\n⚠️ Alguns projetos têm problemas, mas continuando...",
                 Colors.YELLOW,
@@ -362,15 +376,15 @@ def main() -> int:
         missing_by_project = discover_missing_dependencies(
             projects,
             discovery,
-            args["verbose"],
+            verbose=args["verbose"],
         )
 
         # 3. Conflitos
-        analyze_conflicts(workspace_path, analyzer, args["verbose"])
+        analyze_conflicts(workspace_path, analyzer, verbose=args["verbose"])
 
         # 4. Adição de dependências
         if missing_by_project:
-            add_missing_dependencies(missing_by_project, poetry_ops, args["auto"])
+            add_missing_dependencies(missing_by_project, poetry_ops, auto=args["auto"])
 
         # 5. Relatório final
         print_colored("\n📊 Relatório Final:", Colors.BLUE)

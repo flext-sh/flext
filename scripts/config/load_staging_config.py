@@ -6,14 +6,12 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextResult
-
-from flext_tools import (
+from src.flext_tools import (
     Colors,
-    ConfigurationManager,
-    FlextScript,
-    ScriptMetadata,
     print_colored,
 )
+from src.flext_tools.config_manager import ConfigurationManager
+from src.flext_tools.script_base import FlextScript, ScriptMetadata
 
 # Apenas tipos internos de Python; argparse já importado acima
 
@@ -51,7 +49,7 @@ class StagingConfigLoader(FlextScript):
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute staging config loading logic."""
         try:
-            project_root = Path.cwd()
+            Path.cwd()
             validate_only = kwargs.get("validate_only", False)
 
             print_colored("⚙️ STAGING CONFIGURATION LOADER", Colors.CYAN)
@@ -61,10 +59,8 @@ class StagingConfigLoader(FlextScript):
             config_manager = ConfigurationManager()
 
             # Load and validate staging configuration
-            success = config_manager.load_config(
-                workspace_root=project_root,
-                environment="staging",
-            )
+            result = config_manager.load_config()
+            success = result.is_success
 
             if success:
                 print_colored(
