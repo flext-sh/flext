@@ -8,7 +8,7 @@
 
 ## 🚀 FLEXT Getting Started Guides
 
-This directory contains comprehensive getting started documentation for new FLEXT developers.
+This directory contains getting started documentation for new FLEXT developers.
 
 ### 📋 Planned Content
 

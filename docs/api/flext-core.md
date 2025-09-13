@@ -14,7 +14,7 @@ from flext_core import (
     FlextResult,
 
     # Dependency injection
-    FlextContainer,       # Enterprise DI container
+    FlextContainer,       # Dependency injection container
     get_flext_container, # Global container access
 
     # Domain modeling
@@ -89,7 +89,7 @@ else:
 
 ## 📦 FlextContainer - Dependency Injection
 
-Enterprise dependency injection with type safety.
+Dependency injection with type safety.
 
 ### Basic Usage
 

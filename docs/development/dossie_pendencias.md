@@ -97,13 +97,11 @@
 ### Fase 1: Correção Crítica (Esta Semana)
 
 1. **Eliminar 68 erros MyPy em src/**
-
    - Corrigir tipos genéricos
    - Remover object explícito
    - Ajustar interfaces
 
 2. **Corrigir teste falhando**
-
    - test_field_deserialization
 
 3. **Remover imports de fallback**
@@ -113,7 +111,6 @@
 ### Fase 2: Implementações (Próxima Semana)
 
 1. **Completar implementações vazias**
-
    - Implementar métodos com NotImplementedError
    - Completar handlers parciais
    - Usar parâmetros não utilizados

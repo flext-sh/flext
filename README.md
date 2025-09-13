@@ -506,7 +506,7 @@ make debug-export          # Export debug data for analysis
 1. **Fork & Clone**: Fork repository and clone locally
 2. **Branch**: Create feature branch: `git checkout -b feature/pipeline-optimization`
 3. **Develop**: Implement changes following Clean Architecture principles
-4. **Test**: Ensure 90%+ test coverage: `make test-coverage`
+4. **Test**: Ensure good test coverage: `make test-coverage`
 5. **Quality**: Pass all quality gates: `make validate`
 6. **Document**: Update relevant documentation
 7. **Submit**: Create pull request with detailed description

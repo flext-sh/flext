@@ -11,7 +11,10 @@ import importlib.util
 import sys
 from pathlib import Path
 
-from flext_tools import Colors, DependencyDiscovery, get_stdlib_modules, print_colored
+from flext_core import FlextTypes
+from src.flext_tools import Colors, print_colored
+from src.flext_tools.discovery_base import DependencyDiscovery
+from src.flext_tools.stdlib import get_stdlib_modules
 
 
 class FalsePositiveAuditor:
@@ -401,7 +404,9 @@ def audit_workspace() -> tuple[
             # Consolida resultados globais
             for category, items in analysis.items():
                 for item in items:
-                    global_analysis[category].add(item["import"])
+                    import_name = item["import"]
+                    if isinstance(import_name, str):
+                        global_analysis[category].add(import_name)
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro ao auditar {project_path.name}: {e}", Colors.RED)

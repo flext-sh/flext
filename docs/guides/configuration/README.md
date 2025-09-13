@@ -8,7 +8,7 @@
 
 ## ⚙️ FLEXT Configuration Guides
 
-This directory contains comprehensive configuration documentation for FLEXT ecosystem services.
+This directory contains configuration documentation for FLEXT ecosystem services.
 
 ### 📋 Planned Content
 

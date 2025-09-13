@@ -11,15 +11,10 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult
-
-from flext_tools import (
-    CodeDuplicateAnalyzer,
-    Colors,
-    FlextScript,
-    ScriptMetadata,
-    print_colored,
-)
+from flext_core import FlextResult, FlextTypes
+from src.flext_tools import Colors, print_colored
+from src.flext_tools.duplicates import CodeDuplicateAnalyzer
+from src.flext_tools.script_base import FlextScript, ScriptMetadata
 
 
 class CodeDuplicatesAnalyzer(FlextScript):

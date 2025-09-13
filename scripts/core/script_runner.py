@@ -15,8 +15,8 @@ from collections.abc import Callable
 from pathlib import Path
 
 from flext_core import FlextResult
-
-from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
+from src.flext_tools import Colors, print_colored
+from src.flext_tools.script_base import FlextScript, ScriptMetadata
 
 from .script_registry import ScriptRegistry
 
@@ -102,11 +102,7 @@ class ScriptRunner(FlextScript):
             list[ScriptMetadata],
         ] = {}  # Changed object to ScriptMetadata
         for script in scripts:
-            category = (
-                script.category.value
-                if hasattr(script.category, "value")
-                else str(script.category)
-            )
+            category = str(script.category)
             if category not in by_category:
                 by_category[category] = []
             by_category[category].append(script)
@@ -115,11 +111,7 @@ class ScriptRunner(FlextScript):
         for category, category_scripts in sorted(by_category.items()):
             print_colored(f"\n📁 {category.title()}:", Colors.CYAN)
             for script in sorted(category_scripts, key=lambda s: s.name):
-                (
-                    script.priority.value
-                    if hasattr(script.priority, "value")
-                    else str(script.priority)
-                )
+                print_colored(f"  📄 {script.name}: {script.description}", Colors.WHITE)
 
         print_colored(f"\n📊 Total: {len(scripts)} scripts", Colors.GREEN)
 
@@ -143,9 +135,11 @@ class ScriptRunner(FlextScript):
         try:
             # Import and run the script
 
+            # Construct file path from script name
+            script_file_path = Path(f"scripts/{script_name}.py")
             spec = importlib.util.spec_from_file_location(
                 f"script_{script_name}",
-                script_metadata.file_path,
+                script_file_path,
             )
 
             if not spec or not spec.loader:

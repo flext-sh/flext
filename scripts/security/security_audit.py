@@ -61,14 +61,13 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
+from flext_tools.antipattern_scanner import SecurityViolation, scan_flext_ecosystem
 
 
-# Placeholder implementations for security audit functionality
-class SecurityViolation:
-    """Security violation data class."""
+# Security audit functionality
 
     def __init__(self, message: str, risk_level: str = "MEDIUM") -> None:
         self.message = message
@@ -267,9 +266,9 @@ class SecurityAuditScript(FlextScript):
             print_colored("🌐 Scanning entire FLEXT ecosystem...", Colors.CYAN)
 
             # Use convenience function for ecosystem scan
-            scan_result = scan_flext_ecosystem(
+            scan_result: FlextResult[list[SecurityViolation]] = scan_flext_ecosystem(
                 workspace_path=".",
-                output_file=str(output_file) if output_file else None,
+                _output_file=str(output_file) if output_file else None,
             )
 
             if not scan_result.success:
@@ -299,7 +298,7 @@ class SecurityAuditScript(FlextScript):
             output_file = kwargs.get("output_file")
             risk_threshold = kwargs.get("risk_threshold", "MEDIUM")
             include_deps = kwargs.get("include_deps", False)
-            max_workers = kwargs.get("max_workers", 4)
+            kwargs.get("max_workers", 4)
             verbose = kwargs.get("verbose", False)
 
             # Validate paths
@@ -323,9 +322,6 @@ class SecurityAuditScript(FlextScript):
             config = ScanConfig(
                 target_paths=validated_paths,
                 include_dependencies=include_deps,
-                output_format=output_format,
-                risk_threshold=risk_threshold,
-                max_workers=max_workers,
             )
 
             # Validate configuration

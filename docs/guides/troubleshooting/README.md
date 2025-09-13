@@ -8,7 +8,7 @@
 
 ## 🔍 FLEXT Troubleshooting Guides
 
-This directory contains comprehensive troubleshooting documentation for FLEXT ecosystem issues.
+This directory contains troubleshooting documentation for FLEXT ecosystem issues.
 
 ### 📋 Planned Content
 

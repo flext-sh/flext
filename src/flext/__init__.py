@@ -50,51 +50,109 @@ License: MIT
 
 from __future__ import annotations
 
-"""FLEXT - Enterprise Data Integration Platform.
+# Application Handlers - Direct exports (no wildcards)
+from flext.application_handlers import ( AuthorizingHandler, BasicHandler, Command, CommandBus, CommandHandler, EventHandler, FlextAdvancedHandlerModels, )
 
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-"""
+# Application Pipeline - Direct exports (no wildcards)
+from flext.application_pipeline import ( CreatePipelineCommand, Entry, EntryValidator, ExecutePipelineCommand, FlextAdvancedPipelineModels, FlextAdvancedPipelineService, FlextApplicationPipelineService, )
 
-# Import all from each module with proper type handling - FLEXT Pattern
-from flext.application_handlers import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
-from flext.application_pipeline import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
-from flext.base_cli import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
-from flext.cli_patterns import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
-from flext.dev import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
-from flext.services import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
-from flext.services_utils import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
-from flext.workspace import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
-from flext.workspace_cli import *  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
+# Base CLI - Direct exports (no wildcards)
+from flext.base_cli import ( FlextCliApi, FlextCliConfig, FlextCliFormatters, FlextCliMain, FlextCliModule, FlextCliServices, )
 
-# Import CLI module AFTER workspace_cli to avoid namespace collision
-from flext.cli import FlextControlPanelCli, create_cli, main, quality, scripts, analysis, test, lint, format_code, info  # type: ignore[unused-ignore,reportWildcardImport,assignment,import-untyped] # noqa: F403
+# CLI - Direct exports (no wildcards)
+from flext.cli import ( FlextControlPanelCli, analysis, create_cli, format_code, info, lint, main, quality, scripts, test, )
 
-# Import the CLI module as a module to fix test compatibility
-import flext.cli as cli_module  # Make cli module available for tests
+# CLI Patterns - Direct exports (no wildcards)
+from flext.cli_patterns import ( FlextCLI, FlextCliApi as FlextCliApiPattern, FlextCLICommand, FlextCLIConfig, FlextCliConfig as FlextCliConfigPattern, FlextCliFormatters as FlextCliFormattersPattern, FlextCLIGroup, FlextCliMain as FlextCliMainPattern, with_config, )
 
-# Combine all __all__ from all modules - FLEXT Pattern
-import flext.application_handlers as _application_handlers
-import flext.application_pipeline as _application_pipeline
-import flext.base_cli as _base_cli
-import flext.cli as _cli
-import flext.cli_patterns as _cli_patterns
-import flext.dev as _dev
-import flext.services as _services
-import flext.services_utils as _services_utils
-import flext.workspace as _workspace
-import flext.workspace_cli as _workspace_cli
+# Development Tools - Direct exports (no wildcards)
+from flext.dev import ( FlextAdvancedDevModels, FlextAdvancedDevToolsManager, OperationStatus, OperationType, ProjectType, create_dev_tools_manager, )
 
-# Collect all exports from modules - FLEXT Pattern
-_collected_exports: list[str] = []
-for module in [_application_handlers, _application_pipeline, _base_cli, _cli, _cli_patterns, _dev, _services, _services_utils, _workspace, _workspace_cli]:
-    if hasattr(module, "__all__") and module.__all__:
-        module_all = getattr(module, "__all__", [])
-        if isinstance(module_all, list):
-            _collected_exports.extend(module_all)
+# Services - Direct exports (no wildcards)
+from flext.services import ( CommandHandler as ServicesCommandHandler, CreatePipelineCommand as ServicesCreatePipelineCommand, EventHandler as ServicesEventHandler, ExecutePipelineCommand as ServicesExecutePipelineCommand, FlextUnifiedServices, QueryHandler, create_services, )
 
-# Remove duplicates and sort - FLEXT Pattern
-__all__ = sorted(set(_collected_exports))
+# Service Utils - Direct exports (no wildcards)
+from flext.services_utils import ( FlextLogger, FlextResult, FlextUtilities, )
+
+# Workspace - Direct exports (no wildcards)
+from flext.workspace import ( FlextAdvancedWorkspaceModels, FlextAdvancedWorkspaceService, FlextWorkspaceService, ProjectType as WorkspaceProjectType, WorkspaceStatus, create_workspace_service, )
+
+# Workspace CLI - Direct exports (no wildcards)
+from flext.workspace_cli import ( FlextWorkspaceCli, build, check, cli, create_workspace_cli, docker, main as workspace_main, status, test as workspace_test, )
+
+# Export all imported symbols - Direct exports without wildcards
+__all__ = [
+    "AuthorizingHandler",
+    "BasicHandler",
+    "Command",
+    "CommandBus",
+    "CommandHandler",
+    "CreatePipelineCommand",
+    "Entry",
+    "EntryValidator",
+    "EventHandler",
+    "ExecutePipelineCommand",
+    "FlextAdvancedDevModels",
+    "FlextAdvancedDevToolsManager",
+    "FlextAdvancedHandlerModels",
+    "FlextAdvancedPipelineModels",
+    "FlextAdvancedPipelineService",
+    "FlextAdvancedWorkspaceModels",
+    "FlextAdvancedWorkspaceService",
+    "FlextApplicationPipelineService",
+    "FlextCLI",
+    "FlextCLICommand",
+    "FlextCLIConfig",
+    "FlextCLIGroup",
+    "FlextCliApi",
+    "FlextCliApiPattern",
+    "FlextCliConfig",
+    "FlextCliConfigPattern",
+    "FlextCliFormatters",
+    "FlextCliFormattersPattern",
+    "FlextCliMain",
+    "FlextCliMainPattern",
+    "FlextCliModule",
+    "FlextCliServices",
+    "FlextControlPanelCli",
+    "FlextLogger",
+    "FlextResult",
+    "FlextUnifiedServices",
+    "FlextUtilities",
+    "FlextWorkspaceCli",
+    "FlextWorkspaceService",
+    "OperationStatus",
+    "OperationType",
+    "ProjectType",
+    "QueryHandler",
+    "ServicesCommandHandler",
+    "ServicesCreatePipelineCommand",
+    "ServicesEventHandler",
+    "ServicesExecutePipelineCommand",
+    "WorkspaceProjectType",
+    "WorkspaceStatus",
+    "analysis",
+    "build",
+    "check",
+    "cli",
+    "create_cli",
+    "create_dev_tools_manager",
+    "create_services",
+    "create_workspace_cli",
+    "create_workspace_service",
+    "docker",
+    "format_code",
+    "info",
+    "lint",
+    "main",
+    "quality",
+    "scripts",
+    "status",
+    "test",
+    "with_config",
+    "workspace_main",
+    "workspace_test",
+]
 
 __version__ = "2.0.0"
 __author__ = "FLEXT Development Team"

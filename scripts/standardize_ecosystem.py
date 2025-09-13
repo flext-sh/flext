@@ -223,12 +223,11 @@ class FlextEcosystemStandardizer(FlextBaseService):
 
         original_content = content
         for pattern, replacement in docstring_patterns:
+            compiled_pattern = re.compile(pattern, flags=re.MULTILINE | re.DOTALL)
             if callable(replacement):
-                content = re.sub(
-                    pattern, replacement, content, flags=re.MULTILINE | re.DOTALL
-                )
+                content = compiled_pattern.sub(replacement, content)
             else:
-                content = re.sub(pattern, str(replacement), content, flags=re.MULTILINE)
+                content = compiled_pattern.sub(str(replacement), content)
 
         if content != original_content:
             stats["docstring_fixes"] += 1

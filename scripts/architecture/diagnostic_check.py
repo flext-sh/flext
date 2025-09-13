@@ -109,7 +109,8 @@ class FlextDiagnostic:
                 return 1, "", f"Invalid project path: {project_path}"
 
             # Validate executable path
-            if not ruff_path.is_absolute() or not ruff_path.exists():
+            ruff_path_obj = Path(ruff_path)
+            if not ruff_path_obj.is_absolute() or not ruff_path_obj.exists():
                 return 1, "", f"Invalid ruff executable: {ruff_path}"
 
             result = subprocess.run(

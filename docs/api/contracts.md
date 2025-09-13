@@ -6,7 +6,7 @@ Comprehensive API contract documentation defining the integration patterns, comm
 
 ## Overview
 
-This document defines the **enterprise-grade API contracts** for bidirectional communication between the two core services of the FLEXT ecosystem:
+This document defines the **API contracts** for bidirectional communication between the two core services of the FLEXT ecosystem:
 
 - **FlexCore Service** (Go): High-performance runtime container and plugin orchestration engine
 - **FLEXT Service** (Go/Python): Data integration engine with Python ecosystem bridge
@@ -970,7 +970,7 @@ services:
 
 ---
 
-**This API contract documentation ensures reliable, secure, and efficient communication between FlexCore and FLEXT Service, providing the foundation for enterprise-grade data integration operations across the entire FLEXT ecosystem.**
+**This API contract documentation ensures reliable, secure, and efficient communication between FlexCore and FLEXT Service, providing the foundation for data integration operations across the entire FLEXT ecosystem.**
 
 **Navigation**: [FLEXT Hub](NAVIGATION.md) > Documentation > API Contracts
 **Related Documentation**: [FlexCore CLAUDE.md](../flexcore/CLAUDE.md) | [FLEXT Service CLAUDE.md](../cmd/flext/CLAUDE.md)
