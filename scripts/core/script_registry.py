@@ -13,9 +13,9 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
 
-from flext_core import FlextLogger
-
-from flext_tools import Colors, ScriptMetadata, print_colored
+from flext_core import FlextLogger, FlextTypes
+from src.flext_tools import Colors, print_colored
+from src.flext_tools.script_base import ScriptMetadata
 
 
 class ScriptCategory(StrEnum):

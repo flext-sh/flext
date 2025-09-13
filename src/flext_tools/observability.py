@@ -208,7 +208,6 @@ def create_detailed_logger(name: str) -> DetailedLogger:
         Recommended approach:
 
         >>> from flext_core import FlextLogger
-    from flext_core.typings import FlextTypes
         >>> logger = FlextLogger(__name__)
 
     Warning:

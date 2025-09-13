@@ -86,7 +86,7 @@
 2. **cmd/flext** - Critical port discrepancies fixed (8081 vs 8080), Railway-oriented programming documented
 3. **cmd/flext-control-panel** - Architectural confusion corrected, simple launcher reality documented
 4. **cmd/flext-demo** - Elaborate fake demo system removed, simple HTTP server reality documented
-5. **flexcore** - Marketing badges removed, comprehensive architecture maintained
+5. **flexcore** - Marketing badges removed, architecture maintained
 
 **Critical Issues Fixed:**
 

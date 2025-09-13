@@ -7,7 +7,9 @@ Usa flext_tools para análise modular e cache.
 import sys
 from pathlib import Path
 
-from flext_tools import Colors, ConflictAnalyzer, cached, print_colored
+from flext_core import FlextTypes
+from src.flext_tools import Colors, print_colored
+from src.flext_tools.conflicts import ConflictAnalyzer
 
 
 def main() -> int:
@@ -20,10 +22,13 @@ def main() -> int:
     # Inicializa analisador
     analyzer = ConflictAnalyzer()
 
-    # Usa cache para análise pesada
-    @cached(namespace="conflicts", ttl=600)
+    # Análise direta sem cache
     def get_workspace_analysis() -> FlextTypes.Core.Dict:
-        return analyzer.analyze_workspace_conflicts(workspace_path)
+        result = analyzer.analyze_workspace_conflicts(workspace_path)
+        if result.is_success:
+            conflict_result = result.unwrap()
+            return conflict_result.model_dump()
+        return {"error": result.error or "Analysis failed"}
 
     # Executa análise
     print_colored("📊 Analisando workspace...", Colors.CYAN)
@@ -35,17 +40,25 @@ def main() -> int:
 
     # Mostra conflitos de versão
     if analysis["version_conflicts"]:
+        version_conflicts = analysis.get("version_conflicts", {})
+        conflicts_count = (
+            len(version_conflicts) if isinstance(version_conflicts, dict) else 0
+        )
         print_colored(
-            f"\n⚠️ Conflitos de Versão ({len(analysis['version_conflicts'])} pacotes):",
+            f"\n⚠️ Conflitos de Versão ({conflicts_count} pacotes):",
             Colors.YELLOW,
         )
 
         # Ordena por severidade
-        conflicts_sorted = sorted(
-            analysis["version_conflicts"].items(),
-            key=lambda x: (x[1].get("severity", "low"), len(x[1]["projects"])),
-            reverse=True,
-        )
+        version_conflicts = analysis.get("version_conflicts", {})
+        if isinstance(version_conflicts, dict):
+            conflicts_sorted = sorted(
+                version_conflicts.items(),
+                key=lambda x: (x[1].get("severity", "low"), len(x[1]["projects"])),
+                reverse=True,
+            )
+        else:
+            conflicts_sorted = []
 
         # Mostra top 10 ou todos se --all
         show_all = "--all" in sys.argv
@@ -63,11 +76,15 @@ def main() -> int:
         print_colored("\n🚫 Principais Bloqueadores de Atualização:", Colors.RED)
 
         # Ordena por número de projetos bloqueados
-        blockers_sorted = sorted(
-            analysis["update_blockers"].items(),
-            key=lambda x: len(x[1]["blocking_projects"]),
-            reverse=True,
-        )
+        update_blockers = analysis.get("update_blockers", {})
+        if isinstance(update_blockers, dict):
+            blockers_sorted = sorted(
+                update_blockers.items(),
+                key=lambda x: len(x[1]["blocking_projects"]),
+                reverse=True,
+            )
+        else:
+            blockers_sorted = []
 
         # Top 10 bloqueadores
         for _i, (_package, blocker_data) in enumerate(blockers_sorted[:10]):
@@ -80,15 +97,19 @@ def main() -> int:
     if analysis["suggested_resolutions"] and "--suggest" in sys.argv:
         print_colored("\n💡 Resoluções Sugeridas:", Colors.GREEN)
 
-        for _package, _suggestion in sorted(analysis["suggested_resolutions"].items())[
-            :10
-        ]:
-            pass
+        suggested_resolutions = analysis.get("suggested_resolutions", {})
+        if isinstance(suggested_resolutions, dict):
+            for _package, _suggestion in sorted(suggested_resolutions.items())[:10]:
+                pass
 
     # Gera relatório completo se solicitado
     if "--report" in sys.argv:
         report_path = Path("conflict_report.md")
-        report = analyzer.generate_conflict_report(analysis)
+        # Cast analysis to expected type for generate_conflict_report
+        analysis_typed: dict[
+            str, FlextTypes.Core.Dict | FlextTypes.Core.List | str | int
+        ] = analysis
+        report = analyzer.generate_conflict_report(analysis_typed)
 
         with Path(report_path).open("w", encoding="utf-8") as f:
             f.write(report)

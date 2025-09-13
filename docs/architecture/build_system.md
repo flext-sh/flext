@@ -93,7 +93,7 @@ make service-health          # Check FlexCore health status
 make build                   # Build to workspace /bin directory
 make build-local             # Build to local cmd/flext/bin directory
 make run                     # Start FLEXT service
-make test                    # Run comprehensive tests
+make test                    # Run tests
 make validate                # Complete validation pipeline
 ```
 

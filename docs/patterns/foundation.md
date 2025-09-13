@@ -311,7 +311,7 @@ else:
 
 ## Quality Standards
 
-- **Type Safety**: All models must have complete type annotations
+- **Type Safety**: All models must have proper type annotations
 - **Validation**: Business rules validated in `validate_business_rules()`
 - **Immutability**: Value objects must be frozen
 - **Error Handling**: All operations return FlextResult

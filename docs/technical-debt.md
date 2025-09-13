@@ -209,13 +209,11 @@ type CommandBus interface {
 ### **Phase 1: Critical Architecture Fixes (2-3 weeks)**
 
 1. **Fix Clean Architecture Violations**
-
    - Move HTTP server to infrastructure layer
    - Create proper domain interfaces
    - Implement dependency injection properly
 
 2. **Unify CQRS Implementation**
-
    - Choose one CQRS implementation
    - Remove conflicting implementations
    - Add proper type safety
@@ -228,7 +226,6 @@ type CommandBus interface {
 ### **Phase 2: Domain Enhancement (3-4 weeks)**
 
 1. **Implement Rich Domain Model**
-
    - Add complex business logic to entities
    - Create domain services for orchestration
    - Define clear aggregate boundaries
@@ -241,13 +238,12 @@ type CommandBus interface {
 ### **Phase 3: Production Readiness (4-6 weeks)**
 
 1. **Performance Optimizations**
-
    - Optimize read models
    - Add caching strategies
    - Implement connection pooling
 
 2. **Complete Testing Coverage**
-   - Add comprehensive integration tests
+   - Add integration tests
    - Implement end-to-end testing
    - Add performance testing
 
