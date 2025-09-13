@@ -153,7 +153,7 @@ class TestProjectDiscoveryService:
         manager = create_dev_tools_manager()
         discovery_service = manager.create_project_discovery()
 
-        result = discovery_service.discover_projects()
+        result = discovery_service.discover_projects(temp_workspace)
         assert result.is_success
 
         projects = result.unwrap()
@@ -300,7 +300,7 @@ class TestAdvancedPatternsCompliance:
         assert operation.coverage_threshold == 85.5
         assert "unit" in operation.test_types
 
-    def test_flext_result_pattern_integration(self) -> None:
+    def test_flext_result_pattern_integration(self, temp_workspace: Path) -> None:
         """Test FlextResult pattern integration throughout."""
         manager = create_dev_tools_manager()
 
@@ -309,7 +309,7 @@ class TestAdvancedPatternsCompliance:
         executor = manager.create_operation_executor()
 
         # Test that all methods return FlextResult
-        result1 = discovery_service.discover_projects()
+        result1 = discovery_service.discover_projects(temp_workspace)
         assert isinstance(result1, FlextResult)
 
         result2 = executor.create_operation({"type": "test"})
@@ -397,5 +397,5 @@ class TestErrorHandling:
 
             # Test prerequisite validation
             with patch("subprocess.run", side_effect=Exception("Command not found")):
-                operation.validate_prerequisites()
+                result = operation.validate_prerequisites()
                 assert result.is_failure

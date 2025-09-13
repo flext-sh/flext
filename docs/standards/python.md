@@ -11,13 +11,13 @@
 
 ## 🎯 Overview
 
-The FLEXT Control Panel implements a **professional Python module organization** following **Clean Architecture**, **Domain-Driven Design**, and **enterprise-grade patterns** aligned with the broader FLEXT ecosystem standards.
+The FLEXT Control Panel implements a **professional Python module organization** following **Clean Architecture**, **Domain-Driven Design**, and **professional patterns** aligned with the broader FLEXT ecosystem standards.
 
 ### **Module Organization Philosophy**
 
 1. **Clean Architecture Compliance** - Clear separation of concerns and dependency rules
 2. **Domain-Driven Design** - Business domain modeling with bounded contexts
-3. **Enterprise Standards** - Professional naming, documentation, and structure
+3. **Professional Standards** - Professional naming, documentation, and structure
 4. **FLEXT-Core Integration** - Consistent patterns across ecosystem
 5. **Maintainability Focus** - Clear, discoverable, and extensible organization
 
@@ -49,7 +49,7 @@ src/
 │   └── workspace/                   # Workspace management domain
 │       ├── __init__.py
 │       └── cli.py                   # Workspace CLI commands
-└── flext_tools/                     # Enterprise tooling package
+└── flext_tools/                     # Professional tooling package
     ├── __init__.py                  # Tools API exports
     ├── py.typed
     ├── analysis/                    # Analysis and validation tools
@@ -191,7 +191,7 @@ class WorkspaceService(FlextService):
 """
 FLEXT Control Panel - Workspace Management Module
 
-This module provides enterprise-grade workspace management capabilities for the FLEXT
+This module provides professional workspace management capabilities for the FLEXT
 data integration ecosystem, implementing Clean Architecture and Domain-Driven Design
 patterns for workspace lifecycle management, project organization, and dependency
 coordination across the 32-project ecosystem.
@@ -199,7 +199,7 @@ coordination across the 32-project ecosystem.
 Key Features:
     - Workspace lifecycle management (create, validate, migrate)
     - Multi-project dependency coordination
-    - Enterprise configuration management
+    - Configuration management
     - Quality gate enforcement across projects
 
 Integration:
@@ -234,7 +234,7 @@ License: MIT
 ```python
 class WorkspaceManager:
     """
-    Enterprise workspace manager for FLEXT ecosystem coordination.
+    Workspace manager for FLEXT ecosystem coordination.
 
     Manages workspace lifecycle, project coordination, and dependency management
     across the 32-project FLEXT ecosystem. Implements Clean Architecture patterns
@@ -423,10 +423,10 @@ from flext_observability import HealthChecker, MetricsCollector
 from flext_quality import QualityGateway
 
 # 4. Local package imports (relative imports)
-from .config import WorkspaceConfig
-from .entities import Workspace, Project
-from .services import ProjectService
-from ..utils import PathUtils
+from flext_module.config import WorkspaceConfig
+from flext_module.entities import Workspace, Project
+from flext_module.services import ProjectService
+from flext_module..utils import PathUtils
 
 # 5. Local module imports (absolute imports within package)
 from flext.cli_patterns import BaseCLI
@@ -440,7 +440,7 @@ from flext_tools.discovery import PythonDiscovery
 FLEXT Control Panel - Public API
 
 This module exposes the public API for the FLEXT Control Panel, providing
-enterprise-grade workspace management and control plane functionality for
+professional workspace management and control plane functionality for
 the FLEXT data integration ecosystem.
 """
 
@@ -450,16 +450,10 @@ __author__ = "FLEXT Development Team"
 __license__ = "MIT"
 
 # Core public API
-from .workspace import WorkspaceManager, WorkspaceConfig
-from .cli import FlextCLI
-from .services.application.pipeline import PipelineManager
-from .services.application.handlers import CommandHandler, QueryHandler
-
-# CLI patterns for extensibility
-from .cli_patterns import BaseCLI
-
-# Re-export essential flext-core components for convenience
-from flext_core import FlextResult, FlextLogger, FlextLogger
+from flext_module.workspace import WorkspaceManager, WorkspaceConfig
+from flext_module.cli import FlextCLI
+from flext_module.services.application.pipeline import PipelineManager
+from flext_module.services.application.handlers import CommandHandler, QueryHandler
 
 # Public API list for type checking and documentation
 __all__: FlextTypes.Core.StringList = [
@@ -628,7 +622,7 @@ make docs-coverage                   # Check docstring coverage
 make docs-examples-test              # Test all documentation examples
 
 # Type checking
-make type-check                    
+make type-check
 make type-coverage
 
 # Import validation
@@ -671,7 +665,7 @@ repos:
 #### **Adding New Modules**
 
 1. **Follow naming conventions** (snake_case, descriptive names)
-2. **Create comprehensive docstrings** following standards
+2. **Create docstrings** following standards
 3. **Add type annotations** for all signatures
 4. **Include examples** in docstrings
 5. **Add tests** with appropriate coverage

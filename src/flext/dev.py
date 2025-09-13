@@ -14,25 +14,17 @@ import subprocess
 from abc import ABC, abstractmethod
 from enum import Enum
 from pathlib import Path
-from typing import Annotated, Any, Generic, Literal, Protocol, TypeVar
+from typing import Annotated, Any, Literal, Protocol, TypeVar
 from uuid import UUID, uuid4
 
-from flext_core import (
-    FlextDomainService, 
-    FlextLogger, 
-    FlextResult,
-    FlextModels,
-    FlextValidations,
-    FlextProcessors,
-    FlextUtilities
-)
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from flext_core import ( FlextDomainService, FlextLogger, FlextModels, FlextResult, )
+from pydantic import BaseModel, Field, field_validator, model_validator
 from pydantic.functional_validators import BeforeValidator
 
 # Modern type system with generic constraints
 T = TypeVar("T", bound=BaseModel)
 R = TypeVar("R")
-OperationType = TypeVar("OperationType", bound="DevOperation")
+OperationType = TypeVar("OperationType", bound="FlextAdvancedDevModels.DevOperation")
 
 
 class OperationStatus(str, Enum):
@@ -58,6 +50,7 @@ class OperationType(str, Enum):
 # Import from unified workspace service - ELIMINATES duplication
 from flext.workspace import ProjectType
 
+
 def validate_project_path(v: str) -> str:
     """Validate project path using workspace service."""
     from flext.workspace import create_workspace_service
@@ -81,7 +74,7 @@ class FlextAdvancedDevModels:
         operation_id: UUID = Field(default_factory=uuid4, description="Operation identifier")
         workspace_root: ProjectPath = Field(..., description="Workspace root path")
         parallel_workers: int = Field(4, ge=1, le=16, description="Parallel workers")
-        
+
         # Use config from FlextModels.Config (timeout_seconds already exists as timeout_seconds)
 
     # FLEXT-CORE INTEGRATION: Use FlextModels.Value for immutable operations
@@ -90,12 +83,12 @@ class FlextAdvancedDevModels:
 
         operation_id: str = Field(default_factory=lambda: f"op_{uuid4().hex[:8]}",
                                 description="Unique operation identifier")
-        context: DevOperationContext = Field(..., description="Operation context")
+        context: "FlextAdvancedDevModels.DevOperationContext" = Field(..., description="Operation context")
 
         @abstractmethod
         def validate_prerequisites(self) -> FlextResult[None]:
             """Validate operation prerequisites."""
-            
+
         def validate_business_rules(self) -> FlextResult[None]:
             """Implement required abstract method from FlextModels.Value."""
             return self.validate_prerequisites()
@@ -141,7 +134,7 @@ class FlextAdvancedDevModels:
         strict_mode: bool = Field(True, description="Enable strict mode")
 
         @model_validator(mode="after")
-        def validate_lint_config(self) -> LintOperation:
+        def validate_lint_config(self) -> "FlextAdvancedDevModels.LintOperation":
             """Validate linting configuration."""
             if "mypy" in self.tools and "pyright" in self.tools:
                 raise ValueError("Cannot run both mypy and pyright simultaneously")
@@ -206,7 +199,7 @@ class FlextAdvancedDevModels:
         test_count: int = Field(0, ge=0, description="Number of test files")
 
         @model_validator(mode="after")
-        def validate_project_consistency(self) -> ProjectInfo:
+        def validate_project_consistency(self) -> "FlextAdvancedDevModels.ProjectInfo":
             """Validate project type consistency."""
             path = Path(self.path)
 
@@ -520,11 +513,13 @@ class FlextAdvancedDevToolsManager(FlextDomainService[FlextAdvancedDevModels.Ope
         # Default execution returns service status
         return FlextResult[FlextAdvancedDevModels.OperationResult].ok(
             FlextAdvancedDevModels.OperationResult(
-                operation_type="status",
+                operation_id="status_check",
                 status=FlextAdvancedDevModels.OperationStatus.SUCCESS,
-                message="FlextAdvancedDevToolsManager ready",
                 duration_seconds=0.0,
-                metadata={"service": "FlextAdvancedDevToolsManager", "workspace": str(self._workspace_root)}
+                exit_code=0,
+                stdout_lines=0,
+                stderr_lines=0,
+                artifacts={"service": "FlextAdvancedDevToolsManager", "workspace": str(self._workspace_root)}
             )
         )
 

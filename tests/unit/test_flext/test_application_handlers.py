@@ -7,7 +7,7 @@ following FLEXT unified class patterns and advanced type safety.
 from unittest.mock import patch
 
 import pytest
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
 
 from flext.application_handlers import (
     CommandHandler,
@@ -284,8 +284,10 @@ class TestFlextAdvancedHandlerService:
         assert "Unknown command type" in result.error
 
     @patch("flext.application_handlers.FlextLogger")
-    def test_error_handling_in_handlers(self, mock_logger) -> None:
+    def test_error_handling_in_handlers(self, mock_logger: object) -> None:
         """Test error handling within handlers."""
+        # Note: mock_logger parameter unused in this test implementation
+        _ = mock_logger  # Acknowledge unused parameter
         service = create_handler_service()
 
         # Test with command that might cause business rule violation
@@ -359,8 +361,6 @@ class TestAdvancedPatterns:
 
     def test_generic_type_constraints(self) -> None:
         """Test generic type constraints with BaseModel."""
-        from pydantic import BaseModel
-
         service = FlextAdvancedHandlerService[BaseModel]()
         assert isinstance(service, FlextAdvancedHandlerService)
 

@@ -2,7 +2,7 @@
 
 **Category**: Documentation Hub | **Status**: Active Development | **Version**: 0.9.0-dev | **Last Updated**: 2025-08-10
 
-Welcome to the FLEXT documentation hub. This comprehensive guide provides everything you need to understand, use, and contribute to the FLEXT ecosystem.
+Welcome to the FLEXT documentation hub. This guide provides everything you need to understand, use, and contribute to the FLEXT ecosystem.
 
 ## Table of Contents
 

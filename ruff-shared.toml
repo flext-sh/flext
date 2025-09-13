@@ -53,6 +53,7 @@ lint.ignore = [
 lint.isort.force-single-line = false
 lint.isort.split-on-trailing-comma = true
 lint.isort.combine-as-imports = true
+lint.per-file-ignores."**/.vulture_whitelist.py" = ["ALL"]
 lint.per-file-ignores."**/*_pb2_grpc.py" = ["ALL"]
 lint.per-file-ignores."**/*_pb2.py" = ["ALL"]
 lint.per-file-ignores."**/generated/**/*.py" = ["ALL"]

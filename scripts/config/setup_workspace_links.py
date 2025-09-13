@@ -17,18 +17,16 @@ import shutil
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult
-
-from flext_tools import (
+from flext_core import FlextResult, FlextTypes
+from src.flext_tools import (
     Colors,
-    FlextScript,
-    MonitoringManager,
-    MyPyChecker,
-    PoetryValidator,
-    ScriptMetadata,
-    SSLManager,
     print_colored,
 )
+from src.flext_tools.monitoring_manager import MonitoringManager
+from src.flext_tools.mypy_checker import MyPyChecker
+from src.flext_tools.poetry_validator import PoetryValidator
+from src.flext_tools.script_base import FlextScript, ScriptMetadata
+from src.flext_tools.ssl_manager import SSLManager
 
 """Somente tipos stdlib aqui; argparse já importado acima."""
 
@@ -89,37 +87,37 @@ class ComprehensiveWorkspaceManager(FlextScript):
                 result = self._setup_workspace_links(workspace_root, **kwargs)
                 if result.is_failure:
                     return FlextResult[object].fail(result.error or "Unknown error")
-                success = success and result.data
+                success = success and bool(result.data)
 
             if operation in {"setup", "all"}:
                 result = self._complete_workspace_setup(workspace_root, **kwargs)
                 if result.is_failure:
                     return FlextResult[object].fail(result.error or "Unknown error")
-                success = success and result.data
+                success = success and bool(result.data)
 
             if operation in {"deps", "all"}:
                 result = self._manage_dependencies(workspace_root, **kwargs)
                 if result.is_failure:
                     return FlextResult[object].fail(result.error or "Unknown error")
-                success = success and result.data
+                success = success and bool(result.data)
 
             if operation in {"typecheck", "all"}:
                 result = self._run_mypy_check(workspace_root, **kwargs)
                 if result.is_failure:
                     return FlextResult[object].fail(result.error or "Unknown error")
-                success = success and result.data
+                success = success and bool(result.data)
 
             if operation in {"ssl", "all"}:
                 result = self._setup_ssl(workspace_root, **kwargs)
                 if result.is_failure:
                     return FlextResult[object].fail(result.error or "Unknown error")
-                success = success and result.data
+                success = success and bool(result.data)
 
             if operation in {"monitoring", "all"}:
                 result = self._setup_monitoring(workspace_root, **kwargs)
                 if result.is_failure:
                     return FlextResult[object].fail(result.error or "Unknown error")
-                success = success and result.data
+                success = success and bool(result.data)
 
             return FlextResult[object].ok(success)
 
@@ -296,10 +294,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
 
         try:
             mypy_checker = MyPyChecker(workspace_path=workspace_root)
-            check_result = mypy_checker.check_workspace(
-                projects_filter=kwargs.get("projects"),
-                strict_mode=kwargs.get("strict", False),
-            )
+            check_result = mypy_checker.check_workspace()
 
             if check_result:
                 has_errors = check_result.get("has_errors", False)
@@ -332,10 +327,8 @@ class ComprehensiveWorkspaceManager(FlextScript):
 
         try:
             ssl_manager = SSLManager()
-            success = ssl_manager.setup_ssl(
-                workspace_root=workspace_root,
-                environment="staging",
-            )
+            result = ssl_manager.setup_ssl()
+            success = result.is_success
 
             if success:
                 print_colored(
@@ -360,10 +353,8 @@ class ComprehensiveWorkspaceManager(FlextScript):
 
         try:
             monitoring_manager = MonitoringManager()
-            success = monitoring_manager.setup_monitoring(
-                workspace_root=workspace_root,
-                environment=kwargs.get("environment", "staging"),
-            )
+            result = monitoring_manager.setup_monitoring()
+            success = result.is_success
 
             if success:
                 print_colored(

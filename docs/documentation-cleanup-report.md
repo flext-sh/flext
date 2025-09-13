@@ -162,7 +162,6 @@ docs/
 ### High Priority
 
 1. **Individual Project README Standardization**
-
    - flext-api, flext-auth, flext-cli need honest README versions
    - Remove marketing claims, add realistic status
    - Follow established template from main README.md
