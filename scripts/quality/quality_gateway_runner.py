@@ -14,11 +14,10 @@ from flext_core import FlextTypes
 
 from flext_tools import (
     Colors,
-    FlextScript,
-    QualityGateway,
-    ScriptMetadata,
     print_colored,
 )
+from flext_tools.quality_gateway import QualityGateway
+from flext_tools.script_base import FlextScript, ScriptMetadata
 
 
 class QualityGatewayRunner(FlextScript):
@@ -60,23 +59,21 @@ class QualityGatewayRunner(FlextScript):
             quality_gateway = QualityGateway(workspace_path=workspace_root)
 
             # Run complete quality gateway
-            gateway_result = quality_gateway.run_quality_checks(
-                projects_filter=projects_filter,
-                strict_mode=strict_mode,
-                fail_fast=fail_fast,
-            )
+            gateway_result = quality_gateway.run_quality_checks()
 
             if gateway_result:
                 print_colored("✅ Quality gateway completed", Colors.GREEN)
 
                 # Print summary
                 total_issues = 0
-                for check_result in gateway_result.get("details", {}).values():
-                    if isinstance(check_result, dict) and not check_result.get(
-                        "passed",
-                        True,
-                    ):
-                        total_issues += 1
+                details = gateway_result.get("details", {})
+                if isinstance(details, dict):
+                    for check_result in details.values():
+                        if isinstance(check_result, dict) and not check_result.get(
+                            "passed",
+                            True,
+                        ):
+                            total_issues += 1
 
                 if total_issues == 0:
                     print_colored(

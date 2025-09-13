@@ -12,17 +12,11 @@ from __future__ import annotations
 
 import subprocess
 from pathlib import Path
+
 from flext_cli import FlextCliApi, FlextCliConfig, FlextCliMain
 from flext_core import FlextDomainService, FlextLogger, FlextResult
 
-from flext_tools import (
-    Colors,
-    QualityCheckConfig,
-    QualityGateway,
-    all_quality_checks_passed,
-    get_quality_failure_summary,
-    print_colored,
-)
+from flext_tools import ( Colors, QualityCheckConfig, QualityGateway, all_quality_checks_passed, get_quality_failure_summary, print_colored, )
 
 
 class FlextControlPanelCli(FlextDomainService[str]):
@@ -291,10 +285,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
 
             # Create main CLI using flext-cli
             try:
-                main_cli = FlextCliMain(
-                    name="flext",
-                    description="FLEXT Control Panel - Enterprise Data Integration Platform",
-                )
+                main_cli = FlextCliMain()
             except Exception as cli_error:
                 # Fallback for CLI initialization issues during optimization phase
                 self._logger.warning(

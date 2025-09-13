@@ -20,13 +20,12 @@ from mypy import api as mypy_api
 
 from flext_tools import (
     Colors,
-    ConflictAnalyzer,
-    DependencyDiscovery,
-    FlextScript,
-    PoetryValidator,
-    ScriptMetadata,
     print_colored,
 )
+from flext_tools.conflicts import ConflictAnalyzer
+from flext_tools.discovery_base import DependencyDiscovery
+from flext_tools.poetry_validator import PoetryValidator
+from flext_tools.script_base import FlextScript, ScriptMetadata
 
 from ..common import discover_projects
 
@@ -172,33 +171,64 @@ class QualityGateway(FlextScript):
                     project_name,
                     analysis_results,
                 )  # Atualizar estatísticas
-                total_stats["projects_analyzed"] = (
-                    int(total_stats["projects_analyzed"]) + 1
-                )
+                current_analyzed = total_stats["projects_analyzed"]
+                if isinstance(current_analyzed, (int, str)):
+                    total_stats["projects_analyzed"] = int(current_analyzed) + 1
+                else:
+                    total_stats["projects_analyzed"] = 1
                 if project_result["passed"]:
-                    total_stats["passed"] = int(total_stats["passed"]) + 1
+                    current_passed = total_stats["passed"]
+                    if isinstance(current_passed, (int, str)):
+                        total_stats["passed"] = int(current_passed) + 1
+                    else:
+                        total_stats["passed"] = 1
                     print_colored(f"  ✅ {project_name}: APROVADO", Colors.GREEN)
                 else:
-                    total_stats["failed"] = int(total_stats["failed"]) + 1
+                    current_failed = total_stats["failed"]
+                    if isinstance(current_failed, (int, str)):
+                        total_stats["failed"] = int(current_failed) + 1
+                    else:
+                        total_stats["failed"] = 1
                     failed_projects.append(project_name)
                     print_colored(f"  ❌ {project_name}: REPROVADO", Colors.RED)
 
-                total_stats["total_issues"] = int(total_stats["total_issues"]) + int(
-                    project_result["total_issues"],
-                )
-                total_stats["critical_issues"] = int(
-                    total_stats["critical_issues"],
-                ) + int(project_result["critical_issues"])
+                # Safe int conversion for total_issues
+                current_total_issues = total_stats["total_issues"]
+                project_total_issues = project_result.get("total_issues", 0)
+                if isinstance(current_total_issues, (int, str)) and isinstance(
+                    project_total_issues, (int, str)
+                ):
+                    total_stats["total_issues"] = int(current_total_issues) + int(
+                        project_total_issues
+                    )
+                elif isinstance(project_total_issues, (int, str)):
+                    total_stats["total_issues"] = int(project_total_issues)
+
+                # Safe int conversion for critical_issues
+                current_critical_issues = total_stats["critical_issues"]
+                project_critical_issues = project_result.get("critical_issues", 0)
+                if isinstance(current_critical_issues, (int, str)) and isinstance(
+                    project_critical_issues, (int, str)
+                ):
+                    total_stats["critical_issues"] = int(current_critical_issues) + int(
+                        project_critical_issues
+                    )
+                elif isinstance(project_critical_issues, (int, str)):
+                    total_stats["critical_issues"] = int(project_critical_issues)
 
                 # Mostrar detalhes se há falhas
-                if not project_result["passed"]:
+                project_passed = project_result.get("passed", False)
+                if not project_passed:
                     self._print_project_issues(project_result)
 
             # Resumo final
-            self._print_final_summary(total_stats, failed_projects, strict_mode)
+            self._print_final_summary(
+                total_stats, failed_projects, _strict_mode=strict_mode
+            )
 
             # Gateway aprovado apenas se todos os projetos passaram
-            gateway_passed = int(total_stats["failed"]) == 0
+            failed_count = total_stats.get("failed", 0)
+            gateway_passed = isinstance(failed_count, (int, str)) and int(failed_count) == 0
 
             if gateway_passed:
                 print_colored("\n🎉 QUALITY GATEWAY: APROVADO", Colors.GREEN)
@@ -225,7 +255,7 @@ class QualityGateway(FlextScript):
         """Descobrir projetos para analisar."""
         return discover_projects(workspace_root, projects_filter)
 
-    def _analyze_dependencies(self, project_path: Path) -> FlextTypes.Core.Dict:
+    def _analyze_dependencies(self, project_path: Path) -> dict[str, object]:
         """Analisar dependências usando flext_tools."""
         try:
             discovery = DependencyDiscovery(resolve_transitive=True)
@@ -251,7 +281,7 @@ class QualityGateway(FlextScript):
                 "error": str(e),
             }
 
-    def _analyze_code_quality(self, project_path: Path) -> FlextTypes.Core.Dict:
+    def _analyze_code_quality(self, project_path: Path) -> dict[str, object]:
         """Analisar qualidade do código."""
         try:
             try:
@@ -278,16 +308,20 @@ class QualityGateway(FlextScript):
                 # Validate project path to prevent directory traversal
                 project_path = project_path.resolve()
                 if not project_path.exists() or not project_path.is_dir():
-                    return FlextResult[FlextTypes.Core.Dict].fail(
-                        f"Invalid project path: {project_path}"
-                    )
+                    return {
+                        "total_issues": -1,
+                        "status": "error",
+                        "error": f"Invalid project path: {project_path}",
+                    }
 
                 # Use absolute path and validate executable
                 ruff_cmd = shutil.which("ruff")
                 if not ruff_cmd:
-                    return FlextResult[FlextTypes.Core.Dict].fail(
-                        "Ruff not found in PATH"
-                    )
+                    return {
+                        "total_issues": -1,
+                        "status": "error",
+                        "error": "Ruff not found in PATH",
+                    }
 
                 result = subprocess.run(
                     [ruff_cmd, "check", str(project_path), "--output-format=json"],
@@ -345,16 +379,27 @@ class QualityGateway(FlextScript):
                 "error": str(e),
             }
 
-    def _analyze_conflicts(self, project_path: Path) -> FlextTypes.Core.Dict:
+    def _analyze_conflicts(self, project_path: Path) -> dict[str, object]:
         """Analisar conflitos usando flext_tools."""
         try:
             analyzer = ConflictAnalyzer()
-            conflicts = analyzer.analyze_workspace_conflicts(project_path)
+            conflicts_result = analyzer.analyze_workspace_conflicts(project_path)
+
+            if conflicts_result.is_failure:
+                return {
+                    "conflicts_count": -1,
+                    "conflicts": [],
+                    "status": "error",
+                    "error": conflicts_result.error,
+                }
+
+            conflicts = conflicts_result.unwrap()
+            conflicts_count = conflicts.conflict_count()
 
             return {
-                "conflicts_count": len(conflicts),
-                "conflicts": conflicts,
-                "status": "passed" if len(conflicts) == 0 else "failed",
+                "conflicts_count": conflicts_count,
+                "conflicts": [],  # Empty list since we don't need the actual conflicts
+                "status": "passed" if conflicts_count == 0 else "failed",
             }
 
         except (OSError, ValueError, TypeError) as e:
@@ -365,7 +410,7 @@ class QualityGateway(FlextScript):
                 "error": str(e),
             }
 
-    def _validate_poetry_config(self, project_path: Path) -> FlextTypes.Core.Dict:
+    def _validate_poetry_config(self, project_path: Path) -> dict[str, object]:
         """Validar configuração Poetry usando flext_tools."""
         try:
             validator = PoetryValidator()
@@ -380,7 +425,7 @@ class QualityGateway(FlextScript):
         self,
         project_name: str,
         results: AnalysisResults,
-    ) -> FlextTypes.Core.Dict:
+    ) -> dict[str, object]:
         """Calcular resultado final do projeto."""
         issues = []
         critical_issues = 0
@@ -456,18 +501,21 @@ class QualityGateway(FlextScript):
             "poetry_result": results.poetry_result,
         }
 
-    def _print_project_issues(self, project_result: FlextTypes.Core.Dict) -> None:
+    def _print_project_issues(self, project_result: dict[str, object]) -> None:
         """Imprimir issues do projeto."""
-        for issue in project_result["issues"]:
-            if "Conflitos:" in issue or "Poetry" in issue:
-                print_colored(f"    🚨 {issue}", Colors.RED)
-            else:
-                print_colored(f"    ⚠️ {issue}", Colors.YELLOW)
+        issues = project_result.get("issues", [])
+        if isinstance(issues, list):
+            for issue in issues:
+                if isinstance(issue, str):
+                    if "Conflitos:" in issue or "Poetry" in issue:
+                        print_colored(f"    🚨 {issue}", Colors.RED)
+                    else:
+                        print_colored(f"    ⚠️ {issue}", Colors.YELLOW)
 
     def _print_final_summary(
         self,
-        total_stats: FlextTypes.Core.Dict,
-        failed_projects: FlextTypes.Core.StringList,
+        total_stats: dict[str, object],
+        failed_projects: list[str],
         *,
         _strict_mode: bool = False,
     ) -> None:
@@ -481,10 +529,11 @@ class QualityGateway(FlextScript):
                 pass
 
         # Score de qualidade
-        if total_stats["projects_analyzed"] > 0:
-            success_rate = (
-                total_stats["passed"] / total_stats["projects_analyzed"]
-            ) * 100
+        projects_analyzed = total_stats.get("projects_analyzed", 0)
+        passed_count = total_stats.get("passed", 0)
+
+        if isinstance(projects_analyzed, (int, str)) and isinstance(passed_count, (int, str)) and int(projects_analyzed) > 0:
+            success_rate = (int(passed_count) / int(projects_analyzed)) * 100
 
             if success_rate == PERFECT_SCORE:
                 score_color = Colors.GREEN

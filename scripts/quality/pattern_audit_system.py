@@ -480,6 +480,8 @@ class PatternAuditSystem:
                 return False
 
             ecosystem_result = audit_result.data
+            if ecosystem_result is None:
+                return False
 
             # Generate comprehensive report
             report_result = self.generate_compliance_report(ecosystem_result)

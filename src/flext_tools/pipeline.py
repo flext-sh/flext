@@ -85,8 +85,7 @@ License: MIT
 
 from __future__ import annotations
 
-from flext_core import FlextLogger, FlextModels, FlextResult
-from flext_core.typings import FlextTypes
+from flext_core import FlextLogger, FlextModels, FlextResult, FlextTypes
 from pydantic import Field
 
 # Initialize logger

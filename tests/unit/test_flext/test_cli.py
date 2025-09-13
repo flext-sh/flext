@@ -4,12 +4,14 @@ Tests for the unified CLI interface functionality following FLEXT testing patter
 with proper verification of flext-cli integration and unified class patterns.
 """
 
+import inspect
 from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
 from flext_core import FlextResult
 
+from flext import cli
 from flext.cli import (
     FlextControlPanelCli,
     __all__,
@@ -19,7 +21,6 @@ from flext.cli import (
     info,
     lint,
     main,
-    # Legacy function exports
     quality,
     scripts,
     test,
@@ -361,10 +362,6 @@ class TestUnifiedClassPatternCompliance:
 
     def test_no_loose_helper_functions(self) -> None:
         """Test that no loose helper functions exist outside classes."""
-        import inspect
-
-        from flext import cli
-
         # Get all functions in module
         functions = [
             name
@@ -393,10 +390,6 @@ class TestUnifiedClassPatternCompliance:
 
     def test_flext_cli_integration_compliance(self) -> None:
         """Test compliance with flext-cli integration requirements."""
-        import inspect
-
-        from flext import cli
-
         source = inspect.getsource(cli)
 
         # Should use flext-cli components

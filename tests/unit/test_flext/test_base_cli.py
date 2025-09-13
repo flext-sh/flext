@@ -4,6 +4,9 @@ Tests for the CLI facade functionality following FLEXT testing patterns
 with proper verification of flext-cli integration and facade pattern compliance.
 """
 
+import inspect
+
+from flext import base_cli
 from flext.base_cli import (
     FlextCliApi,
     FlextCliConfig,
@@ -85,8 +88,6 @@ class TestFlextCliDirectExports:
         """Test that no local CLI implementation exists - only direct re-exports."""
         # Verify all imports come from flext-cli, not local modules
         # Check module source to ensure it's just direct re-exports
-        import inspect
-
         from flext import base_cli
 
         source_lines = inspect.getsourcelines(base_cli)[0]
@@ -127,10 +128,6 @@ class TestDirectImportCompliance:
 
     def test_no_duplicate_functionality(self) -> None:
         """Test that no functionality is duplicated locally."""
-        import inspect
-
-        from flext import base_cli
-
         # Get all members of base_cli module
         members = inspect.getmembers(base_cli)
 
@@ -150,10 +147,6 @@ class TestDirectImportCompliance:
 
     def test_domain_separation_compliance(self) -> None:
         """Test that module respects domain separation - only CLI functionality."""
-        import inspect
-
-        from flext import base_cli
-
         source_lines = inspect.getsourcelines(base_cli)[0]
         source_code = "".join(source_lines)
 
@@ -173,10 +166,6 @@ class TestDirectImportCompliance:
 
     def test_zero_tolerance_enforcement(self) -> None:
         """Test zero tolerance policy - no local CLI implementations."""
-        import inspect
-
-        from flext import base_cli
-
         source_lines = inspect.getsourcelines(base_cli)[0]
         source_code = "".join(source_lines)
 
@@ -199,10 +188,6 @@ class TestDirectImportCompliance:
 
     def test_anti_duplication_comments(self) -> None:
         """Test that anti-duplication enforcement comments are present."""
-        import inspect
-
-        from flext import base_cli
-
         source_lines = inspect.getsourcelines(base_cli)[0]
         source_code = "".join(source_lines)
 
@@ -241,10 +226,6 @@ class TestDirectImportValidation:
 
     def test_no_alias_definitions(self) -> None:
         """Test that no alias definitions exist in the module."""
-        import inspect
-
-        from flext import base_cli
-
         source_lines = inspect.getsourcelines(base_cli)[0]
         source_code = "".join(source_lines)
 
@@ -266,8 +247,6 @@ class TestModuleDocumentation:
 
     def test_module_docstring_present(self) -> None:
         """Test that module has proper docstring."""
-        from flext import base_cli
-
         assert base_cli.__doc__ is not None
         assert len(base_cli.__doc__.strip()) > 0
 
@@ -279,8 +258,6 @@ class TestModuleDocumentation:
 
     def test_copyright_and_license(self) -> None:
         """Test that proper copyright and license are present."""
-        from flext import base_cli
-
         doc = base_cli.__doc__
         assert "Copyright" in doc
         assert "2025 FLEXT Team" in doc
@@ -288,8 +265,6 @@ class TestModuleDocumentation:
 
     def test_direct_import_documentation(self) -> None:
         """Test that direct import policy is documented."""
-        from flext import base_cli
-
         doc = base_cli.__doc__
         assert "ZERO TOLERANCE" in doc
         assert "NO ALIASES" in doc
