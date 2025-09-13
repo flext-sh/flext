@@ -10,7 +10,7 @@ This document provides an honest assessment of FlexCore's current architecture, 
 
 ### Purpose and Scope
 
-FlexCore serves as the **enterprise runtime container service** and **primary orchestration engine** for the entire FLEXT data integration ecosystem. It bridges high-performance Go services with Python business logic while maintaining strict architectural boundaries.
+FlexCore serves as the **business runtime container service** and **primary orchestration engine** for the entire FLEXT data integration ecosystem. It bridges high-performance Go services with Python business logic while maintaining strict architectural boundaries.
 
 ### Key Responsibilities
 
@@ -167,13 +167,11 @@ func (ar *AggregateRoot[T]) ClearEvents() {
 ### Phase 1: Critical Architecture Fixes (Weeks 1-2)
 
 1. **Move HTTP Server to Infrastructure Layer**
-
    - Extract HTTP server from Application struct
    - Create proper adapter interfaces
    - Implement dependency injection
 
 2. **Unify CQRS Implementation**
-
    - Choose single implementation strategy
    - Remove conflicting implementations
    - Implement proper type safety
@@ -186,7 +184,6 @@ func (ar *AggregateRoot[T]) ClearEvents() {
 ### Phase 2: Domain Enhancement (Weeks 3-4)
 
 1. **Implement Rich Domain Model**
-
    - Add business logic to entities
    - Create domain services
    - Define aggregate boundaries

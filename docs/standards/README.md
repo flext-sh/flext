@@ -210,7 +210,7 @@ Every directory must have a `README.md` that includes:
 
 - Use descriptive file names
 - Include relevant keywords in content
-- Create comprehensive indexes
+- Create indexes
 - Use consistent terminology for searchability
 
 ## Quality Checklist

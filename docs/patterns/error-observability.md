@@ -24,7 +24,7 @@ FlextExceptions.Error                  # Base for all errors
 
 ### Rich Context Preservation
 
-Every error carries comprehensive context.
+Every error carries context.
 
 ### Protocol-Based Observability
 

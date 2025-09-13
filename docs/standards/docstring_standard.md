@@ -11,7 +11,7 @@ Extended description explaining the module's purpose, architecture, and
 integration within the FLEXT ecosystem. Should include key components,
 main classes/functions, and examples of usage.
 
-The module docstring should be comprehensive but concise, providing enough
+The module docstring should be but concise, providing enough
 information for developers to understand the module's role and how to use it
 effectively within the broader FLEXT architecture.
 
@@ -335,7 +335,7 @@ class ProcessingStatus(Enum):
 
 ## Quality Standards
 
-- All public APIs must have comprehensive docstrings
+- All public APIs must have docstrings
 - Examples must be executable and demonstrate real usage
 - Type hints must match docstring descriptions
 - No spelling or grammar errors

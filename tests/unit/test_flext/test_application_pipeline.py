@@ -7,7 +7,7 @@ following FLEXT unified class patterns and comprehensive validation.
 from unittest.mock import patch
 
 import pytest
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
 
 from flext.application_pipeline import (
     CreatePipelineCommand,
@@ -17,7 +17,6 @@ from flext.application_pipeline import (
     GetPipelineQuery,
     ListPipelinesQuery,
     PipelineName,
-    # Legacy compatibility
     PipelineService,
     PipelineStatus,
     PipelineType,
@@ -35,7 +34,7 @@ class TestFlextAdvancedPipelineModels:
             host="oracle.example.com",
             port=1521,
             service_name="XEPDB1",
-            username="hr",
+            user="hr",
             password="password123",
             # schema_name="HR",  # Parameter not available in current API
         )
@@ -78,7 +77,9 @@ class TestFlextAdvancedPipelineModels:
     def test_source_config_discriminated_union(self) -> None:
         """Test SourceConfig discriminated union functionality."""
         oracle_config = FlextAdvancedPipelineModels.OracleSource(
-            host="oracle.test.com", port=1521, service_name="TEST",
+            host="oracle.test.com",
+            port=1521,
+            service_name="TEST",
             # database="", username="", password=""  # Adding missing required parameters
         )
 
@@ -253,8 +254,10 @@ class TestFlextAdvancedPipelineService:
         assert len(pipelines) >= 0
 
     @patch("flext.application_pipeline.FlextLogger")
-    def test_error_handling_in_handlers(self, mock_logger) -> None:
+    def test_error_handling_in_handlers(self, mock_logger: object) -> None:
         """Test error handling within handlers."""
+        # Note: mock_logger parameter unused in this test implementation
+        _ = mock_logger  # Acknowledge unused parameter
         service = create_pipeline_service()
 
         # Test with empty pipeline name (should be handled gracefully)
@@ -360,8 +363,6 @@ class TestAdvancedPatterns:
 
     def test_generic_type_constraints(self) -> None:
         """Test generic type constraints with BaseModel."""
-        from pydantic import BaseModel
-
         service = FlextAdvancedPipelineService[BaseModel]()
         assert isinstance(service, FlextAdvancedPipelineService)
 

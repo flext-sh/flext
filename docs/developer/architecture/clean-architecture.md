@@ -13,7 +13,7 @@ This document describes how FLEXT Control Panel implements Clean Architecture pr
 
 ## Overview
 
-FLEXT Control Panel implements Clean Architecture as defined by Robert C. Martin, with adaptations for Go ecosystem and enterprise data integration requirements.
+FLEXT Control Panel implements Clean Architecture as defined by Robert C. Martin, with adaptations for Go ecosystem and business data integration requirements.
 
 ### Core Principles
 
@@ -53,7 +53,7 @@ FLEXT Control Panel implements Clean Architecture as defined by Robert C. Martin
 ### Domain Layer (Inner Core)
 
 **Location**: `pkg/domain/`  
-**Purpose**: Contains enterprise business rules and entities  
+**Purpose**: Contains business business rules and entities  
 **Dependencies**: None (only Go standard library)
 
 ```go

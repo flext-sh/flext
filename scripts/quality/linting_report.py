@@ -19,10 +19,10 @@ from datetime import UTC, datetime
 from importlib import import_module
 from pathlib import Path
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 from mypy import api as mypy_api
-
-from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
+from src.flext_tools import Colors, print_colored
+from src.flext_tools.script_base import FlextScript, ScriptMetadata
 
 from ..common import discover_projects
 
@@ -110,8 +110,8 @@ class LintingReport(FlextScript):
                     "python_files": len(list(project_path.rglob("*.py"))),
                     "ruff_issues": ruff_result["total_issues"],
                     "mypy_errors": mypy_result["total_errors"],
-                    "has_issues": int(ruff_result["total_issues"]) > 0
-                    or int(mypy_result["total_errors"]) > 0,
+                    "has_issues": int(str(ruff_result["total_issues"])) > 0
+                    or int(str(mypy_result["total_errors"])) > 0,
                 }
 
                 project_results[project_name] = {
@@ -121,28 +121,51 @@ class LintingReport(FlextScript):
                 }
 
                 # Atualizar totais
-                total_stats["projects_analyzed"] = (
-                    int(total_stats["projects_analyzed"]) + 1
-                )
-                total_stats["total_files"] = int(total_stats["total_files"]) + int(
-                    project_stats["python_files"],
-                )
-                total_stats["ruff_issues"] = int(total_stats["ruff_issues"]) + int(
-                    project_stats["ruff_issues"],
-                )
-                total_stats["mypy_errors"] = int(total_stats["mypy_errors"]) + int(
-                    project_stats["mypy_errors"],
-                )
-                if project_stats["has_issues"]:
-                    total_stats["projects_with_issues"] = (
-                        int(total_stats["projects_with_issues"]) + 1
+                current_analyzed = total_stats["projects_analyzed"]
+                if isinstance(current_analyzed, (int, str)):
+                    total_stats["projects_analyzed"] = int(current_analyzed) + 1
+                else:
+                    total_stats["projects_analyzed"] = 1
+                # Safe int conversion for total_files
+                current_total_files = total_stats["total_files"]
+                if isinstance(current_total_files, (int, str)):
+                    total_stats["total_files"] = int(current_total_files) + int(
+                        project_stats["python_files"]
                     )
+                else:
+                    total_stats["total_files"] = int(project_stats["python_files"])
+
+                # Safe int conversion for ruff_issues
+                current_ruff_issues = total_stats["ruff_issues"]
+                if isinstance(current_ruff_issues, (int, str)):
+                    total_stats["ruff_issues"] = int(current_ruff_issues) + int(
+                        project_stats["ruff_issues"]
+                    )
+                else:
+                    total_stats["ruff_issues"] = int(project_stats["ruff_issues"])
+
+                # Safe int conversion for mypy_errors
+                current_mypy_errors = total_stats["mypy_errors"]
+                if isinstance(current_mypy_errors, (int, str)):
+                    total_stats["mypy_errors"] = int(current_mypy_errors) + int(
+                        project_stats["mypy_errors"]
+                    )
+                else:
+                    total_stats["mypy_errors"] = int(project_stats["mypy_errors"])
+                if project_stats["has_issues"]:
+                    current_projects_with_issues = total_stats["projects_with_issues"]
+                    if isinstance(current_projects_with_issues, (int, str)):
+                        total_stats["projects_with_issues"] = (
+                            int(current_projects_with_issues) + 1
+                        )
+                    else:
+                        total_stats["projects_with_issues"] = 1
 
                 # Mostrar resultado do projeto
                 self._print_project_summary(
                     project_name,
                     project_stats,
-                    detailed=detailed,
+                    _detailed=detailed,
                 )
 
                 if detailed:

@@ -1,6 +1,6 @@
 # FLEXT Core Best Practices
 
-**Comprehensive guide for enterprise development with FLEXT Core**
+**Guide for professional development with FLEXT Core**
 
 ## 🎯 Fundamental Principles
 
@@ -266,7 +266,7 @@ def transfer_money(
     to_account: str,
     amount: float
 ) -> FlextResult[TransferResult]:
-    """Transfer money with comprehensive error handling."""
+    """Transfer money with error handling."""
 
     # Chain of operations
     from_account_result = account_service.get_account(from_account)
@@ -453,7 +453,7 @@ def test_inactive_user_cannot_change_email():
 - Implement Clean Architecture
 - Validate data at multiple layers
 - Use dependency injection
-- Write comprehensive tests
+- Write tests
 - Document design decisions
 - Monitor performance and errors
 - Sanitize user inputs
