@@ -112,6 +112,7 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
                 capture_output=True,
                 text=True,
                 cwd=project_dir,
+                shell=False,
             )
             completed_return = result.returncode
             completed_stderr = result.stderr

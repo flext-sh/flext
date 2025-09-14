@@ -72,6 +72,7 @@ def run_example(project_root: Path, example_file: Path, timeout: int) -> RunResu
         [sys.executable, str(example_file.name)],
         cwd=str(project_root / "examples"),
         env=env,
+        shell=False,
         capture_output=True,
         text=True,
         timeout=timeout,

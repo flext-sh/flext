@@ -427,6 +427,7 @@ class FlextLintFixer:
                 ["/usr/bin/ruff", "check", str(project_path)],  # noqa: S607
                 check=False,
                 capture_output=True,
+                shell=False,
                 text=True,
                 cwd=project_path,
             )
