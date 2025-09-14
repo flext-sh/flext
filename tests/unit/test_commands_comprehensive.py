@@ -12,6 +12,7 @@ from __future__ import annotations
 
 from collections import UserDict
 from datetime import UTC
+from typing import cast
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -27,21 +28,21 @@ from flext_tests import FlextTestsMatchers
 class TestFlextCommandsModels:
     """Comprehensive tests for FlextCommands.Models nested classes."""
 
-    def test_command_model_initialization(self) -> None:
+    def testcommand_model_initialization(self) -> None:
         """Test FlextCommands.Models.Command initialization."""
         command = FlextCommands.Models.Command(
-            command_type="test_command",
+            command_type="testcommand",
             payload={"data": "test"},
         )
 
-        assert command.command_type == "test_command"
+        assert command.command_type == "testcommand"
         assert command.payload == {"data": "test"}
         assert hasattr(command, "command_id")
         assert hasattr(command, "timestamp")
         assert hasattr(command, "correlation_id")
 
-    def test_command_model_validator_ensures_command_type(self) -> None:
-        """Test _ensure_command_type model validator."""
+    def testcommand_model_validator_ensurescommand_type(self) -> None:
+        """Test _ensurecommand_type model validator."""
 
         # Test with missing command_type - should derive from class name
         class TestCreateUserCommand(FlextCommands.Models.Command):
@@ -51,40 +52,40 @@ class TestFlextCommandsModels:
         # Should derive "test_create_user" from "TestCreateUserCommand"
         assert command.command_type == "test_create_user"
 
-    def test_command_validate_command_method(self) -> None:
-        """Test Command.validate_command method."""
+    def testcommand_validatecommand_method(self) -> None:
+        """Test Command.validatecommand method."""
         command = FlextCommands.Models.Command(
-            command_type="test_command",
+            command_type="testcommand",
             payload={"valid": True},
         )
 
-        result = command.validate_command()
+        result = command.validatecommand()
         FlextTestsMatchers.assert_result_success(result)
         assert result.data is True
 
-    def test_command_id_property(self) -> None:
+    def testcommand_id_property(self) -> None:
         """Test Command.id property (alias for command_id)."""
         command = FlextCommands.Models.Command(
-            command_type="test_command",
+            command_type="testcommand",
             payload={},
         )
 
         assert command.id == command.command_id
 
-    def test_command_get_command_type_method(self) -> None:
-        """Test Command.get_command_type method."""
+    def testcommand_getcommand_type_method(self) -> None:
+        """Test Command.getcommand_type method."""
 
         class CreateUserCommand(FlextCommands.Models.Command):
             pass
 
         command = CreateUserCommand(command_type="create_user", payload={})
-        command_type = command.get_command_type()
+        command_type = command.getcommand_type()
         assert command_type == "create_user"
 
-    def test_command_to_payload_success(self) -> None:
+    def testcommand_to_payload_success(self) -> None:
         """Test Command.to_payload method success path."""
         command = FlextCommands.Models.Command(
-            command_type="test_command",
+            command_type="testcommand",
             payload={"data": "test"},
         )
 
@@ -94,10 +95,10 @@ class TestFlextCommandsModels:
         assert result.message_type == "Command"
         assert result.source_service == "command_service"
 
-    def test_command_to_payload_exception_handling(self) -> None:
+    def testcommand_to_payload_exception_handling(self) -> None:
         """Test Command.to_payload exception handling."""
         command = FlextCommands.Models.Command(
-            command_type="test_command",
+            command_type="testcommand",
             payload={},
         )
 
@@ -108,25 +109,28 @@ class TestFlextCommandsModels:
 
             result = command.to_payload()
             assert isinstance(result, FlextResult)
-            FlextTestsMatchers.assert_result_failure(result)
+            FlextTestsMatchers.assert_result_failure(
+                cast("FlextResult[object]", result)
+            )
+            assert result.error is not None
             assert "Failed to create payload" in result.error
 
-    def test_command_from_payload_with_dict(self) -> None:
+    def testcommand_from_payload_with_dict(self) -> None:
         """Test Command.from_payload with dict input."""
         payload_data = {
-            "command_type": "test_command",
+            "command_type": "testcommand",
             "payload": {"data": "test"},
         }
 
         result = FlextCommands.Models.Command.from_payload(payload_data)
         FlextTestsMatchers.assert_result_success(result)
         command = result.value
-        assert command.command_type == "test_command"
+        assert command.command_type == "testcommand"
 
-    def test_command_from_payload_with_payload_object(self) -> None:
+    def testcommand_from_payload_with_payload_object(self) -> None:
         """Test Command.from_payload with Payload object."""
         payload_obj = FlextModels.Payload[dict](
-            data={"command_type": "test_command", "payload": {"data": "test"}},
+            data={"command_type": "testcommand", "payload": {"data": "test"}},
             message_type="test",
             source_service="test",
         )
@@ -134,35 +138,38 @@ class TestFlextCommandsModels:
         result = FlextCommands.Models.Command.from_payload(payload_obj)
         FlextTestsMatchers.assert_result_success(result)
         command = result.value
-        assert command.command_type == "test_command"
+        assert command.command_type == "testcommand"
 
-    def test_command_from_payload_invalid_data(self) -> None:
+    def testcommand_from_payload_invalid_data(self) -> None:
         """Test Command.from_payload with invalid data."""
         result = FlextCommands.Models.Command.from_payload("invalid")
-        FlextTestsMatchers.assert_result_failure(result)
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
+        assert result.error is not None
         assert "FlextModels data is not compatible" in result.error
 
-    def test_command_from_payload_exception_handling(self) -> None:
+    def testcommand_from_payload_exception_handling(self) -> None:
         """Test Command.from_payload exception handling."""
         # Invalid data that will cause validation exception
         invalid_data = {"command_type": 123}  # Invalid type
 
-        result = FlextCommands.Models.Command.from_payload(invalid_data)
-        FlextTestsMatchers.assert_result_failure(result)
+        result = FlextCommands.Models.Command.from_payload(
+            cast("dict[str, object]", invalid_data)
+        )
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
 
-    def test_query_model_initialization(self) -> None:
+    def testquery_model_initialization(self) -> None:
         """Test FlextCommands.Models.Query initialization."""
         query = FlextCommands.Models.Query(
-            query_type="test_query",
+            query_type="testquery",
             filters={"status": "active"},
         )
 
-        assert query.query_type == "test_query"
+        assert query.query_type == "testquery"
         assert query.filters == {"status": "active"}
         assert hasattr(query, "query_id")
 
-    def test_query_model_validator_ensures_query_type(self) -> None:
-        """Test Query _ensure_query_type model validator."""
+    def testquery_model_validator_ensuresquery_type(self) -> None:
+        """Test Query _ensurequery_type model validator."""
 
         class FindUsersQuery(FlextCommands.Models.Query):
             pass
@@ -170,38 +177,39 @@ class TestFlextCommandsModels:
         query = FindUsersQuery(query_type="find_users", filters={})
         assert query.query_type == "find_users"
 
-    def test_query_id_property(self) -> None:
+    def testquery_id_property(self) -> None:
         """Test Query.id property (alias for query_id)."""
         query = FlextCommands.Models.Query(
-            query_type="test_query",
+            query_type="testquery",
             filters={},
         )
 
         assert query.id == query.query_id
 
-    def test_query_from_payload_with_dict(self) -> None:
+    def testquery_from_payload_with_dict(self) -> None:
         """Test Query.from_payload with dict input."""
         payload_data = {
-            "query_type": "test_query",
+            "query_type": "testquery",
             "filters": {"status": "active"},
         }
 
         result = FlextCommands.Models.Query.from_payload(payload_data)
         FlextTestsMatchers.assert_result_success(result)
         query = result.value
-        assert query.query_type == "test_query"
+        assert query.query_type == "testquery"
 
-    def test_query_from_payload_invalid_data(self) -> None:
+    def testquery_from_payload_invalid_data(self) -> None:
         """Test Query.from_payload with invalid data."""
         result = FlextCommands.Models.Query.from_payload("invalid")
-        FlextTestsMatchers.assert_result_failure(result)
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
+        assert result.error is not None
         assert "FlextModels data is not compatible" in result.error
 
 
 class TestFlextCommandsHandlers:
     """Comprehensive tests for FlextCommands.Handlers nested classes."""
 
-    def test_command_handler_initialization_with_config(self) -> None:
+    def testcommand_handler_initialization_with_config(self) -> None:
         """Test CommandHandler initialization with handler_config."""
         handler_config = {
             "handler_name": "test_handler",
@@ -209,13 +217,15 @@ class TestFlextCommandsHandlers:
             "handler_type": "command",
         }
 
-        handler = FlextCommands.Handlers.CommandHandler(handler_config=handler_config)
+        handler = FlextCommands.Handlers.CommandHandler(
+            handler_config=cast("dict[str, object]", handler_config)
+        )
 
         assert handler.handler_name == "test_handler"
         assert handler.handler_id == "test_id"
         assert handler._config == handler_config
 
-    def test_command_handler_initialization_without_config(self) -> None:
+    def testcommand_handler_initialization_without_config(self) -> None:
         """Test CommandHandler initialization without handler_config."""
         handler = FlextCommands.Handlers.CommandHandler(
             handler_name="custom_handler",
@@ -226,43 +236,43 @@ class TestFlextCommandsHandlers:
         assert handler.handler_id == "custom_id"
         assert isinstance(handler._config, dict)
 
-    def test_command_handler_logger_property(self) -> None:
+    def testcommand_handler_logger_property(self) -> None:
         """Test CommandHandler logger property."""
         handler = FlextCommands.Handlers.CommandHandler()
         logger = handler.logger
 
         assert isinstance(logger, FlextLogger)
 
-    def test_command_handler_validate_command_with_validation_method(self) -> None:
-        """Test CommandHandler.validate_command with command that has validation."""
-        mock_command = MagicMock()
-        mock_command.validate_command.return_value = FlextResult[bool].ok(True)
+    def testcommand_handler_validatecommand_with_validation_method(self) -> None:
+        """Test CommandHandler.validatecommand with command that has validation."""
+        mockcommand = MagicMock()
+        mockcommand.validatecommand.return_value = FlextResult[bool].ok(True)
 
         handler = FlextCommands.Handlers.CommandHandler()
-        result = handler.validate_command(mock_command)
+        result = handler.validatecommand(mockcommand)
 
         FlextTestsMatchers.assert_result_success(result)
 
-    def test_command_handler_validate_command_without_validation_method(self) -> None:
-        """Test CommandHandler.validate_command without validation method."""
-        mock_command = MagicMock()
-        del mock_command.validate_command  # Remove the method
+    def testcommand_handler_validatecommand_without_validation_method(self) -> None:
+        """Test CommandHandler.validatecommand without validation method."""
+        mockcommand = MagicMock()
+        del mockcommand.validatecommand  # Remove the method
 
         handler = FlextCommands.Handlers.CommandHandler()
-        result = handler.validate_command(mock_command)
+        result = handler.validatecommand(mockcommand)
 
         FlextTestsMatchers.assert_result_success(result)
 
-    def test_command_handler_handle_method_not_implemented(self) -> None:
+    def testcommand_handler_handle_method_not_implemented(self) -> None:
         """Test CommandHandler.handle raises NotImplementedError."""
         handler = FlextCommands.Handlers.CommandHandler()
 
         with pytest.raises(
             NotImplementedError, match="Subclasses must implement handle method"
         ):
-            handler.handle("test_command")
+            handler.handle("testcommand")
 
-    def test_command_handler_can_handle_with_generic_type(self) -> None:
+    def testcommand_handler_can_handle_with_generic_type(self) -> None:
         """Test CommandHandler.can_handle with generic type constraints."""
 
         class TestCommandHandler(FlextCommands.Handlers.CommandHandler[str, str]):
@@ -278,7 +288,7 @@ class TestFlextCommandsHandlers:
         # Should not handle other types
         assert handler.can_handle(int) is False
 
-    def test_command_handler_can_handle_without_generic_constraints(self) -> None:
+    def testcommand_handler_can_handle_without_generic_constraints(self) -> None:
         """Test CommandHandler.can_handle when type checking fails."""
         # The actual behavior when generic constraints can't be determined
         # is to log and return True. Let's test this by using a handler
@@ -297,7 +307,7 @@ class TestFlextCommandsHandlers:
         result = handler.can_handle(str)
         assert result is True
 
-    def test_command_handler_execute_cannot_handle_command(self) -> None:
+    def testcommand_handler_execute_cannot_handlecommand(self) -> None:
         """Test CommandHandler.execute when handler cannot handle command."""
 
         class RestrictedHandler(FlextCommands.Handlers.CommandHandler[int, int]):
@@ -306,21 +316,22 @@ class TestFlextCommandsHandlers:
 
         handler = RestrictedHandler()
 
-        # Try to execute with wrong type
-        result = handler.execute("not_an_int")
-        FlextTestsMatchers.assert_result_failure(result)
+        # Try to execute with wrong type - intentionally passing wrong type for testing
+        result = handler.execute(cast("int", "not_an_int"))
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
+        assert result.error is not None
         assert "cannot handle" in result.error
 
-    def test_command_handler_execute_validation_failure(self) -> None:
+    def testcommand_handler_execute_validation_failure(self) -> None:
         """Test CommandHandler.execute with validation failure."""
         # Create a simple string command that TestHandler can handle
-        test_command = "test_command_string"
+        testcommand = "testcommand_string"
 
         class TestHandler(FlextCommands.Handlers.CommandHandler[str, str]):
             def handle(self, _command: str) -> FlextResult[str]:
                 return FlextResult[str].ok("handled")
 
-            def validate_command(self, command: object) -> FlextResult[None]:
+            def validatecommand(self, command: object) -> FlextResult[None]:
                 # Override to return validation failure
                 # Note: command parameter unused in this test implementation
                 _ = command  # Acknowledge unused parameter
@@ -328,11 +339,12 @@ class TestFlextCommandsHandlers:
 
         handler = TestHandler()
 
-        result = handler.execute(test_command)
-        FlextTestsMatchers.assert_result_failure(result)
+        result = handler.execute(testcommand)
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
+        assert result.error is not None
         assert "Validation failed" in result.error
 
-    def test_command_handler_execute_success(self) -> None:
+    def testcommand_handler_execute_success(self) -> None:
         """Test CommandHandler.execute successful execution."""
 
         class TestHandler(FlextCommands.Handlers.CommandHandler[str, str]):
@@ -341,11 +353,11 @@ class TestFlextCommandsHandlers:
 
         handler = TestHandler()
 
-        result = handler.execute("test_command")
+        result = handler.execute("testcommand")
         FlextTestsMatchers.assert_result_success(result)
-        assert result.value == "handled: test_command"
+        assert result.value == "handled: testcommand"
 
-    def test_command_handler_execute_exception_handling(self) -> None:
+    def testcommand_handler_execute_exception_handling(self) -> None:
         """Test CommandHandler.execute exception handling."""
 
         class FailingHandler(FlextCommands.Handlers.CommandHandler[str, str]):
@@ -355,12 +367,13 @@ class TestFlextCommandsHandlers:
 
         handler = FailingHandler()
 
-        result = handler.execute("test_command")
-        FlextTestsMatchers.assert_result_failure(result)
+        result = handler.execute("testcommand")
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
+        assert result.error is not None
         assert "Command processing failed" in result.error
 
-    def test_command_handler_handle_command_delegate(self) -> None:
-        """Test CommandHandler.handle_command delegates to execute."""
+    def testcommand_handler_handlecommand_delegate(self) -> None:
+        """Test CommandHandler.handlecommand delegates to execute."""
 
         class TestHandler(FlextCommands.Handlers.CommandHandler[str, str]):
             def handle(self, _command: str) -> FlextResult[str]:
@@ -368,78 +381,80 @@ class TestFlextCommandsHandlers:
 
         handler = TestHandler()
 
-        result = handler.handle_command("test")
+        result = handler.handlecommand("test")
         FlextTestsMatchers.assert_result_success(result)
         assert result.value == "delegated"
 
-    def test_query_handler_initialization_with_config(self) -> None:
+    def testquery_handler_initialization_with_config(self) -> None:
         """Test QueryHandler initialization with handler_config."""
         handler_config = {
-            "handler_name": "test_query_handler",
+            "handler_name": "testquery_handler",
             "handler_id": "query_id",
             "handler_type": "query",
         }
 
-        handler = FlextCommands.Handlers.QueryHandler(handler_config=handler_config)
-
-        assert handler.handler_name == "test_query_handler"
-        assert handler.handler_id == "query_id"
-
-    def test_query_handler_initialization_without_config(self) -> None:
-        """Test QueryHandler initialization without handler_config."""
         handler = FlextCommands.Handlers.QueryHandler(
-            handler_name="custom_query_handler",
-            handler_id="custom_query_id",
+            handler_config=cast("dict[str, object]", handler_config)
         )
 
-        assert handler.handler_name == "custom_query_handler"
-        assert handler.handler_id == "custom_query_id"
+        assert handler.handler_name == "testquery_handler"
+        assert handler.handler_id == "query_id"
 
-    def test_query_handler_logger_property(self) -> None:
+    def testquery_handler_initialization_without_config(self) -> None:
+        """Test QueryHandler initialization without handler_config."""
+        handler = FlextCommands.Handlers.QueryHandler(
+            handler_name="customquery_handler",
+            handler_id="customquery_id",
+        )
+
+        assert handler.handler_name == "customquery_handler"
+        assert handler.handler_id == "customquery_id"
+
+    def testquery_handler_logger_property(self) -> None:
         """Test QueryHandler logger property."""
         handler = FlextCommands.Handlers.QueryHandler()
         logger = handler.logger
 
         assert isinstance(logger, FlextLogger)
 
-    def test_query_handler_can_handle_default_implementation(self) -> None:
+    def testquery_handler_can_handle_default_implementation(self) -> None:
         """Test QueryHandler.can_handle default implementation."""
         handler = FlextCommands.Handlers.QueryHandler()
 
         # Default implementation should return True
-        assert handler.can_handle("any_query") is True
+        assert handler.can_handle("anyquery") is True
 
-    def test_query_handler_validate_query_with_validation_method(self) -> None:
-        """Test QueryHandler.validate_query with query that has validation."""
-        mock_query = MagicMock()
-        mock_query.validate_query.return_value = FlextResult[bool].ok(True)
+    def testquery_handler_validatequery_with_validation_method(self) -> None:
+        """Test QueryHandler.validatequery with query that has validation."""
+        mockquery = MagicMock()
+        mockquery.validatequery.return_value = FlextResult[bool].ok(True)
 
         handler = FlextCommands.Handlers.QueryHandler()
-        result = handler.validate_query(mock_query)
+        result = handler.validatequery(mockquery)
 
         FlextTestsMatchers.assert_result_success(result)
 
-    def test_query_handler_validate_query_without_validation_method(self) -> None:
-        """Test QueryHandler.validate_query without validation method."""
-        mock_query = MagicMock()
-        del mock_query.validate_query
+    def testquery_handler_validatequery_without_validation_method(self) -> None:
+        """Test QueryHandler.validatequery without validation method."""
+        mockquery = MagicMock()
+        del mockquery.validatequery
 
         handler = FlextCommands.Handlers.QueryHandler()
-        result = handler.validate_query(mock_query)
+        result = handler.validatequery(mockquery)
 
         FlextTestsMatchers.assert_result_success(result)
 
-    def test_query_handler_handle_method_not_implemented(self) -> None:
+    def testquery_handler_handle_method_not_implemented(self) -> None:
         """Test QueryHandler.handle raises NotImplementedError."""
         handler = FlextCommands.Handlers.QueryHandler()
 
         with pytest.raises(
             NotImplementedError, match="Subclasses must implement handle method"
         ):
-            handler.handle("test_query")
+            handler.handle("testquery")
 
-    def test_query_handler_handle_query_validation_failure(self) -> None:
-        """Test QueryHandler.handle_query with validation failure."""
+    def testquery_handler_handlequery_validation_failure(self) -> None:
+        """Test QueryHandler.handlequery with validation failure."""
 
         class TestQueryHandler(FlextCommands.Handlers.QueryHandler[str, str]):
             def handle(self, _query: str) -> FlextResult[str]:
@@ -447,27 +462,28 @@ class TestFlextCommandsHandlers:
 
         handler = TestQueryHandler()
 
-        mock_query = MagicMock()
-        mock_query.validate_query.return_value = FlextResult[bool].fail(
+        mockquery = MagicMock()
+        mockquery.validatequery.return_value = FlextResult[bool].fail(
             "Query validation failed"
         )
 
-        result = handler.handle_query(mock_query)
-        FlextTestsMatchers.assert_result_failure(result)
+        result = handler.handlequery(mockquery)
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
+        assert result.error is not None
         assert "Query validation failed" in result.error
 
-    def test_query_handler_handle_query_success(self) -> None:
-        """Test QueryHandler.handle_query successful execution."""
+    def testquery_handler_handlequery_success(self) -> None:
+        """Test QueryHandler.handlequery successful execution."""
 
         class TestQueryHandler(FlextCommands.Handlers.QueryHandler[str, str]):
-            def handle(self, _query: str) -> FlextResult[str]:
-                return FlextResult[str].ok(f"query result: {_query}")
+            def handle(self, query: str) -> FlextResult[str]:
+                return FlextResult[str].ok(f"query result: {query}")
 
         handler = TestQueryHandler()
 
-        result = handler.handle_query("test_query")
+        result = handler.handlequery("testquery")
         FlextTestsMatchers.assert_result_success(result)
-        assert result.value == "query result: test_query"
+        assert result.value == "query result: testquery"
 
 
 class TestFlextCommandsBus:
@@ -475,7 +491,10 @@ class TestFlextCommandsBus:
 
     def test_bus_initialization_with_config(self) -> None:
         """Test Bus initialization with bus_config."""
-        bus_config = {"enable_middleware": True, "enable_metrics": True}
+        bus_config: dict[str, object] = {
+            "enable_middleware": True,
+            "enable_metrics": True,
+        }
 
         bus = FlextCommands.Bus(bus_config=bus_config)
 
@@ -511,7 +530,8 @@ class TestFlextCommandsBus:
         bus = FlextCommands.Bus()
         result = bus.register_handler(None)
 
-        FlextTestsMatchers.assert_result_failure(result)
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
+        assert result.error is not None
         assert "Handler cannot be None" in result.error
 
     def test_bus_register_handler_single_arg_invalid_handler(self) -> None:
@@ -522,7 +542,8 @@ class TestFlextCommandsBus:
         bus = FlextCommands.Bus()
         result = bus.register_handler(mock_handler)
 
-        FlextTestsMatchers.assert_result_failure(result)
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
+        assert result.error is not None
         assert "must have callable 'handle' method" in result.error
 
     def test_bus_register_handler_single_arg_already_registered(self) -> None:
@@ -558,7 +579,8 @@ class TestFlextCommandsBus:
         bus = FlextCommands.Bus()
         result = bus.register_handler(None, None)
 
-        FlextTestsMatchers.assert_result_failure(result)
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
+        assert result.error is not None
         assert "command_type and handler are required" in result.error
 
     def test_bus_register_handler_invalid_arg_count(self) -> None:
@@ -566,10 +588,11 @@ class TestFlextCommandsBus:
         bus = FlextCommands.Bus()
         result = bus.register_handler("arg1", "arg2", "arg3")
 
-        FlextTestsMatchers.assert_result_failure(result)
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
+        assert result.error is not None
         assert "takes 1 or 2 positional arguments" in result.error
 
-    def test_bus_find_handler_by_command_name(self) -> None:
+    def test_bus_find_handler_bycommand_name(self) -> None:
         """Test Bus.find_handler finding handler by command type name."""
 
         class TestCommand:
@@ -618,14 +641,15 @@ class TestFlextCommandsBus:
 
     def test_bus_execute_middleware_disabled(self) -> None:
         """Test Bus.execute with middleware disabled but configured."""
-        bus_config = {"enable_middleware": False}
+        bus_config: dict[str, object] = {"enable_middleware": False}
         bus = FlextCommands.Bus(bus_config=bus_config)
         bus._middleware = [{"middleware_id": "test"}]  # Add middleware
 
-        mock_command = MagicMock()
+        mockcommand = MagicMock()
 
-        result = bus.execute(mock_command)
-        FlextTestsMatchers.assert_result_failure(result)
+        result = bus.execute(mockcommand)
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
+        assert result.error is not None
         assert "Middleware pipeline is disabled" in result.error
 
     def test_bus_execute_no_handler_found(self) -> None:
@@ -638,7 +662,8 @@ class TestFlextCommandsBus:
         command_instance = TestCommand()
 
         result = bus.execute(command_instance)
-        FlextTestsMatchers.assert_result_failure(result)
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
+        assert result.error is not None
         assert "No handler found for TestCommand" in result.error
 
     def test_bus_execute_successful(self) -> None:
@@ -661,7 +686,7 @@ class TestFlextCommandsBus:
 
         FlextTestsMatchers.assert_result_success(result)
 
-    def test_bus_execute_with_query_caching(self) -> None:
+    def test_bus_execute_withquery_caching(self) -> None:
         """Test Bus.execute with query result caching."""
 
         class TestQuery:
@@ -670,7 +695,7 @@ class TestFlextCommandsBus:
             def __str__(self) -> str:
                 return "TestQuery"
 
-        bus_config = {"enable_metrics": True}
+        bus_config: dict[str, object] = {"enable_metrics": True}
         bus = FlextCommands.Bus(bus_config=bus_config)
         bus._cache = {}  # Initialize cache
 
@@ -696,7 +721,7 @@ class TestFlextCommandsBus:
 
     def test_bus_apply_middleware_disabled(self) -> None:
         """Test Bus._apply_middleware when middleware is disabled."""
-        bus_config = {"enable_middleware": False}
+        bus_config: dict[str, object] = {"enable_middleware": False}
         bus = FlextCommands.Bus(bus_config=bus_config)
 
         result = bus._apply_middleware("command", "handler")
@@ -757,7 +782,8 @@ class TestFlextCommandsBus:
         bus._middleware_instances = {"rejecting_mw": mock_middleware}
 
         result = bus._apply_middleware("command", "handler")
-        FlextTestsMatchers.assert_result_failure(result)
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
+        assert result.error is not None
         assert "Middleware rejected" in result.error
 
     def test_bus_execute_handler_with_execute_method(self) -> None:
@@ -783,12 +809,12 @@ class TestFlextCommandsBus:
         FlextTestsMatchers.assert_result_success(result)
         assert result.value == "handled"
 
-    def test_bus_execute_handler_with_process_command_method(self) -> None:
-        """Test Bus._execute_handler with handler that has process_command method."""
+    def test_bus_execute_handler_with_processcommand_method(self) -> None:
+        """Test Bus._execute_handler with handler that has processcommand method."""
         mock_handler = MagicMock()
         del mock_handler.execute
         del mock_handler.handle
-        mock_handler.process_command = MagicMock(return_value="processed")
+        mock_handler.processcommand = MagicMock(return_value="processed")
 
         bus = FlextCommands.Bus()
         result = bus._execute_handler(mock_handler, "command")
@@ -801,13 +827,14 @@ class TestFlextCommandsBus:
         mock_handler = MagicMock()
         del mock_handler.execute
         del mock_handler.handle
-        del mock_handler.process_command
+        del mock_handler.processcommand
 
         bus = FlextCommands.Bus()
         result = bus._execute_handler(mock_handler, "command")
 
-        FlextTestsMatchers.assert_result_failure(result)
-        assert "no callable execute, handle, or process_command method" in result.error
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
+        assert result.error is not None
+        assert "no callable execute, handle, or processcommand method" in result.error
 
     def test_bus_execute_handler_exception(self) -> None:
         """Test Bus._execute_handler when handler raises exception."""
@@ -817,7 +844,8 @@ class TestFlextCommandsBus:
         bus = FlextCommands.Bus()
         result = bus._execute_handler(mock_handler, "command")
 
-        FlextTestsMatchers.assert_result_failure(result)
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
+        assert result.error is not None
         assert "Handler execution failed" in result.error
 
     def test_bus_add_middleware_with_config(self) -> None:
@@ -857,7 +885,7 @@ class TestFlextCommandsBus:
 
     def test_bus_add_middleware_disabled_pipeline(self) -> None:
         """Test Bus.add_middleware when middleware pipeline is disabled."""
-        bus_config = {"enable_middleware": False}
+        bus_config: dict[str, object] = {"enable_middleware": False}
         bus = FlextCommands.Bus(bus_config=bus_config)
 
         mock_middleware = MagicMock()
@@ -907,8 +935,8 @@ class TestFlextCommandsBus:
         result = bus.unregister_handler("NonExistentCommand")
         assert result is False
 
-    def test_bus_send_command_delegates_to_execute(self) -> None:
-        """Test Bus.send_command delegates to execute."""
+    def test_bus_sendcommand_delegates_to_execute(self) -> None:
+        """Test Bus.sendcommand delegates to execute."""
         mock_handler = MagicMock()
         mock_handler.handle = MagicMock()
         mock_handler.can_handle = MagicMock(return_value=True)
@@ -918,7 +946,7 @@ class TestFlextCommandsBus:
         bus = FlextCommands.Bus()
         bus.register_handler(mock_handler)
 
-        result = bus.send_command("test_command")
+        result = bus.sendcommand("testcommand")
         FlextTestsMatchers.assert_result_success(result)
 
     def test_bus_get_registered_handlers(self) -> None:
@@ -940,7 +968,7 @@ class TestFlextCommandsBus:
 class TestFlextCommandsDecorators:
     """Comprehensive tests for FlextCommands.Decorators class."""
 
-    def test_command_handler_decorator(self) -> None:
+    def testcommand_handler_decorator(self) -> None:
         """Test @command_handler decorator functionality."""
 
         class TestCommand:
@@ -948,38 +976,38 @@ class TestFlextCommandsDecorators:
                 self.data = data
 
         @FlextCommands.Decorators.command_handler(TestCommand)
-        def handle_test_command(command: TestCommand) -> str:
+        def handle_testcommand(command: TestCommand) -> str:
             return f"handled: {command.data}"
 
         # Test that wrapper function works
-        test_command = TestCommand("test_data")
-        result = handle_test_command(test_command)
+        testcommand = TestCommand("test_data")
+        result = handle_testcommand(testcommand)
         assert result == "handled: test_data"
 
         # Test that metadata is stored
-        assert handle_test_command.__dict__["command_type"] == TestCommand
-        assert "handler_instance" in handle_test_command.__dict__
+        assert handle_testcommand.__dict__["command_type"] == TestCommand
+        assert "handler_instance" in handle_testcommand.__dict__
 
-    def test_command_handler_decorator_with_flext_result(self) -> None:
+    def testcommand_handler_decorator_with_flext_result(self) -> None:
         """Test @command_handler decorator with FlextResult return."""
 
         class TestCommand:
             pass
 
         @FlextCommands.Decorators.command_handler(TestCommand)
-        def handle_command_with_result(command: TestCommand) -> FlextResult[str]:
+        def handlecommand_with_result(command: TestCommand) -> FlextResult[str]:
             # Note: command parameter unused in this test implementation
             _ = command  # Acknowledge unused parameter
             return FlextResult[str].ok("handled with result")
 
         # Test handler instance handles FlextResult correctly
-        handler_instance = handle_command_with_result.__dict__["handler_instance"]
+        handler_instance = handlecommand_with_result.__dict__["handler_instance"]
         result = handler_instance.handle(TestCommand())
 
         FlextTestsMatchers.assert_result_success(result)
         assert result.value == "handled with result"
 
-    def test_command_handler_decorator_preserves_annotations(self) -> None:
+    def testcommand_handler_decorator_preserves_annotations(self) -> None:
         """Test @command_handler decorator preserves function annotations."""
 
         class TestCommand:
@@ -1015,13 +1043,13 @@ class TestFlextCommandsResults:
         """Test Results.failure with error code."""
         error_msg = "Operation failed"
         error_code = "CUSTOM_ERROR"
-        error_data = {"details": "Additional info"}
+        error_data: dict[str, object] = {"details": "Additional info"}
 
         result = FlextCommands.Results.failure(
             error_msg, error_code=error_code, error_data=error_data
         )
 
-        FlextTestsMatchers.assert_result_failure(result)
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
         assert result.error == error_msg
 
     def test_results_failure_without_error_code(self) -> None:
@@ -1030,16 +1058,16 @@ class TestFlextCommandsResults:
 
         result = FlextCommands.Results.failure(error_msg)
 
-        FlextTestsMatchers.assert_result_failure(result)
+        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
         assert result.error == error_msg
 
 
 class TestFlextCommandsFactories:
     """Comprehensive tests for FlextCommands.Factories class."""
 
-    def test_create_command_bus(self) -> None:
-        """Test Factories.create_command_bus method."""
-        bus = FlextCommands.Factories.create_command_bus()
+    def test_createcommand_bus(self) -> None:
+        """Test Factories.createcommand_bus method."""
+        bus = FlextCommands.Factories.createcommand_bus()
 
         assert isinstance(bus, FlextCommands.Bus)
         assert isinstance(bus._handlers, dict)
@@ -1048,62 +1076,62 @@ class TestFlextCommandsFactories:
     def test_create_simple_handler(self) -> None:
         """Test Factories.create_simple_handler method."""
 
-        def handler_func(command: str) -> str:
-            return f"processed: {command}"
+        def handler_func(_command: str) -> str:
+            return f"processed: {_command}"
 
         handler = FlextCommands.Factories.create_simple_handler(handler_func)
 
         assert isinstance(handler, FlextCommands.Handlers.CommandHandler)
 
         # Test handler execution
-        result = handler.handle("test_command")
+        result = handler.handle("testcommand")
         FlextTestsMatchers.assert_result_success(result)
-        assert result.value == "processed: test_command"
+        assert result.value == "processed: testcommand"
 
     def test_create_simple_handler_with_flext_result(self) -> None:
         """Test Factories.create_simple_handler with FlextResult return."""
 
-        def handler_func(command: str) -> FlextResult[str]:
-            return FlextResult[str].ok(f"result: {command}")
+        def handler_func(_command: str) -> FlextResult[str]:
+            return FlextResult[str].ok(f"result: {_command}")
 
         handler = FlextCommands.Factories.create_simple_handler(handler_func)
 
-        result = handler.handle("test_command")
+        result = handler.handle("testcommand")
         FlextTestsMatchers.assert_result_success(result)
-        assert result.value == "result: test_command"
+        assert result.value == "result: testcommand"
 
-    def test_create_query_handler(self) -> None:
-        """Test Factories.create_query_handler method."""
+    def test_createquery_handler(self) -> None:
+        """Test Factories.createquery_handler method."""
 
         def query_func(query: str) -> str:
             return f"query result: {query}"
 
-        handler = FlextCommands.Factories.create_query_handler(query_func)
+        handler = FlextCommands.Factories.createquery_handler(query_func)
 
         assert isinstance(handler, FlextCommands.Handlers.QueryHandler)
 
         # Test handler execution
-        result = handler.handle("test_query")
+        result = handler.handle("testquery")
         FlextTestsMatchers.assert_result_success(result)
-        assert result.value == "query result: test_query"
+        assert result.value == "query result: testquery"
 
-    def test_create_query_handler_with_flext_result(self) -> None:
-        """Test Factories.create_query_handler with FlextResult return."""
+    def test_createquery_handler_with_flext_result(self) -> None:
+        """Test Factories.createquery_handler with FlextResult return."""
 
         def query_func(query: str) -> FlextResult[str]:
             return FlextResult[str].ok(f"query processed: {query}")
 
-        handler = FlextCommands.Factories.create_query_handler(query_func)
+        handler = FlextCommands.Factories.createquery_handler(query_func)
 
-        result = handler.handle("test_query")
+        result = handler.handle("testquery")
         FlextTestsMatchers.assert_result_success(result)
-        assert result.value == "query processed: test_query"
+        assert result.value == "query processed: testquery"
 
 
 class TestFlextCommandsIntegration:
     """Integration tests for FlextCommands system."""
 
-    def test_full_command_processing_pipeline(self) -> None:
+    def test_fullcommand_processing_pipeline(self) -> None:
         """Test complete command processing through the system."""
         # Create command
         command = FlextCommands.Models.Command(
@@ -1115,9 +1143,7 @@ class TestFlextCommandsIntegration:
         class CreateUserHandler(
             FlextCommands.Handlers.CommandHandler[FlextCommands.Models.Command, str]
         ):
-            def handle(
-                self, _command: FlextCommands.Models.Command
-            ) -> FlextResult[str]:
+            def handle(self, command: FlextCommands.Models.Command) -> FlextResult[str]:
                 return FlextResult[str].ok(f"User created: {command.payload['name']}")
 
         # Create bus and register handler
@@ -1129,13 +1155,13 @@ class TestFlextCommandsIntegration:
         result = bus.execute(command)
 
         FlextTestsMatchers.assert_result_success(result)
-        assert "User created: John" in result.value
+        assert "User created: John" in str(result.value)
 
     def test_middleware_pipeline_integration(self) -> None:
         """Test command execution with middleware pipeline."""
         # Create command
         command = FlextCommands.Models.Command(
-            command_type="test_command",
+            command_type="testcommand",
             payload={"data": "test"},
         )
 
@@ -1174,12 +1200,12 @@ class TestFlextCommandsIntegration:
         FlextTestsMatchers.assert_result_success(result)
         assert middleware.called is True
 
-    def test_query_processing_with_caching(self) -> None:
+    def testquery_processing_with_caching(self) -> None:
         """Test query processing with result caching."""
 
         # Create query
         class TestQuery:
-            query_id = "test_query_123"
+            query_id = "testquery_123"
 
             def __init__(self, filters: dict[str, str]) -> None:
                 self.filters = filters
@@ -1200,7 +1226,7 @@ class TestFlextCommandsIntegration:
                 )
 
         # Setup bus with caching enabled
-        bus_config = {"enable_metrics": True}
+        bus_config: dict[str, object] = {"enable_metrics": True}
         bus = FlextCommands.Bus(bus_config=bus_config)
         bus._cache = {}  # Initialize cache
 

@@ -213,7 +213,7 @@ class FlextLintFixer:
                 def __init__(self) -> None:
                     self.unused_args = []
 
-                def visit_FunctionDef(self, node) -> None:
+                def visit_FunctionDef(self, node: object) -> None:
                     # Get all argument names
                     arg_names = set()
                     arg_names.update(arg.arg for arg in node.args.args)

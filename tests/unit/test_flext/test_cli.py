@@ -62,7 +62,7 @@ class TestFlextControlPanelCli:
         assert hasattr(main_handler, "info_command")
 
     @patch("flext.cli.FlextCliApi")
-    def test_cli_api_integration(self, mock_cli_api) -> None:
+    def test_cli_api_integration(self, mock_cli_api: object) -> None:
         """Test integration with flext-cli API."""
         mock_api_instance = Mock()
         mock_cli_api.return_value = mock_api_instance
@@ -75,7 +75,7 @@ class TestFlextControlPanelCli:
 
     @patch("flext.cli.FlextCliConfig")
     @patch("flext.cli.FlextCliMain")
-    def test_cli_initialization(self, mock_cli_main, mock_cli_config) -> None:
+    def test_cli_initialization(self, mock_cli_main: object, mock_cli_config: object) -> None:
         """Test CLI initialization with flext-cli components."""
         mock_config_instance = Mock()
         mock_main_instance = Mock()
@@ -214,7 +214,7 @@ class TestLegacyCompatibilityFunctions:
     """Test suite for legacy compatibility functions."""
 
     @patch("flext.cli.create_cli")
-    def test_quality_function_compatibility(self, mock_create_cli) -> None:
+    def test_quality_function_compatibility(self, mock_create_cli: object) -> None:
         """Test legacy quality function compatibility."""
         mock_cli_service = Mock()
         mock_tools_handler = Mock()
@@ -231,7 +231,7 @@ class TestLegacyCompatibilityFunctions:
         mock_cli_service.create_tools_handler.assert_called_once()
 
     @patch("flext.cli.create_cli")
-    def test_scripts_function_compatibility(self, mock_create_cli) -> None:
+    def test_scripts_function_compatibility(self, mock_create_cli: object) -> None:
         """Test legacy scripts function compatibility."""
         mock_cli_service = Mock()
         mock_tools_handler = Mock()
@@ -244,7 +244,7 @@ class TestLegacyCompatibilityFunctions:
         mock_tools_handler.list_scripts.assert_called_with("development")
 
     @patch("flext.cli.create_cli")
-    def test_analysis_function_compatibility(self, mock_create_cli) -> None:
+    def test_analysis_function_compatibility(self, mock_create_cli: object) -> None:
         """Test legacy analysis function compatibility."""
         mock_cli_service = Mock()
         mock_tools_handler = Mock()
@@ -257,7 +257,7 @@ class TestLegacyCompatibilityFunctions:
         mock_tools_handler.run_analysis.assert_called_with("dependencies")
 
     @patch("flext.cli.create_cli")
-    def test_test_function_compatibility(self, mock_create_cli) -> None:
+    def test_test_function_compatibility(self, mock_create_cli: object) -> None:
         """Test legacy test function compatibility."""
         mock_cli_service = Mock()
         mock_main_handler = Mock()
@@ -273,7 +273,7 @@ class TestLegacyCompatibilityFunctions:
         mock_main_handler.test_command.assert_called_with(True, False)
 
     @patch("flext.cli.create_cli")
-    def test_lint_function_compatibility(self, mock_create_cli) -> None:
+    def test_lint_function_compatibility(self, mock_create_cli: object) -> None:
         """Test legacy lint function compatibility."""
         mock_cli_service = Mock()
         mock_main_handler = Mock()
@@ -289,7 +289,7 @@ class TestLegacyCompatibilityFunctions:
         mock_main_handler.lint_command.assert_called_with(True)
 
     @patch("flext.cli.create_cli")
-    def test_format_code_function_compatibility(self, mock_create_cli) -> None:
+    def test_format_code_function_compatibility(self, mock_create_cli: object) -> None:
         """Test legacy format_code function compatibility."""
         mock_cli_service = Mock()
         mock_main_handler = Mock()
@@ -302,7 +302,7 @@ class TestLegacyCompatibilityFunctions:
         mock_main_handler.format_command.assert_called_with(True)
 
     @patch("flext.cli.create_cli")
-    def test_info_function_compatibility(self, mock_create_cli) -> None:
+    def test_info_function_compatibility(self, mock_create_cli: object) -> None:
         """Test legacy info function compatibility."""
         mock_cli_service = Mock()
         mock_main_handler = Mock()
@@ -469,7 +469,7 @@ class TestMainFunctionEntryPoint:
     """Test suite for main function entry point."""
 
     @patch("flext.cli.create_cli")
-    def test_main_function_exists(self, mock_create_cli) -> None:
+    def test_main_function_exists(self, mock_create_cli: object) -> None:
         """Test that main function exists and can be called."""
         mock_cli_service = Mock()
         mock_create_cli.return_value = mock_cli_service

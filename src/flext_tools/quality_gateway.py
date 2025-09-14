@@ -78,9 +78,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextModels, FlextResult
-from flext_core.container import FlextContainer
-from flext_core.typings import FlextTypes
+from flext_core import FlextContainer, FlextLogger, FlextModels, FlextResult, FlextTypes
 from pydantic import Field
 
 from .colors import Colors, print_colored
