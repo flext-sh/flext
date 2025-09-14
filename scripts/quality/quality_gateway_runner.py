@@ -48,9 +48,9 @@ class QualityGatewayRunner(FlextScript):
         """Execute quality gateway."""
         try:
             workspace_root = Path.cwd()
-            projects_filter = kwargs.get("projects")
-            strict_mode = kwargs.get("strict", False)
-            fail_fast = kwargs.get("fail_fast", False)
+            kwargs.get("projects")
+            kwargs.get("strict", False)
+            kwargs.get("fail_fast", False)
 
             print_colored("🔍 QUALITY GATEWAY RUNNER", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)

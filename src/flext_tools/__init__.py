@@ -9,7 +9,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core.typings import FlextTypes
+from flext_core import FlextTypes
 
 # Base CLI infrastructure - explicit imports
 from .base_cli import (
@@ -53,7 +53,7 @@ from .duplicates import (
 
 # Handlers - explicit imports
 from .handlers import (
-    FlextHandlers,
+    FlextProcessing,
     FlextResult,
 )
 
@@ -94,7 +94,7 @@ __all__: FlextTypes.Core.StringList = [
     # Workspace CLI
     "FlextCliApi",
     # Handlers
-    "FlextHandlers",
+    "FlextProcessing",
     "FlextResult",
     # CLI tools
     "FlextToolsCLI",

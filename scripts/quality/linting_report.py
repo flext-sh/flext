@@ -18,6 +18,7 @@ from contextlib import redirect_stderr, redirect_stdout
 from datetime import UTC, datetime
 from importlib import import_module
 from pathlib import Path
+from typing import cast
 
 from flext_core import FlextResult, FlextTypes
 from mypy import api as mypy_api
@@ -83,7 +84,7 @@ class LintingReport(FlextScript):
             )
 
             # Análise agregada
-            total_stats: FlextTypes.Core.Dict = {
+            total_stats: dict[str, object] = {
                 "projects_analyzed": 0,
                 "total_files": 0,
                 "ruff_issues": 0,
@@ -196,7 +197,7 @@ class LintingReport(FlextScript):
         """Descobrir projetos para analisar."""
         return discover_projects(workspace_root, projects_filter)
 
-    def _run_ruff_analysis(self, project_path: Path) -> FlextTypes.Core.Dict:
+    def _run_ruff_analysis(self, project_path: Path) -> dict[str, object]:
         """Executar análise Ruff."""
         try:
             if not project_path.is_dir():
@@ -252,7 +253,7 @@ class LintingReport(FlextScript):
             print_colored(f"    ⚠️ Erro no Ruff: {e}", Colors.YELLOW)
             return {"total_issues": 0, "by_category": {}, "by_file": {}, "issues": []}
 
-    def _run_mypy_analysis(self, project_path: Path) -> FlextTypes.Core.Dict:
+    def _run_mypy_analysis(self, project_path: Path) -> dict[str, object]:
         """Executar análise MyPy."""
         try:
             if not project_path.is_dir():
@@ -328,7 +329,7 @@ class LintingReport(FlextScript):
         if ruff_result["by_category"]:
             print_colored("    📋 Top Ruff Issues:", Colors.CYAN)
             for _category, _count in sorted(
-                ruff_result["by_category"].items(),
+                dict(ruff_result["by_category"]).items(),
                 key=operator.itemgetter(1),
                 reverse=True,
             )[:5]:
@@ -337,7 +338,7 @@ class LintingReport(FlextScript):
         if mypy_result["by_type"]:
             print_colored("    📋 Top MyPy Errors:", Colors.CYAN)
             for _error_type, _count in sorted(
-                mypy_result["by_type"].items(),
+                dict(mypy_result["by_type"]).items(),
                 key=operator.itemgetter(1),
                 reverse=True,
             )[:5]:
@@ -353,10 +354,11 @@ class LintingReport(FlextScript):
         print_colored("=" * 50, Colors.BLUE)
 
         # Score de qualidade
-        if total_stats["total_files"] > 0:
+        if cast("int", total_stats["total_files"]) > 0:
             issues_per_file = (
-                total_stats["ruff_issues"] + total_stats["mypy_errors"]
-            ) / total_stats["total_files"]
+                cast("int", total_stats["ruff_issues"])
+                + cast("int", total_stats["mypy_errors"])
+            ) / cast("int", total_stats["total_files"])
             if issues_per_file == 0:
                 score_color = Colors.GREEN
                 status = "PERFEITO"
@@ -436,7 +438,7 @@ class LintingReport(FlextScript):
     {
             "".join(
                 f'<div class="project"><h3>{name}</h3> <p>Issues: '
-                f"{data['stats']['ruff_issues'] + data['stats']['mypy_errors']}"
+                f"{cast('int', cast('dict[str, object]', cast('dict', data)['stats'])['ruff_issues']) + cast('int', cast('dict[str, object]', cast('dict', data)['stats'])['mypy_errors'])}"
                 f"</p></div>"
                 for name, data in project_results.items()
             )

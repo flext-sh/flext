@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import sys
 
-from flext_core.typings import FlextTypes
+from flext_core import FlextTypes
 
 from .security_audit import (
     AntipatternScanner,

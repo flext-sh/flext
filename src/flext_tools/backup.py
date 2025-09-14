@@ -9,8 +9,7 @@ import tomllib
 from datetime import UTC, datetime
 from pathlib import Path
 
-from flext_core import FlextLogger
-from flext_core.typings import FlextTypes
+from flext_core import FlextLogger, FlextTypes
 
 from .colors import Colors, print_colored
 

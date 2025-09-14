@@ -99,12 +99,12 @@ from pathlib import Path
 from typing import Protocol, runtime_checkable
 
 from flext_core import (
+    FlextContainer,
     FlextDomainService,
     FlextLogger,
     FlextModels,
     FlextResult,
 )
-from flext_core.container import FlextContainer
 
 from .colors import Colors, print_colored
 from .quality_gateway import (

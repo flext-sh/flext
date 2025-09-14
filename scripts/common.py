@@ -46,8 +46,8 @@ def discover_projects(
 
         return project_paths
 
-    except Exception as e:
-        logger.exception(f"Failed to discover projects: {e}")
+    except Exception:
+        logger.exception("Failed to discover projects")
         return []
 
 
@@ -57,6 +57,6 @@ def get_workspace_root() -> Path:
         # Use current working directory as workspace root
         workspace_service = FlextWorkspaceService()
         return workspace_service._workspace_path
-    except Exception as e:
-        logger.exception(f"Failed to discover workspace root: {e}")
+    except Exception:
+        logger.exception("Failed to discover workspace root")
         return Path.cwd()

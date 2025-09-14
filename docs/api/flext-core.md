@@ -33,7 +33,7 @@ from flext_core import (
 from flext_core import (
     # Commands and handlers (CQRS)
     FlextCommands,
-    FlextHandlers,
+    FlextProcessing,
 
     # Validation
     FlextValidations,
@@ -42,7 +42,7 @@ from flext_core import (
 
     # Utilities
     FlextUtilities,
-    FlextGenerators,
+    FlextUtilities.Generators,
 
     # Logging
     FlextLogger,
