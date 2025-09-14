@@ -24,7 +24,7 @@ from pydantic.functional_validators import BeforeValidator
 # Modern type system with generic constraints
 T = TypeVar("T", bound=BaseModel)
 R = TypeVar("R")
-OperationType = TypeVar("OperationType", bound="FlextAdvancedDevModels.DevOperation")
+# OperationType will be defined after FlextAdvancedDevModels class
 
 
 class OperationStatus(str, Enum):
@@ -280,7 +280,7 @@ class FlextAdvancedDevToolsManager(FlextDomainService[FlextAdvancedDevModels.Ope
     class _ProjectDiscoveryService:
         """Nested project discovery service."""
 
-        def __init__(self, manager: FlextAdvancedDevToolsManager[T]) -> None:
+        def __init__(self, manager: FlextAdvancedDevToolsManager) -> None:
             self._manager = manager
 
         def discover_projects(self, workspace_root: Path) -> FlextResult[list[FlextAdvancedDevModels.ProjectInfo]]:
@@ -347,7 +347,7 @@ class FlextAdvancedDevToolsManager(FlextDomainService[FlextAdvancedDevModels.Ope
     class _OperationExecutor:
         """Nested operation executor with advanced patterns."""
 
-        def __init__(self, manager: FlextAdvancedDevToolsManager[T]) -> None:
+        def __init__(self, manager: FlextAdvancedDevToolsManager) -> None:
             self._manager = manager
 
         def execute_test_operation(self, operation: FlextAdvancedDevModels.TestOperation) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
@@ -514,7 +514,7 @@ class FlextAdvancedDevToolsManager(FlextDomainService[FlextAdvancedDevModels.Ope
         return FlextResult[FlextAdvancedDevModels.OperationResult].ok(
             FlextAdvancedDevModels.OperationResult(
                 operation_id="status_check",
-                status=FlextAdvancedDevModels.OperationStatus.SUCCESS,
+                status=OperationStatus.SUCCESS,
                 duration_seconds=0.0,
                 exit_code=0,
                 stdout_lines=0,

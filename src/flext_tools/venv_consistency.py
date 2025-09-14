@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from importlib.metadata import distributions  # Python 3.8+
 from pathlib import Path
 
-from flext_core.typings import FlextTypes
+from flext_core import FlextTypes
 
 from .colors import Colors, print_colored
 
