@@ -126,6 +126,7 @@ class TestFlextAuthCliComprehensive:
 
     def test_cli_variable_access(self) -> None:
         """Test cli variable functionality."""
+        auth_cli = create_auth_cli()
         assert auth_cli is not None
         # CLI might be a function, object, or command group
 

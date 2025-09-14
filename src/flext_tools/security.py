@@ -32,7 +32,8 @@ class SecretVaultDecryptor:
             FlextResult containing the decrypted secrets dictionary
 
         """
-        # TODO: Implement actual decryption logic
+        # TODO(@flext-team): Implement actual decryption logic
+        # Issue: https://github.com/flext-team/flext-tools/issues/1
         return FlextResult[FlextTypes.Core.Dict].fail("Not implemented yet")
 
 
