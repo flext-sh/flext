@@ -51,34 +51,113 @@ License: MIT
 from __future__ import annotations
 
 # Application Handlers - Direct exports (no wildcards)
-from flext.application_handlers import ( AuthorizingHandler, BasicHandler, Command, CommandBus, CommandHandler, EventHandler, FlextAdvancedHandlerModels, )
+from flext.application_handlers import (
+    AuthorizingHandler,
+    BasicHandler,
+    Command,
+    CommandBus,
+    CommandHandler,
+    EventHandler,
+    FlextAdvancedHandlerModels,
+)
 
 # Application Pipeline - Direct exports (no wildcards)
-from flext.application_pipeline import ( CreatePipelineCommand, Entry, EntryValidator, ExecutePipelineCommand, FlextAdvancedPipelineModels, FlextAdvancedPipelineService, FlextApplicationPipelineService, )
+from flext.application_pipeline import (
+    CreatePipelineCommand,
+    Entry,
+    EntryValidator,
+    ExecutePipelineCommand,
+    FlextAdvancedPipelineModels,
+    FlextAdvancedPipelineService,
+    FlextApplicationPipelineService,
+)
 
 # Base CLI - Direct exports (no wildcards)
-from flext.base_cli import ( FlextCliApi, FlextCliConfig, FlextCliFormatters, FlextCliMain, FlextCliModule, FlextCliServices, )
+from flext.base_cli import (
+    FlextCliApi,
+    FlextCliConfig,
+    FlextCliFormatters,
+    FlextCliMain,
+    FlextCliServices,
+)
 
 # CLI - Direct exports (no wildcards)
-from flext.cli import ( FlextControlPanelCli, analysis, create_cli, format_code, info, lint, main, quality, scripts, test, )
+from flext.cli import (
+    FlextControlPanelCli,
+    analysis,
+    create_cli,
+    format_code,
+    info,
+    lint,
+    main,
+    quality,
+    scripts,
+    test,
+)
 
 # CLI Patterns - Direct exports (no wildcards)
-from flext.cli_patterns import ( FlextCLI, FlextCliApi as FlextCliApiPattern, FlextCLICommand, FlextCLIConfig, FlextCliConfig as FlextCliConfigPattern, FlextCliFormatters as FlextCliFormattersPattern, FlextCLIGroup, FlextCliMain as FlextCliMainPattern, with_config, )
+from flext.cli_patterns import (
+    FlextCLI,
+    FlextCliApi as FlextCliApiPattern,
+    FlextCLICommand,
+    FlextCLIConfig,
+    FlextCliConfig as FlextCliConfigPattern,
+    FlextCliFormatters as FlextCliFormattersPattern,
+    FlextCLIGroup,
+    FlextCliMain as FlextCliMainPattern,
+    with_config,
+)
 
 # Development Tools - Direct exports (no wildcards)
-from flext.dev import ( FlextAdvancedDevModels, FlextAdvancedDevToolsManager, OperationStatus, OperationType, ProjectType, create_dev_tools_manager, )
+from flext.dev import (
+    FlextAdvancedDevModels,
+    FlextAdvancedDevToolsManager,
+    OperationStatus,
+    OperationType,
+    ProjectType,
+    create_dev_tools_manager,
+)
 
 # Services - Direct exports (no wildcards)
-from flext.services import ( CommandHandler as ServicesCommandHandler, CreatePipelineCommand as ServicesCreatePipelineCommand, EventHandler as ServicesEventHandler, ExecutePipelineCommand as ServicesExecutePipelineCommand, FlextUnifiedServices, QueryHandler, create_services, )
+from flext.services import (
+    CommandHandler as ServicesCommandHandler,
+    CreatePipelineCommand as ServicesCreatePipelineCommand,
+    EventHandler as ServicesEventHandler,
+    ExecutePipelineCommand as ServicesExecutePipelineCommand,
+    FlextUnifiedServices,
+    QueryHandler,
+    create_services,
+)
 
 # Service Utils - Direct exports (no wildcards)
-from flext.services_utils import ( FlextLogger, FlextResult, FlextUtilities, )
+from flext.services_utils import (
+    FlextLogger,
+    FlextResult,
+    FlextUtilities,
+)
 
 # Workspace - Direct exports (no wildcards)
-from flext.workspace import ( FlextAdvancedWorkspaceModels, FlextAdvancedWorkspaceService, FlextWorkspaceService, ProjectType as WorkspaceProjectType, WorkspaceStatus, create_workspace_service, )
+from flext.workspace import (
+    FlextAdvancedWorkspaceModels,
+    FlextAdvancedWorkspaceService,
+    FlextWorkspaceService,
+    ProjectType as WorkspaceProjectType,
+    WorkspaceStatus,
+    create_workspace_service,
+)
 
 # Workspace CLI - Direct exports (no wildcards)
-from flext.workspace_cli import ( FlextWorkspaceCli, build, check, cli, create_workspace_cli, docker, main as workspace_main, status, test as workspace_test, )
+from flext.workspace_cli import (
+    FlextWorkspaceCli,
+    build,
+    check,
+    cli,
+    create_workspace_cli,
+    docker,
+    main as workspace_main,
+    status,
+    test as workspace_test,
+)
 
 # Export all imported symbols - Direct exports without wildcards
 __all__ = [
@@ -112,7 +191,6 @@ __all__ = [
     "FlextCliFormattersPattern",
     "FlextCliMain",
     "FlextCliMainPattern",
-    "FlextCliModule",
     "FlextCliServices",
     "FlextControlPanelCli",
     "FlextLogger",

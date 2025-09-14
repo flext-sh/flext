@@ -20,6 +20,7 @@ class WorkspaceStatus:
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         return ScriptMetadata(
             name="workspace_status",
             description="Dashboard completo do workspace FLEXT com métricas e status",

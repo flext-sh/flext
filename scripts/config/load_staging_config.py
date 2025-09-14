@@ -21,6 +21,7 @@ class StagingConfigLoader(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         return ScriptMetadata(
             name="load_staging_config",
             description="Load and validate staging environment configuration",
@@ -47,6 +48,7 @@ class StagingConfigLoader(FlextScript):
         return FlextResult[None].ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+        """Execute main script logic."""
         """Execute staging config loading logic."""
         try:
             Path.cwd()

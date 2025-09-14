@@ -57,6 +57,30 @@ from .handlers import (
     FlextResult,
 )
 
+# Quality gateway - explicit imports
+from .quality_gateway import (
+    QualityCheckConfig,
+    QualityGateway,
+    all_quality_checks_passed,
+    get_quality_failure_summary,
+)
+
+# Script base - explicit imports
+from .script_base import (
+    FlextScript,
+    ScriptMetadata,
+)
+
+# Security utilities - explicit imports
+from .security import (
+    SecretVaultDecryptor,
+)
+
+# Testing utilities - explicit imports
+from .testing import (
+    OracleE2ERunner,
+)
+
 # Workspace management - explicit imports
 from .workspace import (
     FlextToolsWorkspaceService,
@@ -77,39 +101,38 @@ from .workspace_cli import (
 # Only modules with clear, well-defined APIs are explicitly imported above.
 
 __all__: FlextTypes.Core.StringList = [
-    # Base CLI
     "BaseCLI",
     "CLIApi",
     "CLIConfig",
-    # Analysis tools
     "CodeDuplicateAnalyzer",
-    # Colors and output
     "Colors",
-    # Development tools
     "DevToolsManager",
-    # Documentation
     "DocumentationGenerator",
     "FlextBaseCLI",
     "FlextCLIConfig",
-    # Workspace CLI
     "FlextCliApi",
-    # Handlers
     "FlextProcessing",
     "FlextResult",
-    # CLI tools
+    "FlextScript",
     "FlextToolsCLI",
     "FlextToolsCliService",
     "FlextToolsDevService",
     "FlextToolsWorkspaceCLIService",
-    # Workspace management
     "FlextToolsWorkspaceService",
+    "OracleE2ERunner",
+    "QualityCheckConfig",
+    "QualityGateway",
+    "ScriptMetadata",
+    "SecretVaultDecryptor",
     "WorkspaceCLI",
     "WorkspaceManager",
+    "all_quality_checks_passed",
     "colorize",
     "create_cli_service",
     "create_dev_tools_manager",
     "create_workspace_cli",
     "create_workspace_manager",
+    "get_quality_failure_summary",
     "print_colored",
 ]
 

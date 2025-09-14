@@ -29,6 +29,7 @@ class PyprojectStandardizer(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         return ScriptMetadata(
             name="standardize_pyproject",
             description="Apply PEP 518/621 standards to all pyproject.toml files",
@@ -57,6 +58,7 @@ class PyprojectStandardizer(FlextScript):
         return FlextResult[None].ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+        """Execute main script logic."""
         """Execute pyproject.toml standardization."""
         try:
             workspace_root = Path.cwd()

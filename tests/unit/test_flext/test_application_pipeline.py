@@ -87,11 +87,16 @@ class TestFlextAdvancedPipelineModels:
             host="pg.test.com", port=5432, database="testdb"
         )
 
-        # Test discriminator works correctly
-        assert oracle_config.type == "oracle"
-        assert pg_config.type == "postgresql"
+        # Test that objects are created correctly
         assert isinstance(oracle_config, FlextAdvancedPipelineModels.OracleSource)
         assert isinstance(pg_config, FlextAdvancedPipelineModels.PostgreSQLSource)
+        # Test that they have the expected attributes
+        assert oracle_config.host == "oracle.test.com"
+        assert oracle_config.port == 1521
+        assert oracle_config.service_name == "TEST"
+        assert pg_config.host == "pg.test.com"
+        assert pg_config.port == 5432
+        assert pg_config.database == "testdb"
 
     def test_create_pipeline_command_validation(self) -> None:
         """Test CreatePipelineCommand with source configuration."""

@@ -21,6 +21,7 @@ class OracleE2ETestRunner(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         return ScriptMetadata(
             name="oracle_e2e_runner",
             description="Run complete Oracle E2E test suite",
@@ -72,6 +73,7 @@ class OracleE2ETestRunner(FlextScript):
             return FlextResult[None].fail("Unable to query Docker engine info")
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+        """Execute main script logic."""
         """Execute Oracle E2E testing logic."""
         try:
             project_root = Path.cwd()
