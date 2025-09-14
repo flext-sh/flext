@@ -52,13 +52,13 @@ License: MIT
 from __future__ import annotations
 
 from flext_core import (
-    FlextHandlers,
+    FlextProcessing,
     FlextResult,
 )
 
 # Direct exports from flext-core without unnecessary aliases
 
 __all__ = [
-    "FlextHandlers",
+    "FlextProcessing",
     "FlextResult",
 ]

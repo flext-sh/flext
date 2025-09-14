@@ -16,8 +16,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import mkdocs.__main__
-from flext_core import FlextLogger, FlextResult
-from flext_core.typings import FlextTypes
+from flext_core import FlextLogger, FlextResult, FlextTypes
 
 from .discovery_base import DependencyDiscovery
 from .documentation_templates import TemplateManager

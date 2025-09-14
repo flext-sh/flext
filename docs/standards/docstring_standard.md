@@ -227,11 +227,9 @@ def complex_method(self, data: List[Dict[str, object]]) -> FlextResult[List[str]
 ## Type Hints Integration
 
 ```python
-from typing import Dict, List, Optional, Union, TypeVar, Generic
+from typing import Dict, List, Optional, Union, Generic
 
-from flext_core import FlextResult
-
-T = TypeVar('T')
+from flext_core import FlextResult, T
 
 class GenericProcessor(Generic[T]):
     """Generic processor for any data type.

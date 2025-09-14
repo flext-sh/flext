@@ -63,15 +63,50 @@ from pathlib import Path
 
 from flext_core import FlextResult, FlextTypes
 
-from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
-from flext_tools.antipattern_scanner import SecurityViolation, scan_flext_ecosystem
+from flext_tools import Colors, print_colored
+from flext_tools.script_base import FlextScript, ScriptMetadata
 
+# Note: SecurityViolation and scan_flext_ecosystem defined locally to avoid import issues
 
 # Security audit functionality
 
+
+class SecurityIssue:
+    """Security issue representation."""
+
     def __init__(self, message: str, risk_level: str = "MEDIUM") -> None:
+        """Initialize security issue."""
         self.message = message
         self.risk_level = risk_level
+
+
+class SecurityViolation:
+    """Security violation representation."""
+
+    def __init__(
+        self,
+        violation_type: str,
+        risk_level: str,
+        code_snippet: str = "",
+        description: str = "",
+        suggested_fix: str = "",
+    ) -> None:
+        """Initialize security violation."""
+        self.violation_type = violation_type
+        self.risk_level = (
+            RiskLevel(risk_level) if isinstance(risk_level, str) else risk_level
+        )
+        self.code_snippet = code_snippet
+        self.description = description
+        self.suggested_fix = suggested_fix
+
+
+class RiskLevel:
+    """Risk level representation."""
+
+    def __init__(self, value: str) -> None:
+        """Initialize risk level."""
+        self.value = value.upper()
 
 
 class ScanConfig:
@@ -83,22 +118,62 @@ class ScanConfig:
         *,
         include_dependencies: bool = False,
     ) -> None:
+        """Initialize scanner configuration."""
         self.target_paths = target_paths
         self.include_dependencies = include_dependencies
+
+    def validate_business_rules(self) -> FlextResult[None]:
+        """Validate configuration business rules."""
+        if not self.target_paths:
+            return FlextResult[None].fail("Target paths cannot be empty")
+        return FlextResult[None].ok(None)
 
 
 class AntipatternScanner:
     """Security antipattern scanner."""
 
     def __init__(self, config: ScanConfig) -> None:
+        """Initialize scanner with configuration."""
         self.config = config
 
     def scan_ecosystem(self) -> list[SecurityViolation]:
         """Scan for security violations."""
         return [
-            SecurityViolation("Example security violation", "LOW"),
-            SecurityViolation("Another security issue", "MEDIUM"),
+            SecurityViolation(
+                violation_type="example_violation",
+                risk_level="LOW",
+                description="Example security violation",
+            ),
+            SecurityViolation(
+                violation_type="security_issue",
+                risk_level="MEDIUM",
+                description="Another security issue",
+            ),
         ]
+
+    def generate_report(
+        self, violations: list[SecurityViolation], output_file: str
+    ) -> FlextResult[None]:
+        """Generate report file."""
+        try:
+            with Path(output_file).open("w", encoding="utf-8") as f:
+                f.write("Security Report\n")
+                f.write(f"Found {len(violations)} violations\n")
+                f.writelines(
+                    f"- {violation.violation_type}: {violation.description}\n"
+                    for violation in violations
+                )
+            return FlextResult[None].ok(None)
+        except Exception as e:
+            return FlextResult[None].fail(f"Report generation failed: {e}")
+
+    def _generate_summary_report(self, violations: list[SecurityViolation]) -> None:
+        """Generate console summary report."""
+        print_colored(f"Found {len(violations)} security violations:", Colors.YELLOW)
+        for violation in violations:
+            print_colored(
+                f"- {violation.violation_type}: {violation.description}", Colors.RED
+            )
 
 
 def scan_flext_ecosystem(
@@ -266,17 +341,10 @@ class SecurityAuditScript(FlextScript):
             print_colored("🌐 Scanning entire FLEXT ecosystem...", Colors.CYAN)
 
             # Use convenience function for ecosystem scan
-            scan_result: FlextResult[list[SecurityViolation]] = scan_flext_ecosystem(
+            violations = scan_flext_ecosystem(
                 workspace_path=".",
                 _output_file=str(output_file) if output_file else None,
             )
-
-            if not scan_result.success:
-                return FlextResult[object].fail(
-                    f"Ecosystem scan failed: {scan_result.error}"
-                )
-
-            violations = scan_result.data or []
 
             return FlextResult[object].ok(
                 {
@@ -297,7 +365,7 @@ class SecurityAuditScript(FlextScript):
             output_format = kwargs.get("output_format", "summary")
             output_file = kwargs.get("output_file")
             risk_threshold = kwargs.get("risk_threshold", "MEDIUM")
-            include_deps = kwargs.get("include_deps", False)
+            include_deps = bool(kwargs.get("include_deps", False))
             kwargs.get("max_workers", 4)
             verbose = kwargs.get("verbose", False)
 
@@ -326,21 +394,14 @@ class SecurityAuditScript(FlextScript):
 
             # Validate configuration
             config_validation = config.validate_business_rules()
-            if not config_validation.success:
+            if config_validation.is_failure:
                 return FlextResult[object].fail(
                     f"Invalid configuration: {config_validation.error}",
                 )
 
             # Create and run scanner
             scanner = AntipatternScanner(config)
-            scan_result = scanner.scan_ecosystem()
-
-            if not scan_result.success:
-                return FlextResult[object].fail(
-                    f"Security scan failed: {scan_result.error}"
-                )
-
-            violations = scan_result.data or []
+            violations = scanner.scan_ecosystem()
             self.logger.info(
                 f"Security scan completed: {len(violations)} violations found",
             )

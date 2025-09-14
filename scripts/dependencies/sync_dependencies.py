@@ -89,6 +89,8 @@ def validate_projects(
             continue
 
         validation = validation_result.unwrap()
+        # Type assertion for validation result structure
+        assert isinstance(validation, dict), "Validation result must be a dict"
 
         if validation["valid"]:
             if verbose:
@@ -96,11 +98,15 @@ def validate_projects(
         else:
             all_valid = False
             print_colored(f"  ❌ {project.name}: Inválido", Colors.RED)
-            for error in validation["errors"]:
+            # Type assertion for errors list
+            from typing import cast
+            errors = cast("list", validation.get("errors", []))
+            for error in errors:
                 print_colored(f"    - {error}", Colors.RED)
 
-        if validation["warnings"] and verbose:
-            for warning in validation["warnings"]:
+        warnings = cast("list", validation.get("warnings", []))
+        if warnings and verbose:
+            for warning in warnings:
                 print_colored(f"    ⚠️ {warning}", Colors.YELLOW)
 
     if all_valid:
