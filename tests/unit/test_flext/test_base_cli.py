@@ -12,7 +12,6 @@ from flext.base_cli import (
     FlextCliConfig,
     FlextCliFormatters,
     FlextCliMain,
-    FlextCliModule,
     FlextCliServices,
     __all__,
 )
@@ -36,14 +35,6 @@ class TestFlextCliDirectExports:
 
         # Verify it's imported from flext-cli
         assert "flext_cli" in str(FlextCliConfig.__module__)
-
-    def test_flext_cli_module_import(self) -> None:
-        """Test that FlextCliModule is properly imported from flext-cli."""
-        assert FlextCliModule is not None
-        assert hasattr(FlextCliModule, "__name__")
-
-        # Verify it's imported from flext-cli
-        assert "flext_cli" in str(FlextCliModule.__module__)
 
     def test_flext_cli_services_import(self) -> None:
         """Test that FlextCliServices is properly imported from flext-cli."""
@@ -77,7 +68,7 @@ class TestFlextCliDirectExports:
             "FlextCliConfig",
             "FlextCliFormatters",
             "FlextCliMain",
-            "FlextCliModule",
+            "FlextCliModels",
             "FlextCliServices",
         ]
 
@@ -110,7 +101,6 @@ class TestFlextCliDirectExports:
         assert callable(FlextCliConfig)
         assert callable(FlextCliApi)
         assert callable(FlextCliFormatters)
-        assert callable(FlextCliModule)
         assert callable(FlextCliServices)
 
     def test_classes_have_correct_names(self) -> None:
@@ -119,7 +109,6 @@ class TestFlextCliDirectExports:
         assert FlextCliConfig.__name__ == "FlextCliConfig"
         assert FlextCliApi.__name__ == "FlextCliApi"
         assert FlextCliFormatters.__name__ == "FlextCliFormatters"
-        assert FlextCliModule.__name__ == "FlextCliModule"
         assert FlextCliServices.__name__ == "FlextCliServices"
 
 
@@ -214,7 +203,6 @@ class TestDirectImportValidation:
             FlextCliConfig,
             FlextCliFormatters,
             FlextCliMain,
-            FlextCliModule,
             FlextCliServices,
         ]
 

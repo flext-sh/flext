@@ -4,10 +4,10 @@ Single responsibility workspace management service eliminating ALL loose functio
 and SOLID violations. Uses flext-core utilities directly with SOURCE OF TRUTH
 principle for all workspace operations and metadata.
 
-ANTI-DUPLICATION ENFORCEMENT: Eliminates ALL duplications of flext-cli and 
+ANTI-DUPLICATION ENFORCEMENT: Eliminates ALL duplications of flext-cli and
 flext-tools functionality, using flext-core utilities exclusively.
 
-Copyright (c) 2025 FLEXT Team. All rights reserved.  
+Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
 
@@ -17,7 +17,13 @@ from enum import Enum
 from pathlib import Path
 from typing import TypedDict
 
-from flext_core import ( FlextContainer, FlextDomainService, FlextLogger, FlextModels, FlextResult, )
+from flext_core import (
+    FlextContainer,
+    FlextDomainService,
+    FlextLogger,
+    FlextModels,
+    FlextResult,
+)
 from pydantic import Field
 
 
@@ -117,17 +123,17 @@ class FlextAdvancedWorkspaceModels:
 
 class FlextWorkspaceService(FlextDomainService[str]):
     """Unified workspace service using flext-core utilities exclusively.
-    
+
     Eliminates ALL wrapper methods and SOLID violations, using flext-core
     utilities directly without abstraction layers. Uses SOURCE OF TRUTH
     principle for all workspace operations and metadata loading.
-    
+
     ANTI-DUPLICATION: NO local implementations - uses flext-core extensively.
     DOMAIN SEPARATION: Workspace operations only, NO CLI or tools functionality.
-    
+
     SOLID Principles Applied:
         - Single Responsibility: Workspace management only
-        - Open/Closed: Extensible through flext-core patterns  
+        - Open/Closed: Extensible through flext-core patterns
         - Dependency Inversion: Uses FlextContainer for dependencies
         - Interface Segregation: Focused workspace interface
     """
@@ -149,6 +155,11 @@ class FlextWorkspaceService(FlextDomainService[str]):
         path: str
         type: str
         size_mb: float
+        exists: bool
+        has_pyproject: bool
+        has_makefile: bool
+        has_src: bool
+        has_tests: bool
 
     def __init__(self, workspace_path: str | None = None, **data: object) -> None:
         """Initialize workspace service with flext-core dependencies."""
@@ -209,7 +220,12 @@ class FlextWorkspaceService(FlextDomainService[str]):
                                 "name": item.name,
                                 "path": str(item),
                                 "type": project_type.value,
-                                "size_mb": project_size
+                                "size_mb": project_size,
+                                "exists": True,
+                                "has_pyproject": (item / "pyproject.toml").exists(),
+                                "has_makefile": (item / "Makefile").exists(),
+                                "has_src": (item / "src").exists(),
+                                "has_tests": (item / "tests").exists() or (item / "test").exists()
                             }
                             discovered_projects.append(project_info)
 
@@ -349,13 +365,11 @@ class FlextWorkspaceService(FlextDomainService[str]):
                     typed_data[key] = int(value) if isinstance(value, str) else value
                 elif key == "enabled" and isinstance(value, (bool, str)):
                     typed_data[key] = value == "true" if isinstance(value, str) else value
-                elif key == "settings" and isinstance(value, dict):
-                    typed_data[key] = value
-                elif key == "name" and isinstance(value, str):
+                elif (key == "settings" and isinstance(value, dict)) or (key == "name" and isinstance(value, str)):
                     typed_data[key] = value
                 else:
                     typed_data[key] = value  # type: ignore[assignment]
-            
+
             context = FlextAdvancedWorkspaceModels.WorkspaceContext(**typed_data)  # type: ignore[arg-type]
             return FlextResult[FlextAdvancedWorkspaceModels.WorkspaceContext].ok(context)
         except Exception as e:
@@ -371,15 +385,13 @@ class FlextWorkspaceService(FlextDomainService[str]):
                     typed_data[key] = value
                 elif key == "scan_depth" and isinstance(value, (int, str)):
                     typed_data[key] = int(value) if isinstance(value, str) else value
-                elif key == "include_hidden" and isinstance(value, (bool, str)):
-                    typed_data[key] = value == "true" if isinstance(value, str) else value
-                elif key in ["check_dependencies", "validate_structure", "check_permissions", "install_dependencies", "setup_git_hooks"] and isinstance(value, (bool, str)):
+                elif (key == "include_hidden" and isinstance(value, (bool, str))) or (key in ["check_dependencies", "validate_structure", "check_permissions", "install_dependencies", "setup_git_hooks"] and isinstance(value, (bool, str))):
                     typed_data[key] = value == "true" if isinstance(value, str) else value
                 elif key == "python_version" and isinstance(value, str):
                     typed_data[key] = value
                 else:
                     typed_data[key] = value  # type: ignore[assignment]
-            
+
             operation = FlextAdvancedWorkspaceModels.WorkspaceOperation(**typed_data)  # type: ignore[arg-type]
             return FlextResult[FlextAdvancedWorkspaceModels.WorkspaceOperation].ok(operation)
         except Exception as e:

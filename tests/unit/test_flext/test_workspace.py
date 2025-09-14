@@ -174,8 +174,10 @@ class TestProjectDiscoveryService:
         python_project = temp_workspace / "flext-core"
         result = discovery.analyze_project_structure(python_project)
 
-        assert result.is_success
-        project_info = result.unwrap()
+        assert isinstance(result, dict)
+        assert result.get("success") is True
+        project_info = result.get("project_info")
+        assert project_info is not None
         assert project_info.project_type == "python"
         assert project_info.has_tests
         assert project_info.has_src
@@ -482,8 +484,9 @@ class TestErrorHandling:
         invalid_path = Path("/non/existent/workspace")
         result = discovery.analyze_project_structure(invalid_path)
 
-        assert result.is_failure
-        assert "not found" in result.error or "does not exist" in result.error
+        assert isinstance(result, dict)
+        assert result.get("success") is False
+        assert "does not exist" in result.get("error", "")
 
     def test_validator_error_handling(self) -> None:
         """Test workspace validator error handling."""

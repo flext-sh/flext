@@ -31,6 +31,7 @@ class DevToolsManager:
     """Lazy wrapper for FlextAdvancedDevToolsManager to avoid circular imports."""
 
     def __new__(cls, *args: object, **kwargs: object) -> object:
+        """Create instance using lazy-loaded FlextAdvancedDevToolsManager."""
         FlextAdvancedDevToolsManager, _ = _get_flext_dev_classes()
         return FlextAdvancedDevToolsManager(*args, **kwargs)
 

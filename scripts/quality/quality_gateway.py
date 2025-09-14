@@ -60,6 +60,7 @@ class QualityGateway(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         """Return script metadata."""
         return ScriptMetadata(
             name="quality_gateway",
@@ -115,6 +116,7 @@ class QualityGateway(FlextScript):
         return FlextResult[None].ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+        """Execute main script logic."""
         """Executar gateway de qualidade completo."""
         try:
             workspace_root = Path.cwd()
@@ -228,7 +230,9 @@ class QualityGateway(FlextScript):
 
             # Gateway aprovado apenas se todos os projetos passaram
             failed_count = total_stats.get("failed", 0)
-            gateway_passed = isinstance(failed_count, (int, str)) and int(failed_count) == 0
+            gateway_passed = (
+                isinstance(failed_count, (int, str)) and int(failed_count) == 0
+            )
 
             if gateway_passed:
                 print_colored("\n🎉 QUALITY GATEWAY: APROVADO", Colors.GREEN)
@@ -532,7 +536,11 @@ class QualityGateway(FlextScript):
         projects_analyzed = total_stats.get("projects_analyzed", 0)
         passed_count = total_stats.get("passed", 0)
 
-        if isinstance(projects_analyzed, (int, str)) and isinstance(passed_count, (int, str)) and int(projects_analyzed) > 0:
+        if (
+            isinstance(projects_analyzed, (int, str))
+            and isinstance(passed_count, (int, str))
+            and int(projects_analyzed) > 0
+        ):
             success_rate = (int(passed_count) / int(projects_analyzed)) * 100
 
             if success_rate == PERFECT_SCORE:

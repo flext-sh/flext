@@ -22,6 +22,7 @@ class SecretsVaultDecryptor(BaseSecurityScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         return ScriptMetadata(
             name="decrypt_secrets_vault",
             description="Decrypt production secrets vault securely",
@@ -32,6 +33,7 @@ class SecretsVaultDecryptor(BaseSecurityScript):
     # validate_preconditions is inherited from BaseSecurityScript
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+        """Execute main script logic."""
         """Execute vault decryption."""
         try:
             workspace_root = Path.cwd()

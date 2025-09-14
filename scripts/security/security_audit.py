@@ -194,6 +194,7 @@ class SecurityAuditScript(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         """Return security audit script metadata."""
         return ScriptMetadata(
             name="security-audit",
@@ -220,6 +221,7 @@ class SecurityAuditScript(FlextScript):
             return FlextResult[None].fail(f"Precondition validation failed: {e}")
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+        """Execute main script logic."""
         """Execute security audit with comprehensive analysis."""
         try:
             # Handle ecosystem scan mode

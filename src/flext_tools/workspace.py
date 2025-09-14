@@ -9,6 +9,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from flext_core import FlextDomainService, FlextResult
 
 from flext.workspace import (
@@ -19,7 +21,7 @@ from flext.workspace import (
 
 
 # Lazy loading to avoid circular imports
-def _get_flext_workspace_classes() -> tuple[type, type, object]:
+def _get_flext_workspace_classes() -> tuple[type, type, Callable[[str | None], FlextWorkspaceService]]:
     """Lazy load flext workspace classes to avoid circular imports."""
     return FlextWorkspaceService, ProjectType, create_workspace_service
 
@@ -34,10 +36,10 @@ class WorkspaceManager:
 
 
 # Legacy compatibility factory functions
-def create_workspace_manager(*args: object, **kwargs: object) -> object:
+def create_workspace_manager(workspace_path: str | None = None) -> object:
     """Create workspace manager using lazy loading."""
     _, _, create_workspace_service = _get_flext_workspace_classes()
-    return create_workspace_service(*args, **kwargs)
+    return create_workspace_service(workspace_path)
 
 
 # Facade class for legacy tools compatibility
@@ -49,13 +51,14 @@ class FlextToolsWorkspaceService(FlextDomainService[str]):
         super().__init__()
         # Lazy loading to avoid circular imports
         self._workspace_path = workspace_path
-        self._workspace_service = None
+        self._workspace_service: FlextWorkspaceService | None = None
 
-    def _get_workspace_service(self) -> object:
+    def _get_workspace_service(self) -> FlextWorkspaceService:
         """Lazy load workspace service to avoid circular imports."""
         if self._workspace_service is None:
             _, _, create_workspace_service = _get_flext_workspace_classes()
             self._workspace_service = create_workspace_service(self._workspace_path)
+        assert self._workspace_service is not None
         return self._workspace_service
 
     def execute(self, _request: str = "") -> FlextResult[str]:
