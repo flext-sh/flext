@@ -125,14 +125,14 @@ class ComprehensiveWorkspaceManager(FlextScript):
             print_colored(f"❌ Error during workspace management: {e}", Colors.RED)
             return FlextResult[object].fail(f"Error during workspace management: {e}")
 
-    def _discover_projects(self, workspace_root: Path) -> list[Path]:
+    def _discover_projects(self, _workspace_root: Path) -> list[Path]:
         """Discover FLEXT projects."""
         # Projects to ignore
         ignore_list = {"client-a-oud-mig", "client-b-meltano-native", "flexcore"}
 
         projects = [
             item
-            for item in workspace_root.iterdir()
+            for item in _workspace_root.iterdir()
             if item.is_dir()
             and (item / "pyproject.toml").exists()
             and item.name not in ignore_list
@@ -188,7 +188,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
                     Colors.GREEN,
                 )
 
-    def _setup_workspace_links(self, workspace_root: Path) -> FlextResult[bool]:
+    def _setup_workspace_links(self, _workspace_root: Path) -> FlextResult[bool]:
         """Setup development links between workspace projects."""
         print_colored("\n🔗 WORKSPACE LINKS SETUP", Colors.BLUE)
         print_colored("-" * 40, Colors.BLUE)
@@ -197,7 +197,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
         poetry_ops = PoetryValidator()
 
         # Discover projects
-        projects = self._discover_projects(workspace_root)
+        projects = self._discover_projects(_workspace_root)
 
         total_linked = 0
         failed_projects: FlextTypes.Core.StringList = []
@@ -242,7 +242,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
 
     def _complete_workspace_setup(
         self,
-        workspace_root: Path,
+        _workspace_root: Path,
         **_kwargs: object,
     ) -> FlextResult[bool]:
         """Complete workspace setup with Poetry dependency management."""
@@ -250,7 +250,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
         print_colored("-" * 40, Colors.BLUE)
 
         poetry_ops = PoetryValidator()
-        success = poetry_ops.validate_project(workspace_root)
+        success = poetry_ops.validate_project(_workspace_root)
 
         if success:
             print_colored("✅ Workspace setup completed successfully", Colors.GREEN)
@@ -263,13 +263,13 @@ class ComprehensiveWorkspaceManager(FlextScript):
         print_colored("Check Poetry logs for details", Colors.YELLOW)
         return FlextResult[bool].fail("Workspace setup failed")
 
-    def _manage_dependencies(self, workspace_root: Path) -> FlextResult[bool]:
+    def _manage_dependencies(self, _workspace_root: Path) -> FlextResult[bool]:
         """Manage workspace dependencies with Poetry validation."""
         print_colored("\n📦 WORKSPACE DEPENDENCY MANAGEMENT", Colors.BLUE)
         print_colored("-" * 40, Colors.BLUE)
 
         poetry_ops = PoetryValidator()
-        success = poetry_ops.validate_project(workspace_root)
+        success = poetry_ops.validate_project(_workspace_root)
 
         if success:
             print_colored(
@@ -286,14 +286,14 @@ class ComprehensiveWorkspaceManager(FlextScript):
         return FlextResult[bool].fail("Failed to manage dependencies")
 
     def _run_mypy_check(
-        self, workspace_root: Path, **kwargs: object
+        self, _workspace_root: Path, **_kwargs: object
     ) -> FlextResult[bool]:
         """Run MyPy type checking across workspace."""
         print_colored("\n🔍 MYPY WORKSPACE CHECK", Colors.BLUE)
         print_colored("-" * 40, Colors.BLUE)
 
         try:
-            mypy_checker = MyPyChecker(workspace_path=workspace_root)
+            mypy_checker = MyPyChecker(workspace_path=_workspace_root)
             check_result = mypy_checker.check_workspace()
 
             if check_result:
@@ -320,7 +320,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
             print_colored(f"❌ Error during MyPy check: {e}", Colors.RED)
             return FlextResult[bool].fail(f"Error during MyPy check: {e}")
 
-    def _setup_ssl(self, workspace_root: Path) -> FlextResult[bool]:
+    def _setup_ssl(self, _workspace_root: Path) -> FlextResult[bool]:
         """Setup SSL/TLS certificates for staging environment."""
         print_colored("\n🔐 STAGING SSL SETUP", Colors.BLUE)
         print_colored("-" * 40, Colors.BLUE)
@@ -345,7 +345,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
             return FlextResult[bool].fail(f"Error during SSL setup: {e}")
 
     def _setup_monitoring(
-        self, workspace_root: Path, **kwargs: object
+        self, _workspace_root: Path, **_kwargs: object
     ) -> FlextResult[bool]:
         """Setup monitoring infrastructure for FLEXT workspace."""
         print_colored("\n📊 MONITORING INFRASTRUCTURE SETUP", Colors.BLUE)

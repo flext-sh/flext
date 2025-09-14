@@ -106,7 +106,7 @@ class TestCliPatternsIntegration:
         workspace.mkdir()
         return workspace
 
-    def test_cli_patterns_module_imports_cleanly(self, temp_workspace: Path) -> None:
+    def test_cli_patterns_module_imports_cleanly(self, _temp_workspace: Path) -> None:
         """Test that cli_patterns module imports without side effects."""
         # This test ensures the module can be imported in various contexts
         try:

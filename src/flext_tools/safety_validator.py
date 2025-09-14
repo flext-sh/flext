@@ -76,8 +76,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import requests
-from flext_core import FlextLogger, FlextResult
-from flext_core.typings import FlextTypes
+from flext_core import FlextLogger, FlextResult, FlextTypes
 
 # Constants for validation
 MIN_NAME_LENGTH = 2

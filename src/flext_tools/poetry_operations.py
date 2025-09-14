@@ -19,9 +19,7 @@ import subprocess
 import time
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextResult
-from flext_core.container import FlextContainer
-from flext_core.typings import FlextTypes
+from flext_core import FlextContainer, FlextLogger, FlextResult, FlextTypes
 
 from .backup import BackupManager
 from .colors import Colors, print_colored

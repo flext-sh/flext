@@ -48,7 +48,7 @@ All operations that can fail return FlextResult.
 ### System Utilities
 
 ```python
-from typing import TypeVar, Dict
+from typing import Dict
 
 from datetime import datetime, timezone
 import uuid
@@ -195,9 +195,8 @@ def flext_time_format_duration(seconds: float) -> str:
 ### Collection Utilities
 
 ```python
-from typing import List, TypeVar, Callable
-
-T = TypeVar('T')
+from typing import List, Callable
+from flext_core import T
 
 def flext_collection_chunk(
     items: List[T],

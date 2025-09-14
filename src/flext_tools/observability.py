@@ -3,8 +3,7 @@
 import warnings
 from typing import ParamSpec, Protocol
 
-from flext_core import FlextLogger
-from flext_core.typings import FlextTypes
+from flext_core import FlextLogger, FlextTypes
 from flext_observability import (
     FlextLoggingService,
     flext_create_log_entry,

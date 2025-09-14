@@ -31,21 +31,17 @@ Use protocols for structural typing instead of deep inheritance.
 ## Core Foundation Types
 
 ```python
-from typing import TypeVar, Union, Dict, Callable, Protocol
+from typing import Union, Dict, Callable, Protocol
 
 from datetime import datetime
 from decimal import Decimal
+from flext_core import T, U, V
 
 class FlextTypes:
     """Unified type system for FLEXT ecosystem."""
 
     class Core:
         """Foundation types used across all domains."""
-
-
-        T = TypeVar('T')
-        K = TypeVar('K')
-        V = TypeVar('V')
 
         # JSON Types
         JsonValue = Union[str, int, float, bool, None, Dict[str, object], list]
