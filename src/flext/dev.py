@@ -17,7 +17,12 @@ from pathlib import Path
 from typing import Annotated, Any, Literal, Protocol, TypeVar
 from uuid import UUID, uuid4
 
-from flext_core import ( FlextDomainService, FlextLogger, FlextModels, FlextResult, )
+from flext_core import (
+    FlextDomainService,
+    FlextLogger,
+    FlextModels,
+    FlextResult,
+)
 from pydantic import BaseModel, Field, field_validator, model_validator
 from pydantic.functional_validators import BeforeValidator
 
@@ -83,7 +88,7 @@ class FlextAdvancedDevModels:
 
         operation_id: str = Field(default_factory=lambda: f"op_{uuid4().hex[:8]}",
                                 description="Unique operation identifier")
-        context: "FlextAdvancedDevModels.DevOperationContext" = Field(..., description="Operation context")
+        context: FlextAdvancedDevModels.DevOperationContext = Field(..., description="Operation context")
 
         @abstractmethod
         def validate_prerequisites(self) -> FlextResult[None]:
@@ -134,7 +139,7 @@ class FlextAdvancedDevModels:
         strict_mode: bool = Field(True, description="Enable strict mode")
 
         @model_validator(mode="after")
-        def validate_lint_config(self) -> "FlextAdvancedDevModels.LintOperation":
+        def validate_lint_config(self) -> FlextAdvancedDevModels.LintOperation:
             """Validate linting configuration."""
             if "mypy" in self.tools and "pyright" in self.tools:
                 raise ValueError("Cannot run both mypy and pyright simultaneously")
@@ -199,7 +204,7 @@ class FlextAdvancedDevModels:
         test_count: int = Field(0, ge=0, description="Number of test files")
 
         @model_validator(mode="after")
-        def validate_project_consistency(self) -> "FlextAdvancedDevModels.ProjectInfo":
+        def validate_project_consistency(self) -> FlextAdvancedDevModels.ProjectInfo:
             """Validate project type consistency."""
             path = Path(self.path)
 
@@ -256,7 +261,7 @@ class FlextAdvancedDevModels:
 
 class FlextAdvancedDevToolsManager(FlextDomainService[FlextAdvancedDevModels.OperationResult]):
     """Advanced development tools service using Python 3.13 + Generic patterns.
-    
+
     Implements modern development operations with:
     - Generic type constraints for type safety
     - Protocol-based operation design
@@ -265,7 +270,7 @@ class FlextAdvancedDevToolsManager(FlextDomainService[FlextAdvancedDevModels.Ope
     - Discriminated unions for operation types
     """
 
-    def __init__(self, **data: Any) -> None:
+    def __init__(self, **_data: Any) -> None:
         """Initialize development tools service with advanced patterns."""
         super().__init__()
         self._logger = FlextLogger(__name__)
@@ -533,19 +538,19 @@ def create_dev_tools_manager() -> FlextAdvancedDevToolsManager:
 
 # Export main classes and types for external use
 __all__ = [
-    # Main service class
-    "FlextAdvancedDevToolsManager",
-    "create_dev_tools_manager",
+    # Legacy compatibility
+    "DevToolsManager",
     # Advanced models
     "FlextAdvancedDevModels",
+    # Main service class
+    "FlextAdvancedDevToolsManager",
     # Enums
     "OperationStatus",
     "OperationType",
-    "ProjectType",
     # Type aliases
     "ProjectPath",
-    # Legacy compatibility
-    "DevToolsManager",
+    "ProjectType",
+    "create_dev_tools_manager",
 ]
 
 # Legacy compatibility aliases

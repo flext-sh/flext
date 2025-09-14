@@ -22,6 +22,7 @@ class GradualLintFixerScript(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         return ScriptMetadata(
             name="gradual_lint_fixer",
             description="Apply safe gradual lint fixes to projects",
@@ -55,6 +56,7 @@ class GradualLintFixerScript(FlextScript):
         return FlextResult[None].ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+        """Execute main script logic."""
         """Execute gradual lint fixing."""
         try:
             workspace_root = Path.cwd()

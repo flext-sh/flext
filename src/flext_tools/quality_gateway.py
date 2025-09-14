@@ -443,7 +443,7 @@ class QualityGateway:
                 try:
                     # Run ruff against workspace_path using subprocess
                     result = subprocess.run(
-                        ["ruff", "check", str(self.workspace_path)],
+                        ["/usr/bin/ruff", "check", str(self.workspace_path)],
                         check=False,
                         capture_output=True,
                         text=True,
@@ -490,7 +490,7 @@ class QualityGateway:
                 )
             # Run mypy via subprocess
             result = subprocess.run(
-                ["mypy", "src", "--strict", "--show-error-codes"],
+                ["/usr/bin/mypy", "src", "--strict", "--show-error-codes"],
                 check=False,
                 cwd=self.workspace_path,
                 capture_output=True,
@@ -532,7 +532,7 @@ class QualityGateway:
                 )
             # Run pytest via subprocess
             result = subprocess.run(
-                ["pytest", "tests", "-v", "--tb=short"],
+                ["/usr/bin/pytest", "tests", "-v", "--tb=short"],
                 check=False,
                 cwd=self.workspace_path,
                 capture_output=True,

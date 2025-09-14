@@ -11,12 +11,20 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import subprocess
+import sys
 from pathlib import Path
 
 from flext_cli import FlextCliApi, FlextCliConfig, FlextCliMain
 from flext_core import FlextDomainService, FlextLogger, FlextResult
 
-from flext_tools import ( Colors, QualityCheckConfig, QualityGateway, all_quality_checks_passed, get_quality_failure_summary, print_colored, )
+from flext_tools import (
+    Colors,
+    QualityCheckConfig,
+    QualityGateway,
+    all_quality_checks_passed,
+    get_quality_failure_summary,
+    print_colored,
+)
 
 
 class FlextControlPanelCli(FlextDomainService[str]):
@@ -27,7 +35,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
     enterprise-grade CLI capabilities through proper flext-cli integration.
     """
 
-    def __init__(self, **data: object) -> None:
+    def __init__(self, **_data: object) -> None:
         """Initialize FLEXT CLI service with flext-cli integration."""
         super().__init__()
         self._logger = FlextLogger(__name__)
@@ -316,7 +324,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
         """Get current workspace path."""
         return self._workspace
 
-    def execute(self, request: str = "") -> FlextResult[str]:
+    def execute(self, _request: str = "") -> FlextResult[str]:
         """Execute CLI service - required by FlextDomainService abstract method."""
         try:
             # Default execution returns CLI system info
@@ -388,10 +396,10 @@ def quality() -> None:
 
     result = tools_handler.quality_check(config)
     if result.is_failure:
-        exit(1)
+        sys.exit(1)
 
 
-def scripts(category: str | None = None, list_only: bool = True) -> None:
+def scripts(category: str | None = None, _list_only: bool = True) -> None:
     """Legacy function - use FlextControlPanelCli._ToolsCommands.list_scripts instead."""
     cli_service = create_cli()
     tools_handler = cli_service.create_tools_handler()
@@ -415,10 +423,10 @@ def test(coverage: bool = True, parallel: bool = False) -> None:
     if result.is_success:
         test_result = result.unwrap()
         if not test_result.get("success", True):
-            exit(1)
+            sys.exit(1)
     else:
         print(f"❌ Test execution failed: {result.error}")
-        exit(1)
+        sys.exit(1)
 
 
 def lint(fix: bool = False) -> None:
@@ -433,7 +441,7 @@ def lint(fix: bool = False) -> None:
         pass
     else:
         print(f"❌ Linting failed: {result.error}")
-        exit(1)
+        sys.exit(1)
 
 
 def format_code(check_only: bool = False) -> None:
@@ -453,16 +461,16 @@ def info(detailed: bool = False) -> None:
 # Export unified CLI class and legacy compatibility functions
 __all__ = [
     "FlextControlPanelCli",
+    "analysis",
     "create_cli",
+    "format_code",
+    "info",
+    "lint",
     "main",
     # Legacy function exports for backward compatibility
     "quality",
     "scripts",
-    "analysis",
     "test",
-    "lint",
-    "format_code",
-    "info",
 ]
 
 

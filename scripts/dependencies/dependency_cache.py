@@ -21,6 +21,7 @@ class DependencyCacheManager(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         return ScriptMetadata(
             name="dependency_cache",
             description="Manage dependency analysis cache for performance",
@@ -41,6 +42,7 @@ class DependencyCacheManager(FlextScript):
         return FlextResult[None].ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+        """Execute main script logic."""
         """Execute cache management operations."""
         try:
             Path.cwd()

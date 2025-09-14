@@ -51,9 +51,10 @@ class TestFlextAdvancedDevToolsManager:
         create_dev_tools_manager()
 
         # Test that we can access advanced models namespace
-        assert hasattr(FlextAdvancedDevModels, "Operations")
-        assert hasattr(FlextAdvancedDevModels, "Projects")
-        assert hasattr(FlextAdvancedDevModels, "Configuration")
+        assert hasattr(FlextAdvancedDevModels, "TestOperation")
+        assert hasattr(FlextAdvancedDevModels, "LintOperation")
+        assert hasattr(FlextAdvancedDevModels, "FormatOperation")
+        assert hasattr(FlextAdvancedDevModels, "DevOperationContext")
 
 
 class TestAdvancedDevOperations:
@@ -343,9 +344,9 @@ class TestModuleExports:
         assert FlextAdvancedDevModels is not None
 
         # Test nested namespaces
-        assert hasattr(FlextAdvancedDevModels, "Operations")
-        assert hasattr(FlextAdvancedDevModels, "Projects")
-        assert hasattr(FlextAdvancedDevModels, "Configuration")
+        assert hasattr(FlextAdvancedDevModels, "DevOperation")
+        assert hasattr(FlextAdvancedDevModels, "ProjectInfo")
+        assert hasattr(FlextAdvancedDevModels, "DevOperationContext")
 
 
 class TestErrorHandling:

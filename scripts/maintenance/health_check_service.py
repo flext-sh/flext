@@ -20,6 +20,7 @@ class HealthCheckServiceRunner(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         return ScriptMetadata(
             name="health_check_service",
             description="Run comprehensive health monitoring service",
