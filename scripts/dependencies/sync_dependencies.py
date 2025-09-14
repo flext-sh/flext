@@ -100,6 +100,7 @@ def validate_projects(
             print_colored(f"  ❌ {project.name}: Inválido", Colors.RED)
             # Type assertion for errors list
             from typing import cast
+
             errors = cast("list", validation.get("errors", []))
             for error in errors:
                 print_colored(f"    - {error}", Colors.RED)

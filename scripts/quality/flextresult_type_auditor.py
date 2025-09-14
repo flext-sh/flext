@@ -24,6 +24,7 @@ class FlextResultTypeAuditor(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         return ScriptMetadata(
             name="flextresult_type_auditor",
             description="Audit FlextResult type consistency across FLEXT ecosystem",
@@ -92,7 +93,7 @@ class FlextResultTypeAuditor(FlextScript):
 
         try:
             result = subprocess.run(
-                ["git", "submodule", "status"],
+                ["/usr/bin/git", "submodule", "status"],
                 capture_output=True,
                 text=True,
                 check=True,

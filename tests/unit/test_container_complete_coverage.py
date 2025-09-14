@@ -302,7 +302,7 @@ class TestFlextContainerCompleteCoverage:
         config = {
             "enable_caching": True,
             "thread_safe": True,
-            "validation_level": "strict"
+            "validation_level": "strict",
         }
 
         try:
@@ -407,13 +407,17 @@ class TestFlextContainerCompleteCoverage:
 
         # Empty service name variations
         FlextContainer.ServiceKey[str]("")
-        FlextContainer.ServiceKey[str](None) if hasattr(FlextContainer.ServiceKey, "__init__") else None
+        FlextContainer.ServiceKey[str](None) if hasattr(
+            FlextContainer.ServiceKey, "__init__"
+        ) else None
 
         # Exception scenarios
         try:
+
             def exception_factory() -> Never:
                 msg = "System error"
                 raise OSError(msg)
+
             container.register_factory("exception_service", exception_factory)
             container.get("exception_service")
         except (OSError, ValueError, TypeError):

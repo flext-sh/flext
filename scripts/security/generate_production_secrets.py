@@ -24,6 +24,7 @@ class ProductionSecretsScript(BaseSecurityScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         return ScriptMetadata(
             name="generate_production_secrets",
             description="Generate secure secrets for production deployment",
@@ -34,6 +35,7 @@ class ProductionSecretsScript(BaseSecurityScript):
     # validate_preconditions is inherited from BaseSecurityScript
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+        """Execute main script logic."""
         """Execute secrets generation."""
         try:
             workspace_root = Path.cwd()

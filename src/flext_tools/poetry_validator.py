@@ -521,7 +521,7 @@ class PoetryValidator:
         # Use subprocess to run poetry check command
         try:
             result = subprocess.run(
-                ["poetry", "check"],
+                ["/usr/bin/poetry", "check"],  # noqa: S607
                 check=False,
                 cwd=project_path,
                 capture_output=True,

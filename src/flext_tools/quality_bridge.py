@@ -42,7 +42,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from flext_core import FlextLogger, FlextResult, FlextTypes
-from flext_quality import QualityAPI
+from flext_quality import FlextQualityService
 
 logger = FlextLogger(__name__)
 
@@ -112,7 +112,7 @@ class QualityBridge:
             # Delegate to authoritative flext-quality service
             # Note: QualityAPI likely provides async methods; this bridge remains sync for now
             # and returns a clear message until a proper async bridge is implemented.
-            _ = QualityAPI  # Ensures import is used for type-checking and availability
+            _ = FlextQualityService  # Ensures import is used for type-checking and availability
             return FlextResult[FlextTypes.Core.Dict].fail(
                 "Quality API integration requires async implementation",
             )
@@ -240,7 +240,7 @@ class QualityBridge:
         """
         try:
             # Instantiate to verify availability
-            _ = QualityAPI()
+            _ = FlextQualityService()
             return FlextResult[FlextTypes.Core.Dict].ok(
                 {
                     "service_available": True,

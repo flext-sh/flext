@@ -26,6 +26,7 @@ class ScriptRunner(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         return ScriptMetadata(
             name="script_runner",
             description="Executor centralizado para todos os scripts FLEXT",
@@ -45,6 +46,7 @@ class ScriptRunner(FlextScript):
         return FlextResult[None].ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+        """Execute main script logic."""
         """Execute script runner logic."""
         try:
             list_scripts = kwargs.get("list", False)

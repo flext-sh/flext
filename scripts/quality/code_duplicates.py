@@ -22,6 +22,7 @@ class CodeDuplicatesAnalyzer(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         return ScriptMetadata(
             name="code_duplicates",
             description="Analyze and detect code duplicates across workspace",
@@ -52,6 +53,7 @@ class CodeDuplicatesAnalyzer(FlextScript):
         return FlextResult[None].ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+        """Execute main script logic."""
         """Execute code duplicate analysis."""
         try:
             workspace_root = Path.cwd()

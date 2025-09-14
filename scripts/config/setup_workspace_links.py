@@ -36,6 +36,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         return ScriptMetadata(
             name="comprehensive_workspace_manager",
             description=(
@@ -73,6 +74,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
         return FlextResult[None].fail("Poetry not found")
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+        """Execute main script logic."""
         """Execute comprehensive workspace management."""
         try:
             workspace_root = Path.cwd()

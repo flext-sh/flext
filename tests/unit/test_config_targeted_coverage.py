@@ -20,18 +20,18 @@ class TestFlextConfigTargetedCoverage:
     """Targeted tests for FlextConfig covering specific uncovered lines."""
 
     def test_business_validator_empty_app_name_validation(self) -> None:
-        """Test BusinessValidator with validation scenarios - bypassing Pydantic validation."""
-        # Test the BusinessValidator directly, not through FlextConfig constructor
-        validator = FlextConfig.BusinessValidator()
+        """Test RuntimeValidator with validation scenarios."""
+        # Test the RuntimeValidator directly (this is where app_name validation is)
+        validator = FlextConfig.RuntimeValidator()
 
-        # Create a config object that bypasses validation for testing
-        config = FlextConfig(_factory_mode=True)  # Factory mode bypasses validation
+        # Create a config object and bypass Pydantic validation
+        config = FlextConfig(_factory_mode=True)
         config._sealed = False  # Allow modification
 
-        # Manually set problematic values for business rule testing
-        config.__dict__["app_name"] = ""  # Direct dict access bypasses validation
+        # Use object.__setattr__ to bypass Pydantic validation
+        object.__setattr__(config, "app_name", "")
 
-        result = validator.validate_business_rules(config)
+        result = validator.validate_runtime_requirements(config)
         FlextTestsMatchers.assert_result_failure(result)
         assert "app_name" in result.error
 
@@ -118,7 +118,8 @@ class TestFlextConfigTargetedCoverage:
         assert isinstance(json_result, str)
 
         api_payload_result = config.as_api_payload()
-        assert isinstance(api_payload_result, dict)
+        FlextTestsMatchers.assert_result_success(api_payload_result)
+        assert isinstance(api_payload_result.unwrap(), dict)
 
     def test_environment_adapter_functionality(self) -> None:
         """Test DefaultEnvironmentAdapter with correct API."""
@@ -126,7 +127,7 @@ class TestFlextConfigTargetedCoverage:
 
         # Test get_env_var with correct signature (only one parameter)
         result = adapter.get_env_var("NONEXISTENT_VAR")
-        assert result is None  # Should return None for nonexistent vars
+        FlextTestsMatchers.assert_result_failure(result)  # Should return failure for nonexistent vars
 
     def test_config_merge_functionality(self) -> None:
         """Test config merge functionality."""
@@ -135,7 +136,7 @@ class TestFlextConfigTargetedCoverage:
         config2 = FlextConfig(_factory_mode=True)
 
         # Test merge operation
-        merge_result = config1.merge(config2)
+        merge_result = FlextConfig.merge(config1, config2.to_dict())
         FlextTestsMatchers.assert_result_success(merge_result)
 
     def test_config_factory_patterns(self) -> None:
@@ -167,4 +168,4 @@ class TestFlextConfigTargetedCoverage:
 
         # Test validate_configuration_consistency
         consistency_result = config.validate_configuration_consistency()
-        assert isinstance(consistency_result, FlextResult)
+        assert isinstance(consistency_result, FlextConfig)
