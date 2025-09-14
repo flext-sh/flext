@@ -58,7 +58,7 @@ class FlextToolsWorkspaceService(FlextDomainService[str]):
         if self._workspace_service is None:
             _, _, create_workspace_service = _get_flext_workspace_classes()
             self._workspace_service = create_workspace_service(self._workspace_path)
-        assert self._workspace_service is not None
+        assert self._workspace_service is not None  # noqa: S101 - Lazy loading assertion
         return self._workspace_service
 
     def execute(self, _request: str = "") -> FlextResult[str]:

@@ -117,6 +117,7 @@ class FlextDiagnostic:
                 [str(ruff_path), "check", "."],
                 check=False,
                 capture_output=True,
+                shell=False,
                 text=True,
                 cwd=str(project_path),
             )
@@ -166,6 +167,7 @@ class FlextDiagnostic:
                 check=False,
                 capture_output=True,
                 text=True,
+                shell=False,
                 cwd=str(workspace_path),
             )
             return result.returncode, result.stdout, result.stderr
