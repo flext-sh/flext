@@ -64,6 +64,15 @@ SKIP_DIRS = {
 
 
 def should_skip(path: Path) -> bool:
+    """Check if a path should be skipped based on directory exclusions.
+    
+    Args:
+        path: The path to check
+        
+    Returns:
+        True if the path should be skipped, False otherwise
+
+    """
     return any(part in SKIP_DIRS for part in path.parts)
 
 
@@ -82,6 +91,15 @@ def simplify(base: str) -> FlextTypes.Core.StringList:
 
 
 def propose(dir_path: Path) -> dict[Path, Path]:
+    """Propose standardized test file names for a directory.
+    
+    Args:
+        dir_path: Directory path to analyze for test files
+        
+    Returns:
+        Dictionary mapping original paths to proposed new paths
+
+    """
     mapping: dict[Path, Path] = {}
     by_target: defaultdict[str, list[Path]] = defaultdict(list)
 
@@ -120,6 +138,15 @@ def propose(dir_path: Path) -> dict[Path, Path]:
 
 
 def main(argv: Iterable[str] | None = None) -> int:
+    """Main entry point for the test standardization script.
+    
+    Args:
+        argv: Command line arguments, defaults to sys.argv if None
+        
+    Returns:
+        Exit code (0 for success)
+
+    """
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--apply", action="store_true", help="Apply changes (otherwise dry-run)"

@@ -33,6 +33,7 @@ class LintingReport(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         """Metadados do script.
 
         Returns:
@@ -67,6 +68,7 @@ class LintingReport(FlextScript):
         return FlextResult[None].ok(None)
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+        """Execute main script logic."""
         """Executar análise completa de qualidade."""
         try:
             workspace_root = Path.cwd()

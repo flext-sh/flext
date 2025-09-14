@@ -25,6 +25,7 @@ class QualityGatewayRunner(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         return ScriptMetadata(
             name="quality_gateway_runner",
             description="Run comprehensive quality gateway checks",
