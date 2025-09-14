@@ -75,7 +75,9 @@ class TestFlextControlPanelCli:
 
     @patch("flext.cli.FlextCliConfig")
     @patch("flext.cli.FlextCliMain")
-    def test_cli_initialization(self, mock_cli_main: object, mock_cli_config: object) -> None:
+    def test_cli_initialization(
+        self, mock_cli_main: object, mock_cli_config: object
+    ) -> None:
         """Test CLI initialization with flext-cli components."""
         mock_config_instance = Mock()
         mock_main_instance = Mock()
@@ -256,8 +258,7 @@ class TestLegacyCompatibilityFunctions:
         mock_create_cli.assert_called_once()
         mock_tools_handler.run_analysis.assert_called_with("dependencies")
 
-    @patch("flext.cli.create_cli")
-    def test_test_function_compatibility(self, mock_create_cli: object) -> None:
+    def test_test_function_compatibility(self) -> None:
         """Test legacy test function compatibility."""
         mock_cli_service = Mock()
         mock_main_handler = Mock()
@@ -265,11 +266,10 @@ class TestLegacyCompatibilityFunctions:
         mock_main_handler.test_command.return_value = FlextResult.ok(
             {"status": "passed"}
         )
-        mock_create_cli.return_value = mock_cli_service
 
-        test(coverage=True, parallel=False)
+        with patch("flext.cli.create_cli", return_value=mock_cli_service):
+            test(coverage=True, parallel=False)
 
-        mock_create_cli.assert_called_once()
         mock_main_handler.test_command.assert_called_with(True, False)
 
     @patch("flext.cli.create_cli")

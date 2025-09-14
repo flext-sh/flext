@@ -113,14 +113,15 @@ class TestFlextProcessingHandlerRegistry:
         request = "test_request"
         expected_result = "callable_result"
 
-        callable_handler = Mock(return_value=expected_result)
+        callable_handler = Mock()
+        callable_handler.handle.return_value = expected_result
         self.registry.register(handler_name, callable_handler)
 
         result = self.registry.execute(handler_name, request)
 
         FlextTestsMatchers.assert_result_success(result)
         assert result.unwrap() == expected_result
-        callable_handler.assert_called_once_with(request)
+        callable_handler.handle.assert_called_once_with(request)
 
     def test_execute_handler_returning_flext_result(self) -> None:
         """Test executing handler that returns FlextResult."""

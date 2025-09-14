@@ -34,7 +34,7 @@ class TestFlextConfigComprehensiveCoverage:
             "name": "test",
             "version": "1.0.0",
             "environment": "development",
-            "max_workers": 4
+            "max_workers": 4,
         }
 
         config = FlextConfig(**config_data)
@@ -51,7 +51,7 @@ class TestFlextConfigComprehensiveCoverage:
             "name": "",  # Empty name to trigger line 206
             "version": "1.0.0",
             "environment": "development",
-            "max_workers": 4
+            "max_workers": 4,
         }
 
         config = FlextConfig(**config_data)
@@ -68,7 +68,7 @@ class TestFlextConfigComprehensiveCoverage:
             "name": "test",
             "version": "1.0",  # Invalid version format to trigger line 213
             "environment": "development",
-            "max_workers": 4
+            "max_workers": 4,
         }
 
         config = FlextConfig(**config_data)
@@ -134,7 +134,10 @@ class TestFlextConfigComprehensiveCoverage:
         result = persistence.save_to_file(test_data, invalid_path)
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert "Failed to load configuration from file" in result.error or "CONFIG_LOAD_ERROR" in result.error
+        assert (
+            "Failed to load configuration from file" in result.error
+            or "CONFIG_LOAD_ERROR" in result.error
+        )
 
     def test_factory_create_from_env_default_env_file_line_458(self) -> None:
         """Test Factory.create_from_env with default env file handling (line 458)."""
@@ -159,7 +162,10 @@ class TestFlextConfigComprehensiveCoverage:
         # Should handle missing env file gracefully or return failure
         assert hasattr(result, "is_success")
         if result.is_failure:
-            assert "env file" in result.error.lower() or "not found" in result.error.lower()
+            assert (
+                "env file" in result.error.lower()
+                or "not found" in result.error.lower()
+            )
 
     def test_factory_create_from_file_file_not_found_line_505(self) -> None:
         """Test Factory.create_from_file with file not found (line 505)."""
@@ -168,7 +174,10 @@ class TestFlextConfigComprehensiveCoverage:
         result = factory.create_from_file("nonexistent_config.json")
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert "file not found" in result.error.lower() or "does not exist" in result.error.lower()
+        assert (
+            "file not found" in result.error.lower()
+            or "does not exist" in result.error.lower()
+        )
 
     def test_factory_create_from_file_invalid_json_line_514(self) -> None:
         """Test Factory.create_from_file with invalid JSON (line 514)."""
@@ -209,7 +218,7 @@ class TestFlextConfigComprehensiveCoverage:
         overrides = {
             "app_name": "test-override",
             "environment": "testing",
-            "debug": True
+            "debug": True,
         }
 
         result = factory.create_for_testing(overrides=overrides)
@@ -227,7 +236,7 @@ class TestFlextConfigComprehensiveCoverage:
         # Create invalid overrides that will cause validation failure
         invalid_overrides = {
             "environment": "invalid_environment",  # Invalid environment
-            "max_workers": -5  # Invalid worker count
+            "max_workers": -5,  # Invalid worker count
         }
 
         result = factory.create_for_testing(overrides=invalid_overrides)
@@ -251,7 +260,9 @@ class TestFlextConfigComprehensiveCoverage:
 
         # Test TOML file loading
         try:
-            config = FlextConfig(_factory_mode=True, _env_file=temp_path, _env_format="toml")
+            config = FlextConfig(
+                _factory_mode=True, _env_file=temp_path, _env_format="toml"
+            )
             assert config.app_name == "toml-test"
         except Exception:
             # If TOML parsing fails, that's still covering the line
@@ -306,7 +317,9 @@ class TestFlextConfigComprehensiveCoverage:
             temp_path = f.name
 
         try:
-            config = FlextConfig(_factory_mode=True, _env_file=temp_path, _env_format="toml")
+            config = FlextConfig(
+                _factory_mode=True, _env_file=temp_path, _env_format="toml"
+            )
             # Should process TOML data and handle nested structures
             assert hasattr(config, "app_name")
         except Exception:
@@ -320,17 +333,16 @@ class TestFlextConfigComprehensiveCoverage:
         json_content = {
             "app_name": "json-test",
             "environment": "testing",
-            "nested": {
-                "key1": "value1",
-                "key2": "value2"
-            }
+            "nested": {"key1": "value1", "key2": "value2"},
         }
 
         with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(json_content, f)
             temp_path = f.name
 
-        config = FlextConfig(_factory_mode=True, _env_file=temp_path, _env_format="json")
+        config = FlextConfig(
+            _factory_mode=True, _env_file=temp_path, _env_format="json"
+        )
 
         # Cleanup
         Path(temp_path).unlink()
@@ -346,9 +358,7 @@ class TestFlextConfigComprehensiveCoverage:
             env_file.write_text("FLEXT_APP_NAME=env-specific-test\n")
 
             config = FlextConfig(
-                _factory_mode=True,
-                _env_file=str(env_file),
-                environment="testing"
+                _factory_mode=True, _env_file=str(env_file), environment="testing"
             )
 
             assert hasattr(config, "app_name")
@@ -359,10 +369,7 @@ class TestFlextConfigComprehensiveCoverage:
             additional_env = Path(temp_dir) / "additional.env"
             additional_env.write_text("FLEXT_DEBUG=true\nFLEXT_TRACE=true\n")
 
-            config = FlextConfig(
-                _factory_mode=True,
-                _env_file=str(additional_env)
-            )
+            config = FlextConfig(_factory_mode=True, _env_file=str(additional_env))
 
             assert hasattr(config, "debug")
 
@@ -414,7 +421,7 @@ class TestFlextConfigComprehensiveCoverage:
         # Create invalid configuration that will trigger validation error
         result = FlextConfig.create(
             constants={"app_name": ""},  # Empty app_name will cause validation error
-            env_file=None
+            env_file=None,
         )
 
         FlextTestsMatchers.assert_result_failure(result)
@@ -424,27 +431,38 @@ class TestFlextConfigComprehensiveCoverage:
         """Test create method environment validation (lines 1360-1365)."""
         result = FlextConfig.create(
             constants={"environment": "invalid_env"},  # Invalid environment
-            env_file=None
+            env_file=None,
         )
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert "invalid environment" in result.error.lower() or "environment" in result.error.lower()
+        assert (
+            "invalid environment" in result.error.lower()
+            or "environment" in result.error.lower()
+        )
 
     def test_create_from_environment_validation_error_lines_1428_1433(self) -> None:
         """Test create_from_environment validation error handling (lines 1428-1433)."""
         # Set invalid environment variables
-        with patch.dict(os.environ, {
-            "FLEXT_ENVIRONMENT": "invalid_environment",
-            "FLEXT_MAX_WORKERS": "-5"  # Invalid worker count
-        }):
+        with patch.dict(
+            os.environ,
+            {
+                "FLEXT_ENVIRONMENT": "invalid_environment",
+                "FLEXT_MAX_WORKERS": "-5",  # Invalid worker count
+            },
+        ):
             result = FlextConfig.create_from_environment()
 
             FlextTestsMatchers.assert_result_failure(result)
-            assert "validation" in result.error.lower() or "invalid" in result.error.lower()
+            assert (
+                "validation" in result.error.lower()
+                or "invalid" in result.error.lower()
+            )
 
     def test_validate_all_business_failure_line_1477(self) -> None:
         """Test validate_all with business rule failure (line 1477)."""
-        config = FlextConfig(app_name="", name="test")  # Empty app_name will fail business rules
+        config = FlextConfig(
+            app_name="", name="test"
+        )  # Empty app_name will fail business rules
 
         result = config.validate_all()
 
@@ -499,11 +517,16 @@ class TestFlextConfigComprehensiveCoverage:
         config = FlextConfig()
 
         # Mock a scenario that would cause serialization error
-        with patch.object(config, "model_dump", side_effect=Exception("Serialization error")):
+        with patch.object(
+            config, "model_dump", side_effect=Exception("Serialization error")
+        ):
             result = config.to_api_payload()
 
             FlextTestsMatchers.assert_result_failure(result)
-            assert "serialization" in result.error.lower() or "error" in result.error.lower()
+            assert (
+                "serialization" in result.error.lower()
+                or "error" in result.error.lower()
+            )
 
     def test_safe_load_error_handling_lines_1675_1676(self) -> None:
         """Test safe_load error handling (lines 1675-1676)."""
@@ -532,7 +555,7 @@ class TestFlextConfigComprehensiveCoverage:
         # Test production environment worker validation
         config_prod = FlextConfig(
             environment="production",
-            max_workers=1  # Below minimum for production
+            max_workers=1,  # Below minimum for production
         )
 
         validator = FlextConfig.BusinessValidator()
@@ -560,11 +583,14 @@ class TestFlextConfigComprehensiveCoverage:
         assert result == "default_value"
 
         # Test get_env_vars_with_prefix
-        with patch.dict(os.environ, {
-            "FLEXT_TEST_VAR1": "value1",
-            "FLEXT_TEST_VAR2": "value2",
-            "OTHER_VAR": "value3"
-        }):
+        with patch.dict(
+            os.environ,
+            {
+                "FLEXT_TEST_VAR1": "value1",
+                "FLEXT_TEST_VAR2": "value2",
+                "OTHER_VAR": "value3",
+            },
+        ):
             result = adapter.get_env_vars_with_prefix("FLEXT_TEST_")
             assert len(result) == 2
             assert "FLEXT_TEST_VAR1" in result

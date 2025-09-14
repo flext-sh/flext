@@ -22,6 +22,7 @@ class MissingDependenciesDiscoverer(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Get script metadata."""
         return ScriptMetadata(
             name="discover_missing_deps",
             description="Descobrir e analisar dependências faltantes em projetos FLEXT",
