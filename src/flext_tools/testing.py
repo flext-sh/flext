@@ -32,7 +32,8 @@ class OracleE2ERunner:
             FlextResult containing the test results dictionary
 
         """
-        # TODO: Implement actual E2E testing logic
+        # TODO(@flext-team): Implement actual E2E testing logic
+        # Issue: https://github.com/flext-team/flext-tools/issues/2
         return FlextResult[FlextTypes.Core.Dict].fail("Not implemented yet")
 
 

@@ -332,6 +332,7 @@ class QualityGateway(FlextScript):
                     capture_output=True,
                     text=True,
                     check=False,
+                    shell=False,
                 )
                 ruff_output = result.stdout
             except (FileNotFoundError, subprocess.SubprocessError):
