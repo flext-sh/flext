@@ -207,7 +207,7 @@ class FlextResultTypeAuditor(FlextScript):
 
         return issues
 
-    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+    def execute_main_logic(self, **_kwargs: object) -> FlextResult[object]:
         """Execute FlextResult type consistency audit."""
         print_colored(
             "🔍 Verificando inconsistências de FlextResult em todos os projetos flext...",

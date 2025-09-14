@@ -1156,10 +1156,8 @@ class DataProcessor:
 
 ```python
 # ✅ CORRECT - Proper generic typing
-from typing import Generic, TypeVar, Protocol
-
-T = TypeVar('T')
-U = TypeVar('U')
+from typing import Generic, Protocol
+from flext_core import T, U
 
 class DataProcessor(Generic[T]):
     """Generic data processor with proper type constraints."""

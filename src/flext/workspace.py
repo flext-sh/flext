@@ -420,15 +420,15 @@ class FlextWorkspaceService(FlextDomainService[str]):
 
                     # Check if path exists first - proper error handling
                     if not project_path.exists():
-                        return FlextResult.fail(f"Project path does not exist: {project_path}")
+                        return {"error": f"Project path does not exist: {project_path}", "success": False}
 
                     if not project_path.is_dir():
-                        return FlextResult.fail(f"Project path is not a directory: {project_path}")
+                        return {"error": f"Project path is not a directory: {project_path}", "success": False}
 
                     # Detect project type
                     type_result = self._parent._detect_project_type(project_path)
                     if type_result.is_failure:
-                        return type_result
+                        return {"error": f"Project type detection failed: {type_result.error}", "success": False}
 
                     project_type = type_result.value
 
@@ -449,10 +449,16 @@ class FlextWorkspaceService(FlextDomainService[str]):
                         has_src=has_src
                     )
 
-                    return FlextResult.ok(project_info)
+                    return {
+                        "project_type": project_type.value,
+                        "has_tests": has_tests,
+                        "has_src": has_src,
+                        "success": True,
+                        "project_info": project_info
+                    }
 
                 except Exception as e:
-                    return FlextResult.fail(f"Project structure analysis failed: {e}")
+                    return {"error": f"Project structure analysis failed: {e}", "success": False}
 
         return ProjectDiscoveryService(self)
 

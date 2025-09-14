@@ -115,10 +115,9 @@ class FlextConfig(BaseSettings):
 Type-safe operation results inspired by Rust's Result type.
 
 ```python
-from typing import TypeVar, Generic, Optional, Callable
+from typing import Generic, Optional, Callable
 from dataclasses import dataclass
-
-T = TypeVar('T')
+from flext_core import T
 
 @dataclass
 class FlextResult(Generic[T]):

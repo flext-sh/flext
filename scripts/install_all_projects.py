@@ -6,7 +6,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from flext_core.typings import FlextTypes
+from flext_core import FlextTypes
 
 
 def get_project_directories() -> FlextTypes.Core.StringList:

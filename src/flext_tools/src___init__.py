@@ -54,8 +54,7 @@ from __future__ import annotations
 from typing import Protocol
 
 # Import flext-core patterns - always available
-from flext_core import FlextResult
-from flext_core.typings import FlextTypes
+from flext_core import FlextResult, FlextTypes
 
 
 class FlextWebAppProtocol(Protocol):

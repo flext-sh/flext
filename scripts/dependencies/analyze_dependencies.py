@@ -106,9 +106,8 @@ def main() -> int:
     if "--report" in sys.argv:
         report_path = Path("conflict_report.md")
         # Cast analysis to expected type for generate_conflict_report
-        analysis_typed: dict[
-            str, FlextTypes.Core.Dict | FlextTypes.Core.List | str | int
-        ] = analysis
+        from typing import cast
+        analysis_typed = cast("dict[str, FlextTypes.Core.Dict | FlextTypes.Core.List | str | int]", analysis)
         report = analyzer.generate_conflict_report(analysis_typed)
 
         with Path(report_path).open("w", encoding="utf-8") as f:
