@@ -84,122 +84,6 @@ MAX_INCONSISTENCIES_DISPLAY = 10
 CRITICAL_VERSION_CONFLICT_THRESHOLD = 2
 
 
-@dataclass
-class LockFileEntry:
-    """Represents an entry in a Poetry lock file with package metadata."""
-
-    name: str
-    version: str
-    hash: str | None = None
-    dependencies: FlextTypes.Core.Headers | None = None
-
-
-@dataclass
-class ProjectLockInfo:
-    """Project-specific Poetry lock file information and metadata.
-
-    Contains comprehensive information about a project's Poetry lock file
-    including existence status, package inventory, and lock file metadata
-    for dependency consistency analysis across workspace projects.
-
-    Attributes:
-      project_name: Name of the project directory
-      lock_path: Path to the poetry.lock file
-      exists: Whether the lock file exists and is readable
-      packages: Dictionary of package entries from the lock file
-      lock_version: Poetry lock file format version
-      python_versions: Python version constraints from lock metadata
-
-    """
-
-    project_name: str
-    lock_path: Path
-    exists: bool
-    packages: dict[str, LockFileEntry]
-    lock_version: str | None = None
-    python_versions: FlextTypes.Core.StringList | None = None
-
-
-@dataclass
-class LockInconsistency:
-    """Represents an inconsistency detected between Poetry lock files.
-
-    Contains detailed information about dependency inconsistencies found
-    during cross-project analysis including package identification, inconsistency
-    type, affected projects, and severity classification for prioritized resolution.
-
-    Attributes:
-      package: Name of the package with detected inconsistency
-      type: Type of inconsistency (version, missing, hash)
-      details: Project-specific details mapping project names to versions/status
-      severity: Severity level (critical, warning, info) for prioritization
-
-    """
-
-    package: str
-    type: str  # "version", "missing", "hash"
-    details: FlextTypes.Core.Headers  # project -> version/status
-    severity: str  # "critical", "warning", "info"
-
-
-class WorkspaceSummary(FlextModels.Value):
-    """Comprehensive workspace dependency analysis summary.
-
-    Contains statistical summary of workspace analysis including project
-    counts, package inventory, and inconsistency classification.
-    """
-
-    total_projects: int = Field(..., description="Total number of projects analyzed")
-    projects_with_lock: int = Field(
-        ...,
-        description="Number of projects with valid poetry.lock files",
-    )
-    total_packages: int = Field(
-        ...,
-        description="Total number of unique packages across all projects",
-    )
-    total_inconsistencies: int = Field(
-        ...,
-        description="Total number of inconsistencies detected",
-    )
-    critical_inconsistencies: int = Field(
-        ...,
-        description="Number of critical inconsistencies",
-    )
-    warning_inconsistencies: int = Field(
-        ...,
-        description="Number of warning inconsistencies",
-    )
-    info_inconsistencies: int = Field(
-        ...,
-        description="Number of informational inconsistencies",
-    )
-
-    def validate_business_rules(self) -> FlextResult[None]:
-        """Validate workspace summary business rules."""
-        if self.total_projects < 0:
-            return FlextResult[None].fail("Total projects cannot be negative")
-
-        if self.projects_with_lock < 0 or self.projects_with_lock > self.total_projects:
-            return FlextResult[None].fail(
-                "Projects with lock must be between 0 and total projects"
-            )
-
-        if any(
-            count < 0
-            for count in [
-                self.total_packages,
-                self.total_inconsistencies,
-                self.critical_inconsistencies,
-                self.warning_inconsistencies,
-                self.info_inconsistencies,
-            ]
-        ):
-            return FlextResult[None].fail("All counts must be non-negative")
-
-        return FlextResult[None].ok(None)
-
-
 class LockConsistencyAnalyzer:
     """Enterprise Poetry lock file consistency analyzer for workspace management.
 
@@ -255,10 +139,122 @@ class LockConsistencyAnalyzer:
 
     """
 
+    @dataclass
+    class LockFileEntry:
+        """Represents an entry in a Poetry lock file with package metadata."""
+
+        name: str
+        version: str
+        hash: str | None = None
+        dependencies: FlextTypes.Core.Headers | None = None
+
+    @dataclass
+    class ProjectLockInfo:
+        """Project-specific Poetry lock file information and metadata.
+
+        Contains comprehensive information about a project's Poetry lock file
+        including existence status, package inventory, and lock file metadata
+        for dependency consistency analysis across workspace projects.
+
+        Attributes:
+          project_name: Name of the project directory
+          lock_path: Path to the poetry.lock file
+          exists: Whether the lock file exists and is readable
+          packages: Dictionary of package entries from the lock file
+          lock_version: Poetry lock file format version
+          python_versions: Python version constraints from lock metadata
+
+        """
+
+        project_name: str
+        lock_path: Path
+        exists: bool
+        packages: dict[str, LockConsistencyAnalyzer.LockFileEntry]
+        lock_version: str | None = None
+        python_versions: FlextTypes.Core.StringList | None = None
+
+    @dataclass
+    class LockInconsistency:
+        """Represents an inconsistency detected between Poetry lock files.
+
+        Contains detailed information about dependency inconsistencies found
+        during cross-project analysis including package identification, inconsistency
+        type, affected projects, and severity classification for prioritized resolution.
+
+        Attributes:
+          package: Name of the package with detected inconsistency
+          type: Type of inconsistency (version, missing, hash)
+          details: Project-specific details mapping project names to versions/status
+          severity: Severity level (critical, warning, info) for prioritization
+
+        """
+
+        package: str
+        type: str  # "version", "missing", "hash"
+        details: FlextTypes.Core.Headers  # project -> version/status
+        severity: str  # "critical", "warning", "info"
+
+    class WorkspaceSummary(FlextModels.Value):
+        """Comprehensive workspace dependency analysis summary.
+
+        Contains statistical summary of workspace analysis including project
+        counts, package inventory, and inconsistency classification.
+        """
+
+        total_projects: int = Field(..., description="Total number of projects analyzed")
+        projects_with_lock: int = Field(
+            ...,
+            description="Number of projects with valid poetry.lock files",
+        )
+        total_packages: int = Field(
+            ...,
+            description="Total number of unique packages across all projects",
+        )
+        total_inconsistencies: int = Field(
+            ...,
+            description="Total number of inconsistencies detected",
+        )
+        critical_inconsistencies: int = Field(
+            ...,
+            description="Number of critical inconsistencies",
+        )
+        warning_inconsistencies: int = Field(
+            ...,
+            description="Number of warning inconsistencies",
+        )
+        info_inconsistencies: int = Field(
+            ...,
+            description="Number of informational inconsistencies",
+        )
+
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Validate workspace summary business rules."""
+            if self.total_projects < 0:
+                return FlextResult[None].fail("Total projects cannot be negative")
+
+            if self.projects_with_lock < 0 or self.projects_with_lock > self.total_projects:
+                return FlextResult[None].fail(
+                    "Projects with lock must be between 0 and total projects"
+                )
+
+            if any(
+                count < 0
+                for count in [
+                    self.total_packages,
+                    self.total_inconsistencies,
+                    self.critical_inconsistencies,
+                    self.warning_inconsistencies,
+                    self.info_inconsistencies,
+                ]
+            ):
+                return FlextResult[None].fail("All counts must be non-negative")
+
+            return FlextResult[None].ok(None)
+
     def __init__(self) -> None:
         """Initialize analyzer."""
-        self.project_locks: dict[str, ProjectLockInfo] = {}
-        self.inconsistencies: list[LockInconsistency] = []
+        self.project_locks: dict[str, LockConsistencyAnalyzer.ProjectLockInfo] = {}
+        self.inconsistencies: list[LockConsistencyAnalyzer.LockInconsistency] = []
 
     def analyze_workspace(
         self,
