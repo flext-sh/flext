@@ -37,7 +37,9 @@ class OracleE2ERunner:
         try:
             config_file = Path(config_path)
             if not config_file.exists():
-                return FlextResult[FlextTypes.Core.Dict].fail(f"Config file not found: {config_path}")
+                return FlextResult[FlextTypes.Core.Dict].fail(
+                    f"Config file not found: {config_path}"
+                )
 
             # For now, return a placeholder implementation
             # In a real implementation, this would run actual E2E tests
@@ -48,13 +50,15 @@ class OracleE2ERunner:
                 "tests_passed": 0,
                 "tests_failed": 0,
                 "duration_seconds": 0.0,
-                "timestamp": "2025-01-27T00:00:00Z"
+                "timestamp": "2025-01-27T00:00:00Z",
             }
 
             return FlextResult[FlextTypes.Core.Dict].ok(test_results)
 
         except Exception as e:
-            return FlextResult[FlextTypes.Core.Dict].fail(f"E2E test execution failed: {e}")
+            return FlextResult[FlextTypes.Core.Dict].fail(
+                f"E2E test execution failed: {e}"
+            )
 
 
 __all__: FlextTypes.Core.StringList = [
