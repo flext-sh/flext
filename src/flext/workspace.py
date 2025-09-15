@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from enum import Enum
 from pathlib import Path
-from typing import TypedDict
+from typing import Protocol, TypedDict, runtime_checkable
 
 from flext_core import (
     FlextContainer,
@@ -45,6 +45,32 @@ class WorkspaceStatus(str, Enum):
     READY = "ready"
     ERROR = "error"
     MAINTENANCE = "maintenance"
+
+
+@runtime_checkable
+class ProjectDiscoveryServiceProtocol(Protocol):
+    """Protocol for project discovery service interface."""
+
+    def discover_projects(self) -> FlextResult[list[dict[str, object]]]:
+        """Discover projects in workspace."""
+        ...
+
+    def analyze_project_structure(self, project_path: str | Path) -> dict[str, object]:
+        """Analyze project structure."""
+        ...
+
+
+@runtime_checkable
+class WorkspaceValidatorProtocol(Protocol):
+    """Protocol for workspace validator interface."""
+
+    def validate_workspace_structure(self, workspace_path: str | Path) -> FlextResult[dict[str, object]]:
+        """Validate workspace structure."""
+        ...
+
+    def check_workspace_health(self, workspace_path: str | Path) -> FlextResult[dict[str, object]]:
+        """Check workspace health."""
+        ...
 
 
 class FlextAdvancedWorkspaceModels:
@@ -415,15 +441,30 @@ class FlextWorkspaceService(FlextDomainService[str]):
         return self.create_workspace_context(workspace_data)
 
     # Nested service creation methods expected by tests
-    def create_project_discovery(self) -> object:
+    def create_project_discovery(self) -> ProjectDiscoveryServiceProtocol:
         """Create project discovery service for test compatibility."""
         class ProjectDiscoveryService:
             def __init__(self, parent_service: FlextWorkspaceService) -> None:
                 self._parent = parent_service
 
-            def discover_projects(self) -> object:
+            def discover_projects(self) -> FlextResult[list[dict[str, object]]]:
                 """Discover projects using parent service functionality."""
-                return self._parent.discover_projects_as_objects()
+                result = self._parent.discover_projects_as_objects()
+                if result.is_failure:
+                    return FlextResult[list[dict[str, object]]].fail(result.error or "Discovery failed")
+                
+                # Convert Project objects to dictionaries
+                projects_data = []
+                for project in result.value:
+                    project_dict = {
+                        "name": project.name,
+                        "path": project.path,
+                        "type": project.project_type,
+                        "size_mb": project.size_mb
+                    }
+                    projects_data.append(project_dict)
+                
+                return FlextResult[list[dict[str, object]]].ok(projects_data)
 
             def analyze_project_structure(self, project_path: str | Path) -> dict[str, object]:
                 """Analyze project structure using parent service functionality."""
@@ -474,38 +515,52 @@ class FlextWorkspaceService(FlextDomainService[str]):
 
         return ProjectDiscoveryService(self)
 
-    def create_workspace_validator(self) -> object:
+    def create_workspace_validator(self) -> WorkspaceValidatorProtocol:
         """Create workspace validator for test compatibility."""
         class WorkspaceValidator:
             def __init__(self, parent_service: FlextWorkspaceService) -> None:
                 self._parent = parent_service
 
-            def validate_workspace_structure(self, workspace_data: object) -> FlextResult[None]:
+            def validate_workspace_structure(self, workspace_path: str | Path) -> FlextResult[dict[str, object]]:
                 """Validate workspace structure."""
-                if not isinstance(workspace_data, dict):
-                    return FlextResult[None].fail("Workspace data must be a dictionary")
+                try:
+                    workspace_path = Path(workspace_path) if isinstance(workspace_path, str) else workspace_path
+                    
+                    if not workspace_path.exists():
+                        return FlextResult[dict[str, object]].fail(f"Workspace path does not exist: {workspace_path}")
+                    
+                    if not workspace_path.is_dir():
+                        return FlextResult[dict[str, object]].fail(f"Workspace path is not a directory: {workspace_path}")
+                    
+                    # Return validation result
+                    validation_result = {
+                        "valid": True,
+                        "workspace_path": str(workspace_path),
+                        "message": "Workspace structure is valid"
+                    }
+                    
+                    return FlextResult[dict[str, object]].ok(validation_result)
+                    
+                except Exception as e:
+                    return FlextResult[dict[str, object]].fail(f"Workspace validation failed: {e}")
 
-                # Validate workspace_root field
-                if "workspace_root" in workspace_data:
-                    workspace_root = workspace_data["workspace_root"]
-                    if not workspace_root or not isinstance(workspace_root, str):
-                        return FlextResult[None].fail("workspace_root must be a non-empty string")
-
-                # Validate required_projects field if present
-                if "required_projects" in workspace_data:
-                    required_projects = workspace_data["required_projects"]
-                    if required_projects is not None and not isinstance(required_projects, (list, tuple)):
-                        return FlextResult[None].fail("required_projects must be a list or None")
-
-                # Additional validation for empty workspace_root
-                if workspace_data.get("workspace_root") == "":
-                    return FlextResult[None].fail("workspace_root cannot be empty")
-
-                return FlextResult[None].ok(None)
-
-            def check_workspace_health(self):
+            def check_workspace_health(self, workspace_path: str | Path) -> FlextResult[dict[str, object]]:
                 """Check workspace health."""
-                return self._parent.get_workspace_info()
+                result = self._parent.get_workspace_info()
+                if result.is_failure:
+                    return FlextResult[dict[str, object]].fail(result.error or "Health check failed")
+                
+                # Convert WorkspaceInfo to dictionary
+                workspace_info = result.value
+                health_data = {
+                    "healthy": True,
+                    "workspace_path": str(workspace_path),
+                    "status": workspace_info["status"],
+                    "project_count": workspace_info["project_count"],
+                    "total_size_mb": workspace_info["total_size_mb"]
+                }
+                
+                return FlextResult[dict[str, object]].ok(health_data)
 
         return WorkspaceValidator(self)
 

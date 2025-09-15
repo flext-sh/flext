@@ -38,7 +38,9 @@ class ProductionSecretsScript(BaseSecurityScript):
             workspace_root = Path.cwd()
             environment = kwargs.get("environment", "production")
             output_file = kwargs.get("output_file")
-            encrypt = kwargs.get("encrypt", True)  # TODO(@marlonsc): Implement encryption
+            encrypt = kwargs.get(
+                "encrypt", True
+            )  # TODO(@marlonsc): Implement encryption
             _ = encrypt  # Suppress unused variable warning
 
             print_colored("🔐 PRODUCTION SECRETS GENERATOR", Colors.CYAN)
@@ -54,7 +56,9 @@ class ProductionSecretsScript(BaseSecurityScript):
             #     environment=environment,
             #     encrypt=encrypt,
             # )
-            secrets_result = FlextResult[dict].fail("Secret generation not yet implemented")
+            secrets_result = FlextResult[dict].fail(
+                "Secret generation not yet implemented"
+            )
 
             if secrets_result:
                 print_colored(

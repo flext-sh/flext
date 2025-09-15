@@ -33,6 +33,7 @@ class TestFlextConfigTargetedCoverage:
 
         result = validator.validate_runtime_requirements(config)
         FlextTestsMatchers.assert_result_failure(result)
+        assert result.error is not None
         assert "app_name" in result.error
 
     def test_factory_create_from_env_basic_functionality(self) -> None:
@@ -68,11 +69,11 @@ class TestFlextConfigTargetedCoverage:
             config = FlextConfig(_factory_mode=True)
 
             # Test save functionality
-            save_result = persistence.save_to_file(config, temp_path)
+            save_result = persistence.save_to_file(config, str(temp_path))
             FlextTestsMatchers.assert_result_success(save_result)
 
             # Test load functionality
-            load_result = persistence.load_from_file(temp_path)
+            load_result = persistence.load_from_file(str(temp_path))
             FlextTestsMatchers.assert_result_success(load_result)
 
     def test_config_validation_scenarios(self) -> None:

@@ -68,7 +68,7 @@ class TestFlextAuthCliComprehensive:
                 username="new@example.com",
                 email="new@example.com",
                 password_hash="hashed_password",
-                full_name="New User"
+                full_name="New User",
             )
             mock_register.return_value = FlextResult[FlextAuthModels.User].ok(mock_user)
 
@@ -101,7 +101,9 @@ class TestFlextAuthCliComprehensive:
 
     def test_validate_config_failure(self) -> None:
         """Test _validate_config with invalid configuration."""
-        with patch("flext_auth.config.FlextAuthConfig.validate_configuration") as mock_validate:
+        with patch(
+            "flext_auth.config.FlextAuthConfig.validate_configuration"
+        ) as mock_validate:
             mock_validate.return_value = FlextResult[None].fail("Invalid config")
 
             result = _validate_config()
