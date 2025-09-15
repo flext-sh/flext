@@ -327,7 +327,7 @@ class QualityGateway(FlextScript):
                         "error": "Ruff not found in PATH",
                     }
 
-                result = subprocess.run(
+                result = subprocess.run(  # noqa: S603
                     [ruff_cmd, "check", str(project_path), "--output-format=json"],
                     capture_output=True,
                     text=True,

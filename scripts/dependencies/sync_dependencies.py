@@ -12,6 +12,7 @@ Funcionalidades:
 
 import sys
 from pathlib import Path
+from typing import cast
 
 from flext_core import FlextTypes
 from src.flext_tools import Colors, print_colored
@@ -99,8 +100,6 @@ def validate_projects(
             all_valid = False
             print_colored(f"  ❌ {project.name}: Inválido", Colors.RED)
             # Type assertion for errors list
-            from typing import cast
-
             errors = cast("list", validation.get("errors", []))
             for error in errors:
                 print_colored(f"    - {error}", Colors.RED)
