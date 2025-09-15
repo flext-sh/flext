@@ -112,6 +112,7 @@ class WorkspaceManager:
     """FLEXT workspace management using flext-core patterns."""
 
     def __init__(self, workspace_path: str) -> None:
+        """Initialize workspace manager with path."""
         self.workspace_path = workspace_path
 
     def validate_all_projects(self) -> FlextResult[FlextTypes.Core.StringList]:

@@ -22,7 +22,7 @@ class OracleE2ERunner:
     def __init__(self) -> None:
         """Initialize the OracleE2ERunner."""
 
-    def run_e2e_tests(self, config_path: str) -> FlextResult[FlextTypes.Core.Dict]:
+    def run_e2e_tests(self, _config_path: str) -> FlextResult[FlextTypes.Core.Dict]:
         """Run end-to-end tests for Oracle integration.
 
         Args:
@@ -32,7 +32,7 @@ class OracleE2ERunner:
             FlextResult containing the test results dictionary
 
         """
-        # TODO(@flext-team): Implement actual E2E testing logic
+        # TODO(@flext-team): Implement actual E2E testing logic  # noqa: TD003, FIX002
         # Issue: https://github.com/flext-team/flext-tools/issues/2
         return FlextResult[FlextTypes.Core.Dict].fail("Not implemented yet")
 
