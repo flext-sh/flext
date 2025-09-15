@@ -772,15 +772,15 @@ class TestFlextCommandsBus:
         )
 
         # Create a dict-like object with attributes
-        class MiddlewareConfig(dict[str, object]):
+        class MiddlewareConfig(UserDict[str, object]):
             def __init__(self, config: dict[str, object]) -> None:
                 super().__init__(config)
                 self.middleware_id = config["middleware_id"]
                 self.enabled = config["enabled"]
 
-        config_obj: dict[str, object] = MiddlewareConfig(middleware_config)
+        config_obj = MiddlewareConfig(middleware_config)
 
-        bus._middleware = [config_obj]  # type: ignore[assignment]
+        bus._middleware = [dict(config_obj)]
         bus._middleware_instances = {"rejecting_mw": mock_middleware}
 
         result = bus._apply_middleware("command", "handler")

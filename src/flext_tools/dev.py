@@ -15,7 +15,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import Self
+from typing import cast
 
 from flext_core import FlextDomainService, FlextResult, FlextTypes
 
@@ -27,16 +27,20 @@ from flext.dev import FlextAdvancedDevToolsManager
 class DevToolsManager:
     """Lazy wrapper for FlextAdvancedDevToolsManager to avoid circular imports."""
 
-    def __new__(cls, *args: FlextTypes.Core.Dict, **kwargs: FlextTypes.Core.Dict) -> Self:
+    def __new__(
+        cls, *args: FlextTypes.Core.Dict, **kwargs: FlextTypes.Core.Dict
+    ) -> FlextAdvancedDevToolsManager:
         """Create instance using FlextAdvancedDevToolsManager."""
-        return FlextAdvancedDevToolsManager(*args, **kwargs)  # type: ignore[name-defined,return-value]
+        return FlextAdvancedDevToolsManager(*args, **kwargs)
 
 
 # Facade class for legacy tools compatibility
 class FlextToolsDevService(FlextDomainService[str]):
     """Facade to flext dev service - eliminates development code duplication."""
 
-    def __init__(self, workspace_path: str | None = None, **kwargs: FlextTypes.Core.Dict) -> None:
+    def __init__(
+        self, workspace_path: str | None = None, **kwargs: FlextTypes.Core.Dict
+    ) -> None:
         """Initialize with flext dev service."""
         super().__init__()
         # Lazy loading to avoid circular imports during class definition
@@ -48,9 +52,13 @@ class FlextToolsDevService(FlextDomainService[str]):
         """Get dev service instance."""
         if self._dev_service is None:
             # Prepare data for FlextAdvancedDevToolsManager
-            init_data: FlextTypes.Core.Dict = {"workspace_path": self._workspace_path or ""}  # type: ignore[arg-type]
-            init_data.update(self._kwargs)  # type: ignore[arg-type]
-            self._dev_service = FlextAdvancedDevToolsManager(**init_data)  # type: ignore[name-defined,assignment,arg-type]
+            init_data: FlextTypes.Core.Dict = {
+                "workspace_path": self._workspace_path or ""
+            }
+            # Convert kwargs to proper types
+            for key, value in self._kwargs.items():
+                init_data[key] = str(value) if value is not None else ""
+            self._dev_service = FlextAdvancedDevToolsManager(**cast(dict[str, object], init_data))
         return self._dev_service
 
     def execute(self, _request: str = "") -> FlextResult[str]:
@@ -68,9 +76,9 @@ def create_dev_tools_manager(*args: object, **kwargs: object) -> object:
     for i, arg in enumerate(args):
         init_data[f"arg_{i}"] = str(arg) if arg is not None else ""
     for key, value in kwargs.items():
-        init_data[key] = value
+        init_data[key] = str(value) if value is not None else ""
 
-    return FlextAdvancedDevToolsManager(**init_data)  # type: ignore[name-defined,arg-type]
+    return FlextAdvancedDevToolsManager(**cast(dict[str, object], init_data))
 
 
 __all__ = [

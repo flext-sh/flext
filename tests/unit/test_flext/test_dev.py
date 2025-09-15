@@ -115,6 +115,7 @@ class TestAdvancedDevOperations:
 
         result = operation_executor.create_test_operation(invalid_operation)
         assert result.is_failure
+        assert result.error is not None
         assert "coverage_threshold" in result.error
 
 
@@ -251,6 +252,7 @@ class TestOperationExecutor:
 
         result = executor.create_test_operation(invalid_data)
         assert result.is_failure
+        assert result.error is not None
         assert "test_types" in result.error
 
 
@@ -274,7 +276,11 @@ class TestAdvancedPatternsCompliance:
 
         # Test different operation types via discriminated unions
         operations = [
-            {"type": "test", "coverage_enabled": True, "context": {"workspace_root": "."}},
+            {
+                "type": "test",
+                "coverage_enabled": True,
+                "context": {"workspace_root": "."},
+            },
             {"type": "lint", "tools": ["ruff"], "context": {"workspace_root": "."}},
             {"type": "format", "check_only": True, "context": {"workspace_root": "."}},
         ]
@@ -362,7 +368,11 @@ class TestErrorHandling:
         manager = create_dev_tools_manager()
         executor = manager.create_operation_executor()
 
-        operation_data = {"type": "test", "project_filter": "flext-core", "context": {"workspace_root": "."}}
+        operation_data = {
+            "type": "test",
+            "project_filter": "flext-core",
+            "context": {"workspace_root": "."},
+        }
         op_result = executor.create_test_operation(operation_data)
         assert op_result.is_success
 
