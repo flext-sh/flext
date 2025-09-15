@@ -21,7 +21,6 @@ from flext_cli import (
     FlextCliConfig,
     FlextCliMain,
 )
-from flext_core import FlextDomainService, FlextResult
 
 # Primary CLI API - delegate to flext-cli
 BaseCLI = FlextCliMain  # Main CLI interface
@@ -29,19 +28,7 @@ CLIConfig = FlextCliConfig  # Configuration management
 CLIApi = FlextCliApi  # CLI API interface
 
 
-# Facade class for backward compatibility
-class FlextToolsCliService(FlextDomainService[str]):
-    """Facade to flext-cli - eliminates CLI code duplication."""
-
-    def __init__(self) -> None:
-        """Initialize with flext-cli dependencies."""
-        super().__init__()
-        self._cli_api = FlextCliApi()
-        self._cli_main = FlextCliMain()
-
-    def execute(self, _request: str = "") -> FlextResult[str]:
-        """Execute CLI operation through flext-cli."""
-        return FlextResult[str].ok("FlextToolsCliService using flext-cli facade")
+# Direct usage of flext-cli - no facade needed
 
 
 # Legacy aliases for compatibility
@@ -54,5 +41,4 @@ __all__ = [
     "CLIConfig",
     "FlextBaseCLI",
     "FlextCLIConfig",
-    "FlextToolsCliService",
 ]

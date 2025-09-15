@@ -60,73 +60,6 @@ from .colors import Colors, print_colored
 logger = FlextLogger(__name__)
 
 
-class Configuration(FlextModels.Value):
-    """Comprehensive configuration model for FLEXT ecosystem components.
-
-    Provides structured configuration data with validation for environment
-    settings, debug modes, timeouts, and component-specific details. Built
-    on Pydantic for automatic validation and type safety across the entire
-    FLEXT ecosystem.
-
-    This model ensures consistent configuration structure across all FLEXT
-    projects and environments, with proper defaults and validation rules
-    for enterprise-grade configuration management.
-
-    Attributes:
-        environment: Deployment environment identifier (dev, staging, production).
-        debug: Debug mode flag for development and troubleshooting features.
-        timeout: Default timeout duration in seconds for operations.
-        details: Nested configuration dictionary for component-specific settings.
-
-    Example:
-        Create and validate configuration:
-
-        >>> config = Configuration(
-        ...     environment="production",
-        ...     debug=False,
-        ...     timeout=60,
-        ...     details={"database": {"pool_size": 10}},
-        ... )
-        >>> print(f"Environment: {config.environment}")
-        'Environment: production'
-        >>> print(f"Debug enabled: {config.debug}")
-        'Debug enabled: False'
-
-    Note:
-        Uses Pydantic validation to ensure configuration integrity
-        and provides automatic type conversion where appropriate.
-
-    """
-
-    environment: str = Field(
-        default="staging",
-        description="Deployment environment (dev, staging, production)",
-    )
-    debug: bool = Field(
-        default=True,
-        description="Debug mode flag for development and troubleshooting",
-    )
-    timeout: int = Field(
-        default=30,
-        description="Default timeout values for operations",
-    )
-    details: FlextTypes.Core.Dict = Field(
-        default_factory=dict,
-        description="Nested configuration for specific components",
-    )
-
-    def validate_business_rules(self) -> FlextResult[None]:
-        """Validate configuration business rules."""
-        valid_environments = ["dev", "development", "staging", "production"]
-        if self.environment not in valid_environments:
-            return FlextResult[None].fail(f"Invalid environment: {self.environment}")
-
-        if self.timeout <= 0:
-            return FlextResult[None].fail("Timeout must be positive")
-
-        return FlextResult[None].ok(None)
-
-
 class ConfigurationManager:
     """Enterprise configuration manager for FLEXT ecosystem coordination.
 
@@ -175,6 +108,74 @@ class ConfigurationManager:
 
     """
 
+    class Configuration(FlextModels.Value):
+        """Comprehensive configuration model for FLEXT ecosystem components.
+
+        Provides structured configuration data with validation for environment
+        settings, debug modes, timeouts, and component-specific details. Built
+        on Pydantic for automatic validation and type safety across the entire
+        FLEXT ecosystem.
+
+        This model ensures consistent configuration structure across all FLEXT
+        projects and environments, with proper defaults and validation rules
+        for enterprise-grade configuration management.
+
+        Attributes:
+            environment: Deployment environment identifier (dev, staging, production).
+            debug: Debug mode flag for development and troubleshooting features.
+            timeout: Default timeout duration in seconds for operations.
+            details: Nested configuration dictionary for component-specific settings.
+
+        Example:
+            Create and validate configuration:
+
+            >>> config = ConfigurationManager.Configuration(
+            ...     environment="production",
+            ...     debug=False,
+            ...     timeout=60,
+            ...     details={"database": {"pool_size": 10}},
+            ... )
+            >>> print(f"Environment: {config.environment}")
+            'Environment: production'
+            >>> print(f"Debug enabled: {config.debug}")
+            'Debug enabled: False'
+
+        Note:
+            Uses Pydantic validation to ensure configuration integrity
+            and provides automatic type conversion where appropriate.
+
+        """
+
+        environment: str = Field(
+            default="staging",
+            description="Deployment environment (dev, staging, production)",
+        )
+        debug: bool = Field(
+            default=True,
+            description="Debug mode flag for development and troubleshooting",
+        )
+        timeout: int = Field(
+            default=30,
+            description="Default timeout values for operations",
+        )
+        details: FlextTypes.Core.Dict = Field(
+            default_factory=dict,
+            description="Nested configuration for specific components",
+        )
+
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Validate configuration business rules."""
+            valid_environments = ["dev", "development", "staging", "production"]
+            if self.environment not in valid_environments:
+                return FlextResult[None].fail(
+                    f"Invalid environment: {self.environment}"
+                )
+
+            if self.timeout <= 0:
+                return FlextResult[None].fail("Timeout must be positive")
+
+            return FlextResult[None].ok(None)
+
     def __init__(self, config_path: Path | None = None) -> None:
         """Initialize configuration manager with specified configuration path.
 
@@ -189,7 +190,7 @@ class ConfigurationManager:
         """
         self.config_path = config_path or Path.cwd() / "config"
 
-    def load_config(self) -> FlextResult[Configuration]:
+    def load_config(self) -> FlextResult["ConfigurationManager.Configuration"]:
         """Load configuration from files with environment-specific settings.
 
         Loads and processes configuration files from the configured directory,
@@ -224,7 +225,7 @@ class ConfigurationManager:
             )
 
             # For now, using default configuration - in production this would load from files
-            config = Configuration(
+            config = self.Configuration(
                 environment="staging",
                 debug=True,
                 timeout=30,
@@ -234,9 +235,9 @@ class ConfigurationManager:
             print_colored("✅ Configuration loaded successfully", Colors.GREEN)
             logger.info("Configuration loaded successfully")
 
-            return FlextResult[Configuration].ok(config)
+            return FlextResult["ConfigurationManager.Configuration"].ok(config)
 
         except Exception as e:
             error_msg = f"Failed to load configuration: {e}"
             logger.exception(error_msg)
-            return FlextResult[Configuration].fail(error_msg)
+            return FlextResult["ConfigurationManager.Configuration"].fail(error_msg)
