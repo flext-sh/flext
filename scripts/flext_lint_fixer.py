@@ -424,7 +424,7 @@ class FlextLintFixer:
         """Run ruff validation on a project."""
         try:
             result = subprocess.run(
-                ["/usr/bin/ruff", "check", str(project_path)],  # noqa: S607
+                ["/usr/bin/ruff", "check", str(project_path)],
                 check=False,
                 capture_output=True,
                 shell=False,
