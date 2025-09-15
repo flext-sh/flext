@@ -26,7 +26,7 @@ from flext.application_pipeline import (
     FlextAdvancedPipelineService,
     FlextApplicationPipelineService,
 )
-from flext.base_cli import (
+from flext_cli import (
     FlextCliApi,
     FlextCliConfig,
     FlextCliFormatters,
@@ -58,10 +58,9 @@ from flext.cli_patterns import (
 from flext.dev import (
     FlextAdvancedDevModels,
     FlextAdvancedDevToolsManager,
-    OperationStatus,
-    OperationType,
     create_dev_tools_manager,
 )
+from flext.dev_enums import OperationStatus, OperationType
 from flext.project_types import ProjectType
 from flext.services import (
     CommandHandler as ServicesCommandHandler,

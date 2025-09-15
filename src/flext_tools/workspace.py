@@ -26,9 +26,6 @@ class FlextWorkspaceService(FlextDomainService[str]):
         """Lazy load workspace service to avoid circular imports."""
         if self._workspace_service is None:
             self._workspace_service = FlextWorkspaceService(self._workspace_path)
-        if self._workspace_service is None:
-            msg = "Workspace service not initialized"
-            raise RuntimeError(msg)
         return self._workspace_service
 
     def execute(self, _request: str = "") -> FlextResult[str]:

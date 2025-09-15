@@ -79,12 +79,6 @@ from pathlib import Path
 from flext_core import FlextLogger, FlextResult
 from pydantic import BaseModel, Field
 
-# Use flext-core logger
-logger = FlextLogger(__name__)
-
-# Constants
-MAX_WORKERS_LIMIT = 16
-
 
 class AntipatternScanner:
     """Unified security antipattern scanner service.
@@ -94,6 +88,9 @@ class AntipatternScanner:
     security antipatterns that can lead to silent failures, state corruption, and
     production issues.
     """
+
+    # Constants
+    MAX_WORKERS_LIMIT = 16
 
     class ViolationType(Enum):
         """Types of security violations detected by the scanner."""
@@ -135,7 +132,7 @@ class AntipatternScanner:
         )
         output_format: str = Field(default="detailed")
         risk_threshold: str = Field(default="MEDIUM")
-        max_workers: int = Field(default=4, ge=1, le=MAX_WORKERS_LIMIT)
+        max_workers: int = Field(default=4, ge=1, le=16)
         include_tests: bool = Field(default=False)
 
         def validate_business_rules(self) -> FlextResult[None]:
@@ -144,9 +141,9 @@ class AntipatternScanner:
                 return FlextResult[None].fail(
                     "At least one target path must be specified"
                 )
-            if self.max_workers < 1 or self.max_workers > MAX_WORKERS_LIMIT:
+            if self.max_workers < 1 or self.max_workers > AntipatternScanner.MAX_WORKERS_LIMIT:
                 return FlextResult[None].fail(
-                    f"Max workers must be between 1 and {MAX_WORKERS_LIMIT}"
+                    f"Max workers must be between 1 and {AntipatternScanner.MAX_WORKERS_LIMIT}"
                 )
             return FlextResult[None].ok(None)
 

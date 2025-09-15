@@ -15,12 +15,13 @@ from pathlib import Path
 from typing import cast
 
 from flext_core import FlextTypes
-from src.flext_tools import Colors, print_colored
-from src.flext_tools.conflicts import ConflictAnalyzer
-from src.flext_tools.discovery_base import DependencyDiscovery
-from src.flext_tools.observability import FlextObservabilityService
-from src.flext_tools.poetry_operations import PoetryOperations
-from src.flext_tools.poetry_validator import PoetryValidator
+
+from flext_tools import Colors, print_colored
+from flext_tools.conflicts import ConflictAnalyzer
+from flext_tools.discovery_base import DependencyDiscovery
+from flext_tools.observability import FlextObservabilityService
+from flext_tools.poetry_operations import PoetryOperations
+from flext_tools.poetry_validator import PoetryValidator
 
 
 def check_validation_lock() -> bool:

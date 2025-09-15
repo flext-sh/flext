@@ -13,13 +13,10 @@ from __future__ import annotations
 import subprocess
 import sys
 from pathlib import Path
+from typing import Protocol
 
 from flext_cli import FlextCliApi, FlextCliConfig, FlextCliMain
 from flext_core import FlextDomainService, FlextLogger, FlextResult
-
-from flext_tools import (
-    all_quality_checks_passed,
-)
 
 
 class FlextControlPanelCli(FlextDomainService[str]):
@@ -45,13 +42,20 @@ class FlextControlPanelCli(FlextDomainService[str]):
             for key, value in kwargs.items():
                 setattr(self, key, value)
 
+    class QualityResult(Protocol):
+        """Protocol for quality check results."""
+
+        success: bool
+        value: dict[str, object]
+        error: str | None
+
     class _QualityGateway:
         """Temporary quality gateway to avoid circular imports."""
 
         def __init__(self, workspace_path: Path | str) -> None:
             self.workspace_path = str(workspace_path)
 
-        def run_quality_checks_safe(self, config: object):
+        def run_quality_checks_safe(self, config: object) -> "FlextControlPanelCli.QualityResult":
             # Use config parameter to avoid unused warning
             _ = config
 
@@ -60,7 +64,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
                     self,
                     *,
                     success: bool,
-                    value: dict | None = None,
+                    value: dict[str, object] | None = None,
                     error: str | None = None,
                 ) -> None:
                     self.success = success
@@ -70,18 +74,19 @@ class FlextControlPanelCli(FlextDomainService[str]):
             return Result(success=True, value={"success": True})
 
     @staticmethod
-    def _print_colored(text: str, color: str) -> None:
+    def _print_colored(text: str) -> None:
         """Print colored text using flext-cli patterns."""
-        _ = color
-        print(text)
+        logger = FlextLogger(__name__)
+        logger.info(text)
 
     @staticmethod
-    def _all_quality_checks_passed(result: dict) -> bool:
+    def _all_quality_checks_passed(result: dict[str, object]) -> bool:
         """Temporary quality checks function to avoid circular imports."""
-        return result.get("success", False)
+        success = result.get("success", False)
+        return bool(success)
 
     @staticmethod
-    def _get_quality_failure_summary(result: dict) -> str:
+    def _get_quality_failure_summary(result: dict[str, object]) -> str:
         """Temporary quality failure summary function to avoid circular imports."""
         failed_checks = []
         if not result.get("tests_passed", True):
@@ -97,7 +102,8 @@ class FlextControlPanelCli(FlextDomainService[str]):
 
         if failed_checks:
             return f"Failed: {', '.join(failed_checks)}"
-        return result.get("error", "Unknown error")
+        error = result.get("error", "Unknown error")
+        return str(error)
 
     def __init__(self, **_data: object) -> None:
         """Initialize FLEXT CLI service with flext-cli integration."""
@@ -146,38 +152,27 @@ class FlextControlPanelCli(FlextDomainService[str]):
                 if result.success and FlextControlPanelCli._all_quality_checks_passed(
                     result.value
                 ):
-                    self._cli_service._print_colored(
-                        "✅ All quality checks passed!",
-                        self._cli_service._Colors.GREEN,
-                    )
+                    self._cli_service._print_colored("✅ All quality checks passed!")
                     return FlextResult[dict[str, object]].ok(result.value)
                 failure = (
                     self._cli_service._get_quality_failure_summary(result.value)
                     if result.success
                     else (result.error or "unknown error")
                 )
-                self._cli_service._print_colored(
-                    f"❌ Quality checks failed: {failure}",
-                    self._cli_service._Colors.RED,
-                )
+                self._cli_service._print_colored(f"❌ Quality checks failed: {failure}")
                 return FlextResult[dict[str, object]].fail(failure)
 
             except Exception as e:
                 error = f"Error running quality checks: {e}"
-                self._cli_service._print_colored(
-                    f"❌ {error}", self._cli_service._Colors.RED
-                )
+                self._cli_service._print_colored(f"❌ {error}")
                 return FlextResult[dict[str, object]].fail(error)
 
         def list_scripts(
             self, category: str | None = None
         ) -> FlextResult[list[dict[str, str]]]:
             """List available FlextScript instances with optional category filtering."""
-            self._cli_service._print_colored(
-                f"📋 Available FlextScript instances in {self._cli_service._workspace}:"
-                + (f" (category: {category})" if category else ""),
-                self._cli_service._Colors.BLUE,
-            )
+            self._cli_service._print_colored(f"📋 Available FlextScript instances in {self._cli_service._workspace}:"
+                + (f" (category: {category})" if category else ""))
 
             items = [
                 {"name": "Quality Gateway Script", "category": "quality"},
@@ -192,10 +187,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
             ]
 
             for item in filtered_items:
-                self._cli_service._print_colored(
-                    f"  - {item['name']} (category: {item['category']})",
-                    self._cli_service._Colors.CYAN,
-                )
+                self._cli_service._print_colored(f"  - {item['name']} (category: {item['category']})")
 
             return FlextResult[list[dict[str, str]]].ok(filtered_items)
 
@@ -203,16 +195,10 @@ class FlextControlPanelCli(FlextDomainService[str]):
             self, analysis_type: str = "structure"
         ) -> FlextResult[dict[str, str]]:
             """Perform workspace and code analysis using flext_tools."""
-            self._cli_service._print_colored(
-                f"🔬 Running {analysis_type} analysis on workspace: {self._cli_service._workspace}",
-                self._cli_service._Colors.BLUE,
-            )
+            self._cli_service._print_colored(f"🔬 Running {analysis_type} analysis on workspace: {self._cli_service._workspace}")
 
             result = {"type": analysis_type, "status": "completed"}
-            self._cli_service._print_colored(
-                f"✅ {analysis_type.title()} analysis completed",
-                self._cli_service._Colors.GREEN,
-            )
+            self._cli_service._print_colored(f"✅ {analysis_type.title()} analysis completed")
             return FlextResult[dict[str, str]].ok(result)
 
     class _MainCommands:
@@ -225,10 +211,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
             self, *, coverage: bool = True, parallel: bool = False
         ) -> FlextResult[dict[str, object]]:
             """Execute comprehensive test suite using flext_tools integration."""
-            self._cli_service._print_colored(
-                f"🧪 Running tests (parallel={parallel}, coverage={coverage}) in {self._cli_service._workspace}...",
-                self._cli_service._Colors.BLUE,
-            )
+            self._cli_service._print_colored(f"🧪 Running tests (parallel={parallel}) in {self._cli_service._workspace}...")
 
             try:
                 gateway = self._cli_service._QualityGateway(
@@ -243,10 +226,10 @@ class FlextControlPanelCli(FlextDomainService[str]):
                 )
                 result = gateway.run_quality_checks_safe(config)
 
-                if result.success and all_quality_checks_passed(result.value):
-                    self._cli_service._print_colored(
-                        "✅ Tests passed", self._cli_service._Colors.GREEN
-                    )
+                if result.success and FlextControlPanelCli._all_quality_checks_passed(
+                    result.value
+                ):
+                    self._cli_service._print_colored("✅ Tests passed")
                     return FlextResult[dict[str, object]].ok(result.value)
 
                 # Handle quality check failures
@@ -263,24 +246,17 @@ class FlextControlPanelCli(FlextDomainService[str]):
                 ):
                     failure = "Test execution failed: Command failed"
 
-                self._cli_service._print_colored(
-                    f"❌ Tests failed: {failure}", self._cli_service._Colors.RED
-                )
+                self._cli_service._print_colored(f"❌ Tests failed: {failure}")
                 return FlextResult[dict[str, object]].fail(failure)
 
             except Exception as e:
                 error = f"Test execution failed: {e}"
-                self._cli_service._print_colored(
-                    f"❌ {error}", self._cli_service._Colors.RED
-                )
+                self._cli_service._print_colored(f"❌ {error}")
                 return FlextResult[dict[str, object]].fail(error)
 
         def lint_command(self, *, fix: bool = False) -> FlextResult[dict[str, object]]:
             """Execute linting using flext_tools quality gateway."""
-            self._cli_service._print_colored(
-                "🔍 Running linting with flext_tools...",
-                self._cli_service._Colors.BLUE,
-            )
+            self._cli_service._print_colored("🔍 Running linting with flext_tools...")
 
             try:
                 quality_gateway = self._cli_service._QualityGateway(
@@ -297,33 +273,24 @@ class FlextControlPanelCli(FlextDomainService[str]):
                 result = quality_gateway.run_quality_checks_safe(config)
 
                 if result.success and result.value.get("lint_passed", False):
-                    self._cli_service._print_colored(
-                        "✅ Linting passed!", self._cli_service._Colors.GREEN
-                    )
+                    self._cli_service._print_colored("✅ Linting passed!")
                     return FlextResult[dict[str, object]].ok(result.value)
                 failure = (
                     self._cli_service._get_quality_failure_summary(result.value)
                     if result.success
                     else (result.error or "unknown error")
                 )
-                self._cli_service._print_colored(
-                    f"❌ Linting failed: {failure}", self._cli_service._Colors.RED
-                )
+                self._cli_service._print_colored(f"❌ Linting failed: {failure}")
                 return FlextResult[dict[str, object]].fail(failure)
             except Exception as e:
                 error = f"Linting failed: {e}"
-                self._cli_service._print_colored(
-                    f"❌ {error}", self._cli_service._Colors.RED
-                )
+                self._cli_service._print_colored(f"❌ {error}")
                 return FlextResult[dict[str, object]].fail(error)
 
         def format_command(self, *, check_only: bool = False) -> None:
             """Auto-format code using flext_tools with flext-cli patterns."""
             action = "Checking" if check_only else "Formatting"
-            self._cli_service._print_colored(
-                f"🎨 {action} code in {self._cli_service._workspace} with flext_tools...",
-                self._cli_service._Colors.BLUE,
-            )
+            self._cli_service._print_colored(f"🎨 {action} code in {self._cli_service._workspace} with flext_tools...")
 
             try:
                 # Build format command
@@ -333,13 +300,9 @@ class FlextControlPanelCli(FlextDomainService[str]):
 
                 # Execute formatting
                 subprocess.run(cmd, check=False, timeout=180)
-                self._cli_service._print_colored(
-                    "✅ Formatting completed!", self._cli_service._Colors.GREEN
-                )
+                self._cli_service._print_colored("✅ Formatting completed!")
             except Exception as e:
-                self._cli_service._print_colored(
-                    f"❌ Formatting failed: {e}", self._cli_service._Colors.RED
-                )
+                self._cli_service._print_colored(f"❌ Formatting failed: {e}")
 
         def info_command(
             self, *, detailed: bool = False
@@ -357,38 +320,20 @@ class FlextControlPanelCli(FlextDomainService[str]):
                 else False,
             }
 
+            self._cli_service._print_colored("🏢 FLEXT Control Panel - Workspace Information")
+            self._cli_service._print_colored("=" * 50)
             self._cli_service._print_colored(
-                "🏢 FLEXT Control Panel - Workspace Information",
-                self._cli_service._Colors.CYAN,
-            )
-            self._cli_service._print_colored("=" * 50, self._cli_service._Colors.CYAN)
-            self._cli_service._print_colored(
-                f"📁 Workspace Root: {workspace_data['workspace_root']}",
-                self._cli_service._Colors.BLUE,
-            )
-            self._cli_service._print_colored(
-                f"📦 Projects Found: {workspace_data['projects_count']}",
-                self._cli_service._Colors.BLUE,
-            )
-            self._cli_service._print_colored(
-                f"⚙️  Profile: {workspace_data['profile']}",
-                self._cli_service._Colors.BLUE,
-            )
-            self._cli_service._print_colored(
-                f"🐛 Debug Mode: {'✅ Enabled' if workspace_data['debug_mode'] else '❌ Disabled'}",
-                self._cli_service._Colors.BLUE,
-            )
+                f"📁 Workspace Root: {workspace_data['workspace_root']}")
+            self._cli_service._print_colored(f"📦 Projects Found: {workspace_data['projects_count']}")
+            self._cli_service._print_colored(f"⚙️  Profile: {workspace_data['profile']}")
+            self._cli_service._print_colored(f"🐛 Debug Mode: {'✅ Enabled' if workspace_data['debug_mode'] else '❌ Disabled'}")
 
             if detailed:
-                self._cli_service._print_colored(
-                    "\n📋 Projects:", self._cli_service._Colors.GREEN
-                )
+                self._cli_service._print_colored("\n📋 Projects:")
                 projects = workspace_data.get("projects", [])
                 if isinstance(projects, list):
                     for project in projects:
-                        self._cli_service._print_colored(
-                            f"  • {project}", self._cli_service._Colors.CYAN
-                        )
+                        self._cli_service._print_colored(f"  • {project}")
 
             return FlextResult[dict[str, object]].ok(workspace_data)
 
@@ -405,10 +350,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
             self._workspace = Path(workspace) if workspace else Path.cwd()
 
             if debug:
-                self._print_colored(
-                    "✅ FLEXT CLI initialized with flext-cli integration",
-                    self._Colors.GREEN,
-                )
+                self._print_colored("✅ FLEXT CLI initialized with flext-cli integration")
 
             # Create main CLI using flext-cli
             try:
@@ -427,7 +369,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
 
         except Exception as e:
             error = f"Configuration error: {e}"
-            self._print_colored(f"❌ {error}", self._Colors.RED)
+            self._print_colored(f"❌ {error}")
             return FlextResult[FlextCliMain].fail(error)
 
     def create_tools_handler(self) -> _ToolsCommands:
@@ -443,7 +385,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
         """Get current workspace path."""
         return self._workspace
 
-    def execute(self, _request: str = "") -> FlextResult[str]:
+    def execute(self) -> FlextResult[str]:
         """Execute CLI service - required by FlextDomainService abstract method."""
         try:
             # Default execution returns CLI system info
@@ -470,17 +412,11 @@ def main() -> None:
     # Initialize CLI
     init_result = cli_service.initialize()
     if init_result.is_failure:
-        cli_service._print_colored(
-            f"❌ CLI initialization failed: {init_result.error}",
-            cli_service._Colors.RED,
-        )
+        cli_service._print_colored(f"❌ CLI initialization failed: {init_result.error}")
         return
 
     # Demo usage of the unified CLI service
-    cli_service._print_colored(
-        "🚀 FLEXT Control Panel CLI (Unified Class Pattern)",
-        cli_service._Colors.GREEN,
-    )
+    cli_service._print_colored("🚀 FLEXT Control Panel CLI (Unified Class Pattern)")
 
     # Example: Run quality checks
     tools_handler = cli_service.create_tools_handler()
@@ -495,15 +431,9 @@ def main() -> None:
 
     quality_result = tools_handler.quality_check(config)
     if quality_result.is_success:
-        cli_service._print_colored(
-            "✅ Quality checks completed successfully",
-            cli_service._Colors.GREEN,
-        )
+        cli_service._print_colored("✅ Quality checks completed successfully")
     else:
-        cli_service._print_colored(
-            f"❌ Quality checks failed: {quality_result.error}",
-            cli_service._Colors.RED,
-        )
+        cli_service._print_colored(f"❌ Quality checks failed: {quality_result.error}")
 
 
 # ============================================================================
@@ -573,7 +503,7 @@ def info(*, detailed: bool = False) -> None:
     main_handler.info_command(detailed=detailed)
 
 
-def test(*, coverage: bool = True, parallel: bool = False) -> None:
+def test(*, coverage: bool, parallel: bool) -> None:
     """Legacy function - use FlextControlPanelCli._MainCommands.test_command instead."""
     cli_service = create_cli()
     main_handler = cli_service.create_main_handler()
