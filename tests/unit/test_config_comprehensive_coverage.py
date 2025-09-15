@@ -39,7 +39,7 @@ class TestFlextConfigComprehensiveCoverage:
             "max_workers": 4,
         }
 
-        config = FlextConfig.model_construct(**config_data)
+        config = FlextConfig.model_validate(**config_data)
         validator = FlextConfig.BusinessValidator()
         result = validator.validate_business_rules(config)
 
@@ -62,7 +62,7 @@ class TestFlextConfigComprehensiveCoverage:
         result = validator.validate_business_rules(config)
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert "name cannot be empty" in result.error
+        assert result.error is not None and "name cannot be empty" in result.error
 
     def test_business_validator_invalid_version_line_213(self) -> None:
         """Test BusinessValidator with invalid version format (line 213)."""
@@ -74,7 +74,7 @@ class TestFlextConfigComprehensiveCoverage:
             "max_workers": 4,
         }
 
-        config = FlextConfig.model_construct(**config_data)
+        config = FlextConfig.model_validate(**config_data)
         validator = FlextConfig.BusinessValidator()
         result = validator.validate_business_rules(config)
 
@@ -140,7 +140,7 @@ class TestFlextConfigComprehensiveCoverage:
         result = persistence.save_to_file(test_data, invalid_path)
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert (
+        assert result.error is not None and (
             "Failed to save file" in result.error
             or "Permission denied" in result.error
         )
