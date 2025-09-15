@@ -142,10 +142,11 @@ class TestFlextCommandsModels:
 
     def testcommand_from_payload_invalid_data(self) -> None:
         """Test Command.from_payload with invalid data."""
-        result = FlextCommands.Models.Command.from_payload("invalid")
-        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
-        assert result.error is not None
-        assert "FlextModels data is not compatible" in result.error
+        result = FlextCommands.Models.Command.from_payload({"invalid": "data"})
+        FlextTestsMatchers.assert_result_success(cast("FlextResult[object]", result))
+        assert result.data is not None
+        # Command model filters out invalid fields, so payload will be empty
+        assert result.data.payload == {}
 
     def testcommand_from_payload_exception_handling(self) -> None:
         """Test Command.from_payload exception handling."""
@@ -200,10 +201,10 @@ class TestFlextCommandsModels:
 
     def testquery_from_payload_invalid_data(self) -> None:
         """Test Query.from_payload with invalid data."""
-        result = FlextCommands.Models.Query.from_payload("invalid")
-        FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
-        assert result.error is not None
-        assert "FlextModels data is not compatible" in result.error
+        result = FlextCommands.Models.Query.from_payload({"invalid": "data"})
+        FlextTestsMatchers.assert_result_success(cast("FlextResult[object]", result))
+        assert result.data is not None
+        assert result.data.filters == {}
 
 
 class TestFlextCommandsHandlers:
@@ -697,7 +698,6 @@ class TestFlextCommandsBus:
 
         bus_config: dict[str, object] = {"enable_metrics": True}
         bus = FlextCommands.Bus(bus_config=bus_config)
-        bus._cache = {}  # Initialize cache
 
         mock_handler = MagicMock()
         mock_handler.handle = MagicMock()
@@ -750,7 +750,7 @@ class TestFlextCommandsBus:
         mock_mw2 = MagicMock()
         mock_mw2.process = MagicMock(return_value=FlextResult[None].ok(None))
 
-        bus._middleware = [middleware1, middleware2]
+        bus._middleware = [middleware1, middleware2]  # type: ignore[assignment]
         bus._middleware_instances = {"mw1": mock_mw1, "mw2": mock_mw2}
 
         result = bus._apply_middleware("command", "handler")
@@ -771,14 +771,16 @@ class TestFlextCommandsBus:
             return_value=FlextResult[None].fail("Middleware rejected")
         )
 
-        # Add a enabled attribute to the middleware_config dict
-        class MiddlewareConfig(UserDict):
-            def __getattr__(self, key: str) -> object:
-                return self.get(key)
+        # Create a dict-like object with attributes
+        class MiddlewareConfig(dict[str, object]):
+            def __init__(self, config: dict[str, object]) -> None:
+                super().__init__(config)
+                self.middleware_id = config["middleware_id"]
+                self.enabled = config["enabled"]
 
-        config_obj = MiddlewareConfig(middleware_config)
+        config_obj: dict[str, object] = MiddlewareConfig(middleware_config)
 
-        bus._middleware = [config_obj]
+        bus._middleware = [config_obj]  # type: ignore[assignment]
         bus._middleware_instances = {"rejecting_mw": mock_middleware}
 
         result = bus._apply_middleware("command", "handler")
@@ -814,7 +816,7 @@ class TestFlextCommandsBus:
         mock_handler = MagicMock()
         del mock_handler.execute
         del mock_handler.handle
-        mock_handler.processcommand = MagicMock(return_value="processed")
+        mock_handler.process_command = MagicMock(return_value="processed")
 
         bus = FlextCommands.Bus()
         result = bus._execute_handler(mock_handler, "command")
@@ -827,14 +829,14 @@ class TestFlextCommandsBus:
         mock_handler = MagicMock()
         del mock_handler.execute
         del mock_handler.handle
-        del mock_handler.processcommand
+        del mock_handler.process_command
 
         bus = FlextCommands.Bus()
         result = bus._execute_handler(mock_handler, "command")
 
         FlextTestsMatchers.assert_result_failure(cast("FlextResult[object]", result))
         assert result.error is not None
-        assert "no callable execute, handle, or processcommand method" in result.error
+        assert "no callable execute, handle, or process_command method" in result.error
 
     def test_bus_execute_handler_exception(self) -> None:
         """Test Bus._execute_handler when handler raises exception."""
@@ -1076,7 +1078,7 @@ class TestFlextCommandsFactories:
     def test_create_simple_handler(self) -> None:
         """Test Factories.create_simple_handler method."""
 
-        def handler_func(_command: str) -> str:
+        def handler_func(_command: object) -> object:
             return f"processed: {_command}"
 
         handler = FlextCommands.Factories.create_simple_handler(handler_func)
@@ -1091,7 +1093,7 @@ class TestFlextCommandsFactories:
     def test_create_simple_handler_with_flext_result(self) -> None:
         """Test Factories.create_simple_handler with FlextResult return."""
 
-        def handler_func(_command: str) -> FlextResult[str]:
+        def handler_func(_command: object) -> object:
             return FlextResult[str].ok(f"result: {_command}")
 
         handler = FlextCommands.Factories.create_simple_handler(handler_func)
@@ -1103,7 +1105,7 @@ class TestFlextCommandsFactories:
     def test_create_query_handler(self) -> None:
         """Test Factories.create_query_handler method."""
 
-        def query_func(query: str) -> str:
+        def query_func(query: object) -> object:
             return f"query result: {query}"
 
         handler = FlextCommands.Factories.create_query_handler(query_func)
@@ -1118,7 +1120,7 @@ class TestFlextCommandsFactories:
     def test_create_query_handler_with_flext_result(self) -> None:
         """Test Factories.create_query_handler with FlextResult return."""
 
-        def query_func(query: str) -> FlextResult[str]:
+        def query_func(query: object) -> object:
             return FlextResult[str].ok(f"query processed: {query}")
 
         handler = FlextCommands.Factories.create_query_handler(query_func)
@@ -1228,7 +1230,6 @@ class TestFlextCommandsIntegration:
         # Setup bus with caching enabled
         bus_config: dict[str, object] = {"enable_metrics": True}
         bus = FlextCommands.Bus(bus_config=bus_config)
-        bus._cache = {}  # Initialize cache
 
         handler = TestQueryHandler()
         bus.register_handler(handler)

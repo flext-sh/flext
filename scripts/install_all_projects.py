@@ -106,7 +106,7 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
             if not poetry_path:
                 return False, "❌ Poetry não encontrado no PATH"
 
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 [poetry_path, "install", "--no-interaction"],
                 check=False,
                 capture_output=True,

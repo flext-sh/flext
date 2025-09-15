@@ -86,7 +86,7 @@ class TestFlextAdvancedHandlerModels:
 
     def test_user_management_command_email_validation(self) -> None:
         """Test UserManagementCommand email validation."""
-        with pytest.raises(ValidationError, match="regex"):
+        with pytest.raises(ValidationError, match="Invalid email format"):
             FlextAdvancedHandlerModels.UserManagementCommand(
                 user_email="invalid_email", action="create"
             )

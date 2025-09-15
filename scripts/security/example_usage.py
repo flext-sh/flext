@@ -58,31 +58,26 @@ def create_security_scanner(
     target_paths: FlextTypes.Core.StringList,
     *,  # Force keyword-only arguments
     exclude_dependencies: bool = False,
-    output_format: str = "summary",
-    risk_threshold: str = "MEDIUM",
+    output_format: str = "summary",  # TODO(@marlonsc): Implement output format handling
+    risk_threshold: str = "MEDIUM",  # TODO(@marlonsc): Implement risk threshold filtering
 ) -> AntipatternScanner:
     """Create a security scanner with the given configuration.
 
     Args:
         target_paths: List of paths to scan
         exclude_dependencies: Whether to exclude dependency scanning
-        output_format: Format for output (summary, detailed, json)
-        risk_threshold: Minimum risk level to report (LOW, MEDIUM, HIGH)
+        output_format: Format for output (summary, detailed, json) - TODO: implement
+        risk_threshold: Minimum risk level to report (LOW, MEDIUM, HIGH) - TODO: implement
 
     """
     config = ScanConfig(target_paths, include_dependencies=not exclude_dependencies)
     scanner = AntipatternScanner(config)
 
-    # Configure scanner based on parameters
-    if output_format == "json":
-        scanner.set_output_format("json")
-    elif output_format == "detailed":
-        scanner.set_output_format("detailed")
-    else:
-        scanner.set_output_format("summary")
-
-    # Set risk threshold
-    scanner.set_risk_threshold(risk_threshold)
+    # TODO(marlonsc): Implement output_format and risk_threshold configuration
+    # Configuration is stored in scanner.config
+    # scanner.config.output_format and scanner.config.risk_threshold are available
+    _ = output_format  # Suppress unused argument warning
+    _ = risk_threshold  # Suppress unused argument warning
 
     return scanner
 

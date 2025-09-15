@@ -328,23 +328,27 @@ class LintingReport(FlextScript):
         mypy_result: FlextTypes.Core.Dict,
     ) -> None:
         """Imprimir issues detalhadas."""
-        if ruff_result["by_category"]:
+        if ruff_result["by_category"] and isinstance(ruff_result["by_category"], dict):
             print_colored("    📋 Top Ruff Issues:", Colors.CYAN)
-            for _category, _count in sorted(
-                dict(ruff_result["by_category"]).items(),
-                key=operator.itemgetter(1),
-                reverse=True,
-            )[:5]:
-                pass
+            by_category = ruff_result["by_category"]
+            if isinstance(by_category, dict):
+                for _category, _count in sorted(
+                    by_category.items(),
+                    key=operator.itemgetter(1),
+                    reverse=True,
+                )[:5]:
+                    pass
 
-        if mypy_result["by_type"]:
+        if mypy_result["by_type"] and isinstance(mypy_result["by_type"], dict):
             print_colored("    📋 Top MyPy Errors:", Colors.CYAN)
-            for _error_type, _count in sorted(
-                dict(mypy_result["by_type"]).items(),
-                key=operator.itemgetter(1),
-                reverse=True,
-            )[:5]:
-                pass
+            by_type = mypy_result["by_type"]
+            if isinstance(by_type, dict):
+                for _error_type, _count in sorted(
+                    by_type.items(),
+                    key=operator.itemgetter(1),
+                    reverse=True,
+                )[:5]:
+                    pass
 
     def _print_final_summary(
         self,

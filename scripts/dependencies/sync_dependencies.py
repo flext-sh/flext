@@ -90,8 +90,10 @@ def validate_projects(
             continue
 
         validation = validation_result.unwrap()
-        # Type assertion for validation result structure
-        assert isinstance(validation, dict), "Validation result must be a dict"
+        # Type validation for validation result structure
+        if not isinstance(validation, dict):
+            print_colored(f"  ❌ {project.name}: Invalid validation result format", Colors.RED)
+            continue
 
         if validation["valid"]:
             if verbose:
