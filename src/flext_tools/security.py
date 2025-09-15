@@ -37,7 +37,9 @@ class SecretVaultDecryptor:
         try:
             vault_file = Path(vault_path)
             if not vault_file.exists():
-                return FlextResult[FlextTypes.Core.Dict].fail(f"Vault file not found: {vault_path}")
+                return FlextResult[FlextTypes.Core.Dict].fail(
+                    f"Vault file not found: {vault_path}"
+                )
 
             # For now, return a placeholder implementation
             # In a real implementation, this would decrypt the vault using proper encryption
@@ -45,7 +47,7 @@ class SecretVaultDecryptor:
                 "vault_path": str(vault_file),
                 "status": "decrypted",
                 "secrets_count": 0,
-                "timestamp": "2025-01-27T00:00:00Z"
+                "timestamp": "2025-01-27T00:00:00Z",
             }
 
             return FlextResult[FlextTypes.Core.Dict].ok(decrypted_secrets)

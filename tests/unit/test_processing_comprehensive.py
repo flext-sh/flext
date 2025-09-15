@@ -32,7 +32,9 @@ class TestFlextProcessingHandler:
         for request in test_data:
             result = handler.handle(request)
             FlextTestsMatchers.assert_result_success(result)
-            assert "Base handler processed:" in result.unwrap()
+            unwrapped = result.unwrap()
+            assert unwrapped is not None
+            assert "Base handler processed:" in str(unwrapped)
 
 
 class TestFlextProcessingHandlerRegistry:
@@ -71,7 +73,12 @@ class TestFlextProcessingHandlerRegistry:
         result = self.registry.register(handler_name, self.mock_handler)
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert f"Handler '{handler_name}' already registered" in result.error
+        assert (
+            result.error is not None
+        )
+        assert (
+            f"Handler '{handler_name}' already registered" in result.error
+        )
 
     def test_get_existing_handler_success(self) -> None:
         """Test retrieving existing handler."""
@@ -90,7 +97,12 @@ class TestFlextProcessingHandlerRegistry:
         result = self.registry.get(handler_name)
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert f"Handler '{handler_name}' not found" in result.error
+        assert (
+            result.error is not None
+        )
+        assert (
+            f"Handler '{handler_name}' not found" in result.error
+        )
 
     def test_execute_handler_with_handle_method(self) -> None:
         """Test executing handler that has handle method."""
@@ -151,6 +163,7 @@ class TestFlextProcessingHandlerRegistry:
         result = self.registry.execute(handler_name, "request")
 
         FlextTestsMatchers.assert_result_failure(result)
+        assert result.error
         assert (
             f"Handler '{handler_name}' does not implement handle method" in result.error
         )
@@ -170,6 +183,7 @@ class TestFlextProcessingHandlerRegistry:
         result = self.registry.execute(handler_name, "request")
 
         FlextTestsMatchers.assert_result_failure(result)
+        assert result.error is not None
         assert "Handler execution failed:" in result.error
 
     def test_execute_nonexistent_handler(self) -> None:
@@ -177,7 +191,12 @@ class TestFlextProcessingHandlerRegistry:
         result = self.registry.execute("nonexistent", "request")
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert "Handler 'nonexistent' not found" in result.error
+        assert (
+            result.error is not None
+        )
+        assert (
+            "Handler 'nonexistent' not found" in result.error
+        )
 
     def test_count_handlers(self) -> None:
         """Test counting registered handlers."""
@@ -475,6 +494,7 @@ class TestFlextProcessingPatterns:
         result = self.chain.handle("request")
 
         FlextTestsMatchers.assert_result_failure(result)
+        assert result.error is not None
         assert "Handler failed" in result.error
 
     def test_handler_chain_with_no_handlers(self) -> None:
@@ -523,9 +543,9 @@ class TestFlextProcessingIntegration:
         # Create pipeline that uses registry
         pipeline = FlextProcessing.create_pipeline()
 
-        def registry_step(data: object) -> object:
+        def registry_step(data: object) -> str:
             result = registry.execute("transformer", data)
-            return result.unwrap() if result.is_success else data
+            return str(result.unwrap()) if result.is_success else str(data)  # type: ignore[return-value]
 
         pipeline.add_step(registry_step)
 
@@ -542,7 +562,7 @@ class TestFlextProcessingIntegration:
         def validate_step(data: object) -> FlextResult[str]:
             if not data or data == "invalid":
                 return FlextResult[str].fail("Validation failed")
-            return FlextResult[str].ok(data)
+            return FlextResult[str].ok(str(data))
 
         def transform_step(data: object) -> str:
             return f"processed_{data}"

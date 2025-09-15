@@ -92,7 +92,9 @@ def validate_projects(
         validation = validation_result.unwrap()
         # Type validation for validation result structure
         if not isinstance(validation, dict):
-            print_colored(f"  ❌ {project.name}: Invalid validation result format", Colors.RED)
+            print_colored(
+                f"  ❌ {project.name}: Invalid validation result format", Colors.RED
+            )
             continue
 
         if validation["valid"]:

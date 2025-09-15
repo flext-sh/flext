@@ -26,6 +26,7 @@ from flext.cli import (
     scripts,
     test,
 )
+from flext_tools.quality_gateway import QualityCheckConfig
 
 
 class TestFlextControlPanelCli:
@@ -124,13 +125,15 @@ class TestNestedCommandHandlers:
         tools_handler = cli_service.create_tools_handler()
 
         # Test with mock quality config
-        config = {"strict": True, "coverage_threshold": 80}
+        config: QualityCheckConfig = QualityCheckConfig(
+            coverage_threshold=80.0, relaxed=False
+        )
         with patch("flext.cli.QualityGateway") as mock_quality:
             mock_gateway = Mock()
             mock_quality.return_value = mock_gateway
             mock_gateway.run_checks.return_value = FlextResult.ok({"status": "passed"})
 
-            result = tools_handler.quality_check(config)
+            result = tools_handler.run_quality_check()
 
             assert result.is_success
             # Note: run_quality_check is a placeholder that doesn't use QualityGateway
@@ -436,6 +439,7 @@ class TestErrorHandling:
             result = cli_service.initialize(workspace="/invalid", profile="bad")
 
             assert result.is_failure
+            assert result.error is not None
             assert "Configuration error" in result.error
 
     def test_command_execution_error_handling(self) -> None:
@@ -449,6 +453,7 @@ class TestErrorHandling:
             result = main_handler.test_command(coverage=True, parallel=False)
 
             assert result.is_failure
+            assert result.error is not None
             assert (
                 "Command failed" in result.error
                 or "Test execution failed" in result.error

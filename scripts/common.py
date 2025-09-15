@@ -39,8 +39,10 @@ def discover_projects(
 
         for project_info in project_infos:
             project_path = Path(project_info["path"])
-            if project_path.exists() and (projects_filter is None or project_info["name"] in projects_filter):
-                    project_paths.append(project_path)
+            if project_path.exists() and (
+                projects_filter is None or project_info["name"] in projects_filter
+            ):
+                project_paths.append(project_path)
 
         return project_paths
 

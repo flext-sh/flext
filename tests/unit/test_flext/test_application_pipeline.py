@@ -4,8 +4,6 @@ Tests for pipeline patterns with Python 3.13 + Pydantic integration
 following FLEXT unified class patterns and comprehensive validation.
 """
 
-
-
 from flext.application_pipeline import (
     FlextApplicationPipelineService,
     create_pipeline_service,

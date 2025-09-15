@@ -238,6 +238,7 @@ class TestModuleDocumentation:
 
         # Should contain key information
         doc = base_cli.__doc__
+        assert doc is not None
         assert "FLEXT CLI" in doc
         assert "Direct Re-export" in doc
         assert "flext-cli" in doc
@@ -245,13 +246,19 @@ class TestModuleDocumentation:
     def test_copyright_and_license(self) -> None:
         """Test that proper copyright and license are present."""
         doc = base_cli.__doc__
-        assert "Copyright" in doc
-        assert "2025 FLEXT Team" in doc
-        assert "SPDX-License-Identifier: MIT" in doc
+        assert doc is not None
+        # Type narrowing for pyright
+        doc_str: str = doc
+        assert "Copyright" in doc_str
+        assert "2025 FLEXT Team" in doc_str
+        assert "SPDX-License-Identifier: MIT" in doc_str
 
     def test_direct_import_documentation(self) -> None:
         """Test that direct import policy is documented."""
         doc = base_cli.__doc__
-        assert "ZERO TOLERANCE" in doc
-        assert "NO ALIASES" in doc
-        assert "NO WRAPPERS" in doc
+        assert doc is not None
+        # Type narrowing for pyright
+        doc_str: str = doc
+        assert "ZERO TOLERANCE" in doc_str
+        assert "NO ALIASES" in doc_str
+        assert "NO WRAPPERS" in doc_str
