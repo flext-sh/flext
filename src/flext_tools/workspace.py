@@ -10,6 +10,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from collections.abc import Callable
+from typing import Self
 
 from flext_core import FlextDomainService, FlextResult
 
@@ -32,7 +33,7 @@ def _get_flext_workspace_classes() -> tuple[
 class WorkspaceManager:
     """Lazy wrapper for FlextWorkspaceService to avoid circular imports."""
 
-    def __new__(cls, *args: object, **kwargs: object) -> object:
+    def __new__(cls, *args: object, **kwargs: object) -> Self:
         """Create instance using lazy-loaded FlextWorkspaceService."""
         flext_workspace_service, _, _ = _get_flext_workspace_classes()
         return flext_workspace_service(*args, **kwargs)

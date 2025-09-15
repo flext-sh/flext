@@ -105,11 +105,15 @@ def tokenize_replace_names(
     toks_out: list[tokenize.TokenInfo] = []
 
     for tok in toks_in:
-        if tok.type == tokenize.NAME and tok.string in NAME_MAP and not line_in_ranges(tok.start[0], import_ranges):
-                orig = tok.string
-                alias = NAME_MAP[orig]
-                replaced_counts[orig] += 1
-                tok = tokenize.TokenInfo(tok.type, alias, tok.start, tok.end, tok.line)  # noqa: PLW2901
+        if (
+            tok.type == tokenize.NAME
+            and tok.string in NAME_MAP
+            and not line_in_ranges(tok.start[0], import_ranges)
+        ):
+            orig = tok.string
+            alias = NAME_MAP[orig]
+            replaced_counts[orig] += 1
+            tok = tokenize.TokenInfo(tok.type, alias, tok.start, tok.end, tok.line)
         toks_out.append(tok)
 
     new_code = tokenize.untokenize(toks_out)
@@ -312,7 +316,7 @@ def process_file(
                 and sym not in banned_symbols
             ):
                 alias = NAME_MAP[sym]
-                tok = tokenize.TokenInfo(tok.type, alias, tok.start, tok.end, tok.line)  # noqa: PLW2901
+                tok = tokenize.TokenInfo(tok.type, alias, tok.start, tok.end, tok.line)
                 replaced_counts[sym] = replaced_counts.get(sym, 0) + 1
         toks_out.append(tok)
     partially_rewritten = tokenize.untokenize(toks_out)
