@@ -17,6 +17,7 @@ from __future__ import annotations
 import json
 import os
 import tempfile
+from collections.abc import Iterator
 from pathlib import Path
 from unittest.mock import patch
 
@@ -84,7 +85,7 @@ class TestFlextConfigComprehensiveCoverage:
 
         # Create a non-Mapping object that has items() method
         class CustomIterable:
-            def __iter__(self):
+            def __iter__(self) -> Iterator[int]:
                 return iter([1, 2, 3])
 
         custom_obj = CustomIterable()
@@ -108,7 +109,7 @@ class TestFlextConfigComprehensiveCoverage:
 
         # Create an object that will cause conversion issues
         class ProblematicObject:
-            def __iter__(self):
+            def __iter__(self) -> Iterator[object]:
                 msg = "Intentional iteration error"
                 raise TypeError(msg)
 

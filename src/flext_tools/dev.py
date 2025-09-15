@@ -21,7 +21,10 @@ from flext_core import FlextDomainService, FlextResult
 # Lazy loading to avoid circular imports
 def _get_flext_dev_classes() -> tuple[type, type]:
     """Lazy load flext dev classes to avoid circular imports."""
-    from flext.dev import FlextAdvancedDevModels, FlextAdvancedDevToolsManager
+    from flext.dev import (  # noqa: PLC0415
+        FlextAdvancedDevModels,
+        FlextAdvancedDevToolsManager,
+    )
 
     return FlextAdvancedDevToolsManager, FlextAdvancedDevModels
 
@@ -32,8 +35,8 @@ class DevToolsManager:
 
     def __new__(cls, *args: object, **kwargs: object) -> object:
         """Create instance using lazy-loaded FlextAdvancedDevToolsManager."""
-        FlextAdvancedDevToolsManager, _ = _get_flext_dev_classes()
-        return FlextAdvancedDevToolsManager(*args, **kwargs)
+        flext_advanced_dev_tools_manager, _ = _get_flext_dev_classes()
+        return flext_advanced_dev_tools_manager(*args, **kwargs)
 
 
 # Facade class for legacy tools compatibility
@@ -51,8 +54,8 @@ class FlextToolsDevService(FlextDomainService[str]):
     def _get_dev_service(self) -> object:
         """Lazy load dev service to avoid circular imports."""
         if self._dev_service is None:
-            FlextAdvancedDevToolsManager, _ = _get_flext_dev_classes()
-            self._dev_service = FlextAdvancedDevToolsManager(
+            flext_advanced_dev_tools_manager, _ = _get_flext_dev_classes()
+            self._dev_service = flext_advanced_dev_tools_manager(
                 workspace_path=self._workspace_path, **self._kwargs
             )
         return self._dev_service
@@ -67,8 +70,8 @@ class FlextToolsDevService(FlextDomainService[str]):
 # Legacy compatibility factory function
 def create_dev_tools_manager(*args: object, **kwargs: object) -> object:
     """Create dev tools manager using lazy loading."""
-    FlextAdvancedDevToolsManager, _ = _get_flext_dev_classes()
-    return FlextAdvancedDevToolsManager(*args, **kwargs)
+    flext_advanced_dev_tools_manager, _ = _get_flext_dev_classes()
+    return flext_advanced_dev_tools_manager(*args, **kwargs)
 
 
 __all__ = [

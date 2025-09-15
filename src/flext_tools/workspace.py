@@ -33,8 +33,9 @@ class WorkspaceManager:
     """Lazy wrapper for FlextWorkspaceService to avoid circular imports."""
 
     def __new__(cls, *args: object, **kwargs: object) -> object:
-        FlextWorkspaceService, _, _ = _get_flext_workspace_classes()
-        return FlextWorkspaceService(*args, **kwargs)
+        """Create instance using lazy-loaded FlextWorkspaceService."""
+        flext_workspace_service, _, _ = _get_flext_workspace_classes()
+        return flext_workspace_service(*args, **kwargs)
 
 
 # Legacy compatibility factory functions
@@ -60,7 +61,9 @@ class FlextToolsWorkspaceService(FlextDomainService[str]):
         if self._workspace_service is None:
             _, _, create_workspace_service = _get_flext_workspace_classes()
             self._workspace_service = create_workspace_service(self._workspace_path)
-        assert self._workspace_service is not None
+        if self._workspace_service is None:
+            msg = "Workspace service not initialized"
+            raise RuntimeError(msg)
         return self._workspace_service
 
     def execute(self, _request: str = "") -> FlextResult[str]:

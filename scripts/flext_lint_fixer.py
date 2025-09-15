@@ -49,8 +49,7 @@ class FlextLintFixer:
         """Find all FLEXT projects in workspace."""
         projects = []
         for item in self.workspace_root.iterdir():
-            if item.is_dir() and item.name.startswith("flext-"):
-                if (item / "src").exists() or any(item.glob("*.py")):
+            if item.is_dir() and item.name.startswith("flext-") and ((item / "src").exists() or any(item.glob("*.py"))):
                     projects.append(item)
         return sorted(projects)
 
@@ -290,11 +289,7 @@ class FlextLintFixer:
             # Find undefined names
             for line in lines:
                 for name, import_stmt in import_map.items():
-                    if re.search(rf"\b{name}\b", line) and not line.strip().startswith(
-                        "#"
-                    ):
-                        # Check if already imported
-                        if not any(import_stmt in l for l in lines):
+                    if re.search(rf"\b{name}\b", line) and not line.strip().startswith("#") and not any(import_stmt in line_item for line_item in lines):
                             needed_imports.add(import_stmt)
 
             if needed_imports:
@@ -423,7 +418,7 @@ class FlextLintFixer:
     def run_validation(self, project_path: Path) -> tuple[bool, str]:
         """Run ruff validation on a project."""
         try:
-            result = subprocess.run(
+            result = subprocess.run(  # noqa: S603
                 ["/usr/bin/ruff", "check", str(project_path)],
                 check=False,
                 capture_output=True,
