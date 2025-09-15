@@ -127,7 +127,9 @@ class TestFlextConfigTargetedCoverage:
 
         # Test get_env_var with correct signature (only one parameter)
         result = adapter.get_env_var("NONEXISTENT_VAR")
-        FlextTestsMatchers.assert_result_failure(result)  # Should return failure for nonexistent vars
+        FlextTestsMatchers.assert_result_failure(
+            result
+        )  # Should return failure for nonexistent vars
 
     def test_config_merge_functionality(self) -> None:
         """Test config merge functionality."""
@@ -144,7 +146,9 @@ class TestFlextConfigTargetedCoverage:
         factory = FlextConfig.Factory()
 
         # Test create_from_file with valid JSON
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+        with tempfile.NamedTemporaryFile(
+            encoding="utf-8", mode="w", suffix=".json", delete=False
+        ) as f:
             f.write('{"app_name": "test-app", "name": "test", "version": "1.0.0"}')
             temp_path = f.name
 

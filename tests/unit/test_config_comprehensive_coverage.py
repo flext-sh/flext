@@ -89,7 +89,9 @@ class TestFlextConfigComprehensiveCoverage:
 
         custom_obj = CustomIterable()
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+        with tempfile.NamedTemporaryFile(
+            encoding="utf-8", mode="w", suffix=".json", delete=False
+        ) as f:
             temp_path = f.name
             # This should trigger line 337 path for non-Mapping objects
             result = persistence.save_to_file(custom_obj, temp_path)
@@ -112,7 +114,9 @@ class TestFlextConfigComprehensiveCoverage:
 
         problematic_obj = ProblematicObject()
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+        with tempfile.NamedTemporaryFile(
+            encoding="utf-8", mode="w", suffix=".json", delete=False
+        ) as f:
             temp_path = f.name
             # This should trigger lines 346-348 fallback conversion
             result = persistence.save_to_file(problematic_obj, temp_path)
@@ -183,7 +187,9 @@ class TestFlextConfigComprehensiveCoverage:
         """Test Factory.create_from_file with invalid JSON (line 514)."""
         factory = FlextConfig.Factory()
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+        with tempfile.NamedTemporaryFile(
+            encoding="utf-8", mode="w", suffix=".json", delete=False
+        ) as f:
             f.write('{"invalid": json}')  # Invalid JSON
             temp_path = f.name
 
@@ -199,7 +205,9 @@ class TestFlextConfigComprehensiveCoverage:
         """Test Factory.create_from_file with unsupported format (lines 521-522)."""
         factory = FlextConfig.Factory()
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".xyz", delete=False) as f:
+        with tempfile.NamedTemporaryFile(
+            encoding="utf-8", mode="w", suffix=".xyz", delete=False
+        ) as f:
             f.write("some content")
             temp_path = f.name
 
@@ -254,7 +262,9 @@ class TestFlextConfigComprehensiveCoverage:
         debug = true
         """
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".toml", delete=False) as f:
+        with tempfile.NamedTemporaryFile(
+            encoding="utf-8", mode="w", suffix=".toml", delete=False
+        ) as f:
             f.write(toml_content)
             temp_path = f.name
 
@@ -278,7 +288,7 @@ class TestFlextConfigComprehensiveCoverage:
             env_file.write_text("FLEXT_APP_NAME=env-test\nFLEXT_DEBUG=true")
 
             # Change to temp directory to test default .env file detection
-            original_cwd = os.getcwd()
+            original_cwd = Path.cwd()
             try:
                 os.chdir(temp_dir)
                 config = FlextConfig(_factory_mode=True)
@@ -289,7 +299,9 @@ class TestFlextConfigComprehensiveCoverage:
 
     def test_init_env_file_path_resolution_line_929(self) -> None:
         """Test __init__ with env file path resolution (line 929)."""
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".env", delete=False) as f:
+        with tempfile.NamedTemporaryFile(
+            encoding="utf-8", mode="w", suffix=".env", delete=False
+        ) as f:
             f.write("FLEXT_APP_NAME=path-test\n")
             temp_path = f.name
 
@@ -312,7 +324,9 @@ class TestFlextConfigComprehensiveCoverage:
         key2 = "value2"
         """
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".toml", delete=False) as f:
+        with tempfile.NamedTemporaryFile(
+            encoding="utf-8", mode="w", suffix=".toml", delete=False
+        ) as f:
             f.write(toml_content)
             temp_path = f.name
 
@@ -336,7 +350,9 @@ class TestFlextConfigComprehensiveCoverage:
             "nested": {"key1": "value1", "key2": "value2"},
         }
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+        with tempfile.NamedTemporaryFile(
+            encoding="utf-8", mode="w", suffix=".json", delete=False
+        ) as f:
             json.dump(json_content, f)
             temp_path = f.name
 
@@ -384,7 +400,9 @@ class TestFlextConfigComprehensiveCoverage:
           key2: value2
         """
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
+        with tempfile.NamedTemporaryFile(
+            encoding="utf-8", mode="w", suffix=".yaml", delete=False
+        ) as f:
             f.write(yaml_content)
             temp_path = f.name
 
@@ -478,7 +496,9 @@ class TestFlextConfigComprehensiveCoverage:
         FlextTestsMatchers.assert_result_failure(result1)
 
         # 2. Invalid JSON file
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+        with tempfile.NamedTemporaryFile(
+            encoding="utf-8", mode="w", suffix=".json", delete=False
+        ) as f:
             f.write("invalid json content")
             temp_path = f.name
 
@@ -489,7 +509,9 @@ class TestFlextConfigComprehensiveCoverage:
 
         # 3. Valid file but invalid config data
         valid_json_invalid_config = {"invalid_field": "value"}
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+        with tempfile.NamedTemporaryFile(
+            encoding="utf-8", mode="w", suffix=".json", delete=False
+        ) as f:
             json.dump(valid_json_invalid_config, f)
             temp_path = f.name
 
