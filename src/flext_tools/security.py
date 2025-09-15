@@ -22,7 +22,7 @@ class SecretVaultDecryptor:
     def __init__(self) -> None:
         """Initialize the SecretVaultDecryptor."""
 
-    def decrypt_vault(self, vault_path: str) -> FlextResult[FlextTypes.Core.Dict]:
+    def decrypt_vault(self, _vault_path: str) -> FlextResult[FlextTypes.Core.Dict]:
         """Decrypt a secrets vault.
 
         Args:
@@ -32,7 +32,7 @@ class SecretVaultDecryptor:
             FlextResult containing the decrypted secrets dictionary
 
         """
-        # TODO(@flext-team): Implement actual decryption logic
+        # TODO(@flext-team): Implement actual decryption logic  # noqa: TD003, FIX002
         # Issue: https://github.com/flext-team/flext-tools/issues/1
         return FlextResult[FlextTypes.Core.Dict].fail("Not implemented yet")
 

@@ -21,6 +21,7 @@ class FalsePositiveAuditor:
     """Auditor manual para identificar falsos positivos com precisão."""
 
     def __init__(self) -> None:
+        """Initialize the false positives auditor."""
         self.stdlib_modules = get_stdlib_modules()
         self.discovery = DependencyDiscovery()
 

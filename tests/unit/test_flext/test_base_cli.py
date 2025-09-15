@@ -79,8 +79,6 @@ class TestFlextCliDirectExports:
         """Test that no local CLI implementation exists - only direct re-exports."""
         # Verify all imports come from flext-cli, not local modules
         # Check module source to ensure it's just direct re-exports
-        from flext import base_cli
-
         source_lines = inspect.getsourcelines(base_cli)[0]
         source_code = "".join(source_lines)
 

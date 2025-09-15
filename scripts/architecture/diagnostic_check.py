@@ -54,6 +54,7 @@ class FlextDiagnostic:
     """Flext diagnostic tool."""
 
     def __init__(self, workspace_root: str = ".") -> None:
+        """Initialize the diagnostic checker with workspace root."""
         self.workspace_root = Path(workspace_root).resolve()
         self.results: dict[str, ProjectStatus] = {}
 
@@ -113,7 +114,7 @@ class FlextDiagnostic:
             if not ruff_path_obj.is_absolute() or not ruff_path_obj.exists():
                 return 1, "", f"Invalid ruff executable: {ruff_path}"
 
-            result = subprocess.run(
+            result = subprocess.run(  # noqa: S603
                 [str(ruff_path), "check", "."],
                 check=False,
                 capture_output=True,
@@ -162,7 +163,7 @@ class FlextDiagnostic:
             if not Path(poetry_path).is_absolute() or not Path(poetry_path).exists():
                 return 1, "", f"Invalid poetry executable: {poetry_path}"
 
-            result = subprocess.run(
+            result = subprocess.run(  # noqa: S603
                 [str(poetry_path), "install", "--no-interaction"],
                 check=False,
                 capture_output=True,
@@ -205,7 +206,7 @@ class FlextDiagnostic:
                 status.errors.append(f"Lint: {stderr.strip()}")
 
             # Check mypy
-            rc, stdout, stderr = self._run_mypy(project_path)
+            rc, _stdout, stderr = self._run_mypy(project_path)
             if rc == SUCCESS_CODE:
                 status.mypy_status = STATUS_PASS
             else:
@@ -213,7 +214,7 @@ class FlextDiagnostic:
                 status.errors.append(f"MyPy: {stderr.strip()}")
 
             # Check tests
-            rc, stdout, stderr = self._run_tests(project_path)
+            rc, _stdout, stderr = self._run_tests(project_path)
             if rc == SUCCESS_CODE:
                 status.test_status = STATUS_PASS
             else:

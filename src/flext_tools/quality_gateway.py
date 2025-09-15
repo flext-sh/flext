@@ -442,7 +442,7 @@ class QualityGateway:
             with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
                 try:
                     # Run ruff against workspace_path using subprocess
-                    result = subprocess.run(
+                    result = subprocess.run(  # noqa: S603
                         ["/usr/bin/ruff", "check", str(self.workspace_path)],
                         check=False,
                         capture_output=True,

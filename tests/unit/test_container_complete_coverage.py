@@ -91,7 +91,7 @@ class TestFlextContainerCompleteCoverage:
         container = FlextContainer.get_global()
 
         # Test singleton registration with validation
-        def singleton_factory():
+        def singleton_factory() -> dict[str, bool]:
             return {"singleton": True}
 
         container.register_factory("validated_singleton", singleton_factory)
@@ -123,7 +123,7 @@ class TestFlextContainerCompleteCoverage:
         container.register("dependency", Dependency())
 
         # Register service with dependency
-        def dependent_factory():
+        def dependent_factory() -> DependentService | None:
             dep_result = container.get("dependency")
             if dep_result.is_success:
                 return DependentService(dep_result.value)
@@ -206,7 +206,7 @@ class TestFlextContainerCompleteCoverage:
         container = FlextContainer.get_global()
 
         # Test scoped services
-        def scoped_factory():
+        def scoped_factory() -> dict[str, object]:
             return {"scoped": True, "id": id(object())}
 
         container.register_factory("scoped_service", scoped_factory)

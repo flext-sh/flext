@@ -148,6 +148,7 @@ class PatternViolationAnalyzer:
     """Core engine for analyzing pattern violations across FLEXT projects."""
 
     def __init__(self) -> None:
+        """Initialize the pattern violation analyzer."""
         self.logger = logging.getLogger(__name__)
         self.pattern_docs_path = (
             Path(__file__).parent.parent.parent / "docs" / "patterns"
@@ -451,6 +452,7 @@ class PatternAuditSystem:
     """Main script class for FLEXT Pattern Audit System."""
 
     def __init__(self) -> None:
+        """Initialize the pattern audit system."""
         self.logger = logging.getLogger(__name__)
         self.analyzer = PatternViolationAnalyzer()
         self.workspace_path = Path(__file__).parent.parent.parent
