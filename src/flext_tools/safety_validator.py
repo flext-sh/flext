@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """FLEXT Safety Validator - Enterprise Security Validation for Critical Operations.
 
 Provides comprehensive security validation and safety controls for critical
@@ -73,6 +72,7 @@ import shutil
 import tomllib
 from enum import Enum
 from pathlib import Path
+from typing import cast
 from urllib.parse import urlparse
 
 import requests
@@ -666,7 +666,14 @@ class SafetyValidator:
         # Validate packages if provided
         if packages:
             for package in packages:
-                package_validation = self.validate_package_safety(package)
+                package_result = self.validate_package_safety_safe(package)
+                if package_result.is_failure:
+                    validation_data["safe"] = False
+                    validation_data["risk_level"] = "high"
+                    issues = cast("list[str]", validation_data["issues"])
+                    issues.append(f"Package validation failed: {package_result.error}")
+                    continue
+                package_validation = package_result.value
                 if not package_validation["safe"]:
                     validation_data["safe"] = False
                     validation_data["risk_level"] = "high"
@@ -718,7 +725,12 @@ class SafetyValidator:
                 operation_type=operation_type,
             )
 
-            recommendations = self.get_safety_recommendations(operation_type, context)
+            recommendations_result = self.get_safety_recommendations_safe(operation_type, context)
+            if recommendations_result.is_failure:
+                logger.warning(f"Failed to get safety recommendations: {recommendations_result.error}")
+                recommendations = []
+            else:
+                recommendations = recommendations_result.value
 
             logger.debug(
                 "Safety recommendations generated",
@@ -878,158 +890,3 @@ class SafetyValidator:
             # In case of network error, assume it exists (false positive is better)
             return True
 
-    # Legacy methods for backward compatibility
-    def validate_package_safety(self, package_name: str) -> FlextTypes.Core.Dict:
-        """Legacy method for backward compatibility - use validate_package_safety_safe() instead."""
-        issues: FlextTypes.Core.StringList = []
-        recommendations: FlextTypes.Core.StringList = []
-
-        result: FlextTypes.Core.Dict = {
-            "safe": True,
-            "package": package_name,
-            "issues": issues,
-            "recommendations": recommendations,
-            "confidence": "high",
-        }
-
-        # Normalize package name
-        normalized_name = package_name.lower().replace("_", "-")
-
-        # Check if it's in the dangerous packages list
-        if normalized_name in self.dangerous_packages:
-            result["safe"] = False
-            issues.append(
-                f"Package '{package_name}' is in the dangerous packages list",
-            )
-            result["confidence"] = "high"
-            return result
-
-        # Check name length
-        if len(package_name) < MIN_NAME_LENGTH:
-            result["safe"] = False
-            issues.append("Package name too short")
-            result["confidence"] = "high"
-
-        if len(package_name) > MAX_NAME_LENGTH:
-            result["safe"] = False
-            issues.append("Package name too long")
-            result["confidence"] = "medium"
-
-        # Check suspicious characters
-        suspicious_chars = set(package_name) & {"@", "#", "$", "%", "^", "&", "*"}
-        if suspicious_chars:
-            result["safe"] = False
-            issues.append(
-                f"Suspicious characters in name: {suspicious_chars}",
-            )
-            result["confidence"] = "high"
-
-        # Check if it's a known safe package
-        if normalized_name in self.known_safe_packages:
-            result["confidence"] = "high"
-            recommendations.append("Known safe package")
-
-        # Check existence on PyPI (only if no critical issues)
-        if result["safe"] and not self._package_exists_on_pypi(package_name):
-            result["safe"] = False
-            issues.append("Package not found on official PyPI")
-            result["confidence"] = "high"
-
-        return result
-
-    def validate_file_operation(
-        self,
-        file_path: Path,
-        operation: str,
-        *,
-        backup_requirement: BackupRequirement = BackupRequirement.REQUIRED,
-    ) -> FlextTypes.Core.Dict:
-        """Legacy method for backward compatibility - use validate_file_operation_safe() instead."""
-        issues: FlextTypes.Core.StringList = []
-        recommendations: FlextTypes.Core.StringList = []
-
-        result: FlextTypes.Core.Dict = {
-            "safe": True,
-            "file": str(file_path),
-            "operation": operation,
-            "issues": issues,
-            "recommendations": recommendations,
-        }
-
-        # Check if file exists (for operations that need it)
-        if operation in {"read", "write", "delete"} and not file_path.exists():
-            result["safe"] = False
-            issues.append("File not found")
-            return result
-
-        # Check if it's a critical file
-        critical_files = {
-            "pyproject.toml",
-            "poetry.lock",
-            "Makefile",
-            ".gitignore",
-            "requirements.txt",
-            "setup.py",
-            "setup.cfg",
-        }
-
-        if file_path.name in critical_files:
-            recommendations.append("Critical file - backup recommended")
-
-            if backup_requirement == BackupRequirement.REQUIRED and operation in {
-                "write",
-                "delete",
-            }:
-                recommendations.append(
-                    "Backup required for this operation",
-                )
-
-        # Check permissions
-        if operation == "write" and not self._can_write_file(file_path):
-            result["safe"] = False
-            issues.append("No write permission")
-
-        if operation == "delete" and not self._can_delete_file(file_path):
-            result["safe"] = False
-            issues.append("No delete permission")
-
-        return result
-
-    def get_safety_recommendations(
-        self,
-        operation_type: str,
-        _context: FlextTypes.Core.Dict,
-    ) -> FlextTypes.Core.StringList:
-        """Legacy method for backward compatibility - use get_safety_recommendations_safe() instead."""
-        recommendations = []
-
-        if operation_type == "package_install":
-            recommendations.extend(
-                [
-                    "Always review dependencies before installing",
-                    "Check for known vulnerable versions",
-                    "Use isolated virtual environments",
-                    "Maintain change log for rollback",
-                ],
-            )
-
-        elif operation_type == "file_modification":
-            recommendations.extend(
-                [
-                    "Create backup before modifying critical files",
-                    "Validate integrity after modification",
-                    "Use version control to track changes",
-                ],
-            )
-
-        elif operation_type == "command_execution":
-            recommendations.extend(
-                [
-                    "Always use shell=False in subprocess",
-                    "Validate user input before executing",
-                    "Use timeout to avoid hanging",
-                    "Log executed commands for audit",
-                ],
-            )
-
-        return recommendations

@@ -372,7 +372,18 @@ class QualityGateway:
                 result = runner()
                 if not result.success:
                     quality_data[key] = False
-                    issues.extend(result.value or [])
+                    # Don't access .value on failed result - use .error instead
+                    if result.error:
+                        issues.append(
+                            QualityIssue(
+                                tool=key,
+                                severity="error",
+                                message=str(result.error),
+                                file_path=None,
+                                line_number=None,
+                                rule_code=None,
+                            )
+                        )
 
             # Calculate execution time and finalize results
             execution_time = time.time() - start_time
