@@ -39,7 +39,7 @@ class TestFlextConfigComprehensiveCoverage:
             "max_workers": 4,
         }
 
-        config = FlextConfig.model_validate(**config_data)
+        config = FlextConfig.model_validate(config_data)
         validator = FlextConfig.BusinessValidator()
         result = validator.validate_business_rules(config)
 
@@ -74,7 +74,7 @@ class TestFlextConfigComprehensiveCoverage:
             "max_workers": 4,
         }
 
-        config = FlextConfig.model_validate(**config_data)
+        config = FlextConfig.model_validate(config_data)
         validator = FlextConfig.BusinessValidator()
         result = validator.validate_business_rules(config)
 
@@ -177,7 +177,7 @@ class TestFlextConfigComprehensiveCoverage:
         result = factory.create_from_file("nonexistent_config.json")
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert (
+        assert result.error is not None and (
             "file not found" in result.error.lower()
             or "does not exist" in result.error.lower()
         )
@@ -198,7 +198,7 @@ class TestFlextConfigComprehensiveCoverage:
         Path(temp_path).unlink()
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert "json" in result.error.lower() or "parse" in result.error.lower()
+        assert result.error is not None and ("json" in result.error.lower() or "parse" in result.error.lower())
 
     def test_factory_create_from_file_unsupported_format_lines_521_522(self) -> None:
         """Test Factory.create_from_file with unsupported format (lines 521-522)."""
@@ -216,7 +216,7 @@ class TestFlextConfigComprehensiveCoverage:
         Path(temp_path).unlink()
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert "failed to parse" in result.error.lower() or "expecting value" in result.error.lower()
+        assert result.error is not None and ("failed to parse" in result.error.lower() or "expecting value" in result.error.lower())
 
     def test_factory_create_for_testing_with_overrides_line_557(self) -> None:
         """Test Factory.create_for_testing with custom overrides (line 557)."""
@@ -251,8 +251,8 @@ class TestFlextConfigComprehensiveCoverage:
 
         # Validation still occurs, so this should fail
         FlextTestsMatchers.assert_result_failure(result)
-        assert "invalid_environment" in result.error
-        assert "Environment must be one of" in result.error
+        assert result.error is not None and "invalid_environment" in result.error
+        assert result.error is not None and "Environment must be one of" in result.error
 
     def test_init_toml_file_processing_line_918(self) -> None:
         """Test __init__ with TOML file processing (line 918)."""
@@ -408,8 +408,7 @@ class TestFlextConfigComprehensiveCoverage:
             f.write(yaml_content)
             temp_path = f.name
 
-        config = FlextConfig()
-        result = config._load_from_sources(temp_path, "yaml")
+        result = FlextConfig._load_from_sources()
 
         # Cleanup
         Path(temp_path).unlink()
@@ -419,13 +418,11 @@ class TestFlextConfigComprehensiveCoverage:
 
     def test_validate_log_level_invalid_line_1122(self) -> None:
         """Test validate_log_level with invalid level (line 1122)."""
-        config = FlextConfig()
+        # Test field validator directly
+        with pytest.raises(ValueError) as exc_info:
+            FlextConfig.validate_log_level("INVALID_LEVEL")
 
-        with patch.object(config, "log_level", "INVALID_LEVEL"):
-            result = config.validate_log_level("INVALID_LEVEL")
-
-            FlextTestsMatchers.assert_result_failure(result)
-            assert "invalid log level" in result.error.lower()
+        assert "invalid log level" in str(exc_info.value).lower()
 
     def test_validate_base_url_invalid_lines_1188_1189(self) -> None:
         """Test validate_base_url with invalid URL (lines 1188-1189)."""
@@ -444,7 +441,7 @@ class TestFlextConfigComprehensiveCoverage:
         )
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert "validation" in result.error.lower() or "error" in result.error.lower()
+        assert result.error is not None and ("validation" in result.error.lower() or "error" in result.error.lower())
 
     def test_create_environment_validation_lines_1360_1365(self) -> None:
         """Test create method environment validation (lines 1360-1365)."""
@@ -454,7 +451,7 @@ class TestFlextConfigComprehensiveCoverage:
         )
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert (
+        assert result.error is not None and (
             "invalid environment" in result.error.lower()
             or "environment" in result.error.lower()
         )
@@ -472,7 +469,7 @@ class TestFlextConfigComprehensiveCoverage:
             result = FlextConfig.create_from_environment()
 
             FlextTestsMatchers.assert_result_failure(result)
-            assert (
+            assert result.error is not None and (
                 "validation" in result.error.lower()
                 or "invalid" in result.error.lower()
             )
@@ -545,7 +542,7 @@ class TestFlextConfigComprehensiveCoverage:
             result = config.to_api_payload()
 
             FlextTestsMatchers.assert_result_failure(result)
-            assert (
+            assert result.error is not None and (
                 "serialization" in result.error.lower()
                 or "error" in result.error.lower()
             )
@@ -570,7 +567,7 @@ class TestFlextConfigComprehensiveCoverage:
         result = FlextConfig.merge(base_config, invalid_override)
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert "merge" in result.error.lower() or "error" in result.error.lower()
+        assert result.error is not None and ("merge" in result.error.lower() or "error" in result.error.lower())
 
     def test_comprehensive_validation_scenarios(self) -> None:
         """Test comprehensive validation scenarios for additional coverage."""
@@ -583,7 +580,7 @@ class TestFlextConfigComprehensiveCoverage:
         validator = FlextConfig.BusinessValidator()
         result = validator.validate_business_rules(config_prod)
         FlextTestsMatchers.assert_result_failure(result)
-        assert "production environment requires" in result.error
+        assert result.error is not None and "production environment requires" in result.error
 
     def test_factory_methods_edge_cases(self) -> None:
         """Test factory methods with edge cases for additional coverage."""
