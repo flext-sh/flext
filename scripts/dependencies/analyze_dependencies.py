@@ -6,6 +6,7 @@ Usa flext_tools para análise modular e cache.
 
 import sys
 from pathlib import Path
+from typing import cast
 
 from flext_core import FlextTypes
 from src.flext_tools import Colors, print_colored
@@ -106,8 +107,6 @@ def main() -> int:
     if "--report" in sys.argv:
         report_path = Path("conflict_report.md")
         # Cast analysis to expected type for generate_conflict_report
-        from typing import cast
-
         analysis_typed = cast(
             "dict[str, FlextTypes.Core.Dict | FlextTypes.Core.List | str | int]",
             analysis,

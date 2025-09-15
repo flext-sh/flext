@@ -25,6 +25,7 @@ from flext.cli import (
     scripts,
     test,
 )
+from flext_tools import QualityCheckConfig
 
 
 class TestFlextControlPanelCli:
@@ -127,8 +128,6 @@ class TestNestedCommandHandlers:
             mock_gateway = Mock()
             mock_quality.return_value = mock_gateway
             mock_gateway.run_checks.return_value = FlextResult.ok({"status": "passed"})
-
-            from flext_tools import QualityCheckConfig
 
             config = QualityCheckConfig(
                 enable_lint=True,
@@ -320,10 +319,6 @@ class TestUnifiedClassPatternCompliance:
 
     def test_single_unified_class_per_module(self) -> None:
         """Test that module has single unified class."""
-        import inspect
-
-        from flext import cli
-
         # Get all classes defined in the module
         classes = [
             name

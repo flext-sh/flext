@@ -23,6 +23,7 @@ class FlextConfigStandardizer:
     """Standardizes FLEXT workspace configurations professionally."""
 
     def __init__(self, workspace_root: Path, *, dry_run: bool = False) -> None:
+        """Initialize the workspace config standardizer."""
         self.workspace_root = workspace_root
         self.dry_run = dry_run
         self.changes_made = 0

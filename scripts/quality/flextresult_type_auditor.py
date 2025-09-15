@@ -57,7 +57,7 @@ class FlextResultTypeAuditor(FlextScript):
             git_path = _validate_git_available()
 
             # Usa git check-ignore para verificar se o arquivo é ignorado
-            result = subprocess.run(
+            result = subprocess.run(  # noqa: S603
                 [git_path, "check-ignore", file_path],
                 check=False,
                 cwd=project_dir,
