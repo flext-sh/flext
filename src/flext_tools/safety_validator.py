@@ -679,8 +679,9 @@ class SafetyValidator:
                     validation_data["risk_level"] = "high"
                     package_issues = package_validation["issues"]
                     if isinstance(package_issues, list):
-                        issues = validation_data["issues"]
-                        if isinstance(issues, list):
+                        issues_data = validation_data["issues"]
+                        if isinstance(issues_data, list):
+                            issues = issues_data
                             issues.extend(
                                 [
                                     f"Package '{package}': {issue}"

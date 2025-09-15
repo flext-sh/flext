@@ -6,12 +6,13 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextResult
-from src.flext_tools import (
+
+from flext_tools import (
     Colors,
     print_colored,
 )
-from src.flext_tools.config_manager import ConfigurationManager
-from src.flext_tools.script_base import FlextScript, ScriptMetadata
+from flext_tools.config_manager import ConfigurationManager
+from flext_tools.script_base import FlextScript, ScriptMetadata
 
 # Apenas tipos internos de Python; argparse já importado acima
 
