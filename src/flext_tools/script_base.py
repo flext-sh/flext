@@ -114,83 +114,12 @@ from .quality_gateway import (
     get_quality_failure_summary,
 )
 
-
-# Protocol for script main functions
-@runtime_checkable
-class ScriptMainFunc(Protocol):
-    """Protocol for script main functions."""
-
-    def __call__(self, **kwargs: object) -> FlextResult[object]:
-        """Execute script with optional keyword arguments."""
-        ...
-
-
 # Use flext-core logger
 logger = FlextLogger(__name__)
 
 
-class ScriptMetadata(FlextModels.Value):
-    """Comprehensive metadata for FLEXT scripts using value object patterns.
 
-    Encapsulates all metadata required for script identification, lifecycle
-    management, and execution control. Built on flext-core FlextModels for
-    immutability and business rule validation with enterprise-grade metadata
-    management for the FLEXT ecosystem.
-
-    This value object ensures consistent script metadata structure across all
-    FLEXT automation and operational scripts, providing standardized attributes
-    for script categorization, versioning, and execution preferences.
-
-    Attributes:
-        name: Unique script identifier using kebab-case naming convention.
-        description: Human-readable description of script purpose and functionality.
-        category: Script category for organization (e.g., "automation", "maintenance").
-        version: Semantic version string for script versioning and compatibility.
-        requires_confirmation: Whether script requires user confirmation before execution.
-        dry_run_supported: Whether script supports dry-run mode for safe testing.
-
-    Example:
-        Create script metadata with validation:
-
-        >>> metadata = ScriptMetadata(
-        ...     name="data-processor",
-        ...     description="Process FLEXT data with validation",
-        ...     category="data-operations",
-        ...     version="2.1.0",
-        ...     requires_confirmation=True,
-        ... )
-        >>> validation = metadata.validate_business_rules()
-        >>> if validation.success:
-        ...     print(f"Script: {metadata.name} v{metadata.version}")
-
-    Note:
-        Uses flext-core value object patterns for immutability and
-        comprehensive business rule validation.
-
-    """
-
-    name: str
-    description: str
-    category: str
-    version: str = "1.0.0"
-    requires_confirmation: bool = False
-    dry_run_supported: bool = True
-
-    def validate_business_rules(self) -> FlextResult[None]:
-        """Validate script metadata business rules."""
-        if not self.name.strip():
-            return FlextResult[None].fail("Script name cannot be empty")
-
-        if not self.description.strip():
-            return FlextResult[None].fail("Script description cannot be empty")
-
-        if not self.category.strip():
-            return FlextResult[None].fail("Script category cannot be empty")
-
-        return FlextResult[None].ok(None)
-
-
-class FlextScript(FlextDomainService[bool]):
+class FlextToolsScript(FlextDomainService[bool]):
     """Abstract base class for enterprise-grade FLEXT scripts with lifecycle management.
 
     Provides comprehensive foundation for creating robust, maintainable FLEXT scripts
@@ -490,152 +419,234 @@ class FlextScript(FlextDomainService[bool]):
 
         return self.run(**vars(args))
 
+    # Nested classes for unified pattern
+    @runtime_checkable
+    class ScriptMainFunc(Protocol):
+        """Protocol for script main functions."""
 
-@dataclass
-class ScriptConfig:
-    """Configuration model for simple script creation and factory patterns.
+        def __call__(self, **kwargs: object) -> FlextResult[object]:
+            """Execute script with optional keyword arguments."""
+            ...
 
-    Encapsulates all configuration required for creating simple FLEXT scripts
-    through the factory pattern. Provides type-safe configuration with proper
-    function signatures and optional lifecycle hooks for streamlined script
-    development.
+    class ScriptMetadata(FlextModels.Value):
+        """Comprehensive metadata for FLEXT scripts using value object patterns.
 
-    This configuration enables rapid script creation while maintaining enterprise
-    standards and integration with the FLEXT ecosystem infrastructure.
+        Encapsulates all metadata required for script identification, lifecycle
+        management, and execution control. Built on flext-core FlextModels for
+        immutability and business rule validation with enterprise-grade metadata
+        management for the FLEXT ecosystem.
 
-    Attributes:
-        name: Unique script identifier for the generated script.
-        description: Human-readable description of script functionality.
-        category: Script category for organization and classification.
-        main_func: Primary script logic function with proper type parameters.
-        setup_func: Optional setup function for pre-execution initialization.
-        validate_func: Optional validation function for precondition checking.
+        This value object ensures consistent script metadata structure across all
+        FLEXT automation and operational scripts, providing standardized attributes
+        for script categorization, versioning, and execution preferences.
 
-    Example:
-        Configure simple script with validation:
+        Attributes:
+            name: Unique script identifier using kebab-case naming convention.
+            description: Human-readable description of script purpose and functionality.
+            category: Script category for organization (e.g., "automation", "maintenance").
+            version: Semantic version string for script versioning and compatibility.
+            requires_confirmation: Whether script requires user confirmation before execution.
+            dry_run_supported: Whether script supports dry-run mode for safe testing.
 
-        >>> def process_data() -> FlextResult[str]:
-        ...     return FlextResult[None].ok("processed")
-        >>>
-        >>> def validate_environment() -> FlextResult[None]:
-        ...     return FlextResult[None].ok(None)
-        >>>
-        >>> config = ScriptConfig(
-        ...     name="data-processor",
-        ...     description="Simple data processing script",
-        ...     category="automation",
-        ...     main_func=process_data,
-        ...     validate_func=validate_environment,
-        ... )
+        Example:
+            Create script metadata with validation:
 
-    Note:
-        Uses generic type parameters to ensure type safety for the
-        main function signature and parameter handling.
+            >>> metadata = ScriptMetadata(
+            ...     name="data-processor",
+            ...     description="Process FLEXT data with validation",
+            ...     category="data-operations",
+            ...     version="2.1.0",
+            ...     requires_confirmation=True,
+            ... )
+            >>> validation = metadata.validate_business_rules()
+            >>> if validation.success:
+            ...     print(f"Script: {metadata.name} v{metadata.version}")
 
-    """
+        Note:
+            Uses flext-core value object patterns for immutability and
+            comprehensive business rule validation.
 
-    name: str
-    description: str
-    category: str
-    main_func: ScriptMainFunc
-    setup_func: Callable[[], FlextResult[None]] | None = None
-    validate_func: Callable[[], FlextResult[None]] | None = None
+        """
 
+        name: str
+        description: str
+        category: str
+        version: str = "1.0.0"
+        requires_confirmation: bool = False
+        dry_run_supported: bool = True
 
-def create_simple_script(
-    config: ScriptConfig,
-) -> type[FlextScript]:
-    """Create enterprise-grade script class from configuration using factory pattern.
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Validate script metadata business rules."""
+            if not self.name.strip():
+                return FlextResult[None].fail("Script name cannot be empty")
 
-    Generates a complete FlextScript subclass with integrated lifecycle management,
-    error handling, and observability from a simple configuration object. This
-    factory pattern enables rapid script development while maintaining enterprise
-    standards and consistency across the FLEXT ecosystem.
+            if not self.description.strip():
+                return FlextResult[None].fail("Script description cannot be empty")
 
-    The generated script class includes comprehensive validation, setup, execution,
-    and cleanup phases with proper error handling via FlextResult patterns and
-    full integration with FLEXT infrastructure components.
+            if not self.category.strip():
+                return FlextResult[None].fail("Script category cannot be empty")
 
-    Args:
-        config: Complete script configuration including metadata, main function,
-               and optional lifecycle hooks for validation and setup.
-
-    Returns:
-        Fully configured FlextScript subclass ready for instantiation and
-        execution with enterprise-grade capabilities and infrastructure integration.
-
-    Example:
-        Create script from configuration:
-
-        >>> def process_data() -> FlextResult[str]:
-        ...     return FlextResult[None].ok("Data processed successfully")
-        >>>
-        >>> def validate_environment() -> FlextResult[None]:
-        ...     # Validate prerequisites
-        ...     return FlextResult[None].ok(None)
-        >>>
-        >>> script_config = ScriptConfig(
-        ...     name="data-processor",
-        ...     description="Process enterprise data with validation",
-        ...     category="data-operations",
-        ...     main_func=process_data,
-        ...     validate_func=validate_environment,
-        ... )
-        >>>
-        >>> ProcessorScript = create_simple_script(script_config)
-        >>> script_instance = ProcessorScript()
-        >>> exit_code = script_instance.run()
-
-    Note:
-        Uses generic type parameters to ensure type safety for function
-        signatures and maintains compatibility with enterprise patterns.
-
-    """
-
-    class SimpleScript(FlextScript):
-        @property
-        def metadata(self) -> ScriptMetadata:
-            return ScriptMetadata(
-                name=config.name,
-                description=config.description,
-                category=config.category,
-            )
-
-        def validate_preconditions(self) -> FlextResult[None]:
-            if config.validate_func:
-                return config.validate_func()
             return FlextResult[None].ok(None)
 
-        def setup(self) -> FlextResult[None]:
-            if config.setup_func:
-                return config.setup_func()
-            return FlextResult[None].ok(None)
+    @dataclass
+    class ScriptConfig:
+        """Configuration model for simple script creation and factory patterns.
 
-        def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
-            try:
-                # Use runtime inspection for dynamic function calling
-                sig = inspect.signature(config.main_func)
-                if sig.parameters:
-                    # Function expects parameters, pass filtered kwargs that match signature
-                    valid_kwargs = {
-                        k: v
-                        for k, v in kwargs.items()
-                        if k in sig.parameters
-                        or any(p.kind == p.VAR_KEYWORD for p in sig.parameters.values())
-                    }
-                    result = config.main_func(**valid_kwargs)
-                else:
-                    # Function expects no parameters
-                    result = config.main_func()
-                return (
-                    result
-                    if isinstance(result, FlextResult)
-                    else FlextResult[object].ok(result)
+        Encapsulates all configuration required for creating simple FLEXT scripts
+        through the factory pattern. Provides type-safe configuration with proper
+        function signatures and optional lifecycle hooks for streamlined script
+        development.
+
+        This configuration enables rapid script creation while maintaining enterprise
+        standards and integration with the FLEXT ecosystem infrastructure.
+
+        Attributes:
+            name: Unique script identifier for the generated script.
+            description: Human-readable description of script functionality.
+            category: Script category for organization and classification.
+            main_func: Primary script logic function with proper type parameters.
+            setup_func: Optional setup function for pre-execution initialization.
+            validate_func: Optional validation function for precondition checking.
+
+        Example:
+            Configure simple script with validation:
+
+            >>> def process_data() -> FlextResult[str]:
+            ...     return FlextResult[None].ok("processed")
+            >>>
+            >>> def validate_environment() -> FlextResult[None]:
+            ...     return FlextResult[None].ok(None)
+            >>>
+            >>> config = ScriptConfig(
+            ...     name="data-processor",
+            ...     description="Simple data processing script",
+            ...     category="automation",
+            ...     main_func=process_data,
+            ...     validate_func=validate_environment,
+            ... )
+
+        Note:
+            Uses generic type parameters to ensure type safety for the
+            main function signature and parameter handling.
+
+        """
+
+        name: str
+        description: str
+        category: str
+        main_func: FlextToolsScript.ScriptMainFunc
+        setup_func: Callable[[], FlextResult[None]] | None = None
+        validate_func: Callable[[], FlextResult[None]] | None = None
+
+    @staticmethod
+    def create_simple_script(
+        config: FlextToolsScript.ScriptConfig,
+    ) -> type[FlextToolsScript]:
+        """Create enterprise-grade script class from configuration using factory pattern.
+
+        Generates a complete FlextToolsScript subclass with integrated lifecycle management,
+        error handling, and observability from a simple configuration object. This
+        factory pattern enables rapid script development while maintaining enterprise
+        standards and consistency across the FLEXT ecosystem.
+
+        The generated script class includes comprehensive validation, setup, execution,
+        and cleanup phases with proper error handling via FlextResult patterns and
+        full integration with FLEXT infrastructure components.
+
+        Args:
+            config: Complete script configuration including metadata, main function,
+                   and optional lifecycle hooks for validation and setup.
+
+        Returns:
+            Fully configured FlextToolsScript subclass ready for instantiation and
+            execution with enterprise-grade capabilities and infrastructure integration.
+
+        Example:
+            Create script from configuration:
+
+            >>> def process_data() -> FlextResult[str]:
+            ...     return FlextResult[None].ok("Data processed successfully")
+            >>>
+            >>> def validate_environment() -> FlextResult[None]:
+            ...     # Validate prerequisites
+            ...     return FlextResult[None].ok(None)
+            >>>
+            >>> config = FlextToolsScript.ScriptConfig(
+            ...     name="data-processor",
+            ...     description="Process enterprise data",
+            ...     category="automation",
+            ...     main_func=process_data,
+            ...     validate_func=validate_environment,
+            ... )
+            >>>
+            >>> SimpleScript = FlextToolsScript.create_simple_script(config)
+            >>> script = SimpleScript()
+            >>> result = script.run()
+
+        Note:
+            Generated scripts inherit full FlextToolsScript capabilities including
+            comprehensive lifecycle management, error handling, and infrastructure integration.
+
+        """
+
+        class SimpleScript(FlextToolsScript):
+            @property
+            def metadata(self) -> FlextToolsScript.ScriptMetadata:
+                return FlextToolsScript.ScriptMetadata(
+                    name=config.name,
+                    description=config.description,
+                    category=config.category,
                 )
-            except TypeError as e:
-                return FlextResult[object].fail(f"Function signature mismatch: {e}")
 
-        def cleanup(self) -> FlextResult[None]:
-            return FlextResult[None].ok(None)
+            def validate_preconditions(self) -> FlextResult[None]:
+                if config.validate_func:
+                    return config.validate_func()
+                return FlextResult[None].ok(None)
 
-    return SimpleScript
+            def setup(self) -> FlextResult[None]:
+                if config.setup_func:
+                    return config.setup_func()
+                return FlextResult[None].ok(None)
+
+            def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+                try:
+                    # Use runtime inspection for dynamic function calling
+                    sig = inspect.signature(config.main_func)
+                    if sig.parameters:
+                        # Function expects parameters, pass filtered kwargs that match signature
+                        valid_kwargs = {
+                            k: v
+                            for k, v in kwargs.items()
+                            if k in sig.parameters
+                            or any(p.kind == p.VAR_KEYWORD for p in sig.parameters.values())
+                        }
+                        result = config.main_func(**valid_kwargs)
+                    else:
+                        # Function expects no parameters
+                        result = config.main_func()
+                    return (
+                        result
+                        if isinstance(result, FlextResult)
+                        else FlextResult[object].ok(result)
+                    )
+                except TypeError as e:
+                    return FlextResult[object].fail(f"Function signature mismatch: {e}")
+
+            def cleanup(self) -> FlextResult[None]:
+                return FlextResult[None].ok(None)
+
+        return SimpleScript
+
+
+# Duplicate classes removed - now using unified FlextToolsScript class
+# All functionality preserved in FlextToolsScript.ScriptConfig nested class
+
+
+# Legacy compatibility exports for existing code
+ScriptMetadata = FlextToolsScript.ScriptMetadata
+ScriptMainFunc = FlextToolsScript.ScriptMainFunc
+ScriptConfig = FlextToolsScript.ScriptConfig
+create_simple_script = FlextToolsScript.create_simple_script
+
+# Backward compatibility alias
+FlextScript = FlextToolsScript

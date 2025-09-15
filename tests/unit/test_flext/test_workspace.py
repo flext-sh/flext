@@ -53,9 +53,9 @@ class TestAdvancedWorkspaceOperations:
 
     def test_workspace_status_enum(self) -> None:
         """Test workspace status enumeration."""
-        assert WorkspaceStatus.INITIALIZING == "initializing"
-        assert WorkspaceStatus.READY == "ready"
-        assert WorkspaceStatus.ERROR == "error"
+        assert WorkspaceStatus.INITIALIZING.value == "initializing"
+        assert WorkspaceStatus.READY.value == "ready"
+        assert WorkspaceStatus.ERROR.value == "error"
 
     def test_workspace_info_model(self) -> None:
         """Test workspace info Pydantic model."""

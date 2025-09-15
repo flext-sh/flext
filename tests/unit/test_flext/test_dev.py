@@ -60,19 +60,19 @@ class TestAdvancedDevOperations:
 
     def test_operation_status_enum(self) -> None:
         """Test operation status enumeration."""
-        assert OperationStatus.PENDING == "pending"
-        assert OperationStatus.RUNNING == "running"
-        assert OperationStatus.SUCCESS == "success"
-        assert OperationStatus.FAILED == "failed"
-        assert OperationStatus.CANCELLED == "cancelled"
+        assert OperationStatus.PENDING.value == "pending"
+        assert OperationStatus.RUNNING.value == "running"
+        assert OperationStatus.SUCCESS.value == "success"
+        assert OperationStatus.FAILED.value == "failed"
+        assert OperationStatus.CANCELLED.value == "cancelled"
 
     def test_operation_type_enum(self) -> None:
         """Test operation type enumeration."""
-        assert OperationType.TEST == "test"
-        assert OperationType.LINT == "lint"
-        assert OperationType.FORMAT == "format"
-        assert OperationType.BUILD == "build"
-        assert OperationType.SECURITY == "security"
+        assert OperationType.TEST.value == "test"
+        assert OperationType.LINT.value == "lint"
+        assert OperationType.FORMAT.value == "format"
+        assert OperationType.BUILD.value == "build"
+        assert OperationType.SECURITY.value == "security"
 
     def test_project_type_enum(self) -> None:
         """Test project type enumeration."""

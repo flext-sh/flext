@@ -58,6 +58,7 @@ from .handlers import (
 
 # Quality gateway - explicit imports
 from .quality_gateway import (
+    FlextToolsQualityGateway,
     QualityCheckConfig,
     QualityGateway,
     all_quality_checks_passed,
@@ -66,7 +67,8 @@ from .quality_gateway import (
 
 # Script base - explicit imports
 from .script_base import (
-    FlextScript,
+    FlextScript,  # Backward compatibility
+    FlextToolsScript,
     ScriptMetadata,
 )
 
@@ -88,7 +90,6 @@ from .workspace import (
 # Workspace CLI - explicit imports
 from .workspace_cli import (
     FlextCliApi,
-    FlextToolsWorkspaceCLIService,
     WorkspaceCLI,
 )
 
@@ -112,6 +113,8 @@ __all__: FlextTypes.Core.StringList = [
     "FlextScript",
     "FlextToolsCLI",
     "FlextToolsDevService",
+    "FlextToolsQualityGateway",
+    "FlextToolsScript",
     "FlextToolsWorkspaceCLIService",
     "FlextToolsWorkspaceService",
     "OracleE2ERunner",
