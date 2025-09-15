@@ -57,8 +57,6 @@ from pydantic import Field
 
 from .colors import Colors, print_colored
 
-logger = FlextLogger(__name__)
-
 
 class ConfigurationManager:
     """Enterprise configuration manager for FLEXT ecosystem coordination.
@@ -188,6 +186,7 @@ class ConfigurationManager:
                         to './config' if not specified.
 
         """
+        self._logger = FlextLogger(__name__)
         self.config_path = config_path or Path.cwd() / "config"
 
     def load_config(self) -> FlextResult["ConfigurationManager.Configuration"]:
@@ -219,7 +218,7 @@ class ConfigurationManager:
         """
         try:
             print_colored("📋 Loading configuration...", Colors.BLUE)
-            logger.info(
+            self._logger.info(
                 "Loading configuration from path",
                 extra={"config_path": str(self.config_path)},
             )
@@ -233,11 +232,11 @@ class ConfigurationManager:
             )
 
             print_colored("✅ Configuration loaded successfully", Colors.GREEN)
-            logger.info("Configuration loaded successfully")
+            self._logger.info("Configuration loaded successfully")
 
             return FlextResult["ConfigurationManager.Configuration"].ok(config)
 
         except Exception as e:
             error_msg = f"Failed to load configuration: {e}"
-            logger.exception(error_msg)
+            self._logger.exception(error_msg)
             return FlextResult["ConfigurationManager.Configuration"].fail(error_msg)

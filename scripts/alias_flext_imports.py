@@ -23,7 +23,7 @@ from flext_tools.quality_gateway import (
     get_quality_failure_summary,
     get_quality_issues,
 )
-from flext_tools.rollback import ConfirmationMode, RollbackManager
+from flext_tools.rollback import RollbackManager
 
 NAME_MAP: FlextTypes.Core.Headers = {
     "FlextModels": "M",
@@ -480,7 +480,7 @@ def main(argv: Iterable[str] | None = None) -> int:
                     rb = RollbackManager(backup_dir=backup_mgr.backup_dir)
                     rb.rollback_session(
                         backup_mgr.session_id,
-                        confirmation_mode=ConfirmationMode.AUTO_CONFIRM,
+                        confirmation_mode=RollbackManager.ConfirmationMode.AUTO_CONFIRM,
                     )
                     print("Rollback completed")
                 except Exception as e:
@@ -500,7 +500,7 @@ def main(argv: Iterable[str] | None = None) -> int:
                     rb = RollbackManager(backup_dir=backup_mgr.backup_dir)
                     rb.rollback_session(
                         backup_mgr.session_id,
-                        confirmation_mode=ConfirmationMode.AUTO_CONFIRM,
+                        confirmation_mode=RollbackManager.ConfirmationMode.AUTO_CONFIRM,
                     )
                     print("Rollback completed")
                 except Exception as e:

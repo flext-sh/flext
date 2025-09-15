@@ -156,18 +156,21 @@ class TestNestedCommandHandlers:
         """Test main commands test execution."""
         main_handler = cli_service.create_main_handler()
 
-        with (
-            patch(
-                "flext.cli.FlextControlPanelCli._QualityGateway.run_quality_checks_safe"
-            ) as mock_gateway,
-            patch("flext.cli.all_quality_checks_passed", return_value=True),
-        ):
-            mock_gateway.return_value = FlextResult.ok(
-                {
-                    "tests_passed": True,
-                    "coverage_passed": True,
-                }
-            )
+        with patch(
+            "flext.cli.FlextControlPanelCli._QualityGateway.run_quality_checks_safe"
+        ) as mock_gateway:
+            # Create a mock Result object that matches the _QualityGateway implementation
+            class MockResult:
+                def __init__(self) -> None:
+                    self.success = True
+                    self.value = {
+                        "success": True,
+                        "tests_passed": True,
+                        "coverage_passed": True,
+                    }
+                    self.error = None
+
+            mock_gateway.return_value = MockResult()
 
             result = main_handler.test_command(coverage=True, parallel=False)
 
@@ -470,12 +473,9 @@ class TestErrorHandling:
         cli_service = create_cli()
         main_handler = cli_service.create_main_handler()
 
-        with (
-            patch("flext.cli.all_quality_checks_passed", return_value=False),
-            patch(
-                "flext.cli.FlextControlPanelCli._QualityGateway.run_quality_checks_safe"
-            ) as mock_gateway,
-        ):
+        with patch(
+            "flext.cli.FlextControlPanelCli._QualityGateway.run_quality_checks_safe"
+        ) as mock_gateway:
             # Mock quality gateway to return success but with failed tests
             mock_gateway.return_value = FlextResult.ok(
                 {

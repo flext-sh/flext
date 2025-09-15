@@ -330,7 +330,7 @@ class TransitiveDependencyResolver:
             List of PathDependency objects with resolved paths and metadata
 
         """
-        path_deps: list[self.PathDependency] = []
+        path_deps: list[TransitiveDependencyResolver.PathDependency] = []
 
         poetry_section = self._get_poetry_section(data)
         if not poetry_section:
@@ -364,7 +364,7 @@ class TransitiveDependencyResolver:
         self, poetry_section: FlextTypes.Core.Dict, project_path: Path
     ) -> list[TransitiveDependencyResolver.PathDependency]:
         """Extract path dependencies from main dependencies section."""
-        path_deps: list[self.PathDependency] = []
+        path_deps: list[TransitiveDependencyResolver.PathDependency] = []
         poetry_deps: object = poetry_section.get("dependencies", {})
         if isinstance(poetry_deps, dict):
             path_deps.extend(self._process_dependency_dict(poetry_deps, project_path))
@@ -374,7 +374,7 @@ class TransitiveDependencyResolver:
         self, poetry_section: FlextTypes.Core.Dict, project_path: Path
     ) -> list[TransitiveDependencyResolver.PathDependency]:
         """Extract path dependencies from dependency groups."""
-        path_deps: list[self.PathDependency] = []
+        path_deps: list[TransitiveDependencyResolver.PathDependency] = []
         groups: object = poetry_section.get("group", {})
         if isinstance(groups, dict):
             for group_data in groups.values():
@@ -390,7 +390,7 @@ class TransitiveDependencyResolver:
         self, deps: FlextTypes.Core.Dict, project_path: Path
     ) -> list[TransitiveDependencyResolver.PathDependency]:
         """Process a dictionary of dependencies and extract path dependencies."""
-        path_deps: list[self.PathDependency] = []
+        path_deps: list[TransitiveDependencyResolver.PathDependency] = []
         for dep_name_raw, dep_spec_raw in deps.items():
             dep_name: str = str(dep_name_raw)
             dep_spec: object = dep_spec_raw
