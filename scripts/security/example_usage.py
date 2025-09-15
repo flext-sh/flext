@@ -71,7 +71,20 @@ def create_security_scanner(
 
     """
     config = ScanConfig(target_paths, include_dependencies=not exclude_dependencies)
-    return AntipatternScanner(config)
+    scanner = AntipatternScanner(config)
+
+    # Configure scanner based on parameters
+    if output_format == "json":
+        scanner.set_output_format("json")
+    elif output_format == "detailed":
+        scanner.set_output_format("detailed")
+    else:
+        scanner.set_output_format("summary")
+
+    # Set risk threshold
+    scanner.set_risk_threshold(risk_threshold)
+
+    return scanner
 
 
 def example_basic_scan() -> None:
