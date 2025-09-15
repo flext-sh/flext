@@ -76,12 +76,14 @@ class CodeDuplicatesAnalyzer(FlextScript):
                 # Print summary
                 result_data = analysis_result.data
                 if isinstance(result_data, dict):
-                    duplicates_found = result_data.get("duplicates_found", 0)
-                    if duplicates_found > 0:
-                        print_colored(
-                            f"🚨 Found {duplicates_found} duplicate code blocks",
-                            Colors.YELLOW,
-                        )
+                    duplicates_found_raw = result_data.get("duplicates_found", 0)
+                    if isinstance(duplicates_found_raw, int):
+                        duplicates_found: int = duplicates_found_raw
+                        if duplicates_found > 0:
+                            print_colored(
+                                f"🚨 Found {duplicates_found} duplicate code blocks",
+                                Colors.YELLOW,
+                            )
                     else:
                         print_colored(
                             "🎉 No significant code duplicates found!",

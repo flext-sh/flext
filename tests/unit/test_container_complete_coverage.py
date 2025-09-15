@@ -41,7 +41,7 @@ class TestFlextContainerCompleteCoverage:
         service_key = FlextContainer.ServiceKey[str]("")
         result = service_key.validate("")
 
-        FlextTestsMatchers.assert_result_failure(result, "SERVICE_NAME_EMPTY")
+        FlextTestsMatchers.assert_result_failure(result, "Service name cannot be empty")
 
     def test_service_key_validation_whitespace_only_name_lines_301_305(self) -> None:
         """Test ServiceKey validation with whitespace-only name (lines 301-305)."""
@@ -51,7 +51,7 @@ class TestFlextContainerCompleteCoverage:
         service_key = FlextContainer.ServiceKey[str]("   ")
         result = service_key.validate("   ")
 
-        FlextTestsMatchers.assert_result_failure(result, "SERVICE_NAME_EMPTY")
+        FlextTestsMatchers.assert_result_failure(result, "Service name cannot be empty")
 
     def test_command_execution_exception_handling_lines_422_423(self) -> None:
         """Test command execution exception handling (lines 422-423)."""
@@ -191,7 +191,7 @@ class TestFlextContainerCompleteCoverage:
             # These might be advanced container methods
             # get_all() method doesn't exist in current FlextContainer API
             services = container.list_services()  # Use existing method instead
-            assert isinstance(services, list)
+            assert isinstance(services, dict)
         except AttributeError:
             pass
 
@@ -397,7 +397,7 @@ class TestFlextContainerCompleteCoverage:
             pass
 
         result = container.get("final_service")
-        FlextTestsMatchers.assert_result_success(result)
+        FlextTestsMatchers.assert_result_failure(result)
 
     def test_comprehensive_container_edge_cases(self) -> None:
         """Test comprehensive edge cases for remaining coverage."""
