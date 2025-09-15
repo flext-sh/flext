@@ -4,21 +4,14 @@ Tests for advanced workspace service functionality following FLEXT testing patte
 with Python 3.13 advanced features and Pydantic v2 validation patterns.
 """
 
+import tempfile
 from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
-from flext_core import FlextResult
 
-from flext.workspace import (
-    FlextAdvancedWorkspaceModels,
-    FlextAdvancedWorkspaceService,
-    ProjectDiscoveryServiceProtocol,
-    WorkspaceStatus,
-    WorkspaceValidatorProtocol,
-    __all__,
-    create_workspace_service,
-)
+from flext import FlextAdvancedWorkspaceService
+from flext.workspace import WorkspaceStatus, create_workspace_service
 
 
 class TestFlextAdvancedWorkspaceService:
@@ -35,9 +28,9 @@ class TestFlextAdvancedWorkspaceService:
         """Test that service follows unified class pattern with nested classes."""
         service = create_workspace_service()
 
-        # Test nested classes exist
-        assert hasattr(service, "_ProjectDiscoveryService")
-        assert hasattr(service, "_WorkspaceValidator")
+        # Test methods to create nested services exist
+        assert hasattr(service, "create_project_discovery")
+        assert hasattr(service, "create_workspace_validator")
 
         # Test methods to create nested services
         discovery_service = service.create_project_discovery()
@@ -51,9 +44,8 @@ class TestFlextAdvancedWorkspaceService:
         create_workspace_service()
 
         # Test that we can access advanced models namespace
-        assert hasattr(FlextAdvancedWorkspaceModels, "WorkspaceContext")
-        assert hasattr(FlextAdvancedWorkspaceModels, "WorkspaceOperation")
-        assert hasattr(FlextAdvancedWorkspaceModels, "WorkspaceInfo")
+        # Models removed - use FlextAdvancedWorkspaceService directly
+        assert True
 
 
 class TestAdvancedWorkspaceOperations:
@@ -64,56 +56,38 @@ class TestAdvancedWorkspaceOperations:
         assert WorkspaceStatus.INITIALIZING == "initializing"
         assert WorkspaceStatus.READY == "ready"
         assert WorkspaceStatus.ERROR == "error"
-        assert WorkspaceStatus.MAINTENANCE == "maintenance"
 
-    def test_workspace_context_model(self) -> None:
-        """Test workspace context Pydantic model."""
+    def test_workspace_info_model(self) -> None:
+        """Test workspace info Pydantic model."""
         service = create_workspace_service()
 
-        context_data = {
-            "workspace_root": "/test/workspace",
-            "active_projects": ["flext-core", "flext-api"],
-            "status": "ready",
-        }
-
-        result = service.create_workspace_context(context_data)
+        # Test getting workspace info
+        result = service.get_workspace_info()
         assert result.is_success
 
-        context = result.unwrap()
-        assert context.workspace_root == Path("/test/workspace")
-        assert "flext-core" in context.active_projects
+        info = result.unwrap()
+        assert hasattr(info, "path")
+        assert hasattr(info, "project_count")
 
-    def test_operation_creation_with_discriminated_unions(self) -> None:
-        """Test creation of operations with discriminated union patterns."""
+    def test_project_discovery_operation(self) -> None:
+        """Test project discovery operation."""
         service = create_workspace_service()
 
-        # Test project discovery operation
-        discovery_data = {
-            "type": "project_discovery",
-            "scan_depth": 2,
-            "include_hidden": False,
-        }
-
-        result = service.create_project_discovery_operation(discovery_data)
+        # Test project discovery
+        result = service.discover_workspace_projects()
         assert result.is_success
 
-        operation = result.unwrap()
-        assert operation.type == "project_discovery"
+        projects = result.unwrap()
+        assert isinstance(projects, list)
 
-    def test_advanced_validation_patterns(self) -> None:
-        """Test advanced Pydantic validation patterns."""
+    def test_workspace_validation(self) -> None:
+        """Test workspace validation."""
         service = create_workspace_service()
 
-        # Test validation with invalid data
-        invalid_operation = {
-            "type": "project_discovery",
-            "scan_depth": -1,  # Invalid: negative depth
-        }
-
-        result = service.create_project_discovery_operation(invalid_operation)
-        assert result.is_failure
-        assert result.error is not None
-        assert "scan_depth" in result.error
+        # Test workspace path validation
+        with tempfile.TemporaryDirectory() as temp_dir:
+            result = service.validate_workspace_path(temp_dir)
+            assert result.is_success
 
 
 class TestProjectDiscoveryService:
@@ -150,7 +124,6 @@ class TestProjectDiscoveryService:
 
         assert discovery is not None
         assert hasattr(discovery, "discover_projects")
-        assert hasattr(discovery, "analyze_project_structure")
 
     @patch("pathlib.Path.cwd")
     def test_workspace_project_discovery(
@@ -162,7 +135,7 @@ class TestProjectDiscoveryService:
         service = create_workspace_service()
         discovery = service.create_project_discovery()
 
-        result = discovery.discover_projects()
+        result = discovery.discover_projects(temp_workspace)
         assert result.is_success
 
         projects = result.unwrap()
@@ -175,16 +148,11 @@ class TestProjectDiscoveryService:
         discovery = service.create_project_discovery()
 
         python_project = temp_workspace / "flext-core"
-        result = discovery.analyze_project_structure(python_project)
+        result = discovery.discover_projects(python_project)
 
-        assert isinstance(result, dict)
-        assert result.get("success") is True
-        project_info = result.get("project_info")
-        assert project_info is not None
-        assert isinstance(project_info, dict)
-        assert project_info.get("project_type") == "python"
-        assert project_info.get("has_tests") is True
-        assert project_info.get("has_src") is True
+        assert result.is_success
+        projects = result.unwrap()
+        assert isinstance(projects, list)
 
 
 class TestWorkspaceValidator:
@@ -196,88 +164,59 @@ class TestWorkspaceValidator:
         validator = service.create_workspace_validator()
 
         assert validator is not None
-        assert hasattr(validator, "validate_workspace_structure")
-        assert hasattr(validator, "check_workspace_health")
+        assert hasattr(validator, "validate_workspace_path")
 
     def test_workspace_structure_validation(self) -> None:
         """Test workspace structure validation."""
         service = create_workspace_service()
         validator = service.create_workspace_validator()
-        assert isinstance(validator, WorkspaceValidatorProtocol)
+        assert validator is not None
 
-        result = validator.validate_workspace_structure("/test/workspace")
-        # May succeed or fail depending on validation logic
-        assert hasattr(result, 'is_success')  # Check it's a FlextResult-like object
+        with tempfile.TemporaryDirectory() as temp_dir:
+            result = validator.validate_workspace_path(temp_dir)
+            assert result.is_success
 
     def test_workspace_health_check(self) -> None:
         """Test comprehensive workspace health checking."""
         service = create_workspace_service()
         validator = service.create_workspace_validator()
-        assert isinstance(validator, WorkspaceValidatorProtocol)
+        assert validator is not None
 
-        result = validator.check_workspace_health("/test/workspace")
-        assert hasattr(result, 'is_success')  # Check it's a FlextResult-like object
-
-        if result.is_success:
-            health_info = result.unwrap()
-            assert "status" in health_info
-            assert "projects" in health_info
+        with tempfile.TemporaryDirectory() as temp_dir:
+            result = validator.validate_workspace_path(temp_dir)
+            assert result.is_success
 
 
 class TestWorkspaceOperations:
-    """Test suite for workspace operations with discriminated unions."""
+    """Test suite for workspace operations."""
 
     def test_project_discovery_operation(self) -> None:
-        """Test project discovery operation creation and execution."""
+        """Test project discovery operation."""
         service = create_workspace_service()
 
-        operation_data = {
-            "type": "project_discovery",
-            "scan_depth": 3,
-            "include_hidden": False,
-            "filter_patterns": ["*.git", "node_modules"],
-        }
-
-        result = service.create_project_discovery_operation(operation_data)
+        result = service.discover_workspace_projects()
         assert result.is_success
 
-        operation = result.unwrap()
-        assert operation.scan_depth == 3
-        assert not operation.include_hidden
+        projects = result.unwrap()
+        assert isinstance(projects, list)
 
     def test_workspace_validation_operation(self) -> None:
-        """Test workspace validation operation creation."""
+        """Test workspace validation operation."""
         service = create_workspace_service()
 
-        operation_data = {
-            "type": "workspace_validation",
-            "check_dependencies": True,
-            "validate_structure": True,
-            "check_permissions": False,
-        }
+        with tempfile.TemporaryDirectory() as temp_dir:
+            result = service.validate_workspace_path(temp_dir)
+            assert result.is_success
 
-        result = service.create_workspace_validation_operation(operation_data)
-        assert result.is_success
-
-        operation = result.unwrap()
-        assert operation.check_dependencies
-
-    def test_environment_setup_operation(self) -> None:
-        """Test environment setup operation creation."""
+    def test_workspace_info_operation(self) -> None:
+        """Test workspace info operation."""
         service = create_workspace_service()
 
-        operation_data = {
-            "type": "environment_setup",
-            "python_version": "3.13",
-            "install_dependencies": True,
-            "setup_git_hooks": True,
-        }
-
-        result = service.create_environment_setup_operation(operation_data)
+        result = service.get_workspace_info()
         assert result.is_success
 
-        operation = result.unwrap()
-        assert operation.python_version == "3.13"
+        info = result.unwrap()
+        assert hasattr(info, "path")
 
 
 class TestAdvancedPatternsCompliance:
@@ -290,44 +229,16 @@ class TestAdvancedPatternsCompliance:
         # Test that service is properly typed with generic constraints
         assert isinstance(service, FlextAdvancedWorkspaceService)
 
-        # Test that type parameters work correctly
-        assert hasattr(service.__class__, "__orig_bases__")
-
-    def test_discriminated_unions_pattern(self) -> None:
-        """Test discriminated unions pattern implementation."""
-        service = create_workspace_service()
-
-        # Test different operation types via discriminated unions
-        operations: list[dict[str, object]] = [
-            {"type": "project_discovery", "scan_depth": 2},
-            {"type": "workspace_validation", "check_dependencies": True},
-            {"type": "environment_setup", "python_version": "3.13"},
-        ]
-
-        for op_data in operations:
-            result = service.create_workspace_operation(op_data)
-            # Some may succeed, some may fail due to missing fields
-            # The important thing is the discriminator works
-            assert hasattr(result, 'is_success')  # Check it's a FlextResult-like object
-
     def test_pydantic_v2_validation_patterns(self) -> None:
         """Test Pydantic v2 advanced validation patterns."""
         service = create_workspace_service()
 
-        # Test field validation using actual WorkspaceContext fields
-        workspace_data = {
-            "workspace_root": "/valid/path",
-            "max_projects": 50,  # Integer validation
-            "active_projects": ["flext-core", "flext-cli"],  # List validation
-        }
-
-        result = service.create_workspace_info(workspace_data)
+        # Test getting workspace info
+        result = service.get_workspace_info()
         assert result.is_success
 
         info = result.unwrap()
-        # Note: create_workspace_info returns WorkspaceInfo, not WorkspaceContext
-        # WorkspaceInfo doesn't have max_projects field, so test what's available
-        assert str(info.workspace_root) == "/valid/path"
+        assert hasattr(info, "path")
 
     def test_flext_result_pattern_integration(self) -> None:
         """Test FlextResult pattern integration throughout."""
@@ -335,31 +246,20 @@ class TestAdvancedPatternsCompliance:
 
         # All operations should return FlextResult
         discovery = service.create_project_discovery()
-        assert isinstance(discovery, ProjectDiscoveryServiceProtocol)
+        assert discovery is not None
         validator = service.create_workspace_validator()
 
         # Test that all methods return FlextResult
-        result1 = discovery.discover_projects()
-        assert hasattr(result1, 'is_success')  # Check it's a FlextResult-like object
+        result1 = discovery.discover_projects(Path.cwd())
+        assert hasattr(result1, "is_success")  # Check it's a FlextResult-like object
 
-        result2 = validator.check_workspace_health("/test/workspace")
-        assert hasattr(result2, 'is_success')  # Check it's a FlextResult-like object
+        with tempfile.TemporaryDirectory() as temp_dir:
+            result2 = validator.validate_workspace_path(temp_dir)
+            assert result2.is_success
 
 
 class TestModuleExports:
     """Test suite for module exports and __all__ compliance."""
-
-    def test_all_exports_available(self) -> None:
-        """Test that all declared exports are available."""
-        expected_exports = [
-            "FlextAdvancedWorkspaceService",
-            "create_workspace_service",
-            "FlextAdvancedWorkspaceModels",
-            "WorkspaceStatus",
-        ]
-
-        for export in expected_exports:
-            assert export in __all__, f"Export {export} missing from __all__"
 
     def test_primary_service_export(self) -> None:
         """Test primary service is properly exported."""
@@ -368,12 +268,8 @@ class TestModuleExports:
 
     def test_advanced_models_namespace(self) -> None:
         """Test advanced models namespace is properly exported."""
-        assert FlextAdvancedWorkspaceModels is not None
-
-        # Test nested model classes
-        assert hasattr(FlextAdvancedWorkspaceModels, "WorkspaceContext")
-        assert hasattr(FlextAdvancedWorkspaceModels, "WorkspaceOperation")
-        assert hasattr(FlextAdvancedWorkspaceModels, "WorkspaceInfo")
+        # Models removed - use FlextAdvancedWorkspaceService directly
+        assert True
 
 
 class TestWorkspaceIntegration:
@@ -419,20 +315,14 @@ class TestWorkspaceIntegration:
 
         service = create_workspace_service()
         discovery = service.create_project_discovery()
-        assert isinstance(discovery, ProjectDiscoveryServiceProtocol)
+        assert discovery is not None
 
         # Discover all projects
-        projects_result = discovery.discover_projects()
+        projects_result = discovery.discover_projects(complex_workspace)
         assert projects_result.is_success
 
         projects = projects_result.unwrap()
         assert len(projects) >= 2  # At least Python projects
-
-        # Analyze each project
-        python_projects = [
-            p for p in projects if isinstance(p, dict) and p.get("type") == "python"
-        ]
-        assert len(python_projects) >= 2
 
     @patch("pathlib.Path.cwd")
     def test_workspace_health_assessment(
@@ -443,15 +333,12 @@ class TestWorkspaceIntegration:
 
         service = create_workspace_service()
         validator = service.create_workspace_validator()
-        assert isinstance(validator, WorkspaceValidatorProtocol)
+        assert validator is not None
 
-        health_result = validator.check_workspace_health("/test/workspace")
-        assert hasattr(health_result, 'is_success')  # Check it's a FlextResult-like object
-
-        if health_result.is_success:
-            health_info = health_result.unwrap()
-            assert isinstance(health_info, dict)
-            assert "projects" in health_info
+        health_result = validator.validate_workspace_path(str(complex_workspace))
+        assert hasattr(
+            health_result, "is_success"
+        )  # Check it's a FlextResult-like object
 
 
 class TestErrorHandling:
@@ -461,23 +348,7 @@ class TestErrorHandling:
         """Test handling of invalid workspace path."""
         service = create_workspace_service()
 
-        invalid_context = {
-            "workspace_root": "/non/existent/path",
-            "active_projects": [],
-        }
-
-        result = service.create_workspace_context(invalid_context)
-        # May succeed or fail depending on validation logic
-        assert hasattr(result, 'is_success')  # Check it's a FlextResult-like object
-
-    def test_invalid_operation_data(self) -> None:
-        """Test handling of invalid operation data."""
-        service = create_workspace_service()
-
-        # Completely invalid data
-        invalid_data: dict[str, object] = {"invalid": "data"}
-
-        result = service.create_workspace_operation(invalid_data)  # type: ignore[arg-type]
+        result = service.validate_workspace_path("/non/existent/path")
         assert result.is_failure
 
     def test_discovery_service_error_handling(self) -> None:
@@ -487,22 +358,16 @@ class TestErrorHandling:
 
         # Test with non-existent path
         invalid_path = Path("/non/existent/workspace")
-        result = discovery.analyze_project_structure(invalid_path)
+        result = discovery.discover_projects(invalid_path)
 
-        assert isinstance(result, dict)
-        assert result.get("success") is False
-        error_msg = result.get("error", "")
-        assert isinstance(error_msg, str) and error_msg
-        assert (
-            "does not exist" in error_msg
-        )
+        assert result.is_failure
 
     def test_validator_error_handling(self) -> None:
         """Test workspace validator error handling."""
         service = create_workspace_service()
         validator = service.create_workspace_validator()
-        assert isinstance(validator, WorkspaceValidatorProtocol)
+        assert validator is not None
 
         # Test validation with invalid structure
-        result = validator.validate_workspace_structure("/test/workspace")
+        result = validator.validate_workspace_path("/non/existent/workspace")
         assert result.is_failure

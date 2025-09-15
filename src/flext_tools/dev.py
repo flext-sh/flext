@@ -15,11 +15,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import cast
-
 from flext_core import FlextDomainService, FlextResult, FlextTypes
 
-# Import flext dev classes directly - no lazy loading needed
 from flext.dev import FlextAdvancedDevToolsManager
 
 
@@ -27,11 +24,13 @@ from flext.dev import FlextAdvancedDevToolsManager
 class DevToolsManager:
     """Lazy wrapper for FlextAdvancedDevToolsManager to avoid circular imports."""
 
-    def __new__(
-        cls, *args: FlextTypes.Core.Dict, **kwargs: FlextTypes.Core.Dict
-    ) -> FlextAdvancedDevToolsManager:
-        """Create instance using FlextAdvancedDevToolsManager."""
-        return FlextAdvancedDevToolsManager(*args, **kwargs)
+    _manager: FlextAdvancedDevToolsManager
+
+    def __init__(self, **data: FlextTypes.Core.Dict) -> None:
+        """Initialize with FlextAdvancedDevToolsManager."""
+        # Lazy import to avoid circular dependency
+
+        self._manager = FlextAdvancedDevToolsManager(**data)
 
 
 # Facade class for legacy tools compatibility
@@ -46,7 +45,7 @@ class FlextToolsDevService(FlextDomainService[str]):
         # Lazy loading to avoid circular imports during class definition
         self._workspace_path = workspace_path
         self._kwargs = kwargs
-        self._dev_service = None
+        self._dev_service: object | None = None
 
     def _get_dev_service(self) -> object:
         """Get dev service instance."""
@@ -58,7 +57,7 @@ class FlextToolsDevService(FlextDomainService[str]):
             # Convert kwargs to proper types
             for key, value in self._kwargs.items():
                 init_data[key] = str(value) if value is not None else ""
-            self._dev_service = FlextAdvancedDevToolsManager(**cast(dict[str, object], init_data))
+            self._dev_service = FlextAdvancedDevToolsManager(_data=init_data)
         return self._dev_service
 
     def execute(self, _request: str = "") -> FlextResult[str]:
@@ -72,13 +71,13 @@ class FlextToolsDevService(FlextDomainService[str]):
 def create_dev_tools_manager(*args: object, **kwargs: object) -> object:
     """Create dev tools manager."""
     # Convert args and kwargs to proper Dict type
-    init_data: FlextTypes.Core.Dict = {}
+    init_data: dict[str, object] = {}
     for i, arg in enumerate(args):
         init_data[f"arg_{i}"] = str(arg) if arg is not None else ""
     for key, value in kwargs.items():
         init_data[key] = str(value) if value is not None else ""
 
-    return FlextAdvancedDevToolsManager(**cast(dict[str, object], init_data))
+    return FlextAdvancedDevToolsManager(_data=init_data)
 
 
 __all__ = [

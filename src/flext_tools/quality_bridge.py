@@ -47,10 +47,6 @@ from flext_quality import FlextQualityService
 logger = FlextLogger(__name__)
 
 
-class QualityServiceDelegationError(Exception):
-    """Error when delegation to flext-quality service fails."""
-
-
 class QualityBridge:
     """Integration bridge that delegates to the authoritative flext-quality service.
 
@@ -75,6 +71,9 @@ class QualityBridge:
       ...     print(f"Project quality score: {score}")
 
     """
+
+    class QualityServiceDelegationError(Exception):
+        """Error when delegation to flext-quality service fails."""
 
     def __init__(self, workspace_root: Path) -> None:
         """Initialize quality bridge with workspace integration configuration."""

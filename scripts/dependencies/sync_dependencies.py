@@ -18,7 +18,7 @@ from flext_core import FlextTypes
 from src.flext_tools import Colors, print_colored
 from src.flext_tools.conflicts import ConflictAnalyzer
 from src.flext_tools.discovery_base import DependencyDiscovery
-from src.flext_tools.observability import DetailedLogger
+from src.flext_tools.observability import FlextObservabilityService
 from src.flext_tools.poetry_operations import PoetryOperations
 from src.flext_tools.poetry_validator import PoetryValidator
 
@@ -260,7 +260,7 @@ def main() -> int:
         return 0
 
     # Inicializa sistema de logging detalhado
-    logger = DetailedLogger("sync_dependencies")
+    logger = FlextObservabilityService.DetailedLogger("sync_dependencies")
 
     try:
         logger.info(

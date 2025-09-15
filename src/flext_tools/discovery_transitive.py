@@ -77,46 +77,6 @@ from flext_core import FlextTypes
 from .colors import Colors, print_colored
 
 
-@dataclass
-class PathDependency:
-    """Represents a path-based dependency configuration.
-
-    Contains metadata for Poetry path dependencies including the dependency
-    name, file system path, and development mode flag for comprehensive
-    dependency graph analysis and resolution.
-
-    Attributes:
-      name: Dependency package name as specified in Poetry configuration
-      path: Resolved file system path to the dependency project
-      develop: Development mode flag indicating editable installation
-
-    """
-
-    name: str
-    path: Path
-    develop: bool = False
-
-
-@dataclass
-class TransitiveDependencies:
-    """Results of transitive dependency resolution analysis.
-
-    Contains complete dependency resolution results including direct dependencies,
-    transitive dependencies discovered through path dependency traversal, and
-    path dependency metadata for comprehensive dependency graph representation.
-
-    Attributes:
-      direct: Set of direct dependencies declared in the project
-      transitive: Set of transitive dependencies discovered through path resolution
-      path_dependencies: List of path-based dependencies with metadata
-
-    """
-
-    direct: set[str]
-    transitive: set[str]
-    path_dependencies: list[PathDependency]
-
-
 class TransitiveDependencyResolver:
     """Enterprise transitive dependency resolver for path-based dependency analysis.
 
@@ -171,16 +131,54 @@ class TransitiveDependencyResolver:
 
     """
 
+    @dataclass
+    class PathDependency:
+        """Represents a path-based dependency configuration.
+
+        Contains metadata for Poetry path dependencies including the dependency
+        name, file system path, and development mode flag for comprehensive
+        dependency graph analysis and resolution.
+
+        Attributes:
+          name: Dependency package name as specified in Poetry configuration
+          path: Resolved file system path to the dependency project
+          develop: Development mode flag indicating editable installation
+
+        """
+
+        name: str
+        path: Path
+        develop: bool = False
+
+    @dataclass
+    class TransitiveDependencies:
+        """Results of transitive dependency resolution analysis.
+
+        Contains complete dependency resolution results including direct dependencies,
+        transitive dependencies discovered through path dependency traversal, and
+        path dependency metadata for comprehensive dependency graph representation.
+
+        Attributes:
+          direct: Set of direct dependencies declared in the project
+          transitive: Set of transitive dependencies discovered through path resolution
+          path_dependencies: List of path-based dependencies with metadata
+
+        """
+
+        direct: set[str]
+        transitive: set[str]
+        path_dependencies: list[TransitiveDependencyResolver.PathDependency]
+
     def __init__(self) -> None:
         """Initialize resolver."""
-        self._cache: dict[str, TransitiveDependencies] = {}
+        self._cache: dict[str, TransitiveDependencyResolver.TransitiveDependencies] = {}
         self._resolving: set[str] = set()  # Prevent circular dependencies
 
     def resolve_transitive_dependencies(
         self,
         project_path: Path,
         max_depth: int = 3,
-    ) -> TransitiveDependencies:
+    ) -> TransitiveDependencyResolver.TransitiveDependencies:
         """Resolve transitive dependencies for a project through path dependency analysis.
 
         Performs comprehensive dependency resolution by traversing path dependencies
@@ -220,7 +218,7 @@ class TransitiveDependencyResolver:
                 f"  ⚠️ Circular dependency detected: {project_path.name}",
                 Colors.YELLOW,
             )
-            return TransitiveDependencies(set(), set(), [])
+            return self.TransitiveDependencies(set(), set(), [])
 
         self._resolving.add(project_key)
 
@@ -235,7 +233,7 @@ class TransitiveDependencyResolver:
         self,
         project_path: Path,
         depth: int,
-    ) -> TransitiveDependencies:
+    ) -> TransitiveDependencyResolver.TransitiveDependencies:
         """Resolve dependencies recursively with depth-limited traversal.
 
         Performs recursive dependency resolution through path dependency traversal
@@ -251,18 +249,18 @@ class TransitiveDependencyResolver:
 
         """
         if depth <= 0:
-            return TransitiveDependencies(set(), set(), [])
+            return self.TransitiveDependencies(set(), set(), [])
 
         pyproject_path = project_path / "pyproject.toml"
         if not pyproject_path.exists():
-            return TransitiveDependencies(set(), set(), [])
+            return self.TransitiveDependencies(set(), set(), [])
 
         try:
             with pyproject_path.open("rb") as f:
                 data = tomllib.load(f)
         except (OSError, tomllib.TOMLDecodeError) as e:
             print_colored(f"  ⚠️ Error reading {pyproject_path}: {e}", Colors.YELLOW)
-            return TransitiveDependencies(set(), set(), [])
+            return self.TransitiveDependencies(set(), set(), [])
 
         # Extract direct dependencies from project configuration
         direct_deps = self._extract_direct_dependencies(data)
@@ -281,7 +279,7 @@ class TransitiveDependencyResolver:
                 # Add transitive dependencies from path dependency
                 transitive_deps.update(child_result.transitive)
 
-        return TransitiveDependencies(
+        return self.TransitiveDependencies(
             direct=direct_deps,
             transitive=transitive_deps,
             path_dependencies=path_deps,
@@ -318,7 +316,7 @@ class TransitiveDependencyResolver:
         self,
         data: FlextTypes.Core.Dict,
         project_path: Path,
-    ) -> list[PathDependency]:
+    ) -> list[TransitiveDependencyResolver.PathDependency]:
         """Extract path dependencies from pyproject.toml configuration.
 
         Parses Poetry configuration to identify path-based dependencies including
@@ -332,7 +330,7 @@ class TransitiveDependencyResolver:
             List of PathDependency objects with resolved paths and metadata
 
         """
-        path_deps: list[PathDependency] = []
+        path_deps: list[self.PathDependency] = []
 
         poetry_section = self._get_poetry_section(data)
         if not poetry_section:
@@ -364,9 +362,9 @@ class TransitiveDependencyResolver:
 
     def _extract_main_path_dependencies(
         self, poetry_section: FlextTypes.Core.Dict, project_path: Path
-    ) -> list[PathDependency]:
+    ) -> list[TransitiveDependencyResolver.PathDependency]:
         """Extract path dependencies from main dependencies section."""
-        path_deps: list[PathDependency] = []
+        path_deps: list[self.PathDependency] = []
         poetry_deps: object = poetry_section.get("dependencies", {})
         if isinstance(poetry_deps, dict):
             path_deps.extend(self._process_dependency_dict(poetry_deps, project_path))
@@ -374,9 +372,9 @@ class TransitiveDependencyResolver:
 
     def _extract_group_path_dependencies(
         self, poetry_section: FlextTypes.Core.Dict, project_path: Path
-    ) -> list[PathDependency]:
+    ) -> list[TransitiveDependencyResolver.PathDependency]:
         """Extract path dependencies from dependency groups."""
-        path_deps: list[PathDependency] = []
+        path_deps: list[self.PathDependency] = []
         groups: object = poetry_section.get("group", {})
         if isinstance(groups, dict):
             for group_data in groups.values():
@@ -390,9 +388,9 @@ class TransitiveDependencyResolver:
 
     def _process_dependency_dict(
         self, deps: FlextTypes.Core.Dict, project_path: Path
-    ) -> list[PathDependency]:
+    ) -> list[TransitiveDependencyResolver.PathDependency]:
         """Process a dictionary of dependencies and extract path dependencies."""
-        path_deps: list[PathDependency] = []
+        path_deps: list[self.PathDependency] = []
         for dep_name_raw, dep_spec_raw in deps.items():
             dep_name: str = str(dep_name_raw)
             dep_spec: object = dep_spec_raw
@@ -401,7 +399,7 @@ class TransitiveDependencyResolver:
                 develop_raw: object = dep_spec.get("develop", False)
                 if isinstance(path_raw, str) and isinstance(develop_raw, bool):
                     path_deps.append(
-                        PathDependency(
+                        self.PathDependency(
                             dep_name, (project_path / path_raw).resolve(), develop_raw
                         )
                     )

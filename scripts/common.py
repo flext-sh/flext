@@ -27,20 +27,20 @@ def discover_projects(
     """
     try:
         # Use flext-core workspace discovery
-        workspace_service = FlextWorkspaceService(str(workspace_root))
-        result = workspace_service.discover_projects()
+        workspace_service = FlextWorkspaceService()
+        result = workspace_service.discover_workspace_projects(str(workspace_root))
 
         if result.is_failure:
             logger.error(f"Project discovery failed: {result.error}")
             return []
 
-        project_infos = result.value
+        project_infos = result.unwrap()
         project_paths = []
 
         for project_info in project_infos:
-            project_path = Path(project_info["path"])
+            project_path = Path(project_info.path)
             if project_path.exists() and (
-                projects_filter is None or project_info["name"] in projects_filter
+                projects_filter is None or project_info.name in projects_filter
             ):
                 project_paths.append(project_path)
 
@@ -55,8 +55,7 @@ def get_workspace_root() -> Path:
     """Get workspace root using flext-core discovery."""
     try:
         # Use current working directory as workspace root
-        workspace_service = FlextWorkspaceService()
-        return workspace_service._workspace_path
+        return Path.cwd()
     except Exception:
         logger.exception("Failed to discover workspace root")
         return Path.cwd()

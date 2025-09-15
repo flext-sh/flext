@@ -1,4 +1,4 @@
-"""FLEXT Pipeline Application Services - Data Pipeline Lifecycle Management.
+"""FLEXT Pipeline Application Services - Unified service for Data Pipeline Lifecycle Management.
 
 Provides comprehensive application services for managing data pipeline lifecycle
 operations within the FLEXT data integration platform. This module implements
@@ -27,10 +27,10 @@ Architecture:
 Example:
     Pipeline service usage for data integration workflows:
 
-    >>> from flext.application_pipeline import PipelineService
-    >>> from flext.application_pipeline import CreatePipelineCommand
+    >>> from flext_tools.pipeline import PipelineService
+    >>> from flext_tools.pipeline import CreatePipelineCommand
     >>> from flext_core import FlextContainer
-from flext_core import FlextTypes
+    >>> from flext_core import FlextTypes
     >>>
     >>> # Initialize pipeline service with dependency injection
     >>> container = FlextContainer()
@@ -95,106 +95,8 @@ logger = FlextLogger(__name__)
 MAX_PIPELINE_LIMIT = 100
 
 
-# Commands
-class CreatePipelineCommand(FlextModels.Value):
-    """Create pipeline command."""
-
-    name: str = Field(..., description="Pipeline name", max_length=100)
-
-    def validate_business_rules(self) -> FlextResult[None]:
-        """Validate pipeline creation business rules."""
-        if not self.name.strip():
-            return FlextResult[None].fail("Pipeline name cannot be empty")
-        return FlextResult[None].ok(None)
-
-
-class ExecutePipelineCommand(FlextModels.Value):
-    """Execute pipeline command."""
-
-    pipeline_id: str = Field(..., description="Pipeline ID")
-
-    def validate_business_rules(self) -> FlextResult[None]:
-        """Validate pipeline execution business rules."""
-        if not self.pipeline_id.strip():
-            return FlextResult[None].fail("Pipeline ID cannot be empty")
-        return FlextResult[None].ok(None)
-
-
-# Queries
-class GetPipelineQuery(FlextModels.Value):
-    """Get pipeline query."""
-
-    pipeline_id: str = Field(..., description="Pipeline ID")
-
-    def validate_business_rules(self) -> FlextResult[None]:
-        """Validate pipeline query business rules."""
-        if not self.pipeline_id.strip():
-            return FlextResult[None].fail("Pipeline ID cannot be empty")
-        return FlextResult[None].ok(None)
-
-
-class ListPipelinesQuery(FlextModels.Value):
-    """List pipelines query."""
-
-    limit: int = Field(10, description="Number of results", ge=1, le=MAX_PIPELINE_LIMIT)
-    offset: int = Field(0, description="Offset for pagination", ge=0)
-
-    def validate_business_rules(self) -> FlextResult[None]:
-        """Validate list pipelines query business rules."""
-        if self.limit <= 0 or self.limit > MAX_PIPELINE_LIMIT:
-            return FlextResult[None].fail(
-                f"Limit must be between 1 and {MAX_PIPELINE_LIMIT}"
-            )
-        if self.offset < 0:
-            return FlextResult[None].fail("Offset cannot be negative")
-        return FlextResult[None].ok(None)
-
-
-# Handlers (simplified stubs)
-class PipelineCommandHandler:
-    """Pipeline command handler."""
-
-    async def handle_create(
-        self, _command: CreatePipelineCommand
-    ) -> FlextResult[FlextTypes.Core.Dict]:
-        """Handle create pipeline command."""
-        # Simplified implementation - to be implemented when Pipeline domain exists
-        return FlextResult[FlextTypes.Core.Dict].ok(
-            {"message": "Pipeline creation not implemented"}
-        )
-
-    async def handle_execute(
-        self, _command: ExecutePipelineCommand
-    ) -> FlextResult[FlextTypes.Core.Dict]:
-        """Handle execute pipeline command."""
-        # Simplified implementation - to be implemented when Pipeline domain exists
-        return FlextResult[FlextTypes.Core.Dict].ok(
-            {"message": "Pipeline execution not implemented"}
-        )
-
-
-class PipelineQueryHandler:
-    """Pipeline query handler."""
-
-    async def handle_get(
-        self, _query: GetPipelineQuery
-    ) -> FlextResult[FlextTypes.Core.Dict]:
-        """Handle get pipeline query."""
-        # Simplified implementation - to be implemented when Pipeline domain exists
-        return FlextResult[FlextTypes.Core.Dict].ok(
-            {"message": "Pipeline get not implemented"}
-        )
-
-    async def handle_list(
-        self, _query: ListPipelinesQuery
-    ) -> FlextResult[list[FlextTypes.Core.Dict]]:
-        """Handle list pipelines query."""
-        # Simplified implementation - to be implemented when Pipeline domain exists
-        return FlextResult[list[FlextTypes.Core.Dict]].ok([])
-
-
 class PipelineService:
-    """High-level pipeline orchestration service.
+    """Unified pipeline orchestration service.
 
     Provides enterprise-grade pipeline management capabilities including
     creation, execution, monitoring, and lifecycle management. Integrates
@@ -206,10 +108,129 @@ class PipelineService:
       Uses FlextResult patterns for consistent error handling.
     """
 
+    class CreatePipelineCommand(FlextModels.Value):
+        """Create pipeline command."""
+
+        name: str = Field(..., description="Pipeline name")
+        source_config: FlextTypes.Core.Dict = Field(
+            ..., description="Source configuration"
+        )
+        target_config: FlextTypes.Core.Dict = Field(
+            ..., description="Target configuration"
+        )
+        schedule: str | None = Field(default=None, description="Cron schedule")
+        description: str | None = Field(
+            default=None, description="Pipeline description"
+        )
+
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Validate business rules."""
+            if not self.name.strip():
+                return FlextResult[None].fail("Pipeline name cannot be empty")
+            if not self.source_config:
+                return FlextResult[None].fail("Source configuration is required")
+            if not self.target_config:
+                return FlextResult[None].fail("Target configuration is required")
+            return FlextResult[None].ok(None)
+
+    class ExecutePipelineCommand(FlextModels.Value):
+        """Execute pipeline command."""
+
+        pipeline_id: str = Field(..., description="Pipeline ID")
+        parameters: FlextTypes.Core.Dict = Field(
+            default_factory=dict, description="Execution parameters"
+        )
+        force: bool = Field(default=False, description="Force execution")
+
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Validate business rules."""
+            if not self.pipeline_id.strip():
+                return FlextResult[None].fail("Pipeline ID cannot be empty")
+            return FlextResult[None].ok(None)
+
+    class GetPipelineQuery(FlextModels.Value):
+        """Get pipeline query."""
+
+        pipeline_id: str = Field(..., description="Pipeline ID")
+
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Validate business rules."""
+            if not self.pipeline_id.strip():
+                return FlextResult[None].fail("Pipeline ID cannot be empty")
+            return FlextResult[None].ok(None)
+
+    class ListPipelinesQuery(FlextModels.Value):
+        """List pipelines query."""
+
+        limit: int = Field(
+            default=MAX_PIPELINE_LIMIT,
+            ge=1,
+            le=MAX_PIPELINE_LIMIT,
+            description="Maximum results",
+        )
+        offset: int = Field(default=0, ge=0, description="Result offset")
+        status: str | None = Field(default=None, description="Filter by status")
+
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Validate business rules."""
+            if self.limit > MAX_PIPELINE_LIMIT:
+                return FlextResult[None].fail(
+                    f"Limit cannot exceed {MAX_PIPELINE_LIMIT}"
+                )
+            return FlextResult[None].ok(None)
+
+    class PipelineCommandHandler:
+        """Pipeline command handler."""
+
+        def __init__(self, service: PipelineService) -> None:
+            """Initialize pipeline command handler."""
+            self._service = service
+
+        async def handle_create(
+            self, _command: PipelineService.CreatePipelineCommand
+        ) -> FlextResult[FlextTypes.Core.Dict]:
+            """Handle create pipeline command."""
+            # Simplified implementation - to be implemented when Pipeline domain exists
+            return FlextResult[FlextTypes.Core.Dict].ok(
+                {"message": "Pipeline creation not implemented"}
+            )
+
+        async def handle_execute(
+            self, _command: PipelineService.ExecutePipelineCommand
+        ) -> FlextResult[FlextTypes.Core.Dict]:
+            """Handle execute pipeline command."""
+            # Simplified implementation - to be implemented when Pipeline domain exists
+            return FlextResult[FlextTypes.Core.Dict].ok(
+                {"message": "Pipeline execution not implemented"}
+            )
+
+    class PipelineQueryHandler:
+        """Pipeline query handler."""
+
+        def __init__(self, service: PipelineService) -> None:
+            """Initialize pipeline command handler."""
+            self._service = service
+
+        async def handle_get(
+            self, _query: PipelineService.GetPipelineQuery
+        ) -> FlextResult[FlextTypes.Core.Dict]:
+            """Handle get pipeline query."""
+            # Simplified implementation - to be implemented when Pipeline domain exists
+            return FlextResult[FlextTypes.Core.Dict].ok(
+                {"message": "Pipeline get not implemented"}
+            )
+
+        async def handle_list(
+            self, _query: PipelineService.ListPipelinesQuery
+        ) -> FlextResult[list[FlextTypes.Core.Dict]]:
+            """Handle list pipelines query."""
+            # Simplified implementation - to be implemented when Pipeline domain exists
+            return FlextResult[list[FlextTypes.Core.Dict]].ok([])
+
     def __init__(self) -> None:
         """Initialize pipeline service with dependency injection support."""
-        self._command_handler = PipelineCommandHandler()
-        self._query_handler = PipelineQueryHandler()
+        self._command_handler = self.PipelineCommandHandler(self)
+        self._query_handler = self.PipelineQueryHandler(self)
 
     async def create_pipeline(
         self, command: CreatePipelineCommand
@@ -234,3 +255,9 @@ class PipelineService:
     ) -> FlextResult[list[FlextTypes.Core.Dict]]:
         """List all available pipelines with metadata."""
         return await self._query_handler.handle_list(query)
+
+
+# Export unified service and nested classes
+__all__ = [
+    "PipelineService",
+]
