@@ -367,7 +367,7 @@ class SecurityAuditScript(FlextScript):
             output_format = kwargs.get("output_format", "summary")
             output_file = kwargs.get("output_file")
             risk_threshold = kwargs.get("risk_threshold", "MEDIUM")
-            include_deps = bool(kwargs.get("include_deps", False))
+            include_deps = bool(kwargs.get("include_deps"))
             kwargs.get("max_workers", 4)
             verbose = kwargs.get("verbose", False)
 
