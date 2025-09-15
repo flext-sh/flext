@@ -4,23 +4,22 @@ Este módulo resolve o problema de pytest_plugins em conftest.py não-top-level
 e fornece configuração global para todos os projetos do workspace.
 """
 
-import warnings
 from pathlib import Path
 
 import pytest
 
 # Silenciar warnings conhecidos de dependências externas
-warnings.filterwarnings(
-    "ignore",
-    category=DeprecationWarning,
-    module=r"pyasn1(\.|$)",
-)
-
-warnings.filterwarnings(
-    "ignore",
-    message="PydanticDeprecatedSince20",
-    category=DeprecationWarning,
-)
+# warnings.filterwarnings(
+#     "ignore",
+#     category=DeprecationWarning,
+#     module=r"pyasn1(\.|$)",
+# )
+#
+# warnings.filterwarnings(
+#     "ignore",
+#     message="PydanticDeprecatedSince20",
+#     category=DeprecationWarning,
+# )
 
 
 # Configuração global de marcadores pytest
@@ -45,14 +44,14 @@ def pytest_configure(config: pytest.Config) -> None:
         config.addinivalue_line("markers", marker)
 
     # Filtros de warning globais
-    config.addinivalue_line(
-        "filterwarnings",
-        "ignore::DeprecationWarning:pyasn1(\\.|$)",
-    )
-    config.addinivalue_line(
-        "filterwarnings",
-        "ignore:PydanticDeprecatedSince20:DeprecationWarning",
-    )
+    # config.addinivalue_line(
+    #     "filterwarnings",
+    #     "ignore::DeprecationWarning:pyasn1(\\.|$)",
+    # )
+    # config.addinivalue_line(
+    #     "filterwarnings",
+    #     "ignore:PydanticDeprecatedSince20:DeprecationWarning",
+    # )
 
 
 # Fixtures globais compartilhadas

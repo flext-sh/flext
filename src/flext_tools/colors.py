@@ -33,6 +33,7 @@ License: MIT
 
 """
 
+from flext_cli import FlextCliApi
 from flext_core import FlextLogger
 
 
@@ -163,8 +164,13 @@ def print_colored(message: str, color: str = "") -> None:
         Use colorize() if you only need the formatted string without output.
 
     """
-    colorize(message, color)
-    _logger.info(message)  # Log without color codes for clean logs
+    # Output colored text to console using flext-cli
+    colored_message = colorize(message, color)
+    cli_api = FlextCliApi()
+    cli_api.output(colored_message)
+
+    # Log the original message without color codes for clean logs
+    _logger.info(message)
 
 
 __all__ = ["Colors", "colorize", "print_colored"]

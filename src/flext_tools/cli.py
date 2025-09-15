@@ -129,10 +129,16 @@ class FlextToolsCLI(FlextDomainService[object]):
         }
         return FlextResult[object].ok(status_data)
 
+    @classmethod
+    def create_cli_service(cls, workspace_path: str | None = None) -> FlextToolsCLI:
+        """Factory class method to create CLI service using flext-core patterns."""
+        return cls(workspace_path=workspace_path)
 
+
+# Module-level factory function for backward compatibility
 def create_cli_service(workspace_path: str | None = None) -> FlextToolsCLI:
-    """Factory function to create CLI service using flext-core patterns."""
-    return FlextToolsCLI(workspace_path=workspace_path)
+    """Create CLI service instance using factory pattern."""
+    return FlextToolsCLI.create_cli_service(workspace_path=workspace_path)
 
 
 # Export simplified service only
