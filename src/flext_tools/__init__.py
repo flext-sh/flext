@@ -18,7 +18,6 @@ from .base_cli import (
     CLIConfig,
     FlextBaseCLI,
     FlextCLIConfig,
-    FlextToolsCliService,
 )
 
 # CLI tools - explicit imports
@@ -83,9 +82,7 @@ from .testing import (
 
 # Workspace management - explicit imports
 from .workspace import (
-    FlextToolsWorkspaceService,
-    WorkspaceManager,
-    create_workspace_manager,
+    FlextWorkspaceService as FlextToolsWorkspaceService,
 )
 
 # Workspace CLI - explicit imports
@@ -93,7 +90,6 @@ from .workspace_cli import (
     FlextCliApi,
     FlextToolsWorkspaceCLIService,
     WorkspaceCLI,
-    create_workspace_cli,
 )
 
 # Note: Many modules in this package do not have proper __all__ declarations
@@ -115,7 +111,6 @@ __all__: FlextTypes.Core.StringList = [
     "FlextResult",
     "FlextScript",
     "FlextToolsCLI",
-    "FlextToolsCliService",
     "FlextToolsDevService",
     "FlextToolsWorkspaceCLIService",
     "FlextToolsWorkspaceService",
@@ -125,13 +120,10 @@ __all__: FlextTypes.Core.StringList = [
     "ScriptMetadata",
     "SecretVaultDecryptor",
     "WorkspaceCLI",
-    "WorkspaceManager",
     "all_quality_checks_passed",
     "colorize",
     "create_cli_service",
     "create_dev_tools_manager",
-    "create_workspace_cli",
-    "create_workspace_manager",
     "get_quality_failure_summary",
     "print_colored",
 ]

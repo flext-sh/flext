@@ -31,50 +31,6 @@ MIN_PROJECTS_HIGH_SEVERITY = 2
 logger = FlextLogger(__name__)
 
 
-class VersionCompatibilityResult(FlextModels.Value):
-    """Version compatibility analysis result using FlextModels for type safety.
-
-    This entity represents the result of version compatibility analysis between
-    two package version specifications, providing structured data for compatibility
-    assessment and conflict resolution.
-
-    Attributes:
-      compatible: Whether the version specifications are compatible
-      spec1: First version specification analyzed
-      spec2: Second version specification analyzed
-      overlap_version: Common version that satisfies both specifications (if any)
-      issues: List of compatibility issues found
-      recommendations: List of recommended actions for resolution
-
-    """
-
-    compatible: bool = Field(
-        description="Whether the version specifications are compatible",
-    )
-    spec1: str = Field(description="First version specification analyzed")
-    spec2: str = Field(description="Second version specification analyzed")
-    overlap_version: str | None = Field(
-        default=None,
-        description="Common version that satisfies both specifications",
-    )
-    issues: FlextTypes.Core.StringList = Field(
-        default_factory=list,
-        description="List of compatibility issues found",
-    )
-    recommendations: FlextTypes.Core.StringList = Field(
-        default_factory=list,
-        description="List of recommended actions for resolution",
-    )
-
-    def validate_business_rules(self) -> FlextResult[None]:
-        """Validate business rules for version compatibility result."""
-        if not self.spec1 or not self.spec2:
-            return FlextResult[None].fail(
-                "Both version specifications must be provided"
-            )
-        return FlextResult[None].ok(None)
-
-
 class VersionAnalyzer:
     """Enterprise package version analysis and constraint management.
 
@@ -83,6 +39,49 @@ class VersionAnalyzer:
     the FLEXT ecosystem. Handles complex version scenarios including semantic
     versioning, caret/tilde constraints, and range specifications.
     """
+
+    class VersionCompatibilityResult(FlextModels.Value):
+        """Version compatibility analysis result using FlextModels for type safety.
+
+        This entity represents the result of version compatibility analysis between
+        two package version specifications, providing structured data for compatibility
+        assessment and conflict resolution.
+
+        Attributes:
+          compatible: Whether the version specifications are compatible
+          spec1: First version specification analyzed
+          spec2: Second version specification analyzed
+          overlap_version: Common version that satisfies both specifications (if any)
+          issues: List of compatibility issues found
+          recommendations: List of recommended actions for resolution
+
+        """
+
+        compatible: bool = Field(
+            description="Whether the version specifications are compatible",
+        )
+        spec1: str = Field(description="First version specification analyzed")
+        spec2: str = Field(description="Second version specification analyzed")
+        overlap_version: str | None = Field(
+            default=None,
+            description="Common version that satisfies both specifications",
+        )
+        issues: FlextTypes.Core.StringList = Field(
+            default_factory=list,
+            description="List of compatibility issues found",
+        )
+        recommendations: FlextTypes.Core.StringList = Field(
+            default_factory=list,
+            description="List of recommended actions for resolution",
+        )
+
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Validate business rules for version compatibility result."""
+            if not self.spec1 or not self.spec2:
+                return FlextResult[None].fail(
+                    "Both version specifications must be provided"
+                )
+            return FlextResult[None].ok(None)
 
     @staticmethod
     def parse_version_spec(spec: str) -> tuple[str, str | None]:
@@ -578,7 +577,7 @@ def normalize_constraint(constraint: str) -> str:
 def check_version_compatibility(
     spec1: str,
     spec2: str,
-) -> FlextResult[VersionCompatibilityResult]:
+) -> FlextResult[VersionAnalyzer.VersionCompatibilityResult]:
     """Check compatibility between two version specifications using FlextResult.
 
     Args:
@@ -597,7 +596,7 @@ def check_version_compatibility(
         issues = analyzer_result.get("issues", [])
         recommendations = analyzer_result.get("recommendations", [])
 
-        result = VersionCompatibilityResult(
+        result = VersionAnalyzer.VersionCompatibilityResult(
             compatible=bool(analyzer_result.get("compatible", False)),
             spec1=spec1,
             spec2=spec2,
@@ -610,7 +609,7 @@ def check_version_compatibility(
             else [],
         )
 
-        return FlextResult[VersionCompatibilityResult].ok(result)
+        return FlextResult[VersionAnalyzer.VersionCompatibilityResult].ok(result)
     except Exception as e:
         logger.exception(
             "Version compatibility check failed",
@@ -618,7 +617,7 @@ def check_version_compatibility(
             spec2=spec2,
             error=str(e),
         )
-        return FlextResult[VersionCompatibilityResult].fail(
+        return FlextResult[VersionAnalyzer.VersionCompatibilityResult].fail(
             f"Version compatibility check failed: {e}"
         )
 
