@@ -29,7 +29,7 @@ class DevToolsManager:
 
     def __new__(cls, *args: FlextTypes.Core.Dict, **kwargs: FlextTypes.Core.Dict) -> Self:
         """Create instance using FlextAdvancedDevToolsManager."""
-        return FlextAdvancedDevToolsManager(*args, **kwargs)  # type: ignore[name-defined]
+        return FlextAdvancedDevToolsManager(*args, **kwargs)  # type: ignore[name-defined,return-value]
 
 
 # Facade class for legacy tools compatibility
@@ -50,7 +50,7 @@ class FlextToolsDevService(FlextDomainService[str]):
             # Prepare data for FlextAdvancedDevToolsManager
             init_data: FlextTypes.Core.Dict = {"workspace_path": self._workspace_path or ""}  # type: ignore[arg-type]
             init_data.update(self._kwargs)  # type: ignore[arg-type]
-            self._dev_service = FlextAdvancedDevToolsManager(**init_data)  # type: ignore[name-defined,assignment]
+            self._dev_service = FlextAdvancedDevToolsManager(**init_data)  # type: ignore[name-defined,assignment,arg-type]
         return self._dev_service
 
     def execute(self, _request: str = "") -> FlextResult[str]:
@@ -70,7 +70,7 @@ def create_dev_tools_manager(*args: object, **kwargs: object) -> object:
     for key, value in kwargs.items():
         init_data[key] = value
 
-    return FlextAdvancedDevToolsManager(**init_data)  # type: ignore[name-defined]
+    return FlextAdvancedDevToolsManager(**init_data)  # type: ignore[name-defined,arg-type]
 
 
 __all__ = [
