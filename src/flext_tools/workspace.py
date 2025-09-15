@@ -21,7 +21,9 @@ from flext.workspace import (
 
 
 # Lazy loading to avoid circular imports
-def _get_flext_workspace_classes() -> tuple[type, type, Callable[[str | None], FlextWorkspaceService]]:
+def _get_flext_workspace_classes() -> tuple[
+    type, type, Callable[[str | None], FlextWorkspaceService]
+]:
     """Lazy load flext workspace classes to avoid circular imports."""
     return FlextWorkspaceService, ProjectType, create_workspace_service
 
@@ -58,7 +60,7 @@ class FlextToolsWorkspaceService(FlextDomainService[str]):
         if self._workspace_service is None:
             _, _, create_workspace_service = _get_flext_workspace_classes()
             self._workspace_service = create_workspace_service(self._workspace_path)
-        assert self._workspace_service is not None  # noqa: S101 - Lazy loading assertion
+        assert self._workspace_service is not None
         return self._workspace_service
 
     def execute(self, _request: str = "") -> FlextResult[str]:
