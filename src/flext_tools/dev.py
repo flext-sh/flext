@@ -15,35 +15,28 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import FlextDomainService, FlextResult
+from typing import Self
 
+from flext_core import FlextDomainService, FlextResult, FlextTypes
 
-# Lazy loading to avoid circular imports
-def _get_flext_dev_classes() -> tuple[type, type]:
-    """Lazy load flext dev classes to avoid circular imports."""
-    from flext.dev import (  # noqa: PLC0415
-        FlextAdvancedDevModels,
-        FlextAdvancedDevToolsManager,
-    )
-
-    return FlextAdvancedDevToolsManager, FlextAdvancedDevModels
+# Import flext dev classes directly - no lazy loading needed
+from flext.dev import FlextAdvancedDevToolsManager
 
 
 # Primary dev API - delegate to flext (lazy loaded)
 class DevToolsManager:
     """Lazy wrapper for FlextAdvancedDevToolsManager to avoid circular imports."""
 
-    def __new__(cls, *args: object, **kwargs: object) -> object:
-        """Create instance using lazy-loaded FlextAdvancedDevToolsManager."""
-        flext_advanced_dev_tools_manager, _ = _get_flext_dev_classes()
-        return flext_advanced_dev_tools_manager(*args, **kwargs)
+    def __new__(cls, *args: FlextTypes.Core.Dict, **kwargs: FlextTypes.Core.Dict) -> Self:
+        """Create instance using FlextAdvancedDevToolsManager."""
+        return FlextAdvancedDevToolsManager(*args, **kwargs)  # type: ignore[name-defined]
 
 
 # Facade class for legacy tools compatibility
 class FlextToolsDevService(FlextDomainService[str]):
     """Facade to flext dev service - eliminates development code duplication."""
 
-    def __init__(self, workspace_path: str | None = None, **kwargs: object) -> None:
+    def __init__(self, workspace_path: str | None = None, **kwargs: FlextTypes.Core.Dict) -> None:
         """Initialize with flext dev service."""
         super().__init__()
         # Lazy loading to avoid circular imports during class definition
@@ -52,12 +45,12 @@ class FlextToolsDevService(FlextDomainService[str]):
         self._dev_service = None
 
     def _get_dev_service(self) -> object:
-        """Lazy load dev service to avoid circular imports."""
+        """Get dev service instance."""
         if self._dev_service is None:
-            flext_advanced_dev_tools_manager, _ = _get_flext_dev_classes()
-            self._dev_service = flext_advanced_dev_tools_manager(
-                workspace_path=self._workspace_path, **self._kwargs
-            )
+            # Prepare data for FlextAdvancedDevToolsManager
+            init_data: FlextTypes.Core.Dict = {"workspace_path": self._workspace_path or ""}  # type: ignore[arg-type]
+            init_data.update(self._kwargs)  # type: ignore[arg-type]
+            self._dev_service = FlextAdvancedDevToolsManager(**init_data)  # type: ignore[name-defined,assignment]
         return self._dev_service
 
     def execute(self, _request: str = "") -> FlextResult[str]:
@@ -69,9 +62,15 @@ class FlextToolsDevService(FlextDomainService[str]):
 
 # Legacy compatibility factory function
 def create_dev_tools_manager(*args: object, **kwargs: object) -> object:
-    """Create dev tools manager using lazy loading."""
-    flext_advanced_dev_tools_manager, _ = _get_flext_dev_classes()
-    return flext_advanced_dev_tools_manager(*args, **kwargs)
+    """Create dev tools manager."""
+    # Convert args and kwargs to proper Dict type
+    init_data: FlextTypes.Core.Dict = {}
+    for i, arg in enumerate(args):
+        init_data[f"arg_{i}"] = str(arg) if arg is not None else ""
+    for key, value in kwargs.items():
+        init_data[key] = value
+
+    return FlextAdvancedDevToolsManager(**init_data)  # type: ignore[name-defined]
 
 
 __all__ = [

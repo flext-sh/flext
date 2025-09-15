@@ -38,9 +38,9 @@ class SecretsVaultDecryptor(BaseSecurityScript):
         try:
             workspace_root = Path.cwd()
             vault_file = kwargs.get("vault_file")
-            password = kwargs.get("password")
-            mask_secrets = kwargs.get("mask_secrets", True)
-            output_format = kwargs.get("format", "text")
+            # password = kwargs.get("password")  # TODO(@marlonsc): Implement password-based decryption
+            # mask_secrets = kwargs.get("mask_secrets", True)  # TODO(@marlonsc): Implement secret masking
+            output_format = kwargs.get("format", "text")  # TODO(@marlonsc): Implement format options
 
             if not vault_file:
                 print_colored("❌ Vault file path is required", Colors.RED)
@@ -55,13 +55,10 @@ class SecretsVaultDecryptor(BaseSecurityScript):
             print_colored("=" * 60, Colors.CYAN)
 
             # Use flext_tools.security for vault decryption
-            vault_decryptor = SecretVaultDecryptor(vault_path=vault_path)
+            vault_decryptor = SecretVaultDecryptor()
 
             # Decrypt vault
-            decrypt_result = vault_decryptor.decrypt_vault(
-                password=password,
-                mask_secrets=mask_secrets,
-            )
+            decrypt_result = vault_decryptor.decrypt_vault(str(vault_path))
 
             if decrypt_result:
                 print_colored("✅ Vault decrypted successfully", Colors.GREEN)

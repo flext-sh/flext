@@ -12,9 +12,6 @@ from pathlib import Path
 from flext_core import FlextResult, FlextTypes
 
 from flext_tools import Colors, ScriptMetadata, print_colored
-from flext_tools.security import (
-    ProductionSecretsGenerator as FlextToolsSecretsGenerator,
-)
 
 from ._base_security_script import BaseSecurityScript
 
@@ -41,19 +38,23 @@ class ProductionSecretsScript(BaseSecurityScript):
             workspace_root = Path.cwd()
             environment = kwargs.get("environment", "production")
             output_file = kwargs.get("output_file")
-            encrypt = kwargs.get("encrypt", True)
+            encrypt = kwargs.get("encrypt", True)  # TODO(@marlonsc): Implement encryption
+            _ = encrypt  # Suppress unused variable warning
 
             print_colored("🔐 PRODUCTION SECRETS GENERATOR", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
 
+            # TODO(marlonsc): Implement FlextToolsSecretsGenerator
             # Use flext_tools.security for secret generation
-            secret_generator = FlextToolsSecretsGenerator()
+            # secret_generator = FlextToolsSecretsGenerator()
 
+            # TODO(@marlonsc): Implement secret generation logic
             # Generate complete set of production secrets
-            secrets_result = secret_generator.generate_production_secrets(
-                environment=environment,
-                encrypt=encrypt,
-            )
+            # secrets_result = secret_generator.generate_production_secrets(
+            #     environment=environment,
+            #     encrypt=encrypt,
+            # )
+            secrets_result = FlextResult[dict].fail("Secret generation not yet implemented")
 
             if secrets_result:
                 print_colored(

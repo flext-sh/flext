@@ -800,7 +800,7 @@ class FlextDuplicateDetector:
                 if minhash_sim >= self.similarity_threshold * 0.6:
                     candidates.append((file1, file2))
 
-        time.time() - start_time
+        _elapsed_time = time.time() - start_time
 
         return candidates
 
