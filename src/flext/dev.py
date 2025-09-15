@@ -14,7 +14,7 @@ import subprocess
 from abc import ABC, abstractmethod
 from enum import Enum
 from pathlib import Path
-from typing import Annotated, Any, Literal, Protocol, TypeVar
+from typing import Annotated, Literal, Protocol, TypeVar
 from uuid import UUID, uuid4
 
 from flext_core import (
@@ -22,6 +22,7 @@ from flext_core import (
     FlextLogger,
     FlextModels,
     FlextResult,
+    FlextTypes,
 )
 from pydantic import BaseModel, Field, field_validator, model_validator
 from pydantic.functional_validators import BeforeValidator
@@ -53,12 +54,11 @@ class OperationType(str, Enum):
 
 
 # Import from unified workspace service - ELIMINATES duplication
-from flext.workspace import ProjectType
+from flext.workspace import ProjectType, create_workspace_service
 
 
 def validate_project_path(v: str) -> str:
     """Validate project path using workspace service."""
-    from flext.workspace import create_workspace_service
     workspace_service = create_workspace_service()
     result = workspace_service.validate_workspace_path(v)
     if result.is_failure:
@@ -106,16 +106,17 @@ class FlextAdvancedDevModels:
         test_types: list[Literal["unit", "integration", "e2e"]] = Field(
             default=["unit"], description="Test types to execute"
         )
-        coverage_enabled: bool = Field(True, description="Enable coverage reporting")
-        coverage_threshold: float = Field(80.0, ge=0.0, le=100.0, description="Coverage threshold")
-        parallel_execution: bool = Field(True, description="Enable parallel execution")
+        coverage_enabled: bool = Field(default=True, description="Enable coverage reporting")
+        coverage_threshold: float = Field(default=80.0, ge=0.0, le=100.0, description="Coverage threshold")
+        parallel_execution: bool = Field(default=True, description="Enable parallel execution")
 
         @field_validator("test_types")
         @classmethod
         def validate_test_types(cls, v: list[str]) -> list[str]:
             """Validate test types."""
             if not v:
-                raise ValueError("At least one test type must be specified")
+                msg = "At least one test type must be specified"
+                raise ValueError(msg)
             return v
 
         def validate_prerequisites(self) -> FlextResult[None]:
@@ -135,14 +136,15 @@ class FlextAdvancedDevModels:
         tools: list[Literal["ruff", "mypy", "bandit", "pyright"]] = Field(
             default=["ruff", "mypy"], description="Linting tools to run"
         )
-        fix_issues: bool = Field(False, description="Automatically fix issues")
-        strict_mode: bool = Field(True, description="Enable strict mode")
+        fix_issues: bool = Field(default=False, description="Automatically fix issues")
+        strict_mode: bool = Field(default=True, description="Enable strict mode")
 
         @model_validator(mode="after")
         def validate_lint_config(self) -> FlextAdvancedDevModels.LintOperation:
             """Validate linting configuration."""
             if "mypy" in self.tools and "pyright" in self.tools:
-                raise ValueError("Cannot run both mypy and pyright simultaneously")
+                msg = "Cannot run both mypy and pyright simultaneously"
+                raise ValueError(msg)
             return self
 
         def validate_prerequisites(self) -> FlextResult[None]:
@@ -238,7 +240,7 @@ class FlextAdvancedDevModels:
         exit_code: int = Field(..., description="Exit code")
         stdout_lines: int = Field(0, ge=0, description="Standard output line count")
         stderr_lines: int = Field(0, ge=0, description="Standard error line count")
-        artifacts: dict[str, Any] = Field(default_factory=dict, description="Operation artifacts")
+        artifacts: FlextTypes.Core.Dict = Field(default_factory=dict, description="Operation artifacts")
 
         @field_validator("duration_seconds")
         @classmethod
@@ -270,7 +272,7 @@ class FlextAdvancedDevToolsManager(FlextDomainService[FlextAdvancedDevModels.Ope
     - Discriminated unions for operation types
     """
 
-    def __init__(self, **_data: Any) -> None:
+    def __init__(self, **_data: FlextTypes.Core.Dict) -> None:
         """Initialize development tools service with advanced patterns."""
         super().__init__()
         self._logger = FlextLogger(__name__)
@@ -354,6 +356,40 @@ class FlextAdvancedDevToolsManager(FlextDomainService[FlextAdvancedDevModels.Ope
 
         def __init__(self, manager: FlextAdvancedDevToolsManager) -> None:
             self._manager = manager
+
+        def create_test_operation(self, operation_data: dict) -> FlextResult[FlextAdvancedDevModels.TestOperation]:
+            """Create test operation from data with validation."""
+            try:
+                operation = FlextAdvancedDevModels.TestOperation.model_validate(operation_data)
+                return FlextResult[FlextAdvancedDevModels.TestOperation].ok(operation)
+            except Exception as e:
+                return FlextResult[FlextAdvancedDevModels.TestOperation].fail(str(e))
+
+        def create_lint_operation(self, operation_data: dict) -> FlextResult[FlextAdvancedDevModels.LintOperation]:
+            """Create lint operation from data with validation."""
+            try:
+                operation = FlextAdvancedDevModels.LintOperation.model_validate(operation_data)
+                return FlextResult[FlextAdvancedDevModels.LintOperation].ok(operation)
+            except Exception as e:
+                return FlextResult[FlextAdvancedDevModels.LintOperation].fail(str(e))
+
+        def create_operation(self, operation_data: dict) -> FlextResult[FlextAdvancedDevModels.OperationUnion]:
+            """Create operation from data using discriminated unions."""
+            try:
+                # Use discriminated union validation through individual operation types
+                operation_type = operation_data.get("type")
+                if operation_type == "test":
+                    operation = FlextAdvancedDevModels.TestOperation.model_validate(operation_data)
+                elif operation_type == "lint":
+                    operation = FlextAdvancedDevModels.LintOperation.model_validate(operation_data)
+                elif operation_type == "format":
+                    operation = FlextAdvancedDevModels.FormatOperation.model_validate(operation_data)
+                else:
+                    return FlextResult[FlextAdvancedDevModels.OperationUnion].fail(f"Unknown operation type: {operation_type}")
+
+                return FlextResult[FlextAdvancedDevModels.OperationUnion].ok(operation)
+            except Exception as e:
+                return FlextResult[FlextAdvancedDevModels.OperationUnion].fail(str(e))
 
         def execute_test_operation(self, operation: FlextAdvancedDevModels.TestOperation) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
             """Execute test operation with comprehensive reporting."""
@@ -495,7 +531,7 @@ class FlextAdvancedDevToolsManager(FlextDomainService[FlextAdvancedDevModels.Ope
         return self._OperationExecutor(self)
 
     # High-level service methods
-    def execute_operation(self, operation: FlextAdvancedDevModels.OperationUnion) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
+    def execute_dev_operation(self, operation: FlextAdvancedDevModels.OperationUnion) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
         """Execute operation using discriminated union patterns."""
         executor = self.create_operation_executor()
 
@@ -552,6 +588,7 @@ __all__ = [
     "ProjectType",
     "create_dev_tools_manager",
 ]
+
 
 # Legacy compatibility aliases
 DevToolsManager = FlextAdvancedDevToolsManager

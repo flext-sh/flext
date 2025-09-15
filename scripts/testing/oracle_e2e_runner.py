@@ -13,7 +13,6 @@ import docker
 from flext_core import FlextResult
 
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
-from flext_tools.testing import OracleE2ETestManager
 
 
 class OracleE2ETestRunner(FlextScript):
@@ -73,33 +72,42 @@ class OracleE2ETestRunner(FlextScript):
             return FlextResult[None].fail("Unable to query Docker engine info")
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
-        """Execute main script logic."""
         """Execute Oracle E2E testing logic."""
         try:
-            project_root = Path.cwd()
-            test_filter = kwargs.get("test_filter")
-            skip_build = kwargs.get("skip_build", False)
-            timeout = kwargs.get("timeout", 1800)  # 30 minutes default
+            # project_root = Path.cwd()  # TODO(@flext-team): Use project_root for test execution
+            # test_filter = kwargs.get("test_filter")  # TODO(@flext-team): Implement test filtering
+            # skip_build = kwargs.get("skip_build", False)  # TODO(@flext-team): Implement build skipping
+            # timeout = kwargs.get("timeout", 1800)  # TODO(@flext-team): Implement timeout handling
+
+            # Suppress unused kwargs warning
+            _ = kwargs
 
             print_colored("🧪 ORACLE E2E TEST RUNNER", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
 
+            # TODO(marlonsc): Implement OracleE2ETestManager
             # Use flext_tools.testing for E2E operations
-            test_manager = OracleE2ETestManager(workspace_path=project_root)
+            # test_manager = OracleE2ETestManager(workspace_path=project_root)
 
+            # TODO(@flext-team): Implement E2E test execution
             # Run Oracle E2E test suite
-            results = test_manager.run_e2e_tests(
-                test_filter=test_filter,
-                skip_build=skip_build,
-                timeout=timeout,
-            )
+            # results = test_manager.run_e2e_tests(
+            #     test_filter=test_filter,
+            #     skip_build=skip_build,
+            #     timeout=timeout,
+            # )
+            results = FlextResult[dict].fail("E2E test execution not yet implemented")
 
-            if results.get("success", False):
-                print_colored(
-                    "✅ Oracle E2E tests completed successfully",
-                    Colors.GREEN,
-                )
-                print_colored("📊 Test reports generated in .flext_logs/", Colors.CYAN)
+            if results.is_success:
+                result_data = results.unwrap()
+                if isinstance(result_data, dict) and result_data.get("success", False):
+                    print_colored(
+                        "✅ Oracle E2E tests completed successfully",
+                        Colors.GREEN,
+                    )
+                    print_colored(
+                        "📊 Test reports generated in .flext_logs/", Colors.CYAN
+                    )
                 return FlextResult[object].ok(None)
             print_colored("❌ Oracle E2E tests failed", Colors.RED)
             print_colored("📋 Check logs in .flext_logs/ for details", Colors.YELLOW)
