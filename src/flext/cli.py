@@ -142,7 +142,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
             self._cli_service = cli_service
 
         def test_command(
-            self, coverage: bool = True, parallel: bool = False
+            self, *, coverage: bool = True, parallel: bool = False
         ) -> FlextResult[dict[str, object]]:
             """Execute comprehensive test suite using flext_tools integration."""
             print_colored(
@@ -187,7 +187,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
                 print_colored(f"❌ {error}", Colors.RED)
                 return FlextResult[dict[str, object]].fail(error)
 
-        def lint_command(self, fix: bool = False) -> FlextResult[dict[str, object]]:
+        def lint_command(self, *, fix: bool = False) -> FlextResult[dict[str, object]]:
             """Execute linting using flext_tools quality gateway."""
             print_colored("🔍 Running linting with flext_tools...", Colors.BLUE)
 
@@ -218,7 +218,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
                 print_colored(f"❌ {error}", Colors.RED)
                 return FlextResult[dict[str, object]].fail(error)
 
-        def format_command(self, check_only: bool = False) -> None:
+        def format_command(self, *, check_only: bool = False) -> None:
             """Auto-format code using flext_tools with flext-cli patterns."""
             action = "Checking" if check_only else "Formatting"
             print_colored(
@@ -238,7 +238,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
             except Exception as e:
                 print_colored(f"❌ Formatting failed: {e}", Colors.RED)
 
-        def info_command(self, detailed: bool = False) -> FlextResult[dict[str, object]]:
+        def info_command(self, *, detailed: bool = False) -> FlextResult[dict[str, object]]:
             """Display workspace information using flext-cli patterns."""
             workspace_data = {
                 "workspace_root": str(self._cli_service._workspace),
@@ -279,6 +279,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
         self,
         workspace: str | None = None,
         profile: str = "default",
+        *,
         debug: bool = False,
     ) -> FlextResult[FlextCliMain]:
         """Initialize CLI with flext-cli integration."""
@@ -399,7 +400,7 @@ def quality() -> None:
         sys.exit(1)
 
 
-def scripts(category: str | None = None, _list_only: bool = True) -> None:
+def scripts(category: str | None = None, *, _list_only: bool = True) -> None:
     """Legacy function - use FlextControlPanelCli._ToolsCommands.list_scripts instead."""
     cli_service = create_cli()
     tools_handler = cli_service.create_tools_handler()
@@ -413,49 +414,49 @@ def analysis(analysis_type: str = "structure") -> None:
     tools_handler.run_analysis(analysis_type)
 
 
-def test(coverage: bool = True, parallel: bool = False) -> None:
+def test(*, coverage: bool = True, parallel: bool = False) -> None:
     """Legacy function: Execute tests using unified service - ELIMINATES duplication."""
     cli_service = create_cli()
     main_handler = cli_service.create_main_handler()
 
-    result = main_handler.test_command(coverage, parallel)
+    result = main_handler.test_command(coverage=coverage, parallel=parallel)
 
     if result.is_success:
         test_result = result.unwrap()
         if not test_result.get("success", True):
             sys.exit(1)
     else:
-        print(f"❌ Test execution failed: {result.error}")
+        # Test execution failed - error already logged by handler
         sys.exit(1)
 
 
-def lint(fix: bool = False) -> None:
+def lint(*, fix: bool = False) -> None:
     """Legacy function: Execute linting using unified service - ELIMINATES duplication."""
     cli_service = create_cli()
     main_handler = cli_service.create_main_handler()
 
-    result = main_handler.lint_command(fix)
+    result = main_handler.lint_command(fix=fix)
 
     if result.is_success:
         # Lint command returns success, no need to exit
         pass
     else:
-        print(f"❌ Linting failed: {result.error}")
+        # Linting failed - error already logged by handler
         sys.exit(1)
 
 
-def format_code(check_only: bool = False) -> None:
+def format_code(*, check_only: bool = False) -> None:
     """Legacy function - use FlextControlPanelCli._MainCommands.format_command instead."""
     cli_service = create_cli()
     main_handler = cli_service.create_main_handler()
-    main_handler.format_command(check_only)
+    main_handler.format_command(check_only=check_only)
 
 
-def info(detailed: bool = False) -> None:
+def info(*, detailed: bool = False) -> None:
     """Legacy function - use FlextControlPanelCli._MainCommands.info_command instead."""
     cli_service = create_cli()
     main_handler = cli_service.create_main_handler()
-    main_handler.info_command(detailed)
+    main_handler.info_command(detailed=detailed)
 
 
 # Export unified CLI class and legacy compatibility functions

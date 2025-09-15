@@ -47,10 +47,13 @@ class FlextLintFixer:
 
     def find_flext_projects(self) -> list[Path]:
         """Find all FLEXT projects in workspace."""
-        projects = []
-        for item in self.workspace_root.iterdir():
-            if item.is_dir() and item.name.startswith("flext-") and ((item / "src").exists() or any(item.glob("*.py"))):
-                    projects.append(item)
+        projects = [
+            item
+            for item in self.workspace_root.iterdir()
+            if item.is_dir()
+            and item.name.startswith("flext-")
+            and ((item / "src").exists() or any(item.glob("*.py")))
+        ]
         return sorted(projects)
 
     def get_python_files(self, project_path: Path) -> list[Path]:
@@ -212,10 +215,11 @@ class FlextLintFixer:
                 def __init__(self) -> None:
                     self.unused_args = []
 
-                def visit_FunctionDef(self, node: object) -> None:
+                def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
                     # Get all argument names
                     arg_names = set()
-                    arg_names.update(arg.arg for arg in node.args.args)
+                    if hasattr(node.args, "args") and node.args.args:
+                        arg_names.update(arg.arg for arg in node.args.args)
 
                     # Check for usage in function body
                     used_names = set()
@@ -289,8 +293,12 @@ class FlextLintFixer:
             # Find undefined names
             for line in lines:
                 for name, import_stmt in import_map.items():
-                    if re.search(rf"\b{name}\b", line) and not line.strip().startswith("#") and not any(import_stmt in line_item for line_item in lines):
-                            needed_imports.add(import_stmt)
+                    if (
+                        re.search(rf"\b{name}\b", line)
+                        and not line.strip().startswith("#")
+                        and not any(import_stmt in line_item for line_item in lines)
+                    ):
+                        needed_imports.add(import_stmt)
 
             if needed_imports:
                 # Find where to insert imports (after existing imports)
@@ -418,7 +426,7 @@ class FlextLintFixer:
     def run_validation(self, project_path: Path) -> tuple[bool, str]:
         """Run ruff validation on a project."""
         try:
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 ["/usr/bin/ruff", "check", str(project_path)],
                 check=False,
                 capture_output=True,

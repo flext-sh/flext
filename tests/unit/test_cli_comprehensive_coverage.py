@@ -24,6 +24,7 @@ from flext_auth.cli import (
     register_user,
     validate_config,
 )
+from flext_auth.models import FlextAuthModels
 from flext_core import FlextResult
 from flext_tests import FlextTestsMatchers
 
@@ -33,15 +34,20 @@ class TestFlextAuthCliComprehensive:
 
     def test_create_auth_cli_basic_functionality(self) -> None:
         """Test create_auth_cli function."""
-        cli = create_auth_cli()
+        result = create_auth_cli()
+        assert result is not None
+        assert isinstance(result, FlextResult)
+        assert result.is_success
+
+        cli = result.unwrap()
         assert cli is not None
         # Verify CLI has expected structure
-        assert hasattr(cli, "main") or callable(cli)
+        assert hasattr(cli, "execute") or callable(cli)
 
     def test_authenticate_user_success_scenario(self) -> None:
         """Test _authenticate_user with valid credentials."""
         # Mock the authentication process
-        with patch("flext_auth.auth.FlextAuth.authenticate") as mock_auth:
+        with patch("flext_auth.auth.FlextAuth.authenticate_user") as mock_auth:
             mock_auth.return_value = FlextResult[dict].ok({"user_id": "test-user"})
 
             result = _authenticate_user("test@example.com", "password123")
@@ -49,7 +55,7 @@ class TestFlextAuthCliComprehensive:
 
     def test_authenticate_user_failure_scenario(self) -> None:
         """Test _authenticate_user with invalid credentials."""
-        with patch("flext_auth.auth.FlextAuth.authenticate") as mock_auth:
+        with patch("flext_auth.auth.FlextAuth.authenticate_user") as mock_auth:
             mock_auth.return_value = FlextResult[dict].fail("Invalid credentials")
 
             result = _authenticate_user("invalid@example.com", "wrongpass")
@@ -57,15 +63,21 @@ class TestFlextAuthCliComprehensive:
 
     def test_register_user_success_scenario(self) -> None:
         """Test _register_user with valid data."""
-        with patch("flext_auth.auth.FlextAuth.register") as mock_register:
-            mock_register.return_value = FlextResult[dict].ok({"user_id": "new-user"})
+        with patch("flext_auth.auth.FlextAuth.register_user") as mock_register:
+            mock_user = FlextAuthModels.User(
+                username="new@example.com",
+                email="new@example.com",
+                password_hash="hashed_password",
+                full_name="New User"
+            )
+            mock_register.return_value = FlextResult[FlextAuthModels.User].ok(mock_user)
 
             result = _register_user("new@example.com", "newpass123", "New User")
             assert isinstance(result, FlextResult)
 
     def test_register_user_failure_scenario(self) -> None:
         """Test _register_user with invalid data."""
-        with patch("flext_auth.auth.FlextAuth.register") as mock_register:
+        with patch("flext_auth.auth.FlextAuth.register_user") as mock_register:
             mock_register.return_value = FlextResult[dict].fail("Registration failed")
 
             result = _register_user("invalid", "short", "")
@@ -73,10 +85,10 @@ class TestFlextAuthCliComprehensive:
 
     def test_manage_config_functionality(self) -> None:
         """Test _manage_config operations."""
-        with patch("flext_auth.config.FlextAuthConfig.load") as mock_load:
+        with patch("flext_auth.config.FlextAuthConfig.load_from_file") as mock_load:
             mock_load.return_value = FlextResult[dict].ok({"api_key": "test-key"})
 
-            result = _manage_config("show")
+            result = _manage_config(show=True)
             assert isinstance(result, FlextResult)
 
     def test_validate_config_success(self) -> None:
@@ -89,7 +101,7 @@ class TestFlextAuthCliComprehensive:
 
     def test_validate_config_failure(self) -> None:
         """Test _validate_config with invalid configuration."""
-        with patch("flext_auth.config.FlextAuthConfig.validate") as mock_validate:
+        with patch("flext_auth.config.FlextAuthConfig.validate_configuration") as mock_validate:
             mock_validate.return_value = FlextResult[None].fail("Invalid config")
 
             result = _validate_config()
