@@ -80,34 +80,6 @@ MIN_PACKAGE_LENGTH = 2
 MAX_SEPARATORS = 2
 
 
-class PythonDependencies(FlextModels.Value):
-    """Python dependencies categorized by type.
-
-    Contains runtime and test dependencies discovered from Python import analysis.
-    """
-
-    runtime: set[str] = Field(
-        default_factory=set,
-        description="Runtime dependency package names",
-    )
-    test: set[str] = Field(
-        default_factory=set,
-        description="Test dependency package names",
-    )
-
-    def validate_business_rules(self) -> FlextResult[None]:
-        """Validate Python dependencies business rules."""
-        # Check for package name validity
-        for pkg in self.runtime | self.test:
-            if (
-                not pkg
-                or not pkg.replace("-", "").replace("_", "").replace(".", "").isalnum()
-            ):
-                return FlextResult[None].fail(f"Invalid package name: {pkg}")
-
-        return FlextResult[None].ok(None)
-
-
 class PythonImportDiscovery:
     """Enterprise Python import analysis for dependency discovery.
 
@@ -129,6 +101,33 @@ class PythonImportDiscovery:
       submodules_mapping (dict[str, str|None]): Submodule to parent package mapping
 
     """
+
+    class PythonDependencies(FlextModels.Value):
+        """Python dependencies categorized by type.
+
+        Contains runtime and test dependencies discovered from Python import analysis.
+        """
+
+        runtime: set[str] = Field(
+            default_factory=set,
+            description="Runtime dependency package names",
+        )
+        test: set[str] = Field(
+            default_factory=set,
+            description="Test dependency package names",
+        )
+
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Validate Python dependencies business rules."""
+            # Check for package name validity
+            for pkg in self.runtime | self.test:
+                if (
+                    not pkg
+                    or not pkg.replace("-", "").replace("_", "").replace(".", "").isalnum()
+                ):
+                    return FlextResult[None].fail(f"Invalid package name: {pkg}")
+
+            return FlextResult[None].ok(None)
 
     def __init__(self, stdlib_modules: set[str]) -> None:
         """Initialize Python import discovery engine.
@@ -193,7 +192,7 @@ class PythonImportDiscovery:
         self,
         project_path: Path,
         installed: set[str],
-    ) -> FlextResult[PythonDependencies]:
+    ) -> FlextResult[PythonImportDiscovery.PythonDependencies]:
         """Discover Python dependencies by analyzing import statements.
 
         Analyzes all Python files in the specified project path to extract import
@@ -229,7 +228,7 @@ class PythonImportDiscovery:
                 file_imports = self._extract_imports(py_file)
                 self._categorize_imports(file_imports, dependencies, installed)
 
-            result = PythonDependencies(
+            result = self.PythonDependencies(
                 runtime=dependencies["runtime"],
                 test=dependencies["test"],
             )
@@ -237,12 +236,12 @@ class PythonImportDiscovery:
             logger.info(
                 f"Found {len(result.runtime)} runtime and {len(result.test)} test dependencies",
             )
-            return FlextResult[PythonDependencies].ok(result)
+            return FlextResult["PythonImportDiscovery.PythonDependencies"].ok(result)
 
         except Exception as e:
             error_msg = f"Failed to discover Python dependencies: {e}"
             logger.exception(error_msg)
-            return FlextResult[PythonDependencies].fail(error_msg)
+            return FlextResult["PythonImportDiscovery.PythonDependencies"].fail(error_msg)
 
     def _categorize_imports(
         self,
