@@ -40,7 +40,9 @@ class SecretsVaultDecryptor(BaseSecurityScript):
             vault_file = kwargs.get("vault_file")
             # password = kwargs.get("password")  # TODO(@marlonsc): Implement password-based decryption
             # mask_secrets = kwargs.get("mask_secrets", True)  # TODO(@marlonsc): Implement secret masking
-            output_format = kwargs.get("format", "text")  # TODO(@marlonsc): Implement format options
+            output_format = kwargs.get(
+                "format", "text"
+            )  # TODO(@marlonsc): Implement format options
 
             if not vault_file:
                 print_colored("❌ Vault file path is required", Colors.RED)

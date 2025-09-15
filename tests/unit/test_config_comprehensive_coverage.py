@@ -62,7 +62,8 @@ class TestFlextConfigComprehensiveCoverage:
         result = validator.validate_business_rules(config)
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert result.error is not None and "name cannot be empty" in result.error
+        assert result.error is not None
+        assert "name cannot be empty" in result.error
 
     def test_business_validator_invalid_version_line_213(self) -> None:
         """Test BusinessValidator with invalid version format (line 213)."""
@@ -140,9 +141,9 @@ class TestFlextConfigComprehensiveCoverage:
         result = persistence.save_to_file(test_data, invalid_path)
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert result.error is not None and (
-            "Failed to save file" in result.error
-            or "Permission denied" in result.error
+        assert result.error is not None
+        assert (
+            "Failed to save file" in result.error or "Permission denied" in result.error
         )
 
     def test_factory_create_from_env_default_env_file_line_458(self) -> None:
@@ -177,7 +178,8 @@ class TestFlextConfigComprehensiveCoverage:
         result = factory.create_from_file("nonexistent_config.json")
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert result.error is not None and (
+        assert result.error is not None
+        assert (
             "file not found" in result.error.lower()
             or "does not exist" in result.error.lower()
         )
@@ -198,7 +200,8 @@ class TestFlextConfigComprehensiveCoverage:
         Path(temp_path).unlink()
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert result.error is not None and ("json" in result.error.lower() or "parse" in result.error.lower())
+        assert result.error is not None
+        assert "json" in result.error.lower() or "parse" in result.error.lower()
 
     def test_factory_create_from_file_unsupported_format_lines_521_522(self) -> None:
         """Test Factory.create_from_file with unsupported format (lines 521-522)."""
@@ -216,7 +219,11 @@ class TestFlextConfigComprehensiveCoverage:
         Path(temp_path).unlink()
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert result.error is not None and ("failed to parse" in result.error.lower() or "expecting value" in result.error.lower())
+        assert result.error is not None
+        assert (
+            "failed to parse" in result.error.lower()
+            or "expecting value" in result.error.lower()
+        )
 
     def test_factory_create_for_testing_with_overrides_line_557(self) -> None:
         """Test Factory.create_for_testing with custom overrides (line 557)."""
@@ -251,8 +258,10 @@ class TestFlextConfigComprehensiveCoverage:
 
         # Validation still occurs, so this should fail
         FlextTestsMatchers.assert_result_failure(result)
-        assert result.error is not None and "invalid_environment" in result.error
-        assert result.error is not None and "Environment must be one of" in result.error
+        assert result.error is not None
+        assert "invalid_environment" in result.error
+        assert result.error is not None
+        assert "Environment must be one of" in result.error
 
     def test_init_toml_file_processing_line_918(self) -> None:
         """Test __init__ with TOML file processing (line 918)."""
@@ -413,8 +422,8 @@ class TestFlextConfigComprehensiveCoverage:
         # Cleanup
         Path(temp_path).unlink()
 
-        # Should handle YAML processing
-        FlextTestsMatchers.assert_result_success(result)
+        # Should handle YAML processing - _load_from_sources returns FlextConfig, not FlextResult
+        assert isinstance(result, FlextConfig)
 
     def test_validate_log_level_invalid_line_1122(self) -> None:
         """Test validate_log_level with invalid level (line 1122)."""
@@ -441,7 +450,8 @@ class TestFlextConfigComprehensiveCoverage:
         )
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert result.error is not None and ("validation" in result.error.lower() or "error" in result.error.lower())
+        assert result.error is not None
+        assert "validation" in result.error.lower() or "error" in result.error.lower()
 
     def test_create_environment_validation_lines_1360_1365(self) -> None:
         """Test create method environment validation (lines 1360-1365)."""
@@ -451,7 +461,8 @@ class TestFlextConfigComprehensiveCoverage:
         )
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert result.error is not None and (
+        assert result.error is not None
+        assert (
             "invalid environment" in result.error.lower()
             or "environment" in result.error.lower()
         )
@@ -469,7 +480,8 @@ class TestFlextConfigComprehensiveCoverage:
             result = FlextConfig.create_from_environment()
 
             FlextTestsMatchers.assert_result_failure(result)
-            assert result.error is not None and (
+            assert result.error is not None
+            assert (
                 "validation" in result.error.lower()
                 or "invalid" in result.error.lower()
             )
@@ -529,6 +541,7 @@ class TestFlextConfigComprehensiveCoverage:
         # Second seal should fail (already sealed)
         result2 = config.seal()
         FlextTestsMatchers.assert_result_failure(result2)
+        assert result2.error is not None
         assert "already sealed" in result2.error.lower()
 
     def test_to_api_payload_error_handling_lines_1627_1628(self) -> None:
@@ -542,7 +555,8 @@ class TestFlextConfigComprehensiveCoverage:
             result = config.to_api_payload()
 
             FlextTestsMatchers.assert_result_failure(result)
-            assert result.error is not None and (
+            assert result.error is not None
+            assert (
                 "serialization" in result.error.lower()
                 or "error" in result.error.lower()
             )
@@ -550,7 +564,9 @@ class TestFlextConfigComprehensiveCoverage:
     def test_safe_load_error_handling_lines_1675_1676(self) -> None:
         """Test safe_load error handling (lines 1675-1676)."""
         # Create data that will cause loading error
-        invalid_data = {"invalid": float("inf")}  # JSON can't serialize infinity
+        invalid_data: dict[str, object] = {
+            "invalid": float("inf")
+        }  # JSON can't serialize infinity
 
         result = FlextConfig.safe_load(invalid_data)
 
@@ -562,12 +578,15 @@ class TestFlextConfigComprehensiveCoverage:
         base_config = FlextConfig()
 
         # Create incompatible override data that will cause merge error
-        invalid_override = {"environment": ["invalid", "list", "value"]}
+        invalid_override: dict[str, object] = {
+            "environment": ["invalid", "list", "value"]
+        }
 
         result = FlextConfig.merge(base_config, invalid_override)
 
         FlextTestsMatchers.assert_result_failure(result)
-        assert result.error is not None and ("merge" in result.error.lower() or "error" in result.error.lower())
+        assert result.error is not None
+        assert "merge" in result.error.lower() or "error" in result.error.lower()
 
     def test_comprehensive_validation_scenarios(self) -> None:
         """Test comprehensive validation scenarios for additional coverage."""
@@ -580,15 +599,18 @@ class TestFlextConfigComprehensiveCoverage:
         validator = FlextConfig.BusinessValidator()
         result = validator.validate_business_rules(config_prod)
         FlextTestsMatchers.assert_result_failure(result)
-        assert result.error is not None and "production environment requires" in result.error
+        assert result.error is not None
+        assert "production environment requires" in result.error
 
     def test_factory_methods_edge_cases(self) -> None:
         """Test factory methods with edge cases for additional coverage."""
         factory = FlextConfig.Factory()
 
         # Test create_from_env with custom settings
-        with patch.dict(os.environ, {"FLEXT_APP_NAME": "factory-test"}):
-            result = factory.create_from_env(extra_settings={"debug": True})
+        with patch.dict(
+            os.environ, {"FLEXT_APP_NAME": "factory-test", "FLEXT_DEBUG": "true"}
+        ):
+            result = factory.create_from_env()
             FlextTestsMatchers.assert_result_success(result)
             config = result.unwrap()
             assert config.debug is True
@@ -597,9 +619,9 @@ class TestFlextConfigComprehensiveCoverage:
         """Test EnvironmentConfigAdapter functionality."""
         adapter = FlextConfig.DefaultEnvironmentAdapter()
 
-        # Test get_env_var with default
-        result = adapter.get_env_var("NONEXISTENT_VAR", "default_value")
-        assert result == "default_value"
+        # Test get_env_var with nonexistent variable
+        result = adapter.get_env_var("NONEXISTENT_VAR")
+        FlextTestsMatchers.assert_result_failure(result)
 
         # Test get_env_vars_with_prefix
         with patch.dict(
@@ -611,6 +633,8 @@ class TestFlextConfigComprehensiveCoverage:
             },
         ):
             result = adapter.get_env_vars_with_prefix("FLEXT_TEST_")
-            assert len(result) == 2
-            assert "FLEXT_TEST_VAR1" in result
-            assert "FLEXT_TEST_VAR2" in result
+            assert result.is_success
+            env_vars = result.unwrap()
+            assert len(env_vars) == 2
+            assert "FLEXT_TEST_VAR1" in env_vars
+            assert "FLEXT_TEST_VAR2" in env_vars
