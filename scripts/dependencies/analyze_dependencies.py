@@ -4,13 +4,14 @@
 Usa flext_tools para análise modular e cache.
 """
 
+import json
 import sys
 from pathlib import Path
-from typing import cast
 
 from flext_core import FlextTypes
-from src.flext_tools import Colors, print_colored
-from src.flext_tools.conflicts import ConflictAnalyzer
+
+from flext_tools import Colors, print_colored
+from flext_tools.conflicts import ConflictAnalyzer
 
 
 def main() -> int:
@@ -106,12 +107,17 @@ def main() -> int:
     # Gera relatório completo se solicitado
     if "--report" in sys.argv:
         report_path = Path("conflict_report.md")
-        # Cast analysis to expected type for generate_conflict_report
-        analysis_typed = cast(
-            "dict[str, FlextTypes.Core.Dict | FlextTypes.Core.List | str | int]",
-            analysis,
-        )
-        report = analyzer.generate_conflict_report(analysis_typed)
+        # Generate simple report from analysis data
+        report_lines = [
+            "# Dependency Conflict Analysis Report",
+            "",
+            f"**Total Projects Analyzed:** {analysis.get('total_projects', 0)}",
+            f"**Conflicts Found:** {analysis.get('conflict_count', 0)}",
+            "",
+            "## Analysis Summary",
+            f"```json\n{json.dumps(analysis, indent=2)}\n```"
+        ]
+        report = "\n".join(report_lines)
 
         with Path(report_path).open("w", encoding="utf-8") as f:
             f.write(report)

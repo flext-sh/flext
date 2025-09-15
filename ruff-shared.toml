@@ -22,10 +22,10 @@ format.line-ending = "lf"
 format.quote-style = "double"
 line-length = 88
 lint.ignore = [
-    "B009",
+    "B009",     
     "B010",
     "B017",
-    "BLE001",
+    "BLE001",  # Blind exception handling
     "C901",    # Too complex (some functions need complexity)
     "COM812",
     "D203",    # conflicting with D211 (blank line before class)
@@ -102,6 +102,7 @@ lint.per-file-ignores."**/*tests*/**" = [
     "PLR0915",
     "PLR2004",
     "PT011",
+    "PT018",   # Assertion should be broken down - acceptable in tests for clarity
     "PT019",   # Fixture without value - fixtures are used in function body
     "S101",
     "S103",
@@ -109,7 +110,6 @@ lint.per-file-ignores."**/*tests*/**" = [
     "S105",
     "S106",
     "S107",
-    "S110",    # try-except-pass - acceptable in test exception handling
     "S112",
     "S311",
     "S603",
@@ -120,6 +120,7 @@ lint.per-file-ignores."**/*tests*/**" = [
     "TRY004",  # Prefer TypeError - test flexibility over strict exception types
 ]
 lint.per-file-ignores."**/src/**" = [
+    "S104",   # hardcoded-bind-all-interfaces - legitimate for web server configuration
     "S603",   # subprocess-without-shell-equals-true - legitimate subprocess calls
 ]
 lint.per-file-ignores."**/typings/**" = ["PYI001"]

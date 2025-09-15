@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Protocol
+from typing import Protocol, assert_never
 
 from flext_core import (
     FlextDomainService,
@@ -135,7 +135,7 @@ class FlextAdvancedDevToolsManager(
             self._manager = manager
 
         def create_test_operation(
-            self, operation_data: dict
+            self, operation_data: dict[str, object]
         ) -> FlextResult[FlextAdvancedDevModels.TestOperation]:
             """Create test operation from data with validation."""
             try:
@@ -147,7 +147,7 @@ class FlextAdvancedDevToolsManager(
                 return FlextResult[FlextAdvancedDevModels.TestOperation].fail(str(e))
 
         def create_lint_operation(
-            self, operation_data: dict
+            self, operation_data: dict[str, object]
         ) -> FlextResult[FlextAdvancedDevModels.LintOperation]:
             """Create lint operation from data with validation."""
             try:
@@ -159,7 +159,7 @@ class FlextAdvancedDevToolsManager(
                 return FlextResult[FlextAdvancedDevModels.LintOperation].fail(str(e))
 
         def create_operation(
-            self, operation_data: dict
+            self, operation_data: dict[str, object]
         ) -> FlextResult[FlextAdvancedDevModels.OperationUnion]:
             """Create operation from data using discriminated unions."""
             try:
@@ -359,13 +359,13 @@ class FlextAdvancedDevToolsManager(
 
         if isinstance(operation, FlextAdvancedDevModels.TestOperation):
             return executor.execute_test_operation(operation)
-        if isinstance(operation, FlextAdvancedDevModels.LintOperation):
+        elif isinstance(operation, FlextAdvancedDevModels.LintOperation):
             return executor.execute_lint_operation(operation)
-        if isinstance(operation, FlextAdvancedDevModels.FormatOperation):
+        elif isinstance(operation, FlextAdvancedDevModels.FormatOperation):
             return executor.execute_format_operation(operation)
-        return FlextResult[FlextAdvancedDevModels.OperationResult].fail(
-            f"Unknown operation type: {type(operation)}"
-        )
+        else:
+            # This should never be reached due to discriminated union validation
+            assert_never(operation)
 
     def discover_workspace_projects(
         self, workspace_root: str | None = None
