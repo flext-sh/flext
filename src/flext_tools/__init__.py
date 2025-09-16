@@ -84,7 +84,7 @@ from .testing import (
 
 # Workspace management - explicit imports
 from .workspace import (
-    FlextWorkspaceService as FlextToolsWorkspaceService,
+    FlextWorkspaceService,
 )
 
 # Workspace CLI - explicit imports
@@ -115,8 +115,7 @@ __all__: FlextTypes.Core.StringList = [
     "FlextToolsDevService",
     "FlextToolsQualityGateway",
     "FlextToolsScript",
-    "FlextToolsWorkspaceCLIService",
-    "FlextToolsWorkspaceService",
+    "FlextWorkspaceService",
     "OracleE2ERunner",
     "QualityCheckConfig",
     "QualityGateway",

@@ -6,7 +6,6 @@ and validate proper functionality of business rules and model validation.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 """
 
-
 from flext.project_types import ProjectType, WorkspaceStatus
 from flext.workspace_models import FlextAdvancedWorkspaceModels
 
@@ -19,7 +18,7 @@ class TestProject:
         project = FlextAdvancedWorkspaceModels.Project(
             name="test-project",
             path="/path/to/project",
-            project_type=ProjectType.PYTHON
+            project_type=ProjectType.PYTHON,
         )
 
         assert project.name == "test-project"
@@ -39,7 +38,7 @@ class TestProject:
             has_tests=True,
             has_pyproject=True,
             has_go_mod=True,
-            test_count=25
+            test_count=25,
         )
 
         assert project.name == "full-project"
@@ -53,9 +52,7 @@ class TestProject:
     def test_project_validate_business_rules_success(self) -> None:
         """Test project business rule validation - success case (line 36)."""
         project = FlextAdvancedWorkspaceModels.Project(
-            name="valid-project",
-            path="/valid/path",
-            project_type=ProjectType.PYTHON
+            name="valid-project", path="/valid/path", project_type=ProjectType.PYTHON
         )
 
         # This covers line 36: return FlextResult[None].ok(None)
@@ -72,14 +69,14 @@ class TestProject:
             ProjectType.JAVASCRIPT,
             ProjectType.RUST,
             ProjectType.DOCUMENTATION,
-            ProjectType.MIXED
+            ProjectType.MIXED,
         ]
 
         for project_type in project_types:
             project = FlextAdvancedWorkspaceModels.Project(
                 name=f"project-{project_type.value}",
                 path=f"/path/to/{project_type.value}",
-                project_type=project_type
+                project_type=project_type,
             )
 
             assert project.project_type == project_type
@@ -95,7 +92,7 @@ class TestProject:
             name="test-project",
             path="/path/to/project",
             project_type=ProjectType.PYTHON,
-            test_count=10
+            test_count=10,
         )
         assert project.test_count == 10
 
@@ -104,7 +101,7 @@ class TestProject:
             name="test-project-zero",
             path="/path/to/project",
             project_type=ProjectType.PYTHON,
-            test_count=0
+            test_count=0,
         )
         assert project_zero.test_count == 0
 
@@ -129,7 +126,7 @@ class TestWorkspaceContext:
             workspace_root="/full/workspace",
             project_filter="test-*",
             include_hidden=True,
-            max_depth=5
+            max_depth=5,
         )
 
         assert context.workspace_root == "/full/workspace"
@@ -142,8 +139,7 @@ class TestWorkspaceContext:
         # Valid max depth values
         for depth in [1, 5, 10]:
             context = FlextAdvancedWorkspaceModels.WorkspaceContext(
-                workspace_root="/workspace",
-                max_depth=depth
+                workspace_root="/workspace", max_depth=depth
             )
             assert context.max_depth == depth
 
@@ -154,8 +150,7 @@ class TestWorkspaceInfo:
     def test_workspace_info_creation_minimal(self) -> None:
         """Test workspace info creation with minimal required fields."""
         info = FlextAdvancedWorkspaceModels.WorkspaceInfo(
-            name="test-workspace",
-            path="/workspace/path"
+            name="test-workspace", path="/workspace/path"
         )
 
         assert info.name == "test-workspace"
@@ -175,7 +170,7 @@ class TestWorkspaceInfo:
             project_count=3,
             total_size_mb=150.5,
             projects=project_list,
-            status=WorkspaceStatus.INITIALIZING
+            status=WorkspaceStatus.INITIALIZING,
         )
 
         assert info.name == "full-workspace"
@@ -191,7 +186,7 @@ class TestWorkspaceInfo:
             name="valid-workspace",
             path="/valid/path",
             project_count=5,
-            total_size_mb=100.0
+            total_size_mb=100.0,
         )
 
         # This covers line 70: return FlextResult[None].ok(None)
@@ -207,7 +202,7 @@ class TestWorkspaceInfo:
             name="edge-workspace",
             path="/edge/path",
             project_count=0,  # Valid boundary value
-            total_size_mb=0.0  # Valid boundary value
+            total_size_mb=0.0,  # Valid boundary value
         )
 
         # Test that business rules pass for valid boundary values
@@ -219,7 +214,7 @@ class TestWorkspaceInfo:
             name="normal-workspace",
             path="/normal/path",
             project_count=10,
-            total_size_mb=250.5
+            total_size_mb=250.5,
         )
 
         result_normal = info_normal.validate_business_rules()
@@ -230,14 +225,14 @@ class TestWorkspaceInfo:
         statuses = [
             WorkspaceStatus.READY,
             WorkspaceStatus.INITIALIZING,
-            WorkspaceStatus.ERROR
+            WorkspaceStatus.ERROR,
         ]
 
         for status in statuses:
             info = FlextAdvancedWorkspaceModels.WorkspaceInfo(
                 name=f"workspace-{status.value}",
                 path=f"/path/to/{status.value}",
-                status=status
+                status=status,
             )
 
             assert info.status == status
@@ -249,10 +244,7 @@ class TestWorkspaceInfo:
     def test_workspace_info_zero_values_valid(self) -> None:
         """Test that zero values are valid for numeric fields."""
         info = FlextAdvancedWorkspaceModels.WorkspaceInfo(
-            name="zero-workspace",
-            path="/zero/path",
-            project_count=0,
-            total_size_mb=0.0
+            name="zero-workspace", path="/zero/path", project_count=0, total_size_mb=0.0
         )
 
         result = info.validate_business_rules()
@@ -267,7 +259,7 @@ class TestWorkspaceInfo:
             path="/multi/project/path",
             project_count=len(projects),
             total_size_mb=500.25,
-            projects=projects
+            projects=projects,
         )
 
         assert info.projects == projects
@@ -287,7 +279,7 @@ class TestWorkspaceModelsIntegration:
             workspace_root="/flext/workspace",
             project_filter="flext-*",
             include_hidden=False,
-            max_depth=2
+            max_depth=2,
         )
 
         # Create projects
@@ -298,7 +290,7 @@ class TestWorkspaceModelsIntegration:
                 project_type=ProjectType.PYTHON,
                 has_tests=True,
                 has_pyproject=True,
-                test_count=45
+                test_count=45,
             ),
             FlextAdvancedWorkspaceModels.Project(
                 name="flext-cli",
@@ -306,7 +298,7 @@ class TestWorkspaceModelsIntegration:
                 project_type=ProjectType.PYTHON,
                 has_tests=True,
                 has_pyproject=True,
-                test_count=20
+                test_count=20,
             ),
             FlextAdvancedWorkspaceModels.Project(
                 name="flext-tools",
@@ -314,8 +306,8 @@ class TestWorkspaceModelsIntegration:
                 project_type=ProjectType.GO,
                 has_tests=True,
                 has_go_mod=True,
-                test_count=15
-            )
+                test_count=15,
+            ),
         ]
 
         # Validate all projects
@@ -330,7 +322,7 @@ class TestWorkspaceModelsIntegration:
             project_count=len(projects),
             total_size_mb=sum([50.0, 30.0, 25.0]),  # Simulated sizes
             projects=[p.name for p in projects],
-            status=WorkspaceStatus.READY
+            status=WorkspaceStatus.READY,
         )
 
         # Validate workspace info
