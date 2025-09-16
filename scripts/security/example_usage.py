@@ -53,7 +53,7 @@ class RiskLevel:
     LOW = "LOW"
 
 
-# Define create_security_scanner function
+# Define create_security_scanner function using new class method pattern
 def create_security_scanner(
     target_paths: FlextTypes.Core.StringList,
     *,  # Force keyword-only arguments
@@ -71,11 +71,17 @@ def create_security_scanner(
 
     """
     config = ScanConfig(target_paths, include_dependencies=not exclude_dependencies)
-    scanner = AntipatternScanner(config)
+    scanner_result = AntipatternScanner.create_scanner(config)
+
+    if scanner_result.is_failure:
+        # Handle error by creating a basic scanner - maintaining backwards compatibility
+        return AntipatternScanner(config)
+
+    scanner = scanner_result.value
 
     # TODO(marlonsc): Implement output_format and risk_threshold configuration
-    # Configuration is stored in scanner.config
-    # scanner.config.output_format and scanner.config.risk_threshold are available
+    # Configuration is stored in scanner._config
+    # scanner._config.output_format and scanner._config.risk_threshold are available
     _ = output_format  # Suppress unused argument warning
     _ = risk_threshold  # Suppress unused argument warning
 
