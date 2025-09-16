@@ -15,11 +15,11 @@ from __future__ import annotations
 import json
 import tomllib
 from collections import defaultdict
-from dataclasses import dataclass
 from importlib.metadata import distributions  # Python 3.8+
 from pathlib import Path
 
-from flext_core import FlextTypes
+from flext_core import FlextLogger, FlextModels, FlextResult, FlextTypes
+from pydantic import Field
 
 from .colors import Colors, print_colored
 
@@ -28,121 +28,76 @@ MAX_PROJECTS_DISPLAY = 5
 MAX_CONFLICTS_DISPLAY = 10
 
 
-@dataclass
-class PackageInfo:
-    """Information about an installed package.
+class FlextToolsVenvConsistencyValidator:
+    """Enterprise virtual environment consistency validator for FLEXT ecosystem.
 
-    Represents metadata for packages installed in the virtual environment
-    including version information, location, and dependency relationships
-    for comprehensive environment analysis.
-
-    Attributes:
-      name: Package name (normalized to lowercase)
-      version: Installed package version string
-      location: Installation location path (optional)
-      required_by: List of packages that depend on this package (optional)
-      dependencies: List of packages this package depends on (optional)
+    Validates consistency of shared virtual environment across workspace
+    with comprehensive conflict detection, missing dependency identification,
+    and optimization recommendations following unified class patterns
+    and enterprise-grade validation standards.
 
     """
 
-    name: str
-    version: str
-    location: str | None = None
-    required_by: FlextTypes.Core.StringList | None = None
-    dependencies: FlextTypes.Core.StringList | None = None
+    # Nested classes for unified pattern
+    class PackageInfo(FlextModels.Value):
+        """Information about an installed package."""
 
+        name: str = Field(..., description="Package name (normalized to lowercase)")
+        version: str = Field(..., description="Installed package version string")
+        location: str | None = Field(None, description="Installation location path")
+        required_by: FlextTypes.Core.StringList | None = Field(
+            None, description="Packages that depend on this package"
+        )
+        dependencies: FlextTypes.Core.StringList | None = Field(
+            None, description="Packages this package depends on"
+        )
 
-@dataclass
-class VenvConflict:
-    """Represents a conflict in the virtual environment.
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Validate package info business rules."""
+            if not self.name:
+                return FlextResult[None].fail("Package name is required")
+            if not self.version:
+                return FlextResult[None].fail("Package version is required")
+            return FlextResult[None].ok(None)
 
-    Contains detailed information about environment inconsistencies including
-    conflict type, affected packages, severity assessment, and impact analysis
-    for structured conflict resolution and reporting.
+    class VenvConflict(FlextModels.Value):
+        """Represents a conflict in the virtual environment."""
 
-    Attributes:
-      type: Conflict type ("version", "missing", "duplicate", "orphan")
-      package: Name of the affected package
-      details: Detailed description of the conflict
-      severity: Severity level ("critical", "warning", "info")
-      affected_projects: List of projects impacted by this conflict
+        type: str = Field(..., description="Conflict type")
+        package: str = Field(..., description="Name of affected package")
+        details: str = Field(..., description="Detailed conflict description")
+        severity: str = Field(..., description="Severity level")
+        affected_projects: FlextTypes.Core.StringList = Field(
+            default_factory=list, description="Projects impacted by conflict"
+        )
 
-    """
+        def validate_business_rules(self) -> FlextResult[None]:
+            """Validate conflict business rules."""
+            valid_types = ["version", "missing", "duplicate", "orphan", "missing_venv"]
+            valid_severities = ["critical", "warning", "info"]
 
-    type: str  # "version", "missing", "duplicate", "orphan"
-    package: str
-    details: str
-    severity: str  # "critical", "warning", "info"
-    affected_projects: FlextTypes.Core.StringList
-
-
-class VenvConsistencyValidator:
-    """Validates consistency of shared virtual environment across workspace.
-
-    Provides comprehensive validation capabilities for workspace virtual environment
-    consistency, analyzing installed packages against project requirements and
-    identifying conflicts, missing dependencies, and optimization opportunities.
-
-    This validator serves as the primary tool for maintaining environment health
-    across the FLEXT ecosystem, ensuring that the shared virtual environment
-    meets all project requirements while identifying potential issues before
-    they impact development or deployment processes.
-
-    Attributes:
-      workspace_path: Path to the workspace root directory
-      venv_path: Path to the shared virtual environment
-      installed_packages: Dictionary of installed package information
-      project_requirements: Dictionary of project requirement specifications
-      conflicts: List of identified environment conflicts
-
-    Features:
-      - Comprehensive package installation analysis
-      - Cross-project requirement validation
-      - Version conflict detection with severity assessment
-      - Orphaned package identification
-      - Missing dependency detection
-      - Detailed reporting with actionable recommendations
-
-    Architecture:
-      Uses Poetry configuration parsing and pip list integration for
-      comprehensive environment analysis with proper error handling
-      and structured conflict reporting.
-
-    Example:
-      Validate workspace environment consistency:
-
-      >>> from pathlib import Path
-      >>> validator = VenvConsistencyValidator(Path("/workspace"))
-      >>>
-      >>> conflicts = validator.validate_venv_consistency()
-      >>>
-      >>> # Check for critical issues
-      >>> if conflicts["critical"]:
-      ...     print("Critical environment issues detected:")
-      ...     for conflict in conflicts["critical"]:
-      ...         print(f"  {conflict.package}: {conflict.details}")
-      >>>
-      >>> # Review warnings and optimization opportunities
-      >>> for severity in ["warning", "info"]:
-      ...     if conflicts[severity]:
-      ...         print(f"{severity.title()} issues: {len(conflicts[severity])}")
-
-    Integration:
-      Integrates with Poetry dependency management, quality gates, and
-      automated validation pipelines for continuous environment health
-      monitoring and maintenance.
-
-    """
+            if self.type not in valid_types:
+                return FlextResult[None].fail(f"Invalid conflict type: {self.type}")
+            if self.severity not in valid_severities:
+                return FlextResult[None].fail(f"Invalid severity: {self.severity}")
+            if not self.package and self.type != "missing_venv":
+                return FlextResult[None].fail("Package name is required")
+            return FlextResult[None].ok(None)
 
     def __init__(self, workspace_path: Path) -> None:
-        """Initialize validator with workspace path."""
+        """Initialize unified venv consistency validator."""
         self.workspace_path = workspace_path
         self.venv_path = workspace_path / ".venv"
-        self.installed_packages: dict[str, PackageInfo] = {}
+        self.logger = FlextLogger(__name__)
+        self.installed_packages: dict[
+            str, FlextToolsVenvConsistencyValidator.PackageInfo
+        ] = {}
         self.project_requirements: dict[str, FlextTypes.Core.Headers] = {}
-        self.conflicts: list[VenvConflict] = []
+        self.conflicts: list[FlextToolsVenvConsistencyValidator.VenvConflict] = []
 
-    def validate_venv_consistency(self) -> dict[str, list[VenvConflict]]:
+    def validate_venv_consistency(
+        self,
+    ) -> dict[str, list[FlextToolsVenvConsistencyValidator.VenvConflict]]:
         """Validate consistency of shared virtual environment.
 
         Performs comprehensive validation of the workspace virtual environment
@@ -178,7 +133,7 @@ class VenvConsistencyValidator:
         if not self._check_venv_exists():
             return {
                 "critical": [
-                    VenvConflict(
+                    self.VenvConflict(
                         type="missing_venv",
                         package="",
                         details="Virtual environment not found",
@@ -258,9 +213,12 @@ class VenvConsistencyValidator:
                 name = package_data["name"].lower()
                 version = package_data["version"]
 
-                self.installed_packages[name] = PackageInfo(
+                self.installed_packages[name] = self.PackageInfo(
                     name=name,
                     version=version,
+                    location=None,
+                    required_by=None,
+                    dependencies=None,
                 )
 
             print_colored(
@@ -408,7 +366,7 @@ class VenvConsistencyValidator:
         for package, versions in package_versions.items():
             if len(versions) > 1:
                 self.conflicts.append(
-                    VenvConflict(
+                    self.VenvConflict(
                         type="version",
                         package=package,
                         details=f"Conflicting versions: {', '.join(versions)}",
@@ -421,7 +379,7 @@ class VenvConsistencyValidator:
         for package, requesters in package_requesters.items():
             if package not in self.installed_packages:
                 self.conflicts.append(
-                    VenvConflict(
+                    self.VenvConflict(
                         type="missing",
                         package=package,
                         details="Package required but not installed",
@@ -451,7 +409,7 @@ class VenvConsistencyValidator:
 
         for orphan in orphans:
             self.conflicts.append(
-                VenvConflict(
+                self.VenvConflict(
                     type="orphan",
                     package=orphan,
                     details="Package installed but not required by any project",
@@ -465,7 +423,9 @@ class VenvConsistencyValidator:
             Colors.GREEN,
         )
 
-    def _organize_conflicts_by_severity(self) -> dict[str, list[VenvConflict]]:
+    def _organize_conflicts_by_severity(
+        self,
+    ) -> dict[str, list[FlextToolsVenvConsistencyValidator.VenvConflict]]:
         """Organize conflicts by severity level.
 
         Groups identified conflicts into severity categories for prioritized
@@ -480,7 +440,7 @@ class VenvConsistencyValidator:
             - 'info': Optimization opportunities and minor issues
 
         """
-        organized: dict[str, list[VenvConflict]] = {
+        organized: dict[str, list[FlextToolsVenvConsistencyValidator.VenvConflict]] = {
             "critical": [],
             "warning": [],
             "info": [],
@@ -493,7 +453,9 @@ class VenvConsistencyValidator:
 
     def _print_validation_summary(
         self,
-        conflicts_by_severity: dict[str, list[VenvConflict]],
+        conflicts_by_severity: dict[
+            str, list[FlextToolsVenvConsistencyValidator.VenvConflict]
+        ],
     ) -> None:
         """Print comprehensive validation summary report.
 
@@ -556,3 +518,9 @@ class VenvConsistencyValidator:
                     f"    ... and {len(conflicts) - 10} more conflicts",
                     color,
                 )
+
+
+# Backward compatibility exports
+VenvConsistencyValidator = FlextToolsVenvConsistencyValidator
+PackageInfo = FlextToolsVenvConsistencyValidator.PackageInfo
+VenvConflict = FlextToolsVenvConsistencyValidator.VenvConflict

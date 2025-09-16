@@ -67,6 +67,7 @@ lint.per-file-ignores."**/exceptions.py" = [
 ]
 lint.per-file-ignores."**/examples/**" = [
     "EXE001",
+    "FIX002", # line-contains-todo - examples may have legitimate TODOs
     "INP001",
     "N999",    # Invalid module name (examples use numbered prefixes)
     "PLR2004", # magic numbers in examples
@@ -122,6 +123,9 @@ lint.per-file-ignores."**/*tests*/**" = [
 lint.per-file-ignores."**/src/**" = [
     "S104",   # hardcoded-bind-all-interfaces - legitimate for web server configuration
     "S603",   # subprocess-without-shell-equals-true - legitimate subprocess calls
+]
+lint.per-file-ignores."**/client-b-meltano-native/src/client-b_meltano_native/cli.py" = [
+    "FIX002", # line-contains-todo - legitimate TODO for CLI migration
 ]
 lint.per-file-ignores."**/typings/**" = ["PYI001"]
 lint.select = ["ALL"]
