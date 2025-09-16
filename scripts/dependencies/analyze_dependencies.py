@@ -115,7 +115,7 @@ def main() -> int:
             f"**Conflicts Found:** {analysis.get('conflict_count', 0)}",
             "",
             "## Analysis Summary",
-            f"```json\n{json.dumps(analysis, indent=2)}\n```"
+            f"```json\n{json.dumps(analysis, indent=2)}\n```",
         ]
         report = "\n".join(report_lines)
 

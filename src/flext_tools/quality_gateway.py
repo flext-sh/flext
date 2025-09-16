@@ -140,7 +140,9 @@ def get_quality_failure_summary(quality_data: QualityCheckData) -> str:
     return f"Failed: {', '.join(failures)}"
 
 
-def get_quality_issues(quality_data: QualityCheckData) -> list[FlextToolsQualityGateway.QualityIssue]:
+def get_quality_issues(
+    quality_data: QualityCheckData,
+) -> list[FlextToolsQualityGateway.QualityIssue]:
     """Get all quality issues detected during checks."""
     issues = quality_data.get("issues", [])
     if isinstance(issues, list):
@@ -232,7 +234,9 @@ class FlextToolsQualityGateway:
         file_path: str | None = Field(
             None, description="File path where issue was detected"
         )
-        line_number: int | None = Field(None, description="Line number where issue occurs")
+        line_number: int | None = Field(
+            None, description="Line number where issue occurs"
+        )
         rule_code: str | None = Field(
             None, description="Quality rule or error code identifier"
         )
@@ -351,7 +355,13 @@ class FlextToolsQualityGateway:
 
             # Execute quality checks based on configuration via compact loop
             checks: list[
-                tuple[str, bool, Callable[[], FlextResult[list[FlextToolsQualityGateway.QualityIssue]]]]
+                tuple[
+                    str,
+                    bool,
+                    Callable[
+                        [], FlextResult[list[FlextToolsQualityGateway.QualityIssue]]
+                    ],
+                ]
             ] = [
                 ("lint_passed", config.enable_lint, self._run_lint_check),
                 ("types_passed", config.enable_types, self._run_type_check),
@@ -434,7 +444,9 @@ class FlextToolsQualityGateway:
                 f"Quality check execution failed: {e}"
             )
 
-    def _run_lint_check(self) -> FlextResult[list[FlextToolsQualityGateway.QualityIssue]]:
+    def _run_lint_check(
+        self,
+    ) -> FlextResult[list[FlextToolsQualityGateway.QualityIssue]]:
         """Run linting check with Ruff."""
         try:
             if shutil.which("ruff") is None:
@@ -460,9 +472,9 @@ class FlextToolsQualityGateway:
                     )
                     exit_code = result.returncode
                 except Exception as e:
-                    return FlextResult[list[FlextToolsQualityGateway.QualityIssue]].fail(
-                        f"Lint check failed: {e}"
-                    )
+                    return FlextResult[
+                        list[FlextToolsQualityGateway.QualityIssue]
+                    ].fail(f"Lint check failed: {e}")
 
             if exit_code == 0:
                 return FlextResult[list[FlextToolsQualityGateway.QualityIssue]].ok([])
@@ -484,9 +496,13 @@ class FlextToolsQualityGateway:
                 f"Linting issues found: {len(issues)} issues"
             )
         except Exception as e:
-            return FlextResult[list[FlextToolsQualityGateway.QualityIssue]].fail(f"Lint check failed: {e}")
+            return FlextResult[list[FlextToolsQualityGateway.QualityIssue]].fail(
+                f"Lint check failed: {e}"
+            )
 
-    def _run_type_check(self) -> FlextResult[list[FlextToolsQualityGateway.QualityIssue]]:
+    def _run_type_check(
+        self,
+    ) -> FlextResult[list[FlextToolsQualityGateway.QualityIssue]]:
         """Run type checking with MyPy."""
         try:
             if shutil.which("mypy") is None:
@@ -526,9 +542,13 @@ class FlextToolsQualityGateway:
                 f"Type checking issues found: {len(issues)} issues"
             )
         except Exception as e:
-            return FlextResult[list[FlextToolsQualityGateway.QualityIssue]].fail(f"Type check failed: {e}")
+            return FlextResult[list[FlextToolsQualityGateway.QualityIssue]].fail(
+                f"Type check failed: {e}"
+            )
 
-    def _run_test_check(self) -> FlextResult[list[FlextToolsQualityGateway.QualityIssue]]:
+    def _run_test_check(
+        self,
+    ) -> FlextResult[list[FlextToolsQualityGateway.QualityIssue]]:
         """Run test execution with Pytest."""
         try:
             if shutil.which("pytest") is None:
@@ -566,9 +586,13 @@ class FlextToolsQualityGateway:
                 f"Test failures found: {len(issues)} issues"
             )
         except Exception as e:
-            return FlextResult[list[FlextToolsQualityGateway.QualityIssue]].fail(f"Test execution failed: {e}")
+            return FlextResult[list[FlextToolsQualityGateway.QualityIssue]].fail(
+                f"Test execution failed: {e}"
+            )
 
-    def _run_coverage_check(self, threshold: float) -> FlextResult[list[FlextToolsQualityGateway.QualityIssue]]:
+    def _run_coverage_check(
+        self, threshold: float
+    ) -> FlextResult[list[FlextToolsQualityGateway.QualityIssue]]:
         """Run coverage analysis with threshold validation."""
         try:
             # This is a placeholder - implement actual coverage check
@@ -593,9 +617,13 @@ class FlextToolsQualityGateway:
             )
 
         except Exception as e:
-            return FlextResult[list[FlextToolsQualityGateway.QualityIssue]].fail(f"Coverage check failed: {e}")
+            return FlextResult[list[FlextToolsQualityGateway.QualityIssue]].fail(
+                f"Coverage check failed: {e}"
+            )
 
-    def _run_security_check(self) -> FlextResult[list[FlextToolsQualityGateway.QualityIssue]]:
+    def _run_security_check(
+        self,
+    ) -> FlextResult[list[FlextToolsQualityGateway.QualityIssue]]:
         """Run security scanning with Bandit."""
         try:
             if shutil.which("bandit") is None:
@@ -610,7 +638,9 @@ class FlextToolsQualityGateway:
             return FlextResult[list[FlextToolsQualityGateway.QualityIssue]].ok([])
 
         except Exception as e:
-            return FlextResult[list[FlextToolsQualityGateway.QualityIssue]].fail(f"Security check failed: {e}")
+            return FlextResult[list[FlextToolsQualityGateway.QualityIssue]].fail(
+                f"Security check failed: {e}"
+            )
 
     def run_quality_checks(self) -> FlextTypes.Core.Dict:
         """Convenience method for testing - use run_quality_checks_safe() instead."""

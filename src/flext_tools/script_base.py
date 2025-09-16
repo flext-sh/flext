@@ -118,7 +118,6 @@ from .quality_gateway import (
 logger = FlextLogger(__name__)
 
 
-
 class FlextToolsScript(FlextDomainService[bool]):
     """Abstract base class for enterprise-grade FLEXT scripts with lifecycle management.
 
@@ -618,7 +617,9 @@ class FlextToolsScript(FlextDomainService[bool]):
                             k: v
                             for k, v in kwargs.items()
                             if k in sig.parameters
-                            or any(p.kind == p.VAR_KEYWORD for p in sig.parameters.values())
+                            or any(
+                                p.kind == p.VAR_KEYWORD for p in sig.parameters.values()
+                            )
                         }
                         result = config.main_func(**valid_kwargs)
                     else:

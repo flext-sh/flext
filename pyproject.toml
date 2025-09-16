@@ -209,8 +209,8 @@ pep621_dev_dependency_groups = ["dev", "security", "test", "typings", "docs"]
 # Strict mode - enables all recommended checks
 strict = true
 
-# Module path resolution - exclude src to avoid conflicts
-# mypy_path = "src"  # Commented out to avoid module name conflicts
+# Module path resolution - use src directory explicitly
+mypy_path = "src"
 
 
 
