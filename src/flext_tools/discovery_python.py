@@ -123,7 +123,10 @@ class PythonImportDiscovery:
             for pkg in self.runtime | self.test:
                 if (
                     not pkg
-                    or not pkg.replace("-", "").replace("_", "").replace(".", "").isalnum()
+                    or not pkg.replace("-", "")
+                    .replace("_", "")
+                    .replace(".", "")
+                    .isalnum()
                 ):
                     return FlextResult[None].fail(f"Invalid package name: {pkg}")
 
@@ -241,7 +244,9 @@ class PythonImportDiscovery:
         except Exception as e:
             error_msg = f"Failed to discover Python dependencies: {e}"
             logger.exception(error_msg)
-            return FlextResult["PythonImportDiscovery.PythonDependencies"].fail(error_msg)
+            return FlextResult["PythonImportDiscovery.PythonDependencies"].fail(
+                error_msg
+            )
 
     def _categorize_imports(
         self,

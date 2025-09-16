@@ -100,33 +100,6 @@ logger = FlextLogger(__name__)
 ValidationData = FlextTypes.Core.Dict
 
 
-# Utility functions for validation data (moved from removed ValidationResult class)
-def has_validation_issues(validation_data: ValidationData) -> bool:
-    """Check if validation found any security issues."""
-    issues = validation_data.get("issues", [])
-    return isinstance(issues, list) and len(issues) > 0
-
-
-def get_risk_assessment(validation_data: ValidationData) -> str:
-    """Get human-readable risk assessment summary."""
-    safe = validation_data.get("safe", False)
-    issues = validation_data.get("issues", [])
-    issue_count = len(issues) if isinstance(issues, list) else 0
-
-    if not safe:
-        return f"HIGH RISK: {issue_count} security issues found"
-    if issue_count > 0:
-        return f"MEDIUM RISK: {issue_count} warnings identified"
-    return "LOW RISK: Operation validated as safe"
-
-
-class BackupRequirement(Enum):
-    """Backup requirement options."""
-
-    REQUIRED = "required"
-    OPTIONAL = "optional"
-
-
 class SafetyValidator:
     """Enterprise safety validator for comprehensive security validation.
 
@@ -171,6 +144,72 @@ class SafetyValidator:
       and coordinates with monitoring systems for security analytics.
 
     """
+
+    class BackupRequirement(Enum):
+        """Backup requirement options."""
+
+        REQUIRED = "required"
+        OPTIONAL = "optional"
+
+    class _ValidationHelper:
+        """Nested helper class for validation utilities."""
+
+        @staticmethod
+        def has_validation_issues(validation_data: ValidationData) -> bool:
+            """Check if validation found any security issues."""
+            issues = validation_data.get("issues", [])
+            return isinstance(issues, list) and len(issues) > 0
+
+        @staticmethod
+        def get_risk_assessment(validation_data: ValidationData) -> str:
+            """Get human-readable risk assessment summary."""
+            safe = validation_data.get("safe", False)
+            issues = validation_data.get("issues", [])
+            issue_count = len(issues) if isinstance(issues, list) else 0
+
+            if not safe:
+                return f"HIGH RISK: {issue_count} security issues found"
+            if issue_count > 0:
+                return f"MEDIUM RISK: {issue_count} warnings identified"
+            return "LOW RISK: Operation validated as safe"
+
+        @staticmethod
+        def generate_recommendations_for_operation(
+            operation_type: str, context: FlextTypes.Core.Dict | None = None
+        ) -> FlextTypes.Core.StringList:
+            """Generate security recommendations based on operation type."""
+            context = context or {}
+            base_recommendations = [
+                "Follow security best practices",
+                "Use version control for tracking changes",
+                "Test in development environment first",
+            ]
+
+            operation_specific = {
+                "package_install": [
+                    "Verify package source and maintainer reputation",
+                    "Check for known vulnerabilities",
+                    "Use virtual environment for isolation",
+                ],
+                "file_operation": [
+                    "Create backup before critical file modifications",
+                    "Validate file permissions and access rights",
+                    "Use atomic operations to prevent corruption",
+                ],
+                "command_execution": [
+                    "Validate command arguments for security",
+                    "Use safe execution environment",
+                    "Monitor command output for errors",
+                ],
+                "poetry_operation": [
+                    "Validate project configuration",
+                    "Check dependency compatibility",
+                    "Monitor for dependency conflicts",
+                ],
+            }
+
+            specific_recs = operation_specific.get(operation_type, [])
+            return base_recommendations + specific_recs
 
     def __init__(self) -> None:
         """Initialize safety validator with comprehensive security configuration.
@@ -376,7 +415,7 @@ class SafetyValidator:
         file_path: Path,
         operation: str,
         *,
-        backup_requirement: BackupRequirement = BackupRequirement.REQUIRED,
+        backup_requirement: SafetyValidator.BackupRequirement | None = None,
     ) -> FlextResult[ValidationData]:
         """Safely validate file operation using railway-oriented programming.
 
@@ -405,6 +444,9 @@ class SafetyValidator:
             to ensure reliable file operation validation with security controls.
 
         """
+        if backup_requirement is None:
+            backup_requirement = self.BackupRequirement.REQUIRED
+
         try:
             logger.info(
                 "Starting file operation validation",
@@ -463,10 +505,14 @@ class SafetyValidator:
                     "Critical file detected - backup strongly recommended",
                 )
 
-                if backup_requirement == BackupRequirement.REQUIRED and operation in {
-                    "write",
-                    "delete",
-                }:
+                if (
+                    backup_requirement == SafetyValidator.BackupRequirement.REQUIRED
+                    and operation
+                    in {
+                        "write",
+                        "delete",
+                    }
+                ):
                     recommendations.append(
                         "Backup required for critical file modification/deletion",
                     )
@@ -726,12 +772,12 @@ class SafetyValidator:
                 operation_type=operation_type,
             )
 
-            recommendations_result = self.get_safety_recommendations_safe(operation_type, context)
-            if recommendations_result.is_failure:
-                logger.warning(f"Failed to get safety recommendations: {recommendations_result.error}")
-                recommendations = []
-            else:
-                recommendations = recommendations_result.value
+            # Fixed: Use helper method instead of recursive call
+            recommendations = (
+                self._ValidationHelper.generate_recommendations_for_operation(
+                    operation_type, context
+                )
+            )
 
             logger.debug(
                 "Safety recommendations generated",
@@ -890,4 +936,3 @@ class SafetyValidator:
         except (requests.RequestException, OSError):
             # In case of network error, assume it exists (false positive is better)
             return True
-

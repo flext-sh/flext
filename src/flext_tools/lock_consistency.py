@@ -173,7 +173,6 @@ class LockConsistencyAnalyzer:
         lock_version: str | None = None
         python_versions: FlextTypes.Core.StringList | None = None
 
-
     class WorkspaceSummary(FlextModels.Value):
         """Comprehensive workspace dependency analysis summary.
 
@@ -181,7 +180,9 @@ class LockConsistencyAnalyzer:
         counts, package inventory, and inconsistency classification.
         """
 
-        total_projects: int = Field(..., description="Total number of projects analyzed")
+        total_projects: int = Field(
+            ..., description="Total number of projects analyzed"
+        )
         projects_with_lock: int = Field(
             ...,
             description="Number of projects with valid poetry.lock files",
@@ -212,7 +213,10 @@ class LockConsistencyAnalyzer:
             if self.total_projects < 0:
                 return FlextResult[None].fail("Total projects cannot be negative")
 
-            if self.projects_with_lock < 0 or self.projects_with_lock > self.total_projects:
+            if (
+                self.projects_with_lock < 0
+                or self.projects_with_lock > self.total_projects
+            ):
                 return FlextResult[None].fail(
                     "Projects with lock must be between 0 and total projects"
                 )
@@ -270,7 +274,9 @@ class LockConsistencyAnalyzer:
 
         """
         try:
-            print_colored("🔍 Analyzing Poetry lock file consistency across workspace...")
+            print_colored(
+                "🔍 Analyzing Poetry lock file consistency across workspace..."
+            )
 
             # Discover all projects with Poetry configuration
             projects = self._discover_projects(workspace_path)
@@ -508,7 +514,9 @@ class LockConsistencyAnalyzer:
 
         return categories
 
-    def get_workspace_summary(self) -> FlextResult[LockConsistencyAnalyzer.WorkspaceSummary]:
+    def get_workspace_summary(
+        self,
+    ) -> FlextResult[LockConsistencyAnalyzer.WorkspaceSummary]:
         """Return comprehensive workspace dependency analysis summary.
 
         Generates statistical summary of workspace analysis including project
@@ -542,7 +550,9 @@ class LockConsistencyAnalyzer:
         except Exception as e:
             error_msg = f"Failed to generate workspace summary: {e}"
             logger.exception(error_msg)
-            return FlextResult["LockConsistencyAnalyzer.WorkspaceSummary"].fail(error_msg)
+            return FlextResult["LockConsistencyAnalyzer.WorkspaceSummary"].fail(
+                error_msg
+            )
 
     def print_detailed_report(
         self,
@@ -562,7 +572,6 @@ class LockConsistencyAnalyzer:
             if not inconsistencies:
                 continue
 
-
             severity_label = {
                 "critical": "🔴 CRITICAL",
                 "warning": "🟡 WARNINGS",
@@ -573,21 +582,18 @@ class LockConsistencyAnalyzer:
 
             for inconsistency in inconsistencies[:10]:  # Limite de 10 por categoria
                 print_colored(
-                    f"  📦 {inconsistency.package_name} ({inconsistency.inconsistency_type}):")
+                    f"  📦 {inconsistency.package_name} ({inconsistency.inconsistency_type}):"
+                )
 
                 for project, value in sorted(inconsistency.details.items()):
                     status_emoji = "❌" if value == "missing" else "📌"
                     print_colored(f"    {status_emoji} {project}: {value}")
 
             if len(inconsistencies) > MAX_INCONSISTENCIES_DISPLAY:
-                print_colored(
-                    f"    ... and {len(inconsistencies) - 10} more items")
+                print_colored(f"    ... and {len(inconsistencies) - 10} more items")
 
 
 # Data Models for Lock Consistency Analysis
-
-
-
 
 
 class LockInconsistency(FlextModels.Value):
@@ -596,7 +602,9 @@ class LockInconsistency(FlextModels.Value):
     package_name: str = Field(..., description="Package with inconsistency")
     inconsistency_type: str = Field(..., description="Type of inconsistency")
     severity: str = Field(..., description="Severity level")
-    details: dict[str, str] = Field(default_factory=dict, description="Inconsistency details")
+    details: dict[str, str] = Field(
+        default_factory=dict, description="Inconsistency details"
+    )
 
 
 class WorkspaceSummary(FlextModels.Value):
@@ -610,4 +618,8 @@ class WorkspaceSummary(FlextModels.Value):
     warning_inconsistencies: int = Field(..., description="Warning inconsistencies")
 
 
-__all__: FlextTypes.Core.StringList = ["LockConsistencyAnalyzer", "LockInconsistency", "WorkspaceSummary"]
+__all__: FlextTypes.Core.StringList = [
+    "LockConsistencyAnalyzer",
+    "LockInconsistency",
+    "WorkspaceSummary",
+]
