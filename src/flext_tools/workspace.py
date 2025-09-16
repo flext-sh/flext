@@ -11,6 +11,8 @@ from __future__ import annotations
 
 from flext_core import FlextDomainService, FlextResult
 
+from flext.workspace import FlextWorkspaceService as ActualWorkspaceService
+
 
 class FlextWorkspaceService(FlextDomainService[str]):
     """Facade to flext workspace service - eliminates workspace code duplication."""
@@ -20,12 +22,12 @@ class FlextWorkspaceService(FlextDomainService[str]):
         super().__init__()
         # Lazy loading to avoid circular imports
         self._workspace_path = workspace_path
-        self._workspace_service: FlextWorkspaceService | None = None
+        self._workspace_service: object | None = None
 
-    def _get_workspace_service(self) -> FlextWorkspaceService:
+    def _get_workspace_service(self) -> object:
         """Lazy load workspace service to avoid circular imports."""
         if self._workspace_service is None:
-            self._workspace_service = FlextWorkspaceService(self._workspace_path)
+            self._workspace_service = ActualWorkspaceService()
         return self._workspace_service
 
     def execute(self, _request: str = "") -> FlextResult[str]:

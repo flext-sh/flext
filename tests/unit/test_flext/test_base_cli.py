@@ -107,7 +107,7 @@ class TestFlextCliDirectExports:
         assert FlextCliConfig.__name__ == "FlextCliConfig"
         assert FlextCliApi.__name__ == "FlextCliApi"
         assert FlextCliFormatters.__name__ == "FlextCliFormatters"
-        assert FlextCliServices.__name__ == "FlextCliServices"
+        assert FlextCliServices.__name__ == "FlextCliService"
 
 
 class TestDirectImportCompliance:

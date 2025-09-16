@@ -124,9 +124,7 @@ class AntipatternScanner:
     class ScanConfig(BaseModel):
         """Configuration for antipattern scanning operations."""
 
-        target_paths: list[str] = Field(
-            default_factory=lambda: ["src/"]
-        )
+        target_paths: list[str] = Field(default_factory=lambda: ["src/"])
         exclude_patterns: list[str] = Field(
             default_factory=lambda: [".venv", "__pycache__", "*.pyc"]
         )
@@ -141,203 +139,270 @@ class AntipatternScanner:
                 return FlextResult[None].fail(
                     "At least one target path must be specified"
                 )
-            if self.max_workers < 1 or self.max_workers > AntipatternScanner.MAX_WORKERS_LIMIT:
+            if (
+                self.max_workers < 1
+                or self.max_workers > AntipatternScanner.MAX_WORKERS_LIMIT
+            ):
                 return FlextResult[None].fail(
                     f"Max workers must be between 1 and {AntipatternScanner.MAX_WORKERS_LIMIT}"
                 )
             return FlextResult[None].ok(None)
 
-    def __init__(self, config: ScanConfig) -> None:
-        """Initialize antipattern scanner with configuration."""
-        self._config = config
-        self._logger = FlextLogger(__name__)
+    class _DirectoryScanner:
+        """Nested helper class for directory scanning operations."""
 
-    def scan_ecosystem(self) -> FlextResult[list[SecurityViolation]]:
-        """Scan the entire FLEXT ecosystem for security antipatterns."""
-        try:
+        def __init__(
+            self, config: AntipatternScanner.ScanConfig, logger: FlextLogger
+        ) -> None:
+            self._config = config
+            self._logger = logger
+
+        def scan_directory(
+            self, directory: Path
+        ) -> FlextResult[list[AntipatternScanner.SecurityViolation]]:
+            """Scan a directory for security violations with explicit error handling."""
             violations = []
 
-            # Scan each target path
-            for target_path in self._config.target_paths:
-                path = Path(target_path)
-                if path.exists():
-                    path_violations = self._scan_directory(path)
-                    violations.extend(path_violations)
-                else:
-                    self._logger.warning(f"Target path does not exist: {target_path}")
+            if not directory.exists():
+                return FlextResult[list[AntipatternScanner.SecurityViolation]].fail(
+                    f"Directory does not exist: {directory}"
+                )
+
+            for file_path in directory.rglob("*.py"):
+                if self._should_scan_file(file_path):
+                    file_result = self._scan_file(file_path)
+                    if file_result.is_failure:
+                        self._logger.warning(f"File scan failed: {file_result.error}")
+                        continue
+                    violations.extend(file_result.value)
 
             return FlextResult[list[AntipatternScanner.SecurityViolation]].ok(
                 violations
             )
-        except Exception as e:
-            return FlextResult[list[AntipatternScanner.SecurityViolation]].fail(
-                f"Ecosystem scan failed: {e}"
+
+        def _should_scan_file(self, file_path: Path) -> bool:
+            """Determine if a file should be scanned based on configuration."""
+            file_str = str(file_path)
+
+            for pattern in self._config.exclude_patterns:
+                if pattern in file_str:
+                    return False
+
+            return not (
+                not self._config.include_tests and "test" in file_path.name.lower()
             )
 
-    def _scan_directory(self, directory: Path) -> list[SecurityViolation]:
-        """Scan a directory for security violations."""
-        violations = []
-
-        try:
-            for file_path in directory.rglob("*.py"):
-                if self._should_scan_file(file_path):
-                    file_violations = self._scan_file(file_path)
-                    violations.extend(file_violations)
-        except Exception:
-            self._logger.exception("Directory scan failed for %s", directory)
-
-        return violations
-
-    def _should_scan_file(self, file_path: Path) -> bool:
-        """Determine if a file should be scanned based on configuration."""
-        file_str = str(file_path)
-
-        # Check exclude patterns
-        for pattern in self._config.exclude_patterns:
-            if pattern in file_str:
-                return False
-
-        # Skip test files if not including tests
-        return not (not self._config.include_tests and "test" in file_path.name.lower())
-
-    def _scan_file(self, file_path: Path) -> list[SecurityViolation]:
-        """Scan a single file for security violations."""
-        violations = []
-
-        try:
-            with file_path.open(encoding="utf-8") as f:
-                content = f.read()
-
-            # Parse AST
-            tree = ast.parse(content)
-
-            # Scan for violations
-            violations.extend(self._scan_ast_for_violations(tree, file_path))
-
-        except Exception:
-            self._logger.exception("File scan failed for %s", file_path)
-
-        return violations
-
-    def _scan_ast_for_violations(
-        self, tree: ast.AST, file_path: Path
-    ) -> list[SecurityViolation]:
-        """Scan AST for security violations."""
-        violations = []
-
-        for node in ast.walk(tree):
-            if isinstance(node, ast.ExceptHandler):
-                violation = self._check_except_handler(node, file_path)
-                if violation:
-                    violations.append(violation)
-
-        return violations
-
-    def _check_except_handler(
-        self, node: ast.ExceptHandler, file_path: Path
-    ) -> SecurityViolation | None:
-        """Check an except handler for security violations."""
-        if not node.body:
-            return None
-
-        # Check for silent failure patterns
-        if len(node.body) == 1:
-            body_node = node.body[0]
-
-            # Check for return statements with fake values
-            if isinstance(body_node, ast.Return):
-                if body_node.value and isinstance(
-                    body_node.value, (ast.Constant, ast.NameConstant)
-                ):
-                    return self.SecurityViolation(
-                        file_path=str(file_path),
-                        line_number=node.lineno,
-                        violation_type=self.ViolationType.SILENT_FAILURE,
-                        risk_level=self.RiskLevel.HIGH,
-                        pattern="except: return fake_value",
-                        context=ast.unparse(body_node),
-                        remediation="Use FlextResult.fail() instead of returning fake values",
-                        severity_score=8,
-                    )
-
-            # Check for pass statements
-            elif isinstance(body_node, ast.Pass):
-                return self.SecurityViolation(
-                    file_path=str(file_path),
-                    line_number=node.lineno,
-                    violation_type=self.ViolationType.EXCEPTION_SWALLOWING,
-                    risk_level=self.RiskLevel.CRITICAL,
-                    pattern="except: pass",
-                    context="Exception swallowed silently",
-                    remediation="Use FlextResult.fail() for proper error handling",
-                    severity_score=10,
+        def _scan_file(
+            self, file_path: Path
+        ) -> FlextResult[list[AntipatternScanner.SecurityViolation]]:
+            """Scan a single file for security violations with explicit error handling."""
+            if not file_path.exists():
+                return FlextResult[list[AntipatternScanner.SecurityViolation]].fail(
+                    f"File does not exist: {file_path}"
                 )
 
-        return None
+            try:
+                with file_path.open(encoding="utf-8") as f:
+                    content = f.read()
+
+                tree = ast.parse(content)
+                violations = self._scan_ast_for_violations(tree, file_path)
+                return FlextResult[list[AntipatternScanner.SecurityViolation]].ok(
+                    violations
+                )
+
+            except Exception as e:
+                return FlextResult[list[AntipatternScanner.SecurityViolation]].fail(
+                    f"File scan failed for {file_path}: {e}"
+                )
+
+        def _scan_ast_for_violations(
+            self, tree: ast.AST, file_path: Path
+        ) -> list[AntipatternScanner.SecurityViolation]:
+            """Scan AST for security violations."""
+            violations = []
+
+            for node in ast.walk(tree):
+                if isinstance(node, ast.ExceptHandler):
+                    violation = self._check_except_handler(node, file_path)
+                    if violation:
+                        violations.append(violation)
+
+            return violations
+
+        def _check_except_handler(
+            self, node: ast.ExceptHandler, file_path: Path
+        ) -> AntipatternScanner.SecurityViolation | None:
+            """Check an except handler for security violations."""
+            if not node.body:
+                return None
+
+            if len(node.body) == 1:
+                body_node = node.body[0]
+
+                if isinstance(body_node, ast.Return):
+                    if body_node.value and isinstance(
+                        body_node.value, (ast.Constant, ast.NameConstant)
+                    ):
+                        return AntipatternScanner.SecurityViolation(
+                            file_path=str(file_path),
+                            line_number=node.lineno,
+                            violation_type=AntipatternScanner.ViolationType.SILENT_FAILURE,
+                            risk_level=AntipatternScanner.RiskLevel.HIGH,
+                            pattern="except: return fake_value",
+                            context=ast.unparse(body_node),
+                            remediation="Use FlextResult.fail() instead of returning fake values",
+                            severity_score=8,
+                        )
+
+                elif isinstance(body_node, ast.Pass):
+                    return AntipatternScanner.SecurityViolation(
+                        file_path=str(file_path),
+                        line_number=node.lineno,
+                        violation_type=AntipatternScanner.ViolationType.EXCEPTION_SWALLOWING,
+                        risk_level=AntipatternScanner.RiskLevel.CRITICAL,
+                        pattern="except: pass",
+                        context="Exception swallowed silently",
+                        remediation="Use FlextResult.fail() for proper error handling",
+                        severity_score=10,
+                    )
+
+            return None
+
+    class _ReportGenerator:
+        """Nested helper class for report generation operations."""
+
+        def __init__(self, config: AntipatternScanner.ScanConfig) -> None:
+            self._config = config
+
+        def generate_report(
+            self,
+            violations: list[AntipatternScanner.SecurityViolation],
+            output_path: str,
+        ) -> FlextResult[None]:
+            """Generate a detailed security report with explicit error handling."""
+            if not violations:
+                return FlextResult[None].fail(
+                    "No violations provided for report generation"
+                )
+
+            if not output_path:
+                return FlextResult[None].fail("Output path cannot be empty")
+
+            try:
+                report_data = {
+                    "scan_config": {
+                        "target_paths": self._config.target_paths,
+                        "exclude_patterns": self._config.exclude_patterns,
+                        "risk_threshold": self._config.risk_threshold,
+                    },
+                    "violations": [
+                        {
+                            "file_path": v.file_path,
+                            "line_number": v.line_number,
+                            "violation_type": v.violation_type.value,
+                            "risk_level": v.risk_level.value,
+                            "pattern": v.pattern,
+                            "context": v.context,
+                            "remediation": v.remediation,
+                            "severity_score": v.severity_score,
+                        }
+                        for v in violations
+                    ],
+                    "summary": {
+                        "total_violations": len(violations),
+                        "critical_count": len(
+                            [
+                                v
+                                for v in violations
+                                if v.risk_level == AntipatternScanner.RiskLevel.CRITICAL
+                            ]
+                        ),
+                        "high_count": len(
+                            [
+                                v
+                                for v in violations
+                                if v.risk_level == AntipatternScanner.RiskLevel.HIGH
+                            ]
+                        ),
+                        "medium_count": len(
+                            [
+                                v
+                                for v in violations
+                                if v.risk_level == AntipatternScanner.RiskLevel.MEDIUM
+                            ]
+                        ),
+                        "low_count": len(
+                            [
+                                v
+                                for v in violations
+                                if v.risk_level == AntipatternScanner.RiskLevel.LOW
+                            ]
+                        ),
+                    },
+                }
+
+                out_path = Path(output_path)
+                with out_path.open("w", encoding="utf-8") as f:
+                    json.dump(report_data, f, indent=2)
+
+                return FlextResult[None].ok(None)
+            except Exception as e:
+                return FlextResult[None].fail(f"Report generation failed: {e}")
+
+    def __init__(self, config: ScanConfig) -> None:
+        """Initialize antipattern scanner with configuration."""
+        self._config = config
+        self._logger = FlextLogger(__name__)
+        self._directory_scanner = self._DirectoryScanner(config, self._logger)
+        self._report_generator = self._ReportGenerator(config)
+
+    @classmethod
+    def create_scanner(
+        cls,
+        config: ScanConfig,
+    ) -> FlextResult[AntipatternScanner]:
+        """Create security scanner with configuration validation."""
+        validation_result = config.validate_business_rules()
+        if validation_result.is_failure:
+            return FlextResult[AntipatternScanner].fail(
+                f"Invalid configuration: {validation_result.error}"
+            )
+
+        return FlextResult[AntipatternScanner].ok(cls(config))
+
+    def scan_ecosystem(self) -> FlextResult[list[SecurityViolation]]:
+        """Scan the entire FLEXT ecosystem for security antipatterns with explicit error handling."""
+        if not self._config.target_paths:
+            return FlextResult[list[AntipatternScanner.SecurityViolation]].fail(
+                "No target paths specified for scanning"
+            )
+
+        violations = []
+
+        for target_path in self._config.target_paths:
+            path = Path(target_path)
+            if not path.exists():
+                self._logger.warning(f"Target path does not exist: {target_path}")
+                continue
+
+            scan_result = self._directory_scanner.scan_directory(path)
+            if scan_result.is_failure:
+                self._logger.error(f"Directory scan failed: {scan_result.error}")
+                continue
+
+            violations.extend(scan_result.value)
+
+        return FlextResult[list[AntipatternScanner.SecurityViolation]].ok(violations)
 
     def generate_report(
         self, violations: list[SecurityViolation], output_path: str
     ) -> FlextResult[None]:
         """Generate a detailed security report."""
-        try:
-            report_data = {
-                "scan_config": {
-                    "target_paths": self._config.target_paths,
-                    "exclude_patterns": self._config.exclude_patterns,
-                    "risk_threshold": self._config.risk_threshold,
-                },
-                "violations": [
-                    {
-                        "file_path": v.file_path,
-                        "line_number": v.line_number,
-                        "violation_type": v.violation_type.value,
-                        "risk_level": v.risk_level.value,
-                        "pattern": v.pattern,
-                        "context": v.context,
-                        "remediation": v.remediation,
-                        "severity_score": v.severity_score,
-                    }
-                    for v in violations
-                ],
-                "summary": {
-                    "total_violations": len(violations),
-                    "critical_count": len(
-                        [
-                            v
-                            for v in violations
-                            if v.risk_level == self.RiskLevel.CRITICAL
-                        ]
-                    ),
-                    "high_count": len(
-                        [v for v in violations if v.risk_level == self.RiskLevel.HIGH]
-                    ),
-                    "medium_count": len(
-                        [v for v in violations if v.risk_level == self.RiskLevel.MEDIUM]
-                    ),
-                    "low_count": len(
-                        [v for v in violations if v.risk_level == self.RiskLevel.LOW]
-                    ),
-                },
-            }
-
-            out_path = Path(output_path)
-            with out_path.open("w", encoding="utf-8") as f:
-                json.dump(report_data, f, indent=2)
-
-            return FlextResult[None].ok(None)
-        except Exception as e:
-            return FlextResult[None].fail(f"Report generation failed: {e}")
-
-
-def create_security_scanner(
-    config: AntipatternScanner.ScanConfig,
-) -> AntipatternScanner:
-    """Create security scanner with configuration."""
-    return AntipatternScanner(config)
+        return self._report_generator.generate_report(violations, output_path)
 
 
 # Export unified service and nested classes
 __all__ = [
     "AntipatternScanner",
-    "create_security_scanner",
 ]

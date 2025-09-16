@@ -107,42 +107,54 @@ class TestColorize:
 class TestPrintColored:
     """Test the print_colored function for console output with logging."""
 
-    @patch("flext_tools.colors.print")
+    @patch("flext_tools.colors.FlextCliFormatters")
     @patch("flext_tools.colors._logger")
-    def test_print_colored_with_color(self, mock_logger: mock.Mock, mock_print: mock.Mock) -> None:
+    def test_print_colored_with_color(
+        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
+    ) -> None:
         """Test print_colored with color outputs colored text and logs."""
         message = "Success message"
         color = Colors.GREEN
+        mock_formatter = mock.Mock()
+        mock_formatter_class.return_value = mock_formatter
 
         print_colored(message, color)
 
         # Should print the colorized text
         expected_colored = f"{color}{message}{Colors.RESET}"
-        mock_print.assert_called_once_with(expected_colored)
+        mock_formatter.console.print.assert_called_once_with(expected_colored)
 
         # Should log the original message (without color codes)
         mock_logger.info.assert_called_once_with(message)
 
-    @patch("flext_tools.colors.print")
+    @patch("flext_tools.colors.FlextCliFormatters")
     @patch("flext_tools.colors._logger")
-    def test_print_colored_without_color(self, mock_logger: mock.Mock, mock_print: mock.Mock) -> None:
+    def test_print_colored_without_color(
+        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
+    ) -> None:
         """Test print_colored without color outputs plain text and logs."""
         message = "Plain message"
+        mock_formatter = mock.Mock()
+        mock_formatter_class.return_value = mock_formatter
 
         print_colored(message, "")
 
         # Should print the original message unchanged
-        mock_print.assert_called_once_with(message)
+        mock_formatter.console.print.assert_called_once_with(message)
 
         # Should log the original message
         mock_logger.info.assert_called_once_with(message)
 
-    @patch("flext_tools.colors.print")
+    @patch("flext_tools.colors.FlextCliFormatters")
     @patch("flext_tools.colors._logger")
-    def test_print_colored_logs_without_color_codes(self, mock_logger: mock.Mock, mock_print: mock.Mock) -> None:
+    def test_print_colored_logs_without_color_codes(
+        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
+    ) -> None:
         """Test that logger receives message without ANSI color codes."""
         message = "Warning message"
         color = Colors.YELLOW
+        mock_formatter = mock.Mock()
+        mock_formatter_class.return_value = mock_formatter
 
         print_colored(message, color)
 
@@ -151,36 +163,44 @@ class TestPrintColored:
 
         # Print should get the colored version
         expected_colored = f"{color}{message}{Colors.RESET}"
-        mock_print.assert_called_once_with(expected_colored)
+        mock_formatter.console.print.assert_called_once_with(expected_colored)
 
-    @patch("flext_tools.colors.print")
+    @patch("flext_tools.colors.FlextCliFormatters")
     @patch("flext_tools.colors._logger")
-    def test_print_colored_empty_message(self, mock_logger: mock.Mock, mock_print: mock.Mock) -> None:
+    def test_print_colored_empty_message(
+        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
+    ) -> None:
         """Test print_colored with empty message."""
         message = ""
         color = Colors.RED
+        mock_formatter = mock.Mock()
+        mock_formatter_class.return_value = mock_formatter
 
         print_colored(message, color)
 
         # Should print the colored empty string
         expected_colored = f"{color}{Colors.RESET}"
-        mock_print.assert_called_once_with(expected_colored)
+        mock_formatter.console.print.assert_called_once_with(expected_colored)
 
         # Should log the empty message
         mock_logger.info.assert_called_once_with(message)
 
-    @patch("flext_tools.colors.print")
+    @patch("flext_tools.colors.FlextCliFormatters")
     @patch("flext_tools.colors._logger")
-    def test_print_colored_with_multiline_message(self, mock_logger: mock.Mock, mock_print: mock.Mock) -> None:
+    def test_print_colored_with_multiline_message(
+        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
+    ) -> None:
         """Test print_colored with multiline message."""
         message = "Line 1\nLine 2\nLine 3"
         color = Colors.BLUE
+        mock_formatter = mock.Mock()
+        mock_formatter_class.return_value = mock_formatter
 
         print_colored(message, color)
 
         # Should print the colorized multiline text
         expected_colored = f"{color}{message}{Colors.RESET}"
-        mock_print.assert_called_once_with(expected_colored)
+        mock_formatter.console.print.assert_called_once_with(expected_colored)
 
         # Should log the original multiline message
         mock_logger.info.assert_called_once_with(message)
@@ -205,26 +225,32 @@ class TestColorIntegration:
         assert "Warning: " in warning_text
         assert "Error!" in error_text
 
-    @patch("builtins.print")
+    @patch("flext_tools.colors.FlextCliFormatters")
     @patch("flext_tools.colors._logger")
-    def test_print_colored_multiple_calls(self, mock_logger: mock.Mock, mock_print: mock.Mock) -> None:
+    def test_print_colored_multiple_calls(
+        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
+    ) -> None:
         """Test multiple calls to print_colored work correctly."""
+        # Set up the mock
+        mock_formatter = mock.Mock()
+        mock_formatter_class.return_value = mock_formatter
+
         messages = [
             ("Success", Colors.GREEN),
             ("Warning", Colors.YELLOW),
             ("Error", Colors.RED),
-            ("Info", "")  # No color
+            ("Info", ""),  # No color
         ]
 
         for message, color in messages:
             print_colored(message, color)
 
-        # Should have called print and logger for each message
-        assert mock_print.call_count == len(messages)
+        # Should have called console.print and logger for each message
+        assert mock_formatter.console.print.call_count == len(messages)
         assert mock_logger.info.call_count == len(messages)
 
         # Check the calls match expectations
         for i, (message, color) in enumerate(messages):
             expected_colored = colorize(message, color)
-            assert mock_print.call_args_list[i][0][0] == expected_colored
+            assert mock_formatter.console.print.call_args_list[i][0][0] == expected_colored
             assert mock_logger.info.call_args_list[i][0][0] == message

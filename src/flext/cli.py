@@ -27,6 +27,9 @@ class FlextControlPanelCli(FlextDomainService[str]):
     enterprise-grade CLI capabilities through proper flext-cli integration.
     """
 
+    # Instance fields with proper type annotations
+    _cli_api: FlextCliApi | None
+
     class _Colors:
         """Temporary color constants to avoid circular imports."""
 
@@ -110,18 +113,39 @@ class FlextControlPanelCli(FlextDomainService[str]):
         super().__init__()
         self._logger = FlextLogger(__name__)
         # Initialize FlextCliApi using the factory pattern to avoid initialization issues
-        self._cli_api: FlextCliApi | None
-        try:
-            self._cli_api = FlextCliApi(version="0.9.0")  # Match flext-core version
-        except Exception as e:
-            # If FlextCliApi has initialization issues, create a minimal working instance
-            # This is a simple fallback to ensure tests can run while optimization continues
-            self._logger.warning(
-                f"FlextCliApi initialization issue: {e}, using fallback"
-            )
+        # Initialize CLI API using FlextResult pattern
+        cli_api_result = self._initialize_cli_api()
+        if cli_api_result.is_success:
+            self._cli_api = cli_api_result.unwrap()
+        else:
+            self._logger.warning(f"FlextCliApi initialization failed: {cli_api_result.error}")
             self._cli_api = None  # Will be handled in methods
         self._config: FlextCliConfig | None = None
         self._workspace: Path = Path.cwd()
+
+    def _initialize_cli_api(self) -> FlextResult[FlextCliApi]:
+        """Initialize CLI API with proper error handling using FlextResult."""
+        try:
+            cli_api = FlextCliApi(version="0.9.0")  # Match flext-core version
+            return FlextResult[FlextCliApi].ok(cli_api)
+        except Exception as e:
+            return FlextResult[FlextCliApi].fail(f"FlextCliApi initialization failed: {str(e)}")
+
+    def _initialize_config(self, profile: str, debug: bool) -> FlextResult[FlextCliConfig]:
+        """Initialize CLI configuration using FlextResult pattern."""
+        try:
+            config = FlextCliConfig(profile=profile, debug=debug)
+            return FlextResult[FlextCliConfig].ok(config)
+        except Exception as e:
+            return FlextResult[FlextCliConfig].fail(f"Configuration initialization failed: {str(e)}")
+
+    def _create_main_cli(self) -> FlextResult[FlextCliMain]:
+        """Create main CLI using FlextResult pattern."""
+        try:
+            main_cli = FlextCliMain()
+            return FlextResult[FlextCliMain].ok(main_cli)
+        except Exception as e:
+            return FlextResult[FlextCliMain].fail(f"FlextCliMain creation failed: {str(e)}")
 
     # Instance method not needed; static method above is sufficient for calls via class or instance
 
@@ -344,33 +368,29 @@ class FlextControlPanelCli(FlextDomainService[str]):
         *,
         debug: bool = False,
     ) -> FlextResult[FlextCliMain]:
-        """Initialize CLI with flext-cli integration."""
-        try:
-            self._config = FlextCliConfig(profile=profile, debug=debug)
-            self._workspace = Path(workspace) if workspace else Path.cwd()
-
-            if debug:
-                self._print_colored("✅ FLEXT CLI initialized with flext-cli integration")
-
-            # Create main CLI using flext-cli
-            try:
-                main_cli = FlextCliMain()
-            except Exception as cli_error:
-                # Fallback for CLI initialization issues during optimization phase
-                self._logger.warning(
-                    f"FlextCliMain initialization issue: {cli_error}, using simple fallback"
-                )
-                # Return a minimal result to allow tests to continue
-                return FlextResult[FlextCliMain].fail(
-                    f"CLI initialization temporarily unavailable: {cli_error}"
-                )
-
-            return FlextResult[FlextCliMain].ok(main_cli)
-
-        except Exception as e:
-            error = f"Configuration error: {e}"
+        """Initialize CLI with flext-cli integration using FlextResult pattern."""
+        # Initialize configuration using FlextResult
+        config_result = self._initialize_config(profile, debug)
+        if config_result.is_failure:
+            error = f"Configuration error: {config_result.error}"
             self._print_colored(f"❌ {error}")
             return FlextResult[FlextCliMain].fail(error)
+
+        self._config = config_result.unwrap()
+        self._workspace = Path(workspace) if workspace else Path.cwd()
+
+        if debug:
+            self._print_colored("✅ FLEXT CLI initialized with flext-cli integration")
+
+        # Create main CLI using FlextResult
+        main_cli_result = self._create_main_cli()
+        if main_cli_result.is_failure:
+            self._logger.warning(f"FlextCliMain initialization issue: {main_cli_result.error}")
+            return FlextResult[FlextCliMain].fail(
+                f"CLI initialization temporarily unavailable: {main_cli_result.error}"
+            )
+
+        return main_cli_result
 
     def create_tools_handler(self) -> _ToolsCommands:
         """Create tools command handler with nested class pattern."""
