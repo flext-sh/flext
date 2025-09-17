@@ -14,9 +14,9 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
-from flext_core import FlextDomainService, FlextResult
 
 from flext.workspace_cli import FlextWorkspaceCli
+from flext_core import FlextDomainService, FlextResult
 
 # Optional imports for integration tests
 try:

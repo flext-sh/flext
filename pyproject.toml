@@ -297,6 +297,8 @@ exclude = [
     "src/flext_tools/",  # Exclude entire flext_tools to avoid module name conflicts
     "src/flext/application_handlers.py",  # Exclude problematic duplicate module
     "src/flext/application_pipeline.py",  # Exclude problematic duplicate module
+    ".*_pb2\\.py$",  # Exclude generated protobuf files
+    ".*_pb2_grpc\\.py$",  # Exclude generated protobuf gRPC files
     "flext-web/src/flext_web/protocols.py",  # Exclude problematic syntax issue
     "flexcore/src/",         # Exclude flexcore/src to avoid module name conflicts
     "flext-*/src/",          # Exclude all flext-* project src directories
@@ -312,6 +314,10 @@ exclude = [
     ".*/typings/.*",
     # Skip generated or problematic source files
     "flext-core/src/flext_core/fields.py",
+    # Exclude gRPC generated files
+    "flext-grpc/src/flext_grpc/proto/flext_grpc_pb2.py",
+    "flext-grpc/src/flext_grpc/proto/flext_grpc_pb2_grpc.py",
+    "flext-grpc/src/flext_grpc/proto/src/flext_grpc/proto/flext_grpc_pb2.py",
     # Arquivos de módulos duplicados específicos, se o problema persistir após exclusões gerais
     "flext-api/examples/__init__.py",
     "client-a-oud-mig/examples/__init__.py",

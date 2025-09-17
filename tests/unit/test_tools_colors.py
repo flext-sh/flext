@@ -107,8 +107,8 @@ class TestColorize:
 class TestPrintColored:
     """Test the print_colored function for console output with logging."""
 
-    @patch("flext_tools.colors.FlextCliFormatters")
-    @patch("flext_tools.colors._logger")
+    @patch("flext_cli.FlextCliFormatters")
+    @patch("flext_tools.colors._service._logger")
     def test_print_colored_with_color(
         self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
     ) -> None:
@@ -127,8 +127,8 @@ class TestPrintColored:
         # Should log the original message (without color codes)
         mock_logger.info.assert_called_once_with(message)
 
-    @patch("flext_tools.colors.FlextCliFormatters")
-    @patch("flext_tools.colors._logger")
+    @patch("flext_cli.FlextCliFormatters")
+    @patch("flext_tools.colors._service._logger")
     def test_print_colored_without_color(
         self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
     ) -> None:
@@ -145,8 +145,8 @@ class TestPrintColored:
         # Should log the original message
         mock_logger.info.assert_called_once_with(message)
 
-    @patch("flext_tools.colors.FlextCliFormatters")
-    @patch("flext_tools.colors._logger")
+    @patch("flext_cli.FlextCliFormatters")
+    @patch("flext_tools.colors._service._logger")
     def test_print_colored_logs_without_color_codes(
         self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
     ) -> None:
@@ -165,8 +165,8 @@ class TestPrintColored:
         expected_colored = f"{color}{message}{Colors.RESET}"
         mock_formatter.console.print.assert_called_once_with(expected_colored)
 
-    @patch("flext_tools.colors.FlextCliFormatters")
-    @patch("flext_tools.colors._logger")
+    @patch("flext_cli.FlextCliFormatters")
+    @patch("flext_tools.colors._service._logger")
     def test_print_colored_empty_message(
         self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
     ) -> None:
@@ -185,8 +185,8 @@ class TestPrintColored:
         # Should log the empty message
         mock_logger.info.assert_called_once_with(message)
 
-    @patch("flext_tools.colors.FlextCliFormatters")
-    @patch("flext_tools.colors._logger")
+    @patch("flext_cli.FlextCliFormatters")
+    @patch("flext_tools.colors._service._logger")
     def test_print_colored_with_multiline_message(
         self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
     ) -> None:
@@ -225,8 +225,8 @@ class TestColorIntegration:
         assert "Warning: " in warning_text
         assert "Error!" in error_text
 
-    @patch("flext_tools.colors.FlextCliFormatters")
-    @patch("flext_tools.colors._logger")
+    @patch("flext_cli.FlextCliFormatters")
+    @patch("flext_tools.colors._service._logger")
     def test_print_colored_multiple_calls(
         self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
     ) -> None:
@@ -252,5 +252,7 @@ class TestColorIntegration:
         # Check the calls match expectations
         for i, (message, color) in enumerate(messages):
             expected_colored = colorize(message, color)
-            assert mock_formatter.console.print.call_args_list[i][0][0] == expected_colored
+            assert (
+                mock_formatter.console.print.call_args_list[i][0][0] == expected_colored
+            )
             assert mock_logger.info.call_args_list[i][0][0] == message

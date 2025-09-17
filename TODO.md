@@ -345,4 +345,4 @@ class FlextSingerProtocolManager(FlextDomainService):
 
 **CRITICAL SUCCESS FACTOR**: This implementation transforms flext-meltano from a simple wrapper into a true enterprise ELT foundation that leverages modern library APIs and industry standards to provide advanced functionality for the entire FLEXT ecosystem.
 
-**ZERO TOLERANCE ENFORCEMENT**: Any direct library imports outside FLEXT abstractions will block production deployment and must be resolved in Phase 1.
+**ZERO TOLERANCE ENFORCEMENT**: object direct library imports outside FLEXT abstractions will block production deployment and must be resolved in Phase 1.

@@ -62,7 +62,6 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextResult, FlextTypes
-
 from flext_tools import Colors, print_colored
 from flext_tools.script_base import FlextScript, ScriptMetadata
 

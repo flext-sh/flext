@@ -8,9 +8,6 @@ from flext.application_pipeline import (
     FlextApplicationPipelineService,
     create_pipeline_service,
 )
-from flext_tools.pipeline import (
-    PipelineService,
-)
 
 
 class TestPipelineModels:
@@ -49,13 +46,13 @@ class TestAdvancedPatterns:
 
     def test_generic_type_constraints(self) -> None:
         """Test generic type constraints with BaseModel."""
-        service = PipelineService()
-        assert isinstance(service, PipelineService)
+        service = FlextApplicationPipelineService()
+        assert isinstance(service, FlextApplicationPipelineService)
 
     def test_discriminated_union_type_safety(self) -> None:
         """Test discriminated union type safety for sources."""
         # Test with service instance
-        service = PipelineService()
-        assert isinstance(service, PipelineService)
-        assert hasattr(service, "create_pipeline")
+        service = FlextApplicationPipelineService()
+        assert isinstance(service, FlextApplicationPipelineService)
+        assert hasattr(service, "create_pipeline_factory")
         assert hasattr(service, "execute_pipeline")
