@@ -12,16 +12,15 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Protocol, assert_never
 
+from flext.dev_enums import OperationStatus, OperationType
+from flext.dev_models import FlextAdvancedDevModels
+from flext.project_types import ProjectType
 from flext_core import (
     FlextDomainService,
     FlextLogger,
     FlextResult,
     FlextTypes,
 )
-
-from flext.dev_enums import OperationStatus, OperationType
-from flext.dev_models import FlextAdvancedDevModels
-from flext.project_types import ProjectType
 
 
 class FlextAdvancedDevToolsManager(
@@ -359,13 +358,12 @@ class FlextAdvancedDevToolsManager(
 
         if isinstance(operation, FlextAdvancedDevModels.TestOperation):
             return executor.execute_test_operation(operation)
-        elif isinstance(operation, FlextAdvancedDevModels.LintOperation):
+        if isinstance(operation, FlextAdvancedDevModels.LintOperation):
             return executor.execute_lint_operation(operation)
-        elif isinstance(operation, FlextAdvancedDevModels.FormatOperation):
+        if isinstance(operation, FlextAdvancedDevModels.FormatOperation):
             return executor.execute_format_operation(operation)
-        else:
-            # This should never be reached due to discriminated union validation
-            assert_never(operation)
+        # This should never be reached due to discriminated union validation
+        assert_never(operation)
 
     def discover_workspace_projects(
         self, workspace_root: str | None = None

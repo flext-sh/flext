@@ -15,7 +15,6 @@ from pathlib import Path
 from typing import cast
 
 from flext_core import FlextTypes
-
 from flext_tools import Colors, print_colored
 from flext_tools.conflicts import ConflictAnalyzer
 from flext_tools.discovery_base import DependencyDiscovery

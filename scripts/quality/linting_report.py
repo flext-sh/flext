@@ -20,10 +20,11 @@ from importlib import import_module
 from pathlib import Path
 from typing import cast
 
-from flext_core import FlextResult, FlextTypes
 from mypy import api as mypy_api
-from src.flext_tools import Colors, print_colored
-from src.flext_tools.script_base import FlextScript, ScriptMetadata
+
+from flext_core import FlextResult, FlextTypes
+from flext_tools import Colors, print_colored
+from flext_tools.script_base import FlextScript, ScriptMetadata
 
 from ..common import discover_projects
 

@@ -58,7 +58,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
         def __init__(self, workspace_path: Path | str) -> None:
             self.workspace_path = str(workspace_path)
 
-        def run_quality_checks_safe(self, config: object) -> "FlextControlPanelCli.QualityResult":
+        def run_quality_checks_safe(self, config: object) -> FlextControlPanelCli.QualityResult:
             # Use config parameter to avoid unused warning
             _ = config
 
@@ -129,7 +129,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
             cli_api = FlextCliApi(version="0.9.0")  # Match flext-core version
             return FlextResult[FlextCliApi].ok(cli_api)
         except Exception as e:
-            return FlextResult[FlextCliApi].fail(f"FlextCliApi initialization failed: {str(e)}")
+            return FlextResult[FlextCliApi].fail(f"FlextCliApi initialization failed: {e!s}")
 
     def _initialize_config(self, profile: str, debug: bool) -> FlextResult[FlextCliConfig]:
         """Initialize CLI configuration using FlextResult pattern."""
@@ -137,7 +137,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
             config = FlextCliConfig(profile=profile, debug=debug)
             return FlextResult[FlextCliConfig].ok(config)
         except Exception as e:
-            return FlextResult[FlextCliConfig].fail(f"Configuration initialization failed: {str(e)}")
+            return FlextResult[FlextCliConfig].fail(f"Configuration initialization failed: {e!s}")
 
     def _create_main_cli(self) -> FlextResult[FlextCliMain]:
         """Create main CLI using FlextResult pattern."""
@@ -145,7 +145,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
             main_cli = FlextCliMain()
             return FlextResult[FlextCliMain].ok(main_cli)
         except Exception as e:
-            return FlextResult[FlextCliMain].fail(f"FlextCliMain creation failed: {str(e)}")
+            return FlextResult[FlextCliMain].fail(f"FlextCliMain creation failed: {e!s}")
 
     # Instance method not needed; static method above is sufficient for calls via class or instance
 

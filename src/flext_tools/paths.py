@@ -1,79 +1,100 @@
-"""FLEXT Tools Path Utilities - Path Manipulation and Analysis Utilities.
+"""Unified path service for FLEXT platform.
 
-This utility module provides path manipulation functions and directory filtering
-for the FLEXT ecosystem workspace analysis. Used by dependency discovery and
-project management tools to navigate the FLEXT workspace structure.
-
-Key Components:
-    - IGNORE_DIRS: Set of directories to exclude from analysis
-    - should_ignore_path: Path filtering function for workspace operations
-
-Integration:
-    - Core utility used by FLEXT workspace dependency analysis
-    - Provides consistent path handling across all FLEXT tools
-
-Copyright (c) 2025 Flext. All rights reserved.
+Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
-
-Author: FLEXT Development Team
-Version: 0.9.0
-License: MIT
 """
+
+from __future__ import annotations
 
 from pathlib import Path
 
-# Directories that should be ignored during workspace analysis
-IGNORE_DIRS: set[str] = {
-    # Archive and backup directories
-    "archive",
-    ".archive",
-    "backup",
-    "old",
-    "deprecated",
-    "outdated",
-    "temp",
-    "tmp",
-    # Version control systems
-    ".git",
-    ".svn",
-    ".hg",
-    ".bzr",
-    # Python cache and build directories
-    "__pycache__",
-    ".pytest_cache",
-    ".mypy_cache",
-    ".ruff_cache",
-    ".tox",
-    ".nox",
-    ".coverage",
-    "htmlcov",
-    ".hypothesis",
-    # Build and distribution directories
-    "build",
-    "dist",
-    "*.egg-info",
-    "_build",
-    "wheelhouse",
-    # Node.js directories
-    "node_modules",
-    ".npm",
-    ".yarn",
-    # IDE and editor files
-    ".idea",
-    ".vscode",
-    ".vs",
-    "*.swp",
-    "*.swo",
-    # Virtual environments and configurations
-    "venv",
-    ".venv",
-    "env",
-    ".env",
-    "virtualenv",
-}
+from flext_core import FlextDomainService, FlextResult
 
 
-def should_ignore_path(path: Path) -> bool:
-    """Check if a path should be ignored during workspace analysis."""
-    parts = path.parts
-    return any(ignore_dir in parts for ignore_dir in IGNORE_DIRS)
+class FlextPathService(FlextDomainService[Path]):
+    """Unified path service with nested helpers.
+
+    Single responsibility: Path operations and validation.
+    """
+
+    class _ValidationHelper:
+        """Nested helper for path validation."""
+
+        @staticmethod
+        def should_ignore_path(path: str | Path) -> bool:
+            """Check if path should be ignored."""
+            path_str = str(path)
+            ignore_patterns = [
+                "__pycache__",
+                ".git",
+                ".venv",
+                "node_modules",
+                ".pytest_cache",
+                ".mypy_cache",
+                "*.pyc",
+                "*.pyo",
+            ]
+            return any(pattern in path_str for pattern in ignore_patterns)
+
+    class _UtilityHelper:
+        """Nested helper for path utilities."""
+
+        @staticmethod
+        def get_project_root() -> Path:
+            """Get project root directory."""
+            return Path.cwd()
+
+        @staticmethod
+        def normalize_path(path: str | Path) -> Path:
+            """Normalize path."""
+            return Path(path).resolve()
+
+    def execute(self) -> FlextResult[Path]:
+        """Execute path service - FlextDomainService interface."""
+        root = self._UtilityHelper.get_project_root()
+        return FlextResult[Path].ok(root)
+
+    def should_ignore_path(self, path: str | Path) -> FlextResult[bool]:
+        """Check if path should be ignored using nested helper."""
+        should_ignore = self._ValidationHelper.should_ignore_path(path)
+        return FlextResult[bool].ok(should_ignore)
+
+    def get_project_root(self) -> FlextResult[Path]:
+        """Get project root using nested helper."""
+        root = self._UtilityHelper.get_project_root()
+        return FlextResult[Path].ok(root)
+
+    def normalize_path(self, path: str | Path) -> FlextResult[Path]:
+        """Normalize path using nested helper."""
+        normalized = self._UtilityHelper.normalize_path(path)
+        return FlextResult[Path].ok(normalized)
+
+
+# Module-level exports for backward compatibility
+_service = FlextPathService()
+
+
+def get_project_root() -> Path:
+    """Module-level get_project_root function."""
+    result = _service.get_project_root()
+    return result.unwrap() if result.success else Path.cwd()
+
+
+def normalize_path(path: str | Path) -> Path:
+    """Module-level normalize_path function."""
+    result = _service.normalize_path(path)
+    return result.unwrap() if result.success else Path(path).resolve()
+
+
+def should_ignore_path(path: str | Path) -> bool:
+    """Module-level should_ignore_path function."""
+    result = _service.should_ignore_path(path)
+    return result.unwrap() if result.success else False
+
+
+__all__ = [
+    "FlextPathService",
+    "get_project_root",
+    "normalize_path",
+    "should_ignore_path",
+]

@@ -95,6 +95,7 @@ lint.per-file-ignores."**/scripts/**" = [
 
 ]
 lint.per-file-ignores."**/*tests*/**" = [
+    "D102",    # Missing docstring in public method - test methods don't need docstrings
     "EM102",
     "FBT001",  # Boolean positional argument - acceptable in tests
     "FBT003",

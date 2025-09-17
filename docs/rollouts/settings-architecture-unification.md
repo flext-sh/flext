@@ -55,6 +55,6 @@ Authority: flext-core/docs/refactor/settings-architecture-unification-plan.md
 ## Execution Log
 
 - 2025‑09‑07: Initiated rollout. Updated flext-web `configure_web_configs_system()` and `configure_web_services_system()` to validate core fields via `FlextModels.SystemConfigs.BaseSystemConfig` (keeps dict compatibility). Next: add `WebSettings` bridge.
-- 2025‑09‑07: Applied LDAP exceptions configuration facade `FlextLDAPExceptions.configure_exceptions_system()` with core validation via `BaseSystemConfig` and derived defaults; output remains a dict for compatibility.
+- 2025‑09‑07: Applied LDAP exceptions configuration facade `FlextLdapExceptions.configure_exceptions_system()` with core validation via `BaseSystemConfig` and derived defaults; output remains a dict for compatibility.
 - 2025‑09‑07: Validated CLI core configuration via `FlextModels.SystemConfigs.BaseSystemConfig` in `FlextCliService.configure()`; preserves dict border, adds environment default.
 - 2025‑09‑07: Added `flext_web.settings.FlextWebSettings` and wired `configure_web_configs_system()` to use full Settings → WebConfig bridge with backward-compatible fallback.

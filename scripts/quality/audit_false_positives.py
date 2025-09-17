@@ -12,9 +12,9 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextTypes
-from src.flext_tools import Colors, print_colored
-from src.flext_tools.discovery_base import DependencyDiscovery
-from src.flext_tools.stdlib import get_stdlib_modules
+from flext_tools import Colors, print_colored
+from flext_tools.discovery_base import DependencyDiscovery
+from flext_tools.stdlib import get_stdlib_modules
 
 
 class FalsePositiveAuditor:

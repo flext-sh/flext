@@ -21,17 +21,9 @@ from flext.application_handlers import (
 )
 from flext.application_pipeline import (
     Entry,
-    EntryValidator,
     FlextAdvancedPipelineModels,
     FlextAdvancedPipelineService,
     FlextApplicationPipelineService,
-)
-from flext_cli import (
-    FlextCliApi,
-    FlextCliConfig,
-    FlextCliFormatters,
-    FlextCliMain,
-    FlextCliServices,
 )
 from flext.cli import (
     FlextControlPanelCli,
@@ -90,6 +82,13 @@ from flext.workspace_cli import (
     main as workspace_main,
     status,
     test as workspace_test,
+)
+from flext_cli import (
+    FlextCliApi,
+    FlextCliConfig,
+    FlextCliFormatters,
+    FlextCliMain,
+    FlextCliServices,
 )
 
 # ProjectType and WorkspaceStatus are already imported from flext.workspace
