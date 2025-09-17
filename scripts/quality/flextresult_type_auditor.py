@@ -15,8 +15,8 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextResult, FlextTypes
-from src.flext_tools import Colors, print_colored
-from src.flext_tools.script_base import FlextScript, ScriptMetadata
+from flext_tools import Colors, print_colored
+from flext_tools.script_base import FlextScript, ScriptMetadata
 
 
 class FlextResultTypeAuditor(FlextScript):

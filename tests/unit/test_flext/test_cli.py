@@ -9,7 +9,6 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
-from flext_core import FlextResult
 
 import flext.cli as cli_module
 import flext.workspace_cli
@@ -27,6 +26,7 @@ from flext.cli import (
     scripts,
     test,
 )
+from flext_core import FlextResult
 
 
 class TestFlextControlPanelCli:

@@ -60,7 +60,6 @@ src/
     │   └── version.py               # Version management
     ├── cache/                       # Caching infrastructure
     │   ├── __init__.py
-    │   ├── decorators.py            # Cache decorators
     │   └── manager.py               # Cache management
     ├── config/                      # Configuration management
     │   ├── __init__.py

@@ -1,136 +1,59 @@
-"""FLEXT Tools - Enterprise workspace and development utilities.
-
-This module provides comprehensive tooling for FLEXT workspace management,
-including quality analysis, dependency management, monitoring, and automation.
+"""FLEXT Tools - Utility modules for FLEXT ecosystem.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
 
-from __future__ import annotations
+from flext_tools.backup import BackupManager
+from flext_tools.colors import Colors, colorize, print_colored
+from flext_tools.config_manager import ConfigurationManager
+from flext_tools.conflicts import ConflictAnalyzer
+from flext_tools.discovery_base import DependencyDiscovery
+from flext_tools.documentation_generator import DocumentationGenerator
+from flext_tools.duplicates import CodeDuplicateAnalyzer
+from flext_tools.health_check import HealthCheckService
+from flext_tools.lint_fixer import GradualLintFixer
+from flext_tools.monitoring_manager import MonitoringManager
+from flext_tools.mypy_checker import MyPyChecker
+from flext_tools.observability import FlextObservabilityService
+from flext_tools.paths import get_project_root, normalize_path, should_ignore_path
+from flext_tools.poetry_operations import PoetryOperations
+from flext_tools.poetry_validator import PoetryValidator
+from flext_tools.quality_gateway import QualityGateway
+from flext_tools.rollback import RollbackManager
+from flext_tools.script_base import FlextScript, ScriptMetadata
+from flext_tools.security import AntipatternScanner, ScanConfig, SecretVaultDecryptor
+from flext_tools.ssl_manager import SSLManager
+from flext_tools.stdlib import get_stdlib_modules, is_stdlib_module
 
-from flext_core import FlextTypes
-
-# Base CLI infrastructure - explicit imports
-from .base_cli import (
-    BaseCLI,
-    CLIApi,
-    CLIConfig,
-    FlextBaseCLI,
-    FlextCLIConfig,
-)
-
-# CLI tools - explicit imports
-from .cli import (
-    FlextToolsCLI,
-    create_cli_service,
-)
-
-# Colors and output utilities - explicit imports
-from .colors import (
-    Colors,
-    colorize,
-    print_colored,
-)
-
-# Development tools - explicit imports
-from .dev import (
-    DevToolsManager,
-    FlextToolsDevService,
-    create_dev_tools_manager,
-)
-
-# Documentation generator (without wildcards)
-from .documentation_generator import (
-    DocumentationGenerator,
-)
-
-# Duplicate analysis - explicit imports
-from .duplicates import (
-    CodeDuplicateAnalyzer,
-)
-
-# Handlers - explicit imports
-from .handlers import (
-    FlextProcessing,
-    FlextResult,
-)
-
-# Quality gateway - explicit imports
-from .quality_gateway import (
-    FlextToolsQualityGateway,
-    QualityCheckConfig,
-    QualityGateway,
-    all_quality_checks_passed,
-    get_quality_failure_summary,
-)
-
-# Script base - explicit imports
-from .script_base import (
-    FlextScript,  # Backward compatibility
-    FlextToolsScript,
-    ScriptMetadata,
-)
-
-# Security utilities - explicit imports
-from .security import (
-    SecretVaultDecryptor,
-)
-
-# Testing utilities - explicit imports
-from .testing import (
-    OracleE2ERunner,
-)
-
-# Workspace management - explicit imports
-from .workspace import (
-    FlextWorkspaceService,
-)
-
-# Workspace CLI - explicit imports
-from .workspace_cli import (
-    FlextCliApi,
-    WorkspaceCLI,
-)
-
-# Note: Many modules in this package do not have proper __all__ declarations
-# and contain implementation details that should not be exported.
-# Only modules with clear, well-defined APIs are explicitly imported above.
-
-__all__: FlextTypes.Core.StringList = [
-    "BaseCLI",
-    "CLIApi",
-    "CLIConfig",
+__all__ = [
+    "AntipatternScanner",
+    "BackupManager",
     "CodeDuplicateAnalyzer",
     "Colors",
-    "DevToolsManager",
+    "ConfigurationManager",
+    "ConflictAnalyzer",
+    "DependencyDiscovery",
     "DocumentationGenerator",
-    "FlextBaseCLI",
-    "FlextCLIConfig",
-    "FlextCliApi",
-    "FlextProcessing",
-    "FlextResult",
+    "FlextObservabilityService",
     "FlextScript",
-    "FlextToolsCLI",
-    "FlextToolsDevService",
-    "FlextToolsQualityGateway",
-    "FlextToolsScript",
-    "FlextWorkspaceService",
-    "OracleE2ERunner",
-    "QualityCheckConfig",
+    "GradualLintFixer",
+    "HealthCheckService",
+    "MonitoringManager",
+    "MyPyChecker",
+    "PoetryOperations",
+    "PoetryValidator",
     "QualityGateway",
+    "RollbackManager",
+    "SSLManager",
+    "ScanConfig",
     "ScriptMetadata",
     "SecretVaultDecryptor",
-    "WorkspaceCLI",
-    "all_quality_checks_passed",
     "colorize",
-    "create_cli_service",
-    "create_dev_tools_manager",
-    "get_quality_failure_summary",
+    "get_project_root",
+    "get_stdlib_modules",
+    "is_stdlib_module",
+    "normalize_path",
     "print_colored",
+    "should_ignore_path",
 ]
-
-# Note: This module has been refactored to use explicit imports only.
-# Many utility modules that were previously imported with wildcards (*)
-# contain implementation details and do not have proper public APIs.
-# Users should import specific functions from individual modules as needed.
