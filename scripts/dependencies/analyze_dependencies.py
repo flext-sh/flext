@@ -9,7 +9,6 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextTypes
-
 from flext_tools import Colors, print_colored
 from flext_tools.conflicts import ConflictAnalyzer
 

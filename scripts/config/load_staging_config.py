@@ -6,7 +6,6 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextResult
-
 from flext_tools import (
     Colors,
     print_colored,
@@ -97,6 +96,13 @@ class StagingConfigLoader(FlextScript):
         )
 
         return parser
+
+    def execute(self, args: dict[str, object]) -> FlextResult[object]:
+        """Execute the staging config loading."""
+        validate_only = bool(args.get("validate_only"))
+
+        # Run the config loading logic
+        return self.execute_main_logic(validate_only=validate_only)
 
     def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""

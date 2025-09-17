@@ -8,7 +8,6 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
-from flext_core import FlextResult
 
 from flext.dev import (
     DevToolsManager,
@@ -18,6 +17,7 @@ from flext.dev import (
 )
 from flext.dev_enums import OperationStatus, OperationType
 from flext.project_types import ProjectType
+from flext_core import FlextResult
 
 
 class TestFlextAdvancedDevToolsManager:

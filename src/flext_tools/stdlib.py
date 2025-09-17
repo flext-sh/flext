@@ -1,10 +1,6 @@
-"""FLEXT Tools Python Standard Library Utilities - Module Identification.
+"""Unified stdlib service for FLEXT platform.
 
-This utility module provides functions to identify Python standard library modules
-for dependency analysis in the FLEXT ecosystem. Used by workspace tools to
-distinguish between stdlib and third-party dependencies.
-
-Copyright (c) 2025 Flext. All rights reserved.
+Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
 
@@ -12,206 +8,79 @@ from __future__ import annotations
 
 import sys
 
+from flext_core import FlextDomainService, FlextResult
+
+
+class FlextStdlibService(FlextDomainService[list[str]]):
+    """Unified stdlib service with nested helpers.
+
+    Single responsibility: Standard library module detection and management.
+    """
+
+    class _ModuleHelper:
+        """Nested helper for module operations."""
+
+        @staticmethod
+        def get_stdlib_modules() -> list[str]:
+            """Get list of standard library modules."""
+            stdlib_modules = [
+                "os",
+                "sys",
+                "re",
+                "json",
+                "urllib",
+                "http",
+                "pathlib",
+                "collections",
+                "itertools",
+                "functools",
+                "typing",
+                "datetime",
+                "argparse",
+                "subprocess",
+                "shutil",
+                "glob",
+                "tempfile",
+            ]
+
+            stdlib_modules.extend(list(sys.stdlib_module_names))
+            return sorted(set(stdlib_modules))
+
+        @staticmethod
+        def is_stdlib_module(module_name: str) -> bool:
+            """Check if module is from standard library."""
+            return module_name in FlextStdlibService._ModuleHelper.get_stdlib_modules()
+
+    def execute(self) -> FlextResult[list[str]]:
+        """Execute stdlib service - FlextDomainService interface."""
+        modules = self._ModuleHelper.get_stdlib_modules()
+        return FlextResult[list[str]].ok(modules)
+
+    def get_stdlib_modules(self) -> FlextResult[list[str]]:
+        """Get stdlib modules using nested helper."""
+        modules = self._ModuleHelper.get_stdlib_modules()
+        return FlextResult[list[str]].ok(modules)
+
+    def is_stdlib_module(self, module_name: str) -> FlextResult[bool]:
+        """Check if module is stdlib using nested helper."""
+        is_stdlib = self._ModuleHelper.is_stdlib_module(module_name)
+        return FlextResult[bool].ok(is_stdlib)
+
+
+# Module-level exports for backward compatibility
+_service = FlextStdlibService()
+
 
 def get_stdlib_modules() -> set[str]:
-    """Return comprehensive set of Python standard library modules.
+    """Module-level get_stdlib_modules function."""
+    result = _service.get_stdlib_modules()
+    return set(result.unwrap()) if result.success else set()
 
-    Returns:
-      Set containing names of all Python standard library modules
 
-    """
-    try:
-        # Use builtin_module_names from current system (safer than subprocess)
-        builtin_modules = set(sys.builtin_module_names)
+def is_stdlib_module(module_name: str) -> bool:
+    """Module-level is_stdlib_module function."""
+    result = _service.is_stdlib_module(module_name)
+    return result.unwrap() if result.success else False
 
-        # Add known stdlib modules not included in builtin_module_names
-        stdlib_extras = {
-            # Collections and data structures
-            "collections",
-            "functools",
-            "itertools",
-            "operator",
-            "typing",
-            "dataclasses",
-            "enum",
-            "abc",
-            "types",
-            # I/O and file system
-            "pathlib",
-            "io",
-            "os",
-            "sys",
-            "shutil",
-            "tempfile",
-            # Date and time
-            "datetime",
-            "time",
-            "calendar",
-            "zoneinfo",
-            # Data formats
-            "json",
-            "csv",
-            "configparser",
-            "tomllib",
-            "xml",
-            "html",
-            # Mathematics and numbers
-            "math",
-            "decimal",
-            "fractions",
-            "statistics",
-            "random",
-            # Text and string processing
-            "string",
-            "re",
-            "textwrap",
-            "difflib",
-            "unicodedata",
-            # System and processes
-            "subprocess",
-            "threading",
-            "multiprocessing",
-            "asyncio",
-            "concurrent",
-            # Network and communication
-            "socket",
-            "http",
-            "urllib",
-            "email",
-            "ipaddress",
-            # Security and cryptography
-            "hashlib",
-            "secrets",
-            "uuid",
-            "hmac",
-            # General utilities
-            "logging",
-            "warnings",
-            "traceback",
-            "inspect",
-            "copy",
-            "copyreg",
-            "contextlib",
-            "atexit",
-            "weakref",
-            "gc",
-            "getpass",
-            "fnmatch",
-            # Development and testing
-            "unittest",
-            "doctest",
-            "pdb",
-            "profile",
-            "timeit",
-            # Other utilities
-            "pickle",
-            "shelve",
-            "sqlite3",
-            "zlib",
-            "gzip",
-            "bz2",
-            "lzma",
-            "base64",
-            "binascii",
-            "struct",
-            "codecs",
-            "locale",
-            "gettext",
-            "argparse",
-            "getopt",
-            "readline",
-            "rlcompleter",
-            "platform",
-            "errno",
-            "ctypes",
-            "array",
-            "queue",
-            "heapq",
-            "bisect",
-            "pprint",
-            "reprlib",
-            "dis",
-            "ast",
-            "tokenize",
-            "keyword",
-            "builtins",
-            "__future__",
-            "imp",
-            "importlib",
-            "pkgutil",
-            "modulefinder",
-            "runpy",
-            "site",
-            "sysconfig",
-            "venv",
-            "numbers",
-            "cmath",
-            "audioop",
-            "chunk",
-            "colorsys",
-            "imghdr",
-            "ossaudiodev",
-            "sndhdr",
-            "wave",
-            "cgi",
-            "cgitb",
-            "wsgiref",
-            "ftplib",
-            "poplib",
-            "imaplib",
-            "smtplib",
-            "telnetlib",
-            "socketserver",
-            "xmlrpc",
-            "ssl",
-            "select",
-            "selectors",
-            "signal",
-            "mmap",
-            "msvcrt",
-            "winreg",
-            "winsound",
-            "posix",
-            "pwd",
-            "grp",
-            "termios",
-            "tty",
-            "pty",
-            "fcntl",
-            "resource",
-            "syslog",
-            "pipes",
-            "pathlib2",
-            "contextvars",
-        }
 
-        return builtin_modules | stdlib_extras
-
-    except (AttributeError, ImportError):
-        # Fallback to minimal list if something fails
-        return {
-            "os",
-            "sys",
-            "re",
-            "json",
-            "math",
-            "random",
-            "datetime",
-            "time",
-            "pathlib",
-            "typing",
-            "collections",
-            "itertools",
-            "functools",
-            "subprocess",
-            "threading",
-            "asyncio",
-            "unittest",
-            "logging",
-            "copy",
-            "operator",
-            "contextlib",
-            "io",
-            "string",
-            "types",
-        }
+__all__ = ["FlextStdlibService", "get_stdlib_modules", "is_stdlib_module"]

@@ -32,20 +32,15 @@ from flext_core import (
 ```python
 from flext_core import (
     # Commands and handlers (CQRS)
-    FlextCommands,
+    FlextBus,
+    FlextHandlers,
+    FlextCqrs,
     FlextProcessing,
-
-    # Validation
-    FlextValidations,
-    FlextValidators,
-    FlextPredicates,
 
     # Utilities
     FlextUtilities,
-    FlextUtilities.Generators,
 
     # Logging
-    FlextLogger,
     FlextLogger,
 )
 ```

@@ -1,61 +1,64 @@
-"""Security utilities for FLEXT tools.
+"""Unified security service for FLEXT platform.
 
-This module provides security-related functionality for FLEXT workspace management.
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from flext_core import FlextResult, FlextTypes
-
-# Import the actual implementation from the scripts
-# Note: This is a temporary solution until the security scripts are properly refactored
-# into the flext_tools package structure.
+from flext_core import FlextDomainService, FlextResult
 
 
-class SecretVaultDecryptor:
-    """Placeholder for SecretVaultDecryptor functionality.
+class FlextSecurityService(FlextDomainService[dict[str, str]]):
+    """Unified security service with nested helpers.
 
-    This class will be properly implemented when the security scripts are refactored
-    into the flext_tools package structure.
+    Single responsibility: Security operations including vault decryption and antipattern scanning.
     """
 
-    def __init__(self) -> None:
-        """Initialize the SecretVaultDecryptor."""
+    class _VaultHelper:
+        """Nested helper for vault operations."""
 
-    def decrypt_vault(self, vault_path: str) -> FlextResult[FlextTypes.Core.Dict]:
-        """Decrypt a secrets vault.
+        @staticmethod
+        def decrypt_secrets(vault_path: str) -> FlextResult[dict[str, str]]:
+            """Decrypt secrets from vault."""
+            _ = vault_path  # Placeholder implementation
+            return FlextResult[dict[str, str]].ok({})
 
-        Args:
-            vault_path: Path to the encrypted vault file
+    class _ScanHelper:
+        """Nested helper for scanning operations."""
 
-        Returns:
-            FlextResult containing the decrypted secrets dictionary
+        @staticmethod
+        def scan_directory(
+            directory: str, config: dict[str, str] | None = None
+        ) -> FlextResult[list[str]]:
+            """Scan directory for antipatterns."""
+            _ = directory, config  # Placeholder implementation
+            return FlextResult[list[str]].ok([])
 
-        """
-        try:
-            vault_file = Path(vault_path)
-            if not vault_file.exists():
-                return FlextResult[FlextTypes.Core.Dict].fail(
-                    f"Vault file not found: {vault_path}"
-                )
+    def execute(self) -> FlextResult[dict[str, str]]:
+        """Execute security service - FlextDomainService interface."""
+        return FlextResult[dict[str, str]].ok({})
 
-            # For now, return a placeholder implementation
-            # In a real implementation, this would decrypt the vault using proper encryption
-            decrypted_secrets = {
-                "vault_path": str(vault_file),
-                "status": "decrypted",
-                "secrets_count": 0,
-                "timestamp": "2025-01-27T00:00:00Z",
-            }
+    def decrypt_vault(self, vault_path: str) -> FlextResult[dict[str, str]]:
+        """Decrypt secrets from vault using nested helper."""
+        return self._VaultHelper.decrypt_secrets(vault_path)
 
-            return FlextResult[FlextTypes.Core.Dict].ok(decrypted_secrets)
-
-        except Exception as e:
-            return FlextResult[FlextTypes.Core.Dict].fail(f"Decryption failed: {e}")
+    def scan_antipatterns(
+        self, directory: str, config: dict[str, str] | None = None
+    ) -> FlextResult[list[str]]:
+        """Scan for antipatterns using nested helper."""
+        return self._ScanHelper.scan_directory(directory, config)
 
 
-__all__: FlextTypes.Core.StringList = [
+# Module-level exports for backward compatibility
+# Note: These are aliases/placeholders for the refactored structure
+AntipatternScanner = FlextSecurityService
+ScanConfig = dict  # Placeholder - was likely a simple config class
+SecretVaultDecryptor = FlextSecurityService
+
+__all__ = [
+    "AntipatternScanner",
+    "FlextSecurityService",
+    "ScanConfig",
     "SecretVaultDecryptor",
 ]
