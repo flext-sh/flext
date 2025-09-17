@@ -10,9 +10,9 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from src.flext_tools import Colors, print_colored
-from src.flext_tools.discovery_base import DependencyDiscovery
-from src.flext_tools.script_base import FlextScript, ScriptMetadata
+from flext_tools import Colors, print_colored
+from flext_tools.discovery_base import DependencyDiscovery
+from flext_tools.script_base import FlextScript, ScriptMetadata
 
 from ..common import discover_projects
 

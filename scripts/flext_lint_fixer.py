@@ -23,6 +23,23 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+from typing import TypedDict, cast
+
+
+class ProjectFixesDict(TypedDict):
+    """TypedDict for tracking project-level fix statistics."""
+
+    files_processed: int
+    files_modified: int
+    fixes: dict[str, int]
+
+
+class ProjectProcessedDict(TypedDict):
+    """TypedDict for tracking processed project information."""
+
+    name: str
+    path: str
+    stats: ProjectFixesDict
 
 
 # Core fix patterns
@@ -42,8 +59,8 @@ class FlextLintFixer:
             "EXE002": 0,  # Missing shebang
             "D205": 0,  # Missing blank after docstring
         }
-        self.projects_processed = []
-        self.errors_encountered = []
+        self.projects_processed: list[ProjectProcessedDict] = []
+        self.errors_encountered: list[str] = []
 
     def find_flext_projects(self) -> list[Path]:
         """Find all FLEXT projects in workspace."""
@@ -58,7 +75,7 @@ class FlextLintFixer:
 
     def get_python_files(self, project_path: Path) -> list[Path]:
         """Get all Python files in a project."""
-        python_files = []
+        python_files: list[Path] = []
         for pattern in ["src/**/*.py", "*.py", "tests/**/*.py"]:
             python_files.extend(project_path.glob(pattern))
         return [f for f in python_files if f.is_file()]
@@ -213,11 +230,11 @@ class FlextLintFixer:
 
             class ArgumentAnalyzer(ast.NodeVisitor):
                 def __init__(self) -> None:
-                    self.unused_args = []
+                    self.unused_args: list[tuple[int, set[str]]] = []
 
                 def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
                     # Get all argument names
-                    arg_names = set()
+                    arg_names: set[str] = set()
                     if hasattr(node.args, "args") and node.args.args:
                         arg_names.update(arg.arg for arg in node.args.args)
 
@@ -277,7 +294,6 @@ class FlextLintFixer:
                 "List": "from typing import List",
                 "Optional": "from typing import Optional",
                 "Union": "from typing import Union",
-                "Any": "from typing import Any",
                 "Type": "from typing import Type",
                 "Callable": "from typing import Callable",
                 "Iterator": "from typing import Iterator",
@@ -387,12 +403,16 @@ class FlextLintFixer:
             "D205": self.fix_missing_blank_after_docstring(file_path),
         }
 
-    def process_project(self, project_path: Path) -> dict:
+    def process_project(self, project_path: Path) -> ProjectFixesDict:
         """Process all Python files in a project."""
         print(f"\n🔍 Processing project: {project_path.name}")
 
         python_files = self.get_python_files(project_path)
-        project_fixes = {"files_processed": 0, "files_modified": 0, "fixes": {}}
+        project_fixes: ProjectFixesDict = {
+            "files_processed": 0,
+            "files_modified": 0,
+            "fixes": {},
+        }
 
         for fix_type in self.fixes_applied:
             project_fixes["fixes"][fix_type] = 0
@@ -414,11 +434,14 @@ class FlextLintFixer:
                 self.errors_encountered.append(f"Error processing {py_file}: {e}")
 
         self.projects_processed.append(
-            {
-                "name": project_path.name,
-                "path": str(project_path),
-                "stats": project_fixes,
-            }
+            cast(
+                "ProjectProcessedDict",
+                {
+                    "name": project_path.name,
+                    "path": str(project_path),
+                    "stats": project_fixes,
+                },
+            )
         )
 
         return project_fixes
@@ -440,7 +463,7 @@ class FlextLintFixer:
 
     def generate_report(self) -> str:
         """Generate comprehensive report of all fixes applied."""
-        report = []
+        report: list[str] = []
         report.extend(
             (
                 "# FLEXT Automated Linting Fix Report",
