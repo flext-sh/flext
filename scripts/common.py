@@ -9,10 +9,10 @@ from __future__ import annotations
 from collections.abc import Sequence
 from pathlib import Path
 
+from flext.workspace import FlextWorkspaceService
+
 # Use flext-core exclusively - NO LOCAL IMPLEMENTATIONS
 from flext_core import FlextLogger
-
-from flext.workspace import FlextWorkspaceService
 
 logger = FlextLogger(__name__)
 

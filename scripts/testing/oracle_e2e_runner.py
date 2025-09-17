@@ -10,8 +10,8 @@ import sys
 from pathlib import Path
 
 import docker
-from flext_core import FlextResult
 
+from flext_core import FlextResult
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
 

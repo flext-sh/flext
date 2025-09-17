@@ -78,7 +78,9 @@ src/project_namespace/
 │   └── root_models.py         # RootModel patterns for validation
 │
 ├── Application Layer (CQRS/Handlers)
-│   ├── commands.py            # FlextCommands pattern and CQRS foundation
+│   ├── cqrs.py                # FlextCqrs pattern and CQRS foundation
+│   ├── handlers.py            # FlextHandlers command/query abstraction
+│   ├── bus.py                 # FlextBus command routing implementation
 │   ├── handlers.py            # Handler implementations and registry
 │   ├── validation.py          # Validation framework with predicates
 │   ├── payload.py             # Message/event patterns for integration
@@ -92,7 +94,6 @@ src/project_namespace/
 │
 ├── Support Modules (Utilities & Extensions)
 │   ├── mixins.py              # Reusable behavior patterns
-│   ├── decorators.py          # Enterprise decorator patterns
 │   ├── utilities.py           # Helper functions, generators, type guards
 │   ├── fields.py              # Field validation and metadata
 │   ├── services.py            # Service layer abstractions
