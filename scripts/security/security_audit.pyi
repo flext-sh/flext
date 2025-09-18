@@ -1,4 +1,4 @@
-from flext_core.typings import FlextTypes
+from flext_core import FlextTypes
 
 class SecurityViolation:
     def __init__(self, message: str, risk_level: str = "MEDIUM") -> None: ...
