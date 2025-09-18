@@ -89,7 +89,7 @@ class FlextEcosystemStandardizer(FlextBaseService):
 
             for project_path in python_projects:
                 result = self._standardize_project(project_path, stats)
-                if result.failure:
+                if result.is_failure:
                     self.logger.warning(
                         f"Issues in project {project_path.name}: {result.error}"
                     )

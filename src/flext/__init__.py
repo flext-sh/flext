@@ -88,7 +88,7 @@ from flext_cli import (
     FlextCliConfig,
     FlextCliFormatters,
     FlextCliMain,
-    FlextCliServices,
+    FlextCliService,
 )
 
 # ProjectType and WorkspaceStatus are already imported from flext.workspace
@@ -101,7 +101,6 @@ __all__ = [
     "CommandBus",
     "CommandHandler",
     "Entry",
-    "EntryValidator",
     "EventHandler",
     "FlextAdvancedDevModels",
     "FlextAdvancedDevToolsManager",
@@ -124,7 +123,7 @@ __all__ = [
     "FlextCliFormattersPattern",
     "FlextCliMain",
     "FlextCliMainPattern",
-    "FlextCliServices",
+    "FlextCliService",
     "FlextControlPanelCli",
     "FlextLogger",
     "FlextResult",

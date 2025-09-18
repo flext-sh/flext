@@ -33,13 +33,34 @@ class ConfigurationManager:
         except Exception as e:
             return FlextResult[dict[str, str]].fail(f"Config load failed: {e}")
 
-    def get(self, key: str, default: str = "") -> str:
-        """Get configuration value."""
-        return self._config.get(key, default)
+    def get(self, key: str, default: str = "") -> FlextResult[str]:
+        """Get configuration value with type-safe error handling."""
+        if not key:
+            return FlextResult[str].fail("Configuration key cannot be empty")
 
-    def set(self, key: str, value: str) -> None:
-        """Set configuration value."""
-        self._config[key] = value
+        try:
+            value = self._config.get(key, default)
+            return FlextResult[str].ok(value)
+        except Exception as e:
+            return FlextResult[str].fail(
+                f"Failed to get config value for key '{key}': {e}"
+            )
+
+    def set(self, key: str, value: str) -> FlextResult[None]:
+        """Set configuration value with type-safe error handling."""
+        if not key:
+            return FlextResult[None].fail("Configuration key cannot be empty")
+
+        if value is None:
+            return FlextResult[None].fail("Configuration value cannot be None")
+
+        try:
+            self._config[key] = value
+            return FlextResult[None].ok(None)
+        except Exception as e:
+            return FlextResult[None].fail(
+                f"Failed to set config value for key '{key}': {e}"
+            )
 
     def validate_config(self) -> FlextResult[None]:
         """Validate configuration."""
