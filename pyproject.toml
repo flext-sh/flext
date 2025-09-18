@@ -170,6 +170,7 @@ types-ujson = "^5.10.0.20250326"
 types-mock = "^5.2.0.20250809"
 types-factory-boy = "^0.4.1"
 aiofiles = "^24.1.0"
+types-grpcio = "^1.0.0.20250914"
 
 
 [tool.poetry.group.typing.dependencies]
