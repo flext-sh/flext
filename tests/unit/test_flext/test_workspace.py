@@ -66,8 +66,9 @@ class TestAdvancedWorkspaceOperations:
         assert result.is_success
 
         info = result.unwrap()
-        assert hasattr(info, "path")
-        assert hasattr(info, "project_count")
+        assert isinstance(info, dict)
+        assert "path" in info
+        assert "project_count" in info
 
     def test_project_discovery_operation(self) -> None:
         """Test project discovery operation."""
@@ -216,7 +217,8 @@ class TestWorkspaceOperations:
         assert result.is_success
 
         info = result.unwrap()
-        assert hasattr(info, "path")
+        assert isinstance(info, dict)
+        assert "path" in info
 
 
 class TestAdvancedPatternsCompliance:
@@ -238,7 +240,8 @@ class TestAdvancedPatternsCompliance:
         assert result.is_success
 
         info = result.unwrap()
-        assert hasattr(info, "path")
+        assert isinstance(info, dict)
+        assert "path" in info
 
     def test_flext_result_pattern_integration(self) -> None:
         """Test FlextResult pattern integration throughout."""

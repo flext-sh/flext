@@ -4,22 +4,11 @@ Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
 
-from typing import TYPE_CHECKING
-
+import flext_cli
 from flext_core import FlextDomainService, FlextLogger, FlextResult
 
-if TYPE_CHECKING:
-    import flext_cli
-
-    FLEXT_CLI_AVAILABLE = True
-else:
-    try:
-        import flext_cli
-
-        FLEXT_CLI_AVAILABLE = True
-    except ImportError:
-        flext_cli: object = None
-        FLEXT_CLI_AVAILABLE = False
+# FlextCli availability flag
+FLEXT_CLI_AVAILABLE = True
 
 
 class FlextColorService(FlextDomainService[str]):

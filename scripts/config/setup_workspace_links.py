@@ -14,244 +14,270 @@ Using clean flext-core architecture patterns without external dependencies.
 
 import argparse
 import json
-import shutil
-import subprocess
 import sys
 from pathlib import Path
 
-from flext_core import FlextContainer, FlextDomainService, FlextLogger, FlextResult
+from flext_core import (
+    FlextContainer,
+    FlextDomainService,
+    FlextLogger,
+    FlextResult,
+    FlextTypes,
+)
 
 
-class WorkspaceManagementService(FlextDomainService):
-    """Comprehensive FLEXT workspace management domain service."""
+class WorkspaceManagementService(FlextDomainService[FlextTypes.Core.Dict]):
+    """Workspace link management service for FLEXT ecosystem.
 
-    def __init__(self) -> None:
+    Unified class for managing workspace symbolic links and directory structure.
+    """
+
+    def __init__(self, **data: object) -> None:
         """Initialize workspace management service."""
-        super().__init__()
+        super().__init__(**data)
+        self._container = FlextContainer.get_global()
         self._logger = FlextLogger(__name__)
+        self._workspace_root = Path.cwd()
 
-    def validate_business_rules(self) -> FlextResult[None]:
-        """Validate workspace management business rules."""
-        workspace_root = Path.cwd()
+    class _LinkHelper:
+        """Nested helper for symbolic link operations."""
 
-        # Check if we're in FLEXT workspace
-        flext_projects = [
-            p
-            for p in workspace_root.iterdir()
-            if p.is_dir()
-            and p.name.startswith("flext-")
-            and (p / "pyproject.toml").exists()
-        ]
-
-        if not flext_projects:
-            self._logger.error("Not in FLEXT workspace root")
-            return FlextResult[None].fail("Not in FLEXT workspace root")
-
-        self._logger.info(f"Found {len(flext_projects)} FLEXT projects")
-
-        # Check Poetry availability
-        poetry_path = shutil.which("poetry")
-        if not poetry_path:
-            return FlextResult[None].fail("Poetry not found")
-
-        self._logger.info("Poetry available")
-        return FlextResult[None].ok(None)
-
-    def setup_workspace_links(
-        self, workspace_root: Path
-    ) -> FlextResult[dict[str, str]]:
-        """Setup workspace project links."""
-        self._logger.info("Setting up workspace links")
-
-        try:
-            # Find all FLEXT projects
-            projects = [
-                p
-                for p in workspace_root.iterdir()
-                if p.is_dir()
-                and p.name.startswith("flext-")
-                and (p / "pyproject.toml").exists()
-            ]
-
-            results = {}
-            for project in projects:
-                # Create symbolic links for src directories
-                src_dir = project / "src"
-                if src_dir.exists():
-                    link_name = workspace_root / "src" / project.name.replace("-", "_")
-                    if not link_name.exists():
-                        link_name.parent.mkdir(parents=True, exist_ok=True)
-                        link_name.symlink_to(src_dir.resolve())
-                        results[project.name] = "linked"
-                        self._logger.info(f"Created link for {project.name}")
-                    else:
-                        results[project.name] = "exists"
-
-            return FlextResult[dict[str, str]].ok(results)
-
-        except Exception as e:
-            return FlextResult[dict[str, str]].fail(f"Link setup failed: {e}")
-
-    def validate_project_dependencies(
-        self, workspace_root: Path
-    ) -> FlextResult[dict[str, str]]:
-        """Validate project dependencies."""
-        self._logger.info("Validating project dependencies")
-
-        try:
-            projects = [
-                p
-                for p in workspace_root.iterdir()
-                if p.is_dir()
-                and p.name.startswith("flext-")
-                and (p / "pyproject.toml").exists()
-            ]
-
-            results = {}
-            for project in projects:
-                pyproject_file = project / "pyproject.toml"
-                if pyproject_file.exists():
-                    results[project.name] = "valid"
-                else:
-                    results[project.name] = "missing_pyproject"
-
-            return FlextResult[dict[str, str]].ok(results)
-
-        except Exception as e:
-            return FlextResult[dict[str, str]].fail(
-                f"Dependency validation failed: {e}"
-            )
-
-    def run_type_checking(self, workspace_root: Path) -> FlextResult[dict[str, str]]:
-        """Run MyPy type checking on workspace."""
-        self._logger.info("Running type checking")
-
-        try:
-            results = {}
-
-            # Run MyPy on each project
-            projects = [
-                p
-                for p in workspace_root.iterdir()
-                if p.is_dir() and p.name.startswith("flext-") and (p / "src").exists()
-            ]
-
-            for project in projects:
-                try:
-                    cmd = [
-                        "python",
-                        "-m",
-                        "mypy",
-                        "src/",
-                        "--show-error-codes",
-                        "--no-error-summary",
-                    ]
-                    result = subprocess.run(
-                        cmd,
-                        check=False,
-                        cwd=project,
-                        capture_output=True,
-                        text=True,
-                        env={"PYTHONPATH": f"src:{workspace_root}/flext-core/src"},
+        @staticmethod
+        def create_symbolic_link(source: Path, target: Path) -> FlextResult[None]:
+            """Create symbolic link with validation."""
+            try:
+                if not source.exists():
+                    return FlextResult[None].fail(
+                        f"Source path does not exist: {source}"
                     )
 
-                    if result.returncode == 0:
-                        results[project.name] = "passed"
+                if target.exists() and target.is_symlink():
+                    target.unlink()
+                elif target.exists():
+                    return FlextResult[None].fail(
+                        f"Target exists and is not a symlink: {target}"
+                    )
+
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.symlink_to(source)
+
+                return FlextResult[None].ok(None)
+
+            except OSError as e:
+                return FlextResult[None].fail(f"Failed to create symlink: {e}")
+
+        @staticmethod
+        def validate_link(link_path: Path) -> FlextResult[bool]:
+            """Validate symbolic link exists and points to valid target."""
+            try:
+                if not link_path.exists():
+                    return FlextResult[bool].fail(f"Link does not exist: {link_path}")
+
+                if not link_path.is_symlink():
+                    return FlextResult[bool].fail(
+                        f"Path is not a symbolic link: {link_path}"
+                    )
+
+                target = link_path.resolve()
+                if not target.exists():
+                    return FlextResult[bool].fail(
+                        f"Link target does not exist: {target}"
+                    )
+
+                link_is_valid = True
+                return FlextResult[bool].ok(value=link_is_valid)
+
+            except Exception as e:
+                return FlextResult[bool].fail(f"Link validation error: {e}")
+
+    class _WorkspaceHelper:
+        """Nested helper for workspace structure operations."""
+
+        @staticmethod
+        def discover_flext_projects(workspace_root: Path) -> FlextResult[list[Path]]:
+            """Discover FLEXT projects in workspace."""
+            try:
+                projects = []
+
+                for item in workspace_root.iterdir():
+                    if item.is_dir() and item.name.startswith("flext-"):
+                        pyproject_file = item / "pyproject.toml"
+                        if pyproject_file.exists():
+                            projects.append(item)
+
+                return FlextResult[list[Path]].ok(projects)
+
+            except Exception as e:
+                return FlextResult[list[Path]].fail(f"Project discovery error: {e}")
+
+        @staticmethod
+        def create_workspace_structure(
+            workspace_root: Path,
+        ) -> FlextResult[dict[str, Path]]:
+            """Create standard workspace directory structure."""
+            try:
+                directories = {
+                    "src": workspace_root / "src",
+                    "tests": workspace_root / "tests",
+                    "docs": workspace_root / "docs",
+                    "scripts": workspace_root / "scripts",
+                }
+
+                for path in directories.values():
+                    path.mkdir(parents=True, exist_ok=True)
+
+                return FlextResult[dict[str, Path]].ok(directories)
+
+            except Exception as e:
+                return FlextResult[dict[str, Path]].fail(
+                    f"Workspace structure creation error: {e}"
+                )
+
+    def setup_workspace_links(self) -> FlextResult[FlextTypes.Core.Dict]:
+        """Setup symbolic links for workspace projects."""
+        self._logger.info("Setting up workspace links")
+
+        # Discover projects
+        projects_result = self._WorkspaceHelper.discover_flext_projects(
+            self._workspace_root
+        )
+        if projects_result.is_failure:
+            return FlextResult[FlextTypes.Core.Dict].fail(
+                f"Project discovery failed: {projects_result.error}"
+            )
+
+        projects = projects_result.unwrap()
+
+        # Create workspace structure
+        structure_result = self._WorkspaceHelper.create_workspace_structure(
+            self._workspace_root
+        )
+        if structure_result.is_failure:
+            return FlextResult[FlextTypes.Core.Dict].fail(
+                f"Workspace structure creation failed: {structure_result.error}"
+            )
+
+        directories = structure_result.unwrap()
+
+        # Setup links for each project
+        links_created = []
+        links_failed = []
+
+        for project in projects:
+            project_name = project.name.replace("-", "_")
+
+            # Link source directory
+            if (project / "src" / project_name).exists():
+                source = project / "src" / project_name
+                target = directories["src"] / project_name
+
+                link_result = self._LinkHelper.create_symbolic_link(source, target)
+                if link_result.is_success:
+                    links_created.append(f"src/{project_name}")
+                else:
+                    links_failed.append(f"src/{project_name}: {link_result.error}")
+
+            # Link tests directory
+            if (project / "tests").exists():
+                source = project / "tests"
+                target = directories["tests"] / project_name
+
+                link_result = self._LinkHelper.create_symbolic_link(source, target)
+                if link_result.is_success:
+                    links_created.append(f"tests/{project_name}")
+                else:
+                    links_failed.append(f"tests/{project_name}: {link_result.error}")
+
+        result = {
+            "projects_found": len(projects),
+            "links_created": links_created,
+            "links_failed": links_failed,
+            "workspace_directories": list(directories.keys()),
+        }
+
+        return FlextResult[FlextTypes.Core.Dict].ok(result)
+
+    def validate_workspace_links(self) -> FlextResult[FlextTypes.Core.Dict]:
+        """Validate all workspace symbolic links."""
+        self._logger.info("Validating workspace links")
+
+        # Get workspace structure
+        structure_result = self._WorkspaceHelper.create_workspace_structure(
+            self._workspace_root
+        )
+        if structure_result.is_failure:
+            return FlextResult[FlextTypes.Core.Dict].fail(
+                f"Workspace structure access failed: {structure_result.error}"
+            )
+
+        directories = structure_result.unwrap()
+
+        valid_links = []
+        invalid_links = []
+
+        # Check src links
+        src_dir = directories["src"]
+        if src_dir.exists():
+            for item in src_dir.iterdir():
+                if item.is_symlink():
+                    validation_result = self._LinkHelper.validate_link(item)
+                    if validation_result.is_success:
+                        valid_links.append(f"src/{item.name}")
                     else:
-                        results[project.name] = (
-                            f"errors: {len(result.stdout.splitlines())} issues"
+                        invalid_links.append(
+                            f"src/{item.name}: {validation_result.error}"
                         )
 
-                except Exception as e:
-                    results[project.name] = f"failed: {e}"
+        # Check tests links
+        tests_dir = directories["tests"]
+        if tests_dir.exists():
+            for item in tests_dir.iterdir():
+                if item.is_symlink():
+                    validation_result = self._LinkHelper.validate_link(item)
+                    if validation_result.is_success:
+                        valid_links.append(f"tests/{item.name}")
+                    else:
+                        invalid_links.append(
+                            f"tests/{item.name}: {validation_result.error}"
+                        )
 
-            return FlextResult[dict[str, str]].ok(results)
+        result = {
+            "valid_links": valid_links,
+            "invalid_links": invalid_links,
+            "total_checked": len(valid_links) + len(invalid_links),
+        }
 
-        except Exception as e:
-            return FlextResult[dict[str, str]].fail(f"Type checking failed: {e}")
+        return FlextResult[FlextTypes.Core.Dict].ok(result)
 
-    def setup_monitoring(self, workspace_root: Path) -> FlextResult[dict[str, str]]:
-        """Setup monitoring configuration."""
-        self._logger.info("Setting up monitoring")
+    def execute(self) -> FlextResult[FlextTypes.Core.Dict]:
+        """Execute workspace management operation."""
+        self._logger.info("Executing workspace management")
 
-        try:
-            # Basic monitoring setup
-            monitoring_dir = workspace_root / "monitoring"
-            monitoring_dir.mkdir(exist_ok=True)
+        # Setup workspace links
+        setup_result = self.setup_workspace_links()
+        if setup_result.is_failure:
+            return FlextResult[FlextTypes.Core.Dict].fail(
+                f"Workspace setup failed: {setup_result.error}"
+            )
 
-            config_file = monitoring_dir / "config.yaml"
-            if not config_file.exists():
-                config_content = """
-monitoring:
-  enabled: true
-  interval: 60
-  metrics:
-    - system_health
-    - project_status
-"""
-                config_file.write_text(config_content)
-
-            return FlextResult[dict[str, str]].ok({"monitoring": "configured"})
-
-        except Exception as e:
-            return FlextResult[dict[str, str]].fail(f"Monitoring setup failed: {e}")
-
-    def execute(self) -> FlextResult[dict[str, object]]:
-        """Execute the main domain service operation."""
-        return self.run_comprehensive_management("all")
-
-    def run_comprehensive_management(
-        self, operation: str = "all"
-    ) -> FlextResult[dict[str, object]]:
-        """Run comprehensive workspace management."""
-        workspace_root = Path.cwd()
-
-        self._logger.info("Starting comprehensive workspace management")
-
-        # Validate preconditions
-        validation_result = self.validate_business_rules()
+        # Validate links
+        validation_result = self.validate_workspace_links()
         if validation_result.is_failure:
-            return FlextResult[dict[str, object]].fail(validation_result.error)
+            return FlextResult[FlextTypes.Core.Dict].fail(
+                f"Link validation failed: {validation_result.error}"
+            )
 
-        results: dict[str, object] = {}
+        # Combine results
+        setup_data = setup_result.unwrap()
+        validation_data = validation_result.unwrap()
 
-        if operation in {"links", "all"}:
-            links_result = self.setup_workspace_links(workspace_root)
-            if links_result.is_success:
-                results["links"] = links_result.value
-            else:
-                return FlextResult[dict[str, object]].fail(
-                    f"Links setup failed: {links_result.error}"
-                )
+        combined_result = {
+            "workspace_setup": setup_data,
+            "link_validation": validation_data,
+            "operation_status": "completed",
+        }
 
-        if operation in {"deps", "all"}:
-            deps_result = self.validate_project_dependencies(workspace_root)
-            if deps_result.is_success:
-                results["dependencies"] = deps_result.value
-            else:
-                return FlextResult[dict[str, object]].fail(
-                    f"Dependencies validation failed: {deps_result.error}"
-                )
-
-        if operation in {"types", "all"}:
-            types_result = self.run_type_checking(workspace_root)
-            if types_result.is_success:
-                results["type_checking"] = types_result.value
-            else:
-                return FlextResult[dict[str, object]].fail(
-                    f"Type checking failed: {types_result.error}"
-                )
-
-        if operation in {"monitoring", "all"}:
-            monitoring_result = self.setup_monitoring(workspace_root)
-            if monitoring_result.is_success:
-                results["monitoring"] = monitoring_result.value
-            else:
-                return FlextResult[dict[str, object]].fail(
-                    f"Monitoring setup failed: {monitoring_result.error}"
-                )
-
-        return FlextResult[dict[str, object]].ok(results)
+        return FlextResult[FlextTypes.Core.Dict].ok(combined_result)
 
 
 def print_results(data: dict[str, object], title: str) -> None:
