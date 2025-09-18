@@ -12,7 +12,7 @@ from flext.base_cli import (
     FlextCliConfig,
     FlextCliFormatters,
     FlextCliMain,
-    FlextCliServices,
+    FlextCliService,
     __all__,
 )
 
@@ -37,12 +37,12 @@ class TestFlextCliDirectExports:
         assert "flext_cli" in str(FlextCliConfig.__module__)
 
     def test_flext_cli_services_import(self) -> None:
-        """Test that FlextCliServices is properly imported from flext-cli."""
-        assert FlextCliServices is not None
-        assert hasattr(FlextCliServices, "__name__")
+        """Test that FlextCliService is properly imported from flext-cli."""
+        assert FlextCliService is not None
+        assert hasattr(FlextCliService, "__name__")
 
         # Verify it's imported from flext-cli
-        assert "flext_cli" in str(FlextCliServices.__module__)
+        assert "flext_cli" in str(FlextCliService.__module__)
 
     def test_api_import(self) -> None:
         """Test that FlextCliApi is properly imported from flext-cli."""
@@ -69,7 +69,7 @@ class TestFlextCliDirectExports:
             "FlextCliFormatters",
             "FlextCliMain",
             "FlextCliModels",
-            "FlextCliServices",
+            "FlextCliService",
         ]
 
         for export in expected_exports:
@@ -99,7 +99,7 @@ class TestFlextCliDirectExports:
         assert callable(FlextCliConfig)
         assert callable(FlextCliApi)
         assert callable(FlextCliFormatters)
-        assert callable(FlextCliServices)
+        assert callable(FlextCliService)
 
     def test_classes_have_correct_names(self) -> None:
         """Test that all classes have correct names matching flext-cli."""
@@ -107,7 +107,7 @@ class TestFlextCliDirectExports:
         assert FlextCliConfig.__name__ == "FlextCliConfig"
         assert FlextCliApi.__name__ == "FlextCliApi"
         assert FlextCliFormatters.__name__ == "FlextCliFormatters"
-        assert FlextCliServices.__name__ == "FlextCliService"
+        assert FlextCliService.__name__ == "FlextCliService"
 
 
 class TestDirectImportCompliance:
@@ -201,7 +201,7 @@ class TestDirectImportValidation:
             FlextCliConfig,
             FlextCliFormatters,
             FlextCliMain,
-            FlextCliServices,
+            FlextCliService,
         ]
 
         # All classes should be directly from flext_cli module
