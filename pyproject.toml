@@ -321,6 +321,8 @@ exclude = [
     # Arquivos de módulos duplicados específicos, se o problema persistir após exclusões gerais
     "flext-api/examples/__init__.py",
     "client-a-oud-mig/examples/__init__.py",
+    # Exclude flext-ldap ldap3 stubs to avoid duplicate module conflicts
+    "flext-ldap/src/ldap3/.*",
 ]
 
 [tool.pydantic-mypy]

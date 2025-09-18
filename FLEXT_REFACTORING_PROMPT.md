@@ -1,8 +1,10 @@
-# FLEXT Ecosystem Refactoring Agent — STRICT FULL PROMPT (UPDATED 2025-01-27)
+# FLEXT Ecosystem Refactoring Agent — IMPLEMENTATION GUIDE (UPDATED 2025-01-18)
 
-**Enterprise-Grade LLM Agent Instructions for FLEXT Architecture Compliance**
-**This prompt assumes the virtual environment is already activated:**
-`source ~/flext/.venv/bin/activate`
+**Enterprise-Grade LLM Agent Instructions for FLEXT Architecture Implementation**
+
+**AUTHORITY**: This document provides detailed implementation guidance based on workspace standards defined in [CLAUDE.md](CLAUDE.md).
+
+**PREREQUISITE**: Virtual environment must be activated: `source ~/flext/.venv/bin/activate`
 **Do not change this path. Do not export PYTHONPATH. Do not prefix commands with `env`.**
 
 ---
@@ -10,26 +12,23 @@
 ## 🎯 Mission Statement (Non-Negotiable)
 
 Read calmly, act meticulously, and execute via a continuously updated **TODO Plan**.
-**Goal:** 100% compliance with FLEXT architectural standards with **zero** regressions and **zero** issues in **Ruff**, **Mypy (strict)**, **Pyright**, and **Pytest**.
+**Goal:** Full compliance with FLEXT architectural standards as defined in [CLAUDE.md](CLAUDE.md) with **zero** regressions and **zero** issues in **Ruff**, **Mypy (strict)**, **Pyright**, and **Pytest**.
 
-**CRITICAL: FLEXT-CORE IS NOW THE PROVEN FOUNDATION - REPLICATE ITS PATTERNS EVERYWHERE**
+**CRITICAL: FOLLOW CLAUDE.md WORKSPACE STANDARDS EXACTLY**
 
-Based on the current state of flext-core (version 0.9.0), you MUST:
+Based on workspace standards in [CLAUDE.md](CLAUDE.md) and the proven flext-core foundation (version 0.9.0), you MUST:
 
-- **REPLICATE flext-core patterns** exactly as implemented and proven working
-- **USE ONLY flext-core foundation** - it is now production-ready with 75%+ coverage
-- **FOLLOW the Clean Architecture layers** as established in flext-core
-- **IMPLEMENT FlextResult railway pattern** everywhere for error handling
-- **USE dependency injection patterns** via get_flext_container()
-- **INHERIT from proven base classes** (FlextModels.Entity, FlextValueObject, FlextDomainService)
-- **APPLY strict type safety** with MyPy strict mode and Python 3.13+
-- **MAINTAIN 75%+ test coverage** as proven achievable in flext-core
-- **FOLLOW PEP8 naming** and **layered module organization**
-- **USE root-level imports** only (outside same project) - `from flext_core import X`
-- **VALIDATE with quality gates** after EVERY edit using make commands
-- **NEVER** change `pyproject.toml`, lint configs, or use ignore statements
-- **NEVER** break public APIs; maintain backward compatibility
-- **FIX ROOT CAUSES**, not symptoms - follow flext-core debugging patterns
+- **FOLLOW all absolute prohibitions** as defined in CLAUDE.md
+- **USE ONLY flext-core foundation** - production-ready with 75%+ coverage
+- **IMPLEMENT unified class pattern** exactly as specified in CLAUDE.md
+- **USE FlextResult pattern** everywhere for error handling (see CLAUDE.md examples)
+- **APPLY dependency injection** via FlextContainer as specified in CLAUDE.md
+- **INHERIT from proven base classes** per CLAUDE.md architectural principles
+- **MAINTAIN 75% minimum coverage** (proven achievable), 100% aspirational
+- **USE root-level imports** only as defined in CLAUDE.md import strategy
+- **VALIDATE with quality gates** after EVERY edit using make commands from CLAUDE.md
+- **USE MCP servers** (serena, sequential-thinking, context7) as specified in CLAUDE.md
+- **NEVER** violate zero-tolerance policies defined in CLAUDE.md
 
 ---
 
@@ -104,110 +103,73 @@ src/project_namespace/
 └── __init__.py                # Wildcard imports with __all__ aggregation
 ```
 
-### ✅ PROVEN Quality Standards (ENFORCE EVERYWHERE)
+### ✅ PROVEN Quality Standards (FROM CLAUDE.md)
 
-**flext-core has proven these standards work - APPLY TO ALL PROJECTS:**
+**Use quality standards as defined in [CLAUDE.md](CLAUDE.md) - APPLY TO ALL PROJECTS:**
 
 ```bash
-# MANDATORY commands that MUST work in ALL projects:
-make setup                 # Complete dev environment setup
-make validate              # ALL quality gates (lint + type + security + test)
+# MANDATORY commands from CLAUDE.md that MUST work in ALL projects:
+make validate              # Complete pipeline (lint + type + security + test)
 make check                 # Quick validation (lint + type-check only)
-make test                  # 75%+ coverage requirement (PROVEN achievable)
-make lint
-make type-check
-make format                # Auto-format code (79 char line limit)
-make security              # Bandit + pip-audit scanning
+make test                  # 75% minimum coverage (proven achievable)
+make lint                  # Ruff linting (ZERO tolerance)
+make type-check            # MyPy/PyRight validation
+make format                # Auto-format
 ```
 
-### ✅ PROVEN Error Handling Pattern (MANDATORY EVERYWHERE)
+**See [CLAUDE.md](CLAUDE.md) for comprehensive validation script and detailed quality gate requirements.**
 
-**flext-core has established FlextResult as the foundation - USE EVERYWHERE:**
+### ✅ PROVEN Error Handling Pattern (FROM CLAUDE.md)
 
+**Use FlextResult pattern as defined in [CLAUDE.md](CLAUDE.md):**
+
+**See [CLAUDE.md](CLAUDE.md) Section "FlextResult Pattern (MANDATORY)" for:**
+- Complete FlextResult usage examples
+- Railway-oriented programming patterns
+- Safe error handling without try/except fallbacks
+- Integration with unified class pattern
+
+**Reference implementation:**
 ```python
-# ✅ CORRECT - Proven pattern from flext-core
+# See CLAUDE.md for complete examples
 from flext_core import FlextResult
 
-def business_operation(data: dict) -> FlextResult[ProcessedData]:
-    """MANDATORY: All business operations must return FlextResult."""
-    if not data:
-        return FlextResult[None].fail("Data required", error_code="VALIDATION_ERROR")
-
-    # Railway-oriented composition (PROVEN PATTERN)
-    return (
-        validate_data(data)
-        .flat_map(lambda d: process_data(d))      # Chain operations
-        .map(lambda d: enrich_data(d))            # Transform success
-        .map_error(lambda e: f"Processing failed: {e}")  # Handle errors
-    )
-
-# Consumption pattern
-result = business_operation(data)
-if result.success:
-    processed = result.unwrap()  # Safe unwrap after success check
-else:
-    logger.error(f"Operation failed: {result.error}")
+# Follow CLAUDE.md patterns exactly for all business operations
 ```
 
-### ✅ PROVEN Dependency Injection Pattern (MANDATORY)
+### ✅ PROVEN Dependency Injection Pattern (FROM CLAUDE.md)
 
-**flext-core has established the container pattern - USE EVERYWHERE:**
+**Use dependency injection as defined in [CLAUDE.md](CLAUDE.md):**
 
+**See [CLAUDE.md](CLAUDE.md) Section "Core Architectural Principles" for:**
+- FlextContainer.get_global() usage patterns
+- Dependency injection in unified class pattern
+- Integration with domain services
+
+**Reference implementation:**
 ```python
-# ✅ CORRECT - Proven pattern from flext-core
-from flext_core import get_flext_container
+# See CLAUDE.md for complete dependency injection examples
+from flext_core import FlextContainer
 
-# Registration (typically in application startup)
-container = get_flext_container()
-container.register("database", DatabaseService())
-container.register_factory("logger", lambda: create_logger())
-
-# Consumption (in business logic)
-def service_operation() -> FlextResult[Data]:
-    db_result = container.get("database")
-    if db_result.failure:
-        return FlextResult[None].fail("Database service unavailable")
-
-    db = db_result.unwrap()
-    return db.fetch_data()
+# Follow CLAUDE.md unified class pattern with dependency injection
 ```
 
-### ✅ PROVEN Domain Modeling Pattern (MANDATORY)
+### ✅ PROVEN Domain Modeling Pattern (FROM CLAUDE.md)
 
-**flext-core has proven DDD patterns work - REPLICATE EVERYWHERE:**
+**Use domain modeling as defined in [CLAUDE.md](CLAUDE.md):**
 
+**See [CLAUDE.md](CLAUDE.md) Section "Python 3.13 + Pydantic Patterns" for:**
+- FlextModel usage with Pydantic v2 integration
+- Advanced type safety patterns
+- Protocol-based design patterns
+- SOLID principles implementation
+
+**Reference implementation:**
 ```python
-# ✅ CORRECT - Proven patterns from flext-core
+# See CLAUDE.md for complete domain modeling examples
 from flext_core import FlextModels
 
-class Email(FlextValueObject):
-    """Value objects are immutable and compared by value."""
-    address: str
-
-    def validate_business_rules(self) -> FlextResult[None]:
-        if "@" not in self.address:
-            return FlextResult[None].fail("Invalid email")
-        return FlextResult[None].ok(None)
-
-class User(FlextModels.Entity):
-    """Entities have identity and lifecycle."""
-    name: str
-    email: Email
-
-    def activate(self) -> FlextResult[None]:
-        """Business logic returns FlextResult."""
-        if self.is_active:
-            return FlextResult[None].fail("Already active")
-        self.is_active = True
-        return FlextResult[None].ok(None)
-
-class UserAggregate(FlextModels.AggregateRoot):
-    """Aggregate roots enforce consistency boundaries."""
-    user: User
-
-    def register_user(self, data: dict) -> FlextResult[User]:
-        # Domain events are automatically tracked
-        return self.create_user(data)
+# Follow CLAUDE.md patterns for entity and value object design
 ```
 
 ---
@@ -383,54 +345,46 @@ class ProjectInfrastructure:
 
 ## 🛡️ Quality Gates (PROVEN FROM flext-core)
 
-**CRITICAL: Use the SAME quality gates that made flext-core successful**
+**CRITICAL: Use quality gates as defined in [CLAUDE.md](CLAUDE.md)**
 
-### ✅ Development Commands (EXACTLY as in flext-core)
+### ✅ Development Commands (FROM CLAUDE.md)
+
+**Use the exact commands specified in [CLAUDE.md](CLAUDE.md) Section "Universal Quality Commands":**
 
 ```bash
-# ✅ PROVEN commands from successful flext-core implementation
-make setup                 # Complete dev environment setup
-make validate              # Run ALL quality gates (lint + type + security + test)
-make check                 # Quick validation (lint + type-check only)
-make lint
-make type-check
-make test                  # 75%+ coverage (proven achievable)
-make security              # Bandit + pip-audit scanning
-make format                # Auto-format code (79 char limit)
-make clean                 # Clean build artifacts
-make docs                  # Build documentation
-make build                 # Build package
-
-# Single letter aliases (proven useful)
-make t                     # test
-make l                     # lint
-make f                     # format
-make tc
-make v                     # validate
+# MANDATORY commands from CLAUDE.md:
+make validate              # Complete validation pipeline
+make check                 # Quick validation (lint + type)
+make test                  # Real tests with 75% minimum coverage
+make lint                  # Ruff linting (ZERO tolerance)
+make type-check            # MyPy/PyRight validation
+make format                # Auto-format
 ```
 
-### ✅ Testing Standards (PROVEN EFFECTIVE)
+**See [CLAUDE.md](CLAUDE.md) for comprehensive validation script and testing strategy.**
+
+### ✅ Testing Standards (FROM CLAUDE.md)
+
+**Use testing strategy as defined in [CLAUDE.md](CLAUDE.md) Section "Testing Strategy (75% MINIMUM COVERAGE)":**
 
 ```bash
-# ✅ PROVEN testing approaches from flext-core
-make test-unit             # Unit tests only
-make test-integration      # Integration tests only
-make test-fast             # Tests without coverage
-make coverage-html         # HTML coverage report
+# MANDATORY testing from CLAUDE.md:
+pytest tests/ --cov=src --cov-report=term-missing --cov-fail-under=75
+pytest -m "not mock" -v    # Functional tests preferred
 
-# Advanced testing (proven patterns)
-poetry run pytest tests/unit/ -m "not slow" --tb=short -q
-poetry run pytest tests/unit/ --cov=src/project_name --cov-report=term-missing
-poetry run pytest --lf --ff -x  # Last failed with fail-fast
+# See CLAUDE.md for complete testing strategy
 ```
 
-### ✅ Type Safety Standards (ZERO TOLERANCE PROVEN)
+### ✅ Type Safety Standards (FROM CLAUDE.md)
+
+**Use type safety standards as defined in [CLAUDE.md](CLAUDE.md) Section "Required Standards":**
 
 ```bash
-# ✅ PROVEN type safety from flext-core (ZERO errors)
-mypy src/ --strict --show-error-codes         # Must be 0 errors
-pyright src/ --level error                    # Must be 0 errors
-ruff check src/ tests/ examples/ scripts/     # Must be 0 errors
+# ZERO errors in src/ as specified in CLAUDE.md:
+make type-check            # MyPy + PyRight validation
+make lint                  # Ruff linting (ZERO tolerance)
+
+# See CLAUDE.md for comprehensive validation script
 ```
 
 ---
@@ -676,161 +630,131 @@ pytest tests/ -v    # All pass
 
 ## 🚫 ABSOLUTE PROHIBITIONS (LEARNED FROM flext-core SUCCESS)
 
-### ❌ Configuration Modifications (NEVER ALLOWED)
+### ❌ ABSOLUTE PROHIBITIONS (FROM CLAUDE.md)
 
-**These files are PROVEN to work - DO NOT MODIFY:**
+**Follow all zero-tolerance policies defined in [CLAUDE.md](CLAUDE.md) Section "ABSOLUTE PROHIBITIONS":**
 
-- `pyproject.toml` - Copy from flext-core with minimal changes
-- Makefile - Copy from flext-core pattern exactly
-- Linting configurations - Use flext-core proven settings
-- Test configurations - Use flext-core proven settings
+**See [CLAUDE.md](CLAUDE.md) for complete list of:**
+- CLI project violations (forbidden imports)
+- Code quality violations (multiple classes, helper functions, try/except fallbacks)
+- Type safety violations (# type: ignore, Any types)
 
-### ❌ Local Implementations (FORBIDDEN)
+### ❌ Configuration Modifications (FORBIDDEN)
 
-**flext-core provides these - NEVER RECREATE LOCALLY:**
+**Per [CLAUDE.md](CLAUDE.md) anti-duplication enforcement - DO NOT:**
+- Modify pyproject.toml, Makefile, or linting configurations
+- Create local implementations of flext-core functionality
+- Relax quality standards below CLAUDE.md requirements
 
-- FlextResult - Use from flext-core
-- Dependency injection - Use get_flext_container()
-- Logging - Use FlextLogger() from flext-core
-- Base classes - Use FlextModels.Entity, FlextValueObject, FlextDomainService
-- Validation - Use FlextModels with Pydantic
-- Constants - Inherit from FlextConstants
-- Exceptions - Inherit from FlextExceptions
+### ❌ Pattern Violations (ZERO TOLERANCE)
 
-### ❌ Quality Gate Bypassing (ZERO TOLERANCE)
-
-**These practices are FORBIDDEN:**
-
-- `
-- `
-- Relaxing mypy/ruff settings
-- Skipping test coverage requirements
-- Using non-strict type checking
+**Strictly follow [CLAUDE.md](CLAUDE.md) patterns:**
+- Unified class pattern (single class per module)
+- FlextResult error handling (no try/except fallbacks)
+- Root-level imports only
+- MCP server usage for all operations
 
 ---
 
 ## 🏆 Success Criteria (PROVEN ACHIEVABLE)
 
-### ✅ Quality Metrics (BASED ON flext-core SUCCESS)
+### ✅ Quality Metrics (FROM CLAUDE.md)
 
-**These standards are PROVEN achievable:**
+**Follow quality standards defined in [CLAUDE.md](CLAUDE.md):**
 
-```bash
-# PEP8 Compliance (flext-core achieved 100%)
-ruff check src/ tests/ examples/ scripts/  # 0 errors
-
-# Type Safety (flext-core achieved 100% in src/)
-mypy src/ --strict --show-error-codes      # 0 errors
-pyright src/ --level error                 # 0 errors
-
-# Test Coverage (flext-core achieved 75%+)
-pytest --cov=src/project_name --cov-report=term-missing --cov-fail-under=75
-
-# Security (flext-core achieved 0 issues)
-bandit -r src/                             # 0 high/medium issues
-pip-audit                                  # 0 vulnerabilities
-```
-
-### ✅ Architecture Compliance (PROVEN PATTERNS)
+**See [CLAUDE.md](CLAUDE.md) Section "Required Standards" for:**
+- Source quality requirements (ZERO errors in src/)
+- Test coverage targets (75% minimum, 100% aspirational)
+- CLI compliance requirements
+- Unified class requirements
+- Error handling requirements
 
 ```bash
-# flext-core Integration (100% usage)
-grep -r "from flext_core import" src/ | wc -l     # Should be > 10
-
-# FlextResult Usage (100% error handling)
-grep -r "FlextResult\[" src/ | wc -l              # Should be > 5
-
-# No Local Base Classes (0 violations)
-grep -r "class.*Base.*ABC" src/ | wc -l           # Should be 0
-
-# Pydantic Integration (100% models)
-grep -r "FlextModels" src/ | wc -l                 # Should be > 0
+# Use CLAUDE.md validation commands:
+make validate      # Complete pipeline as defined in CLAUDE.md
+make check         # Quick validation as defined in CLAUDE.md
+make test          # 75% minimum coverage (proven achievable)
 ```
 
-### ✅ Development Experience (PROVEN WORKFLOW)
+### ✅ Architecture Compliance (FROM CLAUDE.md)
 
-**These commands MUST work exactly as in flext-core:**
+**Follow architectural principles defined in [CLAUDE.md](CLAUDE.md):**
 
-```bash
-make setup         # Complete environment setup
-make validate      # All quality gates pass
-make check         # Quick validation passes
-make test          # 75%+ coverage achieved
-make build         # Package builds successfully
-make docs          # Documentation generates
+**See [CLAUDE.md](CLAUDE.md) for:**
+- Anti-duplication enforcement patterns
+- Violation detection commands
+- Centralization requirements
 
-# Import functionality (100% working)
-python -c "import project_name; print(dir(project_name))"
-python -c "from project_name import ProjectService; print('✅')"
-```
+### ✅ Development Experience (FROM CLAUDE.md)
+
+**Use development workflow defined in [CLAUDE.md](CLAUDE.md):**
+
+**See [CLAUDE.md](CLAUDE.md) Section "Universal Quality Commands" for complete command set.**
 
 ---
 
 ## 🎯 CRITICAL SUCCESS FACTORS
 
-**BASED ON flext-core's proven development experience:**
+**BASED ON [CLAUDE.md](CLAUDE.md) workspace standards:**
 
-1. **Follow the proven order** - Foundation → Domain → Application → Infrastructure
-2. **Validate continuously** - After every single module addition
-3. **Use flext-core patterns** - Don't reinvent, replicate proven success
-4. **Maintain quality gates** - Zero tolerance for regressions
-5. **Copy successful configurations** - Makefile, pyproject.toml, etc.
-6. **Inherit from flext-core** - Base classes, constants, exceptions
-7. **Use dependency injection** - get_flext_container() everywhere
-8. **Apply railway pattern** - FlextResult for all business operations
-9. **Enforce type safety** - MyPy strict mode, Python 3.13+
-10. **Achieve test coverage** - 75%+ is proven achievable
+1. **Follow CLAUDE.md absolutely** - All principles, patterns, and prohibitions
+2. **Use MCP servers** - serena, sequential-thinking, context7 as specified
+3. **Validate continuously** - After every change using CLAUDE.md quality gates
+4. **Maintain zero tolerance** - For all violations defined in CLAUDE.md
+5. **Reference authority** - CLAUDE.md for principles, this document for implementation
+6. **Use unified patterns** - Single class per module as defined in CLAUDE.md
+7. **Apply FlextResult everywhere** - As specified in CLAUDE.md error handling
+8. **Enforce 75% minimum coverage** - With 100% aspirational target
+9. **Use root-level imports only** - As defined in CLAUDE.md import strategy
+10. **Coordinate with workspace** - Follow CLAUDE.md hierarchy and authority
 
-**VERIFICATION-FIRST DEVELOPMENT (CRITICAL LESSON from flext-core):**
+**VERIFICATION-FIRST DEVELOPMENT (FROM CLAUDE.md):**
 
-**ALWAYS verify before asserting anything:**
+**ALWAYS verify using tools before asserting anything:**
 
 ```bash
-# Before claiming something works:
-python -c "from project_name import ClassName; print('✅')"  # Test actual execution
-
-# Before assuming imports exist:
-cat src/project_name/__init__.py  # Check actual exports
-
-# Before assuming API signatures:
-python -c "from flext_core import FlextResult; help(FlextResult)"  # Verify methods
+# Use serena for code verification:
+# Use sequential-thinking for problem decomposition
+# Use context7 for library documentation
+# Reference CLAUDE.md for all patterns and standards
 ```
 
-**NEVER assume based on:**
-
-- File names or "logical" patterns
-- What "should" work without testing
-- Previous session memory
+**NEVER:**
+- Assume patterns without checking CLAUDE.md
+- Skip MCP server usage as specified in CLAUDE.md
+- Violate zero-tolerance policies defined in CLAUDE.md
 
 ---
 
 ## 🚨 FINAL REMINDERS
 
-**flext-core is now the PROVEN FOUNDATION with:**
+**[CLAUDE.md](CLAUDE.md) is the WORKSPACE AUTHORITY with:**
 
-- ✅ 75%+ test coverage achieved
-- ✅ Zero ruff/mypy/pyright errors in src/
-- ✅ Complete Clean Architecture implementation
-- ✅ Production-ready FlextResult railway pattern
-- ✅ Proven dependency injection patterns
-- ✅ Successful DDD implementation
-- ✅ Working make commands for all quality gates
+- ✅ Complete architectural principles and patterns
+- ✅ Zero-tolerance policies and quality standards
+- ✅ MCP server integration requirements
+- ✅ Unified class patterns and error handling
+- ✅ Anti-duplication enforcement
+- ✅ Comprehensive validation scripts
 
-**YOUR MISSION: REPLICATE THIS SUCCESS IN ALL OTHER PROJECTS**
+**YOUR MISSION: IMPLEMENT CLAUDE.md STANDARDS EXACTLY**
 
 **ALWAYS:**
 
-- Copy proven patterns from flext-core exactly
-- Use flext-core as foundation dependency
-- Follow the established layered architecture
-- Maintain the proven quality standards
-- Validate continuously with make commands
+- Reference [CLAUDE.md](CLAUDE.md) for all architectural decisions
+- Use MCP servers (serena, sequential-thinking, context7) as specified
+- Follow unified class pattern and FlextResult error handling
+- Maintain 75% minimum coverage with 100% aspirational target
+- Validate with quality gates defined in CLAUDE.md
 
 **NEVER:**
 
-- Reinvent patterns that work in flext-core
-- Relax quality standards below flext-core level
-- Skip validation steps that ensured flext-core success
-- Create local implementations of flext-core functionality
+- Violate zero-tolerance policies defined in CLAUDE.md
+- Skip MCP server usage requirements
+- Create patterns not defined in CLAUDE.md
+- Relax quality standards below CLAUDE.md requirements
 
-**The path to success is clear: Follow the flext-core blueprint exactly.**
+**The path to success is clear: Follow [CLAUDE.md](CLAUDE.md) workspace standards exactly.**
+
+**For questions about principles**: See [CLAUDE.md](CLAUDE.md)
+**For implementation details**: Use this document with CLAUDE.md patterns
