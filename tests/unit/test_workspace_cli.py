@@ -15,25 +15,11 @@ from unittest.mock import Mock, patch
 
 import pytest
 
+from flext.services import create_services
 from flext.workspace_cli import FlextWorkspaceCli
+from flext.workspace_service import create_workspace_service
 from flext_core import FlextDomainService, FlextResult
-
-# Optional imports for integration tests
-try:
-    from flext.workspace import create_workspace_service
-except ImportError:
-    create_workspace_service = None
-
-try:
-    from flext.services import create_services
-except ImportError:
-    create_services = None
-
-try:
-    from flext_tools import Colors, print_colored
-except ImportError:
-    print_colored = None
-    Colors = None
+from flext_tools import Colors, print_colored
 
 
 class TestFlextWorkspaceCli:
