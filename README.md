@@ -1,6 +1,6 @@
 # FLEXT - Enterprise Data Integration Platform
 
-**Version**: 0.9.0-dev | **Status**: ACTIVE DEVELOPMENT | **Last Updated**: 2025-08-13
+**Version**: 0.9.0 | **Status**: ACTIVE DEVELOPMENT | **Last Updated**: 2025-01-18
 
 ## Overview
 
@@ -80,6 +80,71 @@ Development planning and status.
 - **Redis 7**: Caching and message broker
 - **Docker**: Containerization
 
+### 🏢 Domain Library Architecture
+
+FLEXT enforces strict domain separation where third-party libraries are accessed only through designated FLEXT domain libraries:
+
+#### Core Infrastructure
+- **flext-core**: Foundation patterns (FlextResult, FlextContainer, FlextModels)
+- **flext-cli**: All CLI/Rich/Click/Typer functionality
+- **flext-api**: HTTP/REST API functionality (requests, httpx)
+- **flext-web**: Web framework functionality (FastAPI, Flask, Django, aiohttp)
+- **flext-observability**: Prometheus, structured logging, monitoring, Redis
+- **flext-auth**: Authentication and authorization patterns
+- **flext-grpc**: gRPC communication and service definitions
+- **flext-tools**: Development tooling (backup, monitoring, linting utilities)
+
+#### Quality & Analysis
+- **flext-quality**: Code quality analysis (MyPy, Ruff, coverage, complexity, pytest)
+- **flext-plugin**: Plugin system architecture and management
+
+#### Data Integration Pipeline
+- **flext-meltano**: ALL Meltano/Singer/DBT functionality
+- **flext-dbt-\***: DBT transformation projects
+  - flext-dbt-ldap, flext-dbt-ldif, flext-dbt-oracle, flext-dbt-oracle-wms
+- **flext-tap-\***: Singer data extractors
+  - flext-tap-ldap, flext-tap-ldif, flext-tap-oracle, flext-tap-oracle-oic, flext-tap-oracle-wms
+- **flext-target-\***: Singer data loaders
+  - flext-target-ldap, flext-target-ldif, flext-target-oracle, flext-target-oracle-oic, flext-target-oracle-wms
+
+#### Database & Integration Domains
+- **flext-db-oracle**: SQLAlchemy 2 and oracledb connectivity
+- **flext-oracle-wms**: Oracle WMS integration (uses flext-db-oracle)
+- **flext-oracle-oic-ext**: Oracle OIC integration (uses flext-db-oracle)
+- **flext-ldap**: LDAP3 functionality and operations
+- **flext-ldif**: LDIF file processing and validation
+
+#### Migration & Integration Projects
+- **client-a-oud-mig**: Enterprise LDAP-to-Oracle migration
+  - Uses: flext-cli, flext-ldap, flext-ldif, flext-dbt-\*, flext-tap-\*, flext-target-\*
+- **client-b-meltano-native**: Native Meltano integration project
+  - Uses: flext-meltano exclusively
+
+**Principle**: *"Fix the domain foundation, never bypass it"*
+
+```python
+# ❌ FORBIDDEN - Direct third-party imports
+import rich, click, typer               # Use flext-cli
+import fastapi, flask, django           # Use flext-web
+import requests, httpx                   # Use flext-api
+import meltano, singer, dbt              # Use flext-meltano
+import sqlalchemy, oracledb, ldap3       # Use flext-db-oracle, flext-ldap
+import mypy, coverage, pytest, ruff      # Use flext-quality
+import grpc, grpcio                      # Use flext-grpc
+import prometheus_client, redis          # Use flext-observability
+
+# ✅ CORRECT - Through FLEXT domains
+from flext_cli import FlextCliApi          # Rich/Click/Typer
+from flext_web import FlextWebServer       # FastAPI/Flask/Django
+from flext_api import FlextApiClient       # HTTP requests
+from flext_meltano import FlextMeltanoRunner  # Meltano/Singer/DBT
+from flext_db_oracle import FlextOracleClient # SQLAlchemy 2 + oracledb
+from flext_ldap import FlextLdapClient      # LDAP3
+from flext_quality import FlextQualityAnalyzer # Code analysis
+from flext_grpc import FlextGrpcServer      # gRPC services
+from flext_observability import FlextMetrics # Monitoring
+```
+
 ## 🌐 Ecosystem Components
 
 ### Core Services
@@ -117,26 +182,28 @@ FLEXT implements a hybrid architecture where Go services orchestrate Python libr
 
 ### Architecture Progress
 
-- **flext-core (Foundation)**: Significant progress - 1,249 MyPy errors (71% reduction, only 4 in src/)
-- **FlexCore (Go Runtime)**: Clean Architecture violations being fixed - 30% compliance
-- **FLEXT Service (Go Control Panel)**: Multi-modal architecture in development
-- **Python Ecosystem**: Singer/Meltano/DBT integration in progress
-- **Documentation**: Being standardized and aligned with actual code state
+- **flext-core (Foundation)**: Production-ready - MyPy and Ruff clean, comprehensive feature set
+- **Python Ecosystem**: 30+ specialized packages for data integration (LDAP, Oracle, Singer, DBT)
+- **CLI Infrastructure**: flext-cli provides unified command-line interface
+- **Quality Gates**: Automated linting, type checking, and testing infrastructure
+- **Documentation**: Aligned with actual implementation and continuously updated
 
 ### Ready for Development Use
 
-- **Core Patterns**: FlextResult, FlextContainer, basic DDD patterns working
-- **Docker Environment**: Development infrastructure operational
-- **CI/CD Pipeline**: Quality gates and validation working
-- **Basic Services**: HTTP APIs and database connectivity functional
+- **Core Patterns**: FlextResult, FlextContainer, FlextModels, FlextConfig fully functional
+- **Domain-Driven Design**: Entity, Value Objects, Aggregate Roots with event handling
+- **Validation Framework**: Comprehensive value object validation (Email, URL, paths, dates)
+- **Dependency Injection**: Type-safe container with factory support and auto-wiring
+- **CQRS Support**: Command and Query patterns with enhanced auto-naming
+- **Quality Infrastructure**: Ruff, MyPy, PyRight validation with zero tolerance policies
 
-### Not Yet Production Ready
+### In Active Development
 
-- **Clean Architecture**: Significant refactoring needed across services
-- **Type Safety**: Major MyPy error resolution in progress
-- **Event Sourcing**: Foundation exists but needs complete implementation
-- **Plugin System**: Basic framework exists, security and isolation needed
-- **Cross-Service Integration**: APIs exist but need comprehensive testing
+- **Event Sourcing**: Foundation implemented, advanced features planned
+- **Plugin System**: Basic framework available, advanced security features in development
+- **Distributed Services**: Go control plane integration under development
+- **Cross-Service Integration**: APIs implemented, comprehensive testing in progress
+- **Performance Optimization**: Baseline performance established, optimization ongoing
 
 ## 🚀 Development Setup
 
