@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/config_new/providers.py
+# hypothesis_version: 6.138.2
+
+['.yaml', '.yml', '0.1.0', '1', 'APP_NAME', 'APP_VERSION', 'DEBUG', 'ENABLE_CACHING', 'ENABLE_METRICS', 'ENABLE_TRACING', 'ENVIRONMENT', 'FLEXT_', 'LOG_LEVEL', 'MAX_RETRIES', 'TIMEOUT_SECONDS', 'app_name', 'app_version', 'config_source', 'debug', 'enable_caching', 'enable_metrics', 'enable_tracing', 'environment', 'flext-app', 'log_level', 'max_retries', 'on', 'timeout_seconds', 'true', 'utf-8', 'yes']

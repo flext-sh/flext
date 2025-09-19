@@ -18,7 +18,8 @@ class CodeDuplicateAnalyzer:
         """Initialize code duplicate analyzer."""
 
     def analyze_duplicates(
-        self, project_path: str | Path,
+        self,
+        project_path: str | Path,
     ) -> FlextResult[list[dict[str, str]]]:
         """Analyze code duplicates."""
         try:

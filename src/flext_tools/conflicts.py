@@ -17,7 +17,8 @@ class ConflictAnalyzer:
         self._conflicts: list[dict[str, str]] = []
 
     def analyze_dependencies(
-        self, project_path: str,
+        self,
+        project_path: str,
     ) -> FlextResult[list[dict[str, str]]]:
         """Analyze dependency conflicts."""
         try:

@@ -16,7 +16,8 @@ class DependencyDiscovery:
         """Initialize dependency discovery."""
 
     def discover_dependencies(
-        self, project_path: str,
+        self,
+        project_path: str,
     ) -> FlextResult[list[dict[str, str]]]:
         """Discover project dependencies."""
         try:

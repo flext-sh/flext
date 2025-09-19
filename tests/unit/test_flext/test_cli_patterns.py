@@ -1,24 +1,26 @@
 """Unit tests for flext.cli_patterns module.
 
-Tests for CLI patterns and base CLI functionality following FLEXT testing patterns
-with proper mocking and architectural pattern validation.
+Tests for CLI patterns and direct re-exports following FLEXT testing patterns
+with proper validation of domain separation compliance.
 """
 
 from __future__ import annotations
 
-from pathlib import Path
+import inspect
 
-import pytest
-
-import flext.cli_patterns
-import flext.cli_patterns as module
-import flext.cli_patterns as patterns
 import flext.cli_patterns as patterns_module
 from flext.cli_patterns import (
-    BaseCLI,
-    BaseCLI as ImportedBaseCLI,
-    BaseCLI as PatternBaseCLI,
+    FlextCliApi,
+    FlextCliConfigs,
+    FlextCliFormatters,
+    FlextCliMain,
     __all__,
+)
+from flext_cli import (
+    FlextCliApi as OriginalApi,
+    FlextCliConfigs as OriginalConfigs,
+    FlextCliFormatters as OriginalFormatters,
+    FlextCliMain as OriginalMain,
 )
 
 
@@ -30,29 +32,34 @@ class TestCliPatterns:
         # Assert
         assert "__all__" in dir(__import__("flext.cli_patterns"))
         assert isinstance(__all__, list)
-        assert "BaseCLI" in __all__
+        assert "FlextCliApi" in __all__
+        assert "FlextCliConfigs" in __all__
+        assert "FlextCliFormatters" in __all__
+        assert "FlextCliMain" in __all__
 
-    @pytest.mark.skipif(
-        BaseCLI is None, reason="BaseCLI not available - import dependency issue",
-    )
-    def test_base_cli_import_from_patterns(self) -> None:
-        """Test that BaseCLI can be imported from cli_patterns."""
-        # Act
+    def test_flext_cli_api_import_from_patterns(self) -> None:
+        """Test that FlextCliApi can be imported from cli_patterns."""
+        # Act & Assert
+        assert FlextCliApi is not None
+        assert hasattr(FlextCliApi, "__name__")
 
-        # Assert
-        assert ImportedBaseCLI is not None
-        assert ImportedBaseCLI is BaseCLI
+    def test_flext_cli_configs_import_from_patterns(self) -> None:
+        """Test that FlextCliConfigs can be imported from cli_patterns."""
+        # Act & Assert
+        assert FlextCliConfigs is not None
+        assert hasattr(FlextCliConfigs, "__name__")
 
-    @pytest.mark.skipif(
-        BaseCLI is None, reason="BaseCLI not available - import dependency issue",
-    )
-    def test_base_cli_alias_functionality(self) -> None:
-        """Test that BaseCLI alias maintains functionality."""
-        # This tests the import alias mechanism
+    def test_flext_cli_formatters_import_from_patterns(self) -> None:
+        """Test that FlextCliFormatters can be imported from cli_patterns."""
+        # Act & Assert
+        assert FlextCliFormatters is not None
+        assert hasattr(FlextCliFormatters, "__name__")
 
-        # Assert that the alias points to the same class
-        assert PatternBaseCLI is not None
-        assert hasattr(PatternBaseCLI, "__name__")
+    def test_flext_cli_main_import_from_patterns(self) -> None:
+        """Test that FlextCliMain can be imported from cli_patterns."""
+        # Act & Assert
+        assert FlextCliMain is not None
+        assert hasattr(FlextCliMain, "__name__")
 
     def test_module_structure(self) -> None:
         """Test that cli_patterns module has correct structure."""
@@ -62,167 +69,150 @@ class TestCliPatterns:
         assert patterns_module.__doc__ is not None
         assert "FLEXT CLI Patterns" in patterns_module.__doc__
 
-    def test_enterprise_cli_framework_documentation(self) -> None:
-        """Test that CLI patterns framework is properly documented."""
+    def test_zero_tolerance_enforcement_documentation(self) -> None:
+        """Test that zero tolerance enforcement is properly documented."""
         doc = patterns_module.__doc__ or ""
 
-        # Assert key concepts are documented - facade pattern
+        # Assert key concepts are documented
         assert "FLEXT CLI Patterns" in doc
-        assert "facade" in doc.lower()
-        assert "ANTI-DUPLICATION ENFORCEMENT" in doc
-        assert "FLEXT ecosystem" in doc
+        assert "ZERO TOLERANCE ENFORCEMENT" in doc
+        assert "DIRECT re-exports" in doc
+        assert "NO aliases" in doc
+        assert "NO wrappers" in doc
+        assert "NO compatibility layers" in doc
 
-    @pytest.mark.skipif(
-        BaseCLI is None, reason="BaseCLI not available - import dependency issue",
-    )
-    def test_base_cli_can_be_subclassed(self) -> None:
-        """Test that BaseCLI can be used for subclassing."""
+    def test_direct_re_exports_compliance(self) -> None:
+        """Test that module only contains direct re-exports."""
+        # Test that the module exports only the expected classes
+        expected_exports = {
+            "FlextCliApi",
+            "FlextCliConfigs",
+            "FlextCliFormatters",
+            "FlextCliMain",
+        }
 
-        # Act - Create a subclass
-        class TestCLI(BaseCLI):
-            def __init__(self) -> None:
-                # This is just testing that subclassing works
-                pass
+        actual_exports = set(__all__)
+        assert actual_exports == expected_exports
 
-        # Assert
-        assert issubclass(TestCLI, BaseCLI)
+    def test_no_aliases_or_wrappers(self) -> None:
+        """Test that there are no aliases or wrappers in the module."""
+        # Import the module and check it has no additional attributes
+        cp = patterns_module
 
-        # Test instantiation (may require mocking depending on BaseCLI implementation)
-        try:
-            test_cli = TestCLI()
-            assert test_cli is not None
-        except (TypeError, AttributeError):
-            # This is acceptable if BaseCLI requires specific initialization
-            pass
-
-
-class TestCliPatternsIntegration:
-    """Integration tests for CLI patterns with broader system."""
-
-    @pytest.fixture
-    def temp_workspace(self, tmp_path: Path) -> Path:
-        """Create temporary workspace for integration testing."""
-        workspace = tmp_path / "cli-patterns-integration-test"
-        workspace.mkdir()
-        return workspace
-
-    def test_cli_patterns_module_imports_cleanly(self) -> None:
-        """Test that cli_patterns module imports without side effects."""
-        # This test ensures the module can be imported in various contexts
-        try:
-            # Module should import without executing CLI logic
-            assert True
-        except Exception as e:
-            pytest.fail(f"cli_patterns should import cleanly: {e}")
-
-    def test_flext_ecosystem_integration_design(self) -> None:
-        """Test that CLI patterns are designed for FLEXT ecosystem integration."""
-        # Check module documentation mentions key integration points
-
-        doc = patterns.__doc__ or ""
-        integration_keywords = [
-            "FLEXT ecosystem",
-            "flext-cli",
-            "facade",
-            "ZERO TOLERANCE",
+        # Get all public attributes (excluding special methods and annotations)
+        public_attrs = [
+            attr
+            for attr in dir(cp)
+            if not attr.startswith("_") and attr != "annotations"
         ]
 
-        for keyword in integration_keywords:
-            assert keyword in doc, f"Documentation should mention {keyword} integration"
+        # Should only contain the four direct re-exports
+        expected_attrs = {
+            "FlextCliApi",
+            "FlextCliConfigs",
+            "FlextCliFormatters",
+            "FlextCliMain",
+        }
 
-    @pytest.mark.skipif(
-        BaseCLI is None, reason="BaseCLI not available - import dependency issue",
-    )
-    def test_architectural_pattern_compliance(self) -> None:
-        """Test that CLI patterns follow Clean Architecture principles."""
-        # This test checks that the architectural patterns are properly structured
-        # Actual implementation details would be tested when BaseCLI is fully implemented
+        actual_attrs = set(public_attrs)
+        assert actual_attrs == expected_attrs
 
-        # Assert that BaseCLI follows expected patterns
-        assert BaseCLI is not None
+    def test_flext_domain_separation_compliance(self) -> None:
+        """Test compliance with FLEXT domain separation rules."""
+        # Test that all exported classes are from flext_cli
 
-        # Check for common CLI pattern methods (when available)
-        if hasattr(BaseCLI, "__init__"):
-            assert callable(BaseCLI.__init__)
-
-
-class TestErrorHandling:
-    """Test suite for CLI patterns error handling."""
-
-    def test_import_error_handling(self) -> None:
-        """Test graceful handling of import errors."""
-        # The module should handle missing dependencies without crashing
-
-        try:
-            # If import succeeds, module should be usable
-            assert hasattr(flext.cli_patterns, "__all__")
-        except ImportError:
-            # If import fails, it should be a clear, specific error
-            pytest.fail("cli_patterns should handle import dependencies gracefully")
-
-    def test_missing_base_cli_handling(self) -> None:
-        """Test handling when base CLI implementation is missing."""
-        # This tests the resilience of the patterns module
-
-        # Module should be importable even if underlying implementation is missing
-        assert flext.cli_patterns is not None
-        assert hasattr(flext.cli_patterns, "__all__")
-
-    def test_graceful_degradation(self) -> None:
-        """Test that CLI patterns degrade gracefully when dependencies are unavailable."""
-        try:
-            # Should have expected exports even if some may not be functional
-            assert isinstance(__all__, list)
-            assert len(__all__) > 0
-
-        except Exception as e:
-            pytest.fail(f"CLI patterns should provide graceful degradation: {e}")
+        # Assert that the re-exports are the same as the originals
+        assert FlextCliApi is OriginalApi
+        assert FlextCliConfigs is OriginalConfigs
+        assert FlextCliFormatters is OriginalFormatters
+        assert FlextCliMain is OriginalMain
 
 
-class TestDocumentationCompliance:
-    """Test suite for documentation and API compliance."""
+class TestDirectReExportsPattern:
+    """Test suite for direct re-exports pattern compliance."""
 
-    def test_module_docstring_quality(self) -> None:
-        """Test that module has comprehensive documentation."""
-        doc = module.__doc__
-        assert doc is not None
-        assert len(doc) > 100  # Substantial documentation
+    def test_pattern_follows_zero_aliases_rule(self) -> None:
+        """Test that pattern follows zero aliases rule."""
+        cp = patterns_module
 
-        # Check for key documentation sections - facade pattern
-        required_sections = [
-            "FLEXT CLI Patterns",
-            "ANTI-DUPLICATION ENFORCEMENT",
-            "ZERO TOLERANCE",
-            "facade",
-        ]
+        # Get the source lines of the module
+        source_lines = inspect.getsourcelines(cp)[0]
+        source_text = "".join(source_lines)
 
-        for section in required_sections:
-            assert section in doc, f"Documentation missing {section} section"
+        # Should not contain any alias assignments
+        assert " = FlextCli" not in source_text
+        assert "BaseCLI" not in source_text
+        assert "with_config" not in source_text
+        assert "with_output_format" not in source_text
 
-    def test_version_and_metadata(self) -> None:
-        """Test that module contains proper version and metadata information."""
-        doc = module.__doc__ or ""
+    def test_pattern_uses_direct_imports_only(self) -> None:
+        """Test that pattern uses only direct imports."""
+        cp = patterns_module
 
-        # Check for metadata in documentation - facade pattern
-        metadata_items = [
-            "Copyright (c) 2025 FLEXT Team",
-            "SPDX-License-Identifier: MIT",
-        ]
+        # Get the source lines of the module
+        source_lines = inspect.getsourcelines(cp)[0]
+        source_text = "".join(source_lines)
 
-        for item in metadata_items:
-            assert item in doc, f"Documentation should contain {item}"
+        # Should contain direct imports from flext_cli
+        assert "from flext_cli import (" in source_text
+        assert "FlextCliApi," in source_text
+        assert "FlextCliConfigs," in source_text
+        assert "FlextCliFormatters," in source_text
+        assert "FlextCliMain," in source_text
 
-    def test_enterprise_standards_documentation(self) -> None:
-        """Test that enterprise standards are properly documented."""
-        doc = module.__doc__ or ""
+    def test_copyright_and_licensing(self) -> None:
+        """Test that module has proper copyright and licensing."""
+        doc = patterns_module.__doc__ or ""
 
-        # Check for enterprise standards documentation - facade pattern
-        enterprise_concepts = [
-            "ANTI-DUPLICATION ENFORCEMENT",
-            "ZERO TOLERANCE",
-            "facade",
-            "flext-cli exclusively",
-        ]
+        # Assert licensing information
+        assert "Copyright (c) 2025 FLEXT Team" in doc
+        assert "SPDX-License-Identifier: MIT" in doc
 
-        for concept in enterprise_concepts:
-            assert concept in doc, f"Should document {concept} for enterprise standards"
+
+class TestModuleExportsCompliance:
+    """Test suite for module exports compliance."""
+
+    def test_all_list_matches_actual_exports(self) -> None:
+        """Test that __all__ list matches what's actually exported."""
+        cp = patterns_module
+
+        # Get what's in __all__
+        all_exports = set(__all__)
+
+        # Get what's actually available for import
+        available_exports = {
+            name
+            for name in dir(cp)
+            if not name.startswith("_") and name != "annotations" and hasattr(cp, name)
+        }
+
+        assert all_exports == available_exports
+
+    def test_no_legacy_exports_remain(self) -> None:
+        """Test that no legacy exports remain in __all__."""
+        # These should not be in __all__ anymore
+        legacy_exports = {
+            "BaseCLI",
+            "FlextCLI",
+            "FlextCLICommand",
+            "FlextCLIConfig",
+            "FlextCLIGroup",
+            "with_config",
+            "with_output_format",
+        }
+
+        actual_exports = set(__all__)
+        assert not actual_exports.intersection(legacy_exports)
+
+    def test_only_clean_api_exported(self) -> None:
+        """Test that only clean API is exported."""
+        # Should only export the four clean classes
+        clean_exports = {
+            "FlextCliApi",
+            "FlextCliConfigs",
+            "FlextCliFormatters",
+            "FlextCliMain",
+        }
+
+        actual_exports = set(__all__)
+        assert actual_exports == clean_exports
