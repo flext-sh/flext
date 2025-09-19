@@ -83,7 +83,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, FlextTypes.Core.Strin
 
     except (OSError, ValueError, TypeError) as e:
         return FlextResult[dict[str, FlextTypes.Core.StringList]].fail(
-            f"Failed to find manual config patterns: {e}"
+            f"Failed to find manual config patterns: {e}",
         )
 
 

@@ -255,7 +255,6 @@ def stats_by_project() -> int:
         percentage = (error_count / total_errors * 100) if total_errors > 0 else 0
         bar_length = int(percentage / 5)  # Escala de 0-20 caracteres
         bar_chart = "█" * bar_length + "░" * (20 - bar_length)
-        # TODO(marlonsc): Use bar_chart for visualization
         print(f"{_project_name}: {bar_chart} {percentage:.1f}% ({error_count} errors)")
 
     return total_errors
@@ -291,9 +290,6 @@ def stats_by_error_type() -> int:
     # Ordenar tipos de erro por frequência
     for error_type, count in error_type_counts.most_common():
         percentage = count / total_errors * 100
-        # bar_length = int(percentage / 2)  # Escala de 0-50 caracteres
-        # bar_chart = "█" * bar_length + "░" * (max(0, 25 - bar_length))
-        # TODO(@flext-team): Use bar_chart for visualization
 
         # Mostrar distribuição por projeto para este tipo de erro
         project_distribution = error_by_project_type[str(error_type)]
@@ -304,19 +300,15 @@ def stats_by_error_type() -> int:
         )
 
         for _project_name, _project_count in sorted_projects[:5]:  # Top 5 projetos
-            # project_percentage = project_count / count * 100
-            # TODO(marlonsc): Use project_percentage for visualization
             pass
 
         if len(sorted_projects) > 5:
             remaining_projects = len(sorted_projects) - 5
-            # TODO(marlonsc): Use remaining_projects for visualization
             print(f"  ... and {remaining_projects} more projects")
 
     top_5_errors = error_type_counts.most_common(5)
     for _error_type, count in top_5_errors:
         percentage = count / total_errors * 100
-        # TODO(marlonsc): Use percentage for visualization
         print(f"{_error_type}: {percentage:.1f}% ({count} errors)")
 
     return total_errors

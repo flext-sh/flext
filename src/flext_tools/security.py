@@ -29,7 +29,7 @@ class FlextSecurityService(FlextDomainService[dict[str, str]]):
 
         @staticmethod
         def scan_directory(
-            directory: str, config: dict[str, str] | None = None
+            directory: str, config: dict[str, str] | None = None,
         ) -> FlextResult[list[str]]:
             """Scan directory for antipatterns."""
             _ = directory, config  # Placeholder implementation
@@ -44,21 +44,17 @@ class FlextSecurityService(FlextDomainService[dict[str, str]]):
         return self._VaultHelper.decrypt_secrets(vault_path)
 
     def scan_antipatterns(
-        self, directory: str, config: dict[str, str] | None = None
+        self, directory: str, config: dict[str, str] | None = None,
     ) -> FlextResult[list[str]]:
         """Scan for antipatterns using nested helper."""
         return self._ScanHelper.scan_directory(directory, config)
 
 
-# Module-level exports for backward compatibility
-# Note: These are aliases/placeholders for the refactored structure
-AntipatternScanner = FlextSecurityService
-ScanConfig = dict  # Placeholder - was likely a simple config class
-SecretVaultDecryptor = FlextSecurityService
+# LEGACY ALIASES ELIMINATED - Use FlextSecurityService directly:
+# Use: FlextSecurityService instead of AntipatternScanner
+# Use: FlextSecurityService instead of SecretVaultDecryptor
+# Use: dict[str, object] instead of ScanConfig
 
 __all__ = [
-    "AntipatternScanner",
     "FlextSecurityService",
-    "ScanConfig",
-    "SecretVaultDecryptor",
 ]
