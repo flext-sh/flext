@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/mixins/logging.py
+# hypothesis_version: 6.138.2
+
+['_logger', 'error_details', 'error_type', 'object_type', 'operation', 'operation_id']

@@ -40,7 +40,8 @@ class QualityReport:
 
 
 def run_command(
-    cmd: FlextTypes.Core.StringList, _cwd: str | None = None,
+    cmd: FlextTypes.Core.StringList,
+    _cwd: str | None = None,
 ) -> tuple[int, str, str]:
     """Executa um comando e retorna (exit_code, stdout, stderr)."""
     try:

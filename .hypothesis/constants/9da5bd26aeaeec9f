@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/commands.py
+# hypothesis_version: 6.136.7
+
+[100, '(?<!^)(?=[A-Z])', '.', '; ', '@', 'Applying middleware', 'Command', 'Executing command', 'FlextCommands', 'FlextResult[object]', 'Handler check result', 'Middleware failed', 'No handler found', 'UTC', 'Unknown error', 'Validation failed', '_', '__args__', '__dict__', '__name__', '__orig_bases__', '_metrics', '_metrics_state', '_validator', 'asc', 'can_handle', 'command_class', 'command_id', 'command_type', 'correlation_id', 'desc', 'email', 'error', 'error_code', 'execute', 'forbid', 'get_metrics', 'handle', 'handler_id', 'handler_instance', 'process', 'success', 'timestamp', 'total', 'type', 'unknown', 'user_id', 'validate_command', 'validate_message', 'validate_query']

@@ -242,7 +242,8 @@ class FlextLintFixer:
                     used_names = set()
                     for child in ast.walk(node):
                         if isinstance(child, ast.Name) and isinstance(
-                            child.ctx, ast.Load,
+                            child.ctx,
+                            ast.Load,
                         ):
                             used_names.add(child.id)
 

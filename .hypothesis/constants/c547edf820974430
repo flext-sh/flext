@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/legacy_types.py
+# hypothesis_version: 6.136.7
+
+['E', 'F', 'FlextEntityId', 'FlextTypes', 'R', 'T', 'TAnyDict', 'TAnyObject', 'TComparable', 'TEntityId', 'TErrorMessage', 'TPredicate', 'TSerializable', 'TUserData', 'TValidatable', 'U', 'V']

@@ -370,7 +370,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
     ) -> FlextResult[FlextCliMain]:
         """Initialize CLI with flext-cli integration using FlextResult pattern."""
         # Initialize configuration using FlextResult
-        config_result = self._initialize_config(profile, debug)
+        config_result = self._initialize_config(profile, debug=debug)
         if config_result.is_failure:
             error = f"Configuration error: {config_result.error}"
             self._print_colored(f"❌ {error}")

@@ -198,7 +198,8 @@ class QualityGateway(FlextScript):
                 current_total_issues = total_stats["total_issues"]
                 project_total_issues = project_result.get("total_issues", 0)
                 if isinstance(current_total_issues, (int, str)) and isinstance(
-                    project_total_issues, (int, str),
+                    project_total_issues,
+                    (int, str),
                 ):
                     total_stats["total_issues"] = int(current_total_issues) + int(
                         project_total_issues,
@@ -210,7 +211,8 @@ class QualityGateway(FlextScript):
                 current_critical_issues = total_stats["critical_issues"]
                 project_critical_issues = project_result.get("critical_issues", 0)
                 if isinstance(current_critical_issues, (int, str)) and isinstance(
-                    project_critical_issues, (int, str),
+                    project_critical_issues,
+                    (int, str),
                 ):
                     total_stats["critical_issues"] = int(current_critical_issues) + int(
                         project_critical_issues,
@@ -225,7 +227,9 @@ class QualityGateway(FlextScript):
 
             # Resumo final
             self._print_final_summary(
-                total_stats, failed_projects, _strict_mode=strict_mode,
+                total_stats,
+                failed_projects,
+                _strict_mode=strict_mode,
             )
 
             # Gateway aprovado apenas se todos os projetos passaram

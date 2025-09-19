@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/exceptions.py
+# hypothesis_version: 6.138.15
+
+['-', '.', 'FlextExceptions', 'Mapping[str, object]', '_', 'actual_type', 'attribute_context', 'attribute_name', 'auth_method', 'bool', 'business_rule', 'config_file', 'config_key', 'context', 'correlation_id', 'dict', 'endpoint', 'error_code', 'expected_type', 'field', 'float', 'int', 'list', 'operation', 'required_permission', 'resource_id', 'resource_type', 'service', 'str', 'str | None', 'timeout_seconds', 'validation_details', 'value']

@@ -214,7 +214,6 @@ strict = true
 mypy_path = "src"
 
 
-
 # Additional strict checks beyond default strict mode
 check_untyped_defs = true
 disallow_any_decorated = false
@@ -295,22 +294,22 @@ exclude = [
     "dist/",
     "node_modules/",
     "vendor/",
-    "src/flext_tools/",  # Exclude entire flext_tools to avoid module name conflicts
-    "src/flext/application_handlers.py",  # Exclude problematic duplicate module
-    "src/flext/application_pipeline.py",  # Exclude problematic duplicate module
-    ".*_pb2\\.py$",  # Exclude generated protobuf files
-    ".*_pb2_grpc\\.py$",  # Exclude generated protobuf gRPC files
-    "flext-web/src/flext_web/protocols.py",  # Exclude problematic syntax issue
-    "flexcore/src/",         # Exclude flexcore/src to avoid module name conflicts
-    "flext-*/src/",          # Exclude all flext-* project src directories
-    "flext-*/tests/",        # Exclude all flext-* project test directories
-    "client-a-oud-mig/src/",    # Exclude client-a-oud-mig src directory
-    "client-a-oud-mig/tests/",  # Exclude client-a-oud-mig test directory
-    "client-b-meltano-native/src/",  # Exclude client-b-meltano-native src directory
-    "client-b-meltano-native/tests/", # Exclude client-b-meltano-native test directory
-    ".*/examples/",          # Exclui todos os diretórios 'examples' em qualquer nível (regex corrigida)
-    ".*/tests/",             # Exclui todos os diretórios 'tests' em qualquer nível (regex corrigida)
-    ".*/scripts/",           # Exclui todos os diretórios 'scripts' em qualquer nível (regex corrigida)
+    "src/flext_tools/",                     # Exclude entire flext_tools to avoid module name conflicts
+    "src/flext/application_handlers.py",    # Exclude problematic duplicate module
+    "src/flext/application_pipeline.py",    # Exclude problematic duplicate module
+    ".*_pb2\\.py$",                         # Exclude generated protobuf files
+    ".*_pb2_grpc\\.py$",                    # Exclude generated protobuf gRPC files
+    "flext-web/src/flext_web/protocols.py", # Exclude problematic syntax issue
+    "flexcore/src/",                        # Exclude flexcore/src to avoid module name conflicts
+    "flext-*/src/",                         # Exclude all flext-* project src directories
+    "flext-*/tests/",                       # Exclude all flext-* project test directories
+    "client-a-oud-mig/src/",                   # Exclude client-a-oud-mig src directory
+    "client-a-oud-mig/tests/",                 # Exclude client-a-oud-mig test directory
+    "client-b-meltano-native/src/",         # Exclude client-b-meltano-native src directory
+    "client-b-meltano-native/tests/",       # Exclude client-b-meltano-native test directory
+    ".*/examples/",                         # Exclui todos os diretórios 'examples' em qualquer nível (regex corrigida)
+    ".*/tests/",                            # Exclui todos os diretórios 'tests' em qualquer nível (regex corrigida)
+    ".*/scripts/",                          # Exclui todos os diretórios 'scripts' em qualquer nível (regex corrigida)
     # Excluir stubs/typings dentro de pacotes para evitar módulos duplicados durante checagem local
     ".*/typings/.*",
     # Skip generated or problematic source files
@@ -348,12 +347,7 @@ venvPath = "."
 venv = ".venv"
 
 # Include and exclude patterns - workspace-wide
-include = [
-    "**/examples",
-    "**/scripts",
-    "**/src",
-    "**/tests",
-]
+include = ["**/examples", "**/scripts", "**/src", "**/tests"]
 exclude = [
     "**/__pycache__",
     "**/.meltano",
@@ -449,7 +443,7 @@ addopts = [
 ]
 markers = [
     "e2e: marca testes como testes de integração end-to-end",
-    "integration: marca testes como testes de integração", 
+    "integration: marca testes como testes de integração",
     "unit: marca testes como testes unitários",
     "slow: marca testes como execução lenta",
     "docker: marca testes que requerem Docker",
@@ -460,9 +454,7 @@ markers = [
     "integrity: marca testes de integridade",
     "edge_cases: marca testes de casos extremos",
 ]
-filterwarnings = [
-    "ignore::DeprecationWarning:pyasn1(.*|$)",
-]
+filterwarnings = ["ignore::DeprecationWarning:pyasn1(.*|$)"]
 
 
 [tool.poetry.dependencies]
