@@ -124,12 +124,14 @@ make format                # Auto-format
 **Use FlextResult pattern as defined in [CLAUDE.md](CLAUDE.md):**
 
 **See [CLAUDE.md](CLAUDE.md) Section "FlextResult Pattern (MANDATORY)" for:**
+
 - Complete FlextResult usage examples
 - Railway-oriented programming patterns
 - Safe error handling without try/except fallbacks
 - Integration with unified class pattern
 
 **Reference implementation:**
+
 ```python
 # See CLAUDE.md for complete examples
 from flext_core import FlextResult
@@ -142,11 +144,13 @@ from flext_core import FlextResult
 **Use dependency injection as defined in [CLAUDE.md](CLAUDE.md):**
 
 **See [CLAUDE.md](CLAUDE.md) Section "Core Architectural Principles" for:**
+
 - FlextContainer.get_global() usage patterns
 - Dependency injection in unified class pattern
 - Integration with domain services
 
 **Reference implementation:**
+
 ```python
 # See CLAUDE.md for complete dependency injection examples
 from flext_core import FlextContainer
@@ -159,12 +163,14 @@ from flext_core import FlextContainer
 **Use domain modeling as defined in [CLAUDE.md](CLAUDE.md):**
 
 **See [CLAUDE.md](CLAUDE.md) Section "Python 3.13 + Pydantic Patterns" for:**
+
 - FlextModel usage with Pydantic v2 integration
 - Advanced type safety patterns
 - Protocol-based design patterns
 - SOLID principles implementation
 
 **Reference implementation:**
+
 ```python
 # See CLAUDE.md for complete domain modeling examples
 from flext_core import FlextModels
@@ -635,13 +641,15 @@ pytest tests/ -v    # All pass
 **Follow all zero-tolerance policies defined in [CLAUDE.md](CLAUDE.md) Section "ABSOLUTE PROHIBITIONS":**
 
 **See [CLAUDE.md](CLAUDE.md) for complete list of:**
+
 - CLI project violations (forbidden imports)
 - Code quality violations (multiple classes, helper functions, try/except fallbacks)
-- Type safety violations (# type: ignore, Any types)
+- Type safety violations (# type: ignore, object types)
 
 ### ❌ Configuration Modifications (FORBIDDEN)
 
 **Per [CLAUDE.md](CLAUDE.md) anti-duplication enforcement - DO NOT:**
+
 - Modify pyproject.toml, Makefile, or linting configurations
 - Create local implementations of flext-core functionality
 - Relax quality standards below CLAUDE.md requirements
@@ -649,6 +657,7 @@ pytest tests/ -v    # All pass
 ### ❌ Pattern Violations (ZERO TOLERANCE)
 
 **Strictly follow [CLAUDE.md](CLAUDE.md) patterns:**
+
 - Unified class pattern (single class per module)
 - FlextResult error handling (no try/except fallbacks)
 - Root-level imports only
@@ -663,6 +672,7 @@ pytest tests/ -v    # All pass
 **Follow quality standards defined in [CLAUDE.md](CLAUDE.md):**
 
 **See [CLAUDE.md](CLAUDE.md) Section "Required Standards" for:**
+
 - Source quality requirements (ZERO errors in src/)
 - Test coverage targets (75% minimum, 100% aspirational)
 - CLI compliance requirements
@@ -681,6 +691,7 @@ make test          # 75% minimum coverage (proven achievable)
 **Follow architectural principles defined in [CLAUDE.md](CLAUDE.md):**
 
 **See [CLAUDE.md](CLAUDE.md) for:**
+
 - Anti-duplication enforcement patterns
 - Violation detection commands
 - Centralization requirements
@@ -720,6 +731,7 @@ make test          # 75% minimum coverage (proven achievable)
 ```
 
 **NEVER:**
+
 - Assume patterns without checking CLAUDE.md
 - Skip MCP server usage as specified in CLAUDE.md
 - Violate zero-tolerance policies defined in CLAUDE.md
