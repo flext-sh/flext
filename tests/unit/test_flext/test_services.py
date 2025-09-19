@@ -82,7 +82,7 @@ class TestFlextUnifiedServices:
         # Mock the pipeline service execute_pipeline method
         mock_pipeline_service = Mock()
         mock_pipeline_service.execute_pipeline.return_value = Mock(
-            is_success=True, value={"test": "result"}
+            is_success=True, value={"test": "result"},
         )
         pipeline_services._pipeline_service = mock_pipeline_service
 
@@ -98,7 +98,7 @@ class TestFlextUnifiedServices:
         # Mock the pipeline service execute_pipeline method to return failure
         mock_pipeline_service = Mock()
         mock_pipeline_service.execute_pipeline.return_value = Mock(
-            is_success=False, error="Pipeline failed"
+            is_success=False, error="Pipeline failed",
         )
         pipeline_services._pipeline_service = mock_pipeline_service
 
@@ -172,7 +172,7 @@ class TestFlextUnifiedServices:
         # Mock subprocess.run to avoid actual command execution
         with patch("flext.services.subprocess.run") as mock_run:
             mock_run.return_value = Mock(
-                returncode=0, stdout="quality check output", stderr=""
+                returncode=0, stdout="quality check output", stderr="",
             )
             result = test_services.execute_quality_check()
             assert result is not None
@@ -186,7 +186,7 @@ class TestFlextUnifiedServices:
         # Mock subprocess.run to avoid actual command execution
         with patch("flext.services.subprocess.run") as mock_run:
             mock_run.return_value = Mock(
-                returncode=0, stdout="quality check output", stderr=""
+                returncode=0, stdout="quality check output", stderr="",
             )
             result = test_services.execute_quality_check(fix=True)
             assert result is not None

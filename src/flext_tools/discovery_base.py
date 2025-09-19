@@ -16,14 +16,14 @@ class DependencyDiscovery:
         """Initialize dependency discovery."""
 
     def discover_dependencies(
-        self, project_path: str
+        self, project_path: str,
     ) -> FlextResult[list[dict[str, str]]]:
         """Discover project dependencies."""
         try:
             # Use the project_path parameter for dependency discovery
             if not project_path:
                 return FlextResult[list[dict[str, str]]].fail(
-                    "Project path cannot be empty"
+                    "Project path cannot be empty",
                 )
 
             # Placeholder implementation - acknowledge parameter usage

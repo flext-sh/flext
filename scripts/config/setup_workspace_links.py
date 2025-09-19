@@ -48,14 +48,14 @@ class WorkspaceManagementService(FlextDomainService[FlextTypes.Core.Dict]):
             try:
                 if not source.exists():
                     return FlextResult[None].fail(
-                        f"Source path does not exist: {source}"
+                        f"Source path does not exist: {source}",
                     )
 
                 if target.exists() and target.is_symlink():
                     target.unlink()
                 elif target.exists():
                     return FlextResult[None].fail(
-                        f"Target exists and is not a symlink: {target}"
+                        f"Target exists and is not a symlink: {target}",
                     )
 
                 target.parent.mkdir(parents=True, exist_ok=True)
@@ -75,13 +75,13 @@ class WorkspaceManagementService(FlextDomainService[FlextTypes.Core.Dict]):
 
                 if not link_path.is_symlink():
                     return FlextResult[bool].fail(
-                        f"Path is not a symbolic link: {link_path}"
+                        f"Path is not a symbolic link: {link_path}",
                     )
 
                 target = link_path.resolve()
                 if not target.exists():
                     return FlextResult[bool].fail(
-                        f"Link target does not exist: {target}"
+                        f"Link target does not exist: {target}",
                     )
 
                 link_is_valid = True
@@ -130,7 +130,7 @@ class WorkspaceManagementService(FlextDomainService[FlextTypes.Core.Dict]):
 
             except Exception as e:
                 return FlextResult[dict[str, Path]].fail(
-                    f"Workspace structure creation error: {e}"
+                    f"Workspace structure creation error: {e}",
                 )
 
     def setup_workspace_links(self) -> FlextResult[FlextTypes.Core.Dict]:
@@ -139,22 +139,22 @@ class WorkspaceManagementService(FlextDomainService[FlextTypes.Core.Dict]):
 
         # Discover projects
         projects_result = self._WorkspaceHelper.discover_flext_projects(
-            self._workspace_root
+            self._workspace_root,
         )
         if projects_result.is_failure:
             return FlextResult[FlextTypes.Core.Dict].fail(
-                f"Project discovery failed: {projects_result.error}"
+                f"Project discovery failed: {projects_result.error}",
             )
 
         projects = projects_result.unwrap()
 
         # Create workspace structure
         structure_result = self._WorkspaceHelper.create_workspace_structure(
-            self._workspace_root
+            self._workspace_root,
         )
         if structure_result.is_failure:
             return FlextResult[FlextTypes.Core.Dict].fail(
-                f"Workspace structure creation failed: {structure_result.error}"
+                f"Workspace structure creation failed: {structure_result.error}",
             )
 
         directories = structure_result.unwrap()
@@ -203,11 +203,11 @@ class WorkspaceManagementService(FlextDomainService[FlextTypes.Core.Dict]):
 
         # Get workspace structure
         structure_result = self._WorkspaceHelper.create_workspace_structure(
-            self._workspace_root
+            self._workspace_root,
         )
         if structure_result.is_failure:
             return FlextResult[FlextTypes.Core.Dict].fail(
-                f"Workspace structure access failed: {structure_result.error}"
+                f"Workspace structure access failed: {structure_result.error}",
             )
 
         directories = structure_result.unwrap()
@@ -225,7 +225,7 @@ class WorkspaceManagementService(FlextDomainService[FlextTypes.Core.Dict]):
                         valid_links.append(f"src/{item.name}")
                     else:
                         invalid_links.append(
-                            f"src/{item.name}: {validation_result.error}"
+                            f"src/{item.name}: {validation_result.error}",
                         )
 
         # Check tests links
@@ -238,7 +238,7 @@ class WorkspaceManagementService(FlextDomainService[FlextTypes.Core.Dict]):
                         valid_links.append(f"tests/{item.name}")
                     else:
                         invalid_links.append(
-                            f"tests/{item.name}: {validation_result.error}"
+                            f"tests/{item.name}: {validation_result.error}",
                         )
 
         result = {
@@ -257,14 +257,14 @@ class WorkspaceManagementService(FlextDomainService[FlextTypes.Core.Dict]):
         setup_result = self.setup_workspace_links()
         if setup_result.is_failure:
             return FlextResult[FlextTypes.Core.Dict].fail(
-                f"Workspace setup failed: {setup_result.error}"
+                f"Workspace setup failed: {setup_result.error}",
             )
 
         # Validate links
         validation_result = self.validate_workspace_links()
         if validation_result.is_failure:
             return FlextResult[FlextTypes.Core.Dict].fail(
-                f"Link validation failed: {validation_result.error}"
+                f"Link validation failed: {validation_result.error}",
             )
 
         # Combine results

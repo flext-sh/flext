@@ -110,7 +110,7 @@ class TestPrintColored:
     @patch("flext_cli.FlextCliFormatters")
     @patch("flext_tools.colors._service._logger")
     def test_print_colored_with_color(
-        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
+        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock,
     ) -> None:
         """Test print_colored with color outputs colored text and logs."""
         message = "Success message"
@@ -130,7 +130,7 @@ class TestPrintColored:
     @patch("flext_cli.FlextCliFormatters")
     @patch("flext_tools.colors._service._logger")
     def test_print_colored_without_color(
-        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
+        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock,
     ) -> None:
         """Test print_colored without color outputs plain text and logs."""
         message = "Plain message"
@@ -148,7 +148,7 @@ class TestPrintColored:
     @patch("flext_cli.FlextCliFormatters")
     @patch("flext_tools.colors._service._logger")
     def test_print_colored_logs_without_color_codes(
-        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
+        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock,
     ) -> None:
         """Test that logger receives message without ANSI color codes."""
         message = "Warning message"
@@ -168,7 +168,7 @@ class TestPrintColored:
     @patch("flext_cli.FlextCliFormatters")
     @patch("flext_tools.colors._service._logger")
     def test_print_colored_empty_message(
-        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
+        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock,
     ) -> None:
         """Test print_colored with empty message."""
         message = ""
@@ -188,7 +188,7 @@ class TestPrintColored:
     @patch("flext_cli.FlextCliFormatters")
     @patch("flext_tools.colors._service._logger")
     def test_print_colored_with_multiline_message(
-        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
+        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock,
     ) -> None:
         """Test print_colored with multiline message."""
         message = "Line 1\nLine 2\nLine 3"
@@ -228,7 +228,7 @@ class TestColorIntegration:
     @patch("flext_cli.FlextCliFormatters")
     @patch("flext_tools.colors._service._logger")
     def test_print_colored_multiple_calls(
-        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock
+        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock,
     ) -> None:
         """Test multiple calls to print_colored work correctly."""
         # Set up the mock

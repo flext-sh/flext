@@ -9,7 +9,7 @@ import inspect
 from flext import base_cli
 from flext.base_cli import (
     FlextCliApi,
-    FlextCliConfig,
+    FlextCliConfigs,
     FlextCliFormatters,
     FlextCliMain,
     FlextCliService,
@@ -29,12 +29,12 @@ class TestFlextCliDirectExports:
         assert "flext_cli" in str(FlextCliMain.__module__)
 
     def test_flext_cli_config_import(self) -> None:
-        """Test that FlextCliConfig is properly imported from flext-cli."""
-        assert FlextCliConfig is not None
-        assert hasattr(FlextCliConfig, "__name__")
+        """Test that FlextCliConfigs is properly imported from flext-cli."""
+        assert FlextCliConfigs is not None
+        assert hasattr(FlextCliConfigs, "__name__")
 
         # Verify it's imported from flext-cli
-        assert "flext_cli" in str(FlextCliConfig.__module__)
+        assert "flext_cli" in str(FlextCliConfigs.__module__)
 
     def test_flext_cli_services_import(self) -> None:
         """Test that FlextCliService is properly imported from flext-cli."""
@@ -65,7 +65,7 @@ class TestFlextCliDirectExports:
         expected_exports = [
             # Direct flext-cli exports
             "FlextCliApi",
-            "FlextCliConfig",
+            "FlextCliConfigs",
             "FlextCliFormatters",
             "FlextCliMain",
             "FlextCliModels",
@@ -96,7 +96,7 @@ class TestFlextCliDirectExports:
         """Test that all classes are directly accessible without instantiation."""
         # Verify all classes exist and are callable
         assert callable(FlextCliMain)
-        assert callable(FlextCliConfig)
+        assert callable(FlextCliConfigs)
         assert callable(FlextCliApi)
         assert callable(FlextCliFormatters)
         assert callable(FlextCliService)
@@ -104,7 +104,9 @@ class TestFlextCliDirectExports:
     def test_classes_have_correct_names(self) -> None:
         """Test that all classes have correct names matching flext-cli."""
         assert FlextCliMain.__name__ == "FlextCliMain"
-        assert FlextCliConfig.__name__ == "FlextCliConfigs"  # Aliased from FlextCliConfigs
+        assert (
+            FlextCliConfigs.__name__ == "FlextCliConfigs"
+        )  # Aliased from FlextCliConfigs
         assert FlextCliApi.__name__ == "FlextCliApi"
         assert FlextCliFormatters.__name__ == "FlextCliFormatters"
         assert FlextCliService.__name__ == "FlextCliService"
@@ -198,7 +200,7 @@ class TestDirectImportValidation:
         # Get all classes imported
         classes = [
             FlextCliApi,
-            FlextCliConfig,
+            FlextCliConfigs,
             FlextCliFormatters,
             FlextCliMain,
             FlextCliService,
