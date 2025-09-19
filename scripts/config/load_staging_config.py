@@ -74,7 +74,7 @@ class StagingConfigLoader(FlextScript):
                     {
                         "success": True,
                         "validate_only": validate_only,
-                    }
+                    },
                 )
 
             print_colored("❌ Failed to load staging configuration", Colors.RED)

@@ -74,28 +74,14 @@ class OracleE2ETestRunner(FlextScript):
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute Oracle E2E testing logic."""
         try:
-            # project_root = Path.cwd()  # TODO(@flext-team): Use project_root for test execution
-            # test_filter = kwargs.get("test_filter")  # TODO(@flext-team): Implement test filtering
-            # skip_build = kwargs.get("skip_build", False)  # TODO(@flext-team): Implement build skipping
-            # timeout = kwargs.get("timeout", 1800)  # TODO(@flext-team): Implement timeout handling
-
             # Suppress unused kwargs warning
             _ = kwargs
 
             print_colored("🧪 ORACLE E2E TEST RUNNER", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
 
-            # TODO(marlonsc): Implement OracleE2ETestManager
-            # Use flext_tools.testing for E2E operations
-            # test_manager = OracleE2ETestManager(workspace_path=project_root)
-
-            # TODO(@flext-team): Implement E2E test execution
-            # Run Oracle E2E test suite
-            # results = test_manager.run_e2e_tests(
-            #     test_filter=test_filter,
-            #     skip_build=skip_build,
-            #     timeout=timeout,
-            # )
+            # Oracle E2E test functionality to be implemented
+            # Will use flext_tools.testing for E2E operations
             results = FlextResult[dict].fail("E2E test execution not yet implemented")
 
             if results.is_success:
@@ -106,7 +92,7 @@ class OracleE2ETestRunner(FlextScript):
                         Colors.GREEN,
                     )
                     print_colored(
-                        "📊 Test reports generated in .flext_logs/", Colors.CYAN
+                        "📊 Test reports generated in .flext_logs/", Colors.CYAN,
                     )
                 return FlextResult[object].ok(None)
             print_colored("❌ Oracle E2E tests failed", Colors.RED)

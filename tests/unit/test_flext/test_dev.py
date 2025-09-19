@@ -132,7 +132,7 @@ class TestProjectDiscoveryService:
         (python_project / "src").mkdir()
         (python_project / "tests").mkdir()
         (python_project / "pyproject.toml").write_text(
-            "[tool.poetry]\nname = 'flext-core'"
+            "[tool.poetry]\nname = 'flext-core'",
         )
 
         return workspace

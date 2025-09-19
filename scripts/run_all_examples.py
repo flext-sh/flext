@@ -88,7 +88,7 @@ def run_example(project_root: Path, example_file: Path, timeout: int) -> RunResu
         for line in err_tail:
             print(f"  ! {line}")
     return RunResult(
-        project=project, example=example_file.name, returncode=proc.returncode
+        project=project, example=example_file.name, returncode=proc.returncode,
     )
 
 

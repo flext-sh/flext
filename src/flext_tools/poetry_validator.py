@@ -18,7 +18,7 @@ class PoetryValidator:
         """Initialize poetry validator."""
 
     def validate_pyproject(
-        self, project_path: str | Path
+        self, project_path: str | Path,
     ) -> FlextResult[dict[str, bool]]:
         """Validate pyproject.toml file."""
         try:

@@ -111,7 +111,7 @@ def collect_needed_exports(file_path: Path, package_name: str) -> list[ExportReq
 
     return [
         ExportRequest(
-            submodule=sub, names=names, package=package_name, project_dir=Path.cwd()
+            submodule=sub, names=names, package=package_name, project_dir=Path.cwd(),
         )
         for sub, names in needed.items()
     ]
@@ -351,7 +351,7 @@ def main() -> None:
                 entry = export_requests.setdefault(
                     req.submodule,
                     ExportRequest(
-                        req.submodule, set(), pkg.package_name, pkg.project_dir
+                        req.submodule, set(), pkg.package_name, pkg.project_dir,
                     ),
                 )
                 entry.names.update(req.names)

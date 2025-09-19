@@ -124,7 +124,7 @@ class FlextLintFixer:
                     if stripped.startswith("from __future__"):
                         future_imports.append(line)
                     elif stripped.startswith(
-                        ("import ", "from ")
+                        ("import ", "from "),
                     ) and not stripped.startswith("from __future__"):
                         regular_imports.append(line)
                     elif i <= docstring_end_idx:
@@ -242,7 +242,7 @@ class FlextLintFixer:
                     used_names = set()
                     for child in ast.walk(node):
                         if isinstance(child, ast.Name) and isinstance(
-                            child.ctx, ast.Load
+                            child.ctx, ast.Load,
                         ):
                             used_names.add(child.id)
 
@@ -441,7 +441,7 @@ class FlextLintFixer:
                     "path": str(project_path),
                     "stats": project_fixes,
                 },
-            )
+            ),
         )
 
         return project_fixes
@@ -470,7 +470,7 @@ class FlextLintFixer:
                 f"**Generated**: {Path().cwd()}",
                 f"**Workspace**: {self.workspace_root}",
                 "",
-            )
+            ),
         )
 
         # Summary
@@ -497,7 +497,7 @@ class FlextLintFixer:
                     "D205": "Added blank lines after docstrings",
                 }
                 report.append(
-                    f"- **{fix_type}**: {count} - {description.get(fix_type, 'Unknown fix')}"
+                    f"- **{fix_type}**: {count} - {description.get(fix_type, 'Unknown fix')}",
                 )
 
         report.append("")
@@ -511,7 +511,7 @@ class FlextLintFixer:
                     f"### {project['name']}",
                     f"- Files processed: {stats['files_processed']}",
                     f"- Files modified: {stats['files_modified']}",
-                )
+                ),
             )
 
             for fix_type, count in stats["fixes"].items():
@@ -532,7 +532,7 @@ class FlextLintFixer:
                 "2. Run tests to ensure functionality is preserved",
                 "3. Commit changes with descriptive messages",
                 "4. Consider running additional quality checks",
-            )
+            ),
         )
 
         return "\n".join(report)

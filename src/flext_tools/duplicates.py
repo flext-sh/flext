@@ -18,7 +18,7 @@ class CodeDuplicateAnalyzer:
         """Initialize code duplicate analyzer."""
 
     def analyze_duplicates(
-        self, project_path: str | Path
+        self, project_path: str | Path,
     ) -> FlextResult[list[dict[str, str]]]:
         """Analyze code duplicates."""
         try:
@@ -26,7 +26,7 @@ class CodeDuplicateAnalyzer:
             return FlextResult[list[dict[str, str]]].ok([])
         except Exception as e:
             return FlextResult[list[dict[str, str]]].fail(
-                f"Duplicate analysis failed: {e}"
+                f"Duplicate analysis failed: {e}",
             )
 
     def get_duplicate_report(self) -> FlextResult[str]:
