@@ -3,6 +3,7 @@
 This document outlines the phased approach for consolidating FLEXT around domain services, a unified dispatcher, and context-first observability.
 
 ## Phase 0 — Baseline Assessment (Week 1)
+
 - Inventory all domain services, handlers, bus registrations, and custom dispatch mechanisms across the ecosystem.
 - Document current configuration flows and context initialisation patterns.
 - Identify key stakeholders and assign owners per sub-project.
@@ -11,6 +12,7 @@ This document outlines the phased approach for consolidating FLEXT around domain
 ### Phase 0 Findings (2025-09-17)
 
 **Domain & Handler Inventory**
+
 - `flext-cli` exposes 12 domain services and seven command handlers (e.g. `flext-cli/src/flext_cli/api.py:34`, `flext-cli/src/flext_cli/handlers.py:50`) while the `OperationDispatcher` remains a bespoke match-case dispatcher (`flext-cli/src/flext_cli/api.py:69`) bound to a local command bus registered in `flext-cli/src/flext_cli/cli_bus.py:40`.
 - `flext-target-oracle` consolidates eight domain services plus a single `FlextHandlers` implementation (`flext-target-oracle/src/flext_target_oracle/target_commands.py:255`) with command-bus wiring in `flext-target-oracle/src/flext_target_oracle/target_refactored.py:47` and separate Singer message dispatch in `flext-target-oracle/src/flext_target_oracle/target_client.py:210`.
 - Connector packages (`flext-db-oracle/src/flext_db_oracle/services.py:58`, `flext-ldif/src/flext_ldif/services.py:97`, `flext-ldap/src/flext_ldap/domain.py:400`) and platform utilities (`src/flext/application_handlers.py:58`) each define their own domain services yet depend on local helper stacks and ad-hoc dispatch helpers (`src/flext/application_handlers.py:214`).
@@ -18,28 +20,30 @@ This document outlines the phased approach for consolidating FLEXT around domain
 - Several ecosystem packages consciously skip `FlextDomainService` adoption (for example `flext-auth/src/flext_auth/quickstart.py:17`), signalling migration candidates that will require targeted change management.
 
 **Configuration & Context Observations**
+
 - `FlextConfig` still acts as the global source of truth with layered loading (`flext-core/src/flext_core/config.py:926`) and permissive merge APIs (`flext-core/src/flext_core/config.py:1640`), yet downstream projects frequently fork configuration logic instead of reusing these hooks.
 - The dependency container defers to `FlextConfig` while keeping shadow copies of database/security/logging payloads (`flext-core/src/flext_core/container.py:636`), creating parallel configuration surfaces that must be rationalised.
 - CLI tooling extends `FlextConfig` (`flext-cli/src/flext_cli/config.py:17`) but the primary service lazily hydrates settings on demand (`flext-cli/src/flext_cli/core.py:52`), leading to divergent lifecycle expectations across command handlers and formatters.
 - `FlextContext` offers comprehensive correlation/request scoping (`flext-core/src/flext_core/context.py:19`), yet packages such as the target connector still log context manually (“Without FlextContext” in `flext-target-oracle/src/flext_target_oracle/target_observability.py:319`) and the CLI relies on a bespoke context object (`flext-cli/src/flext_cli/context.py:14`).
 
 **Stakeholders & Ownership**
+
 - Core Platform (flext-core, shared `src/flext_*` utilities) – proposed owner for dispatcher, context, and configuration consolidation work.
 - Developer Experience (flext-cli, flext_cli tooling) – primary stakeholders for dispatcher integration and handler ergonomics.
-- Data Connectors (flext-target-*, flext-db-oracle, flext-ldif, flext-ldap, flext-meltano) – require guided migrations off custom dispatch and config stacks.
+- Data Connectors (flext-target-\*, flext-db-oracle, flext-ldif, flext-ldap, flext-meltano) – require guided migrations off custom dispatch and config stacks.
 - Platform Extensions & APIs (flext-api, flext-plugin, flext-observability) – need alignment on shared dispatcher/context contracts.
 - Quality & Safeguards (flext-quality, test harnesses) – should govern regression coverage as migrations proceed.
 
 ### Tracking Dashboard (2025-09-17)
 
-| Workstream | Status | Owner | Notes |
-| --- | --- | --- | --- |
-| Domain services & handlers | Baseline captured; gaps flagged in non-adopters | Core Platform | Consolidate service list and publish importable registry. |
-| Dispatcher & bus usage | Fragmented between CLI/targets and local helpers | Core Platform × Developer Experience | Prototype unified dispatcher that replaces bespoke match-case blocks. |
-| Configuration lifecycle | Global `FlextConfig` vs package-specific models needs harmonisation | Core Platform | Draft integration guide + container refactor plan. |
-| Context & observability | Core context unused outside tests/connectors | Observability Team | Define adoption checklist + implement shim for CLI and connectors. |
-| Connector migrations | High domain-service count with bespoke pipelines | Data Connectors Guild | Prioritise Oracle + LDAP for early pilot once dispatcher stabilises. |
-| QA coverage & tooling | Tests depend on legacy patterns; monitoring needed | Quality & Safeguards | Map coverage expectations to migration milestones. |
+| Workstream                 | Status                                                              | Owner                                | Notes                                                                 |
+| -------------------------- | ------------------------------------------------------------------- | ------------------------------------ | --------------------------------------------------------------------- |
+| Domain services & handlers | Baseline captured; gaps flagged in non-adopters                     | Core Platform                        | Consolidate service list and publish importable registry.             |
+| Dispatcher & bus usage     | Fragmented between CLI/targets and local helpers                    | Core Platform × Developer Experience | Prototype unified dispatcher that replaces bespoke match-case blocks. |
+| Configuration lifecycle    | Global `FlextConfig` vs package-specific models needs harmonisation | Core Platform                        | Draft integration guide + container refactor plan.                    |
+| Context & observability    | Core context unused outside tests/connectors                        | Observability Team                   | Define adoption checklist + implement shim for CLI and connectors.    |
+| Connector migrations       | High domain-service count with bespoke pipelines                    | Data Connectors Guild                | Prioritise Oracle + LDAP for early pilot once dispatcher stabilises.  |
+| QA coverage & tooling      | Tests depend on legacy patterns; monitoring needed                  | Quality & Safeguards                 | Map coverage expectations to migration milestones.                    |
 
 ### Phase 0 Immediate Actions (2025-09-17)
 
@@ -58,57 +62,57 @@ This document outlines the phased approach for consolidating FLEXT around domain
 
 Repository scan results mapping each package to current dispatcher/context adoption. Counts are derived from class inheritance and usage references gathered on 2025-09-17.
 
-| Group | Project | Domain Services | Handlers | Bus | Context | Config | Notes |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| Core Platform | core-root | Yes (`src/flext/dev.py:26`) | No | Yes | No | No | Bus used without handlers |
-| Core Platform | flext-core | No | Yes (`flext-core/src/flext_core/bus.py:93`) | Yes | Yes | Yes | No domain services registered |
-| Developer Experience | flext-cli | Yes (`flext-cli/src/flext_cli/domain_services.py:33`) | Yes (`flext-cli/src/flext_cli/handlers.py:50`) | Yes | No | Yes | Context not adopted |
-| Platform Extensions & APIs | flext-api | Yes (`flext-api/src/flext_api/client.py:35`) | No | No | No | Yes | Context not adopted |
-| Platform Extensions & APIs | flext-auth | No | No | No | No | Yes | No domain services registered |
-| Platform Extensions & APIs | flext-grpc | No | No | No | No | No | No domain services registered |
-| Platform Extensions & APIs | flext-observability | Yes (`flext-observability/src/flext_observability/factories.py:46`) | No | No | No | No | Context not adopted |
-| Platform Extensions & APIs | flext-plugin | Yes (`flext-plugin/src/flext_plugin/flext_plugin_services.py:30`) | No | No | No | No | Context not adopted |
-| Platform Extensions & APIs | flext-web | No | No | No | No | Yes | No domain services registered |
-| Quality & Safeguards | flext-quality | Yes (`flext-quality/src/flext_quality/cli.py:44`) | No | No | No | No | Context not adopted |
-| Data Connectors | flext-db-oracle | Yes (`flext-db-oracle/src/flext_db_oracle/cli.py:38`) | No | No | No | No | Context not adopted |
-| Data Connectors | flext-dbt-ldap | No | No | No | No | Yes | No domain services registered |
-| Data Connectors | flext-dbt-ldif | No | No | No | No | Yes | No domain services registered |
-| Data Connectors | flext-dbt-oracle | No | No | No | No | Yes | No domain services registered |
-| Data Connectors | flext-dbt-oracle-wms | No | No | No | No | Yes | No domain services registered |
-| Data Connectors | flext-ldap | Yes (`flext-ldap/src/flext_ldap/adapters.py:35`) | Yes (`flext-ldap/src/flext_ldap/domain.py:1284`) | No | No | Yes | Context not adopted |
-| Data Connectors | flext-ldif | Yes (`flext-ldif/src/flext_ldif/cli.py:16`) | No | No | No | Yes | Context not adopted |
-| Data Connectors | flext-meltano | Yes (`flext-meltano/src/flext_meltano/executors.py:39`) | No | No | No | Yes | Context not adopted |
-| Data Connectors | flext-oracle-oic-ext | Yes (`flext-oracle-oic-ext/src/flext_oracle_oic_ext/ext_services.py:58`) | No | No | No | Yes | Context not adopted |
-| Data Connectors | flext-oracle-wms | No | No | No | No | Yes | No domain services registered |
-| Data Connectors | flext-tap-ldap | No | No | No | No | Yes | No domain services registered |
-| Data Connectors | flext-tap-ldif | No | No | No | No | Yes | No domain services registered |
-| Data Connectors | flext-tap-oracle | No | No | No | No | Yes | No domain services registered |
-| Data Connectors | flext-tap-oracle-oic | No | No | No | No | Yes | No domain services registered |
-| Data Connectors | flext-tap-oracle-wms | No | No | No | No | No | No domain services registered |
-| Data Connectors | flext-target-ldap | No | No | No | No | Yes | No domain services registered |
-| Data Connectors | flext-target-ldif | No | No | No | No | Yes | No domain services registered |
-| Data Connectors | flext-target-oracle | Yes (`flext-target-oracle/src/flext_target_oracle/target_services.py:101`) | Yes (`flext-target-oracle/src/flext_target_oracle/target_commands.py:255`) | Yes | Yes | No |  |
-| Data Connectors | flext-target-oracle-oic | No | No | No | No | No | No domain services registered |
-| Data Connectors | flext-target-oracle-wms | No | No | No | No | No | No domain services registered |
+| Group                      | Project                 | Domain Services                                                            | Handlers                                                                   | Bus | Context | Config | Notes                         |
+| -------------------------- | ----------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------- | --- | ------- | ------ | ----------------------------- |
+| Core Platform              | core-root               | Yes (`src/flext/dev.py:26`)                                                | No                                                                         | Yes | No      | No     | Bus used without handlers     |
+| Core Platform              | flext-core              | No                                                                         | Yes (`flext-core/src/flext_core/bus.py:93`)                                | Yes | Yes     | Yes    | No domain services registered |
+| Developer Experience       | flext-cli               | Yes (`flext-cli/src/flext_cli/domain_services.py:33`)                      | Yes (`flext-cli/src/flext_cli/handlers.py:50`)                             | Yes | No      | Yes    | Context not adopted           |
+| Platform Extensions & APIs | flext-api               | Yes (`flext-api/src/flext_api/client.py:35`)                               | No                                                                         | No  | No      | Yes    | Context not adopted           |
+| Platform Extensions & APIs | flext-auth              | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
+| Platform Extensions & APIs | flext-grpc              | No                                                                         | No                                                                         | No  | No      | No     | No domain services registered |
+| Platform Extensions & APIs | flext-observability     | Yes (`flext-observability/src/flext_observability/factories.py:46`)        | No                                                                         | No  | No      | No     | Context not adopted           |
+| Platform Extensions & APIs | flext-plugin            | Yes (`flext-plugin/src/flext_plugin/flext_plugin_services.py:30`)          | No                                                                         | No  | No      | No     | Context not adopted           |
+| Platform Extensions & APIs | flext-web               | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
+| Quality & Safeguards       | flext-quality           | Yes (`flext-quality/src/flext_quality/cli.py:44`)                          | No                                                                         | No  | No      | No     | Context not adopted           |
+| Data Connectors            | flext-db-oracle         | Yes (`flext-db-oracle/src/flext_db_oracle/cli.py:38`)                      | No                                                                         | No  | No      | No     | Context not adopted           |
+| Data Connectors            | flext-dbt-ldap          | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
+| Data Connectors            | flext-dbt-ldif          | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
+| Data Connectors            | flext-dbt-oracle        | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
+| Data Connectors            | flext-dbt-oracle-wms    | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
+| Data Connectors            | flext-ldap              | Yes (`flext-ldap/src/flext_ldap/adapters.py:35`)                           | Yes (`flext-ldap/src/flext_ldap/domain.py:1284`)                           | No  | No      | Yes    | Context not adopted           |
+| Data Connectors            | flext-ldif              | Yes (`flext-ldif/src/flext_ldif/cli.py:16`)                                | No                                                                         | No  | No      | Yes    | Context not adopted           |
+| Data Connectors            | flext-meltano           | Yes (`flext-meltano/src/flext_meltano/executors.py:39`)                    | No                                                                         | No  | No      | Yes    | Context not adopted           |
+| Data Connectors            | flext-oracle-oic-ext    | Yes (`flext-oracle-oic-ext/src/flext_oracle_oic_ext/ext_services.py:58`)   | No                                                                         | No  | No      | Yes    | Context not adopted           |
+| Data Connectors            | flext-oracle-wms        | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
+| Data Connectors            | flext-tap-ldap          | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
+| Data Connectors            | flext-tap-ldif          | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
+| Data Connectors            | flext-tap-oracle        | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
+| Data Connectors            | flext-tap-oracle-oic    | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
+| Data Connectors            | flext-tap-oracle-wms    | No                                                                         | No                                                                         | No  | No      | No     | No domain services registered |
+| Data Connectors            | flext-target-ldap       | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
+| Data Connectors            | flext-target-ldif       | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
+| Data Connectors            | flext-target-oracle     | Yes (`flext-target-oracle/src/flext_target_oracle/target_services.py:101`) | Yes (`flext-target-oracle/src/flext_target_oracle/target_commands.py:255`) | Yes | Yes     | No     |                               |
+| Data Connectors            | flext-target-oracle-oic | No                                                                         | No                                                                         | No  | No      | No     | No domain services registered |
+| Data Connectors            | flext-target-oracle-wms | No                                                                         | No                                                                         | No  | No      | No     | No domain services registered |
 
 ### Phase 0 Action Status (2025-09-17)
 
-| Action | Status | Notes |
-| --- | --- | --- |
-| Owner map confirmation | Pending | Core Platform to send delegate request via architecture sync; scheduling for 2025-09-19. |
-| Cross-team broadcast | Pending | Developer Experience to record Loom/Slack update summarising dispatcher and connector hotspots. |
-| QA alignment | Pending | Quality & Safeguards reviewing coverage expectations; awaiting response. |
-| Participant snapshot | Complete | Repository-wide adoption table added above for ecosystem visibility. |
-| Dispatcher charter draft | Complete | Draft charter and initial sequence flow captured below to seed Week 2 workshop. |
+| Action                   | Status   | Notes                                                                                           |
+| ------------------------ | -------- | ----------------------------------------------------------------------------------------------- |
+| Owner map confirmation   | Pending  | Core Platform to send delegate request via architecture sync; scheduling for 2025-09-19.        |
+| Cross-team broadcast     | Pending  | Developer Experience to record Loom/Slack update summarising dispatcher and connector hotspots. |
+| QA alignment             | Pending  | Quality & Safeguards reviewing coverage expectations; awaiting response.                        |
+| Participant snapshot     | Complete | Repository-wide adoption table added above for ecosystem visibility.                            |
+| Dispatcher charter draft | Complete | Draft charter and initial sequence flow captured below to seed Week 2 workshop.                 |
 
 ### Action Support Details (2025-09-17)
-
 
 **Owner Map Delegation Template**
 
 Subject: FLEXT modernization delegate needed — <team name>
 
 Body highlights:
+
 - Recap goal: unify dispatcher/context per modernization plan.
 - Request named delegate and backup by 2025-09-19.
 - Link Phase 0 findings + participant snapshot section (above) for reference.
@@ -165,6 +169,7 @@ Caller (CLI, API, connector)
 ```
 
 ## Phase 1 — Core Design Validation (Weeks 2-3)
+
 - Finalise dispatcher API that routes commands/queries (Pydantic models) to domain service methods.
 - Draft reference architecture diagram covering domain services, dispatcher, context, logging, and configuration.
 - Build proof-of-concept within flext-core: implement dispatcher, adapt two representative services, and expose CLI/API samples.
@@ -202,7 +207,6 @@ Caller (CLI, API, connector)
 - **Observability:** Verify correlation IDs appear in logs when dispatcher is enabled and inspect instrumentation coverage via `flext-observability` tooling.
 - **Acceptance criteria:** Dispatcher drives 100% of pilot commands, regression suite remains green, and QA sign-off (per alignment plan) is granted before expanding to other packages.
 
-
 #### Phase 1 Implementation Update (2025-09-17)
 
 - **Shared registry helper:** Added `FlextDispatcherRegistry` to `flext-core/src/flext_core/dispatcher_registry.py`, enabling idempotent bulk registration with summary reporting and re-exported via `flext-core/src/flext_core/__init__.py`.
@@ -215,8 +219,8 @@ Caller (CLI, API, connector)
 - **Verification status:** Targeted unit/integration tests exercised the dispatcher paths (`flext-core/tests/unit/test_dispatcher.py`, `flext-ldap/tests/unit/test_domain_functional.py`, `flext-ldap/tests/unit/test_services.py`, `flext-ldif/tests/integration/test_api.py`, `flext-db-oracle/tests/unit/test_api_comprehensive.py`, `client-a-oud-mig/tests/unit/test_main.py`). Runs succeeded with explicit commands (`PYTHONPATH=src …`, `pytest -c /dev/null …`) after injecting the shared `flext-core/src` path; remaining full-suite coverage still depends on packaging the `flext_tests` helpers for general availability.
 - **Next focus:** Extend dispatcher coverage to remaining connectors (`flext-meltano`, `flext-target-*`) and unblock automated test execution by packaging `flext_tests` into the workspace tooling layer.
 
-
 ## Phase 2 — Tooling & Templates (Weeks 4-5)
+
 - Publish updated documentation: service contract, dispatcher usage, context lifecycle, configuration guidelines.
 - Ship template repository (or Cookiecutter) reflecting the new architecture.
 - Create linting/check tooling: Ruff rules, mypy plugin, or custom scripts to flag direct service invocations, missing dispatcher usage, and absent context seeding.
@@ -239,8 +243,8 @@ Caller (CLI, API, connector)
   - Capture coverage deltas in `ecosystem_coverage.csv` once new suites run.
 - **Timeline:** Complete documentation drafts and lint rules by end of Week 4; template repository and CI pipeline updates by Week 5.
 
-
 ## Phase 3 — Ecosystem Migration (Weeks 6-10)
+
 - Define migration playbook (sequence, acceptance criteria, rollback steps).
 - Pilot migration in two projects (e.g. flext-target-oracle, flext-cli); iterate on tooling/documentation based on feedback.
 - Roll out to remaining packages prioritised by usage/criticality.
@@ -270,8 +274,8 @@ Caller (CLI, API, connector)
   - Use participant snapshot as baseline; update table after each package migrates.
   - Publish weekly status in architecture sync referencing this playbook.
 
-
 ## Phase 4 — Deprecation & Cleanup (Weeks 11-12)
+
 - Deprecate legacy modules/aliases (FlextProcessing, FlextBus, FlextCqrs, unused mixins) with clear timelines and messaging.
 - Remove obsolete documentation/examples/tests once downstream adoption reaches threshold.
 - Simplify utility surface (drop unused mixins, consolidate serialization helpers) and update type exports.
@@ -298,6 +302,7 @@ Caller (CLI, API, connector)
   - Establish quality gates (coverage thresholds, lint rule compliance) that must pass before accepting new domain services.
 
 ## Success Metrics
+
 - 100% of command/ query flows routed via the dispatcher.
 - All domain services returning `FlextResult` with validated configs.
 - Context correlation IDs present in 100% of logged events during acceptance tests.
@@ -305,12 +310,14 @@ Caller (CLI, API, connector)
 - CI passing across ecosystem with new lint/type rules enabled.
 
 ## Risks & Mitigations
+
 - **Adoption lag:** Provide hands-on support, clear migration guides, and phased cut-offs.
 - **Tooling false positives:** Iterate quickly on lint/type rules using pilot feedback before broad enforcement.
 - **Performance regressions:** Include performance benchmarks in CI for migrated services to catch regressions early.
 - **Knowledge gaps:** Host workshops, record walkthrough videos, and keep documentation up to date.
 
 ## Governance
+
 - Establish a weekly architecture sync to review progress, risks, and tooling updates.
 - Maintain a shared backlog in issue tracker; require architecture sign-off for new services/commands.
 - Schedule quarterly reviews to evaluate architecture health and adjust roadmap.
@@ -323,8 +330,8 @@ Caller (CLI, API, connector)
 - **Quarterly review:** Validate success metrics, reassess risks, and recalibrate roadmap, including potential expansion to non-FLEXT packages.
 - **Communication:** Maintain single source of truth in modernization plan; update Loom/Slack threads after each milestone.
 
-
 ## Roadmap Status Snapshot (2025-09-17)
+
 - Phase 0 baseline complete; action follow-ups in progress with charter and sequence flow drafted.
 - Phase 1 design brief, pilot scope, validation strategy accepted for workshop review; initial `FlextDispatcher` facade implemented in flext-core.
 - Phase 2 tooling backlog defined (docs, templates, linting, CI) targeting Week 4–5 completion.
