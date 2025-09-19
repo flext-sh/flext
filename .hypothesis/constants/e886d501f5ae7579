@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/domain_services.py
+# hypothesis_version: 6.139.2
+
+['BaseModel', 'FlextDomainService', 'business_rules_valid', 'config_valid', 'configuration', 'forbid', 'is_valid', 'service_id', 'service_type', 'timestamp']

@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/protocols.py
+# hypothesis_version: 6.138.2
+
+['FLAT', 'FlextProtocols', 'HIERARCHICAL', 'T', 'TInput_contra', 'TOutput_co', 'T_co', 'T_contra', 'U', 'V', 'balanced', 'development', 'environment', 'high', 'log_level', 'low', 'production', 'protocol_level', 'subtree', 'test', 'validation_level']

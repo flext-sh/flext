@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/delegation_system.py
+# hypothesis_version: 6.136.7
+
+['FlextMixinDelegator', 'SUCCESS', '_', '__class__', 'delegated_methods', 'delegation', 'delegation_info', 'delegator', 'get_delegation_info', 'id', 'initialization_log', 'is_valid', 'logging', 'property_name', 'property_setter', 'readonly', 'registered_mixins', 'serialization', 'status', 'test_results', 'timestamps', 'to_dict_basic', 'validation', 'validation_errors', 'validation_result', '✗']

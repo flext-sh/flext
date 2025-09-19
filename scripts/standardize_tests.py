@@ -149,7 +149,9 @@ def main(argv: Iterable[str] | None = None) -> int:
     """
     ap = argparse.ArgumentParser()
     ap.add_argument(
-        "--apply", action="store_true", help="Apply changes (otherwise dry-run)",
+        "--apply",
+        action="store_true",
+        help="Apply changes (otherwise dry-run)",
     )
     ap.add_argument("--project", help="Filter by project name substring", default=None)
     args = ap.parse_args(list(argv) if argv is not None else None)

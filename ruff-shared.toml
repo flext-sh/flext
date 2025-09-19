@@ -27,6 +27,7 @@ lint.ignore = [
     "B017",    # assert-raises-exception
     "BLE001",  # blind-except
     "C901",    # complex-structure
+    "COM812",
     "D203",    # incorrect-blank-line-before-class - conflicting with D211 (blank line before class)
     "D213",    # multi-line-summary-second-line - conflicting with D212 (summary line position)
     "D401",    # non-imperative-mood - too opinionated in multilingual codebase

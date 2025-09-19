@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/dispatcher.py
+# hypothesis_version: 6.139.2
+
+['FlextDispatcher', 'command', 'dispatch_failed', 'dispatch_succeeded', 'handler_registered', 'query']

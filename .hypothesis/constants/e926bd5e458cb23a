@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_tests/http_support.py
+# hypothesis_version: 6.138.2
+
+[100.0, 1000.0, 200, 429, 500, 503, '0', 'CIRCUIT_BREAKER_OPEN', 'Circuit breaker open', 'FlextTestsHttp', 'GET', 'INTERNAL_ERROR', 'INVALID_ERROR_FORMAT', 'Network unreachable', 'POST', 'RATE_LIMIT_EXCEEDED', 'Rate limit exceeded', 'Request timed out', 'Server error', 'application/json', 'circuit_breaker', 'code', 'content-type', 'data', 'elapsed_ms', 'error', 'event', 'failure_count', 'failure_threshold', 'has_next', 'has_prev', 'message', 'method', 'page', 'pagination', 'received', 'retry', 'retry-after', 'retry_after', 'retry_succeeded', 'scenarios', 'signature', 'size', 'status', 'status_code', 'success', 'timestamp', 'total_items', 'total_pages', 'total_requests', 'type', 'url', 'user-agent', 'x-ratelimit-reset']

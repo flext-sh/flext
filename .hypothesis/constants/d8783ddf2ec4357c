@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/bus.py
+# hypothesis_version: 6.139.2
+
+[1000, ', ', 'Applying middleware', 'Cached query result', 'FlextBus', 'FlextResult[object]', 'Handler unregistered', 'No handler found', 'Query', 'Unknown error', '__args__', '__name__', '__origin__', '_cache', 'can_handle', 'command', 'command_id', 'enabled', 'execute', 'execute_command', 'handle', 'handler_id', 'id', 'middleware_id', 'middleware_type', 'order', 'process', 'process_command', 'query', 'query_id', 'unknown']

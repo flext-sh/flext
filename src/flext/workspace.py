@@ -17,9 +17,13 @@ from flext.workspace_service import (
     create_workspace_service,
 )
 
+# Convenience aliases for test compatibility
+WorkspaceStatus = FlextProjectTypes.WorkspaceStatus
+
 __all__ = [
     "FlextAdvancedWorkspaceModels",
-    "FlextWorkspaceService",
     "FlextProjectTypes",
+    "FlextWorkspaceService",
+    "WorkspaceStatus",
     "create_workspace_service",
 ]

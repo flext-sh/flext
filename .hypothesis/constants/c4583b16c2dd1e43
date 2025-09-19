@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/config.py
+# hypothesis_version: 6.136.7
+
+[8000, 'Env access failed', 'Env error', 'File error', 'File load failed', 'FlextConfig', 'FlextConfigDefaults', 'FlextConfigManager', 'FlextConfigOps', 'FlextSettings', 'INFO', 'Validation failed', 'allow_reuse', 'debug', 'description', 'development', 'environment', 'extra', 'flext_core.config', 'forbid', 'frozen', 'log_level', 'merge_configs', 'port', 'str_strip_whitespace', 'timeout', 'use_enum_values', 'utf-8', 'validate_all', 'validate_assignment', 'value', 'w']

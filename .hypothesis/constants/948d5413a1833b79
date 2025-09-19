@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/mixins.py
+# hypothesis_version: 6.136.7
+
+[1000.0, 300, 'FlextCacheableMixin', 'FlextCommandMixin', 'FlextComparableMixin', 'FlextDataMixin', 'FlextEntityMixin', 'FlextFullMixin', 'FlextGenerators', 'FlextLoggableMixin', 'FlextServiceMixin', 'FlextTimestampMixin', 'FlextTimingMixin', 'FlextValidators', '_', '_cache', '_id', '_is_valid', '_logger', '_service_initialized', '_validation_errors', 'entity_id', 'field', 'id', 'is_initialized', 'is_valid', 'model_dump', 'service_name', 'service_type', 'value']

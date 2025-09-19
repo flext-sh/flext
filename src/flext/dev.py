@@ -400,13 +400,14 @@ def create_dev_tools_manager() -> FlextAdvancedDevToolsManager:
     return FlextAdvancedDevToolsManager()
 
 
+# Convenience alias for test compatibility
+DevToolsManager = FlextAdvancedDevToolsManager
+
 # Export main classes and types for external use
 __all__ = [
+    "DevToolsManager",
     "FlextAdvancedDevModels",
     "FlextAdvancedDevToolsManager",
     "FlextProjectTypes",
     "create_dev_tools_manager",
 ]
-
-
-# LEGACY ALIAS ELIMINATED - Use FlextAdvancedDevToolsManager directly

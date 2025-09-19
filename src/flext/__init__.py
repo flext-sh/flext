@@ -36,7 +36,6 @@ from flext.cli_patterns import (
 from flext.dev import (
     FlextAdvancedDevModels,
     FlextAdvancedDevToolsManager,
-    FlextProjectTypes as DevFlextProjectTypes,
     create_dev_tools_manager,
 )
 from flext.dev_enums import FlextDevEnums
@@ -76,20 +75,37 @@ from flext_cli import (
 
 
 __all__ = [
-    # Application handlers
+    "FlextAdvancedDevModels",
+    "FlextAdvancedDevToolsManager",
+    "FlextAdvancedWorkspaceModels",
     "FlextApplicationHandlerService",
-    "create_handler_service",
-
-    # Application pipeline
     "FlextApplicationPipelineService",
-    "create_pipeline_service",
-
-    # CLI functionality
+    "FlextCliApi",
+    "FlextCliApiPattern",
+    "FlextCliConfigs",
+    "FlextCliConfigsPattern",
+    "FlextCliFormatters",
+    "FlextCliFormattersPattern",
+    "FlextCliMain",
+    "FlextCliMainPattern",
+    "FlextCliService",
     "FlextControlPanelCli",
+    "FlextDevEnums",
+    "FlextLogger",
+    "FlextProjectTypes",
+    "FlextResult",
+    "FlextUnifiedServices",
+    "FlextUtilities",
+    "FlextWorkspaceCli",
+    "FlextWorkspaceService",
     "analysis",
     "build",
     "check",
     "create_cli",
+    "create_dev_tools_manager",
+    "create_handler_service",
+    "create_pipeline_service",
+    "create_services",
     "create_workspace_cli",
     "docker",
     "format_code",
@@ -101,44 +117,6 @@ __all__ = [
     "status",
     "workspace_main",
     "workspace_test",
-
-    # CLI patterns
-    "FlextCliApiPattern",
-    "FlextCliConfigsPattern",
-    "FlextCliFormattersPattern",
-    "FlextCliMainPattern",
-
-    # Development tools
-    "FlextAdvancedDevModels",
-    "FlextAdvancedDevToolsManager",
-    "create_dev_tools_manager",
-
-    # Development enums
-    "FlextDevEnums",
-
-    # Project types
-    "FlextProjectTypes",
-
-    # Services
-    "FlextUnifiedServices",
-    "create_services",
-
-    # Services utilities
-    "FlextLogger",
-    "FlextResult",
-    "FlextUtilities",
-
-    # Workspace
-    "FlextAdvancedWorkspaceModels",
-    "FlextWorkspaceCli",
-    "FlextWorkspaceService",
-
-    # CLI from flext-cli
-    "FlextCliApi",
-    "FlextCliConfigs",
-    "FlextCliFormatters",
-    "FlextCliMain",
-    "FlextCliService",
 ]
 
 __version__ = "0.9.0"

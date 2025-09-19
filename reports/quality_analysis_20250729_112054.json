@@ -1,0 +1,581 @@
+[
+  {
+    "project": ".",
+    "lint_errors": 8602,
+    "lint_warnings": 189,
+    "mypy_errors": 0,
+    "mypy_warnings": 0,
+    "test_failures": 277,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: 18 | # TODO(@marlonsc): Consolidate manual config to FLEXT patterns",
+      "\u274c Lint Error: 18 | # TODO(@marlonsc): Consolidate manual config to FLEXT patterns",
+      "\u274c Lint Error: 6 | # TODO(@marlonsc): Consolidate manual config to FLEXT patterns",
+      "\u274c Lint Error: 6 | # TODO(@marlonsc): Consolidate manual config to FLEXT patterns",
+      "\u274c Lint Error:  98 |             logger.error(f\"Error: {result.get('error', 'Unknown error')}\")",
+      "\u274c Test Failure: ================================================ ERRORS =================================================",
+      "\u274c Test Failure: __________________ ERROR collecting client-a-oud-mig/src/client-a_oud_mig/test_constants.py ___________________",
+      "\u274c Test Failure: _________________________________ ERROR collecting client-a-oud-mig/tests __________________________________"
+    ]
+  },
+  {
+    "project": "client-a-oud-mig",
+    "lint_errors": 368,
+    "lint_warnings": 16,
+    "mypy_errors": 0,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: 18 | # TODO(@marlonsc): Consolidate manual config to FLEXT patterns",
+      "\u274c Lint Error: 18 | # TODO(@marlonsc): Consolidate manual config to FLEXT patterns",
+      "\u274c Lint Error: 6 | # TODO(@marlonsc): Consolidate manual config to FLEXT patterns",
+      "\u274c Lint Error: 6 | # TODO(@marlonsc): Consolidate manual config to FLEXT patterns",
+      "\u274c Lint Error:  98 |             logger.error(f\"Error: {result.get('error', 'Unknown error')}\")"
+    ]
+  },
+  {
+    "project": "flexcore",
+    "lint_errors": 0,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 1,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c MyPy Error: src/flexcore/core.py:9:5: error: Explicit \"Any\" is not allowed  [explicit-any]"
+    ]
+  },
+  {
+    "project": "flext-api",
+    "lint_errors": 519,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 1,
+    "issues": [
+      "\u274c Lint Error: test_enterprise_standalone.py:10:51: SyntaxError: Expected one or more symbol names after import",
+      "\u274c Lint Error: test_enterprise_standalone.py:33:1: SyntaxError: unindent does not match any outer indentation level",
+      "\u274c Lint Error: test_enterprise_standalone.py:33:9: SyntaxError: Expected a statement",
+      "\u274c Lint Error: test_enterprise_standalone.py:33:10: SyntaxError: Expected a statement",
+      "\u274c Lint Error: test_enterprise_standalone.py:36:1: SyntaxError: Unexpected indentation",
+      "\u274c MyPy Error: tests/unit/test_builder_core.py:9:21: error: invalid syntax  [syntax]",
+      "\u274c Poetry: Error: pyproject.toml changed significantly since poetry.lock was last generated. Run `poetry lock` to fix the lock file."
+    ]
+  },
+  {
+    "project": "flext-auth",
+    "lint_errors": 518,
+    "lint_warnings": 38,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 29,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: examples/01_basic_usage.py:211:89: E501 Line too long (92 > 88)",
+      "\u274c Lint Error: 211 |     request_data = {\"username\": \"REDACTED_LDAP_BIND_PASSWORD\", \"password\": \"REDACTED_LDAP_BIND_PASSWORD123\"}  # Exemplo com REDACTED_LDAP_BIND_PASSWORD padr\u00e3o",
+      "\u274c Lint Error: examples/01_basic_usage.py:247:89: E501 Line too long (97 > 88)",
+      "\u274c Lint Error: examples/01_basic_usage.py:275:89: E501 Line too long (120 > 88)",
+      "\u274c Lint Error: examples/02_advanced_features.py:163:89: E501 Line too long (90 > 88)",
+      "\u274c MyPy Error: tests/test_advanced_api.py:161:101: error: unexpected character after line continuation character ",
+      "\u274c Test Failure: ================================================ ERRORS =================================================",
+      "\u274c Test Failure: \u001b[31m\u001b[1m______________________________ ERROR collecting tests/test_advanced_api.py ______________________________\u001b[0m",
+      "\u274c Test Failure: \u001b[31m\u001b[1m____________________________ ERROR collecting tests/test_anti_boilerplate.py ____________________________\u001b[0m"
+    ]
+  },
+  {
+    "project": "flext-cli",
+    "lint_errors": 1157,
+    "lint_warnings": 8,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: examples/01_basic_cli_usage.py:98:89: E501 Line too long (92 > 88)",
+      "\u274c Lint Error:  98 |     console.print(f\"   ExistingFile allows existing files: {flext_cli.ExistingFile.exists}\")",
+      "\u274c Lint Error: examples/01_basic_cli_usage.py:116:9: D401 First line of docstring should be in imperative mood: \"Example service operation that returns a simple result.\"",
+      "\u274c Lint Error: examples/01_basic_cli_usage.py:121:9: D401 First line of docstring should be in imperative mood: \"Example service operation that returns a FlextResult.\"",
+      "\u274c Lint Error: examples/03_domain_entities.py:43:89: E501 Line too long (100 > 88)",
+      "\u274c MyPy Error: examples/boilerplate_reduction_examples.py:215:50: error: closing parenthesis ']' does not match opening"
+    ]
+  },
+  {
+    "project": "flext-core",
+    "lint_errors": 3052,
+    "lint_warnings": 21,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 79,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: examples/17_flext_working_examples.py:47:89: E501 Line too long (89 > 88)",
+      "\u274c Lint Error: examples/shared_domain.py:889:89: E501 Line too long (104 > 88)",
+      "\u274c Lint Error: 889 |         except (RuntimeError, ValueError, TypeError) as e:  # Test factory needs to handle any exception",
+      "\u274c Lint Error: examples/shared_domain.py:903:89: E501 Line too long (104 > 88)",
+      "\u274c Lint Error: 903 |         except (RuntimeError, ValueError, TypeError) as e:  # Test factory needs to handle any exception",
+      "\u274c MyPy Error: tests/unit/core/test_builder_base.py:42:79: error: unexpected character after line continuation",
+      "\u274c Test Failure: ================================================ ERRORS =================================================",
+      "\u274c Test Failure: _________________________ ERROR collecting tests/unit/core/test_builder_base.py _________________________",
+      "\u274c Test Failure: ___________________________ ERROR collecting tests/unit/core/test_commands.py ___________________________"
+    ]
+  },
+  {
+    "project": "flext-db-oracle",
+    "lint_errors": 7,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 2,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: 340 |             {\"column_name\": \"ID\", \"data_type\": \"NUMBER\"},",
+      "\u274c Lint Error: tests/unit/test_config.py:271:28: PT011 `pytest.raises(ValueError)` is too broad, set the `match` parameter or use a more specific exception",
+      "\u274c Lint Error: 271 |         with pytest.raises(ValueError):",
+      "\u274c Lint Error: 230 | /         with pytest.raises(Exception, match=\"Test error\"), connection.session():",
+      "\u274c Lint Error: 230 |         with pytest.raises(Exception, match=\"Test error\"), connection.session():",
+      "\u274c MyPy Error: src/flext_db_oracle/__init__.py: error: Source file found twice under different module names:"
+    ]
+  },
+  {
+    "project": "flext-dbt-ldap",
+    "lint_errors": 7,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: tests/unit/test_version.py:23:35: SyntaxError: Invalid assignment target",
+      "\u274c Lint Error: tests/unit/test_version.py:23:75: SyntaxError: Expected 'in', found ')'",
+      "\u274c Lint Error: tests/unit/test_version.py:24:46: SyntaxError: Unparenthesized generator expression cannot be used here",
+      "\u274c Lint Error: tests/unit/test_version.py:24:70: SyntaxError: Expected 'in', found '}'",
+      "\u274c Lint Error: tests/unit/test_version.py:24:72: SyntaxError: Expected ',', found 'in'",
+      "\u274c MyPy Error: tests/unit/test_version.py:23: error: 'in' expected after for-loop variables  [syntax]"
+    ]
+  },
+  {
+    "project": "flext-dbt-ldif",
+    "lint_errors": 14,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: tests/unit/test_version.py:21:35: SyntaxError: Invalid assignment target",
+      "\u274c Lint Error: 22 |             raise AssertionError(f\"Expected {all(part.isdigit() for part} in {parts[:3])}\")",
+      "\u274c Lint Error: tests/unit/test_version.py:21:56: SyntaxError: Expected 'in', found ')'",
+      "\u274c Lint Error: 22 |             raise AssertionError(f\"Expected {all(part.isdigit() for part} in {parts[:3])}\")",
+      "\u274c Lint Error: tests/unit/test_version.py:22:50: SyntaxError: Unparenthesized generator expression cannot be used here",
+      "\u274c MyPy Error: tests/unit/test_version.py:21: error: 'in' expected after for-loop variables  [syntax]"
+    ]
+  },
+  {
+    "project": "flext-dbt-oracle",
+    "lint_errors": 12,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: tests/test_basic.py:3:34: SyntaxError: Expected one or more symbol names after import",
+      "\u274c Lint Error: tests/test_basic.py:4:46: SyntaxError: Expected one or more symbol names after import",
+      "\u274c Lint Error: tests/test_basic.py:15:1: SyntaxError: Unexpected indentation",
+      "\u274c Lint Error: tests/test_basic.py:17:5: SyntaxError: Expected a statement",
+      "\u274c Lint Error: tests/test_basic.py:17:6: SyntaxError: Expected a statement",
+      "\u274c MyPy Error: tests/test_basic.py:4: error: invalid syntax  [syntax]"
+    ]
+  },
+  {
+    "project": "flext-dbt-oracle-wms",
+    "lint_errors": 0,
+    "lint_warnings": 0,
+    "mypy_errors": 2,
+    "mypy_warnings": 1,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c MyPy Error: src/flext_dbt_oracle_wms/__init__.py:21: error: Cannot find implementation or library stub for module",
+      "\u274c MyPy Error: src/flext_dbt_oracle_wms/__init__.py:26: error: Cannot find implementation or library stub for module"
+    ]
+  },
+  {
+    "project": "flext-grpc",
+    "lint_errors": 152,
+    "lint_warnings": 1,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 13,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: examples/advanced_usage.py:29:89: E501 Line too long (97 > 88)",
+      "\u274c Lint Error: examples/advanced_usage.py:90:25: RUF001 String contains ambiguous `\u2139` (INFORMATION SOURCE). Did you mean `i` (LATIN SMALL LETTER I)?",
+      "\u274c Lint Error: examples/advanced_usage.py:120:89: E501 Line too long (98 > 88)",
+      "\u274c Lint Error: examples/advanced_usage.py:159:88: E501 Line too long (89 > 88)",
+      "\u274c Lint Error: examples/advanced_usage.py:175:88: E501 Line too long (97 > 88)",
+      "\u274c MyPy Error: tests/e2e/test_complete_grpc_workflow.py:10:25: error: '(' was never closed  [syntax]",
+      "\u274c Test Failure: ================================================ ERRORS =================================================",
+      "\u274c Test Failure: _______________________ ERROR collecting tests/e2e/test_complete_grpc_workflow.py _______________________",
+      "\u274c Test Failure: ____________________ ERROR collecting tests/integration/test_platform_integration.py ____________________"
+    ]
+  },
+  {
+    "project": "flext-ldap",
+    "lint_errors": 532,
+    "lint_warnings": 4,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: examples/ldap_simple_client_example.py:1:1: EXE001 Shebang is present but file is not executable",
+      "\u274c Lint Error: examples/run_with_docker_ldap.py:1:1: EXE001 Shebang is present but file is not executable",
+      "\u274c Lint Error: 80 |     except (RuntimeError, ValueError, TypeError):",
+      "\u274c Lint Error: 89 |     except (RuntimeError, ValueError, TypeError):",
+      "\u274c Lint Error: 89 |     except (RuntimeError, ValueError, TypeError):",
+      "\u274c MyPy Error: tests/application/test_ldap_service.py:141: error: invalid syntax  [syntax]"
+    ]
+  },
+  {
+    "project": "flext-ldif",
+    "lint_errors": 124,
+    "lint_warnings": 3,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: examples/complete_validation_examples.py:1:1: EXE001 Shebang is present but file is not executable",
+      "\u274c Lint Error: examples/complete_validation_examples.py:450:85: SyntaxError: Expected ')', found ':'",
+      "\u274c Lint Error: examples/complete_validation_examples.py:450:86: SyntaxError: Expected a simple statement",
+      "\u274c Lint Error: examples/complete_validation_examples.py:450:87: SyntaxError: Expected a statement",
+      "\u274c Lint Error: examples/complete_validation_examples.py:451:1: SyntaxError: Unexpected indentation",
+      "\u274c MyPy Error: examples/complete_validation_examples.py:450: error: invalid syntax  [syntax]"
+    ]
+  },
+  {
+    "project": "flext-meltano",
+    "lint_errors": 163,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 1,
+    "issues": [
+      "\u274c Lint Error: examples/basic_usage.py:60:5: D401 First line of docstring should be in imperative mood: \"Example: Service health checks.\"",
+      "\u274c Lint Error: 60 |     \"\"\"Example: Service health checks.\"\"\"",
+      "\u274c Lint Error: examples/basic_usage.py:78:5: D401 First line of docstring should be in imperative mood: \"Example: Plugin discovery.\"",
+      "\u274c Lint Error: 78 |     \"\"\"Example: Plugin discovery.\"\"\"",
+      "\u274c Lint Error: examples/basic_usage.py:102:5: D401 First line of docstring should be in imperative mood: \"Example: Project validation.\"",
+      "\u274c MyPy Error: examples/quick_start_guide.py:18: error: invalid syntax  [syntax]",
+      "\u274c Poetry: Error: pyproject.toml changed significantly since poetry.lock was last generated. Run `poetry lock` to fix the lock file."
+    ]
+  },
+  {
+    "project": "flext-observability",
+    "lint_errors": 457,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: examples/functional_examples.py:59:89: E501 Line too long (103 > 88)",
+      "\u274c Lint Error: examples/functional_examples.py:112:89: E501 Line too long (90 > 88)",
+      "\u274c Lint Error: examples/functional_examples.py:192:89: E501 Line too long (101 > 88)",
+      "\u274c Lint Error: examples/functional_examples.py:207:89: E501 Line too long (113 > 88)",
+      "\u274c Lint Error: examples/functional_examples.py:209:89: E501 Line too long (92 > 88)",
+      "\u274c MyPy Error: tests/conftest.py:13:2: error: invalid syntax  [syntax]"
+    ]
+  },
+  {
+    "project": "flext-oracle-oic-ext",
+    "lint_errors": 14,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: 29 | except ImportError:",
+      "\u274c Lint Error: 40 |     class DomainEntity:",
+      "\u274c Lint Error: tests/test_e2e_complete.py:424:1: SyntaxError: Unexpected indentation",
+      "\u274c Lint Error: tests/test_e2e_complete.py:456:1: SyntaxError: unindent does not match any outer indentation level",
+      "\u274c Lint Error: tests/test_extension.py:111:72: SyntaxError: Expected ':', found newline",
+      "\u274c MyPy Error: tests/test_e2e_complete.py:424: error: unexpected indent  [syntax]"
+    ]
+  },
+  {
+    "project": "flext-oracle-wms",
+    "lint_errors": 114,
+    "lint_warnings": 30,
+    "mypy_errors": 189,
+    "mypy_warnings": 142,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: scripts/analyze_wms_data.py:159:16: BLE001 Do not catch blind exception: `Exception`",
+      "\u274c Lint Error: 159 |         except Exception:",
+      "\u274c Lint Error: 159 |         except Exception:",
+      "\u274c Lint Error: src/flext_oracle_wms/__init__.py:40:1: ERA001 Found commented-out code",
+      "\u274c Lint Error: 169 |         except Exception as e:",
+      "\u274c MyPy Error: tests/test_helpers_real.py:3: error: Cannot find implementation or library stub for module named",
+      "\u274c MyPy Error: tests/test_helpers.py:3: error: Cannot find implementation or library stub for module named",
+      "\u274c MyPy Error: tests/test_authentication.py:3: error: Cannot find implementation or library stub for module named",
+      "\u274c MyPy Error: tests/test_helpers_coverage.py:5: error: Cannot find implementation or library stub for module named",
+      "\u274c MyPy Error: tests/test_authentication_simple.py:5: error: Cannot find implementation or library stub for module"
+    ]
+  },
+  {
+    "project": "flext-plugin",
+    "lint_errors": 645,
+    "lint_warnings": 58,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 23,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: .plugin_backups/test-plugin/12e01109-bb16-45c7-933a-29e6c3a5fbba_mock.py:31:1: E402 Module level import not at top of file",
+      "\u274c Lint Error: .plugin_backups/test-plugin/12e01109-bb16-45c7-933a-29e6c3a5fbba_mock.py:32:1: E402 Module level import not at top of file",
+      "\u274c Lint Error: .plugin_backups/test-plugin/12e01109-bb16-45c7-933a-29e6c3a5fbba_mock.py:33:1: E402 Module level import not at top of file",
+      "\u274c Lint Error: .plugin_backups/test-plugin/12e01109-bb16-45c7-933a-29e6c3a5fbba_mock.py:34:1: E402 Module level import not at top of file",
+      "\u274c Lint Error: .plugin_backups/test-plugin/12e01109-bb16-45c7-933a-29e6c3a5fbba_mock.py:35:1: E402 Module level import not at top of file",
+      "\u274c MyPy Error: tests/test_core_types.py:135:76: error: unexpected character after line continuation character  [syntax]",
+      "\u274c Test Failure: ================================================ ERRORS =================================================",
+      "\u274c Test Failure: __________________________ ERROR collecting tests/test_application_handlers.py __________________________",
+      "\u274c Test Failure: _______________________________ ERROR collecting tests/test_core_types.py _______________________________"
+    ]
+  },
+  {
+    "project": "flext-quality",
+    "lint_errors": 54,
+    "lint_warnings": 6,
+    "mypy_errors": 0,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: analyzer/management/commands/populate_backends.py:66:32: SyntaxError: missing closing quote in string literal",
+      "\u274c Lint Error: 65 |                 \"display_name\": \"External Tools\",",
+      "\u274c Lint Error: analyzer/management/commands/populate_backends.py:67:29: SyntaxError: Expected ':', found name",
+      "\u274c Lint Error: 65 |                 \"display_name\": \"External Tools\",",
+      "\u274c Lint Error: analyzer/management/commands/populate_backends.py:67:52: SyntaxError: missing closing quote in string literal"
+    ]
+  },
+  {
+    "project": "flext-tap-ldap",
+    "lint_errors": 4,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: src/flext_tap_ldap/ldif_processor.py:344:34: F821 Undefined name `EXPECTED_BULK_SIZE`",
+      "\u274c Lint Error: 344 |                 if len(parts) == EXPECTED_BULK_SIZE:",
+      "\u274c Lint Error: src/flext_tap_ldap/ldif_processor.py:580:30: F821 Undefined name `EXPECTED_BULK_SIZE`",
+      "\u274c Lint Error: 580 |             if len(parts) != EXPECTED_BULK_SIZE:",
+      "\u274c MyPy Error: tests/test_ldif_processor.py:94: error: 'in' expected after for-loop variables  [syntax]"
+    ]
+  },
+  {
+    "project": "flext-tap-ldif",
+    "lint_errors": 0,
+    "lint_warnings": 0,
+    "mypy_errors": 13,
+    "mypy_warnings": 6,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c MyPy Error: src/flext_tap_ldif/__init__.py:20: error: Cannot find implementation or library stub for module named",
+      "\u274c MyPy Error: src/flext_tap_ldif/config.py:8: error: Cannot find implementation or library stub for module named",
+      "\u274c MyPy Error: src/flext_tap_ldif/config.py:86: error: Returning Any from function declared to return \"str | None\" ",
+      "\u274c MyPy Error: src/flext_tap_ldif/config.py:92: error: Returning Any from function declared to return \"str | None\" ",
+      "\u274c MyPy Error: src/flext_tap_ldif/ldif_processor.py:15: error: Cannot find implementation or library stub for module"
+    ]
+  },
+  {
+    "project": "flext-tap-oracle",
+    "lint_errors": 0,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c MyPy Error: tests/e2e/test_oracle_e2e.py:196:35: error: invalid syntax  [syntax]"
+    ]
+  },
+  {
+    "project": "flext-tap-oracle-oic",
+    "lint_errors": 58,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: src/flext_tap_oracle_oic/tap.py:7:56: SyntaxError: Expected one or more symbol names after import",
+      "\u274c Lint Error: src/flext_tap_oracle_oic/tap.py:91:1: SyntaxError: Unexpected indentation",
+      "\u274c Lint Error: src/flext_tap_oracle_oic/tap.py:94:9: SyntaxError: Expected a statement",
+      "\u274c Lint Error: src/flext_tap_oracle_oic/tap.py:94:10: SyntaxError: Expected a statement",
+      "\u274c Lint Error: src/flext_tap_oracle_oic/tap.py:177:1: SyntaxError: Expected a statement",
+      "\u274c MyPy Error: src/flext_tap_oracle_oic/tap.py:8: error: invalid syntax  [syntax]"
+    ]
+  },
+  {
+    "project": "flext-tap-oracle-wms",
+    "lint_errors": 0,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c MyPy Error: tests/unit/test_auth_comprehensive.py:127: error: f-string: expecting '=', or '!', or ':', or '}' "
+    ]
+  },
+  {
+    "project": "flext-target-ldap",
+    "lint_errors": 2,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: src/flext_target_ldap/connection/connection.py:33:13: SyntaxError: Expected an indented block after `try` statement",
+      "\u274c Lint Error: 33 |             except ImportError:",
+      "\u274c MyPy Error: src/flext_target_ldap/connection/connection.py:33: error: expected an indented block after 'try'"
+    ]
+  },
+  {
+    "project": "flext-target-ldif",
+    "lint_errors": 0,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c MyPy Error: tests/test_target.py:40: error: unexpected character after line continuation character  [syntax]"
+    ]
+  },
+  {
+    "project": "flext-target-oracle",
+    "lint_errors": 0,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 1,
+    "issues": [
+      "\u274c MyPy Error: tests/test_config.py:103: error: unexpected character after line continuation character  [syntax]",
+      "\u274c Poetry: Error: pyproject.toml changed significantly since poetry.lock was last generated. Run `poetry lock` to fix the lock file."
+    ]
+  },
+  {
+    "project": "flext-target-oracle-oic",
+    "lint_errors": 17,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: src/flext_target_oracle_oic/connection/connection.py:19:9: SyntaxError: Expected ',', found '='",
+      "\u274c Lint Error: src/flext_target_oracle_oic/connection/connection.py:19:11: SyntaxError: Expected ')', found int",
+      "\u274c Lint Error: src/flext_target_oracle_oic/connection/connection.py:21:1: SyntaxError: Unexpected indentation",
+      "\u274c Lint Error: src/flext_target_oracle_oic/connection/connection.py:22:1: SyntaxError: Expected a statement",
+      "\u274c Lint Error: 24 | if TYPE_CHECKING:",
+      "\u274c MyPy Error: src/flext_target_oracle_oic/connection/connection.py:19: error: invalid syntax  [syntax]"
+    ]
+  },
+  {
+    "project": "flext-target-oracle-wms",
+    "lint_errors": 10,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: src/flext_target_oracle_wms/infrastructure/di_container.py:3:49: SyntaxError: Expected one or more symbol names after import",
+      "\u274c Lint Error: src/flext_target_oracle_wms/infrastructure/di_container.py:4:47: SyntaxError: Expected one or more symbol names after import",
+      "\u274c Lint Error: src/flext_target_oracle_wms/infrastructure/di_container.py:82:1: SyntaxError: unindent does not match any outer indentation level",
+      "\u274c Lint Error: src/flext_target_oracle_wms/infrastructure/di_container.py:82:13: SyntaxError: Expected a statement",
+      "\u274c Lint Error: src/flext_target_oracle_wms/infrastructure/di_container.py:82:14: SyntaxError: Expected a statement",
+      "\u274c MyPy Error: src/flext_target_oracle_wms/infrastructure/di_container.py:4: error: invalid syntax  [syntax]"
+    ]
+  },
+  {
+    "project": "flext-web",
+    "lint_errors": 2,
+    "lint_warnings": 0,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 3,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: tests/test_simple_api_fixed.py:90:79: SyntaxError: Expected a newline after line continuation character",
+      "\u274c Lint Error: tests/test_simple_api_fixed.py:90:94: SyntaxError: Simple statements must be separated by newlines or semicolons",
+      "\u274c MyPy Error: tests/test_simple_api_fixed.py:90:81: error: unexpected character after line continuation character ",
+      "\u274c Test Failure: ================================================ ERRORS =================================================",
+      "\u274c Test Failure: __________________________ ERROR collecting tests/test_config_comprehensive.py __________________________",
+      "\u274c Test Failure: ERROR tests/test_config_comprehensive.py"
+    ]
+  },
+  {
+    "project": "client-b-meltano-native",
+    "lint_errors": 466,
+    "lint_warnings": 2,
+    "mypy_errors": 1,
+    "mypy_warnings": 0,
+    "test_failures": 0,
+    "coverage_percentage": 0.0,
+    "poetry_issues": 0,
+    "issues": [
+      "\u274c Lint Error: src/client-b_meltano_native/oracle/connection_manager_enhanced.py:12:62: SyntaxError: Expected one or more symbol names after import",
+      "\u274c Lint Error: src/client-b_meltano_native/oracle/connection_manager_enhanced.py:107:1: SyntaxError: Unexpected indentation",
+      "\u274c Lint Error: src/client-b_meltano_native/oracle/connection_manager_enhanced.py:108:13: SyntaxError: Expected `except` or `finally` after `try` block",
+      "\u274c Lint Error: src/client-b_meltano_native/oracle/connection_manager_enhanced.py:108:14: SyntaxError: Expected a statement",
+      "\u274c Lint Error: src/client-b_meltano_native/oracle/connection_manager_enhanced.py:137:9: SyntaxError: Expected a statement",
+      "\u274c MyPy Error: src/client-b_meltano_native/oracle/connection_manager_enhanced.py:15: error: invalid syntax  [syntax]"
+    ]
+  }
+]
