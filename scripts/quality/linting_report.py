@@ -134,7 +134,7 @@ class LintingReport(FlextScript):
                 current_total_files = total_stats["total_files"]
                 if isinstance(current_total_files, (int, str)):
                     total_stats["total_files"] = int(current_total_files) + int(
-                        project_stats["python_files"]
+                        project_stats["python_files"],
                     )
                 else:
                     total_stats["total_files"] = int(project_stats["python_files"])
@@ -143,7 +143,7 @@ class LintingReport(FlextScript):
                 current_ruff_issues = total_stats["ruff_issues"]
                 if isinstance(current_ruff_issues, (int, str)):
                     total_stats["ruff_issues"] = int(current_ruff_issues) + int(
-                        project_stats["ruff_issues"]
+                        project_stats["ruff_issues"],
                     )
                 else:
                     total_stats["ruff_issues"] = int(project_stats["ruff_issues"])
@@ -152,7 +152,7 @@ class LintingReport(FlextScript):
                 current_mypy_errors = total_stats["mypy_errors"]
                 if isinstance(current_mypy_errors, (int, str)):
                     total_stats["mypy_errors"] = int(current_mypy_errors) + int(
-                        project_stats["mypy_errors"]
+                        project_stats["mypy_errors"],
                     )
                 else:
                     total_stats["mypy_errors"] = int(project_stats["mypy_errors"])

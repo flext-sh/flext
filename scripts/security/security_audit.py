@@ -151,7 +151,7 @@ class AntipatternScanner:
         ]
 
     def generate_report(
-        self, violations: list[SecurityViolation], output_file: str
+        self, violations: list[SecurityViolation], output_file: str,
     ) -> FlextResult[None]:
         """Generate report file."""
         try:
@@ -171,12 +171,12 @@ class AntipatternScanner:
         print_colored(f"Found {len(violations)} security violations:", Colors.YELLOW)
         for violation in violations:
             print_colored(
-                f"- {violation.violation_type}: {violation.description}", Colors.RED
+                f"- {violation.violation_type}: {violation.description}", Colors.RED,
             )
 
 
 def scan_flext_ecosystem(
-    workspace_path: str, _output_file: str | None = None
+    workspace_path: str, _output_file: str | None = None,
 ) -> list[SecurityViolation]:
     """Convenience function for ecosystem scanning."""
     config = ScanConfig([workspace_path])
@@ -374,7 +374,7 @@ class SecurityAuditScript(FlextScript):
             validated_paths = self._validate_target_paths(paths)
             if not validated_paths:
                 return FlextResult[object].fail(
-                    "No valid target paths found for scanning"
+                    "No valid target paths found for scanning",
                 )
 
             self.logger.info(f"Starting security audit of {len(validated_paths)} paths")

@@ -99,7 +99,7 @@ class GradualLintFixerScript(FlextScript):
                     {
                         "fix_result": fix_result,
                         "project": project,
-                    }
+                    },
                 )
 
             print_colored("❌ Gradual lint fixing failed", Colors.RED)

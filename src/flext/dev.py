@@ -12,9 +12,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Protocol, assert_never
 
-from flext.dev_enums import OperationStatus, OperationType
+from flext.dev_enums import FlextDevEnums
 from flext.dev_models import FlextAdvancedDevModels
-from flext.project_types import ProjectType
+from flext.project_types import FlextProjectTypes
 from flext_core import (
     FlextDomainService,
     FlextLogger,
@@ -48,7 +48,7 @@ class FlextAdvancedDevToolsManager(
 
         def handle(
             self,
-            operation: OperationType,
+            operation: FlextDevEnums.OperationType,
             context: FlextAdvancedDevModels.DevOperationContext,
         ) -> FlextResult[FlextAdvancedDevModels.OperationResult]: ...
 
@@ -88,17 +88,17 @@ class FlextAdvancedDevToolsManager(
             """Analyze individual project for type and characteristics."""
             try:
                 # Detect project type
-                project_type = ProjectType.MIXED
+                project_type = FlextProjectTypes.ProjectType.MIXED
                 has_pyproject = (project_path / "pyproject.toml").exists()
                 has_go_mod = (project_path / "go.mod").exists()
                 has_package_json = (project_path / "package.json").exists()
 
                 if has_pyproject or (project_path / "setup.py").exists():
-                    project_type = ProjectType.PYTHON
+                    project_type = FlextProjectTypes.ProjectType.PYTHON
                 elif has_go_mod:
-                    project_type = ProjectType.GO
+                    project_type = FlextProjectTypes.ProjectType.GO
                 elif has_package_json:
-                    project_type = ProjectType.JAVASCRIPT
+                    project_type = FlextProjectTypes.ProjectType.JAVASCRIPT
 
                 # Count test files
                 tests_dir = project_path / "tests"
@@ -222,7 +222,7 @@ class FlextAdvancedDevToolsManager(
 
                 result = FlextAdvancedDevModels.OperationResult(
                     operation_id=operation.operation_id,
-                    status=OperationStatus.SUCCESS,
+                    status=FlextDevEnums.OperationStatus.SUCCESS,
                     duration_seconds=execution_time,
                     exit_code=0,
                     stdout_lines=total_tests_run * 2,
@@ -262,9 +262,9 @@ class FlextAdvancedDevToolsManager(
 
                 result = FlextAdvancedDevModels.OperationResult(
                     operation_id=operation.operation_id,
-                    status=OperationStatus.SUCCESS
+                    status=FlextDevEnums.OperationStatus.SUCCESS
                     if issues_found == 0
-                    else OperationStatus.FAILED,
+                    else FlextDevEnums.OperationStatus.FAILED,
                     duration_seconds=execution_time,
                     exit_code=issues_found,
                     stdout_lines=100,
@@ -304,7 +304,7 @@ class FlextAdvancedDevToolsManager(
 
                 result = FlextAdvancedDevModels.OperationResult(
                     operation_id=operation.operation_id,
-                    status=OperationStatus.SUCCESS,
+                    status=FlextDevEnums.OperationStatus.SUCCESS,
                     duration_seconds=execution_time,
                     exit_code=0,
                     stdout_lines=files_formatted,
@@ -332,7 +332,7 @@ class FlextAdvancedDevToolsManager(
             """Create failed operation result."""
             result = FlextAdvancedDevModels.OperationResult(
                 operation_id=operation.operation_id,
-                status=OperationStatus.FAILED,
+                status=FlextDevEnums.OperationStatus.FAILED,
                 duration_seconds=0.0,
                 exit_code=1,
                 stdout_lines=0,
@@ -381,7 +381,7 @@ class FlextAdvancedDevToolsManager(
         return FlextResult[FlextAdvancedDevModels.OperationResult].ok(
             FlextAdvancedDevModels.OperationResult(
                 operation_id="status_check",
-                status=OperationStatus.SUCCESS,
+                status=FlextDevEnums.OperationStatus.SUCCESS,
                 duration_seconds=0.0,
                 exit_code=0,
                 stdout_lines=0,
@@ -402,13 +402,11 @@ def create_dev_tools_manager() -> FlextAdvancedDevToolsManager:
 
 # Export main classes and types for external use
 __all__ = [
-    "DevToolsManager",
     "FlextAdvancedDevModels",
     "FlextAdvancedDevToolsManager",
-    "ProjectType",
+    "FlextProjectTypes",
     "create_dev_tools_manager",
 ]
 
 
-# Legacy compatibility aliases
-DevToolsManager = FlextAdvancedDevToolsManager
+# LEGACY ALIAS ELIMINATED - Use FlextAdvancedDevToolsManager directly
