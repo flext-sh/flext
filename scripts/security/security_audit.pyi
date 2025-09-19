@@ -21,5 +21,6 @@ class AntipatternScanner:
     def scan_ecosystem(self) -> list[SecurityViolation]: ...
 
 def scan_flext_ecosystem(
-    workspace_path: str, _output_file: str | None = None,
+    workspace_path: str,
+    _output_file: str | None = None,
 ) -> list[SecurityViolation]: ...

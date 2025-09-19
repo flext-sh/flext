@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/utilities.py
+# hypothesis_version: 6.139.2
+
+[0.0, ',', '-', '0', '1', ':', 'FlextUtilities', 'NFKD', '[-\\s]+', '[^\\w\\s-]', '\\s+', 'exception', 'false', 'no', 'off', 'on', 'true', 'yes', '{}']

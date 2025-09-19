@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 """
 
 from flext_tools.backup import BackupManager
-from flext_tools.colors import FlextColorService
+from flext_tools.colors import Colors, FlextColorService, print_colored
 from flext_tools.config_manager import ConfigurationManager
 from flext_tools.conflicts import ConflictAnalyzer
 from flext_tools.discovery_base import DependencyDiscovery
@@ -30,6 +30,7 @@ from flext_tools.stdlib import get_stdlib_modules, is_stdlib_module
 __all__ = [
     "BackupManager",
     "CodeDuplicateAnalyzer",
+    "Colors",
     "ConfigurationManager",
     "ConflictAnalyzer",
     "DependencyDiscovery",
@@ -49,4 +50,5 @@ __all__ = [
     "SSLManager",
     "get_stdlib_modules",
     "is_stdlib_module",
+    "print_colored",
 ]

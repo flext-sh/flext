@@ -1,0 +1,65 @@
+# FLEXT Workspace Makefile
+# Development automation for the complete FLEXT ecosystem
+
+.PHONY: help install dev test test-all lint format check clean build ecosystem services
+
+# Default target
+help:
+	@echo "🚀 FLEXT Ecosystem Development Commands"
+	@echo "======================================"
+	@echo "📦 Setup:"
+	@echo "  install      Install all FLEXT modules in development mode"
+	@echo "  clean        Clean all build artifacts"
+	@echo ""
+	@echo "🔧 Development:"
+	@echo "  dev          Start development environment"
+	@echo "  services     Start all FLEXT services (API server)"
+	@echo "  ecosystem    Test complete ecosystem integration"
+	@echo ""
+	@echo "🧪 Testing:"
+	@echo "  test         Run tests for all modules"
+	@echo "  test-unit    Run unit tests only"
+	@echo "  test-integration  Run integration tests only"
+	@echo ""
+	@echo "✨ Quality:"
+	@echo "  lint         Run linting for all modules"
+	@echo "  format       Format code for all modules"
+	@echo "  check        Run all quality checks"
+	@echo ""
+	@echo "📦 Build:"
+	@echo "  build        Build all modules"
+
+# Installation targets
+install:
+	@echo "📦 Installing FLEXT ecosystem..."
+	pip install -e flext-core/
+	pip install -e flext-auth/
+	pip install -e flext-api/
+	pip install -e flext-meltano/
+	pip install -e flext-plugin/
+	@echo "✅ All FLEXT modules installed in development mode"
+
+# Development targets
+dev:
+	@echo "🔧 Starting FLEXT development environment..."
+	@python run_flext_ecosystem.py
+	@echo "✅ Development environment ready"
+
+services:
+	@echo "🌐 Starting FLEXT services..."
+	@python start_flext_services.py
+
+ecosystem:
+	@echo "🔍 Testing FLEXT ecosystem integration..."
+	@python run_flext_ecosystem.py
+
+# Status check
+status:
+	@echo "📊 FLEXT Ecosystem Status:"
+	@echo "========================"
+	@python run_flext_ecosystem.py
+
+# Quick API server startup
+api:
+	@echo "🌐 Starting FLEXT API server..."
+	@cd flext-api && uvicorn flext_api.main:app --reload --host 0.0.0.0 --port 8000

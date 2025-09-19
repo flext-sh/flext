@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_tests/builders.py
+# hypothesis_version: 6.139.2
+
+[3600, 5432, 6379, '.config.json', '.json', '.txt', 'DEBUG', 'FlextTestsBuilders', 'INFO', 'Test error', '_building_container', '_container_factories', '_container_services', '_result_data', '_result_error', '_result_error_code', '_result_error_data', '_result_success', 'cache', 'connected', 'console', 'database', 'database_url', 'debug', 'default_value', 'development', 'environment', 'format', 'handlers', 'host', 'json', 'level', 'local', 'localhost', 'log_level', 'logger', 'name', 'port', 'production', 'required', 'staging', 'string', 'test', 'test_data', 'test_db', 'test_error', 'test_string', 'ttl', 'type', 'utf-8', 'w']

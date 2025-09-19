@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/legacy.py
+# hypothesis_version: 6.138.2
+
+['.', '3.13+', 'BaseConfigManager', 'BaseEntry', 'BaseFileWriter', 'BaseProcessor', 'BaseSorter', 'ConsoleLogger', 'EntryType', 'FlextBaseModel', 'FlextBaseSettings', 'FlextBaseUtilities', 'FlextBaseValidators', 'FlextConfiguration', 'FlextDomainEntity', 'FlextFactory', 'FlextHelpers', 'FlextImmutableModel', 'FlextMutableModel', 'FlextValidationUtils', 'InMemoryMetrics', 'MinimalObservability', 'NoOpTracer', 'SimpleAlerts', 'Validation failed', '_BaseConfigDefaults', '_BaseConfigOps', '_PerformanceConfig', 'compare_versions', 'container', 'core', 'get_version_info', 'get_version_string', 'get_version_tuple', 'is_feature_available', 'python', 'result', 'validation', 'value', 'version']

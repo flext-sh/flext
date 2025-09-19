@@ -57,7 +57,9 @@ class FlextColorService(FlextDomainService[str]):
 
         @staticmethod
         def print_colored(
-            message: str, color: str = "", logger: FlextLogger | None = None,
+            message: str,
+            color: str = "",
+            logger: FlextLogger | None = None,
         ) -> FlextResult[None]:
             """Print text with color formatting and logging."""
             # Log message regardless of flext_cli availability
@@ -74,7 +76,8 @@ class FlextColorService(FlextDomainService[str]):
 
             if color:
                 colored_message = FlextColorService._FormattingHelper.colorize(
-                    message, color,
+                    message,
+                    color,
                 )
                 formatter.console.print(colored_message)
             else:
@@ -107,5 +110,18 @@ class FlextColorService(FlextDomainService[str]):
 # - FlextColorService().colorize()
 # - FlextColorService().print_colored()
 
+# Convenience imports for test compatibility - delegate to unified service
+Colors = FlextColorService.Colors
 
-__all__ = ["FlextColorService"]
+def colorize(message: str, color: str) -> str:
+    """Convenience function for colorize - delegates to FlextColorService."""
+    service = FlextColorService()
+    result = service.colorize(message, color)
+    return result.unwrap() if result.is_success else message
+
+def print_colored(message: str, color: str = "") -> None:
+    """Convenience function for print_colored - delegates to FlextColorService."""
+    service = FlextColorService()
+    service.print_colored(message, color)
+
+__all__ = ["Colors", "FlextColorService", "colorize", "print_colored"]

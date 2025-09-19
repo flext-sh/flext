@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/mixins/cache.py
+# hypothesis_version: 6.138.2
+
+['FlextCache', 'T', '_cache', '_cache_stats', 'hits', 'misses']

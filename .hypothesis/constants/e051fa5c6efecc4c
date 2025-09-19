@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/core.py
+# hypothesis_version: 6.136.7
+
+['Callable[P, R]', 'Expected dictionary', 'FlextCore', 'INFO', 'P', 'R', 'S', 'Service not found', 'flext_core']
