@@ -10,25 +10,16 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext.project_types import ProjectType, WorkspaceStatus
+from flext.project_types import FlextProjectTypes
 from flext.workspace_models import FlextAdvancedWorkspaceModels
 from flext.workspace_service import (
     FlextWorkspaceService,
-    ProjectDiscoveryServiceProtocol,
-    WorkspaceValidatorProtocol,
     create_workspace_service,
 )
 
-# Alias for test compatibility
-FlextAdvancedWorkspaceService = FlextWorkspaceService
-
 __all__ = [
     "FlextAdvancedWorkspaceModels",
-    "FlextAdvancedWorkspaceService",  # Test compatibility alias
     "FlextWorkspaceService",
-    "ProjectDiscoveryServiceProtocol",
-    "ProjectType",
-    "WorkspaceStatus",
-    "WorkspaceValidatorProtocol",
+    "FlextProjectTypes",
     "create_workspace_service",
 ]

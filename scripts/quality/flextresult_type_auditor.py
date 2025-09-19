@@ -137,7 +137,7 @@ class FlextResultTypeAuditor(FlextScript):
         return py_files
 
     def _check_flextresult_inconsistencies(
-        self, file_path: str
+        self, file_path: str,
     ) -> list[FlextTypes.Core.Dict]:
         """Verifica inconsistências de FlextResult em um arquivo."""
         try:
@@ -165,7 +165,7 @@ class FlextResultTypeAuditor(FlextScript):
                 if return_type.strip() != "None":
                     # Procura pelo corpo do método
                     for j in range(
-                        i + 1, min(i + 50, len(lines))
+                        i + 1, min(i + 50, len(lines)),
                     ):  # Até 50 linhas depois
                         if lines[j].strip().startswith("def "):  # Próximo método
                             break
@@ -177,7 +177,7 @@ class FlextResultTypeAuditor(FlextScript):
                                     "method": method_name,
                                     "declared_type": return_type,
                                     "issue": f"Método declara FlextResult[{return_type}] mas retorna FlextResult.success()/error() sem valor",
-                                }
+                                },
                             )
 
         # Procura por outros padrões problemáticos
@@ -203,7 +203,7 @@ class FlextResultTypeAuditor(FlextScript):
                         "method": "unknown",
                         "declared_type": "mixed",
                         "issue": "Possível inconsistência entre FlextResult[None] e FlextResult[dict]",
-                    }
+                    },
                 )
 
         return issues
@@ -232,7 +232,7 @@ class FlextResultTypeAuditor(FlextScript):
 
             if project_issues:
                 print_colored(
-                    f"   ⚠️  {len(project_issues)} problemas encontrados", Colors.YELLOW
+                    f"   ⚠️  {len(project_issues)} problemas encontrados", Colors.YELLOW,
                 )
                 all_issues.extend(project_issues)
             else:

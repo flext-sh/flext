@@ -77,7 +77,7 @@ class FlextScriptService(FlextDomainService[object]):
         validation_result = self.validate_preconditions()
         if validation_result.is_failure:
             return FlextResult[object].fail(
-                validation_result.error or "Precondition validation failed"
+                validation_result.error or "Precondition validation failed",
             )
 
         return self.execute_implementation(args or {})
@@ -101,8 +101,8 @@ class FlextScriptService(FlextDomainService[object]):
         """Execute script implementation."""
 
 
-# Module-level exports for backward compatibility
-FlextScript = FlextScriptService
-ScriptMetadata = FlextScriptService.ScriptMetadata
+# LEGACY ALIASES ELIMINATED - Use FlextScriptService directly:
+# Use: FlextScriptService instead of FlextScript
+# Use: FlextScriptService.ScriptMetadata instead of ScriptMetadata
 
-__all__ = ["FlextScript", "FlextScriptService", "ScriptMetadata"]
+__all__ = ["FlextScriptService"]

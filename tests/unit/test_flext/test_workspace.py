@@ -10,18 +10,18 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from flext import FlextAdvancedWorkspaceService
+from flext import FlextWorkspaceService
 from flext.workspace import WorkspaceStatus, create_workspace_service
 
 
-class TestFlextAdvancedWorkspaceService:
+class TestFlextWorkspaceService:
     """Test suite for advanced workspace service."""
 
     def test_workspace_service_creation(self) -> None:
         """Test creation of advanced workspace service."""
         service = create_workspace_service()
 
-        assert isinstance(service, FlextAdvancedWorkspaceService)
+        assert isinstance(service, FlextWorkspaceService)
         assert hasattr(service, "_logger")
 
     def test_unified_class_pattern_compliance(self) -> None:
@@ -44,7 +44,7 @@ class TestFlextAdvancedWorkspaceService:
         create_workspace_service()
 
         # Test that we can access advanced models namespace
-        # Models removed - use FlextAdvancedWorkspaceService directly
+        # Models removed - use FlextWorkspaceService directly
         assert True
 
 
@@ -107,7 +107,7 @@ class TestProjectDiscoveryService:
             (project / "src").mkdir()
             (project / "tests").mkdir()
             (project / "pyproject.toml").write_text(
-                f'[tool.poetry]\nname = "{project_name}"'
+                f'[tool.poetry]\nname = "{project_name}"',
             )
 
         # Create Go project
@@ -128,7 +128,7 @@ class TestProjectDiscoveryService:
 
     @patch("pathlib.Path.cwd")
     def test_workspace_project_discovery(
-        self, mock_cwd: Mock, temp_workspace: Path
+        self, mock_cwd: Mock, temp_workspace: Path,
     ) -> None:
         """Test comprehensive workspace project discovery."""
         mock_cwd.return_value = temp_workspace
@@ -229,7 +229,7 @@ class TestAdvancedPatternsCompliance:
         service = create_workspace_service()
 
         # Test that service is properly typed with generic constraints
-        assert isinstance(service, FlextAdvancedWorkspaceService)
+        assert isinstance(service, FlextWorkspaceService)
 
     def test_pydantic_v2_validation_patterns(self) -> None:
         """Test Pydantic v2 advanced validation patterns."""
@@ -267,11 +267,11 @@ class TestModuleExports:
     def test_primary_service_export(self) -> None:
         """Test primary service is properly exported."""
         service = create_workspace_service()
-        assert isinstance(service, FlextAdvancedWorkspaceService)
+        assert isinstance(service, FlextWorkspaceService)
 
     def test_advanced_models_namespace(self) -> None:
         """Test advanced models namespace is properly exported."""
-        # Models removed - use FlextAdvancedWorkspaceService directly
+        # Models removed - use FlextWorkspaceService directly
         assert True
 
 
@@ -290,7 +290,7 @@ class TestWorkspaceIntegration:
         (core_project / "src" / "flext_core").mkdir(parents=True)
         (core_project / "tests" / "unit").mkdir(parents=True)
         (core_project / "pyproject.toml").write_text(
-            "[tool.poetry]\nname = 'flext-core'"
+            "[tool.poetry]\nname = 'flext-core'",
         )
 
         api_project = workspace / "flext-api"
@@ -311,7 +311,7 @@ class TestWorkspaceIntegration:
 
     @patch("pathlib.Path.cwd")
     def test_complex_workspace_analysis(
-        self, mock_cwd: Mock, complex_workspace: Path
+        self, mock_cwd: Mock, complex_workspace: Path,
     ) -> None:
         """Test comprehensive analysis of complex workspace."""
         mock_cwd.return_value = complex_workspace
@@ -329,7 +329,7 @@ class TestWorkspaceIntegration:
 
     @patch("pathlib.Path.cwd")
     def test_workspace_health_assessment(
-        self, mock_cwd: Mock, complex_workspace: Path
+        self, mock_cwd: Mock, complex_workspace: Path,
     ) -> None:
         """Test comprehensive workspace health assessment."""
         mock_cwd.return_value = complex_workspace
@@ -340,7 +340,7 @@ class TestWorkspaceIntegration:
 
         health_result = validator.validate_workspace_path(str(complex_workspace))
         assert hasattr(
-            health_result, "is_success"
+            health_result, "is_success",
         )  # Check it's a FlextResult-like object
 
 

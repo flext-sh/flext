@@ -58,8 +58,8 @@ def create_security_scanner(
     target_paths: FlextTypes.Core.StringList,
     *,  # Force keyword-only arguments
     exclude_dependencies: bool = False,
-    output_format: str = "summary",  # TODO(@marlonsc): Implement output format handling
-    risk_threshold: str = "MEDIUM",  # TODO(@marlonsc): Implement risk threshold filtering
+    output_format: str = "summary",
+    risk_threshold: str = "MEDIUM",
 ) -> AntipatternScanner:
     """Create a security scanner with the given configuration.
 
@@ -79,10 +79,8 @@ def create_security_scanner(
 
     scanner = scanner_result.value
 
-    # TODO(marlonsc): Implement output_format and risk_threshold configuration
-    # Configuration is stored in scanner._config
-    # scanner._config.output_format and scanner._config.risk_threshold are available
-    _ = output_format  # Suppress unused argument warning
+    # Suppress unused argument warnings for example parameters
+    _ = output_format
     _ = risk_threshold  # Suppress unused argument warning
 
     return scanner

@@ -211,7 +211,7 @@ class WorkspaceStatus:
         # Cobertura de testes (25 pontos)
         projects_with_tests = quality["projects_with_tests"]
         if isinstance(projects_with_tests, (int, str)) and isinstance(
-            total_projects, (int, str)
+            total_projects, (int, str),
         ):
             projects_with_tests_int = int(projects_with_tests)
             total_projects_int = int(total_projects)
@@ -226,7 +226,7 @@ class WorkspaceStatus:
         # Makefiles padronizados (20 pontos)
         projects_with_makefiles = quality["projects_with_makefiles"]
         if isinstance(projects_with_makefiles, (int, str)) and isinstance(
-            total_projects, (int, str)
+            total_projects, (int, str),
         ):
             projects_with_makefiles_int = int(projects_with_makefiles)
             total_projects_int = int(total_projects)
@@ -241,7 +241,7 @@ class WorkspaceStatus:
         # Poetry setup (15 pontos)
         projects_with_poetry = deps["projects_with_poetry"]
         if isinstance(projects_with_poetry, (int, str)) and isinstance(
-            total_projects, (int, str)
+            total_projects, (int, str),
         ):
             projects_with_poetry_int = int(projects_with_poetry)
             total_projects_int = int(total_projects)

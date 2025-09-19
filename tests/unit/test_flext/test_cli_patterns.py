@@ -33,7 +33,7 @@ class TestCliPatterns:
         assert "BaseCLI" in __all__
 
     @pytest.mark.skipif(
-        BaseCLI is None, reason="BaseCLI not available - import dependency issue"
+        BaseCLI is None, reason="BaseCLI not available - import dependency issue",
     )
     def test_base_cli_import_from_patterns(self) -> None:
         """Test that BaseCLI can be imported from cli_patterns."""
@@ -44,7 +44,7 @@ class TestCliPatterns:
         assert ImportedBaseCLI is BaseCLI
 
     @pytest.mark.skipif(
-        BaseCLI is None, reason="BaseCLI not available - import dependency issue"
+        BaseCLI is None, reason="BaseCLI not available - import dependency issue",
     )
     def test_base_cli_alias_functionality(self) -> None:
         """Test that BaseCLI alias maintains functionality."""
@@ -73,7 +73,7 @@ class TestCliPatterns:
         assert "FLEXT ecosystem" in doc
 
     @pytest.mark.skipif(
-        BaseCLI is None, reason="BaseCLI not available - import dependency issue"
+        BaseCLI is None, reason="BaseCLI not available - import dependency issue",
     )
     def test_base_cli_can_be_subclassed(self) -> None:
         """Test that BaseCLI can be used for subclassing."""
@@ -131,7 +131,7 @@ class TestCliPatternsIntegration:
             assert keyword in doc, f"Documentation should mention {keyword} integration"
 
     @pytest.mark.skipif(
-        BaseCLI is None, reason="BaseCLI not available - import dependency issue"
+        BaseCLI is None, reason="BaseCLI not available - import dependency issue",
     )
     def test_architectural_pattern_compliance(self) -> None:
         """Test that CLI patterns follow Clean Architecture principles."""

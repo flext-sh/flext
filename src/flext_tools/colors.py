@@ -57,7 +57,7 @@ class FlextColorService(FlextDomainService[str]):
 
         @staticmethod
         def print_colored(
-            message: str, color: str = "", logger: FlextLogger | None = None
+            message: str, color: str = "", logger: FlextLogger | None = None,
         ) -> FlextResult[None]:
             """Print text with color formatting and logging."""
             # Log message regardless of flext_cli availability
@@ -66,7 +66,7 @@ class FlextColorService(FlextDomainService[str]):
 
             if not FLEXT_CLI_AVAILABLE:
                 return FlextResult[None].fail(
-                    "FlextCli not available for colored output"
+                    "FlextCli not available for colored output",
                 )
 
             # flext_cli is available
@@ -74,7 +74,7 @@ class FlextColorService(FlextDomainService[str]):
 
             if color:
                 colored_message = FlextColorService._FormattingHelper.colorize(
-                    message, color
+                    message, color,
                 )
                 formatter.console.print(colored_message)
             else:
@@ -101,20 +101,11 @@ class FlextColorService(FlextDomainService[str]):
         return self._OutputHelper.print_colored(message, color, self._logger)
 
 
-# Module-level exports for backward compatibility
-Colors = FlextColorService.Colors
-_service = FlextColorService()
+# LEGACY ALIASES AND FUNCTIONS ELIMINATED
+# Use FlextColorService directly:
+# - FlextColorService.Colors
+# - FlextColorService().colorize()
+# - FlextColorService().print_colored()
 
 
-def colorize(message: str, color: str) -> str:
-    """Module-level colorize function."""
-    result = _service.colorize(message, color)
-    return result.unwrap() if result.success else message
-
-
-def print_colored(message: str, color: str = "") -> None:
-    """Module-level print_colored function."""
-    _service.print_colored(message, color)
-
-
-__all__ = ["Colors", "FlextColorService", "colorize", "print_colored"]
+__all__ = ["FlextColorService"]

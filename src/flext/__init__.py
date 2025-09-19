@@ -9,21 +9,12 @@ License: MIT
 from __future__ import annotations
 
 from flext.application_handlers import (
-    AuthorizingHandler,
-    BasicHandler,
-    Command,
-    CommandBus,
-    CommandHandler,
-    EventHandler,
-    FlextAdvancedHandlerModels,
-    FlextAdvancedHandlerService,
+    FlextApplicationHandlerService,
     create_handler_service,
 )
 from flext.application_pipeline import (
-    Entry,
-    FlextAdvancedPipelineModels,
-    FlextAdvancedPipelineService,
     FlextApplicationPipelineService,
+    create_pipeline_service,
 )
 from flext.cli import (
     FlextControlPanelCli,
@@ -37,30 +28,21 @@ from flext.cli import (
     scripts,
 )
 from flext.cli_patterns import (
-    FlextCLI,
     FlextCliApi as FlextCliApiPattern,
-    FlextCLICommand,
-    FlextCLIConfig,
-    FlextCliConfig as FlextCliConfigPattern,
+    FlextCliConfigs as FlextCliConfigsPattern,
     FlextCliFormatters as FlextCliFormattersPattern,
-    FlextCLIGroup,
     FlextCliMain as FlextCliMainPattern,
-    with_config,
 )
 from flext.dev import (
     FlextAdvancedDevModels,
     FlextAdvancedDevToolsManager,
+    FlextProjectTypes as DevFlextProjectTypes,
     create_dev_tools_manager,
 )
-from flext.dev_enums import OperationStatus, OperationType
-from flext.project_types import ProjectType
+from flext.dev_enums import FlextDevEnums
+from flext.project_types import FlextProjectTypes
 from flext.services import (
-    CommandHandler as ServicesCommandHandler,
-    CreatePipelineCommand as ServicesCreatePipelineCommand,
-    EventHandler as ServicesEventHandler,
-    ExecutePipelineCommand as ServicesExecutePipelineCommand,
     FlextUnifiedServices,
-    QueryHandler,
     create_services,
 )
 from flext.services_utils import (
@@ -70,7 +52,6 @@ from flext.services_utils import (
 )
 from flext.workspace import (
     FlextAdvancedWorkspaceModels,
-    FlextAdvancedWorkspaceService,
     FlextWorkspaceService,
 )
 from flext.workspace_cli import (
@@ -85,7 +66,7 @@ from flext.workspace_cli import (
 )
 from flext_cli import (
     FlextCliApi,
-    FlextCliConfig,
+    FlextCliConfigs,
     FlextCliFormatters,
     FlextCliMain,
     FlextCliService,
@@ -95,57 +76,20 @@ from flext_cli import (
 
 
 __all__ = [
-    "AuthorizingHandler",
-    "BasicHandler",
-    "Command",
-    "CommandBus",
-    "CommandHandler",
-    "Entry",
-    "EventHandler",
-    "FlextAdvancedDevModels",
-    "FlextAdvancedDevToolsManager",
-    "FlextAdvancedHandlerModels",
-    "FlextAdvancedHandlerService",
-    "FlextAdvancedPipelineModels",
-    "FlextAdvancedPipelineService",
-    "FlextAdvancedWorkspaceModels",
-    "FlextAdvancedWorkspaceService",
+    # Application handlers
+    "FlextApplicationHandlerService",
+    "create_handler_service",
+
+    # Application pipeline
     "FlextApplicationPipelineService",
-    "FlextCLI",
-    "FlextCLICommand",
-    "FlextCLIConfig",
-    "FlextCLIGroup",
-    "FlextCliApi",
-    "FlextCliApiPattern",
-    "FlextCliConfig",
-    "FlextCliConfigPattern",
-    "FlextCliFormatters",
-    "FlextCliFormattersPattern",
-    "FlextCliMain",
-    "FlextCliMainPattern",
-    "FlextCliService",
+    "create_pipeline_service",
+
+    # CLI functionality
     "FlextControlPanelCli",
-    "FlextLogger",
-    "FlextResult",
-    "FlextUnifiedServices",
-    "FlextUtilities",
-    "FlextWorkspaceCli",
-    "FlextWorkspaceService",
-    "OperationStatus",
-    "OperationType",
-    "ProjectType",
-    "QueryHandler",
-    "ServicesCommandHandler",
-    "ServicesCreatePipelineCommand",
-    "ServicesEventHandler",
-    "ServicesExecutePipelineCommand",
     "analysis",
     "build",
     "check",
     "create_cli",
-    "create_dev_tools_manager",
-    "create_handler_service",
-    "create_services",
     "create_workspace_cli",
     "docker",
     "format_code",
@@ -155,9 +99,46 @@ __all__ = [
     "quality",
     "scripts",
     "status",
-    "with_config",
     "workspace_main",
     "workspace_test",
+
+    # CLI patterns
+    "FlextCliApiPattern",
+    "FlextCliConfigsPattern",
+    "FlextCliFormattersPattern",
+    "FlextCliMainPattern",
+
+    # Development tools
+    "FlextAdvancedDevModels",
+    "FlextAdvancedDevToolsManager",
+    "create_dev_tools_manager",
+
+    # Development enums
+    "FlextDevEnums",
+
+    # Project types
+    "FlextProjectTypes",
+
+    # Services
+    "FlextUnifiedServices",
+    "create_services",
+
+    # Services utilities
+    "FlextLogger",
+    "FlextResult",
+    "FlextUtilities",
+
+    # Workspace
+    "FlextAdvancedWorkspaceModels",
+    "FlextWorkspaceCli",
+    "FlextWorkspaceService",
+
+    # CLI from flext-cli
+    "FlextCliApi",
+    "FlextCliConfigs",
+    "FlextCliFormatters",
+    "FlextCliMain",
+    "FlextCliService",
 ]
 
 __version__ = "0.9.0"
