@@ -104,7 +104,7 @@ class TestFlextCliDirectExports:
     def test_classes_have_correct_names(self) -> None:
         """Test that all classes have correct names matching flext-cli."""
         assert FlextCliMain.__name__ == "FlextCliMain"
-        assert FlextCliConfig.__name__ == "FlextCliConfig"
+        assert FlextCliConfig.__name__ == "FlextCliConfigs"  # Aliased from FlextCliConfigs
         assert FlextCliApi.__name__ == "FlextCliApi"
         assert FlextCliFormatters.__name__ == "FlextCliFormatters"
         assert FlextCliService.__name__ == "FlextCliService"

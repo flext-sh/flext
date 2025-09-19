@@ -32,9 +32,9 @@ class WorkspaceManagementService(FlextDomainService[FlextTypes.Core.Dict]):
     Unified class for managing workspace symbolic links and directory structure.
     """
 
-    def __init__(self, **data: object) -> None:
+    def __init__(self) -> None:
         """Initialize workspace management service."""
-        super().__init__(**data)
+        super().__init__()
         self._container = FlextContainer.get_global()
         self._logger = FlextLogger(__name__)
         self._workspace_root = Path.cwd()
@@ -85,7 +85,7 @@ class WorkspaceManagementService(FlextDomainService[FlextTypes.Core.Dict]):
                     )
 
                 link_is_valid = True
-                return FlextResult[bool].ok(value=link_is_valid)
+                return FlextResult[bool].ok(link_is_valid)
 
             except Exception as e:
                 return FlextResult[bool].fail(f"Link validation error: {e}")
@@ -271,7 +271,7 @@ class WorkspaceManagementService(FlextDomainService[FlextTypes.Core.Dict]):
         setup_data = setup_result.unwrap()
         validation_data = validation_result.unwrap()
 
-        combined_result = {
+        combined_result: FlextTypes.Core.Dict = {
             "workspace_setup": setup_data,
             "link_validation": validation_data,
             "operation_status": "completed",
@@ -300,14 +300,14 @@ def main() -> int:
         help="Operation to perform",
     )
 
-    args = parser.parse_args()
+    parser.parse_args()
 
     # Create service using proper dependency injection
     FlextContainer.get_global()
     service = WorkspaceManagementService()
 
     # Execute operation
-    result = service.run_comprehensive_management(operation=args.operation)
+    result = service.execute()
 
     if result.is_success:
         print("✅ Workspace management completed successfully")
