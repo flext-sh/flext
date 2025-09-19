@@ -2529,7 +2529,7 @@
         {
             "file": "/home/marlonsc/flext/client-a-oud-mig/tests/unit/test_connection.py",
             "severity": "error",
-            "message": "Type \"object\" is not assignable to return type \"FlextLdapConnectionConfig\"\n  \"object\" is not assignable to \"FlextLdapConnectionConfig\"",
+            "message": "Type \"object\" is not assignable to return type \"FlextLdapModels.ConnectionConfig\"\n  \"object\" is not assignable to \"FlextLdapModels.ConnectionConfig\"",
             "range": {
                 "start": {
                     "line": 44,
@@ -14157,7 +14157,7 @@
         {
             "file": "/home/marlonsc/flext/flext-core/src/flext_tests/asyncs.py",
             "severity": "error",
-            "message": "Type \"(*_args: object, **_kwargs: object) -> object\" is not assignable to return type \"AsyncMockProtocol\"\n  Type \"(*_args: object, **_kwargs: object) -> object\" is not assignable to type \"(*args: object, **kwargs: object) -> CoroutineType[Any, Any, object]\"\n    Function return type \"object\" is incompatible with type \"CoroutineType[Any, Any, object]\"\n      \"object\" is not assignable to \"CoroutineType[Any, Any, object]\"",
+            "message": "Type \"(*_args: object, **_kwargs: object) -> object\" is not assignable to return type \"AsyncMockProtocol\"\n  Type \"(*_args: object, **_kwargs: object) -> object\" is not assignable to type \"(*args: object, **kwargs: object) -> CoroutineType[object, object, object]\"\n    Function return type \"object\" is incompatible with type \"CoroutineType[object, object, object]\"\n      \"object\" is not assignable to \"CoroutineType[object, object, object]\"",
             "range": {
                 "start": {
                     "line": 334,
@@ -14173,7 +14173,7 @@
         {
             "file": "/home/marlonsc/flext/flext-core/src/flext_tests/asyncs.py",
             "severity": "error",
-            "message": "Type \"(*_args: object, **_kwargs: object) -> object\" is not assignable to return type \"AsyncMockProtocol\"\n  Type \"(*_args: object, **_kwargs: object) -> object\" is not assignable to type \"(*args: object, **kwargs: object) -> CoroutineType[Any, Any, object]\"\n    Function return type \"object\" is incompatible with type \"CoroutineType[Any, Any, object]\"\n      \"object\" is not assignable to \"CoroutineType[Any, Any, object]\"",
+            "message": "Type \"(*_args: object, **_kwargs: object) -> object\" is not assignable to return type \"AsyncMockProtocol\"\n  Type \"(*_args: object, **_kwargs: object) -> object\" is not assignable to type \"(*args: object, **kwargs: object) -> CoroutineType[object, object, object]\"\n    Function return type \"object\" is incompatible with type \"CoroutineType[object, object, object]\"\n      \"object\" is not assignable to \"CoroutineType[object, object, object]\"",
             "range": {
                 "start": {
                     "line": 377,
@@ -14189,7 +14189,7 @@
         {
             "file": "/home/marlonsc/flext/flext-core/src/flext_tests/asyncs.py",
             "severity": "error",
-            "message": "Type \"(*_args: object, **_kwargs: object) -> object\" is not assignable to return type \"AsyncMockProtocol\"\n  Type \"(*_args: object, **_kwargs: object) -> object\" is not assignable to type \"(*args: object, **kwargs: object) -> CoroutineType[Any, Any, object]\"\n    Function return type \"object\" is incompatible with type \"CoroutineType[Any, Any, object]\"\n      \"object\" is not assignable to \"CoroutineType[Any, Any, object]\"",
+            "message": "Type \"(*_args: object, **_kwargs: object) -> object\" is not assignable to return type \"AsyncMockProtocol\"\n  Type \"(*_args: object, **_kwargs: object) -> object\" is not assignable to type \"(*args: object, **kwargs: object) -> CoroutineType[object, object, object]\"\n    Function return type \"object\" is incompatible with type \"CoroutineType[object, object, object]\"\n      \"object\" is not assignable to \"CoroutineType[object, object, object]\"",
             "range": {
                 "start": {
                     "line": 388,
@@ -15801,7 +15801,7 @@
         {
             "file": "/home/marlonsc/flext/flext-dbt-ldif/tests/unit/test_dbt_client.py",
             "severity": "error",
-            "message": "Argument of type \"list[Any]\" cannot be assigned to parameter \"data\" of type \"None\" in function \"ok\"\n  \"list[Any]\" is not assignable to \"None\"",
+            "message": "Argument of type \"list[object]\" cannot be assigned to parameter \"data\" of type \"None\" in function \"ok\"\n  \"list[object]\" is not assignable to \"None\"",
             "range": {
                 "start": {
                     "line": 27,
@@ -15961,7 +15961,7 @@
         {
             "file": "/home/marlonsc/flext/flext-dbt-ldif/tests/unit/test_dbt_client.py",
             "severity": "error",
-            "message": "Argument of type \"list[Any]\" cannot be assigned to parameter \"data\" of type \"None\" in function \"ok\"\n  \"list[Any]\" is not assignable to \"None\"",
+            "message": "Argument of type \"list[object]\" cannot be assigned to parameter \"data\" of type \"None\" in function \"ok\"\n  \"list[object]\" is not assignable to \"None\"",
             "range": {
                 "start": {
                     "line": 97,
@@ -16361,7 +16361,7 @@
         {
             "file": "/home/marlonsc/flext/flext-dbt-ldif/tests/unit/test_services_and_api.py",
             "severity": "error",
-            "message": "Argument of type \"list[Any]\" cannot be assigned to parameter \"data\" of type \"None\" in function \"ok\"\n  \"list[Any]\" is not assignable to \"None\"",
+            "message": "Argument of type \"list[object]\" cannot be assigned to parameter \"data\" of type \"None\" in function \"ok\"\n  \"list[object]\" is not assignable to \"None\"",
             "range": {
                 "start": {
                     "line": 37,
@@ -16569,7 +16569,7 @@
         {
             "file": "/home/marlonsc/flext/flext-dbt-ldif/tests/unit/test_services_and_api.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, list[Any]]\" cannot be assigned to parameter \"data\" of type \"None\" in function \"ok\"",
+            "message": "Argument of type \"dict[str, list[object]]\" cannot be assigned to parameter \"data\" of type \"None\" in function \"ok\"",
             "range": {
                 "start": {
                     "line": 119,
@@ -33097,7 +33097,7 @@
         {
             "file": "/home/marlonsc/flext/flext-oracle-wms/src/flext_oracle_wms/http_client.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, object] | Any | dict[str, str]\" cannot be assigned to parameter \"data\" of type \"Dict\" in function \"ok\"\n  Type \"dict[str, object] | Any | dict[str, str]\" is not assignable to type \"Dict\"\n    \"dict[str, str]\" is not assignable to \"dict[str, object]\"\n      Type parameter \"_VT@dict\" is invariant, but \"str\" is not the same as \"object\"\n      Consider switching from \"dict\" to \"Mapping\" which is covariant in the value type",
+            "message": "Argument of type \"dict[str, object] | object | dict[str, str]\" cannot be assigned to parameter \"data\" of type \"Dict\" in function \"ok\"\n  Type \"dict[str, object] | object | dict[str, str]\" is not assignable to type \"Dict\"\n    \"dict[str, str]\" is not assignable to \"dict[str, object]\"\n      Type parameter \"_VT@dict\" is invariant, but \"str\" is not the same as \"object\"\n      Consider switching from \"dict\" to \"Mapping\" which is covariant in the value type",
             "range": {
                 "start": {
                     "line": 130,
@@ -33113,7 +33113,7 @@
         {
             "file": "/home/marlonsc/flext/flext-oracle-wms/src/flext_oracle_wms/http_client.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, object] | Any | dict[str, str]\" cannot be assigned to parameter \"data\" of type \"Dict\" in function \"ok\"\n  Type \"dict[str, object] | Any | dict[str, str]\" is not assignable to type \"Dict\"\n    \"dict[str, str]\" is not assignable to \"dict[str, object]\"\n      Type parameter \"_VT@dict\" is invariant, but \"str\" is not the same as \"object\"\n      Consider switching from \"dict\" to \"Mapping\" which is covariant in the value type",
+            "message": "Argument of type \"dict[str, object] | object | dict[str, str]\" cannot be assigned to parameter \"data\" of type \"Dict\" in function \"ok\"\n  Type \"dict[str, object] | object | dict[str, str]\" is not assignable to type \"Dict\"\n    \"dict[str, str]\" is not assignable to \"dict[str, object]\"\n      Type parameter \"_VT@dict\" is invariant, but \"str\" is not the same as \"object\"\n      Consider switching from \"dict\" to \"Mapping\" which is covariant in the value type",
             "range": {
                 "start": {
                     "line": 200,
@@ -33129,7 +33129,7 @@
         {
             "file": "/home/marlonsc/flext/flext-oracle-wms/src/flext_oracle_wms/http_client.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, object] | Any | dict[str, str]\" cannot be assigned to parameter \"data\" of type \"Dict\" in function \"ok\"\n  Type \"dict[str, object] | Any | dict[str, str]\" is not assignable to type \"Dict\"\n    \"dict[str, str]\" is not assignable to \"dict[str, object]\"\n      Type parameter \"_VT@dict\" is invariant, but \"str\" is not the same as \"object\"\n      Consider switching from \"dict\" to \"Mapping\" which is covariant in the value type",
+            "message": "Argument of type \"dict[str, object] | object | dict[str, str]\" cannot be assigned to parameter \"data\" of type \"Dict\" in function \"ok\"\n  Type \"dict[str, object] | object | dict[str, str]\" is not assignable to type \"Dict\"\n    \"dict[str, str]\" is not assignable to \"dict[str, object]\"\n      Type parameter \"_VT@dict\" is invariant, but \"str\" is not the same as \"object\"\n      Consider switching from \"dict\" to \"Mapping\" which is covariant in the value type",
             "range": {
                 "start": {
                     "line": 270,
@@ -33145,7 +33145,7 @@
         {
             "file": "/home/marlonsc/flext/flext-oracle-wms/src/flext_oracle_wms/http_client.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, object] | Any | dict[str, str]\" cannot be assigned to parameter \"data\" of type \"Dict\" in function \"ok\"\n  Type \"dict[str, object] | Any | dict[str, str]\" is not assignable to type \"Dict\"\n    \"dict[str, str]\" is not assignable to \"dict[str, object]\"\n      Type parameter \"_VT@dict\" is invariant, but \"str\" is not the same as \"object\"\n      Consider switching from \"dict\" to \"Mapping\" which is covariant in the value type",
+            "message": "Argument of type \"dict[str, object] | object | dict[str, str]\" cannot be assigned to parameter \"data\" of type \"Dict\" in function \"ok\"\n  Type \"dict[str, object] | object | dict[str, str]\" is not assignable to type \"Dict\"\n    \"dict[str, str]\" is not assignable to \"dict[str, object]\"\n      Type parameter \"_VT@dict\" is invariant, but \"str\" is not the same as \"object\"\n      Consider switching from \"dict\" to \"Mapping\" which is covariant in the value type",
             "range": {
                 "start": {
                     "line": 325,
@@ -50179,7 +50179,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-ldap/src/flext_tap_ldap/tap_client.py",
             "severity": "error",
-            "message": "Argument of type \"object\" cannot be assigned to parameter \"connection\" of type \"FlextLdapConnectionConfig\" in function \"__init__\"\n  \"object\" is not assignable to \"FlextLdapConnectionConfig\"",
+            "message": "Argument of type \"object\" cannot be assigned to parameter \"connection\" of type \"FlextLdapModels.ConnectionConfig\" in function \"__init__\"\n  \"object\" is not assignable to \"FlextLdapModels.ConnectionConfig\"",
             "range": {
                 "start": {
                     "line": 867,
@@ -62691,7 +62691,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle-oic/tests/test_e2e.py",
             "severity": "error",
-            "message": "Argument of type \"Literal['type']\" cannot be assigned to parameter \"key\" of type \"SupportsIndex | slice[Any, Any, Any]\" in function \"__getitem__\"\n  Type \"Literal['type']\" is not assignable to type \"SupportsIndex | slice[Any, Any, Any]\"\n    \"Literal['type']\" is incompatible with protocol \"SupportsIndex\"\n      \"__index__\" is not present\n    \"Literal['type']\" is not assignable to \"slice[Any, Any, Any]\"",
+            "message": "Argument of type \"Literal['type']\" cannot be assigned to parameter \"key\" of type \"SupportsIndex | slice[object, object, object]\" in function \"__getitem__\"\n  Type \"Literal['type']\" is not assignable to type \"SupportsIndex | slice[object, object, object]\"\n    \"Literal['type']\" is incompatible with protocol \"SupportsIndex\"\n      \"__index__\" is not present\n    \"Literal['type']\" is not assignable to \"slice[object, object, object]\"",
             "range": {
                 "start": {
                     "line": 451,
@@ -63107,7 +63107,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle-oic/tests/utils.py",
             "severity": "error",
-            "message": "Return type of generator function must be compatible with \"Generator[dict[str, float], Any, Any]\"\n  \"Generator[dict[str, float], Unknown, Unknown]\" is not assignable to \"Generator[Dict, None, None]\"\n    Type parameter \"_YieldT_co@Generator\" is covariant, but \"dict[str, float]\" is not a subtype of \"Dict\"\n      \"dict[str, float]\" is not assignable to \"dict[str, object]\"\n        Type parameter \"_VT@dict\" is invariant, but \"float\" is not the same as \"object\"\n        Consider switching from \"dict\" to \"Mapping\" which is covariant in the value type",
+            "message": "Return type of generator function must be compatible with \"Generator[dict[str, float], object, object]\"\n  \"Generator[dict[str, float], Unknown, Unknown]\" is not assignable to \"Generator[Dict, None, None]\"\n    Type parameter \"_YieldT_co@Generator\" is covariant, but \"dict[str, float]\" is not a subtype of \"Dict\"\n      \"dict[str, float]\" is not assignable to \"dict[str, object]\"\n        Type parameter \"_VT@dict\" is invariant, but \"float\" is not the same as \"object\"\n        Consider switching from \"dict\" to \"Mapping\" which is covariant in the value type",
             "range": {
                 "start": {
                     "line": 284,
@@ -63171,7 +63171,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle-oic/tests/utils.py",
             "severity": "error",
-            "message": "Argument of type \"Generator[object, None, None]\" cannot be assigned to parameter \"iterable\" of type \"Iterable[SupportsRichComparisonT@max]\" in function \"max\"\n  \"Generator[object, None, None]\" is not assignable to \"Iterable[SupportsRichComparisonT@max]\"\n    Type parameter \"_T_co@Iterable\" is covariant, but \"object\" is not a subtype of \"SupportsRichComparisonT@max\"\n      Type \"object\" is not assignable to type \"SupportsRichComparison\"\n        Type \"object\" is not assignable to type \"SupportsRichComparison\"\n          \"object\" is incompatible with protocol \"SupportsDunderLT[Any]\"\n          \"object\" is incompatible with protocol \"SupportsDunderGT[Any]\"",
+            "message": "Argument of type \"Generator[object, None, None]\" cannot be assigned to parameter \"iterable\" of type \"Iterable[SupportsRichComparisonT@max]\" in function \"max\"\n  \"Generator[object, None, None]\" is not assignable to \"Iterable[SupportsRichComparisonT@max]\"\n    Type parameter \"_T_co@Iterable\" is covariant, but \"object\" is not a subtype of \"SupportsRichComparisonT@max\"\n      Type \"object\" is not assignable to type \"SupportsRichComparison\"\n        Type \"object\" is not assignable to type \"SupportsRichComparison\"\n          \"object\" is incompatible with protocol \"SupportsDunderLT[object]\"\n          \"object\" is incompatible with protocol \"SupportsDunderGT[object]\"",
             "range": {
                 "start": {
                     "line": 302,
@@ -64579,7 +64579,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle-wms/tests/unit/test_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, dict[str, str | dict[Any, Any]]]\" cannot be assigned to parameter \"data\" of type \"None\" in function \"ok\"",
+            "message": "Argument of type \"dict[str, dict[str, str | dict[object, object]]]\" cannot be assigned to parameter \"data\" of type \"None\" in function \"ok\"",
             "range": {
                 "start": {
                     "line": 138,
@@ -66067,7 +66067,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/src/flext_tap_oracle/tap_streams.py",
             "severity": "error",
-            "message": "Return type of generator function must be compatible with \"Generator[dict[Unknown, Unknown] | dict[str, Unknown] | dict[str, str], Any, Any]\"\n  \"Generator[dict[Unknown, Unknown] | dict[str, Unknown] | dict[str, str], Unknown, Unknown]\" is not assignable to \"Iterable[Dict]\"\n    Type parameter \"_T_co@Iterable\" is covariant, but \"dict[Unknown, Unknown] | dict[str, Unknown] | dict[str, str]\" is not a subtype of \"Dict\"\n      Type \"dict[Unknown, Unknown] | dict[str, Unknown] | dict[str, str]\" is not assignable to type \"Dict\"\n        \"dict[str, str]\" is not assignable to \"dict[str, object]\"\n          Type parameter \"_VT@dict\" is invariant, but \"str\" is not the same as \"object\"\n          Consider switching from \"dict\" to \"Mapping\" which is covariant in the value type",
+            "message": "Return type of generator function must be compatible with \"Generator[dict[Unknown, Unknown] | dict[str, Unknown] | dict[str, str], object, object]\"\n  \"Generator[dict[Unknown, Unknown] | dict[str, Unknown] | dict[str, str], Unknown, Unknown]\" is not assignable to \"Iterable[Dict]\"\n    Type parameter \"_T_co@Iterable\" is covariant, but \"dict[Unknown, Unknown] | dict[str, Unknown] | dict[str, str]\" is not a subtype of \"Dict\"\n      Type \"dict[Unknown, Unknown] | dict[str, Unknown] | dict[str, str]\" is not assignable to type \"Dict\"\n        \"dict[str, str]\" is not assignable to \"dict[str, object]\"\n          Type parameter \"_VT@dict\" is invariant, but \"str\" is not the same as \"object\"\n          Consider switching from \"dict\" to \"Mapping\" which is covariant in the value type",
             "range": {
                 "start": {
                     "line": 246,
@@ -66883,7 +66883,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 134,
@@ -66979,7 +66979,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 151,
@@ -67043,7 +67043,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 184,
@@ -67107,7 +67107,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 210,
@@ -67139,7 +67139,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 237,
@@ -67171,7 +67171,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 249,
@@ -67203,7 +67203,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 273,
@@ -67235,7 +67235,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 295,
@@ -67267,7 +67267,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 308,
@@ -67299,7 +67299,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 329,
@@ -67331,7 +67331,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 350,
@@ -67363,7 +67363,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 386,
@@ -67395,7 +67395,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 419,
@@ -67427,7 +67427,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 467,
@@ -67443,7 +67443,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 502,
@@ -67491,7 +67491,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 538,
@@ -67651,7 +67651,7 @@
         {
             "file": "/home/marlonsc/flext/flext-tap-oracle/tests/test_enterprise_tap.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, Any]\" is not assignable to \"FlextOracleTapConfig\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"config\" of type \"FlextOracleTapConfig\" in function \"__init__\"\n  \"dict[str, object]\" is not assignable to \"FlextOracleTapConfig\"",
             "range": {
                 "start": {
                     "line": 660,
@@ -70051,7 +70051,7 @@
         {
             "file": "/home/marlonsc/flext/flext-target-ldif/tests/test_exceptions.py",
             "severity": "error",
-            "message": "Argument of type \"dict[str, Any]\" cannot be assigned to parameter \"output_file\" of type \"str | None\" in function \"__init__\"\n  Type \"dict[str, Any]\" is not assignable to type \"str | None\"\n    \"dict[str, Any]\" is not assignable to \"str\"\n    \"dict[str, Any]\" is not assignable to \"None\"",
+            "message": "Argument of type \"dict[str, object]\" cannot be assigned to parameter \"output_file\" of type \"str | None\" in function \"__init__\"\n  Type \"dict[str, object]\" is not assignable to type \"str | None\"\n    \"dict[str, object]\" is not assignable to \"str\"\n    \"dict[str, object]\" is not assignable to \"None\"",
             "range": {
                 "start": {
                     "line": 231,
@@ -77299,7 +77299,7 @@
         {
             "file": "/home/marlonsc/flext/flext-target-oracle-wms/tests/test_target.py",
             "severity": "error",
-            "message": "Argument of type \"dict[Any, Any]\" cannot be assigned to parameter \"data\" of type \"None\" in function \"ok\"",
+            "message": "Argument of type \"dict[object, object]\" cannot be assigned to parameter \"data\" of type \"None\" in function \"ok\"",
             "range": {
                 "start": {
                     "line": 496,
@@ -79147,7 +79147,7 @@
         {
             "file": "/home/marlonsc/flext/flext-target-oracle/tests/unit/test_cli_dispatcher.py",
             "severity": "error",
-            "message": "Return type of generator function must be compatible with \"Generator[Any, Any, Any]\"\n  \"Generator[Any, Any, Any]\" is not assignable to \"None\"",
+            "message": "Return type of generator function must be compatible with \"Generator[object, object, object]\"\n  \"Generator[object, object, object]\" is not assignable to \"None\"",
             "range": {
                 "start": {
                     "line": 19,
@@ -79163,7 +79163,7 @@
         {
             "file": "/home/marlonsc/flext/flext-target-oracle/tests/unit/test_cli_dispatcher.py",
             "severity": "error",
-            "message": "Return type of generator function must be compatible with \"Generator[None, Any, Any]\"\n  \"Generator[None, Unknown, Unknown]\" is not assignable to \"None\"",
+            "message": "Return type of generator function must be compatible with \"Generator[None, object, object]\"\n  \"Generator[None, Unknown, Unknown]\" is not assignable to \"None\"",
             "range": {
                 "start": {
                     "line": 23,
@@ -86583,4 +86583,3 @@
         "timeInSec": 69.786
     }
 }
-

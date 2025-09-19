@@ -85,6 +85,7 @@ Development planning and status.
 FLEXT enforces strict domain separation where third-party libraries are accessed only through designated FLEXT domain libraries:
 
 #### Core Infrastructure
+
 - **flext-core**: Foundation patterns (FlextResult, FlextContainer, FlextModels)
 - **flext-cli**: All CLI/Rich/Click/Typer functionality
 - **flext-api**: HTTP/REST API functionality (requests, httpx)
@@ -95,10 +96,12 @@ FLEXT enforces strict domain separation where third-party libraries are accessed
 - **flext-tools**: Development tooling (backup, monitoring, linting utilities)
 
 #### Quality & Analysis
+
 - **flext-quality**: Code quality analysis (MyPy, Ruff, coverage, complexity, pytest)
 - **flext-plugin**: Plugin system architecture and management
 
 #### Data Integration Pipeline
+
 - **flext-meltano**: ALL Meltano/Singer/DBT functionality
 - **flext-dbt-\***: DBT transformation projects
   - flext-dbt-ldap, flext-dbt-ldif, flext-dbt-oracle, flext-dbt-oracle-wms
@@ -108,6 +111,7 @@ FLEXT enforces strict domain separation where third-party libraries are accessed
   - flext-target-ldap, flext-target-ldif, flext-target-oracle, flext-target-oracle-oic, flext-target-oracle-wms
 
 #### Database & Integration Domains
+
 - **flext-db-oracle**: SQLAlchemy 2 and oracledb connectivity
 - **flext-oracle-wms**: Oracle WMS integration (uses flext-db-oracle)
 - **flext-oracle-oic-ext**: Oracle OIC integration (uses flext-db-oracle)
@@ -115,12 +119,13 @@ FLEXT enforces strict domain separation where third-party libraries are accessed
 - **flext-ldif**: LDIF file processing and validation
 
 #### Migration & Integration Projects
+
 - **client-a-oud-mig**: Enterprise LDAP-to-Oracle migration
   - Uses: flext-cli, flext-ldap, flext-ldif, flext-dbt-\*, flext-tap-\*, flext-target-\*
 - **client-b-meltano-native**: Native Meltano integration project
   - Uses: flext-meltano exclusively
 
-**Principle**: *"Fix the domain foundation, never bypass it"*
+**Principle**: _"Fix the domain foundation, never bypass it"_
 
 ```python
 # ❌ FORBIDDEN - Direct third-party imports
