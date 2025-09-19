@@ -75,10 +75,10 @@ class TestFlextControlPanelCli:
         mock_cli_api.assert_called_once()
         assert cli_service._cli_api == mock_api_instance
 
-    @patch("flext.cli.FlextCliConfig")
+    @patch("flext.cli.FlextCliConfigs")
     @patch("flext.cli.FlextCliMain")
     def test_cli_initialization(
-        self, mock_cli_main: Mock, mock_cli_config: Mock
+        self, mock_cli_main: Mock, mock_cli_config: Mock,
     ) -> None:
         """Test CLI initialization with flext-cli components."""
         mock_config_instance = Mock()
@@ -88,7 +88,7 @@ class TestFlextControlPanelCli:
 
         cli_service = create_cli()
         result = cli_service.initialize(
-            workspace="/test/workspace", profile="dev", debug=True
+            workspace="/test/workspace", profile="dev", debug=True,
         )
 
         assert result.is_success
@@ -119,14 +119,14 @@ class TestNestedCommandHandlers:
         return create_cli()
 
     def test_tools_commands_quality_check(
-        self, cli_service: FlextControlPanelCli
+        self, cli_service: FlextControlPanelCli,
     ) -> None:
         """Test tools commands quality check functionality."""
         tools_handler = cli_service.create_tools_handler()
 
         # Test with mock quality config
         config = FlextControlPanelCli._QualityCheckConfig(
-            coverage_threshold=80.0, relaxed=False
+            coverage_threshold=80.0, relaxed=False,
         )
         with patch("flext_tools.QualityGateway") as mock_quality:
             mock_gateway = Mock()
@@ -139,7 +139,7 @@ class TestNestedCommandHandlers:
             # Note: run_quality_check is a placeholder that doesn't use QualityGateway
 
     def test_tools_commands_list_scripts(
-        self, cli_service: FlextControlPanelCli
+        self, cli_service: FlextControlPanelCli,
     ) -> None:
         """Test tools commands script listing."""
         tools_handler = cli_service.create_tools_handler()
@@ -151,13 +151,13 @@ class TestNestedCommandHandlers:
             mock_print.assert_called()
 
     def test_main_commands_test_command(
-        self, cli_service: FlextControlPanelCli
+        self, cli_service: FlextControlPanelCli,
     ) -> None:
         """Test main commands test execution."""
         main_handler = cli_service.create_main_handler()
 
         with patch(
-            "flext.cli.FlextControlPanelCli._QualityGateway.run_quality_checks_safe"
+            "flext.cli.FlextControlPanelCli._QualityGateway.run_quality_checks_safe",
         ) as mock_gateway:
             # Create a mock Result object that matches the _QualityGateway implementation
             class MockResult:
@@ -178,13 +178,13 @@ class TestNestedCommandHandlers:
             mock_gateway.assert_called()
 
     def test_main_commands_lint_command(
-        self, cli_service: FlextControlPanelCli
+        self, cli_service: FlextControlPanelCli,
     ) -> None:
         """Test main commands lint execution."""
         main_handler = cli_service.create_main_handler()
 
         with patch(
-            "flext.cli.FlextControlPanelCli._QualityGateway.run_quality_checks_safe"
+            "flext.cli.FlextControlPanelCli._QualityGateway.run_quality_checks_safe",
         ) as mock_gateway:
             # Mock the custom Result object that the method actually returns
             class MockResult:
@@ -201,7 +201,7 @@ class TestNestedCommandHandlers:
             mock_gateway.assert_called()
 
     def test_main_commands_format_command(
-        self, cli_service: FlextControlPanelCli
+        self, cli_service: FlextControlPanelCli,
     ) -> None:
         """Test main commands format execution."""
         main_handler = cli_service.create_main_handler()
@@ -214,7 +214,7 @@ class TestNestedCommandHandlers:
             mock_subprocess.assert_called()
 
     def test_main_commands_info_command(
-        self, cli_service: FlextControlPanelCli
+        self, cli_service: FlextControlPanelCli,
     ) -> None:
         """Test main commands info display."""
         main_handler = cli_service.create_main_handler()
@@ -240,7 +240,7 @@ class TestLegacyCompatibilityFunctions:
         mock_tools_handler = Mock()
         mock_cli_service.create_tools_handler.return_value = mock_tools_handler
         mock_tools_handler.quality_check.return_value = FlextResult.ok(
-            {"status": "passed"}
+            {"status": "passed"},
         )
         mock_create_cli.return_value = mock_cli_service
 
@@ -282,7 +282,7 @@ class TestLegacyCompatibilityFunctions:
         mock_main_handler = Mock()
         mock_cli_service.create_main_handler.return_value = mock_main_handler
         mock_main_handler.test_command.return_value = FlextResult.ok(
-            {"status": "passed"}
+            {"status": "passed"},
         )
 
         with patch("flext.cli.create_cli", return_value=mock_cli_service):
@@ -297,7 +297,7 @@ class TestLegacyCompatibilityFunctions:
         mock_main_handler = Mock()
         mock_cli_service.create_main_handler.return_value = mock_main_handler
         mock_main_handler.lint_command.return_value = FlextResult.ok(
-            {"status": "passed"}
+            {"status": "passed"},
         )
         mock_create_cli.return_value = mock_cli_service
 
@@ -415,7 +415,7 @@ class TestUnifiedClassPatternCompliance:
         # Should use flext-cli components
         assert "from flext_cli import" in source
         assert "FlextCliApi" in source
-        # Note: workspace_cli only uses FlextCliApi, not FlextCliConfig or FlextCliMain
+        # Note: workspace_cli only uses FlextCliApi, not FlextCliConfigs or FlextCliMain
 
         # Should NOT use direct Click imports (forbidden)
         assert "import click" not in source
@@ -461,7 +461,7 @@ class TestErrorHandling:
         """Test CLI initialization with invalid configuration."""
         cli_service = create_cli()
 
-        with patch("flext.cli.FlextCliConfig", side_effect=Exception("Config error")):
+        with patch("flext.cli.FlextCliConfigs", side_effect=Exception("Config error")):
             result = cli_service.initialize(workspace="/invalid", profile="bad")
 
             assert result.is_failure
@@ -474,7 +474,7 @@ class TestErrorHandling:
         main_handler = cli_service.create_main_handler()
 
         with patch(
-            "flext.cli.FlextControlPanelCli._QualityGateway.run_quality_checks_safe"
+            "flext.cli.FlextControlPanelCli._QualityGateway.run_quality_checks_safe",
         ) as mock_gateway:
             # Mock quality gateway to return success but with failed tests
             mock_gateway.return_value = FlextResult.ok(
@@ -484,7 +484,7 @@ class TestErrorHandling:
                     "lint_passed": True,
                     "types_passed": True,
                     "security_passed": True,
-                }
+                },
             )
 
             result = main_handler.test_command(coverage=True, parallel=False)

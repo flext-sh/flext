@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 from typing import Protocol
 
-from flext_cli import FlextCliApi, FlextCliConfig, FlextCliMain
+from flext_cli import FlextCliApi, FlextCliConfigs, FlextCliMain
 from flext_core import FlextDomainService, FlextLogger, FlextResult
 
 
@@ -120,7 +120,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
         else:
             self._logger.warning(f"FlextCliApi initialization failed: {cli_api_result.error}")
             self._cli_api = None  # Will be handled in methods
-        self._config: FlextCliConfig | None = None
+        self._config: FlextCliConfigs | None = None
         self._workspace: Path = Path.cwd()
 
     def _initialize_cli_api(self) -> FlextResult[FlextCliApi]:
@@ -131,13 +131,13 @@ class FlextControlPanelCli(FlextDomainService[str]):
         except Exception as e:
             return FlextResult[FlextCliApi].fail(f"FlextCliApi initialization failed: {e!s}")
 
-    def _initialize_config(self, profile: str, debug: bool) -> FlextResult[FlextCliConfig]:
+    def _initialize_config(self, profile: str, *, debug: bool) -> FlextResult[FlextCliConfigs]:
         """Initialize CLI configuration using FlextResult pattern."""
         try:
-            config = FlextCliConfig(profile=profile, debug=debug)
-            return FlextResult[FlextCliConfig].ok(config)
+            config = FlextCliConfigs(profile=profile, debug=debug)
+            return FlextResult[FlextCliConfigs].ok(config)
         except Exception as e:
-            return FlextResult[FlextCliConfig].fail(f"Configuration initialization failed: {e!s}")
+            return FlextResult[FlextCliConfigs].fail(f"Configuration initialization failed: {e!s}")
 
     def _create_main_cli(self) -> FlextResult[FlextCliMain]:
         """Create main CLI using FlextResult pattern."""
@@ -152,7 +152,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
     class _CliContext:
         """Nested CLI context management."""
 
-        def __init__(self, config: FlextCliConfig, workspace: Path) -> None:
+        def __init__(self, config: FlextCliConfigs, workspace: Path) -> None:
             self.config = config
             self.workspace = workspace
             self.output_format = "table"
@@ -501,12 +501,10 @@ def lint(*, fix: bool = False) -> None:
 
     result = main_handler.lint_command(fix=fix)
 
-    if result.is_success:
-        # Lint command returns success, no need to exit
-        pass
-    else:
+    if result.is_failure:
         # Linting failed - error already logged by handler
         sys.exit(1)
+    # Lint command returns success, continue execution
 
 
 def format_code(*, check_only: bool = False) -> None:

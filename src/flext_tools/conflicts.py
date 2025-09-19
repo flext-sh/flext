@@ -17,14 +17,14 @@ class ConflictAnalyzer:
         self._conflicts: list[dict[str, str]] = []
 
     def analyze_dependencies(
-        self, project_path: str
+        self, project_path: str,
     ) -> FlextResult[list[dict[str, str]]]:
         """Analyze dependency conflicts."""
         try:
             # Use the project_path parameter for analysis
             if not project_path:
                 return FlextResult[list[dict[str, str]]].fail(
-                    "Project path cannot be empty"
+                    "Project path cannot be empty",
                 )
 
             # Placeholder implementation - acknowledge parameter usage
@@ -32,7 +32,7 @@ class ConflictAnalyzer:
             return FlextResult[list[dict[str, str]]].ok([])
         except Exception as e:
             return FlextResult[list[dict[str, str]]].fail(
-                f"Conflict analysis failed: {e}"
+                f"Conflict analysis failed: {e}",
             )
 
     def detect_version_conflicts(self) -> FlextResult[list[str]]:

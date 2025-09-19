@@ -75,7 +75,7 @@ class DependencyCacheManager(FlextScript):
                 {
                     "operation": operation,
                     "projects": projects,
-                }
+                },
             )
 
         except (OSError, ValueError, TypeError) as e:

@@ -43,7 +43,7 @@ class ConfigurationManager:
             return FlextResult[str].ok(value)
         except Exception as e:
             return FlextResult[str].fail(
-                f"Failed to get config value for key '{key}': {e}"
+                f"Failed to get config value for key '{key}': {e}",
             )
 
     def set(self, key: str, value: str) -> FlextResult[None]:
@@ -59,7 +59,7 @@ class ConfigurationManager:
             return FlextResult[None].ok(None)
         except Exception as e:
             return FlextResult[None].fail(
-                f"Failed to set config value for key '{key}': {e}"
+                f"Failed to set config value for key '{key}': {e}",
             )
 
     def validate_config(self) -> FlextResult[None]:

@@ -99,7 +99,7 @@ class EcosystemAuditResult:
     critical_violations_count: int = 0
     high_violations_count: int = 0
     projects_with_critical_issues: FlextTypes.Core.StringList = field(
-        default_factory=list
+        default_factory=list,
     )
     fully_compliant_projects: FlextTypes.Core.StringList = field(default_factory=list)
     audit_timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
@@ -230,7 +230,7 @@ class PatternViolationAnalyzer:
         try:
             if not project_path.exists():
                 return FlextResult[ProjectAuditResult].fail(
-                    f"Project path does not exist: {project_path}"
+                    f"Project path does not exist: {project_path}",
                 )
 
             # Find Python files to analyze
@@ -317,7 +317,7 @@ class PatternViolationAnalyzer:
         except Exception as e:
             self.logger.debug(f"Error analyzing file {file_path}: {e}")
             return FlextResult[list[PatternViolation]].ok(
-                []
+                [],
             )  # Return empty list on file errors
 
     def _analyze_ast_patterns(
@@ -563,7 +563,7 @@ class PatternAuditSystem:
 
         except Exception as e:
             return FlextResult[EcosystemAuditResult].fail(
-                f"Ecosystem audit failed: {e}"
+                f"Ecosystem audit failed: {e}",
             )
 
     def generate_compliance_report(
