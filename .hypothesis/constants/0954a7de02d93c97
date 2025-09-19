@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/domain_services.py
+# hypothesis_version: 6.138.2
+
+['FlextDomainService', 'TDomainResult', 'config_valid', 'forbid', 'service_type']

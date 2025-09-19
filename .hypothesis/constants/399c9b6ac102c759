@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/config_compat.py
+# hypothesis_version: 6.136.7
+
+[8000, 'Env error', 'File error', 'Invalid JSON format', 'Validation failed', 'debug', 'port', 'safe_get_env_var', 'safe_load_json_file', 'timeout']

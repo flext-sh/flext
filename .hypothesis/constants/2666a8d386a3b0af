@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/typings.py
+# hypothesis_version: 6.138.2
+
+['CRITICAL', 'DEBUG', 'DELETE', 'E', 'ERROR', 'F', 'FlextTypes', 'GET', 'HEAD', 'INFO', 'K', 'OPTIONS', 'P', 'PATCH', 'POST', 'PUT', 'R', 'T', 'TAggregate', 'TCommand', 'TEntity', 'TEntry', 'TMessage', 'TQuery', 'TRequest', 'TResponse', 'TResult', 'TValueObject', 'U', 'V', 'WARNING', 'balanced', 'development', 'extreme', 'factory', 'high', 'http', 'https', 'instance', 'local', 'low', 'production', 'staging', 'tcp', 'test', 'udp', 'ws', 'wss']

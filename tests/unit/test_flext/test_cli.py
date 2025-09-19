@@ -78,7 +78,9 @@ class TestFlextControlPanelCli:
     @patch("flext.cli.FlextCliConfigs")
     @patch("flext.cli.FlextCliMain")
     def test_cli_initialization(
-        self, mock_cli_main: Mock, mock_cli_config: Mock,
+        self,
+        mock_cli_main: Mock,
+        mock_cli_config: Mock,
     ) -> None:
         """Test CLI initialization with flext-cli components."""
         mock_config_instance = Mock()
@@ -88,7 +90,9 @@ class TestFlextControlPanelCli:
 
         cli_service = create_cli()
         result = cli_service.initialize(
-            workspace="/test/workspace", profile="dev", debug=True,
+            workspace="/test/workspace",
+            profile="dev",
+            debug=True,
         )
 
         assert result.is_success
@@ -119,14 +123,16 @@ class TestNestedCommandHandlers:
         return create_cli()
 
     def test_tools_commands_quality_check(
-        self, cli_service: FlextControlPanelCli,
+        self,
+        cli_service: FlextControlPanelCli,
     ) -> None:
         """Test tools commands quality check functionality."""
         tools_handler = cli_service.create_tools_handler()
 
         # Test with mock quality config
         config = FlextControlPanelCli._QualityCheckConfig(
-            coverage_threshold=80.0, relaxed=False,
+            coverage_threshold=80.0,
+            relaxed=False,
         )
         with patch("flext_tools.QualityGateway") as mock_quality:
             mock_gateway = Mock()
@@ -139,7 +145,8 @@ class TestNestedCommandHandlers:
             # Note: run_quality_check is a placeholder that doesn't use QualityGateway
 
     def test_tools_commands_list_scripts(
-        self, cli_service: FlextControlPanelCli,
+        self,
+        cli_service: FlextControlPanelCli,
     ) -> None:
         """Test tools commands script listing."""
         tools_handler = cli_service.create_tools_handler()
@@ -151,7 +158,8 @@ class TestNestedCommandHandlers:
             mock_print.assert_called()
 
     def test_main_commands_test_command(
-        self, cli_service: FlextControlPanelCli,
+        self,
+        cli_service: FlextControlPanelCli,
     ) -> None:
         """Test main commands test execution."""
         main_handler = cli_service.create_main_handler()
@@ -178,7 +186,8 @@ class TestNestedCommandHandlers:
             mock_gateway.assert_called()
 
     def test_main_commands_lint_command(
-        self, cli_service: FlextControlPanelCli,
+        self,
+        cli_service: FlextControlPanelCli,
     ) -> None:
         """Test main commands lint execution."""
         main_handler = cli_service.create_main_handler()
@@ -201,7 +210,8 @@ class TestNestedCommandHandlers:
             mock_gateway.assert_called()
 
     def test_main_commands_format_command(
-        self, cli_service: FlextControlPanelCli,
+        self,
+        cli_service: FlextControlPanelCli,
     ) -> None:
         """Test main commands format execution."""
         main_handler = cli_service.create_main_handler()
@@ -214,7 +224,8 @@ class TestNestedCommandHandlers:
             mock_subprocess.assert_called()
 
     def test_main_commands_info_command(
-        self, cli_service: FlextControlPanelCli,
+        self,
+        cli_service: FlextControlPanelCli,
     ) -> None:
         """Test main commands info display."""
         main_handler = cli_service.create_main_handler()

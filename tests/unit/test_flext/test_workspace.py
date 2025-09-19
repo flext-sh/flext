@@ -128,7 +128,9 @@ class TestProjectDiscoveryService:
 
     @patch("pathlib.Path.cwd")
     def test_workspace_project_discovery(
-        self, mock_cwd: Mock, temp_workspace: Path,
+        self,
+        mock_cwd: Mock,
+        temp_workspace: Path,
     ) -> None:
         """Test comprehensive workspace project discovery."""
         mock_cwd.return_value = temp_workspace
@@ -311,7 +313,9 @@ class TestWorkspaceIntegration:
 
     @patch("pathlib.Path.cwd")
     def test_complex_workspace_analysis(
-        self, mock_cwd: Mock, complex_workspace: Path,
+        self,
+        mock_cwd: Mock,
+        complex_workspace: Path,
     ) -> None:
         """Test comprehensive analysis of complex workspace."""
         mock_cwd.return_value = complex_workspace
@@ -329,7 +333,9 @@ class TestWorkspaceIntegration:
 
     @patch("pathlib.Path.cwd")
     def test_workspace_health_assessment(
-        self, mock_cwd: Mock, complex_workspace: Path,
+        self,
+        mock_cwd: Mock,
+        complex_workspace: Path,
     ) -> None:
         """Test comprehensive workspace health assessment."""
         mock_cwd.return_value = complex_workspace
@@ -340,7 +346,8 @@ class TestWorkspaceIntegration:
 
         health_result = validator.validate_workspace_path(str(complex_workspace))
         assert hasattr(
-            health_result, "is_success",
+            health_result,
+            "is_success",
         )  # Check it's a FlextResult-like object
 
 

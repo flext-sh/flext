@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/type_adapters.py
+# hypothesis_version: 6.136.2
+
+[0.0, 100.0, 5432, 65535, '-', '.', '@', 'ConfigDict_Type', 'ConnectionString', 'EmailAddress', 'EntityId', 'ErrorCode', 'ErrorMessage', 'EventList', 'Host', 'Host cannot be empty', 'Invalid email format', 'John Doe', 'K', 'Metadata', 'MigrationHelpers', 'Percentage', 'Port', 'SchemaHelpers', 'SerializationHelpers', 'ServiceName', 'T', 'Timestamp', 'TypeAdapterExamples', 'TypeAdapterFactory', 'V', 'ValidationAdapters', 'Version', 'Version must be >= 1', '_', 'age', 'database', 'dict[str, object]', 'email', 'flext', 'forbid', 'host', 'john@example.com', 'localhost', 'name', 'password', 'port', 'postgres', 'secret', 'username', 'utf-8']

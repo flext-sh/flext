@@ -52,7 +52,9 @@ class TestProject:
     def test_project_validate_business_rules_success(self) -> None:
         """Test project business rule validation - success case (line 36)."""
         project = FlextAdvancedWorkspaceModels.Project(
-            name="valid-project", path="/valid/path", project_type=ProjectType.PYTHON,
+            name="valid-project",
+            path="/valid/path",
+            project_type=ProjectType.PYTHON,
         )
 
         # This covers line 36: return FlextResult[None].ok(None)
@@ -139,7 +141,8 @@ class TestWorkspaceContext:
         # Valid max depth values
         for depth in [1, 5, 10]:
             context = FlextAdvancedWorkspaceModels.WorkspaceContext(
-                workspace_root="/workspace", max_depth=depth,
+                workspace_root="/workspace",
+                max_depth=depth,
             )
             assert context.max_depth == depth
 
@@ -150,7 +153,8 @@ class TestWorkspaceInfo:
     def test_workspace_info_creation_minimal(self) -> None:
         """Test workspace info creation with minimal required fields."""
         info = FlextAdvancedWorkspaceModels.WorkspaceInfo(
-            name="test-workspace", path="/workspace/path",
+            name="test-workspace",
+            path="/workspace/path",
         )
 
         assert info.name == "test-workspace"
@@ -244,7 +248,10 @@ class TestWorkspaceInfo:
     def test_workspace_info_zero_values_valid(self) -> None:
         """Test that zero values are valid for numeric fields."""
         info = FlextAdvancedWorkspaceModels.WorkspaceInfo(
-            name="zero-workspace", path="/zero/path", project_count=0, total_size_mb=0.0,
+            name="zero-workspace",
+            path="/zero/path",
+            project_count=0,
+            total_size_mb=0.0,
         )
 
         result = info.validate_business_rules()

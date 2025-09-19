@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/fields.py
+# hypothesis_version: 6.136.2
+
+['.', '0', '1', 'Allowed value list', 'Example', 'Field description', 'Field tags', 'FlextFieldCore', 'FlextFieldMetadata', 'FlextFieldRegistry', 'FlextFields', 'Integer too large', 'Is field deprecated', 'JsonDict', 'Registry cleared', 'Should be indexed', 'SupportsInt', 'Validation failed', '__float__', '__int__', 'allowed_values', 'boolean', 'custom_properties', 'data', 'default_value', 'deprecated', 'description', 'dict[str, object]', 'example', 'false', 'field', 'field_id', 'field_name', 'field_type', 'forbid', 'indexed', 'integer', 'internal', 'max_length', 'max_value', 'metadata', 'min_length', 'min_value', 'no', 'off', 'on', 'pattern', 'required', 'sensitive', 'string', 'tags', 'to_dict', 'true', 'unique', 'validator', 'value', 'yes']

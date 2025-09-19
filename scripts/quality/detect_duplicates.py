@@ -1254,7 +1254,8 @@ class FlextDuplicateDetector:
         return duplicates
 
     def _collect_files(
-        self, modules: FlextTypes.Core.StringList,
+        self,
+        modules: FlextTypes.Core.StringList,
     ) -> FlextTypes.Core.Headers:
         """Coleta conteúdo dos arquivos para análise com otimização de memória."""
         files_content: FlextTypes.Core.Headers = {}

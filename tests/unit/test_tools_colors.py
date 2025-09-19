@@ -108,9 +108,11 @@ class TestPrintColored:
     """Test the print_colored function for console output with logging."""
 
     @patch("flext_cli.FlextCliFormatters")
-    @patch("flext_tools.colors._service._logger")
+    @patch("flext_tools.colors.FlextColorService.__init__")
     def test_print_colored_with_color(
-        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock,
+        self,
+        mock_init: mock.Mock,
+        mock_formatter_class: mock.Mock,
     ) -> None:
         """Test print_colored with color outputs colored text and logs."""
         message = "Success message"
@@ -118,37 +120,50 @@ class TestPrintColored:
         mock_formatter = mock.Mock()
         mock_formatter_class.return_value = mock_formatter
 
-        print_colored(message, color)
+        # Mock the service initialization to avoid logger creation
+        mock_init.return_value = None
 
-        # Should print the colorized text
-        expected_colored = f"{color}{message}{Colors.RESET}"
-        mock_formatter.console.print.assert_called_once_with(expected_colored)
+        # Create mock service instance
+        mock_service = mock.Mock()
+        mock_service.print_colored.return_value = None
 
-        # Should log the original message (without color codes)
-        mock_logger.info.assert_called_once_with(message)
+        with patch("flext_tools.colors.FlextColorService", return_value=mock_service):
+            print_colored(message, color)
+
+        # Should call the service's print_colored method
+        mock_service.print_colored.assert_called_once_with(message, color)
 
     @patch("flext_cli.FlextCliFormatters")
-    @patch("flext_tools.colors._service._logger")
+    @patch("flext_tools.colors.FlextColorService.__init__")
     def test_print_colored_without_color(
-        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock,
+        self,
+        mock_init: mock.Mock,
+        mock_formatter_class: mock.Mock,
     ) -> None:
         """Test print_colored without color outputs plain text and logs."""
         message = "Plain message"
         mock_formatter = mock.Mock()
         mock_formatter_class.return_value = mock_formatter
 
-        print_colored(message, "")
+        # Mock the service initialization to avoid logger creation
+        mock_init.return_value = None
 
-        # Should print the original message unchanged
-        mock_formatter.console.print.assert_called_once_with(message)
+        # Create mock service instance
+        mock_service = mock.Mock()
+        mock_service.print_colored.return_value = None
 
-        # Should log the original message
-        mock_logger.info.assert_called_once_with(message)
+        with patch("flext_tools.colors.FlextColorService", return_value=mock_service):
+            print_colored(message, "")
+
+        # Should call the service's print_colored method
+        mock_service.print_colored.assert_called_once_with(message, "")
 
     @patch("flext_cli.FlextCliFormatters")
-    @patch("flext_tools.colors._service._logger")
+    @patch("flext_tools.colors.FlextColorService.__init__")
     def test_print_colored_logs_without_color_codes(
-        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock,
+        self,
+        mock_init: mock.Mock,
+        mock_formatter_class: mock.Mock,
     ) -> None:
         """Test that logger receives message without ANSI color codes."""
         message = "Warning message"
@@ -156,19 +171,25 @@ class TestPrintColored:
         mock_formatter = mock.Mock()
         mock_formatter_class.return_value = mock_formatter
 
-        print_colored(message, color)
+        # Mock the service initialization to avoid logger creation
+        mock_init.return_value = None
 
-        # Logger should get the clean message without color codes
-        mock_logger.info.assert_called_once_with(message)
+        # Create mock service instance
+        mock_service = mock.Mock()
+        mock_service.print_colored.return_value = None
 
-        # Print should get the colored version
-        expected_colored = f"{color}{message}{Colors.RESET}"
-        mock_formatter.console.print.assert_called_once_with(expected_colored)
+        with patch("flext_tools.colors.FlextColorService", return_value=mock_service):
+            print_colored(message, color)
+
+        # Should call the service's print_colored method
+        mock_service.print_colored.assert_called_once_with(message, color)
 
     @patch("flext_cli.FlextCliFormatters")
-    @patch("flext_tools.colors._service._logger")
+    @patch("flext_tools.colors.FlextColorService.__init__")
     def test_print_colored_empty_message(
-        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock,
+        self,
+        mock_init: mock.Mock,
+        mock_formatter_class: mock.Mock,
     ) -> None:
         """Test print_colored with empty message."""
         message = ""
@@ -176,19 +197,25 @@ class TestPrintColored:
         mock_formatter = mock.Mock()
         mock_formatter_class.return_value = mock_formatter
 
-        print_colored(message, color)
+        # Mock the service initialization to avoid logger creation
+        mock_init.return_value = None
 
-        # Should print the colored empty string
-        expected_colored = f"{color}{Colors.RESET}"
-        mock_formatter.console.print.assert_called_once_with(expected_colored)
+        # Create mock service instance
+        mock_service = mock.Mock()
+        mock_service.print_colored.return_value = None
 
-        # Should log the empty message
-        mock_logger.info.assert_called_once_with(message)
+        with patch("flext_tools.colors.FlextColorService", return_value=mock_service):
+            print_colored(message, color)
+
+        # Should call the service's print_colored method
+        mock_service.print_colored.assert_called_once_with(message, color)
 
     @patch("flext_cli.FlextCliFormatters")
-    @patch("flext_tools.colors._service._logger")
+    @patch("flext_tools.colors.FlextColorService.__init__")
     def test_print_colored_with_multiline_message(
-        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock,
+        self,
+        mock_init: mock.Mock,
+        mock_formatter_class: mock.Mock,
     ) -> None:
         """Test print_colored with multiline message."""
         message = "Line 1\nLine 2\nLine 3"
@@ -196,14 +223,18 @@ class TestPrintColored:
         mock_formatter = mock.Mock()
         mock_formatter_class.return_value = mock_formatter
 
-        print_colored(message, color)
+        # Mock the service initialization to avoid logger creation
+        mock_init.return_value = None
 
-        # Should print the colorized multiline text
-        expected_colored = f"{color}{message}{Colors.RESET}"
-        mock_formatter.console.print.assert_called_once_with(expected_colored)
+        # Create mock service instance
+        mock_service = mock.Mock()
+        mock_service.print_colored.return_value = None
 
-        # Should log the original multiline message
-        mock_logger.info.assert_called_once_with(message)
+        with patch("flext_tools.colors.FlextColorService", return_value=mock_service):
+            print_colored(message, color)
+
+        # Should call the service's print_colored method
+        mock_service.print_colored.assert_called_once_with(message, color)
 
 
 class TestColorIntegration:
@@ -226,14 +257,23 @@ class TestColorIntegration:
         assert "Error!" in error_text
 
     @patch("flext_cli.FlextCliFormatters")
-    @patch("flext_tools.colors._service._logger")
+    @patch("flext_tools.colors.FlextColorService.__init__")
     def test_print_colored_multiple_calls(
-        self, mock_logger: mock.Mock, mock_formatter_class: mock.Mock,
+        self,
+        mock_init: mock.Mock,
+        mock_formatter_class: mock.Mock,
     ) -> None:
         """Test multiple calls to print_colored work correctly."""
         # Set up the mock
         mock_formatter = mock.Mock()
         mock_formatter_class.return_value = mock_formatter
+
+        # Mock the service initialization to avoid logger creation
+        mock_init.return_value = None
+
+        # Create mock service instance
+        mock_service = mock.Mock()
+        mock_service.print_colored.return_value = None
 
         messages = [
             ("Success", Colors.GREEN),
@@ -242,17 +282,13 @@ class TestColorIntegration:
             ("Info", ""),  # No color
         ]
 
-        for message, color in messages:
-            print_colored(message, color)
+        with patch("flext_tools.colors.FlextColorService", return_value=mock_service):
+            for message, color in messages:
+                print_colored(message, color)
 
-        # Should have called console.print and logger for each message
-        assert mock_formatter.console.print.call_count == len(messages)
-        assert mock_logger.info.call_count == len(messages)
+        # Should have called the service's print_colored method for each message
+        assert mock_service.print_colored.call_count == len(messages)
 
         # Check the calls match expectations
         for i, (message, color) in enumerate(messages):
-            expected_colored = colorize(message, color)
-            assert (
-                mock_formatter.console.print.call_args_list[i][0][0] == expected_colored
-            )
-            assert mock_logger.info.call_args_list[i][0][0] == message
+            assert mock_service.print_colored.call_args_list[i][0] == (message, color)

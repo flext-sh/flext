@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/result.py
+# hypothesis_version: 6.138.2
+
+[0.0, 100.0, 'All functions failed', 'Combine failed', 'First result failed', 'FlextResult', 'FlextResult[object]', 'Left operand failed', 'Map operation failed', 'Operation failed', 'Result failed', 'Right operand failed', 'Second result failed', 'Sequence failed', 'T1', 'T2', 'T3', 'TItem', 'TResult', 'TUtil', 'T_co', 'U', 'Unknown error', 'V', '__dict__', '_data', '_error', 'error', 'exception', 'exception_type', 'object']

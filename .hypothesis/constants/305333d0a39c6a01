@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/fields.py
+# hypothesis_version: 6.136.7
+
+['.', '1', 'Allowed value list', 'Cannot deserialize', 'Example', 'Field description', 'Field storage by ID', 'Field tags', 'FlextFieldCore', 'FlextFieldId', 'FlextFieldMetadata', 'FlextFieldName', 'FlextFieldRegistry', 'FlextFieldTypeStr', 'FlextFields', 'FlextValidator', 'Is field deprecated', 'Name to ID mapping', 'Should be indexed', 'Validation failed', 'allowed_values', 'bool', 'boolean', 'custom_properties', 'data', 'default', 'default_value', 'deprecated', 'description', 'example', 'field', 'field_id', 'field_name', 'field_type', 'float', 'forbid', 'has_validator', 'indexed', 'int', 'integer', 'internal', 'list[object]', 'list[str]', 'max_length', 'max_value', 'metadata', 'min_length', 'min_value', 'on', 'pattern', 'required', 'sensitive', 'string', 'tags', 'true', 'unique', 'unknown', 'value', 'yes']

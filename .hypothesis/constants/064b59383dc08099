@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/context_new/headers.py
+# hypothesis_version: 6.138.2
+
+['X-Correlation-Id', 'X-Service-Name', 'X-User-Id']

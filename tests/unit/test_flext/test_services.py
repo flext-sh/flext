@@ -5,6 +5,7 @@ Tests the unified service coordination pattern with proper flext-core integratio
 
 from unittest.mock import Mock, patch
 
+from flext.application_handlers import FlextApplicationHandlerService
 from flext.services import FlextUnifiedServices
 
 
@@ -30,33 +31,33 @@ class TestFlextUnifiedServices:
         service = FlextUnifiedServices()
         handler_services = service._HandlerServices(service)
 
-        # Mock the CommandHandler import
-        with patch("flext.services.CommandHandler") as mock_handler:
-            mock_handler.return_value = Mock()
-            result = handler_services.create_command_handler()
-            assert result is not None
+        # Test actual implementation without mocking - uses FlextApplicationHandlerService
+        result = handler_services.create_command_handler()
+        assert result is not None
+        # Verify it returns the expected service type
+        assert isinstance(result, FlextApplicationHandlerService)
 
     def test_create_event_handler(self) -> None:
         """Test event handler creation."""
         service = FlextUnifiedServices()
         handler_services = service._HandlerServices(service)
 
-        # Mock the EventHandler import
-        with patch("flext.services.EventHandler") as mock_handler:
-            mock_handler.return_value = Mock()
-            result = handler_services.create_event_handler()
-            assert result is not None
+        # Test actual implementation without mocking - uses FlextApplicationHandlerService
+        result = handler_services.create_event_handler()
+        assert result is not None
+        # Verify it returns the expected service type
+        assert isinstance(result, FlextApplicationHandlerService)
 
     def test_create_query_handler(self) -> None:
         """Test query handler creation."""
         service = FlextUnifiedServices()
         handler_services = service._HandlerServices(service)
 
-        # Mock the QueryHandler import
-        with patch("flext.services.QueryHandler") as mock_handler:
-            mock_handler.return_value = Mock()
-            result = handler_services.create_query_handler()
-            assert result is not None
+        # Test actual implementation without mocking - uses FlextApplicationHandlerService
+        result = handler_services.create_query_handler()
+        assert result is not None
+        # Verify it returns the expected service type
+        assert isinstance(result, FlextApplicationHandlerService)
 
     def test_pipeline_services_init(self) -> None:
         """Test nested pipeline services initialization."""
@@ -82,7 +83,8 @@ class TestFlextUnifiedServices:
         # Mock the pipeline service execute_pipeline method
         mock_pipeline_service = Mock()
         mock_pipeline_service.execute_pipeline.return_value = Mock(
-            is_success=True, value={"test": "result"},
+            is_success=True,
+            value={"test": "result"},
         )
         pipeline_services._pipeline_service = mock_pipeline_service
 
@@ -98,7 +100,8 @@ class TestFlextUnifiedServices:
         # Mock the pipeline service execute_pipeline method to return failure
         mock_pipeline_service = Mock()
         mock_pipeline_service.execute_pipeline.return_value = Mock(
-            is_success=False, error="Pipeline failed",
+            is_success=False,
+            error="Pipeline failed",
         )
         pipeline_services._pipeline_service = mock_pipeline_service
 
@@ -172,7 +175,9 @@ class TestFlextUnifiedServices:
         # Mock subprocess.run to avoid actual command execution
         with patch("flext.services.subprocess.run") as mock_run:
             mock_run.return_value = Mock(
-                returncode=0, stdout="quality check output", stderr="",
+                returncode=0,
+                stdout="quality check output",
+                stderr="",
             )
             result = test_services.execute_quality_check()
             assert result is not None
@@ -186,7 +191,9 @@ class TestFlextUnifiedServices:
         # Mock subprocess.run to avoid actual command execution
         with patch("flext.services.subprocess.run") as mock_run:
             mock_run.return_value = Mock(
-                returncode=0, stdout="quality check output", stderr="",
+                returncode=0,
+                stdout="quality check output",
+                stderr="",
             )
             result = test_services.execute_quality_check(fix=True)
             assert result is not None
