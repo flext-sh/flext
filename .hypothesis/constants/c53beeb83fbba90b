@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/utilities.py
+# hypothesis_version: 6.138.2
+
+[0.0, 100, 255, 30000, 60000, 300000, ' .', '*', '-', '.', '...', '1', 'ConfigDict', 'FlextUtilities', 'INFO', 'TModel', 'Unknown error', '[^a-z0-9]+', '\\s+', '_', 'available_log_levels', 'avg_duration', 'base_configuration', 'caching_enabled', 'config_source', 'debug', 'debug_mode', 'development', 'dict', 'dict[str, object]', 'enable_caching', 'environment', 'environment_metadata', 'error_count', 'float', 'int', 'is_development', 'is_production', 'is_testing', 'last_error', 'log_level', 'max_retries', 'model_dump', 'model_validate', 'monitoring_enabled', 'name', 'on', 'performance_settings', 'request_timeout', 'request_timeout_ms', 'security_settings', 'strict', 'strict_validation', 'success_count', 'total_calls', 'total_duration', 'true', 'untitled', 'validation_level', 'yes', '{}']

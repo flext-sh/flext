@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/config_new/schema_app.py
+# hypothesis_version: 6.138.2
+
+['0.1.0', 'API keys', 'Application name', 'Application version', 'Custom settings', 'Database URL', 'Enable caching', 'Enable debug mode', 'Enable metrics', 'Enable tracing', 'Feature flags', 'INFO', 'Redis URL', 'Runtime environment', 'after', 'config_source', 'environment', 'flext-app', 'log_level']

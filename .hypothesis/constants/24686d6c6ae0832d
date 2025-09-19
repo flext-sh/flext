@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/mixin_compat.py
+# hypothesis_version: 6.136.7
+
+[1000.0, 300, ', ', 'Validation failed', '_', '_created_at', '_domain_events', '_id', '_is_valid', '_updated_at', '_validation_errors', 'default-id', 'default-service', 'entity_id', 'field', 'is_initialized', 'is_valid', 'service_name', 'service_type', 'to_dict_basic', 'value']

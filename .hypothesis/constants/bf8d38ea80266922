@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/loggings.py
+# hypothesis_version: 6.138.2
+
+['\x1b[91m', '\x1b[92m', '\x1b[93m', '\x1b[94m', '\x1b[95m', '%(message)s', 'client-a_LOG_LEVEL', 'CRITICAL', 'DEBUG', 'ENVIRONMENT', 'ERROR', 'FLEXT_LOG_COLORS', 'FLEXT_LOG_LEVEL', 'FlextLogContext', 'FlextLogEntry', 'FlextLogLevel', 'FlextLogger', 'FlextLoggerFactory', 'INFO', 'LEVEL_TO_NAME', 'LOG_LEVEL', 'NAME_TO_LEVEL', 'TRACE', 'WARNING', '_LEVEL_TO_NAME', '_NAME_TO_LEVEL', '_proxy_to_logger', 'context', 'create_log_context', 'critical', 'debug', 'default', 'dev', 'development', 'error', 'event', 'flext', 'flext.unknown', 'flext_get_logger', 'get_logger', 'info', 'iso', 'level', 'local', 'logger', 'message', 'method', 'name', 'timestamp', 'trace', 'traceback', 'true', 'unix', 'unknown', 'value', 'warning']

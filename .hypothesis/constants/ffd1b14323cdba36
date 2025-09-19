@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/semantic.py
+# hypothesis_version: 6.136.2
+
+['.observability', 'FlextBusinessError', 'FlextError', 'FlextResult[None]', 'FlextSemantic', 'FlextValidationError', 'cause', 'context', 'dict[str, object]', 'extra', 'field_name', 'field_value', 'get_observability', 'status', 'str_max_length', 'str_strip_whitespace', 'timeout', 'use_enum_values', 'validate_assignment', 'validate_default']

@@ -92,7 +92,8 @@ class OracleE2ETestRunner(FlextScript):
                         Colors.GREEN,
                     )
                     print_colored(
-                        "📊 Test reports generated in .flext_logs/", Colors.CYAN,
+                        "📊 Test reports generated in .flext_logs/",
+                        Colors.CYAN,
                     )
                 return FlextResult[object].ok(None)
             print_colored("❌ Oracle E2E tests failed", Colors.RED)

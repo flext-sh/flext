@@ -52,7 +52,9 @@ class FlextEcosystemStandardizer(FlextBaseService):
         self.error_count = 0
 
     def _handle_error(
-        self, error: Exception, operation: str,
+        self,
+        error: Exception,
+        operation: str,
     ) -> FlextResult[dict[str, int]]:
         """Handle errors in standardization operations."""
         self.logger.error(f"Error in {operation}: {error}")
@@ -124,7 +126,9 @@ class FlextEcosystemStandardizer(FlextBaseService):
         return projects
 
     def _standardize_project(
-        self, project_path: Path, stats: dict[str, int],
+        self,
+        project_path: Path,
+        stats: dict[str, int],
     ) -> FlextResult[None]:
         """Standardize a single project.
 
@@ -159,11 +163,14 @@ class FlextEcosystemStandardizer(FlextBaseService):
 
         except Exception as e:
             return self._handle_error_none(
-                e, f"standardize_project({project_path.name})",
+                e,
+                f"standardize_project({project_path.name})",
             )
 
     def _standardize_file(
-        self, file_path: Path, stats: dict[str, int],
+        self,
+        file_path: Path,
+        stats: dict[str, int],
     ) -> FlextResult[None]:
         """Standardize a single Python file.
 
@@ -282,7 +289,10 @@ class FlextEcosystemStandardizer(FlextBaseService):
 
         # Remove TYPE_CHECKING conditionals
         content = re.sub(
-            r"if TYPE_CHECKING:.*?\n(?=\S|\Z)", "", content, flags=re.DOTALL,
+            r"if TYPE_CHECKING:.*?\n(?=\S|\Z)",
+            "",
+            content,
+            flags=re.DOTALL,
         )
 
         if content != original_content:

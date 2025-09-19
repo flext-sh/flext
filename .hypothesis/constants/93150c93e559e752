@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/guards.py
+# hypothesis_version: 6.138.2
+
+[0.0, 100, 300, 500, 600, 1000, 2000, 5000, "'", 'FlextGuards', 'R', 'T', 'Value cannot be None', '_', '__doc__', '__hash__', '__init__', '__module__', '__name__', '__pure__', '__qualname__', '__setattr__', '_initialized', 'aggressive', 'balanced', 'builder_patterns', 'cache_hit_ratio', 'conservative', 'dict[object, object]', 'enable_debug_logging', 'environment', 'factory_methods', 'high', 'immutable_classes', 'list[object]', 'log_level', 'low', 'max_cache_size', 'medium', 'memory_optimization', 'object', 'optimization_enabled', 'performance_level', 'pure_functions', 'type_guards', 'validation_level', 'validation_utils']

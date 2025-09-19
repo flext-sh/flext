@@ -1,0 +1,43 @@
+{
+  "pipelines": [
+    {
+      "id": "d8d22a2b-8f26-4d8c-8567-ff1ca576e988",
+      "name": "ldap-to-postgres-real",
+      "description": "Pipeline REAL LDAP para PostgreSQL usando flext-core",
+      "is_active": true,
+      "created_at": "2025-07-11T08:26:20.077520",
+      "steps": [
+        {
+          "type": "extract",
+          "source": "ldap",
+          "connection": "ldap://localhost:389"
+        },
+        {
+          "type": "transform",
+          "format": "json"
+        },
+        {
+          "type": "load",
+          "target": "postgresql",
+          "table": "ldap_users"
+        }
+      ]
+    }
+  ],
+  "plugins": [
+    {
+      "name": "tap-ldap",
+      "type": "tap",
+      "version": "1.0.0",
+      "status": "active",
+      "description": "REAL LDAP tap with tested data extraction"
+    },
+    {
+      "name": "target-postgresql",
+      "type": "target",
+      "version": "1.0.0",
+      "status": "active",
+      "description": "PostgreSQL target with REAL database connection"
+    }
+  ]
+}

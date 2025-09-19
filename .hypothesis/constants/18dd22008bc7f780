@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/mixins/state.py
+# hypothesis_version: 6.138.2
+
+['FlextState', 'INVALID_STATE', 'Invalid state', '_state', '_state_attributes', '_state_history', '_state_initialized', 'created', 'is_failure', 'state_change']

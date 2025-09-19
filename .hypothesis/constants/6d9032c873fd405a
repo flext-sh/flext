@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/_config_base.py
+# hypothesis_version: 6.136.7
+
+['_BaseConfigDefaults', '_BaseConfigOps']

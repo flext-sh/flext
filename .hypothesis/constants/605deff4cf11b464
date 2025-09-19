@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_tests/http_support.py
+# hypothesis_version: 6.138.15
+
+[30.0, 200, 500, 503, '1.0', '2025-01-01T00:00:00Z', 'FlextTestsHttp', 'GET', 'INTERNAL_ERROR', 'INVALID_ERROR_FORMAT', 'INVALID_SIGNATURE', 'Retry needed', 'TEMPORARY_ERROR', 'application/json', 'circuit_breaker', 'code', 'content-type', 'data', 'error', 'error_code', 'error_message', 'event', 'failure_threshold', 'headers', 'id', 'json', 'max_retries', 'message', 'method', 'processed_at', 'received', 'recovery_timeout', 'response_data', 'retry', 'retry_count', 'scenario_types', 'scenarios', 'status', 'status_code', 'success', 'test_data', 'test_webhook_123', 'timestamp', 'total_scenarios', 'type', 'url', 'user-agent', 'version']

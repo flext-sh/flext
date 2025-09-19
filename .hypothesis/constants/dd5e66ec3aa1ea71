@@ -1,0 +1,4 @@
+# file: /home/marlonsc/flext/flext-core/src/flext_core/config_base.py
+# hypothesis_version: 6.136.7
+
+['.env', 'Env error', 'FlextAbstractConfig', 'FlextConfigBuilder', 'FlextConfigValidator', 'FlextSettings', 'Path is not a file', 'T', 'Validation failed', '_', '_case_sensitive', '_cli_settings_source', '_env_file', '_env_file_encoding', '_env_prefix', '_secrets_dir', 'forbid', 'ignore', 'r', 'utf-8']

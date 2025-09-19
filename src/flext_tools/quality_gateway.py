@@ -14,7 +14,8 @@ class QualityGateway:
         """Initialize quality gateway."""
 
     def run_checks(
-        self, config: dict[str, object] | None = None,
+        self,
+        config: dict[str, object] | None = None,
     ) -> FlextResult[dict[str, object]]:
         """Run quality checks.
 
