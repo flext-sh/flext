@@ -58,7 +58,9 @@ class FlextControlPanelCli(FlextDomainService[str]):
         def __init__(self, workspace_path: Path | str) -> None:
             self.workspace_path = str(workspace_path)
 
-        def run_quality_checks_safe(self, config: object) -> FlextControlPanelCli.QualityResult:
+        def run_quality_checks_safe(
+            self, config: object
+        ) -> FlextControlPanelCli.QualityResult:
             # Use config parameter to avoid unused warning
             _ = config
 
@@ -118,7 +120,9 @@ class FlextControlPanelCli(FlextDomainService[str]):
         if cli_api_result.is_success:
             self._cli_api = cli_api_result.unwrap()
         else:
-            self._logger.warning(f"FlextCliApi initialization failed: {cli_api_result.error}")
+            self._logger.warning(
+                f"FlextCliApi initialization failed: {cli_api_result.error}"
+            )
             self._cli_api = None  # Will be handled in methods
         self._config: FlextCliConfigs | None = None
         self._workspace: Path = Path.cwd()
@@ -129,15 +133,21 @@ class FlextControlPanelCli(FlextDomainService[str]):
             cli_api = FlextCliApi(version="0.9.0")  # Match flext-core version
             return FlextResult[FlextCliApi].ok(cli_api)
         except Exception as e:
-            return FlextResult[FlextCliApi].fail(f"FlextCliApi initialization failed: {e!s}")
+            return FlextResult[FlextCliApi].fail(
+                f"FlextCliApi initialization failed: {e!s}"
+            )
 
-    def _initialize_config(self, profile: str, *, debug: bool) -> FlextResult[FlextCliConfigs]:
+    def _initialize_config(
+        self, profile: str, *, debug: bool
+    ) -> FlextResult[FlextCliConfigs]:
         """Initialize CLI configuration using FlextResult pattern."""
         try:
             config = FlextCliConfigs(profile=profile, debug=debug)
             return FlextResult[FlextCliConfigs].ok(config)
         except Exception as e:
-            return FlextResult[FlextCliConfigs].fail(f"Configuration initialization failed: {e!s}")
+            return FlextResult[FlextCliConfigs].fail(
+                f"Configuration initialization failed: {e!s}"
+            )
 
     def _create_main_cli(self) -> FlextResult[FlextCliMain]:
         """Create main CLI using FlextResult pattern."""
@@ -145,7 +155,9 @@ class FlextControlPanelCli(FlextDomainService[str]):
             main_cli = FlextCliMain()
             return FlextResult[FlextCliMain].ok(main_cli)
         except Exception as e:
-            return FlextResult[FlextCliMain].fail(f"FlextCliMain creation failed: {e!s}")
+            return FlextResult[FlextCliMain].fail(
+                f"FlextCliMain creation failed: {e!s}"
+            )
 
     # Instance method not needed; static method above is sufficient for calls via class or instance
 
@@ -195,8 +207,10 @@ class FlextControlPanelCli(FlextDomainService[str]):
             self, category: str | None = None
         ) -> FlextResult[list[dict[str, str]]]:
             """List available FlextScript instances with optional category filtering."""
-            self._cli_service._print_colored(f"📋 Available FlextScript instances in {self._cli_service._workspace}:"
-                + (f" (category: {category})" if category else ""))
+            self._cli_service._print_colored(
+                f"📋 Available FlextScript instances in {self._cli_service._workspace}:"
+                + (f" (category: {category})" if category else "")
+            )
 
             items = [
                 {"name": "Quality Gateway Script", "category": "quality"},
@@ -211,7 +225,9 @@ class FlextControlPanelCli(FlextDomainService[str]):
             ]
 
             for item in filtered_items:
-                self._cli_service._print_colored(f"  - {item['name']} (category: {item['category']})")
+                self._cli_service._print_colored(
+                    f"  - {item['name']} (category: {item['category']})"
+                )
 
             return FlextResult[list[dict[str, str]]].ok(filtered_items)
 
@@ -219,10 +235,14 @@ class FlextControlPanelCli(FlextDomainService[str]):
             self, analysis_type: str = "structure"
         ) -> FlextResult[dict[str, str]]:
             """Perform workspace and code analysis using flext_tools."""
-            self._cli_service._print_colored(f"🔬 Running {analysis_type} analysis on workspace: {self._cli_service._workspace}")
+            self._cli_service._print_colored(
+                f"🔬 Running {analysis_type} analysis on workspace: {self._cli_service._workspace}"
+            )
 
             result = {"type": analysis_type, "status": "completed"}
-            self._cli_service._print_colored(f"✅ {analysis_type.title()} analysis completed")
+            self._cli_service._print_colored(
+                f"✅ {analysis_type.title()} analysis completed"
+            )
             return FlextResult[dict[str, str]].ok(result)
 
     class _MainCommands:
@@ -235,7 +255,9 @@ class FlextControlPanelCli(FlextDomainService[str]):
             self, *, coverage: bool = True, parallel: bool = False
         ) -> FlextResult[dict[str, object]]:
             """Execute comprehensive test suite using flext_tools integration."""
-            self._cli_service._print_colored(f"🧪 Running tests (parallel={parallel}) in {self._cli_service._workspace}...")
+            self._cli_service._print_colored(
+                f"🧪 Running tests (parallel={parallel}) in {self._cli_service._workspace}..."
+            )
 
             try:
                 gateway = self._cli_service._QualityGateway(
@@ -314,7 +336,9 @@ class FlextControlPanelCli(FlextDomainService[str]):
         def format_command(self, *, check_only: bool = False) -> None:
             """Auto-format code using flext_tools with flext-cli patterns."""
             action = "Checking" if check_only else "Formatting"
-            self._cli_service._print_colored(f"🎨 {action} code in {self._cli_service._workspace} with flext_tools...")
+            self._cli_service._print_colored(
+                f"🎨 {action} code in {self._cli_service._workspace} with flext_tools..."
+            )
 
             try:
                 # Build format command
@@ -344,13 +368,20 @@ class FlextControlPanelCli(FlextDomainService[str]):
                 else False,
             }
 
-            self._cli_service._print_colored("🏢 FLEXT Control Panel - Workspace Information")
+            self._cli_service._print_colored(
+                "🏢 FLEXT Control Panel - Workspace Information"
+            )
             self._cli_service._print_colored("=" * 50)
             self._cli_service._print_colored(
-                f"📁 Workspace Root: {workspace_data['workspace_root']}")
-            self._cli_service._print_colored(f"📦 Projects Found: {workspace_data['projects_count']}")
+                f"📁 Workspace Root: {workspace_data['workspace_root']}"
+            )
+            self._cli_service._print_colored(
+                f"📦 Projects Found: {workspace_data['projects_count']}"
+            )
             self._cli_service._print_colored(f"⚙️  Profile: {workspace_data['profile']}")
-            self._cli_service._print_colored(f"🐛 Debug Mode: {'✅ Enabled' if workspace_data['debug_mode'] else '❌ Disabled'}")
+            self._cli_service._print_colored(
+                f"🐛 Debug Mode: {'✅ Enabled' if workspace_data['debug_mode'] else '❌ Disabled'}"
+            )
 
             if detailed:
                 self._cli_service._print_colored("\n📋 Projects:")
@@ -385,7 +416,9 @@ class FlextControlPanelCli(FlextDomainService[str]):
         # Create main CLI using FlextResult
         main_cli_result = self._create_main_cli()
         if main_cli_result.is_failure:
-            self._logger.warning(f"FlextCliMain initialization issue: {main_cli_result.error}")
+            self._logger.warning(
+                f"FlextCliMain initialization issue: {main_cli_result.error}"
+            )
             return FlextResult[FlextCliMain].fail(
                 f"CLI initialization temporarily unavailable: {main_cli_result.error}"
             )

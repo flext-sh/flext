@@ -3,6 +3,9 @@
 
 Este módulo fornece um sistema centralizado para registrar, categorizar e executar
 scripts do workspace FLEXT de forma padronizada e automatizada.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
 
 from __future__ import annotations

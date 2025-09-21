@@ -3,6 +3,9 @@
 This module provides standard, reusable pytest fixtures that are available across
 the entire FLEXT workspace without explicit imports. These fixtures provide common
 test data and setup that can be used by any test module.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
 
 from __future__ import annotations

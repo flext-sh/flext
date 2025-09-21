@@ -2,6 +2,9 @@
 
 Este módulo resolve o problema de pytest_plugins em conftest.py não-top-level
 e fornece configuração global para todos os projetos do workspace.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
 
 from pathlib import Path

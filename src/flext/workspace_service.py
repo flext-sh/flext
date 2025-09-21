@@ -88,16 +88,12 @@ class FlextWorkspaceService(FlextDomainService[str]):
                     if project_info_result.is_success:
                         projects.append(project_info_result.unwrap())
 
-                return FlextResult[list[FlextModels.Project]].ok(
-                    projects
-                )
+                return FlextResult[list[FlextModels.Project]].ok(projects)
 
             except Exception as e:
                 error = f"Project discovery failed: {e}"
                 self._manager._logger.exception(error)
-                return FlextResult[list[FlextModels.Project]].fail(
-                    error
-                )
+                return FlextResult[list[FlextModels.Project]].fail(error)
 
         def _analyze_project(
             self, project_path: Path
@@ -138,9 +134,7 @@ class FlextWorkspaceService(FlextDomainService[str]):
                     test_count=test_count,
                 )
 
-                return FlextResult[FlextModels.Project].ok(
-                    project_info
-                )
+                return FlextResult[FlextModels.Project].ok(project_info)
 
             except Exception as e:
                 error = f"Project analysis failed for {project_path.name}: {e}"
@@ -222,9 +216,7 @@ class FlextWorkspaceService(FlextDomainService[str]):
                 "status": FlextProjectTypes.WorkspaceStatus.READY,
             }
 
-            return FlextResult[FlextTypes.Core.Dict].ok(
-                workspace_info
-            )
+            return FlextResult[FlextTypes.Core.Dict].ok(workspace_info)
 
         except Exception as e:
             error = f"Failed to get workspace info: {e}"

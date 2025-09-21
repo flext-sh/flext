@@ -14,7 +14,7 @@ DOMAIN SEPARATION: Handler patterns belong exclusively to flext-core domain.
 from __future__ import annotations
 
 import uuid
-from enum import Enum
+from enum import StrEnum
 from typing import Self, TypeVar
 
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -46,7 +46,7 @@ class FlextApplicationHandlerService[T](FlextDomainService[str]):
     All functionality is delegated exclusively to flext-core implementations.
     """
 
-    class HandlerStatus(str, Enum):
+    class HandlerStatus(StrEnum):
         """Handler status enumeration."""
 
         ACTIVE = "active"
@@ -54,7 +54,7 @@ class FlextApplicationHandlerService[T](FlextDomainService[str]):
         PENDING = "pending"
         ERROR = "error"
 
-    class HandlerType(str, Enum):
+    class HandlerType(StrEnum):
         """Handler type enumeration."""
 
         COMMAND = "command"
@@ -62,7 +62,7 @@ class FlextApplicationHandlerService[T](FlextDomainService[str]):
         EVENT = "event"
         COMPOSITE = "composite"
 
-    class Priority(str, Enum):
+    class Priority(StrEnum):
         """Priority enumeration."""
 
         HIGH = "high"

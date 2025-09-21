@@ -27,7 +27,7 @@ classifiers = [
 dependencies = [
     "click (>=8.2.1)",
     "packaging (>=25.0)",
-    "protobuf (>=4)",
+    "protobuf  (>=6.30.2)",
     "pydantic (>=2.11.7)",
     "pydantic-settings (>=2.10.1)",
     "pyyaml (>=6.0)",
@@ -177,12 +177,6 @@ types-grpcio = "^1.0.0.20250914"
 types-croniter = "^6.0.0.20250626"
 types-aiofiles = "^24.1.0.20250809"
 
-[tool.bandit]
-extend = "./.bandit-shared.toml"
-
-[tool.coverage]
-extend = "./.coverage-shared.toml"
-
 [tool.deptry]
 exclude = [
     "__pycache__",
@@ -240,9 +234,8 @@ no_implicit_optional = true
 strict_optional = true
 
 # Import handling
-ignore_missing_imports = false
 follow_imports = "normal"
-follow_imports_for_stubs = false
+follow_imports_for_stubs = true
 
 # Error reporting
 show_error_codes = true
@@ -294,35 +287,8 @@ exclude = [
     "dist/",
     "node_modules/",
     "vendor/",
-    "src/flext_tools/",                     # Exclude entire flext_tools to avoid module name conflicts
-    "src/flext/application_handlers.py",    # Exclude problematic duplicate module
-    "src/flext/application_pipeline.py",    # Exclude problematic duplicate module
     ".*_pb2\\.py$",                         # Exclude generated protobuf files
     ".*_pb2_grpc\\.py$",                    # Exclude generated protobuf gRPC files
-    "flext-web/src/flext_web/protocols.py", # Exclude problematic syntax issue
-    "flexcore/src/",                        # Exclude flexcore/src to avoid module name conflicts
-    "flext-*/src/",                         # Exclude all flext-* project src directories
-    "flext-*/tests/",                       # Exclude all flext-* project test directories
-    "client-a-oud-mig/src/",                   # Exclude client-a-oud-mig src directory
-    "client-a-oud-mig/tests/",                 # Exclude client-a-oud-mig test directory
-    "client-b-meltano-native/src/",         # Exclude client-b-meltano-native src directory
-    "client-b-meltano-native/tests/",       # Exclude client-b-meltano-native test directory
-    ".*/examples/",                         # Exclui todos os diretórios 'examples' em qualquer nível (regex corrigida)
-    ".*/tests/",                            # Exclui todos os diretórios 'tests' em qualquer nível (regex corrigida)
-    ".*/scripts/",                          # Exclui todos os diretórios 'scripts' em qualquer nível (regex corrigida)
-    # Excluir stubs/typings dentro de pacotes para evitar módulos duplicados durante checagem local
-    ".*/typings/.*",
-    # Skip generated or problematic source files
-    "flext-core/src/flext_core/fields.py",
-    # Exclude gRPC generated files
-    "flext-grpc/src/flext_grpc/proto/flext_grpc_pb2.py",
-    "flext-grpc/src/flext_grpc/proto/flext_grpc_pb2_grpc.py",
-    "flext-grpc/src/flext_grpc/proto/src/flext_grpc/proto/flext_grpc_pb2.py",
-    # Arquivos de módulos duplicados específicos, se o problema persistir após exclusões gerais
-    "flext-api/examples/__init__.py",
-    "client-a-oud-mig/examples/__init__.py",
-    # Exclude flext-ldap ldap3 stubs to avoid duplicate module conflicts
-    "flext-ldap/src/ldap3/.*",
 ]
 
 [tool.pydantic-mypy]
@@ -362,27 +328,12 @@ exclude = [
 ]
 
 # Type checking mode
-typeCheckingMode = "basic"
+typeCheckingMode = "strict"
 
 
-# Reporting configuration - balanced for workspace
-# reportDuplicateImport = true
-# reportImportCycles = true
-# reportMissingImports = true
-# reportMissingTypeStubs = true
-# reportPrivateUsage = true
-# reportPropertyTypeMismatch = true
-# reportUnusedClass = true
-# reportUnusedFunction = true
-# reportUnusedImport = true
-# reportUnusedVariable = true
-
-# Execution environments for different project types - comprehensive coverage
-
-# Allow wildcard imports in __init__.py files across all projects  
 [[tool.pyright.executionEnvironments]]
 root = "."
-extraPaths = ["src", "**/src"]
+extraPaths = ["**/src"]
 include = ["**/__init__.py"]
 reportWildcardImportFromLibrary = false
 
@@ -390,9 +341,6 @@ reportWildcardImportFromLibrary = false
 [[tool.pyright.executionEnvironments]]
 root = "."
 extraPaths = [
-    "examples",
-    "scripts",
-    "tests",
     "**/examples",
     "**/scripts",
     "**/tests",
