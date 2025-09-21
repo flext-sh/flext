@@ -7,7 +7,7 @@ Copyright (c) 2025 FLEXT Team. All rights reserved.
 """
 
 from flext.project_types import ProjectType, WorkspaceStatus
-from flext.workspace_models import FlextAdvancedWorkspaceModels
+from flext_core import FlextModels
 
 
 class TestProject:
@@ -15,43 +15,40 @@ class TestProject:
 
     def test_project_creation_basic(self) -> None:
         """Test basic project creation with required fields."""
-        project = FlextAdvancedWorkspaceModels.Project(
+        project = FlextModels.Project(
             name="test-project",
-            path="/path/to/project",
-            project_type=ProjectType.PYTHON,
+            organization_id="test-org",
+            project_type="python",
         )
 
         assert project.name == "test-project"
-        assert project.path == "/path/to/project"
-        assert project.project_type == ProjectType.PYTHON
-        assert project.has_tests is False  # Default value
-        assert project.has_pyproject is False  # Default value
-        assert project.has_go_mod is False  # Default value
-        assert project.test_count == 0  # Default value
+        assert project.organization_id == "test-org"
+        assert project.project_type == "python"
+        assert project.is_test_project is False  # Default value
+        assert project.test_framework is None  # Default value
+        assert project.repository_path is None  # Default value
 
     def test_project_creation_with_all_fields(self) -> None:
         """Test project creation with all optional fields specified."""
-        project = FlextAdvancedWorkspaceModels.Project(
+        project = FlextModels.Project(
             name="full-project",
-            path="/path/to/full/project",
-            project_type=ProjectType.GO,
-            has_tests=True,
-            has_pyproject=True,
-            has_go_mod=True,
-            test_count=25,
+            organization_id="full-org",
+            repository_path="/path/to/full/project",
+            project_type="go",
+            is_test_project=True,
+            test_framework="go test",
         )
 
         assert project.name == "full-project"
-        assert project.path == "/path/to/full/project"
-        assert project.project_type == ProjectType.GO
-        assert project.has_tests is True
-        assert project.has_pyproject is True
-        assert project.has_go_mod is True
-        assert project.test_count == 25
+        assert project.organization_id == "full-org"
+        assert project.repository_path == "/path/to/full/project"
+        assert project.project_type == "go"
+        assert project.is_test_project is True
+        assert project.test_framework == "go test"
 
     def test_project_validate_business_rules_success(self) -> None:
         """Test project business rule validation - success case (line 36)."""
-        project = FlextAdvancedWorkspaceModels.Project(
+        project = FlextModels.Project(
             name="valid-project",
             path="/valid/path",
             project_type=ProjectType.PYTHON,
@@ -75,7 +72,7 @@ class TestProject:
         ]
 
         for project_type in project_types:
-            project = FlextAdvancedWorkspaceModels.Project(
+            project = FlextModels.Project(
                 name=f"project-{project_type.value}",
                 path=f"/path/to/{project_type.value}",
                 project_type=project_type,
@@ -90,7 +87,7 @@ class TestProject:
     def test_project_test_count_validation(self) -> None:
         """Test that test_count field validates non-negative values."""
         # Valid test count
-        project = FlextAdvancedWorkspaceModels.Project(
+        project = FlextModels.Project(
             name="test-project",
             path="/path/to/project",
             project_type=ProjectType.PYTHON,
@@ -99,7 +96,7 @@ class TestProject:
         assert project.test_count == 10
 
         # Zero test count (should be valid)
-        project_zero = FlextAdvancedWorkspaceModels.Project(
+        project_zero = FlextModels.Project(
             name="test-project-zero",
             path="/path/to/project",
             project_type=ProjectType.PYTHON,
@@ -113,7 +110,7 @@ class TestWorkspaceContext:
 
     def test_workspace_context_creation_minimal(self) -> None:
         """Test workspace context creation with minimal required fields."""
-        context = FlextAdvancedWorkspaceModels.WorkspaceContext(
+        context = FlextModels.WorkspaceInfo(
             workspace_root="/workspace/root",
         )
 
@@ -124,7 +121,7 @@ class TestWorkspaceContext:
 
     def test_workspace_context_creation_full(self) -> None:
         """Test workspace context creation with all fields specified."""
-        context = FlextAdvancedWorkspaceModels.WorkspaceContext(
+        context = FlextModels.WorkspaceInfo(
             workspace_root="/full/workspace",
             project_filter="test-*",
             include_hidden=True,
@@ -140,7 +137,7 @@ class TestWorkspaceContext:
         """Test that max_depth validates within range."""
         # Valid max depth values
         for depth in [1, 5, 10]:
-            context = FlextAdvancedWorkspaceModels.WorkspaceContext(
+            context = FlextModels.WorkspaceInfo(
                 workspace_root="/workspace",
                 max_depth=depth,
             )
@@ -152,7 +149,7 @@ class TestWorkspaceInfo:
 
     def test_workspace_info_creation_minimal(self) -> None:
         """Test workspace info creation with minimal required fields."""
-        info = FlextAdvancedWorkspaceModels.WorkspaceInfo(
+        info = FlextModels.WorkspaceInfo(
             name="test-workspace",
             path="/workspace/path",
         )
@@ -168,7 +165,7 @@ class TestWorkspaceInfo:
         """Test workspace info creation with all fields specified."""
         project_list = ["project1", "project2", "project3"]
 
-        info = FlextAdvancedWorkspaceModels.WorkspaceInfo(
+        info = FlextModels.WorkspaceInfo(
             name="full-workspace",
             path="/full/workspace/path",
             project_count=3,
@@ -186,7 +183,7 @@ class TestWorkspaceInfo:
 
     def test_workspace_info_validate_business_rules_success(self) -> None:
         """Test workspace info business rule validation - success case (line 70)."""
-        info = FlextAdvancedWorkspaceModels.WorkspaceInfo(
+        info = FlextModels.WorkspaceInfo(
             name="valid-workspace",
             path="/valid/path",
             project_count=5,
@@ -202,7 +199,7 @@ class TestWorkspaceInfo:
     def test_workspace_info_validate_business_rules_edge_cases(self) -> None:
         """Test workspace info business rule validation - edge cases."""
         # Test with valid values at boundaries
-        info = FlextAdvancedWorkspaceModels.WorkspaceInfo(
+        info = FlextModels.WorkspaceInfo(
             name="edge-workspace",
             path="/edge/path",
             project_count=0,  # Valid boundary value
@@ -214,7 +211,7 @@ class TestWorkspaceInfo:
         assert result.is_success
 
         # Test with normal positive values
-        info_normal = FlextAdvancedWorkspaceModels.WorkspaceInfo(
+        info_normal = FlextModels.WorkspaceInfo(
             name="normal-workspace",
             path="/normal/path",
             project_count=10,
@@ -233,7 +230,7 @@ class TestWorkspaceInfo:
         ]
 
         for status in statuses:
-            info = FlextAdvancedWorkspaceModels.WorkspaceInfo(
+            info = FlextModels.WorkspaceInfo(
                 name=f"workspace-{status.value}",
                 path=f"/path/to/{status.value}",
                 status=status,
@@ -247,7 +244,7 @@ class TestWorkspaceInfo:
 
     def test_workspace_info_zero_values_valid(self) -> None:
         """Test that zero values are valid for numeric fields."""
-        info = FlextAdvancedWorkspaceModels.WorkspaceInfo(
+        info = FlextModels.WorkspaceInfo(
             name="zero-workspace",
             path="/zero/path",
             project_count=0,
@@ -261,7 +258,7 @@ class TestWorkspaceInfo:
         """Test workspace info with projects list populated."""
         projects = ["flext-core", "flext-cli", "flext-auth", "flext-tools"]
 
-        info = FlextAdvancedWorkspaceModels.WorkspaceInfo(
+        info = FlextModels.WorkspaceInfo(
             name="multi-project-workspace",
             path="/multi/project/path",
             project_count=len(projects),
@@ -282,7 +279,7 @@ class TestWorkspaceModelsIntegration:
     def test_full_workspace_modeling_workflow(self) -> None:
         """Test a complete workflow using all workspace models."""
         # Create workspace context
-        context = FlextAdvancedWorkspaceModels.WorkspaceContext(
+        context = FlextModels.WorkspaceInfo(
             workspace_root="/flext/workspace",
             project_filter="flext-*",
             include_hidden=False,
@@ -291,7 +288,7 @@ class TestWorkspaceModelsIntegration:
 
         # Create projects
         projects = [
-            FlextAdvancedWorkspaceModels.Project(
+            FlextModels.Project(
                 name="flext-core",
                 path="/flext/workspace/flext-core",
                 project_type=ProjectType.PYTHON,
@@ -299,7 +296,7 @@ class TestWorkspaceModelsIntegration:
                 has_pyproject=True,
                 test_count=45,
             ),
-            FlextAdvancedWorkspaceModels.Project(
+            FlextModels.Project(
                 name="flext-cli",
                 path="/flext/workspace/flext-cli",
                 project_type=ProjectType.PYTHON,
@@ -307,7 +304,7 @@ class TestWorkspaceModelsIntegration:
                 has_pyproject=True,
                 test_count=20,
             ),
-            FlextAdvancedWorkspaceModels.Project(
+            FlextModels.Project(
                 name="flext-tools",
                 path="/flext/workspace/flext-tools",
                 project_type=ProjectType.GO,
@@ -323,7 +320,7 @@ class TestWorkspaceModelsIntegration:
             assert result.is_success
 
         # Create workspace info
-        workspace_info = FlextAdvancedWorkspaceModels.WorkspaceInfo(
+        workspace_info = FlextModels.WorkspaceInfo(
             name="flext-ecosystem",
             path=context.workspace_root,
             project_count=len(projects),

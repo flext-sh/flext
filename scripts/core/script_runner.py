@@ -3,6 +3,9 @@
 
 Este script serve como ponto de entrada único para execução de todos os scripts
 do workspace FLEXT usando flext_tools para máxima reutilização.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
 
 from __future__ import annotations

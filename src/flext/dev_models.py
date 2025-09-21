@@ -214,7 +214,9 @@ class FlextAdvancedDevModels:
 
         name: str = Field(..., min_length=1, max_length=100)
         path: ProjectPath = Field(..., description="Project path")
-        project_type: FlextTypes.Project.ProjectType = Field(..., description="Detected project type")
+        project_type: FlextTypes.Project.ProjectType = Field(
+            ..., description="Detected project type"
+        )
         has_tests: bool = Field(default=False, description="Has test directory")
         has_pyproject: bool = Field(default=False, description="Has pyproject.toml")
         has_go_mod: bool = Field(default=False, description="Has go.mod file")
@@ -232,7 +234,10 @@ class FlextAdvancedDevModels:
                     raise ValueError(msg)
 
             # Validate Go projects
-            elif self.project_type == FlextProjectTypes.ProjectType.GO and not self.has_go_mod:
+            elif (
+                self.project_type == FlextProjectTypes.ProjectType.GO
+                and not self.has_go_mod
+            ):
                 msg = "Go projects must have go.mod file"
                 raise ValueError(msg)
 
