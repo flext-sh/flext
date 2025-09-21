@@ -9,7 +9,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 
 
 class FlextDevEnums:
@@ -19,7 +19,7 @@ class FlextDevEnums:
     following FLEXT architectural patterns for single-class-per-module compliance.
     """
 
-    class OperationStatus(str, Enum):
+    class OperationStatus(StrEnum):
         """Development operation status enumeration."""
 
         PENDING = "pending"
@@ -28,7 +28,7 @@ class FlextDevEnums:
         FAILED = "failed"
         CANCELLED = "cancelled"
 
-    class OperationType(str, Enum):
+    class OperationType(StrEnum):
         """Development operation types."""
 
         TEST = "test"

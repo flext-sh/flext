@@ -1,0 +1,144 @@
+{
+  "file": "/home/marlonsc/flext/flext-api/src/flext_api/client.py",
+  "severity": "error",
+  "message": "Condition will always evaluate to False since the types \"AsyncClient\" and \"None\" have no overlap",
+  "range": {
+    "start": {
+      "line": 2098,
+      "character": 11
+    },
+    "end": {
+      "line": 2098,
+      "character": 25
+    }
+  },
+  "rule": "reportUnnecessaryComparison"
+}
+{
+  "file": "/home/marlonsc/flext/flext-api/src/flext_api/client.py",
+  "severity": "error",
+  "message": "Condition will always evaluate to False since the types \"HttpRequestConfig\" and \"None\" have no overlap",
+  "range": {
+    "start": {
+      "line": 2101,
+      "character": 11
+    },
+    "end": {
+      "line": 2101,
+      "character": 33
+    }
+  },
+  "rule": "reportUnnecessaryComparison"
+}
+{
+  "file": "/home/marlonsc/flext/flext-api/src/flext_api/client.py",
+  "severity": "error",
+  "message": "Condition will always evaluate to False since the types \"dict[str, object | None]\" and \"None\" have no overlap",
+  "range": {
+    "start": {
+      "line": 2104,
+      "character": 11
+    },
+    "end": {
+      "line": 2104,
+      "character": 31
+    }
+  },
+  "rule": "reportUnnecessaryComparison"
+}
+{
+  "file": "/home/marlonsc/flext/flext-api/src/flext_api/client.py",
+  "severity": "error",
+  "message": "Condition will always evaluate to False since the types \"ClientConfig\" and \"None\" have no overlap",
+  "range": {
+    "start": {
+      "line": 2107,
+      "character": 11
+    },
+    "end": {
+      "line": 2107,
+      "character": 38
+    }
+  },
+  "rule": "reportUnnecessaryComparison"
+}
+{
+  "file": "/home/marlonsc/flext/flext-api/src/flext_api/client.py",
+  "severity": "error",
+  "message": "Condition will always evaluate to True since the types \"dict[str, str]\" and \"None\" have no overlap",
+  "range": {
+    "start": {
+      "line": 2117,
+      "character": 11
+    },
+    "end": {
+      "line": 2117,
+      "character": 45
+    }
+  },
+  "rule": "reportUnnecessaryComparison"
+}
+{
+  "file": "/home/marlonsc/flext/flext-api/src/flext_api/client.py",
+  "severity": "error",
+  "message": "Condition will always evaluate to True since the types \"int\" and \"None\" have no overlap",
+  "range": {
+    "start": {
+      "line": 2120,
+      "character": 11
+    },
+    "end": {
+      "line": 2120,
+      "character": 45
+    }
+  },
+  "rule": "reportUnnecessaryComparison"
+}
+{
+  "file": "/home/marlonsc/flext/flext-api/src/flext_api/client.py",
+  "severity": "error",
+  "message": "Condition will always evaluate to True since the types \"int\" and \"None\" have no overlap",
+  "range": {
+    "start": {
+      "line": 2120,
+      "character": 107
+    },
+    "end": {
+      "line": 2120,
+      "character": 141
+    }
+  },
+  "rule": "reportUnnecessaryComparison"
+}
+{
+  "file": "/home/marlonsc/flext/flext-db-oracle/src/flext_db_oracle/api.py",
+  "severity": "error",
+  "message": "Condition will always evaluate to True since the types \"str\" and \"None\" have no overlap",
+  "range": {
+    "start": {
+      "line": 56,
+      "character": 20
+    },
+    "end": {
+      "line": 56,
+      "character": 53
+    }
+  },
+  "rule": "reportUnnecessaryComparison"
+}
+{
+  "file": "/home/marlonsc/flext/flext-oracle-wms/src/flext_oracle_wms/api_service.py",
+  "severity": "error",
+  "message": "Condition will always evaluate to False since the types \"dict[str, object]\" and \"None\" have no overlap",
+  "range": {
+    "start": {
+      "line": 88,
+      "character": 39
+    },
+    "end": {
+      "line": 88,
+      "character": 61
+    }
+  },
+  "rule": "reportUnnecessaryComparison"
+}

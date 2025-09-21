@@ -1,28 +1,763 @@
-# Meltano
-.meltano/
-output/
-*.db
-*.sqlite
-*.sqlite3
+# ============================================================================
+# FLEXT WORKSPACE - ROOT .gitignore  
+# Multi-language monorepo: Python 3.13+ | Go 1.21+ | Node.js | Docker | Singer/Meltano
+# Enterprise-grade hybrid development environment - 2024/2025 standards
+# Based on research: https://github.com/github/gitignore + modern toolchain practices
+# ============================================================================
 
-# Python
+# ============================================================================
+# JUNK FILES - NEVER COMMIT THESE
+# ============================================================================
+
+# Archive and backup directories
+.archive/
+archive/
+archives/
+backup/
+backups/
+.backup/
+*_backup/
+*_backup_*/
+temp_backup/
+
+# AI-generated files and reports
+*_REPORT*.md
+*_ANALYSIS*.md  
+*_SUMMARY*.md
+*_FINDINGS*.md
+CLAUDE*.md
+CONFIG_MIGRATION*.md
+DEVELOPMENT_STANDARDS*.md
+DUPLICATION_REPORT*.md
+LINT_CORRECTIONS*.md
+*.ai.md
+*.ai.txt
+
+# Backup files with timestamps
+*_20250*.bak
+*_202507*.bak
+*_202506*.bak
+*.md_20250*
+README_20250*.bak
+
+# Generic backup patterns
+*.bak
+*.backup
+*.orig
+*.syntax_backup
+*.broken
+*.tmp.bak
+*_temp.py
+*_temp.md
+
+# Fix scripts and validation files  
+fix_*.py
+*_fix.py
+*_validation.py
+validate_*.py
+investigate_*.py
+temp_*.py
+debug_*.py
+
+# Tool reports and analysis
+*_analysis.txt
+*_report.txt
+*_output.txt
+analysis_temp/
+report_*/
+reports_*/
+temp_test_*/
+# ============================================================================
+# PYTHON BUILD AND RUNTIME ARTIFACTS
+# ============================================================================
+
+# Python cache and compiled files
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+*.pyo
+*.pyd
 *.so
+
+# Distribution / packaging
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-wheel-metadata/
+*.dist-info/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+junit.xml
+test-results/
+reports/
+
+# ============================================================================
+# VIRTUAL ENVIRONMENTS
+# ============================================================================
+
+# All virtual environment patterns
+.env
+.venv/
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+.venv.bkp/
+*/venv/
+*/.venv/
+*/ENV/
+*/env/
+**/.venv/
+**/venv/
+**/ENV/
+**/env/
 
-# IDE
+# ============================================================================
+# PACKAGE MANAGERS AND DEPENDENCIES
+# ============================================================================
+
+# Poetry - BEST PRACTICE: Keep poetry.lock for reproducible builds (2024/2025)
+# DO NOT ignore poetry.lock files - they ensure dependency consistency
+# poetry.lock files should be committed for reproducible builds
+poetry.toml
+
+# pip
+pip-wheel-metadata/
+
+# pipenv (legacy support)
+Pipfile.lock
+
+# pdm (modern alternative)
+.pdm-python
+.pdm-build/
+pdm.lock
+.pdm.toml
+
+# uv (next-gen Python package installer - 2024)
+.uv/
+
+# pixi (modern conda alternative - 2024)
+.pixi/
+pixi.lock
+
+# PEP 582 (direct execution from __pypackages__)
+__pypackages__/
+
+# ============================================================================
+# ENVIRONMENT AND CONFIGURATION
+# ============================================================================
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.template
+.internal.invalid
+.env.*.local
+.env.production
+.env.prod
+
+# ============================================================================
+# IDE AND EDITOR FILES
+# ============================================================================
+
+# VS Code
 .vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains IDEs
 .idea/
+
+# Cursor AI
+.cursor/
+.cursorignore
+
+# Vim/Neovim
 *.swp
 *.swo
+*~
+.netrwhist
+Session.vim
+Sessionx.vim
 
-# OS
-.DS_Store
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Sublime Text
+*.sublime-*
+
+# Other editors
+.fleet/
+
+# ============================================================================
+# OS SPECIFIC FILES
+# ============================================================================
+
+# Windows
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Linux
+*~
+.nfs*
+
+# ============================================================================
+# DEVELOPMENT TOOLS AND QUALITY ASSURANCE (2024/2025)
+# ============================================================================
+
+# Type checkers
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.pyright/
+pyrightconfig.json.bak
+
+# Modern Python linting and formatting (2024 stack)
+.ruff_cache/
+.black/
+.isort.cfg
+.flake8.cache
+.bandit/
+
+# Pre-commit hooks (essential for 2024 workflows)
+.pre-commit-config.yaml.backup
+pre-commit.log
+
+# Testing frameworks and coverage
+.pytest_cache/
+.coverage/
+.tox/
+.nox/
+
+# Security scanning tools
+.bandit/
+.safety/
+.semgrep/
+
+# Performance profiling
+.prof/
+*.prof
+*.pprof
+
+# Documentation generators
+docs/_build/
+docs/build/
+_build/
+.sphinx/
+/site
+mkdocs_site/
+.mkdocs/
+
+# Code quality tools (2024)
+.qlty/
+.sourcery/
+.regal/
+.trunk/
+
+# ============================================================================
+# GO SPECIFIC (Go 1.24+ Modern Patterns)
+# ============================================================================
+
+# Go build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go executables (project-specific naming)
+/flext
+/flexcore
+*/flext
+*/flexcore
+cmd/*/flext*
+cmd/*/flexcore*
+
+# Go test artifacts
+*.test
+go.test.*
+*.bench
+*.mem
+
+# Go coverage and profiling
+*.out
+*.coverprofile
+profile.out
+coverage.out
+cpu.prof
+mem.prof
+trace.out
+
+# Go workspace files (Go 1.18+)
+go.work
+go.work.sum
+
+# Go module cache and proxy
+go.sum.backup
+GOCACHE/
+GOMODCACHE/
+
+# Go build cache and temp files
+.go-build-cache/
+go-build*/
+.go/
+
+# Go generics and type inference artifacts (Go 1.20+)
+*.type
+
+# GoReleaser (modern Go release tool)
+.goreleaser/
+dist/
+
+# Air (live reloading for Go - 2024)
+.air/
+tmp/
+
+# Go toolchain and development tools (2024)
+.vscode/go/
+.golangci-cache/
+.govulncheck/
+.gosec/
+
+# Go static analysis tools
+.staticcheck/
+.golint/
+.goimports/
+
+# Delve debugger
+__debug_bin*
+
+# Command binaries - preserve source files only  
+cmd/*/*
+!cmd/*/Makefile
+!cmd/*/*.go
+!cmd/*/*.md
+!cmd/*/README*
+!cmd/*/Dockerfile
+
+# Build artifacts directory
+bin/
+build/
+
+# ============================================================================
+# NODE.JS AND MODERN FRONTEND (2024/2025)
+# ============================================================================
+
+# Node modules and package managers
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Modern package managers (2024)
+# pnpm
+.pnpm-store/
+.pnpm-debug.log*
+
+# Bun (fast JavaScript runtime - 2024)
+.bun/
+bun.lockb
+
+# Yarn modern (Yarn 3+)
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.yarnrc.yml
+
+# npm
+.npm/
+.npmrc
+
+# Coverage tools
+coverage/
+*.lcov
+.nyc_output/
+
+# Frontend frameworks and tools
+.next/
+.nuxt/
+.vercel/
+.svelte-kit/
+.turbo/
+.astro/
+
+# Build outputs
+dist/
+build/
+out/
+public/build/
+
+# Dependency directories
+jspm_packages/
+vendor/
+
+# TypeScript
+*.tsbuildinfo
+.tsconfig.tsbuildinfo
+
+# ============================================================================
+# DOCKER AND CONTAINERIZATION (2024/2025 Standards)
+# ============================================================================
+
+# Docker build context and cache
+.docker/
+.dockerignore
+docker-compose.override.yml
+internal.invalid.yml
+docker-compose.dev.yml
+*.tar.gz
+
+# Docker centralized directory - preserve structure but exclude artifacts  
+docker/logs/
+docker/data/
+docker/cache/
+docker/.build-cache/
+docker/volumes/
+
+# Docker BuildKit cache
+.buildx-cache/
+
+# Container images and exports
+*.tar
+*.tar.gz
+*.tar.xz
+
+# Docker Compose logs
+docker-compose.log
+
+# Kubernetes and container orchestration
+k8s-secrets.yaml
+*.secret.yaml
+kustomization.yaml.bak
+.kube/config
+
+# Helm charts
+.helm/
+
+# Container security scanning
+.trivy/
+.grype/
+
+# Local development containers
+.devcontainer/build-cache/
+
+# Podman (Docker alternative)
+.podman/
+
+# Skaffold (K8s dev tool)
+.skaffold/
+
+# Tilt (dev tool for Kubernetes - 2024)
+.tiltbuild/
+
+# ============================================================================
+# DATABASES
+# ============================================================================
+
+# SQLite
+*.sqlite
+*.sqlite3
+*.db
+*.sqlite3-journal
+*.sqlite3-shm
+*.sqlite3-wal
+
+# PostgreSQL
+*.backup
+*.dump
+
+# ============================================================================
+# LOGS AND OUTPUT
+# ============================================================================
+
+# Log files
+logs/
+*.log
+log/
+output/
+outputs/
+temp/
+tmp/
+.flext_logs/
+
+# Runtime data
+runtime/
+cache/
+.cache/
+pids/
+*.pid
+*.seed
+*.pid.lock
+.meltano/
+
+# ============================================================================
+# BACKUP AND TEMPORARY FILES
+# ============================================================================
+
+# Backup files
+*.backup
+*.bak
+*.tmp
+*.orig
+*.rej
+
+# Temporary directories
+temp/
+tmp/
+backup/
+backups/
+
+# ============================================================================
+# JUPYTER AND NOTEBOOKS
+# ============================================================================
+
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+*.ipynb
+*/.ipynb_checkpoints/*
+
+# IPython
+profile_default/
+ipython_config.py
+
+# ============================================================================
+# SECURITY SENSITIVE FILES
+# ============================================================================
+
+# Private keys and certificates
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.jks
+secret*
+*.secret
+credentials.json
+auth.json
+service-account*.json
+
+# API keys and tokens
+api_keys.json
+tokens.json
+*.token
+
+# SSL certificates
+ssl/
+certs/
+wallet/
+*.wallet
+
+# ============================================================================
+# SINGER/MELTANO SPECIFIC
+# ============================================================================
+
+# Meltano
+.meltano/
+.meltano-*
+meltano.db
+meltano-*.db
+**/.meltano/run/
+**/.meltano/logs/
+**/.meltano/transformers/
+**/.meltano/extractors/
+**/.meltano/loaders/
+**/.meltano/run_test/
+plugins/
+
+# Singer
+*.state
+*.state.json
+state.json
+*_state.json
+catalogs/
+catalog.json
+*.catalog.json
+
+# dbt - Data Build Tool
+target/
+dbt_packages/
+dbt_modules/
+logs/
+dbt.log
+dbt_project.yml.jinja
+
+# ============================================================================
+# FLEXT WORKSPACE SPECIFIC
+# ============================================================================
+
+# Multi-agent coordination
+.token
+
+# Development artifacts
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# Generated content and build artifacts
+schemas/
+reference/
+
+# FLEXT build and runtime
+bin/flext*
+bin/flexcore*
+*/runtime-plugins/
+
+# Workspace temporary files  
+flext_plugin_violations.txt
+final_mypy_ecosystem_analysis.json
+pyright_scan_workspace.json
+check_flextresult_all.py
+
+# ============================================================================
+# PROJECT SPECIFIC PATTERNS
+# ============================================================================
+
+# Data pipeline artifacts
+data/
+output/
+logs/
+
+# LDAP specific
+*.ldif.bak
+
+# Oracle specific
+*.ora
+tnsnames.ora
+sqlnet.ora
+*.dmp
+*.exp
+
+# Test artifacts
+test_output/
+*.jsonl
+
+# ============================================================================
+# ARCHIVE AND COMPRESSED FILES
+# ============================================================================
+
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.bz2
+*.xz
+
+# ============================================================================
+# AI TOOLS
+# ============================================================================
+
+# AI assistant files
+.cursor/
+.cursorrules
+.aider*
+
+# ============================================================================
+# ALWAYS INCLUDE EXCEPTIONS
+# ============================================================================
+
+# Important: Use ! to force include critical files
+!.env.example
+!.env.template
+!pyproject.toml
+!Makefile
+!README.md
+!docker-compose.yml
+!Dockerfile
+!.gitignore
+!.pre-commit-config.yaml
+!meltano.yml
+!go.mod
+!package.json
+!dbt_project.yml
+!ansible.cfg
+!requirements.txt
+
+# ============================================================================
+# ROOT DIRECTORY SPECIFIC RULES
+# ============================================================================
+
+# Root-specific patterns
+.benchmarks/
+.qlty/
+.logfire/

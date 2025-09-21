@@ -20,6 +20,7 @@ from flext.application_pipeline import (
     FlextApplicationPipelineService,
 )
 from flext_core import FlextDomainService, FlextLogger, FlextResult, FlextTypes
+from flext_core.constants import FlextConstants
 
 
 class FlextUnifiedServices(FlextDomainService[str]):
@@ -91,13 +92,11 @@ class FlextUnifiedServices(FlextDomainService[str]):
             result = self._pipeline_service.execute_pipeline(pipeline_id)
 
             if result.is_success:
-                return FlextResult[FlextTypes.Core.Dict].ok(
-                    {
-                        "pipeline_id": pipeline_id,
-                        "status": "completed",
-                        "result": result.value,
-                    }
-                )
+                return FlextResult[FlextTypes.Core.Dict].ok({
+                    "pipeline_id": pipeline_id,
+                    "status": "completed",
+                    "result": result.value,
+                })
             return FlextResult[FlextTypes.Core.Dict].fail(
                 f"Pipeline execution failed: {result.error}"
             )
@@ -149,17 +148,15 @@ class FlextUnifiedServices(FlextDomainService[str]):
 
                 # Execute tests
                 result = subprocess.run(
-                    cmd, check=False, capture_output=True, text=True, timeout=300
+                    cmd, check=False, capture_output=True, text=True, timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT
                 )
 
-                return FlextResult[FlextTypes.Core.Dict].ok(
-                    {
-                        "returncode": result.returncode,
-                        "stdout": result.stdout,
-                        "stderr": result.stderr,
-                        "success": result.returncode == 0,
-                    }
-                )
+                return FlextResult[FlextTypes.Core.Dict].ok({
+                    "returncode": result.returncode,
+                    "stdout": result.stdout,
+                    "stderr": result.stderr,
+                    "success": result.returncode == 0,
+                })
 
             except Exception as e:
                 error = f"Test execution failed: {e}"
@@ -192,7 +189,7 @@ class FlextUnifiedServices(FlextDomainService[str]):
                             check=False,
                             capture_output=True,
                             text=True,
-                            timeout=180,
+                            timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT_SHORT,
                         )
                         results[name] = {
                             "returncode": result.returncode,
@@ -206,9 +203,10 @@ class FlextUnifiedServices(FlextDomainService[str]):
                         results[name] = {"success": False, "error": str(e)}
                         overall_success = False
 
-                return FlextResult[FlextTypes.Core.Dict].ok(
-                    {"overall_success": overall_success, "checks": results}
-                )
+                return FlextResult[FlextTypes.Core.Dict].ok({
+                    "overall_success": overall_success,
+                    "checks": results,
+                })
 
             except Exception as e:
                 error = f"Quality check failed: {e}"
@@ -234,17 +232,15 @@ class FlextUnifiedServices(FlextDomainService[str]):
                         build_cmd.extend(["--outdir", f"dist/{module}"])
 
                 result = subprocess.run(
-                    build_cmd, check=False, capture_output=True, text=True, timeout=300
+                    build_cmd, check=False, capture_output=True, text=True, timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT
                 )
 
-                return FlextResult[FlextTypes.Core.Dict].ok(
-                    {
-                        "returncode": result.returncode,
-                        "stdout": result.stdout,
-                        "stderr": result.stderr,
-                        "success": result.returncode == 0,
-                    }
-                )
+                return FlextResult[FlextTypes.Core.Dict].ok({
+                    "returncode": result.returncode,
+                    "stdout": result.stdout,
+                    "stderr": result.stderr,
+                    "success": result.returncode == 0,
+                })
 
             except Exception as e:
                 error = f"Build check failed: {e}"
@@ -279,14 +275,12 @@ class FlextUnifiedServices(FlextDomainService[str]):
             # FlextServices doesn't have list_services method, so use simple validation
             service_count = 1  # Assume core services are available
 
-            return FlextResult[dict[str, str]].ok(
-                {
-                    "handler_services": "initialized",
-                    "pipeline_services": "initialized",
-                    "core_services": "connected",
-                    "total_core_services": str(service_count),
-                }
-            )
+            return FlextResult[dict[str, str]].ok({
+                "handler_services": "initialized",
+                "pipeline_services": "initialized",
+                "core_services": "connected",
+                "total_core_services": str(service_count),
+            })
 
         except Exception as e:
             error = f"Service initialization failed: {e}"
