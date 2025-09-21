@@ -268,8 +268,8 @@ class TestErrorHandling:
             context={"error": "Test validation error"},
         )
 
-        assert entry["level"] == "ERROR"  # type: ignore[misc]
-        assert entry["message"] == "Configuration validation failed"  # type: ignore[misc]
+        assert entry["level"] == "ERROR"
+        assert entry["message"] == "Configuration validation failed"
 
     def test_string_error_handling(self) -> None:
         """Test string error handling."""
