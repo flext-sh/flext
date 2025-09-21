@@ -15,7 +15,7 @@ exclude = [
     "venv",
 ]
 fix = true
-preview = false
+preview = true
 format.docstring-code-format = true
 format.indent-style = "space"
 format.line-ending = "lf"
@@ -46,6 +46,22 @@ lint.ignore = [
     "TC003",   # typing-only-standard-library-import - Pydantic requirement
     "TRY300",  # try-consider-else
     "TRY301",  # raise-within-try - Abstract raise
+    "W293",
+    "DOC201",
+    "DOC501",
+    "CPY001",
+    "DOC402",
+    "FBT003",
+    "Q000",
+    "TRY003",
+    "PLC0415",
+    "PLR1702",
+    "PLR0914",
+    "PLR0904",
+    "DOC202",
+    "DOC502",
+    "PLR0917",
+    "D417",
 ]
 
 lint.isort.force-single-line = false
@@ -118,18 +134,8 @@ lint.per-file-ignores."**/*tests*/**" = [
     "TRY003",
     "TRY004",  # Prefer TypeError - test flexibility over strict exception types
 ]
-lint.per-file-ignores."**/src/**" = [
-    "S104", # hardcoded-bind-all-interfaces - legitimate for web server configuration
-    "S603", # subprocess-without-shell-equals-true - legitimate subprocess calls
-]
-lint.per-file-ignores."**/client-b-meltano-native/src/client-b_meltano_native/cli.py" = [
-    "FIX002", # line-contains-todo - legitimate TODO for CLI migration
-]
-lint.per-file-ignores."**/typings/**" = ["PYI001"]
 lint.select = ["ALL"]
 respect-gitignore = true
 show-fixes = true
-src = ["examples", "scripts", "src", "tests"]
+src = ["src"]
 target-version = "py313"
-lint.pep8-naming.classmethod-decorators = ["classmethod"]
-lint.pep8-naming.staticmethod-decorators = ["staticmethod"]

@@ -18,8 +18,8 @@ services:
       - ./.env:/app/.env
     ports:
       # Expose additional ports for development
-      - "8080:8080"  # API
-      - "6060:6060"  # pprof profiling
+      - "8080:8080" # API
+      - "6060:6060" # pprof profiling
     command: ["./flext", "-env", "development", "-log-level", "debug"]
 
   # Development overrides for web interface
@@ -33,15 +33,15 @@ services:
       - ./flext-web/src:/app/src
       - ./.env:/app/.env
     ports:
-      - "5000:5000"  # Web interface
+      - "5000:5000" # Web interface
     command: ["python", "-m", "flext_web.api", "--debug"]
 
   # Enable all monitoring services in development
   prometheus:
-    profiles: []  # Remove profile to enable by default
+    profiles: [] # Remove profile to enable by default
 
   grafana:
-    profiles: []  # Remove profile to enable by default
+    profiles: [] # Remove profile to enable by default
     environment:
       GF_SECURITY_ADMIN_PASSWORD: REDACTED_LDAP_BIND_PASSWORD
       GF_USERS_ALLOW_SIGN_UP: true

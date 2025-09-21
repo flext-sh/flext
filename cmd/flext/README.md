@@ -21,6 +21,7 @@ go build -o flext main.go
 ## Current Reality
 
 **What Actually Works:**
+
 - ✅ **Multi-Modal Operation**: Server, CLI, and interactive modes with intelligent detection
 - ✅ **Railway-Oriented Programming**: Comprehensive error handling with ServiceInitializationResult
 - ✅ **DI Container**: Real dependency injection with plugin handlers registration
@@ -30,6 +31,7 @@ go build -o flext main.go
 - ✅ **Production Features**: Graceful shutdown, health monitoring, structured logging
 
 **Architecture Validation:**
+
 - ✅ **Clean Architecture**: Strict layered architecture with dependency inversion
 - ✅ **Domain-Driven Design**: 5 bounded contexts (Pipeline, Plugin, Singer, Meltano, WMS)
 - ✅ **Service Initialization**: Railway pattern with explicit error handling chain
@@ -86,29 +88,29 @@ FLEXT_MODE=server ./flext        # Environment variable
 
 ### Configuration
 
-**Enterprise Configuration** (config.yaml):
+**Enterprise Configuration** (config.YAML):
 
 ```yaml
 app:
-  mode: "auto"          # auto, server, cli, interactive
+  mode: "auto" # auto, server, cli, interactive
   environment: "production"
   debug: false
 
 server:
   host: "0.0.0.0"
-  port: 8081           # FLEXT Service standard (NOT 8080)
+  port: 8081 # FLEXT Service standard (NOT 8080)
   timeout: 30s
 
 database:
-  url: "postgresql://localhost:5433/flext"  # Port 5433 (not default 5432)
+  url: "postgresql://localhost:5433/flext" # Port 5433 (not default 5432)
   pool_size: 20
 
 redis:
-  url: "redis://localhost:6380"           # Port 6380 (not default 6379)
+  url: "redis://localhost:6380" # Port 6380 (not default 6379)
   pool_size: 10
 
 flexcore:
-  url: "http://localhost:8080"            # FlexCore coordination
+  url: "http://localhost:8080" # FlexCore coordination
   timeout: 30s
 
 python:
@@ -119,13 +121,13 @@ python:
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `FLEXT_MODE` | Operation mode (server/cli/interactive/auto) | auto |
-| `FLEXT_SERVER_PORT` | Server port (CRITICAL: use 8081) | 8081 |
-| `FLEXT_DATABASE_URL` | PostgreSQL connection | postgresql://localhost:5433/flext |
-| `FLEXT_REDIS_URL` | Redis connection | redis://localhost:6380 |
-| `FLEXT_FLEXCORE_URL` | FlexCore service URL | http://localhost:8080 |
+| Variable             | Description                                  | Default                           |
+| -------------------- | -------------------------------------------- | --------------------------------- |
+| `FLEXT_MODE`         | Operation mode (server/cli/interactive/auto) | auto                              |
+| `FLEXT_SERVER_PORT`  | Server port (CRITICAL: use 8081)             | 8081                              |
+| `FLEXT_DATABASE_URL` | PostgreSQL connection                        | postgresql://localhost:5433/flext |
+| `FLEXT_REDIS_URL`    | Redis connection                             | redis://localhost:6380            |
+| `FLEXT_FLEXCORE_URL` | FlexCore service URL                         | <http://localhost:8080>           |
 
 ## Development Commands
 
@@ -328,14 +330,17 @@ curl -X POST http://localhost:8081/api/v1/meltano/run \
 ### Common Production Issues
 
 **Port Configuration:**
+
 - ❌ **Wrong Port**: Using 8080 instead of 8081 (conflicts with FlexCore)
 - ✅ **Correct Port**: FLEXT Service uses 8081, FlexCore uses 8080
 
 **Service Communication:**
+
 - ❌ **Connection Failed**: Check FlexCore availability at localhost:8080
 - ✅ **Health Validation**: Both services should return healthy status
 
 **Multi-Modal Issues:**
+
 - ❌ **Mode Detection**: Set explicit mode if auto-detection fails
 - ✅ **Environment**: Check TTY, container, and argument detection
 
