@@ -268,8 +268,8 @@ class TestErrorHandling:
             context={"error": "Test validation error"},
         )
 
-        assert entry["level"] == "ERROR"
-        assert entry["message"] == "Configuration validation failed"
+        assert entry["level"] == "ERROR"  # type: ignore[misc]
+        assert entry["message"] == "Configuration validation failed"  # type: ignore[misc]
 
     def test_string_error_handling(self) -> None:
         """Test string error handling."""
@@ -567,7 +567,7 @@ class TestPerformanceAndStressScenarios:
         import threading
 
         logger = FlextLogger("concurrent_test")
-        results = []
+        results: list[int] = []
 
         def log_from_thread(thread_id: int) -> None:
             with patch("structlog.get_logger"):
@@ -575,7 +575,7 @@ class TestPerformanceAndStressScenarios:
                 results.append(thread_id)
 
         # Create multiple threads
-        threads = []
+        threads: list[threading.Thread] = []
         for i in range(10):
             thread = threading.Thread(target=log_from_thread, args=(i,))
             threads.append(thread)
