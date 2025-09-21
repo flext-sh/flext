@@ -2,6 +2,9 @@
 """Common utilities for FLEXT scripts - Facade for flext-core patterns.
 
 ANTI-DUPLICATION ENFORCEMENT: Uses flext-core exclusively, NO local implementations.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
 
 from __future__ import annotations

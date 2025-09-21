@@ -2,6 +2,9 @@
 """FLEXT Architecture Diagnostic Tool.
 
 Comprehensive diagnostic tool for FLEXT workspace architecture validation.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
 
 import contextlib
@@ -17,20 +20,20 @@ from pathlib import Path
 import pytest
 from mypy import api as mypy_api
 
-from flext_core import FlextLogger, FlextTypes
+from flext_core import FlextConstants, FlextLogger, FlextTypes
 
 logger = FlextLogger(__name__)
 
-# Constants for return codes
-SUCCESS_CODE = 0
-MAKEFILE_TARGET_NOT_FOUND = 2
-COMMAND_FAILED = 1
+# Constants for return codes - use FlextConstants for standardization
+SUCCESS_CODE = FlextConstants.Defaults.SUCCESS_EXIT_CODE
+MAKEFILE_TARGET_NOT_FOUND = FlextConstants.Defaults.ERROR_EXIT_CODE + 1  # 2
+COMMAND_FAILED = FlextConstants.Defaults.ERROR_EXIT_CODE  # 1
 
-# Status constants (not passwords, just status indicators)
-STATUS_PASS = "PASS"
-STATUS_FAIL = "FAIL"
-STATUS_NO_TARGET = "NO_TARGET"
-STATUS_SKIP = "SKIP"
+# Status constants (not passwords, just status indicators) - use FlextConstants
+STATUS_PASS = FlextConstants.Mixins.STATUS_PASS
+STATUS_FAIL = FlextConstants.Mixins.STATUS_FAIL
+STATUS_NO_TARGET = FlextConstants.Mixins.STATUS_NO_TARGET
+STATUS_SKIP = FlextConstants.Mixins.STATUS_SKIP
 
 
 @dataclass
@@ -358,10 +361,27 @@ class FlextDiagnostic:
                 for _name, data in level_projects:
                     if isinstance(data, dict):
                         status_icons = [
-                            str(data.get("lint_status", "UNKNOWN")),
-                            str(data.get("mypy_status", "UNKNOWN")),
-                            str(data.get("test_status", "UNKNOWN")),
-                            str(data.get("poetry_install", "UNKNOWN")),
+                            str(
+                                data.get(
+                                    "lint_status", FlextConstants.Mixins.STATUS_UNKNOWN
+                                )
+                            ),
+                            str(
+                                data.get(
+                                    "mypy_status", FlextConstants.Mixins.STATUS_UNKNOWN
+                                )
+                            ),
+                            str(
+                                data.get(
+                                    "test_status", FlextConstants.Mixins.STATUS_UNKNOWN
+                                )
+                            ),
+                            str(
+                                data.get(
+                                    "poetry_install",
+                                    FlextConstants.Mixins.STATUS_UNKNOWN,
+                                )
+                            ),
                         ]
                         " | ".join(status_icons)
 

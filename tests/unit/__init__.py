@@ -1,1 +1,5 @@
-"""Unit tests for FLEXT Control Panel."""
+"""Unit tests for FLEXT Control Panel.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""

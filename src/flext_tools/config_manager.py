@@ -51,9 +51,6 @@ class ConfigurationManager:
         if not key:
             return FlextResult[None].fail("Configuration key cannot be empty")
 
-        if value is None:
-            return FlextResult[None].fail("Configuration value cannot be None")
-
         try:
             self._config[key] = value
             return FlextResult[None].ok(None)

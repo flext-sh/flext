@@ -3,6 +3,9 @@
 
 This script fixes issues where DI container functions are called before import,
 and removes duplicate initialization comments.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
 
 import re
