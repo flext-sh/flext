@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Análise simples de violações arquiteturais no flext-core."""
+"""Análise simples de violações arquiteturais no flext-core.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 import ast
 import os
