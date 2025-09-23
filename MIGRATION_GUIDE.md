@@ -89,16 +89,16 @@ class MyModel(BaseModel):
 **Before:**
 
 ```python
-from typing import Dict, Any
+from typing import Dict, object
 
-def process_data(data: Dict[str, Any]) -> Dict[str, Any]:
+def process_data(data: Dict[str, object]) -> Dict[str, object]:
     return data
 ```
 
 **After:**
 
 ```python
-def process_data(data: dict[str, Any]) -> dict[str, Any]:
+def process_data(data: dict[str, object]) -> dict[str, object]:
     return data
 ```
 

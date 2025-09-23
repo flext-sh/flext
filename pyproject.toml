@@ -297,56 +297,42 @@ init_typed = true
 warn_required_dynamic_aliases = true
 warn_untyped_fields = true
 
-[tool.ruff]
-extend = "./ruff-shared.toml"
-lint.isort.known-first-party = ["flext", "flext_tools"]
 
-# =============================================================================
-# PYRIGHT CONFIGURATION
-# =============================================================================
-# Enhanced type checking with Pyright/Basedpyright
 [tool.pyright]
-# Basic configuration
-pythonVersion = "3.13"
+include = ["examples/", "scripts/", "src/", "tests/"]
+exclude = [
+    "__pycache__/",
+    ".meltano/",
+    ".mypy_cache/",
+    ".pytest_cache/",
+    ".ruff_cache/",
+    ".venv/",
+    "build/",
+    "dist/",
+    "node_modules/",
+    "target/",
+]
+reportMissingSuperCall = false
 pythonPlatform = "Linux"
+pythonVersion = "3.13"
+typeCheckingMode = "strict"
 venvPath = "."
 venv = ".venv"
 
-# Include and exclude patterns - workspace-wide
-include = ["**/examples", "**/scripts", "**/src", "**/tests"]
-exclude = [
-    "**/__pycache__",
-    "**/.meltano",
-    "**/.mypy_cache",
-    "**/.pytest_cache",
-    "**/.ruff_cache",
-    "**/.venv",
-    "**/build",
-    "**/dist",
-    "**/node_modules",
-    "**/target",
-]
 
-# Type checking mode
-typeCheckingMode = "strict"
-
-
-[[tool.pyright.executionEnvironments]]
-root = "."
-extraPaths = ["**/src"]
-include = ["**/__init__.py"]
-reportWildcardImportFromLibrary = false
-
-# Test files environment - disable private usage checking
 [[tool.pyright.executionEnvironments]]
 root = "."
 extraPaths = [
-    "**/examples",
-    "**/scripts",
-    "**/tests",
+    "examples/",
+    "scripts/",
+    "tests/",
 ]
 reportImplicitRelativeImport = false
 reportPrivateUsage = false
+
+[tool.ruff]
+extend = "./ruff-shared.toml"
+lint.isort.known-first-party = ["flext", "flext_tools"]
 
 
 [tool.vulture]

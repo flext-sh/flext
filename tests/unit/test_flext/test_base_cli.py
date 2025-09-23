@@ -9,7 +9,7 @@ import inspect
 from flext import base_cli
 from flext.base_cli import (
     FlextCliApi,
-    FlextCliConfigs,
+    FlextCliContext,
     FlextCliFormatters,
     FlextCliMain,
     FlextCliService,
@@ -200,7 +200,7 @@ class TestDirectImportValidation:
         # Get all classes imported
         classes = [
             FlextCliApi,
-            FlextCliConfigs,
+            FlextCliContext,
             FlextCliFormatters,
             FlextCliMain,
             FlextCliService,

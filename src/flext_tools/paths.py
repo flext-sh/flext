@@ -8,10 +8,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextDomainService, FlextResult
+from flext_core import FlextResult, FlextService
 
 
-class FlextPathService(FlextDomainService[Path]):
+class FlextPathService(FlextService[Path]):
     """Unified path service with nested helpers.
 
     Single responsibility: Path operations and validation.
@@ -50,7 +50,7 @@ class FlextPathService(FlextDomainService[Path]):
             return Path(path).resolve()
 
     def execute(self) -> FlextResult[Path]:
-        """Execute path service - FlextDomainService interface."""
+        """Execute path service - FlextService interface."""
         root = self._UtilityHelper.get_project_root()
         return FlextResult[Path].ok(root)
 

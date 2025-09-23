@@ -27,7 +27,7 @@ from flext.cli import (
 )
 from flext.cli_patterns import (
     FlextCliApi as FlextCliApiPattern,
-    FlextCliConfigs as FlextCliConfigsPattern,
+    FlextCliContext as FlextCliContextPattern,
     FlextCliFormatters as FlextCliFormattersPattern,
     FlextCliMain as FlextCliMainPattern,
 )
@@ -59,11 +59,11 @@ from flext.workspace_cli import (
     docker,
     main as workspace_main,
     status,
-    test as workspace_test,
+    run_tests as workspace_test,
 )
 from flext_cli import (
     FlextCliApi,
-    FlextCliConfigs,
+    FlextCliContext,
     FlextCliFormatters,
     FlextCliMain,
     FlextCliService,
@@ -80,8 +80,8 @@ __all__ = [
     "FlextApplicationPipelineService",
     "FlextCliApi",
     "FlextCliApiPattern",
-    "FlextCliConfigs",
-    "FlextCliConfigsPattern",
+    "FlextCliContext",
+    "FlextCliContextPattern",
     "FlextCliFormatters",
     "FlextCliFormattersPattern",
     "FlextCliMain",
