@@ -6,10 +6,10 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import FlextDomainService, FlextResult
+from flext_core import FlextResult, FlextService
 
 
-class FlextSecurityService(FlextDomainService[dict[str, str]]):
+class FlextSecurityService(FlextService[dict[str, str]]):
     """Unified security service with nested helpers.
 
     Single responsibility: Security operations including vault decryption and antipattern scanning.
@@ -37,7 +37,7 @@ class FlextSecurityService(FlextDomainService[dict[str, str]]):
             return FlextResult[list[str]].ok([])
 
     def execute(self) -> FlextResult[dict[str, str]]:
-        """Execute security service - FlextDomainService interface."""
+        """Execute security service - FlextService interface."""
         return FlextResult[dict[str, str]].ok({})
 
     def decrypt_vault(self, vault_path: str) -> FlextResult[dict[str, str]]:

@@ -11,14 +11,14 @@ import inspect
 import flext.cli_patterns as patterns_module
 from flext.cli_patterns import (
     FlextCliApi,
-    FlextCliConfigs,
+    FlextCliContext,
     FlextCliFormatters,
     FlextCliMain,
     __all__,
 )
 from flext_cli import (
     FlextCliApi as OriginalApi,
-    FlextCliConfigs as OriginalConfigs,
+    FlextCliContext as OriginalContext,
     FlextCliFormatters as OriginalFormatters,
     FlextCliMain as OriginalMain,
 )
@@ -33,7 +33,7 @@ class TestCliPatterns:
         assert "__all__" in dir(__import__("flext.cli_patterns"))
         assert isinstance(__all__, list)
         assert "FlextCliApi" in __all__
-        assert "FlextCliConfigs" in __all__
+        assert "FlextCliContext" in __all__
         assert "FlextCliFormatters" in __all__
         assert "FlextCliMain" in __all__
 
@@ -43,11 +43,11 @@ class TestCliPatterns:
         assert FlextCliApi is not None
         assert hasattr(FlextCliApi, "__name__")
 
-    def test_flext_cli_configs_import_from_patterns(self) -> None:
-        """Test that FlextCliConfigs can be imported from cli_patterns."""
+    def test_flext_cli_context_import_from_patterns(self) -> None:
+        """Test that FlextCliContext can be imported from cli_patterns."""
         # Act & Assert
-        assert FlextCliConfigs is not None
-        assert hasattr(FlextCliConfigs, "__name__")
+        assert FlextCliContext is not None
+        assert hasattr(FlextCliContext, "__name__")
 
     def test_flext_cli_formatters_import_from_patterns(self) -> None:
         """Test that FlextCliFormatters can be imported from cli_patterns."""
@@ -86,7 +86,7 @@ class TestCliPatterns:
         # Test that the module exports only the expected classes
         expected_exports = {
             "FlextCliApi",
-            "FlextCliConfigs",
+            "FlextCliContext",
             "FlextCliFormatters",
             "FlextCliMain",
         }
@@ -109,7 +109,7 @@ class TestCliPatterns:
         # Should only contain the four direct re-exports
         expected_attrs = {
             "FlextCliApi",
-            "FlextCliConfigs",
+            "FlextCliContext",
             "FlextCliFormatters",
             "FlextCliMain",
         }
@@ -123,7 +123,7 @@ class TestCliPatterns:
 
         # Assert that the re-exports are the same as the originals
         assert FlextCliApi is OriginalApi
-        assert FlextCliConfigs is OriginalConfigs
+        assert FlextCliContext is OriginalContext
         assert FlextCliFormatters is OriginalFormatters
         assert FlextCliMain is OriginalMain
 
@@ -156,7 +156,7 @@ class TestDirectReExportsPattern:
         # Should contain direct imports from flext_cli
         assert "from flext_cli import (" in source_text
         assert "FlextCliApi," in source_text
-        assert "FlextCliConfigs," in source_text
+        assert "FlextCliContext," in source_text
         assert "FlextCliFormatters," in source_text
         assert "FlextCliMain," in source_text
 
@@ -209,7 +209,7 @@ class TestModuleExportsCompliance:
         # Should only export the four clean classes
         clean_exports = {
             "FlextCliApi",
-            "FlextCliConfigs",
+            "FlextCliContext",
             "FlextCliFormatters",
             "FlextCliMain",
         }

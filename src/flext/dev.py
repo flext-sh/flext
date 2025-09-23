@@ -16,7 +16,7 @@ from flext.dev_enums import FlextDevEnums
 from flext.dev_models import FlextAdvancedDevModels
 from flext.project_types import FlextProjectTypes
 from flext_core import (
-    FlextDomainService,
+    FlextService,
     FlextLogger,
     FlextResult,
     FlextTypes,
@@ -24,7 +24,7 @@ from flext_core import (
 
 
 class FlextAdvancedDevToolsManager(
-    FlextDomainService[FlextAdvancedDevModels.OperationResult]
+    FlextService[FlextAdvancedDevModels.OperationResult]
 ):
     """Advanced development tools service using Python 3.13 + Generic patterns.
 
@@ -376,7 +376,7 @@ class FlextAdvancedDevToolsManager(
         return discovery_service.discover_projects(workspace_path)
 
     def execute(self) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
-        """Execute dev tools manager - required by FlextDomainService abstract method."""
+        """Execute dev tools manager - required by FlextService abstract method."""
         # Default execution returns service status
         return FlextResult[FlextAdvancedDevModels.OperationResult].ok(
             FlextAdvancedDevModels.OperationResult(
