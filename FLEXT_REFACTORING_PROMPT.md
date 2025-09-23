@@ -73,7 +73,7 @@ src/project_namespace/
 │
 ├── Domain Layer (DDD Patterns)
 │   ├── models.py              # Pydantic models and JSON schemas
-│   ├── domain_services.py     # Domain service patterns and operations
+│   ├── service.py     # Domain service patterns and operations
 │   └── root_models.py         # RootModel patterns for validation
 │
 ├── Application Layer (CQRS/Handlers)
@@ -287,13 +287,13 @@ class UserModel(FlextModels):
     }
 ```
 
-2. **domain_services.py - Use FlextDomainService**
+2. **service.py - Use FlextService**
 
 ```python
 # ✅ CORRECT - flext-core proven service patterns
-from flext_core import FlextDomainService, FlextResult
+from flext_core import FlextService, FlextResult
 
-class UserService(FlextDomainService[FlextResult[UserModel]]):
+class UserService(FlextService[FlextResult[UserModel]]):
     """User service using flext-core foundation."""
 
     def __init__(self):
@@ -491,7 +491,7 @@ from project_name.protocols import *
 
 # Domain Layer - Depends only on Foundation
 from project_name.models import *
-from project_name.domain_services import *
+from project_name.service import *
 
 # Application Layer - Depends on Domain + Foundation
 from project_name.commands import *
@@ -598,12 +598,12 @@ class ProjectModel(FlextModels):
 __all__ = ["ProjectModel"]
 ```
 
-2. **domain_services.py** (Business logic)
+2. **service.py** (Business logic)
 
 ```python
-from flext_core import FlextDomainService, FlextResult
+from flext_core import FlextService, FlextResult
 
-class ProjectService(FlextDomainService[FlextResult[ProjectModel]]):
+class ProjectService(FlextService[FlextResult[ProjectModel]]):
     """Project service following flext-core patterns."""
 
     def create_project(self, data: dict) -> FlextResult[ProjectModel]:

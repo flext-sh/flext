@@ -13,7 +13,7 @@
 - **Files**: 20 Python modules (7,266 lines total)
 - **Architecture**: Single class per module pattern (FLEXT compliant)
 - **FLEXT Integration**: 591 FlextResult usages, 59 methods with FlextResult returns
-- **Service Pattern**: Proper FlextDomainService inheritance in core services
+- **Service Pattern**: Proper FlextService inheritance in core services
 
 ### **Implementation Strengths**
 
@@ -92,7 +92,7 @@ flext-meltano has a solid foundation with proper FLEXT patterns but requires arc
 **Strengths**:
 
 - FlextResult usage throughout (591 occurrences, 59 methods)
-- Proper service inheritance from FlextDomainService
+- Proper service inheritance from FlextService
 - Comprehensive type annotations and validation
 - Clean module separation and organization
 
@@ -133,9 +133,9 @@ class FlextMeltanoProjectWrapper:
 
 ```python
 from dbt.cli.main import dbtRunner, dbtRunnerResult
-from flext_core import FlextDomainService, FlextResult
+from flext_core import FlextService, FlextResult
 
-class FlextDbtProgrammaticRunner(FlextDomainService):
+class FlextDbtProgrammaticRunner(FlextService):
     """Advanced dbt runner using dbtRunner programmatic API."""
 
     class _SessionManager:
@@ -174,9 +174,9 @@ class FlextDbtProgrammaticRunner(FlextDomainService):
 
 ```python
 from singer_sdk.singerlib import SingerTap, SingerTarget
-from flext_core import FlextDomainService, FlextResult
+from flext_core import FlextService, FlextResult
 
-class FlextSingerProtocolManager(FlextDomainService):
+class FlextSingerProtocolManager(FlextService):
     """Singer protocol management following 2025 specifications."""
 
     class _MessageProcessor:

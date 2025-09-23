@@ -19,11 +19,11 @@ from flext.application_handlers import (
 from flext.application_pipeline import (
     FlextApplicationPipelineService,
 )
-from flext_core import FlextDomainService, FlextLogger, FlextResult, FlextTypes
+from flext_core import FlextService, FlextLogger, FlextResult, FlextTypes
 from flext_core.constants import FlextConstants
 
 
-class FlextUnifiedServices(FlextDomainService[str]):
+class FlextUnifiedServices(FlextService[str]):
     """Unified service coordination with nested service handlers.
 
     Implements FLEXT unified class pattern for service coordination across
@@ -288,7 +288,7 @@ class FlextUnifiedServices(FlextDomainService[str]):
             return FlextResult[dict[str, str]].fail(error)
 
     def execute(self, _request: str = "") -> FlextResult[str]:
-        """Execute unified services - required by FlextDomainService abstract method."""
+        """Execute unified services - required by FlextService abstract method."""
         try:
             # Default execution initializes all services and returns status
             init_result = self.initialize_all_services()

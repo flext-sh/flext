@@ -48,9 +48,9 @@ ProjectPath = Annotated[str, BeforeValidator(validate_project_path)]
 class FlextAdvancedDevModels:
     """Advanced development models using flext-core as SOURCE OF TRUTH."""
 
-    # FLEXT-CORE INTEGRATION: Use FlextModels.Config instead of local BaseModel
-    class DevOperationContext(FlextModels.Config):
-        """Development operation context using flext-core Config."""
+    # FLEXT-CORE INTEGRATION: Use BaseModel with flext-core patterns
+    class DevOperationContext(BaseModel):
+        """Development operation context using Pydantic BaseModel."""
 
         # Additional dev-specific fields beyond base Config
         operation_id: UUID = Field(
