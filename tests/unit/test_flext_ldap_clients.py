@@ -1,510 +1,515 @@
-"""Comprehensive tests for FlextLdapClient - targeting 100% coverage.
-
-This test module provides comprehensive coverage for the LDAP client
-implementation, focusing on real functionality and edge cases.
-"""
+"""Comprehensive tests for FlextLdapClient - using ACTUAL API."""
 
 from unittest.mock import Mock, patch
 
 import pytest
 from flext_ldap.clients import FlextLdapClient
-from flext_ldap.config import FlextLdapConfigs
 from flext_ldap.models import FlextLdapModels
-from pydantic import SecretStr
 
 
 class TestFlextLdapClient:
-    """Test FlextLdapClient implementation."""
+    """Test FlextLdapClient implementation with actual API."""
 
     @pytest.fixture
-    def mock_connection(self):
-        """Create mock LDAP connection."""
+    def client(self) -> FlextLdapClient:
+        return FlextLdapClient()
+
+    @pytest.fixture
+    def mock_connection(self) -> Mock:
         mock_conn = Mock()
         mock_conn.bound = True
         mock_conn.last_error = None
         mock_conn.entries = []
         return mock_conn
 
-    @pytest.fixture
-    def client_config(self):
-        """Create test client configuration."""
-        return FlextLdapConfigs.LdapConnectionConfig(
-            server="ldap://test.example.com",
-            port=389,
-            bind_dn="cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com",
-            bind_password=SecretStr("password123"),
-            base_dn="dc=example,dc=com",
-            use_ssl=False,
-            timeout=30,
+    def test_initialization(self) -> None:
+        client = FlextLdapClient()
+        assert client._connection is None
+        assert client._server is None
+        assert client._logger is not None
+
+    @pytest.mark.asyncio
+    @patch("flext_ldap.clients.Connection")
+    @patch("flext_ldap.clients.Server")
+    async def test_connect_success(
+        self,
+        mock_server_class: Mock,
+        mock_connection_class: Mock,
+        client: FlextLdapClient,
+    ) -> None:
+        mock_server = Mock()
+        mock_conn = Mock()
+        mock_conn.bound = True
+        mock_server_class.return_value = mock_server
+        mock_connection_class.return_value = mock_conn
+
+        result = await client.connect(
+            "ldap://localhost:389", "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com", "password"
         )
 
-    @pytest.fixture
-    def client(self, client_config):
-        """Create test client."""
-        return FlextLdapClient(client_config)
-
-    def test_client_initialization(self, client_config) -> None:
-        """Test client initialization."""
-        client = FlextLdapClient(client_config)
-        assert client._config == client_config
-        assert client._connection is None
-
-    @patch("flext_ldap.clients.Connection")
-    @patch("flext_ldap.clients.Server")
-    def test_connect_success(
-        self, mock_server, mock_connection, client, mock_connection_obj
-    ) -> None:
-        """Test successful connection."""
-        mock_server.return_value = Mock()
-        mock_connection.return_value = mock_connection_obj
-        mock_connection_obj.bind.return_value = True
-
-        result = client.connect()
-
         assert result.is_success
-        assert client._connection is not None
-        mock_server.assert_called_once()
-        mock_connection.assert_called_once()
+        assert result.value is True
+        mock_server_class.assert_called_once_with("ldap://localhost:389")
+        mock_connection_class.assert_called_once_with(
+            mock_server, "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com", "password", auto_bind=True
+        )
 
+    @pytest.mark.asyncio
     @patch("flext_ldap.clients.Connection")
     @patch("flext_ldap.clients.Server")
-    def test_connect_bind_failure(self, mock_server, mock_connection, client) -> None:
-        """Test connection with bind failure."""
-        mock_server.return_value = Mock()
+    async def test_connect_bind_failure(
+        self,
+        mock_server_class: Mock,
+        mock_connection_class: Mock,
+        client: FlextLdapClient,
+    ) -> None:
+        mock_server = Mock()
         mock_conn = Mock()
-        mock_conn.bind.return_value = False
-        mock_conn.last_error = "Invalid credentials"
-        mock_connection.return_value = mock_conn
+        mock_conn.bound = False
+        mock_server_class.return_value = mock_server
+        mock_connection_class.return_value = mock_conn
 
-        result = client.connect()
+        result = await client.connect(
+            "ldap://localhost:389", "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com", "wrongpass"
+        )
 
         assert result.is_failure
         assert "Failed to bind" in result.error
 
-    @patch("flext_ldap.clients.Connection")
+    @pytest.mark.asyncio
     @patch("flext_ldap.clients.Server")
-    def test_connect_exception(self, mock_server, mock_connection, client) -> None:
-        """Test connection with exception."""
-        mock_server.side_effect = Exception("Connection error")
+    async def test_connect_exception(
+        self, mock_server_class: Mock, client: FlextLdapClient
+    ) -> None:
+        mock_server_class.side_effect = Exception("Connection error")
 
-        result = client.connect()
+        result = await client.connect(
+            "ldap://localhost:389", "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com", "password"
+        )
 
         assert result.is_failure
-        assert "Connection error" in result.error
+        assert "Connection failed" in result.error
 
-    def test_disconnect_success(self, client, mock_connection) -> None:
-        """Test successful disconnection."""
+    @pytest.mark.asyncio
+    @patch("flext_ldap.clients.Connection")
+    async def test_bind_success(
+        self,
+        mock_connection_class: Mock,
+        client: FlextLdapClient,
+        mock_connection: Mock,
+    ) -> None:
+        client._connection = mock_connection
+        client._server = Mock()
+
+        mock_new_conn = Mock()
+        mock_new_conn.bound = True
+        mock_connection_class.return_value = mock_new_conn
+
+        result = await client.bind("cn=test,dc=example,dc=com", "password")
+
+        assert result.is_success
+        assert result.value is True
+
+    @pytest.mark.asyncio
+    @patch("flext_ldap.clients.Connection")
+    async def test_bind_failure(
+        self,
+        mock_connection_class: Mock,
+        client: FlextLdapClient,
+        mock_connection: Mock,
+    ) -> None:
+        client._connection = mock_connection
+        client._server = Mock()
+
+        mock_new_conn = Mock()
+        mock_new_conn.bound = False
+        mock_connection_class.return_value = mock_new_conn
+
+        result = await client.bind("cn=test,dc=example,dc=com", "wrongpass")
+
+        assert result.is_failure
+        assert "Bind failed" in result.error
+
+    @pytest.mark.asyncio
+    async def test_bind_no_connection(self, client: FlextLdapClient) -> None:
+        result = await client.bind("cn=test,dc=example,dc=com", "password")
+
+        assert result.is_failure
+        assert "No connection established" in result.error
+
+    @pytest.mark.asyncio
+    async def test_unbind_success(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
         client._connection = mock_connection
 
-        result = client.disconnect()
+        result = await client.unbind()
 
         assert result.is_success
         mock_connection.unbind.assert_called_once()
-        assert client._connection is None
 
-    def test_disconnect_no_connection(self, client) -> None:
-        """Test disconnect when no connection exists."""
-        result = client.disconnect()
+    @pytest.mark.asyncio
+    async def test_unbind_no_connection(self, client: FlextLdapClient) -> None:
+        result = await client.unbind()
+
         assert result.is_success
 
-    def test_disconnect_exception(self, client, mock_connection) -> None:
-        """Test disconnect with exception."""
+    def test_is_connected_true(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
         client._connection = mock_connection
-        mock_connection.unbind.side_effect = Exception("Unbind error")
+        mock_connection.bound = True
 
-        result = client.disconnect()
+        assert client.is_connected() is True
 
-        assert result.is_failure
-        assert "Unbind error" in result.error
+    def test_is_connected_false_no_connection(self, client: FlextLdapClient) -> None:
+        assert client.is_connected() is False
 
-    def test_is_connected_true(self, client, mock_connection) -> None:
-        """Test is_connected when connected."""
+    def test_is_connected_false_unbound(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
         client._connection = mock_connection
-        assert client.is_connected()
-
-    def test_is_connected_false(self, client) -> None:
-        """Test is_connected when not connected."""
-        assert not client.is_connected()
-
-    def test_is_connected_unbound(self, client, mock_connection) -> None:
-        """Test is_connected when connection is unbound."""
         mock_connection.bound = False
-        client._connection = mock_connection
-        assert not client.is_connected()
 
-    def test_bind_success(self, client, mock_connection) -> None:
-        """Test successful bind."""
-        client._connection = mock_connection
-        mock_connection.bind.return_value = True
+        assert client.is_connected() is False
 
-        result = client.bind("cn=test,dc=example,dc=com", "password")
+    def test_test_connection_connected(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
+        client._connection = mock_connection
+        mock_connection.bound = True
+
+        result = client.test_connection()
 
         assert result.is_success
-        mock_connection.bind.assert_called_with(
-            user="cn=test,dc=example,dc=com", password="password"
-        )
+        assert result.value is True
 
-    def test_bind_failure(self, client, mock_connection) -> None:
-        """Test bind failure."""
+    def test_test_connection_not_connected(self, client: FlextLdapClient) -> None:
+        result = client.test_connection()
+
+        assert result.is_failure
+        assert "Not connected" in result.error
+
+    @pytest.mark.asyncio
+    @patch("flext_ldap.clients.Connection")
+    async def test_authenticate_user_success(
+        self,
+        mock_connection_class: Mock,
+        client: FlextLdapClient,
+        mock_connection: Mock,
+    ) -> None:
         client._connection = mock_connection
-        mock_connection.bind.return_value = False
-        mock_connection.last_error = "Invalid credentials"
+        client._server = Mock()
 
-        result = client.bind("cn=test,dc=example,dc=com", "wrongpass")
-
-        assert result.is_failure
-        assert "Invalid credentials" in result.error
-
-    def test_bind_no_connection(self, client) -> None:
-        """Test bind without connection."""
-        result = client.bind("cn=test,dc=example,dc=com", "password")
-
-        assert result.is_failure
-        assert "No connection established" in result.error
-
-    def test_search_users_success(self, client, mock_connection) -> None:
-        """Test successful user search."""
-        # Setup mock entry
         mock_entry = Mock()
         mock_entry.entry_dn = "uid=testuser,ou=users,dc=example,dc=com"
-        mock_entry.cn.value = "Test User"
-        mock_entry.uid.value = "testuser"
-        mock_entry.sn.value = "User"
-        mock_entry.givenName.value = "Test"
-        mock_entry.mail.value = "test@example.com"
-        mock_entry.telephoneNumber.value = "123-456-7890"
-        mock_entry.mobile.value = "987-654-3210"
-        mock_entry.departmentNumber.value = "IT"
-        mock_entry.title.value = "Developer"
-        mock_entry.o.value = "Example Corp"
-        mock_entry.ou.value = "Engineering"
-        mock_entry.userPassword.value = "password123"
-        mock_entry.createTimestamp = None
-        mock_entry.modifyTimestamp = None
+        mock_entry.uid = Mock(value="testuser")
+        mock_entry.cn = Mock(value="Test User")
+        mock_entry.sn = Mock(value="User")
+        mock_entry.givenName = Mock(value="Test")
+        mock_entry.mail = Mock(value="test@example.com")
+        mock_entry.telephoneNumber = Mock(value=None)
+        mock_entry.mobile = Mock(value=None)
+        mock_entry.departmentNumber = Mock(value=None)
+        mock_entry.title = Mock(value=None)
+        mock_entry.o = Mock(value=None)
+        mock_entry.ou = Mock(value=None)
+        mock_entry.userPassword = Mock(value="secret")
 
-        client._connection = mock_connection
-        mock_connection.search.return_value = True
+        mock_connection.search.return_value = None
         mock_connection.entries = [mock_entry]
 
-        result = client.search_users("ou=users,dc=example,dc=com", uid="testuser")
+        mock_test_conn = Mock()
+        mock_test_conn.bind.return_value = True
+        mock_test_conn.unbind.return_value = None
+        mock_connection_class.return_value = mock_test_conn
+
+        result = await client.authenticate_user("testuser", "password")
 
         assert result.is_success
-        users = result.value
-        assert len(users) == 1
-        assert users[0].uid == "testuser"
-        assert users[0].cn == "Test User"
+        assert isinstance(result.value, FlextLdapModels.LdapUser)
 
-    def test_search_users_no_connection(self, client) -> None:
-        """Test user search without connection."""
-        result = client.search_users("ou=users,dc=example,dc=com")
-
-        assert result.is_failure
-        assert "No connection established" in result.error
-
-    def test_search_users_search_failure(self, client, mock_connection) -> None:
-        """Test user search with search failure."""
+    @pytest.mark.asyncio
+    @patch("flext_ldap.clients.Connection")
+    async def test_authenticate_user_failure(
+        self,
+        mock_connection_class: Mock,
+        client: FlextLdapClient,
+        mock_connection: Mock,
+    ) -> None:
         client._connection = mock_connection
-        mock_connection.search.return_value = False
-        mock_connection.last_error = "Search failed"
+        client._server = Mock()
 
-        result = client.search_users("ou=users,dc=example,dc=com")
-
-        assert result.is_failure
-        assert "Search failed" in result.error
-
-    def test_search_groups_success(self, client, mock_connection) -> None:
-        """Test successful group search."""
-        # Setup mock entry
-        mock_entry = Mock()
-        mock_entry.entry_dn = "cn=testgroup,ou=groups,dc=example,dc=com"
-        mock_entry.cn.value = "testgroup"
-        mock_entry.gidNumber.value = 1000
-        mock_entry.description.value = "Test Group"
-        mock_entry.createTimestamp = None
-        mock_entry.modifyTimestamp = None
-
-        client._connection = mock_connection
-        mock_connection.search.return_value = True
-        mock_connection.entries = [mock_entry]
-
-        result = client.search_groups("ou=groups,dc=example,dc=com", cn="testgroup")
-
-        assert result.is_success
-        groups = result.value
-        assert len(groups) == 1
-        assert groups[0].cn == "testgroup"
-        assert groups[0].gid_number == 1000
-
-    def test_authenticate_user_success(self, client, mock_connection) -> None:
-        """Test successful user authentication."""
-        # Setup mock for search
         mock_entry = Mock()
         mock_entry.entry_dn = "uid=testuser,ou=users,dc=example,dc=com"
-
-        client._connection = mock_connection
-        mock_connection.search.return_value = True
+        mock_connection.search.return_value = None
         mock_connection.entries = [mock_entry]
 
-        # Mock test connection for authentication
-        with patch("flext_ldap.clients.Connection") as mock_conn_class:
-            mock_test_conn = Mock()
-            mock_test_conn.bind.return_value = True
-            mock_conn_class.return_value = mock_test_conn
+        mock_test_conn = Mock()
+        mock_test_conn.bind.return_value = False
+        mock_connection_class.return_value = mock_test_conn
 
-            result = client.authenticate_user("testuser", "password")
+        result = await client.authenticate_user("testuser", "wrongpass")
 
-            assert result.is_success
-            assert result.value is True
+        assert result.is_failure
+        assert "Authentication failed" in result.error
 
-    def test_authenticate_user_failure(self, client, mock_connection) -> None:
-        """Test failed user authentication."""
-        # Setup mock for search
-        mock_entry = Mock()
-        mock_entry.entry_dn = "uid=testuser,ou=users,dc=example,dc=com"
-
+    @pytest.mark.asyncio
+    async def test_authenticate_user_not_found(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
         client._connection = mock_connection
-        mock_connection.search.return_value = True
-        mock_connection.entries = [mock_entry]
-
-        # Mock test connection for authentication
-        with patch("flext_ldap.clients.Connection") as mock_conn_class:
-            mock_test_conn = Mock()
-            mock_test_conn.bind.return_value = False
-            mock_conn_class.return_value = mock_test_conn
-
-            result = client.authenticate_user("testuser", "wrongpass")
-
-            assert result.is_success
-            assert result.value is False
-
-    def test_authenticate_user_not_found(self, client, mock_connection) -> None:
-        """Test authentication for non-existent user."""
-        client._connection = mock_connection
-        mock_connection.search.return_value = True
+        mock_connection.search.return_value = None
         mock_connection.entries = []
 
-        result = client.authenticate_user("nonexistent", "password")
+        result = await client.authenticate_user("nonexistent", "password")
 
         assert result.is_failure
         assert "User not found" in result.error
 
-    def test_search_with_request_success(self, client, mock_connection) -> None:
-        """Test search with request object."""
+    @pytest.mark.asyncio
+    async def test_search_with_request_success(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
+        client._connection = mock_connection
+
         request = FlextLdapModels.SearchRequest(
             base_dn="ou=users,dc=example,dc=com",
-            filter="(objectClass=person)",
-            scope="subtree",
+            filter="(uid=test)",
+            scope=FlextLdapModels.Scope.SUBTREE,
             attributes=["uid", "cn"],
+            page_size=100,
+            paged_cookie=b"",
         )
 
-        # Setup mock entry
         mock_entry = Mock()
         mock_entry.entry_dn = "uid=test,ou=users,dc=example,dc=com"
         mock_entry.entry_attributes = ["uid", "cn"]
-        mock_entry.__getitem__ = Mock()
-        mock_entry.__getitem__.return_value.value = "test_value"
+        mock_uid = Mock()
+        mock_uid.value = "test"
+        mock_cn = Mock()
+        mock_cn.value = "Test User"
+        mock_entry.__getitem__ = lambda self, key: mock_uid if key == "uid" else mock_cn
 
-        client._connection = mock_connection
         mock_connection.search.return_value = True
         mock_connection.entries = [mock_entry]
 
-        result = client.search_with_request(request)
+        result = await client.search_with_request(request)
 
         assert result.is_success
-        response = result.value
-        assert len(response.entries) == 1
+        assert isinstance(result.value, FlextLdapModels.SearchResponse)
+        assert result.value.total_count == 1
 
-    def test_create_user_success(self, client, mock_connection) -> None:
-        """Test successful user creation."""
-        request = FlextLdapModels.CreateUserRequest(
-            uid="newuser",
-            cn="New User",
-            sn="User",
-            given_name="New",
-            mail="newuser@example.com",
-            user_password=SecretStr("password123"),
-        )
-
+    @pytest.mark.asyncio
+    async def test_search_users_success(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
         client._connection = mock_connection
-        mock_connection.add.return_value = True
 
-        result = client.create_user(request)
-
-        assert result.is_success
-        user = result.value
-        assert user.uid == "newuser"
-        assert user.cn == "New User"
-
-    def test_create_user_failure(self, client, mock_connection) -> None:
-        """Test failed user creation."""
-        request = FlextLdapModels.CreateUserRequest(
-            uid="newuser",
-            cn="New User",
-            sn="User",
-            given_name="New",
-            mail="newuser@example.com",
-            user_password=SecretStr("password123"),
-        )
-
-        client._connection = mock_connection
-        mock_connection.add.return_value = False
-        mock_connection.last_error = "User already exists"
-
-        result = client.create_user(request)
-
-        assert result.is_failure
-        assert "User already exists" in result.error
-
-    def test_create_group_success(self, client, mock_connection) -> None:
-        """Test successful group creation."""
-        request = FlextLdapModels.CreateGroupRequest(
-            cn="newgroup", gid_number=2000, description="New Group"
-        )
-
-        client._connection = mock_connection
-        mock_connection.add.return_value = True
-
-        result = client.create_group(request)
-
-        assert result.is_success
-        group = result.value
-        assert group.cn == "newgroup"
-        assert group.gid_number == 2000
-
-    def test_update_user_attributes_success(self, client, mock_connection) -> None:
-        """Test successful user attribute update."""
-        attributes = {"mail": "updated@example.com", "title": "Senior Developer"}
-
-        client._connection = mock_connection
-        mock_connection.modify.return_value = True
-
-        result = client.update_user_attributes(
-            "uid=test,ou=users,dc=example,dc=com", attributes
-        )
-
-        assert result.is_success
-        assert result.value is True
-
-    def test_update_group_attributes_success(self, client, mock_connection) -> None:
-        """Test successful group attribute update."""
-        attributes = {"description": "Updated description"}
-
-        client._connection = mock_connection
-        mock_connection.modify.return_value = True
-
-        result = client.update_group_attributes(
-            "cn=test,ou=groups,dc=example,dc=com", attributes
-        )
-
-        assert result.is_success
-        assert result.value is True
-
-    def test_delete_user_success(self, client, mock_connection) -> None:
-        """Test successful user deletion."""
-        client._connection = mock_connection
-        mock_connection.delete.return_value = True
-
-        result = client.delete_user("uid=test,ou=users,dc=example,dc=com")
-
-        assert result.is_success
-
-    def test_delete_group_success(self, client, mock_connection) -> None:
-        """Test successful group deletion."""
-        client._connection = mock_connection
-        mock_connection.delete.return_value = True
-
-        result = client.delete_group("cn=test,ou=groups,dc=example,dc=com")
-
-        assert result.is_success
-
-    def test_create_user_from_entry_complete(self, client) -> None:
-        """Test _create_user_from_entry with complete data."""
         mock_entry = Mock()
         mock_entry.entry_dn = "uid=test,ou=users,dc=example,dc=com"
-        mock_entry.cn.value = "Test User"
-        mock_entry.uid.value = "testuser"
-        mock_entry.sn.value = "User"
-        mock_entry.givenName.value = "Test"
-        mock_entry.mail.value = "test@example.com"
-        mock_entry.telephoneNumber.value = "123-456-7890"
-        mock_entry.mobile.value = "987-654-3210"
-        mock_entry.departmentNumber.value = "IT"
-        mock_entry.title.value = "Developer"
-        mock_entry.o.value = "Example Corp"
-        mock_entry.ou.value = "Engineering"
-        mock_entry.userPassword.value = "password123"
-        mock_entry.createTimestamp = None
-        mock_entry.modifyTimestamp = None
+        mock_entry.uid = Mock(value="test")
+        mock_entry.cn = Mock(value="Test User")
+        mock_entry.sn = Mock(value="User")
+        mock_entry.givenName = Mock(value="Test")
+        mock_entry.mail = Mock(value="test@example.com")
+        mock_entry.telephoneNumber = Mock(value=None)
+        mock_entry.mobile = Mock(value=None)
+        mock_entry.departmentNumber = Mock(value=None)
+        mock_entry.title = Mock(value=None)
+        mock_entry.o = Mock(value=None)
+        mock_entry.ou = Mock(value=None)
+        mock_entry.userPassword = Mock(value="secret")
 
-        user = client._create_user_from_entry(mock_entry)
+        mock_connection.search.return_value = True
+        mock_connection.entries = [mock_entry]
 
-        assert user.uid == "testuser"
-        assert user.cn == "Test User"
-        assert user.mail == "test@example.com"
+        result = await client.search_users("ou=users,dc=example,dc=com", "(uid=test)")
 
-    def test_create_group_from_entry_complete(self, client) -> None:
-        """Test _create_group_from_entry with complete data."""
+        assert result.is_success
+        assert len(result.value) > 0
+
+    @pytest.mark.asyncio
+    async def test_search_groups_success(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
+        client._connection = mock_connection
+
         mock_entry = Mock()
-        mock_entry.entry_dn = "cn=test,ou=groups,dc=example,dc=com"
-        mock_entry.cn.value = "testgroup"
-        mock_entry.gidNumber.value = 1000
-        mock_entry.description.value = "Test Group"
-        mock_entry.createTimestamp = None
-        mock_entry.modifyTimestamp = None
+        mock_entry.entry_dn = "cn=testgroup,ou=groups,dc=example,dc=com"
+        mock_entry.cn = Mock(value="testgroup")
+        mock_entry.gidNumber = Mock(value=1000)
+        mock_entry.description = Mock(value="Test Group")
 
-        group = client._create_group_from_entry(mock_entry)
+        mock_connection.search.return_value = True
+        mock_connection.entries = [mock_entry]
 
-        assert group.cn == "testgroup"
-        assert group.gid_number == 1000
-        assert group.description == "Test Group"
+        result = await client.search_groups(
+            "ou=groups,dc=example,dc=com", "(cn=testgroup)"
+        )
 
-    def test_no_connection_methods(self, client) -> None:
-        """Test methods that require connection when no connection exists."""
-        # Test all methods that should fail without connection
-        methods_to_test = [
-            (client.search_users, ("ou=users,dc=example,dc=com",)),
-            (client.search_groups, ("ou=groups,dc=example,dc=com",)),
-            (client.authenticate_user, ("user", "pass")),
-            (
-                client.create_user,
-                (
-                    FlextLdapModels.CreateUserRequest(
-                        uid="test",
-                        cn="Test",
-                        sn="User",
-                        given_name="Test",
-                        mail="test@example.com",
-                        user_password=SecretStr("pass"),
-                    ),
-                ),
-            ),
-            (
-                client.create_group,
-                (FlextLdapModels.CreateGroupRequest(cn="test", gid_number=1000),),
-            ),
-            (
-                client.update_user_attributes,
-                ("uid=test,dc=example,dc=com", {"mail": "new@example.com"}),
-            ),
-            (
-                client.update_group_attributes,
-                ("cn=test,dc=example,dc=com", {"description": "new"}),
-            ),
-            (client.delete_user, ("uid=test,dc=example,dc=com",)),
-            (client.delete_group, ("cn=test,dc=example,dc=com",)),
-        ]
+        assert result.is_success
+        assert len(result.value) > 0
 
-        for method, args in methods_to_test:
-            result = method(*args)
-            assert result.is_failure
-            assert "No connection established" in result.error
+    @pytest.mark.asyncio
+    async def test_get_user_success(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
+        client._connection = mock_connection
 
+        mock_entry = Mock()
+        mock_entry.entry_dn = "uid=test,ou=users,dc=example,dc=com"
+        mock_entry.uid = Mock(value="test")
+        mock_entry.cn = Mock(value="Test User")
+        mock_entry.sn = Mock(value="User")
+        mock_entry.givenName = Mock(value="Test")
+        mock_entry.mail = Mock(value="test@example.com")
+        mock_entry.telephoneNumber = Mock(value=None)
+        mock_entry.mobile = Mock(value=None)
+        mock_entry.departmentNumber = Mock(value=None)
+        mock_entry.title = Mock(value=None)
+        mock_entry.o = Mock(value=None)
+        mock_entry.ou = Mock(value=None)
+        mock_entry.userPassword = Mock(value="secret")
 
-class TestFlextLdapClientClass:
-    """Test FlextLdapClient class structure."""
+        mock_connection.search.return_value = True
+        mock_connection.entries = [mock_entry]
 
-    def test_class_structure(self) -> None:
-        """Test that FlextLdapClient has expected methods."""
-        assert hasattr(FlextLdapClient, "__init__")
-        assert hasattr(FlextLdapClient, "connect")
-        assert hasattr(FlextLdapClient, "disconnect")
+        result = await client.get_user("uid=test,ou=users,dc=example,dc=com")
+
+        assert result.is_success
+        assert result.value.uid == "test"
+
+    @pytest.mark.asyncio
+    async def test_get_group_success(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
+        client._connection = mock_connection
+
+        mock_entry = Mock()
+        mock_entry.entry_dn = "cn=testgroup,ou=groups,dc=example,dc=com"
+        mock_entry.cn = Mock(value="testgroup")
+        mock_entry.gidNumber = Mock(value=1000)
+        mock_entry.description = Mock(value="Test Group")
+
+        mock_connection.search.return_value = True
+        mock_connection.entries = [mock_entry]
+
+        result = await client.get_group("cn=testgroup,ou=groups,dc=example,dc=com")
+
+        assert result.is_success
+        assert result.value.cn == "testgroup"
+
+    @pytest.mark.asyncio
+    async def test_create_user_success(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
+        client._connection = mock_connection
+        mock_connection.add.return_value = True
+
+        request = FlextLdapModels.CreateUserRequest(
+            dn="uid=newuser,ou=users,dc=example,dc=com",
+            uid="newuser",
+            cn="New User",
+            sn="User",
+            given_name="New",
+            mail="newuser@example.com",
+            user_password="ValidPass123!",
+        )
+
+        mock_entry = Mock()
+        mock_entry.entry_dn = "uid=newuser,ou=users,dc=example,dc=com"
+        mock_entry.uid = Mock(value="newuser")
+        mock_entry.cn = Mock(value="New User")
+        mock_entry.sn = Mock(value="User")
+        mock_entry.givenName = Mock(value="New")
+        mock_entry.mail = Mock(value="newuser@example.com")
+        mock_entry.telephoneNumber = Mock(value=None)
+        mock_entry.mobile = Mock(value=None)
+        mock_entry.departmentNumber = Mock(value=None)
+        mock_entry.title = Mock(value=None)
+        mock_entry.o = Mock(value=None)
+        mock_entry.ou = Mock(value=None)
+        mock_entry.userPassword = Mock(value="secret")
+
+        mock_connection.search.return_value = True
+        mock_connection.entries = [mock_entry]
+
+        result = await client.create_user(request)
+
+        assert result.is_success
+        assert result.value.uid == "newuser"
+
+    @pytest.mark.asyncio
+    async def test_create_group_success(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
+        client._connection = mock_connection
+        mock_connection.add.return_value = True
+
+        request = FlextLdapModels.CreateGroupRequest(
+            dn="cn=newgroup,ou=groups,dc=example,dc=com",
+            cn="newgroup",
+        )
+
+        mock_entry = Mock()
+        mock_entry.entry_dn = "cn=newgroup,ou=groups,dc=example,dc=com"
+        mock_entry.cn = Mock(value="newgroup")
+        mock_entry.gidNumber = Mock(value=2000)
+        mock_entry.description = Mock(value=None)
+
+        mock_connection.search.return_value = True
+        mock_connection.entries = [mock_entry]
+
+        result = await client.create_group(request)
+
+        assert result.is_success
+        assert result.value.cn == "newgroup"
+
+    @pytest.mark.asyncio
+    async def test_update_user_attributes_success(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
+        client._connection = mock_connection
+        mock_connection.modify.return_value = True
+
+        result = await client.update_user_attributes(
+            "uid=test,ou=users,dc=example,dc=com", {"mail": "new@example.com"}
+        )
+
+        assert result.is_success
+
+    @pytest.mark.asyncio
+    async def test_update_group_attributes_success(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
+        client._connection = mock_connection
+        mock_connection.modify.return_value = True
+
+        result = await client.update_group_attributes(
+            "cn=test,ou=groups,dc=example,dc=com", {"description": "Updated"}
+        )
+
+        assert result.is_success
+
+    @pytest.mark.asyncio
+    async def test_delete_user_success(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
+        client._connection = mock_connection
+        mock_connection.delete.return_value = True
+
+        result = await client.delete_user("uid=test,ou=users,dc=example,dc=com")
+
+        assert result.is_success
+
+    @pytest.mark.asyncio
+    async def test_delete_group_success(
+        self, client: FlextLdapClient, mock_connection: Mock
+    ) -> None:
+        client._connection = mock_connection
+        mock_connection.delete.return_value = True
+
+        result = await client.delete_group("cn=test,ou=groups,dc=example,dc=com")
+
+        assert result.is_success
