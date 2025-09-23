@@ -126,6 +126,7 @@ lint.per-file-ignores."**/*tests*/**" = [
     "S107",
     "S112",
     "S311",
+    "S404",    # subprocess-without-shell-equals-true - tests may need subprocess
     "S603",
     "S608",
     "SIM105",  # Use contextlib.suppress - tests may prefer explicit try/except
