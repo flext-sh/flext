@@ -361,7 +361,7 @@ class TestErrorHandling:
         service = create_workspace_service()
 
         result = service.validate_workspace_path("/non/existent/path")
-        assert result.is_failure
+        assert not result.success
 
     def test_discovery_service_error_handling(self) -> None:
         """Test discovery service error handling."""
@@ -372,7 +372,7 @@ class TestErrorHandling:
         invalid_path = Path("/non/existent/workspace")
         result = discovery.discover_projects(invalid_path)
 
-        assert result.is_failure
+        assert not result.success
 
     def test_validator_error_handling(self) -> None:
         """Test workspace validator error handling."""
@@ -382,4 +382,4 @@ class TestErrorHandling:
 
         # Test validation with invalid structure
         result = validator.validate_workspace_path("/non/existent/workspace")
-        assert result.is_failure
+        assert not result.success

@@ -70,7 +70,7 @@ class TestUserRepository:
         # Repositories use FlextResult, so they return failures instead of raising
         result = await user_repo.find_by_dn(None)
         # Should return a failure result for invalid input
-        assert result.is_failure
+        assert not result.success
 
     @pytest.mark.asyncio
     async def test_search_success(
@@ -149,7 +149,7 @@ class TestUserRepository:
         """Test delete with empty DN."""
         result = await user_repo.delete("")
 
-        assert result.is_failure
+        assert not result.success
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -159,7 +159,7 @@ class TestUserRepository:
         """Test delete with None DN."""
         result = await user_repo.delete(None)
 
-        assert result.is_failure
+        assert not result.success
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -181,7 +181,7 @@ class TestUserRepository:
         """Test exists with empty DN."""
         result = await user_repo.exists("")
 
-        assert result.is_failure
+        assert not result.success
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -206,7 +206,7 @@ class TestUserRepository:
 
         result = await user_repo.update("", attributes)
 
-        assert result.is_failure
+        assert not result.success
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -218,7 +218,7 @@ class TestUserRepository:
 
         result = await user_repo.update(test_dn, {})
 
-        assert result.is_failure
+        assert not result.success
         assert "Attributes cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -230,7 +230,7 @@ class TestUserRepository:
 
         result = await user_repo.update(test_dn, None)
 
-        assert result.is_failure
+        assert not result.success
         assert "Attributes cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -266,7 +266,7 @@ class TestUserRepository:
     ) -> None:
         """Test that repositories return FlextResult, not raise exceptions."""
         result = await user_repo.find_by_dn("uid=test,ou=users,dc=example,dc=com")
-        assert result.is_success or result.is_failure
+        assert result.success or not result.success
 
 
 class TestGroupRepository:
@@ -368,7 +368,7 @@ class TestGroupRepository:
         """Test delete with empty DN."""
         result = await group_repo.delete("")
 
-        assert result.is_failure
+        assert not result.success
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -390,7 +390,7 @@ class TestGroupRepository:
         """Test exists with empty DN."""
         result = await group_repo.exists("")
 
-        assert result.is_failure
+        assert not result.success
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -415,7 +415,7 @@ class TestGroupRepository:
 
         result = await group_repo.update("", attributes)
 
-        assert result.is_failure
+        assert not result.success
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -427,7 +427,7 @@ class TestGroupRepository:
 
         result = await group_repo.update(test_dn, {})
 
-        assert result.is_failure
+        assert not result.success
         assert "Attributes cannot be empty" in result.error
 
     @pytest.mark.asyncio

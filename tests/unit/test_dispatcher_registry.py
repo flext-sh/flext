@@ -103,7 +103,7 @@ class TestFlextRegistry:
 
         result = registry.register_handler(mock_handler)
 
-        assert result.is_failure
+        assert not result.success
         assert "TestHandler" not in registry._registered_keys
         assert result.error is not None
         assert "Registration failed" in str(result.error)
@@ -171,7 +171,7 @@ class TestFlextRegistry:
 
         result = registry.register_handlers(handlers)
 
-        assert result.is_failure  # Should fail due to second handler failure
+        assert not result.success  # Should fail due to second handler failure
         assert result.error is not None
         assert "Handler2 failed" in str(result.error)
 
