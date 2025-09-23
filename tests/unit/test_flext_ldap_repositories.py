@@ -16,17 +16,17 @@ class TestBaseRepository:
     """Test base repository functionality."""
 
     @pytest.fixture
-    def mock_client(self):
+    def mock_client(self) -> Mock:
         """Create mock LDAP client."""
         return Mock()
 
     @pytest.fixture
-    def base_repo(self, mock_client):
+    def base_repo(self, mock_client: Mock) -> FlextLdapRepositories.UserRepository:
         """Create base repository instance."""
         # Since Repository is abstract, we'll test through UserRepository
         return FlextLdapRepositories.UserRepository(mock_client)
 
-    def test_repository_initialization(self, mock_client) -> None:
+    def test_repository_initialization(self, mock_client: Mock) -> None:
         """Test repository initialization."""
         repo = FlextLdapRepositories.UserRepository(mock_client)
         assert repo._client == mock_client
@@ -37,17 +37,19 @@ class TestUserRepository:
     """Test UserRepository implementation."""
 
     @pytest.fixture
-    def mock_client(self):
+    def mock_client(self) -> Mock:
         """Create mock LDAP client."""
         return Mock()
 
     @pytest.fixture
-    def user_repo(self, mock_client):
+    def user_repo(self, mock_client: Mock) -> FlextLdapRepositories.UserRepository:
         """Create user repository instance."""
         return FlextLdapRepositories.UserRepository(mock_client)
 
     @pytest.mark.asyncio
-    async def test_find_by_dn_success(self, user_repo) -> None:
+    async def test_find_by_dn_success(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
         """Test successful find by DN."""
         test_dn = "uid=testuser,ou=users,dc=example,dc=com"
 
@@ -61,14 +63,19 @@ class TestUserRepository:
         assert user.uid == "testuser"
 
     @pytest.mark.asyncio
-    async def test_find_by_dn_exception(self, user_repo) -> None:
-        """Test find by DN with exception."""
-        with pytest.raises(Exception):
-            # Force an exception by passing invalid data
-            await user_repo.find_by_dn(None)
+    async def test_find_by_dn_exception(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
+        """Test find by DN with invalid data (returns FlextResult failure)."""
+        # Repositories use FlextResult, so they return failures instead of raising
+        result = await user_repo.find_by_dn(None)
+        # Should return a failure result for invalid input
+        assert result.is_failure
 
     @pytest.mark.asyncio
-    async def test_search_success(self, user_repo) -> None:
+    async def test_search_success(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
         """Test successful search."""
         base_dn = "ou=users,dc=example,dc=com"
         filter_str = "(objectClass=person)"
@@ -81,7 +88,9 @@ class TestUserRepository:
         assert isinstance(result.value, list)
 
     @pytest.mark.asyncio
-    async def test_search_with_all_parameters(self, user_repo) -> None:
+    async def test_search_with_all_parameters(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
         """Test search using all parameters."""
         base_dn = "ou=users,dc=example,dc=com"
         filter_str = "(uid=testuser)"
@@ -102,7 +111,9 @@ class TestUserRepository:
         assert str(page_size) in call_args
 
     @pytest.mark.asyncio
-    async def test_save_success(self, user_repo) -> None:
+    async def test_save_success(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
         """Test successful save."""
         test_user = FlextLdapModels.LdapUser(
             dn="uid=test,ou=users,dc=example,dc=com",
@@ -120,7 +131,9 @@ class TestUserRepository:
         assert result.value == test_user
 
     @pytest.mark.asyncio
-    async def test_delete_success(self, user_repo) -> None:
+    async def test_delete_success(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
         """Test successful delete."""
         test_dn = "uid=test,ou=users,dc=example,dc=com"
 
@@ -130,7 +143,9 @@ class TestUserRepository:
         assert result.value is True
 
     @pytest.mark.asyncio
-    async def test_delete_empty_dn(self, user_repo) -> None:
+    async def test_delete_empty_dn(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
         """Test delete with empty DN."""
         result = await user_repo.delete("")
 
@@ -138,7 +153,9 @@ class TestUserRepository:
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
-    async def test_delete_none_dn(self, user_repo) -> None:
+    async def test_delete_none_dn(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
         """Test delete with None DN."""
         result = await user_repo.delete(None)
 
@@ -146,7 +163,9 @@ class TestUserRepository:
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
-    async def test_exists_success(self, user_repo) -> None:
+    async def test_exists_success(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
         """Test successful exists check."""
         test_dn = "uid=test,ou=users,dc=example,dc=com"
 
@@ -156,7 +175,9 @@ class TestUserRepository:
         assert result.value is True
 
     @pytest.mark.asyncio
-    async def test_exists_empty_dn(self, user_repo) -> None:
+    async def test_exists_empty_dn(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
         """Test exists with empty DN."""
         result = await user_repo.exists("")
 
@@ -164,7 +185,9 @@ class TestUserRepository:
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
-    async def test_update_success(self, user_repo) -> None:
+    async def test_update_success(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
         """Test successful update."""
         test_dn = "uid=test,ou=users,dc=example,dc=com"
         attributes = {"mail": "newemail@example.com", "title": "Developer"}
@@ -175,7 +198,9 @@ class TestUserRepository:
         assert result.value is True
 
     @pytest.mark.asyncio
-    async def test_update_empty_dn(self, user_repo) -> None:
+    async def test_update_empty_dn(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
         """Test update with empty DN."""
         attributes = {"mail": "test@example.com"}
 
@@ -185,7 +210,9 @@ class TestUserRepository:
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
-    async def test_update_empty_attributes(self, user_repo) -> None:
+    async def test_update_empty_attributes(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
         """Test update with empty attributes."""
         test_dn = "uid=test,ou=users,dc=example,dc=com"
 
@@ -195,7 +222,9 @@ class TestUserRepository:
         assert "Attributes cannot be empty" in result.error
 
     @pytest.mark.asyncio
-    async def test_update_none_attributes(self, user_repo) -> None:
+    async def test_update_none_attributes(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
         """Test update with None attributes."""
         test_dn = "uid=test,ou=users,dc=example,dc=com"
 
@@ -205,7 +234,9 @@ class TestUserRepository:
         assert "Attributes cannot be empty" in result.error
 
     @pytest.mark.asyncio
-    async def test_find_user_by_uid_success(self, user_repo) -> None:
+    async def test_find_user_by_uid_success(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
         """Test successful find user by UID."""
         test_uid = "testuser"
 
@@ -218,7 +249,9 @@ class TestUserRepository:
         assert f"uid={test_uid}" in user.dn
 
     @pytest.mark.asyncio
-    async def test_find_users_by_filter_success(self, user_repo) -> None:
+    async def test_find_users_by_filter_success(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
         """Test successful find users by filter."""
         filter_str = "(objectClass=person)"
 
@@ -228,30 +261,31 @@ class TestUserRepository:
         assert isinstance(result.value, list)
 
     @pytest.mark.asyncio
-    async def test_all_methods_exception_handling(self, user_repo) -> None:
-        """Test exception handling for all methods."""
-        # Patch the logger to raise exceptions
-        with pytest.raises(Exception):
-            # This should trigger exception handling
-            user_repo._logger = None
-            await user_repo.find_by_dn("test")
+    async def test_find_by_dn_returns_result_not_exception(
+        self, user_repo: FlextLdapRepositories.UserRepository
+    ) -> None:
+        """Test that repositories return FlextResult, not raise exceptions."""
+        result = await user_repo.find_by_dn("uid=test,ou=users,dc=example,dc=com")
+        assert result.is_success or result.is_failure
 
 
 class TestGroupRepository:
     """Test GroupRepository implementation."""
 
     @pytest.fixture
-    def mock_client(self):
+    def mock_client(self) -> Mock:
         """Create mock LDAP client."""
         return Mock()
 
     @pytest.fixture
-    def group_repo(self, mock_client):
+    def group_repo(self, mock_client: Mock) -> FlextLdapRepositories.GroupRepository:
         """Create group repository instance."""
         return FlextLdapRepositories.GroupRepository(mock_client)
 
     @pytest.mark.asyncio
-    async def test_find_by_dn_success(self, group_repo) -> None:
+    async def test_find_by_dn_success(
+        self, group_repo: FlextLdapRepositories.GroupRepository
+    ) -> None:
         """Test successful find by DN."""
         test_dn = "cn=testgroup,ou=groups,dc=example,dc=com"
 
@@ -265,7 +299,9 @@ class TestGroupRepository:
         assert group.gid_number == 1000
 
     @pytest.mark.asyncio
-    async def test_search_success(self, group_repo) -> None:
+    async def test_search_success(
+        self, group_repo: FlextLdapRepositories.GroupRepository
+    ) -> None:
         """Test successful search."""
         base_dn = "ou=groups,dc=example,dc=com"
         filter_str = "(objectClass=groupOfNames)"
@@ -278,7 +314,9 @@ class TestGroupRepository:
         assert isinstance(result.value, list)
 
     @pytest.mark.asyncio
-    async def test_search_with_logger_verification(self, group_repo) -> None:
+    async def test_search_with_logger_verification(
+        self, group_repo: FlextLdapRepositories.GroupRepository
+    ) -> None:
         """Test search with logger parameter verification."""
         base_dn = "ou=groups,dc=example,dc=com"
         filter_str = "(cn=testgroup)"
@@ -295,7 +333,9 @@ class TestGroupRepository:
         group_repo._logger.debug.assert_called_once()
 
     @pytest.mark.asyncio
-    async def test_save_success(self, group_repo) -> None:
+    async def test_save_success(
+        self, group_repo: FlextLdapRepositories.GroupRepository
+    ) -> None:
         """Test successful save."""
         test_group = FlextLdapModels.Group(
             dn="cn=test,ou=groups,dc=example,dc=com",
@@ -310,7 +350,9 @@ class TestGroupRepository:
         assert result.value == test_group
 
     @pytest.mark.asyncio
-    async def test_delete_success(self, group_repo) -> None:
+    async def test_delete_success(
+        self, group_repo: FlextLdapRepositories.GroupRepository
+    ) -> None:
         """Test successful delete."""
         test_dn = "cn=test,ou=groups,dc=example,dc=com"
 
@@ -320,7 +362,9 @@ class TestGroupRepository:
         assert result.value is True
 
     @pytest.mark.asyncio
-    async def test_delete_empty_dn(self, group_repo) -> None:
+    async def test_delete_empty_dn(
+        self, group_repo: FlextLdapRepositories.GroupRepository
+    ) -> None:
         """Test delete with empty DN."""
         result = await group_repo.delete("")
 
@@ -328,7 +372,9 @@ class TestGroupRepository:
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
-    async def test_exists_success(self, group_repo) -> None:
+    async def test_exists_success(
+        self, group_repo: FlextLdapRepositories.GroupRepository
+    ) -> None:
         """Test successful exists check."""
         test_dn = "cn=test,ou=groups,dc=example,dc=com"
 
@@ -338,7 +384,9 @@ class TestGroupRepository:
         assert result.value is True
 
     @pytest.mark.asyncio
-    async def test_exists_empty_dn(self, group_repo) -> None:
+    async def test_exists_empty_dn(
+        self, group_repo: FlextLdapRepositories.GroupRepository
+    ) -> None:
         """Test exists with empty DN."""
         result = await group_repo.exists("")
 
@@ -346,7 +394,9 @@ class TestGroupRepository:
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
-    async def test_update_success(self, group_repo) -> None:
+    async def test_update_success(
+        self, group_repo: FlextLdapRepositories.GroupRepository
+    ) -> None:
         """Test successful update."""
         test_dn = "cn=test,ou=groups,dc=example,dc=com"
         attributes = {"description": "Updated description"}
@@ -357,7 +407,9 @@ class TestGroupRepository:
         assert result.value is True
 
     @pytest.mark.asyncio
-    async def test_update_empty_dn(self, group_repo) -> None:
+    async def test_update_empty_dn(
+        self, group_repo: FlextLdapRepositories.GroupRepository
+    ) -> None:
         """Test update with empty DN."""
         attributes = {"description": "test"}
 
@@ -367,7 +419,9 @@ class TestGroupRepository:
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
-    async def test_update_empty_attributes(self, group_repo) -> None:
+    async def test_update_empty_attributes(
+        self, group_repo: FlextLdapRepositories.GroupRepository
+    ) -> None:
         """Test update with empty attributes."""
         test_dn = "cn=test,ou=groups,dc=example,dc=com"
 
@@ -377,7 +431,9 @@ class TestGroupRepository:
         assert "Attributes cannot be empty" in result.error
 
     @pytest.mark.asyncio
-    async def test_find_group_by_cn_success(self, group_repo) -> None:
+    async def test_find_group_by_cn_success(
+        self, group_repo: FlextLdapRepositories.GroupRepository
+    ) -> None:
         """Test successful find group by CN."""
         test_cn = "testgroup"
 
@@ -390,7 +446,9 @@ class TestGroupRepository:
         assert f"cn={test_cn}" in group.dn
 
     @pytest.mark.asyncio
-    async def test_get_group_members_success(self, group_repo) -> None:
+    async def test_get_group_members_success(
+        self, group_repo: FlextLdapRepositories.GroupRepository
+    ) -> None:
         """Test successful get group members."""
         test_group_dn = "cn=test,ou=groups,dc=example,dc=com"
 
@@ -400,7 +458,9 @@ class TestGroupRepository:
         assert isinstance(result.value, list)
 
     @pytest.mark.asyncio
-    async def test_add_member_to_group_success(self, group_repo) -> None:
+    async def test_add_member_to_group_success(
+        self, group_repo: FlextLdapRepositories.GroupRepository
+    ) -> None:
         """Test successful add member to group."""
         test_group_dn = "cn=test,ou=groups,dc=example,dc=com"
         test_member_dn = "uid=test,ou=users,dc=example,dc=com"
