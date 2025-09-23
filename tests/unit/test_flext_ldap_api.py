@@ -107,7 +107,7 @@ class TestFlextLdapAPI:
 
             result = await self.api.authenticate_user("testuser", "wrongpassword")
 
-            assert result.is_failure
+            assert not result.success
             assert "Invalid credentials" in result.error
 
     @pytest.mark.asyncio
@@ -154,7 +154,7 @@ class TestFlextLdapAPI:
 
         result = await self.api.bind()
 
-        assert result.is_failure
+        assert not result.success
         assert "DN and password are required" in result.error
 
     @pytest.mark.asyncio
@@ -555,7 +555,7 @@ class TestFlextLdapAPI:
             result = self.api.validate_configuration_consistency()
 
             # Should fail because password is missing when DN is provided
-            assert result.is_failure
+            assert not result.success
 
     def test_validate_dn(self) -> None:
         """Test DN validation."""

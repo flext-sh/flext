@@ -73,7 +73,7 @@ class TestFlextAdvancedHandlerModelsUpdated:
             invalid_command_data
         )
 
-        assert result.is_failure
+        assert not result.success
         assert result.error is not None
         assert "Command validation failed" in result.error
         assert result.error_code == FlextConstants.Cqrs.COMMAND_VALIDATION_FAILED
@@ -104,7 +104,7 @@ class TestFlextAdvancedHandlerModelsUpdated:
             },
         )
 
-        assert validation_result.is_failure
+        assert not validation_result.success
         assert validation_result.error is not None
         assert (
             "Large batch sizes require additional validation" in validation_result.error
@@ -139,7 +139,7 @@ class TestFlextAdvancedHandlerModelsUpdated:
             },
         )
 
-        assert invalid_email_result.is_failure
+        assert not invalid_email_result.success
         assert invalid_email_result.error is not None
         assert "Invalid email format" in invalid_email_result.error
         assert invalid_email_result.error_code == FlextConstants.Errors.VALIDATION_ERROR
@@ -169,7 +169,7 @@ class TestFlextAdvancedHandlerModelsUpdated:
             },
         )
 
-        assert protection_result.is_failure
+        assert not protection_result.success
         assert protection_result.error is not None
         assert "Cannot delete REDACTED_LDAP_BIND_PASSWORD user" in protection_result.error
         assert protection_result.error_code == "ADMIN_PROTECTION_VIOLATION"
@@ -328,7 +328,7 @@ class TestLegacyCompatibilityUpdated:
             },
         )
 
-        assert modern_error.is_failure
+        assert not modern_error.success
         assert modern_error.error == "Input validation failed"
         assert modern_error.error_code == FlextConstants.Errors.VALIDATION_ERROR
         assert modern_error.error_data is not None
