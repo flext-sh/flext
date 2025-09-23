@@ -17,11 +17,11 @@ from pathlib import Path
 from flext.services import create_services
 from flext.workspace_service import create_workspace_service
 from flext_cli import FlextCliApi
-from flext_core import FlextDomainService, FlextLogger, FlextResult
+from flext_core import FlextService, FlextLogger, FlextResult
 from flext_tools import Colors, print_colored
 
 
-class FlextWorkspaceCli(FlextDomainService[str]):
+class FlextWorkspaceCli(FlextService[str]):
     """Unified workspace CLI service with nested command handlers.
 
     Implements FLEXT unified class pattern with all workspace management
@@ -508,7 +508,7 @@ class FlextWorkspaceCli(FlextDomainService[str]):
                     )
 
     def execute(self, _request: str = "") -> FlextResult[str]:
-        """Execute workspace CLI service - required by FlextDomainService abstract method."""
+        """Execute workspace CLI service - required by FlextService abstract method."""
         try:
             # Default execution returns workspace CLI system info
             info = {
