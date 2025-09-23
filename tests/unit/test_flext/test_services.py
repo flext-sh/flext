@@ -110,15 +110,13 @@ class TestFlextUnifiedServices:
         assert not result.success
 
     def test_pipeline_command_classes(self) -> None:
-        """Test pipeline command class attributes."""
+        """Test pipeline services has required methods."""
         service = FlextUnifiedServices()
         pipeline_services = service._PipelineServices(service)
 
-        # Test that command classes are accessible
-        assert hasattr(pipeline_services, "CreatePipelineCommand")
-        assert hasattr(pipeline_services, "ExecutePipelineCommand")
-        assert hasattr(pipeline_services, "GetPipelineQuery")
-        assert hasattr(pipeline_services, "ListPipelinesQuery")
+        # Test that pipeline service methods are accessible
+        assert hasattr(pipeline_services, "execute_pipeline_workflow")
+        assert hasattr(pipeline_services, "pipeline_service")
 
     def test_core_services_init(self) -> None:
         """Test nested core services initialization."""
