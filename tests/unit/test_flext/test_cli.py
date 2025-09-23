@@ -490,7 +490,7 @@ class TestErrorHandling:
 
             result = main_handler.test_command(coverage=True, parallel=False)
 
-            assert result.is_failure
+            assert not result.success
             assert result.error is not None
             assert "Failed: tests" in result.error
 

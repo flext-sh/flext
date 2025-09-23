@@ -73,7 +73,7 @@ class TestFlextLdapClient:
             "ldap://localhost:389", "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com", "wrongpass"
         )
 
-        assert result.is_failure
+        assert not result.success
         assert "Failed to bind" in result.error
 
     @pytest.mark.asyncio
@@ -87,7 +87,7 @@ class TestFlextLdapClient:
             "ldap://localhost:389", "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com", "password"
         )
 
-        assert result.is_failure
+        assert not result.success
         assert "Connection failed" in result.error
 
     @pytest.mark.asyncio
@@ -127,14 +127,14 @@ class TestFlextLdapClient:
 
         result = await client.bind("cn=test,dc=example,dc=com", "wrongpass")
 
-        assert result.is_failure
+        assert not result.success
         assert "Bind failed" in result.error
 
     @pytest.mark.asyncio
     async def test_bind_no_connection(self, client: FlextLdapClient) -> None:
         result = await client.bind("cn=test,dc=example,dc=com", "password")
 
-        assert result.is_failure
+        assert not result.success
         assert "No connection established" in result.error
 
     @pytest.mark.asyncio
@@ -187,7 +187,7 @@ class TestFlextLdapClient:
     def test_test_connection_not_connected(self, client: FlextLdapClient) -> None:
         result = client.test_connection()
 
-        assert result.is_failure
+        assert not result.success
         assert "Not connected" in result.error
 
     @pytest.mark.asyncio
@@ -251,7 +251,7 @@ class TestFlextLdapClient:
 
         result = await client.authenticate_user("testuser", "wrongpass")
 
-        assert result.is_failure
+        assert not result.success
         assert "Authentication failed" in result.error
 
     @pytest.mark.asyncio
@@ -264,7 +264,7 @@ class TestFlextLdapClient:
 
         result = await client.authenticate_user("nonexistent", "password")
 
-        assert result.is_failure
+        assert not result.success
         assert "User not found" in result.error
 
     @pytest.mark.asyncio
