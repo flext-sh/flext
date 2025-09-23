@@ -18,7 +18,7 @@ import pytest
 from flext.services import create_services
 from flext.workspace_cli import FlextWorkspaceCli
 from flext.workspace_service import create_workspace_service
-from flext_core import FlextDomainService, FlextResult
+from flext_core import FlextResult, FlextService
 from flext_tools import Colors, print_colored
 
 
@@ -207,11 +207,11 @@ class TestFlextWorkspaceCli:
             pytest.skip("flext_tools Colors not available in test environment")
 
     def test_flext_domain_service_inheritance(self) -> None:
-        """Test FlextWorkspaceCli properly inherits from FlextDomainService."""
+        """Test FlextWorkspaceCli properly inherits from FlextService."""
         cli = FlextWorkspaceCli()
 
         # Verify inheritance
-        assert isinstance(cli, FlextDomainService)
+        assert isinstance(cli, FlextService)
 
     def test_execute_method_exception_handling(self) -> None:
         """Test execute method exception handling."""
@@ -435,4 +435,4 @@ class TestFlextWorkspaceCliIntegration:
         assert callable(cli.execute)
 
         # Test inheritance is proper
-        assert isinstance(cli, FlextDomainService)
+        assert isinstance(cli, FlextService)

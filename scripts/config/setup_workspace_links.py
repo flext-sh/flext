@@ -19,14 +19,14 @@ from pathlib import Path
 
 from flext_core import (
     FlextContainer,
-    FlextDomainService,
     FlextLogger,
     FlextResult,
+    FlextService,
     FlextTypes,
 )
 
 
-class WorkspaceManagementService(FlextDomainService[FlextTypes.Core.Dict]):
+class WorkspaceManagementService(FlextService[FlextTypes.Core.Dict]):
     """Workspace link management service for FLEXT ecosystem.
 
     Unified class for managing workspace symbolic links and directory structure.

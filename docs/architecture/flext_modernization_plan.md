@@ -17,7 +17,7 @@ This document outlines the phased approach for consolidating FLEXT around domain
 - `flext-target-oracle` consolidates eight domain services plus a single `FlextHandlers` implementation (`flext-target-oracle/src/flext_target_oracle/target_commands.py:255`) with command-bus wiring in `flext-target-oracle/src/flext_target_oracle/target_refactored.py:47` and separate Singer message dispatch in `flext-target-oracle/src/flext_target_oracle/target_client.py:210`.
 - Connector packages (`flext-db-oracle/src/flext_db_oracle/services.py:58`, `flext-ldif/src/flext_ldif/services.py:97`, `flext-ldap/src/flext_ldap/domain.py:400`) and platform utilities (`src/flext/application_handlers.py:58`) each define their own domain services yet depend on local helper stacks and ad-hoc dispatch helpers (`src/flext/application_handlers.py:214`).
 - Observability, plugin, and quality tooling provide focused domain services (`flext-observability/src/flext_observability/factories.py:46`, `flext-plugin/src/flext_plugin/flext_plugin_services.py:30`, `flext-quality/src/flext_quality/cli.py:44`) but remain isolated from the shared bus/dispatcher pathway.
-- Several ecosystem packages consciously skip `FlextDomainService` adoption (for example `flext-auth/src/flext_auth/quickstart.py:17`), signalling migration candidates that will require targeted change management.
+- Several ecosystem packages consciously skip `FlextService` adoption (for example `flext-auth/src/flext_auth/quickstart.py:17`), signalling migration candidates that will require targeted change management.
 
 **Configuration & Context Observations**
 
@@ -66,7 +66,7 @@ Repository scan results mapping each package to current dispatcher/context adopt
 | -------------------------- | ----------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------- | --- | ------- | ------ | ----------------------------- |
 | Core Platform              | core-root               | Yes (`src/flext/dev.py:26`)                                                | No                                                                         | Yes | No      | No     | Bus used without handlers     |
 | Core Platform              | flext-core              | No                                                                         | Yes (`flext-core/src/flext_core/bus.py:93`)                                | Yes | Yes     | Yes    | No domain services registered |
-| Developer Experience       | flext-cli               | Yes (`flext-cli/src/flext_cli/domain_services.py:33`)                      | Yes (`flext-cli/src/flext_cli/handlers.py:50`)                             | Yes | No      | Yes    | Context not adopted           |
+| Developer Experience       | flext-cli               | Yes (`flext-cli/src/flext_cli/service.py:33`)                      | Yes (`flext-cli/src/flext_cli/handlers.py:50`)                             | Yes | No      | Yes    | Context not adopted           |
 | Platform Extensions & APIs | flext-api               | Yes (`flext-api/src/flext_api/client.py:35`)                               | No                                                                         | No  | No      | Yes    | Context not adopted           |
 | Platform Extensions & APIs | flext-auth              | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
 | Platform Extensions & APIs | flext-grpc              | No                                                                         | No                                                                         | No  | No      | No     | No domain services registered |
@@ -159,7 +159,7 @@ Flext Dispatcher (proposed flext-core module)
 FlextHandlers implementation (e.g. flext-target-oracle/src/flext_target_oracle/target_commands.py:255)
   │  invoke domain service
   ▼
-FlextDomainService (e.g. flext-target-oracle/src/flext_target_oracle/target_services.py:101)
+FlextService (e.g. flext-target-oracle/src/flext_target_oracle/target_services.py:101)
   │  emits FlextResult + context metadata
   ▼
 FlextContext / Observability sinks (flext-core/src/flext_core/context.py:19)
@@ -209,7 +209,7 @@ Caller (CLI, API, connector)
 
 #### Phase 1 Implementation Update (2025-09-17)
 
-- **Shared registry helper:** Added `FlextDispatcherRegistry` to `flext-core/src/flext_core/dispatcher_registry.py`, enabling idempotent bulk registration with summary reporting and re-exported via `flext-core/src/flext_core/__init__.py`.
+- **Shared registry helper:** Added `FlextRegistry` to `flext-core/src/flext_core/registry.py`, enabling idempotent bulk registration with summary reporting and re-exported via `flext-core/src/flext_core/__init__.py`.
 - **CLI adoption:** `flext-cli/src/flext_cli/cli_bus.py` now relies on the registry for handler setup, falling back to the bus only when dispatcher registration fails while preserving feature flag `FLEXT_CLI_ENABLE_DISPATCHER` semantics.
 - **Connector feature flags:** Introduced dispatcher bridges guarded by environment toggles for `flext-ldap` (`FLEXT_LDAP_ENABLE_DISPATCHER`), `flext-ldif` (`FLEXT_LDIF_ENABLE_DISPATCHER`), and `client-a-oud-mig` (`client-a_OUD_MIG_ENABLE_DISPATCHER`), wiring domain factories / APIs through the shared dispatcher while retaining legacy code paths.
 - **Documentation of new flow:** `flext-ldap/src/flext_ldap/domain.py`, `flext-ldif/src/flext_ldif/api.py`, and `client-a-oud-mig/src/client-a_oud_mig/commands.py` now route command execution through `FlextDispatcher` when the respective flags are enabled, with fallbacks and structured logging on dispatcher failure.
@@ -235,7 +235,7 @@ Caller (CLI, API, connector)
   - Base skeleton on current CLI + target pilots with dispatcher integration stubs.
   - Include sample handler registration and context instrumentation along with pytest scaffolding referencing `flext-core/tests/unit/test_flext_commands.py`.
 - **Static analysis & linting:**
-  - Extend shared Ruff config (`ruff-shared.toml`) with rules detecting direct `FlextDomainService.execute` calls and missing dispatcher usage.
+  - Extend shared Ruff config (`ruff-shared.toml`) with rules detecting direct `FlextService.execute` calls and missing dispatcher usage.
   - Prototype mypy plugin enforcing dispatcher type contracts against `FlextHandlers` annotations.
   - Provide opt-in pre-commit hook updates across packages.
 - **CI enforcement:**

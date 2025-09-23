@@ -17,7 +17,7 @@ from flext.project_types import FlextProjectTypes
 # from flext.workspace_models import FlextAdvancedWorkspaceModels
 from flext_core import (
     FlextContainer,
-    FlextDomainService,
+    FlextService,
     FlextLogger,
     FlextModels,
     FlextResult,
@@ -25,7 +25,7 @@ from flext_core import (
 )
 
 
-class FlextWorkspaceService(FlextDomainService[str]):
+class FlextWorkspaceService(FlextService[str]):
     """Unified workspace service using flext-core utilities exclusively.
 
     Eliminates ALL wrapper methods and SOLID violations, using flext-core
@@ -224,7 +224,7 @@ class FlextWorkspaceService(FlextDomainService[str]):
             return FlextResult[FlextTypes.Core.Dict].fail(error)
 
     def execute(self) -> FlextResult[str]:
-        """Execute workspace service - required by FlextDomainService abstract method."""
+        """Execute workspace service - required by FlextService abstract method."""
         try:
             workspace_info_result = self.get_workspace_info()
             if workspace_info_result.is_failure:
