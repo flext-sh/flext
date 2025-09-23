@@ -29,6 +29,8 @@ def create_ldap_user_with_defaults(
     organizational_unit: str | None = None,
     created_timestamp: datetime | None = None,
     modified_timestamp: datetime | None = None,
+    additional_attributes: dict[str, list[str]] | None = None,
+    object_classes: list[str] | None = None,
 ) -> FlextLdapModels.LdapUser:
     """Helper function to create LdapUser with default optional parameters."""
     return FlextLdapModels.LdapUser(
@@ -45,8 +47,8 @@ def create_ldap_user_with_defaults(
         title=title,
         organization=organization,
         organizational_unit=organizational_unit,
-        object_classes=["person", "organizationalPerson", "inetOrgPerson"],
-        additional_attributes={},
+        object_classes=object_classes or ["person", "organizationalPerson", "inetOrgPerson"],
+        additional_attributes=additional_attributes or {},
         created_timestamp=created_timestamp,
         modified_timestamp=modified_timestamp,
     )
@@ -60,6 +62,7 @@ def create_group_with_defaults(
     created_timestamp: datetime | None = None,
     modified_timestamp: datetime | None = None,
     member_dns: list[str] | None = None,
+    unique_member_dns: list[str] | None = None,
 ) -> FlextLdapModels.Group:
     """Helper function to create Group with default optional parameters."""
     return FlextLdapModels.Group(
@@ -69,6 +72,7 @@ def create_group_with_defaults(
         description=description,
         object_classes=["groupOfNames", "top"],
         member_dns=member_dns or [],
+        unique_member_dns=unique_member_dns or [],
         additional_attributes={},
         created_timestamp=created_timestamp,
         modified_timestamp=modified_timestamp,
@@ -1047,7 +1051,7 @@ class TestCreateUserRequest:
                 sn=valid_create_user_data["sn"],
                 given_name=valid_create_user_data["given_name"],
                 mail=valid_create_user_data["mail"],
-                user_password=SecretStr("123"),
+                user_password="123",
             )
 
     def test_required_string_validation(

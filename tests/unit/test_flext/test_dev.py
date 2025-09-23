@@ -112,7 +112,7 @@ class TestAdvancedDevOperations:
         }
 
         result = operation_executor.create_test_operation(invalid_operation)
-        assert result.is_failure
+        assert not result.success
         assert result.error is not None
         assert "coverage_threshold" in result.error
 
@@ -249,7 +249,7 @@ class TestOperationExecutor:
         }
 
         result = executor.create_test_operation(invalid_data)
-        assert result.is_failure
+        assert not result.success
         assert result.error is not None
         assert "test_types" in result.error
 
@@ -385,7 +385,7 @@ class TestErrorHandling:
         invalid_data = {"invalid": "data"}
 
         result = executor.create_operation(invalid_data)
-        assert result.is_failure
+        assert not result.success
 
     def test_prerequisite_validation_failure(self) -> None:
         """Test prerequisite validation failure handling."""
@@ -402,4 +402,4 @@ class TestErrorHandling:
             # Test prerequisite validation
             with patch("subprocess.run", side_effect=Exception("Command not found")):
                 result = operation.validate_prerequisites()
-                assert result.is_failure
+                assert not result.success
