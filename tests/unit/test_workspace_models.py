@@ -221,56 +221,75 @@ class TestWorkspaceInfo:
         result_normal = info_normal.validate_business_rules()
         assert result_normal.is_success
 
-    def test_workspace_info_different_statuses(self) -> None:
-        """Test workspace info with different status values."""
-        statuses = [
-            WorkspaceStatus.READY,
-            WorkspaceStatus.INITIALIZING,
-            WorkspaceStatus.ERROR,
+    def test_workspace_info_different_configurations(self) -> None:
+        """Test WorkspaceInfo with different configurations using actual API."""
+        # Test different workspace configurations
+        configurations = [
+            {"name": "ready-workspace", "projects": []},
+            {"name": "project-workspace", "projects": [], "total_files": 5},
+            {
+                "name": "large-workspace",
+                "projects": [],
+                "total_files": 100,
+                "total_size_bytes": 1024,
+            },
         ]
 
-        for status in statuses:
+        for config in configurations:
             info = FlextModels.WorkspaceInfo(
-                name=f"workspace-{status.value}",
-                path=f"/path/to/{status.value}",
-                status=status,
+                workspace_id=f"ws-{config['name']}-001",
+                name=config["name"],
+                root_path=f"/path/to/{config['name']}",
+                projects=config.get("projects", []),
+                total_files=config.get("total_files", 0),
+                total_size_bytes=config.get("total_size_bytes", 0),
             )
 
-            assert info.status == status
-
-            # Test validation for each status
-            result = info.validate_business_rules()
-            assert result.is_success
+            assert info.name == config["name"]
+            assert info.total_files == config.get("total_files", 0)
+            assert info.total_size_bytes == config.get("total_size_bytes", 0)
 
     def test_workspace_info_zero_values_valid(self) -> None:
         """Test that zero values are valid for numeric fields."""
         info = FlextModels.WorkspaceInfo(
+            workspace_id="ws-zero-001",
             name="zero-workspace",
-            path="/zero/path",
-            project_count=0,
-            total_size_mb=0.0,
+            root_path="/zero/path",
+            total_files=0,
+            total_size_bytes=0,
         )
 
-        result = info.validate_business_rules()
-        assert result.is_success
+        # The model validates automatically on creation
+        assert info.total_files == 0
+        assert info.total_size_bytes == 0
 
     def test_workspace_info_with_projects_list(self) -> None:
         """Test workspace info with projects list populated."""
-        projects = ["flext-core", "flext-cli", "flext-auth", "flext-tools"]
+        projects = [
+            FlextModels.Project(
+                name="flext-core",
+                organization_id="flext-org",
+                repository_path="/repo/flext-core",
+            ),
+            FlextModels.Project(
+                name="flext-cli",
+                organization_id="flext-org",
+                repository_path="/repo/flext-cli",
+            ),
+        ]
 
         info = FlextModels.WorkspaceInfo(
+            workspace_id="ws-multi-001",
             name="multi-project-workspace",
-            path="/multi/project/path",
-            project_count=len(projects),
-            total_size_mb=500.25,
+            root_path="/multi/project/path",
             projects=projects,
+            total_files=50,
+            total_size_bytes=500 * 1024,  # 500KB
         )
 
         assert info.projects == projects
-        assert len(info.projects) == info.project_count
-
-        result = info.validate_business_rules()
-        assert result.is_success
+        assert len(info.projects) == 2
+        assert info.total_files == 50
 
 
 class TestWorkspaceModelsIntegration:

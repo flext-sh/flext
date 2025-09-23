@@ -5,13 +5,13 @@ SPDX-License-Identifier: MIT
 """
 
 import flext_cli
-from flext_core import FlextDomainService, FlextLogger, FlextResult
+from flext_core import FlextLogger, FlextResult, FlextService
 
 # FlextCli availability flag
 FLEXT_CLI_AVAILABLE = True
 
 
-class FlextColorService(FlextDomainService[str]):
+class FlextColorService(FlextService[str]):
     """Unified color service with nested helpers.
 
     Single responsibility: Terminal color formatting and output.
@@ -101,7 +101,7 @@ class FlextColorService(FlextDomainService[str]):
         self._logger = FlextLogger(__name__)
 
     def execute(self) -> FlextResult[str]:
-        """Execute color service - FlextDomainService interface."""
+        """Execute color service - FlextService interface."""
         return FlextResult[str].ok("Color service ready")
 
     def colorize(self, message: str, color: str) -> FlextResult[str]:

@@ -103,7 +103,7 @@ flextVERSION = "0.9.0"   # mixedCase
 class FlextModels.Entity[TId]:
 class FlextModels.Value:
 class FlextModels.AggregateRoot[TId]:
-class FlextDomainService:
+class FlextService:
 
 # Tipos relacionados
 TFlextEntityId = TypeVar("TFlextEntityId")
@@ -129,7 +129,7 @@ class FlextUserRepository(FlextRepository[FlextUser, int]):
 
 # Service Layer
 class FlextApplicationService:
-class FlextDomainService:
+class FlextService:
 ```
 
 ### Sistema de Resultado

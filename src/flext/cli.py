@@ -15,11 +15,11 @@ import sys
 from pathlib import Path
 from typing import Protocol
 
-from flext_cli import FlextCliApi, FlextCliConfigs, FlextCliMain
-from flext_core import FlextDomainService, FlextLogger, FlextResult
+from flext_cli import FlextCliApi, FlextCliContext, FlextCliMain
+from flext_core import FlextService, FlextLogger, FlextResult
 
 
-class FlextControlPanelCli(FlextDomainService[str]):
+class FlextControlPanelCli(FlextService[str]):
     """Unified CLI service for FLEXT Control Panel with nested command handlers.
 
     Implements FLEXT unified class pattern with all functionality organized into
@@ -124,7 +124,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
                 f"FlextCliApi initialization failed: {cli_api_result.error}"
             )
             self._cli_api = None  # Will be handled in methods
-        self._config: FlextCliConfigs | None = None
+        self._config: FlextCliContext | None = None
         self._workspace: Path = Path.cwd()
 
     def _initialize_cli_api(self) -> FlextResult[FlextCliApi]:
@@ -139,13 +139,13 @@ class FlextControlPanelCli(FlextDomainService[str]):
 
     def _initialize_config(
         self, profile: str, *, debug: bool
-    ) -> FlextResult[FlextCliConfigs]:
+    ) -> FlextResult[FlextCliContext]:
         """Initialize CLI configuration using FlextResult pattern."""
         try:
-            config = FlextCliConfigs(profile=profile, debug=debug)
-            return FlextResult[FlextCliConfigs].ok(config)
+            config = FlextCliContext(profile=profile, debug=debug)
+            return FlextResult[FlextCliContext].ok(config)
         except Exception as e:
-            return FlextResult[FlextCliConfigs].fail(
+            return FlextResult[FlextCliContext].fail(
                 f"Configuration initialization failed: {e!s}"
             )
 
@@ -164,7 +164,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
     class _CliContext:
         """Nested CLI context management."""
 
-        def __init__(self, config: FlextCliConfigs, workspace: Path) -> None:
+        def __init__(self, config: FlextCliContext, workspace: Path) -> None:
             self.config = config
             self.workspace = workspace
             self.output_format = "table"
@@ -439,7 +439,7 @@ class FlextControlPanelCli(FlextDomainService[str]):
         return self._workspace
 
     def execute(self) -> FlextResult[str]:
-        """Execute CLI service - required by FlextDomainService abstract method."""
+        """Execute CLI service - required by FlextService abstract method."""
         try:
             # Default execution returns CLI system info
             info = {

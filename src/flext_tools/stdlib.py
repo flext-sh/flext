@@ -8,10 +8,10 @@ from __future__ import annotations
 
 import sys
 
-from flext_core import FlextDomainService, FlextResult
+from flext_core import FlextResult, FlextService
 
 
-class FlextStdlibService(FlextDomainService[list[str]]):
+class FlextStdlibService(FlextService[list[str]]):
     """Unified stdlib service with nested helpers.
 
     Single responsibility: Standard library module detection and management.
@@ -52,7 +52,7 @@ class FlextStdlibService(FlextDomainService[list[str]]):
             return module_name in FlextStdlibService._ModuleHelper.get_stdlib_modules()
 
     def execute(self) -> FlextResult[list[str]]:
-        """Execute stdlib service - FlextDomainService interface."""
+        """Execute stdlib service - FlextService interface."""
         modules = self._ModuleHelper.get_stdlib_modules()
         return FlextResult[list[str]].ok(modules)
 

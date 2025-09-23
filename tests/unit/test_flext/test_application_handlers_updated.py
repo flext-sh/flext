@@ -36,31 +36,26 @@ class TestFlextAdvancedHandlerModelsUpdated:
         assert getattr(handler_config, "handler_type") == "command"
 
     def test_data_processing_command_with_new_api(self) -> None:
-        """Test DataProcessingCommand using new FlextCqrs command creation."""
+        """Test Command using new FlextCqrs command creation with actual API."""
         command_data: dict[str, object] = {
             "command_type": "ProcessData",
-            "payload": {
-                "operation": "process_data",
-                "data_source": "file:///test/data.csv",
-                "batch_size": 1000,
-            },
-            "priority": "normal",
+            "issuer_id": "test_user_123",
         }
 
         result: FlextResult[object] = FlextCqrs.Operations.create_command(command_data)
 
         assert result.is_success
         command: object = result.value
-        # Type assertion for command attributes
+        # Type assertion for command attributes using actual Command model fields
         assert hasattr(command, "command_type")
-        assert hasattr(command, "payload")
         assert hasattr(command, "command_id")
+        assert hasattr(command, "issued_at")
+        assert hasattr(command, "issuer_id")
         assert getattr(command, "command_type") == "ProcessData"
-        payload: dict[str, object] = getattr(command, "payload")
-        assert payload["operation"] == "process_data"
-        assert payload["data_source"] == "file:///test/data.csv"
-        assert payload["batch_size"] == 1000
+        assert getattr(command, "issuer_id") == "test_user_123"
+        # Command ID should be auto-generated
         assert getattr(command, "command_id") is not None
+        assert len(str(getattr(command, "command_id"))) > 0
 
     def test_data_processing_command_validation_error(self) -> None:
         """Test data processing command validation with new API."""

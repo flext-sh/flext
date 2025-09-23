@@ -22,7 +22,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from flext_core import (
     FlextBus,
     FlextContainer,
-    FlextDomainService,
+    FlextService,
     FlextHandlers,
     FlextLogger,
     FlextProcessing,
@@ -38,7 +38,7 @@ T = TypeVar("T")
 # Use flext-core FlextHandlers exclusively - NO LOCAL IMPLEMENTATIONS
 
 
-class FlextApplicationHandlerService[T](FlextDomainService[str]):
+class FlextApplicationHandlerService[T](FlextService[str]):
     """Unified handler service providing facade to flext-core handler system.
 
     This service acts as a facade to flext-core's comprehensive handler system,
@@ -279,7 +279,7 @@ class FlextApplicationHandlerService[T](FlextDomainService[str]):
         return FlextResult[dict[str, object]].ok({"status": "handled"})
 
     def execute(self, request: str = "") -> FlextResult[str]:
-        """Execute handler service - required by FlextDomainService abstract method."""
+        """Execute handler service - required by FlextService abstract method."""
         try:
             # Use request parameter to avoid unused warning
             _ = request

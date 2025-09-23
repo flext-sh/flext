@@ -22,7 +22,7 @@ from pydantic import BaseModel, Field
 
 from flext_core import (
     FlextContainer,
-    FlextDomainService,
+    FlextService,
     FlextHandlers,
     FlextLogger,
     FlextProcessing,
@@ -37,7 +37,7 @@ from flext_core import (
 Entry = TypeVar("Entry")
 
 
-class FlextApplicationPipelineService(FlextDomainService[str]):
+class FlextApplicationPipelineService(FlextService[str]):
     """Unified pipeline service providing facade to flext-core pipeline system.
 
     This service acts as a facade to flext-core's comprehensive pipeline system,
@@ -211,7 +211,7 @@ class FlextApplicationPipelineService(FlextDomainService[str]):
         return FlextHandlers[object, object]()
 
     def execute(self, request: str = "") -> FlextResult[str]:
-        """Execute pipeline service - required by FlextDomainService abstract method."""
+        """Execute pipeline service - required by FlextService abstract method."""
         _ = request  # Parameter available for service requests
         try:
             # Default execution returns pipeline system info from flext-core

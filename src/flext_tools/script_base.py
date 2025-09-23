@@ -11,10 +11,10 @@ from abc import abstractmethod
 
 from pydantic import BaseModel
 
-from flext_core import FlextDomainService, FlextResult
+from flext_core import FlextResult, FlextService
 
 
-class FlextScriptService(FlextDomainService[object]):
+class FlextScriptService(FlextService[object]):
     """Unified script service with nested helpers.
 
     Single responsibility: Script execution and management.
@@ -61,7 +61,7 @@ class FlextScriptService(FlextDomainService[object]):
         """Get script metadata."""
 
     def execute(self) -> FlextResult[object]:
-        """Execute script service - FlextDomainService interface."""
+        """Execute script service - FlextService interface."""
         return self.run({})
 
     def create_parser(self) -> argparse.ArgumentParser:

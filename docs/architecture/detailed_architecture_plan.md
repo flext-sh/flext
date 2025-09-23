@@ -11,7 +11,7 @@ FlextResult.ok(), FlextResult.fail(), .map(), .flat_map()
 
 # Domain Foundation
 FlextModels
-FlextDomainService, FlextPlugin, FlextContainer
+FlextService, FlextPlugin, FlextContainer
 
 # Configuration & Types
 FlextConfig, FlextSingerConfig, FlextDatabaseConfig
@@ -251,7 +251,7 @@ class FlextMeltanoCli:
 #### **base.py - Services Base**
 
 ```python
-class FlextMeltanoBaseService(FlextDomainService):
+class FlextMeltanoBaseService(FlextService):
     """Base service para todos os serviços Meltano"""
 
     def __init__(self, config: FlextMeltanoConfig):
