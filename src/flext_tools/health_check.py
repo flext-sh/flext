@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Self
 
 from flext_core import FlextResult
 
@@ -14,7 +15,7 @@ from flext_core import FlextResult
 class HealthCheckService:
     """Basic health check service for legacy scripts."""
 
-    def __init__(self) -> None:
+    def __init__(self: Self) -> None:
         """Initialize health check service."""
 
     def run_health_check(self, project_path: str | Path) -> FlextResult[dict[str, str]]:
@@ -29,6 +30,6 @@ class HealthCheckService:
         except Exception as e:
             return FlextResult[dict[str, str]].fail(f"Health check failed: {e}")
 
-    def get_system_health(self) -> FlextResult[str]:
+    def get_system_health(self: Self) -> FlextResult[str]:
         """Get system health status."""
         return FlextResult[str].ok("System is healthy")

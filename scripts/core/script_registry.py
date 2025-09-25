@@ -16,9 +16,8 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextTypes
-from flext_tools import Colors, print_colored
-from flext_tools.script_base import ScriptMetadata
+from flext_core import FlextLogger
+from flext_tools import Colors, ScriptMetadata, print_colored
 
 
 class ScriptCategory(StrEnum):
@@ -51,7 +50,7 @@ class LegacyScriptMetadata:
     priority: ScriptPriority
     file_path: Path
     requires_venv: bool = True
-    dependencies: FlextTypes.Core.StringList = field(default_factory=list)
+    dependencies: list[str] = field(default_factory=list)
 
     @property
     def makefile_target(self) -> str:

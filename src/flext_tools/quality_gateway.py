@@ -4,13 +4,15 @@ Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
 
+from typing import Self
+
 from flext_core import FlextResult
 
 
 class QualityGateway:
     """Simple quality gateway for testing purposes."""
 
-    def __init__(self) -> None:
+    def __init__(self: Self) -> None:
         """Initialize quality gateway."""
 
     def run_checks(

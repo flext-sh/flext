@@ -22,11 +22,12 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from flext_core import (
     FlextBus,
     FlextContainer,
-    FlextService,
     FlextHandlers,
     FlextLogger,
-    FlextProcessing,
+    FlextModels,
+    FlextProcessors,
     FlextResult,
+    FlextService,
 )
 
 # Direct flext-core imports - no aliases
@@ -98,7 +99,7 @@ class FlextApplicationHandlerService[T](FlextService[str]):
             return v
 
         @model_validator(mode="after")
-        def validate_command(self) -> Self:
+        def validate_command(self: Self) -> Self:
             """Validate command data."""
             if not self.user_data:
                 msg = "User data is required"
@@ -125,7 +126,7 @@ class FlextApplicationHandlerService[T](FlextService[str]):
             return v
 
         @model_validator(mode="after")
-        def validate_command(self) -> Self:
+        def validate_command(self: Self) -> Self:
             """Validate command data."""
             if not self.data_source.strip():
                 msg = "Data source is required"
@@ -182,11 +183,27 @@ class FlextApplicationHandlerService[T](FlextService[str]):
             self, _name: str | None = None
         ) -> FlextHandlers[object, object]:
             """Create handler chain using flext-core implementation."""
-            return FlextHandlers()
+            # Create a basic handler config for handler chain operations
+            config = FlextModels.CqrsConfig.Handler(
+                handler_id="handler_chain_001",
+                handler_name="handler_chain",
+                handler_type="command",
+                handler_mode="command",
+                command_timeout=30,
+                max_command_retries=3,
+            )
+            
+            # Create a concrete handler implementation
+            class HandlerChainHandler(FlextHandlers[object, object]):
+                def handle(self, message: object) -> FlextResult[object]:
+                    """Handle handler chain commands."""
+                    return FlextResult[object].ok(f"Handler chain processed: {message}")
+            
+            return HandlerChainHandler(config=config)
 
-        def create_pipeline(self, _name: str | None = None) -> FlextProcessing.Pipeline:
+        def create_pipeline(self, _name: str | None = None) -> FlextProcessors.Pipeline:
             """Create pipeline using flext-core implementation."""
-            return FlextProcessing.Pipeline()
+            return FlextProcessors.Pipeline()
 
     class _BusFactory:
         """Nested factory for creating CQRS buses."""
@@ -194,11 +211,11 @@ class FlextApplicationHandlerService[T](FlextService[str]):
         def __init__(self, service: FlextApplicationHandlerService[object]) -> None:
             self._service = service
 
-        def create_command_bus(self) -> FlextBus:
+        def create_command_bus(self: Self) -> FlextBus:
             """Create command bus using flext-core implementation."""
             return FlextBus()
 
-        def create_query_bus(self) -> FlextBus:
+        def create_query_bus(self: Self) -> FlextBus:
             """Create query bus using flext-core implementation."""
             return FlextBus()
 
@@ -227,23 +244,23 @@ class FlextApplicationHandlerService[T](FlextService[str]):
             except Exception as e:
                 return FlextResult[object].fail(f"Failed to get handler {name}: {e}")
 
-        def get_all_handlers(self) -> dict[str, object]:
+        def get_all_handlers(self: Self) -> dict[str, object]:
             """Get all registered handlers."""
             return self._registry.copy()
 
-    def create_handler_factory(self) -> _HandlerFactory:
+    def create_handler_factory(self: Self) -> _HandlerFactory:
         """Create handler factory."""
         return self._HandlerFactory(self)
 
-    def create_pattern_factory(self) -> _PatternFactory:
+    def create_pattern_factory(self: Self) -> _PatternFactory:
         """Create pattern factory."""
         return self._PatternFactory(self)
 
-    def create_bus_factory(self) -> _BusFactory:
+    def create_bus_factory(self: Self) -> _BusFactory:
         """Create bus factory."""
         return self._BusFactory(self)
 
-    def create_registry_manager(self) -> _RegistryManager:
+    def create_registry_manager(self: Self) -> _RegistryManager:
         """Create registry manager."""
         return self._RegistryManager(self)
 

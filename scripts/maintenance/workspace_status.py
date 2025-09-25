@@ -11,8 +11,7 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextResult
-from flext_tools import Colors, print_colored
-from flext_tools.script_base import ScriptMetadata
+from flext_tools import Colors, ScriptMetadata, print_colored
 
 
 class WorkspaceStatus:
@@ -86,8 +85,7 @@ class WorkspaceStatus:
 
     def _analyze_projects(self, workspace_root: Path) -> dict[str, object]:
         """Analisar projetos do workspace."""
-        projects = {}
-
+        projects: dict[str, object] = {}
         for item in workspace_root.iterdir():
             if item.is_dir() and (item / "pyproject.toml").exists():
                 if any(
@@ -191,8 +189,7 @@ class WorkspaceStatus:
         # Pontuação baseada em várias métricas
         score = 0
         max_score = 100
-        issues = []
-
+        issues: list[object] = []
         # Estrutura dos projetos (30 pontos)
         total_count = projects["total_count"]
         if isinstance(total_count, (int, str)):

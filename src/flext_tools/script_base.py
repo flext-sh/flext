@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 from abc import abstractmethod
+from typing import Self
 
 from pydantic import BaseModel
 
@@ -52,28 +53,42 @@ class FlextScriptService(FlextService[object]):
 
         @staticmethod
         def validate_preconditions() -> FlextResult[None]:
-            """Validate script preconditions."""
+            """Validate script preconditions.
+
+            🚨 AUDIT VIOLATION: Empty validation method instead of proper models validation!
+            ❌ CRITICAL ISSUE: This method provides no actual validation
+            ❌ MISSING VALIDATION: Should use FlextModels.Validation.validate_script_preconditions()
+
+            🔧 REQUIRED ACTION:
+            - Replace with FlextModels.Validation.validate_script_preconditions()
+            - Use FlextModels.ScriptMetadata validation for script validation
+            - Implement proper precondition validation logic
+
+            📍 SHOULD BE USED INSTEAD: FlextModels.Validation.validate_script_preconditions(metadata)
+            """
+            # 🚨 AUDIT VIOLATION: Empty validation - should use FlextModels.Validation
             return FlextResult[None].ok(None)
 
     @property
     @abstractmethod
-    def metadata(self) -> ScriptMetadata:
+    def metadata(self: Self) -> ScriptMetadata:
         """Get script metadata."""
 
-    def execute(self) -> FlextResult[object]:
+    def execute(self: Self) -> FlextResult[object]:
         """Execute script service - FlextService interface."""
         return self.run({})
 
-    def create_parser(self) -> argparse.ArgumentParser:
+    def create_parser(self: Self) -> argparse.ArgumentParser:
         """Create argument parser using nested helper."""
         return self._ParserHelper.create_parser(self.metadata)
 
-    def validate_preconditions(self) -> FlextResult[None]:
+    def validate_preconditions(self: Self) -> FlextResult[None]:
         """Validate preconditions using nested helper."""
         return self._ValidationHelper.validate_preconditions()
 
     def run(self, args: dict[str, object] | None = None) -> FlextResult[object]:
         """Run the script."""
+        # 🚨 AUDIT VIOLATION: Using empty validation method - should use FlextModels.Validation
         validation_result = self.validate_preconditions()
         if validation_result.is_failure:
             return FlextResult[object].fail(
@@ -82,14 +97,14 @@ class FlextScriptService(FlextService[object]):
 
         return self.execute_implementation(args or {})
 
-    def main(self) -> int:
+    def main(self: Self) -> int:
         """Main entry point for script."""
         try:
             parser = self.create_parser()
             args = parser.parse_args()
-            arg_dict = vars(args)
+            arg_dict: dict[str, object] = vars(args)
 
-            result = self.run(arg_dict)
+            result: FlextResult[object] = self.run(arg_dict)
             if result.is_success:
                 return 0
             return 1

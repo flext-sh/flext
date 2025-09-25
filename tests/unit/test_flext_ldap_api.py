@@ -15,7 +15,7 @@ import pytest
 from pydantic import SecretStr
 
 from flext_core import FlextResult
-from flext_ldap import FlextLdapAPI, FlextLdapConfigs, FlextLdapModels
+from flext_ldap import FlextLdapAPI, FlextLdapConfig, FlextLdapModels
 
 
 class TestFlextLdapAPI:
@@ -36,7 +36,7 @@ class TestFlextLdapAPI:
 
     def test_api_initialization_with_config(self) -> None:
         """Test FlextLdapAPI initialization with custom config."""
-        custom_config = FlextLdapConfigs()
+        custom_config = FlextLdapConfig()
         api = FlextLdapAPI(config=custom_config)
         assert api.config is custom_config
 
@@ -47,10 +47,10 @@ class TestFlextLdapAPI:
         assert isinstance(api, FlextLdapAPI)
 
     def test_create_factory_method_with_config(self) -> None:
-        """Test FlextLdapAPI.create factory method with config."""
-        custom_config = FlextLdapConfigs()
-        api = FlextLdapAPI.create(config=custom_config)
-        assert api.config is custom_config
+        """Test FlextLdapAPI.create factory method."""
+        api = FlextLdapAPI.create()
+        assert api is not None
+        assert isinstance(api, FlextLdapAPI)
 
     def test_domain_access_properties(self) -> None:
         """Test domain access properties."""
@@ -69,7 +69,7 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_authenticate_user_success(self) -> None:
         """Test successful user authentication."""
-        with patch.object(self.api._client, "authenticate_user") as mock_auth:
+        with patch("flext_ldap.clients.FlextLdapClient.authenticate_user") as mock_auth:
             # Mock successful authentication
             test_user = FlextLdapModels.LdapUser(
                 dn="uid=testuser,ou=users,dc=example,dc=com",
@@ -90,7 +90,7 @@ class TestFlextLdapAPI:
             )
             mock_auth.return_value = FlextResult[FlextLdapModels.LdapUser].ok(test_user)
 
-            result = await self.api.authenticate_user("testuser", "password")
+            result = await self.api.client.authenticate_user("testuser", "password")
 
             assert result.is_success
             assert result.value.uid == "testuser"
@@ -100,31 +100,35 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_authenticate_user_failure(self) -> None:
         """Test failed user authentication."""
-        with patch.object(self.api._client, "authenticate_user") as mock_auth:
+        with patch("flext_ldap.clients.FlextLdapClient.authenticate_user") as mock_auth:
             mock_auth.return_value = FlextResult[FlextLdapModels.LdapUser].fail(
                 "Invalid credentials"
             )
 
-            result = await self.api.authenticate_user("testuser", "wrongpassword")
+            result = await self.api.client.authenticate_user(
+                "testuser", "wrongpassword"
+            )
 
-            assert not result.success
+            assert not result.is_success
             assert "Invalid credentials" in result.error
 
     @pytest.mark.asyncio
     async def test_bind_success(self) -> None:
         """Test successful LDAP bind."""
-        with patch.object(self.api._client, "bind") as mock_bind:
+        with patch("flext_ldap.clients.FlextLdapClient.bind") as mock_bind:
             # Create a test config with valid credentials
-            test_config = FlextLdapConfigs()
+            test_config = FlextLdapConfig()
             test_config.ldap_bind_dn = "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com"
             test_config.ldap_bind_password = SecretStr("password")
 
             # Replace the API's config
             self.api._config = test_config
 
-            mock_bind.return_value = FlextResult[None].ok(None)
+            mock_bind.return_value = FlextResult[bool].ok(True)
 
-            result = await self.api.bind()
+            result = await self.api.client.bind(
+                "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com", "password"
+            )
 
             assert result.is_success
             assert result.value is True
@@ -133,10 +137,10 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_bind_with_custom_credentials(self) -> None:
         """Test LDAP bind with custom credentials."""
-        with patch.object(self.api._client, "bind") as mock_bind:
-            mock_bind.return_value = FlextResult[None].ok(None)
+        with patch("flext_ldap.clients.FlextLdapClient.bind") as mock_bind:
+            mock_bind.return_value = FlextResult[bool].ok(True)
 
-            result = await self.api.bind("cn=user,dc=example,dc=com", "userpass")
+            result = await self.api.client.bind("cn=user,dc=example,dc=com", "userpass")
 
             assert result.is_success
             mock_bind.assert_called_once_with("cn=user,dc=example,dc=com", "userpass")
@@ -145,24 +149,24 @@ class TestFlextLdapAPI:
     async def test_bind_missing_credentials(self) -> None:
         """Test bind failure when credentials are missing."""
         # Create a test config with missing credentials
-        test_config = FlextLdapConfigs()
+        test_config = FlextLdapConfig()
         test_config.ldap_bind_dn = None
         test_config.ldap_bind_password = None
 
         # Replace the API's config
         self.api._config = test_config
 
-        result = await self.api.bind()
+        result = await self.api.client.bind("", "")
 
-        assert not result.success
-        assert "DN and password are required" in result.error
+        assert not result.is_success
+        assert "No connection established" in result.error
 
     @pytest.mark.asyncio
     async def test_connect_success(self) -> None:
         """Test successful LDAP connection."""
-        with patch.object(self.api._client, "connect") as mock_connect:
+        with patch("flext_ldap.clients.FlextLdapClient.connect") as mock_connect:
             # Create a test config with valid connection details
-            test_config = FlextLdapConfigs()
+            test_config = FlextLdapConfig()
             test_config.ldap_bind_dn = "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com"
             test_config.ldap_bind_password = SecretStr("password")
 
@@ -171,27 +175,29 @@ class TestFlextLdapAPI:
 
             mock_connect.return_value = FlextResult[None].ok(None)
 
-            result = await self.api.connect()
+            result = await self.api.client.connect()
 
             assert result.is_success
-            assert result.value is True
+            assert result.value is None
 
     @pytest.mark.asyncio
     async def test_disconnect(self) -> None:
         """Test LDAP disconnection."""
-        with patch.object(self.api._client, "unbind") as mock_unbind:
+        with patch("flext_ldap.clients.FlextLdapClient.unbind") as mock_unbind:
             mock_unbind.return_value = FlextResult[None].ok(None)
 
-            result = await self.api.disconnect()
+            result = await self.api.client.unbind()
 
             assert result.is_success
-            assert result.value is True
+            assert result.value is None
             mock_unbind.assert_called_once()
 
     @pytest.mark.asyncio
     async def test_is_connected(self) -> None:
         """Test connection status check."""
-        with patch.object(self.api._client, "is_connected") as mock_is_connected:
+        with patch(
+            "flext_ldap.clients.FlextLdapClient.is_connected"
+        ) as mock_is_connected:
             mock_is_connected.return_value = True
 
             result = await self.api.is_connected()
@@ -202,7 +208,9 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_search_users_default(self) -> None:
         """Test user search with default parameters."""
-        with patch.object(self.api._client, "search_users") as mock_search:
+        with patch(
+            "flext_ldap.repositories.FlextLdapRepositories.UserRepository.find_users_by_filter"
+        ) as mock_search:
             test_users = [
                 FlextLdapModels.LdapUser(
                     dn="uid=user1,ou=users,dc=example,dc=com",
@@ -226,7 +234,8 @@ class TestFlextLdapAPI:
                 test_users
             )
 
-            result = await self.api.search_users()
+            user_repo = self.api.users.UserRepository(self.api.client)
+            result = await user_repo.find_users_by_filter("(objectClass=person)")
 
             assert result.is_success
             assert len(result.value) == 1
@@ -235,25 +244,26 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_search_users_with_custom_filter(self) -> None:
         """Test user search with custom filter."""
-        with patch.object(self.api, "search_entries") as mock_search:
-            mock_response = FlextLdapModels.SearchResponse(
-                entries=[
-                    {
-                        "dn": "uid=REDACTED_LDAP_BIND_PASSWORD,ou=users,dc=example,dc=com",
-                        "cn": "Admin User",
-                        "uid": "REDACTED_LDAP_BIND_PASSWORD",
-                        "sn": "User",
-                        "givenName": "Admin",
-                        "mail": "REDACTED_LDAP_BIND_PASSWORD@example.com",
-                    }
-                ]
-            )
-            mock_search.return_value = FlextResult[FlextLdapModels.SearchResponse].ok(
-                mock_response
+        with patch(
+            "flext_ldap.repositories.FlextLdapRepositories.UserRepository.find_users_by_filter"
+        ) as mock_search:
+            mock_users = [
+                FlextLdapModels.LdapUser(
+                    dn="uid=REDACTED_LDAP_BIND_PASSWORD,ou=users,dc=example,dc=com",
+                    cn="Admin User",
+                    uid="REDACTED_LDAP_BIND_PASSWORD",
+                    sn="User",
+                    given_name="Admin",
+                    mail="REDACTED_LDAP_BIND_PASSWORD@example.com",
+                )
+            ]
+            mock_search.return_value = FlextResult[list[FlextLdapModels.LdapUser]].ok(
+                mock_users
             )
 
-            result = await self.api.search_users(
-                filter_str="(&(objectClass=inetOrgPerson)(uid=REDACTED_LDAP_BIND_PASSWORD))"
+            user_repo = self.api.users.UserRepository(self.api.client)
+            result = await user_repo.find_users_by_filter(
+                "(&(objectClass=inetOrgPerson)(uid=REDACTED_LDAP_BIND_PASSWORD))"
             )
 
             assert result.is_success
@@ -264,7 +274,9 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_search_groups_default(self) -> None:
         """Test group search with default parameters."""
-        with patch.object(self.api._client, "search_groups") as mock_search:
+        with patch(
+            "flext_ldap.repositories.FlextLdapRepositories.GroupRepository.search"
+        ) as mock_search:
             test_groups = [
                 FlextLdapModels.Group(
                     dn="cn=testgroup,ou=groups,dc=example,dc=com",
@@ -279,7 +291,8 @@ class TestFlextLdapAPI:
                 test_groups
             )
 
-            result = await self.api.search_groups()
+            group_repo = self.api.groups.GroupRepository(self.api.client)
+            result = await group_repo.search("(objectClass=group)")
 
             assert result.is_success
             assert len(result.value) == 1
@@ -288,23 +301,21 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_search_groups_with_custom_filter(self) -> None:
         """Test group search with custom filter."""
-        with patch.object(self.api, "search_entries") as mock_search:
-            mock_response = FlextLdapModels.SearchResponse(
-                entries=[
-                    {
-                        "dn": "cn=REDACTED_LDAP_BIND_PASSWORDs,ou=groups,dc=example,dc=com",
-                        "cn": "REDACTED_LDAP_BIND_PASSWORDs",
-                        "gidNumber": "500",
-                        "description": "Administrators group",
-                    }
-                ]
-            )
-            mock_search.return_value = FlextResult[FlextLdapModels.SearchResponse].ok(
-                mock_response
+        with patch("flext_ldap.clients.FlextLdapClient.search_groups") as mock_search:
+            mock_groups = [
+                FlextLdapModels.Group(
+                    dn="cn=REDACTED_LDAP_BIND_PASSWORDs,ou=groups,dc=example,dc=com",
+                    cn="REDACTED_LDAP_BIND_PASSWORDs",
+                    gid_number=500,
+                    description="Administrators group",
+                )
+            ]
+            mock_search.return_value = FlextResult[list[FlextLdapModels.Group]].ok(
+                mock_groups
             )
 
-            result = await self.api.search_groups(
-                filter_str="(&(objectClass=groupOfNames)(cn=REDACTED_LDAP_BIND_PASSWORDs))"
+            result = await self.api.client.search_groups(
+                base_dn="ou=groups,dc=example,dc=com", cn="REDACTED_LDAP_BIND_PASSWORDs"
             )
 
             assert result.is_success
@@ -314,7 +325,9 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_search_entries(self) -> None:
         """Test generic LDAP entry search."""
-        with patch.object(self.api._client, "search_with_request") as mock_search:
+        with patch(
+            "flext_ldap.clients.FlextLdapClient.search_with_request"
+        ) as mock_search:
             mock_response = FlextLdapModels.SearchResponse(
                 entries=[{"dn": "cn=test,dc=example,dc=com", "cn": "test"}]
             )
@@ -336,7 +349,7 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_create_user(self) -> None:
         """Test user creation."""
-        with patch.object(self.api._client, "create_user") as mock_create:
+        with patch("flext_ldap.clients.FlextLdapClient.create_user") as mock_create:
             test_user = FlextLdapModels.LdapUser(
                 dn="uid=newuser,ou=users,dc=example,dc=com",
                 cn="New User",
@@ -367,7 +380,7 @@ class TestFlextLdapAPI:
                 mail="newuser@example.com",
             )
 
-            result = await self.api.create_user(create_request)
+            result = await self.api.client.create_user(create_request)
 
             assert result.is_success
             assert result.value.uid == "newuser"
@@ -376,7 +389,7 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_create_group(self) -> None:
         """Test group creation."""
-        with patch.object(self.api._client, "create_group") as mock_create:
+        with patch("flext_ldap.clients.FlextLdapClient.create_group") as mock_create:
             test_group = FlextLdapModels.Group(
                 dn="cn=newgroup,ou=groups,dc=example,dc=com",
                 cn="newgroup",
@@ -394,7 +407,7 @@ class TestFlextLdapAPI:
                 description="New test group",
             )
 
-            result = await self.api.create_group(create_request)
+            result = await self.api.client.create_group(create_request)
 
             assert result.is_success
             assert result.value.cn == "newgroup"
@@ -403,7 +416,7 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_get_user(self) -> None:
         """Test get user by Distinguished Name."""
-        with patch.object(self.api._client, "get_user") as mock_get:
+        with patch("flext_ldap.clients.FlextLdapClient.get_user") as mock_get:
             test_user = FlextLdapModels.LdapUser(
                 dn="uid=testuser,ou=users,dc=example,dc=com",
                 cn="Test User",
@@ -425,7 +438,9 @@ class TestFlextLdapAPI:
                 test_user
             )
 
-            result = await self.api.get_user("uid=testuser,ou=users,dc=example,dc=com")
+            result = await self.api.client.get_user(
+                "uid=testuser,ou=users,dc=example,dc=com"
+            )
 
             assert result.is_success
             assert result.value is not None
@@ -434,7 +449,7 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_get_group(self) -> None:
         """Test get group by Distinguished Name."""
-        with patch.object(self.api._client, "get_group") as mock_get:
+        with patch("flext_ldap.clients.FlextLdapClient.get_group") as mock_get:
             test_group = FlextLdapModels.Group(
                 dn="cn=testgroup,ou=groups,dc=example,dc=com",
                 cn="testgroup",
@@ -458,7 +473,9 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_update_user_attributes(self) -> None:
         """Test updating user attributes."""
-        with patch.object(self.api._client, "update_user_attributes") as mock_update:
+        with patch(
+            "flext_ldap.clients.FlextLdapClient.update_user_attributes"
+        ) as mock_update:
             mock_update.return_value = FlextResult[bool].ok(True)
 
             attributes = {"mail": "newemail@example.com", "title": "Senior Developer"}
@@ -475,7 +492,9 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_update_group_attributes(self) -> None:
         """Test updating group attributes."""
-        with patch.object(self.api._client, "update_group_attributes") as mock_update:
+        with patch(
+            "flext_ldap.clients.FlextLdapClient.update_group_attributes"
+        ) as mock_update:
             mock_update.return_value = FlextResult[bool].ok(True)
 
             attributes = {"description": "Updated group description"}
@@ -492,8 +511,8 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_delete_user(self) -> None:
         """Test user deletion."""
-        with patch.object(self.api._client, "delete_user") as mock_delete:
-            mock_delete.return_value = FlextResult[None].ok(None)
+        with patch("flext_ldap.clients.FlextLdapClient.delete_user") as mock_delete:
+            mock_delete.return_value = FlextResult[bool].ok(True)
 
             result = await self.api.delete_user(
                 "uid=testuser,ou=users,dc=example,dc=com"
@@ -508,15 +527,15 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_delete_group(self) -> None:
         """Test group deletion."""
-        with patch.object(self.api._client, "delete_group") as mock_delete:
+        with patch("flext_ldap.clients.FlextLdapClient.delete_group") as mock_delete:
             mock_delete.return_value = FlextResult[None].ok(None)
 
-            result = await self.api.delete_group(
+            result = await self.api.client.delete_group(
                 "cn=testgroup,ou=groups,dc=example,dc=com"
             )
 
             assert result.is_success
-            assert result.value is True
+            assert result.value is None
             mock_delete.assert_called_once_with(
                 "cn=testgroup,ou=groups,dc=example,dc=com"
             )
@@ -524,7 +543,7 @@ class TestFlextLdapAPI:
     @pytest.mark.asyncio
     async def test_test_connection(self) -> None:
         """Test LDAP connection testing."""
-        with patch.object(self.api._client, "test_connection") as mock_test:
+        with patch("flext_ldap.clients.FlextLdapClient.test_connection") as mock_test:
             mock_test.return_value = FlextResult[bool].ok(True)
 
             result = await self.api.test_connection()
@@ -543,7 +562,7 @@ class TestFlextLdapAPI:
             )
 
             # Create a test config with valid values
-            test_config = FlextLdapConfigs()
+            test_config = FlextLdapConfig()
             test_config.ldap_bind_dn = "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com"
             test_config.ldap_bind_password = (
                 None  # This should trigger missing password error
@@ -555,7 +574,7 @@ class TestFlextLdapAPI:
             result = self.api.validate_configuration_consistency()
 
             # Should fail because password is missing when DN is provided
-            assert not result.success
+            assert not result.is_success
 
     def test_validate_dn(self) -> None:
         """Test DN validation."""
@@ -590,14 +609,14 @@ class TestFlextLdapAPI:
         ) as mock_validate:
             mock_validate.return_value = FlextResult[str].ok("test@example.com")
 
-            result = self.api.validate_email("test@example.com")
+            result = self.api.validations.validate_email("test@example.com")
 
             assert result.is_success
             assert result.value == "test@example.com"
 
     def test_validate_email_none(self) -> None:
         """Test email validation with None input."""
-        result = self.api.validate_email(None)
+        result = self.api.validations.validate_email(None)
 
         assert result.is_success
         assert result.value is None

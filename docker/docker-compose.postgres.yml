@@ -1,0 +1,33 @@
+# PostgreSQL Test Container for FLEXT
+# Service name: postgres
+# Container name: flext-postgres-test
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: flext-postgres-test
+    environment:
+      POSTGRES_DB: flext_test
+      POSTGRES_USER: flext
+      POSTGRES_PASSWORD: flext_test_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5433:5432"
+    volumes:
+      - flext_postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flext -d flext_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - flext-shared-network
+
+volumes:
+  flext_postgres_data:
+    driver: local
+
+networks:
+  flext-shared-network:
+    driver: bridge

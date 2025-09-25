@@ -11,10 +11,14 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult, FlextTypes
-from flext_tools import Colors, print_colored
-from flext_tools.duplicates import CodeDuplicateAnalyzer
-from flext_tools.script_base import FlextScript, ScriptMetadata
+from flext_core import FlextResult
+from flext_tools import (
+    CodeDuplicateAnalyzer,
+    Colors,
+    FlextScript,
+    ScriptMetadata,
+    print_colored,
+)
 
 
 class CodeDuplicatesAnalyzer(FlextScript):
@@ -134,9 +138,9 @@ class CodeDuplicatesAnalyzer(FlextScript):
 
         return parser
 
-    def _process_kwargs(self, args: object) -> FlextTypes.Core.Dict:
+    def _process_kwargs(self, args: object) -> dict[str, object]:
         """Process arguments into kwargs."""
-        kwargs: FlextTypes.Core.Dict = {}
+        kwargs: dict[str, object] = {}
         kwargs["generate_report"] = not getattr(args, "no_report", False)
         return kwargs
 

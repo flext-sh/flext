@@ -12,8 +12,7 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextResult
-from flext_tools import Colors, print_colored
-from flext_tools.script_base import FlextScript, ScriptMetadata
+from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
 
 class DependencyCacheManager(FlextScript):

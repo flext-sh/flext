@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 # Import centralized types from flext-core foundation
-from flext_core import FlextTypes
+from flext_core import FlextTypes, WorkspaceStatus
 
 
 class FlextProjectTypes:
@@ -18,12 +18,10 @@ class FlextProjectTypes:
 
     # Use centralized enums from FlextTypes.Project
     ProjectType = FlextTypes.Project.ProjectType
-    WorkspaceStatus = FlextTypes.Project.WorkspaceStatus
 
 
 # Convenience aliases for test compatibility
 ProjectType = FlextProjectTypes.ProjectType
-WorkspaceStatus = FlextProjectTypes.WorkspaceStatus
 
 __all__ = [
     "FlextProjectTypes",

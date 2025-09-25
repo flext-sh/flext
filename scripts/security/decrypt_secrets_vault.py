@@ -9,9 +9,8 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult, FlextTypes
-from flext_tools import Colors, ScriptMetadata, print_colored
-from flext_tools.security import SecretVaultDecryptor
+from flext_core import FlextResult
+from flext_tools import Colors, ScriptMetadata, SecretVaultDecryptor, print_colored
 
 from ._base_security_script import BaseSecurityScript
 
@@ -114,9 +113,9 @@ class SecretsVaultDecryptor(BaseSecurityScript):
 
         return parser
 
-    def _process_kwargs(self, args: object) -> FlextTypes.Core.Dict:
+    def _process_kwargs(self, args: object) -> dict[str, object]:
         """Process arguments into kwargs."""
-        kwargs: FlextTypes.Core.Dict = {}
+        kwargs: dict[str, object] = {}
         kwargs["mask_secrets"] = not getattr(args, "no_mask", False)
         return kwargs
 

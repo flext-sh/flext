@@ -39,7 +39,7 @@ from flext_core import (
     FlextBus,
     FlextHandlers,
     FlextCqrs,
-    FlextProcessing,
+    FlextProcessors,
 
     # Utilities
     FlextUtilities,
@@ -49,7 +49,7 @@ from flext_core import (
 )
 
 # Domain-specific imports (use instead of direct third-party imports)
-from flext_cli import FlextCliApi, FlextCliMain  # For Rich/Click/Typer functionality
+from flext_cli import FlextCliApi, FlextCliCommands  # For Rich/Click/Typer functionality
 from flext_web import FlextWebServer             # For FastAPI/Flask/Django
 from flext_api import FlextApiClient             # For requests/httpx
 from flext_quality import FlextQualityAnalyzer   # For MyPy/pytest/coverage

@@ -10,10 +10,9 @@ import shutil
 import sys
 from collections.abc import Iterable
 from contextlib import redirect_stderr, redirect_stdout, suppress
+from dataclasses import dataclass
 from importlib import import_module
 from pathlib import Path
-
-from flext_core import FlextTypes
 
 # Import ruff dynamically (call via import_module to allow runtime fallback)
 _ruff_mod = import_module("ruff.__main__")
@@ -52,11 +51,11 @@ def iter_python_files(root: Path) -> Iterable[Path]:
         yield path
 
 
+@dataclass
 class _Completed:
-    def __init__(self, returncode: int, stdout: str, stderr: str) -> None:
-        self.returncode = returncode
-        self.stdout = stdout
-        self.stderr = stderr
+    returncode: int
+    stdout: str
+    stderr: str
 
 
 def run_pyment_on_file(path: Path) -> _Completed:
@@ -103,7 +102,7 @@ def has_command(cmd: str) -> bool:
     return shutil.which(cmd) is not None
 
 
-def main(argv: FlextTypes.Core.StringList) -> int:
+def main(argv: list[str]) -> int:
     """Main function to normalize docstrings in Python files.
 
     Args:
