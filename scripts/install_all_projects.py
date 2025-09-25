@@ -6,10 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from flext_core import FlextTypes
 
-
-def get_project_directories() -> FlextTypes.Core.StringList:
+def get_project_directories() -> list[str]:
     """Obter lista de diretórios de projetos principais FLEXT.
 
     Varre recursivamente o workspace raiz para encontrar todos os projetos
@@ -35,8 +33,7 @@ def get_project_directories() -> FlextTypes.Core.StringList:
 
     """
     workspace_root = Path(__file__).parent.parent
-    projects = []
-
+    projects: list[str] = []
     # Projetos principais (excluindo backups e arquivos temporários)
     for pyproject in workspace_root.rglob("pyproject.toml"):
         if any(
@@ -171,7 +168,7 @@ def main() -> int:
         pass
 
     # Instalar projetos
-    results = []
+    results: list[tuple[str, bool, str]] = []
     for project in projects:
         success, message = run_poetry_install(project)
         results.append((project, success, message))

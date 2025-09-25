@@ -1,0 +1,74 @@
+# FLEXT Shared LDAP Test Data - Test Groups
+# Comprehensive group data for testing across all FLEXT projects
+
+# IT Department Group
+dn: cn=IT Department,ou=groups,dc=flext,dc=local
+objectClass: groupOfNames
+objectClass: top
+cn: IT Department
+description: Information Technology Department
+member: uid=john.doe,ou=people,dc=flext,dc=local
+member: uid=bob.wilson,ou=people,dc=flext,dc=local
+
+# HR Department Group
+dn: cn=HR Department,ou=groups,dc=flext,dc=local
+objectClass: groupOfNames
+objectClass: top
+cn: HR Department
+description: Human Resources Department
+member: uid=jane.smith,ou=people,dc=flext,dc=local
+
+# Engineering Group
+dn: cn=Engineering,ou=groups,dc=flext,dc=local
+objectClass: groupOfNames
+objectClass: top
+cn: Engineering
+description: Engineering Team
+member: uid=john.doe,ou=people,dc=flext,dc=local
+member: uid=bob.wilson,ou=people,dc=flext,dc=local
+
+# Management Group
+dn: cn=Management,ou=groups,dc=flext,dc=local
+objectClass: groupOfNames
+objectClass: top
+cn: Management
+description: Management Team
+member: uid=alice.johnson,ou=people,dc=flext,dc=local
+
+# Support Group
+dn: cn=Support,ou=groups,dc=flext,dc=local
+objectClass: groupOfNames
+objectClass: top
+cn: Support
+description: Technical Support Team
+member: uid=charlie.brown,ou=people,dc=flext,dc=local
+
+# All Employees Group
+dn: cn=All Employees,ou=groups,dc=flext,dc=local
+objectClass: groupOfNames
+objectClass: top
+cn: All Employees
+description: All company employees
+member: uid=john.doe,ou=people,dc=flext,dc=local
+member: uid=jane.smith,ou=people,dc=flext,dc=local
+member: uid=bob.wilson,ou=people,dc=flext,dc=local
+member: uid=alice.johnson,ou=people,dc=flext,dc=local
+member: uid=charlie.brown,ou=people,dc=flext,dc=local
+
+# Developers Group
+dn: cn=Developers,ou=groups,dc=flext,dc=local
+objectClass: groupOfNames
+objectClass: top
+cn: Developers
+description: Software Developers
+member: uid=john.doe,ou=people,dc=flext,dc=local
+member: uid=bob.wilson,ou=people,dc=flext,dc=local
+
+# Administrators Group
+dn: cn=Administrators,ou=groups,dc=flext,dc=local
+objectClass: groupOfNames
+objectClass: top
+cn: Administrators
+description: System Administrators
+member: uid=john.doe,ou=people,dc=flext,dc=local
+member: uid=alice.johnson,ou=people,dc=flext,dc=local

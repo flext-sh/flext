@@ -114,10 +114,9 @@ class FlextLintFixer:
 
             # Fix: Move imports after __future__ and docstring
             if first_import_idx > 0:
-                future_imports = []
-                regular_imports = []
-                other_lines = []
-
+                future_imports: list[str] = []
+                regular_imports: list[str] = []
+                other_lines: list[str] = []
                 # Separate different types of content
                 for i, line in enumerate(lines):
                     stripped = line.strip()
@@ -133,8 +132,7 @@ class FlextLintFixer:
                         other_lines.append(line)
 
                 # Reconstruct with proper ordering
-                new_lines = []
-
+                new_lines: list[str] = []
                 # Add module docstring and metadata
                 doc_lines = [
                     line for i, line in enumerate(lines) if i <= docstring_end_idx
@@ -478,13 +476,13 @@ class FlextLintFixer:
         total_fixes = sum(self.fixes_applied.values())
         total_projects = len(self.projects_processed)
 
-        report.append("## 📊 Summary")
-        report.append(f"- **Projects processed**: {total_projects}")
-        report.append(f"- **Total fixes applied**: {total_fixes}")
-        report.append("")
-
-        # Fix breakdown
-        report.append("## 🔧 Fixes Applied")
+        report.extend([
+            "## 📊 Summary",
+            f"- **Projects processed**: {total_projects}",
+            f"- **Total fixes applied**: {total_fixes}",
+            "",
+            "## 🔧 Fixes Applied",
+        ])
         for fix_type, count in self.fixes_applied.items():
             if count > 0:
                 description = {
@@ -501,10 +499,7 @@ class FlextLintFixer:
                     f"- **{fix_type}**: {count} - {description.get(fix_type, 'Unknown fix')}",
                 )
 
-        report.append("")
-
-        # Project details
-        report.append("## 📁 Project Details")
+        report.extend(["", "## 📁 Project Details"])
         for project in self.projects_processed:
             stats = project["stats"]
             report.extend(

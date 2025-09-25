@@ -12,6 +12,9 @@ from __future__ import annotations
 
 import subprocess
 from pathlib import Path
+from typing import Self
+
+from flext_core.constants import FlextConstants
 
 from flext.application_handlers import (
     FlextApplicationHandlerService,
@@ -19,8 +22,7 @@ from flext.application_handlers import (
 from flext.application_pipeline import (
     FlextApplicationPipelineService,
 )
-from flext_core import FlextService, FlextLogger, FlextResult, FlextTypes
-from flext_core.constants import FlextConstants
+from flext_core import FlextLogger, FlextResult, FlextService
 
 
 class FlextUnifiedServices(FlextService[str]):
@@ -31,7 +33,7 @@ class FlextUnifiedServices(FlextService[str]):
     proper integration with flext-core service patterns.
     """
 
-    def __init__(self, **_data: FlextTypes.Core.Dict) -> None:
+    def __init__(self, **_data: dict[str, object]) -> None:
         """Initialize unified services with flext-core integration."""
         super().__init__()
         self._logger = FlextLogger(__name__)
@@ -44,23 +46,23 @@ class FlextUnifiedServices(FlextService[str]):
         def __init__(self, services: FlextUnifiedServices) -> None:
             self._services = services
 
-        def create_command_handler(self) -> object:
+        def create_command_handler(self: Self) -> object:
             """Create command handler using application layer patterns."""
             # Return service instance instead of abstract class
             return FlextApplicationHandlerService()
 
-        def create_event_handler(self) -> object:
+        def create_event_handler(self: Self) -> object:
             """Create event handler using application layer patterns."""
             # Return service instance instead of abstract class
             return FlextApplicationHandlerService()
 
-        def create_query_handler(self) -> object:
+        def create_query_handler(self: Self) -> object:
             """Create query handler using application layer patterns."""
             # Return service instance instead of abstract class
             return FlextApplicationHandlerService()
 
         @property
-        def core_services(self) -> FlextApplicationPipelineService | None:
+        def core_services(self: Self) -> FlextApplicationPipelineService | None:
             """Direct access to flext-core services - ELIMINATES wrapper methods."""
             return self._services._core_services
 
@@ -74,7 +76,7 @@ class FlextUnifiedServices(FlextService[str]):
             self._pipeline_service = FlextApplicationPipelineService()
 
         @property
-        def pipeline_service(self) -> object:
+        def pipeline_service(self: Self) -> object:
             """Direct access to pipeline service - ELIMINATES wrapper methods."""
             return self._pipeline_service
 
@@ -86,18 +88,18 @@ class FlextUnifiedServices(FlextService[str]):
 
         def execute_pipeline_workflow(
             self, pipeline_id: str
-        ) -> FlextResult[FlextTypes.Core.Dict]:
+        ) -> FlextResult[dict[str, object]]:
             """Execute complete pipeline workflow."""
             # Execute pipeline using service - FlextResult handles errors
-            result = self._pipeline_service.execute_pipeline(pipeline_id)
+            result: FlextResult[object] = self._pipeline_service.execute_pipeline(pipeline_id)
 
             if result.is_success:
-                return FlextResult[FlextTypes.Core.Dict].ok({
+                return FlextResult[dict[str, object]].ok({
                     "pipeline_id": pipeline_id,
                     "status": "completed",
                     "result": result.value,
                 })
-            return FlextResult[FlextTypes.Core.Dict].fail(
+            return FlextResult[dict[str, object]].fail(
                 f"Pipeline execution failed: {result.error}"
             )
 
@@ -108,7 +110,7 @@ class FlextUnifiedServices(FlextService[str]):
             self._core_services = services._core_services
 
         @property
-        def core_services(self) -> FlextApplicationPipelineService | None:
+        def core_services(self: Self) -> FlextApplicationPipelineService | None:
             """Direct access to flext-core services - NO wrapper methods."""
             return self._core_services
 
@@ -126,7 +128,7 @@ class FlextUnifiedServices(FlextService[str]):
             coverage: bool = True,
             parallel: bool = True,
             integration: bool = False,
-        ) -> FlextResult[FlextTypes.Core.Dict]:
+        ) -> FlextResult[dict[str, object]]:
             """Unified test execution eliminating CLI duplication."""
             try:
                 # Build test command
@@ -151,7 +153,7 @@ class FlextUnifiedServices(FlextService[str]):
                     cmd, check=False, capture_output=True, text=True, timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT
                 )
 
-                return FlextResult[FlextTypes.Core.Dict].ok({
+                return FlextResult[dict[str, object]].ok({
                     "returncode": result.returncode,
                     "stdout": result.stdout,
                     "stderr": result.stderr,
@@ -161,25 +163,26 @@ class FlextUnifiedServices(FlextService[str]):
             except Exception as e:
                 error = f"Test execution failed: {e}"
                 self._logger.exception(error)
-                return FlextResult[FlextTypes.Core.Dict].fail(error)
+                return FlextResult[dict[str, object]].fail(error)
 
         def execute_quality_check(
             self, *, fix: bool = False
-        ) -> FlextResult[FlextTypes.Core.Dict]:
+        ) -> FlextResult[dict[str, object]]:
             """Unified quality check eliminating CLI duplication."""
             try:
-                commands = []
-
+                commands: list[object] = []
                 # Lint command
                 lint_cmd = ["ruff", "check", "src/"]
                 if fix:
                     lint_cmd.append("--fix")
-                commands.append(("lint", lint_cmd))
-
+                
                 # Type check command
-                commands.append(("type", ["mypy", "src/"]))
+                commands.extend([
+                    ("lint", lint_cmd),
+                    ("type", ["mypy", "src/"])
+                ])
 
-                results = {}
+                results: dict[str, object] = {}
                 overall_success = True
 
                 for name, cmd in commands:
@@ -203,7 +206,7 @@ class FlextUnifiedServices(FlextService[str]):
                         results[name] = {"success": False, "error": str(e)}
                         overall_success = False
 
-                return FlextResult[FlextTypes.Core.Dict].ok({
+                return FlextResult[dict[str, object]].ok({
                     "overall_success": overall_success,
                     "checks": results,
                 })
@@ -211,11 +214,11 @@ class FlextUnifiedServices(FlextService[str]):
             except Exception as e:
                 error = f"Quality check failed: {e}"
                 self._logger.exception(error)
-                return FlextResult[FlextTypes.Core.Dict].fail(error)
+                return FlextResult[dict[str, object]].fail(error)
 
         def execute_build_check(
             self, module: str | None = None
-        ) -> FlextResult[FlextTypes.Core.Dict]:
+        ) -> FlextResult[dict[str, object]]:
             """Unified build check eliminating CLI duplication."""
             try:
                 # Check if it's a Python project with pyproject.toml
@@ -235,7 +238,7 @@ class FlextUnifiedServices(FlextService[str]):
                     build_cmd, check=False, capture_output=True, text=True, timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT
                 )
 
-                return FlextResult[FlextTypes.Core.Dict].ok({
+                return FlextResult[dict[str, object]].ok({
                     "returncode": result.returncode,
                     "stdout": result.stdout,
                     "stderr": result.stderr,
@@ -245,25 +248,25 @@ class FlextUnifiedServices(FlextService[str]):
             except Exception as e:
                 error = f"Build check failed: {e}"
                 self._logger.exception(error)
-                return FlextResult[FlextTypes.Core.Dict].fail(error)
+                return FlextResult[dict[str, object]].fail(error)
 
-    def create_test_services(self) -> _TestServices:
+    def create_test_services(self: Self) -> _TestServices:
         """Create unified test service coordinator - ELIMINATES CLI duplication."""
         return self._TestServices(self)
 
-    def create_handler_services(self) -> _HandlerServices:
+    def create_handler_services(self: Self) -> _HandlerServices:
         """Create handler service coordinator."""
         return self._HandlerServices(self)
 
-    def create_pipeline_services(self) -> _PipelineServices:
+    def create_pipeline_services(self: Self) -> _PipelineServices:
         """Create pipeline service coordinator."""
         return self._PipelineServices(self)
 
-    def create_core_services(self) -> _CoreServices:
+    def create_core_services(self: Self) -> _CoreServices:
         """Create core service coordinator."""
         return self._CoreServices(self)
 
-    def initialize_all_services(self) -> FlextResult[dict[str, str]]:
+    def initialize_all_services(self: Self) -> FlextResult[dict[str, str]]:
         """Initialize all service coordinators."""
         try:
             # Create all service handlers
@@ -291,7 +294,7 @@ class FlextUnifiedServices(FlextService[str]):
         """Execute unified services - required by FlextService abstract method."""
         try:
             # Default execution initializes all services and returns status
-            init_result = self.initialize_all_services()
+            init_result: FlextResult[object] = self.initialize_all_services()
             if init_result.is_success:
                 services_info = init_result.unwrap()
                 return FlextResult[str].ok(

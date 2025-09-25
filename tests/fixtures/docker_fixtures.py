@@ -1,107 +1,162 @@
-"""FLEXT Docker Test Fixtures - Docker-specific fixtures for integration tests.
+"""FLEXT Docker Test Fixtures - Unified Docker Management Integration.
 
-This module provides Docker-specific fixtures for integration testing. These fixtures
-are conditionally loaded and provide Docker container management for tests that require
-external services like databases, LDAP servers, etc.
+This module provides Docker-specific fixtures for integration testing using the
+unified FlextTestDocker class. This eliminates direct docker module usage and
+provides consistent Docker management across all FLEXT projects.
+
+ARCHITECTURAL PRINCIPLE: All Docker operations go through FlextTestDocker
+to maintain consistency and eliminate duplicate Docker management logic.
 """
 
 from __future__ import annotations
 
-import time
 from collections.abc import Generator
 
-import docker
 import pytest
-from docker.client import DockerClient
-from docker.models.containers import Container
+
+from flext_tests import FlextTestDocker
 
 
 @pytest.fixture(scope="session")
-def docker_client() -> Generator[DockerClient]:
-    """Docker client fixture for tests that need Docker access."""
-    client = docker.from_env()
+def flext_docker() -> Generator[FlextTestDocker]:
+    """FlextTestDocker unified management fixture for all Docker operations."""
+    docker_manager = FlextTestDocker()
     try:
-        yield client
+        yield docker_manager
     finally:
-        pass  # Client cleanup handled by Docker
+        # Cleanup handled by FlextTestDocker automatically
+        pass
 
 
 @pytest.fixture
-def postgres_container(docker_client: DockerClient) -> Generator[str]:
-    """PostgreSQL container fixture for database integration tests."""
-    container: Container | None = None
+def postgres_container(flext_docker: FlextTestDocker) -> Generator[str]:
+    """PostgreSQL container fixture using unified FlextTestDocker management."""
+    # Start the shared PostgreSQL container
+    start_result = flext_docker.start_container("flext-postgres-test")
+    if start_result.is_failure:
+        pytest.skip(f"PostgreSQL container failed to start: {start_result.error}")
+
+    # Get container status to extract connection info
+    status_result = flext_docker.get_container_status("flext-postgres-test")
+    if status_result.is_failure:
+        pytest.skip(f"Failed to get PostgreSQL container status: {status_result.error}")
+
+    container_info = status_result.value
+    if "5433" not in container_info.ports:
+        pytest.skip("PostgreSQL container port not available")
+
+    host_port = container_info.ports["5433"]
+
+    # Return connection string compatible with existing tests
+    connection_string = (
+        f"postgresql://flext:flext_password@localhost:{host_port}/flext_db"
+    )
+
     try:
-        # Create and start PostgreSQL container
-        container = docker_client.containers.run(
-            "postgres:15-alpine",
-            environment={
-                "POSTGRES_DB": "testdb",
-                "POSTGRES_USER": "testuser",
-                "POSTGRES_PASSWORD": "testpass",
-            },
-            ports={"5432/tcp": None},  # Auto-assign port
-            detach=True,
-            remove=True,
-        )
-
-        # Wait for container to be ready
-        time.sleep(5)
-
-        # Get the assigned port
-        if container.id is not None:
-            container_info: dict[str, object] = docker_client.api.inspect_container(
-                container.id
-            )
-        else:
-            msg = "Container ID is None"
-            raise RuntimeError(msg)
-        network_settings: dict[str, object] = container_info["NetworkSettings"]
-        ports: dict[str, object] = network_settings["Ports"]
-        port_config: list[dict[str, str]] = ports["5432/tcp"]
-        port: str = port_config[0]["HostPort"]
-
-        yield f"postgresql://testuser:testpass@localhost:{port}/testdb"
-
+        yield connection_string
     finally:
-        if container:
-            container.stop()
+        # Container cleanup is managed by FlextTestDocker lifecycle
+        # No explicit stop needed - shared containers persist across tests
+        pass
 
 
 @pytest.fixture
-def ldap_container(docker_client: DockerClient) -> Generator[str]:
-    """OpenLDAP container fixture for LDAP integration tests."""
-    container: Container | None = None
+def ldap_container(flext_docker: FlextTestDocker) -> Generator[str]:
+    """OpenLDAP container fixture using unified FlextTestDocker management."""
+    # Start the shared OpenLDAP container
+    start_result = flext_docker.start_container("flext-openldap-test")
+    if start_result.is_failure:
+        pytest.skip(f"OpenLDAP container failed to start: {start_result.error}")
+
+    # Get container status to extract connection info
+    status_result = flext_docker.get_container_status("flext-openldap-test")
+    if status_result.is_failure:
+        pytest.skip(f"Failed to get OpenLDAP container status: {status_result.error}")
+
+    container_info = status_result.value
+    if "3390" not in container_info.ports:
+        pytest.skip("OpenLDAP container port not available")
+
+    host_port = container_info.ports["3390"]
+
+    # Return connection string compatible with existing tests
+    connection_string = f"ldap://localhost:{host_port}"
+
     try:
-        # Create and start OpenLDAP container
-        container = docker_client.containers.run(
-            "osixia/openldap:1.5.0",
-            environment={
-                "LDAP_DOMAIN": "example.com",
-                "LDAP_ADMIN_PASSWORD": "REDACTED_LDAP_BIND_PASSWORDpass",
-            },
-            ports={"389/tcp": None},  # Auto-assign port
-            detach=True,
-            remove=True,
-        )
-
-        # Wait for container to be ready
-        time.sleep(10)
-
-        # Get the assigned port
-        if container.id is not None:
-            container_info: dict[str, object] = docker_client.api.inspect_container(
-                container.id
-            )
-        else:
-            msg = "Container ID is None"
-            raise RuntimeError(msg)
-        network_settings: dict[str, object] = container_info["NetworkSettings"]
-        ports: dict[str, object] = network_settings["Ports"]
-        port_config: list[dict[str, str]] = ports["389/tcp"]
-        port: str = port_config[0]["HostPort"]
-
-        yield f"ldap://localhost:{port}"
-
+        yield connection_string
     finally:
-        if container:
-            container.stop()
+        # Container cleanup is managed by FlextTestDocker lifecycle
+        # No explicit stop needed - shared containers persist across tests
+        pass
+
+
+@pytest.fixture
+def redis_container(flext_docker: FlextTestDocker) -> Generator[str]:
+    """Redis container fixture using unified FlextTestDocker management."""
+    # Start the shared Redis container
+    start_result = flext_docker.start_container("flext-redis-test")
+    if start_result.is_failure:
+        pytest.skip(f"Redis container failed to start: {start_result.error}")
+
+    # Get container status to extract connection info
+    status_result = flext_docker.get_container_status("flext-redis-test")
+    if status_result.is_failure:
+        pytest.skip(f"Failed to get Redis container status: {status_result.error}")
+
+    container_info = status_result.value
+    if "6380" not in container_info.ports:
+        pytest.skip("Redis container port not available")
+
+    host_port = container_info.ports["6380"]
+
+    # Return connection string compatible with existing tests
+    connection_string = f"redis://localhost:{host_port}/0"
+
+    try:
+        yield connection_string
+    finally:
+        # Container cleanup is managed by FlextTestDocker lifecycle
+        # No explicit stop needed - shared containers persist across tests
+        pass
+
+
+@pytest.fixture
+def oracle_container(flext_docker: FlextTestDocker) -> Generator[str]:
+    """Oracle Database container fixture using unified FlextTestDocker management."""
+    # Start the shared Oracle container
+    start_result = flext_docker.start_container("flext-oracle-db-test")
+    if start_result.is_failure:
+        pytest.skip(f"Oracle container failed to start: {start_result.error}")
+
+    # Get container status to extract connection info
+    status_result = flext_docker.get_container_status("flext-oracle-db-test")
+    if status_result.is_failure:
+        pytest.skip(f"Failed to get Oracle container status: {status_result.error}")
+
+    container_info = status_result.value
+    if "1522" not in container_info.ports:
+        pytest.skip("Oracle container port not available")
+
+    host_port = container_info.ports["1522"]
+
+    # Return connection string compatible with existing tests
+    connection_string = f"oracle://flext:flext_password@localhost:{host_port}/FLEXT"
+
+    try:
+        yield connection_string
+    finally:
+        # Container cleanup is managed by FlextTestDocker lifecycle
+        # No explicit stop needed - shared containers persist across tests
+        pass
+
+
+# Legacy compatibility fixtures - deprecated but maintained for backward compatibility
+@pytest.fixture(scope="session")
+def docker_client(flext_docker: FlextTestDocker):
+    """Deprecated: Direct Docker client access. Use flext_docker fixture instead.
+
+    This fixture is maintained for backward compatibility but is deprecated.
+    New tests should use the flext_docker fixture directly.
+    """
+    # Return the FlextTestDocker client for legacy compatibility
+    return flext_docker.client

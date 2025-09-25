@@ -6,13 +6,15 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from typing import Self
+
 from flext_core import FlextResult
 
 
 class RollbackManager:
     """Basic rollback manager for legacy scripts."""
 
-    def __init__(self) -> None:
+    def __init__(self: Self) -> None:
         """Initialize rollback manager."""
 
     def create_checkpoint(self, name: str) -> FlextResult[str]:
@@ -24,6 +26,6 @@ class RollbackManager:
         _ = checkpoint_id  # Parameter used for checkpoint rollback
         return FlextResult[None].ok(None)
 
-    def list_checkpoints(self) -> FlextResult[list[str]]:
+    def list_checkpoints(self: Self) -> FlextResult[list[str]]:
         """List available checkpoints."""
         return FlextResult[list[str]].ok([])

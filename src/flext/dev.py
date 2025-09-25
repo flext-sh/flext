@@ -10,16 +10,15 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Protocol, assert_never
+from typing import Protocol, Self, assert_never
 
 from flext.dev_enums import FlextDevEnums
 from flext.dev_models import FlextAdvancedDevModels
 from flext.project_types import FlextProjectTypes
 from flext_core import (
-    FlextService,
     FlextLogger,
     FlextResult,
-    FlextTypes,
+    FlextService,
 )
 
 
@@ -36,7 +35,7 @@ class FlextAdvancedDevToolsManager(
     - Discriminated unions for operation types
     """
 
-    def __init__(self, **_data: FlextTypes.Core.Dict) -> None:
+    def __init__(self, **_data: dict[str, object]) -> None:
         """Initialize development tools service with advanced patterns."""
         super().__init__()
         self._logger = FlextLogger(__name__)
@@ -63,8 +62,7 @@ class FlextAdvancedDevToolsManager(
         ) -> FlextResult[list[FlextAdvancedDevModels.ProjectInfo]]:
             """Discover all projects in workspace with type detection."""
             try:
-                projects = []
-
+                projects: list[FlextAdvancedDevModels.ProjectInfo] = []
                 for project_dir in workspace_root.iterdir():
                     if not project_dir.is_dir() or project_dir.name.startswith("."):
                         continue
@@ -192,7 +190,7 @@ class FlextAdvancedDevToolsManager(
             """Execute test operation with comprehensive reporting."""
             try:
                 # Validate prerequisites
-                prereq_result = operation.validate_prerequisites()
+                prereq_result: FlextResult[object] = operation.validate_prerequisites()
                 if prereq_result.is_failure:
                     return self._create_failed_result(
                         operation, f"Prerequisites failed: {prereq_result.error}"
@@ -201,7 +199,7 @@ class FlextAdvancedDevToolsManager(
                 # Execute tests based on configuration
                 workspace_path = Path(operation.context.workspace_root)
                 discovery_service = self._manager.create_project_discovery()
-                projects_result = discovery_service.discover_projects(workspace_path)
+                projects_result: FlextResult[object] = discovery_service.discover_projects(workspace_path)
 
                 if projects_result.is_failure:
                     return self._create_failed_result(
@@ -250,7 +248,7 @@ class FlextAdvancedDevToolsManager(
         ) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
             """Execute linting operation with tool coordination."""
             try:
-                prereq_result = operation.validate_prerequisites()
+                prereq_result: FlextResult[object] = operation.validate_prerequisites()
                 if prereq_result.is_failure:
                     return self._create_failed_result(
                         operation, f"Prerequisites failed: {prereq_result.error}"
@@ -292,7 +290,7 @@ class FlextAdvancedDevToolsManager(
         ) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
             """Execute formatting operation with tool coordination."""
             try:
-                prereq_result = operation.validate_prerequisites()
+                prereq_result: FlextResult[object] = operation.validate_prerequisites()
                 if prereq_result.is_failure:
                     return self._create_failed_result(
                         operation, f"Prerequisites failed: {prereq_result.error}"
@@ -341,11 +339,11 @@ class FlextAdvancedDevToolsManager(
             )
             return FlextResult[FlextAdvancedDevModels.OperationResult].ok(result)
 
-    def create_project_discovery(self) -> _ProjectDiscoveryService:
+    def create_project_discovery(self: Self) -> _ProjectDiscoveryService:
         """Create project discovery service."""
         return self._ProjectDiscoveryService(self)
 
-    def create_operation_executor(self) -> _OperationExecutor:
+    def create_operation_executor(self: Self) -> _OperationExecutor:
         """Create operation executor with advanced patterns."""
         return self._OperationExecutor(self)
 
@@ -375,7 +373,7 @@ class FlextAdvancedDevToolsManager(
         )
         return discovery_service.discover_projects(workspace_path)
 
-    def execute(self) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
+    def execute(self: Self) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
         """Execute dev tools manager - required by FlextService abstract method."""
         # Default execution returns service status
         return FlextResult[FlextAdvancedDevModels.OperationResult].ok(

@@ -24,10 +24,10 @@ from flext_core import FlextConstants, FlextLogger, FlextTypes
 
 logger = FlextLogger(__name__)
 
-# Constants for return codes - use FlextConstants for standardization
-SUCCESS_CODE = FlextConstants.Defaults.SUCCESS_EXIT_CODE
-MAKEFILE_TARGET_NOT_FOUND = FlextConstants.Defaults.ERROR_EXIT_CODE + 1  # 2
-COMMAND_FAILED = FlextConstants.Defaults.ERROR_EXIT_CODE  # 1
+# Constants for return codes - use standard exit codes
+SUCCESS_CODE = 0
+MAKEFILE_TARGET_NOT_FOUND = 2  # Standard exit code for makefile target not found
+COMMAND_FAILED = 1  # Standard exit code for command failure
 
 # Status constants (not passwords, just status indicators) - use FlextConstants
 STATUS_PASS = FlextConstants.Mixins.STATUS_PASS
@@ -240,9 +240,9 @@ class FlextDiagnostic:
 
         return status
 
-    def check_architecture_violations(self) -> dict[str, FlextTypes.Core.StringList]:
+    def check_architecture_violations(self) -> dict[str, list[str]]:
         """Check architecture violations."""
-        violations: dict[str, FlextTypes.Core.StringList] = {}
+        violations: dict[str, list[str]] = {}
 
         # Check flext-core (should not have specific imports)
         core_path = self.workspace_root / "flext-core" / "src"
@@ -264,7 +264,7 @@ class FlextDiagnostic:
 
         return violations
 
-    def run_full_diagnostic(self) -> FlextTypes.Core.Dict:
+    def run_full_diagnostic(self) -> dict[str, object]:
         """Run full diagnostic."""
         # Check all projects
         for project_name in self.project_levels:
@@ -295,7 +295,7 @@ class FlextDiagnostic:
             "summary": self.generate_summary(),
         }
 
-    def generate_summary(self) -> FlextTypes.Core.Dict:
+    def generate_summary(self) -> dict[str, object]:
         """Generate summary."""
         total_projects = len(self.results)
         projects_with_makefile = sum(1 for s in self.results.values() if s.has_makefile)
@@ -329,7 +329,7 @@ class FlextDiagnostic:
             "projects_with_errors": projects_with_errors,
         }
 
-    def print_report(self, report: FlextTypes.Core.Dict) -> None:
+    def print_report(self, report: dict[str, object]) -> None:
         """Print formatted report."""
         # Summary
         summary_obj = report["summary"]
@@ -342,10 +342,13 @@ class FlextDiagnostic:
             projects_obj = report["projects"]
             if not isinstance(projects_obj, dict):
                 continue
-            level_projects = [
+            level_projects: list[tuple[str, FlextTypes.Core.Dict]] = [
                 (name, data)
                 for name, data in projects_obj.items()
-                if isinstance(data, dict) and data.get("level") == level
+                if isinstance(data, dict)
+                and "level" in data
+                and isinstance(data["level"], int)
+                and data["level"] == level
             ]
 
             if level_projects:
@@ -359,31 +362,30 @@ class FlextDiagnostic:
                 }.get(level, f"NÍVEL {level}")
 
                 for _name, data in level_projects:
-                    if isinstance(data, dict):
-                        status_icons = [
-                            str(
-                                data.get(
-                                    "lint_status", FlextConstants.Mixins.STATUS_UNKNOWN
-                                )
-                            ),
-                            str(
-                                data.get(
-                                    "mypy_status", FlextConstants.Mixins.STATUS_UNKNOWN
-                                )
-                            ),
-                            str(
-                                data.get(
-                                    "test_status", FlextConstants.Mixins.STATUS_UNKNOWN
-                                )
-                            ),
-                            str(
-                                data.get(
-                                    "poetry_install",
-                                    FlextConstants.Mixins.STATUS_UNKNOWN,
-                                )
-                            ),
-                        ]
-                        " | ".join(status_icons)
+                    status_icons = [
+                        str(
+                            data.get(
+                                "lint_status", FlextConstants.Mixins.STATUS_UNKNOWN
+                            )
+                        ),
+                        str(
+                            data.get(
+                                "mypy_status", FlextConstants.Mixins.STATUS_UNKNOWN
+                            )
+                        ),
+                        str(
+                            data.get(
+                                "test_status", FlextConstants.Mixins.STATUS_UNKNOWN
+                            )
+                        ),
+                        str(
+                            data.get(
+                                "poetry_install",
+                                FlextConstants.Mixins.STATUS_UNKNOWN,
+                            )
+                        ),
+                    ]
+                    " | ".join(status_icons)
 
                     errors = data.get("errors", [])
                     if isinstance(errors, list) and errors:

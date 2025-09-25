@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import sys
+from typing import Self
 
 from flext_core import FlextResult, FlextService
 
@@ -51,12 +52,17 @@ class FlextStdlibService(FlextService[list[str]]):
             """Check if module is from standard library."""
             return module_name in FlextStdlibService._ModuleHelper.get_stdlib_modules()
 
-    def execute(self) -> FlextResult[list[str]]:
+    def execute(self: Self) -> FlextResult[list[str]]:
         """Execute stdlib service - FlextService interface."""
         modules = self._ModuleHelper.get_stdlib_modules()
         return FlextResult[list[str]].ok(modules)
 
-    def get_stdlib_modules(self) -> FlextResult[list[str]]:
+    async def execute_async(self: Self) -> FlextResult[list[str]]:
+        """Execute stdlib service asynchronously - FlextService interface."""
+        modules = self._ModuleHelper.get_stdlib_modules()
+        return FlextResult[list[str]].ok(modules)
+
+    def get_stdlib_modules(self: Self) -> FlextResult[list[str]]:
         """Get stdlib modules using nested helper."""
         modules = self._ModuleHelper.get_stdlib_modules()
         return FlextResult[list[str]].ok(modules)
@@ -74,13 +80,13 @@ _service = FlextStdlibService()
 def get_stdlib_modules() -> set[str]:
     """Module-level get_stdlib_modules function."""
     result = _service.get_stdlib_modules()
-    return set(result.unwrap()) if result.success else set()
+    return set(result.unwrap()) if result.is_success else set()
 
 
 def is_stdlib_module(module_name: str) -> bool:
     """Module-level is_stdlib_module function."""
     result = _service.is_stdlib_module(module_name)
-    return result.unwrap() if result.success else False
+    return result.unwrap() if result.is_success else False
 
 
 __all__ = ["FlextStdlibService", "get_stdlib_modules", "is_stdlib_module"]
