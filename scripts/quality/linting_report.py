@@ -22,9 +22,8 @@ from typing import cast
 
 from mypy import api as mypy_api
 
-from flext_core import FlextResult, FlextTypes
-from flext_tools import Colors, print_colored
-from flext_tools.script_base import FlextScript, ScriptMetadata
+from flext_core import FlextResult
+from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
 from ..common import discover_projects
 
@@ -51,8 +50,7 @@ class LintingReport(FlextScript):
     def validate_preconditions(self) -> FlextResult[None]:
         """Validar ferramentas necessárias."""
         required_tools = ["ruff", "mypy"]
-        missing_tools = []
-
+        missing_tools: list[object] = []
         for tool in required_tools:
             if shutil.which(tool) is None:
                 print_colored(f"❌ {tool.title()} não encontrado", Colors.RED)
@@ -95,7 +93,7 @@ class LintingReport(FlextScript):
                 "projects_with_issues": 0,
             }
 
-            project_results: FlextTypes.Core.Dict = {}
+            project_results: dict[str, object] = {}
 
             # Analisar cada projeto
             for project_path in projects:
@@ -229,7 +227,7 @@ class LintingReport(FlextScript):
 
             issues_by_category: dict[str, int] = defaultdict(int)
             issues_by_file: dict[str, int] = defaultdict(int)
-            all_issues: FlextTypes.Core.List = []
+            all_issues: list[object] = []
 
             output_text = stdout_buf.getvalue()
             if output_text:
@@ -298,7 +296,7 @@ class LintingReport(FlextScript):
     def _print_project_summary(
         self,
         _project_name: str,
-        stats: FlextTypes.Core.Dict,
+        stats: dict[str, object],
         *,
         _detailed: bool,
     ) -> None:
@@ -325,8 +323,8 @@ class LintingReport(FlextScript):
 
     def _print_detailed_issues(
         self,
-        ruff_result: FlextTypes.Core.Dict,
-        mypy_result: FlextTypes.Core.Dict,
+        ruff_result: dict[str, object],
+        mypy_result: dict[str, object],
     ) -> None:
         """Imprimir issues detalhadas."""
         if ruff_result["by_category"] and isinstance(ruff_result["by_category"], dict):
@@ -353,8 +351,8 @@ class LintingReport(FlextScript):
 
     def _print_final_summary(
         self,
-        total_stats: FlextTypes.Core.Dict,
-        _project_results: FlextTypes.Core.Dict,
+        total_stats: dict[str, object],
+        _project_results: dict[str, object],
     ) -> None:
         """Imprimir resumo final."""
         print_colored("\n📊 RESUMO FINAL DO LINTING", Colors.BLUE)
@@ -386,8 +384,8 @@ class LintingReport(FlextScript):
 
     def _save_json_report(
         self,
-        total_stats: FlextTypes.Core.Dict,
-        project_results: FlextTypes.Core.Dict,
+        total_stats: dict[str, object],
+        project_results: dict[str, object],
     ) -> None:
         """Salvar relatório em JSON."""
         report_data = {
@@ -406,8 +404,8 @@ class LintingReport(FlextScript):
 
     def _save_html_report(
         self,
-        total_stats: FlextTypes.Core.Dict,
-        project_results: FlextTypes.Core.Dict,
+        total_stats: dict[str, object],
+        project_results: dict[str, object],
     ) -> None:
         """Salvar relatório em formato HTML."""
         report_path = Path("linting_report.html")

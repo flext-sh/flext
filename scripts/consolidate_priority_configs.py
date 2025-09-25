@@ -222,7 +222,7 @@ class ConsolidatedProjectSettings(FlextCoreSettings):
 
 
 # Centralized configuration factory (singleton pattern)
-_settings_instance: ConsolidatedProjectSettings | None = None
+_settings_instance: Union[ConsolidatedProjectSettings, None] = None
 
 
 def get_project_settings() -> ConsolidatedProjectSettings:

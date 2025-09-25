@@ -99,7 +99,7 @@ pip install flext-meltano       # Data pipelines
 ```python
 # Import from any modernized project
 from flext_core import FlextResult, FlextContainer
-from flext_cli import FlextCliConfigs
+from Flext_cli import FlextCliConfig
 from flext_api import FlextApiUtilities
 from flext_auth import FlextAuth
 from flext_meltano import FlextMeltanoConfig

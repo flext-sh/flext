@@ -27,11 +27,11 @@ Authority: flext-core/docs/refactor/settings-architecture-unification-plan.md
   - Action: None (used as reference)
 
 - flext-web
-  - Validate core env/log fields via `FlextModels.SystemConfigs.BaseSystemConfig` inside `configure_web_configs_system()` while preserving dict output
-  - Next: consider adding `WebSettings(FlextConfig.Settings)` + `to_config()` mapping to `FlextWebConfigs.WebConfig` for full bridge
+  - Validate core env/log fields via `FlextModels.SystemConfig.BaseSystemConfig` inside `configure_web_configs_system()` while preserving dict output
+  - Next: consider adding `WebSettings(FlextConfig.Settings)` + `to_config()` mapping to `FlextWebConfig.WebConfig` for full bridge
 
 - flext-api
-  - TODO: Add `ApiSettings(FlextConfig.Settings)` and map to existing API config model(s); update `configure_*` to use Settings → Configs → `model_dump()`
+  - TODO: Add `ApiSettings(FlextConfig.Settings)` and map to existing API config model(s); update `configure_*` to use Settings → Config → `model_dump()`
 
 - flext-auth
   - TODO: Add `AuthSettings(FlextConfig.Settings)` bridging auth models; adopt in `configure_*` facades
@@ -54,7 +54,7 @@ Authority: flext-core/docs/refactor/settings-architecture-unification-plan.md
 
 ## Execution Log
 
-- 2025‑09‑07: Initiated rollout. Updated flext-web `configure_web_configs_system()` and `configure_web_services_system()` to validate core fields via `FlextModels.SystemConfigs.BaseSystemConfig` (keeps dict compatibility). Next: add `WebSettings` bridge.
+- 2025‑09‑07: Initiated rollout. Updated Flext-web `configure_web_configs_system()` and `configure_web_services_system()` to validate core fields via `FlextModels.SystemConfig.BaseSystemConfig` (keeps dict compatibility). Next: add `WebSettings` bridge.
 - 2025‑09‑07: Applied LDAP exceptions configuration facade `FlextLdapExceptions.configure_exceptions_system()` with core validation via `BaseSystemConfig` and derived defaults; output remains a dict for compatibility.
-- 2025‑09‑07: Validated CLI core configuration via `FlextModels.SystemConfigs.BaseSystemConfig` in `FlextCliService.configure()`; preserves dict border, adds environment default.
+- 2025‑09‑07: Validated CLI core configuration via `FlextModels.SystemConfig.BaseSystemConfig` in `FlextCliService.configure()`; preserves dict border, adds environment default.
 - 2025‑09‑07: Added `flext_web.settings.FlextWebSettings` and wired `configure_web_configs_system()` to use full Settings → WebConfig bridge with backward-compatible fallback.

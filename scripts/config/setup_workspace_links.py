@@ -22,11 +22,10 @@ from flext_core import (
     FlextLogger,
     FlextResult,
     FlextService,
-    FlextTypes,
 )
 
 
-class WorkspaceManagementService(FlextService[FlextTypes.Core.Dict]):
+class WorkspaceManagementService(FlextService[dict[str, object]]):
     """Workspace link management service for FLEXT ecosystem.
 
     Unified class for managing workspace symbolic links and directory structure.
@@ -97,8 +96,7 @@ class WorkspaceManagementService(FlextService[FlextTypes.Core.Dict]):
         def discover_flext_projects(workspace_root: Path) -> FlextResult[list[Path]]:
             """Discover FLEXT projects in workspace."""
             try:
-                projects = []
-
+                projects: list[object] = []
                 for item in workspace_root.iterdir():
                     if item.is_dir() and item.name.startswith("flext-"):
                         pyproject_file = item / "pyproject.toml"
@@ -133,7 +131,7 @@ class WorkspaceManagementService(FlextService[FlextTypes.Core.Dict]):
                     f"Workspace structure creation error: {e}",
                 )
 
-    def setup_workspace_links(self) -> FlextResult[FlextTypes.Core.Dict]:
+    def setup_workspace_links(self) -> FlextResult[dict[str, object]]:
         """Setup symbolic links for workspace projects."""
         self._logger.info("Setting up workspace links")
 
@@ -142,7 +140,7 @@ class WorkspaceManagementService(FlextService[FlextTypes.Core.Dict]):
             self._workspace_root,
         )
         if projects_result.is_failure:
-            return FlextResult[FlextTypes.Core.Dict].fail(
+            return FlextResult[dict[str, object]].fail(
                 f"Project discovery failed: {projects_result.error}",
             )
 
@@ -153,16 +151,15 @@ class WorkspaceManagementService(FlextService[FlextTypes.Core.Dict]):
             self._workspace_root,
         )
         if structure_result.is_failure:
-            return FlextResult[FlextTypes.Core.Dict].fail(
+            return FlextResult[dict[str, object]].fail(
                 f"Workspace structure creation failed: {structure_result.error}",
             )
 
         directories = structure_result.unwrap()
 
         # Setup links for each project
-        links_created = []
-        links_failed = []
-
+        links_created: list[object] = []
+        links_failed: list[object] = []
         for project in projects:
             project_name = project.name.replace("-", "_")
 
@@ -188,16 +185,16 @@ class WorkspaceManagementService(FlextService[FlextTypes.Core.Dict]):
                 else:
                     links_failed.append(f"tests/{project_name}: {link_result.error}")
 
-        result = {
+        result: dict[str, object] = {
             "projects_found": len(projects),
             "links_created": links_created,
             "links_failed": links_failed,
             "workspace_directories": list(directories.keys()),
         }
 
-        return FlextResult[FlextTypes.Core.Dict].ok(result)
+        return FlextResult[dict[str, object]].ok(result)
 
-    def validate_workspace_links(self) -> FlextResult[FlextTypes.Core.Dict]:
+    def validate_workspace_links(self) -> FlextResult[dict[str, object]]:
         """Validate all workspace symbolic links."""
         self._logger.info("Validating workspace links")
 
@@ -206,15 +203,14 @@ class WorkspaceManagementService(FlextService[FlextTypes.Core.Dict]):
             self._workspace_root,
         )
         if structure_result.is_failure:
-            return FlextResult[FlextTypes.Core.Dict].fail(
+            return FlextResult[dict[str, object]].fail(
                 f"Workspace structure access failed: {structure_result.error}",
             )
 
         directories = structure_result.unwrap()
 
-        valid_links = []
-        invalid_links = []
-
+        valid_links: list[object] = []
+        invalid_links: list[object] = []
         # Check src links
         src_dir = directories["src"]
         if src_dir.exists():
@@ -247,23 +243,23 @@ class WorkspaceManagementService(FlextService[FlextTypes.Core.Dict]):
             "total_checked": len(valid_links) + len(invalid_links),
         }
 
-        return FlextResult[FlextTypes.Core.Dict].ok(result)
+        return FlextResult[dict[str, object]].ok(result)
 
-    def execute(self) -> FlextResult[FlextTypes.Core.Dict]:
+    def execute(self) -> FlextResult[dict[str, object]]:
         """Execute workspace management operation."""
         self._logger.info("Executing workspace management")
 
         # Setup workspace links
         setup_result = self.setup_workspace_links()
         if setup_result.is_failure:
-            return FlextResult[FlextTypes.Core.Dict].fail(
+            return FlextResult[dict[str, object]].fail(
                 f"Workspace setup failed: {setup_result.error}",
             )
 
         # Validate links
         validation_result = self.validate_workspace_links()
         if validation_result.is_failure:
-            return FlextResult[FlextTypes.Core.Dict].fail(
+            return FlextResult[dict[str, object]].fail(
                 f"Link validation failed: {validation_result.error}",
             )
 
@@ -271,13 +267,13 @@ class WorkspaceManagementService(FlextService[FlextTypes.Core.Dict]):
         setup_data = setup_result.unwrap()
         validation_data = validation_result.unwrap()
 
-        combined_result: FlextTypes.Core.Dict = {
+        combined_result: dict[str, object] = {
             "workspace_setup": setup_data,
             "link_validation": validation_data,
             "operation_status": "completed",
         }
 
-        return FlextResult[FlextTypes.Core.Dict].ok(combined_result)
+        return FlextResult[dict[str, object]].ok(combined_result)
 
 
 def print_results(data: dict[str, object], title: str) -> None:

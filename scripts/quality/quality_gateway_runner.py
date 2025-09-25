@@ -10,13 +10,13 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from flext_core import FlextTypes
 from flext_tools import (
     Colors,
+    FlextScript,
+    QualityGateway,
+    ScriptMetadata,
     print_colored,
 )
-from flext_tools.quality_gateway import QualityGateway
-from flext_tools.script_base import FlextScript, ScriptMetadata
 
 
 class QualityGatewayRunner(FlextScript):
@@ -127,9 +127,9 @@ class QualityGatewayRunner(FlextScript):
 
         return parser
 
-    def _process_kwargs(self, args: object) -> FlextTypes.Core.Dict:
+    def _process_kwargs(self, args: object) -> dict[str, object]:
         """Process arguments into kwargs."""
-        kwargs: FlextTypes.Core.Dict = {}
+        kwargs: dict[str, object] = {}
         kwargs["generate_report"] = not getattr(args, "no_report", False)
         return kwargs
 

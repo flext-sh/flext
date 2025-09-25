@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Self
 
 from flext_core import FlextResult
 
@@ -14,7 +15,7 @@ from flext_core import FlextResult
 class CodeDuplicateAnalyzer:
     """Basic code duplicate analyzer for legacy scripts."""
 
-    def __init__(self) -> None:
+    def __init__(self: Self) -> None:
         """Initialize code duplicate analyzer."""
 
     def analyze_duplicates(
@@ -30,6 +31,6 @@ class CodeDuplicateAnalyzer:
                 f"Duplicate analysis failed: {e}",
             )
 
-    def get_duplicate_report(self) -> FlextResult[str]:
+    def get_duplicate_report(self: Self) -> FlextResult[str]:
         """Get duplicate report."""
         return FlextResult[str].ok("No duplicates found")

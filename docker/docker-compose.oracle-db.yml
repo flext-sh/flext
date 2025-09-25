@@ -1,0 +1,36 @@
+# Oracle Database Test Container for FLEXT
+# Service name: oracle-db
+# Container name: flext-oracle-db-test
+
+services:
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim
+    container_name: flext-oracle-db-test
+    ports:
+      - "1522:1521" # Oracle TNS
+      - "2484:2484" # Oracle TCPS (SSL/TLS)
+    environment:
+      ORACLE_PASSWORD: flext_oracle_test
+      APP_USER: flext_test
+      APP_USER_PASSWORD: flext_test_password
+      ORACLE_DATABASE: FLEXTDB
+    volumes:
+      - flext_oracle_data:/opt/oracle/oradata
+      - ./oracle-db/init.sql:/container-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    shm_size: 1g
+    networks:
+      - flext-shared-network
+
+volumes:
+  flext_oracle_data:
+    driver: local
+
+networks:
+  flext-shared-network:
+    driver: bridge

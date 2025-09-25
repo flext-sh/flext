@@ -10,7 +10,7 @@ from typing import cast
 import pytest
 from flext_ldap.models import FlextLdapModels
 from flext_ldap.typings import FlextLdapTypes
-from pydantic import SecretStr, ValidationError
+from pydantic import BaseModel, SecretStr, ValidationError
 
 
 def create_ldap_user_with_defaults(
@@ -47,7 +47,8 @@ def create_ldap_user_with_defaults(
         title=title,
         organization=organization,
         organizational_unit=organizational_unit,
-        object_classes=object_classes or ["person", "organizationalPerson", "inetOrgPerson"],
+        object_classes=object_classes
+        or ["person", "organizationalPerson", "inetOrgPerson"],
         additional_attributes=additional_attributes or {},
         created_timestamp=created_timestamp,
         modified_timestamp=modified_timestamp,
@@ -116,7 +117,7 @@ def create_search_request_with_defaults(
     """Helper function to create SearchRequest with default optional parameters."""
     return FlextLdapModels.SearchRequest(
         base_dn=base_dn,
-        filter=filter_str,
+        filter_str=filter_str,
         scope=scope,
         page_size=page_size,
         paged_cookie=paged_cookie,
@@ -491,7 +492,7 @@ class TestLdapUser:
         assert user.telephone_number == "123-456-7890"
         assert user.department == "IT"
 
-    def test_dn_validation(self, valid_user_data: dict[str, str | SecretStr]) -> None:
+    def test_self(self, valid_user_data: dict[str, str | SecretStr]) -> None:
         """Test DN validation."""
         # Test empty DN
         with pytest.raises(ValidationError):
@@ -551,7 +552,7 @@ class TestLdapUser:
             )
             assert user.mail == email
 
-    def test_cn_validation(self, valid_user_data: dict[str, str | SecretStr]) -> None:
+    def test_self(self, valid_user_data: dict[str, str | SecretStr]) -> None:
         """Test CN validation."""
         with pytest.raises(ValidationError):
             create_ldap_user_with_defaults(
@@ -609,7 +610,7 @@ class TestLdapUser:
         # This should not raise an exception
         assert user.uid == "testuser"
 
-    def test_get_attribute(self, valid_user_data: dict[str, str | SecretStr]) -> None:
+    def test_self(self, valid_user_data: dict[str, str | SecretStr]) -> None:
         """Test get_attribute method - gets from additional_attributes only."""
         user = create_ldap_user_with_defaults(
             dn=str(valid_user_data["dn"]),
@@ -624,7 +625,7 @@ class TestLdapUser:
         assert user.get_attribute("custom_field") == "custom_value"
         assert user.get_attribute("nonexistent") is None
 
-    def test_set_attribute(self, valid_user_data: dict[str, str | SecretStr]) -> None:
+    def test_self(self, valid_user_data: dict[str, str | SecretStr]) -> None:
         """Test set_attribute method."""
         user = create_ldap_user_with_defaults(
             dn=str(valid_user_data["dn"]),
@@ -638,7 +639,7 @@ class TestLdapUser:
         user.set_attribute("title", "Senior Developer")
         assert user.additional_attributes["title"] == "Senior Developer"
 
-    def test_get_rdn(self, valid_user_data: dict[str, str | SecretStr]) -> None:
+    def test_self(self, valid_user_data: dict[str, str | SecretStr]) -> None:
         """Test get_rdn method."""
         user = create_ldap_user_with_defaults(
             dn=str(valid_user_data["dn"]),
@@ -652,7 +653,7 @@ class TestLdapUser:
         rdn = user.get_rdn()
         assert rdn == "uid=test"
 
-    def test_get_parent_dn(self, valid_user_data: dict[str, str | SecretStr]) -> None:
+    def test_self(self, valid_user_data: dict[str, str | SecretStr]) -> None:
         """Test get_parent_dn method."""
         user = create_ldap_user_with_defaults(
             dn=str(valid_user_data["dn"]),
@@ -680,7 +681,7 @@ class TestGroup:
             "description": "Test Group",
         }
 
-    def test_create_valid_group(self, valid_group_data: dict[str, str | int]) -> None:
+    def test_self(self, valid_group_data: dict[str, str | int]) -> None:
         """Test creating valid group."""
         group = create_group_with_defaults(
             dn=str(valid_group_data["dn"]),
@@ -692,7 +693,7 @@ class TestGroup:
         assert group.cn == valid_group_data["cn"]
         assert group.gid_number == valid_group_data["gid_number"]
 
-    def test_group_with_members(self, valid_group_data: dict[str, object]) -> None:
+    def test_self(self, valid_group_data: dict[str, object]) -> None:
         """Test group with members."""
         group = create_group_with_defaults(
             dn=str(valid_group_data["dn"]),
@@ -705,7 +706,7 @@ class TestGroup:
         assert len(group.member_dns) == 1
         assert len(group.unique_member_dns) == 1
 
-    def test_dn_validation(self, valid_group_data: dict[str, str | int]) -> None:
+    def test_self(self, valid_group_data: dict[str, str | int]) -> None:
         """Test DN validation."""
         with pytest.raises(ValidationError):
             create_group_with_defaults(
@@ -728,7 +729,7 @@ class TestGroup:
         # This should not raise an exception
         assert group.cn == "testgroup"
 
-    def test_has_member(self, valid_group_data: dict[str, str | int]) -> None:
+    def test_self(self, valid_group_data: dict[str, str | int]) -> None:
         """Test has_member method."""
         member_dn = "uid=test,ou=users,dc=example,dc=com"
         group = create_group_with_defaults(
@@ -742,7 +743,7 @@ class TestGroup:
         assert group.has_member(member_dn)
         assert not group.has_member("uid=other,ou=users,dc=example,dc=com")
 
-    def test_add_member(self, valid_group_data: dict[str, object]) -> None:
+    def test_self(self, valid_group_data: dict[str, object]) -> None:
         """Test add_member method."""
         group = create_group_with_defaults(
             dn=str(valid_group_data["dn"]),
@@ -759,7 +760,7 @@ class TestGroup:
         group.add_member(member_dn)
         assert group.member_dns.count(member_dn) == 1
 
-    def test_remove_member(self, valid_group_data: dict[str, str | int]) -> None:
+    def test_self(self, valid_group_data: dict[str, str | int]) -> None:
         """Test remove_member method."""
         member_dn = "uid=test,ou=users,dc=example,dc=com"
         group = create_group_with_defaults(
@@ -781,7 +782,7 @@ class TestEntry:
     """Test Entry model."""
 
     @pytest.fixture
-    def valid_entry_data(self) -> dict[str, str | dict[str, str] | list[str]]:
+    def valid_entry_data(self) -> dict[str, str | dict[str, str], list[str]]:
         """Valid entry data for testing."""
         return {
             "dn": "uid=test,ou=entries,dc=example,dc=com",
@@ -790,7 +791,7 @@ class TestEntry:
         }
 
     def test_create_valid_entry(
-        self, valid_entry_data: dict[str, str | dict[str, str] | list[str]]
+        self, valid_entry_data: dict[str, str | dict[str, str], list[str]]
     ) -> None:
         """Test creating valid entry."""
         entry = create_entry_with_defaults(
@@ -801,7 +802,7 @@ class TestEntry:
         assert entry.dn == valid_entry_data["dn"]
         assert entry.attributes == valid_entry_data["attributes"]
 
-    def test_dn_validation(self, valid_entry_data: dict[str, object]) -> None:
+    def test_self(self, valid_entry_data: dict[str, object]) -> None:
         """Test DN validation."""
         with pytest.raises(ValidationError):
             create_entry_with_defaults(
@@ -811,7 +812,7 @@ class TestEntry:
             )
 
     def test_get_attribute(
-        self, valid_entry_data: dict[str, str | dict[str, str] | list[str]]
+        self, valid_entry_data: dict[str, str | dict[str, str], list[str]]
     ) -> None:
         """Test get_attribute method - returns list."""
         entry = create_entry_with_defaults(
@@ -823,7 +824,7 @@ class TestEntry:
         assert entry.get_attribute("nonexistent") is None
 
     def test_get_attribute_with_default(
-        self, valid_entry_data: dict[str, str | dict[str, str] | list[str]]
+        self, valid_entry_data: dict[str, str | dict[str, str], list[str]]
     ) -> None:
         """Test get_attribute returns None for non-existent attributes."""
         entry = create_entry_with_defaults(
@@ -834,7 +835,7 @@ class TestEntry:
         assert entry.get_attribute("nonexistent") is None
 
     def test_set_attribute(
-        self, valid_entry_data: dict[str, str | dict[str, str] | list[str]]
+        self, valid_entry_data: dict[str, str | dict[str, str], list[str]]
     ) -> None:
         """Test set_attribute method."""
         entry = create_entry_with_defaults(
@@ -846,7 +847,7 @@ class TestEntry:
         assert entry.attributes["mail"] == "test@example.com"
 
     def test_has_attribute(
-        self, valid_entry_data: dict[str, str | dict[str, str] | list[str]]
+        self, valid_entry_data: dict[str, str | dict[str, str], list[str]]
     ) -> None:
         """Test has_attribute method."""
         entry = create_entry_with_defaults(
@@ -858,7 +859,7 @@ class TestEntry:
         assert not entry.has_attribute("nonexistent")
 
     def test_get_rdn(
-        self, valid_entry_data: dict[str, str | dict[str, str] | list[str]]
+        self, valid_entry_data: dict[str, str | dict[str, str], list[str]]
     ) -> None:
         """Test get_rdn method."""
         entry = create_entry_with_defaults(
@@ -939,7 +940,7 @@ class TestSearchRequest:
         """Test search request with paging parameters."""
         request = FlextLdapModels.SearchRequest(
             base_dn="ou=users,dc=example,dc=com",
-            filter="(objectClass=person)",
+            filter_str="(objectClass=person)",
             page_size=100,
             paged_cookie=b"cookie_data",
         )
@@ -998,7 +999,7 @@ class TestCreateUserRequest:
             "user_password": "ValidPass123!",
         }
 
-    def test_create_valid_request(self, valid_create_user_data: dict[str, str]) -> None:
+    def test_self(self, valid_create_user_data: dict[str, str]) -> None:
         """Test creating valid create user request."""
         request = create_user_request_with_defaults(
             dn=valid_create_user_data["dn"],
@@ -1012,7 +1013,7 @@ class TestCreateUserRequest:
         assert request.uid == "newuser"
         assert request.cn == "New User"
 
-    def test_dn_validation(self, valid_create_user_data: dict[str, object]) -> None:
+    def test_self(self, valid_create_user_data: dict[str, object]) -> None:
         """Test DN validation."""
         with pytest.raises(ValidationError):
             create_user_request_with_defaults(
@@ -1025,7 +1026,7 @@ class TestCreateUserRequest:
                 user_password=SecretStr(valid_create_user_data["user_password"]),
             )
 
-    def test_email_validation(self, valid_create_user_data: dict[str, object]) -> None:
+    def test_self(self, valid_create_user_data: dict[str, object]) -> None:
         """Test email validation."""
         with pytest.raises(ValidationError):
             create_user_request_with_defaults(
@@ -1085,7 +1086,7 @@ class TestCreateUserRequest:
         # This should not raise an exception
         assert request.uid == "newuser"
 
-    def test_to_user_entity(self, valid_create_user_data: dict[str, object]) -> None:
+    def test_self(self, valid_create_user_data: dict[str, object]) -> None:
         """Test to_user_entity method."""
         request = create_user_request_with_defaults(
             dn=valid_create_user_data["dn"],
@@ -1127,7 +1128,7 @@ class TestCreateGroupRequest:
         assert request.cn == "newgroup"
         assert request.description == "New Group"
 
-    def test_dn_validation(self, valid_create_group_data: dict[str, object]) -> None:
+    def test_self(self, valid_create_group_data: dict[str, object]) -> None:
         """Test DN validation."""
         with pytest.raises(ValidationError):
             create_group_request_with_defaults(
@@ -1136,7 +1137,7 @@ class TestCreateGroupRequest:
                 description=valid_create_group_data["description"],
             )
 
-    def test_cn_validation(self, valid_create_group_data: dict[str, object]) -> None:
+    def test_self(self, valid_create_group_data: dict[str, object]) -> None:
         """Test CN validation."""
         with pytest.raises(ValidationError):
             create_group_request_with_defaults(
@@ -1232,7 +1233,7 @@ class TestOperationResult:
             operation_type="search",
             duration_ms=100.5,
         )
-        assert result.success is True
+        assert result.is_success is True
         assert result.result_code == 0
 
     def test_success_result_factory(self) -> None:
@@ -1243,7 +1244,7 @@ class TestOperationResult:
             data={"entries": []},
             duration_ms=50.0,
         )
-        assert result.success is True
+        assert result.is_success is True
         assert result.result_code == 0
 
     def test_error_result_factory(self) -> None:
@@ -1255,7 +1256,7 @@ class TestOperationResult:
             target_dn="ou=missing,dc=example,dc=com",
             duration_ms=25.0,
         )
-        assert result.success is False
+        assert result.is_success is False
         assert result.result_code == 32
 
 
@@ -1303,9 +1304,7 @@ class TestFlextLdapModels:
             assert hasattr(FlextLdapModels, class_name)
             assert callable(getattr(FlextLdapModels, class_name))
 
-    def test_model_inheritance(self) -> None:
         """Test that all models inherit from BaseModel."""
-        from pydantic import BaseModel
 
         models_to_test = [
             FlextLdapModels.LdapUser,

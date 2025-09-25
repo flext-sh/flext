@@ -14,7 +14,7 @@ import shutil
 import subprocess
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Annotated, Literal, TypeVar
+from typing import Annotated, Literal, Self, TypeVar
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -36,7 +36,7 @@ def validate_project_path(v: str) -> str:
     """Validate project path using workspace service."""
     # Lazy import to avoid circular dependency
     workspace_service = create_workspace_service()
-    result = workspace_service.validate_workspace_path(v)
+    result: FlextResult[object] = workspace_service.validate_workspace_path(v)
     if result.is_failure:
         raise ValueError(result.error)
     return str(result.value)
@@ -74,10 +74,10 @@ class FlextAdvancedDevModels:
         )
 
         @abstractmethod
-        def validate_prerequisites(self) -> FlextResult[None]:
+        def validate_prerequisites(self: Self) -> FlextResult[None]:
             """Validate operation prerequisites."""
 
-        def validate_business_rules(self) -> FlextResult[None]:
+        def validate_business_rules(self: Self) -> FlextResult[None]:
             """Implement required abstract method from FlextModels.Value."""
             return self.validate_prerequisites()
 
@@ -108,7 +108,7 @@ class FlextAdvancedDevModels:
                 raise ValueError(msg)
             return v
 
-        def validate_prerequisites(self) -> FlextResult[None]:
+        def validate_prerequisites(self: Self) -> FlextResult[None]:
             """Validate test operation prerequisites."""
             # Check if pytest is available
             try:
@@ -135,16 +135,16 @@ class FlextAdvancedDevModels:
         strict_mode: bool = Field(default=True, description="Enable strict mode")
 
         @model_validator(mode="after")
-        def validate_lint_config(self) -> FlextAdvancedDevModels.LintOperation:
+        def validate_lint_config(self: Self) -> FlextAdvancedDevModels.LintOperation:
             """Validate linting configuration."""
             if "mypy" in self.tools and "pyright" in self.tools:
                 msg = "Cannot run both mypy and pyright simultaneously"
                 raise ValueError(msg)
             return self
 
-        def validate_prerequisites(self) -> FlextResult[None]:
+        def validate_prerequisites(self: Self) -> FlextResult[None]:
             """Validate linting prerequisites."""
-            missing_tools = []
+            missing_tools: list[object] = []
             for tool in self.tools:
                 try:
                     subprocess.run(
@@ -174,9 +174,9 @@ class FlextAdvancedDevModels:
             default=False, description="Check formatting without changes"
         )
 
-        def validate_prerequisites(self) -> FlextResult[None]:
+        def validate_prerequisites(self: Self) -> FlextResult[None]:
             """Validate formatting prerequisites."""
-            missing_formatters = []
+            missing_formatters: list[object] = []
             for formatter in self.formatters:
                 try:
                     if formatter == "gofmt":
@@ -223,7 +223,7 @@ class FlextAdvancedDevModels:
         test_count: int = Field(0, ge=0, description="Number of test files")
 
         @model_validator(mode="after")
-        def validate_project_consistency(self) -> FlextAdvancedDevModels.ProjectInfo:
+        def validate_project_consistency(self: Self) -> FlextAdvancedDevModels.ProjectInfo:
             """Validate project type consistency."""
             path = Path(self.path)
 
@@ -243,7 +243,7 @@ class FlextAdvancedDevModels:
 
             return self
 
-        def validate_business_rules(self) -> FlextResult[None]:
+        def validate_business_rules(self: Self) -> FlextResult[None]:
             """Implement required abstract method from FlextModels.Value."""
             try:
                 # Project consistency validation handled by model_validator
@@ -261,7 +261,7 @@ class FlextAdvancedDevModels:
         exit_code: int = Field(..., description="Exit code")
         stdout_lines: int = Field(0, ge=0, description="Standard output line count")
         stderr_lines: int = Field(0, ge=0, description="Standard error line count")
-        artifacts: FlextTypes.Core.Dict = Field(
+        artifacts: dict[str, object] = Field(
             default_factory=dict, description="Operation artifacts"
         )
 
@@ -275,7 +275,7 @@ class FlextAdvancedDevModels:
                 raise ValueError(msg)
             return v
 
-        def validate_business_rules(self) -> FlextResult[None]:
+        def validate_business_rules(self: Self) -> FlextResult[None]:
             """Implement required abstract method from FlextModels.Value."""
             try:
                 # Duration validation handled by field_validator

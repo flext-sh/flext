@@ -6,7 +6,7 @@ and validate proper functionality of business rules and model validation.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 """
 
-from flext.project_types import ProjectType, WorkspaceStatus
+from flext import ProjectType, WorkspaceStatus
 from flext_core import FlextModels
 
 
@@ -19,6 +19,7 @@ class TestProject:
             name="test-project",
             organization_id="test-org",
             project_type="python",
+            domain_events=[],
         )
 
         assert project.name == "test-project"
@@ -37,6 +38,7 @@ class TestProject:
             project_type="go",
             is_test_project=True,
             test_framework="go test",
+            domain_events=[],
         )
 
         assert project.name == "full-project"

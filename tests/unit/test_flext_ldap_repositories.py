@@ -4,6 +4,7 @@ This test module provides comprehensive coverage for the LDAP repository
 implementation, focusing on real functionality and edge cases.
 """
 
+from abc import ABC
 from unittest.mock import Mock
 
 import pytest
@@ -26,7 +27,7 @@ class TestBaseRepository:
         # Since Repository is abstract, we'll test through UserRepository
         return FlextLdapRepositories.UserRepository(mock_client)
 
-    def test_repository_initialization(self, mock_client: Mock) -> None:
+    def test_self(self, mock_client: Mock) -> None:
         """Test repository initialization."""
         repo = FlextLdapRepositories.UserRepository(mock_client)
         assert repo._client == mock_client
@@ -70,7 +71,7 @@ class TestUserRepository:
         # Repositories use FlextResult, so they return failures instead of raising
         result = await user_repo.find_by_dn(None)
         # Should return a failure result for invalid input
-        assert not result.success
+        assert not result.is_success
 
     @pytest.mark.asyncio
     async def test_search_success(
@@ -105,10 +106,14 @@ class TestUserRepository:
         assert result.is_success
         # Verify logger was called with all parameters
         user_repo._logger.debug.assert_called_once()
-        call_args = user_repo._logger.debug.call_args[0][0]
-        assert base_dn in call_args
-        assert filter_str in call_args
-        assert str(page_size) in call_args
+        # Check the formatted message, not the format string
+        formatted_message = (
+            user_repo._logger.debug.call_args[0][0]
+            % user_repo._logger.debug.call_args[0][1:]
+        )
+        assert base_dn in formatted_message
+        assert filter_str in formatted_message
+        assert str(page_size) in formatted_message
 
     @pytest.mark.asyncio
     async def test_save_success(
@@ -149,7 +154,7 @@ class TestUserRepository:
         """Test delete with empty DN."""
         result = await user_repo.delete("")
 
-        assert not result.success
+        assert not result.is_success
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -159,7 +164,7 @@ class TestUserRepository:
         """Test delete with None DN."""
         result = await user_repo.delete(None)
 
-        assert not result.success
+        assert not result.is_success
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -181,7 +186,7 @@ class TestUserRepository:
         """Test exists with empty DN."""
         result = await user_repo.exists("")
 
-        assert not result.success
+        assert not result.is_success
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -206,7 +211,7 @@ class TestUserRepository:
 
         result = await user_repo.update("", attributes)
 
-        assert not result.success
+        assert not result.is_success
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -218,7 +223,7 @@ class TestUserRepository:
 
         result = await user_repo.update(test_dn, {})
 
-        assert not result.success
+        assert not result.is_success
         assert "Attributes cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -230,7 +235,7 @@ class TestUserRepository:
 
         result = await user_repo.update(test_dn, None)
 
-        assert not result.success
+        assert not result.is_success
         assert "Attributes cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -266,7 +271,7 @@ class TestUserRepository:
     ) -> None:
         """Test that repositories return FlextResult, not raise exceptions."""
         result = await user_repo.find_by_dn("uid=test,ou=users,dc=example,dc=com")
-        assert result.success or not result.success
+        assert result.is_success or not result.is_success
 
 
 class TestGroupRepository:
@@ -368,7 +373,7 @@ class TestGroupRepository:
         """Test delete with empty DN."""
         result = await group_repo.delete("")
 
-        assert not result.success
+        assert not result.is_success
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -390,7 +395,7 @@ class TestGroupRepository:
         """Test exists with empty DN."""
         result = await group_repo.exists("")
 
-        assert not result.success
+        assert not result.is_success
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -415,7 +420,7 @@ class TestGroupRepository:
 
         result = await group_repo.update("", attributes)
 
-        assert not result.success
+        assert not result.is_success
         assert "DN cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -427,7 +432,7 @@ class TestGroupRepository:
 
         result = await group_repo.update(test_dn, {})
 
-        assert not result.success
+        assert not result.is_success
         assert "Attributes cannot be empty" in result.error
 
     @pytest.mark.asyncio
@@ -490,9 +495,7 @@ class TestFlextLdapRepositories:
         assert isinstance(user_repo, FlextLdapRepositories.Repository)
         assert isinstance(group_repo, FlextLdapRepositories.Repository)
 
-    def test_abstract_base_repository(self) -> None:
         """Test that base Repository is abstract."""
-        from abc import ABC
 
         assert issubclass(FlextLdapRepositories.Repository, ABC)
 

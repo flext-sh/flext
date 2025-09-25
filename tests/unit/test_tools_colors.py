@@ -9,7 +9,7 @@ Copyright (c) 2025 FLEXT Team. All rights reserved.
 from unittest import mock
 from unittest.mock import patch
 
-from flext_tools.colors import Colors, colorize, print_colored
+from flext_tools import Colors, colorize, print_colored
 
 
 class TestColors:
@@ -107,7 +107,7 @@ class TestColorize:
 class TestPrintColored:
     """Test the print_colored function for console output with logging."""
 
-    @patch("flext_cli.FlextCliFormatters")
+    @patch("flext_cli.FlextCliOutput")
     @patch("flext_tools.colors.FlextColorService.__init__")
     def test_print_colored_with_color(
         self,
@@ -133,7 +133,7 @@ class TestPrintColored:
         # Should call the service's print_colored method
         mock_service.print_colored.assert_called_once_with(message, color)
 
-    @patch("flext_cli.FlextCliFormatters")
+    @patch("flext_cli.FlextCliOutput")
     @patch("flext_tools.colors.FlextColorService.__init__")
     def test_print_colored_without_color(
         self,
@@ -158,7 +158,7 @@ class TestPrintColored:
         # Should call the service's print_colored method
         mock_service.print_colored.assert_called_once_with(message, "")
 
-    @patch("flext_cli.FlextCliFormatters")
+    @patch("flext_cli.FlextCliOutput")
     @patch("flext_tools.colors.FlextColorService.__init__")
     def test_print_colored_logs_without_color_codes(
         self,
@@ -184,7 +184,7 @@ class TestPrintColored:
         # Should call the service's print_colored method
         mock_service.print_colored.assert_called_once_with(message, color)
 
-    @patch("flext_cli.FlextCliFormatters")
+    @patch("flext_cli.FlextCliOutput")
     @patch("flext_tools.colors.FlextColorService.__init__")
     def test_print_colored_empty_message(
         self,
@@ -210,7 +210,7 @@ class TestPrintColored:
         # Should call the service's print_colored method
         mock_service.print_colored.assert_called_once_with(message, color)
 
-    @patch("flext_cli.FlextCliFormatters")
+    @patch("flext_cli.FlextCliOutput")
     @patch("flext_tools.colors.FlextColorService.__init__")
     def test_print_colored_with_multiline_message(
         self,
@@ -256,7 +256,7 @@ class TestColorIntegration:
         assert "Warning: " in warning_text
         assert "Error!" in error_text
 
-    @patch("flext_cli.FlextCliFormatters")
+    @patch("flext_cli.FlextCliOutput")
     @patch("flext_tools.colors.FlextColorService.__init__")
     def test_print_colored_multiple_calls(
         self,

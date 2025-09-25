@@ -1,21 +1,19 @@
 #!/usr/bin/env python3
 """Simple script to consolidate manual configuration handlers."""
 
-import logging
 import re
 from pathlib import Path
 
-from flext_core import FlextTypes
+from flext_core import FlextLogger
 
 # Configure basic logging
-logging.basicConfig(level=logging.WARNING)
-logger = logging.getLogger(__name__)
+logger = FlextLogger(__name__)
 
 
-def find_manual_env_vars() -> FlextTypes.Core.StringList:
+def find_manual_env_vars() -> list[str]:
     """Find files with manual os.getenv() usage."""
     # Avoid spawning shell tools; scan with pathlib
-    matches: FlextTypes.Core.StringList = []
+    matches: list[str] = []
     for path in Path.cwd().rglob("*.py"):
         try:
             text = path.read_text(encoding="utf-8")

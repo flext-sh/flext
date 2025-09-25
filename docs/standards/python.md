@@ -450,7 +450,7 @@ __license__ = "MIT"
 
 # Core public API
 from flext_module.workspace import WorkspaceManager, WorkspaceConfig
-from flext_module.cli import FlextCLI
+from flext_module.cli import FlextCli
 from flext_module.services.application.pipeline import PipelineManager
 from flext_module.services.application.handlers import CommandHandler, QueryHandler
 
@@ -464,7 +464,7 @@ __all__: FlextTypes.Core.StringList = [
     # Core classes
     "WorkspaceManager",
     "WorkspaceConfig",
-    "FlextCLI",
+    "FlextCli",
     "PipelineManager",
 
     # Handlers
