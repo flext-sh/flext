@@ -66,7 +66,7 @@ Repository scan results mapping each package to current dispatcher/context adopt
 | -------------------------- | ----------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------- | --- | ------- | ------ | ----------------------------- |
 | Core Platform              | core-root               | Yes (`src/flext/dev.py:26`)                                                | No                                                                         | Yes | No      | No     | Bus used without handlers     |
 | Core Platform              | flext-core              | No                                                                         | Yes (`flext-core/src/flext_core/bus.py:93`)                                | Yes | Yes     | Yes    | No domain services registered |
-| Developer Experience       | flext-cli               | Yes (`flext-cli/src/flext_cli/service.py:33`)                      | Yes (`flext-cli/src/flext_cli/handlers.py:50`)                             | Yes | No      | Yes    | Context not adopted           |
+| Developer Experience       | flext-cli               | Yes (`flext-cli/src/flext_cli/service.py:33`)                              | Yes (`flext-cli/src/flext_cli/handlers.py:50`)                             | Yes | No      | Yes    | Context not adopted           |
 | Platform Extensions & APIs | flext-api               | Yes (`flext-api/src/flext_api/client.py:35`)                               | No                                                                         | No  | No      | Yes    | Context not adopted           |
 | Platform Extensions & APIs | flext-auth              | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
 | Platform Extensions & APIs | flext-grpc              | No                                                                         | No                                                                         | No  | No      | No     | No domain services registered |
@@ -276,7 +276,7 @@ Caller (CLI, API, connector)
 
 ## Phase 4 — Deprecation & Cleanup (Weeks 11-12)
 
-- Deprecate legacy modules/aliases (FlextProcessing, FlextBus, FlextCqrs, unused mixins) with clear timelines and messaging.
+- Deprecate legacy modules/aliases (FlextProcessors, FlextBus, FlextCqrs, unused mixins) with clear timelines and messaging.
 - Remove obsolete documentation/examples/tests once downstream adoption reaches threshold.
 - Simplify utility surface (drop unused mixins, consolidate serialization helpers) and update type exports.
 - Finalise long-term maintenance plan (ownership, release cadence, quality gates).
@@ -284,7 +284,7 @@ Caller (CLI, API, connector)
 #### Phase 4 Deprecation Checklist (2025-09-17)
 
 - **Module sunset plan:**
-  - Announce deprecation of `flext_core.processing.FlextProcessing` (`flext-core/src/flext_core/processing.py:13`) and related aliases once dispatcher adoption reaches >80% of packages.
+  - Announce deprecation of `flext_core.processors.FlextProcessors` (`flext-core/src/flext_core.processors.py:13`) and related aliases once dispatcher adoption reaches >80% of packages.
   - Replace wildcard exports in `flext-core/src/flext_core/__init__.py` with curated dispatcher/context surfaces; schedule warning releases one sprint ahead.
   - Retire legacy CQRS helpers (`flext-core/src/flext_core/cqrs.py`) after providing dispatcher parity samples.
 - **Documentation cleanup:**
@@ -304,7 +304,7 @@ Caller (CLI, API, connector)
 ## Success Metrics
 
 - 100% of command/ query flows routed via the dispatcher.
-- All domain services returning `FlextResult` with validated configs.
+- All domain services returning `FlextResult` with validated Config.
 - Context correlation IDs present in 100% of logged events during acceptance tests.
 - Removal or deprecation of legacy orchestration modules without consumer regressions.
 - CI passing across ecosystem with new lint/type rules enabled.

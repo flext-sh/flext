@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+# !/usr/bin/env python3
 """Refatora imports em todos os projetos para usarem apenas o pacote raiz.
 
 Ações executadas:
@@ -19,8 +19,6 @@ import re
 from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
-
-from flext_core import FlextTypes
 
 # ----------------------------- Descoberta do workspace -----------------------------
 
@@ -139,7 +137,7 @@ def ensure_reexports(
 
     original = content
 
-    lines_to_add: FlextTypes.Core.StringList = []
+    lines_to_add: list[str] = []
     for req in requests:
         for name in sorted(req.names):
             import_line = f"from {package_name}.{req.submodule} import {name}"
@@ -184,7 +182,7 @@ def _promote_type_checking_imports(updated: str) -> tuple[str, bool]:
         return updated, changed
 
     lines = updated.splitlines(keepends=True)
-    promoted_imports: FlextTypes.Core.StringList = []
+    promoted_imports: list[str] = []
     keep_tc_blocks: list[tuple[int, int, str]] = []  # (start, end, text)
 
     for node in tree.body:
@@ -204,7 +202,7 @@ def _promote_type_checking_imports(updated: str) -> tuple[str, bool]:
             except SyntaxError:
                 continue
 
-            kept_lines: FlextTypes.Core.StringList = []
+            kept_lines: list[str] = []
             for tc_node in tc_tree.body:
                 if isinstance(tc_node, ast.Import):
                     for alias in tc_node.names:
@@ -284,7 +282,7 @@ def rewrite_file_imports(file_path: Path, package_name: str) -> bool:
 
     # 1) Remover sys.path hacks
     sys_path_pattern = re.compile(
-        r"^\s*sys\.path\.(insert|append)\(.*\)\s*$",
+        r"^\s*sys\.path\.(Union[insert, append])\(.*\)\s*$",
         re.MULTILINE,
     )
     if sys_path_pattern.search(updated):

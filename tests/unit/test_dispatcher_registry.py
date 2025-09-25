@@ -103,7 +103,7 @@ class TestFlextRegistry:
 
         result = registry.register_handler(mock_handler)
 
-        assert not result.success
+        assert not result.is_success
         assert "TestHandler" not in registry._registered_keys
         assert result.error is not None
         assert "Registration failed" in str(result.error)
@@ -138,8 +138,8 @@ class TestFlextRegistry:
         assert result.is_success
         summary = result.unwrap()
         assert len(summary.registered) == 2
-        assert summary.successful_registrations == 2
-        assert summary.failed_registrations == 0
+        assert len(summary.errors) == 0
+        assert summary.is_success
 
     def test_register_handlers_mixed_results(self) -> None:
         """Test registering multiple handlers with mixed success/failure."""
@@ -171,7 +171,7 @@ class TestFlextRegistry:
 
         result = registry.register_handlers(handlers)
 
-        assert not result.success  # Should fail due to second handler failure
+        assert not result.is_success  # Should fail due to second handler failure
         assert result.error is not None
         assert "Handler2 failed" in str(result.error)
 
@@ -203,8 +203,8 @@ class TestFlextRegistryEdgeCases:
         assert result.is_success
         summary = result.unwrap()
         assert len(summary.registered) == 0
-        assert summary.successful_registrations == 0
-        assert summary.failed_registrations == 0
+        assert len(summary.errors) == 0
+        assert summary.is_success
 
     def test_empty_bindings_dict(self) -> None:
         """Test registering empty bindings list."""
@@ -264,9 +264,7 @@ class TestFlextRegistryEdgeCases:
 
         assert result.is_success  # Summary contains error details
         summary = result.unwrap()
-        assert (
-            summary.failed_registrations >= 0
-        )  # Should handle missing metadata gracefully
+        assert len(summary.errors) >= 0  # Should handle missing metadata gracefully
 
     def test_function_map_invalid_metadata_type(self) -> None:
         """Test function map with invalid metadata type."""

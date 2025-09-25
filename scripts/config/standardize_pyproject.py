@@ -11,13 +11,14 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextResult
 from flext_tools import (
     Colors,
+    FlextScript,
+    PoetryValidator,
+    ScriptMetadata,
     print_colored,
 )
-from flext_tools.poetry_validator import PoetryValidator
-from flext_tools.script_base import FlextScript, ScriptMetadata
 
 from ..common import discover_projects
 
@@ -77,7 +78,7 @@ class PyprojectStandardizer(FlextScript):
             poetry_ops = PoetryValidator()
 
             total_standardized = 0
-            failed_projects: FlextTypes.Core.StringList = []
+            failed_projects: list[str] = []
 
             # Standardize each project
             for project_path in projects:
@@ -133,7 +134,7 @@ class PyprojectStandardizer(FlextScript):
         self,
         total_projects: int,
         standardized: int,
-        failed_projects: FlextTypes.Core.StringList,
+        failed_projects: list[str],
     ) -> None:
         """Print standardization summary."""
         print_colored("\n📊 STANDARDIZATION SUMMARY", Colors.BLUE)

@@ -6,13 +6,15 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from typing import Self
+
 from flext_core import FlextResult
 
 
 class FlextObservabilityService:
     """Basic observability service for legacy scripts."""
 
-    def __init__(self) -> None:
+    def __init__(self: Self) -> None:
         """Initialize observability service."""
 
     def log_metric(self, name: str, value: str) -> FlextResult[None]:
@@ -21,6 +23,6 @@ class FlextObservabilityService:
         _ = name, value  # Parameters used for metric logging
         return FlextResult[None].ok(None)
 
-    def get_metrics(self) -> FlextResult[dict[str, str]]:
+    def get_metrics(self: Self) -> FlextResult[dict[str, str]]:
         """Get current metrics."""
         return FlextResult[dict[str, str]].ok({})

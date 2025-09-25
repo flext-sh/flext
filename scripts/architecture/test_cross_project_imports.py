@@ -13,7 +13,7 @@ import traceback
 
 def test_imports() -> bool:
     """Test imports from all 6 FLEXT projects."""
-    results = {}
+    results: dict[str, str] = {}
 
     # Test flext-core
     try:

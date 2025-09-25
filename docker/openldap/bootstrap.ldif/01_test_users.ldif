@@ -1,0 +1,97 @@
+# FLEXT Shared LDAP Test Data - Test Users
+# Comprehensive user data for testing across all FLEXT projects
+
+# Test User 1 - John Doe (IT Department)
+dn: uid=john.doe,ou=people,dc=flext,dc=local
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: john.doe
+cn: John Doe
+sn: Doe
+givenName: John
+displayName: John Doe
+mail: john.doe@internal.invalid
+telephoneNumber: +1 555 123 4567
+employeeNumber: 12345
+departmentNumber: IT
+title: Software Engineer
+userPassword: {SSHA}password123
+description: Senior Software Engineer in IT Department
+
+# Test User 2 - Jane Smith (HR Department)
+dn: uid=jane.smith,ou=people,dc=flext,dc=local
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: jane.smith
+cn: Jane Smith
+sn: Smith
+givenName: Jane
+displayName: Jane Smith
+mail: jane.smith@internal.invalid
+telephoneNumber: +1 555 234 5678
+employeeNumber: 23456
+departmentNumber: HR
+title: HR Manager
+userPassword: {SSHA}password123
+description: Human Resources Manager
+
+# Test User 3 - Bob Wilson (Engineering)
+dn: uid=bob.wilson,ou=people,dc=flext,dc=local
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: bob.wilson
+cn: Bob Wilson
+sn: Wilson
+givenName: Bob
+displayName: Bob Wilson
+mail: bob.wilson@internal.invalid
+telephoneNumber: +1 555 345 6789
+employeeNumber: 34567
+departmentNumber: Engineering
+title: Senior Developer
+userPassword: {SSHA}password123
+description: Senior Software Developer
+
+# Test User 4 - Alice Johnson (Management)
+dn: uid=alice.johnson,ou=people,dc=flext,dc=local
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: alice.johnson
+cn: Alice Johnson
+sn: Johnson
+givenName: Alice
+displayName: Alice Johnson
+mail: alice.johnson@internal.invalid
+telephoneNumber: +1 555 456 7890
+employeeNumber: 45678
+departmentNumber: Management
+title: Project Manager
+userPassword: {SSHA}password123
+description: Project Manager
+
+# Test User 5 - Charlie Brown (Support)
+dn: uid=charlie.brown,ou=people,dc=flext,dc=local
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: charlie.brown
+cn: Charlie Brown
+sn: Brown
+givenName: Charlie
+displayName: Charlie Brown
+mail: charlie.brown@internal.invalid
+telephoneNumber: +1 555 567 8901
+employeeNumber: 56789
+departmentNumber: Support
+title: Technical Support Specialist
+userPassword: {SSHA}password123
+description: Technical Support Specialist

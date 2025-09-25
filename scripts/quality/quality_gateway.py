@@ -17,15 +17,16 @@ from pathlib import Path
 
 from mypy import api as mypy_api
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextResult
 from flext_tools import (
     Colors,
+    ConflictAnalyzer,
+    DependencyDiscovery,
+    FlextScript,
+    PoetryValidator,
+    ScriptMetadata,
     print_colored,
 )
-from flext_tools.conflicts import ConflictAnalyzer
-from flext_tools.discovery_base import DependencyDiscovery
-from flext_tools.poetry_validator import PoetryValidator
-from flext_tools.script_base import FlextScript, ScriptMetadata
 
 from ..common import discover_projects
 
@@ -42,10 +43,10 @@ NEEDS_IMPROVEMENT_THRESHOLD = 60
 class AnalysisResults:
     """Resultados de análise de qualidade."""
 
-    deps_result: FlextTypes.Core.Dict
-    quality_result: FlextTypes.Core.Dict
-    conflicts_result: FlextTypes.Core.Dict
-    poetry_result: FlextTypes.Core.Dict
+    deps_result: dict[str, object]
+    quality_result: dict[str, object]
+    conflicts_result: dict[str, object]
+    poetry_result: dict[str, object]
 
 
 @dataclass
@@ -95,8 +96,7 @@ class QualityGateway(FlextScript):
 
         # Verificar ferramentas necessárias
         required_tools = ["ruff", "mypy", "poetry"]
-        missing_tools = []
-
+        missing_tools: list[object] = []
         for tool in required_tools:
             if shutil.which(tool) is None:
                 missing_tools.append(tool)
@@ -133,7 +133,7 @@ class QualityGateway(FlextScript):
             )
 
             # Estatísticas agregadas
-            total_stats: FlextTypes.Core.Dict = {
+            total_stats: dict[str, object] = {
                 "projects_analyzed": 0,
                 "passed": 0,
                 "failed": 0,
@@ -141,7 +141,7 @@ class QualityGateway(FlextScript):
                 "critical_issues": 0,
             }
 
-            failed_projects: FlextTypes.Core.StringList = []
+            failed_projects: list[str] = []
 
             # Executar análise em cada projeto
             for project_path in projects:
@@ -436,7 +436,7 @@ class QualityGateway(FlextScript):
         results: AnalysisResults,
     ) -> dict[str, object]:
         """Calcular resultado final do projeto."""
-        issues = []
+        issues: list[object] = []
         critical_issues = 0
         total_issues = 0
 

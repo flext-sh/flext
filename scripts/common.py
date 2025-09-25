@@ -12,9 +12,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from pathlib import Path
 
-from flext.workspace_service import FlextWorkspaceService
-
-# Use flext-core exclusively - NO LOCAL IMPLEMENTATIONS
+from flext import FlextWorkspaceService
 from flext_core import FlextLogger
 
 logger = FlextLogger(__name__)
@@ -38,14 +36,14 @@ def discover_projects(
             return []
 
         project_infos = result.unwrap()
-        project_paths = []
-
+        project_paths: list[Path] = []
         for project_info in project_infos:
-            project_path = Path(project_info.path)
-            if project_path.exists() and (
-                projects_filter is None or project_info.name in projects_filter
-            ):
-                project_paths.append(project_path)
+            if project_info.repository_path:
+                project_path = Path(project_info.repository_path)
+                if project_path.exists() and (
+                    projects_filter is None or project_info.name in projects_filter
+                ):
+                    project_paths.append(project_path)
 
         return project_paths
 

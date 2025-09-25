@@ -73,7 +73,7 @@ class TestFlextLdapClient:
             "ldap://localhost:389", "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com", "wrongpass"
         )
 
-        assert not result.success
+        assert not result.is_success
         assert "Failed to bind" in result.error
 
     @pytest.mark.asyncio
@@ -87,7 +87,7 @@ class TestFlextLdapClient:
             "ldap://localhost:389", "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com", "password"
         )
 
-        assert not result.success
+        assert not result.is_success
         assert "Connection failed" in result.error
 
     @pytest.mark.asyncio
@@ -127,14 +127,14 @@ class TestFlextLdapClient:
 
         result = await client.bind("cn=test,dc=example,dc=com", "wrongpass")
 
-        assert not result.success
+        assert not result.is_success
         assert "Bind failed" in result.error
 
     @pytest.mark.asyncio
-    async def test_bind_no_connection(self, client: FlextLdapClient) -> None:
+    async def test_self(self, client: FlextLdapClient) -> None:
         result = await client.bind("cn=test,dc=example,dc=com", "password")
 
-        assert not result.success
+        assert not result.is_success
         assert "No connection established" in result.error
 
     @pytest.mark.asyncio
@@ -149,7 +149,7 @@ class TestFlextLdapClient:
         mock_connection.unbind.assert_called_once()
 
     @pytest.mark.asyncio
-    async def test_unbind_no_connection(self, client: FlextLdapClient) -> None:
+    async def test_self(self, client: FlextLdapClient) -> None:
         result = await client.unbind()
 
         assert result.is_success
@@ -162,7 +162,7 @@ class TestFlextLdapClient:
 
         assert client.is_connected() is True
 
-    def test_is_connected_false_no_connection(self, client: FlextLdapClient) -> None:
+    def test_self(self, client: FlextLdapClient) -> None:
         assert client.is_connected() is False
 
     def test_is_connected_false_unbound(
@@ -184,10 +184,10 @@ class TestFlextLdapClient:
         assert result.is_success
         assert result.value is True
 
-    def test_test_connection_not_connected(self, client: FlextLdapClient) -> None:
+    def test_self(self, client: FlextLdapClient) -> None:
         result = client.test_connection()
 
-        assert not result.success
+        assert not result.is_success
         assert "Not connected" in result.error
 
     @pytest.mark.asyncio
@@ -251,7 +251,7 @@ class TestFlextLdapClient:
 
         result = await client.authenticate_user("testuser", "wrongpass")
 
-        assert not result.success
+        assert not result.is_success
         assert "Authentication failed" in result.error
 
     @pytest.mark.asyncio
@@ -264,7 +264,7 @@ class TestFlextLdapClient:
 
         result = await client.authenticate_user("nonexistent", "password")
 
-        assert not result.success
+        assert not result.is_success
         assert "User not found" in result.error
 
     @pytest.mark.asyncio
@@ -275,7 +275,7 @@ class TestFlextLdapClient:
 
         request = FlextLdapModels.SearchRequest(
             base_dn="ou=users,dc=example,dc=com",
-            filter="(uid=test)",
+            filter_str="(uid=test)",
             scope=FlextLdapModels.Scope.SUBTREE,
             attributes=["uid", "cn"],
             page_size=100,
@@ -289,7 +289,7 @@ class TestFlextLdapClient:
         mock_uid.value = "test"
         mock_cn = Mock()
         mock_cn.value = "Test User"
-        mock_entry.__getitem__ = lambda self, key: mock_uid if key == "uid" else mock_cn
+        mock_entry.__getitem__ = lambda _, key: mock_uid if key == "uid" else mock_cn
 
         mock_connection.search.return_value = True
         mock_connection.entries = [mock_entry]

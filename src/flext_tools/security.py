@@ -6,6 +6,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from typing import Self
+
 from flext_core import FlextResult, FlextService
 
 
@@ -36,7 +38,7 @@ class FlextSecurityService(FlextService[dict[str, str]]):
             _ = directory, config  # Placeholder implementation
             return FlextResult[list[str]].ok([])
 
-    def execute(self) -> FlextResult[dict[str, str]]:
+    def execute(self: Self) -> FlextResult[dict[str, str]]:
         """Execute security service - FlextService interface."""
         return FlextResult[dict[str, str]].ok({})
 

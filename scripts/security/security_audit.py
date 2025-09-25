@@ -61,9 +61,8 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult, FlextTypes
-from flext_tools import Colors, print_colored
-from flext_tools.script_base import FlextScript, ScriptMetadata
+from flext_core import FlextResult
+from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
 # Note: SecurityViolation and scan_flext_ecosystem defined locally to avoid import issues
 
@@ -113,7 +112,7 @@ class ScanConfig:
 
     def __init__(
         self,
-        target_paths: FlextTypes.Core.StringList,
+        target_paths: list[str],
         *,
         include_dependencies: bool = False,
     ) -> None:
@@ -237,7 +236,7 @@ class SecurityAuditScript(FlextScript):
         except Exception as e:
             return FlextResult[object].fail(f"Security audit execution failed: {e}")
 
-    def _validate_target_paths(self, paths: object) -> FlextTypes.Core.StringList:
+    def _validate_target_paths(self, paths: object) -> list[str]:
         """Validate and filter target paths for scanning.
 
         Args:
@@ -250,7 +249,7 @@ class SecurityAuditScript(FlextScript):
         if not isinstance(paths, list):
             paths = [str(paths)] if paths else ["src/"]
 
-        validated_paths: FlextTypes.Core.StringList = []
+        validated_paths: list[str] = []
 
         for path_str in paths:
             path = Path(path_str)
@@ -422,7 +421,7 @@ class SecurityAuditScript(FlextScript):
                     print_colored(f"📄 Report saved to: {output_file}", Colors.GREEN)
             else:
                 # Console summary report
-                scanner._generate_summary_report(violations)
+                scanner._generate_summary_report(violations)  # noqa: SLF001
 
             # Return scan results for further processing
             return FlextResult[object].ok(

@@ -4,7 +4,6 @@
 import argparse
 import ast
 import json
-import logging
 import re
 import sys
 from dataclasses import dataclass, field
@@ -12,7 +11,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextLogger, FlextResult, FlextTypes
 
 
 @dataclass
@@ -98,10 +97,10 @@ class EcosystemAuditResult:
     total_violations_count: int = 0
     critical_violations_count: int = 0
     high_violations_count: int = 0
-    projects_with_critical_issues: FlextTypes.Core.StringList = field(
+    projects_with_critical_issues: list[str] = field(
         default_factory=list,
     )
-    fully_compliant_projects: FlextTypes.Core.StringList = field(default_factory=list)
+    fully_compliant_projects: list[str] = field(default_factory=list)
     audit_timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     def calculate_ecosystem_metrics(self) -> None:
@@ -149,7 +148,7 @@ class PatternViolationAnalyzer:
 
     def __init__(self) -> None:
         """Initialize the pattern violation analyzer."""
-        self.logger = logging.getLogger(__name__)
+        self.logger = FlextLogger(__name__)
         self.pattern_docs_path = (
             Path(__file__).parent.parent.parent / "docs" / "patterns"
         )
@@ -252,7 +251,7 @@ class PatternViolationAnalyzer:
                 result.calculate_compliance_metrics()
                 return FlextResult[ProjectAuditResult].ok(result)
 
-            violations = []
+            violations: list[object] = []
             for python_file in python_files:
                 file_violations_result = self._analyze_file_patterns(
                     python_file,
@@ -288,8 +287,7 @@ class PatternViolationAnalyzer:
                 content = f.read()
                 lines = content.splitlines()
 
-            violations = []
-
+            violations: list[object] = []
             # AST-based structural analysis
             try:
                 tree = ast.parse(content)
@@ -324,11 +322,11 @@ class PatternViolationAnalyzer:
         self,
         tree: ast.AST,
         file_path: Path,
-        lines: FlextTypes.Core.StringList,
+        lines: list[str],
         _project_name: str,
     ) -> list[PatternViolation]:
         """Analyze AST for structural pattern violations."""
-        violations = []
+        violations: list[object] = []
 
         class PatternVisitor(ast.NodeVisitor):
             def __init__(self, analyzer: PatternViolationAnalyzer) -> None:
@@ -387,12 +385,11 @@ class PatternViolationAnalyzer:
     def _analyze_text_patterns(
         self,
         file_path: Path,
-        lines: FlextTypes.Core.StringList,
+        lines: list[str],
         _project_name: str,
     ) -> list[PatternViolation]:
         """Analyze text patterns for violations."""
-        violations = []
-
+        violations: list[object] = []
         for line_num, line in enumerate(lines, 1):
             # Check type system violations
             for pattern, rule in self.type_system_violations.items():
@@ -453,7 +450,7 @@ class PatternAuditSystem:
 
     def __init__(self) -> None:
         """Initialize the pattern audit system."""
-        self.logger = logging.getLogger(__name__)
+        self.logger = FlextLogger(__name__)
         self.analyzer = PatternViolationAnalyzer()
         self.workspace_path = Path(__file__).parent.parent.parent
         # Add metadata for audit reporting
@@ -534,8 +531,7 @@ class PatternAuditSystem:
                 "client-b-meltano-native",
             ]
 
-            results = {}
-
+            results: dict[str, object] = {}
             for project_name in projects:
                 if project_name == "main-workspace":
                     project_path = workspace_path  # Main workspace is the root
@@ -644,8 +640,7 @@ class PatternAuditSystem:
         ecosystem_result: EcosystemAuditResult,
     ) -> FlextTypes.Core.Headers:
         """Generate prioritized remediation recommendations."""
-        recommendations = {}
-
+        recommendations: dict[str, object] = {}
         if ecosystem_result.critical_violations_count > 0:
             recommendations["immediate_action"] = (
                 f"Address {ecosystem_result.critical_violations_count} critical violations "

@@ -14,6 +14,13 @@ from flext.application_pipeline import (
     FlextApplicationPipelineService,
     create_pipeline_service,
 )
+from flext.base_cli import (
+    FlextCliApi,
+    FlextCliContext,
+    FlextCliModels,
+    FlextCliOutput,
+    FlextCliService,
+)
 from flext.cli import (
     FlextControlPanelCli,
     analysis,
@@ -24,20 +31,21 @@ from flext.cli import (
     main,
     quality,
     scripts,
+    test,
 )
 from flext.cli_patterns import (
     FlextCliApi as FlextCliApiPattern,
     FlextCliContext as FlextCliContextPattern,
-    FlextCliFormatters as FlextCliFormattersPattern,
-    FlextCliMain as FlextCliMainPattern,
+    FlextCliOutput as FlextCliFormattersPattern,
 )
 from flext.dev import (
+    DevToolsManager,
     FlextAdvancedDevModels,
     FlextAdvancedDevToolsManager,
     create_dev_tools_manager,
 )
-from flext.dev_enums import FlextDevEnums
-from flext.project_types import FlextProjectTypes
+from flext.dev_enums import FlextDevEnums, OperationStatus, OperationType
+from flext.project_types import FlextProjectTypes, ProjectType
 from flext.services import (
     FlextUnifiedServices,
     create_services,
@@ -50,6 +58,8 @@ from flext.services_utils import (
 from flext.workspace import (
     FlextAdvancedWorkspaceModels,
     FlextWorkspaceService,
+    WorkspaceStatus,
+    create_workspace_service,
 )
 from flext.workspace_cli import (
     FlextWorkspaceCli,
@@ -58,21 +68,15 @@ from flext.workspace_cli import (
     create_workspace_cli,
     docker,
     main as workspace_main,
-    status,
     run_tests as workspace_test,
+    status,
 )
 from flext_cli import (
-    FlextCliApi,
-    FlextCliContext,
-    FlextCliFormatters,
-    FlextCliMain,
-    FlextCliService,
+    FlextCliCommands,
 )
 
-# ProjectType and WorkspaceStatus are already imported from flext.workspace
-
-
 __all__ = [
+    "DevToolsManager",
     "FlextAdvancedDevModels",
     "FlextAdvancedDevToolsManager",
     "FlextAdvancedWorkspaceModels",
@@ -80,12 +84,12 @@ __all__ = [
     "FlextApplicationPipelineService",
     "FlextCliApi",
     "FlextCliApiPattern",
+    "FlextCliCommands",
     "FlextCliContext",
     "FlextCliContextPattern",
-    "FlextCliFormatters",
     "FlextCliFormattersPattern",
-    "FlextCliMain",
-    "FlextCliMainPattern",
+    "FlextCliModels",
+    "FlextCliOutput",
     "FlextCliService",
     "FlextControlPanelCli",
     "FlextDevEnums",
@@ -96,6 +100,10 @@ __all__ = [
     "FlextUtilities",
     "FlextWorkspaceCli",
     "FlextWorkspaceService",
+    "OperationStatus",
+    "OperationType",
+    "ProjectType",
+    "WorkspaceStatus",
     "analysis",
     "build",
     "check",
@@ -105,6 +113,7 @@ __all__ = [
     "create_pipeline_service",
     "create_services",
     "create_workspace_cli",
+    "create_workspace_service",
     "docker",
     "format_code",
     "info",
@@ -113,6 +122,7 @@ __all__ = [
     "quality",
     "scripts",
     "status",
+    "test",
     "workspace_main",
     "workspace_test",
 ]

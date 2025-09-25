@@ -54,7 +54,7 @@ lint.ignore = [
     "FBT003",
     "Q000",
     "TRY003",
-    "PLC0415",
+    # "PLC0415",
     "PLR1702",
     "PLR0914",
     "PLR0904",
@@ -77,7 +77,9 @@ lint.per-file-ignores."**/constants.py" = [
     "S105", # hardcoded-password-string - false positives in error messages and descriptions
 ]
 lint.per-file-ignores."**/exceptions.py" = [
-    "S105", # hardcoded-password-string - false positives in error code constants
+    "A001",    # variable-is-ambiguous - Allow ambiguous variable names in exceptions
+    "SLF001",  # private-member-access - Allow private member access in exception classes
+    "S105",    # hardcoded-password-string - false positives in error code constants
 ]
 lint.per-file-ignores."**/examples/**" = [
     "EXE001",

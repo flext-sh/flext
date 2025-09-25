@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Self
 
 from flext_core import FlextResult
 
@@ -14,7 +15,7 @@ from flext_core import FlextResult
 class DocumentationGenerator:
     """Basic documentation generator for legacy scripts."""
 
-    def __init__(self) -> None:
+    def __init__(self: Self) -> None:
         """Initialize documentation generator."""
 
     def generate_docs(self, project_path: str | Path) -> FlextResult[str]:

@@ -9,10 +9,13 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextTypes
-from flext_tools import Colors, print_colored
-from flext_tools.health_check import HealthCheckService
-from flext_tools.script_base import FlextScript, ScriptMetadata
+from flext_tools import (
+    Colors,
+    FlextScript,
+    HealthCheckService,
+    ScriptMetadata,
+    print_colored,
+)
 
 
 class HealthCheckServiceRunner(FlextScript):
@@ -112,9 +115,9 @@ class HealthCheckServiceRunner(FlextScript):
 
         return parser
 
-    def _process_kwargs(self, args: argparse.Namespace) -> FlextTypes.Core.Dict:
+    def _process_kwargs(self, args: argparse.Namespace) -> dict[str, object]:
         """Process arguments into kwargs."""
-        kwargs: FlextTypes.Core.Dict = {}
+        kwargs: dict[str, object] = {}
         kwargs["generate_report"] = not getattr(args, "no_report", False)
         return kwargs
 
