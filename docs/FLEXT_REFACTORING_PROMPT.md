@@ -314,9 +314,9 @@ class UserService(FlextService[FlextResult[UserModel]]):
 
 ```python
 # ✅ CORRECT - flext-core proven handler patterns
-from flext_core import FlextProcessing, FlextResult
+from flext_core import FlextProcessors, FlextResult
 
-class ProjectHandlers(FlextProcessing):
+class ProjectHandlers(FlextProcessors):
     """Project handlers using flext-core foundation."""
 
     def handle_user_creation(self, command: dict) -> FlextResult[dict]:

@@ -134,7 +134,7 @@ class TestCreatePipelineHandler:
         result = await handler.handle(command)
 
         # Assert
-        assert result.success is True
+        assert result.is_success is True
         assert result.value == "pipeline-123"
         mock_repository.create.assert_called_once_with(
             name="test-pipeline",
@@ -155,7 +155,7 @@ class TestCreatePipelineHandler:
         result = await handler.handle(command)
 
         # Assert
-        assert result.success is False
+        assert result.is_success is False
         assert "validation" in result.error.lower()
 ```
 
@@ -206,7 +206,7 @@ class TestWorkspacePipelineIntegration:
         assert len(projects) == 2
         assert "flext-core" in projects
         assert "flext-api" in projects
-        assert pipeline_result.success is True
+        assert pipeline_result.is_success is True
 ```
 
 ### **End-to-End Test Pattern**

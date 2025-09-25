@@ -1,0 +1,29 @@
+# Redis Test Container for FLEXT
+# Service name: redis
+# Container name: flext-redis-test
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: flext-redis-test
+    ports:
+      - "6380:6379"
+    volumes:
+      - flext_redis_data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - flext-shared-network
+
+volumes:
+  flext_redis_data:
+    driver: local
+
+networks:
+  flext-shared-network:
+    driver: bridge

@@ -68,7 +68,7 @@ def fix_syntax_errors_in_file(file_path: Path) -> bool:
 
         # Ensure proper indentation in TYPE_CHECKING blocks
         lines = content.split("\n")
-        fixed_lines = []
+        fixed_lines: list[str] = []
         in_type_checking = False
 
         for line in lines:
@@ -87,14 +87,16 @@ def fix_syntax_errors_in_file(file_path: Path) -> bool:
 
         content = "\n".join(fixed_lines)
 
+        # Write back if changed
         if content != original_content:
             file_path.write_text(content, encoding="utf-8")
             return True
 
-    except (OSError, UnicodeDecodeError):
-        pass
+        return False
 
-    return False
+    except Exception as e:
+        print(f"Error fixing {file_path}: {e}")
+        return False
 
 
 def main() -> None:

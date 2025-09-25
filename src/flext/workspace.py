@@ -16,9 +16,9 @@ from flext.workspace_service import (
     FlextWorkspaceService,
     create_workspace_service,
 )
+from flext_core import WorkspaceStatus
 
-# Convenience aliases for test compatibility
-WorkspaceStatus = FlextProjectTypes.WorkspaceStatus
+# WorkspaceStatus is imported directly from flext_core
 
 __all__ = [
     "FlextAdvancedWorkspaceModels",

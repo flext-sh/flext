@@ -16,7 +16,6 @@ from pathlib import Path
 import pytest
 from mypy import api as mypy_api
 
-from flext_core import FlextTypes
 from flext_tools import Colors, print_colored
 
 # Import ruff dynamically (we call it via import_module to allow runtime fallback)
@@ -36,11 +35,11 @@ class QualityReport:
     test_failures: int = 0
     coverage_percentage: float = 0.0
     poetry_issues: int = 0
-    issues: FlextTypes.Core.StringList = field(default_factory=list)
+    issues: list[str] = field(default_factory=list)
 
 
 def run_command(
-    cmd: FlextTypes.Core.StringList,
+    cmd: list[str],
     _cwd: str | None = None,
 ) -> tuple[int, str, str]:
     """Executa um comando e retorna (exit_code, stdout, stderr)."""
@@ -181,7 +180,7 @@ def analyze_project(project_path: str) -> QualityReport:
 def main() -> int:
     """Função principal."""
     # Listar todos os projetos Python
-    projects: FlextTypes.Core.StringList = []
+    projects: list[str] = []
     for pyproject in Path().rglob("pyproject.toml"):
         project_path = str(pyproject.parent)
         # Filtrar apenas projetos ativos

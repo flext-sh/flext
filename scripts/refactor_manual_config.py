@@ -8,12 +8,12 @@ import operator
 import re
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextResult, FlextTypes
+from flext_core import FlextLogger, FlextResult
 
 logger = FlextLogger(__name__)
 
 
-def find_manual_config_patterns() -> FlextResult[dict[str, FlextTypes.Core.StringList]]:
+def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
     """Find files with manual configuration patterns.
 
     Returns:
@@ -21,7 +21,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, FlextTypes.Core.Strin
 
     """
     try:
-        patterns: dict[str, FlextTypes.Core.StringList] = {
+        patterns: dict[str, list[str]] = {
             "manual_env_vars": [],
             "manual_pydantic": [],
             "manual_file_loading": [],
@@ -29,7 +29,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, FlextTypes.Core.Strin
         }
 
         # Find manual os.getenv() usage without external commands
-        env_var_files: FlextTypes.Core.StringList = []
+        env_var_files: list[str] = []
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
@@ -41,7 +41,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, FlextTypes.Core.Strin
         patterns["manual_env_vars"] = env_var_files
 
         # Find manual Pydantic instantiation (Config(), Settings(), etc.)
-        pyd_files: FlextTypes.Core.StringList = []
+        pyd_files: list[str] = []
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
@@ -53,7 +53,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, FlextTypes.Core.Strin
         patterns["manual_pydantic"] = pyd_files
 
         # Find manual file loading (json.load, yaml.load)
-        file_loading: FlextTypes.Core.StringList = []
+        file_loading: list[str] = []
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
@@ -65,24 +65,24 @@ def find_manual_config_patterns() -> FlextResult[dict[str, FlextTypes.Core.Strin
         patterns["manual_file_loading"] = file_loading
 
         # Find manual validation patterns
-        manual_valid: FlextTypes.Core.StringList = []
+        manual_valid: list[str] = []
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
             except Exception as e:
                 logger.debug(f"Skipping {path}: {e}")
                 continue
-            if re.search(r"if\s+not\s+.*config|assert\s+.*config", text):
+            if re.search(r"if\s+not\s+.*Union[config, assert]\s+.*config", text):
                 manual_valid.append(str(path))
         patterns["manual_validation"] = manual_valid
 
         total_files = len(set(functools.reduce(operator.iadd, patterns.values(), [])))
         logger.info(f"Found {total_files} files with manual config patterns")
 
-        return FlextResult[dict[str, FlextTypes.Core.StringList]].ok(patterns)
+        return FlextResult[dict[str, list[str]]].ok(patterns)
 
     except (OSError, ValueError, TypeError) as e:
-        return FlextResult[dict[str, FlextTypes.Core.StringList]].fail(
+        return FlextResult[dict[str, list[str]]].fail(
             f"Failed to find manual config patterns: {e}",
         )
 
@@ -176,7 +176,7 @@ def refactor_manual_pydantic(file_path: str) -> FlextResult[bool]:
         # Pattern: direct Settings/Config instantiation
         config_instantiation = (
             r"(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*"
-            r"([A-Z][a-zA-Z0-9_]*(?:Settings|Config))\(\)"
+            r"([A-Z][a-zA-Z0-9_]*(?:Union[Settings, Config]))\(\)"
         )
 
         def replace_config_instantiation(match: re.Match[str]) -> str:
@@ -228,9 +228,7 @@ def refactor_manual_file_loading(file_path: str) -> FlextResult[bool]:
         changes_made = False
 
         # Pattern: json.load() or yaml.load()
-        file_load_pattern = (
-            r"(\s+)(.*?)\s*=\s*(json\.load|yaml\.load|yaml\.safe_load)\((.*?)\)"
-        )
+        file_load_pattern = r"(\s+)(.*?)\s*=\s*(json\.Union[load, yaml]\.Union[load, yaml]\.safe_load)\((.*?)\)"
 
         def replace_file_loading(match: re.Match[str]) -> str:
             indent = match.group(1)
@@ -318,7 +316,7 @@ class ProjectSpecificSettings(FlextCoreSettings):
 
 
 # Centralized configuration factory
-_settings_instance: ProjectSpecificSettings | None = None
+_settings_instance: Union[ProjectSpecificSettings, None] = None
 
 
 def get_project_settings() -> ProjectSpecificSettings:

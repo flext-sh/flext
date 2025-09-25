@@ -1,0 +1,39 @@
+# FLEXT Python Service Test Container
+# Service name: flext
+# Container name: flext-test
+
+services:
+  flext:
+    build:
+      context: ..
+      dockerfile: docker/flext/Dockerfile
+    container_name: flext-test
+    ports:
+      - "8000:8000"
+    environment:
+      FLEXT_ENV: test
+      FLEXT_DEBUG: "true"
+      PYTHONPATH: /app/src
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ../src:/app/src:ro
+      - ../tests:/app/tests:ro
+      - flext_test_cache:/app/.cache
+    command: python -m uvicorn flext.main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - flext-shared-network
+
+volumes:
+  flext_test_cache:
+    driver: local
+
+networks:
+  flext-shared-network:
+    driver: bridge

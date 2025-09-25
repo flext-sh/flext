@@ -1,0 +1,24 @@
+# FLEXT Shared LDAP Test Data - Base Structure
+# This file contains the foundational LDAP structure used by all FLEXT projects
+# Note: Root domain dc=flext,dc=local is already created by container initialization
+
+# Organizational Units
+dn: ou=people,dc=flext,dc=local
+objectClass: organizationalUnit
+ou: people
+description: People organizational unit
+
+dn: ou=groups,dc=flext,dc=local
+objectClass: organizationalUnit
+ou: groups
+description: Groups organizational unit
+
+dn: ou=services,dc=flext,dc=local
+objectClass: organizationalUnit
+ou: services
+description: Service accounts organizational unit
+
+dn: ou=computers,dc=flext,dc=local
+objectClass: organizationalUnit
+ou: computers
+description: Computer accounts organizational unit

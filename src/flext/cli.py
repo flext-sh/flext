@@ -13,10 +13,10 @@ from __future__ import annotations
 import subprocess
 import sys
 from pathlib import Path
-from typing import Protocol
+from typing import Self, cast
 
-from flext_cli import FlextCliApi, FlextCliContext, FlextCliMain
-from flext_core import FlextService, FlextLogger, FlextResult
+from flext_cli import FlextCli, FlextCliApi, FlextCliContext
+from flext_core import FlextLogger, FlextResult, FlextService
 
 
 class FlextControlPanelCli(FlextService[str]):
@@ -29,6 +29,7 @@ class FlextControlPanelCli(FlextService[str]):
 
     # Instance fields with proper type annotations
     _cli_api: FlextCliApi | None
+    _config: FlextCliContext | None
 
     class _Colors:
         """Temporary color constants to avoid circular imports."""
@@ -45,12 +46,7 @@ class FlextControlPanelCli(FlextService[str]):
             for key, value in kwargs.items():
                 setattr(self, key, value)
 
-    class QualityResult(Protocol):
-        """Protocol for quality check results."""
-
-        success: bool
-        value: dict[str, object]
-        error: str | None
+    # QualityResult protocol removed - now using FlextResult directly
 
     class _QualityGateway:
         """Temporary quality gateway to avoid circular imports."""
@@ -59,24 +55,13 @@ class FlextControlPanelCli(FlextService[str]):
             self.workspace_path = str(workspace_path)
 
         def run_quality_checks_safe(
-            self, config: object
-        ) -> FlextControlPanelCli.QualityResult:
+            self, config: FlextControlPanelCli._QualityCheckConfig
+        ) -> FlextResult[dict[str, object]]:
             # Use config parameter to avoid unused warning
             _ = config
 
-            class Result:
-                def __init__(
-                    self,
-                    *,
-                    success: bool,
-                    value: dict[str, object] | None = None,
-                    error: str | None = None,
-                ) -> None:
-                    self.success = success
-                    self.value = value or {}
-                    self.error = error
-
-            return Result(success=True, value={"success": True})
+            # Return a proper FlextResult instead of custom Result class
+            return FlextResult[dict[str, object]].ok({"success": True})
 
     @staticmethod
     def _print_colored(text: str) -> None:
@@ -93,7 +78,7 @@ class FlextControlPanelCli(FlextService[str]):
     @staticmethod
     def _get_quality_failure_summary(result: dict[str, object]) -> str:
         """Temporary quality failure summary function to avoid circular imports."""
-        failed_checks = []
+        failed_checks: list[str] = []
         if not result.get("tests_passed", True):
             failed_checks.append("tests")
         if not result.get("coverage_passed", True):
@@ -116,7 +101,7 @@ class FlextControlPanelCli(FlextService[str]):
         self._logger = FlextLogger(__name__)
         # Initialize FlextCliApi using the factory pattern to avoid initialization issues
         # Initialize CLI API using FlextResult pattern
-        cli_api_result = self._initialize_cli_api()
+        cli_api_result: FlextResult[FlextCliApi] = self._initialize_cli_api()
         if cli_api_result.is_success:
             self._cli_api = cli_api_result.unwrap()
         else:
@@ -124,13 +109,13 @@ class FlextControlPanelCli(FlextService[str]):
                 f"FlextCliApi initialization failed: {cli_api_result.error}"
             )
             self._cli_api = None  # Will be handled in methods
-        self._config: FlextCliContext | None = None
+        self._config = None
         self._workspace: Path = Path.cwd()
 
-    def _initialize_cli_api(self) -> FlextResult[FlextCliApi]:
+    def _initialize_cli_api(self: Self) -> FlextResult[FlextCliApi]:
         """Initialize CLI API with proper error handling using FlextResult."""
         try:
-            cli_api = FlextCliApi(version="0.9.0")  # Match flext-core version
+            cli_api = FlextCliApi()  # Use default initialization
             return FlextResult[FlextCliApi].ok(cli_api)
         except Exception as e:
             return FlextResult[FlextCliApi].fail(
@@ -149,14 +134,14 @@ class FlextControlPanelCli(FlextService[str]):
                 f"Configuration initialization failed: {e!s}"
             )
 
-    def _create_main_cli(self) -> FlextResult[FlextCliMain]:
+    def _create_main_cli(self: Self) -> FlextResult[FlextCli]:
         """Create main CLI using FlextResult pattern."""
         try:
-            main_cli = FlextCliMain()
-            return FlextResult[FlextCliMain].ok(main_cli)
+            main_cli = FlextCli()
+            return FlextResult[FlextCli].ok(main_cli)
         except Exception as e:
-            return FlextResult[FlextCliMain].fail(
-                f"FlextCliMain creation failed: {e!s}"
+            return FlextResult[FlextCli].fail(
+                f"FlextCli creation failed: {e!s}"
             )
 
     # Instance method not needed; static method above is sufficient for calls via class or instance
@@ -185,14 +170,14 @@ class FlextControlPanelCli(FlextService[str]):
                 )
                 result = quality_gateway.run_quality_checks_safe(config)
 
-                if result.success and FlextControlPanelCli._all_quality_checks_passed(
+                if result.is_success and FlextControlPanelCli._all_quality_checks_passed(
                     result.value
                 ):
                     self._cli_service._print_colored("✅ All quality checks passed!")
                     return FlextResult[dict[str, object]].ok(result.value)
                 failure = (
                     self._cli_service._get_quality_failure_summary(result.value)
-                    if result.success
+                    if result.is_success
                     else (result.error or "unknown error")
                 )
                 self._cli_service._print_colored(f"❌ Quality checks failed: {failure}")
@@ -272,7 +257,7 @@ class FlextControlPanelCli(FlextService[str]):
                 )
                 result = gateway.run_quality_checks_safe(config)
 
-                if result.success and FlextControlPanelCli._all_quality_checks_passed(
+                if result.is_success and FlextControlPanelCli._all_quality_checks_passed(
                     result.value
                 ):
                     self._cli_service._print_colored("✅ Tests passed")
@@ -281,7 +266,7 @@ class FlextControlPanelCli(FlextService[str]):
                 # Handle quality check failures
                 failure = (
                     self._cli_service._get_quality_failure_summary(result.value)
-                    if result.success
+                    if result.is_success
                     else (result.error or "unknown error")
                 )
 
@@ -318,12 +303,12 @@ class FlextControlPanelCli(FlextService[str]):
                 )
                 result = quality_gateway.run_quality_checks_safe(config)
 
-                if result.success and result.value.get("lint_passed", False):
+                if result.is_success and result.value.get("lint_passed", False):
                     self._cli_service._print_colored("✅ Linting passed!")
                     return FlextResult[dict[str, object]].ok(result.value)
                 failure = (
                     self._cli_service._get_quality_failure_summary(result.value)
-                    if result.success
+                    if result.is_success
                     else (result.error or "unknown error")
                 )
                 self._cli_service._print_colored(f"❌ Linting failed: {failure}")
@@ -354,7 +339,7 @@ class FlextControlPanelCli(FlextService[str]):
 
         def info_command(
             self, *, detailed: bool = False
-        ) -> FlextResult[dict[str, object]]:
+        ) -> FlextResult[dict[str, str | list[str], bool]]:
             """Display workspace information using flext-cli patterns."""
             workspace_data = {
                 "workspace_root": str(self._cli_service._workspace),
@@ -385,12 +370,11 @@ class FlextControlPanelCli(FlextService[str]):
 
             if detailed:
                 self._cli_service._print_colored("\n📋 Projects:")
-                projects = workspace_data.get("projects", [])
-                if isinstance(projects, list):
-                    for project in projects:
-                        self._cli_service._print_colored(f"  • {project}")
+                projects = cast("list[str]", workspace_data["projects"])
+                for project in projects:
+                    self._cli_service._print_colored(f"  • {project}")
 
-            return FlextResult[dict[str, object]].ok(workspace_data)
+            return FlextResult[dict[str, str | list[str] | bool]].ok(workspace_data)
 
     def initialize(
         self,
@@ -398,14 +382,14 @@ class FlextControlPanelCli(FlextService[str]):
         profile: str = "default",
         *,
         debug: bool = False,
-    ) -> FlextResult[FlextCliMain]:
+    ) -> FlextResult[FlextCli]:
         """Initialize CLI with flext-cli integration using FlextResult pattern."""
         # Initialize configuration using FlextResult
         config_result = self._initialize_config(profile, debug=debug)
         if config_result.is_failure:
             error = f"Configuration error: {config_result.error}"
             self._print_colored(f"❌ {error}")
-            return FlextResult[FlextCliMain].fail(error)
+            return FlextResult[FlextCli].fail(error)
 
         self._config = config_result.unwrap()
         self._workspace = Path(workspace) if workspace else Path.cwd()
@@ -417,28 +401,28 @@ class FlextControlPanelCli(FlextService[str]):
         main_cli_result = self._create_main_cli()
         if main_cli_result.is_failure:
             self._logger.warning(
-                f"FlextCliMain initialization issue: {main_cli_result.error}"
+                f"FlextCli initialization issue: {main_cli_result.error}"
             )
-            return FlextResult[FlextCliMain].fail(
+            return FlextResult[FlextCli].fail(
                 f"CLI initialization temporarily unavailable: {main_cli_result.error}"
             )
 
         return main_cli_result
 
-    def create_tools_handler(self) -> _ToolsCommands:
+    def create_tools_handler(self: Self) -> _ToolsCommands:
         """Create tools command handler with nested class pattern."""
         return self._ToolsCommands(self)
 
-    def create_main_handler(self) -> _MainCommands:
+    def create_main_handler(self: Self) -> _MainCommands:
         """Create main command handler with nested class pattern."""
         return self._MainCommands(self)
 
     @property
-    def workspace_path(self) -> Path:
+    def workspace_path(self: Self) -> Path:
         """Get current workspace path."""
         return self._workspace
 
-    def execute(self) -> FlextResult[str]:
+    def execute(self: Self) -> FlextResult[str]:
         """Execute CLI service - required by FlextService abstract method."""
         try:
             # Default execution returns CLI system info
