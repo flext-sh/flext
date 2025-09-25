@@ -3,6 +3,7 @@
 This test suite tests only the functionality that exists in the simplified FlextLogger implementation.
 """
 
+import threading
 from unittest.mock import MagicMock, patch
 
 from flext_core import FlextLogger
@@ -316,8 +317,6 @@ class TestRequestContextManagement:
 
     def test_request_context_thread_isolation(self) -> None:
         """Test request context thread isolation."""
-        import threading
-
         logger = FlextLogger("context_test")
 
         # Set context in main thread
@@ -566,8 +565,6 @@ class TestPerformanceAndStressScenarios:
 
     def test_concurrent_logging_thread_safety(self) -> None:
         """Test concurrent logging thread safety."""
-        import threading
-
         logger = FlextLogger("concurrent_test")
         results: list[int] = []
 

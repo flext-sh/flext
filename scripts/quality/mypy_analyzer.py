@@ -16,10 +16,8 @@ from pathlib import Path
 
 from mypy import api as mypy_api
 
-from flext_core import FlextTypes
 
-
-def _run_mypy_api(args: FlextTypes.Core.StringList) -> tuple[int, str, str]:
+def _run_mypy_api(args: list[str]) -> tuple[int, str, str]:
     """Run MyPy using its Python API and return (exit_code, stdout, stderr)."""
     try:
         stdout, stderr, exit_status = mypy_api.run(args)
@@ -28,10 +26,9 @@ def _run_mypy_api(args: FlextTypes.Core.StringList) -> tuple[int, str, str]:
         return 1, "", f"MyPy API execution failed: {e}"
 
 
-def parse_mypy_errors(output: str) -> list[FlextTypes.Core.Dict]:
+def parse_mypy_errors(output: str) -> list[dict[str, object]]:
     """Parse MyPy output to extract structured error information."""
-    errors = []
-
+    errors: list[dict[str, object]] = []
     # Regex para capturar erros MyPy
     error_pattern = r"([^:]+):(\d+): error: (.+?) \[([^\]]+)\]"
 
@@ -67,7 +64,7 @@ def get_project_from_path(file_path: str) -> str:
 
 def analyze_project_with_stats(
     project_path: Path,
-) -> tuple[int, list[FlextTypes.Core.Dict]]:
+) -> tuple[int, list[dict[str, object]]]:
     """Analisa projeto específico e retorna estatísticas detalhadas."""
     exit_code, stdout, stderr = _run_mypy_api([str(project_path)])
 
@@ -81,12 +78,12 @@ def analyze_project_with_stats(
     return exit_code, errors
 
 
-def analyze_workspace_with_stats() -> tuple[int, list[FlextTypes.Core.Dict]]:
+def analyze_workspace_with_stats() -> tuple[int, list[dict[str, object]]]:
     """Analisa workspace e retorna estatísticas detalhadas."""
     workspace_root = Path(__file__).parent.parent
 
     # Verificar quais diretórios existem para análise
-    dirs_to_analyze = []
+    dirs_to_analyze: list[str] = []
     for dir_name in ["src", "tests", "scripts", "examples"]:
         dir_path = workspace_root / dir_name
         if dir_path.exists() and dir_path.is_dir():
@@ -114,7 +111,7 @@ def analyze_workspace() -> int:
     workspace_root = Path(__file__).parent.parent
 
     # Verificar quais diretórios existem para análise
-    dirs_to_analyze = []
+    dirs_to_analyze: list[str] = []
     for dir_name in ["src", "tests", "scripts", "examples"]:
         dir_path = workspace_root / dir_name
         if dir_path.exists() and dir_path.is_dir():
@@ -224,9 +221,8 @@ def stats_by_project() -> int:
     if not projects:
         return 0
 
-    all_errors = []
-    project_stats = {}
-
+    all_errors: list[dict[str, object]] = []
+    project_stats: dict[str, int] = {}
     # Analisar workspace primeiro
     _, workspace_errors = analyze_workspace_with_stats()
     all_errors.extend(workspace_errors)

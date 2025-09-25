@@ -81,7 +81,7 @@ class ArchitectureAnalyzer:
 
     def _discover_projects(self) -> dict[str, Project]:
         """Descobre todos os projetos no workspace."""
-        projects = {}
+        projects: dict[str, Project] = {}
 
         for item in self.workspace_root.iterdir():
             if not item.is_dir() or item.name.startswith("."):

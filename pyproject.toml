@@ -171,6 +171,7 @@ types-mock = "^5.2.0.20250809"
 types-factory-boy = "^0.4.1"
 aiofiles = "^24.1.0"
 types-grpcio = "^1.0.0.20250914"
+pyarrow-stubs = "^20.0.0.20250825"
 
 
 [tool.poetry.group.typing.dependencies]
@@ -206,6 +207,8 @@ strict = true
 
 # Module path resolution - use src directory explicitly
 mypy_path = "src"
+# Only check main workspace files to avoid duplicate module conflicts with subprojects
+files = ["src/flext/", "src/flext_tools/", "tests/unit/", "tests/conftest.py", "scripts/"]
 
 
 # Additional strict checks beyond default strict mode
@@ -289,6 +292,14 @@ exclude = [
     "vendor/",
     ".*_pb2\\.py$",                         # Exclude generated protobuf files
     ".*_pb2_grpc\\.py$",                    # Exclude generated protobuf gRPC files
+    "client-a-oud-mig/tests/",                # Exclude conflicting tests module
+    "flext-.*/tests/",                     # Exclude other project test modules
+    "flexcore/tests/",                     # Exclude flexcore test modules
+    "client-b-.*/tests/",                  # Exclude client-b test modules
+    "client-a-oud-mig/examples/",             # Exclude conflicting examples module
+    "flext-.*/examples/",                  # Exclude other project example modules
+    "flexcore/examples/",                  # Exclude flexcore example modules
+    "client-b-.*/examples/",               # Exclude client-b example modules
 ]
 
 [tool.pydantic-mypy]
@@ -316,16 +327,17 @@ reportMissingSuperCall = false
 pythonPlatform = "Linux"
 pythonVersion = "3.13"
 typeCheckingMode = "strict"
-venvPath = "."
-venv = ".venv"
+venv = ".venv/"
 
 
 [[tool.pyright.executionEnvironments]]
-root = "."
+root = "./tests"
 extraPaths = [
-    "examples/",
-    "scripts/",
-    "tests/",
+    "./examples",
+    "./scripts",
+    "**/examples/",
+    "**/scripts/",
+    "**/tests/",
 ]
 reportImplicitRelativeImport = false
 reportPrivateUsage = false
@@ -389,6 +401,55 @@ markers = [
     "edge_cases: marca testes de casos extremos",
 ]
 filterwarnings = ["ignore::DeprecationWarning:pyasn1(.*|$)"]
+
+[tool.pyrefly]
+project-excludes = [
+    "**/.git",
+    "**/__pycache__",
+    "**/*.venv",
+    "**/*dist",
+    "**/*mypy_cache",
+    "**/*pytest_cache",
+    "**/*ruff_cache",
+    "**/*venv/**",
+    "**/node_modules/**", 
+]
+python-version = "3.13"
+search-path = [
+    "client-a-oud-mig/src",
+    "flexcore/src",
+    "flext-core/src",
+    "flext-cli/src", 
+    "flext-api/src",
+    "flext-auth/src",
+    "flext-grpc/src",
+    "flext-observability/src",
+    "flext-web/src",
+    "flext-meltano/src",
+    "flext-ldap/src",
+    "flext-ldif/src",
+    "flext-db-oracle/src",
+    "flext-oracle-wms/src",
+    "flext-oracle-oic-ext/src",
+    "flext-plugin/src",
+    "flext-quality/src",
+    "flext-tap-ldap/src",
+    "flext-tap-ldif/src",
+    "flext-tap-oracle/src",
+    "flext-tap-oracle-oic/src",
+    "flext-tap-oracle-wms/src",
+    "flext-target-ldap/src",
+    "flext-target-ldif/src",
+    "flext-target-oracle/src",
+    "flext-target-oracle-oic/src",
+    "flext-target-oracle-wms/src",
+    "flext-dbt-ldap/src",
+    "flext-dbt-ldif/src",
+    "flext-dbt-oracle/src",
+    "flext-dbt-oracle-wms/src",
+    "client-b-meltano-native/src"
+]
+
 
 
 [tool.poetry.dependencies]

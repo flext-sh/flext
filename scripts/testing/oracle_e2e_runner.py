@@ -9,9 +9,8 @@ import argparse
 import sys
 from pathlib import Path
 
-import docker
-
 from flext_core import FlextResult
+from flext_tests import FlextTestDocker
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
 
@@ -39,37 +38,28 @@ class OracleE2ETestRunner(FlextScript):
 
         print_colored("✅ FLEXT workspace detected", Colors.GREEN)
 
-        # Check Docker availability via Docker SDK (no subprocess)
+        # Check Docker availability via FlextTestDocker unified management
         try:
-            client = docker.from_env()
-            # Ping daemon and fetch version to ensure connectivity
-            client.ping()
-            _ = client.version()
-            print_colored("✅ Docker available", Colors.GREEN)
-        except Exception:
+            docker_manager = FlextTestDocker()
+            # FlextTestDocker automatically validates Docker connectivity during initialization
+            print_colored("✅ Docker available via FlextTestDocker", Colors.GREEN)
+
+            # Verify Docker daemon is responsive
+            if docker_manager.client:
+                print_colored("✅ Docker daemon responsive", Colors.GREEN)
+            else:
+                print_colored("❌ Docker daemon not responsive", Colors.RED)
+                return FlextResult[None].fail("Docker daemon not responsive")
+
+            return FlextResult[None].ok(None)
+        except Exception as e:
             print_colored(
-                "❌ Docker not available - required for Oracle E2E tests",
+                f"❌ FlextTestDocker not available - required for Oracle E2E tests: {e}",
                 Colors.RED,
             )
             return FlextResult[None].fail(
-                "Docker not available - required for Oracle E2E tests",
+                f"FlextTestDocker not available - required for Oracle E2E tests: {e}",
             )
-
-        # Docker Compose check: best-effort via engine info (compose is a CLI plugin)
-        try:
-            info = client.info()
-            engine_ok = bool(info and info.get("ServerVersion"))
-            if engine_ok:
-                print_colored(
-                    "✅ Docker engine healthy (compose plugin not required)",
-                    Colors.GREEN,
-                )
-                return FlextResult[None].ok(None)
-            print_colored("❌ Docker engine info unavailable", Colors.RED)
-            return FlextResult[None].fail("Docker engine info unavailable")
-        except Exception:
-            print_colored("❌ Unable to query Docker engine info", Colors.RED)
-            return FlextResult[None].fail("Unable to query Docker engine info")
 
     def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
         """Execute Oracle E2E testing logic."""

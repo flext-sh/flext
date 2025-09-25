@@ -9,19 +9,15 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Protocol, runtime_checkable
+from typing import Protocol, Self, runtime_checkable
 
 from flext.project_types import FlextProjectTypes
-
-# Workspace models consolidated into flext-core
-# from flext.workspace_models import FlextAdvancedWorkspaceModels
 from flext_core import (
     FlextContainer,
-    FlextService,
     FlextLogger,
     FlextModels,
     FlextResult,
-    FlextTypes,
+    FlextService,
 )
 
 
@@ -42,7 +38,7 @@ class FlextWorkspaceService(FlextService[str]):
         - Interface Segregation: Focused workspace interface
     """
 
-    def __init__(self, **_data: FlextTypes.Core.Dict) -> None:
+    def __init__(self, **_data: dict[str, object]) -> None:
         """Initialize workspace service with flext-core patterns."""
         super().__init__()
         self._logger = FlextLogger(__name__)
@@ -78,13 +74,12 @@ class FlextWorkspaceService(FlextService[str]):
         ) -> FlextResult[list[FlextModels.Project]]:
             """Discover all projects in workspace with type detection."""
             try:
-                projects = []
-
+                projects: list[FlextModels.Project] = []
                 for project_dir in workspace_root.iterdir():
                     if not project_dir.is_dir() or project_dir.name.startswith("."):
                         continue
 
-                    project_info_result = self._analyze_project(project_dir)
+                    project_info_result: FlextResult[FlextModels.Project] = self._analyze_project(project_dir)
                     if project_info_result.is_success:
                         projects.append(project_info_result.unwrap())
 
@@ -116,22 +111,15 @@ class FlextWorkspaceService(FlextService[str]):
                 # Count test files
                 tests_dir = project_path / "tests"
                 has_tests = tests_dir.exists()
-                test_count = 0
-
-                if has_tests:
-                    test_files = list(tests_dir.glob("**/test_*.py")) + list(
-                        tests_dir.glob("**/*_test.py")
-                    )
-                    test_count = len(test_files)
+                # Test count tracking removed as unused
 
                 project_info = FlextModels.Project(
                     name=project_path.name,
-                    path=str(project_path),
+                    organization_id="default",
+                    repository_path=str(project_path),
+                    is_test_project=has_tests,
+                    test_framework="pytest" if has_tests else None,
                     project_type=project_type,
-                    has_tests=has_tests,
-                    has_pyproject=has_pyproject,
-                    has_go_mod=has_go_mod,
-                    test_count=test_count,
                 )
 
                 return FlextResult[FlextModels.Project].ok(project_info)
@@ -162,11 +150,11 @@ class FlextWorkspaceService(FlextService[str]):
             except Exception as e:
                 return FlextResult[str].fail(f"Workspace path validation failed: {e}")
 
-    def create_project_discovery(self) -> _ProjectDiscoveryService:
+    def create_project_discovery(self: Self) -> _ProjectDiscoveryService:
         """Create project discovery service."""
         return self._ProjectDiscoveryService(self)
 
-    def create_workspace_validator(self) -> _WorkspaceValidator:
+    def create_workspace_validator(self: Self) -> _WorkspaceValidator:
         """Create workspace validator service."""
         return self._WorkspaceValidator(self)
 
@@ -187,7 +175,7 @@ class FlextWorkspaceService(FlextService[str]):
 
     def get_workspace_info(
         self, workspace_root: str | None = None
-    ) -> FlextResult[FlextTypes.Core.Dict]:
+    ) -> FlextResult[dict[str, object]]:
         """Get comprehensive workspace information."""
         try:
             workspace_path = (
@@ -195,9 +183,9 @@ class FlextWorkspaceService(FlextService[str]):
             )
 
             # Discover projects
-            projects_result = self.discover_workspace_projects(str(workspace_path))
+            projects_result: FlextResult[list[FlextModels.Project]] = self.discover_workspace_projects(str(workspace_path))
             if projects_result.is_failure:
-                return FlextResult[FlextTypes.Core.Dict].fail(
+                return FlextResult[dict[str, object]].fail(
                     f"Failed to discover projects: {projects_result.error}"
                 )
 
@@ -216,17 +204,17 @@ class FlextWorkspaceService(FlextService[str]):
                 "status": FlextProjectTypes.WorkspaceStatus.READY,
             }
 
-            return FlextResult[FlextTypes.Core.Dict].ok(workspace_info)
+            return FlextResult[dict[str, object]].ok(workspace_info)
 
         except Exception as e:
             error = f"Failed to get workspace info: {e}"
             self._logger.exception(error)
-            return FlextResult[FlextTypes.Core.Dict].fail(error)
+            return FlextResult[dict[str, object]].fail(error)
 
-    def execute(self) -> FlextResult[str]:
+    def execute(self: Self) -> FlextResult[str]:
         """Execute workspace service - required by FlextService abstract method."""
         try:
-            workspace_info_result = self.get_workspace_info()
+            workspace_info_result: FlextResult[dict[str, object]] = self.get_workspace_info()
             if workspace_info_result.is_failure:
                 return FlextResult[str].fail(
                     f"Workspace service execution failed: {workspace_info_result.error}"

@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Self
 
 from flext_core import FlextResult
 
@@ -14,7 +15,7 @@ from flext_core import FlextResult
 class GradualLintFixer:
     """Basic gradual lint fixer for legacy scripts."""
 
-    def __init__(self) -> None:
+    def __init__(self: Self) -> None:
         """Initialize gradual lint fixer."""
 
     def fix_linting_issues(self, project_path: str | Path) -> FlextResult[str]:
@@ -25,6 +26,6 @@ class GradualLintFixer:
         except Exception as e:
             return FlextResult[str].fail(f"Lint fixing failed: {e}")
 
-    def get_fix_report(self) -> FlextResult[str]:
+    def get_fix_report(self: Self) -> FlextResult[str]:
         """Get fix report."""
         return FlextResult[str].ok("All issues fixed")

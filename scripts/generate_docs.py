@@ -9,7 +9,7 @@ MkDocs integration, and automated content generation.
 import sys
 from pathlib import Path
 
-from flext_tools.documentation_generator import DocumentationGenerator
+from flext_tools import DocumentationGenerator
 
 
 def main() -> int:
