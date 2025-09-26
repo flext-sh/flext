@@ -63,7 +63,7 @@ class TestFlextCliPromptsConfirm:
         assert result.data is False
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_confirm_yes_response(self, mock_input: object) -> None:
         """Test confirm with yes response."""
         mock_input.return_value = "y"
         prompts = FlextCliPrompts()
@@ -72,7 +72,7 @@ class TestFlextCliPromptsConfirm:
         assert result.data is True
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_confirm_capitalized_yes(self, mock_input: object) -> None:
         """Test confirm with capitalized yes response."""
         mock_input.return_value = "YES"
         prompts = FlextCliPrompts()
@@ -81,7 +81,7 @@ class TestFlextCliPromptsConfirm:
         assert result.data is True
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_confirm_no_response(self, mock_input: object) -> None:
         """Test confirm with no response."""
         mock_input.return_value = "n"
         prompts = FlextCliPrompts()
@@ -90,7 +90,7 @@ class TestFlextCliPromptsConfirm:
         assert result.data is False
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_confirm_empty_default_false(self, mock_input: object) -> None:
         """Test confirm with empty response and default False."""
         mock_input.return_value = ""
         prompts = FlextCliPrompts()
@@ -99,7 +99,7 @@ class TestFlextCliPromptsConfirm:
         assert result.data is False
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_confirm_empty_default_true(self, mock_input: object) -> None:
         """Test confirm with empty response and default True."""
         mock_input.return_value = ""
         prompts = FlextCliPrompts()
@@ -108,7 +108,7 @@ class TestFlextCliPromptsConfirm:
         assert result.data is True
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_confirm_invalid_response(self, mock_input: object) -> None:
         """Test confirm with invalid response."""
         mock_input.return_value = "maybe"
         prompts = FlextCliPrompts()
@@ -117,7 +117,7 @@ class TestFlextCliPromptsConfirm:
         assert result.data is False  # Should use default
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_confirm_keyboard_interrupt(self, mock_input: object) -> None:
         """Test confirm with keyboard interrupt."""
         mock_input.side_effect = KeyboardInterrupt()
         prompts = FlextCliPrompts()
@@ -126,7 +126,7 @@ class TestFlextCliPromptsConfirm:
         assert "User interrupted confirmation" in result.error
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_confirm_eof_error(self, mock_input: object) -> None:
         """Test confirm with EOF error."""
         mock_input.side_effect = EOFError()
         prompts = FlextCliPrompts()
@@ -135,7 +135,7 @@ class TestFlextCliPromptsConfirm:
         assert "Input stream ended" in result.error
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_confirm_general_exception(self, mock_input: object) -> None:
         """Test confirm with general exception."""
         mock_input.side_effect = Exception("Test error")
         prompts = FlextCliPrompts()
@@ -162,7 +162,7 @@ class TestFlextCliPromptsPrompt:
         assert "Empty input is not allowed" in result.error
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_prompt_valid_input(self, mock_input: object) -> None:
         """Test prompt with valid input."""
         mock_input.return_value = "user_input"
         prompts = FlextCliPrompts()
@@ -171,7 +171,7 @@ class TestFlextCliPromptsPrompt:
         assert result.data == "user_input"
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_prompt_empty_with_default(self, mock_input: object) -> None:
         """Test prompt with empty input and default."""
         mock_input.return_value = ""
         prompts = FlextCliPrompts()
@@ -180,7 +180,7 @@ class TestFlextCliPromptsPrompt:
         assert result.data == "default_value"
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_prompt_empty_no_default(self, mock_input: object) -> None:
         """Test prompt with empty input and no default."""
         mock_input.return_value = ""
         prompts = FlextCliPrompts()
@@ -189,7 +189,7 @@ class TestFlextCliPromptsPrompt:
         assert "Empty input is not allowed" in result.error
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_prompt_whitespace_only(self, mock_input: object) -> None:
         """Test prompt with whitespace-only input."""
         mock_input.return_value = "   "
         prompts = FlextCliPrompts()
@@ -198,7 +198,7 @@ class TestFlextCliPromptsPrompt:
         assert "Empty input is not allowed" in result.error
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_prompt_keyboard_interrupt(self, mock_input: object) -> None:
         """Test prompt with keyboard interrupt."""
         mock_input.side_effect = KeyboardInterrupt()
         prompts = FlextCliPrompts()
@@ -207,7 +207,7 @@ class TestFlextCliPromptsPrompt:
         assert "User interrupted prompt" in result.error
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_prompt_eof_error(self, mock_input: object) -> None:
         """Test prompt with EOF error."""
         mock_input.side_effect = EOFError()
         prompts = FlextCliPrompts()
@@ -216,7 +216,7 @@ class TestFlextCliPromptsPrompt:
         assert "Input stream ended" in result.error
 
     @patch("builtins.input")
-    def test_self(self, mock_input: object) -> None:
+    def test_prompt_general_exception(self, mock_input: object) -> None:
         """Test prompt with general exception."""
         mock_input.side_effect = Exception("Test error")
         prompts = FlextCliPrompts()

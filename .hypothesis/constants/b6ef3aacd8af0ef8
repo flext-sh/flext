@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/decorators.py
-# hypothesis_version: 6.136.7
-
-[1.0, 100, 128, 1000, 'Calling function', 'F', 'FlextDecoratorUtils', 'FlextDecorators', 'Function entry', 'Function error', 'Function exit', 'INFO', 'No input to validate', 'P', 'R', 'Unknown error', '_BaseDecoratorUtils', '_DecoratedFunction', '_DecoratorsBase', '__doc__', '__module__', '__name__', '_decorators_base', '_safe_call_decorator', 'args', 'args_count', 'duration', 'duration_ms', 'error_message', 'error_type', 'exception_message', 'exception_type', 'execution_time_ms', 'field', 'float', 'func_module', 'function', 'handled_exceptions', 'input', 'kwargs_keys', 'log_level', 'model_validate', 'name', 'slow', 'str', 'str | None', 'success', 'threshold_seconds', 'timestamp', 'unknown']

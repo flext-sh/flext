@@ -101,7 +101,7 @@ SRC_MODULE := flext_api
 # API-specific commands
 dev: poetry-check ## Start development server
 	@echo "$(BLUE)🚀 Starting FastAPI development server...$(NC)"
-	@$(POETRY_RUN) uvicorn flext_api.main:app --reload --host 0.0.0.0 --port 8000
+	@$(POETRY_RUN) uvicorn flext_api.main:app --reload --host 0.0.0.0 --port $${FLEXT_API_PORT:-8000}
 """,
         "flext-web": """
 # Web project - Django application

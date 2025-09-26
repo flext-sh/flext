@@ -6,6 +6,8 @@ import pytest
 from flext_ldap.clients import FlextLdapClient
 from flext_ldap.models import FlextLdapModels
 
+from flext_ldap import FlextLdapConstants
+
 
 class TestFlextLdapClient:
     """Test FlextLdapClient implementation with actual API."""
@@ -44,12 +46,16 @@ class TestFlextLdapClient:
         mock_connection_class.return_value = mock_conn
 
         result = await client.connect(
-            "ldap://localhost:389", "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com", "password"
+            f"ldap://localhost:{FlextLdapConstants.Protocol.DEFAULT_PORT}",
+            "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com",
+            "password",
         )
 
         assert result.is_success
         assert result.value is True
-        mock_server_class.assert_called_once_with("ldap://localhost:389")
+        mock_server_class.assert_called_once_with(
+            f"ldap://localhost:{FlextLdapConstants.Protocol.DEFAULT_PORT}"
+        )
         mock_connection_class.assert_called_once_with(
             mock_server, "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com", "password", auto_bind=True
         )
@@ -70,7 +76,9 @@ class TestFlextLdapClient:
         mock_connection_class.return_value = mock_conn
 
         result = await client.connect(
-            "ldap://localhost:389", "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com", "wrongpass"
+            f"ldap://localhost:{FlextLdapConstants.Protocol.DEFAULT_PORT}",
+            "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com",
+            "wrongpass",
         )
 
         assert not result.is_success
@@ -84,7 +92,9 @@ class TestFlextLdapClient:
         mock_server_class.side_effect = Exception("Connection error")
 
         result = await client.connect(
-            "ldap://localhost:389", "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com", "password"
+            f"ldap://localhost:{FlextLdapConstants.Protocol.DEFAULT_PORT}",
+            "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com",
+            "password",
         )
 
         assert not result.is_success
@@ -131,7 +141,7 @@ class TestFlextLdapClient:
         assert "Bind failed" in result.error
 
     @pytest.mark.asyncio
-    async def test_self(self, client: FlextLdapClient) -> None:
+    async def test_bind_no_connection(self, client: FlextLdapClient) -> None:
         result = await client.bind("cn=test,dc=example,dc=com", "password")
 
         assert not result.is_success
@@ -149,7 +159,7 @@ class TestFlextLdapClient:
         mock_connection.unbind.assert_called_once()
 
     @pytest.mark.asyncio
-    async def test_self(self, client: FlextLdapClient) -> None:
+    async def test_unbind_no_connection(self, client: FlextLdapClient) -> None:
         result = await client.unbind()
 
         assert result.is_success
@@ -162,7 +172,7 @@ class TestFlextLdapClient:
 
         assert client.is_connected() is True
 
-    def test_self(self, client: FlextLdapClient) -> None:
+    def test_is_connected_false(self, client: FlextLdapClient) -> None:
         assert client.is_connected() is False
 
     def test_is_connected_false_unbound(
@@ -184,7 +194,7 @@ class TestFlextLdapClient:
         assert result.is_success
         assert result.value is True
 
-    def test_self(self, client: FlextLdapClient) -> None:
+    def test_connection_not_connected(self, client: FlextLdapClient) -> None:
         result = client.test_connection()
 
         assert not result.is_success

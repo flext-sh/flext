@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/mixins/serialization.py
-# hypothesis_version: 6.138.2
-
-['FlextSerialization', 'FlextTypes.Core.Dict', 'Iterable[object]', '_', '__dict__', 'created_at', 'dict[object, object]', 'id', 'list[object]', 'updated_at']

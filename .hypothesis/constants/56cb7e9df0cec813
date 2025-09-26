@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/root_models.py
-# hypothesis_version: 6.136.2
-
-[0.0, 100.0, 512, 65535, '@', 'EmailAddress', 'EntityId', 'Error message', 'ErrorCode', 'ErrorMessage', 'FlextEmailAddress', 'FlextEntityId', 'FlextErrorCode', 'FlextErrorMessage', 'FlextEventList', 'FlextHost', 'FlextMetadata', 'FlextPercentage', 'FlextPort', 'FlextServiceName', 'FlextTimestamp', 'FlextVersion', 'Host', 'Metadata', 'Non-empty host', 'Port', 'ServiceName', 'Timestamp', 'Valid email address', 'Valid port number', 'Version', '^[A-Z][A-Z0-9_]*$', '^[^@]+@[^@]+\\.[^@]+$', '_flext_events', 'aggregate_id', 'before', 'create_email', 'create_entity_id', 'create_host_port', 'create_service_name', 'create_version', 'data', 'entity_id', 'event_type', 'from_legacy_dict', 'root', 'timestamp', 'to_legacy_dict', 'type', 'version']

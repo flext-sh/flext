@@ -91,7 +91,7 @@ class FlextUnifiedServices(FlextService[str]):
         ) -> FlextResult[dict[str, object]]:
             """Execute complete pipeline workflow."""
             # Execute pipeline using service - FlextResult handles errors
-            result: FlextResult[object] = self._pipeline_service.execute_pipeline(pipeline_id)
+            result: FlextResult[dict[str, object]] = self._pipeline_service.execute_pipeline(pipeline_id)
 
             if result.is_success:
                 return FlextResult[dict[str, object]].ok({
@@ -170,7 +170,7 @@ class FlextUnifiedServices(FlextService[str]):
         ) -> FlextResult[dict[str, object]]:
             """Unified quality check eliminating CLI duplication."""
             try:
-                commands: list[object] = []
+                commands: list[tuple[str, list[str]]] = []
                 # Lint command
                 lint_cmd = ["ruff", "check", "src/"]
                 if fix:
@@ -294,7 +294,7 @@ class FlextUnifiedServices(FlextService[str]):
         """Execute unified services - required by FlextService abstract method."""
         try:
             # Default execution initializes all services and returns status
-            init_result: FlextResult[object] = self.initialize_all_services()
+            init_result: FlextResult[dict[str, str]] = self.initialize_all_services()
             if init_result.is_success:
                 services_info = init_result.unwrap()
                 return FlextResult[str].ok(

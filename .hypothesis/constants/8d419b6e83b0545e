@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/mixins/timestamps.py
-# hypothesis_version: 6.138.2
-
-['FlextTimestamps', '__dict__', '_created_at', '_updated_at', 'created_at', 'datetime', 'updated_at']

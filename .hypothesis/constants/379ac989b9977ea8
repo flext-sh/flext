@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/processors.py
-# hypothesis_version: 6.138.2
-
-[100, '.*', 'BaseProcessor', 'CONFIG', 'ConfigProcessor', 'DATA', 'FlextProcessors', 'GROUP', 'PERMISSION', 'Processing failed', 'ProcessingPipeline', 'Processor not found', 'ROLE', 'RegexProcessor', 'USER', 'Validation failed', 'active', 'clean_content', 'config', 'content_length', 'correlation_id', 'data', 'dict[str, object]', 'enable_regex_caching', 'entry_sorting', 'entry_type', 'entry_validation', 'entry_validator', 'environment', 'error', 'extracted_identifier', 'group', 'has_metadata', 'identifier', 'instance', 'log_level', 'metadata', 'name', 'original_content', 'permission', 'pipeline_processing', 'processing_features', 'processor', 'regex_processing', 'role', 'status', 'type', 'unknown', 'user']

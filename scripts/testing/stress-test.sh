@@ -1,11 +1,17 @@
 #!/bin/bash
 set -e
 
+# Load FLEXT constants
+source "$(dirname "$0")/../constants.env" 2>/dev/null || {
+	echo "Warning: Could not load FLEXT constants, using defaults"
+	FLEXT_TEST_SERVER_URL="http://localhost:8081"
+}
+
 echo "🔥 FLEXT-MELTANO STRESS TESTING & PERFORMANCE VALIDATION"
 echo "======================================================="
 
 # Configuration
-SERVER_URL="http://localhost:8081"
+SERVER_URL="${FLEXT_TEST_SERVER_URL}"
 CONCURRENT_CONNECTIONS=20
 REQUESTS_PER_CONNECTION=50
 TOTAL_REQUESTS=$((CONCURRENT_CONNECTIONS * REQUESTS_PER_CONNECTION))
@@ -20,11 +26,11 @@ BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
 NC='\033[0m' # No Color
 
-# Performance thresholds
-MAX_RESPONSE_TIME_MS=5000 # 5 seconds max response time
-MIN_SUCCESS_RATE=95       # 95% minimum success rate
-MAX_MEMORY_MB=500         # 500MB max memory usage
-MAX_CPU_PERCENT=80        # 80% max CPU usage
+# Performance thresholds (using FLEXT constants from environment)
+MAX_RESPONSE_TIME_MS=${FLEXT_PERFORMANCE_CRITICAL_MS:-5000} # FlextConstants.Performance.CRITICAL_DURATION_MS
+MIN_SUCCESS_RATE=${FLEXT_MIN_SUCCESS_RATE:-95}              # Business requirement minimum success rate
+MAX_MEMORY_MB=${FLEXT_MAX_MEMORY_MB:-500}                   # Test environment memory limit
+MAX_CPU_PERCENT=${FLEXT_CRITICAL_USAGE_PERCENT:-80}         # FlextConstants.Performance.CRITICAL_USAGE_PERCENT
 
 # Logging function
 log() {

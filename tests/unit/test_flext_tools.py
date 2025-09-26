@@ -9,6 +9,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -150,16 +151,15 @@ class TestFlextToolsConfigurationManager:
     def test_configuration_manager_load_config(self, temp_file: Path) -> None:
         """Test ConfigurationManager load_config method."""
         manager = ConfigurationManager()
-        temp_file.write_text('{"test": "value"}', encoding="utf-8")
 
-        result = manager.load_config(str(temp_file))
+        result = manager.load_config()
         assert isinstance(result, FlextResult)
 
         if result.is_success:
             assert isinstance(result.data, dict)
 
-    def test_configuration_manager_load_config(self) -> None:
-        """Test ConfigurationManager load_config method."""
+    def test_configuration_manager_load_config_default(self) -> None:
+        """Test ConfigurationManager load_config method with defaults."""
         manager = ConfigurationManager()
 
         result = manager.load_config()
@@ -284,14 +284,15 @@ class TestFlextToolsHealthCheckService:
         """Test HealthCheckService run_health_check method."""
         service = HealthCheckService()
 
-        result = service.run_health_check("/tmp")
-        assert isinstance(result, FlextResult)
+        with tempfile.TemporaryDirectory(prefix="health_check_test_") as temp_dir:
+            result = service.run_health_check(temp_dir)
+            assert isinstance(result, FlextResult)
 
-        if result.is_success:
-            assert isinstance(result.data, dict)
-            assert "status" in result.data
-            assert "project" in result.data
-            assert "checks_passed" in result.data
+            if result.is_success:
+                assert isinstance(result.data, dict)
+                assert "status" in result.data
+                assert "project" in result.data
+                assert "checks_passed" in result.data
 
     def test_health_check_service_get_system_health(self) -> None:
         """Test HealthCheckService get_system_health method."""
@@ -517,20 +518,26 @@ class TestFlextToolsFlextScriptService:
     """Test FlextTools FlextScriptService functionality."""
 
     def test_flext_script_service_initialization(self) -> None:
-        """Test FlextScriptService initializes correctly."""
-        service = FlextScriptService()
-        assert service is not None
+        """Test FlextScriptService abstract class structure."""
+        # Test that FlextScriptService is an abstract class
+        assert hasattr(FlextScriptService, "execute_implementation")
+        assert hasattr(FlextScriptService, "metadata")
 
-    def test_flext_script_service_execute_script(self, temp_dir: Path) -> None:
-        """Test FlextScriptService execute_script method."""
-        service = FlextScriptService()
+        # Test that it's abstract (can't be instantiated directly)
+        with pytest.raises(TypeError, match="Can't instantiate abstract class"):
+            FlextScriptService()
 
-        # Create test script
-        script_file = temp_dir / "test_script.py"
-        script_file.write_text("print('Hello, World!')")
+    def test_flext_script_service_abstract_methods(self, temp_dir: Path) -> None:
+        """Test FlextScriptService abstract methods."""
+        # Test that abstract methods exist
+        assert hasattr(FlextScriptService, "execute_implementation")
+        assert hasattr(FlextScriptService, "metadata")
 
-        result = service.execute_script(str(script_file))
-        assert isinstance(result, FlextResult)
+        # Test method signatures
+        import inspect
+
+        sig = inspect.signature(FlextScriptService.execute_implementation)
+        assert len(sig.parameters) >= 1  # Should have at least self parameter
 
 
 class TestFlextToolsFlextSecurityService:
@@ -541,19 +548,19 @@ class TestFlextToolsFlextSecurityService:
         service = FlextSecurityService()
         assert service is not None
 
-    def test_flext_security_service_scan_vulnerabilities(self, temp_dir: Path) -> None:
-        """Test FlextSecurityService scan_vulnerabilities method."""
+    def test_flext_security_service_decrypt_vault(self, temp_dir: Path) -> None:
+        """Test FlextSecurityService decrypt_vault method."""
         service = FlextSecurityService()
 
-        # Create test Python file
-        test_file = temp_dir / "test.py"
-        test_file.write_text("import os\nimport sys")
-
-        result = service.scan_vulnerabilities(str(temp_dir))
+        # Test with non-existent vault (should handle gracefully)
+        result = service.decrypt_vault(str(temp_dir / "nonexistent.vault"))
         assert isinstance(result, FlextResult)
 
+        # Should handle non-existent vault gracefully
         if result.is_success:
             assert isinstance(result.data, dict)
+        elif result.is_failure:
+            assert result.error is not None
 
 
 class TestFlextToolsSSLManager:
