@@ -9,6 +9,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import asyncio
+import time
 import pytest
 from flext_cli.constants import FlextCliConstants
 from flext_cli.output import FlextCliOutput
@@ -64,8 +66,6 @@ class TestFlextCliOutput:
         """Test output performance characteristics."""
         output = FlextCliOutput()
 
-        import time
-
         start_time = time.time()
         result = output.execute()
         execution_time = time.time() - start_time
@@ -92,8 +92,6 @@ class TestFlextCliOutput:
         assert result.is_success
 
         # Test async version
-        import asyncio
-
         async_result = asyncio.run(output.execute_async())
         assert async_result.is_success
 
@@ -113,9 +111,7 @@ class TestFlextCliOutput:
         output = FlextCliOutput()
 
         # Execute multiple output operations concurrently
-        import asyncio
-
-        async def test_concurrent():
+        async def test_concurrent() -> list[str]:
             return await asyncio.gather(output.execute_async(), output.execute_async())
 
         results = asyncio.run(test_concurrent())
@@ -154,8 +150,6 @@ class TestFlextCliOutput:
 
         # Test that sync and async versions return consistent data
         sync_result = output.execute()
-        import asyncio
-
         async_result = asyncio.run(output.execute_async())
 
         assert sync_result.is_success == async_result.is_success

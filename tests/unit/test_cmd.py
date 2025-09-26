@@ -10,6 +10,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import tempfile
+import time
 from pathlib import Path
 
 from flext_cli.cmd import FlextCliCmd
@@ -96,8 +97,6 @@ class TestFlextCliCmd:
     def test_cmd_performance(self) -> None:
         """Test CMD performance characteristics."""
         cmd = FlextCliCmd()
-
-        import time
 
         start_time = time.time()
         result = cmd.execute()
