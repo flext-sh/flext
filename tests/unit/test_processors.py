@@ -9,6 +9,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import asyncio
+import time
 import pytest
 from flext_cli.constants import FlextCliConstants
 from flext_cli.processors import FlextCliProcessors
@@ -64,8 +66,6 @@ class TestFlextCliProcessors:
         """Test processors performance characteristics."""
         processors = FlextCliProcessors()
 
-        import time
-
         start_time = time.time()
         result = processors.execute()
         execution_time = time.time() - start_time
@@ -92,8 +92,6 @@ class TestFlextCliProcessors:
         assert result.is_success
 
         # Test async version
-        import asyncio
-
         async_result = asyncio.run(processors.execute_async())
         assert async_result.is_success
 

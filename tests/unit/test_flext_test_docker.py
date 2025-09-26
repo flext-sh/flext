@@ -253,7 +253,7 @@ class TestFlextTestDockerGetContainerInfo:
 
         assert result.is_success
         container_info = result.unwrap()
-        assert container_info.image == ""
+        assert not container_info.image
 
     @patch("flext_tests.docker.docker.from_env")
     def test_get_container_info_not_found(self, mock_from_env: Mock) -> None:
@@ -381,7 +381,7 @@ class TestContainerInfoDataClass:
             image="alpine:latest",
         )
 
-        assert container_info.container_id == ""
+        assert not container_info.container_id
 
     def test_container_info_frozen(self) -> None:
         """Test ContainerInfo is frozen (immutable)."""
