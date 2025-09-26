@@ -9,6 +9,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import inspect
+import time
+
 from flext_api import FlextApiApp, FlextApiClient, FlextApiConfig
 from flext_core import FlextLogger, FlextTypes
 
@@ -174,20 +177,22 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_performance(self) -> None:
         """Test API performance characteristics."""
-        import time
-
         start_time = time.time()
 
-        # Perform multiple API operations
+        # Create a single client and perform multiple operations
+        client = FlextApiClient()
+        assert client is not None
+        
+        # Perform multiple operations with the same client
         for _ in range(10):
-            client = FlextApiClient()
-            assert client is not None
+            # Test a lightweight operation
+            assert client.base_url is not None
 
         end_time = time.time()
         elapsed = end_time - start_time
 
-        # Should complete quickly (less than 5 seconds for 10 operations)
-        assert elapsed < 5.0
+        # Should complete quickly (less than 2 seconds for 10 operations)
+        assert elapsed < 2.0
 
     # =============================================================================
     # API DOMAIN SEPARATION TESTS
@@ -201,8 +206,6 @@ class TestFlextApiConsolidated:
         assert isinstance(client, FlextApiClient)
 
         # Test that API doesn't directly import HTTP libraries
-        import inspect
-
         source = inspect.getsource(client.__class__)
 
         # Should not contain direct HTTP library imports

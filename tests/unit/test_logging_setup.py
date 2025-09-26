@@ -9,6 +9,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import asyncio
+import time
+
 import pytest
 from flext_cli.constants import FlextCliConstants
 from flext_cli.logging_setup import FlextCliLoggingSetup
@@ -64,8 +67,6 @@ class TestFlextCliLoggingSetup:
         """Test logging setup performance characteristics."""
         logging_setup = FlextCliLoggingSetup()
 
-        import time
-
         start_time = time.time()
         result = logging_setup.execute()
         execution_time = time.time() - start_time
@@ -92,8 +93,6 @@ class TestFlextCliLoggingSetup:
         assert result.is_success
 
         # Test async version
-        import asyncio
-
         async_result = asyncio.run(logging_setup.execute_async())
         assert async_result.is_success
 
@@ -113,9 +112,7 @@ class TestFlextCliLoggingSetup:
         logging_setup = FlextCliLoggingSetup()
 
         # Execute multiple logging setup operations concurrently
-        import asyncio
-
-        async def test_concurrent():
+        async def test_concurrent() -> list[str]:
             return await asyncio.gather(
                 logging_setup.execute_async(), logging_setup.execute_async()
             )
@@ -156,8 +153,6 @@ class TestFlextCliLoggingSetup:
 
         # Test that sync and async versions return consistent data
         sync_result = logging_setup.execute()
-        import asyncio
-
         async_result = asyncio.run(logging_setup.execute_async())
 
         assert sync_result.is_success == async_result.is_success

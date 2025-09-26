@@ -425,6 +425,11 @@ class TestFlextLdapClient:
             given_name="New",
             mail="newuser@example.com",
             user_password="ValidPass123!",
+            telephone_number="+1234567890",
+            description="Test user for client testing",
+            department="IT Department",
+            title="Software Engineer",
+            organization="Example Corp",
         )
 
         mock_entry = Mock()
