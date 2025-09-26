@@ -9,6 +9,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import asyncio
+import time
+
 import pytest
 from flext_cli.commands import FlextCliCommands
 from flext_cli.constants import FlextCliConstants
@@ -97,8 +100,6 @@ class TestFlextCliCommands:
         """Test commands performance characteristics."""
         commands = FlextCliCommands()
 
-        import time
-
         start_time = time.time()
         result = commands.execute()
         execution_time = time.time() - start_time
@@ -162,9 +163,7 @@ class TestFlextCliCommands:
         commands.register_command("cmd2", lambda: "result2")
 
         # Execute commands concurrently
-        import asyncio
-
-        async def test_concurrent():
+        async def test_concurrent() -> list[str]:
             return await asyncio.gather(
                 commands.execute_command("cmd1"), commands.execute_command("cmd2")
             )

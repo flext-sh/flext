@@ -9,6 +9,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import time
+
 import pytest
 
 from flext_core import (
@@ -334,8 +336,6 @@ class TestFlextCoreConsolidated:
     def test_flext_core_performance(self) -> None:
         """Test flext-core performance characteristics."""
         # Test that operations are reasonably fast
-        import time
-
         start_time = time.time()
 
         # Perform multiple operations
