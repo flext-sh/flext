@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_tests/fixtures.py
-# hypothesis_version: 6.138.2
-
-[0.001, 1.0, 50.0, 100.0, 123, 400, 408, 500, 503, 1024, '2024-01-01T00:00:00Z', 'FlextTestsFixtures', 'NetworkError', 'Operation timed out', 'Test Product', 'Test User', 'TimeoutError', 'Type of command', 'Validation failed', 'ValidationError', 'batch', 'chunks', 'code', 'command', 'created_at', 'data', 'depth', 'details', 'field', 'id', 'index', 'invalid', 'key', 'list', 'message', 'name', 'nested', 'network', 'number', 'original', 'output', 'pending', 'process', 'processed', 'reason', 'required_field', 'retry_after', 'size_mb', 'test', 'test_data', 'test_error', 'test_event', 'test_field', 'timeout', 'timeout_seconds', 'timestamp', 'transformed', 'type', 'unknown', 'valid', 'validation', 'value', 'x']

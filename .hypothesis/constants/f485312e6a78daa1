@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/handlers_base.py
-# hypothesis_version: 6.136.7
-
-['FlextAbstractHandler', 'THandler', 'TRequest', 'TResponse']

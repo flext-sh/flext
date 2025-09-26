@@ -20,7 +20,6 @@ from uuid import UUID, uuid4
 from pydantic import BaseModel, Field, field_validator, model_validator
 from pydantic.functional_validators import BeforeValidator
 
-from flext.project_types import FlextProjectTypes
 from flext.workspace_service import create_workspace_service
 from flext_core import (
     FlextModels,
@@ -36,7 +35,7 @@ def validate_project_path(v: str) -> str:
     """Validate project path using workspace service."""
     # Lazy import to avoid circular dependency
     workspace_service = create_workspace_service()
-    result: FlextResult[object] = workspace_service.validate_workspace_path(v)
+    result: FlextResult[str] = workspace_service.validate_workspace_path(v)
     if result.is_failure:
         raise ValueError(result.error)
     return str(result.value)
@@ -144,7 +143,7 @@ class FlextAdvancedDevModels:
 
         def validate_prerequisites(self: Self) -> FlextResult[None]:
             """Validate linting prerequisites."""
-            missing_tools: list[object] = []
+            missing_tools: list[str] = []
             for tool in self.tools:
                 try:
                     subprocess.run(
@@ -176,7 +175,7 @@ class FlextAdvancedDevModels:
 
         def validate_prerequisites(self: Self) -> FlextResult[None]:
             """Validate formatting prerequisites."""
-            missing_formatters: list[object] = []
+            missing_formatters: list[str] = []
             for formatter in self.formatters:
                 try:
                     if formatter == "gofmt":
@@ -228,14 +227,14 @@ class FlextAdvancedDevModels:
             path = Path(self.path)
 
             # Validate Python projects
-            if self.project_type == FlextProjectTypes.ProjectType.PYTHON:
+            if self.project_type == "PYTHON":
                 if not self.has_pyproject and not (path / "setup.py").exists():
                     msg = "Python projects must have pyproject.toml or setup.py"
                     raise ValueError(msg)
 
             # Validate Go projects
             elif (
-                self.project_type == FlextProjectTypes.ProjectType.GO
+                self.project_type == "GO"
                 and not self.has_go_mod
             ):
                 msg = "Go projects must have go.mod file"
@@ -292,6 +291,5 @@ class FlextAdvancedDevModels:
 
 __all__ = [
     "FlextAdvancedDevModels",
-    "FlextProjectTypes",
     "ProjectPath",
 ]

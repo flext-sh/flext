@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/utilities.py
-# hypothesis_version: 6.136.2
-
-[100, 1024, 3600, '*', '-', '...', 'Callable[[], T]', 'FlextBaseFactory', 'FlextConversions', 'FlextFormatters', 'FlextGenerators', 'FlextGenericFactory', 'FlextIdGenerator', 'FlextPerformance', 'FlextTextProcessor', 'FlextTimeUtils', 'FlextTypeGuards', 'FlextUtilities', 'FlextUtilityFactory', '[-\\s]+', '[^\\w\\s-]', '\\[/?[^\\]]*\\]', 'count', 'end', 'failure', 'generate_id', 'generate_uuid', 'is_not_none', 'last_duration', 'metrics', 'safe_call', 'sep', 'success', 'truncate']

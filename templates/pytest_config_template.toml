@@ -1,0 +1,105 @@
+# FLEXT Project pytest Configuration Template
+# Copy this configuration to your project's pyproject.toml [tool.pytest.ini_options] section
+#
+# Usage:
+# 1. Copy the [tool.pytest.ini_options] section below to your pyproject.toml
+# 2. Adjust MIN_COVERAGE variable in your Makefile
+# 3. Add project-specific markers as needed
+# 4. Customize test paths if your structure differs
+#
+# Version: 1.0.0
+# Based on: flext-core proven configuration (79% coverage baseline)
+# Standards: FLEXT_TESTING_STANDARDS.md
+
+[tool.pytest.ini_options]
+# Test Discovery
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+# Essential Configuration Options
+addopts = [
+    "--strict-markers",      # Enforce marker registration (MANDATORY)
+    "--strict-config",       # Strict configuration validation (MANDATORY)
+    "--tb=short",           # Concise tracebacks for better readability
+    "-ra",                  # Show all test outcomes summary
+    "--maxfail=1",          # Stop on first failure (adjust per project needs)
+    # Uncomment below for coverage reporting (adjust source path):
+    # "--cov=src",           # Coverage source directory
+    # "--cov-report=term-missing",  # Show missing lines in terminal
+    # "--cov-fail-under=75", # Minimum coverage threshold (adjust per project)
+]
+
+# Async Support (uncomment if your project uses async/await)
+# asyncio_mode = "auto"
+
+# Warning Filters (add project-specific warnings as needed)
+filterwarnings = [
+    "ignore::DeprecationWarning:pyasn1(.*|$)",
+    # Add your project-specific warning filters here:
+    # "ignore::UserWarning:your_dependency",
+]
+
+# FLEXT Standard Markers (MANDATORY - DO NOT REMOVE)
+# Add project-specific markers below the standard ones
+markers = [
+    # === FLEXT ECOSYSTEM STANDARD MARKERS (MANDATORY) ===
+    "unit: Unit tests - fast, isolated tests (default category)",
+    "integration: Integration tests - tests with real dependencies",
+    "slow: Slow tests - long-running tests excluded from default runs",
+    "oracle: Oracle database tests - requires Oracle connectivity",
+    "performance: Performance and benchmark tests",
+    "smoke: Smoke tests - basic functionality validation",
+    "e2e: End-to-end tests - complete workflow testing",
+
+    # === ADDITIONAL STANDARD MARKERS ===
+    "edge_cases: Edge case and boundary condition testing",
+    "architecture: Architectural pattern validation tests",
+    "ddd: Domain-driven design pattern tests",
+    "security: Security-focused tests",
+    "docker: Tests requiring Docker containers",
+    "memory: Memory usage and leak tests",
+
+    # === PROJECT-SPECIFIC MARKERS (ADD BELOW) ===
+    # Examples for different project types:
+
+    # For Singer projects (taps/targets):
+    # "tap: Singer tap extraction tests",
+    # "target: Singer target loading tests",
+    # "schema: Schema validation tests",
+
+    # For DBT projects:
+    # "dbt: DBT transformation tests",
+    # "sql: SQL query validation tests",
+
+    # For API projects:
+    # "api: API endpoint tests",
+    # "auth: Authentication tests",
+    # "middleware: Middleware tests",
+
+    # For CLI projects:
+    # "cli: Command-line interface tests",
+    # "interactive: Interactive mode tests",
+
+    # For data projects:
+    # "etl: ETL pipeline tests",
+    # "validation: Data validation tests",
+    # "transformation: Data transformation tests",
+
+    # For enterprise projects:
+    # "enterprise: Enterprise integration tests",
+    # "compliance: Compliance validation tests",
+    # "audit: Audit trail tests",
+]
+
+# Test timeout (uncomment if needed)
+# timeout = 300  # 5 minutes default timeout
+
+# Parallel execution (uncomment for faster test runs)
+# Add to addopts: "-n auto" and ensure pytest-xdist is in dependencies
+
+# Benchmark configuration (if using pytest-benchmark)
+# [tool.pytest.benchmark]
+# min_rounds = 5
+# max_time = 0.5

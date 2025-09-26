@@ -421,7 +421,14 @@ class SecurityAuditScript(FlextScript):
                     print_colored(f"📄 Report saved to: {output_file}", Colors.GREEN)
             else:
                 # Console summary report
-                scanner._generate_summary_report(violations)  # noqa: SLF001
+                print_colored(
+                    f"Found {len(violations)} security violations:", Colors.YELLOW
+                )
+                for violation in violations:
+                    print_colored(
+                        f"- {violation.violation_type}: {violation.description}",
+                        Colors.RED,
+                    )
 
             # Return scan results for further processing
             return FlextResult[object].ok(

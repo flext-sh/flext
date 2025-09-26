@@ -304,7 +304,7 @@ class ProjectSpecificSettings(FlextCoreSettings):
 
     # Replace manual env vars like: host = os.getenv("HOST", "localhost")
     host: str = Field(default="localhost", description="Server hostname")
-    port: int = Field(default=8080, description="Server port")
+    port: int = Field(default=FlextConstants.Platform.DEFAULT_HTTP_PORT, description="Server port")
     debug_mode: bool = Field(default=False, description="Enable debug mode")
 
     # Database configuration

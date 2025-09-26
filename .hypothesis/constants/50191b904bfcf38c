@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_tests/fixtures.py
-# hypothesis_version: 6.138.2
-
-[0.001, 1024, 'FlextTestsFixtures', 'FlextTypes.Core.Dict', 'NET_001', 'NOT_FOUND', 'Network error', 'NetworkError', 'PROC_001', 'Processing failed', 'ProcessingError', 'REPOSITORY_ERROR', 'Simulated timeout', 'Type of command', 'UNK_001', 'Unknown error', 'User ID required', 'VALIDATION_ERROR', 'VAL_001', 'Validation failed', 'ValidationError', 'batch', 'body', 'code', 'created_at', 'data', 'description', 'details', 'entity_id', 'event_type', 'from_email', 'id', 'index', 'message', 'name', 'nested', 'network', 'original', 'output', 'processed', 'processing', 'required_field', 'sent_at', 'size_mb', 'subject', 'test', 'test@example.com', 'test_event', 'timestamp', 'to', 'transformed', 'type', 'unknown', 'user_id', 'username', 'valid', 'validation', 'value', 'x']

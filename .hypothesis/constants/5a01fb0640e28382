@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/typings.py
-# hypothesis_version: 6.138.15
-
-['CRITICAL', 'DEBUG', 'E', 'ERROR', 'F', 'FlextTypes', 'INFO', 'K', 'Optional', 'P', 'R', 'T', 'T1', 'T2', 'T3', 'TAggregate', 'TCommand', 'TDomain', 'TDomainResult', 'TEntity', 'TEntry', 'TInput_contra', 'TItem', 'TMessage', 'TOutput_co', 'TQuery', 'TRequest', 'TResponse', 'TResult', 'TUtil', 'TValueObject', 'T_Service', 'T_co', 'T_contra', 'U', 'V', 'WARNING', 'balanced', 'development', 'extreme', 'factory', 'high', 'instance', 'local', 'low', 'production', 'staging', 'test']

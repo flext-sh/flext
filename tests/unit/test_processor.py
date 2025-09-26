@@ -6,6 +6,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import threading
+import time
 from pathlib import Path
 
 import pytest
@@ -384,7 +386,7 @@ cn: User Two
         processor = FlextLdifProcessor()
         invalid_config = {"invalid": "config"}
 
-        result = processor.configure(invalid_config)  # type: ignore[arg-type]
+        result = processor.configure(invalid_config)
 
         # Should handle invalid config gracefully
         assert result.is_success or result.is_failure
@@ -446,8 +448,6 @@ cn: User Two
         processor = FlextLdifProcessor()
 
         # Test basic performance
-        import time
-
         start_time = time.time()
 
         result = processor.get_status()
@@ -489,8 +489,6 @@ cn: User Two
 
     def test_processor_concurrent_operations(self) -> None:
         """Test processor concurrent operations."""
-        import threading
-
         processor = FlextLdifProcessor()
         results = []
 

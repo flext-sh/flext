@@ -77,7 +77,7 @@ class FlextWorkspaceCli(FlextService[str]):
             print_colored(f"Running: {' '.join(command)} in {cwd}")
 
             try:
-                result: FlextResult[object] = subprocess.run(command, check=False, text=True)
+                result: subprocess.CompletedProcess[str] = subprocess.run(command, check=False, text=True)
 
                 if check and result.returncode != 0:
                     error = f"Command failed: {result.stderr}"
@@ -115,7 +115,7 @@ class FlextWorkspaceCli(FlextService[str]):
                     )
 
                 if not module_path.exists():
-                    status = {"exists": False, "name": module, "path": str(module_path)}
+                    status: dict[str, object] = {"exists": False, "name": module, "path": str(module_path)}
                     return FlextResult[dict[str, object]].ok(status)
 
                 # Check for key files
@@ -124,7 +124,7 @@ class FlextWorkspaceCli(FlextService[str]):
                 has_src = (module_path / "src").exists()
                 has_tests = (module_path / "tests").exists()
 
-                status = {
+                status: dict[str, object] = {
                     "exists": True,
                     "name": module,
                     "path": str(module_path),
@@ -144,9 +144,9 @@ class FlextWorkspaceCli(FlextService[str]):
         def list_modules(self: Self) -> FlextResult[list[dict[str, object]]]:
             """List all workspace modules with status information."""
             try:
-                modules: list[object] = []
+                modules: list[dict[str, object]] = []
                 for module in self._cli_service._modules:
-                    result: FlextResult[object] = self.get_module_status(module)
+                    result = self.get_module_status(module)
                     if result.is_failure:
                         return FlextResult[list[dict[str, object]]].fail(
                             result.error or "Unknown error"
@@ -182,17 +182,18 @@ class FlextWorkspaceCli(FlextService[str]):
             for module_info in self._modules:
                 # module_info is a Project object
                 name = module_info.name
-                # Project exists if it has a name and path
-                if module_info.name and module_info.path:
+                # Project exists if it has a name and repository_path
+                if module_info.name and module_info.repository_path:
                     print_colored(f"✅ {name}: Found")
 
-                    # Show available features
-                    features: list[object] = []
-                    if module_info.has_pyproject:
-                        features.append("PyProject")
-                    # Only show features that exist in the Project model
-                    if module_info.has_tests:
+                    # Show available features based on actual Project model attributes
+                    features: list[str] = []
+                    if module_info.is_test_project:
                         features.append("Tests")
+                    if module_info.test_framework:
+                        features.append(f"Framework: {module_info.test_framework}")
+                    if module_info.project_type != "application":
+                        features.append(f"Type: {module_info.project_type}")
 
                     if features:
                         print_colored(
@@ -201,12 +202,12 @@ class FlextWorkspaceCli(FlextService[str]):
                 else:
                     print_colored(f"❌ {name}: Missing")
 
-            status_data = {
+            status_data: dict[str, object] = {
                 "total_modules": len(self._modules),
-                "modules": self._modules,
+                "modules": list(self._modules),  # Convert to list for type compatibility
             }
 
-            available_count = len([m for m in self._modules if m.name and m.path])
+            available_count = len([m for m in self._modules if m.name and m.repository_path])
             print_colored(
                 f"\n📊 Summary: {available_count}/{status_data['total_modules']} modules available"
             )
@@ -233,29 +234,40 @@ class FlextWorkspaceCli(FlextService[str]):
             _ = coverage
             if module:
                 print_colored(f"🧪 Running tests for {module}")
-                result: FlextResult[object] = self._workspace_service.run_make_target("test")
+                result = self._workspace_service.run_make_target("test")
                 if result.is_failure:
                     return FlextResult[dict[str, object]].fail(
                         f"Tests failed for {module}: {result.error}"
                     )
 
-                print_colored(f"✅ {module} tests passed")
-                return FlextResult[dict[str, object]].ok({"status": "started"})
+                # Check if the process completed successfully
+                completed_process = result.unwrap()
+                if completed_process.returncode == 0:
+                    print_colored(f"✅ {module} tests passed")
+                    return FlextResult[dict[str, object]].ok({"status": "passed"})
+                else:
+                    return FlextResult[dict[str, object]].fail(f"Tests failed for {module}")
+
             print_colored("🧪 Running all workspace tests")
 
             results: dict[str, object] = {}
             for module_name in self._cli_service._modules:
                 print_colored(f"Testing {module_name}...")
-                result: FlextResult[object] = self._workspace_service.run_make_target("test")
+                result = self._workspace_service.run_make_target("test")
 
-                if result.is_success and result.unwrap().returncode == 0:
-                    print_colored(f"✅ {module_name} tests passed")
-                    results[module_name] = "passed"
+                if result.is_success:
+                    completed_process = result.unwrap()
+                    if completed_process.returncode == 0:
+                        print_colored(f"✅ {module_name} tests passed")
+                        results[module_name] = "passed"
+                    else:
+                        print_colored(f"❌ {module_name} tests failed")
+                        results[module_name] = "failed"
                 else:
                     print_colored(f"❌ {module_name} tests failed")
                     results[module_name] = "failed"
 
-            return FlextResult[dict[str, object]].ok({"status": "started"})
+            return FlextResult[dict[str, object]].ok({"status": "completed", "results": results})
 
     class _QualityCommands:
         """Nested quality command handlers."""
@@ -277,16 +289,22 @@ class FlextWorkspaceCli(FlextService[str]):
             _ = coverage
             if module:
                 print_colored(f"🔍 Running quality checks for {module}")
-                result: FlextResult[object] = self._workspace_service.run_make_target("check")
+                result = self._workspace_service.run_make_target("check")
                 if result.is_failure:
                     return FlextResult[dict[str, object]].fail(
                         f"Quality checks failed for {module}"
                     )
 
-                print_colored(f"✅ {module} quality checks passed")
-                return FlextResult[dict[str, object]].ok({"status": "passed"})
+                # Check if the process completed successfully
+                completed_process = result.unwrap()
+                if completed_process.returncode == 0:
+                    print_colored(f"✅ {module} quality checks passed")
+                    return FlextResult[dict[str, object]].ok({"status": "passed"})
+                else:
+                    return FlextResult[dict[str, object]].fail(f"Quality checks failed for {module}")
+
             print_colored("🔍 Running workspace quality checks")
-            result: FlextResult[object] = self._workspace_service.run_make_target("check-all")
+            result = self._workspace_service.run_make_target("check-all")
             if result.is_failure:
                 return FlextResult[dict[str, object]].fail(
                     "Workspace quality checks failed"
@@ -315,7 +333,7 @@ class FlextWorkspaceCli(FlextService[str]):
             _ = coverage
             if module:
                 print_colored(f"🔨 Building {module}")
-                result: FlextResult[object] = self._workspace_service.run_make_target("build")
+                result = self._workspace_service.run_make_target("build")
                 if result.is_failure:
                     return FlextResult[dict[str, object]].fail(
                         f"Build failed for {module}"
@@ -324,7 +342,7 @@ class FlextWorkspaceCli(FlextService[str]):
                 print_colored(f"✅ {module} build completed")
                 return FlextResult[dict[str, object]].ok({"status": "completed"})
             print_colored("🔨 Building entire workspace")
-            result: FlextResult[object] = self._workspace_service.run_make_target("build-all")
+            result = self._workspace_service.run_make_target("build-all")
             if result.is_failure:
                 return FlextResult[dict[str, object]].fail("Build failed")
 
@@ -350,7 +368,7 @@ class FlextWorkspaceCli(FlextService[str]):
 
             cmd = ["docker-compose"]
 
-            result: FlextResult[object] = self._workspace_service.run_command(cmd)
+            result = self._workspace_service.run_command(cmd)
             if result.is_failure:
                 return FlextResult[dict[str, object]].fail("Failed to start containers")
 
@@ -366,12 +384,12 @@ class FlextWorkspaceCli(FlextService[str]):
             """Stop and remove Docker containers."""
             print_colored("🐳 Stopping Docker containers")
 
-            result: FlextResult[object] = self._workspace_service.run_command(["docker-compose"])
+            result = self._workspace_service.run_command(["docker-compose"])
             if result.is_failure:
                 return FlextResult[dict[str, object]].fail("Failed to stop containers")
 
             print_colored("✅ Containers stopped successfully")
-            return FlextResult[dict[str, object]].ok({"status": "started"})
+            return FlextResult[dict[str, object]].ok({"status": "stopped"})
 
         def view_logs(
             self,
@@ -386,7 +404,7 @@ class FlextWorkspaceCli(FlextService[str]):
             if service:
                 cmd.append(service)
 
-            result: FlextResult[object] = self._workspace_service.run_command(cmd)
+            result = self._workspace_service.run_command(cmd)
             if result.is_failure:
                 return FlextResult[dict[str, object]].fail("Failed to view logs")
 
@@ -425,9 +443,9 @@ class FlextWorkspaceCli(FlextService[str]):
 
                 try:
                     if callable(action):
-                        result: FlextResult[object] = action()
+                        result = action()
                     else:
-                        result: FlextResult[object] = self._workspace_service.run_make_target(str(action))
+                        result = self._workspace_service.run_make_target(str(action))
 
                     # Result is already a FlextResult from run_make_target
 
@@ -459,7 +477,7 @@ class FlextWorkspaceCli(FlextService[str]):
 
             print_colored("🧹 Cleaning workspace")
 
-            result: FlextResult[object] = self._workspace_service.run_make_target("clean-workspace")
+            result = self._workspace_service.run_make_target("clean-workspace")
             if result.is_failure:
                 return FlextResult[dict[str, str]].fail("Workspace clean failed")
 
@@ -474,7 +492,7 @@ class FlextWorkspaceCli(FlextService[str]):
 
             # Start required containers
             print_colored("Starting test containers...")
-            container_result: FlextResult[object] = self._workspace_service.run_command(["docker-compose"])
+            container_result = self._workspace_service.run_command(["docker-compose"])
 
             if container_result.is_failure:
                 return FlextResult[dict[str, str]].fail(
@@ -501,7 +519,7 @@ class FlextWorkspaceCli(FlextService[str]):
             finally:
                 # Clean up containers
                 print_colored("Cleaning up test containers...")
-                cleanup_result: FlextResult[object] = self._workspace_service.run_command(["docker-compose"])
+                cleanup_result = self._workspace_service.run_command(["docker-compose"])
                 if cleanup_result.is_failure:
                     self._cli_service._logger.warning(
                         "Failed to clean up test containers"
@@ -559,7 +577,7 @@ def main() -> None:
 
     # Demo: Display workspace status
     status_handler = workspace_cli.create_status_handler()
-    status_result: FlextResult[object] = status_handler.display_status()
+    status_result = status_handler.display_status()
 
     if status_result.is_success:
         print_colored("✅ Workspace status displayed successfully")
@@ -596,10 +614,11 @@ def run_tests(
     )
 
     if result.is_success:
-        test_result: FlextResult[object] = result.unwrap()
-        if not test_result["success"]:
+        test_result_data = result.unwrap()
+        if isinstance(test_result_data, dict) and not test_result_data.get("success", True):
+            returncode = test_result_data.get("returncode", 1)
             print_colored(
-                f"❌ Tests failed with return code {test_result['returncode']}"
+                f"❌ Tests failed with return code {returncode}"
             )
             sys.exit(1)
         else:
@@ -614,11 +633,11 @@ def check() -> None:
     services = create_services()
     test_service = services.create_test_services()
 
-    result: FlextResult[object] = test_service.execute_quality_check(fix=False)
+    result = test_service.execute_quality_check(fix=False)
 
     if result.is_success:
-        check_result: FlextResult[object] = result.unwrap()
-        if check_result["overall_success"]:
+        check_result_data = result.unwrap()
+        if isinstance(check_result_data, dict) and check_result_data.get("overall_success", False):
             print_colored("✅ Quality checks passed")
         else:
             print_colored("❌ Quality checks failed")
@@ -633,15 +652,16 @@ def build() -> None:
     services = create_services()
     test_service = services.create_test_services()
 
-    result: FlextResult[object] = test_service.execute_build_check()
+    result = test_service.execute_build_check()
 
     if result.is_success:
-        build_result: FlextResult[object] = result.unwrap()
-        if build_result["success"]:
+        build_result_data = result.unwrap()
+        if isinstance(build_result_data, dict) and build_result_data.get("success", False):
             print_colored("✅ Build completed successfully")
         else:
+            returncode = build_result_data.get("returncode", 1) if isinstance(build_result_data, dict) else 1
             print_colored(
-                f"❌ Build failed with return code {build_result['returncode']}"
+                f"❌ Build failed with return code {returncode}"
             )
             sys.exit(1)
     else:
@@ -687,7 +707,7 @@ def integration_test(env: str = "development") -> None:
     """Legacy integration test function - use FlextWorkspaceCli._SetupCommands.run_integration_test instead."""
     workspace_cli = create_workspace_cli()
     setup_handler = workspace_cli.create_setup_handler()
-    result: FlextResult[object] = setup_handler.run_integration_test(env)
+    result = setup_handler.run_integration_test(env)
     if result.is_failure:
         print_colored(f"❌ Integration tests failed: {result.error}")
         sys.exit(1)
@@ -697,7 +717,7 @@ def setup() -> None:
     """Legacy setup function - use FlextWorkspaceCli._SetupCommands.setup_workspace instead."""
     workspace_cli = create_workspace_cli()
     setup_handler = workspace_cli.create_setup_handler()
-    result: FlextResult[object] = setup_handler.setup_workspace()
+    result = setup_handler.setup_workspace()
     if result.is_failure:
         print_colored(f"❌ Setup failed: {result.error}")
         sys.exit(1)
@@ -713,7 +733,7 @@ def clean() -> None:
             "This will remove all build artifacts and caches. Continue? [y/N]: "
         )
         if response.lower() == "y":
-            result: FlextResult[object] = setup_handler.clean_workspace(confirmed=True)
+            result = setup_handler.clean_workspace(confirmed=True)
             if result.is_failure:
                 print_colored(f"❌ Cleanup failed: {result.error}")
                 sys.exit(1)

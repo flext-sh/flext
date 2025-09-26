@@ -6,6 +6,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import time
+
 import pytest
 from flext_ldif.models import FlextLdifModels
 
@@ -381,14 +383,12 @@ class TestFlextLdifModels:
 
         # Test with None values
         attributes = FlextLdifModels.LdifAttributes()
-        result = attributes.add_attribute("test", None)  # type: ignore[arg-type]
+        result = attributes.add_attribute("test", None)
         # Should handle None values gracefully
         assert isinstance(result, FlextResult)
 
     def test_ldif_models_performance(self) -> None:
         """Test LdifModels performance characteristics."""
-        import time
-
         # Test entry creation performance
         start_time = time.time()
 
@@ -432,8 +432,6 @@ class TestFlextLdifModels:
             },
         )
 
-        import time
-
         start_time = time.time()
 
         # Test multiple serializations
@@ -452,8 +450,6 @@ class TestFlextLdifModels:
             dn="cn=test,dc=example,dc=com",
             attributes={"objectClass": ["person"], "cn": ["Test User"]},
         )
-
-        import time
 
         start_time = time.time()
 

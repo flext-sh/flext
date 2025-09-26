@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/context.py
-# hypothesis_version: 6.138.15
-
-['FlextContext', 'FlextContext(empty)', 'X-Correlation-Id', 'X-Service-Name', 'X-User-Id', 'correlation_id', 'duration_seconds', 'end_time', 'environment', 'operation_metadata', 'operation_name', 'operation_start_time', 'request_id', 'request_timestamp', 'service_name', 'service_version', 'start_time', 'user_id']

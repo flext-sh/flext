@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/context_new/core.py
-# hypothesis_version: 6.138.2
-
-['correlation_id', 'service_name', 'user_id']

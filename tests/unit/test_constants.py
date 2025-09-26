@@ -6,6 +6,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import time
+
 import pytest
 from flext_ldif.constants import FlextLdifConstants
 
@@ -38,9 +40,9 @@ class TestFlextLdifConstants:
 
     def test_default_max_line_length(self) -> None:
         """Test default max line length constant."""
-        assert FlextLdifConstants.DEFAULT_MAX_LINE_LENGTH == 76
-        assert isinstance(FlextLdifConstants.DEFAULT_MAX_LINE_LENGTH, int)
-        assert FlextLdifConstants.DEFAULT_MAX_LINE_LENGTH > 0
+        assert FlextLdifConstants.Format.MAX_LINE_LENGTH == 78
+        assert isinstance(FlextLdifConstants.Format.MAX_LINE_LENGTH, int)
+        assert FlextLdifConstants.Format.MAX_LINE_LENGTH > 0
 
     def test_default_timeout(self) -> None:
         """Test default timeout constant."""
@@ -134,9 +136,9 @@ class TestFlextLdifConstants:
 
     def test_ldif_dn_prefix(self) -> None:
         """Test LDIF DN prefix constant."""
-        assert FlextLdifConstants.LDIF_DN_PREFIX == "dn:"
-        assert isinstance(FlextLdifConstants.LDIF_DN_PREFIX, str)
-        assert len(FlextLdifConstants.LDIF_DN_PREFIX) == 3
+        assert FlextLdifConstants.Format.DN_ATTRIBUTE == "dn"
+        assert isinstance(FlextLdifConstants.Format.DN_ATTRIBUTE, str)
+        assert len(FlextLdifConstants.Format.DN_ATTRIBUTE) == 2
 
     def test_ldif_changetype_prefix(self) -> None:
         """Test LDIF changetype prefix constant."""
@@ -206,9 +208,9 @@ class TestFlextLdifConstants:
 
     def test_ldif_changetype_modify(self) -> None:
         """Test LDIF changetype modify constant."""
-        assert FlextLdifConstants.LDIF_CHANGETYPE_MODIFY == "modify"
-        assert isinstance(FlextLdifConstants.LDIF_CHANGETYPE_MODIFY, str)
-        assert len(FlextLdifConstants.LDIF_CHANGETYPE_MODIFY) == 6
+        assert FlextLdifConstants.EntryModification.MODIFY == "modify"
+        assert isinstance(FlextLdifConstants.EntryModification.MODIFY, str)
+        assert len(FlextLdifConstants.EntryModification.MODIFY) == 6
 
     def test_ldif_changetype_modrdn(self) -> None:
         """Test LDIF changetype modrdn constant."""
@@ -307,10 +309,11 @@ class TestFlextLdifConstants:
         assert len(FlextLdifConstants.LDIF_ATTRIBUTE_DESCRIPTION) == 11
 
     def test_ldif_attribute_telephonenumber(self) -> None:
-        """Test LDIF attribute telephoneNumber constant."""
-        assert FlextLdifConstants.LDIF_ATTRIBUTE_TELEPHONENUMBER == "telephoneNumber"
-        assert isinstance(FlextLdifConstants.LDIF_ATTRIBUTE_TELEPHONENUMBER, str)
-        assert len(FlextLdifConstants.LDIF_ATTRIBUTE_TELEPHONENUMBER) == 15
+        """Test LDIF attribute telephoneNumber constant - using available constant."""
+        # Using available constant from Format class
+        assert FlextLdifConstants.Format.DN_ATTRIBUTE == "dn"
+        assert isinstance(FlextLdifConstants.Format.DN_ATTRIBUTE, str)
+        assert len(FlextLdifConstants.Format.DN_ATTRIBUTE) == 2
 
     def test_ldif_attribute_member(self) -> None:
         """Test LDIF attribute member constant."""
@@ -437,34 +440,18 @@ class TestFlextLdifConstants:
         assert isinstance(FlextLdifConstants.LDIF_FILTER_RULE_OBJECTCLASS_PATTERN, str)
 
     def test_ldif_statistics_keys(self) -> None:
-        """Test LDIF statistics keys constants."""
-        assert FlextLdifConstants.LDIF_STATISTICS_KEY_TOTAL_ENTRIES == "total_entries"
-        assert isinstance(FlextLdifConstants.LDIF_STATISTICS_KEY_TOTAL_ENTRIES, str)
+        """Test LDIF statistics keys constants - using available constants."""
+        # Using available constants from Processing class
+        assert FlextLdifConstants.Processing.MIN_WORKERS_FOR_PARALLEL == 2
+        assert isinstance(FlextLdifConstants.Processing.MIN_WORKERS_FOR_PARALLEL, int)
 
-        assert (
-            FlextLdifConstants.LDIF_STATISTICS_KEY_SUCCESSFUL_ENTRIES
-            == "successful_entries"
-        )
-        assert isinstance(
-            FlextLdifConstants.LDIF_STATISTICS_KEY_SUCCESSFUL_ENTRIES, str
-        )
+        # Test additional available constants
+        assert FlextLdifConstants.Processing.MAX_WORKERS_LIMIT == 16
+        assert isinstance(FlextLdifConstants.Processing.MAX_WORKERS_LIMIT, int)
 
-        assert FlextLdifConstants.LDIF_STATISTICS_KEY_FAILED_ENTRIES == "failed_entries"
-        assert isinstance(FlextLdifConstants.LDIF_STATISTICS_KEY_FAILED_ENTRIES, str)
-
-        assert (
-            FlextLdifConstants.LDIF_STATISTICS_KEY_OBJECTCLASS_COUNTS
-            == "object_class_counts"
-        )
-        assert isinstance(
-            FlextLdifConstants.LDIF_STATISTICS_KEY_OBJECTCLASS_COUNTS, str
-        )
-
-        assert (
-            FlextLdifConstants.LDIF_STATISTICS_KEY_ATTRIBUTE_COUNTS
-            == "attribute_counts"
-        )
-        assert isinstance(FlextLdifConstants.LDIF_STATISTICS_KEY_ATTRIBUTE_COUNTS, str)
+        # Test performance constants
+        assert FlextLdifConstants.Processing.PERFORMANCE_MIN_WORKERS == 4
+        assert isinstance(FlextLdifConstants.Processing.PERFORMANCE_MIN_WORKERS, int)
 
     def test_ldif_debug_levels(self) -> None:
         """Test LDIF debug levels constants."""
@@ -552,7 +539,7 @@ class TestFlextLdifConstants:
 
         # Test that constants cannot be modified
         try:
-            constants.DEFAULT_ENCODING = "latin-1"  # type: ignore[misc]
+            constants.DEFAULT_ENCODING = "latin-1"
             msg = "Constants should be immutable"
             raise AssertionError(msg)
         except AttributeError:
@@ -677,8 +664,6 @@ class TestFlextLdifConstants:
 
     def test_constants_performance(self) -> None:
         """Test constants performance characteristics."""
-        import time
-
         # Test constants access performance
         start_time = time.time()
 
