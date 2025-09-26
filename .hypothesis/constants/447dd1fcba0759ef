@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/aggregate_root.py
-# hypothesis_version: 6.136.7
-
-['FlextAggregateRoot', 'TAnyDict', 'aggregate_id', 'created_at', 'data', 'datetime', 'domain_events', 'forbid', 'id', 'initialization_error', 'provided_kwargs', 'type', 'unknown', 'version', 'year']

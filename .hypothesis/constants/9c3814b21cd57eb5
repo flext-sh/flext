@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/cqrs.py
-# hypothesis_version: 6.139.2
-
-[1000, 'FlextCqrs', 'FlextResult[TResult]', 'FlextResult[object]', '__name__', 'command', 'command_type', 'handler_instance', 'implementation_path', 'metadata', 'query']

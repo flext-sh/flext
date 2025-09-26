@@ -47,7 +47,7 @@ make test-all                # All test suites (90% minimum coverage)
 make lint
 ```
 
-**Type Safety**: Python 3.13+ with strict mypy/pyright compliance. All code must have explicit type annotations.
+**Type Safety**: Python 3.13+ with strict Pyrefly compliance. All code must have explicit type annotations.
 
 ### Workspace Commands
 

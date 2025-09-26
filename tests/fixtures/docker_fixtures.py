@@ -152,7 +152,7 @@ def oracle_container(flext_docker: FlextTestDocker) -> Generator[str]:
 
 # Legacy compatibility fixtures - deprecated but maintained for backward compatibility
 @pytest.fixture(scope="session")
-def docker_client(flext_docker: FlextTestDocker):
+def docker_client(flext_docker: FlextTestDocker) -> object:
     """Deprecated: Direct Docker client access. Use flext_docker fixture instead.
 
     This fixture is maintained for backward compatibility but is deprecated.

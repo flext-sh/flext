@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/config.py
-# hypothesis_version: 6.136.7
-
-[8000, 'Env load failed', 'FlextConfig', 'FlextConfigDefaults', 'FlextConfigManager', 'FlextConfigOps', 'FlextSettings', 'INFO', 'Validation failed', 'debug', 'development', 'environment', 'flext_core.config', 'log_level', 'merge_configs', 'port', 'timeout']

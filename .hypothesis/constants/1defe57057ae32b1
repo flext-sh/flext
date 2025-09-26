@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/result.py
-# hypothesis_version: 6.136.2
-
-['All functions failed', 'BIND_ERROR', 'CHAIN_ERROR', 'CONTEXT_ERROR', 'Combine failed', 'EXCEPTION_ERROR', 'EXPECT_ERROR', 'First result failed', 'FlextResult', 'MAP_ERROR', 'Map operation failed', 'OPERATION_ERROR', 'Result failed', 'Second result failed', 'U', 'UNWRAP_ERROR', 'Unknown error', 'Unwrap failed', '__dict__', '_data', '_error', '_unwrap_origin', 'context_manager', 'error', 'exception', 'exception_type', 'expect', 'safe_call']

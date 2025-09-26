@@ -475,7 +475,7 @@ cn: Test User
         parser = FlextLdifParser()
         invalid_config = {"invalid": "config"}
 
-        result = parser.configure(invalid_config)  # type: ignore[arg-type]
+        result = parser.configure(invalid_config)
 
         # Should handle invalid config gracefully
         assert result.is_success or result.is_failure

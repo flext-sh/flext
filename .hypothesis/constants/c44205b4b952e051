@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/validation.py
-# hypothesis_version: 6.136.7
-
-['.', '@', 'FlextBaseValidator', 'FlextDomainValidator', 'FlextPredicates', 'FlextValidation', 'FlextValidators', 'Invalid email format', 'T', 'Value cannot be None', 'field', 'flext_validate_email', 'http://', 'https://', 'value']

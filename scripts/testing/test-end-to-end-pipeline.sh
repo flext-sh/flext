@@ -1,11 +1,17 @@
 #!/bin/bash
 set -e
 
+# Load FLEXT constants
+source "$(dirname "$0")/../constants.env" 2>/dev/null || {
+	echo "Warning: Could not load FLEXT constants, using defaults"
+	FLEXT_TEST_SERVER_URL="http://localhost:8081"
+}
+
 echo "🚀 FLEXT-MELTANO END-TO-END PIPELINE TESTING"
 echo "============================================="
 
 # Configuration
-SERVER_URL="http://localhost:8081"
+SERVER_URL="${FLEXT_TEST_SERVER_URL}"
 TEST_PROJECT="e2e-test-project"
 TEST_DATA_DIR="./test-data"
 LOG_FILE="./e2e-test.log"
