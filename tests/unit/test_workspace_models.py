@@ -6,7 +6,6 @@ and validate proper functionality of business rules and model validation.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 """
 
-from flext import ProjectType, WorkspaceStatus
 from flext_core import FlextModels
 
 
@@ -54,29 +53,29 @@ class TestProject:
             name="valid-project",
             organization_id="test-org",
             path="/valid/path",
-            project_type=ProjectType.PYTHON,
+            project_type="python",
         )
 
         # Project creation itself validates business rules via Pydantic
         assert project.name == "valid-project"
-        assert project.project_type == ProjectType.PYTHON
+        assert project.project_type == "python"
 
     def test_project_different_project_types(self) -> None:
         """Test project creation with different project types."""
         project_types = [
-            ProjectType.PYTHON,
-            ProjectType.GO,
-            ProjectType.JAVASCRIPT,
-            ProjectType.RUST,
-            ProjectType.DOCUMENTATION,
-            ProjectType.MIXED,
+            "python",
+            "go",
+            "javascript",
+            "rust",
+            "documentation",
+            "mixed",
         ]
 
         for project_type in project_types:
             project = FlextModels.Project(
-                name=f"project-{project_type.value}",
+                name=f"project-{project_type}",
                 organization_id="test-org",
-                path=f"/path/to/{project_type.value}",
+                path=f"/path/to/{project_type}",
                 project_type=project_type,
             )
 
@@ -314,7 +313,7 @@ class TestWorkspaceModelsIntegration:
                 name="flext-core",
                 organization_id="flext-org",
                 path="/flext/workspace/flext-core",
-                project_type=ProjectType.PYTHON,
+                project_type="python",
                 has_tests=True,
                 has_pyproject=True,
                 test_count=45,
@@ -323,7 +322,7 @@ class TestWorkspaceModelsIntegration:
                 name="flext-cli",
                 organization_id="flext-org",
                 path="/flext/workspace/flext-cli",
-                project_type=ProjectType.PYTHON,
+                project_type="python",
                 has_tests=True,
                 has_pyproject=True,
                 test_count=20,
@@ -332,7 +331,7 @@ class TestWorkspaceModelsIntegration:
                 name="flext-tools",
                 organization_id="flext-org",
                 path="/flext/workspace/flext-tools",
-                project_type=ProjectType.GO,
+                project_type="go",
                 has_tests=True,
                 has_go_mod=True,
                 test_count=15,
@@ -354,7 +353,7 @@ class TestWorkspaceModelsIntegration:
             total_size_mb=sum([50.0, 30.0, 25.0]),  # Simulated sizes
             total_files=100,  # Required when projects is not empty
             projects=projects,  # Use Project objects, not names
-            status=WorkspaceStatus.READY,
+            status="ready",
         )
 
         # Validate workspace info - successful creation validates

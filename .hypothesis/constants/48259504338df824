@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/container.py
-# hypothesis_version: 6.136.2
-
-[100, 'Callable[[], object]', 'Factory for', 'Factory registered', 'FlextContainer', 'FlextContainerUtils', 'FlextServiceKey', 'Registration failed', 'Service not found', 'Service registered', 'T', 'TService', 'UTC', '__module__', '__name__', 'asc', 'class', 'factory', 'failed:', 'get_container', 'get_flext_container', 'get_service', 'get_typed', 'instance', 'kind', 'list_services', 'module', 'name', 'register_factory', 'register_service', 'register_typed', 'type', 'unknown', 'unregister_service']

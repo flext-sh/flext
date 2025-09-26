@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_tests/fixtures.py
-# hypothesis_version: 6.138.2
-
-[0.001, 50.0, 100.0, 123, 1024, 'FlextTestsFixtures', 'Test Product', 'Test User', 'Type of command', 'batch', 'command', 'created_at', 'data', 'id', 'key', 'list', 'name', 'nested', 'number', 'original', 'output', 'pending', 'process', 'processed', 'required_field', 'size_mb', 'test', 'test_data', 'test_error', 'timestamp', 'transformed', 'valid', 'validation', 'value', 'x']

@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_tests/domains.py
-# hypothesis_version: 6.138.15
-
-[10.0, 100.0, 150, 999, 8000, 9000, '/health', '0.01', '1.0', '123@numbers.com', '2024-01-01T00:00:00Z', '50.00', '@missing-local.com', 'FlextTestsDomains', 'INFO', 'TC', 'Test City', 'active', 'address', 'age', 'api_timeout', 'cache_enabled', 'city', 'created_at', 'customer_id', 'data', 'database_url', 'debug', 'dependencies', 'email', 'health_check_path', 'id', 'items', 'log_level', 'max_connections', 'message', 'message_id', 'metadata', 'missing-at-sign.com', 'name', 'not-an-email', 'order_id', 'pending', 'phone', 'port', 'price', 'processed', 'product_id', 'quantity', 'request_id', 'source', 'state', 'status', 'street', 'success', 'test', 'timestamp', 'total', 'type', 'user+tag@example.org', 'user@.com', 'user@domain.', 'user@example.com', 'user_created', 'user_id', 'version', 'zip']

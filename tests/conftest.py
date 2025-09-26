@@ -30,6 +30,7 @@ class FileManager:
     """Simple file manager for tests."""
 
     def __init__(self, temp_dir: Path) -> None:
+        """Initialize FileManager with temporary directory."""
         self.temp_dir = temp_dir
 
     def create_file(self, filename: str, content: str) -> Path:
@@ -243,9 +244,7 @@ def pytest_configure(config: pytest.Config) -> None:
     config.addinivalue_line("markers", "auth: marks tests as authentication tests")
 
 
-def pytest_collection_modifyitems(
-    config: pytest.Config, items: list[pytest.Item]
-) -> None:
+def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
     """Modify test collection to add markers based on test names."""
     for item in items:
         # Add unit marker to tests in unit directories

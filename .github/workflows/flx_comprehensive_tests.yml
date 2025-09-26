@@ -434,7 +434,7 @@ jobs:
           poetry run ruff check . --output-format=json --output-file=ruff-report.json || true
 
 
-          poetry run mypy flext/ --json-report mypy-report || true
+          poetry run pyrefly flext/ --json-report pyrefly-report || true
 
           # Black formatting check
           poetry run black --check --diff flext/ || true
@@ -446,7 +446,7 @@ jobs:
           name: quality-check-results
           path: |
             ruff-report.json
-            mypy-report/
+            pyrefly-report/
 
   # ============================================================================
   # DEPLOYMENT TESTS

@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/mixins/validation.py
-# hypothesis_version: 6.138.2
-
-['[\\s\\-\\(\\)]', '^\\+?[1-9]\\d{1,14}$', '_is_valid', '_validation_errors', 'bool', 'list[str]']

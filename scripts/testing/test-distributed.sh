@@ -5,6 +5,16 @@
 
 set -e
 
+# Load FLEXT constants
+source "$(dirname "$0")/../constants.env" 2>/dev/null || {
+	echo "Warning: Could not load FLEXT constants, using FlextConstants defaults"
+	# Fallback values synchronized with FlextConstants
+	FLEXT_REDIS_ADDRESS="localhost:6379" # FlextConstants.Platform.DEFAULT_HOST:REDIS_DEFAULT_PORT
+	FLEXT_TEST_API_PORT=8081             # Test API port (offset from FLEXT_API_PORT)
+	FLEXT_PROMETHEUS_PORT=9090           # Standard Prometheus port
+	FLEXT_GRAFANA_PORT=3000              # Standard Grafana port
+}
+
 echo "🚀 FLEXT Distributed Architecture Test"
 echo "======================================"
 
@@ -61,7 +71,7 @@ if command -v redis-cli &>/dev/null && redis-cli ping &>/dev/null; then
 	print_status "Redis detected, testing distributed mode..."
 
 	# Set environment variables for testing
-	export FLEXT_REDIS_ADDRESS="localhost:6379"
+	export FLEXT_REDIS_ADDRESS="${FLEXT_REDIS_ADDRESS}"
 	export FLEXT_MAX_WORKERS="5"
 	export FLEXT_MIN_WORKERS="2"
 
@@ -77,21 +87,21 @@ if command -v redis-cli &>/dev/null && redis-cli ping &>/dev/null; then
 			print_status "Testing distributed API endpoints..."
 
 			# Test health endpoint
-			if curl -s http://localhost:8081/health >/dev/null; then
+			if curl -s "http://localhost:${FLEXT_TEST_API_PORT}/health" >/dev/null; then
 				print_success "Health endpoint responding"
 			else
 				print_warning "Health endpoint not responding"
 			fi
 
 			# Test cluster status
-			if curl -s http://localhost:8081/api/v1/cluster/status >/dev/null; then
+			if curl -s "http://localhost:${FLEXT_TEST_API_PORT}/api/v1/cluster/status" >/dev/null; then
 				print_success "Cluster status endpoint responding"
 			else
 				print_warning "Cluster status endpoint not responding"
 			fi
 
 			# Test metrics
-			if curl -s http://localhost:8081/metrics >/dev/null; then
+			if curl -s "http://localhost:${FLEXT_TEST_API_PORT}/metrics" >/dev/null; then
 				print_success "Metrics endpoint responding"
 			else
 				print_warning "Metrics endpoint not responding"
@@ -105,7 +115,7 @@ if command -v redis-cli &>/dev/null && redis-cli ping &>/dev/null; then
 	fi
 else
 	print_warning "Redis not available, skipping distributed mode test"
-	print_warning "To test distributed mode: docker run -d -p 6379:6379 redis:alpine"
+	print_warning "To test distributed mode: docker run -d -p ${FLEXT_REDIS_PORT}:${FLEXT_REDIS_PORT} redis:alpine"
 fi
 
 # Test configuration loading
@@ -168,11 +178,11 @@ echo ""
 echo "🎉 FLEXT Distributed Architecture Test Complete!"
 echo ""
 echo "📚 Next Steps:"
-echo "1. Start Redis: docker run -d -p 6379:6379 redis:alpine"
+echo "1. Start Redis: docker run -d -p ${FLEXT_REDIS_PORT}:${FLEXT_REDIS_PORT} redis:alpine"
 echo "2. Test distributed: ./bin/flext -distributed"
 echo "3. Start cluster: docker-compose -f docker-compose.distributed.yml up"
-echo "4. Monitor cluster: http://localhost:3000 (Grafana)"
-echo "5. View metrics: http://localhost:9090 (Prometheus)"
+echo "4. Monitor cluster: http://localhost:${FLEXT_GRAFANA_PORT} (Grafana)"
+echo "5. View metrics: http://localhost:${FLEXT_PROMETHEUS_PORT} (Prometheus)"
 echo ""
 echo "🔧 Architecture Features Available:"
 echo "• Clustering with automatic node discovery"

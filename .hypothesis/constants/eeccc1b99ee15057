@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/handlers.py
-# hypothesis_version: 6.138.15
-
-[0.0, 1000, 'DEFAULT_MODE', 'FlextHandlers', 'FlextResult[None]', 'MessageT', 'ResultT', 'Validation failed', '__args__', '__name__', '__orig_bases__', '__origin__', 'command', 'command_id', 'error', 'handler_type', 'handler_type_check', 'id', 'invalid_handler_mode', 'processing_message', 'query', 'query_id', 'success', 'unknown', 'validate_command', 'validate_query']

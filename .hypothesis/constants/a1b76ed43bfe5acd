@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/decorators.py
-# hypothesis_version: 6.138.2
-
-[1.0, ':', 'FlextDecorators', 'T', '_cache', 'args', 'correlation_id', 'deprecated', 'elapsed_time', 'error', 'error_message', 'exception', 'function', 'kwargs', 'result_type', 'status', 'success']

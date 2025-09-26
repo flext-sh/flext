@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/context.py
-# hypothesis_version: 6.138.2
-
-[0.0, 0.7, 0.85, 0.92, 100, 150, 200, 500, 600, 1000, 1800, 2000, 3600, 4000, 'FlextContext', 'FlextContext(empty)', 'X-Correlation-Id', 'X-Service-Name', 'X-User-Id', 'aggressive', 'balanced', 'configuration_source', 'conservative', 'context_cache_size', 'context_level', 'context_pool_size', 'correlation_id', 'current_service_name', 'default', 'duration_seconds', 'end_time', 'environment', 'headers', 'high', 'last_health_check', 'log_level', 'low', 'max_context_depth', 'medium', 'memory_pool_size_mb', 'metadata', 'operation_metadata', 'operation_name', 'operation_start_time', 'operational', 'optimization_enabled', 'optimization_level', 'performance_level', 'request_id', 'request_timestamp', 'serialization', 'service_name', 'service_version', 'start_time', 'system_status', 'user_id']

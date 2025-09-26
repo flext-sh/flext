@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/validations.py
-# hypothesis_version: 6.138.2
-
-[100, 150, 500, 1000, 2000, 3000, 5000, 10000, 'Expected string type', 'FlextTypes.Core.Dict', 'FlextTypes.Core.List', 'FlextValidations', 'Invalid email format', 'Value is not numeric', '^[a-zA-Z0-9_-]+$', '__float__', '__int__', 'action', 'age', 'available_validators', 'config_validator', 'created_at', 'credit_card', 'development', 'email', 'email_format', 'email_validator', 'environment', 'fail_fast_validation', 'hex_color', 'id', 'int', 'ip_address', 'log_level', 'name', 'normal', 'pattern', 'phone', 'postal_code', 'predicate', 'production', 'schema_validator', 'service_name', 'strict', 'supported_patterns', 'test', 'url', 'url_validator', 'uuid', 'validation_level', 'version']

@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/aggregate_root.py
-# hypothesis_version: 6.136.7
-
-['FlextAggregateRoot', 'aggregate_id', 'created_at', 'datetime', 'domain_events', 'id', 'initialization_error', 'int', 'provided_kwargs', 'str', 'version', 'year']

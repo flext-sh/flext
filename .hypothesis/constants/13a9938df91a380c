@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/result.py
-# hypothesis_version: 6.138.2
-
-[0.0, 100.0, 'All functions failed', 'Combine failed', 'First result failed', 'FlextResult', 'FlextResult[object]', 'Map operation failed', 'Operation failed', 'Result failed', 'Second result failed', 'T', 'U', 'Unknown error', '__dict__', '_data', '_error', 'error', 'exception', 'exception_type', 'fail_result', 'object', 'ok_result']
