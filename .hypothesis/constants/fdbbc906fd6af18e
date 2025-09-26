@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/handlers.py
-# hypothesis_version: 6.136.7
-
-[0.0, '1.0', 'CommandHandler', 'ENVIRONMENT', 'FlextBaseHandler', 'FlextCommandHandler', 'FlextEventHandler', 'FlextHandlerChain', 'FlextHandlerRegistry', 'FlextHandlers', 'FlextMetricsHandler', 'FlextQueryHandler', 'No user in context', 'Unknown error', 'Validation failed', '_metrics_state', 'authorize_query', 'avg_duration', 'can_handle_all', 'commands_processed', 'count', 'custom_metrics', 'environment', 'event_type', 'failed_commands', 'failed_queries', 'failure_count', 'get_metrics', 'handle', 'handler_class', 'handler_name', 'handler_type', 'is_success', 'last_duration', 'operations', 'permissions', 'production', 'queries_processed', 'request_type', 'response_type', 'success', 'success_count', 'success_rate', 'successful_commands', 'successful_queries', 'total', 'total_duration', 'user', 'validate_message', 'version']

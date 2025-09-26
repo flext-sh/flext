@@ -11,13 +11,13 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Protocol, Self, runtime_checkable
 
-from flext.project_types import FlextProjectTypes
 from flext_core import (
     FlextContainer,
     FlextLogger,
     FlextModels,
     FlextResult,
     FlextService,
+    FlextTypes,
 )
 
 
@@ -87,7 +87,9 @@ class FlextWorkspaceService(FlextService[str]):
 
             except Exception as e:
                 error = f"Project discovery failed: {e}"
-                self._manager._logger.exception(error)
+                # Use manager's public logging interface
+                logger = FlextLogger(__name__)
+                logger.exception(error)
                 return FlextResult[list[FlextModels.Project]].fail(error)
 
         def _analyze_project(
@@ -95,18 +97,18 @@ class FlextWorkspaceService(FlextService[str]):
         ) -> FlextResult[FlextModels.Project]:
             """Analyze individual project for type and characteristics."""
             try:
-                # Detect project type
-                project_type = FlextProjectTypes.ProjectType.MIXED
+                # Detect project type using FlextTypes.Project.ProjectType
+                project_type: FlextTypes.Project.ProjectType = "application"
                 has_pyproject = (project_path / "pyproject.toml").exists()
                 has_go_mod = (project_path / "go.mod").exists()
                 has_package_json = (project_path / "package.json").exists()
 
                 if has_pyproject or (project_path / "setup.py").exists():
-                    project_type = FlextProjectTypes.ProjectType.PYTHON
+                    project_type = "PYTHON"
                 elif has_go_mod:
-                    project_type = FlextProjectTypes.ProjectType.GO
+                    project_type = "GO"
                 elif has_package_json:
-                    project_type = FlextProjectTypes.ProjectType.JAVASCRIPT
+                    project_type = "JAVASCRIPT"
 
                 # Count test files
                 tests_dir = project_path / "tests"
@@ -120,6 +122,7 @@ class FlextWorkspaceService(FlextService[str]):
                     is_test_project=has_tests,
                     test_framework="pytest" if has_tests else None,
                     project_type=project_type,
+                    domain_events=[],
                 )
 
                 return FlextResult[FlextModels.Project].ok(project_info)
@@ -195,13 +198,13 @@ class FlextWorkspaceService(FlextService[str]):
             # Calculate total size (mock for now)
             total_size_mb = len(projects) * 10.5  # Mock calculation
 
-            workspace_info = {
+            workspace_info: dict[str, object] = {
                 "name": workspace_path.name,
                 "path": str(workspace_path),
                 "project_count": len(projects),
                 "total_size_mb": total_size_mb,
                 "projects": project_names,
-                "status": FlextProjectTypes.WorkspaceStatus.READY,
+                "status": "ready",
             }
 
             return FlextResult[dict[str, object]].ok(workspace_info)

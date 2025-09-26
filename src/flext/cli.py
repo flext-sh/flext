@@ -339,7 +339,7 @@ class FlextControlPanelCli(FlextService[str]):
 
         def info_command(
             self, *, detailed: bool = False
-        ) -> FlextResult[dict[str, str | list[str], bool]]:
+        ) -> FlextResult[dict[str, str | list[str] | bool]]:
             """Display workspace information using flext-cli patterns."""
             workspace_data = {
                 "workspace_root": str(self._cli_service._workspace),

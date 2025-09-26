@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/value_objects.py
-# hypothesis_version: 6.136.7
-
-[', ', 'FlextValueObject', 'Validation failed', '_', '__str__', 'class_info', 'class_name', 'correlation_id', 'domain_events', 'forbid', 'invalid', 'model_dump', 'module', 'timestamp', 'type', 'valid', 'validated', 'validation_status', 'value_object_data']
