@@ -9,6 +9,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import asyncio
+import time
+
 import pytest
 from flext_cli.constants import FlextCliConstants
 from flext_cli.containers import FlextCliContainers
@@ -64,8 +67,6 @@ class TestFlextCliContainers:
         """Test containers performance characteristics."""
         containers = FlextCliContainers()
 
-        import time
-
         start_time = time.time()
         result = containers.execute()
         execution_time = time.time() - start_time
@@ -92,8 +93,6 @@ class TestFlextCliContainers:
         assert result.is_success
 
         # Test async version
-        import asyncio
-
         async_result = asyncio.run(containers.execute_async())
         assert async_result.is_success
 
@@ -113,9 +112,7 @@ class TestFlextCliContainers:
         containers = FlextCliContainers()
 
         # Execute multiple container operations concurrently
-        import asyncio
-
-        async def test_concurrent():
+        async def test_concurrent() -> list[str]:
             return await asyncio.gather(
                 containers.execute_async(), containers.execute_async()
             )
@@ -156,8 +153,6 @@ class TestFlextCliContainers:
 
         # Test that sync and async versions return consistent data
         sync_result = containers.execute()
-        import asyncio
-
         async_result = asyncio.run(containers.execute_async())
 
         assert sync_result.is_success == async_result.is_success

@@ -9,6 +9,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import asyncio
+import time
+
 import pytest
 from flext_cli.constants import FlextCliConstants
 from flext_cli.debug import FlextCliDebug
@@ -138,8 +141,6 @@ class TestFlextCliDebug:
         """Test debug performance characteristics."""
         debug = FlextCliDebug()
 
-        import time
-
         start_time = time.time()
         result = debug.execute()
         execution_time = time.time() - start_time
@@ -206,9 +207,7 @@ class TestFlextCliDebug:
         debug = FlextCliDebug()
 
         # Execute multiple debug operations concurrently
-        import asyncio
-
-        async def test_concurrent():
+        async def test_concurrent() -> list[str]:
             return await asyncio.gather(
                 debug.execute_async(),
                 debug.test_connectivity(),

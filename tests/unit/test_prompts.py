@@ -176,10 +176,11 @@ class TestFlextCliPrompts:
         assert "T" in timestamp
         assert "Z" in timestamp or "+" in timestamp
 
-    def test_prompts_service_name(self) -> None:
+    @pytest.mark.asyncio
+    async def test_prompts_service_name(self) -> None:
         """Test prompts service name."""
         prompts = FlextCliPrompts()
-        result = prompts.execute()
+        result = await prompts.execute_async()
 
         assert result.is_success
         service = result.value["service"]

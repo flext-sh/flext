@@ -17,10 +17,9 @@ from pathlib import Path
 from flext import (
     FlextAdvancedWorkspaceModels,
     FlextWorkspaceService,
-    WorkspaceStatus,
     create_workspace_service,
 )
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextResult, FlextModels
 from flext_tests import FlextTestsDomains
 
 
@@ -213,15 +212,20 @@ class TestWorkspace:
 
     def test_workspace_status_enum(self) -> None:
         """Test WorkspaceStatus enum functionality."""
+        # Use the actual enum from FlextModels
+        WorkspaceStatus = FlextModels.WorkspaceStatus
+        
         # Test enum values exist
-        assert hasattr(WorkspaceStatus, "ACTIVE")
-        assert hasattr(WorkspaceStatus, "INACTIVE")
-        assert hasattr(WorkspaceStatus, "ARCHIVED")
+        assert hasattr(WorkspaceStatus, "INITIALIZING")
+        assert hasattr(WorkspaceStatus, "READY")
+        assert hasattr(WorkspaceStatus, "ERROR")
+        assert hasattr(WorkspaceStatus, "MAINTENANCE")
 
         # Test enum values are accessible
-        assert WorkspaceStatus.ACTIVE is not None
-        assert WorkspaceStatus.INACTIVE is not None
-        assert WorkspaceStatus.ARCHIVED is not None
+        assert WorkspaceStatus.INITIALIZING is not None
+        assert WorkspaceStatus.READY is not None
+        assert WorkspaceStatus.ERROR is not None
+        assert WorkspaceStatus.MAINTENANCE is not None
 
     def test_create_workspace_service_factory(self) -> None:
         """Test create_workspace_service factory function."""

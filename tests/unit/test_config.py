@@ -9,7 +9,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import asyncio
 import tempfile
+import time
 from pathlib import Path
 
 import pytest
@@ -232,8 +234,6 @@ class TestFlextCliConfigService:
         """Test config service performance."""
         config_service = FlextCliConfigService()
 
-        import time
-
         start_time = time.time()
         result = config_service.execute()
         execution_time = time.time() - start_time
@@ -251,8 +251,6 @@ class TestFlextCliConfigService:
         assert result.is_success
 
         # Test async version
-        import asyncio
-
         async_result = asyncio.run(config_service.execute_async())
         assert async_result.is_success
 

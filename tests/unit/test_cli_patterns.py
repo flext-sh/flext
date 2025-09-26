@@ -282,13 +282,13 @@ class TestCliPatterns:
         formatters_pattern = FlextCliFormattersPattern()
 
         # Test that all public methods exist and are callable
-        expected_methods = {
-            api_pattern: ["apply_pattern", "validate_pattern", "list_patterns"],
-            context_pattern: ["apply_context", "validate_context", "list_contexts"],
-            formatters_pattern: ["format_output", "validate_format", "list_formats"],
-        }
+        pattern_tests = [
+            (api_pattern, "api_pattern", ["execute", "validate_config", "display_output"]),
+            (context_pattern, "context_pattern", ["apply_context", "validate_context", "list_contexts"]),
+            (formatters_pattern, "formatters_pattern", ["format_output", "validate_format", "list_formats"]),
+        ]
 
-        for instance, methods in expected_methods.items():
+        for instance, pattern_name, methods in pattern_tests:
             for method_name in methods:
                 if hasattr(instance, method_name):
                     method = getattr(instance, method_name)

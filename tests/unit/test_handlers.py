@@ -9,6 +9,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import asyncio
+import time
+
 import pytest
 from flext_cli.constants import FlextCliConstants
 from flext_cli.handlers import FlextCliHandlers
@@ -66,8 +69,6 @@ class TestFlextCliHandlers:
         """Test handlers performance characteristics."""
         handlers = FlextCliHandlers()
 
-        import time
-
         start_time = time.time()
         result = handlers.execute()
         execution_time = time.time() - start_time
@@ -79,7 +80,8 @@ class TestFlextCliHandlers:
     def test_handlers_memory_usage(self) -> None:
         """Test handlers memory usage characteristics."""
         # Test CommandHandler functionality
-        def test_command(**kwargs) -> FlextResult[str]:
+        def test_command(**kwargs: str) -> FlextResult[str]:
+            _ = kwargs  # Acknowledge parameter usage
             return FlextResult[str].ok("test command executed")
         
         command_handler = FlextCliHandlers.CommandHandler(test_command)
@@ -92,7 +94,8 @@ class TestFlextCliHandlers:
     def test_handlers_integration(self) -> None:
         """Test handlers integration with other services."""
         # Test CommandHandler integration
-        def test_command(**kwargs) -> FlextResult[str]:
+        def test_command(**kwargs: str) -> FlextResult[str]:
+            _ = kwargs  # Acknowledge parameter usage
             return FlextResult[str].ok("integration test passed")
         
         command_handler = FlextCliHandlers.CommandHandler(test_command)
@@ -115,15 +118,14 @@ class TestFlextCliHandlers:
     def test_handlers_concurrent_execution(self) -> None:
         """Test handlers concurrent execution."""
         # Test CommandHandler concurrent execution
-        def test_command(**kwargs) -> FlextResult[str]:
+        def test_command(**kwargs: str) -> FlextResult[str]:
+            _ = kwargs  # Acknowledge parameter usage
             return FlextResult[str].ok("concurrent test passed")
         
         command_handler = FlextCliHandlers.CommandHandler(test_command)
         
         # Execute multiple handler operations concurrently
-        import asyncio
-
-        async def test_concurrent():
+        async def test_concurrent() -> list[str]:
             # Simulate concurrent execution by running multiple calls
             results = []
             for _ in range(2):
@@ -167,8 +169,6 @@ class TestFlextCliHandlers:
 
         # Test that sync and async versions return consistent data
         sync_result = handlers.execute()
-        import asyncio
-
         async_result = asyncio.run(handlers.execute_async())
 
         assert sync_result.is_success == async_result.is_success
