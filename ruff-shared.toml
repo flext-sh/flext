@@ -55,6 +55,7 @@ lint.ignore = [
     "Q000",
     "TRY003",
     # "PLC0415",
+    "RUF005",  # unpacking-operator - disabled to avoid pyrefly conflicts
     "PLR1702",
     "PLR0914",
     "PLR0904",

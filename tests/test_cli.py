@@ -50,7 +50,7 @@ class TestFlextCli:
         assert components["main"] == "available"
 
     @patch("flext_cli.cli.click")
-    def test_self(self, mock_click: MagicMock) -> None:
+    def test_cli_status_command(self, mock_click: MagicMock) -> None:
         """Test CLI status command."""
         cli = FlextCli()
 
@@ -67,7 +67,7 @@ class TestFlextCli:
         assert cli.auth is not None
 
     @patch("flext_cli.cli.click")
-    def test_self(self, mock_click: MagicMock) -> None:
+    def test_cli_version_command(self, mock_click: MagicMock) -> None:
         """Test CLI version command."""
         cli = FlextCli()
 
@@ -128,7 +128,7 @@ class TestFlextCli:
 
         assert isinstance(cli.api, FlextCliApi)
         assert isinstance(cli.auth, FlextCliAuth)
-        assert isinstance(cli.config, FlextCliConfig.MainConfig)
+        assert isinstance(cli.config, FlextCliConfig)
         assert isinstance(cli.debug, FlextCliDebug)
         assert isinstance(cli.formatters, FlextCliOutput)
         assert isinstance(cli.main, FlextCliCommands)

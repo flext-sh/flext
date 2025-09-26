@@ -1,4 +1,7 @@
-"""FLEXT LDIF Config - Comprehensive Unit Tests.
+"""FLEXT CLI Config Tests - Comprehensive configuration functionality testing.
+
+Tests for FlextCliConfig classes using flext_tests infrastructure with real functionality
+testing, no mocks, and comprehensive coverage following FLEXT standards.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -6,459 +9,267 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import tempfile
 from pathlib import Path
 
 import pytest
-from flext_ldif.config import FlextLdifConfig
-from flext_ldif.constants import FlextLdifConstants
+from flext_cli.config import (
+    FlextCliConfig,
+    FlextCliConfigService,
+)
+from flext_cli.constants import FlextCliConstants
+from flext_cli.models import FlextCliModels
 
 
-@pytest.mark.unit
-class TestFlextLdifConfig:
-    """Comprehensive tests for FlextLdifConfig class."""
+class TestFlextCliConfig:
+    """Comprehensive tests for FlextCliConfig class."""
 
-    def test_config_initialization_default(self) -> None:
-        """Test config initialization with default values."""
-        config = FlextLdifConfig()
-
+    def test_config_initialization(self) -> None:
+        """Test Config initialization with proper configuration."""
+        config = FlextCliConfig()
         assert config is not None
-        assert config.encoding == FlextLdifConstants.DEFAULT_ENCODING
-        assert config.strict_parsing is True
-        assert config.max_entries == FlextLdifConstants.DEFAULT_MAX_ENTRIES
-        assert config.validate_dn is True
-        assert config.normalize_attributes is True
-
-    def test_config_initialization_custom(self) -> None:
-        """Test config initialization with custom values."""
-        custom_config = FlextLdifConfig(
-            encoding="latin-1",
-            strict_parsing=False,
-            max_entries=5000,
-            validate_dn=False,
-            normalize_attributes=False,
-        )
-
-        assert custom_config.encoding == "latin-1"
-        assert custom_config.strict_parsing is False
-        assert custom_config.max_entries == 5000
-        assert custom_config.validate_dn is False
-        assert custom_config.normalize_attributes is False
-
-    def test_config_validation_valid(self) -> None:
-        """Test config validation with valid values."""
-        config = FlextLdifConfig()
-        result = config.validate()
-
-        assert result.is_success
-        assert isinstance(result.value, dict)
-
-    def test_config_validation_invalid_encoding(self) -> None:
-        """Test config validation with invalid encoding."""
-        config = FlextLdifConfig(encoding="invalid-encoding")
-        result = config.validate()
-
-        # Should handle invalid encoding gracefully
-        assert result.is_success or result.is_failure
-
-    def test_config_validation_invalid_max_entries(self) -> None:
-        """Test config validation with invalid max_entries."""
-        config = FlextLdifConfig(max_entries=-1)
-        # Config validation happens during initialization, so we just check it was created
-        assert config is not None
-
-    def test_config_validation_invalid_max_entries_zero(self) -> None:
-        """Test config validation with zero max_entries."""
-        config = FlextLdifConfig(max_entries=0)
-        # Config validation happens during initialization, so we just check it was created
-        assert config is not None
-
-    def test_config_validation_invalid_max_entries_large(self) -> None:
-        """Test config validation with very large max_entries."""
-        config = FlextLdifConfig(max_entries=1000000000)
-        # Config validation happens during initialization, so we just check it was created
-        assert config is not None
-
-    def test_config_to_dict(self) -> None:
-        """Test converting config to dictionary."""
-        config = FlextLdifConfig(
-            encoding="utf-8",
-            strict_parsing=True,
-            max_entries=1000,
-            validate_dn=True,
-            normalize_attributes=True,
-        )
-
-        config_dict = config.to_dict()
-
-        assert isinstance(config_dict, dict)
-        assert config_dict["encoding"] == "utf-8"
-        assert config_dict["strict_parsing"] is True
-        assert config_dict["max_entries"] == 1000
-        assert config_dict["validate_dn"] is True
-        assert config_dict["normalize_attributes"] is True
-
-    def test_config_from_dict(self) -> None:
-        """Test creating config from dictionary."""
-        config_dict = {
-            "encoding": "utf-8",
-            "strict_parsing": True,
-            "max_entries": 1000,
-            "validate_dn": True,
-            "normalize_attributes": True,
-        }
-
-        config = FlextLdifConfig.from_dict(config_dict)
-
-        assert config.encoding == "utf-8"
-        assert config.strict_parsing is True
-        assert config.max_entries == 1000
-        assert config.validate_dn is True
-        assert config.normalize_attributes is True
-
-    def test_config_from_dict_invalid(self) -> None:
-        """Test creating config from invalid dictionary."""
-        invalid_dict = {"invalid_field": "value", "another_invalid": 123}
-
-        # Should handle invalid dictionary gracefully
-        try:
-            config = FlextLdifConfig.from_dict(invalid_dict)
-            assert config is not None
-        except Exception:
-            # Expected behavior for invalid input
-            pass
-
-    def test_config_from_dict_partial(self) -> None:
-        """Test creating config from partial dictionary."""
-        partial_dict = {"encoding": "utf-8", "strict_parsing": False}
-
-        config = FlextLdifConfig.from_dict(partial_dict)
-
-        assert config.encoding == "utf-8"
-        assert config.strict_parsing is False
-        # Other fields should use defaults
-        assert config.max_entries == FlextLdifConstants.DEFAULT_MAX_ENTRIES
-
-    def test_config_copy(self) -> None:
-        """Test copying config."""
-        original_config = FlextLdifConfig(
-            encoding="utf-8", strict_parsing=True, max_entries=1000
-        )
-
-        copied_config = original_config.copy()
-
-        assert copied_config.encoding == original_config.encoding
-        assert copied_config.strict_parsing == original_config.strict_parsing
-        assert copied_config.max_entries == original_config.max_entries
-
-        # Modify copied config
-        copied_config.encoding = "latin-1"
-        assert copied_config.encoding != original_config.encoding
-
-    def test_config_merge(self) -> None:
-        """Test merging configs."""
-        base_config = FlextLdifConfig(
-            encoding="utf-8", strict_parsing=True, max_entries=1000
-        )
-
-        override_config = FlextLdifConfig(encoding="latin-1", strict_parsing=False)
-
-        merged_config = base_config.merge(override_config)
-
-        assert merged_config.encoding == "latin-1"  # Overridden
-        assert merged_config.strict_parsing is False  # Overridden
-        assert merged_config.max_entries == 1000  # Not overridden
-
-    def test_config_merge_none(self) -> None:
-        """Test merging config with None."""
-        config = FlextLdifConfig()
-
-        # Should handle None gracefully
-        try:
-            merged_config = config.merge(None)  # type: ignore[arg-type]
-            assert merged_config is not None
-        except Exception:
-            # Expected behavior for None input
-            pass
-
-    def test_config_equality(self) -> None:
-        """Test config equality comparison."""
-        config1 = FlextLdifConfig(
-            encoding="utf-8", strict_parsing=True, max_entries=1000
-        )
-
-        config2 = FlextLdifConfig(
-            encoding="utf-8", strict_parsing=True, max_entries=1000
-        )
-
-        config3 = FlextLdifConfig(
-            encoding="latin-1", strict_parsing=True, max_entries=1000
-        )
-
-        assert config1 == config2
-        assert config1 != config3
-
-    def test_config_hash(self) -> None:
-        """Test config hash functionality."""
-        config1 = FlextLdifConfig(encoding="utf-8")
-        config2 = FlextLdifConfig(encoding="utf-8")
-        config3 = FlextLdifConfig(encoding="latin-1")
-
-        assert hash(config1) == hash(config2)
-        assert hash(config1) != hash(config3)
-
-    def test_config_str_representation(self) -> None:
-        """Test config string representation."""
-        config = FlextLdifConfig(
-            encoding="utf-8", strict_parsing=True, max_entries=1000
-        )
-
-        config_str = str(config)
-        assert isinstance(config_str, str)
-        assert "utf-8" in config_str
-        assert "1000" in config_str
-
-    def test_config_repr_representation(self) -> None:
-        """Test config repr representation."""
-        config = FlextLdifConfig(
-            encoding="utf-8", strict_parsing=True, max_entries=1000
-        )
-
-        config_repr = repr(config)
-        assert isinstance(config_repr, str)
-        assert "FlextLdifConfig" in config_repr
-
-    def test_config_serialization(self) -> None:
-        """Test config serialization."""
-        config = FlextLdifConfig(
-            encoding="utf-8", strict_parsing=True, max_entries=1000
-        )
-
-        # Test JSON serialization
-        config_json = config.to_json()
-        assert isinstance(config_json, str)
-
-        # Test deserialization
-        deserialized_config = FlextLdifConfig.from_json(config_json)
-        assert deserialized_config.encoding == config.encoding
-        assert deserialized_config.strict_parsing == config.strict_parsing
-        assert deserialized_config.max_entries == config.max_entries
-
-    def test_config_serialization_invalid_json(self) -> None:
-        """Test config deserialization with invalid JSON."""
-        invalid_json = '{"invalid": "json"'
-
-        # Should handle invalid JSON gracefully
-        try:
-            config = FlextLdifConfig.from_json(invalid_json)
-            assert config is not None
-        except Exception:
-            # Expected behavior for invalid JSON
-            pass
-
-    def test_config_file_operations(self, test_file_manager: object) -> None:
-        """Test config file operations."""
-        config = FlextLdifConfig(
-            encoding="utf-8", strict_parsing=True, max_entries=1000
-        )
-
-        # Test saving to file
-        config_file = test_file_manager.create_file("config.json", "")
-        result = config.save_to_file(config_file)
-
-        assert result.is_success
-        assert config_file.exists()
-
-        # Test loading from file
-        loaded_config = FlextLdifConfig.load_from_file(config_file)
-
-        assert loaded_config.encoding == config.encoding
-        assert loaded_config.strict_parsing == config.strict_parsing
-        assert loaded_config.max_entries == config.max_entries
-
-    def test_config_file_operations_nonexistent(self) -> None:
-        """Test config file operations with nonexistent file."""
-        nonexistent_file = Path("/nonexistent/config.json")
-
-        # Should handle nonexistent file gracefully
-        try:
-            config = FlextLdifConfig.load_from_file(nonexistent_file)
-            assert config is not None
-        except Exception:
-            # Expected behavior for nonexistent file
-            pass
-
-    def test_config_file_operations_invalid_format(
-        self, test_file_manager: object
-    ) -> None:
-        """Test config file operations with invalid format."""
-        invalid_file = test_file_manager.create_file(
-            "invalid.json", "invalid json content"
-        )
-
-        # Should handle invalid format gracefully
-        try:
-            config = FlextLdifConfig.load_from_file(invalid_file)
-            assert config is not None
-        except Exception:
-            # Expected behavior for invalid format
-            pass
-
-    def test_config_environment_variables(self) -> None:
-        """Test config with environment variables."""
-        import os
-
-        # Set environment variables
-        os.environ["FLEXT_LDIF_ENCODING"] = "latin-1"
-        os.environ["FLEXT_LDIF_STRICT_PARSING"] = "false"
-        os.environ["FLEXT_LDIF_MAX_ENTRIES"] = "5000"
-
-        try:
-            config = FlextLdifConfig.from_environment()
-
-            assert config.encoding == "latin-1"
-            assert config.strict_parsing is False
-            assert config.max_entries == 5000
-        finally:
-            # Clean up environment variables
-            os.environ.pop("FLEXT_LDIF_ENCODING", None)
-            os.environ.pop("FLEXT_LDIF_STRICT_PARSING", None)
-            os.environ.pop("FLEXT_LDIF_MAX_ENTRIES", None)
-
-    def test_config_environment_variables_invalid(self) -> None:
-        """Test config with invalid environment variables."""
-        import os
-
-        # Set invalid environment variables
-        os.environ["FLEXT_LDIF_MAX_ENTRIES"] = "invalid-number"
-
-        try:
-            config = FlextLdifConfig.from_environment()
-
-            # Should handle invalid environment variables gracefully
-            assert config is not None
-        finally:
-            # Clean up environment variables
-            os.environ.pop("FLEXT_LDIF_MAX_ENTRIES", None)
-
-    def test_config_validation_rules(self) -> None:
-        """Test config validation rules."""
-        config = FlextLdifConfig()
-
-        # Test validation rules
-        rules = config.get_validation_rules()
-        assert isinstance(rules, dict)
-        assert "encoding" in rules
-        assert "max_entries" in rules
+        assert isinstance(config, FlextCliConfig)
 
     def test_config_default_values(self) -> None:
         """Test config default values."""
-        config = FlextLdifConfig()
+        config = FlextCliConfig()
 
-        # Test default values
-        defaults = config.get_default_values()
-        assert isinstance(defaults, dict)
-        assert defaults["encoding"] == FlextLdifConstants.DEFAULT_ENCODING
-        assert defaults["strict_parsing"] is True
-        assert defaults["max_entries"] == FlextLdifConstants.DEFAULT_MAX_ENTRIES
+        # Test that config has expected default values
+        assert config.debug is False
+        assert config.verbose is False
+        assert config.quiet is False
 
-    def test_config_field_validation(self) -> None:
-        """Test config field validation."""
-        config = FlextLdifConfig()
+    def test_config_custom_values(self) -> None:
+        """Test config with custom values."""
+        config = FlextCliConfig(debug=True, verbose=True, quiet=False)
 
-        # Test field validation
-        result = config.validate_field("encoding", "utf-8")
+        assert config.debug is True
+        assert config.verbose is True
+        assert config.quiet is False
+
+    def test_config_validation(self) -> None:
+        """Test config validation."""
+        config = FlextCliConfig()
+
+        # Test that config validates properly
+        assert config.debug is not None
+        assert config.verbose is not None
+        assert config.quiet is not None
+
+    def test_config_serialization(self) -> None:
+        """Test config serialization."""
+        config = FlextCliConfig(debug=True, verbose=False)
+
+        # Test dict conversion
+        config_dict = config.model_dump()
+        assert isinstance(config_dict, dict)
+        assert config_dict["debug"] is True
+        assert config_dict["verbose"] is False
+
+    def test_config_deserialization(self) -> None:
+        """Test config deserialization."""
+        config_data = {"debug": True, "verbose": False, "quiet": True}
+
+        config = FlextCliConfig.model_validate(config_data)
+        assert config.debug is True
+        assert config.verbose is False
+        assert config.quiet is True
+
+
+class TestLoggingConfig:
+    """Comprehensive tests for LoggingConfig class."""
+
+    def test_logging_config_initialization(self) -> None:
+        """Test LoggingConfig initialization."""
+        logging_config = FlextCliModels.LoggingConfig()
+        assert logging_config is not None
+        assert isinstance(logging_config, FlextCliModels.LoggingConfig)
+
+    def test_logging_config_default_values(self) -> None:
+        """Test logging config default values."""
+        logging_config = FlextCliModels.LoggingConfig()
+
+        # Test that logging config has expected default values
+        assert logging_config.level is not None
+        assert logging_config.format is not None
+
+    def test_logging_config_custom_values(self) -> None:
+        """Test logging config with custom values."""
+        logging_config = FlextCliModels.LoggingConfig(
+            level="DEBUG", format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        )
+
+        assert logging_config.level == "DEBUG"
+        assert "%(asctime)s" in logging_config.format
+
+
+class TestCliOptions:
+    """Comprehensive tests for CliOptions class."""
+
+    def test_cli_options_initialization(self) -> None:
+        """Test CliOptions initialization."""
+        cli_options = FlextCliConfig.CliOptions()
+        assert cli_options is not None
+        assert isinstance(cli_options, FlextCliConfig.CliOptions)
+
+    def test_cli_options_default_values(self) -> None:
+        """Test CLI options default values."""
+        cli_options = FlextCliConfig.CliOptions()
+
+        # Test that CLI options have expected default values
+        assert cli_options.output_format is not None
+        assert cli_options.timeout is not None
+
+    def test_cli_options_custom_values(self) -> None:
+        """Test CLI options with custom values."""
+        cli_options = FlextCliConfig.CliOptions(output_format="json", timeout=60)
+
+        assert cli_options.output_format == "json"
+        assert cli_options.timeout == 60
+
+
+class TestMainConfig:
+    """Comprehensive tests for MainConfig class."""
+
+    def test_main_config_initialization(self) -> None:
+        """Test MainConfig initialization."""
+        main_config = FlextCliConfig.MainConfig()
+        assert main_config is not None
+        assert isinstance(main_config, FlextCliConfig.MainConfig)
+
+    def test_main_config_default_values(self) -> None:
+        """Test main config default values."""
+        main_config = FlextCliConfig.MainConfig()
+
+        # Test that main config has expected default values
+        assert main_config.profile is not None
+        assert main_config.debug is not None
+        assert main_config.verbose is not None
+
+    def test_main_config_custom_values(self) -> None:
+        """Test main config with custom values."""
+        main_config = FlextCliConfig.MainConfig(
+            profile="test_profile", debug=True, verbose=False
+        )
+
+        assert main_config.profile == "test_profile"
+        assert main_config.debug is True
+        assert main_config.verbose is False
+
+
+class TestFlextCliConfigService:
+    """Comprehensive tests for FlextCliConfigService class."""
+
+    def test_config_service_initialization(self) -> None:
+        """Test ConfigService initialization."""
+        config_service = FlextCliConfigService()
+        assert config_service is not None
+        assert isinstance(config_service, FlextCliConfigService)
+
+    def test_config_service_execute_sync(self) -> None:
+        """Test synchronous ConfigService execution."""
+        config_service = FlextCliConfigService()
+        result = config_service.execute()
+
         assert result.is_success
+        assert result.value is not None
+        assert result.value["status"] == FlextCliConstants.OPERATIONAL
+        assert result.value["service"] == "flext-cli-config"
 
-        result = config.validate_field("max_entries", 1000)
+    @pytest.mark.asyncio
+    async def test_config_service_execute_async(self) -> None:
+        """Test asynchronous ConfigService execution."""
+        config_service = FlextCliConfigService()
+        result = await config_service.execute_async()
+
         assert result.is_success
+        assert result.value is not None
+        assert result.value["status"] == FlextCliConstants.OPERATIONAL
+        assert result.value["service"] == "flext-cli-config"
 
-        result = config.validate_field("invalid_field", "value")
-        # Should handle invalid field gracefully
-        assert result.is_success or result.is_failure
+    def test_config_service_load_config(self) -> None:
+        """Test config loading functionality."""
+        config_service = FlextCliConfigService()
 
-    def test_config_field_validation_invalid_values(self) -> None:
-        """Test config field validation with invalid values."""
-        config = FlextLdifConfig()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "test_config.json"
 
-        # Test invalid values
-        result = config.validate_field("encoding", "")
-        # Should handle invalid encoding gracefully
-        assert result.is_success or result.is_failure
+            # Create a test config file
+            test_config = {"debug": True, "verbose": False, "quiet": False}
+            config_path.write_text(str(test_config).replace("'", '"'))
 
-        result = config.validate_field("max_entries", -1)
-        # Should handle invalid max_entries gracefully
-        assert result.is_success or result.is_failure
+            # Test loading config
+            result = config_service.load_config(str(config_path))
+            assert result.is_success
 
-    def test_config_performance(self) -> None:
-        """Test config performance characteristics."""
+    def test_config_service_save_config(self) -> None:
+        """Test config saving functionality."""
+        config_service = FlextCliConfigService()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "test_config.json"
+
+            # Create a test config
+            test_config = FlextCliConfig(debug=True, verbose=False)
+
+            # Test saving config
+            result = config_service.save_config(str(config_path), test_config)
+            assert result.is_success
+
+            # Verify file was created
+            assert config_path.exists()
+
+    def test_config_service_error_handling(self) -> None:
+        """Test config service error handling."""
+        config_service = FlextCliConfigService()
+
+        # Test with invalid path
+        result = config_service.load_config("/invalid/path/config.json")
+        # Should handle gracefully
+        assert result is not None
+
+    def test_config_service_performance(self) -> None:
+        """Test config service performance."""
+        config_service = FlextCliConfigService()
+
         import time
 
-        # Test config creation performance
         start_time = time.time()
+        result = config_service.execute()
+        execution_time = time.time() - start_time
 
-        for _ in range(1000):
-            FlextLdifConfig()
+        assert result.is_success
+        # Should execute quickly
+        assert execution_time < 1.0
 
-        end_time = time.time()
-        execution_time = end_time - start_time
+    def test_config_service_integration(self) -> None:
+        """Test config service integration."""
+        config_service = FlextCliConfigService()
 
-        assert execution_time < 1.0  # Should complete within 1 second
+        # Test that config service properly integrates with its dependencies
+        result = config_service.execute()
+        assert result.is_success
 
-    def test_config_memory_usage(self) -> None:
-        """Test config memory usage characteristics."""
-        # Test that config doesn't leak memory
-        configs = []
+        # Test async version
+        import asyncio
 
-        for _ in range(100):
-            config = FlextLdifConfig()
-            configs.append(config)
+        async_result = asyncio.run(config_service.execute_async())
+        assert async_result.is_success
 
-        # Verify all configs are valid
-        assert len(configs) == 100
-        for config in configs:
-            assert isinstance(config, FlextLdifConfig)
+    def test_config_service_file_operations(self) -> None:
+        """Test config service file operations."""
+        config_service = FlextCliConfigService()
 
-    def test_config_edge_cases(self) -> None:
-        """Test config with edge cases."""
-        # Test with None values
-        try:
-            config = FlextLdifConfig(encoding=None)  # type: ignore[arg-type]
-            assert config is not None
-        except Exception:
-            # Expected behavior for None values
-            pass
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "test_config.json"
 
-        # Test with empty string values
-        try:
-            config = FlextLdifConfig(encoding="")
-            assert config is not None
-        except Exception:
-            # Expected behavior for empty string values
-            pass
+            # Test save and load cycle
+            test_config = FlextCliConfig(debug=True)
 
-    def test_config_concurrent_access(self) -> None:
-        """Test config concurrent access."""
-        import threading
+            # Save config
+            save_result = config_service.save_config(str(config_path), test_config)
+            assert save_result.is_success
 
-        config = FlextLdifConfig()
-        results = []
-
-        def worker() -> None:
-            result = config.validate()
-            results.append(result)
-
-        # Start multiple threads
-        threads = []
-        for _ in range(5):
-            thread = threading.Thread(target=worker)
-            threads.append(thread)
-            thread.start()
-
-        # Wait for all threads to complete
-        for thread in threads:
-            thread.join()
-
-        # Verify all operations succeeded
-        assert len(results) == 5
-        for result in results:
-            assert result.is_success
+            # Load config
+            load_result = config_service.load_config(str(config_path))
+            assert load_result.is_success

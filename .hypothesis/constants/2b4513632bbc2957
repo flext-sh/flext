@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/validations.py
-# hypothesis_version: 6.138.15
-
-[149, '.', '/', '3.14', '3.14159', '@', 'BusinessValidators', 'Collections', 'DELETE', 'Domain', 'FieldValidators', 'FlextValidations', 'GET', 'HEAD', 'Invalid email format', 'OPTIONS', 'PATCH', 'POST', 'PUT', 'Predicates', 'TypeValidators', 'URL must be a string', 'US', 'Value cannot be None', 'Value out of range', '[\\s-]', '\\D', '^\\d{4}-\\d{2}-\\d{2}$', '__float__', '__int__', 'age', 'email', 'integer', 'maximum', 'method', 'minLength', 'minimum', 'name', 'number', 'object', 'path', 'predicate', 'properties', 'required', 'string', 'type']

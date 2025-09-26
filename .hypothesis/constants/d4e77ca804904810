@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/decorators.py
-# hypothesis_version: 6.138.15
-
-[0.0, 1.0, 30.0, 300.0, 120, 128, 256, 1000, 'FlextDecorators', 'T', 'bulkhead_rejected', 'cache_hit', 'cache_store_updated', 'calls', 'circuit_breaker_open', 'closed', 'exception', 'execution_failed', 'execution_started', 'execution_succeeded', 'failures', 'float', 'function_timeout', 'half-open', 'inf', 'int', 'last_duration', 'metric_recorded', 'open', 'opened_at', 'retry_attempt_failed', 'retry_exhausted', 'seconds must be > 0', 'status', 'str', 'total_time', 'trace_enter', 'trace_exit', 'ttl must be >= 0']

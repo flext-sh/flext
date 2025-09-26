@@ -18,6 +18,7 @@ from flext.project_types import FlextProjectTypes
 from flext_core import (
     FlextLogger,
     FlextResult,
+    FlextTypes,
     FlextService,
 )
 
@@ -86,17 +87,17 @@ class FlextAdvancedDevToolsManager(
             """Analyze individual project for type and characteristics."""
             try:
                 # Detect project type
-                project_type = FlextProjectTypes.ProjectType.MIXED
+                project_type = "application"  # Default to application type
                 has_pyproject = (project_path / "pyproject.toml").exists()
                 has_go_mod = (project_path / "go.mod").exists()
                 has_package_json = (project_path / "package.json").exists()
 
                 if has_pyproject or (project_path / "setup.py").exists():
-                    project_type = FlextProjectTypes.ProjectType.PYTHON
+                    project_type = "library"  # Python library
                 elif has_go_mod:
-                    project_type = FlextProjectTypes.ProjectType.GO
+                    project_type = "service"  # Go service
                 elif has_package_json:
-                    project_type = FlextProjectTypes.ProjectType.JAVASCRIPT
+                    project_type = "web"  # JavaScript web application
 
                 # Count test files
                 tests_dir = project_path / "tests"
@@ -190,7 +191,7 @@ class FlextAdvancedDevToolsManager(
             """Execute test operation with comprehensive reporting."""
             try:
                 # Validate prerequisites
-                prereq_result: FlextResult[object] = operation.validate_prerequisites()
+                prereq_result = operation.validate_prerequisites()
                 if prereq_result.is_failure:
                     return self._create_failed_result(
                         operation, f"Prerequisites failed: {prereq_result.error}"
@@ -199,7 +200,7 @@ class FlextAdvancedDevToolsManager(
                 # Execute tests based on configuration
                 workspace_path = Path(operation.context.workspace_root)
                 discovery_service = self._manager.create_project_discovery()
-                projects_result: FlextResult[object] = discovery_service.discover_projects(workspace_path)
+                projects_result = discovery_service.discover_projects(workspace_path)
 
                 if projects_result.is_failure:
                     return self._create_failed_result(
@@ -248,7 +249,7 @@ class FlextAdvancedDevToolsManager(
         ) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
             """Execute linting operation with tool coordination."""
             try:
-                prereq_result: FlextResult[object] = operation.validate_prerequisites()
+                prereq_result = operation.validate_prerequisites()
                 if prereq_result.is_failure:
                     return self._create_failed_result(
                         operation, f"Prerequisites failed: {prereq_result.error}"
@@ -290,7 +291,7 @@ class FlextAdvancedDevToolsManager(
         ) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
             """Execute formatting operation with tool coordination."""
             try:
-                prereq_result: FlextResult[object] = operation.validate_prerequisites()
+                prereq_result = operation.validate_prerequisites()
                 if prereq_result.is_failure:
                     return self._create_failed_result(
                         operation, f"Prerequisites failed: {prereq_result.error}"

@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/__version__.py
-# hypothesis_version: 6.136.7
-
-['.', '2025-06-27', 'AVAILABLE_FEATURES', 'BUILD_TYPE', 'FlextVersionInfo', 'Foundation', 'MAX_PYTHON_VERSION', 'MIN_PYTHON_VERSION', 'RELEASE_DATE', 'RELEASE_NAME', 'VERSION_MAJOR', 'VERSION_MINOR', 'VERSION_PATCH', '__version__', 'advanced_decorators', 'compare_versions', 'core_validation', 'dependency_injection', 'distributed_tracing', 'domain_driven_design', 'enterprise_logging', 'event_sourcing', 'flext-core', 'get_version_info', 'get_version_string', 'get_version_tuple', 'is_feature_available', 'performance_tracking', 'plugin_architecture', 'railway_programming', 'stable', 'type_safety']

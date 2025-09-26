@@ -9,6 +9,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import inspect
+
 from flext_ldap import (
     FlextLdapAPI,
     FlextLdapClient,
@@ -112,8 +114,6 @@ class TestFlextLdapDomainServices:
     def test_flext_ldap_domain_services_requires_parameters(self) -> None:
         """Test FlextLdapDomainServices requires parameters."""
         # Test that the class requires specific parameters
-        import inspect
-
         sig = inspect.signature(FlextLdapDomainServices.__init__)
         required_params = [
             "config",

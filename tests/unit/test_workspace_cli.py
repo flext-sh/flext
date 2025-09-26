@@ -238,7 +238,7 @@ class TestFlextWorkspaceCli:
             assert isinstance(module_path, Path), f"{module_name} should be Path object"
 
     @patch("sys.executable")
-    def test_self(self, mock_executable: Mock) -> None:
+    def test_python_executable_fallback(self, mock_executable: Mock) -> None:
         """Test Python executable fallback behavior."""
         mock_executable.return_value = "/usr/bin/python3"
 
@@ -292,7 +292,7 @@ class TestFlextWorkspaceCli:
         assert cli1._cli_api is not cli2._cli_api
 
     @patch("pathlib.Path.exists")
-    def test_self(self, mock_exists: Mock) -> None:
+    def test_workspace_root_validation(self, mock_exists: Mock) -> None:
         """Test workspace root validation."""
         mock_exists.return_value = True
 
@@ -362,7 +362,7 @@ class TestFlextWorkspaceCliEdgeCases:
         # No exception should be raised
 
     @patch("flext.workspace_cli.FlextLogger")
-    def test_self(self, mock_logger: Mock) -> None:
+    def test_logger_init_failure(self, mock_logger: Mock) -> None:
         """Test handling of logger initialization failure."""
         mock_logger.side_effect = Exception("Logger init failed")
 
@@ -372,7 +372,7 @@ class TestFlextWorkspaceCliEdgeCases:
             FlextWorkspaceCli()
 
     @patch("flext.workspace_cli.FlextCliApi")
-    def test_self(self, mock_api: Mock) -> None:
+    def test_cli_api_init_failure(self, mock_api: Mock) -> None:
         """Test handling of CLI API initialization failure."""
         mock_api.side_effect = Exception("API init failed")
 

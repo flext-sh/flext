@@ -1,4 +1,0 @@
-# file: /home/marlonsc/flext/flext-core/src/flext_core/mixins/timing.py
-# hypothesis_version: 6.138.2
-
-[0.0, 'FlextTiming', '_elapsed_times', '_start_time']
