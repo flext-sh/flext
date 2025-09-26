@@ -10,6 +10,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from flext_cli.mixins import FlextCliMixins
+from flext_core import FlextMixins
 
 
 class TestFlextCliMixins:
@@ -278,6 +279,4 @@ class TestFlextCliMixins:
         mixins = FlextCliMixins()
         assert isinstance(mixins, FlextCliMixins)
         # Should inherit from FlextMixins (base class)
-        from flext_core import FlextMixins
-
         assert isinstance(mixins, FlextMixins)
