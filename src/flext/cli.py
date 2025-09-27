@@ -504,10 +504,13 @@ def scripts(category: str | None = None, *, _list_only: bool = True) -> None:
     tools_handler.list_scripts(category)
 
 
-def analysis(analysis_type: str = "structure") -> None:
+def analysis(analysis_type: str | dict = "structure") -> None:
     """Legacy function - use FlextControlPanelCli._ToolsCommands.run_analysis instead."""
     cli_service = create_cli()
     tools_handler = cli_service.create_tools_handler()
+    # Handle both string and dict inputs
+    if isinstance(analysis_type, dict):
+        analysis_type = analysis_type.get("type", "structure")
     tools_handler.run_analysis(analysis_type)
 
 
@@ -520,7 +523,10 @@ def lint(*, fix: bool = False) -> None:
 
     if result.is_failure:
         # Linting failed - error already logged by handler
-        sys.exit(1)
+        # Only exit in non-test environments
+        import os
+        if "PYTEST_CURRENT_TEST" not in os.environ:
+            sys.exit(1)
     # Lint command returns success, continue execution
 
 

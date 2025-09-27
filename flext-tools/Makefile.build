@@ -1,0 +1,85 @@
+# FLEXT Standardized Build System
+# Common build patterns for all FLEXT projects
+
+# Colors for output
+CYAN := \033[36m
+BLUE := \033[34m
+GREEN := \033[32m
+YELLOW := \033[33m
+RED := \033[31m
+RESET := \033[0m
+
+# Project Configuration
+SRC_DIR := src
+TEST_DIR := tests
+COV_DIR := flext_tools
+MIN_COVERAGE := 75
+POETRY := poetry run
+
+# Standard help target
+.PHONY: std-help
+std-help: ## Show standardized build commands
+	@echo "$(CYAN)📋 FLEXT Standardized Build Commands$(RESET)"
+	@echo "$(CYAN)====================================$(RESET)"
+	@echo ""
+	@echo "$(YELLOW)Quality Gates:$(RESET)"
+	@echo "$(CYAN)  std-validate$(RESET)     Complete validation pipeline"
+	@echo "$(CYAN)  std-check$(RESET)        Quick health check"
+	@echo "$(CYAN)  std-lint$(RESET)         Run linting"
+	@echo "$(CYAN)  std-type-check$(RESET)   Run type checking"
+	@echo "$(CYAN)  std-test$(RESET)         Run tests with coverage"
+	@echo ""
+	@echo "$(YELLOW)Development:$(RESET)"
+	@echo "$(CYAN)  std-format$(RESET)       Format code"
+	@echo "$(CYAN)  std-fix$(RESET)          Auto-fix issues"
+	@echo "$(CYAN)  std-install$(RESET)      Install dependencies"
+	@echo "$(CYAN)  std-install-dev$(RESET)  Install with dev dependencies"
+
+# Standard quality gates
+.PHONY: std-validate
+std-validate: std-lint std-type-check std-test ## Complete validation pipeline
+
+.PHONY: std-check
+std-check: std-lint std-type-check ## Quick health check
+
+.PHONY: std-lint
+std-lint: ## Run linting
+	@echo "$(BLUE)🔍 Running linting...$(RESET)"
+	@$(POETRY) ruff check .
+
+.PHONY: std-type-check
+std-type-check: ## Run type checking
+	@echo "$(BLUE)🔍 Running type checking...$(RESET)"
+	@PYTHONPATH=$(SRC_DIR) $(POETRY) pyrefly check .
+
+.PHONY: std-test
+std-test: ## Run tests with coverage
+	@echo "$(BLUE)🧪 Running tests...$(RESET)"
+	@PYTHONPATH=$(SRC_DIR) $(POETRY) pytest --cov=$(COV_DIR) --cov-report=term-missing --cov-fail-under=$(MIN_COVERAGE)
+
+.PHONY: std-format
+std-format: ## Format code
+	@echo "$(BLUE)🎨 Formatting code...$(RESET)"
+	@$(POETRY) ruff format .
+
+.PHONY: std-fix
+std-fix: ## Auto-fix issues
+	@echo "$(BLUE)🔧 Auto-fixing issues...$(RESET)"
+	@$(POETRY) ruff check . --fix
+	@$(POETRY) ruff format .
+
+.PHONY: std-install
+std-install: ## Install dependencies
+	@echo "$(BLUE)📦 Installing dependencies...$(RESET)"
+	@poetry install
+
+.PHONY: std-install-dev
+std-install-dev: ## Install with dev dependencies
+	@echo "$(BLUE)📦 Installing dev dependencies...$(RESET)"
+	@poetry install --with dev,test
+
+.PHONY: std-validate-setup
+std-validate-setup: ## Validate project setup
+	@echo "$(BLUE)🔍 Validating project setup...$(RESET)"
+	@test -f pyproject.toml || { echo "$(RED)❌ pyproject.toml missing$(RESET)"; exit 1; }
+	@echo "$(GREEN)✅ Basic project validation passed$(RESET)"
