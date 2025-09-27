@@ -18,7 +18,6 @@ from flext.project_types import FlextProjectTypes
 from flext_core import (
     FlextLogger,
     FlextResult,
-    FlextTypes,
     FlextService,
 )
 
