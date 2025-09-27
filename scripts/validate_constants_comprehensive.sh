@@ -160,7 +160,7 @@ is_acceptable_context() {
 validate_file() {
 	local file="$1"
 	local project="$2"
-	local relative_path="${file#${PROJECT_ROOT}/}"
+	local relative_path="${file#"${PROJECT_ROOT}"/}"
 	local violations=()
 
 	((TOTAL_FILES_CHECKED++))

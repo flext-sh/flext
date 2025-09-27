@@ -84,7 +84,7 @@ validate_single_class_pattern() {
 	local project_name=$(basename "$project_dir")
 	local constants_file="$project_dir/src/*/constants.py"
 
-	if ! ls $constants_file >/dev/null 2>&1; then
+	if ! ls "$constants_file" >/dev/null 2>&1; then
 		log_warning "$project_name" "No Constants File" "No constants.py found"
 		return 0
 	fi

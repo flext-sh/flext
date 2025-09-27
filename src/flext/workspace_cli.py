@@ -245,8 +245,7 @@ class FlextWorkspaceCli(FlextService[str]):
                 if completed_process.returncode == 0:
                     print_colored(f"✅ {module} tests passed")
                     return FlextResult[dict[str, object]].ok({"status": "passed"})
-                else:
-                    return FlextResult[dict[str, object]].fail(f"Tests failed for {module}")
+                return FlextResult[dict[str, object]].fail(f"Tests failed for {module}")
 
             print_colored("🧪 Running all workspace tests")
 
@@ -300,8 +299,7 @@ class FlextWorkspaceCli(FlextService[str]):
                 if completed_process.returncode == 0:
                     print_colored(f"✅ {module} quality checks passed")
                     return FlextResult[dict[str, object]].ok({"status": "passed"})
-                else:
-                    return FlextResult[dict[str, object]].fail(f"Quality checks failed for {module}")
+                return FlextResult[dict[str, object]].fail(f"Quality checks failed for {module}")
 
             print_colored("🔍 Running workspace quality checks")
             result = self._workspace_service.run_make_target("check-all")
