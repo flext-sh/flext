@@ -14,6 +14,7 @@ from collections.abc import Generator
 
 import pytest
 
+from flext_core import FlextConstants
 from flext_tests import FlextTestDocker
 
 
@@ -48,9 +49,7 @@ def postgres_container(flext_docker: FlextTestDocker) -> Generator[str]:
     host_port = container_info.ports["5433"]
 
     # Return connection string compatible with existing tests
-    connection_string = (
-        f"postgresql://flext:flext_password@localhost:{host_port}/flext_db"
-    )
+    connection_string = f"postgresql://flext:flext_password@{FlextConstants.Platform.DEFAULT_HOST}:{host_port}/flext_db"
 
     try:
         yield connection_string
@@ -80,7 +79,7 @@ def ldap_container(flext_docker: FlextTestDocker) -> Generator[str]:
     host_port = container_info.ports["3390"]
 
     # Return connection string compatible with existing tests
-    connection_string = f"ldap://localhost:{host_port}"
+    connection_string = f"ldap://{FlextConstants.Platform.DEFAULT_HOST}:{host_port}"
 
     try:
         yield connection_string
@@ -110,7 +109,7 @@ def redis_container(flext_docker: FlextTestDocker) -> Generator[str]:
     host_port = container_info.ports["6380"]
 
     # Return connection string compatible with existing tests
-    connection_string = f"redis://localhost:{host_port}/0"
+    connection_string = f"redis://{FlextConstants.Platform.DEFAULT_HOST}:{host_port}/0"
 
     try:
         yield connection_string
@@ -140,7 +139,7 @@ def oracle_container(flext_docker: FlextTestDocker) -> Generator[str]:
     host_port = container_info.ports["1522"]
 
     # Return connection string compatible with existing tests
-    connection_string = f"oracle://flext:flext_password@localhost:{host_port}/FLEXT"
+    connection_string = f"oracle://flext:flext_password@{FlextConstants.Platform.DEFAULT_HOST}:{host_port}/FLEXT"
 
     try:
         yield connection_string
