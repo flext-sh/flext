@@ -182,7 +182,7 @@ class TestFlextApiConsolidated:
         # Create a single client and perform multiple operations
         client = FlextApiClient()
         assert client is not None
-        
+
         # Perform multiple operations with the same client
         for _ in range(10):
             # Test a lightweight operation

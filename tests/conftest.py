@@ -266,3 +266,25 @@ def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
         # Add oracle marker to tests that mention oracle
         if "oracle" in str(item.fspath).lower():
             item.add_marker(pytest.mark.oracle)
+
+
+@pytest.fixture
+def sample_ldif_entries() -> str:
+    """Sample LDIF entries for testing."""
+    return """dn: cn=John Doe,ou=people,dc=example,dc=com
+objectClass: inetOrgPerson
+cn: John Doe
+sn: Doe
+mail: john.doe@example.com
+
+dn: cn=Jane Smith,ou=people,dc=example,dc=com
+objectClass: inetOrgPerson
+cn: Jane Smith
+sn: Smith
+mail: jane.smith@example.com
+
+dn: ou=groups,dc=example,dc=com
+objectClass: organizationalUnit
+ou: groups
+description: Groups organizational unit
+"""
