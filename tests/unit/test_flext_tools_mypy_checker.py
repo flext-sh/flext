@@ -13,6 +13,8 @@ import inspect
 import tempfile
 from pathlib import Path
 
+import pytest
+
 from flext_core import FlextResult
 from flext_tests import FlextTestsDomains
 from flext_tools.mypy_checker import MyPyChecker
@@ -21,14 +23,30 @@ from flext_tools.mypy_checker import MyPyChecker
 class TestMyPyChecker:
     """Unified test class for MyPyChecker functionality."""
 
+    @pytest.fixture
+    def temp_project_dir(self) -> Path:
+        """Create temporary project directory for testing."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            project_dir = Path(temp_dir) / "test_project"
+            project_dir.mkdir()
+            yield project_dir
+
+    @pytest.fixture
+    def temp_test_dir(self) -> Path:
+        """Create temporary test directory for testing."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            test_dir = Path(temp_dir) / "test"
+            test_dir.mkdir()
+            yield test_dir
+
     class _TestDataHelper:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_test_project_data() -> dict[str, object]:
+        def create_test_project_data(project_path: str) -> dict[str, object]:
             """Create test project data."""
             return {
-                "project_path": "/tmp/flext_test_project",
+                "project_path": project_path,
                 "python_files": ["main.py", "utils.py", "test.py"],
                 "config_file": "mypy.ini",
             }
@@ -72,7 +90,7 @@ class TestMyPyChecker:
         assert callable(checker.check_project)
 
         # Test check_project with string path
-        result = checker.check_project("/tmp/test_project")
+        result = checker.check_project(str(self.temp_project_dir))
         assert isinstance(result, FlextResult)
         assert result.is_success
         assert isinstance(result.data, list)
@@ -82,7 +100,7 @@ class TestMyPyChecker:
         checker = MyPyChecker()
 
         # Test check_project with Path object
-        test_path = Path("/tmp/test_project")
+        test_path = Path(str(self.temp_project_dir))
         result = checker.check_project(test_path)
         assert isinstance(result, FlextResult)
         assert result.is_success
@@ -97,7 +115,7 @@ class TestMyPyChecker:
         assert callable(checker.get_type_coverage)
 
         # Test get_type_coverage returns FlextResult
-        result = checker.get_type_coverage("/tmp/test_project")
+        result = checker.get_type_coverage(str(self.temp_project_dir))
         assert isinstance(result, FlextResult)
         assert result.is_success
         assert isinstance(result.data, str)
@@ -107,11 +125,11 @@ class TestMyPyChecker:
         checker = MyPyChecker()
 
         # Test that checker handles errors gracefully
-        result = checker.check_project("/tmp/test_project")
+        result = checker.check_project(str(self.temp_project_dir))
         assert isinstance(result, FlextResult)
         assert result.is_success
 
-        coverage_result = checker.get_type_coverage("/tmp/test_project")
+        coverage_result = checker.get_type_coverage(str(self.temp_project_dir))
         assert isinstance(coverage_result, FlextResult)
         assert coverage_result.is_success
 
@@ -135,7 +153,7 @@ class TestMyPyChecker:
 
         # Test checking different project paths
         test_paths = [
-            "/tmp/test_project",
+            str(self.temp_project_dir),
             "/home/user/project",
             "/var/www/project",
         ]
@@ -152,7 +170,7 @@ class TestMyPyChecker:
 
         # Test getting type coverage for different projects
         test_paths = [
-            "/tmp/test_project",
+            str(self.temp_project_dir),
             "/home/user/project",
             "/var/www/project",
         ]
@@ -168,21 +186,21 @@ class TestMyPyChecker:
         checker = MyPyChecker()
 
         # Test with string path
-        string_result = checker.check_project("/tmp/test")
+        string_result = checker.check_project(str(self.temp_test_dir))
         assert isinstance(string_result, FlextResult)
         assert string_result.is_success
 
         # Test with Path object
-        path_result = checker.check_project(Path("/tmp/test"))
+        path_result = checker.check_project(Path(str(self.temp_test_dir)))
         assert isinstance(path_result, FlextResult)
         assert path_result.is_success
 
         # Test type coverage with both types
-        string_coverage = checker.get_type_coverage("/tmp/test")
+        string_coverage = checker.get_type_coverage(str(self.temp_test_dir))
         assert isinstance(string_coverage, FlextResult)
         assert string_coverage.is_success
 
-        path_coverage = checker.get_type_coverage(Path("/tmp/test"))
+        path_coverage = checker.get_type_coverage(Path(str(self.temp_test_dir)))
         assert isinstance(path_coverage, FlextResult)
         assert path_coverage.is_success
 
@@ -205,10 +223,10 @@ class TestMyPyChecker:
         assert callable(checker.get_type_coverage)
 
         # Test checker operations
-        check_result = checker.check_project("/tmp/test")
+        check_result = checker.check_project(str(self.temp_test_dir))
         assert isinstance(check_result, FlextResult)
 
-        coverage_result = checker.get_type_coverage("/tmp/test")
+        coverage_result = checker.get_type_coverage(str(self.temp_test_dir))
         assert isinstance(coverage_result, FlextResult)
 
     def test_mypy_checker_with_flext_tests(
@@ -219,10 +237,10 @@ class TestMyPyChecker:
 
         # Create test data using flext_tests
         test_project_data = flext_domains.create_service()
-        test_project_data["project_path"] = "/tmp/flext_test_project"
+        test_project_data["project_path"] = str(self.temp_project_dir)
 
         # Test checker execution
-        check_result = checker.check_project("/tmp/test")
+        check_result = checker.check_project(str(self.temp_test_dir))
         assert isinstance(check_result, FlextResult)
 
         # Test checker with flext_tests data
@@ -239,11 +257,11 @@ class TestMyPyChecker:
         checker = MyPyChecker()
 
         # Test that checker operations are reasonably fast
-        check_result = checker.check_project("/tmp/test")
+        check_result = checker.check_project(str(self.temp_test_dir))
         assert isinstance(check_result, FlextResult)
         assert check_result.is_success
 
-        coverage_result = checker.get_type_coverage("/tmp/test")
+        coverage_result = checker.get_type_coverage(str(self.temp_test_dir))
         assert isinstance(coverage_result, FlextResult)
         assert coverage_result.is_success
 

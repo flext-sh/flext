@@ -345,12 +345,8 @@ class TestFlextPathService:
 
         # Test with None (should handle gracefully)
         utility_helper = service._UtilityHelper()
-        try:
-            normalized = utility_helper.normalize_path("")
-            assert isinstance(normalized, Path)
-        except Exception:
-            # Expected for empty string
-            pass
+        normalized = utility_helper.normalize_path("")
+        assert isinstance(normalized, Path)
 
         # Test with relative paths
         assert validation_helper.should_ignore_path("./__pycache__") is True

@@ -26,7 +26,7 @@ class TestFlextControlPanelCli:
         def create_test_cli_data() -> dict[str, object]:
             """Create test CLI data."""
             return {
-                "config_path": "/tmp/test_config.json",
+                "config_path": "/tmp/test_config.json",  # noqa: S108
                 "verbose": True,
                 "output_format": "json",
             }
@@ -128,7 +128,7 @@ class TestFlextControlPanelCli:
         gateway_class = FlextControlPanelCli._QualityGateway
 
         # Test class can be instantiated with required parameters
-        gateway = gateway_class(workspace_path="/tmp/test_workspace")
+        gateway = gateway_class(workspace_path="/tmp/test_workspace"  # noqa: S108)
         assert gateway is not None
         assert isinstance(gateway, gateway_class)
 
@@ -137,7 +137,7 @@ class TestFlextControlPanelCli:
         context_class = FlextControlPanelCli._CliContext
 
         # Test class can be instantiated with required parameters
-        context = context_class(config={}, workspace="/tmp/test_workspace")
+        context = context_class(config={}, workspace="/tmp/test_workspace"  # noqa: S108)
         assert context is not None
         assert isinstance(context, context_class)
 
@@ -247,7 +247,7 @@ class TestFlextControlPanelCli:
 
         # Create test data using flext_tests
         test_cli_data = flext_domains.create_service()
-        test_cli_data["config_path"] = "/tmp/flext_test_config.json"
+        test_cli_data["config_path"] = "/tmp/flext_test_config.json"  # noqa: S108
 
         # Test service execution
         result = cli.execute()
@@ -301,10 +301,10 @@ class TestFlextControlPanelCli:
         quality_config = cli._QualityCheckConfig(test_param="test_value")
         assert quality_config is not None
 
-        quality_gateway = cli._QualityGateway(workspace_path="/tmp/test_workspace")
+        quality_gateway = cli._QualityGateway(workspace_path="/tmp/test_workspace"  # noqa: S108)
         assert quality_gateway is not None
 
-        cli_context = cli._CliContext(config={}, workspace="/tmp/test_workspace")
+        cli_context = cli._CliContext(config={}, workspace="/tmp/test_workspace"  # noqa: S108)
         assert cli_context is not None
 
         tools_commands = cli._ToolsCommands(cli)
