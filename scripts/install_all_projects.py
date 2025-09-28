@@ -2,7 +2,7 @@
 """Script para instalar todos os projetos FLEXT em modo de desenvolvimento."""
 
 import shutil
-import subprocess
+import subprocess  # noqa: S404
 import sys
 from pathlib import Path
 

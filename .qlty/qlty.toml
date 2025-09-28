@@ -70,8 +70,8 @@ name = "bandit"
 [[plugin]]
 name = "checkov"
 
-[[plugin]]
-name = "dockerfmt"
+#[[plugin]]
+#name = "dockerfmt"
 
 [[plugin]]
 name = "dotenv-linter"

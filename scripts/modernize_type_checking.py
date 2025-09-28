@@ -242,7 +242,7 @@ def modernize_project(project_dir: Path) -> dict[str, bool]:
     if any(results.values()):
         print(f"  ✅ Successfully modernized {project_dir.name}")
     else:
-        print(f"  ℹ️  No changes needed for {project_dir.name}")
+        print(f"  INFO: No changes needed for {project_dir.name}")
 
     return results
 
@@ -288,7 +288,7 @@ def main() -> None:
         )
         print("Next: Run 'poetry lock' in each updated project")
     else:
-        print("\nℹ️  All projects already modernized or no changes needed")
+        print("\nINFO: All projects already modernized or no changes needed")
 
 
 if __name__ == "__main__":
