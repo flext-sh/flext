@@ -68,12 +68,12 @@ def modernize_type_parameters(content: str) -> tuple[str, list[str]]:
         content = re.sub(r"import.*TypeVar.*\n", "", content)
 
         # Remove TypeVar definitions
-        for var_name, type_name in typevar_matches:
+        for var_name, _type_name in typevar_matches:
             content = re.sub(rf"{var_name}\s*=\s*TypeVar\([^)]+\)\s*\n?", "", content)
             changes.append(f"Removed TypeVar definition for {var_name}")
 
         # Update class definitions to use new syntax
-        for var_name, type_name in typevar_matches:
+        for var_name, _type_name in typevar_matches:
             # Generic[T] -> [T]
             content = re.sub(
                 rf"class\s+(\w+)\s*\(\s*Generic\[{var_name}\]\s*\)",
@@ -99,7 +99,7 @@ def modernize_type_parameters(content: str) -> tuple[str, list[str]]:
     for match in functions:
         func_start = match.start()
         # Look for TypeVar usage in this function
-        for var_name, type_name in typevar_matches:
+        for var_name, _type_name in typevar_matches:
             if (
                 var_name in content[func_start : func_start + 500]
             ):  # Check next 500 chars
@@ -147,9 +147,7 @@ def modernize_override_decorators(content: str) -> tuple[str, list[str]]:
 
         for method in override_methods:
             method_pattern = rf"(\s+)def\s+{method}\s*\("
-            if re.search(method_pattern, class_body):
-                # Add @override decorator if not present
-                if "@override" not in class_body:
+            if re.search(method_pattern, class_body) and "@override" not in class_body:
                     # Add typing import if needed
                     if "from typing import" in content and "override" not in content:
                         content = re.sub(
@@ -436,7 +434,7 @@ def main() -> None:
                 f"  ✅ {project_name}: {project_modified}/{len(files)} files modified, {project_changes} total changes"
             )
         else:
-            print(f"  ℹ️  {project_name}: No changes needed")
+            print(f"  INFO: {project_name}: No changes needed")
 
     # Summary
     print("\n📊 Python 3.13+ Modernization Summary:")
@@ -458,7 +456,7 @@ def main() -> None:
         print("  • Built-in collection types (list[T], dict[K, V])")
         print("  • Unquoted type annotations")
     else:
-        print("\nℹ️  All files already use modern Python syntax")
+        print("\nINFO: All files already use modern Python syntax")
 
 
 if __name__ == "__main__":

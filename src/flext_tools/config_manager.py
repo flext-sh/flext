@@ -33,7 +33,7 @@ class FlextToolsConfig(FlextConfig):
 
     # Configuration File Management
     config_file_path: str | None = Field(
-        default=None, description="Path to configuration file"
+        default=None, description="Path to configuration file",
     )
 
     # Environment Variable Prefixes
@@ -44,15 +44,15 @@ class FlextToolsConfig(FlextConfig):
 
     # Tool Configuration
     backup_enabled: bool = Field(
-        default=True, description="Enable backup functionality"
+        default=True, description="Enable backup functionality",
     )
 
     monitoring_enabled: bool = Field(
-        default=True, description="Enable monitoring functionality"
+        default=True, description="Enable monitoring functionality",
     )
 
     linting_enabled: bool = Field(
-        default=True, description="Enable linting functionality"
+        default=True, description="Enable linting functionality",
     )
 
     # Pydantic 2 field validators
@@ -108,7 +108,7 @@ class FlextToolsConfig(FlextConfig):
             return FlextResult[dict[str, str]].ok(config_data)
         except Exception as e:
             return FlextResult[dict[str, str]].fail(
-                f"Failed to load environment config: {e}"
+                f"Failed to load environment config: {e}",
             )
 
     def get_config_value(self, key: str, default: str = "") -> FlextResult[str]:
@@ -121,14 +121,14 @@ class FlextToolsConfig(FlextConfig):
             env_result = self.load_environment_config()
             if env_result.is_failure:
                 return FlextResult[str].fail(
-                    f"Failed to load config: {env_result.error}"
+                    f"Failed to load config: {env_result.error}",
                 )
 
             value = env_result.data.get(key, default)
             return FlextResult[str].ok(value)
         except Exception as e:
             return FlextResult[str].fail(
-                f"Failed to get config value for key '{key}': {e}"
+                f"Failed to get config value for key '{key}': {e}",
             )
 
     def set_config_value(self, key: str, value: str) -> FlextResult[None]:
@@ -153,7 +153,7 @@ class FlextToolsConfig(FlextConfig):
             return FlextResult[None].ok(None)
         except Exception as e:
             return FlextResult[None].fail(
-                f"Failed to set config value for key '{key}': {e}"
+                f"Failed to set config value for key '{key}': {e}",
             )
 
     def validate_tools_configuration(self) -> FlextResult[None]:
@@ -164,18 +164,18 @@ class FlextToolsConfig(FlextConfig):
                 config_path = Path(self.config_file_path)
                 if not config_path.exists():
                     return FlextResult[None].fail(
-                        f"Configuration file does not exist: {config_path}"
+                        f"Configuration file does not exist: {config_path}",
                     )
                 if not config_path.is_file():
                     return FlextResult[None].fail(
-                        f"Configuration path is not a file: {config_path}"
+                        f"Configuration path is not a file: {config_path}",
                     )
 
             # Validate environment variables
             env_result = self.load_environment_config()
             if env_result.is_failure:
                 return FlextResult[None].fail(
-                    f"Environment validation failed: {env_result.error}"
+                    f"Environment validation failed: {env_result.error}",
                 )
 
             return FlextResult[None].ok(None)
@@ -194,7 +194,7 @@ class FlextToolsConfig(FlextConfig):
 
     @classmethod
     def create_for_environment(
-        cls, environment: str, **overrides: object
+        cls, environment: str, **overrides: object,
     ) -> FlextToolsConfig:
         """Create configuration for specific environment."""
         env_overrides: dict[str, object] = {}
@@ -249,7 +249,7 @@ class ConfigurationManager:
     def __init__(self, config_file: str | Path | None = None) -> None:
         """Initialize configuration manager with legacy interface."""
         self._config_instance = FlextToolsConfig(
-            config_file_path=str(config_file) if config_file else None
+            config_file_path=str(config_file) if config_file else None,
         )
         # Legacy attribute compatibility
         self.config_file = Path(config_file) if config_file else None

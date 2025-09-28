@@ -13,6 +13,8 @@ import inspect
 import tempfile
 from pathlib import Path
 
+import pytest
+
 from flext_core import FlextResult
 from flext_tests import FlextTestsDomains
 from flext_tools.poetry_validator import PoetryValidator
@@ -21,14 +23,30 @@ from flext_tools.poetry_validator import PoetryValidator
 class TestPoetryValidator:
     """Unified test class for PoetryValidator functionality."""
 
+    @pytest.fixture
+    def temp_project_dir(self) -> Path:
+        """Create temporary project directory for testing."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            project_dir = Path(temp_dir) / "test_project"
+            project_dir.mkdir()
+            yield project_dir
+
+    @pytest.fixture
+    def temp_test_dir(self) -> Path:
+        """Create temporary test directory for testing."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            test_dir = Path(temp_dir) / "test"
+            test_dir.mkdir()
+            yield test_dir
+
     class _TestDataHelper:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_test_project_data() -> dict[str, object]:
+        def create_test_project_data(project_path: str) -> dict[str, object]:
             """Create test project data."""
             return {
-                "project_path": "/tmp/flext_test_project",
+                "project_path": project_path,
                 "pyproject_file": "pyproject.toml",
                 "poetry_lock": "poetry.lock",
             }
@@ -72,7 +90,7 @@ class TestPoetryValidator:
         assert callable(validator.validate_pyproject)
 
         # Test validate_pyproject with string path
-        result = validator.validate_pyproject("/tmp/test_project")
+        result = validator.validate_pyproject(str(self.temp_project_dir))
         assert isinstance(result, FlextResult)
         assert result.is_success
         assert isinstance(result.data, dict)
@@ -82,7 +100,7 @@ class TestPoetryValidator:
         validator = PoetryValidator()
 
         # Test validate_pyproject with Path object
-        test_path = Path("/tmp/test_project")
+        test_path = Path(str(self.temp_project_dir))
         result = validator.validate_pyproject(test_path)
         assert isinstance(result, FlextResult)
         assert result.is_success
@@ -97,7 +115,7 @@ class TestPoetryValidator:
         assert callable(validator.validate_project)
 
         # Test validate_project returns FlextResult
-        result = validator.validate_project("/tmp/test_project")
+        result = validator.validate_project(str(self.temp_project_dir))
         assert isinstance(result, FlextResult)
         assert result.is_success
         assert isinstance(result.data, bool)
@@ -107,11 +125,11 @@ class TestPoetryValidator:
         validator = PoetryValidator()
 
         # Test that validator handles errors gracefully
-        result = validator.validate_pyproject("/tmp/test_project")
+        result = validator.validate_pyproject(str(self.temp_project_dir))
         assert isinstance(result, FlextResult)
         assert result.is_success
 
-        deps_result = validator.validate_project("/tmp/test_project")
+        deps_result = validator.validate_project(str(self.temp_project_dir))
         assert isinstance(deps_result, FlextResult)
         assert deps_result.is_success
 
@@ -135,7 +153,7 @@ class TestPoetryValidator:
 
         # Test validating different project paths
         test_paths = [
-            "/tmp/test_project",
+            str(self.temp_project_dir),
             "/home/user/project",
             "/var/www/project",
         ]
@@ -152,7 +170,7 @@ class TestPoetryValidator:
 
         # Test checking dependencies for different projects
         test_paths = [
-            "/tmp/test_project",
+            str(self.temp_project_dir),
             "/home/user/project",
             "/var/www/project",
         ]
@@ -168,21 +186,21 @@ class TestPoetryValidator:
         validator = PoetryValidator()
 
         # Test with string path
-        string_result = validator.validate_pyproject("/tmp/test")
+        string_result = validator.validate_pyproject(str(self.temp_test_dir))
         assert isinstance(string_result, FlextResult)
         assert string_result.is_success
 
         # Test with Path object
-        path_result = validator.validate_pyproject(Path("/tmp/test"))
+        path_result = validator.validate_pyproject(Path(str(self.temp_test_dir)))
         assert isinstance(path_result, FlextResult)
         assert path_result.is_success
 
         # Test dependencies with both types
-        string_deps = validator.validate_project("/tmp/test")
+        string_deps = validator.validate_project(str(self.temp_test_dir))
         assert isinstance(string_deps, FlextResult)
         assert string_deps.is_success
 
-        path_deps = validator.validate_project(Path("/tmp/test"))
+        path_deps = validator.validate_project(Path(str(self.temp_test_dir)))
         assert isinstance(path_deps, FlextResult)
         assert path_deps.is_success
 
@@ -205,10 +223,10 @@ class TestPoetryValidator:
         assert callable(validator.validate_project)
 
         # Test validator operations
-        validate_result = validator.validate_pyproject("/tmp/test")
+        validate_result = validator.validate_pyproject(str(self.temp_test_dir))
         assert isinstance(validate_result, FlextResult)
 
-        deps_result = validator.check_dependencies("/tmp/test")
+        deps_result = validator.check_dependencies(str(self.temp_test_dir))
         assert isinstance(deps_result, FlextResult)
 
     def test_poetry_validator_with_flext_tests(
@@ -219,10 +237,10 @@ class TestPoetryValidator:
 
         # Create test data using flext_tests
         test_project_data = flext_domains.create_service()
-        test_project_data["project_path"] = "/tmp/flext_test_project"
+        test_project_data["project_path"] = str(self.temp_project_dir)
 
         # Test validator execution
-        validate_result = validator.validate_pyproject("/tmp/test")
+        validate_result = validator.validate_pyproject(str(self.temp_test_dir))
         assert isinstance(validate_result, FlextResult)
 
         # Test validator with flext_tests data
@@ -239,11 +257,11 @@ class TestPoetryValidator:
         validator = PoetryValidator()
 
         # Test that validator operations are reasonably fast
-        validate_result = validator.validate_pyproject("/tmp/test")
+        validate_result = validator.validate_pyproject(str(self.temp_test_dir))
         assert isinstance(validate_result, FlextResult)
         assert validate_result.is_success
 
-        deps_result = validator.validate_project("/tmp/test")
+        deps_result = validator.validate_project(str(self.temp_test_dir))
         assert isinstance(deps_result, FlextResult)
         assert deps_result.is_success
 
