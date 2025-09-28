@@ -20,7 +20,7 @@ from __future__ import annotations
 import ast
 import os
 import re
-import subprocess
+import subprocess  # noqa: S404
 import sys
 from pathlib import Path
 from typing import TypedDict, cast

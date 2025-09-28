@@ -228,8 +228,9 @@ def detect_loose_functions(content: str) -> list[str]:
             in_class = False
 
         # Check for loose functions (not inside class)
-        if re.match(function_pattern, stripped) and not in_class:
-            func_name = re.match(function_pattern, stripped).group(1)
+        match = re.match(function_pattern, stripped)
+        if match and not in_class:
+            func_name = match.group(1)
             # Allow certain special functions
             if func_name not in {"main", "__main__"}:
                 violations.append(
@@ -265,11 +266,13 @@ def detect_non_flext_constants(content: str, file_path: Path) -> list[str]:
     violations = []
 
     # Skip if this is a constants file itself
-    if "constants.py" in file_path.name:
-        # Check if it inherits from FlextConstants
-        if "class " in content and "Constants" in content:
-            if "FlextConstants" not in content:
-                violations.append("Constants class should inherit from FlextConstants")
+    if (
+        "constants.py" in file_path.name
+        and "class " in content
+        and "Constants" in content
+        and "FlextConstants" not in content
+    ):
+        violations.append("Constants class should inherit from FlextConstants")
 
     return violations
 
@@ -293,10 +296,13 @@ def detect_internal_imports(content: str) -> list[str]:
 
 
 def enforce_unified_class_pattern(
-    content: str, file_path: Path
+    content: str,
+    file_path: Path,
 ) -> tuple[str, list[str]]:
     """Enforce unified class pattern with nested helpers."""
     changes = []
+    # Use file_path parameter to avoid linting warnings
+    _ = file_path
 
     # This would be a complex transformation requiring AST manipulation
     # For now, we'll detect violations and suggest manual fixes
@@ -314,6 +320,8 @@ def enforce_unified_class_pattern(
 def enforce_domain_separation(content: str, file_path: Path) -> tuple[str, list[str]]:
     """Enforce domain separation by replacing direct imports."""
     changes = []
+    # Use file_path parameter to avoid linting warnings
+    _ = file_path
 
     # Replace domain violations with proper imports
     for old_import, new_import in DOMAIN_REPLACEMENTS.items():
@@ -335,11 +343,10 @@ def enforce_flext_result_pattern(content: str) -> tuple[str, list[str]]:
 
         # Find where to insert import
         for i, line in enumerate(lines):
-            if line.strip().startswith("from flext_core"):
-                if "FlextResult" not in line:
-                    lines[i] = line.rstrip(" ,") + ", FlextResult"
-                    changes.append("Added FlextResult to imports")
-                    break
+            if line.strip().startswith("from flext_core") and "FlextResult" not in line:
+                lines[i] = line.rstrip(" ,") + ", FlextResult"
+                changes.append("Added FlextResult to imports")
+                break
         else:
             # Add new import line
             for i, line in enumerate(lines):
@@ -359,28 +366,29 @@ def enforce_constants_inheritance(
     """Enforce FlextConstants inheritance pattern."""
     changes = []
 
-    if "constants.py" in file_path.name:
-        # Check if it has a constants class
-        if re.search(r"class\s+\w*Constants?\w*", content):
-            if "FlextConstants" not in content:
-                # Add FlextConstants import and inheritance
-                if "from flext_core import" in content:
-                    content = re.sub(
-                        r"from flext_core import ([^)]+)",
-                        r"from flext_core import \1, FlextConstants",
-                        content,
-                    )
-                else:
-                    content = "from flext_core import FlextConstants\n\n" + content
+    if (
+        "constants.py" in file_path.name
+        and re.search(r"class\s+\w*Constants?\w*", content)
+        and "FlextConstants" not in content
+    ):
+        # Add FlextConstants import and inheritance
+        if "from flext_core import" in content:
+            content = re.sub(
+                r"from flext_core import ([^)]+)",
+                r"from flext_core import \1, FlextConstants",
+                content,
+            )
+        else:
+            content = "from flext_core import FlextConstants\n\n" + content
 
-                # Update class definition
-                content = re.sub(
-                    r"class\s+(\w*Constants?\w*)\s*:",
-                    r"class \1(FlextConstants):",
-                    content,
-                )
+        # Update class definition
+        content = re.sub(
+            r"class\s+(\w*Constants?\w*)\s*:",
+            r"class \1(FlextConstants):",
+            content,
+        )
 
-                changes.append("Added FlextConstants inheritance")
+        changes.append("Added FlextConstants inheritance")
 
     return content, changes
 
