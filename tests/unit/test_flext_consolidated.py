@@ -271,8 +271,6 @@ class TestFlextCoreIntegration:
 
     def test_flext_core_imports(self) -> None:
         """Test that flext_core can be imported."""
-        from flext_core import FlextContainer, FlextLogger, FlextResult, FlextService
-
         assert FlextResult is not None
         assert FlextService is not None
         assert FlextContainer is not None

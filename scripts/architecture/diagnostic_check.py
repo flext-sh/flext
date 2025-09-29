@@ -11,7 +11,7 @@ import contextlib
 import io
 import json
 import shutil
-import subprocess  # noqa: S404
+import subprocess
 import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime

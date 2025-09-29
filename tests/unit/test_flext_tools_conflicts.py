@@ -84,7 +84,7 @@ class TestConflictAnalyzer:
         assert callable(analyzer.analyze_dependencies)
 
         # Test analyze_dependencies with valid path
-        result = analyzer.analyze_dependencies("/tmp/test_project")
+        result = analyzer.analyze_dependencies("/tmp/test_project")  # noqa: S108
         assert isinstance(result, FlextResult)
         assert result.is_success
         assert isinstance(result.data, list)
@@ -118,7 +118,7 @@ class TestConflictAnalyzer:
         analyzer = ConflictAnalyzer()
 
         # Test that analyzer handles errors gracefully
-        result = analyzer.analyze_dependencies("/tmp/test_project")
+        result = analyzer.analyze_dependencies("/tmp/test_project")  # noqa: S108
         assert isinstance(result, FlextResult)
         assert result.is_success
 
@@ -146,7 +146,7 @@ class TestConflictAnalyzer:
 
         # Test analyzing different project paths
         test_paths = [
-            "/tmp/test_project",
+            "/tmp/test_project",  # noqa: S108
             "/home/user/project",
             "/var/www/project",
         ]
