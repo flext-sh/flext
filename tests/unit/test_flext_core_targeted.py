@@ -1,0 +1,538 @@
+"""Targeted tests for flext-core modules focusing on actual existing API.
+
+Tests the real API methods to achieve maximum coverage with working functionality.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
+
+from __future__ import annotations
+
+import asyncio
+import time
+from typing import Any
+
+import pytest
+
+from flext_core import (
+    FlextBus,
+    FlextConfig,
+    FlextConstants,
+    FlextContainer,
+    FlextLogger,
+    FlextModels,
+    FlextResult,
+    FlextService,
+    FlextTypes,
+    FlextUtilities,
+)
+
+
+class TestFlextCoreTargeted:
+    """Targeted tests for actual flext-core API methods."""
+
+    # =============================================================================
+    # FLEXT RESULT TARGETED TESTS - Based on Actual API
+    # =============================================================================
+
+    def test_flext_result_creation_and_basic_properties(self) -> None:
+        """Test FlextResult creation and basic property access."""
+        # Test successful creation
+        success = FlextResult[str].ok("test_data")
+        assert success.is_success
+        assert not success.is_failure
+        assert success.data == "test_data"
+        assert success.value == "test_data"  # Dual access API
+        assert success.error is None
+
+        # Test failure creation
+        failure = FlextResult[str].fail("error_message")
+        assert failure.is_failure
+        assert not failure.is_success
+        # Use safe access for failure (property, not method)
+        assert failure.value_or_none is None
+        assert failure.error == "error_message"
+
+    def test_flext_result_unwrap_methods(self) -> None:
+        """Test unwrap methods."""
+        success = FlextResult[str].ok("data")
+        failure = FlextResult[str].fail("error")
+
+        # Test unwrap
+        assert success.unwrap() == "data"
+
+        with pytest.raises(Exception):
+            failure.unwrap()
+
+        # Test unwrap_or
+        assert success.unwrap_or("default") == "data"
+        assert failure.unwrap_or("default") == "default"
+
+        # Test value_or_none property
+        assert success.value_or_none == "data"
+        assert failure.value_or_none is None
+
+    def test_flext_result_map_operations(self) -> None:
+        """Test map and flat_map operations."""
+        success = FlextResult[int].ok(5)
+        failure = FlextResult[int].fail("error")
+
+        # Test map
+        mapped_success = success.map(lambda x: x * 2)
+        assert mapped_success.is_success
+        assert mapped_success.data == 10
+
+        mapped_failure = failure.map(lambda x: x * 2)
+        assert mapped_failure.is_failure
+
+        # Test flat_map
+        def double_wrap(x: int) -> FlextResult[int]:
+            return FlextResult[int].ok(x * 2)
+
+        flat_mapped = success.flat_map(double_wrap)
+        assert flat_mapped.is_success
+        assert flat_mapped.data == 10
+
+    def test_flext_result_combine_methods(self) -> None:
+        """Test combine and collection methods."""
+        results = [
+            FlextResult[int].ok(1),
+            FlextResult[int].ok(2),
+            FlextResult[int].ok(3),
+        ]
+
+        # Test combine using the _Utils.combine method
+        combined = FlextResult._Utils.combine(*results)
+        assert combined.is_success
+        assert combined.data == [1, 2, 3]
+
+        # Test with failure
+        results_with_failure = [
+            FlextResult[int].ok(1),
+            FlextResult[int].fail("error"),
+            FlextResult[int].ok(3),
+        ]
+
+        combined_fail = FlextResult._Utils.combine(*results_with_failure)
+        assert combined_fail.is_failure
+
+    def test_flext_result_logical_operations(self) -> None:
+        """Test logical operations and operators."""
+        success1 = FlextResult[int].ok(1)
+        success2 = FlextResult[int].ok(2)
+        failure = FlextResult[int].fail("error")
+
+        # Test or_else method instead of | operator
+        or_result = success1.or_else(success2)
+        assert or_result.is_success
+        assert or_result.data == 1
+
+        or_with_failure = failure.or_else(success2)
+        assert or_with_failure.is_success
+        assert or_with_failure.data == 2
+
+        # Test combining results
+        and_result = success1.zip_with(success2, lambda a, b: b)
+        assert and_result.is_success
+        assert and_result.data == 2
+
+    def test_flext_result_error_handling(self) -> None:
+        """Test error handling methods."""
+        failure = FlextResult[str].fail("original_error")
+
+        # Test or_else
+        recovered = failure.or_else(FlextResult[str].ok("recovered"))
+        assert recovered.is_success
+        assert recovered.data == "recovered"
+
+        # Test recover
+        def recovery_fn(error: str) -> str:
+            return f"recovered_from_{error}"
+
+        recovered_with_fn = failure.recover(recovery_fn)
+        assert recovered_with_fn.is_success
+        assert "recovered_from_original_error" in recovered_with_fn.data
+
+    def test_flext_result_filtering_and_validation(self) -> None:
+        """Test filter and validation methods."""
+        success = FlextResult[int].ok(5)
+
+        # Test filter
+        filtered_pass = success.filter(lambda x: x > 3, "Value too small")
+        assert filtered_pass.is_success
+
+        filtered_fail = success.filter(lambda x: x > 10, "Value too small")
+        assert filtered_fail.is_failure
+
+    def test_flext_result_context_manager(self) -> None:
+        """Test FlextResult as context manager."""
+        success = FlextResult[str].ok("test_data")
+
+        with success as value:
+            assert value == "test_data"
+
+        # Test with failure
+        failure = FlextResult[str].fail("error")
+
+        with pytest.raises(Exception), failure as value:
+            pass  # Should raise
+
+    def test_flext_result_equality_and_hashing(self) -> None:
+        """Test equality and hashing."""
+        success1 = FlextResult[int].ok(42)
+        success2 = FlextResult[int].ok(42)
+        success3 = FlextResult[int].ok(43)
+        failure1 = FlextResult[int].fail("error")
+        failure2 = FlextResult[int].fail("error")
+
+        # Test equality
+        assert success1 == success2
+        assert success1 != success3
+        assert success1 != failure1
+        assert failure1 == failure2
+
+        # Test hashing (for use in sets/dicts)
+        result_set = {success1, success2, failure1}
+        assert len(result_set) == 2  # success1 and success2 are equal
+
+    # =============================================================================
+    # FLEXT UTILITIES TARGETED TESTS
+    # =============================================================================
+
+    def test_flext_utilities_generators(self) -> None:
+        """Test FlextUtilities.Generators methods."""
+        # Test timestamp generation
+        ts1 = FlextUtilities.Generators.generate_timestamp()
+        time.sleep(0.001)
+        ts2 = FlextUtilities.Generators.generate_timestamp()
+
+        assert ts1 != ts2
+        assert isinstance(ts1, str)
+        assert "T" in ts1
+
+        # Test UUID generation
+        uuid1 = FlextUtilities.Generators.generate_uuid()
+        uuid2 = FlextUtilities.Generators.generate_uuid()
+
+        assert uuid1 != uuid2
+        assert len(uuid1) == 36
+        assert uuid1.count("-") == 4
+
+        # Test correlation ID
+        corr1 = FlextUtilities.Generators.generate_correlation_id()
+        corr2 = FlextUtilities.Generators.generate_correlation_id()
+
+        assert corr1 != corr2
+        assert isinstance(corr1, str)
+        assert len(corr1) > 0
+
+    def test_flext_utilities_conversions(self) -> None:
+        """Test FlextUtilities.TypeConversions methods."""
+        # Test to_int conversion
+        int_result = FlextUtilities.TypeConversions.to_int("42")
+        assert int_result.is_success
+        assert int_result.data == 42
+
+        # Test failed int conversion
+        fail_result = FlextUtilities.TypeConversions.to_int("not_number")
+        assert fail_result.is_failure
+
+        # Test to_bool conversion (uses keyword argument)
+        bool_result = FlextUtilities.TypeConversions.to_bool(value="true")
+        assert bool_result.is_success
+        assert bool_result.data is True
+
+    def test_flext_utilities_validation(self) -> None:
+        """Test FlextUtilities.Validation methods."""
+        # Test string validation
+        string_valid = FlextUtilities.Validation.validate_string("test")
+        assert string_valid.is_success
+
+        # Test email validation
+        email_valid = FlextUtilities.Validation.validate_email("test@example.com")
+        assert email_valid.is_success
+
+        # Test port validation
+        port_valid = FlextUtilities.Validation.validate_port(8080)
+        assert port_valid.is_success
+
+    # =============================================================================
+    # FLEXT CONTAINER TARGETED TESTS
+    # =============================================================================
+
+    def test_flext_container_basic_operations(self) -> None:
+        """Test FlextContainer basic operations."""
+        container = FlextContainer.get_global()
+
+        # Test registration and retrieval
+        key = "test_container_key"
+        value = "test_value"
+
+        container.register(key, value)
+        result = container.get(key)
+
+        assert result.is_success
+        assert result.data == value
+
+        # Test non-existent key
+        missing_result = container.get("nonexistent_key")
+        assert missing_result.is_failure
+
+    def test_flext_container_singleton_behavior(self) -> None:
+        """Test FlextContainer singleton pattern."""
+        container1 = FlextContainer.get_global()
+        container2 = FlextContainer.get_global()
+
+        assert container1 is container2
+
+    # =============================================================================
+    # FLEXT BUS TARGETED TESTS
+    # =============================================================================
+
+    def test_flext_bus_basic_pubsub(self) -> None:
+        """Test FlextBus basic handler registration and execution."""
+        bus = FlextBus()
+
+        def handler(command) -> FlextResult[str]:
+            return FlextResult[str].ok(f"handled_{command}")
+
+        # Test handler registration
+        reg_result = bus.register_handler("TestCommand", handler)
+        assert reg_result.is_success
+
+        # Test command execution
+        exec_result = bus.send_command("TestCommand")
+        assert isinstance(exec_result, FlextResult)
+
+    # =============================================================================
+    # FLEXT SERVICE TARGETED TESTS
+    # =============================================================================
+
+    def test_flext_service_basic_functionality(self) -> None:
+        """Test FlextService basic functionality."""
+
+        class TestService(FlextService[str]):
+            def execute(self) -> FlextResult[str]:
+                return FlextResult[str].ok("service_executed")
+
+        service = TestService()
+        result = service.execute()
+
+        assert result.is_success
+        assert result.data == "service_executed"
+
+    def test_flext_service_with_error(self) -> None:
+        """Test FlextService error handling."""
+
+        class ErrorService(FlextService[str]):
+            def execute(self) -> FlextResult[str]:
+                return FlextResult[str].fail("service_error")
+
+        service = ErrorService()
+        result = service.execute()
+
+        assert result.is_failure
+        assert result.error == "service_error"
+
+    # =============================================================================
+    # FLEXT LOGGER TARGETED TESTS
+    # =============================================================================
+
+    def test_flext_logger_basic_logging(self) -> None:
+        """Test FlextLogger basic functionality."""
+        logger = FlextLogger("test_logger")
+
+        # Test basic logging methods
+        logger.debug("Debug message")
+        logger.info("Info message")
+        logger.warning("Warning message")
+        logger.error("Error message")
+        logger.critical("Critical message")
+
+        # Test structured logging
+        logger.info("Structured message", extra={"key": "value"})
+
+    # =============================================================================
+    # FLEXT CONFIG TARGETED TESTS
+    # =============================================================================
+
+    def test_flext_config_basic_operations(self) -> None:
+        """Test FlextConfig basic operations."""
+        # Test basic config creation
+        config = FlextConfig()
+
+        # Test config exists
+        assert config is not None
+        assert isinstance(config, FlextConfig)
+
+    # =============================================================================
+    # FLEXT MODELS TARGETED TESTS
+    # =============================================================================
+
+    def test_flext_models_basic_validation(self) -> None:
+        """Test FlextModels basic validation functionality."""
+        # Test model functionality with actual model classes
+        entity_model = FlextModels.Entity()
+        assert entity_model is not None
+
+        # Test model validation exists
+        assert hasattr(FlextModels, "Validation")
+
+        # Test validation methods
+        validation = FlextModels.Validation()
+        assert validation is not None
+
+    # =============================================================================
+    # FLEXT CONSTANTS TARGETED TESTS
+    # =============================================================================
+
+    def test_flext_constants_access(self) -> None:
+        """Test FlextConstants access."""
+        # Test that constants exist and are accessible
+        assert hasattr(FlextConstants, "Core")
+        core_constants = FlextConstants.Core
+        assert core_constants is not None
+
+    # =============================================================================
+    # FLEXT TYPES TARGETED TESTS
+    # =============================================================================
+
+    def test_flext_types_usage(self) -> None:
+        """Test FlextTypes usage."""
+        # Test basic type usage
+        test_dict: FlextTypes.Core.Dict = {"key": "value"}
+        assert isinstance(test_dict, dict)
+
+        test_list: FlextTypes.Core.List = [1, 2, 3]
+        assert isinstance(test_list, list)
+
+        # Test config types
+        config_value: FlextTypes.Core.ConfigValue = "config_string"
+        assert isinstance(config_value, str)
+
+    # =============================================================================
+    # PERFORMANCE AND STRESS TESTS
+    # =============================================================================
+
+    def test_performance_basic(self) -> None:
+        """Test basic performance characteristics."""
+        start_time = time.time()
+
+        # Create many FlextResult instances
+        results = []
+        for i in range(1000):
+            result = FlextResult[int].ok(i)
+            results.append(result)
+
+        # Test basic operations
+        for result in results[:100]:
+            mapped = result.map(lambda x: x * 2)
+            assert mapped.is_success
+
+        end_time = time.time()
+        elapsed = end_time - start_time
+
+        # Should complete reasonably quickly
+        assert elapsed < 2.0
+
+    # =============================================================================
+    # ERROR HANDLING AND EDGE CASES
+    # =============================================================================
+
+    def test_edge_cases(self) -> None:
+        """Test edge cases and boundary conditions."""
+        # Test with None values
+        none_result = FlextResult[None].ok(None)
+        assert none_result.is_success
+        assert none_result.data is None
+
+        # Test empty collections
+        empty_list = FlextResult[list[Any]].ok([])
+        assert empty_list.is_success
+        assert empty_list.data == []
+
+        empty_dict = FlextResult[dict[str, Any]].ok({})
+        assert empty_dict.is_success
+        assert empty_dict.data == {}
+
+        # Test large strings
+        large_string = "x" * 10000
+        large_result = FlextResult[str].ok(large_string)
+        assert large_result.is_success
+        assert len(large_result.data) == 10000
+
+    def test_exception_handling(self) -> None:
+        """Test exception handling patterns."""
+        # Test creating result from exception
+        try:
+            msg = "Test exception"
+            raise ValueError(msg)
+        except ValueError as e:
+            result = FlextResult[str].fail(str(e))
+            assert result.is_failure
+            assert "Test exception" in result.error
+
+        # Test safe operations
+        def risky_operation() -> str:
+            msg = "Risky operation failed"
+            raise RuntimeError(msg)
+
+        try:
+            risky_operation()
+            result = FlextResult[str].ok("success")
+        except Exception as e:
+            result = FlextResult[str].fail(str(e))
+
+        assert result.is_failure
+        assert "Risky operation failed" in result.error
+
+    # =============================================================================
+    # INTEGRATION TESTS
+    # =============================================================================
+
+    def test_component_integration(self) -> None:
+        """Test integration between different components."""
+        # Create a comprehensive test that uses multiple components
+        container = FlextContainer.get_global()
+        logger = FlextLogger("integration_test")
+        FlextBus()
+
+        class IntegrationService(FlextService[dict[str, Any]]):
+            def execute(self) -> FlextResult[dict[str, Any]]:
+                # Use container
+                container.register("integration_key", "integration_value")
+
+                # Use logger
+                logger.info("Integration service executing")
+
+                # Create result with timestamp
+                timestamp = FlextUtilities.Generators.generate_timestamp()
+
+                return FlextResult[dict[str, Any]].ok({
+                    "status": "success",
+                    "timestamp": timestamp,
+                    "container_value": container.get("integration_key").unwrap_or(
+                        "default"
+                    ),
+                })
+
+        service = IntegrationService()
+        result = service.execute()
+
+        assert result.is_success
+        data = result.data
+        assert data["status"] == "success"
+        assert "timestamp" in data
+        assert data["container_value"] == "integration_value"
+
+    def test_async_compatibility(self) -> None:
+        """Test async compatibility where applicable."""
+
+        async def async_operation() -> FlextResult[str]:
+            await asyncio.sleep(0.001)
+            return FlextResult[str].ok("async_success")
+
+        # Run async test
+        result = asyncio.run(async_operation())
+        assert result.is_success
+        assert result.data == "async_success"

@@ -72,7 +72,6 @@ class TestPoetryValidator:
 
     def test_poetry_validator_with_parameters(self) -> None:
         """Test PoetryValidator with initialization parameters."""
-        self._TestDataHelper.create_test_project_data()
         validator = PoetryValidator()
         assert validator is not None
         assert isinstance(validator, PoetryValidator)
@@ -283,7 +282,9 @@ class TestPoetryValidator:
         assert isinstance(validator, PoetryValidator)
 
         # Test pyproject validation
-        test_data = self._TestDataHelper.create_test_project_data()
+        test_data = self._TestDataHelper.create_test_project_data(
+            str(self.temp_test_dir)
+        )
         validate_result = validator.validate_pyproject(test_data["project_path"])
         assert isinstance(validate_result, FlextResult)
         assert validate_result.is_success

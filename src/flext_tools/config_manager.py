@@ -33,7 +33,8 @@ class FlextToolsConfig(FlextConfig):
 
     # Configuration File Management
     config_file_path: str | None = Field(
-        default=None, description="Path to configuration file",
+        default=None,
+        description="Path to configuration file",
     )
 
     # Environment Variable Prefixes
@@ -44,15 +45,18 @@ class FlextToolsConfig(FlextConfig):
 
     # Tool Configuration
     backup_enabled: bool = Field(
-        default=True, description="Enable backup functionality",
+        default=True,
+        description="Enable backup functionality",
     )
 
     monitoring_enabled: bool = Field(
-        default=True, description="Enable monitoring functionality",
+        default=True,
+        description="Enable monitoring functionality",
     )
 
     linting_enabled: bool = Field(
-        default=True, description="Enable linting functionality",
+        default=True,
+        description="Enable linting functionality",
     )
 
     # Pydantic 2 field validators
@@ -194,7 +198,9 @@ class FlextToolsConfig(FlextConfig):
 
     @classmethod
     def create_for_environment(
-        cls, environment: str, **overrides: object,
+        cls,
+        environment: str,
+        **overrides: object,
     ) -> FlextToolsConfig:
         """Create configuration for specific environment."""
         env_overrides: dict[str, object] = {}
