@@ -14,7 +14,9 @@ Standards: FLEXT_TESTING_STANDARDS.md
 Based on: flext-core proven patterns
 """
 
+import os
 from collections.abc import Generator
+from typing import Any
 from unittest.mock import Mock
 
 import pytest
@@ -306,7 +308,9 @@ def mock_repository() -> Mock:
 
 
 @pytest.fixture
-def test_environment(clean_container, logger, sample_data):
+def test_environment(
+    clean_container: Any, logger: Any, sample_data: Any
+) -> dict[str, Any]:
     """Provide complete test environment with common dependencies.
 
     This is a convenience fixture that combines commonly used fixtures.
@@ -342,8 +346,6 @@ def reset_global_state() -> None:
 def configure_test_environment() -> None:
     """Configure test environment for the entire test session."""
     # Set test-specific environment variables
-    import os
-
     os.environ["ENVIRONMENT"] = "test"
     os.environ["LOG_LEVEL"] = "DEBUG"
 
@@ -355,7 +357,7 @@ def configure_test_environment() -> None:
 # =============================================================================
 
 
-def pytest_configure(config) -> None:
+def pytest_configure(config: Any) -> None:
     """Configure pytest markers and settings.
 
     This function is called during pytest startup and can be used
@@ -365,7 +367,7 @@ def pytest_configure(config) -> None:
     # additional configuration here if needed
 
 
-def pytest_collection_modifyitems(config, items) -> None:
+def pytest_collection_modifyitems(config: Any, items: list[Any]) -> None:
     """Modify collected test items.
 
     This hook can be used to:

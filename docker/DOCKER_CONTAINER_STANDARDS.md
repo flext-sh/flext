@@ -57,6 +57,7 @@ All FLEXT test containers use non-conflicting ports:
 | postgres  | flext-postgres-test  | 5433                                      | PostgreSQL database       |
 | redis     | flext-redis-test     | 6380                                      | Redis cache/queue         |
 | oracle-db | flext-oracle-db-test | 1522 (TNS), 2484 (TCPS)                   | Oracle Database XE        |
+| client-a-oud | flext-client-a-oud-test | 3389 (LDAP), 3639 (LDAPS), 4449 (Admin)    | Oracle Unified Directory  |
 | flext     | flext-test           | 8000                                      | FLEXT Python service      |
 | flexcore  | flext-flexcore-test  | 8090 (HTTP), 50051 (gRPC), 9091 (metrics) | FlexCore Go service       |
 

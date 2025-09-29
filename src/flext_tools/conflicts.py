@@ -58,3 +58,12 @@ class ConflictAnalyzer:
     def resolve_conflicts(self: Self) -> FlextResult[None]:
         """Attempt to resolve conflicts."""
         return FlextResult[None].ok(None)
+
+    def get_conflicts(self) -> FlextResult[list[dict[str, str]]]:
+        """Get the list of detected conflicts.
+
+        Returns:
+            FlextResult containing list of conflicts detected during analysis.
+
+        """
+        return FlextResult[list[dict[str, str]]].ok(self._conflicts)

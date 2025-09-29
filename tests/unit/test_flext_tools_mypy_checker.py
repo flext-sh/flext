@@ -72,7 +72,6 @@ class TestMyPyChecker:
 
     def test_mypy_checker_with_parameters(self) -> None:
         """Test MyPyChecker with initialization parameters."""
-        self._TestDataHelper.create_test_project_data()
         checker = MyPyChecker()
         assert checker is not None
         assert isinstance(checker, MyPyChecker)
@@ -283,7 +282,9 @@ class TestMyPyChecker:
         assert isinstance(checker, MyPyChecker)
 
         # Test project checking
-        test_data = self._TestDataHelper.create_test_project_data()
+        test_data = self._TestDataHelper.create_test_project_data(
+            str(self.temp_test_dir)
+        )
         check_result = checker.check_project(test_data["project_path"])
         assert isinstance(check_result, FlextResult)
         assert check_result.is_success
