@@ -10,6 +10,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import inspect
+from pathlib import Path
 
 from flext import FlextControlPanelCli
 from flext_core import FlextResult, FlextService
@@ -26,13 +27,13 @@ class TestFlextControlPanelCli:
         def create_test_cli_data() -> dict[str, object]:
             """Create test CLI data."""
             return {
-                "config_path": "/tmp/test_config.json",  # noqa: S108
+                "config_path": "/tmp/test_config.json",
                 "verbose": True,
                 "output_format": "json",
             }
 
         @staticmethod
-        def create_test_command_data() -> dict[str, str]:
+        def create_test_command_data() -> dict[str, object]:
             """Create test command data."""
             return {
                 "command": "test_command",
@@ -121,14 +122,14 @@ class TestFlextControlPanelCli:
         config = config_class(test_param="test_value")
         assert config is not None
         assert hasattr(config, "test_param")
-        assert config.test_param == "test_value"
+        assert getattr(config, "test_param") == "test_value"
 
     def test_quality_gateway_nested_class(self) -> None:
         """Test _QualityGateway nested class."""
         gateway_class = FlextControlPanelCli._QualityGateway
 
         # Test class can be instantiated with required parameters
-        gateway = gateway_class(workspace_path="/tmp/test_workspace"  # noqa: S108)
+        gateway = gateway_class(workspace_path="/tmp/test_workspace")
         assert gateway is not None
         assert isinstance(gateway, gateway_class)
 
@@ -137,7 +138,7 @@ class TestFlextControlPanelCli:
         context_class = FlextControlPanelCli._CliContext
 
         # Test class can be instantiated with required parameters
-        context = context_class(config={}, workspace="/tmp/test_workspace"  # noqa: S108)
+        context = context_class(config={}, workspace=Path("/tmp/test_workspace"))
         assert context is not None
         assert isinstance(context, context_class)
 
@@ -193,17 +194,17 @@ class TestFlextControlPanelCli:
         """Test FlextControlPanelCli main method if it exists."""
         cli = FlextControlPanelCli()
 
-        # Test main method if it exists
-        if hasattr(cli, "main"):
-            assert callable(cli.main)
+        # Test execute method exists
+        assert hasattr(cli, "execute")
+        assert callable(cli.execute)
 
     def test_cli_run_method(self) -> None:
         """Test FlextControlPanelCli run method if it exists."""
         cli = FlextControlPanelCli()
 
-        # Test run method if it exists
-        if hasattr(cli, "run"):
-            assert callable(cli.run)
+        # Test execute method exists
+        assert hasattr(cli, "execute")
+        assert callable(cli.execute)
 
     def test_cli_has_expected_methods(self) -> None:
         """Test FlextControlPanelCli has expected methods."""
@@ -247,7 +248,7 @@ class TestFlextControlPanelCli:
 
         # Create test data using flext_tests
         test_cli_data = flext_domains.create_service()
-        test_cli_data["config_path"] = "/tmp/flext_test_config.json"  # noqa: S108
+        test_cli_data["config_path"] = "/tmp/flext_test_config.json"
 
         # Test service execution
         result = cli.execute()
@@ -301,10 +302,10 @@ class TestFlextControlPanelCli:
         quality_config = cli._QualityCheckConfig(test_param="test_value")
         assert quality_config is not None
 
-        quality_gateway = cli._QualityGateway(workspace_path="/tmp/test_workspace"  # noqa: S108)
+        quality_gateway = cli._QualityGateway(workspace_path="/tmp/test_workspace")
         assert quality_gateway is not None
 
-        cli_context = cli._CliContext(config={}, workspace="/tmp/test_workspace"  # noqa: S108)
+        cli_context = cli._CliContext(config={}, workspace=Path("/tmp/test_workspace"))
         assert cli_context is not None
 
         tools_commands = cli._ToolsCommands(cli)
@@ -345,6 +346,5 @@ class TestFlextControlPanelCli:
         cli._Colors()
         # Colors class has no methods, only constants
 
-        quality_config = cli._QualityCheckConfig()
-        init_sig = inspect.signature(quality_config.__init__)
+        init_sig = inspect.signature(cli._QualityCheckConfig.__init__)
         assert len(init_sig.parameters) >= 1  # Should have self parameter

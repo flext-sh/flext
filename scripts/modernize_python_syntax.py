@@ -148,32 +148,30 @@ def modernize_override_decorators(content: str) -> tuple[str, list[str]]:
         for method in override_methods:
             method_pattern = rf"(\s+)def\s+{method}\s*\("
             if re.search(method_pattern, class_body) and "@override" not in class_body:
-                    # Add typing import if needed
-                    if "from typing import" in content and "override" not in content:
-                        content = re.sub(
-                            r"from typing import ([^\n]+)",
-                            r"from typing import \1, override",
-                            content,
-                        )
-                        changes.append("Added override import")
-                    elif "from typing import" not in content:
-                        # Add typing import at the top
-                        content = re.sub(
-                            r"(from __future__ import annotations\n)",
-                            r"\1\nfrom typing import override\n",
-                            content,
-                        )
-                        changes.append("Added typing override import")
-
-                    # Add @override decorator
+                # Add typing import if needed
+                if "from typing import" in content and "override" not in content:
                     content = re.sub(
-                        rf"(\s+)def\s+{method}\s*\(",
-                        rf"\1@override\n\1def {method}(",
+                        r"from typing import ([^\n]+)",
+                        r"from typing import \1, override",
                         content,
                     )
-                    changes.append(
-                        f"Added @override decorator to {method} in {class_name}"
+                    changes.append("Added override import")
+                elif "from typing import" not in content:
+                    # Add typing import at the top
+                    content = re.sub(
+                        r"(from __future__ import annotations\n)",
+                        r"\1\nfrom typing import override\n",
+                        content,
                     )
+                    changes.append("Added typing override import")
+
+                # Add @override decorator
+                content = re.sub(
+                    rf"(\s+)def\s+{method}\s*\(",
+                    rf"\1@override\n\1def {method}(",
+                    content,
+                )
+                changes.append(f"Added @override decorator to {method} in {class_name}")
 
     return content, changes
 
