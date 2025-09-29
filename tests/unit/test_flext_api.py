@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import inspect
 import time
+from typing import cast
 
 from flext_api import FlextApiApp, FlextApiClient, FlextApiConfig
 from flext_core import FlextLogger, FlextTypes
@@ -23,8 +24,8 @@ class TestFlextApiConsolidated:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_api_config() -> FlextTypes.Core.Dict:
-            """Create test API configuration."""
+        def create_api_config() -> dict[str, str | int]:
+            """Create test API configuration with proper types."""
             return {
                 "base_url": "https://api.example.com",
                 "timeout": 30,
@@ -54,7 +55,11 @@ class TestFlextApiConsolidated:
     def test_flext_api_client_with_config(self) -> None:
         """Test FlextApiClient creation with configuration."""
         config_data = self._TestDataHelper.create_api_config()
-        client = FlextApiClient(**config_data)
+        client = FlextApiClient(
+            base_url=cast("str", config_data["base_url"]),
+            timeout=cast("int", config_data["timeout"]),
+            max_retries=cast("int", config_data["max_retries"]),
+        )
 
         assert client is not None
         assert isinstance(client, FlextApiClient)
@@ -115,7 +120,11 @@ class TestFlextApiConsolidated:
     def test_flext_api_config_with_data(self) -> None:
         """Test FlextApiConfig with initial data."""
         config_data = self._TestDataHelper.create_api_config()
-        config = FlextApiConfig(**config_data)
+        config = FlextApiConfig(
+            base_url=cast("str", config_data["base_url"]),
+            timeout=cast("int", config_data["timeout"]),
+            max_retries=cast("int", config_data["max_retries"]),
+        )
 
         assert config is not None
         # Verify config has expected attributes
