@@ -9,6 +9,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import uuid
+
 from flext import (
     FlextApplicationHandlerService,
     FlextApplicationPipelineService,
@@ -99,8 +101,6 @@ class TestFlextCoreComponents:
         assert container is not None
 
         # Test registration and retrieval
-        import uuid
-
         test_key = f"test_key_{uuid.uuid4().hex[:8]}"
         test_value = "test_value"
         result = container.register(test_key, test_value)

@@ -63,6 +63,11 @@ class FlextPathService(FlextService[Path]):
             """Normalize path."""
             return Path(path).resolve()
 
+        @staticmethod
+        def resolve_path(path: str | Path) -> Path:
+            """Resolve path to absolute path."""
+            return Path(path).resolve()
+
     def execute(self: Self) -> FlextResult[Path]:
         """Execute path service - FlextService interface."""
         root = self._UtilityHelper.get_project_root()
