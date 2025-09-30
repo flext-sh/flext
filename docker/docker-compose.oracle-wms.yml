@@ -1,0 +1,153 @@
+# =============================================================================
+# FLEXT Oracle WMS - Docker Compose Configuration
+# =============================================================================
+# Complete Oracle WMS testing and development environment
+# Supports real Oracle WMS connectivity and full functionality validation
+
+version: "3.8"
+
+services:
+  # Main Oracle WMS service with complete functionality
+  flext-oracle-wms:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flext-oracle-wms-main
+    environment:
+      # Oracle WMS Configuration (from .env)
+      - ORACLE_WMS_BASE_URL=${ORACLE_WMS_BASE_URL}
+      - ORACLE_WMS_USERNAME=${ORACLE_WMS_USERNAME}
+      - ORACLE_WMS_PASSWORD=${ORACLE_WMS_PASSWORD}
+      - ORACLE_WMS_ENVIRONMENT=${ORACLE_WMS_ENVIRONMENT}
+      - ORACLE_WMS_API_VERSION=${ORACLE_WMS_API_VERSION:-v10}
+      - ORACLE_WMS_TIMEOUT=${ORACLE_WMS_TIMEOUT:-30}
+      - ORACLE_WMS_MAX_RETRIES=${ORACLE_WMS_MAX_RETRIES:-3}
+      - ORACLE_WMS_VERIFY_SSL=${ORACLE_WMS_VERIFY_SSL:-true}
+
+      # Testing and Development
+      - PYTHONPATH=/app/src
+      - FLEXT_DEBUG_MODE=true
+      - PYTEST_CURRENT_TEST=1
+
+      # Enterprise Configuration
+      - ORACLE_WMS_ENABLE_RATE_LIMITING=${ORACLE_WMS_ENABLE_RATE_LIMITING:-true}
+      - ORACLE_WMS_MAX_REQUESTS_PER_MINUTE=${ORACLE_WMS_MAX_REQUESTS_PER_MINUTE:-60}
+      - ORACLE_WMS_ENABLE_REQUEST_LOGGING=${ORACLE_WMS_ENABLE_REQUEST_LOGGING:-true}
+
+    volumes:
+      # Mount source code for development
+      - ./src:/app/src:ro
+      - ./tests:/app/tests:ro
+      - ./examples:/app/examples:ro
+      - ./scripts:/app/scripts:ro
+
+      # Mount reports directory for test results
+      - ./reports:/app/reports
+
+      # Mount .env for configuration
+      - ./.env:/app/.env:ro
+
+    ports:
+      - "8080:8080" # Expose for potential web interface
+
+    networks:
+      - flext-network
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "poetry",
+          "run",
+          "python",
+          "-c",
+          "from flext_oracle_wms import FlextOracleWmsClient; print('✅ Oracle WMS Client available')",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+    restart: unless-stopped
+
+  # Testing service for continuous validation
+  flext-oracle-wms-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flext-oracle-wms-test
+    environment:
+      - ORACLE_WMS_BASE_URL=${ORACLE_WMS_BASE_URL}
+      - ORACLE_WMS_USERNAME=${ORACLE_WMS_USERNAME}
+      - ORACLE_WMS_PASSWORD=${ORACLE_WMS_PASSWORD}
+      - ORACLE_WMS_ENVIRONMENT=${ORACLE_WMS_ENVIRONMENT}
+      - PYTHONPATH=/app/src
+      - PYTEST_CURRENT_TEST=1
+
+    volumes:
+      - ./src:/app/src:ro
+      - ./tests:/app/tests:ro
+      - ./examples:/app/examples:ro
+      - ./reports:/app/reports
+      - ./.env:/app/.env:ro
+
+    command: >
+      sh -c "
+      echo '🧪 FLEXT Oracle WMS - Continuous Testing Mode' &&
+      echo '📋 Running complete test suite with real Oracle WMS...' &&
+      poetry run pytest tests/ -v --tb=short --cov=src --cov-report=html --cov-report=term-missing --cov-fail-under=90 &&
+      echo '✅ All tests completed! Check reports/ for detailed results.'
+      "
+
+    networks:
+      - flext-network
+
+    depends_on:
+      - flext-oracle-wms
+
+  # Examples service for functionality demonstration
+  flext-oracle-wms-examples:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flext-oracle-wms-examples
+    environment:
+      - ORACLE_WMS_BASE_URL=${ORACLE_WMS_BASE_URL}
+      - ORACLE_WMS_USERNAME=${ORACLE_WMS_USERNAME}
+      - ORACLE_WMS_PASSWORD=${ORACLE_WMS_PASSWORD}
+      - ORACLE_WMS_ENVIRONMENT=${ORACLE_WMS_ENVIRONMENT}
+      - PYTHONPATH=/app/src
+      - FLEXT_DEBUG_MODE=true
+
+    volumes:
+      - ./src:/app/src:ro
+      - ./examples:/app/examples:ro
+      - ./reports:/app/reports
+      - ./.env:/app/.env:ro
+
+    command: >
+      sh -c "
+      echo '🚀 FLEXT Oracle WMS - Examples Demonstration' &&
+      echo '📋 Running all examples with real Oracle WMS functionality...' &&
+      echo '1️⃣ Basic Usage - Discovering Oracle WMS entities...' &&
+      poetry run python examples/basic_usage.py &&
+      echo '2️⃣ Configuration Management...' &&
+      poetry run python examples/02_configuration.py &&
+      echo '✅ All examples completed successfully! Real Oracle WMS functionality validated.'
+      "
+
+    networks:
+      - flext-network
+
+    depends_on:
+      - flext-oracle-wms
+
+networks:
+  flext-network:
+    driver: bridge
+    name: flext-oracle-wms-network
+
+# Volumes for persistent data
+volumes:
+  reports-data:
+    driver: local
