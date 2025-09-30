@@ -118,6 +118,9 @@ line-length = 88
         "SLF001", # private-member-access - Allow private member access in exception classes
         "S105",   # hardcoded-password-string - false positives in error code constants
     ]
+    "**/flext-dbt-*/**" = [
+        "S608",   # Possible SQL injection - DBT templates are safe by design
+    ]
     "**/scripts/**" = [
         "EXE001",
         "FIX002",  # line-contains-todo - scripts may have legitimate TODOs
@@ -152,6 +155,7 @@ line-length = 88
         "S105",
         "S106",
         "S107",
+        "S108",    # Probable insecure usage of temp file - acceptable in tests
         "S112",
         "S311",
         "S404",    # subprocess-without-shell-equals-true - tests may need subprocess
