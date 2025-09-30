@@ -91,10 +91,9 @@ line-length = 88
         "ALL",
     ]
     "**/config.py" = [
+        "ANN401", # any-type - examples can legitimately use Any for Pydantic 2 models
         "FBT001", # Boolean positional argument - required by Pydantic field serializers
-    ]
-    "**/models.py" = [
-        "FBT001", # Boolean positional argument - required by Pydantic field serializers
+        "PLC0415", # allow lazy imports in fix circular imports in base level
     ]
     "**/constants.py" = [
         "S105", # hardcoded-password-string - false positives in error messages and descriptions
@@ -115,11 +114,20 @@ line-length = 88
     ]
     "**/exceptions.py" = [
         "A001",   # variable-is-ambiguous - Allow ambiguous variable names in exceptions
+        "PLC0415", # allow lazy imports in fix circular imports in base level
         "SLF001", # private-member-access - Allow private member access in exception classes
         "S105",   # hardcoded-password-string - false positives in error code constants
     ]
-    "**/flext-dbt-*/**" = [
-        "S608",   # Possible SQL injection - DBT templates are safe by design
+    "**/loggings.py" = [
+        "PLC0415", # allow lazy imports in fix circular imports in base level
+    ]
+    "**/models.py" = [
+        "ANN401", # any-type - examples can legitimately use Any for Pydantic 2 models
+        "FBT001", # Boolean positional argument - required by Pydantic field serializers
+        "PLC0415", # allow lazy imports in fix circular imports in base level
+    ]
+    "**/result.py" = [
+        "PLC0415", # allow lazy imports in fix circular imports in base level
     ]
     "**/scripts/**" = [
         "EXE001",
@@ -138,18 +146,30 @@ line-length = 88
 
     ]
     "**/*tests*/**" = [
+        "ARG001",   # Unused function argument (helper functions for testing)
+        "ARG002",   # Unused method argument (test fixtures)
+        "ARG005",   # Unused lambda argument (test lambdas)
+        "B903",     # Dataclass suggestion (test classes don't need dataclass)
         "D102",    # Missing docstring in public method - test methods don't need docstrings
-        "EM102",
+        "EM102",    # F-string in exception (test error messages)
         "FBT001",  # Boolean positional argument - acceptable in tests
         "FBT003",
+        "FIX002",   # TODO comments are acceptable in tests
+        "FURB118",  # operator usage (test readability more important)
         "INP001",
+        "N818",     # Exception naming (custom test exceptions)
+        "PLC0415",  # Import not at top (test-specific imports for isolation)
+        "PLC2701",  # Private imports (testing internal implementation)
         "PLR0912",
         "PLR0915",
-        "PLR2004",
+        "PLR2004",  # Magic values (test values are self-documenting)
+        "PLW1641",  # Missing __hash__ (test objects don't need hashing)
         "PT011",
+        "PT018",    # Complex assertions (comprehensive test assertions)
         "PT018",   # Assertion should be broken down - acceptable in tests for clarity
         "PT019",   # Fixture without value - fixtures are used in function body
-        "S101",
+        "RUF029",   # Async without await (testing async signatures)
+        "S101",     # Assert usage (pytest standard pattern)
         "S103",
         "S104",
         "S105",
@@ -162,7 +182,10 @@ line-length = 88
         "S603",
         "S608",
         "SIM105",  # Use contextlib.suppress - tests may prefer explicit try/except
-        "SLF001",  # private-member-access
+        "SIM117",   # Nested with statements (test readability)
+        "SLF001",   # Private member access (testing internal implementation)
+        "TD002",    # TODO author (not needed in tests)
+        "TD003",
         "TID252",
         "TRY003",
         "TRY004",  # Prefer TypeError - test flexibility over strict exception types
