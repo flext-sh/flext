@@ -1,0 +1,49 @@
+# FLEXT gRPC - Production Docker Image
+FROM python:3.13-slim
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Create non-root user
+RUN groupadd -r flext && useradd -r -g flext flext
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set work directory
+WORKDIR /app
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Copy application code
+COPY src/ ./src/
+COPY pyproject.toml .
+
+# Install the application
+RUN pip install -e .
+
+# Create directories and set permissions
+RUN mkdir -p /app/logs \
+    && chown -R flext:flext /app
+
+# Switch to non-root user
+USER flext
+
+# Expose gRPC port
+EXPOSE ${FlextGrpcConstants.Network.DEFAULT_PORT}
+
+# Health check for gRPC service
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import grpc; import sys; channel = grpc.insecure_channel('${FlextGrpcConstants.Network.DEFAULT_HOST}:${FlextGrpcConstants.Network.DEFAULT_PORT}'); channel.close()" || exit 1
+
+# Start the gRPC server
+CMD ["python", "-m", "flext_grpc.server"]

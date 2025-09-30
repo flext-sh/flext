@@ -1,0 +1,116 @@
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# Install only essential dependencies
+RUN pip install --no-cache-dir pydantic pytest pytest-cov ruff mypy click
+
+# Copy source code
+COPY . .
+
+# Create minimal mock dependencies
+RUN mkdir -p /app/src/flext_core /app/src/flext_observability
+
+# Create flext_core mock
+RUN echo 'from typing import Dict
+
+from pydantic import BaseModel
+
+class FlextResult:
+    def __init__(self, success: bool, data: object = None, error: str = None):
+        self.success = success
+        self.is_failure = not success
+        self.data = data
+        self.error = error
+    
+    @classmethod
+    def ok(cls, data: object = None):
+        return cls(True, data=data)
+    
+    @classmethod 
+    def fail(cls, error: str):
+        return cls(False, error=error)
+
+def FlextLogger(name: str):
+    return logging.getLogger(name)
+
+class FlextContainer:
+    def __init__(self):
+        self._services = {}
+    
+    def register(self, name: str, service: object):
+        self._services[name] = service
+        return FlextResult.ok(None)
+    
+    def get(self, name: str):
+        if name in self._services:
+            return FlextResult.ok(self._services[name])
+        return FlextResult.fail(f"Service {name} not found")
+
+class FlextModels.Entity(BaseModel):
+    id: str = "mock_id"
+    
+    def validate_domain_rules(self):
+        return FlextResult.ok(None)
+
+TAnyDict = Dict[str, object]
+' > /app/src/flext_core/__init__.py
+
+# Create exceptions module
+RUN echo 'class FlextExceptions.Error(Exception):
+    def __init__(self, message: str, context: dict = None):
+        super().__init__(message)
+        self.context = context or {}
+
+class FlextExceptions.ValidationError(FlextExceptions.Error):
+    pass
+
+class FlextExceptions.ConfigurationError(FlextExceptions.Error):
+    pass
+
+class FlextExceptions.ConnectionError(FlextExceptions.Error):
+    pass
+
+class FlextExceptions.ProcessingError(FlextExceptions.Error):
+    pass
+
+class FlextExceptions.AuthenticationError(FlextExceptions.Error):
+    pass
+
+class FlextExceptions.TimeoutError(FlextExceptions.Error):
+    pass
+' > /app/src/flext_core/exceptions.py
+
+# Create observability mock
+RUN echo 'import os
+def flext_create_metric(name: str, value: float, tags: dict = None):
+    if not os.environ.get("FLEXT_OBSERVABILITY_QUIET"):
+        print(f"📊 Metric: {name}={value} {tags or {}}")
+
+def flext_create_trace(trace_id: str, operation: str, config: dict = None):
+    if not os.environ.get("FLEXT_OBSERVABILITY_QUIET"):
+        print(f"🔍 Trace: {trace_id} - {operation}")
+
+def flext_create_log_entry(message: str, level: str = "info", context: dict = None):
+    if not os.environ.get("FLEXT_OBSERVABILITY_QUIET"):
+        print(f"📝 Log[{level.upper()}]: {message}")
+' > /app/src/flext_observability/__init__.py
+
+# Set Python path and install
+ENV PYTHONPATH=/app/src:/app
+RUN pip install -e . --no-deps
+
+# Test basic functionality
+RUN echo "🧪 Testing imports..." && \
+    python -c "from flext_quality.analyzer import CodeAnalyzer; print('✅ CodeAnalyzer')" && \
+    python -c "from flext_quality.exceptions import FlextQualityError; print('✅ Exceptions')" && \
+    python -c "from flext_core.exceptions import FlextExceptions.Error; print('✅ FlextCore')" && \
+    echo "✅ All imports successful\!"
+
+# Run critical tests
+RUN echo "🧪 Running validation..." && \
+    python -m pytest tests/test_exceptions.py --tb=short -q --maxfail=3 && \
+    echo "✅ Validation passed\!"
+
+CMD ["echo", "🎉 FLEXT Quality Docker ready\!"]
+EOF < /dev/null
