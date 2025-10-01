@@ -3,7 +3,7 @@
 from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
-from flext_cli.api import FlextCliApi
+from flext_cli.api import FlextCli
 from flext_cli.auth import FlextCliAuth
 from flext_cli.cli import FlextCli
 from flext_cli.commands import FlextCliCommands
@@ -126,7 +126,7 @@ class TestFlextCli:
 
         # Check component types
 
-        assert isinstance(cli.api, FlextCliApi)
+        assert isinstance(cli.api, FlextCli)
         assert isinstance(cli.auth, FlextCliAuth)
         assert isinstance(cli.config, FlextCliConfig)
         assert isinstance(cli.debug, FlextCliDebug)
