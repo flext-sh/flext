@@ -14,7 +14,7 @@ import uuid
 from flext import (
     FlextApplicationHandlerService,
     FlextApplicationPipelineService,
-    FlextCliApi,
+    FlextCli,
     FlextCliService,
     FlextControlPanelCli,
     FlextLogger as FlextLoggerMain,
@@ -61,10 +61,10 @@ class TestFlextMainComponents:
         assert isinstance(service, FlextApplicationPipelineService)
 
     def test_flext_cli_api_creation(self) -> None:
-        """Test FlextCliApi creation."""
-        api = FlextCliApi()
+        """Test FlextCli creation."""
+        api = FlextCli()
         assert api is not None
-        assert isinstance(api, FlextCliApi)
+        assert isinstance(api, FlextCli)
 
     def test_flext_cli_service_creation(self) -> None:
         """Test FlextCliService creation."""
@@ -229,7 +229,7 @@ class TestFlextIntegration:
         assert FlextUnifiedServices is not None
         assert FlextApplicationHandlerService is not None
         assert FlextApplicationPipelineService is not None
-        assert FlextCliApi is not None
+        assert FlextCli is not None
         assert FlextCliService is not None
         assert FlextWorkspaceService is not None
 
@@ -240,7 +240,7 @@ class TestFlextIntegration:
         services = FlextUnifiedServices()
         handler_service = FlextApplicationHandlerService()
         pipeline_service = FlextApplicationPipelineService()
-        api = FlextCliApi()
+        api = FlextCli()
         cli_service = FlextCliService()
         workspace_service = FlextWorkspaceService()
 
@@ -260,7 +260,7 @@ class TestFlextIntegration:
         services = FlextUnifiedServices()
         handler_service = FlextApplicationHandlerService()
         pipeline_service = FlextApplicationPipelineService()
-        api = FlextCliApi()
+        api = FlextCli()
         cli_service = FlextCliService()
         workspace_service = FlextWorkspaceService()
 
@@ -365,7 +365,7 @@ class TestFlextIntegration:
         assert pipeline_service is not None
 
         # Test API workflow
-        api = FlextCliApi()
+        api = FlextCli()
         assert api is not None
 
         # Test CLI service workflow
@@ -383,7 +383,7 @@ class TestFlextIntegration:
         services = FlextUnifiedServices()
         handler_service = FlextApplicationHandlerService()
         pipeline_service = FlextApplicationPipelineService()
-        api = FlextCliApi()
+        api = FlextCli()
         cli_service = FlextCliService()
         workspace_service = FlextWorkspaceService()
 
@@ -404,7 +404,7 @@ class TestFlextIntegration:
         services = FlextUnifiedServices()
         handler_service = FlextApplicationHandlerService()
         pipeline_service = FlextApplicationPipelineService()
-        api = FlextCliApi()
+        api = FlextCli()
         cli_service = FlextCliService()
         workspace_service = FlextWorkspaceService()
 

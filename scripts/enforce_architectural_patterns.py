@@ -89,11 +89,11 @@ DOMAIN_VIOLATIONS = {
 # Proper domain library mappings
 DOMAIN_REPLACEMENTS = {
     # CLI/UI
-    "import click": "from flext_cli import FlextCliApi",
-    "import rich": "from flext_cli import FlextCliApi",
-    "import typer": "from flext_cli import FlextCliApi",
-    "from rich.console import Console": "from flext_cli import FlextCliApi",
-    "from click import command": "from flext_cli import FlextCliApi",
+    "import click": "from flext_cli import FlextCli",
+    "import rich": "from flext_cli import FlextCli",
+    "import typer": "from flext_cli import FlextCli",
+    "from rich.console import Console": "from flext_cli import FlextCli",
+    "from click import command": "from flext_cli import FlextCli",
     # Web Framework
     "import fastapi": "from flext_web import FlextWebServer",
     "import flask": "from flext_web import FlextWebServer",

@@ -49,7 +49,7 @@ from flext_core import (
 )
 
 # Domain-specific imports (use instead of direct third-party imports)
-from flext_cli import FlextCliApi, FlextCliCommands  # For Rich/Click/Typer functionality
+from flext_cli import FlextCli, FlextCliCommands  # For Rich/Click/Typer functionality
 from flext_web import FlextWebServer             # For FastAPI/Flask/Django
 from flext_api import FlextApiClient             # For requests/httpx
 from flext_quality import FlextQualityAnalyzer   # For MyPy/pytest/coverage
@@ -550,7 +550,7 @@ import redis           # Use flext-observability instead
 import prometheus_client  # Use flext-observability instead
 
 # ✅ CORRECT - Through FLEXT domains
-from flext_cli import FlextCliApi          # Rich/Click/Typer functionality
+from flext_cli import FlextCli          # Rich/Click/Typer functionality
 from flext_web import FlextWebServer       # FastAPI/Flask/Django
 from flext_api import FlextApiClient       # HTTP/REST requests
 from flext_core import FlextLogger         # Structured logging
@@ -621,11 +621,11 @@ class DataPipelineService:
 # table = Table()
 
 # ✅ CORRECT - Rich through flext-cli
-from flext_cli import FlextCliApi
+from flext_cli import FlextCli
 
 class UserService:
     def __init__(self):
-        self._cli = FlextCliApi()
+        self._cli = FlextCli()
 
     def display_users(self, users: list[dict]) -> FlextResult[None]:
         """Display users using Rich tables through flext-cli domain."""
