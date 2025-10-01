@@ -12,7 +12,7 @@ from __future__ import annotations
 from flext import (
     FlextApplicationHandlerService,
     FlextApplicationPipelineService,
-    FlextCliApi,
+    FlextCli,
     FlextCliService,
     FlextControlPanelCli,
     FlextLogger as FlextLoggerMain,
@@ -177,31 +177,31 @@ class TestFlextApplicationPipelineService:
 
 
 class TestFlextCliApi:
-    """Test FlextCliApi functionality."""
+    """Test FlextCli functionality."""
 
     def test_flext_cli_api_creation(self) -> None:
-        """Test FlextCliApi creation."""
-        api = FlextCliApi()
+        """Test FlextCli creation."""
+        api = FlextCli()
         assert api is not None
-        assert isinstance(api, FlextCliApi)
+        assert isinstance(api, FlextCli)
 
     def test_flext_cli_api_methods(self) -> None:
-        """Test FlextCliApi has expected methods."""
-        api = FlextCliApi()
+        """Test FlextCli has expected methods."""
+        api = FlextCli()
 
         # Test that api has expected methods
         assert hasattr(api, "run")
         assert hasattr(api, "execute")
 
     def test_flext_cli_api_execution(self) -> None:
-        """Test FlextCliApi execution."""
-        api = FlextCliApi()
+        """Test FlextCli execution."""
+        api = FlextCli()
         result = api.run()
         assert isinstance(result, FlextResult)
 
     def test_flext_cli_api_execute(self) -> None:
-        """Test FlextCliApi execute method."""
-        api = FlextCliApi()
+        """Test FlextCli execute method."""
+        api = FlextCli()
         result = api.execute()
         assert isinstance(result, FlextResult)
 
@@ -353,7 +353,7 @@ class TestFlextIntegration:
         assert FlextUnifiedServices is not None
         assert FlextApplicationHandlerService is not None
         assert FlextApplicationPipelineService is not None
-        assert FlextCliApi is not None
+        assert FlextCli is not None
         assert FlextCliService is not None
         assert FlextWorkspaceService is not None
 
@@ -364,7 +364,7 @@ class TestFlextIntegration:
         services = FlextUnifiedServices()
         handler_service = FlextApplicationHandlerService()
         pipeline_service = FlextApplicationPipelineService()
-        api = FlextCliApi()
+        api = FlextCli()
         cli_service = FlextCliService()
         workspace_service = FlextWorkspaceService()
 
@@ -384,7 +384,7 @@ class TestFlextIntegration:
         services = FlextUnifiedServices()
         handler_service = FlextApplicationHandlerService()
         pipeline_service = FlextApplicationPipelineService()
-        api = FlextCliApi()
+        api = FlextCli()
         cli_service = FlextCliService()
         workspace_service = FlextWorkspaceService()
 
@@ -426,7 +426,7 @@ class TestFlextIntegration:
         assert isinstance(pipeline_result, FlextResult)
 
         # Test API workflow
-        api = FlextCliApi()
+        api = FlextCli()
         api_result = api.run()
         assert isinstance(api_result, FlextResult)
 
@@ -447,7 +447,7 @@ class TestFlextIntegration:
         services = FlextUnifiedServices()
         handler_service = FlextApplicationHandlerService()
         pipeline_service = FlextApplicationPipelineService()
-        api = FlextCliApi()
+        api = FlextCli()
         cli_service = FlextCliService()
         workspace_service = FlextWorkspaceService()
 
@@ -468,7 +468,7 @@ class TestFlextIntegration:
         services = FlextUnifiedServices()
         handler_service = FlextApplicationHandlerService()
         pipeline_service = FlextApplicationPipelineService()
-        api = FlextCliApi()
+        api = FlextCli()
         cli_service = FlextCliService()
         workspace_service = FlextWorkspaceService()
 
@@ -490,7 +490,7 @@ class TestFlextIntegration:
         services = FlextUnifiedServices()
         handler_service = FlextApplicationHandlerService()
         pipeline_service = FlextApplicationPipelineService()
-        api = FlextCliApi()
+        api = FlextCli()
         cli_service = FlextCliService()
         workspace_service = FlextWorkspaceService()
 
