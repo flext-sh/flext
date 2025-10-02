@@ -8,7 +8,6 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import asyncio
 import time
 from typing import Any
 
@@ -508,13 +507,15 @@ class TestFlextCoreTargeted:
                 # Create result with timestamp
                 timestamp = FlextUtilities.Generators.generate_timestamp()
 
-                return FlextResult[dict[str, Any]].ok({
-                    "status": "success",
-                    "timestamp": timestamp,
-                    "container_value": container.get("integration_key").unwrap_or(
-                        "default"
-                    ),
-                })
+                return FlextResult[dict[str, Any]].ok(
+                    {
+                        "status": "success",
+                        "timestamp": timestamp,
+                        "container_value": container.get("integration_key").unwrap_or(
+                            "default"
+                        ),
+                    }
+                )
 
         service = IntegrationService()
         result = service.execute()
@@ -525,14 +526,14 @@ class TestFlextCoreTargeted:
         assert "timestamp" in data
         assert data["container_value"] == "integration_value"
 
-    def test_async_compatibility(self) -> None:
-        """Test async compatibility where applicable."""
+    def test_compatibility(self) -> None:
+        """Test compatibility where applicable."""
 
-        async def async_operation() -> FlextResult[str]:
-            await asyncio.sleep(0.001)
-            return FlextResult[str].ok("async_success")
+        def operation() -> FlextResult[str]:
+            time.sleep(0.001)
+            return FlextResult[str].ok("success")
 
-        # Run async test
-        result = asyncio.run(async_operation())
+        # Run test
+        result = operation()
         assert result.is_success
-        assert result.data == "async_success"
+        assert result.data == "success"

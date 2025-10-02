@@ -9,16 +9,13 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import inspect
 
 from flext_ldap import (
     FlextLdapAPI,
     FlextLdapClient,
     FlextLdapConfig,
     FlextLdapConstants,
-    FlextLdapDomainServices,
     FlextLdapModels,
-    FlextLdapRepositories,
     FlextLdapTypes,
     FlextLdapUtilities,
 )
@@ -102,33 +99,7 @@ class TestFlextLdapConstants:
         assert hasattr(constants, "LdapDefaults")
 
 
-class TestFlextLdapDomainServices:
-    """Test FlextLdapDomainServices functionality."""
-
-    def test_flext_ldap_domain_services_class_definition(self) -> None:
-        """Test FlextLdapDomainServices class definition."""
-        # Test that FlextLdapDomainServices is defined
-        assert FlextLdapDomainServices is not None
-        assert hasattr(FlextLdapDomainServices, "__init__")
-
-    def test_flext_ldap_domain_services_requires_parameters(self) -> None:
-        """Test FlextLdapDomainServices requires parameters."""
-        # Test that the class requires specific parameters
-        sig = inspect.signature(FlextLdapDomainServices.__init__)
-        required_params = [
-            "config",
-            "client",
-            "container",
-            "bus",
-            "dispatcher",
-            "processors",
-            "registry",
-        ]
-
-        for param in required_params:
-            assert param in sig.parameters
-
-
+# TestFlextLdapDomainServices class removed - class no longer exists in flext-ldap
 class TestFlextLdapModels:
     """Test FlextLdapModels functionality."""
 

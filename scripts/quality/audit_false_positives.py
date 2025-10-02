@@ -212,7 +212,6 @@ class FalsePositiveAuditor:
             "scipy",
             "matplotlib",
             "seaborn",
-            "aiohttp",
             "httpx",
             "websockets",
             "pyyaml",

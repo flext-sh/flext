@@ -345,7 +345,7 @@ flext-ldap → flext-meltano            # Infrastructure → Integration
 ### Service Communication
 
 **HTTP/REST**: Synchronous API calls for immediate operations
-**Event Streams**: Asynchronous coordination via PostgreSQL event store
+**Event Streams**: hronous coordination via PostgreSQL event store
 **Redis Pub/Sub**: Real-time state synchronization
 **gRPC**: High-performance service-to-service communication
 
