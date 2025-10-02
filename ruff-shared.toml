@@ -121,6 +121,13 @@ line-length = 88
     "**/loggings.py" = [
         "PLC0415", # allow lazy imports in fix circular imports in base level
     ]
+    "**/middleware.py" = [
+        "ANN401",  # any-type - intentional to avoid circular imports between flext-auth/flext-api/flext-web
+        "FBT001",  # boolean-type-hint-positional-argument - middleware configuration pattern
+        "FBT002",  # boolean-default-value-positional-argument - middleware configuration pattern
+        "PLC2801", # unnecessary-dunder-call - object.__setattr__ required for Pydantic extra="forbid"
+        "S107",    # hardcoded-password-default - "Bearer" is HTTP protocol keyword, not password
+    ]
     "**/models.py" = [
         "ANN401", # any-type - examples can legitimately use Any for Pydantic 2 models
         "FBT001", # Boolean positional argument - required by Pydantic field serializers
@@ -156,7 +163,7 @@ line-length = 88
         "FBT003",
         "FIX002",   # TODO comments are acceptable in tests
         "FURB118",  # operator usage (test readability more important)
-        "INP001",
+        "INP001",   # Allow implicit namespace packages in tests
         "N818",     # Exception naming (custom test exceptions)
         "PLC0415",  # Import not at top (test-specific imports for isolation)
         "PLC2701",  # Private imports (testing internal implementation)
@@ -165,7 +172,6 @@ line-length = 88
         "PLR2004",  # Magic values (test values are self-documenting)
         "PLW1641",  # Missing __hash__ (test objects don't need hashing)
         "PT011",
-        "PT018",    # Complex assertions (comprehensive test assertions)
         "PT018",   # Assertion should be broken down - acceptable in tests for clarity
         "PT019",   # Fixture without value - fixtures are used in function body
         "RUF029",   # Async without await (testing async signatures)
