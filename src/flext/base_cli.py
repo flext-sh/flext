@@ -18,6 +18,7 @@ from __future__ import annotations
 
 # Direct re-exports from flext-cli - NO ALIASES, NO WRAPPERS
 from flext_cli import (
+    FlextCli,
     FlextCliApi,
     FlextCliContext,
     FlextCliModels,
@@ -26,6 +27,7 @@ from flext_cli import (
 )
 
 __all__ = [
+    "FlextCli",
     "FlextCliApi",
     "FlextCliContext",
     "FlextCliModels",

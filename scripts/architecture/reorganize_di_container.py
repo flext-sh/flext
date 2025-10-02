@@ -29,7 +29,6 @@ def fix_di_ordering(file_path: Path) -> bool:
 
         # Fix calls to DI functions before import
         content = re.sub(
-            r"(from typing import.*?\n)\n([^#\n]*?get_\w+\(\).*?\n)+\n"
             r"(# Use Union[centralized, from] flext_)",
             r"\1\n\3",
             content,

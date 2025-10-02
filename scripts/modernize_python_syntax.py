@@ -16,10 +16,6 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Any
-
-# FLEXT projects to modernize
-FLEXT_ROOT = Path("/home/marlonsc/flext")
 
 
 def find_python_files() -> list[Path]:
@@ -27,7 +23,7 @@ def find_python_files() -> list[Path]:
     python_files = []
 
     # Find all Python files in src directories
-    for py_file in FLEXT_ROOT.rglob("src/**/*.py"):
+    for py_file in Path.cwd().rglob("src/**/*.py"):
         # Skip virtual environment and system files
         if ".venv" in str(py_file) or "site-packages" in str(py_file):
             continue
@@ -48,7 +44,6 @@ def modernize_type_parameters(content: str) -> tuple[str, list[str]]:
     changes = []
 
     # Pattern 1: Generic class definitions with TypeVar
-    # from typing import TypeVar, Generic
     # T = TypeVar('T')
     # class MyClass(Generic[T]): -> class MyClass[T]:
 
@@ -77,13 +72,13 @@ def modernize_type_parameters(content: str) -> tuple[str, list[str]]:
             # Generic[T] -> [T]
             content = re.sub(
                 rf"class\s+(\w+)\s*\(\s*Generic\[{var_name}\]\s*\)",
-                rf"class \1[{type_name}]",
+                rf"class \1[{_type_name}]",
                 content,
             )
             # class Name(BaseClass, Generic[T]) -> class Name[T](BaseClass)
             content = re.sub(
                 rf"class\s+(\w+)\s*\(\s*([^,]+),\s*Generic\[{var_name}\]\s*\)",
-                rf"class \1[{type_name}](\2)",
+                rf"class \1[{_type_name}](\2)",
                 content,
             )
             changes.append(
@@ -106,7 +101,7 @@ def modernize_type_parameters(content: str) -> tuple[str, list[str]]:
                 # Add type parameter to function
                 content = re.sub(
                     rf"def\s+({re.escape(match.group(1))})\s*\(",
-                    rf"def \1[{type_name}](",
+                    rf"def \1[{_type_name}](",
                     content,
                     count=1,
                 )
@@ -151,8 +146,10 @@ def modernize_override_decorators(content: str) -> tuple[str, list[str]]:
                 # Add typing import if needed
                 if "from typing import" in content and "override" not in content:
                     content = re.sub(
-                        r"from typing import ([^\n]+)",
-                        r"from typing import \1, override",
+                        r"from typing import ([^,\n]*,\s*)?override(,\s*[^,\n]*)?",
+                        lambda m: f"from typing import {m.group(1) or ''}{m.group(2) or ''}".replace(
+                            ", ,", ","
+                        ).strip(", "),
                         content,
                     )
                     changes.append("Added override import")
@@ -314,7 +311,7 @@ def modernize_string_annotations(content: str) -> tuple[str, list[str]]:
     return content, changes
 
 
-def modernize_python_file(file_path: Path) -> dict[str, Any]:
+def modernize_python_file(file_path: Path) -> dict[str, object]:
     """Modernize a single Python file with Python 3.13+ syntax."""
     try:
         with Path(file_path).open("r", encoding="utf-8") as f:
@@ -412,12 +409,13 @@ def main() -> None:
             if result["status"] == "modified":
                 modified_files += 1
                 project_modified += 1
-                project_changes += len(result["changes"])
-                total_changes += len(result["changes"])
+                if isinstance(result["changes"], list):
+                    project_changes += len(result["changes"])
+                    total_changes += len(result["changes"])
 
                 # Show first few changes
-                if result["changes"]:
-                    relative_path = str(file_path).replace(str(FLEXT_ROOT) + "/", "")
+                if isinstance(result["changes"], list) and result["changes"]:
+                    relative_path = str(file_path).replace(str(Path.cwd()) + "/", "")
                     print(f"  ✅ {relative_path}: {len(result['changes'])} changes")
                     for change in result["changes"][:3]:  # Show first 3 changes
                         print(f"     • {change}")

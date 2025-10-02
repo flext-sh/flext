@@ -15,9 +15,9 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from flext_core import FlextResult
 from mypy import api as mypy_api
 
-from flext_core import FlextResult
 from flext_tools import (
     Colors,
     ConflictAnalyzer,

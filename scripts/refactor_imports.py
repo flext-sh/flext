@@ -231,10 +231,7 @@ def _promote_type_checking_imports(updated: str) -> tuple[str, bool]:
 
             kept_text = "\n".join(kept_lines).rstrip()
             if kept_text:
-                new_block = (
-                    "from typing import TYPE_CHECKING\n"
-                    "if TYPE_CHECKING:\n    " + "\n    ".join(kept_lines) + "\n"
-                )
+                new_block = "if TYPE_CHECKING:\n    " + "\n    ".join(kept_lines) + "\n"
                 keep_tc_blocks.append((start, end, new_block))
             else:
                 keep_tc_blocks.append((start, end, ""))

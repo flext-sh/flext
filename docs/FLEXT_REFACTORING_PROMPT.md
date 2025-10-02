@@ -482,7 +482,7 @@ with proper layered imports and zero circular dependencies.
 from __future__ import annotations
 
 # Foundation Layer - Import first (proven order)
-from project_name.__version__ import *
+from project_name.version import *
 from project_name.constants import *
 from project_name.typings import *
 from project_name.result import *
