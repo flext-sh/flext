@@ -289,14 +289,6 @@ class FlextLintFixer:
             # Common undefined names and their imports
             import_map = {
                 "Path": "from pathlib import Path",
-                "Dict": "from typing import Dict",
-                "List": "from typing import List",
-                "Optional": "from typing import Optional",
-                "Union": "from typing import Union",
-                "Type": "from typing import Type",
-                "Callable": "from typing import Callable",
-                "Iterator": "from typing import Iterator",
-                "Generator": "from typing import Generator",
                 "FlextResult": "from flext_core import FlextResult",
                 "FlextLogger": "from flext_core import FlextLogger",
                 "FlextModels": "from flext_core import FlextModels",
@@ -476,15 +468,13 @@ class FlextLintFixer:
         total_fixes = sum(self.fixes_applied.values())
         total_projects = len(self.projects_processed)
 
-        report.extend(
-            [
-                "## 📊 Summary",
-                f"- **Projects processed**: {total_projects}",
-                f"- **Total fixes applied**: {total_fixes}",
-                "",
-                "## 🔧 Fixes Applied",
-            ]
-        )
+        report.extend([
+            "## 📊 Summary",
+            f"- **Projects processed**: {total_projects}",
+            f"- **Total fixes applied**: {total_fixes}",
+            "",
+            "## 🔧 Fixes Applied",
+        ])
         for fix_type, count in self.fixes_applied.items():
             if count > 0:
                 description = {

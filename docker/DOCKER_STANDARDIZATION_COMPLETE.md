@@ -119,6 +119,6 @@ def test_my_feature(openldap_container):
 
 ## Zero Tolerance Enforcement
 
-**NO EXCEPTIONS**: Any Docker usage outside the standard pattern MUST be archived immediately.
+**NO EXCEPTIONS**: object Docker usage outside the standard pattern MUST be archived immediately.
 
 **Status**: ✅ ENFORCEMENT COMPLETE

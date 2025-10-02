@@ -18,7 +18,6 @@ import ast
 import operator
 import re
 from pathlib import Path
-from typing import Any
 
 # FLEXT projects to enforce patterns on
 FLEXT_ROOT = Path("/home/marlonsc/flext")
@@ -393,7 +392,7 @@ def enforce_constants_inheritance(
     return content, changes
 
 
-def analyze_architectural_patterns(file_path: Path) -> dict[str, Any]:
+def analyze_architectural_patterns(file_path: Path) -> dict[str, object]:
     """Analyze a single file for architectural pattern compliance."""
     try:
         with Path(file_path).open("r", encoding="utf-8") as f:
@@ -426,7 +425,7 @@ def analyze_architectural_patterns(file_path: Path) -> dict[str, Any]:
         }
 
 
-def enforce_architectural_patterns(file_path: Path) -> dict[str, Any]:
+def enforce_architectural_patterns(file_path: Path) -> dict[str, object]:
     """Enforce architectural patterns on a single file."""
     try:
         with Path(file_path).open("r", encoding="utf-8") as f:

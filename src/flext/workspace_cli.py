@@ -7,13 +7,14 @@ Click direct usage, organizing all functionality into nested classes.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
+from typing import Self
+
 
 from __future__ import annotations
 
 import subprocess
 import sys
 from pathlib import Path
-from typing import Self
 
 from flext.services import create_services
 from flext.workspace_service import create_workspace_service

@@ -57,11 +57,6 @@ class FlextStdlibService(FlextService[list[str]]):
         modules = self._ModuleHelper.get_stdlib_modules()
         return FlextResult[list[str]].ok(modules)
 
-    def execute(self: Self) -> FlextResult[list[str]]:
-        """Execute stdlib service hronously - FlextService interface."""
-        modules = self._ModuleHelper.get_stdlib_modules()
-        return FlextResult[list[str]].ok(modules)
-
     def get_stdlib_modules(self: Self) -> FlextResult[list[str]]:
         """Get stdlib modules using nested helper."""
         modules = self._ModuleHelper.get_stdlib_modules()

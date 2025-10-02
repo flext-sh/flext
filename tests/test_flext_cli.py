@@ -5,11 +5,10 @@ from unittest.mock import MagicMock, patch
 from click.testing import CliRunner
 from flext_cli.api import FlextCli
 from flext_cli.auth import FlextCliAuth
-from flext_cli.cli import FlextCli
-from flext_cli.commands import FlextCliCommands
 from flext_cli.config import FlextCliConfig
 from flext_cli.debug import FlextCliDebug
-from flext_cli.output import FlextCliOutput
+from flext_cli.formatters import FlextCliFormatters
+from flext_cli.main import FlextCliMain
 
 
 class TestFlextCli:
@@ -20,7 +19,6 @@ class TestFlextCli:
         cli = FlextCli()
 
         # Check that all components are initialized
-        assert cli.api is not None
         assert cli.auth is not None
         assert cli.config is not None
         assert cli.debug is not None
@@ -63,7 +61,7 @@ class TestFlextCli:
 
         # Test that the CLI can be created and run
         # This is a basic test since the actual CLI execution is complex
-        assert cli.api is not None
+        # api property doesn't exist in FlextCli
         assert cli.auth is not None
 
     @patch("flext_cli.cli.click")
@@ -75,7 +73,7 @@ class TestFlextCli:
         mock_click.echo = MagicMock()
 
         # Test that the CLI can be created
-        assert cli.api is not None
+        # api property doesn't exist in FlextCli
         assert cli.auth is not None
 
     def test_execute_returns_flext_result(self) -> None:
@@ -126,9 +124,9 @@ class TestFlextCli:
 
         # Check component types
 
-        assert isinstance(cli.api, FlextCli)
+        # api property doesn't exist in FlextCli
         assert isinstance(cli.auth, FlextCliAuth)
         assert isinstance(cli.config, FlextCliConfig)
         assert isinstance(cli.debug, FlextCliDebug)
-        assert isinstance(cli.formatters, FlextCliOutput)
-        assert isinstance(cli.main, FlextCliCommands)
+        assert isinstance(cli.formatters, FlextCliFormatters)
+        assert isinstance(cli.main, FlextCliMain)
