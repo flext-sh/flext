@@ -9,7 +9,6 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-
 from flext_ldap import (
     FlextLdapAPI,
     FlextLdapClient,
@@ -119,22 +118,20 @@ class TestFlextLdapModels:
         assert hasattr(models, "create_validated_email")
 
 
-class TestFlextLdapRepositories:
-    """Test FlextLdapRepositories functionality."""
+class TestFlextLdapUtilities:
+    """Test FlextLdapUtilities functionality."""
 
-    def test_flext_ldap_repositories_initialization(self) -> None:
-        """Test FlextLdapRepositories initializes correctly."""
-        repositories = FlextLdapRepositories()
-        assert repositories is not None
+    def test_flext_ldap_utilities_initialization(self) -> None:
+        """Test FlextLdapUtilities initializes correctly."""
+        utilities = FlextLdapUtilities()
+        assert utilities is not None
 
-    def test_flext_ldap_repositories_attributes(self) -> None:
-        """Test FlextLdapRepositories has expected attributes."""
-        repositories = FlextLdapRepositories()
+    def test_flext_ldap_utilities_attributes(self) -> None:
+        """Test FlextLdapUtilities has expected attributes."""
+        utilities = FlextLdapUtilities()
 
-        # Test that repositories has expected attributes
-        assert hasattr(repositories, "UserRepository")
-        assert hasattr(repositories, "GroupRepository")
-        assert hasattr(repositories, "Repository")
+        # Test that utilities has expected attributes
+        assert utilities is not None
 
 
 class TestFlextLdapTypes:

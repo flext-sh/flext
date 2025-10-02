@@ -9,10 +9,8 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from typing import Any
 
 import pytest
-
 from flext_core import (
     FlextBus,
     FlextConfig,
@@ -446,11 +444,11 @@ class TestFlextCoreTargeted:
         assert none_result.data is None
 
         # Test empty collections
-        empty_list = FlextResult[list[Any]].ok([])
+        empty_list = FlextResult[list[object]].ok([])
         assert empty_list.is_success
         assert empty_list.data == []
 
-        empty_dict = FlextResult[dict[str, Any]].ok({})
+        empty_dict = FlextResult[dict[str, object]].ok({})
         assert empty_dict.is_success
         assert empty_dict.data == {}
 
@@ -469,7 +467,7 @@ class TestFlextCoreTargeted:
         except ValueError as e:
             result = FlextResult[str].fail(str(e))
             assert result.is_failure
-            assert "Test exception" in result.error
+            assert result.error is not None and "Test exception" in result.error
 
         # Test safe operations
         def risky_operation() -> str:
@@ -483,7 +481,7 @@ class TestFlextCoreTargeted:
             result = FlextResult[str].fail(str(e))
 
         assert result.is_failure
-        assert "Risky operation failed" in result.error
+        assert result.error is not None and "Risky operation failed" in result.error
 
     # =============================================================================
     # INTEGRATION TESTS
@@ -496,8 +494,8 @@ class TestFlextCoreTargeted:
         logger = FlextLogger("integration_test")
         FlextBus()
 
-        class IntegrationService(FlextService[dict[str, Any]]):
-            def execute(self) -> FlextResult[dict[str, Any]]:
+        class IntegrationService(FlextService[dict[str, object]]):
+            def execute(self) -> FlextResult[dict[str, object]]:
                 # Use container
                 container.register("integration_key", "integration_value")
 
@@ -507,15 +505,13 @@ class TestFlextCoreTargeted:
                 # Create result with timestamp
                 timestamp = FlextUtilities.Generators.generate_timestamp()
 
-                return FlextResult[dict[str, Any]].ok(
-                    {
-                        "status": "success",
-                        "timestamp": timestamp,
-                        "container_value": container.get("integration_key").unwrap_or(
-                            "default"
-                        ),
-                    }
-                )
+                return FlextResult[dict[str, object]].ok({
+                    "status": "success",
+                    "timestamp": timestamp,
+                    "container_value": container.get("integration_key").unwrap_or(
+                        "default"
+                    ),
+                })
 
         service = IntegrationService()
         result = service.execute()

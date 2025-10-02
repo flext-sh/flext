@@ -7,12 +7,13 @@ facades while providing proper service orchestration.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
+from typing import Self
+
 
 from __future__ import annotations
 
 import subprocess
 from pathlib import Path
-from typing import Self
 
 from flext_core.constants import FlextConstants
 

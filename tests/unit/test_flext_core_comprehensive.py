@@ -11,10 +11,8 @@ from __future__ import annotations
 
 import math
 import time
-from typing import Any
 
 import pytest
-
 from flext_core import (
     FlextBus,
     FlextConfig,
@@ -47,7 +45,7 @@ class TestFlextCoreComprehensive:
         assert result_none.is_success
         assert result_none.data is None
 
-        result_dict = FlextResult[dict[str, Any]].ok({"key": "value"})
+        result_dict = FlextResult[dict[str, object]].ok({"key": "value"})
         assert result_dict.is_success
         assert result_dict.data["key"] == "value"
 
@@ -158,7 +156,7 @@ class TestFlextCoreComprehensive:
         bus = FlextBus()
         received_messages = []
 
-        def handler(message: dict[str, Any]) -> FlextResult[str]:
+        def handler(message: dict[str, object]) -> FlextResult[str]:
             received_messages.append(message)
             return FlextResult[str].ok("handled")
 
@@ -184,11 +182,11 @@ class TestFlextCoreComprehensive:
         handler1_calls = []
         handler2_calls = []
 
-        def handler1(msg: dict[str, Any]) -> FlextResult[str]:
+        def handler1(msg: dict[str, object]) -> FlextResult[str]:
             handler1_calls.append(msg)
             return FlextResult[str].ok("h1")
 
-        def handler2(msg: dict[str, Any]) -> FlextResult[str]:
+        def handler2(msg: dict[str, object]) -> FlextResult[str]:
             handler2_calls.append(msg)
             return FlextResult[str].ok("h2")
 
@@ -204,7 +202,7 @@ class TestFlextCoreComprehensive:
         """Test FlextBus error handling."""
         bus = FlextBus()
 
-        def failing_handler(msg: dict[str, Any]) -> FlextResult[str]:
+        def failing_handler(msg: dict[str, object]) -> FlextResult[str]:
             return FlextResult[str].fail("Handler error")
 
         bus.subscribe("error_topic", failing_handler)
@@ -445,7 +443,7 @@ class TestFlextCoreComprehensive:
         result = service.execute()
 
         assert result.is_failure
-        assert "Service error" in result.error
+        assert result.error is not None and "Service error" in result.error
 
     def test_flext_service_operations(self) -> None:
         """Test FlextService with operations."""
@@ -584,12 +582,10 @@ class TestFlextCoreComprehensive:
         assert validation_result.is_success
 
         # Test validation failure
-        validation_fail = config.validate_required_fields(
-            [
-                "required_field",
-                "missing_field",
-            ]
-        )
+        validation_fail = config.validate_required_fields([
+            "required_field",
+            "missing_field",
+        ])
         assert validation_fail.is_failure
 
     # =============================================================================
@@ -683,14 +679,14 @@ class TestFlextCoreComprehensive:
     def test_comprehensive_integration(self) -> None:
         """Test comprehensive integration of all flext-core components."""
 
-        class ComprehensiveTestService(FlextService[dict[str, Any]]):
+        class ComprehensiveTestService(FlextService[dict[str, object]]):
             def __init__(self) -> None:
                 super().__init__()
                 self.logger = FlextLogger("comprehensive_test")
                 self.container = FlextContainer.get_global()
                 self.config = FlextConfig({"test_mode": True, "max_items": 100})
 
-            def execute(self) -> FlextResult[dict[str, Any]]:
+            def execute(self) -> FlextResult[dict[str, object]]:
                 try:
                     # Use logger
                     self.logger.info("Starting comprehensive test")
@@ -707,7 +703,7 @@ class TestFlextCoreComprehensive:
                     chunk_result = FlextUtilities.Collections.chunk_list(test_data, 3)
 
                     if chunk_result.is_failure:
-                        return FlextResult[dict[str, Any]].fail(chunk_result.error)
+                        return FlextResult[dict[str, object]].fail(chunk_result.error)
 
                     # Create result
                     result_data = {
@@ -726,11 +722,11 @@ class TestFlextCoreComprehensive:
                         extra={"result_size": len(result_data)},
                     )
 
-                    return FlextResult[dict[str, Any]].ok(result_data)
+                    return FlextResult[dict[str, object]].ok(result_data)
 
                 except Exception as e:
                     self.logger.exception(f"Comprehensive test failed: {e}")
-                    return FlextResult[dict[str, Any]].fail(str(e))
+                    return FlextResult[dict[str, object]].fail(str(e))
 
         # Execute comprehensive test
         service = ComprehensiveTestService()
@@ -808,7 +804,7 @@ class TestFlextCoreComprehensive:
         result = service.execute()
 
         assert result.is_failure
-        assert "Step 1 failed" in result.error
+        assert result.error is not None and "Step 1 failed" in result.error
 
         # Test error recovery
         recovery_result = service.test_recovery()
@@ -823,7 +819,7 @@ class TestFlextCoreComprehensive:
         large_results = []
         for i in range(1000):
             large_data = {"data": list(range(100)), "id": i}
-            result = FlextResult[dict[str, Any]].ok(large_data)
+            result = FlextResult[dict[str, object]].ok(large_data)
             large_results.append(result)
 
         assert len(large_results) == 1000
@@ -870,7 +866,7 @@ class TestFlextCoreComprehensive:
     def test_edge_cases_and_boundary_conditions(self) -> None:
         """Test edge cases and boundary conditions."""
         # Test empty data structures
-        empty_result = FlextResult[list[Any]].ok([])
+        empty_result = FlextResult[list[object]].ok([])
         assert empty_result.is_success
         assert empty_result.data == []
 
@@ -893,6 +889,6 @@ class TestFlextCoreComprehensive:
 
         # Test deeply nested structures
         nested = {"level1": {"level2": {"level3": {"value": "deep"}}}}
-        nested_result = FlextResult[dict[str, Any]].ok(nested)
+        nested_result = FlextResult[dict[str, object]].ok(nested)
         assert nested_result.is_success
         assert nested_result.data["level1"]["level2"]["level3"]["value"] == "deep"
