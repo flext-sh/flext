@@ -21,7 +21,7 @@ COPY --chown=appuser:appuser . .
 # Install essential Python packages
 RUN pip install --no-cache-dir \
     click pydantic pydantic-settings rich typer httpx jinja2 pathspec tomli \
-    pytest pytest-cov pytest-asyncio ruff mypy bandit pip-audit
+    pytest pytest-cov pytest-ruff mypy bandit pip-audit
 
 # Create necessary directories
 RUN mkdir -p /app/logs /app/outputs /app/test_results /app/example_results && \

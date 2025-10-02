@@ -75,7 +75,7 @@ tests/
 - **pytest**: Primary testing framework with fixtures and plugins
 - **pytest-cov**: Coverage reporting and enforcement
 - **pytest-mock**: Mocking and stubbing for unit tests
-- **pytest-asyncio**: Async/await testing support
+- **pytest-*: /testing support
 - **pytest-xdist**: Parallel test execution for performance
 
 ### **Specialized Testing Tools**
@@ -120,7 +120,7 @@ class TestCreatePipelineHandler:
         """Create handler instance with mocked dependencies."""
         return CreatePipelineHandler(pipeline_repository=mock_repository)
 
-    async def test_create_pipeline_success(self, handler, mock_repository):
+    def test_create_pipeline_success(self, handler, mock_repository):
         """Test successful pipeline creation with valid input."""
         # Arrange
         command = CreatePipelineCommand(
@@ -131,7 +131,7 @@ class TestCreatePipelineHandler:
         mock_repository.create.return_value = "pipeline-123"
 
         # Act
-        result = await handler.handle(command)
+        result = handler.handle(command)
 
         # Assert
         assert result.is_success is True
@@ -142,7 +142,7 @@ class TestCreatePipelineHandler:
             target={"type": "postgres"}
         )
 
-    async def test_create_pipeline_validation_failure(self, handler):
+    def test_create_pipeline_validation_failure(self, handler):
         """Test pipeline creation with invalid configuration."""
         # Arrange
         command = CreatePipelineCommand(
@@ -152,7 +152,7 @@ class TestCreatePipelineHandler:
         )
 
         # Act
-        result = await handler.handle(command)
+        result = handler.handle(command)
 
         # Assert
         assert result.is_success is False
@@ -189,7 +189,7 @@ class TestWorkspacePipelineIntegration:
 
         return workspace
 
-    async def test_workspace_pipeline_coordination(self, workspace_path):
+    def test_workspace_pipeline_coordination(self, workspace_path):
         """Test coordination between workspace and pipeline services."""
         # Arrange
         workspace = WorkspaceManager(workspace_path)
@@ -197,7 +197,7 @@ class TestWorkspacePipelineIntegration:
 
         # Act
         projects = workspace.list_projects()
-        pipeline_result = await pipeline_service.create_workspace_pipeline(
+        pipeline_result = pipeline_service.create_workspace_pipeline(
             workspace_root=workspace_path,
             projects=projects
         )

@@ -12,7 +12,6 @@ from __future__ import annotations
 from flext import (
     FlextApplicationHandlerService,
     FlextApplicationPipelineService,
-    FlextCli,
     FlextCliService,
     FlextControlPanelCli,
     FlextLogger as FlextLoggerMain,
@@ -22,6 +21,7 @@ from flext import (
     FlextWorkspaceCli,
     FlextWorkspaceService,
 )
+from flext_cli import FlextCli
 from flext_core import FlextContainer, FlextLogger, FlextResult, FlextService
 
 
