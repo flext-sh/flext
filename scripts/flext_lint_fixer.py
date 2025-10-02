@@ -476,13 +476,15 @@ class FlextLintFixer:
         total_fixes = sum(self.fixes_applied.values())
         total_projects = len(self.projects_processed)
 
-        report.extend([
-            "## 📊 Summary",
-            f"- **Projects processed**: {total_projects}",
-            f"- **Total fixes applied**: {total_fixes}",
-            "",
-            "## 🔧 Fixes Applied",
-        ])
+        report.extend(
+            [
+                "## 📊 Summary",
+                f"- **Projects processed**: {total_projects}",
+                f"- **Total fixes applied**: {total_fixes}",
+                "",
+                "## 🔧 Fixes Applied",
+            ]
+        )
         for fix_type, count in self.fixes_applied.items():
             if count > 0:
                 description = {

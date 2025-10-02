@@ -83,7 +83,6 @@ def main() -> None:
             client-a_types = project_config["tool"]["poetry"]["group.typings.dependencies"]
             client-a_types.update(
                 {
-                    "types-aiofiles": "^24.1.0.20250708",
                     "types-click": "^7.1.8",
                     "types-pygments": "^2.19.0.20250516",
                     "types-cffi": "^1.17.0.20250523",

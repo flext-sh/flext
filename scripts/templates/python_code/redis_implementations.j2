@@ -2,22 +2,22 @@
 
 {% if method_type == 'store' %}
         # Real Redis implementation for {{ method_name }}
-        await self._redis_client.set(key, self._serialize(value), ex=ttl.total_seconds() if ttl else None)
+        self._redis_client.set(key, self._serialize(value), ex=ttl.total_seconds() if ttl else None)
 {% elif method_type == 'get' %}
         # Real Redis implementation for {{ method_name }}
-        result = await self._redis_client.get(key)
+        result = self._redis_client.get(key)
         return self._deserialize(result) if result else None
 {% elif method_type == 'delete' %}
         # Real Redis implementation for {{ method_name }}
-        result = await self._redis_client.delete(key)
+        result = self._redis_client.delete(key)
         return bool(result)
 {% elif method_type == 'exists' %}
         # Real Redis implementation for {{ method_name }}
-        result = await self._redis_client.exists(key)
+        result = self._redis_client.exists(key)
         return bool(result)
 {% elif method_type == 'keys' %}
         # Real Redis implementation for {{ method_name }}
-        keys = await self._redis_client.keys(pattern)
+        keys = self._redis_client.keys(pattern)
         return [key.decode() if isinstance(key, bytes) else key for key in keys]
 {% elif method_type == 'cleanup' %}
         # Real Redis implementation with proper cleanup for {{ method_name }}
@@ -33,7 +33,7 @@
         end
         return count
         '''
-        return await self._redis_client.eval(script, 0, "*")
+        return self._redis_client.eval(script, 0, "*")
 {% else %}
         # TODO: Implement {{ method_name }} with proper business logic
         logger = structlog.FlextLogger(__name__)

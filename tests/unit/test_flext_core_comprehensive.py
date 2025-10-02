@@ -9,7 +9,6 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import asyncio
 import math
 import time
 from typing import Any
@@ -448,23 +447,23 @@ class TestFlextCoreComprehensive:
         assert result.is_failure
         assert "Service error" in result.error
 
-    def test_flext_service_async_operations(self) -> None:
-        """Test FlextService with async operations."""
+    def test_flext_service_operations(self) -> None:
+        """Test FlextService with operations."""
 
-        class AsyncService(FlextService[str]):
-            async def execute_async(self) -> FlextResult[str]:
-                await asyncio.sleep(0.001)  # Minimal delay
-                return FlextResult[str].ok("async_result")
+        class Service(FlextService[str]):
+            def execute(self) -> FlextResult[str]:
+                time.sleep(0.001)  # Minimal delay
+                return FlextResult[str].ok("result")
 
-        service = AsyncService()
+        service = Service()
 
-        async def test_async() -> None:
-            result = await service.execute_async()
+        def test() -> None:
+            result = service.execute()
             assert result.is_success
-            assert result.data == "async_result"
+            assert result.data == "result"
 
-        # Run the async test
-        asyncio.run(test_async())
+        # Run the test
+        test()
 
     # =============================================================================
     # FLEXT LOGGER COMPREHENSIVE TESTS
@@ -585,10 +584,12 @@ class TestFlextCoreComprehensive:
         assert validation_result.is_success
 
         # Test validation failure
-        validation_fail = config.validate_required_fields([
-            "required_field",
-            "missing_field",
-        ])
+        validation_fail = config.validate_required_fields(
+            [
+                "required_field",
+                "missing_field",
+            ]
+        )
         assert validation_fail.is_failure
 
     # =============================================================================

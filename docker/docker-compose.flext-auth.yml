@@ -44,7 +44,7 @@ services:
     environment:
       - ENVIRONMENT=production
       - DEBUG=false
-      - DATABASE_URL=postgresql+asyncpg://flext:flext_password@postgres:5432/flext_auth
+      - DATABASE_URL=postgresql+pg://flext:flext_password@postgres:5432/flext_auth
       - JWT_SECRET_KEY=${JWT_SECRET_KEY:-your-production-secret-key-here}
       - REDIS_URL=redis://redis:6379/0
     ports:

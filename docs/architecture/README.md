@@ -81,7 +81,7 @@ FLEXT implements a dual-service distributed architecture with Clean Architecture
 
 - **gRPC**: High-performance service-to-service communication
 - **HTTP/REST**: External API exposure
-- **Event Streaming**: Asynchronous event processing
+- **Event Streaming**: hronous event processing
 
 ### Data Flow
 
