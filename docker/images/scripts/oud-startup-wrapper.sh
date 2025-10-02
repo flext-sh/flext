@@ -9,10 +9,11 @@ echo "=== Starting OUD Instance ==="
 /u01/oracle/container-scripts/createAndStartOUDInstance.sh &
 OUD_STARTUP_PID=$!
 
-# Wait for OUD to be fully started (check if port 1389 is responding)
+# Wait for OUD to be fully started (check if port is responding)
 echo "=== Waiting for OUD to be ready ==="
+echo "Using baseDN: ${baseDN}, port: ${ldapPort}"
 for i in {1..60}; do
-    if ldapsearch -x -H ldap://localhost:1389 -b "" -s base "(objectClass=*)" > /dev/null 2>&1; then
+    if ${ORACLE_HOME}/oud/bin/ldapsearch -h localhost -p ${ldapPort} -b "" -s base "(objectClass=*)" > /dev/null 2>&1; then
         echo "OUD is ready!"
         break
     fi
