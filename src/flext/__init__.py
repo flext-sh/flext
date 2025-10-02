@@ -3,9 +3,13 @@
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
+from typing import Final
+
 
 from __future__ import annotations
 
+
+from flext.version import VERSION, FlextVersion
 from flext.application_handlers import (
     FlextApplicationHandlerService,
     create_handler_service,
@@ -15,7 +19,7 @@ from flext.application_pipeline import (
     create_pipeline_service,
 )
 from flext.base_cli import (
-    FlextCliApi,
+    FlextCli,
     FlextCliContext,
     FlextCliModels,
     FlextCliOutput,
@@ -34,7 +38,7 @@ from flext.cli import (
     test,
 )
 from flext.cli_patterns import (
-    FlextCliApi as FlextCliApiPattern,
+    FlextCli as FlextCliPattern,
     FlextCliContext as FlextCliContextPattern,
     FlextCliOutput as FlextCliFormattersPattern,
 )
@@ -75,6 +79,11 @@ from flext_cli import (
     FlextCliCommands,
 )
 
+PROJECT_VERSION: Final[FlextVersion] = VERSION
+
+__version__: str = VERSION.version
+__version_info__: tuple[int | str, ...] = VERSION.version_info
+
 __all__ = [
     "DevToolsManager",
     "FlextAdvancedDevModels",
@@ -82,8 +91,8 @@ __all__ = [
     "FlextAdvancedWorkspaceModels",
     "FlextApplicationHandlerService",
     "FlextApplicationPipelineService",
-    "FlextCliApi",
-    "FlextCliApiPattern",
+    "FlextCli",
+    "FlextCliPattern",
     "FlextCliCommands",
     "FlextCliContext",
     "FlextCliContextPattern",
@@ -125,10 +134,9 @@ __all__ = [
     "test",
     "workspace_main",
     "workspace_test",
+    "FlextVersion",
+    "VERSION",
+    "PROJECT_VERSION",
+    "__version__",
+    "__version_info__",
 ]
-
-__version__ = "0.9.0"
-__author__ = "FLEXT Development Team"
-__email__ = "team@flext.sh"
-__license__ = "MIT"
-__homepage__ = "https://github.com/flext-sh/flext"

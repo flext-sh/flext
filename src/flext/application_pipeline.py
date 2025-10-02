@@ -10,12 +10,13 @@ consistent pipeline usage across the FLEXT ecosystem.
 ZERO TOLERANCE: NO local implementations - uses flext-core exclusively.
 DOMAIN SEPARATION: Pipeline patterns belong exclusively to flext-core domain.
 """
+from typing import Self, TypeVar
+
 
 from __future__ import annotations
 
 import time
 from enum import StrEnum
-from typing import Self, TypeVar
 
 # Import SOURCE OF TRUTH co, Selfnfigurations - NO DUPLICATION
 from pydantic import BaseModel, Field
@@ -217,13 +218,13 @@ class FlextApplicationPipelineService(FlextService[str]):
             command_timeout=30,
             max_command_retries=3,
         )
-        
+
         # Create a concrete handler implementation
         class PipelineHandler(FlextHandlers[object, object]):
             def handle(self, message: object) -> FlextResult[object]:
                 """Handle pipeline commands."""
                 return FlextResult[object].ok(f"Pipeline processed: {message}")
-        
+
         return PipelineHandler(config=config)
 
     def execute(self, request: str = "") -> FlextResult[str]:
@@ -240,9 +241,10 @@ class FlextApplicationPipelineService(FlextService[str]):
         except Exception as e:
             return FlextResult[str].fail(f"Pipeline service execution failed: {e}")
 
-    async def execute_async(self, request: str = "") -> FlextResult[str]:
-        """Execute pipeline service asynchronously - required by FlextService abstract method."""
-        _ = request  # Parameter available for service requests
+    def execute_async(self, request: str = "") -> FlextResult[str]:  # noqa: ARG004
+        """Execute pipeline service asynchronously - required by FlextService abstract method (sync stub)."""
+        # Synchronous stub - return the input object
+        # Real async operations should be converted to sync alternatives
         try:
             # Default execution returns pipeline system info from flext-core
             info = {

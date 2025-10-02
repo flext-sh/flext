@@ -10,12 +10,13 @@ usage across the FLEXT ecosystem.
 ZERO TOLERANCE: NO local implementations - uses flext-core FlextHandlers exclusively.
 DOMAIN SEPARATION: Handler patterns belong exclusively to flext-core domain.
 """
+from typing import Self, TypeVar
+
 
 from __future__ import annotations
 
 import uuid
 from enum import StrEnum
-from typing import Self, TypeVar
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 

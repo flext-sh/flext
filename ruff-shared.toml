@@ -196,6 +196,11 @@ line-length = 88
         "TRY003",
         "TRY004",  # Prefer TypeError - test flexibility over strict exception types
     ]
+    "**/utilities.py" = [
+        "S404",
+        "PLW1510",
+        "S603",
+    ]
     "**/__init__.py" = [
         "F822",    # undefined-name - lazy imports define names at runtime via __getattr__
         "PLC0415", # import-outside-top-level - lazy imports are intentional for circular import prevention

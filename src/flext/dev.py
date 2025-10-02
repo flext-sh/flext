@@ -6,11 +6,12 @@ FLEXT architectural patterns with proper separation of concerns.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
+from typing import Protocol, Self
+
 
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Protocol, Self, assert_never
 
 from flext.dev_enums import FlextDevEnums
 from flext.dev_models import FlextAdvancedDevModels

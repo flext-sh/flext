@@ -123,7 +123,9 @@ class TestFlextCliPromptsConfirm:
         prompts = FlextCliPrompts()
         result = prompts.confirm("Test message")
         assert result.is_failure
-        assert "User interrupted confirmation" in result.error
+        assert (
+            result.error is not None and "User interrupted confirmation" in result.error
+        )
 
     @patch("builtins.input")
     def test_confirm_eof_error(self, mock_input: object) -> None:
@@ -132,7 +134,7 @@ class TestFlextCliPromptsConfirm:
         prompts = FlextCliPrompts()
         result = prompts.confirm("Test message")
         assert result.is_failure
-        assert "Input stream ended" in result.error
+        assert result.error is not None and "Input stream ended" in result.error
 
     @patch("builtins.input")
     def test_confirm_general_exception(self, mock_input: object) -> None:
@@ -141,7 +143,10 @@ class TestFlextCliPromptsConfirm:
         prompts = FlextCliPrompts()
         result = prompts.confirm("Test message")
         assert result.is_failure
-        assert "Confirmation failed: Test error" in result.error
+        assert (
+            result.error is not None
+            and "Confirmation failed: Test error" in result.error
+        )
 
 
 class TestFlextCliPromptsPrompt:
@@ -159,7 +164,7 @@ class TestFlextCliPromptsPrompt:
         prompts = FlextCliPrompts(quiet=True)
         result = prompts.prompt("Test message")
         assert result.is_failure
-        assert "Empty input is not allowed" in result.error
+        assert result.error is not None and "Empty input is not allowed" in result.error
 
     @patch("builtins.input")
     def test_prompt_valid_input(self, mock_input: object) -> None:
@@ -186,7 +191,7 @@ class TestFlextCliPromptsPrompt:
         prompts = FlextCliPrompts()
         result = prompts.prompt("Test message")
         assert result.is_failure
-        assert "Empty input is not allowed" in result.error
+        assert result.error is not None and "Empty input is not allowed" in result.error
 
     @patch("builtins.input")
     def test_prompt_whitespace_only(self, mock_input: object) -> None:
@@ -195,7 +200,7 @@ class TestFlextCliPromptsPrompt:
         prompts = FlextCliPrompts()
         result = prompts.prompt("Test message")
         assert result.is_failure
-        assert "Empty input is not allowed" in result.error
+        assert result.error is not None and "Empty input is not allowed" in result.error
 
     @patch("builtins.input")
     def test_prompt_keyboard_interrupt(self, mock_input: object) -> None:
@@ -204,7 +209,7 @@ class TestFlextCliPromptsPrompt:
         prompts = FlextCliPrompts()
         result = prompts.prompt("Test message")
         assert result.is_failure
-        assert "User interrupted prompt" in result.error
+        assert result.error is not None and "User interrupted prompt" in result.error
 
     @patch("builtins.input")
     def test_prompt_eof_error(self, mock_input: object) -> None:
@@ -213,7 +218,7 @@ class TestFlextCliPromptsPrompt:
         prompts = FlextCliPrompts()
         result = prompts.prompt("Test message")
         assert result.is_failure
-        assert "Input stream ended" in result.error
+        assert result.error is not None and "Input stream ended" in result.error
 
     @patch("builtins.input")
     def test_prompt_general_exception(self, mock_input: object) -> None:
@@ -222,7 +227,7 @@ class TestFlextCliPromptsPrompt:
         prompts = FlextCliPrompts()
         result = prompts.prompt("Test message")
         assert result.is_failure
-        assert "Prompt failed: Test error" in result.error
+        assert result.error is not None and "Prompt failed: Test error" in result.error
 
 
 class TestFlextCliPromptsPrintStatus:
@@ -270,7 +275,10 @@ class TestFlextCliPromptsPrintStatus:
         with patch.object(prompts._logger, "info", side_effect=Exception("Test error")):
             result = prompts.print_status("Test message", status="info")
             assert result.is_failure
-            assert "Print status failed: Test error" in result.error
+            assert (
+                result.error is not None
+                and "Print status failed: Test error" in result.error
+            )
 
 
 class TestFlextCliPromptsConvenienceMethods:
@@ -336,7 +344,10 @@ class TestFlextCliPromptsProgress:
         with patch.object(prompts._logger, "info", side_effect=Exception("Test error")):
             result = prompts.create_progress("Test progress")
             assert result.is_failure
-            assert "Progress creation failed: Test error" in result.error
+            assert (
+                result.error is not None
+                and "Progress creation failed: Test error" in result.error
+            )
 
     def test_with_progress_quiet_mode(self) -> None:
         """Test with progress in quiet mode."""
@@ -370,7 +381,10 @@ class TestFlextCliPromptsProgress:
         with patch.object(prompts._logger, "info", side_effect=Exception("Test error")):
             result = prompts.with_progress(items, "Processing items")
             assert result.is_failure
-            assert "Progress processing failed: Test error" in result.error
+            assert (
+                result.error is not None
+                and "Progress processing failed: Test error" in result.error
+            )
 
 
 class TestFlextCliPromptsIntegration:

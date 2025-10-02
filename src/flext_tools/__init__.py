@@ -16,8 +16,6 @@ from flext_tools.lint_fixer import GradualLintFixer
 from flext_tools.monitoring_manager import MonitoringManager
 from flext_tools.mypy_checker import MyPyChecker
 from flext_tools.observability import FlextObservabilityService
-
-# LEGACY ALIASES ELIMINATED - Access path utilities directly through modules
 from flext_tools.poetry_operations import PoetryOperations
 from flext_tools.poetry_validator import PoetryValidator
 from flext_tools.quality_gateway import QualityGateway

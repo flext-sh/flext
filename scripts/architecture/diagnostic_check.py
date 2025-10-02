@@ -18,9 +18,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-from mypy import api as mypy_api
-
 from flext_core import FlextConstants, FlextLogger, FlextTypes
+from mypy import api as mypy_api
 
 logger = FlextLogger(__name__)
 
