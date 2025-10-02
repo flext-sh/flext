@@ -300,12 +300,10 @@ class TestFlextCoreConsolidated:
                     self._container.register("test", "value")
 
                     # Return success result
-                    return FlextResult[FlextTypes.Core.Dict].ok(
-                        {
-                            "status": "success",
-                            "message": "Integration test passed",
-                        }
-                    )
+                    return FlextResult[FlextTypes.Core.Dict].ok({
+                        "status": "success",
+                        "message": "Integration test passed",
+                    })
                 except Exception as e:
                     return FlextResult[FlextTypes.Core.Dict].fail(str(e))
 
@@ -333,7 +331,7 @@ class TestFlextCoreConsolidated:
         result = service.execute()
 
         assert result.is_failure
-        assert "Test error" in result.error
+        assert result.error is not None and "Test error" in result.error
 
     def test_flext_core_performance(self) -> None:
         """Test flext-core performance characteristics."""

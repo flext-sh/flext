@@ -7,6 +7,8 @@ and modern validation for development workflow automation.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
+from typing import Annotated, Literal, Self, TypeVar
+
 
 from __future__ import annotations
 
@@ -14,7 +16,6 @@ import shutil
 import subprocess
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Annotated, Literal, Self, TypeVar
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field, field_validator, model_validator
