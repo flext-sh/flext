@@ -63,7 +63,9 @@ class TestFlextToolsBackup:
         result = manager.restore_backup("")
         assert isinstance(result, FlextResult)
         assert result.is_failure
-        assert "Backup path cannot be empty" in result.error
+        assert (
+            result.error is not None and "Backup path cannot be empty" in result.error
+        )
 
 
 class TestFlextToolsColors:

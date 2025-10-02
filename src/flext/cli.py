@@ -7,13 +7,14 @@ uses nested classes for organization while maintaining all CLI capabilities.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
+from typing import Self, cast
+
 
 from __future__ import annotations
 
 import subprocess
 import sys
 from pathlib import Path
-from typing import Self, cast
 
 from flext_cli import FlextCli, FlextCliApi, FlextCliContext
 from flext_core import FlextLogger, FlextResult, FlextService

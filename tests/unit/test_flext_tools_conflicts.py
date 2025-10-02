@@ -97,7 +97,9 @@ class TestConflictAnalyzer:
         result = analyzer.analyze_dependencies("")
         assert isinstance(result, FlextResult)
         assert result.is_failure
-        assert "Project path cannot be empty" in result.error
+        assert (
+            result.error is not None and "Project path cannot be empty" in result.error
+        )
 
     def test_conflict_analyzer_detect_version_conflicts(self) -> None:
         """Test ConflictAnalyzer detect_version_conflicts method."""
@@ -331,7 +333,9 @@ class TestConflictAnalyzer:
         result = analyzer.analyze_dependencies("")
         assert isinstance(result, FlextResult)
         assert result.is_failure
-        assert "Project path cannot be empty" in result.error
+        assert (
+            result.error is not None and "Project path cannot be empty" in result.error
+        )
 
         # Test with relative path
         result = analyzer.analyze_dependencies("./test")

@@ -278,7 +278,6 @@ class FlextEcosystemStandardizer(FlextBaseService):
         original_content = content
 
         # Remove TYPE_CHECKING imports
-        content = re.sub(r"from typing import.*TYPE_CHECKING.*\n", "", content)
         content = re.sub(
             r"if TYPE_CHECKING:\s*\n((?:\s{4,}.*\n)*)",
             self._extract_type_checking_imports,
@@ -344,8 +343,6 @@ class FlextEcosystemStandardizer(FlextBaseService):
             r"import structlog": "# Use FlextLogger from flext_core instead\nfrom flext_core import FlextLogger",
             r"from structlog import FlextLogger": "from flext_core import FlextLogger",
             # Standardize to flext-core patterns
-            r"from typing import Optional": "# Use Union[T, None] instead of Optional[T]",
-            r"from typing import Union": "# Use Union[T, U] instead of Union[T, U]",
         }
 
         for old_pattern, new_import in import_mappings.items():

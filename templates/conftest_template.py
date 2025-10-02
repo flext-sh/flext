@@ -16,7 +16,6 @@ Based on: flext-core proven patterns
 
 import os
 from collections.abc import Generator
-from typing import Any
 from unittest.mock import Mock
 
 import pytest
@@ -109,7 +108,7 @@ def invalid_data() -> dict[str, object]:
 
 # FOR USER/ACCOUNT DOMAIN PROJECTS
 # @pytest.fixture
-# def sample_user_data() -> Dict[str, Any]:
+# def sample_user_data() -> Dict[str, object]:
 #     """Provide valid user data for testing."""
 #     return {
 #         "name": "Test User",
@@ -120,7 +119,7 @@ def invalid_data() -> dict[str, object]:
 #     }
 
 # @pytest.fixture
-# def invalid_user_data() -> Dict[str, Any]:
+# def invalid_user_data() -> Dict[str, object]:
 #     """Provide invalid user data for error testing."""
 #     return {
 #         "name": "",  # Empty name
@@ -223,7 +222,7 @@ def invalid_data() -> dict[str, object]:
 #     # Cleanup if needed
 
 # @pytest.fixture
-# def singer_config() -> Dict[str, Any]:
+# def singer_config() -> Dict[str, object]:
 #     """Provide Singer tap/target configuration."""
 #     return {
 #         "host": "localhost",
@@ -309,8 +308,8 @@ def mock_repository() -> Mock:
 
 @pytest.fixture
 def test_environment(
-    clean_container: Any, logger: Any, sample_data: Any
-) -> dict[str, Any]:
+    clean_container: object, logger: object, sample_data: object
+) -> dict[str, object]:
     """Provide complete test environment with common dependencies.
 
     This is a convenience fixture that combines commonly used fixtures.
@@ -357,7 +356,7 @@ def configure_test_environment() -> None:
 # =============================================================================
 
 
-def pytest_configure(config: Any) -> None:
+def pytest_configure(config: object) -> None:
     """Configure pytest markers and settings.
 
     This function is called during pytest startup and can be used
@@ -367,7 +366,7 @@ def pytest_configure(config: Any) -> None:
     # additional configuration here if needed
 
 
-def pytest_collection_modifyitems(config: Any, items: list[Any]) -> None:
+def pytest_collection_modifyitems(config: object, items: list[object]) -> None:
     """Modify collected test items.
 
     This hook can be used to:
