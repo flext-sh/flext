@@ -37,7 +37,7 @@ DOMAIN_VIOLATIONS = {
         r"import fastapi\b",
         r"import flask\b",
         r"import django\b",
-        r"import aiohttp\b",
+        r"import httpx\b",
         r"from fastapi\.",
         r"from flask\.",
     ],

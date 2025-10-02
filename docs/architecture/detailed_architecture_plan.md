@@ -185,7 +185,7 @@ class FlextMeltanoExecutor:
     def run_dbt_command(self, command: FlextTypes.Core.StringList, project_dir: Path) -> FlextResult[DbtResult]:
         """Executa comando DBT"""
 
-    def execute_async(self, operation: Callable) -> FlextResult[str]:  # retorna job_id
+    def execute(self, operation: Callable) -> FlextResult[str]:  # retorna job_id
         """Executa operação assíncrona e retorna job_id"""
 
     def get_execution_status(self, job_id: str) -> FlextResult[ExecutionStatus]:

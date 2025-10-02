@@ -119,14 +119,14 @@ class PipelineService:
     def __init__(self, meltano_runner: MeltanoRunner):
         self._meltano_runner = meltano_runner
 
-    async def execute_pipeline(
+    def execute_pipeline(
         self,
         pipeline_id: str,
         config: FlextTypes.Data.ConnectionConfig
     ) -> FlextResult[FlextTypes.Data.RecordBatch]:
         """Execute pipeline via Meltano."""
         try:
-            result = await self._meltano_runner.run_pipeline(
+            result = self._meltano_runner.run_pipeline(
                 pipeline_id=pipeline_id,
                 config=config
             )
@@ -179,10 +179,10 @@ from flext_meltano import MeltanoManager
 router = APIRouter()
 
 @router.post("/pipelines")
-async def create_pipeline(pipeline: PipelineCreate):
+def create_pipeline(pipeline: PipelineCreate):
     """Create new pipeline."""
     manager = MeltanoManager()
-    result = await manager.create_pipeline(pipeline)
+    result = manager.create_pipeline(pipeline)
 
     if result.is_failure:
         raise HTTPException(
@@ -329,10 +329,10 @@ from flext_core.result import FlextResult
 class PipelineExecutor:
     """Execute pipelines with proper error handling."""
 
-    async def execute_pipeline(self, pipeline_id: str, config: dict) -> FlextResult[dict]:
+    def execute_pipeline(self, pipeline_id: str, config: dict) -> FlextResult[dict]:
         try:
             # 1. Validate pipeline
-            validation_result = await self._validate_pipeline(pipeline_id)
+            validation_result = self._validate_pipeline(pipeline_id)
             if validation_result.is_failure:
                 return FlextResult[None].fail(
                     f"Pipeline validation failed: {validation_result.error}",
@@ -340,7 +340,7 @@ class PipelineExecutor:
                 )
 
             # 2. Execute pipeline
-            result = await self._run_pipeline(pipeline_id, config)
+            result = self._run_pipeline(pipeline_id, config)
             return FlextResult[None].ok(result)
 
         except FlextBusinessError as e:
@@ -464,7 +464,7 @@ class PipelineService:
         self.tracer = get_tracer()
         self.logger = FlextLogger()
 
-    async def execute_pipeline(self, request: PipelineRequest) -> PipelineResponse:
+    def execute_pipeline(self, request: PipelineRequest) -> PipelineResponse:
         # 1. Extract trace context from Go
         context = self.tracer.extract_context(request.trace_context)
 
@@ -474,7 +474,7 @@ class PipelineService:
             span.set_attribute("service.type", "python")
 
             # 3. Execute pipeline
-            result = await self._execute_pipeline(request)
+            result = self._execute_pipeline(request)
 
             # 4. Record results
             span.set_attribute("success", result.success)
@@ -568,14 +568,14 @@ class TestPipelineIntegration:
         """Mock Go service for testing."""
         return MockGoService()
 
-    async def test_pipeline_execution(self, go_service):
+    def test_pipeline_execution(self, go_service):
         """Test pipeline execution with Go integration."""
         # 1. Setup pipeline
         pipeline_id = "test-pipeline"
         config = {"test": True}
 
         # 2. Execute pipeline
-        result = await go_service.execute_pipeline(pipeline_id, config)
+        result = go_service.execute_pipeline(pipeline_id, config)
 
         # 3. Assert results
         assert result.success

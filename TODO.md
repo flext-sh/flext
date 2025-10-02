@@ -159,7 +159,7 @@ class FlextDbtProgrammaticRunner(FlextService):
             # IMPLEMENTATION: runner.invoke(cli_args) with FlextResult wrapping
             pass
 
-    async def run_transformations_programmatic(
+    def run_transformations_programmatic(
         self,
         project_dir: Path,
         models: list[str],
@@ -203,7 +203,7 @@ class FlextSingerProtocolManager(FlextService):
             # IMPLEMENTATION: State persistence and incremental processing
             pass
 
-    async def execute_singer_pipeline(
+    def execute_singer_pipeline(
         self,
         tap_instance: object,
         target_instance: object

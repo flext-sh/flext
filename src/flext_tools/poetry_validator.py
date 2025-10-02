@@ -126,10 +126,12 @@ class PoetryValidator:
                         .get("dependencies", {})
                     )
 
-                    dependency_results.update({
-                        "dependency_count": len(dependencies),
-                        "dev_dependency_count": len(dev_dependencies),
-                    })
+                    dependency_results.update(
+                        {
+                            "dependency_count": len(dependencies),
+                            "dev_dependency_count": len(dev_dependencies),
+                        }
+                    )
                 except Exception as parse_error:
                     # If we can't parse the file, still return basic info
                     # Log error but continue with basic validation

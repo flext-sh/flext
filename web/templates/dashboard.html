@@ -218,12 +218,12 @@ function dashboard() {
             setInterval(() => this.loadStats(), 30000);
         },
         
-        async loadStats() {
+        loadStats() {
             try {
                 this.loading = true;
-                const response = await fetch('/api/dashboard/stats');
+                const response = fetch('/api/dashboard/stats');
                 if (response.ok) {
-                    this.stats = await response.json();
+                    this.stats = response.json();
                 }
             } catch (error) {
                 console.error('Error loading stats:', error);
