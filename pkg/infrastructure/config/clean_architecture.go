@@ -69,7 +69,7 @@ type UseCaseConfig struct {
 type EventConfig struct {
 	// Event publishing
 	PublishingEnabled bool `mapstructure:"publishing_enabled" envconfig:"PUBLISHING_ENABLED" default:"true"`
-	AsyncPublishing   bool `mapstructure:"async_publishing" envconfig:"ASYNC_PUBLISHING" default:"true"`
+	Publishing   bool `mapstructure:"publishing" envconfig:"PUBLISHING" default:"true"`
 
 	// Buffer settings
 	BufferSize     int           `mapstructure:"buffer_size" envconfig:"BUFFER_SIZE" default:"1000"`
@@ -167,7 +167,7 @@ func NewCleanArchitectureConfig() *CleanArchitectureConfig {
 		},
 		Events: EventConfig{
 			PublishingEnabled: true,
-			AsyncPublishing:   true,
+			Publishing:   true,
 			BufferSize:        1000,
 			FlushInterval:     1 * time.Second,
 			PublishTimeout:    5 * time.Second,

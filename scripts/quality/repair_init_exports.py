@@ -100,7 +100,7 @@ def parse_public_exports(py_path: Path) -> list[str]:
 
     # Add defined functions/classes and simple assigns
     for node in tree.body:
-        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+        if isinstance(node, (ast.FunctionDef, ast.FunctionDef, ast.ClassDef)):
             add(node.name)
         elif isinstance(node, (ast.Assign, ast.AnnAssign)):
             targets: list[ast.expr] = []

@@ -31,8 +31,8 @@ addopts = [
     # "--cov-fail-under=75", # Minimum coverage threshold (adjust per project)
 ]
 
-# Async Support (uncomment if your project uses async/await)
-# asyncio_mode = "auto"
+# Support (uncomment if your project uses /await)
+# mode = "auto"
 
 # Warning Filters (add project-specific warnings as needed)
 filterwarnings = [

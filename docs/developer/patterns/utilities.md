@@ -488,7 +488,7 @@ class AuthService:
     def __init__(self, secret_key: str):
         self.secret_key = secret_key
 
-    async def register_user(self, username: str, password: str) -> FlextResult[User]:
+    def register_user(self, username: str, password: str) -> FlextResult[User]:
         # Hash password
         hash_result = flext_auth_hash_password(password)
         if hash_result.is_failure:
@@ -498,9 +498,9 @@ class AuthService:
         user = User(username=username, password_hash=hash_result.data)
         return FlextResult[None].ok(user)
 
-    async def login(self, username: str, password: str) -> FlextResult[dict]:
+    def login(self, username: str, password: str) -> FlextResult[dict]:
         # Get user
-        user = await self.get_user_by_username(username)
+        user = self.get_user_by_username(username)
         if not user:
             return FlextResult[None].fail("Invalid credentials")
 

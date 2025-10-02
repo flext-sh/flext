@@ -3,7 +3,6 @@
 from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
-
 from flext_cli.api import FlextCli
 from flext_cli.auth import FlextCliAuth
 from flext_cli.cli import FlextCli

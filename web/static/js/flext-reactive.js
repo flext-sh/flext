@@ -70,11 +70,11 @@ function chart(chartId, chartType) {
             }
         },
 
-        async loadChartData() {
+        loadChartData() {
             try {
-                const response = await fetch(`/api/charts/${chartId}/data`);
+                const response = fetch(`/api/charts/${chartId}/data`);
                 if (response.ok) {
-                    const data = await response.json();
+                    const data = response.json();
                     this.updateChart(data);
                 }
             } catch (error) {
@@ -202,12 +202,12 @@ function dashboard() {
             setInterval(() => this.loadStats(), 30000);
         },
 
-        async loadStats() {
+        loadStats() {
             try {
                 this.loading = true;
-                const response = await fetch('/api/dashboard/stats');
+                const response = fetch('/api/dashboard/stats');
                 if (response.ok) {
-                    this.stats = await response.json();
+                    this.stats = response.json();
                     this.$dispatch('stats-updated', this.stats);
                 }
             } catch (error) {
@@ -226,12 +226,12 @@ function form(action, method) {
         submitting: false,
         errors: {},
 
-        async submit(formData) {
+        submit(formData) {
             this.submitting = true;
             this.errors = {};
 
             try {
-                const response = await fetch(action, {
+                const response = fetch(action, {
                     method: method.toUpperCase(),
                     headers: {
                         'Content-Type': 'application/json'
@@ -243,7 +243,7 @@ function form(action, method) {
                     showNotification('Operation completed successfully!', 'success');
                     this.$dispatch('form-success', { response });
                 } else {
-                    const errorData = await response.json();
+                    const errorData = response.json();
                     this.errors = errorData.errors || {};
                     showNotification(errorData.message || 'An error occurred', 'error');
                 }
