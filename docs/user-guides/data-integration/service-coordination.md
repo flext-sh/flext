@@ -245,7 +245,7 @@ class PipelineService(pb.PipelineServiceServicer):
                     correlation_id=trace_context.get("correlation_id"))
 
             # Execute pipeline
-            result = await self._meltano_runner.run_pipeline(
+            result = self._meltano_runner.run_pipeline(
                 pipeline_id=request.pipeline_id,
                 config=request.config
             )
@@ -334,7 +334,7 @@ from flext_meltano import MeltanoRunner
 app = FastAPI(title="FLEXT Python API")
 
 @app.post("/api/v1/pipelines/execute")
-async def execute_pipeline(request: PipelineExecuteRequest):
+def execute_pipeline(request: PipelineExecuteRequest):
     """Execute pipeline via HTTP."""
     try:
         # Validate request
@@ -343,7 +343,7 @@ async def execute_pipeline(request: PipelineExecuteRequest):
 
         # Execute pipeline
         runner = MeltanoRunner()
-        result = await runner.run_pipeline(
+        result = runner.run_pipeline(
             pipeline_id=request.pipeline_id,
             config=request.config
         )
@@ -460,7 +460,6 @@ func (m *PythonSubprocessManager) ExecutePipeline(ctx context.Context, pipelineI
 
 import sys
 import json
-import asyncio
 from flext_core.result import FlextResult
 from flext_meltano import MeltanoRunner
 
@@ -479,7 +478,7 @@ def main():
     try:
         # Execute pipeline
         runner = MeltanoRunner()
-        result = asyncio.run(runner.run_pipeline(pipeline_id, config))
+        result = run(runner.run_pipeline(pipeline_id, config))
 
         # Output result as JSON
         output = {

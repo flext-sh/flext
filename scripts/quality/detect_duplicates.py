@@ -1092,9 +1092,7 @@ class FlextDuplicateDetector:
                 if (
                     re.search(pattern, line_content)
                     and i > 0
-                    and (
-                        "service" in lines[i - 1].lower() or "async def" in lines[i - 1]
-                    )
+                    and ("service" in lines[i - 1].lower() or "def" in lines[i - 1])
                 ):
                     patterns.append(
                         AntiPatternMatch(

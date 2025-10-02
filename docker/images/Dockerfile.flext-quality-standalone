@@ -34,7 +34,7 @@ COPY . .
 RUN pip install tomli tomli_w
 
 # Create a standalone pyproject.toml without local dependencies
-RUN python -c "import tomli_w; import tomli; from pathlib import Path; data = tomli.load(open('pyproject.toml', 'rb')); essential_deps = {'python': '>=3.13,<3.14', 'click': '*', 'pydantic': '*', 'rich': '*', 'typer': '*', 'httpx': '*', 'jinja2': '*', 'pathspec': '*', 'tomli': '*', 'pytest': '*', 'pytest-cov': '*', 'pytest-asyncio': '*', 'ruff': '*', 'mypy': '*', 'bandit': '*', 'pip-audit': '*'}; data['tool']['poetry']['dependencies'] = essential_deps if 'tool' in data and 'poetry' in data['tool'] else None; tomli_w.dump(data, open('pyproject.standalone.toml', 'wb'))"
+RUN python -c "import tomli_w; import tomli; from pathlib import Path; data = tomli.load(open('pyproject.toml', 'rb')); essential_deps = {'python': '>=3.13,<3.14', 'click': '*', 'pydantic': '*', 'rich': '*', 'typer': '*', 'httpx': '*', 'jinja2': '*', 'pathspec': '*', 'tomli': '*', 'pytest': '*', 'pytest-cov': '*', 'pytest-: '*', 'ruff': '*', 'mypy': '*', 'bandit': '*', 'pip-audit': '*'}; data['tool']['poetry']['dependencies'] = essential_deps if 'tool' in data and 'poetry' in data['tool'] else None; tomli_w.dump(data, open('pyproject.standalone.toml', 'wb'))"
 
 # Install dependencies using standalone config
 RUN mv pyproject.standalone.toml pyproject.toml && \

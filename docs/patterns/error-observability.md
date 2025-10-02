@@ -360,7 +360,7 @@ class UserService:
         self.metrics = get_metrics()
         self.tracer = get_tracer()
 
-    async def create_user(self, user_data: Dict[str, object]) -> FlextResult[User]:
+    def create_user(self, user_data: Dict[str, object]) -> FlextResult[User]:
         """Create user with full observability."""
 
         with self.tracer.start_span("user.create") as span:
@@ -379,7 +379,7 @@ class UserService:
                         )
 
                     # Create user
-                    user = await self._create_user_record(user_data)
+                    user = self._create_user_record(user_data)
 
                     self.logger.info("User created successfully", user_id=user.id)
                     self.metrics.increment("users.created")
@@ -402,7 +402,7 @@ class RetryStrategy:
         self.max_retries = max_retries
         self.base_delay = base_delay
 
-    async def execute_with_retry(
+    def execute_with_retry(
         self,
         operation: Callable[[], FlextResult[T]],
         recoverable_errors: tuple = (FlextTechnicalError,)
@@ -411,7 +411,7 @@ class RetryStrategy:
 
         for attempt in range(self.max_retries + 1):
             try:
-                result = await operation()
+                result = operation()
 
                 if result.is_success:
                     return result
@@ -420,7 +420,7 @@ class RetryStrategy:
                 if hasattr(result, 'error') and isinstance(result.error, recoverable_errors):
                     if result.error.recoverable and attempt < self.max_retries:
                         delay = self.base_delay * (2 ** attempt)
-                        await asyncio.sleep(delay)
+                        sleep(delay)
                         continue
 
                 return result
@@ -428,7 +428,7 @@ class RetryStrategy:
             except recoverable_errors as e:
                 if e.recoverable and attempt < self.max_retries:
                     delay = self.base_delay * (2 ** attempt)
-                    await asyncio.sleep(delay)
+                    sleep(delay)
                 else:
                     raise
 

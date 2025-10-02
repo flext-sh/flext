@@ -518,7 +518,7 @@ import typer           # Use flext-cli instead
 import fastapi         # Use flext-web instead
 import flask           # Use flext-web instead
 import django          # Use flext-web instead
-import aiohttp         # Use flext-web instead
+import httpx           # Use flext-web instead
 
 # HTTP Client Libraries
 import requests        # Use flext-api instead

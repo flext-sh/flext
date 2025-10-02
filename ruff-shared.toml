@@ -174,7 +174,7 @@ line-length = 88
         "PT011",
         "PT018",   # Assertion should be broken down - acceptable in tests for clarity
         "PT019",   # Fixture without value - fixtures are used in function body
-        "RUF029",   # Async without await (testing async signatures)
+        "RUF029",   # without (testing signatures)
         "S101",     # Assert usage (pytest standard pattern)
         "S103",
         "S104",

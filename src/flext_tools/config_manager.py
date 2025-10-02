@@ -206,23 +206,29 @@ class FlextToolsConfig(FlextConfig):
         env_overrides: dict[str, object] = {}
 
         if environment == "production":
-            env_overrides.update({
-                "backup_enabled": True,
-                "monitoring_enabled": True,
-                "linting_enabled": True,
-            })
+            env_overrides.update(
+                {
+                    "backup_enabled": True,
+                    "monitoring_enabled": True,
+                    "linting_enabled": True,
+                }
+            )
         elif environment == "development":
-            env_overrides.update({
-                "backup_enabled": False,
-                "monitoring_enabled": True,
-                "linting_enabled": True,
-            })
+            env_overrides.update(
+                {
+                    "backup_enabled": False,
+                    "monitoring_enabled": True,
+                    "linting_enabled": True,
+                }
+            )
         elif environment == "testing":
-            env_overrides.update({
-                "backup_enabled": False,
-                "monitoring_enabled": False,
-                "linting_enabled": True,
-            })
+            env_overrides.update(
+                {
+                    "backup_enabled": False,
+                    "monitoring_enabled": False,
+                    "linting_enabled": True,
+                }
+            )
 
         all_overrides = {**env_overrides, **overrides, "environment": environment}
         return cls(**all_overrides)

@@ -57,8 +57,8 @@ class FlextStdlibService(FlextService[list[str]]):
         modules = self._ModuleHelper.get_stdlib_modules()
         return FlextResult[list[str]].ok(modules)
 
-    async def execute_async(self: Self) -> FlextResult[list[str]]:
-        """Execute stdlib service asynchronously - FlextService interface."""
+    def execute(self: Self) -> FlextResult[list[str]]:
+        """Execute stdlib service hronously - FlextService interface."""
         modules = self._ModuleHelper.get_stdlib_modules()
         return FlextResult[list[str]].ok(modules)
 
