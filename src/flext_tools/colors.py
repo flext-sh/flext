@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT
 from typing import Self
 
 import flext_cli
+
 from flext_core import FlextLogger, FlextResult, FlextService
 
 # FlextCli availability flag

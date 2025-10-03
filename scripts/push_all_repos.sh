@@ -25,7 +25,7 @@ REPOS=(
 	"flext-observability"
 	"flext-web"
 	"flext-oracle-wms"
-	"flext-oracle-oic-ext"
+	"flext-oracle-oic"
 	"flext-plugin"
 	"flext-quality"
 	"flext-tap-oracle"

@@ -70,9 +70,9 @@
 	path = flext-oracle-wms
 	url = git@github.com:flext-sh/flext-oracle-wms.git
 
-[submodule "flext-oracle-oic-ext"]
-	path = flext-oracle-oic-ext
-	url = git@github.com:flext-sh/flext-oracle-oic-ext.git
+[submodule "flext-oracle-oic"]
+	path = flext-oracle-oic
+	url = git@github.com:flext-sh/flext-oracle-oic.git
 
 [submodule "flext-grpc"]
 	path = flext-grpc

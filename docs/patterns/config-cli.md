@@ -70,7 +70,7 @@ class FlextConfigHierarchical:
 
     def __init__(self) -> None:
         self._providers: List[FlextConfigProvider] = []
-        self._cache: Dict[str, object] = {}
+        self._cache: FlextTypes.Dict = {}
         self._transformers: Dict[str, Callable] = {}
 
     def register_provider(self, provider: FlextConfigProvider) -> FlextResult[None]:
@@ -103,7 +103,7 @@ class FlextConfigHierarchical:
 
         return FlextResult[None].ok(default)
 
-    def get_all_configs(self) -> Dict[str, object]:
+    def get_all_configs(self) -> FlextTypes.Dict:
         """Get all configuration values merged by precedence."""
         all_configs = {}
 
@@ -146,7 +146,7 @@ class FlextConfigFileProvider:
 
     def __init__(self, config_path: Path) -> None:
         self.config_path = config_path
-        self._config: Dict[str, object] = {}
+        self._config: FlextTypes.Dict = {}
         self._load_config()
 
     def _load_config(self) -> None:
@@ -193,7 +193,7 @@ class FlextConfigFileProvider:
 class FlextCliProvider(Protocol):
     """Protocol for CLI argument providers."""
 
-    def parse_args(self, args: Optional[List[str]] = None) -> FlextResult[Dict[str, object]]: ...
+    def parse_args(self, args: Optional[List[str]] = None) -> FlextResult[FlextTypes.Dict]: ...
     def get_config(self, key: str, default: object = None) -> FlextResult[object]: ...
     def get_priority(self) -> int: ...
 ```
@@ -252,7 +252,7 @@ class DatabaseSettings(FlextConfig):
         case_sensitive = False
 
 # Create settings with hierarchy
-def create_database_config(cli_args: Dict[str, object]) -> FlextResult[DatabaseSettings]:
+def create_database_config(cli_args: FlextTypes.Dict) -> FlextResult[DatabaseSettings]:
     config = FlextConfigHierarchical()
 
     # Register providers

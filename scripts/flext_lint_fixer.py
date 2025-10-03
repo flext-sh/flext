@@ -60,7 +60,7 @@ class FlextLintFixer:
             "D205": 0,  # Missing blank after docstring
         }
         self.projects_processed: list[ProjectProcessedDict] = []
-        self.errors_encountered: list[str] = []
+        self.errors_encountered: FlextTypes.StringList = []
 
     def find_flext_projects(self) -> list[Path]:
         """Find all FLEXT projects in workspace."""
@@ -114,9 +114,9 @@ class FlextLintFixer:
 
             # Fix: Move imports after __future__ and docstring
             if first_import_idx > 0:
-                future_imports: list[str] = []
-                regular_imports: list[str] = []
-                other_lines: list[str] = []
+                future_imports: FlextTypes.StringList = []
+                regular_imports: FlextTypes.StringList = []
+                other_lines: FlextTypes.StringList = []
                 # Separate different types of content
                 for i, line in enumerate(lines):
                     stripped = line.strip()
@@ -132,7 +132,7 @@ class FlextLintFixer:
                         other_lines.append(line)
 
                 # Reconstruct with proper ordering
-                new_lines: list[str] = []
+                new_lines: FlextTypes.StringList = []
                 # Add module docstring and metadata
                 doc_lines = [
                     line for i, line in enumerate(lines) if i <= docstring_end_idx
@@ -383,7 +383,7 @@ class FlextLintFixer:
 
         return False
 
-    def process_file(self, file_path: Path) -> dict[str, bool]:
+    def process_file(self, file_path: Path) -> FlextTypes.BoolDict:
         """Process a single Python file with all fixes."""
         return {
             "E402": self.fix_import_ordering(file_path),
@@ -454,7 +454,7 @@ class FlextLintFixer:
 
     def generate_report(self) -> str:
         """Generate comprehensive report of all fixes applied."""
-        report: list[str] = []
+        report: FlextTypes.StringList = []
         report.extend(
             (
                 "# FLEXT Automated Linting Fix Report",

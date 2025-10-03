@@ -6,8 +6,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+from flext_core import FlextTypes
 
-def get_project_directories() -> list[str]:
+
+def get_project_directories() -> FlextTypes.StringList:
     """Obter lista de diretórios de projetos principais FLEXT.
 
     Varre recursivamente o workspace raiz para encontrar todos os projetos
@@ -33,7 +35,7 @@ def get_project_directories() -> list[str]:
 
     """
     workspace_root = Path(__file__).parent.parent
-    projects: list[str] = []
+    projects: FlextTypes.StringList = []
     # Projetos principais (excluindo backups e arquivos temporários)
     for pyproject in workspace_root.rglob("pyproject.toml"):
         if any(

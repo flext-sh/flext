@@ -455,7 +455,7 @@ from flext_module.services.application.pipeline import PipelineManager
 from flext_module.services.application.handlers import CommandHandler, QueryHandler
 
 # Public API list for type checking and documentation
-__all__: FlextTypes.Core.StringList = [
+__all__: FlextTypes.StringList = [
     # Version info
     "__version__",
     "__author__",
