@@ -20,7 +20,7 @@ class DependencyDiscovery:
     def discover_dependencies(
         self,
         project_path: str,
-    ) -> FlextResult[list[dict[str, str]]]:
+    ) -> FlextResult[list[FlextTypes.StringDict]]:
         """Discover project dependencies.
 
         🚨 AUDIT VIOLATION: Inline validation instead of proper models class usage!
@@ -38,17 +38,19 @@ class DependencyDiscovery:
             # Use the project_path parameter for dependency discovery
             # 🚨 AUDIT VIOLATION: Inline validation - should use FlextModels.Validation
             if not project_path:
-                return FlextResult[list[dict[str, str]]].fail(
+                return FlextResult[list[FlextTypes.StringDict]].fail(
                     "Project path cannot be empty",
                 )
 
             # Placeholder implementation - acknowledge parameter usage
             _ = project_path  # Parameter used for dependency discovery
-            return FlextResult[list[dict[str, str]]].ok([])
+            return FlextResult[list[FlextTypes.StringDict]].ok([])
         except Exception as e:
-            return FlextResult[list[dict[str, str]]].fail(f"Discovery failed: {e}")
+            return FlextResult[list[FlextTypes.StringDict]].fail(
+                f"Discovery failed: {e}"
+            )
 
-    def analyze_imports(self, file_path: str) -> FlextResult[list[str]]:
+    def analyze_imports(self, file_path: str) -> FlextResult[FlextTypes.StringList]:
         """Analyze imports in a file.
 
         🚨 AUDIT VIOLATION: Inline validation instead of proper models class usage!
@@ -64,8 +66,8 @@ class DependencyDiscovery:
         """
         # 🚨 AUDIT VIOLATION: Inline validation - should use FlextModels.Validation
         if not file_path:
-            return FlextResult[list[str]].fail("File path cannot be empty")
+            return FlextResult[FlextTypes.StringList].fail("File path cannot be empty")
 
         # Placeholder implementation - acknowledge parameter usage
         _ = file_path  # Parameter used for import analysis
-        return FlextResult[list[str]].ok([])
+        return FlextResult[FlextTypes.StringList].ok([])

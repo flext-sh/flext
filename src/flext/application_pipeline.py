@@ -10,10 +10,9 @@ consistent pipeline usage across the FLEXT ecosystem.
 ZERO TOLERANCE: NO local implementations - uses flext-core exclusively.
 DOMAIN SEPARATION: Pipeline patterns belong exclusively to flext-core domain.
 """
-from typing import Self, TypeVar
-
-
 from __future__ import annotations
+
+from typing import Self, TypeVar
 
 import time
 from enum import StrEnum
@@ -89,7 +88,7 @@ class FlextApplicationPipelineService(FlextService[str]):
         """Initialize pipeline service with flext-core integration."""
         super().__init__()
         self._logger = FlextLogger(__name__)
-        self._container = FlextContainer.get_global()
+        self._container = FlextContainer._ensure_global_manager().get_or_create()
 
     class _PipelineFactory:
         """Direct access to flext-core pipelines - ELIMINATES WRAPPER METHODS."""

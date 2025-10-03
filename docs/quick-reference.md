@@ -63,7 +63,7 @@ from flext_core.types import FlextTypes
 
 connection: FlextTypes.Data.Connection
 query: FlextTypes.Data.Query
-result: FlextTypes.Core.Result
+result: FlextTypes.Result
 ```
 
 ## 🎯 Common Tasks

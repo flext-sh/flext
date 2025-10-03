@@ -91,7 +91,7 @@ def main() -> None:
         "flext-ldif",
         "flext-db-oracle",
         "flext-oracle-wms",
-        "flext-oracle-oic-ext",
+        "flext-oracle-oic",
         "flext-plugin",
         "flext-quality",
         "flext-tap-ldap",

@@ -4495,7 +4495,7 @@ version = "24.1.0.20250822"
 description = "Typing stubs for aiofiles"
 optional = false
 python-versions = ">=3.9"
-groups = ["typing"]
+groups = ["typings"]
 files = [
     {file = "types_aiofiles-24.1.0.20250822-py3-none-any.whl", hash = "sha256:0ec8f8909e1a85a5a79aed0573af7901f53120dd2a29771dd0b3ef48e12328b0"},
     {file = "types_aiofiles-24.1.0.20250822.tar.gz", hash = "sha256:9ab90d8e0c307fe97a7cf09338301e3f01a163e39f3b529ace82466355c84a7b"},
@@ -4538,7 +4538,7 @@ version = "6.0.0.20250809"
 description = "Typing stubs for croniter"
 optional = false
 python-versions = ">=3.9"
-groups = ["typing"]
+groups = ["typings"]
 files = [
     {file = "types_croniter-6.0.0.20250809-py3-none-any.whl", hash = "sha256:d9f53f3e837eb6af509e2090fd2f5bb29b38425dd78f77d7b3bf37ccd2b2bf93"},
     {file = "types_croniter-6.0.0.20250809.tar.gz", hash = "sha256:c829295d4d65eaddcfafec905b0fbab59e72c3c91ee934a4d504dcafad79ff95"},
@@ -4600,10 +4600,9 @@ files = [
 name = "types-ldap3"
 version = "2.9.13.20250622"
 description = "Typing stubs for ldap3"
-optional = true
+optional = false
 python-versions = ">=3.9"
-groups = ["main"]
-markers = "extra == \"typings\""
+groups = ["main", "typings"]
 files = [
     {file = "types_ldap3-2.9.13.20250622-py3-none-any.whl", hash = "sha256:c18d0320327fa0017eb3d95acdf38921542d80939255e4ba130ca2d13ca3375f"},
     {file = "types_ldap3-2.9.13.20250622.tar.gz", hash = "sha256:4770a8701daddf1ee936d46414205a329211b6f6e655c2764f6b70c89b023c47"},
@@ -4682,10 +4681,9 @@ files = [
 name = "types-pyasn1"
 version = "0.6.0.20250914"
 description = "Typing stubs for pyasn1"
-optional = true
+optional = false
 python-versions = ">=3.9"
-groups = ["main"]
-markers = "extra == \"typings\""
+groups = ["main", "typings"]
 files = [
     {file = "types_pyasn1-0.6.0.20250914-py3-none-any.whl", hash = "sha256:68ffeef3c28e1ed120b8b81a242f238f137543e68d466d84a97edcf3e4203b5b"},
     {file = "types_pyasn1-0.6.0.20250914.tar.gz", hash = "sha256:236102553b76c938953037b7ae93d11d395d9413b7f2f8083d3b19d740f7eda6"},
@@ -5292,4 +5290,4 @@ typings = ["django-stubs", "types-ldap3", "types-protobuf", "types-psutil", "typ
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "64b48cf745f8f2ea8b92099ae293f5f08b1e2307100013932c25ec1bb22bad6c"
+content-hash = "8a19783ff5fee7329bdf85103502a95b64b861085c941e23807f2c5b5fa41f71"

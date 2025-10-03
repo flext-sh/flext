@@ -163,7 +163,7 @@
         "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-oracle-wms/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-oracle-wms/tests/conftest.py'))"
       ]
     },
-    "flext-oracle-oic-ext": {
+    "flext-oracle-oic": {
       "level": 3,
       "has_makefile": true,
       "has_pyproject": true,
@@ -174,7 +174,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: ",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-oracle-oic-ext/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-oracle-oic-ext/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-oracle-oic/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-oracle-oic/tests/conftest.py'))"
       ]
     },
     "flext-tap-oracle": {

@@ -4,16 +4,16 @@
 import re
 from pathlib import Path
 
-from flext_core import FlextLogger
+from flext_core import FlextLogger, FlextTypes
 
 # Configure basic logging
 logger = FlextLogger(__name__)
 
 
-def find_manual_env_vars() -> list[str]:
+def find_manual_env_vars() -> FlextTypes.StringList:
     """Find files with manual os.getenv() usage."""
     # Avoid spawning shell tools; scan with pathlib
-    matches: list[str] = []
+    matches: FlextTypes.StringList = []
     for path in Path.cwd().rglob("*.py"):
         try:
             text = path.read_text(encoding="utf-8")

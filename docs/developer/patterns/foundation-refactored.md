@@ -177,9 +177,9 @@ def create_user(name: str, email: str) -> FlextResult[User]:
 # OLD: Scattered, unclear type definitions
 from typing import Dict, List, Optional, Union
 
-UserData = Dict[str, object]
-UserList = List[Dict[str, object]]
-DatabaseResult = Union[Dict[str, object], None]
+UserData = FlextTypes.Dict
+UserList = List[FlextTypes.Dict]
+DatabaseResult = Union[FlextTypes.Dict, None]
 ValidationResult = Optional[str]
 ```
 
@@ -190,9 +190,9 @@ ValidationResult = Optional[str]
 from flext_core.types import FlextTypes
 
 # Self-documenting types
-user_predicate: FlextTypes.Core.Predicate[User] = lambda u: u.is_active
+user_predicate: FlextTypes.Predicate[User] = lambda u: u.is_active
 connection: FlextTypes.Data.Connection = get_oracle_connection()
-validator: FlextTypes.Core.Validator[User] = validate_email
+validator: FlextTypes.Validator[User] = validate_email
 ```
 
 ## Configuration: Environment-Aware Settings
@@ -275,7 +275,7 @@ from dataclasses import dataclass
 class Order:
     id: str
     customer_id: str
-    items: List[Dict[str, object]]
+    items: List[FlextTypes.Dict]
     total: float
     status: str
     created_at: datetime
@@ -292,7 +292,7 @@ class OrderService:
         self.payment = payment_service
         self.inventory = inventory_service
 
-    def process_order(self, order_data: Dict[str, object]):
+    def process_order(self, order_data: FlextTypes.Dict):
         try:
             # Validate order
             if not order_data.get("customer_id"):
@@ -413,7 +413,7 @@ return validate(data).flat_map(process).flat_map(save)
 ```python
 # Replace generic types with semantic types
 from flext_core.types import FlextTypes
-validator: FlextTypes.Core.Validator[User] = validate_user
+validator: FlextTypes.Validator[User] = validate_user
 ```
 
 ## Related Patterns

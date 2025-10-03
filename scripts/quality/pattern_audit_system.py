@@ -97,10 +97,10 @@ class EcosystemAuditResult:
     total_violations_count: int = 0
     critical_violations_count: int = 0
     high_violations_count: int = 0
-    projects_with_critical_issues: list[str] = field(
+    projects_with_critical_issues: FlextTypes.StringList = field(
         default_factory=list,
     )
-    fully_compliant_projects: list[str] = field(default_factory=list)
+    fully_compliant_projects: FlextTypes.StringList = field(default_factory=list)
     audit_timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     def calculate_ecosystem_metrics(self) -> None:
@@ -175,11 +175,11 @@ class PatternViolationAnalyzer:
         }
 
         self.type_system_violations = {
-            "Dict[str, object]": {
+            "FlextTypes.Dict": {
                 "severity": "CRITICAL",
                 "pattern": "types.md#FlextTypes",
                 "context": "Use FlextTypes namespace for semantic type definitions",
-                "guidance": "Replace with FlextTypes.Core.JsonDict",
+                "guidance": "Replace with FlextTypes.JsonDict",
             },
             "List[dict]": {
                 "severity": "HIGH",
@@ -251,7 +251,7 @@ class PatternViolationAnalyzer:
                 result.calculate_compliance_metrics()
                 return FlextResult[ProjectAuditResult].ok(result)
 
-            violations: list[object] = []
+            violations: FlextTypes.List = []
             for python_file in python_files:
                 file_violations_result = self._analyze_file_patterns(
                     python_file,
@@ -287,7 +287,7 @@ class PatternViolationAnalyzer:
                 content = f.read()
                 lines = content.splitlines()
 
-            violations: list[object] = []
+            violations: FlextTypes.List = []
             # AST-based structural analysis
             try:
                 tree = ast.parse(content)
@@ -322,11 +322,11 @@ class PatternViolationAnalyzer:
         self,
         tree: ast.AST,
         file_path: Path,
-        lines: list[str],
+        lines: FlextTypes.StringList,
         _project_name: str,
     ) -> list[PatternViolation]:
         """Analyze AST for structural pattern violations."""
-        violations: list[object] = []
+        violations: FlextTypes.List = []
 
         class PatternVisitor(ast.NodeVisitor):
             def __init__(self, analyzer: PatternViolationAnalyzer) -> None:
@@ -385,11 +385,11 @@ class PatternViolationAnalyzer:
     def _analyze_text_patterns(
         self,
         file_path: Path,
-        lines: list[str],
+        lines: FlextTypes.StringList,
         _project_name: str,
     ) -> list[PatternViolation]:
         """Analyze text patterns for violations."""
-        violations: list[object] = []
+        violations: FlextTypes.List = []
         for line_num, line in enumerate(lines, 1):
             # Check type system violations
             for pattern, rule in self.type_system_violations.items():
@@ -512,7 +512,7 @@ class PatternAuditSystem:
                 "flext-oracle-wms",
                 "flext-plugin",
                 "flext-quality",
-                "flext-oracle-oic-ext",
+                "flext-oracle-oic",
                 "flext-tap-ldap",
                 "flext-tap-ldif",
                 "flext-tap-oracle",
@@ -531,7 +531,7 @@ class PatternAuditSystem:
                 "client-b-meltano-native",
             ]
 
-            results: dict[str, object] = {}
+            results: FlextTypes.Dict = {}
             for project_name in projects:
                 if project_name == "main-workspace":
                     project_path = workspace_path  # Main workspace is the root
@@ -638,9 +638,9 @@ class PatternAuditSystem:
     def _generate_remediation_recommendations(
         self,
         ecosystem_result: EcosystemAuditResult,
-    ) -> FlextTypes.Core.Headers:
+    ) -> FlextTypes.StringDict:
         """Generate prioritized remediation recommendations."""
-        recommendations: dict[str, object] = {}
+        recommendations: FlextTypes.Dict = {}
         if ecosystem_result.critical_violations_count > 0:
             recommendations["immediate_action"] = (
                 f"Address {ecosystem_result.critical_violations_count} critical violations "

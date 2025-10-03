@@ -16,7 +16,9 @@ from flext.workspace_service import (
     FlextWorkspaceService,
     create_workspace_service,
 )
-from flext_core import WorkspaceStatus
+from flext_core.models import FlextModels
+
+WorkspaceStatus = FlextModels.WorkspaceStatus
 
 # WorkspaceStatus is imported directly from flext_core
 

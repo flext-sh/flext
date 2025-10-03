@@ -11,6 +11,7 @@ import importlib.util
 import sys
 from pathlib import Path
 
+from flext_core import FlextTypes
 from flext_tools import Colors, DependencyDiscovery, get_stdlib_modules, print_colored
 
 
@@ -44,7 +45,7 @@ class FalsePositiveAuditor:
             "flext_target_oracle_oic",
             "flext_target_oracle_wms",
             "flext_dbt_ldap",
-            "flext_oracle_oic_ext",
+            "flext_oracle_oic",
         }
 
         # Módulos que são aliases ou imports especiais
@@ -61,7 +62,7 @@ class FalsePositiveAuditor:
     def audit_project_dependencies(
         self,
         project_path: Path,
-    ) -> dict[str, list[dict[str, object]]]:
+    ) -> dict[str, list[FlextTypes.Dict]]:
         """Audita dependências de um projeto específico.
 
         Returns:
@@ -79,7 +80,7 @@ class FalsePositiveAuditor:
         )
 
         # Analisa cada dependência encontrada
-        analysis: dict[str, list[dict[str, object]]] = {
+        analysis: dict[str, list[FlextTypes.Dict]] = {
             "stdlib": [],  # Módulos da standard library
             "flext_internal": [],  # Módulos internos do FLEXT
             "relative_imports": [],  # Imports relativos locais
@@ -290,7 +291,7 @@ class FalsePositiveAuditor:
 
     def _print_audit_results(
         self,
-        analysis: dict[str, list[dict[str, object]]],
+        analysis: dict[str, list[FlextTypes.Dict]],
     ) -> None:
         """Imprime resultados da auditoria de forma organizada."""
         total = sum(len(items) for items in analysis.values())
@@ -349,7 +350,7 @@ class FalsePositiveAuditor:
 
 
 def audit_workspace() -> tuple[
-    dict[str, dict[str, list[dict[str, object]]]],
+    dict[str, dict[str, list[FlextTypes.Dict]]],
     dict[str, set[str]],
 ]:
     """Audita todo o workspace FLEXT."""
@@ -391,7 +392,7 @@ def audit_workspace() -> tuple[
         "unknown": set(),
     }
 
-    project_details: dict[str, dict[str, list[dict[str, object]]]] = {}
+    project_details: dict[str, dict[str, list[FlextTypes.Dict]]] = {}
 
     for project_path in projects:
         try:

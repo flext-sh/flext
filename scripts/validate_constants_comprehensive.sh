@@ -33,7 +33,7 @@ readonly HARDCODED_PATTERNS=(
 readonly FLEXT_PROJECTS=(
 	"flext-core" "flext-cli" "flext-api" "flext-auth" "flext-web"
 	"flext-grpc" "flext-observability" "flext-quality" "flext-plugin"
-	"flext-db-oracle" "flext-oracle-wms" "flext-oracle-oic-ext"
+	"flext-db-oracle" "flext-oracle-wms" "flext-oracle-oic"
 	"flext-ldap" "flext-ldif" "flext-meltano"
 	"flext-dbt-ldap" "flext-dbt-ldif" "flext-dbt-oracle"
 	"flext-tap-ldap" "flext-tap-ldif" "flext-tap-oracle"
