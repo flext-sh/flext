@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Self
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 
 
 class MonitoringManager:
@@ -25,9 +25,9 @@ class MonitoringManager:
         """Stop monitoring."""
         return FlextResult[None].ok(None)
 
-    def get_metrics(self: Self) -> FlextResult[dict[str, str]]:
+    def get_metrics(self: Self) -> FlextResult[FlextTypes.StringDict]:
         """Get monitoring metrics."""
-        return FlextResult[dict[str, str]].ok({})
+        return FlextResult[FlextTypes.StringDict].ok({})
 
     def get_health_status(self: Self) -> FlextResult[str]:
         """Get health status."""

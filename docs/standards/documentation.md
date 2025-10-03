@@ -365,7 +365,7 @@ Projects SHOULD implement automated validation for:
 
 3. **Phase 3: Singer Ecosystem (Week 3)**
    - All 5 taps, 5 targets, 4 DBT projects
-   - flext-oracle-oic-ext
+   - flext-oracle-oic
 
 4. **Phase 4: Applications and Services (Week 4)**
    - flext-web, flext-cli, flext-quality

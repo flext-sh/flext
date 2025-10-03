@@ -8,7 +8,7 @@ _T = TypeVar("_T")
 class BenchmarkFixture:
     group: str
     name: str | None
-    extra_info: FlextTypes.Core.Dict
+    extra_info: FlextTypes.Dict
 
     def __call__(
         self,

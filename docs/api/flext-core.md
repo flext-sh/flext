@@ -38,7 +38,6 @@ from flext_core import (
     # Commands and handlers (CQRS)
     FlextBus,
     FlextHandlers,
-    FlextCqrs,
     FlextProcessors,
 
     # Utilities

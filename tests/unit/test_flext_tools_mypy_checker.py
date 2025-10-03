@@ -14,9 +14,9 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
-from flext_core import FlextResult
 from flext_tests import FlextTestsDomains
+
+from flext_core import FlextResult, FlextTypes
 from flext_tools.mypy_checker import MyPyChecker
 
 
@@ -43,7 +43,7 @@ class TestMyPyChecker:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_test_project_data(project_path: str) -> dict[str, object]:
+        def create_test_project_data(project_path: str) -> FlextTypes.Dict:
             """Create test project data."""
             return {
                 "project_path": project_path,
@@ -52,7 +52,7 @@ class TestMyPyChecker:
             }
 
         @staticmethod
-        def create_test_check_data() -> dict[str, str]:
+        def create_test_check_data() -> FlextTypes.StringDict:
             """Create test check data."""
             return {
                 "check_type": "strict",

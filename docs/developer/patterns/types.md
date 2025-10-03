@@ -13,7 +13,7 @@ Hierarchical, namespace-based type system that ensures consistency and type safe
 All types organized under `FlextTypes` with semantic domain grouping:
 
 ```python
-FlextTypes.Core.*     # Foundation types
+FlextTypes.*     # Foundation types
 FlextTypes.Data.*     # Data integration types
 FlextTypes.Obs.*      # Observability types
 FlextTypes.Singer.*   # Singer protocol types
@@ -44,7 +44,7 @@ class FlextTypes:
         """Foundation types used across all domains."""
 
         # JSON Types
-        JsonValue = Union[str, int, float, bool, None, Dict[str, object], list]
+        JsonValue = Union[str, int, float, bool, None, FlextTypes.Dict, list]
         JsonDict = Dict[str, JsonValue]
         JsonList = list[JsonValue]
 
@@ -83,17 +83,17 @@ class FlextTypes:
 
         # Connection Types
         ConnectionString = str
-        ConnectionConfig = Dict[str, object]
+        ConnectionConfig = FlextTypes.Dict
         Connection = Union[ConnectionString, ConnectionConfig]
 
         # Schema Types
         FieldName = str
         FieldType = str  # 'string', 'integer', 'number', 'boolean', 'object', 'array'
-        FieldDefinition = Dict[str, object]
+        FieldDefinition = FlextTypes.Dict
         Schema = Dict[FieldName, FieldDefinition]
 
         # Record Types
-        Record = Dict[str, object]
+        Record = FlextTypes.Dict
         RecordBatch = list[Record]
         RecordStream = Iterator[Record]
 
@@ -104,15 +104,15 @@ class FlextTypes:
 
         # Query Types
         Query = str
-        QueryParams = Dict[str, object]
+        QueryParams = FlextTypes.Dict
         QueryResult = Union[Record, RecordBatch]
 
         # Metadata Types
         TableName = str
         DatabaseName = str
         SchemaName = str
-        ColumnMetadata = Dict[str, object]
-        TableMetadata = Dict[str, object]
+        ColumnMetadata = FlextTypes.Dict
+        TableMetadata = FlextTypes.Dict
 ```
 
 ## Authentication Types
@@ -125,7 +125,7 @@ class FlextTypes:
         # Token Types
         Token = str
         TokenType = Literal['Bearer', 'Basic', 'API']
-        TokenPayload = Dict[str, object]
+        TokenPayload = FlextTypes.Dict
 
         # Credential Types
         Username = str
@@ -143,7 +143,7 @@ class FlextTypes:
 
         # Session Types
         SessionId = str
-        SessionData = Dict[str, object]
+        SessionData = FlextTypes.Dict
         SessionStore = Dict[SessionId, SessionData]
 
         # Permission Types
@@ -156,7 +156,7 @@ class FlextTypes:
         # Context Types
         UserId = str
         TenantId = str
-        AuthContext = Dict[str, object]
+        AuthContext = FlextTypes.Dict
 ```
 
 ## Observability Types
@@ -168,8 +168,8 @@ class FlextTypes:
 
         # Logging Types
         LogLevel = Literal['TRACE', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL']
-        LogContext = Dict[str, object]
-        LogEntry = Dict[str, object]
+        LogContext = FlextTypes.Dict
+        LogEntry = FlextTypes.Dict
 
         # Metrics Types
         MetricName = str
@@ -180,18 +180,18 @@ class FlextTypes:
         # Tracing Types
         TraceId = str
         SpanId = str
-        SpanContext = Dict[str, object]
+        SpanContext = FlextTypes.Dict
         SpanKind = Literal['CLIENT', 'SERVER', 'PRODUCER', 'CONSUMER', 'INTERNAL']
 
         # Alert Types
         AlertLevel = Literal['INFO', 'WARNING', 'ERROR', 'CRITICAL']
         AlertName = str
         AlertMessage = str
-        AlertContext = Dict[str, object]
+        AlertContext = FlextTypes.Dict
 
         # Health Check Types
         HealthStatus = Literal['HEALTHY', 'DEGRADED', 'UNHEALTHY']
-        HealthCheck = Dict[str, object]
+        HealthCheck = FlextTypes.Dict
         HealthReport = Dict[str, HealthCheck]
 ```
 
@@ -204,23 +204,23 @@ class FlextTypes:
 
         # Message Types
         MessageType = Literal['RECORD', 'STATE', 'SCHEMA', 'ACTIVATE_VERSION']
-        Record = Dict[str, object]
-        State = Dict[str, object]
-        Schema = Dict[str, object]
+        Record = FlextTypes.Dict
+        State = FlextTypes.Dict
+        Schema = FlextTypes.Dict
 
         # Stream Types
         StreamName = str
         TapStreamId = str
-        StreamMetadata = Dict[str, object]
+        StreamMetadata = FlextTypes.Dict
 
         # Catalog Types
-        CatalogEntry = Dict[str, object]
+        CatalogEntry = FlextTypes.Dict
         Catalog = Dict[str, CatalogEntry]
         SelectedStreams = Set[StreamName]
 
         # Configuration Types
-        TapConfig = Dict[str, object]
-        TargetConfig = Dict[str, object]
+        TapConfig = FlextTypes.Dict
+        TargetConfig = FlextTypes.Dict
         StateValue = object
 
         # Replication Types
@@ -239,7 +239,7 @@ class FlextTypes:
         # Message Types
         MessageId = str
         MessageType = str
-        MessagePayload = Dict[str, object]
+        MessagePayload = FlextTypes.Dict
 
         # Protocol Types
         RequestId = str
@@ -253,7 +253,7 @@ class FlextTypes:
         # Contract Types
         ServiceName = str
         MethodName = str
-        ServiceContract = Dict[MethodName, Dict[str, object]]
+        ServiceContract = Dict[MethodName, FlextTypes.Dict]
 
         # Bridge Message Structure
         BridgeMessage = TypedDict('BridgeMessage', {
@@ -276,7 +276,7 @@ from flext_core.types import FlextTypes
 from flext_core.result import FlextResult
 
 # Using core types
-def validate_data(data: FlextTypes.Core.JsonDict) -> FlextTypes.Core.Result:
+def validate_data(data: FlextTypes.JsonDict) -> FlextTypes.Result:
     if not isinstance(data, dict):
         return FlextResult[None].fail("Data must be a dictionary")
     return FlextResult[None].ok(data)
@@ -314,7 +314,7 @@ def validate_token(
 def transform_records(
     records: FlextTypes.Data.RecordBatch,
     transformer: FlextTypes.Data.RecordTransformer,
-    validator: FlextTypes.Core.Validator[FlextTypes.Data.Record]
+    validator: FlextTypes.Validator[FlextTypes.Data.Record]
 ) -> FlextResult[FlextTypes.Data.RecordBatch]:
     """Transform and validate a batch of records."""
     transformed: FlextTypes.Data.RecordBatch = []
@@ -341,7 +341,7 @@ def transform_records(
 class DataSource(Protocol):
     """Protocol for data sources."""
 
-    def connect(self, config: FlextTypes.Data.ConnectionConfig) -> FlextTypes.Core.Result: ...
+    def connect(self, config: FlextTypes.Data.ConnectionConfig) -> FlextTypes.Result: ...
 
     def query(
         self,
@@ -349,11 +349,11 @@ class DataSource(Protocol):
         params: FlextTypes.Data.QueryParams
     ) -> FlextResult[FlextTypes.Data.QueryResult]: ...
 
-    def disconnect(self) -> FlextTypes.Core.Result: ...
+    def disconnect(self) -> FlextTypes.Result: ...
 
 # Implementation
 class PostgresSource:
-    def connect(self, config: FlextTypes.Data.ConnectionConfig) -> FlextTypes.Core.Result:
+    def connect(self, config: FlextTypes.Data.ConnectionConfig) -> FlextTypes.Result:
         return FlextResult[None].ok(None)
 
     def query(
@@ -364,7 +364,7 @@ class PostgresSource:
         result: FlextTypes.Data.RecordBatch = []
         return FlextResult[None].ok(result)
 
-    def disconnect(self) -> FlextTypes.Core.Result:
+    def disconnect(self) -> FlextTypes.Result:
         return FlextResult[None].ok(None)
 
 # Type checking

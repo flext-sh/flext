@@ -8,12 +8,12 @@ import operator
 import re
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextResult
+from flext_core import FlextLogger, FlextResult, FlextTypes
 
 logger = FlextLogger(__name__)
 
 
-def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
+def find_manual_config_patterns() -> FlextResult[dict[str, FlextTypes.StringList]]:
     """Find files with manual configuration patterns.
 
     Returns:
@@ -21,7 +21,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
 
     """
     try:
-        patterns: dict[str, list[str]] = {
+        patterns: dict[str, FlextTypes.StringList] = {
             "manual_env_vars": [],
             "manual_pydantic": [],
             "manual_file_loading": [],
@@ -29,7 +29,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
         }
 
         # Find manual os.getenv() usage without external commands
-        env_var_files: list[str] = []
+        env_var_files: FlextTypes.StringList = []
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
@@ -41,7 +41,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
         patterns["manual_env_vars"] = env_var_files
 
         # Find manual Pydantic instantiation (Config(), Settings(), etc.)
-        pyd_files: list[str] = []
+        pyd_files: FlextTypes.StringList = []
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
@@ -53,7 +53,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
         patterns["manual_pydantic"] = pyd_files
 
         # Find manual file loading (json.load, yaml.load)
-        file_loading: list[str] = []
+        file_loading: FlextTypes.StringList = []
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
@@ -65,7 +65,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
         patterns["manual_file_loading"] = file_loading
 
         # Find manual validation patterns
-        manual_valid: list[str] = []
+        manual_valid: FlextTypes.StringList = []
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
@@ -79,10 +79,10 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
         total_files = len(set(functools.reduce(operator.iadd, patterns.values(), [])))
         logger.info(f"Found {total_files} files with manual config patterns")
 
-        return FlextResult[dict[str, list[str]]].ok(patterns)
+        return FlextResult[dict[str, FlextTypes.StringList]].ok(patterns)
 
     except (OSError, ValueError, TypeError) as e:
-        return FlextResult[dict[str, list[str]]].fail(
+        return FlextResult[dict[str, FlextTypes.StringList]].fail(
             f"Failed to find manual config patterns: {e}",
         )
 

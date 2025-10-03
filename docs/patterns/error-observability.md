@@ -75,7 +75,7 @@ class FlextExceptions.Error(Exception):
         *,
         error_code: Optional[str] = None,
         correlation_id: Optional[str] = None,
-        context: Optional[Dict[str, object]] = None,
+        context: Optional[FlextTypes.Dict] = None,
         cause: Optional[Exception] = None,
         recoverable: Optional[bool] = None,
         alert_level: str = "error"
@@ -105,7 +105,7 @@ class FlextExceptions.Error(Exception):
             **self.context
         )
 
-    def to_dict(self) -> Dict[str, object]:
+    def to_dict(self) -> FlextTypes.Dict:
         """Serialize exception for cross-service communication."""
         return {
             "error_type": self.__class__.__name__,
@@ -222,10 +222,10 @@ class FlextLoggerProtocol(Protocol):
 class FlextTracerProtocol(Protocol):
     """Protocol for distributed tracing."""
 
-    def start_span(self, operation_name: str, *, kind: str = "INTERNAL", attributes: Optional[Dict[str, object]] = None) -> ContextManager: ...
+    def start_span(self, operation_name: str, *, kind: str = "INTERNAL", attributes: Optional[FlextTypes.Dict] = None) -> ContextManager: ...
     def get_current_span(self) -> Optional[object]: ...
-    def inject_context(self, carrier: Dict[str, object]) -> None: ...
-    def extract_context(self, carrier: Dict[str, object]) -> Optional[object]: ...
+    def inject_context(self, carrier: FlextTypes.Dict) -> None: ...
+    def extract_context(self, carrier: FlextTypes.Dict) -> Optional[object]: ...
 
 @runtime_checkable
 class FlextMetricsProtocol(Protocol):
@@ -313,7 +313,7 @@ def get_observability() -> FlextObservabilityProtocol:
 from flext_core.errors import FlextData, FlextAuth, FlextExceptions.Error
 from flext_core.result import FlextResult
 
-def connect_to_database(config: Dict[str, object]) -> FlextResult[Connection]:
+def connect_to_database(config: FlextTypes.Dict) -> FlextResult[Connection]:
     """Connect to database with proper error handling."""
     try:
         # Validate configuration
@@ -360,7 +360,7 @@ class UserService:
         self.metrics = get_metrics()
         self.tracer = get_tracer()
 
-    def create_user(self, user_data: Dict[str, object]) -> FlextResult[User]:
+    def create_user(self, user_data: FlextTypes.Dict) -> FlextResult[User]:
         """Create user with full observability."""
 
         with self.tracer.start_span("user.create") as span:

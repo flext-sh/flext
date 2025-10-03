@@ -11,6 +11,8 @@ from __future__ import annotations
 
 import uuid
 
+from flext_cli import FlextCli
+
 from flext import (
     FlextApplicationHandlerService,
     FlextApplicationPipelineService,
@@ -23,7 +25,6 @@ from flext import (
     FlextWorkspaceCli,
     FlextWorkspaceService,
 )
-from flext_cli import FlextCli
 from flext_core import FlextContainer, FlextLogger, FlextResult, FlextService
 
 

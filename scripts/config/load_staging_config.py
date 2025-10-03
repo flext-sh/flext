@@ -5,7 +5,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 from flext_tools import (
     Colors,
     ConfigurationManager,
@@ -98,7 +98,7 @@ class StagingConfigLoader(FlextScript):
 
         return parser
 
-    def execute(self, args: dict[str, object]) -> FlextResult[object]:
+    def execute(self, args: FlextTypes.Dict) -> FlextResult[object]:
         """Execute the staging config loading."""
         validate_only = bool(args.get("validate_only"))
 

@@ -7,10 +7,9 @@ facades while providing proper service orchestration.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
-from typing import Self
-
-
 from __future__ import annotations
+
+from typing import Self
 
 import subprocess
 from pathlib import Path

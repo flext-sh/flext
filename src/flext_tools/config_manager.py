@@ -13,7 +13,7 @@ from typing import ClassVar
 
 from pydantic import Field, field_validator
 
-from flext_core import FlextConfig, FlextResult
+from flext_core import FlextConfig, FlextResult, FlextTypes
 
 
 class FlextToolsConfig(FlextConfig):
@@ -38,7 +38,7 @@ class FlextToolsConfig(FlextConfig):
     )
 
     # Environment Variable Prefixes
-    env_prefixes: list[str] = Field(
+    env_prefixes: FlextTypes.StringList = Field(
         default_factory=lambda: ["FLEXT_", "ORACLE_", "POSTGRES_"],
         description="Environment variable prefixes to load",
     )
@@ -62,7 +62,7 @@ class FlextToolsConfig(FlextConfig):
     # Pydantic 2 field validators
     @field_validator("env_prefixes")
     @classmethod
-    def validate_env_prefixes(cls, v: list[str]) -> list[str]:
+    def validate_env_prefixes(cls, v: FlextTypes.StringList) -> FlextTypes.StringList:
         """Validate environment variable prefixes."""
         if not v:
             msg = "Environment prefixes cannot be empty"
@@ -96,12 +96,12 @@ class FlextToolsConfig(FlextConfig):
 
         return v
 
-    def load_environment_config(self) -> FlextResult[dict[str, str]]:
+    def load_environment_config(self) -> FlextResult[FlextTypes.StringDict]:
         """Load configuration from environment variables using Pydantic Settings."""
         try:
             # Filter environment variables with specified prefixes
             # This uses the environment variables that Pydantic BaseSettings has access to
-            config_data: dict[str, str] = {}
+            config_data: FlextTypes.StringDict = {}
 
             # Get environment variables that match our prefixes
             # Note: Pydantic BaseSettings already loaded these, we just expose them
@@ -109,9 +109,9 @@ class FlextToolsConfig(FlextConfig):
                 if any(key.startswith(prefix) for prefix in self.env_prefixes):
                     config_data[key] = str(value)
 
-            return FlextResult[dict[str, str]].ok(config_data)
+            return FlextResult[FlextTypes.StringDict].ok(config_data)
         except Exception as e:
-            return FlextResult[dict[str, str]].fail(
+            return FlextResult[FlextTypes.StringDict].fail(
                 f"Failed to load environment config: {e}",
             )
 
@@ -186,7 +186,7 @@ class FlextToolsConfig(FlextConfig):
         except Exception as e:
             return FlextResult[None].fail(f"Configuration validation error: {e}")
 
-    def get_tools_config(self) -> dict[str, object]:
+    def get_tools_config(self) -> FlextTypes.Dict:
         """Get tools configuration dictionary."""
         return {
             "config_file_path": self.config_file_path,
@@ -203,7 +203,7 @@ class FlextToolsConfig(FlextConfig):
         **overrides: object,
     ) -> FlextToolsConfig:
         """Create configuration for specific environment."""
-        env_overrides: dict[str, object] = {}
+        env_overrides: FlextTypes.Dict = {}
 
         if environment == "production":
             env_overrides.update({
@@ -259,9 +259,9 @@ class ConfigurationManager:
         )
         # Legacy attribute compatibility
         self.config_file = Path(config_file) if config_file else None
-        self._config: dict[str, str] = {}
+        self._config: FlextTypes.StringDict = {}
 
-    def load_config(self) -> FlextResult[dict[str, str]]:
+    def load_config(self) -> FlextResult[FlextTypes.StringDict]:
         """Load configuration from file or environment."""
         result = self._config_instance.load_environment_config()
         if result.is_success:

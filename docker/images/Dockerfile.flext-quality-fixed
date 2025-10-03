@@ -147,11 +147,11 @@ class FlextConstants:
     MAX_RETRIES = 3
 
 # Type aliases for compatibility
-TAnyDict = Dict[str, object]
-TConfigDict = Dict[str, object]
+TAnyDict = FlextTypes.Dict
+TConfigDict = FlextTypes.Dict
 
 # Export all required symbols
-__all__: FlextTypes.Core.StringList = [
+__all__: FlextTypes.StringList = [
     "FlextResult", "FlextLogger", "FlextContainer", "get_flext_container",
     "FlextModels.Entity", "FlextModels.Value", "FlextConfig", "FlextConstants", 
     "TAnyDict", "TConfigDict", "FlextExceptions.Error", "FlextExceptions.ValidationError",
@@ -197,7 +197,7 @@ class FlextExceptions.TimeoutError(FlextExceptions.Error):
     """Timeout error."""
     pass
 
-__all__: FlextTypes.Core.StringList = [
+__all__: FlextTypes.StringList = [
     "FlextExceptions.Error", "FlextExceptions.ValidationError", "FlextExceptions.ConfigurationError",
     "FlextExceptions.ConnectionError", "FlextExceptions.ProcessingError", "FlextExceptions.AuthenticationError",
     "FlextExceptions.TimeoutError"
