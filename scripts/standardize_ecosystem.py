@@ -25,7 +25,7 @@ import re
 import sys
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextModels, FlextResult
+from flext_core import FlextLogger, FlextModels, FlextResult, FlextTypes
 
 
 # Placeholder classes for standardization
@@ -409,7 +409,7 @@ class FlextEcosystemStandardizer(FlextBaseService):
             tree = ast.parse(content)
 
             # Find functions and classes without docstrings
-            missing_docstrings: list[object] = []
+            missing_docstrings: FlextTypes.List = []
 
             class DocstringChecker(ast.NodeVisitor):
                 def visit_FunctionDef(self, node: ast.FunctionDef) -> None:

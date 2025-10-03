@@ -66,7 +66,7 @@ def flext_core_get_timestamp() -> datetime:
     return datetime.now(timezone.utc)
 
 def flext_core_safe_get(
-    dictionary: Dict[str, object],
+    dictionary: FlextTypes.Dict,
     key: str,
     default: object = None
 ) -> object:

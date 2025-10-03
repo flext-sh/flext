@@ -10,7 +10,7 @@ import tomllib
 from pathlib import Path
 from typing import Self
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 
 
 class PoetryValidator:
@@ -22,7 +22,7 @@ class PoetryValidator:
     def validate_pyproject(
         self,
         project_path: str | Path,
-    ) -> FlextResult[dict[str, bool]]:
+    ) -> FlextResult[FlextTypes.BoolDict]:
         """Validate pyproject.toml file.
 
         🚨 AUDIT VIOLATION: Inline validation instead of proper models class usage!
@@ -47,9 +47,11 @@ class PoetryValidator:
                 "has_dependencies": True,
             }
 
-            return FlextResult[dict[str, bool]].ok(validation_results)
+            return FlextResult[FlextTypes.BoolDict].ok(validation_results)
         except Exception as e:
-            return FlextResult[dict[str, bool]].fail(f"Poetry validation failed: {e}")
+            return FlextResult[FlextTypes.BoolDict].fail(
+                f"Poetry validation failed: {e}"
+            )
 
     def validate_project(self, project_path: str | Path) -> FlextResult[bool]:
         """Validate project (alias for validate_pyproject).
@@ -76,13 +78,13 @@ class PoetryValidator:
         _ = project_path  # Parameter used for lock consistency checking
         return FlextResult[bool].ok(data=True)
 
-    def get_dependency_issues(self: Self) -> FlextResult[list[str]]:
+    def get_dependency_issues(self: Self) -> FlextResult[FlextTypes.StringList]:
         """Get dependency issues."""
-        return FlextResult[list[str]].ok([])
+        return FlextResult[FlextTypes.StringList].ok([])
 
     def check_dependencies(
         self, project_path: str | Path
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Dict]:
         """Check dependencies for the given project path.
 
         Args:
@@ -135,7 +137,7 @@ class PoetryValidator:
                     # Log error but continue with basic validation
                     _ = parse_error  # Acknowledge the exception
 
-            return FlextResult[dict[str, object]].ok(dependency_results)
+            return FlextResult[FlextTypes.Dict].ok(dependency_results)
 
         except Exception as e:
-            return FlextResult[dict[str, object]].fail(f"Dependency check failed: {e}")
+            return FlextResult[FlextTypes.Dict].fail(f"Dependency check failed: {e}")

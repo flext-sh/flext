@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Self
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 
 
 class SSLManager:
@@ -23,7 +23,7 @@ class SSLManager:
         _ = config_path  # Parameter used for SSL configuration
         return FlextResult[None].ok(None)
 
-    def validate_certificates(self: Self) -> FlextResult[dict[str, bool]]:
+    def validate_certificates(self: Self) -> FlextResult[FlextTypes.BoolDict]:
         """Validate SSL certificates.
 
         🚨 AUDIT VIOLATION: Empty validation method instead of proper models validation!
@@ -38,7 +38,7 @@ class SSLManager:
         📍 SHOULD BE USED INSTEAD: FlextModels.Validation.validate_ssl_certificates(cert_data)
         """
         # 🚨 AUDIT VIOLATION: Empty validation - should use FlextModels.Validation
-        return FlextResult[dict[str, bool]].ok({"valid": True})
+        return FlextResult[FlextTypes.BoolDict].ok({"valid": True})
 
     def get_ssl_status(self: Self) -> FlextResult[str]:
         """Get SSL status."""

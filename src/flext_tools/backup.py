@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Self
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 
 
 class BackupManager:
@@ -46,6 +46,6 @@ class BackupManager:
         _ = backup_path_str  # Parameter is used for restoration logic
         return FlextResult[None].ok(None)
 
-    def list_backups(self: Self) -> FlextResult[list[str]]:
+    def list_backups(self: Self) -> FlextResult[FlextTypes.StringList]:
         """List available backups."""
-        return FlextResult[list[str]].ok([])
+        return FlextResult[FlextTypes.StringList].ok([])

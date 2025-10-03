@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Self
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 
 
 class ConflictAnalyzer:
@@ -16,12 +16,12 @@ class ConflictAnalyzer:
 
     def __init__(self: Self) -> None:
         """Initialize conflict analyzer."""
-        self._conflicts: list[dict[str, str]] = []
+        self._conflicts: list[FlextTypes.StringDict] = []
 
     def analyze_dependencies(
         self,
         project_path: str,
-    ) -> FlextResult[list[dict[str, str]]]:
+    ) -> FlextResult[list[FlextTypes.StringDict]]:
         """Analyze dependency conflicts.
 
         🚨 AUDIT VIOLATION: Inline validation instead of proper models class usage!
@@ -39,31 +39,31 @@ class ConflictAnalyzer:
             # Use the project_path parameter for analysis
             # 🚨 AUDIT VIOLATION: Inline validation - should use FlextModels.Validation
             if not project_path:
-                return FlextResult[list[dict[str, str]]].fail(
+                return FlextResult[list[FlextTypes.StringDict]].fail(
                     "Project path cannot be empty",
                 )
 
             # Placeholder implementation - acknowledge parameter usage
             _ = project_path  # Parameter used for project analysis
-            return FlextResult[list[dict[str, str]]].ok([])
+            return FlextResult[list[FlextTypes.StringDict]].ok([])
         except Exception as e:
-            return FlextResult[list[dict[str, str]]].fail(
+            return FlextResult[list[FlextTypes.StringDict]].fail(
                 f"Conflict analysis failed: {e}",
             )
 
-    def detect_version_conflicts(self: Self) -> FlextResult[list[str]]:
+    def detect_version_conflicts(self: Self) -> FlextResult[FlextTypes.StringList]:
         """Detect version conflicts."""
-        return FlextResult[list[str]].ok([])
+        return FlextResult[FlextTypes.StringList].ok([])
 
     def resolve_conflicts(self: Self) -> FlextResult[None]:
         """Attempt to resolve conflicts."""
         return FlextResult[None].ok(None)
 
-    def get_conflicts(self) -> FlextResult[list[dict[str, str]]]:
+    def get_conflicts(self) -> FlextResult[list[FlextTypes.StringDict]]:
         """Get the list of detected conflicts.
 
         Returns:
             FlextResult containing list of conflicts detected during analysis.
 
         """
-        return FlextResult[list[dict[str, str]]].ok(self._conflicts)
+        return FlextResult[list[FlextTypes.StringDict]].ok(self._conflicts)

@@ -144,10 +144,10 @@ class MeltanoDbtWrapper:
     def create_runner(self, project_dir: Path) -> FlextResult[dbtRunner]:
         """Cria dbtRunner usando FlextResult pattern"""
 
-    def run_models(self, runner: dbtRunner, models: FlextTypes.Core.StringList) -> FlextResult[DbtRunResult]:
+    def run_models(self, runner: dbtRunner, models: FlextTypes.StringList) -> FlextResult[DbtRunResult]:
         """Executa modelos DBT com observabilidade flext-core"""
 
-    def test_models(self, runner: dbtRunner, models: FlextTypes.Core.StringList) -> FlextResult[DbtTestResult]:
+    def test_models(self, runner: dbtRunner, models: FlextTypes.StringList) -> FlextResult[DbtTestResult]:
         """Testa modelos DBT com resultado estruturado"""
 
     def compile_project(self, runner: dbtRunner) -> FlextResult[DbtCompileResult]:
@@ -176,13 +176,13 @@ class FlextMeltanoExecutor:
         self.dbt_wrapper = MeltanoDbtWrapper()
         self.meltano_bridge = MeltanoBridge()
 
-    def execute_meltano_command(self, command: FlextTypes.Core.StringList) -> FlextResult[ExecutionResult]:
+    def execute_meltano_command(self, command: FlextTypes.StringList) -> FlextResult[ExecutionResult]:
         """Executa comando meltano via subprocess"""
 
     def run_singer_pipeline(self, tap_name: str, target_name: str) -> FlextResult[PipelineResult]:
         """Executa pipeline Singer completo"""
 
-    def run_dbt_command(self, command: FlextTypes.Core.StringList, project_dir: Path) -> FlextResult[DbtResult]:
+    def run_dbt_command(self, command: FlextTypes.StringList, project_dir: Path) -> FlextResult[DbtResult]:
         """Executa comando DBT"""
 
     def execute(self, operation: Callable) -> FlextResult[str]:  # retorna job_id
@@ -202,19 +202,19 @@ class FlextMeltanoBridge:
         self.executor = FlextMeltanoExecutor()
 
     # Endpoints para FlexCore (Go)
-    def get_version(self) -> FlextTypes.Core.Headers:
+    def get_version(self) -> FlextTypes.StringDict:
         """GET /meltano/version - JSON response"""
 
-    def list_plugins(self) -> FlextTypes.Core.Dict:
+    def list_plugins(self) -> FlextTypes.Dict:
         """GET /meltano/plugins - JSON response"""
 
-    def run_pipeline(self, tap_name: str, target_name: str, config: dict) -> FlextTypes.Core.Dict:
+    def run_pipeline(self, tap_name: str, target_name: str, config: dict) -> FlextTypes.Dict:
         """POST /meltano/pipeline/run - JSON response"""
 
-    def run_dbt(self, command: str, args: FlextTypes.Core.StringList, project_dir: str) -> FlextTypes.Core.Dict:
+    def run_dbt(self, command: str, args: FlextTypes.StringList, project_dir: str) -> FlextTypes.Dict:
         """POST /dbt/run - JSON response"""
 
-    def get_job_status(self, job_id: str) -> FlextTypes.Core.Dict:
+    def get_job_status(self, job_id: str) -> FlextTypes.Dict:
         """GET /jobs/{job_id}/status - JSON response"""
 
 # Bridge CLI Script para FlexCore
@@ -236,7 +236,7 @@ def main():
 class FlextMeltanoCli:
     """Interface CLI para uso direto (não bridge)"""
 
-    def run_command(self, args: FlextTypes.Core.StringList) -> FlextResult[CliResult]:
+    def run_command(self, args: FlextTypes.StringList) -> FlextResult[CliResult]:
         """Executa comando CLI direto"""
 
     def run_interactive(self) -> None:
@@ -306,10 +306,10 @@ class FlextMeltanoDbtService(FlextMeltanoBaseService):
         self.project_dir = project_dir
         self.dbt_wrapper = MeltanoDbtWrapper()
 
-    def run_models(self, models: FlextTypes.Core.StringList) -> FlextResult[DbtRunResult]:
+    def run_models(self, models: FlextTypes.StringList) -> FlextResult[DbtRunResult]:
         """Executa modelos específicos"""
 
-    def test_models(self, models: FlextTypes.Core.StringList) -> FlextResult[DbtTestResult]:
+    def test_models(self, models: FlextTypes.StringList) -> FlextResult[DbtTestResult]:
         """Testa modelos específicos"""
 
     def generate_docs(self) -> FlextResult[bool]:
@@ -358,7 +358,7 @@ class FlextDbtPlugin(FlextPlugin):
         super().__init__(plugin_config)
         self.dbt_service = FlextMeltanoDbtService(plugin_config.project_dir, plugin_config)
 
-    def run_transformation(self, models: FlextTypes.Core.StringList) -> FlextResult[TransformResult]:
+    def run_transformation(self, models: FlextTypes.StringList) -> FlextResult[TransformResult]:
         """Plugin transformation interface"""
 ```
 

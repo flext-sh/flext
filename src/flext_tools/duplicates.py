@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Self
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 
 
 class CodeDuplicateAnalyzer:
@@ -21,13 +21,13 @@ class CodeDuplicateAnalyzer:
     def analyze_duplicates(
         self,
         project_path: str | Path,
-    ) -> FlextResult[list[dict[str, str]]]:
+    ) -> FlextResult[list[FlextTypes.StringDict]]:
         """Analyze code duplicates."""
         try:
             _ = project_path  # Parameter used for duplicate analysis
-            return FlextResult[list[dict[str, str]]].ok([])
+            return FlextResult[list[FlextTypes.StringDict]].ok([])
         except Exception as e:
-            return FlextResult[list[dict[str, str]]].fail(
+            return FlextResult[list[FlextTypes.StringDict]].fail(
                 f"Duplicate analysis failed: {e}",
             )
 

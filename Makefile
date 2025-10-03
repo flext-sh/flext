@@ -18,7 +18,7 @@ PYTHON_APP_PROJECTS := flext-api flext-auth flext-web flext-quality flext-observ
 PYTHON_TAP_PROJECTS := flext-tap-ldap flext-tap-ldif flext-tap-oracle flext-tap-oracle-oic flext-tap-oracle-wms
 PYTHON_TARGET_PROJECTS := flext-target-ldap flext-target-ldif flext-target-oracle flext-target-oracle-oic flext-target-oracle-wms
 PYTHON_DBT_PROJECTS := flext-dbt-ldap flext-dbt-ldif flext-dbt-oracle flext-dbt-oracle-wms
-PYTHON_EXT_PROJECTS := flext-ldap flext-ldif flext-meltano flext-plugin flext-cli flext-grpc flext-oracle-oic-ext client-b-meltano-native
+PYTHON_EXT_PROJECTS := flext-ldap flext-ldif flext-meltano flext-plugin flext-cli flext-grpc flext-oracle-oic client-b-meltano-native
 
 # Go Projects
 GO_CMD_PROJECTS := cmd/flext cmd/flext-cli cmd/flext-server cmd/flext-demo

@@ -264,7 +264,7 @@
 
 **Target**: 1 project - Singer ecosystem extensions
 
-31. **flext-oracle-oic-ext**
+31. **flext-oracle-oic**
     - Document OIC extension capabilities
     - Add utility and helper documentation
     - Document custom integration patterns

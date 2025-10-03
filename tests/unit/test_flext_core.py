@@ -33,7 +33,7 @@ class TestFlextCoreConsolidated:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_success_data() -> FlextTypes.Core.Dict:
+        def create_success_data() -> FlextTypes.Dict:
             """Create test data for success cases."""
             return {"status": "success", "data": "test_value"}
 
@@ -43,7 +43,7 @@ class TestFlextCoreConsolidated:
             return "test_error_message"
 
         @staticmethod
-        def create_complex_data() -> FlextTypes.Core.Dict:
+        def create_complex_data() -> FlextTypes.Dict:
             """Create complex test data."""
             return {"nested": {"value": 42}, "list": [1, 2, 3], "string": "test"}
 
@@ -62,14 +62,14 @@ class TestFlextCoreConsolidated:
 
         # Test with dict
         test_data = self._TestDataHelper.create_success_data()
-        result_dict = FlextResult[FlextTypes.Core.Dict].ok(test_data)
+        result_dict = FlextResult[FlextTypes.Dict].ok(test_data)
         assert result_dict.is_success
         assert result_dict.data == test_data
         assert result_dict.error is None
 
         # Test with complex data
         complex_data = self._TestDataHelper.create_complex_data()
-        result_complex = FlextResult[FlextTypes.Core.Dict].ok(complex_data)
+        result_complex = FlextResult[FlextTypes.Dict].ok(complex_data)
         assert result_complex.is_success
         assert result_complex.data == complex_data
 
@@ -218,16 +218,16 @@ class TestFlextCoreConsolidated:
     def test_flext_types_access(self) -> None:
         """Test FlextTypes access."""
         # Test core types
-        assert FlextTypes.Core.Dict is not None
-        assert FlextTypes.Core.List is not None
-        assert FlextTypes.Core.StringList is not None
+        assert FlextTypes.Dict is not None
+        assert FlextTypes.List is not None
+        assert FlextTypes.StringList is not None
 
     def test_flext_types_usage(self) -> None:
         """Test FlextTypes usage in type annotations."""
         # Test that types can be used in annotations
-        test_dict: FlextTypes.Core.Dict = {"key": "value"}
-        test_list: FlextTypes.Core.List = [1, 2, 3]
-        test_string_list: FlextTypes.Core.StringList = ["test1", "test2"]
+        test_dict: FlextTypes.Dict = {"key": "value"}
+        test_list: FlextTypes.List = [1, 2, 3]
+        test_string_list: FlextTypes.StringList = ["test1", "test2"]
 
         assert test_dict is not None
         assert test_list is not None
@@ -285,13 +285,13 @@ class TestFlextCoreConsolidated:
         """Test flext-core components working together."""
 
         # Create a service that uses multiple flext-core components
-        class IntegratedService(FlextService[FlextTypes.Core.Dict]):
+        class IntegratedService(FlextService[FlextTypes.Dict]):
             def __init__(self) -> None:
                 super().__init__()
                 self._logger = FlextLogger(__name__)
                 self._container = FlextContainer.get_global()
 
-            def execute(self) -> FlextResult[FlextTypes.Core.Dict]:
+            def execute(self) -> FlextResult[FlextTypes.Dict]:
                 try:
                     # Use logger
                     self._logger.info("Service executing")
@@ -300,12 +300,12 @@ class TestFlextCoreConsolidated:
                     self._container.register("test", "value")
 
                     # Return success result
-                    return FlextResult[FlextTypes.Core.Dict].ok({
+                    return FlextResult[FlextTypes.Dict].ok({
                         "status": "success",
                         "message": "Integration test passed",
                     })
                 except Exception as e:
-                    return FlextResult[FlextTypes.Core.Dict].fail(str(e))
+                    return FlextResult[FlextTypes.Dict].fail(str(e))
 
         service = IntegratedService()
         result = service.execute()

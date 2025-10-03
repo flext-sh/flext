@@ -15,9 +15,9 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from flext_core import FlextResult
 from mypy import api as mypy_api
 
+from flext_core import FlextResult, FlextTypes
 from flext_tools import (
     Colors,
     ConflictAnalyzer,
@@ -43,10 +43,10 @@ NEEDS_IMPROVEMENT_THRESHOLD = 60
 class AnalysisResults:
     """Resultados de análise de qualidade."""
 
-    deps_result: dict[str, object]
-    quality_result: dict[str, object]
-    conflicts_result: dict[str, object]
-    poetry_result: dict[str, object]
+    deps_result: FlextTypes.Dict
+    quality_result: FlextTypes.Dict
+    conflicts_result: FlextTypes.Dict
+    poetry_result: FlextTypes.Dict
 
 
 @dataclass
@@ -96,7 +96,7 @@ class QualityGateway(FlextScript):
 
         # Verificar ferramentas necessárias
         required_tools = ["ruff", "mypy", "poetry"]
-        missing_tools: list[object] = []
+        missing_tools: FlextTypes.List = []
         for tool in required_tools:
             if shutil.which(tool) is None:
                 missing_tools.append(tool)
@@ -133,7 +133,7 @@ class QualityGateway(FlextScript):
             )
 
             # Estatísticas agregadas
-            total_stats: dict[str, object] = {
+            total_stats: FlextTypes.Dict = {
                 "projects_analyzed": 0,
                 "passed": 0,
                 "failed": 0,
@@ -141,7 +141,7 @@ class QualityGateway(FlextScript):
                 "critical_issues": 0,
             }
 
-            failed_projects: list[str] = []
+            failed_projects: FlextTypes.StringList = []
 
             # Executar análise em cada projeto
             for project_path in projects:
@@ -263,7 +263,7 @@ class QualityGateway(FlextScript):
         """Descobrir projetos para analisar."""
         return discover_projects(workspace_root, projects_filter)
 
-    def _analyze_dependencies(self, project_path: Path) -> dict[str, object]:
+    def _analyze_dependencies(self, project_path: Path) -> FlextTypes.Dict:
         """Analisar dependências usando flext_tools."""
         try:
             discovery = DependencyDiscovery(resolve_transitive=True)
@@ -289,7 +289,7 @@ class QualityGateway(FlextScript):
                 "error": str(e),
             }
 
-    def _analyze_code_quality(self, project_path: Path) -> dict[str, object]:
+    def _analyze_code_quality(self, project_path: Path) -> FlextTypes.Dict:
         """Analisar qualidade do código."""
         try:
             try:
@@ -388,7 +388,7 @@ class QualityGateway(FlextScript):
                 "error": str(e),
             }
 
-    def _analyze_conflicts(self, project_path: Path) -> dict[str, object]:
+    def _analyze_conflicts(self, project_path: Path) -> FlextTypes.Dict:
         """Analisar conflitos usando flext_tools."""
         try:
             analyzer = ConflictAnalyzer()
@@ -419,7 +419,7 @@ class QualityGateway(FlextScript):
                 "error": str(e),
             }
 
-    def _validate_poetry_config(self, project_path: Path) -> dict[str, object]:
+    def _validate_poetry_config(self, project_path: Path) -> FlextTypes.Dict:
         """Validar configuração Poetry usando flext_tools."""
         try:
             validator = PoetryValidator()
@@ -434,9 +434,9 @@ class QualityGateway(FlextScript):
         self,
         project_name: str,
         results: AnalysisResults,
-    ) -> dict[str, object]:
+    ) -> FlextTypes.Dict:
         """Calcular resultado final do projeto."""
-        issues: list[object] = []
+        issues: FlextTypes.List = []
         critical_issues = 0
         total_issues = 0
 
@@ -510,7 +510,7 @@ class QualityGateway(FlextScript):
             "poetry_result": results.poetry_result,
         }
 
-    def _print_project_issues(self, project_result: dict[str, object]) -> None:
+    def _print_project_issues(self, project_result: FlextTypes.Dict) -> None:
         """Imprimir issues do projeto."""
         issues = project_result.get("issues", [])
         if isinstance(issues, list):
@@ -523,8 +523,8 @@ class QualityGateway(FlextScript):
 
     def _print_final_summary(
         self,
-        total_stats: dict[str, object],
-        failed_projects: list[str],
+        total_stats: FlextTypes.Dict,
+        failed_projects: FlextTypes.StringList,
         *,
         _strict_mode: bool = False,
     ) -> None:

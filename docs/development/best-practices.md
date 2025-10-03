@@ -12,7 +12,7 @@
 # ✅ Excellent - Complete type hints
 def process_user_data(
     user_id: str,
-    data: FlextTypes.Core.Dict,
+    data: FlextTypes.Dict,
     validate: bool = True
 ) -> FlextResult[User]:
     """Process user data with type safety."""
