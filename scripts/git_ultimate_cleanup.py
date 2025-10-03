@@ -14,6 +14,7 @@ Complete repository cleanup with maximum safety:
 
 Usage:
     python3 scripts/git_ultimate_cleanup.py --test                # Test all functions
+    python3 scripts/git_ultimate_cleanup.py --detect-cruft        # Detect additional cruft
     python3 scripts/git_ultimate_cleanup.py --dry-run             # Simulate cleanup
     python3 scripts/git_ultimate_cleanup.py                       # Main repo
     python3 scripts/git_ultimate_cleanup.py --all                 # Main + submodules
@@ -42,7 +43,8 @@ class GitUltimateCleanup:
     # Cruft patterns to remove from git history
     CRUFT_PATTERNS = [
         # Build artifacts
-        "*.pyc", "__pycache__/", "dist/", "build/", "*.egg-info/",
+        "*.pyc", "*.pyo", "*.py[cod]", "*$py.class",
+        "__pycache__/", "dist/", "build/", "*.egg-info/",
         # Cache directories
         ".ruff_cache/", ".mypy_cache/", ".pytest_cache/", ".serena/cache/", ".serena/",
         # Coverage reports
@@ -51,15 +53,31 @@ class GitUltimateCleanup:
         "*.log", ".meltano/logs/",
         # Backup files
         "*.backup", "*.bak", "*.orig", "*~", ".*.swp",
+        "*.syntax_backup", "*.broken", "*.tmp.bak",
+        "*_backup", "*_backup_*", "temp_backup",
+        # Temporary/debug scripts and files
+        "temp_*.py", "*_temp.py", "*_temp.md",
+        "fix_*.py", "*_fix.py",
+        "debug_*.py", "investigate_*.py", "validate_*.py",
+        "*_analysis.txt", "*_output.txt", "*_report.txt",
+        "temp_test_*", "analysis_temp/", "report_*/", "reports_*/",
         # OS-specific
         ".DS_Store", "Thumbs.db",
         # AI/IDE config and reports
         "CLAUDE*.md", ".cursor/", ".vscode/", ".idea/",
         "*_report.md", "*_analysis.md", "*_summary.md",
+        "*_REPORT*.md", "*_ANALYSIS*.md", "*_SUMMARY*.md", "*_FINDINGS*.md",
+        "CONFIG_MIGRATION*.md", "DEVELOPMENT_STANDARDS*.md",
+        "DUPLICATION_REPORT*.md", "LINT_CORRECTIONS*.md",
+        "*.ai.md", "*.ai.txt",
+        # Archive directories
+        ".archive/", "archive/", "archives/", "backups/",
         # Large data files
         "*.db", "*.sqlite", "*.sqlite3", "output_files/", "data_buffers/",
         "*.tar", "*.tar.gz", "*.zip", "*backup*/", "submodule_cleanup_backup/",
         "sync_control.db",  # Large database file
+        # Timestamped documentation (AI-generated)
+        "*.md_20250*",
     ]
 
     AI_PATTERNS = [
@@ -777,6 +795,188 @@ def callback(commit, metadata):
         print(f"\n✅ All {len(submodules)} submodules pushed!")
         return True
 
+    def analyze_gitignore(self) -> list[str]:
+        """Parse .gitignore and extract patterns that might indicate committed cruft."""
+        gitignore_path = self.repo_path / ".gitignore"
+        if not gitignore_path.exists():
+            return []
+
+        patterns = []
+        content = gitignore_path.read_text()
+
+        for line in content.split('\n'):
+            line = line.strip()
+            # Skip comments and empty lines
+            if not line or line.startswith('#'):
+                continue
+            # Skip negation patterns
+            if line.startswith('!'):
+                continue
+            # Clean up the pattern
+            pattern = line.rstrip('/')
+            if pattern:
+                patterns.append(pattern)
+
+        return patterns
+
+    def analyze_historical_removals(self) -> dict[str, int]:
+        """Analyze git history to find frequently deleted files (likely cruft)."""
+        result = subprocess.run(
+            ["git", "-C", str(self.repo_path), "log", "--all", "--diff-filter=D", "--name-only", "--format="],
+            capture_output=True, text=True, check=False
+        )
+
+        if result.returncode != 0:
+            return {}
+
+        # Count deletion frequency
+        deletion_counts = {}
+        for line in result.stdout.strip().split('\n'):
+            if not line:
+                continue
+            deletion_counts[line] = deletion_counts.get(line, 0) + 1
+
+        return deletion_counts
+
+    def detect_additional_cruft(self) -> dict[str, list[str]]:
+        """Detect additional cruft patterns from git history and .gitignore."""
+        print(f"\n{'='*70}")
+        print("🔍 DETECTING ADDITIONAL CRUFT PATTERNS")
+        print(f"{'='*70}\n")
+
+        detected = {
+            'gitignore_patterns': [],
+            'historical_removals': [],
+            'recommended_patterns': []
+        }
+
+        # 1. Analyze .gitignore
+        print("1️⃣  Analyzing .gitignore patterns...")
+        gitignore_patterns = self.analyze_gitignore()
+
+        # Find patterns in .gitignore that aren't in CRUFT_PATTERNS
+        current_patterns_set = set(self.CRUFT_PATTERNS)
+        new_from_gitignore = []
+
+        for pattern in gitignore_patterns:
+            # Normalize pattern for comparison
+            normalized = pattern.rstrip('/')
+
+            # Check if pattern or similar pattern already exists
+            is_new = True
+            for existing in current_patterns_set:
+                if normalized in existing or existing in normalized:
+                    is_new = False
+                    break
+
+            if is_new:
+                new_from_gitignore.append(pattern)
+
+        detected['gitignore_patterns'] = new_from_gitignore
+        print(f"   Found {len(gitignore_patterns)} total .gitignore patterns")
+        print(f"   Detected {len(new_from_gitignore)} new patterns not in current cruft list")
+
+        # 2. Analyze historical removals
+        print("2️⃣  Analyzing git history for frequently removed files...")
+        deletion_counts = self.analyze_historical_removals()
+
+        # Find patterns that appear in deletion history
+        frequent_deletions = {path: count for path, count in deletion_counts.items() if count >= 3}
+
+        # Extract patterns from frequently deleted files
+        pattern_counts = {}
+        for path in frequent_deletions.keys():
+            # Extract file extension patterns
+            if '.' in path:
+                ext = '*' + path[path.rfind('.'):]
+                pattern_counts[ext] = pattern_counts.get(ext, 0) + 1
+
+            # Extract directory patterns
+            if '/' in path:
+                parts = path.split('/')
+                for part in parts[:-1]:  # Exclude filename
+                    if part.startswith('.') or part in ['node_modules', '__pycache__', 'dist', 'build']:
+                        dir_pattern = f"{part}/"
+                        pattern_counts[dir_pattern] = pattern_counts.get(dir_pattern, 0) + 1
+
+        # Sort by frequency and filter out existing patterns
+        new_from_history = []
+        for pattern, count in sorted(pattern_counts.items(), key=lambda x: x[1], reverse=True):
+            is_new = True
+            for existing in current_patterns_set:
+                if pattern in existing or existing in pattern:
+                    is_new = False
+                    break
+            if is_new and count >= 3:  # At least 3 occurrences
+                new_from_history.append(f"{pattern} (removed {count}x)")
+
+        detected['historical_removals'] = new_from_history
+        print(f"   Analyzed {len(deletion_counts)} deleted files")
+        print(f"   Detected {len(new_from_history)} frequently removed patterns")
+
+        # 3. Generate recommendations
+        print("3️⃣  Generating recommendations...")
+
+        # Combine and deduplicate
+        recommended = set()
+
+        # Add high-confidence patterns from .gitignore
+        for pattern in new_from_gitignore[:20]:  # Top 20
+            # Skip very generic patterns
+            if pattern not in ['*', '**', '.', '..']:
+                recommended.add(pattern)
+
+        # Add high-confidence patterns from history
+        for entry in new_from_history[:10]:  # Top 10
+            pattern = entry.split(' (')[0]
+            recommended.add(pattern)
+
+        detected['recommended_patterns'] = sorted(list(recommended))
+
+        print(f"   Generated {len(detected['recommended_patterns'])} recommended patterns")
+
+        # 4. Display results
+        print(f"\n{'='*70}")
+        print("📊 DETECTION RESULTS")
+        print(f"{'='*70}\n")
+
+        if detected['recommended_patterns']:
+            print("🎯 RECOMMENDED PATTERNS TO ADD:")
+            print()
+            for i, pattern in enumerate(detected['recommended_patterns'], 1):
+                print(f"   {i:2d}. {pattern}")
+            print()
+            print("To add these patterns, update CRUFT_PATTERNS in the script:")
+            print("   CRUFT_PATTERNS = [")
+            print("       # ... existing patterns ...")
+            for pattern in detected['recommended_patterns']:
+                print(f'       "{pattern}",')
+            print("   ]")
+            print()
+        else:
+            print("✅ No additional cruft patterns detected!")
+            print("   Current CRUFT_PATTERNS list is comprehensive.")
+            print()
+
+        # 5. Show detailed breakdown
+        if new_from_gitignore:
+            print("📄 NEW PATTERNS FROM .GITIGNORE:")
+            for pattern in new_from_gitignore[:10]:
+                print(f"   • {pattern}")
+            if len(new_from_gitignore) > 10:
+                print(f"   ... and {len(new_from_gitignore) - 10} more")
+            print()
+
+        if new_from_history:
+            print("📜 FREQUENTLY REMOVED PATTERNS:")
+            for entry in new_from_history[:10]:
+                print(f"   • {entry}")
+            if len(new_from_history) > 10:
+                print(f"   ... and {len(new_from_history) - 10} more")
+            print()
+
+        return detected
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -791,6 +991,7 @@ def main():
     parser.add_argument("--test", action="store_true", help="Run principal function tests and exit")
     parser.add_argument("--push", action="store_true", help="Push to GitHub after cleanup")
     parser.add_argument("--push-all", action="store_true", help="Push main + all submodules to GitHub")
+    parser.add_argument("--detect-cruft", action="store_true", help="Detect additional cruft patterns from history and .gitignore")
 
     args = parser.parse_args()
 
@@ -806,6 +1007,11 @@ def main():
             sys.exit(0)
         else:
             sys.exit(1)
+
+    # Detect additional cruft
+    if args.detect_cruft:
+        cleanup.detect_additional_cruft()
+        sys.exit(0)
 
     # Just restore remotes
     if args.restore_remotes:

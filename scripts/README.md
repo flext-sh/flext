@@ -2,16 +2,19 @@
 
 Quick reference for git history reorganization tools.
 
-## Quick Start (Safe 3-Step Process)
+## Quick Start (Safe 4-Step Process)
 
 ```bash
-# Step 1: TEST FUNCTIONS (doesn't modify anything)
+# Step 1: DETECT CRUFT (analyzes .gitignore and git history)
+python3 scripts/git_ultimate_cleanup.py --detect-cruft
+
+# Step 2: TEST FUNCTIONS (doesn't modify anything)
 python3 scripts/git_ultimate_cleanup.py --test
 
-# Step 2: DRY RUN (simulates all operations)
+# Step 3: DRY RUN (simulates all operations)
 python3 scripts/git_ultimate_cleanup.py --dry-run
 
-# Step 3: EXECUTE (with automatic backup)
+# Step 4: EXECUTE (with automatic backup)
 python3 scripts/git_ultimate_cleanup.py --all --push-all
 ```
 
@@ -21,6 +24,7 @@ python3 scripts/git_ultimate_cleanup.py --all --push-all
 
 | Command                                              | Purpose                                                        | Safe?          |
 | ---------------------------------------------------- | -------------------------------------------------------------- | -------------- |
+| `python3 scripts/git_ultimate_cleanup.py --detect-cruft` | **Detect cruft** - Analyzes .gitignore and git history     | ✅ SAFE        |
 | `python3 scripts/git_ultimate_cleanup.py --test`     | **Test all functions** - Validates without changes             | ✅ SAFE        |
 | `python3 scripts/git_ultimate_cleanup.py --dry-run`  | **Simulate cleanup** - Shows what would be done                | ✅ SAFE        |
 | `python3 scripts/git_ultimate_cleanup.py`            | **Clean main repo** - With external backup                     | ⚠️ DESTRUCTIVE |
@@ -32,7 +36,44 @@ python3 scripts/git_ultimate_cleanup.py --all --push-all
 
 ## Detailed Workflow
 
-### 1. Test Mode (Safe)
+### 1. Cruft Detection (Safe)
+
+```bash
+cd /home/marlonsc/flext
+python3 scripts/git_ultimate_cleanup.py --detect-cruft
+```
+
+**What it does:**
+
+- ✅ Analyzes .gitignore patterns (458 patterns found in FLEXT)
+- ✅ Scans git history for frequently deleted files
+- ✅ Identifies patterns not yet in CRUFT_PATTERNS
+- ✅ Generates recommendations for new patterns to add
+- ✅ Shows breakdown by source (.gitignore vs historical)
+
+**What it doesn't do:**
+
+- ❌ Modify repository
+- ❌ Change CRUFT_PATTERNS automatically
+- ❌ Delete any files
+
+**Results:**
+
+The detection analyzes two sources:
+- **From .gitignore**: Patterns that should never be committed but exist in history
+- **From git history**: Files frequently added and removed (likely cruft)
+
+**Example output:**
+```
+🎯 RECOMMENDED PATTERNS TO ADD:
+   1. *.ai.md
+   2. *_backup
+   3. archive/
+   4. CONFIG_MIGRATION*.md
+   ...
+```
+
+### 2. Test Mode (Safe)
 
 ```bash
 cd /home/marlonsc/flext
@@ -111,18 +152,24 @@ python3 scripts/git_ultimate_cleanup.py --all --push-all
    - Force push all submodules
    - Push all branches and tags
 
-**Cruft patterns removed (49 total):**
+**Cruft patterns removed (79 total, auto-detected):**
 
-- Build artifacts: `*.pyc`, `__pycache__/`, `dist/`, `build/`, `*.egg-info/`
+- Build artifacts: `*.pyc`, `*.pyo`, `*.py[cod]`, `*$py.class`, `__pycache__/`, `dist/`, `build/`, `*.egg-info/`
 - Cache directories: `.ruff_cache/`, `.mypy_cache/`, `.pytest_cache/`, `.serena/`
 - Coverage reports: `.coverage`, `htmlcov/`, `.tox/`
 - Log files: `*.log`, `.meltano/logs/`
-- Backup files: `*.backup`, `*.bak`, `*.orig`, `*~`, `.*.swp`
+- Backup files: `*.backup`, `*.bak`, `*.orig`, `*~`, `.*.swp`, `*.syntax_backup`, `*.broken`, `*.tmp.bak`
+- Backup patterns: `*_backup`, `*_backup_*`, `temp_backup`
+- Temp/debug scripts: `temp_*.py`, `*_temp.py`, `*_temp.md`, `fix_*.py`, `*_fix.py`, `debug_*.py`, `investigate_*.py`, `validate_*.py`
+- Temp analysis: `*_analysis.txt`, `*_output.txt`, `*_report.txt`, `temp_test_*`, `analysis_temp/`, `report_*/`, `reports_*/`
 - OS-specific: `.DS_Store`, `Thumbs.db`
 - AI/IDE config: `CLAUDE*.md`, `.cursor/`, `.vscode/`, `.idea/`
-- AI reports: `*_report.md`, `*_analysis.md`, `*_summary.md`
-- Large data: `*.db`, `*.sqlite`, `sync_control.db`
-- Archive files: `*.tar`, `*.tar.gz`, `*.zip`
+- AI reports: `*_report.md`, `*_analysis.md`, `*_summary.md`, `*_REPORT*.md`, `*_ANALYSIS*.md`, `*_SUMMARY*.md`, `*_FINDINGS*.md`
+- AI documentation: `CONFIG_MIGRATION*.md`, `DEVELOPMENT_STANDARDS*.md`, `DUPLICATION_REPORT*.md`, `LINT_CORRECTIONS*.md`
+- AI-generated: `*.ai.md`, `*.ai.txt`, `*.md_20250*`
+- Archive directories: `.archive/`, `archive/`, `archives/`, `backups/`
+- Large data: `*.db`, `*.sqlite`, `*.sqlite3`, `output_files/`, `data_buffers/`, `sync_control.db`
+- Archive files: `*.tar`, `*.tar.gz`, `*.zip`, `*backup*/`, `submodule_cleanup_backup/`
 
 **Recovery (if needed):**
 
@@ -139,11 +186,12 @@ cd ~/flext-ultimate-backup-YYYYMMDD-HHMMSS/flext/
 ## Current State
 
 - **Total commits**: 357 (main repo)
-- **Cruft patterns**: 49 (build artifacts, cache, logs, AI config, data files)
+- **Cruft patterns**: 79 (auto-detected from .gitignore + git history)
 - **AI patterns**: 14 (removes all Claude/Codex/Cursor references)
 - **Authors**: Normalized to Marlon Costa <marlonsc@gmail.com>
 - **Submodules**: 32
 - **Script**: ONE unified script (git_ultimate_cleanup.py)
+- **Features**: Auto-detection, dry-run, testing, GitHub push/sync
 
 ## Safety Features
 
