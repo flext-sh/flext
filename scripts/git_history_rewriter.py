@@ -1,29 +1,24 @@
 #!/usr/bin/env python3
 """
-AI-Powered Git History Rewriter for FLEXT Workspace
+Heuristic-Based Git History Rewriter for FLEXT Workspace
 
 This script analyzes git commit history and generates improved commit messages
-using Claude API, following conventional commit format and FLEXT context.
+using intelligent heuristics, following conventional commit format and FLEXT context.
+
+No API keys required - works completely offline!
 
 Usage:
-    python git_history_rewriter.py --repo /path/to/repo [--api-key YOUR_KEY]
+    python git_history_rewriter.py --repo /path/to/repo
     python git_history_rewriter.py --batch-submodules  # Process all submodules
 """
 
 import argparse
 import json
-import os
 import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
-
-try:
-    import anthropic
-except ImportError:
-    print("❌ anthropic package not installed. Run: pip install anthropic")
-    sys.exit(1)
 
 
 @dataclass
@@ -83,9 +78,9 @@ class GitHistoryAnalyzer:
 
 
 class AICommitMessageRewriter:
-    """Rewrites commit messages using Claude API."""
+    """Rewrites commit messages using intelligent heuristics."""
 
-    SYSTEM_PROMPT = """You are a git commit message expert for the FLEXT Enterprise Data Integration Platform.
+    SYSTEM_PROMPT = """Git commit message heuristics for FLEXT Enterprise Data Integration Platform.
 
 FLEXT Context:
 - Python 3.13 enterprise data integration framework
@@ -117,52 +112,55 @@ Examples:
 """
 
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
-        if not self.api_key:
-            raise ValueError("ANTHROPIC_API_KEY not found in environment")
-        self.client = anthropic.Anthropic(api_key=self.api_key)
+        # No API key needed for heuristic approach
+        pass
 
     def rewrite_message(self, commit: CommitInfo) -> str:
-        """Rewrite a single commit message using Claude API."""
-        # Build context prompt
-        files_summary = "\n".join(f"  - {f}" for f in commit.files_changed[:10])
-        if len(commit.files_changed) > 10:
-            files_summary += f"\n  ... and {len(commit.files_changed) - 10} more files"
+        """Rewrite commit message using intelligent heuristics."""
+        original = commit.message.split("\n")[0].strip()
+        return self._apply_heuristics(original, commit)
 
-        user_prompt = f"""Rewrite this commit message:
+    def _apply_heuristics(self, message: str, commit: CommitInfo) -> str:
+        """Apply rule-based conventional commit transformations."""
+        # Version bump commits
+        if message.strip() and all(c in '0123456789.' for c in message.strip()):
+            return f"chore(release): bump version to {message.strip()}"
 
-Original message:
-{commit.message}
+        # WIP/tmp commits
+        if message.lower().startswith(('wip', 'tmp', 'temp', 'test')):
+            files = commit.files_changed
+            if files:
+                main_dir = files[0].split('/')[0] if '/' in files[0] else 'core'
+                return f"feat({main_dir}): work in progress on {main_dir}"
 
-Files changed ({len(commit.files_changed)} total):
-{files_summary}
+        # Typo fixes
+        if 'typo' in message.lower():
+            return "docs: correct typos in documentation"
 
-Diff stats:
-{commit.diff_stats[:500]}
+        # Lint/format fixes
+        if any(word in message.lower() for word in ['lint', 'format', 'black', 'ruff', 'isort']):
+            return "style: apply code formatting and linting"
 
-Return ONLY the new commit message (subject line only, no body). Follow conventional commits format."""
+        # Already conventional format
+        conventional_types = ['feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'chore', 'build', 'ci', 'revert']
+        for type_ in conventional_types:
+            if message.startswith(f"{type_}(") or message.startswith(f"{type_}:"):
+                return message
 
-        try:
-            response = self.client.messages.create(
-                model="claude-3-5-sonnet-20241022",
-                max_tokens=150,
-                temperature=0.3,
-                system=self.SYSTEM_PROMPT,
-                messages=[{"role": "user", "content": user_prompt}]
-            )
+        # Default: try to infer type from files changed
+        files = commit.files_changed
+        if files:
+            # Detect scope from file paths
+            if any('test' in f.lower() for f in files):
+                return f"test: {message}"
+            elif any(f.endswith('.md') for f in files):
+                return f"docs: {message}"
+            elif any('src/' in f for f in files):
+                main_dir = next((f.split('/')[1] for f in files if 'src/' in f and len(f.split('/')) > 1), 'core')
+                return f"feat({main_dir}): {message}"
 
-            new_message = response.content[0].text.strip()
-
-            # Validate format
-            if ":" not in new_message:
-                print(f"⚠️  Invalid format for {commit.sha[:8]}, keeping original")
-                return commit.message.split("\n")[0]
-
-            return new_message
-
-        except Exception as e:
-            print(f"❌ Error rewriting {commit.sha[:8]}: {e}")
-            return commit.message.split("\n")[0]
+        # Fallback: chore
+        return f"chore: {message}"
 
     def batch_rewrite(self, commits: list[CommitInfo],
                      output_file: Path) -> dict[str, str]:
@@ -186,12 +184,6 @@ Return ONLY the new commit message (subject line only, no body). Follow conventi
             mapping[commit.sha] = new_message
 
             print(f"    → {new_message}")
-
-            # Rate limiting (Claude API: ~50 req/min)
-            if i % 40 == 0:
-                print("    ⏸️  Rate limit pause (5s)...")
-                import time
-                time.sleep(5)
 
         # Save mapping file for git-filter-repo
         self._save_mapping(mapping, output_file)
@@ -222,10 +214,10 @@ Return ONLY the new commit message (subject line only, no body). Follow conventi
 class HistoryCleanupOrchestrator:
     """Orchestrates the full history cleanup process."""
 
-    def __init__(self, repo_path: Path, api_key: Optional[str] = None):
+    def __init__(self, repo_path: Path):
         self.repo_path = repo_path
         self.analyzer = GitHistoryAnalyzer(repo_path)
-        self.rewriter = AICommitMessageRewriter(api_key)
+        self.rewriter = AICommitMessageRewriter()
         self.output_dir = repo_path / ".git" / "history-cleanup"
         self.output_dir.mkdir(exist_ok=True)
 
@@ -274,9 +266,8 @@ class HistoryCleanupOrchestrator:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="AI-powered git history rewriter")
+    parser = argparse.ArgumentParser(description="Heuristic-based git history rewriter")
     parser.add_argument("--repo", type=Path, help="Path to git repository")
-    parser.add_argument("--api-key", help="Anthropic API key (or use ANTHROPIC_API_KEY env)")
     parser.add_argument("--batch-submodules", action="store_true",
                        help="Process all submodules in current directory")
 
@@ -293,13 +284,13 @@ def main():
         for submodule in submodules:
             submodule_path = Path.cwd() / submodule
             if submodule_path.exists():
-                orchestrator = HistoryCleanupOrchestrator(submodule_path, args.api_key)
+                orchestrator = HistoryCleanupOrchestrator(submodule_path)
                 orchestrator.analyze_and_generate_mapping()
             else:
                 print(f"⚠️  Submodule not found: {submodule}")
 
     elif args.repo:
-        orchestrator = HistoryCleanupOrchestrator(args.repo, args.api_key)
+        orchestrator = HistoryCleanupOrchestrator(args.repo)
         mapping_file = orchestrator.analyze_and_generate_mapping()
 
         print(f"\n{'='*60}")
@@ -311,6 +302,7 @@ def main():
         print(f"3. Run git-filter-repo:")
         print(f"   cd {args.repo}")
         print(f"   git filter-repo --replace-message {mapping_file} --force")
+        print(f"\n💡 Tip: Use Cursor AI to review and improve suggestions")
     else:
         parser.print_help()
         sys.exit(1)
