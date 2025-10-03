@@ -1,52 +1,35 @@
 #!/usr/bin/env python3
-"""
-<<<<<<< HEAD
-Heuristic-Based Git History Rewriter for FLEXT Workspace
-
-This script analyzes git commit history and generates improved commit messages
-using intelligent heuristics, following conventional commit format and FLEXT context.
-
-No API keys required - works completely offline!
-
-Usage:
-    python git_history_rewriter.py --repo /path/to/repo
-=======
-AI-Powered Git History Rewriter for FLEXT Workspace
+"""AI-Powered Git History Rewriter for FLEXT Workspace.
 
 This script analyzes git commit history and generates improved commit messages
 using Claude API, following conventional commit format and FLEXT context.
 
 Usage:
     python git_history_rewriter.py --repo /path/to/repo [--api-key YOUR_KEY]
->>>>>>> origin/main
     python git_history_rewriter.py --batch-submodules  # Process all submodules
 """
 
 import argparse
 import json
-<<<<<<< HEAD
-=======
 import os
->>>>>>> origin/main
 import subprocess
 import sys
+import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
 
-<<<<<<< HEAD
-=======
 try:
     import anthropic
+    ANTHROPIC_AVAILABLE = True
 except ImportError:
-    print("❌ anthropic package not installed. Run: pip install anthropic")
-    sys.exit(1)
+    ANTHROPIC_AVAILABLE = False
+    anthropic = None
 
->>>>>>> origin/main
 
 @dataclass
 class CommitInfo:
     """Represents a git commit with metadata."""
+
     sha: str
     author: str
     date: str
@@ -58,7 +41,13 @@ class CommitInfo:
 class GitHistoryAnalyzer:
     """Analyzes git repository commit history."""
 
-    def __init__(self, repo_path: Path):
+    def __init__(self, repo_path: Path) -> None:
+        """Initialize GitHistoryAnalyzer.
+
+        Args:
+            repo_path: Path to the git repository to analyze
+
+        """
         self.repo_path = repo_path
 
     def get_commit_list(self, branch: str = "HEAD") -> list[str]:
@@ -70,8 +59,15 @@ class GitHistoryAnalyzer:
     def get_commit_info(self, sha: str) -> CommitInfo:
         """Get detailed information about a commit."""
         # Get commit metadata
-        cmd = ["git", "-C", str(self.repo_path), "show",
-               "--format=%an%n%ad%n%s%n%b", "--no-patch", sha]
+        cmd = [
+            "git",
+            "-C",
+            str(self.repo_path),
+            "show",
+            "--format=%an%n%ad%n%s%n%b",
+            "--no-patch",
+            sha,
+        ]
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
         lines = result.stdout.strip().split("\n")
         author = lines[0]
@@ -79,14 +75,20 @@ class GitHistoryAnalyzer:
         message = "\n".join(lines[2:])
 
         # Get files changed
-        cmd = ["git", "-C", str(self.repo_path), "show",
-               "--name-only", "--format=", sha]
+        cmd = [
+            "git",
+            "-C",
+            str(self.repo_path),
+            "show",
+            "--name-only",
+            "--format=",
+            sha,
+        ]
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
         files_changed = [f for f in result.stdout.strip().split("\n") if f]
 
         # Get diff stats
-        cmd = ["git", "-C", str(self.repo_path), "show",
-               "--stat", "--format=", sha]
+        cmd = ["git", "-C", str(self.repo_path), "show", "--stat", "--format=", sha]
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
         diff_stats = result.stdout.strip()
 
@@ -96,20 +98,14 @@ class GitHistoryAnalyzer:
             date=date,
             message=message,
             files_changed=files_changed,
-            diff_stats=diff_stats
+            diff_stats=diff_stats,
         )
 
 
 class AICommitMessageRewriter:
-<<<<<<< HEAD
-    """Rewrites commit messages using intelligent heuristics."""
-
-    SYSTEM_PROMPT = """Git commit message heuristics for FLEXT Enterprise Data Integration Platform.
-=======
     """Rewrites commit messages using Claude API."""
 
     SYSTEM_PROMPT = """You are a git commit message expert for the FLEXT Enterprise Data Integration Platform.
->>>>>>> origin/main
 
 FLEXT Context:
 - Python 3.13 enterprise data integration framework
@@ -140,128 +136,30 @@ Examples:
 - "WIP async" → "feat(core): implement async execution patterns"
 """
 
-    def __init__(self, api_key: Optional[str] = None):
-<<<<<<< HEAD
-        # No API key needed for heuristic approach
-        pass
+    def __init__(self, api_key: str | None = None, heuristic_only: bool = False) -> None:
+        """Initialize AICommitMessageRewriter.
 
-    def rewrite_message(self, commit: CommitInfo) -> str:
-        """Rewrite commit message using intelligent heuristics."""
-        original = commit.message.split("\n")[0].strip()
-        return self._apply_heuristics(original, commit)
+        Args:
+            api_key: Anthropic API key for Claude API access
+            heuristic_only: If True, use only heuristic rules without API
 
-    def _apply_heuristics(self, message: str, commit: CommitInfo) -> str:
-        """Apply rule-based conventional commit transformations."""
-        # Sanitized/removed messages - reconstruct from files
-        if message.strip() in ('***REMOVED***', '[REMOVED]', 'REMOVED', ''):
-            return self._reconstruct_from_files(commit)
-
-        # Version bump commits
-        if message.strip() and all(c in '0123456789.' for c in message.strip()):
-            return f"chore(release): bump version to {message.strip()}"
-
-        # WIP/tmp commits
-        if message.lower().startswith(('wip', 'tmp', 'temp', 'test')):
-            files = commit.files_changed
-            if files:
-                main_dir = files[0].split('/')[0] if '/' in files[0] else 'core'
-                return f"feat({main_dir}): work in progress on {main_dir}"
-
-        # Typo fixes
-        if 'typo' in message.lower():
-            return "docs: correct typos in documentation"
-
-        # Lint/format fixes
-        if any(word in message.lower() for word in ['lint', 'format', 'black', 'ruff', 'isort']):
-            return "style: apply code formatting and linting"
-
-        # Already conventional format
-        conventional_types = ['feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'chore', 'build', 'ci', 'revert']
-        for type_ in conventional_types:
-            if message.startswith(f"{type_}(") or message.startswith(f"{type_}:"):
-                return message
-
-        # Default: try to infer type from files changed
-        files = commit.files_changed
-        if files:
-            # Detect scope from file paths
-            if any('test' in f.lower() for f in files):
-                return f"test: {message}"
-            elif any(f.endswith('.md') for f in files):
-                return f"docs: {message}"
-            elif any('src/' in f for f in files):
-                main_dir = next((f.split('/')[1] for f in files if 'src/' in f and len(f.split('/')) > 1), 'core')
-                return f"feat({main_dir}): {message}"
-
-        # Fallback: chore
-        return f"chore: {message}"
-
-    def _reconstruct_from_files(self, commit: CommitInfo) -> str:
-        """Reconstruct commit message from files changed when original was removed."""
-        # Try to extract meaning from body first
-        body = commit.message.split('\n', 1)[1].strip() if '\n' in commit.message else ''
-
-        if body:
-            # Extract first meaningful line from body
-            for line in body.split('\n'):
-                line = line.strip().lstrip('-').strip()
-                if line and not line.startswith(('🤖', 'Co-Authored', 'Changes:', 'Phase', 'Related')):
-                    # Classify based on content
-                    if 'isort' in line.lower() or 'import' in line.lower():
-                        return "style: apply import sorting and formatting"
-                    elif 'verify' in line.lower() or 'check' in line.lower():
-                        return "test: verify component integration"
-                    elif 'fix' in line.lower():
-                        return f"fix: {line.lower()}"
-                    elif 'add' in line.lower():
-                        return f"feat: {line.lower()}"
-                    elif 'refactor' in line.lower():
-                        return f"refactor: {line.lower()}"
-                    elif 'update' in line.lower() or 'adjust' in line.lower():
-                        return f"chore: {line.lower()}"
-                    # Generic from first line
-                    return f"chore: {line.lower()}"
-
-        # Fallback to file analysis
-        files = commit.files_changed
-
-        if not files:
-            return "chore: update repository"
-
-        # Analyze file patterns
-        has_tests = any('test' in f.lower() for f in files)
-        has_docs = any(f.endswith('.md') or f.endswith('.rst') for f in files)
-        has_config = any(f in ('pyproject.toml', 'setup.py', 'Makefile', '.gitmodules') for f in files)
-        has_src = any('src/' in f for f in files)
-
-        # Determine scope from files
-        scopes = set()
-        for f in files:
-            if 'src/' in f:
-                parts = f.split('/')
-                if len(parts) > 1:
-                    scopes.add(parts[1])
-
-        scope = next(iter(scopes)) if len(scopes) == 1 else None
-
-        # Infer commit type
-        if has_config:
-            return "chore: update project configuration"
-        elif has_docs and len(files) == len([f for f in files if f.endswith(('.md', '.rst'))]):
-            return "docs: update documentation"
-        elif has_tests and len(files) == len([f for f in files if 'test' in f.lower()]):
-            scope_str = f"({scope})" if scope else ""
-            return f"test{scope_str}: add/update tests"
-        elif has_src:
-            scope_str = f"({scope})" if scope else ""
-            return f"feat{scope_str}: implement changes"
-        else:
-            return "chore: update repository"
-=======
+        """
+        self.heuristic_only = heuristic_only
         self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
-        if not self.api_key:
-            raise ValueError("ANTHROPIC_API_KEY not found in environment")
-        self.client = anthropic.Anthropic(api_key=self.api_key)
+
+        if not heuristic_only:
+            if not ANTHROPIC_AVAILABLE:
+                print("⚠️  Anthropic package not available, falling back to heuristic mode")
+                self.heuristic_only = True
+                self.client = None
+            elif not self.api_key:
+                print("⚠️  No API key found, falling back to heuristic mode")
+                self.heuristic_only = True
+                self.client = None
+            else:
+                self.client = anthropic.Anthropic(api_key=self.api_key)
+        else:
+            self.client = None
 
     def rewrite_message(self, commit: CommitInfo) -> str:
         """Rewrite a single commit message using Claude API."""
@@ -289,7 +187,7 @@ Return ONLY the new commit message (subject line only, no body). Follow conventi
                 max_tokens=150,
                 temperature=0.3,
                 system=self.SYSTEM_PROMPT,
-                messages=[{"role": "user", "content": user_prompt}]
+                messages=[{"role": "user", "content": user_prompt}],
             )
 
             new_message = response.content[0].text.strip()
@@ -304,10 +202,10 @@ Return ONLY the new commit message (subject line only, no body). Follow conventi
         except Exception as e:
             print(f"❌ Error rewriting {commit.sha[:8]}: {e}")
             return commit.message.split("\n")[0]
->>>>>>> origin/main
 
-    def batch_rewrite(self, commits: list[CommitInfo],
-                     output_file: Path) -> dict[str, str]:
+    def batch_rewrite(
+        self, commits: list[CommitInfo], output_file: Path
+    ) -> dict[str, str]:
         """Rewrite multiple commits and save mapping."""
         mapping = {}
         total = len(commits)
@@ -320,7 +218,7 @@ Return ONLY the new commit message (subject line only, no body). Follow conventi
             # Skip if already looks good
             original = commit.message.split("\n")[0]
             if self._looks_conventional(original):
-                print(f"    ✓ Already conventional, keeping")
+                print("    ✓ Already conventional, keeping")
                 mapping[commit.sha] = original
                 continue
 
@@ -329,15 +227,10 @@ Return ONLY the new commit message (subject line only, no body). Follow conventi
 
             print(f"    → {new_message}")
 
-<<<<<<< HEAD
-=======
             # Rate limiting (Claude API: ~50 req/min)
             if i % 40 == 0:
                 print("    ⏸️  Rate limit pause (5s)...")
-                import time
                 time.sleep(5)
-
->>>>>>> origin/main
         # Save mapping file for git-filter-repo
         self._save_mapping(mapping, output_file)
 
@@ -345,47 +238,59 @@ Return ONLY the new commit message (subject line only, no body). Follow conventi
 
     def _looks_conventional(self, message: str) -> bool:
         """Check if message already follows conventional commits."""
-        types = ["feat", "fix", "refactor", "docs", "style", "test",
-                "chore", "perf", "ci", "build"]
-        for type_ in types:
-            if message.startswith(f"{type_}(") or message.startswith(f"{type_}:"):
-                return True
-        return False
+        types = [
+            "feat",
+            "fix",
+            "refactor",
+            "docs",
+            "style",
+            "test",
+            "chore",
+            "perf",
+            "ci",
+            "build",
+        ]
+        return any(message.startswith((f"{type_}(", f"{type_}:")) for type_ in types)
 
-    def _save_mapping(self, mapping: dict[str, str], output_file: Path):
+    def _save_mapping(self, mapping: dict[str, str], output_file: Path) -> None:
         """Save commit SHA to message mapping for git-filter-repo."""
         # Format: old_message==>new_message
         lines = []
-        for sha, new_msg in mapping.items():
+        for _sha, new_msg in mapping.values():
             # git-filter-repo expects literal old message
             lines.append(f"{new_msg}")
 
-        output_file.write_text("\n".join(lines))
+        output_file.write_text("\n".join(lines), encoding="utf-8")
         print(f"\n✅ Saved {len(mapping)} mappings to {output_file}")
 
 
 class HistoryCleanupOrchestrator:
     """Orchestrates the full history cleanup process."""
 
-<<<<<<< HEAD
-    def __init__(self, repo_path: Path):
-        self.repo_path = repo_path
-        self.analyzer = GitHistoryAnalyzer(repo_path)
-        self.rewriter = AICommitMessageRewriter()
-=======
-    def __init__(self, repo_path: Path, api_key: Optional[str] = None):
+    def __init__(self, repo_path: Path, api_key: str | None = None) -> None:
+        """Initialize HistoryCleanupOrchestrator.
+
+        Args:
+            repo_path: Path to the git repository
+            api_key: Optional Anthropic API key for AI-powered rewriting
+
+        """
         self.repo_path = repo_path
         self.analyzer = GitHistoryAnalyzer(repo_path)
         self.rewriter = AICommitMessageRewriter(api_key)
->>>>>>> origin/main
         self.output_dir = repo_path / ".git" / "history-cleanup"
         self.output_dir.mkdir(exist_ok=True)
 
-    def analyze_and_generate_mapping(self):
-        """Main workflow: analyze commits and generate rewrite mapping."""
-        print(f"\n{'='*60}")
+    def analyze_and_generate_mapping(self) -> Path:
+        """Main workflow: analyze commits and generate rewrite mapping.
+
+        Returns:
+            Path to the generated mapping file
+
+        """
+        print(f"\n{'=' * 60}")
         print(f"🔍 ANALYZING: {self.repo_path.name}")
-        print(f"{'='*60}\n")
+        print(f"{'=' * 60}\n")
 
         # Get all commits
         print("📊 Fetching commit history...")
@@ -409,7 +314,7 @@ class HistoryCleanupOrchestrator:
 
         return mapping_file
 
-    def _generate_summary(self, commits: list[CommitInfo], mapping_file: Path):
+    def _generate_summary(self, commits: list[CommitInfo], mapping_file: Path) -> None:
         """Generate cleanup summary report."""
         summary_file = self.output_dir / "cleanup-summary.json"
 
@@ -417,69 +322,57 @@ class HistoryCleanupOrchestrator:
             "repo": str(self.repo_path),
             "total_commits_analyzed": len(commits),
             "mapping_file": str(mapping_file),
-            "authors": list(set(c.author for c in commits)),
-            "files_affected": len(set(f for c in commits for f in c.files_changed)),
+            "authors": list({c.author for c in commits}),
+            "files_affected": len({f for c in commits for f in c.files_changed}),
         }
 
         summary_file.write_text(json.dumps(summary, indent=2))
         print(f"\n📄 Summary saved to {summary_file}")
 
 
-def main():
-<<<<<<< HEAD
-    parser = argparse.ArgumentParser(description="Heuristic-based git history rewriter")
-    parser.add_argument("--repo", type=Path, help="Path to git repository")
-=======
+def main() -> None:
+    """Main entry point for git history rewriter."""
     parser = argparse.ArgumentParser(description="AI-powered git history rewriter")
     parser.add_argument("--repo", type=Path, help="Path to git repository")
-    parser.add_argument("--api-key", help="Anthropic API key (or use ANTHROPIC_API_KEY env)")
->>>>>>> origin/main
-    parser.add_argument("--batch-submodules", action="store_true",
-                       help="Process all submodules in current directory")
+    parser.add_argument(
+        "--api-key", help="Anthropic API key (or use ANTHROPIC_API_KEY env)"
+    )
+    parser.add_argument(
+        "--batch-submodules",
+        action="store_true",
+        help="Process all submodules in current directory",
+    )
 
     args = parser.parse_args()
 
     if args.batch_submodules:
         # Find all submodules
         result = subprocess.run(
-            ["git", "submodule", "status"],
-            capture_output=True, text=True, check=True
+            ["git", "submodule", "status"], capture_output=True, text=True, check=True
         )
         submodules = [line.split()[1] for line in result.stdout.strip().split("\n")]
 
         for submodule in submodules:
             submodule_path = Path.cwd() / submodule
             if submodule_path.exists():
-<<<<<<< HEAD
-                orchestrator = HistoryCleanupOrchestrator(submodule_path)
-=======
                 orchestrator = HistoryCleanupOrchestrator(submodule_path, args.api_key)
->>>>>>> origin/main
                 orchestrator.analyze_and_generate_mapping()
             else:
                 print(f"⚠️  Submodule not found: {submodule}")
 
     elif args.repo:
-<<<<<<< HEAD
-        orchestrator = HistoryCleanupOrchestrator(args.repo)
-=======
         orchestrator = HistoryCleanupOrchestrator(args.repo, args.api_key)
->>>>>>> origin/main
         mapping_file = orchestrator.analyze_and_generate_mapping()
 
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print("✅ ANALYSIS COMPLETE")
-        print(f"{'='*60}")
-        print(f"\nNext steps:")
+        print(f"{'=' * 60}")
+        print("\nNext steps:")
         print(f"1. Review generated mapping: {mapping_file}")
-        print(f"2. Create backup: git tag pre-cleanup-backup")
-        print(f"3. Run git-filter-repo:")
+        print("2. Create backup: git tag pre-cleanup-backup")
+        print("3. Run git-filter-repo:")
         print(f"   cd {args.repo}")
         print(f"   git filter-repo --replace-message {mapping_file} --force")
-<<<<<<< HEAD
-        print(f"\n💡 Tip: Use Cursor AI to review and improve suggestions")
-=======
->>>>>>> origin/main
     else:
         parser.print_help()
         sys.exit(1)

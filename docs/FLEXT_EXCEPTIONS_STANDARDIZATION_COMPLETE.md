@@ -19,6 +19,7 @@ Successfully standardized exception handling across the entire FLEXT ecosystem u
 ### Projects Refactored by Priority
 
 **Priority 1-2: Core Foundation** (10 projects)
+
 - ✅ client-a-oud-mig
 - ✅ flext-ldap
 - ✅ flext-ldif
@@ -31,15 +32,18 @@ Successfully standardized exception handling across the entire FLEXT ecosystem u
 - ✅ flext-plugin (CRITICAL: Fixed base class inheritance violation)
 
 **Priority 3: Observability & Tools** (3 projects)
+
 - ✅ flext-observability (Created from scratch - 15 exception classes)
 - ✅ flext-quality (14 exception classes refactored)
 - ✅ flext-meltano (Created from scratch - 16 exception classes)
 
 **Priority 4: DBT Projects** (2 projects)
+
 - ✅ flext-dbt-ldap (3 exception classes)
 - ✅ flext-dbt-oracle (5 exception classes)
 
 **Priority 5: Singer Taps** (2 projects)
+
 - ✅ flext-tap-ldap (6 exception classes)
 - ✅ flext-tap-ldif (3 exception classes)
 
@@ -92,7 +96,7 @@ class DomainSpecificError(FlextExceptions.BaseError):
 ### Key Components
 
 1. **`_extract_common_kwargs(kwargs)`**: Extracts `context`, `correlation_id`, and `error_code` from kwargs
-2. **`_build_context(base_context, **fields)`**: Builds context dictionary with domain-specific fields
+2. **`\_build_context(base_context, **fields)`\*\*: Builds context dictionary with domain-specific fields
 3. **Domain-Specific Attributes**: Stored before extraction for later access
 4. **Error Codes**: Domain-specific default codes with override support
 5. **Correlation ID**: Distributed tracing support
@@ -106,12 +110,14 @@ class DomainSpecificError(FlextExceptions.BaseError):
 **Problem**: `PluginBaseError` was extending `Exception` directly instead of `FlextExceptions.BaseError`
 
 **Before**:
+
 ```python
 class PluginBaseError(Exception):  # ❌ WRONG
     """Base exception for all plugin domain errors."""
 ```
 
 **After**:
+
 ```python
 class PluginBaseError(FlextExceptions.BaseError):  # ✅ CORRECT
     """Base exception for all plugin domain errors extending FlextExceptions.BaseError."""
@@ -161,16 +167,16 @@ All with Meltano-specific context fields and correlation ID tracking.
 
 ### Per-Project Validation Sample
 
-| Project | Helper Methods | Correlation IDs | Ruff Status |
-|---------|---------------|-----------------|-------------|
-| flext-plugin | 28 | 42 | ✅ Pass |
-| flext-observability | 30 | 45 | ✅ Pass |
-| flext-quality | 28 | 42 | ✅ Pass |
-| flext-meltano | 32 | 48 | ✅ Pass |
-| flext-dbt-ldap | 6 | 6 | ✅ Pass |
-| flext-dbt-oracle | 10 | 10 | ✅ Pass |
-| flext-tap-ldap | 12 | 14 | ✅ Pass |
-| flext-tap-ldif | 6 | 6 | ✅ Pass |
+| Project             | Helper Methods | Correlation IDs | Ruff Status |
+| ------------------- | -------------- | --------------- | ----------- |
+| flext-plugin        | 28             | 42              | ✅ Pass     |
+| flext-observability | 30             | 45              | ✅ Pass     |
+| flext-quality       | 28             | 42              | ✅ Pass     |
+| flext-meltano       | 32             | 48              | ✅ Pass     |
+| flext-dbt-ldap      | 6              | 6               | ✅ Pass     |
+| flext-dbt-oracle    | 10             | 10              | ✅ Pass     |
+| flext-tap-ldap      | 12             | 14              | ✅ Pass     |
+| flext-tap-ldif      | 6              | 6               | ✅ Pass     |
 
 ---
 
@@ -348,6 +354,7 @@ def _build_context(
 Format: `{DOMAIN}_{OPERATION}_ERROR`
 
 Examples:
+
 - `PLUGIN_ERROR`, `PLUGIN_INSTALLATION_ERROR`
 - `OBSERVABILITY_ERROR`, `METRICS_COLLECTION_ERROR`
 - `MELTANO_ERROR`, `DBT_EXECUTION_ERROR`

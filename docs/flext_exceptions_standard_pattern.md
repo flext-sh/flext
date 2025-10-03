@@ -30,7 +30,7 @@ Every domain exception class MUST have:
 - [ ] **Error code support** with domain-specific defaults
 - [ ] **Domain-specific context fields** as instance attributes
 - [ ] **`@override` decorator** on `__init__` method (Python 3.12+)
-- [ ] **`**kwargs: object`** parameter for extensibility
+- [ ] **`**kwargs: object`\*\* parameter for extensibility
 - [ ] **Type annotations** on all parameters and return values
 
 ---
@@ -257,6 +257,7 @@ class FlextApiExceptions:
 ```
 
 **Usage**:
+
 ```python
 from flext_api import FlextApiExceptions
 
@@ -372,6 +373,7 @@ class FlextLdapExceptions:
 ```
 
 **Usage**:
+
 ```python
 from flext_ldap import FlextLdapExceptions
 
@@ -502,6 +504,7 @@ class FlextTapOracleExceptions:
 ```
 
 **Usage**:
+
 ```python
 from flext_tap_oracle import FlextTapOracleExceptions
 

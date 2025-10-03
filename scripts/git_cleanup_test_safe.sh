@@ -57,7 +57,7 @@ echo ""
 echo -e "${YELLOW}Sample improved commit messages:${NC}"
 head -20 .git/history-cleanup/commit-msg-mapping.txt
 echo ""
-echo -e "${YELLOW}... ($(wc -l < .git/history-cleanup/commit-msg-mapping.txt) total messages)${NC}"
+echo -e "${YELLOW}... ($(wc -l <.git/history-cleanup/commit-msg-mapping.txt) total messages)${NC}"
 echo ""
 
 echo -e "${YELLOW}Current authors:${NC}"
@@ -75,35 +75,35 @@ echo ""
 read -p "Apply changes to test clone? (y/n): " apply_test
 
 if [ "$apply_test" = "y" ]; then
-    echo ""
-    echo -e "${BLUE}🔧 Applying git-filter-repo to test clone...${NC}"
+	echo ""
+	echo -e "${BLUE}🔧 Applying git-filter-repo to test clone...${NC}"
 
-    # Apply changes
-    git filter-repo --force \
-        --mailmap .mailmap \
-        --replace-message .git/history-cleanup/commit-msg-mapping.txt
+	# Apply changes
+	git filter-repo --force \
+		--mailmap .mailmap \
+		--replace-message .git/history-cleanup/commit-msg-mapping.txt
 
-    echo -e "${GREEN}   ✅ Changes applied to test clone${NC}"
-    echo ""
+	echo -e "${GREEN}   ✅ Changes applied to test clone${NC}"
+	echo ""
 
-    # Show results
-    echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}║  RESULTS in Test Clone${NC}"
-    echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
-    echo ""
+	# Show results
+	echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
+	echo -e "${CYAN}║  RESULTS in Test Clone${NC}"
+	echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
+	echo ""
 
-    echo -e "${YELLOW}Sample new commit messages:${NC}"
-    git log --oneline | head -20
-    echo ""
+	echo -e "${YELLOW}Sample new commit messages:${NC}"
+	git log --oneline | head -20
+	echo ""
 
-    echo -e "${YELLOW}Normalized authors:${NC}"
-    git log --all --format='%aN <%aE>' | sort -u
-    echo ""
+	echo -e "${YELLOW}Normalized authors:${NC}"
+	git log --all --format='%aN <%aE>' | sort -u
+	echo ""
 
-    echo -e "${YELLOW}Repository stats:${NC}"
-    echo "  Total commits: $(git rev-list --all --count)"
-    echo "  Merge commits: $(git log --all --merges --oneline | wc -l)"
-    echo ""
+	echo -e "${YELLOW}Repository stats:${NC}"
+	echo "  Total commits: $(git rev-list --all --count)"
+	echo "  Merge commits: $(git log --all --merges --oneline | wc -l)"
+	echo ""
 fi
 
 # Final instructions

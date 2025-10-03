@@ -29,11 +29,13 @@ Submodules to process: 32
 ### Commit Message Patterns
 
 **Problematic**:
+
 - 83 commits with just "0.9.0" (no context)
 - 19 commits with "WIP", "tmp", "typo", "fix lint"
 - Inconsistent formatting (no conventional commits)
 
 **Good examples** (will preserve):
+
 - `feat: Complete Phase 1 & 2 - Foundation and model verification`
 - `style(flext-ldif): Apply isort formatting after async removal`
 - `chore(submodules): update pointers after docs cleanup`
@@ -101,6 +103,7 @@ cd /home/marlonsc/flext
 ```
 
 **What happens**:
+
 1. Creates backup of test submodule
 2. Analyzes commit history
 3. Generates AI-rewritten commit messages
@@ -137,6 +140,7 @@ cd /home/marlonsc/flext
 ```
 
 **Execution order**:
+
 1. **Backup**: Creates comprehensive backup of all repos
 2. **Submodules**: Processes each submodule independently (bottom-up)
 3. **Main repo**: Updates submodule references, then cleans main repo
@@ -163,6 +167,7 @@ make test
 ```
 
 **Validation checklist**:
+
 - [ ] Commit messages follow conventional commits
 - [ ] Authors normalized to canonical identities
 - [ ] No cruft commits (WIP, tmp, etc.)
@@ -221,10 +226,12 @@ python scripts/git_history_rewriter.py \
 ```
 
 **Output**:
+
 - `.git/history-cleanup/commit-msg-mapping.txt` - Mapping for git-filter-repo
 - `.git/history-cleanup/cleanup-summary.json` - Analysis summary
 
 **Features**:
+
 - Converts to conventional commits: `feat(scope): description`
 - Preserves important context (issue numbers, breaking changes)
 - Rate-limited to respect Claude API limits (~50 req/min)
@@ -245,6 +252,7 @@ Creates comprehensive backups before destructive operations.
 ```
 
 **Backup includes**:
+
 - Mirror clone of repository
 - Commit history export
 - Branch and tag information
@@ -267,6 +275,7 @@ Main orchestration script - coordinates the full workflow.
 ```
 
 **Safety features**:
+
 - Preflight checks (tools, API key)
 - Confirmation prompts
 - Automatic backups
@@ -450,6 +459,7 @@ make test
 ### Commit Messages
 
 **Before**:
+
 ```
 0.9.0
 0.9.0
@@ -458,6 +468,7 @@ WIP async implementation
 ```
 
 **After**:
+
 ```
 chore(release): bump version to 0.9.0
 docs: correct typos in documentation
@@ -467,6 +478,7 @@ feat(core): implement async execution patterns
 ### Author Normalization
 
 **Before**:
+
 ```
 Claude <claude@anthropic.com>
 Claude Code <noreply@anthropic.com>
@@ -476,6 +488,7 @@ Test User <test@example.com>
 ```
 
 **After**:
+
 ```
 Claude Code <noreply@anthropic.com>
 Cursor Agent <cursoragent@cursor.com>

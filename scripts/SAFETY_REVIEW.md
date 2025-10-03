@@ -11,6 +11,7 @@
 ```
 
 **Steps performed**:
+
 1. ✅ Asks for confirmation
 2. ✅ Runs Python rewriter script (analysis only)
 3. ✅ Generates mapping file with suggested improvements
@@ -21,6 +22,7 @@
 8. ❌ **DOES NOT change SHAs**
 
 **No destructive operations** - only creates files in `.git/history-cleanup/`:
+
 - `commit-msg-mapping.txt` - Proposed new messages
 - `cleanup-summary.json` - Analysis summary
 
@@ -36,6 +38,7 @@ test_run()
 ```
 
 **No calls to**:
+
 - ❌ `process_repository()` (which runs git filter-repo)
 - ❌ `git filter-repo`
 - ❌ `git commit`
@@ -52,6 +55,7 @@ test_run()
 ```
 
 **Steps performed**:
+
 1. ⚠️ Creates backups
 2. ⚠️ Processes all submodules with `process_repository()`
 3. ⚠️ **RUNS git filter-repo --force** on each repo
@@ -75,6 +79,7 @@ full_cleanup()
 ```
 
 **Destructive operations**:
+
 - ✅ Rewrites all commit SHAs
 - ✅ Changes author information
 - ✅ Modifies commit messages
@@ -155,10 +160,10 @@ git tag -l 'pre-cleanup-*'
 
 ## 📊 Risk Assessment
 
-| Mode | Risk Level | Changes History | Reversible | Recommended |
-|------|-----------|----------------|------------|-------------|
-| `--test-run` | ✅ **ZERO** | ❌ No | N/A | ✅ **Always run first** |
-| `--full-cleanup` | 🔴 **HIGH** | ✅ Yes | ⚠️ Via backup | ⚠️ **After testing** |
+| Mode             | Risk Level  | Changes History | Reversible    | Recommended             |
+| ---------------- | ----------- | --------------- | ------------- | ----------------------- |
+| `--test-run`     | ✅ **ZERO** | ❌ No           | N/A           | ✅ **Always run first** |
+| `--full-cleanup` | 🔴 **HIGH** | ✅ Yes          | ⚠️ Via backup | ⚠️ **After testing**    |
 
 ## 🎯 Recommended Workflow
 

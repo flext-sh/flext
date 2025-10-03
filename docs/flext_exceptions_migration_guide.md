@@ -12,6 +12,7 @@
 This guide provides **step-by-step instructions** for refactoring existing FlextExceptions implementations to follow the **standard pattern** defined in `flext_exceptions_standard_pattern.md`.
 
 **When to Use This Guide**:
+
 - ❌ Your exceptions extend plain `Exception` instead of `FlextExceptions.BaseError`
 - ❌ Your exceptions don't use `_extract_common_kwargs()` helper
 - ❌ Your exceptions don't use `_build_context()` helper
@@ -43,12 +44,14 @@ This guide provides **step-by-step instructions** for refactoring existing Flext
 **Actions**:
 
 1. **Read current exceptions file**:
+
    ```bash
    # Example for client-a-oud-mig
    cat src/client-a_oud_mig/exceptions.py | head -100
    ```
 
 2. **Identify anti-patterns**:
+
    ```bash
    # Check if exceptions extend Exception instead of BaseError
    grep "class.*Exception.*:" src/*/exceptions.py | grep -v BaseError
@@ -66,6 +69,7 @@ This guide provides **step-by-step instructions** for refactoring existing Flext
    - Note inheritance relationships
 
 **Example Analysis** (client-a-oud-mig):
+
 ```
 Current Issues:
 ❌ _MigrationError extends Exception (should extend FlextExceptions.BaseError)
@@ -100,7 +104,7 @@ Exception Classes to Migrate:
 
 **Goal**: Refactor exception classes to follow the standard pattern.
 
-#### Before (Anti-pattern):
+#### Before (Anti-pattern)
 
 ```python
 # ❌ OLD PATTERN - client-a-oud-mig/src/client-a_oud_mig/exceptions.py
@@ -131,7 +135,7 @@ class client-aOudMigExceptions(FlextExceptions):
             # ❌ No helper methods
 ```
 
-#### After (Standard pattern):
+#### After (Standard pattern)
 
 ```python
 # ✅ NEW PATTERN - client-a-oud-mig/src/client-a_oud_mig/exceptions.py
@@ -312,7 +316,7 @@ class LdifProcessingError(MigrationError):  # ✅ Inherits from MigrationError
 
 **Goal**: Update all places where exceptions are raised to use the new pattern.
 
-#### Before (Old usage):
+#### Before (Old usage)
 
 ```python
 # ❌ OLD USAGE - Manual context handling
@@ -329,7 +333,7 @@ raise client-aOudMigExceptions._LdifProcessingError(
 )
 ```
 
-#### After (Standard usage):
+#### After (Standard usage)
 
 ```python
 # ✅ NEW USAGE - Clean and consistent
@@ -351,6 +355,7 @@ raise client-aOudMigExceptions.LdifProcessingError(
 #### Find and Replace Strategy
 
 1. **Find all exception raises**:
+
    ```bash
    grep -r "raise.*Exceptions\." src/ | grep -v "__pycache__" | grep -v ".pyc"
    ```
@@ -362,6 +367,7 @@ raise client-aOudMigExceptions.LdifProcessingError(
    - Add `correlation_id` where distributed tracing is needed
 
 3. **Example replacements**:
+
    ```python
    # BEFORE
    raise client-aOudMigExceptions._client-aValidationError(
@@ -386,7 +392,7 @@ raise client-aOudMigExceptions.LdifProcessingError(
 
 **Goal**: Convert factory methods to follow standard pattern or remove them if redundant.
 
-#### Before (Factory pattern):
+#### Before (Factory pattern)
 
 ```python
 # ❌ OLD PATTERN - Factory methods
@@ -407,7 +413,7 @@ exceptions = FlextLdapExceptions()
 raise exceptions.connection_error("Failed", "ldap://localhost:389")
 ```
 
-#### After (Direct instantiation):
+#### After (Direct instantiation)
 
 ```python
 # ✅ NEW PATTERN - Direct instantiation (no factory needed)
@@ -427,6 +433,7 @@ raise FlextLdapExceptions.LdapConnectionError(
 **Decision**: If factory methods provide **business value** (e.g., complex error construction logic), keep them as **static methods**. Otherwise, remove and use direct instantiation.
 
 **Keep factories if**:
+
 ```python
 # ✅ Factory provides business value
 @staticmethod
@@ -486,6 +493,7 @@ print('✅ Exception pattern compliance verified')
 #### Common Migration Errors
 
 **Error 1**: Type annotation issues
+
 ```python
 # ❌ WRONG
 def __init__(self, message: str, *, context: dict | None = None) -> None:
@@ -497,6 +505,7 @@ def __init__(self, message: str, *, **kwargs: object) -> None:
 ```
 
 **Error 2**: Missing correlation_id support
+
 ```python
 # ❌ WRONG - Doesn't accept correlation_id
 raise MyError("Failed", field="email")
@@ -506,6 +515,7 @@ raise MyError("Failed", field="email", correlation_id="req_123")
 ```
 
 **Error 3**: Hardcoded context instead of using helper
+
 ```python
 # ❌ WRONG
 context = {"field": field, "value": value}
@@ -522,7 +532,7 @@ super().__init__(message, context=context, correlation_id=correlation_id)
 
 **Goal**: Ensure exception classes are properly exported.
 
-#### Before:
+#### Before
 
 ```python
 # ❌ OLD - Private class exports
@@ -535,7 +545,7 @@ class client-aOudMigExceptions(FlextExceptions):
     # ... more exports
 ```
 
-#### After:
+#### After
 
 ```python
 # ✅ NEW - Direct public classes (no _ prefix needed)
@@ -553,7 +563,7 @@ class client-aOudMigExceptions:
     # No need for public exports - classes are already public
 ```
 
-#### Update __all__ exports:
+#### Update **all** exports
 
 ```python
 # exceptions.py
@@ -599,14 +609,14 @@ Before considering migration complete:
 
 Use this table to track migration progress across projects:
 
-| Project | Status | Issues Found | Time Spent | Completed |
-|---------|--------|--------------|------------|-----------|
-| flext-core | ✅ Complete | None - reference implementation | - | 2025-10-01 |
-| flext-api | ✅ Complete | None - reference implementation | - | 2025-10-01 |
-| flext-ldap | ⏳ In Progress | Factory pattern, missing helpers | - | - |
-| flext-tap-oracle | ✅ Complete | Minor - error code improvements | - | 2025-10-01 |
-| client-a-oud-mig | ⏳ Planned | Critical - doesn't extend BaseError | - | - |
-| ... | ... | ... | ... | ... |
+| Project          | Status         | Issues Found                        | Time Spent | Completed  |
+| ---------------- | -------------- | ----------------------------------- | ---------- | ---------- |
+| flext-core       | ✅ Complete    | None - reference implementation     | -          | 2025-10-01 |
+| flext-api        | ✅ Complete    | None - reference implementation     | -          | 2025-10-01 |
+| flext-ldap       | ⏳ In Progress | Factory pattern, missing helpers    | -          | -          |
+| flext-tap-oracle | ✅ Complete    | Minor - error code improvements     | -          | 2025-10-01 |
+| client-a-oud-mig    | ⏳ Planned     | Critical - doesn't extend BaseError | -          | -          |
+| ...              | ...            | ...                                 | ...        | ...        |
 
 ---
 
@@ -615,7 +625,7 @@ Use this table to track migration progress across projects:
 ### Conversion Quick Guide
 
 1. **Change base class**: `Exception` → `FlextExceptions.BaseError`
-2. **Add `**kwargs`**: Accept `**kwargs: object` parameter
+2. **Add `**kwargs`**: Accept `\*\*kwargs: object` parameter
 3. **Extract common params**: Call `self._extract_common_kwargs(kwargs)`
 4. **Build context**: Call `self._build_context(base_context, field1=value1, ...)`
 5. **Call super**: Pass `message`, `code`, `context`, `correlation_id` to `super().__init__(...)`
@@ -626,6 +636,7 @@ Use this table to track migration progress across projects:
 ### Common Patterns
 
 **Simple exception**:
+
 ```python
 class MyError(FlextExceptions.BaseError):
     @override
@@ -637,6 +648,7 @@ class MyError(FlextExceptions.BaseError):
 ```
 
 **Specialized exception**:
+
 ```python
 class SpecializedError(MyError):
     @override
@@ -656,6 +668,7 @@ class SpecializedError(MyError):
 **Symptom**: `error: Signature of "__init__" incompatible with supertype "BaseError"`
 
 **Solution**: Ensure parameter order matches parent:
+
 ```python
 # ✅ CORRECT parameter order
 def __init__(
@@ -672,6 +685,7 @@ def __init__(
 **Symptom**: Correlation IDs are lost when re-raising exceptions
 
 **Solution**: Always pass `correlation_id` when re-raising:
+
 ```python
 try:
     do_something()
@@ -689,6 +703,7 @@ except MyError as e:
 **Symptom**: Tests expect old exception class names
 
 **Solution**: Update test assertions:
+
 ```python
 # ❌ OLD
 with pytest.raises(client-aOudMigExceptions._MigrationError):

@@ -13,54 +13,54 @@ sleep 10
 
 # Wait for OUD to be ready
 for i in {1..30}; do
-    if ldapsearch -x -H ldap://localhost:1389 -b "" -s base "(objectClass=*)" > /dev/null 2>&1; then
-        echo "OUD is ready"
-        break
-    fi
-    sleep 2
+	if ldapsearch -x -H ldap://localhost:1389 -b "" -s base "(objectClass=*)" >/dev/null 2>&1; then
+		echo "OUD is ready"
+		break
+	fi
+	sleep 2
 done
 
 echo "=== Applying Production OUD Configuration ==="
 
 # Create password file for dsconfig
-echo "$ADMIN_PASSWORD" > /tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt
+echo "$ADMIN_PASSWORD" >/tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt
 
 # 1. Set single-structural-objectclass-behavior to accept
 echo "1/4 - Configuring single-structural-objectclass-behavior..."
 $OUD_INSTANCE_PATH/bin/dsconfig set-global-configuration-prop \
-    --set single-structural-objectclass-behavior:accept \
-    -h localhost -p 4444 \
-    -D "$ADMIN_DN" \
-    -j /tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt \
-    --no-prompt --trustAll || echo "Already configured"
+	--set single-structural-objectclass-behavior:accept \
+	-h localhost -p 4444 \
+	-D "$ADMIN_DN" \
+	-j /tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt \
+	--no-prompt --trustAll || echo "Already configured"
 
 # 2. Disable compact encoding for userRoot workflow
 echo "2/4 - Disabling compact encoding for userRoot workflow..."
 $OUD_INSTANCE_PATH/bin/dsconfig set-workflow-element-prop \
-    --element-name "userRoot" \
-    --set compact-encoding:false \
-    -h localhost -p 4444 \
-    -D "$ADMIN_DN" \
-    -j /tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt \
-    --no-prompt --trustAll || echo "Already configured"
+	--element-name "userRoot" \
+	--set compact-encoding:false \
+	-h localhost -p 4444 \
+	-D "$ADMIN_DN" \
+	-j /tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt \
+	--no-prompt --trustAll || echo "Already configured"
 
 # 3. Disable schema checking for migration compatibility
 echo "3/4 - Disabling schema checking..."
 $OUD_INSTANCE_PATH/bin/dsconfig set-global-configuration-prop \
-    --set check-schema:false \
-    -h localhost -p 4444 \
-    -D "$ADMIN_DN" \
-    -j /tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt \
-    --no-prompt --trustAll || echo "Already configured"
+	--set check-schema:false \
+	-h localhost -p 4444 \
+	-D "$ADMIN_DN" \
+	-j /tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt \
+	--no-prompt --trustAll || echo "Already configured"
 
 # 4. Allow unauthenticated requests
 echo "4/4 - Allowing unauthenticated requests..."
 $OUD_INSTANCE_PATH/bin/dsconfig set-global-configuration-prop \
-    --set reject-unauthenticated-requests:false \
-    -h localhost -p 4444 \
-    -D "$ADMIN_DN" \
-    -j /tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt \
-    --no-prompt --trustAll || echo "Already configured"
+	--set reject-unauthenticated-requests:false \
+	-h localhost -p 4444 \
+	-D "$ADMIN_DN" \
+	-j /tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt \
+	--no-prompt --trustAll || echo "Already configured"
 
 # Clean up password file
 rm -f /tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt
