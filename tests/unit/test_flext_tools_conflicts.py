@@ -13,8 +13,9 @@ import inspect
 import tempfile
 from pathlib import Path
 
-from flext_core import FlextResult
 from flext_tests import FlextTestsDomains
+
+from flext_core import FlextResult, FlextTypes
 from flext_tools.conflicts import ConflictAnalyzer
 
 
@@ -25,7 +26,7 @@ class TestConflictAnalyzer:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_test_project_data() -> dict[str, object]:
+        def create_test_project_data() -> FlextTypes.Dict:
             """Create test project data."""
             return {
                 "project_path": "/tmp/flext_test_project",
@@ -34,7 +35,7 @@ class TestConflictAnalyzer:
             }
 
         @staticmethod
-        def create_test_conflict_data() -> list[dict[str, str]]:
+        def create_test_conflict_data() -> list[FlextTypes.StringDict]:
             """Create test conflict data."""
             return [
                 {

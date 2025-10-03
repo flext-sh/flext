@@ -140,7 +140,7 @@ def find_python_files() -> list[Path]:
     return sorted(python_files)
 
 
-def detect_domain_violations(content: str, file_path: Path) -> list[str]:
+def detect_domain_violations(content: str, file_path: Path) -> FlextTypes.StringList:
     """Detect domain separation violations in file content."""
     violations = []
 
@@ -183,7 +183,7 @@ def detect_domain_violations(content: str, file_path: Path) -> list[str]:
     return violations
 
 
-def detect_multiple_classes(content: str) -> list[str]:
+def detect_multiple_classes(content: str) -> FlextTypes.StringList:
     """Detect multiple classes in a single module."""
     violations = []
 
@@ -204,7 +204,7 @@ def detect_multiple_classes(content: str) -> list[str]:
     return violations
 
 
-def detect_loose_functions(content: str) -> list[str]:
+def detect_loose_functions(content: str) -> FlextTypes.StringList:
     """Detect loose helper functions outside classes."""
     violations = []
 
@@ -239,7 +239,7 @@ def detect_loose_functions(content: str) -> list[str]:
     return violations
 
 
-def detect_try_except_fallbacks(content: str) -> list[str]:
+def detect_try_except_fallbacks(content: str) -> FlextTypes.StringList:
     """Detect try/except fallback patterns instead of FlextResult."""
     # Patterns that indicate fallback mechanisms
     fallback_patterns = [
@@ -260,7 +260,7 @@ def detect_try_except_fallbacks(content: str) -> list[str]:
     ]
 
 
-def detect_non_flext_constants(content: str, file_path: Path) -> list[str]:
+def detect_non_flext_constants(content: str, file_path: Path) -> FlextTypes.StringList:
     """Detect constants classes that don't inherit from FlextConstants."""
     violations = []
 
@@ -276,7 +276,7 @@ def detect_non_flext_constants(content: str, file_path: Path) -> list[str]:
     return violations
 
 
-def detect_internal_imports(content: str) -> list[str]:
+def detect_internal_imports(content: str) -> FlextTypes.StringList:
     """Detect internal imports instead of root-level imports."""
     internal_patterns = [
         r"from flext_core\.result import",
@@ -297,7 +297,7 @@ def detect_internal_imports(content: str) -> list[str]:
 def enforce_unified_class_pattern(
     content: str,
     file_path: Path,
-) -> tuple[str, list[str]]:
+) -> tuple[str, FlextTypes.StringList]:
     """Enforce unified class pattern with nested helpers."""
     changes = []
     # Use file_path parameter to avoid linting warnings
@@ -316,7 +316,9 @@ def enforce_unified_class_pattern(
     return content, changes
 
 
-def enforce_domain_separation(content: str, file_path: Path) -> tuple[str, list[str]]:
+def enforce_domain_separation(
+    content: str, file_path: Path
+) -> tuple[str, FlextTypes.StringList]:
     """Enforce domain separation by replacing direct imports."""
     changes = []
     # Use file_path parameter to avoid linting warnings
@@ -331,7 +333,7 @@ def enforce_domain_separation(content: str, file_path: Path) -> tuple[str, list[
     return content, changes
 
 
-def enforce_flext_result_pattern(content: str) -> tuple[str, list[str]]:
+def enforce_flext_result_pattern(content: str) -> tuple[str, FlextTypes.StringList]:
     """Enforce FlextResult pattern instead of try/except fallbacks."""
     changes = []
 
@@ -361,7 +363,7 @@ def enforce_flext_result_pattern(content: str) -> tuple[str, list[str]]:
 
 def enforce_constants_inheritance(
     content: str, file_path: Path
-) -> tuple[str, list[str]]:
+) -> tuple[str, FlextTypes.StringList]:
     """Enforce FlextConstants inheritance pattern."""
     changes = []
 
@@ -392,7 +394,7 @@ def enforce_constants_inheritance(
     return content, changes
 
 
-def analyze_architectural_patterns(file_path: Path) -> dict[str, object]:
+def analyze_architectural_patterns(file_path: Path) -> FlextTypes.Dict:
     """Analyze a single file for architectural pattern compliance."""
     try:
         with Path(file_path).open("r", encoding="utf-8") as f:
@@ -425,7 +427,7 @@ def analyze_architectural_patterns(file_path: Path) -> dict[str, object]:
         }
 
 
-def enforce_architectural_patterns(file_path: Path) -> dict[str, object]:
+def enforce_architectural_patterns(file_path: Path) -> FlextTypes.Dict:
     """Enforce architectural patterns on a single file."""
     try:
         with Path(file_path).open("r", encoding="utf-8") as f:

@@ -186,7 +186,7 @@ from flext_meltano import (
 
 **Extensions (1 project)**:
 
-- `flext-oracle-oic-ext`: Oracle Integration Cloud utilities
+- `flext-oracle-oic`: Oracle Integration Cloud utilities
 
 ### Project Specializations (Not Duplications)
 

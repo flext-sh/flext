@@ -17,6 +17,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from flext_core import FlextTypes
+
 
 def find_python_files() -> list[Path]:
     """Find all Python files in FLEXT projects."""
@@ -39,7 +41,7 @@ def find_python_files() -> list[Path]:
     return sorted(python_files)
 
 
-def modernize_type_parameters(content: str) -> tuple[str, list[str]]:
+def modernize_type_parameters(content: str) -> tuple[str, FlextTypes.StringList]:
     """Apply PEP 695: Type Parameter Syntax."""
     changes = []
 
@@ -111,7 +113,7 @@ def modernize_type_parameters(content: str) -> tuple[str, list[str]]:
     return content, changes
 
 
-def modernize_override_decorators(content: str) -> tuple[str, list[str]]:
+def modernize_override_decorators(content: str) -> tuple[str, FlextTypes.StringList]:
     """Apply PEP 698: @override decorator."""
     changes = []
 
@@ -173,7 +175,7 @@ def modernize_override_decorators(content: str) -> tuple[str, list[str]]:
     return content, changes
 
 
-def modernize_union_syntax(content: str) -> tuple[str, list[str]]:
+def modernize_union_syntax(content: str) -> tuple[str, FlextTypes.StringList]:
     """Modernize Union syntax to use | operator (Python 3.10+ syntax)."""
     changes = []
 
@@ -224,7 +226,7 @@ def modernize_union_syntax(content: str) -> tuple[str, list[str]]:
     return content, changes
 
 
-def modernize_dict_list_syntax(content: str) -> tuple[str, list[str]]:
+def modernize_dict_list_syntax(content: str) -> tuple[str, FlextTypes.StringList]:
     """Modernize Dict/List to use built-in types."""
     changes = []
 
@@ -275,7 +277,7 @@ def modernize_dict_list_syntax(content: str) -> tuple[str, list[str]]:
     return content, changes
 
 
-def modernize_string_annotations(content: str) -> tuple[str, list[str]]:
+def modernize_string_annotations(content: str) -> tuple[str, FlextTypes.StringList]:
     """Remove quotes from type annotations (Python 3.10+ with from __future__ import annotations)."""
     changes = []
 
@@ -311,7 +313,7 @@ def modernize_string_annotations(content: str) -> tuple[str, list[str]]:
     return content, changes
 
 
-def modernize_python_file(file_path: Path) -> dict[str, object]:
+def modernize_python_file(file_path: Path) -> FlextTypes.Dict:
     """Modernize a single Python file with Python 3.13+ syntax."""
     try:
         with Path(file_path).open("r", encoding="utf-8") as f:

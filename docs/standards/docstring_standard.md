@@ -95,7 +95,7 @@ class FlextExampleClass:
 ```python
 def process_data(
     self,
-    input_data: Dict[str, object],
+    input_data: FlextTypes.Dict,
     *,
     validate: bool = True,
     timeout: Optional[int] = None,
@@ -155,7 +155,7 @@ def status(self) -> str:
 
 ```python
 @classmethod
-def create_from_config(cls, config: Dict[str, object]) -> "FlextExampleClass":
+def create_from_config(cls, config: FlextTypes.Dict) -> "FlextExampleClass":
     """Create instance from configuration dictionary.
 
     Factory method that creates a new instance using configuration
@@ -197,7 +197,7 @@ def validate_input(data: object) -> bool:
 ## Inline Comments Standards
 
 ```python
-def complex_method(self, data: List[Dict[str, object]]) -> FlextResult[List[str]]:
+def complex_method(self, data: List[FlextTypes.Dict]) -> FlextResult[List[str]]:
     """Process complex data with multiple steps."""
     # Step 1: Validate all input data
     validated_data = []

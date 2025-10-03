@@ -14,6 +14,7 @@ import time
 from typing import cast
 
 from flext_api import FlextApiApp, FlextApiClient, FlextApiConfig
+
 from flext_core import FlextLogger, FlextTypes
 
 
@@ -33,7 +34,7 @@ class TestFlextApiConsolidated:
             }
 
         @staticmethod
-        def create_request_data() -> FlextTypes.Core.Dict:
+        def create_request_data() -> FlextTypes.Dict:
             """Create test request data."""
             return {
                 "method": "GET",

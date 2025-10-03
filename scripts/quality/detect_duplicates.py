@@ -55,7 +55,7 @@ class AnalysisResult:
     anti_patterns: list[AntiPatternMatch] = field(default_factory=list)
     total_files: int = 0
     analyzed_files: int = 0
-    errors: list[str] = field(default_factory=list)
+    errors: FlextTypes.StringList = field(default_factory=list)
 
 
 class FlextDuplicateDetector:
@@ -65,7 +65,7 @@ class FlextDuplicateDetector:
         self,
         similarity_threshold: float = 0.65,  # Reduzido para capturar mais padrões
         min_lines: int = 5,  # Reduzido para detectar pequenos padrões anti-pattern
-        file_extensions: list[str] | None = None,
+        file_extensions: FlextTypes.StringList | None = None,
         *,
         analyze_all_files: bool = False,
     ) -> None:
@@ -196,7 +196,7 @@ class FlextDuplicateDetector:
             "flext-ldif/src",
             "flext-meltano/src",
             "flext-observability/src",
-            "flext-oracle-oic-ext/src",
+            "flext-oracle-oic/src",
             "flext-oracle-wms/src",
             "flext-plugin/src",
             "flext-quality/src",
@@ -383,7 +383,7 @@ class FlextDuplicateDetector:
     def _normalize_markdown_code(self, content: str) -> str:
         """Normaliza código Markdown preservando estrutura semântica."""
         try:
-            lines: list[object] = []
+            lines: FlextTypes.List = []
             in_code_block = False
 
             for line in content.split("\n"):
@@ -437,7 +437,7 @@ class FlextDuplicateDetector:
     def _normalize_shell_code(self, content: str) -> str:
         """Normaliza código shell preservando estrutura lógica."""
         try:
-            lines: list[object] = []
+            lines: FlextTypes.List = []
             for line in content.split("\n"):
                 line_content = line.strip()
 
@@ -500,7 +500,7 @@ class FlextDuplicateDetector:
         """Normaliza código Python usando AST."""
         try:
             # Remover comentários e docstrings
-            lines: list[object] = []
+            lines: FlextTypes.List = []
             for line in content.split("\n"):
                 line_content = line
                 # Remover comentários
@@ -545,8 +545,8 @@ class FlextDuplicateDetector:
     def _get_file_blocks(self, content: str) -> list[tuple[str, int, int]]:
         """Divide arquivo em blocos de código."""
         lines = content.split("\n")
-        blocks: list[object] = []
-        current_block: list[str] = []
+        blocks: FlextTypes.List = []
+        current_block: FlextTypes.StringList = []
         start_line = 0
 
         for i, line in enumerate(lines):
@@ -556,7 +556,7 @@ class FlextDuplicateDetector:
                 if current_block and len(current_block) >= self.min_lines:
                     block_content = "\n".join(current_block)
                     blocks.append((block_content, start_line, i))
-                current_block: list[object] = []
+                current_block: FlextTypes.List = []
                 start_line = i + 1
             else:
                 current_block.append(line_content)
@@ -630,7 +630,7 @@ class FlextDuplicateDetector:
             return [0] * num_hashes
 
         # Use diferentes seeds para simular diferentes hash functions
-        minhashes: list[object] = []
+        minhashes: FlextTypes.List = []
         for seed in range(num_hashes):
             min_hash = min(hash((seed, s)) for s in shingles)
             minhashes.append(min_hash)
@@ -647,10 +647,10 @@ class FlextDuplicateDetector:
 
     def _create_file_signatures(
         self,
-        files_content: FlextTypes.Core.Headers,
+        files_content: FlextTypes.StringDict,
     ) -> dict[str, tuple[str, set[str], list[int]]]:
         """Cria assinaturas avançadas para detecção ultra-rápida."""
-        signatures: dict[str, object] = {}
+        signatures: FlextTypes.Dict = {}
         # Use multiprocessing para acelerar a criação de assinaturas
         with ProcessPoolExecutor(max_workers=mp.cpu_count()) as executor:
             future_to_file = {
@@ -696,10 +696,10 @@ class FlextDuplicateDetector:
     def _find_exact_duplicates(
         self,
         signatures: dict[str, tuple[str, set[str], list[int]]],
-        files_content: FlextTypes.Core.Headers,
+        files_content: FlextTypes.StringDict,
     ) -> list[DuplicateMatch]:
         """Encontra duplicatas exatas usando assinaturas pré-computadas."""
-        duplicates: list[object] = []
+        duplicates: FlextTypes.List = []
         hash_to_files = defaultdict(list)
 
         # Agrupar por hash
@@ -728,11 +728,11 @@ class FlextDuplicateDetector:
     def _find_similar_blocks(
         self,
         signatures: dict[str, tuple[str, set[str], list[int]]],
-        files_content: FlextTypes.Core.Headers,
+        files_content: FlextTypes.StringDict,
     ) -> list[DuplicateMatch]:
         """Encontra blocos similares usando pre-filtering com assinaturas."""
-        duplicates: list[object] = []
-        file_blocks: dict[str, object] = {}
+        duplicates: FlextTypes.List = []
+        file_blocks: FlextTypes.Dict = {}
         # Extrair blocos apenas de arquivos que passaram pelo filtro inicial
         for file_path, content in files_content.items():
             if file_path in signatures:
@@ -777,7 +777,7 @@ class FlextDuplicateDetector:
         signatures: dict[str, tuple[str, set[str], list[int]]],
     ) -> list[tuple[str, str]]:
         """Encontra pares candidatos usando MinHash ultra-rápido."""
-        candidates: list[object] = []
+        candidates: FlextTypes.List = []
         file_paths = list(signatures.keys())
 
         start_time = time.time()
@@ -802,10 +802,10 @@ class FlextDuplicateDetector:
 
     def _detect_flext_anti_patterns(
         self,
-        files_content: FlextTypes.Core.Headers,
+        files_content: FlextTypes.StringDict,
     ) -> list[AntiPatternMatch]:
         """Detecta anti-patterns que deveriam usar bibliotecas base do FLEXT."""
-        anti_patterns: list[object] = []
+        anti_patterns: FlextTypes.List = []
         for file_path, content in files_content.items():
             # Pular arquivos que não são Python
             if not str(file_path).endswith(".py"):
@@ -836,7 +836,7 @@ class FlextDuplicateDetector:
         content: str,
     ) -> list[AntiPatternMatch]:
         """Detecta manipulação manual de resultados que deveria usar FlextResult."""
-        patterns: list[object] = []
+        patterns: FlextTypes.List = []
         lines = content.split("\n")
 
         # Padrões que indicam resultado manual ao invés de FlextResult
@@ -897,7 +897,7 @@ class FlextDuplicateDetector:
         content: str,
     ) -> list[AntiPatternMatch]:
         """Detecta configuração manual de logging que deveria usar flext-core."""
-        patterns: list[object] = []
+        patterns: FlextTypes.List = []
         lines = content.split("\n")
 
         # Padrões que indicam logging manual
@@ -950,7 +950,7 @@ class FlextDuplicateDetector:
         content: str,
     ) -> list[AntiPatternMatch]:
         """Detecta manipulação manual de configuração que deveria usar Config."""
-        patterns: list[object] = []
+        patterns: FlextTypes.List = []
         lines = content.split("\n")
 
         # Padrões que indicam config manual
@@ -1000,7 +1000,7 @@ class FlextDuplicateDetector:
         content: str,
     ) -> list[AntiPatternMatch]:
         """Detecta modelos de domínio manuais que deveriam usar FlextModels."""
-        patterns: list[object] = []
+        patterns: FlextTypes.List = []
         lines = content.split("\n")
 
         # Padrões que indicam domain models manuais
@@ -1060,7 +1060,7 @@ class FlextDuplicateDetector:
         content: str,
     ) -> list[AntiPatternMatch]:
         """Detecta padrões de serviço manuais que deveriam seguir arquitetura FLEXT."""
-        patterns: list[object] = []
+        patterns: FlextTypes.List = []
         lines = content.split("\n")
 
         # Padrões que indicam serviços não seguindo padrão FLEXT
@@ -1113,7 +1113,7 @@ class FlextDuplicateDetector:
         content: str,
     ) -> list[AntiPatternMatch]:
         """Detecta manipulação manual de conexões que deveria usar serviços FLEXT."""
-        patterns: list[object] = []
+        patterns: FlextTypes.List = []
         lines = content.split("\n")
 
         # Padrões para diferentes tipos de conexão
@@ -1165,7 +1165,7 @@ class FlextDuplicateDetector:
         content: str,
     ) -> list[AntiPatternMatch]:
         """Detecta tratamento manual de erros que deveria usar padrões FLEXT."""
-        patterns: list[object] = []
+        patterns: FlextTypes.List = []
         lines = content.split("\n")
 
         # Padrões de error handling que não seguem FLEXT
@@ -1211,11 +1211,11 @@ class FlextDuplicateDetector:
     def _find_similar_blocks_batched(
         self,
         signatures: dict[str, tuple[str, set[str], list[int]]],
-        files_content: FlextTypes.Core.Headers,
+        files_content: FlextTypes.StringDict,
         batch_size: int = 100,
     ) -> list[DuplicateMatch]:
         """Processa em lotes usando assinaturas pré-computadas."""
-        duplicates: list[object] = []
+        duplicates: FlextTypes.List = []
         list(signatures.keys())
 
         # Pre-filter global para reduzir candidate pairs
@@ -1248,11 +1248,11 @@ class FlextDuplicateDetector:
 
     def _collect_files(
         self,
-        modules: list[str],
-    ) -> FlextTypes.Core.Headers:
+        modules: FlextTypes.StringList,
+    ) -> FlextTypes.StringDict:
         """Coleta conteúdo dos arquivos para análise com otimização de memória."""
-        files_content: FlextTypes.Core.Headers = {}
-        errors: list[object] = []
+        files_content: FlextTypes.StringDict = {}
+        errors: FlextTypes.List = []
         max_file_size = 2 * 1024 * 1024  # 2MB limit per file (aumentado)
         total_size = 0
         max_total_size = 512 * 1024 * 1024  # 512MB total limit
@@ -1370,7 +1370,7 @@ class FlextDuplicateDetector:
         """Lê arquivo em chunks para economizar memória."""
         try:
             with Path(file_path).open(encoding="utf-8", errors="ignore") as f:
-                chunks: list[object] = []
+                chunks: FlextTypes.List = []
                 while True:
                     chunk = f.read(8192)  # 8KB chunks
                     if not chunk:
@@ -1397,7 +1397,7 @@ class FlextDuplicateDetector:
         signatures = self._create_file_signatures(files_content)
 
         # Encontrar duplicações
-        duplicates: list[object] = []
+        duplicates: FlextTypes.List = []
         # 1. Duplicatas exatas
         exact_duplicates = self._find_exact_duplicates(signatures, files_content)
         duplicates.extend(exact_duplicates)
@@ -1423,7 +1423,7 @@ class FlextDuplicateDetector:
             errors=[],
         )
 
-    def analyze_modules(self, modules: list[str]) -> AnalysisResult:
+    def analyze_modules(self, modules: FlextTypes.StringList) -> AnalysisResult:
         """Analisa módulos específicos."""
         files_content = self._collect_files(modules)
         if not files_content:
@@ -1432,7 +1432,7 @@ class FlextDuplicateDetector:
         # Criar assinaturas
         signatures = self._create_file_signatures(files_content)
 
-        duplicates: list[object] = []
+        duplicates: FlextTypes.List = []
         duplicates.extend(self._find_exact_duplicates(signatures, files_content))
         duplicates.extend(self._find_similar_blocks(signatures, files_content))
 

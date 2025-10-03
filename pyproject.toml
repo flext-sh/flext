@@ -241,7 +241,7 @@
             flext-ldif = { path = "./flext-ldif", develop = true }
             flext-meltano = { path = "./flext-meltano", develop = true }
             flext-observability = { path = "./flext-observability", develop = true }
-            flext-oracle-oic-ext = { path = "./flext-oracle-oic-ext", develop = true }
+            flext-oracle-oic = { path = "./flext-oracle-oic", develop = true }
             flext-oracle-wms = { path = "./flext-oracle-wms", develop = true }
             flext-plugin = { path = "./flext-plugin", develop = true }
             flext-quality = { path = "./flext-quality", develop = true }
@@ -293,6 +293,7 @@
             types-simplejson = "^3.20.0.20250326"
             types-six = "^1.17.0.20250515"
             types-ujson = "^5.10.0.20250326"
+        types-ldap3 = "^2.9.13.20250622"
 
 	[tool.pydantic-mypy]
 		init_forbid_extra = true
@@ -315,21 +316,69 @@
 		    "**/tests/",
 		    "**/examples/",
 		    "**/scripts/",
+		    "**/*.pb2.py",
+		    "**/*.pb2_grpc.py",
+		    "**/flext-cli/**",
+		    "**/flext-dbt-*/**",
+		    "**/flext-tap-*/**",
+		    "**/flext-target-*/**",
 	    ]
 		extraPaths = [
 		    "./src",
-		    "**/src/",
+		    "./flext-core/src",
 		]
+		pythonVersion = "3.13"
+		pythonPlatform = "Linux"
+		typeCheckingMode = "basic"
+		useLibraryCodeForTypes = false
+		autoSearchPaths = false
+		reportMissingImports = "warning"
+		reportMissingTypeStubs = "warning"
+		reportImportCycles = "error"
+		reportUnusedImport = "warning"
+		reportUnusedClass = "warning"
+		reportUnusedFunction = "warning"
+		reportUnusedVariable = "warning"
+		reportDuplicateImport = "warning"
+		reportConstantRedefinition = "error"
+		reportIncompatibleMethodOverride = "error"
+		reportIncompatibleVariableOverride = "error"
+		reportInconsistentConstructor = "error"
+		reportOverlappingOverloads = "error"
+		reportMissingSuperCall = "warning"
+		reportUninitializedInstanceVariable = "warning"
+		reportInvalidStringEscapeSequence = "error"
+		reportUnknownParameterType = "warning"
+		reportUnknownArgumentType = "warning"
+		reportUnknownLambdaType = "warning"
+		reportUnknownVariableType = "warning"
+		reportUnknownMemberType = "warning"
+		reportMissingParameterType = "warning"
+		reportMissingTypeArgument = "warning"
+		reportInvalidTypeVarUse = "error"
+		reportCallInDefaultInitializer = "warning"
+		reportUnnecessaryIsInstance = "warning"
+		reportUnnecessaryCast = "warning"
+		reportUnnecessaryComparison = "warning"
+		reportAssertAlwaysTrue = "warning"
+		reportSelfClsParameterName = "warning"
+		reportImplicitStringConcatenation = "warning"
+		reportUndefinedVariable = "error"
+		reportUnboundVariable = "error"
+		reportInvalidStubStatement = "error"
+		reportIncompleteStub = "warning"
+		reportUnsupportedDunderAll = "warning"
+		reportUnusedCoroutine = "warning"
 
 		[[tool.pyright.executionEnvironments]]
 		    root = "./tests"
 		    extraPaths = [
-		        "./examples",
-		        "./scripts",
-		        "**/examples/",
-		        "**/scripts/",
-		        "**/tests/",
+		        "./src",
+		        "./flext-core/src",
 		    ]
+		    pythonVersion = "3.13"
+		    pythonPlatform = "Linux"
+		    typeCheckingMode = "basic"
 		    reportImplicitRelativeImport = false
 		    reportPrivateUsage = false
 
@@ -344,45 +393,36 @@
 		    "**/*ruff_cache",
 		    "**/*venv/**",
 		    "**/node_modules/**",
+		    "**/*.pb2.py",
+		    "**/*.pb2_grpc.py",
+		    "**/build/**",
+		    "**/examples/**",
+		    "**/scripts/**",
+		    "**/tests/**",
+		    "**/flext-cli/**",
+		    "**/flext-dbt-*/**",
+		    "**/flext-tap-*/**",
+		    "**/flext-target-*/**",
 		]
 		python-version = "3.13"
 		search-path = [
-		    "client-a-oud-mig/src",
-		    "examples",
-		    "flexcore/src",
+		    "src",
+		    "flext-core/src",
 		    "flext-api/src",
 		    "flext-auth/src",
-		    "flext-cli/src",
-		    "flext-core/src",
-		    "flext-db-oracle/src",
-		    "flext-dbt-ldap/src",
-		    "flext-dbt-ldif/src",
-		    "flext-dbt-oracle-wms/src",
-		    "flext-dbt-oracle/src",
-		    "flext-grpc/src",
+		    "flext-meltano/src",
 		    "flext-ldap/src",
 		    "flext-ldif/src",
-		    "flext-meltano/src",
-		    "flext-observability/src",
-		    "flext-oracle-oic-ext/src",
-		    "flext-oracle-wms/src",
-		    "flext-plugin/src",
-		    "flext-quality/src",
-		    "flext-tap-ldap/src",
-		    "flext-tap-ldif/src",
-		    "flext-tap-oracle-oic/src",
-		    "flext-tap-oracle-wms/src",
-		    "flext-tap-oracle/src",
-		    "flext-target-ldap/src",
-		    "flext-target-ldif/src",
-		    "flext-target-oracle-oic/src",
-		    "flext-target-oracle-wms/src",
-		    "flext-target-oracle/src",
+		    "flext-grpc/src",
 		    "flext-web/src",
+		    "flext-observability/src",
+		    "flext-quality/src",
+		    "flext-plugin/src",
+		    "flext-db-oracle/src",
+		    "flext-oracle-oic/src",
+		    "flext-oracle-wms/src",
+		    "client-a-oud-mig/src",
 		    "client-b-meltano-native/src",
-		    "scripts",
-		    "src",
-		    "tests",
 		]
 
 	[tool.pytest.ini_options]

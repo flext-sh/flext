@@ -153,7 +153,7 @@ class FlextDbtProgrammaticRunner(FlextService):
         @staticmethod
         def execute_dbt_command(
             runner: object,
-            command_args: list[str]
+            command_args: FlextTypes.StringList
         ) -> FlextResult[dbtRunnerResult]:
             """Execute dbt command with proper error handling."""
             # IMPLEMENTATION: runner.invoke(cli_args) with FlextResult wrapping
@@ -162,7 +162,7 @@ class FlextDbtProgrammaticRunner(FlextService):
     def run_transformations_programmatic(
         self,
         project_dir: Path,
-        models: list[str],
+        models: FlextTypes.StringList,
         **options: object
     ) -> FlextResult[dict]:
         """Execute dbt transformations using programmatic API."""

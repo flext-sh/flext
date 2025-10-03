@@ -12,7 +12,7 @@ from typing import Self
 
 from pydantic import BaseModel
 
-from flext_core import FlextResult, FlextService
+from flext_core import FlextResult, FlextService, FlextTypes
 
 
 class FlextScriptService(FlextService[object]):
@@ -86,7 +86,7 @@ class FlextScriptService(FlextService[object]):
         """Validate preconditions using nested helper."""
         return self._ValidationHelper.validate_preconditions()
 
-    def run(self, args: dict[str, object] | None = None) -> FlextResult[object]:
+    def run(self, args: FlextTypes.Dict | None = None) -> FlextResult[object]:
         """Run the script."""
         # 🚨 AUDIT VIOLATION: Using empty validation method - should use FlextModels.Validation
         validation_result = self.validate_preconditions()
@@ -102,7 +102,7 @@ class FlextScriptService(FlextService[object]):
         try:
             parser = self.create_parser()
             args = parser.parse_args()
-            arg_dict: dict[str, object] = vars(args)
+            arg_dict: FlextTypes.Dict = vars(args)
 
             result: FlextResult[object] = self.run(arg_dict)
             if result.is_success:
@@ -112,7 +112,7 @@ class FlextScriptService(FlextService[object]):
             return 1
 
     @abstractmethod
-    def execute_implementation(self, args: dict[str, object]) -> FlextResult[object]:
+    def execute_implementation(self, args: FlextTypes.Dict) -> FlextResult[object]:
         """Execute script implementation."""
 
 
