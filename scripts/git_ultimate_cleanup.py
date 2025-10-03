@@ -91,13 +91,14 @@ class GitUltimateCleanup:
         if not (self.repo_path / ".git").exists():
             return False, f"Not a git repository: {self.repo_path}"
 
-        # Check uncommitted changes
-        result = subprocess.run(
-            ["git", "-C", str(self.repo_path), "status", "--porcelain"],
-            capture_output=True, text=True, check=False
-        )
-        if result.stdout.strip():
-            return False, "Uncommitted changes detected. Commit or stash first."
+        # Check uncommitted changes (skip in dry-run mode)
+        if not self.dry_run:
+            result = subprocess.run(
+                ["git", "-C", str(self.repo_path), "status", "--porcelain"],
+                capture_output=True, text=True, check=False
+            )
+            if result.stdout.strip():
+                return False, "Uncommitted changes detected. Commit or stash first."
 
         # Check git-filter-repo
         result = subprocess.run(["which", "git-filter-repo"], capture_output=True, check=False)
@@ -822,8 +823,8 @@ def main():
         sys.exit(1)
     print(message)
 
-    # Confirm
-    if not args.backup_only:
+    # Confirm (skip in dry-run)
+    if not args.backup_only and not args.dry_run:
         print(f"\n{'='*70}")
         print("⚠️  WARNING")
         print(f"{'='*70}")
@@ -840,12 +841,15 @@ def main():
             print("Cancelled.")
             sys.exit(0)
 
-    # Create backup
-    backup_path = cleanup.create_comprehensive_backup()
+    # Create backup (skip in dry-run)
+    if not args.dry_run:
+        backup_path = cleanup.create_comprehensive_backup()
 
-    if args.backup_only:
-        print(f"✅ Backup complete: {backup_path}")
-        sys.exit(0)
+        if args.backup_only:
+            print(f"✅ Backup complete: {backup_path}")
+            sys.exit(0)
+    else:
+        backup_path = None
 
     # Cleanup main repo
     success = cleanup.cleanup_repository()
@@ -913,8 +917,9 @@ def main():
             if args.all:
                 print("   6. Submodules: git submodule foreach 'git push origin --force --all'")
         print()
-        print(f"💾 Backup: {backup_path}")
-        print(f"   To recover: cd {backup_path} && ./RECOVER.sh")
+        if backup_path:
+            print(f"💾 Backup: {backup_path}")
+            print(f"   To recover: cd {backup_path} && ./RECOVER.sh")
     print()
 
 
