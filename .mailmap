@@ -1,0 +1,16 @@
+# Git Mailmap for FLEXT Workspace - Author Normalization
+#
+# Format: Canonical Name <canonical@email.com> <old@email.com>
+#         Canonical Name <canonical@email.com> Old Name <old@email.com>
+#
+# This maps all author variations to their canonical identities.
+
+# Marlon Costa (primary maintainer)
+marlon-costa-dc <128386606+marlon-costa-dc@users.noreply.github.com>
+
+# AI Assistants - Normalize to consistent identities
+Claude Code <noreply@anthropic.com> Claude <claude@anthropic.com>
+Cursor Agent <cursoragent@cursor.com>
+
+# Test/Development accounts
+# Test User <test@example.com>  # Keep as-is for test commits
