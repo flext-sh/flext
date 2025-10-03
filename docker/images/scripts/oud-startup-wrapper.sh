@@ -13,18 +13,18 @@ OUD_STARTUP_PID=$!
 echo "=== Waiting for OUD to be ready ==="
 echo "Using baseDN: ${baseDN}, port: ${ldapPort}"
 for i in {1..60}; do
-    if ${ORACLE_HOME}/oud/bin/ldapsearch -h localhost -p ${ldapPort} -b "" -s base "(objectClass=*)" > /dev/null 2>&1; then
-        echo "OUD is ready!"
-        break
-    fi
-    sleep 2
+	if ${ORACLE_HOME}/oud/bin/ldapsearch -h localhost -p ${ldapPort} -b "" -s base "(objectClass=*)" >/dev/null 2>&1; then
+		echo "OUD is ready!"
+		break
+	fi
+	sleep 2
 done
 
 # Apply production configuration if script exists
 if [ -f /docker-entrypoint-init.d/configure-oud.sh ]; then
-    echo "=== Applying production OUD configuration ==="
-    chmod +x /docker-entrypoint-init.d/configure-oud.sh
-    /docker-entrypoint-init.d/configure-oud.sh
+	echo "=== Applying production OUD configuration ==="
+	chmod +x /docker-entrypoint-init.d/configure-oud.sh
+	/docker-entrypoint-init.d/configure-oud.sh
 fi
 
 # Wait for the OUD startup process

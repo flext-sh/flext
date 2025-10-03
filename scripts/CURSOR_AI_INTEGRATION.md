@@ -31,12 +31,14 @@
 ### 🔄 Migration from Claude API Version
 
 **Old approach** (v1.0.0):
+
 ```bash
 export ANTHROPIC_API_KEY="sk-ant-..."
 python git_history_rewriter.py --repo . --api-key $ANTHROPIC_API_KEY
 ```
 
 **New approach** (v2.0.0):
+
 ```bash
 # No API key needed!
 python git_history_rewriter.py --repo .
@@ -49,29 +51,34 @@ python git_history_rewriter.py --repo .
 The system applies intelligent rules to detect and fix patterns:
 
 #### Version Bumps
+
 ```
 "0.9.0" → "chore(release): bump version to 0.9.0"
 ```
 
 #### WIP/Temp Commits
+
 ```
 "WIP async" → "feat(core): work in progress on async"
 "tmp fix" → "feat(core): work in progress on core"
 ```
 
 #### Typo Fixes
+
 ```
 "fix typo" → "docs: correct typos in documentation"
 "fix typos in readme" → "docs: correct typos in documentation"
 ```
 
 #### Lint/Format Fixes
+
 ```
 "fix lint" → "style: apply code formatting and linting"
 "run black" → "style: apply code formatting and linting"
 ```
 
 #### File-Based Detection
+
 ```
 # Changes in tests/
 "add unit tests" → "test: add unit tests"
@@ -108,43 +115,43 @@ git filter-repo --replace-message .git/history-cleanup/commit-msg-mapping.txt
 
 ### Conventional Commit Types
 
-| Type | When Applied | Example |
-|------|--------------|---------|
-| `feat` | New features, src/ changes | `feat(core): add FlextResult type` |
-| `fix` | Bug fixes | `fix(ldap): resolve connection timeout` |
-| `docs` | *.md files, documentation | `docs: update installation guide` |
-| `style` | Lint, format, black, ruff | `style: apply code formatting` |
-| `refactor` | Code restructuring | `refactor(api): simplify error handling` |
-| `test` | Test files, test/ directory | `test: add integration tests` |
-| `chore` | Version bumps, dependencies | `chore(release): bump version to 0.9.0` |
-| `perf` | Performance improvements | `perf(db): optimize query execution` |
-| `ci` | CI/CD changes | `ci: update GitHub Actions workflow` |
-| `build` | Build system changes | `build: update dependencies` |
+| Type       | When Applied                | Example                                  |
+| ---------- | --------------------------- | ---------------------------------------- |
+| `feat`     | New features, src/ changes  | `feat(core): add FlextResult type`       |
+| `fix`      | Bug fixes                   | `fix(ldap): resolve connection timeout`  |
+| `docs`     | \*.md files, documentation  | `docs: update installation guide`        |
+| `style`    | Lint, format, black, ruff   | `style: apply code formatting`           |
+| `refactor` | Code restructuring          | `refactor(api): simplify error handling` |
+| `test`     | Test files, test/ directory | `test: add integration tests`            |
+| `chore`    | Version bumps, dependencies | `chore(release): bump version to 0.9.0`  |
+| `perf`     | Performance improvements    | `perf(db): optimize query execution`     |
+| `ci`       | CI/CD changes               | `ci: update GitHub Actions workflow`     |
+| `build`    | Build system changes        | `build: update dependencies`             |
 
 ### Scope Detection
 
 Scopes are automatically detected from file paths:
 
-| File Path | Detected Scope | Example |
-|-----------|----------------|---------|
-| `src/flext_core/` | `core` | `feat(core): ...` |
-| `src/flext_ldap/` | `flext_ldap` | `feat(flext_ldap): ...` |
-| `tests/` | (test type) | `test: ...` |
-| `docs/` | (docs type) | `docs: ...` |
-| `*.md` | (docs type) | `docs: ...` |
+| File Path         | Detected Scope | Example                 |
+| ----------------- | -------------- | ----------------------- |
+| `src/flext_core/` | `core`         | `feat(core): ...`       |
+| `src/flext_ldap/` | `flext_ldap`   | `feat(flext_ldap): ...` |
+| `tests/`          | (test type)    | `test: ...`             |
+| `docs/`           | (docs type)    | `docs: ...`             |
+| `*.md`            | (docs type)    | `docs: ...`             |
 
 ## Comparison: Heuristic vs API-based
 
-| Feature | Heuristic (v2.0) | Claude API (v1.0) |
-|---------|------------------|-------------------|
-| **API Key** | ❌ Not needed | ✅ Required |
-| **Offline** | ✅ Yes | ❌ No |
-| **Rate Limits** | ❌ None | ✅ ~50 req/min |
-| **Speed** | ✅ Instant | ⚠️ Slower |
-| **Accuracy** | ✅ 90%+ for common patterns | ✅ 95%+ |
-| **Cost** | ✅ Free | ⚠️ Paid API |
-| **Customization** | ✅ Edit heuristics | ❌ Limited |
-| **Cursor AI** | ✅ Interactive review | ❌ Separate |
+| Feature           | Heuristic (v2.0)            | Claude API (v1.0) |
+| ----------------- | --------------------------- | ----------------- |
+| **API Key**       | ❌ Not needed               | ✅ Required       |
+| **Offline**       | ✅ Yes                      | ❌ No             |
+| **Rate Limits**   | ❌ None                     | ✅ ~50 req/min    |
+| **Speed**         | ✅ Instant                  | ⚠️ Slower         |
+| **Accuracy**      | ✅ 90%+ for common patterns | ✅ 95%+           |
+| **Cost**          | ✅ Free                     | ⚠️ Paid API       |
+| **Customization** | ✅ Edit heuristics          | ❌ Limited        |
+| **Cursor AI**     | ✅ Interactive review       | ❌ Separate       |
 
 ## Advanced Customization
 
@@ -184,6 +191,7 @@ if re.search(r'#\d+', message):
 ### Interactive Review Process
 
 1. **Generate baseline suggestions**:
+
    ```bash
    python scripts/git_history_rewriter.py --repo flext-core
    ```
@@ -256,6 +264,7 @@ elif any('migrations/' in f for f in files):
 ### Want more context in messages
 
 **Solution**: The heuristic keeps original message content. Use Cursor AI to enhance:
+
 - "Make this message more descriptive while keeping it under 72 chars"
 - "Add context about WHY this change was made"
 
@@ -272,6 +281,7 @@ Potential improvements to the heuristic system:
 ## Support
 
 For issues or enhancements:
+
 1. Review heuristic rules in `git_history_rewriter.py`
 2. Test with `--test-run` flag first
 3. Use Cursor AI for complex improvements

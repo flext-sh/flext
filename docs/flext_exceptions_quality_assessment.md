@@ -14,15 +14,15 @@
 
 ### Key Findings
 
-| Category | Status | Details |
-|----------|--------|---------|
-| **Foundation** | ✅ Excellent | flext-core provides complete BaseError with all features |
-| **Domain Extensions** | ⚠️ Mixed | Inconsistent helper method implementation |
-| **Helper Methods** | ⚠️ Inconsistent | Some projects have them, others don't |
-| **Context Building** | ⚠️ Varied | Different approaches to domain-specific context |
-| **Correlation IDs** | ✅ Good | Most projects support correlation tracking |
-| **Error Codes** | ⚠️ Varied | Different patterns for domain error codes |
-| **Factory Methods** | ⚠️ Mixed | Some use factories, others don't |
+| Category              | Status          | Details                                                  |
+| --------------------- | --------------- | -------------------------------------------------------- |
+| **Foundation**        | ✅ Excellent    | flext-core provides complete BaseError with all features |
+| **Domain Extensions** | ⚠️ Mixed        | Inconsistent helper method implementation                |
+| **Helper Methods**    | ⚠️ Inconsistent | Some projects have them, others don't                    |
+| **Context Building**  | ⚠️ Varied       | Different approaches to domain-specific context          |
+| **Correlation IDs**   | ✅ Good         | Most projects support correlation tracking               |
+| **Error Codes**       | ⚠️ Varied       | Different patterns for domain error codes                |
+| **Factory Methods**   | ⚠️ Mixed        | Some use factories, others don't                         |
 
 ---
 
@@ -35,6 +35,7 @@
 **Quality Assessment**: ⭐⭐⭐⭐⭐ **EXCELLENT FOUNDATION**
 
 **Strengths**:
+
 - ✅ Complete `BaseError` implementation with all required fields
 - ✅ Helper method `_extract_common_kwargs()` for consistent exception initialization
 - ✅ Correlation ID support throughout
@@ -44,6 +45,7 @@
 - ✅ Type-safe with proper annotations
 
 **Pattern**:
+
 ```python
 class FlextExceptions:
     class BaseError(Exception):
@@ -74,6 +76,7 @@ class FlextExceptions:
 **Quality Assessment**: ⭐⭐⭐⭐⭐ **REFERENCE IMPLEMENTATION**
 
 **Strengths**:
+
 - ✅ Excellent helper methods (`_extract_common_kwargs`, `_build_context`)
 - ✅ HTTP-specific context fields (status_code, endpoint, method)
 - ✅ Proper correlation ID propagation
@@ -81,6 +84,7 @@ class FlextExceptions:
 - ✅ Clean separation of domain-specific and common fields
 
 **Pattern**:
+
 ```python
 class FlextApiExceptions:
     class ApiError(FlextExceptions.BaseError):
@@ -128,11 +132,13 @@ class FlextApiExceptions:
 **Quality Assessment**: ⭐⭐⭐⭐☆ **GOOD BUT DIFFERENT PATTERN**
 
 **Strengths**:
+
 - ✅ LDAP-specific context (server_uri, ldap_code, bind_dn, etc.)
 - ✅ Proper exception hierarchy
 - ✅ Integration with FlextContext and FlextLogger
 
 **Pattern Variation**: Uses **factory methods** instead of direct instantiation
+
 ```python
 class FlextLdapExceptions(FlextExceptions):
     @override
@@ -154,6 +160,7 @@ class FlextLdapExceptions(FlextExceptions):
 ```
 
 **Issues**:
+
 - ⚠️ **Different Pattern**: Factory methods vs direct exception instantiation
 - ⚠️ **Inconsistency**: Not using `_extract_common_kwargs` helper
 - ⚠️ **Usability**: Less intuitive than direct `raise FlextLdapExceptions.LdapConnectionError(...)`
@@ -169,12 +176,14 @@ class FlextLdapExceptions(FlextExceptions):
 **Quality Assessment**: ⭐⭐⭐⭐☆ **GOOD WITH HELPER METHODS**
 
 **Strengths**:
+
 - ✅ Singer tap-specific context (tap_stream_id, catalog_entry)
 - ✅ Helper methods (`_extract_common_kwargs`, `_build_context`)
 - ✅ Proper correlation ID handling
 - ✅ Domain-specific error codes
 
 **Pattern**:
+
 ```python
 class FlextTapOracleExceptions:
     class TapError(FlextExceptions.BaseError):
@@ -209,6 +218,7 @@ class FlextTapOracleExceptions:
 ```
 
 **Issues**:
+
 - ⚠️ **Minor**: Could benefit from more specific default error codes (TAP_ERROR instead of GENERIC_ERROR)
 
 **Recommendation**: Add Singer-specific error codes to FlextConstants.
@@ -222,6 +232,7 @@ class FlextTapOracleExceptions:
 **Quality Assessment**: ⭐⭐⭐☆☆ **ENTERPRISE FEATURES BUT INCONSISTENT**
 
 **Strengths**:
+
 - ✅ **Excellent**: Advanced error handling patterns (RecoverableError, WorkflowError)
 - ✅ **Excellent**: Rich factory methods for creating specific errors
 - ✅ **Excellent**: FlextResult integration (`create_flext_result_error`, `wrap_exception_as_flext_result`)
@@ -230,6 +241,7 @@ class FlextTapOracleExceptions:
 - ✅ **Good**: Domain-specific exceptions (migration, LDIF, validation, etc.)
 
 **Issues**:
+
 - ❌ **CRITICAL**: Exceptions DON'T extend `FlextExceptions.BaseError` - they extend plain `Exception`
 - ❌ **CRITICAL**: Missing correlation ID support
 - ❌ **CRITICAL**: Missing error code standardization
@@ -237,6 +249,7 @@ class FlextTapOracleExceptions:
 - ⚠️ **Pattern Inconsistency**: Uses factory methods AND direct instantiation
 
 **Anti-Pattern Found**:
+
 ```python
 class client-aOudMigExceptions(FlextExceptions):
     class _MigrationError(Exception):  # ❌ Should extend FlextExceptions.BaseError
@@ -254,6 +267,7 @@ class client-aOudMigExceptions(FlextExceptions):
 ```
 
 **Correct Pattern Should Be**:
+
 ```python
 class client-aOudMigExceptions(FlextExceptions):
     class MigrationError(FlextExceptions.BaseError):  # ✅ Extend BaseError
@@ -301,7 +315,7 @@ Every domain exception class MUST have:
 - [ ] **Error code support** with domain-specific defaults
 - [ ] **Domain-specific context fields** as instance attributes
 - [ ] **`@override` decorator** on `__init__` method
-- [ ] **`**kwargs: object`** parameter for extensibility
+- [ ] **`**kwargs: object`\*\* parameter for extensibility
 
 ### Standard Pattern Template
 
@@ -354,6 +368,7 @@ class Flext[Domain]Exceptions:
 **Projects Affected**: client-a-oud-mig (1 project)
 
 **Issues**:
+
 - ❌ Exceptions don't extend FlextExceptions.BaseError
 - ❌ Missing correlation ID support
 - ❌ Missing helper methods
@@ -369,6 +384,7 @@ class Flext[Domain]Exceptions:
 **Projects Affected**: flext-ldap (1 project confirmed, likely 5+ more)
 
 **Issues**:
+
 - ⚠️ Factory method pattern vs direct instantiation
 - ⚠️ Missing `_extract_common_kwargs` helper
 - ⚠️ Missing `_build_context` helper
@@ -384,6 +400,7 @@ class Flext[Domain]Exceptions:
 **Projects Affected**: All projects
 
 **Opportunities**:
+
 - 💡 Standardize error code patterns (domain-specific constants)
 - 💡 Add error code registry to FlextConstants
 - 💡 Document correlation ID best practices
@@ -397,15 +414,16 @@ class Flext[Domain]Exceptions:
 
 ## 📊 Gap Analysis Summary
 
-| Project | Extends BaseError | Helper Methods | Correlation ID | Error Codes | Factory Pattern | Overall |
-|---------|-------------------|----------------|----------------|-------------|-----------------|---------|
-| **flext-core** | ✅ | ✅ | ✅ | ✅ | ❌ | ⭐⭐⭐⭐⭐ |
-| **flext-api** | ✅ | ✅ | ✅ | ✅ | ❌ | ⭐⭐⭐⭐⭐ |
-| **flext-ldap** | ✅ | ⚠️ | ✅ | ✅ | ⚠️ | ⭐⭐⭐⭐☆ |
-| **flext-tap-oracle** | ✅ | ✅ | ✅ | ⚠️ | ❌ | ⭐⭐⭐⭐☆ |
-| **client-a-oud-mig** | ❌ | ❌ | ❌ | ⚠️ | ⚠️ | ⭐⭐⭐☆☆ |
+| Project              | Extends BaseError | Helper Methods | Correlation ID | Error Codes | Factory Pattern | Overall    |
+| -------------------- | ----------------- | -------------- | -------------- | ----------- | --------------- | ---------- |
+| **flext-core**       | ✅                | ✅             | ✅             | ✅          | ❌              | ⭐⭐⭐⭐⭐ |
+| **flext-api**        | ✅                | ✅             | ✅             | ✅          | ❌              | ⭐⭐⭐⭐⭐ |
+| **flext-ldap**       | ✅                | ⚠️             | ✅             | ✅          | ⚠️              | ⭐⭐⭐⭐☆  |
+| **flext-tap-oracle** | ✅                | ✅             | ✅             | ⚠️          | ❌              | ⭐⭐⭐⭐☆  |
+| **client-a-oud-mig**    | ❌                | ❌             | ❌             | ⚠️          | ⚠️              | ⭐⭐⭐☆☆   |
 
 **Legend**:
+
 - ✅ Fully implemented
 - ⚠️ Partially implemented or inconsistent
 - ❌ Missing or not implemented
@@ -451,6 +469,7 @@ class Flext[Domain]Exceptions:
 **Phase 4**: ⏳ **PENDING** - Validation and documentation
 
 **Estimated Total Time**:
+
 - Phase 2: 30 minutes (pattern documentation)
 - Phase 3: 440 minutes (22 projects × 20 minutes average)
 - Phase 4: 60 minutes (validation + final docs)

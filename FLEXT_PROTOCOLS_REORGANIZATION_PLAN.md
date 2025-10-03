@@ -9,14 +9,14 @@
 
 ### Protocol Files Inventory
 
-| Project | File | Lines | Structure Pattern |
-|---------|------|-------|------------------|
-| **flext-core** | protocols.py | 1431 | FlextProtocols class with nested namespaces |
-| **flext-ldap** | protocols.py | 318 | FlextLdapProtocols class |
-| **flext-api** | protocols.py | 417 | FlextApiProtocols class |
-| **flext-cli** | protocols.py | 139 | FlextCliProtocols class (minimal) |
-| **flext-web** | protocols.py | 479 | FlextWebProtocols class |
-| **flext-db-oracle** | protocols.py | 434 | FlextDbOracleProtocols class |
+| Project             | File         | Lines | Structure Pattern                           |
+| ------------------- | ------------ | ----- | ------------------------------------------- |
+| **flext-core**      | protocols.py | 1431  | FlextProtocols class with nested namespaces |
+| **flext-ldap**      | protocols.py | 318   | FlextLdapProtocols class                    |
+| **flext-api**       | protocols.py | 417   | FlextApiProtocols class                     |
+| **flext-cli**       | protocols.py | 139   | FlextCliProtocols class (minimal)           |
+| **flext-web**       | protocols.py | 479   | FlextWebProtocols class                     |
+| **flext-db-oracle** | protocols.py | 434   | FlextDbOracleProtocols class                |
 
 **Total**: 3,218 lines of protocol definitions across 6 projects
 
@@ -76,6 +76,7 @@
    - Middleware
 
 **Runtime Implementation** (183 lines):
+
 - Protocol registry methods
 - Validation functionality
 - Middleware management
@@ -89,11 +90,13 @@
 **Issue**: FlextProtocols contains 50+ protocol definitions, many unused or domain-specific
 
 **Evidence**:
+
 - Complex domain patterns (Saga, AggregateRoot, EventStore) rarely used in FLEXT projects
 - Duplicate command/query protocols (in both Domain and Commands namespaces)
 - Infrastructure protocols too specific (LogRenderer, ConfigPersistence, ConfigFactory)
 
 **Impact**:
+
 - Confusion about which protocols to use
 - Heavy imports for simple use cases
 - Maintenance burden for unused patterns
@@ -103,12 +106,14 @@
 **Issue**: Domain libraries create separate protocol classes but don't properly extend FlextProtocols
 
 **Evidence**:
+
 - flext-ldap: FlextLdapProtocols (318 lines) - separate class
 - flext-api: FlextApiProtocols (417 lines) - separate class
 - flext-web: FlextWebProtocols (479 lines) - separate class
 - NO inheritance or extension relationship with FlextProtocols
 
 **Impact**:
+
 - Protocol duplication across projects
 - No unified protocol hierarchy
 - Difficult to understand protocol relationships
@@ -118,6 +123,7 @@
 **Issue**: Many advanced DDD/CQRS protocols are defined but not used
 
 **Unused Protocols** (from code analysis):
+
 - Domain.Saga[TState] - NO usage in ecosystem
 - Domain.AggregateRoot[TState] - LIMITED usage
 - Application.EventStore - NO usage
@@ -125,6 +131,7 @@
 - Extensions.Observability - Minimal usage
 
 **Impact**:
+
 - Code bloat (500+ lines unused)
 - False impression of required complexity
 - Maintenance burden
@@ -134,12 +141,14 @@
 **Issue**: Domain libraries need protocols NOT in flext-core
 
 **Examples**:
+
 - flext-ldap: LDAP-specific connection, entry, search protocols
 - flext-api: HTTP request/response, endpoint protocols
 - flext-web: Flask/FastAPI application, route protocols
 - flext-db-oracle: Oracle connection, query result protocols
 
 **Impact**:
+
 - Domain libraries forced to create from scratch
 - No guidance on extending FlextProtocols
 - Protocol pattern inconsistency
@@ -155,6 +164,7 @@
 #### Keep (Essential Foundation - ~500 lines)
 
 **Foundation Namespace** (Keep All - 108 lines):
+
 - ✅ OperationCallable - Used throughout
 - ✅ Validator[T] - Core validation pattern
 - ✅ HasModelDump - Pydantic integration
@@ -166,6 +176,7 @@
 - ✅ HasValidateCommand - Command validation
 
 **Domain Namespace** (Simplify to ~100 lines):
+
 - ✅ Service - Core domain service (KEEP - widely used)
 - ✅ Repository[T] - Data access (KEEP - essential pattern)
 - ❌ AggregateRoot[TState] - REMOVE (complex, rarely used)
@@ -175,6 +186,7 @@
 - ❌ Saga[TState] - REMOVE (advanced pattern, unused)
 
 **Application Namespace** (Simplify to ~120 lines):
+
 - ✅ Handler[TInput, TResult] - Core handler (KEEP - essential)
 - ❌ CommandHandler[TCommand, TResult] - REMOVE (use Handler)
 - ❌ QueryHandler[TQuery, TResult] - REMOVE (use Handler)
@@ -184,6 +196,7 @@
 - ❌ EventPublisher - REMOVE (move to Extensions)
 
 **Infrastructure Namespace** (Simplify to ~100 lines):
+
 - ✅ Connection - Basic connection protocol (KEEP)
 - ✅ Configurable - Basic configuration (KEEP)
 - ✅ LoggerProtocol - Essential logging (KEEP)
@@ -194,12 +207,14 @@
 - ❌ ConfigFactory - REMOVE (factory pattern, not protocol concern)
 
 **Commands Namespace** (Keep Consolidated - ~100 lines):
+
 - ✅ CommandHandler[CommandT, ResultT] - CQRS pattern (KEEP)
 - ✅ QueryHandler[QueryT, ResultT] - CQRS pattern (KEEP)
 - ✅ CommandBus - Bus pattern (KEEP)
 - ✅ Middleware - Middleware pattern (KEEP)
 
 **Extensions Namespace** (Keep Simple - ~70 lines):
+
 - ✅ Plugin - Plugin system (KEEP)
 - ✅ PluginContext - Plugin context (KEEP)
 - ✅ Middleware - Cross-cutting (KEEP)
@@ -208,6 +223,7 @@
 #### Remove (~900 lines)
 
 **Protocols to Remove**:
+
 - All Saga-related protocols (~200 lines)
 - All EventStore-related protocols (~150 lines)
 - Duplicate command/query protocols (~100 lines)
@@ -360,7 +376,7 @@ __all__ = ["FlextLdapProtocols"]
 - [ ] Validate after EACH change: `ruff check src/flext_[project]/protocols.py`
 - [ ] Test imports: `pytest tests/unit/test_protocols.py -v`
 - [ ] Check ecosystem impact: `grep -r "FlextProtocols\.[removed]" ../flext-*`
-- [ ] Update __all__ exports
+- [ ] Update **all** exports
 
 ### Post-Execution (QUALITY GATES)
 
@@ -455,14 +471,15 @@ echo "Reduction: ${reduction}%"
 
 **Total Duration**: 4 weeks (one project per 2-5 days)
 
-| Week | Projects | Focus | Lines Reduced |
-|------|----------|-------|---------------|
-| **Week 1** | flext-core | Foundation consolidation | ~900 lines |
-| **Week 2** | flext-ldap, flext-api | Extension pattern implementation | ~400 lines |
-| **Week 3** | flext-cli, flext-web | Extension pattern + domain cleanup | ~270 lines |
-| **Week 4** | flext-db-oracle, Validation | Final implementation + ecosystem validation | ~234 lines |
+| Week       | Projects                    | Focus                                       | Lines Reduced |
+| ---------- | --------------------------- | ------------------------------------------- | ------------- |
+| **Week 1** | flext-core                  | Foundation consolidation                    | ~900 lines    |
+| **Week 2** | flext-ldap, flext-api       | Extension pattern implementation            | ~400 lines    |
+| **Week 3** | flext-cli, flext-web        | Extension pattern + domain cleanup          | ~270 lines    |
+| **Week 4** | flext-db-oracle, Validation | Final implementation + ecosystem validation | ~234 lines    |
 
 **Milestones**:
+
 - Week 1 End: Core protocols consolidated, documented, validated
 - Week 2 End: 2 major domain libraries migrated to extension pattern
 - Week 3 End: All domain libraries following extension pattern

@@ -10,7 +10,7 @@ All Docker containers across the FLEXT ecosystem have been standardized with ZER
 
 ## Archived Files (ZERO TOLERANCE POLICY)
 
-### Non-standard Docker files moved to .bak (15 files):
+### Non-standard Docker files moved to .bak (15 files)
 
 1. `.config/docker/` (3 files)
 2. `client-a-oud-mig/scripts/docker_test_manager.py`
@@ -40,12 +40,15 @@ All Docker containers across the FLEXT ecosystem have been standardized with ZER
 ## Container Configuration
 
 ### Shared Containers (Port Mapping)
+
 - **OpenLDAP**: Port 3390 (host) → 389 (container)
 - **Oracle DB**: Port 1522 (host) → 1521 (container)
 - **client-a OUD**: Port 3389 (host) → 1389 (container) - PRODUCTION COMPATIBLE
 
 ### Centralized Docker Compose Files (16 files)
+
 All centralized in `~/flext/docker/`:
+
 - docker-compose.openldap.yml
 - docker-compose.oracle-db.yml
 - docker-compose.client-a-oud.yml
@@ -61,7 +64,9 @@ All centralized in `~/flext/docker/`:
 - And more...
 
 ### Centralized Dockerfiles (21 files)
+
 All centralized in `~/flext/docker/images/`:
+
 - Multiple specialized Docker images for ecosystem testing
 
 ## Validation Results
@@ -97,9 +102,11 @@ $ bash validate_docker_standardization.sh
 ## Remaining Files (LEGITIMATE)
 
 ### Core Test
+
 - `flext-core/tests/unit/test_flext_docker.py` - Tests FlextTestDocker itself (✅ LEGITIMATE)
 
 ### Third-Party Dependencies
+
 - `flext-dbt-oracle-wms/dbt_packages/dbt_expectations/integration_tests/docker-*.sh` - Third-party package (✅ DO NOT MODIFY)
 
 ## Usage Pattern

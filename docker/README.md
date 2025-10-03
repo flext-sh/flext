@@ -127,6 +127,7 @@ All compose files follow naming convention: `docker-compose.{project}-{purpose}.
    - **Fixture**: `ldap_container` from `flext_tests.fixtures`
 
 ### Infrastructure Services
+
 - `docker-compose.flext-auth.yml` - Authentication services
 - `docker-compose.flext-web.yml` - Web application services
 - `docker-compose.db-oracle.yml` - **Oracle Database** (port 1522)
@@ -136,14 +137,17 @@ All compose files follow naming convention: `docker-compose.{project}-{purpose}.
 - `docker-compose.ldap-oracle-db.yml` - LDAP + Oracle integration
 
 ### Testing Services
+
 - `docker-compose.tap-oracle-test.yml` - Oracle tap testing
 - `docker-compose.meltano-test.yml` - Meltano integration tests
 - `docker-compose.oracle-wms.yml` - Oracle WMS testing
 
 ### Integration Services
+
 - Additional compose files for various integration scenarios
 
 **Usage**:
+
 ```bash
 # From any project directory, reference central compose files
 docker-compose -f ~/flext/docker/docker-compose.db-oracle.yml up -d
@@ -158,6 +162,7 @@ docker-compose -f ~/flext/docker/docker-compose.db-oracle.yml up -d
 All Dockerfiles are consolidated in `images/` directory with descriptive names:
 
 ### FLEXT Service Images
+
 - `Dockerfile.flext-auth` (+ simple, test variants)
 - `Dockerfile.flext-web` (+ simple variant)
 - `Dockerfile.flext-api`
@@ -169,10 +174,12 @@ All Dockerfiles are consolidated in `images/` directory with descriptive names:
 - `Dockerfile.flext-meltano-test`
 
 ### Project Images
+
 - `Dockerfile.client-a-oud`, `Dockerfile.client-a-oud-mig`
 - `Dockerfile.flext`, `Dockerfile.flexcore`
 
 **Build Example**:
+
 ```bash
 # Build from centralized location
 docker build -f ~/flext/docker/images/Dockerfile.flext-api -t flext-api:latest ~/flext/flext-api/
@@ -219,6 +226,7 @@ Dirty state tracked in: `~/.flext/docker_state.json`
 ## 🔧 MIGRATION FROM OLD PATTERNS
 
 ### Old Pattern (DEPRECATED)
+
 ```python
 # ❌ OLD - Direct docker-compose in project directory
 import docker
@@ -227,6 +235,7 @@ container = client.containers.run("postgres:13", detach=True)
 ```
 
 ### New Pattern (REQUIRED)
+
 ```python
 # ✅ NEW - Use FlextTestDocker
 from flext_tests import FlextTestDocker
@@ -237,6 +246,7 @@ result = docker_mgr.start_container("flext-postgres-test")
 ```
 
 ### Fixture Migration
+
 ```python
 # ❌ OLD - Local fixture files
 from tests.fixtures.docker_fixtures import postgres_container
@@ -250,12 +260,14 @@ from flext_tests.fixtures import postgres_container
 ## 🚨 PROHIBITED PATTERNS
 
 ### NEVER Create These Files
+
 - ❌ `docker-compose.yml` in project directories (use central location)
 - ❌ `Dockerfile` in project directories (use images/ directory)
 - ❌ Local `docker_fixtures.py` (use flext_tests.fixtures)
 - ❌ Custom Docker scripts (use FlextTestDocker API)
 
 ### Always Use
+
 - ✅ `flext_tests.FlextTestDocker` for container management
 - ✅ `flext_tests.fixtures` for test fixtures
 - ✅ Centralized compose files from `~/flext/docker/`

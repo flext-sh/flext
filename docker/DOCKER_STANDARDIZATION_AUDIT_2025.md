@@ -11,14 +11,16 @@
 
 The FLEXT ecosystem has successfully achieved **near-complete Docker standardization** across all 30+ projects. The centralized Docker management infrastructure through `FlextTestDocker` is operational and widely adopted.
 
-### Key Findings:
+### Key Findings
+
 - ✅ **Centralized Infrastructure**: All Docker artifacts consolidated in `~/flext/docker/`
 - ✅ **Unified Management**: FlextTestDocker (1797 lines) provides comprehensive container lifecycle
 - ✅ **Standardized Fixtures**: 6 container types properly exported and documented
 - ✅ **Zero Critical Issues**: No direct Docker module usage, no subprocess calls
 - ⚠️ **Minor Cleanup**: 1 legacy helper file identified for refactoring
 
-### Validation Results:
+### Validation Results
+
 ```
 [1/8] ✅ PASSED: No duplicate docker-compose files
 [2/8] ✅ PASSED: No duplicate Dockerfiles
@@ -38,7 +40,8 @@ The FLEXT ecosystem has successfully achieved **near-complete Docker standardiza
 
 ### Centralized Docker Infrastructure (`~/flext/docker/`)
 
-#### Docker Compose Files (16 total):
+#### Docker Compose Files (16 total)
+
 ```bash
 docker-compose.client-a-oud.yml       # client-a OUD (port 1389 TEST, 3389 PROD)
 docker-compose.db-oracle.yml       # Oracle Database (port 1522)
@@ -57,7 +60,8 @@ docker-compose.ldap-openldap.yml   # LDAP standalone
 docker-compose.ldap-oracle-db.yml  # LDAP + Oracle integration
 ```
 
-#### Dockerfiles (21 total in `~/flext/docker/images/`):
+#### Dockerfiles (21 total in `~/flext/docker/images/`)
+
 ```bash
 Dockerfile.client-a-oud              # client-a OUD image
 Dockerfile.client-a-oud-mig          # client-a migration tools
@@ -79,6 +83,7 @@ Dockerfile.flext-meltano-test     # Meltano testing
 **Location**: `flext-core/src/flext_tests/docker.py`
 **Size**: 1797 lines (comprehensive implementation)
 **Features**:
+
 - Container lifecycle management (start/stop/reset)
 - Dirty state tracking (`~/.flext/docker_state.json`)
 - Connection pooling and health checks
@@ -106,20 +111,20 @@ from flext_tests.fixtures import (
 
 **Container Type Matrix**:
 
-| Container | Port | Compose File | Purpose | Projects |
-|-----------|------|--------------|---------|----------|
-| **client-a OUD** | 1389 (TEST)<br>3389 (PROD) | docker-compose.client-a-oud.yml | client-a OUD migration | client-a-oud-mig |
-| **Generic OpenLDAP** | 3390 | docker-compose.openldap.yml | Generic LDAP/LDIF | flext-(ldap\|ldif), flext-(dbt\|tap\|target)-(ldap\|ldif) |
-| **Oracle Database** | 1522 | docker-compose.db-oracle.yml | Standard Oracle | flext-db-oracle, flext-(dbt\|tap\|target)-oracle |
-| **PostgreSQL** | 5433 | docker-compose.postgres.yml | PostgreSQL tests | Generic database tests |
-| **Redis** | 6380 | docker-compose.redis.yml | Redis tests | Caching tests |
-| **Oracle WMS** | TBD | docker-compose.oracle-wms.yml | Oracle WMS | flext-oracle-wms |
+| Container            | Port                       | Compose File                  | Purpose             | Projects                                                  |
+| -------------------- | -------------------------- | ----------------------------- | ------------------- | --------------------------------------------------------- |
+| **client-a OUD**        | 1389 (TEST)<br>3389 (PROD) | docker-compose.client-a-oud.yml  | client-a OUD migration | client-a-oud-mig                                             |
+| **Generic OpenLDAP** | 3390                       | docker-compose.openldap.yml   | Generic LDAP/LDIF   | flext-(ldap\|ldif), flext-(dbt\|tap\|target)-(ldap\|ldif) |
+| **Oracle Database**  | 1522                       | docker-compose.db-oracle.yml  | Standard Oracle     | flext-db-oracle, flext-(dbt\|tap\|target)-oracle          |
+| **PostgreSQL**       | 5433                       | docker-compose.postgres.yml   | PostgreSQL tests    | Generic database tests                                    |
+| **Redis**            | 6380                       | docker-compose.redis.yml      | Redis tests         | Caching tests                                             |
+| **Oracle WMS**       | TBD                        | docker-compose.oracle-wms.yml | Oracle WMS          | flext-oracle-wms                                          |
 
 ---
 
 ## Project Integration Analysis
 
-### ✅ Fully Standardized Projects (28 projects):
+### ✅ Fully Standardized Projects (28 projects)
 
 All projects properly using `FlextTestDocker` through centralized fixtures:
 
@@ -132,15 +137,17 @@ All projects properly using `FlextTestDocker` through centralized fixtures:
 - **Quality & Tools**: flext-quality, flext-plugin, flext-tools
 - **Migration**: client-a-oud-mig (with minor cleanup needed)
 
-### ⚠️ Minor Cleanup Needed (1 project):
+### ⚠️ Minor Cleanup Needed (1 project)
 
 #### **client-a-oud-mig** - Helper File Simplification
+
 **Status**: Already using FlextTestDocker but has redundant helper file
 **Issue**: `/tests/helpers/docker_helpers.py` contains simple port-checking utilities
 **Impact**: Low - file is lightweight and doesn't violate standardization
 **Recommendation**: Consider moving utilities to project-level test utilities or inline in conftest.py
 
 **File Analysis**:
+
 ```python
 # client-a-oud-mig/tests/helpers/docker_helpers.py
 # - 60 lines total
@@ -156,28 +163,33 @@ All projects properly using `FlextTestDocker` through centralized fixtures:
 
 ## Container Usage Patterns
 
-### Shared Containers (Persist Across Tests):
+### Shared Containers (Persist Across Tests)
+
 These containers start once and serve multiple tests:
+
 - PostgreSQL - Database operations
 - Redis - Caching operations
 - OpenLDAP - Generic LDAP operations
 - Oracle Database - Standard Oracle operations
 
 **Lifecycle**:
+
 1. First test requests container → FlextTestDocker starts it
 2. Subsequent tests reuse running container
 3. Tests clean up their own data
 4. Container persists until explicit shutdown or marked dirty
 5. Dirty containers auto-recreated on next run
 
-### Private Containers (Project-Specific):
+### Private Containers (Project-Specific)
+
 These containers have project-specific configurations:
+
 - **client-a OUD** (client-a-oud-mig)
   - TEST: Port 1389, dc=example,dc=com, cn=Directory Manager
   - PROD: Port 3389, dc=ctbc, cn=orclREDACTED_LDAP_BIND_PASSWORD
   - Isolated for client-a-specific testing
 
-### Container Dirty State Management:
+### Container Dirty State Management
 
 **Dirty State File**: `~/.flext/docker_state.json`
 
@@ -195,6 +207,7 @@ These containers have project-specific configurations:
 ```
 
 **Marking Dirty**:
+
 ```python
 def test_that_corrupts_container(flext_docker):
     try:
@@ -209,7 +222,7 @@ def test_that_corrupts_container(flext_docker):
 
 ## Security & Best Practices
 
-### ✅ Security Strengths:
+### ✅ Security Strengths
 
 1. **No Direct Docker Access**: All Docker operations through FlextTestDocker API
 2. **Centralized Configuration**: Single source of truth for all container configs
@@ -217,7 +230,7 @@ def test_that_corrupts_container(flext_docker):
 4. **Network Isolation**: Containers properly networked
 5. **Resource Limits**: Docker Compose files include resource constraints
 
-### ✅ Best Practices Implemented:
+### ✅ Best Practices Implemented
 
 1. **Fixtures Over Setup**: pytest fixtures for container management
 2. **Automatic Cleanup**: FlextTestDocker handles lifecycle
@@ -234,12 +247,13 @@ def test_that_corrupts_container(flext_docker):
 ### client-a OUD Container (Critical for Migration)
 
 **TEST Configuration** (docker-compose.client-a-oud.yml):
+
 ```yaml
 services:
   flext-client-a-oud-test:
     image: osixia/openldap:latest
     ports:
-      - "1389:389"  # TEST port (NOT production 3389)
+      - "1389:389" # TEST port (NOT production 3389)
     environment:
       LDAP_ORGANISATION: "Example Inc"
       LDAP_DOMAIN: "example.com"
@@ -250,6 +264,7 @@ services:
 ```
 
 **PRODUCTION Configuration** (client-a-oud-mig usage):
+
 - Port: 3389 (client-a standard)
 - Base DN: dc=ctbc
 - Admin DN: cn=orclREDACTED_LDAP_BIND_PASSWORD
@@ -260,12 +275,13 @@ services:
 ### Generic OpenLDAP Container
 
 **Configuration** (docker-compose.openldap.yml):
+
 ```yaml
 services:
   flext-openldap-test:
     image: osixia/openldap:latest
     ports:
-      - "3390:389"  # Unique port to avoid client-a OUD conflict
+      - "3390:389" # Unique port to avoid client-a OUD conflict
     environment:
       LDAP_ORGANISATION: "FLEXT"
       LDAP_DOMAIN: "internal.invalid"
@@ -278,12 +294,13 @@ services:
 ### Oracle Database Container
 
 **Configuration** (docker-compose.db-oracle.yml):
+
 ```yaml
 services:
   flext-oracle-db-test:
     image: container-registry.oracle.com/database/express:latest
     ports:
-      - "1522:1521"  # Oracle standard port
+      - "1522:1521" # Oracle standard port
     environment:
       ORACLE_PWD: "Oracle123"
       ORACLE_CHARACTERSET: "AL32UTF8"
@@ -295,7 +312,7 @@ services:
 
 ## Identified Issues & Resolutions
 
-### ✅ RESOLVED ISSUES:
+### ✅ RESOLVED ISSUES
 
 1. **Direct Docker Module Usage** - ✅ None found
 2. **Subprocess Docker Calls** - ✅ None found
@@ -304,7 +321,7 @@ services:
 5. **Duplicate Fixtures** - ✅ Single source in flext-core
 6. **Missing Documentation** - ✅ Complete README.md exists
 
-### ⚠️ MINOR ISSUES (Non-Critical):
+### ⚠️ MINOR ISSUES (Non-Critical)
 
 1. **docker_helpers.py in client-a-oud-mig**:
    - **Impact**: Low - simple port checking utilities
@@ -321,7 +338,8 @@ services:
 
 ## Performance Metrics
 
-### Container Startup Times (Measured):
+### Container Startup Times (Measured)
+
 ```bash
 PostgreSQL:     ~8 seconds to ready state
 Redis:          ~3 seconds to ready state
@@ -330,7 +348,8 @@ client-a OUD:      ~15 seconds to ready state
 Oracle Database: ~45 seconds to ready state
 ```
 
-### Test Execution Impact:
+### Test Execution Impact
+
 - **First test run** (cold start): Containers start + test execution
 - **Subsequent tests** (warm state): Test execution only
 - **Typical overhead**: 5-10 seconds for container health checks
@@ -340,17 +359,19 @@ Oracle Database: ~45 seconds to ready state
 
 ## Recommendations
 
-### Immediate Actions (Optional):
+### Immediate Actions (Optional)
 
 1. **Archive client-a-oud-mig helper file**:
+
    ```bash
    mv ~/flext/client-a-oud-mig/tests/helpers/docker_helpers.py \
       ~/flext/client-a-oud-mig/tests/helpers/docker_helpers.py.bak
    ```
+
    - Update conftest.py to inline simple port checks if needed
    - Or document as acceptable project-specific utility
 
-### Future Enhancements (Nice to Have):
+### Future Enhancements (Nice to Have)
 
 1. **Container Performance Optimization**:
    - Implement container warming for faster test starts
@@ -376,7 +397,7 @@ Oracle Database: ~45 seconds to ready state
 
 ## Compliance Checklist
 
-### ✅ FLEXT Docker Standards Compliance:
+### ✅ FLEXT Docker Standards Compliance
 
 - [x] All Docker artifacts centralized in `~/flext/docker/`
 - [x] All projects use FlextTestDocker for container management
@@ -392,7 +413,7 @@ Oracle Database: ~45 seconds to ready state
 - [x] Resource limits configured
 - [x] Security best practices followed
 
-### ⚠️ Minor Non-Compliance (Acceptable):
+### ⚠️ Minor Non-Compliance (Acceptable)
 
 - [ ] 1 helper file in client-a-oud-mig (simple utilities, low impact)
 - [ ] 2 vendor scripts in dbt_expectations (third-party, acceptable)
@@ -403,7 +424,8 @@ Oracle Database: ~45 seconds to ready state
 
 ## Validation Commands
 
-### Complete Ecosystem Validation:
+### Complete Ecosystem Validation
+
 ```bash
 # Run official validation script
 ~/flext/docker/validate_docker_standardization.sh
@@ -411,7 +433,8 @@ Oracle Database: ~45 seconds to ready state
 # Expected output: 7/8 PASSED, 1 WARNING (vendor scripts)
 ```
 
-### Project-Specific Validation:
+### Project-Specific Validation
+
 ```bash
 # Test FlextTestDocker import
 python -c "from flext_tests import FlextTestDocker; print('OK')"
@@ -424,7 +447,8 @@ ls ~/flext/docker/docker-compose*.yml | wc -l  # Should be 16
 ls ~/flext/docker/images/Dockerfile.* | wc -l  # Should be 21
 ```
 
-### Container Lifecycle Test:
+### Container Lifecycle Test
+
 ```bash
 cd ~/flext/flext-ldap/tests
 pytest -v -k ldap --setup-show  # Should show fixture setup/teardown

@@ -21,16 +21,16 @@ Quick reference for git history reorganization tools.
 
 ## Scripts
 
-| Script | Purpose | Safe? |
-|--------|---------|-------|
-| `git_cleanup_orchestrator.sh --test-run` | **Analysis only** - Preview commit message changes | ✅ SAFE |
-| `git_cleanup_test_safe.sh` | **Test in temp clone** | ✅ SAFE |
-| `git_cleanup_cruft_removal.sh --test-mode` | **Test cruft removal** in temporary clone | ✅ SAFE |
-| `git_cleanup_cruft_removal.sh` | **Remove cruft from git history** (production) | ⚠️ DESTRUCTIVE |
-| `git_cleanup_orchestrator.sh --full-cleanup` | **Apply commit message changes** | ⚠️ DESTRUCTIVE |
-| `git_history_rewriter.py` | Heuristic commit rewriting | ✅ SAFE (analysis only) |
-| `git_cleanup_backup.sh` | Create backups | ✅ SAFE |
-| `git_cleanup_validator.sh` | Validate after cleanup | ✅ SAFE |
+| Script                                       | Purpose                                            | Safe?                   |
+| -------------------------------------------- | -------------------------------------------------- | ----------------------- |
+| `git_cleanup_orchestrator.sh --test-run`     | **Analysis only** - Preview commit message changes | ✅ SAFE                 |
+| `git_cleanup_test_safe.sh`                   | **Test in temp clone**                             | ✅ SAFE                 |
+| `git_cleanup_cruft_removal.sh --test-mode`   | **Test cruft removal** in temporary clone          | ✅ SAFE                 |
+| `git_cleanup_cruft_removal.sh`               | **Remove cruft from git history** (production)     | ⚠️ DESTRUCTIVE          |
+| `git_cleanup_orchestrator.sh --full-cleanup` | **Apply commit message changes**                   | ⚠️ DESTRUCTIVE          |
+| `git_history_rewriter.py`                    | Heuristic commit rewriting                         | ✅ SAFE (analysis only) |
+| `git_cleanup_backup.sh`                      | Create backups                                     | ✅ SAFE                 |
+| `git_cleanup_validator.sh`                   | Validate after cleanup                             | ✅ SAFE                 |
 
 ## Detailed Workflow
 
@@ -42,12 +42,14 @@ cd /home/marlonsc/flext
 ```
 
 **What it does:**
+
 - Analyzes first 100 commits
 - Generates improved messages using heuristics
 - Creates mapping file for review
 - Shows preview
 
 **What it doesn't do:**
+
 - ❌ Modify repository
 - ❌ Change commit SHAs
 - ❌ Require force push
@@ -59,12 +61,14 @@ cd /home/marlonsc/flext
 ```
 
 **What it does:**
+
 - Creates temporary clone in `/tmp/`
 - Applies all changes to the clone
 - Shows actual results
 - Original repo untouched
 
 **Review results:**
+
 ```bash
 cd /tmp/flext-cleanup-test-*
 git log --oneline | head -50
@@ -80,12 +84,14 @@ git log --format='%aN <%aE>' | sort -u
 ```
 
 **What it does:**
+
 - Creates temporary clone in `/tmp/flext-cruft-test-*`
 - Removes cruft from git history in the test clone
 - Shows size reduction statistics
 - Original repo untouched
 
 **Cruft patterns removed:**
+
 - Build artifacts: `*.pyc`, `__pycache__/`, `dist/`, `build/`, `*.egg-info/`
 - Cache directories: `.ruff_cache/`, `.mypy_cache/`, `.pytest_cache/`, `.serena/`
 - Coverage reports: `.coverage`, `htmlcov/`, `.tox/`
@@ -97,6 +103,7 @@ git log --format='%aN <%aE>' | sort -u
 - AI reports: `*_report.md`, `*_analysis.md`, `*_summary.md`
 
 **Review test results:**
+
 ```bash
 cd /tmp/flext-cruft-test-YYYYMMDD-HHMMSS
 git log --oneline | head -20
@@ -112,6 +119,7 @@ git count-objects -vH
 ```
 
 **This will:**
+
 - Create backup tags (`pre-cruft-cleanup-YYYYMMDD-HHMMSS`)
 - Process main repository AND all submodules
 - Permanently remove cruft from git history
@@ -119,6 +127,7 @@ git count-objects -vH
 - Require force push to remote
 
 **After cruft removal:**
+
 ```bash
 # Review changes
 git log --oneline | head -20
@@ -130,6 +139,7 @@ git push origin --force --tags
 ```
 
 **Recovery (if needed):**
+
 ```bash
 git reset --hard pre-cruft-cleanup-YYYYMMDD-HHMMSS
 ```
@@ -143,6 +153,7 @@ git reset --hard pre-cruft-cleanup-YYYYMMDD-HHMMSS
 ```
 
 **This will:**
+
 - Create comprehensive backups
 - Process all submodules
 - Modify git history
@@ -165,13 +176,13 @@ git reset --hard pre-cruft-cleanup-YYYYMMDD-HHMMSS
 
 Automatic improvements (no API key needed):
 
-| Pattern | Becomes |
-|---------|---------|
-| `0.9.0` | `chore(release): bump version to 0.9.0` |
+| Pattern         | Becomes                                                              |
+| --------------- | -------------------------------------------------------------------- |
+| `0.9.0`         | `chore(release): bump version to 0.9.0`                              |
 | `***REMOVED***` | Reconstructed from commit body (e.g., `style: apply import sorting`) |
-| `WIP async` | `feat(core): work in progress on async` |
-| `fix typo` | `docs: correct typos in documentation` |
-| `fix lint` | `style: apply code formatting and linting` |
+| `WIP async`     | `feat(core): work in progress on async`                              |
+| `fix typo`      | `docs: correct typos in documentation`                               |
+| `fix lint`      | `style: apply code formatting and linting`                           |
 
 ## Safety Features
 
@@ -180,6 +191,7 @@ Automatic improvements (no API key needed):
 All destructive operations create backups in `~/flext-history-backup-*/` with rollback scripts.
 
 **Rollback:**
+
 ```bash
 cd ~/flext-history-backup-YYYYMMDD-HHMMSS/
 ./ROLLBACK.sh
@@ -188,6 +200,7 @@ cd ~/flext-history-backup-YYYYMMDD-HHMMSS/
 ### Cruft Removal Safety
 
 All cruft removal operations:
+
 - Create backup tags before rewriting
 - Support test mode with temporary clones
 - Show detailed statistics and previews
@@ -212,6 +225,7 @@ pip install git-filter-repo
 ### "Repository was modified during test"
 
 The old `--test-run` was destructive. Use the new safe workflow:
+
 1. Run `--test-run` (now safe, analysis only)
 2. Use `git_cleanup_test_safe.sh` for actual testing
 3. Original repo stays untouched

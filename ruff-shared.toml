@@ -100,7 +100,7 @@ line-length = 88
     ]
     "**/examples/**" = [
         "ANN401",  # any-type - examples can legitimately use Any for flexibility
-        "EXE001",
+        "EXE001",  # shebang - examples are meant to be executable
         "FBT001",  # boolean-type-hint-positional-argument - examples use simple boolean args
         "FBT002",  # boolean-default-value-positional-argument - examples use boolean defaults
         "FIX002",  # line-contains-todo - examples may have legitimate TODOs
@@ -109,7 +109,7 @@ line-length = 88
         "PLR2004", # magic numbers in examples
         "S105",    # hardcoded-password-string - false positives in error code constants
         "S106",    # hardcoded-password-func-arg
-        "T201",    # print
+        "T201",    # print - examples demonstrate output
         "TID252",  # relative-imports
     ]
     "**/exceptions.py" = [
@@ -132,6 +132,9 @@ line-length = 88
         "ANN401", # any-type - examples can legitimately use Any for Pydantic 2 models
         "FBT001", # Boolean positional argument - required by Pydantic field serializers
         "PLC0415", # allow lazy imports in fix circular imports in base level
+    ]
+    "src/flext_ldif/models.py" = [
+        "FBT001", # Boolean positional argument - required by Pydantic field serializers
     ]
     "**/result.py" = [
         "PLC0415", # allow lazy imports in fix circular imports in base level

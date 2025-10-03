@@ -75,7 +75,7 @@ tests/
 - **pytest**: Primary testing framework with fixtures and plugins
 - **pytest-cov**: Coverage reporting and enforcement
 - **pytest-mock**: Mocking and stubbing for unit tests
-- **pytest-*: /testing support
+- \*_pytest-_: /testing support
 - **pytest-xdist**: Parallel test execution for performance
 
 ### **Specialized Testing Tools**
