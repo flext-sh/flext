@@ -122,6 +122,10 @@ Examples:
 
     def _apply_heuristics(self, message: str, commit: CommitInfo) -> str:
         """Apply rule-based conventional commit transformations."""
+        # Sanitized/removed messages - reconstruct from files
+        if message.strip() in ('***REMOVED***', '[REMOVED]', 'REMOVED', ''):
+            return self._reconstruct_from_files(commit)
+
         # Version bump commits
         if message.strip() and all(c in '0123456789.' for c in message.strip()):
             return f"chore(release): bump version to {message.strip()}"
@@ -161,6 +165,68 @@ Examples:
 
         # Fallback: chore
         return f"chore: {message}"
+
+    def _reconstruct_from_files(self, commit: CommitInfo) -> str:
+        """Reconstruct commit message from files changed when original was removed."""
+        # Try to extract meaning from body first
+        body = commit.message.split('\n', 1)[1].strip() if '\n' in commit.message else ''
+
+        if body:
+            # Extract first meaningful line from body
+            for line in body.split('\n'):
+                line = line.strip().lstrip('-').strip()
+                if line and not line.startswith(('🤖', 'Co-Authored', 'Changes:', 'Phase', 'Related')):
+                    # Classify based on content
+                    if 'isort' in line.lower() or 'import' in line.lower():
+                        return "style: apply import sorting and formatting"
+                    elif 'verify' in line.lower() or 'check' in line.lower():
+                        return "test: verify component integration"
+                    elif 'fix' in line.lower():
+                        return f"fix: {line.lower()}"
+                    elif 'add' in line.lower():
+                        return f"feat: {line.lower()}"
+                    elif 'refactor' in line.lower():
+                        return f"refactor: {line.lower()}"
+                    elif 'update' in line.lower() or 'adjust' in line.lower():
+                        return f"chore: {line.lower()}"
+                    # Generic from first line
+                    return f"chore: {line.lower()}"
+
+        # Fallback to file analysis
+        files = commit.files_changed
+
+        if not files:
+            return "chore: update repository"
+
+        # Analyze file patterns
+        has_tests = any('test' in f.lower() for f in files)
+        has_docs = any(f.endswith('.md') or f.endswith('.rst') for f in files)
+        has_config = any(f in ('pyproject.toml', 'setup.py', 'Makefile', '.gitmodules') for f in files)
+        has_src = any('src/' in f for f in files)
+
+        # Determine scope from files
+        scopes = set()
+        for f in files:
+            if 'src/' in f:
+                parts = f.split('/')
+                if len(parts) > 1:
+                    scopes.add(parts[1])
+
+        scope = next(iter(scopes)) if len(scopes) == 1 else None
+
+        # Infer commit type
+        if has_config:
+            return "chore: update project configuration"
+        elif has_docs and len(files) == len([f for f in files if f.endswith(('.md', '.rst'))]):
+            return "docs: update documentation"
+        elif has_tests and len(files) == len([f for f in files if 'test' in f.lower()]):
+            scope_str = f"({scope})" if scope else ""
+            return f"test{scope_str}: add/update tests"
+        elif has_src:
+            scope_str = f"({scope})" if scope else ""
+            return f"feat{scope_str}: implement changes"
+        else:
+            return "chore: update repository"
 
     def batch_rewrite(self, commits: list[CommitInfo],
                      output_file: Path) -> dict[str, str]:
