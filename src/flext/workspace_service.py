@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import (
+from flext_core import (, FlextTypes
     FlextContainer,
     FlextLogger,
     FlextModels,

@@ -10,10 +10,9 @@ usage across the FLEXT ecosystem.
 ZERO TOLERANCE: NO local implementations - uses flext-core FlextHandlers exclusively.
 DOMAIN SEPARATION: Handler patterns belong exclusively to flext-core domain.
 """
-from typing import Self, TypeVar
-
-
 from __future__ import annotations
+
+from typing import Self, TypeVar
 
 import uuid
 from enum import StrEnum
@@ -161,7 +160,7 @@ class FlextApplicationHandlerService[T](FlextService[str]):
         """Initialize handler service with flext-core integration."""
         super().__init__()
         self._logger = FlextLogger(__name__)
-        self._container = FlextContainer.get_global()
+        self._container = FlextContainer._ensure_global_manager().get_or_create()
 
     class _HandlerFactory:
         """Direct access to flext-core handlers - ELIMINATES WRAPPER METHODS."""

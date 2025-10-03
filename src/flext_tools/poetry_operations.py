@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Self
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 
 
 class PoetryOperations:
@@ -33,6 +33,6 @@ class PoetryOperations:
         _ = project_path  # Parameter used for lock file checking
         return FlextResult[bool].ok(data=True)
 
-    def get_outdated_packages(self: Self) -> FlextResult[list[str]]:
+    def get_outdated_packages(self: Self) -> FlextResult[FlextTypes.StringList]:
         """Get outdated packages."""
-        return FlextResult[list[str]].ok([])
+        return FlextResult[FlextTypes.StringList].ok([])

@@ -10,7 +10,11 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 # Import centralized types from flext-core foundation
-from flext_core import FlextTypes, WorkspaceStatus
+from flext_core import FlextTypes
+from flext_core.models import FlextModels
+
+# Import WorkspaceStatus from the correct location
+WorkspaceStatus = FlextModels.WorkspaceStatus
 
 
 class FlextProjectTypes:

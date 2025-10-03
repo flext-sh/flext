@@ -9,10 +9,10 @@ from __future__ import annotations
 import sys
 from typing import Self
 
-from flext_core import FlextResult, FlextService
+from flext_core import FlextResult, FlextService, FlextTypes
 
 
-class FlextStdlibService(FlextService[list[str]]):
+class FlextStdlibService(FlextService[FlextTypes.StringList]):
     """Unified stdlib service with nested helpers.
 
     Single responsibility: Standard library module detection and management.
@@ -22,7 +22,7 @@ class FlextStdlibService(FlextService[list[str]]):
         """Nested helper for module operations."""
 
         @staticmethod
-        def get_stdlib_modules() -> list[str]:
+        def get_stdlib_modules() -> FlextTypes.StringList:
             """Get list of standard library modules."""
             stdlib_modules = [
                 "os",
@@ -52,15 +52,15 @@ class FlextStdlibService(FlextService[list[str]]):
             """Check if module is from standard library."""
             return module_name in FlextStdlibService._ModuleHelper.get_stdlib_modules()
 
-    def execute(self: Self) -> FlextResult[list[str]]:
+    def execute(self: Self) -> FlextResult[FlextTypes.StringList]:
         """Execute stdlib service - FlextService interface."""
         modules = self._ModuleHelper.get_stdlib_modules()
-        return FlextResult[list[str]].ok(modules)
+        return FlextResult[FlextTypes.StringList].ok(modules)
 
-    def get_stdlib_modules(self: Self) -> FlextResult[list[str]]:
+    def get_stdlib_modules(self: Self) -> FlextResult[FlextTypes.StringList]:
         """Get stdlib modules using nested helper."""
         modules = self._ModuleHelper.get_stdlib_modules()
-        return FlextResult[list[str]].ok(modules)
+        return FlextResult[FlextTypes.StringList].ok(modules)
 
     def is_stdlib_module(self, module_name: str) -> FlextResult[bool]:
         """Check if module is stdlib using nested helper."""

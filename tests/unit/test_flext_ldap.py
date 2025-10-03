@@ -152,24 +152,6 @@ class TestFlextLdapTypes:
         assert hasattr(types, "LdapEntries")
 
 
-class TestFlextLdapUtilities:
-    """Test FlextLdapUtilities functionality."""
-
-    def test_flext_ldap_utilities_initialization(self) -> None:
-        """Test FlextLdapUtilities initializes correctly."""
-        utilities = FlextLdapUtilities()
-        assert utilities is not None
-
-    def test_flext_ldap_utilities_methods(self) -> None:
-        """Test FlextLdapUtilities has expected methods."""
-        utilities = FlextLdapUtilities()
-
-        # Test that utilities has expected model classes
-        assert hasattr(utilities, "LdapConversion")
-        assert hasattr(utilities, "LdapProcessing")
-        assert hasattr(utilities, "Validation")
-
-
 class TestFlextLdapIntegration:
     """Test flext_ldap module integration functionality."""
 

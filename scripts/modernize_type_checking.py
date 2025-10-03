@@ -18,6 +18,8 @@ from pathlib import Path
 
 import toml
 
+from flext_core import FlextTypes
+
 # FLEXT projects to modernize (discovered dynamically)
 FLEXT_ROOT = Path("/home/marlonsc/flext")
 
@@ -230,7 +232,7 @@ def update_makefile(project_dir: Path) -> bool:
         return False
 
 
-def modernize_project(project_dir: Path) -> dict[str, bool]:
+def modernize_project(project_dir: Path) -> FlextTypes.BoolDict:
     """Modernize a single project's type checking configuration."""
     print(f"\n🔧 Modernizing {project_dir.name}...")
 

@@ -76,8 +76,7 @@ src/project_namespace/
 │   ├── service.py     # Domain service patterns and operations
 │   └── root_models.py         # RootModel patterns for validation
 │
-├── Application Layer (CQRS/Handlers)
-│   ├── cqrs.py                # FlextCqrs pattern and CQRS foundation
+├── Application Layer (Handlers)
 │   ├── handlers.py            # FlextHandlers command/query abstraction
 │   ├── bus.py                 # FlextBus command routing implementation
 │   ├── handlers.py            # Handler implementations and registry
@@ -513,7 +512,7 @@ import project_name.constants as _constants
 import project_name.models as _models
 # ... other imports
 
-__all__: FlextTypes.Core.StringList = []
+__all__: FlextTypes.StringList = []
 for module in [_constants, _models]:  # Add all modules
     if hasattr(module, "__all__"):
         __all__.extend(module.__all__)

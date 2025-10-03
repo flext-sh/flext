@@ -14,9 +14,9 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
-from flext_core import FlextResult
 from flext_tests import FlextTestsDomains
+
+from flext_core import FlextResult, FlextTypes
 from flext_tools.poetry_validator import PoetryValidator
 
 
@@ -43,7 +43,7 @@ class TestPoetryValidator:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_test_project_data(project_path: str) -> dict[str, object]:
+        def create_test_project_data(project_path: str) -> FlextTypes.Dict:
             """Create test project data."""
             return {
                 "project_path": project_path,
@@ -52,7 +52,7 @@ class TestPoetryValidator:
             }
 
         @staticmethod
-        def create_test_validation_data() -> dict[str, bool]:
+        def create_test_validation_data() -> FlextTypes.BoolDict:
             """Create test validation data."""
             return {
                 "pyproject_exists": True,

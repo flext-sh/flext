@@ -11,6 +11,7 @@ from __future__ import annotations
 import time
 
 import pytest
+
 from flext_core import (
     FlextBus,
     FlextConfig,
@@ -397,14 +398,14 @@ class TestFlextCoreTargeted:
     def test_flext_types_usage(self) -> None:
         """Test FlextTypes usage."""
         # Test basic type usage
-        test_dict: FlextTypes.Core.Dict = {"key": "value"}
+        test_dict: FlextTypes.Dict = {"key": "value"}
         assert isinstance(test_dict, dict)
 
-        test_list: FlextTypes.Core.List = [1, 2, 3]
+        test_list: FlextTypes.List = [1, 2, 3]
         assert isinstance(test_list, list)
 
         # Test config types
-        config_value: FlextTypes.Core.ConfigValue = "config_string"
+        config_value: FlextTypes.ConfigValue = "config_string"
         assert isinstance(config_value, str)
 
     # =============================================================================
@@ -444,11 +445,11 @@ class TestFlextCoreTargeted:
         assert none_result.data is None
 
         # Test empty collections
-        empty_list = FlextResult[list[object]].ok([])
+        empty_list = FlextResult[FlextTypes.List].ok([])
         assert empty_list.is_success
         assert empty_list.data == []
 
-        empty_dict = FlextResult[dict[str, object]].ok({})
+        empty_dict = FlextResult[FlextTypes.Dict].ok({})
         assert empty_dict.is_success
         assert empty_dict.data == {}
 
@@ -494,8 +495,8 @@ class TestFlextCoreTargeted:
         logger = FlextLogger("integration_test")
         FlextBus()
 
-        class IntegrationService(FlextService[dict[str, object]]):
-            def execute(self) -> FlextResult[dict[str, object]]:
+        class IntegrationService(FlextService[FlextTypes.Dict]):
+            def execute(self) -> FlextResult[FlextTypes.Dict]:
                 # Use container
                 container.register("integration_key", "integration_value")
 
@@ -505,7 +506,7 @@ class TestFlextCoreTargeted:
                 # Create result with timestamp
                 timestamp = FlextUtilities.Generators.generate_timestamp()
 
-                return FlextResult[dict[str, object]].ok({
+                return FlextResult[FlextTypes.Dict].ok({
                     "status": "success",
                     "timestamp": timestamp,
                     "container_value": container.get("integration_key").unwrap_or(

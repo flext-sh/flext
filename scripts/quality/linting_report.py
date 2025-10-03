@@ -22,7 +22,7 @@ from typing import cast
 
 from mypy import api as mypy_api
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
 from ..common import discover_projects
@@ -50,7 +50,7 @@ class LintingReport(FlextScript):
     def validate_preconditions(self) -> FlextResult[None]:
         """Validar ferramentas necessárias."""
         required_tools = ["ruff", "mypy"]
-        missing_tools: list[object] = []
+        missing_tools: FlextTypes.List = []
         for tool in required_tools:
             if shutil.which(tool) is None:
                 print_colored(f"❌ {tool.title()} não encontrado", Colors.RED)
@@ -85,7 +85,7 @@ class LintingReport(FlextScript):
             )
 
             # Análise agregada
-            total_stats: dict[str, object] = {
+            total_stats: FlextTypes.Dict = {
                 "projects_analyzed": 0,
                 "total_files": 0,
                 "ruff_issues": 0,
@@ -93,7 +93,7 @@ class LintingReport(FlextScript):
                 "projects_with_issues": 0,
             }
 
-            project_results: dict[str, object] = {}
+            project_results: FlextTypes.Dict = {}
 
             # Analisar cada projeto
             for project_path in projects:
@@ -198,7 +198,7 @@ class LintingReport(FlextScript):
         """Descobrir projetos para analisar."""
         return discover_projects(workspace_root, projects_filter)
 
-    def _run_ruff_analysis(self, project_path: Path) -> dict[str, object]:
+    def _run_ruff_analysis(self, project_path: Path) -> FlextTypes.Dict:
         """Executar análise Ruff."""
         try:
             if not project_path.is_dir():
@@ -227,7 +227,7 @@ class LintingReport(FlextScript):
 
             issues_by_category: dict[str, int] = defaultdict(int)
             issues_by_file: dict[str, int] = defaultdict(int)
-            all_issues: list[object] = []
+            all_issues: FlextTypes.List = []
 
             output_text = stdout_buf.getvalue()
             if output_text:
@@ -254,7 +254,7 @@ class LintingReport(FlextScript):
             print_colored(f"    ⚠️ Erro no Ruff: {e}", Colors.YELLOW)
             return {"total_issues": 0, "by_category": {}, "by_file": {}, "issues": []}
 
-    def _run_mypy_analysis(self, project_path: Path) -> dict[str, object]:
+    def _run_mypy_analysis(self, project_path: Path) -> FlextTypes.Dict:
         """Executar análise MyPy."""
         try:
             if not project_path.is_dir():
@@ -296,7 +296,7 @@ class LintingReport(FlextScript):
     def _print_project_summary(
         self,
         _project_name: str,
-        stats: dict[str, object],
+        stats: FlextTypes.Dict,
         *,
         _detailed: bool,
     ) -> None:
@@ -323,8 +323,8 @@ class LintingReport(FlextScript):
 
     def _print_detailed_issues(
         self,
-        ruff_result: dict[str, object],
-        mypy_result: dict[str, object],
+        ruff_result: FlextTypes.Dict,
+        mypy_result: FlextTypes.Dict,
     ) -> None:
         """Imprimir issues detalhadas."""
         if ruff_result["by_category"] and isinstance(ruff_result["by_category"], dict):
@@ -351,8 +351,8 @@ class LintingReport(FlextScript):
 
     def _print_final_summary(
         self,
-        total_stats: dict[str, object],
-        _project_results: dict[str, object],
+        total_stats: FlextTypes.Dict,
+        _project_results: FlextTypes.Dict,
     ) -> None:
         """Imprimir resumo final."""
         print_colored("\n📊 RESUMO FINAL DO LINTING", Colors.BLUE)
@@ -384,8 +384,8 @@ class LintingReport(FlextScript):
 
     def _save_json_report(
         self,
-        total_stats: dict[str, object],
-        project_results: dict[str, object],
+        total_stats: FlextTypes.Dict,
+        project_results: FlextTypes.Dict,
     ) -> None:
         """Salvar relatório em JSON."""
         report_data = {
@@ -404,8 +404,8 @@ class LintingReport(FlextScript):
 
     def _save_html_report(
         self,
-        total_stats: dict[str, object],
-        project_results: dict[str, object],
+        total_stats: FlextTypes.Dict,
+        project_results: FlextTypes.Dict,
     ) -> None:
         """Salvar relatório em formato HTML."""
         report_path = Path("linting_report.html")
@@ -443,7 +443,7 @@ class LintingReport(FlextScript):
     {
             "".join(
                 f'<div class="project"><h3>{name}</h3> <p>Issues: '
-                f"{cast('int', cast('dict[str, object]', cast('dict', data)['stats'])['ruff_issues']) + cast('int', cast('dict[str, object]', cast('dict', data)['stats'])['mypy_errors'])}"
+                f"{cast('int', cast('FlextTypes.Dict', cast('dict', data)['stats'])['ruff_issues']) + cast('int', cast('FlextTypes.Dict', cast('dict', data)['stats'])['mypy_errors'])}"
                 f"</p></div>"
                 for name, data in project_results.items()
             )

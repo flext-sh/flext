@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Self
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 
 
 class HealthCheckService:
@@ -18,7 +18,9 @@ class HealthCheckService:
     def __init__(self: Self) -> None:
         """Initialize health check service."""
 
-    def run_health_check(self, project_path: str | Path) -> FlextResult[dict[str, str]]:
+    def run_health_check(
+        self, project_path: str | Path
+    ) -> FlextResult[FlextTypes.StringDict]:
         """Run health check."""
         try:
             health_status = {
@@ -26,9 +28,9 @@ class HealthCheckService:
                 "project": str(project_path),
                 "checks_passed": "all",
             }
-            return FlextResult[dict[str, str]].ok(health_status)
+            return FlextResult[FlextTypes.StringDict].ok(health_status)
         except Exception as e:
-            return FlextResult[dict[str, str]].fail(f"Health check failed: {e}")
+            return FlextResult[FlextTypes.StringDict].fail(f"Health check failed: {e}")
 
     def get_system_health(self: Self) -> FlextResult[str]:
         """Get system health status."""

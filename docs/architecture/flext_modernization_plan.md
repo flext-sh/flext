@@ -82,7 +82,7 @@ Repository scan results mapping each package to current dispatcher/context adopt
 | Data Connectors            | flext-ldap              | Yes (`flext-ldap/src/flext_ldap/adapters.py:35`)                           | Yes (`flext-ldap/src/flext_ldap/domain.py:1284`)                           | No  | No      | Yes    | Context not adopted           |
 | Data Connectors            | flext-ldif              | Yes (`flext-ldif/src/flext_ldif/cli.py:16`)                                | No                                                                         | No  | No      | Yes    | Context not adopted           |
 | Data Connectors            | flext-meltano           | Yes (`flext-meltano/src/flext_meltano/executors.py:39`)                    | No                                                                         | No  | No      | Yes    | Context not adopted           |
-| Data Connectors            | flext-oracle-oic-ext    | Yes (`flext-oracle-oic-ext/src/flext_oracle_oic_ext/ext_services.py:58`)   | No                                                                         | No  | No      | Yes    | Context not adopted           |
+| Data Connectors            | flext-oracle-oic    | Yes (`flext-oracle-oic/src/flext_oracle_oic/ext_services.py:58`)   | No                                                                         | No  | No      | Yes    | Context not adopted           |
 | Data Connectors            | flext-oracle-wms        | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
 | Data Connectors            | flext-tap-ldap          | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
 | Data Connectors            | flext-tap-ldif          | No                                                                         | No                                                                         | No  | No      | Yes    | No domain services registered |
@@ -276,7 +276,7 @@ Caller (CLI, API, connector)
 
 ## Phase 4 — Deprecation & Cleanup (Weeks 11-12)
 
-- Deprecate legacy modules/aliases (FlextProcessors, FlextBus, FlextCqrs, unused mixins) with clear timelines and messaging.
+- Deprecate legacy modules/aliases (FlextProcessors, FlextBus,unused mixins) with clear timelines and messaging.
 - Remove obsolete documentation/examples/tests once downstream adoption reaches threshold.
 - Simplify utility surface (drop unused mixins, consolidate serialization helpers) and update type exports.
 - Finalise long-term maintenance plan (ownership, release cadence, quality gates).

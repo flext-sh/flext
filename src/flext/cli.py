@@ -7,16 +7,15 @@ uses nested classes for organization while maintaining all CLI capabilities.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
-from typing import Self, cast
-
-
 from __future__ import annotations
+
+from typing import Self, cast
 
 import subprocess
 import sys
 from pathlib import Path
 
-from flext_cli import FlextCli, FlextCliApi, FlextCliContext
+from flext_cli import FlextCli, FlextCliApi, FlextCliContext, FlextCliTypes
 from flext_core import FlextLogger, FlextResult, FlextService
 
 
@@ -128,7 +127,12 @@ class FlextControlPanelCli(FlextService[str]):
     ) -> FlextResult[FlextCliContext]:
         """Initialize CLI configuration using FlextResult pattern."""
         try:
-            config = FlextCliContext(profile=profile, debug=debug)
+            # Pass profile and debug through environment_variables
+            environment_variables: FlextCliTypes.Data.CliConfigData = {
+                "profile": profile,
+                "debug": debug,
+            }
+            config = FlextCliContext(environment_variables=environment_variables)
             return FlextResult[FlextCliContext].ok(config)
         except Exception as e:
             return FlextResult[FlextCliContext].fail(

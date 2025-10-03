@@ -20,6 +20,8 @@ from unittest.mock import Mock
 
 import pytest
 
+from flext_core import FlextTypes
+
 # FLEXT Core imports (adjust path if needed)
 try:
     from flext_core import FlextContainer, FlextLogger
@@ -72,7 +74,7 @@ def logger() -> Mock | object:
 
 
 @pytest.fixture
-def sample_data() -> dict[str, object]:
+def sample_data() -> FlextTypes.Dict:
     """Provide standard sample data for testing.
 
     Customize this fixture with data relevant to your domain.
@@ -88,7 +90,7 @@ def sample_data() -> dict[str, object]:
 
 
 @pytest.fixture
-def invalid_data() -> dict[str, object]:
+def invalid_data() -> FlextTypes.Dict:
     """Provide invalid data for error testing.
 
     Use this fixture to test validation and error handling paths.
@@ -108,7 +110,7 @@ def invalid_data() -> dict[str, object]:
 
 # FOR USER/ACCOUNT DOMAIN PROJECTS
 # @pytest.fixture
-# def sample_user_data() -> Dict[str, object]:
+# def sample_user_data() -> FlextTypes.Dict:
 #     """Provide valid user data for testing."""
 #     return {
 #         "name": "Test User",
@@ -119,7 +121,7 @@ def invalid_data() -> dict[str, object]:
 #     }
 
 # @pytest.fixture
-# def invalid_user_data() -> Dict[str, object]:
+# def invalid_user_data() -> FlextTypes.Dict:
 #     """Provide invalid user data for error testing."""
 #     return {
 #         "name": "",  # Empty name
@@ -222,7 +224,7 @@ def invalid_data() -> dict[str, object]:
 #     # Cleanup if needed
 
 # @pytest.fixture
-# def singer_config() -> Dict[str, object]:
+# def singer_config() -> FlextTypes.Dict:
 #     """Provide Singer tap/target configuration."""
 #     return {
 #         "host": "localhost",
@@ -248,7 +250,7 @@ def invalid_data() -> dict[str, object]:
 
 
 @pytest.fixture
-def performance_threshold() -> dict[str, float]:
+def performance_threshold() -> FlextTypes.FloatDict:
     """Provide performance thresholds for benchmark tests.
 
     Customize these values based on your project's performance requirements.
@@ -309,7 +311,7 @@ def mock_repository() -> Mock:
 @pytest.fixture
 def test_environment(
     clean_container: object, logger: object, sample_data: object
-) -> dict[str, object]:
+) -> FlextTypes.Dict:
     """Provide complete test environment with common dependencies.
 
     This is a convenience fixture that combines commonly used fixtures.
@@ -366,7 +368,7 @@ def pytest_configure(config: object) -> None:
     # additional configuration here if needed
 
 
-def pytest_collection_modifyitems(config: object, items: list[object]) -> None:
+def pytest_collection_modifyitems(config: object, items: FlextTypes.List) -> None:
     """Modify collected test items.
 
     This hook can be used to:

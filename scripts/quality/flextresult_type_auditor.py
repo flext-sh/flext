@@ -14,8 +14,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult
-
+from flext_core import FlextResult, FlextTypes
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
 
@@ -84,9 +83,9 @@ class FlextResultTypeAuditor(FlextScript):
             ]
             return any(pattern in file_path for pattern in ignored_patterns)
 
-    def _find_flext_projects(self) -> list[str]:
+    def _find_flext_projects(self) -> FlextTypes.StringList:
         """Encontra todos os projetos flext no workspace usando git submodules."""
-        projects: list[object] = []
+        projects: FlextTypes.List = []
         # Adiciona o projeto raiz (workspace principal)
         projects.append(".")
 
@@ -115,9 +114,9 @@ class FlextResultTypeAuditor(FlextScript):
             ]
             return sorted(fallback_projects)
 
-    def _find_python_files(self, project_dir: str) -> list[str]:
+    def _find_python_files(self, project_dir: str) -> FlextTypes.StringList:
         """Encontra todos os arquivos .py no projeto respeitando .gitignore."""
-        py_files: list[object] = []
+        py_files: FlextTypes.List = []
         project_path = Path(project_dir)
 
         for root, dirs, files in os.walk(project_path):
@@ -138,7 +137,7 @@ class FlextResultTypeAuditor(FlextScript):
     def _check_flextresult_inconsistencies(
         self,
         file_path: str,
-    ) -> list[dict[str, object]]:
+    ) -> list[FlextTypes.Dict]:
         """Verifica inconsistências de FlextResult em um arquivo."""
         try:
             with Path(file_path).open(encoding="utf-8") as f:
@@ -151,7 +150,7 @@ class FlextResultTypeAuditor(FlextScript):
         method_pattern = r"def\s+(\w+)\([^)]*\)\s*->\s*FlextResult\[([^\]]+)\]:"
         return_pattern = r"return\s+FlextResult\.(?:Union[success, error])\(\)"
 
-        issues: list[object] = []
+        issues: FlextTypes.List = []
         lines = content.split("\n")
 
         # Procura por métodos que retornam FlextResult[T] mas fazem return FlextResult.success()
@@ -218,13 +217,13 @@ class FlextResultTypeAuditor(FlextScript):
         print_colored("=" * 80, Colors.CYAN)
 
         projects = self._find_flext_projects()
-        all_issues: list[object] = []
+        all_issues: FlextTypes.List = []
         for project in projects:
             project_name = "workspace-raiz" if project == "." else project
             print_colored(f"\n📁 Analisando projeto: {project_name}", Colors.BLUE)
 
             py_files = self._find_python_files(project)
-            project_issues: list[object] = []
+            project_issues: FlextTypes.List = []
             for file_path in py_files:
                 issues = self._check_flextresult_inconsistencies(file_path)
                 project_issues.extend(issues)

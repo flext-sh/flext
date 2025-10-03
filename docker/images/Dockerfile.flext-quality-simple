@@ -53,7 +53,7 @@ class FlextModels.Entity(BaseModel):
     def validate_domain_rules(self):
         return FlextResult.ok(None)
 
-TAnyDict = Dict[str, object]
+TAnyDict = FlextTypes.Dict
 ' > /app/src/flext_core/__init__.py
 
 # Create exceptions module
