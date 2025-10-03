@@ -2,6 +2,7 @@
 
 Quick reference for git history reorganization tools.
 
+<<<<<<< HEAD
 ## Quick Start (3-Step Safe Process)
 
 ```bash
@@ -13,10 +14,32 @@ Quick reference for git history reorganization tools.
 
 # Step 3: ONLY IF SATISFIED - Apply to real repository
 ./git_cleanup_orchestrator.sh --full-cleanup
+=======
+## Quick Start
+
+```bash
+# 1. Set API key
+export ANTHROPIC_API_KEY="your-key-here"
+
+# 2. Test on one submodule first
+./git_cleanup_orchestrator.sh --test-run
+
+# 3. Review results
+cd flext-grpc && git log --oneline
+
+# 4. If satisfied, run full cleanup
+cd ..
+./git_cleanup_orchestrator.sh --full-cleanup
+
+# 5. Validate and deploy
+git push --force origin main
+git submodule foreach 'git push --force origin main'
+>>>>>>> origin/main
 ```
 
 ## Scripts
 
+<<<<<<< HEAD
 | Script | Purpose | Safe? |
 |--------|---------|-------|
 | `git_cleanup_orchestrator.sh --test-run` | **Analysis only** - Preview changes | ✅ SAFE |
@@ -83,6 +106,17 @@ git log --format='%aN <%aE>' | sort -u
 
 - **Complete Guide**: [../docs/GIT_HISTORY_CLEANUP_GUIDE.md](../docs/GIT_HISTORY_CLEANUP_GUIDE.md)
 - **Cursor AI Integration**: [CURSOR_AI_INTEGRATION.md](CURSOR_AI_INTEGRATION.md)
+=======
+| Script | Purpose | Usage |
+|--------|---------|-------|
+| `git_cleanup_orchestrator.sh` | **Main entry point** | `./git_cleanup_orchestrator.sh --test-run` |
+| `git_history_rewriter.py` | AI commit message rewriting | `python git_history_rewriter.py --repo .` |
+| `git_cleanup_backup.sh` | Backup repositories | `./git_cleanup_backup.sh --all-submodules` |
+
+## Documentation
+
+See [../docs/GIT_HISTORY_CLEANUP_GUIDE.md](../docs/GIT_HISTORY_CLEANUP_GUIDE.md) for comprehensive guide.
+>>>>>>> origin/main
 
 ## Current State
 
@@ -92,6 +126,7 @@ git log --format='%aN <%aE>' | sort -u
 - **Authors**: 5 unique
 - **Submodules**: 32
 
+<<<<<<< HEAD
 ## Heuristic Rules
 
 Automatic improvements (no API key needed):
@@ -110,11 +145,19 @@ Automatic improvements (no API key needed):
 All destructive operations create backups in `~/flext-history-backup-*/` with rollback scripts.
 
 **Rollback:**
+=======
+## Safety
+
+All operations create backups in `~/flext-history-backup-*/` with rollback scripts.
+
+**Rollback**:
+>>>>>>> origin/main
 ```bash
 cd ~/flext-history-backup-YYYYMMDD-HHMMSS/
 ./ROLLBACK.sh
 ```
 
+<<<<<<< HEAD
 ### Multiple Safety Layers
 
 1. **Test mode**: Analysis only, no changes
@@ -148,3 +191,11 @@ The old `--test-run` was destructive. Use the new safe workflow:
 ---
 
 **Remember**: Always test in temporary clone before applying to production!
+=======
+## Requirements
+
+```bash
+pip install git-filter-repo anthropic
+export ANTHROPIC_API_KEY="your-key"
+```
+>>>>>>> origin/main

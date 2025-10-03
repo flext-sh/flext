@@ -5,6 +5,7 @@
 #
 # This maps all author variations to their canonical identities.
 
+<<<<<<< HEAD
 # Marlon Costa (primary maintainer) - Canonical identity
 Marlon Costa <marlonsc@gmail.com> marlon-costa-dc <128386606+marlon-costa-dc@users.noreply.github.com>
 
@@ -15,3 +16,14 @@ Marlon Costa <marlonsc@gmail.com> Cursor Agent <cursoragent@cursor.com>
 
 # Test/Development accounts - Map to Marlon Costa
 Marlon Costa <marlonsc@gmail.com> Test User <test@example.com>
+=======
+# Marlon Costa (primary maintainer)
+marlon-costa-dc <128386606+marlon-costa-dc@users.noreply.github.com>
+
+# AI Assistants - Normalize to consistent identities
+Claude Code <noreply@anthropic.com> Claude <claude@anthropic.com>
+Cursor Agent <cursoragent@cursor.com>
+
+# Test/Development accounts
+# Test User <test@example.com>  # Keep as-is for test commits
+>>>>>>> origin/main
