@@ -13,15 +13,16 @@ Complete repository cleanup with maximum safety:
 - All safety guards and validation
 
 Usage:
-    python3 scripts/git_ultimate_cleanup.py --test                # Test all functions
-    python3 scripts/git_ultimate_cleanup.py --detect-cruft        # Detect additional cruft
-    python3 scripts/git_ultimate_cleanup.py --dry-run             # Simulate cleanup
-    python3 scripts/git_ultimate_cleanup.py                       # Main repo
-    python3 scripts/git_ultimate_cleanup.py --all                 # Main + submodules
-    python3 scripts/git_ultimate_cleanup.py --push                # Cleanup + push main
-    python3 scripts/git_ultimate_cleanup.py --all --push-all      # All + push all
-    python3 scripts/git_ultimate_cleanup.py --backup-only         # Just backup
-    python3 scripts/git_ultimate_cleanup.py --restore-remotes     # Just restore remotes
+    python3 scripts/git_ultimate_cleanup.py --test                           # Test all functions
+    python3 scripts/git_ultimate_cleanup.py --detect-cruft                   # Detect additional cruft
+    python3 scripts/git_ultimate_cleanup.py --workspace-report REPORT.md     # Generate workspace report
+    python3 scripts/git_ultimate_cleanup.py --dry-run                        # Simulate cleanup
+    python3 scripts/git_ultimate_cleanup.py                                  # Main repo
+    python3 scripts/git_ultimate_cleanup.py --all                            # Main + submodules
+    python3 scripts/git_ultimate_cleanup.py --push                           # Cleanup + push main
+    python3 scripts/git_ultimate_cleanup.py --all --push-all                 # All + push all
+    python3 scripts/git_ultimate_cleanup.py --backup-only                    # Just backup
+    python3 scripts/git_ultimate_cleanup.py --restore-remotes                # Just restore remotes
 """
 
 import argparse
@@ -838,20 +839,23 @@ def callback(commit, metadata):
 
         return deletion_counts
 
-    def detect_additional_cruft(self) -> dict[str, list[str]]:
+    def detect_additional_cruft(self, silent: bool = False) -> dict[str, list[str]]:
         """Detect additional cruft patterns from git history and .gitignore."""
-        print(f"\n{'='*70}")
-        print("🔍 DETECTING ADDITIONAL CRUFT PATTERNS")
-        print(f"{'='*70}\n")
+        if not silent:
+            print(f"\n{'='*70}")
+            print("🔍 DETECTING ADDITIONAL CRUFT PATTERNS")
+            print(f"{'='*70}\n")
 
         detected = {
             'gitignore_patterns': [],
             'historical_removals': [],
-            'recommended_patterns': []
+            'recommended_patterns': [],
+            'repo_name': self.repo_path.name
         }
 
         # 1. Analyze .gitignore
-        print("1️⃣  Analyzing .gitignore patterns...")
+        if not silent:
+            print("1️⃣  Analyzing .gitignore patterns...")
         gitignore_patterns = self.analyze_gitignore()
 
         # Find patterns in .gitignore that aren't in CRUFT_PATTERNS
@@ -873,11 +877,13 @@ def callback(commit, metadata):
                 new_from_gitignore.append(pattern)
 
         detected['gitignore_patterns'] = new_from_gitignore
-        print(f"   Found {len(gitignore_patterns)} total .gitignore patterns")
-        print(f"   Detected {len(new_from_gitignore)} new patterns not in current cruft list")
+        if not silent:
+            print(f"   Found {len(gitignore_patterns)} total .gitignore patterns")
+            print(f"   Detected {len(new_from_gitignore)} new patterns not in current cruft list")
 
         # 2. Analyze historical removals
-        print("2️⃣  Analyzing git history for frequently removed files...")
+        if not silent:
+            print("2️⃣  Analyzing git history for frequently removed files...")
         deletion_counts = self.analyze_historical_removals()
 
         # Find patterns that appear in deletion history
@@ -911,11 +917,16 @@ def callback(commit, metadata):
                 new_from_history.append(f"{pattern} (removed {count}x)")
 
         detected['historical_removals'] = new_from_history
-        print(f"   Analyzed {len(deletion_counts)} deleted files")
-        print(f"   Detected {len(new_from_history)} frequently removed patterns")
+        detected['total_gitignore_patterns'] = len(gitignore_patterns)
+        detected['total_deletions'] = len(deletion_counts)
+
+        if not silent:
+            print(f"   Analyzed {len(deletion_counts)} deleted files")
+            print(f"   Detected {len(new_from_history)} frequently removed patterns")
 
         # 3. Generate recommendations
-        print("3️⃣  Generating recommendations...")
+        if not silent:
+            print("3️⃣  Generating recommendations...")
 
         # Combine and deduplicate
         recommended = set()
@@ -933,9 +944,13 @@ def callback(commit, metadata):
 
         detected['recommended_patterns'] = sorted(list(recommended))
 
-        print(f"   Generated {len(detected['recommended_patterns'])} recommended patterns")
+        if not silent:
+            print(f"   Generated {len(detected['recommended_patterns'])} recommended patterns")
 
-        # 4. Display results
+        # 4. Display results (skip if silent)
+        if silent:
+            return detected
+
         print(f"\n{'='*70}")
         print("📊 DETECTION RESULTS")
         print(f"{'='*70}\n")
@@ -977,6 +992,174 @@ def callback(commit, metadata):
 
         return detected
 
+    def generate_workspace_cruft_report(self, output_file: Path) -> None:
+        """Generate comprehensive cruft detection report for entire workspace."""
+        from datetime import datetime
+
+        print(f"\n{'='*70}")
+        print("🔍 WORKSPACE-WIDE CRUFT DETECTION")
+        print(f"{'='*70}\n")
+
+        all_results = []
+
+        # Analyze main repository
+        print(f"📁 Analyzing main repository: {self.repo_path.name}")
+        main_result = self.detect_additional_cruft(silent=True)
+        all_results.append(main_result)
+        print(f"   ✅ Complete")
+
+        # Analyze all submodules
+        submodules = self.get_submodules()
+        if submodules:
+            print(f"\n📦 Analyzing {len(submodules)} submodules...")
+            for i, submodule in enumerate(submodules, 1):
+                print(f"   [{i:2d}/{len(submodules)}] {submodule.name}...", end=" ")
+                try:
+                    sub_cleanup = GitUltimateCleanup(submodule)
+                    sub_result = sub_cleanup.detect_additional_cruft(silent=True)
+                    all_results.append(sub_result)
+                    print("✅")
+                except Exception as e:
+                    print(f"❌ Error: {e}")
+
+        # Aggregate results
+        print(f"\n📊 Aggregating results from {len(all_results)} repositories...")
+
+        pattern_frequency = {}
+        repos_by_pattern = {}
+
+        for result in all_results:
+            for pattern in result['recommended_patterns']:
+                pattern_frequency[pattern] = pattern_frequency.get(pattern, 0) + 1
+                if pattern not in repos_by_pattern:
+                    repos_by_pattern[pattern] = []
+                repos_by_pattern[pattern].append(result['repo_name'])
+
+        # Sort by frequency
+        sorted_patterns = sorted(pattern_frequency.items(), key=lambda x: x[1], reverse=True)
+
+        # Generate markdown report
+        print(f"📝 Generating report: {output_file}")
+
+        report = []
+        report.append("# FLEXT Workspace Cruft Detection Report\n")
+        report.append(f"**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        report.append(f"**Repositories Analyzed**: {len(all_results)}\n")
+        report.append(f"**Current CRUFT_PATTERNS**: {len(self.CRUFT_PATTERNS)}\n\n")
+
+        report.append("---\n\n")
+
+        # Executive Summary
+        report.append("## 📊 Executive Summary\n\n")
+
+        total_gitignore = sum(r.get('total_gitignore_patterns', 0) for r in all_results)
+        total_deletions = sum(r.get('total_deletions', 0) for r in all_results)
+        total_new_patterns = sum(len(r.get('gitignore_patterns', [])) for r in all_results)
+        total_recommended = len(pattern_frequency)
+
+        report.append(f"- **Total .gitignore patterns analyzed**: {total_gitignore:,}\n")
+        report.append(f"- **Total historical deletions analyzed**: {total_deletions:,}\n")
+        report.append(f"- **New patterns detected**: {total_new_patterns:,}\n")
+        report.append(f"- **Unique recommended patterns**: {total_recommended}\n\n")
+
+        # Pattern Frequency Analysis
+        report.append("## 🎯 Recommended Patterns by Frequency\n\n")
+        report.append("Patterns appearing in multiple repositories (sorted by frequency):\n\n")
+        report.append("| # | Pattern | Repos | Found In |\n")
+        report.append("|---|---------|-------|----------|\n")
+
+        for i, (pattern, count) in enumerate(sorted_patterns[:50], 1):  # Top 50
+            repos_str = ", ".join(repos_by_pattern[pattern][:3])
+            if len(repos_by_pattern[pattern]) > 3:
+                repos_str += f", +{len(repos_by_pattern[pattern])-3} more"
+            report.append(f"| {i} | `{pattern}` | {count} | {repos_str} |\n")
+
+        if len(sorted_patterns) > 50:
+            report.append(f"\n*... and {len(sorted_patterns) - 50} more patterns*\n")
+
+        report.append("\n")
+
+        # High-Priority Patterns
+        report.append("## 🔥 High-Priority Patterns\n\n")
+        report.append("Patterns found in 5+ repositories (should be added to global CRUFT_PATTERNS):\n\n")
+
+        high_priority = [p for p, c in sorted_patterns if c >= 5]
+        if high_priority:
+            report.append("```python\n")
+            report.append("# Add to CRUFT_PATTERNS in git_ultimate_cleanup.py:\n")
+            for pattern in high_priority:
+                report.append(f'"{pattern}",\n')
+            report.append("```\n\n")
+        else:
+            report.append("*No patterns found in 5+ repositories*\n\n")
+
+        # Per-Repository Breakdown
+        report.append("## 📁 Per-Repository Analysis\n\n")
+
+        for result in sorted(all_results, key=lambda x: len(x.get('recommended_patterns', [])), reverse=True):
+            repo_name = result['repo_name']
+            recommended = result.get('recommended_patterns', [])
+            gitignore_count = result.get('total_gitignore_patterns', 0)
+            deletions_count = result.get('total_deletions', 0)
+
+            if not recommended:
+                continue  # Skip repos with no recommendations
+
+            report.append(f"### {repo_name}\n\n")
+            report.append(f"- **.gitignore patterns**: {gitignore_count}\n")
+            report.append(f"- **Historical deletions**: {deletions_count}\n")
+            report.append(f"- **New patterns detected**: {len(recommended)}\n\n")
+
+            if recommended:
+                report.append("<details>\n")
+                report.append(f"<summary><b>Show {len(recommended)} patterns</b></summary>\n\n")
+                for pattern in recommended:
+                    report.append(f"- `{pattern}`\n")
+                report.append("\n</details>\n\n")
+
+        # Repos with no new patterns
+        clean_repos = [r['repo_name'] for r in all_results if not r.get('recommended_patterns', [])]
+        if clean_repos:
+            report.append("## ✅ Clean Repositories\n\n")
+            report.append("Repositories with no additional cruft patterns detected:\n\n")
+            for repo in clean_repos:
+                report.append(f"- {repo}\n")
+            report.append("\n")
+
+        # Action Items
+        report.append("## 📋 Action Items\n\n")
+        report.append("1. **Review high-priority patterns** (5+ repos) and add to global CRUFT_PATTERNS\n")
+        report.append("2. **Evaluate repo-specific patterns** for local .gitignore updates\n")
+        report.append("3. **Run cleanup** with updated patterns:\n")
+        report.append("   ```bash\n")
+        report.append("   python3 scripts/git_ultimate_cleanup.py --all --push-all\n")
+        report.append("   ```\n\n")
+
+        # Statistics
+        report.append("## 📈 Detection Statistics\n\n")
+        report.append("| Repository | .gitignore | Deletions | New Patterns |\n")
+        report.append("|------------|------------|-----------|---------------|\n")
+
+        for result in sorted(all_results, key=lambda x: x['repo_name']):
+            repo_name = result['repo_name']
+            gitignore = result.get('total_gitignore_patterns', 0)
+            deletions = result.get('total_deletions', 0)
+            new_patterns = len(result.get('recommended_patterns', []))
+            report.append(f"| {repo_name} | {gitignore} | {deletions} | {new_patterns} |\n")
+
+        report.append("\n---\n\n")
+        report.append(f"*Report generated by git_ultimate_cleanup.py at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n")
+
+        # Write report
+        output_file.write_text("".join(report))
+
+        print(f"\n✅ Report generated: {output_file}")
+        print(f"\n📊 Summary:")
+        print(f"   • Repositories analyzed: {len(all_results)}")
+        print(f"   • Unique patterns found: {len(pattern_frequency)}")
+        print(f"   • High-priority patterns (5+ repos): {len(high_priority) if high_priority else 0}")
+        print()
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -992,6 +1175,7 @@ def main():
     parser.add_argument("--push", action="store_true", help="Push to GitHub after cleanup")
     parser.add_argument("--push-all", action="store_true", help="Push main + all submodules to GitHub")
     parser.add_argument("--detect-cruft", action="store_true", help="Detect additional cruft patterns from history and .gitignore")
+    parser.add_argument("--workspace-report", type=str, metavar="FILE", help="Generate workspace-wide cruft detection report (e.g., CRUFT_REPORT.md)")
 
     args = parser.parse_args()
 
@@ -1011,6 +1195,12 @@ def main():
     # Detect additional cruft
     if args.detect_cruft:
         cleanup.detect_additional_cruft()
+        sys.exit(0)
+
+    # Generate workspace report
+    if args.workspace_report:
+        output_file = Path(args.workspace_report)
+        cleanup.generate_workspace_cruft_report(output_file)
         sys.exit(0)
 
     # Just restore remotes
