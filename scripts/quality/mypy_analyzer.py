@@ -14,9 +14,8 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from mypy import api as mypy_api
-
 from flext_core import FlextTypes
+from mypy import api as mypy_api
 
 
 def _run_mypy_api(args: FlextTypes.StringList) -> tuple[int, str, str]:

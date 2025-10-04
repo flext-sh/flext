@@ -9,9 +9,9 @@ import argparse
 import sys
 from pathlib import Path
 
+from flext_core import FlextResult
 from flext_tests import FlextTestDocker
 
-from flext_core import FlextResult
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
 
@@ -73,7 +73,9 @@ class OracleE2ETestRunner(FlextScript):
 
             # Oracle E2E test functionality to be implemented
             # Will use flext_tools.testing for E2E operations
-            results = FlextResult[dict].fail("E2E test execution not yet implemented")
+            results = FlextResult[FlextTypes.Dict].fail(
+                "E2E test execution not yet implemented"
+            )
 
             if results.is_success:
                 result_data = results.unwrap()

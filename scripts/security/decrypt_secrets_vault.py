@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextResult, FlextTypes
+
 from flext_tools import Colors, ScriptMetadata, SecretVaultDecryptor, print_colored
 
 from ._base_security_script import BaseSecurityScript

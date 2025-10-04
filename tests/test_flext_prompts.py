@@ -12,7 +12,6 @@ from __future__ import annotations
 from unittest.mock import patch
 
 from flext_cli.prompts import FlextCliPrompts
-
 from flext_core import FlextLogger, FlextTypes
 
 

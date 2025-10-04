@@ -1,53 +1,67 @@
-"""FLEXT Tools - Utility modules for FLEXT ecosystem.
+"""FLEXT Tools - Consolidated workspace tools library.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
+Unified entry point consolidating 85+ scripts into 6 tool modules + utilities.
 """
 
-from flext_tools.backup import BackupManager
-from flext_tools.colors import Colors, FlextColorService, colorize, print_colored
-from flext_tools.config_manager import ConfigurationManager
-from flext_tools.conflicts import ConflictAnalyzer
-from flext_tools.discovery_base import DependencyDiscovery
-from flext_tools.documentation_generator import DocumentationGenerator
-from flext_tools.duplicates import CodeDuplicateAnalyzer
-from flext_tools.health_check import HealthCheckService
-from flext_tools.lint_fixer import GradualLintFixer
-from flext_tools.monitoring_manager import MonitoringManager
-from flext_tools.mypy_checker import MyPyChecker
-from flext_tools.observability import FlextObservabilityService
-from flext_tools.poetry_operations import PoetryOperations
-from flext_tools.poetry_validator import PoetryValidator
-from flext_tools.quality_gateway import QualityGateway
-from flext_tools.rollback import RollbackManager
-from flext_tools.script_base import FlextScriptService
-from flext_tools.security import FlextSecurityService
-from flext_tools.ssl_manager import SSLManager
-from flext_tools.stdlib import get_stdlib_modules, is_stdlib_module
+#  Unified API (PRIMARY IMPORT)
+from flext_tools.api import FlextTools, FlextToolsAPI
+
+# Tool modules (6 unified modules consolidating 85+ scripts)
+from flext_tools.architecture_tools import FlextArchitectureTools
+
+# Namespace classes
+from flext_tools.constants import FlextToolsConstants
+from flext_tools.dependency_tools import FlextDependencyTools
+from flext_tools.exceptions import FlextToolsExceptions
+from flext_tools.git_tools import FlextGitTools
+from flext_tools.models import FlextToolsModels
+from flext_tools.optimizer_tools import FlextOptimizerTools
+from flext_tools.protocols import FlextToolsProtocols
+from flext_tools.quality_tools import FlextQualityTools
+from flext_tools.typings import FlextToolsTypes
+
+# Utilities (consolidated from colors, paths, stdlib)
+from flext_tools.utilities import (
+    Colors,
+    FlextToolsUtilities,
+    colorize,
+    get_project_root,
+    get_stdlib_modules,
+    is_stdlib_module,
+    normalize_path,
+    print_colored,
+    should_ignore_path,
+)
+from flext_tools.validation_tools import FlextValidationTools
 
 __all__ = [
-    "BackupManager",
-    "CodeDuplicateAnalyzer",
     "Colors",
-    "ConfigurationManager",
-    "ConflictAnalyzer",
-    "DependencyDiscovery",
-    "DocumentationGenerator",
-    "FlextColorService",
-    "FlextObservabilityService",
-    "FlextScriptService",
-    "FlextSecurityService",
-    "GradualLintFixer",
-    "HealthCheckService",
-    "MonitoringManager",
-    "MyPyChecker",
-    "PoetryOperations",
-    "PoetryValidator",
-    "QualityGateway",
-    "RollbackManager",
-    "SSLManager",
+    "FlextArchitectureTools",
+    "FlextDependencyTools",
+    # Tool modules
+    "FlextGitTools",
+    "FlextOptimizerTools",
+    "FlextQualityTools",
+    # PRIMARY API
+    "FlextTools",
+    "FlextToolsAPI",
+    # Namespace classes
+    "FlextToolsConstants",
+    "FlextToolsExceptions",
+    "FlextToolsModels",
+    "FlextToolsProtocols",
+    "FlextToolsTypes",
+    # Utilities
+    "FlextToolsUtilities",
+    "FlextValidationTools",
     "colorize",
+    "get_project_root",
     "get_stdlib_modules",
     "is_stdlib_module",
+    "normalize_path",
     "print_colored",
+    "should_ignore_path",
 ]

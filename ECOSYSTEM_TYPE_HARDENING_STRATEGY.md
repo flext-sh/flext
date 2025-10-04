@@ -30,10 +30,10 @@
 **Example**:
 ```python
 # ❌ BROKEN - Pyrefly doesn't recognize computed_field as property
-return dn_model.normalized_value  # Type: BoundMethod
+return dn_model.normalized_value
 
 # ✅ FIXED - Explicit str() cast
-return str(dn_model.normalized_value)  # Type: str
+return str(dn_model.normalized_value)
 ```
 
 **Auto-Fix Pattern**:
@@ -51,7 +51,7 @@ grep -rn "@computed_field" --include="*.py" -A5 | grep "return.*\."
 **Example**:
 ```python
 # ❌ BROKEN - Wrong return type annotation
-def items(self) -> dict[str, object]:
+def items(self) -> FlextTypes.Dict:
     return self.attributes.items()  # Returns dict_items, not dict
 
 # ✅ FIXED - Correct return type
@@ -98,7 +98,7 @@ grep -rn "class.*Protocol" --include="*.py" -A10 | grep -B5 "-> FlextResult" | g
 
 ### Pattern 4: Type Union Inconsistencies (Complex Inference)
 
-**Error**: `dict[str, list[str]] | dict[str, object] | dict[Unknown, Unknown] is not assignable`
+**Error**: `dict[str, list[str]] | FlextTypes.Dict | dict[Unknown, Unknown] is not assignable`
 
 **Example**:
 ```python
@@ -106,7 +106,7 @@ grep -rn "class.*Protocol" --include="*.py" -A10 | grep -B5 "-> FlextResult" | g
 if isinstance(entry, Entry):
     attributes = {name: values.values for name, values in entry.items()}  # dict[str, list[str]]
 else:
-    attributes = {k: v for k, v in entry.items() if k != "dn"}  # dict[str, object]
+    attributes = {k: v for k, v in entry.items() if k != "dn"}  # FlextTypes.Dict
 
 # Later usage causes error
 quirk.process_entry(dn, attributes)  # ❌ Union type not assignable
@@ -114,7 +114,7 @@ quirk.process_entry(dn, attributes)  # ❌ Union type not assignable
 # ✅ FIXED - Explicit type normalization
 from typing import cast
 
-attributes_normalized: dict[str, object] = cast(dict[str, object], attributes)
+attributes_normalized: FlextTypes.Dict = cast(FlextTypes.Dict, attributes)
 quirk.process_entry(dn, attributes_normalized)  # ✅ Consistent type
 ```
 
@@ -161,7 +161,7 @@ grep -rn "^type.*= dict\[" --include="*.py"
 msg = f"Error in {cls.__name__}"  # Pyrefly: "__name__" doesn't exist
 
 # ✅ FIXED - Suppress false positive
-msg = f"Error in {cls.__name__}"  # type: ignore[misc]
+msg = f"Error in {cls.__name__}"
 ```
 
 **Auto-Fix Pattern**:
@@ -188,7 +188,7 @@ def execute(self) -> FlextResult[ProcessedData]:
 def execute(self) -> FlextResult[ProcessedData]:
     validation = self.validate()
     if validation.is_failure:
-        return validation  # type: ignore[return-value]  # Early validation return
+        return validation
 ```
 
 **Auto-Fix Pattern**:

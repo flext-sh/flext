@@ -299,7 +299,7 @@ import json
 
 def flext_data_parse_json_stream(
     stream: Iterator[str]
-) -> Iterator[FlextResult[dict]]:
+) -> Iterator[FlextResult[FlextTypes.Dict]]:
     """Parse JSON objects from line stream."""
     for line in stream:
         line = line.strip()
@@ -343,9 +343,9 @@ def flext_data_flatten_record(
     return flattened
 
 def flext_data_batch_records(
-    records: Iterator[dict],
+    records: Iterator[FlextTypes.Dict],
     batch_size: int = 1000
-) -> Iterator[List[dict]]:
+) -> Iterator[List[FlextTypes.Dict]]:
     """Batch records into chunks."""
     batch = []
 
@@ -442,7 +442,7 @@ from flext_meltano.utils import (
     flext_data_batch_records
 )
 
-def process_json_stream(lines: List[str]) -> FlextResult[List[dict]]:
+def process_json_stream(lines: List[str]) -> FlextResult[List[FlextTypes.Dict]]:
     """Process JSON lines with transformation."""
     processed_records = []
     errors = []
@@ -469,7 +469,7 @@ def process_json_stream(lines: List[str]) -> FlextResult[List[dict]]:
     return FlextResult[None].ok(processed_records)
 
 # Batch processing
-def process_in_batches(records: List[dict]) -> None:
+def process_in_batches(records: List[FlextTypes.Dict]) -> None:
     for batch in flext_data_batch_records(iter(records), batch_size=100):
         print(f"Processing batch of {len(batch)} records")
         # Process batch...
@@ -498,7 +498,7 @@ class AuthService:
         user = User(username=username, password_hash=hash_result.data)
         return FlextResult[None].ok(user)
 
-    def login(self, username: str, password: str) -> FlextResult[dict]:
+    def login(self, username: str, password: str) -> FlextResult[FlextTypes.Dict]:
         # Get user
         user = self.get_user_by_username(username)
         if not user:

@@ -329,7 +329,7 @@ from flext_core.result import FlextResult
 class PipelineExecutor:
     """Execute pipelines with proper error handling."""
 
-    def execute_pipeline(self, pipeline_id: str, config: dict) -> FlextResult[dict]:
+    def execute_pipeline(self, pipeline_id: str, config: dict) -> FlextResult[FlextTypes.Dict]:
         try:
             # 1. Validate pipeline
             validation_result = self._validate_pipeline(pipeline_id)

@@ -13,9 +13,9 @@ import inspect
 import tempfile
 from pathlib import Path
 
+from flext_core import FlextResult, FlextService, FlextTypes
 from flext_tests import FlextTestsDomains
 
-from flext_core import FlextResult, FlextService, FlextTypes
 from flext_tools.paths import FlextPathService
 
 

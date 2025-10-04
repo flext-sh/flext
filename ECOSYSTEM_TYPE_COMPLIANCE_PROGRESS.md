@@ -127,7 +127,7 @@
 
 ### Pattern 4: Type Union Inconsistencies
 - **Occurrence**: Complex if/else with different dict types
-- **Fix**: Cast to consistent type with `cast(dict[str, object], ...)`
+- **Fix**: Cast to consistent type with `cast(FlextTypes.Dict, ...)`
 - **Auto-fixable**: ⚠️ Partial (requires context analysis)
 
 ### Pattern 5: Circuit Breaker/State Types

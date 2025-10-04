@@ -9,12 +9,11 @@ SPDX-License-Identifier: MIT
 """
 from __future__ import annotations
 
+import subprocess  # nosec S404 - Controlled subprocess usage for test execution
+from pathlib import Path
 from typing import Self
 
-import subprocess
-from pathlib import Path
-
-from flext_core.constants import FlextConstants
+from flext_core import FlextLogger, FlextResult, FlextService, FlextTypes, FlextConstants
 
 from flext.application_handlers import (
     FlextApplicationHandlerService,
@@ -22,7 +21,6 @@ from flext.application_handlers import (
 from flext.application_pipeline import (
     FlextApplicationPipelineService,
 )
-from flext_core import FlextLogger, FlextResult, FlextService
 
 
 class FlextUnifiedServices(FlextService[str]):
@@ -33,7 +31,7 @@ class FlextUnifiedServices(FlextService[str]):
     proper integration with flext-core service patterns.
     """
 
-    def __init__(self, **_data: dict[str, object]) -> None:
+    def __init__(self, **_data: FlextTypes.Dict) -> None:
         """Initialize unified services with flext-core integration."""
         super().__init__()
         self._logger = FlextLogger(__name__)
@@ -64,7 +62,7 @@ class FlextUnifiedServices(FlextService[str]):
         @property
         def core_services(self: Self) -> FlextApplicationPipelineService | None:
             """Direct access to flext-core services - ELIMINATES wrapper methods."""
-            return self._services._core_services
+            return self._services._core_services  # nosec SLF001 - Controlled access within class hierarchy
 
     class _PipelineServices:
         """Nested pipeline service coordination."""
@@ -88,18 +86,18 @@ class FlextUnifiedServices(FlextService[str]):
 
         def execute_pipeline_workflow(
             self, pipeline_id: str
-        ) -> FlextResult[dict[str, object]]:
+        ) -> FlextResult[FlextTypes.Dict]:
             """Execute complete pipeline workflow."""
             # Execute pipeline using service - FlextResult handles errors
-            result: FlextResult[dict[str, object]] = self._pipeline_service.execute_pipeline(pipeline_id)
+            result: FlextResult[FlextTypes.Dict] = self._pipeline_service.execute_pipeline(pipeline_id)
 
             if result.is_success:
-                return FlextResult[dict[str, object]].ok({
+                return FlextResult[FlextTypes.Dict].ok({
                     "pipeline_id": pipeline_id,
                     "status": "completed",
                     "result": result.value,
                 })
-            return FlextResult[dict[str, object]].fail(
+            return FlextResult[FlextTypes.Dict].fail(
                 f"Pipeline execution failed: {result.error}"
             )
 
@@ -128,7 +126,7 @@ class FlextUnifiedServices(FlextService[str]):
             coverage: bool = True,
             parallel: bool = True,
             integration: bool = False,
-        ) -> FlextResult[dict[str, object]]:
+        ) -> FlextResult[FlextTypes.Dict]:
             """Unified test execution eliminating CLI duplication."""
             try:
                 # Build test command
@@ -148,12 +146,12 @@ class FlextUnifiedServices(FlextService[str]):
                 if integration:
                     cmd.extend(["-m", "integration"])
 
-                # Execute tests
-                result = subprocess.run(
+                # Execute tests - nosec S603: Controlled command execution for testing
+                result = subprocess.run(  # nosec S603
                     cmd, check=False, capture_output=True, text=True, timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT
                 )
 
-                return FlextResult[dict[str, object]].ok({
+                return FlextResult[FlextTypes.Dict].ok({
                     "returncode": result.returncode,
                     "stdout": result.stdout,
                     "stderr": result.stderr,
@@ -163,11 +161,11 @@ class FlextUnifiedServices(FlextService[str]):
             except Exception as e:
                 error = f"Test execution failed: {e}"
                 self._logger.exception(error)
-                return FlextResult[dict[str, object]].fail(error)
+                return FlextResult[FlextTypes.Dict].fail(error)
 
         def execute_quality_check(
             self, *, fix: bool = False
-        ) -> FlextResult[dict[str, object]]:
+        ) -> FlextResult[FlextTypes.Dict]:
             """Unified quality check eliminating CLI duplication."""
             try:
                 commands: list[tuple[str, list[str]]] = []
@@ -175,19 +173,19 @@ class FlextUnifiedServices(FlextService[str]):
                 lint_cmd = ["ruff", "check", "src/"]
                 if fix:
                     lint_cmd.append("--fix")
-                
+
                 # Type check command
                 commands.extend([
                     ("lint", lint_cmd),
                     ("type", ["mypy", "src/"])
                 ])
 
-                results: dict[str, object] = {}
+                results: FlextTypes.Dict = {}
                 overall_success = True
 
                 for name, cmd in commands:
                     try:
-                        result = subprocess.run(
+                        result = subprocess.run(  # nosec S603 - Controlled quality check execution
                             cmd,
                             check=False,
                             capture_output=True,
@@ -206,7 +204,7 @@ class FlextUnifiedServices(FlextService[str]):
                         results[name] = {"success": False, "error": str(e)}
                         overall_success = False
 
-                return FlextResult[dict[str, object]].ok({
+                return FlextResult[FlextTypes.Dict].ok({
                     "overall_success": overall_success,
                     "checks": results,
                 })
@@ -214,11 +212,11 @@ class FlextUnifiedServices(FlextService[str]):
             except Exception as e:
                 error = f"Quality check failed: {e}"
                 self._logger.exception(error)
-                return FlextResult[dict[str, object]].fail(error)
+                return FlextResult[FlextTypes.Dict].fail(error)
 
         def execute_build_check(
             self, module: str | None = None
-        ) -> FlextResult[dict[str, object]]:
+        ) -> FlextResult[FlextTypes.Dict]:
             """Unified build check eliminating CLI duplication."""
             try:
                 # Check if it's a Python project with pyproject.toml
@@ -234,11 +232,11 @@ class FlextUnifiedServices(FlextService[str]):
                     ):
                         build_cmd.extend(["--outdir", f"dist/{module}"])
 
-                result = subprocess.run(
+                result = subprocess.run(  # nosec S603 - Controlled build execution
                     build_cmd, check=False, capture_output=True, text=True, timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT
                 )
 
-                return FlextResult[dict[str, object]].ok({
+                return FlextResult[FlextTypes.Dict].ok({
                     "returncode": result.returncode,
                     "stdout": result.stdout,
                     "stderr": result.stderr,
@@ -248,7 +246,7 @@ class FlextUnifiedServices(FlextService[str]):
             except Exception as e:
                 error = f"Build check failed: {e}"
                 self._logger.exception(error)
-                return FlextResult[dict[str, object]].fail(error)
+                return FlextResult[FlextTypes.Dict].fail(error)
 
     def create_test_services(self: Self) -> _TestServices:
         """Create unified test service coordinator - ELIMINATES CLI duplication."""

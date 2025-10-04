@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextResult, FlextTypes
+
 from flext_tools import Colors, ScriptMetadata, print_colored
 
 from ._base_security_script import BaseSecurityScript
@@ -45,7 +46,7 @@ class ProductionSecretsScript(BaseSecurityScript):
 
             # Secret generation functionality to be implemented
             # Will use flext_tools.security for secret generation
-            secrets_result = FlextResult[dict].fail(
+            secrets_result = FlextResult[FlextTypes.Dict].fail(
                 "Secret generation not yet implemented",
             )
 

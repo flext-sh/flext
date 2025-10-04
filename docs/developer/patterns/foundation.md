@@ -127,7 +127,7 @@ class FlextResult(Generic[T]):
     data: Optional[T] = None
     error: Optional[str] = None
     error_code: Optional[str] = None
-    error_context: Optional[dict] = None
+    error_context: Optional[FlextTypes.Dict] = None
 
     @classmethod
     def ok(cls, data: T) -> 'FlextResult[T]':

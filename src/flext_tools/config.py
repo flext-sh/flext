@@ -11,9 +11,8 @@ import threading
 from pathlib import Path
 from typing import ClassVar
 
-from pydantic import Field, field_validator
-
 from flext_core import FlextConfig, FlextResult, FlextTypes
+from pydantic import Field, field_validator
 
 
 class FlextToolsConfig(FlextConfig):
@@ -26,6 +25,14 @@ class FlextToolsConfig(FlextConfig):
     - Proper Pydantic 2 validation
     - Singleton pattern with proper typing
     """
+
+    def __init__(self, **data: object) -> None:
+        """Initialize FlextToolsConfig with proper type preservation.
+
+        This override ensures that FlextToolsConfig() returns a FlextToolsConfig instance,
+        not a FlextConfig instance, maintaining proper inheritance behavior.
+        """
+        super().__init__(**data)
 
     # Singleton pattern attributes
     _global_instance: ClassVar[FlextToolsConfig | None] = None

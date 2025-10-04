@@ -181,7 +181,7 @@ class PatternViolationAnalyzer:
                 "context": "Use FlextTypes namespace for semantic type definitions",
                 "guidance": "Replace with FlextTypes.JsonDict",
             },
-            "List[dict]": {
+            "List[FlextTypes.Dict]": {
                 "severity": "HIGH",
                 "pattern": "types.md#data-types",
                 "context": "Use semantic data type definitions",

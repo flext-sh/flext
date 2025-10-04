@@ -181,7 +181,7 @@ class ToolService(FlextService):
         super().__init__()
         self._ldap = FlextLdapClient()  # Use domain library
 
-    async def perform_operation(self, data: dict) -> FlextResult[dict]:
+    async def perform_operation(self, data: dict) -> FlextResult[FlextTypes.Dict]:
         return await self._ldap.operation(data)  # Delegate to domain library
 
 # ❌ FORBIDDEN: Direct third-party import

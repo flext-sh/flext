@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-FLEXT Git Ultimate Cleanup - THE ONLY SCRIPT YOU NEED
+"""FLEXT Git Ultimate Cleanup - THE ONLY SCRIPT YOU NEED.
 
 Complete repository cleanup with maximum safety:
 - External backup (tar.gz + git mirror)
@@ -27,8 +26,8 @@ Usage:
 """
 
 import argparse
+import operator
 import re
-import shutil
 import subprocess
 import sys
 import tarfile
@@ -45,63 +44,158 @@ class GitUltimateCleanup:
     # Cruft patterns to remove from git history
     CRUFT_PATTERNS = [
         # Build artifacts
-        "*.pyc", "*.pyo", "*.py[cod]", "*$py.class",
-        "__pycache__/", "dist/", "build/", "*.egg-info/",
+        "*.pyc",
+        "*.pyo",
+        "*.py[cod]",
+        "*$py.class",
+        "__pycache__/",
+        "dist/",
+        "build/",
+        "*.egg-info/",
         # Cache directories
-        ".ruff_cache/", ".mypy_cache/", ".pytest_cache/", ".serena/cache/", ".serena/",
+        ".ruff_cache/",
+        ".mypy_cache/",
+        ".pytest_cache/",
+        ".serena/cache/",
+        ".serena/",
         # Coverage reports
-        ".coverage", "htmlcov/", ".tox/", ".benchmarks/",
+        ".coverage",
+        "htmlcov/",
+        ".tox/",
+        ".benchmarks/",
         # Log files
-        "*.log", ".meltano/logs/",
+        "*.log",
+        ".meltano/logs/",
         # Backup files
-        "*.backup", "*.bak", "*.orig", "*~", ".*.swp",
-        "*.syntax_backup", "*.broken", "*.tmp.bak",
-        "*_backup", "*_backup_*", "temp_backup",
+        "*.backup",
+        "*.bak",
+        "*.orig",
+        "*~",
+        ".*.swp",
+        "*.syntax_backup",
+        "*.broken",
+        "*.tmp.bak",
+        "*_backup",
+        "*_backup_*",
+        "temp_backup",
         # Temporary/debug scripts and files
-        "temp_*.py", "*_temp.py", "*_temp.md",
-        "fix_*.py", "*_fix.py",
-        "debug_*.py", "investigate_*.py", "validate_*.py",
-        "*_analysis.txt", "*_output.txt", "*_report.txt",
-        "temp_test_*", "analysis_temp/", "report_*/", "reports_*/",
+        "temp_*.py",
+        "*_temp.py",
+        "*_temp.md",
+        "fix_*.py",
+        "*_fix.py",
+        "debug_*.py",
+        "investigate_*.py",
+        "validate_*.py",
+        "*_analysis.txt",
+        "*_output.txt",
+        "*_report.txt",
+        "temp_test_*",
+        "analysis_temp/",
+        "report_*/",
+        "reports_*/",
         # OS-specific
-        ".DS_Store", "Thumbs.db",
+        ".DS_Store",
+        "Thumbs.db",
         # AI/IDE config and reports
-        "CLAUDE*.md", ".cursor/", ".vscode/", ".idea/",
-        "*_report.md", "*_analysis.md", "*_summary.md",
-        "*_REPORT*.md", "*_ANALYSIS*.md", "*_SUMMARY*.md", "*_FINDINGS*.md",
-        "CONFIG_MIGRATION*.md", "DEVELOPMENT_STANDARDS*.md",
-        "DUPLICATION_REPORT*.md", "LINT_CORRECTIONS*.md",
-        "*.ai.md", "*.ai.txt",
+        "CLAUDE*.md",
+        ".cursor/",
+        ".vscode/",
+        ".idea/",
+        "*_report.md",
+        "*_analysis.md",
+        "*_summary.md",
+        "*_REPORT*.md",
+        "*_ANALYSIS*.md",
+        "*_SUMMARY*.md",
+        "*_FINDINGS*.md",
+        "CONFIG_MIGRATION*.md",
+        "DEVELOPMENT_STANDARDS*.md",
+        "DUPLICATION_REPORT*.md",
+        "LINT_CORRECTIONS*.md",
+        "*.ai.md",
+        "*.ai.txt",
         # Archive directories
-        ".archive/", "archive/", "archives/", "backups/",
+        ".archive/",
+        "archive/",
+        "archives/",
+        "backups/",
         # Large data files
-        "*.db", "*.sqlite", "*.sqlite3", "output_files/", "data_buffers/",
-        "*.tar", "*.tar.gz", "*.zip", "*backup*/", "submodule_cleanup_backup/",
+        "*.db",
+        "*.sqlite",
+        "*.sqlite3",
+        "output_files/",
+        "data_buffers/",
+        "*.tar",
+        "*.tar.gz",
+        "*.zip",
+        "*backup*/",
+        "submodule_cleanup_backup/",
         "sync_control.db",  # Large database file
         # Timestamped documentation (AI-generated)
         "*.md_20250*",
         # Frequently deleted markdown patterns (AI-generated documentation)
-        "*_COMPLETE.md", "*_PLAN.md", "*_GUIDE.md", "*_CHECKLIST.md",
-        "*_PROMPT.md", "*_ASSESSMENT.md", "*_CONTROL.md", "*_AUDIT*.md",
-        "*_RESULTS.md", "*_STATUS.md", "*_HANDOVER.md", "*_REFACTORING*.md",
-        "*_REORGANIZATION*.md", "*_STANDARDIZATION*.md", "*_OPTIMIZATION*.md",
-        "*_METHODOLOGY*.md", "*_BASELINE*.md", "*_MODERNIZATION*.md",
-        "RELATORIO_*.md", "COMPREHENSIVE_*.md", "COMPLETE_*.md",
-        "TODO.md", "lint-report.md", "mypy_*.md",
-        "*-report.md", "*-cleanup*.md", "*-summary.md",
+        "*_COMPLETE.md",
+        "*_PLAN.md",
+        "*_GUIDE.md",
+        "*_CHECKLIST.md",
+        "*_PROMPT.md",
+        "*_ASSESSMENT.md",
+        "*_CONTROL.md",
+        "*_AUDIT*.md",
+        "*_RESULTS.md",
+        "*_STATUS.md",
+        "*_HANDOVER.md",
+        "*_REFACTORING*.md",
+        "*_REORGANIZATION*.md",
+        "*_STANDARDIZATION*.md",
+        "*_OPTIMIZATION*.md",
+        "*_METHODOLOGY*.md",
+        "*_BASELINE*.md",
+        "*_MODERNIZATION*.md",
+        "RELATORIO_*.md",
+        "COMPREHENSIVE_*.md",
+        "COMPLETE_*.md",
+        "TODO.md",
+        "lint-report.md",
+        "mypy_*.md",
+        "*-report.md",
+        "*-cleanup*.md",
+        "*-summary.md",
         # High-priority patterns from workspace analysis
-        "*.so", "*.pyd", ".Python",
-        ".installed.cfg", "MANIFEST", "*.manifest",
-        ".env", ".venv", "venv/", "ENV/",
-        "coverage.xml", "coverage.json", "*.cover",
-        ".hypothesis/", "junit.xml", ".nox/",
-        ".pyre/", ".pytype/", ".bandit/",
-        "state.json", "*.state", "*.state.json",
-        "catalog.json", "target_config.json",
-        "dbt.log", "dbt_packages/", "target/",
-        "*.spec", "profiles.yml.bak", "profiles/profiles.yml.backup",
+        "*.so",
+        "*.pyd",
+        ".Python",
+        ".installed.cfg",
+        "MANIFEST",
+        "*.manifest",
+        ".env",
+        ".venv",
+        "venv/",
+        "ENV/",
+        "coverage.xml",
+        "coverage.json",
+        "*.cover",
+        ".hypothesis/",
+        "junit.xml",
+        ".nox/",
+        ".pyre/",
+        ".pytype/",
+        ".bandit/",
+        "state.json",
+        "*.state",
+        "*.state.json",
+        "catalog.json",
+        "target_config.json",
+        "dbt.log",
+        "dbt_packages/",
+        "target/",
+        "*.spec",
+        "profiles.yml.bak",
+        "profiles/profiles.yml.backup",
         "**/.user.yml",
-        "docs/_build/", "site/",
+        "docs/_build/",
+        "site/",
         "Desktop.ini",
     ]
 
@@ -122,7 +216,7 @@ class GitUltimateCleanup:
         r"noreply@anthropic\.com.*",
     ]
 
-    def __init__(self, repo_path: Path, dry_run: bool = False):
+    def __init__(self, repo_path: Path, dry_run: bool = False) -> None:
         self.repo_path = repo_path.resolve()
         self.timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         self.backup_root = Path.home() / f"flext-ultimate-backup-{self.timestamp}"
@@ -138,28 +232,41 @@ class GitUltimateCleanup:
         if not self.dry_run:
             result = subprocess.run(
                 ["git", "-C", str(self.repo_path), "status", "--porcelain"],
-                capture_output=True, text=True, check=False
+                capture_output=True,
+                text=True,
+                check=False,
             )
             if result.stdout.strip():
                 return False, "Uncommitted changes detected. Commit or stash first."
 
         # Check git-filter-repo
-        result = subprocess.run(["which", "git-filter-repo"], capture_output=True, check=False)
+        result = subprocess.run(
+            ["which", "git-filter-repo"], capture_output=True, check=False
+        )
         if result.returncode != 0:
-            return False, "git-filter-repo not installed. Run: pip install git-filter-repo"
+            return (
+                False,
+                "git-filter-repo not installed. Run: pip install git-filter-repo",
+            )
 
         # Check not detached HEAD
         result = subprocess.run(
             ["git", "-C", str(self.repo_path), "symbolic-ref", "-q", "HEAD"],
-            capture_output=True, check=False
+            capture_output=True,
+            check=False,
         )
         if result.returncode != 0:
             return False, "Detached HEAD state. Checkout a branch first."
 
         # Check disk space
-        result = subprocess.run(["df", "-h", str(self.repo_path)], capture_output=True, text=True, check=False)
+        result = subprocess.run(
+            ["df", "-h", str(self.repo_path)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
         if result.returncode == 0:
-            lines = result.stdout.strip().split('\n')
+            lines = result.stdout.strip().split("\n")
             if len(lines) > 1:
                 avail = lines[1].split()[3]
                 print(f"   💾 Available disk space: {avail}")
@@ -168,9 +275,9 @@ class GitUltimateCleanup:
 
     def create_comprehensive_backup(self) -> Path:
         """Create complete external backup with multiple safety layers."""
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print("📦 CREATING COMPREHENSIVE BACKUP")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
         self.backup_root.mkdir(parents=True, exist_ok=True)
         repo_backup = self.backup_root / self.repo_path.name
@@ -187,11 +294,16 @@ class GitUltimateCleanup:
             tar.add(
                 self.repo_path,
                 arcname=self.repo_path.name,
-                filter=lambda t: None if any([
-                    "__pycache__" in t.name, ".pyc" in t.name,
-                    ".ruff_cache" in t.name, ".mypy_cache" in t.name,
-                    ".pytest_cache" in t.name, "htmlcov" in t.name,
-                ]) else t
+                filter=lambda t: None
+                if any([
+                    "__pycache__" in t.name,
+                    ".pyc" in t.name,
+                    ".ruff_cache" in t.name,
+                    ".mypy_cache" in t.name,
+                    ".pytest_cache" in t.name,
+                    "htmlcov" in t.name,
+                ])
+                else t,
             )
 
         size_mb = tar_file.stat().st_size / (1024 * 1024)
@@ -202,7 +314,9 @@ class GitUltimateCleanup:
         mirror_path = repo_backup / f"{self.repo_path.name}.git"
         result = subprocess.run(
             ["git", "clone", "--mirror", str(self.repo_path), str(mirror_path)],
-            capture_output=True, text=True
+            check=False,
+            capture_output=True,
+            text=True,
         )
         if result.returncode == 0:
             print("   ✅ Mirror clone created")
@@ -213,12 +327,22 @@ class GitUltimateCleanup:
         print("3️⃣  Exporting commit history...")
         history_file = repo_backup / "commit-history.txt"
         result = subprocess.run(
-            ["git", "-C", str(self.repo_path), "log", "--all", "--format=%H|%an|%ae|%ad|%s", "--date=iso"],
-            capture_output=True, text=True, check=False
+            [
+                "git",
+                "-C",
+                str(self.repo_path),
+                "log",
+                "--all",
+                "--format=%H|%an|%ae|%ad|%s",
+                "--date=iso",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
         )
         if result.returncode == 0:
             history_file.write_text(result.stdout)
-            lines = len(result.stdout.strip().split('\n'))
+            lines = len(result.stdout.strip().split("\n"))
             print(f"   ✅ Exported {lines} commits")
 
         # 4. Export reflog
@@ -226,7 +350,9 @@ class GitUltimateCleanup:
         reflog_file = repo_backup / "reflog.txt"
         result = subprocess.run(
             ["git", "-C", str(self.repo_path), "reflog", "--format=%H|%gd|%gs"],
-            capture_output=True, text=True, check=False
+            capture_output=True,
+            text=True,
+            check=False,
         )
         if result.returncode == 0:
             reflog_file.write_text(result.stdout)
@@ -237,7 +363,9 @@ class GitUltimateCleanup:
         branch_file = repo_backup / "branches.txt"
         result = subprocess.run(
             ["git", "-C", str(self.repo_path), "branch", "-a"],
-            capture_output=True, text=True, check=False
+            capture_output=True,
+            text=True,
+            check=False,
         )
         if result.returncode == 0:
             branch_file.write_text(result.stdout)
@@ -248,7 +376,9 @@ class GitUltimateCleanup:
         tags_file = repo_backup / "tags.txt"
         result = subprocess.run(
             ["git", "-C", str(self.repo_path), "tag", "-l"],
-            capture_output=True, text=True, check=False
+            capture_output=True,
+            text=True,
+            check=False,
         )
         if result.returncode == 0:
             tags_file.write_text(result.stdout)
@@ -259,7 +389,8 @@ class GitUltimateCleanup:
         safety_tag = f"pre-cleanup-{self.timestamp}"
         subprocess.run(
             ["git", "-C", str(self.repo_path), "tag", safety_tag],
-            check=False, capture_output=True
+            check=False,
+            capture_output=True,
         )
         print(f"   ✅ Tag created: {safety_tag}")
 
@@ -268,18 +399,20 @@ class GitUltimateCleanup:
         self._create_recovery_script(repo_backup, safety_tag, tar_file, mirror_path)
         print("   ✅ Recovery script created")
 
-        print(f"\n✅ Comprehensive backup complete!")
+        print("\n✅ Comprehensive backup complete!")
         print(f"   Location: {repo_backup}")
         print()
 
         return self.backup_root
 
-    def _create_recovery_script(self, backup_dir: Path, safety_tag: str, tar_file: Path, mirror_path: Path):
+    def _create_recovery_script(
+        self, backup_dir: Path, safety_tag: str, tar_file: Path, mirror_path: Path
+    ) -> None:
         """Create recovery script."""
         script = backup_dir / "RECOVER.sh"
-        script.write_text(f'''#!/bin/bash
+        script.write_text(f"""#!/bin/bash
 # FLEXT Repository Recovery Script
-# Created: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+# Created: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 # Source: {self.repo_path}
 
 set -e
@@ -326,15 +459,15 @@ esac
 
 echo ""
 echo "Recovery complete!"
-''')
+""")
         script.chmod(0o755)
 
         # Create README
         readme = backup_dir / "README.md"
-        readme.write_text(f'''# FLEXT Ultimate Backup
+        readme.write_text(f"""# FLEXT Ultimate Backup
 
 ## Backup Information
-- **Created**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+- **Created**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 - **Source**: {self.repo_path}
 - **Safety Tag**: {safety_tag}
 
@@ -383,13 +516,13 @@ wc -l commit-history.txt
 - Multiple recovery options available
 - Safety tag created in repository: {safety_tag}
 - Keep this backup until cleanup is verified!
-''')
+""")
 
     def test_principal_functions(self) -> bool:
         """Test all principal functions without modifying anything."""
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print("🧪 DRY RUN TEST - VALIDATING FUNCTIONS")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
         tests_passed = 0
         tests_failed = 0
@@ -412,7 +545,7 @@ wc -l commit-history.txt
                 print(f"  ✅ PASS: Found git dir at {git_dir}")
                 tests_passed += 1
             else:
-                print(f"  ❌ FAIL: Git dir not found")
+                print("  ❌ FAIL: Git dir not found")
                 tests_failed += 1
         except Exception as e:
             print(f"  ❌ FAIL: {e}")
@@ -421,7 +554,7 @@ wc -l commit-history.txt
         # Test 3: Cruft pattern validation
         print("Test 3: Cruft pattern validation...")
         print(f"  ℹ️  {len(self.CRUFT_PATTERNS)} patterns configured")
-        print(f"  ✅ PASS: Cruft patterns loaded")
+        print("  ✅ PASS: Cruft patterns loaded")
         tests_passed += 1
 
         # Test 4: AI pattern validation
@@ -432,27 +565,27 @@ wc -l commit-history.txt
         for pattern in self.AI_PATTERNS:
             cleaned = re.sub(pattern, "", cleaned, flags=re.IGNORECASE | re.MULTILINE)
         if cleaned != test_msg:
-            print(f"  ✅ PASS: AI patterns working")
+            print("  ✅ PASS: AI patterns working")
             tests_passed += 1
         else:
-            print(f"  ❌ FAIL: AI patterns not working")
+            print("  ❌ FAIL: AI patterns not working")
             tests_failed += 1
 
         # Test 5: Submodule detection
         print("Test 5: Submodule detection...")
         submodules = self.get_submodules()
         print(f"  ℹ️  Found {len(submodules)} submodules")
-        print(f"  ✅ PASS: Submodule detection working")
+        print("  ✅ PASS: Submodule detection working")
         tests_passed += 1
 
         # Test 6: Remote configuration
         print("Test 6: Remote configuration from .gitmodules...")
         gitmodules = self.repo_path / ".gitmodules"
         if gitmodules.exists():
-            print(f"  ✅ PASS: .gitmodules found")
+            print("  ✅ PASS: .gitmodules found")
             tests_passed += 1
         else:
-            print(f"  ⚠️  WARN: No .gitmodules (might be standalone repo)")
+            print("  ⚠️  WARN: No .gitmodules (might be standalone repo)")
             tests_passed += 1
 
         # Test 7: Backup directory creation
@@ -461,7 +594,7 @@ wc -l commit-history.txt
             test_backup = Path.home() / f"flext-test-{self.timestamp}"
             test_backup.mkdir(parents=True, exist_ok=True)
             test_backup.rmdir()
-            print(f"  ✅ PASS: Can create backup directory")
+            print("  ✅ PASS: Can create backup directory")
             tests_passed += 1
         except Exception as e:
             print(f"  ❌ FAIL: {e}")
@@ -472,20 +605,20 @@ wc -l commit-history.txt
         commands = ["git", "git-filter-repo", "tar"]
         all_available = True
         for cmd in commands:
-            result = subprocess.run(["which", cmd], capture_output=True)
+            result = subprocess.run(["which", cmd], check=False, capture_output=True)
             if result.returncode != 0:
                 print(f"  ❌ FAIL: {cmd} not found")
                 all_available = False
         if all_available:
-            print(f"  ✅ PASS: All required commands available")
+            print("  ✅ PASS: All required commands available")
             tests_passed += 1
         else:
             tests_failed += 1
 
         # Summary
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print(f"Test Results: {tests_passed} passed, {tests_failed} failed")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
         if tests_failed > 0:
             print("❌ Some tests failed. Fix issues before running cleanup.")
@@ -496,17 +629,19 @@ wc -l commit-history.txt
 
     def cleanup_repository(self) -> bool:
         """Execute complete repository cleanup."""
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print(f"🔧 CLEANING: {self.repo_path.name}")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
         if self.dry_run:
             print("🧪 DRY RUN MODE - Simulating operations...")
             print()
             print("Would perform:")
             print(f"  🧹 Remove {len(self.CRUFT_PATTERNS)} cruft patterns from history")
-            print(f"  🚫 Clean AI references from all commits")
-            print(f"  ✍️  Normalize all authors to: {self.AUTHOR_NAME} <{self.AUTHOR_EMAIL}>")
+            print("  🚫 Clean AI references from all commits")
+            print(
+                f"  ✍️  Normalize all authors to: {self.AUTHOR_NAME} <{self.AUTHOR_EMAIL}>"
+            )
             print()
             print("✅ Dry run complete (no changes made)")
             return True
@@ -517,9 +652,14 @@ wc -l commit-history.txt
 
         # Build command
         cmd = [
-            "git", "filter-repo", "--force",
-            "--commit-callback", str(callback_script),
-            "--invert-paths", "--paths-from-file", str(cruft_file),
+            "git",
+            "filter-repo",
+            "--force",
+            "--commit-callback",
+            str(callback_script),
+            "--invert-paths",
+            "--paths-from-file",
+            str(cruft_file),
         ]
 
         # Add mailmap
@@ -530,22 +670,22 @@ wc -l commit-history.txt
         # Show what we're doing
         print("Operations:")
         print(f"  🧹 Removing {len(self.CRUFT_PATTERNS)} cruft patterns")
-        print(f"  🚫 Cleaning AI references")
+        print("  🚫 Cleaning AI references")
         print(f"  ✍️  Normalizing author: {self.AUTHOR_NAME} <{self.AUTHOR_EMAIL}>")
         print()
 
         # Execute
         print("Processing commits...")
         try:
-            result = subprocess.run(cmd, cwd=str(self.repo_path))
+            result = subprocess.run(cmd, check=False, cwd=str(self.repo_path))
 
             if result.returncode != 0:
-                print(f"\n❌ Cleanup failed!")
+                print("\n❌ Cleanup failed!")
                 print(f"   Recover: cd {self.backup_root} && ./RECOVER.sh")
                 return False
 
         except KeyboardInterrupt:
-            print(f"\n\n❌ INTERRUPTED!")
+            print("\n\n❌ INTERRUPTED!")
             print(f"   Recover: cd {self.backup_root} && ./RECOVER.sh")
             return False
 
@@ -556,7 +696,9 @@ wc -l commit-history.txt
         # Verify
         result = subprocess.run(
             ["git", "-C", str(self.repo_path), "log", "-1", "--format=%an %ae"],
-            capture_output=True, text=True
+            check=False,
+            capture_output=True,
+            text=True,
         )
         if result.returncode == 0:
             author = result.stdout.strip()
@@ -566,11 +708,13 @@ wc -l commit-history.txt
         # Show statistics
         result = subprocess.run(
             ["git", "-C", str(self.repo_path), "count-objects", "-vH"],
-            capture_output=True, text=True
+            check=False,
+            capture_output=True,
+            text=True,
         )
         if result.returncode == 0:
-            print(f"\n📊 Repository statistics:")
-            for line in result.stdout.strip().split('\n')[:5]:
+            print("\n📊 Repository statistics:")
+            for line in result.stdout.strip().split("\n")[:5]:
                 print(f"   {line}")
 
         print(f"\n✅ {self.repo_path.name} cleaned successfully!")
@@ -582,7 +726,7 @@ wc -l commit-history.txt
         """Create git-filter-repo callback script."""
         patterns_str = ",\n".join([f'        r"{p}"' for p in self.AI_PATTERNS])
 
-        script = f'''#!/usr/bin/env python3
+        script = f"""#!/usr/bin/env python3
 import re
 
 commit_count = 0
@@ -615,7 +759,7 @@ def callback(commit, metadata):
     commit.author_email = AUTHOR_EMAIL
     commit.committer_name = AUTHOR_NAME
     commit.committer_email = AUTHOR_EMAIL
-'''
+"""
 
         git_dir = self._get_git_dir()
         script_path = git_dir / "ultimate-cleanup.py"
@@ -641,15 +785,16 @@ def callback(commit, metadata):
 
     def restore_remotes(self) -> None:
         """Restore git remotes from .gitmodules."""
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print("🔗 RESTORING REMOTES")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
         # Main repo
         main_remote = "git@github.com:flext-sh/flext.git"
         subprocess.run(
             ["git", "-C", str(self.repo_path), "remote", "add", "origin", main_remote],
-            check=False, capture_output=True
+            check=False,
+            capture_output=True,
         )
         print(f"✅ Main: {main_remote}")
 
@@ -661,23 +806,27 @@ def callback(commit, metadata):
 
         result = subprocess.run(
             ["git", "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
-            capture_output=True, text=True
+            check=False,
+            capture_output=True,
+            text=True,
         )
 
         if result.returncode != 0:
             print()
             return
 
-        for line in result.stdout.strip().split('\n'):
+        for line in result.stdout.strip().split("\n"):
             if not line:
                 continue
 
             key, path = line.split()
-            name = key.split('.')[1]
+            name = key.split(".")[1]
 
             url_result = subprocess.run(
                 ["git", "config", "-f", str(gitmodules), f"submodule.{name}.url"],
-                capture_output=True, text=True
+                check=False,
+                capture_output=True,
+                text=True,
             )
 
             if url_result.returncode != 0:
@@ -689,7 +838,8 @@ def callback(commit, metadata):
             if submodule_path.exists():
                 subprocess.run(
                     ["git", "-C", str(submodule_path), "remote", "add", "origin", url],
-                    check=False, capture_output=True
+                    check=False,
+                    capture_output=True,
                 )
                 print(f"✅ {path}")
 
@@ -703,14 +853,16 @@ def callback(commit, metadata):
 
         result = subprocess.run(
             ["git", "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
-            capture_output=True, text=True
+            check=False,
+            capture_output=True,
+            text=True,
         )
 
         if result.returncode != 0:
             return []
 
         submodules = []
-        for line in result.stdout.strip().split('\n'):
+        for line in result.stdout.strip().split("\n"):
             if not line:
                 continue
             path = line.split()[1]
@@ -722,22 +874,24 @@ def callback(commit, metadata):
 
     def push_to_github(self, push_tags: bool = True) -> bool:
         """Push repository to GitHub with force."""
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print(f"🚀 PUSHING TO GITHUB: {self.repo_path.name}")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
         if self.dry_run:
             print("🧪 DRY RUN MODE - Would push:")
-            print(f"  📤 Force push all branches")
+            print("  📤 Force push all branches")
             if push_tags:
-                print(f"  🏷️  Force push all tags")
+                print("  🏷️  Force push all tags")
             print()
             return True
 
         # Check if remote exists
         result = subprocess.run(
             ["git", "-C", str(self.repo_path), "remote", "get-url", "origin"],
-            capture_output=True, text=True
+            check=False,
+            capture_output=True,
+            text=True,
         )
 
         if result.returncode != 0:
@@ -760,7 +914,9 @@ def callback(commit, metadata):
         print("📤 Pushing all branches...")
         result = subprocess.run(
             ["git", "-C", str(self.repo_path), "push", "origin", "--force", "--all"],
-            capture_output=True, text=True
+            check=False,
+            capture_output=True,
+            text=True,
         )
 
         if result.returncode != 0:
@@ -773,8 +929,18 @@ def callback(commit, metadata):
         if push_tags:
             print("🏷️  Pushing all tags...")
             result = subprocess.run(
-                ["git", "-C", str(self.repo_path), "push", "origin", "--force", "--tags"],
-                capture_output=True, text=True
+                [
+                    "git",
+                    "-C",
+                    str(self.repo_path),
+                    "push",
+                    "origin",
+                    "--force",
+                    "--tags",
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
             )
 
             if result.returncode != 0:
@@ -794,9 +960,9 @@ def callback(commit, metadata):
             print("ℹ️  No submodules to push")
             return True
 
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print(f"📦 PUSHING SUBMODULES ({len(submodules)} total)")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
         if self.dry_run:
             print("🧪 DRY RUN MODE - Would push:")
@@ -829,16 +995,16 @@ def callback(commit, metadata):
         patterns = []
         content = gitignore_path.read_text()
 
-        for line in content.split('\n'):
+        for line in content.split("\n"):
             line = line.strip()
             # Skip comments and empty lines
-            if not line or line.startswith('#'):
+            if not line or line.startswith("#"):
                 continue
             # Skip negation patterns
-            if line.startswith('!'):
+            if line.startswith("!"):
                 continue
             # Clean up the pattern
-            pattern = line.rstrip('/')
+            pattern = line.rstrip("/")
             if pattern:
                 patterns.append(pattern)
 
@@ -847,8 +1013,19 @@ def callback(commit, metadata):
     def analyze_historical_removals(self) -> dict[str, int]:
         """Analyze git history to find frequently deleted files (likely cruft)."""
         result = subprocess.run(
-            ["git", "-C", str(self.repo_path), "log", "--all", "--diff-filter=D", "--name-only", "--format="],
-            capture_output=True, text=True, check=False
+            [
+                "git",
+                "-C",
+                str(self.repo_path),
+                "log",
+                "--all",
+                "--diff-filter=D",
+                "--name-only",
+                "--format=",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
         )
 
         if result.returncode != 0:
@@ -856,7 +1033,7 @@ def callback(commit, metadata):
 
         # Count deletion frequency
         deletion_counts = {}
-        for line in result.stdout.strip().split('\n'):
+        for line in result.stdout.strip().split("\n"):
             if not line:
                 continue
             deletion_counts[line] = deletion_counts.get(line, 0) + 1
@@ -866,15 +1043,15 @@ def callback(commit, metadata):
     def detect_additional_cruft(self, silent: bool = False) -> dict[str, list[str]]:
         """Detect additional cruft patterns from git history and .gitignore."""
         if not silent:
-            print(f"\n{'='*70}")
+            print(f"\n{'=' * 70}")
             print("🔍 DETECTING ADDITIONAL CRUFT PATTERNS")
-            print(f"{'='*70}\n")
+            print(f"{'=' * 70}\n")
 
         detected = {
-            'gitignore_patterns': [],
-            'historical_removals': [],
-            'recommended_patterns': [],
-            'repo_name': self.repo_path.name
+            "gitignore_patterns": [],
+            "historical_removals": [],
+            "recommended_patterns": [],
+            "repo_name": self.repo_path.name,
         }
 
         # 1. Analyze .gitignore
@@ -888,7 +1065,7 @@ def callback(commit, metadata):
 
         for pattern in gitignore_patterns:
             # Normalize pattern for comparison
-            normalized = pattern.rstrip('/')
+            normalized = pattern.rstrip("/")
 
             # Check if pattern or similar pattern already exists
             is_new = True
@@ -900,10 +1077,12 @@ def callback(commit, metadata):
             if is_new:
                 new_from_gitignore.append(pattern)
 
-        detected['gitignore_patterns'] = new_from_gitignore
+        detected["gitignore_patterns"] = new_from_gitignore
         if not silent:
             print(f"   Found {len(gitignore_patterns)} total .gitignore patterns")
-            print(f"   Detected {len(new_from_gitignore)} new patterns not in current cruft list")
+            print(
+                f"   Detected {len(new_from_gitignore)} new patterns not in current cruft list"
+            )
 
         # 2. Analyze historical removals
         if not silent:
@@ -911,27 +1090,38 @@ def callback(commit, metadata):
         deletion_counts = self.analyze_historical_removals()
 
         # Find patterns that appear in deletion history
-        frequent_deletions = {path: count for path, count in deletion_counts.items() if count >= 3}
+        frequent_deletions = {
+            path: count for path, count in deletion_counts.items() if count >= 3
+        }
 
         # Extract patterns from frequently deleted files
         pattern_counts = {}
-        for path in frequent_deletions.keys():
+        for path in frequent_deletions:
             # Extract file extension patterns
-            if '.' in path:
-                ext = '*' + path[path.rfind('.'):]
+            if "." in path:
+                ext = "*" + path[path.rfind(".") :]
                 pattern_counts[ext] = pattern_counts.get(ext, 0) + 1
 
             # Extract directory patterns
-            if '/' in path:
-                parts = path.split('/')
+            if "/" in path:
+                parts = path.split("/")
                 for part in parts[:-1]:  # Exclude filename
-                    if part.startswith('.') or part in ['node_modules', '__pycache__', 'dist', 'build']:
+                    if part.startswith(".") or part in {
+                        "node_modules",
+                        "__pycache__",
+                        "dist",
+                        "build",
+                    }:
                         dir_pattern = f"{part}/"
-                        pattern_counts[dir_pattern] = pattern_counts.get(dir_pattern, 0) + 1
+                        pattern_counts[dir_pattern] = (
+                            pattern_counts.get(dir_pattern, 0) + 1
+                        )
 
         # Sort by frequency and filter out existing patterns
         new_from_history = []
-        for pattern, count in sorted(pattern_counts.items(), key=lambda x: x[1], reverse=True):
+        for pattern, count in sorted(
+            pattern_counts.items(), key=operator.itemgetter(1), reverse=True
+        ):
             is_new = True
             for existing in current_patterns_set:
                 if pattern in existing or existing in pattern:
@@ -940,9 +1130,9 @@ def callback(commit, metadata):
             if is_new and count >= 3:  # At least 3 occurrences
                 new_from_history.append(f"{pattern} (removed {count}x)")
 
-        detected['historical_removals'] = new_from_history
-        detected['total_gitignore_patterns'] = len(gitignore_patterns)
-        detected['total_deletions'] = len(deletion_counts)
+        detected["historical_removals"] = new_from_history
+        detected["total_gitignore_patterns"] = len(gitignore_patterns)
+        detected["total_deletions"] = len(deletion_counts)
 
         if not silent:
             print(f"   Analyzed {len(deletion_counts)} deleted files")
@@ -958,37 +1148,39 @@ def callback(commit, metadata):
         # Add high-confidence patterns from .gitignore
         for pattern in new_from_gitignore[:20]:  # Top 20
             # Skip very generic patterns
-            if pattern not in ['*', '**', '.', '..']:
+            if pattern not in {"*", "**", ".", ".."}:
                 recommended.add(pattern)
 
         # Add high-confidence patterns from history
         for entry in new_from_history[:10]:  # Top 10
-            pattern = entry.split(' (')[0]
+            pattern = entry.split(" (")[0]
             recommended.add(pattern)
 
-        detected['recommended_patterns'] = sorted(list(recommended))
+        detected["recommended_patterns"] = sorted(recommended)
 
         if not silent:
-            print(f"   Generated {len(detected['recommended_patterns'])} recommended patterns")
+            print(
+                f"   Generated {len(detected['recommended_patterns'])} recommended patterns"
+            )
 
         # 4. Display results (skip if silent)
         if silent:
             return detected
 
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print("📊 DETECTION RESULTS")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
-        if detected['recommended_patterns']:
+        if detected["recommended_patterns"]:
             print("🎯 RECOMMENDED PATTERNS TO ADD:")
             print()
-            for i, pattern in enumerate(detected['recommended_patterns'], 1):
+            for i, pattern in enumerate(detected["recommended_patterns"], 1):
                 print(f"   {i:2d}. {pattern}")
             print()
             print("To add these patterns, update CRUFT_PATTERNS in the script:")
             print("   CRUFT_PATTERNS = [")
             print("       # ... existing patterns ...")
-            for pattern in detected['recommended_patterns']:
+            for pattern in detected["recommended_patterns"]:
                 print(f'       "{pattern}",')
             print("   ]")
             print()
@@ -1018,9 +1210,9 @@ def callback(commit, metadata):
 
     def update_all_gitignores(self) -> None:
         """Update all .gitignore files in workspace with comprehensive cruft patterns."""
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print("📝 UPDATING ALL .GITIGNORE FILES")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
         # Patterns to add to .gitignore
         gitignore_additions = [
@@ -1192,14 +1384,19 @@ def callback(commit, metadata):
                 continue
 
             # Append new patterns
-            new_content = existing_content.rstrip() + "\n\n" + "\n".join(gitignore_additions) + "\n"
+            new_content = (
+                existing_content.rstrip()
+                + "\n\n"
+                + "\n".join(gitignore_additions)
+                + "\n"
+            )
 
             # Write updated .gitignore
             gitignore_path.write_text(new_content)
             updated_count += 1
             print(f"   ✅ {repo.name}: Updated with {len(gitignore_additions)} lines")
 
-        print(f"\n📊 Summary:")
+        print("\n📊 Summary:")
         print(f"   • Updated: {updated_count} repositories")
         print(f"   • Skipped: {skipped_count} (already updated)")
         print(f"   • Total: {len(repos_to_update)}")
@@ -1209,9 +1406,9 @@ def callback(commit, metadata):
         """Generate comprehensive cruft detection report for entire workspace."""
         from datetime import datetime
 
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print("🔍 WORKSPACE-WIDE CRUFT DETECTION")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
         all_results = []
 
@@ -1219,7 +1416,7 @@ def callback(commit, metadata):
         print(f"📁 Analyzing main repository: {self.repo_path.name}")
         main_result = self.detect_additional_cruft(silent=True)
         all_results.append(main_result)
-        print(f"   ✅ Complete")
+        print("   ✅ Complete")
 
         # Analyze all submodules
         submodules = self.get_submodules()
@@ -1242,21 +1439,25 @@ def callback(commit, metadata):
         repos_by_pattern = {}
 
         for result in all_results:
-            for pattern in result['recommended_patterns']:
+            for pattern in result["recommended_patterns"]:
                 pattern_frequency[pattern] = pattern_frequency.get(pattern, 0) + 1
                 if pattern not in repos_by_pattern:
                     repos_by_pattern[pattern] = []
-                repos_by_pattern[pattern].append(result['repo_name'])
+                repos_by_pattern[pattern].append(result["repo_name"])
 
         # Sort by frequency
-        sorted_patterns = sorted(pattern_frequency.items(), key=lambda x: x[1], reverse=True)
+        sorted_patterns = sorted(
+            pattern_frequency.items(), key=operator.itemgetter(1), reverse=True
+        )
 
         # Generate markdown report
         print(f"📝 Generating report: {output_file}")
 
         report = []
         report.append("# FLEXT Workspace Cruft Detection Report\n")
-        report.append(f"**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        report.append(
+            f"**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+        )
         report.append(f"**Repositories Analyzed**: {len(all_results)}\n")
         report.append(f"**Current CRUFT_PATTERNS**: {len(self.CRUFT_PATTERNS)}\n\n")
 
@@ -1265,26 +1466,34 @@ def callback(commit, metadata):
         # Executive Summary
         report.append("## 📊 Executive Summary\n\n")
 
-        total_gitignore = sum(r.get('total_gitignore_patterns', 0) for r in all_results)
-        total_deletions = sum(r.get('total_deletions', 0) for r in all_results)
-        total_new_patterns = sum(len(r.get('gitignore_patterns', [])) for r in all_results)
+        total_gitignore = sum(r.get("total_gitignore_patterns", 0) for r in all_results)
+        total_deletions = sum(r.get("total_deletions", 0) for r in all_results)
+        total_new_patterns = sum(
+            len(r.get("gitignore_patterns", [])) for r in all_results
+        )
         total_recommended = len(pattern_frequency)
 
-        report.append(f"- **Total .gitignore patterns analyzed**: {total_gitignore:,}\n")
-        report.append(f"- **Total historical deletions analyzed**: {total_deletions:,}\n")
+        report.append(
+            f"- **Total .gitignore patterns analyzed**: {total_gitignore:,}\n"
+        )
+        report.append(
+            f"- **Total historical deletions analyzed**: {total_deletions:,}\n"
+        )
         report.append(f"- **New patterns detected**: {total_new_patterns:,}\n")
         report.append(f"- **Unique recommended patterns**: {total_recommended}\n\n")
 
         # Pattern Frequency Analysis
         report.append("## 🎯 Recommended Patterns by Frequency\n\n")
-        report.append("Patterns appearing in multiple repositories (sorted by frequency):\n\n")
+        report.append(
+            "Patterns appearing in multiple repositories (sorted by frequency):\n\n"
+        )
         report.append("| # | Pattern | Repos | Found In |\n")
         report.append("|---|---------|-------|----------|\n")
 
         for i, (pattern, count) in enumerate(sorted_patterns[:50], 1):  # Top 50
             repos_str = ", ".join(repos_by_pattern[pattern][:3])
             if len(repos_by_pattern[pattern]) > 3:
-                repos_str += f", +{len(repos_by_pattern[pattern])-3} more"
+                repos_str += f", +{len(repos_by_pattern[pattern]) - 3} more"
             report.append(f"| {i} | `{pattern}` | {count} | {repos_str} |\n")
 
         if len(sorted_patterns) > 50:
@@ -1294,14 +1503,17 @@ def callback(commit, metadata):
 
         # High-Priority Patterns
         report.append("## 🔥 High-Priority Patterns\n\n")
-        report.append("Patterns found in 5+ repositories (should be added to global CRUFT_PATTERNS):\n\n")
+        report.append(
+            "Patterns found in 5+ repositories (should be added to global CRUFT_PATTERNS):\n\n"
+        )
 
         high_priority = [p for p, c in sorted_patterns if c >= 5]
         if high_priority:
-            report.append("```python\n")
-            report.append("# Add to CRUFT_PATTERNS in git_ultimate_cleanup.py:\n")
-            for pattern in high_priority:
-                report.append(f'"{pattern}",\n')
+            report.extend((
+                "```python\n",
+                "# Add to CRUFT_PATTERNS in git_ultimate_cleanup.py:\n",
+            ))
+            report.extend(f'"{pattern}",\n' for pattern in high_priority)
             report.append("```\n\n")
         else:
             report.append("*No patterns found in 5+ repositories*\n\n")
@@ -1309,40 +1521,54 @@ def callback(commit, metadata):
         # Per-Repository Breakdown
         report.append("## 📁 Per-Repository Analysis\n\n")
 
-        for result in sorted(all_results, key=lambda x: len(x.get('recommended_patterns', [])), reverse=True):
-            repo_name = result['repo_name']
-            recommended = result.get('recommended_patterns', [])
-            gitignore_count = result.get('total_gitignore_patterns', 0)
-            deletions_count = result.get('total_deletions', 0)
+        for result in sorted(
+            all_results,
+            key=lambda x: len(x.get("recommended_patterns", [])),
+            reverse=True,
+        ):
+            repo_name = result["repo_name"]
+            recommended = result.get("recommended_patterns", [])
+            gitignore_count = result.get("total_gitignore_patterns", 0)
+            deletions_count = result.get("total_deletions", 0)
 
             if not recommended:
                 continue  # Skip repos with no recommendations
 
-            report.append(f"### {repo_name}\n\n")
-            report.append(f"- **.gitignore patterns**: {gitignore_count}\n")
-            report.append(f"- **Historical deletions**: {deletions_count}\n")
-            report.append(f"- **New patterns detected**: {len(recommended)}\n\n")
+            report.extend((
+                f"### {repo_name}\n\n",
+                f"- **.gitignore patterns**: {gitignore_count}\n",
+                f"- **Historical deletions**: {deletions_count}\n",
+                f"- **New patterns detected**: {len(recommended)}\n\n",
+            ))
 
             if recommended:
-                report.append("<details>\n")
-                report.append(f"<summary><b>Show {len(recommended)} patterns</b></summary>\n\n")
-                for pattern in recommended:
-                    report.append(f"- `{pattern}`\n")
+                report.extend((
+                    "<details>\n",
+                    f"<summary><b>Show {len(recommended)} patterns</b></summary>\n\n",
+                ))
+                report.extend(f"- `{pattern}`\n" for pattern in recommended)
                 report.append("\n</details>\n\n")
 
         # Repos with no new patterns
-        clean_repos = [r['repo_name'] for r in all_results if not r.get('recommended_patterns', [])]
+        clean_repos = [
+            r["repo_name"] for r in all_results if not r.get("recommended_patterns", [])
+        ]
         if clean_repos:
-            report.append("## ✅ Clean Repositories\n\n")
-            report.append("Repositories with no additional cruft patterns detected:\n\n")
-            for repo in clean_repos:
-                report.append(f"- {repo}\n")
+            report.extend((
+                "## ✅ Clean Repositories\n\n",
+                "Repositories with no additional cruft patterns detected:\n\n",
+            ))
+            report.extend(f"- {repo}\n" for repo in clean_repos)
             report.append("\n")
 
         # Action Items
         report.append("## 📋 Action Items\n\n")
-        report.append("1. **Review high-priority patterns** (5+ repos) and add to global CRUFT_PATTERNS\n")
-        report.append("2. **Evaluate repo-specific patterns** for local .gitignore updates\n")
+        report.append(
+            "1. **Review high-priority patterns** (5+ repos) and add to global CRUFT_PATTERNS\n"
+        )
+        report.append(
+            "2. **Evaluate repo-specific patterns** for local .gitignore updates\n"
+        )
         report.append("3. **Run cleanup** with updated patterns:\n")
         report.append("   ```bash\n")
         report.append("   python3 scripts/git_ultimate_cleanup.py --all --push-all\n")
@@ -1353,43 +1579,76 @@ def callback(commit, metadata):
         report.append("| Repository | .gitignore | Deletions | New Patterns |\n")
         report.append("|------------|------------|-----------|---------------|\n")
 
-        for result in sorted(all_results, key=lambda x: x['repo_name']):
-            repo_name = result['repo_name']
-            gitignore = result.get('total_gitignore_patterns', 0)
-            deletions = result.get('total_deletions', 0)
-            new_patterns = len(result.get('recommended_patterns', []))
-            report.append(f"| {repo_name} | {gitignore} | {deletions} | {new_patterns} |\n")
+        for result in sorted(all_results, key=operator.itemgetter("repo_name")):
+            repo_name = result["repo_name"]
+            gitignore = result.get("total_gitignore_patterns", 0)
+            deletions = result.get("total_deletions", 0)
+            new_patterns = len(result.get("recommended_patterns", []))
+            report.append(
+                f"| {repo_name} | {gitignore} | {deletions} | {new_patterns} |\n"
+            )
 
-        report.append("\n---\n\n")
-        report.append(f"*Report generated by git_ultimate_cleanup.py at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n")
+        report.extend((
+            "\n---\n\n",
+            f"*Report generated by git_ultimate_cleanup.py at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n",
+        ))
 
         # Write report
-        output_file.write_text("".join(report))
+        output_file.write_text("".join(report), encoding="utf-8")
 
         print(f"\n✅ Report generated: {output_file}")
-        print(f"\n📊 Summary:")
+        print("\n📊 Summary:")
         print(f"   • Repositories analyzed: {len(all_results)}")
         print(f"   • Unique patterns found: {len(pattern_frequency)}")
-        print(f"   • High-priority patterns (5+ repos): {len(high_priority) if high_priority else 0}")
+        print(
+            f"   • High-priority patterns (5+ repos): {len(high_priority) if high_priority else 0}"
+        )
         print()
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="FLEXT Git Ultimate Cleanup - The Only Script You Need",
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--repo", type=Path, default=Path.cwd(), help="Repository path")
-    parser.add_argument("--all", action="store_true", help="Process main + all submodules")
+    parser.add_argument(
+        "--all", action="store_true", help="Process main + all submodules"
+    )
     parser.add_argument("--backup-only", action="store_true", help="Only create backup")
-    parser.add_argument("--restore-remotes", action="store_true", help="Only restore remotes")
-    parser.add_argument("--dry-run", action="store_true", help="Test mode - simulate operations without changes")
-    parser.add_argument("--test", action="store_true", help="Run principal function tests and exit")
-    parser.add_argument("--push", action="store_true", help="Push to GitHub after cleanup")
-    parser.add_argument("--push-all", action="store_true", help="Push main + all submodules to GitHub")
-    parser.add_argument("--detect-cruft", action="store_true", help="Detect additional cruft patterns from history and .gitignore")
-    parser.add_argument("--workspace-report", type=str, metavar="FILE", help="Generate workspace-wide cruft detection report (e.g., CRUFT_REPORT.md)")
-    parser.add_argument("--update-gitignores", action="store_true", help="Update all .gitignore files with comprehensive cruft patterns")
+    parser.add_argument(
+        "--restore-remotes", action="store_true", help="Only restore remotes"
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Test mode - simulate operations without changes",
+    )
+    parser.add_argument(
+        "--test", action="store_true", help="Run principal function tests and exit"
+    )
+    parser.add_argument(
+        "--push", action="store_true", help="Push to GitHub after cleanup"
+    )
+    parser.add_argument(
+        "--push-all", action="store_true", help="Push main + all submodules to GitHub"
+    )
+    parser.add_argument(
+        "--detect-cruft",
+        action="store_true",
+        help="Detect additional cruft patterns from history and .gitignore",
+    )
+    parser.add_argument(
+        "--workspace-report",
+        type=str,
+        metavar="FILE",
+        help="Generate workspace-wide cruft detection report (e.g., CRUFT_REPORT.md)",
+    )
+    parser.add_argument(
+        "--update-gitignores",
+        action="store_true",
+        help="Update all .gitignore files with comprehensive cruft patterns",
+    )
 
     args = parser.parse_args()
 
@@ -1428,9 +1687,9 @@ def main():
         sys.exit(0)
 
     # Validate
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print("🔍 VALIDATION")
-    print(f"{'='*70}\n")
+    print(f"{'=' * 70}\n")
 
     valid, message = cleanup.validate_repository()
     if not valid:
@@ -1440,14 +1699,14 @@ def main():
 
     # Confirm (skip in dry-run)
     if not args.backup_only and not args.dry_run:
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print("⚠️  WARNING")
-        print(f"{'='*70}")
+        print(f"{'=' * 70}")
         print("This will PERMANENTLY modify git history!")
         print(f"Repository: {args.repo}")
-        print(f"Author: Marlon Costa <marlonsc@gmail.com>")
-        print(f"AI references: REMOVED")
-        print(f"Cruft: PURGED from history")
+        print("Author: Marlon Costa <marlonsc@gmail.com>")
+        print("AI references: REMOVED")
+        print("Cruft: PURGED from history")
         if args.all:
             print("Scope: Main repo + ALL submodules")
         print()
@@ -1475,9 +1734,9 @@ def main():
     if args.all:
         submodules = cleanup.get_submodules()
         if submodules:
-            print(f"\n{'='*70}")
+            print(f"\n{'=' * 70}")
             print(f"📦 SUBMODULES ({len(submodules)} total)")
-            print(f"{'='*70}\n")
+            print(f"{'=' * 70}\n")
 
             for submodule in submodules:
                 sub_cleanup = GitUltimateCleanup(submodule, dry_run=args.dry_run)
@@ -1503,20 +1762,20 @@ def main():
                     print("⚠️  Some submodule pushes failed")
                     sys.exit(1)
         else:
-            print(f"\n{'='*70}")
+            print(f"\n{'=' * 70}")
             print("🧪 DRY RUN - WOULD PUSH TO GITHUB")
-            print(f"{'='*70}\n")
+            print(f"{'=' * 70}\n")
             cleanup.push_to_github()
             if args.push_all:
                 cleanup.push_all_submodules()
 
     # Final summary
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     if args.dry_run:
         print("🧪 DRY RUN COMPLETE")
     else:
         print("✅ CLEANUP COMPLETE")
-    print(f"{'='*70}\n")
+    print(f"{'=' * 70}\n")
 
     if args.dry_run:
         print("📋 Dry run complete - no changes made")
@@ -1530,7 +1789,9 @@ def main():
             print("   4. Force push: git push origin --force --all")
             print("   5. Push tags: git push origin --force --tags")
             if args.all:
-                print("   6. Submodules: git submodule foreach 'git push origin --force --all'")
+                print(
+                    "   6. Submodules: git submodule foreach 'git push origin --force --all'"
+                )
         print()
         if backup_path:
             print(f"💾 Backup: {backup_path}")
