@@ -538,8 +538,8 @@ This method extracts common parameters from kwargs to avoid repetition.
 ```python
 @staticmethod
 def _extract_common_kwargs(
-    kwargs: dict[str, object],
-) -> tuple[dict[str, object] | None, str | None, str | None]:
+    kwargs: FlextTypes.Dict,
+) -> tuple[FlextTypes.Dict | None, str | None, str | None]:
     """Extract common kwargs (context, correlation_id, error_code).
 
     Args:
@@ -567,9 +567,9 @@ This method builds the complete context dictionary with domain-specific fields.
 ```python
 @staticmethod
 def _build_context(
-    base_context: dict[str, object] | None,
+    base_context: FlextTypes.Dict | None,
     **domain_fields: object,
-) -> dict[str, object]:
+) -> FlextTypes.Dict:
     """Build context dictionary with domain-specific fields.
 
     Args:

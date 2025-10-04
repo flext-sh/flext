@@ -12,8 +12,9 @@ from __future__ import annotations
 from collections.abc import Sequence
 from pathlib import Path
 
-from flext import FlextWorkspaceService
 from flext_core import FlextLogger
+
+from flext import FlextWorkspaceService
 
 logger = FlextLogger(__name__)
 

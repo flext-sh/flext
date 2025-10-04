@@ -20,9 +20,9 @@ from importlib import import_module
 from pathlib import Path
 from typing import cast
 
+from flext_core import FlextResult, FlextTypes
 from mypy import api as mypy_api
 
-from flext_core import FlextResult, FlextTypes
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
 from ..common import discover_projects

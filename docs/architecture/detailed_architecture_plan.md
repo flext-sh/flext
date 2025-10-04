@@ -33,7 +33,7 @@ OAuthAuthenticator, get_tap_test_class
 # Plugin Development
 class MyTap(Tap):
     def discover_streams(self) -> list[Stream]
-    def get_records(self, context: dict) -> Iterator[dict]
+    def get_records(self, context: dict) -> Iterator[FlextTypes.Dict]
 ```
 
 ### **MELTANO OFERECE:**
@@ -103,7 +103,7 @@ class FlextSingerAdapter:
     def adapt_schema(self, singer_schema: dict) -> FlextResult[FlextSchema]:
         """Converte singer schema para FlextSchema"""
 
-    def adapt_records(self, singer_records: Iterator[dict]) -> Iterator[FlextRecord]:
+    def adapt_records(self, singer_records: Iterator[FlextTypes.Dict]) -> Iterator[FlextRecord]:
         """Converte singer records para FlextRecord"""
 ```
 

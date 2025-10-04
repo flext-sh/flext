@@ -342,7 +342,7 @@ from flext_core import FlextModels.Entity, FlextResult, FlextModels
 
 class Order(FlextModels.Entity):
     customer_id: str
-    items: list[dict]
+    items: list[FlextTypes.Dict]
     total: int = 0
     status: str = "pending"
 

@@ -13,7 +13,6 @@ import math
 import time
 
 import pytest
-
 from flext_core import (
     FlextBus,
     FlextConfig,

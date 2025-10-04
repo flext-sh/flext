@@ -12,10 +12,10 @@ from __future__ import annotations
 import inspect
 from pathlib import Path
 
+from flext_core import FlextResult, FlextService, FlextTypes
 from flext_tests import FlextTestsDomains
 
 from flext import FlextControlPanelCli
-from flext_core import FlextResult, FlextService, FlextTypes
 
 
 class TestFlextControlPanelCli:

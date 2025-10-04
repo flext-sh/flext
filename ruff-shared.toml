@@ -204,10 +204,13 @@ line-length = 88
         "PLW1510",
         "S603",
     ]
+    "src/flext/services.py" = [
+        "S404",  # subprocess import for controlled test execution
+        "S603",  # subprocess calls for controlled testing operations
+        "SLF001", # private member access within class hierarchy
+    ]
     "**/__init__.py" = [
         "F822",    # undefined-name - lazy imports define names at runtime via __getattr__
         "PLC0415", # import-outside-top-level - lazy imports are intentional for circular import prevention
-    ]
-    "__init__.py" = [
         "N999",    # invalid-module-name - project root uses 'flext-auth' for package distribution
     ]

@@ -19,7 +19,6 @@ from collections.abc import Generator
 from unittest.mock import Mock
 
 import pytest
-
 from flext_core import FlextTypes
 
 # FLEXT Core imports (adjust path if needed)

@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextTypes
+
 from flext_tools import Colors, ConflictAnalyzer, print_colored
 
 

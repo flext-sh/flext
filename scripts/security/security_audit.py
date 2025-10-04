@@ -62,6 +62,7 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextResult, FlextTypes
+
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
 # Note: SecurityViolation and scan_flext_ecosystem defined locally to avoid import issues

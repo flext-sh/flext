@@ -75,31 +75,32 @@ scripts/
 | Project | Status | Coverage | Verified | Notes |
 |---------|--------|----------|----------|-------|
 | flext-core | ✅ REFERENCE | 100% target | YES | Foundation library standard |
-| flext-api | ⏳ PENDING | 85% target | NO | Next to verify |
-| flext-cli | ⏳ PENDING | 85% target | NO | After flext-api |
-| flext-auth | ⏳ PENDING | 85% target | NO | After flext-cli |
+| flext-api | ❌ NEEDS WORK | 23.76% actual | YES | Lint: 122 errors, Type: 129 errors, Tests: 46 collection errors |
+| flext-cli | ❌ NEEDS WORK | Unknown | YES | Lint: ✅ PASS, Type: 301 errors, Tests: TIMEOUT (5min+) |
+| flext-auth | ❌ NEEDS WORK | 36.8% pass | YES | Lint: 20 errors, Type: 174 errors, Tests: 197/535 pass (CLAUDE.md outdated) |
+| flext-web | ❌ NEEDS WORK | 33.48% actual | YES | Lint: ✅ PASS, Type: 296 errors, Tests: 36 collection errors |
 
 ### Priority 2: Domain Libraries
 
 | Project | Status | Coverage | Verified | Notes |
 |---------|--------|----------|----------|-------|
-| flext-ldap | ⏳ PENDING | 80% target | NO | |
-| flext-ldif | ⏳ PENDING | 80% target | NO | |
-| flext-db-oracle | ⏳ PENDING | 80% target | NO | |
-| flext-meltano | ⏳ PENDING | 80% target | NO | |
-| flext-grpc | ⏳ PENDING | 80% target | NO | |
-| flext-web | ⏳ PENDING | 80% target | NO | |
-| flext-observability | ⏳ PENDING | 80% target | NO | |
+| flext-ldap | ❌ NEEDS WORK | 33% actual (75% target) | YES | Lint: ✅ PASS, Type: flext_core import errors, Tests: CRITICAL ERROR - Missing FlextLdapConstants.Connection.DEFAULT_TIME_LIMIT |
+| flext-ldif | ❌ NEEDS WORK | 65% target achieved | YES | **Lint: ❌ 9 errors** (TODO comments), **Type: pyrefly errors** (flext_core/pytest/flext_tests import-error), **Tests: ⏱️ TIMEOUT** (>2min), **Domain: ✅ CLEAN** (0 forbidden ldif imports) |
+| flext-db-oracle | ❌ NEEDS WORK | 100% target | YES | **Lint: ❌ 2 errors** (subprocess security warnings), **Type: pyrefly errors** (flext_core/sqlalchemy import-error), **Tests: ❌ 2 FAILURES**, **Domain: ⚠️ EXPECTED** (1 sqlalchemy import in services.py - infrastructure layer) |
+| flext-meltano | ❌ NEEDS WORK | 100% target | YES | **Lint: ✅ PASS**, **Type: pyrefly errors** (flext_core/meltano import-error), **Tests: ❌ EARLY TERMINATION** (14 errors), **Domain: ⚠️ EXPECTED** (1 meltano import in abstractions.py - ELT foundation layer) |
+| flext-grpc | ❌ NEEDS WORK | 30% actual (80% target) | YES | **Lint: ❌ 2 errors** (import at top level), **Type: pyrefly errors** (flext_core import-error + bad-argument-count), **Tests: ❌ DEPENDENCY MISMATCH** (grpcio 1.75.0 vs 1.75.1+ required - 34 collection errors), **Domain: ⚠️ EXPECTED** (5 grpc imports in proto/ - infrastructure layer) |
+| flext-observability | ❌ NEEDS WORK | 46% actual (80% target) | YES | **Lint: ✅ PASS**, **Type: pyrefly errors** (flext_core/pydantic/pydantic_settings import-error), **Tests: ❌ 5 COLLECTION ERRORS** (import name issues: 'flext_alert', 'FlextAlertService', 'FlextMetricsService', 'memory' marker not configured) + Coverage 46% vs 100% target, **Domain: ✅ CLEAN** (0 forbidden prometheus/statsd imports) |
+| flext-web | ❌ NEEDS WORK | 35% actual (80% target) | YES | **Lint: ❌ 3 errors** (unused arguments in config.py, services.py), **Type: pyrefly errors** (requests/flext_core/flask import-error), **Tests: ❌ 7 COLLECTION ERRORS** (AttributeError: WebService - test fixture issues) + Coverage 35% vs 100% target, **Domain: ⚠️ EXPECTED** (3 fastapi/flask imports in app.py - web framework layer) |
 
-### Priority 3: Singer Ecosystem
+### Priority 3: Singer Ecosystem (Sample Verified)
 
 | Project | Status | Coverage | Verified | Notes |
 |---------|--------|----------|----------|-------|
-| flext-tap-ldap | ⏳ PENDING | 75% target | NO | |
-| flext-tap-ldif | ⏳ PENDING | 75% target | NO | |
-| flext-tap-oracle | ⏳ PENDING | 75% target | NO | |
-| flext-target-* | ⏳ PENDING | 75% target | NO | Multiple projects |
-| flext-dbt-* | ⏳ PENDING | 75% target | NO | Multiple projects |
+| flext-tap-ldap | ❌ NEEDS WORK | Coverage unknown (75% target) | YES | **Lint: ❌ 13 errors** (blank line issues, F821 undefined name `time`), **Type: pyrefly errors** (pytest/flext_tests/TYPE_CHECKING import-error), **Tests: ❌ 1 COLLECTION ERROR** ('performance' marker not configured), **Domain: ⚠️ EXPECTED** (6 singer imports in src/ - Singer SDK layer) |
+| flext-tap-ldif | ❌ NEEDS WORK | 0% actual (75% target) | YES | **Lint: ❌ 21 errors** (blank lines, syntax errors in utilities.py:603), **Type: pyrefly errors** (pytest/flext_tests/flext_core import-error), **Tests: ❌ SYNTAX ERROR** (utilities.py invalid syntax prevents all tests), **Domain: Status pending after syntax fix** |
+| flext-tap-oracle | ❌ NEEDS WORK | Coverage unknown (75% target) | YES | **Lint: ❌ 22 errors** (PLC0415 imports not at top-level in tap_client.py), **Type: pyrefly errors** (pytest/flext_tests/flext_core import-error), **Tests: ❌ 1 COLLECTION ERROR** (AttributeError: Platform.DATABASE_DEFAULT_PORT missing), **Domain: Status pending** |
+| flext-target-* | ⏳ PENDING | 75% target | NO | Sample verification skipped (time constraints) |
+| flext-dbt-* | ⏳ PENDING | 75% target | NO | Sample verification skipped (time constraints) |
 
 ### Priority 4: Enterprise Tools
 
@@ -229,10 +230,76 @@ scripts/
 
 ---
 
+## 🔍 Domain Library Compliance Validation
+
+**Date Checked**: 2025-10-03
+**Scope**: Complete workspace scan for ZERO TOLERANCE domain library violations
+
+### ✅ Compliant Domain Libraries (Clean)
+
+- **flext-ldap**: ✅ No forbidden ldap3 imports outside boundary
+- **flext-cli**: ✅ No forbidden click/rich imports outside boundary
+- **flext-db-oracle**: ✅ No forbidden oracledb imports outside boundary
+- **flext-meltano**: ✅ No forbidden meltano imports outside boundary
+- **flext-ldif**: ✅ No forbidden ldif imports outside boundary
+- **flext-grpc**: ✅ No forbidden grpc imports outside boundary
+
+### ⚠️ Domain Library Violations Found
+
+**CRITICAL FINDINGS** - ZERO TOLERANCE policy requires immediate attention:
+
+1. **flext-api domain violations**:
+   - `flext-api/src/flext_api/app.py` - Direct fastapi import (should use flext-web)
+   - `flext-api/src/flext_api/server.py` - Direct fastapi import (should use flext-web)
+   - **Impact**: Violates flext-web domain boundary for web framework operations
+
+2. **flext-quality domain violations**:
+   - `flext-quality/src/flext_quality/web.py` - Direct flask import (should use flext-web)
+   - **Impact**: Violates flext-web domain boundary for web framework operations
+
+3. **flext-target-oracle-oic violations**:
+   - `flext-target-oracle-oic/src/flext_target_oracle_oic/connection/connection.py` - Direct requests import (should use flext-api)
+   - **Impact**: Violates flext-api domain boundary for HTTP client operations
+
+4. **Cross-cutting concerns (RESOLVED)**:
+   - `src/flext_tools/constants.py` - Found in multiple domain library scans (httpx, requests, oracledb, meltano)
+   - **Status**: ✅ LEGITIMATE - Workspace-level shared utility package for scripts
+   - **Explanation**: `flext_tools` is a workspace utility package used by `scripts/` directory
+   - **Contains**: Configuration data ABOUT forbidden imports (not actual imports)
+
+### 📊 Compliance Summary
+
+- **Total Domain Libraries Checked**: 10+
+- **Clean Domain Libraries**: 6 (60%)
+- **Violations Found**: 4 projects
+- **Total Violation Instances**: 5-6 files
+- **Severity**: CRITICAL (Zero Tolerance policy)
+
+### 🎯 Required Actions
+
+1. **Immediate**:
+   - Document all violations in project-specific CLAUDE.md files
+   - Create remediation plan for each violation
+   - Prioritize flext-api violations (2 files affected)
+
+2. **Short-term**:
+   - Refactor flext-api to use flext-web abstractions
+   - Refactor flext-quality to use flext-web abstractions
+   - Refactor flext-target-oracle-oic to use flext-api abstractions
+   - Investigate flext_tools/constants.py multi-domain usage
+
+3. **Validation**:
+   - Re-run compliance checks after remediation
+   - Update compliance status in this document
+   - Document architectural decisions for any approved deviations
+
+---
+
 ## ✅ Sign-Off
 
 **Phase 1 Status**: COMPLETE
-**Next Phase**: Manual project-by-project verification starting with flext-api
+**Phase 2 Status**: IN PROGRESS (Priority 1 verified, compliance violations identified)
+**Next Phase**: Remediate domain library violations, continue Priority 2 verification
 
 **Last Updated**: 2025-10-03
-**Updated By**: Automated cleanup + manual documentation
+**Updated By**: Domain library compliance validation completed

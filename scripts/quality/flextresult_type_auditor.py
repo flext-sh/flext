@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextResult, FlextTypes
+
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
 
@@ -202,7 +203,7 @@ class FlextResultTypeAuditor(FlextScript):
                         "line": i + 1,
                         "method": "unknown",
                         "declared_type": "mixed",
-                        "issue": "Possível inconsistência entre FlextResult[None] e FlextResult[dict]",
+                        "issue": "Possível inconsistência entre FlextResult[None] e FlextResult[FlextTypes.Dict]",
                     },
                 )
 

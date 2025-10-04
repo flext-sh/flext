@@ -11,18 +11,17 @@ from collections.abc import Generator
 from pathlib import Path
 
 import pytest
-from flext_tests import (
-    FlextTestsBuilders,
-    FlextTestsDomains,
-    FlextTestsFactories,
-    FlextTestsMatchers,
-)
-
 from flext_core import (
     FlextContainer,
     FlextLogger,
     FlextResult,
     FlextTypes,
+)
+from flext_tests import (
+    FlextTestsBuilders,
+    FlextTestsDomains,
+    FlextTestsFactories,
+    FlextTestsMatchers,
 )
 
 

@@ -626,7 +626,7 @@ class UserService:
     def __init__(self):
         self._cli = FlextCli()
 
-    def display_users(self, users: list[dict]) -> FlextResult[None]:
+    def display_users(self, users: list[FlextTypes.Dict]) -> FlextResult[None]:
         """Display users using Rich tables through flext-cli domain."""
         return self._cli.display_table(
             data=users,

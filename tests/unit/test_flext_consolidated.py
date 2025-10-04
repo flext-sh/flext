@@ -10,6 +10,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from flext_cli import FlextCli
+from flext_core import FlextContainer, FlextLogger, FlextResult, FlextService
 
 from flext import (
     FlextApplicationHandlerService,
@@ -23,7 +24,6 @@ from flext import (
     FlextWorkspaceCli,
     FlextWorkspaceService,
 )
-from flext_core import FlextContainer, FlextLogger, FlextResult, FlextService
 
 
 class TestFlextControlPanelCli:

@@ -10,9 +10,8 @@ import argparse
 from abc import abstractmethod
 from typing import Self
 
-from pydantic import BaseModel
-
 from flext_core import FlextResult, FlextService, FlextTypes
+from pydantic import BaseModel
 
 
 class FlextScriptService(FlextService[object]):

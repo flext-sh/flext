@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Self
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 
 
 class DependencyDiscovery:

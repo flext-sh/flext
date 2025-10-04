@@ -14,7 +14,6 @@ import time
 from typing import cast
 
 from flext_api import FlextApiApp, FlextApiClient, FlextApiConfig
-
 from flext_core import FlextLogger, FlextTypes
 
 
