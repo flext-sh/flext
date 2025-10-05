@@ -1,0 +1,29 @@
+[build-system]
+    build-backend = "poetry.core.masonry.api"
+    requires = [
+        "poetry-core>=1.9.0",
+    ]
+
+[project]
+    name = "flext-tests"
+    version = "0.1.0"
+    description = "FLEXT Tests - Shared test utilities and fixtures"
+    authors = [
+        {name = "FLEXT Team", email = "team@flext.sh"}
+    ]
+    dependencies = [
+        "flext-core @ file:///home/marlonsc/flext/flext-core",
+        "pytest>=8.4.0",
+    ]
+    requires-python = ">=3.13,<3.14"
+
+[tool.poetry]
+    name = "flext-tests"
+    version = "0.1.0"
+    description = "FLEXT Tests - Shared test utilities and fixtures"
+    authors = ["FLEXT Team <team@flext.sh>"]
+
+[tool.poetry.dependencies]
+    python = "^3.13"
+    flext-core = { path = "../flext-core" }
+    pytest = "^8.4.0"
