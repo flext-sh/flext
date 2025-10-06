@@ -34,6 +34,7 @@ import sys
 import tarfile
 from datetime import datetime
 from pathlib import Path
+from typing import ClassVar
 
 # Ensure git is available
 GIT_CMD = shutil.which("git")
@@ -49,7 +50,7 @@ class GitUltimateCleanup:
     AUTHOR_EMAIL = "marlonsc@gmail.com"
 
     # Cruft patterns to remove from git history
-    CRUFT_PATTERNS = [
+    CRUFT_PATTERNS: ClassVar[list[str]] = [
         # Build artifacts
         "*.pyc",
         "*.pyo",

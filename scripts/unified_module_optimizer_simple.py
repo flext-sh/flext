@@ -93,9 +93,12 @@ import operator
 import os
 import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
-from typing import Any, ClassVar
+from typing import Any, ClassVar, TypeVar
+
+T = TypeVar("T")
 
 # Ensure ruff is available
 RUFF_CMD = shutil.which("ruff")
@@ -105,23 +108,27 @@ if not RUFF_CMD:
 
 
 # Simplified core patterns to avoid circular imports
-class FlextResult:
+class FlextResult[T]:
     """Simplified FlextResult for railway pattern."""
 
-    def __init__(self, success: bool, value: Any = None, error: str = "") -> None:
+    def __init__(self, *, success: bool, value: T | None = None, error: str = "") -> None:
+        """Initialize the result with success status, value, and error."""
         self.success = success
         self._value = value
         self.error = error
 
     @classmethod
-    def ok(cls, value: Any) -> FlextResult:
-        return cls(True, value)
+    def ok(cls, value: T) -> FlextResult[T]:
+        """Create a successful result with a value."""
+        return cls(success=True, value=value)
 
     @classmethod
-    def fail(cls, error: str, **kwargs) -> FlextResult:
-        return cls(False, None, error)
+    def fail(cls, error: str) -> FlextResult[T]:
+        """Create a failed result with an error message."""
+        return cls(success=False, error=error)
 
-    def unwrap(self) -> Any:
+    def unwrap(self) -> T:
+        """Unwrap the result value, raising an error if failed."""
         if not self.success:
             msg = f"Failed to unwrap: {self.error}"
             raise ValueError(msg)
@@ -129,10 +136,12 @@ class FlextResult:
 
     @property
     def is_success(self) -> bool:
+        """Check if the result is successful."""
         return self.success
 
     @property
     def is_failure(self) -> bool:
+        """Check if the result is a failure."""
         return not self.success
 
 
@@ -140,12 +149,15 @@ class FlextLogger:
     """Simplified logger."""
 
     def __init__(self, name: str) -> None:
+        """Initialize the logger with a name."""
         self.name = name
 
-    def info(self, msg: str, **kwargs) -> None:
+    def info(self, msg: str) -> None:
+        """Log an info message."""
         print(f"INFO [{self.name}]: {msg}")
 
-    def error(self, msg: str, **kwargs) -> None:
+    def error(self, msg: str) -> None:
+        """Log an error message."""
         print(f"ERROR [{self.name}]: {msg}")
 
 
@@ -153,6 +165,7 @@ class FlextConfig:
     """Simplified configuration base."""
 
     def __init__(self) -> None:
+        """Initialize the configuration with default values."""
         self.log_level = "INFO"
         self.timeout_seconds = 30
         self.debug = False
@@ -162,9 +175,13 @@ class FlextConstants:
     """Simplified constants namespace."""
 
     class Defaults:
+        """Default constant values."""
+
         TIMEOUT = 30
 
     class Logging:
+        """Logging-related constants."""
+
         DEFAULT_LEVEL = "INFO"
 
 
@@ -172,10 +189,10 @@ class FlextModels:
     """Simplified models namespace."""
 
     class Entity:
-        pass
+        """Base entity model."""
 
     class Value:
-        pass
+        """Value object model."""
 
 
 class FlextTypes:
@@ -188,10 +205,10 @@ class FlextExceptions:
     """Simplified exceptions namespace."""
 
     class ValidationError(Exception):
-        pass
+        """Validation error exception."""
 
     class BaseError(Exception):
-        pass
+        """Base error exception."""
 
 
 # Configuration for the optimizer
@@ -250,7 +267,8 @@ class FlextModuleOptimizerConstants(FlextConstants):
 class FlextModuleOptimizerConfig(FlextConfig):
     """Optimization configuration."""
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, **kwargs: Any) -> None:
+        """Initialize the optimizer configuration."""
         super().__init__()
         self.batch_size = kwargs.get(
             "batch_size", FlextModuleOptimizerConstants.Optimization.DEFAULT_BATCH_SIZE
@@ -609,16 +627,16 @@ class FlextModuleOptimizer:
             # Apply optimizations based on type
             if target["optimization_type"] == "pattern_violation":
                 optimized_content = self._fix_pattern_violations(
-                    original_content, target
+                    original_content
                 )
             elif target["optimization_type"] == "complexity_reduction":
-                optimized_content = self._reduce_complexity(original_content, target)
+                optimized_content = self._reduce_complexity(original_content)
             elif target["optimization_type"] == "domain_library_integration":
                 optimized_content = self._integrate_domain_libraries(
                     original_content, target
                 )
             else:
-                optimized_content = self._general_improvements(original_content, target)
+                optimized_content = self._general_improvements(original_content)
 
             # Calculate changes
             changes_made = self._count_changes(original_content, optimized_content)
@@ -656,7 +674,7 @@ class FlextModuleOptimizer:
                 "warnings": [],
             }
 
-    def _fix_pattern_violations(self, content: str, target: dict) -> str:
+    def _fix_pattern_violations(self, content: str) -> str:
         """Fix pattern violations in module."""
         optimized = content
 
@@ -683,7 +701,7 @@ class FlextModuleOptimizer:
         # Fix Any types
         return optimized.replace(r"-> Any:", "-> object:")
 
-    def _reduce_complexity(self, content: str, target: dict) -> str:
+    def _reduce_complexity(self, content: str) -> str:
         """Reduce module complexity."""
         # For complexity reduction, we would need more sophisticated analysis
         # This is a simplified version - in practice, this would involve
@@ -699,7 +717,7 @@ class FlextModuleOptimizer:
 
         # Check what functionality the module needs and add appropriate libraries
         if "ldap" in target["file_path"].lower() and "from flext_ldap" not in optimized:
-            imports_to_add.append("from flext_ldap import FlextLDAP")
+            imports_to_add.append("from flext_ldap import FlextLdap")
         if "ldif" in target["file_path"].lower() and "from flext_ldif" not in optimized:
             imports_to_add.append("from flext_ldif import FlextLdif")
         if "api" in target["file_path"].lower() and "from flext_api" not in optimized:
@@ -726,7 +744,7 @@ class FlextModuleOptimizer:
 
         return optimized
 
-    def _general_improvements(self, content: str, target: dict) -> str:
+    def _general_improvements(self, content: str) -> str:
         """Apply general improvements."""
         optimized = content
 

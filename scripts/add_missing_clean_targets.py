@@ -201,9 +201,10 @@ def main() -> None:
         if makefile_path.exists():
             # Check if it already has a clean target
             content = makefile_path.read_text(encoding="utf-8")
-            if ".PHONY: clean" not in content:
-                if add_clean_target(makefile_path, project):
-                    added_count += 1
+            if ".PHONY: clean" not in content and add_clean_target(
+                makefile_path, project
+            ):
+                added_count += 1
         else:
             print(f"⚠️  No Makefile found for {project}")
 
