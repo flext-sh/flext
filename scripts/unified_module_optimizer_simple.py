@@ -92,10 +92,16 @@ import asyncio
 import operator
 import os
 import re
-import subprocess
+import shutil
 import sys
 from pathlib import Path
 from typing import Any, ClassVar
+
+# Ensure ruff is available
+RUFF_CMD = shutil.which("ruff")
+if not RUFF_CMD:
+    print("Error: ruff command not found. Please install ruff.", file=sys.stderr)
+    sys.exit(1)
 
 
 # Simplified core patterns to avoid circular imports
@@ -270,7 +276,7 @@ class FlextModuleOptimizer:
         self._config = config or FlextModuleOptimizerConfig()
         self._logger = FlextLogger(__name__)
 
-    async def optimize_project(self, project_path: str) -> FlextResult:
+    def optimize_project(self, project_path: str) -> FlextResult:
         """Optimize entire project according to FLEXT patterns.
 
         Args:
@@ -286,28 +292,28 @@ class FlextModuleOptimizer:
 
         try:
             # Phase 1: Discovery and analysis
-            discovery_result = await self._discover_optimization_targets(project_path)
+            discovery_result = self._discover_optimization_targets(project_path)
             if discovery_result.is_failure:
                 return FlextResult.fail(f"Discovery failed: {discovery_result.error}")
 
             targets = discovery_result.unwrap()
 
             # Phase 2: Quality gate validation
-            quality_result = await self._validate_quality_gates(targets)
+            quality_result = self._validate_quality_gates(targets)
             if quality_result.is_failure and not self._config.force:
                 return FlextResult.fail(f"Quality gates failed: {quality_result.error}")
 
             # Phase 3: Batch optimization
-            optimization_result = await self._optimize_in_batches(targets)
+            optimization_result = self._optimize_in_batches(targets)
 
             # Phase 4: Final validation
-            return await self._validate_optimization_results(optimization_result)
+            return self._validate_optimization_results(optimization_result)
 
         except Exception as e:
             self._logger.exception("Optimization failed", extra={"error": str(e)})
             return FlextResult.fail(f"Optimization error: {e}")
 
-    async def _discover_optimization_targets(self, project_path: str) -> FlextResult:
+    def _discover_optimization_targets(self, project_path: str) -> FlextResult:
         """Discover modules that need optimization."""
         self._logger.info(
             "Discovering optimization targets", extra={"project_path": project_path}
@@ -351,9 +357,7 @@ class FlextModuleOptimizer:
                         continue
 
                     # Analyze file for optimization needs
-                    analysis_result = await self._analyze_file_for_optimization(
-                        file_path
-                    )
+                    analysis_result = self._analyze_file_for_optimization(file_path)
                     if analysis_result.is_failure:
                         self._logger.info(
                             f"Analysis failed for {file_path}: {analysis_result.error}"
@@ -383,7 +387,7 @@ class FlextModuleOptimizer:
         except Exception as e:
             return FlextResult.fail(f"Discovery error: {e}")
 
-    async def _analyze_file_for_optimization(self, file_path: Path) -> FlextResult:
+    def _analyze_file_for_optimization(self, file_path: Path) -> FlextResult:
         """Analyze file for optimization opportunities."""
         try:
             with Path(file_path).open(encoding="utf-8") as f:
@@ -535,9 +539,7 @@ class FlextModuleOptimizer:
 
         return max_child_depth
 
-    async def _validate_quality_gates(
-        self, targets: list[FlextTypes.Dict]
-    ) -> FlextResult:
+    def _validate_quality_gates(self, targets: list[FlextTypes.Dict]) -> FlextResult:
         """Validate targets against quality gates."""
         self._logger.info(
             "Validating quality gates", extra={"target_count": len(targets)}
@@ -562,7 +564,7 @@ class FlextModuleOptimizer:
 
         return FlextResult.ok(None)
 
-    async def _optimize_in_batches(
+    def _optimize_in_batches(
         self, targets: list[FlextTypes.Dict]
     ) -> list[FlextTypes.Dict]:
         """Optimize targets in batches."""
@@ -579,9 +581,11 @@ class FlextModuleOptimizer:
                 f"Processing batch {i // batch_size + 1}/{(len(targets) - 1) // batch_size + 1}"
             )
 
-            batch_results = await asyncio.gather(*[
-                self._optimize_single_target(target) for target in batch
-            ])
+            # Run tasks sequentially since we're removing async
+            batch_results = []
+            for target in batch:
+                result = self._optimize_single_target(target)
+                batch_results.append(result)
 
             results.extend(batch_results)
 
@@ -593,7 +597,7 @@ class FlextModuleOptimizer:
 
         return results
 
-    async def _optimize_single_target(self, target: dict) -> dict:
+    def _optimize_single_target(self, target: dict) -> dict:
         """Optimize a single target module."""
         self._logger.info(f"Optimizing {target['file_path']}")
 
@@ -604,21 +608,17 @@ class FlextModuleOptimizer:
 
             # Apply optimizations based on type
             if target["optimization_type"] == "pattern_violation":
-                optimized_content = await self._fix_pattern_violations(
+                optimized_content = self._fix_pattern_violations(
                     original_content, target
                 )
             elif target["optimization_type"] == "complexity_reduction":
-                optimized_content = await self._reduce_complexity(
-                    original_content, target
-                )
+                optimized_content = self._reduce_complexity(original_content, target)
             elif target["optimization_type"] == "domain_library_integration":
-                optimized_content = await self._integrate_domain_libraries(
+                optimized_content = self._integrate_domain_libraries(
                     original_content, target
                 )
             else:
-                optimized_content = await self._general_improvements(
-                    original_content, target
-                )
+                optimized_content = self._general_improvements(original_content, target)
 
             # Calculate changes
             changes_made = self._count_changes(original_content, optimized_content)
@@ -629,9 +629,7 @@ class FlextModuleOptimizer:
                     f.write(optimized_content)
 
                 # Validate the optimized file
-                validation_result = await self._validate_optimized_file(
-                    target["file_path"]
-                )
+                validation_result = self._validate_optimized_file(target["file_path"])
                 if validation_result.is_failure:
                     return {
                         "target": target,
@@ -658,7 +656,7 @@ class FlextModuleOptimizer:
                 "warnings": [],
             }
 
-    async def _fix_pattern_violations(self, content: str, target: dict) -> str:
+    def _fix_pattern_violations(self, content: str, target: dict) -> str:
         """Fix pattern violations in module."""
         optimized = content
 
@@ -685,14 +683,14 @@ class FlextModuleOptimizer:
         # Fix Any types
         return optimized.replace(r"-> Any:", "-> object:")
 
-    async def _reduce_complexity(self, content: str, target: dict) -> str:
+    def _reduce_complexity(self, content: str, target: dict) -> str:
         """Reduce module complexity."""
         # For complexity reduction, we would need more sophisticated analysis
         # This is a simplified version - in practice, this would involve
         # extracting helper methods, reducing nesting, etc.
         return content
 
-    async def _integrate_domain_libraries(self, content: str, target: dict) -> str:
+    def _integrate_domain_libraries(self, content: str, target: dict) -> str:
         """Integrate appropriate domain libraries."""
         optimized = content
 
@@ -701,7 +699,7 @@ class FlextModuleOptimizer:
 
         # Check what functionality the module needs and add appropriate libraries
         if "ldap" in target["file_path"].lower() and "from flext_ldap" not in optimized:
-            imports_to_add.append("from flext_ldap import FlextLdap")
+            imports_to_add.append("from flext_ldap import FlextLDAP")
         if "ldif" in target["file_path"].lower() and "from flext_ldif" not in optimized:
             imports_to_add.append("from flext_ldif import FlextLdif")
         if "api" in target["file_path"].lower() and "from flext_api" not in optimized:
@@ -728,7 +726,7 @@ class FlextModuleOptimizer:
 
         return optimized
 
-    async def _general_improvements(self, content: str, target: dict) -> str:
+    def _general_improvements(self, content: str, target: dict) -> str:
         """Apply general improvements."""
         optimized = content
 
@@ -751,12 +749,12 @@ class FlextModuleOptimizer:
         optimized_lines = set(optimized.split("\n"))
         return len(original_lines.symmetric_difference(optimized_lines))
 
-    async def _validate_optimized_file(self, file_path: str) -> FlextResult:
+    def _validate_optimized_file(self, file_path: str) -> FlextResult:
         """Validate optimized file."""
         try:
             # Run ruff check
             result = subprocess.run(
-                ["ruff", "check", file_path],
+                [RUFF_CMD, "check", file_path],
                 check=False,
                 capture_output=True,
                 text=True,
@@ -771,7 +769,7 @@ class FlextModuleOptimizer:
         except Exception as e:
             return FlextResult.fail(f"Validation error: {e}")
 
-    async def _validate_optimization_results(
+    def _validate_optimization_results(
         self, results: list[FlextTypes.Dict]
     ) -> FlextResult:
         """Validate final optimization results."""

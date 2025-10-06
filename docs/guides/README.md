@@ -1,36 +1,83 @@
-# FLEXT User Guides
+# User Guides
 
-**Version**: 0.9.0 | **Status**: Active
+Comprehensive guides for using FLEXT effectively in various scenarios.
 
-## Overview
+## Getting Started
 
-Step-by-step guides for common tasks in the FLEXT ecosystem.
+### [Installation Guide](./getting-started.md)
 
-## Available Guides
+Complete installation instructions for FLEXT and all its components.
 
-### [Getting Started](./getting-started/README.md)
+### [Quick Start Tutorial](./quick-start.md)
 
-First-time setup and development environment configuration.
+Hands-on tutorial to get you up and running with FLEXT in minutes.
 
-### [Configuration](./configuration/README.md)
+### [Configuration Guide](./configuration.md)
 
-Managing configuration across environments.
+How to configure FLEXT for your specific environment and requirements.
 
-### [Deployment](./deployment/README.md)
+## Development
 
-Deployment options from development to production.
+### [Development Setup](./development.md)
 
-### [Troubleshooting](./troubleshooting/README.md)
+Setting up a development environment for FLEXT contributions.
 
-Common issues and resolution strategies.
+### [Contributing Guide](./contributing.md)
 
-## Quick Start
+Guidelines for contributing to the FLEXT ecosystem.
 
-1. **Development Setup**: Follow [Getting Started](./getting-started/README.md)
-2. **Configure Environment**: See [Configuration](./configuration/README.md)
-3. **Deploy Application**: Use [Deployment](./deployment/README.md)
-4. **Resolve Issues**: Check [Troubleshooting](./troubleshooting/README.md)
+### [Testing Guide](./testing.md)
 
----
+Best practices for testing FLEXT applications and libraries.
 
-See [Architecture](../architecture/README.md) for system design details.
+## Operations
+
+### [Deployment Guide](./deployment.md)
+
+Deploying FLEXT applications to production environments.
+
+### [Monitoring Guide](./monitoring.md)
+
+Monitoring and observability for FLEXT applications.
+
+### [Troubleshooting Guide](./troubleshooting.md)
+
+Common issues and their solutions.
+
+## Integration
+
+### [LDAP Integration](./ldap-integration.md)
+
+Integrating FLEXT with LDAP servers and directories.
+
+### [Database Integration](./database-integration.md)
+
+Working with databases through FLEXT's data access layer.
+
+### [API Integration](./api-integration.md)
+
+Building and consuming APIs with FLEXT.
+
+## Migration
+
+### [LDIF Migration Guide](./ldif-migration.md)
+
+Complete guide for migrating LDIF data between LDAP servers.
+
+### [Data Migration](./data-migration.md)
+
+Migrating data between different systems using FLEXT.
+
+## Best Practices
+
+### [Performance Optimization](./performance.md)
+
+Optimizing FLEXT applications for better performance.
+
+### [Security Best Practices](./security.md)
+
+Security considerations when using FLEXT.
+
+### [Error Handling](./error-handling.md)
+
+Effective error handling strategies in FLEXT applications.

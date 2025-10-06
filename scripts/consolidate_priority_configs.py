@@ -16,20 +16,20 @@ def consolidate_client-a_config() -> bool | None:
         original_content = content
 
         # Add flext-core import if not present
-        if "FlextCoreSettings" not in content:
+        if "FlextSettings" not in content:
             # Find the import section
             import_pattern = r"(from pydantic import BaseSettings.*?\n)"
             match = re.search(import_pattern, content, re.DOTALL)
             if match:
                 content = content.replace(
                     match.group(1),
-                    f"{match.group(1)}FlextCoreSettings\n",
+                    f"{match.group(1)}FlextSettings\n",
                 )
 
-        # Replace BaseSettings with FlextCoreSettings
+        # Replace BaseSettings with FlextSettings
         content = re.sub(
             r"class\s+([A-Z][a-zA-Z0-9_]*Settings)\(BaseSettings\)",
-            r"class \1(FlextCoreSettings)",
+            r"class \1(FlextSettings)",
             content,
         )
 
@@ -59,15 +59,15 @@ def consolidate_flext_auth_config() -> bool | None:
 
         # Add flext-core import if not present
         if (
-            "FlextCoreSettings" not in content
+            "FlextSettings" not in content
             and "from pydantic import BaseSettings" in content
         ):
             content = content.replace(
                 "from pydantic import BaseSettings",
-                "from pydantic import BaseSettings\nFlextCoreSettings",
+                "from pydantic import BaseSettings\nFlextSettings",
             )
 
-        # Replace BaseSettings with FlextCoreSettings for config classes
+        # Replace BaseSettings with FlextSettings for config classes
         config_classes = re.findall(
             r"class\s+([A-Z][a-zA-Z0-9_]*Config)\(BaseSettings\)",
             content,
@@ -75,7 +75,7 @@ def consolidate_flext_auth_config() -> bool | None:
         for class_name in config_classes:
             content = re.sub(
                 f"class\\s+{class_name}\\(BaseSettings\\)",
-                f"class {class_name}(FlextCoreSettings)",
+                f"class {class_name}(FlextSettings)",
                 content,
             )
 
@@ -150,7 +150,7 @@ from pydantic import Field
 from pydantic_settings import SettingsConfigDict
 from flext_core import FlextConstants
 
-FlextCoreSettings
+FlextSettings
 
 
 # BEFORE: Manual configuration with BaseSettings
@@ -160,7 +160,7 @@ FlextCoreSettings
 #     debug: bool = Field(default=False)
 
 # AFTER: Consolidated FLEXT configuration
-class ConsolidatedProjectSettings(FlextCoreSettings):
+class ConsolidatedProjectSettings(FlextSettings):
     """Project configuration using FLEXT patterns.
 
     This replaces manual configuration patterns with standardized
@@ -168,8 +168,8 @@ class ConsolidatedProjectSettings(FlextCoreSettings):
     """
 
     model_config = SettingsConfigDict(
-      # Inherit from FlextCoreSettings
-      **FlextCoreSettings.model_config,
+      # Inherit from FlextSettings
+      **FlextSettings.model_config,
       # Project-specific overrides
       env_prefix="PROJECT_",
     )

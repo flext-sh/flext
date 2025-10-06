@@ -314,11 +314,11 @@ host = FlextConstants.Platform.DEFAULT_HOST  # ✅ AFTER
 
 ```python
 # Add to imports
-from flext_ldap import FlextLdapConstants
+from flext_ldap import FlextLDAPConstants
 
 # Replace hardcoded values
 port = 389  # ❌ BEFORE
-port = FlextLdapConstants.Protocol.DEFAULT_PORT  # ✅ AFTER
+port = FlextLDAPConstants.Protocol.DEFAULT_PORT  # ✅ AFTER
 ```
 
 ### 3. Common Constant Mappings

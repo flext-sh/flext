@@ -25,7 +25,7 @@ from flext_core import (
 )
 
 
-class TestFlextCoreTargeted:
+class TestFlextTargeted:
     """Targeted tests for actual flext-core API methods."""
 
     # =============================================================================

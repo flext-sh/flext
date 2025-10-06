@@ -28,11 +28,16 @@ Usage:
 import argparse
 import operator
 import re
-import subprocess
 import sys
 import tarfile
 from datetime import datetime
 from pathlib import Path
+
+# Ensure git is available
+GIT_CMD = shutil.which("git")
+if not GIT_CMD:
+    print("Error: git command not found. Please install git.", file=sys.stderr)
+    sys.exit(1)
 
 
 class GitUltimateCleanup:
@@ -231,7 +236,7 @@ class GitUltimateCleanup:
         # Check uncommitted changes (skip in dry-run mode)
         if not self.dry_run:
             result = subprocess.run(
-                ["git", "-C", str(self.repo_path), "status", "--porcelain"],
+                [GIT_CMD, "-C", str(self.repo_path), "status", "--porcelain"],
                 capture_output=True,
                 text=True,
                 check=False,
@@ -251,7 +256,7 @@ class GitUltimateCleanup:
 
         # Check not detached HEAD
         result = subprocess.run(
-            ["git", "-C", str(self.repo_path), "symbolic-ref", "-q", "HEAD"],
+            [GIT_CMD, "-C", str(self.repo_path), "symbolic-ref", "-q", "HEAD"],
             capture_output=True,
             check=False,
         )
@@ -313,7 +318,7 @@ class GitUltimateCleanup:
         print("2️⃣  Creating git mirror clone...")
         mirror_path = repo_backup / f"{self.repo_path.name}.git"
         result = subprocess.run(
-            ["git", "clone", "--mirror", str(self.repo_path), str(mirror_path)],
+            [GIT_CMD, "clone", "--mirror", str(self.repo_path), str(mirror_path)],
             check=False,
             capture_output=True,
             text=True,
@@ -349,7 +354,7 @@ class GitUltimateCleanup:
         print("4️⃣  Exporting reflog...")
         reflog_file = repo_backup / "reflog.txt"
         result = subprocess.run(
-            ["git", "-C", str(self.repo_path), "reflog", "--format=%H|%gd|%gs"],
+            [GIT_CMD, "-C", str(self.repo_path), "reflog", "--format=%H|%gd|%gs"],
             capture_output=True,
             text=True,
             check=False,
@@ -362,7 +367,7 @@ class GitUltimateCleanup:
         print("5️⃣  Exporting branch information...")
         branch_file = repo_backup / "branches.txt"
         result = subprocess.run(
-            ["git", "-C", str(self.repo_path), "branch", "-a"],
+            [GIT_CMD, "-C", str(self.repo_path), "branch", "-a"],
             capture_output=True,
             text=True,
             check=False,
@@ -375,7 +380,7 @@ class GitUltimateCleanup:
         print("6️⃣  Exporting tags...")
         tags_file = repo_backup / "tags.txt"
         result = subprocess.run(
-            ["git", "-C", str(self.repo_path), "tag", "-l"],
+            [GIT_CMD, "-C", str(self.repo_path), "tag", "-l"],
             capture_output=True,
             text=True,
             check=False,
@@ -388,7 +393,7 @@ class GitUltimateCleanup:
         print("7️⃣  Creating safety tag in repository...")
         safety_tag = f"pre-cleanup-{self.timestamp}"
         subprocess.run(
-            ["git", "-C", str(self.repo_path), "tag", safety_tag],
+            [GIT_CMD, "-C", str(self.repo_path), "tag", safety_tag],
             check=False,
             capture_output=True,
         )
@@ -602,7 +607,7 @@ wc -l commit-history.txt
 
         # Test 8: Git commands availability
         print("Test 8: Git commands availability...")
-        commands = ["git", "git-filter-repo", "tar"]
+        commands = [GIT_CMD, "git-filter-repo", "tar"]
         all_available = True
         for cmd in commands:
             result = subprocess.run(["which", cmd], check=False, capture_output=True)
@@ -695,7 +700,7 @@ wc -l commit-history.txt
 
         # Verify
         result = subprocess.run(
-            ["git", "-C", str(self.repo_path), "log", "-1", "--format=%an %ae"],
+            [GIT_CMD, "-C", str(self.repo_path), "log", "-1", "--format=%an %ae"],
             check=False,
             capture_output=True,
             text=True,
@@ -707,7 +712,7 @@ wc -l commit-history.txt
 
         # Show statistics
         result = subprocess.run(
-            ["git", "-C", str(self.repo_path), "count-objects", "-vH"],
+            [GIT_CMD, "-C", str(self.repo_path), "count-objects", "-vH"],
             check=False,
             capture_output=True,
             text=True,
@@ -792,7 +797,15 @@ def callback(commit, metadata):
         # Main repo
         main_remote = "git@github.com:flext-sh/flext.git"
         subprocess.run(
-            ["git", "-C", str(self.repo_path), "remote", "add", "origin", main_remote],
+            [
+                GIT_CMD,
+                "-C",
+                str(self.repo_path),
+                "remote",
+                "add",
+                "origin",
+                main_remote,
+            ],
             check=False,
             capture_output=True,
         )
@@ -805,7 +818,7 @@ def callback(commit, metadata):
             return
 
         result = subprocess.run(
-            ["git", "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
+            [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
             check=False,
             capture_output=True,
             text=True,
@@ -823,7 +836,7 @@ def callback(commit, metadata):
             name = key.split(".")[1]
 
             url_result = subprocess.run(
-                ["git", "config", "-f", str(gitmodules), f"submodule.{name}.url"],
+                [GIT_CMD, "config", "-f", str(gitmodules), f"submodule.{name}.url"],
                 check=False,
                 capture_output=True,
                 text=True,
@@ -837,7 +850,15 @@ def callback(commit, metadata):
 
             if submodule_path.exists():
                 subprocess.run(
-                    ["git", "-C", str(submodule_path), "remote", "add", "origin", url],
+                    [
+                        GIT_CMD,
+                        "-C",
+                        str(submodule_path),
+                        "remote",
+                        "add",
+                        "origin",
+                        url,
+                    ],
                     check=False,
                     capture_output=True,
                 )
@@ -852,7 +873,7 @@ def callback(commit, metadata):
             return []
 
         result = subprocess.run(
-            ["git", "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
+            [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
             check=False,
             capture_output=True,
             text=True,
@@ -888,7 +909,7 @@ def callback(commit, metadata):
 
         # Check if remote exists
         result = subprocess.run(
-            ["git", "-C", str(self.repo_path), "remote", "get-url", "origin"],
+            [GIT_CMD, "-C", str(self.repo_path), "remote", "get-url", "origin"],
             check=False,
             capture_output=True,
             text=True,
@@ -913,7 +934,7 @@ def callback(commit, metadata):
         # Push branches
         print("📤 Pushing all branches...")
         result = subprocess.run(
-            ["git", "-C", str(self.repo_path), "push", "origin", "--force", "--all"],
+            [GIT_CMD, "-C", str(self.repo_path), "push", "origin", "--force", "--all"],
             check=False,
             capture_output=True,
             text=True,

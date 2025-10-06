@@ -94,6 +94,7 @@ line-length = 88
         "ANN401", # any-type - examples can legitimately use Any for Pydantic 2 models
         "FBT001", # Boolean positional argument - required by Pydantic field serializers
         "PLC0415", # allow lazy imports in fix circular imports in base level
+        "SLF001", # private-member-access - necessary for config synchronization across modules
     ]
     "**/constants.py" = [
         "S105", # hardcoded-password-string - false positives in error messages and descriptions
@@ -120,6 +121,7 @@ line-length = 88
     ]
     "**/loggings.py" = [
         "PLC0415", # allow lazy imports in fix circular imports in base level
+        "PLW0603", # global-statement - necessary for lazy config loading to avoid circular imports
     ]
     "**/middleware.py" = [
         "ANN401",  # any-type - intentional to avoid circular imports between flext-auth/flext-api/flext-web
@@ -132,6 +134,7 @@ line-length = 88
         "ANN401", # any-type - examples can legitimately use Any for Pydantic 2 models
         "FBT001", # Boolean positional argument - required by Pydantic field serializers
         "PLC0415", # allow lazy imports in fix circular imports in base level
+        "PLW0603", # global-statement - necessary for lazy config loading to avoid circular imports
     ]
     "src/flext_ldif/models.py" = [
         "FBT001", # Boolean positional argument - required by Pydantic field serializers

@@ -80,7 +80,7 @@ class TestFlextMainComponents:
         assert isinstance(service, FlextWorkspaceService)
 
 
-class TestFlextCoreComponents:
+class TestFlextComponents:
     """Test flext core components functionality."""
 
     def test_flext_result_functionality(self) -> None:

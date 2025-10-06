@@ -1,120 +1,215 @@
-# FLEXT Architecture
+# Architecture Overview
 
-**Version**: 0.9.0-dev | **Status**: Under Development | **Last Updated**: 2025-08-05
+## System Architecture
 
-## Overview
+FLEXT is built on a clean architecture foundation with flext-core providing the core patterns and abstractions.
 
-FLEXT implements a dual-service distributed architecture with Clean Architecture principles, Domain-Driven Design, CQRS, and Event Sourcing patterns. This section covers the core architectural decisions and current implementation status.
+### Core Principles
 
-## Architecture Documentation
+- **Clean Architecture**: Clear separation of concerns with dependency inversion
+- **SOLID Principles**: Single responsibility, Open/closed, Liskov substitution, Interface segregation, Dependency inversion
+- **CQRS Pattern**: Command Query Responsibility Segregation for complex business logic
+- **Railway-Oriented Programming**: Functional error handling with happy/sad path composition
+- **Dependency Injection**: FlextContainer for managing component dependencies
 
-### [Overview](./overview.md)
-
-**Primary Document**: Complete system architecture, service status, and development roadmap.
-
-### [Clean Architecture](./clean-architecture.md)
-
-**Implementation Guide**: Detailed Clean Architecture patterns with Go code examples.
-
-### [FlexCore Current State](./flexcore-current-state.md)
-
-**Current Reality**: Honest assessment of FlexCore's architectural compliance and critical issues.
-
-### [Python-Go Integration](./python-go-integration.md)
-
-**Integration Patterns**: Cross-language integration patterns and communication protocols.
-
-## Key Concepts
-
-### Architectural Principles
-
-- **Clean Architecture**: Separation of concerns with clear boundaries
-- **Domain-Driven Design**: Business domain modeling
-- **CQRS**: Command/Query Responsibility Segregation
-- **Event Sourcing**: Immutable event log for state reconstruction
-- **Microservices**: Loosely coupled, independently deployable services
-
-### Technology Stack
-
-- **Go 1.24+**: Control plane implementation
-- **Python 3.13+**: Data processing (Singer, Meltano, DBT)
-- **PostgreSQL 15**: Primary data store
-- **Redis 7**: Caching and message broker
-- **Docker**: Containerization
-
-### System Components
+### Architecture Layers
 
 ```
-┌─────────────────────────────────────────────┐
-│              FLEXT Control Panel            │
-│              (Go - Port 8081)               │
-│  ┌─────────────┬─────────────┬─────────────┐ │
-│  │   API       │  Service    │  Plugin     │ │
-│  │  Gateway    │ Discovery   │ Management  │ │
-│  └─────────────┴─────────────┴─────────────┘ │
-└─────────────────────────────────────────────┘
-                    │
-                    ▼
-┌─────────────────────────────────────────────┐
-│              FlexCore Runtime               │
-│              (Go - Port 8080)               │
-│  ┌─────────────┬─────────────┬─────────────┐ │
-│  │ Workflow    │  Resource   │  Event      │ │
-│  │ Execution   │ Management  │  Sourcing   │ │
-│  └─────────────┴─────────────┴─────────────┘ │
-└─────────────────────────────────────────────┘
-                    │
-                    ▼
-┌─────────────────────────────────────────────┐
-│            Python Ecosystem                 │
-│            (33 Projects)                    │
-│  ┌─────────────┬─────────────┬─────────────┐ │
-│  │ Foundation  │ Integration │ Processing  │ │
-│  │ Libraries   │ Services    │ Libraries   │ │
-│  └─────────────┴─────────────┴─────────────┘ │
-└─────────────────────────────────────────────┘
+┌─────────────────────────────────────┐
+│         Application Layer           │
+│   - Use Cases & Application Services│
+│   - Command/Query Handlers         │
+│   - Application Pipelines          │
+└─────────────────┬───────────────────┘
+                  │
+┌─────────────────────────────────────┐
+│           Domain Layer              │
+│   - Business Logic & Rules         │
+│   - Domain Models & Value Objects  │
+│   - Domain Services                │
+└─────────────────┬───────────────────┘
+                  │
+┌─────────────────────────────────────┐
+│     Infrastructure Layer           │
+│   - External Services (DB, LDAP)   │
+│   - File System, Network I/O       │
+│   - Third-party Integrations       │
+└─────────────────┬───────────────────┘
+                  │
+┌─────────────────────────────────────┐
+│           Core Layer               │
+│   - flext-core Framework          │
+│   - Common Patterns & Abstractions │
+│   - Cross-cutting Concerns         │
+└─────────────────────────────────────┘
+```
+
+## flext-core Architecture
+
+### Core Components
+
+#### FlextContainer (Dependency Injection)
+
+```python
+from flext_core import FlextContainer
+
+container = FlextContainer()
+container.register(IFooService, FooService())
+container.register(IBarService, BarService())
+
+foo_service = container.resolve(IFooService)
+```
+
+#### FlextDispatcher (CQRS)
+
+```python
+from flext_core import FlextDispatcher
+
+dispatcher = FlextDispatcher()
+dispatcher.register_handler(CreateUserCommand, CreateUserHandler)
+dispatcher.register_handler(GetUserQuery, GetUserHandler)
+
+# Dispatch commands and queries
+result = dispatcher.dispatch(CreateUserCommand(user_data))
+user = dispatcher.dispatch(GetUserQuery(user_id))
+```
+
+#### FlextResult (Railway-Oriented Programming)
+
+```python
+from flext_core import FlextResult
+
+def divide(a: float, b: float) -> FlextResult[float, str]:
+    if b == 0:
+        return FlextResult.failure("Cannot divide by zero")
+
+    return FlextResult.success(a / b)
+
+# Compose operations
+result = (FlextResult.success(10)
+          .bind(lambda x: divide(x, 2))
+          .bind(lambda x: divide(x, 3)))
+
+if result.is_success:
+    print(f"Result: {result.unwrap()}")
+else:
+    print(f"Error: {result.failure()}")
+```
+
+#### FlextBus (Domain Events)
+
+```python
+from flext_core import FlextBus
+
+bus = FlextBus()
+bus.subscribe(UserCreatedEvent, UserCreatedHandler)
+
+# Emit events
+bus.emit(UserCreatedEvent(user_id="123", email="user@example.com"))
+```
+
+## Project Structure
+
+### Monorepo Organization
+
+```
+flext/
+├── flext-core/           # Core framework
+│   ├── src/flext_core/   # Core abstractions
+│   └── tests/
+├── flext-ldif/           # LDIF processing
+│   ├── src/flext_ldif/   # LDIF-specific code
+│   └── tests/
+├── flext-api/            # REST API framework
+├── flext-auth/           # Authentication
+├── flext-ldap/           # LDAP operations
+├── flext-oracle/         # Oracle integration
+└── docs/                 # Documentation
+```
+
+### Package Structure
+
+Each flext-\* project follows this structure:
+
+```
+flext-ldif/
+├── src/flext_ldif/
+│   ├── __init__.py       # Public API
+│   ├── api.py            # Main facade
+│   ├── models.py         # Pydantic models
+│   ├── config.py         # Configuration
+│   ├── constants.py      # Constants
+│   ├── exceptions.py     # Domain exceptions
+│   ├── typings.py        # Type definitions
+│   └── ...
+├── tests/
+├── docs/
+├── examples/
+└── pyproject.toml
 ```
 
 ## Integration Patterns
 
-### Service Communication
+### Cross-Project Dependencies
 
-- **gRPC**: High-performance service-to-service communication
-- **HTTP/REST**: External API exposure
-- **Event Streaming**: hronous event processing
+- **flext-core** is the foundation - all projects depend on it
+- **Domain libraries** (flext-ldif, flext-ldap) are independent
+- **Infrastructure libraries** (flext-oracle, flext-api) may depend on domain libraries
 
-### Data Flow
+### Import Strategy
 
-- **ETL Pipelines**: Extract, Transform, Load workflows
-- **Stream Processing**: Real-time data processing
-- **Batch Processing**: Large-scale data operations
+```python
+# In flext-ldif
+from flext_core import FlextResult, FlextDispatcher
 
-### Deployment
+# In flext-oracle
+from flext_core import FlextContainer
+from flext_ldif import FlextLdifModels  # If needed
+```
 
-- **Docker Containers**: Isolated service deployment
-- **Kubernetes**: Orchestration and scaling
-- **Service Mesh**: Inter-service communication
+## Deployment Architecture
 
-## Quality Standards
+### Container Strategy
 
-### Performance
+- Each flext-\* project is a separate Python package
+- Published to PyPI for easy installation
+- Docker images for containerized deployments
 
-- **Response Time**: < 100ms for API calls
-- **Throughput**: 1000+ concurrent requests
-- **Availability**: 99.9% uptime
+### Service Architecture
 
-### Security
+- **CLI Tools**: Command-line interfaces for operations
+- **API Services**: REST/gRPC services for integration
+- **Batch Processors**: Background job processing
+- **Event-Driven**: Asynchronous processing with domain events
 
-- **Authentication**: JWT-based token system
+## Quality Assurance
+
+### Testing Strategy
+
+- **Unit Tests**: Test individual components
+- **Integration Tests**: Test component interactions
+- **E2E Tests**: Full workflow testing
+- **Performance Tests**: Load and stress testing
+
+### Code Quality
+
+- **Linting**: Ruff for code style and error detection
+- **Type Checking**: Pyright/mypy for static type analysis
+- **Coverage**: 100% test coverage requirement
+- **Documentation**: Docstring validation and coverage
+
+## Security Architecture
+
+- **Input Validation**: Pydantic models for all inputs
+- **Authentication**: JWT and LDAP integration
 - **Authorization**: Role-based access control
-- **Encryption**: TLS for all communications
+- **Audit Logging**: Comprehensive security event logging
+- **Data Protection**: Encryption at rest and in transit
 
-### Monitoring
+## Performance Considerations
 
-- **Metrics**: Prometheus-based monitoring
-- **Logging**: Structured logging with correlation IDs
-- **Tracing**: Distributed tracing with OpenTelemetry
-
----
-
-See [Patterns](../patterns/README.md) for implementation patterns.
+- **Async/Await**: Full async support for I/O operations
+- **Connection Pooling**: Database and LDAP connection reuse
+- **Caching**: Intelligent caching strategies
+- **Batch Processing**: Efficient bulk operations
+- **Monitoring**: Performance metrics and alerting

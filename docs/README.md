@@ -1,173 +1,67 @@
-# FLEXT Documentation Hub
+# FLEXT Documentation
 
-**Category**: Documentation Hub | **Status**: Active Development | **Version**: 0.9.0-dev | **Last Updated**: 2025-08-10
+**FLEXT** - Enterprise Data Integration Platform
 
-Welcome to the FLEXT documentation hub. This guide provides everything you need to understand, use, and contribute to the FLEXT ecosystem.
+A comprehensive, enterprise-grade data integration framework built with Python 3.13+ and modern architectural patterns. FLEXT provides a unified platform for data processing, transformation, and integration across multiple domains including LDAP, Oracle, and various enterprise systems.
 
-## Table of Contents
+## 📚 Documentation Structure
 
-- [Quick Start](#quick-start)
-- [Documentation Structure](#documentation-structure)
-- [User Documentation](#user-documentation)
-- [Developer Documentation](#developer-documentation)
-- [Reference Documentation](#reference-documentation)
-- [Standards and Guidelines](#standards-and-guidelines)
-- [Getting Help](#getting-help)
+### 🚀 [Getting Started](./guides/getting-started.md)
 
-## Quick Start
+Quick start guides, installation instructions, and basic usage examples.
 
-### For New Users
+### 🏗️ [Architecture](./architecture/README.md)
 
-1. **Start Here**: [Installation Guide](./getting-started/installation.md)
-2. **Quick Tutorial**: [Quick Start Guide](./getting-started/quick-start.md)
-3. **First Project**: [Data Integration Guide](./user-guides/data-integration/README.md)
+System architecture, design patterns, and technical decisions.
 
-### For Developers
+### 🔌 [API Reference](./api-reference/README.md)
 
-1. **Architecture**: [System Overview](./developer/architecture/README.md)
-2. **API Reference**: [Complete API Docs](./reference/api/README.md)
-3. **Contributing**: [Development Guidelines](./developer/contributing/README.md)
+Complete API documentation for all FLEXT components and libraries.
 
-### For System Administrators
+### 📦 [Projects](./projects/README.md)
 
-1. **Deployment**: [Deployment Guide](./developer/deployment/README.md)
-2. **Configuration**: [System Configuration](./user-guides/configuration/README.md)
-3. **Monitoring**: [Observability Guide](./user-guides/troubleshooting/monitoring.md)
+Detailed documentation for each FLEXT project and library:
 
-## Documentation Structure
+- **flext-core** - Core framework and patterns
+- **flext-ldif** - LDIF processing and migration
+- **flext-api** - REST API framework
+- **flext-auth** - Authentication and authorization
+- **flext-ldap** - LDAP operations
+- **flext-oracle** - Oracle database integration
+- **flext-grpc** - gRPC services
+- And more...
 
-Our documentation is organized into logical sections to help you find what you need quickly:
+### 📋 [Standards](./standards/README.md)
 
-```
-docs/
-├── getting-started/          # Quick start guides and installation
-├── user-guides/             # End-user documentation by use case
-├── developer/               # Technical implementation details
-├── reference/               # Complete API and configuration reference
-├── standards/               # Documentation standards and templates
-└── archive/                 # Deprecated content
-```
+Coding standards, best practices, and development guidelines.
 
-## User Documentation
+### 📊 [Reports](./reports/README.md)
 
-### Getting Started
+Project status, QA reports, and technical documentation.
 
-- **[Installation Guide](./getting-started/installation.md)** - Complete installation instructions
-- **[Quick Start Guide](./getting-started/quick-start.md)** - Get up and running in 10 minutes
-- **[Prerequisites](./getting-started/prerequisites.md)** - System requirements and dependencies
+## 🎯 Key Features
 
-### User Guides
+- **Unified API**: Single facade pattern across all libraries
+- **Type Safety**: Full Pydantic v2 integration with Python 3.13+
+- **Enterprise Patterns**: CQRS, Railway-oriented programming, Dependency Injection
+- **Extensible**: Plugin architecture with flext-core patterns
+- **Production Ready**: Comprehensive testing, monitoring, and error handling
 
-- **[Data Integration](./user-guides/data-integration/README.md)** - ETL/ELT workflows and patterns
-- **[Authentication](./user-guides/authentication/README.md)** - User authentication and authorization
-- **[Configuration](./user-guides/configuration/README.md)** - System configuration and customization
-- **[Troubleshooting](./user-guides/troubleshooting/README.md)** - Common issues and solutions
+## 🛠️ Quick Links
 
-## Developer Documentation
+- [Installation Guide](./guides/getting-started.md#installation)
+- [API Overview](./api-reference/README.md)
+- [Project Structure](./projects/README.md)
+- [Development Guide](./guides/development.md)
 
-### Architecture
+## 📞 Support
 
-- **[System Overview](./developer/architecture/README.md)** - High-level architecture and design
-- **[Clean Architecture](./developer/architecture/clean-architecture.md)** - Design principles and patterns
-- **[Python-Go Integration](./developer/architecture/python-go-integration.md)** - Cross-language integration
-- **[Package Structure](./developer/architecture/pkg-structure.md)** - Code organization
+For support and questions:
 
-### Development
-
-- **[API Development](./developer/api/README.md)** - Building and extending APIs
-- **[Coding Patterns](./developer/patterns/README.md)** - Standard patterns and practices
-- **[Deployment](./developer/deployment/README.md)** - Deployment strategies and infrastructure
-- **[Contributing](./developer/contributing/README.md)** - How to contribute to FLEXT
-
-## Reference Documentation
-
-### API Reference
-
-- **[REST API](./reference/api/rest-api.md)** - Complete REST API documentation
-- **[Python SDK](./reference/api/python-sdk.md)** - Python client library reference
-- **[Go SDK](./reference/api/go-sdk.md)** - Go client library reference
-- **[OpenAPI Specs](./reference/api/openapi/)** - Machine-readable API specifications
-
-### Configuration Reference
-
-- **[Configuration Files](./reference/configuration/files.md)** - All configuration options
-- **[Environment Variables](./reference/configuration/environment.md)** - Environment variable reference
-- **[CLI Options](./reference/cli/README.md)** - Command-line interface reference
-
-## Standards and Guidelines
-
-### Documentation Standards
-
-- **[Documentation Standards](./standards/README.md)** - How to write and maintain documentation
-- **[Writing Guide](./standards/writing-guide.md)** - Detailed writing guidelines
-- **[Style Guide](./standards/style-guide.md)** - Visual and formatting standards
-- **[Templates](./standards/templates/)** - Standard document templates
-
-### Development Standards
-
-- **[Python Standards](./standards/python.md)** - Python coding conventions
-- **[Go Standards](./standards/go.md)** - Go coding conventions
-- **[API Standards](./standards/api.md)** - API design and documentation standards
-
-## Project-Specific Documentation
-
-### Core Components
-
-- **[FlexCore](./flexcore/README.md)** - Go-based core system
-- **[FLEXT API](./flext-api/README.md)** - Python API server
-- **[FLEXT CLI](./flext-cli/README.md)** - Command-line interface
-- **[FLEXT Web](./flext-web/README.md)** - Web interface
-
-### Data Integration
-
-- **[FLEXT TAP Oracle](./flext-tap-oracle/README.md)** - Oracle data extraction
-- **[FLEXT TAP LDAP](./flext-tap-ldap/README.md)** - LDAP data extraction
-- **[FLEXT Target Oracle](./flext-target-oracle/README.md)** - Oracle data loading
-- **[FLEXT DBT Projects](./flext-dbt-oracle/README.md)** - Data transformation
-
-### Authentication & Security
-
-- **[FLEXT Auth](./flext-auth/README.md)** - Authentication system
-- **[FLEXT LDAP](./flext-ldap/README.md)** - LDAP integration
-- **[FLEXT LDIF](./flext-ldif/README.md)** - LDIF processing
-
-## Getting Help
-
-### Documentation Status
-
-- **Current Version**: 0.9.0-dev
-- **Last Updated**: 2025-08-10
-- **Coverage**: Major components documented; sections in progress
-- **Status**: Active development
-
-### Support Channels
-
-- **GitHub Issues**: [Report bugs or request features](https://github.com/flext-sh/flext/issues)
-- **GitHub Discussions**: [Ask questions and share ideas](https://github.com/flext-sh/flext/discussions)
-- **Documentation Issues**: [Report documentation problems](https://github.com/flext-sh/flext/issues?q=label%3Adocumentation)
-
-### Contributing to Documentation
-
-1. **Fork the repository**
-2. **Create a feature branch**: `docs/your-improvement`
-3. **Follow the [documentation standards](./standards/README.md)**
-4. **Submit a pull request** with clear description
-
-### Documentation Roadmap
-
-- **Q1 2025**: Complete API reference documentation
-- **Q2 2025**: Add video tutorials and interactive examples
-- **Q3 2025**: Implement documentation search and analytics
-- **Q4 2025**: Add multilingual support
-
-## Related Resources
-
-- **[Main Project README](../README.md)** - Project overview and quick start
-- **[Development Guide](../docs/development/README.md)** - Development planning and status
-- **[Architecture Overview](../docs/architecture/README.md)** - System architecture details
+- 📧 Email: <dev@flext.com>
+- 📖 [Contributing Guide](./guides/contributing.md)
+- 🐛 [Issue Tracker](https://github.com/flext/flext/issues)
 
 ---
 
-**Contributors**: FLEXT Documentation Team  
-**Last Updated**: 2025-08-07  
-**Version**: 2.1.0
+_Built with ❤️ by the FLEXT Team_
