@@ -1,4 +1,32 @@
-"""FLEXT Control Panel - Enterprise Data Integration Platform.
+"""
+FLEXT Control Panel - Enterprise Data Integration Platform.
+
+FLEXT is a comprehensive enterprise data integration platform that provides a unified
+framework for data processing, transformation, and integration across multiple domains
+including LDAP, Oracle, and various enterprise systems.
+
+This module contains the core FLEXT application framework including:
+
+    - CLI interface for data integration operations
+    - Workspace management for project coordination
+    - Application handlers for pipeline orchestration
+    - Development tools for workflow automation
+    - Service utilities for enterprise operations
+
+The platform follows clean architecture principles with CQRS patterns, railway-oriented
+programming, and comprehensive error handling throughout.
+
+Attributes:
+    PROJECT_VERSION (FlextVersion): Current version of the FLEXT project.
+    __version__ (str): Version string for the package.
+    __version_info__ (tuple): Detailed version information.
+
+Example:
+    >>> from flext import FlextCli, create_cli
+    >>>
+    >>> # Create and run FLEXT CLI
+    >>> cli = create_cli()
+    >>> cli.run()
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT

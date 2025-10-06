@@ -107,7 +107,7 @@ DOMAIN_REPLACEMENTS = {
     # Database
     "import sqlalchemy": "from flext_db_oracle import FlextOracleClient",
     "import oracledb": "from flext_db_oracle import FlextOracleClient",
-    "import ldap3": "from flext_ldap import FlextLdapClient",
+    "import ldap3": "from flext_ldap import FlextLDAPClient",
     # Quality/Analysis
     "import mypy": "from flext_quality import FlextQualityAnalyzer",
     "import coverage": "from flext_quality import FlextQualityAnalyzer",

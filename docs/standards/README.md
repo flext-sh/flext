@@ -1,270 +1,156 @@
-# FLEXT Documentation Standards
+# Standards and Guidelines
 
-**Category**: Standards | **Status**: Published | **Version**: 0.9.0 | **Last Updated**: 2025-08-07
+Coding standards, best practices, and development guidelines for the FLEXT ecosystem.
 
-This document defines the standards and guidelines for all FLEXT documentation to ensure consistency, quality, and professionalism across the entire documentation ecosystem.
+## Code Standards
 
-## Table of Contents
+### [Python Standards](./python.md)
 
-- [Overview](#overview)
-- [Document Structure](#document-structure)
-- [Content Standards](#content-standards)
-- [Writing Guidelines](#writing-guidelines)
-- [Code Examples](#code-examples)
-- [Navigation Standards](#navigation-standards)
-- [Quality Checklist](#quality-checklist)
+Python coding standards, style guidelines, and best practices for FLEXT development.
 
-## Overview
+### [PEP Compliance](./pep-semantic.md)
 
-FLEXT documentation follows a structured approach to ensure:
+PEP compliance requirements and semantic versioning standards.
 
-- **Consistency** across all documents
-- **Professionalism** in presentation and language
-- **Usability** for different types of users
-- **Maintainability** for long-term sustainability
-- **Reality-based** content that matches actual implementation
+### [Docstring Standards](./docstring_standard.md)
 
-## Document Structure
+Documentation standards for docstrings, comments, and code documentation.
 
-### Required Frontmatter
+## Development Practices
 
-Every document must include standardized frontmatter:
+### [Documentation Standards](./documentation.md)
 
-```yaml
----
-title: "Document Title"
-description: "Brief description of the document"
-category: "getting-started|user-guides|developer|reference|standards"
-status: "draft|review|published|deprecated"
-version: "0.9.0"
-last_updated: "YYYY-MM-DD"
-contributors: ["author1", "author2"]
-dependencies: ["related-doc-1", "related-doc-2"]
----
-```
+Standards for creating and maintaining project documentation.
 
-### Document Header
+### [Template Standards](./templates/)
 
-Every document must have a standardized header:
+Standard templates for documentation, configuration, and project structure.
 
-```markdown
-# Document Title
+## Quality Assurance
 
-**Category**: [Category] | **Status**: [Status] | **Version**: [Version] | **Last Updated**: [Date]
+### [Testing Standards](./testing.md)
 
-Brief description of what this document covers and who it's for.
-```
+Standards for unit testing, integration testing, and end-to-end testing.
 
-### Required Sections
+### [Code Quality](./code-quality.md)
 
-1. **Table of Contents** - For documents longer than 500 words
-2. **Overview/Introduction** - Clear purpose and scope
-3. **Main Content** - Organized with clear headings
-4. **Related Documentation** - Links to related content
-5. **Footer** - Contributors, last updated, version
+Code quality metrics, linting standards, and static analysis requirements.
 
-## Content Standards
+### [Performance Standards](./performance.md)
 
-### Reality-Based Documentation
+Performance benchmarks, optimization guidelines, and monitoring standards.
 
-✅ **Do:**
+## Architecture Standards
 
-- Document actual implementation status
-- Include working code examples
-- Specify clear prerequisites and dependencies
-- Acknowledge limitations and known issues
-- Update documentation when implementation changes
+### [Clean Architecture](./clean-architecture.md)
 
-❌ **Don't:**
+Implementation of clean architecture principles in FLEXT projects.
 
-- Make marketing claims or fictional achievements
-- Include outdated or incorrect information
-- Promise features that don't exist
-- Hide known problems or limitations
+### [Design Patterns](./design-patterns.md)
 
-### Professional Language
+Standard design patterns used throughout the FLEXT ecosystem.
 
-✅ **Do:**
+### [SOLID Principles](./solid-principles.md)
 
-- Use clear, concise, and technical language
-- Maintain consistent terminology across all documents
-- Use proper grammar and spelling
-- Write in active voice when possible
-- Define technical terms on first use
+Application of SOLID principles in FLEXT development.
 
-❌ **Don't:**
+## Development Workflow
 
-- Use informal or marketing language
-- Use technical jargon without explanation
-- Write in passive voice unnecessarily
-- Use abbreviations without defining them
+### [Git Workflow](./git-workflow.md)
 
-### Accuracy and Completeness
+Git workflow, branching strategy, and commit message standards.
 
-✅ **Do:**
+### [Release Process](./release-process.md)
 
-- Verify all information before publishing
-- Include version numbers and compatibility notes
-- Test all code examples
-- Provide complete step-by-step instructions
-- Include troubleshooting information
+Release management, versioning, and deployment standards.
 
-❌ **Don't:**
+### [CI/CD Standards](./cicd.md)
 
-- Publish incomplete or untested information
-- Assume reader knowledge
-- Skip important steps in procedures
-- Leave out error handling information
+Continuous integration and deployment pipeline standards.
 
-## Writing Guidelines
+## Security Standards
 
-### Document Organization
+### [Security Guidelines](./security.md)
 
-1. **Start with the goal** - What will the reader accomplish?
-2. **Provide context** - Why is this information important?
-3. **Give step-by-step instructions** - How to achieve the goal?
-4. **Include examples** - Show real-world usage
-5. **Address common issues** - What might go wrong?
+Security best practices, authentication, and authorization standards.
 
-### Heading Structure
+### [Data Protection](./data-protection.md)
 
-- **H1 (#)** - Document title only
-- **H2 (##)** - Major sections
-- **H3 (###)** - Subsections
-- **H4 (####)** - Minor subsections (use sparingly)
+Data protection, encryption, and privacy standards.
 
-### Lists and Formatting
+## Operational Standards
 
-- Use bullet points for unordered lists
-- Use numbered lists for step-by-step procedures
-- Use bold for emphasis on important terms
-- Use code formatting for technical terms, commands, and file names
-- Use blockquotes for warnings, notes, and tips
+### [Monitoring Standards](./monitoring.md)
 
-### Links and References
+Monitoring, logging, and observability standards.
 
-- Use relative links for internal documentation
-- Include descriptive link text
-- Verify all links work before publishing
-- Use anchor links for specific sections
+### [Error Handling](./error-handling.md)
 
-## Code Examples
+Error handling patterns and exception management standards.
 
-### Code Block Standards
+### [Configuration Management](./configuration.md)
 
-````markdown
-```python
-# Clear, descriptive comment
-def example_function():
-    """Docstring explaining the function."""
-    # Implementation with comments
-    result = process_data()
-    return result
-```
-````
+Configuration management and environment variable standards.
 
-### Code Example Requirements
+## Compliance
 
-✅ **Do:**
+### [Industry Standards](./industry-standards.md)
 
-- Include working, tested code
-- Add clear comments and explanations
-- Use proper syntax highlighting
-- Include error handling where relevant
-- Show complete, runnable examples
-- Include expected output when helpful
+Industry compliance requirements and regulatory standards.
 
-❌ **Don't:**
+### [Accessibility](./accessibility.md)
 
-- Include pseudo-code or incomplete examples
-- Use placeholder text like "TODO" or "FIXME"
-- Skip error handling in production code
-- Assume the reader knows the context
+Accessibility guidelines and web standards compliance.
 
-### Code Style
+## Contributing to Standards
 
-- Follow language-specific style guides (PEP 8 for Python, etc.)
-- Use consistent indentation and formatting
-- Include type hints where appropriate
-- Add docstrings for functions and classes
+Standards are living documents that evolve with the ecosystem:
 
-## Navigation Standards
+1. **Propose Changes**: Use the issue tracker to propose standard updates
+2. **Review Process**: All standard changes require review and approval
+3. **Implementation**: Update code and documentation to match new standards
+4. **Communication**: Announce standard changes to the development team
 
-### Directory Structure
+## Standards Enforcement
 
-Every directory must have a `README.md` that includes:
+Standards are enforced through:
 
-- Overview of the directory's purpose
-- List of documents with brief descriptions
-- Navigation guidance for users
-- Related directories and resources
+- **Automated Tools**: Linting, type checking, and code analysis
+- **Code Reviews**: Peer review process for standard compliance
+- **CI/CD Pipeline**: Automated checks for standard violations
+- **Documentation**: Regular updates to reflect current standards
 
-### Cross-References
+## Standards Categories
 
-- Use relative paths for internal links
-- Include anchor links for specific sections
-- Maintain a "Related Documentation" section
-- Update links when documents are moved or renamed
+### Must-Follow Standards
 
-### Search and Discovery
+- Python 3.13+ syntax and features
+- Pydantic v2 patterns and validation
+- flext-core architectural patterns
+- 100% test coverage requirement
+- Type safety with no type: ignore usage
 
-- Use descriptive file names
-- Include relevant keywords in content
-- Create indexes
-- Use consistent terminology for searchability
+### Recommended Standards
 
-## Quality Checklist
+- Clean architecture implementation
+- SOLID principles application
+- Comprehensive error handling
+- Structured logging practices
+- Performance optimization guidelines
 
-Before publishing any document, verify:
+### Project-Specific Standards
 
-### Content Quality
+- Each flext-\* project may have additional specific standards
+- Domain-specific requirements and constraints
+- Integration-specific patterns and practices
 
-- [ ] Information is accurate and up-to-date
-- [ ] Code examples work and are tested
-- [ ] All links are valid and working
-- [ ] No marketing claims or fictional content
-- [ ] Prerequisites and dependencies are clearly stated
+## Getting Help with Standards
 
-### Structure and Format
-
-- [ ] Document follows the standard template
-- [ ] Frontmatter is complete and correct
-- [ ] Table of contents is included (if needed)
-- [ ] Headings follow the hierarchy guidelines
-- [ ] Related documentation links are included
-
-### Language and Style
-
-- [ ] Professional language throughout
-- [ ] Consistent terminology used
-- [ ] No spelling or grammar errors
-- [ ] Technical terms are defined
-- [ ] Active voice used where appropriate
-
-### Navigation
-
-- [ ] Document is in the correct directory
-- [ ] Directory README is updated
-- [ ] Cross-references are accurate
-- [ ] File name is descriptive and consistent
-
-## Templates
-
-Standard templates are available in the `standards/templates/` directory:
-
-- [Document Template](./templates/document-template.md)
-- [API Reference Template](./templates/api-template.md)
-- [User Guide Template](./templates/user-guide-template.md)
-- [Developer Guide Template](./templates/developer-guide-template.md)
-
-## Related Documentation
-
-- [Writing Guide](./writing-guide.md) - Detailed writing guidelines
-- [Style Guide](./style-guide.md) - Visual and formatting standards
-- [Documentation Plan](../DOCUMENTATION_REORGANIZATION_PLAN.md) - Overall reorganization strategy
+- 📖 **Standards Documentation**: Complete standards reference
+- 🐛 **Standards Issues**: Report standard violations or propose changes
+- 💬 **Standards Discussion**: Discuss standards interpretation and application
+- 📧 **Standards Support**: Get help with standards implementation
 
 ---
 
-**Contributors**: FLEXT Documentation Team  
-**Last Updated**: 2025-08-07  
-**Version**: 0.9.0
+_Standards ensure consistency, quality, and maintainability across the FLEXT ecosystem._

@@ -267,7 +267,7 @@ class TestFlextWorkspaceService:
         assert isinstance(result, FlextResult)
 
 
-class TestFlextCoreIntegration:
+class TestFlextIntegration:
     """Test flext core integration functionality."""
 
     def test_flext_core_imports(self) -> None:

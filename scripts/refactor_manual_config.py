@@ -280,10 +280,10 @@ to use standardized FLEXT configuration management patterns.
 from pydantic import BaseSettings, Field
 from pydantic_settings import SettingsConfigDict
 
-FlextCoreSettings
+FlextSettings
 
 
-class ProjectSpecificSettings(FlextCoreSettings):
+class ProjectSpecificSettings(FlextSettings):
     """Project-specific configuration using FLEXT patterns.
 
     This replaces manual os.getenv() calls and direct config instantiation

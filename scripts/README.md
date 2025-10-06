@@ -22,17 +22,17 @@ python3 scripts/git_ultimate_cleanup.py --all --push-all
 
 **THE ONLY SCRIPT YOU NEED**: `git_ultimate_cleanup.py`
 
-| Command                                              | Purpose                                                        | Safe?          |
-| ---------------------------------------------------- | -------------------------------------------------------------- | -------------- |
-| `python3 scripts/git_ultimate_cleanup.py --detect-cruft` | **Detect cruft** - Analyzes .gitignore and git history     | ✅ SAFE        |
-| `python3 scripts/git_ultimate_cleanup.py --test`     | **Test all functions** - Validates without changes             | ✅ SAFE        |
-| `python3 scripts/git_ultimate_cleanup.py --dry-run`  | **Simulate cleanup** - Shows what would be done                | ✅ SAFE        |
-| `python3 scripts/git_ultimate_cleanup.py`            | **Clean main repo** - With external backup                     | ⚠️ DESTRUCTIVE |
-| `python3 scripts/git_ultimate_cleanup.py --all`      | **Clean all** - Main + 32 submodules                           | ⚠️ DESTRUCTIVE |
-| `python3 scripts/git_ultimate_cleanup.py --push`     | **Clean + push** - Main repo to GitHub                         | ⚠️ DESTRUCTIVE |
-| `python3 scripts/git_ultimate_cleanup.py --push-all` | **Clean + push all** - Main + submodules to GitHub             | ⚠️ DESTRUCTIVE |
-| `python3 scripts/git_ultimate_cleanup.py --backup-only` | **Backup only** - Creates external backup without cleanup   | ✅ SAFE        |
-| `python3 scripts/git_ultimate_cleanup.py --restore-remotes` | **Restore remotes** - Re-add after filter-repo          | ✅ SAFE        |
+| Command                                                     | Purpose                                                   | Safe?          |
+| ----------------------------------------------------------- | --------------------------------------------------------- | -------------- |
+| `python3 scripts/git_ultimate_cleanup.py --detect-cruft`    | **Detect cruft** - Analyzes .gitignore and git history    | ✅ SAFE        |
+| `python3 scripts/git_ultimate_cleanup.py --test`            | **Test all functions** - Validates without changes        | ✅ SAFE        |
+| `python3 scripts/git_ultimate_cleanup.py --dry-run`         | **Simulate cleanup** - Shows what would be done           | ✅ SAFE        |
+| `python3 scripts/git_ultimate_cleanup.py`                   | **Clean main repo** - With external backup                | ⚠️ DESTRUCTIVE |
+| `python3 scripts/git_ultimate_cleanup.py --all`             | **Clean all** - Main + 32 submodules                      | ⚠️ DESTRUCTIVE |
+| `python3 scripts/git_ultimate_cleanup.py --push`            | **Clean + push** - Main repo to GitHub                    | ⚠️ DESTRUCTIVE |
+| `python3 scripts/git_ultimate_cleanup.py --push-all`        | **Clean + push all** - Main + submodules to GitHub        | ⚠️ DESTRUCTIVE |
+| `python3 scripts/git_ultimate_cleanup.py --backup-only`     | **Backup only** - Creates external backup without cleanup | ✅ SAFE        |
+| `python3 scripts/git_ultimate_cleanup.py --restore-remotes` | **Restore remotes** - Re-add after filter-repo            | ✅ SAFE        |
 
 ## Detailed Workflow
 
@@ -60,10 +60,12 @@ python3 scripts/git_ultimate_cleanup.py --detect-cruft
 **Results:**
 
 The detection analyzes two sources:
+
 - **From .gitignore**: Patterns that should never be committed but exist in history
 - **From git history**: Files frequently added and removed (likely cruft)
 
 **Example output:**
+
 ```
 🎯 RECOMMENDED PATTERNS TO ADD:
    1. *.ai.md
@@ -113,6 +115,7 @@ python3 scripts/git_ultimate_cleanup.py --dry-run
 **Review simulation:**
 
 The script will show:
+
 - Number of cruft patterns to remove
 - AI references that would be cleaned
 - Author normalization preview

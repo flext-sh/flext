@@ -26,7 +26,7 @@ from flext_core import (
 )
 
 
-class TestFlextCoreComprehensive:
+class TestFlextComprehensive:
     """Comprehensive tests for all flext-core components."""
 
     # =============================================================================

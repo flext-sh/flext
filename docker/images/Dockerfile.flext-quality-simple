@@ -104,7 +104,7 @@ RUN pip install -e . --no-deps
 RUN echo "🧪 Testing imports..." && \
     python -c "from flext_quality.analyzer import CodeAnalyzer; print('✅ CodeAnalyzer')" && \
     python -c "from flext_quality.exceptions import FlextQualityError; print('✅ Exceptions')" && \
-    python -c "from flext_core.exceptions import FlextExceptions.Error; print('✅ FlextCore')" && \
+    python -c "from flext_core.exceptions import FlextExceptions.Error; print('✅ Flext')" && \
     echo "✅ All imports successful\!"
 
 # Run critical tests

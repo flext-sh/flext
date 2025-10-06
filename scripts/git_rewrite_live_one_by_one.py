@@ -12,7 +12,6 @@ Usage:
 
 import argparse
 import re
-import subprocess
 import sys
 from pathlib import Path
 
@@ -62,7 +61,7 @@ class LiveGitRewriter:
 
         return f'''#!/usr/bin/env python3
 import re
-import subprocess
+import subprocessFlextLDAPModels
 import sys
 
 # Global variables for the callback

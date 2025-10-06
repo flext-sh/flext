@@ -25,7 +25,7 @@ from flext_core import (
 )
 
 
-class TestFlextCoreConsolidated:
+class TestFlextConsolidated:
     """Unified test class for all flext-core functionality."""
 
     class _TestDataHelper:
