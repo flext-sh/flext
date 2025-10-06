@@ -102,7 +102,7 @@ class FlextTools(FlextService[None]):
     def __init__(self: Self) -> None:
         """Initialize FlextTools with complete flext-core integration."""
         super().__init__()
-        self._logger = FlextLogger(__name__)
+        self.logger = FlextLogger(__name__)
 
         # Complete flext-core ecosystem integration
         self._container = FlextContainer.get_global()
@@ -120,7 +120,7 @@ class FlextTools(FlextService[None]):
         self.architecture = FlextArchitectureTools()  # 14 architecture scripts
         self.dependencies = FlextDependencyTools()  # 6 dependency scripts
 
-        self._logger.info("FlextTools initialized with 6 tool categories")
+        self.logger.info("FlextTools initialized with 6 tool categories")
 
     def execute(self: Self) -> FlextResult[None]:
         """Execute FlextTools service - FlextService interface."""
