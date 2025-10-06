@@ -61,7 +61,7 @@ class LiveGitRewriter:
 
         return f'''#!/usr/bin/env python3
 import re
-import subprocessFlextLDAPModels
+import subprocessFlextLdapModels
 import sys
 
 # Global variables for the callback

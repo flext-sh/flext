@@ -10,27 +10,27 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from flext_ldap import (
-    FlextLDAP,
-    FlextLDAPClient,
-    FlextLDAPConfig,
-    FlextLDAPConstants,
-    FlextLDAPModels,
-    FlextLDAPTypes,
-    FlextLDAPUtilities,
+    FlextLdap,
+    FlextLdapClients,
+    FlextLdapConfig,
+    FlextLdapConstants,
+    FlextLdapModels,
+    FlextLdapTypes,
+    FlextLdapUtilities,
 )
 
 
-class TestFlextLDAPApi:
-    """Test FlextLDAP functionality."""
+class TestFlextLdap:
+    """Test FlextLdap functionality."""
 
     def test_flext_ldap_api_initialization(self) -> None:
-        """Test FlextLDAP initializes correctly."""
-        api = FlextLDAP()
+        """Test FlextLdap initializes correctly."""
+        api = FlextLdap()
         assert api is not None
 
     def test_flext_ldap_api_methods(self) -> None:
-        """Test FlextLDAP has expected methods."""
-        api = FlextLDAP()
+        """Test FlextLdap has expected methods."""
+        api = FlextLdap()
 
         # Test that API has expected methods
         assert hasattr(api, "connect")
@@ -40,17 +40,17 @@ class TestFlextLDAPApi:
         assert hasattr(api, "update_user_attributes")
 
 
-class TestFlextLDAPClient:
-    """Test FlextLDAPClient functionality."""
+class TestFlextLdapClient:
+    """Test FlextLdapClients functionality."""
 
     def test_flext_ldap_client_initialization(self) -> None:
-        """Test FlextLDAPClient initializes correctly."""
-        client = FlextLDAPClient()
+        """Test FlextLdapClients initializes correctly."""
+        client = FlextLdapClients()
         assert client is not None
 
     def test_flext_ldap_client_methods(self) -> None:
-        """Test FlextLDAPClient has expected methods."""
-        client = FlextLDAPClient()
+        """Test FlextLdapClients has expected methods."""
+        client = FlextLdapClients()
 
         # Test that client has expected methods
         assert hasattr(client, "connect")
@@ -61,17 +61,17 @@ class TestFlextLDAPClient:
         assert hasattr(client, "delete")
 
 
-class TestFlextLDAPConfig:
-    """Test FlextLDAPConfig functionality."""
+class TestFlextLdapConfig:
+    """Test FlextLdapConfig functionality."""
 
     def test_flext_ldap_config_initialization(self) -> None:
-        """Test FlextLDAPConfig initializes correctly."""
-        config = FlextLDAPConfig()
+        """Test FlextLdapConfig initializes correctly."""
+        config = FlextLdapConfig()
         assert config is not None
 
     def test_flext_ldap_config_methods(self) -> None:
-        """Test FlextLDAPConfig has expected methods."""
-        config = FlextLDAPConfig()
+        """Test FlextLdapConfig has expected methods."""
+        config = FlextLdapConfig()
 
         # Test that config has expected methods
         assert hasattr(config, "get_effective_server_uri")
@@ -80,17 +80,17 @@ class TestFlextLDAPConfig:
         assert hasattr(config, "ldap_default_connection")
 
 
-class TestFlextLDAPConstants:
-    """Test FlextLDAPConstants functionality."""
+class TestFlextLdapConstants:
+    """Test FlextLdapConstants functionality."""
 
     def test_flext_ldap_constants_initialization(self) -> None:
-        """Test FlextLDAPConstants initializes correctly."""
-        constants = FlextLDAPConstants()
+        """Test FlextLdapConstants initializes correctly."""
+        constants = FlextLdapConstants()
         assert constants is not None
 
     def test_flext_ldap_constants_values(self) -> None:
-        """Test FlextLDAPConstants has expected values."""
-        constants = FlextLDAPConstants()
+        """Test FlextLdapConstants has expected values."""
+        constants = FlextLdapConstants()
 
         # Test that constants has expected attributes
         assert hasattr(constants, "DEFAULT_TIMEOUT")
@@ -98,18 +98,18 @@ class TestFlextLDAPConstants:
         assert hasattr(constants, "LdapDefaults")
 
 
-# TestFlextLDAPDomainServices class removed - class no longer exists in flext-ldap
-class TestFlextLDAPModels:
-    """Test FlextLDAPModels functionality."""
+# TestFlextLdapDomainServices class removed - class no longer exists in flext-ldap
+class TestFlextLdapModels:
+    """Test FlextLdapModels functionality."""
 
     def test_flext_ldap_models_initialization(self) -> None:
-        """Test FlextLDAPModels initializes correctly."""
-        models = FlextLDAPModels()
+        """Test FlextLdapModels initializes correctly."""
+        models = FlextLdapModels()
         assert models is not None
 
     def test_flext_ldap_models_methods(self) -> None:
-        """Test FlextLDAPModels has expected methods."""
-        models = FlextLDAPModels()
+        """Test FlextLdapModels has expected methods."""
+        models = FlextLdapModels()
 
         # Test that models has expected model classes
         assert hasattr(models, "User")
@@ -118,33 +118,33 @@ class TestFlextLDAPModels:
         assert hasattr(models, "create_validated_email")
 
 
-class TestFlextLDAPUtilities:
-    """Test FlextLDAPUtilities functionality."""
+class TestFlextLdapUtilities:
+    """Test FlextLdapUtilities functionality."""
 
     def test_flext_ldap_utilities_initialization(self) -> None:
-        """Test FlextLDAPUtilities initializes correctly."""
-        utilities = FlextLDAPUtilities()
+        """Test FlextLdapUtilities initializes correctly."""
+        utilities = FlextLdapUtilities()
         assert utilities is not None
 
     def test_flext_ldap_utilities_attributes(self) -> None:
-        """Test FlextLDAPUtilities has expected attributes."""
-        utilities = FlextLDAPUtilities()
+        """Test FlextLdapUtilities has expected attributes."""
+        utilities = FlextLdapUtilities()
 
         # Test that utilities has expected attributes
         assert utilities is not None
 
 
-class TestFlextLDAPTypes:
-    """Test FlextLDAPTypes functionality."""
+class TestFlextLdapTypes:
+    """Test FlextLdapTypes functionality."""
 
     def test_flext_ldap_types_initialization(self) -> None:
-        """Test FlextLDAPTypes initializes correctly."""
-        types = FlextLDAPTypes()
+        """Test FlextLdapTypes initializes correctly."""
+        types = FlextLdapTypes()
         assert types is not None
 
     def test_flext_ldap_types_methods(self) -> None:
-        """Test FlextLDAPTypes has expected methods."""
-        types = FlextLDAPTypes()
+        """Test FlextLdapTypes has expected methods."""
+        types = FlextLdapTypes()
 
         # Test that types has expected type classes
         assert hasattr(types, "LdapConfig")
@@ -152,15 +152,15 @@ class TestFlextLDAPTypes:
         assert hasattr(types, "LdapEntries")
 
 
-class TestFlextLDAPIntegration:
+class TestFlextLdapIntegration:
     """Test flext_ldap module integration functionality."""
 
     def test_flext_ldap_module_integration(self) -> None:
         """Test flext_ldap module integration."""
         # Test that all main components can be imported and work together
-        api = FlextLDAP()
-        client = FlextLDAPClient()
-        config = FlextLDAPConfig()
+        api = FlextLdap()
+        client = FlextLdapClients()
+        config = FlextLdapConfig()
 
         assert api is not None
         assert client is not None
@@ -169,8 +169,8 @@ class TestFlextLDAPIntegration:
     def test_flext_ldap_module_functionality(self) -> None:
         """Test flext_ldap module functionality."""
         # Test that main components work together
-        api = FlextLDAP()
-        client = FlextLDAPClient()
+        api = FlextLdap()
+        client = FlextLdapClients()
 
         # Test API can create client
         assert api is not None
@@ -179,7 +179,7 @@ class TestFlextLDAPIntegration:
     def test_flext_ldap_module_real_functionality(self) -> None:
         """Test flext_ldap module real functionality without mocks."""
         # Test real functionality without mocks
-        api = FlextLDAP()
+        api = FlextLdap()
 
         # Test API initialization with real dependencies
         assert api is not None
