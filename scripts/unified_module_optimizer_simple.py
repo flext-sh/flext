@@ -111,7 +111,9 @@ if not RUFF_CMD:
 class FlextResult[T]:
     """Simplified FlextResult for railway pattern."""
 
-    def __init__(self, *, success: bool, value: T | None = None, error: str = "") -> None:
+    def __init__(
+        self, *, success: bool, value: T | None = None, error: str = ""
+    ) -> None:
         """Initialize the result with success status, value, and error."""
         self.success = success
         self._value = value
@@ -292,7 +294,7 @@ class FlextModuleOptimizer:
     def __init__(self, config: FlextModuleOptimizerConfig | None = None) -> None:
         """Initialize optimizer."""
         self._config = config or FlextModuleOptimizerConfig()
-        self._logger = FlextLogger(__name__)
+        self.logger = FlextLogger(__name__)
 
     def optimize_project(self, project_path: str) -> FlextResult:
         """Optimize entire project according to FLEXT patterns.
@@ -304,7 +306,7 @@ class FlextModuleOptimizer:
             FlextResult with optimization summary
 
         """
-        self._logger.info(
+        self.logger.info(
             "Starting unified module optimization", extra={"project_path": project_path}
         )
 
@@ -328,12 +330,12 @@ class FlextModuleOptimizer:
             return self._validate_optimization_results(optimization_result)
 
         except Exception as e:
-            self._logger.exception("Optimization failed", extra={"error": str(e)})
+            self.logger.exception("Optimization failed", extra={"error": str(e)})
             return FlextResult.fail(f"Optimization error: {e}")
 
     def _discover_optimization_targets(self, project_path: str) -> FlextResult:
         """Discover modules that need optimization."""
-        self._logger.info(
+        self.logger.info(
             "Discovering optimization targets", extra={"project_path": project_path}
         )
 
@@ -371,13 +373,13 @@ class FlextModuleOptimizer:
                         file_path.stat().st_size
                         > FlextModuleOptimizerConstants.Optimization.MAX_FILE_SIZE
                     ):
-                        self._logger.info(f"Skipping large file: {file_path}")
+                        self.logger.info(f"Skipping large file: {file_path}")
                         continue
 
                     # Analyze file for optimization needs
                     analysis_result = self._analyze_file_for_optimization(file_path)
                     if analysis_result.is_failure:
-                        self._logger.info(
+                        self.logger.info(
                             f"Analysis failed for {file_path}: {analysis_result.error}"
                         )
                         continue
@@ -399,7 +401,7 @@ class FlextModuleOptimizer:
             # Sort by priority (highest first)
             targets.sort(key=operator.itemgetter("priority"), reverse=True)
 
-            self._logger.info(f"Discovered {len(targets)} optimization targets")
+            self.logger.info(f"Discovered {len(targets)} optimization targets")
             return FlextResult.ok(targets)
 
         except Exception as e:
@@ -559,7 +561,7 @@ class FlextModuleOptimizer:
 
     def _validate_quality_gates(self, targets: list[FlextTypes.Dict]) -> FlextResult:
         """Validate targets against quality gates."""
-        self._logger.info(
+        self.logger.info(
             "Validating quality gates", extra={"target_count": len(targets)}
         )
 
@@ -586,7 +588,7 @@ class FlextModuleOptimizer:
         self, targets: list[FlextTypes.Dict]
     ) -> list[FlextTypes.Dict]:
         """Optimize targets in batches."""
-        self._logger.info(
+        self.logger.info(
             "Starting batch optimization", extra={"total_targets": len(targets)}
         )
 
@@ -595,7 +597,7 @@ class FlextModuleOptimizer:
 
         for i in range(0, len(targets), batch_size):
             batch = targets[i : i + batch_size]
-            self._logger.info(
+            self.logger.info(
                 f"Processing batch {i // batch_size + 1}/{(len(targets) - 1) // batch_size + 1}"
             )
 
@@ -609,15 +611,13 @@ class FlextModuleOptimizer:
 
             # Progress reporting
             success_count = sum(1 for r in batch_results if r["success"])
-            self._logger.info(
-                f"Batch complete: {success_count}/{len(batch)} successful"
-            )
+            self.logger.info(f"Batch complete: {success_count}/{len(batch)} successful")
 
         return results
 
     def _optimize_single_target(self, target: dict) -> dict:
         """Optimize a single target module."""
-        self._logger.info(f"Optimizing {target['file_path']}")
+        self.logger.info(f"Optimizing {target['file_path']}")
 
         try:
             # Read current content
@@ -626,9 +626,7 @@ class FlextModuleOptimizer:
 
             # Apply optimizations based on type
             if target["optimization_type"] == "pattern_violation":
-                optimized_content = self._fix_pattern_violations(
-                    original_content
-                )
+                optimized_content = self._fix_pattern_violations(original_content)
             elif target["optimization_type"] == "complexity_reduction":
                 optimized_content = self._reduce_complexity(original_content)
             elif target["optimization_type"] == "domain_library_integration":

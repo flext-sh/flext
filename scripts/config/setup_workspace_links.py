@@ -36,7 +36,7 @@ class WorkspaceManagementService(FlextService[FlextTypes.Dict]):
         """Initialize workspace management service."""
         super().__init__()
         self._container = FlextContainer.get_global()
-        self._logger = FlextLogger(__name__)
+        self.logger = FlextLogger(__name__)
         self._workspace_root = Path.cwd()
 
     class _LinkHelper:
@@ -134,7 +134,7 @@ class WorkspaceManagementService(FlextService[FlextTypes.Dict]):
 
     def setup_workspace_links(self) -> FlextResult[FlextTypes.Dict]:
         """Setup symbolic links for workspace projects."""
-        self._logger.info("Setting up workspace links")
+        self.logger.info("Setting up workspace links")
 
         # Discover projects
         projects_result = self._WorkspaceHelper.discover_flext_projects(
@@ -197,7 +197,7 @@ class WorkspaceManagementService(FlextService[FlextTypes.Dict]):
 
     def validate_workspace_links(self) -> FlextResult[FlextTypes.Dict]:
         """Validate all workspace symbolic links."""
-        self._logger.info("Validating workspace links")
+        self.logger.info("Validating workspace links")
 
         # Get workspace structure
         structure_result = self._WorkspaceHelper.create_workspace_structure(
@@ -248,7 +248,7 @@ class WorkspaceManagementService(FlextService[FlextTypes.Dict]):
 
     def execute(self) -> FlextResult[FlextTypes.Dict]:
         """Execute workspace management operation."""
-        self._logger.info("Executing workspace management")
+        self.logger.info("Executing workspace management")
 
         # Setup workspace links
         setup_result = self.setup_workspace_links()

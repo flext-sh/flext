@@ -22,13 +22,13 @@ class TestFlextCliPromptsInitialization:
         """Test default initialization."""
         prompts = FlextCliPrompts()
         assert prompts._quiet is False
-        assert prompts._logger is not None
+        assert prompts.logger is not None
 
     def test_init_with_logger(self) -> None:
         """Test initialization with custom logger."""
         logger = FlextLogger("test")
         prompts = FlextCliPrompts(logger=logger)
-        assert prompts._logger is logger
+        assert prompts.logger is logger
         assert prompts._quiet is False
 
     def test_init_quiet_mode(self) -> None:
@@ -271,7 +271,7 @@ class TestFlextCliPromptsPrintStatus:
         """Test print status with exception."""
         prompts = FlextCliPrompts()
         # Mock logger to raise exception
-        with patch.object(prompts._logger, "info", side_effect=Exception("Test error")):
+        with patch.object(prompts.logger, "info", side_effect=Exception("Test error")):
             result = prompts.print_status("Test message", status="info")
             assert result.is_failure
             assert (
@@ -340,7 +340,7 @@ class TestFlextCliPromptsProgress:
         """Test create progress with exception."""
         prompts = FlextCliPrompts()
         # Mock logger to raise exception
-        with patch.object(prompts._logger, "info", side_effect=Exception("Test error")):
+        with patch.object(prompts.logger, "info", side_effect=Exception("Test error")):
             result = prompts.create_progress("Test progress")
             assert result.is_failure
             assert (
@@ -377,7 +377,7 @@ class TestFlextCliPromptsProgress:
         prompts = FlextCliPrompts()
         items = [1, 2, 3]
         # Mock logger to raise exception
-        with patch.object(prompts._logger, "info", side_effect=Exception("Test error")):
+        with patch.object(prompts.logger, "info", side_effect=Exception("Test error")):
             result = prompts.with_progress(items, "Processing items")
             assert result.is_failure
             assert (

@@ -287,13 +287,13 @@ class TestFlextConsolidated:
         class IntegratedService(FlextService[FlextTypes.Dict]):
             def __init__(self) -> None:
                 super().__init__()
-                self._logger = FlextLogger(__name__)
+                self.logger = FlextLogger(__name__)
                 self._container = FlextContainer.get_global()
 
             def execute(self) -> FlextResult[FlextTypes.Dict]:
                 try:
                     # Use logger
-                    self._logger.info("Service executing")
+                    self.logger.info("Service executing")
 
                     # Use container
                     self._container.register("test", "value")
