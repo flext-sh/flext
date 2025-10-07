@@ -41,15 +41,26 @@ from flext_tools.api import FlextTools, FlextToolsAPI
 # Tool modules (6 unified modules consolidating 85+ scripts)
 from flext_tools.architecture_tools import FlextArchitectureTools
 
+# Legacy aliases for backward compatibility
+from flext_tools.config import ConfigurationManager
+from flext_tools.conflicts import ConflictAnalyzer
+
 # Namespace classes
 from flext_tools.constants import FlextToolsConstants
-from flext_tools.dependency_tools import FlextDependencyTools
+from flext_tools.dependency_tools import DependencyDiscovery, FlextDependencyTools
 from flext_tools.exceptions import FlextToolsExceptions
 from flext_tools.git_tools import FlextGitTools
 from flext_tools.models import FlextToolsModels
+from flext_tools.observability import FlextObservabilityService
 from flext_tools.optimizer_tools import FlextOptimizerTools
+from flext_tools.poetry_operations import PoetryOperations
+from flext_tools.poetry_validator import PoetryValidator
 from flext_tools.protocols import FlextToolsProtocols
 from flext_tools.quality_tools import FlextQualityTools
+from flext_tools.script_base import (
+    FlextScriptService,
+    FlextScriptService as FlextScript,
+)
 from flext_tools.typings import FlextToolsTypes
 
 # Utilities (consolidated from colors, paths, stdlib)
@@ -66,14 +77,22 @@ from flext_tools.utilities import (
 )
 from flext_tools.validation_tools import FlextValidationTools
 
+ScriptMetadata = FlextScriptService.ScriptMetadata
+
 __all__ = [
     "Colors",
+    "ConfigurationManager",  # Legacy
+    "ConflictAnalyzer",  # Legacy
+    "DependencyDiscovery",  # Legacy
     "FlextArchitectureTools",
     "FlextDependencyTools",
     # Tool modules
     "FlextGitTools",
+    "FlextObservabilityService",  # Legacy
     "FlextOptimizerTools",
     "FlextQualityTools",
+    # Legacy aliases
+    "FlextScript",  # Legacy
     # PRIMARY API
     "FlextTools",
     "FlextToolsAPI",
@@ -86,6 +105,9 @@ __all__ = [
     # Utilities
     "FlextToolsUtilities",
     "FlextValidationTools",
+    "PoetryOperations",  # Legacy
+    "PoetryValidator",  # Legacy
+    "ScriptMetadata",  # Legacy
     "colorize",
     "get_project_root",
     "get_stdlib_modules",

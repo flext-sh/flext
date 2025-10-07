@@ -57,6 +57,7 @@ from flext_core import (
     FlextRegistry,
     FlextResult,
     FlextService,
+    FlextTypes,
 )
 from pydantic import ConfigDict
 

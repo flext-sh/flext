@@ -9,7 +9,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 from flext_tests import FlextTestDocker
 
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
