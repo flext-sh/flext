@@ -74,10 +74,10 @@ class FlextTestsUtilities:
     @staticmethod
     @contextmanager
     def test_context(
-        target: Any,
+        target: object,
         attribute: str,
-        new_value: Any,
-        **options: Any,
+        new_value: object,
+        **options: dict[str, Any],
     ) -> Generator[None]:
         """Context manager for temporarily changing object attributes.
 
@@ -132,7 +132,7 @@ class FlextTestsUtilities:
             assert result.is_failure, f"Expected failure result, got: {result}"
 
         @staticmethod
-        def create_mock_service(**methods: Any) -> MagicMock:
+        def create_mock_service(**methods: dict[str, Any]) -> MagicMock:
             """Create a mock service with specified methods.
 
             Args:

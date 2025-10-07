@@ -141,6 +141,7 @@ line-length = 88
     ]
     "**/result.py" = [
         "PLC0415", # allow lazy imports in fix circular imports in base level
+        "SLF001", 
     ]
     "**/scripts/**" = [
         "EXE001",
@@ -207,7 +208,7 @@ line-length = 88
         "PLW1510",
         "S603",
     ]
-    "src/flext/services.py" = [
+    "**/services.py" = [
         "S404",  # subprocess import for controlled test execution
         "S603",  # subprocess calls for controlled testing operations
         "SLF001", # private member access within class hierarchy
