@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
+import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -330,7 +331,7 @@ class QualityGateway(FlextScript):
                         "error": "Ruff not found in PATH",
                     }
 
-                result = subprocess.run(
+                result = FlextUtilities.run_external_command(
                     [ruff_cmd, "check", str(project_path), "--output-format=json"],
                     capture_output=True,
                     text=True,

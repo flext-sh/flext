@@ -10,6 +10,7 @@ from __future__ import annotations
 import os
 import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -56,7 +57,7 @@ class FlextResultTypeAuditor(FlextScript):
             git_path = _validate_git_available()
 
             # Usa git check-ignore para verificar se o arquivo é ignorado
-            result = subprocess.run(
+            result = FlextUtilities.run_external_command(
                 [git_path, "check-ignore", file_path],
                 check=False,
                 cwd=project_dir,
@@ -90,7 +91,7 @@ class FlextResultTypeAuditor(FlextScript):
         projects.append(".")
 
         try:
-            result = subprocess.run(
+            result = FlextUtilities.run_external_command(
                 ["/usr/bin/git", "submodule", "status"],
                 capture_output=True,
                 text=True,

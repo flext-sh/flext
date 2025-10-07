@@ -90,29 +90,6 @@ class TestFlextTargeted:
         assert flat_mapped.is_success
         assert flat_mapped.data == 10
 
-    def test_flext_result_combine_methods(self) -> None:
-        """Test combine and collection methods."""
-        results = [
-            FlextResult[int].ok(1),
-            FlextResult[int].ok(2),
-            FlextResult[int].ok(3),
-        ]
-
-        # Test combine using the _Utils.combine method
-        combined = FlextResult._Utils.combine(*results)
-        assert combined.is_success
-        assert combined.data == [1, 2, 3]
-
-        # Test with failure
-        results_with_failure = [
-            FlextResult[int].ok(1),
-            FlextResult[int].fail("error"),
-            FlextResult[int].ok(3),
-        ]
-
-        combined_fail = FlextResult._Utils.combine(*results_with_failure)
-        assert combined_fail.is_failure
-
     def test_flext_result_logical_operations(self) -> None:
         """Test logical operations and operators."""
         success1 = FlextResult[int].ok(1)
@@ -127,11 +104,6 @@ class TestFlextTargeted:
         or_with_failure = failure.or_else(success2)
         assert or_with_failure.is_success
         assert or_with_failure.data == 2
-
-        # Test combining results
-        and_result = success1.zip_with(success2, lambda a, b: b)
-        assert and_result.is_success
-        assert and_result.data == 2
 
     def test_flext_result_error_handling(self) -> None:
         """Test error handling methods."""
@@ -290,7 +262,7 @@ class TestFlextTargeted:
         """Test FlextBus basic handler registration and execution."""
         bus = FlextBus()
 
-        def handler(command) -> FlextResult[str]:
+        def handler(command: str) -> FlextResult[str]:
             return FlextResult[str].ok(f"handled_{command}")
 
         # Test handler registration

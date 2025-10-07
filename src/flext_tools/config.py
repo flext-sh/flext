@@ -261,7 +261,7 @@ class ConfigurationManager:
 
     def __init__(self, config_file: str | Path | None = None) -> None:
         """Initialize configuration manager with legacy interface."""
-        self._config_instance = FlextToolsConfig(
+        self.config_instance = FlextToolsConfig(
             config_file_path=str(config_file) if config_file else None,
         )
         # Legacy attribute compatibility
@@ -270,7 +270,7 @@ class ConfigurationManager:
 
     def load_config(self) -> FlextResult[FlextTypes.StringDict]:
         """Load configuration from file or environment."""
-        result = self._config_instance.load_environment_config()
+        result = self.config_instance.load_environment_config()
         if result.is_success:
             self._config = result.data
         return result
@@ -280,11 +280,11 @@ class ConfigurationManager:
         # Check internal config first, then environment
         if key in self._config:
             return FlextResult[str].ok(self._config[key])
-        return self._config_instance.get_config_value(key, default)
+        return self.config_instance.get_config_value(key, default)
 
     def set(self, key: str, value: str) -> FlextResult[None]:
         """Set configuration value with type-safe error handling."""
-        result = self._config_instance.set_config_value(key, value)
+        result = self.config_instance.set_config_value(key, value)
         if result.is_success:
             # Also update internal config for immediate access
             self._config[key] = value
@@ -292,4 +292,4 @@ class ConfigurationManager:
 
     def validate_config(self) -> FlextResult[None]:
         """Validate configuration."""
-        return self._config_instance.validate_tools_configuration()
+        return self.config_instance.validate_tools_configuration()

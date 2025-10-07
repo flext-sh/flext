@@ -19,8 +19,8 @@ class FlextTestsMatchers:
     Provides pytest-compatible matchers for common FLEXT patterns.
     """
 
-    @staticmethod
     def assert_result_success(
+        self,
         result: FlextResult[Any],
         message: str | None = None,
     ) -> None:

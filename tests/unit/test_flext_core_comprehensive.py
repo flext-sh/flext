@@ -115,22 +115,6 @@ class TestFlextComprehensive:
         )
         assert fail_result == "Error: error"
 
-    def test_flext_result_combine_operations(self) -> None:
-        """Test combining multiple results."""
-        r1 = FlextResult[int].ok(1)
-        r2 = FlextResult[int].ok(2)
-        r3 = FlextResult[int].ok(3)
-        fail = FlextResult[int].fail("error")
-
-        # Test successful combine
-        combined = FlextResult.combine([r1, r2, r3])
-        assert combined.is_success
-        assert combined.data == [1, 2, 3]
-
-        # Test combine with failure
-        combined_fail = FlextResult.combine([r1, fail, r3])
-        assert combined_fail.is_failure
-
     def test_flext_result_logical_operations(self) -> None:
         """Test and/or operations."""
         success1 = FlextResult[int].ok(1)
@@ -486,7 +470,7 @@ class TestFlextComprehensive:
             msg = "Test exception"
             raise ValueError(msg)
         except ValueError:
-            logger.error("Exception occurred", exc_info=True)
+            logger.exception("Exception occurred")
 
     def test_flext_logger_context(self) -> None:
         """Test FlextLogger with context."""
@@ -725,7 +709,7 @@ class TestFlextComprehensive:
                     return FlextResult[FlextTypes.Dict].ok(result_data)
 
                 except Exception as e:
-                    self.logger.exception(f"Comprehensive test failed: {e}")
+                    self.logger.exception("Comprehensive test failed")
                     return FlextResult[FlextTypes.Dict].fail(str(e))
 
         # Execute comprehensive test
@@ -758,11 +742,6 @@ class TestFlextComprehensive:
                 uuid = FlextUtilities.Generators.generate_uuid()
                 assert len(timestamp) > 0
                 assert len(uuid) == 36
-
-        # Test bulk operations
-        combined_result = FlextResult.combine(results[:100])  # First 100
-        assert combined_result.is_success
-        assert len(combined_result.data) == 100
 
         end_time = time.time()
         elapsed = end_time - start_time

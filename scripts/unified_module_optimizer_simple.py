@@ -93,10 +93,9 @@ import operator
 import os
 import re
 import shutil
-import subprocess
 import sys
 from pathlib import Path
-from typing import Any, ClassVar, TypeVar
+from typing import ClassVar, TypeVar
 
 T = TypeVar("T")
 
@@ -269,7 +268,7 @@ class FlextModuleOptimizerConstants(FlextConstants):
 class FlextModuleOptimizerConfig(FlextConfig):
     """Optimization configuration."""
 
-    def __init__(self, **kwargs: Any) -> None:
+    def __init__(self, **kwargs: object) -> None:
         """Initialize the optimizer configuration."""
         super().__init__()
         self.batch_size = kwargs.get(
@@ -454,7 +453,7 @@ class FlextModuleOptimizer:
                     domain_library_usage[library] = True
 
             # Calculate complexity score
-            complexity_score = self._calculate_complexity_score(tree, content)
+            complexity_score = self.calculate_complexity_score(tree, content)
 
             # Generate suggestions
             if violations:
@@ -515,7 +514,7 @@ class FlextModuleOptimizer:
 
         return priority
 
-    def _calculate_complexity_score(self, tree: ast.Module, content: str) -> float:
+    def calculate_complexity_score(self, tree: ast.Module, content: str) -> float:
         """Calculate complexity score for module."""
         score = 0.0
 
@@ -536,7 +535,7 @@ class FlextModuleOptimizer:
             score += 0.3
 
         # Check for nested complexity
-        max_depth = self._calculate_ast_depth(tree)
+        max_depth = self.calculate_ast_depth(tree)
         if max_depth > 5:
             score += 0.2
 
@@ -547,14 +546,14 @@ class FlextModuleOptimizer:
 
         return min(score, 1.0)
 
-    def _calculate_ast_depth(self, node: ast.AST, depth: int = 0) -> int:
+    def calculate_ast_depth(self, node: ast.AST, depth: int = 0) -> int:
         """Calculate maximum AST depth."""
         if not hasattr(node, "body"):
             return depth
 
         max_child_depth = depth
         for child in ast.iter_child_nodes(node):
-            child_depth = self._calculate_ast_depth(child, depth + 1)
+            child_depth = self.calculate_ast_depth(child, depth + 1)
             max_child_depth = max(max_child_depth, child_depth)
 
         return max_child_depth
@@ -626,7 +625,7 @@ class FlextModuleOptimizer:
 
             # Apply optimizations based on type
             if target["optimization_type"] == "pattern_violation":
-                optimized_content = self._fix_pattern_violations(original_content)
+                optimized_content = self.fix_pattern_violations(original_content)
             elif target["optimization_type"] == "complexity_reduction":
                 optimized_content = self._reduce_complexity(original_content)
             elif target["optimization_type"] == "domain_library_integration":
@@ -634,10 +633,10 @@ class FlextModuleOptimizer:
                     original_content, target
                 )
             else:
-                optimized_content = self._general_improvements(original_content)
+                optimized_content = self.general_improvements(original_content)
 
             # Calculate changes
-            changes_made = self._count_changes(original_content, optimized_content)
+            changes_made = self.count_changes(original_content, optimized_content)
 
             # Apply changes if not dry run
             if not self._config.dry_run and optimized_content != original_content:
@@ -672,7 +671,7 @@ class FlextModuleOptimizer:
                 "warnings": [],
             }
 
-    def _fix_pattern_violations(self, content: str) -> str:
+    def fix_pattern_violations(self, content: str) -> str:
         """Fix pattern violations in module."""
         optimized = content
 
@@ -742,7 +741,7 @@ class FlextModuleOptimizer:
 
         return optimized
 
-    def _general_improvements(self, content: str) -> str:
+    def general_improvements(self, content: str) -> str:
         """Apply general improvements."""
         optimized = content
 
@@ -751,15 +750,15 @@ class FlextModuleOptimizer:
             optimized = "from __future__ import annotations\n\n" + optimized
 
         # Add proper type hints if missing
-        return self._add_missing_type_hints(optimized)
+        return self.add_missing_type_hints(optimized)
 
-    def _add_missing_type_hints(self, content: str) -> str:
+    def add_missing_type_hints(self, content: str) -> str:
         """Add missing type hints (simplified implementation)."""
         # This would be a complex analysis in practice
         # For now, just ensure basic patterns are followed
         return content
 
-    def _count_changes(self, original: str, optimized: str) -> int:
+    def count_changes(self, original: str, optimized: str) -> int:
         """Count number of changes made."""
         original_lines = set(original.split("\n"))
         optimized_lines = set(optimized.split("\n"))
@@ -769,7 +768,7 @@ class FlextModuleOptimizer:
         """Validate optimized file."""
         try:
             # Run ruff check
-            result = subprocess.run(
+            result = FlextUtilities.run_external_command(
                 [RUFF_CMD, "check", file_path],
                 check=False,
                 capture_output=True,

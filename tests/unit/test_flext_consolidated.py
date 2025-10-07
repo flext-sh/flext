@@ -344,7 +344,7 @@ class TestFlextIntegration:
         assert result.value == "test_execution"
 
 
-class TestFlextIntegration:
+class TestFlextModuleIntegration:
     """Test flext module integration functionality."""
 
     def test_all_components_importable(self) -> None:
