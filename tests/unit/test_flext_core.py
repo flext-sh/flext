@@ -287,7 +287,7 @@ class TestFlextConsolidated:
         class IntegratedService(FlextService[FlextTypes.Dict]):
             def __init__(self) -> None:
                 super().__init__()
-                self.logger = FlextLogger(__name__)
+                # self.logger is read-only, use class logger
                 self._container = FlextContainer.get_global()
 
             def execute(self) -> FlextResult[FlextTypes.Dict]:

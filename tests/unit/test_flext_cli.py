@@ -248,7 +248,7 @@ class TestFlextControlPanelCli:
         cli = FlextControlPanelCli()
 
         # Create test data using flext_tests
-        test_cli_data = flext_domains.create_service()
+        test_cli_data = flext_domains.create_service(service_type="api")
         test_cli_data["config_path"] = "/tmp/flext_test_config.json"
 
         # Test service execution
