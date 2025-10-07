@@ -5,15 +5,15 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextResult
 
 from flext_tools import (
-    Colors,
     ConfigurationManager,
     FlextScript,
     ScriptMetadata,
     print_colored,
 )
+from flext_tools.colors import Colors
 
 # Apenas tipos internos de Python; argparse já importado acima
 
@@ -99,7 +99,7 @@ class StagingConfigLoader(FlextScript):
 
         return parser
 
-    def execute(self, args: FlextTypes.Dict) -> FlextResult[object]:
+    def execute(self) -> FlextResult[object]:
         """Execute the staging config loading."""
         validate_only = bool(args.get("validate_only"))
 
