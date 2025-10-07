@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import Any
+import re
 
 from flext_core import FlextResult
 
@@ -118,7 +118,7 @@ class FlextTestsMatchers:
 
     def assert_result_success(
         self,
-        result: FlextResult[Any],
+        result: FlextResult[object],
         message: str | None = None,
     ) -> None:
         """Assert that a FlextResult is successful.
@@ -135,7 +135,7 @@ class FlextTestsMatchers:
 
     @staticmethod
     def assert_result_failure(
-        result: FlextResult[Any],
+        result: FlextResult[object],
         expected_error: str | None = None,
         message: str | None = None,
     ) -> None:
@@ -160,8 +160,8 @@ class FlextTestsMatchers:
 
     @staticmethod
     def assert_dict_contains(
-        data: dict[str, Any],
-        expected: dict[str, Any],
+        data: dict[str, object],
+        expected: dict[str, object],
         message: str | None = None,
     ) -> None:
         """Assert that a dictionary contains expected key-value pairs.
@@ -183,7 +183,7 @@ class FlextTestsMatchers:
 
     @staticmethod
     def assert_list_contains(
-        items: list[Any],
+        items: list[object],
         expected_item: object,
         message: str | None = None,
     ) -> None:
@@ -214,8 +214,6 @@ class FlextTestsMatchers:
             AssertionError: If email format is invalid
 
         """
-        import re
-
         email_pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
         assert re.match(email_pattern, email), (
@@ -223,7 +221,9 @@ class FlextTestsMatchers:
         )
 
     @staticmethod
-    def assert_config_valid(config: dict[str, Any], message: str | None = None) -> None:
+    def assert_config_valid(
+        config: dict[str, object], message: str | None = None
+    ) -> None:
         """Assert that a configuration dictionary is valid.
 
         Args:
