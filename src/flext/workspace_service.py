@@ -5,10 +5,9 @@ Unified workspace service using flext-core exclusively with proper separation of
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
-from typing import Protocol, Self, runtime_checkable
-
-
 from __future__ import annotations
+
+from typing import Protocol, Self, runtime_checkable
 
 from pathlib import Path
 

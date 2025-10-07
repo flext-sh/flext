@@ -30,7 +30,7 @@ import operator
 import re
 import shlex
 import shutil
-import subprocess  # noqa: S404
+import subprocess
 import sys
 import tarfile
 from datetime import UTC, datetime
@@ -479,7 +479,7 @@ esac
 
 echo ""
 echo "Recovery complete!"
-"""  # noqa: S608
+"""
         )
         script.chmod(0o755)
 
