@@ -26,7 +26,7 @@ class FlextTestsUtilities:
     @staticmethod
     def create_test_result(
         success: bool = True,
-        data: Any = None,
+        data: object = None,
         error: str | None = None,
     ) -> FlextResult[Any]:
         """Create a test FlextResult.
@@ -47,7 +47,7 @@ class FlextTestsUtilities:
     @staticmethod
     def functional_service(
         service_type: str = "api",
-        **config: Any,
+        **config: dict[str, Any],
     ) -> dict[str, Any]:
         """Create a functional service configuration for testing.
 

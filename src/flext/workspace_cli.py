@@ -7,10 +7,9 @@ Click direct usage, organizing all functionality into nested classes.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
-from typing import Self
-
-
 from __future__ import annotations
+
+from typing import Self
 
 import subprocess
 import sys

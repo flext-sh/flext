@@ -87,7 +87,7 @@ class FlextTestsMatchers:
     @staticmethod
     def assert_list_contains(
         items: list[Any],
-        expected_item: Any,
+        expected_item: object,
         message: str | None = None,
     ) -> None:
         """Assert that a list contains an expected item.
