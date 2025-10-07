@@ -9,7 +9,6 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import uuid
-from typing import Any
 
 
 class FlextTestsDomains:
@@ -22,8 +21,8 @@ class FlextTestsDomains:
     def create_configuration(
         service_type: str = "api",
         environment: str = "test",
-        **overrides: Any,
-    ) -> dict[str, Any]:
+        **overrides: dict[str, object],
+    ) -> dict[str, object]:
         """Create test configuration data.
 
         Args:
@@ -35,7 +34,7 @@ class FlextTestsDomains:
             Configuration dictionary
 
         """
-        base_config = {
+        base_config: dict[str, object] = {
             "service_type": service_type,
             "environment": environment,
             "debug": True,
@@ -53,8 +52,8 @@ class FlextTestsDomains:
     @staticmethod
     def create_payload(
         data_type: str = "user",
-        **custom_fields: Any,
-    ) -> dict[str, Any]:
+        **custom_fields: dict[str, object],
+    ) -> dict[str, object]:
         """Create test payload data.
 
         Args:
@@ -65,7 +64,7 @@ class FlextTestsDomains:
             Payload dictionary
 
         """
-        payloads = {
+        payloads: dict[str, dict[str, object]] = {
             "user": {
                 "id": str(uuid.uuid4()),
                 "name": "Test User",
@@ -94,9 +93,9 @@ class FlextTestsDomains:
     @staticmethod
     def api_response_data(
         status: str = "success",
-        include_data: bool = True,
-        **custom_fields: Any,
-    ) -> dict[str, Any]:
+        include_data: bool | None = None,
+        **custom_fields: dict[str, object],
+    ) -> dict[str, object]:
         """Create API response test data.
 
         Args:
@@ -108,7 +107,7 @@ class FlextTestsDomains:
             API response dictionary
 
         """
-        response = {
+        response: dict[str, object] = {
             "status": status,
             "timestamp": "2025-01-01T00:00:00Z",
             "request_id": str(uuid.uuid4()),
@@ -147,8 +146,8 @@ class FlextTestsDomains:
     @staticmethod
     def create_service(
         service_type: str = "api",
-        **config: Any,
-    ) -> dict[str, Any]:
+        **config: dict[str, object],
+    ) -> dict[str, object]:
         """Create test service configuration.
 
         Args:
@@ -159,7 +158,7 @@ class FlextTestsDomains:
             Service configuration dictionary
 
         """
-        base_service = {
+        base_service: dict[str, object] = {
             "type": service_type,
             "name": f"test_{service_type}_service",
             "enabled": True,
@@ -169,7 +168,7 @@ class FlextTestsDomains:
         return base_service
 
     @staticmethod
-    def create_user(**overrides: Any) -> dict[str, Any]:
+    def create_user(**overrides: dict[str, object]) -> dict[str, object]:
         """Create test user data.
 
         Args:

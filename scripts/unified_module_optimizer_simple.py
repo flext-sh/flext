@@ -259,7 +259,7 @@ class FlextModuleOptimizerConstants(FlextConstants):
         # ❌ FORBIDDEN - Anti-patterns
         FORBIDDEN_PATTERNS: ClassVar[list[str]] = [
             r"# type: ignore.*$",  # Generic type ignore
-            r"def .*\).*-> Any:",  # Any return type
+            r"def .*\).*-> object:",  # object return type
             r"except.*pass",  # Empty except blocks
             r"from flext_core\.[^.]+\.import",  # Internal imports
         ]
@@ -695,8 +695,8 @@ class FlextModuleOptimizer:
             flags=re.MULTILINE,
         )
 
-        # Fix Any types
-        return optimized.replace(r"-> Any:", "-> object:")
+        # Fix object types
+        return optimized.replace(r"-> object:", "-> object:")
 
     def _reduce_complexity(self, content: str) -> str:
         """Reduce module complexity."""

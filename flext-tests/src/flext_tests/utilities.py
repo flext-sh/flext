@@ -11,7 +11,6 @@ from __future__ import annotations
 import uuid
 from collections.abc import Generator
 from contextlib import contextmanager
-from typing import Any
 from unittest.mock import MagicMock
 
 from flext_core import FlextResult
@@ -26,9 +25,9 @@ class FlextTestsUtilities:
     @staticmethod
     def create_test_result(
         success: bool = True,
-        data: object = None,
+        data: object | None = None,
         error: str | None = None,
-    ) -> FlextResult[Any]:
+    ) -> FlextResult[object]:
         """Create a test FlextResult.
 
         Args:
@@ -41,14 +40,14 @@ class FlextTestsUtilities:
 
         """
         if success:
-            return FlextResult[Any].ok(data)
-        return FlextResult[Any].fail(error or "Test error")
+            return FlextResult[object].ok(data)
+        return FlextResult[object].fail(error or "Test error")
 
     @staticmethod
     def functional_service(
         service_type: str = "api",
-        **config: dict[str, Any],
-    ) -> dict[str, Any]:
+        **config: dict[str, object],
+    ) -> dict[str, object]:
         """Create a functional service configuration for testing.
 
         Args:
@@ -77,7 +76,7 @@ class FlextTestsUtilities:
         target: object,
         attribute: str,
         new_value: object,
-        **options: dict[str, Any],
+        **options: dict[str, object],
     ) -> Generator[None]:
         """Context manager for temporarily changing object attributes.
 
@@ -106,7 +105,7 @@ class FlextTestsUtilities:
         """Nested class with additional test utilities."""
 
         @staticmethod
-        def assert_result_success(result: FlextResult[Any]) -> None:
+        def assert_result_success(result: FlextResult[object]) -> None:
             """Assert that a FlextResult is successful.
 
             Args:
@@ -119,7 +118,7 @@ class FlextTestsUtilities:
             assert result.is_success, f"Expected success result, got: {result}"
 
         @staticmethod
-        def assert_result_failure(result: FlextResult[Any]) -> None:
+        def assert_result_failure(result: FlextResult[object]) -> None:
             """Assert that a FlextResult is a failure.
 
             Args:
@@ -132,7 +131,7 @@ class FlextTestsUtilities:
             assert result.is_failure, f"Expected failure result, got: {result}"
 
         @staticmethod
-        def create_mock_service(**methods: dict[str, Any]) -> MagicMock:
+        def create_mock_service(**methods: dict[str, object]) -> MagicMock:
             """Create a mock service with specified methods.
 
             Args:
