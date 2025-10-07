@@ -13,11 +13,108 @@ from typing import Any
 from flext_core import FlextResult
 
 
+class TestDataBuilder:
+    """Builder for test datasets."""
+
+    def __init__(self) -> None:
+        """Initialize test data builder."""
+        super().__init__()
+        self._data: dict[str, object] = {}
+
+    def with_users(self, count: int = 5) -> TestDataBuilder:
+        """Add users to dataset."""
+        self._data["users"] = [
+            {
+                "id": f"USER-{i}",
+                "name": f"User {i}",
+                "email": f"user{i}@example.com",
+                "age": 20 + i,
+            }
+            for i in range(count)
+        ]
+        return self
+
+    def with_configs(self, *, production: bool = False) -> TestDataBuilder:
+        """Add configuration to dataset."""
+        self._data["configs"] = {
+            "environment": "production" if production else "development",
+            "debug": not production,
+            "database_url": "postgresql://localhost/testdb",
+            "api_timeout": 30,
+            "max_connections": 10,
+        }
+        return self
+
+    def with_validation_fields(self, count: int = 5) -> TestDataBuilder:
+        """Add validation fields to dataset."""
+        self._data["validation_fields"] = {
+            "valid_emails": [f"user{i}@example.com" for i in range(count)],
+            "invalid_emails": ["invalid", "no-at-sign.com", ""],
+            "valid_hostnames": ["example.com", "localhost"],
+            "invalid_hostnames": ["invalid..hostname", ""],
+        }
+        return self
+
+    def build(self) -> dict[str, object]:
+        """Build the dataset."""
+        return dict(self._data)
+
+
 class FlextTestsMatchers:
     """Custom test matchers for FLEXT ecosystem.
 
     Provides pytest-compatible matchers for common FLEXT patterns.
     """
+
+    class TestDataBuilder:
+        """Builder for test datasets."""
+
+        def __init__(self) -> None:
+            """Initialize test data builder."""
+            super().__init__()
+            self._data: dict[str, object] = {}
+
+        def with_users(self, count: int = 5) -> FlextTestsMatchers.TestDataBuilder:
+            """Add users to dataset."""
+            self._data["users"] = [
+                {
+                    "id": f"USER-{i}",
+                    "name": f"User {i}",
+                    "email": f"user{i}@example.com",
+                    "age": 20 + i,
+                }
+                for i in range(count)
+            ]
+            return self
+
+        def with_configs(
+            self, *, production: bool = False
+        ) -> FlextTestsMatchers.TestDataBuilder:
+            """Add configuration to dataset."""
+            self._data["configs"] = {
+                "environment": "production" if production else "development",
+                "debug": not production,
+                "database_url": "postgresql://localhost/testdb",
+                "api_timeout": 30,
+                "max_connections": 10,
+            }
+            return self
+
+        def with_validation_fields(
+            self, count: int = 5
+        ) -> FlextTestsMatchers.TestDataBuilder:
+            """Add validation fields to dataset."""
+            self._data["validation_fields"] = {
+                "valid_emails": [f"user{i}@example.com" for i in range(count)],
+                "invalid_emails": ["invalid", "no-at-sign.com", ""],
+                "valid_hostnames": ["example.com", "localhost"],
+                "invalid_hostnames": ["invalid..hostname", ""],
+            }
+            return self
+
+        def build(self) -> dict[str, object]:
+            """Build the dataset."""
+            return dict(self._data)
 
     def assert_result_success(
         self,
