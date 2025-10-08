@@ -54,7 +54,7 @@ def test_with_ldap(ldap_container):
 # Example 2: Using client-a OUD for client-a migration
 def test_client-a_migration(client-a_oud_container):
     \"\"\"Test using client-a OUD container (port 3389).\"\"\"
-    # client-a-specific OpenLDAP with dc=ctbc, cn=orclREDACTED_LDAP_BIND_PASSWORD
+    # client-a-specific OpenLDAP with dc=invaliddc, cn=invalid_user
     connection_string = client-a_oud_container  # ldap://localhost:3389
     # Use for client-a-oud-mig project exclusively
 
@@ -116,7 +116,7 @@ All compose files follow naming convention: `docker-compose.{project}-{purpose}.
 2. **client-a Oracle Unified Directory** (`flext-client-a-oud-test`)
    - **Port**: 3389 (client-a production port)
    - **Compose File**: `docker-compose.client-a-oud.yml`
-   - **Purpose**: client-a Telecom OUD migration (OpenLDAP simulating OUD with dc=ctbc, cn=orclREDACTED_LDAP_BIND_PASSWORD)
+   - **Purpose**: client-a Telecom OUD migration (OpenLDAP simulating OUD with dc=invaliddc, cn=invalid_user)
    - **Fixture**: `client-a_oud_container` from `flext_tests.fixtures`
    - **Projects**: client-a-oud-mig
 

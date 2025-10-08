@@ -1,6 +1,6 @@
 {
   "timestamp": "2025-09-07T16:28:44.881615+00:00",
-  "workspace_root": "/home/marlonsc/flext",
+  "workspace_root": "../..",
   "projects": {
     "flext-core": {
       "level": 1,
@@ -26,7 +26,7 @@
       "poetry_install": "\u2705 PASS",
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-cli/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-cli/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-cli/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-cli/tests/conftest.py'))"
       ]
     },
     "flext-observability": {
@@ -53,7 +53,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: ",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-grpc/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-grpc/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-grpc/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-grpc/tests/conftest.py'))"
       ]
     },
     "flext-web": {
@@ -66,7 +66,7 @@
       "poetry_install": "\u2705 PASS",
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-web/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-web/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-web/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-web/tests/conftest.py'))"
       ]
     },
     "flext-api": {
@@ -80,7 +80,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: MyPy execution failed: Cannot find component 'FlextUtils' for 'flext_api.FlextUtils'",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-api/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-api/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-api/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-api/tests/conftest.py'))"
       ]
     },
     "flext-auth": {
@@ -106,7 +106,7 @@
       "poetry_install": "\u2705 PASS",
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-meltano/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-meltano/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-meltano/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-meltano/tests/conftest.py'))"
       ]
     },
     "flext-ldif": {
@@ -120,7 +120,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: ",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-ldif/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-ldif/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-ldif/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-ldif/tests/conftest.py'))"
       ]
     },
     "flext-ldap": {
@@ -133,7 +133,7 @@
       "poetry_install": "\u2705 PASS",
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-ldap/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-ldap/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-ldap/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-ldap/tests/conftest.py'))"
       ]
     },
     "flext-db-oracle": {
@@ -146,7 +146,7 @@
       "poetry_install": "\u2705 PASS",
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-db-oracle/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-db-oracle/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-db-oracle/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-db-oracle/tests/conftest.py'))"
       ]
     },
     "flext-oracle-wms": {
@@ -160,7 +160,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: ",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-oracle-wms/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-oracle-wms/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-oracle-wms/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-oracle-wms/tests/conftest.py'))"
       ]
     },
     "flext-oracle-oic": {
@@ -174,7 +174,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: ",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-oracle-oic/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-oracle-oic/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-oracle-oic/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-oracle-oic/tests/conftest.py'))"
       ]
     },
     "flext-tap-oracle": {
@@ -188,7 +188,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: ",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-tap-oracle/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-tap-oracle/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-tap-oracle/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-tap-oracle/tests/conftest.py'))"
       ]
     },
     "flext-tap-ldap": {
@@ -202,7 +202,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: ",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-tap-ldap/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-tap-ldap/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-tap-ldap/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-tap-ldap/tests/conftest.py'))"
       ]
     },
     "flext-tap-ldif": {
@@ -216,7 +216,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: ",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-tap-ldif/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-tap-ldif/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-tap-ldif/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-tap-ldif/tests/conftest.py'))"
       ]
     },
     "flext-tap-oracle-wms": {
@@ -230,7 +230,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: ",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-tap-oracle-wms/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-tap-oracle-wms/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-tap-oracle-wms/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-tap-oracle-wms/tests/conftest.py'))"
       ]
     },
     "flext-tap-oracle-oic": {
@@ -244,7 +244,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: ",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-tap-oracle-oic/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-tap-oracle-oic/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-tap-oracle-oic/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-tap-oracle-oic/tests/conftest.py'))"
       ]
     },
     "flext-target-oracle": {
@@ -258,7 +258,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: ",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-target-oracle/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-target-oracle/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-target-oracle/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-target-oracle/tests/conftest.py'))"
       ]
     },
     "flext-target-ldap": {
@@ -272,7 +272,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: ",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-target-ldap/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-target-ldap/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-target-ldap/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-target-ldap/tests/conftest.py'))"
       ]
     },
     "flext-target-ldif": {
@@ -285,7 +285,7 @@
       "poetry_install": "\u2705 PASS",
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-target-ldif/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-target-ldif/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-target-ldif/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-target-ldif/tests/conftest.py'))"
       ]
     },
     "flext-target-oracle-wms": {
@@ -327,7 +327,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: ",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-dbt-oracle/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-dbt-oracle/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-dbt-oracle/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-dbt-oracle/tests/conftest.py'))"
       ]
     },
     "flext-dbt-ldap": {
@@ -341,7 +341,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: ",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-dbt-ldap/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-dbt-ldap/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-dbt-ldap/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-dbt-ldap/tests/conftest.py'))"
       ]
     },
     "flext-dbt-ldif": {
@@ -383,7 +383,7 @@
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
         "MyPy: ",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/flext-plugin/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/flext-plugin/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-plugin/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-plugin/tests/conftest.py'))"
       ]
     },
     "client-a-oud-mig": {
@@ -396,7 +396,7 @@
       "poetry_install": "\u2705 PASS",
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
-        "Tests: ImportError while loading conftest '/home/marlonsc/flext/client-a-oud-mig/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '/home/marlonsc/flext/flext-core/tests/conftest.py', PosixPath('/home/marlonsc/flext/client-a-oud-mig/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..client-a-oud-mig/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..client-a-oud-mig/tests/conftest.py'))"
       ]
     },
     "client-b-meltano-native": {
@@ -416,12 +416,12 @@
   },
   "architecture_violations": {
     "flext-core": [
-      "Import meltano: /home/marlonsc/flext/flext-core/src/flext_core/constants.py",
-      "Import oracle: /home/marlonsc/flext/flext-core/src/flext_core/constants.py",
-      "Import ldap: /home/marlonsc/flext/flext-core/src/flext_core/constants.py",
-      "Import singer: /home/marlonsc/flext/flext-core/src/flext_core/constants.py",
-      "Import client-a: /home/marlonsc/flext/flext-core/src/flext_core/constants.py",
-      "Import ldap: /home/marlonsc/flext/flext-core/src/flext_tests/utilities.py"
+      "Import meltano: ..flext-core/src/flext_core/constants.py",
+      "Import oracle: ..flext-core/src/flext_core/constants.py",
+      "Import ldap: ..flext-core/src/flext_core/constants.py",
+      "Import singer: ..flext-core/src/flext_core/constants.py",
+      "Import client-a: ..flext-core/src/flext_core/constants.py",
+      "Import ldap: ..flext-core/src/flext_tests/utilities.py"
     ]
   },
   "summary": {

@@ -188,7 +188,7 @@ git log --oneline | head -5
 ```bash
 # Test on a temporary clone first
 cd /tmp
-git clone --recursive /home/marlonsc/flext flext-test
+git clone --recursive .. flext-test
 cd flext-test
 
 # Run full cleanup on clone
@@ -198,14 +198,14 @@ cd flext-test
 git log --oneline | head -20
 
 # If satisfied, proceed with real repo
-cd /home/marlonsc/flext
+cd ..
 ```
 
 ### Phase 3: Production Execution
 
 ```bash
 # Only after testing on clone!
-cd /home/marlonsc/flext
+cd ..
 
 # Final confirmation
 ./scripts/git_cleanup_orchestrator.sh --full-cleanup

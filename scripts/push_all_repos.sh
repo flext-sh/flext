@@ -123,7 +123,7 @@ process_repo() {
 
 # Processar repositório principal primeiro
 echo "🏠 Processando repositório principal..."
-cd /home/marlonsc/flext
+cd ..
 
 # Verificar se há mudanças no repositório principal
 if [ -n "$(git status --porcelain)" ]; then

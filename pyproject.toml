@@ -29,8 +29,8 @@
         "toml (>=0.10.2)",
         "tomli-w (>=1.2.0)",
         "tomlkit (>=0.13.3)",
-        "trio (>=0.31.0,<0.32.0)",
-        "cbor2 (>=5.7.0,<6.0.0)",
+        "trio (>=0.31.0)",
+        "cbor2 (>=5.7.0)",
     ]
     description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
     keywords = [
@@ -152,6 +152,8 @@
 		    "vendor",
 		    "node_modules",
 		    "reports",
+		    "scripts",
+            "tests",
 		    "venv",
 		]
 		extend_exclude = ["client-a-.*/", "flexcore/", "flext-.*/", "client-b-.*/"]

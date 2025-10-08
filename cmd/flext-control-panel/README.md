@@ -10,7 +10,7 @@ FLEXT Control Panel service launcher using the common flextservice framework. Th
 
 ```bash
 # Build Control Panel
-cd /home/marlonsc/flext/cmd/flext-control-panel
+cd ..cmd/flext-control-panel
 go build -o flext-control-panel main.go
 
 # Run service (default port 8081)
@@ -92,7 +92,7 @@ func main() {
 
 ```bash
 # Build control panel
-cd /home/marlonsc/flext/cmd/flext-control-panel
+cd ..cmd/flext-control-panel
 go build -o flext-control-panel main.go
 
 # Run service

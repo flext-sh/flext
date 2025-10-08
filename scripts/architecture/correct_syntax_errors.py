@@ -103,7 +103,7 @@ def fix_syntax_errors_in_file(file_path: Path) -> bool:
 
 def main() -> None:
     """Main function to fix all syntax errors across workspace."""
-    workspace = Path("/home/marlonsc/flext")
+    workspace = Path("../..")
 
     # Focus on projects with errors identified
     error_projects = [

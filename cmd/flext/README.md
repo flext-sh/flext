@@ -10,9 +10,9 @@ FLEXT Service is the enterprise-grade data integration engine serving as the pri
 
 ```bash
 # Build and run FLEXT Service
-cd /home/marlonsc/flext/cmd/flext
+cd .
 go build -o flext main.go
-./flext --mode server --config /home/marlonsc/flext/config.yaml
+./flext --mode server --config ../../config.yaml
 
 # Service will start on port 8081 (FLEXT Service standard)
 # Health check: curl http://localhost:8081/health

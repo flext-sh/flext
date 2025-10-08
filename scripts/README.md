@@ -39,7 +39,7 @@ python3 scripts/git_ultimate_cleanup.py --all --push-all
 ### 1. Cruft Detection (Safe)
 
 ```bash
-cd /home/marlonsc/flext
+cd ..
 python3 scripts/git_ultimate_cleanup.py --detect-cruft
 ```
 
@@ -78,7 +78,7 @@ The detection analyzes two sources:
 ### 2. Test Mode (Safe)
 
 ```bash
-cd /home/marlonsc/flext
+cd ..
 python3 scripts/git_ultimate_cleanup.py --test
 ```
 
