@@ -223,7 +223,9 @@ class SecurityAuditScript(FlextScript):
         except Exception as e:
             return FlextResult[None].fail(f"Precondition validation failed: {e}")
 
-    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+    def execute_main_logic(
+        self, **kwargs: dict[str, str]
+    ) -> FlextResult[dict[str, str]]:
         """Execute main script logic."""
         """Execute security audit with comprehensive analysis."""
         try:
@@ -237,7 +239,7 @@ class SecurityAuditScript(FlextScript):
         except Exception as e:
             return FlextResult[object].fail(f"Security audit execution failed: {e}")
 
-    def _validate_target_paths(self, paths: object) -> FlextTypes.StringList:
+    def _validate_target_paths(self, paths: list[str]) -> FlextTypes.StringList:
         """Validate and filter target paths for scanning.
 
         Args:

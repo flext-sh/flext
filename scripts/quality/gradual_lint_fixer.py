@@ -7,6 +7,7 @@ usando flext_tools.quality para máxima confiabilidade enterprise.
 
 from __future__ import annotations
 
+import argparse
 import shutil
 import sys
 from pathlib import Path
@@ -60,7 +61,9 @@ class GradualLintFixerScript(FlextScript):
         print_colored("✅ Git available", Colors.GREEN)
         return FlextResult[None].ok(None)
 
-    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+    def execute_main_logic(
+        self, **kwargs: dict[str, str]
+    ) -> FlextResult[dict[str, str]]:
         """Execute main script logic."""
         """Execute gradual lint fixing."""
         try:
@@ -114,7 +117,7 @@ class GradualLintFixerScript(FlextScript):
             print_colored(f"❌ Error during lint fixing: {e}", Colors.RED)
             return FlextResult[object].fail(f"Error during lint fixing: {e}")
 
-    def create_parser(self) -> object:
+    def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
         parser = super().create_parser()
 
@@ -137,7 +140,7 @@ class GradualLintFixerScript(FlextScript):
 
         return parser
 
-    def _process_kwargs(self, args: object) -> FlextTypes.Dict:
+    def _process_kwargs(self, args: argparse.Namespace) -> FlextTypes.Dict:
         """Process arguments into kwargs."""
         kwargs: FlextTypes.Dict = {}
         kwargs["safe_only"] = not getattr(args, "unsafe", False)

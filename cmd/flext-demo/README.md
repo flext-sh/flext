@@ -120,7 +120,6 @@ Options:
   --host         Server host (default: 0.0.0.0)
   --node-id      Node ID (default: demo-001)
   --cluster      Cluster name (default: flext-demo)
-  --env          Environment: development/production (default: development)
 ```
 
 ### Configuration
@@ -166,7 +165,7 @@ go test ./...
 go test -cover ./...
 
 # Run server for testing
-./flext-demo --port 8082 --env development
+./flext-demo --port 8082
 ```
 
 ### Server Operations

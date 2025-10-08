@@ -10,7 +10,7 @@ from __future__ import annotations
 import os
 import re
 import shutil
-import subprocess  # noqa: S404
+import subprocess  # noqa: S404 - Used for running type checking tools
 import sys
 from pathlib import Path
 
@@ -210,7 +210,9 @@ class FlextResultTypeAuditor(FlextScript):
 
         return issues
 
-    def execute_main_logic(self, **_kwargs: object) -> FlextResult[object]:
+    def execute_main_logic(
+        self, **_kwargs: dict[str, str]
+    ) -> FlextResult[dict[str, str]]:
         """Execute FlextResult type consistency audit."""
         print_colored(
             "🔍 Verificando inconsistências de FlextResult em todos os projetos flext...",

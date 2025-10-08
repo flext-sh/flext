@@ -7,6 +7,7 @@ para máxima confiabilidade e padronização enterprise.
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -46,7 +47,7 @@ class QualityGatewayRunner(FlextScript):
         print_colored("✅ FLEXT workspace detected", Colors.GREEN)
         return True
 
-    def execute_main_logic(self, **kwargs: object) -> bool:
+    def execute_main_logic(self, **kwargs: dict[str, str]) -> bool:
         """Execute quality gateway."""
         try:
             workspace_root = Path.cwd()
@@ -100,7 +101,7 @@ class QualityGatewayRunner(FlextScript):
             print_colored(f"❌ Error during quality gateway: {e}", Colors.RED)
             return False
 
-    def create_parser(self) -> object:
+    def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
         parser = super().create_parser()
 
@@ -129,7 +130,7 @@ class QualityGatewayRunner(FlextScript):
 
         return parser
 
-    def _process_kwargs(self, args: object) -> FlextTypes.Dict:
+    def _process_kwargs(self, args: argparse.Namespace) -> FlextTypes.Dict:
         """Process arguments into kwargs."""
         kwargs: FlextTypes.Dict = {}
         kwargs["generate_report"] = not getattr(args, "no_report", False)

@@ -31,7 +31,9 @@ class ProductionSecretsScript(BaseSecurityScript):
 
     # validate_preconditions is inherited from BaseSecurityScript
 
-    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+    def execute_main_logic(
+        self, **kwargs: dict[str, str]
+    ) -> FlextResult[dict[str, str]]:
         """Execute main script logic."""
         """Execute secrets generation."""
         try:
@@ -109,7 +111,7 @@ class ProductionSecretsScript(BaseSecurityScript):
 
         return parser
 
-    def _process_kwargs(self, args: object) -> FlextTypes.Dict:
+    def _process_kwargs(self, args: dict[str, str]) -> FlextTypes.StringDict:
         """Process arguments into kwargs."""
         kwargs: FlextTypes.Dict = {}
         kwargs["encrypt"] = not getattr(args, "no_encrypt", False)

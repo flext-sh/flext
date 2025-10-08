@@ -10,7 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
-import subprocess  # noqa: S404
+import subprocess  # noqa: S404 - Used for running quality checking tools
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -116,7 +116,9 @@ class QualityGateway(FlextScript):
 
         return FlextResult[None].ok(None)
 
-    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+    def execute_main_logic(
+        self, **kwargs: dict[str, str]
+    ) -> FlextResult[dict[str, str]]:
         """Execute main script logic."""
         """Executar gateway de qualidade completo."""
         try:

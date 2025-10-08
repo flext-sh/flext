@@ -14,7 +14,6 @@ MIN_COVERAGE := 80
 # Server Configuration
 SERVER_PORT := 8080
 SERVER_HOST := localhost
-SERVER_ENV := development
 
 # Export variables
 export GO_VERSION MIN_COVERAGE BINARY_NAME SERVER_PORT SERVER_HOST SERVER_ENV

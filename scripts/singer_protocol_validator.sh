@@ -144,7 +144,7 @@ validate_singer_message_handling() {
 
 	# Check for Singer message format handling - includes Singer SDK patterns
 	local message_handling
-	message_handling=$(find "$project_dir/src" -name "*.py" -exec grep -l "SCHEMA\|RECORD\|STATE\|singer.*message\|from singer_sdk\|import singer_sdk\|singer_sdk.*typing\|FlextTapStream\|FlextSingerTarget" {} \; 2>/dev/null || true)
+	message_handling=$(find "$project_dir/src" -name "*.py" -exec grep -l "SCHEMA\|RECORD\|STATE\|singer.*message\|from singer_sdk\|import singer_sdk\|singer_sdk.*typing\|FlextMeltanoStream\|FlextSingerTarget" {} \; 2>/dev/null || true)
 
 	if [[ -n $message_handling ]]; then
 		log_success "$project_name" "Singer Message Handling"
