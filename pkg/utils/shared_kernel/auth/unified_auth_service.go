@@ -17,11 +17,11 @@ type UnifiedAuthService struct {
 	tokenExpiry   time.Duration
 	refreshExpiry time.Duration
 	logger        logging.Logger
-	providers     map[string]AuthProvider
+	providers     map[string]FlextAuthProvider
 }
 
-// AuthProvider interface for different authentication mechanisms
-type AuthProvider interface {
+// FlextAuthProvider interface for different authentication mechanisms
+type FlextAuthProvider interface {
 	Authenticate(ctx context.Context, credentials Credentials) (*AuthResult, error)
 	GetProviderType() string
 	Validate(ctx context.Context, token string) (*UserContext, error)
@@ -95,7 +95,7 @@ func NewUnifiedAuthService(config UnifiedAuthConfig, logger logging.Logger) (*Un
 		tokenExpiry:   config.TokenExpiry,
 		refreshExpiry: config.RefreshTokenExpiry,
 		logger:        logger.With(logging.F("component", "unified_auth")),
-		providers:     make(map[string]AuthProvider),
+		providers:     make(map[string]FlextAuthProvider),
 	}
 
 	// Set default expiry times if not provided
@@ -108,7 +108,7 @@ func NewUnifiedAuthService(config UnifiedAuthConfig, logger logging.Logger) (*Un
 
 	// Initialize built-in providers
 	if config.EnableBasicAuth {
-		service.RegisterProvider(NewBasicAuthProvider(logger))
+		service.RegisterProvider(FlextAuthNewBasicProvider(logger))
 	}
 
 	if config.EnableOAuth2 {
@@ -136,7 +136,7 @@ func NewUnifiedAuthService(config UnifiedAuthConfig, logger logging.Logger) (*Un
 }
 
 // RegisterProvider registers an authentication provider
-func (s *UnifiedAuthService) RegisterProvider(provider AuthProvider) {
+func (s *UnifiedAuthService) RegisterProvider(provider FlextAuthProvider) {
 	s.providers[provider.GetProviderType()] = provider
 	s.logger.Info("Auth provider registered",
 		logging.F("provider_type", provider.GetProviderType()),

@@ -27,13 +27,6 @@ class BaseSecurityScript(FlextScript):
 
         print_colored("✅ FLEXT workspace detected", Colors.GREEN)
 
-        # Check cryptography availability
-        try:
-            print_colored("✅ Cryptography library available", Colors.GREEN)
-            return FlextResult[None].ok(None)
-        except ImportError:
-            print_colored(
-                "❌ Cryptography library not found - install with: pip install cryptography",
-                Colors.RED,
-            )
-            return FlextResult[None].fail("Cryptography library not found")
+        # Cryptography is checked at import time (module level)
+        print_colored("✅ Cryptography library available", Colors.GREEN)
+        return FlextResult[None].ok(None)

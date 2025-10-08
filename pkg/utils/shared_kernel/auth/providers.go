@@ -14,8 +14,8 @@ import (
 	"github.com/google/uuid"
 )
 
-// BasicAuthProvider provides basic username/password authentication
-type BasicAuthProvider struct {
+// FlextAuthBasicProvider provides basic username/password authentication
+type FlextAuthBasicProvider struct {
 	logger logging.Logger
 	users  map[string]UserCredentials // In production, this would be a database
 }
@@ -31,8 +31,8 @@ type UserCredentials struct {
 	IsActive     bool      `json:"is_active"`
 }
 
-// NewBasicAuthProvider creates a new basic auth provider
-func NewBasicAuthProvider(logger logging.Logger) *BasicAuthProvider {
+// FlextAuthNewBasicProvider creates a new basic auth provider
+func FlextAuthNewBasicProvider(logger logging.Logger) *FlextAuthBasicProvider {
 	// Initialize with some test users
 	testUsers := map[string]UserCredentials{
 		"REDACTED_LDAP_BIND_PASSWORD": {
@@ -55,19 +55,19 @@ func NewBasicAuthProvider(logger logging.Logger) *BasicAuthProvider {
 		},
 	}
 
-	return &BasicAuthProvider{
+	return &FlextAuthBasicProvider{
 		logger: logger.With(logging.F("provider", "basic_auth")),
 		users:  testUsers,
 	}
 }
 
 // GetProviderType returns the provider type
-func (p *BasicAuthProvider) GetProviderType() string {
+func (p *FlextAuthBasicProvider) GetProviderType() string {
 	return "basic"
 }
 
 // Authenticate authenticates user with username/password
-func (p *BasicAuthProvider) Authenticate(ctx context.Context, credentials Credentials) (*AuthResult, error) {
+func (p *FlextAuthBasicProvider) Authenticate(ctx context.Context, credentials Credentials) (*AuthResult, error) {
 	if credentials.Username == "" || credentials.Password == "" {
 		return nil, &errors.DomainError{
 			Code:        "INVALID_CREDENTIALS",
@@ -118,7 +118,7 @@ func (p *BasicAuthProvider) Authenticate(ctx context.Context, credentials Creden
 }
 
 // Validate validates a basic auth token (base64 encoded username:password)
-func (p *BasicAuthProvider) Validate(ctx context.Context, token string) (*UserContext, error) {
+func (p *FlextAuthBasicProvider) Validate(ctx context.Context, token string) (*UserContext, error) {
 	if !strings.HasPrefix(token, "Basic ") {
 		return nil, &errors.DomainError{
 			Code:        "INVALID_TOKEN_FORMAT",
