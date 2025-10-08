@@ -49,6 +49,7 @@ line-length = 88
         "PLR0913", # too-many-arguments - Too many arguments in function definition (sometimes necessary)
         "PLR0915", # too-many-statements - Many statements in some builder functions
         "PLR6301", # no-self-use
+        "RUF001",  # ambiguous-unicode-character-docstring - false positives when using certain images
         "RUF002",  # ambiguous-unicode-character-docstring - false positives when using certain images
         "RUF003",  # ambiguous-unicode-character-comment
         "TC001",   # typing-only-first-party-import - Pydantic requirement

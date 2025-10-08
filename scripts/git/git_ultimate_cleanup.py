@@ -30,12 +30,14 @@ import operator
 import re
 import shlex
 import shutil
-import subprocess
+import subprocess  # noqa: S404
 import sys
 import tarfile
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import ClassVar
+
+from flext_core.utilities import FlextUtilities
 
 # Ensure git is available
 _git_cmd = shutil.which("git")

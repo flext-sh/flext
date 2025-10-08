@@ -18,6 +18,7 @@ from pathlib import Path
 
 import pytest
 from flext_core import FlextConstants, FlextLogger, FlextTypes
+from flext_core.utilities import FlextUtilities
 from mypy import api as mypy_api
 
 logger = FlextLogger(__name__)

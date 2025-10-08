@@ -10,11 +10,12 @@ from __future__ import annotations
 import os
 import re
 import shutil
-import subprocess
+import subprocess  # noqa: S404
 import sys
 from pathlib import Path
 
 from flext_core import FlextResult, FlextTypes
+from flext_core.utilities import FlextUtilities
 
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
