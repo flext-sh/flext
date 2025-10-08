@@ -10,12 +10,13 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
-import subprocess
+import subprocess  # noqa: S404
 import sys
 from dataclasses import dataclass
 from pathlib import Path
 
 from flext_core import FlextResult, FlextTypes
+from flext_core.utilities import FlextUtilities
 from mypy import api as mypy_api
 
 from flext_tools import (

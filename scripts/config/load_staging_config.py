@@ -101,7 +101,7 @@ class StagingConfigLoader(FlextScript):
 
     def execute(self) -> FlextResult[object]:
         """Execute the staging config loading."""
-        validate_only = bool(args.get("validate_only"))
+        validate_only = bool(self.args.get("validate_only"))
 
         # Run the config loading logic
         return self.execute_main_logic(validate_only=validate_only)

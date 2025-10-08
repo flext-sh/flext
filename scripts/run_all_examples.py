@@ -21,11 +21,13 @@ from __future__ import annotations
 
 import argparse
 import os
-import subprocess
+import subprocess  # noqa: S404
 import sys
 from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
+
+from flext_core.utilities import FlextUtilities
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 

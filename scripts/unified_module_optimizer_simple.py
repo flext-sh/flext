@@ -97,6 +97,8 @@ import sys
 from pathlib import Path
 from typing import ClassVar, TypeVar
 
+from flext_core.utilities import FlextUtilities
+
 T = TypeVar("T")
 
 # Ensure ruff is available
