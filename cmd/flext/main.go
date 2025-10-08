@@ -38,7 +38,7 @@ type CommandLineFlags struct {
 func parseFlags() CommandLineFlags {
 	var flags CommandLineFlags
 
-	flag.StringVar(&flags.configPath, "config", "/home/marlonsc/flext/config.yaml", "Path to configuration file")
+	flag.StringVar(&flags.configPath, "config", "../../config.yaml", "Path to configuration file")
 	flag.StringVar(&flags.environment, "env", "", "Environment (development/production)")
 	flag.StringVar(&flags.logLevel, "log-level", "", "Log level (debug/info/warn/error)")
 	flag.BoolVar(&flags.help, "help", false, "Show help")

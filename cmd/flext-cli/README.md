@@ -10,7 +10,7 @@ Command-line interface service for FLEXT data integration platform.
 
 ```bash
 # Build CLI
-cd /home/marlonsc/flext/cmd/flext-cli
+cd ..cmd/flext-cli
 go build -o flext-cli main.go
 
 # Test basic functionality
@@ -100,7 +100,7 @@ func main() {
 
 ```bash
 # Clone and build
-cd /home/marlonsc/flext/cmd/flext-cli
+cd ..cmd/flext-cli
 go build -o flext-cli main.go
 
 # Run basic CLI

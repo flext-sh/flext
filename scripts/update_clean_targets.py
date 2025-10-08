@@ -223,7 +223,7 @@ def main() -> None:
 
     updated_count = 0
     for project in PROJECTS_TO_UPDATE:
-        makefile_path = Path(f"/home/marlonsc/flext/{project}/Makefile")
+        makefile_path = Path(f"..{project}/Makefile")
         if makefile_path.exists():
             if update_makefile(makefile_path, project):
                 updated_count += 1

@@ -150,12 +150,12 @@ main() {
 	print_header
 
 	# Change to flext workspace directory
-	if [[ ! -d "/home/marlonsc/flext" ]]; then
-		echo -e "${RED}Error: FLEXT workspace not found at /home/marlonsc/flext${NC}"
+	if [[ ! -d "../.." ]]; then
+		echo -e "${RED}Error: FLEXT workspace not found at ../..${NC}"
 		exit 1
 	fi
 
-	cd "/home/marlonsc/flext"
+	cd "../.."
 
 	# Run comprehensive quality dashboard
 	run_domain_separation_validation

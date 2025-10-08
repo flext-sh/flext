@@ -75,7 +75,7 @@ def fix_imports_in_file(file_path: Path) -> bool:
 
 def main() -> None:
     """Main function to fix all architectural violations."""
-    workspace = Path("/home/marlonsc/flext")
+    workspace = Path("../..")
 
     # Target all FLEXT projects except legacy
     projects = [

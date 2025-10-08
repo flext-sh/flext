@@ -22,7 +22,7 @@ from pathlib import Path
 from flext_core import FlextTypes
 
 # FLEXT projects to enforce patterns on
-FLEXT_ROOT = Path("/home/marlonsc/flext")
+FLEXT_ROOT = Path("..")
 
 # Domain violation patterns
 DOMAIN_VIOLATIONS = {

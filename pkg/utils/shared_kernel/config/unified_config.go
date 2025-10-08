@@ -382,8 +382,8 @@ func (c *UnifiedConfig) loadBoundedContextConfigs() error {
 
 	c.Meltano = MeltanoConfig{
 		ProjectPath:   getEnvOrDefault("MELTANO_PROJECT_PATH", "."),
-		PythonPath:    getEnvOrDefault("MELTANO_PYTHON_PATH", "/home/marlonsc/flext/.venv/bin/python3"),
-		VenvPath:      getEnvOrDefault("MELTANO_VENV_PATH", "/home/marlonsc/flext/.venv"),
+		PythonPath:    getEnvOrDefault("MELTANO_PYTHON_PATH", "...venv/bin/python3"),
+		VenvPath:      getEnvOrDefault("MELTANO_VENV_PATH", "...venv"),
 		ConfigPath:    getEnvOrDefault("MELTANO_CONFIG_PATH", "meltano.yml"),
 		StateBackend:  getEnvOrDefault("MELTANO_STATE_BACKEND", "filesystem"),
 		EnableLogging: getBoolEnvOrDefault("MELTANO_ENABLE_LOGGING", true),
@@ -393,9 +393,9 @@ func (c *UnifiedConfig) loadBoundedContextConfigs() error {
 	c.DBT = DBTConfig{
 		ProjectPath:   getEnvOrDefault("DBT_PROJECT_PATH", "./dbt_project"),
 		ProfilesDir:   getEnvOrDefault("DBT_PROFILES_DIR", "~/.dbt"),
-		PythonPath:    getEnvOrDefault("DBT_PYTHON_PATH", "/home/marlonsc/flext/.venv/bin/python3"),
+		PythonPath:    getEnvOrDefault("DBT_PYTHON_PATH", "...venv/bin/python3"),
 		DBTPath:       getEnvOrDefault("DBT_PATH", "dbt"),
-		VenvPath:      getEnvOrDefault("DBT_VENV_PATH", "/home/marlonsc/flext/.venv"),
+		VenvPath:      getEnvOrDefault("DBT_VENV_PATH", "...venv"),
 		DefaultTarget: getEnvOrDefault("DBT_DEFAULT_TARGET", "dev"),
 		EnableDocs:    getBoolEnvOrDefault("DBT_ENABLE_DOCS", true),
 		DocsPort:      getIntEnvOrDefault("DBT_DOCS_PORT", 8081),

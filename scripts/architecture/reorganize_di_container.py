@@ -59,7 +59,7 @@ def fix_di_ordering(file_path: Path) -> bool:
 
 def main() -> None:
     """Main function to fix DI ordering in all Python files."""
-    base_dir = Path("/home/marlonsc/flext/flext-api")
+    base_dir = Path("..flext-api")
 
     if not base_dir.exists():
         sys.exit(1)

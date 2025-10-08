@@ -197,7 +197,7 @@ def main() -> None:
 
     added_count = 0
     for project in PROJECTS_NEEDING_CLEAN:
-        makefile_path = Path(f"/home/marlonsc/flext/{project}/Makefile")
+        makefile_path = Path(f"..{project}/Makefile")
         if makefile_path.exists():
             # Check if it already has a clean target
             content = makefile_path.read_text(encoding="utf-8")

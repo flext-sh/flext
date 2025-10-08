@@ -10,7 +10,7 @@ FLEXT Demo Server is a simple HTTP server demonstration showcasing basic FLEXT c
 
 ```bash
 # Build demo server
-cd /home/marlonsc/flext/cmd/flext-demo
+cd ..cmd/flext-demo
 go build -o flext-demo main.go
 
 # Run server (default port 8080)
@@ -100,7 +100,7 @@ type DemoConfig struct {
 
 ```bash
 # Build demo server
-cd /home/marlonsc/flext/cmd/flext-demo
+cd ..cmd/flext-demo
 go build -o flext-demo main.go
 
 # Run with default settings

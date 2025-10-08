@@ -20,7 +20,7 @@ from pathlib import Path
 
 def main() -> None:
     """Main execution function."""
-    flext_root = Path("/home/marlonsc/flext")
+    flext_root = Path("../..")
 
     # TODO(@flext-team): Implement actual consolidation verification using flext-meltano classes (https://github.com/flext-team/flext-meltano/issues/2)
     print("Meltano consolidation verification not yet implemented")

@@ -110,7 +110,7 @@ func (c *MeltanoConfig) detectPythonEnvironment(logger logging.Logger) error {
 		"./venv/bin/python",
 		"./.venv/bin/python3",
 		"./.venv/bin/python",
-		"/home/marlonsc/flext/.venv/bin/python3",
+		"...venv/bin/python3",
 		"python3",
 		"python",
 	}

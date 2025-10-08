@@ -893,7 +893,7 @@ Examples:
         projects_to_optimize.append(args.project)
     elif args.project_pattern:
         # Find projects matching pattern
-        projects_dir = Path("/home/marlonsc/flext")
+        projects_dir = Path("..")
         projects_to_optimize.extend(
             project_dir.name
             for project_dir in projects_dir.iterdir()
@@ -915,7 +915,7 @@ Examples:
     for project in projects_to_optimize:
         print(f"🔧 Optimizing project: {project}")
 
-        project_path = f"/home/marlonsc/flext/{project}"
+        project_path = f"..{project}"
         if not Path(project_path).exists():
             print(f"❌ Project not found: {project_path}")
             continue
