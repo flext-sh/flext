@@ -30,7 +30,7 @@ import operator
 import re
 import shlex
 import shutil
-import subprocess  # noqa: S404 - Used for git operations in cleanup script
+import subprocess
 import sys
 import tarfile
 from datetime import UTC, datetime
