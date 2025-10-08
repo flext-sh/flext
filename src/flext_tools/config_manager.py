@@ -18,22 +18,22 @@ class ConfigurationManager:
     def __init__(self: Self, config_path: Path | str | None = None) -> None:
         """Initialize configuration manager."""
         self.config_path = Path(config_path) if config_path else None
-        self._config: FlextTypes.Dict = {}
+        self._config: FlextTypes.StringDict = {}
 
-    def load_config(self) -> FlextResult[FlextTypes.Dict]:
+    def load_config(self) -> FlextResult[FlextTypes.StringDict]:
         """Load configuration."""
-        return FlextResult[FlextTypes.Dict].ok(self._config)
+        return FlextResult[FlextTypes.StringDict].ok(self._config)
 
     def save_config(self) -> FlextResult[None]:
         """Save configuration."""
         return FlextResult[None].ok(None)
 
-    def get(self, key: str, default: object = None) -> FlextResult[object]:
+    def get(self, key: str, default: str | None = None) -> FlextResult[str | None]:
         """Get configuration value."""
         value = self._config.get(key, default)
-        return FlextResult[object].ok(value)
+        return FlextResult[str | None].ok(value)
 
-    def set(self, key: str, value: object) -> FlextResult[None]:
+    def set(self, key: str, value: str) -> FlextResult[None]:
         """Set configuration value."""
         self._config[key] = value
         return FlextResult[None].ok(None)

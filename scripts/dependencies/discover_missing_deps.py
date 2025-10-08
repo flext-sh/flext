@@ -7,8 +7,11 @@ faltantes baseado em análise AST de imports Python.
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
+
+from flext_core import FlextResult
 
 from flext_tools import (
     Colors,
@@ -57,7 +60,9 @@ class MissingDependenciesDiscoverer(FlextScript):
         )
         return True
 
-    def execute_main_logic(self, **kwargs: object) -> bool:
+    def execute_main_logic(
+        self, **kwargs: dict[str, str]
+    ) -> FlextResult[dict[str, str]]:
         """Executar descoberta de dependências faltantes."""
         try:
             workspace_root = Path.cwd()
@@ -158,7 +163,7 @@ class MissingDependenciesDiscoverer(FlextScript):
             )
             print_colored("\n💡 Sugestões:", Colors.CYAN)
 
-    def create_parser(self) -> object:
+    def create_parser(self) -> argparse.ArgumentParser:
         """Criar parser com argumentos específicos."""
         parser = super().create_parser()
 

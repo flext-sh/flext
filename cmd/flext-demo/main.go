@@ -106,7 +106,6 @@ func main() {
 	host := flag.String("host", "0.0.0.0", "Server host")
 	nodeID := flag.String("node-id", "demo-001", "Node ID")
 	cluster := flag.String("cluster", "flext-demo", "Cluster name")
-	env := flag.String("env", "development", "Environment (development/production)")
 	flag.Parse()
 
 	// Initialize logging

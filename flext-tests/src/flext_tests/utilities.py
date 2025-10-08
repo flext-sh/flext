@@ -24,6 +24,7 @@ class FlextTestsUtilities:
 
     @staticmethod
     def create_test_result(
+        *,
         success: bool = True,
         data: object | None = None,
         error: str | None = None,

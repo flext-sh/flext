@@ -41,7 +41,9 @@ class DependencyCacheManager(FlextScript):
         print_colored("✅ FLEXT workspace detected", Colors.GREEN)
         return FlextResult[None].ok(None)
 
-    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+    def execute_main_logic(
+        self, **kwargs: dict[str, str]
+    ) -> FlextResult[dict[str, str]]:
         """Execute main script logic."""
         """Execute cache management operations."""
         try:

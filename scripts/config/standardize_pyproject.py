@@ -59,7 +59,9 @@ class PyprojectStandardizer(FlextScript):
         print_colored(f"✅ Found {len(flext_projects)} FLEXT projects", Colors.GREEN)
         return FlextResult[None].ok(None)
 
-    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+    def execute_main_logic(
+        self, **kwargs: dict[str, str]
+    ) -> FlextResult[dict[str, str]]:
         """Execute main script logic."""
         """Execute pyproject.toml standardization."""
         try:

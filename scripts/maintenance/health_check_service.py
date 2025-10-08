@@ -9,7 +9,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextTypes
+from flext_core import FlextResult, FlextTypes
 
 from flext_tools import (
     Colors,
@@ -45,7 +45,9 @@ class HealthCheckServiceRunner(FlextScript):
         print_colored("✅ FLEXT workspace detected", Colors.GREEN)
         return True
 
-    def execute_main_logic(self, **kwargs: object) -> bool:
+    def execute_main_logic(
+        self, **kwargs: dict[str, str]
+    ) -> FlextResult[dict[str, str]]:
         """Execute health check service."""
         try:
             workspace_root = Path.cwd()
@@ -85,7 +87,7 @@ class HealthCheckServiceRunner(FlextScript):
             print_colored(f"❌ Error during health check: {e}", Colors.RED)
             return False
 
-    def create_parser(self) -> object:
+    def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
         parser = super().create_parser()
 
