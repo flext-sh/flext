@@ -432,7 +432,7 @@ class GitUltimateCleanup:
 
         script = backup_dir / "RECOVER.sh"
         script.write_text(
-            f"""#!/bin/bash  # noqa: S608
+            f"""#!/bin/bash
 # FLEXT Repository Recovery Script
 # Created: {created}
 # Source: {source}
