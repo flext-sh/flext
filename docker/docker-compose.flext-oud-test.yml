@@ -1,0 +1,57 @@
+# FLEXT Generic Oracle Unified Directory Test Environment
+# Generic OUD configuration for flext-ldap validation testing
+# Port 3489, baseDN dc=flext,dc=local (matches OpenLDAP for cross-server testing)
+services:
+  flext-oud-test:
+    image: registry.example.com/ocr/middleware/oud:14.1.2.1.0-jdk17-ol8-250314
+    container_name: flext-oud-test
+    hostname: flext-oud-test
+    ports:
+      - "3489:1389" # LDAP port (different from production to avoid conflicts)
+      - "3639:1636" # LDAPS port
+      - "4446:4444" # Admin port
+    environment:
+      # OUD Instance Configuration - FLEXT GENERIC TEST
+      OUD_INSTANCE_NAME: "flext_oud_test"
+      rootUserDN: "cn=REDACTED_LDAP_BIND_PASSWORD"
+      rootUserPassword: "REDACTED_LDAP_BIND_PASSWORD123"
+      REDACTED_LDAP_BIND_PASSWORDPassword: "REDACTED_LDAP_BIND_PASSWORD123"
+      baseDN: "dc=flext,dc=local"
+
+      # Port Configuration
+      ldapPort: "1389"
+      ldapsPort: "1636"
+      REDACTED_LDAP_BIND_PASSWORDConnectorPort: "4444"
+
+      # Additional Settings
+      sampleData: "0"
+      addBaseEntry: "true"
+      sleepBeforeConfig: "3"
+    volumes:
+      # Docker named volume - container will create with correct permissions
+      - flext_oud_test_data:/u01/oracle/user_projects
+      # Mount generic test configuration if available
+      - ./flext-oud/bootstrap.ldif:/bootstrap.ldif:ro
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "sh",
+          "-c",
+          '$${ORACLE_HOME}/oud/bin/ldapsearch -h localhost -p $${ldapPort} -b $${baseDN} -D $${rootUserDN} -w $${rootUserPassword} -s base "(objectClass=*)"',
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 20
+      start_period: 240s
+    restart: unless-stopped
+    networks:
+      - flext-test-network
+
+volumes:
+  flext_oud_test_data:
+    driver: local
+
+networks:
+  flext-test-network:
+    driver: bridge
