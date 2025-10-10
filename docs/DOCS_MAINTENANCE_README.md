@@ -1,317 +1,541 @@
-# Documentation Maintenance System - Quick Start
+# FLEXT Documentation Maintenance System
 
-> **Comprehensive automated documentation quality assurance for FLEXT monorepo**
+**Automated Documentation Quality Assurance and Maintenance Framework**
+
+[![Maintenance](https://img.shields.io/badge/Maintenance-automated-blue.svg)](#)
+[![Quality](https://img.shields.io/badge/Quality-monitored-green.svg)](#)
+[![Coverage](https://img.shields.io/badge/Coverage-comprehensive-orange.svg)](#)
+
+---
+
+## 🎯 Overview
+
+The FLEXT Documentation Maintenance System provides comprehensive automated quality assurance, validation, and maintenance for the entire FLEXT documentation ecosystem. This system ensures documentation remains current, accurate, and high-quality through systematic monitoring and automated improvements.
+
+### Key Features
+
+- 🔍 **Content Quality Audit** - Comprehensive file analysis and quality scoring
+- 🔗 **Link Validation** - External and internal link health monitoring
+- 🎨 **Style Consistency** - Automated style checking and formatting
+- 🔧 **Content Optimization** - Automated content improvements and fixes
+- 🔄 **Version Control Integration** - Git-based change tracking and synchronization
+- 📊 **Quality Reporting** - Detailed analytics and improvement recommendations
+
+---
 
 ## 🚀 Quick Start
 
-### Run Your First Audit
+### Prerequisites
 
 ```bash
-# Preview what needs fixing (safe, no changes)
-python scripts/docs_maintenance_audit.py --root . --output audit.md
+# Ensure Python dependencies are installed
+pip install aiohttp requests beautifulsoup4
 
-# View the report
-cat audit.md
+# Verify scripts are executable
+chmod +x scripts/docs_*.py
 ```
 
-### Common Tasks
+### Basic Usage
 
 ```bash
-# Fix broken links automatically
-python scripts/docs_link_fixer.py --root . --apply
+# Run comprehensive maintenance cycle
+python scripts/docs_maintenance_orchestrator.py comprehensive
 
-# Generate table of contents for all docs
-python scripts/docs_toc_generator.py --root . --apply
+# Run individual checks
+python scripts/docs_maintenance_orchestrator.py audit     # Quality audit
+python scripts/docs_maintenance_orchestrator.py validate  # Link validation
+python scripts/docs_maintenance_orchestrator.py style     # Style checking
+python scripts/docs_maintenance_orchestrator.py optimize  # Content optimization
 
-# Run complete maintenance workflow
-./scripts/docs_sync_automation.sh --apply
+# Check status without making changes
+python scripts/docs_maintenance_orchestrator.py status
 ```
-
-## 📁 Files Created
-
-### Core Tools
-
-| File | Purpose |
-|------|---------|
-| `scripts/docs_maintenance_audit.py` | Main audit engine - analyzes all 659 markdown files |
-| `scripts/docs_link_fixer.py` | Automatically fixes broken links and references |
-| `scripts/docs_toc_generator.py` | Generates/updates table of contents |
-| `scripts/docs_sync_automation.sh` | Complete maintenance workflow automation |
 
 ### Configuration
 
-| File | Purpose |
-|------|---------|
-| `.markdownlint.json` | Markdown style rules and linting configuration |
-| `.github/workflows/docs_maintenance.yml` | GitHub Actions CI/CD workflow |
-| `Makefile.docs` | Make commands for easy access to tools |
+The system uses `docs/docs_maintenance_config.json` for configuration:
 
-### Documentation
-
-| File | Purpose |
-|------|---------|
-| `docs/documentation-maintenance-guide.md` | Complete usage guide (you are here!) |
-| `docs/DOCS_MAINTENANCE_README.md` | This quick start guide |
-
-## 🎯 What Gets Checked
-
-### Content Quality ✅
-
-- **Freshness**: Documents >90 days old flagged for review
-- **Completeness**: Minimum word count, structure requirements
-- **TODO Markers**: Track unfinished documentation
-- **Heading Structure**: Proper hierarchy and organization
-
-### Link Validation 🔗
-
-- **Internal Links**: Verify all `../` and `./` references
-- **External Links**: Check HTTP status (optional, slower)
-- **Images**: Validate image paths and existence
-- **Anchors**: Verify heading anchors work
-
-### Style & Formatting 🎨
-
-- **Line Length**: Configurable max characters per line
-- **Heading Hierarchy**: Sequential levels (h1→h2→h3, not h1→h3)
-- **Code Blocks**: Language specification required
-- **List Formatting**: Consistent markers and indentation
-
-### Accessibility ♿
-
-- **Alt Text**: All images must have descriptive alt text
-- **Link Text**: Descriptive text (not "click here")
-- **Structure**: Proper heading hierarchy for screen readers
-
-## 🛠️ Using Make Commands
-
-Add to your main `Makefile`:
-
-```makefile
-include Makefile.docs
+```json
+{
+  "max_age_days": 30,
+  "link_timeout": 10,
+  "style_rules": {
+    "max_line_length": 120,
+    "heading_hierarchy": true,
+    "consistent_lists": true
+  },
+  "quality_thresholds": {
+    "completeness": 0.8,
+    "freshness": 0.7
+  }
+}
 ```
-
-Then use convenient shortcuts:
-
-```bash
-# Show all available commands
-make docs-help
-
-# Quick audit
-make docs-audit
-
-# Fix everything
-make docs-sync-apply
-
-# Run CI checks locally
-make docs-ci-check
-```
-
-## 📊 Understanding Reports
-
-### Severity Levels
-
-```
-🔴 CRITICAL  - Broken links, missing images, security issues
-🟠 HIGH      - Accessibility violations, major structure issues
-🟡 MEDIUM    - Stale content (>90 days), minor link problems
-🔵 LOW       - Style violations, formatting inconsistencies
-ℹ️  INFO      - Suggestions, optimization opportunities
-```
-
-### Sample Report Structure
-
-```markdown
-# FLEXT Documentation Audit Report
-
-**Total Files Analyzed:** 659
-**Total Issues Found:** 127
-
-## Issues by Severity
-- Critical: 3    ← Fix these immediately!
-- High: 12       ← Address soon
-- Medium: 45     ← Schedule for review
-- Low: 67        ← Nice to have
-
-## Issues by Category
-- Broken Link: 8           ← Run link fixer
-- Missing Image: 2         ← Add missing assets
-- Content Freshness: 23    ← Review/update old docs
-- Accessibility: 34        ← Add alt text
-- Style Formatting: 60     ← Run auto-formatter
-```
-
-## 🔄 Automated Workflows
-
-### Weekly Audit (GitHub Actions)
-
-Runs every Sunday at midnight UTC:
-
-1. Audits all 659 markdown files
-2. Generates reports (MD, JSON, HTML)
-3. Creates/updates GitHub issue with findings
-4. Uploads reports as workflow artifacts
-
-**View:** `.github/workflows/docs_maintenance.yml`
-
-### Pull Request Validation
-
-Runs on every PR touching markdown files:
-
-1. Quick audit of changed files
-2. Validates internal links
-3. Checks style compliance
-4. Comments on PR with summary
-
-## 🎬 Complete Workflow Example
-
-### Scenario: Weekly Maintenance
-
-```bash
-# 1. Preview all changes (safe, no writes)
-./scripts/docs_sync_automation.sh
-
-# 2. Review what would change
-# Read the output carefully
-
-# 3. Apply fixes
-./scripts/docs_sync_automation.sh --apply
-
-# 4. Review changes in git
-git diff
-
-# 5. Commit if satisfied
-git add -A
-git commit -m "docs: weekly maintenance - fix links, update TOCs, improve accessibility"
-git push
-```
-
-### Scenario: Adding New Documentation
-
-```bash
-# 1. Create your new doc
-vim docs/new-feature-guide.md
-
-# 2. Write content with proper headings
-
-# 3. Generate TOC
-python scripts/docs_toc_generator.py --root docs --apply
-
-# 4. Validate before commit
-python scripts/docs_maintenance_audit.py --root docs --output /tmp/audit.md
-
-# 5. Check for issues
-grep "severity.*critical\|severity.*high" /tmp/audit.md
-
-# 6. Fix any issues, then commit
-git add docs/new-feature-guide.md
-git commit -m "docs: add new feature guide with TOC"
-```
-
-## 🚨 Troubleshooting
-
-### Issue: "Too many broken links after refactoring"
-
-```bash
-# Auto-fix with similarity matching
-python scripts/docs_link_fixer.py --root . --apply
-
-# Review remaining issues
-python scripts/docs_maintenance_audit.py --root . --output audit.md
-grep "broken_link" audit.md
-```
-
-### Issue: "External link checking is too slow"
-
-```bash
-# Disable external checking for faster runs
-python scripts/docs_maintenance_audit.py --root . --output audit.md
-# (omit --check-external-links flag)
-
-# Or run only internal validation
-./scripts/docs_sync_automation.sh --apply
-# (no --external-links flag)
-```
-
-### Issue: "CI workflow failing"
-
-1. Check GitHub Actions logs
-2. Verify Python 3.13+ installed
-3. Ensure dependencies available:
-   ```bash
-   pip install requests beautifulsoup4 markdown
-   ```
-
-## 📈 Metrics & Monitoring
-
-### Current Documentation Health
-
-```bash
-# Get quick statistics
-make docs-stats
-
-# Output:
-# Markdown files:    659
-# Docs directories:  36
-# Total lines:       ~23,456
-# Total words:       ~458,234
-```
-
-### Track Improvement Over Time
-
-```bash
-# Run audit weekly and compare
-python scripts/docs_maintenance_audit.py --root . --output audit_$(date +%Y%m%d).md
-
-# Compare with previous week
-diff audit_20251002.md audit_20251009.md
-```
-
-## 🎓 Best Practices
-
-### Do ✅
-
-- Run audit before committing doc changes
-- Fix critical/high issues immediately
-- Review medium issues monthly
-- Update stale docs (>90 days) quarterly
-- Add alt text to all images
-- Use descriptive link text
-- Keep TOCs updated
-
-### Don't ❌
-
-- Ignore broken links
-- Skip external link validation forever
-- Commit without running validation
-- Use absolute paths in links
-- Forget alt text on images
-- Use "click here" as link text
-
-## 🔗 Resources
-
-- **Full Guide**: `docs/documentation-maintenance-guide.md`
-- **CI Config**: `.github/workflows/docs_maintenance.yml`
-- **Style Rules**: `.markdownlint.json`
-- **Markdown Guide**: https://www.markdownguide.org/
-- **WCAG Guidelines**: https://www.w3.org/WAI/WCAG21/quickref/
-
-## 📞 Getting Help
-
-- **Tool Issues**: Check script output and error messages
-- **Workflow Questions**: Review `docs/documentation-maintenance-guide.md`
-- **CI/CD Issues**: Check GitHub Actions logs
-- **General Help**: Create issue with `documentation` label
 
 ---
 
-## Next Steps
+## 📊 System Architecture
 
-1. **Run your first audit**: `python scripts/docs_maintenance_audit.py --root . --output audit.md`
-2. **Review the report**: `cat audit.md`
-3. **Fix critical issues**: `python scripts/docs_link_fixer.py --root . --apply`
-4. **Read full guide**: `docs/documentation-maintenance-guide.md`
-5. **Set up Make commands**: Add `include Makefile.docs` to main Makefile
+### Core Components
+
+```
+docs_maintenance_orchestrator.py    # Main orchestrator
+├── docs_maintenance_system.py      # Content quality audit
+├── docs_link_validator.py          # Link validation
+├── docs_style_checker.py           # Style consistency
+├── docs_sync_system.py             # Git integration
+└── docs_maintenance_config.json    # Configuration
+```
+
+### Data Flow
+
+```
+Documentation Files → Quality Audit → Link Validation → Style Check → Optimization → Git Sync → Reports
+                       ↓              ↓               ↓             ↓            ↓           ↓
+                   Content Analysis  Health Checks  Consistency   Improvements  Commits  Analytics
+```
+
+### Integration Points
+
+- **Version Control**: Git integration with change tracking
+- **CI/CD**: Automated maintenance in build pipelines
+- **Monitoring**: Real-time health dashboards
+- **Reporting**: Stakeholder communication and analytics
 
 ---
 
-**Version:** 1.0.0 | **Last Updated:** 2025-10-09 | **Status:** Production Ready
+## 🔍 Quality Audit System
+
+### Content Analysis
+
+The audit system evaluates documentation across multiple dimensions:
+
+#### Completeness Metrics
+- Word count analysis per file
+- Required section presence
+- Content depth assessment
+- TODO/FIXME marker tracking
+
+#### Freshness Analysis
+- File modification date checking
+- Content age monitoring
+- Update frequency tracking
+- Stale content identification
+
+#### Quality Scoring
+- Overall completeness score (0-100%)
+- Freshness rating
+- Issue severity classification
+- Improvement recommendations
+
+### Audit Reports
+
+Generated reports include:
+- Executive summary with key metrics
+- Detailed issue breakdowns by category
+- File-specific recommendations
+- Priority action items
+- Quality trend analysis
+
+---
+
+## 🔗 Link Validation System
+
+### External Link Checking
+
+- HTTP status code validation
+- Redirect detection and tracking
+- Timeout handling with retries
+- Domain health analysis
+- Response time monitoring
+
+### Internal Link Validation
+
+- Cross-reference checking between files
+- Anchor link verification
+- File existence validation
+- Reference consistency analysis
+- Broken link impact assessment
+
+### Caching and Performance
+
+- Link validation results caching
+- Concurrent processing for performance
+- Smart retry logic for reliability
+- Rate limiting and throttling
+- Error handling and recovery
+
+---
+
+## 🎨 Style Consistency System
+
+### Markdown Standards
+
+- Heading hierarchy enforcement
+- List formatting consistency
+- Code block language specification
+- Table alignment validation
+- Whitespace and formatting rules
+
+### Accessibility Compliance
+
+- Alt text requirements for images
+- Descriptive link text validation
+- Heading structure accessibility
+- Color contrast considerations
+- Screen reader compatibility
+
+### Automated Fixes
+
+- Safe formatting corrections
+- Whitespace normalization
+- List marker standardization
+- Code block language detection
+- Table formatting improvements
+
+---
+
+## 🔧 Content Optimization System
+
+### Automated Improvements
+
+- Table of contents generation
+- Frontmatter management
+- Common formatting fixes
+- Spelling and grammar validation
+- Readability enhancements
+
+### Smart Detection
+
+- Content pattern recognition
+- Language and context awareness
+- File type specific optimizations
+- Metadata extraction and updating
+- Cross-reference improvements
+
+### Quality Enhancement
+
+- Readability scoring and suggestions
+- Content structure optimization
+- Information architecture improvements
+- User experience enhancements
+- SEO and discoverability improvements
+
+---
+
+## 🔄 Version Control Integration
+
+### Git Synchronization
+
+- Change detection and classification
+- Automated commit generation
+- Branch management and merging
+- Conflict resolution strategies
+- Rollback and recovery procedures
+
+### Change Tracking
+
+- File modification monitoring
+- Content change analysis
+- Author attribution tracking
+- Historical trend analysis
+- Impact assessment and reporting
+
+### Automated Workflows
+
+- Pre-commit quality checks
+- Post-commit validation
+- Branch-specific policies
+- Release preparation automation
+- Deployment verification
+
+---
+
+## 📊 Reporting and Analytics
+
+### Quality Dashboards
+
+- Real-time health monitoring
+- Trend analysis and forecasting
+- Team productivity metrics
+- Quality score tracking
+- Issue resolution analytics
+
+### Stakeholder Reports
+
+- Executive summaries
+- Detailed technical reports
+- Improvement recommendations
+- Priority action items
+- Progress tracking and milestones
+
+### Integration Options
+
+- GitHub integration
+- Slack notifications
+- Email alerts
+- Project management tools
+- Custom webhook support
+
+---
+
+## 🛠️ Configuration and Customization
+
+### Configuration File Structure
+
+```json
+{
+  "audit": {
+    "enabled": true,
+    "max_age_days": 30,
+    "min_words_per_file": 100
+  },
+  "validation": {
+    "external_links": true,
+    "internal_links": true,
+    "timeout": 10,
+    "retries": 3
+  },
+  "style": {
+    "rules": {
+      "max_line_length": 120,
+      "heading_hierarchy": true,
+      "consistent_lists": true
+    }
+  },
+  "optimization": {
+    "auto_fix_safe": true,
+    "backup_before_changes": true
+  },
+  "sync": {
+    "auto_commit": false,
+    "commit_template": "docs: automated maintenance - {changes}"
+  },
+  "reporting": {
+    "generate_html": true,
+    "include_details": true,
+    "severity_levels": ["critical", "high", "medium", "low"]
+  }
+}
+```
+
+### Custom Rules
+
+Extend the system with custom validation rules:
+
+```python
+# Custom validation rule example
+def custom_validation_rule(file_path: Path, content: str) -> List[StyleIssue]:
+    """Custom validation logic."""
+    issues = []
+    # Your custom validation code here
+    return issues
+```
+
+### Team-Specific Configuration
+
+Adapt the system for team preferences:
+
+- Custom style guides
+- Project-specific quality thresholds
+- Team workflow integration
+- Notification preferences
+- Reporting customization
+
+---
+
+## 📈 Usage Examples
+
+### Daily Maintenance
+
+```bash
+# Quick daily check
+python scripts/docs_maintenance_orchestrator.py status
+
+# Automated audit
+python scripts/docs_maintenance_orchestrator.py audit --verbose
+
+# Safe optimization (dry run first)
+python scripts/docs_maintenance_orchestrator.py optimize --dry-run
+python scripts/docs_maintenance_orchestrator.py optimize
+```
+
+### Weekly Maintenance
+
+```bash
+# Comprehensive weekly maintenance
+python scripts/docs_maintenance_orchestrator.py comprehensive --verbose
+
+# Link validation with detailed reporting
+python scripts/docs_maintenance_orchestrator.py validate --output weekly_links.md
+
+# Style checking with fixes
+python scripts/docs_maintenance_orchestrator.py style
+python scripts/docs_maintenance_orchestrator.py optimize
+```
+
+### CI/CD Integration
+
+```yaml
+# .github/workflows/docs-maintenance.yml
+name: Documentation Maintenance
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # Weekly on Monday
+  workflow_dispatch:
+
+jobs:
+  maintenance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+      - name: Install dependencies
+        run: pip install aiohttp requests beautifulsoup4
+      - name: Run maintenance
+        run: python scripts/docs_maintenance_orchestrator.py comprehensive
+      - name: Upload reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs-reports
+          path: docs/reports/
+```
+
+---
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+#### Import Errors
+```bash
+# Ensure scripts are in Python path
+export PYTHONPATH="${PYTHONPATH}:$(pwd)/scripts"
+
+# Install missing dependencies
+pip install aiohttp requests beautifulsoup4
+```
+
+#### Permission Issues
+```bash
+# Make scripts executable
+chmod +x scripts/docs_*.py
+
+# Check file permissions
+ls -la scripts/docs_*.py
+```
+
+#### Git Integration Issues
+```bash
+# Ensure git repository is clean for auto-commit
+git status
+
+# Disable auto-commit for safety
+python scripts/docs_maintenance_orchestrator.py comprehensive --no-sync
+```
+
+#### Performance Issues
+```bash
+# Reduce concurrent requests
+# Edit docs_maintenance_config.json:
+{
+  "max_concurrent": 3,
+  "link_timeout": 15
+}
+```
+
+### Debug Mode
+
+Enable verbose output for troubleshooting:
+
+```bash
+python scripts/docs_maintenance_orchestrator.py audit --verbose
+python scripts/docs_maintenance_orchestrator.py validate --verbose
+```
+
+---
+
+## 📚 API Reference
+
+### Orchestrator API
+
+```python
+from docs_maintenance_orchestrator import DocumentationMaintenanceOrchestrator
+
+# Initialize
+orchestrator = DocumentationMaintenanceOrchestrator()
+
+# Run individual checks
+audit_results = orchestrator.run_comprehensive_audit()
+validation_results = orchestrator.run_link_validation()
+style_results = orchestrator.run_style_checking()
+
+# Run full cycle
+results = orchestrator.run_full_maintenance_cycle()
+```
+
+### Configuration API
+
+```python
+# Load custom configuration
+config = {
+    "max_age_days": 45,
+    "link_timeout": 15,
+    "style_rules": {
+        "max_line_length": 100,
+        "heading_hierarchy": True
+    }
+}
+
+orchestrator = DocumentationMaintenanceOrchestrator()
+orchestrator.config.update(config)
+```
+
+---
+
+## 🤝 Contributing
+
+### Adding New Validation Rules
+
+1. Extend the style checker with custom rules
+2. Add new audit categories
+3. Implement custom optimization logic
+4. Create new reporting formats
+
+### Testing the Maintenance System
+
+```bash
+# Test individual components
+python -m pytest scripts/test_docs_maintenance.py -v
+
+# Integration testing
+python scripts/docs_maintenance_orchestrator.py comprehensive --dry-run
+```
+
+### Code Standards
+
+- Follow FLEXT coding standards
+- Add comprehensive type hints
+- Include docstrings for all functions
+- Write unit tests for new functionality
+- Update documentation for any changes
+
+---
+
+## 📄 License
+
+This documentation maintenance system is part of the FLEXT project and follows the same MIT license terms.
+
+---
+
+## 📞 Support
+
+- **Issues**: Create GitHub issues with the `documentation` label
+- **Discussions**: Use GitHub Discussions for questions
+- **Contributing**: See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines
+
+---
+
+**FLEXT Documentation Maintenance System** - Ensuring documentation quality through automated excellence.

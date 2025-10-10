@@ -1,0 +1,95 @@
+{
+  "output_dir": "docs/architecture",
+  "frameworks": {
+    "c4_model": true,
+    "arc42": true,
+    "adr": true,
+    "plantuml": true,
+    "interactive": false
+  },
+  "diagrams": {
+    "system_context": true,
+    "container": true,
+    "component": true,
+    "deployment": true,
+    "data_flow": true,
+    "sequence": true
+  },
+  "analysis": {
+    "code_analysis": true,
+    "dependency_analysis": true,
+    "interface_analysis": true,
+    "quality_assessment": true
+  },
+  "quality_attributes": {
+    "performance": {
+      "enabled": true,
+      "metrics": ["throughput", "latency", "scalability", "efficiency"]
+    },
+    "security": {
+      "enabled": true,
+      "metrics": ["authentication", "authorization", "data_protection", "compliance"]
+    },
+    "reliability": {
+      "enabled": true,
+      "metrics": ["availability", "fault_tolerance", "data_consistency", "monitoring"]
+    },
+    "maintainability": {
+      "enabled": true,
+      "metrics": ["modularity", "testability", "documentation", "extensibility"]
+    },
+    "usability": {
+      "enabled": true,
+      "metrics": ["api_design", "cli_experience", "error_messages", "documentation"]
+    }
+  },
+  "generation": {
+    "auto_generate_diagrams": true,
+    "include_code_examples": true,
+    "generate_api_docs": true,
+    "create_cross_references": true,
+    "validate_links": true
+  },
+  "templates": {
+    "c4_model_template": "templates/c4-model.md",
+    "arc42_template": "templates/arc42.md",
+    "adr_template": "templates/adr.md",
+    "plantuml_template": "templates/diagram.puml"
+  },
+  "styling": {
+    "color_scheme": "default",
+    "diagram_theme": "plain",
+    "font_family": "sans-serif",
+    "layout": "hierarchical"
+  },
+  "metadata": {
+    "author": "FLEXT Architecture Team",
+    "version": "0.9.0",
+    "last_updated": "2025-01-XX",
+    "review_cycle": "quarterly"
+  },
+  "integration": {
+    "github_pages": false,
+    "mkdocs": true,
+    "sphinx": false,
+    "custom_portal": false
+  },
+  "automation": {
+    "ci_integration": true,
+    "pre_commit_hooks": true,
+    "auto_update": false,
+    "notification_webhooks": []
+  },
+  "validation": {
+    "strict_mode": true,
+    "fail_on_warnings": false,
+    "max_issues_per_file": 10,
+    "required_sections": [
+      "Overview",
+      "Architecture",
+      "Components",
+      "Interfaces",
+      "Quality Attributes"
+    ]
+  }
+}
