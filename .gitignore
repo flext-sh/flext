@@ -15,8 +15,6 @@
 # ============================================================================
 # Allow all FLEXT ecosystem project directories
 !flext-*/
-!client-a-*/
-!client-b-*/
 !flexcore/
 
 # ============================================================================
@@ -73,8 +71,6 @@
 # WHITELIST: Contents Inside Allowed Directories
 # ============================================================================
 !flext-*/**
-!client-a-*/**
-!client-b-*/**
 !flexcore/**
 !scripts/**
 !docker/**

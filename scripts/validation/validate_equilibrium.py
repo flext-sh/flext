@@ -84,9 +84,12 @@ def validate_equilibrium() -> int:
         # Test Constants
         try:
             if lib_dir == "flext-core":
-                results["constants"].append(
-                    (lib_dir, "FlextConstants", "✅ FOUNDATION", "foundation")
-                )
+                results["constants"].append((
+                    lib_dir,
+                    "FlextConstants",
+                    "✅ FOUNDATION",
+                    "foundation",
+                ))
             else:
                 module_name = f"flext_{domain}.constants"
                 class_name = f"Flext{domain.title().replace('_', '')}Constants"
@@ -102,21 +105,30 @@ def validate_equilibrium() -> int:
                     if extends
                     else "❌ DOES NOT EXTEND FlextConstants"
                 )
-                results["constants"].append(
-                    (lib_dir, class_name, status, "extends" if extends else "error")
-                )
+                results["constants"].append((
+                    lib_dir,
+                    class_name,
+                    status,
+                    "extends" if extends else "error",
+                ))
 
         except Exception as e:
-            results["constants"].append(
-                (lib_dir, "Constants", f"⚠️  ERROR: {str(e)[:50]}", "error")
-            )
+            results["constants"].append((
+                lib_dir,
+                "Constants",
+                f"⚠️  ERROR: {str(e)[:50]}",
+                "error",
+            ))
 
         # Test Config
         try:
             if lib_dir == "flext-core":
-                results["config"].append(
-                    (lib_dir, "FlextConfig", "✅ FOUNDATION", "foundation")
-                )
+                results["config"].append((
+                    lib_dir,
+                    "FlextConfig",
+                    "✅ FOUNDATION",
+                    "foundation",
+                ))
             else:
                 module_name = f"flext_{domain}.config"
                 class_name = f"Flext{domain.title().replace('_', '')}Config"
@@ -131,21 +143,30 @@ def validate_equilibrium() -> int:
                     if extends
                     else "❌ DOES NOT EXTEND FlextConfig"
                 )
-                results["config"].append(
-                    (lib_dir, class_name, status, "extends" if extends else "error")
-                )
+                results["config"].append((
+                    lib_dir,
+                    class_name,
+                    status,
+                    "extends" if extends else "error",
+                ))
 
         except Exception as e:
-            results["config"].append(
-                (lib_dir, "Config", f"⚠️  ERROR: {str(e)[:50]}", "error")
-            )
+            results["config"].append((
+                lib_dir,
+                "Config",
+                f"⚠️  ERROR: {str(e)[:50]}",
+                "error",
+            ))
 
         # Test Models
         try:
             if lib_dir == "flext-core":
-                results["models"].append(
-                    (lib_dir, "FlextModels", "✅ FOUNDATION", "foundation")
-                )
+                results["models"].append((
+                    lib_dir,
+                    "FlextModels",
+                    "✅ FOUNDATION",
+                    "foundation",
+                ))
             else:
                 module_name = f"flext_{domain}.models"
                 class_name = f"Flext{domain.title().replace('_', '')}Models"
@@ -160,14 +181,20 @@ def validate_equilibrium() -> int:
                     if extends
                     else "❌ DOES NOT EXTEND FlextModels"
                 )
-                results["models"].append(
-                    (lib_dir, class_name, status, "extends" if extends else "error")
-                )
+                results["models"].append((
+                    lib_dir,
+                    class_name,
+                    status,
+                    "extends" if extends else "error",
+                ))
 
         except Exception as e:
-            results["models"].append(
-                (lib_dir, "Models", f"⚠️  ERROR: {str(e)[:50]}", "error")
-            )
+            results["models"].append((
+                lib_dir,
+                "Models",
+                f"⚠️  ERROR: {str(e)[:50]}",
+                "error",
+            ))
 
     # Print results
     print("=" * 80)
@@ -192,21 +219,21 @@ def validate_equilibrium() -> int:
     constants_ok = sum(
         1
         for _, _, _, result_type in results["constants"]
-        if result_type in ("extends", "foundation")
+        if result_type in {"extends", "foundation"}
     )
     constants_total = len([r for r in results["constants"] if r[3] != "error"])
 
     config_ok = sum(
         1
         for _, _, _, result_type in results["config"]
-        if result_type in ("extends", "foundation")
+        if result_type in {"extends", "foundation"}
     )
     config_total = len([r for r in results["config"] if r[3] != "error"])
 
     models_ok = sum(
         1
         for _, _, _, result_type in results["models"]
-        if result_type in ("extends", "foundation")
+        if result_type in {"extends", "foundation"}
     )
     models_total = len([r for r in results["models"] if r[3] != "error"])
 

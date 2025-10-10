@@ -67,7 +67,9 @@ def update_init_file(project_name: str) -> bool:
 
     if not package_dir.exists():
         # Try to find any package directory
-        package_dirs = [d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith(".")]
+        package_dirs = [
+            d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith(".")
+        ]
         if not package_dirs:
             print(f"   ❌ No package directory in {project_name}/src/")
             return False
@@ -93,41 +95,29 @@ def update_init_file(project_name: str) -> bool:
 
     # Remove hardcoded __version__ (but keep imports)
     new_content = re.sub(
-        r'^__version__\s*=\s*["\'].*?["\'].*$',
-        "",
-        new_content,
-        flags=re.MULTILINE
+        r'^__version__\s*=\s*["\'].*?["\'].*$', "", new_content, flags=re.MULTILINE
     )
 
     # Remove hardcoded __author__
     new_content = re.sub(
-        r'^__author__\s*=\s*["\'].*?["\'].*$',
-        "",
-        new_content,
-        flags=re.MULTILINE
+        r'^__author__\s*=\s*["\'].*?["\'].*$', "", new_content, flags=re.MULTILINE
     )
 
     # Remove hardcoded __email__
     new_content = re.sub(
-        r'^__email__\s*=\s*["\'].*?["\'].*$',
-        "",
-        new_content,
-        flags=re.MULTILINE
+        r'^__email__\s*=\s*["\'].*?["\'].*$', "", new_content, flags=re.MULTILINE
     )
 
     # Remove hardcoded __description__
     new_content = re.sub(
-        r'^__description__\s*=\s*["\'].*?["\'].*$',
-        "",
-        new_content,
-        flags=re.MULTILINE
+        r'^__description__\s*=\s*["\'].*?["\'].*$', "", new_content, flags=re.MULTILINE
     )
 
     # Add import from __version__ after "from __future__ import annotations"
     if "from __future__ import annotations" in new_content:
         new_content = new_content.replace(
             "from __future__ import annotations",
-            f"from __future__ import annotations\n\nfrom {package_name}.__version__ import __version__, __version_info__"
+            f"from __future__ import annotations\n\nfrom {package_name}.__version__ import __version__, __version_info__",
         )
     else:
         # Add at the top after docstring
@@ -147,11 +137,14 @@ def update_init_file(project_name: str) -> bool:
         if insert_index == 0:
             insert_index = 1  # After first line
 
-        lines.insert(insert_index, f"\nfrom {package_name}.__version__ import __version__, __version_info__")
+        lines.insert(
+            insert_index,
+            f"\nfrom {package_name}.__version__ import __version__, __version_info__",
+        )
         new_content = "\n".join(lines)
 
     # Clean up multiple blank lines
-    new_content = re.sub(r'\n{3,}', '\n\n', new_content)
+    new_content = re.sub(r"\n{3,}", "\n\n", new_content)
 
     # Write updated content
     init_file.write_text(new_content)

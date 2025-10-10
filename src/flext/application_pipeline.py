@@ -10,15 +10,12 @@ consistent pipeline usage across the FLEXT ecosystem.
 ZERO TOLERANCE: NO local implementations - uses flext-core exclusively.
 DOMAIN SEPARATION: Pipeline patterns belong exclusively to flext-core domain.
 """
-from __future__ import annotations
 
-from typing import Self, TypeVar
+from __future__ import annotations
 
 import time
 from enum import StrEnum
-
-# Import SOURCE OF TRUTH co, Selfnfigurations - NO DUPLICATION
-from pydantic import BaseModel, Field
+from typing import Self, TypeVar
 
 from flext_core import (
     FlextContainer,
@@ -29,6 +26,9 @@ from flext_core import (
     FlextResult,
     FlextService,
 )
+
+# Import SOURCE OF TRUTH co, Selfnfigurations - NO DUPLICATION
+from pydantic import BaseModel, Field
 
 # Removed conflicting import - using local PipelineService function instead
 
@@ -209,7 +209,7 @@ class FlextApplicationPipelineService(FlextService[str]):
     def create_command_handler(self: Self) -> FlextHandlers[object, object]:
         """Create command handler for pipeline operations."""
         # Create a basic handler config for pipeline operations
-        config = FlextModels.CqrsConfig.Handler(
+        config = FlextModels.Cqrs.Handler(
             handler_id="pipeline_handler_001",
             handler_name="pipeline_handler",
             handler_type="command",
@@ -240,7 +240,7 @@ class FlextApplicationPipelineService(FlextService[str]):
         except Exception as e:
             return FlextResult[str].fail(f"Pipeline service execution failed: {e}")
 
-    def execute_async(self, request: str = "") -> FlextResult[str]:  # noqa: ARG004
+    def execute_async(self, request: str = "") -> FlextResult[str]:
         """Execute pipeline service asynchronously - required by FlextService abstract method (sync stub)."""
         # Synchronous stub - return the input object
         # Real async operations should be converted to sync alternatives

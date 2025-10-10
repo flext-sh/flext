@@ -1,5 +1,4 @@
-"""
-FLEXT Control Panel - Enterprise Data Integration Platform.
+"""FLEXT Control Panel - Enterprise Data Integration Platform.
 
 FLEXT is a comprehensive enterprise data integration platform that provides a unified
 framework for data processing, transformation, and integration across multiple domains
@@ -30,13 +29,17 @@ Example:
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
+
 from __future__ import annotations
 
 from typing import Final
 
+from flext_cli import (
+    FlextCliCommands,
+)
 
-from flext.version import VERSION, FlextVersion
 from flext.application_handlers import (
     FlextApplicationHandlerService,
     create_handler_service,
@@ -60,6 +63,7 @@ from flext.cli import (
     info,
     lint,
     main,
+    orchestrate,
     quality,
     scripts,
     test,
@@ -86,6 +90,7 @@ from flext.services_utils import (
     FlextResult,
     FlextUtilities,
 )
+from flext.version import VERSION, FlextVersion
 from flext.workspace import (
     FlextAdvancedWorkspaceModels,
     FlextWorkspaceService,
@@ -102,9 +107,6 @@ from flext.workspace_cli import (
     run_tests as workspace_test,
     status,
 )
-from flext_cli import (
-    FlextCliCommands,
-)
 
 PROJECT_VERSION: Final[FlextVersion] = VERSION
 
@@ -112,6 +114,8 @@ __version__: str = VERSION.version
 __version_info__: tuple[int | str, ...] = VERSION.version_info
 
 __all__ = [
+    "PROJECT_VERSION",
+    "VERSION",
     "DevToolsManager",
     "FlextAdvancedDevModels",
     "FlextAdvancedDevToolsManager",
@@ -119,13 +123,13 @@ __all__ = [
     "FlextApplicationHandlerService",
     "FlextApplicationPipelineService",
     "FlextCli",
-    "FlextCliPattern",
     "FlextCliCommands",
     "FlextCliContext",
     "FlextCliContextPattern",
     "FlextCliFormattersPattern",
     "FlextCliModels",
     "FlextCliOutput",
+    "FlextCliPattern",
     "FlextCliService",
     "FlextControlPanelCli",
     "FlextDevEnums",
@@ -134,12 +138,15 @@ __all__ = [
     "FlextResult",
     "FlextUnifiedServices",
     "FlextUtilities",
+    "FlextVersion",
     "FlextWorkspaceCli",
     "FlextWorkspaceService",
     "OperationStatus",
     "OperationType",
     "ProjectType",
     "WorkspaceStatus",
+    "__version__",
+    "__version_info__",
     "analysis",
     "build",
     "check",
@@ -155,15 +162,11 @@ __all__ = [
     "info",
     "lint",
     "main",
+    "orchestrate",
     "quality",
     "scripts",
     "status",
     "test",
     "workspace_main",
     "workspace_test",
-    "FlextVersion",
-    "VERSION",
-    "PROJECT_VERSION",
-    "__version__",
-    "__version_info__",
 ]

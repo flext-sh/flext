@@ -5,11 +5,11 @@ Unified workspace service using flext-core exclusively with proper separation of
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
+
 from __future__ import annotations
 
-from typing import Protocol, Self, runtime_checkable
-
 from pathlib import Path
+from typing import Protocol, Self, runtime_checkable
 
 from flext_core import (
     FlextContainer,
@@ -79,7 +79,9 @@ class FlextWorkspaceService(FlextService[str]):
                     if not project_dir.is_dir() or project_dir.name.startswith("."):
                         continue
 
-                    project_info_result: FlextResult[FlextModels.Project] = self._analyze_project(project_dir)
+                    project_info_result: FlextResult[FlextModels.Project] = (
+                        self._analyze_project(project_dir)
+                    )
                     if project_info_result.is_success:
                         projects.append(project_info_result.unwrap())
 
@@ -186,7 +188,9 @@ class FlextWorkspaceService(FlextService[str]):
             )
 
             # Discover projects
-            projects_result: FlextResult[list[FlextModels.Project]] = self.discover_workspace_projects(str(workspace_path))
+            projects_result: FlextResult[list[FlextModels.Project]] = (
+                self.discover_workspace_projects(str(workspace_path))
+            )
             if projects_result.is_failure:
                 return FlextResult[dict[str, object]].fail(
                     f"Failed to discover projects: {projects_result.error}"
@@ -217,7 +221,9 @@ class FlextWorkspaceService(FlextService[str]):
     def execute(self: Self) -> FlextResult[str]:
         """Execute workspace service - required by FlextService abstract method."""
         try:
-            workspace_info_result: FlextResult[dict[str, object]] = self.get_workspace_info()
+            workspace_info_result: FlextResult[dict[str, object]] = (
+                self.get_workspace_info()
+            )
             if workspace_info_result.is_failure:
                 return FlextResult[str].fail(
                     f"Workspace service execution failed: {workspace_info_result.error}"

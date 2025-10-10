@@ -1,0 +1,133 @@
+@startuml FLEXT System Overview
+!theme plain
+title FLEXT Enterprise Data Integration Platform - System Overview
+
+!define RECTANGLE class
+!define COMPONENT component
+!define PACKAGE package
+!define DATABASE database
+!define CLOUD cloud
+
+' External Users
+actor "Data Engineers" as DE
+actor "System Administrators" as SA
+actor "Business Users" as BU
+actor "Developers" as DEV
+
+' External Systems
+cloud "LDAP Systems" as LDAP
+cloud "Oracle Systems" as ORACLE
+cloud "File Systems" as FILES
+cloud "Monitoring Systems" as MONITORING
+
+' FLEXT Platform
+package "FLEXT Platform" {
+    ' Web Layer
+    component "FLEXT Web UI" as WEBUI
+    component "CLI Tool" as CLI
+    
+    ' API Layer
+    component "API Gateway" as APIGATEWAY
+    component "Authentication Service" as AUTH
+    
+    ' Core Services
+    component "Core Service" as CORE
+    component "LDAP Service" as LDAPSVC
+    component "LDIF Service" as LDIFSVC
+    component "Oracle Service" as ORACLESVC
+    
+    ' Singer Platform
+    package "Singer Platform" {
+        component "Singer Taps" as TAPS
+        component "Singer Targets" as TARGETS
+        component "DBT Transformations" as DBT
+    }
+    
+    ' Runtime Container
+    component "FlexCore Runtime" as FLEXCORE
+    
+    ' Quality and Observability
+    component "Quality Service" as QUALITY
+    component "Observability Service" as OBSERVABILITY
+}
+
+' Data Storage
+package "Data Storage" {
+    database "PostgreSQL" as POSTGRES
+    database "Redis" as REDIS
+    database "File Storage" as FILESTORAGE
+}
+
+' User Interactions
+DE --> WEBUI
+DE --> CLI
+SA --> WEBUI
+SA --> CLI
+BU --> WEBUI
+DEV --> CLI
+
+' Internal Communication
+WEBUI --> APIGATEWAY
+CLI --> APIGATEWAY
+APIGATEWAY --> AUTH
+APIGATEWAY --> CORE
+APIGATEWAY --> LDAPSVC
+APIGATEWAY --> LDIFSVC
+APIGATEWAY --> ORACLESVC
+APIGATEWAY --> QUALITY
+APIGATEWAY --> OBSERVABILITY
+
+' FlexCore Integration
+FLEXCORE --> APIGATEWAY
+FLEXCORE --> TAPS
+FLEXCORE --> TARGETS
+FLEXCORE --> DBT
+
+' Service Dependencies
+LDAPSVC --> CORE
+LDIFSVC --> CORE
+ORACLESVC --> CORE
+QUALITY --> CORE
+OBSERVABILITY --> CORE
+
+' Data Storage Connections
+CORE --> POSTGRES
+AUTH --> POSTGRES
+QUALITY --> POSTGRES
+OBSERVABILITY --> POSTGRES
+
+APIGATEWAY --> REDIS
+AUTH --> REDIS
+
+LDIFSVC --> FILESTORAGE
+TAPS --> FILESTORAGE
+TARGETS --> FILESTORAGE
+
+' External System Connections
+LDAPSVC --> LDAP
+ORACLESVC --> ORACLE
+LDIFSVC --> FILES
+OBSERVABILITY --> MONITORING
+
+' Styling
+skinparam component {
+    BackgroundColor #E8F5E8
+    BorderColor #4CAF50
+}
+
+skinparam database {
+    BackgroundColor #FFF3E0
+    BorderColor #FF9800
+}
+
+skinparam cloud {
+    BackgroundColor #F3E5F5
+    BorderColor #9C27B0
+}
+
+skinparam actor {
+    BackgroundColor #E1F5FE
+    BorderColor #2196F3
+}
+
+@enduml

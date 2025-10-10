@@ -7,16 +7,18 @@ uses nested classes for organization while maintaining all CLI capabilities.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
-from __future__ import annotations
 
-from typing import Self, cast
+from __future__ import annotations
 
 import subprocess
 import sys
 from pathlib import Path
+from typing import Self, cast
 
-from flext_cli import FlextCli, FlextCliApi, FlextCliContext, FlextCliTypes
+from flext_cli import FlextCli, FlextCliContext, FlextCliTypes
 from flext_core import FlextLogger, FlextResult, FlextService
+
+from flext.task_orchestration import TaskOrchestrationCli
 
 
 class FlextControlPanelCli(FlextService[str]):
@@ -28,7 +30,7 @@ class FlextControlPanelCli(FlextService[str]):
     """
 
     # Instance fields with proper type annotations
-    _cli_api: FlextCliApi | None
+    _cli_api: FlextCli | None
     _config: FlextCliContext | None
 
     class _Colors:
@@ -101,25 +103,25 @@ class FlextControlPanelCli(FlextService[str]):
         self._logger = FlextLogger(__name__)
         # Initialize FlextCliApi using the factory pattern to avoid initialization issues
         # Initialize CLI API using FlextResult pattern
-        cli_api_result: FlextResult[FlextCliApi] = self._initialize_cli_api()
+        cli_api_result: FlextResult[FlextCli] = self._initialize_cli_api()
         if cli_api_result.is_success:
             self._cli_api = cli_api_result.unwrap()
         else:
             self._logger.warning(
-                f"FlextCliApi initialization failed: {cli_api_result.error}"
+                f"FlextCli initialization failed: {cli_api_result.error}"
             )
             self._cli_api = None  # Will be handled in methods
         self._config = None
         self._workspace: Path = Path.cwd()
 
-    def _initialize_cli_api(self: Self) -> FlextResult[FlextCliApi]:
+    def _initialize_cli_api(self: Self) -> FlextResult[FlextCli]:
         """Initialize CLI API with proper error handling using FlextResult."""
         try:
-            cli_api = FlextCliApi()  # Use default initialization
-            return FlextResult[FlextCliApi].ok(cli_api)
+            cli_api = FlextCli()  # Use default initialization
+            return FlextResult[FlextCli].ok(cli_api)
         except Exception as e:
-            return FlextResult[FlextCliApi].fail(
-                f"FlextCliApi initialization failed: {e!s}"
+            return FlextResult[FlextCli].fail(
+                f"FlextCli initialization failed: {e!s}"
             )
 
     def _initialize_config(
@@ -145,9 +147,7 @@ class FlextControlPanelCli(FlextService[str]):
             main_cli = FlextCli()
             return FlextResult[FlextCli].ok(main_cli)
         except Exception as e:
-            return FlextResult[FlextCli].fail(
-                f"FlextCli creation failed: {e!s}"
-            )
+            return FlextResult[FlextCli].fail(f"FlextCli creation failed: {e!s}")
 
     # Instance method not needed; static method above is sufficient for calls via class or instance
 
@@ -175,8 +175,9 @@ class FlextControlPanelCli(FlextService[str]):
                 )
                 result = quality_gateway.run_quality_checks_safe(config)
 
-                if result.is_success and FlextControlPanelCli._all_quality_checks_passed(
-                    result.value
+                if (
+                    result.is_success
+                    and FlextControlPanelCli._all_quality_checks_passed(result.value)
                 ):
                     self._cli_service._print_colored("✅ All quality checks passed!")
                     return FlextResult[dict[str, object]].ok(result.value)
@@ -240,6 +241,7 @@ class FlextControlPanelCli(FlextService[str]):
 
         def __init__(self, cli_service: FlextControlPanelCli) -> None:
             self._cli_service = cli_service
+            self._orchestration_cli = TaskOrchestrationCli()
 
         def test_command(
             self, *, coverage: bool = True, parallel: bool = False
@@ -262,8 +264,9 @@ class FlextControlPanelCli(FlextService[str]):
                 )
                 result = gateway.run_quality_checks_safe(config)
 
-                if result.is_success and FlextControlPanelCli._all_quality_checks_passed(
-                    result.value
+                if (
+                    result.is_success
+                    and FlextControlPanelCli._all_quality_checks_passed(result.value)
                 ):
                     self._cli_service._print_colored("✅ Tests passed")
                     return FlextResult[dict[str, object]].ok(result.value)
@@ -380,6 +383,46 @@ class FlextControlPanelCli(FlextService[str]):
                     self._cli_service._print_colored(f"  • {project}")
 
             return FlextResult[dict[str, str | list[str] | bool]].ok(workspace_data)
+
+        def orchestrate_command(
+            self,
+            input_data: str | Path,
+            *,
+            focus: str | None = None,
+            agents: int | None = None,
+            days: int | None = None,
+            analyze_only: bool = False,
+            context: dict[str, object] | None = None
+        ) -> FlextResult[None]:
+            """Execute task orchestration using three-agent system."""
+            self._cli_service._print_colored("🎯 Starting task orchestration...")
+            
+            try:
+                # Convert context to proper type
+                context_dict = None
+                if context:
+                    context_dict = {k: v for k, v in context.items()}
+                
+                result = self._orchestration_cli.orchestrate_command(
+                    input_data=input_data,
+                    focus=focus,
+                    agents=agents,
+                    days=days,
+                    analyze_only=analyze_only,
+                    context=context_dict
+                )
+                
+                if result.is_success:
+                    self._cli_service._print_colored("✅ Task orchestration completed successfully")
+                else:
+                    self._cli_service._print_colored(f"❌ Task orchestration failed: {result.error}")
+                
+                return result
+                
+            except Exception as e:
+                error = f"Orchestrate command execution failed: {e}"
+                self._cli_service._print_colored(f"❌ {error}")
+                return FlextResult[None].fail(error)
 
     def initialize(
         self,
@@ -530,6 +573,7 @@ def lint(*, fix: bool = False) -> None:
         # Linting failed - error already logged by handler
         # Only exit in non-test environments
         import os
+
         if "PYTEST_CURRENT_TEST" not in os.environ:
             sys.exit(1)
     # Lint command returns success, continue execution
@@ -558,6 +602,30 @@ def test(*, coverage: bool, parallel: bool) -> None:
         sys.exit(1)
 
 
+def orchestrate(
+    input_data: str | Path,
+    *,
+    focus: str | None = None,
+    agents: int | None = None,
+    days: int | None = None,
+    analyze_only: bool = False,
+    context: dict[str, object] | None = None
+) -> None:
+    """Legacy function - use FlextControlPanelCli._MainCommands.orchestrate_command instead."""
+    cli_service = create_cli()
+    main_handler = cli_service.create_main_handler()
+    result = main_handler.orchestrate_command(
+        input_data=input_data,
+        focus=focus,
+        agents=agents,
+        days=days,
+        analyze_only=analyze_only,
+        context=context
+    )
+    if result.is_failure:
+        sys.exit(1)
+
+
 # Export unified CLI class and legacy compatibility functions
 __all__ = [
     "FlextControlPanelCli",
@@ -567,6 +635,7 @@ __all__ = [
     "info",
     "lint",
     "main",
+    "orchestrate",
     "quality",
     "scripts",
     "test",

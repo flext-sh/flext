@@ -134,7 +134,7 @@ def verify_constants_file(project_dir: Path, package_name: str) -> dict[str, boo
         (r'^\s*LICENSE\s*=\s*["\']', "LICENSE"),
     ]
 
-    for pattern, name in hardcoded_patterns:
+    for pattern, _name in hardcoded_patterns:
         if re.search(pattern, content, re.MULTILINE):
             # Check if it's using __version__ variable instead
             if "VERSION = __version__" not in content:
@@ -164,7 +164,9 @@ def verify_project(project_dir: Path) -> dict[str, object]:
 
     if not package_dir.exists():
         # Try to find any package directory
-        package_dirs = [d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith(".")]
+        package_dirs = [
+            d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith(".")
+        ]
         if not package_dirs:
             return {"error": "No package directory"}
 
@@ -237,12 +239,16 @@ def main() -> None:
             if not result["version_file"]["has_version_file"]:
                 issues.append(f"  • {project}: Missing __version__.py")
             elif not result["version_file"]["uses_importlib"]:
-                issues.append(f"  • {project}: __version__.py doesn't use importlib.metadata")
+                issues.append(
+                    f"  • {project}: __version__.py doesn't use importlib.metadata"
+                )
             elif not result["version_file"]["no_hardcoded_version"]:
                 issues.append(f"  • {project}: __version__.py has hardcoded version")
 
             if not result["init_file"]["imports_from_version"]:
-                issues.append(f"  • {project}: __init__.py doesn't import from __version__")
+                issues.append(
+                    f"  • {project}: __init__.py doesn't import from __version__"
+                )
             if not result["init_file"]["no_hardcoded_version"]:
                 issues.append(f"  • {project}: __init__.py has hardcoded version")
 

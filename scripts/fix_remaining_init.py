@@ -41,18 +41,12 @@ def fix_init_file(project_name: str) -> bool:
 
     # Remove hardcoded __version__
     content = re.sub(
-        r'^__version__\s*=\s*["\'].*?["\'].*$',
-        "",
-        content,
-        flags=re.MULTILINE
+        r'^__version__\s*=\s*["\'].*?["\'].*$', "", content, flags=re.MULTILINE
     )
 
     # Remove hardcoded __author__
     content = re.sub(
-        r'^__author__\s*=\s*["\'].*?["\'].*$',
-        "",
-        content,
-        flags=re.MULTILINE
+        r'^__author__\s*=\s*["\'].*?["\'].*$', "", content, flags=re.MULTILINE
     )
 
     # Add import if not present
@@ -61,7 +55,7 @@ def fix_init_file(project_name: str) -> bool:
         if "from __future__ import annotations" in content:
             content = content.replace(
                 "from __future__ import annotations",
-                f"from __future__ import annotations\n\nfrom {package_name}.__version__ import __version__, __version_info__"
+                f"from __future__ import annotations\n\nfrom {package_name}.__version__ import __version__, __version_info__",
             )
         else:
             # Add at the top after docstring
@@ -81,11 +75,14 @@ def fix_init_file(project_name: str) -> bool:
             if insert_index == 0:
                 insert_index = 1
 
-            lines.insert(insert_index, f"\nfrom {package_name}.__version__ import __version__, __version_info__")
+            lines.insert(
+                insert_index,
+                f"\nfrom {package_name}.__version__ import __version__, __version_info__",
+            )
             content = "\n".join(lines)
 
     # Clean up multiple blank lines
-    content = re.sub(r'\n{3,}', '\n\n', content)
+    content = re.sub(r"\n{3,}", "\n\n", content)
 
     init_file.write_text(content)
     print(f"   ✅ {project_name}: Fixed __init__.py")

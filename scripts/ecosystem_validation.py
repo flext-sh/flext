@@ -106,7 +106,9 @@ class EcosystemValidator:
             try:
                 ast.parse(py_file.read_text())
             except SyntaxError as e:
-                errors.append(f"{py_file.relative_to(project_path)}: {e.msg} at line {e.lineno}")
+                errors.append(
+                    f"{py_file.relative_to(project_path)}: {e.msg} at line {e.lineno}"
+                )
                 error_count += 1
 
         return error_count, errors
@@ -122,6 +124,7 @@ class EcosystemValidator:
         try:
             result = subprocess.run(
                 ["ruff", "check", str(src_dir), "--output-format=json"],
+                check=False,
                 capture_output=True,
                 text=True,
                 cwd=project_path,
@@ -219,7 +222,11 @@ class EcosystemValidator:
         result.has_makefile = has_makefile
 
         # Determine status
-        if result.syntax_errors == 0 and len(result.domain_violations) == 0 and lint_errors == 0:
+        if (
+            result.syntax_errors == 0
+            and len(result.domain_violations) == 0
+            and lint_errors == 0
+        ):
             result.status = "PASS"
         elif result.syntax_errors > 0:
             result.status = "FAIL"
@@ -232,7 +239,9 @@ class EcosystemValidator:
         if not has_makefile:
             result.recommendations.append("Add Makefile for quality gates")
         if result.domain_violations:
-            result.recommendations.append(f"Fix {len(result.domain_violations)} domain library violations")
+            result.recommendations.append(
+                f"Fix {len(result.domain_violations)} domain library violations"
+            )
         if lint_errors > 0:
             result.recommendations.append(f"Fix {lint_errors} lint errors")
 
@@ -244,10 +253,12 @@ class EcosystemValidator:
     def generate_report(self) -> str:
         """Generate human-readable report."""
         lines = []
-        lines.append("=" * 80)
-        lines.append("FLEXT ECOSYSTEM TRANSFORMATION STATUS REPORT")
-        lines.append("=" * 80)
-        lines.append("")
+        lines.extend((
+            "=" * 80,
+            "FLEXT ECOSYSTEM TRANSFORMATION STATUS REPORT",
+            "=" * 80,
+            "",
+        ))
 
         # Summary statistics
         total = len(self.results)
@@ -269,13 +280,14 @@ class EcosystemValidator:
             status_icon = {"PASS": "✅", "WARN": "⚠️", "FAIL": "❌"}[core.status]
             lines.append(f"  {status_icon} flext-core: {core.status}")
             if core.issues:
-                for issue in core.issues[:3]:
-                    lines.append(f"    - {issue}")
+                lines.extend(f"    - {issue}" for issue in core.issues[:3])
         lines.append("")
 
         # Domain libraries
         lines.append("DOMAIN LIBRARIES:")
-        domain_libs = [p for p in FLEXT_PROJECTS if p.startswith("flext-") and p != "flext-core"]
+        domain_libs = [
+            p for p in FLEXT_PROJECTS if p.startswith("flext-") and p != "flext-core"
+        ]
         for project in sorted(domain_libs):
             if project in self.results:
                 r = self.results[project]
@@ -296,7 +308,9 @@ class EcosystemValidator:
                 status_icon = {"PASS": "✅", "WARN": "⚠️", "FAIL": "❌"}[r.status]
                 lines.append(f"  {status_icon} {project}: {r.status}")
                 if r.domain_violations:
-                    lines.append(f"      ⚠️  Must use flext-* libraries ({len(r.domain_violations)} violations)")
+                    lines.append(
+                        f"      ⚠️  Must use flext-* libraries ({len(r.domain_violations)} violations)"
+                    )
         lines.append("")
 
         # Critical issues
@@ -306,8 +320,7 @@ class EcosystemValidator:
             for project in critical_projects:
                 r = self.results[project]
                 lines.append(f"  ❌ {project}:")
-                for issue in r.issues[:5]:
-                    lines.append(f"      - {issue}")
+                lines.extend(f"      - {issue}" for issue in r.issues[:5])
             lines.append("")
 
         # Top recommendations
@@ -319,11 +332,7 @@ class EcosystemValidator:
 
         for rec, count in sorted(all_recommendations.items(), key=lambda x: -x[1])[:10]:
             lines.append(f"  - {rec} ({count} projects)")
-        lines.append("")
-
-        lines.append("=" * 80)
-        lines.append("Validation completed successfully")
-        lines.append("=" * 80)
+        lines.extend(("", "=" * 80, "Validation completed successfully", "=" * 80))
 
         return "\n".join(lines)
 

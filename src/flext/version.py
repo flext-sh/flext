@@ -14,7 +14,7 @@ class FlextVersion:
         self.version_info = (0, 1, 0)
 
     @classmethod
-    def current(cls) -> "FlextVersion":
+    def current(cls) -> FlextVersion:
         """Return canonical metadata."""
         return cls()
 

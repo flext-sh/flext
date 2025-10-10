@@ -5,18 +5,6 @@
 # ============================================================================
 
 # ============================================================================
-# DATACOSMOS-BR ORGANIZATION - Enterprise/Client-Specific Projects
-# ============================================================================
-
-[submodule "client-a-oud-mig"]
-	path = client-a-oud-mig
-	url = git@github.com:datacosmos-br/client-a-oud-mig.git
-
-[submodule "client-b-meltano-native"]
-	path = client-b-meltano-native
-	url = git@github.com:datacosmos-br/client-b-meltano-native.git
-
-# ============================================================================
 # FLEXT-SH ORGANIZATION - Core Platform Projects
 # ============================================================================
 
@@ -176,15 +164,3 @@
 [submodule "legacy/flx-oracle-wms"]
 	path = legacy/flx-oracle-wms
 	url = git@github.com:flext-sh/flx-oracle-wms.git
-
-# ============================================================================
-# CONFIGURATION NOTES:
-# ============================================================================
-# - All URLs standardized to SSH format (git@github.com:)
-# - Projects organized by organization and category
-# - DataCosmos-BR: Enterprise/client-specific projects
-# - FLEXT-SH: Core platform and ecosystem projects
-# - FlexCore contains third-party windmill submodule for build/test support
-# - Legacy projects maintained for historical reference
-# - Total: 32 active projects + 7 legacy projects = 39 submodules
-# ============================================================================

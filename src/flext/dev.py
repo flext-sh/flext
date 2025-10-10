@@ -6,20 +6,21 @@ FLEXT architectural patterns with proper separation of concerns.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
+
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Protocol, Self, assert_never
 
-from pathlib import Path
-
-from flext.dev_enums import FlextDevEnums
-from flext.dev_models import FlextAdvancedDevModels
-from flext.project_types import FlextProjectTypes
 from flext_core import (
     FlextLogger,
     FlextResult,
     FlextService,
 )
+
+from flext.dev_enums import FlextDevEnums
+from flext.dev_models import FlextAdvancedDevModels
+from flext.project_types import FlextProjectTypes
 
 
 class FlextAdvancedDevToolsManager(

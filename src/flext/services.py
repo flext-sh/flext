@@ -7,13 +7,20 @@ facades while providing proper service orchestration.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
+
 from __future__ import annotations
 
 import subprocess  # nosec S404 - Controlled subprocess usage for test execution
 from pathlib import Path
 from typing import Self
 
-from flext_core import FlextLogger, FlextResult, FlextService, FlextTypes, FlextConstants
+from flext_core import (
+    FlextConstants,
+    FlextLogger,
+    FlextResult,
+    FlextService,
+    FlextTypes,
+)
 
 from flext.application_handlers import (
     FlextApplicationHandlerService,
@@ -89,7 +96,9 @@ class FlextUnifiedServices(FlextService[str]):
         ) -> FlextResult[FlextTypes.Dict]:
             """Execute complete pipeline workflow."""
             # Execute pipeline using service - FlextResult handles errors
-            result: FlextResult[FlextTypes.Dict] = self._pipeline_service.execute_pipeline(pipeline_id)
+            result: FlextResult[FlextTypes.Dict] = (
+                self._pipeline_service.execute_pipeline(pipeline_id)
+            )
 
             if result.is_success:
                 return FlextResult[FlextTypes.Dict].ok({
@@ -148,7 +157,11 @@ class FlextUnifiedServices(FlextService[str]):
 
                 # Execute tests - nosec S603: Controlled command execution for testing
                 result = subprocess.run(  # nosec S603
-                    cmd, check=False, capture_output=True, text=True, timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT
+                    cmd,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                    timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT,
                 )
 
                 return FlextResult[FlextTypes.Dict].ok({
@@ -175,10 +188,7 @@ class FlextUnifiedServices(FlextService[str]):
                     lint_cmd.append("--fix")
 
                 # Type check command
-                commands.extend([
-                    ("lint", lint_cmd),
-                    ("type", ["mypy", "src/"])
-                ])
+                commands.extend([("lint", lint_cmd), ("type", ["mypy", "src/"])])
 
                 results: FlextTypes.Dict = {}
                 overall_success = True
@@ -233,7 +243,11 @@ class FlextUnifiedServices(FlextService[str]):
                         build_cmd.extend(["--outdir", f"dist/{module}"])
 
                 result = subprocess.run(  # nosec S603 - Controlled build execution
-                    build_cmd, check=False, capture_output=True, text=True, timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT
+                    build_cmd,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                    timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT,
                 )
 
                 return FlextResult[FlextTypes.Dict].ok({

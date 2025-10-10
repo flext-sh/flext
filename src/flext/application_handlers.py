@@ -10,14 +10,12 @@ usage across the FLEXT ecosystem.
 ZERO TOLERANCE: NO local implementations - uses flext-core FlextHandlers exclusively.
 DOMAIN SEPARATION: Handler patterns belong exclusively to flext-core domain.
 """
-from __future__ import annotations
 
-from typing import Self, TypeVar
+from __future__ import annotations
 
 import uuid
 from enum import StrEnum
-
-from pydantic import BaseModel, Field, field_validator, model_validator
+from typing import Self, TypeVar
 
 from flext_core import (
     FlextBus,
@@ -29,6 +27,7 @@ from flext_core import (
     FlextResult,
     FlextService,
 )
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 # Direct flext-core imports - no aliases
 
@@ -184,7 +183,7 @@ class FlextApplicationHandlerService[T](FlextService[str]):
         ) -> FlextHandlers[object, object]:
             """Create handler chain using flext-core implementation."""
             # Create a basic handler config for handler chain operations
-            config = FlextModels.CqrsConfig.Handler(
+            config = FlextModels.Cqrs.Handler(
                 handler_id="handler_chain_001",
                 handler_name="handler_chain",
                 handler_type="command",
@@ -192,13 +191,13 @@ class FlextApplicationHandlerService[T](FlextService[str]):
                 command_timeout=30,
                 max_command_retries=3,
             )
-            
+
             # Create a concrete handler implementation
             class HandlerChainHandler(FlextHandlers[object, object]):
                 def handle(self, message: object) -> FlextResult[object]:
                     """Handle handler chain commands."""
                     return FlextResult[object].ok(f"Handler chain processed: {message}")
-            
+
             return HandlerChainHandler(config=config)
 
         def create_pipeline(self, _name: str | None = None) -> FlextProcessors.Pipeline:

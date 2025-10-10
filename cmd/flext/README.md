@@ -383,11 +383,11 @@ make validate                    # MANDATORY before commits
 
 ## License
 
-MIT License - See [LICENSE](../../LICENSE) file for details.
+MIT License - See project root for license details.
 
 ## Links
 
-- **[FLEXT Hub](../../docs/NAVIGATION.md)**: Complete ecosystem navigation
+- **[FLEXT Hub](../../docs/README.md)**: Complete ecosystem navigation
 - **[FlexCore](../../flexcore/)**: Go runtime service (port 8080)
 - **[FLEXT Core](../../flext-core/)**: Foundation library with FlextResult patterns
 - **[Complete Documentation](../../docs/README.md)**: Architecture and integration guides

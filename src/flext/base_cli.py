@@ -20,10 +20,10 @@ from __future__ import annotations
 from flext_cli import (
     FlextCli,
     FlextCli as FlextCliApi,
+    FlextCli as FlextCliService,
     FlextCliContext,
     FlextCliModels,
     FlextCliOutput,
-    FlextCli as FlextCliService,
 )
 
 __all__ = [

@@ -1,0 +1,103 @@
+@startuml Data Pipeline Execution
+!theme plain
+title FLEXT Data Pipeline Execution - End-to-End Processing
+
+participant "Scheduler" as SCHED
+participant "FlexCore" as FC
+participant "Singer Tap" as TAP
+participant "DBT Transform" as DBT
+participant "Singer Target" as TARGET
+participant "Source DB" as SRC_DB
+participant "Target DB" as TGT_DB
+participant "File System" as FS
+
+== Pipeline Initialization ==
+SCHED -> FC: Trigger Pipeline Execution
+activate FC
+
+FC -> FC: Load Pipeline Configuration
+FC -> FC: Initialize Pipeline Context
+FC -> FC: Validate Pipeline Dependencies
+
+== Data Extraction Phase ==
+FC -> TAP: Execute Data Extraction
+activate TAP
+
+TAP -> SRC_DB: Query Source Data
+activate SRC_DB
+SRC_DB --> TAP: Source Data Records
+deactivate SRC_DB
+
+TAP -> TAP: Transform to Singer Format
+TAP -> FS: Write Singer Messages
+activate FS
+FS --> TAP: Messages Written
+deactivate FS
+
+TAP -> FC: Update Extraction State
+TAP --> FC: Extraction Complete
+deactivate TAP
+
+== Data Transformation Phase ==
+FC -> DBT: Execute Data Transformation
+activate DBT
+
+DBT -> FS: Read Singer Messages
+activate FS
+FS --> DBT: Singer Messages
+deactivate FS
+
+DBT -> DBT: Parse Singer Messages
+DBT -> DBT: Generate SQL Transformations
+DBT -> SRC_DB: Execute SQL Transformations
+activate SRC_DB
+SRC_DB --> DBT: Transformed Data
+deactivate SRC_DB
+
+DBT -> FS: Write Transformed Data
+activate FS
+FS --> DBT: Data Written
+deactivate FS
+
+DBT -> FC: Update Transformation State
+DBT --> FC: Transformation Complete
+deactivate DBT
+
+== Data Loading Phase ==
+FC -> TARGET: Execute Data Loading
+activate TARGET
+
+TARGET -> FS: Read Transformed Data
+activate FS
+FS --> TARGET: Transformed Data
+deactivate FS
+
+TARGET -> TARGET: Validate Data Schema
+TARGET -> TGT_DB: Load Target Data
+activate TGT_DB
+TGT_DB --> TARGET: Load Complete
+deactivate TGT_DB
+
+TARGET -> FC: Update Loading State
+TARGET --> FC: Loading Complete
+deactivate TARGET
+
+== Pipeline Completion ==
+FC -> FC: Update Pipeline Status
+FC -> FC: Generate Pipeline Report
+FC -> FC: Clean Up Resources
+
+FC --> SCHED: Pipeline Complete
+deactivate FC
+
+== Error Handling ==
+note over SCHED, TGT_DB: All operations use FlextResult[T] for error handling
+note over SCHED, TGT_DB: Failed stages can be retried independently
+note over SCHED, TGT_DB: Pipeline state is persisted for recovery
+
+== Monitoring and Observability ==
+note over SCHED, TGT_DB: All operations are logged and monitored
+note over SCHED, TGT_DB: Performance metrics are collected
+note over SCHED, TGT_DB: Alerts are sent for failures
+
+@enduml

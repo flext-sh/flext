@@ -79,6 +79,16 @@ Guide for cleaning up git history and repository maintenance.
 ### [FLEXT_WORKSPACE_OPTIMIZATION_REPORT.md](../FLEXT_WORKSPACE_OPTIMIZATION_REPORT.md)
 Report on workspace optimizations and performance improvements.
 
+## Documentation Updates
+
+### [DOCUMENTATION_UPDATE_SUMMARY_2025-10-09.md](./DOCUMENTATION_UPDATE_SUMMARY_2025-10-09.md) 🆕
+Comprehensive documentation audit and update summary for October 2025, including:
+- Analysis of 574 markdown files with 570K words
+- 8,335 issues identified and prioritized
+- Implementation status for v0.9.0 release
+- Documentation maintenance system overview
+- Actionable recommendations and next steps
+
 ## Report Archives
 
 Historical reports and documentation:
