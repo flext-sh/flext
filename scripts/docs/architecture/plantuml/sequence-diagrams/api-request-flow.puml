@@ -1,0 +1,66 @@
+@startuml API Request Flow
+!theme plain
+skinparam backgroundColor #FEFEFE
+
+title FLEXT API Request Processing Flow
+
+actor "Client" as client
+participant "API Gateway" as gateway
+participant "Authentication" as auth
+participant "Rate Limiter" as rate
+participant "Request Router" as router
+participant "Domain Service" as domain
+database "Database" as db
+participant "Response Formatter" as formatter
+
+== Successful Request Flow ==
+
+client -> gateway: HTTP POST /api/v1/pipeline
+gateway -> auth: authenticate request
+auth --> gateway: JWT validated
+
+gateway -> rate: check rate limits
+rate --> gateway: within limits
+
+gateway -> router: route to domain service
+router -> domain: execute business logic
+
+domain -> db: query data
+db --> domain: return results
+
+domain --> router: FlextResult.success(data)
+        api_flow_file.parent.mkdir(parents=True, exist_ok=True)
+router -> formatter: format response
+formatter --> gateway: JSON response
+
+gateway --> client: 200 OK + JSON
+
+== Error Handling Flow ==
+
+client -> gateway: HTTP POST /api/v1/pipeline
+gateway -> auth: authenticate request
+auth --> gateway: invalid token
+
+note right: Authentication Failure
+gateway -> formatter: format error response
+formatter --> gateway: error JSON
+
+gateway --> client: 401 Unauthorized
+
+== Domain Error Flow ==
+
+client -> gateway: HTTP POST /api/v1/pipeline
+gateway -> router: route to domain service
+router -> domain: execute business logic
+
+domain -> db: query data
+db --> domain: connection timeout
+
+note right: Railway Pattern Error Propagation
+domain --> router: FlextResult.failure("DB timeout")
+router -> formatter: format domain error
+formatter --> gateway: error response
+
+gateway --> client: 500 Internal Server Error
+
+@enduml

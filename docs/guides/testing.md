@@ -4,12 +4,12 @@ This guide covers testing strategies, best practices, and procedures for FLEXT a
 
 ## Overview
 
-FLEXT maintains comprehensive test coverage across all projects with the following standards:
+FLEXT maintains comprehensive test coverage across all **33 projects** with the following standards:
 
 - **85%+ coverage** for foundation libraries (flext-core)
 - **75%+ coverage** for applications and domain libraries
 - **100% test pass rate** across all projects
-- **Zero MyPy errors** in strict mode
+- **Zero Pyrefly errors** in strict mode (successor to MyPy)
 - **Zero Ruff violations** in production code
 
 ## Test Structure
