@@ -36,10 +36,7 @@ def fix_init_file(project_name: str) -> bool:
 
     # Remove old version.py import
     content = re.sub(
-        r'^from\s+\w+\.version\s+import.*$',
-        "",
-        content,
-        flags=re.MULTILINE
+        r"^from\s+\w+\.version\s+import.*$", "", content, flags=re.MULTILINE
     )
 
     # Remove try/except block for importlib.metadata.version
@@ -47,35 +44,32 @@ def fix_init_file(project_name: str) -> bool:
         r'try:\s*\n\s*__version__\s*=\s*importlib\.metadata\.version\(["\'].*?["\']\)\s*\n.*?except.*?:\s*\n\s*__version__\s*=\s*["\'].*?["\']\s*\n',
         "",
         content,
-        flags=re.DOTALL
+        flags=re.DOTALL,
     )
 
     # Remove PROJECT_VERSION assignment
     content = re.sub(
-        r'^PROJECT_VERSION:.*?=.*?VERSION.*$',
-        "",
-        content,
-        flags=re.MULTILINE
+        r"^PROJECT_VERSION:.*?=.*?VERSION.*$", "", content, flags=re.MULTILINE
     )
 
     # Remove redundant __version__ assignments
     content = re.sub(
-        r'^__version__:\s*str\s*=\s*VERSION\.version.*$',
+        r"^__version__:\s*str\s*=\s*VERSION\.version.*$",
         "",
         content,
-        flags=re.MULTILINE
+        flags=re.MULTILINE,
     )
 
     # Remove redundant __version_info__ assignments
     content = re.sub(
-        r'^__version_info__:.*?=\s*VERSION\.version_info.*$',
+        r"^__version_info__:.*?=\s*VERSION\.version_info.*$",
         "",
         content,
-        flags=re.MULTILINE
+        flags=re.MULTILINE,
     )
 
     # Clean up multiple blank lines
-    content = re.sub(r'\n{3,}', '\n\n', content)
+    content = re.sub(r"\n{3,}", "\n\n", content)
 
     # Remove PROJECT_VERSION and VERSION from __all__
     version_exports = [
@@ -94,12 +88,7 @@ def fix_init_file(project_name: str) -> bool:
     ]
 
     for export in version_exports:
-        content = re.sub(
-            rf'^\s*"{export}",\s*\n',
-            "",
-            content,
-            flags=re.MULTILINE
-        )
+        content = re.sub(rf'^\s*"{export}",\s*\n', "", content, flags=re.MULTILINE)
 
     init_file.write_text(content)
     print(f"   ✅ {project_name}: Fixed __init__.py")

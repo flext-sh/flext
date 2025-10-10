@@ -7,18 +7,19 @@ Click direct usage, organizing all functionality into nested classes.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
-from __future__ import annotations
 
-from typing import Self
+from __future__ import annotations
 
 import subprocess
 import sys
 from pathlib import Path
+from typing import Self
+
+from flext_cli import FlextCli
+from flext_core import FlextLogger, FlextResult, FlextService
 
 from flext.services import create_services
 from flext.workspace_service import create_workspace_service
-from flext_cli import FlextCliApi
-from flext_core import FlextLogger, FlextResult, FlextService
 from flext_tools import Colors, print_colored
 
 
@@ -34,7 +35,7 @@ class FlextWorkspaceCli(FlextService[str]):
         """Initialize workspace CLI with flext-cli integration."""
         super().__init__()
         self._logger = FlextLogger(__name__)
-        self._cli_api = FlextCliApi()
+        self._cli_api = FlextCli()
 
         # Workspace configuration
         self._workspace_root = Path(__file__).parent.parent.parent.parent
@@ -77,7 +78,9 @@ class FlextWorkspaceCli(FlextService[str]):
             print_colored(f"Running: {' '.join(command)} in {cwd}")
 
             try:
-                result: subprocess.CompletedProcess[str] = subprocess.run(command, check=False, text=True)
+                result: subprocess.CompletedProcess[str] = subprocess.run(
+                    command, check=False, text=True
+                )
 
                 if check and result.returncode != 0:
                     error = f"Command failed: {result.stderr}"
@@ -115,7 +118,11 @@ class FlextWorkspaceCli(FlextService[str]):
                     )
 
                 if not module_path.exists():
-                    status: dict[str, object] = {"exists": False, "name": module, "path": str(module_path)}
+                    status: dict[str, object] = {
+                        "exists": False,
+                        "name": module,
+                        "path": str(module_path),
+                    }
                     return FlextResult[dict[str, object]].ok(status)
 
                 # Check for key files
@@ -204,10 +211,14 @@ class FlextWorkspaceCli(FlextService[str]):
 
             status_data: dict[str, object] = {
                 "total_modules": len(self._modules),
-                "modules": list(self._modules),  # Convert to list for type compatibility
+                "modules": list(
+                    self._modules
+                ),  # Convert to list for type compatibility
             }
 
-            available_count = len([m for m in self._modules if m.name and m.repository_path])
+            available_count = len([
+                m for m in self._modules if m.name and m.repository_path
+            ])
             print_colored(
                 f"\n📊 Summary: {available_count}/{status_data['total_modules']} modules available"
             )
@@ -266,7 +277,10 @@ class FlextWorkspaceCli(FlextService[str]):
                     print_colored(f"❌ {module_name} tests failed")
                     results[module_name] = "failed"
 
-            return FlextResult[dict[str, object]].ok({"status": "completed", "results": results})
+            return FlextResult[dict[str, object]].ok({
+                "status": "completed",
+                "results": results,
+            })
 
     class _QualityCommands:
         """Nested quality command handlers."""
@@ -299,7 +313,9 @@ class FlextWorkspaceCli(FlextService[str]):
                 if completed_process.returncode == 0:
                     print_colored(f"✅ {module} quality checks passed")
                     return FlextResult[dict[str, object]].ok({"status": "passed"})
-                return FlextResult[dict[str, object]].fail(f"Quality checks failed for {module}")
+                return FlextResult[dict[str, object]].fail(
+                    f"Quality checks failed for {module}"
+                )
 
             print_colored("🔍 Running workspace quality checks")
             result = self._workspace_service.run_make_target("check-all")
@@ -613,11 +629,11 @@ def run_tests(
 
     if result.is_success:
         test_result_data = result.unwrap()
-        if isinstance(test_result_data, dict) and not test_result_data.get("success", True):
+        if isinstance(test_result_data, dict) and not test_result_data.get(
+            "success", True
+        ):
             returncode = test_result_data.get("returncode", 1)
-            print_colored(
-                f"❌ Tests failed with return code {returncode}"
-            )
+            print_colored(f"❌ Tests failed with return code {returncode}")
             sys.exit(1)
         else:
             print_colored("✅ Tests completed successfully")
@@ -635,7 +651,9 @@ def check() -> None:
 
     if result.is_success:
         check_result_data = result.unwrap()
-        if isinstance(check_result_data, dict) and check_result_data.get("overall_success", False):
+        if isinstance(check_result_data, dict) and check_result_data.get(
+            "overall_success", False
+        ):
             print_colored("✅ Quality checks passed")
         else:
             print_colored("❌ Quality checks failed")
@@ -654,13 +672,17 @@ def build() -> None:
 
     if result.is_success:
         build_result_data = result.unwrap()
-        if isinstance(build_result_data, dict) and build_result_data.get("success", False):
+        if isinstance(build_result_data, dict) and build_result_data.get(
+            "success", False
+        ):
             print_colored("✅ Build completed successfully")
         else:
-            returncode = build_result_data.get("returncode", 1) if isinstance(build_result_data, dict) else 1
-            print_colored(
-                f"❌ Build failed with return code {returncode}"
+            returncode = (
+                build_result_data.get("returncode", 1)
+                if isinstance(build_result_data, dict)
+                else 1
             )
+            print_colored(f"❌ Build failed with return code {returncode}")
             sys.exit(1)
     else:
         print_colored(f"❌ Build execution failed: {result.error}")

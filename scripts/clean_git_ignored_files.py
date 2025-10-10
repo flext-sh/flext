@@ -34,7 +34,7 @@ def get_tracked_files(project_dir: Path) -> list[str]:
             text=True,
             check=True,
         )
-        return [f.strip() for f in result.stdout.split('\n') if f.strip()]
+        return [f.strip() for f in result.stdout.split("\n") if f.strip()]
     except subprocess.CalledProcessError:
         return []
 
@@ -131,7 +131,7 @@ def clean_project(project_dir: Path, dry_run: bool = True) -> dict[str, list[str
         return results
 
     # Actually untrack files
-    print(f"   🗑️  Untracking files from git...")
+    print("   🗑️  Untracking files from git...")
     for file_path in results["to_remove"]:
         if untrack_file(project_dir, file_path):
             results["removed"].append(file_path)
@@ -201,16 +201,16 @@ def main() -> None:
                 if results["failed"]:
                     print(f"   ⚠️  Failed to untrack {len(results['failed'])} files")
         else:
-            print(f"   ✨ No tracked files to remove")
+            print("   ✨ No tracked files to remove")
 
     print("\n" + "=" * 80)
     if dry_run:
-        print(f"📊 DRY RUN Summary:")
+        print("📊 DRY RUN Summary:")
         print(f"   Projects with files to untrack: {projects_with_changes}")
         print(f"   Total files would be untracked: {total_to_remove}")
-        print("\n💡 To execute: python {} --execute".format(__file__))
+        print(f"\n💡 To execute: python {__file__} --execute")
     else:
-        print(f"📊 Execution Summary:")
+        print("📊 Execution Summary:")
         print(f"   Projects cleaned: {projects_with_changes}")
         print(f"   Files untracked: {total_removed}")
         if total_failed:
@@ -226,7 +226,9 @@ def main() -> None:
         print("  3. Review with: git status")
     else:
         print("  1. Review: cd <project> && git status")
-        print("  2. Commit: git add .gitignore && git commit -m 'chore: untrack ignored files'")
+        print(
+            "  2. Commit: git add .gitignore && git commit -m 'chore: untrack ignored files'"
+        )
         print("  3. The untracked files are still on disk (not deleted)")
 
 

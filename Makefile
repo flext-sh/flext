@@ -397,6 +397,16 @@ show-status: ## Display comprehensive workspace status
 status: show-status ## (Deprecated) Use show-status instead
 
 # =============================================================================
+# DOCUMENTATION MAINTENANCE
+# =============================================================================
+
+# Include Documentation Makefile
+include Makefile.docs
+
+# Include Enhanced Documentation Makefile
+include Makefile.docs.enhanced
+
+# =============================================================================
 # SPECIALIZED COMMANDS
 # =============================================================================
 

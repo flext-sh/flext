@@ -1,0 +1,232 @@
+name: Documentation Maintenance & Quality Assurance
+
+on:
+  schedule:
+    # Run weekly on Sundays at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+    inputs:
+      check_external_links:
+        description: 'Check external links (slower)'
+        required: false
+        default: 'false'
+        type: boolean
+  pull_request:
+    paths:
+      - '**/*.md'
+      - '.github/workflows/docs_maintenance.yml'
+
+env:
+  PYTHON_VERSION: '3.13'
+
+jobs:
+  docs-audit:
+    name: Documentation Quality Audit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for change tracking
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4 markdown
+
+      - name: Run documentation audit
+        id: audit
+        run: |
+          python scripts/docs_maintenance_audit.py \
+            --root . \
+            --output docs_audit_report.md \
+            --format markdown \
+            ${{ github.event.inputs.check_external_links == 'true' && '--check-external-links' || '' }}
+
+      - name: Generate JSON report for metrics
+        run: |
+          python scripts/docs_maintenance_audit.py \
+            --root . \
+            --output docs_audit_report.json \
+            --format json
+
+      - name: Generate HTML dashboard
+        run: |
+          python scripts/docs_maintenance_audit.py \
+            --root . \
+            --output docs_audit_report.html \
+            --format html
+
+      - name: Upload audit reports as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-audit-reports
+          path: |
+            docs_audit_report.md
+            docs_audit_report.json
+            docs_audit_report.html
+          retention-days: 30
+
+      - name: Create or update audit issue
+        if: github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const reportContent = fs.readFileSync('docs_audit_report.md', 'utf8');
+
+            // Find existing audit issue
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: ['documentation', 'maintenance', 'automated']
+            });
+
+            const existingIssue = issues.data.find(
+              issue => issue.title.includes('Weekly Documentation Audit')
+            );
+
+            const issueBody = `## 📊 Weekly Documentation Audit Report
+
+            ${reportContent}
+
+            ---
+
+            *This issue is automatically generated and updated weekly. Review the findings and address high-priority issues.*
+
+            **Action Items:**
+            - [ ] Review and fix critical/high severity issues
+            - [ ] Update stale documentation (>90 days)
+            - [ ] Resolve broken links and missing images
+            - [ ] Add alt text to images for accessibility
+
+            **Download Full Reports:**
+            - [Markdown Report](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+            - [JSON Report](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+            - [HTML Dashboard](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+            `;
+
+            if (existingIssue) {
+              // Update existing issue
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssue.number,
+                body: issueBody
+              });
+            } else {
+              // Create new issue
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `📚 Weekly Documentation Audit - ${new Date().toISOString().split('T')[0]}`,
+                body: issueBody,
+                labels: ['documentation', 'maintenance', 'automated']
+              });
+            }
+
+      - name: Comment on PR with audit summary
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const reportContent = fs.readFileSync('docs_audit_report.md', 'utf8');
+
+            // Extract summary statistics from report
+            const summaryMatch = reportContent.match(/Total Issues Found:\*\* (\d+)/);
+            const totalIssues = summaryMatch ? summaryMatch[1] : 'unknown';
+
+            const comment = `## 📊 Documentation Quality Audit
+
+            **Total Issues Found:** ${totalIssues}
+
+            <details>
+            <summary>View Full Audit Report</summary>
+
+            ${reportContent}
+
+            </details>
+
+            ---
+
+            Download detailed reports from the workflow artifacts.
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  link-validation:
+    name: Validate Links
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4
+
+      - name: Validate internal links
+        run: |
+          python scripts/docs_maintenance_audit.py \
+            --root . \
+            --output link_validation.md \
+            --format markdown
+
+      - name: Check for broken links
+        run: |
+          if grep -q "broken_link" link_validation.md; then
+            echo "::error::Broken links found in documentation"
+            exit 1
+          fi
+
+  style-check:
+    name: Style & Formatting Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check markdown formatting
+        uses: DavidAnson/markdownlint-action@v1
+        with:
+          config_file: '.markdownlint.json'
+          files: '**/*.md'
+          ignore: 'node_modules'
+
+      - name: Check for common issues
+        run: |
+          # Check for trailing whitespace
+          if grep -r -n " $" --include="*.md" .; then
+            echo "::warning::Found trailing whitespace in markdown files"
+          fi
+
+          # Check for multiple blank lines
+          if grep -Pzo -r "(?s)\n\n\n+" --include="*.md" .; then
+            echo "::warning::Found multiple consecutive blank lines"
+          fi

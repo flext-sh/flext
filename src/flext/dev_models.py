@@ -7,25 +7,25 @@ and modern validation for development workflow automation.
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
-from __future__ import annotations
 
-from typing import Annotated, Literal, Self, TypeVar
+from __future__ import annotations
 
 import shutil
 import subprocess
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import Annotated, Literal, Self, TypeVar
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field, field_validator, model_validator
-from pydantic.functional_validators import BeforeValidator
-
-from flext.workspace_service import create_workspace_service
 from flext_core import (
     FlextModels,
     FlextResult,
     FlextTypes,
 )
+from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic.functional_validators import BeforeValidator
+
+from flext.workspace_service import create_workspace_service
 
 # Modern type system with generic constraints
 T = TypeVar("T", bound=BaseModel)
@@ -222,7 +222,9 @@ class FlextAdvancedDevModels:
         test_count: int = Field(0, ge=0, description="Number of test files")
 
         @model_validator(mode="after")
-        def validate_project_consistency(self: Self) -> FlextAdvancedDevModels.ProjectInfo:
+        def validate_project_consistency(
+            self: Self,
+        ) -> FlextAdvancedDevModels.ProjectInfo:
             """Validate project type consistency."""
             path = Path(self.path)
 
@@ -233,10 +235,7 @@ class FlextAdvancedDevModels:
                     raise ValueError(msg)
 
             # Validate Go projects
-            elif (
-                self.project_type == "GO"
-                and not self.has_go_mod
-            ):
+            elif self.project_type == "GO" and not self.has_go_mod:
                 msg = "Go projects must have go.mod file"
                 raise ValueError(msg)
 

@@ -121,27 +121,47 @@ def merge_gitignore(project_dir: Path) -> bool:
 
     if gitignore_file.exists():
         existing_content = gitignore_file.read_text()
-        existing_rules = [line.strip() for line in existing_content.split('\n') if line.strip()]
+        existing_rules = [
+            line.strip() for line in existing_content.split("\n") if line.strip()
+        ]
 
         # Check if already has whitelist rules
         if "/*" in existing_content and "/!src/" in existing_content.replace(" ", ""):
             has_whitelist = True
-            print(f"   ℹ️  Already has whitelist rules")
+            print("   ℹ️  Already has whitelist rules")
 
     # Extract project-specific rules (not common patterns)
     common_patterns = {
-        "__pycache__", "*.pyc", "*.pyo", ".pytest_cache", ".mypy_cache",
-        ".ruff_cache", ".hypothesis", ".coverage", "htmlcov", "dist",
-        "build", "*.egg-info", ".venv", "venv", "env", ".DS_Store",
-        "*.swp", ".idea", "*.log", ".env"
+        "__pycache__",
+        "*.pyc",
+        "*.pyo",
+        ".pytest_cache",
+        ".mypy_cache",
+        ".ruff_cache",
+        ".hypothesis",
+        ".coverage",
+        "htmlcov",
+        "dist",
+        "build",
+        "*.egg-info",
+        ".venv",
+        "venv",
+        "env",
+        ".DS_Store",
+        "*.swp",
+        ".idea",
+        "*.log",
+        ".env",
     }
 
     project_specific = []
     for rule in existing_rules:
-        if not rule.startswith('#'):
+        if not rule.startswith("#"):
             # Keep if not a common pattern
-            rule_clean = rule.lstrip('!').strip('/')
-            if rule_clean not in common_patterns and not any(p in rule for p in ['.pyc', '__pycache__', '.cache', '.egg']):
+            rule_clean = rule.lstrip("!").strip("/")
+            if rule_clean not in common_patterns and not any(
+                p in rule for p in [".pyc", "__pycache__", ".cache", ".egg"]
+            ):
                 project_specific.append(rule)
 
     # Build merged content
@@ -161,15 +181,21 @@ def merge_gitignore(project_dir: Path) -> bool:
 
     # 5. Add project-specific rules if any
     if project_specific:
-        merged_lines.append("\n# ============================================================================")
-        merged_lines.append(f"# PROJECT-SPECIFIC RULES: {project_dir.name}")
-        merged_lines.append("# ============================================================================\n")
+        merged_lines.extend((
+            "\n# ============================================================================",
+            f"# PROJECT-SPECIFIC RULES: {project_dir.name}",
+            "# ============================================================================\n",
+        ))
         merged_lines.extend(project_specific)
 
     # 6. Add common Python ignores that work with whitelist
-    merged_lines.append("\n# ============================================================================")
+    merged_lines.append(
+        "\n# ============================================================================"
+    )
     merged_lines.append("# COMMON PATTERNS: Artifacts inside allowed directories")
-    merged_lines.append("# ============================================================================")
+    merged_lines.append(
+        "# ============================================================================"
+    )
     merged_lines.append("**/__pycache__/")
     merged_lines.append("**/*.pyc")
     merged_lines.append("**/*.pyo")
@@ -185,26 +211,30 @@ def merge_gitignore(project_dir: Path) -> bool:
     merged_lines.append("*.egg-info/")
 
     # 7. Add final safety
-    merged_lines.append("\n# ============================================================================")
+    merged_lines.append(
+        "\n# ============================================================================"
+    )
     merged_lines.append("# SAFETY: Keep .gitkeep files")
-    merged_lines.append("# ============================================================================")
+    merged_lines.append(
+        "# ============================================================================"
+    )
     merged_lines.append("!**/.gitkeep")
 
-    merged_content = '\n'.join(merged_lines)
+    merged_content = "\n".join(merged_lines)
 
     # Backup existing if it has content
     if existing_content and not has_whitelist:
         backup_file = project_dir / ".gitignore.backup"
         backup_file.write_text(existing_content)
-        print(f"   📦 Backed up existing .gitignore")
+        print("   📦 Backed up existing .gitignore")
 
     # Write merged content
     gitignore_file.write_text(merged_content)
 
     if has_whitelist:
-        print(f"   🔄 Updated whitelist rules")
+        print("   🔄 Updated whitelist rules")
     else:
-        print(f"   ✅ Merged aggressive whitelist with existing rules")
+        print("   ✅ Merged aggressive whitelist with existing rules")
 
     return True
 
@@ -242,7 +272,9 @@ def main() -> None:
             success_count += 1
 
     print("\n" + "=" * 80)
-    print(f"✅ Merged aggressive .gitignore in {success_count}/{len(projects)} projects")
+    print(
+        f"✅ Merged aggressive .gitignore in {success_count}/{len(projects)} projects"
+    )
     print("=" * 80)
     print("\n📋 Next Steps:")
     print("  1. Review changes: cd <project> && git diff .gitignore")

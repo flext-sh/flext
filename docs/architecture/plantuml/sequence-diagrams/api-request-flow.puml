@@ -1,0 +1,76 @@
+@startuml API Request Flow
+!theme plain
+title FLEXT API Request Flow - Authentication and Processing
+
+participant "Client" as C
+participant "API Gateway" as AG
+participant "Auth Service" as AUTH
+participant "Core Service" as CORE
+participant "Database" as DB
+participant "Redis" as REDIS
+participant "LDAP Service" as LDAP
+
+== Authentication Flow ==
+C -> AG: HTTP Request with JWT Token
+activate AG
+
+AG -> AG: Validate Request Format
+AG -> AUTH: Validate JWT Token
+activate AUTH
+
+AUTH -> REDIS: Check Token Cache
+activate REDIS
+REDIS --> AUTH: Token Data (if cached)
+deactivate REDIS
+
+alt Token Not Cached
+    AUTH -> DB: Query Token from Database
+    activate DB
+    DB --> AUTH: Token Information
+    deactivate DB
+    
+    AUTH -> REDIS: Cache Token Data
+    activate REDIS
+    REDIS --> AUTH: Cache Stored
+    deactivate REDIS
+end
+
+AUTH --> AG: Authentication Result
+deactivate AUTH
+
+== Request Processing ==
+alt Token Valid
+    AG -> CORE: Process Business Request
+    activate CORE
+    
+    CORE -> DB: Query Business Data
+    activate DB
+    DB --> CORE: Data Result
+    deactivate DB
+    
+    CORE -> LDAP: Query LDAP Data (if needed)
+    activate LDAP
+    LDAP --> CORE: LDAP Data
+    deactivate LDAP
+    
+    CORE --> AG: Response Data
+    deactivate CORE
+    
+    AG -> REDIS: Cache Response (if applicable)
+    activate REDIS
+    REDIS --> AG: Response Cached
+    deactivate REDIS
+    
+    AG --> C: HTTP Response (200 OK)
+else Token Invalid
+    AG --> C: HTTP Response (401 Unauthorized)
+end
+
+deactivate AG
+
+== Error Handling ==
+note over C, LDAP: All operations use FlextResult[T] for error handling
+note over C, LDAP: Errors are logged and monitored
+note over C, LDAP: Failed requests are tracked for analysis
+
+@enduml

@@ -52,14 +52,14 @@ Project status, QA reports, and technical documentation.
 - [Installation Guide](./guides/getting-started.md#installation)
 - [API Overview](./api-reference/README.md)
 - [Project Structure](./projects/README.md)
-- [Development Guide](./guides/development.md)
+- [Development Guide](./guides/README.md#development) (Coming Soon)
 
 ## 📞 Support
 
 For support and questions:
 
 - 📧 Email: <dev@flext.com>
-- 📖 [Contributing Guide](./guides/contributing.md)
+- 📖 [Contributing Guide](./guides/README.md#development) (Coming Soon)
 - 🐛 [Issue Tracker](https://github.com/flext/flext/issues)
 
 ---

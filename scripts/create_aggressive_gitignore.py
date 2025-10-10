@@ -15,7 +15,7 @@ from pathlib import Path
 FLEXT_ROOT = Path("/home/marlonsc/flext")
 
 # Aggressive whitelist .gitignore template
-GITIGNORE_TEMPLATE = """# AGGRESSIVE WHITELIST .gitignore
+GITIGNORE_TEMPLATE = r"""# AGGRESSIVE WHITELIST .gitignore
 # Default: Block everything, then explicitly allow specific files/directories
 # This ensures only intended files are committed to version control
 
@@ -276,10 +276,10 @@ def create_gitignore_for_project(project_dir: Path) -> bool:
     if gitignore_file.exists():
         backup_file = project_dir / ".gitignore.backup"
         gitignore_file.rename(backup_file)
-        print(f"   📦 Backed up existing .gitignore to .gitignore.backup")
+        print("   📦 Backed up existing .gitignore to .gitignore.backup")
 
     gitignore_file.write_text(GITIGNORE_TEMPLATE)
-    print(f"   ✅ Created aggressive whitelist .gitignore")
+    print("   ✅ Created aggressive whitelist .gitignore")
     return True
 
 
@@ -317,7 +317,9 @@ def main() -> None:
             success_count += 1
 
     print("\n" + "=" * 80)
-    print(f"✅ Created aggressive .gitignore in {success_count}/{len(projects)} projects")
+    print(
+        f"✅ Created aggressive .gitignore in {success_count}/{len(projects)} projects"
+    )
     print("=" * 80)
     print("\n⚠️  IMPORTANT NOTES:")
     print("  • Old .gitignore files backed up as .gitignore.backup")

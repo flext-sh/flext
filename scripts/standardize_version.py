@@ -24,7 +24,6 @@ SPDX-License-Identifier: Proprietary
 from __future__ import annotations
 
 import argparse
-import shutil
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -146,7 +145,9 @@ class VersionStandardizer:
             return
 
         # Find package directory (should be only one directory in src/)
-        package_dirs = [d for d in src_path.iterdir() if d.is_dir() and not d.name.startswith(".")]
+        package_dirs = [
+            d for d in src_path.iterdir() if d.is_dir() and not d.name.startswith(".")
+        ]
 
         if not package_dirs:
             issues.append("No package found in src/")
@@ -156,14 +157,15 @@ class VersionStandardizer:
             # Multiple packages - use the one matching project name or first non-test package
             project_name_snake = project_dir.name.replace("-", "_")
             matching_package = next(
-                (d for d in package_dirs if d.name == project_name_snake),
-                None
+                (d for d in package_dirs if d.name == project_name_snake), None
             )
             if matching_package:
                 package_dir = matching_package
             else:
                 # Use first non-test package
-                non_test_packages = [d for d in package_dirs if "test" not in d.name.lower()]
+                non_test_packages = [
+                    d for d in package_dirs if "test" not in d.name.lower()
+                ]
                 if non_test_packages:
                     package_dir = non_test_packages[0]
                 else:
@@ -219,7 +221,9 @@ class VersionStandardizer:
         if self.verbose:
             print(f"\n📦 {project_dir.name}")
             print(f"   Package: {package_name}")
-            print(f"   Version file: {current_version_file.name if current_version_file else 'None'}")
+            print(
+                f"   Version file: {current_version_file.name if current_version_file else 'None'}"
+            )
             print(f"   Needs update: {needs_update}")
             if issues:
                 print(f"   Issues: {', '.join(issues)}")
@@ -234,20 +238,26 @@ class VersionStandardizer:
         total = len(self.projects)
         needs_update = sum(1 for p in self.projects if p.needs_update)
         has_issues = sum(1 for p in self.projects if p.issues)
-        ready = sum(
-            1 for p in self.projects if not p.needs_update and not p.issues
-        )
+        ready = sum(1 for p in self.projects if not p.needs_update and not p.issues)
 
-        print(f"\n📈 Statistics:")
+        print("\n📈 Statistics:")
         print(f"   Total projects: {total}")
         print(f"   ✅ Already standardized: {ready}")
         print(f"   🔄 Needs update: {needs_update}")
         print(f"   ⚠️  Has issues: {has_issues}")
 
         # Group projects by status
-        ready_projects = [p for p in self.projects if not p.needs_update and not p.issues]
-        update_projects = [p for p in self.projects if p.needs_update and p.has_pyproject]
-        issue_projects = [p for p in self.projects if not p.has_pyproject or (p.issues and not p.needs_update)]
+        ready_projects = [
+            p for p in self.projects if not p.needs_update and not p.issues
+        ]
+        update_projects = [
+            p for p in self.projects if p.needs_update and p.has_pyproject
+        ]
+        issue_projects = [
+            p
+            for p in self.projects
+            if not p.has_pyproject or (p.issues and not p.needs_update)
+        ]
 
         if ready_projects:
             print(f"\n✅ Already Standardized ({len(ready_projects)}):")
@@ -321,29 +331,33 @@ class VersionStandardizer:
 
     def _update_init_file(self, project: ProjectInfo, init_file: Path) -> None:
         """Update __init__.py to import from __version__."""
-        content = init_file.read_text()
+        content = init_file.read_text(encoding="utf-8")
 
         # Check if already uses __version__ import
         if f"from {project.package_name}.__version__ import" in content:
-            print(f"   ℹ️  __init__.py already imports from __version__")
+            print("   ℹ️  __init__.py already imports from __version__")
             return
 
         if self.dry_run:
             print(f"   ℹ️  Would update: {init_file.relative_to(FLEXT_ROOT)}")
-            print(f"      Add: from {project.package_name}.__version__ import __version__, __version_info__")
+            print(
+                f"      Add: from {project.package_name}.__version__ import __version__, __version_info__"
+            )
         else:
             print(f"   ⚠️  Manual review needed: {init_file.relative_to(FLEXT_ROOT)}")
-            print(f"      Add: from {project.package_name}.__version__ import __version__, __version_info__")
+            print(
+                f"      Add: from {project.package_name}.__version__ import __version__, __version_info__"
+            )
 
     def _check_constants_file(self, project: ProjectInfo, constants_file: Path) -> None:
         """Check constants.py for hardcoded metadata."""
-        content = constants_file.read_text()
+        content = constants_file.read_text(encoding="utf-8")
 
         hardcoded_patterns = [
-            ('VERSION = "', 'hardcoded VERSION'),
-            ('AUTHOR = "', 'hardcoded AUTHOR'),
-            ('DESCRIPTION = "', 'hardcoded DESCRIPTION'),
-            ('LICENSE = "', 'hardcoded LICENSE'),
+            ('VERSION = "', "hardcoded VERSION"),
+            ('AUTHOR = "', "hardcoded AUTHOR"),
+            ('DESCRIPTION = "', "hardcoded DESCRIPTION"),
+            ('LICENSE = "', "hardcoded LICENSE"),
         ]
 
         found_issues = []
@@ -352,11 +366,13 @@ class VersionStandardizer:
                 found_issues.append(description)
 
         if found_issues:
-            print(f"   ⚠️  constants.py has hardcoded metadata:")
+            print("   ⚠️  constants.py has hardcoded metadata:")
             for issue in found_issues:
                 print(f"      • {issue}")
             if not self.dry_run:
-                print(f"      Manual review needed: {constants_file.relative_to(FLEXT_ROOT)}")
+                print(
+                    f"      Manual review needed: {constants_file.relative_to(FLEXT_ROOT)}"
+                )
 
     def standardize_all(self, confirm: bool = False) -> None:
         """Standardize all projects that need updates.
@@ -365,7 +381,9 @@ class VersionStandardizer:
             confirm: If True, proceed without confirmation prompt
 
         """
-        update_projects = [p for p in self.projects if p.needs_update and p.has_pyproject]
+        update_projects = [
+            p for p in self.projects if p.needs_update and p.has_pyproject
+        ]
 
         if not update_projects:
             print("\n✅ All projects are already standardized!")
@@ -388,9 +406,13 @@ class VersionStandardizer:
 
         print("\n" + "=" * 80)
         if self.dry_run:
-            print(f"✅ Dry run complete: {success_count}/{len(update_projects)} projects would be updated")
+            print(
+                f"✅ Dry run complete: {success_count}/{len(update_projects)} projects would be updated"
+            )
         else:
-            print(f"✅ Standardization complete: {success_count}/{len(update_projects)} projects updated")
+            print(
+                f"✅ Standardization complete: {success_count}/{len(update_projects)} projects updated"
+            )
         print("=" * 80)
 
 
@@ -440,7 +462,9 @@ def main() -> None:
     print("=" * 80)
     print("🚀 FLEXT Ecosystem __version__.py Standardization Script")
     print("=" * 80)
-    print(f"\nMode: {'🔍 DRY RUN (safe - no changes)' if dry_run else '⚠️  EXECUTE (will make changes!)'}")
+    print(
+        f"\nMode: {'🔍 DRY RUN (safe - no changes)' if dry_run else '⚠️  EXECUTE (will make changes!)'}"
+    )
 
     standardizer = VersionStandardizer(dry_run=dry_run, verbose=args.verbose)
 
@@ -454,7 +478,9 @@ def main() -> None:
     if args.all:
         standardizer.standardize_all(confirm=args.yes_i_am_sure)
     elif args.project:
-        project = next((p for p in standardizer.projects if p.name == args.project), None)
+        project = next(
+            (p for p in standardizer.projects if p.name == args.project), None
+        )
         if project:
             standardizer.standardize_project(project)
         else:

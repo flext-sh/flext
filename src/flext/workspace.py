@@ -10,13 +10,14 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from flext_core.models import FlextModels
+
 from flext.project_types import FlextProjectTypes
 from flext.workspace_models import FlextAdvancedWorkspaceModels
 from flext.workspace_service import (
     FlextWorkspaceService,
     create_workspace_service,
 )
-from flext_core.models import FlextModels
 
 WorkspaceStatus = FlextModels.WorkspaceStatus
 

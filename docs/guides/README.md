@@ -4,80 +4,84 @@ Comprehensive guides for using FLEXT effectively in various scenarios.
 
 ## Getting Started
 
-### [Installation Guide](./getting-started.md)
+### [Installation Guide](./getting-started.md) ✅
 
 Complete installation instructions for FLEXT and all its components.
 
-### [Quick Start Tutorial](./quick-start.md)
+### Quick Start Tutorial (Coming Soon)
 
 Hands-on tutorial to get you up and running with FLEXT in minutes.
 
-### [Configuration Guide](./configuration.md)
+### [Configuration Guide](./configuration.md) ✅
 
 How to configure FLEXT for your specific environment and requirements.
 
 ## Development
 
-### [Development Setup](./development.md)
+### [Development Setup](./development.md) ✅
 
 Setting up a development environment for FLEXT contributions.
 
-### [Contributing Guide](./contributing.md)
+### Contributing Guide (Coming Soon)
 
 Guidelines for contributing to the FLEXT ecosystem.
 
-### [Testing Guide](./testing.md)
+### [Testing Guide](./testing.md) ✅
 
 Best practices for testing FLEXT applications and libraries.
 
 ## Operations
 
-### [Deployment Guide](./deployment.md)
+### Deployment Guide (Coming Soon)
 
 Deploying FLEXT applications to production environments.
 
-### [Monitoring Guide](./monitoring.md)
+### Monitoring Guide (Coming Soon)
 
 Monitoring and observability for FLEXT applications.
 
-### [Troubleshooting Guide](./troubleshooting.md)
+### [Troubleshooting Guide](./troubleshooting.md) ✅
 
 Common issues and their solutions.
 
 ## Integration
 
-### [LDAP Integration](./ldap-integration.md)
+### LDAP Integration (Coming Soon)
 
 Integrating FLEXT with LDAP servers and directories.
 
-### [Database Integration](./database-integration.md)
+### Database Integration (Coming Soon)
 
 Working with databases through FLEXT's data access layer.
 
-### [API Integration](./api-integration.md)
+### API Integration (Coming Soon)
 
 Building and consuming APIs with FLEXT.
 
 ## Migration
 
-### [LDIF Migration Guide](./ldif-migration.md)
+### LDIF Migration Guide (Coming Soon)
 
 Complete guide for migrating LDIF data between LDAP servers.
 
-### [Data Migration](./data-migration.md)
+### Data Migration (Coming Soon)
 
 Migrating data between different systems using FLEXT.
 
 ## Best Practices
 
-### [Performance Optimization](./performance.md)
+### Performance Optimization (Coming Soon)
 
 Optimizing FLEXT applications for better performance.
 
-### [Security Best Practices](./security.md)
+### Security Best Practices (Coming Soon)
 
 Security considerations when using FLEXT.
 
-### [Error Handling](./error-handling.md)
+### Error Handling (Coming Soon)
 
 Effective error handling strategies in FLEXT applications.
+
+---
+
+**Note**: This guide structure is being updated. Currently, only the Getting Started guide is available. Additional guides are being created as part of the documentation maintenance process.
