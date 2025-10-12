@@ -15,6 +15,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+import yaml
 from flext_core import FlextCore
 
 from .constants import FlextTaskOrchestrationConstants
@@ -1151,8 +1152,6 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
     def _generate_status_tracker(self, tasks: list[Task]) -> str:
         """Generate YAML status tracker."""
-        import yaml
-
         status_data = {
             "orchestration": {
                 "created_at": datetime.now(UTC).isoformat(),
