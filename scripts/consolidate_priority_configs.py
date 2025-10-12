@@ -148,7 +148,7 @@ from __future__ import annotations
 
 from pydantic import Field
 from pydantic_settings import SettingsConfigDict
-from flext_core import FlextConstants
+from flext_core import FlextCore
 
 FlextSettings
 
@@ -156,7 +156,7 @@ FlextSettings
 # BEFORE: Manual configuration with BaseSettings
 # class OldConfig(BaseSettings):
 #     host: str = Field(default="localhost")
-#     port: int = Field(default=FlextConstants.Platform.DEFAULT_HTTP_PORT)
+#     port: int = Field(default=FlextCore.Constants.Platform.DEFAULT_HTTP_PORT)
 #     debug: bool = Field(default=False)
 
 # AFTER: Consolidated FLEXT configuration
@@ -181,7 +181,7 @@ class ConsolidatedProjectSettings(FlextSettings):
       json_schema_extra={"env": "PROJECT_HOST"}
     )
     port: int = Field(
-      default=FlextConstants.Platform.DEFAULT_HTTP_PORT,
+      default=FlextCore.Constants.Platform.DEFAULT_HTTP_PORT,
       ge=1,
       le=65535,
       description="Server port",
@@ -242,7 +242,7 @@ def get_project_settings() -> ConsolidatedProjectSettings:
 
 # BEFORE: Manual env var access
 # host = os.getenv("PROJECT_HOST", "localhost")
-# port = int(os.getenv("PROJECT_PORT", str(FlextConstants.Platform.DEFAULT_HTTP_PORT)))
+# port = int(os.getenv("PROJECT_PORT", str(FlextCore.Constants.Platform.DEFAULT_HTTP_PORT)))
 
 # AFTER: FLEXT configuration
 # settings = get_project_settings()

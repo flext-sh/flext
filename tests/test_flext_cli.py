@@ -77,11 +77,11 @@ class TestFlextCli:
         assert cli.auth is not None
 
     def test_execute_returns_flext_result(self) -> None:
-        """Test that execute returns FlextResult."""
+        """Test that execute returns FlextCore.Result."""
         cli = FlextCli()
         result = cli.execute()
 
-        # Check FlextResult properties
+        # Check FlextCore.Result properties
         assert hasattr(result, "is_success")
         assert hasattr(result, "is_failure")
         assert hasattr(result, "unwrap")

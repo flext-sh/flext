@@ -8,7 +8,7 @@ import re
 from collections.abc import Iterable
 from pathlib import Path
 
-from flext_core import FlextTypes
+from flext_core import FlextCore
 
 WORKSPACE = Path(__file__).resolve().parents[2]
 
@@ -56,7 +56,7 @@ def iter_target_files() -> Iterable[Path]:
             yield path
 
 
-def parse_public_exports(py_path: Path) -> FlextTypes.StringList:
+def parse_public_exports(py_path: Path) -> FlextCore.Types.StringList:
     """Parse the public exports from a Python file."""
     src = py_path.read_text(encoding="utf-8")
     try:
@@ -64,7 +64,7 @@ def parse_public_exports(py_path: Path) -> FlextTypes.StringList:
     except SyntaxError:
         return []
 
-    existing_all: FlextTypes.StringList = []
+    existing_all: FlextCore.Types.StringList = []
     # collect existing __all__ entries to preserve order
     for node in tree.body:
         if isinstance(node, ast.Assign):
@@ -78,7 +78,7 @@ def parse_public_exports(py_path: Path) -> FlextTypes.StringList:
                         existing_all = [str(x) for x in value]
                     break
 
-    names: FlextTypes.StringList = []
+    names: FlextCore.Types.StringList = []
 
     def add(name: str) -> None:
         """Add a name to the list of public exports."""
@@ -125,7 +125,7 @@ def parse_public_exports(py_path: Path) -> FlextTypes.StringList:
                     add(name)
 
     # Merge with existing __all__ (preserve its order first)
-    ordered: FlextTypes.StringList = []
+    ordered: FlextCore.Types.StringList = []
     seen: set[str] = set()
     for n in existing_all:
         if n not in seen:
@@ -141,7 +141,7 @@ def parse_public_exports(py_path: Path) -> FlextTypes.StringList:
     return ordered
 
 
-def replace_or_append_all(py_path: Path, exports: FlextTypes.StringList) -> bool:
+def replace_or_append_all(py_path: Path, exports: FlextCore.Types.StringList) -> bool:
     """Replace the __all__ definition, or append if not present.
 
     Returns True if file content changed.
@@ -150,8 +150,8 @@ def replace_or_append_all(py_path: Path, exports: FlextTypes.StringList) -> bool
 
     # Build pretty-printed __all__ block
     # Wrap lines to a reasonable length
-    lines: FlextTypes.StringList = []
-    current: FlextTypes.StringList = []
+    lines: FlextCore.Types.StringList = []
+    current: FlextCore.Types.StringList = []
     max_len = 100
 
     def flush_current() -> None:
@@ -171,7 +171,9 @@ def replace_or_append_all(py_path: Path, exports: FlextTypes.StringList) -> bool
             current.append(item)
     flush_current()
 
-    pretty = "__all__: FlextTypes.StringList = [\n    " + ",\n    ".join(lines) + ",\n]"
+    pretty = (
+        "__all__: FlextCore.Types.StringList = [\n    " + ",\n    ".join(lines) + ",\n]"
+    )
 
     pattern = re.compile(r"^__all__\s*[:=].*", re.DOTALL | re.MULTILINE)
 

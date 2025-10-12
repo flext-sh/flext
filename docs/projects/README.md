@@ -10,11 +10,11 @@ The foundation framework providing core patterns, abstractions, and utilities fo
 
 **Key Features:**
 
-- Dependency injection with FlextContainer
-- CQRS pattern with FlextDispatcher
-- Railway-oriented programming with FlextResult
-- Domain event system with FlextBus
-- Structured logging with FlextLogger
+- Dependency injection with FlextCore.Container
+- CQRS pattern with FlextCore.Dispatcher
+- Railway-oriented programming with FlextCore.Result
+- Domain event system with FlextCore.Bus
+- Structured logging with FlextCore.Logger
 
 ### 📄 [flext-ldif](./flext-ldif.md)
 
@@ -110,10 +110,10 @@ flext-core (foundation)
 ### Using flext-core
 
 ```python
-from flext_core import FlextContainer, FlextResult
+from flext_core import FlextCore
 
 # Set up dependency injection
-container = FlextContainer()
+container = FlextCore.Container()
 
 # Use railway-oriented programming
 result = some_operation()

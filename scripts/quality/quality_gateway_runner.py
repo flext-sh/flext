@@ -11,7 +11,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextTypes
+from flext_core import FlextCore
 
 from flext_tools import (
     Colors,
@@ -130,9 +130,9 @@ class QualityGatewayRunner(FlextScript):
 
         return parser
 
-    def _process_kwargs(self, args: argparse.Namespace) -> FlextTypes.Dict:
+    def _process_kwargs(self, args: argparse.Namespace) -> FlextCore.Types.Dict:
         """Process arguments into kwargs."""
-        kwargs: FlextTypes.Dict = {}
+        kwargs: FlextCore.Types.Dict = {}
         kwargs["generate_report"] = not getattr(args, "no_report", False)
         return kwargs
 

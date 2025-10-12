@@ -44,7 +44,7 @@ api -> core: query pipeline state
 core -> domain: get error details
 
 note right: Railway Pattern Error Handling
-domain --> core: FlextResult.failure("Connection timeout")
+domain --> core: FlextCore.Result.failure("Connection timeout")
 core -> api: propagate error context
 api -> cli: format error response
 cli --> user: display actionable error

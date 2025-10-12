@@ -20,24 +20,28 @@
 ## 🎯 Recent Achievements (v0.9.0)
 
 ### ✅ Production-Ready Status
+
 - **32+ Projects**: All projects fully implemented and production-ready
 - **Zero Critical Issues**: No blocking issues in codebase or documentation
 - **100% Type Safety**: Complete MyPy strict mode compliance
 - **Zero Linting Violations**: Clean code across all projects
 
 ### ✅ Unified Patterns Implementation
-- **FlextResult[T]**: Railway-oriented programming throughout
-- **FlextContainer**: Dependency injection across all projects
+
+- **FlextCore.Result[T]**: Railway-oriented programming throughout
+- **FlextCore.Container**: Dependency injection across all projects
 - **[Project]Models**: Standardized domain models pattern
 - **Quality Gates**: Automated enforcement of standards
 
 ### ✅ Documentation Excellence
+
 - **674 Documentation Files**: Comprehensive coverage
 - **Automated Maintenance**: AI-powered documentation system
 - **Real-time Health Monitoring**: Continuous quality assurance
 - **Interactive Dashboards**: Visual project status and metrics
 
 ### ✅ Enterprise-Grade Features
+
 - **LDIF Processing**: RFC 2849/4512 compliant with 7 server-specific quirks
 - **Oracle UD Migration**: Complete OID to OUD migration capabilities
 - **HTTP Foundation**: Unified client across 33+ projects
@@ -45,15 +49,15 @@
 
 ## 📦 Core Libraries
 
-| Library                           | Description                                   | Status        |
-| --------------------------------- | --------------------------------------------- | ------------- |
-| **[flext-core](flext-core/)**     | Core framework with patterns and abstractions | ✅ Production |
-| **[flext-ldif](flext-ldif/)**     | RFC-compliant LDIF processing and migration   | ✅ Production |
-| **[flext-api](flext-api/)**       | REST API framework with OpenAPI support       | ✅ Production |
-| **[flext-auth](flext-auth/)**     | Authentication and authorization services     | ✅ Production |
-| **[flext-ldap](flext-ldap/)**     | LDAP client operations and management         | ✅ Production |
+| Library                                    | Description                                   | Status        |
+| ------------------------------------------ | --------------------------------------------- | ------------- |
+| **[flext-core](flext-core/)**              | Core framework with patterns and abstractions | ✅ Production |
+| **[flext-ldif](flext-ldif/)**              | RFC-compliant LDIF processing and migration   | ✅ Production |
+| **[flext-api](flext-api/)**                | REST API framework with OpenAPI support       | ✅ Production |
+| **[flext-auth](flext-auth/)**              | Authentication and authorization services     | ✅ Production |
+| **[flext-ldap](flext-ldap/)**              | LDAP client operations and management         | ✅ Production |
 | **[flext-oracle](.venv/bin/flext-oracle)** | Oracle database integration                   | ✅ Production |
-| **[flext-grpc](flext-grpc/)**     | gRPC services framework                       | ✅ Production |
+| **[flext-grpc](flext-grpc/)**              | gRPC services framework                       | ✅ Production |
 
 ## 🏗️ Architecture
 
@@ -63,7 +67,7 @@ FLEXT is built on a clean architecture foundation with these core principles:
 - **SOLID Principles**: Single responsibility, Open/closed, Liskov substitution, Interface segregation, Dependency inversion
 - **CQRS Pattern**: Command Query Responsibility Segregation for complex business logic
 - **Railway-Oriented Programming**: Functional error handling with happy/sad path composition
-- **Dependency Injection**: FlextContainer for managing component dependencies
+- **Dependency Injection**: FlextCore.Container for managing component dependencies
 
 ```
 ┌─────────────────────────────────────┐
@@ -158,11 +162,11 @@ if migration_result.is_success:
 ### Railway-Oriented Error Handling
 
 ```python
-from flext_core import FlextResult
+from flext_core import FlextCore
 
-def process_data(data: str) -> FlextResult[str, Exception]:
+def process_data(data: str) -> FlextCore.Result[str, Exception]:
     # Your processing logic with error handling
-    return FlextResult.success("processed data")
+    return FlextCore.Result.success("processed data")
 ```
 
 ## 📚 Documentation
@@ -296,18 +300,21 @@ We welcome contributions! Please see our [Contributing Guide](flext-core/docs/de
 ## 📋 Roadmap
 
 ### Immediate (Next Release)
+
 - [ ] Fix 324 broken documentation links (high priority)
 - [ ] Create 16 missing documentation guides
 - [ ] Enhanced async/await support across all libraries
 - [ ] GraphQL API integration
 
 ### Short-term (Next Quarter)
+
 - [ ] Kubernetes operator for FLEXT services
 - [ ] Advanced monitoring and observability
 - [ ] Machine learning integration for data processing
 - [ ] Multi-cloud deployment support
 
 ### Long-term (Next 6 Months)
+
 - [ ] Additional LDAP server support
 - [ ] Advanced migration capabilities
 - [ ] Enterprise security enhancements

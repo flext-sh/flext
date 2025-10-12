@@ -33,12 +33,7 @@
     "link_health": 0.95
   },
   "content_rules": {
-    "required_sections": [
-      "Overview",
-      "Installation",
-      "Usage",
-      "Configuration"
-    ],
+    "required_sections": ["Overview", "Installation", "Usage", "Configuration"],
     "max_todos_per_file": 5,
     "min_headings_per_file": 3,
     "max_consecutive_blank_lines": 2

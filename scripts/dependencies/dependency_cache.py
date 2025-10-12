@@ -11,7 +11,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult
+from flext_core import FlextCore
 
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
@@ -29,21 +29,21 @@ class DependencyCacheManager(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> FlextResult[None]:
+    def validate_preconditions(self) -> FlextCore.Result[None]:
         """Validate preconditions."""
         workspace_root = Path.cwd()
 
         # Check if we're in FLEXT workspace
         if not (workspace_root / "pyproject.toml").exists():
             print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return FlextResult[None].fail("Not in FLEXT workspace root")
+            return FlextCore.Result[None].fail("Not in FLEXT workspace root")
 
         print_colored("✅ FLEXT workspace detected", Colors.GREEN)
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
     def execute_main_logic(
         self, **kwargs: dict[str, str]
-    ) -> FlextResult[dict[str, str]]:
+    ) -> FlextCore.Result[dict[str, str]]:
         """Execute main script logic."""
         """Execute cache management operations."""
         try:
@@ -71,9 +71,9 @@ class DependencyCacheManager(FlextScript):
 
             else:
                 print_colored(f"❌ Unknown operation: {operation}", Colors.RED)
-                return FlextResult[object].fail(f"Unknown operation: {operation}")
+                return FlextCore.Result[object].fail(f"Unknown operation: {operation}")
 
-            return FlextResult[object].ok(
+            return FlextCore.Result[object].ok(
                 {
                     "operation": operation,
                     "projects": projects,
@@ -82,7 +82,7 @@ class DependencyCacheManager(FlextScript):
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during cache operation: {e}", Colors.RED)
-            return FlextResult[object].fail(f"Cache operation error: {e}")
+            return FlextCore.Result[object].fail(f"Cache operation error: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
@@ -101,9 +101,9 @@ class DependencyCacheManager(FlextScript):
 
         return parser
 
-    def cleanup(self) -> FlextResult[None]:
+    def cleanup(self) -> FlextCore.Result[None]:
         """Limpeza após execução."""
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
 
 def main() -> int:

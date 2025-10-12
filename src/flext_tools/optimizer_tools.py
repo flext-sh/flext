@@ -8,17 +8,17 @@ from __future__ import annotations
 
 from typing import Self
 
-from flext_core import FlextLogger, FlextResult, FlextService
+from flext_core import FlextCore
 
 
-class FlextOptimizerTools(FlextService[None]):
+class FlextOptimizerTools(FlextCore.Service[None]):
     """Code optimization and performance tools."""
 
     def __init__(self: Self) -> None:
         """Initialize optimizer tools."""
         super().__init__()
-        self.logger = FlextLogger(__name__)
+        self.logger = FlextCore.Logger(__name__)
 
-    def execute(self: Self) -> FlextResult[None]:
+    def execute(self: Self) -> FlextCore.Result[None]:
         """Execute optimizer tools service."""
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)

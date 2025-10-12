@@ -13,7 +13,7 @@ import inspect
 import tempfile
 from pathlib import Path
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextCore
 from flext_tests import FlextTestsDomains
 
 from flext_tools.conflicts import ConflictAnalyzer
@@ -26,7 +26,7 @@ class TestConflictAnalyzer:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_test_project_data() -> FlextTypes.Dict:
+        def create_test_project_data() -> FlextCore.Types.Dict:
             """Create test project data."""
             return {
                 "project_path": "/tmp/flext_test_project",
@@ -35,7 +35,7 @@ class TestConflictAnalyzer:
             }
 
         @staticmethod
-        def create_test_conflict_data() -> list[FlextTypes.StringDict]:
+        def create_test_conflict_data() -> list[FlextCore.Types.StringDict]:
             """Create test conflict data."""
             return [
                 {
@@ -86,7 +86,7 @@ class TestConflictAnalyzer:
 
         # Test analyze_dependencies with valid path
         result = analyzer.analyze_dependencies("/tmp/test_project")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
         assert isinstance(result.data, list)
 
@@ -96,7 +96,7 @@ class TestConflictAnalyzer:
 
         # Test analyze_dependencies with empty path
         result = analyzer.analyze_dependencies("")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_failure
         assert (
             result.error is not None and "Project path cannot be empty" in result.error
@@ -110,9 +110,9 @@ class TestConflictAnalyzer:
         assert hasattr(analyzer, "detect_version_conflicts")
         assert callable(analyzer.detect_version_conflicts)
 
-        # Test detect_version_conflicts returns FlextResult
+        # Test detect_version_conflicts returns FlextCore.Result
         result = analyzer.detect_version_conflicts()
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
         assert isinstance(result.data, list)
 
@@ -122,11 +122,11 @@ class TestConflictAnalyzer:
 
         # Test that analyzer handles errors gracefully
         result = analyzer.analyze_dependencies("/tmp/test_project")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
 
         conflicts_result = analyzer.detect_version_conflicts()
-        assert isinstance(conflicts_result, FlextResult)
+        assert isinstance(conflicts_result, FlextCore.Result)
         assert conflicts_result.is_success
 
     # =============================================================================
@@ -156,7 +156,7 @@ class TestConflictAnalyzer:
 
         for path in test_paths:
             result = analyzer.analyze_dependencies(path)
-            assert isinstance(result, FlextResult)
+            assert isinstance(result, FlextCore.Result)
             assert result.is_success
             assert isinstance(result.data, list)
 
@@ -166,7 +166,7 @@ class TestConflictAnalyzer:
 
         # Test getting conflicts
         result = analyzer.get_conflicts()
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
         assert isinstance(result.data, list)
 
@@ -184,7 +184,7 @@ class TestConflictAnalyzer:
 
         # Test that conflicts list is accessible
         conflicts = analyzer.detect_version_conflicts()
-        assert isinstance(conflicts, FlextResult)
+        assert isinstance(conflicts, FlextCore.Result)
         assert conflicts.is_success
 
     # =============================================================================
@@ -207,10 +207,10 @@ class TestConflictAnalyzer:
 
         # Test analyzer operations
         analyze_result = analyzer.analyze_dependencies("/tmp/test")
-        assert isinstance(analyze_result, FlextResult)
+        assert isinstance(analyze_result, FlextCore.Result)
 
         conflicts_result = analyzer.get_conflicts()
-        assert isinstance(conflicts_result, FlextResult)
+        assert isinstance(conflicts_result, FlextCore.Result)
 
     def test_conflict_analyzer_with_flext_tests(
         self, flext_domains: FlextTestsDomains
@@ -224,7 +224,7 @@ class TestConflictAnalyzer:
 
         # Test analyzer execution
         analyze_result = analyzer.analyze_dependencies("/tmp/test")
-        assert isinstance(analyze_result, FlextResult)
+        assert isinstance(analyze_result, FlextCore.Result)
 
         # Test analyzer with flext_tests data
         flext_domains.create_configuration()
@@ -241,11 +241,11 @@ class TestConflictAnalyzer:
 
         # Test that analyzer operations are reasonably fast
         analyze_result = analyzer.analyze_dependencies("/tmp/test")
-        assert isinstance(analyze_result, FlextResult)
+        assert isinstance(analyze_result, FlextCore.Result)
         assert analyze_result.is_success
 
         conflicts_result = analyzer.detect_version_conflicts()
-        assert isinstance(conflicts_result, FlextResult)
+        assert isinstance(conflicts_result, FlextCore.Result)
         assert conflicts_result.is_success
 
         # Should complete quickly for basic operations
@@ -268,13 +268,13 @@ class TestConflictAnalyzer:
         # Test dependency analysis
         test_data = self._TestDataHelper.create_test_project_data()
         analyze_result = analyzer.analyze_dependencies(test_data["project_path"])
-        assert isinstance(analyze_result, FlextResult)
+        assert isinstance(analyze_result, FlextCore.Result)
         assert analyze_result.is_success
         assert isinstance(analyze_result.data, list)
 
         # Test conflicts retrieval
         conflicts_result = analyzer.detect_version_conflicts()
-        assert isinstance(conflicts_result, FlextResult)
+        assert isinstance(conflicts_result, FlextCore.Result)
         assert conflicts_result.is_success
         assert isinstance(conflicts_result.data, list)
 
@@ -319,11 +319,11 @@ class TestConflictAnalyzer:
 
             # Test with real temporary directory
             analyze_result = analyzer.analyze_dependencies(str(temp_path))
-            assert isinstance(analyze_result, FlextResult)
+            assert isinstance(analyze_result, FlextCore.Result)
             assert analyze_result.is_success
 
             conflicts_result = analyzer.get_conflicts()
-            assert isinstance(conflicts_result, FlextResult)
+            assert isinstance(conflicts_result, FlextCore.Result)
             assert conflicts_result.is_success
 
     def test_conflict_analyzer_edge_cases(self) -> None:
@@ -332,7 +332,7 @@ class TestConflictAnalyzer:
 
         # Test with empty string path (should fail)
         result = analyzer.analyze_dependencies("")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_failure
         assert (
             result.error is not None and "Project path cannot be empty" in result.error
@@ -340,15 +340,15 @@ class TestConflictAnalyzer:
 
         # Test with relative path
         result = analyzer.analyze_dependencies("./test")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
 
         # Test with non-existent path
         result = analyzer.analyze_dependencies("/non/existent/path")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
 
         # Test conflicts retrieval with edge cases
         conflicts_result = analyzer.detect_version_conflicts()
-        assert isinstance(conflicts_result, FlextResult)
+        assert isinstance(conflicts_result, FlextCore.Result)
         assert conflicts_result.is_success

@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
-"""
-Table of Contents Generator for FLEXT Documentation
+"""Table of Contents Generator for FLEXT Documentation.
 
 Automatically generates and updates table of contents for markdown files
 based on heading structure. Supports GitHub-flavored markdown anchors.
 """
 
 import re
-import sys
 from pathlib import Path
 from typing import NamedTuple
 
@@ -24,7 +22,7 @@ class Heading(NamedTuple):
 class TOCGenerator:
     """Generate and update table of contents in markdown files."""
 
-    def __init__(self, min_headings: int = 3, max_level: int = 3):
+    def __init__(self, min_headings: int = 3, max_level: int = 3) -> None:
         self.min_headings = min_headings
         self.max_level = max_level
 
@@ -62,9 +60,7 @@ class TOCGenerator:
         anchor = re.sub(r"[^\w\s-]", "", anchor)
         anchor = re.sub(r"\s+", "-", anchor)
         anchor = re.sub(r"-+", "-", anchor)
-        anchor = anchor.strip("-")
-
-        return anchor
+        return anchor.strip("-")
 
     def generate_toc(self, headings: list[Heading]) -> str:
         """Generate table of contents from headings."""
@@ -100,12 +96,11 @@ class TOCGenerator:
         if toc_match:
             # Replace existing TOC
             return content[: toc_match.start()] + toc + content[toc_match.end() :]
-        else:
-            # Insert TOC after first heading
-            first_heading = re.search(r"^#\s+.+$", content, re.MULTILINE)
-            if first_heading:
-                insert_pos = first_heading.end()
-                return content[:insert_pos] + "\n\n" + toc + "\n" + content[insert_pos:]
+        # Insert TOC after first heading
+        first_heading = re.search(r"^#\s+.+$", content, re.MULTILINE)
+        if first_heading:
+            insert_pos = first_heading.end()
+            return content[:insert_pos] + "\n\n" + toc + "\n" + content[insert_pos:]
 
         return content
 
@@ -152,7 +147,7 @@ class TOCGenerator:
             if self.process_file(file_path, dry_run):
                 updated_count += 1
 
-        print(f"\n📊 Summary:")
+        print("\n📊 Summary:")
         print(f"  - Files processed: {len(markdown_files)}")
         print(f"  - Files updated: {updated_count}")
 

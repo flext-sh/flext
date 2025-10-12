@@ -8,21 +8,21 @@ Code-level architecture showing class relationships and implementation patterns:
 @startuml FLEXT Code Architecture
 !include <C4/C4_Code>
 
-class FlextResult {
+class FlextCore.Result {
     +value: T
     +error: E
     +is_success: bool
     +is_failure: bool
     +unwrap(): T
-    +map(func): FlextResult[U]
-    +flat_map(func): FlextResult[U]
+    +map(func): FlextCore.Result[U]
+    +flat_map(func): FlextCore.Result[U]
 }
 
-class FlextContainer {
+class FlextCore.Container {
     -_services: Dict[str, Any]
     +register(name: str, service: Any)
     +resolve(name: str): Any
-    +get_global(): FlextContainer
+    +get_global(): FlextCore.Container
 }
 
 abstract class FlextModel {
@@ -44,33 +44,33 @@ class AggregateRoot {
     +domain_events: List[DomainEvent]
 }
 
-class FlextDispatcher {
+class FlextCore.Dispatcher {
     -_handlers: Dict[type, Callable]
     +register_handler(command_type, handler)
-    +dispatch(command): FlextResult
+    +dispatch(command): FlextCore.Result
 }
 
-class FlextBus {
+class FlextCore.Bus {
     -_subscribers: Dict[type, List[Callable]]
     +subscribe(event_type, handler)
     +publish(event)
 }
 
-FlextResult --> FlextContainer : uses
-FlextContainer --> FlextModel : manages
+FlextCore.Result --> FlextCore.Container : uses
+FlextCore.Container --> FlextModel : manages
 FlextModel <|-- Entity
 FlextModel <|-- Value
 FlextModel <|-- AggregateRoot
 
-FlextDispatcher --> FlextBus : publishes events
-FlextBus --> FlextLogger : logs events
+FlextCore.Dispatcher --> FlextCore.Bus : publishes events
+FlextCore.Bus --> FlextCore.Logger : logs events
 
-note right of FlextResult
+note right of FlextCore.Result
     Railway-oriented
     error handling
 end note
 
-note right of FlextContainer
+note right of FlextCore.Container
     Dependency injection
     singleton container
 end note
@@ -85,8 +85,9 @@ end note
 ## Key Classes and Interfaces
 
 ### Error Handling
+
 ```python
-class FlextResult[T, E]:
+class FlextCore.Result[T, E]:
     """Monadic result type for railway-oriented programming."""
 
     def __init__(self, value: Optional[T] = None, error: Optional[E] = None):
@@ -106,29 +107,30 @@ class FlextResult[T, E]:
             raise RuntimeError(f"Cannot unwrap failure result: {self._error}")
         return self._value
 
-    def map[U](self, func: Callable[[T], U]) -> FlextResult[U, E]:
+    def map[U](self, func: Callable[[T], U]) -> FlextCore.Result[U, E]:
         if self.is_success:
-            return FlextResult(func(self._value))
-        return FlextResult(error=self._error)
+            return FlextCore.Result(func(self._value))
+        return FlextCore.Result(error=self._error)
 
-    def flat_map[U](self, func: Callable[[T], FlextResult[U, E]]) -> FlextResult[U, E]:
+    def flat_map[U](self, func: Callable[[T], FlextCore.Result[U, E]]) -> FlextCore.Result[U, E]:
         if self.is_success:
             return func(self._value)
-        return FlextResult(error=self._error)
+        return FlextCore.Result(error=self._error)
 ```
 
 ### Dependency Injection
+
 ```python
-class FlextContainer:
+class FlextCore.Container:
     """Global dependency injection container."""
 
-    _instance: Optional['FlextContainer'] = None
+    _instance: Optional['FlextCore.Container'] = None
 
     def __init__(self):
         self._services: Dict[str, Any] = {}
 
     @classmethod
-    def get_global(cls) -> 'FlextContainer':
+    def get_global(cls) -> 'FlextCore.Container':
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
@@ -143,8 +145,9 @@ class FlextContainer:
 ```
 
 ### Domain Models
+
 ```python
-class FlextModels:
+class FlextCore.Models:
     """Domain-Driven Design base classes."""
 
     class Entity:

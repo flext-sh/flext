@@ -12,11 +12,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Protocol, Self, assert_never
 
-from flext_core import (
-    FlextLogger,
-    FlextResult,
-    FlextService,
-)
+from flext_core import FlextCore
 
 from flext.dev_enums import FlextDevEnums
 from flext.dev_models import FlextAdvancedDevModels
@@ -24,22 +20,22 @@ from flext.project_types import FlextProjectTypes
 
 
 class FlextAdvancedDevToolsManager(
-    FlextService[FlextAdvancedDevModels.OperationResult]
+    FlextCore.Service[FlextAdvancedDevModels.OperationResult]
 ):
     """Advanced development tools service using Python 3.13 + Generic patterns.
 
     Implements modern development operations with:
     - Generic type constraints for type safety
     - Protocol-based operation design
-    - Advanced error handling with FlextResult
+    - Advanced error handling with FlextCore.Result
     - Comprehensive validation and business rules
     - Discriminated unions for operation types
     """
 
-    def __init__(self, **_data: dict[str, object]) -> None:
+    def __init__(self, **_data: FlextCore.Types.Dict) -> None:
         """Initialize development tools service with advanced patterns."""
         super().__init__()
-        self._logger = FlextLogger(__name__)
+        self._logger = FlextCore.Logger(__name__)
         self._models = FlextAdvancedDevModels()
         self._workspace_root = Path.cwd()
 
@@ -50,7 +46,7 @@ class FlextAdvancedDevToolsManager(
             self,
             operation: FlextDevEnums.OperationType,
             context: FlextAdvancedDevModels.DevOperationContext,
-        ) -> FlextResult[FlextAdvancedDevModels.OperationResult]: ...
+        ) -> FlextCore.Result[FlextAdvancedDevModels.OperationResult]: ...
 
     class _ProjectDiscoveryService:
         """Nested project discovery service."""
@@ -60,7 +56,7 @@ class FlextAdvancedDevToolsManager(
 
         def discover_projects(
             self, workspace_root: Path
-        ) -> FlextResult[list[FlextAdvancedDevModels.ProjectInfo]]:
+        ) -> FlextCore.Result[list[FlextAdvancedDevModels.ProjectInfo]]:
             """Discover all projects in workspace with type detection."""
             try:
                 projects: list[FlextAdvancedDevModels.ProjectInfo] = []
@@ -72,18 +68,20 @@ class FlextAdvancedDevToolsManager(
                     if project_info_result.is_success:
                         projects.append(project_info_result.unwrap())
 
-                return FlextResult[list[FlextAdvancedDevModels.ProjectInfo]].ok(
+                return FlextCore.Result[list[FlextAdvancedDevModels.ProjectInfo]].ok(
                     projects
                 )
 
             except Exception as e:
                 error = f"Project discovery failed: {e}"
                 self._manager._logger.exception(error)
-                return FlextResult[list[FlextAdvancedDevModels.ProjectInfo]].fail(error)
+                return FlextCore.Result[list[FlextAdvancedDevModels.ProjectInfo]].fail(
+                    error
+                )
 
         def _analyze_project(
             self, project_path: Path
-        ) -> FlextResult[FlextAdvancedDevModels.ProjectInfo]:
+        ) -> FlextCore.Result[FlextAdvancedDevModels.ProjectInfo]:
             """Analyze individual project for type and characteristics."""
             try:
                 # Detect project type
@@ -120,11 +118,13 @@ class FlextAdvancedDevToolsManager(
                     test_count=test_count,
                 )
 
-                return FlextResult[FlextAdvancedDevModels.ProjectInfo].ok(project_info)
+                return FlextCore.Result[FlextAdvancedDevModels.ProjectInfo].ok(
+                    project_info
+                )
 
             except Exception as e:
                 error = f"Project analysis failed for {project_path.name}: {e}"
-                return FlextResult[FlextAdvancedDevModels.ProjectInfo].fail(error)
+                return FlextCore.Result[FlextAdvancedDevModels.ProjectInfo].fail(error)
 
     class _OperationExecutor:
         """Nested operation executor with advanced patterns."""
@@ -133,32 +133,40 @@ class FlextAdvancedDevToolsManager(
             self._manager = manager
 
         def create_test_operation(
-            self, operation_data: dict[str, object]
-        ) -> FlextResult[FlextAdvancedDevModels.TestOperation]:
+            self, operation_data: FlextCore.Types.Dict
+        ) -> FlextCore.Result[FlextAdvancedDevModels.TestOperation]:
             """Create test operation from data with validation."""
             try:
                 operation = FlextAdvancedDevModels.TestOperation.model_validate(
                     operation_data
                 )
-                return FlextResult[FlextAdvancedDevModels.TestOperation].ok(operation)
+                return FlextCore.Result[FlextAdvancedDevModels.TestOperation].ok(
+                    operation
+                )
             except Exception as e:
-                return FlextResult[FlextAdvancedDevModels.TestOperation].fail(str(e))
+                return FlextCore.Result[FlextAdvancedDevModels.TestOperation].fail(
+                    str(e)
+                )
 
         def create_lint_operation(
-            self, operation_data: dict[str, object]
-        ) -> FlextResult[FlextAdvancedDevModels.LintOperation]:
+            self, operation_data: FlextCore.Types.Dict
+        ) -> FlextCore.Result[FlextAdvancedDevModels.LintOperation]:
             """Create lint operation from data with validation."""
             try:
                 operation = FlextAdvancedDevModels.LintOperation.model_validate(
                     operation_data
                 )
-                return FlextResult[FlextAdvancedDevModels.LintOperation].ok(operation)
+                return FlextCore.Result[FlextAdvancedDevModels.LintOperation].ok(
+                    operation
+                )
             except Exception as e:
-                return FlextResult[FlextAdvancedDevModels.LintOperation].fail(str(e))
+                return FlextCore.Result[FlextAdvancedDevModels.LintOperation].fail(
+                    str(e)
+                )
 
         def create_operation(
-            self, operation_data: dict[str, object]
-        ) -> FlextResult[FlextAdvancedDevModels.OperationUnion]:
+            self, operation_data: FlextCore.Types.Dict
+        ) -> FlextCore.Result[FlextAdvancedDevModels.OperationUnion]:
             """Create operation from data using discriminated unions."""
             try:
                 # Use discriminated union validation through individual operation types
@@ -177,17 +185,21 @@ class FlextAdvancedDevToolsManager(
                         operation_data
                     )
                 else:
-                    return FlextResult[FlextAdvancedDevModels.OperationUnion].fail(
+                    return FlextCore.Result[FlextAdvancedDevModels.OperationUnion].fail(
                         f"Unknown operation type: {operation_type}"
                     )
 
-                return FlextResult[FlextAdvancedDevModels.OperationUnion].ok(operation)
+                return FlextCore.Result[FlextAdvancedDevModels.OperationUnion].ok(
+                    operation
+                )
             except Exception as e:
-                return FlextResult[FlextAdvancedDevModels.OperationUnion].fail(str(e))
+                return FlextCore.Result[FlextAdvancedDevModels.OperationUnion].fail(
+                    str(e)
+                )
 
         def execute_test_operation(
             self, operation: FlextAdvancedDevModels.TestOperation
-        ) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
+        ) -> FlextCore.Result[FlextAdvancedDevModels.OperationResult]:
             """Execute test operation with comprehensive reporting."""
             try:
                 # Validate prerequisites
@@ -237,7 +249,9 @@ class FlextAdvancedDevToolsManager(
                 self._manager._logger.info(
                     f"Test operation completed: {len(test_projects)} projects, {total_tests_run} tests"
                 )
-                return FlextResult[FlextAdvancedDevModels.OperationResult].ok(result)
+                return FlextCore.Result[FlextAdvancedDevModels.OperationResult].ok(
+                    result
+                )
 
             except Exception as e:
                 error = f"Test operation failed: {e}"
@@ -246,7 +260,7 @@ class FlextAdvancedDevToolsManager(
 
         def execute_lint_operation(
             self, operation: FlextAdvancedDevModels.LintOperation
-        ) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
+        ) -> FlextCore.Result[FlextAdvancedDevModels.OperationResult]:
             """Execute linting operation with tool coordination."""
             try:
                 prereq_result = operation.validate_prerequisites()
@@ -279,7 +293,9 @@ class FlextAdvancedDevToolsManager(
                 self._manager._logger.info(
                     f"Lint operation completed: {len(operation.tools)} tools, {issues_found} issues"
                 )
-                return FlextResult[FlextAdvancedDevModels.OperationResult].ok(result)
+                return FlextCore.Result[FlextAdvancedDevModels.OperationResult].ok(
+                    result
+                )
 
             except Exception as e:
                 error = f"Lint operation failed: {e}"
@@ -288,7 +304,7 @@ class FlextAdvancedDevToolsManager(
 
         def execute_format_operation(
             self, operation: FlextAdvancedDevModels.FormatOperation
-        ) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
+        ) -> FlextCore.Result[FlextAdvancedDevModels.OperationResult]:
             """Execute formatting operation with tool coordination."""
             try:
                 prereq_result = operation.validate_prerequisites()
@@ -318,7 +334,9 @@ class FlextAdvancedDevToolsManager(
                 self._manager._logger.info(
                     f"Format operation completed: {files_formatted} files formatted"
                 )
-                return FlextResult[FlextAdvancedDevModels.OperationResult].ok(result)
+                return FlextCore.Result[FlextAdvancedDevModels.OperationResult].ok(
+                    result
+                )
 
             except Exception as e:
                 error = f"Format operation failed: {e}"
@@ -327,7 +345,7 @@ class FlextAdvancedDevToolsManager(
 
         def _create_failed_result(
             self, operation: FlextAdvancedDevModels.DevOperation, error: str
-        ) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
+        ) -> FlextCore.Result[FlextAdvancedDevModels.OperationResult]:
             """Create failed operation result."""
             result = FlextAdvancedDevModels.OperationResult(
                 operation_id=operation.operation_id,
@@ -338,7 +356,7 @@ class FlextAdvancedDevToolsManager(
                 stderr_lines=1,
                 artifacts={"error": error},
             )
-            return FlextResult[FlextAdvancedDevModels.OperationResult].ok(result)
+            return FlextCore.Result[FlextAdvancedDevModels.OperationResult].ok(result)
 
     def create_project_discovery(self: Self) -> _ProjectDiscoveryService:
         """Create project discovery service."""
@@ -351,7 +369,7 @@ class FlextAdvancedDevToolsManager(
     # High-level service methods
     def execute_dev_operation(
         self, operation: FlextAdvancedDevModels.OperationUnion
-    ) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
+    ) -> FlextCore.Result[FlextAdvancedDevModels.OperationResult]:
         """Execute operation using discriminated union patterns."""
         executor = self.create_operation_executor()
 
@@ -366,7 +384,7 @@ class FlextAdvancedDevToolsManager(
 
     def discover_workspace_projects(
         self, workspace_root: str | None = None
-    ) -> FlextResult[list[FlextAdvancedDevModels.ProjectInfo]]:
+    ) -> FlextCore.Result[list[FlextAdvancedDevModels.ProjectInfo]]:
         """Discover all projects in the workspace."""
         discovery_service = self.create_project_discovery()
         workspace_path = (
@@ -374,10 +392,10 @@ class FlextAdvancedDevToolsManager(
         )
         return discovery_service.discover_projects(workspace_path)
 
-    def execute(self: Self) -> FlextResult[FlextAdvancedDevModels.OperationResult]:
-        """Execute dev tools manager - required by FlextService abstract method."""
+    def execute(self: Self) -> FlextCore.Result[FlextAdvancedDevModels.OperationResult]:
+        """Execute dev tools manager - required by FlextCore.Service abstract method."""
         # Default execution returns service status
-        return FlextResult[FlextAdvancedDevModels.OperationResult].ok(
+        return FlextCore.Result[FlextAdvancedDevModels.OperationResult].ok(
             FlextAdvancedDevModels.OperationResult(
                 operation_id="status_check",
                 status=FlextDevEnums.OperationStatus.SUCCESS,

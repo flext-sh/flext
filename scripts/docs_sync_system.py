@@ -1,26 +1,25 @@
 #!/usr/bin/env python3
-"""
-FLEXT Documentation Synchronization System
+"""FLEXT Documentation Synchronization System.
 
 Automated git integration, change tracking, and synchronization for documentation maintenance.
 """
 
 import json
 import subprocess
-import time
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
-import re
+
+from flext_core import FlextCore
 
 
 @dataclass
 class GitChange:
     """Represents a git change."""
+
     file_path: Path
     change_type: str  # "modified", "added", "deleted", "renamed"
-    old_path: Optional[Path] = None
+    old_path: Path | None = None
     lines_added: int = 0
     lines_removed: int = 0
 
@@ -28,48 +27,47 @@ class GitChange:
 @dataclass
 class SyncResult:
     """Results of synchronization operations."""
+
     timestamp: datetime
-    changes_committed: List[GitChange] = field(default_factory=list)
+    changes_committed: list[GitChange] = field(default_factory=list)
     files_processed: int = 0
-    errors: List[str] = field(default_factory=list)
-    commit_hash: Optional[str] = None
-    branch: Optional[str] = None
+    errors: FlextCore.Types.StringList = field(default_factory=list)
+    commit_hash: str | None = None
+    branch: str | None = None
 
 
 class DocumentationSyncSystem:
     """Automated documentation synchronization with git integration."""
 
-    def __init__(self, config: Optional[Dict] = None):
+    def __init__(self, config: dict | None = None) -> None:
         self.config = config or {}
         self.auto_commit = self.config.get("auto_commit", False)
-        self.commit_message_template = self.config.get("commit_message_template",
-                                                      "docs: automated maintenance - {changes}")
+        self.commit_message_template = self.config.get(
+            "commit_message_template", "docs: automated maintenance - {changes}"
+        )
         self.backup_before_changes = self.config.get("backup_before_changes", True)
 
-    def get_git_status(self) -> Dict[str, List[Path]]:
+    def get_git_status(self) -> dict[str, list[Path]]:
         """Get current git status for documentation files."""
         try:
             # Get status of docs directory
             result = subprocess.run(
                 ["git", "status", "--porcelain", "docs/"],
-                capture_output=True, text=True, check=True
+                capture_output=True,
+                text=True,
+                check=True,
             )
 
-            status = {
-                "modified": [],
-                "added": [],
-                "deleted": [],
-                "untracked": []
-            }
+            status = {"modified": [], "added": [], "deleted": [], "untracked": []}
 
-            for line in result.stdout.strip().split('\n'):
+            for line in result.stdout.strip().split("\n"):
                 if line.strip():
                     status_code = line[:2]
                     file_path = Path(line[3:].strip())
 
-                    if status_code in ["M ", "MM"]:
+                    if status_code in {"M ", "MM"}:
                         status["modified"].append(file_path)
-                    elif status_code in ["A ", "AM"]:
+                    elif status_code in {"A ", "AM"}:
                         status["added"].append(file_path)
                     elif status_code == " D":
                         status["deleted"].append(file_path)
@@ -82,33 +80,44 @@ class DocumentationSyncSystem:
             print(f"Error getting git status: {e}")
             return {"modified": [], "added": [], "deleted": [], "untracked": []}
 
-    def get_recent_changes(self, days: int = 7) -> List[GitChange]:
+    def get_recent_changes(self, days: int = 7) -> list[GitChange]:
         """Get recent changes to documentation files."""
         try:
-            since_date = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+            since_date = (datetime.now(UTC) - timedelta(days=days)).strftime("%Y-%m-%d")
 
-            result = subprocess.run([
-                "git", "log", "--since", since_date, "--name-status",
-                "--pretty=format:", "--", "docs/"
-            ], capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                [
+                    "git",
+                    "log",
+                    "--since",
+                    since_date,
+                    "--name-status",
+                    "--pretty=format:",
+                    "--",
+                    "docs/",
+                ],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
 
             changes = []
-            for line in result.stdout.strip().split('\n'):
+            for line in result.stdout.strip().split("\n"):
                 if line.strip():
-                    parts = line.split('\t')
+                    parts = line.split("\t")
                     if len(parts) >= 2:
                         change_type = parts[0]
                         file_path = Path(parts[1])
 
                         # Handle renames
                         old_path = None
-                        if len(parts) >= 3 and change_type.startswith('R'):
+                        if len(parts) >= 3 and change_type.startswith("R"):
                             old_path = Path(parts[2])
 
                         change = GitChange(
                             file_path=file_path,
                             change_type=self.normalize_change_type(change_type),
-                            old_path=old_path
+                            old_path=old_path,
                         )
                         changes.append(change)
 
@@ -121,22 +130,22 @@ class DocumentationSyncSystem:
     def normalize_change_type(self, git_status: str) -> str:
         """Normalize git change type to readable format."""
         mapping = {
-            'A': 'added',
-            'M': 'modified',
-            'D': 'deleted',
-            'R': 'renamed',
-            'C': 'copied',
-            'U': 'updated',
-            'T': 'type_changed'
+            "A": "added",
+            "M": "modified",
+            "D": "deleted",
+            "R": "renamed",
+            "C": "copied",
+            "U": "updated",
+            "T": "type_changed",
         }
         return mapping.get(git_status, git_status.lower())
 
-    def create_backup(self, files: List[Path]) -> Optional[Path]:
+    def create_backup(self, files: list[Path]) -> Path | None:
         """Create backup of files before modification."""
         if not self.backup_before_changes or not files:
             return None
 
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
         backup_dir = Path(f"docs/backups/backup_{timestamp}")
         backup_dir.mkdir(parents=True, exist_ok=True)
 
@@ -144,21 +153,27 @@ class DocumentationSyncSystem:
             if file_path.exists():
                 backup_path = backup_dir / file_path.name
                 try:
-                    backup_path.write_text(file_path.read_text(encoding='utf-8'), encoding='utf-8')
+                    backup_path.write_text(
+                        file_path.read_text(encoding="utf-8"), encoding="utf-8"
+                    )
                 except Exception as e:
                     print(f"Warning: Could not backup {file_path}: {e}")
 
         return backup_dir
 
-    def commit_changes(self, message: str, files: List[Path] = None) -> SyncResult:
+    def commit_changes(
+        self, message: str, files: list[Path] | None = None
+    ) -> SyncResult:
         """Commit documentation changes to git."""
-        result = SyncResult(timestamp=datetime.now())
+        result = SyncResult(timestamp=datetime.now(UTC))
 
         try:
             # Get current branch
             branch_result = subprocess.run(
                 ["git", "branch", "--show-current"],
-                capture_output=True, text=True, check=True
+                capture_output=True,
+                text=True,
+                check=True,
             )
             result.branch = branch_result.stdout.strip()
 
@@ -172,7 +187,9 @@ class DocumentationSyncSystem:
             # Check if there are changes to commit
             status_result = subprocess.run(
                 ["git", "status", "--porcelain", "docs/"],
-                capture_output=True, text=True, check=True
+                capture_output=True,
+                text=True,
+                check=True,
             )
 
             if not status_result.stdout.strip():
@@ -190,24 +207,25 @@ class DocumentationSyncSystem:
 
             # Get commit hash
             hash_result = subprocess.run(
-                ["git", "rev-parse", "HEAD"],
-                capture_output=True, text=True, check=True
+                ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True
             )
             result.commit_hash = hash_result.stdout.strip()
 
             # Get details of committed changes
             show_result = subprocess.run(
                 ["git", "show", "--name-status", result.commit_hash],
-                capture_output=True, text=True, check=True
+                capture_output=True,
+                text=True,
+                check=True,
             )
 
-            for line in show_result.stdout.strip().split('\n'):
-                if line.strip() and not line.startswith('commit '):
-                    parts = line.split('\t')
+            for line in show_result.stdout.strip().split("\n"):
+                if line.strip() and not line.startswith("commit "):
+                    parts = line.split("\t")
                     if len(parts) >= 2:
                         change = GitChange(
                             file_path=Path(parts[1]),
-                            change_type=self.normalize_change_type(parts[0])
+                            change_type=self.normalize_change_type(parts[0]),
                         )
                         result.changes_committed.append(change)
 
@@ -220,21 +238,23 @@ class DocumentationSyncSystem:
 
         return result
 
-    def generate_sync_report(self, result: SyncResult, audit_results: Optional[Dict] = None) -> str:
+    def generate_sync_report(
+        self, result: SyncResult, audit_results: dict | None = None
+    ) -> str:
         """Generate comprehensive synchronization report."""
         report = f"""# FLEXT Documentation Sync Report
 
-**Generated:** {result.timestamp.strftime('%Y-%m-%d %H:%M:%S')}
-**Branch:** {result.branch or 'unknown'}
-**Commit:** {result.commit_hash or 'none'}
+**Generated:** {result.timestamp.strftime("%Y-%m-%d %H:%M:%S")}
+**Branch:** {result.branch or "unknown"}
+**Commit:** {result.commit_hash or "none"}
 
 ## 📊 Sync Summary
 
 | Metric | Value | Status |
 |--------|-------|---------|
 | Files Processed | {result.files_processed} | ✅ |
-| Changes Committed | {len(result.changes_committed)} | {'✅' if result.changes_committed else '⚠️'} |
-| Errors | {len(result.errors)} | {'❌' if result.errors else '✅'} |
+| Changes Committed | {len(result.changes_committed)} | {"✅" if result.changes_committed else "⚠️"} |
+| Errors | {len(result.errors)} | {"❌" if result.errors else "✅"} |
 
 """
 
@@ -279,24 +299,25 @@ class DocumentationSyncSystem:
         if result.errors:
             report += "- ⚠️ Review errors and consider manual intervention\n"
 
-        if audit_results and audit_results.get('issues_found', 0) > 0:
+        if audit_results and audit_results.get("issues_found", 0) > 0:
             report += f"- 🔧 Address {audit_results['issues_found']} outstanding documentation issues\n"
 
         report += "- 📈 Schedule regular maintenance to keep documentation healthy\n"
 
         return report
 
-    def run_maintenance_workflow(self, audit_results: Optional[Dict] = None,
-                               dry_run: bool = False) -> Dict[str, any]:
+    def run_maintenance_workflow(
+        self, audit_results: dict | None = None, dry_run: bool = False
+    ) -> dict[str, any]:
         """Run complete maintenance workflow."""
         print("🔄 Starting documentation maintenance workflow...")
 
         results = {
-            "timestamp": datetime.now().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "git_status": {},
             "sync_result": {},
             "audit_summary": audit_results or {},
-            "report": ""
+            "report": "",
         }
 
         # Get git status
@@ -330,12 +351,12 @@ class DocumentationSyncSystem:
                     "changes_committed": len(sync_result.changes_committed),
                     "commit_hash": sync_result.commit_hash,
                     "branch": sync_result.branch,
-                    "errors": sync_result.errors
+                    "errors": sync_result.errors,
                 }
             else:
                 results["sync_result"] = {
                     "message": f"Would commit {total_changes} changes (dry run)",
-                    "dry_run": True
+                    "dry_run": True,
                 }
 
         # Generate report
@@ -344,7 +365,7 @@ class DocumentationSyncSystem:
             sync_result = SyncResult(
                 timestamp=datetime.fromisoformat(results["sync_result"]["timestamp"]),
                 commit_hash=results["sync_result"]["commit_hash"],
-                branch=results["sync_result"]["branch"]
+                branch=results["sync_result"]["branch"],
             )
             results["report"] = self.generate_sync_report(sync_result, audit_results)
         else:
@@ -354,15 +375,20 @@ class DocumentationSyncSystem:
         return results
 
 
-def main():
+def main() -> None:
     """Main entry point."""
     import argparse
 
     parser = argparse.ArgumentParser(description="FLEXT Documentation Sync System")
-    parser.add_argument("action", choices=["status", "commit", "workflow", "report"],
-                       help="Sync action to perform")
+    parser.add_argument(
+        "action",
+        choices=["status", "commit", "workflow", "report"],
+        help="Sync action to perform",
+    )
     parser.add_argument("--message", "-m", help="Custom commit message")
-    parser.add_argument("--dry-run", action="store_true", help="Show what would be done")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Show what would be done"
+    )
     parser.add_argument("--audit-data", help="JSON file with audit results")
     parser.add_argument("--output", "-o", help="Output report file")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
@@ -372,14 +398,11 @@ def main():
     # Load audit data if provided
     audit_results = None
     if args.audit_data and Path(args.audit_data).exists():
-        with open(args.audit_data, 'r') as f:
+        with Path(args.audit_data).open(encoding="utf-8") as f:
             audit_results = json.load(f)
 
     # Initialize system
-    config = {
-        "auto_commit": not args.dry_run,
-        "backup_before_changes": True
-    }
+    config = {"auto_commit": not args.dry_run, "backup_before_changes": True}
 
     sync_system = DocumentationSyncSystem(config)
 
@@ -416,7 +439,7 @@ def main():
             print("🔄 Workflow Results:")
             print(f"  Status: {results['sync_result'].get('message', 'Completed')}")
 
-            if 'commit_hash' in results.get('sync_result', {}):
+            if "commit_hash" in results.get("sync_result", {}):
                 print(f"  Commit: {results['sync_result']['commit_hash']}")
 
         elif args.action == "report":
@@ -426,7 +449,7 @@ def main():
 
             report = f"""# Documentation Status Report
 
-**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Generated:** {datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")}
 
 ## Current Status
 
@@ -441,7 +464,7 @@ def main():
                         report += f"- ... and {len(files) - 10} more\n"
                     report += "\n"
 
-            report += f"## Recent Changes (Last 7 Days)\n\n"
+            report += "## Recent Changes (Last 7 Days)\n\n"
             report += f"**Total Changes:** {len(recent_changes)}\n\n"
 
             if recent_changes:
@@ -451,7 +474,7 @@ def main():
                     report += f"- ... and {len(recent_changes) - 20} more changes\n"
 
             if args.output:
-                Path(args.output).write_text(report, encoding='utf-8')
+                Path(args.output).write_text(report, encoding="utf-8")
                 print(f"📄 Report saved to: {args.output}")
             else:
                 print(report)

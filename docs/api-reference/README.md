@@ -10,11 +10,11 @@ The foundation framework providing core patterns and utilities.
 
 **Key Classes:**
 
-- `FlextContainer` - Dependency injection container
-- `FlextDispatcher` - CQRS command/query dispatcher
-- `FlextRegistry` - Service registration system
-- `FlextResult` - Railway-oriented error handling
-- `FlextBus` - Domain event system
+- `FlextCore.Container` - Dependency injection container
+- `FlextCore.Dispatcher` - CQRS command/query dispatcher
+- `FlextCore.Registry` - Service registration system
+- `FlextCore.Result` - Railway-oriented error handling
+- `FlextCore.Bus` - Domain event system
 
 ### 📄 flext-ldif
 
@@ -72,9 +72,9 @@ Oracle database integration and operations.
 ### Dependency Injection
 
 ```python
-from flext_core import FlextContainer
+from flext_core import FlextCore
 
-container = FlextContainer()
+container = FlextCore.Container()
 container.register(FlextLdif, FlextLdif())
 
 service = container.resolve(FlextLdif)
@@ -83,22 +83,22 @@ service = container.resolve(FlextLdif)
 ### Railway-Oriented Programming
 
 ```python
-from flext_core import FlextResult
+from flext_core import FlextCore
 
-def process_data(data: str) -> FlextResult[List[Entry], Exception]:
+def process_data(data: str) -> FlextCore.Result[List[Entry], Exception]:
     try:
         # Processing logic
-        return FlextResult.success(entries)
+        return FlextCore.Result.success(entries)
     except Exception as e:
-        return FlextResult.failure(e)
+        return FlextCore.Result.failure(e)
 ```
 
 ### CQRS Pattern
 
 ```python
-from flext_core import FlextDispatcher
+from flext_core import FlextCore
 
-dispatcher = FlextDispatcher()
+dispatcher = FlextCore.Dispatcher()
 dispatcher.register_handler(CreateEntryCommand, CreateEntryHandler)
 
 result = dispatcher.dispatch(CreateEntryCommand(data))
@@ -123,7 +123,7 @@ config = FlextLdifConfig(
 Unified error handling across all libraries:
 
 ```python
-from flext_core import FlextResult
+from flext_core import FlextCore
 
 result = some_operation()
 if result.is_failure:
@@ -138,8 +138,8 @@ else:
 Structured logging with flext-core:
 
 ```python
-from flext_core import FlextLogger
+from flext_core import FlextCore
 
-logger = FlextLogger.get_logger(__name__)
+logger = FlextCore.Logger.get_logger(__name__)
 logger.info("Operation completed", extra={"entries_count": len(entries)})
 ```

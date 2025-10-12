@@ -8,17 +8,17 @@ from __future__ import annotations
 
 from typing import Self
 
-from flext_core import FlextLogger, FlextResult, FlextService
+from flext_core import FlextCore
 
 
-class FlextGitTools(FlextService[None]):
+class FlextGitTools(FlextCore.Service[None]):
     """Git repository management and operations tools."""
 
     def __init__(self: Self) -> None:
         """Initialize git tools."""
         super().__init__()
-        self.logger = FlextLogger(__name__)
+        self.logger = FlextCore.Logger(__name__)
 
-    def execute(self: Self) -> FlextResult[None]:
+    def execute(self: Self) -> FlextCore.Result[None]:
         """Execute git tools service."""
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)

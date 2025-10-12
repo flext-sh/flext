@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Self
 
-from flext_core import FlextLogger, FlextResult, FlextService
+from flext_core import FlextCore
 
 
 class DependencyDiscovery:
@@ -17,14 +17,14 @@ class DependencyDiscovery:
     # Add methods here as needed
 
 
-class FlextDependencyTools(FlextService[None]):
+class FlextDependencyTools(FlextCore.Service[None]):
     """Dependency analysis and management tools."""
 
     def __init__(self: Self) -> None:
         """Initialize dependency tools."""
         super().__init__()
-        self.logger = FlextLogger(__name__)
+        self.logger = FlextCore.Logger(__name__)
 
-    def execute(self: Self) -> FlextResult[None]:
+    def execute(self: Self) -> FlextCore.Result[None]:
         """Execute dependency tools service."""
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)

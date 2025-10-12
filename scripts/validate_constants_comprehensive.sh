@@ -46,16 +46,16 @@ readonly VALIDATE_DIRS=("src" "examples" "scripts" "tests")
 
 # Constants that should be used instead of hardcoded values
 declare -A CONSTANT_MAPPINGS=(
-	["8000"]="FlextConstants.Platform.FLEXT_API_PORT"
-	["8080"]="FlextConstants.Platform.DEFAULT_HTTP_PORT"
-	["5432"]="FlextConstants.Platform.POSTGRES_DEFAULT_PORT"
-	["27017"]="FlextConstants.Platform.MONGODB_DEFAULT_PORT"
-	["6379"]="FlextConstants.Platform.REDIS_DEFAULT_PORT"
-	["389"]="FlextConstants.Platform.LDAP_DEFAULT_PORT"
-	["636"]="FlextConstants.Platform.LDAPS_DEFAULT_PORT"
-	["localhost"]="FlextConstants.Platform.DEFAULT_HOST"
-	["127.0.0.1"]="FlextConstants.Platform.LOCALHOST_IP"
-	["30"]="FlextConstants.Network.DEFAULT_TIMEOUT"
+	["8000"]="FlextCore.Constants.Platform.FLEXT_API_PORT"
+	["8080"]="FlextCore.Constants.Platform.DEFAULT_HTTP_PORT"
+	["5432"]="FlextCore.Constants.Platform.POSTGRES_DEFAULT_PORT"
+	["27017"]="FlextCore.Constants.Platform.MONGODB_DEFAULT_PORT"
+	["6379"]="FlextCore.Constants.Platform.REDIS_DEFAULT_PORT"
+	["389"]="FlextCore.Constants.Platform.LDAP_DEFAULT_PORT"
+	["636"]="FlextCore.Constants.Platform.LDAPS_DEFAULT_PORT"
+	["localhost"]="FlextCore.Constants.Platform.DEFAULT_HOST"
+	["127.0.0.1"]="FlextCore.Constants.Platform.LOCALHOST_IP"
+	["30"]="FlextCore.Constants.Network.DEFAULT_TIMEOUT"
 )
 
 # Global counters
@@ -100,10 +100,10 @@ has_constants_file() {
 	[[ -f "${PROJECT_ROOT}/${project}/src/${project//-/_}/constants.py" ]]
 }
 
-# Check if file imports FlextConstants
+# Check if file imports FlextCore.Constants
 imports_flext_constants() {
 	local file="$1"
-	grep -q "from flext_core import.*FlextConstants\|import.*FlextConstants" "$file" 2>/dev/null
+	grep -q "from flext_core import FlextCore" "$file" 2>/dev/null
 }
 
 # Check if file imports project constants
@@ -200,7 +200,7 @@ validate_file() {
 
 			# Report missing imports
 			if [[ $needs_flext_constants == true ]] && ! imports_flext_constants "$file"; then
-				violations+=("$relative_path: Missing FlextConstants import")
+				violations+=("$relative_path: Missing FlextCore.Constants import")
 			fi
 
 			if [[ $needs_project_constants == true ]] && ! imports_project_constants "$file" "$project"; then
@@ -296,18 +296,18 @@ generate_recommendations() {
 
 ## Quick Fixes for Common Violations
 
-### 1. Import FlextConstants
+### 1. Import FlextCore.Constants
 
 ```python
 # Add to imports
-from flext_core import FlextConstants
+from flext_core import FlextCore
 
 # Replace hardcoded values
 timeout = 30  # ❌ BEFORE
-timeout = FlextConstants.Network.DEFAULT_TIMEOUT  # ✅ AFTER
+timeout = FlextCore.Constants.Network.DEFAULT_TIMEOUT  # ✅ AFTER
 
 host = "localhost"  # ❌ BEFORE
-host = FlextConstants.Platform.DEFAULT_HOST  # ✅ AFTER
+host = FlextCore.Constants.Platform.DEFAULT_HOST  # ✅ AFTER
 ```
 
 ### 2. Use Project Constants
@@ -325,12 +325,12 @@ port = FlextLdapConstants.Protocol.DEFAULT_PORT  # ✅ AFTER
 
 | Hardcoded Value | Recommended Constant |
 |----------------|---------------------|
-| `8000` | `FlextConstants.Platform.FLEXT_API_PORT` |
-| `8080` | `FlextConstants.Platform.DEFAULT_HTTP_PORT` |
-| `5432` | `FlextConstants.Platform.POSTGRES_DEFAULT_PORT` |
-| `389` | `FlextConstants.Platform.LDAP_DEFAULT_PORT` |
-| `"localhost"` | `FlextConstants.Platform.DEFAULT_HOST` |
-| `30` (timeout) | `FlextConstants.Network.DEFAULT_TIMEOUT` |
+| `8000` | `FlextCore.Constants.Platform.FLEXT_API_PORT` |
+| `8080` | `FlextCore.Constants.Platform.DEFAULT_HTTP_PORT` |
+| `5432` | `FlextCore.Constants.Platform.POSTGRES_DEFAULT_PORT` |
+| `389` | `FlextCore.Constants.Platform.LDAP_DEFAULT_PORT` |
+| `"localhost"` | `FlextCore.Constants.Platform.DEFAULT_HOST` |
+| `30` (timeout) | `FlextCore.Constants.Network.DEFAULT_TIMEOUT` |
 
 ### 4. Acceptable Hardcoded Values
 
@@ -387,7 +387,7 @@ EOF
 		cat <<EOF | tee -a "$LOG_FILE"
 ✅ PASSED: All projects are constants compliant
 
-All FLEXT projects properly use [Project]Constants and FlextConstants
+All FLEXT projects properly use [Project]Constants and FlextCore.Constants
 for configuration values, timeouts, ports, and host references.
 
 EOF

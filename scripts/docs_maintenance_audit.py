@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-FLEXT Documentation Maintenance & Quality Audit System
+"""FLEXT Documentation Maintenance & Quality Audit System.
 
 Comprehensive documentation quality analysis, validation, and maintenance framework
 for the FLEXT monorepo workspace with 659 markdown files across 36 docs directories.
@@ -14,25 +13,29 @@ Features:
 """
 
 import json
+import operator
 import re
 import subprocess
 import sys
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
 
 try:
     import requests
     from bs4 import BeautifulSoup
 except ImportError:
     print("Installing required dependencies...")
-    subprocess.check_call(
-        [sys.executable, "-m", "pip", "install", "requests", "beautifulsoup4"]
-    )
+    subprocess.check_call([
+        sys.executable,
+        "-m",
+        "pip",
+        "install",
+        "requests",
+        "beautifulsoup4",
+    ])
     import requests
-    from bs4 import BeautifulSoup
 
 
 @dataclass
@@ -81,11 +84,11 @@ class AuditReport:
 class DocumentationAuditor:
     """Main documentation audit and maintenance system."""
 
-    def __init__(self, root_path: Path, config: dict[str, Any] | None = None):
+    def __init__(self, root_path: Path, config: dict[str, Any] | None = None) -> None:
         self.root_path = root_path
         self.config = config or self._default_config()
         self.report = AuditReport(
-            timestamp=datetime.now(), total_files=0, total_issues=0
+            timestamp=datetime.now(UTC), total_files=0, total_issues=0
         )
 
     def _default_config(self) -> dict[str, Any]:
@@ -142,7 +145,7 @@ class DocumentationAuditor:
 
         # File age
         last_modified = datetime.fromtimestamp(file_path.stat().st_mtime)
-        age_days = (datetime.now() - last_modified).days
+        age_days = (datetime.now(UTC) - last_modified).days
 
         return DocumentMetrics(
             file_path=file_path,
@@ -256,7 +259,9 @@ class DocumentationAuditor:
                 elif check_external and link_url.startswith(("http://", "https://")):
                     try:
                         response = requests.head(
-                            link_url, timeout=self.config["link_timeout"], allow_redirects=True
+                            link_url,
+                            timeout=self.config["link_timeout"],
+                            allow_redirects=True,
                         )
                         if response.status_code >= 400:
                             issues.append(
@@ -372,18 +377,18 @@ class DocumentationAuditor:
         # Check code blocks have language specified
         if self.config["style_rules"]["code_block_language"]:
             code_blocks = re.findall(r"```(\w*)", content)
-            for block in code_blocks:
-                if not block:
-                    issues.append(
-                        ValidationIssue(
-                            severity="low",
-                            category="style_formatting",
-                            file_path=file_path,
-                            line_number=None,
-                            message="Code block missing language specification",
-                            suggestion="Add language identifier (e.g., ```python)",
-                        )
-                    )
+            issues.extend(
+                ValidationIssue(
+                    severity="low",
+                    category="style_formatting",
+                    file_path=file_path,
+                    line_number=None,
+                    message="Code block missing language specification",
+                    suggestion="Add language identifier (e.g., ```python)",
+                )
+                for block in code_blocks
+                if not block
+            )
 
         return issues
 
@@ -399,7 +404,9 @@ class DocumentationAuditor:
 
         # Analyze each file
         for idx, file_path in enumerate(markdown_files, 1):
-            print(f"[{idx}/{self.report.total_files}] Analyzing: {file_path.relative_to(self.root_path)}")
+            print(
+                f"[{idx}/{self.report.total_files}] Analyzing: {file_path.relative_to(self.root_path)}"
+            )
 
             # Collect metrics
             metrics = self.analyze_document_metrics(file_path)
@@ -409,14 +416,18 @@ class DocumentationAuditor:
             # Run validations
             issues = []
             issues.extend(self.validate_content_quality(file_path, metrics))
-            issues.extend(self.validate_links(file_path, check_external=False))  # External link checking can be slow
+            issues.extend(
+                self.validate_links(file_path, check_external=False)
+            )  # External link checking can be slow
             issues.extend(self.validate_images(file_path))
             issues.extend(self.validate_style(file_path))
 
             self.report.issues.extend(issues)
 
         self.report.total_issues = len(self.report.issues)
-        print(f"\n✅ Audit complete! Found {self.report.total_issues} issues across {self.report.total_files} files")
+        print(
+            f"\n✅ Audit complete! Found {self.report.total_issues} issues across {self.report.total_files} files"
+        )
 
         return self.report
 
@@ -424,12 +435,12 @@ class DocumentationAuditor:
         """Generate audit report in specified format."""
         if output_format == "markdown":
             return self._generate_markdown_report()
-        elif output_format == "json":
+        if output_format == "json":
             return self._generate_json_report()
-        elif output_format == "html":
+        if output_format == "html":
             return self._generate_html_report()
-        else:
-            raise ValueError(f"Unsupported format: {output_format}")
+        msg = f"Unsupported format: {output_format}"
+        raise ValueError(msg)
 
     def _generate_markdown_report(self) -> str:
         """Generate markdown audit report."""
@@ -447,7 +458,11 @@ class DocumentationAuditor:
         # Calculate statistics
         total_words = sum(m.word_count for m in self.report.metrics)
         total_lines = sum(m.line_count for m in self.report.metrics)
-        avg_age = sum(m.age_days for m in self.report.metrics) / len(self.report.metrics) if self.report.metrics else 0
+        avg_age = (
+            sum(m.age_days for m in self.report.metrics) / len(self.report.metrics)
+            if self.report.metrics
+            else 0
+        )
 
         report_lines.extend([
             f"- **Total Words:** {total_words:,}",
@@ -481,14 +496,16 @@ class DocumentationAuditor:
         for issue in self.report.issues:
             category_counts[issue.category] = category_counts.get(issue.category, 0) + 1
 
-        for category, count in sorted(category_counts.items(), key=lambda x: x[1], reverse=True):
+        for category, count in sorted(
+            category_counts.items(), key=operator.itemgetter(1), reverse=True
+        ):
             report_lines.append(f"- **{category.replace('_', ' ').title()}:** {count}")
 
         report_lines.extend(["", "## 🔍 Detailed Issues", ""])
 
         # List critical and high severity issues
         critical_high_issues = [
-            i for i in self.report.issues if i.severity in ["critical", "high"]
+            i for i in self.report.issues if i.severity in {"critical", "high"}
         ]
         if critical_high_issues:
             report_lines.append("### Critical & High Severity Issues\n")
@@ -508,7 +525,9 @@ class DocumentationAuditor:
         ])
 
         # List oldest documents
-        oldest_docs = sorted(self.report.metrics, key=lambda m: m.age_days, reverse=True)[:10]
+        oldest_docs = sorted(
+            self.report.metrics, key=lambda m: m.age_days, reverse=True
+        )[:10]
         for metric in oldest_docs:
             file_rel = metric.file_path.relative_to(self.root_path)
             report_lines.append(
@@ -567,7 +586,7 @@ class DocumentationAuditor:
         # Convert markdown report to HTML structure
         md_report = self._generate_markdown_report()
 
-        html = f"""<!DOCTYPE html>
+        return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -611,7 +630,6 @@ class DocumentationAuditor:
     </div>
 </body>
 </html>"""
-        return html
 
     def save_report(self, output_path: Path, output_format: str = "markdown") -> None:
         """Save audit report to file."""

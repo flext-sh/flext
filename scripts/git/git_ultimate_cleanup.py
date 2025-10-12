@@ -37,7 +37,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import ClassVar
 
-from flext_core.utilities import FlextUtilities
+from flext_core import FlextCore
 
 # Ensure git is available
 _git_cmd = shutil.which("git")
@@ -55,11 +55,11 @@ class GitUltimateCleanup:
 
     @staticmethod
     def _run_git_command(
-        repo_path: Path, args: list[str], *, check: bool = False
+        repo_path: Path, args: FlextCore.Types.StringList, *, check: bool = False
     ) -> subprocess.CompletedProcess[str]:
         """Run a git command with proper error handling and type annotations."""
         cmd = [GIT_CMD, "-C", str(repo_path)] + args
-        return FlextUtilities.run_external_command(
+        return FlextCore.Utilities.run_external_command(
             cmd,
             capture_output=True,
             text=True,
@@ -67,7 +67,7 @@ class GitUltimateCleanup:
         )
 
     # Cruft patterns to remove from git history
-    CRUFT_PATTERNS: ClassVar[list[str]] = [
+    CRUFT_PATTERNS: ClassVar[FlextCore.Types.StringList] = [
         # Build artifacts
         "*.pyc",
         "*.pyo",
@@ -224,7 +224,7 @@ class GitUltimateCleanup:
         "Desktop.ini",
     ]
 
-    AI_PATTERNS: ClassVar[list[str]] = [
+    AI_PATTERNS: ClassVar[FlextCore.Types.StringList] = [
         r"🤖 Generated with \[Claude Code\].*",
         r"Co-Authored-By:\s*Claude.*",
         r"Co-Authored-By:\s*Codex.*",
@@ -284,11 +284,13 @@ class GitUltimateCleanup:
             return False, "Detached HEAD state. Checkout a branch first."
 
         # Check disk space
-        result: subprocess.CompletedProcess[str] = FlextUtilities.run_external_command(
-            ["df", "-h", str(self.repo_path)],
-            capture_output=True,
-            text=True,
-            check=False,
+        result: subprocess.CompletedProcess[str] = (
+            FlextCore.Utilities.run_external_command(
+                ["df", "-h", str(self.repo_path)],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
         )
         if result.returncode == 0:
             lines = result.stdout.strip().split("\n")
@@ -337,11 +339,13 @@ class GitUltimateCleanup:
         # 2. Create git mirror clone
         print("2️⃣  Creating git mirror clone...")
         mirror_path = repo_backup / f"{self.repo_path.name}.git"
-        result: subprocess.CompletedProcess[str] = FlextUtilities.run_external_command(
-            [GIT_CMD, "clone", "--mirror", str(self.repo_path), str(mirror_path)],
-            check=False,
-            capture_output=True,
-            text=True,
+        result: subprocess.CompletedProcess[str] = (
+            FlextCore.Utilities.run_external_command(
+                [GIT_CMD, "clone", "--mirror", str(self.repo_path), str(mirror_path)],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
         )
         if result.returncode == 0:
             print("   ✅ Mirror clone created")
@@ -393,7 +397,7 @@ class GitUltimateCleanup:
         # 7. Create safety tag in repo
         print("7️⃣  Creating safety tag in repository...")
         safety_tag = f"pre-cleanup-{self.timestamp}"
-        FlextUtilities.run_external_command(
+        FlextCore.Utilities.run_external_command(
             [GIT_CMD, "-C", str(self.repo_path), "tag", safety_tag],
             check=False,
             capture_output=True,
@@ -703,7 +707,7 @@ wc -l commit-history.txt
         print("Processing commits...")
         try:
             result: subprocess.CompletedProcess[str] = (
-                FlextUtilities.run_external_command(
+                FlextCore.Utilities.run_external_command(
                     cmd, check=False, cwd=str(self.repo_path)
                 )
             )
@@ -814,7 +818,7 @@ def callback(commit, metadata):
 
         # Main repo
         main_remote = "git@github.com:flext-sh/flext.git"
-        FlextUtilities.run_external_command(
+        FlextCore.Utilities.run_external_command(
             [
                 GIT_CMD,
                 "-C",
@@ -836,11 +840,13 @@ def callback(commit, metadata):
             print()
             return
 
-        result: subprocess.CompletedProcess[str] = FlextUtilities.run_external_command(
-            [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
-            check=False,
-            capture_output=True,
-            text=True,
+        result: subprocess.CompletedProcess[str] = (
+            FlextCore.Utilities.run_external_command(
+                [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
         )
 
         if result.returncode != 0:
@@ -855,7 +861,7 @@ def callback(commit, metadata):
             name = key.split(".")[1]
 
             url_result: subprocess.CompletedProcess[str] = (
-                FlextUtilities.run_external_command(
+                FlextCore.Utilities.run_external_command(
                     [GIT_CMD, "config", "-f", str(gitmodules), f"submodule.{name}.url"],
                     check=False,
                     capture_output=True,
@@ -870,7 +876,7 @@ def callback(commit, metadata):
             submodule_path = self.repo_path / path
 
             if submodule_path.exists():
-                FlextUtilities.run_external_command(
+                FlextCore.Utilities.run_external_command(
                     [
                         GIT_CMD,
                         "-C",
@@ -894,11 +900,13 @@ def callback(commit, metadata):
         if not gitmodules.exists():
             return []
 
-        result: subprocess.CompletedProcess[str] = FlextUtilities.run_external_command(
-            [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
-            check=False,
-            capture_output=True,
-            text=True,
+        result: subprocess.CompletedProcess[str] = (
+            FlextCore.Utilities.run_external_command(
+                [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
         )
 
         if result.returncode != 0:
@@ -1012,7 +1020,7 @@ def callback(commit, metadata):
         print(f"\n✅ All {len(submodules)} submodules pushed!")
         return True
 
-    def analyze_gitignore(self) -> list[str]:
+    def analyze_gitignore(self) -> FlextCore.Types.StringList:
         """Parse .gitignore and extract patterns that might indicate committed cruft."""
         gitignore_path = self.repo_path / ".gitignore"
         if not gitignore_path.exists():
@@ -1055,7 +1063,9 @@ def callback(commit, metadata):
 
         return deletion_counts
 
-    def detect_additional_cruft(self, *, silent: bool = False) -> dict[str, list[str]]:
+    def detect_additional_cruft(
+        self, *, silent: bool = False
+    ) -> dict[str, FlextCore.Types.StringList]:
         """Detect additional cruft patterns from git history and .gitignore."""
         if not silent:
             print(f"\n{'=' * 70}")

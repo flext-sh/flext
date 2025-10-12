@@ -10,7 +10,7 @@ import tomllib
 from pathlib import Path
 from typing import Self
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextCore
 
 
 class PoetryValidator:
@@ -22,76 +22,80 @@ class PoetryValidator:
     def validate_pyproject(
         self,
         project_path: str | Path,
-    ) -> FlextResult[FlextTypes.BoolDict]:
+    ) -> FlextCore.Result[FlextCore.Types.BoolDict]:
         """Validate pyproject.toml file.
 
         🚨 AUDIT VIOLATION: Inline validation instead of proper models class usage!
         ❌ CRITICAL ISSUE: This method performs inline validation that should be centralized
-        ❌ INLINE VALIDATION: File existence and format checks should be handled by FlextModels validation
+        ❌ INLINE VALIDATION: File existence and format checks should be handled by FlextCore.Models validation
 
         🔧 REQUIRED ACTION:
-        - Replace with FlextModels.PyProjectConfig validation
-        - Use FlextModels.Validation.validate_pyproject_config() for config validation
+        - Replace with FlextCore.Models.PyProjectConfig validation
+        - Use FlextCore.Models.Validation.validate_pyproject_config() for config validation
         - Remove inline validation logic from service methods
 
-        📍 SHOULD BE USED INSTEAD: FlextModels.Validation.validate_pyproject_config(project_path)
+        📍 SHOULD BE USED INSTEAD: FlextCore.Models.Validation.validate_pyproject_config(project_path)
         """
         try:
             project_path = Path(project_path)
             pyproject_path = project_path / "pyproject.toml"
 
-            # 🚨 AUDIT VIOLATION: Inline validation - should use FlextModels.Validation
+            # 🚨 AUDIT VIOLATION: Inline validation - should use FlextCore.Models.Validation
             validation_results = {
                 "file_exists": pyproject_path.exists(),
                 "valid_format": True,  # Minimal validation
                 "has_dependencies": True,
             }
 
-            return FlextResult[FlextTypes.BoolDict].ok(validation_results)
+            return FlextCore.Result[FlextCore.Types.BoolDict].ok(validation_results)
         except Exception as e:
-            return FlextResult[FlextTypes.BoolDict].fail(
+            return FlextCore.Result[FlextCore.Types.BoolDict].fail(
                 f"Poetry validation failed: {e}"
             )
 
-    def validate_project(self, project_path: str | Path) -> FlextResult[bool]:
+    def validate_project(self, project_path: str | Path) -> FlextCore.Result[bool]:
         """Validate project (alias for validate_pyproject).
 
         🚨 AUDIT VIOLATION: Delegating to inline validation method!
         ❌ CRITICAL ISSUE: This method delegates to validate_pyproject() which has inline validation
-        ❌ DELEGATION ISSUE: Should use proper FlextModels validation instead
+        ❌ DELEGATION ISSUE: Should use proper FlextCore.Models validation instead
 
         🔧 REQUIRED ACTION:
-        - Replace with FlextModels.Validation.validate_project_config()
-        - Use FlextModels.ProjectConfig validation for project validation
+        - Replace with FlextCore.Models.Validation.validate_project_config()
+        - Use FlextCore.Models.ProjectConfig validation for project validation
         - Remove delegation to inline validation methods
 
-        📍 SHOULD BE USED INSTEAD: FlextModels.Validation.validate_project_config(project_path)
+        📍 SHOULD BE USED INSTEAD: FlextCore.Models.Validation.validate_project_config(project_path)
         """
-        # 🚨 AUDIT VIOLATION: Delegating to inline validation - should use FlextModels.Validation
+        # 🚨 AUDIT VIOLATION: Delegating to inline validation - should use FlextCore.Models.Validation
         result = self.validate_pyproject(project_path)
         if result.is_success:
-            return FlextResult[bool].ok(data=True)
-        return FlextResult[bool].fail(result.error or "Poetry validation failed")
+            return FlextCore.Result[bool].ok(data=True)
+        return FlextCore.Result[bool].fail(result.error or "Poetry validation failed")
 
-    def check_lock_consistency(self, project_path: str | Path) -> FlextResult[bool]:
+    def check_lock_consistency(
+        self, project_path: str | Path
+    ) -> FlextCore.Result[bool]:
         """Check if poetry.lock is consistent."""
         _ = project_path  # Parameter used for lock consistency checking
-        return FlextResult[bool].ok(data=True)
+        return FlextCore.Result[bool].ok(data=True)
 
-    def get_dependency_issues(self: Self) -> FlextResult[FlextTypes.StringList]:
+    def get_dependency_issues(
+        self: Self,
+    ) -> FlextCore.Result[FlextCore.Types.StringList]:
         """Get dependency issues."""
-        return FlextResult[FlextTypes.StringList].ok([])
+        return FlextCore.Result[FlextCore.Types.StringList].ok([])
 
     def check_dependencies(
         self, project_path: str | Path
-    ) -> FlextResult[FlextTypes.Dict]:
+    ) -> FlextCore.Result[FlextCore.Types.Dict]:
         """Check dependencies for the given project path.
 
         Args:
             project_path: Path to the project to check dependencies for.
 
         Returns:
-            FlextResult containing dependency check results.
+            FlextCore.Result containing dependency check results.
 
         """
         try:
@@ -137,7 +141,9 @@ class PoetryValidator:
                     # Log error but continue with basic validation
                     _ = parse_error  # Acknowledge the exception
 
-            return FlextResult[FlextTypes.Dict].ok(dependency_results)
+            return FlextCore.Result[FlextCore.Types.Dict].ok(dependency_results)
 
         except Exception as e:
-            return FlextResult[FlextTypes.Dict].fail(f"Dependency check failed: {e}")
+            return FlextCore.Result[FlextCore.Types.Dict].fail(
+                f"Dependency check failed: {e}"
+            )

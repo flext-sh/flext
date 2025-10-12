@@ -12,7 +12,7 @@ from __future__ import annotations
 import inspect
 from pathlib import Path
 
-from flext_core import FlextResult, FlextService, FlextTypes
+from flext_core import FlextCore
 from flext_tests import FlextTestsDomains
 
 from flext import FlextControlPanelCli
@@ -25,7 +25,7 @@ class TestFlextControlPanelCli:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_test_cli_data() -> FlextTypes.Dict:
+        def create_test_cli_data() -> FlextCore.Types.Dict:
             """Create test CLI data."""
             return {
                 "config_path": "/tmp/test_config.json",
@@ -34,7 +34,7 @@ class TestFlextControlPanelCli:
             }
 
         @staticmethod
-        def create_test_command_data() -> FlextTypes.Dict:
+        def create_test_command_data() -> FlextCore.Types.Dict:
             """Create test command data."""
             return {
                 "command": "test_command",
@@ -51,7 +51,7 @@ class TestFlextControlPanelCli:
         cli = FlextControlPanelCli()
         assert cli is not None
         assert isinstance(cli, FlextControlPanelCli)
-        assert isinstance(cli, FlextService)
+        assert isinstance(cli, FlextCore.Service)
 
     def test_cli_with_parameters(self) -> None:
         """Test FlextControlPanelCli with initialization parameters."""
@@ -69,7 +69,7 @@ class TestFlextControlPanelCli:
         cli = FlextControlPanelCli()
         result = cli.execute()
 
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
         assert isinstance(result.data, str)
 
@@ -83,7 +83,7 @@ class TestFlextControlPanelCli:
         assert "config_path" in test_data
 
         result = cli.execute()
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
 
     def test_cli_error_handling(self) -> None:
@@ -92,7 +92,7 @@ class TestFlextControlPanelCli:
 
         # Test that service handles errors gracefully
         result = cli.execute()
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         # Should either succeed or fail gracefully, not crash
 
     # =============================================================================
@@ -116,8 +116,8 @@ class TestFlextControlPanelCli:
         assert colors_class.CYAN == "cyan"
 
     def test_quality_check_config_nested_class(self) -> None:
-        """Test _QualityCheckConfig nested class."""
-        config_class = FlextControlPanelCli._QualityCheckConfig
+        """Test QualityCheckConfig nested class."""
+        config_class = FlextControlPanelCli.QualityCheckConfig
 
         # Test class can be instantiated
         config = config_class(test_param="test_value")
@@ -126,8 +126,8 @@ class TestFlextControlPanelCli:
         assert getattr(config, "test_param") == "test_value"
 
     def test_quality_gateway_nested_class(self) -> None:
-        """Test _QualityGateway nested class."""
-        gateway_class = FlextControlPanelCli._QualityGateway
+        """Test QualityGateway nested class."""
+        gateway_class = FlextControlPanelCli.QualityGateway
 
         # Test class can be instantiated with required parameters
         gateway = gateway_class(workspace_path="/tmp/test_workspace")
@@ -169,8 +169,8 @@ class TestFlextControlPanelCli:
 
         # Test nested classes exist
         assert hasattr(cli_class, "_Colors")
-        assert hasattr(cli_class, "_QualityCheckConfig")
-        assert hasattr(cli_class, "_QualityGateway")
+        assert hasattr(cli_class, "QualityCheckConfig")
+        assert hasattr(cli_class, "QualityGateway")
         assert hasattr(cli_class, "_CliContext")
         assert hasattr(cli_class, "_ToolsCommands")
         assert hasattr(cli_class, "_MainCommands")
@@ -178,8 +178,8 @@ class TestFlextControlPanelCli:
         # Test nested classes are callable
         for class_name in [
             "_Colors",
-            "_QualityCheckConfig",
-            "_QualityGateway",
+            "QualityCheckConfig",
+            "QualityGateway",
             "_CliContext",
             "_ToolsCommands",
             "_MainCommands",
@@ -229,7 +229,7 @@ class TestFlextControlPanelCli:
 
         # Test service can be created and executed
         result = cli.execute()
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
         # Test service has expected methods
         assert hasattr(cli, "execute")
@@ -237,8 +237,8 @@ class TestFlextControlPanelCli:
 
         # Test nested classes
         assert hasattr(cli.__class__, "_Colors")
-        assert hasattr(cli.__class__, "_QualityCheckConfig")
-        assert hasattr(cli.__class__, "_QualityGateway")
+        assert hasattr(cli.__class__, "QualityCheckConfig")
+        assert hasattr(cli.__class__, "QualityGateway")
         assert hasattr(cli.__class__, "_CliContext")
         assert hasattr(cli.__class__, "_ToolsCommands")
         assert hasattr(cli.__class__, "_MainCommands")
@@ -253,13 +253,13 @@ class TestFlextControlPanelCli:
 
         # Test service execution
         result = cli.execute()
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
         # Test service with flext_tests data
         test_config_data = flext_domains.create_configuration()
         cli_with_config = FlextControlPanelCli(**test_config_data)
         config_result = cli_with_config.execute()
-        assert isinstance(config_result, FlextResult)
+        assert isinstance(config_result, FlextCore.Result)
 
     # =============================================================================
     # PERFORMANCE TESTS
@@ -271,7 +271,7 @@ class TestFlextControlPanelCli:
 
         # Test that service executes reasonably fast
         result = cli.execute()
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
 
         # Should complete quickly for basic operations
@@ -290,20 +290,20 @@ class TestFlextControlPanelCli:
 
         # Test initialization
         assert isinstance(cli, FlextControlPanelCli)
-        assert isinstance(cli, FlextService)
+        assert isinstance(cli, FlextCore.Service)
 
         # Test execution
         result = cli.execute()
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
         # Test nested classes
         colors = cli._Colors()
         assert colors is not None
 
-        quality_config = cli._QualityCheckConfig(test_param="test_value")
+        quality_config = cli.QualityCheckConfig(test_param="test_value")
         assert quality_config is not None
 
-        quality_gateway = cli._QualityGateway(workspace_path="/tmp/test_workspace")
+        quality_gateway = cli.QualityGateway(workspace_path="/tmp/test_workspace")
         assert quality_gateway is not None
 
         cli_context = cli._CliContext(config={}, workspace=Path("/tmp/test_workspace"))
@@ -325,8 +325,8 @@ class TestFlextControlPanelCli:
 
         # Test nested classes have docstrings
         assert FlextControlPanelCli._Colors.__doc__ is not None
-        assert FlextControlPanelCli._QualityCheckConfig.__doc__ is not None
-        assert FlextControlPanelCli._QualityGateway.__doc__ is not None
+        assert FlextControlPanelCli.QualityCheckConfig.__doc__ is not None
+        assert FlextControlPanelCli.QualityGateway.__doc__ is not None
         assert FlextControlPanelCli._CliContext.__doc__ is not None
         assert FlextControlPanelCli._ToolsCommands.__doc__ is not None
         assert FlextControlPanelCli._MainCommands.__doc__ is not None
@@ -347,5 +347,5 @@ class TestFlextControlPanelCli:
         cli._Colors()
         # Colors class has no methods, only constants
 
-        init_sig = inspect.signature(cli._QualityCheckConfig.__init__)
+        init_sig = inspect.signature(cli.QualityCheckConfig.__init__)
         assert len(init_sig.parameters) >= 1  # Should have self parameter

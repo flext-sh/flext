@@ -105,7 +105,7 @@ import pytest
 from unittest.mock import Mock, patch
 from flext.services.application.handlers import CreatePipelineHandler
 from flext.services.application.pipeline import CreatePipelineCommand
-from flext_core import FlextResult
+from flext_core import FlextCore
 
 class TestCreatePipelineHandler:
     """Test suite for CreatePipelineHandler following enterprise patterns."""

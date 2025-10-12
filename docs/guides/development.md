@@ -74,7 +74,7 @@ git checkout -b feature/amazing-feature
 
 Follow FLEXT development standards:
 
-- **Use FlextResult[T]** for all operations
+- **Use FlextCore.Result[T]** for all operations
 - **Follow Clean Architecture** principles
 - **Maintain type safety** with MyPy strict mode
 - **Write comprehensive tests**
@@ -103,12 +103,12 @@ git push origin feature/amazing-feature
 
 ```python
 # ✅ CORRECT - Complete type annotations
-def process_data(data: dict[str, Any]) -> FlextResult[ProcessedData]:
+def process_data(data: dict[str, Any]) -> FlextCore.Result[ProcessedData]:
     """Process data with type safety."""
     if not data:
-        return FlextResult[ProcessedData].fail("Data required")
-    
-    return FlextResult[ProcessedData].ok(ProcessedData(**data))
+        return FlextCore.Result[ProcessedData].fail("Data required")
+
+    return FlextCore.Result[ProcessedData].ok(ProcessedData(**data))
 
 # ❌ WRONG - Missing type annotations
 def process_data(data):
@@ -118,8 +118,8 @@ def process_data(data):
 ### Railway-Oriented Programming
 
 ```python
-# ✅ CORRECT - Use FlextResult for all operations
-def validate_and_process(data: dict) -> FlextResult[ProcessedData]:
+# ✅ CORRECT - Use FlextCore.Result for all operations
+def validate_and_process(data: dict) -> FlextCore.Result[ProcessedData]:
     return (
         validate_data(data)
         .flat_map(transform_data)
@@ -141,9 +141,9 @@ def validate_and_process(data: dict) -> ProcessedData:
 class FlextApiModels:
     class Request(BaseModel):
         data: dict[str, Any]
-    
+
     class Response(BaseModel):
-        result: FlextResult[Any]
+        result: FlextCore.Result[Any]
         status: int
 
 # ❌ WRONG - Scattered model definitions
@@ -175,21 +175,21 @@ pytest --cov=src --cov-report=html
 
 ```python
 import pytest
-from flext_core import FlextResult
+from flext_core import FlextCore
 
 class TestDataProcessing:
     def test_process_valid_data(self):
         """Test processing valid data."""
         data = {"key": "value"}
         result = process_data(data)
-        
+
         assert result.is_success
         assert result.unwrap().key == "value"
-    
+
     def test_process_invalid_data(self):
         """Test processing invalid data."""
         result = process_data(None)
-        
+
         assert result.is_failure
         assert "Data required" in result.failure()
 ```
@@ -241,15 +241,15 @@ cd flext-newlib
 
 ```python
 # src/flext_newlib/__init__.py
-from flext_core import FlextResult, FlextContainer, FlextModels
+from flext_core import FlextCore
 
 # Main API class
 class FlextNewlib:
     def __init__(self, config: FlextNewlibConfig):
         self.config = config
-    
-    def process(self, data: dict) -> FlextResult[dict]:
-        """Process data using FlextResult pattern."""
+
+    def process(self, data: dict) -> FlextCore.Result[dict]:
+        """Process data using FlextCore.Result pattern."""
         # Implementation here
         pass
 
@@ -257,12 +257,12 @@ class FlextNewlib:
 class FlextNewlibModels:
     class Config(BaseModel):
         setting: str = "default"
-    
+
     class Request(BaseModel):
         data: dict[str, Any]
-    
+
     class Response(BaseModel):
-        result: FlextResult[Any]
+        result: FlextCore.Result[Any]
 ```
 
 ### 3. Add to Workspace
@@ -311,19 +311,19 @@ poetry env info
 ### Code Documentation
 
 ```python
-def process_data(data: dict[str, Any]) -> FlextResult[ProcessedData]:
+def process_data(data: dict[str, Any]) -> FlextCore.Result[ProcessedData]:
     """
     Process data using the FLEXT pipeline.
-    
+
     Args:
         data: Input data dictionary
-        
+
     Returns:
-        FlextResult containing processed data or error
-        
+        FlextCore.Result containing processed data or error
+
     Raises:
         ValidationError: If data validation fails
-        
+
     Example:
         >>> result = process_data({"key": "value"})
         >>> if result.is_success:
@@ -336,7 +336,7 @@ def process_data(data: dict[str, Any]) -> FlextResult[ProcessedData]:
 
 Update project README.md files when adding new features:
 
-```markdown
+````markdown
 ## New Feature
 
 ### Usage
@@ -347,6 +347,7 @@ from flext_newlib import FlextNewlib
 lib = FlextNewlib()
 result = lib.new_feature()
 ```
+````
 
 ### Configuration
 
@@ -357,7 +358,8 @@ config = FlextNewlibConfig(
     new_setting="value"
 )
 ```
-```
+
+````
 
 ## Contributing
 
@@ -387,21 +389,23 @@ config = FlextNewlibConfig(
    ```bash
    # Check PYTHONPATH
    export PYTHONPATH=src
-   
+
    # Reinstall dependencies
    make clean && make setup
-   ```
+````
 
 2. **Test Failures**
+
    ```bash
    # Run with debug output
    pytest -vv --tb=long
-   
+
    # Check specific test
    pytest tests/unit/test_specific.py::test_function -v
    ```
 
 3. **Build Issues**
+
    ```bash
    # Clean and rebuild
    make clean-all

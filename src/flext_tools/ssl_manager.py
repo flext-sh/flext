@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Self
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextCore
 
 
 class SSLManager:
@@ -18,28 +18,28 @@ class SSLManager:
     def __init__(self: Self) -> None:
         """Initialize SSL manager."""
 
-    def setup_ssl(self, config_path: str | Path) -> FlextResult[None]:
+    def setup_ssl(self, config_path: str | Path) -> FlextCore.Result[None]:
         """Setup SSL configuration."""
         _ = config_path  # Parameter used for SSL configuration
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
-    def validate_certificates(self: Self) -> FlextResult[FlextTypes.BoolDict]:
+    def validate_certificates(self: Self) -> FlextCore.Result[FlextCore.Types.BoolDict]:
         """Validate SSL certificates.
 
         🚨 AUDIT VIOLATION: Empty validation method instead of proper models validation!
         ❌ CRITICAL ISSUE: This method provides no actual validation
-        ❌ MISSING VALIDATION: Should use FlextModels.Validation.validate_ssl_certificates()
+        ❌ MISSING VALIDATION: Should use FlextCore.Models.Validation.validate_ssl_certificates()
 
         🔧 REQUIRED ACTION:
-        - Replace with FlextModels.Validation.validate_ssl_certificates()
-        - Use FlextModels.SSLCertificate validation for certificate validation
+        - Replace with FlextCore.Models.Validation.validate_ssl_certificates()
+        - Use FlextCore.Models.SSLCertificate validation for certificate validation
         - Implement proper SSL certificate validation logic
 
-        📍 SHOULD BE USED INSTEAD: FlextModels.Validation.validate_ssl_certificates(cert_data)
+        📍 SHOULD BE USED INSTEAD: FlextCore.Models.Validation.validate_ssl_certificates(cert_data)
         """
-        # 🚨 AUDIT VIOLATION: Empty validation - should use FlextModels.Validation
-        return FlextResult[FlextTypes.BoolDict].ok({"valid": True})
+        # 🚨 AUDIT VIOLATION: Empty validation - should use FlextCore.Models.Validation
+        return FlextCore.Result[FlextCore.Types.BoolDict].ok({"valid": True})
 
-    def get_ssl_status(self: Self) -> FlextResult[str]:
+    def get_ssl_status(self: Self) -> FlextCore.Result[str]:
         """Get SSL status."""
-        return FlextResult[str].ok("configured")
+        return FlextCore.Result[str].ok("configured")

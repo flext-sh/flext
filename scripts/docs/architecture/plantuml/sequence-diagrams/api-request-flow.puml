@@ -28,7 +28,7 @@ router -> domain: execute business logic
 domain -> db: query data
 db --> domain: return results
 
-domain --> router: FlextResult.success(data)
+domain --> router: FlextCore.Result.success(data)
         api_flow_file.parent.mkdir(parents=True, exist_ok=True)
 router -> formatter: format response
 formatter --> gateway: JSON response
@@ -57,7 +57,7 @@ domain -> db: query data
 db --> domain: connection timeout
 
 note right: Railway Pattern Error Propagation
-domain --> router: FlextResult.failure("DB timeout")
+domain --> router: FlextCore.Result.failure("DB timeout")
 router -> formatter: format domain error
 formatter --> gateway: error response
 

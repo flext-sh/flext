@@ -10,12 +10,12 @@ from __future__ import annotations
 
 import traceback
 
-from flext_core import FlextTypes
+from flext_core import FlextCore
 
 
 def test_imports() -> bool:
     """Test imports from all 6 FLEXT projects."""
-    results: FlextTypes.StringDict = {}
+    results: FlextCore.Types.StringDict = {}
 
     # Test flext-core
     try:

@@ -9,10 +9,10 @@ the complex flext-core integrations that may have circular import issues.
 ## 📚 QUICK REFERENCE - Key Sections
 
 **Core Patterns** (Most Important):
-- **[Namespace Class Pattern](#-namespace-class-pattern-critical-flext-core-foundation)** - FlextConstants, FlextModels, FlextTypes, FlextExceptions, FlextProtocols
+- **[Namespace Class Pattern](#-namespace-class-pattern-critical-flext-core-foundation)** - FlextCore.Constants, FlextCore.Models, FlextCore.Types, FlextCore.Exceptions, FlextCore.Protocols
 - **[Extending Namespace Classes](#-extending-namespace-classes-domain-library-pattern)** - How domain libraries extend flext-core
-- **[FlextConfig Advanced](#-flextconfig-advanced-patterns-pydantic-211-basesettings)** - Pydantic 2.11+ BaseSettings, validators, computed fields
-- **[FlextResult Railway](#-flextresult-railway-pattern-monadic-error-handling)** - Monadic operations, railway-oriented programming
+- **[FlextCore.Config Advanced](#-flextconfig-advanced-patterns-pydantic-211-basesettings)** - Pydantic 2.11+ BaseSettings, validators, computed fields
+- **[FlextCore.Result Railway](#-flextresult-railway-pattern-monadic-error-handling)** - Monadic operations, railway-oriented programming
 - **[Complete API Surface](#-complete-flext-core-api-surface-20-exports)** - All 20+ flext-core exports
 - **[Module-Only-One-Class](#-module-only-one-class-pattern-unified-single-class)** - Single unified class pattern with nested helpers
 
@@ -97,7 +97,7 @@ import sys
 from pathlib import Path
 from typing import ClassVar, TypeVar
 
-from flext_core.utilities import FlextUtilities
+from flext_core import FlextCore
 
 T = TypeVar("T")
 
@@ -108,114 +108,8 @@ if not RUFF_CMD:
     sys.exit(1)
 
 
-# Simplified core patterns to avoid circular imports
-class FlextResult[T]:
-    """Simplified FlextResult for railway pattern."""
-
-    def __init__(
-        self, *, success: bool, value: T | None = None, error: str = ""
-    ) -> None:
-        """Initialize the result with success status, value, and error."""
-        self.success = success
-        self._value = value
-        self.error = error
-
-    @classmethod
-    def ok(cls, value: T) -> FlextResult[T]:
-        """Create a successful result with a value."""
-        return cls(success=True, value=value)
-
-    @classmethod
-    def fail(cls, error: str) -> FlextResult[T]:
-        """Create a failed result with an error message."""
-        return cls(success=False, error=error)
-
-    def unwrap(self) -> T:
-        """Unwrap the result value, raising an error if failed."""
-        if not self.success:
-            msg = f"Failed to unwrap: {self.error}"
-            raise ValueError(msg)
-        return self._value
-
-    @property
-    def is_success(self) -> bool:
-        """Check if the result is successful."""
-        return self.success
-
-    @property
-    def is_failure(self) -> bool:
-        """Check if the result is a failure."""
-        return not self.success
-
-
-class FlextLogger:
-    """Simplified logger."""
-
-    def __init__(self, name: str) -> None:
-        """Initialize the logger with a name."""
-        self.name = name
-
-    def info(self, msg: str) -> None:
-        """Log an info message."""
-        print(f"INFO [{self.name}]: {msg}")
-
-    def error(self, msg: str) -> None:
-        """Log an error message."""
-        print(f"ERROR [{self.name}]: {msg}")
-
-
-class FlextConfig:
-    """Simplified configuration base."""
-
-    def __init__(self) -> None:
-        """Initialize the configuration with default values."""
-        self.log_level = "INFO"
-        self.timeout_seconds = 30
-        self.debug = False
-
-
-class FlextConstants:
-    """Simplified constants namespace."""
-
-    class Defaults:
-        """Default constant values."""
-
-        TIMEOUT = 30
-
-    class Logging:
-        """Logging-related constants."""
-
-        DEFAULT_LEVEL = "INFO"
-
-
-class FlextModels:
-    """Simplified models namespace."""
-
-    class Entity:
-        """Base entity model."""
-
-    class Value:
-        """Value object model."""
-
-
-class FlextTypes:
-    """Simplified types namespace."""
-
-    Dict = dict
-
-
-class FlextExceptions:
-    """Simplified exceptions namespace."""
-
-    class ValidationError(Exception):
-        """Validation error exception."""
-
-    class BaseError(Exception):
-        """Base error exception."""
-
-
 # Configuration for the optimizer
-class FlextModuleOptimizerConstants(FlextConstants):
+class FlextModuleOptimizerConstants(FlextCore.Constants):
     """Optimization constants extending flext-core."""
 
     class Optimization:
@@ -224,7 +118,7 @@ class FlextModuleOptimizerConstants(FlextConstants):
         DEFAULT_BATCH_SIZE: int = 5
         MAX_FILE_SIZE: int = 1024 * 1024  # 1MB
         SUPPORTED_EXTENSIONS: ClassVar[set[str]] = {".py", ".pyi"}
-        EXCLUDE_PATTERNS: ClassVar[list[str]] = [
+        EXCLUDE_PATTERNS: ClassVar[FlextCore.Types.StringList] = [
             "__pycache__",
             ".git",
             ".venv",
@@ -259,7 +153,7 @@ class FlextModuleOptimizerConstants(FlextConstants):
         }
 
         # ❌ FORBIDDEN - Anti-patterns
-        FORBIDDEN_PATTERNS: ClassVar[list[str]] = [
+        FORBIDDEN_PATTERNS: ClassVar[FlextCore.Types.StringList] = [
             r"# type: ignore.*$",  # Generic type ignore
             r"def .*\).*-> object:",  # object return type
             r"except.*pass",  # Empty except blocks
@@ -267,7 +161,7 @@ class FlextModuleOptimizerConstants(FlextConstants):
         ]
 
 
-class FlextModuleOptimizerConfig(FlextConfig):
+class FlextModuleOptimizerConfig(FlextCore.Config):
     """Optimization configuration."""
 
     def __init__(self, **kwargs: object) -> None:
@@ -295,16 +189,16 @@ class FlextModuleOptimizer:
     def __init__(self, config: FlextModuleOptimizerConfig | None = None) -> None:
         """Initialize optimizer."""
         self._config = config or FlextModuleOptimizerConfig()
-        self.logger = FlextLogger(__name__)
+        self.logger = FlextCore.Logger(__name__)
 
-    def optimize_project(self, project_path: str) -> FlextResult:
+    def optimize_project(self, project_path: str) -> FlextCore.Result:
         """Optimize entire project according to FLEXT patterns.
 
         Args:
             project_path: Path to project to optimize
 
         Returns:
-            FlextResult with optimization summary
+            FlextCore.Result with optimization summary
 
         """
         self.logger.info(
@@ -315,14 +209,18 @@ class FlextModuleOptimizer:
             # Phase 1: Discovery and analysis
             discovery_result = self._discover_optimization_targets(project_path)
             if discovery_result.is_failure:
-                return FlextResult.fail(f"Discovery failed: {discovery_result.error}")
+                return FlextCore.Result.fail(
+                    f"Discovery failed: {discovery_result.error}"
+                )
 
             targets = discovery_result.unwrap()
 
             # Phase 2: Quality gate validation
             quality_result = self._validate_quality_gates(targets)
             if quality_result.is_failure and not self._config.force:
-                return FlextResult.fail(f"Quality gates failed: {quality_result.error}")
+                return FlextCore.Result.fail(
+                    f"Quality gates failed: {quality_result.error}"
+                )
 
             # Phase 3: Batch optimization
             optimization_result = self._optimize_in_batches(targets)
@@ -332,9 +230,9 @@ class FlextModuleOptimizer:
 
         except Exception as e:
             self.logger.exception("Optimization failed", extra={"error": str(e)})
-            return FlextResult.fail(f"Optimization error: {e}")
+            return FlextCore.Result.fail(f"Optimization error: {e}")
 
-    def _discover_optimization_targets(self, project_path: str) -> FlextResult:
+    def _discover_optimization_targets(self, project_path: str) -> FlextCore.Result:
         """Discover modules that need optimization."""
         self.logger.info(
             "Discovering optimization targets", extra={"project_path": project_path}
@@ -347,7 +245,9 @@ class FlextModuleOptimizer:
 
             # Check if it's a valid project
             if not (project_root / "src").exists():
-                return FlextResult.fail(f"No src directory found in {project_path}")
+                return FlextCore.Result.fail(
+                    f"No src directory found in {project_path}"
+                )
 
             # Walk through src directory
             for root, dirs, files in os.walk(project_root / "src"):
@@ -403,12 +303,12 @@ class FlextModuleOptimizer:
             targets.sort(key=operator.itemgetter("priority"), reverse=True)
 
             self.logger.info(f"Discovered {len(targets)} optimization targets")
-            return FlextResult.ok(targets)
+            return FlextCore.Result.ok(targets)
 
         except Exception as e:
-            return FlextResult.fail(f"Discovery error: {e}")
+            return FlextCore.Result.fail(f"Discovery error: {e}")
 
-    def _analyze_file_for_optimization(self, file_path: Path) -> FlextResult:
+    def _analyze_file_for_optimization(self, file_path: Path) -> FlextCore.Result:
         """Analyze file for optimization opportunities."""
         try:
             with Path(file_path).open(encoding="utf-8") as f:
@@ -418,7 +318,7 @@ class FlextModuleOptimizer:
             try:
                 tree = ast.parse(content, filename=str(file_path))
             except SyntaxError as e:
-                return FlextResult.fail(f"Syntax error: {e}")
+                return FlextCore.Result.fail(f"Syntax error: {e}")
 
             violations = []
             suggestions = []
@@ -467,7 +367,7 @@ class FlextModuleOptimizer:
                     "Consider using domain libraries for better architecture"
                 )
 
-            return FlextResult.ok({
+            return FlextCore.Result.ok({
                 "violations": violations,
                 "suggestions": suggestions,
                 "complexity_score": complexity_score,
@@ -475,7 +375,7 @@ class FlextModuleOptimizer:
             })
 
         except Exception as e:
-            return FlextResult.fail(f"Analysis error: {e}")
+            return FlextCore.Result.fail(f"Analysis error: {e}")
 
     def _needs_optimization(self, analysis: dict) -> bool:
         """Determine if module needs optimization."""
@@ -560,7 +460,9 @@ class FlextModuleOptimizer:
 
         return max_child_depth
 
-    def _validate_quality_gates(self, targets: list[FlextTypes.Dict]) -> FlextResult:
+    def _validate_quality_gates(
+        self, targets: list[FlextCore.Types.Dict]
+    ) -> FlextCore.Result:
         """Validate targets against quality gates."""
         self.logger.info(
             "Validating quality gates", extra={"target_count": len(targets)}
@@ -581,13 +483,13 @@ class FlextModuleOptimizer:
                 )
 
         if violations and not self._config.force:
-            return FlextResult.fail("Quality gate violations found")
+            return FlextCore.Result.fail("Quality gate violations found")
 
-        return FlextResult.ok(None)
+        return FlextCore.Result.ok(None)
 
     def _optimize_in_batches(
-        self, targets: list[FlextTypes.Dict]
-    ) -> list[FlextTypes.Dict]:
+        self, targets: list[FlextCore.Types.Dict]
+    ) -> list[FlextCore.Types.Dict]:
         """Optimize targets in batches."""
         self.logger.info(
             "Starting batch optimization", extra={"total_targets": len(targets)}
@@ -766,11 +668,11 @@ class FlextModuleOptimizer:
         optimized_lines = set(optimized.split("\n"))
         return len(original_lines.symmetric_difference(optimized_lines))
 
-    def _validate_optimized_file(self, file_path: str) -> FlextResult:
+    def _validate_optimized_file(self, file_path: str) -> FlextCore.Result:
         """Validate optimized file."""
         try:
             # Run ruff check
-            result = FlextUtilities.run_external_command(
+            result = FlextCore.Utilities.run_external_command(
                 [RUFF_CMD, "check", file_path],
                 check=False,
                 capture_output=True,
@@ -779,16 +681,16 @@ class FlextModuleOptimizer:
             )
 
             if result.returncode != 0:
-                return FlextResult.fail(f"Ruff validation failed: {result.stdout}")
+                return FlextCore.Result.fail(f"Ruff validation failed: {result.stdout}")
 
-            return FlextResult.ok(None)
+            return FlextCore.Result.ok(None)
 
         except Exception as e:
-            return FlextResult.fail(f"Validation error: {e}")
+            return FlextCore.Result.fail(f"Validation error: {e}")
 
     def _validate_optimization_results(
-        self, results: list[FlextTypes.Dict]
-    ) -> FlextResult:
+        self, results: list[FlextCore.Types.Dict]
+    ) -> FlextCore.Result:
         """Validate final optimization results."""
         total_targets = len(results)
         successful_targets = sum(1 for r in results if r["success"])
@@ -807,9 +709,9 @@ class FlextModuleOptimizer:
         }
 
         if total_errors > 0 and not self._config.force:
-            return FlextResult.fail(f"Optimization had {total_errors} errors")
+            return FlextCore.Result.fail(f"Optimization had {total_errors} errors")
 
-        return FlextResult.ok(summary)
+        return FlextCore.Result.ok(summary)
 
 
 def main() -> None:

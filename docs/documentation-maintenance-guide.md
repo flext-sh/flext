@@ -284,6 +284,7 @@ See `.github/workflows/docs_maintenance.yml` for details.
 **Trigger:** Every Sunday at 00:00 UTC
 
 **Actions:**
+
 1. Run comprehensive audit
 2. Generate reports (Markdown, JSON, HTML)
 3. Create/update GitHub issue with findings
@@ -296,6 +297,7 @@ See `.github/workflows/docs_maintenance.yml` for details.
 **Trigger:** Pull requests modifying `*.md` files
 
 **Actions:**
+
 1. Quick audit of changed files
 2. Validate internal links
 3. Check style compliance
@@ -375,6 +377,7 @@ git commit -m "docs: add new feature documentation"
 **Cause:** Large refactoring or file reorganization
 
 **Solution:**
+
 ```bash
 # Run link fixer with similarity matching
 python scripts/docs_link_fixer.py --root . --apply
@@ -389,6 +392,7 @@ grep "broken_link" audit.md
 **Cause:** Network latency or rate limiting
 
 **Solution:**
+
 ```bash
 # Disable external link checking for faster runs
 python scripts/docs_maintenance_audit.py --root . --output audit.md
@@ -403,6 +407,7 @@ python scripts/docs_maintenance_audit.py --root . --output audit.md
 **Cause:** Insufficient headings or improper structure
 
 **Solution:**
+
 ```bash
 # Lower minimum headings requirement
 python scripts/docs_toc_generator.py --root . --min-headings 2 --apply
@@ -416,6 +421,7 @@ grep "^#" docs/problematic-file.md
 **Cause:** Dependencies not installed or permission issues
 
 **Solution:**
+
 - Check workflow logs in GitHub Actions
 - Verify Python version compatibility (3.13+)
 - Ensure dependencies are listed in workflow
@@ -446,15 +452,19 @@ grep "^#" docs/problematic-file.md
 
 ```markdown
 <!-- Good: Descriptive text -->
+
 See the [installation guide](./installation.md) for details.
 
 <!-- Bad: Non-descriptive -->
+
 Click [here](./installation.md) for more info.
 
 <!-- Good: Relative paths -->
+
 [Reference](../docs/reference.md)
 
 <!-- Bad: Absolute paths -->
+
 [Reference](/home/user/flext/docs/reference.md)
 ```
 
@@ -462,9 +472,11 @@ Click [here](./installation.md) for more info.
 
 ```markdown
 <!-- Good: With alt text -->
+
 ![Architecture diagram showing system components](./images/architecture.png)
 
 <!-- Bad: Without alt text -->
+
 ![](./images/architecture.png)
 ```
 
@@ -472,15 +484,17 @@ Click [here](./installation.md) for more info.
 
 ```markdown
 <!-- Good: With language -->
+
 \`\`\`python
 def example():
-    return "Hello"
+return "Hello"
 \`\`\`
 
 <!-- Bad: No language -->
+
 \`\`\`
 def example():
-    return "Hello"
+return "Hello"
 \`\`\`
 ```
 
@@ -521,17 +535,20 @@ def example():
 **Total Issues Found:** 127
 
 ## Summary Statistics
+
 - Total Words: 458,234
 - Total Lines: 23,456
 - Average Document Age: 45.2 days
 
 ## Issues by Severity
+
 - Critical: 3
 - High: 12
 - Medium: 45
 - Low: 67
 
 ## Issues by Category
+
 - Content Freshness: 23
 - Broken Link: 8
 - Missing Image: 2
@@ -539,9 +556,11 @@ def example():
 - Style Formatting: 60
 
 ## Detailed Issues
+
 [... specific issues with file locations and suggestions ...]
 
 ## Recommendations
+
 [... prioritized action items ...]
 ```
 
@@ -603,10 +622,12 @@ fi
 #### VS Code
 
 Install extensions:
+
 - `DavidAnson.vscode-markdownlint`
 - `yzhang.markdown-all-in-one`
 
 Add to `.vscode/settings.json`:
+
 ```json
 {
   "markdownlint.config": {
@@ -619,13 +640,13 @@ Add to `.vscode/settings.json`:
 
 ## Maintenance Schedule
 
-| Frequency | Task | Tool | Who |
-|-----------|------|------|-----|
-| On Commit | Quick validation | CI workflow | Automated |
-| Weekly | Full audit | GitHub Action | Automated |
-| Monthly | Link validation | `docs_sync_automation.sh --external-links` | Team lead |
-| Quarterly | Deep clean | Manual + automation | Documentation team |
-| As needed | Major refactoring | All tools | Contributors |
+| Frequency | Task              | Tool                                       | Who                |
+| --------- | ----------------- | ------------------------------------------ | ------------------ |
+| On Commit | Quick validation  | CI workflow                                | Automated          |
+| Weekly    | Full audit        | GitHub Action                              | Automated          |
+| Monthly   | Link validation   | `docs_sync_automation.sh --external-links` | Team lead          |
+| Quarterly | Deep clean        | Manual + automation                        | Documentation team |
+| As needed | Major refactoring | All tools                                  | Contributors       |
 
 ---
 

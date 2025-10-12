@@ -13,40 +13,40 @@ graph TB
     SystemAdmins[System Administrators]
     BusinessUsers[Business Users]
     Developers[Developers]
-    
+
     %% External Systems
     LDAPSystems[LDAP Systems<br/>Active Directory<br/>OpenLDAP]
     OracleSystems[Oracle Databases<br/>Oracle WMS<br/>Oracle OIC]
     FileSystems[File Systems<br/>LDIF Files<br/>CSV/JSON]
     MonitoringSystems[Monitoring Systems<br/>Prometheus<br/>Grafana]
     SecuritySystems[Security Systems<br/>OAuth2/OIDC<br/>SAML]
-    
+
     %% FLEXT Platform
     FLEXT[FLEXT Platform<br/>Enterprise Data Integration<br/>Python 3.13+ + Go 1.24+]
-    
+
     %% User Interactions
     DataEngineers -->|Configure Pipelines| FLEXT
     SystemAdmins -->|Manage Infrastructure| FLEXT
     BusinessUsers -->|Access Data| FLEXT
     Developers -->|Extend Platform| FLEXT
-    
+
     %% System Interactions
     FLEXT -->|Extract Data| LDAPSystems
     FLEXT -->|Extract Data| OracleSystems
     FLEXT -->|Process Files| FileSystems
     FLEXT -->|Send Metrics| MonitoringSystems
     FLEXT -->|Authenticate| SecuritySystems
-    
+
     %% Reverse Data Flow
     LDAPSystems -->|Data Updates| FLEXT
     OracleSystems -->|Data Updates| FLEXT
     FileSystems -->|Data Updates| FLEXT
-    
+
     %% Styling
     classDef user fill:#e1f5fe
     classDef system fill:#f3e5f5
     classDef flext fill:#e8f5e8
-    
+
     class DataEngineers,SystemAdmins,BusinessUsers,Developers user
     class LDAPSystems,OracleSystems,FileSystems,MonitoringSystems,SecuritySystems system
     class FLEXT flext
@@ -140,22 +140,26 @@ graph TB
 ## Quality Attributes
 
 ### Performance
+
 - **Throughput**: Process millions of records per hour
 - **Latency**: Sub-second response times for API calls
 - **Scalability**: Horizontal scaling to handle increased load
 
 ### Reliability
+
 - **Availability**: 99.9% uptime target
 - **Fault Tolerance**: Graceful handling of component failures
 - **Data Consistency**: ACID compliance for critical operations
 
 ### Security
+
 - **Authentication**: Multi-factor authentication support
 - **Authorization**: Role-based access control
 - **Data Protection**: Encryption and secure communication
 - **Audit Trail**: Comprehensive logging of all activities
 
 ### Maintainability
+
 - **Modularity**: Clear separation of concerns
 - **Testability**: Comprehensive test coverage
 - **Documentation**: Complete API and architecture documentation
@@ -164,22 +168,26 @@ graph TB
 ## Technology Stack
 
 ### Runtime Environment
+
 - **Python 3.13+**: Primary business logic language
 - **Go 1.24+**: High-performance runtime container
 - **Docker**: Containerization and deployment
 
 ### Data Storage
+
 - **PostgreSQL**: Primary database for metadata and configuration
 - **Redis**: Caching and session management
 - **File System**: LDIF and configuration file storage
 
 ### Integration Protocols
+
 - **LDAP/LDIF**: Directory service integration
 - **SQL**: Database connectivity
 - **REST APIs**: Web service integration
 - **gRPC**: High-performance service communication
 
 ### Monitoring and Observability
+
 - **Prometheus**: Metrics collection
 - **Grafana**: Visualization and dashboards
 - **Structured Logging**: JSON-formatted logs

@@ -41,7 +41,8 @@ export FLEXT_API_TIMEOUT=30
 
 Create configuration files in YAML, JSON, or TOML format:
 
-**config.yaml:**
+**config.YAML:**
+
 ```yaml
 # FLEXT Configuration
 log_level: INFO
@@ -67,11 +68,11 @@ api:
 Configure FLEXT programmatically in your code:
 
 ```python
-from flext_core import FlextConfig
+from flext_core import FlextCore
 from flext_ldif import FlextLdifConfig
 
 # Core configuration
-config = FlextConfig(
+config = FlextCore.Config(
     log_level="INFO",
     debug=False,
     environment="production"
@@ -97,12 +98,12 @@ config = FlextLdifConfig(
     # Server-specific settings
     source_server="oid",
     target_server="oud",
-    
+
     # Migration options
     preserve_oid_modifiers=True,
     handle_schema_extensions=True,
     validate_entries=True,
-    
+
     # Performance settings
     batch_size=1000,
     parallel_processing=True,
@@ -182,10 +183,10 @@ api:
 All configuration is validated using Pydantic v2 models:
 
 ```python
-from flext_core import FlextConfig
+from flext_core import FlextCore
 
 try:
-    config = FlextConfig(
+    config = FlextCore.Config(
         log_level="INVALID_LEVEL"  # This will raise ValidationError
     )
 except ValidationError as e:
@@ -197,16 +198,16 @@ except ValidationError as e:
 FLEXT supports configuration inheritance for complex setups:
 
 ```python
-from flext_core import FlextConfig
+from flext_core import FlextCore
 
 # Base configuration
-base_config = FlextConfig(
+base_config = FlextCore.Config(
     log_level="INFO",
     environment="production"
 )
 
 # Extended configuration
-extended_config = FlextConfig(
+extended_config = FlextCore.Config(
     **base_config.dict(),
     debug=True,  # Override for development
     custom_setting="value"
@@ -226,16 +227,16 @@ export FLEXT_API_KEY=your_api_key
 ### 2. Validate Configuration Early
 
 ```python
-from flext_core import FlextConfig
+from flext_core import FlextCore
 
 def main():
     # Validate configuration at startup
-    config = FlextConfig()
-    
+    config = FlextCore.Config()
+
     if not config.is_valid():
         print("Invalid configuration")
         return 1
-    
+
     # Continue with application logic
     return 0
 ```
@@ -243,12 +244,12 @@ def main():
 ### 3. Use Configuration Classes
 
 ```python
-from flext_core import FlextConfig
+from flext_core import FlextCore
 
-class MyAppConfig(FlextConfig):
+class MyAppConfig(FlextCore.Config):
     custom_setting: str = "default_value"
     another_setting: int = 42
-    
+
     @field_validator('another_setting')
     @classmethod
     def validate_another_setting(cls, v):
@@ -262,12 +263,12 @@ class MyAppConfig(FlextConfig):
 ```python
 class FlextLdifConfig(BaseModel):
     """Configuration for LDIF processing."""
-    
+
     default_encoding: str = Field(
         default="utf-8",
         description="Default encoding for LDIF files"
     )
-    
+
     strict_validation: bool = Field(
         default=True,
         description="Enable strict RFC validation"
@@ -296,10 +297,10 @@ class FlextLdifConfig(BaseModel):
 ### Debug Configuration
 
 ```python
-from flext_core import FlextConfig
+from flext_core import FlextCore
 
 # Enable debug logging
-config = FlextConfig(debug=True)
+config = FlextCore.Config(debug=True)
 
 # Print configuration
 print(config.dict())
@@ -320,27 +321,27 @@ else:
 """Complete FLEXT configuration example."""
 
 import os
-from flext_core import FlextConfig
+from flext_core import FlextCore
 from flext_ldif import FlextLdifConfig
 from flext_api import FlextApiConfig
 
 def main():
     # Load configuration from environment
-    config = FlextConfig()
-    
+    config = FlextCore.Config()
+
     # Configure LDIF processing
     ldif_config = FlextLdifConfig(
         source_server=os.getenv("FLEXT_SOURCE_SERVER", "oid"),
         target_server=os.getenv("FLEXT_TARGET_SERVER", "oud"),
         batch_size=int(os.getenv("FLEXT_BATCH_SIZE", "1000"))
     )
-    
+
     # Configure API client
     api_config = FlextApiConfig(
         base_url=os.getenv("FLEXT_API_URL", "http://localhost:8000"),
         timeout=int(os.getenv("FLEXT_API_TIMEOUT", "30"))
     )
-    
+
     print("Configuration loaded successfully")
     print(f"Log level: {config.log_level}")
     print(f"LDIF batch size: {ldif_config.batch_size}")

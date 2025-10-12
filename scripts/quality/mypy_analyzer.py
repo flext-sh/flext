@@ -14,11 +14,11 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from flext_core import FlextTypes
+from flext_core import FlextCore
 from mypy import api as mypy_api
 
 
-def _run_mypy_api(args: FlextTypes.StringList) -> tuple[int, str, str]:
+def _run_mypy_api(args: FlextCore.Types.StringList) -> tuple[int, str, str]:
     """Run MyPy using its Python API and return (exit_code, stdout, stderr)."""
     try:
         stdout, stderr, exit_status = mypy_api.run(args)
@@ -27,9 +27,9 @@ def _run_mypy_api(args: FlextTypes.StringList) -> tuple[int, str, str]:
         return 1, "", f"MyPy API execution failed: {e}"
 
 
-def parse_mypy_errors(output: str) -> list[FlextTypes.Dict]:
+def parse_mypy_errors(output: str) -> list[FlextCore.Types.Dict]:
     """Parse MyPy output to extract structured error information."""
-    errors: list[FlextTypes.Dict] = []
+    errors: list[FlextCore.Types.Dict] = []
     # Regex para capturar erros MyPy
     error_pattern = r"([^:]+):(\d+): error: (.+?) \[([^\]]+)\]"
 
@@ -65,7 +65,7 @@ def get_project_from_path(file_path: str) -> str:
 
 def analyze_project_with_stats(
     project_path: Path,
-) -> tuple[int, list[FlextTypes.Dict]]:
+) -> tuple[int, list[FlextCore.Types.Dict]]:
     """Analisa projeto específico e retorna estatísticas detalhadas."""
     exit_code, stdout, stderr = _run_mypy_api([str(project_path)])
 
@@ -79,12 +79,12 @@ def analyze_project_with_stats(
     return exit_code, errors
 
 
-def analyze_workspace_with_stats() -> tuple[int, list[FlextTypes.Dict]]:
+def analyze_workspace_with_stats() -> tuple[int, list[FlextCore.Types.Dict]]:
     """Analisa workspace e retorna estatísticas detalhadas."""
     workspace_root = Path(__file__).parent.parent
 
     # Verificar quais diretórios existem para análise
-    dirs_to_analyze: FlextTypes.StringList = []
+    dirs_to_analyze: FlextCore.Types.StringList = []
     for dir_name in ["src", "tests", "scripts", "examples"]:
         dir_path = workspace_root / dir_name
         if dir_path.exists() and dir_path.is_dir():
@@ -112,7 +112,7 @@ def analyze_workspace() -> int:
     workspace_root = Path(__file__).parent.parent
 
     # Verificar quais diretórios existem para análise
-    dirs_to_analyze: FlextTypes.StringList = []
+    dirs_to_analyze: FlextCore.Types.StringList = []
     for dir_name in ["src", "tests", "scripts", "examples"]:
         dir_path = workspace_root / dir_name
         if dir_path.exists() and dir_path.is_dir():
@@ -222,7 +222,7 @@ def stats_by_project() -> int:
     if not projects:
         return 0
 
-    all_errors: list[FlextTypes.Dict] = []
+    all_errors: list[FlextCore.Types.Dict] = []
     project_stats: dict[str, int] = {}
     # Analisar workspace primeiro
     _, workspace_errors = analyze_workspace_with_stats()

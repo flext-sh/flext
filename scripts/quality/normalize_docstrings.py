@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from importlib import import_module
 from pathlib import Path
 
-from flext_core import FlextTypes
+from flext_core import FlextCore
 
 # Import ruff dynamically (call via import_module to allow runtime fallback)
 _ruff_mod = import_module("ruff.__main__")
@@ -104,11 +104,11 @@ def has_command(cmd: str) -> bool:
     return shutil.which(cmd) is not None
 
 
-def main(argv: FlextTypes.StringList) -> int:
+def main(argv: FlextCore.Types.StringList) -> int:
     """Main function to normalize docstrings in Python files.
 
     Args:
-      argv (List[str]): Command line arguments.
+      argv (FlextCore.Types.StringList): Command line arguments.
 
     Raises:
       None.

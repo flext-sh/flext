@@ -37,28 +37,17 @@ result = await tools.dependencies.analyzer.analyze_dependencies(project_path="."
 ```
 
 Integrates complete flext-core ecosystem:
-- FlextBus: Event emission
-- FlextContainer: Dependency injection
-- FlextContext: Operation context
-- FlextLogger: Structured logging
+- FlextCore.Bus: Event emission
+- FlextCore.Container: Dependency injection
+- FlextCore.Context: Operation context
+- FlextCore.Logger: Structured logging
 """
 
 from __future__ import annotations
 
 from typing import Self
 
-from flext_core import (
-    FlextBus,
-    FlextContainer,
-    FlextContext,
-    FlextDispatcher,
-    FlextLogger,
-    FlextProcessors,
-    FlextRegistry,
-    FlextResult,
-    FlextService,
-    FlextTypes,
-)
+from flext_core import FlextCore
 from pydantic import ConfigDict
 
 from flext_tools.architecture_tools import FlextArchitectureTools
@@ -69,7 +58,7 @@ from flext_tools.quality_tools import FlextQualityTools
 from flext_tools.validation_tools import FlextValidationTools
 
 
-class FlextTools(FlextService[None]):
+class FlextTools(FlextCore.Service[None]):
     """Unified workspace tools facade with complete FLEXT integration.
 
     Single entry point for ALL flext-tools operations consolidating 85+ scripts
@@ -93,8 +82,8 @@ class FlextTools(FlextService[None]):
     ALL operations support:
     - dry_run=True (MANDATORY default)
     - temp_path for temporary workspace
-    - FlextResult error handling (NO try/except)
-    - FlextLogger structured logging
+    - FlextCore.Result error handling (NO try/except)
+    - FlextCore.Logger structured logging
     - Complete flext-core integration
     """
 
@@ -103,15 +92,15 @@ class FlextTools(FlextService[None]):
     def __init__(self: Self) -> None:
         """Initialize FlextTools with complete flext-core integration."""
         super().__init__()
-        self.logger = FlextLogger(__name__)
+        self.logger = FlextCore.Logger(__name__)
 
         # Complete flext-core ecosystem integration
-        self._container = FlextContainer.get_global()
-        self._context = FlextContext()
-        self._bus = FlextBus()
-        self._dispatcher = FlextDispatcher()
-        self._processors = FlextProcessors()
-        self._registry = FlextRegistry(dispatcher=self._dispatcher)
+        self._container = FlextCore.Container.get_global()
+        self._context = FlextCore.Context()
+        self._bus = FlextCore.Bus()
+        self._dispatcher = FlextCore.Dispatcher()
+        self._processors = FlextCore.Processors()
+        self._registry = FlextCore.Registry(dispatcher=self._dispatcher)
 
         # Initialize all 6 tool categories (consolidating 85+ scripts)
         self.git = FlextGitTools()  # 20 git scripts
@@ -123,15 +112,15 @@ class FlextTools(FlextService[None]):
 
         self.logger.info("FlextTools initialized with 6 tool categories")
 
-    def execute(self: Self) -> FlextResult[None]:
-        """Execute FlextTools service - FlextService interface."""
-        return FlextResult[None].ok(None)
+    def execute(self: Self) -> FlextCore.Result[None]:
+        """Execute FlextTools service - FlextCore.Service interface."""
+        return FlextCore.Result[None].ok(None)
 
-    def get_status(self: Self) -> FlextResult[FlextTypes.Dict]:
+    def get_status(self: Self) -> FlextCore.Result[FlextCore.Types.Dict]:
         """Get status of all tool categories.
 
         Returns:
-            FlextResult with status information
+            FlextCore.Result with status information
 
         """
         status = {
@@ -145,7 +134,7 @@ class FlextTools(FlextService[None]):
             "tool_categories": 6,
         }
 
-        return FlextResult[FlextTypes.Dict].ok(status)
+        return FlextCore.Result[FlextCore.Types.Dict].ok(status)
 
 
 # Alias for convenience

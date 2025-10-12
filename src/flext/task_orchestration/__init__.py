@@ -11,8 +11,6 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import FlextResult
-
 from .agents import (
     DependencyAnalyzer,
     TaskDecomposer,
@@ -31,7 +29,7 @@ from .services import TaskOrchestrationService
 __all__ = [
     "DependencyAnalyzer",
     "Task",
-    "TaskDecomposer", 
+    "TaskDecomposer",
     "TaskDependency",
     "TaskOrchestrationCli",
     "TaskOrchestrationConfig",

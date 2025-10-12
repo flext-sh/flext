@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 from typing import Self
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextCore
 
 
 class QualityGateway:
@@ -17,18 +17,18 @@ class QualityGateway:
 
     def run_checks(
         self,
-        config: FlextTypes.Dict | None = None,
-    ) -> FlextResult[FlextTypes.Dict]:
+        config: FlextCore.Types.Dict | None = None,
+    ) -> FlextCore.Result[FlextCore.Types.Dict]:
         """Run quality checks.
 
         Args:
             config: Optional configuration
 
         Returns:
-            FlextResult with check results
+            FlextCore.Result with check results
 
         """
         _ = config  # Parameter used for quality check configuration
-        return FlextResult[FlextTypes.Dict].ok(
+        return FlextCore.Result[FlextCore.Types.Dict].ok(
             {"status": "passed", "checks": "mocked"},
         )

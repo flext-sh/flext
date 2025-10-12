@@ -15,16 +15,11 @@ in dedicated ecosystem projects (flext-ldif, flext-db-oracle, etc.).
 from __future__ import annotations
 
 # Use flext-core utilities exclusively - NO LOCAL IMPLEMENTATIONS
-from flext_core import (
-    FlextLogger,
-    FlextResult,
-    FlextUtilities,
-)
 
 # Export flext-core utility patterns exclusively
 __all__ = [
-    "FlextLogger",
-    "FlextResult",
+    "FlextCore.Logger",
+    "FlextCore.Result",
     # Core utility patterns
-    "FlextUtilities",
+    "FlextCore.Utilities",
 ]

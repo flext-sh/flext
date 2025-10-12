@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Self
 
-from flext_core import FlextResult
+from flext_core import FlextCore
 
 
 class GradualLintFixer:
@@ -18,14 +18,14 @@ class GradualLintFixer:
     def __init__(self: Self) -> None:
         """Initialize gradual lint fixer."""
 
-    def fix_linting_issues(self, project_path: str | Path) -> FlextResult[str]:
+    def fix_linting_issues(self, project_path: str | Path) -> FlextCore.Result[str]:
         """Fix linting issues gradually."""
         try:
             _ = project_path  # Parameter used for lint fixing
-            return FlextResult[str].ok("Linting issues fixed")
+            return FlextCore.Result[str].ok("Linting issues fixed")
         except Exception as e:
-            return FlextResult[str].fail(f"Lint fixing failed: {e}")
+            return FlextCore.Result[str].fail(f"Lint fixing failed: {e}")
 
-    def get_fix_report(self: Self) -> FlextResult[str]:
+    def get_fix_report(self: Self) -> FlextCore.Result[str]:
         """Get fix report."""
-        return FlextResult[str].ok("All issues fixed")
+        return FlextCore.Result[str].ok("All issues fixed")

@@ -14,7 +14,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextCore
 from flext_tests import FlextTestsDomains
 
 from flext_tools.mypy_checker import MyPyChecker
@@ -43,7 +43,7 @@ class TestMyPyChecker:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_test_project_data(project_path: str) -> FlextTypes.Dict:
+        def create_test_project_data(project_path: str) -> FlextCore.Types.Dict:
             """Create test project data."""
             return {
                 "project_path": project_path,
@@ -52,7 +52,7 @@ class TestMyPyChecker:
             }
 
         @staticmethod
-        def create_test_check_data() -> FlextTypes.StringDict:
+        def create_test_check_data() -> FlextCore.Types.StringDict:
             """Create test check data."""
             return {
                 "check_type": "strict",
@@ -90,7 +90,7 @@ class TestMyPyChecker:
 
         # Test check_project with string path
         result = checker.check_project(str(self.temp_project_dir))
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
         assert isinstance(result.data, list)
 
@@ -101,7 +101,7 @@ class TestMyPyChecker:
         # Test check_project with Path object
         test_path = Path(str(self.temp_project_dir))
         result = checker.check_project(test_path)
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
         assert isinstance(result.data, list)
 
@@ -113,9 +113,9 @@ class TestMyPyChecker:
         assert hasattr(checker, "get_type_coverage")
         assert callable(checker.get_type_coverage)
 
-        # Test get_type_coverage returns FlextResult
+        # Test get_type_coverage returns FlextCore.Result
         result = checker.get_type_coverage(str(self.temp_project_dir))
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
         assert isinstance(result.data, str)
 
@@ -125,11 +125,11 @@ class TestMyPyChecker:
 
         # Test that checker handles errors gracefully
         result = checker.check_project(str(self.temp_project_dir))
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
 
         coverage_result = checker.get_type_coverage(str(self.temp_project_dir))
-        assert isinstance(coverage_result, FlextResult)
+        assert isinstance(coverage_result, FlextCore.Result)
         assert coverage_result.is_success
 
     # =============================================================================
@@ -159,7 +159,7 @@ class TestMyPyChecker:
 
         for path in test_paths:
             result = checker.check_project(path)
-            assert isinstance(result, FlextResult)
+            assert isinstance(result, FlextCore.Result)
             assert result.is_success
             assert isinstance(result.data, list)
 
@@ -176,7 +176,7 @@ class TestMyPyChecker:
 
         for path in test_paths:
             result = checker.get_type_coverage(path)
-            assert isinstance(result, FlextResult)
+            assert isinstance(result, FlextCore.Result)
             assert result.is_success
             assert isinstance(result.data, str)
 
@@ -186,21 +186,21 @@ class TestMyPyChecker:
 
         # Test with string path
         string_result = checker.check_project(str(self.temp_test_dir))
-        assert isinstance(string_result, FlextResult)
+        assert isinstance(string_result, FlextCore.Result)
         assert string_result.is_success
 
         # Test with Path object
         path_result = checker.check_project(Path(str(self.temp_test_dir)))
-        assert isinstance(path_result, FlextResult)
+        assert isinstance(path_result, FlextCore.Result)
         assert path_result.is_success
 
         # Test type coverage with both types
         string_coverage = checker.get_type_coverage(str(self.temp_test_dir))
-        assert isinstance(string_coverage, FlextResult)
+        assert isinstance(string_coverage, FlextCore.Result)
         assert string_coverage.is_success
 
         path_coverage = checker.get_type_coverage(Path(str(self.temp_test_dir)))
-        assert isinstance(path_coverage, FlextResult)
+        assert isinstance(path_coverage, FlextCore.Result)
         assert path_coverage.is_success
 
     # =============================================================================
@@ -223,10 +223,10 @@ class TestMyPyChecker:
 
         # Test checker operations
         check_result = checker.check_project(str(self.temp_test_dir))
-        assert isinstance(check_result, FlextResult)
+        assert isinstance(check_result, FlextCore.Result)
 
         coverage_result = checker.get_type_coverage(str(self.temp_test_dir))
-        assert isinstance(coverage_result, FlextResult)
+        assert isinstance(coverage_result, FlextCore.Result)
 
     def test_mypy_checker_with_flext_tests(
         self, flext_domains: FlextTestsDomains
@@ -240,7 +240,7 @@ class TestMyPyChecker:
 
         # Test checker execution
         check_result = checker.check_project(str(self.temp_test_dir))
-        assert isinstance(check_result, FlextResult)
+        assert isinstance(check_result, FlextCore.Result)
 
         # Test checker with flext_tests data
         flext_domains.create_configuration()
@@ -257,11 +257,11 @@ class TestMyPyChecker:
 
         # Test that checker operations are reasonably fast
         check_result = checker.check_project(str(self.temp_test_dir))
-        assert isinstance(check_result, FlextResult)
+        assert isinstance(check_result, FlextCore.Result)
         assert check_result.is_success
 
         coverage_result = checker.get_type_coverage(str(self.temp_test_dir))
-        assert isinstance(coverage_result, FlextResult)
+        assert isinstance(coverage_result, FlextCore.Result)
         assert coverage_result.is_success
 
         # Should complete quickly for basic operations
@@ -286,13 +286,13 @@ class TestMyPyChecker:
             str(self.temp_test_dir)
         )
         check_result = checker.check_project(test_data["project_path"])
-        assert isinstance(check_result, FlextResult)
+        assert isinstance(check_result, FlextCore.Result)
         assert check_result.is_success
         assert isinstance(check_result.data, list)
 
         # Test type coverage
         coverage_result = checker.get_type_coverage(test_data["project_path"])
-        assert isinstance(coverage_result, FlextResult)
+        assert isinstance(coverage_result, FlextCore.Result)
         assert coverage_result.is_success
         assert isinstance(coverage_result.data, str)
 
@@ -339,11 +339,11 @@ class TestMyPyChecker:
 
             # Test with real temporary directory
             check_result = checker.check_project(str(temp_path))
-            assert isinstance(check_result, FlextResult)
+            assert isinstance(check_result, FlextCore.Result)
             assert check_result.is_success
 
             coverage_result = checker.get_type_coverage(str(temp_path))
-            assert isinstance(coverage_result, FlextResult)
+            assert isinstance(coverage_result, FlextCore.Result)
             assert coverage_result.is_success
 
     def test_mypy_checker_edge_cases(self) -> None:
@@ -352,15 +352,15 @@ class TestMyPyChecker:
 
         # Test with empty string path
         result = checker.check_project("")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
 
         # Test with relative path
         result = checker.check_project("./test")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
 
         # Test with non-existent path
         result = checker.check_project("/non/existent/path")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success

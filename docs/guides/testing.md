@@ -33,7 +33,7 @@ Test individual functions and classes in isolation:
 
 ```python
 import pytest
-from flext_core import FlextResult
+from flext_core import FlextCore
 from flext_ldif import FlextLdif
 
 class TestLdifParsing:
@@ -43,21 +43,21 @@ class TestLdifParsing:
         content = """dn: cn=test,dc=example,dc=com
 cn: test
 objectClass: inetOrgPerson"""
-        
+
         result = ldif.parse(content)
-        
+
         assert result.is_success
         entries = result.unwrap()
         assert len(entries) == 1
         assert entries[0].dn == "cn=test,dc=example,dc=com"
-    
+
     def test_parse_invalid_ldif(self):
         """Test parsing invalid LDIF content."""
         ldif = FlextLdif()
         content = "invalid ldif content"
-        
+
         result = ldif.parse(content)
-        
+
         assert result.is_failure
         assert "parsing" in str(result.failure()).lower()
 ```
@@ -68,23 +68,23 @@ Test component interactions and workflows:
 
 ```python
 import pytest
-from flext_core import FlextContainer
+from flext_core import FlextCore
 from flext_ldif import FlextLdif, FlextLdifConfig
 
 class TestLdifIntegration:
     def test_ldif_with_container(self):
         """Test LDIF processing with dependency injection."""
-        container = FlextContainer.get_global()
-        
+        container = FlextCore.Container.get_global()
+
         # Register LDIF service
         config = FlextLdifConfig(batch_size=100)
         ldif = FlextLdif(config=config)
         container.register("ldif", ldif)
-        
+
         # Retrieve and use service
         ldif_result = container.get("ldif")
         assert ldif_result.is_success
-        
+
         ldif_service = ldif_result.unwrap()
         # Test LDIF operations
         result = ldif_service.parse("dn: test")
@@ -106,28 +106,28 @@ class TestLdifMigration:
         # Setup test data
         input_dir = Path("test_data/oid")
         output_dir = Path("test_data/oud")
-        
+
         input_dir.mkdir(parents=True, exist_ok=True)
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Create sample LDIF file
         sample_ldif = """dn: cn=test,dc=example,dc=com
 cn: test
 objectClass: inetOrgPerson"""
-        
+
         with open(input_dir / "test.ldif", 'w') as f:
             f.write(sample_ldif)
-        
+
         # Configure and run migration
         config = FlextLdifConfig(
             source_server="oid",
             target_server="oud",
             preserve_oid_modifiers=True
         )
-        
+
         ldif = FlextLdif(config=config)
         result = ldif.migrate(input_dir, output_dir, "oid", "oud")
-        
+
         # Verify migration
         assert result.is_success
         report = result.unwrap()
@@ -240,10 +240,10 @@ def temp_directories(tmp_path):
     """Provide temporary directories for file tests."""
     input_dir = tmp_path / "input"
     output_dir = tmp_path / "output"
-    
+
     input_dir.mkdir()
     output_dir.mkdir()
-    
+
     return input_dir, output_dir
 ```
 
@@ -258,11 +258,11 @@ def test_ldif_parsing(ldif_service, sample_ldif_content):
 def test_file_migration(ldif_service, temp_directories):
     """Test file migration with temporary directories."""
     input_dir, output_dir = temp_directories
-    
+
     # Create test file
     test_file = input_dir / "test.ldif"
     test_file.write_text("dn: test")
-    
+
     # Run migration
     result = ldif_service.migrate(input_dir, output_dir, "oid", "oud")
     assert result.is_success
@@ -274,17 +274,17 @@ def test_file_migration(ldif_service, temp_directories):
 
 ```python
 from unittest.mock import Mock, patch
-from flext_core import FlextResult
+from flext_core import FlextCore
 
 def test_with_mocked_dependency():
     """Test with mocked external dependency."""
     with patch('flext_ldif.external_service') as mock_service:
         # Configure mock
-        mock_service.process.return_value = FlextResult.ok("processed")
-        
+        mock_service.process.return_value = FlextCore.Result.ok("processed")
+
         # Test function that uses mock
         result = my_function()
-        
+
         # Verify mock was called
         mock_service.process.assert_called_once()
         assert result.is_success
@@ -294,19 +294,19 @@ def test_with_mocked_dependency():
 
 ```python
 from unittest.mock import Mock
-from flext_core import FlextContainer
+from flext_core import FlextCore
 
 def test_with_stubbed_service():
     """Test with stubbed service in container."""
-    container = FlextContainer.get_global()
-    
+    container = FlextCore.Container.get_global()
+
     # Create stub service
     stub_service = Mock()
-    stub_service.process.return_value = FlextResult.ok("stubbed")
-    
+    stub_service.process.return_value = FlextCore.Result.ok("stubbed")
+
     # Register stub
     container.register("external_service", stub_service)
-    
+
     # Test integration
     result = integration_function()
     assert result.is_success
@@ -326,22 +326,22 @@ def test_concurrent_processing():
     """Test concurrent processing performance."""
     ldif = FlextLdif()
     content = "dn: test\ncn: test"
-    
+
     def process_entry():
         return ldif.parse(content)
-    
+
     # Run concurrent processing
     start_time = time.time()
-    
+
     with ThreadPoolExecutor(max_workers=10) as executor:
         futures = [executor.submit(process_entry) for _ in range(100)]
         results = [future.result() for future in futures]
-    
+
     end_time = time.time()
-    
+
     # Verify all succeeded
     assert all(result.is_success for result in results)
-    
+
     # Verify performance (should complete in < 1 second)
     assert (end_time - start_time) < 1.0
 ```
@@ -358,18 +358,18 @@ def test_memory_usage():
     """Test memory usage during large file processing."""
     process = psutil.Process(os.getpid())
     initial_memory = process.memory_info().rss
-    
+
     # Process large dataset
     ldif = FlextLdif()
     large_content = "dn: test\ncn: test\n" * 10000
-    
+
     result = ldif.parse(large_content)
     assert result.is_success
-    
+
     # Check memory usage (should not exceed 100MB)
     current_memory = process.memory_info().rss
     memory_used = current_memory - initial_memory
-    
+
     assert memory_used < 100 * 1024 * 1024  # 100MB
 ```
 
@@ -413,7 +413,7 @@ def test_with_fixture():
     """Test using loaded fixture data."""
     ldif_content = load_test_fixture("ldif/valid.ldif")
     config_data = load_json_fixture("config/dev.yaml")
-    
+
     # Use fixture data in test
     result = process_ldif(ldif_content, config_data)
     assert result.is_success
@@ -434,28 +434,28 @@ jobs:
     strategy:
       matrix:
         python-version: [3.13]
-    
+
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-    
-    - name: Install dependencies
-      run: |
-        pip install poetry
-        poetry install
-    
-    - name: Run tests
-      run: |
-        poetry run pytest --cov=src --cov-report=xml
-    
-    - name: Upload coverage
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          poetry install
+
+      - name: Run tests
+        run: |
+          poetry run pytest --cov=src --cov-report=xml
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
 ```
 
 ## Best Practices
@@ -485,22 +485,22 @@ def test_ldif():
 ```python
 class TestLdifParsing:
     """Test LDIF parsing functionality."""
-    
+
     def test_parse_valid_single_entry(self):
         """Test parsing single valid LDIF entry."""
         pass
-    
+
     def test_parse_valid_multiple_entries(self):
         """Test parsing multiple valid LDIF entries."""
         pass
-    
+
     def test_parse_invalid_format(self):
         """Test parsing invalid LDIF format."""
         pass
 
 class TestLdifMigration:
     """Test LDIF migration functionality."""
-    
+
     def test_migrate_oid_to_oud(self):
         """Test OID to OUD migration."""
         pass
@@ -512,7 +512,7 @@ class TestLdifMigration:
 # ✅ GOOD - Specific assertions
 def test_parse_result():
     result = ldif.parse(content)
-    
+
     assert result.is_success
     entries = result.unwrap()
     assert len(entries) == 1
@@ -556,6 +556,7 @@ def test_parse_invalid_ldif():
 ### Common Test Issues
 
 1. **Import Errors**
+
    ```bash
    # Set PYTHONPATH
    export PYTHONPATH=src
@@ -563,6 +564,7 @@ def test_parse_invalid_ldif():
    ```
 
 2. **Fixture Not Found**
+
    ```python
    # Check fixture scope and dependencies
    @pytest.fixture(scope="function")
@@ -571,12 +573,14 @@ def test_parse_invalid_ldif():
    ```
 
 3. **Test Timeout**
+
    ```bash
    # Increase timeout
    pytest --timeout=300
    ```
 
 4. **Coverage Issues**
+
    ```bash
    # Check coverage configuration
    pytest --cov=src --cov-report=term-missing

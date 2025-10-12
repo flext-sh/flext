@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Automated Link Fixer for FLEXT Documentation
+"""Automated Link Fixer for FLEXT Documentation.
 
 Automatically fixes common link issues in documentation:
 - Converts absolute paths to relative paths
@@ -10,15 +9,13 @@ Automatically fixes common link issues in documentation:
 """
 
 import re
-import sys
 from pathlib import Path
-from typing import Any
 
 
 class LinkFixer:
     """Automated link correction and validation."""
 
-    def __init__(self, root_path: Path, dry_run: bool = True):
+    def __init__(self, root_path: Path, dry_run: bool = True) -> None:
         self.root_path = root_path
         self.dry_run = dry_run
         self.fixes_applied = 0
@@ -39,7 +36,7 @@ class LinkFixer:
             matches = re.finditer(link_pattern, line)
 
             for match in matches:
-                link_text, absolute_path = match.groups()
+                _link_text, absolute_path = match.groups()
                 # Convert to relative path
                 target_path = self.root_path / absolute_path.lstrip("/")
 
@@ -47,9 +44,7 @@ class LinkFixer:
                     relative_path = Path(absolute_path.lstrip("/")).relative_to(
                         file_path.parent
                     )
-                    line = line.replace(
-                        f"]({absolute_path})", f"]({relative_path})"
-                    )
+                    line = line.replace(f"]({absolute_path})", f"]({relative_path})")
                     self.fixes_applied += 1
                     print(
                         f"  ✓ Fixed: {absolute_path} → {relative_path} in {file_path.name}"
@@ -69,7 +64,7 @@ class LinkFixer:
             matches = re.finditer(link_pattern, line)
 
             for match in matches:
-                link_text, link_url = match.groups()
+                _link_text, link_url = match.groups()
 
                 # Skip external links
                 if link_url.startswith(("http://", "https://")):
@@ -154,7 +149,7 @@ class LinkFixer:
         for file_path in markdown_files:
             self.fix_file(file_path)
 
-        print(f"\n📊 Summary:")
+        print("\n📊 Summary:")
         print(f"  - Files processed: {len(markdown_files)}")
         print(f"  - Fixes applied: {self.fixes_applied}")
         print(f"  - Issues found: {self.issues_found}")
@@ -167,7 +162,9 @@ def main() -> None:
     """Main entry point."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Automated link fixer for documentation")
+    parser = argparse.ArgumentParser(
+        description="Automated link fixer for documentation"
+    )
     parser.add_argument(
         "--root",
         type=Path,

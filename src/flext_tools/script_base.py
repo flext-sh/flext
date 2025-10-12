@@ -10,11 +10,11 @@ import argparse
 from abc import abstractmethod
 from typing import Self
 
-from flext_core import FlextResult, FlextService, FlextTypes
+from flext_core import FlextCore
 from pydantic import BaseModel
 
 
-class FlextScriptService(FlextService[object]):
+class FlextScriptService(FlextCore.Service[object]):
     """Unified script service with nested helpers.
 
     Single responsibility: Script execution and management.
@@ -51,46 +51,46 @@ class FlextScriptService(FlextService[object]):
         """Nested helper for validation."""
 
         @staticmethod
-        def validate_preconditions() -> FlextResult[None]:
+        def validate_preconditions() -> FlextCore.Result[None]:
             """Validate script preconditions.
 
             🚨 AUDIT VIOLATION: Empty validation method instead of proper models validation!
             ❌ CRITICAL ISSUE: This method provides no actual validation
-            ❌ MISSING VALIDATION: Should use FlextModels.Validation.validate_script_preconditions()
+            ❌ MISSING VALIDATION: Should use FlextCore.Models.Validation.validate_script_preconditions()
 
             🔧 REQUIRED ACTION:
-            - Replace with FlextModels.Validation.validate_script_preconditions()
-            - Use FlextModels.ScriptMetadata validation for script validation
+            - Replace with FlextCore.Models.Validation.validate_script_preconditions()
+            - Use FlextCore.Models.ScriptMetadata validation for script validation
             - Implement proper precondition validation logic
 
-            📍 SHOULD BE USED INSTEAD: FlextModels.Validation.validate_script_preconditions(metadata)
+            📍 SHOULD BE USED INSTEAD: FlextCore.Models.Validation.validate_script_preconditions(metadata)
             """
-            # 🚨 AUDIT VIOLATION: Empty validation - should use FlextModels.Validation
-            return FlextResult[None].ok(None)
+            # 🚨 AUDIT VIOLATION: Empty validation - should use FlextCore.Models.Validation
+            return FlextCore.Result[None].ok(None)
 
     @property
     @abstractmethod
     def metadata(self: Self) -> ScriptMetadata:
         """Get script metadata."""
 
-    def execute(self: Self) -> FlextResult[object]:
-        """Execute script service - FlextService interface."""
+    def execute(self: Self) -> FlextCore.Result[object]:
+        """Execute script service - FlextCore.Service interface."""
         return self.run({})
 
     def create_parser(self: Self) -> argparse.ArgumentParser:
         """Create argument parser using nested helper."""
         return self._ParserHelper.create_parser(self.metadata)
 
-    def validate_preconditions(self: Self) -> FlextResult[None]:
+    def validate_preconditions(self: Self) -> FlextCore.Result[None]:
         """Validate preconditions using nested helper."""
         return self._ValidationHelper.validate_preconditions()
 
-    def run(self, args: FlextTypes.Dict | None = None) -> FlextResult[object]:
+    def run(self, args: FlextCore.Types.Dict | None = None) -> FlextCore.Result[object]:
         """Run the script."""
-        # 🚨 AUDIT VIOLATION: Using empty validation method - should use FlextModels.Validation
+        # 🚨 AUDIT VIOLATION: Using empty validation method - should use FlextCore.Models.Validation
         validation_result = self.validate_preconditions()
         if validation_result.is_failure:
-            return FlextResult[object].fail(
+            return FlextCore.Result[object].fail(
                 validation_result.error or "Precondition validation failed",
             )
 
@@ -101,9 +101,9 @@ class FlextScriptService(FlextService[object]):
         try:
             parser = self.create_parser()
             args = parser.parse_args()
-            arg_dict: FlextTypes.Dict = vars(args)
+            arg_dict: FlextCore.Types.Dict = vars(args)
 
-            result: FlextResult[object] = self.run(arg_dict)
+            result: FlextCore.Result[object] = self.run(arg_dict)
             if result.is_success:
                 return 0
             return 1
@@ -111,7 +111,9 @@ class FlextScriptService(FlextService[object]):
             return 1
 
     @abstractmethod
-    def execute_implementation(self, args: FlextTypes.Dict) -> FlextResult[object]:
+    def execute_implementation(
+        self, args: FlextCore.Types.Dict
+    ) -> FlextCore.Result[object]:
         """Execute script implementation."""
 
 

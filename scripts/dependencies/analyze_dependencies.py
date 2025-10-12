@@ -11,7 +11,7 @@ import json
 import sys
 from pathlib import Path
 
-from flext_core import FlextTypes
+from flext_core import FlextCore
 
 from flext_tools import Colors, ConflictAnalyzer, print_colored
 
@@ -27,7 +27,7 @@ def main() -> int:
     analyzer = ConflictAnalyzer()
 
     # Análise direta sem cache
-    def get_workspace_analysis() -> FlextTypes.Dict:
+    def get_workspace_analysis() -> FlextCore.Types.Dict:
         result = analyzer.analyze_workspace_conflicts(workspace_path)
         if result.is_success:
             conflict_result = result.unwrap()
@@ -62,7 +62,7 @@ def main() -> int:
                 reverse=True,
             )
         else:
-            conflicts_sorted: FlextTypes.List = []
+            conflicts_sorted: FlextCore.Types.List = []
         # Mostra top 10 ou todos se --all
         show_all = "--all" in sys.argv
         limit = len(conflicts_sorted) if show_all else min(10, len(conflicts_sorted))
@@ -87,7 +87,7 @@ def main() -> int:
                 reverse=True,
             )
         else:
-            blockers_sorted: FlextTypes.List = []
+            blockers_sorted: FlextCore.Types.List = []
         # Top 10 bloqueadores
         for _i, (_package, blocker_data) in enumerate(blockers_sorted[:10]):
             # Agrupa por constraint

@@ -13,10 +13,12 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+from flext_core import FlextCore
+
 FLEXT_ROOT = Path("/home/marlonsc/flext")
 
 
-def get_tracked_files(project_dir: Path) -> list[str]:
+def get_tracked_files(project_dir: Path) -> FlextCore.Types.StringList:
     """Get list of all tracked files in git.
 
     Args:
@@ -88,7 +90,9 @@ def untrack_file(project_dir: Path, file_path: str) -> bool:
         return False
 
 
-def clean_project(project_dir: Path, dry_run: bool = True) -> dict[str, list[str]]:
+def clean_project(
+    project_dir: Path, dry_run: bool = True
+) -> dict[str, FlextCore.Types.StringList]:
     """Clean tracked files that should be ignored.
 
     Args:

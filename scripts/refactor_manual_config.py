@@ -8,20 +8,22 @@ import operator
 import re
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextResult, FlextTypes
+from flext_core import FlextCore
 
-logger = FlextLogger(__name__)
+logger = FlextCore.Logger(__name__)
 
 
-def find_manual_config_patterns() -> FlextResult[dict[str, FlextTypes.StringList]]:
+def find_manual_config_patterns() -> FlextCore.Result[
+    dict[str, FlextCore.Types.StringList]
+]:
     """Find files with manual configuration patterns.
 
     Returns:
-      FlextResult containing dict of pattern types to file lists.
+      FlextCore.Result containing dict of pattern types to file lists.
 
     """
     try:
-        patterns: dict[str, FlextTypes.StringList] = {
+        patterns: dict[str, FlextCore.Types.StringList] = {
             "manual_env_vars": [],
             "manual_pydantic": [],
             "manual_file_loading": [],
@@ -29,7 +31,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, FlextTypes.StringList
         }
 
         # Find manual os.getenv() usage without external commands
-        env_var_files: FlextTypes.StringList = []
+        env_var_files: FlextCore.Types.StringList = []
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
@@ -41,7 +43,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, FlextTypes.StringList
         patterns["manual_env_vars"] = env_var_files
 
         # Find manual Pydantic instantiation (Config(), Settings(), etc.)
-        pyd_files: FlextTypes.StringList = []
+        pyd_files: FlextCore.Types.StringList = []
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
@@ -53,7 +55,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, FlextTypes.StringList
         patterns["manual_pydantic"] = pyd_files
 
         # Find manual file loading (json.load, yaml.load)
-        file_loading: FlextTypes.StringList = []
+        file_loading: FlextCore.Types.StringList = []
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
@@ -65,7 +67,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, FlextTypes.StringList
         patterns["manual_file_loading"] = file_loading
 
         # Find manual validation patterns
-        manual_valid: FlextTypes.StringList = []
+        manual_valid: FlextCore.Types.StringList = []
         for path in Path.cwd().rglob("*.py"):
             try:
                 text = path.read_text(encoding="utf-8")
@@ -79,22 +81,22 @@ def find_manual_config_patterns() -> FlextResult[dict[str, FlextTypes.StringList
         total_files = len(set(functools.reduce(operator.iadd, patterns.values(), [])))
         logger.info(f"Found {total_files} files with manual config patterns")
 
-        return FlextResult[dict[str, FlextTypes.StringList]].ok(patterns)
+        return FlextCore.Result[dict[str, FlextCore.Types.StringList]].ok(patterns)
 
     except (OSError, ValueError, TypeError) as e:
-        return FlextResult[dict[str, FlextTypes.StringList]].fail(
+        return FlextCore.Result[dict[str, FlextCore.Types.StringList]].fail(
             f"Failed to find manual config patterns: {e}",
         )
 
 
-def refactor_manual_env_vars(file_path: str) -> FlextResult[bool]:
+def refactor_manual_env_vars(file_path: str) -> FlextCore.Result[bool]:
     """Refactor manual os.getenv() usage to use FLEXT config patterns.
 
     Args:
       file_path: Path to file to refactor.
 
     Returns:
-      FlextResult indicating success and whether changes were made.
+      FlextCore.Result indicating success and whether changes were made.
 
     """
     try:
@@ -148,23 +150,23 @@ def refactor_manual_env_vars(file_path: str) -> FlextResult[bool]:
             with Path(file_path).open("w", encoding="utf-8") as f:
                 f.write(content)
             logger.info(f"✅ Added FLEXT config TODOs to: {file_path}")
-            return FlextResult[bool].ok(data=True)
+            return FlextCore.Result[bool].ok(data=True)
         logger.info(f"⏭️ No env var changes needed: {file_path}")
-        return FlextResult[bool].ok(data=False)
+        return FlextCore.Result[bool].ok(data=False)
 
     except (OSError, ValueError, TypeError) as e:
         logger.exception(f"❌ Error refactoring env vars in {file_path}")
-        return FlextResult[bool].fail(f"Failed to refactor env vars: {e}")
+        return FlextCore.Result[bool].fail(f"Failed to refactor env vars: {e}")
 
 
-def refactor_manual_pydantic(file_path: str) -> FlextResult[bool]:
+def refactor_manual_pydantic(file_path: str) -> FlextCore.Result[bool]:
     """Refactor manual Pydantic instantiation to use FLEXT patterns.
 
     Args:
       file_path: Path to file to refactor.
 
     Returns:
-      FlextResult indicating success and whether changes were made.
+      FlextCore.Result indicating success and whether changes were made.
 
     """
     try:
@@ -202,23 +204,23 @@ def refactor_manual_pydantic(file_path: str) -> FlextResult[bool]:
             with Path(file_path).open("w", encoding="utf-8") as f:
                 f.write(content)
             logger.info(f"✅ Added FLEXT config TODOs to: {file_path}")
-            return FlextResult[bool].ok(data=True)
+            return FlextCore.Result[bool].ok(data=True)
         logger.info(f"⏭️ No Pydantic changes needed: {file_path}")
-        return FlextResult[bool].ok(data=False)
+        return FlextCore.Result[bool].ok(data=False)
 
     except (OSError, ValueError, TypeError) as e:
         logger.exception(f"❌ Error refactoring Pydantic in {file_path}")
-        return FlextResult[bool].fail(f"Failed to refactor Pydantic: {e}")
+        return FlextCore.Result[bool].fail(f"Failed to refactor Pydantic: {e}")
 
 
-def refactor_manual_file_loading(file_path: str) -> FlextResult[bool]:
+def refactor_manual_file_loading(file_path: str) -> FlextCore.Result[bool]:
     """Refactor manual file loading to use FLEXT config patterns.
 
     Args:
       file_path: Path to file to refactor.
 
     Returns:
-      FlextResult indicating success and whether changes were made.
+      FlextCore.Result indicating success and whether changes were made.
 
     """
     try:
@@ -250,23 +252,23 @@ def refactor_manual_file_loading(file_path: str) -> FlextResult[bool]:
             with Path(file_path).open("w", encoding="utf-8") as f:
                 f.write(content)
             logger.info(f"✅ Added FLEXT config TODOs to: {file_path}")
-            return FlextResult[bool].ok(data=True)
+            return FlextCore.Result[bool].ok(data=True)
         logger.info(f"⏭️ No file loading changes needed: {file_path}")
-        return FlextResult[bool].ok(data=False)
+        return FlextCore.Result[bool].ok(data=False)
 
     except (OSError, ValueError, TypeError) as e:
         logger.exception(f"❌ Error refactoring file loading in {file_path}")
-        return FlextResult[bool].fail(f"Failed to refactor file loading: {e}")
+        return FlextCore.Result[bool].fail(f"Failed to refactor file loading: {e}")
 
 
-def create_flext_config_template(output_path: str) -> FlextResult[None]:
+def create_flext_config_template(output_path: str) -> FlextCore.Result[None]:
     """Create a template for FLEXT configuration consolidation.
 
     Args:
       output_path: Path where to create the template.
 
     Returns:
-      FlextResult indicating success.
+      FlextCore.Result indicating success.
 
     """
     try:
@@ -304,7 +306,7 @@ class ProjectSpecificSettings(FlextSettings):
 
     # Replace manual env vars like: host = os.getenv("HOST", "localhost")
     host: str = Field(default="localhost", description="Server hostname")
-    port: int = Field(default=FlextConstants.Platform.DEFAULT_HTTP_PORT, description="Server port")
+    port: int = Field(default=FlextCore.Constants.Platform.DEFAULT_HTTP_PORT, description="Server port")
     debug_mode: bool = Field(default=False, description="Enable debug mode")
 
     # Database configuration
@@ -347,10 +349,10 @@ def get_project_settings() -> ProjectSpecificSettings:
             f.write(template_content)
 
         logger.info(f"✅ Created FLEXT config template: {output_path}")
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
     except (OSError, ValueError, TypeError) as e:
-        return FlextResult[None].fail(f"Failed to create template: {e}")
+        return FlextCore.Result[None].fail(f"Failed to create template: {e}")
 
 
 def main() -> None:

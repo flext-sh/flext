@@ -3,21 +3,21 @@ name: Documentation Maintenance & Quality Assurance
 on:
   schedule:
     # Run weekly on Sundays at 00:00 UTC
-    - cron: '0 0 * * 0'
+    - cron: "0 0 * * 0"
   workflow_dispatch:
     inputs:
       check_external_links:
-        description: 'Check external links (slower)'
+        description: "Check external links (slower)"
         required: false
-        default: 'false'
+        default: "false"
         type: boolean
   pull_request:
     paths:
-      - '**/*.md'
-      - '.github/workflows/docs_maintenance.yml'
+      - "**/*.md"
+      - ".github/workflows/docs_maintenance.yml"
 
 env:
-  PYTHON_VERSION: '3.13'
+  PYTHON_VERSION: "3.13"
 
 jobs:
   docs-audit:
@@ -32,7 +32,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history for change tracking
+          fetch-depth: 0 # Full history for change tracking
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -215,9 +215,9 @@ jobs:
       - name: Check markdown formatting
         uses: DavidAnson/markdownlint-action@v1
         with:
-          config_file: '.markdownlint.json'
-          files: '**/*.md'
-          ignore: 'node_modules'
+          config_file: ".markdownlint.json"
+          files: "**/*.md"
+          ignore: "node_modules"
 
       - name: Check for common issues
         run: |

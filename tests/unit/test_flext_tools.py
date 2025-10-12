@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextResult, FlextService
+from flext_core import FlextCore
 
 from flext_tools import (
     backup,
@@ -38,7 +38,7 @@ class TestFlextToolsBackup:
         manager = backup.BackupManager()
         test_path = "test_file.txt"
         result = manager.create_backup(test_path)
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
         assert "Backup created for" in result.value
 
@@ -47,7 +47,7 @@ class TestFlextToolsBackup:
         manager = backup.BackupManager()
         backup_path = "backup_file.txt"
         result = manager.restore_backup(backup_path)
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
 
     def test_backup_with_pathlib(self) -> None:
@@ -55,14 +55,14 @@ class TestFlextToolsBackup:
         manager = backup.BackupManager()
         test_path = Path("test_file.txt")
         result = manager.create_backup(test_path)
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
 
     def test_backup_error_handling(self) -> None:
         """Test backup error handling."""
         manager = backup.BackupManager()
         result = manager.restore_backup("")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_failure
         assert (
             result.error is not None and "Backup path cannot be empty" in result.error
@@ -91,16 +91,16 @@ class TestFlextToolsColors:
         """Test colorize method functionality."""
         service = colors.FlextColorService()
         result = service.colorize("test", service.Colors.RED)
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
         assert isinstance(result.data, str)
         assert "test" in result.data
         assert "\033[91m" in result.data
 
     def test_service_inheritance(self) -> None:
-        """Test that service properly inherits from FlextService."""
+        """Test that service properly inherits from FlextCore.Service."""
         service = colors.FlextColorService()
-        assert isinstance(service, FlextService)
+        assert isinstance(service, FlextCore.Service)
         assert hasattr(service, "execute")
         assert callable(service.execute)
 
@@ -126,31 +126,31 @@ class TestFlextToolsConfigManager:
         """Test load config functionality."""
         manager = config_manager.ConfigurationManager()
         result = manager.load_config()
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
     def test_set_config_functionality(self) -> None:
         """Test set config functionality."""
         manager = config_manager.ConfigurationManager()
         result = manager.set("test_key", "test_value")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
     def test_get_config_functionality(self) -> None:
         """Test get config functionality."""
         manager = config_manager.ConfigurationManager()
         result = manager.get("test_key", "default_value")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
     def test_validate_config_functionality(self) -> None:
         """Test validate config functionality."""
         manager = config_manager.ConfigurationManager()
         result = manager.validate_config()
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
     def test_config_with_pathlib(self) -> None:
         """Test config with Path object."""
         manager = config_manager.ConfigurationManager(Path("test_config.json"))
         result = manager.load_config()
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
 
 class TestFlextToolsConflicts:
@@ -166,25 +166,25 @@ class TestFlextToolsConflicts:
         """Test detect version conflicts functionality."""
         analyzer = conflicts.ConflictAnalyzer()
         result = analyzer.detect_version_conflicts()
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
     def test_analyze_dependencies(self) -> None:
         """Test analyze dependencies functionality."""
         analyzer = conflicts.ConflictAnalyzer()
         result = analyzer.analyze_dependencies("/path/to/project")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
     def test_resolve_conflicts(self) -> None:
         """Test resolve conflicts functionality."""
         analyzer = conflicts.ConflictAnalyzer()
         result = analyzer.resolve_conflicts()
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
     def test_conflict_error_handling(self) -> None:
         """Test conflict error handling."""
         analyzer = conflicts.ConflictAnalyzer()
         result = analyzer.analyze_dependencies("")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
 
 class TestFlextToolsDiscoveryBase:
@@ -200,19 +200,19 @@ class TestFlextToolsDiscoveryBase:
         """Test discover dependencies functionality."""
         discovery = discovery_base.DependencyDiscovery()
         result = discovery.discover_dependencies("test_module")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
     def test_discover_dependencies_with_path(self) -> None:
         """Test discover dependencies with project path."""
         discovery = discovery_base.DependencyDiscovery()
         result = discovery.discover_dependencies("/path/to/project")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
     def test_discovery_error_handling(self) -> None:
         """Test discovery error handling."""
         discovery = discovery_base.DependencyDiscovery()
         result = discovery.discover_dependencies("")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
 
 class TestFlextToolsPaths:
@@ -225,9 +225,9 @@ class TestFlextToolsPaths:
         assert isinstance(service, paths.FlextPathService)
 
     def test_service_inheritance(self) -> None:
-        """Test that service properly inherits from FlextService."""
+        """Test that service properly inherits from FlextCore.Service."""
         service = paths.FlextPathService()
-        assert isinstance(service, FlextService)
+        assert isinstance(service, FlextCore.Service)
         assert hasattr(service, "execute")
         assert callable(service.execute)
 
@@ -235,7 +235,7 @@ class TestFlextToolsPaths:
         """Test execute method functionality."""
         service = paths.FlextPathService()
         result = service.execute()
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
         assert result.is_success
         assert isinstance(result.data, Path)
 
@@ -290,25 +290,25 @@ class TestFlextToolsSecurity:
         """Test decrypt vault functionality."""
         service = security.FlextSecurityService()
         result = service.decrypt_vault("/path/to/vault")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
     def test_scan_antipatterns_functionality(self) -> None:
         """Test scan antipatterns functionality."""
         service = security.FlextSecurityService()
         result = service.scan_antipatterns("/path/to/directory")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
     def test_execute_functionality(self) -> None:
         """Test execute functionality."""
         service = security.FlextSecurityService()
         result = service.execute()
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
     def test_security_error_handling(self) -> None:
         """Test security error handling."""
         service = security.FlextSecurityService()
         result = service.decrypt_vault("")
-        assert isinstance(result, FlextResult)
+        assert isinstance(result, FlextCore.Result)
 
 
 class TestFlextToolsIntegration:
@@ -343,7 +343,7 @@ class TestFlextToolsIntegration:
         assert security_service is not None
 
     def test_flext_result_consistency(self) -> None:
-        """Test that all services return FlextResult consistently."""
+        """Test that all services return FlextCore.Result consistently."""
         backup_manager = backup.BackupManager()
         color_service = colors.FlextColorService()
         config_manager_instance = config_manager.ConfigurationManager()
@@ -352,27 +352,29 @@ class TestFlextToolsIntegration:
         path_service = paths.FlextPathService()
         security_service = security.FlextSecurityService()
 
-        # Test that all methods return FlextResult
-        assert isinstance(backup_manager.create_backup("test"), FlextResult)
+        # Test that all methods return FlextCore.Result
+        assert isinstance(backup_manager.create_backup("test"), FlextCore.Result)
         assert isinstance(
-            color_service.colorize("test", color_service.Colors.RED), FlextResult
+            color_service.colorize("test", color_service.Colors.RED), FlextCore.Result
         )
-        assert isinstance(config_manager_instance.load_config(), FlextResult)
-        assert isinstance(conflict_analyzer.detect_version_conflicts(), FlextResult)
-        assert isinstance(discovery.discover_dependencies("test"), FlextResult)
-        assert isinstance(path_service.execute(), FlextResult)
-        assert isinstance(security_service.execute(), FlextResult)
+        assert isinstance(config_manager_instance.load_config(), FlextCore.Result)
+        assert isinstance(
+            conflict_analyzer.detect_version_conflicts(), FlextCore.Result
+        )
+        assert isinstance(discovery.discover_dependencies("test"), FlextCore.Result)
+        assert isinstance(path_service.execute(), FlextCore.Result)
+        assert isinstance(security_service.execute(), FlextCore.Result)
 
     def test_service_inheritance_consistency(self) -> None:
-        """Test that services properly inherit from FlextService."""
+        """Test that services properly inherit from FlextCore.Service."""
         color_service = colors.FlextColorService()
         path_service = paths.FlextPathService()
         security_service = security.FlextSecurityService()
 
-        # Test that services inherit from FlextService
-        assert isinstance(color_service, FlextService)
-        assert isinstance(path_service, FlextService)
-        assert isinstance(security_service, FlextService)
+        # Test that services inherit from FlextCore.Service
+        assert isinstance(color_service, FlextCore.Service)
+        assert isinstance(path_service, FlextCore.Service)
+        assert isinstance(security_service, FlextCore.Service)
 
         # Test that they have execute method
         assert hasattr(color_service, "execute")
@@ -384,30 +386,30 @@ class TestFlextToolsIntegration:
         # Test backup workflow
         backup_manager = backup.BackupManager()
         backup_result = backup_manager.create_backup("test_file.txt")
-        assert isinstance(backup_result, FlextResult)
+        assert isinstance(backup_result, FlextCore.Result)
         assert backup_result.is_success
 
         # Test color workflow
         color_service = colors.FlextColorService()
         color_result = color_service.colorize("test", color_service.Colors.GREEN)
-        assert isinstance(color_result, FlextResult)
+        assert isinstance(color_result, FlextCore.Result)
         assert color_result.is_success
 
         # Test config workflow
         config_manager_instance = config_manager.ConfigurationManager()
         config_result = config_manager_instance.set("test_key", "test_value")
-        assert isinstance(config_result, FlextResult)
+        assert isinstance(config_result, FlextCore.Result)
 
         # Test path workflow
         path_service = paths.FlextPathService()
         path_result = path_service.execute()
-        assert isinstance(path_result, FlextResult)
+        assert isinstance(path_result, FlextCore.Result)
         assert path_result.is_success
 
         # Test security workflow
         security_service = security.FlextSecurityService()
         security_result = security_service.execute()
-        assert isinstance(security_result, FlextResult)
+        assert isinstance(security_result, FlextCore.Result)
 
     def test_error_handling_consistency(self) -> None:
         """Test that error handling is consistent across all tools."""
@@ -418,11 +420,11 @@ class TestFlextToolsIntegration:
         security_service = security.FlextSecurityService()
 
         # Test error handling with empty/invalid inputs
-        assert isinstance(backup_manager.restore_backup(""), FlextResult)
-        assert isinstance(config_manager_instance.get("", "default"), FlextResult)
-        assert isinstance(conflict_analyzer.analyze_dependencies(""), FlextResult)
-        assert isinstance(discovery.discover_dependencies(""), FlextResult)
-        assert isinstance(security_service.decrypt_vault(""), FlextResult)
+        assert isinstance(backup_manager.restore_backup(""), FlextCore.Result)
+        assert isinstance(config_manager_instance.get("", "default"), FlextCore.Result)
+        assert isinstance(conflict_analyzer.analyze_dependencies(""), FlextCore.Result)
+        assert isinstance(discovery.discover_dependencies(""), FlextCore.Result)
+        assert isinstance(security_service.decrypt_vault(""), FlextCore.Result)
 
     def test_performance_consistency(self) -> None:
         """Test that performance is consistent across all tools."""
@@ -437,18 +439,20 @@ class TestFlextToolsIntegration:
         # Test multiple rapid operations
         for i in range(5):
             assert isinstance(
-                backup_manager.create_backup(f"test_{i}.txt"), FlextResult
+                backup_manager.create_backup(f"test_{i}.txt"), FlextCore.Result
             )
             assert isinstance(
                 color_service.colorize(f"test_{i}", color_service.Colors.BLUE),
-                FlextResult,
+                FlextCore.Result,
             )
             assert isinstance(
-                config_manager_instance.set(f"key_{i}", f"value_{i}"), FlextResult
+                config_manager_instance.set(f"key_{i}", f"value_{i}"), FlextCore.Result
             )
-            assert isinstance(conflict_analyzer.detect_version_conflicts(), FlextResult)
             assert isinstance(
-                discovery.discover_dependencies(f"module_{i}"), FlextResult
+                conflict_analyzer.detect_version_conflicts(), FlextCore.Result
             )
-            assert isinstance(path_service.execute(), FlextResult)
-            assert isinstance(security_service.execute(), FlextResult)
+            assert isinstance(
+                discovery.discover_dependencies(f"module_{i}"), FlextCore.Result
+            )
+            assert isinstance(path_service.execute(), FlextCore.Result)
+            assert isinstance(security_service.execute(), FlextCore.Result)

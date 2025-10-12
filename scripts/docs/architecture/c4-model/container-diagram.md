@@ -65,6 +65,7 @@ Rel_D(domain_services, monitoring, "Reports", "Logs")
 ### User-Facing Containers
 
 #### API Gateway
+
 - **Technology**: Python/FastAPI
 - **Purpose**: REST API gateway with OpenAPI documentation
 - **Responsibilities**:
@@ -74,6 +75,7 @@ Rel_D(domain_services, monitoring, "Reports", "Logs")
   - Request/response transformation
 
 #### CLI Interface
+
 - **Technology**: Python/Click+Rich
 - **Purpose**: Command-line interface with rich formatting
 - **Responsibilities**:
@@ -85,15 +87,17 @@ Rel_D(domain_services, monitoring, "Reports", "Logs")
 ### Core Containers
 
 #### FLEXT Core
+
 - **Technology**: Python
 - **Purpose**: Foundation library with Clean Architecture patterns
 - **Responsibilities**:
-  - FlextResult[T] error handling
-  - FlextContainer dependency injection
-  - FlextModels domain patterns
-  - FlextLogger structured logging
+  - FlextCore.Result[T] error handling
+  - FlextCore.Container dependency injection
+  - FlextCore.Models domain patterns
+  - FlextCore.Logger structured logging
 
 #### Domain Services
+
 - **Technology**: Python
 - **Purpose**: Business logic and domain services
 - **Responsibilities**:
@@ -103,6 +107,7 @@ Rel_D(domain_services, monitoring, "Reports", "Logs")
   - REST API framework
 
 #### Data Integration
+
 - **Technology**: Python/Singer+DBT
 - **Purpose**: ETL pipelines and data transformation
 - **Responsibilities**:
@@ -111,6 +116,7 @@ Rel_D(domain_services, monitoring, "Reports", "Logs")
   - Data transformation (DBT)
 
 #### Runtime Container
+
 - **Technology**: Go
 - **Purpose**: Plugin execution and orchestration
 - **Responsibilities**:
@@ -122,21 +128,25 @@ Rel_D(domain_services, monitoring, "Reports", "Logs")
 ### External Systems
 
 #### LDAP Directory
+
 - **Technology**: OpenLDAP/Active Directory/Oracle OID
 - **Purpose**: Corporate directory services
 - **Interfaces**: LDAP protocol (RFC 4511)
 
 #### Oracle Database
+
 - **Technology**: Oracle RDBMS
 - **Purpose**: Enterprise database systems
 - **Interfaces**: JDBC, OCI
 
 #### Data Warehouse
+
 - **Technology**: Snowflake/BigQuery/Redshift
 - **Purpose**: Analytics data warehouse
 - **Interfaces**: Various ETL protocols
 
 #### Monitoring
+
 - **Technology**: Prometheus/Grafana
 - **Purpose**: Observability platform
 - **Interfaces**: Metrics, logs, traces

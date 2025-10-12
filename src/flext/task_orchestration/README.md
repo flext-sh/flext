@@ -114,6 +114,7 @@ Initiates the task orchestration workflow using the three-agent system.
 ### Status Commands
 
 #### `/task-status`
+
 Check orchestration status and progress.
 
 ```bash
@@ -121,6 +122,7 @@ Check orchestration status and progress.
 ```
 
 #### `/task-move`
+
 Move task to new status.
 
 ```bash
@@ -128,6 +130,7 @@ Move task to new status.
 ```
 
 #### `/task-report`
+
 Generate orchestration report.
 
 ```bash
@@ -137,6 +140,7 @@ Generate orchestration report.
 ## Input Formats
 
 ### Direct Task List
+
 ```
 /orchestrate
 - Implement user authentication with JWT
@@ -146,11 +150,13 @@ Generate orchestration report.
 ```
 
 ### File Reference
+
 ```
 /orchestrate features.md
 ```
 
 ### Mixed Context
+
 ```
 /orchestrate
 Based on our meeting notes (lots of discussion about UI colors), we need to:
@@ -191,34 +197,34 @@ class Task(BaseModel):
     type: TaskType                   # Feature, bugfix, refactor, etc.
     priority: TaskPriority           # Low, medium, high, critical
     status: TaskStatus               # todo, in_progress, completed, etc.
-    
+
     # Assignment and ownership
     assignee: Optional[str]          # Assigned agent or user
     owner: Optional[str]             # Task owner
-    
+
     # Dependencies and relationships
     dependencies: List[TaskDependency]  # Task dependencies
-    blocks: List[str]                # Tasks blocked by this task
-    
+    blocks: FlextCore.Types.StringList                # Tasks blocked by this task
+
     # Timing and estimation
     estimated_hours: Optional[float] # Estimated hours to complete
     actual_hours: Optional[float]    # Actual hours spent
     due_date: Optional[datetime]     # Task due date
-    
+
     # Metadata
-    tags: List[str]                  # Task tags
+    tags: FlextCore.Types.StringList                  # Task tags
     category: Optional[str]          # Task category
     project: Optional[str]           # Associated project
-    
+
     # Timestamps
     created_at: datetime             # Creation timestamp
     updated_at: datetime             # Last update timestamp
     started_at: Optional[datetime]   # Start timestamp
     completed_at: Optional[datetime] # Completion timestamp
-    
+
     # Progress tracking
     progress_percentage: int         # Progress percentage (0-100)
-    notes: List[str]                 # Task notes and updates
+    notes: FlextCore.Types.StringList                 # Task notes and updates
 ```
 
 ## Configuration
@@ -230,23 +236,23 @@ class TaskOrchestrationConfig(BaseModel):
     # Directory structure
     orchestration_root: Path = Path("task-orchestration")
     date_format: str = "%m_%d_%Y"
-    
+
     # Agent configuration
     max_agents: int = 3              # Maximum number of agents
     parallel_tasks: int = 5          # Maximum parallel tasks
-    
+
     # Task constraints
     max_task_duration_days: int = 30 # Maximum task duration
     auto_assign: bool = True         # Auto-assign tasks to agents
-    
+
     # Quality gates
     require_qa: bool = True          # Require QA review
     min_estimation_hours: float = 0.5 # Minimum task estimation
     max_estimation_hours: float = 40  # Maximum task estimation
-    
+
     # Focus and filtering
     focus_area: Optional[str] = None # Focus area for prioritization
-    exclude_patterns: List[str] = [] # Patterns to exclude
+    exclude_patterns: FlextCore.Types.StringList = [] # Patterns to exclude
 ```
 
 ## Three-Agent System
@@ -256,12 +262,14 @@ class TaskOrchestrationConfig(BaseModel):
 **Purpose**: Requirement clarification and coordination
 
 **Responsibilities**:
+
 - Extract requirements from various input formats
 - Apply focus filtering and validation
 - Generate clarification questions
 - Coordinate the overall orchestration process
 
 **Key Methods**:
+
 - `clarify_requirements()`: Extract and validate requirements
 - `_parse_requirements()`: Parse different input formats
 - `_validate_requirements()`: Ensure requirement quality
@@ -271,12 +279,14 @@ class TaskOrchestrationConfig(BaseModel):
 **Purpose**: Atomic task creation and breakdown
 
 **Responsibilities**:
+
 - Decompose requirements into atomic tasks
 - Determine task types and priorities
 - Estimate effort and complexity
 - Create subtasks when needed
 
 **Key Methods**:
+
 - `decompose_requirements()`: Main decomposition logic
 - `_create_task_from_requirement()`: Create individual tasks
 - `_decompose_into_subtasks()`: Break down complex requirements
@@ -286,12 +296,14 @@ class TaskOrchestrationConfig(BaseModel):
 **Purpose**: Conflict detection and parallelization
 
 **Responsibilities**:
+
 - Detect dependencies between tasks
 - Identify conflicts and circular dependencies
 - Find parallelization opportunities
 - Validate dependency graphs
 
 **Key Methods**:
+
 - `analyze_dependencies()`: Main analysis logic
 - `_detect_conflicts()`: Find various conflict types
 - `_find_parallel_opportunities()`: Identify parallel execution
@@ -383,7 +395,7 @@ The system provides comprehensive error handling:
 The orchestration system integrates seamlessly with:
 
 - **FLEXT CLI**: Native command integration
-- **FLEXT Core**: Uses FlextResult pattern for error handling
+- **FLEXT Core**: Uses FlextCore.Result pattern for error handling
 - **FLEXT Services**: Follows FLEXT service patterns
 - **Status Tracking**: Real-time progress monitoring
 - **Reporting**: Comprehensive reporting capabilities
@@ -427,9 +439,9 @@ The orchestration system integrates seamlessly with:
 Enable debug mode for detailed logging:
 
 ```python
-from flext_core import FlextLogger
+from flext_core import FlextCore
 
-logger = FlextLogger(__name__)
+logger = FlextCore.Logger(__name__)
 logger.setLevel("DEBUG")
 ```
 
@@ -441,7 +453,7 @@ When contributing to the task orchestration system:
 2. Add comprehensive tests
 3. Update documentation
 4. Ensure type safety
-5. Use FlextResult for error handling
+5. Use FlextCore.Result for error handling
 
 ## License
 
