@@ -17,28 +17,13 @@ import time
 from enum import StrEnum
 from typing import Self, TypeVar
 
-from flext_core import (
-    FlextContainer,
-    FlextHandlers,
-    FlextLogger,
-    FlextModels,
-    FlextProcessors,
-    FlextResult,
-    FlextService,
-)
-
-# Import SOURCE OF TRUTH co, Selfnfigurations - NO DUPLICATION
+from flext_core import FlextCore
 from pydantic import BaseModel, Field
-
-# Removed conflicting import - using local PipelineService function instead
-
-# Direct flext-core integration - NO ALIASES ALLOWED
-# Users must access FlextProcessors.Pipeline directly from flext-core
 
 Entry = TypeVar("Entry")
 
 
-class FlextApplicationPipelineService(FlextService[str]):
+class FlextApplicationPipelineService(FlextCore.Service[str]):
     """Unified pipeline service providing facade to flext-core pipeline system.
 
     This service acts as a facade to flext-core's comprehensive pipeline system,
@@ -67,7 +52,7 @@ class FlextApplicationPipelineService(FlextService[str]):
         """Command to create a new pipeline."""
 
         name: str = Field(..., description="Pipeline name")
-        config: dict[str, object] = Field(..., description="Pipeline configuration")
+        config: FlextCore.Types.Dict = Field(..., description="Pipeline configuration")
 
     class ExecutePipelineCommand(BaseModel):
         """Command to execute a pipeline."""
@@ -87,8 +72,8 @@ class FlextApplicationPipelineService(FlextService[str]):
     def __init__(self, **_data: object) -> None:
         """Initialize pipeline service with flext-core integration."""
         super().__init__()
-        self._logger = FlextLogger(__name__)
-        self._container = FlextContainer._ensure_global_manager().get_or_create()
+        self._logger = FlextCore.Logger(__name__)
+        self._container = FlextCore.Container._ensure_global_manager().get_or_create()
 
     class _PipelineFactory:
         """Direct access to flext-core pipelines - ELIMINATES WRAPPER METHODS."""
@@ -96,13 +81,15 @@ class FlextApplicationPipelineService(FlextService[str]):
         def __init__(self, service: FlextApplicationPipelineService) -> None:
             self._service = service
 
-        def create_pipeline(self, _name: str | None = None) -> FlextProcessors.Pipeline:
+        def create_pipeline(
+            self, _name: str | None = None
+        ) -> FlextCore.Processors.Pipeline:
             """Create pipeline using flext-core implementation."""
-            return FlextProcessors.Pipeline()
+            return FlextCore.Processors.Pipeline()
 
-        def create_processing_pipeline(self: Self) -> FlextProcessors.Pipeline:
+        def create_processing_pipeline(self: Self) -> FlextCore.Processors.Pipeline:
             """Create processing pipeline using flext-core implementation."""
-            return FlextProcessors.Pipeline()
+            return FlextCore.Processors.Pipeline()
 
     class _ServiceFactory:
         """Nested factory for creating pipeline services."""
@@ -140,60 +127,62 @@ class FlextApplicationPipelineService(FlextService[str]):
     def create_pipeline(
         self,
         name: str,
-        config: dict[str, object],
-    ) -> FlextResult[dict[str, object]]:
+        config: FlextCore.Types.Dict,
+    ) -> FlextCore.Result[FlextCore.Types.Dict]:
         """Create a new pipeline."""
         try:
             # Use config parameter to avoid unused warning
             _ = config
             # Use flext-core pipeline creation
-            _pipeline = FlextProcessors.Pipeline()
-            return FlextResult[dict[str, object]].ok({
+            _pipeline = FlextCore.Processors.Pipeline()
+            return FlextCore.Result[FlextCore.Types.Dict].ok({
                 "pipeline": name,
                 "status": "created",
             })
         except Exception as e:
-            return FlextResult[dict[str, object]].fail(
+            return FlextCore.Result[FlextCore.Types.Dict].fail(
                 f"Failed to create pipeline: {e}"
             )
 
-    def execute_pipeline(self, name: str) -> FlextResult[dict[str, object]]:
+    def execute_pipeline(self, name: str) -> FlextCore.Result[FlextCore.Types.Dict]:
         """Execute a pipeline."""
         try:
             # Simulate pipeline execution
             time.sleep(0.1)  # Simulate processing time
-            return FlextResult[dict[str, object]].ok({
+            return FlextCore.Result[FlextCore.Types.Dict].ok({
                 "pipeline": name,
                 "status": "completed",
             })
         except Exception as e:
-            return FlextResult[dict[str, object]].fail(
+            return FlextCore.Result[FlextCore.Types.Dict].fail(
                 f"Failed to execute pipeline: {e}"
             )
 
-    def get_pipeline(self, name: str) -> FlextResult[dict[str, object]]:
+    def get_pipeline(self, name: str) -> FlextCore.Result[FlextCore.Types.Dict]:
         """Get pipeline information."""
         try:
-            return FlextResult[dict[str, object]].ok({
+            return FlextCore.Result[FlextCore.Types.Dict].ok({
                 "pipeline": name,
                 "status": "active",
             })
         except Exception as e:
-            return FlextResult[dict[str, object]].fail(f"Failed to get pipeline: {e}")
+            return FlextCore.Result[FlextCore.Types.Dict].fail(
+                f"Failed to get pipeline: {e}"
+            )
 
-    def list_pipelines(self: Self) -> FlextResult[list[dict[str, object]]]:
+    def list_pipelines(self: Self) -> FlextCore.Result[list[FlextCore.Types.Dict]]:
         """List all pipelines."""
         try:
-            return FlextResult[list[dict[str, object]]].ok([])
+            return FlextCore.Result[list[FlextCore.Types.Dict]].ok([])
         except Exception as e:
-            return FlextResult[list[dict[str, object]]].fail(
+            return FlextCore.Result[list[FlextCore.Types.Dict]].fail(
                 f"Failed to list pipelines: {e}"
             )
 
-    def get_pipeline_metrics(self, name: str) -> FlextResult[dict[str, object]]:
+    def get_pipeline_metrics(self, name: str) -> FlextCore.Result[FlextCore.Types.Dict]:
         """Get pipeline metrics."""
         try:
-            return FlextResult[dict[str, object]].ok({
+            return FlextCore.Result[FlextCore.Types.Dict].ok({
                 "pipeline": name,
                 "metrics": {
                     "executions": 0,
@@ -202,14 +191,14 @@ class FlextApplicationPipelineService(FlextService[str]):
                 },
             })
         except Exception as e:
-            return FlextResult[dict[str, object]].fail(
+            return FlextCore.Result[FlextCore.Types.Dict].fail(
                 f"Failed to get pipeline metrics: {e}"
             )
 
-    def create_command_handler(self: Self) -> FlextHandlers[object, object]:
+    def create_command_handler(self: Self) -> FlextCore.Handlers[object, object]:
         """Create command handler for pipeline operations."""
         # Create a basic handler config for pipeline operations
-        config = FlextModels.Cqrs.Handler(
+        config = FlextCore.Models.Cqrs.Handler(
             handler_id="pipeline_handler_001",
             handler_name="pipeline_handler",
             handler_type="command",
@@ -219,15 +208,15 @@ class FlextApplicationPipelineService(FlextService[str]):
         )
 
         # Create a concrete handler implementation
-        class PipelineHandler(FlextHandlers[object, object]):
-            def handle(self, message: object) -> FlextResult[object]:
+        class PipelineHandler(FlextCore.Handlers[object, object]):
+            def handle(self, message: object) -> FlextCore.Result[object]:
                 """Handle pipeline commands."""
-                return FlextResult[object].ok(f"Pipeline processed: {message}")
+                return FlextCore.Result[object].ok(f"Pipeline processed: {message}")
 
         return PipelineHandler(config=config)
 
-    def execute(self, request: str = "") -> FlextResult[str]:
-        """Execute pipeline service - required by FlextService abstract method."""
+    def execute(self, request: str = "") -> FlextCore.Result[str]:
+        """Execute pipeline service - required by FlextCore.Service abstract method."""
         _ = request  # Parameter available for service requests
         try:
             # Default execution returns pipeline system info from flext-core
@@ -236,12 +225,14 @@ class FlextApplicationPipelineService(FlextService[str]):
                 "domain": "pipeline",
                 "status": "ready",
             }
-            return FlextResult[str].ok(f"FlextApplicationPipelineService ready: {info}")
+            return FlextCore.Result[str].ok(
+                f"FlextApplicationPipelineService ready: {info}"
+            )
         except Exception as e:
-            return FlextResult[str].fail(f"Pipeline service execution failed: {e}")
+            return FlextCore.Result[str].fail(f"Pipeline service execution failed: {e}")
 
-    def execute_async(self, request: str = "") -> FlextResult[str]:
-        """Execute pipeline service asynchronously - required by FlextService abstract method (sync stub)."""
+    def execute_async(self, request: str = "") -> FlextCore.Result[str]:
+        """Execute pipeline service asynchronously - required by FlextCore.Service abstract method (sync stub)."""
         # Synchronous stub - return the input object
         # Real async operations should be converted to sync alternatives
         try:
@@ -251,9 +242,11 @@ class FlextApplicationPipelineService(FlextService[str]):
                 "domain": "pipeline",
                 "status": "ready",
             }
-            return FlextResult[str].ok(f"FlextApplicationPipelineService ready: {info}")
+            return FlextCore.Result[str].ok(
+                f"FlextApplicationPipelineService ready: {info}"
+            )
         except Exception as e:
-            return FlextResult[str].fail(f"Pipeline service execution failed: {e}")
+            return FlextCore.Result[str].fail(f"Pipeline service execution failed: {e}")
 
     # Advanced models namespace for test compatibility
     class FlextAdvancedPipelineModels:

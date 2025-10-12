@@ -11,7 +11,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextCore
 
 from flext_tools import (
     CodeDuplicateAnalyzer,
@@ -35,7 +35,7 @@ class CodeDuplicatesAnalyzer(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> FlextResult[None]:
+    def validate_preconditions(self) -> FlextCore.Result[None]:
         """Validate preconditions."""
         workspace_root = Path.cwd()
 
@@ -49,17 +49,17 @@ class CodeDuplicatesAnalyzer(FlextScript):
                 "❌ No Python projects with src/ directories found",
                 Colors.RED,
             )
-            return FlextResult[None].fail("No Python projects found")
+            return FlextCore.Result[None].fail("No Python projects found")
 
         print_colored(
             f"✅ Found {len(python_projects)} Python projects to analyze",
             Colors.GREEN,
         )
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
     def execute_main_logic(
         self, **kwargs: dict[str, str]
-    ) -> FlextResult[dict[str, str]]:
+    ) -> FlextCore.Result[dict[str, str]]:
         """Execute main script logic."""
         """Execute code duplicate analysis."""
         try:
@@ -101,14 +101,14 @@ class CodeDuplicatesAnalyzer(FlextScript):
                 if kwargs.get("generate_report", True):
                     print_colored("📊 Detailed report generated", Colors.CYAN)
 
-                return FlextResult[object].ok(analysis_result.data)
+                return FlextCore.Result[object].ok(analysis_result.data)
 
             print_colored("❌ Code duplicate analysis failed", Colors.RED)
-            return FlextResult[object].fail("Analysis failed")
+            return FlextCore.Result[object].fail("Analysis failed")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during duplicate analysis: {e}", Colors.RED)
-            return FlextResult[object].fail(f"Error during analysis: {e}")
+            return FlextCore.Result[object].fail(f"Error during analysis: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
@@ -141,15 +141,15 @@ class CodeDuplicatesAnalyzer(FlextScript):
 
         return parser
 
-    def _process_kwargs(self, args: object) -> FlextTypes.Dict:
+    def _process_kwargs(self, args: object) -> FlextCore.Types.Dict:
         """Process arguments into kwargs."""
-        kwargs: FlextTypes.Dict = {}
+        kwargs: FlextCore.Types.Dict = {}
         kwargs["generate_report"] = not getattr(args, "no_report", False)
         return kwargs
 
-    def cleanup(self) -> FlextResult[None]:
+    def cleanup(self) -> FlextCore.Result[None]:
         """Limpeza após execução."""
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
 
 def main() -> int:

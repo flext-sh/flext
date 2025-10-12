@@ -53,7 +53,7 @@ FLEXT Demo provides a simple demonstration of controlpanel integration:
 ├─────────────────────────────────────────────────────────────────┤
 │ Singer Ecosystem: Taps(5) | Targets(5) | DBT(4) | Extensions(1) │
 ├─────────────────────────────────────────────────────────────────┤
-│ Foundation: FLEXT-CORE (FlextResult | DI | Domain Patterns)     │
+│ Foundation: FLEXT-CORE (FlextCore.Result | DI | Domain Patterns)     │
 └─────────────────────────────────────────────────────────────────┘
 ```
 

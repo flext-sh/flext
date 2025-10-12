@@ -11,19 +11,20 @@
 ### Core Framework APIs
 
 #### flext-core
+
 **Foundation library providing core patterns and abstractions**
 
 ```python
 from flext_core import (
-    FlextResult,      # Railway-oriented error handling
-    FlextContainer,   # Dependency injection container
-    FlextModels,      # Unified domain models
-    FlextLogger,      # Structured logging
-    FlextConfig,      # Configuration management
+    FlextCore.Result,      # Railway-oriented error handling
+    FlextCore.Container,   # Dependency injection container
+    FlextCore.Models,      # Unified domain models
+    FlextCore.Logger,      # Structured logging
+    FlextCore.Config,      # Configuration management
 )
 
 # Railway-oriented programming
-def process_data(data: dict) -> FlextResult[ProcessedData]:
+def process_data(data: dict) -> FlextCore.Result[ProcessedData]:
     return (
         validate(data)
         .flat_map(transform)
@@ -32,12 +33,13 @@ def process_data(data: dict) -> FlextResult[ProcessedData]:
     )
 
 # Dependency injection
-container = FlextContainer.get_global()
+container = FlextCore.Container.get_global()
 container.register("database", DatabaseService())
 db_result = container.get("database")
 ```
 
 #### flext-api
+
 **REST API framework with OpenAPI support**
 
 ```python
@@ -56,7 +58,7 @@ class UserResponse(FlextApiModels.Response):
 api = FlextApi()
 
 @api.post("/users")
-async def create_user(request: UserRequest) -> FlextResult[UserResponse]:
+async def create_user(request: UserRequest) -> FlextCore.Result[UserResponse]:
     return (
         validate_user_data(request)
         .flat_map(save_user)
@@ -65,6 +67,7 @@ async def create_user(request: UserRequest) -> FlextResult[UserResponse]:
 ```
 
 #### flext-auth
+
 **Authentication and authorization services**
 
 ```python
@@ -84,7 +87,7 @@ class TokenResponse(FlextAuthModels.Response):
 auth = FlextAuth()
 
 @auth.login
-async def authenticate(request: LoginRequest) -> FlextResult[TokenResponse]:
+async def authenticate(request: LoginRequest) -> FlextCore.Result[TokenResponse]:
     return (
         validate_credentials(request)
         .flat_map(generate_tokens)
@@ -95,6 +98,7 @@ async def authenticate(request: LoginRequest) -> FlextResult[TokenResponse]:
 ### Data Integration APIs
 
 #### flext-ldif
+
 **RFC-compliant LDIF processing and migration**
 
 ```python
@@ -103,17 +107,17 @@ from flext_ldif import FlextLdif, FlextLdifModels
 # LDIF models
 class LdifEntry(FlextLdifModels.Entry):
     dn: str
-    attributes: dict[str, list[str]]
+    attributes: dict[str, FlextCore.Types.StringList]
     changetype: str = "add"
 
 class LdifParseResult(FlextLdifModels.ParseResult):
     entries: list[LdifEntry]
-    errors: list[str]
+    errors: FlextCore.Types.StringList
 
 # LDIF processing
 ldif = FlextLdif()
 
-def parse_ldif_file(file_path: str) -> FlextResult[LdifParseResult]:
+def parse_ldif_file(file_path: str) -> FlextCore.Result[LdifParseResult]:
     return (
         read_file(file_path)
         .flat_map(ldif.parse)
@@ -122,6 +126,7 @@ def parse_ldif_file(file_path: str) -> FlextResult[LdifParseResult]:
 ```
 
 #### flext-ldap
+
 **LDAP client operations and management**
 
 ```python
@@ -141,7 +146,7 @@ class LdapSearchResult(FlextLdapModels.SearchResult):
 # LDAP operations
 ldap = FlextLdap()
 
-def search_users(connection: LdapConnection) -> FlextResult[LdapSearchResult]:
+def search_users(connection: LdapConnection) -> FlextCore.Result[LdapSearchResult]:
     return (
         ldap.connect(connection)
         .flat_map(lambda conn: ldap.search(conn, "ou=users,dc=example,dc=com"))
@@ -150,6 +155,7 @@ def search_users(connection: LdapConnection) -> FlextResult[LdapSearchResult]:
 ```
 
 #### flext-oracle
+
 **Oracle database integration**
 
 ```python
@@ -165,13 +171,13 @@ class OracleConnection(FlextOracleModels.Connection):
 
 class QueryResult(FlextOracleModels.QueryResult):
     rows: list[dict[str, Any]]
-    column_names: list[str]
+    column_names: FlextCore.Types.StringList
     row_count: int
 
 # Oracle operations
 oracle = FlextOracle()
 
-def execute_query(connection: OracleConnection, query: str) -> FlextResult[QueryResult]:
+def execute_query(connection: OracleConnection, query: str) -> FlextCore.Result[QueryResult]:
     return (
         oracle.connect(connection)
         .flat_map(lambda conn: oracle.execute(conn, query))
@@ -182,6 +188,7 @@ def execute_query(connection: OracleConnection, query: str) -> FlextResult[Query
 ### Singer Platform APIs
 
 #### Taps (Data Extraction)
+
 **Extract data from various sources**
 
 ```python
@@ -205,7 +212,7 @@ oracle_tap.configure({
 })
 
 # Extract data
-def extract_all_data() -> FlextResult[list[dict]]:
+def extract_all_data() -> FlextCore.Result[list[dict]]:
     return (
         ldap_tap.extract()
         .flat_map(lambda ldap_data: oracle_tap.extract().map(lambda oracle_data: ldap_data + oracle_data))
@@ -213,6 +220,7 @@ def extract_all_data() -> FlextResult[list[dict]]:
 ```
 
 #### Targets (Data Loading)
+
 **Load data into various destinations**
 
 ```python
@@ -236,7 +244,7 @@ oracle_target.configure({
 })
 
 # Load data
-def load_data(records: list[dict]) -> FlextResult[LoadResult]:
+def load_data(records: list[dict]) -> FlextCore.Result[LoadResult]:
     return (
         ldap_target.load(records)
         .flat_map(lambda ldap_result: oracle_target.load(records).map(lambda oracle_result: combine_results(ldap_result, oracle_result)))
@@ -244,6 +252,7 @@ def load_data(records: list[dict]) -> FlextResult[LoadResult]:
 ```
 
 ### DBT Transformations
+
 **Data transformation and modeling**
 
 ```python
@@ -264,7 +273,7 @@ class OracleUserModel(FlextDbtOracle.Model):
     org_unit: str
 
 # Transform data
-def transform_user_data() -> FlextResult[list[dict]]:
+def transform_user_data() -> FlextCore.Result[list[dict]]:
     return (
         extract_ldap_users()
         .flat_map(lambda users: transform_ldap_to_oracle(users))
@@ -279,29 +288,29 @@ def transform_user_data() -> FlextResult[list[dict]]:
 ### Environment Configuration
 
 ```python
-from flext_core import FlextConfig
+from flext_core import FlextCore
 
 # Configuration management
-config = FlextConfig()
+config = FlextCore.Config()
 
 # Database configuration
 db_config = config.get_database_config()
-# Returns: FlextResult[DatabaseConfig]
+# Returns: FlextCore.Result[DatabaseConfig]
 
 # LDAP configuration
 ldap_config = config.get_ldap_config()
-# Returns: FlextResult[LdapConfig]
+# Returns: FlextCore.Result[LdapConfig]
 
 # API configuration
 api_config = config.get_api_config()
-# Returns: FlextResult[ApiConfig]
+# Returns: FlextCore.Result[ApiConfig]
 ```
 
 ### Service Configuration
 
 ```python
 # Service registration
-container = FlextContainer.get_global()
+container = FlextCore.Container.get_global()
 
 # Register services
 container.register("database", DatabaseService())
@@ -326,7 +335,7 @@ if db_result.is_success:
 
 ```python
 # Railway-oriented programming
-def complex_operation(data: dict) -> FlextResult[ProcessedData]:
+def complex_operation(data: dict) -> FlextCore.Result[ProcessedData]:
     return (
         validate_input(data)
         .flat_map(authenticate_user)
@@ -346,21 +355,21 @@ def handle_errors(error: str) -> str:
 ### Logging and Monitoring
 
 ```python
-from flext_core import FlextLogger
+from flext_core import FlextCore
 
 # Structured logging
-logger = FlextLogger.get_logger(__name__)
+logger = FlextCore.Logger.get_logger(__name__)
 
-def process_with_logging(data: dict) -> FlextResult[ProcessedData]:
+def process_with_logging(data: dict) -> FlextCore.Result[ProcessedData]:
     logger.info("Starting data processing", extra={"data_size": len(data)})
-    
+
     result = process_data(data)
-    
+
     if result.is_success:
         logger.info("Data processing completed successfully")
     else:
         logger.error("Data processing failed", extra={"error": result.error})
-    
+
     return result
 ```
 
@@ -368,20 +377,20 @@ def process_with_logging(data: dict) -> FlextResult[ProcessedData]:
 
 ```python
 import pytest
-from flext_core import FlextResult
+from flext_core import FlextCore
 
 def test_data_processing():
     # Test success case
     data = {"name": "test", "email": "test@example.com"}
     result = process_data(data)
-    
+
     assert result.is_success
     assert result.unwrap().name == "test"
-    
+
     # Test error case
     invalid_data = {}
     result = process_data(invalid_data)
-    
+
     assert not result.is_success
     assert "required" in result.error.lower()
 ```
@@ -394,17 +403,17 @@ def test_data_processing():
 
 ```python
 import asyncio
-from flext_core import FlextResult
+from flext_core import FlextCore
 
-async def async_data_processing(data: list[dict]) -> FlextResult[list[ProcessedData]]:
+async def async_data_processing(data: list[dict]) -> FlextCore.Result[list[ProcessedData]]:
     # Process data concurrently
     tasks = [process_single_item(item) for item in data]
     results = await asyncio.gather(*tasks, return_exceptions=True)
-    
+
     # Handle results
     processed_data = []
     errors = []
-    
+
     for result in results:
         if isinstance(result, Exception):
             errors.append(str(result))
@@ -412,11 +421,11 @@ async def async_data_processing(data: list[dict]) -> FlextResult[list[ProcessedD
             processed_data.append(result.unwrap())
         else:
             errors.append(result.error)
-    
+
     if errors:
-        return FlextResult[list[ProcessedData]].fail(f"Processing errors: {errors}")
-    
-    return FlextResult[list[ProcessedData]].ok(processed_data)
+        return FlextCore.Result[list[ProcessedData]].fail(f"Processing errors: {errors}")
+
+    return FlextCore.Result[list[ProcessedData]].ok(processed_data)
 ```
 
 ### Caching
@@ -427,18 +436,18 @@ from flext_core import FlextCache
 # Cache configuration
 cache = FlextCache(ttl=3600)  # 1 hour TTL
 
-def get_cached_data(key: str) -> FlextResult[dict]:
+def get_cached_data(key: str) -> FlextCore.Result[dict]:
     # Check cache first
     cached_result = cache.get(key)
     if cached_result.is_success:
         return cached_result
-    
+
     # Fetch from source
     data_result = fetch_from_source(key)
     if data_result.is_success:
         # Cache the result
         cache.set(key, data_result.unwrap())
-    
+
     return data_result
 ```
 
@@ -449,26 +458,29 @@ def get_cached_data(key: str) -> FlextResult[dict]:
 ### Common Issues
 
 #### 1. Import Errors
+
 ```python
 # ❌ WRONG - Internal module imports
-from flext_core.result import FlextResult
+from flext_core import FlextCore
 
 # ✅ CORRECT - Root module imports
-from flext_core import FlextResult
+from flext_core import FlextCore
 ```
 
 #### 2. Type Safety Issues
+
 ```python
 # ❌ WRONG - Missing type annotations
 def process_data(data):
     return transform(data)
 
 # ✅ CORRECT - Complete type annotations
-def process_data(data: dict[str, Any]) -> FlextResult[ProcessedData]:
+def process_data(data: dict[str, Any]) -> FlextCore.Result[ProcessedData]:
     return transform(data)
 ```
 
 #### 3. Error Handling
+
 ```python
 # ❌ WRONG - Exception-based
 def process_data(data: dict) -> ProcessedData:
@@ -477,9 +489,9 @@ def process_data(data: dict) -> ProcessedData:
     return transform(data)
 
 # ✅ CORRECT - Railway-oriented
-def process_data(data: dict) -> FlextResult[ProcessedData]:
+def process_data(data: dict) -> FlextCore.Result[ProcessedData]:
     if not data:
-        return FlextResult[ProcessedData].fail("Data required")
+        return FlextCore.Result[ProcessedData].fail("Data required")
     return transform(data)
 ```
 
@@ -490,11 +502,11 @@ def process_data(data: dict) -> FlextResult[ProcessedData]:
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
-# Use FlextLogger for structured logging
-logger = FlextLogger.get_logger(__name__)
+# Use FlextCore.Logger for structured logging
+logger = FlextCore.Logger.get_logger(__name__)
 logger.debug("Processing data", extra={"data": data})
 
-# Check FlextResult details
+# Check FlextCore.Result details
 result = process_data(data)
 if not result.is_success:
     logger.error(f"Processing failed: {result.error}")
@@ -506,17 +518,20 @@ if not result.is_success:
 ## 📚 Additional Resources
 
 ### Documentation
+
 - **Main README:** [README.md](../../README.md)
 - **Implementation Status:** [IMPLEMENTATION_STATUS_2025-10-09.md](IMPLEMENTATION_STATUS_2025-10-09.md)
 - **Architecture Guide:** [docs/architecture/](../architecture/)
 - **Getting Started:** [docs/guides/getting-started.md](../guides/getting-started.md)
 
 ### Examples
+
 - **Basic Usage:** [examples/basic_usage.py](../../examples/)
 - **Advanced Patterns:** [examples/advanced_patterns.py](../../examples/)
 - **Integration Examples:** [examples/integrations/](../../examples/)
 
 ### Support
+
 - **Issues:** Create GitHub issue with appropriate label
 - **Questions:** Check CLAUDE.md for guidance
 - **Development:** Follow established patterns and practices

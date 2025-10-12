@@ -28,11 +28,21 @@
     },
     "security": {
       "enabled": true,
-      "metrics": ["authentication", "authorization", "data_protection", "compliance"]
+      "metrics": [
+        "authentication",
+        "authorization",
+        "data_protection",
+        "compliance"
+      ]
     },
     "reliability": {
       "enabled": true,
-      "metrics": ["availability", "fault_tolerance", "data_consistency", "monitoring"]
+      "metrics": [
+        "availability",
+        "fault_tolerance",
+        "data_consistency",
+        "monitoring"
+      ]
     },
     "maintainability": {
       "enabled": true,
@@ -40,7 +50,12 @@
     },
     "usability": {
       "enabled": true,
-      "metrics": ["api_design", "cli_experience", "error_messages", "documentation"]
+      "metrics": [
+        "api_design",
+        "cli_experience",
+        "error_messages",
+        "documentation"
+      ]
     }
   },
   "generation": {

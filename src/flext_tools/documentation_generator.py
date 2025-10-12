@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Self
 
-from flext_core import FlextResult
+from flext_core import FlextCore
 
 
 class DocumentationGenerator:
@@ -18,12 +18,12 @@ class DocumentationGenerator:
     def __init__(self: Self) -> None:
         """Initialize documentation generator."""
 
-    def generate_docs(self, project_path: str | Path) -> FlextResult[str]:
+    def generate_docs(self, project_path: str | Path) -> FlextCore.Result[str]:
         """Generate documentation."""
         _ = project_path  # Parameter used for documentation generation
-        return FlextResult[str].ok("Documentation generated")
+        return FlextCore.Result[str].ok("Documentation generated")
 
-    def generate_api_docs(self, source_path: str | Path) -> FlextResult[str]:
+    def generate_api_docs(self, source_path: str | Path) -> FlextCore.Result[str]:
         """Generate API documentation."""
         _ = source_path  # Parameter used for API documentation generation
-        return FlextResult[str].ok("API documentation generated")
+        return FlextCore.Result[str].ok("API documentation generated")

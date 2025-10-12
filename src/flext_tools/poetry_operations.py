@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Self
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextCore
 
 
 class PoetryOperations:
@@ -18,21 +18,23 @@ class PoetryOperations:
     def __init__(self: Self) -> None:
         """Initialize poetry operations."""
 
-    def install_dependencies(self, project_path: str | Path) -> FlextResult[str]:
+    def install_dependencies(self, project_path: str | Path) -> FlextCore.Result[str]:
         """Install dependencies."""
         _ = project_path  # Parameter used for dependency installation
-        return FlextResult[str].ok("Dependencies installed")
+        return FlextCore.Result[str].ok("Dependencies installed")
 
-    def update_dependencies(self, project_path: str | Path) -> FlextResult[str]:
+    def update_dependencies(self, project_path: str | Path) -> FlextCore.Result[str]:
         """Update dependencies."""
         _ = project_path  # Parameter used for dependency updates
-        return FlextResult[str].ok("Dependencies updated")
+        return FlextCore.Result[str].ok("Dependencies updated")
 
-    def check_lock_file(self, project_path: str | Path) -> FlextResult[bool]:
+    def check_lock_file(self, project_path: str | Path) -> FlextCore.Result[bool]:
         """Check lock file."""
         _ = project_path  # Parameter used for lock file checking
-        return FlextResult[bool].ok(data=True)
+        return FlextCore.Result[bool].ok(data=True)
 
-    def get_outdated_packages(self: Self) -> FlextResult[FlextTypes.StringList]:
+    def get_outdated_packages(
+        self: Self,
+    ) -> FlextCore.Result[FlextCore.Types.StringList]:
         """Get outdated packages."""
-        return FlextResult[FlextTypes.StringList].ok([])
+        return FlextCore.Result[FlextCore.Types.StringList].ok([])

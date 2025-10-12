@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Self
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextCore
 
 
 class RollbackManager:
@@ -17,15 +17,15 @@ class RollbackManager:
     def __init__(self: Self) -> None:
         """Initialize rollback manager."""
 
-    def create_checkpoint(self, name: str) -> FlextResult[str]:
+    def create_checkpoint(self, name: str) -> FlextCore.Result[str]:
         """Create rollback checkpoint."""
-        return FlextResult[str].ok(f"Checkpoint {name} created")
+        return FlextCore.Result[str].ok(f"Checkpoint {name} created")
 
-    def rollback_to_checkpoint(self, checkpoint_id: str) -> FlextResult[None]:
+    def rollback_to_checkpoint(self, checkpoint_id: str) -> FlextCore.Result[None]:
         """Rollback to checkpoint."""
         _ = checkpoint_id  # Parameter used for checkpoint rollback
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
-    def list_checkpoints(self: Self) -> FlextResult[FlextTypes.StringList]:
+    def list_checkpoints(self: Self) -> FlextCore.Result[FlextCore.Types.StringList]:
         """List available checkpoints."""
-        return FlextResult[FlextTypes.StringList].ok([])
+        return FlextCore.Result[FlextCore.Types.StringList].ok([])

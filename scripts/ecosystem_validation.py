@@ -21,6 +21,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
+from flext_core import FlextCore
+
 # FLEXT ecosystem projects
 FLEXT_PROJECTS = [
     # Foundation
@@ -77,11 +79,11 @@ class ValidationResult:
     lint_errors: int = 0
     lint_warnings: int = 0
     type_errors: int = 0
-    domain_violations: list[str] = field(default_factory=list)
+    domain_violations: FlextCore.Types.StringList = field(default_factory=list)
     has_tests: bool = False
     has_makefile: bool = False
-    issues: list[str] = field(default_factory=list)
-    recommendations: list[str] = field(default_factory=list)
+    issues: FlextCore.Types.StringList = field(default_factory=list)
+    recommendations: FlextCore.Types.StringList = field(default_factory=list)
 
 
 class EcosystemValidator:
@@ -91,7 +93,7 @@ class EcosystemValidator:
         self.workspace_path = workspace_path
         self.results: dict[str, ValidationResult] = {}
 
-    def validate_syntax(self, project: str) -> tuple[int, list[str]]:
+    def validate_syntax(self, project: str) -> tuple[int, FlextCore.Types.StringList]:
         """Validate Python syntax using AST parsing."""
         project_path = self.workspace_path / project
         src_dir = project_path / "src"
@@ -141,7 +143,7 @@ class EcosystemValidator:
 
         return 0, 0
 
-    def validate_domain_violations(self, project: str) -> list[str]:
+    def validate_domain_violations(self, project: str) -> FlextCore.Types.StringList:
         """Check for direct imports of wrapped technologies."""
         project_path = self.workspace_path / project
         src_dir = project_path / "src"

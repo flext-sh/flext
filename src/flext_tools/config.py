@@ -2,9 +2,9 @@
 
 MANDATORY PATTERNS:
 - Pydantic 2.11+ BaseSettings with dependency_injector integration
-- ALL defaults from FlextConstants (ZERO module-level constants)
+- ALL defaults from FlextCore.Constants (ZERO module-level constants)
 - Centralized config classes with comprehensive validation logic
-- FlextResult for ALL operations (railway pattern)
+- FlextCore.Result for ALL operations (railway pattern)
 - Sync-only operations (temporary requirement)
 - NO environments, helpers, or production/homologation configurations
 
@@ -14,16 +14,11 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import json
 import threading
-from pathlib import Path
 from typing import ClassVar, Self
 
 from dependency_injector import providers
-from flext_core.constants import FlextConstants
-from flext_core.exceptions import FlextExceptions
-from flext_core.result import FlextResult
-from flext_core.typings import FlextTypes
+from flext_core import FlextCore
 from pydantic import Field, SecretStr, computed_field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -34,15 +29,15 @@ class FlextToolsConfig(BaseSettings):
     MANDATORY PATTERNS:
     - Pydantic 2.11+ BaseSettings for validation and environment variable support
     - dependency_injector integration for service injection
-    - ALL defaults from FlextConstants (ZERO module-level constants)
+    - ALL defaults from FlextCore.Constants (ZERO module-level constants)
     - Centralized configuration with comprehensive validation logic
-    - FlextResult for ALL operations (railway pattern)
+    - FlextCore.Result for ALL operations (railway pattern)
     - Sync-only operations (temporary requirement)
     - NO environments, helpers, or production/homologation configurations
 
     Core Features:
     - Environment variable support with FLEXT_ prefix
-    - Pydantic validation with FlextConstants defaults
+    - Pydantic validation with FlextCore.Constants defaults
     - Dependency injection provider integration
     - Computed fields for derived configuration
     - Railway pattern error handling
@@ -69,10 +64,10 @@ class FlextToolsConfig(BaseSettings):
     # Pydantic 2.11+ BaseSettings configuration
     model_config = SettingsConfigDict(
         case_sensitive=False,
-        env_prefix=FlextConstants.Platform.ENV_PREFIX,
-        env_file=FlextConstants.Platform.ENV_FILE_DEFAULT,
-        env_file_encoding=FlextConstants.Mixins.DEFAULT_ENCODING,
-        env_nested_delimiter=FlextConstants.Platform.ENV_NESTED_DELIMITER,
+        env_prefix=FlextCore.Constants.Platform.ENV_PREFIX,
+        env_file=FlextCore.Constants.Platform.ENV_FILE_DEFAULT,
+        env_file_encoding=FlextCore.Constants.Mixins.DEFAULT_ENCODING,
+        env_nested_delimiter=FlextCore.Constants.Platform.ENV_NESTED_DELIMITER,
         extra="ignore",
         use_enum_values=True,
         frozen=False,
@@ -87,14 +82,14 @@ class FlextToolsConfig(BaseSettings):
         },
     )
 
-    # Core application configuration - ALL defaults from FlextConstants
+    # Core application configuration - ALL defaults from FlextCore.Constants
     app_name: str = Field(
-        default=f"{FlextConstants.Core.NAME} Tools Application",
+        default=f"{FlextCore.Constants.NAME} Tools Application",
         description="Application name",
     )
 
     version: str = Field(
-        default=FlextConstants.Core.VERSION,
+        default=FlextCore.Constants.VERSION,
         description="Application version",
     )
 
@@ -108,24 +103,24 @@ class FlextToolsConfig(BaseSettings):
         description="Enable trace mode",
     )
 
-    # Logging configuration - ALL from FlextConstants
+    # Logging configuration - ALL from FlextCore.Constants
     log_level: str = Field(
-        default=FlextConstants.Logging.DEFAULT_LEVEL,
+        default=FlextCore.Constants.Logging.DEFAULT_LEVEL,
         description="Logging level",
     )
 
     json_output: bool = Field(
-        default=FlextConstants.Logging.JSON_OUTPUT_DEFAULT,
+        default=FlextCore.Constants.Logging.JSON_OUTPUT_DEFAULT,
         description="Use JSON output format",
     )
 
     include_source: bool = Field(
-        default=FlextConstants.Logging.INCLUDE_SOURCE,
+        default=FlextCore.Constants.Logging.INCLUDE_SOURCE,
         description="Include source code location",
     )
 
     structured_output: bool = Field(
-        default=FlextConstants.Logging.STRUCTURED_OUTPUT,
+        default=FlextCore.Constants.Logging.STRUCTURED_OUTPUT,
         description="Use structured logging format",
     )
 
@@ -136,21 +131,21 @@ class FlextToolsConfig(BaseSettings):
     )
 
     database_pool_size: int = Field(
-        default=FlextConstants.Performance.DEFAULT_DB_POOL_SIZE,
-        ge=FlextConstants.Performance.MIN_DB_POOL_SIZE,
-        le=FlextConstants.Performance.MAX_DB_POOL_SIZE,
+        default=FlextCore.Constants.Performance.DEFAULT_DB_POOL_SIZE,
+        ge=FlextCore.Constants.Performance.MIN_DB_POOL_SIZE,
+        le=FlextCore.Constants.Performance.MAX_DB_POOL_SIZE,
         description="Database connection pool size",
     )
 
-    # Cache configuration - ALL from FlextConstants
+    # Cache configuration - ALL from FlextCore.Constants
     cache_ttl: int = Field(
-        default=FlextConstants.Defaults.TIMEOUT * 10,  # 300 seconds
+        default=FlextCore.Constants.Defaults.TIMEOUT * 10,  # 300 seconds
         ge=0,
         description="Cache TTL in seconds",
     )
 
     cache_max_size: int = Field(
-        default=FlextConstants.Defaults.PAGE_SIZE * 10,  # 1000
+        default=FlextCore.Constants.Defaults.PAGE_SIZE * 10,  # 1000
         ge=0,
         description="Maximum cache size",
     )
@@ -166,18 +161,18 @@ class FlextToolsConfig(BaseSettings):
         description="API key for external service authentication",
     )
 
-    # Tools-specific configuration - ALL from FlextConstants where possible
+    # Tools-specific configuration - ALL from FlextCore.Constants where possible
     max_retry_attempts: int = Field(
-        default=FlextConstants.Reliability.MAX_RETRY_ATTEMPTS,
+        default=FlextCore.Constants.Reliability.MAX_RETRY_ATTEMPTS,
         ge=0,
-        le=FlextConstants.Performance.MAX_RETRY_ATTEMPTS_LIMIT,
+        le=FlextCore.Constants.Performance.MAX_RETRY_ATTEMPTS_LIMIT,
         description="Maximum retry attempts",
     )
 
     timeout_seconds: int = Field(
-        default=FlextConstants.Defaults.TIMEOUT,
+        default=FlextCore.Constants.Defaults.TIMEOUT,
         ge=1,
-        le=FlextConstants.Performance.DEFAULT_TIMEOUT_LIMIT,
+        le=FlextCore.Constants.Performance.DEFAULT_TIMEOUT_LIMIT,
         description="Default timeout in seconds",
     )
 
@@ -213,31 +208,31 @@ class FlextToolsConfig(BaseSettings):
         description="Enable linting functionality",
     )
 
-    # Container configuration - from FlextConstants
+    # Container configuration - from FlextCore.Constants
     max_workers: int = Field(
-        default=FlextConstants.Container.MAX_WORKERS,
+        default=FlextCore.Constants.Container.MAX_WORKERS,
         ge=1,
         le=50,
         description="Maximum number of workers",
     )
 
-    # Validation configuration - from FlextConstants
+    # Validation configuration - from FlextCore.Constants
     max_name_length: int = Field(
-        default=FlextConstants.Validation.MAX_NAME_LENGTH,
+        default=FlextCore.Constants.Validation.MAX_NAME_LENGTH,
         ge=1,
         le=500,
         description="Maximum allowed name length",
     )
 
     min_phone_digits: int = Field(
-        default=FlextConstants.Validation.MIN_PHONE_DIGITS,
+        default=FlextCore.Constants.Validation.MIN_PHONE_DIGITS,
         ge=7,
         le=15,
         description="Minimum phone number digits",
     )
 
     # Direct access method - simplified
-    def __call__(self, key: str) -> FlextTypes.ConfigValue:
+    def __call__(self, key: str) -> FlextCore.Types.ConfigValue:
         """Direct value access: config('log_level')."""
         if not hasattr(self, key):
             msg = f"Configuration key '{key}' not found"
@@ -248,11 +243,11 @@ class FlextToolsConfig(BaseSettings):
     @field_validator("log_level")
     @classmethod
     def validate_log_level(cls, v: str) -> str:
-        """Validate log level using FlextConstants."""
+        """Validate log level using FlextCore.Constants."""
         v_upper = v.upper()
-        if v_upper not in FlextConstants.Logging.VALID_LEVELS:
-            error_msg = f"Invalid log level: {v}. Must be one of: {', '.join(FlextConstants.Logging.VALID_LEVELS)}"
-            raise FlextExceptions.ValidationError(error_msg)
+        if v_upper not in FlextCore.Constants.Logging.VALID_LEVELS:
+            error_msg = f"Invalid log level: {v}. Must be one of: {', '.join(FlextCore.Constants.Logging.VALID_LEVELS)}"
+            raise FlextCore.Exceptions.ValidationError(error_msg)
         return v_upper
 
     @model_validator(mode="after")
@@ -260,7 +255,7 @@ class FlextToolsConfig(BaseSettings):
         """Validate debug and trace mode consistency."""
         if self.trace and not self.debug:
             error_msg = "Trace mode requires debug mode to be enabled"
-            raise FlextExceptions.ValidationError(error_msg)
+            raise FlextCore.Exceptions.ValidationError(error_msg)
         return self
 
     # Dependency injection integration
@@ -296,89 +291,23 @@ class FlextToolsConfig(BaseSettings):
         with cls._lock:
             cls._instances.pop(cls, None)
 
-    # File operations with FlextResult
-    @classmethod
-    def from_file(cls, file_path: str | Path) -> FlextResult[FlextToolsConfig]:
-        """Load configuration from JSON file."""
-        try:
-            path = Path(file_path)
-            if not path.exists():
-                return FlextResult[FlextToolsConfig].fail(
-                    f"Configuration file not found: {file_path}"
-                )
-
-            if path.suffix.lower() == ".json":
-                with path.open("r", encoding="utf-8") as f:
-                    data = json.load(f)
-                config = cls.model_validate(data)
-                return FlextResult[FlextToolsConfig].ok(config)
-
-            return FlextResult[FlextToolsConfig].fail(
-                f"Unsupported file format: {path.suffix}"
-            )
-
-        except json.JSONDecodeError as e:
-            return FlextResult[FlextToolsConfig].fail(
-                f"Invalid JSON in configuration file: {e}"
-            )
-        except Exception as e:
-            return FlextResult[FlextToolsConfig].fail(
-                f"Failed to load configuration: {e}"
-            )
-
-    def save_to_file(
-        self, file_path: str | Path, **kwargs: int | bool
-    ) -> FlextResult[None]:
-        """Save configuration to JSON file."""
-        try:
-            path = Path(file_path)
-            config_data = self.model_dump()
-
-            # Mask sensitive fields
-            if config_data.get("secret_key"):
-                config_data["secret_key"] = FlextConstants.Messages.REDACTED_SECRET
-            if config_data.get("api_key"):
-                config_data["api_key"] = FlextConstants.Messages.REDACTED_SECRET
-
-            indent = kwargs.get("indent", FlextConstants.Mixins.DEFAULT_JSON_INDENT)
-            sort_keys = kwargs.get("sort_keys", FlextConstants.Mixins.DEFAULT_SORT_KEYS)
-
-            with path.open("w", encoding="utf-8") as f:
-                json.dump(config_data, f, indent=indent, sort_keys=sort_keys)
-
-            return FlextResult[None].ok(None)
-
-        except Exception as e:
-            return FlextResult[None].fail(f"Failed to save configuration: {e}")
-
-    # Infrastructure protocol implementations
-    def configure(self, config: FlextTypes.Dict) -> FlextResult[None]:
-        """Configure component with provided settings."""
-        try:
-            for key, value in config.items():
-                if hasattr(self, key):
-                    setattr(self, key, value)
-            return self.validate_runtime_requirements()
-        except Exception as e:
-            return FlextResult[None].fail(f"Configuration failed: {e}")
-
-    def validate_runtime_requirements(self) -> FlextResult[None]:
+    def validate_runtime_requirements(self) -> FlextCore.Result[None]:
         """Validate configuration meets runtime requirements."""
         try:
             self.validate_log_level(self.log_level)
-        except FlextExceptions.ValidationError as e:
-            return FlextResult[None].fail(str(e))
+        except FlextCore.Exceptions.ValidationError as e:
+            return FlextCore.Result[None].fail(str(e))
 
         if self.trace and not self.debug:
-            return FlextResult[None].fail(
+            return FlextCore.Result[None].fail(
                 "Trace mode requires debug mode to be enabled"
             )
 
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
-    def validate_business_rules(self) -> FlextResult[None]:
+    def validate_business_rules(self) -> FlextCore.Result[None]:
         """Validate business rules for configuration consistency."""
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
     # Computed fields
     @computed_field
@@ -386,80 +315,6 @@ class FlextToolsConfig(BaseSettings):
         """Check if debug mode is enabled."""
         return self.debug or self.trace
 
-    @computed_field
-    def effective_log_level(self) -> str:
-        """Get effective log level considering debug/trace modes."""
-        if self.trace:
-            return "DEBUG"
-        if self.debug:
-            return "INFO"
-        return self.log_level
-
-    @computed_field
-    def cache_config(self) -> FlextTypes.Dict:
-        """Get cache configuration."""
-        return {
-            "ttl": self.cache_ttl,
-            "max_size": self.cache_max_size,
-            "enabled": self.cache_ttl > 0,
-        }
-
-    @computed_field
-    def security_config(self) -> FlextTypes.Dict:
-        """Get security configuration."""
-        return {
-            "secret_key_configured": self.secret_key is not None,
-            "api_key_configured": self.api_key is not None,
-        }
-
-    @computed_field
-    def database_config(self) -> FlextTypes.Dict:
-        """Get database configuration."""
-        return {
-            "url": self.database_url,
-            "pool_size": self.database_pool_size,
-            "connection_config": {
-                "min_size": FlextConstants.Performance.MIN_DB_POOL_SIZE,
-                "max_size": self.database_pool_size,
-                "timeout_seconds": self.timeout_seconds,
-                "retry_attempts": self.max_retry_attempts,
-            },
-        }
-
-    @computed_field
-    def logging_config(self) -> FlextTypes.Dict:
-        """Get logging configuration."""
-        return {
-            "level": self.effective_log_level,
-            "json_output": self.json_output,
-            "include_source": self.include_source,
-            "structured": self.structured_output,
-        }
-
-    @computed_field
-    def tools_config(self) -> FlextTypes.Dict:
-        """Get tools-specific configuration."""
-        return {
-            "backup_enabled": self.backup_enabled,
-            "monitoring_enabled": self.monitoring_enabled,
-            "linting_enabled": self.linting_enabled,
-            "max_workers": self.max_workers,
-        }
-
-    @computed_field
-    def metadata_config(self) -> FlextTypes.Dict:
-        """Get application metadata."""
-        return {
-            "app_name": self.app_name,
-            "version": self.version,
-            "debug_mode": self.debug,
-            "trace_mode": self.trace,
-            "effective_log_level": self.effective_log_level,
-            "is_debug_enabled": self.is_debug_enabled,
-        }
-
-
-FlextToolsConfig.model_rebuild()
 
 __all__ = [
     "FlextToolsConfig",

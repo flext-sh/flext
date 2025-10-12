@@ -8,10 +8,10 @@ from __future__ import annotations
 
 from typing import Self
 
-from flext_core import FlextResult, FlextService, FlextTypes
+from flext_core import FlextCore
 
 
-class FlextSecurityService(FlextService[FlextTypes.StringDict]):
+class FlextSecurityService(FlextCore.Service[FlextCore.Types.StringDict]):
     """Unified security service with nested helpers.
 
     Single responsibility: Security operations including vault decryption and antipattern scanning.
@@ -21,10 +21,12 @@ class FlextSecurityService(FlextService[FlextTypes.StringDict]):
         """Nested helper for vault operations."""
 
         @staticmethod
-        def decrypt_secrets(vault_path: str) -> FlextResult[FlextTypes.StringDict]:
+        def decrypt_secrets(
+            vault_path: str,
+        ) -> FlextCore.Result[FlextCore.Types.StringDict]:
             """Decrypt secrets from vault."""
             _ = vault_path  # Placeholder implementation
-            return FlextResult[FlextTypes.StringDict].ok({})
+            return FlextCore.Result[FlextCore.Types.StringDict].ok({})
 
     class _ScanHelper:
         """Nested helper for scanning operations."""
@@ -32,25 +34,27 @@ class FlextSecurityService(FlextService[FlextTypes.StringDict]):
         @staticmethod
         def scan_directory(
             directory: str,
-            config: FlextTypes.StringDict | None = None,
-        ) -> FlextResult[FlextTypes.StringList]:
+            config: FlextCore.Types.StringDict | None = None,
+        ) -> FlextCore.Result[FlextCore.Types.StringList]:
             """Scan directory for antipatterns."""
             _ = directory, config  # Placeholder implementation
-            return FlextResult[FlextTypes.StringList].ok([])
+            return FlextCore.Result[FlextCore.Types.StringList].ok([])
 
-    def execute(self: Self) -> FlextResult[FlextTypes.StringDict]:
-        """Execute security service - FlextService interface."""
-        return FlextResult[FlextTypes.StringDict].ok({})
+    def execute(self: Self) -> FlextCore.Result[FlextCore.Types.StringDict]:
+        """Execute security service - FlextCore.Service interface."""
+        return FlextCore.Result[FlextCore.Types.StringDict].ok({})
 
-    def decrypt_vault(self, vault_path: str) -> FlextResult[FlextTypes.StringDict]:
+    def decrypt_vault(
+        self, vault_path: str
+    ) -> FlextCore.Result[FlextCore.Types.StringDict]:
         """Decrypt secrets from vault using nested helper."""
         return self._VaultHelper.decrypt_secrets(vault_path)
 
     def scan_antipatterns(
         self,
         directory: str,
-        config: FlextTypes.StringDict | None = None,
-    ) -> FlextResult[FlextTypes.StringList]:
+        config: FlextCore.Types.StringDict | None = None,
+    ) -> FlextCore.Result[FlextCore.Types.StringList]:
         """Scan for antipatterns using nested helper."""
         return self._ScanHelper.scan_directory(directory, config)
 
@@ -58,7 +62,7 @@ class FlextSecurityService(FlextService[FlextTypes.StringDict]):
 # LEGACY ALIASES ELIMINATED - Use FlextSecurityService directly:
 # Use: FlextSecurityService instead of AntipatternScanner
 # Use: FlextSecurityService instead of SecretVaultDecryptor
-# Use: FlextTypes.Dict instead of ScanConfig
+# Use: FlextCore.Types.Dict instead of ScanConfig
 
 __all__ = [
     "FlextSecurityService",

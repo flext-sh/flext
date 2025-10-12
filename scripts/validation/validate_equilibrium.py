@@ -2,9 +2,9 @@
 """FLEXT Ecosystem Equilibrium Validation Script.
 
 Validates that all domain libraries follow the equilibrium pattern:
-- Constants classes extend FlextConstants
-- Config classes extend FlextConfig
-- Models classes extend FlextModels
+- Constants classes extend FlextCore.Constants
+- Config classes extend FlextCore.Config
+- Models classes extend FlextCore.Models
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -63,7 +63,7 @@ def validate_equilibrium() -> int:
 
     # Load foundation
     try:
-        from flext_core import FlextConfig, FlextConstants, FlextModels
+        from flext_core import FlextCore
 
         print("✅ Flext foundation loaded\n")
     except Exception as e:
@@ -86,7 +86,7 @@ def validate_equilibrium() -> int:
             if lib_dir == "flext-core":
                 results["constants"].append((
                     lib_dir,
-                    "FlextConstants",
+                    "FlextCore.Constants",
                     "✅ FOUNDATION",
                     "foundation",
                 ))
@@ -99,11 +99,11 @@ def validate_equilibrium() -> int:
                 const_cls = getattr(module, class_name)
 
                 # Check inheritance
-                extends = issubclass(const_cls, FlextConstants)
+                extends = issubclass(const_cls, FlextCore.Constants)
                 status = (
-                    "✅ EXTENDS FlextConstants"
+                    "✅ EXTENDS FlextCore.Constants"
                     if extends
-                    else "❌ DOES NOT EXTEND FlextConstants"
+                    else "❌ DOES NOT EXTEND FlextCore.Constants"
                 )
                 results["constants"].append((
                     lib_dir,
@@ -125,7 +125,7 @@ def validate_equilibrium() -> int:
             if lib_dir == "flext-core":
                 results["config"].append((
                     lib_dir,
-                    "FlextConfig",
+                    "FlextCore.Config",
                     "✅ FOUNDATION",
                     "foundation",
                 ))
@@ -137,11 +137,11 @@ def validate_equilibrium() -> int:
                 module = __import__(module_name, fromlist=[class_name])
                 cfg_cls = getattr(module, class_name)
 
-                extends = issubclass(cfg_cls, FlextConfig)
+                extends = issubclass(cfg_cls, FlextCore.Config)
                 status = (
-                    "✅ EXTENDS FlextConfig"
+                    "✅ EXTENDS FlextCore.Config"
                     if extends
-                    else "❌ DOES NOT EXTEND FlextConfig"
+                    else "❌ DOES NOT EXTEND FlextCore.Config"
                 )
                 results["config"].append((
                     lib_dir,
@@ -163,7 +163,7 @@ def validate_equilibrium() -> int:
             if lib_dir == "flext-core":
                 results["models"].append((
                     lib_dir,
-                    "FlextModels",
+                    "FlextCore.Models",
                     "✅ FOUNDATION",
                     "foundation",
                 ))
@@ -175,11 +175,11 @@ def validate_equilibrium() -> int:
                 module = __import__(module_name, fromlist=[class_name])
                 mdl_cls = getattr(module, class_name)
 
-                extends = issubclass(mdl_cls, FlextModels)
+                extends = issubclass(mdl_cls, FlextCore.Models)
                 status = (
-                    "✅ EXTENDS FlextModels"
+                    "✅ EXTENDS FlextCore.Models"
                     if extends
-                    else "❌ DOES NOT EXTEND FlextModels"
+                    else "❌ DOES NOT EXTEND FlextCore.Models"
                 )
                 results["models"].append((
                     lib_dir,
@@ -245,9 +245,9 @@ def validate_equilibrium() -> int:
     print("\n" + "=" * 80)
     print("EQUILIBRIUM SUMMARY")
     print("=" * 80)
-    print(f"Constants: {constants_ok}/{constants_total} extend FlextConstants")
-    print(f"Config:    {config_ok}/{config_total} extend FlextConfig")
-    print(f"Models:    {models_ok}/{models_total} extend FlextModels")
+    print(f"Constants: {constants_ok}/{constants_total} extend FlextCore.Constants")
+    print(f"Config:    {config_ok}/{config_total} extend FlextCore.Config")
+    print(f"Models:    {models_ok}/{models_total} extend FlextCore.Models")
     print(f"\nOVERALL:   {total_ok}/{total_checks} ({equilibrium:.1f}%) EQUILIBRIUM")
 
     if equilibrium == 100:

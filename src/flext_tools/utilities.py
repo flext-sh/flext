@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from flext_core import FlextCore
+
 
 class Colors:
     """Color constants."""
@@ -35,7 +37,7 @@ def get_project_root() -> Path:
     return Path.cwd()
 
 
-def get_stdlib_modules() -> list[str]:
+def get_stdlib_modules() -> FlextCore.Types.StringList:
     """Get standard library modules."""
     return ["os", "sys", "pathlib"]
 
@@ -55,7 +57,7 @@ def print_colored(text: str, color: str) -> None:
 
 
 def should_ignore_path(
-    path: str | Path, ignore_patterns: list[str] | None = None
+    path: str | Path, ignore_patterns: FlextCore.Types.StringList | None = None
 ) -> bool:
     """Check if path should be ignored."""
     if ignore_patterns is None:

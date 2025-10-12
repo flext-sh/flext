@@ -85,11 +85,6 @@ from flext.services import (
     FlextUnifiedServices,
     create_services,
 )
-from flext.services_utils import (
-    FlextLogger,
-    FlextResult,
-    FlextUtilities,
-)
 from flext.version import VERSION, FlextVersion
 from flext.workspace import (
     FlextAdvancedWorkspaceModels,
@@ -133,11 +128,8 @@ __all__ = [
     "FlextCliService",
     "FlextControlPanelCli",
     "FlextDevEnums",
-    "FlextLogger",
     "FlextProjectTypes",
-    "FlextResult",
     "FlextUnifiedServices",
-    "FlextUtilities",
     "FlextVersion",
     "FlextWorkspaceCli",
     "FlextWorkspaceService",

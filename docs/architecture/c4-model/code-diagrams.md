@@ -4,11 +4,11 @@
 
 This document provides detailed code-level diagrams showing the implementation structure of key components in the FLEXT platform, including class diagrams, entity relationship diagrams, and sequence diagrams.
 
-## 1. FlextResult[T] Class Diagram
+## 1. FlextCore.Result[T] Class Diagram
 
 ```mermaid
 classDiagram
-    class FlextResult~T~ {
+    class FlextCore.Result~T~ {
         <<Generic Type>>
         +T value
         +Exception error
@@ -16,55 +16,55 @@ classDiagram
         +bool is_failure
         +unwrap() T
         +unwrap_failure() Exception
-        +map(Func~T, U~) FlextResult~U~
-        +flat_map(Func~T, FlextResult~U~~) FlextResult~U~
-        +and_then(Func~T, FlextResult~U~~) FlextResult~U~
-        +or_else(Func~Exception, FlextResult~T~~) FlextResult~T~
-        +on_success(Action~T~) FlextResult~T~
-        +on_failure(Action~Exception~) FlextResult~T~
-        +ok(T value) FlextResult~T~
-        +fail(Exception error) FlextResult~T~
+        +map(Func~T, U~) FlextCore.Result~U~
+        +flat_map(Func~T, FlextCore.Result~U~~) FlextCore.Result~U~
+        +and_then(Func~T, FlextCore.Result~U~~) FlextCore.Result~U~
+        +or_else(Func~Exception, FlextCore.Result~T~~) FlextCore.Result~T~
+        +on_success(Action~T~) FlextCore.Result~T~
+        +on_failure(Action~Exception~) FlextCore.Result~T~
+        +ok(T value) FlextCore.Result~T~
+        +fail(Exception error) FlextCore.Result~T~
     }
-    
+
     class FlextSuccess~T~ {
         +T value
         +bool is_success = true
         +bool is_failure = false
         +unwrap() T
-        +map(Func~T, U~) FlextResult~U~
-        +flat_map(Func~T, FlextResult~U~~) FlextResult~U~
+        +map(Func~T, U~) FlextCore.Result~U~
+        +flat_map(Func~T, FlextCore.Result~U~~) FlextCore.Result~U~
     }
-    
+
     class FlextFailure~T~ {
         +Exception error
         +bool is_success = false
         +bool is_failure = true
         +unwrap_failure() Exception
-        +or_else(Func~Exception, FlextResult~T~~) FlextResult~T~
+        +or_else(Func~Exception, FlextCore.Result~T~~) FlextCore.Result~T~
     }
-    
-    FlextResult~T~ <|-- FlextSuccess~T~
-    FlextResult~T~ <|-- FlextFailure~T~
+
+    FlextCore.Result~T~ <|-- FlextSuccess~T~
+    FlextCore.Result~T~ <|-- FlextFailure~T~
 ```
 
-## 2. FlextContainer Class Diagram
+## 2. FlextCore.Container Class Diagram
 
 ```mermaid
 classDiagram
-    class FlextContainer {
+    class FlextCore.Container {
         <<Singleton>>
         -Dict~str, ServiceRegistration~ registrations
         -Dict~str, object~ instances
         +register_singleton~T~(str key, Type~T~ service_type) None
         +register_transient~T~(str key, Type~T~ service_type) None
         +register_factory~T~(str key, Callable~T~ factory) None
-        +resolve~T~(str key) FlextResult~T~
-        +get~T~(str key) FlextResult~T~
+        +resolve~T~(str key) FlextCore.Result~T~
+        +get~T~(str key) FlextCore.Result~T~
         +is_registered(str key) bool
-        +get_global() FlextContainer
+        +get_global() FlextCore.Container
         +clear() None
     }
-    
+
     class ServiceRegistration {
         +str key
         +ServiceLifetime lifetime
@@ -73,26 +73,26 @@ classDiagram
         +object instance
         +create_instance() object
     }
-    
+
     class ServiceLifetime {
         <<Enumeration>>
         SINGLETON
         TRANSIENT
         SCOPED
     }
-    
-    FlextContainer --> ServiceRegistration : contains
+
+    FlextCore.Container --> ServiceRegistration : contains
     ServiceRegistration --> ServiceLifetime : uses
 ```
 
-## 3. FlextModels Domain Model
+## 3. FlextCore.Models Domain Model
 
 ```mermaid
 classDiagram
-    class FlextModels {
+    class FlextCore.Models {
         <<Namespace>>
     }
-    
+
     class Entity {
         <<Abstract Base Class>>
         +str id
@@ -104,7 +104,7 @@ classDiagram
         +to_dict() Dict
         +from_dict(data) Entity
     }
-    
+
     class ValueObject {
         <<Abstract Base Class>>
         +__eq__(other) bool
@@ -112,7 +112,7 @@ classDiagram
         +to_dict() Dict
         +from_dict(data) ValueObject
     }
-    
+
     class AggregateRoot {
         <<Abstract Base Class>>
         +List~DomainEvent~ domain_events
@@ -120,7 +120,7 @@ classDiagram
         +clear_domain_events() None
         +get_domain_events() List~DomainEvent~
     }
-    
+
     class DomainEvent {
         <<Abstract Base Class>>
         +str event_id
@@ -128,7 +128,7 @@ classDiagram
         +str event_type
         +Dict event_data
     }
-    
+
     class User {
         +str name
         +Email email
@@ -139,13 +139,13 @@ classDiagram
         +add_role(role) None
         +remove_role(role) None
     }
-    
+
     class Email {
         +str address
         +validate() bool
         +__str__() str
     }
-    
+
     class Role {
         +str name
         +List~Permission~ permissions
@@ -153,19 +153,19 @@ classDiagram
         +remove_permission(permission) None
         +has_permission(permission) bool
     }
-    
+
     class Permission {
         +str name
         +str resource
         +str action
         +__str__() str
     }
-    
-    FlextModels --> Entity
-    FlextModels --> ValueObject
-    FlextModels --> AggregateRoot
-    FlextModels --> DomainEvent
-    
+
+    FlextCore.Models --> Entity
+    FlextCore.Models --> ValueObject
+    FlextCore.Models --> AggregateRoot
+    FlextCore.Models --> DomainEvent
+
     Entity <|-- AggregateRoot
     ValueObject <|-- Email
     AggregateRoot <|-- User
@@ -191,7 +191,7 @@ erDiagram
         datetime created_at
         datetime updated_at
     }
-    
+
     LDAP_USER {
         string id PK
         string connection_id FK
@@ -208,7 +208,7 @@ erDiagram
         datetime created_at
         datetime updated_at
     }
-    
+
     LDAP_GROUP {
         string id PK
         string connection_id FK
@@ -221,7 +221,7 @@ erDiagram
         datetime created_at
         datetime updated_at
     }
-    
+
     LDAP_ORGANIZATIONAL_UNIT {
         string id PK
         string connection_id FK
@@ -234,7 +234,7 @@ erDiagram
         datetime created_at
         datetime updated_at
     }
-    
+
     LDAP_SYNC_LOG {
         string id PK
         string connection_id FK
@@ -247,7 +247,7 @@ erDiagram
         datetime started_at
         datetime completed_at
     }
-    
+
     LDAP_CONNECTION ||--o{ LDAP_USER : has
     LDAP_CONNECTION ||--o{ LDAP_GROUP : has
     LDAP_CONNECTION ||--o{ LDAP_ORGANIZATIONAL_UNIT : has
@@ -264,14 +264,14 @@ sequenceDiagram
     participant CoreService
     participant Database
     participant Redis
-    
+
     Client->>APIGateway: HTTP Request
     APIGateway->>APIGateway: Validate Request
     APIGateway->>AuthService: Validate JWT Token
     AuthService->>Redis: Check Token Cache
     Redis-->>AuthService: Token Data
     AuthService-->>APIGateway: Auth Result
-    
+
     alt Token Valid
         APIGateway->>CoreService: Process Request
         CoreService->>Database: Query Data
@@ -295,14 +295,14 @@ sequenceDiagram
     participant SingerTarget
     participant Database
     participant FileSystem
-    
+
     Scheduler->>FlexCore: Trigger Pipeline
     FlexCore->>SingerTap: Execute Data Extraction
     SingerTap->>Database: Query Source Data
     Database-->>SingerTap: Source Data
     SingerTap->>FileSystem: Write Singer Messages
     SingerTap-->>FlexCore: Extraction Complete
-    
+
     FlexCore->>DBTTransform: Execute Data Transformation
     DBTTransform->>FileSystem: Read Singer Messages
     FileSystem-->>DBTTransform: Singer Messages
@@ -310,14 +310,14 @@ sequenceDiagram
     Database-->>DBTTransform: Transformed Data
     DBTTransform->>FileSystem: Write Transformed Data
     DBTTransform-->>FlexCore: Transformation Complete
-    
+
     FlexCore->>SingerTarget: Execute Data Loading
     SingerTarget->>FileSystem: Read Transformed Data
     FileSystem-->>SingerTarget: Transformed Data
     SingerTarget->>Database: Load Target Data
     Database-->>SingerTarget: Load Complete
     SingerTarget-->>FlexCore: Loading Complete
-    
+
     FlexCore-->>Scheduler: Pipeline Complete
 ```
 
@@ -326,24 +326,24 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant Service
-    participant FlextResult
+    participant FlextCore.Result
     participant Logger
     participant ErrorHandler
     participant NotificationService
-    
-    Service->>FlextResult: Process Operation
-    FlextResult->>FlextResult: Execute Business Logic
-    
+
+    Service->>FlextCore.Result: Process Operation
+    FlextCore.Result->>FlextCore.Result: Execute Business Logic
+
     alt Operation Success
-        FlextResult-->>Service: Success Result
+        FlextCore.Result-->>Service: Success Result
         Service->>Logger: Log Success
     else Operation Failure
-        FlextResult->>ErrorHandler: Handle Error
+        FlextCore.Result->>ErrorHandler: Handle Error
         ErrorHandler->>Logger: Log Error
         ErrorHandler->>NotificationService: Send Alert
         NotificationService-->>ErrorHandler: Alert Sent
-        ErrorHandler-->>FlextResult: Error Handled
-        FlextResult-->>Service: Failure Result
+        ErrorHandler-->>FlextCore.Result: Error Handled
+        FlextCore.Result-->>Service: Failure Result
         Service->>Logger: Log Failure
     end
 ```
@@ -355,11 +355,11 @@ classDiagram
     class PluginManager {
         +Dict~str, Plugin~ plugins
         +register_plugin(plugin) None
-        +execute_plugin(plugin_id, input_data) FlextResult~T~
+        +execute_plugin(plugin_id, input_data) FlextCore.Result~T~
         +get_plugin_status(plugin_id) PluginStatus
         +list_plugins() List~Plugin~
     }
-    
+
     class Plugin {
         <<Abstract Base Class>>
         +str plugin_id
@@ -367,30 +367,30 @@ classDiagram
         +str version
         +PluginType type
         +PluginStatus status
-        +execute(input_data) FlextResult~T~
+        +execute(input_data) FlextCore.Result~T~
         +validate_config(config) bool
         +get_metadata() PluginMetadata
     }
-    
+
     class SingerTap {
         +str source_type
         +Dict config_schema
-        +execute_discovery() FlextResult~Catalog~
-        +execute_sync(config) FlextResult~SyncResult~
+        +execute_discovery() FlextCore.Result~Catalog~
+        +execute_sync(config) FlextCore.Result~SyncResult~
     }
-    
+
     class SingerTarget {
         +str destination_type
         +Dict config_schema
-        +execute_sync(catalog, records) FlextResult~SyncResult~
+        +execute_sync(catalog, records) FlextCore.Result~SyncResult~
     }
-    
+
     class DBTTransform {
         +str transform_type
         +List~str~ dependencies
-        +execute_transform(sql) FlextResult~TransformResult~
+        +execute_transform(sql) FlextCore.Result~TransformResult~
     }
-    
+
     class PluginStatus {
         <<Enumeration>>
         REGISTERED
@@ -399,7 +399,7 @@ classDiagram
         FAILED
         CANCELLED
     }
-    
+
     class PluginType {
         <<Enumeration>>
         TAP
@@ -407,7 +407,7 @@ classDiagram
         TRANSFORM
         CUSTOM
     }
-    
+
     PluginManager --> Plugin : manages
     Plugin <|-- SingerTap
     Plugin <|-- SingerTarget
@@ -420,7 +420,7 @@ classDiagram
 
 ```mermaid
 classDiagram
-    class FlextConfig {
+    class FlextCore.Config {
         <<Singleton>>
         -Dict~str, Any~ settings
         -ConfigSource source
@@ -431,32 +431,32 @@ classDiagram
         +validate() bool
         +reload() None
     }
-    
+
     class ConfigSource {
         <<Abstract Base Class>>
         +load_settings() Dict~str, Any~
         +save_settings(settings) None
         +validate_settings(settings) bool
     }
-    
+
     class EnvironmentConfigSource {
         +load_settings() Dict~str, Any~
         +get_env_var(key, default_value) str
     }
-    
+
     class FileConfigSource {
         +str file_path
         +ConfigFormat format
         +load_settings() Dict~str, Any~
         +save_settings(settings) None
     }
-    
+
     class DatabaseConfigSource {
         +str connection_string
         +load_settings() Dict~str, Any~
         +save_settings(settings) None
     }
-    
+
     class ConfigFormat {
         <<Enumeration>>
         JSON
@@ -464,8 +464,8 @@ classDiagram
         TOML
         INI
     }
-    
-    FlextConfig --> ConfigSource : uses
+
+    FlextCore.Config --> ConfigSource : uses
     ConfigSource <|-- EnvironmentConfigSource
     ConfigSource <|-- FileConfigSource
     ConfigSource <|-- DatabaseConfigSource
@@ -477,13 +477,13 @@ classDiagram
 ```mermaid
 classDiagram
     class EventStore {
-        +append_events(stream_id, events) FlextResult~None~
-        +get_events(stream_id, from_version) FlextResult~List~Event~~
-        +get_stream_metadata(stream_id) FlextResult~StreamMetadata~
-        +create_snapshot(stream_id, version) FlextResult~Snapshot~
-        +get_snapshot(stream_id) FlextResult~Snapshot~
+        +append_events(stream_id, events) FlextCore.Result~None~
+        +get_events(stream_id, from_version) FlextCore.Result~List~Event~~
+        +get_stream_metadata(stream_id) FlextCore.Result~StreamMetadata~
+        +create_snapshot(stream_id, version) FlextCore.Result~Snapshot~
+        +get_snapshot(stream_id) FlextCore.Result~Snapshot~
     }
-    
+
     class Event {
         <<Abstract Base Class>>
         +str event_id
@@ -495,7 +495,7 @@ classDiagram
         +str correlation_id
         +str causation_id
     }
-    
+
     class StreamMetadata {
         +str stream_id
         +int current_version
@@ -503,7 +503,7 @@ classDiagram
         +datetime last_updated
         +int event_count
     }
-    
+
     class Snapshot {
         +str stream_id
         +int version
@@ -511,7 +511,7 @@ classDiagram
         +Dict aggregate_data
         +str snapshot_type
     }
-    
+
     class AggregateRoot {
         +str id
         +int version
@@ -520,13 +520,13 @@ classDiagram
         +mark_events_as_committed() None
         +get_uncommitted_events() List~Event~
     }
-    
+
     class EventHandler {
         <<Abstract Base Class>>
         +handle(event) None
         +can_handle(event_type) bool
     }
-    
+
     EventStore --> Event : stores
     EventStore --> StreamMetadata : manages
     EventStore --> Snapshot : creates
@@ -537,22 +537,25 @@ classDiagram
 ## Code Quality Metrics
 
 ### Test Coverage by Component
-- **FlextResult[T]**: 95% coverage
-- **FlextContainer**: 99% coverage
-- **FlextModels**: 65% coverage
+
+- **FlextCore.Result[T]**: 95% coverage
+- **FlextCore.Container**: 99% coverage
+- **FlextCore.Models**: 65% coverage
 - **LDAP Service**: 85% coverage
 - **API Gateway**: 80% coverage
 - **Plugin Manager**: 70% coverage
 
 ### Performance Benchmarks
-- **FlextResult Operations**: < 1ms per operation
+
+- **FlextCore.Result Operations**: < 1ms per operation
 - **Container Resolution**: < 0.1ms per service
 - **LDAP Queries**: < 100ms per query
 - **API Response Time**: < 200ms per request
 - **Plugin Execution**: < 5s per plugin
 
 ### Memory Usage
-- **FlextResult Instances**: ~100 bytes per instance
+
+- **FlextCore.Result Instances**: ~100 bytes per instance
 - **Container Services**: ~1KB per service registration
 - **LDAP Connections**: ~2MB per connection pool
 - **API Gateway**: ~50MB base memory usage

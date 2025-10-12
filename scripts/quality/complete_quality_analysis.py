@@ -14,7 +14,7 @@ from importlib import import_module
 from pathlib import Path
 
 import pytest
-from flext_core import FlextTypes
+from flext_core import FlextCore
 from mypy import api as mypy_api
 
 from flext_tools import Colors, print_colored
@@ -36,11 +36,11 @@ class QualityReport:
     test_failures: int = 0
     coverage_percentage: float = 0.0
     poetry_issues: int = 0
-    issues: FlextTypes.StringList = field(default_factory=list)
+    issues: FlextCore.Types.StringList = field(default_factory=list)
 
 
 def run_command(
-    cmd: FlextTypes.StringList,
+    cmd: FlextCore.Types.StringList,
     _cwd: str | None = None,
 ) -> tuple[int, str, str]:
     """Executa um comando e retorna (exit_code, stdout, stderr)."""
@@ -181,7 +181,7 @@ def analyze_project(project_path: str) -> QualityReport:
 def main() -> int:
     """Função principal."""
     # Listar todos os projetos Python
-    projects: FlextTypes.StringList = []
+    projects: FlextCore.Types.StringList = []
     for pyproject in Path().rglob("pyproject.toml"):
         project_path = str(pyproject.parent)
         # Filtrar apenas projetos ativos

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Self
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextCore
 
 
 class FlextObservabilityService:
@@ -17,12 +17,12 @@ class FlextObservabilityService:
     def __init__(self: Self) -> None:
         """Initialize observability service."""
 
-    def log_metric(self, name: str, value: str) -> FlextResult[None]:
+    def log_metric(self, name: str, value: str) -> FlextCore.Result[None]:
         """Log a metric."""
         # Use both parameters for metric logging
         _ = name, value  # Parameters used for metric logging
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
-    def get_metrics(self: Self) -> FlextResult[FlextTypes.StringDict]:
+    def get_metrics(self: Self) -> FlextCore.Result[FlextCore.Types.StringDict]:
         """Get current metrics."""
-        return FlextResult[FlextTypes.StringDict].ok({})
+        return FlextCore.Result[FlextCore.Types.StringDict].ok({})

@@ -55,7 +55,7 @@ FLEXT CLI provides command-line access to ecosystem services:
 ├─────────────────────────────────────────────────────────────────┤
 │ Singer Ecosystem: Taps(5) | Targets(5) | DBT(4) | Extensions(1) │
 ├─────────────────────────────────────────────────────────────────┤
-│ Foundation: FLEXT-CORE (FlextResult | DI | Domain Patterns)     │
+│ Foundation: FLEXT-CORE (FlextCore.Result | DI | Domain Patterns)     │
 └─────────────────────────────────────────────────────────────────┘
 ```
 

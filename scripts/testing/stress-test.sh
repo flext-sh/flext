@@ -27,10 +27,10 @@ PURPLE='\033[0;35m'
 NC='\033[0m' # No Color
 
 # Performance thresholds (using FLEXT constants from environment)
-MAX_RESPONSE_TIME_MS=${FLEXT_PERFORMANCE_CRITICAL_MS:-5000} # FlextConstants.Performance.CRITICAL_DURATION_MS
+MAX_RESPONSE_TIME_MS=${FLEXT_PERFORMANCE_CRITICAL_MS:-5000} # FlextCore.Constants.Performance.CRITICAL_DURATION_MS
 MIN_SUCCESS_RATE=${FLEXT_MIN_SUCCESS_RATE:-95}              # Business requirement minimum success rate
 MAX_MEMORY_MB=${FLEXT_MAX_MEMORY_MB:-500}                   # Test environment memory limit
-MAX_CPU_PERCENT=${FLEXT_CRITICAL_USAGE_PERCENT:-80}         # FlextConstants.Performance.CRITICAL_USAGE_PERCENT
+MAX_CPU_PERCENT=${FLEXT_CRITICAL_USAGE_PERCENT:-80}         # FlextCore.Constants.Performance.CRITICAL_USAGE_PERCENT
 
 # Logging function
 log() {

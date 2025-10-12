@@ -11,6 +11,7 @@
 ## Context
 
 [Describe the context and forces at play, including:
+
 - Business requirements
 - Technical constraints
 - Current system state
@@ -20,6 +21,7 @@
 ## Decision
 
 [Clearly state the decision that was made, including:
+
 - What was decided
 - Why this option was chosen
 - How it addresses the context
@@ -28,6 +30,7 @@
 ## Consequences
 
 [Describe the positive and negative consequences of this decision, including:
+
 - Benefits and advantages
 - Drawbacks and risks
 - Impact on other systems
@@ -37,6 +40,7 @@
 ## Alternatives Considered
 
 [List and evaluate alternative options that were considered, including:
+
 - Option 1: Description and evaluation
 - Option 2: Description and evaluation
 - Other options: Description and evaluation
@@ -45,6 +49,7 @@
 ## Implementation Notes
 
 [Provide technical details about implementation, including:
+
 - Code changes required
 - Configuration changes
 - Database migrations
@@ -55,6 +60,7 @@
 ## References
 
 [List relevant documents, discussions, and resources:
+
 - Issue/PR links
 - Design documents
 - Research papers
@@ -63,6 +69,7 @@
 ## Related ADRs
 
 [List related architecture decisions:
+
 - ADR-XXX: Related decision
 - Supersedes: ADR-YYY
 - Superseded by: ADR-ZZZ]

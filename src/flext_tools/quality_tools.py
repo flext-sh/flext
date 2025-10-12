@@ -8,17 +8,17 @@ from __future__ import annotations
 
 from typing import Self
 
-from flext_core import FlextLogger, FlextResult, FlextService
+from flext_core import FlextCore
 
 
-class FlextQualityTools(FlextService[None]):
+class FlextQualityTools(FlextCore.Service[None]):
     """Code quality analysis and validation tools."""
 
     def __init__(self: Self) -> None:
         """Initialize quality tools."""
         super().__init__()
-        self.logger = FlextLogger(__name__)
+        self.logger = FlextCore.Logger(__name__)
 
-    def execute(self: Self) -> FlextResult[None]:
+    def execute(self: Self) -> FlextCore.Result[None]:
         """Execute quality tools service."""
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)

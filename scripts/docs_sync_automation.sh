@@ -27,23 +27,23 @@ CHECK_EXTERNAL_LINKS=false
 
 # Functions
 log_info() {
-    echo -e "${BLUE}ℹ${NC} $*"
+	echo -e "${BLUE}ℹ${NC} $*"
 }
 
 log_success() {
-    echo -e "${GREEN}✓${NC} $*"
+	echo -e "${GREEN}✓${NC} $*"
 }
 
 log_warning() {
-    echo -e "${YELLOW}⚠${NC} $*"
+	echo -e "${YELLOW}⚠${NC} $*"
 }
 
 log_error() {
-    echo -e "${RED}✗${NC} $*"
+	echo -e "${RED}✗${NC} $*"
 }
 
 usage() {
-    cat <<EOF
+	cat <<EOF
 FLEXT Documentation Synchronization & Automation
 
 Usage: $0 [OPTIONS]
@@ -70,115 +70,115 @@ EOF
 }
 
 run_audit() {
-    log_info "Running documentation quality audit..."
+	log_info "Running documentation quality audit..."
 
-    local args=(
-        --root "$ROOT_DIR"
-        --output "$ROOT_DIR/docs_audit_report.md"
-        --format markdown
-    )
+	local args=(
+		--root "$ROOT_DIR"
+		--output "$ROOT_DIR/docs_audit_report.md"
+		--format markdown
+	)
 
-    if [[ "$CHECK_EXTERNAL_LINKS" == "true" ]]; then
-        args+=(--check-external-links)
-    fi
+	if [[ $CHECK_EXTERNAL_LINKS == "true" ]]; then
+		args+=(--check-external-links)
+	fi
 
-    if python3 "$SCRIPT_DIR/docs_maintenance_audit.py" "${args[@]}"; then
-        log_success "Audit complete - report saved to docs_audit_report.md"
-    else
-        log_error "Audit failed"
-        return 1
-    fi
+	if python3 "$SCRIPT_DIR/docs_maintenance_audit.py" "${args[@]}"; then
+		log_success "Audit complete - report saved to docs_audit_report.md"
+	else
+		log_error "Audit failed"
+		return 1
+	fi
 }
 
 fix_links() {
-    log_info "Fixing documentation links..."
+	log_info "Fixing documentation links..."
 
-    local args=(--root "$ROOT_DIR")
+	local args=(--root "$ROOT_DIR")
 
-    if [[ "$DRY_RUN" == "false" ]]; then
-        args+=(--apply)
-    fi
+	if [[ $DRY_RUN == "false" ]]; then
+		args+=(--apply)
+	fi
 
-    if python3 "$SCRIPT_DIR/docs_link_fixer.py" "${args[@]}"; then
-        log_success "Link fixing complete"
-    else
-        log_warning "Link fixing encountered issues"
-    fi
+	if python3 "$SCRIPT_DIR/docs_link_fixer.py" "${args[@]}"; then
+		log_success "Link fixing complete"
+	else
+		log_warning "Link fixing encountered issues"
+	fi
 }
 
 generate_tocs() {
-    log_info "Generating/updating table of contents..."
+	log_info "Generating/updating table of contents..."
 
-    local args=(
-        --root "$ROOT_DIR"
-        --min-headings 3
-        --max-level 3
-    )
+	local args=(
+		--root "$ROOT_DIR"
+		--min-headings 3
+		--max-level 3
+	)
 
-    if [[ "$DRY_RUN" == "false" ]]; then
-        args+=(--apply)
-    fi
+	if [[ $DRY_RUN == "false" ]]; then
+		args+=(--apply)
+	fi
 
-    if python3 "$SCRIPT_DIR/docs_toc_generator.py" "${args[@]}"; then
-        log_success "TOC generation complete"
-    else
-        log_warning "TOC generation encountered issues"
-    fi
+	if python3 "$SCRIPT_DIR/docs_toc_generator.py" "${args[@]}"; then
+		log_success "TOC generation complete"
+	else
+		log_warning "TOC generation encountered issues"
+	fi
 }
 
 format_markdown() {
-    log_info "Formatting markdown files..."
+	log_info "Formatting markdown files..."
 
-    # Use prettier if available, otherwise skip
-    if command -v prettier >/dev/null 2>&1; then
-        if [[ "$DRY_RUN" == "false" ]]; then
-            prettier --write "**/*.md" || log_warning "Prettier formatting had issues"
-        else
-            prettier --check "**/*.md" || log_warning "Some files need formatting"
-        fi
-        log_success "Markdown formatting complete"
-    else
-        log_warning "Prettier not installed - skipping markdown formatting"
-    fi
+	# Use prettier if available, otherwise skip
+	if command -v prettier >/dev/null 2>&1; then
+		if [[ $DRY_RUN == "false" ]]; then
+			prettier --write "**/*.md" || log_warning "Prettier formatting had issues"
+		else
+			prettier --check "**/*.md" || log_warning "Some files need formatting"
+		fi
+		log_success "Markdown formatting complete"
+	else
+		log_warning "Prettier not installed - skipping markdown formatting"
+	fi
 }
 
 validate_links() {
-    log_info "Validating all links..."
+	log_info "Validating all links..."
 
-    # Quick validation using grep for broken link patterns in audit report
-    if [[ -f "$ROOT_DIR/docs_audit_report.md" ]]; then
-        local broken_count
-        broken_count=$(grep -c "broken_link" "$ROOT_DIR/docs_audit_report.md" || true)
+	# Quick validation using grep for broken link patterns in audit report
+	if [[ -f "$ROOT_DIR/docs_audit_report.md" ]]; then
+		local broken_count
+		broken_count=$(grep -c "broken_link" "$ROOT_DIR/docs_audit_report.md" || true)
 
-        if [[ "$broken_count" -gt 0 ]]; then
-            log_warning "Found $broken_count broken links - check audit report"
-        else
-            log_success "All links validated successfully"
-        fi
-    fi
+		if [[ $broken_count -gt 0 ]]; then
+			log_warning "Found $broken_count broken links - check audit report"
+		else
+			log_success "All links validated successfully"
+		fi
+	fi
 }
 
 commit_changes() {
-    if [[ "$AUTO_COMMIT" == "false" ]]; then
-        return
-    fi
+	if [[ $AUTO_COMMIT == "false" ]]; then
+		return
+	fi
 
-    log_info "Committing documentation changes..."
+	log_info "Committing documentation changes..."
 
-    cd "$ROOT_DIR" || exit 1
+	cd "$ROOT_DIR" || exit 1
 
-    # Check if there are changes
-    if git diff --quiet && git diff --cached --quiet; then
-        log_info "No changes to commit"
-        return
-    fi
+	# Check if there are changes
+	if git diff --quiet && git diff --cached --quiet; then
+		log_info "No changes to commit"
+		return
+	fi
 
-    # Stage all documentation changes
-    git add "**/*.md" docs_audit_report.* .markdownlint.json || true
+	# Stage all documentation changes
+	git add "**/*.md" docs_audit_report.* .markdownlint.json || true
 
-    # Generate commit message
-    local commit_msg
-    commit_msg="docs: automated documentation maintenance
+	# Generate commit message
+	local commit_msg
+	commit_msg="docs: automated documentation maintenance
 
 - Updated documentation quality audit
 - Fixed broken links and references
@@ -188,99 +188,99 @@ commit_changes() {
 Generated by: scripts/docs_sync_automation.sh
 Date: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
 
-    if git commit -m "$commit_msg"; then
-        log_success "Changes committed successfully"
-        log_info "Review changes with: git show HEAD"
-    else
-        log_error "Commit failed"
-        return 1
-    fi
+	if git commit -m "$commit_msg"; then
+		log_success "Changes committed successfully"
+		log_info "Review changes with: git show HEAD"
+	else
+		log_error "Commit failed"
+		return 1
+	fi
 }
 
 generate_summary() {
-    log_info "Documentation Maintenance Summary"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+	log_info "Documentation Maintenance Summary"
+	echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-    # Count markdown files
-    local md_count
-    md_count=$(find "$ROOT_DIR" -name "*.md" -not -path "*/node_modules/*" -not -path "*/.venv/*" | wc -l)
-    echo "📄 Total markdown files: $md_count"
+	# Count markdown files
+	local md_count
+	md_count=$(find "$ROOT_DIR" -name "*.md" -not -path "*/node_modules/*" -not -path "*/.venv/*" | wc -l)
+	echo "📄 Total markdown files: $md_count"
 
-    # Extract statistics from audit report if available
-    if [[ -f "$ROOT_DIR/docs_audit_report.md" ]]; then
-        local total_issues
-        total_issues=$(grep -oP "Total Issues Found:\*\* \K\d+" "$ROOT_DIR/docs_audit_report.md" || echo "N/A")
-        echo "🚨 Issues found: $total_issues"
+	# Extract statistics from audit report if available
+	if [[ -f "$ROOT_DIR/docs_audit_report.md" ]]; then
+		local total_issues
+		total_issues=$(grep -oP "Total Issues Found:\*\* \K\d+" "$ROOT_DIR/docs_audit_report.md" || echo "N/A")
+		echo "🚨 Issues found: $total_issues"
 
-        local critical_count
-        critical_count=$(grep -c "severity-critical" "$ROOT_DIR/docs_audit_report.md" || echo "0")
-        echo "🔴 Critical issues: $critical_count"
-    fi
+		local critical_count
+		critical_count=$(grep -c "severity-critical" "$ROOT_DIR/docs_audit_report.md" || echo "0")
+		echo "🔴 Critical issues: $critical_count"
+	fi
 
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+	echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-    if [[ "$DRY_RUN" == "true" ]]; then
-        log_warning "DRY RUN - No changes were applied"
-        log_info "Run with --apply to make actual changes"
-    else
-        log_success "All maintenance tasks completed"
-    fi
+	if [[ $DRY_RUN == "true" ]]; then
+		log_warning "DRY RUN - No changes were applied"
+		log_info "Run with --apply to make actual changes"
+	else
+		log_success "All maintenance tasks completed"
+	fi
 }
 
 # Parse command-line arguments
 while [[ $# -gt 0 ]]; do
-    case $1 in
-    -a | --apply)
-        DRY_RUN=false
-        shift
-        ;;
-    -c | --commit)
-        AUTO_COMMIT=true
-        shift
-        ;;
-    -e | --external-links)
-        CHECK_EXTERNAL_LINKS=true
-        shift
-        ;;
-    -h | --help)
-        usage
-        exit 0
-        ;;
-    *)
-        log_error "Unknown option: $1"
-        usage
-        exit 1
-        ;;
-    esac
+	case $1 in
+	-a | --apply)
+		DRY_RUN=false
+		shift
+		;;
+	-c | --commit)
+		AUTO_COMMIT=true
+		shift
+		;;
+	-e | --external-links)
+		CHECK_EXTERNAL_LINKS=true
+		shift
+		;;
+	-h | --help)
+		usage
+		exit 0
+		;;
+	*)
+		log_error "Unknown option: $1"
+		usage
+		exit 1
+		;;
+	esac
 done
 
 # Main execution
 main() {
-    log_info "FLEXT Documentation Maintenance & Synchronization"
-    log_info "Root directory: $ROOT_DIR"
-    log_info "Mode: $([ "$DRY_RUN" == "true" ] && echo "DRY RUN" || echo "APPLY CHANGES")"
-    echo ""
+	log_info "FLEXT Documentation Maintenance & Synchronization"
+	log_info "Root directory: $ROOT_DIR"
+	log_info "Mode: $([ "$DRY_RUN" == "true" ] && echo "DRY RUN" || echo "APPLY CHANGES")"
+	echo ""
 
-    # Run all tasks
-    run_audit
-    echo ""
+	# Run all tasks
+	run_audit
+	echo ""
 
-    fix_links
-    echo ""
+	fix_links
+	echo ""
 
-    generate_tocs
-    echo ""
+	generate_tocs
+	echo ""
 
-    validate_links
-    echo ""
+	validate_links
+	echo ""
 
-    format_markdown
-    echo ""
+	format_markdown
+	echo ""
 
-    commit_changes
-    echo ""
+	commit_changes
+	echo ""
 
-    generate_summary
+	generate_summary
 }
 
 # Execute main function

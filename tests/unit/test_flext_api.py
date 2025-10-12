@@ -14,7 +14,7 @@ import time
 from typing import cast
 
 from flext_api import FlextApiApp, FlextApiClient, FlextApiConfig
-from flext_core import FlextLogger, FlextTypes
+from flext_core import FlextCore
 
 
 class TestFlextApiConsolidated:
@@ -33,7 +33,7 @@ class TestFlextApiConsolidated:
             }
 
         @staticmethod
-        def create_request_data() -> FlextTypes.Dict:
+        def create_request_data() -> FlextCore.Types.Dict:
             """Create test request data."""
             return {
                 "method": "GET",
@@ -224,10 +224,10 @@ class TestFlextApiConsolidated:
         assert "from httpx" not in source.lower()
 
     def test_flext_api_flext_result_usage(self) -> None:
-        """Test that flext-api uses FlextResult patterns."""
+        """Test that flext-api uses FlextCore.Result patterns."""
         client = FlextApiClient()
 
-        # Test that API client exists and follows FlextResult patterns
+        # Test that API client exists and follows FlextCore.Result patterns
         assert client is not None
         assert isinstance(client, FlextApiClient)
 
@@ -311,10 +311,10 @@ class TestFlextApiConsolidated:
         client = FlextApiClient()
 
         # Test logging integration
-        logger = FlextLogger(__name__)
+        logger = FlextCore.Logger(__name__)
         assert logger is not None
 
-        # Test that API integrates with FlextLogger - client should exist
+        # Test that API integrates with FlextCore.Logger - client should exist
         assert client is not None
 
     # =============================================================================

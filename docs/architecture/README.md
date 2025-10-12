@@ -10,7 +10,7 @@ FLEXT is built on a clean architecture foundation with flext-core providing the 
 - **SOLID Principles**: Single responsibility, Open/closed, Liskov substitution, Interface segregation, Dependency inversion
 - **CQRS Pattern**: Command Query Responsibility Segregation for complex business logic
 - **Railway-Oriented Programming**: Functional error handling with happy/sad path composition
-- **Dependency Injection**: FlextContainer for managing component dependencies
+- **Dependency Injection**: FlextCore.Container for managing component dependencies
 
 ### Architecture Layers
 
@@ -48,24 +48,24 @@ FLEXT is built on a clean architecture foundation with flext-core providing the 
 
 ### Core Components
 
-#### FlextContainer (Dependency Injection)
+#### FlextCore.Container (Dependency Injection)
 
 ```python
-from flext_core import FlextContainer
+from flext_core import FlextCore
 
-container = FlextContainer()
+container = FlextCore.Container()
 container.register(IFooService, FooService())
 container.register(IBarService, BarService())
 
 foo_service = container.resolve(IFooService)
 ```
 
-#### FlextDispatcher (CQRS)
+#### FlextCore.Dispatcher (CQRS)
 
 ```python
-from flext_core import FlextDispatcher
+from flext_core import FlextCore
 
-dispatcher = FlextDispatcher()
+dispatcher = FlextCore.Dispatcher()
 dispatcher.register_handler(CreateUserCommand, CreateUserHandler)
 dispatcher.register_handler(GetUserQuery, GetUserHandler)
 
@@ -74,19 +74,19 @@ result = dispatcher.dispatch(CreateUserCommand(user_data))
 user = dispatcher.dispatch(GetUserQuery(user_id))
 ```
 
-#### FlextResult (Railway-Oriented Programming)
+#### FlextCore.Result (Railway-Oriented Programming)
 
 ```python
-from flext_core import FlextResult
+from flext_core import FlextCore
 
-def divide(a: float, b: float) -> FlextResult[float, str]:
+def divide(a: float, b: float) -> FlextCore.Result[float, str]:
     if b == 0:
-        return FlextResult.failure("Cannot divide by zero")
+        return FlextCore.Result.failure("Cannot divide by zero")
 
-    return FlextResult.success(a / b)
+    return FlextCore.Result.success(a / b)
 
 # Compose operations
-result = (FlextResult.success(10)
+result = (FlextCore.Result.success(10)
           .bind(lambda x: divide(x, 2))
           .bind(lambda x: divide(x, 3)))
 
@@ -96,12 +96,12 @@ else:
     print(f"Error: {result.failure()}")
 ```
 
-#### FlextBus (Domain Events)
+#### FlextCore.Bus (Domain Events)
 
 ```python
-from flext_core import FlextBus
+from flext_core import FlextCore
 
-bus = FlextBus()
+bus = FlextCore.Bus()
 bus.subscribe(UserCreatedEvent, UserCreatedHandler)
 
 # Emit events
@@ -160,10 +160,10 @@ flext-ldif/
 
 ```python
 # In flext-ldif
-from flext_core import FlextResult, FlextDispatcher
+from flext_core import FlextCore
 
 # In flext-oracle
-from flext_core import FlextContainer
+from flext_core import FlextCore
 from flext_ldif import FlextLdifModels  # If needed
 ```
 

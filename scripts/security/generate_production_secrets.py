@@ -9,7 +9,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextCore
 
 from flext_tools import Colors, ScriptMetadata, print_colored
 
@@ -33,7 +33,7 @@ class ProductionSecretsScript(BaseSecurityScript):
 
     def execute_main_logic(
         self, **kwargs: dict[str, str]
-    ) -> FlextResult[dict[str, str]]:
+    ) -> FlextCore.Result[dict[str, str]]:
         """Execute main script logic."""
         """Execute secrets generation."""
         try:
@@ -48,7 +48,7 @@ class ProductionSecretsScript(BaseSecurityScript):
 
             # Secret generation functionality to be implemented
             # Will use flext_tools.security for secret generation
-            secrets_result = FlextResult[FlextTypes.Dict].fail(
+            secrets_result = FlextCore.Result[FlextCore.Types.Dict].fail(
                 "Secret generation not yet implemented",
             )
 
@@ -76,16 +76,18 @@ class ProductionSecretsScript(BaseSecurityScript):
                 # Security reminders
                 print_colored("\n🛡️ Security Reminders:", Colors.YELLOW)
 
-                return FlextResult[object].ok(
+                return FlextCore.Result[object].ok(
                     {"secrets_result": secrets_result, "environment": environment},
                 )
 
             print_colored("❌ Failed to generate production secrets", Colors.RED)
-            return FlextResult[object].fail("Failed to generate production secrets")
+            return FlextCore.Result[object].fail(
+                "Failed to generate production secrets"
+            )
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during secrets generation: {e}", Colors.RED)
-            return FlextResult[object].fail(f"Secrets generation error: {e}")
+            return FlextCore.Result[object].fail(f"Secrets generation error: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
@@ -111,15 +113,15 @@ class ProductionSecretsScript(BaseSecurityScript):
 
         return parser
 
-    def _process_kwargs(self, args: dict[str, str]) -> FlextTypes.StringDict:
+    def _process_kwargs(self, args: dict[str, str]) -> FlextCore.Types.StringDict:
         """Process arguments into kwargs."""
-        kwargs: FlextTypes.Dict = {}
+        kwargs: FlextCore.Types.Dict = {}
         kwargs["encrypt"] = not getattr(args, "no_encrypt", False)
         return kwargs
 
-    def cleanup(self) -> FlextResult[None]:
+    def cleanup(self) -> FlextCore.Result[None]:
         """Limpeza após execução."""
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
 
 def main() -> int:

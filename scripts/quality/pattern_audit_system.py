@@ -11,7 +11,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
 
-from flext_core import FlextLogger, FlextResult, FlextTypes
+from flext_core import FlextCore
 
 
 @dataclass
@@ -97,10 +97,10 @@ class EcosystemAuditResult:
     total_violations_count: int = 0
     critical_violations_count: int = 0
     high_violations_count: int = 0
-    projects_with_critical_issues: FlextTypes.StringList = field(
+    projects_with_critical_issues: FlextCore.Types.StringList = field(
         default_factory=list,
     )
-    fully_compliant_projects: FlextTypes.StringList = field(default_factory=list)
+    fully_compliant_projects: FlextCore.Types.StringList = field(default_factory=list)
     audit_timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     def calculate_ecosystem_metrics(self) -> None:
@@ -148,7 +148,7 @@ class PatternViolationAnalyzer:
 
     def __init__(self) -> None:
         """Initialize the pattern violation analyzer."""
-        self.logger = FlextLogger(__name__)
+        self.logger = FlextCore.Logger(__name__)
         self.pattern_docs_path = (
             Path(__file__).parent.parent.parent / "docs" / "patterns"
         )
@@ -162,8 +162,8 @@ class PatternViolationAnalyzer:
         self.foundation_violations = {
             "BaseModel": {
                 "severity": "CRITICAL",
-                "pattern": "foundation.md#FlextModels",
-                "context": "Use FlextModels/FlextModels/FlextModels instead of direct BaseModel",
+                "pattern": "foundation.md#FlextCore.Models",
+                "context": "Use FlextCore.Models/FlextCore.Models/FlextCore.Models instead of direct BaseModel",
                 "guidance": "Replace with appropriate FLEXT foundation class",
             },
             "validate_domain_rules": {
@@ -175,17 +175,17 @@ class PatternViolationAnalyzer:
         }
 
         self.type_system_violations = {
-            "FlextTypes.Dict": {
+            "FlextCore.Types.Dict": {
                 "severity": "CRITICAL",
-                "pattern": "types.md#FlextTypes",
-                "context": "Use FlextTypes namespace for semantic type definitions",
-                "guidance": "Replace with FlextTypes.JsonDict",
+                "pattern": "types.md#FlextCore.Types",
+                "context": "Use FlextCore.Types namespace for semantic type definitions",
+                "guidance": "Replace with FlextCore.Types.JsonDict",
             },
-            "List[FlextTypes.Dict]": {
+            "List[FlextCore.Types.Dict]": {
                 "severity": "HIGH",
                 "pattern": "types.md#data-types",
                 "context": "Use semantic data type definitions",
-                "guidance": "Replace with FlextTypes.Data.RecordBatch",
+                "guidance": "Replace with FlextCore.Types.Data.RecordBatch",
             },
         }
 
@@ -195,13 +195,13 @@ class PatternViolationAnalyzer:
                 "severity": "MEDIUM",
                 "pattern": "config-cli.md#hierarchical-config",
                 "context": "Use hierarchical configuration instead of direct environment access",
-                "guidance": "Use FlextConfigHierarchical.get_value()",
+                "guidance": "Use FlextCore.ConfigHierarchical.get_value()",
             },
             "BaseSettings": {
                 "severity": "HIGH",
-                "pattern": "config-cli.md#FlextConfig",
+                "pattern": "config-cli.md#FlextCore.Config",
                 "context": "Use FLEXT configuration patterns",
-                "guidance": "Replace with FlextConfig base class",
+                "guidance": "Replace with FlextCore.Config base class",
             },
         }
 
@@ -211,24 +211,24 @@ class PatternViolationAnalyzer:
                 "severity": "HIGH",
                 "pattern": "constants.md#semantic-constants",
                 "context": "Use semantic constants for maintainability",
-                "guidance": "Replace with FlextConstants.Defaults.TIMEOUT",
+                "guidance": "Replace with FlextCore.Constants.Defaults.TIMEOUT",
             },
             r"port=\d+": {
                 "severity": "MEDIUM",
                 "pattern": "constants.md#service-constants",
                 "context": "Use service-specific constants",
-                "guidance": "Replace with FlextConstants.Services.DEFAULT_PORT",
+                "guidance": "Replace with FlextCore.Constants.Services.DEFAULT_PORT",
             },
         }
 
     def analyze_project_compliance(
         self,
         project_path: Path,
-    ) -> FlextResult[ProjectAuditResult]:
+    ) -> FlextCore.Result[ProjectAuditResult]:
         """Analyze pattern compliance for a single project."""
         try:
             if not project_path.exists():
-                return FlextResult[ProjectAuditResult].fail(
+                return FlextCore.Result[ProjectAuditResult].fail(
                     f"Project path does not exist: {project_path}",
                 )
 
@@ -249,9 +249,9 @@ class PatternViolationAnalyzer:
                     total_files_analyzed=0,
                 )
                 result.calculate_compliance_metrics()
-                return FlextResult[ProjectAuditResult].ok(result)
+                return FlextCore.Result[ProjectAuditResult].ok(result)
 
-            violations: FlextTypes.List = []
+            violations: FlextCore.Types.List = []
             for python_file in python_files:
                 file_violations_result = self._analyze_file_patterns(
                     python_file,
@@ -270,24 +270,24 @@ class PatternViolationAnalyzer:
             self.logger.info(
                 f"Analyzed {project_path.name}: {len(violations)} violations found",
             )
-            return FlextResult[ProjectAuditResult].ok(result)
+            return FlextCore.Result[ProjectAuditResult].ok(result)
 
         except Exception as e:
             self.logger.exception(f"Error analyzing project {project_path.name}")
-            return FlextResult[ProjectAuditResult].fail(f"Analysis failed: {e}")
+            return FlextCore.Result[ProjectAuditResult].fail(f"Analysis failed: {e}")
 
     def _analyze_file_patterns(
         self,
         file_path: Path,
         project_name: str,
-    ) -> FlextResult[list[PatternViolation]]:
+    ) -> FlextCore.Result[list[PatternViolation]]:
         """Analyze patterns in a single file."""
         try:
             with Path(file_path).open(encoding="utf-8", errors="ignore") as f:
                 content = f.read()
                 lines = content.splitlines()
 
-            violations: FlextTypes.List = []
+            violations: FlextCore.Types.List = []
             # AST-based structural analysis
             try:
                 tree = ast.parse(content)
@@ -310,11 +310,11 @@ class PatternViolationAnalyzer:
             )
             violations.extend(text_violations)
 
-            return FlextResult[list[PatternViolation]].ok(violations)
+            return FlextCore.Result[list[PatternViolation]].ok(violations)
 
         except Exception as e:
             self.logger.debug(f"Error analyzing file {file_path}: {e}")
-            return FlextResult[list[PatternViolation]].ok(
+            return FlextCore.Result[list[PatternViolation]].ok(
                 [],
             )  # Return empty list on file errors
 
@@ -322,18 +322,18 @@ class PatternViolationAnalyzer:
         self,
         tree: ast.AST,
         file_path: Path,
-        lines: FlextTypes.StringList,
+        lines: FlextCore.Types.StringList,
         _project_name: str,
     ) -> list[PatternViolation]:
         """Analyze AST for structural pattern violations."""
-        violations: FlextTypes.List = []
+        violations: FlextCore.Types.List = []
 
         class PatternVisitor(ast.NodeVisitor):
             def __init__(self, analyzer: PatternViolationAnalyzer) -> None:
                 self.analyzer = analyzer
 
             def visit_ClassDef(self, node: ast.ClassDef) -> None:
-                # Check for BaseModel usage instead of FlextModels
+                # Check for BaseModel usage instead of FlextCore.Models
                 for base in node.bases:
                     if (
                         isinstance(base, ast.Name)
@@ -385,20 +385,20 @@ class PatternViolationAnalyzer:
     def _analyze_text_patterns(
         self,
         file_path: Path,
-        lines: FlextTypes.StringList,
+        lines: FlextCore.Types.StringList,
         _project_name: str,
     ) -> list[PatternViolation]:
         """Analyze text patterns for violations."""
-        violations: FlextTypes.List = []
+        violations: FlextCore.Types.List = []
         for line_num, line in enumerate(lines, 1):
             # Check type system violations
             for pattern, rule in self.type_system_violations.items():
-                if pattern in line and "FlextTypes" not in line:
+                if pattern in line and "FlextCore.Types" not in line:
                     violations.append(
                         PatternViolation(
                             file_path=str(file_path),
                             line_number=line_num,
-                            violation_type="Type System - Missing FlextTypes",
+                            violation_type="Type System - Missing FlextCore.Types",
                             severity_level=rule["severity"],
                             current_code_snippet=line.strip(),
                             pattern_reference=f"docs/patterns/{rule['pattern']}",
@@ -450,7 +450,7 @@ class PatternAuditSystem:
 
     def __init__(self) -> None:
         """Initialize the pattern audit system."""
-        self.logger = FlextLogger(__name__)
+        self.logger = FlextCore.Logger(__name__)
         self.analyzer = PatternViolationAnalyzer()
         self.workspace_path = Path(__file__).parent.parent.parent
         # Add metadata for audit reporting
@@ -492,7 +492,7 @@ class PatternAuditSystem:
     def audit_ecosystem_compliance(
         self,
         workspace_path: Path,
-    ) -> FlextResult[EcosystemAuditResult]:
+    ) -> FlextCore.Result[EcosystemAuditResult]:
         """Audit pattern compliance across entire FLEXT ecosystem."""
         try:
             # Define all FLEXT projects
@@ -531,7 +531,7 @@ class PatternAuditSystem:
                 "client-b-meltano-native",
             ]
 
-            results: FlextTypes.Dict = {}
+            results: FlextCore.Types.Dict = {}
             for project_name in projects:
                 if project_name == "main-workspace":
                     project_path = workspace_path  # Main workspace is the root
@@ -555,17 +555,17 @@ class PatternAuditSystem:
             )
             ecosystem_result.calculate_ecosystem_metrics()
 
-            return FlextResult[EcosystemAuditResult].ok(ecosystem_result)
+            return FlextCore.Result[EcosystemAuditResult].ok(ecosystem_result)
 
         except Exception as e:
-            return FlextResult[EcosystemAuditResult].fail(
+            return FlextCore.Result[EcosystemAuditResult].fail(
                 f"Ecosystem audit failed: {e}",
             )
 
     def generate_compliance_report(
         self,
         ecosystem_result: EcosystemAuditResult,
-    ) -> FlextResult[Path]:
+    ) -> FlextCore.Result[Path]:
         """Generate comprehensive compliance report."""
         try:
             report_data = {
@@ -630,17 +630,17 @@ class PatternAuditSystem:
             with Path(report_path).open("w", encoding="utf-8") as f:
                 json.dump(report_data, f, indent=2, ensure_ascii=False)
 
-            return FlextResult[Path].ok(report_path)
+            return FlextCore.Result[Path].ok(report_path)
 
         except Exception as e:
-            return FlextResult[Path].fail(f"Report generation failed: {e}")
+            return FlextCore.Result[Path].fail(f"Report generation failed: {e}")
 
     def _generate_remediation_recommendations(
         self,
         ecosystem_result: EcosystemAuditResult,
-    ) -> FlextTypes.StringDict:
+    ) -> FlextCore.Types.StringDict:
         """Generate prioritized remediation recommendations."""
-        recommendations: FlextTypes.Dict = {}
+        recommendations: FlextCore.Types.Dict = {}
         if ecosystem_result.critical_violations_count > 0:
             recommendations["immediate_action"] = (
                 f"Address {ecosystem_result.critical_violations_count} critical violations "

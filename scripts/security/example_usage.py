@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import sys
 
-from flext_core import FlextTypes
+from flext_core import FlextCore
 
 from .security_audit import (
     AntipatternScanner,
@@ -55,7 +55,7 @@ class RiskLevel:
 
 # Define create_security_scanner function using new class method pattern
 def create_security_scanner(
-    target_paths: FlextTypes.StringList,
+    target_paths: FlextCore.Types.StringList,
     *,  # Force keyword-only arguments
     exclude_dependencies: bool = False,
     output_format: str = "summary",

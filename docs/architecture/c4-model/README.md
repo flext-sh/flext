@@ -5,15 +5,19 @@ This directory contains the C4 model diagrams for the FLEXT Enterprise Data Inte
 ## 📋 C4 Model Levels
 
 ### 1. [System Context Diagram](./system-context.md)
+
 **Level 1** - Shows FLEXT in the context of its environment, external systems, and users.
 
 ### 2. [Container Diagram](./container-diagram.md)
+
 **Level 2** - Shows the high-level shape of the FLEXT architecture and how responsibilities are distributed across containers.
 
 ### 3. [Component Diagrams](./component-diagrams.md)
+
 **Level 3** - Shows how each container is made up of components and their relationships.
 
 ### 4. [Code Diagrams](./code-diagrams.md)
+
 **Level 4** - Shows how components are implemented in code (UML class diagrams, entity relationship diagrams, etc.).
 
 ## 🎯 FLEXT Architecture Overview
@@ -30,29 +34,34 @@ FLEXT is an enterprise-grade data integration platform built with:
 ## 🏗️ Key Architectural Patterns
 
 ### Foundation Layer (flext-core)
-- **FlextResult[T]** - Railway pattern for error handling
-- **FlextContainer** - Dependency injection container
-- **FlextModels** - DDD patterns (Entity, Value, AggregateRoot)
-- **FlextLogger** - Structured logging with context propagation
+
+- **FlextCore.Result[T]** - Railway pattern for error handling
+- **FlextCore.Container** - Dependency injection container
+- **FlextCore.Models** - DDD patterns (Entity, Value, AggregateRoot)
+- **FlextCore.Logger** - Structured logging with context propagation
 
 ### Application Layer
+
 - **flext-api** - REST API framework with OpenAPI support
 - **flext-auth** - Authentication and authorization services
 - **flext-web** - Web application framework
 - **flext-cli** - Command-line interface utilities
 
 ### Infrastructure Layer
+
 - **flext-ldap** - LDAP client operations
 - **flext-ldif** - LDIF processing (RFC 2849/4512 compliant)
-- **flext-oracle-*** - Oracle database integrations
+- **flext-oracle-\*** - Oracle database integrations
 - **flext-grpc** - gRPC services framework
 
 ### Data Integration Layer (Singer Platform)
+
 - **Taps** (5): Data extraction from various sources
 - **Targets** (5): Data loading to various destinations
 - **DBT Transformations** (4): Data transformation pipelines
 
 ### Runtime Layer
+
 - **FlexCore** - Go-based runtime container (port 8080)
 - **FLEXT Service** - Python-based plugin execution (port 8081)
 

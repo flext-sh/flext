@@ -11,7 +11,7 @@ import importlib.util
 import sys
 from pathlib import Path
 
-from flext_core import FlextTypes
+from flext_core import FlextCore
 
 from flext_tools import Colors, DependencyDiscovery, get_stdlib_modules, print_colored
 
@@ -63,7 +63,7 @@ class FalsePositiveAuditor:
     def audit_project_dependencies(
         self,
         project_path: Path,
-    ) -> dict[str, list[FlextTypes.Dict]]:
+    ) -> dict[str, list[FlextCore.Types.Dict]]:
         """Audita dependências de um projeto específico.
 
         Returns:
@@ -81,7 +81,7 @@ class FalsePositiveAuditor:
         )
 
         # Analisa cada dependência encontrada
-        analysis: dict[str, list[FlextTypes.Dict]] = {
+        analysis: dict[str, list[FlextCore.Types.Dict]] = {
             "stdlib": [],  # Módulos da standard library
             "flext_internal": [],  # Módulos internos do FLEXT
             "relative_imports": [],  # Imports relativos locais
@@ -292,7 +292,7 @@ class FalsePositiveAuditor:
 
     def _print_audit_results(
         self,
-        analysis: dict[str, list[FlextTypes.Dict]],
+        analysis: dict[str, list[FlextCore.Types.Dict]],
     ) -> None:
         """Imprime resultados da auditoria de forma organizada."""
         total = sum(len(items) for items in analysis.values())
@@ -351,7 +351,7 @@ class FalsePositiveAuditor:
 
 
 def audit_workspace() -> tuple[
-    dict[str, dict[str, list[FlextTypes.Dict]]],
+    dict[str, dict[str, list[FlextCore.Types.Dict]]],
     dict[str, set[str]],
 ]:
     """Audita todo o workspace FLEXT."""
@@ -393,7 +393,7 @@ def audit_workspace() -> tuple[
         "unknown": set(),
     }
 
-    project_details: dict[str, dict[str, list[FlextTypes.Dict]]] = {}
+    project_details: dict[str, dict[str, list[FlextCore.Types.Dict]]] = {}
 
     for project_path in projects:
         try:

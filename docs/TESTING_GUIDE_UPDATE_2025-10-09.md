@@ -9,6 +9,7 @@
 ## 📊 Testing Overview
 
 ### Current Testing Status
+
 - **Total Test Files:** 3,086 test files
 - **Test Coverage:** 85%+ average across projects
 - **Test Types:** Unit, Integration, End-to-End, Performance
@@ -16,6 +17,7 @@
 - **CI/CD Integration:** Automated testing in all pipelines
 
 ### Testing Philosophy
+
 - **Test-Driven Development:** Write tests before implementation
 - **Comprehensive Coverage:** Test all critical paths and edge cases
 - **Real Testing:** Minimal mocking, test actual functionality
@@ -29,11 +31,12 @@
 ### Core Testing Tools
 
 #### pytest
+
 **Primary testing framework for all Python projects**
 
 ```python
 import pytest
-from flext_core import FlextResult
+from flext_core import FlextCore
 
 # Basic test structure
 def test_function_success():
@@ -50,6 +53,7 @@ def test_function_failure():
 ```
 
 #### Test Markers
+
 **Organize tests by type and execution requirements**
 
 ```python
@@ -79,7 +83,8 @@ def test_end_to_end_workflow():
 ### Testing Patterns
 
 #### Railway-Oriented Testing
-**Test FlextResult patterns consistently**
+
+**Test FlextCore.Result patterns consistently**
 
 ```python
 def test_railway_pattern():
@@ -90,52 +95,54 @@ def test_railway_pattern():
         .flat_map(process_data)
         .map(format_response)
     )
-    
+
     assert result.is_success
     assert result.unwrap().name == "test"
-    
+
     # Test error path
     result = (
         validate_input({})
         .flat_map(process_data)
         .map(format_response)
     )
-    
+
     assert not result.is_success
     assert "validation" in result.error.lower()
 ```
 
 #### Dependency Injection Testing
-**Test FlextContainer patterns**
+
+**Test FlextCore.Container patterns**
 
 ```python
 def test_dependency_injection():
     """Test dependency injection container."""
-    container = FlextContainer()
-    
+    container = FlextCore.Container()
+
     # Register test service
     container.register("test_service", TestService())
-    
+
     # Retrieve service
     service_result = container.get("test_service")
     assert service_result.is_success
-    
+
     service = service_result.unwrap()
     assert isinstance(service, TestService)
 ```
 
 #### Model Testing
-**Test FlextModels patterns**
+
+**Test FlextCore.Models patterns**
 
 ```python
 def test_model_validation():
     """Test model validation and serialization."""
     from flext_api import FlextApiModels
-    
+
     # Test valid model
     request = FlextApiModels.Request(data={"name": "test"})
     assert request.data["name"] == "test"
-    
+
     # Test invalid model
     with pytest.raises(ValidationError):
         FlextApiModels.Request(data="invalid")
@@ -148,48 +155,50 @@ def test_model_validation():
 ### Core Framework Testing (flext-core)
 
 #### Unit Tests
+
 **Test individual components in isolation**
 
 ```python
 # tests/unit/test_result.py
 def test_flext_result_success():
-    """Test FlextResult success case."""
-    result = FlextResult[str].ok("test")
+    """Test FlextCore.Result success case."""
+    result = FlextCore.Result[str].ok("test")
     assert result.is_success
     assert result.unwrap() == "test"
     assert result.error is None
 
 def test_flext_result_failure():
-    """Test FlextResult failure case."""
-    result = FlextResult[str].fail("error")
+    """Test FlextCore.Result failure case."""
+    result = FlextCore.Result[str].fail("error")
     assert not result.is_success
     assert result.error == "error"
     with pytest.raises(ValueError):
         result.unwrap()
 
 def test_flext_result_composition():
-    """Test FlextResult composition."""
+    """Test FlextCore.Result composition."""
     result = (
-        FlextResult[int].ok(5)
+        FlextCore.Result[int].ok(5)
         .map(lambda x: x * 2)
-        .flat_map(lambda x: FlextResult[int].ok(x + 1))
+        .flat_map(lambda x: FlextCore.Result[int].ok(x + 1))
     )
     assert result.is_success
     assert result.unwrap() == 11
 ```
 
 #### Integration Tests
+
 **Test component interactions**
 
 ```python
 # tests/integration/test_container.py
 def test_container_service_registration():
     """Test service registration and retrieval."""
-    container = FlextContainer()
-    
+    container = FlextCore.Container()
+
     # Register service
     container.register("test", TestService())
-    
+
     # Retrieve service
     result = container.get("test")
     assert result.is_success
@@ -197,11 +206,11 @@ def test_container_service_registration():
 
 def test_container_factory_registration():
     """Test factory registration and instantiation."""
-    container = FlextContainer()
-    
+    container = FlextCore.Container()
+
     # Register factory
     container.register_factory("test", lambda: TestService())
-    
+
     # Retrieve service (should create new instance)
     result = container.get("test")
     assert result.is_success
@@ -211,6 +220,7 @@ def test_container_factory_registration():
 ### API Testing (flext-api)
 
 #### Endpoint Testing
+
 **Test REST API endpoints**
 
 ```python
@@ -231,7 +241,7 @@ def test_create_user_endpoint(api_client):
         "/users",
         json={"name": "test", "email": "test@example.com"}
     )
-    
+
     assert response.status_code == 201
     data = response.json()
     assert data["user_id"] is not None
@@ -245,10 +255,10 @@ def test_get_user_endpoint(api_client):
         json={"name": "test", "email": "test@example.com"}
     )
     user_id = create_response.json()["user_id"]
-    
+
     # Then retrieve the user
     response = api_client.get(f"/users/{user_id}")
-    
+
     assert response.status_code == 200
     data = response.json()
     assert data["user_id"] == user_id
@@ -256,6 +266,7 @@ def test_get_user_endpoint(api_client):
 ```
 
 #### Authentication Testing
+
 **Test authentication and authorization**
 
 ```python
@@ -263,10 +274,10 @@ def test_get_user_endpoint(api_client):
 def test_jwt_token_generation():
     """Test JWT token generation."""
     from flext_auth import FlextAuth
-    
+
     auth = FlextAuth()
     result = auth.generate_token({"user_id": "123", "role": "user"})
-    
+
     assert result.is_success
     token = result.unwrap()
     assert isinstance(token, str)
@@ -275,18 +286,18 @@ def test_jwt_token_generation():
 def test_jwt_token_validation():
     """Test JWT token validation."""
     from flext_auth import FlextAuth
-    
+
     auth = FlextAuth()
-    
+
     # Generate token
     token_result = auth.generate_token({"user_id": "123", "role": "user"})
     assert token_result.is_success
     token = token_result.unwrap()
-    
+
     # Validate token
     validation_result = auth.validate_token(token)
     assert validation_result.is_success
-    
+
     payload = validation_result.unwrap()
     assert payload["user_id"] == "123"
     assert payload["role"] == "user"
@@ -295,6 +306,7 @@ def test_jwt_token_validation():
 ### Data Integration Testing
 
 #### LDIF Processing Tests
+
 **Test LDIF parsing and processing**
 
 ```python
@@ -302,16 +314,16 @@ def test_jwt_token_validation():
 def test_ldif_parse_success():
     """Test successful LDIF parsing."""
     from flext_ldif import FlextLdif
-    
+
     ldif_content = """dn: cn=test,dc=example,dc=com
 cn: test
 sn: user
 objectClass: inetOrgPerson
 """
-    
+
     ldif = FlextLdif()
     result = ldif.parse(ldif_content)
-    
+
     assert result.is_success
     entries = result.unwrap()
     assert len(entries) == 1
@@ -321,15 +333,16 @@ objectClass: inetOrgPerson
 def test_ldif_parse_failure():
     """Test LDIF parsing with invalid content."""
     from flext_ldif import FlextLdif
-    
+
     ldif = FlextLdif()
     result = ldif.parse("invalid ldif content")
-    
+
     assert not result.is_success
     assert "parse" in result.error.lower()
 ```
 
 #### LDAP Integration Tests
+
 **Test LDAP connection and operations**
 
 ```python
@@ -338,17 +351,17 @@ def test_ldif_parse_failure():
 def test_ldap_connection():
     """Test LDAP connection establishment."""
     from flext_ldap import FlextLdap, FlextLdapModels
-    
+
     connection = FlextLdapModels.Connection(
         host="localhost",
         port=389,
         bind_dn="cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com",
         bind_password="REDACTED_LDAP_BIND_PASSWORD"
     )
-    
+
     ldap = FlextLdap()
     result = ldap.connect(connection)
-    
+
     # Note: This test requires a running LDAP server
     # In CI/CD, use a test container or mock
     if result.is_success:
@@ -359,6 +372,7 @@ def test_ldap_connection():
 ```
 
 #### Oracle Integration Tests
+
 **Test Oracle database operations**
 
 ```python
@@ -367,7 +381,7 @@ def test_ldap_connection():
 def test_oracle_connection():
     """Test Oracle database connection."""
     from flext_oracle import FlextOracle, FlextOracleModels
-    
+
     connection = FlextOracleModels.Connection(
         host="localhost",
         port=1521,
@@ -375,10 +389,10 @@ def test_oracle_connection():
         username="test",
         password="test"
     )
-    
+
     oracle = FlextOracle()
     result = oracle.connect(connection)
-    
+
     # Note: This test requires a running Oracle database
     # In CI/CD, use a test container or mock
     if result.is_success:
@@ -391,6 +405,7 @@ def test_oracle_connection():
 ### Singer Platform Testing
 
 #### Tap Testing
+
 **Test data extraction from various sources**
 
 ```python
@@ -398,14 +413,14 @@ def test_oracle_connection():
 def test_ldap_tap_configuration():
     """Test LDAP tap configuration."""
     from flext_tap_ldap import FlextTapLdap
-    
+
     tap = FlextTapLdap()
     config = {
         "host": "ldap.example.com",
         "port": 389,
         "base_dn": "dc=example,dc=com"
     }
-    
+
     result = tap.configure(config)
     assert result.is_success
     assert tap.is_configured
@@ -413,23 +428,24 @@ def test_ldap_tap_configuration():
 def test_ldap_tap_extraction():
     """Test LDAP data extraction."""
     from flext_tap_ldap import FlextTapLdap
-    
+
     tap = FlextTapLdap()
     tap.configure({
         "host": "ldap.example.com",
         "port": 389,
         "base_dn": "dc=example,dc=com"
     })
-    
+
     # Mock the actual extraction for unit testing
     result = tap.extract()
-    
+
     # In real tests, this would connect to actual LDAP
     # For unit tests, we might mock the connection
     assert result.is_success or "connection" in result.error.lower()
 ```
 
 #### Target Testing
+
 **Test data loading to various destinations**
 
 ```python
@@ -437,7 +453,7 @@ def test_ldap_tap_extraction():
 def test_oracle_target_configuration():
     """Test Oracle target configuration."""
     from flext_target_oracle import FlextTargetOracle
-    
+
     target = FlextTargetOracle()
     config = {
         "host": "oracle.example.com",
@@ -446,7 +462,7 @@ def test_oracle_target_configuration():
         "username": "test",
         "password": "test"
     }
-    
+
     result = target.configure(config)
     assert result.is_success
     assert target.is_configured
@@ -454,7 +470,7 @@ def test_oracle_target_configuration():
 def test_oracle_target_loading():
     """Test Oracle data loading."""
     from flext_target_oracle import FlextTargetOracle
-    
+
     target = FlextTargetOracle()
     target.configure({
         "host": "oracle.example.com",
@@ -463,14 +479,14 @@ def test_oracle_target_loading():
         "username": "test",
         "password": "test"
     })
-    
+
     test_data = [
         {"id": 1, "name": "test1"},
         {"id": 2, "name": "test2"}
     ]
-    
+
     result = target.load(test_data)
-    
+
     # In real tests, this would load to actual Oracle
     # For unit tests, we might mock the connection
     assert result.is_success or "connection" in result.error.lower()
@@ -481,49 +497,51 @@ def test_oracle_target_loading():
 ## 🚀 Performance Testing
 
 ### Benchmark Testing
+
 **Test performance characteristics**
 
 ```python
 # tests/performance/test_benchmarks.py
 import time
 import pytest
-from flext_core import FlextResult
+from flext_core import FlextCore
 
 @pytest.mark.slow
 def test_result_creation_performance():
-    """Test FlextResult creation performance."""
+    """Test FlextCore.Result creation performance."""
     start_time = time.time()
-    
+
     # Create many results
     for i in range(10000):
-        result = FlextResult[int].ok(i)
+        result = FlextCore.Result[int].ok(i)
         assert result.is_success
-    
+
     end_time = time.time()
     duration = end_time - start_time
-    
+
     # Should complete within reasonable time
     assert duration < 1.0  # 1 second for 10k operations
 
 @pytest.mark.slow
 def test_result_composition_performance():
-    """Test FlextResult composition performance."""
+    """Test FlextCore.Result composition performance."""
     start_time = time.time()
-    
+
     # Compose many results
-    result = FlextResult[int].ok(0)
+    result = FlextCore.Result[int].ok(0)
     for i in range(1000):
         result = result.map(lambda x: x + 1)
-    
+
     end_time = time.time()
     duration = end_time - start_time
-    
+
     assert result.is_success
     assert result.unwrap() == 1000
     assert duration < 0.5  # 0.5 seconds for 1k compositions
 ```
 
 ### Load Testing
+
 **Test system under load**
 
 ```python
@@ -537,17 +555,17 @@ from flext_api import FlextApi
 async def test_api_load_handling():
     """Test API under concurrent load."""
     api = FlextApi()
-    
+
     # Simulate concurrent requests
     async def make_request(request_id: int):
         # Simulate API request
         result = api.process_request({"id": request_id})
         return result.is_success
-    
+
     # Run 100 concurrent requests
     tasks = [make_request(i) for i in range(100)]
     results = await asyncio.gather(*tasks)
-    
+
     # Most requests should succeed
     success_rate = sum(results) / len(results)
     assert success_rate > 0.95  # 95% success rate
@@ -558,17 +576,18 @@ async def test_api_load_handling():
 ## 🔍 Test Configuration
 
 ### pytest Configuration
+
 **Configure pytest for optimal testing**
 
 ```python
 # conftest.py
 import pytest
-from flext_core import FlextContainer
+from flext_core import FlextCore
 
 @pytest.fixture(scope="session")
 def container():
     """Global test container."""
-    return FlextContainer()
+    return FlextCore.Container()
 
 @pytest.fixture
 def test_data():
@@ -590,18 +609,19 @@ def reset_container(container):
 ```
 
 ### Test Environment Setup
+
 **Configure test environments**
 
 ```python
 # tests/conftest.py
 import os
 import pytest
-from flext_core import FlextConfig
+from flext_core import FlextCore
 
 @pytest.fixture(scope="session")
 def test_config():
     """Test configuration."""
-    return FlextConfig({
+    return FlextCore.Config({
         "database": {
             "host": "localhost",
             "port": 5432,
@@ -630,6 +650,7 @@ def setup_test_environment(test_config):
 ## 📊 Test Coverage and Quality
 
 ### Coverage Requirements
+
 **Maintain high test coverage**
 
 ```bash
@@ -643,6 +664,7 @@ pytest --cov=src --cov-report=html --cov-report=term
 ```
 
 ### Quality Gates
+
 **Enforce test quality standards**
 
 ```bash
@@ -657,6 +679,7 @@ make security  # Security scanning
 ```
 
 ### Test Organization
+
 **Organize tests by type and purpose**
 
 ```
@@ -674,6 +697,7 @@ tests/
 ## 🚀 CI/CD Integration
 
 ### GitHub Actions
+
 **Automated testing in CI/CD**
 
 ```yaml
@@ -688,28 +712,29 @@ jobs:
     strategy:
       matrix:
         python-version: [3.13]
-    
+
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-    
-    - name: Install dependencies
-      run: |
-        pip install -e .
-        pip install pytest pytest-cov
-    
-    - name: Run tests
-      run: |
-        pytest --cov=src --cov-report=xml
-    
-    - name: Upload coverage
-      uses: codecov/codecov-action@v3
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          pip install -e .
+          pip install pytest pytest-cov
+
+      - name: Run tests
+        run: |
+          pytest --cov=src --cov-report=xml
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
 ```
 
 ### Test Execution
+
 **Run tests efficiently**
 
 ```bash
@@ -734,6 +759,7 @@ pytest --cov=src --cov-report=html
 ## 📚 Best Practices
 
 ### Test Writing Guidelines
+
 1. **Write tests first** (TDD approach)
 2. **Test behavior, not implementation**
 3. **Use descriptive test names**
@@ -741,18 +767,21 @@ pytest --cov=src --cov-report=html
 5. **Minimize test dependencies**
 
 ### Test Data Management
+
 1. **Use fixtures for common data**
 2. **Create test data factories**
 3. **Clean up after tests**
 4. **Use realistic test data**
 
 ### Error Testing
+
 1. **Test both success and failure paths**
 2. **Test edge cases and boundary conditions**
 3. **Test error handling and recovery**
 4. **Verify error messages are helpful**
 
 ### Performance Testing
+
 1. **Include performance benchmarks**
 2. **Test under realistic load**
 3. **Monitor memory usage**
@@ -765,15 +794,17 @@ pytest --cov=src --cov-report=html
 ### Common Test Issues
 
 #### 1. Import Errors
+
 ```python
 # ❌ WRONG - Internal module imports
-from flext_core.result import FlextResult
+from flext_core import FlextCore
 
 # ✅ CORRECT - Root module imports
-from flext_core import FlextResult
+from flext_core import FlextCore
 ```
 
 #### 2. Test Isolation
+
 ```python
 # ❌ WRONG - Tests depend on each other
 def test_create_user():
@@ -796,9 +827,10 @@ def test_get_user():
 ```
 
 #### 3. Mock Usage
+
 ```python
 # ❌ WRONG - Over-mocking
-@patch('flext_core.FlextResult')
+@patch('flext_core.FlextCore.Result')
 def test_processing():
     pass
 
@@ -829,16 +861,19 @@ pytest tests/unit/test_result.py::test_flext_result_success -v
 ## 📞 Resources
 
 ### Documentation
+
 - **Main README:** [README.md](../../README.md)
 - **Implementation Status:** [IMPLEMENTATION_STATUS_2025-10-09.md](IMPLEMENTATION_STATUS_2025-10-09.md)
 - **API Reference:** [API_REFERENCE_UPDATE_2025-10-09.md](API_REFERENCE_UPDATE_2025-10-09.md)
 
 ### Testing Tools
-- **pytest:** https://docs.pytest.org/
-- **pytest-cov:** https://pytest-cov.readthedocs.io/
-- **pytest-asyncio:** https://pytest-asyncio.readthedocs.io/
+
+- **pytest:** <https://docs.pytest.org/>
+- **pytest-cov:** <https://pytest-cov.readthedocs.io/>
+- **pytest-asyncio:** <https://pytest-asyncio.readthedocs.io/>
 
 ### Support
+
 - **Issues:** Create GitHub issue with `testing` label
 - **Questions:** Check CLAUDE.md for guidance
 - **Development:** Follow established patterns and practices

@@ -15,8 +15,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from flext_core import FlextResult, FlextTypes
-from flext_core.utilities import FlextUtilities
+from flext_core import FlextCore
 from mypy import api as mypy_api
 
 from flext_tools import (
@@ -44,10 +43,10 @@ NEEDS_IMPROVEMENT_THRESHOLD = 60
 class AnalysisResults:
     """Resultados de análise de qualidade."""
 
-    deps_result: FlextTypes.Dict
-    quality_result: FlextTypes.Dict
-    conflicts_result: FlextTypes.Dict
-    poetry_result: FlextTypes.Dict
+    deps_result: FlextCore.Types.Dict
+    quality_result: FlextCore.Types.Dict
+    conflicts_result: FlextCore.Types.Dict
+    poetry_result: FlextCore.Types.Dict
 
 
 @dataclass
@@ -73,7 +72,7 @@ class QualityGateway(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> FlextResult[None]:
+    def validate_preconditions(self) -> FlextCore.Result[None]:
         """Validar ferramentas necessárias."""
         workspace_root = Path.cwd()
 
@@ -88,7 +87,7 @@ class QualityGateway(FlextScript):
 
         if not flext_projects:
             print_colored("❌ Execute do diretório raiz do workspace FLEXT", Colors.RED)
-            return FlextResult[None].fail("Not in FLEXT workspace root")
+            return FlextCore.Result[None].fail("Not in FLEXT workspace root")
 
         print_colored(
             f"✅ Encontrados {len(flext_projects)} projetos FLEXT",
@@ -97,7 +96,7 @@ class QualityGateway(FlextScript):
 
         # Verificar ferramentas necessárias
         required_tools = ["ruff", "mypy", "poetry"]
-        missing_tools: FlextTypes.List = []
+        missing_tools: FlextCore.Types.List = []
         for tool in required_tools:
             if shutil.which(tool) is None:
                 missing_tools.append(tool)
@@ -110,15 +109,15 @@ class QualityGateway(FlextScript):
                 f"Instale as ferramentas faltantes: {', '.join(missing_tools)}",
                 Colors.YELLOW,
             )
-            return FlextResult[None].fail(
+            return FlextCore.Result[None].fail(
                 f"Missing required tools: {', '.join(missing_tools)}",
             )
 
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
     def execute_main_logic(
         self, **kwargs: dict[str, str]
-    ) -> FlextResult[dict[str, str]]:
+    ) -> FlextCore.Result[dict[str, str]]:
         """Execute main script logic."""
         """Executar gateway de qualidade completo."""
         try:
@@ -136,7 +135,7 @@ class QualityGateway(FlextScript):
             )
 
             # Estatísticas agregadas
-            total_stats: FlextTypes.Dict = {
+            total_stats: FlextCore.Types.Dict = {
                 "projects_analyzed": 0,
                 "passed": 0,
                 "failed": 0,
@@ -144,7 +143,7 @@ class QualityGateway(FlextScript):
                 "critical_issues": 0,
             }
 
-            failed_projects: FlextTypes.StringList = []
+            failed_projects: FlextCore.Types.StringList = []
 
             # Executar análise em cada projeto
             for project_path in projects:
@@ -246,7 +245,7 @@ class QualityGateway(FlextScript):
             else:
                 print_colored("\n🚫 QUALITY GATEWAY: REPROVADO", Colors.RED)
 
-            return FlextResult[object].ok(
+            return FlextCore.Result[object].ok(
                 {
                     "gateway_passed": gateway_passed,
                     "stats": total_stats,
@@ -256,7 +255,7 @@ class QualityGateway(FlextScript):
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
-            return FlextResult[object].fail(f"Analysis error: {e}")
+            return FlextCore.Result[object].fail(f"Analysis error: {e}")
 
     def _discover_projects(
         self,
@@ -266,7 +265,7 @@ class QualityGateway(FlextScript):
         """Descobrir projetos para analisar."""
         return discover_projects(workspace_root, projects_filter)
 
-    def _analyze_dependencies(self, project_path: Path) -> FlextTypes.Dict:
+    def _analyze_dependencies(self, project_path: Path) -> FlextCore.Types.Dict:
         """Analisar dependências usando flext_tools."""
         try:
             discovery = DependencyDiscovery(resolve_transitive=True)
@@ -292,7 +291,7 @@ class QualityGateway(FlextScript):
                 "error": str(e),
             }
 
-    def _analyze_code_quality(self, project_path: Path) -> FlextTypes.Dict:
+    def _analyze_code_quality(self, project_path: Path) -> FlextCore.Types.Dict:
         """Analisar qualidade do código."""
         try:
             try:
@@ -334,7 +333,7 @@ class QualityGateway(FlextScript):
                         "error": "Ruff not found in PATH",
                     }
 
-                result = FlextUtilities.run_external_command(
+                result = FlextCore.Utilities.run_external_command(
                     [ruff_cmd, "check", str(project_path), "--output-format=json"],
                     capture_output=True,
                     text=True,
@@ -391,7 +390,7 @@ class QualityGateway(FlextScript):
                 "error": str(e),
             }
 
-    def _analyze_conflicts(self, project_path: Path) -> FlextTypes.Dict:
+    def _analyze_conflicts(self, project_path: Path) -> FlextCore.Types.Dict:
         """Analisar conflitos usando flext_tools."""
         try:
             analyzer = ConflictAnalyzer()
@@ -422,7 +421,7 @@ class QualityGateway(FlextScript):
                 "error": str(e),
             }
 
-    def _validate_poetry_config(self, project_path: Path) -> FlextTypes.Dict:
+    def _validate_poetry_config(self, project_path: Path) -> FlextCore.Types.Dict:
         """Validar configuração Poetry usando flext_tools."""
         try:
             validator = PoetryValidator()
@@ -437,9 +436,9 @@ class QualityGateway(FlextScript):
         self,
         project_name: str,
         results: AnalysisResults,
-    ) -> FlextTypes.Dict:
+    ) -> FlextCore.Types.Dict:
         """Calcular resultado final do projeto."""
-        issues: FlextTypes.List = []
+        issues: FlextCore.Types.List = []
         critical_issues = 0
         total_issues = 0
 
@@ -513,7 +512,7 @@ class QualityGateway(FlextScript):
             "poetry_result": results.poetry_result,
         }
 
-    def _print_project_issues(self, project_result: FlextTypes.Dict) -> None:
+    def _print_project_issues(self, project_result: FlextCore.Types.Dict) -> None:
         """Imprimir issues do projeto."""
         issues = project_result.get("issues", [])
         if isinstance(issues, list):
@@ -526,8 +525,8 @@ class QualityGateway(FlextScript):
 
     def _print_final_summary(
         self,
-        total_stats: FlextTypes.Dict,
-        failed_projects: FlextTypes.StringList,
+        total_stats: FlextCore.Types.Dict,
+        failed_projects: FlextCore.Types.StringList,
         *,
         _strict_mode: bool = False,
     ) -> None:
@@ -586,9 +585,9 @@ class QualityGateway(FlextScript):
 
         return parser
 
-    def cleanup(self) -> FlextResult[None]:
+    def cleanup(self) -> FlextCore.Result[None]:
         """Limpeza após execução."""
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
 
 def main() -> int:

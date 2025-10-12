@@ -1,52 +1,51 @@
 #!/usr/bin/env python3
-"""
-FLEXT Architecture Documentation Generator
+"""FLEXT Architecture Documentation Generator.
 
 Comprehensive architecture documentation generator with modern tooling and best practices.
 Generates C4 Model, Arc42, ADRs, PlantUML diagrams, and interactive visualizations.
 """
 
 import json
-import os
-import re
 import sys
-from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple, Any
-import subprocess
+from typing import Any
+
+from flext_core import FlextCore
 
 
 @dataclass
 class ArchitectureComponent:
     """Represents an architectural component."""
+
     name: str
     type: str  # 'container', 'component', 'service', 'database', etc.
     description: str
     technology: str
-    dependencies: List[str] = field(default_factory=list)
-    interfaces: List[str] = field(default_factory=list)
-    responsibilities: List[str] = field(default_factory=list)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    dependencies: FlextCore.Types.StringList = field(default_factory=list)
+    interfaces: FlextCore.Types.StringList = field(default_factory=list)
+    responsibilities: FlextCore.Types.StringList = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
 class ArchitectureSystem:
     """Represents the complete system architecture."""
+
     name: str
     description: str
     version: str
-    components: List[ArchitectureComponent] = field(default_factory=list)
-    relationships: List[Tuple[str, str, str]] = field(default_factory=list)
-    contexts: Dict[str, Any] = field(default_factory=dict)
-    quality_attributes: Dict[str, Any] = field(default_factory=dict)
+    components: list[ArchitectureComponent] = field(default_factory=list)
+    relationships: list[tuple[str, str, str]] = field(default_factory=list)
+    contexts: dict[str, Any] = field(default_factory=dict)
+    quality_attributes: dict[str, Any] = field(default_factory=dict)
 
 
 class ArchitectureDocumentationGenerator:
     """Comprehensive architecture documentation generator."""
 
-    def __init__(self, config_file: Optional[str] = None):
+    def __init__(self, config_file: str | None = None) -> None:
         self.config_file = config_file or "docs/architecture/architecture_config.json"
         self.config = self.load_config()
         self.output_dir = Path(self.config.get("output_dir", "docs/architecture"))
@@ -56,10 +55,10 @@ class ArchitectureDocumentationGenerator:
         self.system = ArchitectureSystem(
             name="FLEXT Enterprise Data Integration Platform",
             description="Enterprise-grade data integration platform with Clean Architecture",
-            version="0.9.0"
+            version="0.9.0",
         )
 
-    def load_config(self) -> Dict[str, Any]:
+    def load_config(self) -> dict[str, Any]:
         """Load configuration from file or use defaults."""
         default_config = {
             "output_dir": "docs/architecture",
@@ -67,32 +66,32 @@ class ArchitectureDocumentationGenerator:
                 "c4_model": True,
                 "arc42": True,
                 "adr": True,
-                "plantuml": True
+                "plantuml": True,
             },
             "diagrams": {
                 "system_context": True,
                 "container": True,
                 "component": True,
                 "deployment": True,
-                "data_flow": True
+                "data_flow": True,
             },
             "quality_attributes": {
                 "performance": True,
                 "security": True,
                 "scalability": True,
                 "maintainability": True,
-                "reliability": True
+                "reliability": True,
             },
             "analysis": {
                 "code_analysis": True,
                 "dependency_analysis": True,
-                "interface_analysis": True
-            }
+                "interface_analysis": True,
+            },
         }
 
         if Path(self.config_file).exists():
             try:
-                with open(self.config_file, 'r') as f:
+                with Path(self.config_file).open(encoding="utf-8") as f:
                     user_config = json.load(f)
                     self.merge_config(default_config, user_config)
             except Exception as e:
@@ -100,7 +99,7 @@ class ArchitectureDocumentationGenerator:
 
         return default_config
 
-    def merge_config(self, base: Dict[str, Any], override: Dict[str, Any]) -> None:
+    def merge_config(self, base: dict[str, Any], override: dict[str, Any]) -> None:
         """Merge configuration dictionaries."""
         for key, value in override.items():
             if isinstance(value, dict) and key in base and isinstance(base[key], dict):
@@ -124,7 +123,9 @@ class ArchitectureDocumentationGenerator:
         # Analyze quality attributes
         self.analyze_quality_attributes()
 
-        print(f"✅ Architecture analysis complete. Found {len(self.system.components)} components.")
+        print(
+            f"✅ Architecture analysis complete. Found {len(self.system.components)} components."
+        )
 
     def analyze_project_structure(self) -> None:
         """Analyze the project structure and identify components."""
@@ -138,11 +139,11 @@ class ArchitectureDocumentationGenerator:
                 description="Foundation library providing Clean Architecture patterns",
                 technology="Python 3.13+",
                 responsibilities=[
-                    "FlextResult[T] - Railway-oriented error handling",
-                    "FlextContainer - Dependency injection",
-                    "FlextModels - Domain-Driven Design patterns",
-                    "FlextLogger - Structured logging"
-                ]
+                    "FlextCore.Result[T] - Railway-oriented error handling",
+                    "FlextCore.Container - Dependency injection",
+                    "FlextCore.Models - Domain-Driven Design patterns",
+                    "FlextCore.Logger - Structured logging",
+                ],
             ),
             ArchitectureComponent(
                 name="flexcore",
@@ -153,16 +154,23 @@ class ArchitectureDocumentationGenerator:
                     "Plugin execution environment",
                     "Service orchestration",
                     "Health monitoring",
-                    "Container management"
-                ]
-            )
+                    "Container management",
+                ],
+            ),
         ]
 
         # Domain libraries
         domain_libraries = [
-            "flext-api", "flext-auth", "flext-web", "flext-cli",
-            "flext-ldap", "flext-ldif", "flext-grpc", "flext-meltano",
-            "flext-observability", "flext-quality"
+            "flext-api",
+            "flext-auth",
+            "flext-web",
+            "flext-cli",
+            "flext-ldap",
+            "flext-ldif",
+            "flext-grpc",
+            "flext-meltano",
+            "flext-observability",
+            "flext-quality",
         ]
 
         for lib in domain_libraries:
@@ -172,7 +180,9 @@ class ArchitectureDocumentationGenerator:
                 description=f"Domain library for {lib.replace('flext-', '').replace('-', ' ')} functionality",
                 technology="Python 3.13+",
                 dependencies=["flext-core"],
-                responsibilities=[f"Provide {lib.replace('flext-', '').replace('-', ' ')} capabilities"]
+                responsibilities=[
+                    f"Provide {lib.replace('flext-', '').replace('-', ' ')} capabilities"
+                ],
             )
             core_components.append(component)
 
@@ -187,7 +197,9 @@ class ArchitectureDocumentationGenerator:
                     description=f"Singer {component_type} for {source.upper()} data integration",
                     technology="Python 3.13+",
                     dependencies=["flext-core", "singer-python"],
-                    responsibilities=[f"Extract/load data from/to {source.upper()} systems"]
+                    responsibilities=[
+                        f"Extract/load data from/to {source.upper()} systems"
+                    ],
                 )
                 singer_components.append(component)
 
@@ -201,7 +213,7 @@ class ArchitectureDocumentationGenerator:
                 description=f"DBT transformations for {transform.upper()} data",
                 technology="DBT + Python 3.13+",
                 dependencies=["flext-core", "dbt"],
-                responsibilities=[f"Transform {transform.upper()} data for analytics"]
+                responsibilities=[f"Transform {transform.upper()} data for analytics"],
             )
             dbt_components.append(component)
 
@@ -216,8 +228,8 @@ class ArchitectureDocumentationGenerator:
                 responsibilities=[
                     "OID to OUD migration",
                     "Server-specific quirk handling",
-                    "Data transformation and validation"
-                ]
+                    "Data transformation and validation",
+                ],
             )
         ]
 
@@ -232,7 +244,7 @@ class ArchitectureDocumentationGenerator:
         print("  🔗 Analyzing dependencies...")
 
         # Build dependency relationships
-        component_map = {comp.name: comp for comp in self.system.components}
+        {comp.name: comp for comp in self.system.components}
 
         for component in self.system.components:
             if component.name.startswith("flext-") and component.name != "flext-core":
@@ -260,7 +272,7 @@ class ArchitectureDocumentationGenerator:
         print("  🔌 Analyzing interfaces...")
 
         for component in self.system.components:
-            if component.type in ["service", "library"]:
+            if component.type in {"service", "library"}:
                 # Add REST API interface for API components
                 if "api" in component.name:
                     component.interfaces.append("REST API (OpenAPI 3.0)")
@@ -283,32 +295,32 @@ class ArchitectureDocumentationGenerator:
                 "throughput": "Process millions of records per hour",
                 "latency": "Sub-second response times for API calls",
                 "scalability": "Horizontal scaling through microservices",
-                "concurrency": "Async/await support for I/O operations"
+                "concurrency": "Async/await support for I/O operations",
             },
             "security": {
                 "authentication": "JWT and LDAP authentication",
                 "authorization": "Role-based access control (RBAC)",
                 "data_protection": "Encryption at rest and in transit",
-                "audit_trail": "Comprehensive security event logging"
+                "audit_trail": "Comprehensive security event logging",
             },
             "reliability": {
                 "availability": "99.9% uptime target",
                 "fault_tolerance": "Railway pattern error handling",
                 "data_consistency": "ACID compliance for critical operations",
-                "monitoring": "Comprehensive health checks and metrics"
+                "monitoring": "Comprehensive health checks and metrics",
             },
             "maintainability": {
                 "modularity": "Clean Architecture with clear boundaries",
                 "testability": "Dependency injection and comprehensive testing",
                 "documentation": "Complete API and architecture documentation",
-                "automation": "Automated testing and deployment pipelines"
+                "automation": "Automated testing and deployment pipelines",
             },
             "usability": {
                 "api_design": "RESTful API design with OpenAPI documentation",
                 "cli_interface": "Rich CLI with help, auto-completion, and progress bars",
                 "error_messages": "Clear, actionable error messages",
-                "documentation": "Comprehensive user and developer documentation"
-            }
+                "documentation": "Comprehensive user and developer documentation",
+            },
         }
 
     def generate_c4_model_documentation(self) -> None:
@@ -425,13 +437,13 @@ Rel(flext, monitoring, "Reports", "Metrics/Logs")
 
 ---
 
-**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Generated:** {datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")}
 **Version:** {self.system.version}
 """
 
         context_file = self.output_dir / "c4-model" / "system-context.md"
         context_file.parent.mkdir(parents=True, exist_ok=True)
-        context_file.write_text(context_md, encoding='utf-8')
+        context_file.write_text(context_md, encoding="utf-8")
 
     def generate_container_diagram(self) -> None:
         """Generate container diagram."""
@@ -525,10 +537,10 @@ Rel_D(domain_services, monitoring, "Reports", "Logs")
 - **Technology**: Python
 - **Purpose**: Foundation library with Clean Architecture patterns
 - **Responsibilities**:
-  - FlextResult[T] error handling
-  - FlextContainer dependency injection
-  - FlextModels domain patterns
-  - FlextLogger structured logging
+  - FlextCore.Result[T] error handling
+  - FlextCore.Container dependency injection
+  - FlextCore.Models domain patterns
+  - FlextCore.Logger structured logging
 
 #### Domain Services
 - **Technology**: Python
@@ -580,12 +592,12 @@ Rel_D(domain_services, monitoring, "Reports", "Logs")
 
 ---
 
-**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Generated:** {datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")}
 **Version:** {self.system.version}
 """
 
         container_file = self.output_dir / "c4-model" / "container-diagram.md"
-        container_file.write_text(container_md, encoding='utf-8')
+        container_file.write_text(container_md, encoding="utf-8")
 
     def generate_component_diagrams(self) -> None:
         """Generate component diagrams."""
@@ -602,14 +614,14 @@ Detailed view of FLEXT core components and their relationships:
 
 Container_Boundary(core, "FLEXT Core Library") {{
 
-    Component(result, "FlextResult[T]", "Railway Pattern", "Monadic error handling with composition")
-    Component(container, "FlextContainer", "DI Container", "Dependency injection and service management")
-    Component(models, "FlextModels", "DDD Patterns", "Entity, Value, AggregateRoot patterns")
-    Component(logger, "FlextLogger", "Structured Logging", "Context-aware logging with propagation")
+    Component(result, "FlextCore.Result[T]", "Railway Pattern", "Monadic error handling with composition")
+    Component(container, "FlextCore.Container", "DI Container", "Dependency injection and service management")
+    Component(models, "FlextCore.Models", "DDD Patterns", "Entity, Value, AggregateRoot patterns")
+    Component(logger, "FlextCore.Logger", "Structured Logging", "Context-aware logging with propagation")
 
-    Component(dispatcher, "FlextDispatcher", "CQRS Dispatcher", "Command and query dispatching")
-    Component(bus, "FlextBus", "Event Bus", "Domain event publishing and subscription")
-    Component(config, "FlextConfig", "Configuration", "Environment-aware configuration management")
+    Component(dispatcher, "FlextCore.Dispatcher", "CQRS Dispatcher", "Command and query dispatching")
+    Component(bus, "FlextCore.Bus", "Event Bus", "Domain event publishing and subscription")
+    Component(config, "FlextCore.Config", "Configuration", "Environment-aware configuration management")
 }}
 
 Container_Boundary(domain, "Domain Services") {{
@@ -645,22 +657,22 @@ Rel(infrastructure, core, "Depends on", "Foundation patterns")
 
 ### Core Components
 
-#### FlextResult[T]
+#### FlextCore.Result[T]
 - **Pattern**: Railway-oriented programming
 - **Purpose**: Type-safe error handling with composition
-- **Usage**: All operations that can fail return FlextResult[T]
+- **Usage**: All operations that can fail return FlextCore.Result[T]
 
-#### FlextContainer
+#### FlextCore.Container
 - **Pattern**: Dependency injection container
 - **Purpose**: Service registration and resolution
 - **Usage**: Global singleton for dependency management
 
-#### FlextModels
+#### FlextCore.Models
 - **Pattern**: Domain-Driven Design
 - **Purpose**: Entity, Value, and AggregateRoot patterns
 - **Usage**: Business domain modeling
 
-#### FlextLogger
+#### FlextCore.Logger
 - **Pattern**: Structured logging
 - **Purpose**: Context-aware logging with propagation
 - **Usage**: Consistent logging across all components
@@ -689,12 +701,12 @@ Rel(infrastructure, core, "Depends on", "Foundation patterns")
 
 ---
 
-**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Generated:** {datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")}
 **Version:** {self.system.version}
 """
 
         core_comp_file = self.output_dir / "c4-model" / "component-diagrams.md"
-        core_comp_file.write_text(core_md, encoding='utf-8')
+        core_comp_file.write_text(core_md, encoding="utf-8")
 
     def generate_code_diagrams(self) -> None:
         """Generate code-level diagrams."""
@@ -708,21 +720,21 @@ Code-level architecture showing class relationships and implementation patterns:
 @startuml FLEXT Code Architecture
 !include <C4/C4_Code>
 
-class FlextResult {{
+class FlextCore.Result {{
     +value: T
     +error: E
     +is_success: bool
     +is_failure: bool
     +unwrap(): T
-    +map(func): FlextResult[U]
-    +flat_map(func): FlextResult[U]
+    +map(func): FlextCore.Result[U]
+    +flat_map(func): FlextCore.Result[U]
 }}
 
-class FlextContainer {{
+class FlextCore.Container {{
     -_services: Dict[str, Any]
     +register(name: str, service: Any)
     +resolve(name: str): Any
-    +get_global(): FlextContainer
+    +get_global(): FlextCore.Container
 }}
 
 abstract class FlextModel {{
@@ -744,33 +756,33 @@ class AggregateRoot {{
     +domain_events: List[DomainEvent]
 }}
 
-class FlextDispatcher {{
+class FlextCore.Dispatcher {{
     -_handlers: Dict[type, Callable]
     +register_handler(command_type, handler)
-    +dispatch(command): FlextResult
+    +dispatch(command): FlextCore.Result
 }}
 
-class FlextBus {{
+class FlextCore.Bus {{
     -_subscribers: Dict[type, List[Callable]]
     +subscribe(event_type, handler)
     +publish(event)
 }}
 
-FlextResult --> FlextContainer : uses
-FlextContainer --> FlextModel : manages
+FlextCore.Result --> FlextCore.Container : uses
+FlextCore.Container --> FlextModel : manages
 FlextModel <|-- Entity
 FlextModel <|-- Value
 FlextModel <|-- AggregateRoot
 
-FlextDispatcher --> FlextBus : publishes events
-FlextBus --> FlextLogger : logs events
+FlextCore.Dispatcher --> FlextCore.Bus : publishes events
+FlextCore.Bus --> FlextCore.Logger : logs events
 
-note right of FlextResult
+note right of FlextCore.Result
     Railway-oriented
     error handling
 end note
 
-note right of FlextContainer
+note right of FlextCore.Container
     Dependency injection
     singleton container
 end note
@@ -786,7 +798,7 @@ end note
 
 ### Error Handling
 ```python
-class FlextResult[T, E]:
+class FlextCore.Result[T, E]:
     \"\"\"Monadic result type for railway-oriented programming.\"\"\"
 
     def __init__(self, value: Optional[T] = None, error: Optional[E] = None):
@@ -806,29 +818,29 @@ class FlextResult[T, E]:
             raise RuntimeError(f"Cannot unwrap failure result: {{self._error}}")
         return self._value
 
-    def map[U](self, func: Callable[[T], U]) -> FlextResult[U, E]:
+    def map[U](self, func: Callable[[T], U]) -> FlextCore.Result[U, E]:
         if self.is_success:
-            return FlextResult(func(self._value))
-        return FlextResult(error=self._error)
+            return FlextCore.Result(func(self._value))
+        return FlextCore.Result(error=self._error)
 
-    def flat_map[U](self, func: Callable[[T], FlextResult[U, E]]) -> FlextResult[U, E]:
+    def flat_map[U](self, func: Callable[[T], FlextCore.Result[U, E]]) -> FlextCore.Result[U, E]:
         if self.is_success:
             return func(self._value)
-        return FlextResult(error=self._error)
+        return FlextCore.Result(error=self._error)
 ```
 
 ### Dependency Injection
 ```python
-class FlextContainer:
+class FlextCore.Container:
     \"\"\"Global dependency injection container.\"\"\"
 
-    _instance: Optional['FlextContainer'] = None
+    _instance: Optional['FlextCore.Container'] = None
 
     def __init__(self):
         self._services: Dict[str, Any] = {{}}
 
     @classmethod
-    def get_global(cls) -> 'FlextContainer':
+    def get_global(cls) -> 'FlextCore.Container':
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
@@ -844,7 +856,7 @@ class FlextContainer:
 
 ### Domain Models
 ```python
-class FlextModels:
+class FlextCore.Models:
     \"\"\"Domain-Driven Design base classes.\"\"\"
 
     class Entity:
@@ -881,12 +893,12 @@ class FlextModels:
 
 ---
 
-**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Generated:** {datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")}
 **Version:** {self.system.version}
 """
 
         code_file = self.output_dir / "c4-model" / "code-diagrams.md"
-        code_file.write_text(code_md, encoding='utf-8')
+        code_file.write_text(code_md, encoding="utf-8")
 
     def generate_arc42_documentation(self) -> None:
         """Generate Arc42 documentation framework."""
@@ -903,7 +915,7 @@ class FlextModels:
             section_file.parent.mkdir(parents=True, exist_ok=True)
 
             content = generator_func()
-            section_file.write_text(content, encoding='utf-8')
+            section_file.write_text(content, encoding="utf-8")
 
         print("✅ Arc42 documentation generated.")
 
@@ -976,7 +988,7 @@ FLEXT is an enterprise-grade data integration platform designed to simplify and 
 
 ---
 
-**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Generated:** {datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")}
 **Version:** {self.system.version}
 """
 
@@ -1062,7 +1074,7 @@ FLEXT is an enterprise-grade data integration platform designed to simplify and 
 
 ---
 
-**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Generated:** {datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")}
 **Version:** {self.system.version}
 """
 
@@ -1077,10 +1089,10 @@ FLEXT is an enterprise-grade data integration platform designed to simplify and 
         # Write ADR files
         template_file = self.output_dir / "adr" / "adr-template.md"
         template_file.parent.mkdir(parents=True, exist_ok=True)
-        template_file.write_text(adr_template, encoding='utf-8')
+        template_file.write_text(adr_template, encoding="utf-8")
 
         index_file = self.output_dir / "adr" / "README.md"
-        index_file.write_text(adr_index, encoding='utf-8')
+        index_file.write_text(adr_index, encoding="utf-8")
 
         print("✅ ADR documentation generated.")
 
@@ -1303,7 +1315,7 @@ Use [adr-template.md](./adr-template.md) for new ADRs.
 
 ---
 
-**Last Updated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Last Updated:** {datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")}
 **Total ADRs:** 25
 **Active Decisions:** 22
 """
@@ -1313,7 +1325,7 @@ Use [adr-template.md](./adr-template.md) for new ADRs.
         print("🌱 Generating PlantUML diagrams...")
 
         # System overview diagram
-        system_overview = f"""@startuml FLEXT System Overview
+        system_overview = """@startuml FLEXT System Overview
 !theme plain
 skinparam backgroundColor #FEFEFE
 skinparam sequenceParticipant underline
@@ -1359,7 +1371,7 @@ api -> core: query pipeline state
 core -> domain: get error details
 
 note right: Railway Pattern Error Handling
-domain --> core: FlextResult.failure("Connection timeout")
+domain --> core: FlextCore.Result.failure("Connection timeout")
 core -> api: propagate error context
 api -> cli: format error response
 cli --> user: display actionable error
@@ -1367,12 +1379,17 @@ cli --> user: display actionable error
 @enduml
 """
 
-        overview_file = self.output_dir / "plantuml" / "system-architecture" / "flext-system-overview.puml"
+        overview_file = (
+            self.output_dir
+            / "plantuml"
+            / "system-architecture"
+            / "flext-system-overview.puml"
+        )
         overview_file.parent.mkdir(parents=True, exist_ok=True)
-        overview_file.write_text(system_overview, encoding='utf-8')
+        overview_file.write_text(system_overview, encoding="utf-8")
 
         # API request flow diagram
-        api_flow = f"""@startuml API Request Flow
+        api_flow = """@startuml API Request Flow
 !theme plain
 skinparam backgroundColor #FEFEFE
 
@@ -1402,7 +1419,7 @@ router -> domain: execute business logic
 domain -> db: query data
 db --> domain: return results
 
-domain --> router: FlextResult.success(data)
+domain --> router: FlextCore.Result.success(data)
         api_flow_file.parent.mkdir(parents=True, exist_ok=True)
 router -> formatter: format response
 formatter --> gateway: JSON response
@@ -1431,7 +1448,7 @@ domain -> db: query data
 db --> domain: connection timeout
 
 note right: Railway Pattern Error Propagation
-domain --> router: FlextResult.failure("DB timeout")
+domain --> router: FlextCore.Result.failure("DB timeout")
 router -> formatter: format domain error
 formatter --> gateway: error response
 
@@ -1440,9 +1457,13 @@ gateway --> client: 500 Internal Server Error
 @enduml
 """
 
-        (self.output_dir / "plantuml" / "sequence-diagrams").mkdir(parents=True, exist_ok=True)
-        api_flow_file = self.output_dir / "plantuml" / "sequence-diagrams" / "api-request-flow.puml"
-        api_flow_file.write_text(api_flow, encoding='utf-8')
+        (self.output_dir / "plantuml" / "sequence-diagrams").mkdir(
+            parents=True, exist_ok=True
+        )
+        api_flow_file = (
+            self.output_dir / "plantuml" / "sequence-diagrams" / "api-request-flow.puml"
+        )
+        api_flow_file.write_text(api_flow, encoding="utf-8")
 
         print("✅ PlantUML diagrams generated.")
 
@@ -1462,7 +1483,7 @@ gateway --> client: 500 Internal Server Error
         # Generate comprehensive report
         report = f"""# FLEXT Architecture Documentation Report
 
-**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Generated:** {datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")}
 **System Version:** {self.system.version}
 **Components Analyzed:** {len(self.system.components)}
 **Relationships Identified:** {len(self.system.relationships)}
@@ -1666,20 +1687,26 @@ docs/architecture/
 """
 
         report_file = self.output_dir / "architecture_documentation_report.md"
-        report_file.write_text(report, encoding='utf-8')
+        report_file.write_text(report, encoding="utf-8")
 
         print("✅ Comprehensive architecture documentation generated!")
         print(f"📄 Main report: {report_file}")
 
 
-def main():
+def main() -> int:
     """Main entry point for architecture documentation generation."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="FLEXT Architecture Documentation Generator")
-    parser.add_argument("framework", nargs="?", default="full-suite",
-                       choices=["c4-model", "arc42", "adr", "plantuml", "full-suite"],
-                       help="Documentation framework to generate")
+    parser = argparse.ArgumentParser(
+        description="FLEXT Architecture Documentation Generator"
+    )
+    parser.add_argument(
+        "framework",
+        nargs="?",
+        default="full-suite",
+        choices=["c4-model", "arc42", "adr", "plantuml", "full-suite"],
+        help="Documentation framework to generate",
+    )
     parser.add_argument("--config", help="Configuration file")
     parser.add_argument("--output", "-o", help="Output directory")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
@@ -1710,6 +1737,7 @@ def main():
     except Exception as e:
         print(f"❌ Error generating documentation: {e}")
         import traceback
+
         if args.verbose:
             traceback.print_exc()
         return 1
@@ -1718,4 +1746,4 @@ def main():
 
 
 if __name__ == "__main__":
-    exit(main())
+    sys.exit(main())

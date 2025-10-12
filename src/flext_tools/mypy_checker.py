@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Self
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextCore
 
 
 class MyPyChecker:
@@ -20,25 +20,27 @@ class MyPyChecker:
 
     def check_project(
         self, project_path: str | Path
-    ) -> FlextResult[FlextTypes.StringList]:
+    ) -> FlextCore.Result[FlextCore.Types.StringList]:
         """Check project with MyPy."""
         try:
             # Minimal implementation - just return no errors
             _ = project_path  # Parameter used for project checking
-            return FlextResult[FlextTypes.StringList].ok([])
+            return FlextCore.Result[FlextCore.Types.StringList].ok([])
         except Exception as e:
-            return FlextResult[FlextTypes.StringList].fail(f"MyPy check failed: {e}")
+            return FlextCore.Result[FlextCore.Types.StringList].fail(
+                f"MyPy check failed: {e}"
+            )
 
-    def get_type_coverage(self, project_path: str | Path) -> FlextResult[str]:
+    def get_type_coverage(self, project_path: str | Path) -> FlextCore.Result[str]:
         """Get type coverage percentage."""
         _ = project_path  # Parameter used for coverage analysis
-        return FlextResult[str].ok("100%")
+        return FlextCore.Result[str].ok("100%")
 
-    def check_workspace(self: Self) -> FlextResult[FlextTypes.StringList]:
+    def check_workspace(self: Self) -> FlextCore.Result[FlextCore.Types.StringList]:
         """Check entire workspace with MyPy."""
         try:
-            return FlextResult[FlextTypes.StringList].ok([])
+            return FlextCore.Result[FlextCore.Types.StringList].ok([])
         except Exception as e:
-            return FlextResult[FlextTypes.StringList].fail(
+            return FlextCore.Result[FlextCore.Types.StringList].fail(
                 f"Workspace check failed: {e}"
             )

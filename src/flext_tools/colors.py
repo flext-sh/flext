@@ -7,13 +7,13 @@ SPDX-License-Identifier: MIT
 from typing import Self
 
 import flext_cli
-from flext_core import FlextLogger, FlextResult, FlextService
+from flext_core import FlextCore
 
 # FlextCli availability flag
 FLEXT_CLI_AVAILABLE = True
 
 
-class FlextColorService(FlextService[str]):
+class FlextColorService(FlextCore.Service[str]):
     """Unified color service with nested helpers.
 
     Single responsibility: Terminal color formatting and output.
@@ -53,20 +53,20 @@ class FlextColorService(FlextService[str]):
 
             🚨 AUDIT VIOLATION: Inline validation instead of proper models class usage!
             ❌ CRITICAL ISSUE: This method performs inline validation that should be centralized
-            ❌ INLINE VALIDATION: Empty color check should be handled by FlextModels validation
+            ❌ INLINE VALIDATION: Empty color check should be handled by FlextCore.Models validation
 
             🔧 REQUIRED ACTION:
-            - Replace with FlextModels.ColorCode validation
-            - Use FlextModels.Validation.validate_color_code() for color validation
+            - Replace with FlextCore.Models.ColorCode validation
+            - Use FlextCore.Models.Validation.validate_color_code() for color validation
             - Remove inline validation logic from helper methods
 
-            📍 SHOULD BE USED INSTEAD: FlextModels.Validation.validate_color_code(color)
+            📍 SHOULD BE USED INSTEAD: FlextCore.Models.Validation.validate_color_code(color)
 
             Returns:
                 str: Message with ANSI color codes applied.
 
             """
-            # 🚨 AUDIT VIOLATION: Inline validation - should use FlextModels.Validation
+            # 🚨 AUDIT VIOLATION: Inline validation - should use FlextCore.Models.Validation
             if not color:
                 return message
             return f"{color}{message}{FlextColorService.Colors.RESET}"
@@ -78,21 +78,21 @@ class FlextColorService(FlextService[str]):
         def print_colored(
             message: str,
             color: str = "",
-            logger: FlextLogger | None = None,
-        ) -> FlextResult[None]:
+            logger: FlextCore.Logger | None = None,
+        ) -> FlextCore.Result[None]:
             """Print text with color formatting and logging.
 
             Returns:
-                FlextResult[None]: Success result or failure if CLI not available.
+                FlextCore.Result[None]: Success result or failure if CLI not available.
 
             """
             # Log message regardless of flext_cli availability
             if logger:
                 logger.info(message)
 
-            # 🚨 AUDIT VIOLATION: Inline validation - should use FlextConfig.Validation
+            # 🚨 AUDIT VIOLATION: Inline validation - should use FlextCore.Config.Validation
             if not FLEXT_CLI_AVAILABLE:
-                return FlextResult[None].fail(
+                return FlextCore.Result[None].fail(
                     "FlextCli not available for colored output",
                 )
 
@@ -108,23 +108,25 @@ class FlextColorService(FlextService[str]):
             else:
                 formatter.console.print(message)
 
-            return FlextResult[None].ok(None)
+            return FlextCore.Result[None].ok(None)
 
     def __init__(self: Self) -> None:
         """Initialize color service."""
         super().__init__()
-        self._logger = FlextLogger(__name__)
+        self._logger = FlextCore.Logger(__name__)
 
-    def execute(self: Self) -> FlextResult[str]:
-        """Execute color service - FlextService interface."""
-        return FlextResult[str].ok("Color service ready")
+    def execute(self: Self) -> FlextCore.Result[str]:
+        """Execute color service - FlextCore.Service interface."""
+        return FlextCore.Result[str].ok("Color service ready")
 
-    def colorize(self, message: str, color: str) -> FlextResult[str]:
+    def colorize(self, message: str, color: str) -> FlextCore.Result[str]:
         """Colorize text using nested helper."""
-        result: FlextResult[object] = self._FormattingHelper.colorize(message, color)
-        return FlextResult[str].ok(result)
+        result: FlextCore.Result[object] = self._FormattingHelper.colorize(
+            message, color
+        )
+        return FlextCore.Result[str].ok(result)
 
-    def print_colored(self, message: str, color: str = "") -> FlextResult[None]:
+    def print_colored(self, message: str, color: str = "") -> FlextCore.Result[None]:
         """Print colored text using nested helper."""
         return self._OutputHelper.print_colored(message, color, self._logger)
 
@@ -142,7 +144,7 @@ Colors = FlextColorService.Colors
 def colorize(message: str, color: str) -> str:
     """Convenience function for colorize - delegates to FlextColorService."""
     service = FlextColorService()
-    result: FlextResult[object] = service.colorize(message, color)
+    result: FlextCore.Result[object] = service.colorize(message, color)
     return result.unwrap() if result.is_success else message
 
 

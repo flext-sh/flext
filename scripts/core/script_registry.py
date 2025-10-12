@@ -16,7 +16,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextTypes
+from flext_core import FlextCore
 
 from flext_tools import Colors, ScriptMetadata, print_colored
 
@@ -51,7 +51,7 @@ class LegacyScriptMetadata:
     priority: ScriptPriority
     file_path: Path
     requires_venv: bool = True
-    dependencies: FlextTypes.StringList = field(default_factory=list)
+    dependencies: FlextCore.Types.StringList = field(default_factory=list)
 
     @property
     def makefile_target(self) -> str:
@@ -262,7 +262,7 @@ class ScriptRegistry:
                         # Docstring de linha única
                         return line.replace("'''", "").replace('"""', "").strip()
                     in_docstring = True
-                    FlextLogger(__name__).debug("Failed to parse script metadata")
+                    FlextCore.Logger(__name__).debug("Failed to parse script metadata")
                 if in_docstring and (line.endswith(('"""', "'''"))):
                     return line.replace("'''", "").replace('"""', "").strip()
                 if in_docstring and line and not line.startswith("#"):

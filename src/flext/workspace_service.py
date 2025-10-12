@@ -11,17 +11,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Protocol, Self, runtime_checkable
 
-from flext_core import (
-    FlextContainer,
-    FlextLogger,
-    FlextModels,
-    FlextResult,
-    FlextService,
-    FlextTypes,
-)
+from flext_core import FlextCore
 
 
-class FlextWorkspaceService(FlextService[str]):
+class FlextWorkspaceService(FlextCore.Service[str]):
     """Unified workspace service using flext-core utilities exclusively.
 
     Eliminates ALL wrapper methods and SOLID violations, using flext-core
@@ -34,15 +27,15 @@ class FlextWorkspaceService(FlextService[str]):
     SOLID Principles Applied:
         - Single Responsibility: Workspace management only
         - Open/Closed: Extensible through flext-core patterns
-        - Dependency Inversion: Uses FlextContainer for dependencies
+        - Dependency Inversion: Uses FlextCore.Container for dependencies
         - Interface Segregation: Focused workspace interface
     """
 
-    def __init__(self, **_data: dict[str, object]) -> None:
+    def __init__(self, **_data: FlextCore.Types.Dict) -> None:
         """Initialize workspace service with flext-core patterns."""
         super().__init__()
-        self._logger = FlextLogger(__name__)
-        self._container = FlextContainer.get_global()
+        self._logger = FlextCore.Logger(__name__)
+        self._container = FlextCore.Container.get_global()
         self._workspace_root = Path.cwd()
 
     @runtime_checkable
@@ -51,7 +44,7 @@ class FlextWorkspaceService(FlextService[str]):
 
         def discover_projects(
             self, workspace_root: Path
-        ) -> FlextResult[list[FlextModels.Project]]:
+        ) -> FlextCore.Result[list[FlextCore.Models.Project]]:
             """Discover projects in workspace."""
             ...
 
@@ -59,7 +52,7 @@ class FlextWorkspaceService(FlextService[str]):
     class WorkspaceValidatorProtocol(Protocol):
         """Protocol for workspace validation services."""
 
-        def validate_workspace_path(self, path: str) -> FlextResult[str]:
+        def validate_workspace_path(self, path: str) -> FlextCore.Result[str]:
             """Validate workspace path."""
             ...
 
@@ -71,36 +64,36 @@ class FlextWorkspaceService(FlextService[str]):
 
         def discover_projects(
             self, workspace_root: Path
-        ) -> FlextResult[list[FlextModels.Project]]:
+        ) -> FlextCore.Result[list[FlextCore.Models.Project]]:
             """Discover all projects in workspace with type detection."""
             try:
-                projects: list[FlextModels.Project] = []
+                projects: list[FlextCore.Models.Project] = []
                 for project_dir in workspace_root.iterdir():
                     if not project_dir.is_dir() or project_dir.name.startswith("."):
                         continue
 
-                    project_info_result: FlextResult[FlextModels.Project] = (
+                    project_info_result: FlextCore.Result[FlextCore.Models.Project] = (
                         self._analyze_project(project_dir)
                     )
                     if project_info_result.is_success:
                         projects.append(project_info_result.unwrap())
 
-                return FlextResult[list[FlextModels.Project]].ok(projects)
+                return FlextCore.Result[list[FlextCore.Models.Project]].ok(projects)
 
             except Exception as e:
                 error = f"Project discovery failed: {e}"
                 # Use manager's public logging interface
-                logger = FlextLogger(__name__)
+                logger = FlextCore.Logger(__name__)
                 logger.exception(error)
-                return FlextResult[list[FlextModels.Project]].fail(error)
+                return FlextCore.Result[list[FlextCore.Models.Project]].fail(error)
 
         def _analyze_project(
             self, project_path: Path
-        ) -> FlextResult[FlextModels.Project]:
+        ) -> FlextCore.Result[FlextCore.Models.Project]:
             """Analyze individual project for type and characteristics."""
             try:
-                # Detect project type using FlextTypes.Project.ProjectType
-                project_type: FlextTypes.Project.ProjectType = "application"
+                # Detect project type using FlextCore.Types.Project.ProjectType
+                project_type: FlextCore.Types.Project.ProjectType = "application"
                 has_pyproject = (project_path / "pyproject.toml").exists()
                 has_go_mod = (project_path / "go.mod").exists()
                 has_package_json = (project_path / "package.json").exists()
@@ -117,7 +110,7 @@ class FlextWorkspaceService(FlextService[str]):
                 has_tests = tests_dir.exists()
                 # Test count tracking removed as unused
 
-                project_info = FlextModels.Project(
+                project_info = FlextCore.Models.Project(
                     name=project_path.name,
                     organization_id="default",
                     repository_path=str(project_path),
@@ -127,11 +120,11 @@ class FlextWorkspaceService(FlextService[str]):
                     domain_events=[],
                 )
 
-                return FlextResult[FlextModels.Project].ok(project_info)
+                return FlextCore.Result[FlextCore.Models.Project].ok(project_info)
 
             except Exception as e:
                 error = f"Project analysis failed for {project_path.name}: {e}"
-                return FlextResult[FlextModels.Project].fail(error)
+                return FlextCore.Result[FlextCore.Models.Project].fail(error)
 
     class _WorkspaceValidator:
         """Nested workspace validation service."""
@@ -139,21 +132,23 @@ class FlextWorkspaceService(FlextService[str]):
         def __init__(self, manager: FlextWorkspaceService) -> None:
             self._manager = manager
 
-        def validate_workspace_path(self, path: str) -> FlextResult[str]:
+        def validate_workspace_path(self, path: str) -> FlextCore.Result[str]:
             """Validate workspace path."""
             try:
                 workspace_path = Path(path)
                 if not workspace_path.exists():
-                    return FlextResult[str].fail(
+                    return FlextCore.Result[str].fail(
                         f"Workspace path does not exist: {path}"
                     )
                 if not workspace_path.is_dir():
-                    return FlextResult[str].fail(
+                    return FlextCore.Result[str].fail(
                         f"Workspace path is not a directory: {path}"
                     )
-                return FlextResult[str].ok(str(workspace_path.resolve()))
+                return FlextCore.Result[str].ok(str(workspace_path.resolve()))
             except Exception as e:
-                return FlextResult[str].fail(f"Workspace path validation failed: {e}")
+                return FlextCore.Result[str].fail(
+                    f"Workspace path validation failed: {e}"
+                )
 
     def create_project_discovery(self: Self) -> _ProjectDiscoveryService:
         """Create project discovery service."""
@@ -165,7 +160,7 @@ class FlextWorkspaceService(FlextService[str]):
 
     def discover_workspace_projects(
         self, workspace_root: str | None = None
-    ) -> FlextResult[list[FlextModels.Project]]:
+    ) -> FlextCore.Result[list[FlextCore.Models.Project]]:
         """Discover all projects in the workspace."""
         discovery_service = self.create_project_discovery()
         workspace_path = (
@@ -173,14 +168,14 @@ class FlextWorkspaceService(FlextService[str]):
         )
         return discovery_service.discover_projects(workspace_path)
 
-    def validate_workspace_path(self, path: str) -> FlextResult[str]:
+    def validate_workspace_path(self, path: str) -> FlextCore.Result[str]:
         """Validate workspace path."""
         validator = self.create_workspace_validator()
         return validator.validate_workspace_path(path)
 
     def get_workspace_info(
         self, workspace_root: str | None = None
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextCore.Result[FlextCore.Types.Dict]:
         """Get comprehensive workspace information."""
         try:
             workspace_path = (
@@ -188,11 +183,11 @@ class FlextWorkspaceService(FlextService[str]):
             )
 
             # Discover projects
-            projects_result: FlextResult[list[FlextModels.Project]] = (
+            projects_result: FlextCore.Result[list[FlextCore.Models.Project]] = (
                 self.discover_workspace_projects(str(workspace_path))
             )
             if projects_result.is_failure:
-                return FlextResult[dict[str, object]].fail(
+                return FlextCore.Result[FlextCore.Types.Dict].fail(
                     f"Failed to discover projects: {projects_result.error}"
                 )
 
@@ -202,7 +197,7 @@ class FlextWorkspaceService(FlextService[str]):
             # Calculate total size (mock for now)
             total_size_mb = len(projects) * 10.5  # Mock calculation
 
-            workspace_info: dict[str, object] = {
+            workspace_info: FlextCore.Types.Dict = {
                 "name": workspace_path.name,
                 "path": str(workspace_path),
                 "project_count": len(projects),
@@ -211,33 +206,33 @@ class FlextWorkspaceService(FlextService[str]):
                 "status": "ready",
             }
 
-            return FlextResult[dict[str, object]].ok(workspace_info)
+            return FlextCore.Result[FlextCore.Types.Dict].ok(workspace_info)
 
         except Exception as e:
             error = f"Failed to get workspace info: {e}"
             self._logger.exception(error)
-            return FlextResult[dict[str, object]].fail(error)
+            return FlextCore.Result[FlextCore.Types.Dict].fail(error)
 
-    def execute(self: Self) -> FlextResult[str]:
-        """Execute workspace service - required by FlextService abstract method."""
+    def execute(self: Self) -> FlextCore.Result[str]:
+        """Execute workspace service - required by FlextCore.Service abstract method."""
         try:
-            workspace_info_result: FlextResult[dict[str, object]] = (
+            workspace_info_result: FlextCore.Result[FlextCore.Types.Dict] = (
                 self.get_workspace_info()
             )
             if workspace_info_result.is_failure:
-                return FlextResult[str].fail(
+                return FlextCore.Result[str].fail(
                     f"Workspace service execution failed: {workspace_info_result.error}"
                 )
 
             workspace_info = workspace_info_result.unwrap()
-            return FlextResult[str].ok(
+            return FlextCore.Result[str].ok(
                 f"Workspace service ready: {workspace_info['name']} ({workspace_info['project_count']} projects)"
             )
 
         except Exception as e:
             error = f"Workspace service execution failed: {e}"
             self._logger.exception(error)
-            return FlextResult[str].fail(error)
+            return FlextCore.Result[str].fail(error)
 
 
 # LEGACY ALIASES ELIMINATED - Access protocols directly through service:

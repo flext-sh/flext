@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Self
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextCore
 
 
 class ConfigurationManager:
@@ -18,28 +18,28 @@ class ConfigurationManager:
     def __init__(self: Self, config_path: Path | str | None = None) -> None:
         """Initialize configuration manager."""
         self.config_path = Path(config_path) if config_path else None
-        self._config: FlextTypes.StringDict = {}
+        self._config: FlextCore.Types.StringDict = {}
 
-    def load_config(self) -> FlextResult[FlextTypes.StringDict]:
+    def load_config(self) -> FlextCore.Result[FlextCore.Types.StringDict]:
         """Load configuration."""
-        return FlextResult[FlextTypes.StringDict].ok(self._config)
+        return FlextCore.Result[FlextCore.Types.StringDict].ok(self._config)
 
-    def save_config(self) -> FlextResult[None]:
+    def save_config(self) -> FlextCore.Result[None]:
         """Save configuration."""
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
-    def get(self, key: str, default: str | None = None) -> FlextResult[str | None]:
+    def get(self, key: str, default: str | None = None) -> FlextCore.Result[str | None]:
         """Get configuration value."""
         value = self._config.get(key, default)
-        return FlextResult[str | None].ok(value)
+        return FlextCore.Result[str | None].ok(value)
 
-    def set(self, key: str, value: str) -> FlextResult[None]:
+    def set(self, key: str, value: str) -> FlextCore.Result[None]:
         """Set configuration value."""
         self._config[key] = value
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
-    def delete(self, key: str) -> FlextResult[None]:
+    def delete(self, key: str) -> FlextCore.Result[None]:
         """Delete configuration value."""
         if key in self._config:
             del self._config[key]
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)

@@ -6,13 +6,13 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import FlextTypes
+from flext_core import FlextCore
 
 
-class FlextToolsTypes(FlextTypes):
+class FlextToolsTypes(FlextCore.Types):
     """FlextTools types namespace extending flext-core."""
 
-    class GitConfig(FlextTypes.Dict):
+    class GitConfig(FlextCore.Types.Dict):
         """Git operation configuration."""
 
         repo_path: str
@@ -21,7 +21,7 @@ class FlextToolsTypes(FlextTypes):
         dry_run: bool
         temp_path: str | None
 
-    class OptimizationConfig(FlextTypes.Dict):
+    class OptimizationConfig(FlextCore.Types.Dict):
         """Module optimization configuration."""
 
         batch_size: int
@@ -30,7 +30,7 @@ class FlextToolsTypes(FlextTypes):
         force: bool
         project_type: str  # "library" or "tool"
 
-    class QualityConfig(FlextTypes.Dict):
+    class QualityConfig(FlextCore.Types.Dict):
         """Quality check configuration."""
 
         lint_enabled: bool
@@ -38,21 +38,21 @@ class FlextToolsTypes(FlextTypes):
         coverage_min: int
         strict_mode: bool
 
-    class ValidationConfig(FlextTypes.Dict):
+    class ValidationConfig(FlextCore.Types.Dict):
         """Validation configuration."""
 
         check_structure: bool
         check_dependencies: bool
         check_patterns: bool
 
-    class AnalysisConfig(FlextTypes.Dict):
+    class AnalysisConfig(FlextCore.Types.Dict):
         """Architecture analysis configuration."""
 
         check_violations: bool
         check_complexity: bool
         check_imports: bool
 
-    class DependencyConfig(FlextTypes.Dict):
+    class DependencyConfig(FlextCore.Types.Dict):
         """Dependency management configuration."""
 
         sync_enabled: bool

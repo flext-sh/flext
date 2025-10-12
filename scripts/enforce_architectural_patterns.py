@@ -4,8 +4,8 @@
 This script systematically enforces FLEXT architectural patterns across all projects:
 1. Unified Class Pattern - Single class per module with nested helpers
 2. Domain Separation - Proper import hierarchy and library usage
-3. FlextResult Pattern - Explicit error handling without try/except fallbacks
-4. Constants Unification - Use FlextConstants inheritance hierarchy
+3. FlextCore.Result Pattern - Explicit error handling without try/except fallbacks
+4. Constants Unification - Use FlextCore.Constants inheritance hierarchy
 5. CLI Standardization - Use flext-cli exclusively, no direct Click/Rich
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -19,7 +19,7 @@ import operator
 import re
 from pathlib import Path
 
-from flext_core import FlextTypes
+from flext_core import FlextCore
 
 # FLEXT projects to enforce patterns on
 FLEXT_ROOT = Path("..")
@@ -142,7 +142,9 @@ def find_python_files() -> list[Path]:
     return sorted(python_files)
 
 
-def detect_domain_violations(content: str, file_path: Path) -> FlextTypes.StringList:
+def detect_domain_violations(
+    content: str, file_path: Path
+) -> FlextCore.Types.StringList:
     """Detect domain separation violations in file content."""
     violations = []
 
@@ -185,7 +187,7 @@ def detect_domain_violations(content: str, file_path: Path) -> FlextTypes.String
     return violations
 
 
-def detect_multiple_classes(content: str) -> FlextTypes.StringList:
+def detect_multiple_classes(content: str) -> FlextCore.Types.StringList:
     """Detect multiple classes in a single module."""
     violations = []
 
@@ -206,7 +208,7 @@ def detect_multiple_classes(content: str) -> FlextTypes.StringList:
     return violations
 
 
-def detect_loose_functions(content: str) -> FlextTypes.StringList:
+def detect_loose_functions(content: str) -> FlextCore.Types.StringList:
     """Detect loose helper functions outside classes."""
     violations = []
 
@@ -241,8 +243,8 @@ def detect_loose_functions(content: str) -> FlextTypes.StringList:
     return violations
 
 
-def detect_try_except_fallbacks(content: str) -> FlextTypes.StringList:
-    """Detect try/except fallback patterns instead of FlextResult."""
+def detect_try_except_fallbacks(content: str) -> FlextCore.Types.StringList:
+    """Detect try/except fallback patterns instead of FlextCore.Result."""
     # Patterns that indicate fallback mechanisms
     fallback_patterns = [
         r"try:\s*.*?\s*except.*?:\s*return.*?default",
@@ -256,14 +258,16 @@ def detect_try_except_fallbacks(content: str) -> FlextTypes.StringList:
     ]
 
     return [
-        "Try/except fallback pattern detected (use FlextResult instead)"
+        "Try/except fallback pattern detected (use FlextCore.Result instead)"
         for pattern in fallback_patterns
         if re.search(pattern, content, re.DOTALL | re.MULTILINE)
     ]
 
 
-def detect_non_flext_constants(content: str, file_path: Path) -> FlextTypes.StringList:
-    """Detect constants classes that don't inherit from FlextConstants."""
+def detect_non_flext_constants(
+    content: str, file_path: Path
+) -> FlextCore.Types.StringList:
+    """Detect constants classes that don't inherit from FlextCore.Constants."""
     violations = []
 
     # Skip if this is a constants file itself
@@ -271,14 +275,14 @@ def detect_non_flext_constants(content: str, file_path: Path) -> FlextTypes.Stri
         "constants.py" in file_path.name
         and "class " in content
         and "Constants" in content
-        and "FlextConstants" not in content
+        and "FlextCore.Constants" not in content
     ):
-        violations.append("Constants class should inherit from FlextConstants")
+        violations.append("Constants class should inherit from FlextCore.Constants")
 
     return violations
 
 
-def detect_internal_imports(content: str) -> FlextTypes.StringList:
+def detect_internal_imports(content: str) -> FlextCore.Types.StringList:
     """Detect internal imports instead of root-level imports."""
     internal_patterns = [
         r"from flext_core\.result import",
@@ -299,7 +303,7 @@ def detect_internal_imports(content: str) -> FlextTypes.StringList:
 def enforce_unified_class_pattern(
     content: str,
     file_path: Path,
-) -> tuple[str, FlextTypes.StringList]:
+) -> tuple[str, FlextCore.Types.StringList]:
     """Enforce unified class pattern with nested helpers."""
     changes = []
     # Use file_path parameter to avoid linting warnings
@@ -320,7 +324,7 @@ def enforce_unified_class_pattern(
 
 def enforce_domain_separation(
     content: str, file_path: Path
-) -> tuple[str, FlextTypes.StringList]:
+) -> tuple[str, FlextCore.Types.StringList]:
     """Enforce domain separation by replacing direct imports."""
     changes = []
     # Use file_path parameter to avoid linting warnings
@@ -335,27 +339,32 @@ def enforce_domain_separation(
     return content, changes
 
 
-def enforce_flext_result_pattern(content: str) -> tuple[str, FlextTypes.StringList]:
-    """Enforce FlextResult pattern instead of try/except fallbacks."""
+def enforce_flext_result_pattern(
+    content: str,
+) -> tuple[str, FlextCore.Types.StringList]:
+    """Enforce FlextCore.Result pattern instead of try/except fallbacks."""
     changes = []
 
-    # Add FlextResult import if not present and try/except patterns detected
-    if "try:" in content and "except:" in content and "FlextResult" not in content:
+    # Add FlextCore.Result import if not present and try/except patterns detected
+    if "try:" in content and "except:" in content and "FlextCore.Result" not in content:
         # Add import after existing imports
         lines = content.split("\n")
 
         # Find where to insert import
         for i, line in enumerate(lines):
-            if line.strip().startswith("from flext_core") and "FlextResult" not in line:
-                lines[i] = line.rstrip(" ,") + ", FlextResult"
-                changes.append("Added FlextResult to imports")
+            if (
+                line.strip().startswith("from flext_core")
+                and "FlextCore.Result" not in line
+            ):
+                lines[i] = line.rstrip(" ,") + ", FlextCore.Result"
+                changes.append("Added FlextCore.Result to imports")
                 break
         else:
             # Add new import line
             for i, line in enumerate(lines):
                 if line.strip().startswith("from __future__"):
-                    lines.insert(i + 2, "from flext_core import FlextResult")
-                    changes.append("Added FlextResult import")
+                    lines.insert(i + 2, "from flext_core import FlextCore")
+                    changes.append("Added FlextCore.Result import")
                     break
 
         content = "\n".join(lines)
@@ -365,38 +374,38 @@ def enforce_flext_result_pattern(content: str) -> tuple[str, FlextTypes.StringLi
 
 def enforce_constants_inheritance(
     content: str, file_path: Path
-) -> tuple[str, FlextTypes.StringList]:
-    """Enforce FlextConstants inheritance pattern."""
+) -> tuple[str, FlextCore.Types.StringList]:
+    """Enforce FlextCore.Constants inheritance pattern."""
     changes = []
 
     if (
         "constants.py" in file_path.name
         and re.search(r"class\s+\w*Constants?\w*", content)
-        and "FlextConstants" not in content
+        and "FlextCore.Constants" not in content
     ):
-        # Add FlextConstants import and inheritance
+        # Add FlextCore.Constants import and inheritance
         if "from flext_core import" in content:
             content = re.sub(
                 r"from flext_core import ([^)]+)",
-                r"from flext_core import \1, FlextConstants",
+                r"from flext_core import FlextCore",
                 content,
             )
         else:
-            content = "from flext_core import FlextConstants\n\n" + content
+            content = "from flext_core import FlextCore\n\n" + content
 
         # Update class definition
         content = re.sub(
             r"class\s+(\w*Constants?\w*)\s*:",
-            r"class \1(FlextConstants):",
+            r"class \1(FlextCore.Constants):",
             content,
         )
 
-        changes.append("Added FlextConstants inheritance")
+        changes.append("Added FlextCore.Constants inheritance")
 
     return content, changes
 
 
-def analyze_architectural_patterns(file_path: Path) -> FlextTypes.Dict:
+def analyze_architectural_patterns(file_path: Path) -> FlextCore.Types.Dict:
     """Analyze a single file for architectural pattern compliance."""
     try:
         with Path(file_path).open("r", encoding="utf-8") as f:
@@ -429,7 +438,7 @@ def analyze_architectural_patterns(file_path: Path) -> FlextTypes.Dict:
         }
 
 
-def enforce_architectural_patterns(file_path: Path) -> FlextTypes.Dict:
+def enforce_architectural_patterns(file_path: Path) -> FlextCore.Types.Dict:
     """Enforce architectural patterns on a single file."""
     try:
         with Path(file_path).open("r", encoding="utf-8") as f:
@@ -482,7 +491,9 @@ def main() -> None:
     """Main function to enforce architectural patterns across FLEXT ecosystem."""
     print("🏗️  FLEXT Ecosystem Architectural Pattern Enforcement")
     print("=" * 58)
-    print("Enforcing unified class patterns, domain separation, and FlextResult usage")
+    print(
+        "Enforcing unified class patterns, domain separation, and FlextCore.Result usage"
+    )
 
     # Find all Python files
     python_files = find_python_files()
@@ -607,8 +618,8 @@ def main() -> None:
         )
         print("Patterns enforced:")
         print("  • Domain separation (proper import hierarchy)")
-        print("  • FlextResult error handling")
-        print("  • FlextConstants inheritance")
+        print("  • FlextCore.Result error handling")
+        print("  • FlextCore.Constants inheritance")
         print("  • Root-level imports")
 
     if manual_refactoring_needed > 0:
@@ -616,7 +627,7 @@ def main() -> None:
         print("Patterns needing manual attention:")
         print("  • Unified class pattern (single class per module)")
         print("  • Nested helper classes (no loose functions)")
-        print("  • FlextResult pattern (replace try/except fallbacks)")
+        print("  • FlextCore.Result pattern (replace try/except fallbacks)")
 
     if modified_files == 0 and manual_refactoring_needed == 0:
         print("\n🎉 All files already follow FLEXT architectural patterns!")

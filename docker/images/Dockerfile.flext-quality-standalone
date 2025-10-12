@@ -116,8 +116,8 @@ from pathlib import Path
 
 # Mock flext_core
 mock_flext_core = ModuleType('flext_core')
-mock_flext_core.FlextResult = object
-mock_flext_core.FlextLogger = lambda x: type('Logger', (), {'info': print, 'warning': print, 'error': print})()
+mock_flext_core.FlextCore.Result = object
+mock_flext_core.FlextCore.Logger = lambda x: type('Logger', (), {'info': print, 'warning': print, 'error': print})()
 sys.modules['flext_core'] = mock_flext_core
 
 # Mock flext_observability
@@ -138,7 +138,7 @@ import io
 import contextlib
 from flext_quality import cli as quality_cli
 
-def run_cli_help(args: FlextTypes.StringList) -> int:
+def run_cli_help(args: FlextCore.Types.StringList) -> int:
     out = io.StringIO()
     err = io.StringIO()
     with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):

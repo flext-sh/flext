@@ -29,6 +29,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Final
 
+from flext_core import FlextCore
+
 # FLEXT ecosystem root directory
 FLEXT_ROOT: Final[Path] = Path("/home/marlonsc/flext")
 
@@ -84,7 +86,7 @@ class ProjectInfo:
     current_version_file: Path | None
     needs_update: bool
     has_pyproject: bool
-    issues: list[str]
+    issues: FlextCore.Types.StringList
 
 
 class VersionStandardizer:

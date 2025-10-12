@@ -85,9 +85,9 @@ The primary API providing unified access to all LDIF operations:
 
 ```python
 class FlextLdif:
-    def parse(self, content: str) -> FlextResult[List[Entry], Exception]
-    def write(self, entries: List[Entry]) -> FlextResult[str, Exception]
-    def migrate(self, input_dir: Path, output_dir: Path, from_server: str, to_server: str) -> FlextResult[MigrationReport, Exception]
+    def parse(self, content: str) -> FlextCore.Result[List[Entry], Exception]
+    def write(self, entries: List[Entry]) -> FlextCore.Result[str, Exception]
+    def migrate(self, input_dir: Path, output_dir: Path, from_server: str, to_server: str) -> FlextCore.Result[MigrationReport, Exception]
 ```
 
 #### FlextLdifModels
@@ -226,7 +226,7 @@ if migration_result.is_success:
 ### Custom Processors
 
 ```python
-from flext_core import FlextProcessors
+from flext_core import FlextCore
 
 # Create custom processor
 def custom_validation(entry: dict) -> dict:
@@ -252,10 +252,10 @@ batch_result = ldif.Processors.process_entries_batch(
 ### Event Handling
 
 ```python
-from flext_core import FlextBus
+from flext_core import FlextCore
 
 # Subscribe to LDIF events
-bus = FlextBus()
+bus = FlextCore.Bus()
 bus.subscribe(LdifEntryProcessedEvent, CustomHandler)
 bus.subscribe(LdifMigrationCompletedEvent, NotificationHandler)
 
@@ -339,10 +339,10 @@ class LdifMigrationException(FlextLdifExceptions.FlextLdifDomainException):
 ### Error Handling Best Practices
 
 ```python
-from flext_core import FlextResult
+from flext_core import FlextCore
 
 def safe_ldif_processing():
-    # Use FlextResult for error handling
+    # Use FlextCore.Result for error handling
     result = ldif.parse(ldif_content)
 
     return result.map(

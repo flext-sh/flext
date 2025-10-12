@@ -12,7 +12,7 @@ import shutil
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextCore
 
 from flext_tools import (
     Colors,
@@ -36,14 +36,14 @@ class GradualLintFixerScript(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> FlextResult[None]:
+    def validate_preconditions(self) -> FlextCore.Result[None]:
         """Validate preconditions."""
         workspace_root = Path.cwd()
 
         # Check if we're in FLEXT workspace
         if not (workspace_root / "pyproject.toml").exists():
             print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return FlextResult[None].fail("Not in FLEXT workspace root")
+            return FlextCore.Result[None].fail("Not in FLEXT workspace root")
 
         # Check Ruff availability
         if shutil.which("ruff") is None:
@@ -51,19 +51,19 @@ class GradualLintFixerScript(FlextScript):
                 "❌ Ruff not found - install with: pip install ruff",
                 Colors.RED,
             )
-            return FlextResult[None].fail("Ruff not found")
+            return FlextCore.Result[None].fail("Ruff not found")
         print_colored("✅ Ruff available", Colors.GREEN)
 
         # Check Git availability
         if shutil.which("git") is None:
             print_colored("❌ Git not found - required for safe branching", Colors.RED)
-            return FlextResult[None].fail("Git not found")
+            return FlextCore.Result[None].fail("Git not found")
         print_colored("✅ Git available", Colors.GREEN)
-        return FlextResult[None].ok(None)
+        return FlextCore.Result[None].ok(None)
 
     def execute_main_logic(
         self, **kwargs: dict[str, str]
-    ) -> FlextResult[dict[str, str]]:
+    ) -> FlextCore.Result[dict[str, str]]:
         """Execute main script logic."""
         """Execute gradual lint fixing."""
         try:
@@ -74,12 +74,12 @@ class GradualLintFixerScript(FlextScript):
 
             if not project:
                 print_colored("❌ Project name is required", Colors.RED)
-                return FlextResult[object].fail("Project name is required")
+                return FlextCore.Result[object].fail("Project name is required")
 
             project_path = workspace_root / str(project)
             if not project_path.exists():
                 print_colored(f"❌ Project {project} not found", Colors.RED)
-                return FlextResult[object].fail(f"Project {project} not found")
+                return FlextCore.Result[object].fail(f"Project {project} not found")
 
             print_colored("🔧 GRADUAL LINT FIXER", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
@@ -103,7 +103,7 @@ class GradualLintFixerScript(FlextScript):
                         Colors.GREEN,
                     )
 
-                return FlextResult[object].ok(
+                return FlextCore.Result[object].ok(
                     {
                         "fix_result": fix_result,
                         "project": project,
@@ -111,11 +111,11 @@ class GradualLintFixerScript(FlextScript):
                 )
 
             print_colored("❌ Gradual lint fixing failed", Colors.RED)
-            return FlextResult[object].fail("Gradual lint fixing failed")
+            return FlextCore.Result[object].fail("Gradual lint fixing failed")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during lint fixing: {e}", Colors.RED)
-            return FlextResult[object].fail(f"Error during lint fixing: {e}")
+            return FlextCore.Result[object].fail(f"Error during lint fixing: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""
@@ -140,9 +140,9 @@ class GradualLintFixerScript(FlextScript):
 
         return parser
 
-    def _process_kwargs(self, args: argparse.Namespace) -> FlextTypes.Dict:
+    def _process_kwargs(self, args: argparse.Namespace) -> FlextCore.Types.Dict:
         """Process arguments into kwargs."""
-        kwargs: FlextTypes.Dict = {}
+        kwargs: FlextCore.Types.Dict = {}
         kwargs["safe_only"] = not getattr(args, "unsafe", False)
         kwargs["run_tests"] = not getattr(args, "skip_tests", False)
         return kwargs
