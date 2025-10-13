@@ -87,7 +87,6 @@ from flext.services import (
 )
 from flext.version import VERSION, FlextVersion
 from flext.workspace import (
-    FlextAdvancedWorkspaceModels,
     FlextWorkspaceService,
     WorkspaceStatus,
     create_workspace_service,
@@ -114,7 +113,6 @@ __all__ = [
     "DevToolsManager",
     "FlextAdvancedDevModels",
     "FlextAdvancedDevToolsManager",
-    "FlextAdvancedWorkspaceModels",
     "FlextApplicationHandlerService",
     "FlextApplicationPipelineService",
     "FlextCli",

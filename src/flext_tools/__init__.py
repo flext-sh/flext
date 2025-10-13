@@ -42,7 +42,7 @@ from flext_tools.api import FlextTools, FlextToolsAPI
 from flext_tools.architecture_tools import FlextArchitectureTools
 
 # Legacy aliases for backward compatibility
-from flext_tools.config import ConfigurationManager
+from flext_tools.config import FlextToolsConfig as ConfigurationManager
 from flext_tools.conflicts import ConflictAnalyzer
 
 # Namespace classes

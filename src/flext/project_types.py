@@ -13,7 +13,7 @@ from __future__ import annotations
 from flext_core import FlextCore
 
 # Import WorkspaceStatus from the correct location
-WorkspaceStatus = FlextCore.Models.WorkspaceStatus
+WorkspaceStatus = FlextCore.Types.Project.ProjectStatus
 
 
 class FlextProjectTypes:

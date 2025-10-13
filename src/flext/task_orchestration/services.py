@@ -267,7 +267,7 @@ class TaskOrchestrationService(FlextCore.Service[str]):
                 task_file_path = (
                     orchestration_dir / "tasks" / task.status.value / f"{task.id}.json"
                 )
-                task_data = task.dict()
+                task_data = task.model_dump()
                 task_file_path.write_text(
                     json.dumps(task_data, indent=2, default=str), encoding="utf-8"
                 )

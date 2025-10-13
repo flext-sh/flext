@@ -13,18 +13,16 @@ from __future__ import annotations
 from flext_core import FlextCore
 
 from flext.project_types import FlextProjectTypes
-from flext.workspace_models import FlextAdvancedWorkspaceModels
 from flext.workspace_service import (
     FlextWorkspaceService,
     create_workspace_service,
 )
 
-WorkspaceStatus = FlextCore.Models.WorkspaceStatus
+WorkspaceStatus = FlextCore.Types.Project.ProjectStatus
 
 # WorkspaceStatus is imported directly from flext_core
 
 __all__ = [
-    "FlextAdvancedWorkspaceModels",
     "FlextProjectTypes",
     "FlextWorkspaceService",
     "WorkspaceStatus",
