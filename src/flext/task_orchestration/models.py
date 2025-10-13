@@ -211,7 +211,7 @@ class TaskOrchestrationConfig(BaseSettings):
     )
 
 
-class TaskOrchestrationResult(FlextCore.Models.Dto):
+class TaskOrchestrationResult(BaseModel):
     """Result of task orchestration operation."""
 
     success: bool = Field(..., description="Operation success status")

@@ -61,6 +61,8 @@ class FlextTaskOrchestrationConstants(FlextCore.Constants):
         DEFAULT_PARALLEL_TASKS = 5
         DEFAULT_MAX_TASK_DURATION_DAYS = 30
         DEFAULT_AUTO_ASSIGN = True
+        DEFAULT_MIN_ESTIMATION_HOURS = 0.1
+        DEFAULT_MAX_ESTIMATION_HOURS = 1000.0
 
     class Estimation:
         """Estimation constants for task effort calculation."""

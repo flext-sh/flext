@@ -132,10 +132,16 @@ line-length = 88
         "S107",    # hardcoded-password-default - "Bearer" is HTTP protocol keyword, not password
     ]
     "**/models.py" = [
-        "ANN401", # any-type - examples can legitimately use Any for Pydantic 2 models
+        "ANN401", # any-type - Pydantic 2 models legitimately use Any in dict[str, Any]
         "FBT001", # Boolean positional argument - required by Pydantic field serializers
-        "PLC0415", # allow lazy imports in fix circular imports in base level
+        "PLC0415", # allow lazy imports to fix circular imports at base level
+        "PLR0206", # property-with-parameters - Pydantic @computed_field + @property is valid pattern
         "PLW0603", # global-statement - necessary for lazy config loading to avoid circular imports
+        # NOTE: Pydantic 2.11+ @computed_field + @property is a legitimate pattern:
+        # @computed_field
+        # @property
+        # def field_name(self) -> Type:
+        #     return computed_value
     ]
     "src/flext_ldif/models.py" = [
         "FBT001", # Boolean positional argument - required by Pydantic field serializers

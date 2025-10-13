@@ -233,7 +233,7 @@ class TaskOrchestrationCli:
 
             new_task_file = new_status_dir / f"{task_id}.json"
             new_task_file.write_text(
-                json.dumps(task.dict(), indent=2, default=str), encoding="utf-8"
+                json.dumps(task.model_dump(), indent=2, default=str), encoding="utf-8"
             )
 
             # Remove old file
@@ -350,7 +350,7 @@ class TaskOrchestrationCli:
             "orchestration_dir": str(orchestration_dir),
             "generated_at": datetime.now(UTC).isoformat(),
             "total_tasks": len(tasks),
-            "tasks": [task.dict() for task in tasks],
+            "tasks": [task.model_dump() for task in tasks],
         }
 
     def _load_tasks_from_directory(self, orchestration_dir: Path) -> list[Any]:

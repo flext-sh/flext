@@ -304,6 +304,12 @@
 		init_typed = true
 		warn_required_dynamic_aliases = true
 		warn_untyped_fields = true
+		# NOTE: Pydantic plugin handles @computed_field + @property pattern correctly
+		# Example valid pattern:
+		#   @computed_field
+		#   @property
+		#   def field_name(self) -> Type:
+		#       return computed_value
 
 	[tool.pyright]
 		exclude = [
@@ -381,6 +387,10 @@
 		    reportPrivateUsage = false
 
 	[tool.pyrefly]
+		# NOTE: Pyrefly (MyPy successor) with Pydantic plugin properly handles:
+		#   - @computed_field + @property pattern (Pydantic 2.11+)
+		#   - dict[str, Any] type annotations (legitimate generic usage)
+		#   - Field validators and serializers with proper type inference
 		project-excludes = [
 		    "**/.git",
 		    "**/__pycache__",
