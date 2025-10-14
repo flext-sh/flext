@@ -5,6 +5,7 @@ All constants must be in FlextCore.Constants namespace - ZERO module-level const
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations
@@ -96,8 +97,8 @@ class FlextTaskOrchestrationConstants(FlextCore.Constants):
         TASK_PATTERN = r"^(.+?)(?:\s*-\s*(.+))?$"
         TASK_PATTERN_COLON = r"^(.+?)(?:\s*:\s*(.+))?$"
 
-    class Messages:
-        """User-facing messages."""
+    class TaskMessages:
+        """Task orchestration user-facing messages."""
 
         ORCHESTRATION_STARTED = "Starting task orchestration workflow"
         REQUIREMENTS_CLARIFIED = "Requirements clarified: {count} items extracted"

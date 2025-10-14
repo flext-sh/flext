@@ -5,6 +5,7 @@ and task orchestration system capabilities.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations
@@ -14,6 +15,7 @@ from pathlib import Path
 
 from .cli import TaskOrchestrationCli
 from .models import TaskOrchestrationConfig
+from .services import TaskOrchestrationService
 
 
 def example_basic_orchestration() -> None:
@@ -159,13 +161,13 @@ def example_custom_configuration() -> None:
         parallel_tasks=3,
         max_task_duration_days=14,
         auto_assign=True,
-        require_qa=True,
         focus_area="performance",
     )
 
     # Create CLI instance with custom config
     cli = TaskOrchestrationCli()
-    cli.service = cli.service.__class__(config)
+    # Initialize service with config
+    cli._service = TaskOrchestrationService(config)
 
     # Execute orchestration
     task_list = """

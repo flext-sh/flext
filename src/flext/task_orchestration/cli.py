@@ -5,6 +5,7 @@ the /orchestrate command with comprehensive options.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations
@@ -12,6 +13,7 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import cast
 
 from flext_core import FlextCore
 
@@ -137,11 +139,10 @@ class TaskOrchestrationCli:
 
     def _display_analysis_results(self, requirements_data: dict[str, object]) -> None:
         """Display analysis results for analyze-only mode."""
-        requirements: list[dict[str, object]] = requirements_data.get(
-            "requirements",
-            [],  # type: ignore
+        requirements: list[dict[str, object]] = cast(
+            "list[dict[str, object]]", requirements_data.get("requirements", [])
         )
-        questions: list[str] = requirements_data.get("questions", [])  # type: ignore
+        questions: list[str] = cast("list[str]", requirements_data.get("questions", []))
         focus_area = requirements_data.get("focus_area")
 
         if focus_area:
@@ -353,7 +354,7 @@ class TaskOrchestrationCli:
         """Generate JSON format report."""
         tasks = self._load_tasks_from_directory(orchestration_dir)
 
-        {
+        report_data = {
             "orchestration_dir": str(orchestration_dir),
             "generated_at": datetime.now(UTC).isoformat(),
             "total_tasks": len(tasks),
@@ -364,6 +365,11 @@ class TaskOrchestrationCli:
                 and callable(getattr(task, "model_dump", None))
             ],
         }
+
+        # Write report to file
+        report_file = orchestration_dir / "orchestration_report.json"
+        with Path(report_file).open("w", encoding="utf-8") as f:
+            json.dump(report_data, f, indent=2)
 
     def _load_tasks_from_directory(self, orchestration_dir: Path) -> list[Task]:
         """Load tasks from orchestration directory."""

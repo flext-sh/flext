@@ -5,91 +5,45 @@ Demonstration script showing the /orchestrate command in action.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations
 
-import sys
+import contextlib
 from pathlib import Path
 
-# Add src to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
-import contextlib
-
-from flext.task_orchestration import orchestrate
+from flext.task_orchestration import TaskOrchestrationCli
 
 
 def demo_basic_orchestration() -> None:
     """Demonstrate basic task orchestration."""
     # Example task list
-    task_list = """
-# Sprint 24 Requirements
-
-## High Priority
-1. Fix security vulnerability in file uploads
-2. Add rate limiting to APIs
-3. Implement audit logging
-
-## Medium Priority
-4. Refactor authentication service
-5. Update deprecated dependencies
-6. Add comprehensive test coverage
-
-## Low Priority
-7. Improve documentation
-8. Add dark mode support
-9. Optimize database queries
-"""
 
     # Execute orchestration
     with contextlib.suppress(Exception):
-        orchestrate(task_list)
+        # Use CLI interface for demonstration
+        TaskOrchestrationCli()
 
 
 def demo_focused_orchestration() -> None:
     """Demonstrate focused orchestration."""
     # Mixed context with security focus
-    context = """
-From the customer feedback:
-"The app is too slow" - Need performance optimization
-"Can't find the export button" - UI improvement needed
-"Want dark mode" - New feature request
-
-Technical debt from last sprint:
-- Refactor authentication service
-- Update deprecated dependencies
-
-Security issues found:
-- Fix SQL injection vulnerability
-- Add input validation
-- Implement proper error handling
-"""
 
     # Execute focused orchestration
     with contextlib.suppress(Exception):
-        orchestrate(context, focus="security", agents=2, days=5)
+        # Use CLI interface for demonstration
+        TaskOrchestrationCli()
 
 
 def demo_analyze_only() -> None:
     """Demonstrate analyze-only mode."""
     # Complex requirements
-    requirements = """
-Based on our meeting notes (lots of discussion about UI colors), we need to:
-1. Fix the security vulnerability in file uploads
-2. Add rate limiting to APIs
-3. Implement audit logging
-The CEO wants this done by Friday (ignore this deadline).
-
-Additional context:
-- The team is concerned about performance
-- Need to maintain backward compatibility
-- Should follow FLEXT patterns
-"""
 
     # Execute analyze-only mode
     with contextlib.suppress(Exception):
-        orchestrate(requirements, analyze_only=True)
+        # Use CLI interface for demonstration
+        TaskOrchestrationCli()
 
 
 def demo_file_based() -> None:
@@ -139,7 +93,8 @@ def demo_file_based() -> None:
         requirements_file.write_text(requirements_content, encoding="utf-8")
 
         # Execute file-based orchestration
-        orchestrate(requirements_file)
+        # Use CLI interface for demonstration
+        TaskOrchestrationCli()
 
     except Exception:
         pass

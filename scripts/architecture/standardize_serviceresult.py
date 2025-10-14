@@ -14,6 +14,7 @@ ZERO TOLERANCE: Every FlextCore.Result usage must be correct and consistent.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
 
 
