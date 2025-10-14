@@ -20,14 +20,14 @@ from typing import ClassVar, Self
 from dependency_injector import providers
 from flext_core import FlextCore
 from pydantic import Field, SecretStr, computed_field, field_validator, model_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import SettingsConfigDict
 
 
-class FlextToolsConfig(BaseSettings):
-    """FLEXT Tools Configuration - Pydantic 2.11+ BaseSettings with dependency_injector integration.
+class FlextToolsConfig(FlextCore.Config):
+    """FLEXT Tools Configuration - Pydantic 2.11+ configuration extending FlextCore.Config.
 
     MANDATORY PATTERNS:
-    - Pydantic 2.11+ BaseSettings for validation and environment variable support
+    - Extends FlextCore.Config for validation and environment variable support
     - dependency_injector integration for service injection
     - ALL defaults from FlextCore.Constants (ZERO module-level constants)
     - Centralized configuration with comprehensive validation logic
@@ -61,7 +61,7 @@ class FlextToolsConfig(BaseSettings):
     _instances: ClassVar[dict[type, FlextToolsConfig]] = {}
     _lock: ClassVar[threading.Lock] = threading.Lock()
 
-    # Pydantic 2.11+ BaseSettings configuration
+    # Pydantic 2.11+ SettingsConfigDict configuration
     model_config = SettingsConfigDict(
         case_sensitive=False,
         env_prefix=FlextCore.Constants.Platform.ENV_PREFIX,

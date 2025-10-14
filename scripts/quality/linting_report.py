@@ -247,8 +247,8 @@ class LintingReport(FlextScript):
 
             return {
                 "total_issues": len(all_issues),
-                "by_category": dict(issues_by_category),
-                "by_file": dict(issues_by_file),
+                "by_category": dict[str, object](issues_by_category),
+                "by_file": dict[str, object](issues_by_file),
                 "issues": all_issues,
             }
 
@@ -286,8 +286,8 @@ class LintingReport(FlextScript):
 
             return {
                 "total_errors": total_errors,
-                "by_type": dict(errors_by_type),
-                "by_file": dict(errors_by_file),
+                "by_type": dict[str, object](errors_by_type),
+                "by_file": dict[str, object](errors_by_file),
                 "output": stdout_text,
             }
 

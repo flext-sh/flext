@@ -355,7 +355,7 @@ class DocumentationMaintenanceSystem:
                 else:
                     categories["other"].append(f"{doc_file.path}: {issue}")
 
-        return dict(categories)
+        return dict[str, object](categories)
 
     def generate_report(
         self, audit_result: AuditResult, output_file: str | None = None

@@ -403,7 +403,7 @@ def load_test_fixture(fixture_name: str) -> str:
     fixture_path = Path(__file__).parent / "fixtures" / fixture_name
     return fixture_path.read_text()
 
-def load_json_fixture(fixture_name: str) -> dict:
+def load_json_fixture(fixture_name: str) -> dict[str, object]:
     """Load JSON test fixture."""
     fixture_path = Path(__file__).parent / "fixtures" / fixture_name
     return json.loads(fixture_path.read_text())

@@ -518,7 +518,7 @@ class FlextModuleOptimizer:
 
         return results
 
-    def _optimize_single_target(self, target: dict) -> dict:
+    def _optimize_single_target(self, target: dict) -> dict[str, object]:
         """Optimize a single target module."""
         self.logger.info(f"Optimizing {target['file_path']}")
 

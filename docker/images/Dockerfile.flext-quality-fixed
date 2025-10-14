@@ -65,7 +65,7 @@ class FlextCore.Result:
 # Mock exceptions hierarchy for flext_core.exceptions
 class FlextCore.Exceptions.Error(Exception):
     """Base flext exception."""
-    def __init__(self, message: str, context: dict = None):
+    def __init__(self, message: str, context: dict[str, object] = None):
         super().__init__(message)
         self.context = context or {}
 
@@ -169,7 +169,7 @@ with open(exceptions_dir / 'exceptions.py', 'w') as f:
 
 class FlextCore.Exceptions.Error(Exception):
     """Base flext exception."""
-    def __init__(self, message: str, context: dict = None):
+    def __init__(self, message: str, context: dict[str, object] = None):
         super().__init__(message)
         self.context = context or {}
 
@@ -212,15 +212,15 @@ with open(obs_dir / '__init__.py', 'w') as f:
 import os
 import sys
 
-def flext_create_metric(name: str, value: float, tags: dict = None):
+def flext_create_metric(name: str, value: float, tags: dict[str, object] = None):
     if not os.environ.get("FLEXT_OBSERVABILITY_QUIET"):
         print(f"📊 Metric: {name}={value} {tags or {}}")
 
-def flext_create_trace(trace_id: str, operation: str, config: dict = None):
+def flext_create_trace(trace_id: str, operation: str, config: dict[str, object] = None):
     if not os.environ.get("FLEXT_OBSERVABILITY_QUIET"):
         print(f"🔍 Trace: {trace_id} {operation} {config or {}}")
 
-def flext_create_log_entry(message: str, level: str = "info", context: dict = None):
+def flext_create_log_entry(message: str, level: str = "info", context: dict[str, object] = None):
     if not os.environ.get("FLEXT_OBSERVABILITY_QUIET"):
         print(f"📝 Log [{level}]: {message} {context or {}}")
 ''')

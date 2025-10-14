@@ -217,7 +217,7 @@ class TestFlextComprehensive:
 
     def test_flext_utilities_validation(self) -> None:
         """Test FlextCore.Utilities.Validation methods."""
-        # Test dict structure validation
+        # Test dict[str, object] structure validation
         valid_data = {"name": "test", "age": 25}
         result = FlextCore.Utilities.Validation.validate_dict_structure(
             valid_data, required_keys=["name", "age"]
@@ -254,7 +254,7 @@ class TestFlextComprehensive:
         assert float_result.is_success
         assert abs(float_result.data - math.pi) < 0.001
 
-        # Test dict to object
+        # Test dict[str, object] to object
         test_dict = {"key1": "value1", "key2": "value2"}
         obj_result = FlextCore.Utilities.Conversion.dict_to_object(test_dict)
         assert obj_result.is_success

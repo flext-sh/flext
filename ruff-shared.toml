@@ -143,9 +143,6 @@ line-length = 88
         # def field_name(self) -> Type:
         #     return computed_value
     ]
-    "src/flext_ldif/models.py" = [
-        "FBT001", # Boolean positional argument - required by Pydantic field serializers
-    ]
     "**/result.py" = [
         "PLC0415", # allow lazy imports in fix circular imports in base level
         "SLF001", 
@@ -215,6 +212,9 @@ line-length = 88
         "S404",
         "PLW1510",
         "S603",
+    ]
+    "**/typings.py" = [
+        "ANN401",
     ]
     "**/services.py" = [
         "S404",  # subprocess import for controlled test execution

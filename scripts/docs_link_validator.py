@@ -49,7 +49,7 @@ class ValidationResults:
 class LinkValidator:
     """Advanced link validation system."""
 
-    def __init__(self, config: dict | None = None) -> None:
+    def __init__(self, config: dict[str, object] | None = None) -> None:
         self.config = config or {}
         self.timeout = self.config.get("timeout", 10)
         self.max_retries = self.config.get("max_retries", 3)
@@ -285,7 +285,7 @@ class LinkValidator:
                             f"Line {line_num}: Broken internal link '{url}'"
                         )
 
-        return dict(issues)
+        return dict[str, object](issues)
 
     def analyze_link_health(self, results: list[LinkResult]) -> ValidationResults:
         """Analyze link validation results."""

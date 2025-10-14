@@ -43,6 +43,7 @@ class FlextUnifiedServices(FlextCore.Service[str]):
         """Nested handler service coordination."""
 
         def __init__(self, services: FlextUnifiedServices) -> None:
+            super().__init__()
             self._services = services
 
         def create_command_handler(self: Self) -> object:
@@ -69,6 +70,7 @@ class FlextUnifiedServices(FlextCore.Service[str]):
         """Nested pipeline service coordination."""
 
         def __init__(self, services: FlextUnifiedServices) -> None:
+            super().__init__()
             self._services = services
             # Import and create the actual pipeline service
 
@@ -76,14 +78,7 @@ class FlextUnifiedServices(FlextCore.Service[str]):
 
         @property
         def pipeline_service(self: Self) -> object:
-            """Direct access to pipeline service - ELIMINATES wrapper methods."""
             return self._pipeline_service
-
-        # LEGACY ALIASES ELIMINATED - Access commands directly through service:
-        # Use: FlextApplicationPipelineService.CreatePipelineCommand
-        # Use: FlextApplicationPipelineService.ExecutePipelineCommand
-        # Use: FlextApplicationPipelineService.GetPipelineQuery
-        # Use: FlextApplicationPipelineService.ListPipelinesQuery
 
         def execute_pipeline_workflow(
             self, pipeline_id: str
@@ -108,6 +103,7 @@ class FlextUnifiedServices(FlextCore.Service[str]):
         """Direct access to flext-core services - ELIMINATES UNNECESSARY WRAPPERS."""
 
         def __init__(self, services: FlextUnifiedServices) -> None:
+            super().__init__()
             self._core_services = services._core_services
 
         @property
@@ -119,6 +115,7 @@ class FlextUnifiedServices(FlextCore.Service[str]):
         """Nested test service coordination - ELIMINATES CLI duplication."""
 
         def __init__(self, services: FlextUnifiedServices) -> None:
+            super().__init__()
             self._services = services
             self._logger = FlextCore.Logger(__name__)
 

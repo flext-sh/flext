@@ -14,6 +14,7 @@ from __future__ import annotations
 import re
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import cast
 
 from flext_core import FlextCore
 
@@ -32,6 +33,7 @@ class TaskOrchestrator:
 
     def __init__(self, config: TaskOrchestrationConfig) -> None:
         """Initialize task orchestrator."""
+        super().__init__()
         self.config = config
         self.logger = FlextCore.Logger(__name__)
 
@@ -178,13 +180,16 @@ class TaskOrchestrator:
         filtered = []
 
         for req in requirements:
-            title_lower = req.get("title", "").lower()
-            desc_lower = req.get("description", "").lower()
+            title_lower = str(req.get("title", "")).lower()
+            desc_lower = str(req.get("description", "")).lower()
 
             if (
                 focus_lower in title_lower
                 or focus_lower in desc_lower
-                or any(tag.lower() == focus_lower for tag in req.get("tags", []))
+                or any(
+                    str(tag).lower() == focus_lower
+                    for tag in cast("list[str]", req.get("tags", []))
+                )
             ):
                 filtered.append(req)
 
@@ -205,7 +210,7 @@ class TaskOrchestrator:
 
         # Validate each requirement
         for i, req in enumerate(requirements):
-            if not req.get("title", "").strip():
+            if not str(req.get("title", "")).strip():
                 return FlextCore.Result[dict[str, object]].fail(
                     f"Requirement {i + 1} missing title"
                 )
@@ -224,10 +229,10 @@ class TaskOrchestrator:
         # Check for vague requirements
         vague_indicators = ["improve", "better", "fix", "optimize", "enhance"]
         for req in requirements:
-            title = req.get("title", "").lower()
+            title = str(req.get("title", "")).lower()
             if any(indicator in title for indicator in vague_indicators):
                 questions.append(
-                    f"Can you provide more specific details for '{req.get('title')}'?"
+                    f"Can you provide more specific details for '{title}'?"
                 )
 
         # Check for missing priorities
@@ -248,6 +253,7 @@ class TaskDecomposer:
 
     def __init__(self, config: TaskOrchestrationConfig) -> None:
         """Initialize task decomposer."""
+        super().__init__()
         self.config = config
         self.logger = FlextCore.Logger(__name__)
 
@@ -302,14 +308,20 @@ class TaskDecomposer:
 
         # Create task
         return Task(
-            title=req.get("title", f"Task {counter + 1}"),
-            description=req.get("description", ""),
+            title=str(req.get("title", f"Task {counter + 1}")),
+            description=str(req.get("description", "")),
             type=task_type,
             priority=priority,
             estimated_hours=estimated_hours,
-            category=req.get("category"),
-            project=req.get("project"),
-            tags=req.get("tags", []),
+            assignee=None,
+            owner=None,
+            actual_hours=None,
+            due_date=None,
+            category=str(req.get("category"))
+            if req.get("category") is not None
+            else None,
+            project=str(req.get("project")) if req.get("project") is not None else None,
+            tags=cast("list[str]", req.get("tags", [])),
         )
 
     def _decompose_into_subtasks(
@@ -339,8 +351,8 @@ class TaskDecomposer:
 
     def _needs_decomposition(self, req: dict[str, object]) -> bool:
         """Determine if requirement needs decomposition."""
-        title = req.get("title", "").lower()
-        description = req.get("description", "").lower()
+        title = str(req.get("title", "")).lower()
+        description = str(req.get("description", "")).lower()
 
         # Check for complex indicators
         complex_indicators = [
@@ -391,13 +403,21 @@ class TaskDecomposer:
         subtasks = []
         for phase, description in phases:
             task = Task(
-                title=f"{req.get('title', 'Task')} - {phase}",
-                description=f"{description} for {req.get('description', 'the requirement')}",
+                title=f"{req.get('title', 'Task')!s} - {phase}",
+                description=f"{description} for {req.get('description', 'the requirement')!s}",
                 type=TaskType.FEATURE,
                 priority=self._determine_priority(req),
                 estimated_hours=1.0,  # Default estimation
-                category=req.get("category"),
-                project=req.get("project"),
+                assignee=None,
+                owner=None,
+                actual_hours=None,
+                due_date=None,
+                category=str(req.get("category"))
+                if req.get("category") is not None
+                else None,
+                project=str(req.get("project"))
+                if req.get("project") is not None
+                else None,
             )
             subtasks.append(task)
 
@@ -421,8 +441,8 @@ class TaskDecomposer:
 
     def _determine_task_type(self, req: dict[str, object]) -> TaskType:
         """Determine task type from requirement."""
-        title = req.get("title", "").lower()
-        description = req.get("description", "").lower()
+        title = str(req.get("title", "")).lower()
+        description = str(req.get("description", "")).lower()
 
         if any(
             word in title or word in description
@@ -453,7 +473,7 @@ class TaskDecomposer:
 
     def _determine_priority(self, req: dict[str, object]) -> TaskPriority:
         """Determine task priority from requirement."""
-        priority_str = req.get("priority", "medium").lower()
+        priority_str = str(req.get("priority", "medium")).lower()
 
         priority_map = {
             "low": TaskPriority.LOW,
@@ -467,8 +487,8 @@ class TaskDecomposer:
     def _estimate_effort(self, req: dict[str, object]) -> float:
         """Estimate effort in hours."""
         # Simple estimation based on keywords
-        title = req.get("title", "").lower()
-        description = req.get("description", "").lower()
+        title = str(req.get("title", "")).lower()
+        description = str(req.get("description", "")).lower()
 
         # Base effort
         effort = 2.0
@@ -496,19 +516,17 @@ class TaskDecomposer:
 
     def _validate_task_decomposition(
         self, tasks: list[Task]
-    ) -> FlextCore.Result[dict[str, object]]:
+    ) -> FlextCore.Result[list[Task]]:
         """Validate task decomposition results."""
         if not tasks:
-            return FlextCore.Result[dict[str, object]].fail(
+            return FlextCore.Result[list[Task]].fail(
                 "No tasks created from decomposition"
             )
 
         # Check for duplicate titles
         titles = [task.title for task in tasks]
         if len(titles) != len(set(titles)):
-            return FlextCore.Result[dict[str, object]].fail(
-                "Duplicate task titles found"
-            )
+            return FlextCore.Result[list[Task]].fail("Duplicate task titles found")
 
         # Check estimation bounds
         for task in tasks:
@@ -516,21 +534,18 @@ class TaskDecomposer:
                 task.estimated_hours
                 and task.estimated_hours < self.config.min_estimation_hours
             ):
-                return FlextCore.Result[dict[str, object]].fail(
+                return FlextCore.Result[list[Task]].fail(
                     f"Task '{task.title}' estimation below minimum: {task.estimated_hours}"
                 )
             if (
                 task.estimated_hours
                 and task.estimated_hours > self.config.max_estimation_hours
             ):
-                return FlextCore.Result[dict[str, object]].fail(
+                return FlextCore.Result[list[Task]].fail(
                     f"Task '{task.title}' estimation above maximum: {task.estimated_hours}"
                 )
 
-        return FlextCore.Result[dict[str, object]].ok({
-            "validated": True,
-            "task_count": len(tasks),
-        })
+        return FlextCore.Result[list[Task]].ok(tasks)
 
 
 class DependencyAnalyzer:
@@ -538,6 +553,7 @@ class DependencyAnalyzer:
 
     def __init__(self, config: TaskOrchestrationConfig) -> None:
         """Initialize dependency analyzer."""
+        super().__init__()
         self.config = config
         self.logger = FlextCore.Logger(__name__)
 
@@ -562,7 +578,13 @@ class DependencyAnalyzer:
             # Validate dependency graph
             validation_result = self._validate_dependency_graph(updated_tasks)
             if validation_result.is_failure:
-                return validation_result
+                return FlextCore.Result[
+                    tuple[
+                        list[Task],
+                        list[dict[str, object]],
+                        list[FlextCore.Types.StringList],
+                    ]
+                ].fail(validation_result.error)
 
             self.logger.info(
                 f"Dependency analysis complete: {len(conflicts)} conflicts, {len(parallel_groups)} parallel groups"
@@ -725,8 +747,6 @@ class DependencyAnalyzer:
         self, tasks: list[Task]
     ) -> list[dict[str, object]]:
         """Detect circular dependencies."""
-        conflicts = []
-
         # Build dependency graph
         graph = {task.id: [] for task in tasks}
         for task in tasks:
@@ -754,17 +774,16 @@ class DependencyAnalyzer:
             rec_stack.remove(node)
             return False
 
-        for task_id in graph:
-            if task_id not in visited:
-                if has_cycle(task_id):
-                    conflicts.append({
-                        "type": "circular_dependency",
-                        "description": f"Circular dependency detected involving task {task_id}",
-                        "affected_tasks": [task_id],
-                        "severity": "critical",
-                    })
-
-        return conflicts
+        return [
+            {
+                "type": "circular_dependency",
+                "description": f"Circular dependency detected involving task {task_id}",
+                "affected_tasks": [task_id],
+                "severity": "critical",
+            }
+            for task_id in graph
+            if task_id not in visited and has_cycle(task_id)
+        ]
 
     def _detect_priority_conflicts(self, tasks: list[Task]) -> list[dict[str, object]]:
         """Detect priority conflicts."""
@@ -822,7 +841,7 @@ class DependencyAnalyzer:
 
     def _validate_dependency_graph(
         self, tasks: list[Task]
-    ) -> FlextCore.Result[dict[str, object]]:
+    ) -> FlextCore.Result[list[Task]]:
         """Validate the dependency graph."""
         # Check for valid task IDs in dependencies
         task_ids = {task.id for task in tasks}
@@ -830,8 +849,8 @@ class DependencyAnalyzer:
         for task in tasks:
             for dep in task.dependencies:
                 if dep.task_id not in task_ids:
-                    return FlextCore.Result[dict[str, object]].fail(
+                    return FlextCore.Result[list[Task]].fail(
                         f"Task {task.id} has dependency on non-existent task {dep.task_id}"
                     )
 
-        return FlextCore.Result[dict[str, object]].ok({"validated": True})
+        return FlextCore.Result[list[Task]].ok(tasks)

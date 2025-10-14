@@ -39,7 +39,7 @@ class SyncResult:
 class DocumentationSyncSystem:
     """Automated documentation synchronization with git integration."""
 
-    def __init__(self, config: dict | None = None) -> None:
+    def __init__(self, config: dict[str, object] | None = None) -> None:
         self.config = config or {}
         self.auto_commit = self.config.get("auto_commit", False)
         self.commit_message_template = self.config.get(
@@ -239,7 +239,7 @@ class DocumentationSyncSystem:
         return result
 
     def generate_sync_report(
-        self, result: SyncResult, audit_results: dict | None = None
+        self, result: SyncResult, audit_results: dict[str, object] | None = None
     ) -> str:
         """Generate comprehensive synchronization report."""
         report = f"""# FLEXT Documentation Sync Report
@@ -307,7 +307,7 @@ class DocumentationSyncSystem:
         return report
 
     def run_maintenance_workflow(
-        self, audit_results: dict | None = None, dry_run: bool = False
+        self, audit_results: dict[str, object] | None = None, dry_run: bool = False
     ) -> dict[str, any]:
         """Run complete maintenance workflow."""
         print("🔄 Starting documentation maintenance workflow...")
