@@ -13,7 +13,6 @@ import json
 import re
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
 
 import yaml
 from flext_core import FlextCore
@@ -71,7 +70,7 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
         return self._logger
 
     def orchestrate_tasks(
-        self, input_data: str | Path, context: dict[str, Any] | None = None
+        self, input_data: str | Path, context: dict[str, object] | None = None
     ) -> FlextCore.Result[TaskOrchestrationResult]:
         """Orchestrate tasks using three-agent system with flext-core integration."""
         try:
@@ -169,8 +168,8 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
             return FlextCore.Result[TaskOrchestrationResult].fail(error)
 
     def _clarify_requirements(
-        self, input_data: str | Path, context: dict[str, Any] | None = None
-    ) -> FlextCore.Result[dict[str, Any]]:
+        self, input_data: str | Path, context: dict[str, object] | None = None
+    ) -> FlextCore.Result[dict[str, object]]:
         """Clarify and extract requirements from input."""
         try:
             self._logger.info("Starting requirement clarification process")
@@ -178,7 +177,7 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
             # Extract text content
             if isinstance(input_data, Path):
                 if not input_data.exists():
-                    return FlextCore.Result[dict[str, Any]].fail(
+                    return FlextCore.Result[dict[str, object]].fail(
                         FlextTaskOrchestrationConstants.Messages.FILE_NOT_FOUND.format(
                             path=input_data
                         )
@@ -217,16 +216,16 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
                     count=len(requirements)
                 )
             )
-            return FlextCore.Result[dict[str, Any]].ok(result)
+            return FlextCore.Result[dict[str, object]].ok(result)
 
         except Exception as e:
             error = FlextTaskOrchestrationConstants.Messages.REQUIREMENT_CLARIFICATION_FAILED.format(
                 error=str(e)
             )
             self._logger.exception(error)
-            return FlextCore.Result[dict[str, Any]].fail(error)
+            return FlextCore.Result[dict[str, object]].fail(error)
 
-    def _parse_requirements(self, content: str) -> list[dict[str, Any]]:
+    def _parse_requirements(self, content: str) -> list[dict[str, object]]:
         """Parse requirements from text content using constants."""
         requirements = []
         lines = content.split("\n")
@@ -315,8 +314,8 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
         return requirements
 
     def _filter_by_focus(
-        self, requirements: list[dict[str, Any]], focus_area: str
-    ) -> list[dict[str, Any]]:
+        self, requirements: list[dict[str, object]], focus_area: str
+    ) -> list[dict[str, object]]:
         """Filter requirements by focus area."""
         focus_lower = focus_area.lower()
         filtered = []
@@ -335,36 +334,36 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
         return filtered
 
     def _validate_requirements(
-        self, requirements: list[dict[str, Any]]
-    ) -> FlextCore.Result[dict[str, Any]]:
+        self, requirements: list[dict[str, object]]
+    ) -> FlextCore.Result[dict[str, object]]:
         """Validate extracted requirements."""
         if not requirements:
-            return FlextCore.Result[dict[str, Any]].fail(
+            return FlextCore.Result[dict[str, object]].fail(
                 FlextTaskOrchestrationConstants.Messages.NO_REQUIREMENTS_EXTRACTED
             )
 
         # Check for minimum requirements
         if len(requirements) < 1:
-            return FlextCore.Result[dict[str, Any]].fail(
+            return FlextCore.Result[dict[str, object]].fail(
                 FlextTaskOrchestrationConstants.Messages.AT_LEAST_ONE_REQUIREMENT_NEEDED
             )
 
         # Validate each requirement
         for i, req in enumerate(requirements):
             if not req.get("title", "").strip():
-                return FlextCore.Result[dict[str, Any]].fail(
+                return FlextCore.Result[dict[str, object]].fail(
                     FlextTaskOrchestrationConstants.Messages.REQUIREMENT_MISSING_TITLE.format(
                         index=i + 1
                     )
                 )
 
-        return FlextCore.Result[dict[str, Any]].ok({
+        return FlextCore.Result[dict[str, object]].ok({
             "validated": True,
             "count": len(requirements),
         })
 
     def _generate_clarification_questions(
-        self, requirements: list[dict[str, Any]]
+        self, requirements: list[dict[str, object]]
     ) -> FlextCore.Types.StringList:
         """Generate clarification questions for requirements."""
         questions = []
@@ -394,7 +393,7 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
         return questions
 
     def _decompose_requirements(
-        self, requirements: list[dict[str, Any]]
+        self, requirements: list[dict[str, object]]
     ) -> FlextCore.Result[list[Task]]:
         """Decompose requirements into atomic tasks."""
         try:
@@ -435,7 +434,9 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
             self._logger.exception(error)
             return FlextCore.Result[list[Task]].fail(error)
 
-    def _create_task_from_requirement(self, req: dict[str, Any], counter: int) -> Task:
+    def _create_task_from_requirement(
+        self, req: dict[str, object], counter: int
+    ) -> Task:
         """Create a task from a requirement."""
         # Determine task type
         task_type = self._determine_task_type(req)
@@ -459,7 +460,7 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
         )
 
     def _decompose_into_subtasks(
-        self, req: dict[str, Any], start_counter: int
+        self, req: dict[str, object], start_counter: int
     ) -> list[Task]:
         """Decompose requirement into subtasks if needed."""
         subtasks = []
@@ -490,7 +491,7 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
 
         return subtasks
 
-    def _needs_decomposition(self, req: dict[str, Any]) -> bool:
+    def _needs_decomposition(self, req: dict[str, object]) -> bool:
         """Determine if requirement needs decomposition."""
         title = req.get("title", "").lower()
         description = req.get("description", "").lower()
@@ -530,7 +531,7 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
 
         return has_complex_indicators or has_multiple_components
 
-    def _determine_task_type(self, req: dict[str, Any]) -> TaskType:
+    def _determine_task_type(self, req: dict[str, object]) -> TaskType:
         """Determine task type from requirement."""
         title = req.get("title", "").lower()
         description = req.get("description", "").lower()
@@ -562,7 +563,7 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
             return TaskType.DEPLOYMENT
         return TaskType.FEATURE
 
-    def _determine_priority(self, req: dict[str, Any]) -> TaskPriority:
+    def _determine_priority(self, req: dict[str, object]) -> TaskPriority:
         """Determine task priority from requirement."""
         priority_str = req.get(
             "priority", FlextTaskOrchestrationConstants.TaskPriority.MEDIUM
@@ -577,7 +578,7 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
 
         return priority_map.get(priority_str, TaskPriority.MEDIUM)
 
-    def _estimate_effort(self, req: dict[str, Any]) -> float:
+    def _estimate_effort(self, req: dict[str, object]) -> float:
         """Estimate effort in hours using estimation constants."""
         # Simple estimation based on keywords
         title = req.get("title", "").lower()
@@ -607,23 +608,23 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
 
     def _validate_task_decomposition(
         self, tasks: list[Task]
-    ) -> FlextCore.Result[dict[str, Any]]:
+    ) -> FlextCore.Result[dict[str, object]]:
         """Validate task decomposition results."""
         if not tasks:
-            return FlextCore.Result[dict[str, Any]].fail(
+            return FlextCore.Result[dict[str, object]].fail(
                 "No tasks created from decomposition"
             )
 
         # Check for duplicate titles
         titles = [task.title for task in tasks]
         if len(titles) != len(set(titles)):
-            return FlextCore.Result[dict[str, Any]].fail(
+            return FlextCore.Result[dict[str, object]].fail(
                 FlextTaskOrchestrationConstants.Messages.DUPLICATE_TASK_TITLES
             )
 
         # Basic validation - estimation bounds removed as not essential domain logic
 
-        return FlextCore.Result[dict[str, Any]].ok({
+        return FlextCore.Result[dict[str, object]].ok({
             "validated": True,
             "task_count": len(tasks),
         })
@@ -631,7 +632,7 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
     def _analyze_dependencies(
         self, tasks: list[Task]
     ) -> FlextCore.Result[
-        tuple[list[Task], list[dict[str, Any]], list[FlextCore.Types.StringList]]
+        tuple[list[Task], list[dict[str, object]], list[FlextCore.Types.StringList]]
     ]:
         """Analyze task dependencies and detect conflicts."""
         try:
@@ -659,7 +660,9 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
 
             return FlextCore.Result[
                 tuple[
-                    list[Task], list[dict[str, Any]], list[FlextCore.Types.StringList]
+                    list[Task],
+                    list[dict[str, object]],
+                    list[FlextCore.Types.StringList],
                 ]
             ].ok((updated_tasks, conflicts, parallel_groups))
 
@@ -670,7 +673,9 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
             self._logger.exception(error)
             return FlextCore.Result[
                 tuple[
-                    list[Task], list[dict[str, Any]], list[FlextCore.Types.StringList]
+                    list[Task],
+                    list[dict[str, object]],
+                    list[FlextCore.Types.StringList],
                 ]
             ].fail(error)
 
@@ -766,7 +771,7 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
 
         return len(meaningful_words) > 0
 
-    def _detect_conflicts(self, tasks: list[Task]) -> list[dict[str, Any]]:
+    def _detect_conflicts(self, tasks: list[Task]) -> list[dict[str, object]]:
         """Detect conflicts between tasks."""
         conflicts = []
 
@@ -784,7 +789,7 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
 
         return conflicts
 
-    def _detect_resource_conflicts(self, tasks: list[Task]) -> list[dict[str, Any]]:
+    def _detect_resource_conflicts(self, tasks: list[Task]) -> list[dict[str, object]]:
         """Detect resource conflicts between tasks."""
         conflicts = []
 
@@ -808,7 +813,9 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
 
         return conflicts
 
-    def _detect_circular_dependencies(self, tasks: list[Task]) -> list[dict[str, Any]]:
+    def _detect_circular_dependencies(
+        self, tasks: list[Task]
+    ) -> list[dict[str, object]]:
         """Detect circular dependencies."""
         conflicts = []
 
@@ -853,7 +860,7 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
 
         return conflicts
 
-    def _detect_priority_conflicts(self, tasks: list[Task]) -> list[dict[str, Any]]:
+    def _detect_priority_conflicts(self, tasks: list[Task]) -> list[dict[str, object]]:
         """Detect priority conflicts."""
         conflicts = []
 
@@ -912,7 +919,7 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
 
     def _validate_dependency_graph(
         self, tasks: list[Task]
-    ) -> FlextCore.Result[dict[str, Any]]:
+    ) -> FlextCore.Result[dict[str, object]]:
         """Validate the dependency graph."""
         # Check for valid task IDs in dependencies
         task_ids = {task.id for task in tasks}
@@ -920,13 +927,13 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
         for task in tasks:
             for dep in task.dependencies:
                 if dep.task_id not in task_ids:
-                    return FlextCore.Result[dict[str, Any]].fail(
+                    return FlextCore.Result[dict[str, object]].fail(
                         FlextTaskOrchestrationConstants.Messages.TASK_DEPENDENCY_NON_EXISTENT.format(
                             task_id=task.id, dep_task_id=dep.task_id
                         )
                     )
 
-        return FlextCore.Result[dict[str, Any]].ok({"validated": True})
+        return FlextCore.Result[dict[str, object]].ok({"validated": True})
 
     def _create_execution_plan(
         self, tasks: list[Task], parallel_groups: list[FlextCore.Types.StringList]
@@ -1011,10 +1018,10 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
     def _save_orchestration_results(
         self,
         tasks: list[Task],
-        conflicts: list[dict[str, Any]],
+        conflicts: list[dict[str, object]],
         parallel_groups: list[FlextCore.Types.StringList],
         plan: TaskExecutionPlan,
-        requirements_data: dict[str, Any],
+        requirements_data: dict[str, object],
     ) -> FlextCore.Result[None]:
         """Save orchestration results to files."""
         try:
@@ -1073,10 +1080,10 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
     def _generate_master_coordination(
         self,
         tasks: list[Task],
-        conflicts: list[dict[str, Any]],
+        conflicts: list[dict[str, object]],
         parallel_groups: list[FlextCore.Types.StringList],
         plan: TaskExecutionPlan,
-        requirements_data: dict[str, Any],
+        requirements_data: dict[str, object],
     ) -> str:
         """Generate master coordination document."""
         return f"""# Master Coordination Plan
@@ -1182,7 +1189,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
         return yaml.dump(status_data, default_flow_style=False, indent=2)
 
-    def _format_requirements_summary(self, requirements_data: dict[str, Any]) -> str:
+    def _format_requirements_summary(self, requirements_data: dict[str, object]) -> str:
         """Format requirements summary."""
         requirements = requirements_data.get("requirements", [])
         questions = requirements_data.get("questions", [])
@@ -1241,7 +1248,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
         return content
 
-    def _format_conflicts(self, conflicts: list[dict[str, Any]]) -> str:
+    def _format_conflicts(self, conflicts: list[dict[str, object]]) -> str:
         """Format conflicts."""
         if not conflicts:
             return "No conflicts detected."
@@ -1261,7 +1268,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
     def _format_recommendations(
         self,
-        conflicts: list[dict[str, Any]],
+        conflicts: list[dict[str, object]],
         parallel_groups: list[FlextCore.Types.StringList],
     ) -> str:
         """Format recommendations."""
@@ -1325,7 +1332,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
     def _generate_recommendations(
         self,
-        conflicts: list[dict[str, Any]],
+        conflicts: list[dict[str, object]],
         parallel_groups: list[FlextCore.Types.StringList],
     ) -> FlextCore.Types.StringList:
         """Generate recommendations based on analysis."""

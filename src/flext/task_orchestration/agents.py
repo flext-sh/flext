@@ -14,7 +14,6 @@ from __future__ import annotations
 import re
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 from flext_core import FlextCore
 
@@ -37,8 +36,8 @@ class TaskOrchestrator:
         self.logger = FlextCore.Logger(__name__)
 
     def clarify_requirements(
-        self, input_data: str | Path, context: dict[str, Any] | None = None
-    ) -> FlextCore.Result[dict[str, Any]]:
+        self, input_data: str | Path, context: dict[str, object] | None = None
+    ) -> FlextCore.Result[dict[str, object]]:
         """Clarify and extract requirements from input."""
         try:
             self.logger.info("Starting requirement clarification process")
@@ -46,7 +45,7 @@ class TaskOrchestrator:
             # Extract text content
             if isinstance(input_data, Path):
                 if not input_data.exists():
-                    return FlextCore.Result[dict[str, Any]].fail(
+                    return FlextCore.Result[dict[str, object]].fail(
                         f"File not found: {input_data}"
                     )
                 content = input_data.read_text(encoding="utf-8")
@@ -81,14 +80,14 @@ class TaskOrchestrator:
             self.logger.info(
                 f"Requirements clarified: {len(requirements)} items extracted"
             )
-            return FlextCore.Result[dict[str, Any]].ok(result)
+            return FlextCore.Result[dict[str, object]].ok(result)
 
         except Exception as e:
             error = f"Requirement clarification failed: {e}"
             self.logger.exception(error)
-            return FlextCore.Result[dict[str, Any]].fail(error)
+            return FlextCore.Result[dict[str, object]].fail(error)
 
-    def _parse_requirements(self, content: str) -> list[dict[str, Any]]:
+    def _parse_requirements(self, content: str) -> list[dict[str, object]]:
         """Parse requirements from text content."""
         requirements = []
 
@@ -172,8 +171,8 @@ class TaskOrchestrator:
         return requirements
 
     def _filter_by_focus(
-        self, requirements: list[dict[str, Any]], focus_area: str
-    ) -> list[dict[str, Any]]:
+        self, requirements: list[dict[str, object]], focus_area: str
+    ) -> list[dict[str, object]]:
         """Filter requirements by focus area."""
         focus_lower = focus_area.lower()
         filtered = []
@@ -192,32 +191,32 @@ class TaskOrchestrator:
         return filtered
 
     def _validate_requirements(
-        self, requirements: list[dict[str, Any]]
-    ) -> FlextCore.Result[dict[str, Any]]:
+        self, requirements: list[dict[str, object]]
+    ) -> FlextCore.Result[dict[str, object]]:
         """Validate extracted requirements."""
         if not requirements:
-            return FlextCore.Result[dict[str, Any]].fail("No requirements extracted")
+            return FlextCore.Result[dict[str, object]].fail("No requirements extracted")
 
         # Check for minimum requirements
         if len(requirements) < 1:
-            return FlextCore.Result[dict[str, Any]].fail(
+            return FlextCore.Result[dict[str, object]].fail(
                 "At least one requirement needed"
             )
 
         # Validate each requirement
         for i, req in enumerate(requirements):
             if not req.get("title", "").strip():
-                return FlextCore.Result[dict[str, Any]].fail(
+                return FlextCore.Result[dict[str, object]].fail(
                     f"Requirement {i + 1} missing title"
                 )
 
-        return FlextCore.Result[dict[str, Any]].ok({
+        return FlextCore.Result[dict[str, object]].ok({
             "validated": True,
             "count": len(requirements),
         })
 
     def _generate_clarification_questions(
-        self, requirements: list[dict[str, Any]]
+        self, requirements: list[dict[str, object]]
     ) -> FlextCore.Types.StringList:
         """Generate clarification questions for requirements."""
         questions = []
@@ -253,7 +252,7 @@ class TaskDecomposer:
         self.logger = FlextCore.Logger(__name__)
 
     def decompose_requirements(
-        self, requirements: list[dict[str, Any]]
+        self, requirements: list[dict[str, object]]
     ) -> FlextCore.Result[list[Task]]:
         """Decompose requirements into atomic tasks."""
         try:
@@ -288,7 +287,9 @@ class TaskDecomposer:
             self.logger.exception(error)
             return FlextCore.Result[list[Task]].fail(error)
 
-    def _create_task_from_requirement(self, req: dict[str, Any], counter: int) -> Task:
+    def _create_task_from_requirement(
+        self, req: dict[str, object], counter: int
+    ) -> Task:
         """Create a task from a requirement."""
         # Determine task type
         task_type = self._determine_task_type(req)
@@ -312,7 +313,7 @@ class TaskDecomposer:
         )
 
     def _decompose_into_subtasks(
-        self, req: dict[str, Any], start_counter: int
+        self, req: dict[str, object], start_counter: int
     ) -> list[Task]:
         """Decompose requirement into subtasks if needed."""
         subtasks = []
@@ -336,7 +337,7 @@ class TaskDecomposer:
 
         return subtasks
 
-    def _needs_decomposition(self, req: dict[str, Any]) -> bool:
+    def _needs_decomposition(self, req: dict[str, object]) -> bool:
         """Determine if requirement needs decomposition."""
         title = req.get("title", "").lower()
         description = req.get("description", "").lower()
@@ -377,7 +378,7 @@ class TaskDecomposer:
         return has_complex_indicators or has_multiple_components
 
     def _decompose_by_phases(
-        self, req: dict[str, Any], start_counter: int
+        self, req: dict[str, object], start_counter: int
     ) -> list[Task]:
         """Decompose by development phases."""
         phases = [
@@ -403,7 +404,7 @@ class TaskDecomposer:
         return subtasks
 
     def _decompose_by_components(
-        self, req: dict[str, Any], start_counter: int
+        self, req: dict[str, object], start_counter: int
     ) -> list[Task]:
         """Decompose by system components."""
         # This would be more sophisticated in a real implementation
@@ -411,14 +412,14 @@ class TaskDecomposer:
         return []
 
     def _decompose_by_workflow(
-        self, req: dict[str, Any], start_counter: int
+        self, req: dict[str, object], start_counter: int
     ) -> list[Task]:
         """Decompose by workflow steps."""
         # This would be more sophisticated in a real implementation
         # For now, return empty list
         return []
 
-    def _determine_task_type(self, req: dict[str, Any]) -> TaskType:
+    def _determine_task_type(self, req: dict[str, object]) -> TaskType:
         """Determine task type from requirement."""
         title = req.get("title", "").lower()
         description = req.get("description", "").lower()
@@ -450,7 +451,7 @@ class TaskDecomposer:
             return TaskType.DEPLOYMENT
         return TaskType.FEATURE
 
-    def _determine_priority(self, req: dict[str, Any]) -> TaskPriority:
+    def _determine_priority(self, req: dict[str, object]) -> TaskPriority:
         """Determine task priority from requirement."""
         priority_str = req.get("priority", "medium").lower()
 
@@ -463,7 +464,7 @@ class TaskDecomposer:
 
         return priority_map.get(priority_str, TaskPriority.MEDIUM)
 
-    def _estimate_effort(self, req: dict[str, Any]) -> float:
+    def _estimate_effort(self, req: dict[str, object]) -> float:
         """Estimate effort in hours."""
         # Simple estimation based on keywords
         title = req.get("title", "").lower()
@@ -495,17 +496,19 @@ class TaskDecomposer:
 
     def _validate_task_decomposition(
         self, tasks: list[Task]
-    ) -> FlextCore.Result[dict[str, Any]]:
+    ) -> FlextCore.Result[dict[str, object]]:
         """Validate task decomposition results."""
         if not tasks:
-            return FlextCore.Result[dict[str, Any]].fail(
+            return FlextCore.Result[dict[str, object]].fail(
                 "No tasks created from decomposition"
             )
 
         # Check for duplicate titles
         titles = [task.title for task in tasks]
         if len(titles) != len(set(titles)):
-            return FlextCore.Result[dict[str, Any]].fail("Duplicate task titles found")
+            return FlextCore.Result[dict[str, object]].fail(
+                "Duplicate task titles found"
+            )
 
         # Check estimation bounds
         for task in tasks:
@@ -513,18 +516,18 @@ class TaskDecomposer:
                 task.estimated_hours
                 and task.estimated_hours < self.config.min_estimation_hours
             ):
-                return FlextCore.Result[dict[str, Any]].fail(
+                return FlextCore.Result[dict[str, object]].fail(
                     f"Task '{task.title}' estimation below minimum: {task.estimated_hours}"
                 )
             if (
                 task.estimated_hours
                 and task.estimated_hours > self.config.max_estimation_hours
             ):
-                return FlextCore.Result[dict[str, Any]].fail(
+                return FlextCore.Result[dict[str, object]].fail(
                     f"Task '{task.title}' estimation above maximum: {task.estimated_hours}"
                 )
 
-        return FlextCore.Result[dict[str, Any]].ok({
+        return FlextCore.Result[dict[str, object]].ok({
             "validated": True,
             "task_count": len(tasks),
         })
@@ -541,7 +544,7 @@ class DependencyAnalyzer:
     def analyze_dependencies(
         self, tasks: list[Task]
     ) -> FlextCore.Result[
-        tuple[list[Task], list[dict[str, Any]], list[FlextCore.Types.StringList]]
+        tuple[list[Task], list[dict[str, object]], list[FlextCore.Types.StringList]]
     ]:
         """Analyze task dependencies and detect conflicts."""
         try:
@@ -567,7 +570,9 @@ class DependencyAnalyzer:
 
             return FlextCore.Result[
                 tuple[
-                    list[Task], list[dict[str, Any]], list[FlextCore.Types.StringList]
+                    list[Task],
+                    list[dict[str, object]],
+                    list[FlextCore.Types.StringList],
                 ]
             ].ok((updated_tasks, conflicts, parallel_groups))
 
@@ -576,7 +581,9 @@ class DependencyAnalyzer:
             self.logger.exception(error)
             return FlextCore.Result[
                 tuple[
-                    list[Task], list[dict[str, Any]], list[FlextCore.Types.StringList]
+                    list[Task],
+                    list[dict[str, object]],
+                    list[FlextCore.Types.StringList],
                 ]
             ].fail(error)
 
@@ -672,7 +679,7 @@ class DependencyAnalyzer:
 
         return len(meaningful_words) > 0
 
-    def _detect_conflicts(self, tasks: list[Task]) -> list[dict[str, Any]]:
+    def _detect_conflicts(self, tasks: list[Task]) -> list[dict[str, object]]:
         """Detect conflicts between tasks."""
         conflicts = []
 
@@ -690,7 +697,7 @@ class DependencyAnalyzer:
 
         return conflicts
 
-    def _detect_resource_conflicts(self, tasks: list[Task]) -> list[dict[str, Any]]:
+    def _detect_resource_conflicts(self, tasks: list[Task]) -> list[dict[str, object]]:
         """Detect resource conflicts between tasks."""
         conflicts = []
 
@@ -714,7 +721,9 @@ class DependencyAnalyzer:
 
         return conflicts
 
-    def _detect_circular_dependencies(self, tasks: list[Task]) -> list[dict[str, Any]]:
+    def _detect_circular_dependencies(
+        self, tasks: list[Task]
+    ) -> list[dict[str, object]]:
         """Detect circular dependencies."""
         conflicts = []
 
@@ -757,7 +766,7 @@ class DependencyAnalyzer:
 
         return conflicts
 
-    def _detect_priority_conflicts(self, tasks: list[Task]) -> list[dict[str, Any]]:
+    def _detect_priority_conflicts(self, tasks: list[Task]) -> list[dict[str, object]]:
         """Detect priority conflicts."""
         conflicts = []
 
@@ -813,7 +822,7 @@ class DependencyAnalyzer:
 
     def _validate_dependency_graph(
         self, tasks: list[Task]
-    ) -> FlextCore.Result[dict[str, Any]]:
+    ) -> FlextCore.Result[dict[str, object]]:
         """Validate the dependency graph."""
         # Check for valid task IDs in dependencies
         task_ids = {task.id for task in tasks}
@@ -821,8 +830,8 @@ class DependencyAnalyzer:
         for task in tasks:
             for dep in task.dependencies:
                 if dep.task_id not in task_ids:
-                    return FlextCore.Result[dict[str, Any]].fail(
+                    return FlextCore.Result[dict[str, object]].fail(
                         f"Task {task.id} has dependency on non-existent task {dep.task_id}"
                     )
 
-        return FlextCore.Result[dict[str, Any]].ok({"validated": True})
+        return FlextCore.Result[dict[str, object]].ok({"validated": True})

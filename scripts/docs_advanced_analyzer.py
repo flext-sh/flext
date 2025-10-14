@@ -16,7 +16,6 @@ import sys
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 from flext_core import FlextCore
 
@@ -82,14 +81,16 @@ class CrossReference:
 class AdvancedDocumentationAnalyzer:
     """Advanced documentation analysis and intelligence system."""
 
-    def __init__(self, root_path: Path, config: dict[str, Any] | None = None) -> None:
+    def __init__(
+        self, root_path: Path, config: dict[str, object] | None = None
+    ) -> None:
         self.root_path = root_path
         self.config = config or self._default_config()
         self.content_intelligence: dict[Path, ContentIntelligence] = {}
         self.cross_references: list[CrossReference] = []
         self.documentation_health: dict[Path, DocumentationHealth] = {}
 
-    def _default_config(self) -> dict[str, Any]:
+    def _default_config(self) -> dict[str, object]:
         """Default configuration for advanced analysis."""
         return {
             "min_readability_score": 60.0,
@@ -446,7 +447,7 @@ class AdvancedDocumentationAnalyzer:
 
         return recommendations
 
-    def analyze_documentation_architecture(self) -> dict[str, Any]:
+    def analyze_documentation_architecture(self) -> dict[str, object]:
         """Analyze the overall documentation architecture."""
         markdown_files = list(self.root_path.rglob("*.md"))
 
@@ -480,7 +481,7 @@ class AdvancedDocumentationAnalyzer:
         }
 
     def _calculate_max_depth(
-        self, structure: dict[str, Any], current_depth: int = 0
+        self, structure: dict[str, object], current_depth: int = 0
     ) -> int:
         """Calculate maximum directory depth."""
         if not structure or "_files" in structure:
@@ -494,12 +495,12 @@ class AdvancedDocumentationAnalyzer:
 
         return max_child_depth
 
-    def _calculate_avg_files_per_dir(self, structure: dict[str, Any]) -> float:
+    def _calculate_avg_files_per_dir(self, structure: dict[str, object]) -> float:
         """Calculate average files per directory."""
         total_dirs = 0
         total_files = 0
 
-        def count_dirs_and_files(current: dict[str, Any]) -> None:
+        def count_dirs_and_files(current: dict[str, object]) -> None:
             nonlocal total_dirs, total_files
 
             if "_files" in current:
@@ -525,8 +526,8 @@ class AdvancedDocumentationAnalyzer:
         return [f for f in markdown_files if f not in all_references]
 
     def _calculate_architecture_health(
-        self, patterns: dict[str, Any]
-    ) -> dict[str, Any]:
+        self, patterns: dict[str, object]
+    ) -> dict[str, object]:
         """Calculate overall architecture health."""
         health_score = 0.0
         issues = []
@@ -566,7 +567,7 @@ class AdvancedDocumentationAnalyzer:
         }
 
     def _generate_architecture_recommendations(
-        self, patterns: dict[str, Any]
+        self, patterns: dict[str, object]
     ) -> FlextCore.Types.StringList:
         """Generate architecture improvement recommendations."""
         recommendations = []
@@ -587,7 +588,7 @@ class AdvancedDocumentationAnalyzer:
 
         return recommendations
 
-    def run_comprehensive_analysis(self) -> dict[str, Any]:
+    def run_comprehensive_analysis(self) -> dict[str, object]:
         """Run comprehensive documentation analysis."""
         print("🔍 Starting Advanced Documentation Analysis...")
 
@@ -671,7 +672,7 @@ class AdvancedDocumentationAnalyzer:
         print(f"\n✅ Analysis complete! Processed {len(markdown_files)} files")
         return report
 
-    def _generate_analysis_summary(self) -> dict[str, Any]:
+    def _generate_analysis_summary(self) -> dict[str, object]:
         """Generate analysis summary statistics."""
         if not self.documentation_health:
             return {}

@@ -15,7 +15,6 @@ import sys
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 from flext_core import FlextCore
 
@@ -216,7 +215,7 @@ class AIDocumentationAutomation:
         return result
 
     def _generate_recommendations(
-        self, health_data: dict[str, Any]
+        self, health_data: dict[str, object]
     ) -> FlextCore.Types.StringList:
         """Generate intelligent recommendations based on analysis."""
         recommendations = []

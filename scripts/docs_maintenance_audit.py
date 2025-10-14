@@ -20,7 +20,6 @@ import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 try:
     import requests
@@ -76,22 +75,24 @@ class AuditReport:
     files_analyzed: list[Path] = field(default_factory=list)
     metrics: list[DocumentMetrics] = field(default_factory=list)
     issues: list[ValidationIssue] = field(default_factory=list)
-    broken_links: list[dict[str, Any]] = field(default_factory=list)
-    missing_images: list[dict[str, Any]] = field(default_factory=list)
-    style_violations: list[dict[str, Any]] = field(default_factory=list)
+    broken_links: list[dict[str, object]] = field(default_factory=list)
+    missing_images: list[dict[str, object]] = field(default_factory=list)
+    style_violations: list[dict[str, object]] = field(default_factory=list)
 
 
 class DocumentationAuditor:
     """Main documentation audit and maintenance system."""
 
-    def __init__(self, root_path: Path, config: dict[str, Any] | None = None) -> None:
+    def __init__(
+        self, root_path: Path, config: dict[str, object] | None = None
+    ) -> None:
         self.root_path = root_path
         self.config = config or self._default_config()
         self.report = AuditReport(
             timestamp=datetime.now(UTC), total_files=0, total_issues=0
         )
 
-    def _default_config(self) -> dict[str, Any]:
+    def _default_config(self) -> dict[str, object]:
         """Default configuration for auditing."""
         return {
             "max_document_age_days": 90,

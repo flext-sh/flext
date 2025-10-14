@@ -79,7 +79,7 @@ Each ADR follows this standard template:
 
 ## Implementation Notes
 
-[Any specific implementation details or considerations]
+[object specific implementation details or considerations]
 
 ## References
 

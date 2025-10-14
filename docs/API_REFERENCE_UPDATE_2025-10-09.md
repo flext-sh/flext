@@ -140,7 +140,7 @@ class LdapConnection(FlextLdapModels.Connection):
     bind_password: str
 
 class LdapSearchResult(FlextLdapModels.SearchResult):
-    entries: list[dict[str, Any]]
+    entries: list[dict[str, object]]
     total_count: int
 
 # LDAP operations
@@ -170,7 +170,7 @@ class OracleConnection(FlextOracleModels.Connection):
     password: str
 
 class QueryResult(FlextOracleModels.QueryResult):
-    rows: list[dict[str, Any]]
+    rows: list[dict[str, object]]
     column_names: FlextCore.Types.StringList
     row_count: int
 
@@ -475,7 +475,7 @@ def process_data(data):
     return transform(data)
 
 # ✅ CORRECT - Complete type annotations
-def process_data(data: dict[str, Any]) -> FlextCore.Result[ProcessedData]:
+def process_data(data: dict[str, object]) -> FlextCore.Result[ProcessedData]:
     return transform(data)
 ```
 

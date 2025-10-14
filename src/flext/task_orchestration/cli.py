@@ -12,7 +12,6 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 from flext_core import FlextCore
 
@@ -36,7 +35,7 @@ class TaskOrchestrationCli:
         agents: int | None = None,
         days: int | None = None,
         analyze_only: bool = False,
-        context: dict[str, Any] | None = None,
+        context: dict[str, object] | None = None,
     ) -> FlextCore.Result[None]:
         """Execute the /orchestrate command."""
         try:
@@ -88,7 +87,7 @@ class TaskOrchestrationCli:
         return TaskOrchestrationConfig(**config_data)
 
     def _analyze_only_mode(
-        self, input_data: str | Path, context: dict[str, Any] | None = None
+        self, input_data: str | Path, context: dict[str, object] | None = None
     ) -> FlextCore.Result[None]:
         """Execute analyze-only mode without creating task files."""
         try:
@@ -113,7 +112,7 @@ class TaskOrchestrationCli:
             self.logger.exception(error)
             return FlextCore.Result[None].fail(error)
 
-    def _display_orchestration_results(self, result: Any) -> None:
+    def _display_orchestration_results(self, result: object) -> None:
         """Display orchestration results to user."""
         if result.task_ids:
             for _task_id in result.task_ids[:10]:  # Show first 10
@@ -131,7 +130,7 @@ class TaskOrchestrationCli:
             for _i, _rec in enumerate(result.recommendations, 1):
                 pass
 
-    def _display_analysis_results(self, requirements_data: dict[str, Any]) -> None:
+    def _display_analysis_results(self, requirements_data: dict[str, object]) -> None:
         """Display analysis results for analyze-only mode."""
         requirements = requirements_data.get("requirements", [])
         questions = requirements_data.get("questions", [])
@@ -353,7 +352,7 @@ class TaskOrchestrationCli:
             "tasks": [task.model_dump() for task in tasks],
         }
 
-    def _load_tasks_from_directory(self, orchestration_dir: Path) -> list[Any]:
+    def _load_tasks_from_directory(self, orchestration_dir: Path) -> list[object]:
         """Load tasks from orchestration directory."""
         tasks = []
         tasks_dir = orchestration_dir / "tasks"

@@ -12,7 +12,6 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
 
 from flext_core import FlextCore
 
@@ -54,7 +53,7 @@ class TaskOrchestrationService(FlextCore.Service[str]):
         return self._logger
 
     def orchestrate_tasks(
-        self, input_data: str | Path, context: dict[str, Any] | None = None
+        self, input_data: str | Path, context: dict[str, object] | None = None
     ) -> FlextCore.Result[TaskOrchestrationResult]:
         """Orchestrate tasks using three-agent system."""
         try:
@@ -235,10 +234,10 @@ class TaskOrchestrationService(FlextCore.Service[str]):
     def _save_orchestration_results(
         self,
         tasks: list[Task],
-        conflicts: list[dict[str, Any]],
+        conflicts: list[dict[str, object]],
         parallel_groups: list[FlextCore.Types.StringList],
         plan: TaskExecutionPlan,
-        requirements_data: dict[str, Any],
+        requirements_data: dict[str, object],
     ) -> FlextCore.Result[None]:
         """Save orchestration results to files."""
         try:
@@ -283,10 +282,10 @@ class TaskOrchestrationService(FlextCore.Service[str]):
     def _generate_master_coordination(
         self,
         tasks: list[Task],
-        conflicts: list[dict[str, Any]],
+        conflicts: list[dict[str, object]],
         parallel_groups: list[FlextCore.Types.StringList],
         plan: TaskExecutionPlan,
-        requirements_data: dict[str, Any],
+        requirements_data: dict[str, object],
     ) -> str:
         """Generate master coordination document."""
         return f"""# Master Coordination Plan
@@ -394,7 +393,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
         return yaml.dump(status_data, default_flow_style=False, indent=2)
 
-    def _format_requirements_summary(self, requirements_data: dict[str, Any]) -> str:
+    def _format_requirements_summary(self, requirements_data: dict[str, object]) -> str:
         """Format requirements summary."""
         requirements = requirements_data.get("requirements", [])
         questions = requirements_data.get("questions", [])
@@ -453,7 +452,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
         return content
 
-    def _format_conflicts(self, conflicts: list[dict[str, Any]]) -> str:
+    def _format_conflicts(self, conflicts: list[dict[str, object]]) -> str:
         """Format conflicts."""
         if not conflicts:
             return "No conflicts detected."
@@ -473,7 +472,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
     def _format_recommendations(
         self,
-        conflicts: list[dict[str, Any]],
+        conflicts: list[dict[str, object]],
         parallel_groups: list[FlextCore.Types.StringList],
     ) -> str:
         """Format recommendations."""
@@ -537,7 +536,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
     def _generate_recommendations(
         self,
-        conflicts: list[dict[str, Any]],
+        conflicts: list[dict[str, object]],
         parallel_groups: list[FlextCore.Types.StringList],
     ) -> FlextCore.Types.StringList:
         """Generate recommendations based on analysis."""

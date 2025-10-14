@@ -30,7 +30,6 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 import requests
 from flext_core import FlextCore
@@ -78,7 +77,7 @@ class DocumentationMaintenanceSystem:
         self.output_dir = Path(self.config.get("output_dir", "docs/reports"))
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
-    def load_config(self) -> dict[str, Any]:
+    def load_config(self) -> dict[str, object]:
         """Load configuration from file or use defaults."""
         default_config = {
             "max_age_days": 30,
@@ -429,7 +428,7 @@ class DocumentationMaintenanceSystem:
 
         return report
 
-    def optimize_content(self, dry_run: bool = False) -> dict[str, Any]:
+    def optimize_content(self, dry_run: bool = False) -> dict[str, object]:
         """Optimize and enhance documentation content."""
         print("🔧 Optimizing documentation content...")
 
@@ -546,7 +545,7 @@ class DocumentationMaintenanceSystem:
 
     def run_comprehensive_maintenance(
         self, verbose: bool = False, dry_run: bool = False
-    ) -> dict[str, Any]:
+    ) -> dict[str, object]:
         """Run all maintenance operations comprehensively."""
         print("🚀 Starting comprehensive documentation maintenance...")
 

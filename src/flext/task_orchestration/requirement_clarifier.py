@@ -12,7 +12,6 @@ from __future__ import annotations
 import re
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 from flext_core import FlextCore
 
@@ -41,8 +40,8 @@ class RequirementClarifier:
         self._focus_area = focus_area
 
     def clarify_requirements(
-        self, input_data: str | Path, context: dict[str, Any] | None = None
-    ) -> FlextCore.Result[dict[str, Any]]:
+        self, input_data: str | Path, context: dict[str, object] | None = None
+    ) -> FlextCore.Result[dict[str, object]]:
         """Clarify and extract requirements from input.
 
         Args:
@@ -59,7 +58,7 @@ class RequirementClarifier:
             # Extract text content
             if isinstance(input_data, Path):
                 if not input_data.exists():
-                    return FlextCore.Result[dict[str, Any]].fail(
+                    return FlextCore.Result[dict[str, object]].fail(
                         FlextTaskOrchestrationConstants.Messages.FILE_NOT_FOUND.format(
                             path=input_data
                         )
@@ -96,16 +95,16 @@ class RequirementClarifier:
                     count=len(requirements)
                 )
             )
-            return FlextCore.Result[dict[str, Any]].ok(result)
+            return FlextCore.Result[dict[str, object]].ok(result)
 
         except Exception as e:
             error = FlextTaskOrchestrationConstants.Messages.REQUIREMENT_CLARIFICATION_FAILED.format(
                 error=str(e)
             )
             self._logger.exception(error)
-            return FlextCore.Result[dict[str, Any]].fail(error)
+            return FlextCore.Result[dict[str, object]].fail(error)
 
-    def _parse_requirements(self, content: str) -> list[dict[str, Any]]:
+    def _parse_requirements(self, content: str) -> list[dict[str, object]]:
         """Parse requirements from text content using constants.
 
         Args:
@@ -171,8 +170,8 @@ class RequirementClarifier:
         return requirements
 
     def _filter_by_focus(
-        self, requirements: list[dict[str, Any]], focus_area: str
-    ) -> list[dict[str, Any]]:
+        self, requirements: list[dict[str, object]], focus_area: str
+    ) -> list[dict[str, object]]:
         """Filter requirements by focus area.
 
         Args:
@@ -200,8 +199,8 @@ class RequirementClarifier:
         return filtered
 
     def _validate_requirements(
-        self, requirements: list[dict[str, Any]]
-    ) -> FlextCore.Result[dict[str, Any]]:
+        self, requirements: list[dict[str, object]]
+    ) -> FlextCore.Result[dict[str, object]]:
         """Validate extracted requirements.
 
         Args:
@@ -212,32 +211,32 @@ class RequirementClarifier:
 
         """
         if not requirements:
-            return FlextCore.Result[dict[str, Any]].fail(
+            return FlextCore.Result[dict[str, object]].fail(
                 FlextTaskOrchestrationConstants.Messages.NO_REQUIREMENTS_EXTRACTED
             )
 
         # Check for minimum requirements
         if len(requirements) < 1:
-            return FlextCore.Result[dict[str, Any]].fail(
+            return FlextCore.Result[dict[str, object]].fail(
                 FlextTaskOrchestrationConstants.Messages.AT_LEAST_ONE_REQUIREMENT_NEEDED
             )
 
         # Validate each requirement
         for i, req in enumerate(requirements):
             if not req.get("title", "").strip():
-                return FlextCore.Result[dict[str, Any]].fail(
+                return FlextCore.Result[dict[str, object]].fail(
                     FlextTaskOrchestrationConstants.Messages.REQUIREMENT_MISSING_TITLE.format(
                         index=i + 1
                     )
                 )
 
-        return FlextCore.Result[dict[str, Any]].ok({
+        return FlextCore.Result[dict[str, object]].ok({
             "validated": True,
             "count": len(requirements),
         })
 
     def _generate_clarification_questions(
-        self, requirements: list[dict[str, Any]]
+        self, requirements: list[dict[str, object]]
     ) -> FlextCore.Types.StringList:
         """Generate clarification questions for requirements.
 

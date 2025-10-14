@@ -65,7 +65,6 @@ line-length = 88
         "FBT003",
         "Q000",
         "TRY003",
-        # "PLC0415",
         "RUF005",  # unpacking-operator - disabled to avoid pyrefly conflicts
         "PLR1702",
         "PLR0914",
@@ -92,7 +91,7 @@ line-length = 88
         "ALL",
     ]
     "**/config.py" = [
-        "ANN401", # any-type - examples can legitimately use Any for Pydantic 2 models
+        "ANN401", # any-type - examples can legitimately use object for Pydantic 2 models
         "FBT001", # Boolean positional argument - required by Pydantic field serializers
         "PLC0415", # allow lazy imports in fix circular imports in base level
         "SLF001", # private-member-access - necessary for config synchronization across modules
@@ -101,7 +100,7 @@ line-length = 88
         "S105", # hardcoded-password-string - false positives in error messages and descriptions
     ]
     "**/examples/**" = [
-        "ANN401",  # any-type - examples can legitimately use Any for flexibility
+        "ANN401",  # any-type - examples can legitimately use object for flexibility
         "EXE001",  # shebang - examples are meant to be executable
         "FBT001",  # boolean-type-hint-positional-argument - examples use simple boolean args
         "FBT002",  # boolean-default-value-positional-argument - examples use boolean defaults
@@ -132,11 +131,12 @@ line-length = 88
         "S107",    # hardcoded-password-default - "Bearer" is HTTP protocol keyword, not password
     ]
     "**/models.py" = [
-        "ANN401", # any-type - Pydantic 2 models legitimately use Any in dict[str, Any]
+        "ANN401", # any-type - Pydantic 2 models legitimately use object in dict[str, object]
         "FBT001", # Boolean positional argument - required by Pydantic field serializers
         "PLC0415", # allow lazy imports to fix circular imports at base level
         "PLR0206", # property-with-parameters - Pydantic @computed_field + @property is valid pattern
         "PLW0603", # global-statement - necessary for lazy config loading to avoid circular imports
+        "F821", # undefined-name - DomainEvent forward references in string literals for Pydantic
         # NOTE: Pydantic 2.11+ @computed_field + @property is a legitimate pattern:
         # @computed_field
         # @property
@@ -196,6 +196,7 @@ line-length = 88
         "S106",
         "S107",
         "S108",    # Probable insecure usage of temp file - acceptable in tests
+        "S110",    # try-except-pass - acceptable in test cleanup code where exceptions are intentionally ignored
         "S112",
         "S311",
         "S404",    # subprocess-without-shell-equals-true - tests may need subprocess
@@ -222,6 +223,5 @@ line-length = 88
     ]
     "**/__init__.py" = [
         "F822",    # undefined-name - lazy imports define names at runtime via __getattr__
-        "PLC0415", # import-outside-top-level - lazy imports are intentional for circular import prevention
         "N999",    # invalid-module-name - project root uses 'flext-auth' for package distribution
     ]
