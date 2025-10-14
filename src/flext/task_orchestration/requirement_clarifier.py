@@ -5,6 +5,7 @@ parsing, filtering, validation, and clarification question generation.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations
@@ -36,6 +37,7 @@ class RequirementClarifier:
             focus_area: Optional focus area for requirement filtering
 
         """
+        super().__init__()
         self._logger = logger
         self._focus_area = focus_area
 
@@ -125,7 +127,7 @@ class RequirementClarifier:
 
             # Check for numbered lists
             numbered_match = re.match(
-                FlextTaskOrchestrationConstants.Patterns.NUMBERED_LIST, line
+                FlextTaskOrchestrationConstants.TaskPatterns.NUMBERED_LIST, line
             )
             if numbered_match:
                 if current_requirement:
@@ -142,7 +144,7 @@ class RequirementClarifier:
 
             # Check for bullet points
             bullet_match = re.match(
-                FlextTaskOrchestrationConstants.Patterns.BULLET_POINT, line
+                FlextTaskOrchestrationConstants.TaskPatterns.BULLET_POINT, line
             )
             if bullet_match:
                 if current_requirement:

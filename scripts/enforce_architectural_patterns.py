@@ -10,6 +10,7 @@ This script systematically enforces FLEXT architectural patterns across all proj
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations
