@@ -855,15 +855,15 @@ class FlextDuplicateDetector:
             ),
             (
                 r'return\s+\{\s*["\']success["\']\s*:\s*True',
-                "Manual dict result instead of FlextCore.Result[None].ok()",
+                "Manual dict[str, object] result instead of FlextCore.Result[None].ok()",
             ),
             (
                 r'return\s+\{\s*["\']success["\']\s*:\s*False',
-                "Manual dict result instead of FlextCore.Result(success=False, )",
+                "Manual dict[str, object] result instead of FlextCore.Result(success=False, )",
             ),
             (
                 r'return\s+\{\s*["\']error["\']\s*:',
-                "Manual error dict instead of FlextCore.Result(success=False, )",
+                "Manual error dict[str, object] instead of FlextCore.Result(success=False, )",
             ),
             (
                 r"if\s+result\[0\]\s*:",
@@ -871,7 +871,7 @@ class FlextDuplicateDetector:
             ),
             (
                 r'if\s+result\[["\']success["\']\]\s*:',
-                "Manual dict access instead of FlextCore.Result[None].ok",
+                "Manual dict[str, object] access instead of FlextCore.Result[None].ok",
             ),
         ]
 

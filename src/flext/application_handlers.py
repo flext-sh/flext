@@ -150,12 +150,13 @@ class FlextApplicationHandlerService[T](FlextCore.Service[str]):
         """Initialize handler service with flext-core integration."""
         super().__init__()
         self._logger = FlextCore.Logger(__name__)
-        self._container = FlextCore.Container._ensure_global_manager().get_or_create()
+        self._container = FlextCore.Container.ensure_global_instance()
 
     class _HandlerFactory:
         """Direct access to flext-core handlers - ELIMINATES WRAPPER METHODS."""
 
         def __init__(self, service: FlextApplicationHandlerService[object]) -> None:
+            super().__init__()
             self._service = service
 
         # Direct class access - users can instantiate directly instead of using wrappers
@@ -167,6 +168,7 @@ class FlextApplicationHandlerService[T](FlextCore.Service[str]):
         """Nested factory for creating flext-core handler patterns."""
 
         def __init__(self, service: FlextApplicationHandlerService[object]) -> None:
+            super().__init__()
             self._service = service
 
         def create_handler_chain(
@@ -203,6 +205,7 @@ class FlextApplicationHandlerService[T](FlextCore.Service[str]):
         """Nested factory for creating CQRS buses."""
 
         def __init__(self, service: FlextApplicationHandlerService[object]) -> None:
+            super().__init__()
             self._service = service
 
         def create_command_bus(self: Self) -> FlextCore.Bus:
@@ -217,6 +220,7 @@ class FlextApplicationHandlerService[T](FlextCore.Service[str]):
         """Nested manager for handler registry operations."""
 
         def __init__(self, service: FlextApplicationHandlerService[object]) -> None:
+            super().__init__()
             self._service = service
             self._registry: FlextCore.Types.Dict = {}
 

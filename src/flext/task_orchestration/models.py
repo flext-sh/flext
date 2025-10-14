@@ -15,8 +15,8 @@ from enum import StrEnum
 from pathlib import Path
 
 from flext_core import FlextCore
-from pydantic import BaseModel, Field, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic_settings import SettingsConfigDict
 
 from .constants import FlextTaskOrchestrationConstants
 
@@ -63,10 +63,20 @@ class TaskDependency(FlextCore.Models.Value):
     )
     description: str | None = Field(None, description="Dependency description")
 
-    model_config = BaseModel.model_config | {
-        "frozen": True,  # Immutable value object
-        "use_enum_values": True,
-    }
+    model_config = ConfigDict(
+        validate_assignment=True,
+        validate_return=True,
+        validate_default=True,
+        use_enum_values=True,
+        arbitrary_types_allowed=True,
+        extra="forbid",
+        frozen=True,  # Immutable value object
+        strict=True,
+        str_strip_whitespace=True,
+        ser_json_timedelta="iso8601",
+        ser_json_bytes="base64",
+        hide_input_in_errors=True,
+    )
 
 
 class Task(FlextCore.Models.Entity):
@@ -75,13 +85,13 @@ class Task(FlextCore.Models.Entity):
     # Core fields
     title: str = Field(
         ...,
-        min_length=FlextTaskOrchestrationConstants.Validation.MIN_TITLE_LENGTH,
-        max_length=FlextTaskOrchestrationConstants.Validation.MAX_TITLE_LENGTH,
+        min_length=FlextTaskOrchestrationConstants.TaskValidation.MIN_TITLE_LENGTH,
+        max_length=FlextTaskOrchestrationConstants.TaskValidation.MAX_TITLE_LENGTH,
         description="Task title",
     )
     description: str = Field(
         ...,
-        min_length=FlextTaskOrchestrationConstants.Validation.MIN_DESCRIPTION_LENGTH,
+        min_length=FlextTaskOrchestrationConstants.TaskValidation.MIN_DESCRIPTION_LENGTH,
         description="Detailed task description",
     )
     type: TaskType = Field(default=TaskType.FEATURE, description="Task type")
@@ -124,18 +134,28 @@ class Task(FlextCore.Models.Entity):
     # Progress tracking
     progress_percentage: int = Field(
         default=0,
-        ge=FlextTaskOrchestrationConstants.Validation.MIN_PROGRESS_PERCENTAGE,
-        le=FlextTaskOrchestrationConstants.Validation.MAX_PROGRESS_PERCENTAGE,
+        ge=FlextTaskOrchestrationConstants.TaskValidation.MIN_PROGRESS_PERCENTAGE,
+        le=FlextTaskOrchestrationConstants.TaskValidation.MAX_PROGRESS_PERCENTAGE,
         description="Progress percentage",
     )
     notes: FlextCore.Types.StringList = Field(
         default_factory=list, description="Task notes and updates"
     )
 
-    model_config = BaseModel.model_config | {
-        "use_enum_values": True,
-        "validate_assignment": True,
-    }
+    model_config = ConfigDict(
+        validate_assignment=True,
+        validate_return=True,
+        validate_default=True,
+        use_enum_values=True,
+        arbitrary_types_allowed=True,
+        extra="forbid",
+        frozen=False,
+        strict=True,
+        str_strip_whitespace=True,
+        ser_json_timedelta="iso8601",
+        ser_json_bytes="base64",
+        hide_input_in_errors=True,
+    )
 
     @field_validator("dependencies")
     @classmethod
@@ -148,8 +168,8 @@ class Task(FlextCore.Models.Entity):
     @classmethod
     def validate_progress(cls, v: int) -> int:
         """Validate progress percentage using constants."""
-        min_val = FlextTaskOrchestrationConstants.Validation.MIN_PROGRESS_PERCENTAGE
-        max_val = FlextTaskOrchestrationConstants.Validation.MAX_PROGRESS_PERCENTAGE
+        min_val = FlextTaskOrchestrationConstants.TaskValidation.MIN_PROGRESS_PERCENTAGE
+        max_val = FlextTaskOrchestrationConstants.TaskValidation.MAX_PROGRESS_PERCENTAGE
         if v < min_val or v > max_val:
             raise ValueError(
                 FlextTaskOrchestrationConstants.Messages.INVALID_PROGRESS_PERCENTAGE
@@ -157,7 +177,7 @@ class Task(FlextCore.Models.Entity):
         return v
 
 
-class TaskOrchestrationConfig(BaseSettings):
+class TaskOrchestrationConfig(FlextCore.Config):
     """Task orchestration configuration extending FlextCore.Config patterns."""
 
     model_config = SettingsConfigDict(
@@ -165,6 +185,15 @@ class TaskOrchestrationConfig(BaseSettings):
         env_prefix="FLEXT_TASK_ORCHESTRATION_",
         use_enum_values=True,
         validate_assignment=True,
+        validate_return=True,
+        validate_default=True,
+        strict=True,
+        str_strip_whitespace=True,
+        extra="forbid",
+        frozen=False,
+        ser_json_timedelta="iso8601",
+        ser_json_bytes="base64",
+        hide_input_in_errors=True,
     )
 
     # Directory structure
@@ -182,23 +211,33 @@ class TaskOrchestrationConfig(BaseSettings):
     # Agent configuration
     max_agents: int = Field(
         default=FlextTaskOrchestrationConstants.Configuration.DEFAULT_MAX_AGENTS,
-        ge=FlextTaskOrchestrationConstants.Validation.MIN_AGENTS,
-        le=FlextTaskOrchestrationConstants.Validation.MAX_AGENTS,
+        ge=FlextTaskOrchestrationConstants.TaskValidation.MIN_AGENTS,
+        le=FlextTaskOrchestrationConstants.TaskValidation.MAX_AGENTS,
         description="Maximum number of agents",
     )
     parallel_tasks: int = Field(
         default=FlextTaskOrchestrationConstants.Configuration.DEFAULT_PARALLEL_TASKS,
-        ge=FlextTaskOrchestrationConstants.Validation.MIN_PARALLEL_TASKS,
-        le=FlextTaskOrchestrationConstants.Validation.MAX_PARALLEL_TASKS,
+        ge=FlextTaskOrchestrationConstants.TaskValidation.MIN_PARALLEL_TASKS,
+        le=FlextTaskOrchestrationConstants.TaskValidation.MAX_PARALLEL_TASKS,
         description="Maximum parallel tasks",
     )
 
     # Task constraints
     max_task_duration_days: int = Field(
         default=FlextTaskOrchestrationConstants.Configuration.DEFAULT_MAX_TASK_DURATION_DAYS,
-        ge=FlextTaskOrchestrationConstants.Validation.MIN_TASK_DURATION_DAYS,
-        le=FlextTaskOrchestrationConstants.Validation.MAX_TASK_DURATION_DAYS,
+        ge=FlextTaskOrchestrationConstants.TaskValidation.MIN_TASK_DURATION_DAYS,
+        le=FlextTaskOrchestrationConstants.TaskValidation.MAX_TASK_DURATION_DAYS,
         description="Maximum task duration in days",
+    )
+    min_estimation_hours: float = Field(
+        default=FlextTaskOrchestrationConstants.Configuration.DEFAULT_MIN_ESTIMATION_HOURS,
+        ge=0.1,
+        description="Minimum estimation hours for tasks",
+    )
+    max_estimation_hours: float = Field(
+        default=FlextTaskOrchestrationConstants.Configuration.DEFAULT_MAX_ESTIMATION_HOURS,
+        ge=0.1,
+        description="Maximum estimation hours for tasks",
     )
     auto_assign: bool = Field(
         default=FlextTaskOrchestrationConstants.Configuration.DEFAULT_AUTO_ASSIGN,
@@ -213,6 +252,21 @@ class TaskOrchestrationConfig(BaseSettings):
 
 class TaskOrchestrationResult(BaseModel):
     """Result of task orchestration operation."""
+
+    model_config = ConfigDict(
+        validate_assignment=True,
+        validate_return=True,
+        validate_default=True,
+        use_enum_values=True,
+        arbitrary_types_allowed=True,
+        extra="forbid",
+        frozen=False,
+        strict=True,
+        str_strip_whitespace=True,
+        ser_json_timedelta="iso8601",
+        ser_json_bytes="base64",
+        hide_input_in_errors=True,
+    )
 
     success: bool = Field(..., description="Operation success status")
     message: str = Field(..., description="Result message")
@@ -248,6 +302,21 @@ class TaskOrchestrationResult(BaseModel):
 class TaskExecutionPlan(FlextCore.Models.AggregateRoot):
     """Task execution plan with dependencies and scheduling."""
 
+    model_config = ConfigDict(
+        validate_assignment=True,
+        validate_return=True,
+        validate_default=True,
+        use_enum_values=True,
+        arbitrary_types_allowed=True,
+        extra="forbid",
+        frozen=False,
+        strict=True,
+        str_strip_whitespace=True,
+        ser_json_timedelta="iso8601",
+        ser_json_bytes="base64",
+        hide_input_in_errors=True,
+    )
+
     plan_id: str = Field(default_factory=lambda: f"PLAN-{uuid.uuid4().hex[:8].upper()}")
     name: str = Field(..., description="Plan name")
     description: str = Field(..., description="Plan description")
@@ -275,7 +344,3 @@ class TaskExecutionPlan(FlextCore.Models.AggregateRoot):
     )
     start_date: datetime | None = Field(None, description="Plan start date")
     end_date: datetime | None = Field(None, description="Plan end date")
-
-    model_config = BaseModel.model_config | {
-        "use_enum_values": True,
-    }

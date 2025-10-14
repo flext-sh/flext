@@ -73,8 +73,8 @@ class FlextTaskOrchestrationConstants(FlextCore.Constants):
         IMPLEMENTATION_EFFORT = 4.0
         SUBTASK_DEFAULT_HOURS = 1.0
 
-    class Validation:
-        """Validation constants."""
+    class TaskValidation:
+        """Task validation constants."""
 
         MIN_TITLE_LENGTH = 1
         MAX_TITLE_LENGTH = 200
@@ -88,8 +88,8 @@ class FlextTaskOrchestrationConstants(FlextCore.Constants):
         MIN_TASK_DURATION_DAYS = 1
         MAX_TASK_DURATION_DAYS = 365
 
-    class Patterns:
-        """Regex patterns for parsing."""
+    class TaskPatterns:
+        """Task parsing regex patterns."""
 
         NUMBERED_LIST = r"^(\d+)[\.\)]\s*(.+)"
         BULLET_POINT = r"^[-*]\s*(.+)"

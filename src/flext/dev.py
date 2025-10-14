@@ -52,6 +52,7 @@ class FlextAdvancedDevToolsManager(
         """Nested project discovery service."""
 
         def __init__(self, manager: FlextAdvancedDevToolsManager) -> None:
+            super().__init__()
             self._manager = manager
 
         def discover_projects(
@@ -130,6 +131,7 @@ class FlextAdvancedDevToolsManager(
         """Nested operation executor with advanced patterns."""
 
         def __init__(self, manager: FlextAdvancedDevToolsManager) -> None:
+            super().__init__()
             self._manager = manager
 
         def create_test_operation(

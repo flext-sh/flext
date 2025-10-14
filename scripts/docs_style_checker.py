@@ -46,12 +46,12 @@ class StyleCheckResults:
 class DocumentationStyleChecker:
     """Comprehensive documentation style checker."""
 
-    def __init__(self, config: dict | None = None) -> None:
+    def __init__(self, config: dict[str, object] | None = None) -> None:
         self.config = config or self.default_config()
         self.style_rules = self.config.get("style_rules", {})
         self.content_rules = self.config.get("content_rules", {})
 
-    def default_config(self) -> dict:
+    def default_config(self) -> dict[str, object]:
         """Default configuration for style checking."""
         return {
             "style_rules": {

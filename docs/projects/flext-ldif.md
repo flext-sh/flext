@@ -229,7 +229,7 @@ if migration_result.is_success:
 from flext_core import FlextCore
 
 # Create custom processor
-def custom_validation(entry: dict) -> dict:
+def custom_validation(entry: dict) -> dict[str, object]:
     # Custom validation logic
     if 'uid' in entry.get('attributes', {}):
         uid = entry['attributes']['uid'][0]

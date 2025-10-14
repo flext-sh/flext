@@ -73,12 +73,13 @@ class FlextApplicationPipelineService(FlextCore.Service[str]):
         """Initialize pipeline service with flext-core integration."""
         super().__init__()
         self._logger = FlextCore.Logger(__name__)
-        self._container = FlextCore.Container._ensure_global_manager().get_or_create()
+        self._container = FlextCore.Container.ensure_global_instance()
 
     class _PipelineFactory:
         """Direct access to flext-core pipelines - ELIMINATES WRAPPER METHODS."""
 
         def __init__(self, service: FlextApplicationPipelineService) -> None:
+            super().__init__()
             self._service = service
 
         def create_pipeline(
@@ -95,6 +96,7 @@ class FlextApplicationPipelineService(FlextCore.Service[str]):
         """Nested factory for creating pipeline services."""
 
         def __init__(self, service: FlextApplicationPipelineService) -> None:
+            super().__init__()
             self._service = service
 
         def create_simple_service(self: Self) -> FlextApplicationPipelineService:
@@ -105,6 +107,7 @@ class FlextApplicationPipelineService(FlextCore.Service[str]):
         """Nested factory for creating orchestrators."""
 
         def __init__(self, service: FlextApplicationPipelineService) -> None:
+            super().__init__()
             self._service = service
 
         def create_orchestrator(self: Self) -> FlextApplicationPipelineService:

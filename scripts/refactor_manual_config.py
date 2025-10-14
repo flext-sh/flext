@@ -19,7 +19,7 @@ def find_manual_config_patterns() -> FlextCore.Result[
     """Find files with manual configuration patterns.
 
     Returns:
-      FlextCore.Result containing dict of pattern types to file lists.
+      FlextCore.Result containing dict[str, object] of pattern types to file lists.
 
     """
     try:

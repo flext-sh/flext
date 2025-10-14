@@ -15,7 +15,7 @@ from pathlib import Path
 
 from flext_core import FlextCore
 
-from .models import Task, TaskOrchestrationConfig
+from .models import Task, TaskOrchestrationConfig, TaskOrchestrationResult
 from .services import TaskOrchestrationService
 
 
@@ -24,6 +24,7 @@ class TaskOrchestrationCli:
 
     def __init__(self) -> None:
         """Initialize task orchestration CLI."""
+        super().__init__()
         self.logger = FlextCore.Logger(__name__)
         self._service: TaskOrchestrationService | None = None
 
@@ -94,6 +95,10 @@ class TaskOrchestrationCli:
             self.logger.info("Running analyze-only mode")
 
             # Use orchestrator for requirement clarification only
+            if not self._service or not self._service.orchestrator:
+                return FlextCore.Result[None].fail(
+                    "Task orchestration service not initialized"
+                )
             requirements_result = self._service.orchestrator.clarify_requirements(
                 input_data, context
             )
@@ -112,7 +117,7 @@ class TaskOrchestrationCli:
             self.logger.exception(error)
             return FlextCore.Result[None].fail(error)
 
-    def _display_orchestration_results(self, result: object) -> None:
+    def _display_orchestration_results(self, result: TaskOrchestrationResult) -> None:
         """Display orchestration results to user."""
         if result.task_ids:
             for _task_id in result.task_ids[:10]:  # Show first 10
@@ -132,8 +137,11 @@ class TaskOrchestrationCli:
 
     def _display_analysis_results(self, requirements_data: dict[str, object]) -> None:
         """Display analysis results for analyze-only mode."""
-        requirements = requirements_data.get("requirements", [])
-        questions = requirements_data.get("questions", [])
+        requirements: list[dict[str, object]] = requirements_data.get(
+            "requirements",
+            [],  # type: ignore
+        )
+        questions: list[str] = requirements_data.get("questions", [])  # type: ignore
         focus_area = requirements_data.get("focus_area")
 
         if focus_area:
@@ -222,7 +230,7 @@ class TaskOrchestrationCli:
 
             try:
                 new_status_enum = TaskStatus(new_status)
-                task.update_status(new_status_enum, f"Moved to {new_status}")
+                task.status = new_status_enum
             except ValueError:
                 return FlextCore.Result[None].fail(f"Invalid status: {new_status}")
 
@@ -330,7 +338,7 @@ class TaskOrchestrationCli:
         # Summary
         status_counts = {}
         for task in tasks:
-            status = task.status.value
+            status = str(task.status.value)
             status_counts[status] = status_counts.get(status, 0) + 1
 
         for status in status_counts:
@@ -349,10 +357,15 @@ class TaskOrchestrationCli:
             "orchestration_dir": str(orchestration_dir),
             "generated_at": datetime.now(UTC).isoformat(),
             "total_tasks": len(tasks),
-            "tasks": [task.model_dump() for task in tasks],
+            "tasks": [
+                task.model_dump()
+                for task in tasks
+                if hasattr(task, "model_dump")
+                and callable(getattr(task, "model_dump", None))
+            ],
         }
 
-    def _load_tasks_from_directory(self, orchestration_dir: Path) -> list[object]:
+    def _load_tasks_from_directory(self, orchestration_dir: Path) -> list[Task]:
         """Load tasks from orchestration directory."""
         tasks = []
         tasks_dir = orchestration_dir / "tasks"

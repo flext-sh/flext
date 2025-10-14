@@ -10,6 +10,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -45,6 +46,7 @@ class FlextControlPanelCli(FlextCore.Service[str]):
         """Temporary quality check config to avoid circular imports."""
 
         def __init__(self, **kwargs: object) -> None:
+            super().__init__()
             for key, value in kwargs.items():
                 setattr(self, key, value)
 
@@ -54,6 +56,7 @@ class FlextControlPanelCli(FlextCore.Service[str]):
         """Temporary quality gateway to avoid circular imports."""
 
         def __init__(self, workspace_path: Path | str) -> None:
+            super().__init__()
             self.workspace_path = str(workspace_path)
 
         def run_quality_checks_safe(
@@ -155,6 +158,7 @@ class FlextControlPanelCli(FlextCore.Service[str]):
         """Nested CLI context management."""
 
         def __init__(self, config: FlextCliContext, workspace: Path) -> None:
+            super().__init__()
             self.config = config
             self.workspace = workspace
             self.output_format = "table"
@@ -163,6 +167,7 @@ class FlextControlPanelCli(FlextCore.Service[str]):
         """Nested tools command handlers."""
 
         def __init__(self, cli_service: FlextControlPanelCli) -> None:
+            super().__init__()
             self._cli_service = cli_service
 
         def quality_check(
@@ -240,6 +245,7 @@ class FlextControlPanelCli(FlextCore.Service[str]):
         """Nested main command handlers."""
 
         def __init__(self, cli_service: FlextControlPanelCli) -> None:
+            super().__init__()
             self._cli_service = cli_service
             self._orchestration_cli = TaskOrchestrationCli()
 
@@ -407,7 +413,7 @@ class FlextControlPanelCli(FlextCore.Service[str]):
                 # Convert context to proper type
                 context_dict = None
                 if context:
-                    context_dict = dict(context.items())
+                    context_dict = dict[str, object](context.items())
 
                 result = self._orchestration_cli.orchestrate_command(
                     input_data=input_data,
@@ -590,14 +596,16 @@ def scripts(category: str | None = None, *, _list_only: bool = True) -> None:
     tools_handler.list_scripts(category)
 
 
-def analysis(analysis_type: str | dict = "structure") -> None:
+def analysis(analysis_type: str | dict[str, object] = "structure") -> None:
     """Legacy function - use FlextControlPanelCli._ToolsCommands.run_analysis instead."""
     cli_service = create_cli()
     tools_handler = cli_service.create_tools_handler()
-    # Handle both string and dict inputs
+    # Handle both string and dict[str, object] inputs
     if isinstance(analysis_type, dict):
-        analysis_type = analysis_type.get("type", "structure")
-    tools_handler.run_analysis(analysis_type)
+        analysis_type_str: str = str(analysis_type.get("type", "structure"))
+    else:
+        analysis_type_str: str = analysis_type
+    tools_handler.run_analysis(analysis_type_str)
 
 
 def lint(*, fix: bool = False) -> None:
@@ -610,7 +618,6 @@ def lint(*, fix: bool = False) -> None:
     if result.is_failure:
         # Linting failed - error already logged by handler
         # Only exit in non-test environments
-        import os
 
         if "PYTEST_CURRENT_TEST" not in os.environ:
             sys.exit(1)
