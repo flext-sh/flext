@@ -422,7 +422,7 @@ classDiagram
 classDiagram
     class FlextCore.Config {
         <<Singleton>>
-        -Dict~str, Any~ settings
+        -Dict~str, object~ settings
         -ConfigSource source
         +get~T~(key, default_value) T
         +set(key, value) None
@@ -434,26 +434,26 @@ classDiagram
 
     class ConfigSource {
         <<Abstract Base Class>>
-        +load_settings() Dict~str, Any~
+        +load_settings() Dict~str, object~
         +save_settings(settings) None
         +validate_settings(settings) bool
     }
 
     class EnvironmentConfigSource {
-        +load_settings() Dict~str, Any~
+        +load_settings() Dict~str, object~
         +get_env_var(key, default_value) str
     }
 
     class FileConfigSource {
         +str file_path
         +ConfigFormat format
-        +load_settings() Dict~str, Any~
+        +load_settings() Dict~str, object~
         +save_settings(settings) None
     }
 
     class DatabaseConfigSource {
         +str connection_string
-        +load_settings() Dict~str, Any~
+        +load_settings() Dict~str, object~
         +save_settings(settings) None
     }
 

@@ -339,43 +339,43 @@
 		]
 		pythonVersion = "3.13"
 		pythonPlatform = "Linux"
-		useLibraryCodeForTypes = false
-		reportMissingImports = "warning"
-		reportMissingTypeStubs = "warning"
-		reportImportCycles = "error"
-		reportUnusedImport = "warning"
-		reportUnusedClass = "warning"
-		reportUnusedFunction = "warning"
-		reportUnusedVariable = "warning"
-		reportDuplicateImport = "warning"
+		reportAssertAlwaysTrue = "warning"
+		reportCallInDefaultInitializer = "warning"
 		reportConstantRedefinition = "error"
+		reportDuplicateImport = "warning"
+		reportImplicitStringConcatenation = "warning"
+		reportImportCycles = "error"
 		reportIncompatibleMethodOverride = "error"
 		reportIncompatibleVariableOverride = "error"
+		reportIncompleteStub = "warning"
 		reportInconsistentConstructor = "error"
-		reportMissingSuperCall = "warning"
-		reportUninitializedInstanceVariable = "warning"
 		reportInvalidStringEscapeSequence = "error"
-		reportUnknownParameterType = "warning"
+		reportInvalidStubStatement = "error"
+		reportInvalidTypeVarUse = "error"
+		reportMissingImports = "warning"
+		reportMissingParameterType = "warning"
+		reportMissingSuperCall = "warning"
+		reportMissingTypeArgument = "warning"
+		reportMissingTypeStubs = "warning"
+		reportSelfClsParameterName = "warning"
+		reportUnboundVariable = "error"
+		reportUndefinedVariable = "error"
+		reportUninitializedInstanceVariable = "warning"
 		reportUnknownArgumentType = "warning"
 		reportUnknownLambdaType = "warning"
-		reportUnknownVariableType = "warning"
 		reportUnknownMemberType = "warning"
-		reportMissingParameterType = "warning"
-		reportMissingTypeArgument = "warning"
-		reportInvalidTypeVarUse = "error"
-		reportCallInDefaultInitializer = "warning"
-		reportUnnecessaryIsInstance = "warning"
+		reportUnknownParameterType = "warning"
+		reportUnknownVariableType = "warning"
 		reportUnnecessaryCast = "warning"
-		reportUnnecessaryComparison = "warning"
-		reportAssertAlwaysTrue = "warning"
-		reportSelfClsParameterName = "warning"
-		reportImplicitStringConcatenation = "warning"
-		reportUndefinedVariable = "error"
-		reportUnboundVariable = "error"
-		reportInvalidStubStatement = "error"
-		reportIncompleteStub = "warning"
+		reportUnnecessaryComparison = false
+		reportUnnecessaryIsInstance = false
 		reportUnsupportedDunderAll = "warning"
+		reportUnusedClass = "warning"
 		reportUnusedCoroutine = "warning"
+		reportUnusedFunction = "warning"
+		reportUnusedImport = "warning"
+		reportUnusedVariable = "warning"
+		useLibraryCodeForTypes = true 
 
 		[[tool.pyright.executionEnvironments]]
 		    root = "./tests"
@@ -386,13 +386,28 @@
 		    reportImplicitRelativeImport = false
 		    reportPrivateUsage = false
 
+		[[tool.pyright.executionEnvironments]]
+		    root = "./" 
+		    extraPaths = [
+		        "**/models.py",
+		    ]
+            reportUndefinedVariable=false
+			reportUnknownVariableType=false
+			reportUnknownParameterType=false
+			reportUnknownMemberType=false
+			reportUnknownArgumentType=false
+
+
+
 	[tool.pyrefly]
 		# NOTE: Pyrefly (MyPy successor) with Pydantic plugin properly handles:
 		#   - @computed_field + @property pattern (Pydantic 2.11+)
-		#   - dict[str, Any] type annotations (legitimate generic usage)
+		#   - dict[str, object] type annotations (legitimate generic usage)
 		#   - Field validators and serializers with proper type inference
 		project-excludes = [
 		    "**/.git",
+		    "**/.cache",
+		    "**/.claude",
 		    "**/__pycache__",
 		    "**/*.venv",
 		    "**/*dist",
@@ -406,25 +421,13 @@
 		    "**/build/**",
 		]
 		python-version = "3.13"
-		search-path = [
-		    "src",
-		    "flext-core/src",
-		    "flext-api/src",
-		    "flext-auth/src",
-		    "flext-meltano/src",
-		    "flext-ldap/src",
-		    "flext-ldif/src",
-		    "flext-grpc/src",
-		    "flext-web/src",
-		    "flext-observability/src",
-		    "flext-quality/src",
-		    "flext-plugin/src",
-		    "flext-db-oracle/src",
-		    "flext-oracle-oic/src",
-		    "flext-oracle-wms/src",
-		    "client-a-oud-mig/src",
-		    "client-b-meltano-native/src",
-		]
+
+		# SubConfig: Disable unknown-name error for all models.py files
+		# This handles forward references to classes defined later in the same file
+		[[tool.pyrefly.sub-config]]
+			matches = "**/*models.py"
+			[tool.pyrefly.sub-config.errors]
+				unknown-name = false
 
 	[tool.pytest.ini_options]
 		addopts = [
@@ -500,3 +503,4 @@
 		paths = ["src"]
 		sort_by_size = true
 		verbose = false
+

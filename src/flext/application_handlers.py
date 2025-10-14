@@ -25,7 +25,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 
 T = TypeVar("T")
 
-# Any types allowed for test compatibility interfaces
+# object types allowed for test compatibility interfaces
 # Use flext-core FlextCore.Handlers exclusively - NO LOCAL IMPLEMENTATIONS
 
 

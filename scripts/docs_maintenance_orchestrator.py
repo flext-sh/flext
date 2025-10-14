@@ -11,7 +11,6 @@ import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 from flext_core import FlextCore
 
@@ -21,10 +20,10 @@ class MaintenanceResults:
     """Comprehensive maintenance results."""
 
     timestamp: datetime
-    audit_results: dict[str, Any] = field(default_factory=dict)
-    validation_results: dict[str, Any] = field(default_factory=dict)
-    optimization_results: dict[str, Any] = field(default_factory=dict)
-    sync_results: dict[str, Any] = field(default_factory=dict)
+    audit_results: dict[str, object] = field(default_factory=dict)
+    validation_results: dict[str, object] = field(default_factory=dict)
+    optimization_results: dict[str, object] = field(default_factory=dict)
+    sync_results: dict[str, object] = field(default_factory=dict)
     reports_generated: FlextCore.Types.StringList = field(default_factory=list)
     errors: FlextCore.Types.StringList = field(default_factory=list)
     warnings: FlextCore.Types.StringList = field(default_factory=list)
@@ -45,7 +44,7 @@ class DocumentationMaintenanceOrchestrator:
         self.style_checker = None
         self.sync_system = None
 
-    def load_config(self) -> dict[str, Any]:
+    def load_config(self) -> dict[str, object]:
         """Load configuration from file or use defaults."""
         default_config = {
             "output_dir": "docs/reports",
@@ -93,7 +92,7 @@ class DocumentationMaintenanceOrchestrator:
             print("Make sure all maintenance scripts are in the scripts/ directory")
             sys.exit(1)
 
-    def run_comprehensive_audit(self, verbose: bool = False) -> dict[str, Any]:
+    def run_comprehensive_audit(self, verbose: bool = False) -> dict[str, object]:
         """Run comprehensive documentation audit."""
         if not self.maintenance_system:
             self.initialize_subsystems()
@@ -135,7 +134,7 @@ class DocumentationMaintenanceOrchestrator:
             print(f"❌ {error_msg}")
             return {"error": error_msg}
 
-    def run_link_validation(self, verbose: bool = False) -> dict[str, Any]:
+    def run_link_validation(self, verbose: bool = False) -> dict[str, object]:
         """Run comprehensive link validation."""
         if not self.link_validator:
             self.initialize_subsystems()
@@ -206,7 +205,7 @@ class DocumentationMaintenanceOrchestrator:
             print(f"❌ {error_msg}")
             return {"error": error_msg}
 
-    def run_style_checking(self, verbose: bool = False) -> dict[str, Any]:
+    def run_style_checking(self, verbose: bool = False) -> dict[str, object]:
         """Run comprehensive style checking."""
         if not self.style_checker:
             self.initialize_subsystems()
@@ -255,7 +254,7 @@ class DocumentationMaintenanceOrchestrator:
 
     def run_optimization(
         self, dry_run: bool = False, verbose: bool = False
-    ) -> dict[str, Any]:
+    ) -> dict[str, object]:
         """Run content optimization."""
         if not self.maintenance_system:
             self.initialize_subsystems()
@@ -282,7 +281,7 @@ class DocumentationMaintenanceOrchestrator:
 
     def run_synchronization(
         self, dry_run: bool = False, verbose: bool = False
-    ) -> dict[str, Any]:
+    ) -> dict[str, object]:
         """Run synchronization with version control."""
         if not self.sync_system:
             self.initialize_subsystems()

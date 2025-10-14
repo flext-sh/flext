@@ -95,7 +95,7 @@ except ImportError as e:
 
 ```python
 # Error
-error: Argument 1 to "process" has incompatible type "str"; expected "dict[str, Any]"
+error: Argument 1 to "process" has incompatible type "str"; expected "dict[str, object]"
 ```
 
 #### Solutions
@@ -108,7 +108,7 @@ def process(data):
     return data
 
 # ✅ CORRECT
-def process(data: dict[str, Any]) -> FlextCore.Result[ProcessedData]:
+def process(data: dict[str, object]) -> FlextCore.Result[ProcessedData]:
     return FlextCore.Result.ok(ProcessedData(**data))
 ```
 

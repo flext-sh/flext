@@ -17,7 +17,6 @@ import sys
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 from flext_core import FlextCore
 
@@ -63,13 +62,15 @@ class LinkRepair:
 class SmartDocumentationOptimizer:
     """Intelligent documentation optimization system."""
 
-    def __init__(self, root_path: Path, config: dict[str, Any] | None = None) -> None:
+    def __init__(
+        self, root_path: Path, config: dict[str, object] | None = None
+    ) -> None:
         self.root_path = root_path
         self.config = config or self._default_config()
         self.optimization_results: list[OptimizationResult] = []
         self.link_repairs: list[LinkRepair] = []
 
-    def _default_config(self) -> dict[str, Any]:
+    def _default_config(self) -> dict[str, object]:
         """Default configuration for optimization."""
         return {
             "max_line_length": 88,

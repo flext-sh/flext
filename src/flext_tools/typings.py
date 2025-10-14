@@ -8,8 +8,6 @@ from __future__ import annotations
 
 from typing import TypedDict
 
-from flext_core import FlextCore
-
 
 class FlextToolsTypes:
     """FlextTools types namespace extending flext-core."""

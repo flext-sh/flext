@@ -16,7 +16,6 @@ import sys
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
 
 from flext_core import FlextCore
 
@@ -91,7 +90,9 @@ class TrendData:
 class DocumentationHealthMonitor:
     """Real-time documentation health monitoring system."""
 
-    def __init__(self, root_path: Path, config: dict[str, Any] | None = None) -> None:
+    def __init__(
+        self, root_path: Path, config: dict[str, object] | None = None
+    ) -> None:
         self.root_path = root_path
         self.config = config or self._default_config()
         self.health_scores: list[HealthScore] = []
@@ -99,7 +100,7 @@ class DocumentationHealthMonitor:
         self.trends: dict[str, TrendData] = {}
         self.metrics_history: dict[str, list[tuple[datetime, float]]] = {}
 
-    def _default_config(self) -> dict[str, Any]:
+    def _default_config(self) -> dict[str, object]:
         """Default configuration for health monitoring."""
         return {
             "health_thresholds": {
@@ -396,7 +397,7 @@ class DocumentationHealthMonitor:
                 if ts >= cutoff_date
             ]
 
-    def run_health_check(self) -> dict[str, Any]:
+    def run_health_check(self) -> dict[str, object]:
         """Run comprehensive health check."""
         print("🏥 Running Documentation Health Check...")
 
@@ -452,7 +453,7 @@ class DocumentationHealthMonitor:
 
     def _generate_health_summary(
         self, health_scores: list[HealthScore], alerts: list[Alert]
-    ) -> dict[str, Any]:
+    ) -> dict[str, object]:
         """Generate health summary statistics."""
         if not health_scores:
             return {}

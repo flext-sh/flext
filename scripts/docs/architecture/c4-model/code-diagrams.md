@@ -19,9 +19,9 @@ class FlextCore.Result {
 }
 
 class FlextCore.Container {
-    -_services: Dict[str, Any]
-    +register(name: str, service: Any)
-    +resolve(name: str): Any
+    -_services: Dict[str, object]
+    +register(name: str, service: object)
+    +resolve(name: str): object
     +get_global(): FlextCore.Container
 }
 
@@ -127,7 +127,7 @@ class FlextCore.Container:
     _instance: Optional['FlextCore.Container'] = None
 
     def __init__(self):
-        self._services: Dict[str, Any] = {}
+        self._services: Dict[str, object] = {}
 
     @classmethod
     def get_global(cls) -> 'FlextCore.Container':
@@ -135,10 +135,10 @@ class FlextCore.Container:
             cls._instance = cls()
         return cls._instance
 
-    def register(self, name: str, service: Any) -> None:
+    def register(self, name: str, service: object) -> None:
         self._services[name] = service
 
-    def resolve(self, name: str) -> Any:
+    def resolve(self, name: str) -> object:
         if name not in self._services:
             raise ValueError(f"Service '{name}' not registered")
         return self._services[name]
