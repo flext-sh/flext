@@ -818,8 +818,6 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
         self, tasks: list[Task]
     ) -> list[dict[str, object]]:
         """Detect circular dependencies."""
-        conflicts = []
-
         # Build dependency graph
         graph = {task.id: [] for task in tasks}
         for task in tasks:
@@ -847,19 +845,18 @@ class FlextTaskOrchestration(FlextCore.Service[TaskOrchestrationConfig]):
             rec_stack.remove(node)
             return False
 
-        for task_id in graph:
-            if task_id not in visited:
-                if has_cycle(task_id):
-                    conflicts.append({
-                        "type": FlextTaskOrchestrationConstants.ConflictTypes.CIRCULAR_DEPENDENCY,
-                        "description": FlextTaskOrchestrationConstants.Messages.CIRCULAR_DEPENDENCY_DETECTED.format(
-                            task_id=task_id
-                        ),
-                        "affected_tasks": [task_id],
-                        "severity": FlextTaskOrchestrationConstants.SeverityLevels.CRITICAL,
-                    })
-
-        return conflicts
+        return [
+            {
+                "type": FlextTaskOrchestrationConstants.ConflictTypes.CIRCULAR_DEPENDENCY,
+                "description": FlextTaskOrchestrationConstants.Messages.CIRCULAR_DEPENDENCY_DETECTED.format(
+                    task_id=task_id
+                ),
+                "affected_tasks": [task_id],
+                "severity": FlextTaskOrchestrationConstants.SeverityLevels.CRITICAL,
+            }
+            for task_id in graph
+            if task_id not in visited and has_cycle(task_id)
+        ]
 
     def _detect_priority_conflicts(self, tasks: list[Task]) -> list[dict[str, object]]:
         """Detect priority conflicts."""

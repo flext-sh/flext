@@ -173,7 +173,7 @@ class Task(FlextCore.Models.Entity):
         max_val = FlextTaskOrchestrationConstants.TaskValidation.MAX_PROGRESS_PERCENTAGE
         if v < min_val or v > max_val:
             raise ValueError(
-                FlextTaskOrchestrationConstants.Messages.INVALID_PROGRESS_PERCENTAGE
+                FlextTaskOrchestrationConstants.TaskMessages.INVALID_PROGRESS_PERCENTAGE
             )
         return v
 

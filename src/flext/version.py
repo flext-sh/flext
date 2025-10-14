@@ -10,6 +10,7 @@ class FlextVersion:
 
     def __init__(self) -> None:
         """Initialize version metadata."""
+        super().__init__()
         self.version = "0.1.0"
         self.version_info = (0, 1, 0)
 

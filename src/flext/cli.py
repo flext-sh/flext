@@ -616,12 +616,10 @@ def lint(*, fix: bool = False) -> None:
 
     result = main_handler.lint_command(fix=fix)
 
-    if result.is_failure:
+    if result.is_failure and "PYTEST_CURRENT_TEST" not in os.environ:
         # Linting failed - error already logged by handler
         # Only exit in non-test environments
-
-        if "PYTEST_CURRENT_TEST" not in os.environ:
-            sys.exit(1)
+        sys.exit(1)
     # Lint command returns success, continue execution
 
 

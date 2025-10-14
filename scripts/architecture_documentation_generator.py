@@ -254,15 +254,21 @@ class ArchitectureDocumentationGenerator:
                     component.dependencies.append("flext-core")
 
                 # Add domain-specific dependencies
-                if "ldap" in component.name:
-                    if "flext-ldap" not in component.dependencies:
-                        component.dependencies.append("flext-ldap")
-                if "ldif" in component.name:
-                    if "flext-ldif" not in component.dependencies:
-                        component.dependencies.append("flext-ldif")
-                if "oracle" in component.name:
-                    if "flext-oracle" not in component.dependencies:
-                        component.dependencies.append("flext-oracle")
+                if (
+                    "ldap" in component.name
+                    and "flext-ldap" not in component.dependencies
+                ):
+                    component.dependencies.append("flext-ldap")
+                if (
+                    "ldif" in component.name
+                    and "flext-ldif" not in component.dependencies
+                ):
+                    component.dependencies.append("flext-ldif")
+                if (
+                    "oracle" in component.name
+                    and "flext-oracle" not in component.dependencies
+                ):
+                    component.dependencies.append("flext-oracle")
 
             # Create relationship tuples
             for dep in component.dependencies:

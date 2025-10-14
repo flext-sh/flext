@@ -299,6 +299,11 @@
             types-ujson = "^5.10.0.20250326"
         types-ldap3 = "^2.9.13.20250622"
 
+
+[tool.poetry.group.docs.dependencies]
+seaborn = "^0.13.2"
+matplotlib = "^3.10.7"
+
 	[tool.pydantic-mypy]
 		init_forbid_extra = true
 		init_typed = true
