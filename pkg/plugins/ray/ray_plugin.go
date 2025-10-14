@@ -478,7 +478,7 @@ def execute_distributed_pipeline(params):
             "status": "completed",
             "execution_mode": "distributed",
             "nodes_used": ray.cluster_resources(),
-            "start_time": datetime.now().isoformat(),
+            "start_time": datetime.now(UTC).isoformat(),
             "distributed": True
         }
         

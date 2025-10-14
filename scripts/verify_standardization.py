@@ -137,11 +137,12 @@ def verify_constants_file(project_dir: Path, package_name: str) -> dict[str, boo
     ]
 
     for pattern, _name in hardcoded_patterns:
-        if re.search(pattern, content, re.MULTILINE):
-            # Check if it's using __version__ variable instead
-            if "VERSION = __version__" not in content:
-                results["no_hardcoded_metadata"] = False
-                break
+        if (
+            re.search(pattern, content, re.MULTILINE)
+            and "VERSION = __version__" not in content
+        ):
+            results["no_hardcoded_metadata"] = False
+            break
 
     return results
 

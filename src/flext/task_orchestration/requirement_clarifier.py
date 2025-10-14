@@ -61,7 +61,7 @@ class RequirementClarifier:
             if isinstance(input_data, Path):
                 if not input_data.exists():
                     return FlextCore.Result[dict[str, object]].fail(
-                        FlextTaskOrchestrationConstants.Messages.FILE_NOT_FOUND.format(
+                        FlextTaskOrchestrationConstants.TaskMessages.FILE_NOT_FOUND.format(
                             path=input_data
                         )
                     )
@@ -93,14 +93,14 @@ class RequirementClarifier:
             }
 
             self._logger.info(
-                FlextTaskOrchestrationConstants.Messages.REQUIREMENTS_CLARIFIED.format(
+                FlextTaskOrchestrationConstants.TaskMessages.REQUIREMENTS_CLARIFIED.format(
                     count=len(requirements)
                 )
             )
             return FlextCore.Result[dict[str, object]].ok(result)
 
         except Exception as e:
-            error = FlextTaskOrchestrationConstants.Messages.REQUIREMENT_CLARIFICATION_FAILED.format(
+            error = FlextTaskOrchestrationConstants.TaskMessages.REQUIREMENT_CLARIFICATION_FAILED.format(
                 error=str(e)
             )
             self._logger.exception(error)
@@ -188,13 +188,22 @@ class RequirementClarifier:
         filtered = []
 
         for req in requirements:
-            title_lower = req.get("title", "").lower()
-            desc_lower = req.get("description", "").lower()
+            title_str = str(req.get("title", ""))
+            desc_str = str(req.get("description", ""))
+            title_lower = title_str.lower()
+            desc_lower = desc_str.lower()
+            tags_list = req.get("tags", [])
 
             if (
                 focus_lower in title_lower
                 or focus_lower in desc_lower
-                or any(tag.lower() == focus_lower for tag in req.get("tags", []))
+                or (
+                    isinstance(tags_list, list)
+                    and any(
+                        isinstance(tag, str) and tag.lower() == focus_lower
+                        for tag in tags_list
+                    )
+                )
             ):
                 filtered.append(req)
 
@@ -214,20 +223,21 @@ class RequirementClarifier:
         """
         if not requirements:
             return FlextCore.Result[dict[str, object]].fail(
-                FlextTaskOrchestrationConstants.Messages.NO_REQUIREMENTS_EXTRACTED
+                FlextTaskOrchestrationConstants.TaskMessages.NO_REQUIREMENTS_EXTRACTED
             )
 
         # Check for minimum requirements
         if len(requirements) < 1:
             return FlextCore.Result[dict[str, object]].fail(
-                FlextTaskOrchestrationConstants.Messages.AT_LEAST_ONE_REQUIREMENT_NEEDED
+                FlextTaskOrchestrationConstants.TaskMessages.AT_LEAST_ONE_REQUIREMENT_NEEDED
             )
 
         # Validate each requirement
         for i, req in enumerate(requirements):
-            if not req.get("title", "").strip():
+            title_value = req.get("title", "")
+            if not str(title_value).strip():
                 return FlextCore.Result[dict[str, object]].fail(
-                    FlextTaskOrchestrationConstants.Messages.REQUIREMENT_MISSING_TITLE.format(
+                    FlextTaskOrchestrationConstants.TaskMessages.REQUIREMENT_MISSING_TITLE.format(
                         index=i + 1
                     )
                 )
@@ -254,7 +264,8 @@ class RequirementClarifier:
         # Check for vague requirements
         vague_indicators = ["improve", "better", "fix", "optimize", "enhance"]
         for req in requirements:
-            title = req.get("title", "").lower()
+            title_str = str(req.get("title", ""))
+            title = title_str.lower()
             if any(indicator in title for indicator in vague_indicators):
                 questions.append(
                     f"Can you provide more specific details for '{req.get('title')}'?"

@@ -257,23 +257,21 @@ class DocumentationStyleChecker:
             return issues
 
         # Check opening code block
-        if line.strip() == "```":
-            # Look for language specification
-            if line_num < len(all_lines) - 1:
-                next_line = all_lines[line_num]  # Next line has the code
-                if next_line.strip() and not next_line.strip().startswith("```"):
-                    # This is likely a code block without language
-                    issues.append(
-                        StyleIssue(
-                            file_path=file_path,
-                            line_number=line_num,
-                            issue_type="code_block_lang",
-                            severity="low",
-                            message="Code block missing language specification",
-                            suggestion="Add language after ``` (e.g., ```python)",
-                            context=line,
-                        )
+        if line.strip() == "```" and line_num < len(all_lines) - 1:
+            next_line = all_lines[line_num]  # Next line has the code
+            if next_line.strip() and not next_line.strip().startswith("```"):
+                # This is likely a code block without language
+                issues.append(
+                    StyleIssue(
+                        file_path=file_path,
+                        line_number=line_num,
+                        issue_type="code_block_lang",
+                        severity="low",
+                        message="Code block missing language specification",
+                        suggestion="Add language after ``` (e.g., ```python)",
+                        context=line,
                     )
+                )
 
         return issues
 
