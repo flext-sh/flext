@@ -13,6 +13,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from typing import cast
 
 from flext_core import FlextCore
 
@@ -65,7 +66,8 @@ class FlextResultTypeAuditor(FlextScript):
                 text=True,
             )
             # Se o exit code for 0, o arquivo está ignorado
-            return result.returncode == 0
+            # FlextResult needs to be unwrapped to access CompletedProcess attributes
+            return result.value.returncode == 0 if result.is_success else False
 
         except (subprocess.CalledProcessError, FileNotFoundError):
             # Se git não estiver disponível ou der erro, usa lista básica de exclusões
@@ -86,7 +88,7 @@ class FlextResultTypeAuditor(FlextScript):
 
     def _find_flext_projects(self) -> FlextCore.Types.StringList:
         """Encontra todos os projetos flext no workspace usando git submodules."""
-        projects: FlextCore.Types.List = []
+        projects: list[str] = []
         # Adiciona o projeto raiz (workspace principal)
         projects.append(".")
 
@@ -97,7 +99,7 @@ class FlextResultTypeAuditor(FlextScript):
                 text=True,
                 check=True,
             )
-            for line in result.stdout.strip().split("\n"):
+            for line in result.value.stdout.strip().split("\n"):
                 if line.strip():
                     # Extrai o nome do projeto da linha do git submodule status
                     parts = line.split()
@@ -115,9 +117,9 @@ class FlextResultTypeAuditor(FlextScript):
             ]
             return sorted(fallback_projects)
 
-    def _find_python_files(self, project_dir: str) -> FlextCore.Types.StringList:
+    def _find_python_files(self, project_dir: str) -> list[str]:
         """Encontra todos os arquivos .py no projeto respeitando .gitignore."""
-        py_files: FlextCore.Types.List = []
+        py_files: list[str] = []
         project_path = Path(project_dir)
 
         for root, dirs, files in os.walk(project_path):
@@ -138,7 +140,7 @@ class FlextResultTypeAuditor(FlextScript):
     def _check_flextresult_inconsistencies(
         self,
         file_path: str,
-    ) -> list[FlextCore.Types.Dict]:
+    ) -> list[dict[str, object]]:
         """Verifica inconsistências de FlextCore.Result em um arquivo."""
         try:
             with Path(file_path).open(encoding="utf-8") as f:
@@ -207,26 +209,26 @@ class FlextResultTypeAuditor(FlextScript):
                     },
                 )
 
-        return issues
+        return cast("list[dict[str, object]]", issues)
 
-    def execute_main_logic(
+    def execute_implementation(
         self, **_kwargs: dict[str, str]
     ) -> FlextCore.Result[dict[str, str]]:
         """Execute FlextCore.Result type consistency audit."""
         print_colored(
             "🔍 Verificando inconsistências de FlextCore.Result em todos os projetos flext...",
-            Colors.CYAN,
+            Colors.BLUE,
         )
-        print_colored("=" * 80, Colors.CYAN)
+        print_colored("=" * 80, Colors.BLUE)
 
         projects = self._find_flext_projects()
-        all_issues: FlextCore.Types.List = []
+        all_issues: list[dict[str, object]] = []
         for project in projects:
             project_name = "workspace-raiz" if project == "." else project
             print_colored(f"\n📁 Analisando projeto: {project_name}", Colors.BLUE)
 
             py_files = self._find_python_files(project)
-            project_issues: FlextCore.Types.List = []
+            project_issues: list[dict[str, object]] = []
             for file_path in py_files:
                 issues = self._check_flextresult_inconsistencies(file_path)
                 project_issues.extend(issues)
@@ -240,8 +242,8 @@ class FlextResultTypeAuditor(FlextScript):
             else:
                 print_colored("   ✅ Nenhum problema encontrado", Colors.GREEN)
 
-        print_colored("\n" + "=" * 80, Colors.CYAN)
-        print_colored("📊 RESUMO GERAL:", Colors.CYAN)
+        print_colored("\n" + "=" * 80, Colors.BLUE)
+        print_colored("📊 RESUMO GERAL:", Colors.BLUE)
         print_colored(f"Total de projetos analisados: {len(projects)}", Colors.BLUE)
         print_colored(f"Total de problemas encontrados: {len(all_issues)}", Colors.BLUE)
 
@@ -249,18 +251,19 @@ class FlextResultTypeAuditor(FlextScript):
             print_colored("\n🔧 PROBLEMAS DETALHADOS:", Colors.YELLOW)
             current_project = None
             for issue in all_issues:
-                project_name = str(issue["file"]).split("/")[0]
+                issue_dict: dict[str, object] = issue
+                project_name = str(issue_dict["file"]).split("/")[0]
                 if project_name != current_project:
                     current_project = project_name
                     print_colored(f"\n📁 {project_name}:", Colors.BLUE)
 
-                print_colored(f"   📄 {issue['file']}:{issue['line']}", Colors.WHITE)
-                print_colored(f"      Método: {issue['method']}", Colors.WHITE)
+                print_colored(f"   📄 {issue_dict['file']}:{issue_dict['line']}", Colors.BLUE)
+                print_colored(f"      Método: {issue_dict['method']}", Colors.BLUE)
                 print_colored(
-                    f"      Tipo declarado: FlextCore.Result[{issue['declared_type']}]",
-                    Colors.WHITE,
+                    f"      Tipo declarado: FlextCore.Result[{issue_dict['declared_type']}]",
+                    Colors.BLUE,
                 )
-                print_colored(f"      Problema: {issue['issue']}", Colors.WHITE)
+                print_colored(f"      Problema: {issue_dict['issue']}", Colors.BLUE)
 
         exit_code = len(all_issues)
         status_msg = (
@@ -269,16 +272,17 @@ class FlextResultTypeAuditor(FlextScript):
         color = Colors.GREEN if exit_code == 0 else Colors.YELLOW
         print_colored(f"\n{status_msg}", color)
 
-        return FlextCore.Result[object].ok({
-            "issues_count": exit_code,
-            "issues": all_issues,
+        return FlextCore.Result[dict[str, str]].ok({
+            "issues_count": str(exit_code),
+            "issues": str(len(all_issues)),
         })
 
 
 def main() -> int:
     """Main entry point."""
-    auditor = FlextCore.ResultTypeAuditor()
-    return auditor.run()
+    auditor = FlextResultTypeAuditor()
+    result = auditor.run()
+    return result if isinstance(result, int) else 0
 
 
 if __name__ == "__main__":
