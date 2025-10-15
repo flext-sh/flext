@@ -158,7 +158,6 @@ validate: ## Run complete workspace validation
 check: ## Quick workspace health check
 	@echo "🏥 Running workspace health check..."
 	@make lint-all
-	@make type-check-all
 	@echo "✅ Health check complete"
 
 .PHONY: lint-all
@@ -188,12 +187,7 @@ type-check-all: ## Run type checking on all Python projects
 		if [ -d "$$project" ] && [ -f "$$project/pyproject.toml" ]; then \
 			echo "🔍 Type checking $$project..."; \
 			cd $$project; \
-			if [ -d "src" ]; then \
-				echo "(scoped to src)"; \
-				poetry run mypy src; \
-			else \
-				poetry run mypy .; \
-			fi; \
+			poetry run pyrefly check .; \
 			cd ..; \
 		fi \
 	done

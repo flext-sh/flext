@@ -66,7 +66,7 @@ class FlextResultTypeAuditor(FlextScript):
                 text=True,
             )
             # Se o exit code for 0, o arquivo está ignorado
-            # FlextResult needs to be unwrapped to access CompletedProcess attributes
+            #  needs to be unwrapped to access CompletedProcess attributes
             return result.value.returncode == 0 if result.is_success else False
 
         except (subprocess.CalledProcessError, FileNotFoundError):
@@ -257,7 +257,9 @@ class FlextResultTypeAuditor(FlextScript):
                     current_project = project_name
                     print_colored(f"\n📁 {project_name}:", Colors.BLUE)
 
-                print_colored(f"   📄 {issue_dict['file']}:{issue_dict['line']}", Colors.BLUE)
+                print_colored(
+                    f"   📄 {issue_dict['file']}:{issue_dict['line']}", Colors.BLUE
+                )
                 print_colored(f"      Método: {issue_dict['method']}", Colors.BLUE)
                 print_colored(
                     f"      Tipo declarado: FlextCore.Result[{issue_dict['declared_type']}]",
