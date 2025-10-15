@@ -265,7 +265,7 @@ pytest -m integration
 ### Code Quality
 
 - **Linting**: Ruff for code style and error detection
-- **Type Checking**: Pyright/mypy for static type analysis
+- **Type Checking**: Pyrefly for static type analysis
 - **Formatting**: Black for consistent code formatting
 - **Security**: Automated security scanning
 
