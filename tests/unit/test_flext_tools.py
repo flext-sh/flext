@@ -424,8 +424,12 @@ class TestFlextToolsIntegration:
         # Test error handling with empty/invalid inputs
         assert isinstance(backup_manager.restore_backup(""), FlextResult)
         assert isinstance(config_manager_instance.get("", "default"), FlextResult)
-        assert isinstance(conflict_analyzer.analyze_dependencies("/non/existent/path"), FlextResult)
-        assert isinstance(discovery.discover_dependencies("/non/existent/path"), FlextResult)
+        assert isinstance(
+            conflict_analyzer.analyze_dependencies("/non/existent/path"), FlextResult
+        )
+        assert isinstance(
+            discovery.discover_dependencies("/non/existent/path"), FlextResult
+        )
         assert isinstance(security_service.decrypt_vault(""), FlextResult)
 
     def test_performance_consistency(self) -> None:

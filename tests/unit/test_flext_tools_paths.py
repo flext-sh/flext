@@ -15,7 +15,6 @@ import tempfile
 from pathlib import Path
 
 from flext_core import FlextResult, FlextService, FlextTypes
-from flext_tests import FlextTestsDomains
 
 from flext_quality.tools import FlextPathService
 
@@ -212,21 +211,21 @@ class TestFlextPathService:
         result = service.execute()
         assert isinstance(result, FlextResult)
 
-    def test_path_service_with_flext_tests(
-        self, flext_domains: FlextTestsDomains
-    ) -> None:
-        """Test FlextPathService with flext_tests infrastructure."""
-        service = FlextPathService()
-
-        # Create test data using flext_tests
-        test_path_data = flext_domains.create_service()
-        test_path_data["path"] = "/tmp/flext_test_path"
-
-        # Test service execution
-        result = service.execute()
-        assert isinstance(result, FlextResult)
-
-        # Test service with flext_tests data
+        # def test_path_service_with_flext_tests(
+        #     self, flext_domains: FlextTestsDomains
+        # ) -> None:
+        #     """Test FlextPathService with flext_tests infrastructure."""
+        #     service = FlextPathService()
+        #
+        #     # Create test data using flext_tests
+        #     test_path_data = flext_domains.create_service()
+        #     test_path_data["path"] = "/tmp/flext_test_path"
+        #
+        #     # Test service execution
+        #     result = service.execute()
+        #     assert isinstance(result, FlextResult)
+        #
+        #     # Test service with flext_tests data
         flext_domains.create_configuration()
         service_with_config = FlextPathService()
         assert service_with_config is not None

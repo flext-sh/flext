@@ -240,13 +240,8 @@ class TestFlextApiConsolidated:
         """Test API HTTP methods support."""
         client = FlextApiClient()
 
-        # Test HTTP methods
-        assert (
-            hasattr(client, "get")
-            or hasattr(client, "post")
-            or hasattr(client, "put")
-            or hasattr(client, "delete")
-        )
+        # Test HTTP methods - client has request method for HTTP operations
+        assert hasattr(client, "request")
 
     def test_flext_api_request_methods(self) -> None:
         """Test API request methods."""

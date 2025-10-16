@@ -56,9 +56,9 @@ class TestFlextLdapClient:
         assert hasattr(client, "connect")
         assert hasattr(client, "unbind")
         assert hasattr(client, "search")
-        assert hasattr(client, "add")
-        assert hasattr(client, "modify")
-        assert hasattr(client, "delete")
+        assert hasattr(client, "add_entry")
+        assert hasattr(client, "modify_entry")
+        assert hasattr(client, "delete_entry")
 
 
 class TestFlextLdapConfig:
@@ -73,11 +73,11 @@ class TestFlextLdapConfig:
         """Test FlextLdapConfig has expected methods."""
         config = FlextLdapConfig()
 
-        # Test that config has expected methods
-        assert hasattr(config, "get_effective_server_uri")
-        assert hasattr(config, "get_effective_bind_dn")
-        assert hasattr(config, "get_effective_bind_password")
-        assert hasattr(config, "ldap_default_connection")
+        # Test that config has expected attributes and methods
+        assert hasattr(config, "ldap_server_uri")
+        assert hasattr(config, "ldap_bind_dn")
+        assert hasattr(config, "effective_bind_password")
+        assert hasattr(config, "connection_info")
 
 
 class TestFlextLdapConstants:
@@ -94,8 +94,8 @@ class TestFlextLdapConstants:
 
         # Test that constants has expected attributes
         assert hasattr(constants, "DEFAULT_TIMEOUT")
-        assert hasattr(constants, "VALIDATION_ERROR_BASE")
-        assert hasattr(constants, "LdapDefaults")
+        assert hasattr(constants, "Protocol")
+        assert hasattr(constants, "Connection")
 
 
 # TestFlextLdapDomainServices class removed - class no longer exists in flext-ldap
@@ -112,10 +112,10 @@ class TestFlextLdapModels:
         models = FlextLdapModels()
 
         # Test that models has expected model classes
-        assert hasattr(models, "User")
+        assert hasattr(models, "LdapUser")
         assert hasattr(models, "Group")
         assert hasattr(models, "Entry")
-        assert hasattr(models, "create_validated_email")
+        assert hasattr(models, "DistinguishedName")
 
 
 class TestFlextLdapTypes:
@@ -171,4 +171,4 @@ class TestFlextLdapIntegration:
         # Test that API has expected configuration
         assert hasattr(api, "_config")
         assert hasattr(api, "_client")
-        assert hasattr(api, "_acl_manager")
+        assert hasattr(api, "_acl")
