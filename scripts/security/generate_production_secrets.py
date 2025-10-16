@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate Production Secrets.
 
-Gera secrets criptograficamente seguros para produção usando flext_tools.security
+Gera secrets criptograficamente seguros para produção usando flext_quality.tools.security
 para máxima segurança e padronização enterprise.
 """
 
@@ -11,7 +11,11 @@ from pathlib import Path
 
 from flext_core import FlextResult, FlextTypes
 
-from flext_tools import Colors, ScriptMetadata, print_colored
+from flext_quality.tools import (
+    Colors,
+    ScriptMetadata,
+    print_colored,
+)
 
 from ._base_security_script import BaseSecurityScript
 
@@ -47,7 +51,7 @@ class ProductionSecretsScript(BaseSecurityScript):
             print_colored("=" * 60, Colors.CYAN)
 
             # Secret generation functionality to be implemented
-            # Will use flext_tools.security for secret generation
+            # Will use flext_quality.tools.security for secret generation
             secrets_result = FlextResult[FlextTypes.Dict].fail(
                 "Secret generation not yet implemented",
             )

@@ -19,12 +19,16 @@ from .agents import (
 )
 from .cli import TaskOrchestrationCli
 from .models import (
-    Task,
-    TaskDependency,
-    TaskOrchestrationConfig,
-    TaskStatus,
-    TaskType,
+    FlextTaskOrchestrationModels,
 )
+
+# Expose commonly used classes for convenience
+Task = FlextTaskOrchestrationModels.Task
+TaskDependency = FlextTaskOrchestrationModels.TaskDependency
+TaskOrchestrationConfig = FlextTaskOrchestrationModels.TaskOrchestrationConfig
+TaskStatus = FlextTaskOrchestrationModels.TaskStatus
+TaskType = FlextTaskOrchestrationModels.TaskType
+TaskPriority = FlextTaskOrchestrationModels.TaskPriority
 from .services import TaskOrchestrationService
 
 __all__ = [

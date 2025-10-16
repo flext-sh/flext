@@ -242,12 +242,10 @@ class RequirementClarifier:
                     )
                 )
 
-        return FlextResult[dict[str, object]].ok(
-            {
-                "validated": True,
-                "count": len(requirements),
-            }
-        )
+        return FlextResult[dict[str, object]].ok({
+            "validated": True,
+            "count": len(requirements),
+        })
 
     def _generate_clarification_questions(
         self, requirements: list[dict[str, object]]

@@ -21,7 +21,7 @@ from flext_core import FlextLogger, FlextResult, FlextService, FlextTypes
 
 from flext.services import create_services
 from flext.workspace_service import create_workspace_service
-from flext_tools import Colors, print_colored
+from flext_quality.tools import Colors, print_colored
 
 
 class FlextWorkspaceCli(FlextService[str]):
@@ -217,9 +217,9 @@ class FlextWorkspaceCli(FlextService[str]):
                 ),  # Convert to list for type compatibility
             }
 
-            available_count = len(
-                [m for m in self._modules if m.name and m.repository_path]
-            )
+            available_count = len([
+                m for m in self._modules if m.name and m.repository_path
+            ])
             print_colored(
                 f"\n📊 Summary: {available_count}/{status_data['total_modules']} modules available"
             )
@@ -278,12 +278,10 @@ class FlextWorkspaceCli(FlextService[str]):
                     print_colored(f"❌ {module_name} tests failed")
                     results[module_name] = "failed"
 
-            return FlextResult[FlextTypes.Dict].ok(
-                {
-                    "status": "completed",
-                    "results": results,
-                }
-            )
+            return FlextResult[FlextTypes.Dict].ok({
+                "status": "completed",
+                "results": results,
+            })
 
     class _QualityCommands:
         """Nested quality command handlers."""
@@ -425,12 +423,10 @@ class FlextWorkspaceCli(FlextService[str]):
             if result.is_failure:
                 return FlextResult[FlextTypes.Dict].fail("Failed to view logs")
 
-            return FlextResult[FlextTypes.Dict].ok(
-                {
-                    "status": "completed",
-                    "service": service or "all",
-                }
-            )
+            return FlextResult[FlextTypes.Dict].ok({
+                "status": "completed",
+                "service": service or "all",
+            })
 
     class _SetupCommands:
         """Nested setup and maintenance command handlers."""
@@ -448,12 +444,10 @@ class FlextWorkspaceCli(FlextService[str]):
                 ("Syncing dependencies", "sync-deps"),
                 (
                     "Setting up pre-commit hooks",
-                    lambda: self._workspace_service.run_command(
-                        [
-                            "pre-commit",
-                            "install",
-                        ]
-                    ),
+                    lambda: self._workspace_service.run_command([
+                        "pre-commit",
+                        "install",
+                    ]),
                 ),
                 ("Finalizing setup", "dev-setup"),
             ]
@@ -492,9 +486,9 @@ class FlextWorkspaceCli(FlextService[str]):
             if not confirmed:
                 print_colored("⚠️  This will remove all build artifacts and caches.")
                 print_colored("Use confirmed=True parameter to proceed with cleanup.")
-                return FlextResult[dict[str, str]].ok(
-                    {"status": "confirmation_required"}
-                )
+                return FlextResult[dict[str, str]].ok({
+                    "status": "confirmation_required"
+                })
 
             print_colored("🧹 Cleaning workspace")
 
@@ -522,16 +516,14 @@ class FlextWorkspaceCli(FlextService[str]):
 
             try:
                 # Run integration tests
-                test_result = self._workspace_service.run_command(
-                    [
-                        str(self._cli_service._python_bin),
-                        "-m",
-                        "pytest",
-                        "tests/integration",
-                        "-v",
-                        "--tb=short",
-                    ]
-                )
+                test_result = self._workspace_service.run_command([
+                    str(self._cli_service._python_bin),
+                    "-m",
+                    "pytest",
+                    "tests/integration",
+                    "-v",
+                    "--tb=short",
+                ])
 
                 if test_result.is_failure:
                     return FlextResult[dict[str, str]].fail("Integration tests failed")

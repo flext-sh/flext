@@ -1,4 +1,4 @@
-"""Unit tests for flext_tools.mypy_checker module.
+"""Unit tests for flext_quality.tools.mypy_checker module.
 
 Tests MyPyChecker functionality with real implementations,
 no mocks or legacy patterns. Achieves near 100% coverage following FLEXT standards.
@@ -18,7 +18,7 @@ import pytest
 from flext_core import FlextResult, FlextTypes
 from flext_tests import FlextTestsDomains
 
-from flext_tools import MyPyChecker
+from flext_quality.tools import MyPyChecker
 
 
 class TestMyPyChecker:

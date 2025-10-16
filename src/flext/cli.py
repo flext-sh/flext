@@ -172,7 +172,7 @@ class FlextControlPanelCli(FlextService[str]):
         def quality_check(
             self, config: FlextControlPanelCli.QualityCheckConfig
         ) -> FlextResult[FlextTypes.Dict]:
-            """Execute comprehensive quality checks using flext_tools."""
+            """Execute comprehensive quality checks using flext_quality tools."""
             try:
                 quality_gateway = self._cli_service.QualityGateway(
                     str(self._cli_service._workspace)
@@ -229,7 +229,7 @@ class FlextControlPanelCli(FlextService[str]):
         def run_analysis(
             self, analysis_type: str = "structure"
         ) -> FlextResult[dict[str, str]]:
-            """Perform workspace and code analysis using flext_tools."""
+            """Perform workspace and code analysis using flext_quality tools."""
             self._cli_service.print_colored(
                 f"🔬 Running {analysis_type} analysis on workspace: {self._cli_service._workspace}"
             )
@@ -251,7 +251,7 @@ class FlextControlPanelCli(FlextService[str]):
         def test_command(
             self, *, coverage: bool = True, parallel: bool = False
         ) -> FlextResult[FlextTypes.Dict]:
-            """Execute comprehensive test suite using flext_tools integration."""
+            """Execute comprehensive test suite using flext_quality integration."""
             self._cli_service.print_colored(
                 f"🧪 Running tests (parallel={parallel}) in {self._cli_service._workspace}..."
             )
@@ -299,8 +299,10 @@ class FlextControlPanelCli(FlextService[str]):
                 return FlextResult[FlextTypes.Dict].fail(error)
 
         def lint_command(self, *, fix: bool = False) -> FlextResult[FlextTypes.Dict]:
-            """Execute linting using flext_tools quality gateway."""
-            self._cli_service.print_colored("🔍 Running linting with flext_tools...")
+            """Execute linting using flext_quality quality gateway."""
+            self._cli_service.print_colored(
+                "🔍 Running linting with flext_quality tools..."
+            )
 
             try:
                 quality_gateway = self._cli_service.QualityGateway(
@@ -332,10 +334,10 @@ class FlextControlPanelCli(FlextService[str]):
                 return FlextResult[FlextTypes.Dict].fail(error)
 
         def format_command(self, *, check_only: bool = False) -> None:
-            """Auto-format code using flext_tools with flext-cli patterns."""
+            """Auto-format code using flext_quality tools with flext-cli patterns."""
             action = "Checking" if check_only else "Formatting"
             self._cli_service.print_colored(
-                f"🎨 {action} code in {self._cli_service._workspace} with flext_tools..."
+                f"🎨 {action} code in {self._cli_service._workspace} with flext_quality tools..."
             )
 
             try:

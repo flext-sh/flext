@@ -2,7 +2,7 @@
 """Standardize pyproject.toml files across FLEXT workspace.
 
 This script applies PEP 518/621 standards to all projects in the workspace
-using flext_tools.poetry for professional enterprise standardization.
+using flext_quality.tools.poetry for professional enterprise standardization.
 """
 
 from __future__ import annotations
@@ -13,9 +13,9 @@ from pathlib import Path
 
 from flext_core import FlextResult, FlextTypes
 
-from flext_tools import (
+from flext_quality.tools import (
     Colors,
-    FlextScript,
+    FlextScriptService as FlextScript,
     PoetryValidator,
     ScriptMetadata,
     print_colored,
@@ -77,7 +77,7 @@ class PyprojectStandardizer(FlextScript):
                 str(projects_filter) if projects_filter else None,
             )
 
-            # Use flext_tools.poetry for operations
+            # Use flext_quality.tools.poetry for operations
             poetry_ops = PoetryValidator()
 
             total_standardized = 0
@@ -90,7 +90,7 @@ class PyprojectStandardizer(FlextScript):
                 print_colored(f"\n📦 Standardizing {project_name}...", Colors.BLUE)
 
                 try:
-                    # Use flext_tools for standardization
+                    # Use flext_quality.tools for standardization
                     success = poetry_ops.validate_project(project_path)
 
                     if success:

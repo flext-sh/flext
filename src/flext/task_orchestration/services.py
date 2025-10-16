@@ -18,12 +18,15 @@ from flext_core import FlextLogger, FlextResult, FlextService, FlextTypes
 
 from .agents import DependencyAnalyzer, TaskDecomposer, TaskOrchestrator
 from .models import (
-    Task,
-    TaskExecutionPlan,
-    TaskOrchestrationConfig,
-    TaskOrchestrationResult,
-    TaskStatus,
+    FlextTaskOrchestrationModels,
 )
+
+# Type aliases for convenience
+Task = FlextTaskOrchestrationModels.Task
+TaskExecutionPlan = FlextTaskOrchestrationModels.TaskExecutionPlan
+TaskOrchestrationConfig = FlextTaskOrchestrationModels.TaskOrchestrationConfig
+TaskOrchestrationResult = FlextTaskOrchestrationModels.TaskOrchestrationResult
+TaskStatus = FlextTaskOrchestrationModels.TaskStatus
 
 
 class TaskOrchestrationService(FlextService[str]):

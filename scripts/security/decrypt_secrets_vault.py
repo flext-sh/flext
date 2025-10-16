@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Decrypt Secrets Vault.
 
-Descriptografa cofre de secrets de produção usando flext_tools.security
+Descriptografa cofre de secrets de produção usando flext_quality.tools.security
 para máxima segurança e padronização enterprise.
 """
 
@@ -11,7 +11,12 @@ from pathlib import Path
 
 from flext_core import FlextResult, FlextTypes
 
-from flext_tools import Colors, ScriptMetadata, SecretVaultDecryptor, print_colored
+from flext_quality.tools import (
+    Colors,
+    ScriptMetadata,
+    SecretVaultDecryptor,
+    print_colored,
+)
 
 from ._base_security_script import BaseSecurityScript
 
@@ -51,7 +56,7 @@ class SecretsVaultDecryptor(BaseSecurityScript):
             print_colored("🔓 SECRETS VAULT DECRYPTOR", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
 
-            # Use flext_tools.security for vault decryption
+            # Use flext_quality.tools.security for vault decryption
             vault_decryptor = SecretVaultDecryptor()
 
             # Decrypt vault

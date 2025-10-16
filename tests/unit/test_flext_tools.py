@@ -1,4 +1,4 @@
-"""Comprehensive unit tests for flext_tools module.
+"""Comprehensive unit tests for flext_quality.tools module.
 
 Tests all functionality with real implementations, no mocks or legacy patterns.
 Achieves near 100% coverage with proper functionality validation.
@@ -14,19 +14,19 @@ from pathlib import Path
 
 from flext_core import FlextResult, FlextService
 
-from flext_tools import (
+from flext_quality.tools import (
     backup,
     colors,
     config_manager,
     conflicts,
-    discovery_base,
+    discovery as discovery_base,
     paths,
     security,
 )
 
 
 class TestFlextToolsBackup:
-    """Test flext_tools.backup functionality."""
+    """Test flext_quality.tools.backup functionality."""
 
     def test_backup_manager_creation(self) -> None:
         """Test backup manager creation."""
@@ -71,7 +71,7 @@ class TestFlextToolsBackup:
 
 
 class TestFlextToolsColors:
-    """Test flext_tools.colors functionality."""
+    """Test flext_quality.tools.colors functionality."""
 
     def test_color_service_creation(self) -> None:
         """Test FlextColorService creation."""
@@ -94,9 +94,9 @@ class TestFlextToolsColors:
         result = service.colorize("test", service.Colors.RED)
         assert isinstance(result, FlextResult)
         assert result.is_success
-        assert isinstance(result.data, str)
-        assert "test" in result.data
-        assert "\033[91m" in result.data
+        assert isinstance(result.value, str)
+        assert "test" in result.value
+        assert "\033[91m" in result.value
 
     def test_service_inheritance(self) -> None:
         """Test that service properly inherits from FlextService."""
@@ -115,7 +115,7 @@ class TestFlextToolsColors:
 
 
 class TestFlextToolsConfigManager:
-    """Test flext_tools.config_manager functionality."""
+    """Test flext_quality.tools.config_manager functionality."""
 
     def test_config_manager_creation(self) -> None:
         """Test configuration manager creation."""
@@ -155,7 +155,7 @@ class TestFlextToolsConfigManager:
 
 
 class TestFlextToolsConflicts:
-    """Test flext_tools.conflicts functionality."""
+    """Test flext_quality.tools.conflicts functionality."""
 
     def test_conflict_analyzer_creation(self) -> None:
         """Test conflict analyzer creation."""
@@ -189,7 +189,7 @@ class TestFlextToolsConflicts:
 
 
 class TestFlextToolsDiscoveryBase:
-    """Test flext_tools.discovery_base functionality."""
+    """Test flext_quality.tools.discovery functionality."""
 
     def test_dependency_discovery_creation(self) -> None:
         """Test dependency discovery creation."""
@@ -212,12 +212,15 @@ class TestFlextToolsDiscoveryBase:
     def test_discovery_error_handling(self) -> None:
         """Test discovery error handling."""
         discovery = discovery_base.DependencyDiscovery()
-        result = discovery.discover_dependencies("")
+        # Test with non-existent path - should return empty list
+        result = discovery.discover_dependencies("/non/existent/path")
         assert isinstance(result, FlextResult)
+        assert result.is_success
+        assert result.value == []
 
 
 class TestFlextToolsPaths:
-    """Test flext_tools.paths functionality."""
+    """Test flext_quality.tools.paths functionality."""
 
     def test_path_service_creation(self) -> None:
         """Test FlextPathService creation."""
@@ -238,7 +241,7 @@ class TestFlextToolsPaths:
         result = service.execute()
         assert isinstance(result, FlextResult)
         assert result.is_success
-        assert isinstance(result.data, Path)
+        assert isinstance(result.value, Path)
 
     def test_should_ignore_path_functionality(self) -> None:
         """Test should_ignore_path functionality."""
@@ -279,7 +282,7 @@ class TestFlextToolsPaths:
 
 
 class TestFlextToolsSecurity:
-    """Test flext_tools.security functionality."""
+    """Test flext_quality.tools.security functionality."""
 
     def test_security_service_creation(self) -> None:
         """Test security service creation."""
@@ -313,10 +316,10 @@ class TestFlextToolsSecurity:
 
 
 class TestFlextToolsIntegration:
-    """Test flext_tools module integration functionality."""
+    """Test flext_quality.tools module integration functionality."""
 
     def test_all_modules_importable(self) -> None:
-        """Test that all flext_tools modules can be imported."""
+        """Test that all flext_quality.tools modules can be imported."""
         assert backup is not None
         assert colors is not None
         assert config_manager is not None
@@ -421,8 +424,8 @@ class TestFlextToolsIntegration:
         # Test error handling with empty/invalid inputs
         assert isinstance(backup_manager.restore_backup(""), FlextResult)
         assert isinstance(config_manager_instance.get("", "default"), FlextResult)
-        assert isinstance(conflict_analyzer.analyze_dependencies(""), FlextResult)
-        assert isinstance(discovery.discover_dependencies(""), FlextResult)
+        assert isinstance(conflict_analyzer.analyze_dependencies("/non/existent/path"), FlextResult)
+        assert isinstance(discovery.discover_dependencies("/non/existent/path"), FlextResult)
         assert isinstance(security_service.decrypt_vault(""), FlextResult)
 
     def test_performance_consistency(self) -> None:

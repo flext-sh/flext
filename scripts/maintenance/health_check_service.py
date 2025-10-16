@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """FLEXT Health Check Service.
 
-Serviço de monitoramento de saúde usando flext_tools.monitoring
+Serviço de monitoramento de saúde usando flext_quality.tools.health
 para máxima confiabilidade e padronização enterprise.
 """
 
@@ -11,9 +11,9 @@ from pathlib import Path
 
 from flext_core import FlextResult, FlextTypes
 
-from flext_tools import (
+from flext_quality.tools import (
     Colors,
-    FlextScript,
+    FlextScriptService as FlextScript,
     HealthCheckService,
     ScriptMetadata,
     print_colored,
@@ -58,7 +58,7 @@ class HealthCheckServiceRunner(FlextScript):
             print_colored("🏥 HEALTH CHECK SERVICE", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
 
-            # Use flext_tools.monitoring for health checks
+            # Use flext_quality.tools.health for health checks
             health_service = HealthCheckService(workspace_path=workspace_root)
 
             # Run health checking

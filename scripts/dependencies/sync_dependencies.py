@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Script principal REFATORADO para sincronização de dependências.
 
-Agora usa flext_tools para operações modulares e eficientes.
+Agora usa flext_quality.tools para operações modulares e eficientes.
 Funcionalidades:
 1. Descobre dependências faltantes
 2. Organiza versões no workspace
@@ -16,7 +16,7 @@ from typing import cast
 
 from flext_core import FlextTypes
 
-from flext_tools import (
+from flext_quality.tools import (
     Colors,
     ConflictAnalyzer,
     DependencyDiscovery,

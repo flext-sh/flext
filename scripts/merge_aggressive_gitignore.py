@@ -181,13 +181,11 @@ def merge_gitignore(project_dir: Path) -> bool:
 
     # 5. Add project-specific rules if any
     if project_specific:
-        merged_lines.extend(
-            (
-                "\n# ============================================================================",
-                f"# PROJECT-SPECIFIC RULES: {project_dir.name}",
-                "# ============================================================================\n",
-            )
-        )
+        merged_lines.extend((
+            "\n# ============================================================================",
+            f"# PROJECT-SPECIFIC RULES: {project_dir.name}",
+            "# ============================================================================\n",
+        ))
         merged_lines.extend(project_specific)
 
     # 6. Add common Python ignores that work with whitelist

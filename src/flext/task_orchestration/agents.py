@@ -20,13 +20,16 @@ from typing import cast
 from flext_core import FlextLogger, FlextResult, FlextTypes
 
 from .models import (
-    Task,
-    TaskDependency,
-    TaskOrchestrationConfig,
-    TaskPriority,
-    TaskStatus,
-    TaskType,
+    FlextTaskOrchestrationModels,
 )
+
+# Type aliases for convenience
+Task = FlextTaskOrchestrationModels.Task
+TaskDependency = FlextTaskOrchestrationModels.TaskDependency
+TaskOrchestrationConfig = FlextTaskOrchestrationModels.TaskOrchestrationConfig
+TaskPriority = FlextTaskOrchestrationModels.TaskPriority
+TaskStatus = FlextTaskOrchestrationModels.TaskStatus
+TaskType = FlextTaskOrchestrationModels.TaskType
 
 
 class TaskOrchestrator:
@@ -216,12 +219,10 @@ class TaskOrchestrator:
                     f"Requirement {i + 1} missing title"
                 )
 
-        return FlextResult[dict[str, object]].ok(
-            {
-                "validated": True,
-                "count": len(requirements),
-            }
-        )
+        return FlextResult[dict[str, object]].ok({
+            "validated": True,
+            "count": len(requirements),
+        })
 
     def _generate_clarification_questions(
         self, requirements: list[dict[str, object]]
@@ -735,14 +736,12 @@ class DependencyAnalyzer:
         # Check for overloaded assignees
         for assignee, assignee_task_list in assignee_tasks.items():
             if len(assignee_task_list) > self.config.parallel_tasks:
-                conflicts.append(
-                    {
-                        "type": "resource_conflict",
-                        "description": f"Assignee {assignee} has too many tasks ({len(assignee_task_list)})",
-                        "affected_tasks": [task.id for task in assignee_task_list],
-                        "severity": "high",
-                    }
-                )
+                conflicts.append({
+                    "type": "resource_conflict",
+                    "description": f"Assignee {assignee} has too many tasks ({len(assignee_task_list)})",
+                    "affected_tasks": [task.id for task in assignee_task_list],
+                    "severity": "high",
+                })
 
         return conflicts
 
@@ -804,14 +803,12 @@ class DependencyAnalyzer:
                             TaskPriority.LOW,
                             TaskPriority.MEDIUM,
                         }:
-                            conflicts.append(
-                                {
-                                    "type": "priority_conflict",
-                                    "description": f"High priority task {task.id} blocked by lower priority task {blocking_task.id}",
-                                    "affected_tasks": [task.id, blocking_task.id],
-                                    "severity": "medium",
-                                }
-                            )
+                            conflicts.append({
+                                "type": "priority_conflict",
+                                "description": f"High priority task {task.id} blocked by lower priority task {blocking_task.id}",
+                                "affected_tasks": [task.id, blocking_task.id],
+                                "severity": "medium",
+                            })
 
         return conflicts
 

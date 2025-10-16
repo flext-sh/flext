@@ -7,13 +7,13 @@ from pathlib import Path
 
 from flext_core import FlextResult
 
-from flext_tools import (
+from flext_quality.tools import (
+    Colors,
     ConfigurationManager,
-    FlextScript,
+    FlextScriptService as FlextScript,
     ScriptMetadata,
     print_colored,
 )
-from flext_tools.colors import Colors
 
 
 class StagingConfigLoader(FlextScript):
@@ -59,7 +59,7 @@ class StagingConfigLoader(FlextScript):
             print_colored("⚙️ STAGING CONFIGURATION LOADER", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
 
-            # Use flext_tools.config for operations
+            # Use flext_quality.tools.config for operations
             config_manager = ConfigurationManager()
 
             # Load and validate staging configuration

@@ -19,7 +19,7 @@ from pathlib import Path
 
 from flext_core import FlextLogger, FlextTypes
 
-from flext_tools import Colors, ScriptMetadata, print_colored
+from flext_quality.tools import Colors, ScriptMetadata, print_colored
 
 
 class ScriptCategory(StrEnum):
@@ -60,7 +60,7 @@ class LegacyScriptMetadata:
         return f"script-{self.name.replace('_', '-')}"
 
     def to_script_metadata(self) -> ScriptMetadata:
-        """Converte para ScriptMetadata padrão do flext_tools."""
+        """Converte para ScriptMetadata padrão do flext_quality.tools."""
         return ScriptMetadata(
             name=self.name,
             description=self.description,
@@ -84,7 +84,7 @@ class ScriptRegistry:
             # Skip arquivos especiais
             if (
                 script_file.name.startswith(("__", "test_"))
-                or script_file.name == "flext_tools.py"
+                or script_file.name == "flext_quality_tools.py"
             ):
                 continue
 
@@ -176,7 +176,7 @@ class ScriptRegistry:
         flext_metadata: ScriptMetadata,
         script_file: Path,
     ) -> LegacyScriptMetadata:
-        """Converte ScriptMetadata do flext_tools para LegacyScriptMetadata."""
+        """Converte ScriptMetadata do flext_quality.tools para LegacyScriptMetadata."""
         # Mapear categoria string para enum
         category_map = {
             "config": ScriptCategory.CONFIG,

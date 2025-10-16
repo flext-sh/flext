@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Dependency Cache Management.
 
-Gerencia cache de dependências usando flext_tools.cache
+Gerencia cache de dependências usando flext_quality.tools
 para máxima performance e confiabilidade enterprise.
 """
 
@@ -13,7 +13,12 @@ from pathlib import Path
 
 from flext_core import FlextResult
 
-from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
+from flext_quality.tools import (
+    Colors,
+    FlextScriptService as FlextScript,
+    ScriptMetadata,
+    print_colored,
+)
 
 
 class DependencyCacheManager(FlextScript):

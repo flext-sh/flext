@@ -564,9 +564,9 @@ def main() -> None:
                     capture_output=True,
                     text=True,
                 )
-                changes = len(
-                    [line for line in result.stdout.split("\n") if line.strip()]
-                )
+                changes = len([
+                    line for line in result.stdout.split("\n") if line.strip()
+                ])
                 print(f"🔄 Uncommitted changes: {changes}")
             except:
                 print("🔄 Git status: Unable to check")
