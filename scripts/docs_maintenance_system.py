@@ -309,16 +309,13 @@ class DocumentationMaintenanceSystem:
             result.total_images += len(doc_file.images)
             result.broken_links += len(broken_links)
             result.missing_images += len(missing_images)
-            result.style_issues += len(
-                [
-                    i
-                    for i in doc_file.issues
-                    if any(
-                        keyword in i.lower()
-                        for keyword in ["heading", "alt text", "style"]
-                    )
-                ]
-            )
+            result.style_issues += len([
+                i
+                for i in doc_file.issues
+                if any(
+                    keyword in i.lower() for keyword in ["heading", "alt text", "style"]
+                )
+            ])
 
             result.files.append(doc_file)
 

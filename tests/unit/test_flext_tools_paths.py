@@ -1,4 +1,4 @@
-"""Unit tests for flext_tools.paths module.
+"""Unit tests for flext_quality.tools.paths module.
 
 Tests FlextPathService functionality with real implementations,
 no mocks or legacy patterns. Achieves near 100% coverage following FLEXT standards.
@@ -17,7 +17,7 @@ from pathlib import Path
 from flext_core import FlextResult, FlextService, FlextTypes
 from flext_tests import FlextTestsDomains
 
-from flext_tools import FlextPathService
+from flext_quality.tools import FlextPathService
 
 
 class TestFlextPathService:

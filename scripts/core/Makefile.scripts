@@ -71,7 +71,7 @@ scripts-dependencies: ## Execute todos os scripts de dependencies
 	@python scripts/core/script_runner.py fix_deptry_first_party
 	@python scripts/core/script_runner.py sync_dependencies
 
-script-analyze-dependencies: ## Usa flext_tools para análise modular e cache.
+script-analyze-dependencies: ## Usa flext_quality.tools para análise modular e cache.
 	@python scripts/core/script_runner.py analyze_dependencies
 script-dependency-cache: ## Sistema de cache para análise de dependências.
 	@python scripts/core/script_runner.py dependency_cache
@@ -79,7 +79,7 @@ script-discover-missing-deps: ## Descobrir e analisar dependências faltantes em
 	@python scripts/core/script_runner.py discover_missing_deps
 script-fix-deptry-first-party: ## Percorre todos os projetos a partir da raiz (../flext), encontrando arquivos
 	@python scripts/core/script_runner.py fix_deptry_first_party
-script-sync-dependencies: ## Agora usa flext_tools para operações modulares e eficientes.
+script-sync-dependencies: ## Agora usa flext_quality.tools para operações modulares e eficientes.
 	@python scripts/core/script_runner.py sync_dependencies
 
 # Security Scripts

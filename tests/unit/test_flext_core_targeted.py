@@ -271,7 +271,7 @@ class TestFlextTargeted:
         assert reg_result.is_success
 
         # Test command execution
-        exec_result = bus.send_command("TestCommand")
+        exec_result = bus.execute("TestCommand")
         assert isinstance(exec_result, FlextResult)
 
     # =============================================================================
@@ -478,15 +478,13 @@ class TestFlextTargeted:
                 # Create result with timestamp
                 timestamp = FlextUtilities.Generators.generate_timestamp()
 
-                return FlextResult[FlextTypes.Dict].ok(
-                    {
-                        "status": "success",
-                        "timestamp": timestamp,
-                        "container_value": container.get("integration_key").unwrap_or(
-                            "default"
-                        ),
-                    }
-                )
+                return FlextResult[FlextTypes.Dict].ok({
+                    "status": "success",
+                    "timestamp": timestamp,
+                    "container_value": container.get("integration_key").unwrap_or(
+                        "default"
+                    ),
+                })
 
         service = IntegrationService()
         result = service.execute()

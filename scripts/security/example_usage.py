@@ -92,7 +92,7 @@ def example_basic_scan() -> None:
 
     # Create scanner with factory function
     scanner = create_security_scanner(
-        target_paths=["src/flext_tools/security/"],
+        target_paths=["flext-quality/src/flext_quality/tools/security/"],
         exclude_dependencies=True,
         output_format="summary",
         risk_threshold="MEDIUM",
@@ -173,7 +173,7 @@ def example_custom_reporting() -> None:
     print_colored("📊 Example 4: Custom Reporting", Colors.CYAN)
 
     scanner = create_security_scanner(
-        target_paths=["src/flext_tools/"],
+        target_paths=["flext-quality/src/flext_quality/tools/"],
         risk_threshold="LOW",
     )
 

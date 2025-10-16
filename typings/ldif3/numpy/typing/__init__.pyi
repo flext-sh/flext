@@ -52,7 +52,7 @@ you can either use a ``# type: ignore`` comment:
 
 .. code-block:: python
 
-    >>> np.array(x**2 for x in range(10))  # type: ignore
+    >>> np.array(x**2 for x in range(10))
 
 or explicitly type the array like object as `~typing.Any`:
 

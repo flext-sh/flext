@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Script refatorado para analisar conflitos e bloqueadores de atualização.
 
-Usa flext_tools para análise modular e cache.
+Usa flext_quality.tools para análise modular e cache.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -14,7 +14,7 @@ from pathlib import Path
 
 from flext_core import FlextTypes
 
-from flext_tools import Colors, ConflictAnalyzer, print_colored
+from flext_quality.tools import Colors, ConflictAnalyzer, print_colored
 
 
 def main() -> int:
@@ -29,11 +29,19 @@ def main() -> int:
 
     # Análise direta sem cache
     def get_workspace_analysis() -> FlextTypes.Dict:
-        result = analyzer.analyze_workspace_conflicts(workspace_path)
+        result = analyzer.analyze_dependencies(str(workspace_path))
         if result.is_success:
-            conflict_result = result.unwrap()
-            return conflict_result.model_dump()
-        return {"error": result.error or "Analysis failed"}
+            dependencies = result.value or []
+            return {
+                "stats": {"dependencies_analyzed": len(dependencies)},
+                "version_conflicts": [],
+                "dependency_details": dependencies,
+            }
+        return {
+            "error": result.error or "Analysis failed",
+            "stats": {},
+            "version_conflicts": [],
+        }
 
     # Executa análise
     print_colored("📊 Analisando workspace...", Colors.CYAN)

@@ -82,7 +82,7 @@ class TestFlextWorkspaceCli:
         """Test FlextWorkspaceCli execution."""
         cli = FlextWorkspaceCli()
         result = cli.execute()
-        assert isinstance(result, FlextResult[None])
+        assert isinstance(result, FlextResult)
 
     def test_flext_workspace_cli_execute(self) -> None:
         """Test FlextWorkspaceCli execute method."""

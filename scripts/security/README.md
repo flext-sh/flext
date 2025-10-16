@@ -241,7 +241,7 @@ The scanner supports comprehensive configuration through command-line arguments 
 
 ```python
 # Programmatic configuration example
-from flext_tools.security import ScanConfig, AntipatternScanner
+from flext_quality.tools.security import ScanConfig, AntipatternScanner
 
 config = ScanConfig(
     target_paths=["src/", "tests/"],

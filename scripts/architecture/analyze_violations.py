@@ -227,7 +227,7 @@ class ArchitectureAnalyzer:
         import_mappings = {
             "flext_core": "flext-core",
             "flext_cli": "flext-cli",
-            "flext_tools": "flext-core",  # flext_tools está em flext-core
+            "flext_quality": "flext-core",  # flext_quality está em flext-core
             "client-a_oud_mig": "client-a-oud-mig",
             # ... adicionar outros mapeamentos conforme necessário
         }

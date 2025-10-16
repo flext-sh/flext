@@ -46,7 +46,7 @@ tests/
 
 ### **Unit Tests (90%+ Coverage)**
 
-- **Source Code Modules**: All src/flext/ and src/flext_tools/ modules
+- **Source Code Modules**: All src/flext/ and flext-quality/src/flext_quality/ modules
 - **CLI Commands**: Individual command function testing
 - **Service Layer**: CQRS handlers and application services
 - **Utilities**: Helper functions and shared utilities

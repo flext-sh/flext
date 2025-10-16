@@ -17,7 +17,12 @@ from typing import cast
 
 from flext_core import FlextLogger, FlextResult
 
-from .models import Task, TaskOrchestrationConfig, TaskOrchestrationResult
+from .models import FlextTaskOrchestrationModels
+
+# Type aliases for convenience
+Task = FlextTaskOrchestrationModels.Task
+TaskOrchestrationConfig = FlextTaskOrchestrationModels.TaskOrchestrationConfig
+TaskOrchestrationResult = FlextTaskOrchestrationModels.TaskOrchestrationResult
 from .services import TaskOrchestrationService
 
 
@@ -223,8 +228,6 @@ class TaskOrchestrationCli:
             task_data = json.loads(task_file.read_text(encoding="utf-8"))
 
             # Update status
-            from .models import Task, TaskStatus
-
             task = Task(**task_data)
 
             try:

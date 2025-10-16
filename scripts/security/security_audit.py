@@ -63,7 +63,12 @@ from pathlib import Path
 
 from flext_core import FlextResult, FlextTypes
 
-from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
+from flext_quality.tools import (
+    Colors,
+    FlextScriptService as FlextScript,
+    ScriptMetadata,
+    print_colored,
+)
 
 # Note: SecurityViolation and scan_flext_ecosystem defined locally to avoid import issues
 

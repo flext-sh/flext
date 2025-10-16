@@ -10,7 +10,7 @@ from pathlib import Path
 
 from flext_core import FlextResult
 
-from flext_tools import Colors, FlextScript, print_colored
+from flext_quality.tools import Colors, FlextScriptService as FlextScript, print_colored
 
 
 class BaseSecurityScript(FlextScript):

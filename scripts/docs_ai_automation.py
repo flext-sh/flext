@@ -114,9 +114,9 @@ class AIDocumentationAutomation:
                 print("\n🔧 Step 2: Running smart optimization...")
                 try:
                     optimization_results = self.optimizer.optimize_all_documents()
-                    optimizations_applied = len(
-                        [r for r in optimization_results if r.changes_made]
-                    )
+                    optimizations_applied = len([
+                        r for r in optimization_results if r.changes_made
+                    ])
                     print(
                         f"  ✅ Found {optimizations_applied} optimization opportunities"
                     )

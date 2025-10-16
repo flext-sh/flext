@@ -320,16 +320,14 @@ class GitUltimateCleanup:
                 self.repo_path,
                 arcname=self.repo_path.name,
                 filter=lambda t: None
-                if any(
-                    [
-                        "__pycache__" in t.name,
-                        ".pyc" in t.name,
-                        ".ruff_cache" in t.name,
-                        ".mypy_cache" in t.name,
-                        ".pytest_cache" in t.name,
-                        "htmlcov" in t.name,
-                    ]
-                )
+                if any([
+                    "__pycache__" in t.name,
+                    ".pyc" in t.name,
+                    ".ruff_cache" in t.name,
+                    ".mypy_cache" in t.name,
+                    ".pytest_cache" in t.name,
+                    "htmlcov" in t.name,
+                ])
                 else t,
             )
 
@@ -1471,16 +1469,14 @@ def callback(commit, metadata):
         print(f"📝 Generating report: {output_file}")
 
         report = []
-        report.extend(
-            [
-                "# FLEXT Workspace Cruft Detection Report\n",
-                f"**Generated**: {datetime.now(UTC).strftime('%Y-%m-%d %H:%M:%S')}\n",
-                f"**Repositories Analyzed**: {len(all_results)}\n",
-                f"**Current CRUFT_PATTERNS**: {len(self.CRUFT_PATTERNS)}\n\n",
-                "---\n\n",
-                "## 📊 Executive Summary\n\n",
-            ]
-        )
+        report.extend([
+            "# FLEXT Workspace Cruft Detection Report\n",
+            f"**Generated**: {datetime.now(UTC).strftime('%Y-%m-%d %H:%M:%S')}\n",
+            f"**Repositories Analyzed**: {len(all_results)}\n",
+            f"**Current CRUFT_PATTERNS**: {len(self.CRUFT_PATTERNS)}\n\n",
+            "---\n\n",
+            "## 📊 Executive Summary\n\n",
+        ])
 
         total_gitignore = sum(r.get("total_gitignore_patterns", 0) for r in all_results)
         total_deletions = sum(r.get("total_deletions", 0) for r in all_results)
@@ -1489,22 +1485,18 @@ def callback(commit, metadata):
         )
         total_recommended = len(pattern_frequency)
 
-        report.extend(
-            [
-                f"- **Total .gitignore patterns analyzed**: {total_gitignore:,}\n",
-                f"- **Total historical deletions analyzed**: {total_deletions:,}\n",
-                f"- **New patterns detected**: {total_new_patterns:,}\n",
-                f"- **Unique recommended patterns**: {total_recommended}\n\n",
-                "## 🎯 Recommended Patterns by Frequency\n\n",
-                "Patterns appearing in multiple repositories (sorted by frequency):\n\n",
-            ]
-        )
-        report.extend(
-            [
-                "| # | Pattern | Repos | Found In |\n",
-                "|---|---------|-------|----------|\n",
-            ]
-        )
+        report.extend([
+            f"- **Total .gitignore patterns analyzed**: {total_gitignore:,}\n",
+            f"- **Total historical deletions analyzed**: {total_deletions:,}\n",
+            f"- **New patterns detected**: {total_new_patterns:,}\n",
+            f"- **Unique recommended patterns**: {total_recommended}\n\n",
+            "## 🎯 Recommended Patterns by Frequency\n\n",
+            "Patterns appearing in multiple repositories (sorted by frequency):\n\n",
+        ])
+        report.extend([
+            "| # | Pattern | Repos | Found In |\n",
+            "|---|---------|-------|----------|\n",
+        ])
 
         for i, (pattern, count) in enumerate(sorted_patterns[:50], 1):  # Top 50
             repos_str = ", ".join(repos_by_pattern[pattern][:3])
@@ -1515,22 +1507,18 @@ def callback(commit, metadata):
         if len(sorted_patterns) > 50:
             report.append(f"\n*... and {len(sorted_patterns) - 50} more patterns*\n")
 
-        report.extend(
-            [
-                "\n",
-                "## 🔥 High-Priority Patterns\n\n",
-                "Patterns found in 5+ repositories (should be added to global CRUFT_PATTERNS):\n\n",
-            ]
-        )
+        report.extend([
+            "\n",
+            "## 🔥 High-Priority Patterns\n\n",
+            "Patterns found in 5+ repositories (should be added to global CRUFT_PATTERNS):\n\n",
+        ])
 
         high_priority = [p for p, c in sorted_patterns if c >= 5]
         if high_priority:
-            report.extend(
-                (
-                    "```python\n",
-                    "# Add to CRUFT_PATTERNS in git_ultimate_cleanup.py:\n",
-                )
-            )
+            report.extend((
+                "```python\n",
+                "# Add to CRUFT_PATTERNS in git_ultimate_cleanup.py:\n",
+            ))
             report.extend(f'"{pattern}",\n' for pattern in high_priority)
             report.append("```\n\n")
         else:
@@ -1552,22 +1540,18 @@ def callback(commit, metadata):
             if not recommended:
                 continue  # Skip repos with no recommendations
 
-            report.extend(
-                (
-                    f"### {repo_name}\n\n",
-                    f"- **.gitignore patterns**: {gitignore_count}\n",
-                    f"- **Historical deletions**: {deletions_count}\n",
-                    f"- **New patterns detected**: {len(recommended)}\n\n",
-                )
-            )
+            report.extend((
+                f"### {repo_name}\n\n",
+                f"- **.gitignore patterns**: {gitignore_count}\n",
+                f"- **Historical deletions**: {deletions_count}\n",
+                f"- **New patterns detected**: {len(recommended)}\n\n",
+            ))
 
             if recommended:
-                report.extend(
-                    (
-                        "<details>\n",
-                        f"<summary><b>Show {len(recommended)} patterns</b></summary>\n\n",
-                    )
-                )
+                report.extend((
+                    "<details>\n",
+                    f"<summary><b>Show {len(recommended)} patterns</b></summary>\n\n",
+                ))
                 report.extend(f"- `{pattern}`\n" for pattern in recommended)
                 report.append("\n</details>\n\n")
 
@@ -1576,30 +1560,26 @@ def callback(commit, metadata):
             r["repo_name"] for r in all_results if not r.get("recommended_patterns", [])
         ]
         if clean_repos:
-            report.extend(
-                (
-                    "## ✅ Clean Repositories\n\n",
-                    "Repositories with no additional cruft patterns detected:\n\n",
-                )
-            )
+            report.extend((
+                "## ✅ Clean Repositories\n\n",
+                "Repositories with no additional cruft patterns detected:\n\n",
+            ))
             report.extend(f"- {repo}\n" for repo in clean_repos)
             report.append("\n")
 
         # Action Items
-        report.extend(
-            [
-                "## 📋 Action Items\n\n",
-                "1. **Review high-priority patterns** (5+ repos) and add to global CRUFT_PATTERNS\n",
-                "2. **Evaluate repo-specific patterns** for local .gitignore updates\n",
-                "3. **Run cleanup** with updated patterns:\n",
-                "   ```bash\n",
-                "   python3 scripts/git_ultimate_cleanup.py --all --push-all\n",
-                "   ```\n\n",
-                "## 📈 Detection Statistics\n\n",
-                "| Repository | .gitignore | Deletions | New Patterns |\n",
-                "|------------|------------|-----------|---------------|\n",
-            ]
-        )
+        report.extend([
+            "## 📋 Action Items\n\n",
+            "1. **Review high-priority patterns** (5+ repos) and add to global CRUFT_PATTERNS\n",
+            "2. **Evaluate repo-specific patterns** for local .gitignore updates\n",
+            "3. **Run cleanup** with updated patterns:\n",
+            "   ```bash\n",
+            "   python3 scripts/git_ultimate_cleanup.py --all --push-all\n",
+            "   ```\n\n",
+            "## 📈 Detection Statistics\n\n",
+            "| Repository | .gitignore | Deletions | New Patterns |\n",
+            "|------------|------------|-----------|---------------|\n",
+        ])
 
         for result in sorted(all_results, key=operator.itemgetter("repo_name")):
             repo_name = result["repo_name"]
@@ -1610,12 +1590,10 @@ def callback(commit, metadata):
                 f"| {repo_name} | {gitignore} | {deletions} | {new_patterns} |\n"
             )
 
-        report.extend(
-            (
-                "\n---\n\n",
-                f"*Report generated by git_ultimate_cleanup.py at {datetime.now(UTC).strftime('%Y-%m-%d %H:%M:%S')}*\n",
-            )
-        )
+        report.extend((
+            "\n---\n\n",
+            f"*Report generated by git_ultimate_cleanup.py at {datetime.now(UTC).strftime('%Y-%m-%d %H:%M:%S')}*\n",
+        ))
 
         # Write report
         output_file.write_text("".join(report), encoding="utf-8")

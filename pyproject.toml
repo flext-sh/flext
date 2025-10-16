@@ -146,7 +146,7 @@ exclude = [
 	"venv",
 ]
 extend_exclude = ["client-a-.*/", "flexcore/", "flext-.*/", "client-b-.*/"]
-known_first_party = ["flext", "flext_tools"]
+known_first_party = ["flext", "flext_quality"]
 pep621_dev_dependency_groups = ["dev", "security", "test", "typings", "docs"]
 
 [tool.mypy]
@@ -214,7 +214,6 @@ warn_unused_ignores = false
 
 packages = [
 	{ from = "src", include = "flext" },
-	{ from = "src", include = "flext_tools" },
 ]
 
 [tool.poetry.dependencies]
@@ -448,7 +447,7 @@ testpaths = ["tests/"]
 extend = "./ruff-shared.toml"
 
 [tool.ruff.lint.isort]
-known-first-party = ["flext", "flext_tools"]
+known-first-party = ["flext", "flext_quality"]
 
 [tool.vulture]
 exclude = [

@@ -446,9 +446,9 @@ class AdvancedDocumentationAnalyzer:
 
         # Analyze documentation patterns
         patterns = {
-            "readme_files": len(
-                [f for f in markdown_files if f.name.upper() == "README.MD"]
-            ),
+            "readme_files": len([
+                f for f in markdown_files if f.name.upper() == "README.MD"
+            ]),
             "total_files": len(markdown_files),
             "max_depth": self._calculate_max_depth(directory_structure),
             "avg_files_per_dir": self._calculate_avg_files_per_dir(directory_structure),
@@ -666,24 +666,16 @@ class AdvancedDocumentationAnalyzer:
         return {
             "avg_health_score": sum(health_scores) / len(health_scores),
             "avg_readability_score": sum(readability_scores) / len(readability_scores),
-            "files_needing_attention": len(
-                [
-                    f
-                    for f, h in self.documentation_health.items()
-                    if h.overall_score < 0.6
-                ]
-            ),
-            "high_quality_files": len(
-                [
-                    f
-                    for f, h in self.documentation_health.items()
-                    if h.overall_score > 0.8
-                ]
-            ),
+            "files_needing_attention": len([
+                f for f, h in self.documentation_health.items() if h.overall_score < 0.6
+            ]),
+            "high_quality_files": len([
+                f for f, h in self.documentation_health.items() if h.overall_score > 0.8
+            ]),
             "total_cross_references": len(self.cross_references),
-            "broken_references": len(
-                [cr for cr in self.cross_references if cr.confidence < 0.5]
-            ),
+            "broken_references": len([
+                cr for cr in self.cross_references if cr.confidence < 0.5
+            ]),
         }
 
 

@@ -300,12 +300,10 @@ class TestFlextConsolidated:
                     self._container.register("test", "value")
 
                     # Return success result
-                    return FlextResult[FlextTypes.Dict].ok(
-                        {
-                            "status": "success",
-                            "message": "Integration test passed",
-                        }
-                    )
+                    return FlextResult[FlextTypes.Dict].ok({
+                        "status": "success",
+                        "message": "Integration test passed",
+                    })
                 except Exception as e:
                     return FlextResult[FlextTypes.Dict].fail(str(e))
 

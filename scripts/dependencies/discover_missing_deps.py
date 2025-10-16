@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Descobrir e analisar dependências faltantes em projetos FLEXT.
 
-Script que usa flext_tools.DependencyDiscovery para encontrar dependências
+Script que usa flext_quality.tools.DependencyDiscovery para encontrar dependências
 faltantes baseado em análise AST de imports Python.
 """
 
@@ -13,10 +13,10 @@ from pathlib import Path
 
 from flext_core import FlextResult
 
-from flext_tools import (
+from flext_quality.tools import (
     Colors,
     DependencyDiscovery,
-    FlextScript,
+    FlextScriptService as FlextScript,
     ScriptMetadata,
     print_colored,
 )
@@ -25,7 +25,7 @@ from ..common import discover_projects
 
 
 class MissingDependenciesDiscoverer(FlextScript):
-    """Descobre dependências faltantes usando flext_tools."""
+    """Descobre dependências faltantes usando flext_quality.tools."""
 
     @property
     def metadata(self) -> ScriptMetadata:
@@ -74,7 +74,7 @@ class MissingDependenciesDiscoverer(FlextScript):
             print_colored("🔍 DESCOBERTA DE DEPENDÊNCIAS FALTANTES", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
 
-            # Usar DependencyDiscovery do flext_tools
+            # Usar DependencyDiscovery do flext_quality.tools
             discovery = DependencyDiscovery(resolve_transitive=True)
 
             # Descobrir projetos
@@ -89,7 +89,7 @@ class MissingDependenciesDiscoverer(FlextScript):
 
                 print_colored(f"\n📦 Analisando {project_name}...", Colors.BLUE)
 
-                # Usar flext_tools para descobrir dependências
+                # Usar flext_quality.tools para descobrir dependências
                 missing_deps = discovery.discover_project_dependencies(
                     project_path,
                     include_dev=True,

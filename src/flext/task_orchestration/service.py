@@ -367,12 +367,10 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
                     )
                 )
 
-        return FlextResult[dict[str, object]].ok(
-            {
-                "validated": True,
-                "count": len(requirements),
-            }
-        )
+        return FlextResult[dict[str, object]].ok({
+            "validated": True,
+            "count": len(requirements),
+        })
 
     def _generate_clarification_questions(
         self, requirements: list[dict[str, object]]
@@ -636,12 +634,10 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
 
         # Basic validation - estimation bounds removed as not essential domain logic
 
-        return FlextResult[dict[str, object]].ok(
-            {
-                "validated": True,
-                "task_count": len(tasks),
-            }
-        )
+        return FlextResult[dict[str, object]].ok({
+            "validated": True,
+            "task_count": len(tasks),
+        })
 
     def _analyze_dependencies(
         self, tasks: list[Task]
@@ -818,14 +814,12 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
         # Check for overloaded assignees
         for assignee, assignee_task_list in assignee_tasks.items():
             if len(assignee_task_list) > self._config.parallel_tasks:
-                conflicts.append(
-                    {
-                        "type": FlextTaskOrchestrationConstants.ConflictTypes.RESOURCE_CONFLICT,
-                        "description": f"Assignee {assignee} has too many tasks ({len(assignee_task_list)})",
-                        "affected_tasks": [task.id for task in assignee_task_list],
-                        "severity": FlextTaskOrchestrationConstants.SeverityLevels.HIGH,
-                    }
-                )
+                conflicts.append({
+                    "type": FlextTaskOrchestrationConstants.ConflictTypes.RESOURCE_CONFLICT,
+                    "description": f"Assignee {assignee} has too many tasks ({len(assignee_task_list)})",
+                    "affected_tasks": [task.id for task in assignee_task_list],
+                    "severity": FlextTaskOrchestrationConstants.SeverityLevels.HIGH,
+                })
 
         return conflicts
 
@@ -892,14 +886,12 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
                             TaskPriority.LOW,
                             TaskPriority.MEDIUM,
                         }:
-                            conflicts.append(
-                                {
-                                    "type": FlextTaskOrchestrationConstants.ConflictTypes.PRIORITY_CONFLICT,
-                                    "description": f"High priority task {task.id} blocked by lower priority task {blocking_task.id}",
-                                    "affected_tasks": [task.id, blocking_task.id],
-                                    "severity": FlextTaskOrchestrationConstants.SeverityLevels.MEDIUM,
-                                }
-                            )
+                            conflicts.append({
+                                "type": FlextTaskOrchestrationConstants.ConflictTypes.PRIORITY_CONFLICT,
+                                "description": f"High priority task {task.id} blocked by lower priority task {blocking_task.id}",
+                                "affected_tasks": [task.id, blocking_task.id],
+                                "severity": FlextTaskOrchestrationConstants.SeverityLevels.MEDIUM,
+                            })
 
         return conflicts
 

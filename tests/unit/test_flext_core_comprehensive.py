@@ -567,12 +567,10 @@ class TestFlextComprehensive:
         assert validation_result.is_success
 
         # Test validation failure
-        validation_fail = config.validate_required_fields(
-            [
-                "required_field",
-                "missing_field",
-            ]
-        )
+        validation_fail = config.validate_required_fields([
+            "required_field",
+            "missing_field",
+        ])
         assert validation_fail.is_failure
 
     # =============================================================================

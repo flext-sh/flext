@@ -1,4 +1,4 @@
-"""Unit tests for flext_tools.poetry_validator module.
+"""Unit tests for flext_quality.tools.poetry module.
 
 Tests PoetryValidator functionality with real implementations,
 no mocks or legacy patterns. Achieves near 100% coverage following FLEXT standards.
@@ -18,7 +18,7 @@ import pytest
 from flext_core import FlextResult, FlextTypes
 from flext_tests import FlextTestsDomains
 
-from flext_tools import PoetryValidator
+from flext_quality.tools import PoetryValidator
 
 
 class TestPoetryValidator:

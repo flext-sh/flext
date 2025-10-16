@@ -118,19 +118,17 @@ class DocumentationHealthMonitor:
         readability_score = max(0, 100 - (avg_sentence_length * 1.5))
 
         # Structure quality
-        headings = len(
-            [line for line in content.split("\n") if line.strip().startswith("#")]
-        )
-        lists = len(
-            [
-                line
-                for line in content.split("\n")
-                if line.strip().startswith(("-", "*", "+"))
-            ]
-        )
-        code_blocks = len(
-            [line for line in content.split("\n") if line.strip().startswith("```")]
-        )
+        headings = len([
+            line for line in content.split("\n") if line.strip().startswith("#")
+        ])
+        lists = len([
+            line
+            for line in content.split("\n")
+            if line.strip().startswith(("-", "*", "+"))
+        ])
+        code_blocks = len([
+            line for line in content.split("\n") if line.strip().startswith("```")
+        ])
 
         structure_score = min(
             1.0, (headings + lists + code_blocks) / max(word_count / 100, 1)
@@ -143,9 +141,9 @@ class DocumentationHealthMonitor:
 
         # Accessibility score
         images = self._extract_images(content)
-        images_with_alt = len(
-            [img for img in images if img.get("alt_text", "").strip()]
-        )
+        images_with_alt = len([
+            img for img in images if img.get("alt_text", "").strip()
+        ])
         accessibility_score = images_with_alt / max(len(images), 1) if images else 1.0
 
         # Freshness score
@@ -445,23 +443,23 @@ class DocumentationHealthMonitor:
 
         # Calculate averages
         avg_health_score = statistics.mean([hs.overall_score for hs in health_scores])
-        avg_content_quality = statistics.mean(
-            [hs.content_quality for hs in health_scores]
-        )
-        avg_structure_quality = statistics.mean(
-            [hs.structure_quality for hs in health_scores]
-        )
+        avg_content_quality = statistics.mean([
+            hs.content_quality for hs in health_scores
+        ])
+        avg_structure_quality = statistics.mean([
+            hs.structure_quality for hs in health_scores
+        ])
         avg_link_health = statistics.mean([hs.link_health for hs in health_scores])
-        avg_accessibility = statistics.mean(
-            [hs.accessibility_score for hs in health_scores]
-        )
+        avg_accessibility = statistics.mean([
+            hs.accessibility_score for hs in health_scores
+        ])
         avg_freshness = statistics.mean([hs.freshness_score for hs in health_scores])
-        avg_completeness = statistics.mean(
-            [hs.completeness_score for hs in health_scores]
-        )
-        avg_maintainability = statistics.mean(
-            [hs.maintainability_score for hs in health_scores]
-        )
+        avg_completeness = statistics.mean([
+            hs.completeness_score for hs in health_scores
+        ])
+        avg_maintainability = statistics.mean([
+            hs.maintainability_score for hs in health_scores
+        ])
 
         # Count alerts by severity
         alert_counts = {
@@ -474,9 +472,9 @@ class DocumentationHealthMonitor:
         health_distribution = {
             "excellent": len([hs for hs in health_scores if hs.overall_score >= 0.9]),
             "good": len([hs for hs in health_scores if 0.7 <= hs.overall_score < 0.9]),
-            "warning": len(
-                [hs for hs in health_scores if 0.5 <= hs.overall_score < 0.7]
-            ),
+            "warning": len([
+                hs for hs in health_scores if 0.5 <= hs.overall_score < 0.7
+            ]),
             "critical": len([hs for hs in health_scores if hs.overall_score < 0.5]),
         }
 

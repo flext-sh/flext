@@ -255,14 +255,12 @@ class EcosystemValidator:
     def generate_report(self) -> str:
         """Generate human-readable report."""
         lines = []
-        lines.extend(
-            (
-                "=" * 80,
-                "FLEXT ECOSYSTEM TRANSFORMATION STATUS REPORT",
-                "=" * 80,
-                "",
-            )
-        )
+        lines.extend((
+            "=" * 80,
+            "FLEXT ECOSYSTEM TRANSFORMATION STATUS REPORT",
+            "=" * 80,
+            "",
+        ))
 
         # Summary statistics
         total = len(self.results)

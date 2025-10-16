@@ -2,7 +2,7 @@
 """FLEXT Script Runner - Executor centralizado de scripts.
 
 Este script serve como ponto de entrada único para execução de todos os scripts
-do workspace FLEXT usando flext_tools para máxima reutilização.
+do workspace FLEXT usando flext_quality.tools para máxima reutilização.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -20,7 +20,12 @@ from pathlib import Path
 
 from flext_core import FlextResult
 
-from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
+from flext_quality.tools import (
+    Colors,
+    FlextScriptService as FlextScript,
+    ScriptMetadata,
+    print_colored,
+)
 
 from .script_registry import ScriptRegistry
 
