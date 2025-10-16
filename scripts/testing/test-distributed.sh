@@ -7,9 +7,9 @@ set -e
 
 # Load FLEXT constants
 source "$(dirname "$0")/../constants.env" 2>/dev/null || {
-	echo "Warning: Could not load FLEXT constants, using FlextCore.Constants defaults"
-	# Fallback values synchronized with FlextCore.Constants
-	FLEXT_REDIS_ADDRESS="localhost:6379" # FlextCore.Constants.Platform.DEFAULT_HOST:REDIS_DEFAULT_PORT
+	echo "Warning: Could not load FLEXT constants, using FlextConstants defaults"
+	# Fallback values synchronized with FlextConstants
+	FLEXT_REDIS_ADDRESS="localhost:6379" # FlextConstants.Platform.DEFAULT_HOST:REDIS_DEFAULT_PORT
 	FLEXT_TEST_API_PORT=8081             # Test API port (offset from FLEXT_API_PORT)
 	FLEXT_PROMETHEUS_PORT=9090           # Standard Prometheus port
 	FLEXT_GRAFANA_PORT=3000              # Standard Grafana port

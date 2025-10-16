@@ -5,7 +5,7 @@ It includes the main FLEXT application framework and development tools.
 
 Modules:
     flext: Main FLEXT application framework with CLI, workspace management, and services
-    flext_tools: Development and operational tools for quality assurance, monitoring, and deployment
+    flext_quality.tools: Development and operational tools for quality assurance, monitoring, and deployment
 
 The package provides a comprehensive platform for:
 - Data integration pipeline management
@@ -16,12 +16,12 @@ The package provides a comprehensive platform for:
 
 Usage:
     import flext
-    from flext_tools import quality_gateway
+    from flext_quality.tools import FlextQualityOperations
 
     # Use FLEXT framework
     app = flext.FlextCli()
     app.run()
 
     # Use development tools
-    quality_gateway.run_quality_checks()
+    FlextQualityOperations().gateway.run_all_checks(".")
 """

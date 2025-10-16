@@ -18,7 +18,7 @@ from collections import defaultdict
 from collections.abc import Iterable
 from pathlib import Path
 
-from flext_core import FlextCore
+from flext_core import FlextTypes
 
 ADJ = {
     "extended",
@@ -76,14 +76,14 @@ def should_skip(path: Path) -> bool:
     return any(part in SKIP_DIRS for part in path.parts)
 
 
-def simplify(base: str) -> FlextCore.Types.StringList:
+def simplify(base: str) -> FlextTypes.StringList:
     """Return filtered tokens for a test basename without extension and 'test_' prefix."""
     tokens = re.split(r"[_\-]+", base)
     filtered = [t for t in tokens if t and t.lower() not in ADJ]
     if not filtered:
         filtered = [tokens[0]] if tokens else ["tests"]
     # collapse consecutive duplicates
-    out: FlextCore.Types.StringList = []
+    out: FlextTypes.StringList = []
     for t in filtered:
         if not out or out[-1] != t:
             out.append(t)

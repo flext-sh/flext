@@ -91,7 +91,7 @@ FC --> SCHED: Pipeline Complete
 deactivate FC
 
 == Error Handling ==
-note over SCHED, TGT_DB: All operations use FlextCore.Result[T] for error handling
+note over SCHED, TGT_DB: All operations use FlextResult[T] for error handling
 note over SCHED, TGT_DB: Failed stages can be retried independently
 note over SCHED, TGT_DB: Pipeline state is persisted for recovery
 

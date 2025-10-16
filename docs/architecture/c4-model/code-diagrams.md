@@ -4,11 +4,11 @@
 
 This document provides detailed code-level diagrams showing the implementation structure of key components in the FLEXT platform, including class diagrams, entity relationship diagrams, and sequence diagrams.
 
-## 1. FlextCore.Result[T] Class Diagram
+## 1. FlextResult[T] Class Diagram
 
 ```mermaid
 classDiagram
-    class FlextCore.Result~T~ {
+    class FlextResult~T~ {
         <<Generic Type>>
         +T value
         +Exception error
@@ -16,14 +16,14 @@ classDiagram
         +bool is_failure
         +unwrap() T
         +unwrap_failure() Exception
-        +map(Func~T, U~) FlextCore.Result~U~
-        +flat_map(Func~T, FlextCore.Result~U~~) FlextCore.Result~U~
-        +and_then(Func~T, FlextCore.Result~U~~) FlextCore.Result~U~
-        +or_else(Func~Exception, FlextCore.Result~T~~) FlextCore.Result~T~
-        +on_success(Action~T~) FlextCore.Result~T~
-        +on_failure(Action~Exception~) FlextCore.Result~T~
-        +ok(T value) FlextCore.Result~T~
-        +fail(Exception error) FlextCore.Result~T~
+        +map(Func~T, U~) FlextResult~U~
+        +flat_map(Func~T, FlextResult~U~~) FlextResult~U~
+        +and_then(Func~T, FlextResult~U~~) FlextResult~U~
+        +or_else(Func~Exception, FlextResult~T~~) FlextResult~T~
+        +on_success(Action~T~) FlextResult~T~
+        +on_failure(Action~Exception~) FlextResult~T~
+        +ok(T value) FlextResult~T~
+        +fail(Exception error) FlextResult~T~
     }
 
     class FlextSuccess~T~ {
@@ -31,8 +31,8 @@ classDiagram
         +bool is_success = true
         +bool is_failure = false
         +unwrap() T
-        +map(Func~T, U~) FlextCore.Result~U~
-        +flat_map(Func~T, FlextCore.Result~U~~) FlextCore.Result~U~
+        +map(Func~T, U~) FlextResult~U~
+        +flat_map(Func~T, FlextResult~U~~) FlextResult~U~
     }
 
     class FlextFailure~T~ {
@@ -40,28 +40,28 @@ classDiagram
         +bool is_success = false
         +bool is_failure = true
         +unwrap_failure() Exception
-        +or_else(Func~Exception, FlextCore.Result~T~~) FlextCore.Result~T~
+        +or_else(Func~Exception, FlextResult~T~~) FlextResult~T~
     }
 
-    FlextCore.Result~T~ <|-- FlextSuccess~T~
-    FlextCore.Result~T~ <|-- FlextFailure~T~
+    FlextResult~T~ <|-- FlextSuccess~T~
+    FlextResult~T~ <|-- FlextFailure~T~
 ```
 
-## 2. FlextCore.Container Class Diagram
+## 2. FlextContainer Class Diagram
 
 ```mermaid
 classDiagram
-    class FlextCore.Container {
+    class FlextContainer {
         <<Singleton>>
         -Dict~str, ServiceRegistration~ registrations
         -Dict~str, object~ instances
         +register_singleton~T~(str key, Type~T~ service_type) None
         +register_transient~T~(str key, Type~T~ service_type) None
         +register_factory~T~(str key, Callable~T~ factory) None
-        +resolve~T~(str key) FlextCore.Result~T~
-        +get~T~(str key) FlextCore.Result~T~
+        +resolve~T~(str key) FlextResult~T~
+        +get~T~(str key) FlextResult~T~
         +is_registered(str key) bool
-        +get_global() FlextCore.Container
+        +get_global() FlextContainer
         +clear() None
     }
 
@@ -81,15 +81,15 @@ classDiagram
         SCOPED
     }
 
-    FlextCore.Container --> ServiceRegistration : contains
+    FlextContainer --> ServiceRegistration : contains
     ServiceRegistration --> ServiceLifetime : uses
 ```
 
-## 3. FlextCore.Models Domain Model
+## 3. FlextModels Domain Model
 
 ```mermaid
 classDiagram
-    class FlextCore.Models {
+    class FlextModels {
         <<Namespace>>
     }
 
@@ -161,10 +161,10 @@ classDiagram
         +__str__() str
     }
 
-    FlextCore.Models --> Entity
-    FlextCore.Models --> ValueObject
-    FlextCore.Models --> AggregateRoot
-    FlextCore.Models --> DomainEvent
+    FlextModels --> Entity
+    FlextModels --> ValueObject
+    FlextModels --> AggregateRoot
+    FlextModels --> DomainEvent
 
     Entity <|-- AggregateRoot
     ValueObject <|-- Email
@@ -326,24 +326,24 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant Service
-    participant FlextCore.Result
+    participant FlextResult
     participant Logger
     participant ErrorHandler
     participant NotificationService
 
-    Service->>FlextCore.Result: Process Operation
-    FlextCore.Result->>FlextCore.Result: Execute Business Logic
+    Service->>FlextResult: Process Operation
+    FlextResult->>FlextResult: Execute Business Logic
 
     alt Operation Success
-        FlextCore.Result-->>Service: Success Result
+        FlextResult-->>Service: Success Result
         Service->>Logger: Log Success
     else Operation Failure
-        FlextCore.Result->>ErrorHandler: Handle Error
+        FlextResult->>ErrorHandler: Handle Error
         ErrorHandler->>Logger: Log Error
         ErrorHandler->>NotificationService: Send Alert
         NotificationService-->>ErrorHandler: Alert Sent
-        ErrorHandler-->>FlextCore.Result: Error Handled
-        FlextCore.Result-->>Service: Failure Result
+        ErrorHandler-->>FlextResult: Error Handled
+        FlextResult-->>Service: Failure Result
         Service->>Logger: Log Failure
     end
 ```
@@ -355,7 +355,7 @@ classDiagram
     class PluginManager {
         +Dict~str, Plugin~ plugins
         +register_plugin(plugin) None
-        +execute_plugin(plugin_id, input_data) FlextCore.Result~T~
+        +execute_plugin(plugin_id, input_data) FlextResult~T~
         +get_plugin_status(plugin_id) PluginStatus
         +list_plugins() List~Plugin~
     }
@@ -367,7 +367,7 @@ classDiagram
         +str version
         +PluginType type
         +PluginStatus status
-        +execute(input_data) FlextCore.Result~T~
+        +execute(input_data) FlextResult~T~
         +validate_config(config) bool
         +get_metadata() PluginMetadata
     }
@@ -375,20 +375,20 @@ classDiagram
     class SingerTap {
         +str source_type
         +Dict config_schema
-        +execute_discovery() FlextCore.Result~Catalog~
-        +execute_sync(config) FlextCore.Result~SyncResult~
+        +execute_discovery() FlextResult~Catalog~
+        +execute_sync(config) FlextResult~SyncResult~
     }
 
     class SingerTarget {
         +str destination_type
         +Dict config_schema
-        +execute_sync(catalog, records) FlextCore.Result~SyncResult~
+        +execute_sync(catalog, records) FlextResult~SyncResult~
     }
 
     class DBTTransform {
         +str transform_type
         +List~str~ dependencies
-        +execute_transform(sql) FlextCore.Result~TransformResult~
+        +execute_transform(sql) FlextResult~TransformResult~
     }
 
     class PluginStatus {
@@ -420,7 +420,7 @@ classDiagram
 
 ```mermaid
 classDiagram
-    class FlextCore.Config {
+    class FlextConfig {
         <<Singleton>>
         -Dict~str, object~ settings
         -ConfigSource source
@@ -465,7 +465,7 @@ classDiagram
         INI
     }
 
-    FlextCore.Config --> ConfigSource : uses
+    FlextConfig --> ConfigSource : uses
     ConfigSource <|-- EnvironmentConfigSource
     ConfigSource <|-- FileConfigSource
     ConfigSource <|-- DatabaseConfigSource
@@ -477,11 +477,11 @@ classDiagram
 ```mermaid
 classDiagram
     class EventStore {
-        +append_events(stream_id, events) FlextCore.Result~None~
-        +get_events(stream_id, from_version) FlextCore.Result~List~Event~~
-        +get_stream_metadata(stream_id) FlextCore.Result~StreamMetadata~
-        +create_snapshot(stream_id, version) FlextCore.Result~Snapshot~
-        +get_snapshot(stream_id) FlextCore.Result~Snapshot~
+        +append_events(stream_id, events) FlextResult~None~
+        +get_events(stream_id, from_version) FlextResult~List~Event~~
+        +get_stream_metadata(stream_id) FlextResult~StreamMetadata~
+        +create_snapshot(stream_id, version) FlextResult~Snapshot~
+        +get_snapshot(stream_id) FlextResult~Snapshot~
     }
 
     class Event {
@@ -538,16 +538,16 @@ classDiagram
 
 ### Test Coverage by Component
 
-- **FlextCore.Result[T]**: 95% coverage
-- **FlextCore.Container**: 99% coverage
-- **FlextCore.Models**: 65% coverage
+- **FlextResult[T]**: 95% coverage
+- **FlextContainer**: 99% coverage
+- **FlextModels**: 65% coverage
 - **LDAP Service**: 85% coverage
 - **API Gateway**: 80% coverage
 - **Plugin Manager**: 70% coverage
 
 ### Performance Benchmarks
 
-- **FlextCore.Result Operations**: < 1ms per operation
+- **FlextResult Operations**: < 1ms per operation
 - **Container Resolution**: < 0.1ms per service
 - **LDAP Queries**: < 100ms per query
 - **API Response Time**: < 200ms per request
@@ -555,7 +555,7 @@ classDiagram
 
 ### Memory Usage
 
-- **FlextCore.Result Instances**: ~100 bytes per instance
+- **FlextResult Instances**: ~100 bytes per instance
 - **Container Services**: ~1KB per service registration
 - **LDAP Connections**: ~2MB per connection pool
 - **API Gateway**: ~50MB base memory usage

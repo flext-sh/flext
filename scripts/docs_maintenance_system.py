@@ -32,7 +32,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import requests
-from flext_core import FlextCore
+from flext_core import FlextTypes
 
 
 @dataclass
@@ -44,10 +44,10 @@ class DocFile:
     mtime: float
     lines: int
     words: int
-    headings: FlextCore.Types.StringList
-    links: FlextCore.Types.StringList
-    images: FlextCore.Types.StringList
-    issues: FlextCore.Types.StringList = field(default_factory=list)
+    headings: FlextTypes.StringList
+    links: FlextTypes.StringList
+    images: FlextTypes.StringList
+    issues: FlextTypes.StringList = field(default_factory=list)
     score: float = 0.0
 
 
@@ -65,7 +65,7 @@ class AuditResult:
     style_issues: int = 0
     completeness_score: float = 0.0
     files: list[DocFile] = field(default_factory=list)
-    issues: dict[str, FlextCore.Types.StringList] = field(default_factory=dict)
+    issues: dict[str, FlextTypes.StringList] = field(default_factory=dict)
 
 
 class DocumentationMaintenanceSystem:
@@ -208,7 +208,7 @@ class DocumentationMaintenanceSystem:
                 score=0.0,
             )
 
-    def check_heading_hierarchy(self, headings: FlextCore.Types.StringList) -> bool:
+    def check_heading_hierarchy(self, headings: FlextTypes.StringList) -> bool:
         """Check if heading hierarchy is consistent."""
         if not headings:
             return True
@@ -227,7 +227,7 @@ class DocumentationMaintenanceSystem:
 
     def validate_links(
         self, doc_file: DocFile, timeout: int = 10
-    ) -> tuple[int, FlextCore.Types.StringList]:
+    ) -> tuple[int, FlextTypes.StringList]:
         """Validate external links in a document."""
         broken_links = []
         checked = 0
@@ -246,9 +246,7 @@ class DocumentationMaintenanceSystem:
 
         return checked, broken_links
 
-    def validate_images(
-        self, doc_file: DocFile
-    ) -> tuple[int, FlextCore.Types.StringList]:
+    def validate_images(self, doc_file: DocFile) -> tuple[int, FlextTypes.StringList]:
         """Validate image references in a document."""
         missing_images = []
         checked = 0
@@ -311,13 +309,16 @@ class DocumentationMaintenanceSystem:
             result.total_images += len(doc_file.images)
             result.broken_links += len(broken_links)
             result.missing_images += len(missing_images)
-            result.style_issues += len([
-                i
-                for i in doc_file.issues
-                if any(
-                    keyword in i.lower() for keyword in ["heading", "alt text", "style"]
-                )
-            ])
+            result.style_issues += len(
+                [
+                    i
+                    for i in doc_file.issues
+                    if any(
+                        keyword in i.lower()
+                        for keyword in ["heading", "alt text", "style"]
+                    )
+                ]
+            )
 
             result.files.append(doc_file)
 
@@ -334,7 +335,7 @@ class DocumentationMaintenanceSystem:
 
     def categorize_issues(
         self, files: list[DocFile]
-    ) -> dict[str, FlextCore.Types.StringList]:
+    ) -> dict[str, FlextTypes.StringList]:
         """Categorize issues by type."""
         categories = defaultdict(list)
 

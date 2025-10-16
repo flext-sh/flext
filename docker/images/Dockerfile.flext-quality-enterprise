@@ -41,7 +41,7 @@ mock_dir.mkdir(exist_ok=True)
 
 with open(mock_dir / '__init__.py', 'w') as f:
     f.write('''# Mock flext_core
-class FlextCore.Result:
+class FlextResult:
     def __init__(self, success, data=None, error=None):
         self.success = success
         self.is_failure = not success
@@ -51,11 +51,11 @@ class FlextCore.Result:
     def ok(cls, data=None): return cls(True, data=data)
     @classmethod
     def fail(cls, error): return cls(False, error=error)
-def FlextCore.Logger(name): return logging.getLogger(name)
-class FlextCore.Container:
+def FlextLogger(name): return logging.getLogger(name)
+class FlextContainer:
     def __init__(self): self._services = {}
-    def register(self, name, service): self._services[name] = service; return FlextCore.Result.ok(None)
-    def get(self, name): return FlextCore.Result.ok(self._services[name]) if name in self._services else FlextCore.Result.fail(f"Service {name} not found")
+    def register(self, name, service): self._services[name] = service; return FlextResult.ok(None)
+    def get(self, name): return FlextResult.ok(self._services[name]) if name in self._services else FlextResult.fail(f"Service {name} not found")
 ''')
 
 # Create mock flext_observability module

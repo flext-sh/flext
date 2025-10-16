@@ -13,7 +13,13 @@ from __future__ import annotations
 import uuid
 
 from flext_cli import FlextCli
-from flext_core import FlextCore
+from flext_core import (
+    FlextContainer,
+    FlextLogger,
+    FlextResult,
+    FlextService,
+    FlextUtilities,
+)
 
 from flext import (
     FlextApplicationHandlerService,
@@ -82,39 +88,39 @@ class TestFlextComponents:
     """Test flext core components functionality."""
 
     def test_flext_result_functionality(self) -> None:
-        """Test FlextCore.Result functionality."""
+        """Test FlextResult functionality."""
         # Test success result
-        success_result = FlextCore.Result[str].ok("test_value")
+        success_result = FlextResult[str].ok("test_value")
         assert success_result.is_success
         assert success_result.value == "test_value"
         assert success_result.error is None
 
         # Test failure result
-        failure_result = FlextCore.Result[str].fail("test_error")
+        failure_result = FlextResult[str].fail("test_error")
         assert failure_result.is_failure
         assert failure_result.error == "test_error"
 
     def test_flext_container_functionality(self) -> None:
-        """Test FlextCore.Container functionality."""
-        container = FlextCore.Container.get_global()
+        """Test FlextContainer functionality."""
+        container = FlextContainer.get_global()
         assert container is not None
 
         # Test registration and retrieval
         test_key = f"test_key_{uuid.uuid4().hex[:8]}"
         test_value = "test_value"
         result = container.register(test_key, test_value)
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
         assert result.is_success
 
         # Test retrieval
         retrieved = container.get(test_key)
-        assert isinstance(retrieved, FlextCore.Result)
+        assert isinstance(retrieved, FlextResult)
         if retrieved.is_success:
             assert retrieved.data == test_value
 
     def test_flext_logger_functionality(self) -> None:
-        """Test FlextCore.Logger functionality."""
-        logger = FlextCore.Logger(__name__)
+        """Test FlextLogger functionality."""
+        logger = FlextLogger(__name__)
         assert logger is not None
 
         # Test logging methods
@@ -130,36 +136,36 @@ class TestFlextComponents:
         assert callable(logger.debug)
 
     def test_flext_service_functionality(self) -> None:
-        """Test FlextCore.Service functionality."""
+        """Test FlextService functionality."""
 
         # Create a test service
-        class TestService(FlextCore.Service):
-            def execute(self) -> FlextCore.Result[str]:
-                return FlextCore.Result[str].ok("test_execution")
+        class TestService(FlextService):
+            def execute(self) -> FlextResult[str]:
+                return FlextResult[str].ok("test_execution")
 
         service = TestService()
         assert service is not None
-        assert isinstance(service, FlextCore.Service)
+        assert isinstance(service, FlextService)
 
         # Test execution
         result = service.execute()
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
         assert result.is_success
         assert result.value == "test_execution"
 
 
 class TestFlextUtilities:
-    """Test FlextCore.Utilities functionality."""
+    """Test FlextUtilities functionality."""
 
     def test_flext_utilities_creation(self) -> None:
-        """Test FlextCore.Utilities creation."""
-        utilities = FlextCore.Utilities()
+        """Test FlextUtilities creation."""
+        utilities = FlextUtilities()
         assert utilities is not None
-        assert isinstance(utilities, FlextCore.Utilities)
+        assert isinstance(utilities, FlextUtilities)
 
     def test_flext_utilities_methods(self) -> None:
-        """Test FlextCore.Utilities has expected methods."""
-        utilities = FlextCore.Utilities()
+        """Test FlextUtilities has expected methods."""
+        utilities = FlextUtilities()
 
         # Test that utilities has expected nested classes
         assert hasattr(utilities, "Validation")
@@ -167,26 +173,26 @@ class TestFlextUtilities:
         assert hasattr(utilities, "Conversion")
 
     def test_flext_utilities_validation(self) -> None:
-        """Test FlextCore.Utilities validation methods."""
-        utilities = FlextCore.Utilities()
+        """Test FlextUtilities validation methods."""
+        utilities = FlextUtilities()
 
         # Test validation methods
         result = utilities.Validation.validate_string("test")
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
 
 
 class TestFlextMainLogger:
-    """Test FlextCore.LoggerMain functionality."""
+    """Test FlextLogger functionality."""
 
     def test_flext_main_logger_creation(self) -> None:
-        """Test FlextCore.LoggerMain creation."""
-        logger = FlextCore.LoggerMain(__name__)
+        """Test FlextLogger creation."""
+        logger = FlextLogger(__name__)
         assert logger is not None
-        assert isinstance(logger, FlextCore.LoggerMain)
+        assert isinstance(logger, FlextLogger)
 
     def test_flext_main_logger_methods(self) -> None:
-        """Test FlextCore.LoggerMain has expected methods."""
-        logger = FlextCore.LoggerMain(__name__)
+        """Test FlextLogger has expected methods."""
+        logger = FlextLogger(__name__)
 
         # Test logging methods
         assert hasattr(logger, "info")
@@ -202,18 +208,18 @@ class TestFlextMainLogger:
 
 
 class TestFlextMainResult:
-    """Test FlextCore.ResultMain functionality."""
+    """Test FlextResult functionality."""
 
     def test_flext_main_result_success(self) -> None:
-        """Test FlextCore.ResultMain success functionality."""
-        success_result = FlextCore.ResultMain[str].ok("test_value")
+        """Test FlextResult success functionality."""
+        success_result = FlextResult[str].ok("test_value")
         assert success_result.is_success
         assert success_result.value == "test_value"
         assert success_result.error is None
 
     def test_flext_main_result_failure(self) -> None:
-        """Test FlextCore.ResultMain failure functionality."""
-        failure_result = FlextCore.ResultMain[str].fail("test_error")
+        """Test FlextResult failure functionality."""
+        failure_result = FlextResult[str].fail("test_error")
         assert failure_result.is_failure
         assert failure_result.error == "test_error"
 
@@ -253,7 +259,7 @@ class TestFlextIntegration:
         assert workspace_service is not None
 
     def test_service_inheritance_consistency(self) -> None:
-        """Test that services properly inherit from FlextCore.Service."""
+        """Test that services properly inherit from FlextService."""
         cli = FlextControlPanelCli()
         workspace_cli = FlextWorkspaceCli()
         services = FlextUnifiedServices()
@@ -263,15 +269,15 @@ class TestFlextIntegration:
         cli_service = FlextCliService()
         workspace_service = FlextWorkspaceService()
 
-        # Test that components inherit from FlextCore.Service
-        assert isinstance(cli, FlextCore.Service)
-        assert isinstance(workspace_cli, FlextCore.Service)
-        assert isinstance(services, FlextCore.Service)
-        assert isinstance(handler_service, FlextCore.Service)
-        assert isinstance(pipeline_service, FlextCore.Service)
-        assert isinstance(api, FlextCore.Service)
-        assert isinstance(cli_service, FlextCore.Service)
-        assert isinstance(workspace_service, FlextCore.Service)
+        # Test that components inherit from FlextService
+        assert isinstance(cli, FlextService)
+        assert isinstance(workspace_cli, FlextService)
+        assert isinstance(services, FlextService)
+        assert isinstance(handler_service, FlextService)
+        assert isinstance(pipeline_service, FlextService)
+        assert isinstance(api, FlextService)
+        assert isinstance(cli_service, FlextService)
+        assert isinstance(workspace_service, FlextService)
 
         # Test that they have execute method
         assert hasattr(cli, "execute")
@@ -285,20 +291,20 @@ class TestFlextIntegration:
 
     def test_container_integration(self) -> None:
         """Test container integration."""
-        container = FlextCore.Container.get_global()
+        container = FlextContainer.get_global()
         assert container is not None
 
         # Test registration
         result = container.register("test_key", "test_value")
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
 
         # Test retrieval
         retrieved = container.get("test_key")
-        assert isinstance(retrieved, FlextCore.Result)
+        assert isinstance(retrieved, FlextResult)
 
     def test_logger_integration(self) -> None:
         """Test logger integration."""
-        logger = FlextCore.Logger(__name__)
+        logger = FlextLogger(__name__)
         assert logger is not None
 
         # Test logging methods
@@ -309,7 +315,7 @@ class TestFlextIntegration:
 
     def test_utilities_integration(self) -> None:
         """Test utilities integration."""
-        utilities = FlextCore.Utilities()
+        utilities = FlextUtilities()
         assert utilities is not None
 
         # Test utilities nested classes
@@ -319,7 +325,7 @@ class TestFlextIntegration:
 
     def test_main_logger_integration(self) -> None:
         """Test main logger integration."""
-        logger = FlextCore.LoggerMain(__name__)
+        logger = FlextLogger(__name__)
         assert logger is not None
 
         # Test logging methods
@@ -331,13 +337,13 @@ class TestFlextIntegration:
     def test_main_result_integration(self) -> None:
         """Test main result integration."""
         # Test success result
-        success_result = FlextCore.ResultMain[str].ok("test_value")
+        success_result = FlextResult[str].ok("test_value")
         assert success_result.is_success
         assert success_result.value == "test_value"
         assert success_result.error is None
 
         # Test failure result
-        failure_result = FlextCore.ResultMain[str].fail("test_error")
+        failure_result = FlextResult[str].fail("test_error")
         assert failure_result.is_failure
         assert failure_result.error == "test_error"
 

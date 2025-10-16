@@ -85,9 +85,9 @@ The primary API providing unified access to all LDIF operations:
 
 ```python
 class FlextLdif:
-    def parse(self, content: str) -> FlextCore.Result[List[Entry], Exception]
-    def write(self, entries: List[Entry]) -> FlextCore.Result[str, Exception]
-    def migrate(self, input_dir: Path, output_dir: Path, from_server: str, to_server: str) -> FlextCore.Result[MigrationReport, Exception]
+    def parse(self, content: str) -> FlextResult[List[Entry], Exception]
+    def write(self, entries: List[Entry]) -> FlextResult[str, Exception]
+    def migrate(self, input_dir: Path, output_dir: Path, from_server: str, to_server: str) -> FlextResult[MigrationReport, Exception]
 ```
 
 #### FlextLdifModels
@@ -123,9 +123,9 @@ Handling of server-specific LDIF format variations:
 
 ```python
 # Register server-specific quirks
-from flext_ldif.quirks.registry import QuirkRegistryService
+from flext_ldif import FlextLdifQuirksRegistry
 
-quirks = QuirkRegistryService()
+quirks = FlextLdifQuirksRegistry()
 
 # OID-specific handling
 oid_quirks = quirks.get_quirks("oid")
@@ -226,7 +226,26 @@ if migration_result.is_success:
 ### Custom Processors
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 # Create custom processor
 def custom_validation(entry: dict) -> dict[str, object]:
@@ -252,10 +271,29 @@ batch_result = ldif.Processors.process_entries_batch(
 ### Event Handling
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 # Subscribe to LDIF events
-bus = FlextCore.Bus()
+bus = FlextBus()
 bus.subscribe(LdifEntryProcessedEvent, CustomHandler)
 bus.subscribe(LdifMigrationCompletedEvent, NotificationHandler)
 
@@ -318,31 +356,32 @@ ldif = FlextLdif(config=config)
 
 ## Error Handling
 
-### Exception Hierarchy
-
-```python
-from flext_ldif import FlextLdifExceptions
-
-# Parsing errors
-class LdifParsingException(FlextLdifExceptions.FlextLdifDomainException):
-    pass
-
-# Validation errors
-class LdifValidationException(FlextLdifExceptions.FlextLdifDomainException):
-    pass
-
-# Migration errors
-class LdifMigrationException(FlextLdifExceptions.FlextLdifDomainException):
-    pass
-```
-
 ### Error Handling Best Practices
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 def safe_ldif_processing():
-    # Use FlextCore.Result for error handling
+    # Use FlextResult for error handling
     result = ldif.parse(ldif_content)
 
     return result.map(

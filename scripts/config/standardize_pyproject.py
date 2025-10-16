@@ -11,7 +11,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextCore
+from flext_core import FlextResult, FlextTypes
 
 from flext_tools import (
     Colors,
@@ -39,7 +39,7 @@ class PyprojectStandardizer(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> FlextCore.Result[None]:
+    def validate_preconditions(self) -> FlextResult[None]:
         """Validate preconditions."""
         workspace_root = Path.cwd()
 
@@ -54,14 +54,14 @@ class PyprojectStandardizer(FlextScript):
 
         if not flext_projects:
             print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return FlextCore.Result[None].fail("Not in FLEXT workspace root")
+            return FlextResult[None].fail("Not in FLEXT workspace root")
 
         print_colored(f"✅ Found {len(flext_projects)} FLEXT projects", Colors.GREEN)
-        return FlextCore.Result[None].ok(None)
+        return FlextResult[None].ok(None)
 
     def execute_main_logic(
         self, **kwargs: dict[str, str]
-    ) -> FlextCore.Result[dict[str, str]]:
+    ) -> FlextResult[dict[str, str]]:
         """Execute main script logic."""
         """Execute pyproject.toml standardization."""
         try:
@@ -81,7 +81,7 @@ class PyprojectStandardizer(FlextScript):
             poetry_ops = PoetryValidator()
 
             total_standardized = 0
-            failed_projects: FlextCore.Types.StringList = []
+            failed_projects: FlextTypes.StringList = []
 
             # Standardize each project
             for project_path in projects:
@@ -113,7 +113,7 @@ class PyprojectStandardizer(FlextScript):
             # Summary
             self._print_summary(len(projects), total_standardized, failed_projects)
 
-            return FlextCore.Result[object].ok(
+            return FlextResult[object].ok(
                 {
                     "total_projects": len(projects),
                     "standardized": total_standardized,
@@ -123,7 +123,7 @@ class PyprojectStandardizer(FlextScript):
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during standardization: {e}", Colors.RED)
-            return FlextCore.Result[object].fail(f"Standardization error: {e}")
+            return FlextResult[object].fail(f"Standardization error: {e}")
 
     def _discover_projects(
         self,
@@ -137,7 +137,7 @@ class PyprojectStandardizer(FlextScript):
         self,
         total_projects: int,
         standardized: int,
-        failed_projects: FlextCore.Types.StringList,
+        failed_projects: FlextTypes.StringList,
     ) -> None:
         """Print standardization summary."""
         print_colored("\n📊 STANDARDIZATION SUMMARY", Colors.BLUE)
@@ -181,9 +181,9 @@ class PyprojectStandardizer(FlextScript):
 
         return parser
 
-    def cleanup(self) -> FlextCore.Result[None]:
+    def cleanup(self) -> FlextResult[None]:
         """Limpeza após execução."""
-        return FlextCore.Result[None].ok(None)
+        return FlextResult[None].ok(None)
 
 
 def main() -> int:

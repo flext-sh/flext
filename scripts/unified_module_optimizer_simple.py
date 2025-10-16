@@ -9,10 +9,10 @@ the complex flext-core integrations that may have circular import issues.
 ## 📚 QUICK REFERENCE - Key Sections
 
 **Core Patterns** (Most Important):
-- **[Namespace Class Pattern](#-namespace-class-pattern-critical-flext-core-foundation)** - FlextCore.Constants, FlextCore.Models, FlextCore.Types, FlextCore.Exceptions, FlextCore.Protocols
+- **[Namespace Class Pattern](#-namespace-class-pattern-critical-flext-core-foundation)** - FlextConstants, FlextModels, FlextTypes, FlextExceptions, FlextProtocols
 - **[Extending Namespace Classes](#-extending-namespace-classes-domain-library-pattern)** - How domain libraries extend flext-core
-- **[FlextCore.Config Advanced](#-flextconfig-advanced-patterns-pydantic-211-basesettings)** - Pydantic 2.11+ BaseSettings, validators, computed fields
-- **[FlextCore.Result Railway](#-flextresult-railway-pattern-monadic-error-handling)** - Monadic operations, railway-oriented programming
+- **[FlextConfig Advanced](#-flextconfig-advanced-patterns-pydantic-211-basesettings)** - Pydantic 2.11+ BaseSettings, validators, computed fields
+- **[FlextResult Railway](#-flextresult-railway-pattern-monadic-error-handling)** - Monadic operations, railway-oriented programming
 - **[Complete API Surface](#-complete-flext-core-api-surface-20-exports)** - All 20+ flext-core exports
 - **[Module-Only-One-Class](#-module-only-one-class-pattern-unified-single-class)** - Single unified class pattern with nested helpers
 
@@ -97,7 +97,14 @@ import sys
 from pathlib import Path
 from typing import ClassVar, TypeVar
 
-from flext_core import FlextCore
+from flext_core import (
+    FlextConfig,
+    FlextConstants,
+    FlextLogger,
+    FlextResult,
+    FlextTypes,
+    FlextUtilities,
+)
 
 T = TypeVar("T")
 
@@ -109,7 +116,7 @@ if not RUFF_CMD:
 
 
 # Configuration for the optimizer
-class FlextModuleOptimizerConstants(FlextCore.Constants):
+class FlextModuleOptimizerConstants(FlextConstants):
     """Optimization constants extending flext-core."""
 
     class Optimization:
@@ -118,7 +125,7 @@ class FlextModuleOptimizerConstants(FlextCore.Constants):
         DEFAULT_BATCH_SIZE: int = 5
         MAX_FILE_SIZE: int = 1024 * 1024  # 1MB
         SUPPORTED_EXTENSIONS: ClassVar[set[str]] = {".py", ".pyi"}
-        EXCLUDE_PATTERNS: ClassVar[FlextCore.Types.StringList] = [
+        EXCLUDE_PATTERNS: ClassVar[FlextTypes.StringList] = [
             "__pycache__",
             ".git",
             ".venv",
@@ -153,7 +160,7 @@ class FlextModuleOptimizerConstants(FlextCore.Constants):
         }
 
         # ❌ FORBIDDEN - Anti-patterns
-        FORBIDDEN_PATTERNS: ClassVar[FlextCore.Types.StringList] = [
+        FORBIDDEN_PATTERNS: ClassVar[FlextTypes.StringList] = [
             r"# type: ignore.*$",  # Generic type ignore
             r"def .*\).*-> object:",  # object return type
             r"except.*pass",  # Empty except blocks
@@ -161,7 +168,7 @@ class FlextModuleOptimizerConstants(FlextCore.Constants):
         ]
 
 
-class FlextModuleOptimizerConfig(FlextCore.Config):
+class FlextModuleOptimizerConfig(FlextConfig):
     """Optimization configuration."""
 
     def __init__(self, **kwargs: object) -> None:
@@ -189,16 +196,16 @@ class FlextModuleOptimizer:
     def __init__(self, config: FlextModuleOptimizerConfig | None = None) -> None:
         """Initialize optimizer."""
         self._config = config or FlextModuleOptimizerConfig()
-        self.logger = FlextCore.Logger(__name__)
+        self.logger = FlextLogger(__name__)
 
-    def optimize_project(self, project_path: str) -> FlextCore.Result:
+    def optimize_project(self, project_path: str) -> FlextResult:
         """Optimize entire project according to FLEXT patterns.
 
         Args:
             project_path: Path to project to optimize
 
         Returns:
-            FlextCore.Result with optimization summary
+            FlextResult with optimization summary
 
         """
         self.logger.info(
@@ -209,18 +216,14 @@ class FlextModuleOptimizer:
             # Phase 1: Discovery and analysis
             discovery_result = self._discover_optimization_targets(project_path)
             if discovery_result.is_failure:
-                return FlextCore.Result.fail(
-                    f"Discovery failed: {discovery_result.error}"
-                )
+                return FlextResult.fail(f"Discovery failed: {discovery_result.error}")
 
             targets = discovery_result.unwrap()
 
             # Phase 2: Quality gate validation
             quality_result = self._validate_quality_gates(targets)
             if quality_result.is_failure and not self._config.force:
-                return FlextCore.Result.fail(
-                    f"Quality gates failed: {quality_result.error}"
-                )
+                return FlextResult.fail(f"Quality gates failed: {quality_result.error}")
 
             # Phase 3: Batch optimization
             optimization_result = self._optimize_in_batches(targets)
@@ -230,9 +233,9 @@ class FlextModuleOptimizer:
 
         except Exception as e:
             self.logger.exception("Optimization failed", extra={"error": str(e)})
-            return FlextCore.Result.fail(f"Optimization error: {e}")
+            return FlextResult.fail(f"Optimization error: {e}")
 
-    def _discover_optimization_targets(self, project_path: str) -> FlextCore.Result:
+    def _discover_optimization_targets(self, project_path: str) -> FlextResult:
         """Discover modules that need optimization."""
         self.logger.info(
             "Discovering optimization targets", extra={"project_path": project_path}
@@ -245,9 +248,7 @@ class FlextModuleOptimizer:
 
             # Check if it's a valid project
             if not (project_root / "src").exists():
-                return FlextCore.Result.fail(
-                    f"No src directory found in {project_path}"
-                )
+                return FlextResult.fail(f"No src directory found in {project_path}")
 
             # Walk through src directory
             for root, dirs, files in os.walk(project_root / "src"):
@@ -303,12 +304,12 @@ class FlextModuleOptimizer:
             targets.sort(key=operator.itemgetter("priority"), reverse=True)
 
             self.logger.info(f"Discovered {len(targets)} optimization targets")
-            return FlextCore.Result.ok(targets)
+            return FlextResult.ok(targets)
 
         except Exception as e:
-            return FlextCore.Result.fail(f"Discovery error: {e}")
+            return FlextResult.fail(f"Discovery error: {e}")
 
-    def _analyze_file_for_optimization(self, file_path: Path) -> FlextCore.Result:
+    def _analyze_file_for_optimization(self, file_path: Path) -> FlextResult:
         """Analyze file for optimization opportunities."""
         try:
             with Path(file_path).open(encoding="utf-8") as f:
@@ -318,7 +319,7 @@ class FlextModuleOptimizer:
             try:
                 tree = ast.parse(content, filename=str(file_path))
             except SyntaxError as e:
-                return FlextCore.Result.fail(f"Syntax error: {e}")
+                return FlextResult.fail(f"Syntax error: {e}")
 
             violations = []
             suggestions = []
@@ -367,15 +368,17 @@ class FlextModuleOptimizer:
                     "Consider using domain libraries for better architecture"
                 )
 
-            return FlextCore.Result.ok({
-                "violations": violations,
-                "suggestions": suggestions,
-                "complexity_score": complexity_score,
-                "domain_library_usage": domain_library_usage,
-            })
+            return FlextResult.ok(
+                {
+                    "violations": violations,
+                    "suggestions": suggestions,
+                    "complexity_score": complexity_score,
+                    "domain_library_usage": domain_library_usage,
+                }
+            )
 
         except Exception as e:
-            return FlextCore.Result.fail(f"Analysis error: {e}")
+            return FlextResult.fail(f"Analysis error: {e}")
 
     def _needs_optimization(self, analysis: dict) -> bool:
         """Determine if module needs optimization."""
@@ -421,18 +424,18 @@ class FlextModuleOptimizer:
         score = 0.0
 
         # Count classes (should be 1 per module)
-        class_count = len([
-            node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)
-        ])
+        class_count = len(
+            [node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)]
+        )
         if class_count > 1:
             score += 0.3
         elif class_count == 0:
             score += 0.2
 
         # Count functions (should be minimal in optimized modules)
-        func_count = len([
-            node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)
-        ])
+        func_count = len(
+            [node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)]
+        )
         if func_count > 10:
             score += 0.3
 
@@ -460,9 +463,7 @@ class FlextModuleOptimizer:
 
         return max_child_depth
 
-    def _validate_quality_gates(
-        self, targets: list[FlextCore.Types.Dict]
-    ) -> FlextCore.Result:
+    def _validate_quality_gates(self, targets: list[FlextTypes.Dict]) -> FlextResult:
         """Validate targets against quality gates."""
         self.logger.info(
             "Validating quality gates", extra={"target_count": len(targets)}
@@ -483,13 +484,13 @@ class FlextModuleOptimizer:
                 )
 
         if violations and not self._config.force:
-            return FlextCore.Result.fail("Quality gate violations found")
+            return FlextResult.fail("Quality gate violations found")
 
-        return FlextCore.Result.ok(None)
+        return FlextResult.ok(None)
 
     def _optimize_in_batches(
-        self, targets: list[FlextCore.Types.Dict]
-    ) -> list[FlextCore.Types.Dict]:
+        self, targets: list[FlextTypes.Dict]
+    ) -> list[FlextTypes.Dict]:
         """Optimize targets in batches."""
         self.logger.info(
             "Starting batch optimization", extra={"total_targets": len(targets)}
@@ -609,53 +610,6 @@ class FlextModuleOptimizer:
         # extracting helper methods, reducing nesting, etc.
         return content
 
-    def _integrate_domain_libraries(self, content: str, target: dict) -> str:
-        """Integrate appropriate domain libraries."""
-        optimized = content
-
-        # Add necessary domain library imports
-        imports_to_add = []
-
-        # Check what functionality the module needs and add appropriate libraries
-        if "ldap" in target["file_path"].lower() and "from flext_ldap" not in optimized:
-            imports_to_add.append("from flext_ldap import FlextLdap")
-        if "ldif" in target["file_path"].lower() and "from flext_ldif" not in optimized:
-            imports_to_add.append("from flext_ldif import FlextLdif")
-        if "api" in target["file_path"].lower() and "from flext_api" not in optimized:
-            imports_to_add.append("from flext_api import FlextApi")
-        if "cli" in target["file_path"].lower() and "from flext_cli" not in optimized:
-            imports_to_add.append("from flext_cli import FlextCli")
-
-        # Add imports after existing imports
-        if imports_to_add:
-            lines = optimized.split("\n")
-            insert_idx = 0
-
-            # Find the last import line
-            for i, line in enumerate(lines):
-                if line.startswith(("import ", "from ")):
-                    insert_idx = i + 1
-
-            # Insert new imports
-            for import_line in imports_to_add:
-                lines.insert(insert_idx, import_line)
-                insert_idx += 1
-
-            optimized = "\n".join(lines)
-
-        return optimized
-
-    def general_improvements(self, content: str) -> str:
-        """Apply general improvements."""
-        optimized = content
-
-        # Ensure from __future__ import annotations
-        if "from __future__ import annotations" not in optimized:
-            optimized = "from __future__ import annotations\n\n" + optimized
-
-        # Add proper type hints if missing
-        return self.add_missing_type_hints(optimized)
-
     def add_missing_type_hints(self, content: str) -> str:
         """Add missing type hints (simplified implementation)."""
         # This would be a complex analysis in practice
@@ -668,11 +622,11 @@ class FlextModuleOptimizer:
         optimized_lines = set(optimized.split("\n"))
         return len(original_lines.symmetric_difference(optimized_lines))
 
-    def _validate_optimized_file(self, file_path: str) -> FlextCore.Result:
+    def _validate_optimized_file(self, file_path: str) -> FlextResult:
         """Validate optimized file."""
         try:
             # Run ruff check
-            result = FlextCore.Utilities.run_external_command(
+            result = FlextUtilities.run_external_command(
                 [RUFF_CMD, "check", file_path],
                 check=False,
                 capture_output=True,
@@ -681,16 +635,16 @@ class FlextModuleOptimizer:
             )
 
             if result.returncode != 0:
-                return FlextCore.Result.fail(f"Ruff validation failed: {result.stdout}")
+                return FlextResult.fail(f"Ruff validation failed: {result.stdout}")
 
-            return FlextCore.Result.ok(None)
+            return FlextResult.ok(None)
 
         except Exception as e:
-            return FlextCore.Result.fail(f"Validation error: {e}")
+            return FlextResult.fail(f"Validation error: {e}")
 
     def _validate_optimization_results(
-        self, results: list[FlextCore.Types.Dict]
-    ) -> FlextCore.Result:
+        self, results: list[FlextTypes.Dict]
+    ) -> FlextResult:
         """Validate final optimization results."""
         total_targets = len(results)
         successful_targets = sum(1 for r in results if r["success"])
@@ -709,9 +663,9 @@ class FlextModuleOptimizer:
         }
 
         if total_errors > 0 and not self._config.force:
-            return FlextCore.Result.fail(f"Optimization had {total_errors} errors")
+            return FlextResult.fail(f"Optimization had {total_errors} errors")
 
-        return FlextCore.Result.ok(summary)
+        return FlextResult.ok(summary)
 
 
 def main() -> None:

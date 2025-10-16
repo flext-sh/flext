@@ -117,7 +117,7 @@ git filter-repo --replace-message .git/history-cleanup/commit-msg-mapping.txt
 
 | Type       | When Applied                | Example                                  |
 | ---------- | --------------------------- | ---------------------------------------- |
-| `feat`     | New features, src/ changes  | `feat(core): add FlextCore.Result type`  |
+| `feat`     | New features, src/ changes  | `feat(core): add FlextResult type`       |
 | `fix`      | Bug fixes                   | `fix(ldap): resolve connection timeout`  |
 | `docs`     | \*.md files, documentation  | `docs: update installation guide`        |
 | `style`    | Lint, format, black, ruff   | `style: apply code formatting`           |

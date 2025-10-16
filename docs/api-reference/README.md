@@ -10,11 +10,11 @@ The foundation framework providing core patterns and utilities.
 
 **Key Classes:**
 
-- `FlextCore.Container` - Dependency injection container
-- `FlextCore.Dispatcher` - CQRS command/query dispatcher
-- `FlextCore.Registry` - Service registration system
-- `FlextCore.Result` - Railway-oriented error handling
-- `FlextCore.Bus` - Domain event system
+- `FlextContainer` - Dependency injection container
+- `FlextDispatcher` - CQRS command/query dispatcher
+- `FlextRegistry` - Service registration system
+- `FlextResult` - Railway-oriented error handling
+- `FlextBus` - Domain event system
 
 ### 📄 flext-ldif
 
@@ -72,9 +72,28 @@ Oracle database integration and operations.
 ### Dependency Injection
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-container = FlextCore.Container()
+container = FlextContainer()
 container.register(FlextLdif, FlextLdif())
 
 service = container.resolve(FlextLdif)
@@ -83,22 +102,60 @@ service = container.resolve(FlextLdif)
 ### Railway-Oriented Programming
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-def process_data(data: str) -> FlextCore.Result[List[Entry], Exception]:
+def process_data(data: str) -> FlextResult[List[Entry], Exception]:
     try:
         # Processing logic
-        return FlextCore.Result.success(entries)
+        return FlextResult.success(entries)
     except Exception as e:
-        return FlextCore.Result.failure(e)
+        return FlextResult.failure(e)
 ```
 
 ### CQRS Pattern
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-dispatcher = FlextCore.Dispatcher()
+dispatcher = FlextDispatcher()
 dispatcher.register_handler(CreateEntryCommand, CreateEntryHandler)
 
 result = dispatcher.dispatch(CreateEntryCommand(data))
@@ -123,7 +180,26 @@ config = FlextLdifConfig(
 Unified error handling across all libraries:
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 result = some_operation()
 if result.is_failure:
@@ -138,8 +214,27 @@ else:
 Structured logging with flext-core:
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-logger = FlextCore.Logger.get_logger(__name__)
+logger = FlextLogger.get_logger(__name__)
 logger.info("Operation completed", extra={"entries_count": len(entries)})
 ```

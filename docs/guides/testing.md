@@ -33,7 +33,26 @@ Test individual functions and classes in isolation:
 
 ```python
 import pytest
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 from flext_ldif import FlextLdif
 
 class TestLdifParsing:
@@ -68,13 +87,32 @@ Test component interactions and workflows:
 
 ```python
 import pytest
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 from flext_ldif import FlextLdif, FlextLdifConfig
 
 class TestLdifIntegration:
     def test_ldif_with_container(self):
         """Test LDIF processing with dependency injection."""
-        container = FlextCore.Container.get_global()
+        container = FlextContainer.get_global()
 
         # Register LDIF service
         config = FlextLdifConfig(batch_size=100)
@@ -274,13 +312,32 @@ def test_file_migration(ldif_service, temp_directories):
 
 ```python
 from unittest.mock import Mock, patch
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 def test_with_mocked_dependency():
     """Test with mocked external dependency."""
     with patch('flext_ldif.external_service') as mock_service:
         # Configure mock
-        mock_service.process.return_value = FlextCore.Result.ok("processed")
+        mock_service.process.return_value = FlextResult.ok("processed")
 
         # Test function that uses mock
         result = my_function()
@@ -294,15 +351,34 @@ def test_with_mocked_dependency():
 
 ```python
 from unittest.mock import Mock
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 def test_with_stubbed_service():
     """Test with stubbed service in container."""
-    container = FlextCore.Container.get_global()
+    container = FlextContainer.get_global()
 
     # Create stub service
     stub_service = Mock()
-    stub_service.process.return_value = FlextCore.Result.ok("stubbed")
+    stub_service.process.return_value = FlextResult.ok("stubbed")
 
     # Register stub
     container.register("external_service", stub_service)

@@ -5,5 +5,6 @@ SPDX-License-Identifier: MIT
 
 """
 
-__version__ = "0.1.0"
-__version_info__ = (0, 1, 0)
+from flext_quality.__version__ import __version__, __version_info__
+
+__all__ = ["__version__", "__version_info__"]

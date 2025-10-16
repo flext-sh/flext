@@ -69,7 +69,7 @@ end
 deactivate AG
 
 == Error Handling ==
-note over C, LDAP: All operations use FlextCore.Result[T] for error handling
+note over C, LDAP: All operations use FlextResult[T] for error handling
 note over C, LDAP: Errors are logged and monitored
 note over C, LDAP: Failed requests are tracked for analysis
 

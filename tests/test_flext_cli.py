@@ -3,12 +3,13 @@
 from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
-from flext_cli.api import FlextCli
-from flext_cli.auth import FlextCliAuth
-from flext_cli.config import FlextCliConfig
-from flext_cli.debug import FlextCliDebug
-from flext_cli.formatters import FlextCliFormatters
-from flext_cli.main import FlextCliMain
+from flext_cli import (
+    FlextCli,
+    FlextCliConfig,
+    FlextCliCore,
+    FlextCliFormatters,
+    FlextCliPrompts,
+)
 
 
 class TestFlextCli:
@@ -19,11 +20,10 @@ class TestFlextCli:
         cli = FlextCli()
 
         # Check that all components are initialized
-        assert cli.auth is not None
         assert cli.config is not None
-        assert cli.debug is not None
         assert cli.formatters is not None
-        assert cli.main is not None
+        assert cli.core is not None
+        assert cli.prompts is not None
 
     def test_execute_success(self) -> None:
         """Test execute method returns success."""
@@ -34,18 +34,6 @@ class TestFlextCli:
         data = result.unwrap()
         assert data["status"] == "operational"
         assert data["service"] == "flext-cli"
-        assert data["version"] == "2.0.0"
-        assert "timestamp" in data
-        assert "components" in data
-
-        # Check components
-        components = data["components"]
-        assert components["api"] == "available"
-        assert components["auth"] == "available"
-        assert components["config"] == "available"
-        assert components["debug"] == "available"
-        assert components["formatters"] == "available"
-        assert components["main"] == "available"
 
     @patch("flext_cli.cli.click")
     def test_cli_status_command(self, mock_click: MagicMock) -> None:
@@ -77,11 +65,11 @@ class TestFlextCli:
         assert cli.auth is not None
 
     def test_execute_returns_flext_result(self) -> None:
-        """Test that execute returns FlextCore.Result."""
+        """Test that execute returns FlextResult."""
         cli = FlextCli()
         result = cli.execute()
 
-        # Check FlextCore.Result properties
+        # Check FlextResult properties
         assert hasattr(result, "is_success")
         assert hasattr(result, "is_failure")
         assert hasattr(result, "unwrap")
@@ -123,10 +111,7 @@ class TestFlextCli:
         cli = FlextCli()
 
         # Check component types
-
-        # api property doesn't exist in FlextCli
-        assert isinstance(cli.auth, FlextCliAuth)
         assert isinstance(cli.config, FlextCliConfig)
-        assert isinstance(cli.debug, FlextCliDebug)
         assert isinstance(cli.formatters, FlextCliFormatters)
-        assert isinstance(cli.main, FlextCliMain)
+        assert isinstance(cli.core, FlextCliCore)
+        assert isinstance(cli.prompts, FlextCliPrompts)

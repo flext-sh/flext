@@ -12,7 +12,18 @@ from __future__ import annotations
 import time
 
 import pytest
-from flext_core import FlextCore
+from flext_core import (
+    FlextBus,
+    FlextConfig,
+    FlextConstants,
+    FlextContainer,
+    FlextLogger,
+    FlextModels,
+    FlextResult,
+    FlextService,
+    FlextTypes,
+    FlextUtilities,
+)
 
 
 class TestFlextTargeted:
@@ -23,9 +34,9 @@ class TestFlextTargeted:
     # =============================================================================
 
     def test_flext_result_creation_and_basic_properties(self) -> None:
-        """Test FlextCore.Result creation and basic property access."""
+        """Test FlextResult creation and basic property access."""
         # Test successful creation
-        success = FlextCore.Result[str].ok("test_data")
+        success = FlextResult[str].ok("test_data")
         assert success.is_success
         assert not success.is_failure
         assert success.data == "test_data"
@@ -33,7 +44,7 @@ class TestFlextTargeted:
         assert success.error is None
 
         # Test failure creation
-        failure = FlextCore.Result[str].fail("error_message")
+        failure = FlextResult[str].fail("error_message")
         assert failure.is_failure
         assert not failure.is_success
         # Use safe access for failure (property, not method)
@@ -42,8 +53,8 @@ class TestFlextTargeted:
 
     def test_flext_result_unwrap_methods(self) -> None:
         """Test unwrap methods."""
-        success = FlextCore.Result[str].ok("data")
-        failure = FlextCore.Result[str].fail("error")
+        success = FlextResult[str].ok("data")
+        failure = FlextResult[str].fail("error")
 
         # Test unwrap
         assert success.unwrap() == "data"
@@ -61,8 +72,8 @@ class TestFlextTargeted:
 
     def test_flext_result_map_operations(self) -> None:
         """Test map and flat_map operations."""
-        success = FlextCore.Result[int].ok(5)
-        failure = FlextCore.Result[int].fail("error")
+        success = FlextResult[int].ok(5)
+        failure = FlextResult[int].fail("error")
 
         # Test map
         mapped_success = success.map(lambda x: x * 2)
@@ -73,8 +84,8 @@ class TestFlextTargeted:
         assert mapped_failure.is_failure
 
         # Test flat_map
-        def double_wrap(x: int) -> FlextCore.Result[int]:
-            return FlextCore.Result[int].ok(x * 2)
+        def double_wrap(x: int) -> FlextResult[int]:
+            return FlextResult[int].ok(x * 2)
 
         flat_mapped = success.flat_map(double_wrap)
         assert flat_mapped.is_success
@@ -82,9 +93,9 @@ class TestFlextTargeted:
 
     def test_flext_result_logical_operations(self) -> None:
         """Test logical operations and operators."""
-        success1 = FlextCore.Result[int].ok(1)
-        success2 = FlextCore.Result[int].ok(2)
-        failure = FlextCore.Result[int].fail("error")
+        success1 = FlextResult[int].ok(1)
+        success2 = FlextResult[int].ok(2)
+        failure = FlextResult[int].fail("error")
 
         # Test or_else method instead of | operator
         or_result = success1.or_else(success2)
@@ -97,10 +108,10 @@ class TestFlextTargeted:
 
     def test_flext_result_error_handling(self) -> None:
         """Test error handling methods."""
-        failure = FlextCore.Result[str].fail("original_error")
+        failure = FlextResult[str].fail("original_error")
 
         # Test or_else
-        recovered = failure.or_else(FlextCore.Result[str].ok("recovered"))
+        recovered = failure.or_else(FlextResult[str].ok("recovered"))
         assert recovered.is_success
         assert recovered.data == "recovered"
 
@@ -114,7 +125,7 @@ class TestFlextTargeted:
 
     def test_flext_result_filtering_and_validation(self) -> None:
         """Test filter and validation methods."""
-        success = FlextCore.Result[int].ok(5)
+        success = FlextResult[int].ok(5)
 
         # Test filter
         filtered_pass = success.filter(lambda x: x > 3, "Value too small")
@@ -124,25 +135,25 @@ class TestFlextTargeted:
         assert filtered_fail.is_failure
 
     def test_flext_result_context_manager(self) -> None:
-        """Test FlextCore.Result as context manager."""
-        success = FlextCore.Result[str].ok("test_data")
+        """Test FlextResult as context manager."""
+        success = FlextResult[str].ok("test_data")
 
         with success as value:
             assert value == "test_data"
 
         # Test with failure
-        failure = FlextCore.Result[str].fail("error")
+        failure = FlextResult[str].fail("error")
 
         with pytest.raises(Exception), failure as value:
             pass  # Should raise
 
     def test_flext_result_equality_and_hashing(self) -> None:
         """Test equality and hashing."""
-        success1 = FlextCore.Result[int].ok(42)
-        success2 = FlextCore.Result[int].ok(42)
-        success3 = FlextCore.Result[int].ok(43)
-        failure1 = FlextCore.Result[int].fail("error")
-        failure2 = FlextCore.Result[int].fail("error")
+        success1 = FlextResult[int].ok(42)
+        success2 = FlextResult[int].ok(42)
+        success3 = FlextResult[int].ok(43)
+        failure1 = FlextResult[int].fail("error")
+        failure2 = FlextResult[int].fail("error")
 
         # Test equality
         assert success1 == success2
@@ -159,60 +170,60 @@ class TestFlextTargeted:
     # =============================================================================
 
     def test_flext_utilities_generators(self) -> None:
-        """Test FlextCore.Utilities.Generators methods."""
+        """Test FlextUtilities.Generators methods."""
         # Test timestamp generation
-        ts1 = FlextCore.Utilities.Generators.generate_timestamp()
+        ts1 = FlextUtilities.Generators.generate_timestamp()
         time.sleep(0.001)
-        ts2 = FlextCore.Utilities.Generators.generate_timestamp()
+        ts2 = FlextUtilities.Generators.generate_timestamp()
 
         assert ts1 != ts2
         assert isinstance(ts1, str)
         assert "T" in ts1
 
         # Test UUID generation
-        uuid1 = FlextCore.Utilities.Generators.generate_uuid()
-        uuid2 = FlextCore.Utilities.Generators.generate_uuid()
+        uuid1 = FlextUtilities.Generators.generate_uuid()
+        uuid2 = FlextUtilities.Generators.generate_uuid()
 
         assert uuid1 != uuid2
         assert len(uuid1) == 36
         assert uuid1.count("-") == 4
 
         # Test correlation ID
-        corr1 = FlextCore.Utilities.Generators.generate_correlation_id()
-        corr2 = FlextCore.Utilities.Generators.generate_correlation_id()
+        corr1 = FlextUtilities.Generators.generate_correlation_id()
+        corr2 = FlextUtilities.Generators.generate_correlation_id()
 
         assert corr1 != corr2
         assert isinstance(corr1, str)
         assert len(corr1) > 0
 
     def test_flext_utilities_conversions(self) -> None:
-        """Test FlextCore.Utilities.TypeConversions methods."""
+        """Test FlextUtilities.TypeConversions methods."""
         # Test to_int conversion
-        int_result = FlextCore.Utilities.TypeConversions.to_int("42")
+        int_result = FlextUtilities.TypeConversions.to_int("42")
         assert int_result.is_success
         assert int_result.data == 42
 
         # Test failed int conversion
-        fail_result = FlextCore.Utilities.TypeConversions.to_int("not_number")
+        fail_result = FlextUtilities.TypeConversions.to_int("not_number")
         assert fail_result.is_failure
 
         # Test to_bool conversion (uses keyword argument)
-        bool_result = FlextCore.Utilities.TypeConversions.to_bool(value="true")
+        bool_result = FlextUtilities.TypeConversions.to_bool(value="true")
         assert bool_result.is_success
         assert bool_result.data is True
 
     def test_flext_utilities_validation(self) -> None:
-        """Test FlextCore.Utilities.Validation methods."""
+        """Test FlextUtilities.Validation methods."""
         # Test string validation
-        string_valid = FlextCore.Utilities.Validation.validate_string("test")
+        string_valid = FlextUtilities.Validation.validate_string("test")
         assert string_valid.is_success
 
         # Test email validation
-        email_valid = FlextCore.Utilities.Validation.validate_email("test@example.com")
+        email_valid = FlextUtilities.Validation.validate_email("test@example.com")
         assert email_valid.is_success
 
         # Test port validation
-        port_valid = FlextCore.Utilities.Validation.validate_port(8080)
+        port_valid = FlextUtilities.Validation.validate_port(8080)
         assert port_valid.is_success
 
     # =============================================================================
@@ -220,8 +231,8 @@ class TestFlextTargeted:
     # =============================================================================
 
     def test_flext_container_basic_operations(self) -> None:
-        """Test FlextCore.Container basic operations."""
-        container = FlextCore.Container.get_global()
+        """Test FlextContainer basic operations."""
+        container = FlextContainer.get_global()
 
         # Test registration and retrieval
         key = "test_container_key"
@@ -238,9 +249,9 @@ class TestFlextTargeted:
         assert missing_result.is_failure
 
     def test_flext_container_singleton_behavior(self) -> None:
-        """Test FlextCore.Container singleton pattern."""
-        container1 = FlextCore.Container.get_global()
-        container2 = FlextCore.Container.get_global()
+        """Test FlextContainer singleton pattern."""
+        container1 = FlextContainer.get_global()
+        container2 = FlextContainer.get_global()
 
         assert container1 is container2
 
@@ -249,11 +260,11 @@ class TestFlextTargeted:
     # =============================================================================
 
     def test_flext_bus_basic_pubsub(self) -> None:
-        """Test FlextCore.Bus basic handler registration and execution."""
-        bus = FlextCore.Bus()
+        """Test FlextBus basic handler registration and execution."""
+        bus = FlextBus()
 
-        def handler(command: str) -> FlextCore.Result[str]:
-            return FlextCore.Result[str].ok(f"handled_{command}")
+        def handler(command: str) -> FlextResult[str]:
+            return FlextResult[str].ok(f"handled_{command}")
 
         # Test handler registration
         reg_result = bus.register_handler("TestCommand", handler)
@@ -261,18 +272,18 @@ class TestFlextTargeted:
 
         # Test command execution
         exec_result = bus.send_command("TestCommand")
-        assert isinstance(exec_result, FlextCore.Result)
+        assert isinstance(exec_result, FlextResult)
 
     # =============================================================================
     # FLEXT SERVICE TARGETED TESTS
     # =============================================================================
 
     def test_flext_service_basic_functionality(self) -> None:
-        """Test FlextCore.Service basic functionality."""
+        """Test FlextService basic functionality."""
 
-        class TestService(FlextCore.Service[str]):
-            def execute(self) -> FlextCore.Result[str]:
-                return FlextCore.Result[str].ok("service_executed")
+        class TestService(FlextService[str]):
+            def execute(self) -> FlextResult[str]:
+                return FlextResult[str].ok("service_executed")
 
         service = TestService()
         result = service.execute()
@@ -281,11 +292,11 @@ class TestFlextTargeted:
         assert result.data == "service_executed"
 
     def test_flext_service_with_error(self) -> None:
-        """Test FlextCore.Service error handling."""
+        """Test FlextService error handling."""
 
-        class ErrorService(FlextCore.Service[str]):
-            def execute(self) -> FlextCore.Result[str]:
-                return FlextCore.Result[str].fail("service_error")
+        class ErrorService(FlextService[str]):
+            def execute(self) -> FlextResult[str]:
+                return FlextResult[str].fail("service_error")
 
         service = ErrorService()
         result = service.execute()
@@ -298,8 +309,8 @@ class TestFlextTargeted:
     # =============================================================================
 
     def test_flext_logger_basic_logging(self) -> None:
-        """Test FlextCore.Logger basic functionality."""
-        logger = FlextCore.Logger("test_logger")
+        """Test FlextLogger basic functionality."""
+        logger = FlextLogger("test_logger")
 
         # Test basic logging methods
         logger.debug("Debug message")
@@ -316,29 +327,29 @@ class TestFlextTargeted:
     # =============================================================================
 
     def test_flext_config_basic_operations(self) -> None:
-        """Test FlextCore.Config basic operations."""
+        """Test FlextConfig basic operations."""
         # Test basic config creation
-        config = FlextCore.Config()
+        config = FlextConfig()
 
         # Test config exists
         assert config is not None
-        assert isinstance(config, FlextCore.Config)
+        assert isinstance(config, FlextConfig)
 
     # =============================================================================
     # FLEXT MODELS TARGETED TESTS
     # =============================================================================
 
     def test_flext_models_basic_validation(self) -> None:
-        """Test FlextCore.Models basic validation functionality."""
+        """Test FlextModels basic validation functionality."""
         # Test model functionality with actual model classes
-        entity_model = FlextCore.Models.Entity()
+        entity_model = FlextModels.Entity()
         assert entity_model is not None
 
         # Test model validation exists
-        assert hasattr(FlextCore.Models, "Validation")
+        assert hasattr(FlextModels, "Validation")
 
         # Test validation methods
-        validation = FlextCore.Models.Validation()
+        validation = FlextModels.Validation()
         assert validation is not None
 
     # =============================================================================
@@ -346,10 +357,10 @@ class TestFlextTargeted:
     # =============================================================================
 
     def test_flext_constants_access(self) -> None:
-        """Test FlextCore.Constants access."""
+        """Test FlextConstants access."""
         # Test that constants exist and are accessible
-        assert hasattr(FlextCore.Constants, "Core")
-        core_constants = FlextCore.Constants
+        assert hasattr(FlextConstants, "Core")
+        core_constants = FlextConstants
         assert core_constants is not None
 
     # =============================================================================
@@ -357,16 +368,16 @@ class TestFlextTargeted:
     # =============================================================================
 
     def test_flext_types_usage(self) -> None:
-        """Test FlextCore.Types usage."""
+        """Test FlextTypes usage."""
         # Test basic type usage
-        test_dict: FlextCore.Types.Dict = {"key": "value"}
+        test_dict: FlextTypes.Dict = {"key": "value"}
         assert isinstance(test_dict, dict)
 
-        test_list: FlextCore.Types.List = [1, 2, 3]
+        test_list: FlextTypes.List = [1, 2, 3]
         assert isinstance(test_list, list)
 
         # Test config types
-        config_value: FlextCore.Types.ConfigValue = "config_string"
+        config_value: FlextTypes.ConfigValue = "config_string"
         assert isinstance(config_value, str)
 
     # =============================================================================
@@ -377,10 +388,10 @@ class TestFlextTargeted:
         """Test basic performance characteristics."""
         start_time = time.time()
 
-        # Create many FlextCore.Result instances
+        # Create many FlextResult instances
         results = []
         for i in range(1000):
-            result = FlextCore.Result[int].ok(i)
+            result = FlextResult[int].ok(i)
             results.append(result)
 
         # Test basic operations
@@ -401,22 +412,22 @@ class TestFlextTargeted:
     def test_edge_cases(self) -> None:
         """Test edge cases and boundary conditions."""
         # Test with None values
-        none_result = FlextCore.Result[None].ok(None)
+        none_result = FlextResult[None].ok(None)
         assert none_result.is_success
         assert none_result.data is None
 
         # Test empty collections
-        empty_list = FlextCore.Result[FlextCore.Types.List].ok([])
+        empty_list = FlextResult[FlextTypes.List].ok([])
         assert empty_list.is_success
         assert empty_list.data == []
 
-        empty_dict = FlextCore.Result[FlextCore.Types.Dict].ok({})
+        empty_dict = FlextResult[FlextTypes.Dict].ok({})
         assert empty_dict.is_success
         assert empty_dict.data == {}
 
         # Test large strings
         large_string = "x" * 10000
-        large_result = FlextCore.Result[str].ok(large_string)
+        large_result = FlextResult[str].ok(large_string)
         assert large_result.is_success
         assert len(large_result.data) == 10000
 
@@ -427,7 +438,7 @@ class TestFlextTargeted:
             msg = "Test exception"
             raise ValueError(msg)
         except ValueError as e:
-            result = FlextCore.Result[str].fail(str(e))
+            result = FlextResult[str].fail(str(e))
             assert result.is_failure
             assert result.error is not None and "Test exception" in result.error
 
@@ -438,9 +449,9 @@ class TestFlextTargeted:
 
         try:
             risky_operation()
-            result = FlextCore.Result[str].ok("success")
+            result = FlextResult[str].ok("success")
         except Exception as e:
-            result = FlextCore.Result[str].fail(str(e))
+            result = FlextResult[str].fail(str(e))
 
         assert result.is_failure
         assert result.error is not None and "Risky operation failed" in result.error
@@ -452,12 +463,12 @@ class TestFlextTargeted:
     def test_component_integration(self) -> None:
         """Test integration between different components."""
         # Create a comprehensive test that uses multiple components
-        container = FlextCore.Container.get_global()
-        logger = FlextCore.Logger("integration_test")
-        FlextCore.Bus()
+        container = FlextContainer.get_global()
+        logger = FlextLogger("integration_test")
+        FlextBus()
 
-        class IntegrationService(FlextCore.Service[FlextCore.Types.Dict]):
-            def execute(self) -> FlextCore.Result[FlextCore.Types.Dict]:
+        class IntegrationService(FlextService[FlextTypes.Dict]):
+            def execute(self) -> FlextResult[FlextTypes.Dict]:
                 # Use container
                 container.register("integration_key", "integration_value")
 
@@ -465,15 +476,17 @@ class TestFlextTargeted:
                 logger.info("Integration service executing")
 
                 # Create result with timestamp
-                timestamp = FlextCore.Utilities.Generators.generate_timestamp()
+                timestamp = FlextUtilities.Generators.generate_timestamp()
 
-                return FlextCore.Result[FlextCore.Types.Dict].ok({
-                    "status": "success",
-                    "timestamp": timestamp,
-                    "container_value": container.get("integration_key").unwrap_or(
-                        "default"
-                    ),
-                })
+                return FlextResult[FlextTypes.Dict].ok(
+                    {
+                        "status": "success",
+                        "timestamp": timestamp,
+                        "container_value": container.get("integration_key").unwrap_or(
+                            "default"
+                        ),
+                    }
+                )
 
         service = IntegrationService()
         result = service.execute()
@@ -487,9 +500,9 @@ class TestFlextTargeted:
     def test_compatibility(self) -> None:
         """Test compatibility where applicable."""
 
-        def operation() -> FlextCore.Result[str]:
+        def operation() -> FlextResult[str]:
             time.sleep(0.001)
-            return FlextCore.Result[str].ok("success")
+            return FlextResult[str].ok("success")
 
         # Run test
         result = operation()

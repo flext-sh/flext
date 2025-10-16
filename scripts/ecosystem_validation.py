@@ -21,7 +21,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
-from flext_core import FlextCore
+from flext_core import FlextTypes
 
 # FLEXT ecosystem projects
 FLEXT_PROJECTS = [
@@ -79,11 +79,11 @@ class ValidationResult:
     lint_errors: int = 0
     lint_warnings: int = 0
     type_errors: int = 0
-    domain_violations: FlextCore.Types.StringList = field(default_factory=list)
+    domain_violations: FlextTypes.StringList = field(default_factory=list)
     has_tests: bool = False
     has_makefile: bool = False
-    issues: FlextCore.Types.StringList = field(default_factory=list)
-    recommendations: FlextCore.Types.StringList = field(default_factory=list)
+    issues: FlextTypes.StringList = field(default_factory=list)
+    recommendations: FlextTypes.StringList = field(default_factory=list)
 
 
 class EcosystemValidator:
@@ -93,7 +93,7 @@ class EcosystemValidator:
         self.workspace_path = workspace_path
         self.results: dict[str, ValidationResult] = {}
 
-    def validate_syntax(self, project: str) -> tuple[int, FlextCore.Types.StringList]:
+    def validate_syntax(self, project: str) -> tuple[int, FlextTypes.StringList]:
         """Validate Python syntax using AST parsing."""
         project_path = self.workspace_path / project
         src_dir = project_path / "src"
@@ -143,7 +143,7 @@ class EcosystemValidator:
 
         return 0, 0
 
-    def validate_domain_violations(self, project: str) -> FlextCore.Types.StringList:
+    def validate_domain_violations(self, project: str) -> FlextTypes.StringList:
         """Check for direct imports of wrapped technologies."""
         project_path = self.workspace_path / project
         src_dir = project_path / "src"
@@ -255,12 +255,14 @@ class EcosystemValidator:
     def generate_report(self) -> str:
         """Generate human-readable report."""
         lines = []
-        lines.extend((
-            "=" * 80,
-            "FLEXT ECOSYSTEM TRANSFORMATION STATUS REPORT",
-            "=" * 80,
-            "",
-        ))
+        lines.extend(
+            (
+                "=" * 80,
+                "FLEXT ECOSYSTEM TRANSFORMATION STATUS REPORT",
+                "=" * 80,
+                "",
+            )
+        )
 
         # Summary statistics
         total = len(self.results)

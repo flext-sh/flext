@@ -1,4 +1,4 @@
-from flext_core import FlextCore
+from flext_core import FlextTypes
 
 class SecurityViolation:
     def __init__(self, message: str, risk_level: str = "MEDIUM") -> None: ...
@@ -8,11 +8,11 @@ class SecurityViolation:
 class ScanConfig:
     def __init__(
         self,
-        target_paths: FlextCore.Types.StringList,
+        target_paths: FlextTypes.StringList,
         *,
         include_dependencies: bool = False,
     ) -> None: ...
-    target_paths: FlextCore.Types.StringList
+    target_paths: FlextTypes.StringList
     include_dependencies: bool
 
 class AntipatternScanner:

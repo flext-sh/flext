@@ -14,15 +14,34 @@ pip install flext-core
 
 ## Key Components
 
-### FlextCore.Container (Dependency Injection)
+### FlextContainer (Dependency Injection)
 
 Central dependency injection container for managing component lifecycles and dependencies.
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 # Register services
-container = FlextCore.Container()
+container = FlextContainer()
 container.register(IService, ServiceImplementation())
 container.register(IRepository, RepositoryImplementation())
 
@@ -30,15 +49,34 @@ container.register(IRepository, RepositoryImplementation())
 service = container.resolve(IService)
 ```
 
-### FlextCore.Dispatcher (CQRS Pattern)
+### FlextDispatcher (CQRS Pattern)
 
 Command Query Responsibility Segregation implementation for handling commands and queries.
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 # Register handlers
-dispatcher = FlextCore.Dispatcher()
+dispatcher = FlextDispatcher()
 dispatcher.register_handler(CreateUserCommand, CreateUserHandler)
 dispatcher.register_handler(GetUserQuery, GetUserHandler)
 
@@ -47,20 +85,39 @@ result = dispatcher.dispatch(CreateUserCommand(user_data))
 user = dispatcher.dispatch(GetUserQuery(user_id))
 ```
 
-### FlextCore.Result (Railway-Oriented Programming)
+### FlextResult (Railway-Oriented Programming)
 
 Functional error handling with happy path and sad path composition.
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-def divide(a: float, b: float) -> FlextCore.Result[float, Exception]:
+def divide(a: float, b: float) -> FlextResult[float, Exception]:
     if b == 0:
-        return FlextCore.Result.failure(ValueError("Cannot divide by zero"))
-    return FlextCore.Result.success(a / b)
+        return FlextResult.failure(ValueError("Cannot divide by zero"))
+    return FlextResult.success(a / b)
 
 # Compose operations
-result = (FlextCore.Result.success(10.0)
+result = (FlextResult.success(10.0)
           .bind(lambda x: divide(x, 2.0))
           .bind(lambda x: divide(x, 3.0)))
 
@@ -70,15 +127,34 @@ else:
     print(f"Error: {result.failure()}")
 ```
 
-### FlextCore.Bus (Domain Events)
+### FlextBus (Domain Events)
 
 Event-driven architecture support with domain event publishing and subscription.
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 # Subscribe to events
-bus = FlextCore.Bus()
+bus = FlextBus()
 bus.subscribe(UserCreatedEvent, UserCreatedHandler)
 bus.subscribe(UserDeletedEvent, UserDeletedHandler)
 
@@ -86,14 +162,33 @@ bus.subscribe(UserDeletedEvent, UserDeletedHandler)
 bus.emit(UserCreatedEvent(user_id="123", email="user@example.com"))
 ```
 
-### FlextCore.Logger (Structured Logging)
+### FlextLogger (Structured Logging)
 
 Enterprise-grade logging with structured data support and multiple output formats.
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-logger = FlextCore.Logger.get_logger(__name__)
+logger = FlextLogger.get_logger(__name__)
 
 # Structured logging
 logger.info("User created",
@@ -126,32 +221,51 @@ All flext-core components follow SOLID principles:
 ```python
 # Single Responsibility: Each class has one job
 class UserService:
-    def create_user(self, data: UserData) -> FlextCore.Result[User, Exception]:
+    def create_user(self, data: UserData) -> FlextResult[User, Exception]:
         # Only handles user creation logic
         pass
 
 # Open/Closed: Open for extension, closed for modification
 class BaseHandler(ABC):
     @abstractmethod
-    def handle(self, command: BaseCommand) -> FlextCore.Result:
+    def handle(self, command: BaseCommand) -> FlextResult:
         pass
 
 class UserHandler(BaseHandler):
-    def handle(self, command: CreateUserCommand) -> FlextCore.Result:
+    def handle(self, command: CreateUserCommand) -> FlextResult:
         # Implementation specific to user creation
         pass
 ```
 
 ## Configuration Management
 
-### FlextCore.Config
+### FlextConfig
 
 Centralized configuration management with environment variable support and validation.
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-class AppConfig(FlextCore.Config):
+class AppConfig(FlextConfig):
     database_url: str
     debug_mode: bool = False
     log_level: str = "INFO"
@@ -165,7 +279,7 @@ db_url = config.database_url
 
 ## Error Handling Strategy
 
-### FlextCore.Exceptions Hierarchy
+### FlextExceptions Hierarchy
 
 Structured exception hierarchy for consistent error handling across the ecosystem.
 
@@ -184,23 +298,42 @@ class DatabaseConnectionException(FlextInfrastructureException):
 
 ## Utilities and Helpers
 
-### FlextCore.Utilities
+### FlextUtilities
 
 Common utility functions and helpers used across the ecosystem.
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 # String operations
-camel_case = FlextCore.Utilities.to_camel_case("snake_case_string")
-kebab_case = FlextCore.Utilities.to_kebab_case("camelCaseString")
+camel_case = FlextUtilities.to_camel_case("snake_case_string")
+kebab_case = FlextUtilities.to_kebab_case("camelCaseString")
 
 # File operations
-exists = FlextCore.Utilities.file_exists("/path/to/file")
-content = FlextCore.Utilities.read_file("/path/to/file")
+exists = FlextUtilities.file_exists("/path/to/file")
+content = FlextUtilities.read_file("/path/to/file")
 
 # Data validation
-is_valid_email = FlextCore.Utilities.is_valid_email("user@example.com")
+is_valid_email = FlextUtilities.is_valid_email("user@example.com")
 ```
 
 ## Performance Features
@@ -214,7 +347,7 @@ from flext_core import FlextMetrics
 
 # Decorator for automatic timing
 @FlextMetrics.timer("user_creation_duration")
-def create_user(self, user_data: dict) -> FlextCore.Result:
+def create_user(self, user_data: dict) -> FlextResult:
     # Implementation
     pass
 
@@ -229,12 +362,31 @@ FlextMetrics.gauge("active_users", 150)
 
 ```python
 import pytest
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 class TestUserService:
     def test_create_user_success(self):
         # Arrange
-        container = FlextCore.Container()
+        container = FlextContainer()
         service = container.resolve(IUserService)
 
         # Act
@@ -247,7 +399,7 @@ class TestUserService:
 
     def test_create_user_validation_error(self):
         # Arrange
-        container = FlextCore.Container()
+        container = FlextContainer()
         service = container.resolve(IUserService)
 
         # Act
@@ -281,10 +433,29 @@ container = Container()
 result = Result.success(data)
 
 # After (v1.0.0)
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-container = FlextCore.Container()
-result = FlextCore.Result.success(data)
+container = FlextContainer()
+result = FlextResult.success(data)
 ```
 
 ## Best Practices
@@ -298,7 +469,7 @@ result = FlextCore.Result.success(data)
 
 ### Error Handling Best Practices
 
-1. **Use FlextCore.Result for all operations**
+1. **Use FlextResult for all operations**
 2. **Create specific exception types for different error categories**
 3. **Log errors with appropriate context**
 4. **Handle errors at the appropriate architectural layer**

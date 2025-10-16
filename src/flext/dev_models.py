@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Annotated, Literal, Self, TypeVar
 from uuid import UUID, uuid4
 
-from flext_core import FlextCore
+from flext_core import FlextModels, FlextResult, FlextTypes
 from pydantic import BaseModel, Field, field_validator, model_validator
 from pydantic.functional_validators import BeforeValidator
 
@@ -32,7 +32,7 @@ def validate_project_path(v: str) -> str:
     """Validate project path using workspace service."""
     # Lazy import to avoid circular dependency
     workspace_service = create_workspace_service()
-    result: FlextCore.Result[str] = workspace_service.validate_workspace_path(v)
+    result: FlextResult[str] = workspace_service.validate_workspace_path(v)
     if result.is_failure:
         raise ValueError(result.error)
     return str(result.value)
@@ -55,10 +55,10 @@ class FlextAdvancedDevModels:
         workspace_root: ProjectPath = Field(..., description="Workspace root path")
         parallel_workers: int = Field(4, ge=1, le=16, description="Parallel workers")
 
-        # Use config from FlextCore.Models.Config (timeout_seconds already exists as timeout_seconds)
+        # Use config from FlextModels.Config (timeout_seconds already exists as timeout_seconds)
 
-    # FLEXT-CORE INTEGRATION: Use FlextCore.Models.Value for immutable operations
-    class DevOperation(FlextCore.Models.Value, ABC):
+    # FLEXT-CORE INTEGRATION: Use FlextModels.Value for immutable operations
+    class DevOperation(FlextModels.Value, ABC):
         """Abstract base for all development operations using flext-core Value."""
 
         operation_id: str = Field(
@@ -70,11 +70,11 @@ class FlextAdvancedDevModels:
         )
 
         @abstractmethod
-        def validate_prerequisites(self: Self) -> FlextCore.Result[None]:
+        def validate_prerequisites(self: Self) -> FlextResult[None]:
             """Validate operation prerequisites."""
 
-        def validate_business_rules(self: Self) -> FlextCore.Result[None]:
-            """Implement required abstract method from FlextCore.Models.Value."""
+        def validate_business_rules(self: Self) -> FlextResult[None]:
+            """Implement required abstract method from FlextModels.Value."""
             return self.validate_prerequisites()
 
     class TestOperation(DevOperation):
@@ -97,16 +97,14 @@ class FlextAdvancedDevModels:
 
         @field_validator("test_types")
         @classmethod
-        def validate_test_types(
-            cls, v: FlextCore.Types.StringList
-        ) -> FlextCore.Types.StringList:
+        def validate_test_types(cls, v: FlextTypes.StringList) -> FlextTypes.StringList:
             """Validate test types."""
             if not v:
                 msg = "At least one test type must be specified"
                 raise ValueError(msg)
             return v
 
-        def validate_prerequisites(self: Self) -> FlextCore.Result[None]:
+        def validate_prerequisites(self: Self) -> FlextResult[None]:
             """Validate test operation prerequisites."""
             # Check if pytest is available
             try:
@@ -118,11 +116,9 @@ class FlextAdvancedDevModels:
                     check=True,
                     timeout=10,
                 )
-                return FlextCore.Result[None].ok(None)
+                return FlextResult[None].ok(None)
             except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
-                return FlextCore.Result[None].fail(
-                    "pytest is not available or not working"
-                )
+                return FlextResult[None].fail("pytest is not available or not working")
 
     class LintOperation(DevOperation):
         """Code quality operation with advanced configuration."""
@@ -142,9 +138,9 @@ class FlextAdvancedDevModels:
                 raise ValueError(msg)
             return self
 
-        def validate_prerequisites(self: Self) -> FlextCore.Result[None]:
+        def validate_prerequisites(self: Self) -> FlextResult[None]:
             """Validate linting prerequisites."""
-            missing_tools: FlextCore.Types.StringList = []
+            missing_tools: FlextTypes.StringList = []
             for tool in self.tools:
                 try:
                     subprocess.run(
@@ -158,10 +154,10 @@ class FlextAdvancedDevModels:
                     missing_tools.append(tool)
 
             if missing_tools:
-                return FlextCore.Result[None].fail(
+                return FlextResult[None].fail(
                     f"Missing tools: {', '.join(missing_tools)}"
                 )
-            return FlextCore.Result[None].ok(None)
+            return FlextResult[None].ok(None)
 
     class FormatOperation(DevOperation):
         """Code formatting operation."""
@@ -174,9 +170,9 @@ class FlextAdvancedDevModels:
             default=False, description="Check formatting without changes"
         )
 
-        def validate_prerequisites(self: Self) -> FlextCore.Result[None]:
+        def validate_prerequisites(self: Self) -> FlextResult[None]:
             """Validate formatting prerequisites."""
-            missing_formatters: FlextCore.Types.StringList = []
+            missing_formatters: FlextTypes.StringList = []
             for formatter in self.formatters:
                 try:
                     if formatter == "gofmt":
@@ -197,10 +193,10 @@ class FlextAdvancedDevModels:
                     missing_formatters.append(formatter)
 
             if missing_formatters:
-                return FlextCore.Result[None].fail(
+                return FlextResult[None].fail(
                     f"Missing formatters: {', '.join(missing_formatters)}"
                 )
-            return FlextCore.Result[None].ok(None)
+            return FlextResult[None].ok(None)
 
     # Discriminated Union for operations
     OperationUnion = Annotated[
@@ -208,13 +204,13 @@ class FlextAdvancedDevModels:
         Field(discriminator="type", description="Development operation union"),
     ]
 
-    # FLEXT-CORE INTEGRATION: Use FlextCore.Models.Value for immutable project info
-    class ProjectInfo(FlextCore.Models.Value):
+    # FLEXT-CORE INTEGRATION: Use FlextModels.Value for immutable project info
+    class ProjectInfo(FlextModels.Value):
         """Project information with type detection using flext-core Value."""
 
         name: str = Field(..., min_length=1, max_length=100)
         path: ProjectPath = Field(..., description="Project path")
-        project_type: FlextCore.Types.Project.ProjectType = Field(
+        project_type: FlextTypes.Project.ProjectType = Field(
             ..., description="Detected project type"
         )
         has_tests: bool = Field(default=False, description="Has test directory")
@@ -242,16 +238,16 @@ class FlextAdvancedDevModels:
 
             return self
 
-        def validate_business_rules(self: Self) -> FlextCore.Result[None]:
-            """Implement required abstract method from FlextCore.Models.Value."""
+        def validate_business_rules(self: Self) -> FlextResult[None]:
+            """Implement required abstract method from FlextModels.Value."""
             try:
                 # Project consistency validation handled by model_validator
-                return FlextCore.Result[None].ok(None)
+                return FlextResult[None].ok(None)
             except Exception as e:
-                return FlextCore.Result[None].fail(f"Project validation failed: {e}")
+                return FlextResult[None].fail(f"Project validation failed: {e}")
 
-    # FLEXT-CORE INTEGRATION: Use FlextCore.Models.Value for immutable result
-    class OperationResult(FlextCore.Models.Value):
+    # FLEXT-CORE INTEGRATION: Use FlextModels.Value for immutable result
+    class OperationResult(FlextModels.Value):
         """Operation execution result using flext-core Value."""
 
         operation_id: str = Field(..., description="Operation identifier")
@@ -260,7 +256,7 @@ class FlextAdvancedDevModels:
         exit_code: int = Field(..., description="Exit code")
         stdout_lines: int = Field(0, ge=0, description="Standard output line count")
         stderr_lines: int = Field(0, ge=0, description="Standard error line count")
-        artifacts: FlextCore.Types.Dict = Field(
+        artifacts: FlextTypes.Dict = Field(
             default_factory=dict, description="Operation artifacts"
         )
 
@@ -274,17 +270,17 @@ class FlextAdvancedDevModels:
                 raise ValueError(msg)
             return v
 
-        def validate_business_rules(self: Self) -> FlextCore.Result[None]:
-            """Implement required abstract method from FlextCore.Models.Value."""
+        def validate_business_rules(self: Self) -> FlextResult[None]:
+            """Implement required abstract method from FlextModels.Value."""
             try:
                 # Duration validation handled by field_validator
                 if self.exit_code < 0:
-                    return FlextCore.Result[None].fail(
+                    return FlextResult[None].fail(
                         "Invalid exit code: must be non-negative"
                     )
-                return FlextCore.Result[None].ok(None)
+                return FlextResult[None].ok(None)
             except Exception as e:
-                return FlextCore.Result[None].fail(
+                return FlextResult[None].fail(
                     f"Operation result validation failed: {e}"
                 )
 

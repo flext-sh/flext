@@ -1,7 +1,7 @@
 """Task Orchestration Constants.
 
 Centralized constants for task orchestration system following FLEXT patterns.
-All constants must be in FlextCore.Constants namespace - ZERO module-level constants.
+All constants must be in FlextConstants namespace - ZERO module-level constants.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -10,11 +10,11 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import FlextCore
+from flext_core import FlextConstants
 
 
-class FlextTaskOrchestrationConstants(FlextCore.Constants):
-    """Task orchestration constants extending FlextCore.Constants."""
+class FlextTaskOrchestrationConstants(FlextConstants):
+    """Task orchestration constants extending FlextConstants."""
 
     class TaskStatus:
         """Task status constants."""

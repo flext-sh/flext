@@ -16,18 +16,10 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-from flext_core import FlextCore
-
-# Import our custom modules
-try:
-    from docs_advanced_analyzer import AdvancedDocumentationAnalyzer
-    from docs_health_monitor import DocumentationHealthMonitor
-    from docs_smart_optimizer import SmartDocumentationOptimizer
-except ImportError:
-    print(
-        "Error: Required modules not found. Please ensure all documentation scripts are in the same directory."
-    )
-    sys.exit(1)
+from docs_advanced_analyzer import AdvancedDocumentationAnalyzer
+from docs_health_monitor import DocumentationHealthMonitor
+from docs_smart_optimizer import SmartDocumentationOptimizer
+from flext_core import FlextTypes
 
 
 @dataclass
@@ -50,7 +42,7 @@ class AutomationConfig:
 
     # Reporting
     generate_reports: bool = True
-    report_formats: FlextCore.Types.StringList = None
+    report_formats: FlextTypes.StringList = None
 
     # Team collaboration
     enable_team_features: bool = True
@@ -70,8 +62,8 @@ class AutomationResult:
     optimizations_applied: int
     issues_found: int
     health_score: float
-    recommendations: FlextCore.Types.StringList
-    errors: FlextCore.Types.StringList
+    recommendations: FlextTypes.StringList
+    errors: FlextTypes.StringList
     execution_time: float
     timestamp: datetime
 
@@ -122,9 +114,9 @@ class AIDocumentationAutomation:
                 print("\n🔧 Step 2: Running smart optimization...")
                 try:
                     optimization_results = self.optimizer.optimize_all_documents()
-                    optimizations_applied = len([
-                        r for r in optimization_results if r.changes_made
-                    ])
+                    optimizations_applied = len(
+                        [r for r in optimization_results if r.changes_made]
+                    )
                     print(
                         f"  ✅ Found {optimizations_applied} optimization opportunities"
                     )
@@ -216,7 +208,7 @@ class AIDocumentationAutomation:
 
     def _generate_recommendations(
         self, health_data: dict[str, object]
-    ) -> FlextCore.Types.StringList:
+    ) -> FlextTypes.StringList:
         """Generate intelligent recommendations based on analysis."""
         recommendations = []
 

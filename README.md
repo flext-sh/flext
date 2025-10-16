@@ -28,8 +28,8 @@
 
 ### ✅ Unified Patterns Implementation
 
-- **FlextCore.Result[T]**: Railway-oriented programming throughout
-- **FlextCore.Container**: Dependency injection across all projects
+- **FlextResult[T]**: Railway-oriented programming throughout
+- **FlextContainer**: Dependency injection across all projects
 - **[Project]Models**: Standardized domain models pattern
 - **Quality Gates**: Automated enforcement of standards
 
@@ -67,7 +67,7 @@ FLEXT is built on a clean architecture foundation with these core principles:
 - **SOLID Principles**: Single responsibility, Open/closed, Liskov substitution, Interface segregation, Dependency inversion
 - **CQRS Pattern**: Command Query Responsibility Segregation for complex business logic
 - **Railway-Oriented Programming**: Functional error handling with happy/sad path composition
-- **Dependency Injection**: FlextCore.Container for managing component dependencies
+- **Dependency Injection**: FlextContainer for managing component dependencies
 
 ```
 ┌─────────────────────────────────────┐
@@ -162,11 +162,30 @@ if migration_result.is_success:
 ### Railway-Oriented Error Handling
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-def process_data(data: str) -> FlextCore.Result[str, Exception]:
+def process_data(data: str) -> FlextResult[str, Exception]:
     # Your processing logic with error handling
-    return FlextCore.Result.success("processed data")
+    return FlextResult.success("processed data")
 ```
 
 ## 📚 Documentation

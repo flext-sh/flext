@@ -18,21 +18,21 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-from flext_core import FlextCore
+from flext_core import FlextConstants, FlextLogger, FlextTypes, FlextUtilities
 from mypy import api as mypy_api
 
-logger = FlextCore.Logger(__name__)
+logger = FlextLogger(__name__)
 
 # Constants for return codes - use standard exit codes
 SUCCESS_CODE = 0
 MAKEFILE_TARGET_NOT_FOUND = 2  # Standard exit code for makefile target not found
 COMMAND_FAILED = 1  # Standard exit code for command failure
 
-# Status constants (not passwords, just status indicators) - use FlextCore.Constants
-STATUS_PASS = FlextCore.Constants.Mixins.STATUS_PASS
-STATUS_FAIL = FlextCore.Constants.Mixins.STATUS_FAIL
-STATUS_NO_TARGET = FlextCore.Constants.Mixins.STATUS_NO_TARGET
-STATUS_SKIP = FlextCore.Constants.Mixins.STATUS_SKIP
+# Status constants (not passwords, just status indicators) - use FlextConstants
+STATUS_PASS = FlextConstants.Mixins.STATUS_PASS
+STATUS_FAIL = FlextConstants.Mixins.STATUS_FAIL
+STATUS_NO_TARGET = FlextConstants.Mixins.STATUS_NO_TARGET
+STATUS_SKIP = FlextConstants.Mixins.STATUS_SKIP
 
 
 @dataclass
@@ -47,7 +47,7 @@ class ProjectStatus:
     mypy_status: str = STATUS_SKIP
     test_status: str = STATUS_SKIP
     poetry_install: str = STATUS_SKIP
-    errors: FlextCore.Types.StringList = field(default_factory=list)
+    errors: FlextTypes.StringList = field(default_factory=list)
 
     def __post_init__(self) -> None:
         """Initialize post-creation setup for ProjectStatus."""
@@ -117,7 +117,7 @@ class FlextDiagnostic:
             if not ruff_path_obj.is_absolute() or not ruff_path_obj.exists():
                 return 1, "", f"Invalid ruff executable: {ruff_path}"
 
-            result = FlextCore.Utilities.run_external_command(
+            result = FlextUtilities.run_external_command(
                 [str(ruff_path), "check", "."],
                 check=False,
                 capture_output=True,
@@ -166,7 +166,7 @@ class FlextDiagnostic:
             if not Path(poetry_path).is_absolute() or not Path(poetry_path).exists():
                 return 1, "", f"Invalid poetry executable: {poetry_path}"
 
-            result = FlextCore.Utilities.run_external_command(
+            result = FlextUtilities.run_external_command(
                 [str(poetry_path), "install", "--no-interaction"],
                 check=False,
                 capture_output=True,
@@ -239,9 +239,9 @@ class FlextDiagnostic:
 
         return status
 
-    def check_architecture_violations(self) -> dict[str, FlextCore.Types.StringList]:
+    def check_architecture_violations(self) -> dict[str, FlextTypes.StringList]:
         """Check architecture violations."""
-        violations: dict[str, FlextCore.Types.StringList] = {}
+        violations: dict[str, FlextTypes.StringList] = {}
 
         # Check flext-core (should not have specific imports)
         core_path = self.workspace_root / "flext-core" / "src"
@@ -263,7 +263,7 @@ class FlextDiagnostic:
 
         return violations
 
-    def run_full_diagnostic(self) -> FlextCore.Types.Dict:
+    def run_full_diagnostic(self) -> FlextTypes.Dict:
         """Run full diagnostic."""
         # Check all projects
         for project_name in self.project_levels:
@@ -294,7 +294,7 @@ class FlextDiagnostic:
             "summary": self.generate_summary(),
         }
 
-    def generate_summary(self) -> FlextCore.Types.Dict:
+    def generate_summary(self) -> FlextTypes.Dict:
         """Generate summary."""
         total_projects = len(self.results)
         projects_with_makefile = sum(1 for s in self.results.values() if s.has_makefile)
@@ -328,7 +328,7 @@ class FlextDiagnostic:
             "projects_with_errors": projects_with_errors,
         }
 
-    def print_report(self, report: FlextCore.Types.Dict) -> None:
+    def print_report(self, report: FlextTypes.Dict) -> None:
         """Print formatted report."""
         # Summary
         summary_obj = report["summary"]
@@ -341,7 +341,7 @@ class FlextDiagnostic:
             projects_obj = report["projects"]
             if not isinstance(projects_obj, dict):
                 continue
-            level_projects: list[tuple[str, FlextCore.Types.Dict]] = [
+            level_projects: list[tuple[str, FlextTypes.Dict]] = [
                 (name, data)
                 for name, data in projects_obj.items()
                 if isinstance(data, dict)
@@ -364,23 +364,23 @@ class FlextDiagnostic:
                     status_icons = [
                         str(
                             data.get(
-                                "lint_status", FlextCore.Constants.Mixins.STATUS_UNKNOWN
+                                "lint_status", FlextConstants.Mixins.STATUS_UNKNOWN
                             )
                         ),
                         str(
                             data.get(
-                                "mypy_status", FlextCore.Constants.Mixins.STATUS_UNKNOWN
+                                "mypy_status", FlextConstants.Mixins.STATUS_UNKNOWN
                             )
                         ),
                         str(
                             data.get(
-                                "test_status", FlextCore.Constants.Mixins.STATUS_UNKNOWN
+                                "test_status", FlextConstants.Mixins.STATUS_UNKNOWN
                             )
                         ),
                         str(
                             data.get(
                                 "poetry_install",
-                                FlextCore.Constants.Mixins.STATUS_UNKNOWN,
+                                FlextConstants.Mixins.STATUS_UNKNOWN,
                             )
                         ),
                     ]

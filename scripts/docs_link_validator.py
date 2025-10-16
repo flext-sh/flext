@@ -15,7 +15,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import aiohttp
-from flext_core import FlextCore
+from flext_core import FlextTypes
 
 
 @dataclass
@@ -41,7 +41,7 @@ class ValidationResults:
     redirected_links: int = 0
     timeout_links: int = 0
     results: list[LinkResult] = field(default_factory=list)
-    errors_by_domain: dict[str, FlextCore.Types.StringList] = field(
+    errors_by_domain: dict[str, FlextTypes.StringList] = field(
         default_factory=lambda: defaultdict(list)
     )
 
@@ -211,7 +211,7 @@ class LinkValidator:
         return result
 
     async def validate_links_batch(
-        self, links: FlextCore.Types.StringList
+        self, links: FlextTypes.StringList
     ) -> list[LinkResult]:
         """Validate multiple links concurrently."""
         async with aiohttp.ClientSession() as session:
@@ -242,7 +242,7 @@ class LinkValidator:
 
     def validate_internal_links(
         self, doc_files: list[Path]
-    ) -> dict[str, FlextCore.Types.StringList]:
+    ) -> dict[str, FlextTypes.StringList]:
         """Validate internal links between documentation files."""
         issues = defaultdict(list)
 
@@ -311,7 +311,7 @@ class LinkValidator:
     def generate_report(
         self,
         validation_results: ValidationResults,
-        internal_issues: dict[str, FlextCore.Types.StringList],
+        internal_issues: dict[str, FlextTypes.StringList],
     ) -> str:
         """Generate comprehensive validation report."""
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")

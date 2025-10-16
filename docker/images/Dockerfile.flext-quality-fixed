@@ -46,8 +46,8 @@ from typing import Dict, Optional, Union
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 
-class FlextCore.Result:
-    """Mock FlextCore.Result for enterprise compatibility."""
+class FlextResult:
+    """Mock FlextResult for enterprise compatibility."""
     def __init__(self, success: bool, data: object = None, error: str = None):
         self.success = success
         self.is_failure = not success
@@ -63,100 +63,100 @@ class FlextCore.Result:
         return cls(False, error=error)
 
 # Mock exceptions hierarchy for flext_core.exceptions
-class FlextCore.Exceptions.Error(Exception):
+class FlextExceptions.Error(Exception):
     """Base flext exception."""
     def __init__(self, message: str, context: dict[str, object] = None):
         super().__init__(message)
         self.context = context or {}
 
-class FlextCore.Exceptions.ValidationError(FlextCore.Exceptions.Error):
+class FlextExceptions.ValidationError(FlextExceptions.Error):
     """Validation error."""
     pass
 
-class FlextCore.Exceptions.ConfigurationError(FlextCore.Exceptions.Error):
+class FlextExceptions.ConfigurationError(FlextExceptions.Error):
     """Configuration error."""
     pass
 
-class FlextCore.Exceptions.ConnectionError(FlextCore.Exceptions.Error):
+class FlextExceptions.ConnectionError(FlextExceptions.Error):
     """Connection error."""
     pass
 
-class FlextCore.Exceptions.ProcessingError(FlextCore.Exceptions.Error):
+class FlextExceptions.ProcessingError(FlextExceptions.Error):
     """Processing error."""
     pass
 
-class FlextCore.Exceptions.AuthenticationError(FlextCore.Exceptions.Error):
+class FlextExceptions.AuthenticationError(FlextExceptions.Error):
     """Authentication error."""
     pass
 
-class FlextCore.Exceptions.TimeoutError(FlextCore.Exceptions.Error):
+class FlextExceptions.TimeoutError(FlextExceptions.Error):
     """Timeout error."""
     pass
 
-def FlextCore.Logger(name: str):
+def FlextLogger(name: str):
     """Mock logger factory."""
     return logging.getLogger(name)
 
-class FlextCore.Container:
+class FlextContainer:
     """Mock dependency injection container."""
     def __init__(self):
         self._services = {}
     
     def register(self, name: str, service: object):
         self._services[name] = service
-        return FlextCore.Result.ok(None)
+        return FlextResult.ok(None)
     
     def get(self, name: str):
         if name in self._services:
-            return FlextCore.Result.ok(self._services[name])
-        return FlextCore.Result.fail(f"Service {name} not found")
+            return FlextResult.ok(self._services[name])
+        return FlextResult.fail(f"Service {name} not found")
     
     def get_typed(self, service_type: type):
         """Get service by type."""
         for service in self._services.values():
             if isinstance(service, service_type):
-                return FlextCore.Result.ok(service)
-        return FlextCore.Result.fail(f"Service of type {service_type} not found")
+                return FlextResult.ok(service)
+        return FlextResult.fail(f"Service of type {service_type} not found")
 
 # Mock global container instance
-_global_container = FlextCore.Container()
+_global_container = FlextContainer()
 
-def FlextCore.Container.get_global():
+def FlextContainer.get_global():
     """Get global container instance."""
     return _global_container
 
-class FlextCore.Models.Entity(BaseModel):
-    """Mock FlextCore.Models.Entity base class."""
+class FlextModels.Entity(BaseModel):
+    """Mock FlextModels.Entity base class."""
     id: str = "mock_id"
     
     def validate_domain_rules(self):
-        return FlextCore.Result.ok(None)
+        return FlextResult.ok(None)
 
-class FlextCore.Models.Value(BaseModel):
-    """Mock FlextCore.Models.Value base class."""
+class FlextModels.Value(BaseModel):
+    """Mock FlextModels.Value base class."""
     pass
 
-class FlextCore.Config(BaseSettings):
-    """Mock FlextCore.Config for configuration."""
+class FlextConfig(BaseSettings):
+    """Mock FlextConfig for configuration."""
     pass
 
-class FlextCore.Constants:
+class FlextConstants:
     """Mock constants class to fix import errors."""
     VERSION = "0.9.0"
     DEFAULT_TIMEOUT = 30
     MAX_RETRIES = 3
 
 # Type aliases for compatibility
-TAnyDict = FlextCore.Types.Dict
-TConfigDict = FlextCore.Types.Dict
+TAnyDict = FlextTypes.Dict
+TConfigDict = FlextTypes.Dict
 
 # Export all required symbols
-__all__: FlextCore.Types.StringList = [
-    "FlextCore.Result", "FlextCore.Logger", "FlextCore.Container", "get_flext_container",
-    "FlextCore.Models.Entity", "FlextCore.Models.Value", "FlextCore.Config", "FlextCore.Constants", 
-    "TAnyDict", "TConfigDict", "FlextCore.Exceptions.Error", "FlextCore.Exceptions.ValidationError",
-    "FlextCore.Exceptions.ConfigurationError", "FlextCore.Exceptions.ConnectionError", "FlextCore.Exceptions.ProcessingError",
-    "FlextCore.Exceptions.AuthenticationError", "FlextCore.Exceptions.TimeoutError"
+__all__: FlextTypes.StringList = [
+    "FlextResult", "FlextLogger", "FlextContainer", "get_flext_container",
+    "FlextModels.Entity", "FlextModels.Value", "FlextConfig", "FlextConstants", 
+    "TAnyDict", "TConfigDict", "FlextExceptions.Error", "FlextExceptions.ValidationError",
+    "FlextExceptions.ConfigurationError", "FlextExceptions.ConnectionError", "FlextExceptions.ProcessingError",
+    "FlextExceptions.AuthenticationError", "FlextExceptions.TimeoutError"
 ]
 ''')
 
@@ -167,40 +167,40 @@ with open(exceptions_dir / 'exceptions.py', 'w') as f:
     f.write('''# Mock flext_core.exceptions module
 """Mock exceptions module for enterprise compatibility."""
 
-class FlextCore.Exceptions.Error(Exception):
+class FlextExceptions.Error(Exception):
     """Base flext exception."""
     def __init__(self, message: str, context: dict[str, object] = None):
         super().__init__(message)
         self.context = context or {}
 
-class FlextCore.Exceptions.ValidationError(FlextCore.Exceptions.Error):
+class FlextExceptions.ValidationError(FlextExceptions.Error):
     """Validation error."""
     pass
 
-class FlextCore.Exceptions.ConfigurationError(FlextCore.Exceptions.Error):
+class FlextExceptions.ConfigurationError(FlextExceptions.Error):
     """Configuration error."""
     pass
 
-class FlextCore.Exceptions.ConnectionError(FlextCore.Exceptions.Error):
+class FlextExceptions.ConnectionError(FlextExceptions.Error):
     """Connection error."""
     pass
 
-class FlextCore.Exceptions.ProcessingError(FlextCore.Exceptions.Error):
+class FlextExceptions.ProcessingError(FlextExceptions.Error):
     """Processing error."""
     pass
 
-class FlextCore.Exceptions.AuthenticationError(FlextCore.Exceptions.Error):
+class FlextExceptions.AuthenticationError(FlextExceptions.Error):
     """Authentication error."""
     pass
 
-class FlextCore.Exceptions.TimeoutError(FlextCore.Exceptions.Error):
+class FlextExceptions.TimeoutError(FlextExceptions.Error):
     """Timeout error."""
     pass
 
-__all__: FlextCore.Types.StringList = [
-    "FlextCore.Exceptions.Error", "FlextCore.Exceptions.ValidationError", "FlextCore.Exceptions.ConfigurationError",
-    "FlextCore.Exceptions.ConnectionError", "FlextCore.Exceptions.ProcessingError", "FlextCore.Exceptions.AuthenticationError",
-    "FlextCore.Exceptions.TimeoutError"
+__all__: FlextTypes.StringList = [
+    "FlextExceptions.Error", "FlextExceptions.ValidationError", "FlextExceptions.ConfigurationError",
+    "FlextExceptions.ConnectionError", "FlextExceptions.ProcessingError", "FlextExceptions.AuthenticationError",
+    "FlextExceptions.TimeoutError"
 ]
 ''')
 

@@ -1,14 +1,12 @@
 from collections.abc import Callable
 from typing import TypeVar
 
-from flext_core import FlextCore
-
 _T = TypeVar("_T")
 
 class BenchmarkFixture:
     group: str
     name: str | None
-    extra_info: FlextCore.Types.Dict
+    extra_info: dict[str, object]
 
     def __call__(
         self,

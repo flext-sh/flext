@@ -23,24 +23,45 @@ script-setup-workspace-links: ## Script para configurar links entre projetos do 
 script-standardize-pyproject: ## This script applies PEP 518/621 standards to all projects in the workspace
 	@python scripts/core/script_runner.py standardize_pyproject
 
-# Quality Scripts
-scripts-quality: ## Execute todos os scripts de quality
-	@python scripts/core/script_runner.py audit_false_positives
-	@python scripts/core/script_runner.py linting_report
-	@python scripts/core/script_runner.py quality_gateway
-	@python scripts/core/script_runner.py quality_gateway_old
-	@python scripts/core/script_runner.py code_duplicates
+# Quality Scripts (migrated to flext-quality)
+scripts-quality: ## Execute quality checks using flext-quality operations
+	@python - <<'PY'
+from flext_quality.tools import FlextQualityOperations
+ops = FlextQualityOperations()
+ops.gateway.run_all_checks(".")
+ops.linting.run_lint(".")
+ops.duplicates.detect_duplicates(".")
+PY
 
-script-audit-false-positives: ## Este script examina cada dependência detectada como "faltante" para
-	@python scripts/core/script_runner.py audit_false_positives
-script-linting-report: ## Relatório completo de qualidade de código com Ruff, MyPy e métricas
-	@python scripts/core/script_runner.py linting_report
-script-quality-gateway: ## Gateway de qualidade enterprise com validação completa
-	@python scripts/core/script_runner.py quality_gateway
-script-quality-gateway-old: ## Combina validação Poetry, análise de conflitos e descoberta de dependências.
-	@python scripts/core/script_runner.py quality_gateway_old
-script-code-duplicates: ## Detectar e analisar código duplicado no workspace FLEXT
-	@python scripts/core/script_runner.py code_duplicates
+script-audit-false-positives: ## Audita falsos positivos com flext-quality
+	@python - <<'PY'
+from flext_quality.tools import FlextQualityOperations
+ops = FlextQualityOperations()
+result = ops.audit.audit_false_positives([{"id": 1, "false_positive": False}])
+print(result.value if result.is_success else result.error)
+PY
+
+script-linting-report: ## Relatório de lint usando flext-quality
+	@python - <<'PY'
+from flext_quality.tools import FlextQualityOperations
+ops = FlextQualityOperations()
+result = ops.linting.run_lint(".")
+print(result.value if result.is_success else result.error)
+PY
+
+script-quality-gateway: ## Gateway de qualidade enterprise com flext-quality
+	@python -m flext_quality.cli analyze .
+
+script-quality-gateway-old: ## Alias para o novo gateway
+	@python -m flext_quality.cli analyze .
+
+script-code-duplicates: ## Detectar duplicações com flext-quality
+	@python - <<'PY'
+from flext_quality.tools import FlextQualityOperations
+ops = FlextQualityOperations()
+result = ops.duplicates.detect_duplicates(".", threshold=10)
+print(result.value if result.is_success else result.error)
+PY
 
 # Dependencies Scripts
 scripts-dependencies: ## Execute todos os scripts de dependencies

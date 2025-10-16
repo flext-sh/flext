@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""ARCHITECTURAL FIX: FlextCore.Result[object] Standardization Across FLEXT Workspace.
+"""ARCHITECTURAL FIX: FlextResult[object] Standardization Across FLEXT Workspace.
 
-This script fixes the FlextCore.Result duplicate/inconsistent usage across all projects:
+This script fixes the FlextResult duplicate/inconsistent usage across all projects:
 
-1. Remove duplicated FlextCore.Result definitions
+1. Remove duplicated FlextResult definitions
 
-2. Standardize all imports to use flext_core.domain.shared_types.FlextCore.Result
-3. Convert old syntax FlextCore.Result[None].ok(...) to FlextCore.Result[None].ok(...)
-4. Convert old syntax FlextCore.Result[None].fail(...) to FlextCore.Result[None].fail(...)
-5. Ensure consistent typing FlextCore.Result[T] usage
+2. Standardize all imports to use flext_core.domain.shared_types.FlextResult
+3. Convert old syntax FlextResult[None].ok(...) to FlextResult[None].ok(...)
+4. Convert old syntax FlextResult[None].fail(...) to FlextResult[None].fail(...)
+5. Ensure consistent typing FlextResult[T] usage
 
-ZERO TOLERANCE: Every FlextCore.Result usage must be correct and consistent.
+ZERO TOLERANCE: Every FlextResult usage must be correct and consistent.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -18,4 +18,4 @@ SPDX-License-Identifier: MIT
 """
 
 
-# FlextCore.Result moved to flext_core.domain.shared_types
+# FlextResult moved to flext_core.domain.shared_types

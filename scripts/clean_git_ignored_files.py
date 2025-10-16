@@ -11,14 +11,15 @@ SPDX-License-Identifier: Proprietary
 from __future__ import annotations
 
 import subprocess
+import sys
 from pathlib import Path
 
-from flext_core import FlextCore
+from flext_core import FlextTypes
 
 FLEXT_ROOT = Path("/home/marlonsc/flext")
 
 
-def get_tracked_files(project_dir: Path) -> FlextCore.Types.StringList:
+def get_tracked_files(project_dir: Path) -> FlextTypes.StringList:
     """Get list of all tracked files in git.
 
     Args:
@@ -92,7 +93,7 @@ def untrack_file(project_dir: Path, file_path: str) -> bool:
 
 def clean_project(
     project_dir: Path, dry_run: bool = True
-) -> dict[str, FlextCore.Types.StringList]:
+) -> dict[str, FlextTypes.StringList]:
     """Clean tracked files that should be ignored.
 
     Args:
@@ -147,8 +148,6 @@ def clean_project(
 
 def main() -> None:
     """Clean all FLEXT projects."""
-    import sys
-
     # Check if dry-run or execute
     dry_run = "--execute" not in sys.argv
 

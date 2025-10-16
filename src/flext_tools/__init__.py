@@ -1,72 +1,43 @@
-"""FLEXT Tools - Consolidated workspace tools library.
+"""Compatibility façade bridging historical ``flext_tools`` imports to the new
+``flext_quality`` implementation.
 
-This module provides a comprehensive suite of development and operational tools for the FLEXT
-ecosystem. It consolidates 85+ individual scripts into 6 unified tool modules plus utilities,
-providing a single entry point for all workspace operations.
-
-The module includes tools for:
-    - Quality assurance and code analysis
-    - Architecture validation and optimization
-    - Dependency management and analysis
-    - Git operations and repository management
-    - Performance optimization and monitoring
-    - Validation and testing utilities
-
-All tools follow the unified FLEXT patterns with proper error handling, logging, and
-type safety throughout.
-
-Attributes:
-    FlextTools (FlextToolsAPI): Primary API for accessing all tool functionality.
-    FlextToolsAPI (class): Main API class providing unified tool interface.
-
-Example:
-    >>> from flext_tools import FlextTools, FlextQualityTools
-    >>>
-    >>> # Use primary API
-    >>> tools = FlextTools()
-    >>> result = tools.run_quality_checks()
-    >>>
-    >>> # Use specific tool modules
-    >>> quality_tools = FlextQualityTools()
-    >>> quality_tools.run_linting()
-
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-
+All execution logic now lives inside :mod:`flext_quality`.  This module keeps a
+thin shim so existing scripts continue to work while teams transition their
+imports.  Each symbol exposed here is an alias to the corresponding component
+in :mod:`flext_quality.tools`.
 """
 
-#  Unified API (PRIMARY IMPORT)
-from flext_tools.api import FlextTools, FlextToolsAPI
+from __future__ import annotations
 
-# Tool modules (6 unified modules consolidating 85+ scripts)
-from flext_tools.architecture_tools import FlextArchitectureTools
+import importlib
+import sys
 
-# Legacy aliases for backward compatibility
-from flext_tools.config import FlextToolsConfig as ConfigurationManager
-from flext_tools.conflicts import ConflictAnalyzer
-
-# Namespace classes
-from flext_tools.constants import FlextToolsConstants
-from flext_tools.dependency_tools import DependencyDiscovery, FlextDependencyTools
-from flext_tools.exceptions import FlextToolsExceptions
-from flext_tools.git_tools import FlextGitTools
-from flext_tools.models import FlextToolsModels
-from flext_tools.observability import FlextObservabilityService
-from flext_tools.optimizer_tools import FlextOptimizerTools
-from flext_tools.poetry_operations import PoetryOperations
-from flext_tools.poetry_validator import PoetryValidator
-from flext_tools.protocols import FlextToolsProtocols
-from flext_tools.quality_tools import FlextQualityTools
-from flext_tools.script_base import (
-    FlextScriptService,
-    FlextScriptService as FlextScript,
-)
-from flext_tools.typings import FlextToolsTypes
-
-# Utilities (consolidated from colors, paths, stdlib)
-from flext_tools.utilities import (
+from flext_quality.config import FlextQualityConfig as FlextToolsConfig
+from flext_quality.constants import FlextQualityConstants as FlextToolsConstants
+from flext_quality.models import FlextQualityModels as FlextToolsModels
+from flext_quality.protocols import FlextQualityProtocols as FlextToolsProtocols
+from flext_quality.typings import FlextQualityTypes as FlextToolsTypes
+from flext_quality.tools import (
+    BackupManager,
     Colors,
-    FlextToolsUtilities,
+    ConfigurationManager,
+    ConflictAnalyzer,
+    DependencyDiscovery,
+    FlextPathService,
+    FlextQualityArchitectureTools,
+    FlextQualityDependencyTools,
+    FlextQualityGitTools,
+    FlextQualityOperations,
+    FlextQualityOptimizerOperations,
+    FlextQualityToolsUtilities,
+    FlextQualityValidationTools,
+    FlextScriptService,
+    FlextSecurityService,
+    SecretVaultDecryptor,
+    MyPyChecker,
+    PoetryOperations,
+    PoetryValidator,
+    ScriptMetadata,
     colorize,
     get_project_root,
     get_stdlib_modules,
@@ -75,39 +46,109 @@ from flext_tools.utilities import (
     print_colored,
     should_ignore_path,
 )
-from flext_tools.validation_tools import FlextValidationTools
 
-ScriptMetadata = FlextScriptService.ScriptMetadata
+# Backwards compatible aliases expected by downstream projects
+FlextArchitectureTools = FlextQualityArchitectureTools
+FlextDependencyTools = FlextQualityDependencyTools
+FlextGitTools = FlextQualityGitTools
+FlextOptimizerTools = FlextQualityOptimizerOperations
+FlextQualityTools = FlextQualityOperations
+FlextValidationTools = FlextQualityValidationTools
+FlextToolsUtilities = FlextQualityToolsUtilities
+FlextScript = FlextScriptService
+FlextObservabilityService = FlextSecurityService
+PoetryOperations = PoetryOperations
+PoetryValidator = PoetryValidator
+ScriptMetadata = ScriptMetadata
+DependencyDiscovery = DependencyDiscovery
+ConflictAnalyzer = ConflictAnalyzer
+ConfigurationManager = ConfigurationManager
+MyPyChecker = MyPyChecker
+BackupManager = BackupManager
+SecretVaultDecryptor = SecretVaultDecryptor
+
+
+def _alias_module(alias: str, target: str, extra_attrs: dict[str, object] | None = None) -> None:
+    """Register ``flext_tools.<alias>`` as a view over *target* module."""
+    module = importlib.import_module(target)
+    if extra_attrs:
+        for name, value in extra_attrs.items():
+            setattr(module, name, value)
+    sys.modules[f"{__name__}.{alias}"] = module
+
+
+_alias_module("utilities", "flext_quality.tools.utilities")
+_alias_module("colors", "flext_quality.tools.utilities")
+_alias_module("paths", "flext_quality.tools.paths")
+_alias_module("backup", "flext_quality.tools.backup")
+_alias_module("config_manager", "flext_quality.tools.config_manager")
+_alias_module("conflicts", "flext_quality.tools.conflicts")
+_alias_module("discovery_base", "flext_quality.tools.discovery")
+_alias_module("mypy_checker", "flext_quality.tools.mypy_checker")
+_alias_module("poetry_operations", "flext_quality.tools.poetry")
+_alias_module("poetry_validator", "flext_quality.tools.poetry")
+_alias_module("script_base", "flext_quality.tools.script_base")
+_alias_module("security", "flext_quality.tools.security")
+_alias_module("observability", "flext_quality.tools.security")
+_alias_module("architecture_tools", "flext_quality.tools.architecture")
+_alias_module("dependency_tools", "flext_quality.tools.dependencies")
+_alias_module("git_tools", "flext_quality.tools.git")
+_alias_module("optimizer_tools", "flext_quality.tools.optimizer_operations")
+_alias_module("quality_tools", "flext_quality.tools.quality_operations")
+_alias_module("validation_tools", "flext_quality.tools.validation")
+_alias_module(
+    "constants",
+    "flext_quality.constants",
+    {"FlextToolsConstants": FlextToolsConstants},
+)
+_alias_module(
+    "models",
+    "flext_quality.models",
+    {"FlextToolsModels": FlextToolsModels},
+)
+_alias_module(
+    "protocols",
+    "flext_quality.protocols",
+    {"FlextToolsProtocols": FlextToolsProtocols},
+)
+_alias_module(
+    "typings",
+    "flext_quality.typings",
+    {"FlextToolsTypes": FlextToolsTypes},
+)
+_alias_module(
+    "config",
+    "flext_quality.config",
+    {"FlextToolsConfig": FlextToolsConfig},
+)
 
 __all__ = [
+    "BackupManager",
     "Colors",
-    "ConfigurationManager",  # Legacy
-    "ConflictAnalyzer",  # Legacy
-    "DependencyDiscovery",  # Legacy
+    "ConfigurationManager",
+    "ConflictAnalyzer",
+    "DependencyDiscovery",
     "FlextArchitectureTools",
     "FlextDependencyTools",
-    # Tool modules
     "FlextGitTools",
-    "FlextObservabilityService",  # Legacy
+    "FlextObservabilityService",
     "FlextOptimizerTools",
+    "FlextPathService",
     "FlextQualityTools",
-    # Legacy aliases
-    "FlextScript",  # Legacy
-    # PRIMARY API
-    "FlextTools",
-    "FlextToolsAPI",
-    # Namespace classes
+    "FlextScript",
+    "FlextSecurityService",
+    "FlextToolsConfig",
     "FlextToolsConstants",
-    "FlextToolsExceptions",
     "FlextToolsModels",
     "FlextToolsProtocols",
     "FlextToolsTypes",
-    # Utilities
     "FlextToolsUtilities",
     "FlextValidationTools",
-    "PoetryOperations",  # Legacy
-    "PoetryValidator",  # Legacy
-    "ScriptMetadata",  # Legacy
+    "MyPyChecker",
+    "PoetryOperations",
+    "PoetryValidator",
+    "SecretVaultDecryptor",
+    "ScriptMetadata",
     "colorize",
     "get_project_root",
     "get_stdlib_modules",

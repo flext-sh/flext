@@ -207,7 +207,7 @@ This comprehensive documentation update covers the recent v0.9.0 release achieve
 
 ### 2. Railway-Oriented Programming
 
-**Practice:** All operations return FlextCore.Result[T] for composable error handling
+**Practice:** All operations return FlextResult[T] for composable error handling
 **Implementation:** Eliminate exception-based error handling
 **Benefits:** Type-safe composition, predictable error handling
 

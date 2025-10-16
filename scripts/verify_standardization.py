@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 from typing import Final
 
-from flext_core import FlextCore
+from flext_core import FlextTypes
 
 FLEXT_ROOT: Final[Path] = Path("/home/marlonsc/flext")
 
@@ -147,7 +147,7 @@ def verify_constants_file(project_dir: Path, package_name: str) -> dict[str, boo
     return results
 
 
-def verify_project(project_dir: Path) -> FlextCore.Types.Dict:
+def verify_project(project_dir: Path) -> FlextTypes.Dict:
     """Verify a single project.
 
     Args:
@@ -218,7 +218,7 @@ def main() -> None:
 
     success_count = 0
     warning_count = 0
-    issues: FlextCore.Types.StringList = []
+    issues: FlextTypes.StringList = []
 
     for project_dir in all_projects:
         result = verify_project(project_dir)

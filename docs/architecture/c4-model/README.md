@@ -35,10 +35,10 @@ FLEXT is an enterprise-grade data integration platform built with:
 
 ### Foundation Layer (flext-core)
 
-- **FlextCore.Result[T]** - Railway pattern for error handling
-- **FlextCore.Container** - Dependency injection container
-- **FlextCore.Models** - DDD patterns (Entity, Value, AggregateRoot)
-- **FlextCore.Logger** - Structured logging with context propagation
+- **FlextResult[T]** - Railway pattern for error handling
+- **FlextContainer** - Dependency injection container
+- **FlextModels** - DDD patterns (Entity, Value, AggregateRoot)
+- **FlextLogger** - Structured logging with context propagation
 
 ### Application Layer
 

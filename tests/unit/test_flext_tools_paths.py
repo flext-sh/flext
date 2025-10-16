@@ -14,10 +14,10 @@ import inspect
 import tempfile
 from pathlib import Path
 
-from flext_core import FlextCore
+from flext_core import FlextResult, FlextService, FlextTypes
 from flext_tests import FlextTestsDomains
 
-from flext_tools.paths import FlextPathService
+from flext_tools import FlextPathService
 
 
 class TestFlextPathService:
@@ -27,7 +27,7 @@ class TestFlextPathService:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_test_path_data() -> FlextCore.Types.Dict:
+        def create_test_path_data() -> FlextTypes.Dict:
             """Create test path data."""
             return {
                 "base_path": "/tmp/flext_test",
@@ -36,7 +36,7 @@ class TestFlextPathService:
             }
 
         @staticmethod
-        def create_test_ignore_patterns() -> FlextCore.Types.StringList:
+        def create_test_ignore_patterns() -> FlextTypes.StringList:
             """Create test ignore patterns."""
             return [
                 "__pycache__",
@@ -58,7 +58,7 @@ class TestFlextPathService:
         service = FlextPathService()
         assert service is not None
         assert isinstance(service, FlextPathService)
-        assert isinstance(service, FlextCore.Service)
+        assert isinstance(service, FlextService)
 
     def test_path_service_with_parameters(self) -> None:
         """Test FlextPathService with initialization parameters."""
@@ -79,9 +79,9 @@ class TestFlextPathService:
         assert hasattr(service, "execute")
         assert callable(service.execute)
 
-        # Test execute returns FlextCore.Result
+        # Test execute returns FlextResult
         result = service.execute()
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
 
     def test_path_service_error_handling(self) -> None:
         """Test FlextPathService error handling."""
@@ -89,7 +89,7 @@ class TestFlextPathService:
 
         # Test that service handles errors gracefully
         result = service.execute()
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
 
     # =============================================================================
     # NESTED CLASS TESTS
@@ -168,7 +168,7 @@ class TestFlextPathService:
 
         # Test path service operations
         result = service.execute()
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
 
     def test_path_service_validation_operations(self) -> None:
         """Test FlextPathService validation operations functionality."""
@@ -202,7 +202,7 @@ class TestFlextPathService:
         # Test service can be created
         assert service is not None
         assert isinstance(service, FlextPathService)
-        assert isinstance(service, FlextCore.Service)
+        assert isinstance(service, FlextService)
 
         # Test service has expected methods
         assert hasattr(service, "execute")
@@ -210,7 +210,7 @@ class TestFlextPathService:
 
         # Test service operations
         result = service.execute()
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
 
     def test_path_service_with_flext_tests(
         self, flext_domains: FlextTestsDomains
@@ -224,7 +224,7 @@ class TestFlextPathService:
 
         # Test service execution
         result = service.execute()
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
 
         # Test service with flext_tests data
         flext_domains.create_configuration()
@@ -241,7 +241,7 @@ class TestFlextPathService:
 
         # Test that service operations are reasonably fast
         result = service.execute()
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
 
         # Test helper operations performance
         helper = service._ValidationHelper()
@@ -268,11 +268,11 @@ class TestFlextPathService:
 
         # Test initialization
         assert isinstance(service, FlextPathService)
-        assert isinstance(service, FlextCore.Service)
+        assert isinstance(service, FlextService)
 
         # Test service execution
         result = service.execute()
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
 
         # Test validation helper
         validation_helper = service._ValidationHelper()

@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 
-from flext_core import FlextCore
+from flext_core import FlextTypes
 
 
 @dataclass
@@ -22,9 +22,9 @@ class ArchitectureComponent:
     type: str  # 'container', 'component', 'service', 'database', etc.
     description: str
     technology: str
-    dependencies: FlextCore.Types.StringList = field(default_factory=list)
-    interfaces: FlextCore.Types.StringList = field(default_factory=list)
-    responsibilities: FlextCore.Types.StringList = field(default_factory=list)
+    dependencies: FlextTypes.StringList = field(default_factory=list)
+    interfaces: FlextTypes.StringList = field(default_factory=list)
+    responsibilities: FlextTypes.StringList = field(default_factory=list)
     metadata: dict[str, object] = field(default_factory=dict)
 
 
@@ -140,10 +140,10 @@ class ArchitectureDocumentationGenerator:
                 description="Foundation library providing Clean Architecture patterns",
                 technology="Python 3.13+",
                 responsibilities=[
-                    "FlextCore.Result[T] - Railway-oriented error handling",
-                    "FlextCore.Container - Dependency injection",
-                    "FlextCore.Models - Domain-Driven Design patterns",
-                    "FlextCore.Logger - Structured logging",
+                    "FlextResult[T] - Railway-oriented error handling",
+                    "FlextContainer - Dependency injection",
+                    "FlextModels - Domain-Driven Design patterns",
+                    "FlextLogger - Structured logging",
                 ],
             ),
             ArchitectureComponent(
@@ -544,10 +544,10 @@ Rel_D(domain_services, monitoring, "Reports", "Logs")
 - **Technology**: Python
 - **Purpose**: Foundation library with Clean Architecture patterns
 - **Responsibilities**:
-  - FlextCore.Result[T] error handling
-  - FlextCore.Container dependency injection
-  - FlextCore.Models domain patterns
-  - FlextCore.Logger structured logging
+  - FlextResult[T] error handling
+  - FlextContainer dependency injection
+  - FlextModels domain patterns
+  - FlextLogger structured logging
 
 #### Domain Services
 - **Technology**: Python
@@ -621,14 +621,14 @@ Detailed view of FLEXT core components and their relationships:
 
 Container_Boundary(core, "FLEXT Core Library") {{
 
-    Component(result, "FlextCore.Result[T]", "Railway Pattern", "Monadic error handling with composition")
-    Component(container, "FlextCore.Container", "DI Container", "Dependency injection and service management")
-    Component(models, "FlextCore.Models", "DDD Patterns", "Entity, Value, AggregateRoot patterns")
-    Component(logger, "FlextCore.Logger", "Structured Logging", "Context-aware logging with propagation")
+    Component(result, "FlextResult[T]", "Railway Pattern", "Monadic error handling with composition")
+    Component(container, "FlextContainer", "DI Container", "Dependency injection and service management")
+    Component(models, "FlextModels", "DDD Patterns", "Entity, Value, AggregateRoot patterns")
+    Component(logger, "FlextLogger", "Structured Logging", "Context-aware logging with propagation")
 
-    Component(dispatcher, "FlextCore.Dispatcher", "CQRS Dispatcher", "Command and query dispatching")
-    Component(bus, "FlextCore.Bus", "Event Bus", "Domain event publishing and subscription")
-    Component(config, "FlextCore.Config", "Configuration", "Environment-aware configuration management")
+    Component(dispatcher, "FlextDispatcher", "CQRS Dispatcher", "Command and query dispatching")
+    Component(bus, "FlextBus", "Event Bus", "Domain event publishing and subscription")
+    Component(config, "FlextConfig", "Configuration", "Environment-aware configuration management")
 }}
 
 Container_Boundary(domain, "Domain Services") {{
@@ -664,22 +664,22 @@ Rel(infrastructure, core, "Depends on", "Foundation patterns")
 
 ### Core Components
 
-#### FlextCore.Result[T]
+#### FlextResult[T]
 - **Pattern**: Railway-oriented programming
 - **Purpose**: Type-safe error handling with composition
-- **Usage**: All operations that can fail return FlextCore.Result[T]
+- **Usage**: All operations that can fail return FlextResult[T]
 
-#### FlextCore.Container
+#### FlextContainer
 - **Pattern**: Dependency injection container
 - **Purpose**: Service registration and resolution
 - **Usage**: Global singleton for dependency management
 
-#### FlextCore.Models
+#### FlextModels
 - **Pattern**: Domain-Driven Design
 - **Purpose**: Entity, Value, and AggregateRoot patterns
 - **Usage**: Business domain modeling
 
-#### FlextCore.Logger
+#### FlextLogger
 - **Pattern**: Structured logging
 - **Purpose**: Context-aware logging with propagation
 - **Usage**: Consistent logging across all components
@@ -727,21 +727,21 @@ Code-level architecture showing class relationships and implementation patterns:
 @startuml FLEXT Code Architecture
 !include <C4/C4_Code>
 
-class FlextCore.Result {{
+class FlextResult {{
     +value: T
     +error: E
     +is_success: bool
     +is_failure: bool
     +unwrap(): T
-    +map(func): FlextCore.Result[U]
-    +flat_map(func): FlextCore.Result[U]
+    +map(func): FlextResult[U]
+    +flat_map(func): FlextResult[U]
 }}
 
-class FlextCore.Container {{
+class FlextContainer {{
     -_services: Dict[str, object]
     +register(name: str, service: object)
     +resolve(name: str): object
-    +get_global(): FlextCore.Container
+    +get_global(): FlextContainer
 }}
 
 abstract class FlextModel {{
@@ -763,33 +763,33 @@ class AggregateRoot {{
     +domain_events: List[DomainEvent]
 }}
 
-class FlextCore.Dispatcher {{
+class FlextDispatcher {{
     -_handlers: Dict[type, Callable]
     +register_handler(command_type, handler)
-    +dispatch(command): FlextCore.Result
+    +dispatch(command): FlextResult
 }}
 
-class FlextCore.Bus {{
+class FlextBus {{
     -_subscribers: Dict[type, List[Callable]]
     +subscribe(event_type, handler)
     +publish(event)
 }}
 
-FlextCore.Result --> FlextCore.Container : uses
-FlextCore.Container --> FlextModel : manages
+FlextResult --> FlextContainer : uses
+FlextContainer --> FlextModel : manages
 FlextModel <|-- Entity
 FlextModel <|-- Value
 FlextModel <|-- AggregateRoot
 
-FlextCore.Dispatcher --> FlextCore.Bus : publishes events
-FlextCore.Bus --> FlextCore.Logger : logs events
+FlextDispatcher --> FlextBus : publishes events
+FlextBus --> FlextLogger : logs events
 
-note right of FlextCore.Result
+note right of FlextResult
     Railway-oriented
     error handling
 end note
 
-note right of FlextCore.Container
+note right of FlextContainer
     Dependency injection
     singleton container
 end note
@@ -805,7 +805,7 @@ end note
 
 ### Error Handling
 ```python
-class FlextCore.Result[T, E]:
+class FlextResult[T, E]:
     \"\"\"Monadic result type for railway-oriented programming.\"\"\"
 
     def __init__(self, value: Optional[T] = None, error: Optional[E] = None):
@@ -825,29 +825,29 @@ class FlextCore.Result[T, E]:
             raise RuntimeError(f"Cannot unwrap failure result: {{self._error}}")
         return self._value
 
-    def map[U](self, func: Callable[[T], U]) -> FlextCore.Result[U, E]:
+    def map[U](self, func: Callable[[T], U]) -> FlextResult[U, E]:
         if self.is_success:
-            return FlextCore.Result(func(self._value))
-        return FlextCore.Result(error=self._error)
+            return FlextResult(func(self._value))
+        return FlextResult(error=self._error)
 
-    def flat_map[U](self, func: Callable[[T], FlextCore.Result[U, E]]) -> FlextCore.Result[U, E]:
+    def flat_map[U](self, func: Callable[[T], FlextResult[U, E]]) -> FlextResult[U, E]:
         if self.is_success:
             return func(self._value)
-        return FlextCore.Result(error=self._error)
+        return FlextResult(error=self._error)
 ```
 
 ### Dependency Injection
 ```python
-class FlextCore.Container:
+class FlextContainer:
     \"\"\"Global dependency injection container.\"\"\"
 
-    _instance: Optional['FlextCore.Container'] = None
+    _instance: Optional['FlextContainer'] = None
 
     def __init__(self):
         self._services: Dict[str, object] = {{}}
 
     @classmethod
-    def get_global(cls) -> 'FlextCore.Container':
+    def get_global(cls) -> 'FlextContainer':
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
@@ -863,7 +863,7 @@ class FlextCore.Container:
 
 ### Domain Models
 ```python
-class FlextCore.Models:
+class FlextModels:
     \"\"\"Domain-Driven Design base classes.\"\"\"
 
     class Entity:
@@ -1378,7 +1378,7 @@ api -> core: query pipeline state
 core -> domain: get error details
 
 note right: Railway Pattern Error Handling
-domain --> core: FlextCore.Result.failure("Connection timeout")
+domain --> core: FlextResult.failure("Connection timeout")
 core -> api: propagate error context
 api -> cli: format error response
 cli --> user: display actionable error
@@ -1426,7 +1426,7 @@ router -> domain: execute business logic
 domain -> db: query data
 db --> domain: return results
 
-domain --> router: FlextCore.Result.success(data)
+domain --> router: FlextResult.success(data)
         api_flow_file.parent.mkdir(parents=True, exist_ok=True)
 router -> formatter: format response
 formatter --> gateway: JSON response
@@ -1455,7 +1455,7 @@ domain -> db: query data
 db --> domain: connection timeout
 
 note right: Railway Pattern Error Propagation
-domain --> router: FlextCore.Result.failure("DB timeout")
+domain --> router: FlextResult.failure("DB timeout")
 router -> formatter: format domain error
 formatter --> gateway: error response
 

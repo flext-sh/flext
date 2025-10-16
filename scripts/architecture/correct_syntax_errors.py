@@ -14,7 +14,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from flext_core import FlextCore
+from flext_core import FlextTypes
 
 
 def fix_indentation_errors(content: str) -> str:
@@ -70,7 +70,7 @@ def fix_syntax_errors_in_file(file_path: Path) -> bool:
 
         # Ensure proper indentation in TYPE_CHECKING blocks
         lines = content.split("\n")
-        fixed_lines: FlextCore.Types.StringList = []
+        fixed_lines: FlextTypes.StringList = []
         in_type_checking = False
 
         for line in lines:

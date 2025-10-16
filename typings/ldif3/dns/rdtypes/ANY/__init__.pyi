@@ -1,0 +1,19 @@
+import dns.immutable
+import dns.rdata
+
+@dns.immutable.immutable
+class ZONEMD(dns.rdata.Rdata):
+    __slots__ = ...
+    def __init__(
+        self, rdclass, rdtype, serial, scheme, hash_algorithm, digest
+    ) -> None: ...
+    def to_text(self, origin=..., relativize=..., **kw):  # -> str:
+        ...
+    @classmethod
+    def from_text(
+        cls, rdclass, rdtype, tok, origin=..., relativize=..., relativize_to=...
+    ):  # -> Self:
+        ...
+    @classmethod
+    def from_wire_parser(cls, rdclass, rdtype, parser, origin=...):  # -> Self:
+        ...

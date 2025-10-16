@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from flext_core import FlextCore
+from flext_core import FlextTypes
 
 
 @dataclass
@@ -31,7 +31,7 @@ class SyncResult:
     timestamp: datetime
     changes_committed: list[GitChange] = field(default_factory=list)
     files_processed: int = 0
-    errors: FlextCore.Types.StringList = field(default_factory=list)
+    errors: FlextTypes.StringList = field(default_factory=list)
     commit_hash: str | None = None
     branch: str | None = None
 

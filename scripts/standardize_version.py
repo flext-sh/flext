@@ -29,7 +29,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Final
 
-from flext_core import FlextCore
+from flext_core import FlextTypes
 
 # FLEXT ecosystem root directory
 FLEXT_ROOT: Final[Path] = Path("/home/marlonsc/flext")
@@ -45,6 +45,27 @@ SPDX-License-Identifier: Proprietary
 """
 
 from __future__ import annotations
+from flext_core import FlextBus
+
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 from importlib.metadata import metadata
 
@@ -86,7 +107,7 @@ class ProjectInfo:
     current_version_file: Path | None
     needs_update: bool
     has_pyproject: bool
-    issues: FlextCore.Types.StringList
+    issues: FlextTypes.StringList
 
 
 class VersionStandardizer:

@@ -11,7 +11,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextCore
+from flext_core import FlextResult
 
 from flext_tools import (
     Colors,
@@ -62,7 +62,7 @@ class MissingDependenciesDiscoverer(FlextScript):
 
     def execute_main_logic(
         self, **kwargs: dict[str, str]
-    ) -> FlextCore.Result[dict[str, str]]:
+    ) -> FlextResult[dict[str, str]]:
         """Executar descoberta de dependências faltantes."""
         try:
             workspace_root = Path.cwd()

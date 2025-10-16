@@ -64,7 +64,7 @@
 
 #### Railway-Oriented Programming Constraints
 
-- **FlextCore.Result[T]**: All operations that can fail must return FlextCore.Result[T]
+- **FlextResult[T]**: All operations that can fail must return FlextResult[T]
   - **Constraint**: No exceptions for business logic errors
   - **Impact**: Requires functional programming patterns throughout
 

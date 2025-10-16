@@ -18,12 +18,12 @@ from pathlib import Path
 from typing import Self, cast
 
 from flext_cli import FlextCli, FlextCliContext, FlextCliTypes
-from flext_core import FlextCore
+from flext_core import FlextLogger, FlextResult, FlextService, FlextTypes
 
 from flext.task_orchestration import TaskOrchestrationCli
 
 
-class FlextControlPanelCli(FlextCore.Service[str]):
+class FlextControlPanelCli(FlextService[str]):
     """Unified CLI service for FLEXT Control Panel with nested command handlers.
 
     Implements FLEXT unified class pattern with all functionality organized into
@@ -51,7 +51,7 @@ class FlextControlPanelCli(FlextCore.Service[str]):
             for key, value in kwargs.items():
                 setattr(self, key, value)
 
-    # QualityResult protocol removed - now using FlextCore.Result directly
+    # QualityResult protocol removed - now using FlextResult directly
 
     class QualityGateway:
         """Temporary quality gateway to avoid circular imports."""
@@ -62,29 +62,29 @@ class FlextControlPanelCli(FlextCore.Service[str]):
 
         def run_quality_checks_safe(
             self, config: FlextControlPanelCli.QualityCheckConfig
-        ) -> FlextCore.Result[FlextCore.Types.Dict]:
+        ) -> FlextResult[FlextTypes.Dict]:
             # Use config parameter to avoid unused warning
             _ = config
 
-            # Return a proper FlextCore.Result instead of custom Result class
-            return FlextCore.Result[FlextCore.Types.Dict].ok({"success": True})
+            # Return a proper FlextResult instead of custom Result class
+            return FlextResult[FlextTypes.Dict].ok({"success": True})
 
     @staticmethod
     def print_colored(text: str) -> None:
         """Print colored text using flext-cli patterns."""
-        logger = FlextCore.Logger(__name__)
+        logger = FlextLogger(__name__)
         logger.info(text)
 
     @staticmethod
-    def _all_quality_checks_passed(result: FlextCore.Types.Dict) -> bool:
+    def _all_quality_checks_passed(result: FlextTypes.Dict) -> bool:
         """Temporary quality checks function to avoid circular imports."""
         success = result.get("success", False)
         return bool(success)
 
     @staticmethod
-    def _get_quality_failure_summary(result: FlextCore.Types.Dict) -> str:
+    def _get_quality_failure_summary(result: FlextTypes.Dict) -> str:
         """Temporary quality failure summary function to avoid circular imports."""
-        failed_checks: FlextCore.Types.StringList = []
+        failed_checks: FlextTypes.StringList = []
         if not result.get("tests_passed", True):
             failed_checks.append("tests")
         if not result.get("coverage_passed", True):
@@ -104,10 +104,10 @@ class FlextControlPanelCli(FlextCore.Service[str]):
     def __init__(self, **_data: object) -> None:
         """Initialize FLEXT CLI service with flext-cli integration."""
         super().__init__()
-        self._logger = FlextCore.Logger(__name__)
+        self._logger = FlextLogger(__name__)
         # Initialize FlextCliApi using the factory pattern to avoid initialization issues
-        # Initialize CLI API using FlextCore.Result pattern
-        cli_api_result: FlextCore.Result[FlextCli] = self._initialize_cli_api()
+        # Initialize CLI API using FlextResult pattern
+        cli_api_result: FlextResult[FlextCli] = self._initialize_cli_api()
         if cli_api_result.is_success:
             self._cli_api = cli_api_result.unwrap()
         else:
@@ -118,20 +118,18 @@ class FlextControlPanelCli(FlextCore.Service[str]):
         self._config = None
         self._workspace: Path = Path.cwd()
 
-    def _initialize_cli_api(self: Self) -> FlextCore.Result[FlextCli]:
-        """Initialize CLI API with proper error handling using FlextCore.Result."""
+    def _initialize_cli_api(self: Self) -> FlextResult[FlextCli]:
+        """Initialize CLI API with proper error handling using FlextResult."""
         try:
             cli_api = FlextCli()  # Use default initialization
-            return FlextCore.Result[FlextCli].ok(cli_api)
+            return FlextResult[FlextCli].ok(cli_api)
         except Exception as e:
-            return FlextCore.Result[FlextCli].fail(
-                f"FlextCli initialization failed: {e!s}"
-            )
+            return FlextResult[FlextCli].fail(f"FlextCli initialization failed: {e!s}")
 
     def _initialize_config(
         self, profile: str, *, debug: bool
-    ) -> FlextCore.Result[FlextCliContext]:
-        """Initialize CLI configuration using FlextCore.Result pattern."""
+    ) -> FlextResult[FlextCliContext]:
+        """Initialize CLI configuration using FlextResult pattern."""
         try:
             # Pass profile and debug through environment_variables
             environment_variables: FlextCliTypes.Data.CliConfigData = {
@@ -139,19 +137,19 @@ class FlextControlPanelCli(FlextCore.Service[str]):
                 "debug": debug,
             }
             config = FlextCliContext(environment_variables=dict(environment_variables))
-            return FlextCore.Result[FlextCliContext].ok(config)
+            return FlextResult[FlextCliContext].ok(config)
         except Exception as e:
-            return FlextCore.Result[FlextCliContext].fail(
+            return FlextResult[FlextCliContext].fail(
                 f"Configuration initialization failed: {e!s}"
             )
 
-    def _create_main_cli(self: Self) -> FlextCore.Result[FlextCli]:
-        """Create main CLI using FlextCore.Result pattern."""
+    def _create_main_cli(self: Self) -> FlextResult[FlextCli]:
+        """Create main CLI using FlextResult pattern."""
         try:
             main_cli = FlextCli()
-            return FlextCore.Result[FlextCli].ok(main_cli)
+            return FlextResult[FlextCli].ok(main_cli)
         except Exception as e:
-            return FlextCore.Result[FlextCli].fail(f"FlextCli creation failed: {e!s}")
+            return FlextResult[FlextCli].fail(f"FlextCli creation failed: {e!s}")
 
     # Instance method not needed; static method above is sufficient for calls via class or instance
 
@@ -173,7 +171,7 @@ class FlextControlPanelCli(FlextCore.Service[str]):
 
         def quality_check(
             self, config: FlextControlPanelCli.QualityCheckConfig
-        ) -> FlextCore.Result[FlextCore.Types.Dict]:
+        ) -> FlextResult[FlextTypes.Dict]:
             """Execute comprehensive quality checks using flext_tools."""
             try:
                 quality_gateway = self._cli_service.QualityGateway(
@@ -186,23 +184,23 @@ class FlextControlPanelCli(FlextCore.Service[str]):
                     and FlextControlPanelCli._all_quality_checks_passed(result.value)
                 ):
                     self._cli_service.print_colored("✅ All quality checks passed!")
-                    return FlextCore.Result[FlextCore.Types.Dict].ok(result.value)
+                    return FlextResult[FlextTypes.Dict].ok(result.value)
                 failure = (
                     self._cli_service._get_quality_failure_summary(result.value)
                     if result.is_success
                     else (result.error or "unknown error")
                 )
                 self._cli_service.print_colored(f"❌ Quality checks failed: {failure}")
-                return FlextCore.Result[FlextCore.Types.Dict].fail(failure)
+                return FlextResult[FlextTypes.Dict].fail(failure)
 
             except Exception as e:
                 error = f"Error running quality checks: {e}"
                 self._cli_service.print_colored(f"❌ {error}")
-                return FlextCore.Result[FlextCore.Types.Dict].fail(error)
+                return FlextResult[FlextTypes.Dict].fail(error)
 
         def list_scripts(
             self, category: str | None = None
-        ) -> FlextCore.Result[list[dict[str, str]]]:
+        ) -> FlextResult[list[dict[str, str]]]:
             """List available FlextScript instances with optional category filtering."""
             self._cli_service.print_colored(
                 f"📋 Available FlextScript instances in {self._cli_service._workspace}:"
@@ -226,11 +224,11 @@ class FlextControlPanelCli(FlextCore.Service[str]):
                     f"  - {item['name']} (category: {item['category']})"
                 )
 
-            return FlextCore.Result[list[dict[str, str]]].ok(filtered_items)
+            return FlextResult[list[dict[str, str]]].ok(filtered_items)
 
         def run_analysis(
             self, analysis_type: str = "structure"
-        ) -> FlextCore.Result[dict[str, str]]:
+        ) -> FlextResult[dict[str, str]]:
             """Perform workspace and code analysis using flext_tools."""
             self._cli_service.print_colored(
                 f"🔬 Running {analysis_type} analysis on workspace: {self._cli_service._workspace}"
@@ -240,7 +238,7 @@ class FlextControlPanelCli(FlextCore.Service[str]):
             self._cli_service.print_colored(
                 f"✅ {analysis_type.title()} analysis completed"
             )
-            return FlextCore.Result[dict[str, str]].ok(result)
+            return FlextResult[dict[str, str]].ok(result)
 
     class _MainCommands:
         """Nested main command handlers."""
@@ -252,7 +250,7 @@ class FlextControlPanelCli(FlextCore.Service[str]):
 
         def test_command(
             self, *, coverage: bool = True, parallel: bool = False
-        ) -> FlextCore.Result[FlextCore.Types.Dict]:
+        ) -> FlextResult[FlextTypes.Dict]:
             """Execute comprehensive test suite using flext_tools integration."""
             self._cli_service.print_colored(
                 f"🧪 Running tests (parallel={parallel}) in {self._cli_service._workspace}..."
@@ -276,7 +274,7 @@ class FlextControlPanelCli(FlextCore.Service[str]):
                     and FlextControlPanelCli._all_quality_checks_passed(result.value)
                 ):
                     self._cli_service.print_colored("✅ Tests passed")
-                    return FlextCore.Result[FlextCore.Types.Dict].ok(result.value)
+                    return FlextResult[FlextTypes.Dict].ok(result.value)
 
                 # Handle quality check failures
                 failure = (
@@ -293,16 +291,14 @@ class FlextControlPanelCli(FlextCore.Service[str]):
                     failure = "Test execution failed: Command failed"
 
                 self._cli_service.print_colored(f"❌ Tests failed: {failure}")
-                return FlextCore.Result[FlextCore.Types.Dict].fail(failure)
+                return FlextResult[FlextTypes.Dict].fail(failure)
 
             except Exception as e:
                 error = f"Test execution failed: {e}"
                 self._cli_service.print_colored(f"❌ {error}")
-                return FlextCore.Result[FlextCore.Types.Dict].fail(error)
+                return FlextResult[FlextTypes.Dict].fail(error)
 
-        def lint_command(
-            self, *, fix: bool = False
-        ) -> FlextCore.Result[FlextCore.Types.Dict]:
+        def lint_command(self, *, fix: bool = False) -> FlextResult[FlextTypes.Dict]:
             """Execute linting using flext_tools quality gateway."""
             self._cli_service.print_colored("🔍 Running linting with flext_tools...")
 
@@ -322,18 +318,18 @@ class FlextControlPanelCli(FlextCore.Service[str]):
 
                 if result.is_success and result.value.get("lint_passed", False):
                     self._cli_service.print_colored("✅ Linting passed!")
-                    return FlextCore.Result[FlextCore.Types.Dict].ok(result.value)
+                    return FlextResult[FlextTypes.Dict].ok(result.value)
                 failure = (
                     self._cli_service._get_quality_failure_summary(result.value)
                     if result.is_success
                     else (result.error or "unknown error")
                 )
                 self._cli_service.print_colored(f"❌ Linting failed: {failure}")
-                return FlextCore.Result[FlextCore.Types.Dict].fail(failure)
+                return FlextResult[FlextTypes.Dict].fail(failure)
             except Exception as e:
                 error = f"Linting failed: {e}"
                 self._cli_service.print_colored(f"❌ {error}")
-                return FlextCore.Result[FlextCore.Types.Dict].fail(error)
+                return FlextResult[FlextTypes.Dict].fail(error)
 
         def format_command(self, *, check_only: bool = False) -> None:
             """Auto-format code using flext_tools with flext-cli patterns."""
@@ -356,7 +352,7 @@ class FlextControlPanelCli(FlextCore.Service[str]):
 
         def info_command(
             self, *, detailed: bool = False
-        ) -> FlextCore.Result[dict[str, str | FlextCore.Types.StringList | bool]]:
+        ) -> FlextResult[dict[str, str | FlextTypes.StringList | bool]]:
             """Display workspace information using flext-cli patterns."""
             workspace_data = {
                 "workspace_root": str(self._cli_service._workspace),
@@ -387,15 +383,13 @@ class FlextControlPanelCli(FlextCore.Service[str]):
 
             if detailed:
                 self._cli_service.print_colored("\n📋 Projects:")
-                projects = cast(
-                    "FlextCore.Types.StringList", workspace_data["projects"]
-                )
+                projects = cast("FlextTypes.StringList", workspace_data["projects"])
                 for project in projects:
                     self._cli_service.print_colored(f"  • {project}")
 
-            return FlextCore.Result[
-                dict[str, str | FlextCore.Types.StringList | bool]
-            ].ok(workspace_data)
+            return FlextResult[dict[str, str | FlextTypes.StringList | bool]].ok(
+                workspace_data
+            )
 
         def orchestrate_command(
             self,
@@ -405,8 +399,8 @@ class FlextControlPanelCli(FlextCore.Service[str]):
             agents: int | None = None,
             days: int | None = None,
             analyze_only: bool = False,
-            context: FlextCore.Types.Dict | None = None,
-        ) -> FlextCore.Result[None]:
+            context: FlextTypes.Dict | None = None,
+        ) -> FlextResult[None]:
             """Execute task orchestration using three-agent system."""
             self._cli_service.print_colored("🎯 Starting task orchestration...")
 
@@ -439,7 +433,7 @@ class FlextControlPanelCli(FlextCore.Service[str]):
             except Exception as e:
                 error = f"Orchestrate command execution failed: {e}"
                 self._cli_service.print_colored(f"❌ {error}")
-                return FlextCore.Result[None].fail(error)
+                return FlextResult[None].fail(error)
 
     def initialize(
         self,
@@ -447,14 +441,14 @@ class FlextControlPanelCli(FlextCore.Service[str]):
         profile: str = "default",
         *,
         debug: bool = False,
-    ) -> FlextCore.Result[FlextCli]:
-        """Initialize CLI with flext-cli integration using FlextCore.Result pattern."""
-        # Initialize configuration using FlextCore.Result
+    ) -> FlextResult[FlextCli]:
+        """Initialize CLI with flext-cli integration using FlextResult pattern."""
+        # Initialize configuration using FlextResult
         config_result = self._initialize_config(profile, debug=debug)
         if config_result.is_failure:
             error = f"Configuration error: {config_result.error}"
             self.print_colored(f"❌ {error}")
-            return FlextCore.Result[FlextCli].fail(error)
+            return FlextResult[FlextCli].fail(error)
 
         self._config = config_result.unwrap()
         self._workspace = Path(workspace) if workspace else Path.cwd()
@@ -462,13 +456,13 @@ class FlextControlPanelCli(FlextCore.Service[str]):
         if debug:
             self.print_colored("✅ FLEXT CLI initialized with flext-cli integration")
 
-        # Create main CLI using FlextCore.Result
+        # Create main CLI using FlextResult
         main_cli_result = self._create_main_cli()
         if main_cli_result.is_failure:
             self._logger.warning(
                 f"FlextCli initialization issue: {main_cli_result.error}"
             )
-            return FlextCore.Result[FlextCli].fail(
+            return FlextResult[FlextCli].fail(
                 f"CLI initialization temporarily unavailable: {main_cli_result.error}"
             )
 
@@ -487,8 +481,8 @@ class FlextControlPanelCli(FlextCore.Service[str]):
         """Get current workspace path."""
         return self._workspace
 
-    def execute(self: Self) -> FlextCore.Result[str]:
-        """Execute CLI service - required by FlextCore.Service abstract method."""
+    def execute(self: Self) -> FlextResult[str]:
+        """Execute CLI service - required by FlextService abstract method."""
         try:
             # Default execution returns CLI system info
             info = {
@@ -497,11 +491,11 @@ class FlextControlPanelCli(FlextCore.Service[str]):
                 "status": "ready",
                 "workspace_path": str(self.workspace_path),
             }
-            return FlextCore.Result[str].ok(f"FlextControlPanelCli ready: {info}")
+            return FlextResult[str].ok(f"FlextControlPanelCli ready: {info}")
         except Exception as e:
-            return FlextCore.Result[str].fail(f"CLI service execution failed: {e}")
+            return FlextResult[str].fail(f"CLI service execution failed: {e}")
 
-    def demo_serena_tools(self) -> FlextCore.Result[str]:
+    def demo_serena_tools(self) -> FlextResult[str]:
         """Demonstration method showing serena MCP tools integration.
 
         This method demonstrates how serena MCP tools can be used to:
@@ -511,7 +505,7 @@ class FlextControlPanelCli(FlextCore.Service[str]):
         - Navigate complex enterprise projects
 
         Returns:
-            FlextCore.Result[str]: Success message with tool capabilities
+            FlextResult[str]: Success message with tool capabilities
 
         """
         capabilities = [
@@ -527,7 +521,7 @@ class FlextControlPanelCli(FlextCore.Service[str]):
         )
 
         self.print_colored(f"🚀 {message}")
-        return FlextCore.Result[str].ok("Serena MCP tools demonstrated successfully")
+        return FlextResult[str].ok("Serena MCP tools demonstrated successfully")
 
 
 def create_cli() -> FlextControlPanelCli:
@@ -653,7 +647,7 @@ def orchestrate(
     agents: int | None = None,
     days: int | None = None,
     analyze_only: bool = False,
-    context: FlextCore.Types.Dict | None = None,
+    context: FlextTypes.Dict | None = None,
 ) -> None:
     """Legacy function - use FlextControlPanelCli._MainCommands.orchestrate_command instead."""
     cli_service = create_cli()

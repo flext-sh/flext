@@ -36,7 +36,26 @@
 
 ```python
 import pytest
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 # Basic test structure
 def test_function_success():
@@ -84,7 +103,7 @@ def test_end_to_end_workflow():
 
 #### Railway-Oriented Testing
 
-**Test FlextCore.Result patterns consistently**
+**Test FlextResult patterns consistently**
 
 ```python
 def test_railway_pattern():
@@ -112,12 +131,12 @@ def test_railway_pattern():
 
 #### Dependency Injection Testing
 
-**Test FlextCore.Container patterns**
+**Test FlextContainer patterns**
 
 ```python
 def test_dependency_injection():
     """Test dependency injection container."""
-    container = FlextCore.Container()
+    container = FlextContainer()
 
     # Register test service
     container.register("test_service", TestService())
@@ -132,7 +151,7 @@ def test_dependency_injection():
 
 #### Model Testing
 
-**Test FlextCore.Models patterns**
+**Test FlextModels patterns**
 
 ```python
 def test_model_validation():
@@ -161,26 +180,26 @@ def test_model_validation():
 ```python
 # tests/unit/test_result.py
 def test_flext_result_success():
-    """Test FlextCore.Result success case."""
-    result = FlextCore.Result[str].ok("test")
+    """Test FlextResult success case."""
+    result = FlextResult[str].ok("test")
     assert result.is_success
     assert result.unwrap() == "test"
     assert result.error is None
 
 def test_flext_result_failure():
-    """Test FlextCore.Result failure case."""
-    result = FlextCore.Result[str].fail("error")
+    """Test FlextResult failure case."""
+    result = FlextResult[str].fail("error")
     assert not result.is_success
     assert result.error == "error"
     with pytest.raises(ValueError):
         result.unwrap()
 
 def test_flext_result_composition():
-    """Test FlextCore.Result composition."""
+    """Test FlextResult composition."""
     result = (
-        FlextCore.Result[int].ok(5)
+        FlextResult[int].ok(5)
         .map(lambda x: x * 2)
-        .flat_map(lambda x: FlextCore.Result[int].ok(x + 1))
+        .flat_map(lambda x: FlextResult[int].ok(x + 1))
     )
     assert result.is_success
     assert result.unwrap() == 11
@@ -194,7 +213,7 @@ def test_flext_result_composition():
 # tests/integration/test_container.py
 def test_container_service_registration():
     """Test service registration and retrieval."""
-    container = FlextCore.Container()
+    container = FlextContainer()
 
     # Register service
     container.register("test", TestService())
@@ -206,7 +225,7 @@ def test_container_service_registration():
 
 def test_container_factory_registration():
     """Test factory registration and instantiation."""
-    container = FlextCore.Container()
+    container = FlextContainer()
 
     # Register factory
     container.register_factory("test", lambda: TestService())
@@ -504,16 +523,35 @@ def test_oracle_target_loading():
 # tests/performance/test_benchmarks.py
 import time
 import pytest
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 @pytest.mark.slow
 def test_result_creation_performance():
-    """Test FlextCore.Result creation performance."""
+    """Test FlextResult creation performance."""
     start_time = time.time()
 
     # Create many results
     for i in range(10000):
-        result = FlextCore.Result[int].ok(i)
+        result = FlextResult[int].ok(i)
         assert result.is_success
 
     end_time = time.time()
@@ -524,11 +562,11 @@ def test_result_creation_performance():
 
 @pytest.mark.slow
 def test_result_composition_performance():
-    """Test FlextCore.Result composition performance."""
+    """Test FlextResult composition performance."""
     start_time = time.time()
 
     # Compose many results
-    result = FlextCore.Result[int].ok(0)
+    result = FlextResult[int].ok(0)
     for i in range(1000):
         result = result.map(lambda x: x + 1)
 
@@ -582,12 +620,31 @@ async def test_api_load_handling():
 ```python
 # conftest.py
 import pytest
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 @pytest.fixture(scope="session")
 def container():
     """Global test container."""
-    return FlextCore.Container()
+    return FlextContainer()
 
 @pytest.fixture
 def test_data():
@@ -616,12 +673,31 @@ def reset_container(container):
 # tests/conftest.py
 import os
 import pytest
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 @pytest.fixture(scope="session")
 def test_config():
     """Test configuration."""
-    return FlextCore.Config({
+    return FlextConfig({
         "database": {
             "host": "localhost",
             "port": 5432,
@@ -797,10 +873,48 @@ pytest --cov=src --cov-report=html
 
 ```python
 # ❌ WRONG - Internal module imports
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 # ✅ CORRECT - Root module imports
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 ```
 
 #### 2. Test Isolation
@@ -830,7 +944,7 @@ def test_get_user():
 
 ```python
 # ❌ WRONG - Over-mocking
-@patch('flext_core.FlextCore.Result')
+@patch('flext_core.FlextResult')
 def test_processing():
     pass
 

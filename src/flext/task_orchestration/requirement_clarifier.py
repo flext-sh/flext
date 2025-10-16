@@ -14,7 +14,7 @@ import re
 from datetime import UTC, datetime
 from pathlib import Path
 
-from flext_core import FlextCore
+from flext_core import FlextLogger, FlextResult, FlextTypes
 
 from .constants import FlextTaskOrchestrationConstants
 
@@ -29,7 +29,7 @@ class RequirementClarifier:
     - Generating clarification questions
     """
 
-    def __init__(self, logger: FlextCore.Logger, focus_area: str | None = None) -> None:
+    def __init__(self, logger: FlextLogger, focus_area: str | None = None) -> None:
         """Initialize the requirement clarifier.
 
         Args:
@@ -43,7 +43,7 @@ class RequirementClarifier:
 
     def clarify_requirements(
         self, input_data: str | Path, context: dict[str, object] | None = None
-    ) -> FlextCore.Result[dict[str, object]]:
+    ) -> FlextResult[dict[str, object]]:
         """Clarify and extract requirements from input.
 
         Args:
@@ -51,7 +51,7 @@ class RequirementClarifier:
             context: Optional context information
 
         Returns:
-            FlextCore.Result containing clarified requirements with questions
+            FlextResult containing clarified requirements with questions
 
         """
         try:
@@ -60,7 +60,7 @@ class RequirementClarifier:
             # Extract text content
             if isinstance(input_data, Path):
                 if not input_data.exists():
-                    return FlextCore.Result[dict[str, object]].fail(
+                    return FlextResult[dict[str, object]].fail(
                         FlextTaskOrchestrationConstants.TaskMessages.FILE_NOT_FOUND.format(
                             path=input_data
                         )
@@ -97,14 +97,14 @@ class RequirementClarifier:
                     count=len(requirements)
                 )
             )
-            return FlextCore.Result[dict[str, object]].ok(result)
+            return FlextResult[dict[str, object]].ok(result)
 
         except Exception as e:
             error = FlextTaskOrchestrationConstants.TaskMessages.REQUIREMENT_CLARIFICATION_FAILED.format(
                 error=str(e)
             )
             self._logger.exception(error)
-            return FlextCore.Result[dict[str, object]].fail(error)
+            return FlextResult[dict[str, object]].fail(error)
 
     def _parse_requirements(self, content: str) -> list[dict[str, object]]:
         """Parse requirements from text content using constants.
@@ -211,7 +211,7 @@ class RequirementClarifier:
 
     def _validate_requirements(
         self, requirements: list[dict[str, object]]
-    ) -> FlextCore.Result[dict[str, object]]:
+    ) -> FlextResult[dict[str, object]]:
         """Validate extracted requirements.
 
         Args:
@@ -222,13 +222,13 @@ class RequirementClarifier:
 
         """
         if not requirements:
-            return FlextCore.Result[dict[str, object]].fail(
+            return FlextResult[dict[str, object]].fail(
                 FlextTaskOrchestrationConstants.TaskMessages.NO_REQUIREMENTS_EXTRACTED
             )
 
         # Check for minimum requirements
         if len(requirements) < 1:
-            return FlextCore.Result[dict[str, object]].fail(
+            return FlextResult[dict[str, object]].fail(
                 FlextTaskOrchestrationConstants.TaskMessages.AT_LEAST_ONE_REQUIREMENT_NEEDED
             )
 
@@ -236,20 +236,22 @@ class RequirementClarifier:
         for i, req in enumerate(requirements):
             title_value = req.get("title", "")
             if not str(title_value).strip():
-                return FlextCore.Result[dict[str, object]].fail(
+                return FlextResult[dict[str, object]].fail(
                     FlextTaskOrchestrationConstants.TaskMessages.REQUIREMENT_MISSING_TITLE.format(
                         index=i + 1
                     )
                 )
 
-        return FlextCore.Result[dict[str, object]].ok({
-            "validated": True,
-            "count": len(requirements),
-        })
+        return FlextResult[dict[str, object]].ok(
+            {
+                "validated": True,
+                "count": len(requirements),
+            }
+        )
 
     def _generate_clarification_questions(
         self, requirements: list[dict[str, object]]
-    ) -> FlextCore.Types.StringList:
+    ) -> FlextTypes.StringList:
         """Generate clarification questions for requirements.
 
         Args:
