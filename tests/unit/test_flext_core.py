@@ -164,7 +164,7 @@ class TestFlextConsolidated:
     def test_flext_constants_access(self) -> None:
         """Test FlextConstants access."""
         # Test platform constants
-        assert FlextConstants.Platform.HTTP_STATUS_OK is not None
+        assert FlextConstants.Http.HTTP_OK is not None
         assert FlextConstants.Platform.HTTP_STATUS_INTERNAL_ERROR is not None
 
         # Test logging constants
@@ -275,7 +275,7 @@ class TestFlextConsolidated:
         result = service.execute()
 
         assert result.is_success
-        assert result.data == "test_result"
+        assert result.value == "test_result"
 
     # =============================================================================
     # INTEGRATION TESTS
@@ -311,8 +311,8 @@ class TestFlextConsolidated:
         result = service.execute()
 
         assert result.is_success
-        assert result.data is not None
-        assert result.data["status"] == "success"
+        assert result.value is not None
+        assert result.value["status"] == "success"
 
     def test_flext_core_error_handling(self) -> None:
         """Test flext-core error handling patterns."""

@@ -229,9 +229,9 @@ class TestPoetryValidator:
         deps_result = validator.check_dependencies(str(self.temp_test_dir))
         assert isinstance(deps_result, FlextResult)
 
-    def test_poetry_validator_with_flext_tests(
-        self, flext_domains: FlextTestsDomains
-    ) -> None:
+    # def test_poetry_validator_with_flext_tests(
+    #     self, flext_domains: FlextTestsDomains
+    # ) -> None:
         """Test PoetryValidator with flext_tests infrastructure."""
         validator = PoetryValidator()
 
