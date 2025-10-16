@@ -4,10 +4,10 @@ Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 
 ANTI-DUPLICATION ENFORCEMENT: This module provides ONLY a facade to flext-core
-FlextCore.Handlers, eliminating ALL code duplication and ensuring consistent handler
+FlextHandlers, eliminating ALL code duplication and ensuring consistent handler
 usage across the FLEXT ecosystem.
 
-ZERO TOLERANCE: NO local implementations - uses flext-core FlextCore.Handlers exclusively.
+ZERO TOLERANCE: NO local implementations - uses flext-core FlextHandlers exclusively.
 DOMAIN SEPARATION: Handler patterns belong exclusively to flext-core domain.
 """
 
@@ -17,7 +17,17 @@ import uuid
 from enum import StrEnum
 from typing import Self, TypeVar
 
-from flext_core import FlextCore
+from flext_core import (
+    FlextBus,
+    FlextContainer,
+    FlextHandlers,
+    FlextLogger,
+    FlextModels,
+    FlextProcessors,
+    FlextResult,
+    FlextService,
+    FlextTypes,
+)
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 # Direct flext-core imports - no aliases
@@ -26,10 +36,10 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 T = TypeVar("T")
 
 # object types allowed for test compatibility interfaces
-# Use flext-core FlextCore.Handlers exclusively - NO LOCAL IMPLEMENTATIONS
+# Use flext-core FlextHandlers exclusively - NO LOCAL IMPLEMENTATIONS
 
 
-class FlextApplicationHandlerService[T](FlextCore.Service[str]):
+class FlextApplicationHandlerService[T](FlextService[str]):
     """Unified handler service providing facade to flext-core handler system.
 
     This service acts as a facade to flext-core's comprehensive handler system,
@@ -75,7 +85,7 @@ class FlextApplicationHandlerService[T](FlextCore.Service[str]):
 
         command_id: str = Field(default_factory=lambda: f"cmd_{uuid.uuid4().hex[:8]}")
         action: str = Field(..., description="Action to perform")
-        user_data: FlextCore.Types.Dict = Field(default_factory=dict)
+        user_data: FlextTypes.Dict = Field(default_factory=dict)
         timestamp: float = Field(default_factory=lambda: uuid.uuid4().time)
         priority: str = Field(default="medium")
 
@@ -102,7 +112,7 @@ class FlextApplicationHandlerService[T](FlextCore.Service[str]):
         command_id: str = Field(default_factory=lambda: f"cmd_{uuid.uuid4().hex[:8]}")
         operation: str = Field(..., description="Processing operation")
         data_source: str = Field(..., description="Data source identifier")
-        parameters: FlextCore.Types.Dict = Field(default_factory=dict)
+        parameters: FlextTypes.Dict = Field(default_factory=dict)
         batch_size: int = Field(default=1000, ge=1, le=10000)
         timeout_seconds: int = Field(default=300, ge=1, le=3600)
 
@@ -128,14 +138,14 @@ class FlextApplicationHandlerService[T](FlextCore.Service[str]):
 
         query_id: str = Field(default_factory=lambda: f"qry_{uuid.uuid4().hex[:8]}")
         table: str = Field(..., description="Table name")
-        filters: FlextCore.Types.Dict = Field(default_factory=dict)
+        filters: FlextTypes.Dict = Field(default_factory=dict)
 
     class AggregationQuery(BaseModel):
         """Aggregation query for test compatibility."""
 
         query_id: str = Field(default_factory=lambda: f"qry_{uuid.uuid4().hex[:8]}")
         metric: str = Field(..., description="Metric to aggregate")
-        group_by: FlextCore.Types.StringList = Field(default_factory=list)
+        group_by: FlextTypes.StringList = Field(default_factory=list)
 
     class DataProcessedEvent(BaseModel):
         """Simple data processed event for test compatibility."""
@@ -149,8 +159,8 @@ class FlextApplicationHandlerService[T](FlextCore.Service[str]):
     def __init__(self, **_data: object) -> None:
         """Initialize handler service with flext-core integration."""
         super().__init__()
-        self._logger = FlextCore.Logger(__name__)
-        self._container = FlextCore.Container.ensure_global_instance()
+        self._logger = FlextLogger(__name__)
+        self._container = FlextContainer.ensure_global_instance()
 
     class _HandlerFactory:
         """Direct access to flext-core handlers - ELIMINATES WRAPPER METHODS."""
@@ -160,9 +170,9 @@ class FlextApplicationHandlerService[T](FlextCore.Service[str]):
             self._service = service
 
         # Direct class access - users can instantiate directly instead of using wrappers
-        ValidatingHandler = FlextCore.Handlers
-        AuthorizingHandler = FlextCore.Handlers
-        MetricsHandler = FlextCore.Handlers
+        ValidatingHandler = FlextHandlers
+        AuthorizingHandler = FlextHandlers
+        MetricsHandler = FlextHandlers
 
     class _PatternFactory:
         """Nested factory for creating flext-core handler patterns."""
@@ -173,10 +183,10 @@ class FlextApplicationHandlerService[T](FlextCore.Service[str]):
 
         def create_handler_chain(
             self, _name: str | None = None
-        ) -> FlextCore.Handlers[object, object]:
+        ) -> FlextHandlers[object, object]:
             """Create handler chain using flext-core implementation."""
             # Create a basic handler config for handler chain operations
-            config = FlextCore.Models.Cqrs.Handler(
+            config = FlextModels.Cqrs.Handler(
                 handler_id="handler_chain_001",
                 handler_name="handler_chain",
                 handler_type="command",
@@ -186,20 +196,16 @@ class FlextApplicationHandlerService[T](FlextCore.Service[str]):
             )
 
             # Create a concrete handler implementation
-            class HandlerChainHandler(FlextCore.Handlers[object, object]):
-                def handle(self, message: object) -> FlextCore.Result[object]:
+            class HandlerChainHandler(FlextHandlers[object, object]):
+                def handle(self, message: object) -> FlextResult[object]:
                     """Handle handler chain commands."""
-                    return FlextCore.Result[object].ok(
-                        f"Handler chain processed: {message}"
-                    )
+                    return FlextResult[object].ok(f"Handler chain processed: {message}")
 
             return HandlerChainHandler(config=config)
 
-        def create_pipeline(
-            self, _name: str | None = None
-        ) -> FlextCore.Processors.Pipeline:
+        def create_pipeline(self, _name: str | None = None) -> FlextProcessors.Pipeline:
             """Create pipeline using flext-core implementation."""
-            return FlextCore.Processors.Pipeline()
+            return FlextProcessors.Pipeline()
 
     class _BusFactory:
         """Nested factory for creating CQRS buses."""
@@ -208,13 +214,13 @@ class FlextApplicationHandlerService[T](FlextCore.Service[str]):
             super().__init__()
             self._service = service
 
-        def create_command_bus(self: Self) -> FlextCore.Bus:
+        def create_command_bus(self: Self) -> FlextBus:
             """Create command bus using flext-core implementation."""
-            return FlextCore.Bus()
+            return FlextBus()
 
-        def create_query_bus(self: Self) -> FlextCore.Bus:
+        def create_query_bus(self: Self) -> FlextBus:
             """Create query bus using flext-core implementation."""
-            return FlextCore.Bus()
+            return FlextBus()
 
     class _RegistryManager:
         """Nested manager for handler registry operations."""
@@ -222,33 +228,27 @@ class FlextApplicationHandlerService[T](FlextCore.Service[str]):
         def __init__(self, service: FlextApplicationHandlerService[object]) -> None:
             super().__init__()
             self._service = service
-            self._registry: FlextCore.Types.Dict = {}
+            self._registry: FlextTypes.Dict = {}
 
-        def register_handler(
-            self, name: str, handler: object
-        ) -> FlextCore.Result[None]:
+        def register_handler(self, name: str, handler: object) -> FlextResult[None]:
             """Register handler in flext-core registry."""
             try:
                 self._registry[name] = handler
-                return FlextCore.Result[None].ok(None)
+                return FlextResult[None].ok(None)
             except Exception as e:
-                return FlextCore.Result[None].fail(
-                    f"Failed to register handler {name}: {e}"
-                )
+                return FlextResult[None].fail(f"Failed to register handler {name}: {e}")
 
-        def get_handler(self, name: str) -> FlextCore.Result[object]:
+        def get_handler(self, name: str) -> FlextResult[object]:
             """Get handler from flext-core registry."""
             try:
                 handler = self._registry.get(name)
                 if handler is not None:
-                    return FlextCore.Result[object].ok(handler)
-                return FlextCore.Result[object].fail(f"Handler {name} not found")
+                    return FlextResult[object].ok(handler)
+                return FlextResult[object].fail(f"Handler {name} not found")
             except Exception as e:
-                return FlextCore.Result[object].fail(
-                    f"Failed to get handler {name}: {e}"
-                )
+                return FlextResult[object].fail(f"Failed to get handler {name}: {e}")
 
-        def get_all_handlers(self: Self) -> FlextCore.Types.Dict:
+        def get_all_handlers(self: Self) -> FlextTypes.Dict:
             """Get all registered handlers."""
             return self._registry.copy()
 
@@ -271,36 +271,36 @@ class FlextApplicationHandlerService[T](FlextCore.Service[str]):
     # Handler methods for test compatibility
     def handle_user_management(
         self, *_args: object, **_kwargs: object
-    ) -> FlextCore.Result[FlextCore.Types.Dict]:
+    ) -> FlextResult[FlextTypes.Dict]:
         """Handle user management command."""
-        return FlextCore.Result[FlextCore.Types.Dict].ok({"status": "handled"})
+        return FlextResult[FlextTypes.Dict].ok({"status": "handled"})
 
     def handle_data_processing(
         self, *_args: object, **_kwargs: object
-    ) -> FlextCore.Result[FlextCore.Types.Dict]:
+    ) -> FlextResult[FlextTypes.Dict]:
         """Handle data processing command."""
-        return FlextCore.Result[FlextCore.Types.Dict].ok({"data": []})
+        return FlextResult[FlextTypes.Dict].ok({"data": []})
 
     def handle_data_retrieval(
         self, *_args: object, **_kwargs: object
-    ) -> FlextCore.Result[FlextCore.Types.Dict]:
+    ) -> FlextResult[FlextTypes.Dict]:
         """Handle data retrieval query."""
-        return FlextCore.Result[FlextCore.Types.Dict].ok({"data": []})
+        return FlextResult[FlextTypes.Dict].ok({"data": []})
 
     def handle_aggregation(
         self, *_args: object, **_kwargs: object
-    ) -> FlextCore.Result[FlextCore.Types.Dict]:
+    ) -> FlextResult[FlextTypes.Dict]:
         """Handle aggregation query."""
-        return FlextCore.Result[FlextCore.Types.Dict].ok({"aggregates": {}})
+        return FlextResult[FlextTypes.Dict].ok({"aggregates": {}})
 
     def handle_data_processed(
         self, *_args: object, **_kwargs: object
-    ) -> FlextCore.Result[FlextCore.Types.Dict]:
+    ) -> FlextResult[FlextTypes.Dict]:
         """Handle data processed event."""
-        return FlextCore.Result[FlextCore.Types.Dict].ok({"status": "handled"})
+        return FlextResult[FlextTypes.Dict].ok({"status": "handled"})
 
-    def execute(self, request: str = "") -> FlextCore.Result[str]:
-        """Execute handler service - required by FlextCore.Service abstract method."""
+    def execute(self, request: str = "") -> FlextResult[str]:
+        """Execute handler service - required by FlextService abstract method."""
         try:
             # Use request parameter to avoid unused warning
             _ = request
@@ -311,11 +311,9 @@ class FlextApplicationHandlerService[T](FlextCore.Service[str]):
                 "status": "ready",
                 "components": ["factory", "patterns", "buses", "registry"],
             }
-            return FlextCore.Result[str].ok(
-                f"FlextApplicationHandlerService ready: {info}"
-            )
+            return FlextResult[str].ok(f"FlextApplicationHandlerService ready: {info}")
         except Exception as e:
-            return FlextCore.Result[str].fail(f"Handler service execution failed: {e}")
+            return FlextResult[str].fail(f"Handler service execution failed: {e}")
 
     # Handler enums defined above in class definition
 

@@ -13,7 +13,7 @@ from __future__ import annotations
 import inspect
 from pathlib import Path
 
-from flext_core import FlextCore
+from flext_core import FlextResult, FlextService, FlextTypes
 from flext_tests import FlextTestsDomains
 
 from flext import FlextControlPanelCli
@@ -26,7 +26,7 @@ class TestFlextControlPanelCli:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_test_cli_data() -> FlextCore.Types.Dict:
+        def create_test_cli_data() -> FlextTypes.Dict:
             """Create test CLI data."""
             return {
                 "config_path": "/tmp/test_config.json",
@@ -35,7 +35,7 @@ class TestFlextControlPanelCli:
             }
 
         @staticmethod
-        def create_test_command_data() -> FlextCore.Types.Dict:
+        def create_test_command_data() -> FlextTypes.Dict:
             """Create test command data."""
             return {
                 "command": "test_command",
@@ -52,7 +52,7 @@ class TestFlextControlPanelCli:
         cli = FlextControlPanelCli()
         assert cli is not None
         assert isinstance(cli, FlextControlPanelCli)
-        assert isinstance(cli, FlextCore.Service)
+        assert isinstance(cli, FlextService)
 
     def test_cli_with_parameters(self) -> None:
         """Test FlextControlPanelCli with initialization parameters."""
@@ -70,7 +70,7 @@ class TestFlextControlPanelCli:
         cli = FlextControlPanelCli()
         result = cli.execute()
 
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
         assert result.is_success
         assert isinstance(result.data, str)
 
@@ -84,7 +84,7 @@ class TestFlextControlPanelCli:
         assert "config_path" in test_data
 
         result = cli.execute()
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
         assert result.is_success
 
     def test_cli_error_handling(self) -> None:
@@ -93,7 +93,7 @@ class TestFlextControlPanelCli:
 
         # Test that service handles errors gracefully
         result = cli.execute()
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
         # Should either succeed or fail gracefully, not crash
 
     # =============================================================================
@@ -230,7 +230,7 @@ class TestFlextControlPanelCli:
 
         # Test service can be created and executed
         result = cli.execute()
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
 
         # Test service has expected methods
         assert hasattr(cli, "execute")
@@ -254,13 +254,13 @@ class TestFlextControlPanelCli:
 
         # Test service execution
         result = cli.execute()
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
 
         # Test service with flext_tests data
         test_config_data = flext_domains.create_configuration()
         cli_with_config = FlextControlPanelCli(**test_config_data)
         config_result = cli_with_config.execute()
-        assert isinstance(config_result, FlextCore.Result)
+        assert isinstance(config_result, FlextResult)
 
     # =============================================================================
     # PERFORMANCE TESTS
@@ -272,7 +272,7 @@ class TestFlextControlPanelCli:
 
         # Test that service executes reasonably fast
         result = cli.execute()
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
         assert result.is_success
 
         # Should complete quickly for basic operations
@@ -291,11 +291,11 @@ class TestFlextControlPanelCli:
 
         # Test initialization
         assert isinstance(cli, FlextControlPanelCli)
-        assert isinstance(cli, FlextCore.Service)
+        assert isinstance(cli, FlextService)
 
         # Test execution
         result = cli.execute()
-        assert isinstance(result, FlextCore.Result)
+        assert isinstance(result, FlextResult)
 
         # Test nested classes
         colors = cli._Colors()

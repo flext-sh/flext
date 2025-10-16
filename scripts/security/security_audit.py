@@ -21,7 +21,7 @@ Key Features:
 
 Architecture:
     Built on flext-tools script patterns with comprehensive error handling using
-    FlextCore.Result for type-safe operations. Implements Clean Architecture patterns
+    FlextResult for type-safe operations. Implements Clean Architecture patterns
     with proper separation of CLI, business logic, and reporting concerns.
 
 Usage Examples:
@@ -61,7 +61,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextCore
+from flext_core import FlextResult, FlextTypes
 
 from flext_tools import Colors, FlextScript, ScriptMetadata, print_colored
 
@@ -113,7 +113,7 @@ class ScanConfig:
 
     def __init__(
         self,
-        target_paths: FlextCore.Types.StringList,
+        target_paths: FlextTypes.StringList,
         *,
         include_dependencies: bool = False,
     ) -> None:
@@ -121,11 +121,11 @@ class ScanConfig:
         self.target_paths = target_paths
         self.include_dependencies = include_dependencies
 
-    def validate_business_rules(self) -> FlextCore.Result[None]:
+    def validate_business_rules(self) -> FlextResult[None]:
         """Validate configuration business rules."""
         if not self.target_paths:
-            return FlextCore.Result[None].fail("Target paths cannot be empty")
-        return FlextCore.Result[None].ok(None)
+            return FlextResult[None].fail("Target paths cannot be empty")
+        return FlextResult[None].ok(None)
 
 
 class AntipatternScanner:
@@ -154,7 +154,7 @@ class AntipatternScanner:
         self,
         violations: list[SecurityViolation],
         output_file: str,
-    ) -> FlextCore.Result[None]:
+    ) -> FlextResult[None]:
         """Generate report file."""
         try:
             with Path(output_file).open("w", encoding="utf-8") as f:
@@ -164,9 +164,9 @@ class AntipatternScanner:
                     f"- {violation.violation_type}: {violation.description}\n"
                     for violation in violations
                 )
-            return FlextCore.Result[None].ok(None)
+            return FlextResult[None].ok(None)
         except Exception as e:
-            return FlextCore.Result[None].fail(f"Report generation failed: {e}")
+            return FlextResult[None].fail(f"Report generation failed: {e}")
 
     def _generate_summary_report(self, violations: list[SecurityViolation]) -> None:
         """Generate console summary report."""
@@ -208,24 +208,24 @@ class SecurityAuditScript(FlextScript):
             dry_run_supported=False,
         )
 
-    def validate_preconditions(self) -> FlextCore.Result[None]:
+    def validate_preconditions(self) -> FlextResult[None]:
         """Validate that security audit can run successfully.
 
         Returns:
-            FlextCore.Result indicating validation success or failure with context
+            FlextResult indicating validation success or failure with context
 
         """
         try:
             # Basic validation - no specific preconditions for security scan
             self.logger.info("Security audit preconditions validated")
-            return FlextCore.Result[None].ok(None)
+            return FlextResult[None].ok(None)
 
         except Exception as e:
-            return FlextCore.Result[None].fail(f"Precondition validation failed: {e}")
+            return FlextResult[None].fail(f"Precondition validation failed: {e}")
 
     def execute_main_logic(
         self, **kwargs: dict[str, str]
-    ) -> FlextCore.Result[dict[str, str]]:
+    ) -> FlextResult[dict[str, str]]:
         """Execute main script logic."""
         """Execute security audit with comprehensive analysis."""
         try:
@@ -237,13 +237,11 @@ class SecurityAuditScript(FlextScript):
             return self._execute_custom_scan(**kwargs)
 
         except Exception as e:
-            return FlextCore.Result[object].fail(
-                f"Security audit execution failed: {e}"
-            )
+            return FlextResult[object].fail(f"Security audit execution failed: {e}")
 
     def _validate_target_paths(
-        self, paths: FlextCore.Types.StringList
-    ) -> FlextCore.Types.StringList:
+        self, paths: FlextTypes.StringList
+    ) -> FlextTypes.StringList:
         """Validate and filter target paths for scanning.
 
         Args:
@@ -256,7 +254,7 @@ class SecurityAuditScript(FlextScript):
         if not isinstance(paths, list):
             paths = [str(paths)] if paths else ["src/"]
 
-        validated_paths: FlextCore.Types.StringList = []
+        validated_paths: FlextTypes.StringList = []
 
         for path_str in paths:
             path = Path(path_str)
@@ -343,7 +341,7 @@ class SecurityAuditScript(FlextScript):
 
         return parser
 
-    def _execute_ecosystem_scan(self, **kwargs: object) -> FlextCore.Result[object]:
+    def _execute_ecosystem_scan(self, **kwargs: object) -> FlextResult[object]:
         """Execute predefined ecosystem scan."""
         try:
             output_file = kwargs.get("output_file")
@@ -357,7 +355,7 @@ class SecurityAuditScript(FlextScript):
                 _output_file=str(output_file) if output_file else None,
             )
 
-            return FlextCore.Result[object].ok(
+            return FlextResult[object].ok(
                 {
                     "violations": violations,
                     "total_count": len(violations),
@@ -366,9 +364,9 @@ class SecurityAuditScript(FlextScript):
             )
 
         except Exception as e:
-            return FlextCore.Result[object].fail(f"Ecosystem scan failed: {e}")
+            return FlextResult[object].fail(f"Ecosystem scan failed: {e}")
 
-    def _execute_custom_scan(self, **kwargs: object) -> FlextCore.Result[object]:
+    def _execute_custom_scan(self, **kwargs: object) -> FlextResult[object]:
         """Execute custom path scanning."""
         try:
             # Extract CLI arguments
@@ -383,7 +381,7 @@ class SecurityAuditScript(FlextScript):
             # Validate paths
             validated_paths = self._validate_target_paths(paths)
             if not validated_paths:
-                return FlextCore.Result[object].fail(
+                return FlextResult[object].fail(
                     "No valid target paths found for scanning",
                 )
 
@@ -406,7 +404,7 @@ class SecurityAuditScript(FlextScript):
             # Validate configuration
             config_validation = config.validate_business_rules()
             if config_validation.is_failure:
-                return FlextCore.Result[object].fail(
+                return FlextResult[object].fail(
                     f"Invalid configuration: {config_validation.error}",
                 )
 
@@ -438,7 +436,7 @@ class SecurityAuditScript(FlextScript):
                     )
 
             # Return scan results for further processing
-            return FlextCore.Result[object].ok(
+            return FlextResult[object].ok(
                 {
                     "violations": violations,
                     "total_count": len(violations),
@@ -449,7 +447,7 @@ class SecurityAuditScript(FlextScript):
         except Exception as e:
             error_msg = f"Custom security scan failed: {e}"
             self.logger.exception(error_msg)
-            return FlextCore.Result[object].fail(error_msg)
+            return FlextResult[object].fail(error_msg)
 
 
 def main() -> int:

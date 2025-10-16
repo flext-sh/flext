@@ -145,10 +145,50 @@ to use standardized FLEXT configuration management patterns.
 """
 
 from __future__ import annotations
+from flext_core import FlextBus
+
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 from pydantic import Field
 from pydantic_settings import SettingsConfigDict
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 FlextSettings
 
@@ -156,7 +196,7 @@ FlextSettings
 # BEFORE: Manual configuration with BaseSettings
 # class OldConfig(BaseSettings):
 #     host: str = Field(default="localhost")
-#     port: int = Field(default=FlextCore.Constants.Platform.DEFAULT_HTTP_PORT)
+#     port: int = Field(default=FlextConstants.Platform.DEFAULT_HTTP_PORT)
 #     debug: bool = Field(default=False)
 
 # AFTER: Consolidated FLEXT configuration
@@ -181,7 +221,7 @@ class ConsolidatedProjectSettings(FlextSettings):
       json_schema_extra={"env": "PROJECT_HOST"}
     )
     port: int = Field(
-      default=FlextCore.Constants.Platform.DEFAULT_HTTP_PORT,
+      default=FlextConstants.Platform.DEFAULT_HTTP_PORT,
       ge=1,
       le=65535,
       description="Server port",
@@ -242,7 +282,7 @@ def get_project_settings() -> ConsolidatedProjectSettings:
 
 # BEFORE: Manual env var access
 # host = os.getenv("PROJECT_HOST", "localhost")
-# port = int(os.getenv("PROJECT_PORT", str(FlextCore.Constants.Platform.DEFAULT_HTTP_PORT)))
+# port = int(os.getenv("PROJECT_PORT", str(FlextConstants.Platform.DEFAULT_HTTP_PORT)))
 
 # AFTER: FLEXT configuration
 # settings = get_project_settings()

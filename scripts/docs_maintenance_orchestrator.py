@@ -12,7 +12,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 
-from flext_core import FlextCore
+from flext_core import FlextTypes
 
 
 @dataclass
@@ -24,9 +24,9 @@ class MaintenanceResults:
     validation_results: dict[str, object] = field(default_factory=dict)
     optimization_results: dict[str, object] = field(default_factory=dict)
     sync_results: dict[str, object] = field(default_factory=dict)
-    reports_generated: FlextCore.Types.StringList = field(default_factory=list)
-    errors: FlextCore.Types.StringList = field(default_factory=list)
-    warnings: FlextCore.Types.StringList = field(default_factory=list)
+    reports_generated: FlextTypes.StringList = field(default_factory=list)
+    errors: FlextTypes.StringList = field(default_factory=list)
+    warnings: FlextTypes.StringList = field(default_factory=list)
 
 
 class DocumentationMaintenanceOrchestrator:
@@ -564,9 +564,9 @@ def main() -> None:
                     capture_output=True,
                     text=True,
                 )
-                changes = len([
-                    line for line in result.stdout.split("\n") if line.strip()
-                ])
+                changes = len(
+                    [line for line in result.stdout.split("\n") if line.strip()]
+                )
                 print(f"🔄 Uncommitted changes: {changes}")
             except:
                 print("🔄 Git status: Unable to check")

@@ -14,7 +14,7 @@ import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from flext_core import FlextCore
+from flext_core import FlextLogger, FlextResult, FlextService, FlextTypes
 
 from .agents import DependencyAnalyzer, TaskDecomposer, TaskOrchestrator
 from .models import (
@@ -26,14 +26,14 @@ from .models import (
 )
 
 
-class TaskOrchestrationService(FlextCore.Service[str]):
+class TaskOrchestrationService(FlextService[str]):
     """Main task orchestration service coordinating three-agent system."""
 
     def __init__(self, config: TaskOrchestrationConfig | None = None) -> None:
         """Initialize task orchestration service."""
         super().__init__()
         self._config = config or TaskOrchestrationConfig()
-        self._logger = FlextCore.Logger(__name__)
+        self._logger = FlextLogger(__name__)
 
         # Initialize agents
         self.orchestrator = TaskOrchestrator(self._config)
@@ -49,13 +49,13 @@ class TaskOrchestrationService(FlextCore.Service[str]):
         return self._config
 
     @property
-    def logger(self) -> FlextCore.Logger:
+    def logger(self) -> FlextLogger:
         """Get orchestration logger."""
         return self._logger
 
     def orchestrate_tasks(
         self, input_data: str | Path, context: dict[str, object] | None = None
-    ) -> FlextCore.Result[TaskOrchestrationResult]:
+    ) -> FlextResult[TaskOrchestrationResult]:
         """Orchestrate tasks using three-agent system."""
         try:
             self._logger.info("Starting task orchestration workflow")
@@ -67,7 +67,7 @@ class TaskOrchestrationService(FlextCore.Service[str]):
                 input_data, context
             )
             if requirements_result.is_failure:
-                return FlextCore.Result[TaskOrchestrationResult].fail(
+                return FlextResult[TaskOrchestrationResult].fail(
                     f"Requirement clarification failed: {requirements_result.error}"
                 )
 
@@ -78,7 +78,7 @@ class TaskOrchestrationService(FlextCore.Service[str]):
             self._logger.info("Phase 2: Decomposing requirements into atomic tasks")
             decomposition_result = self.decomposer.decompose_requirements(requirements)
             if decomposition_result.is_failure:
-                return FlextCore.Result[TaskOrchestrationResult].fail(
+                return FlextResult[TaskOrchestrationResult].fail(
                     f"Task decomposition failed: {decomposition_result.error}"
                 )
 
@@ -88,7 +88,7 @@ class TaskOrchestrationService(FlextCore.Service[str]):
             self._logger.info("Phase 3: Analyzing dependencies and conflicts")
             analysis_result = self.analyzer.analyze_dependencies(tasks)
             if analysis_result.is_failure:
-                return FlextCore.Result[TaskOrchestrationResult].fail(
+                return FlextResult[TaskOrchestrationResult].fail(
                     f"Dependency analysis failed: {analysis_result.error}"
                 )
 
@@ -128,12 +128,12 @@ class TaskOrchestrationService(FlextCore.Service[str]):
             self._logger.info(
                 f"Task orchestration completed in {execution_time:.2f} seconds"
             )
-            return FlextCore.Result[TaskOrchestrationResult].ok(result)
+            return FlextResult[TaskOrchestrationResult].ok(result)
 
         except Exception as e:
             error = f"Task orchestration failed: {e}"
             self._logger.exception(error)
-            return FlextCore.Result[TaskOrchestrationResult].fail(error)
+            return FlextResult[TaskOrchestrationResult].fail(error)
 
     def _setup_orchestration_directories(self) -> None:
         """Set up orchestration directory structure."""
@@ -157,7 +157,7 @@ class TaskOrchestrationService(FlextCore.Service[str]):
             self._logger.warning(f"Failed to create orchestration directories: {e}")
 
     def _create_execution_plan(
-        self, tasks: list[Task], parallel_groups: list[FlextCore.Types.StringList]
+        self, tasks: list[Task], parallel_groups: list[FlextTypes.StringList]
     ) -> TaskExecutionPlan:
         """Create execution plan from tasks and parallel groups."""
         # Determine execution order based on dependencies
@@ -181,9 +181,7 @@ class TaskOrchestrationService(FlextCore.Service[str]):
             end_date=datetime.now(UTC) + timedelta(hours=estimated_duration),
         )
 
-    def _determine_execution_order(
-        self, tasks: list[Task]
-    ) -> FlextCore.Types.StringList:
+    def _determine_execution_order(self, tasks: list[Task]) -> FlextTypes.StringList:
         """Determine execution order based on dependencies."""
         # Simple topological sort
         task_ids = [task.id for task in tasks]
@@ -216,7 +214,7 @@ class TaskOrchestrationService(FlextCore.Service[str]):
 
     def _assign_tasks_to_agents(
         self, tasks: list[Task]
-    ) -> dict[str, FlextCore.Types.StringList]:
+    ) -> dict[str, FlextTypes.StringList]:
         """Assign tasks to agents."""
         if not self.config.auto_assign:
             return {}
@@ -236,10 +234,10 @@ class TaskOrchestrationService(FlextCore.Service[str]):
         self,
         tasks: list[Task],
         conflicts: list[dict[str, object]],
-        parallel_groups: list[FlextCore.Types.StringList],
+        parallel_groups: list[FlextTypes.StringList],
         plan: TaskExecutionPlan,
         requirements_data: dict[str, object],
-    ) -> FlextCore.Result[None]:
+    ) -> FlextResult[None]:
         """Save orchestration results to files."""
         try:
             today = datetime.now(UTC).strftime(self.config.date_format)
@@ -273,18 +271,18 @@ class TaskOrchestrationService(FlextCore.Service[str]):
                 )
 
             self._logger.info(f"Orchestration results saved to {orchestration_dir}")
-            return FlextCore.Result[None].ok(None)
+            return FlextResult[None].ok(None)
 
         except Exception as e:
             error = f"Failed to save orchestration results: {e}"
             self._logger.exception(error)
-            return FlextCore.Result[None].fail(error)
+            return FlextResult[None].fail(error)
 
     def _generate_master_coordination(
         self,
         tasks: list[Task],
         conflicts: list[dict[str, object]],
-        parallel_groups: list[FlextCore.Types.StringList],
+        parallel_groups: list[FlextTypes.StringList],
         plan: TaskExecutionPlan,
         requirements_data: dict[str, object],
     ) -> str:
@@ -438,7 +436,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
         return content
 
     def _format_parallel_groups(
-        self, parallel_groups: list[FlextCore.Types.StringList]
+        self, parallel_groups: list[FlextTypes.StringList]
     ) -> str:
         """Format parallel groups."""
         if not parallel_groups:
@@ -474,7 +472,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
     def _format_recommendations(
         self,
         conflicts: list[dict[str, object]],
-        parallel_groups: list[FlextCore.Types.StringList],
+        parallel_groups: list[FlextTypes.StringList],
     ) -> str:
         """Format recommendations."""
         recommendations = []
@@ -496,9 +494,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
         return content
 
-    def _format_execution_order(
-        self, execution_order: FlextCore.Types.StringList
-    ) -> str:
+    def _format_execution_order(self, execution_order: FlextTypes.StringList) -> str:
         """Format execution order."""
         content = ""
         for i, task_id in enumerate(execution_order, 1):
@@ -520,7 +516,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
         return content
 
     def _format_agent_assignments(
-        self, agent_assignments: dict[str, FlextCore.Types.StringList]
+        self, agent_assignments: dict[str, FlextTypes.StringList]
     ) -> str:
         """Format agent assignments."""
         if not agent_assignments:
@@ -538,8 +534,8 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
     def _generate_recommendations(
         self,
         conflicts: list[dict[str, object]],
-        parallel_groups: list[FlextCore.Types.StringList],
-    ) -> FlextCore.Types.StringList:
+        parallel_groups: list[FlextTypes.StringList],
+    ) -> FlextTypes.StringList:
         """Generate recommendations based on analysis."""
         recommendations = []
 
@@ -556,8 +552,8 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
         return recommendations
 
-    def execute(self) -> FlextCore.Result[str]:
-        """Execute service - required by FlextCore.Service abstract method."""
+    def execute(self) -> FlextResult[str]:
+        """Execute service - required by FlextService abstract method."""
         try:
             info = {
                 "service": self.__class__.__name__,
@@ -569,8 +565,8 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
                     "orchestration_root": str(self.config.orchestration_root),
                 },
             }
-            return FlextCore.Result[str].ok(f"TaskOrchestrationService ready: {info}")
+            return FlextResult[str].ok(f"TaskOrchestrationService ready: {info}")
         except Exception as e:
-            return FlextCore.Result[str].fail(
+            return FlextResult[str].fail(
                 f"Task orchestration service execution failed: {e}"
             )

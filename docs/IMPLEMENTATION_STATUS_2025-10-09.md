@@ -34,16 +34,16 @@ FLEXT is an enterprise-grade data integration platform organized as a monorepo w
 - **Version:** 0.9.0
 - **Coverage:** 100% of dependent projects
 - **Key Features:**
-  - FlextCore.Result[T] error handling pattern
-  - FlextCore.Container dependency injection
-  - FlextCore.Models unified domain models
+  - FlextResult[T] error handling pattern
+  - FlextContainer dependency injection
+  - FlextModels unified domain models
   - Railway-oriented programming patterns
   - Type-safe composition
 
 **Implementation Details:**
 
 - **3,200+ lines** of core functionality
-- **100+ nested classes** in FlextCore.Models
+- **100+ nested classes** in FlextModels
 - **Zero MyPy errors** in strict mode
 - **Zero Ruff violations** in production code
 - **85%+ test coverage** maintained
@@ -159,7 +159,7 @@ FLEXT is an enterprise-grade data integration platform organized as a monorepo w
 
 **Projects Fully Compliant:**
 
-- ✅ flext-core: FlextCore.Models (3,200+ lines, 100+ nested classes)
+- ✅ flext-core: FlextModels (3,200+ lines, 100+ nested classes)
 - ✅ flext-auth: FlextAuthModels
 - ✅ flext-ldap: FlextLdapModels
 - ✅ flext-ldif: FlextLdifModels
@@ -171,13 +171,13 @@ FLEXT is an enterprise-grade data integration platform organized as a monorepo w
 
 ### Railway-Oriented Programming ✅ IMPLEMENTED
 
-**Pattern:** All operations return FlextCore.Result[T] for composable error handling
+**Pattern:** All operations return FlextResult[T] for composable error handling
 
 **Implementation:**
 
 ```python
 # Example pattern across all projects
-def process_data(data: dict) -> FlextCore.Result[ProcessedData]:
+def process_data(data: dict) -> FlextResult[ProcessedData]:
     return (
         validate(data)
         .flat_map(transform)
@@ -374,8 +374,8 @@ def process_data(data: dict) -> FlextCore.Result[ProcessedData]:
 
 - **Root Module Imports:** Always use `from flext_core import ...`
 - **Unified Class Pattern:** One [Project]Models class per project
-- **Railway-Oriented Programming:** All operations return FlextCore.Result[T]
-- **Dependency Injection:** Use FlextCore.Container for service management
+- **Railway-Oriented Programming:** All operations return FlextResult[T]
+- **Dependency Injection:** Use FlextContainer for service management
 
 ### 2. Quality Standards
 

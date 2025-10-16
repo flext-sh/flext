@@ -12,7 +12,7 @@ from dataclasses import dataclass, field
 from datetime import UTC
 from pathlib import Path
 
-from flext_core import FlextCore
+from flext_core import FlextTypes
 
 
 @dataclass
@@ -105,7 +105,7 @@ class DocumentationStyleChecker:
         self,
         line: str,
         line_num: int,
-        all_lines: FlextCore.Types.StringList,
+        all_lines: FlextTypes.StringList,
         file_path: Path,
     ) -> list[StyleIssue]:
         """Check a single line for style issues."""
@@ -209,7 +209,7 @@ class DocumentationStyleChecker:
         self,
         line: str,
         line_num: int,
-        all_lines: FlextCore.Types.StringList,
+        all_lines: FlextTypes.StringList,
         file_path: Path,
     ) -> list[StyleIssue]:
         """Check list item formatting."""
@@ -247,7 +247,7 @@ class DocumentationStyleChecker:
         self,
         line: str,
         line_num: int,
-        all_lines: FlextCore.Types.StringList,
+        all_lines: FlextTypes.StringList,
         file_path: Path,
     ) -> list[StyleIssue]:
         """Check code block formatting."""
@@ -304,7 +304,7 @@ class DocumentationStyleChecker:
         self,
         line: str,
         line_num: int,
-        all_lines: FlextCore.Types.StringList,
+        all_lines: FlextTypes.StringList,
         file_path: Path,
     ) -> list[StyleIssue]:
         """Check table column alignment."""
@@ -344,7 +344,7 @@ class DocumentationStyleChecker:
         return issues
 
     def check_file_structure(
-        self, content: str, lines: FlextCore.Types.StringList, file_path: Path
+        self, content: str, lines: FlextTypes.StringList, file_path: Path
     ) -> list[StyleIssue]:
         """Check overall file structure."""
         issues = []
@@ -431,7 +431,7 @@ class DocumentationStyleChecker:
         return issues
 
     def check_heading_hierarchy(
-        self, lines: FlextCore.Types.StringList, file_path: Path
+        self, lines: FlextTypes.StringList, file_path: Path
     ) -> list[StyleIssue]:
         """Check heading hierarchy and proper structure."""
         issues = []
@@ -482,7 +482,7 @@ class DocumentationStyleChecker:
         return bool(re.match(r"^\s*[-\*\+]\s+", line))
 
     def is_code_block_line(
-        self, line: str, all_lines: FlextCore.Types.StringList, line_index: int
+        self, line: str, all_lines: FlextTypes.StringList, line_index: int
     ) -> bool:
         """Check if a line is inside a code block."""
         in_code_block = False

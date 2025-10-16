@@ -15,7 +15,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import cast
 
-from flext_core import FlextCore
+from flext_core import FlextLogger, FlextResult
 
 from .models import Task, TaskOrchestrationConfig, TaskOrchestrationResult
 from .services import TaskOrchestrationService
@@ -27,7 +27,7 @@ class TaskOrchestrationCli:
     def __init__(self) -> None:
         """Initialize task orchestration CLI."""
         super().__init__()
-        self.logger = FlextCore.Logger(__name__)
+        self.logger = FlextLogger(__name__)
         self._service: TaskOrchestrationService | None = None
 
     def orchestrate_command(
@@ -39,7 +39,7 @@ class TaskOrchestrationCli:
         days: int | None = None,
         analyze_only: bool = False,
         context: dict[str, object] | None = None,
-    ) -> FlextCore.Result[None]:
+    ) -> FlextResult[None]:
         """Execute the /orchestrate command."""
         try:
             self.logger.info("Starting /orchestrate command execution")
@@ -60,14 +60,14 @@ class TaskOrchestrationCli:
             if result.is_success:
                 orchestration_result = result.unwrap()
                 self._display_orchestration_results(orchestration_result)
-                return FlextCore.Result[None].ok(None)
+                return FlextResult[None].ok(None)
             self.logger.error(f"Orchestration failed: {result.error}")
-            return FlextCore.Result[None].fail(result.error)
+            return FlextResult[None].fail(result.error)
 
         except Exception as e:
             error = f"Orchestrate command failed: {e}"
             self.logger.exception(error)
-            return FlextCore.Result[None].fail(error)
+            return FlextResult[None].fail(error)
 
     def _create_config(
         self,
@@ -91,33 +91,33 @@ class TaskOrchestrationCli:
 
     def _analyze_only_mode(
         self, input_data: str | Path, context: dict[str, object] | None = None
-    ) -> FlextCore.Result[None]:
+    ) -> FlextResult[None]:
         """Execute analyze-only mode without creating task files."""
         try:
             self.logger.info("Running analyze-only mode")
 
             # Use orchestrator for requirement clarification only
             if not self._service or not self._service.orchestrator:
-                return FlextCore.Result[None].fail(
+                return FlextResult[None].fail(
                     "Task orchestration service not initialized"
                 )
             requirements_result = self._service.orchestrator.clarify_requirements(
                 input_data, context
             )
             if requirements_result.is_failure:
-                return FlextCore.Result[None].fail(
+                return FlextResult[None].fail(
                     f"Analysis failed: {requirements_result.error}"
                 )
 
             requirements_data = requirements_result.unwrap()
             self._display_analysis_results(requirements_data)
 
-            return FlextCore.Result[None].ok(None)
+            return FlextResult[None].ok(None)
 
         except Exception as e:
             error = f"Analyze-only mode failed: {e}"
             self.logger.exception(error)
-            return FlextCore.Result[None].fail(error)
+            return FlextResult[None].fail(error)
 
     def _display_orchestration_results(self, result: TaskOrchestrationResult) -> None:
         """Display orchestration results to user."""
@@ -156,9 +156,7 @@ class TaskOrchestrationCli:
             for _i, _question in enumerate(questions, 1):
                 pass
 
-    def status_command(
-        self, orchestration_id: str | None = None
-    ) -> FlextCore.Result[None]:
+    def status_command(self, orchestration_id: str | None = None) -> FlextResult[None]:
         """Check orchestration status."""
         try:
             self.logger.info("Checking orchestration status")
@@ -166,22 +164,22 @@ class TaskOrchestrationCli:
             # Find orchestration directories
             orchestration_root = Path("task-orchestration")
             if not orchestration_root.exists():
-                return FlextCore.Result[None].ok(None)
+                return FlextResult[None].ok(None)
 
             # List available orchestrations
             orchestrations = [d for d in orchestration_root.iterdir() if d.is_dir()]
             if not orchestrations:
-                return FlextCore.Result[None].ok(None)
+                return FlextResult[None].ok(None)
 
             for orchestration_dir in sorted(orchestrations, reverse=True):
                 self._display_orchestration_status(orchestration_dir)
 
-            return FlextCore.Result[None].ok(None)
+            return FlextResult[None].ok(None)
 
         except Exception as e:
             error = f"Status command failed: {e}"
             self.logger.exception(error)
-            return FlextCore.Result[None].fail(error)
+            return FlextResult[None].fail(error)
 
     def _display_orchestration_status(self, orchestration_dir: Path) -> None:
         """Display status for a specific orchestration."""
@@ -209,7 +207,7 @@ class TaskOrchestrationCli:
 
     def move_command(
         self, task_id: str, new_status: str, orchestration_id: str | None = None
-    ) -> FlextCore.Result[None]:
+    ) -> FlextResult[None]:
         """Move task to new status."""
         try:
             self.logger.info(f"Moving task {task_id} to {new_status}")
@@ -217,7 +215,7 @@ class TaskOrchestrationCli:
             # Find task file
             task_file = self._find_task_file(task_id, orchestration_id)
             if not task_file:
-                return FlextCore.Result[None].fail(f"Task {task_id} not found")
+                return FlextResult[None].fail(f"Task {task_id} not found")
 
             # Load task
             import json
@@ -233,7 +231,7 @@ class TaskOrchestrationCli:
                 new_status_enum = TaskStatus(new_status)
                 task.status = new_status_enum
             except ValueError:
-                return FlextCore.Result[None].fail(f"Invalid status: {new_status}")
+                return FlextResult[None].fail(f"Invalid status: {new_status}")
 
             # Save updated task
             new_status_dir = task_file.parent.parent / new_status
@@ -247,12 +245,12 @@ class TaskOrchestrationCli:
             # Remove old file
             task_file.unlink()
 
-            return FlextCore.Result[None].ok(None)
+            return FlextResult[None].ok(None)
 
         except Exception as e:
             error = f"Move command failed: {e}"
             self.logger.exception(error)
-            return FlextCore.Result[None].fail(error)
+            return FlextResult[None].fail(error)
 
     def _find_task_file(
         self, task_id: str, orchestration_id: str | None = None
@@ -286,7 +284,7 @@ class TaskOrchestrationCli:
 
     def report_command(
         self, orchestration_id: str | None = None, format: str = "table"
-    ) -> FlextCore.Result[None]:
+    ) -> FlextResult[None]:
         """Generate orchestration report."""
         try:
             self.logger.info(f"Generating report for {orchestration_id or 'latest'}")
@@ -294,7 +292,7 @@ class TaskOrchestrationCli:
             # Find orchestration directory
             orchestration_dir = self._find_orchestration_dir(orchestration_id)
             if not orchestration_dir:
-                return FlextCore.Result[None].fail("Orchestration not found")
+                return FlextResult[None].fail("Orchestration not found")
 
             # Generate report
             if format == "table":
@@ -302,14 +300,14 @@ class TaskOrchestrationCli:
             elif format == "json":
                 self._generate_json_report(orchestration_dir)
             else:
-                return FlextCore.Result[None].fail(f"Unsupported format: {format}")
+                return FlextResult[None].fail(f"Unsupported format: {format}")
 
-            return FlextCore.Result[None].ok(None)
+            return FlextResult[None].ok(None)
 
         except Exception as e:
             error = f"Report command failed: {e}"
             self.logger.exception(error)
-            return FlextCore.Result[None].fail(error)
+            return FlextResult[None].fail(error)
 
     def _find_orchestration_dir(
         self, orchestration_id: str | None = None

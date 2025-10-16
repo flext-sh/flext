@@ -72,10 +72,29 @@ docker run -v $(pwd)/data:/app/data flext:latest
 ### 1. Basic Setup
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 # Create dependency injection container
-container = FlextCore.Container()
+container = FlextContainer()
 
 # Register services (example)
 # container.register(IService, ServiceImplementation())
@@ -108,22 +127,41 @@ else:
 ### 3. Railway-Oriented Error Handling
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-def process_ldif_data(content: str) -> FlextCore.Result[str, Exception]:
+def process_ldif_data(content: str) -> FlextResult[str, Exception]:
     # Parse LDIF
     parse_result = ldif.parse(content)
     if parse_result.is_failure:
-        return FlextCore.Result.failure(parse_result.failure())
+        return FlextResult.failure(parse_result.failure())
 
     entries = parse_result.unwrap()
 
     # Process entries
     try:
         processed_data = process_entries(entries)
-        return FlextCore.Result.success(processed_data)
+        return FlextResult.success(processed_data)
     except Exception as e:
-        return FlextCore.Result.failure(e)
+        return FlextResult.failure(e)
 
 def process_entries(entries: list) -> str:
     # Your processing logic here
@@ -140,7 +178,26 @@ else:
 ### 4. CQRS Pattern with Commands and Queries
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 from dataclasses import dataclass
 
 @dataclass
@@ -153,16 +210,16 @@ class GetUserQuery:
     user_id: str
 
 class UserService:
-    def create_user(self, cmd: CreateUserCommand) -> FlextCore.Result[str, Exception]:
+    def create_user(self, cmd: CreateUserCommand) -> FlextResult[str, Exception]:
         # Create user logic
-        return FlextCore.Result.success(f"User {cmd.username} created")
+        return FlextResult.success(f"User {cmd.username} created")
 
-    def get_user(self, query: GetUserQuery) -> FlextCore.Result[str, Exception]:
+    def get_user(self, query: GetUserQuery) -> FlextResult[str, Exception]:
         # Get user logic
-        return FlextCore.Result.success(f"User {query.user_id} data")
+        return FlextResult.success(f"User {query.user_id} data")
 
 # Setup dispatcher
-dispatcher = FlextCore.Dispatcher()
+dispatcher = FlextDispatcher()
 user_service = UserService()
 
 dispatcher.register_handler(CreateUserCommand, user_service.create_user)

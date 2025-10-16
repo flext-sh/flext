@@ -13,28 +13,11 @@ Intelligent documentation optimization with:
 import difflib
 import operator
 import re
-import sys
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-from flext_core import FlextCore
-
-try:
-    import requests
-    from bs4 import BeautifulSoup
-except ImportError:
-    print("Installing required dependencies...")
-    import subprocess
-
-    subprocess.check_call([
-        sys.executable,
-        "-m",
-        "pip",
-        "install",
-        "requests",
-        "beautifulsoup4",
-    ])
+from flext_core import FlextTypes
 
 
 @dataclass
@@ -44,7 +27,7 @@ class OptimizationResult:
     file_path: Path
     original_content: str
     optimized_content: str
-    changes_made: FlextCore.Types.StringList
+    changes_made: FlextTypes.StringList
     improvement_score: float
     confidence: float
 
@@ -140,9 +123,7 @@ class SmartDocumentationOptimizer:
             confidence=confidence,
         )
 
-    def _improve_readability(
-        self, content: str
-    ) -> tuple[str, FlextCore.Types.StringList]:
+    def _improve_readability(self, content: str) -> tuple[str, FlextTypes.StringList]:
         """Improve document readability."""
         changes = []
         lines = content.split("\n")
@@ -274,9 +255,7 @@ class SmartDocumentationOptimizer:
 
         return line
 
-    def _optimize_structure(
-        self, content: str
-    ) -> tuple[str, FlextCore.Types.StringList]:
+    def _optimize_structure(self, content: str) -> tuple[str, FlextTypes.StringList]:
         """Optimize document structure."""
         changes = []
         lines = content.split("\n")
@@ -327,7 +306,7 @@ class SmartDocumentationOptimizer:
 
         return "\n".join(improved_lines), changes
 
-    def _optimize_heading(self, heading: str) -> tuple[str, FlextCore.Types.StringList]:
+    def _optimize_heading(self, heading: str) -> tuple[str, FlextTypes.StringList]:
         """Optimize a heading."""
         changes = []
         original = heading
@@ -354,9 +333,7 @@ class SmartDocumentationOptimizer:
 
         return heading, changes
 
-    def _optimize_paragraph(
-        self, paragraph: str
-    ) -> tuple[str, FlextCore.Types.StringList]:
+    def _optimize_paragraph(self, paragraph: str) -> tuple[str, FlextTypes.StringList]:
         """Optimize a paragraph."""
         changes = []
 
@@ -391,7 +368,7 @@ class SmartDocumentationOptimizer:
 
     def _repair_links(
         self, file_path: Path, content: str
-    ) -> tuple[str, FlextCore.Types.StringList]:
+    ) -> tuple[str, FlextTypes.StringList]:
         """Repair broken links."""
         changes = []
         lines = content.split("\n")
@@ -466,9 +443,7 @@ class SmartDocumentationOptimizer:
 
         return None
 
-    def _improve_accessibility(
-        self, content: str
-    ) -> tuple[str, FlextCore.Types.StringList]:
+    def _improve_accessibility(self, content: str) -> tuple[str, FlextTypes.StringList]:
         """Improve accessibility."""
         changes = []
         lines = content.split("\n")
@@ -515,7 +490,7 @@ class SmartDocumentationOptimizer:
 
         return "\n".join(improved_lines), changes
 
-    def _optimize_for_seo(self, content: str) -> tuple[str, FlextCore.Types.StringList]:
+    def _optimize_for_seo(self, content: str) -> tuple[str, FlextTypes.StringList]:
         """Optimize content for SEO."""
         changes = []
         lines = content.split("\n")
@@ -598,7 +573,7 @@ class SmartDocumentationOptimizer:
 
         return min(improvements, 1.0)  # Cap at 1.0
 
-    def _calculate_confidence(self, changes: FlextCore.Types.StringList) -> float:
+    def _calculate_confidence(self, changes: FlextTypes.StringList) -> float:
         """Calculate confidence in optimizations."""
         if not changes:
             return 0.0

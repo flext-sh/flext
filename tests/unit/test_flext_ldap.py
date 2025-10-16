@@ -17,7 +17,6 @@ from flext_ldap import (
     FlextLdapConstants,
     FlextLdapModels,
     FlextLdapTypes,
-    FlextLdapUtilities,
 )
 
 
@@ -117,22 +116,6 @@ class TestFlextLdapModels:
         assert hasattr(models, "Group")
         assert hasattr(models, "Entry")
         assert hasattr(models, "create_validated_email")
-
-
-class TestFlextLdapUtilities:
-    """Test FlextLdapUtilities functionality."""
-
-    def test_flext_ldap_utilities_initialization(self) -> None:
-        """Test FlextLdapUtilities initializes correctly."""
-        utilities = FlextLdapUtilities()
-        assert utilities is not None
-
-    def test_flext_ldap_utilities_attributes(self) -> None:
-        """Test FlextLdapUtilities has expected attributes."""
-        utilities = FlextLdapUtilities()
-
-        # Test that utilities has expected attributes
-        assert utilities is not None
 
 
 class TestFlextLdapTypes:

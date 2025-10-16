@@ -19,15 +19,16 @@ readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 readonly LOG_FILE="${PROJECT_ROOT}/constants_compliance_report.log"
 
-# Validation patterns
+# Validation patterns - stricter for source code, lenient for examples/tests
 readonly HARDCODED_PATTERNS=(
-	"8080|8000|8081|3000|5000|9090"  # Common web ports
-	"5432|5433|3306|27017|6379"      # Database ports
-	"389|636|1389"                   # LDAP ports
-	"\"localhost\"|\"127\.0\.0\.1\"" # Localhost references
-	"timeout\s*=\s*[0-9]+"           # Hardcoded timeouts
-	"port\s*=\s*[0-9]+"              # Hardcoded ports
+	"\"localhost\"|\"127\.0\.0\.1\"" # Localhost references (should use FlextConstants.Platform)
+	"timeout\s*=\s*30[^0-9]"         # Hardcoded 30-second timeouts (should use FlextConstants.Network.DEFAULT_TIMEOUT)
+	"port\s*=\s*8000[^0-9]"          # Hardcoded FLEXT API port
+	"port\s*=\s*8080[^0-9]"          # Hardcoded FLEXT HTTP port
 )
+
+# Directories that should be more lenient (examples and tests can use hardcoded values)
+readonly LENIENT_DIRS=("examples" "tests")
 
 # Projects to validate
 readonly FLEXT_PROJECTS=(
@@ -46,16 +47,17 @@ readonly VALIDATE_DIRS=("src" "examples" "scripts" "tests")
 
 # Constants that should be used instead of hardcoded values
 declare -A CONSTANT_MAPPINGS=(
-	["8000"]="FlextCore.Constants.Platform.FLEXT_API_PORT"
-	["8080"]="FlextCore.Constants.Platform.DEFAULT_HTTP_PORT"
-	["5432"]="FlextCore.Constants.Platform.POSTGRES_DEFAULT_PORT"
-	["27017"]="FlextCore.Constants.Platform.MONGODB_DEFAULT_PORT"
-	["6379"]="FlextCore.Constants.Platform.REDIS_DEFAULT_PORT"
-	["389"]="FlextCore.Constants.Platform.LDAP_DEFAULT_PORT"
-	["636"]="FlextCore.Constants.Platform.LDAPS_DEFAULT_PORT"
-	["localhost"]="FlextCore.Constants.Platform.DEFAULT_HOST"
-	["127.0.0.1"]="FlextCore.Constants.Platform.LOCALHOST_IP"
-	["30"]="FlextCore.Constants.Network.DEFAULT_TIMEOUT"
+	["8000"]="FlextConstants.Platform.FLEXT_API_PORT"
+	["8080"]="FlextConstants.Platform.DEFAULT_HTTP_PORT"
+	["localhost"]="FlextConstants.Platform.DEFAULT_HOST"
+	["127.0.0.1"]="FlextConstants.Platform.LOOPBACK_IP"
+	["30"]="FlextConstants.Network.DEFAULT_TIMEOUT"
+	# Industry standard ports - acceptable as hardcoded values
+	# ["5432"]="PostgreSQL standard port"
+	# ["27017"]="MongoDB standard port"
+	# ["6379"]="Redis standard port"
+	# ["389"]="LDAP standard port"
+	# ["636"]="LDAPS standard port"
 )
 
 # Global counters
@@ -100,10 +102,29 @@ has_constants_file() {
 	[[ -f "${PROJECT_ROOT}/${project}/src/${project//-/_}/constants.py" ]]
 }
 
-# Check if file imports FlextCore.Constants
+# Check if file imports FlextConstants
 imports_flext_constants() {
 	local file="$1"
-	grep -q "from flext_core import FlextCore" "$file" 2>/dev/null
+	grep -q "from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities" "$file" 2>/dev/null
 }
 
 # Check if file imports project constants
@@ -162,6 +183,7 @@ validate_file() {
 	local project="$2"
 	local relative_path="${file#"${PROJECT_ROOT}"/}"
 	local violations=()
+	local is_lenient_dir=false
 
 	((TOTAL_FILES_CHECKED++))
 
@@ -169,6 +191,14 @@ validate_file() {
 	if [[ ! $file =~ \.py$ ]]; then
 		return 0
 	fi
+
+	# Check if file is in a lenient directory (examples, tests)
+	for lenient_dir in "${LENIENT_DIRS[@]}"; do
+		if echo "$relative_path" | grep -q "/${lenient_dir}/"; then
+			is_lenient_dir=true
+			break
+		fi
+	done
 
 	# Find hardcoded values
 	local hardcoded_lines
@@ -185,26 +215,29 @@ validate_file() {
 		done <<<"$hardcoded_lines"
 
 		if [[ $file_has_violations == true ]]; then
-			# Check if file imports required constants
-			local needs_flext_constants=false
-			local needs_project_constants=false
+			# Skip import checks for lenient directories (examples, tests)
+			if [[ $is_lenient_dir == false ]]; then
+				# Check if file imports required constants
+				local needs_flext_constants=false
+				local needs_project_constants=false
 
-			for violation in "${violations[@]}"; do
-				if echo "$violation" | grep -E "localhost|127\.0\.0\.1|timeout|port" >/dev/null; then
-					needs_flext_constants=true
+				for violation in "${violations[@]}"; do
+					if echo "$violation" | grep -E "localhost|127\.0\.0\.1|timeout|port" >/dev/null; then
+						needs_flext_constants=true
+					fi
+					if echo "$violation" | grep -E "8080|5432|389|636" >/dev/null; then
+						needs_project_constants=true
+					fi
+				done
+
+				# Report missing imports
+				if [[ $needs_flext_constants == true ]] && ! imports_flext_constants "$file"; then
+					violations+=("$relative_path: Missing FlextConstants import")
 				fi
-				if echo "$violation" | grep -E "8080|5432|389|636" >/dev/null; then
-					needs_project_constants=true
+
+				if [[ $needs_project_constants == true ]] && ! imports_project_constants "$file" "$project"; then
+					violations+=("$relative_path: Missing ${project}Constants import")
 				fi
-			done
-
-			# Report missing imports
-			if [[ $needs_flext_constants == true ]] && ! imports_flext_constants "$file"; then
-				violations+=("$relative_path: Missing FlextCore.Constants import")
-			fi
-
-			if [[ $needs_project_constants == true ]] && ! imports_project_constants "$file" "$project"; then
-				violations+=("$relative_path: Missing ${project}Constants import")
 			fi
 		fi
 	fi
@@ -296,18 +329,37 @@ generate_recommendations() {
 
 ## Quick Fixes for Common Violations
 
-### 1. Import FlextCore.Constants
+### 1. Import FlextConstants
 
 ```python
 # Add to imports
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 # Replace hardcoded values
 timeout = 30  # ❌ BEFORE
-timeout = FlextCore.Constants.Network.DEFAULT_TIMEOUT  # ✅ AFTER
+timeout = FlextConstants.Network.DEFAULT_TIMEOUT  # ✅ AFTER
 
 host = "localhost"  # ❌ BEFORE
-host = FlextCore.Constants.Platform.DEFAULT_HOST  # ✅ AFTER
+host = FlextConstants.Platform.DEFAULT_HOST  # ✅ AFTER
 ```
 
 ### 2. Use Project Constants
@@ -325,12 +377,12 @@ port = FlextLdapConstants.Protocol.DEFAULT_PORT  # ✅ AFTER
 
 | Hardcoded Value | Recommended Constant |
 |----------------|---------------------|
-| `8000` | `FlextCore.Constants.Platform.FLEXT_API_PORT` |
-| `8080` | `FlextCore.Constants.Platform.DEFAULT_HTTP_PORT` |
-| `5432` | `FlextCore.Constants.Platform.POSTGRES_DEFAULT_PORT` |
-| `389` | `FlextCore.Constants.Platform.LDAP_DEFAULT_PORT` |
-| `"localhost"` | `FlextCore.Constants.Platform.DEFAULT_HOST` |
-| `30` (timeout) | `FlextCore.Constants.Network.DEFAULT_TIMEOUT` |
+| `8000` | `FlextConstants.Platform.FLEXT_API_PORT` |
+| `8080` | `FlextConstants.Platform.DEFAULT_HTTP_PORT` |
+| `5432` | `FlextConstants.Platform.POSTGRES_DEFAULT_PORT` |
+| `389` | `FlextConstants.Platform.LDAP_DEFAULT_PORT` |
+| `"localhost"` | `FlextConstants.Platform.DEFAULT_HOST` |
+| `30` (timeout) | `FlextConstants.Network.DEFAULT_TIMEOUT` |
 
 ### 4. Acceptable Hardcoded Values
 
@@ -387,7 +439,7 @@ EOF
 		cat <<EOF | tee -a "$LOG_FILE"
 ✅ PASSED: All projects are constants compliant
 
-All FLEXT projects properly use [Project]Constants and FlextCore.Constants
+All FLEXT projects properly use [Project]Constants and FlextConstants
 for configuration values, timeouts, ports, and host references.
 
 EOF

@@ -108,8 +108,8 @@ def process(data):
     return data
 
 # ✅ CORRECT
-def process(data: dict[str, object]) -> FlextCore.Result[ProcessedData]:
-    return FlextCore.Result.ok(ProcessedData(**data))
+def process(data: dict[str, object]) -> FlextResult[ProcessedData]:
+    return FlextResult.ok(ProcessedData(**data))
 ```
 
 **Run MyPy with details:**
@@ -179,10 +179,29 @@ env | grep FLEXT_
 **Validate configuration:**
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 try:
-    config = FlextCore.Config()
+    config = FlextConfig()
     print("Configuration valid")
 except ValidationError as e:
     print(f"Configuration error: {e}")
@@ -192,7 +211,26 @@ except ValidationError as e:
 
 ```python
 import os
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 # Print all FLEXT environment variables
 for key, value in os.environ.items():
@@ -200,7 +238,7 @@ for key, value in os.environ.items():
         print(f"{key}={value}")
 
 # Load and print configuration
-config = FlextCore.Config()
+config = FlextConfig()
 print(f"Config: {config.dict()}")
 ```
 
@@ -244,7 +282,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 ```python
 # Check for common LDIF issues
-def validate_ldif_content(content: str) -> FlextCore.Types.StringList:
+def validate_ldif_content(content: str) -> FlextTypes.StringList:
     issues = []
 
     if not content.strip():
@@ -372,7 +410,26 @@ config = FlextLdifConfig(
 
 ```python
 import logging
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 # Configure logging
 logging.basicConfig(
@@ -381,7 +438,7 @@ logging.basicConfig(
 )
 
 # Use FLEXT logger
-logger = FlextCore.Logger.get_logger(__name__)
+logger = FlextLogger.get_logger(__name__)
 logger.debug("Debug message")
 logger.info("Info message")
 logger.warning("Warning message")
@@ -391,28 +448,66 @@ logger.error("Error message")
 ### 2. Exception Handling
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-def safe_operation(data: dict) -> FlextCore.Result[dict]:
+def safe_operation(data: dict) -> FlextResult[dict]:
     try:
         # Your operation here
         result = process_data(data)
-        return FlextCore.Result.ok(result)
+        return FlextResult.ok(result)
     except ValidationError as e:
         logger.error(f"Validation error: {e}")
-        return FlextCore.Result.fail(f"Validation failed: {e}")
+        return FlextResult.fail(f"Validation failed: {e}")
     except Exception as e:
         logger.error(f"Unexpected error: {e}", exc_info=True)
-        return FlextCore.Result.fail(f"Operation failed: {e}")
+        return FlextResult.fail(f"Operation failed: {e}")
 ```
 
 ### 3. Debug Mode
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 # Enable debug mode
-config = FlextCore.Config(debug=True)
+config = FlextConfig(debug=True)
 
 # Debug information will be printed
 print(f"Debug mode: {config.debug}")
@@ -591,48 +686,70 @@ When reporting issues, include:
 
    ```python
    # Minimal code that reproduces the issue
-   from flext_core import FlextCore
-
-   # Your minimal example here
+   from flext_core import FlextBus
    ```
 
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
+
+# Your minimal example here
+
+````
+
 4. **Expected vs Actual Behavior**
-   - What you expected to happen
-   - What actually happened
-   - Steps to reproduce
+- What you expected to happen
+- What actually happened
+- Steps to reproduce
 
 ## Prevention
 
 ### Best Practices
 
-1. **Always Use FlextCore.Result**
+1. **Always Use FlextResult**
 
-   ```python
-   # ✅ GOOD
-   def process(data: dict) -> FlextCore.Result[ProcessedData]:
-       return FlextCore.Result.ok(ProcessedData(**data))
+```python
+# ✅ GOOD
+def process(data: dict) -> FlextResult[ProcessedData]:
+    return FlextResult.ok(ProcessedData(**data))
 
-   # ❌ BAD
-   def process(data: dict) -> ProcessedData:
-       return ProcessedData(**data)
-   ```
+# ❌ BAD
+def process(data: dict) -> ProcessedData:
+    return ProcessedData(**data)
+````
 
 2. **Validate Input Early**
 
    ```python
-   def process_data(data: dict) -> FlextCore.Result[dict]:
+   def process_data(data: dict) -> FlextResult[dict]:
        if not data:
-           return FlextCore.Result.fail("Data required")
+           return FlextResult.fail("Data required")
 
        # Process data
-       return FlextCore.Result.ok(processed_data)
+       return FlextResult.ok(processed_data)
    ```
 
 3. **Use Type Hints**
 
    ```python
    # ✅ GOOD
-   def process(items: list[Item]) -> FlextCore.Result[list[ProcessedItem]]:
+   def process(items: list[Item]) -> FlextResult[list[ProcessedItem]]:
        pass
 
    # ❌ BAD

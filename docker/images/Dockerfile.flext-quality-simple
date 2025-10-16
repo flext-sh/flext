@@ -16,7 +16,7 @@ RUN echo 'from typing import Dict
 
 from pydantic import BaseModel
 
-class FlextCore.Result:
+class FlextResult:
     def __init__(self, success: bool, data: object = None, error: str = None):
         self.success = success
         self.is_failure = not success
@@ -31,53 +31,53 @@ class FlextCore.Result:
     def fail(cls, error: str):
         return cls(False, error=error)
 
-def FlextCore.Logger(name: str):
+def FlextLogger(name: str):
     return logging.getLogger(name)
 
-class FlextCore.Container:
+class FlextContainer:
     def __init__(self):
         self._services = {}
     
     def register(self, name: str, service: object):
         self._services[name] = service
-        return FlextCore.Result.ok(None)
+        return FlextResult.ok(None)
     
     def get(self, name: str):
         if name in self._services:
-            return FlextCore.Result.ok(self._services[name])
-        return FlextCore.Result.fail(f"Service {name} not found")
+            return FlextResult.ok(self._services[name])
+        return FlextResult.fail(f"Service {name} not found")
 
-class FlextCore.Models.Entity(BaseModel):
+class FlextModels.Entity(BaseModel):
     id: str = "mock_id"
     
     def validate_domain_rules(self):
-        return FlextCore.Result.ok(None)
+        return FlextResult.ok(None)
 
-TAnyDict = FlextCore.Types.Dict
+TAnyDict = FlextTypes.Dict
 ' > /app/src/flext_core/__init__.py
 
 # Create exceptions module
-RUN echo 'class FlextCore.Exceptions.Error(Exception):
+RUN echo 'class FlextExceptions.Error(Exception):
     def __init__(self, message: str, context: dict[str, object] = None):
         super().__init__(message)
         self.context = context or {}
 
-class FlextCore.Exceptions.ValidationError(FlextCore.Exceptions.Error):
+class FlextExceptions.ValidationError(FlextExceptions.Error):
     pass
 
-class FlextCore.Exceptions.ConfigurationError(FlextCore.Exceptions.Error):
+class FlextExceptions.ConfigurationError(FlextExceptions.Error):
     pass
 
-class FlextCore.Exceptions.ConnectionError(FlextCore.Exceptions.Error):
+class FlextExceptions.ConnectionError(FlextExceptions.Error):
     pass
 
-class FlextCore.Exceptions.ProcessingError(FlextCore.Exceptions.Error):
+class FlextExceptions.ProcessingError(FlextExceptions.Error):
     pass
 
-class FlextCore.Exceptions.AuthenticationError(FlextCore.Exceptions.Error):
+class FlextExceptions.AuthenticationError(FlextExceptions.Error):
     pass
 
-class FlextCore.Exceptions.TimeoutError(FlextCore.Exceptions.Error):
+class FlextExceptions.TimeoutError(FlextExceptions.Error):
     pass
 ' > /app/src/flext_core/exceptions.py
 
@@ -104,7 +104,26 @@ RUN pip install -e . --no-deps
 RUN echo "🧪 Testing imports..." && \
     python -c "from flext_quality.analyzer import CodeAnalyzer; print('✅ CodeAnalyzer')" && \
     python -c "from flext_quality.exceptions import FlextQualityError; print('✅ Exceptions')" && \
-    python -c "from flext_core import FlextCore; print('✅ Flext')" && \
+    python -c "from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities; print('✅ Flext')" && \
     echo "✅ All imports successful\!"
 
 # Run critical tests

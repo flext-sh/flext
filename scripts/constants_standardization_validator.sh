@@ -48,7 +48,7 @@ print_header() {
 	echo -e "${BLUE}=== FLEXT CONSTANTS STANDARDIZATION VALIDATOR ===${NC}"
 	echo -e "Date: $(date)"
 	echo -e "Validator: [Project]Constants Pattern Compliance"
-	echo -e "Standard: Single class with nested domains, FlextCore.Constants inheritance"
+	echo -e "Standard: Single class with nested domains, FlextConstants inheritance"
 	echo ""
 }
 
@@ -128,18 +128,18 @@ validate_flext_constants_inheritance() {
 			continue
 		fi
 
-		# Check for FlextCore.Constants inheritance (skip for flext-core itself)
+		# Check for FlextConstants inheritance (skip for flext-core itself)
 		if [[ $project_name == "flext-core" ]]; then
-			if grep -q "class FlextCore.Constants:" "$file" 2>/dev/null; then
-				log_success "$project_name" "FlextCore.Constants Foundation Class"
+			if grep -q "class FlextConstants:" "$file" 2>/dev/null; then
+				log_success "$project_name" "FlextConstants Foundation Class"
 			else
-				log_warning "$project_name" "Unexpected FlextCore.Constants Structure" "Expected class FlextCore.Constants in flext-core"
+				log_warning "$project_name" "Unexpected FlextConstants Structure" "Expected class FlextConstants in flext-core"
 			fi
 		else
-			if grep -q "class.*Constants.*FlextCore.Constants" "$file" 2>/dev/null; then
-				log_success "$project_name" "FlextCore.Constants Inheritance"
+			if grep -q "class.*Constants.*FlextConstants" "$file" 2>/dev/null; then
+				log_success "$project_name" "FlextConstants Inheritance"
 			else
-				log_violation "$project_name" "Missing FlextCore.Constants Inheritance" "Constants class should inherit from FlextCore.Constants"
+				log_violation "$project_name" "Missing FlextConstants Inheritance" "Constants class should inherit from FlextConstants"
 			fi
 		fi
 
@@ -147,10 +147,29 @@ validate_flext_constants_inheritance() {
 		if [[ $project_name == "flext-core" ]]; then
 			log_success "$project_name" "Foundation - No Import Required"
 		else
-			if grep -q "from flext_core import FlextCore" "$file" 2>/dev/null; then
-				log_success "$project_name" "Proper FlextCore.Constants Import"
+			if grep -q "from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities" "$file" 2>/dev/null; then
+				log_success "$project_name" "Proper FlextConstants Import"
 			else
-				log_violation "$project_name" "Missing FlextCore.Constants Import" "Should import FlextCore.Constants from flext_core"
+				log_violation "$project_name" "Missing FlextConstants Import" "Should import FlextConstants from flext_core"
 			fi
 		fi
 	done
@@ -171,17 +190,17 @@ validate_no_duplication_with_flext_constants() {
 
 		# Check for timeout duplications (skip for flext-core foundation)
 		if [[ $project_name != "flext-core" ]]; then
-			if grep -q "DEFAULT_TIMEOUT.*=" "$file" && ! grep -q 'FlextCore.Constants\..*DEFAULT_TIMEOUT' "$file" 2>/dev/null; then
-				log_violation "$project_name" "Timeout Duplication" "Should use FlextCore.Constants.Network.DEFAULT_TIMEOUT"
+			if grep -q "DEFAULT_TIMEOUT.*=" "$file" && ! grep -q 'FlextConstants\..*DEFAULT_TIMEOUT' "$file" 2>/dev/null; then
+				log_violation "$project_name" "Timeout Duplication" "Should use FlextConstants.Network.DEFAULT_TIMEOUT"
 				((duplications++))
 			fi
 		fi
 
 		# Check for batch size duplications (skip for flext-core foundation)
 		if [[ $project_name != "flext-core" ]]; then
-			# Look for actual batch size constant definitions that don't reference FlextCore.Constants
-			if grep -q "BATCH_SIZE.*=" "$file" && ! grep -q 'FlextCore.Constants\.Performance\.BatchProcessing' "$file" 2>/dev/null; then
-				log_violation "$project_name" "Batch Size Duplication" "Should use FlextCore.Constants.Performance.BatchProcessing constants"
+			# Look for actual batch size constant definitions that don't reference FlextConstants
+			if grep -q "BATCH_SIZE.*=" "$file" && ! grep -q 'FlextConstants\.Performance\.BatchProcessing' "$file" 2>/dev/null; then
+				log_violation "$project_name" "Batch Size Duplication" "Should use FlextConstants.Performance.BatchProcessing constants"
 				((duplications++))
 			fi
 		fi
@@ -189,8 +208,8 @@ validate_no_duplication_with_flext_constants() {
 		# Check for error code duplications (skip for flext-core foundation)
 		if [[ $project_name != "flext-core" ]]; then
 			# Look for actual VALIDATION_ERROR constant definitions, not logging config
-			if grep -q "^[[:space:]]*VALIDATION_ERROR.*=" "$file" && ! grep -q 'FlextCore.Constants\..*VALIDATION_ERROR' "$file" 2>/dev/null; then
-				log_violation "$project_name" "Error Code Duplication" "Should extend FlextCore.Constants.Errors.VALIDATION_ERROR"
+			if grep -q "^[[:space:]]*VALIDATION_ERROR.*=" "$file" && ! grep -q 'FlextConstants\..*VALIDATION_ERROR' "$file" 2>/dev/null; then
+				log_violation "$project_name" "Error Code Duplication" "Should extend FlextConstants.Errors.VALIDATION_ERROR"
 				((duplications++))
 			fi
 		fi
@@ -311,8 +330,8 @@ generate_constants_compliance_report() {
 	echo ""
 	echo -e "${BLUE}Constants Standardization Patterns Validated:${NC}"
 	echo -e "1. 🏗️  Single Class Pattern: One [Project]Constants class per module"
-	echo -e "2. 🧬 FlextCore.Constants Inheritance: Proper inheritance from flext-core"
-	echo -e "3. 🚫 No Duplication: Reference FlextCore.Constants instead of duplicating"
+	echo -e "2. 🧬 FlextConstants Inheritance: Proper inheritance from flext-core"
+	echo -e "3. 🚫 No Duplication: Reference FlextConstants instead of duplicating"
 	echo -e "4. 🏘️  Nested Organization: Domain-specific nested classes"
 	echo -e "5. 🏷️  Type Annotations: Proper Final[type] annotations"
 	echo -e "6. 📋 Project Metadata: Version, prefix, and name constants"
@@ -323,7 +342,7 @@ generate_constants_compliance_report() {
 		echo -e "1. Address ${TOTAL_VIOLATIONS} constants violations identified"
 		echo -e "2. Apply [Project]Constants pattern to non-compliant projects"
 		echo -e "3. Eliminate loose constants and multiple classes"
-		echo -e "4. Ensure FlextCore.Constants inheritance and reference patterns"
+		echo -e "4. Ensure FlextConstants inheritance and reference patterns"
 		echo -e "5. Re-run validator to confirm standardization"
 	else
 		echo -e "1. Maintain current constants excellence"

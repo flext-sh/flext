@@ -1,4 +1,4 @@
-# ADR-001: Railway-Oriented Programming with FlextCore.Result[T]
+# ADR-001: Railway-Oriented Programming with FlextResult[T]
 
 ## Status
 
@@ -24,7 +24,7 @@ Traditional exception-based error handling in Python has several limitations:
 
 ## Decision
 
-We will implement Railway-Oriented Programming (ROP) using the `FlextCore.Result[T]` monadic type throughout the FLEXT platform.
+We will implement Railway-Oriented Programming (ROP) using the `FlextResult[T]` monadic type throughout the FLEXT platform.
 
 ### Core Implementation
 
@@ -36,7 +36,7 @@ T = TypeVar('T')
 E = TypeVar('E', bound=Exception)
 
 @dataclass(frozen=True)
-class FlextCore.Result(Generic[T]):
+class FlextResult(Generic[T]):
     """Railway-oriented programming result type."""
 
     value: T | None
@@ -45,12 +45,12 @@ class FlextCore.Result(Generic[T]):
     is_failure: bool
 
     @classmethod
-    def ok(cls, value: T) -> 'FlextCore.Result[T]':
+    def ok(cls, value: T) -> 'FlextResult[T]':
         """Create a successful result."""
         return cls(value=value, error=None, is_success=True, is_failure=False)
 
     @classmethod
-    def fail(cls, error: Exception) -> 'FlextCore.Result[T]':
+    def fail(cls, error: Exception) -> 'FlextResult[T]':
         """Create a failed result."""
         return cls(value=None, error=error, is_success=False, is_failure=True)
 
@@ -66,38 +66,38 @@ class FlextCore.Result(Generic[T]):
             return self.error
         raise ValueError("Cannot unwrap failure from successful result")
 
-    def map(self, func: Callable[[T], U]) -> 'FlextCore.Result[U]':
+    def map(self, func: Callable[[T], U]) -> 'FlextResult[U]':
         """Transform successful value, pass through failures."""
         if self.is_success:
             try:
-                return FlextCore.Result.ok(func(self.value))
+                return FlextResult.ok(func(self.value))
             except Exception as e:
-                return FlextCore.Result.fail(e)
-        return FlextCore.Result.fail(self.error)
+                return FlextResult.fail(e)
+        return FlextResult.fail(self.error)
 
-    def flat_map(self, func: Callable[[T], 'FlextCore.Result[U]']) -> 'FlextCore.Result[U]':
-        """Chain operations that return FlextCore.Result."""
+    def flat_map(self, func: Callable[[T], 'FlextResult[U]']) -> 'FlextResult[U]':
+        """Chain operations that return FlextResult."""
         if self.is_success:
             return func(self.value)
-        return FlextCore.Result.fail(self.error)
+        return FlextResult.fail(self.error)
 
-    def and_then(self, func: Callable[[T], 'FlextCore.Result[U]']) -> 'FlextCore.Result[U]':
+    def and_then(self, func: Callable[[T], 'FlextResult[U]']) -> 'FlextResult[U]':
         """Alias for flat_map for better readability."""
         return self.flat_map(func)
 
-    def or_else(self, func: Callable[[Exception], 'FlextCore.Result[T]']) -> 'FlextCore.Result[T]':
+    def or_else(self, func: Callable[[Exception], 'FlextResult[T]']) -> 'FlextResult[T]':
         """Handle failures by providing alternative result."""
         if self.is_failure:
             return func(self.error)
         return self
 
-    def on_success(self, action: Callable[[T], None]) -> 'FlextCore.Result[T]':
+    def on_success(self, action: Callable[[T], None]) -> 'FlextResult[T]':
         """Execute action on successful result."""
         if self.is_success:
             action(self.value)
         return self
 
-    def on_failure(self, action: Callable[[Exception], None]) -> 'FlextCore.Result[T]':
+    def on_failure(self, action: Callable[[Exception], None]) -> 'FlextResult[T]':
         """Execute action on failed result."""
         if self.is_failure:
             action(self.error)
@@ -109,18 +109,18 @@ class FlextCore.Result(Generic[T]):
 #### Basic Usage
 
 ```python
-def validate_email(email: str) -> FlextCore.Result[str]:
+def validate_email(email: str) -> FlextResult[str]:
     if "@" not in email:
-        return FlextCore.Result.fail(ValueError("Invalid email format"))
-    return FlextCore.Result.ok(email)
+        return FlextResult.fail(ValueError("Invalid email format"))
+    return FlextResult.ok(email)
 
-def save_user(user: User) -> FlextCore.Result[User]:
+def save_user(user: User) -> FlextResult[User]:
     try:
         # Save to database
         saved_user = database.save(user)
-        return FlextCore.Result.ok(saved_user)
+        return FlextResult.ok(saved_user)
     except DatabaseError as e:
-        return FlextCore.Result.fail(e)
+        return FlextResult.fail(e)
 
 # Railway composition
 result = (
@@ -134,7 +134,7 @@ result = (
 #### Error Handling
 
 ```python
-def process_payment(amount: float) -> FlextCore.Result[Payment]:
+def process_payment(amount: float) -> FlextResult[Payment]:
     return (
         validate_amount(amount)
         .and_then(process_payment_logic)
@@ -191,12 +191,12 @@ def process_payment(amount: float) -> FlextCore.Result[Payment]:
 #### 3. Integration Challenges
 
 - **Third-Party Libraries**: Some libraries don't follow the pattern
-- **Exception Conversion**: Need to convert exceptions to FlextCore.Result
-- **API Design**: All public APIs must return FlextCore.Result
+- **Exception Conversion**: Need to convert exceptions to FlextResult
+- **API Design**: All public APIs must return FlextResult
 
 #### 4. Performance Considerations
 
-- **Memory Overhead**: FlextCore.Result objects have memory overhead
+- **Memory Overhead**: FlextResult objects have memory overhead
 - **Function Call Overhead**: More function calls for composition
 - **Type Checking**: More complex type checking at runtime
 
@@ -233,9 +233,9 @@ def process_payment(amount: float) -> FlextCore.Result[Payment]:
 
 ### 2. Integration with Existing Code
 
-- **Exception Conversion**: Convert exceptions to FlextCore.Result at boundaries
+- **Exception Conversion**: Convert exceptions to FlextResult at boundaries
 - **Legacy Wrappers**: Create wrappers for legacy code that throws exceptions
-- **API Boundaries**: Ensure all public APIs return FlextCore.Result
+- **API Boundaries**: Ensure all public APIs return FlextResult
 
 ### 3. Testing Strategy
 

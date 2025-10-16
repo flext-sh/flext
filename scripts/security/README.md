@@ -28,7 +28,7 @@ python scripts/security/security_audit.py --risk-threshold HIGH --verbose
 - **⚡ Performance Optimized**: Parallel processing for large codebases (50k+ files)
 - **📊 Multi-Format Reporting**: Summary, detailed, and JSON formats for different use cases
 - **🎯 Risk-Based Analysis**: Configurable thresholds (LOW, MEDIUM, HIGH, CRITICAL)
-- **🔧 Enterprise Integration**: Built on flext-core patterns with FlextCore.Result error handling
+- **🔧 Enterprise Integration**: Built on flext-core patterns with FlextResult error handling
 - **📈 CI/CD Ready**: Structured output for automated security validation
 
 ### Command Line Options
@@ -60,9 +60,9 @@ except Exception:
 # ✅ SECURE - Proper error handling
 try:
     result = risky_operation()
-    return FlextCore.Result[None].ok(result)
+    return FlextResult[None].ok(result)
 except Exception as e:
-    return FlextCore.Result[None].fail(f"Operation failed: {e}")
+    return FlextResult[None].fail(f"Operation failed: {e}")
 ```
 
 ### 2. Exception Swallowing (CRITICAL Risk)
@@ -79,7 +79,7 @@ try:
     critical_operation()
 except SpecificException as e:
     logger.error(f"Critical operation failed: {e}")
-    return FlextCore.Result[None].fail(f"Operation failed: {e}")
+    return FlextResult[None].fail(f"Operation failed: {e}")
 ```
 
 ### 3. Fake Data Generation (HIGH Risk)
@@ -93,28 +93,28 @@ def get_user_data(user_id):
         return {"id": user_id, "name": "Unknown"}  # Fake data
 
 # ✅ SECURE - Explicit error handling
-def get_user_data(user_id) -> FlextCore.Result[UserData]:
+def get_user_data(user_id) -> FlextResult[UserData]:
     try:
         user_data = database.get_user(user_id)
-        return FlextCore.Result[None].ok(user_data)
+        return FlextResult[None].ok(user_data)
     except UserNotFoundError as e:
-        return FlextCore.Result[None].fail(f"User not found: {user_id}")
+        return FlextResult[None].fail(f"User not found: {user_id}")
     except DatabaseError as e:
-        return FlextCore.Result[None].fail(f"Database error: {e}")
+        return FlextResult[None].fail(f"Database error: {e}")
 ```
 
 ## 🛡️ Security Best Practices
 
 ### Fail-Fast Principles
 
-- **Never return fake data**: Always propagate errors or return FlextCore.Result[None].fail()
+- **Never return fake data**: Always propagate errors or return FlextResult[None].fail()
 - **Specific exception handling**: Catch specific exceptions, not broad Exception classes
 - **Proper logging**: Log errors with context before handling or propagating
 - **State validation**: Validate state before operations, fail early if invalid
 
 ### FLEXT-Specific Patterns
 
-- **Use FlextCore.Result[T]**: Type-safe error handling without exceptions
+- **Use FlextResult[T]**: Type-safe error handling without exceptions
 - **Leverage flext-core logging**: Structured logging with correlation IDs
 - **Follow Clean Architecture**: Proper error boundaries between layers
 - **Domain validation**: Validate business rules early in domain layer
@@ -170,7 +170,7 @@ make security-audit  # Should be integrated into Makefile
 
 ### Error Handling
 
-All operations use FlextCore.Result patterns:
+All operations use FlextResult patterns:
 
 - Type-safe error handling without exceptions
 - Detailed error context for troubleshooting

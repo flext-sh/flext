@@ -79,7 +79,7 @@ FLEXT is an enterprise-grade data integration platform built with modern archite
 
 ### 3. Railway-Oriented Programming
 
-- **FlextCore.Result[T]**: Monadic error handling with composition
+- **FlextResult[T]**: Monadic error handling with composition
 - **Happy Path**: Success flows through the system
 - **Sad Path**: Error handling without exceptions
 

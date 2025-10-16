@@ -15,7 +15,13 @@ import subprocess  # nosec S404 - Controlled subprocess usage for test execution
 from pathlib import Path
 from typing import Self
 
-from flext_core import FlextCore
+from flext_core import (
+    FlextConstants,
+    FlextLogger,
+    FlextResult,
+    FlextService,
+    FlextTypes,
+)
 
 from flext.application_handlers import (
     FlextApplicationHandlerService,
@@ -25,7 +31,7 @@ from flext.application_pipeline import (
 )
 
 
-class FlextUnifiedServices(FlextCore.Service[str]):
+class FlextUnifiedServices(FlextService[str]):
     """Unified service coordination with nested service handlers.
 
     Implements FLEXT unified class pattern for service coordination across
@@ -33,10 +39,10 @@ class FlextUnifiedServices(FlextCore.Service[str]):
     proper integration with flext-core service patterns.
     """
 
-    def __init__(self, **_data: FlextCore.Types.Dict) -> None:
+    def __init__(self, **_data: FlextTypes.Dict) -> None:
         """Initialize unified services with flext-core integration."""
         super().__init__()
-        self._logger = FlextCore.Logger(__name__)
+        self._logger = FlextLogger(__name__)
         # Core services initialization
         self._core_services = None
 
@@ -83,20 +89,22 @@ class FlextUnifiedServices(FlextCore.Service[str]):
 
         def execute_pipeline_workflow(
             self, pipeline_id: str
-        ) -> FlextCore.Result[FlextCore.Types.Dict]:
+        ) -> FlextResult[FlextTypes.Dict]:
             """Execute complete pipeline workflow."""
-            # Execute pipeline using service - FlextCore.Result handles errors
-            result: FlextCore.Result[FlextCore.Types.Dict] = (
+            # Execute pipeline using service - FlextResult handles errors
+            result: FlextResult[FlextTypes.Dict] = (
                 self._pipeline_service.execute_pipeline(pipeline_id)
             )
 
             if result.is_success:
-                return FlextCore.Result[FlextCore.Types.Dict].ok({
-                    "pipeline_id": pipeline_id,
-                    "status": "completed",
-                    "result": result.value,
-                })
-            return FlextCore.Result[FlextCore.Types.Dict].fail(
+                return FlextResult[FlextTypes.Dict].ok(
+                    {
+                        "pipeline_id": pipeline_id,
+                        "status": "completed",
+                        "result": result.value,
+                    }
+                )
+            return FlextResult[FlextTypes.Dict].fail(
                 f"Pipeline execution failed: {result.error}"
             )
 
@@ -118,7 +126,7 @@ class FlextUnifiedServices(FlextCore.Service[str]):
         def __init__(self, services: FlextUnifiedServices) -> None:
             super().__init__()
             self._services = services
-            self._logger = FlextCore.Logger(__name__)
+            self._logger = FlextLogger(__name__)
 
         def execute_unified_test(
             self,
@@ -127,7 +135,7 @@ class FlextUnifiedServices(FlextCore.Service[str]):
             coverage: bool = True,
             parallel: bool = True,
             integration: bool = False,
-        ) -> FlextCore.Result[FlextCore.Types.Dict]:
+        ) -> FlextResult[FlextTypes.Dict]:
             """Unified test execution eliminating CLI duplication."""
             try:
                 # Build test command
@@ -153,27 +161,29 @@ class FlextUnifiedServices(FlextCore.Service[str]):
                     check=False,
                     capture_output=True,
                     text=True,
-                    timeout=FlextCore.Constants.Performance.SUBPROCESS_TIMEOUT,
+                    timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT,
                 )
 
-                return FlextCore.Result[FlextCore.Types.Dict].ok({
-                    "returncode": result.returncode,
-                    "stdout": result.stdout,
-                    "stderr": result.stderr,
-                    "success": result.returncode == 0,
-                })
+                return FlextResult[FlextTypes.Dict].ok(
+                    {
+                        "returncode": result.returncode,
+                        "stdout": result.stdout,
+                        "stderr": result.stderr,
+                        "success": result.returncode == 0,
+                    }
+                )
 
             except Exception as e:
                 error = f"Test execution failed: {e}"
                 self._logger.exception(error)
-                return FlextCore.Result[FlextCore.Types.Dict].fail(error)
+                return FlextResult[FlextTypes.Dict].fail(error)
 
         def execute_quality_check(
             self, *, fix: bool = False
-        ) -> FlextCore.Result[FlextCore.Types.Dict]:
+        ) -> FlextResult[FlextTypes.Dict]:
             """Unified quality check eliminating CLI duplication."""
             try:
-                commands: list[tuple[str, FlextCore.Types.StringList]] = []
+                commands: list[tuple[str, FlextTypes.StringList]] = []
                 # Lint command
                 lint_cmd = ["ruff", "check", "src/"]
                 if fix:
@@ -182,7 +192,7 @@ class FlextUnifiedServices(FlextCore.Service[str]):
                 # Type check command
                 commands.extend([("lint", lint_cmd), ("type", ["mypy", "src/"])])
 
-                results: FlextCore.Types.Dict = {}
+                results: FlextTypes.Dict = {}
                 overall_success = True
 
                 for name, cmd in commands:
@@ -192,7 +202,7 @@ class FlextUnifiedServices(FlextCore.Service[str]):
                             check=False,
                             capture_output=True,
                             text=True,
-                            timeout=FlextCore.Constants.Performance.SUBPROCESS_TIMEOUT_SHORT,
+                            timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT_SHORT,
                         )
                         results[name] = {
                             "returncode": result.returncode,
@@ -206,19 +216,21 @@ class FlextUnifiedServices(FlextCore.Service[str]):
                         results[name] = {"success": False, "error": str(e)}
                         overall_success = False
 
-                return FlextCore.Result[FlextCore.Types.Dict].ok({
-                    "overall_success": overall_success,
-                    "checks": results,
-                })
+                return FlextResult[FlextTypes.Dict].ok(
+                    {
+                        "overall_success": overall_success,
+                        "checks": results,
+                    }
+                )
 
             except Exception as e:
                 error = f"Quality check failed: {e}"
                 self._logger.exception(error)
-                return FlextCore.Result[FlextCore.Types.Dict].fail(error)
+                return FlextResult[FlextTypes.Dict].fail(error)
 
         def execute_build_check(
             self, module: str | None = None
-        ) -> FlextCore.Result[FlextCore.Types.Dict]:
+        ) -> FlextResult[FlextTypes.Dict]:
             """Unified build check eliminating CLI duplication."""
             try:
                 # Check if it's a Python project with pyproject.toml
@@ -239,20 +251,22 @@ class FlextUnifiedServices(FlextCore.Service[str]):
                     check=False,
                     capture_output=True,
                     text=True,
-                    timeout=FlextCore.Constants.Performance.SUBPROCESS_TIMEOUT,
+                    timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT,
                 )
 
-                return FlextCore.Result[FlextCore.Types.Dict].ok({
-                    "returncode": result.returncode,
-                    "stdout": result.stdout,
-                    "stderr": result.stderr,
-                    "success": result.returncode == 0,
-                })
+                return FlextResult[FlextTypes.Dict].ok(
+                    {
+                        "returncode": result.returncode,
+                        "stdout": result.stdout,
+                        "stderr": result.stderr,
+                        "success": result.returncode == 0,
+                    }
+                )
 
             except Exception as e:
                 error = f"Build check failed: {e}"
                 self._logger.exception(error)
-                return FlextCore.Result[FlextCore.Types.Dict].fail(error)
+                return FlextResult[FlextTypes.Dict].fail(error)
 
     def create_test_services(self: Self) -> _TestServices:
         """Create unified test service coordinator - ELIMINATES CLI duplication."""
@@ -270,7 +284,7 @@ class FlextUnifiedServices(FlextCore.Service[str]):
         """Create core service coordinator."""
         return self._CoreServices(self)
 
-    def initialize_all_services(self: Self) -> FlextCore.Result[dict[str, str]]:
+    def initialize_all_services(self: Self) -> FlextResult[dict[str, str]]:
         """Initialize all service coordinators."""
         try:
             # Create all service handlers
@@ -279,38 +293,38 @@ class FlextUnifiedServices(FlextCore.Service[str]):
             self.create_core_services()
 
             # Validate core services connection using direct access
-            # FlextCore.Services doesn't have list_services method, so use simple validation
+            # FlextServices doesn't have list_services method, so use simple validation
             service_count = 1  # Assume core services are available
 
-            return FlextCore.Result[dict[str, str]].ok({
-                "handler_services": "initialized",
-                "pipeline_services": "initialized",
-                "core_services": "connected",
-                "total_core_services": str(service_count),
-            })
+            return FlextResult[dict[str, str]].ok(
+                {
+                    "handler_services": "initialized",
+                    "pipeline_services": "initialized",
+                    "core_services": "connected",
+                    "total_core_services": str(service_count),
+                }
+            )
 
         except Exception as e:
             error = f"Service initialization failed: {e}"
             self._logger.exception(error)
-            return FlextCore.Result[dict[str, str]].fail(error)
+            return FlextResult[dict[str, str]].fail(error)
 
-    def execute(self, _request: str = "") -> FlextCore.Result[str]:
-        """Execute unified services - required by FlextCore.Service abstract method."""
+    def execute(self, _request: str = "") -> FlextResult[str]:
+        """Execute unified services - required by FlextService abstract method."""
         try:
             # Default execution initializes all services and returns status
-            init_result: FlextCore.Result[dict[str, str]] = (
-                self.initialize_all_services()
-            )
+            init_result: FlextResult[dict[str, str]] = self.initialize_all_services()
             if init_result.is_success:
                 services_info = init_result.unwrap()
-                return FlextCore.Result[str].ok(
+                return FlextResult[str].ok(
                     f"FlextUnifiedServices ready: {services_info}"
                 )
-            return FlextCore.Result[str].fail(
+            return FlextResult[str].fail(
                 f"Service initialization failed: {init_result.error}"
             )
         except Exception as e:
-            return FlextCore.Result[str].fail(f"Unified services execution failed: {e}")
+            return FlextResult[str].fail(f"Unified services execution failed: {e}")
 
 
 def create_services() -> FlextUnifiedServices:

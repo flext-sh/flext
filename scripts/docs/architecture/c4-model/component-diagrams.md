@@ -10,14 +10,14 @@ Detailed view of FLEXT core components and their relationships:
 
 Container_Boundary(core, "FLEXT Core Library") {
 
-    Component(result, "FlextCore.Result[T]", "Railway Pattern", "Monadic error handling with composition")
-    Component(container, "FlextCore.Container", "DI Container", "Dependency injection and service management")
-    Component(models, "FlextCore.Models", "DDD Patterns", "Entity, Value, AggregateRoot patterns")
-    Component(logger, "FlextCore.Logger", "Structured Logging", "Context-aware logging with propagation")
+    Component(result, "FlextResult[T]", "Railway Pattern", "Monadic error handling with composition")
+    Component(container, "FlextContainer", "DI Container", "Dependency injection and service management")
+    Component(models, "FlextModels", "DDD Patterns", "Entity, Value, AggregateRoot patterns")
+    Component(logger, "FlextLogger", "Structured Logging", "Context-aware logging with propagation")
 
-    Component(dispatcher, "FlextCore.Dispatcher", "CQRS Dispatcher", "Command and query dispatching")
-    Component(bus, "FlextCore.Bus", "Event Bus", "Domain event publishing and subscription")
-    Component(config, "FlextCore.Config", "Configuration", "Environment-aware configuration management")
+    Component(dispatcher, "FlextDispatcher", "CQRS Dispatcher", "Command and query dispatching")
+    Component(bus, "FlextBus", "Event Bus", "Domain event publishing and subscription")
+    Component(config, "FlextConfig", "Configuration", "Environment-aware configuration management")
 }
 
 Container_Boundary(domain, "Domain Services") {
@@ -53,25 +53,25 @@ Rel(infrastructure, core, "Depends on", "Foundation patterns")
 
 ### Core Components
 
-#### FlextCore.Result[T]
+#### FlextResult[T]
 
 - **Pattern**: Railway-oriented programming
 - **Purpose**: Type-safe error handling with composition
-- **Usage**: All operations that can fail return FlextCore.Result[T]
+- **Usage**: All operations that can fail return FlextResult[T]
 
-#### FlextCore.Container
+#### FlextContainer
 
 - **Pattern**: Dependency injection container
 - **Purpose**: Service registration and resolution
 - **Usage**: Global singleton for dependency management
 
-#### FlextCore.Models
+#### FlextModels
 
 - **Pattern**: Domain-Driven Design
 - **Purpose**: Entity, Value, and AggregateRoot patterns
 - **Usage**: Business domain modeling
 
-#### FlextCore.Logger
+#### FlextLogger
 
 - **Pattern**: Structured logging
 - **Purpose**: Context-aware logging with propagation

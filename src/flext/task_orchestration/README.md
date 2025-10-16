@@ -204,7 +204,7 @@ class Task(BaseModel):
 
     # Dependencies and relationships
     dependencies: List[TaskDependency]  # Task dependencies
-    blocks: FlextCore.Types.StringList                # Tasks blocked by this task
+    blocks: FlextTypes.StringList                # Tasks blocked by this task
 
     # Timing and estimation
     estimated_hours: Optional[float] # Estimated hours to complete
@@ -212,7 +212,7 @@ class Task(BaseModel):
     due_date: Optional[datetime]     # Task due date
 
     # Metadata
-    tags: FlextCore.Types.StringList                  # Task tags
+    tags: FlextTypes.StringList                  # Task tags
     category: Optional[str]          # Task category
     project: Optional[str]           # Associated project
 
@@ -224,7 +224,7 @@ class Task(BaseModel):
 
     # Progress tracking
     progress_percentage: int         # Progress percentage (0-100)
-    notes: FlextCore.Types.StringList                 # Task notes and updates
+    notes: FlextTypes.StringList                 # Task notes and updates
 ```
 
 ## Configuration
@@ -252,7 +252,7 @@ class TaskOrchestrationConfig(BaseModel):
 
     # Focus and filtering
     focus_area: Optional[str] = None # Focus area for prioritization
-    exclude_patterns: FlextCore.Types.StringList = [] # Patterns to exclude
+    exclude_patterns: FlextTypes.StringList = [] # Patterns to exclude
 ```
 
 ## Three-Agent System
@@ -395,7 +395,7 @@ The system provides comprehensive error handling:
 The orchestration system integrates seamlessly with:
 
 - **FLEXT CLI**: Native command integration
-- **FLEXT Core**: Uses FlextCore.Result pattern for error handling
+- **FLEXT Core**: Uses FlextResult pattern for error handling
 - **FLEXT Services**: Follows FLEXT service patterns
 - **Status Tracking**: Real-time progress monitoring
 - **Reporting**: Comprehensive reporting capabilities
@@ -439,9 +439,28 @@ The orchestration system integrates seamlessly with:
 Enable debug mode for detailed logging:
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-logger = FlextCore.Logger(__name__)
+logger = FlextLogger(__name__)
 logger.setLevel("DEBUG")
 ```
 
@@ -453,7 +472,7 @@ When contributing to the task orchestration system:
 2. Add comprehensive tests
 3. Update documentation
 4. Ensure type safety
-5. Use FlextCore.Result for error handling
+5. Use FlextResult for error handling
 
 ## License
 

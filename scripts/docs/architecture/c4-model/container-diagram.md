@@ -91,10 +91,10 @@ Rel_D(domain_services, monitoring, "Reports", "Logs")
 - **Technology**: Python
 - **Purpose**: Foundation library with Clean Architecture patterns
 - **Responsibilities**:
-  - FlextCore.Result[T] error handling
-  - FlextCore.Container dependency injection
-  - FlextCore.Models domain patterns
-  - FlextCore.Logger structured logging
+  - FlextResult[T] error handling
+  - FlextContainer dependency injection
+  - FlextModels domain patterns
+  - FlextLogger structured logging
 
 #### Domain Services
 

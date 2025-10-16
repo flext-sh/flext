@@ -32,15 +32,15 @@ info() {
 
 VALIDATION_FAILURES=0
 
-# 1. Validate scripts/constants.env is synchronized with FlextCore.Constants
+# 1. Validate scripts/constants.env is synchronized with FlextConstants
 info "Checking scripts/constants.env synchronization..."
 
 if [[ -f "scripts/constants.env" ]]; then
-	# Check if it contains FlextCore.Constants references
-	if grep -q "FlextCore.Constants" scripts/constants.env; then
-		success "scripts/constants.env contains FlextCore.Constants references"
+	# Check if it contains FlextConstants references
+	if grep -q "FlextConstants" scripts/constants.env; then
+		success "scripts/constants.env contains FlextConstants references"
 	else
-		error "scripts/constants.env missing FlextCore.Constants references"
+		error "scripts/constants.env missing FlextConstants references"
 		((VALIDATION_FAILURES++))
 	fi
 
@@ -96,7 +96,7 @@ else
 fi
 
 if [[ -f "scripts/testing/test-distributed.sh" ]]; then
-	if grep -q "FlextCore.Constants defaults" scripts/testing/test-distributed.sh; then
+	if grep -q "FlextConstants defaults" scripts/testing/test-distributed.sh; then
 		success "test-distributed.sh uses standardized fallback patterns"
 	else
 		warning "test-distributed.sh may not use standardized patterns"
@@ -159,21 +159,40 @@ else
 	info "No example files found to validate"
 fi
 
-# 5. Validate FlextCore.Constants is accessible
-info "Checking FlextCore.Constants accessibility..."
+# 5. Validate FlextConstants is accessible
+info "Checking FlextConstants accessibility..."
 
 if timeout 10 python -c "
 import sys
 sys.path.insert(0, 'flext-core/src')
-from flext_core import FlextCore
-print('FlextCore.Constants available')
-print(f'API Port: {FlextCore.Constants.Platform.FLEXT_API_PORT}')
-print(f'Default Timeout: {FlextCore.Constants.Network.DEFAULT_TIMEOUT}')
-print(f'Critical Duration: {FlextCore.Constants.Performance.CRITICAL_DURATION_MS}')
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
+print('FlextConstants available')
+print(f'API Port: {FlextConstants.Platform.FLEXT_API_PORT}')
+print(f'Default Timeout: {FlextConstants.Network.DEFAULT_TIMEOUT}')
+print(f'Critical Duration: {FlextConstants.Performance.CRITICAL_DURATION_MS}')
 " 2>/dev/null; then
-	success "FlextCore.Constants is accessible and working"
+	success "FlextConstants is accessible and working"
 else
-	error "FlextCore.Constants is not accessible"
+	error "FlextConstants is not accessible"
 	((VALIDATION_FAILURES++))
 fi
 
@@ -186,11 +205,11 @@ if [[ $VALIDATION_FAILURES -eq 0 ]]; then
 	success "All constants standardization validations passed!"
 	echo ""
 	info "Constants standardization implementation:"
-	echo "  • scripts/constants.env synchronized with FlextCore.Constants"
+	echo "  • scripts/constants.env synchronized with FlextConstants"
 	echo "  • Automatic generation script implemented"
 	echo "  • Test scripts use environment constants"
 	echo "  • Examples use project constants"
-	echo "  • FlextCore.Constants foundation is accessible"
+	echo "  • FlextConstants foundation is accessible"
 	echo ""
 	success "✨ FLEXT Constants Standardization: COMPLETE ✨"
 	exit 0

@@ -10,7 +10,7 @@ FLEXT is built on a clean architecture foundation with flext-core providing the 
 - **SOLID Principles**: Single responsibility, Open/closed, Liskov substitution, Interface segregation, Dependency inversion
 - **CQRS Pattern**: Command Query Responsibility Segregation for complex business logic
 - **Railway-Oriented Programming**: Functional error handling with happy/sad path composition
-- **Dependency Injection**: FlextCore.Container for managing component dependencies
+- **Dependency Injection**: FlextContainer for managing component dependencies
 
 ### Architecture Layers
 
@@ -48,24 +48,62 @@ FLEXT is built on a clean architecture foundation with flext-core providing the 
 
 ### Core Components
 
-#### FlextCore.Container (Dependency Injection)
+#### FlextContainer (Dependency Injection)
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-container = FlextCore.Container()
+container = FlextContainer()
 container.register(IFooService, FooService())
 container.register(IBarService, BarService())
 
 foo_service = container.resolve(IFooService)
 ```
 
-#### FlextCore.Dispatcher (CQRS)
+#### FlextDispatcher (CQRS)
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-dispatcher = FlextCore.Dispatcher()
+dispatcher = FlextDispatcher()
 dispatcher.register_handler(CreateUserCommand, CreateUserHandler)
 dispatcher.register_handler(GetUserQuery, GetUserHandler)
 
@@ -74,19 +112,38 @@ result = dispatcher.dispatch(CreateUserCommand(user_data))
 user = dispatcher.dispatch(GetUserQuery(user_id))
 ```
 
-#### FlextCore.Result (Railway-Oriented Programming)
+#### FlextResult (Railway-Oriented Programming)
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-def divide(a: float, b: float) -> FlextCore.Result[float, str]:
+def divide(a: float, b: float) -> FlextResult[float, str]:
     if b == 0:
-        return FlextCore.Result.failure("Cannot divide by zero")
+        return FlextResult.failure("Cannot divide by zero")
 
-    return FlextCore.Result.success(a / b)
+    return FlextResult.success(a / b)
 
 # Compose operations
-result = (FlextCore.Result.success(10)
+result = (FlextResult.success(10)
           .bind(lambda x: divide(x, 2))
           .bind(lambda x: divide(x, 3)))
 
@@ -96,12 +153,31 @@ else:
     print(f"Error: {result.failure()}")
 ```
 
-#### FlextCore.Bus (Domain Events)
+#### FlextBus (Domain Events)
 
 ```python
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
-bus = FlextCore.Bus()
+bus = FlextBus()
 bus.subscribe(UserCreatedEvent, UserCreatedHandler)
 
 # Emit events
@@ -160,10 +236,48 @@ flext-ldif/
 
 ```python
 # In flext-ldif
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 # In flext-oracle
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 from flext_ldif import FlextLdifModels  # If needed
 ```
 

@@ -74,7 +74,7 @@ git checkout -b feature/amazing-feature
 
 Follow FLEXT development standards:
 
-- **Use FlextCore.Result[T]** for all operations
+- **Use FlextResult[T]** for all operations
 - **Follow Clean Architecture** principles
 - **Maintain type safety** with MyPy strict mode
 - **Write comprehensive tests**
@@ -103,12 +103,12 @@ git push origin feature/amazing-feature
 
 ```python
 # ✅ CORRECT - Complete type annotations
-def process_data(data: dict[str, object]) -> FlextCore.Result[ProcessedData]:
+def process_data(data: dict[str, object]) -> FlextResult[ProcessedData]:
     """Process data with type safety."""
     if not data:
-        return FlextCore.Result[ProcessedData].fail("Data required")
+        return FlextResult[ProcessedData].fail("Data required")
 
-    return FlextCore.Result[ProcessedData].ok(ProcessedData(**data))
+    return FlextResult[ProcessedData].ok(ProcessedData(**data))
 
 # ❌ WRONG - Missing type annotations
 def process_data(data):
@@ -118,8 +118,8 @@ def process_data(data):
 ### Railway-Oriented Programming
 
 ```python
-# ✅ CORRECT - Use FlextCore.Result for all operations
-def validate_and_process(data: dict) -> FlextCore.Result[ProcessedData]:
+# ✅ CORRECT - Use FlextResult for all operations
+def validate_and_process(data: dict) -> FlextResult[ProcessedData]:
     return (
         validate_data(data)
         .flat_map(transform_data)
@@ -143,7 +143,7 @@ class FlextApiModels:
         data: dict[str, object]
 
     class Response(BaseModel):
-        result: FlextCore.Result[object]
+        result: FlextResult[object]
         status: int
 
 # ❌ WRONG - Scattered model definitions
@@ -175,7 +175,26 @@ pytest --cov=src --cov-report=html
 
 ```python
 import pytest
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 class TestDataProcessing:
     def test_process_valid_data(self):
@@ -241,15 +260,34 @@ cd flext-newlib
 
 ```python
 # src/flext_newlib/__init__.py
-from flext_core import FlextCore
+from flext_core import FlextBus
+from flext_core import FlextConfig
+from flext_core import FlextConstants
+from flext_core import FlextContainer
+from flext_core import FlextContext
+from flext_core import FlextDecorators
+from flext_core import FlextDispatcher
+from flext_core import FlextExceptions
+from flext_core import FlextHandlers
+from flext_core import FlextLogger
+from flext_core import FlextMixins
+from flext_core import FlextModels
+from flext_core import FlextProcessors
+from flext_core import FlextProtocols
+from flext_core import FlextRegistry
+from flext_core import FlextResult
+from flext_core import FlextRuntime
+from flext_core import FlextService
+from flext_core import FlextTypes
+from flext_core import FlextUtilities
 
 # Main API class
 class FlextNewlib:
     def __init__(self, config: FlextNewlibConfig):
         self.config = config
 
-    def process(self, data: dict) -> FlextCore.Result[dict]:
-        """Process data using FlextCore.Result pattern."""
+    def process(self, data: dict) -> FlextResult[dict]:
+        """Process data using FlextResult pattern."""
         # Implementation here
         pass
 
@@ -262,7 +300,7 @@ class FlextNewlibModels:
         data: dict[str, object]
 
     class Response(BaseModel):
-        result: FlextCore.Result[object]
+        result: FlextResult[object]
 ```
 
 ### 3. Add to Workspace
@@ -311,7 +349,7 @@ poetry env info
 ### Code Documentation
 
 ```python
-def process_data(data: dict[str, object]) -> FlextCore.Result[ProcessedData]:
+def process_data(data: dict[str, object]) -> FlextResult[ProcessedData]:
     """
     Process data using the FLEXT pipeline.
 
@@ -319,7 +357,7 @@ def process_data(data: dict[str, object]) -> FlextCore.Result[ProcessedData]:
         data: Input data dictionary
 
     Returns:
-        FlextCore.Result containing processed data or error
+        FlextResult containing processed data or error
 
     Raises:
         ValidationError: If data validation fails

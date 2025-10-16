@@ -6,9 +6,9 @@ This directory contains Architecture Decision Records (ADRs) for the FLEXT Enter
 
 ### Foundation Decisions
 
-- [ADR-001: Railway-Oriented Programming with FlextCore.Result[T]](./001-railway-oriented-programming.md)
-- [ADR-002: Dependency Injection with FlextCore.Container](./002-dependency-injection-container.md)
-- [ADR-003: Domain-Driven Design with FlextCore.Models](./003-domain-driven-design-models.md)
+- [ADR-001: Railway-Oriented Programming with FlextResult[T]](./001-railway-oriented-programming.md)
+- [ADR-002: Dependency Injection with FlextContainer](./002-dependency-injection-container.md)
+- [ADR-003: Domain-Driven Design with FlextModels](./003-domain-driven-design-models.md)
 - [ADR-004: Clean Architecture Layer Separation](./004-clean-architecture-layers.md)
 
 ### Technology Decisions
