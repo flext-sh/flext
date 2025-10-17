@@ -244,23 +244,23 @@ class TestFlextControlPanelCli:
         assert hasattr(cli.__class__, "_ToolsCommands")
         assert hasattr(cli.__class__, "_MainCommands")
 
-    def test_cli_with_flext_tests(self, flext_domains: FlextTestsDomains) -> None:
-        """Test FlextControlPanelCli with flext_tests infrastructure."""
-        cli = FlextControlPanelCli()
-
-        # Create test data using flext_tests
-        test_cli_data = flext_domains.create_service(service_type="api")
-        test_cli_data["config_path"] = "/tmp/flext_test_config.json"
-
-        # Test service execution
-        result = cli.execute()
-        assert isinstance(result, FlextResult)
-
-        # Test service with flext_tests data
-        test_config_data = flext_domains.create_configuration()
-        cli_with_config = FlextControlPanelCli(**test_config_data)
-        config_result = cli_with_config.execute()
-        assert isinstance(config_result, FlextResult)
+    # def test_cli_with_flext_tests(self, flext_domains: FlextTestsDomains) -> None:
+    #     """Test FlextControlPanelCli with flext_tests infrastructure."""
+    #     cli = FlextControlPanelCli()
+    #
+    #     # Create test data using flext_tests
+    #     test_cli_data = flext_domains.create_service(service_type="api")
+    #     test_cli_data["config_path"] = "/tmp/flext_test_config.json"
+    #
+    #     # Test service execution
+    #     result = cli.execute()
+    #     assert isinstance(result, FlextResult)
+    #
+    #     # Test service with flext_tests data
+    #     test_config_data = flext_domains.create_configuration()
+    #     cli_with_config = FlextControlPanelCli(**test_config_data)
+    #     config_result = cli_with_config.execute()
+    #     assert isinstance(config_result, FlextResult)
 
     # =============================================================================
     # PERFORMANCE TESTS

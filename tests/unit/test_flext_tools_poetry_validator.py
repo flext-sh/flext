@@ -232,21 +232,21 @@ class TestPoetryValidator:
     # def test_poetry_validator_with_flext_tests(
     #     self, flext_domains: FlextTestsDomains
     # ) -> None:
-        """Test PoetryValidator with flext_tests infrastructure."""
-        validator = PoetryValidator()
-
-        # Create test data using flext_tests
-        test_project_data = flext_domains.create_service()
-        test_project_data["project_path"] = str(self.temp_project_dir)
-
-        # Test validator execution
-        validate_result = validator.validate_pyproject(str(self.temp_test_dir))
-        assert isinstance(validate_result, FlextResult)
-
-        # Test validator with flext_tests data
-        flext_domains.create_configuration()
-        validator_with_config = PoetryValidator()
-        assert validator_with_config is not None
+    #     """Test PoetryValidator with flext_tests infrastructure."""
+    #     validator = PoetryValidator()
+    #
+    #     # Create test data using flext_tests
+    #     test_project_data = flext_domains.create_service()
+    #     test_project_data["project_path"] = str(self.temp_project_dir)
+    #
+    #     # Test validator execution
+    #     validate_result = validator.validate_pyproject(str(self.temp_test_dir))
+    #     assert isinstance(validate_result, FlextResult)
+    #
+    #     # Test validator with flext_tests data
+    #     flext_domains.create_configuration()
+    #     validator_with_config = PoetryValidator()
+    #     assert validator_with_config is not None
 
     # =============================================================================
     # PERFORMANCE TESTS
