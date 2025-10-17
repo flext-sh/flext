@@ -442,6 +442,7 @@ python_classes = ["Test*"]
 python_files = ["*_test.py", "test_*.py"]
 python_functions = ["test_*"]
 testpaths = ["tests/"]
+pythonpath = ["src", "flext-core/src"]
 
 [tool.ruff]
 extend = "./ruff-shared.toml"
