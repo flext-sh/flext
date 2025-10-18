@@ -25,7 +25,6 @@ from flext_core import (
     FlextProcessors,
     FlextResult,
     FlextService,
-    FlextTypes,
 )
 from pydantic import BaseModel, Field
 
@@ -61,7 +60,7 @@ class FlextApplicationPipelineService(FlextService[str]):
         """Command to create a new pipeline."""
 
         name: str = Field(..., description="Pipeline name")
-        config: FlextTypes.Dict = Field(..., description="Pipeline configuration")
+        config: dict[str, object] = Field(..., description="Pipeline configuration")
 
     class ExecutePipelineCommand(BaseModel):
         """Command to execute a pipeline."""
@@ -137,56 +136,60 @@ class FlextApplicationPipelineService(FlextService[str]):
     def create_pipeline(
         self,
         name: str,
-        config: FlextTypes.Dict,
-    ) -> FlextResult[FlextTypes.Dict]:
+        config: dict[str, object],
+    ) -> FlextResult[dict[str, object]]:
         """Create a new pipeline."""
         try:
             # Use config parameter to avoid unused warning
             _ = config
             # Use flext-core pipeline creation
             _pipeline = FlextProcessors.Pipeline()
-            return FlextResult[FlextTypes.Dict].ok({
+            return FlextResult[dict[str, object]].ok({
                 "pipeline": name,
                 "status": "created",
             })
         except Exception as e:
-            return FlextResult[FlextTypes.Dict].fail(f"Failed to create pipeline: {e}")
+            return FlextResult[dict[str, object]].fail(
+                f"Failed to create pipeline: {e}"
+            )
 
-    def execute_pipeline(self, name: str) -> FlextResult[FlextTypes.Dict]:
+    def execute_pipeline(self, name: str) -> FlextResult[dict[str, object]]:
         """Execute a pipeline."""
         try:
             # Simulate pipeline execution
             time.sleep(0.1)  # Simulate processing time
-            return FlextResult[FlextTypes.Dict].ok({
+            return FlextResult[dict[str, object]].ok({
                 "pipeline": name,
                 "status": "completed",
             })
         except Exception as e:
-            return FlextResult[FlextTypes.Dict].fail(f"Failed to execute pipeline: {e}")
+            return FlextResult[dict[str, object]].fail(
+                f"Failed to execute pipeline: {e}"
+            )
 
-    def get_pipeline(self, name: str) -> FlextResult[FlextTypes.Dict]:
+    def get_pipeline(self, name: str) -> FlextResult[dict[str, object]]:
         """Get pipeline information."""
         try:
-            return FlextResult[FlextTypes.Dict].ok({
+            return FlextResult[dict[str, object]].ok({
                 "pipeline": name,
                 "status": "active",
             })
         except Exception as e:
-            return FlextResult[FlextTypes.Dict].fail(f"Failed to get pipeline: {e}")
+            return FlextResult[dict[str, object]].fail(f"Failed to get pipeline: {e}")
 
-    def list_pipelines(self: Self) -> FlextResult[list[FlextTypes.Dict]]:
+    def list_pipelines(self: Self) -> FlextResult[list[dict[str, object]]]:
         """List all pipelines."""
         try:
-            return FlextResult[list[FlextTypes.Dict]].ok([])
+            return FlextResult[list[dict[str, object]]].ok([])
         except Exception as e:
-            return FlextResult[list[FlextTypes.Dict]].fail(
+            return FlextResult[list[dict[str, object]]].fail(
                 f"Failed to list pipelines: {e}"
             )
 
-    def get_pipeline_metrics(self, name: str) -> FlextResult[FlextTypes.Dict]:
+    def get_pipeline_metrics(self, name: str) -> FlextResult[dict[str, object]]:
         """Get pipeline metrics."""
         try:
-            return FlextResult[FlextTypes.Dict].ok({
+            return FlextResult[dict[str, object]].ok({
                 "pipeline": name,
                 "metrics": {
                     "executions": 0,
@@ -195,7 +198,7 @@ class FlextApplicationPipelineService(FlextService[str]):
                 },
             })
         except Exception as e:
-            return FlextResult[FlextTypes.Dict].fail(
+            return FlextResult[dict[str, object]].fail(
                 f"Failed to get pipeline metrics: {e}"
             )
 

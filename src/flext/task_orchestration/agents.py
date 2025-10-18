@@ -17,8 +17,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import cast
 
-from flext_core import FlextLogger, FlextResult, FlextTypes
+from flext_core import FlextLogger, FlextResult
 
+from .constants import FlextTaskOrchestrationConstants
 from .models import (
     FlextTaskOrchestrationModels,
 )
@@ -102,12 +103,12 @@ class TaskOrchestrator:
         current_requirement = None
 
         for line in lines:
-            line = line.strip()
-            if not line:
+            stripped_line = line.strip()
+            if not stripped_line:
                 continue
 
             # Check for numbered lists
-            numbered_match = re.match(r"^(\d+)[\.\)]\s*(.+)", line)
+            numbered_match = re.match(r"^(\d+)[\.\)]\s*(.+)", stripped_line)
             if numbered_match:
                 if current_requirement:
                     requirements.append(current_requirement)
@@ -122,7 +123,7 @@ class TaskOrchestrator:
                 continue
 
             # Check for bullet points
-            bullet_match = re.match(r"^[-*]\s*(.+)", line)
+            bullet_match = re.match(r"^[-*]\s*(.+)", stripped_line)
             if bullet_match:
                 if current_requirement:
                     requirements.append(current_requirement)
@@ -143,7 +144,7 @@ class TaskOrchestrator:
             ]
 
             for pattern in task_patterns:
-                match = re.match(pattern, line)
+                match = re.match(pattern, stripped_line)
                 if match:
                     if current_requirement:
                         requirements.append(current_requirement)
@@ -160,15 +161,16 @@ class TaskOrchestrator:
             # Add to current requirement description
             if (
                 current_requirement
-                and line
+                and stripped_line
                 and not any(
-                    re.match(p, line) for p in task_patterns + [r"^\d+[\.\)]", r"^[-*]"]
+                    re.match(p, stripped_line)
+                    for p in task_patterns + [r"^\d+[\.\)]", r"^[-*]"]
                 )
             ):
                 if current_requirement["description"]:
-                    current_requirement["description"] += " " + line
+                    current_requirement["description"] += " " + stripped_line
                 else:
-                    current_requirement["description"] = line
+                    current_requirement["description"] = stripped_line
 
         # Add final requirement
         if current_requirement:
@@ -226,7 +228,7 @@ class TaskOrchestrator:
 
     def _generate_clarification_questions(
         self, requirements: list[dict[str, object]]
-    ) -> FlextTypes.StringList:
+    ) -> list[str]:
         """Generate clarification questions for requirements."""
         questions = []
 
@@ -393,9 +395,7 @@ class TaskDecomposer:
 
         return has_complex_indicators or has_multiple_components
 
-    def _decompose_by_phases(
-        self, req: dict[str, object], start_counter: int
-    ) -> list[Task]:
+    def _decompose_by_phases(self, req: dict[str, object]) -> list[Task]:
         """Decompose by development phases."""
         phases = [
             ("Analysis", "Analyze requirements and design approach"),
@@ -427,17 +427,13 @@ class TaskDecomposer:
 
         return subtasks
 
-    def _decompose_by_components(
-        self, req: dict[str, object], start_counter: int
-    ) -> list[Task]:
+    def _decompose_by_components(self, _req: dict[str, object]) -> list[Task]:
         """Decompose by system components."""
         # This would be more sophisticated in a real implementation
         # For now, return empty list
         return []
 
-    def _decompose_by_workflow(
-        self, req: dict[str, object], start_counter: int
-    ) -> list[Task]:
+    def _decompose_by_workflow(self, _req: dict[str, object]) -> list[Task]:
         """Decompose by workflow steps."""
         # This would be more sophisticated in a real implementation
         # For now, return empty list
@@ -561,9 +557,7 @@ class DependencyAnalyzer:
 
     def analyze_dependencies(
         self, tasks: list[Task]
-    ) -> FlextResult[
-        tuple[list[Task], list[dict[str, object]], list[FlextTypes.StringList]]
-    ]:
+    ) -> FlextResult[tuple[list[Task], list[dict[str, object]], list[list[str]]]]:
         """Analyze task dependencies and detect conflicts."""
         try:
             self.logger.info(f"Analyzing dependencies for {len(tasks)} tasks")
@@ -584,7 +578,7 @@ class DependencyAnalyzer:
                     tuple[
                         list[Task],
                         list[dict[str, object]],
-                        list[FlextTypes.StringList],
+                        list[list[str]],
                     ]
                 ].fail(validation_result.error)
 
@@ -596,7 +590,7 @@ class DependencyAnalyzer:
                 tuple[
                     list[Task],
                     list[dict[str, object]],
-                    list[FlextTypes.StringList],
+                    list[list[str]],
                 ]
             ].ok((updated_tasks, conflicts, parallel_groups))
 
@@ -607,7 +601,7 @@ class DependencyAnalyzer:
                 tuple[
                     list[Task],
                     list[dict[str, object]],
-                    list[FlextTypes.StringList],
+                    list[list[str]],
                 ]
             ].fail(error)
 
@@ -699,7 +693,12 @@ class DependencyAnalyzer:
 
         # Check for common meaningful words
         common_words = words1.intersection(words2)
-        meaningful_words = {word for word in common_words if len(word) > 3}
+        meaningful_words = {
+            word
+            for word in common_words
+            if len(word)
+            > FlextTaskOrchestrationConstants.Validation.MIN_MEANINGFUL_WORD_LENGTH
+        }
 
         return len(meaningful_words) > 0
 
@@ -812,9 +811,7 @@ class DependencyAnalyzer:
 
         return conflicts
 
-    def _find_parallel_opportunities(
-        self, tasks: list[Task]
-    ) -> list[FlextTypes.StringList]:
+    def _find_parallel_opportunities(self, tasks: list[Task]) -> list[list[str]]:
         """Find tasks that can run in parallel."""
         parallel_groups = []
         remaining_tasks = tasks.copy()

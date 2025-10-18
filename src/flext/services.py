@@ -20,7 +20,6 @@ from flext_core import (
     FlextLogger,
     FlextResult,
     FlextService,
-    FlextTypes,
 )
 
 from flext.application_handlers import (
@@ -39,7 +38,7 @@ class FlextUnifiedServices(FlextService[str]):
     proper integration with flext-core service patterns.
     """
 
-    def __init__(self, **_data: FlextTypes.Dict) -> None:
+    def __init__(self, **_data: dict[str, object]) -> None:
         """Initialize unified services with flext-core integration."""
         super().__init__()
         self._logger = FlextLogger(__name__)
@@ -89,20 +88,20 @@ class FlextUnifiedServices(FlextService[str]):
 
         def execute_pipeline_workflow(
             self, pipeline_id: str
-        ) -> FlextResult[FlextTypes.Dict]:
+        ) -> FlextResult[dict[str, object]]:
             """Execute complete pipeline workflow."""
             # Execute pipeline using service - FlextResult handles errors
-            result: FlextResult[FlextTypes.Dict] = (
+            result: FlextResult[dict[str, object]] = (
                 self._pipeline_service.execute_pipeline(pipeline_id)
             )
 
             if result.is_success:
-                return FlextResult[FlextTypes.Dict].ok({
+                return FlextResult[dict[str, object]].ok({
                     "pipeline_id": pipeline_id,
                     "status": "completed",
                     "result": result.value,
                 })
-            return FlextResult[FlextTypes.Dict].fail(
+            return FlextResult[dict[str, object]].fail(
                 f"Pipeline execution failed: {result.error}"
             )
 
@@ -133,7 +132,7 @@ class FlextUnifiedServices(FlextService[str]):
             coverage: bool = True,
             parallel: bool = True,
             integration: bool = False,
-        ) -> FlextResult[FlextTypes.Dict]:
+        ) -> FlextResult[dict[str, object]]:
             """Unified test execution eliminating CLI duplication."""
             try:
                 # Build test command
@@ -162,7 +161,7 @@ class FlextUnifiedServices(FlextService[str]):
                     timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT,
                 )
 
-                return FlextResult[FlextTypes.Dict].ok({
+                return FlextResult[dict[str, object]].ok({
                     "returncode": result.returncode,
                     "stdout": result.stdout,
                     "stderr": result.stderr,
@@ -172,14 +171,14 @@ class FlextUnifiedServices(FlextService[str]):
             except Exception as e:
                 error = f"Test execution failed: {e}"
                 self._logger.exception(error)
-                return FlextResult[FlextTypes.Dict].fail(error)
+                return FlextResult[dict[str, object]].fail(error)
 
         def execute_quality_check(
             self, *, fix: bool = False
-        ) -> FlextResult[FlextTypes.Dict]:
+        ) -> FlextResult[dict[str, object]]:
             """Unified quality check eliminating CLI duplication."""
             try:
-                commands: list[tuple[str, FlextTypes.StringList]] = []
+                commands: list[tuple[str, list[str]]] = []
                 # Lint command
                 lint_cmd = ["ruff", "check", "src/"]
                 if fix:
@@ -188,7 +187,7 @@ class FlextUnifiedServices(FlextService[str]):
                 # Type check command
                 commands.extend([("lint", lint_cmd), ("type", ["mypy", "src/"])])
 
-                results: FlextTypes.Dict = {}
+                results: dict[str, object] = {}
                 overall_success = True
 
                 for name, cmd in commands:
@@ -212,7 +211,7 @@ class FlextUnifiedServices(FlextService[str]):
                         results[name] = {"success": False, "error": str(e)}
                         overall_success = False
 
-                return FlextResult[FlextTypes.Dict].ok({
+                return FlextResult[dict[str, object]].ok({
                     "overall_success": overall_success,
                     "checks": results,
                 })
@@ -220,11 +219,11 @@ class FlextUnifiedServices(FlextService[str]):
             except Exception as e:
                 error = f"Quality check failed: {e}"
                 self._logger.exception(error)
-                return FlextResult[FlextTypes.Dict].fail(error)
+                return FlextResult[dict[str, object]].fail(error)
 
         def execute_build_check(
             self, module: str | None = None
-        ) -> FlextResult[FlextTypes.Dict]:
+        ) -> FlextResult[dict[str, object]]:
             """Unified build check eliminating CLI duplication."""
             try:
                 # Check if it's a Python project with pyproject.toml
@@ -248,7 +247,7 @@ class FlextUnifiedServices(FlextService[str]):
                     timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT,
                 )
 
-                return FlextResult[FlextTypes.Dict].ok({
+                return FlextResult[dict[str, object]].ok({
                     "returncode": result.returncode,
                     "stdout": result.stdout,
                     "stderr": result.stderr,
@@ -258,7 +257,7 @@ class FlextUnifiedServices(FlextService[str]):
             except Exception as e:
                 error = f"Build check failed: {e}"
                 self._logger.exception(error)
-                return FlextResult[FlextTypes.Dict].fail(error)
+                return FlextResult[dict[str, object]].fail(error)
 
     def create_test_services(self: Self) -> _TestServices:
         """Create unified test service coordinator - ELIMINATES CLI duplication."""

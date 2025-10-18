@@ -39,7 +39,7 @@ class FlextWorkspaceService(FlextService[str]):
         - Interface Segregation: Focused workspace interface
     """
 
-    def __init__(self, **_data: FlextTypes.Dict) -> None:
+    def __init__(self, **_data: dict[str, object]) -> None:
         """Initialize workspace service with flext-core patterns."""
         super().__init__()
         self._logger = FlextLogger(__name__)
@@ -100,8 +100,8 @@ class FlextWorkspaceService(FlextService[str]):
         ) -> FlextResult[FlextModels.Project]:
             """Analyze individual project for type and characteristics."""
             try:
-                # Detect project type using FlextTypes.Project.ProjectType
-                project_type: FlextTypes.Project.ProjectType = "application"
+                # Detect project type using FlextTypes.ProjectType
+                project_type: FlextTypes.ProjectType = "application"
                 has_pyproject = (project_path / "pyproject.toml").exists()
                 has_go_mod = (project_path / "go.mod").exists()
                 has_package_json = (project_path / "package.json").exists()
@@ -181,7 +181,7 @@ class FlextWorkspaceService(FlextService[str]):
 
     def get_workspace_info(
         self, workspace_root: str | None = None
-    ) -> FlextResult[FlextTypes.Dict]:
+    ) -> FlextResult[dict[str, object]]:
         """Get comprehensive workspace information."""
         try:
             workspace_path = (
@@ -193,7 +193,7 @@ class FlextWorkspaceService(FlextService[str]):
                 self.discover_workspace_projects(str(workspace_path))
             )
             if projects_result.is_failure:
-                return FlextResult[FlextTypes.Dict].fail(
+                return FlextResult[dict[str, object]].fail(
                     f"Failed to discover projects: {projects_result.error}"
                 )
 
@@ -203,7 +203,7 @@ class FlextWorkspaceService(FlextService[str]):
             # Calculate total size (mock for now)
             total_size_mb = len(projects) * 10.5  # Mock calculation
 
-            workspace_info: FlextTypes.Dict = {
+            workspace_info: dict[str, object] = {
                 "name": workspace_path.name,
                 "path": str(workspace_path),
                 "project_count": len(projects),
@@ -212,17 +212,17 @@ class FlextWorkspaceService(FlextService[str]):
                 "status": "ready",
             }
 
-            return FlextResult[FlextTypes.Dict].ok(workspace_info)
+            return FlextResult[dict[str, object]].ok(workspace_info)
 
         except Exception as e:
             error = f"Failed to get workspace info: {e}"
             self._logger.exception(error)
-            return FlextResult[FlextTypes.Dict].fail(error)
+            return FlextResult[dict[str, object]].fail(error)
 
     def execute(self: Self) -> FlextResult[str]:
         """Execute workspace service - required by FlextService abstract method."""
         try:
-            workspace_info_result: FlextResult[FlextTypes.Dict] = (
+            workspace_info_result: FlextResult[dict[str, object]] = (
                 self.get_workspace_info()
             )
             if workspace_info_result.is_failure:

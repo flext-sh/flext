@@ -14,7 +14,7 @@ import inspect
 import tempfile
 from pathlib import Path
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextResult
 
 from flext_quality.tools import ConflictAnalyzer
 
@@ -26,7 +26,7 @@ class TestConflictAnalyzer:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_test_project_data() -> FlextTypes.Dict:
+        def create_test_project_data() -> dict[str, object]:
             """Create test project data."""
             return {
                 "project_path": "/tmp/flext_test_project",
@@ -35,7 +35,7 @@ class TestConflictAnalyzer:
             }
 
         @staticmethod
-        def create_test_conflict_data() -> list[FlextTypes.StringDict]:
+        def create_test_conflict_data() -> list[dict[str, str]]:
             """Create test conflict data."""
             return [
                 {
@@ -303,9 +303,7 @@ class TestConflictAnalyzer:
         assert len(analyze_sig.parameters) >= 1  # Should have project_path parameter
 
         detect_sig = inspect.signature(analyzer.detect_version_conflicts)
-        assert (
-            len(detect_sig.parameters) >= 0
-        )  # Should have at least self parameter
+        assert len(detect_sig.parameters) >= 0  # Should have at least self parameter
 
     # =============================================================================
     # TEMPORARY FILE TESTS

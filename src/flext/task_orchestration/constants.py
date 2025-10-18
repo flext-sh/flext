@@ -10,6 +10,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from typing import ClassVar
+
 from flext_core import FlextConstants
 
 
@@ -64,6 +66,11 @@ class FlextTaskOrchestrationConstants(FlextConstants):
         DEFAULT_AUTO_ASSIGN = True
         DEFAULT_MIN_ESTIMATION_HOURS = 0.1
         DEFAULT_MAX_ESTIMATION_HOURS = 1000.0
+
+    class Validation:
+        """Validation constants."""
+
+        MIN_MEANINGFUL_WORD_LENGTH = 3
 
     class Estimation:
         """Estimation constants for task effort calculation."""
@@ -149,10 +156,10 @@ class FlextTaskOrchestrationConstants(FlextConstants):
     class FileExtensions:
         """Supported file extensions."""
 
-        MARKDOWN = [".md", ".markdown"]
-        TEXT = [".txt"]
-        JSON = [".json"]
-        YAML = [".yml", ".yaml"]
+        MARKDOWN: ClassVar[list[str]] = [".md", ".markdown"]
+        TEXT: ClassVar[list[str]] = [".txt"]
+        JSON: ClassVar[list[str]] = [".json"]
+        YAML: ClassVar[list[str]] = [".yml", ".yaml"]
 
     class DirectoryStructure:
         """Directory structure constants."""

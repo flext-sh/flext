@@ -13,8 +13,7 @@ from __future__ import annotations
 import inspect
 from pathlib import Path
 
-from flext_core import FlextResult, FlextService, FlextTypes
-from flext_tests import FlextTestsDomains
+from flext_core import FlextResult, FlextService
 
 from flext import FlextControlPanelCli
 
@@ -26,7 +25,7 @@ class TestFlextControlPanelCli:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_test_cli_data() -> FlextTypes.Dict:
+        def create_test_cli_data() -> dict[str, object]:
             """Create test CLI data."""
             return {
                 "config_path": "/tmp/test_config.json",
@@ -35,7 +34,7 @@ class TestFlextControlPanelCli:
             }
 
         @staticmethod
-        def create_test_command_data() -> FlextTypes.Dict:
+        def create_test_command_data() -> dict[str, object]:
             """Create test command data."""
             return {
                 "command": "test_command",

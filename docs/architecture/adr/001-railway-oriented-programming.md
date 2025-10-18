@@ -1,4 +1,39 @@
 # ADR-001: Railway-Oriented Programming with FlextResult[T]
+## Table of Contents
+
+- [ADR-001: Railway-Oriented Programming with FlextResult[T]](#adr-001-railway-oriented-programming-with-flextresultt)
+  - [Status](#status)
+  - [Context](#context)
+  - [Decision](#decision)
+    - [Core Implementation](#core-implementation)
+    - [Usage Patterns](#usage-patterns)
+      - [Basic Usage](#basic-usage)
+- [Railway composition](#railway-composition)
+      - [Error Handling](#error-handling)
+  - [Consequences](#consequences)
+    - [Positive Consequences](#positive-consequences)
+      - [1. Improved Error Handling](#1-improved-error-handling)
+      - [2. Better Code Organization](#2-better-code-organization)
+      - [3. Enhanced Maintainability](#3-enhanced-maintainability)
+      - [4. Performance Benefits](#4-performance-benefits)
+    - [Negative Consequences](#negative-consequences)
+      - [1. Learning Curve](#1-learning-curve)
+      - [2. Code Verbosity](#2-code-verbosity)
+      - [3. Integration Challenges](#3-integration-challenges)
+      - [4. Performance Considerations](#4-performance-considerations)
+  - [Alternatives Considered](#alternatives-considered)
+    - [1. Traditional Exception Handling](#1-traditional-exception-handling)
+    - [2. Optional/Maybe Pattern](#2-optionalmaybe-pattern)
+    - [3. Either/Result Pattern](#3-eitherresult-pattern)
+    - [4. Custom Exception Hierarchy](#4-custom-exception-hierarchy)
+    - [5. Go-style Error Handling](#5-go-style-error-handling)
+  - [Implementation Notes](#implementation-notes)
+    - [1. Migration Strategy](#1-migration-strategy)
+    - [2. Integration with Existing Code](#2-integration-with-existing-code)
+    - [3. Testing Strategy](#3-testing-strategy)
+    - [4. Performance Optimization](#4-performance-optimization)
+  - [References](#references)
+
 
 ## Status
 
@@ -259,6 +294,6 @@ def process_payment(amount: float) -> FlextResult[Payment]:
 
 ---
 
-**Last Updated**: 2025-01-XX  
-**Version**: 1.0.0  
+**Last Updated**: 2025-01-XX
+**Version**: 1.0.0
 **Maintainer**: FLEXT Architecture Team

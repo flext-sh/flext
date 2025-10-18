@@ -212,9 +212,7 @@ warn_unused_ignores = false
 
 [tool.poetry]
 
-packages = [
-	{ from = "src", include = "flext" },
-]
+packages = [{ from = "src", include = "flext" }]
 
 [tool.poetry.dependencies]
 client-a-oud-mig = { path = "./client-a-oud-mig", develop = true }
@@ -369,19 +367,19 @@ useLibraryCodeForTypes = true
 
 [[tool.pyright.executionEnvironments]]
 root = "./tests"
-extraPaths = ["./src", "./flext-core/src"]
+extraPaths = ["**/tests/*.py"]
 reportImplicitRelativeImport = false
 reportPrivateUsage = false
 
 [[tool.pyright.executionEnvironments]]
 root = "./"
-extraPaths = ["**/models.py"]
+extraPaths = ["**/config.py", "**/models.py"]
+reportInvalidTypeForm = false
 reportUndefinedVariable = false
-reportUnknownVariableType = false
-reportUnknownParameterType = false
-reportUnknownMemberType = false
 reportUnknownArgumentType = false
-
+reportUnknownMemberType = false
+reportUnknownParameterType = false
+reportUnknownVariableType = false
 
 [tool.pyrefly]
 # NOTE: Pyrefly (MyPy successor) with Pydantic plugin properly handles:

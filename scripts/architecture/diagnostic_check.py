@@ -18,7 +18,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-from flext_core import FlextConstants, FlextLogger, FlextTypes, FlextUtilities
+from flext_core import FlextConstants, FlextLogger, FlextUtilities
 from mypy import api as mypy_api
 
 logger = FlextLogger(__name__)
@@ -47,7 +47,7 @@ class ProjectStatus:
     mypy_status: str = STATUS_SKIP
     test_status: str = STATUS_SKIP
     poetry_install: str = STATUS_SKIP
-    errors: FlextTypes.StringList = field(default_factory=list)
+    errors: list[str] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         """Initialize post-creation setup for ProjectStatus."""
@@ -239,9 +239,9 @@ class FlextDiagnostic:
 
         return status
 
-    def check_architecture_violations(self) -> dict[str, FlextTypes.StringList]:
+    def check_architecture_violations(self) -> dict[str, list[str]]:
         """Check architecture violations."""
-        violations: dict[str, FlextTypes.StringList] = {}
+        violations: dict[str, list[str]] = {}
 
         # Check flext-core (should not have specific imports)
         core_path = self.workspace_root / "flext-core" / "src"
@@ -263,7 +263,7 @@ class FlextDiagnostic:
 
         return violations
 
-    def run_full_diagnostic(self) -> FlextTypes.Dict:
+    def run_full_diagnostic(self) -> dict[str, object]:
         """Run full diagnostic."""
         # Check all projects
         for project_name in self.project_levels:
@@ -294,7 +294,7 @@ class FlextDiagnostic:
             "summary": self.generate_summary(),
         }
 
-    def generate_summary(self) -> FlextTypes.Dict:
+    def generate_summary(self) -> dict[str, object]:
         """Generate summary."""
         total_projects = len(self.results)
         projects_with_makefile = sum(1 for s in self.results.values() if s.has_makefile)
@@ -328,7 +328,7 @@ class FlextDiagnostic:
             "projects_with_errors": projects_with_errors,
         }
 
-    def print_report(self, report: FlextTypes.Dict) -> None:
+    def print_report(self, report: dict[str, object]) -> None:
         """Print formatted report."""
         # Summary
         summary_obj = report["summary"]
@@ -341,7 +341,7 @@ class FlextDiagnostic:
             projects_obj = report["projects"]
             if not isinstance(projects_obj, dict):
                 continue
-            level_projects: list[tuple[str, FlextTypes.Dict]] = [
+            level_projects: list[tuple[str, dict[str, object]]] = [
                 (name, data)
                 for name, data in projects_obj.items()
                 if isinstance(data, dict)

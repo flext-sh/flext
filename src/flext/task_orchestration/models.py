@@ -16,7 +16,7 @@ from datetime import datetime
 from enum import StrEnum
 from pathlib import Path
 
-from flext_core import FlextConfig, FlextModels, FlextResult, FlextTypes
+from flext_core import FlextConfig, FlextModels, FlextResult
 from pydantic import ConfigDict, Field, field_validator
 from pydantic_settings import SettingsConfigDict
 
@@ -138,7 +138,7 @@ class FlextTaskOrchestrationModels(FlextModels):
         dependencies: list[FlextTaskOrchestrationModels.TaskDependency] = Field(
             default_factory=list, description="Task dependencies with validation"
         )
-        blocks: FlextTypes.StringList = Field(
+        blocks: list[str] = Field(
             default_factory=list, description="Tasks blocked by this task"
         )
 
@@ -153,7 +153,7 @@ class FlextTaskOrchestrationModels(FlextModels):
         due_date: datetime | None = Field(None, description="Task due date deadline")
 
         # Metadata
-        tags: FlextTypes.StringList = Field(
+        tags: list[str] = Field(
             default_factory=list, description="Task categorization tags"
         )
         category: str | None = Field(None, description="Task category classification")
@@ -166,7 +166,7 @@ class FlextTaskOrchestrationModels(FlextModels):
             le=FlextTaskOrchestrationConstants.TaskValidation.MAX_PROGRESS_PERCENTAGE,
             description="Progress percentage (0-100)",
         )
-        notes: FlextTypes.StringList = Field(
+        notes: list[str] = Field(
             default_factory=list, description="Task notes and status updates"
         )
 
@@ -337,14 +337,14 @@ class FlextTaskOrchestrationModels(FlextModels):
         )
 
         # Detailed results
-        task_ids: FlextTypes.StringList = Field(
+        task_ids: list[str] = Field(
             default_factory=list, description="List of created or updated task IDs"
         )
-        conflicts: list[FlextTypes.Dict] = Field(
+        conflicts: list[dict[str, object]] = Field(
             default_factory=list,
             description="Detailed information about detected conflicts",
         )
-        recommendations: FlextTypes.StringList = Field(
+        recommendations: list[str] = Field(
             default_factory=list,
             description="System-generated recommendations for optimization",
         )
@@ -393,19 +393,19 @@ class FlextTaskOrchestrationModels(FlextModels):
         tasks: list[FlextTaskOrchestrationModels.Task] = Field(
             ..., description="All tasks included in this execution plan"
         )
-        execution_order: FlextTypes.StringList = Field(
+        execution_order: list[str] = Field(
             ..., description="Ordered list of task IDs defining the execution sequence"
         )
-        parallel_groups: list[FlextTypes.StringList] = Field(
+        parallel_groups: list[list[str]] = Field(
             default_factory=list,
             description="Groups of task IDs that can execute concurrently",
         )
 
         # Resource allocation
-        agent_assignments: FlextTypes.Dict = Field(
+        agent_assignments: dict[str, object] = Field(
             default_factory=dict, description="Mapping of agents to assigned task IDs"
         )
-        resource_requirements: FlextTypes.Dict = Field(
+        resource_requirements: dict[str, object] = Field(
             default_factory=dict,
             description="Resource requirements and availability constraints",
         )

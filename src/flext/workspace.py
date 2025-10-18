@@ -19,7 +19,7 @@ from flext.workspace_service import (
     create_workspace_service,
 )
 
-WorkspaceStatus = FlextTypes.Project.ProjectStatus
+WorkspaceStatus = FlextTypes.ProjectStatus
 
 # WorkspaceStatus is imported directly from flext_core
 

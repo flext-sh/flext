@@ -1,8 +1,36 @@
 # FLEXT Ecosystem Documentation
+## Table of Contents
+
+- [FLEXT Ecosystem Documentation](#flext-ecosystem-documentation)
+  - [🚀 Quick Start](#-quick-start)
+  - [📊 Current Status](#-current-status)
+  - [📚 Documentation Sections](#-documentation-sections)
+    - [📈 Reports & Status](#-reports--status)
+    - [🏗️ Architecture & Design](#-architecture--design)
+    - [🔧 Development & Operations](#-development--operations)
+    - [📖 API Reference](#-api-reference)
+    - [📋 Standards & Conventions](#-standards--conventions)
+    - [🏭 Projects](#-projects)
+      - [Core Libraries](#core-libraries)
+      - [Infrastructure Libraries](#infrastructure-libraries)
+      - [Data Integration Tools](#data-integration-tools)
+      - [Singer Ecosystem](#singer-ecosystem)
+      - [DBT Projects](#dbt-projects)
+      - [Enterprise Integration](#enterprise-integration)
+      - [Development Tools](#development-tools)
+  - [🎯 Key Features](#-key-features)
+    - [Core Framework](#core-framework)
+    - [Enterprise Integration](#enterprise-integration)
+    - [Data Pipeline](#data-pipeline)
+    - [Quality Assurance](#quality-assurance)
+  - [📞 Support & Community](#-support--community)
+  - [🔄 Recent Updates](#-recent-updates)
+
 
 **Version**: 1.0.0 | **Status**: 100% Operational | **Last Updated**: October 2025
 
-Welcome to the comprehensive documentation for the FLEXT ecosystem - a complete platform for data integration, transformation, and enterprise connectivity.
+Welcome to the comprehensive documentation for the FLEXT ecosystem - a complete platform for data integration,
+     transformation, and enterprise connectivity.
 
 ---
 

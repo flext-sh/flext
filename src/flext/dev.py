@@ -13,7 +13,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Protocol, Self, assert_never
 
-from flext_core import FlextLogger, FlextResult, FlextService, FlextTypes
+from flext_core import FlextLogger, FlextResult, FlextService
 
 from flext.dev_enums import FlextDevEnums
 from flext.dev_models import FlextAdvancedDevModels
@@ -33,7 +33,7 @@ class FlextAdvancedDevToolsManager(
     - Discriminated unions for operation types
     """
 
-    def __init__(self, **_data: FlextTypes.Dict) -> None:
+    def __init__(self, **_data: dict[str, object]) -> None:
         """Initialize development tools service with advanced patterns."""
         super().__init__()
         self._logger = FlextLogger(__name__)
@@ -132,7 +132,7 @@ class FlextAdvancedDevToolsManager(
             self._manager = manager
 
         def create_test_operation(
-            self, operation_data: FlextTypes.Dict
+            self, operation_data: dict[str, object]
         ) -> FlextResult[FlextAdvancedDevModels.TestOperation]:
             """Create test operation from data with validation."""
             try:
@@ -144,7 +144,7 @@ class FlextAdvancedDevToolsManager(
                 return FlextResult[FlextAdvancedDevModels.TestOperation].fail(str(e))
 
         def create_lint_operation(
-            self, operation_data: FlextTypes.Dict
+            self, operation_data: dict[str, object]
         ) -> FlextResult[FlextAdvancedDevModels.LintOperation]:
             """Create lint operation from data with validation."""
             try:
@@ -156,7 +156,7 @@ class FlextAdvancedDevToolsManager(
                 return FlextResult[FlextAdvancedDevModels.LintOperation].fail(str(e))
 
         def create_operation(
-            self, operation_data: FlextTypes.Dict
+            self, operation_data: dict[str, object]
         ) -> FlextResult[FlextAdvancedDevModels.OperationUnion]:
             """Create operation from data using discriminated unions."""
             try:

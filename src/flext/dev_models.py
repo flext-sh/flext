@@ -12,7 +12,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import shutil
-import subprocess
+import subprocess  # noqa: S404
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Annotated, Literal, Self, TypeVar
@@ -97,7 +97,7 @@ class FlextAdvancedDevModels:
 
         @field_validator("test_types")
         @classmethod
-        def validate_test_types(cls, v: FlextTypes.StringList) -> FlextTypes.StringList:
+        def validate_test_types(cls, v: list[str]) -> list[str]:
             """Validate test types."""
             if not v:
                 msg = "At least one test type must be specified"
@@ -110,11 +110,12 @@ class FlextAdvancedDevModels:
             try:
                 # Use full path to avoid subprocess warning
                 python_path = shutil.which("python") or "python"
-                subprocess.run(
+                subprocess.run(  # noqa: S603
                     [python_path, "-m", "pytest", "--version"],
                     capture_output=True,
                     check=True,
                     timeout=10,
+                    shell=False,  # Explicit for security
                 )
                 return FlextResult[None].ok(None)
             except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
@@ -140,11 +141,15 @@ class FlextAdvancedDevModels:
 
         def validate_prerequisites(self: Self) -> FlextResult[None]:
             """Validate linting prerequisites."""
-            missing_tools: FlextTypes.StringList = []
+            missing_tools: list[str] = []
             for tool in self.tools:
                 try:
-                    subprocess.run(
-                        [tool, "--version"], capture_output=True, check=True, timeout=10
+                    subprocess.run(  # noqa: S603
+                        [tool, "--version"],
+                        capture_output=True,
+                        check=True,
+                        timeout=10,
+                        shell=False,
                     )
                 except (
                     subprocess.CalledProcessError,
@@ -172,21 +177,23 @@ class FlextAdvancedDevModels:
 
         def validate_prerequisites(self: Self) -> FlextResult[None]:
             """Validate formatting prerequisites."""
-            missing_formatters: FlextTypes.StringList = []
+            missing_formatters: list[str] = []
             for formatter in self.formatters:
                 try:
                     if formatter == "gofmt":
-                        subprocess.run(
+                        subprocess.run(  # noqa: S603
                             [formatter, "-help"],
                             capture_output=True,
                             check=False,
                             timeout=5,
+                            shell=False,
                         )
                     else:
-                        subprocess.run(
+                        subprocess.run(  # noqa: S603
                             [formatter, "--version"],
                             capture_output=True,
                             check=True,
+                            shell=False,
                             timeout=10,
                         )
                 except (subprocess.TimeoutExpired, FileNotFoundError):
@@ -210,7 +217,7 @@ class FlextAdvancedDevModels:
 
         name: str = Field(..., min_length=1, max_length=100)
         path: ProjectPath = Field(..., description="Project path")
-        project_type: FlextTypes.Project.ProjectType = Field(
+        project_type: FlextTypes.ProjectType = Field(
             ..., description="Detected project type"
         )
         has_tests: bool = Field(default=False, description="Has test directory")
@@ -256,7 +263,7 @@ class FlextAdvancedDevModels:
         exit_code: int = Field(..., description="Exit code")
         stdout_lines: int = Field(0, ge=0, description="Standard output line count")
         stderr_lines: int = Field(0, ge=0, description="Standard error line count")
-        artifacts: FlextTypes.Dict = Field(
+        artifacts: dict[str, object] = Field(
             default_factory=dict, description="Operation artifacts"
         )
 

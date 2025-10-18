@@ -16,7 +16,6 @@ from pathlib import Path
 
 import pytest
 from flext_core import FlextResult, FlextTypes
-from flext_tests import FlextTestsDomains
 
 from flext_quality.tools import PoetryValidator
 
@@ -44,7 +43,7 @@ class TestPoetryValidator:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_test_project_data(project_path: str) -> FlextTypes.Dict:
+        def create_test_project_data(project_path: str) -> dict[str, object]:
             """Create test project data."""
             return {
                 "project_path": project_path,

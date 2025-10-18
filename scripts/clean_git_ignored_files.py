@@ -10,16 +10,14 @@ SPDX-License-Identifier: Proprietary
 
 from __future__ import annotations
 
-import subprocess
+import subprocess  # noqa: S404
 import sys
 from pathlib import Path
-
-from flext_core import FlextTypes
 
 FLEXT_ROOT = Path("/home/marlonsc/flext")
 
 
-def get_tracked_files(project_dir: Path) -> FlextTypes.StringList:
+def get_tracked_files(project_dir: Path) -> list[str]:
     """Get list of all tracked files in git.
 
     Args:
@@ -31,7 +29,7 @@ def get_tracked_files(project_dir: Path) -> FlextTypes.StringList:
     """
     try:
         result = subprocess.run(
-            ["git", "ls-files"],
+            ["/usr/bin/git", "ls-files"],
             cwd=project_dir,
             capture_output=True,
             text=True,
@@ -55,7 +53,7 @@ def check_if_ignored(project_dir: Path, file_path: str) -> bool:
     """
     try:
         result = subprocess.run(
-            ["git", "check-ignore", "-q", file_path],
+            ["/usr/bin/git", "check-ignore", "-q", file_path],
             cwd=project_dir,
             capture_output=True,
             check=False,
@@ -79,7 +77,7 @@ def untrack_file(project_dir: Path, file_path: str) -> bool:
     """
     try:
         subprocess.run(
-            ["git", "rm", "--cached", file_path],
+            ["/usr/bin/git", "rm", "--cached", file_path],
             cwd=project_dir,
             capture_output=True,
             text=True,
@@ -91,9 +89,7 @@ def untrack_file(project_dir: Path, file_path: str) -> bool:
         return False
 
 
-def clean_project(
-    project_dir: Path, dry_run: bool = True
-) -> dict[str, FlextTypes.StringList]:
+def clean_project(project_dir: Path, dry_run: bool = True) -> dict[str, list[str]]:  # noqa: FBT001,FBT002
     """Clean tracked files that should be ignored.
 
     Args:

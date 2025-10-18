@@ -1,8 +1,30 @@
 # FLEXT System Context Diagram
+## Table of Contents
+
+- [FLEXT System Context Diagram](#flext-system-context-diagram)
+  - [Overview](#overview)
+  - [System Context Diagram](#system-context-diagram)
+  - [Key Stakeholders](#key-stakeholders)
+    - [Primary Users](#primary-users)
+    - [External Systems](#external-systems)
+  - [System Responsibilities](#system-responsibilities)
+    - [Core Capabilities](#core-capabilities)
+  - [Quality Attributes](#quality-attributes)
+    - [Performance](#performance)
+    - [Reliability](#reliability)
+    - [Security](#security)
+    - [Maintainability](#maintainability)
+  - [Technology Stack](#technology-stack)
+    - [Runtime Environment](#runtime-environment)
+    - [Data Storage](#data-storage)
+    - [Integration Protocols](#integration-protocols)
+    - [Monitoring and Observability](#monitoring-and-observability)
+
 
 ## Overview
 
-The FLEXT Enterprise Data Integration Platform serves as a comprehensive data integration solution for enterprise environments, connecting various data sources and destinations through a unified, scalable architecture.
+The FLEXT Enterprise Data Integration Platform serves as a comprehensive data integration solution for enterprise environments,
+     connecting various data sources and destinations through a unified, scalable architecture.
 
 ## System Context Diagram
 
@@ -195,6 +217,6 @@ graph TB
 
 ---
 
-**Last Updated**: 2025-01-XX  
-**Version**: 1.0.0  
+**Last Updated**: 2025-01-XX
+**Version**: 1.0.0
 **Maintainer**: FLEXT Architecture Team

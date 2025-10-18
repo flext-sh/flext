@@ -1,4 +1,38 @@
 # Project Documentation
+## Table of Contents
+
+- [Project Documentation](#project-documentation)
+  - [Core Projects](#core-projects)
+    - [🚀 [flext-core](./flext-core.md)](#-flext-coreflext-coremd)
+    - [📄 [flext-ldif](./flext-ldif.md)](#-flext-ldifflext-ldifmd)
+  - [Infrastructure Projects](#infrastructure-projects)
+    - [🌐 [flext-api](./flext-api.md)](#-flext-apiflext-apimd)
+    - [🔐 [flext-auth](./flext-auth.md)](#-flext-authflext-authmd)
+    - [🗄️ [flext-ldap](./flext-ldap.md)](#-flext-ldapflext-ldapmd)
+    - [🗃️ [flext-oracle](./flext-oracle.md)](#-flext-oracleflext-oraclemd)
+    - [🔗 [flext-grpc](./flext-grpc.md)](#-flext-grpcflext-grpcmd)
+  - [Domain Projects](#domain-projects)
+    - [📦 [flext-meltano](./flext-meltano.md)](#-flext-meltanoflext-meltanomd)
+    - [🔍 [flext-observability](./flext-observability.md)](#-flext-observabilityflext-observabilitymd)
+    - [✨ [flext-quality](./flext-quality.md)](#-flext-qualityflext-qualitymd)
+  - [Specialized Projects](#specialized-projects)
+    - [🎯 [flext-plugin](./flext-plugin.md)](#-flext-pluginflext-pluginmd)
+    - [🧪 [flext-tests](./flext-tests.md)](#-flext-testsflext-testsmd)
+    - [🏭 [flext-cli](./flext-cli.md)](#-flext-cliflext-climd)
+  - [Integration Guidelines](#integration-guidelines)
+    - [Project Dependencies](#project-dependencies)
+    - [Development Workflow](#development-workflow)
+    - [Release Process](#release-process)
+  - [Getting Started with Projects](#getting-started-with-projects)
+    - [Using flext-core](#using-flext-core)
+- [Set up dependency injection](#set-up-dependency-injection)
+- [Use railway-oriented programming](#use-railway-oriented-programming)
+    - [Using flext-ldif](#using-flext-ldif)
+- [Parse LDIF content](#parse-ldif-content)
+- [Migrate between servers](#migrate-between-servers)
+  - [Project Standards](#project-standards)
+  - [Contributing to Projects](#contributing-to-projects)
+
 
 Detailed documentation for each FLEXT project and library.
 
