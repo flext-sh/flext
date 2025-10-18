@@ -1,6 +1,58 @@
 # FLEXT Data Architecture
+## Table of Contents
 
-This directory contains comprehensive documentation of the FLEXT data architecture, including data models, flow patterns, storage strategies, and integration approaches.
+- [FLEXT Data Architecture](#flext-data-architecture)
+  - [📋 Data Architecture Components](#-data-architecture-components)
+    - [1. [Data Models](./data-models/)](#1-data-modelsdata-models)
+    - [2. [Data Flow Patterns](./data-flow-patterns/)](#2-data-flow-patternsdata-flow-patterns)
+    - [3. [Storage Architecture](./storage-architecture/)](#3-storage-architecturestorage-architecture)
+    - [4. [Integration Patterns](./integration-patterns/)](#4-integration-patternsintegration-patterns)
+    - [5. [Data Quality](./data-quality/)](#5-data-qualitydata-quality)
+    - [6. [Data Governance](./data-governance/)](#6-data-governancedata-governance)
+  - [🎯 FLEXT Data Architecture Overview](#-flext-data-architecture-overview)
+  - [🏗️ Key Data Architecture Principles](#-key-data-architecture-principles)
+    - [1. Data as a Product](#1-data-as-a-product)
+    - [2. Event-Driven Data Architecture](#2-event-driven-data-architecture)
+    - [3. Data Integration Patterns](#3-data-integration-patterns)
+    - [4. Data Quality and Governance](#4-data-quality-and-governance)
+  - [📊 Data Architecture Layers](#-data-architecture-layers)
+    - [1. Data Sources Layer](#1-data-sources-layer)
+    - [2. Data Ingestion Layer](#2-data-ingestion-layer)
+    - [3. Data Processing Layer](#3-data-processing-layer)
+    - [4. Data Storage Layer](#4-data-storage-layer)
+    - [5. Data Serving Layer](#5-data-serving-layer)
+  - [🔄 Data Flow Patterns](#-data-flow-patterns)
+    - [1. ETL (Extract, Transform, Load)](#1-etl-extract-transform-load)
+    - [2. ELT (Extract, Load, Transform)](#2-elt-extract-load-transform)
+    - [3. Stream Processing](#3-stream-processing)
+    - [4. Event-Driven Processing](#4-event-driven-processing)
+  - [🗄️ Data Storage Strategies](#-data-storage-strategies)
+    - [1. PostgreSQL (Primary Database)](#1-postgresql-primary-database)
+    - [2. Redis (Cache and Sessions)](#2-redis-cache-and-sessions)
+    - [3. File Storage (LDIF and Configuration)](#3-file-storage-ldif-and-configuration)
+    - [4. External Data Sources](#4-external-data-sources)
+  - [🔗 Data Integration Approaches](#-data-integration-approaches)
+    - [1. Singer Platform Integration](#1-singer-platform-integration)
+    - [2. LDAP Integration](#2-ldap-integration)
+    - [3. Oracle Integration](#3-oracle-integration)
+    - [4. File System Integration](#4-file-system-integration)
+  - [📈 Data Quality Management](#-data-quality-management)
+    - [1. Data Validation](#1-data-validation)
+    - [2. Data Quality Monitoring](#2-data-quality-monitoring)
+    - [3. Data Correction](#3-data-correction)
+  - [🔒 Data Governance and Compliance](#-data-governance-and-compliance)
+    - [1. Data Classification](#1-data-classification)
+    - [2. Audit and Compliance](#2-audit-and-compliance)
+    - [3. Data Security](#3-data-security)
+  - [📚 Related Documentation](#-related-documentation)
+  - [🤝 Contributing to Data Architecture](#-contributing-to-data-architecture)
+    - [Creating New Data Models](#creating-new-data-models)
+    - [Updating Data Architecture](#updating-data-architecture)
+    - [Review Process](#review-process)
+
+
+This directory contains comprehensive documentation of the FLEXT data architecture, including data models, flow patterns,
+     storage strategies, and integration approaches.
 
 ## 📋 Data Architecture Components
 
@@ -266,6 +318,6 @@ FLEXT implements a comprehensive data architecture that supports:
 
 ---
 
-**Last Updated**: 2025-01-XX  
-**Version**: 1.0.0  
+**Last Updated**: 2025-01-XX
+**Version**: 1.0.0
 **Maintainer**: FLEXT Architecture Team

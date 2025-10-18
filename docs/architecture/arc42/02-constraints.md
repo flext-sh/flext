@@ -1,4 +1,54 @@
 # 2. Constraints
+## Table of Contents
+
+- [2. Constraints](#2-constraints)
+  - [2.1 Technical Constraints](#21-technical-constraints)
+    - [2.1.1 Technology Stack Constraints](#211-technology-stack-constraints)
+      - [Programming Languages](#programming-languages)
+      - [Framework and Library Constraints](#framework-and-library-constraints)
+      - [Database Constraints](#database-constraints)
+    - [2.1.2 Architecture Constraints](#212-architecture-constraints)
+      - [Clean Architecture Requirements](#clean-architecture-requirements)
+      - [Domain-Driven Design Constraints](#domain-driven-design-constraints)
+      - [Railway-Oriented Programming Constraints](#railway-oriented-programming-constraints)
+    - [2.1.3 Performance Constraints](#213-performance-constraints)
+      - [Response Time Requirements](#response-time-requirements)
+      - [Throughput Requirements](#throughput-requirements)
+    - [2.1.4 Security Constraints](#214-security-constraints)
+      - [Authentication and Authorization](#authentication-and-authorization)
+      - [Data Protection](#data-protection)
+  - [2.2 Organizational Constraints](#22-organizational-constraints)
+    - [2.2.1 Team Structure Constraints](#221-team-structure-constraints)
+      - [Development Team](#development-team)
+      - [Skill Level Constraints](#skill-level-constraints)
+    - [2.2.2 Process Constraints](#222-process-constraints)
+      - [Development Process](#development-process)
+      - [Quality Assurance](#quality-assurance)
+    - [2.2.3 Budget Constraints](#223-budget-constraints)
+      - [Infrastructure Costs](#infrastructure-costs)
+      - [Development Costs](#development-costs)
+  - [2.3 Regulatory Constraints](#23-regulatory-constraints)
+    - [2.3.1 Data Protection Regulations](#231-data-protection-regulations)
+      - [GDPR Compliance](#gdpr-compliance)
+      - [SOX Compliance](#sox-compliance)
+    - [2.3.2 Industry Standards](#232-industry-standards)
+      - [Data Integration Standards](#data-integration-standards)
+      - [Security Standards](#security-standards)
+  - [2.4 Environmental Constraints](#24-environmental-constraints)
+    - [2.4.1 Infrastructure Constraints](#241-infrastructure-constraints)
+      - [Network Constraints](#network-constraints)
+      - [Hardware Constraints](#hardware-constraints)
+    - [2.4.2 Operational Constraints](#242-operational-constraints)
+      - [Maintenance Windows](#maintenance-windows)
+      - [Monitoring Constraints](#monitoring-constraints)
+  - [2.5 Compliance Constraints](#25-compliance-constraints)
+    - [2.5.1 Data Governance](#251-data-governance)
+      - [Data Classification](#data-classification)
+      - [Audit Requirements](#audit-requirements)
+    - [2.5.2 Security Compliance](#252-security-compliance)
+      - [Vulnerability Management](#vulnerability-management)
+      - [Access Management](#access-management)
+
 
 ## 2.1 Technical Constraints
 
@@ -324,6 +374,6 @@
 
 ---
 
-**Last Updated**: 2025-01-XX  
-**Version**: 1.0.0  
+**Last Updated**: 2025-01-XX
+**Version**: 1.0.0
 **Maintainer**: FLEXT Architecture Team

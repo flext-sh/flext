@@ -14,7 +14,7 @@ import re
 from datetime import UTC, datetime
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextResult, FlextTypes
+from flext_core import FlextLogger, FlextResult
 
 from .constants import FlextTaskOrchestrationConstants
 
@@ -121,13 +121,14 @@ class RequirementClarifier:
         current_requirement = None
 
         for line in lines:
-            line = line.strip()
-            if not line:
+            stripped_line = line.strip()
+            if not stripped_line:
                 continue
 
             # Check for numbered lists
             numbered_match = re.match(
-                FlextTaskOrchestrationConstants.TaskPatterns.NUMBERED_LIST, line
+                FlextTaskOrchestrationConstants.TaskPatterns.NUMBERED_LIST,
+                stripped_line,
             )
             if numbered_match:
                 if current_requirement:
@@ -142,10 +143,11 @@ class RequirementClarifier:
                 }
                 continue
 
-            # Check for bullet points
-            bullet_match = re.match(
-                FlextTaskOrchestrationConstants.TaskPatterns.BULLET_POINT, line
-            )
+                # Check for bullet points
+                bullet_match = re.match(
+                    FlextTaskOrchestrationConstants.TaskPatterns.BULLET_POINT,
+                    stripped_line,
+                )
             if bullet_match:
                 if current_requirement:
                     requirements.append(current_requirement)
@@ -163,7 +165,7 @@ class RequirementClarifier:
             if current_requirement:
                 if current_requirement["description"]:
                     current_requirement["description"] += " "
-                current_requirement["description"] += line
+                current_requirement["description"] += stripped_line
 
         # Add the last requirement
         if current_requirement:
@@ -249,7 +251,7 @@ class RequirementClarifier:
 
     def _generate_clarification_questions(
         self, requirements: list[dict[str, object]]
-    ) -> FlextTypes.StringList:
+    ) -> list[str]:
         """Generate clarification questions for requirements.
 
         Args:

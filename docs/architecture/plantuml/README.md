@@ -1,6 +1,48 @@
 # FLEXT PlantUML Diagrams
+## Table of Contents
 
-This directory contains PlantUML diagrams for the FLEXT Enterprise Data Integration Platform, providing detailed visual representations of the system architecture, components, and interactions.
+- [FLEXT PlantUML Diagrams](#flext-plantuml-diagrams)
+  - [📋 Diagram Categories](#-diagram-categories)
+    - [1. [System Architecture Diagrams](./system-architecture/)](#1-system-architecture-diagramssystem-architecture)
+    - [2. [Component Diagrams](./component-diagrams/)](#2-component-diagramscomponent-diagrams)
+    - [3. [Sequence Diagrams](./sequence-diagrams/)](#3-sequence-diagramssequence-diagrams)
+    - [4. [Class Diagrams](./class-diagrams/)](#4-class-diagramsclass-diagrams)
+    - [5. [Deployment Diagrams](./deployment-diagrams/)](#5-deployment-diagramsdeployment-diagrams)
+    - [6. [Data Flow Diagrams](./data-flow-diagrams/)](#6-data-flow-diagramsdata-flow-diagrams)
+  - [🎯 FLEXT Architecture Overview](#-flext-architecture-overview)
+  - [🏗️ Key Architectural Components](#-key-architectural-components)
+    - [Foundation Layer (flext-core)](#foundation-layer-flext-core)
+    - [Application Layer](#application-layer)
+    - [Infrastructure Layer](#infrastructure-layer)
+    - [Data Integration Layer (Singer Platform)](#data-integration-layer-singer-platform)
+    - [Runtime Layer](#runtime-layer)
+  - [📊 Diagram Types](#-diagram-types)
+    - [System Architecture Diagrams](#system-architecture-diagrams)
+    - [Component Diagrams](#component-diagrams)
+    - [Sequence Diagrams](#sequence-diagrams)
+    - [Class Diagrams](#class-diagrams)
+    - [Deployment Diagrams](#deployment-diagrams)
+    - [Data Flow Diagrams](#data-flow-diagrams)
+  - [🔧 PlantUML Usage](#-plantuml-usage)
+    - [Prerequisites](#prerequisites)
+    - [Local Installation](#local-installation)
+- [Install PlantUML](#install-plantuml)
+- [Generate diagrams](#generate-diagrams)
+    - [Online Usage](#online-usage)
+    - [VS Code Integration](#vs-code-integration)
+  - [📚 Diagram Standards](#-diagram-standards)
+    - [Naming Conventions](#naming-conventions)
+    - [Style Guidelines](#style-guidelines)
+    - [Documentation Standards](#documentation-standards)
+  - [🔗 Related Documentation](#-related-documentation)
+  - [🤝 Contributing to Diagrams](#-contributing-to-diagrams)
+    - [Creating New Diagrams](#creating-new-diagrams)
+    - [Updating Existing Diagrams](#updating-existing-diagrams)
+    - [Review Process](#review-process)
+
+
+This directory contains PlantUML diagrams for the FLEXT Enterprise Data Integration Platform,
+     providing detailed visual representations of the system architecture, components, and interactions.
 
 ## 📋 Diagram Categories
 
@@ -205,6 +247,6 @@ Install the PlantUML extension for VS Code:
 
 ---
 
-**Last Updated**: 2025-01-XX  
-**Version**: 1.0.0  
+**Last Updated**: 2025-01-XX
+**Version**: 1.0.0
 **Maintainer**: FLEXT Architecture Team

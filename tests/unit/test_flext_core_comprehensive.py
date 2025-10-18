@@ -46,7 +46,7 @@ class TestFlextComprehensive:
         assert result_none.is_success
         assert result_none.data is None
 
-        result_dict = FlextResult[FlextTypes.Dict].ok({"key": "value"})
+        result_dict = FlextResult[dict[str, object]].ok({"key": "value"})
         assert result_dict.is_success
         assert result_dict.data["key"] == "value"
 
@@ -141,7 +141,7 @@ class TestFlextComprehensive:
         bus = FlextBus()
         received_messages = []
 
-        def handler(message: FlextTypes.Dict) -> FlextResult[str]:
+        def handler(message: dict[str, object]) -> FlextResult[str]:
             received_messages.append(message)
             return FlextResult[str].ok("handled")
 
@@ -167,11 +167,11 @@ class TestFlextComprehensive:
         handler1_calls = []
         handler2_calls = []
 
-        def handler1(msg: FlextTypes.Dict) -> FlextResult[str]:
+        def handler1(msg: dict[str, object]) -> FlextResult[str]:
             handler1_calls.append(msg)
             return FlextResult[str].ok("h1")
 
-        def handler2(msg: FlextTypes.Dict) -> FlextResult[str]:
+        def handler2(msg: dict[str, object]) -> FlextResult[str]:
             handler2_calls.append(msg)
             return FlextResult[str].ok("h2")
 
@@ -187,7 +187,7 @@ class TestFlextComprehensive:
         """Test FlextBus error handling."""
         bus = FlextBus()
 
-        def failing_handler(msg: FlextTypes.Dict) -> FlextResult[str]:
+        def failing_handler(msg: dict[str, object]) -> FlextResult[str]:
             return FlextResult[str].fail("Handler error")
 
         bus.subscribe("error_topic", failing_handler)
@@ -639,21 +639,21 @@ class TestFlextComprehensive:
     def test_flext_types_usage(self) -> None:
         """Test FlextTypes comprehensive functionality."""
         # Test Core types
-        test_dict: FlextTypes.Dict = {"key": "value"}
+        test_dict: dict[str, object] = {"key": "value"}
         assert isinstance(test_dict, dict)
 
-        test_list: FlextTypes.List = [1, 2, 3]
+        test_list: list[object] = [1, 2, 3]
         assert isinstance(test_list, list)
 
         # Test Config types
-        config_value: FlextTypes.ConfigValue = "config_string"
+        config_value: object = "config_string"
         assert isinstance(config_value, str)
 
-        config_value_int: FlextTypes.ConfigValue = 42
+        config_value_int: object = 42
         assert isinstance(config_value_int, int)
 
         # Test Data types
-        data_dict: FlextTypes.StringDict = {"data": [1, 2, 3]}
+        data_dict: dict[str, str] = {"data": [1, 2, 3]}
         assert "data" in data_dict
         assert isinstance(data_dict["data"], list)
 
@@ -664,14 +664,14 @@ class TestFlextComprehensive:
     def test_comprehensive_integration(self) -> None:
         """Test comprehensive integration of all flext-core components."""
 
-        class ComprehensiveTestService(FlextService[FlextTypes.Dict]):
+        class ComprehensiveTestService(FlextService[dict[str, object]]):
             def __init__(self) -> None:
                 super().__init__()
                 self.logger = FlextLogger("comprehensive_test")
                 self.container = FlextContainer.get_global()
                 self.config = FlextConfig({"test_mode": True, "max_items": 100})
 
-            def execute(self) -> FlextResult[FlextTypes.Dict]:
+            def execute(self) -> FlextResult[dict[str, object]]:
                 try:
                     # Use logger
                     self.logger.info("Starting comprehensive test")
@@ -688,7 +688,7 @@ class TestFlextComprehensive:
                     chunk_result = FlextUtilities.Collections.chunk_list(test_data, 3)
 
                     if chunk_result.is_failure:
-                        return FlextResult[FlextTypes.Dict].fail(chunk_result.error)
+                        return FlextResult[dict[str, object]].fail(chunk_result.error)
 
                     # Create result
                     result_data = {
@@ -707,11 +707,11 @@ class TestFlextComprehensive:
                         extra={"result_size": len(result_data)},
                     )
 
-                    return FlextResult[FlextTypes.Dict].ok(result_data)
+                    return FlextResult[dict[str, object]].ok(result_data)
 
                 except Exception as e:
                     self.logger.exception("Comprehensive test failed")
-                    return FlextResult[FlextTypes.Dict].fail(str(e))
+                    return FlextResult[dict[str, object]].fail(str(e))
 
         # Execute comprehensive test
         service = ComprehensiveTestService()
@@ -799,7 +799,7 @@ class TestFlextComprehensive:
         large_results = []
         for i in range(1000):
             large_data = {"data": list(range(100)), "id": i}
-            result = FlextResult[FlextTypes.Dict].ok(large_data)
+            result = FlextResult[dict[str, object]].ok(large_data)
             large_results.append(result)
 
         assert len(large_results) == 1000
@@ -846,7 +846,7 @@ class TestFlextComprehensive:
     def test_edge_cases_and_boundary_conditions(self) -> None:
         """Test edge cases and boundary conditions."""
         # Test empty data structures
-        empty_result = FlextResult[FlextTypes.List].ok([])
+        empty_result = FlextResult[list[object]].ok([])
         assert empty_result.is_success
         assert empty_result.data == []
 
@@ -869,6 +869,6 @@ class TestFlextComprehensive:
 
         # Test deeply nested structures
         nested = {"level1": {"level2": {"level3": {"value": "deep"}}}}
-        nested_result = FlextResult[FlextTypes.Dict].ok(nested)
+        nested_result = FlextResult[dict[str, object]].ok(nested)
         assert nested_result.is_success
         assert nested_result.data["level1"]["level2"]["level3"]["value"] == "deep"

@@ -1,5 +1,13 @@
 # FLEXT Documentation Maintenance & Quality Assurance Guide
 
+> **Important**
+>
+> The bespoke maintenance scripts under `scripts/docs_*` have been removed.
+> Refer to the unified `flext-quality` CLI (`python -m
+> flext_quality.docs_maintenance.cli` / `flext-docs`) for all automation tasks.
+> Content below that references the legacy helpers is retained for archival
+> context only.
+
 **Version:** 1.0.0
 **Last Updated:** 2025-10-09
 **Status:** Production Ready
@@ -19,7 +27,8 @@
 
 ## Overview
 
-The FLEXT Documentation Maintenance System provides comprehensive automated quality assurance, validation, and maintenance for the monorepo's **659 markdown files** across **36 documentation directories**.
+The FLEXT Documentation Maintenance System provides comprehensive automated quality assurance, validation,
+     and maintenance for the monorepo's **659 markdown files** across **36 documentation directories**.
 
 ### Key Features
 
@@ -32,7 +41,7 @@ The FLEXT Documentation Maintenance System provides comprehensive automated qual
 
 ### Documentation Statistics
 
-```
+``` yaml
 Total Markdown Files: 659
 Documentation Directories: 36
 Projects: 33

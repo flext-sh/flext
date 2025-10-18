@@ -15,13 +15,15 @@ from __future__ import annotations
 
 import ast
 import json
-import subprocess
+import logging
+import shutil
+import subprocess  # noqa: S404
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
-from flext_core import FlextTypes
+logger = logging.getLogger(__name__)
 
 # FLEXT ecosystem projects
 FLEXT_PROJECTS = [
@@ -79,21 +81,27 @@ class ValidationResult:
     lint_errors: int = 0
     lint_warnings: int = 0
     type_errors: int = 0
-    domain_violations: FlextTypes.StringList = field(default_factory=list)
+    domain_violations: list[str] = field(default_factory=list)
     has_tests: bool = False
     has_makefile: bool = False
-    issues: FlextTypes.StringList = field(default_factory=list)
-    recommendations: FlextTypes.StringList = field(default_factory=list)
+    issues: list[str] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
 
 
 class EcosystemValidator:
     """Validator for FLEXT ecosystem projects."""
 
     def __init__(self, workspace_path: Path) -> None:
+        """Initialize the ecosystem validator.
+
+        Args:
+            workspace_path: Path to the FLEXT workspace.
+
+        """
         self.workspace_path = workspace_path
         self.results: dict[str, ValidationResult] = {}
 
-    def validate_syntax(self, project: str) -> tuple[int, FlextTypes.StringList]:
+    def validate_syntax(self, project: str) -> tuple[int, list[str]]:
         """Validate Python syntax using AST parsing."""
         project_path = self.workspace_path / project
         src_dir = project_path / "src"
@@ -123,9 +131,14 @@ class EcosystemValidator:
         if not src_dir.exists():
             return 0, 0
 
+        ruff_path = shutil.which("ruff")
+        if not ruff_path:
+            logger.warning("Ruff executable not found in PATH")
+            return 0, 0
+
         try:
             result = subprocess.run(
-                ["ruff", "check", str(src_dir), "--output-format=json"],
+                [ruff_path, "check", str(src_dir), "--output-format=json"],
                 check=False,
                 capture_output=True,
                 text=True,
@@ -143,7 +156,7 @@ class EcosystemValidator:
 
         return 0, 0
 
-    def validate_domain_violations(self, project: str) -> FlextTypes.StringList:
+    def validate_domain_violations(self, project: str) -> list[str]:
         """Check for direct imports of wrapped technologies."""
         project_path = self.workspace_path / project
         src_dir = project_path / "src"
@@ -268,12 +281,14 @@ class EcosystemValidator:
         warned = sum(1 for r in self.results.values() if r.status == "WARN")
         failed = sum(1 for r in self.results.values() if r.status == "FAIL")
 
-        lines.append("SUMMARY:")
-        lines.append(f"  Total projects: {total}")
-        lines.append(f"  ✅ Production ready: {passed}")
-        lines.append(f"  ⚠️  Need attention: {warned}")
-        lines.append(f"  ❌ Critical issues: {failed}")
-        lines.append("")
+        lines.extend([
+            "SUMMARY:",
+            f"  Total projects: {total}",
+            f"  ✅ Production ready: {passed}",
+            f"  ⚠️  Need attention: {warned}",
+            f"  ❌ Critical issues: {failed}",
+            "",
+        ])
 
         # Foundation status
         lines.append("FOUNDATION:")
@@ -283,10 +298,7 @@ class EcosystemValidator:
             lines.append(f"  {status_icon} flext-core: {core.status}")
             if core.issues:
                 lines.extend(f"    - {issue}" for issue in core.issues[:3])
-        lines.append("")
-
-        # Domain libraries
-        lines.append("DOMAIN LIBRARIES:")
+        lines.extend(["", "DOMAIN LIBRARIES:"])
         domain_libs = [
             p for p in FLEXT_PROJECTS if p.startswith("flext-") and p != "flext-core"
         ]
@@ -299,10 +311,7 @@ class EcosystemValidator:
                     lines.append(f"      Domain violations: {len(r.domain_violations)}")
                 if r.lint_errors > 0:
                     lines.append(f"      Lint errors: {r.lint_errors}")
-        lines.append("")
-
-        # Enterprise tools
-        lines.append("ENTERPRISE TOOLS:")
+        lines.extend(["", "ENTERPRISE TOOLS:"])
         tools = [p for p in FLEXT_PROJECTS if not p.startswith("flext-")]
         for project in sorted(tools):
             if project in self.results:

@@ -1,7 +1,7 @@
 from typing import IO, Any
 
 from django.core.files.uploadedfile import TemporaryUploadedFile, UploadedFile
-from django.http.request import HttpRequest, QueryDict
+from django.http.request import FlextApiModels.HttpRequest, QueryDict
 from django.utils.datastructures import MultiValueDict
 
 class UploadFileException(Exception): ...
@@ -20,9 +20,9 @@ class FileUploadHandler:
     content_length: int | None
     charset: str | None
     content_type_extra: dict[str, bytes] | None
-    request: HttpRequest | None
+    request: FlextApiModels.HttpRequest | None
     field_name: str
-    def __init__(self, request: HttpRequest | None = ...) -> None: ...
+    def __init__(self, request: FlextApiModels.HttpRequest | None = ...) -> None: ...
     def handle_raw_input(
         self,
         input_data: IO[bytes],

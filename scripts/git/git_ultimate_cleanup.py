@@ -30,14 +30,14 @@ import operator
 import re
 import shlex
 import shutil
-import subprocess
+import subprocess  # noqa: S404
 import sys
 import tarfile
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import ClassVar
 
-from flext_core import FlextTypes, FlextUtilities
+from flext_core import FlextUtilities
 
 # Ensure git is available
 _git_cmd = shutil.which("git")
@@ -55,7 +55,7 @@ class GitUltimateCleanup:
 
     @staticmethod
     def _run_git_command(
-        repo_path: Path, args: FlextTypes.StringList, *, check: bool = False
+        repo_path: Path, args: list[str], *, check: bool = False
     ) -> subprocess.CompletedProcess[str]:
         """Run a git command with proper error handling and type annotations."""
         cmd = [GIT_CMD, "-C", str(repo_path)] + args
@@ -67,7 +67,7 @@ class GitUltimateCleanup:
         )
 
     # Cruft patterns to remove from git history
-    CRUFT_PATTERNS: ClassVar[FlextTypes.StringList] = [
+    CRUFT_PATTERNS: ClassVar[list[str]] = [
         # Build artifacts
         "*.pyc",
         "*.pyo",
@@ -224,7 +224,7 @@ class GitUltimateCleanup:
         "Desktop.ini",
     ]
 
-    AI_PATTERNS: ClassVar[FlextTypes.StringList] = [
+    AI_PATTERNS: ClassVar[list[str]] = [
         r"🤖 Generated with \[Claude Code\].*",
         r"Co-Authored-By:\s*Claude.*",
         r"Co-Authored-By:\s*Codex.*",
@@ -481,7 +481,7 @@ esac
 
 echo ""
 echo "Recovery complete!"
-"""
+"""  # noqa: S608
         )
         script.chmod(0o755)
 
@@ -1012,7 +1012,7 @@ def callback(commit, metadata):
         print(f"\n✅ All {len(submodules)} submodules pushed!")
         return True
 
-    def analyze_gitignore(self) -> FlextTypes.StringList:
+    def analyze_gitignore(self) -> list[str]:
         """Parse .gitignore and extract patterns that might indicate committed cruft."""
         gitignore_path = self.repo_path / ".gitignore"
         if not gitignore_path.exists():
@@ -1055,9 +1055,7 @@ def callback(commit, metadata):
 
         return deletion_counts
 
-    def detect_additional_cruft(
-        self, *, silent: bool = False
-    ) -> dict[str, FlextTypes.StringList]:
+    def detect_additional_cruft(self, *, silent: bool = False) -> dict[str, list[str]]:
         """Detect additional cruft patterns from git history and .gitignore."""
         if not silent:
             print(f"\n{'=' * 70}")

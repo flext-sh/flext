@@ -1,4 +1,46 @@
 # FLEXT Container Diagram
+## Table of Contents
+
+- [FLEXT Container Diagram](#flext-container-diagram)
+  - [Overview](#overview)
+  - [Container Diagram](#container-diagram)
+  - [Container Responsibilities](#container-responsibilities)
+    - [Web Layer](#web-layer)
+      - [FLEXT Web UI](#flext-web-ui)
+    - [API Layer](#api-layer)
+      - [API Gateway (flext-api)](#api-gateway-flext-api)
+      - [Authentication Service (flext-auth)](#authentication-service-flext-auth)
+    - [Core Services](#core-services)
+      - [Core Service (flext-core)](#core-service-flext-core)
+    - [Data Integration Services](#data-integration-services)
+      - [LDAP Service (flext-ldap)](#ldap-service-flext-ldap)
+      - [LDIF Service (flext-ldif)](#ldif-service-flext-ldif)
+      - [Oracle Service (flext-oracle-\*)](#oracle-service-flext-oracle-)
+    - [Singer Platform](#singer-platform)
+      - [Singer Taps (flext-tap-\*)](#singer-taps-flext-tap-)
+      - [Singer Targets (flext-target-\*)](#singer-targets-flext-target-)
+      - [DBT Transformations (flext-dbt-\*)](#dbt-transformations-flext-dbt-)
+    - [Runtime Container](#runtime-container)
+      - [FlexCore Runtime](#flexcore-runtime)
+    - [Quality and Observability](#quality-and-observability)
+      - [Quality Service (flext-quality)](#quality-service-flext-quality)
+      - [Observability Service (flext-observability)](#observability-service-flext-observability)
+    - [CLI and Tools](#cli-and-tools)
+      - [CLI Tool (flext-cli)](#cli-tool-flext-cli)
+  - [Data Storage Layer](#data-storage-layer)
+    - [PostgreSQL](#postgresql)
+    - [Redis](#redis)
+    - [File Storage](#file-storage)
+  - [Communication Patterns](#communication-patterns)
+    - [Synchronous Communication](#synchronous-communication)
+    - [Asynchronous Communication](#asynchronous-communication)
+    - [Data Flow Patterns](#data-flow-patterns)
+  - [Technology Decisions](#technology-decisions)
+    - [Programming Languages](#programming-languages)
+    - [Frameworks and Libraries](#frameworks-and-libraries)
+    - [Data Storage](#data-storage)
+    - [Integration Protocols](#integration-protocols)
+
 
 ## Overview
 
@@ -128,7 +170,8 @@ graph TB
     classDef external fill:#f3e5f5
 
     class DataEngineers,SystemAdmins,BusinessUsers,Developers user
-    class WebUI,APIGateway,AuthService,CoreService,LDAPService,LDIFService,OracleService,SingerTaps,SingerTargets,DBTTransformations,FlexCore,QualityService,ObservabilityService,CLITool container
+    class WebUI,APIGateway,AuthService,CoreService,LDAPService,LDIFService,OracleService,SingerTaps,SingerTargets,
+    DBTTransformations,FlexCore,QualityService,ObservabilityService,CLITool container
     class PostgreSQL,Redis,FileStorage storage
     class LDAPSystems,OracleSystems,FileSystems,MonitoringSystems external
 ```
@@ -371,6 +414,6 @@ graph TB
 
 ---
 
-**Last Updated**: 2025-01-XX  
-**Version**: 1.0.0  
+**Last Updated**: 2025-01-XX
+**Version**: 1.0.0
 **Maintainer**: FLEXT Architecture Team

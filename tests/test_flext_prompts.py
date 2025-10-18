@@ -13,7 +13,7 @@ from __future__ import annotations
 from unittest.mock import Mock, patch
 
 from flext_cli import FlextCliPrompts
-from flext_core import FlextLogger, FlextTypes
+from flext_core import FlextLogger
 
 
 class TestFlextCliPromptsInitialization:
@@ -368,7 +368,7 @@ class TestFlextCliPromptsProgress:
     def test_with_progress_empty_items(self) -> None:
         """Test with progress with empty items."""
         prompts = FlextCliPrompts()
-        items: FlextTypes.List = []
+        items: list[object] = []
         result = prompts.with_progress(items, "Processing items")
         assert result.is_success
         assert result.data == items

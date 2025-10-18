@@ -11,12 +11,12 @@ import os
 import re
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextTypes
+from flext_core import FlextLogger
 
 logger = FlextLogger(__name__)
 
 
-def analyze_flext_core_violations() -> list[FlextTypes.StringDict]:
+def analyze_flext_core_violations() -> list[dict[str, str]]:
     """Analisa violações arquiteturais no flext-core."""
     flext_core_path = Path("flext-core/src/flext_core")
     if not flext_core_path.exists():
@@ -32,7 +32,7 @@ def analyze_flext_core_violations() -> list[FlextTypes.StringDict]:
         "client-b",
     ]
 
-    violations: list[FlextTypes.StringDict] = []
+    violations: list[dict[str, str]] = []
 
     for py_file in flext_core_path.rglob("*.py"):
         if py_file.name == "__init__.py" or py_file.name.endswith(".bak"):
@@ -120,7 +120,7 @@ def analyze_ignore_comments() -> list[Path]:
 
 
 def generate_fix_commands(
-    violations: list[FlextTypes.StringDict],
+    violations: list[dict[str, str]],
     ignore_files: list[Path],
 ) -> None:
     """Gera comandos para correção das violações."""
@@ -173,7 +173,7 @@ def main() -> None:
         return
 
     # Executar análises
-    violations: list[FlextTypes.StringDict] = analyze_flext_core_violations()
+    violations: list[dict[str, str]] = analyze_flext_core_violations()
     ignore_files: list[Path] = analyze_ignore_comments()
 
     # Gerar relatório e comandos de correção

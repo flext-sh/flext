@@ -1,7 +1,7 @@
 """FLEXT Project Types - Single Responsibility Module.
 
 Project type enumerations consolidated into flext-core for ecosystem consistency.
-This module now provides compatibility imports from the centralized FlextTypes.Project.
+This module now provides compatibility imports from the centralized FlextTypes.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -15,14 +15,14 @@ from flext_core import FlextTypes
 # Import centralized types from flext-core foundation
 
 # Import WorkspaceStatus from the correct location
-WorkspaceStatus = FlextTypes.Project.ProjectStatus
+WorkspaceStatus = FlextTypes.ProjectStatus
 
 
 class FlextProjectTypes:
     """Unified project types service using flext-core foundation."""
 
-    # Use centralized enums from FlextTypes.Project
-    ProjectType = FlextTypes.Project.ProjectType
+    # Use centralized enums from FlextTypes
+    ProjectType = FlextTypes.ProjectType
 
 
 # Convenience aliases for test compatibility

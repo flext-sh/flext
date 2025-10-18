@@ -5,13 +5,13 @@ Comprehensive architecture documentation generator with modern tooling and best 
 Generates C4 Model, Arc42, ADRs, PlantUML diagrams, and interactive visualizations.
 """
 
+import argparse
 import json
 import sys
+import traceback
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-
-from flext_core import FlextTypes
 
 
 @dataclass
@@ -22,9 +22,9 @@ class ArchitectureComponent:
     type: str  # 'container', 'component', 'service', 'database', etc.
     description: str
     technology: str
-    dependencies: FlextTypes.StringList = field(default_factory=list)
-    interfaces: FlextTypes.StringList = field(default_factory=list)
-    responsibilities: FlextTypes.StringList = field(default_factory=list)
+    dependencies: list[str] = field(default_factory=list)
+    interfaces: list[str] = field(default_factory=list)
+    responsibilities: list[str] = field(default_factory=list)
     metadata: dict[str, object] = field(default_factory=dict)
 
 
@@ -45,6 +45,12 @@ class ArchitectureDocumentationGenerator:
     """Comprehensive architecture documentation generator."""
 
     def __init__(self, config_file: str | None = None) -> None:
+        """Initialize architecture documentation generator.
+
+        Args:
+            config_file: Path to configuration file, defaults to standard location
+
+        """
         self.config_file = config_file or "docs/architecture/architecture_config.json"
         self.config = self.load_config()
         self.output_dir = Path(self.config.get("output_dir", "docs/architecture"))
@@ -1488,6 +1494,7 @@ gateway --> client: 500 Internal Server Error
         self.generate_plantuml_diagrams()
 
         # Generate comprehensive report
+        # Markdown report generation - safe string formatting
         report = f"""# FLEXT Architecture Documentation Report
 
 **Generated:** {datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")}
@@ -1691,7 +1698,7 @@ docs/architecture/
 2. Customize templates for team preferences
 3. Set up automated documentation maintenance
 4. Train team on new documentation practices
-"""
+"""  # noqa: S608
 
         report_file = self.output_dir / "architecture_documentation_report.md"
         report_file.write_text(report, encoding="utf-8")
@@ -1702,8 +1709,6 @@ docs/architecture/
 
 def main() -> int:
     """Main entry point for architecture documentation generation."""
-    import argparse
-
     parser = argparse.ArgumentParser(
         description="FLEXT Architecture Documentation Generator"
     )
@@ -1743,7 +1748,6 @@ def main() -> int:
 
     except Exception as e:
         print(f"❌ Error generating documentation: {e}")
-        import traceback
 
         if args.verbose:
             traceback.print_exc()

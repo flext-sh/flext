@@ -1,4 +1,36 @@
 # Architecture Overview
+## Table of Contents
+
+- [Architecture Overview](#architecture-overview)
+  - [System Architecture](#system-architecture)
+    - [Core Principles](#core-principles)
+    - [Architecture Layers](#architecture-layers)
+  - [flext-core Architecture](#flext-core-architecture)
+    - [Core Components](#core-components)
+      - [FlextContainer (Dependency Injection)](#flextcontainer-dependency-injection)
+      - [FlextDispatcher (CQRS)](#flextdispatcher-cqrs)
+- [Dispatch commands and queries](#dispatch-commands-and-queries)
+      - [FlextResult (Railway-Oriented Programming)](#flextresult-railway-oriented-programming)
+- [Compose operations](#compose-operations)
+      - [FlextBus (Domain Events)](#flextbus-domain-events)
+- [Emit events](#emit-events)
+  - [Project Structure](#project-structure)
+    - [Monorepo Organization](#monorepo-organization)
+    - [Package Structure](#package-structure)
+  - [Integration Patterns](#integration-patterns)
+    - [Cross-Project Dependencies](#cross-project-dependencies)
+    - [Import Strategy](#import-strategy)
+- [In flext-ldif](#in-flext-ldif)
+- [In flext-oracle](#in-flext-oracle)
+  - [Deployment Architecture](#deployment-architecture)
+    - [Container Strategy](#container-strategy)
+    - [Service Architecture](#service-architecture)
+  - [Quality Assurance](#quality-assurance)
+    - [Testing Strategy](#testing-strategy)
+    - [Code Quality](#code-quality)
+  - [Security Architecture](#security-architecture)
+  - [Performance Considerations](#performance-considerations)
+
 
 ## System Architecture
 

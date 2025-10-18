@@ -102,7 +102,6 @@ from flext_core import (
     FlextConstants,
     FlextLogger,
     FlextResult,
-    FlextTypes,
     FlextUtilities,
 )
 
@@ -125,7 +124,7 @@ class FlextModuleOptimizerConstants(FlextConstants):
         DEFAULT_BATCH_SIZE: int = 5
         MAX_FILE_SIZE: int = 1024 * 1024  # 1MB
         SUPPORTED_EXTENSIONS: ClassVar[set[str]] = {".py", ".pyi"}
-        EXCLUDE_PATTERNS: ClassVar[FlextTypes.StringList] = [
+        EXCLUDE_PATTERNS: ClassVar[list[str]] = [
             "__pycache__",
             ".git",
             ".venv",
@@ -160,7 +159,7 @@ class FlextModuleOptimizerConstants(FlextConstants):
         }
 
         # ❌ FORBIDDEN - Anti-patterns
-        FORBIDDEN_PATTERNS: ClassVar[FlextTypes.StringList] = [
+        FORBIDDEN_PATTERNS: ClassVar[list[str]] = [
             r"# type: ignore.*$",  # Generic type ignore
             r"def .*\).*-> object:",  # object return type
             r"except.*pass",  # Empty except blocks
@@ -494,8 +493,8 @@ class FlextModuleOptimizer:
         return FlextResult[None].ok(None)
 
     def _optimize_in_batches(
-        self, targets: list[FlextTypes.Dict]
-    ) -> list[FlextTypes.Dict]:
+        self, targets: list[dict[str, object]]
+    ) -> list[dict[str, object]]:
         """Optimize targets in batches."""
         self.logger.info(
             "Starting batch optimization", extra={"total_targets": len(targets)}

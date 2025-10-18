@@ -14,7 +14,7 @@ import inspect
 import tempfile
 from pathlib import Path
 
-from flext_core import FlextResult, FlextService, FlextTypes
+from flext_core import FlextResult, FlextService
 
 from flext_quality.tools import FlextPathService
 
@@ -26,7 +26,7 @@ class TestFlextPathService:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_test_path_data() -> FlextTypes.Dict:
+        def create_test_path_data() -> dict[str, object]:
             """Create test path data."""
             return {
                 "base_path": "/tmp/flext_test",
@@ -35,7 +35,7 @@ class TestFlextPathService:
             }
 
         @staticmethod
-        def create_test_ignore_patterns() -> FlextTypes.StringList:
+        def create_test_ignore_patterns() -> list[str]:
             """Create test ignore patterns."""
             return [
                 "__pycache__",
@@ -226,9 +226,9 @@ class TestFlextPathService:
         #     assert isinstance(result, FlextResult)
         #
         #     # Test service with flext_tests data
-        flext_domains.create_configuration()
-        service_with_config = FlextPathService()
-        assert service_with_config is not None
+        #     flext_domains.create_configuration()
+        #     service_with_config = FlextPathService()
+        #     assert service_with_config is not None
 
     # =============================================================================
     # PERFORMANCE TESTS

@@ -14,7 +14,8 @@ import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextResult, FlextService, FlextTypes
+import yaml
+from flext_core import FlextLogger, FlextResult, FlextService
 
 from .agents import DependencyAnalyzer, TaskDecomposer, TaskOrchestrator
 from .models import (
@@ -160,7 +161,7 @@ class TaskOrchestrationService(FlextService[str]):
             self._logger.warning(f"Failed to create orchestration directories: {e}")
 
     def _create_execution_plan(
-        self, tasks: list[Task], parallel_groups: list[FlextTypes.StringList]
+        self, tasks: list[Task], parallel_groups: list[list[str]]
     ) -> TaskExecutionPlan:
         """Create execution plan from tasks and parallel groups."""
         # Determine execution order based on dependencies
@@ -184,7 +185,7 @@ class TaskOrchestrationService(FlextService[str]):
             end_date=datetime.now(UTC) + timedelta(hours=estimated_duration),
         )
 
-    def _determine_execution_order(self, tasks: list[Task]) -> FlextTypes.StringList:
+    def _determine_execution_order(self, tasks: list[Task]) -> list[str]:
         """Determine execution order based on dependencies."""
         # Simple topological sort
         task_ids = [task.id for task in tasks]
@@ -215,9 +216,7 @@ class TaskOrchestrationService(FlextService[str]):
 
         return result
 
-    def _assign_tasks_to_agents(
-        self, tasks: list[Task]
-    ) -> dict[str, FlextTypes.StringList]:
+    def _assign_tasks_to_agents(self, tasks: list[Task]) -> dict[str, list[str]]:
         """Assign tasks to agents."""
         if not self.config.auto_assign:
             return {}
@@ -237,7 +236,7 @@ class TaskOrchestrationService(FlextService[str]):
         self,
         tasks: list[Task],
         conflicts: list[dict[str, object]],
-        parallel_groups: list[FlextTypes.StringList],
+        parallel_groups: list[list[str]],
         plan: TaskExecutionPlan,
         requirements_data: dict[str, object],
     ) -> FlextResult[None]:
@@ -285,7 +284,7 @@ class TaskOrchestrationService(FlextService[str]):
         self,
         tasks: list[Task],
         conflicts: list[dict[str, object]],
-        parallel_groups: list[FlextTypes.StringList],
+        parallel_groups: list[list[str]],
         plan: TaskExecutionPlan,
         requirements_data: dict[str, object],
     ) -> str:
@@ -363,16 +362,16 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
     def _generate_status_tracker(self, tasks: list[Task]) -> str:
         """Generate YAML status tracker."""
-        import yaml
-
-        status_data = {
-            "orchestration": {
-                "created_at": datetime.now(UTC).isoformat(),
-                "total_tasks": len(tasks),
-                "status_summary": {},
-            },
-            "tasks": [],
-        }
+        if yaml is None:
+            # Fallback to JSON if YAML not available
+            status_data = {
+                "orchestration": {
+                    "created_at": datetime.now(UTC).isoformat(),
+                    "total_tasks": len(tasks),
+                    "status_summary": {},
+                },
+                "tasks": [],
+            }
 
         # Count tasks by status
         status_counts = {}
@@ -393,7 +392,9 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
         status_data["orchestration"]["status_summary"] = status_counts
 
-        return yaml.dump(status_data, default_flow_style=False, indent=2)
+        if yaml is not None:
+            return yaml.dump(status_data, default_flow_style=False, indent=2)
+        return json.dumps(status_data, indent=2)
 
     def _format_requirements_summary(self, requirements_data: dict[str, object]) -> str:
         """Format requirements summary."""
@@ -438,9 +439,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
         return content
 
-    def _format_parallel_groups(
-        self, parallel_groups: list[FlextTypes.StringList]
-    ) -> str:
+    def _format_parallel_groups(self, parallel_groups: list[list[str]]) -> str:
         """Format parallel groups."""
         if not parallel_groups:
             return "No parallel execution opportunities identified."
@@ -475,7 +474,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
     def _format_recommendations(
         self,
         conflicts: list[dict[str, object]],
-        parallel_groups: list[FlextTypes.StringList],
+        parallel_groups: list[list[str]],
     ) -> str:
         """Format recommendations."""
         recommendations = []
@@ -497,7 +496,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
         return content
 
-    def _format_execution_order(self, execution_order: FlextTypes.StringList) -> str:
+    def _format_execution_order(self, execution_order: list[str]) -> str:
         """Format execution order."""
         content = ""
         for i, task_id in enumerate(execution_order, 1):
@@ -518,9 +517,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
         return content
 
-    def _format_agent_assignments(
-        self, agent_assignments: dict[str, FlextTypes.StringList]
-    ) -> str:
+    def _format_agent_assignments(self, agent_assignments: dict[str, list[str]]) -> str:
         """Format agent assignments."""
         if not agent_assignments:
             return "No agent assignments configured."
@@ -537,8 +534,8 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
     def _generate_recommendations(
         self,
         conflicts: list[dict[str, object]],
-        parallel_groups: list[FlextTypes.StringList],
-    ) -> FlextTypes.StringList:
+        parallel_groups: list[list[str]],
+    ) -> list[str]:
         """Generate recommendations based on analysis."""
         recommendations = []
 

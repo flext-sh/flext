@@ -1,10 +1,87 @@
 # flext-ldif
+## Table of Contents
+
+- [flext-ldif](#flext-ldif)
+  - [Overview](#overview)
+  - [Installation](#installation)
+  - [Quick Start](#quick-start)
+    - [Basic Usage](#basic-usage)
+- [Initialize the API](#initialize-the-api)
+- [Parse LDIF content](#parse-ldif-content)
+    - [Writing LDIF Files](#writing-ldif-files)
+- [Create entries using the models](#create-entries-using-the-models)
+- [Write to LDIF format](#write-to-ldif-format)
+    - [Server Migration](#server-migration)
+- [Migrate between LDAP servers](#migrate-between-ldap-servers)
+  - [Architecture](#architecture)
+    - [Core Components](#core-components)
+      - [FlextLdif (Main Facade)](#flextldif-main-facade)
+      - [FlextLdifModels](#flextldifmodels)
+- [Entry model with validation](#entry-model-with-validation)
+- [Schema models for validation](#schema-models-for-validation)
+      - [Server-Specific Quirks](#server-specific-quirks)
+- [Register server-specific quirks](#register-server-specific-quirks)
+- [OID-specific handling](#oid-specific-handling)
+- [OpenLDAP-specific handling](#openldap-specific-handling)
+  - [Migration Pipeline](#migration-pipeline)
+    - [Migration Process](#migration-process)
+    - [Migration Configuration](#migration-configuration)
+    - [Migration Report](#migration-report)
+  - [RFC Compliance](#rfc-compliance)
+    - [Supported RFCs](#supported-rfcs)
+    - [Compliance Features](#compliance-features)
+  - [Server-Specific Quirks](#server-specific-quirks)
+    - [Supported Servers](#supported-servers)
+    - [Quirk Categories](#quirk-categories)
+  - [Advanced Features](#advanced-features)
+    - [Custom Processors](#custom-processors)
+- [Create custom processor](#create-custom-processor)
+- [Register processor](#register-processor)
+- [Use in batch processing](#use-in-batch-processing)
+    - [Event Handling](#event-handling)
+- [Subscribe to LDIF events](#subscribe-to-ldif-events)
+- [Events are automatically emitted during processing](#events-are-automatically-emitted-during-processing)
+    - [Async Processing](#async-processing)
+- [Run async processing](#run-async-processing)
+  - [Configuration](#configuration)
+    - [Environment Configuration](#environment-configuration)
+- [Set LDIF processing options](#set-ldif-processing-options)
+    - [Programmatic Configuration](#programmatic-configuration)
+- [Use configuration](#use-configuration)
+  - [Error Handling](#error-handling)
+    - [Error Handling Best Practices](#error-handling-best-practices)
+  - [Performance Optimization](#performance-optimization)
+    - [Batch Processing](#batch-processing)
+- [Process large LDIF files in batches](#process-large-ldif-files-in-batches)
+    - [Parallel Processing](#parallel-processing)
+- [Enable parallel processing for better performance](#enable-parallel-processing-for-better-performance)
+- [Process multiple files in parallel](#process-multiple-files-in-parallel)
+    - [Memory Optimization](#memory-optimization)
+- [Process large files with streaming](#process-large-files-with-streaming)
+  - [Testing](#testing)
+    - [Unit Testing](#unit-testing)
+    - [Integration Testing](#integration-testing)
+  - [Examples](#examples)
+    - [Complete Migration Example](#complete-migration-example)
+  - [Best Practices](#best-practices)
+    - [LDIF Processing Best Practices](#ldif-processing-best-practices)
+    - [Migration Best Practices](#migration-best-practices)
+  - [Troubleshooting](#troubleshooting)
+    - [Common Issues](#common-issues)
+      - [Parsing Errors](#parsing-errors)
+      - [Migration Issues](#migration-issues)
+      - [Performance Issues](#performance-issues)
+  - [Support and Documentation](#support-and-documentation)
+  - [License](#license)
+
 
 **LDIF Processing Library** - RFC-compliant LDIF processing with enterprise patterns and server-specific quirks handling.
 
 ## Overview
 
-flext-ldif is a comprehensive library for processing LDAP Data Interchange Format (LDIF) files with full RFC 2849/4512 compliance. It provides enterprise-grade features including server-specific quirks handling, migration pipelines, and seamless integration with the flext-core framework.
+flext-ldif is a comprehensive library for processing LDAP Data Interchange Format (LDIF) files with full RFC 2849/4512 compliance. It provides enterprise-grade features including server-specific quirks handling,
+    
+     migration pipelines, and seamless integration with the flext-core framework.
 
 ## Installation
 

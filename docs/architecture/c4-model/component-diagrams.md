@@ -1,8 +1,29 @@
 # FLEXT Component Diagrams
+## Table of Contents
+
+- [FLEXT Component Diagrams](#flext-component-diagrams)
+  - [Overview](#overview)
+  - [1. FlexCore Runtime Container Components](#1-flexcore-runtime-container-components)
+  - [2. FLEXT Core Service Components](#2-flext-core-service-components)
+  - [3. API Gateway Components](#3-api-gateway-components)
+  - [4. LDAP Service Components](#4-ldap-service-components)
+  - [5. Singer Platform Components](#5-singer-platform-components)
+  - [Component Interaction Patterns](#component-interaction-patterns)
+    - [1. Request-Response Pattern](#1-request-response-pattern)
+    - [2. Event-Driven Pattern](#2-event-driven-pattern)
+    - [3. Pipeline Pattern](#3-pipeline-pattern)
+    - [4. CQRS Pattern](#4-cqrs-pattern)
+    - [5. Railway Pattern](#5-railway-pattern)
+  - [Technology Stack by Component](#technology-stack-by-component)
+    - [Go Components (FlexCore)](#go-components-flexcore)
+    - [Python Components (FLEXT Services)](#python-components-flext-services)
+    - [Common Patterns](#common-patterns)
+
 
 ## Overview
 
-This document provides detailed component diagrams for the key containers in the FLEXT platform, showing how each container is composed of components and their relationships.
+This document provides detailed component diagrams for the key containers in the FLEXT platform,
+     showing how each container is composed of components and their relationships.
 
 ## 1. FlexCore Runtime Container Components
 
@@ -437,6 +458,6 @@ graph TB
 
 ---
 
-**Last Updated**: 2025-01-XX  
-**Version**: 1.0.0  
+**Last Updated**: 2025-01-XX
+**Version**: 1.0.0
 **Maintainer**: FLEXT Architecture Team

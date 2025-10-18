@@ -15,7 +15,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextResult
 from flext_tests import FlextTestsDomains
 
 from flext_quality.tools import MyPyChecker
@@ -44,7 +44,7 @@ class TestMyPyChecker:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_test_project_data(project_path: str) -> FlextTypes.Dict:
+        def create_test_project_data(project_path: str) -> dict[str, object]:
             """Create test project data."""
             return {
                 "project_path": project_path,
@@ -53,7 +53,7 @@ class TestMyPyChecker:
             }
 
         @staticmethod
-        def create_test_check_data() -> FlextTypes.StringDict:
+        def create_test_check_data() -> dict[str, str]:
             """Create test check data."""
             return {
                 "check_type": "strict",
@@ -282,9 +282,7 @@ class TestMyPyChecker:
         assert isinstance(checker, MyPyChecker)
 
         # Test project checking
-        test_data = self._TestDataHelper.create_test_project_data(
-            str(temp_test_dir)
-        )
+        test_data = self._TestDataHelper.create_test_project_data(str(temp_test_dir))
         check_result = checker.check_project(test_data["project_path"])
         assert isinstance(check_result, FlextResult)
         assert check_result.is_success

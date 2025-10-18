@@ -1,12 +1,109 @@
 # Enhanced Documentation Maintenance System
+> **Important**
+>
+> Legacy helper scripts referenced in this document (`scripts/docs_*`) have been
+> retired. Use the consolidated `flext-quality` documentation maintenance CLI
+> (`python -m flext_quality.docs_maintenance.cli` / `flext-docs`) instead. The
+> sections below are preserved for historical context only.
+## Table of Contents
 
-**Version:** 2.0.0  
-**Last Updated:** 2025-10-09  
+- [Enhanced Documentation Maintenance System](#enhanced-documentation-maintenance-system)
+  - [Overview](#overview)
+  - [Key Features](#key-features)
+    - [🤖 AI-Powered Analysis](#-ai-powered-analysis)
+    - [🔧 Advanced Tools](#-advanced-tools)
+    - [📊 Comprehensive Reporting](#-comprehensive-reporting)
+  - [Quick Start](#quick-start)
+    - [1. Basic Usage](#1-basic-usage)
+- [Show all available commands](#show-all-available-commands)
+- [Run complete AI-powered analysis](#run-complete-ai-powered-analysis)
+- [Preview smart optimizations](#preview-smart-optimizations)
+- [Generate health dashboard](#generate-health-dashboard)
+    - [2. Complete Workflow](#2-complete-workflow)
+- [Run AI-powered sync (preview)](#run-ai-powered-sync-preview)
+- [Apply optimizations and commit](#apply-optimizations-and-commit)
+- [Generate comprehensive reports](#generate-comprehensive-reports)
+  - [Tool Overview](#tool-overview)
+    - [1. Advanced Content Analyzer (`docs_advanced_analyzer.py`)](#1-advanced-content-analyzer-docs_advanced_analyzerpy)
+- [Basic analysis](#basic-analysis)
+- [HTML dashboard](#html-dashboard)
+    - [2. Smart Documentation Optimizer (`docs_smart_optimizer.py`)](#2-smart-documentation-optimizer-docs_smart_optimizerpy)
+- [Preview optimizations](#preview-optimizations)
+- [Apply optimizations](#apply-optimizations)
+    - [3. Health Monitor (`docs_health_monitor.py`)](#3-health-monitor-docs_health_monitorpy)
+- [Generate health dashboard](#generate-health-dashboard)
+- [JSON health data](#json-health-data)
+    - [4. AI Automation (`docs_ai_automation.py`)](#4-ai-automation-docs_ai_automationpy)
+- [Run complete automation (dry-run)](#run-complete-automation-dry-run)
+- [Apply changes](#apply-changes)
+- [Schedule automation](#schedule-automation)
+  - [Configuration](#configuration)
+    - [Configuration File (`docs_maintenance_config.json`)](#configuration-file-docs_maintenance_configjson)
+    - [Key Configuration Options](#key-configuration-options)
+  - [Make Commands](#make-commands)
+    - [Analysis Commands](#analysis-commands)
+    - [Optimization Commands](#optimization-commands)
+    - [Health Monitoring Commands](#health-monitoring-commands)
+    - [Complete Workflows](#complete-workflows)
+    - [Reporting Commands](#reporting-commands)
+  - [Quality Gates](#quality-gates)
+    - [Health Score Thresholds](#health-score-thresholds)
+    - [Issue Limits](#issue-limits)
+    - [Accessibility Requirements](#accessibility-requirements)
+  - [Reporting and Dashboards](#reporting-and-dashboards)
+    - [HTML Dashboard](#html-dashboard)
+    - [JSON Reports](#json-reports)
+    - [Markdown Reports](#markdown-reports)
+  - [Team Collaboration](#team-collaboration)
+    - [Team Insights](#team-insights)
+    - [Notifications](#notifications)
+  - [Integration](#integration)
+    - [CI/CD Integration](#cicd-integration)
+    - [Git Integration](#git-integration)
+  - [Performance](#performance)
+    - [Optimization](#optimization)
+    - [Scalability](#scalability)
+  - [Troubleshooting](#troubleshooting)
+    - [Common Issues](#common-issues)
+      - ["Analysis takes too long"](#analysis-takes-too-long)
+- [Reduce analysis scope](#reduce-analysis-scope)
+- [Use caching](#use-caching)
+- [Set enable_caching: true in config](#set-enable_caching-true-in-config)
+      - ["Optimization confidence too low"](#optimization-confidence-too-low)
+- [Lower confidence threshold](#lower-confidence-threshold)
+- [Set optimization_confidence_threshold: 0.5 in config](#set-optimization_confidence_threshold-05-in-config)
+- [Review optimization suggestions](#review-optimization-suggestions)
+      - ["Health score too low"](#health-score-too-low)
+- [Check specific issues](#check-specific-issues)
+- [Review recommendations](#review-recommendations)
+    - [Debug Mode](#debug-mode)
+- [Enable verbose output](#enable-verbose-output)
+  - [Best Practices](#best-practices)
+    - [1. Regular Maintenance](#1-regular-maintenance)
+    - [2. Quality Focus](#2-quality-focus)
+    - [3. Team Collaboration](#3-team-collaboration)
+    - [4. Continuous Improvement](#4-continuous-improvement)
+  - [Advanced Features](#advanced-features)
+    - [AI-Powered Insights](#ai-powered-insights)
+    - [Automation](#automation)
+    - [Integration](#integration)
+  - [Support](#support)
+    - [Getting Help](#getting-help)
+    - [Resources](#resources)
+  - [Changelog](#changelog)
+    - [Version 2.0.0 (2025-10-09)](#version-200-2025-10-09)
+    - [Version 1.0.0 (2025-10-09)](#version-100-2025-10-09)
+
+
+**Version:** 2.0.0
+**Last Updated:** 2025-10-09
 **Status:** Production Ready
 
 ## Overview
 
-The Enhanced Documentation Maintenance System is an AI-powered, comprehensive solution for maintaining high-quality documentation across the FLEXT monorepo. It combines advanced content analysis, intelligent optimization, real-time health monitoring, and automated reporting to ensure documentation excellence.
+The Enhanced Documentation Maintenance System is an AI-powered,
+     comprehensive solution for maintaining high-quality documentation across the FLEXT monorepo. It combines advanced content analysis,
+     intelligent optimization, real-time health monitoring, and automated reporting to ensure documentation excellence.
 
 ## Key Features
 
@@ -515,6 +612,6 @@ make docs-advanced
 
 ---
 
-**Maintained by:** FLEXT Documentation Team  
-**License:** Internal Use Only  
+**Maintained by:** FLEXT Documentation Team
+**License:** Internal Use Only
 **Questions?** Open an issue with the `documentation` label

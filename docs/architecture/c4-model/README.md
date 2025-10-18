@@ -1,6 +1,25 @@
 # FLEXT C4 Model Architecture Documentation
+## Table of Contents
 
-This directory contains the C4 model diagrams for the FLEXT Enterprise Data Integration Platform, providing a comprehensive view of the system architecture at different levels of detail.
+- [FLEXT C4 Model Architecture Documentation](#flext-c4-model-architecture-documentation)
+  - [📋 C4 Model Levels](#-c4-model-levels)
+    - [1. [System Context Diagram](./system-context.md)](#1-system-context-diagramsystem-contextmd)
+    - [2. [Container Diagram](./container-diagram.md)](#2-container-diagramcontainer-diagrammd)
+    - [3. [Component Diagrams](./component-diagrams.md)](#3-component-diagramscomponent-diagramsmd)
+    - [4. [Code Diagrams](./code-diagrams.md)](#4-code-diagramscode-diagramsmd)
+  - [🎯 FLEXT Architecture Overview](#-flext-architecture-overview)
+  - [🏗️ Key Architectural Patterns](#-key-architectural-patterns)
+    - [Foundation Layer (flext-core)](#foundation-layer-flext-core)
+    - [Application Layer](#application-layer)
+    - [Infrastructure Layer](#infrastructure-layer)
+    - [Data Integration Layer (Singer Platform)](#data-integration-layer-singer-platform)
+    - [Runtime Layer](#runtime-layer)
+  - [📊 Architecture Quality Attributes](#-architecture-quality-attributes)
+  - [🔗 Related Documentation](#-related-documentation)
+
+
+This directory contains the C4 model diagrams for the FLEXT Enterprise Data Integration Platform,
+     providing a comprehensive view of the system architecture at different levels of detail.
 
 ## 📋 C4 Model Levels
 
@@ -84,6 +103,6 @@ FLEXT is an enterprise-grade data integration platform built with:
 
 ---
 
-**Last Updated**: 2025-01-XX  
-**Version**: 1.0.0  
+**Last Updated**: 2025-01-XX
+**Version**: 1.0.0
 **Maintainer**: FLEXT Architecture Team

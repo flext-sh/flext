@@ -131,12 +131,12 @@ def discover_missing_dependencies(
     discovery: "DependencyDiscovery",
     *,
     verbose: bool,
-) -> dict[Path, dict[str, FlextTypes.StringList]]:
+) -> dict[Path, dict[str, list[str]]]:
     """Descobre dependências faltantes em todos os projetos."""
     print_colored("\n2️⃣ Descobrindo dependências faltantes...", Colors.BLUE)
 
     # Removemos o decorator @cached que estava causando problemas de tipagem
-    def get_project_deps(project_path: Path) -> dict[str, FlextTypes.StringList]:
+    def get_project_deps(project_path: Path) -> dict[str, list[str]]:
         deps = discovery.discover_project_dependencies(
             project_path,
             include_dev=True,
@@ -145,7 +145,7 @@ def discover_missing_dependencies(
         # Converter set para list se necessário
         return {k: list(v) if isinstance(v, set) else v for k, v in deps.items()}
 
-    missing_by_project: dict[Path, dict[str, FlextTypes.StringList]] = {}
+    missing_by_project: dict[Path, dict[str, list[str]]] = {}
     total_missing = 0
 
     for project in projects:
@@ -179,18 +179,18 @@ def analyze_conflicts(
     analyzer: ConflictAnalyzer,
     *,
     verbose: bool,
-) -> FlextTypes.Dict:
+) -> dict[str, object]:
     """Analisa conflitos de versão no workspace."""
     print_colored("\n3️⃣ Analisando conflitos de versão...", Colors.BLUE)
 
-    def get_conflicts() -> FlextTypes.Dict:
+    def get_conflicts() -> dict[str, object]:
         result = analyzer.analyze_workspace_conflicts(workspace_path)
         if result.is_success:
             conflict_result = result.unwrap()
             return conflict_result.model_dump()
         return {"error": result.error or "Analysis failed"}
 
-    analysis: FlextTypes.Dict = get_conflicts()
+    analysis: dict[str, object] = get_conflicts()
     analysis["stats"]
 
     print_colored("\n📊 Estatísticas:", Colors.CYAN)
@@ -205,7 +205,7 @@ def analyze_conflicts(
                 reverse=True,
             )
         else:
-            conflicts_sorted: FlextTypes.List = []
+            conflicts_sorted: list[object] = []
         for _i, (_package, _data) in enumerate(conflicts_sorted[:5]):
             pass
 
@@ -213,7 +213,7 @@ def analyze_conflicts(
 
 
 def add_missing_dependencies(
-    missing_by_project: dict[Path, dict[str, FlextTypes.StringList]],
+    missing_by_project: dict[Path, dict[str, list[str]]],
     poetry_ops: PoetryOperations,
     *,
     auto: bool,

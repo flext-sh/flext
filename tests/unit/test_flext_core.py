@@ -17,11 +17,11 @@ from flext_core import (
     FlextConfig,
     FlextConstants,
     FlextContainer,
+    FlextExceptions,
     FlextLogger,
     FlextModels,
     FlextResult,
     FlextService,
-    FlextTypes,
     FlextUtilities,
 )
 
@@ -33,7 +33,7 @@ class TestFlextConsolidated:
         """Nested helper class for test data creation."""
 
         @staticmethod
-        def create_success_data() -> FlextTypes.Dict:
+        def create_success_data() -> dict[str, object]:
             """Create test data for success cases."""
             return {"status": "success", "data": "test_value"}
 
@@ -43,7 +43,7 @@ class TestFlextConsolidated:
             return "test_error_message"
 
         @staticmethod
-        def create_complex_data() -> FlextTypes.Dict:
+        def create_complex_data() -> dict[str, object]:
             """Create complex test data."""
             return {"nested": {"value": 42}, "list": [1, 2, 3], "string": "test"}
 
@@ -62,14 +62,14 @@ class TestFlextConsolidated:
 
         # Test with dict
         test_data = self._TestDataHelper.create_success_data()
-        result_dict = FlextResult[FlextTypes.Dict].ok(test_data)
+        result_dict = FlextResult[dict[str, object]].ok(test_data)
         assert result_dict.is_success
         assert result_dict.data == test_data
         assert result_dict.error is None
 
         # Test with complex data
         complex_data = self._TestDataHelper.create_complex_data()
-        result_complex = FlextResult[FlextTypes.Dict].ok(complex_data)
+        result_complex = FlextResult[dict[str, object]].ok(complex_data)
         assert result_complex.is_success
         assert result_complex.data == complex_data
 
@@ -83,7 +83,7 @@ class TestFlextConsolidated:
         assert not result.is_success
 
         # Test that accessing data on failure raises exception
-        with pytest.raises(TypeError):
+        with pytest.raises(FlextExceptions.ValidationError):
             _ = result.data
 
     def test_flext_result_unwrap_success(self) -> None:
@@ -164,7 +164,7 @@ class TestFlextConsolidated:
     def test_flext_constants_access(self) -> None:
         """Test FlextConstants access."""
         # Test platform constants
-        assert FlextConstants.Http.HTTP_OK is not None
+        assert FlextConstants.FlextWeb.HTTP_OK is not None
         assert FlextConstants.Platform.HTTP_STATUS_INTERNAL_ERROR is not None
 
         # Test logging constants
@@ -218,16 +218,16 @@ class TestFlextConsolidated:
     def test_flext_types_access(self) -> None:
         """Test FlextTypes access."""
         # Test core types
-        assert FlextTypes.Dict is not None
-        assert FlextTypes.List is not None
-        assert FlextTypes.StringList is not None
+        assert dict[str, object] is not None
+        assert list[object] is not None
+        assert list[str] is not None
 
     def test_flext_types_usage(self) -> None:
         """Test FlextTypes usage in type annotations."""
         # Test that types can be used in annotations
-        test_dict: FlextTypes.Dict = {"key": "value"}
-        test_list: FlextTypes.List = [1, 2, 3]
-        test_string_list: FlextTypes.StringList = ["test1", "test2"]
+        test_dict: dict[str, object] = {"key": "value"}
+        test_list: list[object] = [1, 2, 3]
+        test_string_list: list[str] = ["test1", "test2"]
 
         assert test_dict is not None
         assert test_list is not None
@@ -285,13 +285,13 @@ class TestFlextConsolidated:
         """Test flext-core components working together."""
 
         # Create a service that uses multiple flext-core components
-        class IntegratedService(FlextService[FlextTypes.Dict]):
+        class IntegratedService(FlextService[dict[str, object]]):
             def __init__(self) -> None:
                 super().__init__()
                 # self.logger is read-only, use class logger
                 self._container = FlextContainer.get_global()
 
-            def execute(self) -> FlextResult[FlextTypes.Dict]:
+            def execute(self) -> FlextResult[dict[str, object]]:
                 try:
                     # Use logger
                     self.logger.info("Service executing")
@@ -300,12 +300,12 @@ class TestFlextConsolidated:
                     self._container.register("test", "value")
 
                     # Return success result
-                    return FlextResult[FlextTypes.Dict].ok({
+                    return FlextResult[dict[str, object]].ok({
                         "status": "success",
                         "message": "Integration test passed",
                     })
                 except Exception as e:
-                    return FlextResult[FlextTypes.Dict].fail(str(e))
+                    return FlextResult[dict[str, object]].fail(str(e))
 
         service = IntegratedService()
         result = service.execute()

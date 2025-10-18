@@ -1,7 +1,99 @@
 # FLEXT Testing Guide Update
+## Table of Contents
 
-**Generated:** 2025-10-09  
-**Version:** 0.9.0  
+- [FLEXT Testing Guide Update](#flext-testing-guide-update)
+  - [📊 Testing Overview](#-testing-overview)
+    - [Current Testing Status](#current-testing-status)
+    - [Testing Philosophy](#testing-philosophy)
+  - [🧪 Testing Framework](#-testing-framework)
+    - [Core Testing Tools](#core-testing-tools)
+      - [pytest](#pytest)
+- [Basic test structure](#basic-test-structure)
+      - [Test Markers](#test-markers)
+    - [Testing Patterns](#testing-patterns)
+      - [Railway-Oriented Testing](#railway-oriented-testing)
+      - [Dependency Injection Testing](#dependency-injection-testing)
+      - [Model Testing](#model-testing)
+  - [🔧 Testing by Project Type](#-testing-by-project-type)
+    - [Core Framework Testing (flext-core)](#core-framework-testing-flext-core)
+      - [Unit Tests](#unit-tests)
+- [tests/unit/test_result.py](#testsunittest_resultpy)
+      - [Integration Tests](#integration-tests)
+- [tests/integration/test_container.py](#testsintegrationtest_containerpy)
+    - [API Testing (flext-api)](#api-testing-flext-api)
+      - [Endpoint Testing](#endpoint-testing)
+- [tests/e2e/test_api_endpoints.py](#testse2etest_api_endpointspy)
+      - [Authentication Testing](#authentication-testing)
+- [tests/integration/test_auth.py](#testsintegrationtest_authpy)
+    - [Data Integration Testing](#data-integration-testing)
+      - [LDIF Processing Tests](#ldif-processing-tests)
+- [tests/unit/test_ldif_processing.py](#testsunittest_ldif_processingpy)
+      - [LDAP Integration Tests](#ldap-integration-tests)
+- [tests/integration/test_ldap_integration.py](#testsintegrationtest_ldap_integrationpy)
+      - [Oracle Integration Tests](#oracle-integration-tests)
+- [tests/integration/test_oracle_integration.py](#testsintegrationtest_oracle_integrationpy)
+    - [Singer Platform Testing](#singer-platform-testing)
+      - [Tap Testing](#tap-testing)
+- [tests/unit/test_tap_ldap.py](#testsunittest_tap_ldappy)
+      - [Target Testing](#target-testing)
+- [tests/unit/test_target_oracle.py](#testsunittest_target_oraclepy)
+  - [🚀 Performance Testing](#-performance-testing)
+    - [Benchmark Testing](#benchmark-testing)
+- [tests/performance/test_benchmarks.py](#testsperformancetest_benchmarkspy)
+    - [Load Testing](#load-testing)
+- [tests/performance/test_load.py](#testsperformancetest_loadpy)
+  - [🔍 Test Configuration](#-test-configuration)
+    - [pytest Configuration](#pytest-configuration)
+- [conftest.py](#conftestpy)
+    - [Test Environment Setup](#test-environment-setup)
+- [tests/conftest.py](#testsconftestpy)
+  - [📊 Test Coverage and Quality](#-test-coverage-and-quality)
+    - [Coverage Requirements](#coverage-requirements)
+- [Run tests with coverage](#run-tests-with-coverage)
+- [Coverage requirements](#coverage-requirements)
+- [- Core libraries: 85%+ coverage](#--core-libraries-85-coverage)
+- [- Application projects: 75%+ coverage](#--application-projects-75-coverage)
+- [- Integration tests: 60%+ coverage](#--integration-tests-60-coverage)
+    - [Quality Gates](#quality-gates)
+- [Run all quality gates](#run-all-quality-gates)
+- [Individual quality checks](#individual-quality-checks)
+    - [Test Organization](#test-organization)
+  - [🚀 CI/CD Integration](#-cicd-integration)
+    - [GitHub Actions](#github-actions)
+- [.github/workflows/test.yml](#githubworkflowstestyml)
+    - [Test Execution](#test-execution)
+- [Run all tests](#run-all-tests)
+- [Run specific test types](#run-specific-test-types)
+- [Run tests for specific project](#run-tests-for-specific-project)
+- [Run tests with coverage](#run-tests-with-coverage)
+  - [📚 Best Practices](#-best-practices)
+    - [Test Writing Guidelines](#test-writing-guidelines)
+    - [Test Data Management](#test-data-management)
+    - [Error Testing](#error-testing)
+    - [Performance Testing](#performance-testing)
+  - [🔍 Troubleshooting](#-troubleshooting)
+    - [Common Test Issues](#common-test-issues)
+      - [1. Import Errors](#1-import-errors)
+- [❌ WRONG - Internal module imports](#-wrong---internal-module-imports)
+- [✅ CORRECT - Root module imports](#-correct---root-module-imports)
+      - [2. Test Isolation](#2-test-isolation)
+- [❌ WRONG - Tests depend on each other](#-wrong---tests-depend-on-each-other)
+- [✅ CORRECT - Tests are independent](#-correct---tests-are-independent)
+      - [3. Mock Usage](#3-mock-usage)
+- [❌ WRONG - Over-mocking](#-wrong---over-mocking)
+- [✅ CORRECT - Minimal mocking](#-correct---minimal-mocking)
+    - [Debugging Tests](#debugging-tests)
+- [Enable debug logging](#enable-debug-logging)
+- [Use pytest debugging](#use-pytest-debugging)
+- [Test specific functionality](#test-specific-functionality)
+  - [📞 Resources](#-resources)
+    - [Documentation](#documentation)
+    - [Testing Tools](#testing-tools)
+    - [Support](#support)
+
+
+**Generated:** 2025-10-09
+**Version:** 0.9.0
 **Status:** ✅ PRODUCTION READY
 
 ---
@@ -994,6 +1086,6 @@ pytest tests/unit/test_result.py::test_flext_result_success -v
 
 ---
 
-**Testing Guide Generated By:** FLEXT Documentation System  
-**Last Updated:** 2025-10-09  
+**Testing Guide Generated By:** FLEXT Documentation System
+**Last Updated:** 2025-10-09
 **Version:** 0.9.0

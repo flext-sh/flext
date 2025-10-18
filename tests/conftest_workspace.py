@@ -53,9 +53,9 @@ def flext_logger() -> FlextLogger:
 
 
 @pytest.fixture
-def flext_result_success() -> FlextResult[FlextTypes.Dict]:
+def flext_result_success() -> FlextResult[dict[str, object]]:
     """Provide successful FlextResult for tests."""
-    return FlextResult[FlextTypes.Dict].ok({"success": True})
+    return FlextResult[dict[str, object]].ok({"success": True})
 
 
 @pytest.fixture
@@ -72,9 +72,9 @@ def test_file_manager(temp_dir: Path) -> FileManager:
 
 
 @pytest.fixture
-def flext_result_failure() -> FlextResult[FlextTypes.Dict]:
+def flext_result_failure() -> FlextResult[dict[str, object]]:
     """Provide failed FlextResult for tests."""
-    return FlextResult[FlextTypes.Dict].fail("Test error")
+    return FlextResult[dict[str, object]].fail("Test error")
 
 
 # =============================================================================
@@ -112,31 +112,31 @@ def flext_matchers() -> FlextTestsMatchers:
 
 
 @pytest.fixture
-def test_user_data() -> FlextTypes.Dict:
+def test_user_data() -> dict[str, object]:
     """Provide test user data."""
     return FlextTestsDomains.create_user()
 
 
 @pytest.fixture
-def test_config_data() -> FlextTypes.Dict:
+def test_config_data() -> dict[str, object]:
     """Provide test configuration data."""
     return FlextTestsDomains.create_configuration()
 
 
 @pytest.fixture
-def test_service_data() -> FlextTypes.Dict:
+def test_service_data() -> dict[str, object]:
     """Provide test service data."""
     return FlextTestsDomains.create_service()
 
 
 @pytest.fixture
-def test_payload_data() -> FlextTypes.Dict:
+def test_payload_data() -> dict[str, object]:
     """Provide test payload data."""
     return FlextTestsDomains.create_payload()
 
 
 @pytest.fixture
-def batch_user_data() -> list[FlextTypes.Dict]:
+def batch_user_data() -> list[dict[str, object]]:
     """Provide batch of test user data."""
     return FlextTestsDomains.batch_users(5)
 
@@ -147,13 +147,13 @@ def batch_user_data() -> list[FlextTypes.Dict]:
 
 
 @pytest.fixture
-def valid_email_cases() -> FlextTypes.StringList:
+def valid_email_cases() -> list[str]:
     """Provide valid email test cases."""
     return FlextTestsDomains.valid_email_cases()
 
 
 @pytest.fixture
-def invalid_email_cases() -> FlextTypes.StringList:
+def invalid_email_cases() -> list[str]:
     """Provide invalid email test cases."""
     return FlextTestsDomains.invalid_email_cases()
 
@@ -176,19 +176,19 @@ def invalid_ages() -> FlextTypes.IntList:
 
 
 @pytest.fixture
-def user_registration_data() -> FlextTypes.Dict:
+def user_registration_data() -> dict[str, object]:
     """Provide realistic user registration data."""
     return FlextTestsDomains.user_registration_data()
 
 
 @pytest.fixture
-def order_data() -> FlextTypes.Dict:
+def order_data() -> dict[str, object]:
     """Provide realistic order data."""
     return FlextTestsDomains.order_data()
 
 
 @pytest.fixture
-def api_response_data() -> FlextTypes.Dict:
+def api_response_data() -> dict[str, object]:
     """Provide realistic API response data."""
     return FlextTestsDomains.api_response_data()
 

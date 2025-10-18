@@ -1,4 +1,25 @@
 # API Reference
+## Table of Contents
+
+- [API Reference](#api-reference)
+  - [Core Components](#core-components)
+    - [🚀 flext-core](#-flext-core)
+    - [📄 flext-ldif](#-flext-ldif)
+- [Parse LDIF content](#parse-ldif-content)
+- [Write LDIF content](#write-ldif-content)
+- [Migrate between LDAP servers](#migrate-between-ldap-servers)
+    - [🌐 flext-api](#-flext-api)
+    - [🔐 flext-auth](#-flext-auth)
+    - [🗄️ flext-ldap](#-flext-ldap)
+    - [🗃️ flext-oracle](#-flext-oracle)
+  - [Architecture Patterns](#architecture-patterns)
+    - [Dependency Injection](#dependency-injection)
+    - [Railway-Oriented Programming](#railway-oriented-programming)
+    - [CQRS Pattern](#cqrs-pattern)
+  - [Configuration](#configuration)
+  - [Error Handling](#error-handling)
+  - [Logging](#logging)
+
 
 Complete API documentation for the FLEXT ecosystem.
 

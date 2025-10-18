@@ -24,7 +24,6 @@ from flext_core import (
     FlextLogger,
     FlextResult,
     FlextService,
-    FlextTypes,
 )
 
 from .constants import FlextTaskOrchestrationConstants
@@ -242,13 +241,13 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
         current_requirement = None
 
         for line in lines:
-            line = line.strip()
-            if not line:
+            stripped_line = line.strip()
+            if not stripped_line:
                 continue
 
             # Check for numbered lists
             numbered_match = re.match(
-                FlextTaskOrchestrationConstants.Patterns.NUMBERED_LIST, line
+                FlextTaskOrchestrationConstants.Patterns.NUMBERED_LIST, stripped_line
             )
             if numbered_match:
                 if current_requirement:
@@ -263,10 +262,10 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
                 }
                 continue
 
-            # Check for bullet points
-            bullet_match = re.match(
-                FlextTaskOrchestrationConstants.Patterns.BULLET_POINT, line
-            )
+                # Check for bullet points
+                bullet_match = re.match(
+                    FlextTaskOrchestrationConstants.Patterns.BULLET_POINT, stripped_line
+                )
             if bullet_match:
                 if current_requirement:
                     requirements.append(current_requirement)
@@ -282,7 +281,7 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
 
             # Check for task-like patterns
             task_match = re.match(
-                FlextTaskOrchestrationConstants.Patterns.TASK_PATTERN, line
+                FlextTaskOrchestrationConstants.Patterns.TASK_PATTERN, stripped_line
             )
             if task_match:
                 if current_requirement:
@@ -302,9 +301,9 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
             # Add to current requirement description
             if (
                 current_requirement
-                and line
+                and stripped_line
                 and not any(
-                    re.match(p, line)
+                    re.match(p, stripped_line)
                     for p in [
                         FlextTaskOrchestrationConstants.Patterns.TASK_PATTERN,
                         FlextTaskOrchestrationConstants.Patterns.NUMBERED_LIST,
@@ -313,9 +312,9 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
                 )
             ):
                 if current_requirement["description"]:
-                    current_requirement["description"] += " " + line
+                    current_requirement["description"] += " " + stripped_line
                 else:
-                    current_requirement["description"] = line
+                    current_requirement["description"] = stripped_line
 
         # Add final requirement
         if current_requirement:
@@ -374,7 +373,7 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
 
     def _generate_clarification_questions(
         self, requirements: list[dict[str, object]]
-    ) -> FlextTypes.StringList:
+    ) -> list[str]:
         """Generate clarification questions for requirements."""
         questions = []
 
@@ -469,9 +468,7 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
             tags=req.get("tags", []),
         )
 
-    def _decompose_into_subtasks(
-        self, req: dict[str, object], start_counter: int
-    ) -> list[Task]:
+    def _decompose_into_subtasks(self, req: dict[str, object]) -> list[Task]:
         """Decompose requirement into subtasks if needed."""
         subtasks = []
 
@@ -641,9 +638,7 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
 
     def _analyze_dependencies(
         self, tasks: list[Task]
-    ) -> FlextResult[
-        tuple[list[Task], list[dict[str, object]], list[FlextTypes.StringList]]
-    ]:
+    ) -> FlextResult[tuple[list[Task], list[dict[str, object]], list[list[str]]]]:
         """Analyze task dependencies and detect conflicts."""
         try:
             self._logger.info(f"Analyzing dependencies for {len(tasks)} tasks")
@@ -672,7 +667,7 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
                 tuple[
                     list[Task],
                     list[dict[str, object]],
-                    list[FlextTypes.StringList],
+                    list[list[str]],
                 ]
             ].ok((updated_tasks, conflicts, parallel_groups))
 
@@ -685,7 +680,7 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
                 tuple[
                     list[Task],
                     list[dict[str, object]],
-                    list[FlextTypes.StringList],
+                    list[list[str]],
                 ]
             ].fail(error)
 
@@ -777,7 +772,12 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
 
         # Check for common meaningful words
         common_words = words1.intersection(words2)
-        meaningful_words = {word for word in common_words if len(word) > 3}
+        meaningful_words = {
+            word
+            for word in common_words
+            if len(word)
+            > FlextTaskOrchestrationConstants.Validation.MIN_MEANINGFUL_WORD_LENGTH
+        }
 
         return len(meaningful_words) > 0
 
@@ -895,9 +895,7 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
 
         return conflicts
 
-    def _find_parallel_opportunities(
-        self, tasks: list[Task]
-    ) -> list[FlextTypes.StringList]:
+    def _find_parallel_opportunities(self, tasks: list[Task]) -> list[list[str]]:
         """Find tasks that can run in parallel."""
         parallel_groups = []
         remaining_tasks = tasks.copy()
@@ -943,7 +941,7 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
         return FlextResult[dict[str, object]].ok({"validated": True})
 
     def _create_execution_plan(
-        self, tasks: list[Task], parallel_groups: list[FlextTypes.StringList]
+        self, tasks: list[Task], parallel_groups: list[list[str]]
     ) -> TaskExecutionPlan:
         """Create execution plan from tasks and parallel groups."""
         # Determine execution order based on dependencies
@@ -967,7 +965,7 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
             end_date=datetime.now(UTC) + timedelta(hours=estimated_duration),
         )
 
-    def _determine_execution_order(self, tasks: list[Task]) -> FlextTypes.StringList:
+    def _determine_execution_order(self, tasks: list[Task]) -> list[str]:
         """Determine execution order based on dependencies."""
         # Simple topological sort
         task_ids = [task.id for task in tasks]
@@ -1002,9 +1000,7 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
 
         return result
 
-    def _assign_tasks_to_agents(
-        self, tasks: list[Task]
-    ) -> dict[str, FlextTypes.StringList]:
+    def _assign_tasks_to_agents(self, tasks: list[Task]) -> dict[str, list[str]]:
         """Assign tasks to agents."""
         if not self._config.auto_assign:
             return {}
@@ -1024,7 +1020,7 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
         self,
         tasks: list[Task],
         conflicts: list[dict[str, object]],
-        parallel_groups: list[FlextTypes.StringList],
+        parallel_groups: list[list[str]],
         plan: TaskExecutionPlan,
         requirements_data: dict[str, object],
     ) -> FlextResult[None]:
@@ -1086,7 +1082,7 @@ class FlextTaskOrchestration(FlextService[TaskOrchestrationConfig]):
         self,
         tasks: list[Task],
         conflicts: list[dict[str, object]],
-        parallel_groups: list[FlextTypes.StringList],
+        parallel_groups: list[list[str]],
         plan: TaskExecutionPlan,
         requirements_data: dict[str, object],
     ) -> str:
@@ -1237,9 +1233,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
         return content
 
-    def _format_parallel_groups(
-        self, parallel_groups: list[FlextTypes.StringList]
-    ) -> str:
+    def _format_parallel_groups(self, parallel_groups: list[list[str]]) -> str:
         """Format parallel groups."""
         if not parallel_groups:
             return "No parallel execution opportunities identified."
@@ -1274,7 +1268,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
     def _format_recommendations(
         self,
         conflicts: list[dict[str, object]],
-        parallel_groups: list[FlextTypes.StringList],
+        parallel_groups: list[list[str]],
     ) -> str:
         """Format recommendations."""
         recommendations = []
@@ -1296,7 +1290,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
         return content
 
-    def _format_execution_order(self, execution_order: FlextTypes.StringList) -> str:
+    def _format_execution_order(self, execution_order: list[str]) -> str:
         """Format execution order."""
         content = ""
         for i, task_id in enumerate(execution_order, 1):
@@ -1317,9 +1311,7 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
 
         return content
 
-    def _format_agent_assignments(
-        self, agent_assignments: dict[str, FlextTypes.StringList]
-    ) -> str:
+    def _format_agent_assignments(self, agent_assignments: dict[str, list[str]]) -> str:
         """Format agent assignments."""
         if not agent_assignments:
             return "No agent assignments configured."
@@ -1336,8 +1328,8 @@ This orchestration plan coordinates {len(tasks)} tasks across {len(parallel_grou
     def _generate_recommendations(
         self,
         conflicts: list[dict[str, object]],
-        parallel_groups: list[FlextTypes.StringList],
-    ) -> FlextTypes.StringList:
+        parallel_groups: list[list[str]],
+    ) -> list[str]:
         """Generate recommendations based on analysis."""
         recommendations = []
 

@@ -26,7 +26,6 @@ from flext_core import (
     FlextProcessors,
     FlextResult,
     FlextService,
-    FlextTypes,
 )
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -85,7 +84,7 @@ class FlextApplicationHandlerService[T](FlextService[str]):
 
         command_id: str = Field(default_factory=lambda: f"cmd_{uuid.uuid4().hex[:8]}")
         action: str = Field(..., description="Action to perform")
-        user_data: FlextTypes.Dict = Field(default_factory=dict)
+        user_data: dict[str, object] = Field(default_factory=dict)
         timestamp: float = Field(default_factory=lambda: uuid.uuid4().time)
         priority: str = Field(default="medium")
 
@@ -112,7 +111,7 @@ class FlextApplicationHandlerService[T](FlextService[str]):
         command_id: str = Field(default_factory=lambda: f"cmd_{uuid.uuid4().hex[:8]}")
         operation: str = Field(..., description="Processing operation")
         data_source: str = Field(..., description="Data source identifier")
-        parameters: FlextTypes.Dict = Field(default_factory=dict)
+        parameters: dict[str, object] = Field(default_factory=dict)
         batch_size: int = Field(default=1000, ge=1, le=10000)
         timeout_seconds: int = Field(default=300, ge=1, le=3600)
 
@@ -138,14 +137,14 @@ class FlextApplicationHandlerService[T](FlextService[str]):
 
         query_id: str = Field(default_factory=lambda: f"qry_{uuid.uuid4().hex[:8]}")
         table: str = Field(..., description="Table name")
-        filters: FlextTypes.Dict = Field(default_factory=dict)
+        filters: dict[str, object] = Field(default_factory=dict)
 
     class AggregationQuery(BaseModel):
         """Aggregation query for test compatibility."""
 
         query_id: str = Field(default_factory=lambda: f"qry_{uuid.uuid4().hex[:8]}")
         metric: str = Field(..., description="Metric to aggregate")
-        group_by: FlextTypes.StringList = Field(default_factory=list)
+        group_by: list[str] = Field(default_factory=list)
 
     class DataProcessedEvent(BaseModel):
         """Simple data processed event for test compatibility."""
@@ -228,7 +227,7 @@ class FlextApplicationHandlerService[T](FlextService[str]):
         def __init__(self, service: FlextApplicationHandlerService[object]) -> None:
             super().__init__()
             self._service = service
-            self._registry: FlextTypes.Dict = {}
+            self._registry: dict[str, object] = {}
 
         def register_handler(self, name: str, handler: object) -> FlextResult[None]:
             """Register handler in flext-core registry."""
@@ -248,7 +247,7 @@ class FlextApplicationHandlerService[T](FlextService[str]):
             except Exception as e:
                 return FlextResult[object].fail(f"Failed to get handler {name}: {e}")
 
-        def get_all_handlers(self: Self) -> FlextTypes.Dict:
+        def get_all_handlers(self: Self) -> dict[str, object]:
             """Get all registered handlers."""
             return self._registry.copy()
 
@@ -271,33 +270,33 @@ class FlextApplicationHandlerService[T](FlextService[str]):
     # Handler methods for test compatibility
     def handle_user_management(
         self, *_args: object, **_kwargs: object
-    ) -> FlextResult[FlextTypes.Dict]:
+    ) -> FlextResult[dict[str, object]]:
         """Handle user management command."""
-        return FlextResult[FlextTypes.Dict].ok({"status": "handled"})
+        return FlextResult[dict[str, object]].ok({"status": "handled"})
 
     def handle_data_processing(
         self, *_args: object, **_kwargs: object
-    ) -> FlextResult[FlextTypes.Dict]:
+    ) -> FlextResult[dict[str, object]]:
         """Handle data processing command."""
-        return FlextResult[FlextTypes.Dict].ok({"data": []})
+        return FlextResult[dict[str, object]].ok({"data": []})
 
     def handle_data_retrieval(
         self, *_args: object, **_kwargs: object
-    ) -> FlextResult[FlextTypes.Dict]:
+    ) -> FlextResult[dict[str, object]]:
         """Handle data retrieval query."""
-        return FlextResult[FlextTypes.Dict].ok({"data": []})
+        return FlextResult[dict[str, object]].ok({"data": []})
 
     def handle_aggregation(
         self, *_args: object, **_kwargs: object
-    ) -> FlextResult[FlextTypes.Dict]:
+    ) -> FlextResult[dict[str, object]]:
         """Handle aggregation query."""
-        return FlextResult[FlextTypes.Dict].ok({"aggregates": {}})
+        return FlextResult[dict[str, object]].ok({"aggregates": {}})
 
     def handle_data_processed(
         self, *_args: object, **_kwargs: object
-    ) -> FlextResult[FlextTypes.Dict]:
+    ) -> FlextResult[dict[str, object]]:
         """Handle data processed event."""
-        return FlextResult[FlextTypes.Dict].ok({"status": "handled"})
+        return FlextResult[dict[str, object]].ok({"status": "handled"})
 
     def execute(self, request: str = "") -> FlextResult[str]:
         """Execute handler service - required by FlextService abstract method."""

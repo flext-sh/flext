@@ -1,12 +1,12 @@
 from typing import Any, ClassVar
 
 from django.db import models
-from django.http.request import HttpRequest
+from django.http.request import FlextApiModels.HttpRequest
 
 SITE_CACHE: Any
 
 class SiteManager(models.Manager[Site]):
-    def get_current(self, request: HttpRequest | None = ...) -> Site: ...
+    def get_current(self, request: FlextApiModels.HttpRequest | None = ...) -> Site: ...
     def clear_cache(self) -> None: ...
     def get_by_natural_key(self, domain: str) -> Site: ...
 

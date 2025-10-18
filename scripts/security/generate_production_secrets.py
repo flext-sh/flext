@@ -9,7 +9,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextResult
 
 from flext_quality.tools import (
     Colors,
@@ -52,7 +52,7 @@ class ProductionSecretsScript(BaseSecurityScript):
 
             # Secret generation functionality to be implemented
             # Will use flext_quality.tools.security for secret generation
-            secrets_result = FlextResult[FlextTypes.Dict].fail(
+            secrets_result = FlextResult[dict[str, object]].fail(
                 "Secret generation not yet implemented",
             )
 
@@ -115,9 +115,9 @@ class ProductionSecretsScript(BaseSecurityScript):
 
         return parser
 
-    def _process_kwargs(self, args: dict[str, str]) -> FlextTypes.StringDict:
+    def _process_kwargs(self, args: dict[str, str]) -> dict[str, str]:
         """Process arguments into kwargs."""
-        kwargs: FlextTypes.Dict = {}
+        kwargs: dict[str, object] = {}
         kwargs["encrypt"] = not getattr(args, "no_encrypt", False)
         return kwargs
 

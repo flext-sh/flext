@@ -1,6 +1,54 @@
 # Architecture Decision Records (ADRs)
+## Table of Contents
 
-This directory contains Architecture Decision Records (ADRs) for the FLEXT Enterprise Data Integration Platform. ADRs document important architectural decisions, their context, and consequences.
+- [Architecture Decision Records (ADRs)](#architecture-decision-records-adrs)
+  - [📋 ADR Index](#-adr-index)
+    - [Foundation Decisions](#foundation-decisions)
+    - [Technology Decisions](#technology-decisions)
+    - [Architecture Decisions](#architecture-decisions)
+    - [Integration Decisions](#integration-decisions)
+    - [Security Decisions](#security-decisions)
+    - [Quality Decisions](#quality-decisions)
+    - [Deployment Decisions](#deployment-decisions)
+  - [📝 ADR Template](#-adr-template)
+- [ADR-XXX: [Title]](#adr-xxx-title)
+  - [Status](#status)
+  - [Context](#context)
+  - [Decision](#decision)
+  - [Consequences](#consequences)
+  - [Alternatives Considered](#alternatives-considered)
+  - [Implementation Notes](#implementation-notes)
+  - [References](#references)
+  - [🔄 ADR Lifecycle](#-adr-lifecycle)
+    - [1. Proposed](#1-proposed)
+    - [2. Accepted](#2-accepted)
+    - [3. Rejected](#3-rejected)
+    - [4. Deprecated](#4-deprecated)
+    - [5. Superseded](#5-superseded)
+  - [📊 Decision Categories](#-decision-categories)
+    - [Foundation Decisions](#foundation-decisions)
+    - [Technology Decisions](#technology-decisions)
+    - [Architecture Decisions](#architecture-decisions)
+    - [Integration Decisions](#integration-decisions)
+    - [Security Decisions](#security-decisions)
+    - [Quality Decisions](#quality-decisions)
+    - [Deployment Decisions](#deployment-decisions)
+  - [🎯 Decision Principles](#-decision-principles)
+    - [1. Consistency](#1-consistency)
+    - [2. Simplicity](#2-simplicity)
+    - [3. Flexibility](#3-flexibility)
+    - [4. Quality](#4-quality)
+    - [5. Team Capability](#5-team-capability)
+  - [📚 Related Documentation](#-related-documentation)
+  - [🤝 Contributing to ADRs](#-contributing-to-adrs)
+    - [Creating New ADRs](#creating-new-adrs)
+    - [Updating ADRs](#updating-adrs)
+    - [Review Process](#review-process)
+
+
+This directory contains Architecture Decision Records (ADRs) for the FLEXT Enterprise Data Integration Platform. ADRs document important architectural decisions,
+    
+     their context, and consequences.
 
 ## 📋 ADR Index
 
@@ -214,6 +262,6 @@ Decisions about deployment, infrastructure, and operations.
 
 ---
 
-**Last Updated**: 2025-01-XX  
-**Version**: 1.0.0  
+**Last Updated**: 2025-01-XX
+**Version**: 1.0.0
 **Maintainer**: FLEXT Architecture Team

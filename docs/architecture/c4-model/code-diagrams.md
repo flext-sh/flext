@@ -1,8 +1,28 @@
 # FLEXT Code Diagrams
+## Table of Contents
+
+- [FLEXT Code Diagrams](#flext-code-diagrams)
+  - [Overview](#overview)
+  - [1. FlextResult[T] Class Diagram](#1-flextresultt-class-diagram)
+  - [2. FlextContainer Class Diagram](#2-flextcontainer-class-diagram)
+  - [3. FlextModels Domain Model](#3-flextmodels-domain-model)
+  - [4. LDAP Service Entity Relationship Diagram](#4-ldap-service-entity-relationship-diagram)
+  - [5. API Gateway Request Flow Sequence Diagram](#5-api-gateway-request-flow-sequence-diagram)
+  - [6. Data Pipeline Execution Sequence Diagram](#6-data-pipeline-execution-sequence-diagram)
+  - [7. Error Handling Flow Sequence Diagram](#7-error-handling-flow-sequence-diagram)
+  - [8. Plugin Execution Architecture](#8-plugin-execution-architecture)
+  - [9. Configuration Management Class Diagram](#9-configuration-management-class-diagram)
+  - [10. Event Sourcing Architecture](#10-event-sourcing-architecture)
+  - [Code Quality Metrics](#code-quality-metrics)
+    - [Test Coverage by Component](#test-coverage-by-component)
+    - [Performance Benchmarks](#performance-benchmarks)
+    - [Memory Usage](#memory-usage)
+
 
 ## Overview
 
-This document provides detailed code-level diagrams showing the implementation structure of key components in the FLEXT platform, including class diagrams, entity relationship diagrams, and sequence diagrams.
+This document provides detailed code-level diagrams showing the implementation structure of key components in the FLEXT platform,
+     including class diagrams, entity relationship diagrams, and sequence diagrams.
 
 ## 1. FlextResult[T] Class Diagram
 
@@ -563,6 +583,6 @@ classDiagram
 
 ---
 
-**Last Updated**: 2025-01-XX  
-**Version**: 1.0.0  
+**Last Updated**: 2025-01-XX
+**Version**: 1.0.0
 **Maintainer**: FLEXT Architecture Team

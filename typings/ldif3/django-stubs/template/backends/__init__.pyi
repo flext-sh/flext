@@ -2,7 +2,7 @@ from collections.abc import Callable
 from typing import Any
 
 from _typeshed import Incomplete
-from django.http.request import HttpRequest
+from django.http.request import FlextApiModels.HttpRequest
 from django.template.exceptions import TemplateSyntaxError
 from django.utils.functional import cached_property
 
@@ -28,7 +28,7 @@ class Template:
     origin: Origin
     def __init__(self, template: Incomplete, backend: Jinja2) -> None: ...
     def render(
-        self, context: dict[str, Any] | None = ..., request: HttpRequest | None = ...
+        self, context: dict[str, Any] | None = ..., request: FlextApiModels.HttpRequest | None = ...
     ) -> str: ...
 
 def get_exception_info(exception: TemplateSyntaxError) -> dict[str, Any]: ...

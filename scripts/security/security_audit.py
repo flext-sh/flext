@@ -61,7 +61,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextResult
 
 from flext_quality.tools import (
     Colors,
@@ -118,7 +118,7 @@ class ScanConfig:
 
     def __init__(
         self,
-        target_paths: FlextTypes.StringList,
+        target_paths: list[str],
         *,
         include_dependencies: bool = False,
     ) -> None:
@@ -244,9 +244,7 @@ class SecurityAuditScript(FlextScript):
         except Exception as e:
             return FlextResult[object].fail(f"Security audit execution failed: {e}")
 
-    def _validate_target_paths(
-        self, paths: FlextTypes.StringList
-    ) -> FlextTypes.StringList:
+    def _validate_target_paths(self, paths: list[str]) -> list[str]:
         """Validate and filter target paths for scanning.
 
         Args:
@@ -259,7 +257,7 @@ class SecurityAuditScript(FlextScript):
         if not isinstance(paths, list):
             paths = [str(paths)] if paths else ["src/"]
 
-        validated_paths: FlextTypes.StringList = []
+        validated_paths: list[str] = []
 
         for path_str in paths:
             path = Path(path_str)
