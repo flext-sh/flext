@@ -15,7 +15,6 @@ import tempfile
 from pathlib import Path
 
 from flext_core import FlextResult, FlextService
-
 from flext_quality.tools import FlextPathService
 
 

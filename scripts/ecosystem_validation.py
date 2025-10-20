@@ -17,7 +17,7 @@ import ast
 import json
 import logging
 import shutil
-import subprocess  # noqa: S404
+import subprocess
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -98,6 +98,7 @@ class EcosystemValidator:
             workspace_path: Path to the FLEXT workspace.
 
         """
+        super().__init__()
         self.workspace_path = workspace_path
         self.results: dict[str, ValidationResult] = {}
 
@@ -183,10 +184,8 @@ class EcosystemValidator:
 
                 for pattern in import_patterns:
                     if pattern in content:
-                        violations.append(
-                            f"{py_file.relative_to(project_path)}: "
-                            f"Direct {tech} import (use {info['library']})"
-                        )
+                        message = f"{py_file.relative_to(project_path)}: Direct {tech} import (use {info['library']})"
+                        violations.append(message)
                         break
 
         return violations

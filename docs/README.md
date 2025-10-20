@@ -1,4 +1,5 @@
 # FLEXT Documentation
+
 ## Table of Contents
 
 - [FLEXT Documentation](#flext-documentation)
@@ -13,12 +14,11 @@
   - [🛠️ Quick Links](#-quick-links)
   - [📞 Support](#-support)
 
-
 **FLEXT** - Enterprise Data Integration Platform
 
 A comprehensive,
-     enterprise-grade data integration framework built with Python 3.13+ and modern architectural patterns. FLEXT provides a unified platform for data processing,
-    
+enterprise-grade data integration framework built with Python 3.13+ and modern architectural patterns. FLEXT provides a unified platform for data processing,
+
      transformation, and integration across multiple domains including LDAP, Oracle, and various enterprise systems.
 
 ## 📚 Documentation Structure

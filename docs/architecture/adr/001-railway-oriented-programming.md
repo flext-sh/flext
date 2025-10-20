@@ -1,4 +1,5 @@
 # ADR-001: Railway-Oriented Programming with FlextResult[T]
+
 ## Table of Contents
 
 - [ADR-001: Railway-Oriented Programming with FlextResult[T]](#adr-001-railway-oriented-programming-with-flextresultt)
@@ -8,8 +9,7 @@
     - [Core Implementation](#core-implementation)
     - [Usage Patterns](#usage-patterns)
       - [Basic Usage](#basic-usage)
-- [Railway composition](#railway-composition)
-      - [Error Handling](#error-handling)
+- [Railway composition](#railway-composition) - [Error Handling](#error-handling)
   - [Consequences](#consequences)
     - [Positive Consequences](#positive-consequences)
       - [1. Improved Error Handling](#1-improved-error-handling)
@@ -33,7 +33,6 @@
     - [3. Testing Strategy](#3-testing-strategy)
     - [4. Performance Optimization](#4-performance-optimization)
   - [References](#references)
-
 
 ## Status
 

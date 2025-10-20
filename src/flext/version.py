@@ -1,8 +1,13 @@
-"""Project metadata for flext."""
+"""Version metadata for flext.
+
+Import version from flext-core for consistency across the ecosystem.
+"""
 
 from __future__ import annotations
 
 from typing import Final
+
+from flext_core.__version__ import __version__, __version_info__
 
 
 class FlextVersion:
@@ -11,8 +16,8 @@ class FlextVersion:
     def __init__(self) -> None:
         """Initialize version metadata."""
         super().__init__()
-        self.version = "0.1.0"
-        self.version_info = (0, 1, 0)
+        self.version = __version__
+        self.version_info = __version_info__
 
     @classmethod
     def current(cls) -> FlextVersion:
@@ -21,7 +26,5 @@ class FlextVersion:
 
 
 VERSION: Final[FlextVersion] = FlextVersion.current()
-__version__: Final[str] = VERSION.version
-__version_info__: Final[tuple[int | str, ...]] = VERSION.version_info
 
 __all__ = ["VERSION", "FlextVersion", "__version__", "__version_info__"]

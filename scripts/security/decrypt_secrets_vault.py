@@ -10,7 +10,6 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextResult
-
 from flext_quality.tools import (
     Colors,
     ScriptMetadata,

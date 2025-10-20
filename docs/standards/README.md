@@ -1,9 +1,10 @@
 # Standards and Guidelines
+
 ## Table of Contents
 
 - [Standards and Guidelines](#standards-and-guidelines)
   - [Code Standards](#code-standards)
-    - [[Python Standards](./python.md)](#python-standardspythonmd)
+    - [[Python Standards](./python.md)](#Python-standardspythonmd)
     - [[PEP Compliance](./pep-semantic.md)](#pep-compliancepep-semanticmd)
     - [[Docstring Standards](./docstring_standard.md)](#docstring-standardsdocstring_standardmd)
   - [Development Practices](#development-practices)
@@ -38,7 +39,6 @@
     - [Recommended Standards](#recommended-standards)
     - [Project-Specific Standards](#project-specific-standards)
   - [Getting Help with Standards](#getting-help-with-standards)
-
 
 Coding standards, best practices, and development guidelines for the FLEXT ecosystem.
 

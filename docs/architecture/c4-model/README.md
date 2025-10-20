@@ -1,4 +1,5 @@
 # FLEXT C4 Model Architecture Documentation
+
 ## Table of Contents
 
 - [FLEXT C4 Model Architecture Documentation](#flext-c4-model-architecture-documentation)
@@ -17,9 +18,8 @@
   - [📊 Architecture Quality Attributes](#-architecture-quality-attributes)
   - [🔗 Related Documentation](#-related-documentation)
 
-
 This directory contains the C4 model diagrams for the FLEXT Enterprise Data Integration Platform,
-     providing a comprehensive view of the system architecture at different levels of detail.
+providing a comprehensive view of the system architecture at different levels of detail.
 
 ## 📋 C4 Model Levels
 

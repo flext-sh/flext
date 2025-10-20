@@ -1,10 +1,12 @@
 # Enhanced Documentation Maintenance System
+
 > **Important**
 >
 > Legacy helper scripts referenced in this document (`scripts/docs_*`) have been
 > retired. Use the consolidated `flext-quality` documentation maintenance CLI
 > (`python -m flext_quality.docs_maintenance.cli` / `flext-docs`) instead. The
 > sections below are preserved for historical context only.
+
 ## Table of Contents
 
 - [Enhanced Documentation Maintenance System](#enhanced-documentation-maintenance-system)
@@ -19,7 +21,7 @@
 - [Run complete AI-powered analysis](#run-complete-ai-powered-analysis)
 - [Preview smart optimizations](#preview-smart-optimizations)
 - [Generate health dashboard](#generate-health-dashboard)
-    - [2. Complete Workflow](#2-complete-workflow)
+  - [2. Complete Workflow](#2-complete-workflow)
 - [Run AI-powered sync (preview)](#run-ai-powered-sync-preview)
 - [Apply optimizations and commit](#apply-optimizations-and-commit)
 - [Generate comprehensive reports](#generate-comprehensive-reports)
@@ -27,13 +29,13 @@
     - [1. Advanced Content Analyzer (`docs_advanced_analyzer.py`)](#1-advanced-content-analyzer-docs_advanced_analyzerpy)
 - [Basic analysis](#basic-analysis)
 - [HTML dashboard](#html-dashboard)
-    - [2. Smart Documentation Optimizer (`docs_smart_optimizer.py`)](#2-smart-documentation-optimizer-docs_smart_optimizerpy)
+  - [2. Smart Documentation Optimizer (`docs_smart_optimizer.py`)](#2-smart-documentation-optimizer-docs_smart_optimizerpy)
 - [Preview optimizations](#preview-optimizations)
 - [Apply optimizations](#apply-optimizations)
-    - [3. Health Monitor (`docs_health_monitor.py`)](#3-health-monitor-docs_health_monitorpy)
+  - [3. Health Monitor (`docs_health_monitor.py`)](#3-health-monitor-docs_health_monitorpy)
 - [Generate health dashboard](#generate-health-dashboard)
 - [JSON health data](#json-health-data)
-    - [4. AI Automation (`docs_ai_automation.py`)](#4-ai-automation-docs_ai_automationpy)
+  - [4. AI Automation (`docs_ai_automation.py`)](#4-ai-automation-docs_ai_automationpy)
 - [Run complete automation (dry-run)](#run-complete-automation-dry-run)
 - [Apply changes](#apply-changes)
 - [Schedule automation](#schedule-automation)
@@ -68,15 +70,13 @@
       - ["Analysis takes too long"](#analysis-takes-too-long)
 - [Reduce analysis scope](#reduce-analysis-scope)
 - [Use caching](#use-caching)
-- [Set enable_caching: true in config](#set-enable_caching-true-in-config)
-      - ["Optimization confidence too low"](#optimization-confidence-too-low)
+- [Set enable_caching: true in config](#set-enable_caching-true-in-config) - ["Optimization confidence too low"](#optimization-confidence-too-low)
 - [Lower confidence threshold](#lower-confidence-threshold)
 - [Set optimization_confidence_threshold: 0.5 in config](#set-optimization_confidence_threshold-05-in-config)
-- [Review optimization suggestions](#review-optimization-suggestions)
-      - ["Health score too low"](#health-score-too-low)
+- [Review optimization suggestions](#review-optimization-suggestions) - ["Health score too low"](#health-score-too-low)
 - [Check specific issues](#check-specific-issues)
 - [Review recommendations](#review-recommendations)
-    - [Debug Mode](#debug-mode)
+  - [Debug Mode](#debug-mode)
 - [Enable verbose output](#enable-verbose-output)
   - [Best Practices](#best-practices)
     - [1. Regular Maintenance](#1-regular-maintenance)
@@ -94,7 +94,6 @@
     - [Version 2.0.0 (2025-10-09)](#version-200-2025-10-09)
     - [Version 1.0.0 (2025-10-09)](#version-100-2025-10-09)
 
-
 **Version:** 2.0.0
 **Last Updated:** 2025-10-09
 **Status:** Production Ready
@@ -102,8 +101,8 @@
 ## Overview
 
 The Enhanced Documentation Maintenance System is an AI-powered,
-     comprehensive solution for maintaining high-quality documentation across the FLEXT monorepo. It combines advanced content analysis,
-     intelligent optimization, real-time health monitoring, and automated reporting to ensure documentation excellence.
+comprehensive solution for maintaining high-quality documentation across the FLEXT monorepo. It combines advanced content analysis,
+intelligent optimization, real-time health monitoring, and automated reporting to ensure documentation excellence.
 
 ## Key Features
 

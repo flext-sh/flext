@@ -30,14 +30,14 @@ import operator
 import re
 import shlex
 import shutil
-import subprocess  # noqa: S404
+import subprocess
 import sys
 import tarfile
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import ClassVar
 
-from flext_core import FlextUtilities
+from flext_core import FlextResult, FlextUtilities
 
 # Ensure git is available
 _git_cmd = shutil.which("git")
@@ -56,7 +56,7 @@ class GitUltimateCleanup:
     @staticmethod
     def _run_git_command(
         repo_path: Path, args: list[str], *, check: bool = False
-    ) -> subprocess.CompletedProcess[str]:
+    ) -> FlextResult[subprocess.CompletedProcess[str]]:
         """Run a git command with proper error handling and type annotations."""
         cmd = [GIT_CMD, "-C", str(repo_path)] + args
         return FlextUtilities.run_external_command(
@@ -262,10 +262,12 @@ class GitUltimateCleanup:
 
         # Check uncommitted changes (skip in dry-run mode)
         if not self.dry_run:
-            result: subprocess.CompletedProcess[str] = self._run_git_command(
+            status_result = self._run_git_command(
                 self.repo_path, ["status", "--porcelain"]
             )
-            if result.stdout.strip():
+            if status_result.is_failure:
+                return False, f"Failed to check git status: {status_result.error}"
+            if status_result.value.stdout.strip():
                 return False, "Uncommitted changes detected. Commit or stash first."
 
         # Check git-filter-repo
@@ -277,21 +279,27 @@ class GitUltimateCleanup:
             )
 
         # Check not detached HEAD
-        result: subprocess.CompletedProcess[str] = self._run_git_command(
+        head_result = self._run_git_command(
             self.repo_path, ["symbolic-ref", "-q", "HEAD"]
         )
-        if result.returncode != 0:
+        if head_result.is_failure:
+            return False, f"Failed to check HEAD: {head_result.error}"
+        if head_result.value.returncode != 0:
             return False, "Detached HEAD state. Checkout a branch first."
 
         # Check disk space
-        result: subprocess.CompletedProcess[str] = FlextUtilities.run_external_command(
+        disk_result = FlextUtilities.run_external_command(
             ["df", "-h", str(self.repo_path)],
             capture_output=True,
             text=True,
             check=False,
         )
-        if result.returncode == 0:
-            lines = result.stdout.strip().split("\n")
+        if disk_result.is_failure:
+            return False, f"Failed to check disk space: {disk_result.error}"
+
+        disk_process = disk_result.value
+        if disk_process.returncode == 0:
+            lines = disk_process.stdout.strip().split("\n")
             if len(lines) > 1:
                 avail = lines[1].split()[3]
                 print(f"   💾 Available disk space: {avail}")
@@ -337,57 +345,65 @@ class GitUltimateCleanup:
         # 2. Create git mirror clone
         print("2️⃣  Creating git mirror clone...")
         mirror_path = repo_backup / f"{self.repo_path.name}.git"
-        result: subprocess.CompletedProcess[str] = FlextUtilities.run_external_command(
+        mirror_result = FlextUtilities.run_external_command(
             [GIT_CMD, "clone", "--mirror", str(self.repo_path), str(mirror_path)],
             check=False,
             capture_output=True,
             text=True,
         )
-        if result.returncode == 0:
-            print("   ✅ Mirror clone created")
+        if mirror_result.is_failure:
+            print(f"   ❌ Mirror clone failed: {mirror_result.error}")
         else:
-            print(f"   ⚠️  Mirror clone failed: {result.stderr}")
+            mirror_process = mirror_result.value
+            if mirror_process.returncode == 0:
+                print("   ✅ Mirror clone created")
+            else:
+                print(f"   ⚠️  Mirror clone failed: {mirror_process.stderr}")
 
         # 3. Export commit history
         print("3️⃣  Exporting commit history...")
         history_file = repo_backup / "commit-history.txt"
-        result: subprocess.CompletedProcess[str] = self._run_git_command(
+        history_result = self._run_git_command(
             self.repo_path,
             ["log", "--all", "--format=%H|%an|%ae|%ad|%s", "--date=iso"],
         )
-        if result.returncode == 0:
-            history_file.write_text(result.stdout)
-            lines = len(result.stdout.strip().split("\n"))
+        if history_result.is_failure:
+            print(f"   ❌ History export failed: {history_result.error}")
+        else:
+            history_process = history_result.value
+            if history_process.returncode == 0:
+                history_file.write_text(history_process.stdout)
+            lines = len(history_process.stdout.strip().split("\n"))
             print(f"   ✅ Exported {lines} commits")
 
         # 4. Export reflog
         print("4️⃣  Exporting reflog...")
         reflog_file = repo_backup / "reflog.txt"
-        result: subprocess.CompletedProcess[str] = self._run_git_command(
+        reflog_result = self._run_git_command(
             self.repo_path, ["reflog", "--format=%H|%gd|%gs"]
         )
-        if result.returncode == 0:
-            reflog_file.write_text(result.stdout)
-            print("   ✅ Reflog exported")
+        if reflog_result.is_failure:
+            print(f"   ❌ Reflog export failed: {reflog_result.error}")
+        else:
+            reflog_process = reflog_result.value
+            if reflog_process.returncode == 0:
+                reflog_file.write_text(reflog_process.stdout)
+                print("   ✅ Reflog exported")
 
         # 5. Export branch info
         print("5️⃣  Exporting branch information...")
         branch_file = repo_backup / "branches.txt"
-        result: subprocess.CompletedProcess[str] = self._run_git_command(
-            self.repo_path, ["branch", "-a"]
-        )
-        if result.returncode == 0:
-            branch_file.write_text(result.stdout)
+        branch_result = self._run_git_command(self.repo_path, ["branch", "-a"])
+        if branch_result.value.returncode == 0:
+            branch_file.write_text(branch_result.value.stdout)
             print("   ✅ Branch info exported")
 
         # 6. Export tags
         print("6️⃣  Exporting tags...")
         tags_file = repo_backup / "tags.txt"
-        result: subprocess.CompletedProcess[str] = self._run_git_command(
-            self.repo_path, ["tag", "-l"]
-        )
-        if result.returncode == 0:
-            tags_file.write_text(result.stdout)
+        tags_result = self._run_git_command(self.repo_path, ["tag", "-l"])
+        if tags_result.value.returncode == 0:
+            tags_file.write_text(tags_result.value.stdout)
             print("   ✅ Tags exported")
 
         # 7. Create safety tag in repo
@@ -481,7 +497,7 @@ esac
 
 echo ""
 echo "Recovery complete!"
-"""  # noqa: S608
+"""
         )
         script.chmod(0o755)
 
@@ -702,13 +718,11 @@ wc -l commit-history.txt
         # Execute
         print("Processing commits...")
         try:
-            result: subprocess.CompletedProcess[str] = (
-                FlextUtilities.run_external_command(
-                    cmd, check=False, cwd=str(self.repo_path)
-                )
+            cleanup_result = FlextUtilities.run_external_command(
+                cmd, check=False, cwd=str(self.repo_path)
             )
 
-            if result.returncode != 0:
+            if cleanup_result.value.returncode != 0:
                 print("\n❌ Cleanup failed!")
                 print(f"   Recover: cd {self.backup_root} && ./RECOVER.sh")
                 return False
@@ -723,21 +737,19 @@ wc -l commit-history.txt
             cruft_file.unlink(missing_ok=True)
 
         # Verify
-        result: subprocess.CompletedProcess[str] = self._run_git_command(
+        verify_result = self._run_git_command(
             self.repo_path, ["log", "-1", "--format=%an %ae"]
         )
-        if result.returncode == 0:
-            author = result.stdout.strip()
+        if verify_result.value.returncode == 0:
+            author = verify_result.value.stdout.strip()
             if self.AUTHOR_NAME not in author:
                 print(f"\n⚠️  Author verification failed: {author}")
 
         # Show statistics
-        result: subprocess.CompletedProcess[str] = self._run_git_command(
-            self.repo_path, ["count-objects", "-vH"]
-        )
-        if result.returncode == 0:
+        stats_result = self._run_git_command(self.repo_path, ["count-objects", "-vH"])
+        if stats_result.value.returncode == 0:
             print("\n📊 Repository statistics:")
-            for line in result.stdout.strip().split("\n")[:5]:
+            for line in stats_result.value.stdout.strip().split("\n")[:5]:
                 print(f"   {line}")
 
         print(f"\n✅ {self.repo_path.name} cleaned successfully!")
@@ -836,37 +848,35 @@ def callback(commit, metadata):
             print()
             return
 
-        result: subprocess.CompletedProcess[str] = FlextUtilities.run_external_command(
+        submodule_result = FlextUtilities.run_external_command(
             [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
             check=False,
             capture_output=True,
             text=True,
         )
 
-        if result.returncode != 0:
+        if submodule_result.value.returncode != 0:
             print()
             return
 
-        for line in result.stdout.strip().split("\n"):
+        for line in submodule_result.value.stdout.strip().split("\n"):
             if not line:
                 continue
 
             key, path = line.split()
             name = key.split(".")[1]
 
-            url_result: subprocess.CompletedProcess[str] = (
-                FlextUtilities.run_external_command(
-                    [GIT_CMD, "config", "-f", str(gitmodules), f"submodule.{name}.url"],
-                    check=False,
-                    capture_output=True,
-                    text=True,
-                )
+            url_result = FlextUtilities.run_external_command(
+                [GIT_CMD, "config", "-f", str(gitmodules), f"submodule.{name}.url"],
+                check=False,
+                capture_output=True,
+                text=True,
             )
 
-            if url_result.returncode != 0:
+            if url_result.value.returncode != 0:
                 continue
 
-            url = url_result.stdout.strip()
+            url = url_result.value.stdout.strip()
             submodule_path = self.repo_path / path
 
             if submodule_path.exists():
@@ -894,18 +904,18 @@ def callback(commit, metadata):
         if not gitmodules.exists():
             return []
 
-        result: subprocess.CompletedProcess[str] = FlextUtilities.run_external_command(
+        submodule_config_result = FlextUtilities.run_external_command(
             [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
             check=False,
             capture_output=True,
             text=True,
         )
 
-        if result.returncode != 0:
+        if submodule_config_result.value.returncode != 0:
             return []
 
         submodules = []
-        for line in result.stdout.strip().split("\n"):
+        for line in submodule_config_result.value.stdout.strip().split("\n"):
             if not line:
                 continue
             path = line.split()[1]
@@ -930,15 +940,15 @@ def callback(commit, metadata):
             return True
 
         # Check if remote exists
-        result: subprocess.CompletedProcess[str] = self._run_git_command(
+        remote_result = self._run_git_command(
             self.repo_path, ["remote", "get-url", "origin"]
         )
 
-        if result.returncode != 0:
+        if remote_result.value.returncode != 0:
             print("❌ No remote 'origin' found. Run --restore-remotes first.")
             return False
 
-        remote_url = result.stdout.strip()
+        remote_url = remote_result.value.stdout.strip()
         print(f"Remote: {remote_url}")
         print()
 
@@ -952,12 +962,12 @@ def callback(commit, metadata):
 
         # Push branches
         print("📤 Pushing all branches...")
-        result: subprocess.CompletedProcess[str] = self._run_git_command(
+        push_branches_result = self._run_git_command(
             self.repo_path, ["push", "origin", "--force", "--all"]
         )
 
-        if result.returncode != 0:
-            print(f"❌ Push failed: {result.stderr}")
+        if push_branches_result.value.returncode != 0:
+            print(f"❌ Push failed: {push_branches_result.value.stderr}")
             return False
 
         print("   ✅ Branches pushed")
@@ -965,12 +975,12 @@ def callback(commit, metadata):
         # Push tags
         if push_tags:
             print("🏷️  Pushing all tags...")
-            result: subprocess.CompletedProcess[str] = self._run_git_command(
+            push_tags_result = self._run_git_command(
                 self.repo_path, ["push", "origin", "--force", "--tags"]
             )
 
-            if result.returncode != 0:
-                print(f"   ⚠️  Tag push failed: {result.stderr}")
+            if push_tags_result.value.returncode != 0:
+                print(f"   ⚠️  Tag push failed: {push_tags_result.value.stderr}")
             else:
                 print("   ✅ Tags pushed")
 
@@ -1038,17 +1048,17 @@ def callback(commit, metadata):
 
     def analyze_historical_removals(self) -> dict[str, int]:
         """Analyze git history to find frequently deleted files (likely cruft)."""
-        result: subprocess.CompletedProcess[str] = self._run_git_command(
+        result = self._run_git_command(
             self.repo_path,
             ["log", "--all", "--diff-filter=D", "--name-only", "--format="],
         )
 
-        if result.returncode != 0:
+        if result.value.returncode != 0:
             return {}
 
         # Count deletion frequency
         deletion_counts = {}
-        for line in result.stdout.strip().split("\n"):
+        for line in result.value.stdout.strip().split("\n"):
             if not line:
                 continue
             deletion_counts[line] = deletion_counts.get(line, 0) + 1

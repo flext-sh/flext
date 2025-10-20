@@ -1,4 +1,5 @@
 # FLEXT System Context Diagram
+
 ## Table of Contents
 
 - [FLEXT System Context Diagram](#flext-system-context-diagram)
@@ -20,11 +21,10 @@
     - [Integration Protocols](#integration-protocols)
     - [Monitoring and Observability](#monitoring-and-observability)
 
-
 ## Overview
 
 The FLEXT Enterprise Data Integration Platform serves as a comprehensive data integration solution for enterprise environments,
-     connecting various data sources and destinations through a unified, scalable architecture.
+connecting various data sources and destinations through a unified, scalable architecture.
 
 ## System Context Diagram
 

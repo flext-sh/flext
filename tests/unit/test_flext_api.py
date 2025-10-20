@@ -49,25 +49,34 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_client_creation(self) -> None:
         """Test FlextApiClient creation."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
         assert client is not None
         assert isinstance(client, FlextApiClient)
 
     def test_flext_api_client_with_config(self) -> None:
         """Test FlextApiClient creation with configuration."""
+        from flext_api.config import FlextApiConfig
+
         config_data = self._TestDataHelper.create_api_config()
-        client = FlextApiClient(
+        config = FlextApiConfig(
             base_url=cast("str", config_data["base_url"]),
             timeout=cast("int", config_data["timeout"]),
             max_retries=cast("int", config_data["max_retries"]),
         )
+        client = FlextApiClient(config)
 
         assert client is not None
         assert isinstance(client, FlextApiClient)
 
     def test_flext_api_client_functionality(self) -> None:
         """Test FlextApiClient basic functionality."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test that API client has expected methods
         assert (
@@ -78,7 +87,10 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_client_health_check(self) -> None:
         """Test FlextApiClient health check functionality."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test that client exists and has some health-related functionality
         assert client is not None
@@ -145,7 +157,10 @@ class TestFlextApiConsolidated:
         config = FlextApiConfig(base_url="https://test-api.com")
 
         # Create API client
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test API app class exists
         assert FlextApiApp is not None
@@ -169,14 +184,20 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_response_handling(self) -> None:
         """Test API response handling."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test that API client exists
         assert client is not None
 
     def test_flext_api_error_handling(self) -> None:
         """Test API error handling patterns."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test that API client exists
         assert client is not None
@@ -190,7 +211,10 @@ class TestFlextApiConsolidated:
         start_time = time.time()
 
         # Create a single client and perform multiple operations
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
         assert client is not None
 
         # Perform multiple operations with the same client
@@ -210,7 +234,10 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_domain_separation(self) -> None:
         """Test that flext-api properly uses domain separation."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test that API uses flext-core patterns
         assert isinstance(client, FlextApiClient)
@@ -226,7 +253,10 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_flext_result_usage(self) -> None:
         """Test that flext-api uses FlextResult patterns."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test that API client exists and follows FlextResult patterns
         assert client is not None
@@ -238,14 +268,20 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_http_methods(self) -> None:
         """Test API HTTP methods support."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test HTTP methods - client has request method for HTTP operations
         assert hasattr(client, "request")
 
     def test_flext_api_request_methods(self) -> None:
         """Test API request methods."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test request methods
         assert (
@@ -271,7 +307,10 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_environment_handling(self) -> None:
         """Test API environment handling."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test environment handling - client should exist
         assert client is not None
@@ -282,7 +321,10 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_input_validation(self) -> None:
         """Test API input validation."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test input validation
         assert (
@@ -293,7 +335,10 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_url_validation(self) -> None:
         """Test API URL validation."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test URL validation - client should exist
         assert client is not None
@@ -304,7 +349,10 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_logging_integration(self) -> None:
         """Test API logging integration."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test logging integration
         logger = FlextLogger(__name__)
@@ -319,14 +367,20 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_retry_mechanism(self) -> None:
         """Test API retry mechanism."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test retry mechanism - client should exist
         assert client is not None
 
     def test_flext_api_timeout_handling(self) -> None:
         """Test API timeout handling."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test timeout handling
         assert (
@@ -341,14 +395,20 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_authentication(self) -> None:
         """Test API authentication."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test authentication - client should exist
         assert client is not None
 
     def test_flext_api_headers_management(self) -> None:
         """Test API headers management."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test headers management - client should exist
         assert client is not None
@@ -359,14 +419,20 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_serialization(self) -> None:
         """Test API serialization."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test serialization - client should exist
         assert client is not None
 
     def test_flext_api_deserialization(self) -> None:
         """Test API deserialization."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test deserialization - client should exist
         assert client is not None
@@ -377,14 +443,20 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_caching(self) -> None:
         """Test API caching functionality."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test caching - client should exist
         assert client is not None
 
     def test_flext_api_cache_invalidation(self) -> None:
         """Test API cache invalidation."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test cache invalidation - client should exist
         assert client is not None
@@ -395,14 +467,20 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_monitoring(self) -> None:
         """Test API monitoring functionality."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test monitoring - client should exist
         assert client is not None
 
     def test_flext_api_performance_tracking(self) -> None:
         """Test API performance tracking."""
-        client = FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
 
         # Test performance tracking - client should exist
         assert client is not None

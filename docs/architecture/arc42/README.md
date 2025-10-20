@@ -1,4 +1,5 @@
 # FLEXT Arc42 Architecture Documentation
+
 ## Table of Contents
 
 - [FLEXT Arc42 Architecture Documentation](#flext-arc42-architecture-documentation)
@@ -30,9 +31,8 @@
   - [🔗 Related Documentation](#-related-documentation)
   - [📚 Additional Resources](#-additional-resources)
 
-
 This directory contains the comprehensive Arc42 architecture documentation for the FLEXT Enterprise Data Integration Platform,
-     following the Arc42 template structure.
+following the Arc42 template structure.
 
 ## 📋 Arc42 Template Structure
 

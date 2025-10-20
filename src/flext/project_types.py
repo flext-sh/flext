@@ -10,19 +10,19 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import FlextTypes
+from typing import Literal
 
 # Import centralized types from flext-core foundation
 
 # Import WorkspaceStatus from the correct location
-WorkspaceStatus = FlextTypes.ProjectStatus
+WorkspaceStatus = Literal["ACTIVE", "INACTIVE", "ARCHIVED", "MAINTENANCE"]
 
 
 class FlextProjectTypes:
     """Unified project types service using flext-core foundation."""
 
     # Use centralized enums from FlextTypes
-    ProjectType = FlextTypes.ProjectType
+    ProjectType = Literal["PYTHON", "GO", "RUST", "NODEJS", "JAVA", "DOTNET", "UNKNOWN"]
 
 
 # Convenience aliases for test compatibility

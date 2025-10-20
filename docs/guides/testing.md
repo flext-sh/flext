@@ -1,4 +1,5 @@
 # FLEXT Testing Guide
+
 ## Table of Contents
 
 - [FLEXT Testing Guide](#flext-testing-guide)
@@ -14,11 +15,11 @@
 - [Run all tests](#run-all-tests)
 - [Run specific test categories](#run-specific-test-categories)
 - [Run with markers](#run-with-markers)
-    - [Coverage Analysis](#coverage-analysis)
+  - [Coverage Analysis](#coverage-analysis)
 - [Run with coverage](#run-with-coverage)
 - [Coverage with specific threshold](#coverage-with-specific-threshold)
 - [Coverage for specific module](#coverage-for-specific-module)
-    - [Parallel Test Execution](#parallel-test-execution)
+  - [Parallel Test Execution](#parallel-test-execution)
 - [Run tests in parallel](#run-tests-in-parallel)
 - [Specific number of workers](#specific-number-of-workers)
   - [Test Fixtures](#test-fixtures)
@@ -40,17 +41,16 @@
     - [1. Test Naming](#1-test-naming)
 - [✅ GOOD - Descriptive test names](#-good---descriptive-test-names)
 - [❌ BAD - Vague test names](#-bad---vague-test-names)
-    - [2. Test Organization](#2-test-organization)
-    - [3. Assertion Quality](#3-assertion-quality)
+  - [2. Test Organization](#2-test-organization)
+  - [3. Assertion Quality](#3-assertion-quality)
 - [✅ GOOD - Specific assertions](#-good---specific-assertions)
 - [❌ BAD - Vague assertions](#-bad---vague-assertions)
-    - [4. Test Independence](#4-test-independence)
+  - [4. Test Independence](#4-test-independence)
 - [✅ GOOD - Independent tests](#-good---independent-tests)
 - [❌ BAD - Dependent tests](#-bad---dependent-tests)
   - [Troubleshooting](#troubleshooting)
     - [Common Test Issues](#common-test-issues)
   - [Resources](#resources)
-
 
 This guide covers testing strategies, best practices, and procedures for FLEXT applications and libraries.
 

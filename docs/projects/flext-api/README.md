@@ -1,4 +1,5 @@
 # FLEXT-API
+
 ## Table of Contents
 
 - [FLEXT-API](#flext-api)
@@ -14,10 +15,10 @@
     - [Installation](#installation)
 - [From source (recommended for development)](#from-source-recommended-for-development)
 - [Or via pip (when available)](#or-via-pip-when-available)
-    - [Basic HTTP Client Usage](#basic-http-client-usage)
+  - [Basic HTTP Client Usage](#basic-http-client-usage)
 - [Configure client](#configure-client)
 - [Make requests with automatic error handling](#make-requests-with-automatic-error-handling)
-    - [FastAPI Application Setup](#fastapi-application-setup)
+  - [FastAPI Application Setup](#fastapi-application-setup)
 - [Create FastAPI application](#create-fastapi-application)
 - [Add your routes](#add-your-routes)
   - [🧪 Testing](#-testing)
@@ -32,14 +33,13 @@
     - [Short-term (Next Month)](#short-term-next-month)
     - [Long-term (Next Quarter)](#long-term-next-quarter)
 
-
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![Production Ready](https://img.shields.io/badge/status-production--ready-brightgreen.svg)](#)
 [![HTTP Foundation](https://img.shields.io/badge/http-foundation-green.svg)](#)
 [![Documentation](https://img.shields.io/badge/docs-organized-blue.svg)](../)
 
 **HTTP client and FastAPI integration foundation** for the FLEXT enterprise data integration platform,
-     providing HTTP operations with FlextResult patterns and synchronous architecture.
+providing HTTP operations with FlextResult patterns and synchronous architecture.
 
 > **✅ STATUS**: Version 0.9.9 - Production foundation implemented, comprehensive test coverage, ready for 1.0.0 release
 
@@ -48,7 +48,7 @@
 ## 🚀 Overview
 
 FLEXT-API serves as the **HTTP foundation** for FLEXT's enterprise data integration platform,
-     providing HTTP client functionality and FastAPI application creation across 33+ FLEXT ecosystem projects. This library eliminates HTTP implementation duplication while maintaining enterprise-grade patterns.
+providing HTTP client functionality and FastAPI application creation across 33+ FLEXT ecosystem projects. This library eliminates HTTP implementation duplication while maintaining enterprise-grade patterns.
 
 ### 🎯 Core Features
 

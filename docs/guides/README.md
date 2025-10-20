@@ -1,4 +1,5 @@
 # User Guides
+
 ## Table of Contents
 
 - [User Guides](#user-guides)
@@ -25,7 +26,6 @@
     - [Performance Optimization (Coming Soon)](#performance-optimization-coming-soon)
     - [Security Best Practices (Coming Soon)](#security-best-practices-coming-soon)
     - [Error Handling (Coming Soon)](#error-handling-coming-soon)
-
 
 Comprehensive guides for using FLEXT effectively in various scenarios.
 
@@ -112,4 +112,4 @@ Effective error handling strategies in FLEXT applications.
 ---
 
 **Note**: This guide structure is being updated. Currently,
-     only the Getting Started guide is available. Additional guides are being created as part of the documentation maintenance process.
+only the Getting Started guide is available. Additional guides are being created as part of the documentation maintenance process.

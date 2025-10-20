@@ -1,4 +1,5 @@
 # FLEXT Component Diagrams
+
 ## Table of Contents
 
 - [FLEXT Component Diagrams](#flext-component-diagrams)
@@ -19,11 +20,10 @@
     - [Python Components (FLEXT Services)](#python-components-flext-services)
     - [Common Patterns](#common-patterns)
 
-
 ## Overview
 
 This document provides detailed component diagrams for the key containers in the FLEXT platform,
-     showing how each container is composed of components and their relationships.
+showing how each container is composed of components and their relationships.
 
 ## 1. FlexCore Runtime Container Components
 

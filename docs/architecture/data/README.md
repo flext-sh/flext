@@ -1,4 +1,5 @@
 # FLEXT Data Architecture
+
 ## Table of Contents
 
 - [FLEXT Data Architecture](#flext-data-architecture)
@@ -50,9 +51,8 @@
     - [Updating Data Architecture](#updating-data-architecture)
     - [Review Process](#review-process)
 
-
 This directory contains comprehensive documentation of the FLEXT data architecture, including data models, flow patterns,
-     storage strategies, and integration approaches.
+storage strategies, and integration approaches.
 
 ## 📋 Data Architecture Components
 

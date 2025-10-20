@@ -1,4 +1,5 @@
 # 1. Introduction and Goals
+
 ## Table of Contents
 
 - [1. Introduction and Goals](#1-introduction-and-goals)
@@ -34,7 +35,6 @@
     - [1.5.1 Technical Success Criteria](#151-technical-success-criteria)
     - [1.5.2 Business Success Criteria](#152-business-success-criteria)
     - [1.5.3 Operational Success Criteria](#153-operational-success-criteria)
-
 
 ## 1.1 Requirements Overview
 

@@ -1,12 +1,14 @@
 # FLEXT Documentation Maintenance System
+
 > **Important**
 >
 > The legacy maintenance scripts under `scripts/docs_*` have been removed in
 > favour of the unified `flext-quality` runner (`python -m
-> flext_quality.docs_maintenance.cli` / `flext-docs`). The historical walkthroughs
+flext_quality.docs_maintenance.cli` / `flext-docs`). The historical walkthroughs
 > below are retained for archival context only and should not be used for new
 > automation. Migrate remaining invocations to the shared CLI documented in
 > `flext-quality/docs/README.md`.
+
 ## Table of Contents
 
 - [FLEXT Documentation Maintenance System](#flext-documentation-maintenance-system)
@@ -16,11 +18,11 @@
     - [Prerequisites](#prerequisites)
 - [Ensure Python dependencies are installed](#ensure-python-dependencies-are-installed)
 - [Verify scripts are executable](#verify-scripts-are-executable)
-    - [Basic Usage](#basic-usage)
+  - [Basic Usage](#basic-usage)
 - [Run comprehensive maintenance cycle](#run-comprehensive-maintenance-cycle)
 - [Run individual checks](#run-individual-checks)
 - [Check status without making changes](#check-status-without-making-changes)
-    - [Configuration](#configuration)
+  - [Configuration](#configuration)
   - [📊 System Architecture](#-system-architecture)
     - [Core Components](#core-components)
     - [Data Flow](#data-flow)
@@ -55,49 +57,45 @@
     - [Configuration File Structure](#configuration-file-structure)
     - [Custom Rules](#custom-rules)
 - [Custom validation rule example](#custom-validation-rule-example)
-    - [Team-Specific Configuration](#team-specific-configuration)
+  - [Team-Specific Configuration](#team-specific-configuration)
   - [📈 Usage Examples](#-usage-examples)
     - [Daily Maintenance](#daily-maintenance)
 - [Quick daily check](#quick-daily-check)
 - [Automated audit](#automated-audit)
 - [Safe optimization (dry run first)](#safe-optimization-dry-run-first)
-    - [Weekly Maintenance](#weekly-maintenance)
+  - [Weekly Maintenance](#weekly-maintenance)
 - [Comprehensive weekly maintenance](#comprehensive-weekly-maintenance)
 - [Link validation with detailed reporting](#link-validation-with-detailed-reporting)
 - [Style checking with fixes](#style-checking-with-fixes)
-    - [CI/CD Integration](#cicd-integration)
+  - [CI/CD Integration](#cicd-integration)
 - [.github/workflows/docs-maintenance.yml](#githubworkflowsdocs-maintenanceyml)
   - [🔧 Troubleshooting](#-troubleshooting)
     - [Common Issues](#common-issues)
       - [Import Errors](#import-errors)
 - [Ensure scripts are in Python path](#ensure-scripts-are-in-python-path)
-- [Install missing dependencies](#install-missing-dependencies)
-      - [Permission Issues](#permission-issues)
+- [Install missing dependencies](#install-missing-dependencies) - [Permission Issues](#permission-issues)
 - [Make scripts executable](#make-scripts-executable)
-- [Check file permissions](#check-file-permissions)
-      - [Git Integration Issues](#git-integration-issues)
+- [Check file permissions](#check-file-permissions) - [Git Integration Issues](#git-integration-issues)
 - [Ensure git repository is clean for auto-commit](#ensure-git-repository-is-clean-for-auto-commit)
-- [Disable auto-commit for safety](#disable-auto-commit-for-safety)
-      - [Performance Issues](#performance-issues)
+- [Disable auto-commit for safety](#disable-auto-commit-for-safety) - [Performance Issues](#performance-issues)
 - [Reduce concurrent requests](#reduce-concurrent-requests)
-- [Edit docs_maintenance_config.json:](#edit-docs_maintenance_configjson)
-    - [Debug Mode](#debug-mode)
+- [Edit docs_maintenance_config.JSON:](#edit-docs_maintenance_configjson)
+  - [Debug Mode](#debug-mode)
   - [📚 API Reference](#-api-reference)
     - [Orchestrator API](#orchestrator-api)
 - [Initialize](#initialize)
 - [Run individual checks](#run-individual-checks)
 - [Run full cycle](#run-full-cycle)
-    - [Configuration API](#configuration-api)
+  - [Configuration API](#configuration-api)
 - [Load custom configuration](#load-custom-configuration)
   - [🤝 Contributing](#-contributing)
     - [Adding New Validation Rules](#adding-new-validation-rules)
     - [Testing the Maintenance System](#testing-the-maintenance-system)
 - [Test individual components](#test-individual-components)
 - [Integration testing](#integration-testing)
-    - [Code Standards](#code-standards)
+  - [Code Standards](#code-standards)
   - [📄 License](#-license)
   - [📞 Support](#-support)
-
 
 **Automated Documentation Quality Assurance and Maintenance Framework**
 
@@ -110,8 +108,8 @@
 ## 🎯 Overview
 
 The FLEXT Documentation Maintenance System provides comprehensive automated quality assurance, validation,
-     and maintenance for the entire FLEXT documentation ecosystem. This system ensures documentation remains current,
-     accurate, and high-quality through systematic monitoring and automated improvements.
+and maintenance for the entire FLEXT documentation ecosystem. This system ensures documentation remains current,
+accurate, and high-quality through systematic monitoring and automated improvements.
 
 ### Key Features
 
