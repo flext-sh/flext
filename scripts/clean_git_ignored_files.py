@@ -10,11 +10,19 @@ SPDX-License-Identifier: Proprietary
 
 from __future__ import annotations
 
-import subprocess  # noqa: S404
+import subprocess
 import sys
+from enum import Enum
 from pathlib import Path
 
 FLEXT_ROOT = Path("/home/marlonsc/flext")
+
+
+class CleanMode(Enum):
+    """Cleaning mode enumeration."""
+
+    DRY_RUN = "dry_run"
+    EXECUTE = "execute"
 
 
 def get_tracked_files(project_dir: Path) -> list[str]:
@@ -89,17 +97,22 @@ def untrack_file(project_dir: Path, file_path: str) -> bool:
         return False
 
 
-def clean_project(project_dir: Path, dry_run: bool = True) -> dict[str, list[str]]:  # noqa: FBT001,FBT002
+def clean_project(
+    project_dir: Path, mode: CleanMode = CleanMode.DRY_RUN
+) -> dict[str, list[str]]:
     """Clean tracked files that should be ignored.
 
     Args:
         project_dir: Project directory path
-        dry_run: If True, only report what would be removed
+        mode: Cleaning mode (dry run or execute)
 
     Returns:
         Dictionary with results
 
     """
+    # Determine if this is a dry run
+    dry_run = mode == CleanMode.DRY_RUN
+
     results = {
         "to_remove": [],
         "removed": [],
@@ -185,7 +198,8 @@ def main() -> None:
     for project_dir in projects:
         print(f"🔧 {project_dir.name}")
 
-        results = clean_project(project_dir, dry_run=dry_run)
+        mode = CleanMode.DRY_RUN if dry_run else CleanMode.EXECUTE
+        results = clean_project(project_dir, mode)
 
         if results["to_remove"]:
             projects_with_changes += 1

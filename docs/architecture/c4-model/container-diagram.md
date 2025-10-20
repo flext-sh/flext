@@ -1,4 +1,5 @@
 # FLEXT Container Diagram
+
 ## Table of Contents
 
 - [FLEXT Container Diagram](#flext-container-diagram)
@@ -40,7 +41,6 @@
     - [Frameworks and Libraries](#frameworks-and-libraries)
     - [Data Storage](#data-storage)
     - [Integration Protocols](#integration-protocols)
-
 
 ## Overview
 

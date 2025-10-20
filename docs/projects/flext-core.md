@@ -1,4 +1,5 @@
 # flext-core
+
 ## Table of Contents
 
 - [flext-core](#flext-core)
@@ -8,15 +9,15 @@
     - [FlextContainer (Dependency Injection)](#flextcontainer-dependency-injection)
 - [Register services](#register-services)
 - [Resolve dependencies](#resolve-dependencies)
-    - [FlextDispatcher (CQRS Pattern)](#flextdispatcher-cqrs-pattern)
+  - [FlextDispatcher (CQRS Pattern)](#flextdispatcher-cqrs-pattern)
 - [Register handlers](#register-handlers)
 - [Dispatch operations](#dispatch-operations)
-    - [FlextResult (Railway-Oriented Programming)](#flextresult-railway-oriented-programming)
+  - [FlextResult (Railway-Oriented Programming)](#flextresult-railway-oriented-programming)
 - [Compose operations](#compose-operations)
-    - [FlextBus (Domain Events)](#flextbus-domain-events)
+  - [FlextBus (Domain Events)](#flextbus-domain-events)
 - [Subscribe to events](#subscribe-to-events)
 - [Publish events](#publish-events)
-    - [FlextLogger (Structured Logging)](#flextlogger-structured-logging)
+  - [FlextLogger (Structured Logging)](#flextlogger-structured-logging)
 - [Structured logging](#structured-logging)
 - [Different log levels](#different-log-levels)
   - [Architecture Patterns](#architecture-patterns)
@@ -52,13 +53,12 @@
     - [Logging Best Practices](#logging-best-practices)
   - [Support and Documentation](#support-and-documentation)
 
-
 **Core Framework** - The foundation of the FLEXT ecosystem providing essential patterns, abstractions, and utilities.
 
 ## Overview
 
 flext-core is the foundational framework that provides the core patterns and abstractions used throughout the FLEXT ecosystem. It implements enterprise-grade patterns like Dependency Injection,
-    
+
      CQRS, Railway-Oriented Programming, and Domain Events.
 
 ## Installation

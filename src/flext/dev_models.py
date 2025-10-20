@@ -12,17 +12,21 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import shutil
-import subprocess  # noqa: S404
+import subprocess
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Annotated, Literal, Self, TypeVar
 from uuid import UUID, uuid4
 
-from flext_core import FlextModels, FlextResult, FlextTypes
+from flext_core import FlextModels, FlextResult
 from pydantic import BaseModel, Field, field_validator, model_validator
 from pydantic.functional_validators import BeforeValidator
 
 from flext.workspace_service import create_workspace_service
+
+# Define project types since they're not in FlextTypes yet
+ProjectType = Literal["PYTHON", "GO", "RUST", "NODEJS", "JAVA", "DOTNET", "UNKNOWN"]
+ProjectStatus = Literal["ACTIVE", "INACTIVE", "ARCHIVED", "MAINTENANCE"]
 
 # Modern type system with generic constraints
 T = TypeVar("T", bound=BaseModel)
@@ -110,7 +114,7 @@ class FlextAdvancedDevModels:
             try:
                 # Use full path to avoid subprocess warning
                 python_path = shutil.which("python") or "python"
-                subprocess.run(  # noqa: S603
+                subprocess.run(
                     [python_path, "-m", "pytest", "--version"],
                     capture_output=True,
                     check=True,
@@ -144,7 +148,7 @@ class FlextAdvancedDevModels:
             missing_tools: list[str] = []
             for tool in self.tools:
                 try:
-                    subprocess.run(  # noqa: S603
+                    subprocess.run(
                         [tool, "--version"],
                         capture_output=True,
                         check=True,
@@ -181,7 +185,7 @@ class FlextAdvancedDevModels:
             for formatter in self.formatters:
                 try:
                     if formatter == "gofmt":
-                        subprocess.run(  # noqa: S603
+                        subprocess.run(
                             [formatter, "-help"],
                             capture_output=True,
                             check=False,
@@ -189,7 +193,7 @@ class FlextAdvancedDevModels:
                             shell=False,
                         )
                     else:
-                        subprocess.run(  # noqa: S603
+                        subprocess.run(
                             [formatter, "--version"],
                             capture_output=True,
                             check=True,
@@ -217,9 +221,7 @@ class FlextAdvancedDevModels:
 
         name: str = Field(..., min_length=1, max_length=100)
         path: ProjectPath = Field(..., description="Project path")
-        project_type: FlextTypes.ProjectType = Field(
-            ..., description="Detected project type"
-        )
+        project_type: ProjectType = Field(..., description="Detected project type")
         has_tests: bool = Field(default=False, description="Has test directory")
         has_pyproject: bool = Field(default=False, description="Has pyproject.toml")
         has_go_mod: bool = Field(default=False, description="Has go.mod file")

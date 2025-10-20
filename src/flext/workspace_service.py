@@ -15,10 +15,8 @@ from typing import Protocol, Self, runtime_checkable
 from flext_core import (
     FlextContainer,
     FlextLogger,
-    FlextModels,
     FlextResult,
     FlextService,
-    FlextTypes,
 )
 
 
@@ -52,7 +50,7 @@ class FlextWorkspaceService(FlextService[str]):
 
         def discover_projects(
             self, workspace_root: Path
-        ) -> FlextResult[list[FlextModels.Project]]:
+        ) -> FlextResult[list[dict[str, object]]]:
             """Discover projects in workspace."""
             ...
 
@@ -68,40 +66,41 @@ class FlextWorkspaceService(FlextService[str]):
         """Nested project discovery service."""
 
         def __init__(self, manager: FlextWorkspaceService) -> None:
+            super().__init__()
             self._manager = manager
 
         def discover_projects(
             self, workspace_root: Path
-        ) -> FlextResult[list[FlextModels.Project]]:
+        ) -> FlextResult[list[dict[str, object]]]:
             """Discover all projects in workspace with type detection."""
             try:
-                projects: list[FlextModels.Project] = []
+                projects: list[dict[str, object]] = []
                 for project_dir in workspace_root.iterdir():
                     if not project_dir.is_dir() or project_dir.name.startswith("."):
                         continue
 
-                    project_info_result: FlextResult[FlextModels.Project] = (
+                    project_info_result: FlextResult[dict[str, object]] = (
                         self._analyze_project(project_dir)
                     )
                     if project_info_result.is_success:
                         projects.append(project_info_result.unwrap())
 
-                return FlextResult[list[FlextModels.Project]].ok(projects)
+                return FlextResult[list[dict[str, object]]].ok(projects)
 
             except Exception as e:
                 error = f"Project discovery failed: {e}"
                 # Use manager's public logging interface
                 logger = FlextLogger(__name__)
                 logger.exception(error)
-                return FlextResult[list[FlextModels.Project]].fail(error)
+                return FlextResult[list[dict[str, object]]].fail(error)
 
         def _analyze_project(
             self, project_path: Path
-        ) -> FlextResult[FlextModels.Project]:
+        ) -> FlextResult[dict[str, object]]:
             """Analyze individual project for type and characteristics."""
             try:
                 # Detect project type using FlextTypes.ProjectType
-                project_type: FlextTypes.ProjectType = "application"
+                project_type: str = "application"
                 has_pyproject = (project_path / "pyproject.toml").exists()
                 has_go_mod = (project_path / "go.mod").exists()
                 has_package_json = (project_path / "package.json").exists()
@@ -118,7 +117,7 @@ class FlextWorkspaceService(FlextService[str]):
                 has_tests = tests_dir.exists()
                 # Test count tracking removed as unused
 
-                project_info = FlextModels.Project(
+                project_info = dict[str, object](
                     name=project_path.name,
                     organization_id="default",
                     repository_path=str(project_path),
@@ -128,16 +127,17 @@ class FlextWorkspaceService(FlextService[str]):
                     domain_events=[],
                 )
 
-                return FlextResult[FlextModels.Project].ok(project_info)
+                return FlextResult[dict[str, object]].ok(project_info)
 
             except Exception as e:
                 error = f"Project analysis failed for {project_path.name}: {e}"
-                return FlextResult[FlextModels.Project].fail(error)
+                return FlextResult[dict[str, object]].fail(error)
 
     class _WorkspaceValidator:
         """Nested workspace validation service."""
 
         def __init__(self, manager: FlextWorkspaceService) -> None:
+            super().__init__()
             self._manager = manager
 
         def validate_workspace_path(self, path: str) -> FlextResult[str]:
@@ -166,7 +166,7 @@ class FlextWorkspaceService(FlextService[str]):
 
     def discover_workspace_projects(
         self, workspace_root: str | None = None
-    ) -> FlextResult[list[FlextModels.Project]]:
+    ) -> FlextResult[list[dict[str, object]]]:
         """Discover all projects in the workspace."""
         discovery_service = self.create_project_discovery()
         workspace_path = (
@@ -189,7 +189,7 @@ class FlextWorkspaceService(FlextService[str]):
             )
 
             # Discover projects
-            projects_result: FlextResult[list[FlextModels.Project]] = (
+            projects_result: FlextResult[list[dict[str, object]]] = (
                 self.discover_workspace_projects(str(workspace_path))
             )
             if projects_result.is_failure:
@@ -198,7 +198,7 @@ class FlextWorkspaceService(FlextService[str]):
                 )
 
             projects = projects_result.unwrap()
-            project_names = [p.name for p in projects]
+            project_names = [p.get("name", "") for p in projects]
 
             # Calculate total size (mock for now)
             total_size_mb = len(projects) * 10.5  # Mock calculation

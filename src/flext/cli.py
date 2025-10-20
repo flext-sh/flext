@@ -21,6 +21,12 @@ from pydantic import BaseModel, Field
 
 from flext.task_orchestration import TaskOrchestrationCli
 
+try:
+    from flext_quality.models import OptimizationTarget
+except ImportError:
+    # Fallback for when flext-quality is not available
+    OptimizationTarget = None
+
 TConfig = TypeVar("TConfig", bound=BaseModel)
 TResult = TypeVar("TResult", bound=BaseModel)
 
@@ -44,7 +50,7 @@ class CliResult(BaseModel):
     message: str | None = Field(default=None, description="Optional result message")
 
 
-class FlextControlPanelCli[TConfig: BaseModel, TResult: BaseModel](FlextService[str]):
+class FlextControlPanelCli[TConfig: BaseModel](FlextService[CliResult]):
     """Generic, SOLID-compliant CLI service with extensive Pydantic usage.
 
     Follows Single Responsibility Principle by delegating all operations to
@@ -60,7 +66,18 @@ class FlextControlPanelCli[TConfig: BaseModel, TResult: BaseModel](FlextService[
         self._cli_service = FlextCli()
         self._orchestration_cli = TaskOrchestrationCli()
 
-    def execute_command(self, command: str, **kwargs: object) -> FlextResult[TResult]:
+    def execute(self) -> FlextResult[CliResult]:
+        """Main CLI execution entry point.
+
+        Returns:
+            FlextResult[CliResult]: Success with CLI result or failure
+
+        """
+        return FlextResult[CliResult].ok(
+            CliResult(success=True, message="CLI initialized successfully")
+        )
+
+    def execute_command(self, command: str, **kwargs: object) -> FlextResult[CliResult]:
         """Execute CLI command by delegating to appropriate service."""
         return self._validate_command(command, kwargs).flat_map(
             lambda _: self._route_command(command, kwargs)
@@ -80,7 +97,7 @@ class FlextControlPanelCli[TConfig: BaseModel, TResult: BaseModel](FlextService[
 
     def _route_command(
         self, command: str, kwargs: dict[str, object]
-    ) -> FlextResult[TResult]:
+    ) -> FlextResult[CliResult]:
         """Route command to appropriate handler by delegation."""
         command_map = {
             "orchestrate": self._handle_orchestration,
@@ -93,40 +110,47 @@ class FlextControlPanelCli[TConfig: BaseModel, TResult: BaseModel](FlextService[
 
         handler = command_map.get(command)
         if not handler:
-            return FlextResult[TResult].fail(f"Unknown command: {command}")
+            return FlextResult[CliResult].fail(f"Unknown command: {command}")
 
         return handler(**kwargs)
 
-    def _handle_orchestration(self, **kwargs: object) -> FlextResult[TResult]:
+    def _handle_orchestration(self, **kwargs: object) -> FlextResult[CliResult]:
         """Delegate orchestration to specialized service."""
-        input_data = kwargs.get("input_data", "")
+        input_data = str(kwargs.get("input_data", ""))
         focus = kwargs.get("focus")
+        focus = str(focus) if focus is not None else None
         agents = kwargs.get("agents")
+        agents = (
+            int(agents)
+            if agents is not None and isinstance(agents, (int, str))
+            else None
+        )
         days = kwargs.get("days")
-        analyze_only = kwargs.get("analyze_only", False)
+        days = int(days) if days is not None and isinstance(days, (int, str)) else None
+        analyze_only = bool(kwargs.get("analyze_only"))
         context = kwargs.get("context")
+        context = dict(context) if isinstance(context, dict) else None
 
         result = self._orchestration_cli.orchestrate_command(
-            input_data=input_data,  # type: ignore[arg-type]
-            focus=focus,  # type: ignore[arg-type]
-            agents=agents,  # type: ignore[arg-type]
-            days=days,  # type: ignore[arg-type]
-            analyze_only=analyze_only,  # type: ignore[arg-type]
-            context=context,  # type: ignore[arg-type]
+            input_data=input_data,
+            focus=focus,
+            agents=agents,
+            days=days,
+            analyze_only=analyze_only,
+            context=context,
         )
-        return FlextResult[TResult].ok(
-            CliResult(success=result.is_success, message="Orchestration completed")  # type: ignore[return-value]
+        return FlextResult[CliResult].ok(
+            CliResult(success=result.is_success, message="Orchestration completed")
         )
 
-    def _handle_quality(self, **kwargs: object) -> FlextResult[TResult]:
+    def _handle_quality(self, **_kwargs: object) -> FlextResult[CliResult]:
         """Execute quality checks using flext-quality service."""
-        # TODO: Integrate with flext-quality when available
-        # For now, return a generic success result
-        return FlextResult[TResult].ok(
+        # Integration with flext-quality service pending - placeholder implementation
+        return FlextResult[CliResult].ok(
             CliResult(success=True, message="Quality checks completed")
-        )  # type: ignore[return-value]
+        )
 
-    def _handle_info(self, **kwargs: object) -> FlextResult[TResult]:
+    def _handle_info(self, **_kwargs: object) -> FlextResult[CliResult]:
         """Display workspace information."""
         info_data = {
             "workspace": str(self._config.workspace),
@@ -134,32 +158,32 @@ class FlextControlPanelCli[TConfig: BaseModel, TResult: BaseModel](FlextService[
             "debug": self._config.debug,
             "output_format": self._config.output_format,
         }
-        return FlextResult[TResult].ok(CliResult(success=True, data=info_data))  # type: ignore[return-value]
+        return FlextResult[CliResult].ok(CliResult(success=True, data=info_data))
 
-    def _handle_lint(self, **kwargs: object) -> FlextResult[TResult]:
+    def _handle_lint(self, **_kwargs: object) -> FlextResult[CliResult]:
         """Execute linting using flext-quality service."""
-        # TODO: Integrate with flext-quality when available
-        return FlextResult[TResult].ok(
+        # Integration with flext-quality service pending - placeholder implementation
+        return FlextResult[CliResult].ok(
             CliResult(success=True, message="Linting completed")
-        )  # type: ignore[return-value]
+        )
 
-    def _handle_test(self, **kwargs: object) -> FlextResult[TResult]:
+    def _handle_test(self, **_kwargs: object) -> FlextResult[CliResult]:
         """Execute testing using flext-quality service."""
-        # TODO: Integrate with flext-quality when available
-        return FlextResult[TResult].ok(
+        # Integration with flext-quality service pending - placeholder implementation
+        return FlextResult[CliResult].ok(
             CliResult(success=True, message="Testing completed")
-        )  # type: ignore[return-value]
+        )
 
-    def _handle_format(self, **kwargs: object) -> FlextResult[TResult]:
+    def _handle_format(self, **_kwargs: object) -> FlextResult[CliResult]:
         """Execute code formatting using flext-quality service."""
-        # TODO: Integrate with flext-quality when available
-        return FlextResult[TResult].ok(
+        # Integration with flext-quality service pending - placeholder implementation
+        return FlextResult[CliResult].ok(
             CliResult(success=True, message="Formatting completed")
-        )  # type: ignore[return-value]
+        )
 
 
 # Legacy compatibility functions - minimal delegation
-def create_cli() -> FlextControlPanelCli[CliConfig, CliResult]:
+def create_cli() -> FlextControlPanelCli[CliConfig]:
     """Factory function to create CLI instance."""
     return FlextControlPanelCli()
 

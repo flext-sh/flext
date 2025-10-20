@@ -1,4 +1,5 @@
 # FLEXT Ecosystem Documentation
+
 ## Table of Contents
 
 - [FLEXT Ecosystem Documentation](#flext-ecosystem-documentation)
@@ -26,11 +27,10 @@
   - [📞 Support & Community](#-support--community)
   - [🔄 Recent Updates](#-recent-updates)
 
-
 **Version**: 1.0.0 | **Status**: 100% Operational | **Last Updated**: October 2025
 
 Welcome to the comprehensive documentation for the FLEXT ecosystem - a complete platform for data integration,
-     transformation, and enterprise connectivity.
+transformation, and enterprise connectivity.
 
 ---
 

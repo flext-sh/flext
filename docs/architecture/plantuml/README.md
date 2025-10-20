@@ -1,4 +1,5 @@
 # FLEXT PlantUML Diagrams
+
 ## Table of Contents
 
 - [FLEXT PlantUML Diagrams](#flext-plantuml-diagrams)
@@ -28,8 +29,8 @@
     - [Local Installation](#local-installation)
 - [Install PlantUML](#install-plantuml)
 - [Generate diagrams](#generate-diagrams)
-    - [Online Usage](#online-usage)
-    - [VS Code Integration](#vs-code-integration)
+  - [Online Usage](#online-usage)
+  - [VS Code Integration](#vs-code-integration)
   - [📚 Diagram Standards](#-diagram-standards)
     - [Naming Conventions](#naming-conventions)
     - [Style Guidelines](#style-guidelines)
@@ -40,9 +41,8 @@
     - [Updating Existing Diagrams](#updating-existing-diagrams)
     - [Review Process](#review-process)
 
-
 This directory contains PlantUML diagrams for the FLEXT Enterprise Data Integration Platform,
-     providing detailed visual representations of the system architecture, components, and interactions.
+providing detailed visual representations of the system architecture, components, and interactions.
 
 ## 📋 Diagram Categories
 

@@ -1,4 +1,5 @@
 # Architecture Decision Records (ADRs)
+
 ## Table of Contents
 
 - [Architecture Decision Records (ADRs)](#architecture-decision-records-adrs)
@@ -45,9 +46,8 @@
     - [Updating ADRs](#updating-adrs)
     - [Review Process](#review-process)
 
-
 This directory contains Architecture Decision Records (ADRs) for the FLEXT Enterprise Data Integration Platform. ADRs document important architectural decisions,
-    
+
      their context, and consequences.
 
 ## 📋 ADR Index

@@ -1,4 +1,5 @@
 # FLEXT Configuration Guide
+
 ## Table of Contents
 
 - [FLEXT Configuration Guide](#flext-configuration-guide)
@@ -9,11 +10,11 @@
 - [Core configuration](#core-configuration)
 - [LDIF processing](#ldif-processing)
 - [API configuration](#api-configuration)
-    - [Configuration Files](#configuration-files)
+  - [Configuration Files](#configuration-files)
 - [FLEXT Configuration](#flext-configuration)
 - [LDIF Processing](#ldif-processing)
 - [API Configuration](#api-configuration)
-    - [Programmatic Configuration](#programmatic-configuration)
+  - [Programmatic Configuration](#programmatic-configuration)
 - [Core configuration](#core-configuration)
 - [LDIF configuration](#ldif-configuration)
   - [Project-Specific Configuration](#project-specific-configuration)
@@ -22,9 +23,9 @@
     - [flext-auth Configuration](#flext-auth-configuration)
   - [Environment-Specific Configuration](#environment-specific-configuration)
     - [Development Environment](#development-environment)
-- [config.dev.yaml](#configdevyaml)
-    - [Production Environment](#production-environment)
-- [config.prod.yaml](#configprodyaml)
+- [config.dev.YAML](#configdevyaml)
+  - [Production Environment](#production-environment)
+- [config.prod.YAML](#configprodyaml)
   - [Configuration Validation](#configuration-validation)
   - [Configuration Inheritance](#configuration-inheritance)
 - [Base configuration](#base-configuration)
@@ -32,9 +33,9 @@
   - [Best Practices](#best-practices)
     - [1. Use Environment Variables for Secrets](#1-use-environment-variables-for-secrets)
 - [Never put secrets in configuration files](#never-put-secrets-in-configuration-files)
-    - [2. Validate Configuration Early](#2-validate-configuration-early)
-    - [3. Use Configuration Classes](#3-use-configuration-classes)
-    - [4. Document Configuration Options](#4-document-configuration-options)
+  - [2. Validate Configuration Early](#2-validate-configuration-early)
+  - [3. Use Configuration Classes](#3-use-configuration-classes)
+  - [4. Document Configuration Options](#4-document-configuration-options)
   - [Troubleshooting](#troubleshooting)
     - [Common Configuration Issues](#common-configuration-issues)
     - [Debug Configuration](#debug-configuration)
@@ -45,13 +46,12 @@
     - [Complete Configuration Example](#complete-configuration-example)
   - [Reference](#reference)
 
-
 This guide covers how to configure FLEXT for your specific environment and requirements.
 
 ## Overview
 
 FLEXT uses a hierarchical configuration system that supports environment variables, configuration files,
-     and programmatic configuration. All configuration is validated using Pydantic v2 models for type safety and validation.
+and programmatic configuration. All configuration is validated using Pydantic v2 models for type safety and validation.
 
 ## Configuration Sources
 

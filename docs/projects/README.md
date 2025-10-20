@@ -1,4 +1,5 @@
 # Project Documentation
+
 ## Table of Contents
 
 - [Project Documentation](#project-documentation)
@@ -27,12 +28,11 @@
     - [Using flext-core](#using-flext-core)
 - [Set up dependency injection](#set-up-dependency-injection)
 - [Use railway-oriented programming](#use-railway-oriented-programming)
-    - [Using flext-ldif](#using-flext-ldif)
+  - [Using flext-ldif](#using-flext-ldif)
 - [Parse LDIF content](#parse-ldif-content)
 - [Migrate between servers](#migrate-between-servers)
   - [Project Standards](#project-standards)
   - [Contributing to Projects](#contributing-to-projects)
-
 
 Detailed documentation for each FLEXT project and library.
 

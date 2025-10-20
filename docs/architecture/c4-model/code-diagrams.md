@@ -1,4 +1,5 @@
 # FLEXT Code Diagrams
+
 ## Table of Contents
 
 - [FLEXT Code Diagrams](#flext-code-diagrams)
@@ -18,11 +19,10 @@
     - [Performance Benchmarks](#performance-benchmarks)
     - [Memory Usage](#memory-usage)
 
-
 ## Overview
 
 This document provides detailed code-level diagrams showing the implementation structure of key components in the FLEXT platform,
-     including class diagrams, entity relationship diagrams, and sequence diagrams.
+including class diagrams, entity relationship diagrams, and sequence diagrams.
 
 ## 1. FlextResult[T] Class Diagram
 

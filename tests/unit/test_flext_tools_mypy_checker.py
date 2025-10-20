@@ -16,9 +16,8 @@ from pathlib import Path
 
 import pytest
 from flext_core import FlextResult
-from flext_tests import FlextTestsDomains
-
 from flext_quality.tools import MyPyChecker
+from flext_tests import FlextTestsDomains
 
 
 class TestMyPyChecker:

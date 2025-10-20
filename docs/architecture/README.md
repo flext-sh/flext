@@ -1,4 +1,5 @@
 # Architecture Overview
+
 ## Table of Contents
 
 - [Architecture Overview](#architecture-overview)
@@ -9,10 +10,8 @@
     - [Core Components](#core-components)
       - [FlextContainer (Dependency Injection)](#flextcontainer-dependency-injection)
       - [FlextDispatcher (CQRS)](#flextdispatcher-cqrs)
-- [Dispatch commands and queries](#dispatch-commands-and-queries)
-      - [FlextResult (Railway-Oriented Programming)](#flextresult-railway-oriented-programming)
-- [Compose operations](#compose-operations)
-      - [FlextBus (Domain Events)](#flextbus-domain-events)
+- [Dispatch commands and queries](#dispatch-commands-and-queries) - [FlextResult (Railway-Oriented Programming)](#flextresult-railway-oriented-programming)
+- [Compose operations](#compose-operations) - [FlextBus (Domain Events)](#flextbus-domain-events)
 - [Emit events](#emit-events)
   - [Project Structure](#project-structure)
     - [Monorepo Organization](#monorepo-organization)
@@ -30,7 +29,6 @@
     - [Code Quality](#code-quality)
   - [Security Architecture](#security-architecture)
   - [Performance Considerations](#performance-considerations)
-
 
 ## System Architecture
 

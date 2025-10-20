@@ -1,4 +1,5 @@
 # 2. Constraints
+
 ## Table of Contents
 
 - [2. Constraints](#2-constraints)
@@ -48,7 +49,6 @@
     - [2.5.2 Security Compliance](#252-security-compliance)
       - [Vulnerability Management](#vulnerability-management)
       - [Access Management](#access-management)
-
 
 ## 2.1 Technical Constraints
 

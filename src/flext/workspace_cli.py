@@ -11,17 +11,17 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import subprocess  # noqa: S404
+import subprocess
 import sys
 from pathlib import Path
 from typing import Self
 
 from flext_cli import FlextCli
 from flext_core import FlextLogger, FlextResult, FlextService
+from flext_quality.tools import Colors, print_colored
 
 from flext.services import create_services
 from flext.workspace_service import create_workspace_service
-from flext_quality.tools import Colors, print_colored
 
 
 class FlextWorkspaceCli(FlextService[str]):
@@ -83,6 +83,7 @@ class FlextWorkspaceCli(FlextService[str]):
         """Nested workspace service for command execution."""
 
         def __init__(self, cli_service: FlextWorkspaceCli) -> None:
+            super().__init__()
             self._cli_service = cli_service
 
         def run_command(
@@ -99,18 +100,17 @@ class FlextWorkspaceCli(FlextService[str]):
                 print_colored(f"Running: {' '.join(command)} in {cwd}")
 
             try:
-                if self._cli_service.modules:
-                    result: subprocess.CompletedProcess[str] = subprocess.run(  # noqa: S603
-                        command,
-                        check=False,
-                        text=True,
-                        shell=False,  # Explicit for security
-                    )
+                result: subprocess.CompletedProcess[str] = subprocess.run(
+                    command,
+                    check=False,
+                    text=True,
+                    shell=False,  # Explicit for security
+                )
 
-                    if check and result.returncode != 0:
-                        error = f"Command failed: {result.stderr}"
-                        print_colored(f"❌ {error}")
-                        return FlextResult[subprocess.CompletedProcess[str]].fail(error)
+                if check and result.returncode != 0:
+                    error = f"Command failed: {result.stderr}"
+                    print_colored(f"❌ {error}")
+                    return FlextResult[subprocess.CompletedProcess[str]].fail(error)
 
                 return FlextResult[subprocess.CompletedProcess[str]].ok(result)
 
@@ -141,12 +141,12 @@ class FlextWorkspaceCli(FlextService[str]):
                     )
 
                 if not module_path.exists():
-                    status: dict[str, object] = {
+                    not_found_status: dict[str, object] = {
                         "exists": False,
                         "name": module,
                         "path": str(module_path),
                     }
-                    return FlextResult[dict[str, object]].ok(status)
+                    return FlextResult[dict[str, object]].ok(not_found_status)
 
                 # Check for key files
                 has_pyproject = (module_path / "pyproject.toml").exists()
@@ -154,7 +154,7 @@ class FlextWorkspaceCli(FlextService[str]):
                 has_src = (module_path / "src").exists()
                 has_tests = (module_path / "tests").exists()
 
-                status: dict[str, object] = {
+                module_status: dict[str, object] = {
                     "exists": True,
                     "name": module,
                     "path": str(module_path),
@@ -164,7 +164,7 @@ class FlextWorkspaceCli(FlextService[str]):
                     "has_tests": has_tests,
                 }
 
-                return FlextResult[dict[str, object]].ok(status)
+                return FlextResult[dict[str, object]].ok(module_status)
 
             except Exception as e:
                 return FlextResult[dict[str, object]].fail(
@@ -191,9 +191,12 @@ class FlextWorkspaceCli(FlextService[str]):
         """Nested status command handlers."""
 
         def __init__(self, cli_service: FlextWorkspaceCli) -> None:
+            super().__init__()
             self._cli_service = cli_service
             self._workspace_service = cli_service._WorkspaceService(cli_service)
             self._actual_workspace_service = create_workspace_service()
+            self._modules_result: FlextResult[list[dict[str, object]]] | None = None
+            self.modules: list[dict[str, object]] | None = None
 
         def display_status(self: Self) -> FlextResult[dict[str, object]]:
             """Display comprehensive workspace status."""
@@ -203,27 +206,30 @@ class FlextWorkspaceCli(FlextService[str]):
             self._modules_result = (
                 self._actual_workspace_service.discover_workspace_projects()
             )
-            if self.modules_result.is_failure:
+            if self._modules_result.is_failure:
                 return FlextResult[dict[str, object]].fail("Failed to load modules")
 
             self.modules = self._modules_result.unwrap()
 
             # Display module status in organized format
             for module_info in self.modules:
-                # module_info is a Project object
-                name = module_info.name
+                # module_info is a dict with project information
+                name = module_info.get("name", "")
                 # Project exists if it has a name and repository_path
-                if module_info.name and module_info.repository_path:
+                if module_info.get("name") and module_info.get("repository_path"):
                     print_colored(f"✅ {name}: Found")
 
-                    # Show available features based on actual Project model attributes
+                    # Show available features based on dict keys
                     features: list[str] = []
-                    if module_info.is_test_project:
+                    if module_info.get("is_test_project"):
                         features.append("Tests")
-                    if module_info.test_framework:
-                        features.append(f"Framework: {module_info.test_framework}")
-                    if module_info.project_type != "application":
-                        features.append(f"Type: {module_info.project_type}")
+                    if module_info.get("test_framework"):
+                        features.append(
+                            f"Framework: {module_info.get('test_framework')}"
+                        )
+                    project_type = module_info.get("project_type", "application")
+                    if project_type != "application":
+                        features.append(f"Type: {project_type}")
 
                     if features:
                         print_colored(
@@ -238,7 +244,7 @@ class FlextWorkspaceCli(FlextService[str]):
             }
 
             available_count = len([
-                m for m in self.modules if m.name and m.repository_path
+                m for m in self.modules if m.get("name") and m.get("repository_path")
             ])
             print_colored(
                 f"\n📊 Summary: {available_count}/{status_data['total_modules']} modules available"
@@ -250,6 +256,7 @@ class FlextWorkspaceCli(FlextService[str]):
         """Nested test command handlers."""
 
         def __init__(self, cli_service: FlextWorkspaceCli) -> None:
+            super().__init__()
             self._cli_service = cli_service
             self._workspace_service = cli_service._WorkspaceService(cli_service)
 
@@ -307,6 +314,7 @@ class FlextWorkspaceCli(FlextService[str]):
         """Nested quality command handlers."""
 
         def __init__(self, cli_service: FlextWorkspaceCli) -> None:
+            super().__init__()
             self._cli_service = cli_service
             self._workspace_service = cli_service._WorkspaceService(cli_service)
 
@@ -352,6 +360,7 @@ class FlextWorkspaceCli(FlextService[str]):
         """Nested build command handlers."""
 
         def __init__(self, cli_service: FlextWorkspaceCli) -> None:
+            super().__init__()
             self._cli_service = cli_service
             self._workspace_service = cli_service._WorkspaceService(cli_service)
 
@@ -388,6 +397,7 @@ class FlextWorkspaceCli(FlextService[str]):
         """Nested Docker command handlers."""
 
         def __init__(self, cli_service: FlextWorkspaceCli) -> None:
+            super().__init__()
             self._cli_service = cli_service
             self._workspace_service = cli_service._WorkspaceService(cli_service)
 
@@ -452,6 +462,7 @@ class FlextWorkspaceCli(FlextService[str]):
         """Nested setup and maintenance command handlers."""
 
         def __init__(self, cli_service: FlextWorkspaceCli) -> None:
+            super().__init__()
             self._cli_service = cli_service
             self._workspace_service = cli_service._WorkspaceService(cli_service)
 

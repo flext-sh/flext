@@ -16,7 +16,6 @@ from pathlib import Path
 
 import pytest
 from flext_core import FlextResult, FlextTypes
-
 from flext_quality.tools import PoetryValidator
 
 
