@@ -114,6 +114,7 @@
 		]
 		typings = [
 			"django-stubs>=5.2.2",
+			"types-docker>=7.1.0",
 			"types-ldap3>=2.9.13.20250622",
 			"types-protobuf>=6.30.2.20250703",
 			"types-psutil>=7.0.0",
@@ -237,6 +238,20 @@
 		warn_unused_configs = true
 		warn_unused_ignores = false
 
+		# Test overrides - allow more flexible typing in tests
+		[[tool.mypy.overrides]]
+			disable_error_code = [
+				"comparison-overlap",
+				"truthy-function",
+			]
+			disallow_untyped_defs = false
+			module = "tests.*"
+
+
+		[[tool.mypy.overrides]]
+			ignore_missing_imports = true
+			module = "ldif3"
+
 	[tool.poetry]
 
 		packages = [
@@ -323,6 +338,17 @@
 		init_typed = true
 		warn_required_dynamic_aliases = true
 
+	[tool.pyrefly]
+		# Include both src and tests in import resolution for all projects
+		include = [
+			"src",
+			"tests",
+		]
+		# Additional import path for test fixtures
+		extra_paths = [
+			"tests",
+		]
+
 	[tool.pyright]
 		exclude = [
 			"**/*.pb2.py",
@@ -378,7 +404,7 @@
 		reportUnknownMemberType = "warning"
 		reportUnknownParameterType = "warning"
 		reportUnknownVariableType = "warning"
-		reportUnnecessaryCast = "warning"
+		reportUnnecessaryCast = false
 		reportUnnecessaryComparison = false
 		reportUnnecessaryIsInstance = false
 		reportUnsupportedDunderAll = "warning"
@@ -411,16 +437,16 @@
 			root = "./"
 
 	[tool.pytest.ini_options]
-        addopts = [
-            "--cov-report=term-missing",
-            "--cov=src/",
-            "--strict-config",
-            "--strict-markers",
-            "--tb=short",
-            "-p no:sugar",
-            "-q",
-            "-ra",
-        ]
+		addopts = [
+			"--cov-report=term-missing",
+			"--cov=src/",
+			"--strict-config",
+			"--strict-markers",
+			"--tb=short",
+			"-p no:sugar",
+			"-q",
+			"-ra",
+		]
 		filterwarnings = [
 			"ignore::DeprecationWarning:pyasn1(.*|$)",
 		]
@@ -485,8 +511,8 @@
 		]
 		min_confidence = 80
 		paths = [
-			"src",
 			"**/src",
+			"src",
 		]
 		sort_by_size = true
 		verbose = false
