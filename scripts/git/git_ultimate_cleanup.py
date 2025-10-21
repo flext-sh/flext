@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
-"""FLEXT Git Ultimate Cleanup - THE ONLY SCRIPT YOU NEED.
+"""Git repository cleanup script.
 
-Complete repository cleanup with maximum safety:
-- External backup (tar.gz + git mirror)
-- Cruft removal from git history
-- Commit message rewriting
-- Author normalization to Marlon Costa
-- AI reference removal
-- Remote restoration
-- GitHub push/sync
-- All safety guards and validation
+Repository cleanup with safety features:
+    - External backup (tar.gz + git mirror)
+    - Cruft removal from git history
+    - Commit message rewriting
+    - Author normalization
+    - Remote restoration
+    - GitHub push/sync
+    - Safety guards and validation
 
 Usage:
     python3 scripts/git_ultimate_cleanup.py --test                           # Test all functions
@@ -447,11 +446,15 @@ class GitUltimateCleanup:
         mirror_path_esc = shlex.quote(mirror_path_str)
 
         script = backup_dir / "RECOVER.sh"
-        script.write_text(
-            f"""#!/bin/bash
+        script_content = (
+            """#!/bin/bash
 # FLEXT Repository Recovery Script
-# Created: {created}
-# Source: {source}
+# Created: """
+            + created
+            + """
+# Source: """
+            + source
+            + """
 
 set -e
 
@@ -470,23 +473,49 @@ read -p "Enter choice (1-3): " choice
 
 case $choice in
     1)
-        echo "Resetting to safety tag: {safety_tag_esc}"
-        cd {repo_path_esc}
-        git reset --hard {safety_tag_esc}
-        echo "✅ Repository reset to {safety_tag_esc}"
+        echo "Resetting to safety tag: """
+            + safety_tag_esc
+            + """"
+        cd """
+            + repo_path_esc
+            + """
+        git reset --hard """
+            + safety_tag_esc
+            + """
+        echo "✅ Repository reset to """
+            + safety_tag_esc
+            + """"
         ;;
     2)
         echo "Extracting from tar.gz..."
-        read -p "Extract to (default: {repo_parent_esc}): " extract_path
-        extract_path=${{extract_path:-{repo_parent_esc}}}
-        tar -xzf {tar_file_esc} -C "$extract_path"
-        echo "✅ Extracted to: $extract_path/{repo_name}"
+        read -p "Extract to (default: """
+            + repo_parent_esc
+            + """): " extract_path
+        extract_path=${extract_path:-"""
+            + repo_parent_esc
+            + """}
+        tar -xzf """
+            + tar_file_esc
+            + """ -C "$extract_path"
+        echo "✅ Extracted to: $extract_path/"""
+            + repo_name
+            + """"
         ;;
     3)
         echo "Restoring from mirror clone..."
-        read -p "Restore to (default: {repo_parent_esc}/{repo_name}-restored): " restore_path
-        restore_path=${{restore_path:-{repo_parent_esc}/{repo_name}-restored}}
-        git clone {mirror_path_esc} "$restore_path"
+        read -p "Restore to (default: """
+            + repo_parent_esc
+            + """/"""
+            + repo_name
+            + """-restored): " restore_path
+        restore_path=${restore_path:-"""
+            + repo_parent_esc
+            + """/"""
+            + repo_name
+            + """-restored}
+        git clone """
+            + mirror_path_esc
+            + """ "$restore_path"
         echo "✅ Restored to: $restore_path"
         ;;
     *)
@@ -499,6 +528,7 @@ echo ""
 echo "Recovery complete!"
 """
         )
+        script.write_text(script_content)
         script.chmod(0o755)
 
         # Create README
@@ -1057,7 +1087,7 @@ def callback(commit, metadata):
             return {}
 
         # Count deletion frequency
-        deletion_counts = {}
+        deletion_counts: dict[str, int] = {}
         for line in result.value.stdout.strip().split("\n"):
             if not line:
                 continue
@@ -1065,18 +1095,22 @@ def callback(commit, metadata):
 
         return deletion_counts
 
-    def detect_additional_cruft(self, *, silent: bool = False) -> dict[str, list[str]]:
+    def detect_additional_cruft(
+        self, *, silent: bool = False
+    ) -> dict[str, list[str] | str | int]:
         """Detect additional cruft patterns from git history and .gitignore."""
         if not silent:
             print(f"\n{'=' * 70}")
             print("🔍 DETECTING ADDITIONAL CRUFT PATTERNS")
             print(f"{'=' * 70}\n")
 
-        detected = {
+        detected: dict[str, list[str] | str | int] = {
             "gitignore_patterns": [],
             "historical_removals": [],
             "recommended_patterns": [],
             "repo_name": self.repo_path.name,
+            "total_gitignore_patterns": 0,
+            "total_deletions": 0,
         }
 
         # 1. Analyze .gitignore
@@ -1120,7 +1154,7 @@ def callback(commit, metadata):
         }
 
         # Extract patterns from frequently deleted files
-        pattern_counts = {}
+        pattern_counts: dict[str, int] = {}
         for path in frequent_deletions:
             # Extract file extension patterns
             if "." in path:
@@ -1185,7 +1219,7 @@ def callback(commit, metadata):
 
         if not silent:
             print(
-                f"   Generated {len(detected['recommended_patterns'])} recommended patterns"
+                f"   Generated {len(detected['recommended_patterns']) if isinstance(detected['recommended_patterns'], list) else 0} recommended patterns"
             )
 
         # 4. Display results (skip if silent)
@@ -1199,16 +1233,18 @@ def callback(commit, metadata):
         if detected["recommended_patterns"]:
             print("🎯 RECOMMENDED PATTERNS TO ADD:")
             print()
-            for i, pattern in enumerate(detected["recommended_patterns"], 1):
-                print(f"   {i:2d}. {pattern}")
-            print()
-            print("To add these patterns, update CRUFT_PATTERNS in the script:")
-            print("   CRUFT_PATTERNS = [")
-            print("       # ... existing patterns ...")
-            for pattern in detected["recommended_patterns"]:
-                print(f'       "{pattern}",')
-            print("   ]")
-            print()
+            recommended_patterns = detected["recommended_patterns"]
+            if isinstance(recommended_patterns, list):
+                for i, pattern in enumerate(recommended_patterns, 1):
+                    print(f"   {i:2d}. {pattern}")
+                print()
+                print("To add these patterns, update CRUFT_PATTERNS in the script:")
+                print("   CRUFT_PATTERNS = [")
+                print("       # ... existing patterns ...")
+                for pattern in recommended_patterns:
+                    print(f'       "{pattern}",')
+                print("   ]")
+                print()
         else:
             print("✅ No additional cruft patterns detected!")
             print("   Current CRUFT_PATTERNS list is comprehensive.")
@@ -1458,15 +1494,21 @@ def callback(commit, metadata):
         # Aggregate results
         print(f"\n📊 Aggregating results from {len(all_results)} repositories...")
 
-        pattern_frequency = {}
-        repos_by_pattern = {}
+        pattern_frequency: dict[str, int] = {}
+        repos_by_pattern: dict[str, list[str]] = {}
 
         for result in all_results:
-            for pattern in result["recommended_patterns"]:
-                pattern_frequency[pattern] = pattern_frequency.get(pattern, 0) + 1
-                if pattern not in repos_by_pattern:
-                    repos_by_pattern[pattern] = []
-                repos_by_pattern[pattern].append(result["repo_name"])
+            recommended_patterns = result.get("recommended_patterns", [])
+            if isinstance(recommended_patterns, list):
+                for pattern in recommended_patterns:
+                    pattern_frequency[pattern] = pattern_frequency.get(pattern, 0) + 1
+                    if pattern not in repos_by_pattern:
+                        repos_by_pattern[pattern] = []
+                    repos_list = repos_by_pattern[pattern]
+                    if isinstance(repos_list, list) and isinstance(
+                        result["repo_name"], str
+                    ):
+                        repos_list.append(result["repo_name"])
 
         # Sort by frequency
         sorted_patterns = sorted(
@@ -1486,10 +1528,20 @@ def callback(commit, metadata):
             "## 📊 Executive Summary\n\n",
         ])
 
-        total_gitignore = sum(r.get("total_gitignore_patterns", 0) for r in all_results)
-        total_deletions = sum(r.get("total_deletions", 0) for r in all_results)
+        def get_int_value(r: dict[str, list[str] | str | int], key: str) -> int:
+            value = r.get(key, 0)
+            return value if isinstance(value, int) else 0
+
+        def get_list_length(r: dict[str, list[str] | str | int], key: str) -> int:
+            value = r.get(key, [])
+            return len(value) if isinstance(value, list) else 0
+
+        total_gitignore = sum(
+            get_int_value(r, "total_gitignore_patterns") for r in all_results
+        )
+        total_deletions = sum(get_int_value(r, "total_deletions") for r in all_results)
         total_new_patterns = sum(
-            len(r.get("gitignore_patterns", [])) for r in all_results
+            get_list_length(r, "gitignore_patterns") for r in all_results
         )
         total_recommended = len(pattern_frequency)
 
@@ -1537,35 +1589,40 @@ def callback(commit, metadata):
 
         for result in sorted(
             all_results,
-            key=lambda x: len(x.get("recommended_patterns", [])),
+            key=lambda x: len(patterns)
+            if isinstance((patterns := x.get("recommended_patterns")), list)
+            else 0,
             reverse=True,
         ):
             repo_name = result["repo_name"]
-            recommended = result.get("recommended_patterns", [])
             gitignore_count = result.get("total_gitignore_patterns", 0)
             deletions_count = result.get("total_deletions", 0)
 
-            if not recommended:
+            recommended_patterns = result.get("recommended_patterns", [])
+            if not isinstance(recommended_patterns, list) or not recommended_patterns:
                 continue  # Skip repos with no recommendations
 
             report.extend((
                 f"### {repo_name}\n\n",
                 f"- **.gitignore patterns**: {gitignore_count}\n",
                 f"- **Historical deletions**: {deletions_count}\n",
-                f"- **New patterns detected**: {len(recommended)}\n\n",
+                f"- **New patterns detected**: {len(recommended_patterns)}\n\n",
             ))
 
-            if recommended:
+            if recommended_patterns:
                 report.extend((
                     "<details>\n",
-                    f"<summary><b>Show {len(recommended)} patterns</b></summary>\n\n",
+                    f"<summary><b>Show {len(recommended_patterns)} patterns</b></summary>\n\n",
                 ))
-                report.extend(f"- `{pattern}`\n" for pattern in recommended)
+                report.extend(f"- `{pattern}`\n" for pattern in recommended_patterns)
                 report.append("\n</details>\n\n")
 
         # Repos with no new patterns
         clean_repos = [
-            r["repo_name"] for r in all_results if not r.get("recommended_patterns", [])
+            r["repo_name"]
+            for r in all_results
+            if not isinstance(r.get("recommended_patterns", []), list)
+            or not r.get("recommended_patterns", [])
         ]
         if clean_repos:
             report.extend((
@@ -1593,7 +1650,12 @@ def callback(commit, metadata):
             repo_name = result["repo_name"]
             gitignore = result.get("total_gitignore_patterns", 0)
             deletions = result.get("total_deletions", 0)
-            new_patterns = len(result.get("recommended_patterns", []))
+            recommended_patterns = result.get("recommended_patterns", [])
+            new_patterns = (
+                len(recommended_patterns)
+                if isinstance(recommended_patterns, list)
+                else 0
+            )
             report.append(
                 f"| {repo_name} | {gitignore} | {deletions} | {new_patterns} |\n"
             )

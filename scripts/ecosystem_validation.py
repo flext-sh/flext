@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""FLEXT Ecosystem Comprehensive Validation Script.
+"""Ecosystem validation script.
 
 Validates all FLEXT projects for:
-- Syntax errors (Python AST parsing)
-- Lint violations (Ruff)
-- Type errors (MyPy/PyRight)
-- Domain library violations (direct imports)
-- Test coverage status
+    - Syntax errors (Python AST parsing)
+    - Lint violations (Ruff)
+    - Type errors (MyPy/PyRight)
+    - Import violations
+    - Test coverage status
 
-Generates structured report for transformation planning.
+Generates validation report.
 """
 
 from __future__ import annotations
@@ -266,7 +266,7 @@ class EcosystemValidator:
 
     def generate_report(self) -> str:
         """Generate human-readable report."""
-        lines = []
+        lines: list[str] = []
         lines.extend((
             "=" * 80,
             "FLEXT ECOSYSTEM TRANSFORMATION STATUS REPORT",
