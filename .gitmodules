@@ -133,34 +133,3 @@
 	path = flext-dbt-oracle-wms
 	url = git@github.com:flext-sh/flext-dbt-oracle-wms.git
 
-# ============================================================================
-# LEGACY PROJECTS (FLEXT-SH - ARCHIVED)
-# ============================================================================
-
-[submodule "legacy/flx-adapter-example"]
-	path = legacy/flx-adapter-example
-	url = git@github.com:flext-sh/flx-adapter-example.git
-
-[submodule "legacy/flx-database-oracle"]
-	path = legacy/flx-database-oracle
-	url = git@github.com:flext-sh/flx-database-oracle.git
-
-[submodule "legacy/flx-http-oracle-oic"]
-	path = legacy/flx-http-oracle-oic
-	url = git@github.com:flext-sh/flx-http-oracle-oic.git
-
-[submodule "legacy/flx-http-oracle-wms"]
-	path = legacy/flx-http-oracle-wms
-	url = git@github.com:flext-sh/flx-http-oracle-wms.git
-
-[submodule "legacy/flx-ldap"]
-	path = legacy/flx-ldap
-	url = git@github.com:flext-sh/flx-ldap.git
-
-[submodule "legacy/flx-meltano-enterprise"]
-	path = legacy/flx-meltano-enterprise
-	url = git@github.com:flext-sh/flx-meltano-enterprise.git
-
-[submodule "legacy/flx-oracle-wms"]
-	path = legacy/flx-oracle-wms
-	url = git@github.com:flext-sh/flx-oracle-wms.git
