@@ -1,0 +1,16 @@
+Project	File	Line	Validator_Name	Function_Type	Pydantic_Replacement	Priority	Status	Effort_Estimate
+flext-cli	src/flext_cli/validator.py	72	validate_log_level	FlextResult[str]	Literal['DEBUG','INFO','WARNING','ERROR','CRITICAL']	HIGH	NOT_FIXED	15_min
+flext-cli	src/flext_cli/validator.py	111	validate_log_level_for_cli	FlextResult[str]	Literal['DEBUG','INFO','WARNING','ERROR','CRITICAL']	HIGH	NOT_FIXED	10_min
+flext-cli	src/flext_cli/models.py	52	_validate_log_level	Pydantic_field_validator	Literal['DEBUG','INFO','WARNING','ERROR','CRITICAL']	HIGH	NOT_FIXED	10_min
+flext-cli	src/flext_cli/mixins.py	197	validate_log_level	Nested_function	Literal['DEBUG','INFO','WARNING','ERROR','CRITICAL']	HIGH	NOT_FIXED	10_min
+flext-observability	src/flext_observability/logging.py	163	validate_log_level	Pydantic_field_validator	Literal['DEBUG','INFO','WARNING','ERROR','CRITICAL']	HIGH	NOT_FIXED	10_min
+flext-observability	src/flext_observability/config.py	136	validate_log_level	Pydantic_field_validator	Literal['DEBUG','INFO','WARNING','ERROR','CRITICAL']	HIGH	NOT_FIXED	10_min
+flext-quality	src/flext_quality/config.py	244	validate_log_level	Pydantic_field_validator	Literal['DEBUG','INFO','WARNING','ERROR','CRITICAL']	HIGH	NOT_FIXED	10_min
+flext-db-oracle	src/flext_db_oracle/config.py	227	validate_host	Pydantic_field_validator	HttpUrl_or_hostname_pattern	HIGH	NOT_FIXED	15_min
+flext-grpc	src/flext_grpc/config.py	78	validate_host	Pydantic_field_validator	HttpUrl_or_hostname_pattern	HIGH	NOT_FIXED	15_min
+flext-oracle-oic	src/flext_oracle_oic/utilities.py	300	validate_base_url	FlextResult[str]	HttpUrl	HIGH	NOT_FIXED	20_min
+flext-oracle-oic	src/flext_oracle_oic/config.py	142	validate_base_url	Pydantic_field_validator	HttpUrl	HIGH	NOT_FIXED	15_min
+flext-oracle-wms	src/flext_oracle_wms/config.py	56	validate_base_url	Pydantic_field_validator	HttpUrl	HIGH	NOT_FIXED	15_min
+flext-target-oracle-oic	src/flext_target_oracle_oic/config.py	263	validate_base_url	Pydantic_field_validator	HttpUrl	HIGH	NOT_FIXED	15_min
+flext-target-oracle-wms	src/flext_target_oracle_wms/target_config.py	256	validate_base_url	Pydantic_field_validator	HttpUrl	HIGH	NOT_FIXED	15_min
+flext-tap-oracle-wms	src/flext_tap_oracle_wms/config.py	319	validate_base_url	Pydantic_field_validator	HttpUrl	HIGH	NOT_FIXED	15_min
