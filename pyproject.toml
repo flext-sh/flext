@@ -340,12 +340,8 @@
 
 	[tool.pyrefly]
 		# Include both src and tests in import resolution for all projects
-		include = [
+		search_path = [
 			"src",
-			"tests",
-		]
-		# Additional import path for test fixtures
-		extra_paths = [
 			"tests",
 		]
 

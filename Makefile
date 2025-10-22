@@ -212,6 +212,42 @@ test-all: ## Run tests on all Python projects
 		fi \
 	done
 
+.PHONY: audit-pydantic-v2
+audit-pydantic-v2: ## Audit all projects for Pydantic v2 compliance
+	@echo "🔍 Auditing Pydantic v2 compliance across all projects..."
+	@echo ""
+	@total_violations=0; \
+	failed_projects=0; \
+	for project in $(ALL_PYTHON_PROJECTS); do \
+		if [ -d "$$project" ] && [ -f "$$project/pyproject.toml" ]; then \
+			echo "🔍 Auditing $$project..."; \
+			cd $$project; \
+			if [ -f "../scripts/audit_pydantic_v2.py" ]; then \
+				python ../scripts/audit_pydantic_v2.py --project . > /tmp/audit_$$project.log 2>&1; \
+				audit_status=$$?; \
+				if [ $$audit_status -ne 0 ]; then \
+					failed_projects=$$((failed_projects + 1)); \
+					cat /tmp/audit_$$project.log; \
+					total_violations=$$((total_violations + 1)); \
+				else \
+					echo "  ✅ $$project: PASS"; \
+				fi \
+			else \
+				echo "  ⚠️  Audit script not found"; \
+			fi; \
+			cd ..; \
+		fi \
+	done; \
+	echo ""; \
+	echo "📊 AUDIT SUMMARY:"; \
+	if [ $$failed_projects -eq 0 ]; then \
+		echo "✅ All projects pass Pydantic v2 compliance audit"; \
+		exit 0; \
+	else \
+		echo "❌ $$failed_projects project(s) failed audit"; \
+		exit 1; \
+	fi
+
 # =============================================================================
 # BUILD & DEPLOYMENT
 # =============================================================================
