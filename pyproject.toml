@@ -375,6 +375,7 @@
 		pythonVersion = "3.13"
 		reportAssertAlwaysTrue = "warning"
 		reportCallInDefaultInitializer = "warning"
+		reportCallIssue = false
 		reportConstantRedefinition = "error"
 		reportDuplicateImport = "warning"
 		reportImplicitStringConcatenation = "warning"
