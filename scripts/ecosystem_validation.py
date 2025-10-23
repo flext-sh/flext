@@ -14,11 +14,13 @@ Generates validation report.
 from __future__ import annotations
 
 import ast
+import io
 import json
 import logging
+import runpy
 import shutil
-import subprocess
 import sys
+from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
@@ -125,35 +127,51 @@ class EcosystemValidator:
         return error_count, errors
 
     def validate_lint(self, project: str) -> tuple[int, int]:
-        """Validate with Ruff linting."""
+        """Validate with Ruff linting using runpy module execution."""
         project_path = self.workspace_path / project
         src_dir = project_path / "src"
 
         if not src_dir.exists():
             return 0, 0
 
-        ruff_path = shutil.which("ruff")
-        if not ruff_path:
+        if not shutil.which("ruff"):
             logger.warning("Ruff executable not found in PATH")
             return 0, 0
 
         try:
-            result = subprocess.run(
-                [ruff_path, "check", str(src_dir), "--output-format=json"],
-                check=False,
-                capture_output=True,
-                text=True,
-                cwd=project_path,
-                timeout=30,
-            )
+            # Save current directory and sys.argv for restoration
+            original_cwd = Path.cwd()
+            original_argv = sys.argv.copy()
 
-            if result.stdout:
-                violations = json.loads(result.stdout)
+            # Change to project directory and set up ruff arguments
+            original_dir = str(original_cwd)
+            sys.chdir(str(project_path))
+            sys.argv = ["ruff", "check", str(src_dir), "--output-format=json"]
+
+            # Capture stdout to get JSON output
+            stdout_capture = io.StringIO()
+            stderr_capture = io.StringIO()
+
+            try:
+                with redirect_stdout(stdout_capture), redirect_stderr(stderr_capture):
+                    runpy.run_module("ruff", run_name="__main__", alter_sys=True)
+            except SystemExit:
+                # ruff exits with different codes, that's okay
+                pass
+            finally:
+                # Restore original state
+                sys.chdir(original_dir)
+                sys.argv = original_argv
+
+            # Parse captured output
+            output = stdout_capture.getvalue()
+            if output:
+                violations = json.loads(output)
                 errors = sum(1 for v in violations if v.get("fix") is None)
                 warnings = len(violations) - errors
                 return errors, warnings
-        except (subprocess.TimeoutExpired, json.JSONDecodeError, FileNotFoundError):
-            pass
+        except (json.JSONDecodeError, FileNotFoundError, Exception) as e:
+            logger.warning(f"Ruff linting check failed for {project}: {e}")
 
         return 0, 0
 

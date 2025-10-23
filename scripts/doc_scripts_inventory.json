@@ -1,0 +1,183 @@
+{
+  "workspace_root": "/home/marlonsc/flext",
+  "projects_scanned": 31,
+  "projects_with_doc_scripts": [
+    "flext-auth",
+    "flext-db-oracle",
+    "flext-meltano",
+    "flext-quality",
+    "client-a-oud-mig",
+    "client-b-meltano-native"
+  ],
+  "total_scripts_found": 24,
+  "script_details": [
+    {
+      "project": "flext-auth",
+      "script_path": "scripts/generate-architecture-docs.py",
+      "full_path": "/home/marlonsc/flext/flext-auth/scripts/generate-architecture-docs.py",
+      "size_bytes": 28157,
+      "has_if_main": true
+    },
+    {
+      "project": "flext-db-oracle",
+      "script_path": "scripts/docs_maintenance.py",
+      "full_path": "/home/marlonsc/flext/flext-db-oracle/scripts/docs_maintenance.py",
+      "size_bytes": 29355,
+      "has_if_main": true
+    },
+    {
+      "project": "flext-db-oracle",
+      "script_path": "scripts/docs_maintenance.py",
+      "full_path": "/home/marlonsc/flext/flext-db-oracle/scripts/docs_maintenance.py",
+      "size_bytes": 29355,
+      "has_if_main": true
+    },
+    {
+      "project": "flext-meltano",
+      "script_path": "scripts/docs_config.py",
+      "full_path": "/home/marlonsc/flext/flext-meltano/scripts/docs_config.py",
+      "size_bytes": 6784,
+      "has_if_main": false
+    },
+    {
+      "project": "flext-meltano",
+      "script_path": "scripts/docs_maintenance.py",
+      "full_path": "/home/marlonsc/flext/flext-meltano/scripts/docs_maintenance.py",
+      "size_bytes": 29135,
+      "has_if_main": true
+    },
+    {
+      "project": "flext-meltano",
+      "script_path": "scripts/docs_models.py",
+      "full_path": "/home/marlonsc/flext/flext-meltano/scripts/docs_models.py",
+      "size_bytes": 2882,
+      "has_if_main": false
+    },
+    {
+      "project": "flext-meltano",
+      "script_path": "scripts/docs_templates.py",
+      "full_path": "/home/marlonsc/flext/flext-meltano/scripts/docs_templates.py",
+      "size_bytes": 10557,
+      "has_if_main": false
+    },
+    {
+      "project": "flext-meltano",
+      "script_path": "scripts/docs_automation.py",
+      "full_path": "/home/marlonsc/flext/flext-meltano/scripts/docs_automation.py",
+      "size_bytes": 15870,
+      "has_if_main": true
+    },
+    {
+      "project": "flext-meltano",
+      "script_path": "scripts/docs_maintenance.py",
+      "full_path": "/home/marlonsc/flext/flext-meltano/scripts/docs_maintenance.py",
+      "size_bytes": 29135,
+      "has_if_main": true
+    },
+    {
+      "project": "flext-quality",
+      "script_path": "docs/maintenance/demo.py",
+      "full_path": "/home/marlonsc/flext/flext-quality/docs/maintenance/demo.py",
+      "size_bytes": 7018,
+      "has_if_main": true
+    },
+    {
+      "project": "flext-quality",
+      "script_path": "docs/maintenance/dashboard.py",
+      "full_path": "/home/marlonsc/flext/flext-quality/docs/maintenance/dashboard.py",
+      "size_bytes": 18415,
+      "has_if_main": true
+    },
+    {
+      "project": "flext-quality",
+      "script_path": "docs/maintenance/notifications.py",
+      "full_path": "/home/marlonsc/flext/flext-quality/docs/maintenance/notifications.py",
+      "size_bytes": 15660,
+      "has_if_main": true
+    },
+    {
+      "project": "flext-quality",
+      "script_path": "docs/maintenance/test_refactoring.py",
+      "full_path": "/home/marlonsc/flext/flext-quality/docs/maintenance/test_refactoring.py",
+      "size_bytes": 4770,
+      "has_if_main": true
+    },
+    {
+      "project": "flext-quality",
+      "script_path": "docs/maintenance/__init__.py",
+      "full_path": "/home/marlonsc/flext/flext-quality/docs/maintenance/__init__.py",
+      "size_bytes": 212,
+      "has_if_main": false
+    },
+    {
+      "project": "flext-quality",
+      "script_path": "docs/maintenance/scheduled_maintenance.py",
+      "full_path": "/home/marlonsc/flext/flext-quality/docs/maintenance/scheduled_maintenance.py",
+      "size_bytes": 20677,
+      "has_if_main": true
+    },
+    {
+      "project": "flext-quality",
+      "script_path": "docs/maintenance/scheduled_maintenance.py",
+      "full_path": "/home/marlonsc/flext/flext-quality/docs/maintenance/scheduled_maintenance.py",
+      "size_bytes": 20677,
+      "has_if_main": true
+    },
+    {
+      "project": "client-a-oud-mig",
+      "script_path": "scripts/docs_maintenance.py",
+      "full_path": "/home/marlonsc/flext/client-a-oud-mig/scripts/docs_maintenance.py",
+      "size_bytes": 30502,
+      "has_if_main": true
+    },
+    {
+      "project": "client-a-oud-mig",
+      "script_path": "scripts/docs_qa.py",
+      "full_path": "/home/marlonsc/flext/client-a-oud-mig/scripts/docs_qa.py",
+      "size_bytes": 24413,
+      "has_if_main": true
+    },
+    {
+      "project": "client-a-oud-mig",
+      "script_path": "scripts/docs_sync.py",
+      "full_path": "/home/marlonsc/flext/client-a-oud-mig/scripts/docs_sync.py",
+      "size_bytes": 22689,
+      "has_if_main": true
+    },
+    {
+      "project": "client-a-oud-mig",
+      "script_path": "scripts/generate-architecture-docs.py",
+      "full_path": "/home/marlonsc/flext/client-a-oud-mig/scripts/generate-architecture-docs.py",
+      "size_bytes": 28534,
+      "has_if_main": true
+    },
+    {
+      "project": "client-a-oud-mig",
+      "script_path": "scripts/docs_maintenance.py",
+      "full_path": "/home/marlonsc/flext/client-a-oud-mig/scripts/docs_maintenance.py",
+      "size_bytes": 30502,
+      "has_if_main": true
+    },
+    {
+      "project": "client-b-meltano-native",
+      "script_path": "scripts/docs_dashboard.py",
+      "full_path": "/home/marlonsc/flext/client-b-meltano-native/scripts/docs_dashboard.py",
+      "size_bytes": 25729,
+      "has_if_main": true
+    },
+    {
+      "project": "client-b-meltano-native",
+      "script_path": "scripts/docs_maintenance.py",
+      "full_path": "/home/marlonsc/flext/client-b-meltano-native/scripts/docs_maintenance.py",
+      "size_bytes": 39403,
+      "has_if_main": true
+    },
+    {
+      "project": "client-b-meltano-native",
+      "script_path": "scripts/docs_maintenance.py",
+      "full_path": "/home/marlonsc/flext/client-b-meltano-native/scripts/docs_maintenance.py",
+      "size_bytes": 39403,
+      "has_if_main": true
+    }
+  ]
+}

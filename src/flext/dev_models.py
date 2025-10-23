@@ -12,8 +12,8 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import shutil
-import subprocess
 from abc import ABC, abstractmethod
+from importlib.util import find_spec
 from pathlib import Path
 from typing import Annotated, Literal, Self, TypeVar
 from uuid import UUID, uuid4
@@ -110,20 +110,10 @@ class FlextAdvancedDevModels:
 
         def validate_prerequisites(self: Self) -> FlextResult[None]:
             """Validate test operation prerequisites."""
-            # Check if pytest is available
-            try:
-                # Use full path to avoid subprocess warning
-                python_path = shutil.which("python") or "python"
-                subprocess.run(
-                    [python_path, "-m", "pytest", "--version"],
-                    capture_output=True,
-                    check=True,
-                    timeout=10,
-                    shell=False,  # Explicit for security
-                )
-                return FlextResult[None].ok(None)
-            except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
-                return FlextResult[None].fail("pytest is not available or not working")
+            # Check if pytest is available using importlib instead of subprocess
+            if find_spec("pytest") is None:
+                return FlextResult[None].fail("pytest is not installed")
+            return FlextResult[None].ok(None)
 
     class LintOperation(DevOperation):
         """Code quality operation with advanced configuration."""
@@ -144,23 +134,8 @@ class FlextAdvancedDevModels:
             return self
 
         def validate_prerequisites(self: Self) -> FlextResult[None]:
-            """Validate linting prerequisites."""
-            missing_tools: list[str] = []
-            for tool in self.tools:
-                try:
-                    subprocess.run(
-                        [tool, "--version"],
-                        capture_output=True,
-                        check=True,
-                        timeout=10,
-                        shell=False,
-                    )
-                except (
-                    subprocess.CalledProcessError,
-                    subprocess.TimeoutExpired,
-                    FileNotFoundError,
-                ):
-                    missing_tools.append(tool)
+            """Validate linting prerequisites using shutil.which() instead of subprocess."""
+            missing_tools = [tool for tool in self.tools if shutil.which(tool) is None]
 
             if missing_tools:
                 return FlextResult[None].fail(
@@ -180,28 +155,10 @@ class FlextAdvancedDevModels:
         )
 
         def validate_prerequisites(self: Self) -> FlextResult[None]:
-            """Validate formatting prerequisites."""
-            missing_formatters: list[str] = []
-            for formatter in self.formatters:
-                try:
-                    if formatter == "gofmt":
-                        subprocess.run(
-                            [formatter, "-help"],
-                            capture_output=True,
-                            check=False,
-                            timeout=5,
-                            shell=False,
-                        )
-                    else:
-                        subprocess.run(
-                            [formatter, "--version"],
-                            capture_output=True,
-                            check=True,
-                            shell=False,
-                            timeout=10,
-                        )
-                except (subprocess.TimeoutExpired, FileNotFoundError):
-                    missing_formatters.append(formatter)
+            """Validate formatting prerequisites using shutil.which() instead of subprocess."""
+            missing_formatters = [
+                fmt for fmt in self.formatters if shutil.which(fmt) is None
+            ]
 
             if missing_formatters:
                 return FlextResult[None].fail(

@@ -29,12 +29,11 @@ import operator
 import re
 import shlex
 import shutil
-import subprocess
 import sys
 import tarfile
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import ClassVar
+from typing import Any, ClassVar
 
 from flext_core import FlextResult, FlextUtilities
 
@@ -55,7 +54,7 @@ class GitUltimateCleanup:
     @staticmethod
     def _run_git_command(
         repo_path: Path, args: list[str], *, check: bool = False
-    ) -> FlextResult[subprocess.CompletedProcess[str]]:
+    ) -> FlextResult[Any]:
         """Run a git command with proper error handling and type annotations."""
         cmd = [GIT_CMD, "-C", str(repo_path)] + args
         return FlextUtilities.run_external_command(
