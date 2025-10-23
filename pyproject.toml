@@ -22,7 +22,7 @@
 		"docker (>=7.1.0)",
 		"packaging (>=25.0)",
 		"protobuf  (>=6.30.2)",
-		"pydantic (>=2.11.7)",
+		"pydantic (>=2.12.3)",
 		"pydantic-settings (>=2.10.1)",
 		"pyyaml (>=6.0)",
 		"rich (>=14.0.0)",
@@ -31,6 +31,7 @@
 		"tomli-w (>=1.2.0)",
 		"tomlkit (>=0.13.3)",
 		"trio (>=0.31.0)",
+		"pydantic-core (>=2.41.4)",
 	]
 
 	description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
@@ -378,7 +379,7 @@
 		reportCallIssue = false
 		reportConstantRedefinition = "error"
 		reportDuplicateImport = "warning"
-		reportImplicitStringConcatenation = "warning"
+		reportImplicitStringConcatenation = false
 		reportImportCycles = "error"
 		reportIncompatibleMethodOverride = "error"
 		reportIncompatibleVariableOverride = "error"

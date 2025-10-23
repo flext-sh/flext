@@ -11,13 +11,12 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import subprocess
 import sys
 from pathlib import Path
-from typing import Self
+from typing import Any, Self
 
 from flext_cli import FlextCli
-from flext_core import FlextLogger, FlextResult, FlextService
+from flext_core import FlextLogger, FlextResult, FlextService, FlextUtilities
 from flext_quality.tools import Colors, print_colored
 
 from flext.services import create_services
@@ -92,36 +91,46 @@ class FlextWorkspaceCli(FlextService[str]):
             cwd: Path | None = None,
             *,
             check: bool = True,
-        ) -> FlextResult[subprocess.CompletedProcess[str]]:
+        ) -> FlextResult[Any]:
             """Execute command with comprehensive error handling."""
             if cwd is None:
                 cwd = self._cli_service.workspace_root
 
-                print_colored(f"Running: {' '.join(command)} in {cwd}")
+            print_colored(f"Running: {' '.join(command)} in {cwd}")
 
             try:
-                result: subprocess.CompletedProcess[str] = subprocess.run(
+                result = FlextUtilities.run_external_command(
                     command,
+                    cwd=cwd,
                     check=False,
                     text=True,
-                    shell=False,  # Explicit for security
                 )
 
-                if check and result.returncode != 0:
-                    error = f"Command failed: {result.stderr}"
-                    print_colored(f"❌ {error}")
-                    return FlextResult[subprocess.CompletedProcess[str]].fail(error)
+                if result.is_failure:
+                    error_msg = result.error
+                    if check:
+                        print_colored(f"❌ Command failed: {error_msg}")
+                        return FlextResult[Any].fail(f"Command failed: {error_msg}")
+                    # Non-critical failure - return wrapped process result
+                    return FlextResult[Any].fail(error_msg)
 
-                return FlextResult[subprocess.CompletedProcess[str]].ok(result)
+                # Success case - return wrapped process result
+                wrapper = result.unwrap()
+                if check and wrapper.returncode != 0:
+                    error = f"Command failed with return code {wrapper.returncode}: {wrapper.stderr}"
+                    print_colored(f"❌ {error}")
+                    return FlextResult[Any].fail(error)
+
+                return FlextResult[Any].ok(wrapper)
 
             except Exception as e:
                 error = f"Command execution failed: {e}"
                 print_colored(f"❌ {error}")
-                return FlextResult[subprocess.CompletedProcess[str]].fail(error)
+                return FlextResult[Any].fail(error)
 
         def run_make_target(
             self, target: str, module: str | None = None, *, check: bool = True
-        ) -> FlextResult[subprocess.CompletedProcess[str]]:
+        ) -> FlextResult[Any]:
             """Execute Make target with proper scoping."""
             cwd = (
                 self._cli_service.modules.get(module, self._cli_service.workspace_root)
@@ -394,12 +403,29 @@ class FlextWorkspaceCli(FlextService[str]):
             return FlextResult[dict[str, object]].ok({"status": "completed"})
 
     class _DockerCommands:
-        """Nested Docker command handlers."""
+        """Nested Docker command handlers using python-on-whales."""
 
         def __init__(self, cli_service: FlextWorkspaceCli) -> None:
             super().__init__()
             self._cli_service = cli_service
             self._workspace_service = cli_service._WorkspaceService(cli_service)
+            # Lazy import for optional docker-compose support
+            self._docker_compose = None
+
+        def _get_docker_compose(self) -> Any:
+            """Lazy-load docker-compose from python-on-whales."""
+            if self._docker_compose is None:
+                try:
+                    from python_on_whales import docker_compose
+
+                    self._docker_compose = docker_compose
+                except ImportError:
+                    msg = (
+                        "python-on-whales is required for docker-compose operations. "
+                        "Install with: poetry add python-on-whales"
+                    )
+                    raise ImportError(msg)
+            return self._docker_compose
 
         def start_containers(
             self,
@@ -408,17 +434,24 @@ class FlextWorkspaceCli(FlextService[str]):
             _integration: bool = False,
             _coverage: bool = False,
         ) -> FlextResult[dict[str, object]]:
-            """Start Docker containers for development environment."""
+            """Start Docker containers for development environment using python-on-whales."""
             print_colored("🐳 Starting Docker containers")
-
-            cmd = ["docker-compose"]
-
-            result = self._workspace_service.run_command(cmd)
-            if result.is_failure:
-                return FlextResult[dict[str, object]].fail("Failed to start containers")
-
-            print_colored("✅ Containers started successfully")
-            return FlextResult[dict[str, object]].ok({"status": "started"})
+            try:
+                docker_compose = self._get_docker_compose()
+                docker_compose.up(detach=True)
+                print_colored("✅ Containers started successfully")
+                return FlextResult[dict[str, object]].ok({"status": "started"})
+            except ImportError as e:
+                return FlextResult[dict[str, object]].fail(f"Docker error: {e}")
+            except Exception as e:
+                error_msg = str(e).lower()
+                if "not found" in error_msg or "no such file" in error_msg:
+                    return FlextResult[dict[str, object]].fail(
+                        "docker-compose not found. Ensure Docker is installed."
+                    )
+                return FlextResult[dict[str, object]].fail(
+                    f"Failed to start containers: {e}"
+                )
 
         def stop_containers(
             self,
@@ -426,15 +459,24 @@ class FlextWorkspaceCli(FlextService[str]):
             _integration: bool = False,
             _coverage: bool = False,
         ) -> FlextResult[dict[str, object]]:
-            """Stop and remove Docker containers."""
+            """Stop and remove Docker containers using python-on-whales."""
             print_colored("🐳 Stopping Docker containers")
-
-            result = self._workspace_service.run_command(["docker-compose"])
-            if result.is_failure:
-                return FlextResult[dict[str, object]].fail("Failed to stop containers")
-
-            print_colored("✅ Containers stopped successfully")
-            return FlextResult[dict[str, object]].ok({"status": "stopped"})
+            try:
+                docker_compose = self._get_docker_compose()
+                docker_compose.down()
+                print_colored("✅ Containers stopped successfully")
+                return FlextResult[dict[str, object]].ok({"status": "stopped"})
+            except ImportError as e:
+                return FlextResult[dict[str, object]].fail(f"Docker error: {e}")
+            except Exception as e:
+                error_msg = str(e).lower()
+                if "not found" in error_msg or "no such file" in error_msg:
+                    return FlextResult[dict[str, object]].fail(
+                        "docker-compose not found. Ensure Docker is installed."
+                    )
+                return FlextResult[dict[str, object]].fail(
+                    f"Failed to stop containers: {e}"
+                )
 
         def view_logs(
             self,
@@ -442,21 +484,31 @@ class FlextWorkspaceCli(FlextService[str]):
             *,
             follow: bool = False,
         ) -> FlextResult[dict[str, object]]:
-            """View and monitor Docker container logs."""
-            cmd = ["docker-compose", "logs"]
-            if follow:
-                cmd.append("-f")
-            if service:
-                cmd.append(service)
+            """View and monitor Docker container logs using python-on-whales."""
+            try:
+                docker_compose = self._get_docker_compose()
 
-            result = self._workspace_service.run_command(cmd)
-            if result.is_failure:
-                return FlextResult[dict[str, object]].fail("Failed to view logs")
+                # Fetch logs via docker-compose
+                if service:
+                    # Get logs for specific service
+                    docker_compose.logs(services=[service], follow=follow)
+                else:
+                    # Get logs for all services
+                    docker_compose.logs(follow=follow)
 
-            return FlextResult[dict[str, object]].ok({
-                "status": "completed",
-                "service": service or "all",
-            })
+                return FlextResult[dict[str, object]].ok({
+                    "status": "completed",
+                    "service": service or "all",
+                })
+            except ImportError as e:
+                return FlextResult[dict[str, object]].fail(f"Docker error: {e}")
+            except Exception as e:
+                error_msg = str(e).lower()
+                if "not found" in error_msg or "no such file" in error_msg:
+                    return FlextResult[dict[str, object]].fail(
+                        "docker-compose not found. Ensure Docker is installed."
+                    )
+                return FlextResult[dict[str, object]].fail(f"Failed to view logs: {e}")
 
     class _SetupCommands:
         """Nested setup and maintenance command handlers."""
@@ -536,13 +588,14 @@ class FlextWorkspaceCli(FlextService[str]):
             """Execute comprehensive integration tests."""
             print_colored(f"🧪 Running integration tests in {env} environment")
 
-            # Start required containers
+            # Start required containers via docker handler
             print_colored("Starting test containers...")
-            container_result = self._workspace_service.run_command(["docker-compose"])
+            docker_handler = self._cli_service.create_docker_handler()
+            container_result = docker_handler.start_containers()
 
             if container_result.is_failure:
                 return FlextResult[dict[str, str]].fail(
-                    "Failed to start test containers"
+                    f"Failed to start test containers: {container_result.error}"
                 )
 
             try:
@@ -559,16 +612,21 @@ class FlextWorkspaceCli(FlextService[str]):
                 if test_result.is_failure:
                     return FlextResult[dict[str, str]].fail("Integration tests failed")
 
+                # Check if tests passed via return code
+                test_wrapper = test_result.unwrap()
+                if test_wrapper.returncode != 0:
+                    return FlextResult[dict[str, str]].fail("Integration tests failed")
+
                 print_colored("✅ Integration tests passed!")
                 return FlextResult[dict[str, str]].ok({"status": "tests_passed"})
 
             finally:
                 # Clean up containers
                 print_colored("Cleaning up test containers...")
-                cleanup_result = self._workspace_service.run_command(["docker-compose"])
+                cleanup_result = docker_handler.stop_containers()
                 if cleanup_result.is_failure:
                     self._cli_service.logger.warning(
-                        "Failed to clean up test containers"
+                        f"Failed to clean up test containers: {cleanup_result.error}"
                     )
 
     def execute(self, _request: str = "") -> FlextResult[str]:

@@ -10,10 +10,11 @@ SPDX-License-Identifier: Proprietary
 
 from __future__ import annotations
 
-import subprocess
 import sys
 from enum import Enum
 from pathlib import Path
+
+from git import InvalidGitRepositoryError, Repo
 
 FLEXT_ROOT = Path("/home/marlonsc/flext")
 
@@ -36,15 +37,10 @@ def get_tracked_files(project_dir: Path) -> list[str]:
 
     """
     try:
-        result = subprocess.run(
-            ["/usr/bin/git", "ls-files"],
-            cwd=project_dir,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        return [f.strip() for f in result.stdout.split("\n") if f.strip()]
-    except subprocess.CalledProcessError:
+        repo = Repo(str(project_dir))
+        # Get list of tracked files using git.ls_files()
+        return repo.git.ls_files().split("\n") if repo.git.ls_files() else []
+    except (InvalidGitRepositoryError, Exception):
         return []
 
 
@@ -60,14 +56,13 @@ def check_if_ignored(project_dir: Path, file_path: str) -> bool:
 
     """
     try:
-        result = subprocess.run(
-            ["/usr/bin/git", "check-ignore", "-q", file_path],
-            cwd=project_dir,
-            capture_output=True,
-            check=False,
-        )
-        # Exit code 0 means file is ignored
-        return result.returncode == 0
+        repo = Repo(str(project_dir))
+        # check_ignore returns the ignored status of a file
+        # Returns the file path if ignored, empty if not
+        result = repo.git.check_ignore("-q", file_path, with_exceptions=False)
+        # If result is empty, file is not ignored
+        # If result has content, file is ignored
+        return result != ""
     except Exception:
         return False
 
@@ -84,16 +79,12 @@ def untrack_file(project_dir: Path, file_path: str) -> bool:
 
     """
     try:
-        subprocess.run(
-            ["/usr/bin/git", "rm", "--cached", file_path],
-            cwd=project_dir,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
+        repo = Repo(str(project_dir))
+        # Use git rm --cached via the GitPython API
+        repo.index.remove([file_path], working_tree=False)
         return True
-    except subprocess.CalledProcessError as e:
-        print(f"      ⚠️  Failed to untrack {file_path}: {e.stderr}")
+    except Exception as e:
+        print(f"      ⚠️  Failed to untrack {file_path}: {e}")
         return False
 
 

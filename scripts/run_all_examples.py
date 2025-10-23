@@ -21,7 +21,6 @@ from __future__ import annotations
 
 import argparse
 import os
-import subprocess
 import sys
 from collections.abc import Iterable
 from dataclasses import dataclass
@@ -70,7 +69,7 @@ def run_example(project_root: Path, example_file: Path, timeout: int) -> RunResu
     env = os.environ.copy()
     # Prefer project-local src so examples can import their package
     env["PYTHONPATH"] = "src"
-    proc = FlextUtilities.run_external_command(
+    result = FlextUtilities.run_external_command(
         [sys.executable, str(example_file.name)],
         cwd=str(project_root / "examples"),
         env=env,
@@ -80,15 +79,29 @@ def run_example(project_root: Path, example_file: Path, timeout: int) -> RunResu
         timeout=timeout,
         check=False,
     )
+
     project = project_root.name
-    # Stream concise output to console
+
+    # Handle timeout or execution errors
+    if result.is_failure:
+        error_msg = result.error.lower()
+        if "timed out" in error_msg:
+            print(f"[{project}] {example_file.name}: TIMEOUT({timeout}s)")
+            return RunResult(project=project, example=example_file.name, returncode=124)
+        print(f"[{project}] {example_file.name}: ERROR({result.error})")
+        return RunResult(project=project, example=example_file.name, returncode=1)
+
+    # Success - check exit code
+    proc = result.unwrap()
     status = "OK" if proc.returncode == 0 else f"FAIL({proc.returncode})"
     print(f"[{project}] {example_file.name}: {status}")
+
     if proc.returncode != 0:
         # Show short stderr tail for debugging
         err_tail = (proc.stderr or "").splitlines()[-5:]
         for line in err_tail:
             print(f"  ! {line}")
+
     return RunResult(
         project=project,
         example=example_file.name,
@@ -151,9 +164,6 @@ def main(argv: Iterable[str] | None = None) -> int:
             try:
                 res = run_example(project_root, f, timeout=args.timeout)
                 all_results.append(res)
-            except subprocess.TimeoutExpired:
-                print(f"[{project_root.name}] {f.name}: TIMEOUT({args.timeout}s)")
-                all_results.append(RunResult(project_root.name, f.name, returncode=124))
             except Exception as e:
                 print(f"[{project_root.name}] {f.name}: ERROR({e})")
                 all_results.append(RunResult(project_root.name, f.name, returncode=1))

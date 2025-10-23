@@ -11,7 +11,6 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import subprocess  # nosec S404 - Controlled subprocess usage for test execution
 from pathlib import Path
 from typing import Self
 
@@ -20,6 +19,7 @@ from flext_core import (
     FlextLogger,
     FlextResult,
     FlextService,
+    FlextUtilities,
 )
 
 from flext.application_handlers import (
@@ -152,8 +152,8 @@ class FlextUnifiedServices(FlextService[str]):
                 if integration:
                     cmd.extend(["-m", "integration"])
 
-                # Execute tests - nosec S603: Controlled command execution for testing
-                result = subprocess.run(  # nosec S603
+                # Execute tests via FlextUtilities
+                result = FlextUtilities.run_external_command(
                     cmd,
                     check=False,
                     capture_output=True,
@@ -161,11 +161,17 @@ class FlextUnifiedServices(FlextService[str]):
                     timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT,
                 )
 
+                if result.is_failure:
+                    return FlextResult[dict[str, object]].fail(
+                        f"Test execution failed: {result.error}"
+                    )
+
+                wrapper = result.unwrap()
                 return FlextResult[dict[str, object]].ok({
-                    "returncode": result.returncode,
-                    "stdout": result.stdout,
-                    "stderr": result.stderr,
-                    "success": result.returncode == 0,
+                    "returncode": wrapper.returncode,
+                    "stdout": wrapper.stdout,
+                    "stderr": wrapper.stderr,
+                    "success": wrapper.returncode == 0,
                 })
 
             except Exception as e:
@@ -192,21 +198,28 @@ class FlextUnifiedServices(FlextService[str]):
 
                 for name, cmd in commands:
                     try:
-                        result = subprocess.run(  # nosec S603 - Controlled quality check execution
+                        # CONVERTED: Use FlextUtilities instead of subprocess.run()
+                        result = FlextUtilities.run_external_command(
                             cmd,
                             check=False,
                             capture_output=True,
                             text=True,
                             timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT_SHORT,
                         )
-                        results[name] = {
-                            "returncode": result.returncode,
-                            "stdout": result.stdout,
-                            "stderr": result.stderr,
-                            "success": result.returncode == 0,
-                        }
-                        if result.returncode != 0:
+
+                        if result.is_failure:
+                            results[name] = {"success": False, "error": result.error}
                             overall_success = False
+                        else:
+                            wrapper = result.unwrap()
+                            results[name] = {
+                                "returncode": wrapper.returncode,
+                                "stdout": wrapper.stdout,
+                                "stderr": wrapper.stderr,
+                                "success": wrapper.returncode == 0,
+                            }
+                            if wrapper.returncode != 0:
+                                overall_success = False
                     except Exception as e:
                         results[name] = {"success": False, "error": str(e)}
                         overall_success = False
@@ -239,7 +252,8 @@ class FlextUnifiedServices(FlextService[str]):
                     ):
                         build_cmd.extend(["--outdir", f"dist/{module}"])
 
-                result = subprocess.run(  # nosec S603 - Controlled build execution
+                # CONVERTED: Use FlextUtilities instead of subprocess.run()
+                result = FlextUtilities.run_external_command(
                     build_cmd,
                     check=False,
                     capture_output=True,
@@ -247,11 +261,17 @@ class FlextUnifiedServices(FlextService[str]):
                     timeout=FlextConstants.Performance.SUBPROCESS_TIMEOUT,
                 )
 
+                if result.is_failure:
+                    return FlextResult[dict[str, object]].fail(
+                        f"Build check failed: {result.error}"
+                    )
+
+                wrapper = result.unwrap()
                 return FlextResult[dict[str, object]].ok({
-                    "returncode": result.returncode,
-                    "stdout": result.stdout,
-                    "stderr": result.stderr,
-                    "success": result.returncode == 0,
+                    "returncode": wrapper.returncode,
+                    "stdout": wrapper.stdout,
+                    "stderr": wrapper.stderr,
+                    "success": wrapper.returncode == 0,
                 })
 
             except Exception as e:
