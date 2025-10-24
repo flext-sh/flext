@@ -191,7 +191,7 @@ class TestPhase6Sprint1UtilitiesConversion:
 
         # Try to modify - should fail
         with pytest.raises((AttributeError, ValueError)):
-            wrapper.returncode = 1  # type: ignore
+            wrapper.returncode = 1
 
     def test_run_external_command_returns_flext_result(self) -> None:
         """Verify run_external_command returns FlextResult type."""
