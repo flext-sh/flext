@@ -57,7 +57,7 @@ def get_pydantic_compliance(project_path: Path) -> dict[str, Any]:
                 }
             if hasattr(module, "main"):
                 # Execute main with appropriate arguments
-                module.main()  # type: ignore[attr-defined]
+                module.main()
                 return {
                     "status": "PASS",
                     "passed": True,
