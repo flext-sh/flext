@@ -123,7 +123,7 @@ class TestFlextControlPanelCli:
         config = config_class(test_param="test_value")
         assert config is not None
         assert hasattr(config, "test_param")
-        assert getattr(config, "test_param") == "test_value"
+        assert config.test_param == "test_value"
 
     def test_quality_gateway_nested_class(self) -> None:
         """Test QualityGateway nested class."""
