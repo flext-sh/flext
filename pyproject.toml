@@ -333,12 +333,6 @@
 		init_typed = true
 		warn_required_dynamic_aliases = true
 
-	[tool.pyrefly]
-		# Include both src and tests in import resolution for all projects
-		search_path = [
-			"src",
-		]
-
 	[tool.pyright]
 		exclude = [
 			"**/*.pb2.py",
@@ -353,6 +347,10 @@
 			"dist/",
 			"node_modules/",
 			"target/",
+		]
+		extraPaths = [
+			"**/src",
+			"./src",
 		]
 		pythonPlatform = "Linux"
 		pythonVersion = "3.13"
@@ -394,12 +392,6 @@
 		reportUnusedImport = "warning"
 		reportUnusedVariable = "warning"
 		useLibraryCodeForTypes = true
-
-		[[tool.pyright.executionEnvironments]]
-			extraPaths = [
-				"**/src/*.py",
-			]
-			root = "./"
 
 		[[tool.pyright.executionEnvironments]]
 			extraPaths = [
