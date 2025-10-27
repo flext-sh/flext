@@ -239,7 +239,6 @@
 		warn_unused_configs = true
 		warn_unused_ignores = false
 
-		# Test overrides - allow more flexible typing in tests
 		[[tool.mypy.overrides]]
 			disable_error_code = [
 				"comparison-overlap",
@@ -247,11 +246,6 @@
 			]
 			disallow_untyped_defs = false
 			module = "tests.*"
-
-
-		[[tool.mypy.overrides]]
-			ignore_missing_imports = true
-			module = "ldif3"
 
 	[tool.poetry]
 
@@ -343,20 +337,12 @@
 		# Include both src and tests in import resolution for all projects
 		search_path = [
 			"src",
-			"tests",
 		]
 
 	[tool.pyright]
 		exclude = [
 			"**/*.pb2.py",
 			"**/*.pb2_grpc.py",
-			"**/examples/",
-			"**/flext-cli/**",
-			"**/flext-dbt-*/**",
-			"**/flext-tap-*/**",
-			"**/flext-target-*/**",
-			"**/scripts/",
-			"**/tests/",
 			".git/",
 			".meltano/",
 			".mypy_cache/",
@@ -367,10 +353,6 @@
 			"dist/",
 			"node_modules/",
 			"target/",
-		]
-		extraPaths = [
-			"./flext-core/src",
-			"./src",
 		]
 		pythonPlatform = "Linux"
 		pythonVersion = "3.13"
@@ -415,11 +397,9 @@
 
 		[[tool.pyright.executionEnvironments]]
 			extraPaths = [
-				"**/tests/*.py",
+				"**/src/*.py",
 			]
-			reportImplicitRelativeImport = false
-			reportPrivateUsage = false
-			root = "./tests"
+			root = "./"
 
 		[[tool.pyright.executionEnvironments]]
 			extraPaths = [
@@ -432,6 +412,15 @@
 			reportUnknownMemberType = false
 			reportUnknownParameterType = false
 			reportUnknownVariableType = false
+			root = "./"
+
+		[[tool.pyright.executionEnvironments]]
+			extraPaths = [
+				"**/tests/*.py",
+			]
+			reportImplicitRelativeImport = false
+			reportPrivateUsage = false
+			reportAssertAlwaysTrue = false
 			root = "./"
 
 	[tool.pytest.ini_options]

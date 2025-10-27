@@ -239,7 +239,7 @@ def generate_dashboard(metrics_list: list[dict[str, Any]]) -> str:
         <h2>Pydantic v2 Compliance</h2>
         <p>Projects Passing: {passing_projects}/{total_projects}</p>
         <div class="progress">
-            <div class="progress-bar" style="width: {(passing_projects / total_projects) * 100}%"></div>
+            <div class="progress-bar" style="width: {((passing_projects / total_projects) * 100) if total_projects > 0 else 0}%"></div>
         </div>
 
         <h2>Project Details</h2>

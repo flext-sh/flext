@@ -31,9 +31,9 @@ target-version = "py313"
 
 [lint]
     ignore = [
-        "B009",    # get-attr-with-constant
-        "B010",    # set-attr-with-constant
-        "B017",    # assert-raises-exception
+        # "B009",    # get-attr-with-constant
+        # "B010",    # set-attr-with-constant
+        # "B017",    # assert-raises-exception
         "BLE001",  # blind-except
         "C901",    # complex-structure
         "COM812",
@@ -163,11 +163,18 @@ target-version = "py313"
             "T201",    # print - examples demonstrate output
             "TID252",  # relative-imports
         ]
+        "**/dispatcher.py" = [
+            "BLE001",  # blind-except - framework code executes user handlers/callables
+        ]
         "**/exceptions.py" = [
             "A001",    # variable-is-ambiguous - Allow ambiguous variable names in exceptions
+            "BLE001",  # blind-except - Allow blind exceptions in exceptions
             "PLC0415", # allow lazy imports in fix circular imports in base level
             "S105",    # hardcoded-password-string - false positives in error code constants
             "SLF001",  # private-member-access - Allow private member access in exception classes
+        ]
+        "**/handlers.py" = [
+            "BLE001",  # blind-except - framework code validates user messages and executes handlers
         ]
         "**/loggings.py" = [
             "PLC0415", # allow lazy imports in fix circular imports in base level
@@ -194,8 +201,13 @@ target-version = "py313"
             #     return computed_value
         ]
         "**/result.py" = [
-            "PLC0415", # allow lazy imports in fix circular imports in base level
-            "SLF001",
+            "BLE001", # broad-exception-catching - framework code executes user callables
+        ]
+        "**/processors.py" = [
+            "BLE001",  # blind-except - framework code processes user messages and handlers
+        ]
+        "**/service.py" = [
+            "BLE001",  # blind-except - service layer handles user operations
         ]
         "**/scripts/**" = [
             "EXE001",
