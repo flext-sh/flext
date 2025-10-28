@@ -332,7 +332,7 @@
 		init_forbid_extra = true
 		init_typed = true
 		warn_required_dynamic_aliases = true
-
+ 
 	[tool.pyright]
 		exclude = [
 			"**/*.pb2.py",
@@ -347,10 +347,6 @@
 			"dist/",
 			"node_modules/",
 			"target/",
-		]
-		extraPaths = [
-			"**/src",
-			"./src",
 		]
 		pythonPlatform = "Linux"
 		pythonVersion = "3.13"
@@ -395,8 +391,10 @@
 
 		[[tool.pyright.executionEnvironments]]
 			extraPaths = [
-				"**/config.py",
-				"**/models.py",
+				"./flext-core/src",
+				"./flext-ldif/src",
+				"./flext-ldap/src",
+				"./client-a-oud-mig/src",
 			]
 			reportInvalidTypeForm = false
 			reportUndefinedVariable = false
@@ -405,11 +403,8 @@
 			reportUnknownParameterType = false
 			reportUnknownVariableType = false
 			root = "./"
-
+ 
 		[[tool.pyright.executionEnvironments]]
-			extraPaths = [
-				"**/tests/*.py",
-			]
 			reportImplicitRelativeImport = false
 			reportPrivateUsage = false
 			reportAssertAlwaysTrue = false
