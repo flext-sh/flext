@@ -35,14 +35,7 @@
         "qa",
         "optimization"
       ],
-      "dependencies": [
-        "sys",
-        "argparse",
-        "json",
-        "datetime",
-        "pathlib",
-        "re"
-      ],
+      "dependencies": ["sys", "argparse", "json", "datetime", "pathlib", "re"],
       "classification": "UI/Dashboard",
       "migration_recommendation": null
     },
@@ -194,13 +187,7 @@
         "configuration",
         "qa"
       ],
-      "dependencies": [
-        "yaml",
-        "flext_core",
-        "__future__",
-        "typing",
-        "pathlib"
-      ],
+      "dependencies": ["yaml", "flext_core", "__future__", "typing", "pathlib"],
       "classification": "UI/Dashboard",
       "migration_recommendation": null
     },
@@ -265,18 +252,8 @@
       "name": "docs_models",
       "size_bytes": 2882,
       "functions": [],
-      "features": [
-        "link_validation",
-        "content_audit",
-        "configuration",
-        "qa"
-      ],
-      "dependencies": [
-        "__future__",
-        "typing",
-        "collections",
-        "pydantic"
-      ],
+      "features": ["link_validation", "content_audit", "configuration", "qa"],
+      "dependencies": ["__future__", "typing", "collections", "pydantic"],
       "classification": "Link Validation",
       "migration_recommendation": null
     },
@@ -442,13 +419,7 @@
         "qa",
         "optimization"
       ],
-      "dependencies": [
-        "sys",
-        "datetime",
-        "logging",
-        "pathlib",
-        "os"
-      ],
+      "dependencies": ["sys", "datetime", "logging", "pathlib", "os"],
       "classification": "UI/Dashboard",
       "migration_recommendation": null
     },
@@ -561,10 +532,7 @@
         "configuration",
         "qa"
       ],
-      "dependencies": [
-        "pathlib",
-        "sys"
-      ],
+      "dependencies": ["pathlib", "sys"],
       "classification": "UI/Dashboard",
       "migration_recommendation": null
     },
@@ -573,11 +541,7 @@
       "name": "__init__",
       "size_bytes": 212,
       "functions": [],
-      "features": [
-        "content_audit",
-        "dashboard",
-        "qa"
-      ],
+      "features": ["content_audit", "dashboard", "qa"],
       "dependencies": [],
       "classification": "UI/Dashboard",
       "migration_recommendation": null
@@ -892,13 +856,7 @@
         "configuration",
         "qa"
       ],
-      "dependencies": [
-        "shutil",
-        "argparse",
-        "json",
-        "typing",
-        "pathlib"
-      ],
+      "dependencies": ["shutil", "argparse", "json", "typing", "pathlib"],
       "classification": "UI/Dashboard",
       "migration_recommendation": null
     },

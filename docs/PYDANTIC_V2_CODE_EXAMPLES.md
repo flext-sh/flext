@@ -936,13 +936,13 @@ def test_partial_env_values():
 
 ## Quick Reference: Method Mapping
 
-| Old v1 | New v2 | Usage |
-|--------|--------|-------|
-| `.dict()` | `.model_dump()` | Convert to Python dict |
-| `.json()` | `.model_dump_json()` | Convert to JSON string |
-| `.parse_obj(data)` | `.model_validate(data)` | Validate Python dict |
-| `.parse_raw(json)` | `.model_validate_json(json)` | Validate JSON string |
-| `class Config` | `model_config = ConfigDict()` | Configuration |
+| Old v1             | New v2                        | Usage                  |
+| ------------------ | ----------------------------- | ---------------------- |
+| `.dict()`          | `.model_dump()`               | Convert to Python dict |
+| `.json()`          | `.model_dump_json()`          | Convert to JSON string |
+| `.parse_obj(data)` | `.model_validate(data)`       | Validate Python dict   |
+| `.parse_raw(json)` | `.model_validate_json(json)`  | Validate JSON string   |
+| `class Config`     | `model_config = ConfigDict()` | Configuration          |
 
 ---
 
@@ -976,7 +976,7 @@ find . -path "*/tests/unit/test_*.py" -name "*config*" -type f
 - **Full Pattern Guide**: `docs/PYDANTIC_V2_PATTERNS.md`
 - **Migration Guide**: `docs/PYDANTIC_V2_MIGRATION_GUIDE.md`
 - **Audit Script**: `scripts/audit_pydantic_v2.py`
-- **Pydantic Official Docs**: https://docs.pydantic.dev/latest/
+- **Pydantic Official Docs**: <https://docs.pydantic.dev/latest/>
 
 ---
 

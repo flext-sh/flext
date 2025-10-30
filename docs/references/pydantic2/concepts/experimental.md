@@ -15,16 +15,16 @@ We also encourage you to read through existing feedback and add your thoughts to
 Pydantic v2.8.0 introduced an experimental "pipeline" API that allows composing of parsing (validation), constraints and transformations in a more type-safe manner than existing APIs. This API is subject to change or removal, we are looking for feedback and suggestions before making it a permanent part of Pydantic.
 
 ??? api "API Documentation"
-    [`pydantic.experimental.pipeline`][pydantic.experimental.pipeline]<br>
+[`pydantic.experimental.pipeline`][pydantic.experimental.pipeline]<br>
 
 Generally, the pipeline API is used to define a sequence of steps to apply to incoming data during validation. The pipeline API is designed to be more type-safe and composable than the existing Pydantic API.
 
 Each step in the pipeline can be:
 
-* A validation step that runs pydantic validation on the provided type
-* A transformation step that modifies the data
-* A constraint step that checks the data against a condition
-* A predicate step that checks the data against a condition and raises an error if it returns `False`
+- A validation step that runs pydantic validation on the provided type
+- A transformation step that modifies the data
+- A constraint step that checks the data against a condition
+- A predicate step that checks the data against a condition and raises an error if it returns `False`
 
 <!-- TODO: add more documentation once we solidify the API during the experimental phase -->
 
@@ -145,20 +145,20 @@ This allows you to validate an incomplete JSON string, or a Python object repres
 Partial validation is particularly helpful when processing the output of an LLM, where the model streams structured responses, and you may wish to begin validating the stream while you're still receiving data (e.g. to show partial data to users).
 
 !!! warning
-    Partial validation is an experimental feature and may change in future versions of Pydantic. The current implementation should be considered a proof of concept at this time and has a number of [limitations](#limitations-of-partial-validation).
+Partial validation is an experimental feature and may change in future versions of Pydantic. The current implementation should be considered a proof of concept at this time and has a number of [limitations](#limitations-of-partial-validation).
 
-Partial validation can be enabled when using the three validation methods on `TypeAdapter`: [`TypeAdapter.validate_json()`][pydantic.TypeAdapter.validate_json], [`TypeAdapter.validate_python()`][pydantic.TypeAdapter.validate_python], and [`TypeAdapter.validate_strings()`][pydantic.TypeAdapter.validate_strings]. This allows you to parse and validation incomplete JSON, but also to validate Python objects created by parsing incomplete data of any format.
+Partial validation can be enabled when using the three validation methods on `TypeAdapter`: [`TypeAdapter.validate_json()`][pydantic.TypeAdapter.validate_JSON], [`TypeAdapter.validate_python()`][pydantic.TypeAdapter.validate_Python], and [`TypeAdapter.validate_strings()`][pydantic.TypeAdapter.validate_strings]. This allows you to parse and validation incomplete JSON, but also to validate Python objects created by parsing incomplete data of any format.
 
 The `experimental_allow_partial` flag can be passed to these methods to enable partial validation.
 It can take the following values (and is `False`, by default):
 
-* `False` or `'off'` - disable partial validation
-* `True` or `'on'` - enable partial validation, but don't support trailing strings
-* `'trailing-strings'` - enable partial validation and support trailing strings
+- `False` or `'off'` - disable partial validation
+- `True` or `'on'` - enable partial validation, but don't support trailing strings
+- `'trailing-strings'` - enable partial validation and support trailing strings
 
 !!! info "`'trailing-strings'` mode"
-    `'trailing-strings'` mode allows for trailing incomplete strings at the end of partial JSON to be included in the output.
-    For example, if you're validating against the following model:
+`'trailing-strings'` mode allows for trailing incomplete strings at the end of partial JSON to be included in the output.
+For example, if you're validating against the following model:
 
     ```python
     from typing import TypedDict
@@ -260,7 +260,7 @@ The [jiter](https://github.com/pydantic/jiter) JSON parser used by Pydantic alre
 `experimental_allow_partial` is simply passed to jiter via the `allow_partial` argument.
 
 !!! note
-    If you just want pure JSON parsing with support for partial JSON, you can use the [`jiter`](https://pypi.org/project/jiter/) Python library directly, or pass the `allow_partial` argument when calling [`pydantic_core.from_json`][pydantic_core.from_json].
+If you just want pure JSON parsing with support for partial JSON, you can use the [`jiter`](https://pypi.org/project/jiter/) Python library directly, or pass the `allow_partial` argument when calling [`pydantic_core.from_json`][pydantic_core.from_JSON].
 
 #### 2. Ignore errors in the last element of the input {#2-ignore-errors-in-last}
 
@@ -268,10 +268,10 @@ Only having access to part of the input data means errors can commonly occur in 
 
 For example:
 
-* if a string has a constraint `MinLen(5)`, when you only see part of the input, validation might fail because part of the string is missing (e.g. `{"name": "Sam` instead of `{"name": "Samuel"}`)
-* if an `int` field has a constraint `Ge(10)`, when you only see part of the input, validation might fail because the number is too small (e.g. `1` instead of `10`)
-* if a `TypedDict` field has 3 required fields, but the partial input only has two of the fields, validation would fail because some field are missing
-* etc. etc. — there are lost more cases like this
+- if a string has a constraint `MinLen(5)`, when you only see part of the input, validation might fail because part of the string is missing (e.g. `{"name": "Sam` instead of `{"name": "Samuel"}`)
+- if an `int` field has a constraint `Ge(10)`, when you only see part of the input, validation might fail because the number is too small (e.g. `1` instead of `10`)
+- if a `TypedDict` field has 3 required fields, but the partial input only has two of the fields, validation would fail because some field are missing
+- etc. etc. — there are lost more cases like this
 
 The point is that if you only see part of some valid input data, validation errors can often occur in the last element of a sequence or last value of mapping.
 
@@ -309,11 +309,11 @@ You can only pass `experiment_allow_partial` to [`TypeAdapter`][pydantic.TypeAda
 
 Right now only a subset of collection validators know how to handle partial validation:
 
-* `list`
-* `set`
-* `frozenset`
-* `dict` (as in `dict[X, Y]`)
-* `TypedDict` — only non-required fields may be missing, e.g. via [`NotRequired`][typing.NotRequired] or [`total=False`][typing.TypedDict.__total__])
+- `list`
+- `set`
+- `frozenset`
+- `dict` (as in `dict[X, Y]`)
+- `TypedDict` — only non-required fields may be missing, e.g. via [`NotRequired`][typing.NotRequired] or [`total=False`][typing.TypedDict.**total**])
 
 While you can use `experimental_allow_partial` while validating against types that include other collection validators, those types will be validated "all or nothing", and partial validation will not work on more nested types.
 
@@ -420,7 +420,7 @@ print(v)
 
 Pydantic provides the [`@validate_call`][pydantic.validate_call] decorator to perform validation on the provided
 arguments (and additionally return type) of a callable. However, it only allows arguments to be provided
-by actually calling the decorated callable. In some situations, you may want to just *validate* the arguments,
+by actually calling the decorated callable. In some situations, you may want to just _validate_ the arguments,
 such as when loading from other data sources such as JSON data.
 
 For this reason, the experimental [`generate_arguments_schema()`][pydantic.experimental.arguments_schema.generate_arguments_schema]
@@ -449,16 +449,16 @@ print(args, kwargs)  # (1)!
 1. If you want the validated arguments as a dictionary, you can use the [`Signature.bind()`][inspect.Signature.bind]
    method:
 
-     ```python {test="skip" lint="skip"}
-     from inspect import signature
+   ```python {test="skip" lint="skip"}
+   from inspect import signature
 
-     signature(func).bind(*args, **kwargs).arguments
-     #> {'p': True, 'args': ('arg1', '1'), 'kwargs': {'extra': 1}}
-     ```
+   signature(func).bind(*args, **kwargs).arguments
+   #> {'p': True, 'args': ('arg1', '1'), 'kwargs': {'extra': 1}}
+   ```
 
 !!! note
-    Unlike [`@validate_call`][pydantic.validate_call], this core schema will only validate the provided arguments;
-    the underlying callable will *not* be called.
+Unlike [`@validate_call`][pydantic.validate_call], this core schema will only validate the provided arguments;
+the underlying callable will _not_ be called.
 
 Additionally, you can ignore specific parameters by providing a callback, which is called for every parameter:
 
@@ -530,8 +530,8 @@ This feature is marked as experimental because it relies on the draft [PEP 661](
 
 As such, the following limitations currently apply:
 
-* Static type checking of sentinels is only supported with Pyright
+- Static type checking of sentinels is only supported with Pyright
   [1.1.402](https://github.com/microsoft/pyright/releases/tag/1.1.402)
   or greater, and the `enableExperimentalFeatures` type evaluation setting
   should be enabled.
-* Pickling of models containing `MISSING` as a value is not supported.
+- Pickling of models containing `MISSING` as a value is not supported.

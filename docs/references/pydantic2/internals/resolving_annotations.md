@@ -1,5 +1,5 @@
 !!! note
-    This section is part of the *internals* documentation, and is partly targeted to contributors.
+This section is part of the _internals_ documentation, and is partly targeted to contributors.
 
 Pydantic heavily relies on [type hints][type hint] at runtime to build schemas for validation, serialization, etc.
 
@@ -19,7 +19,7 @@ class Node:
 
 To circumvent this issue, forward references can be used (by wrapping the annotation in quotes).
 
-In Python 3.7, [PEP 563] introduced the concept of *postponed evaluation of annotations*, meaning
+In Python 3.7, [PEP 563] introduced the concept of _postponed evaluation of annotations_, meaning
 with the `from __future__ import annotations` [future statement], type hints are stringified by default:
 
 ```python {requires="3.12" lint="skip"}
@@ -104,23 +104,23 @@ following logic is applied:
    `{'f1': 'MyType'}`.
 2. Iterate over the `__annotations__` items and try to evaluate the annotation [^1] using a custom wrapper around
    the built-in [`eval()`][eval] function. This function takes two `globals` and `locals` arguments:
-     * The current module's `__dict__` is naturally used as `globals`. For `Base`, this will be
-       `sys.modules['module1'].__dict__`.
-     * For the `locals` argument, Pydantic will try to resolve symbols in the following namespaces, sorted by highest priority:
-         * A namespace created on the fly, containing the current class name (`{cls.__name__: cls}`). This is done
-           in order to support recursive references.
-         * The locals of the current class (i.e. `cls.__dict__`). For `Model`, this will include `LocalType`.
-         * The parent namespace of the class, if different from the globals described above. This is the
-           [locals][frame.f_locals] of the frame where the class is being defined. For `Base`, because the class is being
-           defined in the module directly, this namespace won't be used as it will result in the globals being used again.
-           For `Model`, the parent namespace is the locals of the frame of `inner()`.
+   - The current module's `__dict__` is naturally used as `globals`. For `Base`, this will be
+     `sys.modules['module1'].__dict__`.
+   - For the `locals` argument, Pydantic will try to resolve symbols in the following namespaces, sorted by highest priority:
+     - A namespace created on the fly, containing the current class name (`{cls.__name__: cls}`). This is done
+       in order to support recursive references.
+     - The locals of the current class (i.e. `cls.__dict__`). For `Model`, this will include `LocalType`.
+     - The parent namespace of the class, if different from the globals described above. This is the
+       [locals][frame.f_locals] of the frame where the class is being defined. For `Base`, because the class is being
+       defined in the module directly, this namespace won't be used as it will result in the globals being used again.
+       For `Model`, the parent namespace is the locals of the frame of `inner()`.
 3. If the annotation failed to evaluate, it is kept as is, so that the model can be rebuilt at a later stage. This will
    be the case for `f5`.
 
 The following table lists the resolved type annotations for every field, once the `Model` class has been created:
 
 | Field name | Resolved annotation |
-|------------|---------------------|
+| ---------- | ------------------- |
 | `f1`       | [`int`][]           |
 | `f2`       | [`str`][]           |
 | `f3`       | [`bool`][]          |
@@ -133,35 +133,35 @@ While the namespace fetching logic is trying to be as accurate as possible, we s
 
 <div class="annotate" markdown>
 
-* The locals of the current class (`cls.__dict__`) may include irrelevant entries, most of them being dunder attributes.
+- The locals of the current class (`cls.__dict__`) may include irrelevant entries, most of them being dunder attributes.
   This means that the following annotation: `f: '__doc__'` will successfully (and unexpectedly) be resolved.
-* When the `Model` class is being created inside a function, we keep a copy of the [locals][frame.f_locals] of the frame.
+- When the `Model` class is being created inside a function, we keep a copy of the [locals][frame.f_locals] of the frame.
   This copy only includes the symbols defined in the locals when `Model` is being defined, meaning `InnerType2` won't be included
   (and will **not be** if doing a model rebuild at a later point!).
-    * To avoid memory leaks, we use [weak references][weakref] to the locals of the function, meaning some forward references might
+  - To avoid memory leaks, we use [weak references][weakref] to the locals of the function, meaning some forward references might
     not resolve outside the function (1).
-    * Locals of the function are only taken into account for Pydantic models, but this pattern does not apply to dataclasses, typed
+  - Locals of the function are only taken into account for Pydantic models, but this pattern does not apply to dataclasses, typed
     dictionaries or named tuples.
 
 </div>
 
 1. Here is an example:
 
-    ```python {test="skip" lint="skip"}
-    def func():
-        A = int
+   ```python {test="skip" lint="skip"}
+   def func():
+       A = int
 
-        class Model(BaseModel):
-            f: 'A | Forward'
+       class Model(BaseModel):
+           f: 'A | Forward'
 
-        return Model
+       return Model
 
 
-    Model = func()
+   Model = func()
 
-    Model.model_rebuild(_types_namespace={'Forward': str})
-    # pydantic.errors.PydanticUndefinedAnnotation: name 'A' is not defined
-    ```
+   Model.model_rebuild(_types_namespace={'Forward': str})
+   # pydantic.errors.PydanticUndefinedAnnotation: name 'A' is not defined
+   ```
 
 For backwards compatibility reasons, and to be able to support valid use cases without having to rebuild models,
 the namespace logic described above is a bit different when it comes to core schema generation.
@@ -187,7 +187,7 @@ Once the fields for `Bar` have been collected (meaning annotations resolved), th
 every field into a core schema. When it encounters another class-like field type (such as a dataclass), it will
 try to evaluate annotations, following roughly the same logic as [described above](#resolving-annotations-at-class-definition).
 However, to evaluate the `'Bar | None'` annotation, `Bar` needs to be present in the globals or locals, which is normally
-*not* the case: `Bar` is being created, so it is not "assigned" to the current module's `__dict__` at that point.
+_not_ the case: `Bar` is being created, so it is not "assigned" to the current module's `__dict__` at that point.
 
 To avoid having to call [`model_rebuild()`][pydantic.BaseModel.model_rebuild] on `Bar`, both the parent namespace
 (if `Bar` was to be defined inside a function, and [the namespace provided during a model rebuild](#model-rebuild-semantics))
@@ -197,28 +197,28 @@ and the `{Bar.__name__: Bar}` namespace are included in the locals during annota
 
 1. This backwards compatibility logic can introduce some inconsistencies, such as the following:
 
-    ```python {lint="skip"}
-    from dataclasses import dataclass
+   ```python {lint="skip"}
+   from dataclasses import dataclass
 
-    from pydantic import BaseModel
-
-
-    @dataclass
-    class Foo:
-        # `a` and `b` shouldn't resolve:
-        a: 'Model'
-        b: 'Inner'
+   from pydantic import BaseModel
 
 
-    def func():
-        Inner = int
+   @dataclass
+   class Foo:
+       # `a` and `b` shouldn't resolve:
+       a: 'Model'
+       b: 'Inner'
 
-        class Model(BaseModel):
-            foo: Foo
 
-        Model.__pydantic_complete__
-        #> True, should be False.
-    ```
+   def func():
+       Inner = int
+
+       class Model(BaseModel):
+           foo: Foo
+
+       Model.__pydantic_complete__
+       #> True, should be False.
+   ```
 
 ## Resolving annotations when rebuilding a model
 
@@ -247,13 +247,13 @@ Foo.__pydantic_core_schema__
 #> {'type': 'model', 'schema': {...}, ...}
 ```
 
-The [`model_rebuild()`][pydantic.BaseModel.model_rebuild] method uses a *rebuild namespace*, with the following semantics:
+The [`model_rebuild()`][pydantic.BaseModel.model_rebuild] method uses a _rebuild namespace_, with the following semantics:
 {#model-rebuild-semantics}
 
-* If an explicit `_types_namespace` argument is provided, it is used as the rebuild namespace.
-* If no namespace is provided, the namespace where the method is called will be used as the rebuild namespace.
+- If an explicit `_types_namespace` argument is provided, it is used as the rebuild namespace.
+- If no namespace is provided, the namespace where the method is called will be used as the rebuild namespace.
 
-This *rebuild namespace* will be merged with the model's parent namespace (if it was defined in a function) and used as is
+This _rebuild namespace_ will be merged with the model's parent namespace (if it was defined in a function) and used as is
 (see the [backwards compatibility logic](#backwards-compatibility-logic) described above).
 
 [Mypy]: https://www.mypy-lang.org/
@@ -262,5 +262,6 @@ This *rebuild namespace* will be merged with the model's parent namespace (if it
 [PEP 649]: https://peps.python.org/pep-0649/
 [future statement]: https://docs.python.org/3/reference/simple_stmts.html#future
 
-[^1]: This is done unconditionally, as forward annotations can be only present *as part* of a type hint (e.g. `Optional['int']`), as dictated by
-      the [typing specification](https://typing.readthedocs.io/en/latest/spec/annotations.html#string-annotations).
+[^1]:
+    This is done unconditionally, as forward annotations can be only present _as part_ of a type hint (e.g. `Optional['int']`), as dictated by
+    the [typing specification](https://typing.readthedocs.io/en/latest/spec/annotations.html#string-annotations).

@@ -2,9 +2,9 @@
 In this section, we will look at how to validate data from different types of files.
 
 !!! note
-    If you're using any of the below file formats to parse configuration / settings, you might want to
-    consider using the [`pydantic-settings`][pydantic_settings] library, which offers builtin
-    support for parsing this type of data.
+If you're using any of the below file formats to parse configuration / settings, you might want to
+consider using the [`pydantic-settings`][pydantic_settings] library, which offers builtin
+support for parsing this type of data.
 
 ## JSON data
 
@@ -13,9 +13,9 @@ Here is an example of a `.json` file:
 
 ```json
 {
-    "name": "John Doe",
-    "age": 30,
-    "email": "john@example.com"
+  "name": "John Doe",
+  "age": 30,
+  "email": "john@example.com"
 }
 ```
 
@@ -44,8 +44,8 @@ Let's say we have the following `.json` file:
 
 ```json
 {
-    "age": -30,
-    "email": "not-an-email-address"
+  "age": -30,
+  "email": "not-an-email-address"
 }
 ```
 
@@ -93,16 +93,16 @@ For example, you might have a list of people:
 
 ```json
 [
-    {
-        "name": "John Doe",
-        "age": 30,
-        "email": "john@example.com"
-    },
-    {
-        "name": "Jane Doe",
-        "age": 25,
-        "email": "jane@example.com"
-    }
+  {
+    "name": "John Doe",
+    "age": 30,
+    "email": "john@example.com"
+  },
+  {
+    "name": "Jane Doe",
+    "age": 25,
+    "email": "jane@example.com"
+  }
 ]
 ```
 
@@ -129,7 +129,7 @@ print(people)
 ```
 
 1. We use [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] to validate a list of `Person` objects.
-[`TypeAdapter`][pydantic.type_adapter.TypeAdapter] is a Pydantic construct used to validate data against a single type.
+   [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] is a Pydantic construct used to validate data against a single type.
 
 ## JSON lines files
 

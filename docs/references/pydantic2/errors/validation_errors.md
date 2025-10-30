@@ -1010,7 +1010,7 @@ except ValidationError as exc:
 
 ## `int_parsing_size`
 
-This error is raised when attempting to parse a python or JSON value from a string outside the maximum range that Python
+This error is raised when attempting to parse a Python or JSON value from a string outside the maximum range that Python
 `str` to `int` parsing permits:
 
 ```python
@@ -1598,7 +1598,7 @@ except ValidationError as exc:
 ```
 
 !!! note
-    You may encounter this error when there is a naming collision in your model between a field name and its type. More specifically, this error is likely to be thrown when the default value of that field is `None`.
+You may encounter this error when there is a naming collision in your model between a field name and its type. More specifically, this error is likely to be thrown when the default value of that field is `None`.
 
     For example, the following would yield the `none_required` validation error since the field `int` is set to a default value of `None` and has the exact same name as its type, which causes problems with validation.
 

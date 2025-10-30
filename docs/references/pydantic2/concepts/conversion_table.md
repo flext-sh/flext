@@ -7,13 +7,13 @@ The "Strict" column contains checkmarks for type conversions that are allowed wh
 {{ conversion_table_all }}
 
 === "JSON"
-{{ conversion_table_json }}
+{{ conversion_table_JSON }}
 
 === "JSON - Strict"
-{{ conversion_table_json_strict }}
+{{ conversion_table_JSON_strict }}
 
 === "Python"
-{{ conversion_table_python }}
+{{ conversion_table_Python }}
 
 === "Python - Strict"
-{{ conversion_table_python_strict }}
+{{ conversion_table_Python_strict }}

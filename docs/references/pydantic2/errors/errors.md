@@ -1,10 +1,9 @@
-
 Pydantic will raise a [`ValidationError`][pydantic_core.ValidationError] whenever it finds an error in the data it's validating.
 
 !!! note
-    Validation code should not raise the [`ValidationError`][pydantic_core.ValidationError] itself,
-    but rather raise a [`ValueError`][] or a [`AssertionError`][] (or subclass thereof) which will
-    be caught and used to populate the final [`ValidationError`][pydantic_core.ValidationError].
+Validation code should not raise the [`ValidationError`][pydantic_core.ValidationError] itself,
+but rather raise a [`ValueError`][] or a [`AssertionError`][] (or subclass thereof) which will
+be caught and used to populate the final [`ValidationError`][pydantic_core.ValidationError].
 
     For more details, refer to the [dedicated section](../concepts/validators.md#raising-validation-errors)
     of the validators documentation.
@@ -14,16 +13,16 @@ That [`ValidationError`][pydantic_core.ValidationError] will contain information
 You can access these errors in several ways:
 
 | Method                                                       | Description                                                                                    |
-|--------------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
 | [`errors()`][pydantic_core.ValidationError.errors]           | Returns a list of [`ErrorDetails`][pydantic_core.ErrorDetails] errors found in the input data. |
 | [`error_count()`][pydantic_core.ValidationError.error_count] | Returns the number of errors.                                                                  |
-| [`json()`][pydantic_core.ValidationError.json]               | Returns a JSON representation of the list errors.                                              |
+| [`json()`][pydantic_core.ValidationError.JSON]               | Returns a JSON representation of the list errors.                                              |
 | `str(e)`                                                     | Returns a human-readable representation of the errors.                                         |
 
 The [`ErrorDetails`][pydantic_core.ErrorDetails] object is a dictionary. It contains the following:
 
 | Property                                    | Description                                                                    |
-|---------------------------------------------|--------------------------------------------------------------------------------|
+| ------------------------------------------- | ------------------------------------------------------------------------------ |
 | [`ctx`][pydantic_core.ErrorDetails.ctx]     | An optional object which contains values required to render the error message. |
 | [`input`][pydantic_core.ErrorDetails.input] | The input provided for validation.                                             |
 | [`loc`][pydantic_core.ErrorDetails.loc]     | The error's location as a list.                                                |
@@ -141,8 +140,8 @@ except ValidationError as e:
 
 Pydantic attempts to provide useful default error messages for validation and usage errors, which can be found here:
 
-* [Validation Errors](validation_errors.md): Errors that happen during data validation.
-* [Usage Errors](usage_errors.md): Errors that happen when using Pydantic.
+- [Validation Errors](validation_errors.md): Errors that happen during data validation.
+- [Usage Errors](usage_errors.md): Errors that happen when using Pydantic.
 
 ### Customize error messages
 

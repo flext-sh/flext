@@ -3,14 +3,14 @@ name: Pydantic v2 Compliance Check
 on:
   pull_request:
     paths:
-      - '**.py'
-      - '.github/workflows/pydantic-v2-check.yml'
+      - "**.py"
+      - ".github/workflows/pydantic-v2-check.yml"
   push:
     branches:
       - main
       - develop
     paths:
-      - '**.py'
+      - "**.py"
 
 jobs:
   pydantic-v2-audit:
@@ -29,7 +29,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: "3.13"
 
       - name: Run Pydantic v2 Audit
         run: |

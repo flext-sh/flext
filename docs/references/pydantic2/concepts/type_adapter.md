@@ -2,7 +2,7 @@ You may have types that are not `BaseModel`s that you want to validate data agai
 Or you may want to validate a `list[SomeModel]`, or dump it to JSON.
 
 ??? api "API Documentation"
-    [`pydantic.type_adapter.TypeAdapter`][pydantic.type_adapter.TypeAdapter]<br>
+[`pydantic.type_adapter.TypeAdapter`][pydantic.type_adapter.TypeAdapter]<br>
 
 For use cases like this, Pydantic provides [`TypeAdapter`][pydantic.type_adapter.TypeAdapter],
 which can be used for type validation, serialization, and JSON schema generation without needing to create a
@@ -45,15 +45,15 @@ print(repr(user_list_adapter.dump_json(user_list)))
 ```
 
 !!! info "`dump_json` returns `bytes`"
-    `TypeAdapter`'s `dump_json` methods returns a `bytes` object, unlike the corresponding method for `BaseModel`, `model_dump_json`, which returns a `str`.
-    The reason for this discrepancy is that in V1, model dumping returned a str type, so this behavior is retained in V2 for backwards compatibility.
-    For the `BaseModel` case, `bytes` are coerced to `str` types, but `bytes` are often the desired end type.
-    Hence, for the new `TypeAdapter` class in V2, the return type is simply `bytes`, which can easily be coerced to a `str` type if desired.
+`TypeAdapter`'s `dump_json` methods returns a `bytes` object, unlike the corresponding method for `BaseModel`, `model_dump_json`, which returns a `str`.
+The reason for this discrepancy is that in V1, model dumping returned a str type, so this behavior is retained in V2 for backwards compatibility.
+For the `BaseModel` case, `bytes` are coerced to `str` types, but `bytes` are often the desired end type.
+Hence, for the new `TypeAdapter` class in V2, the return type is simply `bytes`, which can easily be coerced to a `str` type if desired.
 
 !!! note
-    Despite some overlap in use cases with [`RootModel`][pydantic.root_model.RootModel],
-    [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] should not be used as a type annotation for
-    specifying fields of a `BaseModel`, etc.
+Despite some overlap in use cases with [`RootModel`][pydantic.root_model.RootModel],
+[`TypeAdapter`][pydantic.type_adapter.TypeAdapter] should not be used as a type annotation for
+specifying fields of a `BaseModel`, etc.
 
 ## Parsing data into a specified type
 
@@ -87,16 +87,16 @@ print(items)
 handle as fields of a [`BaseModel`][pydantic.main.BaseModel].
 
 !!! info "Performance considerations"
-    When creating an instance of [`TypeAdapter`][pydantic.type_adapter.TypeAdapter], the provided type must be analyzed and converted into a pydantic-core
-    schema. This comes with some non-trivial overhead, so it is recommended to create a `TypeAdapter` for a given type
-    just once and reuse it in loops or other performance-critical code.
+When creating an instance of [`TypeAdapter`][pydantic.type_adapter.TypeAdapter], the provided type must be analyzed and converted into a pydantic-core
+schema. This comes with some non-trivial overhead, so it is recommended to create a `TypeAdapter` for a given type
+just once and reuse it in loops or other performance-critical code.
 
 ## Rebuilding a `TypeAdapter`'s schema
 
 In v2.10+, [`TypeAdapter`][pydantic.type_adapter.TypeAdapter]'s support deferred schema building and manual rebuilds. This is helpful for the case of:
 
-* Types with forward references
-* Types for which core schema builds are expensive
+- Types with forward references
+- Types for which core schema builds are expensive
 
 When you initialize a [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] with a type, Pydantic analyzes the type and creates a core schema for it.
 This core schema contains the information needed to validate and serialize data for that type.

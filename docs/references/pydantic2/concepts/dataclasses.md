@@ -1,5 +1,5 @@
 ??? api "API Documentation"
-    [`@pydantic.dataclasses.dataclass`][pydantic.dataclasses.dataclass]<br>
+[`@pydantic.dataclasses.dataclass`][pydantic.dataclasses.dataclass]<br>
 
 If you don't want to use Pydantic's [`BaseModel`][pydantic.BaseModel] you can instead get the same data validation
 on standard [dataclasses][dataclasses].
@@ -26,8 +26,8 @@ User(id=42, name='John Doe', signup_ts=datetime.datetime(2032, 6, 21, 12, 0))
 ```
 
 !!! note
-    Keep in mind that Pydantic dataclasses are **not** a replacement for [Pydantic models](../concepts/models.md).
-    They provide a similar functionality to stdlib dataclasses with the addition of Pydantic validation.
+Keep in mind that Pydantic dataclasses are **not** a replacement for [Pydantic models](../concepts/models.md).
+They provide a similar functionality to stdlib dataclasses with the addition of Pydantic validation.
 
     There are cases where subclassing using Pydantic models is the better choice.
 
@@ -36,14 +36,14 @@ User(id=42, name='John Doe', signup_ts=datetime.datetime(2032, 6, 21, 12, 0))
 
 Similarities between Pydantic dataclasses and models include support for:
 
-* [Configuration](#dataclass-config) support
-* [Nested](./models.md#nested-models) classes
-* [Generics](./models.md#generic-models)
+- [Configuration](#dataclass-config) support
+- [Nested](./models.md#nested-models) classes
+- [Generics](./models.md#generic-models)
 
 Some differences between Pydantic dataclasses and models include:
 
-* [validators](#validators-and-initialization-hooks)
-* The behavior with the [`extra`][pydantic.ConfigDict.extra] configuration value
+- [validators](#validators-and-initialization-hooks)
+- The behavior with the [`extra`][pydantic.ConfigDict.extra] configuration value
 
 Similarly to Pydantic models, arguments used to instantiate the dataclass are [copied](./models.md#attribute-copies).
 
@@ -86,8 +86,8 @@ with the addition of a `config` parameter.
 
 If you want to modify the configuration like you would with a [`BaseModel`][pydantic.BaseModel], you have two options:
 
-* Use the `config` argument of the decorator.
-* Define the configuration with the `__pydantic_config__` attribute.
+- Use the `config` argument of the decorator.
+- Define the configuration with the `__pydantic_config__` attribute.
 
 ```python
 from pydantic import ConfigDict
@@ -111,10 +111,10 @@ class MyDataclass2:
 1. You can read more about `validate_assignment` in the [API reference][pydantic.config.ConfigDict.validate_assignment].
 
 !!! note
-    While Pydantic dataclasses support the [`extra`][pydantic.config.ConfigDict.extra] configuration value, some default
-    behavior of stdlib dataclasses may prevail. For example, any extra fields present on a Pydantic dataclass with
-    [`extra`][pydantic.config.ConfigDict.extra] set to `'allow'` are omitted in the dataclass' string representation.
-    There is also no way to provide validation [using the `__pydantic_extra__` attribute](./models.md#extra-data).
+While Pydantic dataclasses support the [`extra`][pydantic.config.ConfigDict.extra] configuration value, some default
+behavior of stdlib dataclasses may prevail. For example, any extra fields present on a Pydantic dataclass with
+[`extra`][pydantic.config.ConfigDict.extra] set to `'allow'` are omitted in the dataclass' string representation.
+There is also no way to provide validation [using the `__pydantic_extra__` attribute](./models.md#extra-data).
 
 ## Rebuilding dataclass schema
 
@@ -351,8 +351,9 @@ print(DemoDataclass(product_id=2468))
 ```
 
 <!-- markdownlint-disable-next-line strong-style -->
+
 The dataclass [`__post_init__()`][dataclasses.__post_init__] method is also supported, and will
-be called between the calls to *before* and *after* model validators.
+be called between the calls to _before_ and _after_ model validators.
 
 ??? example
 

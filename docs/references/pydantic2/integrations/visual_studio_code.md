@@ -30,10 +30,10 @@ With the default configurations, you will get support for autocompletion, but Py
 
 You can enable type error checks from Pylance with these steps:
 
-* Open the "User Settings"
-* Search for `Type Checking Mode`
-* You will find an option under `Python › Analysis: Type Checking Mode`
-* Set it to `basic` or `strict` (by default it's `off`)
+- Open the "User Settings"
+- Search for `Type Checking Mode`
+- You will find an option under `Python › Analysis: Type Checking Mode`
+- Set it to `basic` or `strict` (by default it's `off`)
 
 ![Type Checking Mode set to strict in VS Code](../img/vs_code_02.png)
 
@@ -46,7 +46,7 @@ And you will also get error checks for **invalid data types**.
 ![Invalid data types error checks in VS Code](../img/vs_code_04.png)
 
 !!! note "Technical Details"
-    Pylance is the VS Code extension, it's closed source, but free to use. Underneath, Pylance uses an open source tool (also from Microsoft) called [Pyright](https://github.com/microsoft/pyright) that does all the heavy lifting.
+Pylance is the VS Code extension, it's closed source, but free to use. Underneath, Pylance uses an open source tool (also from Microsoft) called [Pyright](https://github.com/microsoft/pyright) that does all the heavy lifting.
 
     You can read more about it in the [Pylance Frequently Asked Questions](https://github.com/microsoft/pylance-release/blob/main/FAQ.md#what-is-the-relationship-between-pylance-pyright-and-the-python-extension).
 
@@ -58,10 +58,10 @@ This would include the errors detected by the [Pydantic mypy plugin](../integrat
 
 To enable mypy in VS Code, do the following:
 
-* Open the "User Settings"
-* Search for `Mypy Enabled`
-* You will find an option under `Python › Linting: Mypy Enabled`
-* Check the box (by default it's unchecked)
+- Open the "User Settings"
+- Search for `Mypy Enabled`
+- You will find an option under `Python › Linting: Mypy Enabled`
+- Check the box (by default it's unchecked)
 
 ![mypy enabled in VS Code](../img/vs_code_05.png)
 
@@ -279,7 +279,7 @@ This is a limitation of dataclass transforms and cannot be fixed in pydantic.
 ## Technical Details
 
 !!! warning
-    As a Pydantic user, you don't need the details below. Feel free to skip the rest of this section.
+As a Pydantic user, you don't need the details below. Feel free to skip the rest of this section.
 
     These details are only useful for other library authors, etc.
 

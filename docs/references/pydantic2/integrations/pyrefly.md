@@ -57,5 +57,4 @@ ERROR Cannot set field `x` [read-only]
   This field belongs to a frozen Pydantic model
 ```
 
-See the [Pyrefly documentation](https://pyrefly.org/en/docs/pydantic/
-) for more information.
+See the [Pyrefly documentation](https://pyrefly.org/en/docs/pydantic/) for more information.

@@ -102,9 +102,9 @@ class Model(BaseModel):
 
 The [`FieldInfo`][pydantic.fields.FieldInfo] instance of `f` will have three items in its dictionary representation:
 
-* `annotation`: `int`.
-* `metadata`: A list containing the type-specific constraints and other metadata: `[Gt(1), WithJsonSchema({'extra': 'data'})]`.
-* `attributes`: The remaining field-specific attributes: `{'title': 'F'}`.
+- `annotation`: `int`.
+- `metadata`: A list containing the type-specific constraints and other metadata: `[Gt(1), WithJsonSchema({'extra': 'data'})]`.
+- `attributes`: The remaining field-specific attributes: `{'title': 'F'}`.
 
 With that in mind, we can recreate an annotation that "simulates" the one from the original model:
 
@@ -169,10 +169,10 @@ print(m.a)
 
 A couple notes on the implementation:
 
-* Our `make_fields_optional()` function is defined as returning an arbitrary Pydantic model class (`-> type[BaseModel]`).
+- Our `make_fields_optional()` function is defined as returning an arbitrary Pydantic model class (`-> type[BaseModel]`).
   An alternative solution can be to use a type variable to preserve the input class:
 
-    === "Python 3.9 and above"
+  === "Python 3.9 and above"
 
         ```python {lint="skip" test="skip"}
         ModelTypeT = TypeVar('ModelTypeT', bound=type[BaseModel])
@@ -181,19 +181,19 @@ A couple notes on the implementation:
             ...
         ```
 
-    === "Python 3.12 and above"
+  === "Python 3.12 and above"
 
         ```python {lint="skip" test="skip"}
         def make_fields_optional[ModelTypeT: type[BaseModel]](model_cls: ModelTypeT) -> ModelTypeT:
             ...
         ```
 
-    However, note that static type checkers *won't* be able to understand that all fields are now optional.
+  However, note that static type checkers _won't_ be able to understand that all fields are now optional.
 
-* The experimental [`MISSING` sentinel](../concepts/experimental.md#missing-sentinel) can be used as an alternative to `None`
+- The experimental [`MISSING` sentinel](../concepts/experimental.md#missing-sentinel) can be used as an alternative to `None`
   for the default values. Simply replace `None` by `MISSING` in the new annotation and default value.
 
-* You might be tempted to make a copy of the original [`FieldInfo`][pydantic.fields.FieldInfo] instances, add a
+- You might be tempted to make a copy of the original [`FieldInfo`][pydantic.fields.FieldInfo] instances, add a
   default and/or perform other mutations, to then reuse it as [`Annotated`][typing.Annotated] metadata. While this
   may work in some cases, it is **not** a supported pattern, and could break or be deprecated at any point. We strongly
   encourage using the pattern from this example instead.

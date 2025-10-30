@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Final
 
-from flext_core.__version__ import __version__, __version_info__
+from flext_core import __version__, __version_info__
 
 
 class FlextVersion:

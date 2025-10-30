@@ -6,7 +6,7 @@ can be controlled and constraints can be applied on them.
 On top of these, Pydantic provides extra types, either [directly in the library](../api/types.md)
 (e.g. [`SecretStr`][pydantic.types.SecretStr]) or in the [`pydantic-extra-types`](https://github.com/pydantic/pydantic-extra-types)
 external library. These are implemented using the patterns described in the [custom types](#custom-types) section.
-Strictness and constraints *can't* be applied on them.
+Strictness and constraints _can't_ be applied on them.
 
 The [built-in and standard library types](../api/standard_library_types.md) documentation goes over
 the supported types: the allowed values, the possible validation constraints, and whether [strictness](./strict_mode.md)
@@ -48,13 +48,13 @@ except ValidationError as exc:
 ```
 
 1. Note that you can also use constraints from the [annotated-types](https://github.com/annotated-types/annotated-types)
-  library to make this Pydantic-agnostic:
+   library to make this Pydantic-agnostic:
 
-    ```python {test="skip" lint="skip"}
-    from annotated_types import Gt
+   ```python {test="skip" lint="skip"}
+   from annotated_types import Gt
 
-    PositiveInt = Annotated[int, Gt(0)]
-    ```
+   PositiveInt = Annotated[int, Gt(0)]
+   ```
 
 #### Adding validation and serialization
 
@@ -145,14 +145,14 @@ except ValidationError as exc:
 
 ### Named type aliases
 
-The above examples make use of *implicit* type aliases, assigned to a variable. At runtime, Pydantic
+The above examples make use of _implicit_ type aliases, assigned to a variable. At runtime, Pydantic
 has no way of knowing the name of the variable it was assigned to, and this can be problematic for
 two reasons:
 
-* The [JSON Schema](./json_schema.md) of the alias won't be converted into a
+- The [JSON Schema](./json_schema.md) of the alias won't be converted into a
   [definition](https://json-schema.org/understanding-json-schema/structuring#defs).
   This is mostly useful when you are using the alias more than once in a model definition.
-* In most cases, [recursive type aliases](#named-recursive-types) won't work.
+- In most cases, [recursive type aliases](#named-recursive-types) won't work.
 
 By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest/spec/aliases.html#type-statement)
 (introduced in [PEP 695](https://peps.python.org/pep-0695/)), you can define aliases as follows:
@@ -239,6 +239,7 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
        would have been duplicated in both `'x'` and `'y'`.
 
 <!-- markdownlint-disable-next-line no-empty-links -->
+
 [](){#metadata-type-alias-warning}
 
 !!! warning "When to use named type aliases"
@@ -284,7 +285,7 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
     wouldn't be able to have the alias stored as a JSON Schema definition.
 
 !!! note
-    As with implicit type aliases, [type variables][typing.TypeVar] can also be used inside the generic alias:
+As with implicit type aliases, [type variables][typing.TypeVar] can also be used inside the generic alias:
 
     === "Python 3.9 and above"
 
@@ -399,7 +400,7 @@ For instance, here is an example definition of a JSON type:
     1. The value of a named type alias is lazily evaluated, so there's no need to use forward annotations.
 
 !!! tip
-    Pydantic defines a [`JsonValue`][pydantic.types.JsonValue] type as a convenience.
+Pydantic defines a [`JsonValue`][pydantic.types.JsonValue] type as a convenience.
 
 ### Customizing validation with `__get_pydantic_core_schema__` <a name="customizing_validation_with_get_pydantic_core_schema"></a>
 
@@ -626,7 +627,7 @@ You can use this approach to e.g. define behavior for Pandas or Numpy types.
 #### Using `GetPydanticSchema` to reduce boilerplate
 
 ??? api "API Documentation"
-    [`pydantic.types.GetPydanticSchema`][pydantic.types.GetPydanticSchema]<br>
+[`pydantic.types.GetPydanticSchema`][pydantic.types.GetPydanticSchema]<br>
 
 You may notice that the above examples where we create a marker class require a good amount of boilerplate.
 For many simple cases you can greatly minimize this by using `pydantic.GetPydanticSchema`:
@@ -664,8 +665,8 @@ Let's recap:
 ### Handling custom generic classes
 
 !!! warning
-    This is an advanced technique that you might not need in the beginning. In most of
-    the cases you will probably be fine with standard Pydantic models.
+This is an advanced technique that you might not need in the beginning. In most of
+the cases you will probably be fine with standard Pydantic models.
 
 You can use
 [Generic Classes](https://docs.python.org/3/library/typing.html#typing.Generic) as
@@ -905,7 +906,7 @@ except ValidationError as exc:
 ### Access to field name
 
 !!!note
-    This was not possible with Pydantic V2 to V2.3, it was [re-added](https://github.com/pydantic/pydantic/pull/7542) in Pydantic V2.4.
+This was not possible with Pydantic V2 to V2.3, it was [re-added](https://github.com/pydantic/pydantic/pull/7542) in Pydantic V2.4.
 
 As of Pydantic V2.4, you can access the field name via the `handler.field_name` within `__get_pydantic_core_schema__`
 and thereby set the field name which will be available from `info.field_name`.

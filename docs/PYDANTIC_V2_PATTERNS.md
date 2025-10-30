@@ -25,7 +25,7 @@
 
 ## Executive Summary
 
-### What is Pydantic v2?
+### What is Pydantic v2
 
 Pydantic v2 is the next-generation data validation library for Python, providing:
 
@@ -95,6 +95,7 @@ class UserConfig(BaseModel):
 ```
 
 **Key Differences**:
+
 - `class Config` → `model_config = ConfigDict()`
 - `@validator` → `@field_validator` with type annotations
 - Return types explicitly specified
@@ -107,12 +108,14 @@ class UserConfig(BaseModel):
 **Pattern**: Use `.model_validate()` instead of `.parse_obj()`
 
 #### ❌ WRONG (v1)
+
 ```python
 user_dict = {"name": "John", "email": "john@example.com"}
 user = UserConfig.parse_obj(user_dict)  # ❌ Deprecated
 ```
 
 #### ✅ CORRECT (v2)
+
 ```python
 user_dict = {"name": "John", "email": "john@example.com"}
 user = UserConfig.model_validate(user_dict)  # ✅ Current
@@ -125,12 +128,14 @@ user = UserConfig.model_validate(user_dict)  # ✅ Current
 **Pattern**: Use `.model_dump()` and `.model_dump_json()` instead of `.dict()` and `.json()`
 
 #### ❌ WRONG (v1)
+
 ```python
 user_dict = user.dict()  # ❌ Deprecated
 user_json = user.json()  # ❌ Deprecated
 ```
 
 #### ✅ CORRECT (v2)
+
 ```python
 # Python dictionary
 user_dict = user.model_dump()  # ✅ Current
@@ -148,6 +153,7 @@ user_json_pretty = user.model_dump_json(indent=2)
 **Pattern**: Use `Field()` with native Pydantic constraints
 
 #### ❌ WRONG (Duplicate Custom Code)
+
 ```python
 from typing import Annotated
 from pydantic import BeforeValidator, Field
@@ -165,6 +171,7 @@ class ServerConfig(BaseModel):
 ```
 
 #### ✅ CORRECT (Native Pydantic v2)
+
 ```python
 from pydantic import BaseModel, Field
 
@@ -194,6 +201,7 @@ LogLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 ### Application Pattern
 
 #### ❌ WRONG (Duplication)
+
 ```python
 class LdapConfig(BaseModel):
     ldap_port: int = Field(
@@ -219,6 +227,7 @@ class LdapConfig(BaseModel):
 ```
 
 #### ✅ CORRECT (Domain Types)
+
 ```python
 from flext_core import PortNumber, TimeoutSeconds, RetryCount
 
@@ -240,6 +249,7 @@ class LdapConfig(BaseModel):
 ```
 
 **Benefits**:
+
 - ✅ DRY principle - constraints defined once
 - ✅ Semantic clarity - `PortNumber` means more than `int`
 - ✅ Consistency - all projects use same constraints
@@ -255,6 +265,7 @@ class LdapConfig(BaseModel):
 **Key Insight**: Pydantic v2 handles type coercion natively from strings!
 
 #### ❌ WRONG (Custom Coercion)
+
 ```python
 from typing import Annotated
 from pydantic import BeforeValidator, BaseModel
@@ -275,6 +286,7 @@ class AppConfig(BaseModel):
 ```
 
 #### ✅ CORRECT (Native Pydantic v2)
+
 ```python
 from pydantic import BaseModel, Field
 
@@ -288,6 +300,7 @@ class AppConfig(BaseModel):
 ```
 
 **How it Works**:
+
 - Environment variables come in as strings
 - Pydantic v2 validates the TYPE declaration
 - Automatic conversion: `"true"` → `True`, `"100"` → `100`
@@ -384,6 +397,7 @@ class TransformConfig(BaseModel):
 ```
 
 **When to Use**:
+
 - **mode='before'**: Preprocess input before type checking
 - **mode='after'**: Post-process after type checking (most common)
 - **mode='wrap'**: Custom control over validation (advanced)
@@ -536,6 +550,7 @@ timeout: TimeoutSeconds
 ### Pitfall 1: Using `BeforeValidator` for Built-in Type Coercion
 
 ❌ **WRONG**:
+
 ```python
 from typing import Annotated
 from pydantic import BeforeValidator
@@ -547,6 +562,7 @@ field: Annotated[int, BeforeValidator(coerce_to_int)]
 ```
 
 ✅ **CORRECT**:
+
 ```python
 field: int  # Pydantic v2 handles it natively!
 ```
@@ -558,6 +574,7 @@ field: int  # Pydantic v2 handles it natively!
 ### Pitfall 2: Forgetting `@classmethod` in Validators
 
 ❌ **WRONG**:
+
 ```python
 @field_validator('field')
 def validate_field(v):  # Missing @classmethod
@@ -565,6 +582,7 @@ def validate_field(v):  # Missing @classmethod
 ```
 
 ✅ **CORRECT**:
+
 ```python
 @field_validator('field')
 @classmethod
@@ -577,6 +595,7 @@ def validate_field(cls, v: str) -> str:
 ### Pitfall 3: Missing Type Annotations
 
 ❌ **WRONG**:
+
 ```python
 @field_validator('email')
 @classmethod
@@ -585,6 +604,7 @@ def validate_email(cls, v):  # No type hints
 ```
 
 ✅ **CORRECT**:
+
 ```python
 @field_validator('email')
 @classmethod
@@ -597,6 +617,7 @@ def validate_email(cls, v: str) -> str:  # Full type hints
 ### Pitfall 4: Using `class Config` Instead of `model_config`
 
 ❌ **WRONG**:
+
 ```python
 class MyModel(BaseModel):
     class Config:
@@ -604,6 +625,7 @@ class MyModel(BaseModel):
 ```
 
 ✅ **CORRECT**:
+
 ```python
 class MyModel(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
@@ -614,11 +636,13 @@ class MyModel(BaseModel):
 ### Pitfall 5: Forgetting to Handle `None` Values
 
 ❌ **WRONG**:
+
 ```python
 field: int  # Can be None in JSON, will fail validation
 ```
 
 ✅ **CORRECT**:
+
 ```python
 field: int | None = None  # Explicit - can be None
 field: int = Field(default=0)  # Required, must be int
@@ -631,6 +655,7 @@ field: int = Field(default=0)  # Required, must be int
 ### Example 1: flext-ldif/src/flext_ldif/config.py
 
 **Application of Patterns**:
+
 - ✅ ConfigDict with validate_assignment
 - ✅ Field constraints removed (constraints in domain types)
 - ✅ BeforeValidator patterns removed
@@ -667,6 +692,7 @@ class LdifOperationConfig(BaseModel):
 ```
 
 **Key Points**:
+
 1. `model_config = ConfigDict(...)` - Configuration is declarative
 2. `PortNumber`, `TimeoutSeconds`, `RetryCount`, `LogLevel` - All constraints in domain types
 3. No custom `_coerce_*` functions
@@ -676,6 +702,7 @@ class LdifOperationConfig(BaseModel):
 ### Example 2: flext-ldap/src/flext_ldap/config.py
 
 **Application of Patterns**:
+
 - ✅ Domain types applied to network fields
 - ✅ Field validation using field_validator
 - ✅ Pydantic v2 native features
@@ -727,7 +754,8 @@ class FlextLdapConnectionConfig(BaseModel):
 ### Example 3: flext-cli/src/flext_cli/config.py
 
 **Application of Patterns**:
-- ✅ Dead code removed (_coerce_bool, _coerce_int functions)
+
+- ✅ Dead code removed (\_coerce_bool, \_coerce_int functions)
 - ✅ Domain types applied (LogLevel, RetryCount, TimeoutSeconds)
 - ✅ Clean configuration
 
@@ -862,12 +890,14 @@ def test_env_coercion():
 Use this checklist to verify any new code or modules:
 
 ### Model Definition
+
 - [ ] Use `model_config = ConfigDict()` instead of `class Config`
 - [ ] All fields have explicit type annotations
 - [ ] All required fields use `...` (Ellipsis) or no default
 - [ ] Optional fields use `| None` or `Optional[Type]`
 
 ### Validation
+
 - [ ] Use `@field_validator` not `@validator`
 - [ ] Use `@model_validator` for cross-field validation
 - [ ] All validators have `@classmethod` decorator
@@ -875,29 +905,34 @@ Use this checklist to verify any new code or modules:
 - [ ] No custom `BeforeValidator` functions for built-in coercion
 
 ### Domain Types
+
 - [ ] Check if field should use domain type (PortNumber, TimeoutSeconds, etc.)
 - [ ] Import domain types from `flext_core`
 - [ ] Remove redundant Field constraints when using domain types
 
 ### Serialization
+
 - [ ] Use `.model_dump()` not `.dict()`
 - [ ] Use `.model_dump_json()` not `.json()`
 - [ ] Use `.model_validate()` not `.parse_obj()`
 - [ ] Mark sensitive fields with `exclude=True` if needed
 
 ### Configuration
+
 - [ ] Set `validate_assignment=True` for runtime validation
 - [ ] Set `validate_default=True` to validate default values
 - [ ] Set `str_strip_whitespace=True` for string fields
 - [ ] Document configuration with Field descriptions
 
 ### Code Quality
+
 - [ ] Ruff linting passes: `ruff check`
 - [ ] Type checking passes: `pyrefly check`
 - [ ] All tests pass: `pytest`
 - [ ] No `type: ignore` comments (fix root cause instead)
 
 ### Documentation
+
 - [ ] Model docstring explains purpose
 - [ ] Field descriptions explain constraints
 - [ ] Complex validators have docstrings
@@ -909,32 +944,32 @@ Use this checklist to verify any new code or modules:
 
 ### Old v1 → New v2 Method Mapping
 
-| v1 Method | v2 Replacement | Notes |
-|-----------|---|---|
-| `model.dict()` | `model.model_dump()` | Returns Python dict |
-| `model.json()` | `model.model_dump_json()` | Returns JSON string |
-| `Model.parse_obj(data)` | `Model.model_validate(data)` | Validates and creates model |
-| `Model.parse_raw(json)` | `Model.model_validate_json(json)` | Validates JSON string |
-| `@validator` | `@field_validator` | Field-level validation |
-| `@root_validator` | `@model_validator` | Model-level validation |
-| `class Config` | `model_config = ConfigDict()` | Configuration |
+| v1 Method               | v2 Replacement                    | Notes                       |
+| ----------------------- | --------------------------------- | --------------------------- |
+| `model.dict()`          | `model.model_dump()`              | Returns Python dict         |
+| `model.json()`          | `model.model_dump_json()`         | Returns JSON string         |
+| `Model.parse_obj(data)` | `Model.model_validate(data)`      | Validates and creates model |
+| `Model.parse_raw(json)` | `Model.model_validate_json(json)` | Validates JSON string       |
+| `@validator`            | `@field_validator`                | Field-level validation      |
+| `@root_validator`       | `@model_validator`                | Model-level validation      |
+| `class Config`          | `model_config = ConfigDict()`     | Configuration               |
 
 ### Validator Mode Reference
 
-| Mode | When to Use | Example |
-|------|---|---|
-| `mode='after'` | Post-process after type checking | Normalize, transform |
-| `mode='before'` | Pre-process before type checking | Convert formats, cleanup |
-| `mode='wrap'` | Full control over validation | Custom logic with handler |
+| Mode            | When to Use                      | Example                   |
+| --------------- | -------------------------------- | ------------------------- |
+| `mode='after'`  | Post-process after type checking | Normalize, transform      |
+| `mode='before'` | Pre-process before type checking | Convert formats, cleanup  |
+| `mode='wrap'`   | Full control over validation     | Custom logic with handler |
 
 ### Domain Types Reference
 
-| Type | Constraints | Use Case |
-|------|---|---|
-| `PortNumber` | 1-65535 | Network port numbers |
-| `TimeoutSeconds` | > 0, ≤ 300 | Operation timeouts |
-| `RetryCount` | 0-10 | Retry attempts |
-| `LogLevel` | DEBUG/INFO/WARNING/ERROR/CRITICAL | Logging levels |
+| Type             | Constraints                       | Use Case             |
+| ---------------- | --------------------------------- | -------------------- |
+| `PortNumber`     | 1-65535                           | Network port numbers |
+| `TimeoutSeconds` | > 0, ≤ 300                        | Operation timeouts   |
+| `RetryCount`     | 0-10                              | Retry attempts       |
+| `LogLevel`       | DEBUG/INFO/WARNING/ERROR/CRITICAL | Logging levels       |
 
 ---
 
@@ -969,7 +1004,7 @@ make audit-pydantic-v2
 
 ## Resources
 
-- **Pydantic Official Docs**: https://docs.pydantic.dev/latest/
+- **Pydantic Official Docs**: <https://docs.pydantic.dev/latest/>
 - **FLEXT Core Types**: `flext-core/src/flext_core/typings.py`
 - **Audit Script**: `scripts/audit_pydantic_v2.py`
 - **Pre-commit Hook**: `scripts/check_pydantic_v2_precommit.py`

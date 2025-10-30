@@ -139,7 +139,7 @@ See [Discriminated Unions] for more details.
 Instead of using nested models, use `TypedDict` to define the structure of the data.
 
 ??? info "Performance comparison"
-    With a simple benchmark, `TypedDict` is about ~2.5x faster than nested models:
+With a simple benchmark, `TypedDict` is about ~2.5x faster than nested models:
 
     ```python {test="skip"}
     from timeit import timeit

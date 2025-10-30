@@ -3,14 +3,14 @@ name: Pydantic v2 Compliance Check
 on:
   pull_request:
     paths:
-      - '**.py'
-      - 'flext-*/docs/pydantic-v2-modernization/**'
+      - "**.py"
+      - "flext-*/docs/pydantic-v2-modernization/**"
   push:
     branches:
       - main
       - develop
     paths:
-      - '**.py'
+      - "**.py"
 
 jobs:
   pydantic-v2-audit:
@@ -30,8 +30,8 @@ jobs:
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
-          cache: 'pip'
+          python-version: "3.13"
+          cache: "pip"
 
       - name: Install audit dependencies
         run: |
