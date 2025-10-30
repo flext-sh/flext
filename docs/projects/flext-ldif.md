@@ -199,17 +199,17 @@ Handling of server-specific LDIF format variations:
 
 ```python
 # Register server-specific quirks
-from flext_ldif import FlextLdifQuirksRegistry
+from flext_ldif import FlextLdifRegistry
 
-quirks = FlextLdifQuirksRegistry()
+quirks = FlextLdifRegistry()
 
 # OID-specific handling
-oid_quirks = quirks.get_quirks("oid")
-oid_quirks.handle_attribute_wrapping("description", long_value)
+oid = quirks.get_quirks("oid")
+oid.handle_attribute_wrapping("description", long_value)
 
 # OpenLDAP-specific handling
-openldap_quirks = quirks.get_quirks("openldap")
-openldap_quirks.handle_schema_extensions(schema_entry)
+openldap = quirks.get_quirks("openldap")
+openldap.handle_schema_extensions(schema_entry)
 ```
 
 ## Migration Pipeline

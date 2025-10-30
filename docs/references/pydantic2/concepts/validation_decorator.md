@@ -1,5 +1,5 @@
 ??? api "API Documentation"
-    [`pydantic.validate_call_decorator.validate_call`][pydantic.validate_call_decorator.validate_call]<br>
+[`pydantic.validate_call_decorator.validate_call`][pydantic.validate_call_decorator.validate_call]<br>
 
 The [`validate_call()`][pydantic.validate_call] decorator allows the arguments passed to a function to be parsed
 and validated using the function's annotations before the function is called.
@@ -70,19 +70,19 @@ Type coercion like this can be extremely helpful, but also confusing or not desi
 can be enabled by using a [custom configuration](#custom-configuration).
 
 !!! note "Validating the return value"
-    By default, the return value of the function is **not** validated. To do so, the `validate_return` argument
-    of the decorator can be set to `True`.
+By default, the return value of the function is **not** validated. To do so, the `validate_return` argument
+of the decorator can be set to `True`.
 
 ## Function signatures
 
 The [`validate_call()`][pydantic.validate_call] decorator is designed to work with functions
 using all possible [parameter configurations][parameter] and all possible combinations of these:
 
-* Positional or keyword parameters with or without defaults.
-* Keyword-only parameters: parameters after `*,`.
-* Positional-only parameters: parameters before `, /`.
-* Variable positional parameters defined via `*` (often `*args`).
-* Variable keyword parameters defined via `**` (often `**kwargs`).
+- Positional or keyword parameters with or without defaults.
+- Keyword-only parameters: parameters after `*,`.
+- Positional-only parameters: parameters before `, /`.
+- Variable positional parameters defined via `*` (often `*args`).
+- Variable keyword parameters defined via `**` (often `**kwargs`).
 
 ??? example
 
@@ -161,8 +161,8 @@ using all possible [parameter configurations][parameter] and all possible combin
     ```
 
 !!! note "[`Unpack`][typing.Unpack] for keyword parameters"
-    [`Unpack`][typing.Unpack] and typed dictionaries can be used to annotate the variable
-    keyword parameters of a function:
+[`Unpack`][typing.Unpack] and typed dictionaries can be used to annotate the variable
+keyword parameters of a function:
 
     ```python
     from typing_extensions import TypedDict, Unpack

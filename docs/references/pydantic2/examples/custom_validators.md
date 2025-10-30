@@ -96,7 +96,7 @@ except ValidationError as ve:
 1. The `handler` function is what we call to validate the input with standard `pydantic` validation
 2. We call the `handler` function to validate the input with standard `pydantic` validation in this wrap validator
 
-We can also enforce UTC offset constraints in a similar way.  Assuming we have a `lower_bound` and an `upper_bound`, we can create a custom validator to ensure our `datetime` has a UTC offset that is inclusive within the boundary we define:
+We can also enforce UTC offset constraints in a similar way. Assuming we have a `lower_bound` and an `upper_bound`, we can create a custom validator to ensure our `datetime` has a UTC offset that is inclusive within the boundary we define:
 
 ```python
 import datetime as dt
@@ -221,7 +221,7 @@ except ValidationError as e:
 Alternatively, a custom validator can be used in the nested model class (`User`), with the forbidden passwords data from the parent model being passed in via validation context.
 
 !!! warning
-    The ability to mutate the context within a validator adds a lot of power to nested validation, but can also lead to confusing or hard-to-debug code. Use this approach at your own risk!
+The ability to mutate the context within a validator adds a lot of power to nested validation, but can also lead to confusing or hard-to-debug code. Use this approach at your own risk!
 
 ```python
 from pydantic import BaseModel, ValidationError, ValidationInfo, field_validator

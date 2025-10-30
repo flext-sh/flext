@@ -10,10 +10,12 @@
 ## 📚 Pydantic 2.12.3 Core Features
 
 ### 1. **Enhanced Type System**
+
 **Current State**: FLEXT using basic Pydantic v2 models
 **Pydantic 2 Capability**: Advanced type hints, discriminated unions, computed fields
 
 **FLEXT Improvements Needed**:
+
 ```python
 # ✅ CURRENT (Basic)
 class FlextConfig(BaseModel):
@@ -46,20 +48,24 @@ class FlextConfig(BaseModel):
 ```
 
 ### 2. **Validation Improvements**
+
 **Current State**: Basic validation in validators
 **Pydantic 2 Power**: Multi-field validation, computed fields, mode validation
 
 **FLEXT Improvements**:
+
 - Use `field_validator` with `mode='before'|'after'|'wrap'`
 - Use `model_validator` for cross-field validation
 - Implement `ConfigDict` with validation rules
 - Use `SerializerFunctionWrapHandler` for custom serialization
 
 ### 3. **Serialization & JSON Schema**
+
 **Current State**: Basic to_dict/from_dict
 **Pydantic 2 Power**: Advanced serialization, schema generation, mode-aware serialization
 
 **FLEXT Improvements**:
+
 ```python
 from pydantic import BaseModel, ConfigDict
 from pydantic.json_schema import models_json_schema
@@ -83,10 +89,12 @@ class FlextMeltanoConfig(BaseModel):
 ```
 
 ### 4. **Discriminated Unions for Domain Modeling**
+
 **Current State**: Using object or dict for polymorphism
 **Pydantic 2 Power**: Type-safe discriminated unions
 
 **FLEXT Improvements**:
+
 ```python
 from typing import Literal, Union, Annotated
 from pydantic import Discriminator, Field
@@ -114,10 +122,12 @@ class PipelineConfig(BaseModel):
 ```
 
 ### 5. **Generic Models for Reusability**
+
 **Current State**: Repetitive model definitions
 **Pydantic 2 Power**: Reusable generic models
 
 **FLEXT Improvements**:
+
 ```python
 from pydantic import BaseModel, Generic, TypeVar
 
@@ -143,10 +153,12 @@ class PipelineResult(FlextResult[list[str]]):
 ```
 
 ### 6. **Configuration Management with Pydantic Settings**
+
 **Current State**: Basic ConfigDict
 **Pydantic 2 Power**: Settings with environment variable support, validation, secrets
 
 **FLEXT Improvements**:
+
 ```python
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -175,10 +187,12 @@ class FlextSettings(BaseSettings):
 ```
 
 ### 7. **JSON Schema Generation for API Documentation**
+
 **Current State**: Manual schema definitions
 **Pydantic 2 Power**: Automatic, comprehensive JSON schemas
 
 **FLEXT Improvements**:
+
 ```python
 from pydantic.json_schema import GenerateJsonSchema, JsonSchemaValue
 
@@ -204,10 +218,12 @@ schemas = models_json_schema(
 ```
 
 ### 8. **Field Validators with Advanced Modes**
+
 **Current State**: Basic @validator
 **Pydantic 2 Power**: Multi-mode validation (before, after, wrap)
 
 **FLEXT Improvements**:
+
 ```python
 from pydantic import field_validator
 
@@ -239,10 +255,12 @@ class FlextMeltanoService(BaseModel):
 ```
 
 ### 9. **Computed Fields for Derived Data**
+
 **Current State**: Manual properties or methods
 **Pydantic 2 Power**: @computed_field for auto-inclusion in serialization
 
 **FLEXT Improvements**:
+
 ```python
 from pydantic import computed_field
 
@@ -277,10 +295,12 @@ data = service.model_dump()
 ```
 
 ### 10. **Model Serialization Modes**
+
 **Current State**: Single serialization format
 **Pydantic 2 Power**: Multiple serialization modes
 
 **FLEXT Improvements**:
+
 ```python
 from pydantic import BaseModel, SerializerFunctionWrapHandler, model_serializer
 
@@ -320,7 +340,9 @@ print(result.model_dump(mode="python"))  # Internal format
 **Current State**: Basic models in models.py without advanced validation
 
 **Improvements**:
+
 1. **Add computed_field for semantic properties**
+
    ```python
    # Instead of manual properties
    @computed_field
@@ -330,6 +352,7 @@ print(result.model_dump(mode="python"))  # Internal format
    ```
 
 2. **Use discriminated unions for polymorphic types**
+
    ```python
    # Replace Union[TapConfig, TargetConfig, DbtConfig]
    ComponentConfig = Annotated[
@@ -339,6 +362,7 @@ print(result.model_dump(mode="python"))  # Internal format
    ```
 
 3. **Implement field_validator with modes**
+
    ```python
    @field_validator("service_name", mode="before")
    @classmethod
@@ -350,7 +374,9 @@ print(result.model_dump(mode="python"))  # Internal format
 **Current State**: Basic FlextMeltanoConfig without environment support
 
 **Improvements**:
+
 1. **Migrate FlextConfig to BaseSettings**
+
    ```python
    class FlextConfig(BaseSettings):
        model_config = SettingsConfigDict(
@@ -360,6 +386,7 @@ print(result.model_dump(mode="python"))  # Internal format
    ```
 
 2. **Add field descriptions and examples**
+
    ```python
    Field(default="...", description="...", example="...")
    ```
@@ -371,6 +398,7 @@ print(result.model_dump(mode="python"))  # Internal format
 **Current State**: Generic dict/object types throughout
 
 **Improvements**:
+
 1. **Replace dict[str, object] with discriminated unions**
 2. **Use Generic[T] for reusable result types**
 3. **Implement JSON Schema generation**
@@ -380,6 +408,7 @@ print(result.model_dump(mode="python"))  # Internal format
 **Current State**: Basic model_dump() usage
 
 **Improvements**:
+
 1. **Implement mode-aware serialization**
 2. **Add custom serializers for API responses**
 3. **Generate comprehensive JSON schemas**
@@ -389,21 +418,25 @@ print(result.model_dump(mode="python"))  # Internal format
 ## 📋 Implementation Roadmap
 
 ### **Phase 1: Foundation (Week 1)**
+
 - [ ] Add computed_field for semantic properties across all services
 - [ ] Implement field_validator with before/after modes
 - [ ] Update domain models with better type hints
 
 ### **Phase 2: Configuration (Week 2)**
+
 - [ ] Migrate FlextConfig to BaseSettings
 - [ ] Add environment variable support
 - [ ] Implement configuration validation
 
 ### **Phase 3: Type Safety (Week 3)**
+
 - [ ] Replace generic dict/object with discriminated unions
 - [ ] Implement Generic[T] patterns
 - [ ] Add JSON schema generation
 
 ### **Phase 4: Advanced Features (Week 4)**
+
 - [ ] Mode-aware serialization
 - [ ] Custom serializers for API responses
 - [ ] Comprehensive schema documentation
@@ -413,48 +446,60 @@ print(result.model_dump(mode="python"))  # Internal format
 ## 🔍 Specific FLEXT Modules to Improve
 
 ### **flext_meltano/models.py**
+
 **Current Issues**:
+
 - Large god class (1556 lines)
 - Basic field definitions without validation
 - Manual property definitions
 
 **Improvements**:
+
 - Split into domain files (cli_params, configurations, stream_definitions, etc.)
 - Add computed_field for derived properties
 - Implement comprehensive field_validator
 - Add field descriptions and JSON schema examples
 
 ### **flext_meltano/config.py**
+
 **Current Issues**:
+
 - Basic configuration without environment support
 - No validation modes
 - Manual defaults
 
 **Improvements**:
+
 - Migrate to BaseSettings
 - Add environment variable support
 - Implement field_validator modes
 - Add comprehensive validation
 
 ### **flext_meltano/typings.py**
+
 **Current Issues**:
+
 - Generic dict/object types
 - No discriminated unions
 - Limited type safety
 
 **Improvements**:
+
 - Replace with discriminated unions
 - Add Literal types with validation
 - Implement Generic[T] patterns
 - Generate JSON schemas
 
 ### **flext_meltano/services.py**
+
 **Current Issues**:
+
 - Generic service implementation
 - Manual property aliases
 - No computed fields
 
 **Improvements**:
+
 - Add @computed_field for semantic aliases
 - Implement field_validator modes
 - Add mode-aware serialization
@@ -492,7 +537,7 @@ print(result.model_dump(mode="python"))  # Internal format
 
 ## 📚 References
 
-- **Pydantic v2.12.3 Docs**: https://docs.pydantic.dev/2.12.3/
+- **Pydantic v2.12.3 Docs**: <https://docs.pydantic.dev/2.12.3/>
 - **Field Validators**: Validation modes (before, after, wrap)
 - **Computed Fields**: Auto-inclusion in serialization
 - **Discriminated Unions**: Type-safe polymorphism

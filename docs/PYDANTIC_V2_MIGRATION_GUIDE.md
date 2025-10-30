@@ -41,6 +41,7 @@ Before starting migration on any project:
 ### Step 1.1: Identify Model Files
 
 **Command**:
+
 ```bash
 # Find all files with BaseModel
 find src -name "*.py" -exec grep -l "class.*BaseModel" {} \;
@@ -50,6 +51,7 @@ find src -name "*.py" -exec grep -c "class.*BaseModel" {} \; | paste -sd+ | bc
 ```
 
 **Expected Output**:
+
 ```
 src/config.py - contains 5 models
 src/models.py - contains 8 models
@@ -60,6 +62,7 @@ Total: 15 models to migrate
 ### Step 1.2: Identify All Validator Types
 
 **Commands**:
+
 ```bash
 # Find @validator decorators (v1 pattern)
 grep -rn "@validator" src/ | wc -l
@@ -76,6 +79,7 @@ grep -rn "def _coerce" src/ | wc -l
 ```
 
 **Assessment Template**:
+
 ```
 Project: flext-ldif
 Models: 12
@@ -90,6 +94,7 @@ Estimated time: 2-3 hours
 ### Step 1.3: Check Dependencies
 
 **Verify** `pyproject.toml`:
+
 ```toml
 [tool.poetry.dependencies]
 pydantic = "^2.0"  # ✅ Should be v2
@@ -103,6 +108,7 @@ flext-core = "^0.9.0"  # ✅ Required for domain types
 ### Step 2.1: Update Model Configuration
 
 **Find all instances**:
+
 ```bash
 grep -rn "class Config:" src/ --include="*.py"
 ```
@@ -138,19 +144,20 @@ class MyModel(BaseModel):
 
 **Configuration Mapping Table**:
 
-| v1 Setting | v2 Setting | Notes |
-|-----------|-----------|-------|
-| `validate_assignment` | `validate_assignment` | Same name |
-| `arbitrary_types_allowed` | `arbitrary_types_allowed` | Same name |
-| `allow_population_by_field_name` | `populate_by_name` | Renamed |
-| `orm_mode` | `from_attributes` | Renamed |
-| `json_schema_extra` | `json_schema_extra` | Same name |
-| `validate_default` | `validate_default` | Same name (new in v2) |
-| `str_strip_whitespace` | `str_strip_whitespace` | Same name (new in v2) |
+| v1 Setting                       | v2 Setting                | Notes                 |
+| -------------------------------- | ------------------------- | --------------------- |
+| `validate_assignment`            | `validate_assignment`     | Same name             |
+| `arbitrary_types_allowed`        | `arbitrary_types_allowed` | Same name             |
+| `allow_population_by_field_name` | `populate_by_name`        | Renamed               |
+| `orm_mode`                       | `from_attributes`         | Renamed               |
+| `json_schema_extra`              | `json_schema_extra`       | Same name             |
+| `validate_default`               | `validate_default`        | Same name (new in v2) |
+| `str_strip_whitespace`           | `str_strip_whitespace`    | Same name (new in v2) |
 
 ### Step 2.2: Verify Configuration Update
 
 **Test**:
+
 ```bash
 # Ensure models can be imported
 PYTHONPATH=src python -c "from mymodule import MyModel; print('✅ Config OK')"
@@ -166,6 +173,7 @@ python -c "from mymodule import MyModel; print(MyModel.model_config)"
 ### Step 3.1: Update @validator to @field_validator
 
 **Find**:
+
 ```bash
 grep -rn "@validator" src/ --include="*.py"
 ```
@@ -200,6 +208,7 @@ class Config(BaseModel):
 ```
 
 **Key Changes**:
+
 1. Import `field_validator` instead of `validator`
 2. Add `@classmethod` decorator
 3. Add type annotations: parameter and return type
@@ -208,6 +217,7 @@ class Config(BaseModel):
 ### Step 3.2: Update @root_validator to @model_validator
 
 **Find**:
+
 ```bash
 grep -rn "@root_validator" src/ --include="*.py"
 ```
@@ -245,6 +255,7 @@ class Config(BaseModel):
 ```
 
 **Key Changes**:
+
 1. `@root_validator` → `@model_validator(mode='after')`
 2. Remove `@classmethod`, use `self` instead
 3. Return `self` instead of `values`
@@ -264,6 +275,7 @@ grep -rn "Annotated\[" src/ --include="*.py"
 ### Step 4.2: Understand What BeforeValidator Does
 
 **Pattern in v1**:
+
 ```python
 from typing import Annotated
 from pydantic import BeforeValidator
@@ -281,6 +293,7 @@ class Config(BaseModel):
 ```
 
 **Why Remove**:
+
 - ❌ Pydantic v2 handles type coercion natively
 - ❌ Custom coercion functions duplicate v2 functionality
 - ❌ Code becomes simpler without custom functions
@@ -312,6 +325,7 @@ class Config(BaseModel):
 ```
 
 **Process**:
+
 1. Locate `_coerce_*` function definition
 2. Verify it's NOT used elsewhere: `grep -n "_coerce_function_name" src/**/*.py`
 3. Remove function definition (usually 5-15 lines)
@@ -359,7 +373,7 @@ config_dict = model.model_dump()
 config_dict_exclude = model.model_dump(exclude={'password'})
 ```
 
-### Step 5.2: Replace .json() with .model_dump_json()
+### Step 5.2: Replace .JSON() with .model_dump_JSON()
 
 ```bash
 # Find all .json() calls
@@ -397,7 +411,7 @@ data = {"name": "John", "age": 30}
 model = MyModel.model_validate(data)
 ```
 
-### Step 5.4: Replace .parse_raw() with .model_validate_json()
+### Step 5.4: Replace .parse_raw() with .model_validate_JSON()
 
 ```bash
 # Find all .parse_raw() calls
@@ -466,6 +480,7 @@ from flext_core import (
 ### Step 6.3: Apply Domain Types
 
 **Before**:
+
 ```python
 class Config(BaseModel):
     port: int = Field(
@@ -493,6 +508,7 @@ class Config(BaseModel):
 ```
 
 **After**:
+
 ```python
 from flext_core import PortNumber, TimeoutSeconds, RetryCount, LogLevel
 
@@ -692,11 +708,13 @@ git push origin pydantic-v2-migration
 ### Issue 1: Import Error - "No module named pydantic.v1"
 
 **Problem**:
+
 ```
 ImportError: cannot import name 'validator' from 'pydantic'
 ```
 
 **Solution**:
+
 ```python
 # ❌ WRONG - v1 imports
 from pydantic import validator
@@ -708,6 +726,7 @@ from pydantic import field_validator
 ### Issue 2: Field Validation Not Working
 
 **Problem**:
+
 ```python
 @field_validator('email')
 def validate_email(cls, v):  # Missing @classmethod
@@ -715,6 +734,7 @@ def validate_email(cls, v):  # Missing @classmethod
 ```
 
 **Solution**:
+
 ```python
 @field_validator('email')
 @classmethod  # ✅ Add this
@@ -725,6 +745,7 @@ def validate_email(cls, v: str) -> str:  # ✅ Add type hints
 ### Issue 3: Model Configuration Not Applied
 
 **Problem**:
+
 ```python
 class MyModel(BaseModel):
     class Config:  # ❌ v1 pattern
@@ -732,6 +753,7 @@ class MyModel(BaseModel):
 ```
 
 **Solution**:
+
 ```python
 class MyModel(BaseModel):
     model_config = ConfigDict(  # ✅ v2 pattern
@@ -742,6 +764,7 @@ class MyModel(BaseModel):
 ### Issue 4: Type Coercion Not Working
 
 **Problem**:
+
 ```python
 # String "true" not being converted to boolean
 debug: bool = Field(...)
@@ -749,6 +772,7 @@ debug: bool = Field(...)
 ```
 
 **Solution**:
+
 ```python
 # Verify Pydantic v2 is installed
 pip show pydantic  # Should be 2.x
@@ -769,12 +793,14 @@ assert t.debug is True
 ### Issue 5: Serialization Method Missing
 
 **Problem**:
+
 ```python
 # AttributeError: 'MyModel' object has no attribute 'dict'
 data = model.dict()  # ❌ v1 method
 ```
 
 **Solution**:
+
 ```python
 # Use v2 method
 data = model.model_dump()  # ✅ v2 method
@@ -783,6 +809,7 @@ data = model.model_dump()  # ✅ v2 method
 ### Issue 6: Domain Type Validation Failing
 
 **Problem**:
+
 ```python
 # Value error when using domain type
 from flext_core import PortNumber
@@ -790,6 +817,7 @@ port: PortNumber = Field(default=99999)  # ❌ Too high
 ```
 
 **Solution**:
+
 ```python
 # Use valid port range (1-65535)
 from flext_core import PortNumber
@@ -832,16 +860,16 @@ Complete this checklist for each project:
   - [ ] Added type annotations
 
 - [ ] **Phase 4: BeforeValidator**
-  - [ ] Removed _coerce functions
+  - [ ] Removed \_coerce functions
   - [ ] Removed BeforeValidator annotations
   - [ ] Removed Annotated wrappers
   - [ ] Verified no duplication
 
 - [ ] **Phase 5: Methods**
   - [ ] Updated .dict() → .model_dump()
-  - [ ] Updated .json() → .model_dump_json()
+  - [ ] Updated .JSON() → .model_dump_JSON()
   - [ ] Updated .parse_obj() → .model_validate()
-  - [ ] Updated .parse_raw() → .model_validate_json()
+  - [ ] Updated .parse_raw() → .model_validate_JSON()
 
 - [ ] **Phase 6: Domain Types**
   - [ ] Imported domain types from flext_core
@@ -883,17 +911,17 @@ A successful migration has:
 
 ## Timeline
 
-| Phase | Duration | Effort |
-|-------|----------|--------|
-| 1. Assessment | 15-30 min | Low |
-| 2. Configuration | 30-60 min | Low |
-| 3. Validators | 60-90 min | Medium |
-| 4. BeforeValidator | 30-60 min | Low |
-| 5. Methods | 30-60 min | Low |
-| 6. Domain Types | 30-60 min | Low |
-| 7. Testing | 60-120 min | High |
-| 8. Documentation | 15-30 min | Low |
-| **Total** | **4-7 hours** | **Medium** |
+| Phase              | Duration      | Effort     |
+| ------------------ | ------------- | ---------- |
+| 1. Assessment      | 15-30 min     | Low        |
+| 2. Configuration   | 30-60 min     | Low        |
+| 3. Validators      | 60-90 min     | Medium     |
+| 4. BeforeValidator | 30-60 min     | Low        |
+| 5. Methods         | 30-60 min     | Low        |
+| 6. Domain Types    | 30-60 min     | Low        |
+| 7. Testing         | 60-120 min    | High       |
+| 8. Documentation   | 15-30 min     | Low        |
+| **Total**          | **4-7 hours** | **Medium** |
 
 ---
 

@@ -74,7 +74,7 @@ foo = Foo(a={'b': {'a': None}})
 
 In other cases, the error message should indicate how to rebuild the class with the appropriate type defined.
 
-## Custom JSON Schema {#custom-json-schema}
+## Custom JSON Schema {#custom-JSON-schema}
 
 The `__modify_schema__` method is no longer supported in V2. You should use the `__get_pydantic_json_schema__` method instead.
 
@@ -539,7 +539,7 @@ type B = C
 type C = B
 ```
 
-## JSON schema invalid type {#invalid-for-json-schema}
+## JSON schema invalid type {#invalid-for-JSON-schema}
 
 This error is raised when Pydantic fails to generate a JSON schema for some `CoreSchema`.
 
@@ -557,7 +557,7 @@ except PydanticUserError as exc_info:
     assert exc_info.code == 'invalid-for-json-schema'
 ```
 
-## JSON schema already used {#json-schema-already-used}
+## JSON schema already used {#JSON-schema-already-used}
 
 This error is raised when the JSON schema generator has already been used to generate a JSON schema.
 You must create a new instance to generate a new JSON schema.
@@ -1055,7 +1055,7 @@ except PydanticUserError as exc_info:
 
 ## Cannot evaluate type annotation {#unevaluable-type-annotation}
 
-Because type annotations are evaluated *after* assignments, you might get unexpected results when using a type annotation name
+Because type annotations are evaluated _after_ assignments, you might get unexpected results when using a type annotation name
 that clashes with one of your fields. We raise an error in the following case:
 
 ```python {test="skip"}

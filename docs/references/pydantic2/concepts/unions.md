@@ -2,8 +2,8 @@ Unions are fundamentally different to all other types Pydantic validates - inste
 
 This leads to some nuance around how to validate unions:
 
-* which member(s) of the union should you validate data against, and in which order?
-* which errors to raise when validation fails?
+- which member(s) of the union should you validate data against, and in which order?
+- which errors to raise when validation fails?
 
 Validating unions feels like adding another orthogonal dimension to the validation process.
 
@@ -26,7 +26,7 @@ To solve these problems, Pydantic supports three fundamental approaches to valid
 ### Left to Right Mode
 
 !!! note
-    Because this mode often leads to unexpected validation results, it is not the default in Pydantic >=2, instead `union_mode='smart'` is the default.
+Because this mode often leads to unexpected validation results, it is not the default in Pydantic >=2, instead `union_mode='smart'` is the default.
 
 With this approach, validation is attempted against each member of the union in their order they're defined, and the first successful validation is accepted as input.
 
@@ -237,16 +237,16 @@ except ValidationError as e:
 ### Discriminated Unions with callable `Discriminator`
 
 ??? api "API Documentation"
-    [`pydantic.types.Discriminator`][pydantic.types.Discriminator]<br>
+[`pydantic.types.Discriminator`][pydantic.types.Discriminator]<br>
 
 In the case of a `Union` with multiple models, sometimes there isn't a single uniform field
 across all models that you can use as a discriminator.
 This is the perfect use case for a callable `Discriminator`.
 
 !!! tip
-    When you're designing callable discriminators, remember that you might have to account
-    for both `dict` and model type inputs. This pattern is similar to that of `mode='before'` validators,
-    where you have to anticipate various forms of input.
+When you're designing callable discriminators, remember that you might have to account
+for both `dict` and model type inputs. This pattern is similar to that of `mode='before'` validators,
+where you have to anticipate various forms of input.
 
     But wait! You ask, I only anticipate passing in `dict` types, why do I need to account for models?
     Pydantic uses callable discriminators for serialization as well, at which point the input to your callable is
@@ -373,8 +373,8 @@ except ValidationError as e:
    When `None` is returned, this `union_tag_not_found` error is raised.
 
 !!! note
-    Using the [annotated pattern](./fields.md#the-annotated-pattern) can be handy to regroup
-    the `Union` and `discriminator` information. See the next example for more details.
+Using the [annotated pattern](./fields.md#the-annotated-pattern) can be handy to regroup
+the `Union` and `discriminator` information. See the next example for more details.
 
     There are a few ways to set a discriminator for a field, all varying slightly in syntax.
 
@@ -394,7 +394,7 @@ except ValidationError as e:
     ```
 
 !!! warning
-    Discriminated unions cannot be used with only a single variant, such as `Union[Cat]`.
+Discriminated unions cannot be used with only a single variant, such as `Union[Cat]`.
 
     Python changes `Union[T]` into `T` at interpretation time, so it is not possible for `pydantic` to
     distinguish fields of `Union[T]` from `T`.
@@ -462,7 +462,7 @@ except ValidationError as e:
 ```
 
 !!! tip
-    If you want to validate data against a union, and solely a union, you can use pydantic's [`TypeAdapter`](../concepts/type_adapter.md) construct instead of inheriting from the standard `BaseModel`.
+If you want to validate data against a union, and solely a union, you can use pydantic's [`TypeAdapter`](../concepts/type_adapter.md) construct instead of inheriting from the standard `BaseModel`.
 
     In the context of the previous example, we have the following:
 
