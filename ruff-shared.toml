@@ -35,7 +35,7 @@ target-version = "py313"
         # "B010",    # set-attr-with-constant
         # "B017",    # assert-raises-exception
         "BLE001",  # blind-except
-        "C901",    # complex-structure
+        # "C901",    # complex-structure
         "COM812",
         "CPY001",
         "D203",    # incorrect-blank-line-before-class - conflicting with D211 (blank line before class)
@@ -92,12 +92,12 @@ target-version = "py313"
             "EM102",   # F-string in exception (test error messages)
             "FBT001",  # Boolean positional argument - acceptable in tests
             "FBT003",
-            "FIX002",  # TODO comments are acceptable in tests
-            "FURB118", # operator usage (test readability more important)
+            # "FIX002",  # TODO comments are acceptable in tests
+            # "FURB118", # operator usage (test readability more important)
             "INP001",  # Allow implicit namespace packages in tests
             "N818",    # Exception naming (custom test exceptions)
             "N999",    # Invalid module name (project root uses 'flext-auth' for package distribution)
-            "PLC0415", # Import not at top (test-specific imports for isolation)
+            # "PLC0415", # Import not at top (test-specific imports for isolation)
             "PLC2701", # Private imports (testing internal implementation)
             "PLR0912",
             "PLR0915",
@@ -202,9 +202,6 @@ target-version = "py313"
         ]
         "**/result.py" = [
             "BLE001", # broad-exception-catching - framework code executes user callables
-        ]
-        "**/processors.py" = [
-            "BLE001",  # blind-except - framework code processes user messages and handlers
         ]
         "**/service.py" = [
             "BLE001",  # blind-except - service layer handles user operations
