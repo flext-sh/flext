@@ -377,28 +377,6 @@ bus.subscribe(LdifMigrationCompletedEvent, NotificationHandler)
 result = ldif.parse_with_events(ldif_content)  # Emits events for each entry
 ```
 
-### Async Processing
-
-```python
-import asyncio
-from flext_ldif import FlextLdifClient
-
-async def process_ldif_async():
-    client = FlextLdifClient()
-
-    # Async parsing
-    result = await client.parse_async(ldif_content)
-    if result.is_success:
-        entries = result.unwrap()
-
-        # Async writing
-        write_result = await client.write_async(entries)
-        return write_result.unwrap()
-
-# Run async processing
-ldif_output = asyncio.run(process_ldif_async())
-```
-
 ## Configuration
 
 ### Environment Configuration
