@@ -15,6 +15,7 @@ Untrusted data can be passed to a model and, after parsing and validation, Pydan
 of the resultant model instance will conform to the field types defined on the model.
 
 !!! note "Validation — a _deliberate_ misnomer"
+
 <h3>TL;DR</h3>
 
     We use the term "validation" to refer to the process of instantiating a model (or other type) that adheres to specified types and

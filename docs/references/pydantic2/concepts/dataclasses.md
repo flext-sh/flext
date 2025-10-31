@@ -352,7 +352,7 @@ print(DemoDataclass(product_id=2468))
 
 <!-- markdownlint-disable-next-line strong-style -->
 
-The dataclass [`__post_init__()`][dataclasses.__post_init__] method is also supported, and will
+The dataclass [`__post_init__()`][dataclasses.**post_init**] method is also supported, and will
 be called between the calls to _before_ and _after_ model validators.
 
 ??? example
