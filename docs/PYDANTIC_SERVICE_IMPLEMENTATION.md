@@ -195,11 +195,11 @@ from pydantic import Field
 from flext_core.pydantic_service import PydanticService
 from flext_ldif.models import Entry
 
-class FlextLdifParserService(PydanticService[list[Entry]]):
+class FlextLdifParser(Pydantic[list[Entry]]):
     """Parse LDIF files - Pydantic-native.
     
     Example:
-        >>> parser = FlextLdifParserService(source="users.ldif")
+        >>> parser = FlextLdifParser(source="users.ldif")
         >>> entries = parser.result
         >>> print(f"Parsed {len(entries)} entries")
     """
@@ -268,7 +268,7 @@ def parse_ldif(
         >>> for entry in entries:
         ...     print(entry.dn)
     """
-    return FlextLdifParserService(
+    return FlextLdifParser(
         source=source,
         encoding=encoding,
         **kwargs
@@ -279,7 +279,7 @@ def parse_ldif(
 def parse_ldif_model(
     source: str | Path,
     **kwargs
-) -> FlextLdifParserService:
+) -> FlextLdifParser:
     """Create parser model (for advanced usage).
     
     Returns the model itself, allowing access to both result
@@ -291,7 +291,7 @@ def parse_ldif_model(
         >>> stats = parser.statistics
         >>> data = parser.model_dump()
     """
-    return FlextLdifParserService(source=source, **kwargs)
+    return FlextLdifParser(source=source, **kwargs)
 ```
 
 ### Example 2: HTTP Client (Multi-Operation)
@@ -704,7 +704,7 @@ Reduction:             50%
    - Add documentation
 
 2. **Create proof-of-concept in flext-ldif**
-   - Migrate `FlextLdifParserService`
+   - Migrate `FlextLdifParser`
    - Add factory functions
    - Compare old vs new
 

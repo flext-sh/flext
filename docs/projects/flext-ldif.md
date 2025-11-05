@@ -199,9 +199,9 @@ Handling of server-specific LDIF format variations:
 
 ```python
 # Register server-specific quirks
-from flext_ldif import FlextLdifRegistry
+from flext_ldif import FlextLdifServer
 
-quirks = FlextLdifRegistry()
+quirks = FlextLdifServer()
 
 # OID-specific handling
 oid = quirks.get_quirks("oid")
