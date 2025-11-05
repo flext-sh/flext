@@ -2676,7 +2676,7 @@ class FlextLdifWriter(Flext[Any]):
         """Initialize the writer service."""
         super().__init__()
         # ❌ PROBLEMA: Acessa registry diretamente ao invés de usar container
-        self._quirk_registry = FlextLdifServer.get_global_instance()
+        self._registry = FlextLdifServer.get_global_instance()
         self._statistics_service = FlextLdifStatistics()
 ```
 
@@ -2746,7 +2746,7 @@ class FlextLdifWriter:
     def __init__(self) -> None:
         super().__init__()
         # ❌ MAL: Acessa singleton direto
-        self._quirk_registry = FlextLdifServer.get_global_instance()
+        self._registry = FlextLdifServer.get_global_instance()
         self._statistics_service = FlextLdifStatistics()
 
 # ✅ CORRETO: Usar DI container
@@ -2754,7 +2754,7 @@ class FlextLdifWriter:
     def __init__(self, container: FlextContainer) -> None:
         super().__init__()
         # ✅ BOM: Resolve via container
-        self._quirk_registry = container.get_typed(
+        self._registry = container.get_typed(
             "quirk_registry", FlextLdifServer
         ).unwrap()
         self._statistics_service = container.get_typed(
@@ -4869,7 +4869,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
         max_line = self.project_config.ldif_max_line_length
         
         # Implementation
-        quirks = self._get_quirks()
+        quirks = self._gets()
         denormalized = self._denormalize_entries(quirks)
         
         match self.output_target:

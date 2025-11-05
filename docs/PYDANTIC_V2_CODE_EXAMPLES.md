@@ -264,7 +264,7 @@ class LdifOperationConfig(BaseModel):
     skip_invalid_entries: bool = Field(default=False)
 
     # Server quirks
-    server_quirks: ServerQuirksConfig = Field(default_factory=ServerQuirksConfig)
+    servers: ServerQuirksConfig = Field(default_factory=ServerQuirksConfig)
 
     @field_validator('ldap_host')
     @classmethod
@@ -277,7 +277,7 @@ class LdifOperationConfig(BaseModel):
 # ✅ Create with nested config
 config = LdifOperationConfig(
     ldap_host="ldap.example.com",
-    server_quirks=ServerQuirksConfig(
+    servers=ServerQuirksConfig(
         detect_automatically=True,
         server_type="openldap2"
     )
@@ -288,7 +288,7 @@ print(config.model_dump(mode='json'))
 # {
 #   "ldap_host": "ldap.example.com",
 #   "ldap_port": 389,
-#   "server_quirks": {
+#   "servers": {
 #     "detect_automatically": true,
 #     "server_type": "openldap2"
 #   }
