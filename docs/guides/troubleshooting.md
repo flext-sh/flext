@@ -405,7 +405,7 @@ print(f"Config: {config.dict()}")
 
 ```python
 config = FlextLdifConfig(
-    server_quirks_enabled=True,
+    servers_enabled=True,
     source_server="oid",
     target_server="oud"
 )

@@ -256,7 +256,7 @@ from flext_ldif import FlextLdifConfig
 config = FlextLdifConfig(
     default_encoding="utf-8",
     strict_validation=True,
-    server_quirks_enabled=True,
+    servers_enabled=True,
     batch_size=1000
 )
 ```

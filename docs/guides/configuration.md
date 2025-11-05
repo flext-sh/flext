@@ -77,7 +77,7 @@ export FLEXT_ENVIRONMENT=production
 # LDIF processing
 export FLEXT_LDIF_DEFAULT_ENCODING=utf-8
 export FLEXT_LDIF_STRICT_VALIDATION=true
-export FLEXT_LDIF_SERVER_QUIRKS_ENABLED=true
+export FLEXT_LDIF_SERVERS_ENABLED=true
 
 # API configuration
 export FLEXT_API_BASE_URL=https://api.example.com
@@ -100,7 +100,7 @@ environment: production
 ldif:
   default_encoding: utf-8
   strict_validation: true
-  server_quirks_enabled: true
+  servers_enabled: true
   batch_size: 1000
 
 # API Configuration
@@ -148,7 +148,7 @@ config = FlextConfig(
 ldif_config = FlextLdifConfig(
     default_encoding="utf-8",
     strict_validation=True,
-    server_quirks_enabled=True,
+    servers_enabled=True,
     batch_size=1000
 )
 ```
@@ -218,7 +218,7 @@ environment: development
 
 ldif:
   strict_validation: false
-  server_quirks_enabled: false
+  servers_enabled: false
 
 api:
   base_url: http://localhost:8000
@@ -235,7 +235,7 @@ environment: production
 
 ldif:
   strict_validation: true
-  server_quirks_enabled: true
+  servers_enabled: true
   batch_size: 5000
 
 api:

@@ -204,11 +204,11 @@ from flext_ldif import FlextLdifServer
 quirks = FlextLdifServer()
 
 # OID-specific handling
-oid = quirks.get_quirks("oid")
+oid = quirks.gets("oid")
 oid.handle_attribute_wrapping("description", long_value)
 
 # OpenLDAP-specific handling
-openldap = quirks.get_quirks("openldap")
+openldap = quirks.gets("openldap")
 openldap.handle_schema_extensions(schema_entry)
 ```
 
@@ -385,7 +385,7 @@ result = ldif.parse_with_events(ldif_content)  # Emits events for each entry
 # Set LDIF processing options
 export FLEXT_LDIF_DEFAULT_ENCODING=utf-8
 export FLEXT_LDIF_STRICT_VALIDATION=true
-export FLEXT_LDIF_SERVER_QUIRKS_ENABLED=true
+export FLEXT_LDIF_SERVERS_ENABLED=true
 export FLEXT_LDIF_BATCH_SIZE=1000
 ```
 
@@ -397,7 +397,7 @@ from flext_ldif import FlextLdifConfig
 config = FlextLdifConfig(
     default_encoding="utf-8",
     strict_validation=True,
-    server_quirks_enabled=True,
+    servers_enabled=True,
     batch_size=1000,
     parallel_processing=True,
     preserve_modifiers=True,
