@@ -72,7 +72,7 @@ class FlextService[TResult](
     # Just ADD these 3 properties:
     
     # Property 1: Lazy execution
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def result(self) -> FlextResult[TResult]:
         """Execute lazily and return result.

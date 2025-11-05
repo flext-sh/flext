@@ -23,7 +23,7 @@ class MyService(BaseModel):
     param2: int
     
     # Computed output (Pydantic v2 computed_field)
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def result(self) -> dict[str, Any]:
         """Computed result - executes automatically."""
@@ -69,7 +69,7 @@ class FlextService(BaseModel):
     _container: ClassVar[FlextContainer | None] = None
     _logger: ClassVar[FlextLogger | None] = None
     
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def result(self) -> FlextResult[Any]:
         """Computed result - override in subclasses."""
@@ -113,7 +113,7 @@ class ParseLdif(BaseModel):
     encoding: str = "utf-8"
     
     # Computed result - automatic!
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def entries(self) -> list[Entry]:
         """Parsed entries - computed automatically."""
@@ -121,7 +121,7 @@ class ParseLdif(BaseModel):
         content = self._load_source()
         return self._parse_content(content)
     
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def statistics(self) -> dict[str, int]:
         """Statistics - computed from entries."""
@@ -172,7 +172,7 @@ class HttpGet(HttpOperation):
     """GET operation."""
     operation: Literal["get"] = "get"
     
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def response(self) -> dict[str, Any]:
         """Execute GET."""
@@ -187,7 +187,7 @@ class HttpPost(HttpOperation):
     operation: Literal["post"] = "post"
     body: dict[str, Any] = Field(default_factory=dict)
     
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def response(self) -> dict[str, Any]:
         """Execute POST."""
@@ -274,7 +274,7 @@ class CreateUser(BaseModel):
         return self
     
     # Computed result
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def user(self) -> User:
         """Create user - computed after validation."""
@@ -328,7 +328,7 @@ class DatabaseQuery(BaseModel):
     sql: str
     params: dict[str, Any] = Field(default_factory=dict)
     
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def results(self) -> list[dict[str, Any]]:
         """Execute query - computed."""
@@ -502,7 +502,7 @@ class FlextService(BaseModel):
         extra="forbid",
     )
     
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def result(self) -> Any:
         """Computed result (override compute())."""
