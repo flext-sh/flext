@@ -4334,7 +4334,7 @@ class FlextService[TResult](
     # ═══════════════════════════════════════════════════════════════
     # ADDITION 1: Auto-execution Properties
     # ═══════════════════════════════════════════════════════════════
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def result(self) -> FlextResult[TResult]:
         """Lazy execution - executa automaticamente.

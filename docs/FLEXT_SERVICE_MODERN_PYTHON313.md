@@ -117,7 +117,7 @@ class FlextService[TResult](
     # ZERO CEREMONY PROPERTIES
     # =========================================================================
     
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def result(self) -> FlextResult[TResult]:
         """Get result (executes automatically, cached).
@@ -137,7 +137,7 @@ class FlextService[TResult](
         if not self._is_executed:
             self._cached_result = self.execute()
             self._is_executed = True
-        return self._cached_result  # type: ignore[return-value]
+        return self._cached_result
     
     @property
     def value(self) -> TResult:
@@ -750,7 +750,7 @@ encoding: Annotated[
 ### 4. Pydantic v2 computed_field
 
 ```python
-@computed_field  # type: ignore[misc]
+@computed_field
 @property
 def result(self) -> FlextResult[TResult]:
     """Computed automatically on access."""

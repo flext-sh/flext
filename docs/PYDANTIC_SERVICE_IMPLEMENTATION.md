@@ -81,7 +81,7 @@ class PydanticService(BaseModel, ABC, Generic[T]):
     _computed_result: T | None = None
     _result_computed: bool = False
     
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def result(self) -> T:
         """Computed result property.
@@ -99,7 +99,7 @@ class PydanticService(BaseModel, ABC, Generic[T]):
         if not self._result_computed:
             self._computed_result = self.compute()
             self._result_computed = True
-        return self._computed_result  # type: ignore
+        return self._computed_result
     
     @abstractmethod
     def compute(self) -> T:
@@ -229,7 +229,7 @@ class FlextLdifParserService(PydanticService[list[Entry]]):
         # Parse
         return self._parse_content(content)
     
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def statistics(self) -> dict[str, int]:
         """Parsing statistics - computed from result."""
@@ -481,13 +481,13 @@ class OracleQuery(PydanticService[list[dict[str, Any]]]):
                 ]
     
     # Additional computed fields
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def row_count(self) -> int:
         """Number of rows returned."""
         return len(self.result)
     
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def column_names(self) -> list[str]:
         """Column names from result."""
