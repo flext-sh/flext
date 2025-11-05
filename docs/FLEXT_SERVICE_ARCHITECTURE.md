@@ -1806,7 +1806,7 @@ class FlextService[T]:
         
         Resolution order:
         1. Try: ServiceClassName → ConfigClassName
-           (FlextLdifWriterService → FlextLdifConfig)
+           (FlextLdifWriter → FlextLdifConfig)
         2. Fallback: FlextConfig.get_global_instance()
         """
         try:
@@ -1827,7 +1827,7 @@ class FlextService[T]:
         return FlextConfig.get_global_instance()
 
 # This means:
-# 1. FlextLdifWriterService → auto-resolves FlextLdifConfig
+# 1. FlextLdifWriter → auto-resolves FlextLdifConfig
 # 2. FlextApiClient → auto-resolves FlextApiConfig
 # 3. FlextOracleQuery → auto-resolves FlextOracleConfig
 # 4. CustomService → falls back to FlextConfig
@@ -2374,7 +2374,7 @@ with FlextContext.Request.request_context(
    ```python
    def ParseLdif(source: str | Path) -> list[Entry]:
        """Simple function interface."""
-       return FlextLdifParserService(source=source).value
+       return FlextLdifParser(source=source).value
    ```
 
 #### ❌ AVOID Unless You Really Need It
@@ -2428,7 +2428,7 @@ with FlextContext.Request.request_context(
 │  USER CODE: Factory Functions (Public API)                      │
 │  ─────────────────────────────────────────────────────────────  │
 │  def ParseLdif(source: str) -> list[Entry]:                     │
-│      return FlextLdifParserService(source=source).value         │
+│      return FlextLdifParser(source=source).value         │
 │                                                                  │
 │  users = ParseLdif("file.ldif")  # Direct, simple!              │
 └─────────────────────────────────────────────────────────────────┘
@@ -2436,7 +2436,7 @@ with FlextContext.Request.request_context(
 ┌─────────────────────────────────────────────────────────────────┐
 │  LAYER 2: Service Layer (CORE)                                  │
 │  ─────────────────────────────────────────────────────────────  │
-│  class FlextLdifParserService(FlextService[list[Entry]]):       │
+│  class FlextLdifParser(Flext[list[Entry]]):       │
 │      source: str | Path                                         │
 │      encoding: str = "utf-8"                                    │
 │                                                                  │
@@ -2602,7 +2602,7 @@ class FlextContainer:
 ```python
 # flext-ldif/src/flext_ldif/api.py (linha 128-129, 239-278)
 
-class FlextLdif(FlextService[dict[str, object]]):
+class FlextLdif(Flext[dict[str, object]]):
     """Main API facade."""
     
     # ✅ BOM: Container como PrivateAttr
@@ -2615,17 +2615,17 @@ class FlextLdif(FlextService[dict[str, object]]):
         container = self.container  # ✅ BOM: Property access
         
         # ✅ BOM: Register quirk registry singleton
-        quirk_registry = FlextLdifRegistry()
+        quirk_registry = FlextLdifServer()
         container.register("quirk_registry", quirk_registry)
         
         # ✅ BOM: Register stateless writer
-        unified_writer = FlextLdifWriterService()
+        unified_writer = FlextLdifWriter()
         container.register("writer", unified_writer)
         
         # ✅ BOM: Register other services
         container.register("filters", FlextLdifFilters())
-        container.register("statistics", FlextLdifStatisticsService())
-        container.register("validation", FlextLdifValidationService())
+        container.register("statistics", FlextLdifStatistics())
+        container.register("validation", FlextLdifValidation())
         
         # ✅ BOM: Register factory for parameterized service
         def migration_pipeline_factory(params: dict[str, object] | None) -> object:
@@ -2669,15 +2669,15 @@ class FlextLdif(FlextService[dict[str, object]]):
 ```python
 # flext-ldif/src/flext_ldif/services/writer.py (linha 36-42)
 
-class FlextLdifWriterService(FlextService[Any]):
+class FlextLdifWriter(Flext[Any]):
     """Unified LDIF Writer Service."""
     
     def __init__(self) -> None:
         """Initialize the writer service."""
         super().__init__()
         # ❌ PROBLEMA: Acessa registry diretamente ao invés de usar container
-        self._quirk_registry = FlextLdifRegistry.get_global_instance()
-        self._statistics_service = FlextLdifStatisticsService()
+        self._quirk_registry = FlextLdifServer.get_global_instance()
+        self._statistics_service = FlextLdifStatistics()
 ```
 
 **Problema:** Writer service não usa DI container para obter dependencies, instancia direto.
@@ -2742,23 +2742,23 @@ class FlextLdifWriterService(FlextService[Any]):
 
 ```python
 # ❌ ANTI-PATTERN: writer.py (linha 41-42)
-class FlextLdifWriterService:
+class FlextLdifWriter:
     def __init__(self) -> None:
         super().__init__()
         # ❌ MAL: Acessa singleton direto
-        self._quirk_registry = FlextLdifRegistry.get_global_instance()
-        self._statistics_service = FlextLdifStatisticsService()
+        self._quirk_registry = FlextLdifServer.get_global_instance()
+        self._statistics_service = FlextLdifStatistics()
 
 # ✅ CORRETO: Usar DI container
-class FlextLdifWriterService:
+class FlextLdifWriter:
     def __init__(self, container: FlextContainer) -> None:
         super().__init__()
         # ✅ BOM: Resolve via container
         self._quirk_registry = container.get_typed(
-            "quirk_registry", FlextLdifRegistry
+            "quirk_registry", FlextLdifServer
         ).unwrap()
         self._statistics_service = container.get_typed(
-            "statistics", FlextLdifStatisticsService
+            "statistics", FlextLdifStatistics
         ).unwrap()
 ```
 
@@ -2774,19 +2774,19 @@ class FlextLdifWriterService:
 class FlextLdif:
     def parse(self, source: str) -> FlextResult:
         # ❌ MAL: Cria service direto
-        parser = FlextLdifParserService(config=self.config)
+        parser = FlextLdifParser(config=self.config)
         return parser.parse(source)
 
 # ✅ CORRETO: Registrar e resolver via container
 class FlextLdif:
     def _setup_services(self) -> None:
         # ✅ BOM: Registrar no setup
-        parser = FlextLdifParserService(config=self.config)
+        parser = FlextLdifParser(config=self.config)
         self.container.register("parser", parser)
     
     def parse(self, source: str) -> FlextResult:
         # ✅ BOM: Resolver via container
-        parser = self.container.get_typed("parser", FlextLdifParserService).unwrap()
+        parser = self.container.get_typed("parser", FlextLdifParser).unwrap()
         return parser.parse(source)
 ```
 
@@ -3923,7 +3923,7 @@ class FlextService(FlextMixins, BaseModel, Generic[TDomainResult]):
 
 ```python
 # flext-ldif/src/flext_ldif/api.py
-class FlextLdif(FlextService[dict[str, object]]):
+class FlextLdif(Flext[dict[str, object]]):
     """API facade with mixins."""
     
     def parse(self, source: str) -> FlextResult:
@@ -4208,9 +4208,9 @@ class MyService(FlextService[T]):
 
 ### Alta Prioridade (Impacto Imediato)
 
-1. **Migrar FlextLdif Services para DI Container**
-   - Refatorar `FlextLdifWriterService.__init__()` para usar container
-   - Remover `FlextLdifRegistry.get_global_instance()` direto
+1. **Migrar FlextLdif s para DI Container**
+   - Refatorar `FlextLdifWriter.__init__()` para usar container
+   - Remover `FlextLdifServer.get_global_instance()` direto
    - **Impacto:** Testabilidade, desacoplamento
    - **Esforço:** 2-3 horas
 
@@ -4593,7 +4593,7 @@ class MyService(FlextService[T]):
 #### 3. **Single Operation Pattern**
 
 ```python
-class FlextLdifWriterService(FlextService[WriteResponse]):
+class FlextLdifWriter(Flext[WriteResponse]):
     """Single operation: write LDIF."""
     
     # Parameters (Pydantic fields)
@@ -4823,7 +4823,7 @@ class FlextServiceResult[T]:
 
 **Before:**
 ```python
-class FlextLdifWriterService(FlextService[Any]):
+class FlextLdifWriter(Flext[Any]):
     def __init__(self, config: FlextLdifConfig | None = None):
         super().__init__()
         self._config = config or FlextLdifConfig()
@@ -4845,7 +4845,7 @@ class FlextLdifWriterService(FlextService[Any]):
 
 **After:**
 ```python
-class FlextLdifWriterService(FlextService[WriteResponse]):
+class FlextLdifWriter(Flext[WriteResponse]):
     """Write LDIF entries - single operation service."""
     
     # Parameters as Pydantic fields
@@ -4964,20 +4964,20 @@ from flext_core.service import FlextService
 from flext_core.result import FlextResult
 from flext_ldif.models import Entry
 
-class FlextLdifParserService(FlextService[list[Entry]]):
+class FlextLdifParser(Flext[list[Entry]]):
     """Parse LDIF files - Python 3.13 + Pydantic v2.
     
     Zero ceremony - use directly without factory functions!
     
     Usage:
         >>> # Direct (raises on error):
-        >>> entries = FlextLdifParserService(source="file.ldif").value
+        >>> entries = FlextLdifParser(source="file.ldif").value
         
         >>> # Safe (returns None on error):
-        >>> entries = FlextLdifParserService(source="file.ldif").value_or_none
+        >>> entries = FlextLdifParser(source="file.ldif").value_or_none
         
         >>> # With default:
-        >>> entries = FlextLdifParserService(source="file.ldif").value_or([])
+        >>> entries = FlextLdifParser(source="file.ldif").value_or([])
     """
     
     # ═══════════════════════════════════════════════════════════════
@@ -5062,7 +5062,7 @@ class FlextLdifParserService(FlextService[list[Entry]]):
 # ═══════════════════════════════════════════════════════════════════════
 
 # Export only the service
-__all__ = ["FlextLdifParserService"]
+__all__ = ["FlextLdifParser"]
 ```
 
 ### Padrões de Uso (Todas as Variações)
@@ -5071,13 +5071,13 @@ __all__ = ["FlextLdifParserService"]
 # ═══════════════════════════════════════════════════════════════════════
 # PATTERN 1: Direct .value (90% of cases - RECOMMENDED)
 # ═══════════════════════════════════════════════════════════════════════
-entries = FlextLdifParserService(source="users.ldif").value
+entries = FlextLdifParser(source="users.ldif").value
 print(f"Parsed {len(entries)} entries")
 
 # ═══════════════════════════════════════════════════════════════════════
 # PATTERN 2: Safe access with .value_or_none
 # ═══════════════════════════════════════════════════════════════════════
-entries = FlextLdifParserService(source="might_fail.ldif").value_or_none
+entries = FlextLdifParser(source="might_fail.ldif").value_or_none
 if entries:
     print(f"Success: {len(entries)} entries")
 else:
@@ -5086,13 +5086,13 @@ else:
 # ═══════════════════════════════════════════════════════════════════════
 # PATTERN 3: With default fallback
 # ═══════════════════════════════════════════════════════════════════════
-entries = FlextLdifParserService(source="users.ldif").value_or([])
+entries = FlextLdifParser(source="users.ldif").value_or([])
 # Always returns a list (empty if failed)
 
 # ═══════════════════════════════════════════════════════════════════════
 # PATTERN 4: Explicit .result (when you need error details)
 # ═══════════════════════════════════════════════════════════════════════
-result = FlextLdifParserService(source="users.ldif").result
+result = FlextLdifParser(source="users.ldif").result
 if result.is_success:
     print(f"Success: {len(result.value)} entries")
 else:
@@ -5103,10 +5103,10 @@ else:
 # PATTERN 5: Monadic Composition with SMART RESOLUTION
 # ═══════════════════════════════════════════════════════════════════════
 result = (
-    FlextLdifParserService(source="input.ldif")
+    FlextLdifParser(source="input.ldif")
     .map(lambda entries: [e for e in entries if "user" in e.dn])
     .and_then(lambda filtered: 
-        FlextLdifWriterService(  # ← No .result needed! Smart resolution!
+        FlextLdifWriter(  # ← No .result needed! Smart resolution!
             entries=filtered,
             output_path=Path("users_only.ldif")
         )
@@ -5120,9 +5120,9 @@ if result.is_success:
 # PATTERN 6: Error recovery with .or_else + Smart Resolution
 # ═══════════════════════════════════════════════════════════════════════
 entries = (
-    FlextLdifParserService(source="primary.ldif")
+    FlextLdifParser(source="primary.ldif")
     .or_else(lambda err: 
-        FlextLdifParserService(source="backup.ldif")  # ← No .result!
+        FlextLdifParser(source="backup.ldif")  # ← No .result!
     )
     .value
 )
@@ -5138,7 +5138,7 @@ entries = (
 
 ```python
 # Single operation
-response = FlextLdifWriterService(
+response = FlextLdifWriter(
     entries=my_entries,
     output_target="file",
     output_path=Path("output.ldif")
@@ -5162,10 +5162,10 @@ print(f"Found {len(data['users'])} users")
 ```python
 # Parse → filter → transform → write
 result = (
-    FlextLdifParserService(source=Path("input.ldif"))
+    FlextLdifParser(source=Path("input.ldif"))
     .map(lambda entries: [e for e in entries if "user" in e.dn])
     .map(lambda filtered: sorted(filtered, key=lambda e: e.dn))
-    .and_then(lambda entries: FlextLdifWriterService(
+    .and_then(lambda entries: FlextLdifWriter(
         entries=entries,
         output_target="file",
         output_path=Path("output.ldif")
@@ -5189,10 +5189,10 @@ def create_fallback_entries(error: str) -> FlextResult[list[Entry]]:
     return FlextResult.ok([create_default_entry()])
 
 result = (
-    FlextLdifParserService(source=Path("might_fail.ldif"))
+    FlextLdifParser(source=Path("might_fail.ldif"))
     .or_else(create_fallback_entries)  # Recover from error
     .filter(lambda entries: len(entries) > 0, "No entries")
-    .and_then(lambda entries: FlextLdifWriterService(
+    .and_then(lambda entries: FlextLdifWriter(
         entries=entries,
         output_target="string"
     ).result)
@@ -5208,11 +5208,11 @@ content = result.value.content
 
 ```python
 response = (
-    FlextLdifParserService(source=Path("input.ldif"))
+    FlextLdifParser(source=Path("input.ldif"))
     .tap(lambda entries: logger.info(f"Parsed {len(entries)} entries"))
     .map(lambda entries: [e for e in entries if "active" in e.dn])
     .tap(lambda filtered: logger.info(f"Filtered to {len(filtered)}"))
-    .and_then(lambda entries: FlextLdifWriterService(
+    .and_then(lambda entries: FlextLdifWriter(
         entries=entries,
         output_target="file",
         output_path=Path("output.ldif")
@@ -5227,14 +5227,14 @@ response = (
 
 ```python
 # Execute without creating instance variable
-entries = FlextLdifParserService.run(
+entries = FlextLdifParser.run(
     source=Path("data.ldif"),
     source_server_type="oud"
 )
 # ← Returns list[Entry] directly (raises on failure)
 
 # Or with Result for error handling
-result = FlextLdifParserService.try_run(
+result = FlextLdifParser.try_run(
     source=Path("data.ldif")
 )
 # ← Returns FlextResult[list[Entry]]
@@ -5326,7 +5326,7 @@ if result:
 # ═══════════════════════════════════════════════════════════════
 # ANTES (funciona, mas verbose)
 # ═══════════════════════════════════════════════════════════════
-class FlextLdifWriterService(FlextService[WriteResponse]):
+class FlextLdifWriter(Flext[WriteResponse]):
     def __init__(
         self,
         config: FlextLdifConfig | None = None
@@ -5350,7 +5350,7 @@ class FlextLdifWriterService(FlextService[WriteResponse]):
         return FlextResult.ok(WriteResponse())
 
 # Uso:
-service = FlextLdifWriterService(config=cfg)
+service = FlextLdifWriter(config=cfg)
 result = service.write(entries=my_entries, output_target="file")
 if result.is_success:
     response = result.unwrap()
@@ -5358,7 +5358,7 @@ if result.is_success:
 # ═══════════════════════════════════════════════════════════════
 # DEPOIS (clean, Pydantic-native)
 # ═══════════════════════════════════════════════════════════════
-class FlextLdifWriterService(FlextService[WriteResponse]):
+class FlextLdifWriter(Flext[WriteResponse]):
     """Write LDIF entries.
     
     Config auto-resolved via self.project_config!
@@ -5405,14 +5405,14 @@ class FlextLdifWriterService(FlextService[WriteResponse]):
         return self._do_write(encoding, max_line)
 
 # Uso novo (zero ceremony):
-response = FlextLdifWriterService(
+response = FlextLdifWriter(
     entries=my_entries,
     output_target="file",
     output_path=Path("output.ldif")
 ).value  # ← Zero ceremony!
 
 # Ou com error handling:
-result = FlextLdifWriterService(
+result = FlextLdifWriter(
     entries=my_entries,
     output_target="file",
     output_path=Path("output.ldif")
@@ -5449,7 +5449,7 @@ def parse_ldif(
     strict_mode: bool = True
 ) -> list[Entry]:
     """Parse LDIF file."""
-    return FlextLdifParserService(
+    return FlextLdifParser(
         source=source,
         encoding=encoding,
         strict_mode=strict_mode
@@ -5457,7 +5457,7 @@ def parse_ldif(
 
 def parse_ldif_safe(source: str | Path, **kwargs) -> list[Entry] | None:
     """Parse LDIF file (safe)."""
-    return FlextLdifParserService(source=source, **kwargs).value_or_none
+    return FlextLdifParser(source=source, **kwargs).value_or_none
 
 # Problema: 
 # - 2 funções extras
@@ -5468,18 +5468,18 @@ def parse_ldif_safe(source: str | Path, **kwargs) -> list[Entry] | None:
 # ═══════════════════════════════════════════════════════════════
 # DEPOIS: Apenas o service (sem duplicação!)
 # ═══════════════════════════════════════════════════════════════
-class FlextLdifParserService(FlextService[list[Entry]]):
+class FlextLdifParser(Flext[list[Entry]]):
     """Parse LDIF files.
     
     Usage:
         # Direct (raises on error):
-        entries = FlextLdifParserService(source="file.ldif").value
+        entries = FlextLdifParser(source="file.ldif").value
         
         # Safe (returns None on error):
-        entries = FlextLdifParserService(source="file.ldif").value_or_none
+        entries = FlextLdifParser(source="file.ldif").value_or_none
         
         # With default:
-        entries = FlextLdifParserService(source="file.ldif").value_or([])
+        entries = FlextLdifParser(source="file.ldif").value_or([])
     """
     source: str | Path
     encoding: str = "utf-8"
@@ -5490,8 +5490,8 @@ class FlextLdifParserService(FlextService[list[Entry]]):
         ...
 
 # Uso (igualmente clean!):
-entries = FlextLdifParserService(source="file.ldif").value
-entries = FlextLdifParserService(source="file.ldif").value_or_none
+entries = FlextLdifParser(source="file.ldif").value
+entries = FlextLdifParser(source="file.ldif").value_or_none
 
 # Benefícios:
 # ✅ Zero duplicação
@@ -5581,14 +5581,14 @@ value = MyService().value
 
 ```python
 from pathlib import Path
-from flext_ldif import FlextLdifParserService, FlextLdifWriterService
+from flext_ldif import FlextLdifParser, FlextLdifWriter
 
 def process_ldif(input_file: Path, output_file: Path) -> WriteResponse:
     """Process LDIF file with transformations."""
     
     return (
         # Parse input
-        FlextLdifParserService(
+        FlextLdifParser(
             source=input_file,
             source_server_type="oud"
         )
@@ -5603,7 +5603,7 @@ def process_ldif(input_file: Path, output_file: Path) -> WriteResponse:
             for e in entries
         ])
         # Write to output
-        .and_then(lambda entries: FlextLdifWriterService(
+        .and_then(lambda entries: FlextLdifWriter(
             entries=entries,
             target_server_type="rfc4512",
             output_target="file",
@@ -5872,7 +5872,7 @@ def complex_migration(
     def fallback_on_parse(error: str) -> FlextResult[list[Entry]]:
         """Fallback: try lenient parsing."""
         logger.warning(f"Strict parse failed: {error}, trying lenient mode")
-        return FlextLdifParserService.try_run(
+        return FlextLdifParser.try_run(
             source=source_file,
             parse_mode="lenient"
         )
@@ -5881,7 +5881,7 @@ def complex_migration(
         """Fallback: write to alternative location."""
         logger.error(f"Primary write failed: {error}, using backup location")
         backup_path = target_file.with_suffix(".backup.ldif")
-        return FlextLdifWriterService.try_run(
+        return FlextLdifWriter.try_run(
             entries=cached_entries,  # From closure
             output_target="file",
             output_path=backup_path
@@ -5892,7 +5892,7 @@ def complex_migration(
     
     result = (
         # Parse with fallback
-        FlextLdifParserService(source=source_file, parse_mode="strict")
+        FlextLdifParser(source=source_file, parse_mode="strict")
         .or_else(fallback_on_parse)
         # Cache for fallback
         .tap(lambda entries: cached_entries.extend(entries))
@@ -5902,7 +5902,7 @@ def complex_migration(
         # Validate
         .filter(lambda entries: validate_entries(entries), "Validation failed")
         # Write with fallback
-        .and_then(lambda entries: FlextLdifWriterService(
+        .and_then(lambda entries: FlextLdifWriter(
             entries=entries,
             output_target="file",
             output_path=target_file
@@ -5955,7 +5955,7 @@ def complex_migration(
 # ═══════════════════════════════════════════════════════════════════════
 
 # 1. Service definition (com stub execute)
-class FlextLdifParserService(FlextService[Any]):
+class FlextLdifParser(Flext[Any]):
     def __init__(self, config: FlextLdifConfig | None = None):
         super().__init__()
         self._config = config or FlextLdifConfig()
@@ -5974,18 +5974,18 @@ class FlextLdifParserService(FlextService[Any]):
 
 # 2. Factory functions (duplicação!)
 def parse_ldif(source: str | Path, **kwargs) -> list[Entry]:
-    service = FlextLdifParserService(config=cfg)
+    service = FlextLdifParser(config=cfg)
     result = service.parse(source=source, **kwargs)
     return result.unwrap()
 
 def parse_ldif_safe(source: str | Path, **kwargs) -> list[Entry] | None:
-    service = FlextLdifParserService(config=cfg)
+    service = FlextLdifParser(config=cfg)
     result = service.parse(source=source, **kwargs)
     return result.value if result.is_success else None
 
 # 3. Usage (verbose)
 config = FlextLdifConfig()
-service = FlextLdifParserService(config=config)
+service = FlextLdifParser(config=config)
 result = service.parse(source="file.ldif", source_server_type="oud")
 if result.is_success:
     entries = result.unwrap()
@@ -5995,11 +5995,11 @@ else:
 
 # 4. Chaining (verbose - precisa .result)
 result = (
-    FlextLdifParserService(config=cfg)
+    FlextLdifParser(config=cfg)
     .parse(source="input.ldif")  # Método separado!
     .map(filter_users)
     .and_then(lambda entries: 
-        FlextLdifWriterService(config=cfg)
+        FlextLdifWriter(config=cfg)
         .write(entries=entries, output_path=Path("out.ldif"))  # Método separado!
     )
 )
@@ -6009,11 +6009,11 @@ result = (
 # ═══════════════════════════════════════════════════════════════════════
 
 # 1. Service definition (Pydantic-native)
-class FlextLdifParserService(FlextService[list[Entry]]):
+class FlextLdifParser(Flext[list[Entry]]):
     """Parse LDIF files.
     
     Usage:
-        >>> entries = FlextLdifParserService(source="file.ldif").value
+        >>> entries = FlextLdifParser(source="file.ldif").value
     """
     
     # Pydantic fields (auto-validation!)
@@ -6043,22 +6043,22 @@ class FlextLdifParserService(FlextService[list[Entry]]):
 # 2. NO factory functions! Service is clean enough!
 
 # 3. Usage (zero ceremony!)
-entries = FlextLdifParserService(source="file.ldif").value
+entries = FlextLdifParser(source="file.ldif").value
 
 # Safe version
-entries = FlextLdifParserService(source="file.ldif").value_or_none
+entries = FlextLdifParser(source="file.ldif").value_or_none
 if entries:
     process(entries)
 
 # With default
-entries = FlextLdifParserService(source="file.ldif").value_or([])
+entries = FlextLdifParser(source="file.ldif").value_or([])
 
 # 4. Chaining (clean - smart resolution!)
 result = (
-    FlextLdifParserService(source="input.ldif")  # ← Pydantic fields!
+    FlextLdifParser(source="input.ldif")  # ← Pydantic fields!
     .map(filter_users)
     .and_then(lambda entries: 
-        FlextLdifWriterService(  # ← No .result! Smart resolution!
+        FlextLdifWriter(  # ← No .result! Smart resolution!
             entries=entries,
             output_path=Path("out.ldif")
         )

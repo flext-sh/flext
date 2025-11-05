@@ -280,7 +280,7 @@ from pydantic import Field, field_validator
 from flext_core.service import FlextService, ServiceResult
 from flext_ldif.models import Entry
 
-class FlextLdifParserService(FlextService[list[Entry]]):
+class FlextLdifParser(Flext[list[Entry]]):
     """Parse LDIF files.
     
     Python 3.13 + Pydantic v2 optimized implementation.
@@ -385,7 +385,7 @@ def parse_ldif(
     - Keyword-only args for clarity
     - Type hints preserved
     """
-    return FlextLdifParserService(
+    return FlextLdifParser(
         source=source,
         encoding=encoding,
         strict_mode=strict_mode
@@ -407,7 +407,7 @@ def parse_ldif_safe(
         ... else:
         ...     print("Parsing failed")
     """
-    return FlextLdifParserService(
+    return FlextLdifParser(
         source=source,
         **kwargs
     ).value_or_none
@@ -419,7 +419,7 @@ __all__ = [
     "parse_ldif",
     "parse_ldif_safe",
     # Service (for advanced usage)
-    "FlextLdifParserService",
+    "FlextLdifParser",
 ]
 ```
 
@@ -435,10 +435,10 @@ if entries:
     print(f"Got {len(entries)} entries")
 
 # ✅ PATTERN 3: Direct service usage
-entries = FlextLdifParserService(source="users.ldif").value
+entries = FlextLdifParser(source="users.ldif").value
 
 # ✅ PATTERN 4: With error details
-result = FlextLdifParserService(source="users.ldif").result
+result = FlextLdifParser(source="users.ldif").result
 if result.is_success:
     entries = result.value
 else:
@@ -446,10 +446,10 @@ else:
 
 # ✅ PATTERN 5: Functional composition
 result = (
-    FlextLdifParserService(source="input.ldif")
+    FlextLdifParser(source="input.ldif")
     .map(lambda entries: [e for e in entries if "user" in e.dn])
     .and_then(lambda filtered: 
-        FlextLdifWriterService(entries=filtered, output_path="out.ldif").result
+        FlextLdifWriter(entries=filtered, output_path="out.ldif").result
     )
 )
 ```
@@ -820,12 +820,12 @@ from pathlib import Path
 from flext_ldif.services.parser import (
     parse_ldif,
     parse_ldif_safe,
-    FlextLdifParserService,
+    FlextLdifParser,
 )
 from flext_ldif.services.writer import (
     write_ldif,
     write_ldif_safe,
-    FlextLdifWriterService,
+    FlextLdifWriter,
 )
 from flext_ldif.models import Entry
 
@@ -840,8 +840,8 @@ __all__ = [
     "write_ldif",
     "write_ldif_safe",
     # Services (for advanced usage)
-    "FlextLdifParserService",
-    "FlextLdifWriterService",
+    "FlextLdifParser",
+    "FlextLdifWriter",
     # Models
     "Entry",
 ]
@@ -869,10 +869,10 @@ if __name__ == "__main__":
     
     # Example 4: Functional composition
     result = (
-        FlextLdifParserService(source="input.ldif")
+        FlextLdifParser(source="input.ldif")
         .map(lambda entries: [e for e in entries if "active" in e.dn])
         .and_then(lambda filtered: 
-            FlextLdifWriterService(
+            FlextLdifWriter(
                 entries=filtered,
                 output_path=Path("active_users.ldif")
             ).result

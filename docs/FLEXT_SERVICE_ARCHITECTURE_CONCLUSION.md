@@ -51,7 +51,7 @@ The flext ecosystem suffered from **over-engineered high-level abstractions** th
 │  USER CODE: Factory Functions (Public API)                   │
 │  ───────────────────────────────────────────────────────────  │
 │  def ParseLdif(source: str) -> list[Entry]:                  │
-│      return FlextLdifParserService(source=source).value      │
+│      return FlextLdifParser(source=source).value      │
 │                                                               │
 │  entries = ParseLdif("file.ldif")  # Direct and simple!      │
 └──────────────────────────────────────────────────────────────┘
@@ -59,7 +59,7 @@ The flext ecosystem suffered from **over-engineered high-level abstractions** th
 ┌──────────────────────────────────────────────────────────────┐
 │  LAYER 2: Service Layer (CORE)                               │
 │  ───────────────────────────────────────────────────────────  │
-│  class FlextLdifParserService(FlextService[list[Entry]]):    │
+│  class FlextLdifParser(Flext[list[Entry]]):    │
 │      source: str | Path                                      │
 │      encoding: str = "utf-8"                                 │
 │                                                               │
@@ -243,7 +243,7 @@ def ParseLdif(
         >>> entries = ParseLdif("users.ldif")
         >>> print(f"Parsed {len(entries)} entries")
     """
-    return FlextLdifParserService(
+    return FlextLdifParser(
         source=source,
         encoding=encoding,
         **kwargs
@@ -271,7 +271,7 @@ def WriteLdif(
         >>> response = WriteLdif(entries, output_path=Path("output.ldif"))
         >>> print(f"Wrote {response.statistics.entries_written} entries")
     """
-    return FlextLdifWriterService(
+    return FlextLdifWriter(
         entries=entries,
         output_path=output_path,
         output_target=output_target,
@@ -285,8 +285,8 @@ __all__ = [
     "ParseLdif",
     "WriteLdif",
     # Services (for advanced usage)
-    "FlextLdifParserService",
-    "FlextLdifWriterService",
+    "FlextLdifParser",
+    "FlextLdifWriter",
 ]
 ```
 

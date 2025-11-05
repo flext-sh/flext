@@ -309,12 +309,12 @@ def ParseLdif(source: str | Path, **kwargs) -> list[Entry]:
     Example:
         >>> entries = ParseLdif("users.ldif")
     """
-    return FlextLdifParserService(source=source, **kwargs).value
+    return FlextLdifParser(source=source, **kwargs).value
 
 
 def WriteLdif(entries: list[Entry], output_path: Path, **kwargs) -> WriteResponse:
     """Write LDIF - function interface."""
-    return FlextLdifWriterService(
+    return FlextLdifWriter(
         entries=entries,
         output_path=output_path,
         **kwargs
@@ -327,8 +327,8 @@ __all__ = [
     "ParseLdif",
     "WriteLdif",
     # Services (for advanced usage)
-    "FlextLdifParserService",
-    "FlextLdifWriterService",
+    "FlextLdifParser",
+    "FlextLdifWriter",
 ]
 ```
 
@@ -568,7 +568,7 @@ class HttpClient(FlextService[dict]):
 ```python
 # flext-ldif/src/flext_ldif/services/parser.py
 
-class FlextLdifParserService(FlextService[list[Entry]]):
+class FlextLdifParser(Flext[list[Entry]]):
     """Parse LDIF - complete example."""
     
     # Input fields (Pydantic validation)
@@ -618,13 +618,13 @@ class FlextLdifParserService(FlextService[list[Entry]]):
 # Factory function
 def ParseLdif(source: str | Path, **kwargs) -> list[Entry]:
     """Parse LDIF - simple function interface."""
-    return FlextLdifParserService(source=source, **kwargs).value
+    return FlextLdifParser(source=source, **kwargs).value
 
 
 # Usage examples
 entries = ParseLdif("users.ldif")  # ← Simple!
-entries = FlextLdifParserService(source="users.ldif").value  # ← Also simple!
-result = FlextLdifParserService(source="users.ldif").result  # ← With error info
+entries = FlextLdifParser(source="users.ldif").value  # ← Also simple!
+result = FlextLdifParser(source="users.ldif").result  # ← With error info
 ```
 
 ---
