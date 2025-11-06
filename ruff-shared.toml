@@ -86,8 +86,12 @@ target-version = "py313"
         "**/*tests*/**" = [
             "ARG001",  # Unused function argument (helper functions for testing)
             "ARG002",  # Unused method argument (test fixtures)
+            "ARG004",  # Unused static method argument (test helpers)
             "ARG005",  # Unused lambda argument (test lambdas)
+            "B018",    # Useless attribute access (test assertions)
             "B903",    # Dataclass suggestion (test classes don't need dataclass)
+            "C901",    # Function too complex (test helper functions can be complex)
+            "F822",    # Undefined name in __all__ (test exports may vary)
             "D102",    # Missing docstring in public method - test methods don't need docstrings
             "EM102",   # F-string in exception (test error messages)
             "FBT001",  # Boolean positional argument - acceptable in tests
@@ -97,11 +101,15 @@ target-version = "py313"
             "INP001",  # Allow implicit namespace packages in tests
             "N818",    # Exception naming (custom test exceptions)
             "N999",    # Invalid module name (project root uses 'flext-auth' for package distribution)
-            # "PLC0415", # Import not at top (test-specific imports for isolation)
+            "PLC0206", # dict iteration (test data structures)
+            "PLC0415", # Import not at top (test-specific imports for isolation)
+            "PLC1901", # comparison-to-membership (test simplicity)
             "PLC2701", # Private imports (testing internal implementation)
             "PLR0912",
             "PLR0915",
+            "PLR1704", # Redefined-while-unused (test setup/teardown)
             "PLR2004", # Magic values (test values are self-documenting)
+            "PLW2901", # Loop variable overwritten (test iterations)
             "PLW1641", # Missing __hash__ (test objects don't need hashing)
             "PT011",
             "PT018",   # Assertion should be broken down - acceptable in tests for clarity
