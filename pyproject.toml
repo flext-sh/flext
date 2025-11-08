@@ -350,12 +350,18 @@
 		]
 		pythonPlatform = "Linux"
 		pythonVersion = "3.13"
-		reportAssertAlwaysTrue = "warning"
-		reportCallInDefaultInitializer = "warning"
-		reportCallIssue = false
+		typeCheckingMode = "strict"
+		strictListInference = true
+		strictDictionaryInference = true
+		strictSetInference = true
+		strictParameterNoneValue = true
+		enableTypeIgnoreComments = false
+		reportAssertAlwaysTrue = "error"
+		reportCallInDefaultInitializer = "error"
+		reportCallIssue = "error"
 		reportConstantRedefinition = "error"
-		reportDuplicateImport = "warning"
-		reportImplicitStringConcatenation = false
+		reportDuplicateImport = "error"
+		reportImplicitStringConcatenation = "warning"
 		reportImportCycles = "error"
 		reportIncompatibleMethodOverride = "error"
 		reportIncompatibleVariableOverride = "error"
@@ -364,51 +370,73 @@
 		reportInvalidStringEscapeSequence = "error"
 		reportInvalidStubStatement = "error"
 		reportInvalidTypeVarUse = "error"
-		reportMissingImports = "warning"
-		reportMissingParameterType = "warning"
+		reportMatchNotExhaustive = "warning"
+		reportMissingImports = "error"
+		reportMissingModuleSource = "error"
+		reportMissingParameterType = "error"
 		reportMissingSuperCall = "warning"
-		reportMissingTypeArgument = "warning"
+		reportMissingTypeArgument = "error"
 		reportMissingTypeStubs = "warning"
-		reportSelfClsParameterName = "warning"
+		reportOptionalCall = "error"
+		reportOptionalContextManager = "error"
+		reportOptionalIterable = "error"
+		reportOptionalMemberAccess = "error"
+		reportOptionalOperand = "error"
+		reportOptionalSubscript = "error"
+		reportPrivateUsage = "warning"
+		reportPropertyTypeMismatch = "error"
+		reportSelfClsParameterName = "error"
+		reportTypedDictNotRequiredAccess = "error"
 		reportUnboundVariable = "error"
 		reportUndefinedVariable = "error"
 		reportUninitializedInstanceVariable = "warning"
-		reportUnknownArgumentType = "warning"
-		reportUnknownLambdaType = "warning"
-		reportUnknownMemberType = "warning"
-		reportUnknownParameterType = "warning"
-		reportUnknownVariableType = "warning"
-		reportUnnecessaryCast = false
-		reportUnnecessaryComparison = false
-		reportUnnecessaryIsInstance = false
-		reportUnsupportedDunderAll = "warning"
+		reportUnknownArgumentType = "error"
+		reportUnknownLambdaType = "error"
+		reportUnknownMemberType = "error"
+		reportUnknownParameterType = "error"
+		reportUnknownVariableType = "error"
+		reportUnnecessaryCast = "warning"
+		reportUnnecessaryComparison = "warning"
+		reportUnnecessaryIsInstance = "warning"
+		reportUnnecessaryTypeIgnoreComment = "warning"
+		reportUnsupportedDunderAll = "error"
+		reportUntypedBaseClass = "error"
+		reportUntypedClassDecorator = "error"
+		reportUntypedFunctionDecorator = "error"
+		reportUntypedNamedTuple = "error"
+		reportUnusedCallResult = "warning"
 		reportUnusedClass = "warning"
-		reportUnusedCoroutine = "warning"
+		reportUnusedCoroutine = "error"
+		reportUnusedExpression = "warning"
 		reportUnusedFunction = "warning"
-		reportUnusedImport = "warning"
-		reportUnusedVariable = "warning"
+		reportUnusedImport = "error"
+		reportUnusedVariable = "error"
+		reportWildcardImportFromLibrary = "error"
+		reportGeneralTypeIssues = "error"
+		reportFunctionMemberAccess = "error"
 		useLibraryCodeForTypes = true
 
-		[[tool.pyright.executionEnvironments]]
-			extraPaths = [
-				"./flext-core/src",
-				"./flext-ldif/src",
-				"./flext-ldap/src",
-				"./client-a-oud-mig/src",
-			]
-			reportInvalidTypeForm = false
-			reportUndefinedVariable = false
-			reportUnknownArgumentType = false
-			reportUnknownMemberType = false
-			reportUnknownParameterType = false
-			reportUnknownVariableType = false
-			root = "./"
- 
-		[[tool.pyright.executionEnvironments]]
-			reportImplicitRelativeImport = false
-			reportPrivateUsage = false
-			reportAssertAlwaysTrue = false
-			root = "./"
+		# [[tool.pyright.executionEnvironments]]
+		# 	extraPaths = [
+		# 		"./flext-core/src",
+		# 		"./flext-core/tests",
+		# 		"./flext-ldif/src",
+		# 		"./flext-ldap/src",
+		# 		"./client-a-oud-mig/src",
+		# 	]
+		# 	reportInvalidTypeForm = false
+		# 	reportUndefinedVariable = false
+		# 	reportUnknownArgumentType = false
+		# 	reportUnknownMemberType = false
+		# 	reportUnknownParameterType = false
+		# 	reportUnknownVariableType = false
+		# 	root = "./"
+ # 
+		# [[tool.pyright.executionEnvironments]]
+		# 	reportImplicitRelativeImport = false
+		# 	reportPrivateUsage = false
+		# 	reportAssertAlwaysTrue = false
+		# 	root = "./"
 
 	[tool.pytest.ini_options]
 		addopts = [
