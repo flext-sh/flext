@@ -159,6 +159,7 @@ target-version = "py313"
         ]
         "**/examples/**" = [
             "ANN401",  # any-type - examples can legitimately use object for flexibility
+            "C901",    # complex-structure - demonstration functions intentionally comprehensive
             "EXE001",  # shebang - examples are meant to be executable
             "FBT001",  # boolean-type-hint-positional-argument - examples use simple boolean args
             "FBT002",  # boolean-default-value-positional-argument - examples use boolean defaults
@@ -236,6 +237,21 @@ target-version = "py313"
         ]
         "**/typings.py" = ["ANN401"]
         "**/utilities.py" = ["PLW1510", "S404", "S603"]
+        "**/tests/sandbox/**" = [
+            # Allow experimental code patterns in sandbox
+            "ANN",     # All annotation rules - sandbox experiments flexible typing
+            "D",       # All docstring rules - sandbox code doesn't need docs
+            "E731",    # Lambda assignments - quick test functions
+            "EM101",   # Exception string literals - sandbox error messages
+            "F841",    # Unused variables - leftover from experiments
+            "FURB",    # Refurb suggestions - sandbox clarity over performance
+            "N8",      # Naming conventions - sandbox uses descriptive test names
+            "PGH003",  # Blanket type:ignore - sandbox uses generic ignores
+            "RET",     # Return statements - sandbox code clarity
+            "SIM",     # Simplification - sandbox readability over simplicity
+            "T201",    # Print statements - sandbox manual debugging
+            "UP",      # Upgrade suggestions - sandbox may use older patterns
+        ]
 
         # =============================================================================
         # SHARED CONFIGURATION FOR ALL FLEXT PROJECTS
