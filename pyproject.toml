@@ -238,6 +238,11 @@
 		warn_unreachable = true
 		warn_unused_configs = true
 		warn_unused_ignores = false
+		[[tool.mypy.overrides]]
+			disable_error_code = [
+				"call-overload",
+			]
+			module = "(models.py|result.py|service.py)"
 
 		[[tool.mypy.overrides]]
 			disable_error_code = [
@@ -332,7 +337,7 @@
 		init_forbid_extra = true
 		init_typed = true
 		warn_required_dynamic_aliases = true
- 
+
 	[tool.pyright]
 		exclude = [
 			"**/*.pb2.py",
@@ -416,27 +421,26 @@
 		reportFunctionMemberAccess = "error"
 		useLibraryCodeForTypes = true
 
-		# [[tool.pyright.executionEnvironments]]
-		# 	extraPaths = [
-		# 		"./flext-core/src",
-		# 		"./flext-core/tests",
-		# 		"./flext-ldif/src",
-		# 		"./flext-ldap/src",
-		# 		"./client-a-oud-mig/src",
-		# 	]
-		# 	reportInvalidTypeForm = false
-		# 	reportUndefinedVariable = false
-		# 	reportUnknownArgumentType = false
-		# 	reportUnknownMemberType = false
-		# 	reportUnknownParameterType = false
-		# 	reportUnknownVariableType = false
-		# 	root = "./"
- # 
-		# [[tool.pyright.executionEnvironments]]
-		# 	reportImplicitRelativeImport = false
-		# 	reportPrivateUsage = false
-		# 	reportAssertAlwaysTrue = false
-		# 	root = "./"
+		[[tool.pyright.executionEnvironments]]
+			extraPaths = [
+				"**/models.py",
+			]
+			reportInvalidTypeForm = false
+			reportUndefinedVariable = false
+			reportUnknownArgumentType = false
+			reportUnknownMemberType = false
+			reportUnknownParameterType = false
+			reportUnknownVariableType = false
+			root = "./"
+
+		[[tool.pyright.executionEnvironments]]
+     	extraPaths = [
+		 		"**/tests/*",
+      ]
+		 	reportImplicitRelativeImport = false
+		 	reportPrivateUsage = false
+		 	reportAssertAlwaysTrue = false
+		 	root = "./"
 
 	[tool.pytest.ini_options]
 		addopts = [
