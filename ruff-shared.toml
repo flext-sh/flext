@@ -71,6 +71,7 @@ target-version = "py313"
         "TRY003",
         "TRY300",  # try-consider-else
         "TRY301",  # raise-within-try - Abstract raise
+        "UP007",  # Use X | Y for type annotations (adds __future__ annotations)
         "W293",
     ]
     select = ["ALL"]
