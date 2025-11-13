@@ -117,13 +117,15 @@ class FlextDiagnostic:
             if not ruff_path_obj.is_absolute() or not ruff_path_obj.exists():
                 return 1, "", f"Invalid ruff executable: {ruff_path}"
 
-            result = FlextUtilities.run_external_command(
-                [str(ruff_path), "check", "."],
-                check=False,
-                capture_output=True,
-                shell=False,
-                text=True,
-                cwd=str(project_path),
+            result = (
+                FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
+                    [str(ruff_path), "check", "."],
+                    check=False,
+                    capture_output=True,
+                    shell=False,
+                    text=True,
+                    cwd=str(project_path),
+                )
             )
             return result.returncode, result.stdout, result.stderr
         except Exception as e:
@@ -166,13 +168,15 @@ class FlextDiagnostic:
             if not Path(poetry_path).is_absolute() or not Path(poetry_path).exists():
                 return 1, "", f"Invalid poetry executable: {poetry_path}"
 
-            result = FlextUtilities.run_external_command(
-                [str(poetry_path), "install", "--no-interaction"],
-                check=False,
-                capture_output=True,
-                text=True,
-                shell=False,
-                cwd=str(workspace_path),
+            result = (
+                FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
+                    [str(poetry_path), "install", "--no-interaction"],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                    shell=False,
+                    cwd=str(workspace_path),
+                )
             )
             return result.returncode, result.stdout, result.stderr
         except Exception as e:

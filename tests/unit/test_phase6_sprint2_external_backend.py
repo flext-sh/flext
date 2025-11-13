@@ -85,11 +85,13 @@ class TestPhase6Sprint2ExternalBackendConversion:
                                     )
 
     def test_flext_utilities_used_in_all_tool_methods(self) -> None:
-        """Verify FlextUtilities.run_external_command is used in all tool methods."""
+        """Verify FlextUtilities.FlextUtilities.CommandExecution.run_external_command is used in all tool methods."""
         content = self.EXTERNAL_BACKEND_PATH.read_text()
 
-        # Count FlextUtilities.run_external_command calls
-        count = content.count("FlextUtilities.run_external_command(")
+        # Count FlextUtilities.FlextUtilities.CommandExecution.run_external_command calls
+        count = content.count(
+            "FlextUtilities.FlextUtilities.CommandExecution.run_external_command("
+        )
 
         # Should have at least 7 calls (6 methods + radon has 2 calls = 7 total)
         assert count >= 7, f"Expected at least 7 FlextUtilities calls, found {count}"
@@ -106,8 +108,11 @@ class TestPhase6Sprint2ExternalBackendConversion:
                 method_code = ast.unparse(node)
 
                 # Verify FlextUtilities is used
-                assert "FlextUtilities.run_external_command" in method_code, (
-                    "_run_ruff must use FlextUtilities.run_external_command"
+                assert (
+                    "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
+                    in method_code
+                ), (
+                    "_run_ruff must use FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
                 )
 
                 # Verify subprocess.run is not used
@@ -140,7 +145,10 @@ class TestPhase6Sprint2ExternalBackendConversion:
                 found_mypy = True
                 method_code = ast.unparse(node)
 
-                assert "FlextUtilities.run_external_command" in method_code
+                assert (
+                    "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
+                    in method_code
+                )
                 assert "subprocess.run" not in method_code
                 assert "'mypy'" in method_code or '"mypy"' in method_code
 
@@ -157,7 +165,10 @@ class TestPhase6Sprint2ExternalBackendConversion:
                 found_bandit = True
                 method_code = ast.unparse(node)
 
-                assert "FlextUtilities.run_external_command" in method_code
+                assert (
+                    "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
+                    in method_code
+                )
                 assert "subprocess.run" not in method_code
                 assert "'bandit'" in method_code or '"bandit"' in method_code
 
@@ -174,7 +185,10 @@ class TestPhase6Sprint2ExternalBackendConversion:
                 found_vulture = True
                 method_code = ast.unparse(node)
 
-                assert "FlextUtilities.run_external_command" in method_code
+                assert (
+                    "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
+                    in method_code
+                )
                 assert "subprocess.run" not in method_code
                 assert "'vulture'" in method_code or '"vulture"' in method_code
 
@@ -191,7 +205,10 @@ class TestPhase6Sprint2ExternalBackendConversion:
                 found_coverage = True
                 method_code = ast.unparse(node)
 
-                assert "FlextUtilities.run_external_command" in method_code
+                assert (
+                    "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
+                    in method_code
+                )
                 assert "subprocess.run" not in method_code
                 assert "'coverage'" in method_code or '"coverage"' in method_code
 
@@ -210,7 +227,7 @@ class TestPhase6Sprint2ExternalBackendConversion:
 
                 # Must have two FlextUtilities calls (cc and mi)
                 flext_call_count = method_code.count(
-                    "FlextUtilities.run_external_command"
+                    "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
                 )
                 assert flext_call_count >= 2, (
                     f"_run_radon must have at least 2 FlextUtilities calls (cc and mi), found {flext_call_count}"
@@ -362,7 +379,10 @@ class TestPhase6Sprint2ExternalBackendSourceCodeInspection:
 
                         # All should have the pattern:
                         # 1. Call FlextUtilities
-                        assert "FlextUtilities.run_external_command" in method_code
+                        assert (
+                            "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
+                            in method_code
+                        )
 
                         # 2. Check result.is_failure
                         assert (

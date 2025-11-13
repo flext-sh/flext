@@ -57,7 +57,7 @@ class GitUltimateCleanup:
     ) -> FlextResult[Any]:
         """Run a git command with proper error handling and type annotations."""
         cmd = [GIT_CMD, "-C", str(repo_path)] + args
-        return FlextUtilities.run_external_command(
+        return FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
             cmd,
             capture_output=True,
             text=True,
@@ -286,11 +286,13 @@ class GitUltimateCleanup:
             return False, "Detached HEAD state. Checkout a branch first."
 
         # Check disk space
-        disk_result = FlextUtilities.run_external_command(
-            ["df", "-h", str(self.repo_path)],
-            capture_output=True,
-            text=True,
-            check=False,
+        disk_result = (
+            FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
+                ["df", "-h", str(self.repo_path)],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
         )
         if disk_result.is_failure:
             return False, f"Failed to check disk space: {disk_result.error}"
@@ -343,11 +345,13 @@ class GitUltimateCleanup:
         # 2. Create git mirror clone
         print("2️⃣  Creating git mirror clone...")
         mirror_path = repo_backup / f"{self.repo_path.name}.git"
-        mirror_result = FlextUtilities.run_external_command(
-            [GIT_CMD, "clone", "--mirror", str(self.repo_path), str(mirror_path)],
-            check=False,
-            capture_output=True,
-            text=True,
+        mirror_result = (
+            FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
+                [GIT_CMD, "clone", "--mirror", str(self.repo_path), str(mirror_path)],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
         )
         if mirror_result.is_failure:
             print(f"   ❌ Mirror clone failed: {mirror_result.error}")
@@ -407,7 +411,7 @@ class GitUltimateCleanup:
         # 7. Create safety tag in repo
         print("7️⃣  Creating safety tag in repository...")
         safety_tag = f"pre-cleanup-{self.timestamp}"
-        FlextUtilities.run_external_command(
+        FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
             [GIT_CMD, "-C", str(self.repo_path), "tag", safety_tag],
             check=False,
             capture_output=True,
@@ -747,8 +751,10 @@ wc -l commit-history.txt
         # Execute
         print("Processing commits...")
         try:
-            cleanup_result = FlextUtilities.run_external_command(
-                cmd, check=False, cwd=str(self.repo_path)
+            cleanup_result = (
+                FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
+                    cmd, check=False, cwd=str(self.repo_path)
+                )
             )
 
             if cleanup_result.value.returncode != 0:
@@ -855,7 +861,7 @@ def callback(commit, metadata):
 
         # Main repo
         main_remote = "git@github.com:flext-sh/flext.git"
-        FlextUtilities.run_external_command(
+        FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
             [
                 GIT_CMD,
                 "-C",
@@ -877,11 +883,13 @@ def callback(commit, metadata):
             print()
             return
 
-        submodule_result = FlextUtilities.run_external_command(
-            [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
-            check=False,
-            capture_output=True,
-            text=True,
+        submodule_result = (
+            FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
+                [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
         )
 
         if submodule_result.value.returncode != 0:
@@ -895,11 +903,13 @@ def callback(commit, metadata):
             key, path = line.split()
             name = key.split(".")[1]
 
-            url_result = FlextUtilities.run_external_command(
-                [GIT_CMD, "config", "-f", str(gitmodules), f"submodule.{name}.url"],
-                check=False,
-                capture_output=True,
-                text=True,
+            url_result = (
+                FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
+                    [GIT_CMD, "config", "-f", str(gitmodules), f"submodule.{name}.url"],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
             )
 
             if url_result.value.returncode != 0:
@@ -909,7 +919,7 @@ def callback(commit, metadata):
             submodule_path = self.repo_path / path
 
             if submodule_path.exists():
-                FlextUtilities.run_external_command(
+                FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
                     [
                         GIT_CMD,
                         "-C",
@@ -933,11 +943,13 @@ def callback(commit, metadata):
         if not gitmodules.exists():
             return []
 
-        submodule_config_result = FlextUtilities.run_external_command(
-            [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
-            check=False,
-            capture_output=True,
-            text=True,
+        submodule_config_result = (
+            FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
+                [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
         )
 
         if submodule_config_result.value.returncode != 0:

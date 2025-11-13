@@ -61,6 +61,7 @@ target-version = "py313"
         "PLR1702",
         "PLR6301", # no-self-use
         "Q000",
+        "S608",
         "RUF001",  # ambiguous-unicode-character-docstring - false positives when using certain images
         "RUF002",  # ambiguous-unicode-character-docstring - false positives when using certain images
         "RUF003",  # ambiguous-unicode-character-comment
