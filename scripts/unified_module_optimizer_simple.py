@@ -630,12 +630,14 @@ class FlextModuleOptimizer:
         """Validate optimized file."""
         try:
             # Run ruff check
-            result = FlextUtilities.run_external_command(
-                [RUFF_CMD, "check", file_path],
-                check=False,
-                capture_output=True,
-                text=True,
-                cwd=Path(file_path).parent.parent.parent,  # Project root
+            result = (
+                FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
+                    [RUFF_CMD, "check", file_path],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                    cwd=Path(file_path).parent.parent.parent,  # Project root
+                )
             )
 
             if result.returncode != 0:

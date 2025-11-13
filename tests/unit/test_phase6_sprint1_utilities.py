@@ -3,7 +3,7 @@
 Tests verify that subprocess usage in utilities.py has been properly converted:
 1. Subprocess import still present (unavoidable for command execution)
 2. CompletedProcessWrapper class exists and functions correctly
-3. run_external_command uses threading-based timeout (no subprocess.TimeoutExpired)
+3. FlextUtilities.CommandExecution.run_external_command uses threading-based timeout (no subprocess.TimeoutExpired)
 4. All subprocess exception handlers properly replaced
 5. Return type changed from subprocess.CompletedProcess to wrapper
 """
@@ -70,16 +70,18 @@ class TestPhase6Sprint1UtilitiesConversion:
             f"Missing fields: {required_fields - wrapper_fields}"
         )
 
-    def test_run_external_command_signature_changed(self) -> None:
-        """Verify run_external_command return type changed to wrapper."""
+    def test_FlextUtilities_CommandExecution_run_external_command_signature_changed(
+        self,
+    ) -> None:
+        """Verify FlextUtilities.CommandExecution.run_external_command return type changed to wrapper."""
         utilities_content = self.UTILITIES_PATH.read_text()
         tree = ast.parse(utilities_content)
 
-        # Find run_external_command method
+        # Find FlextUtilities.CommandExecution.run_external_command method
         for node in ast.walk(tree):
             if (
                 isinstance(node, ast.FunctionDef)
-                and node.name == "run_external_command"
+                and node.name == "FlextUtilities.CommandExecution.run_external_command"
             ):
                 # Check return annotation
                 if node.returns:
@@ -99,11 +101,11 @@ class TestPhase6Sprint1UtilitiesConversion:
         utilities_content = self.UTILITIES_PATH.read_text()
         tree = ast.parse(utilities_content)
 
-        # Find run_external_command method
+        # Find FlextUtilities.CommandExecution.run_external_command method
         for node in ast.walk(tree):
             if (
                 isinstance(node, ast.FunctionDef)
-                and node.name == "run_external_command"
+                and node.name == "FlextUtilities.CommandExecution.run_external_command"
             ):
                 # Check exception handlers
                 for subnode in ast.walk(node):
@@ -149,7 +151,9 @@ class TestPhase6Sprint1UtilitiesConversion:
             "subprocess.Popen expected for command execution"
         )
 
-    def test_run_external_command_imports_available(self) -> None:
+    def test_FlextUtilities_CommandExecution_run_external_command_imports_available(
+        self,
+    ) -> None:
         """Verify required imports are available at module level."""
         utilities_content = self.UTILITIES_PATH.read_text()
 
@@ -193,8 +197,10 @@ class TestPhase6Sprint1UtilitiesConversion:
         with pytest.raises((AttributeError, ValueError)):
             wrapper.returncode = 1
 
-    def test_run_external_command_returns_flext_result(self) -> None:
-        """Verify run_external_command returns FlextResult type."""
+    def test_FlextUtilities_CommandExecution_run_external_command_returns_flext_result(
+        self,
+    ) -> None:
+        """Verify FlextUtilities.CommandExecution.run_external_command returns FlextResult type."""
         utilities_content = self.UTILITIES_PATH.read_text()
 
         # Should have return statements using FlextResult
@@ -206,14 +212,14 @@ class TestPhase6Sprint1UtilitiesConversion:
         """Verify CalledProcessError replaced with FlextResult error handling."""
         utilities_content = self.UTILITIES_PATH.read_text()
 
-        # Find run_external_command
+        # Find FlextUtilities.CommandExecution.run_external_command
         tree = ast.parse(utilities_content)
 
         # Check that CalledProcessError exception is not caught
         for node in ast.walk(tree):
             if (
                 isinstance(node, ast.FunctionDef)
-                and node.name == "run_external_command"
+                and node.name == "FlextUtilities.CommandExecution.run_external_command"
             ):
                 for subnode in ast.walk(node):
                     if isinstance(subnode, ast.ExceptHandler):
@@ -241,13 +247,15 @@ class TestPhase6Sprint1UtilitiesConversion:
             "original_cwd not stored for restoration"
         )
 
-    def test_can_call_run_external_command(self) -> None:
-        """Verify run_external_command can be called and works correctly."""
+    def test_can_call_FlextUtilities_CommandExecution_run_external_command(
+        self,
+    ) -> None:
+        """Verify FlextUtilities.CommandExecution.run_external_command can be called and works correctly."""
         from flext_core import FlextResult, FlextUtilities
         from flext_core.utilities import _CompletedProcessWrapper
 
         # Test with a simple command
-        result = FlextUtilities.run_external_command(
+        result = FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
             ["python", "--version"], capture_output=True, timeout=10.0
         )
 
@@ -271,7 +279,7 @@ class TestPhase6Sprint1UtilitiesConversion:
         """Verify command not found returns proper error."""
         from flext_core import FlextUtilities
 
-        result = FlextUtilities.run_external_command(
+        result = FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
             ["nonexistent_command_xyz_abc"], capture_output=True
         )
 
@@ -285,7 +293,7 @@ class TestPhase6Sprint1UtilitiesConversion:
         from flext_core import FlextUtilities
 
         # Command that will fail
-        result = FlextUtilities.run_external_command(
+        result = FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
             ["sh", "-c", "exit 42"], capture_output=True, check=False
         )
 
@@ -302,7 +310,7 @@ class TestPhase6Sprint1UtilitiesConversion:
         from flext_core import FlextUtilities
 
         # Command that will fail
-        result = FlextUtilities.run_external_command(
+        result = FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
             ["sh", "-c", "exit 42"], capture_output=True, check=True
         )
 
@@ -317,7 +325,7 @@ class TestPhase6Sprint1UtilitiesConversion:
         """Verify stdout/stderr capture works."""
         from flext_core import FlextUtilities
 
-        result = FlextUtilities.run_external_command(
+        result = FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
             [
                 "python",
                 "-c",
@@ -341,7 +349,7 @@ class TestPhase6Sprint1UtilitiesConversion:
         test_env_var = "TEST_FLEXT_VAR_UNIQUE_12345"
         test_env_value = "test_value_xyz"
 
-        result = FlextUtilities.run_external_command(
+        result = FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
             [
                 "python",
                 "-c",
@@ -361,7 +369,7 @@ class TestPhase6Sprint1UtilitiesConversion:
         """Verify command input is passed to stdin."""
         from flext_core import FlextUtilities
 
-        result = FlextUtilities.run_external_command(
+        result = FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
             ["cat"], capture_output=True, command_input="test input data\n"
         )
 
@@ -377,10 +385,12 @@ class TestPhase6Sprint1UtilitiesConversion:
 
         # Create temp directory
         with tempfile.TemporaryDirectory() as tmpdir:
-            result = FlextUtilities.run_external_command(
-                ["python", "-c", "import os; print(os.getcwd())"],
-                capture_output=True,
-                cwd=tmpdir,
+            result = (
+                FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
+                    ["python", "-c", "import os; print(os.getcwd())"],
+                    capture_output=True,
+                    cwd=tmpdir,
+                )
             )
 
             assert result.is_success, f"Command should succeed: {result.error}"
@@ -439,11 +449,11 @@ class TestPhase6Sprint1SourceCodeInspection:
         utilities_content = self.UTILITIES_PATH.read_text()
         tree = ast.parse(utilities_content)
 
-        # Find run_external_command
+        # Find FlextUtilities.CommandExecution.run_external_command
         for node in ast.walk(tree):
             if (
                 isinstance(node, ast.FunctionDef)
-                and node.name == "run_external_command"
+                and node.name == "FlextUtilities.CommandExecution.run_external_command"
             ):
                 # Check for try-finally structure
                 has_finally = False

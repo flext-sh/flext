@@ -61,7 +61,10 @@ class TestPhase6Sprint2PythonToolsConversion:
 
         # Find run_ruff_check method
         assert "def run_ruff_check(self, path: Path)" in content
-        assert "FlextUtilities.run_external_command" in content
+        assert (
+            "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
+            in content
+        )
         assert "subprocess.run" not in content
 
     def test_pylint_method_uses_flext_utilities(self) -> None:
@@ -70,7 +73,10 @@ class TestPhase6Sprint2PythonToolsConversion:
 
         # Find run_pylint_check method
         assert "def run_pylint_check(self, path: Path)" in content
-        assert "FlextUtilities.run_external_command" in content
+        assert (
+            "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
+            in content
+        )
 
     def test_timeout_expired_handlers_removed(self) -> None:
         """Verify subprocess.TimeoutExpired handlers are removed."""
