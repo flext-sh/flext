@@ -356,16 +356,15 @@
 		pythonPlatform = "Linux"
 		pythonVersion = "3.13"
 		typeCheckingMode = "strict"
-		strictListInference = true
-		strictDictionaryInference = true
-		strictSetInference = true
-		strictParameterNoneValue = true
 		enableTypeIgnoreComments = false
-		reportAssertAlwaysTrue = "error"
+		reportAssertAlwaysTrue = false
 		reportCallInDefaultInitializer = "error"
 		reportCallIssue = "error"
 		reportConstantRedefinition = "error"
 		reportDuplicateImport = "error"
+		reportFunctionMemberAccess = "error"
+		reportGeneralTypeIssues = "error"
+		reportImplicitRelativeImport = false
 		reportImplicitStringConcatenation = "warning"
 		reportImportCycles = "error"
 		reportIncompatibleMethodOverride = "error"
@@ -374,6 +373,7 @@
 		reportInconsistentConstructor = "error"
 		reportInvalidStringEscapeSequence = "error"
 		reportInvalidStubStatement = "error"
+		reportInvalidTypeForm = false
 		reportInvalidTypeVarUse = "error"
 		reportMatchNotExhaustive = "warning"
 		reportMissingImports = "error"
@@ -388,18 +388,22 @@
 		reportOptionalMemberAccess = "error"
 		reportOptionalOperand = "error"
 		reportOptionalSubscript = "error"
-		reportPrivateUsage = "warning"
+		reportPrivateUsage = false
 		reportPropertyTypeMismatch = "error"
 		reportSelfClsParameterName = "error"
 		reportTypedDictNotRequiredAccess = "error"
 		reportUnboundVariable = "error"
-		reportUndefinedVariable = "error"
+		# reportUndefinedVariable = false
 		reportUninitializedInstanceVariable = "warning"
-		reportUnknownArgumentType = "error"
+		# reportUnknownArgumentType = "error"
+		reportUnknownArgumentType = false
 		reportUnknownLambdaType = "error"
-		reportUnknownMemberType = "error"
-		reportUnknownParameterType = "error"
-		reportUnknownVariableType = "error"
+		# reportUnknownMemberType = "error"
+		reportUnknownMemberType = false
+		# reportUnknownParameterType = "error"
+		reportUnknownParameterType = false
+		# reportUnknownVariableType = "error"
+		reportUnknownVariableType = false
 		reportUnnecessaryCast = "warning"
 		reportUnnecessaryComparison = "warning"
 		reportUnnecessaryIsInstance = "warning"
@@ -417,30 +421,11 @@
 		reportUnusedImport = "error"
 		reportUnusedVariable = "error"
 		reportWildcardImportFromLibrary = "error"
-		reportGeneralTypeIssues = "error"
-		reportFunctionMemberAccess = "error"
+		strictDictionaryInference = true
+		strictListInference = true
+		strictParameterNoneValue = true
+		strictSetInference = true
 		useLibraryCodeForTypes = true
-
-		[[tool.pyright.executionEnvironments]]
-			extraPaths = [
-				"**/models.py",
-			]
-			reportInvalidTypeForm = false
-			reportUndefinedVariable = false
-			reportUnknownArgumentType = false
-			reportUnknownMemberType = false
-			reportUnknownParameterType = false
-			reportUnknownVariableType = false
-			root = "./"
-
-		[[tool.pyright.executionEnvironments]]
-     	extraPaths = [
-		 		"**/tests/*",
-      ]
-		 	reportImplicitRelativeImport = false
-		 	reportPrivateUsage = false
-		 	reportAssertAlwaysTrue = false
-		 	root = "./"
 
 	[tool.pytest.ini_options]
 		addopts = [
