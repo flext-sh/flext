@@ -62,7 +62,7 @@ class TestPhase6Sprint2PythonToolsConversion:
         # Find run_ruff_check method
         assert "def run_ruff_check(self, path: Path)" in content
         assert (
-            "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
+            "FlextUtilities.CommandExecution.run_external_command"
             in content
         )
         assert "subprocess.run" not in content
@@ -74,7 +74,7 @@ class TestPhase6Sprint2PythonToolsConversion:
         # Find run_pylint_check method
         assert "def run_pylint_check(self, path: Path)" in content
         assert (
-            "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
+            "FlextUtilities.CommandExecution.run_external_command"
             in content
         )
 

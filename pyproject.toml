@@ -308,6 +308,7 @@
 			redis = ">=5.0.0"
 			twisted = "^25.5.0"
 			types-pyyaml = "^6.0.12.20250809"
+beartype = "^0.22.5"
 
 		[tool.poetry.group.typings.dependencies]
 			aiofiles = "^24.1.0"

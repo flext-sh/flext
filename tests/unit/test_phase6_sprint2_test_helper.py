@@ -62,7 +62,7 @@ class TestPhase6Sprint2TestHelperConversion:
         # Find function and check conversion
         assert "def suggest_tests_from_coverage(project_path: Path)" in content
         assert (
-            "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
+            "FlextUtilities.CommandExecution.run_external_command"
             in content
         )
         assert "pytest" in content  # Should still run pytest
@@ -74,7 +74,7 @@ class TestPhase6Sprint2TestHelperConversion:
         # Find function and check conversion
         assert "def validate_test_execution(test_path: Path)" in content
         assert (
-            "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
+            "FlextUtilities.CommandExecution.run_external_command"
             in content
         )
 

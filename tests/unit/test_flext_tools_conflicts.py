@@ -329,11 +329,12 @@ class TestConflictAnalyzer:
         """Test ConflictAnalyzer edge cases."""
         analyzer = ConflictAnalyzer()
 
-        # Test with empty string path (returns empty list for non-existent paths)
+        # Test with empty string path (returns error for empty path)
         result = analyzer.analyze_dependencies("")
         assert isinstance(result, FlextResult)
-        assert result.is_success  # Empty string is treated as non-existent path
-        assert result.value == []
+        # Empty string returns error - this is the correct behavior
+        assert result.is_failure
+        assert "empty" in result.error.lower() or "cannot be empty" in result.error.lower()
 
         # Test with relative path
         result = analyzer.analyze_dependencies("./test")

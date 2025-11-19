@@ -151,6 +151,6 @@ class TestEcosystemValidationIntegration:
         # Test that StringIO and redirect_stdout work
         captured = io.StringIO()
         with redirect_stdout(captured):
-            pass
+            print("test output")
 
         assert captured.getvalue() == "test output\n"
