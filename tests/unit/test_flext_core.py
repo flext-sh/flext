@@ -95,8 +95,10 @@ class TestFlextConsolidated:
 
     def test_flext_result_unwrap_failure(self) -> None:
         """Test FlextResult unwrap on failure raises exception."""
+        from flext_core.exceptions import FlextExceptions
+
         result = FlextResult[str].fail("error")
-        with pytest.raises(Exception):
+        with pytest.raises(FlextExceptions.BaseError):
             result.unwrap()
 
     def test_flext_result_dual_access_api(self) -> None:
@@ -127,15 +129,18 @@ class TestFlextConsolidated:
 
     def test_flext_container_registration(self) -> None:
         """Test FlextContainer service registration."""
+        import uuid
         container = FlextContainer.get_global()
 
-        # Test registering a service
+        # Use unique key to avoid conflicts with other tests
+        unique_key = f"test_key_{uuid.uuid4().hex[:8]}"
         test_service = "test_service"
-        container.register("test_key", test_service)
+        register_result = container.register_service(unique_key, test_service)
+        assert register_result.is_success, f"Registration failed: {register_result.error}"
 
         # Test retrieving the service
-        retrieved = container.get("test_key")
-        assert retrieved.is_success
+        retrieved = container.get(unique_key)
+        assert retrieved.is_success, f"Retrieval failed: {retrieved.error}"
         assert retrieved.data == test_service
 
     # =============================================================================
@@ -164,8 +169,9 @@ class TestFlextConsolidated:
     def test_flext_constants_access(self) -> None:
         """Test FlextConstants access."""
         # Test platform constants
-        assert FlextConstants.FlextWeb.HTTP_OK is not None
-        assert FlextConstants.Platform.HTTP_STATUS_INTERNAL_ERROR is not None
+        assert FlextConstants.FlextWeb.HTTP_STATUS_MIN is not None
+        assert FlextConstants.FlextWeb.HTTP_STATUS_MAX is not None
+        assert FlextConstants.Platform.DEFAULT_HTTP_PORT is not None
 
         # Test logging constants
         assert FlextConstants.Logging.DEFAULT_LEVEL is not None
@@ -174,7 +180,7 @@ class TestFlextConsolidated:
     def test_flext_constants_immutability(self) -> None:
         """Test FlextConstants immutability."""
         # Constants should be accessible but not modifiable
-        original_value = FlextConstants.Platform.HTTP_STATUS_OK
+        original_value = FlextConstants.Platform.DEFAULT_HTTP_PORT
         assert original_value is not None
 
         # Verify it's a constant value
@@ -297,7 +303,9 @@ class TestFlextConsolidated:
                     self.logger.info("Service executing")
 
                     # Use container
-                    self._container.register("test", "value")
+                    register_result = self._container.register_service("test", "value")
+                    if register_result.is_failure:
+                        return FlextResult[dict[str, object]].fail(f"Registration failed: {register_result.error}")
 
                     # Return success result
                     return FlextResult[dict[str, object]].ok({

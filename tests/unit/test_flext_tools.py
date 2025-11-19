@@ -148,7 +148,7 @@ class TestFlextToolsConfigManager:
 
     def test_config_with_pathlib(self) -> None:
         """Test config with Path object."""
-        manager = config_manager.ConfigurationManager(Path("test_config.json"))
+        manager = config_manager.ConfigurationManager(config_path=Path("test_config.json"))
         result = manager.load_config()
         assert isinstance(result, FlextResult)
 
@@ -240,7 +240,8 @@ class TestFlextToolsPaths:
         result = service.execute()
         assert isinstance(result, FlextResult)
         assert result.is_success
-        assert isinstance(result.value, Path)
+        assert isinstance(result.unwrap(), bool)
+        assert result.unwrap() is True
 
     def test_should_ignore_path_functionality(self) -> None:
         """Test should_ignore_path functionality."""

@@ -49,8 +49,10 @@ class TestFlextCli:
 
         # Test that the CLI can be created and run
         # This is a basic test since the actual CLI execution is complex
-        # api property doesn't exist in FlextCli
-        assert cli.auth is not None
+        # Verify CLI has expected components
+        assert cli.config is not None
+        assert cli.formatters is not None
+        assert cli.core is not None
 
     @patch("flext_cli.cli.click")
     def test_cli_version_command(self, mock_click: MagicMock) -> None:
@@ -61,8 +63,10 @@ class TestFlextCli:
         mock_click.echo = MagicMock()
 
         # Test that the CLI can be created
-        # api property doesn't exist in FlextCli
-        assert cli.auth is not None
+        # Verify CLI has expected components
+        assert cli.config is not None
+        assert cli.formatters is not None
+        assert cli.core is not None
 
     def test_execute_returns_flext_result(self) -> None:
         """Test that execute returns FlextResult."""

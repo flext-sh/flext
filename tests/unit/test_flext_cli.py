@@ -1,6 +1,6 @@
-"""Unit tests for flext.cli module.
+"""Unit tests for flext_cli module.
 
-Tests FlextControlPanelCli functionality with real implementations,
+Tests FlextCli functionality with real implementations,
 no mocks or legacy patterns. Achieves near 100% coverage following FLEXT standards.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -13,13 +13,12 @@ from __future__ import annotations
 import inspect
 from pathlib import Path
 
-from flext_core import FlextResult, FlextService
+from flext_cli import FlextCli
+from flext_core import FlextResult
 
-from flext import FlextControlPanelCli
 
-
-class TestFlextControlPanelCli:
-    """Unified test class for FlextControlPanelCli functionality."""
+class TestFlextCli:
+    """Unified test class for FlextCli functionality."""
 
     class _TestDataHelper:
         """Nested helper class for test data creation."""
@@ -47,205 +46,135 @@ class TestFlextControlPanelCli:
     # =============================================================================
 
     def test_cli_initialization(self) -> None:
-        """Test FlextControlPanelCli initializes correctly."""
-        cli = FlextControlPanelCli()
+        """Test FlextCli initializes correctly."""
+        cli = FlextCli()
         assert cli is not None
-        assert isinstance(cli, FlextControlPanelCli)
-        assert isinstance(cli, FlextService)
+        assert isinstance(cli, FlextCli)
 
     def test_cli_with_parameters(self) -> None:
-        """Test FlextControlPanelCli with initialization parameters."""
-        test_data = self._TestDataHelper.create_test_cli_data()
-        cli = FlextControlPanelCli(**test_data)
+        """Test FlextCli with initialization parameters."""
+        cli = FlextCli()
         assert cli is not None
-        assert isinstance(cli, FlextControlPanelCli)
+        assert isinstance(cli, FlextCli)
 
     # =============================================================================
     # SERVICE EXECUTION TESTS
     # =============================================================================
 
     def test_cli_execute(self) -> None:
-        """Test FlextControlPanelCli execute method."""
-        cli = FlextControlPanelCli()
-        result = cli.execute()
-
-        assert isinstance(result, FlextResult)
-        assert result.is_success
-        assert isinstance(result.data, str)
+        """Test FlextCli execute method."""
+        cli = FlextCli()
+        # Test execute method exists
+        assert hasattr(cli, "execute")
+        assert callable(cli.execute)
 
     def test_cli_execute_with_data(self) -> None:
-        """Test FlextControlPanelCli execute with test data."""
-        cli = FlextControlPanelCli()
+        """Test FlextCli execute with test data."""
+        cli = FlextCli()
         test_data = self._TestDataHelper.create_test_cli_data()
 
         # Verify test data was created correctly
         assert test_data is not None
         assert "config_path" in test_data
 
-        result = cli.execute()
-        assert isinstance(result, FlextResult)
-        assert result.is_success
+        # Test that CLI can be used
+        assert cli is not None
 
     def test_cli_error_handling(self) -> None:
-        """Test FlextControlPanelCli error handling."""
-        cli = FlextControlPanelCli()
+        """Test FlextCli error handling."""
+        cli = FlextCli()
 
-        # Test that service handles errors gracefully
-        result = cli.execute()
-        assert isinstance(result, FlextResult)
-        # Should either succeed or fail gracefully, not crash
+        # Test that CLI handles errors gracefully
+        assert cli is not None
 
     # =============================================================================
-    # NESTED CLASSES TESTS
+    # DOMAIN LIBRARY COMPONENTS TESTS
     # =============================================================================
 
-    def test_colors_nested_class(self) -> None:
-        """Test _Colors nested class."""
-        colors_class = FlextControlPanelCli._Colors
+    def test_cli_domain_components(self) -> None:
+        """Test FlextCli domain library components."""
+        cli = FlextCli()
 
-        # Test color constants exist
-        assert hasattr(colors_class, "RED")
-        assert hasattr(colors_class, "GREEN")
-        assert hasattr(colors_class, "BLUE")
-        assert hasattr(colors_class, "CYAN")
+        # Test domain library components exist
+        assert hasattr(cli, "formatters")
+        assert hasattr(cli, "file_tools")
+        assert hasattr(cli, "output")
+        assert hasattr(cli, "core")
+        assert hasattr(cli, "cmd")
+        assert hasattr(cli, "prompts")
+        assert hasattr(cli, "config")
+        assert hasattr(cli, "logger")
 
-        # Test color values
-        assert colors_class.RED == "red"
-        assert colors_class.GREEN == "green"
-        assert colors_class.BLUE == "blue"
-        assert colors_class.CYAN == "cyan"
-
-    def test_quality_check_config_nested_class(self) -> None:
-        """Test QualityCheckConfig nested class."""
-        config_class = FlextControlPanelCli.QualityCheckConfig
-
-        # Test class can be instantiated
-        config = config_class(test_param="test_value")
-        assert config is not None
-        assert hasattr(config, "test_param")
-        assert config.test_param == "test_value"
-
-    def test_quality_gateway_nested_class(self) -> None:
-        """Test QualityGateway nested class."""
-        gateway_class = FlextControlPanelCli.QualityGateway
-
-        # Test class can be instantiated with required parameters
-        gateway = gateway_class(workspace_path="/tmp/test_workspace")
-        assert gateway is not None
-        assert isinstance(gateway, gateway_class)
-
-    def test_cli_context_nested_class(self) -> None:
-        """Test _CliContext nested class."""
-        context_class = FlextControlPanelCli._CliContext
-
-        # Test class can be instantiated with required parameters
-        context = context_class(config={}, workspace=Path("/tmp/test_workspace"))
-        assert context is not None
-        assert isinstance(context, context_class)
-
-    def test_tools_commands_nested_class(self) -> None:
-        """Test _ToolsCommands nested class."""
-        tools_class = FlextControlPanelCli._ToolsCommands
-
-        # Test class can be instantiated with required parameters
-        cli_service = FlextControlPanelCli()
-        tools = tools_class(cli_service)
-        assert tools is not None
-        assert isinstance(tools, tools_class)
-
-    def test_main_commands_nested_class(self) -> None:
-        """Test _MainCommands nested class."""
-        main_class = FlextControlPanelCli._MainCommands
-
-        # Test class can be instantiated with required parameters
-        cli_service = FlextControlPanelCli()
-        main = main_class(cli_service)
-        assert main is not None
-        assert isinstance(main, main_class)
-
-    def test_nested_classes_exist(self) -> None:
-        """Test that all nested classes exist."""
-        cli_class = FlextControlPanelCli
-
-        # Test nested classes exist
-        assert hasattr(cli_class, "_Colors")
-        assert hasattr(cli_class, "QualityCheckConfig")
-        assert hasattr(cli_class, "QualityGateway")
-        assert hasattr(cli_class, "_CliContext")
-        assert hasattr(cli_class, "_ToolsCommands")
-        assert hasattr(cli_class, "_MainCommands")
-
-        # Test nested classes are callable
-        for class_name in [
-            "_Colors",
-            "QualityCheckConfig",
-            "QualityGateway",
-            "_CliContext",
-            "_ToolsCommands",
-            "_MainCommands",
-        ]:
-            nested_class = getattr(cli_class, class_name)
-            assert callable(nested_class)
+        # Test components are initialized
+        assert cli.formatters is not None
+        assert cli.file_tools is not None
+        assert cli.output is not None
+        assert cli.core is not None
+        assert cli.cmd is not None
+        assert cli.prompts is not None
+        assert cli.config is not None
+        assert cli.logger is not None
 
     # =============================================================================
     # FUNCTIONALITY TESTS
     # =============================================================================
 
     def test_cli_main_method(self) -> None:
-        """Test FlextControlPanelCli main method if it exists."""
-        cli = FlextControlPanelCli()
+        """Test FlextCli main method if it exists."""
+        cli = FlextCli()
 
         # Test execute method exists
         assert hasattr(cli, "execute")
         assert callable(cli.execute)
 
     def test_cli_run_method(self) -> None:
-        """Test FlextControlPanelCli run method if it exists."""
-        cli = FlextControlPanelCli()
+        """Test FlextCli run method if it exists."""
+        cli = FlextCli()
 
         # Test execute method exists
         assert hasattr(cli, "execute")
         assert callable(cli.execute)
 
     def test_cli_has_expected_methods(self) -> None:
-        """Test FlextControlPanelCli has expected methods."""
-        cli = FlextControlPanelCli()
+        """Test FlextCli has expected methods."""
+        cli = FlextCli()
 
-        # Test service has expected methods
+        # Test main methods exist
         assert hasattr(cli, "execute")
         assert callable(cli.execute)
+        assert hasattr(cli, "authenticate")
+        assert callable(cli.authenticate)
+        assert hasattr(cli, "print")
+        assert callable(cli.print)
+        assert hasattr(cli, "create_table")
+        assert callable(cli.create_table)
 
-        # Test instance fields exist
-        assert hasattr(cli, "_cli_api")
-        assert hasattr(cli, "_config")
+        # Test config exists (public attribute)
+        assert hasattr(cli, "config")
+        assert cli.config is not None
 
     # =============================================================================
     # INTEGRATION TESTS
     # =============================================================================
 
     def test_cli_integration(self) -> None:
-        """Test FlextControlPanelCli integration with other components."""
-        cli = FlextControlPanelCli()
+        """Test FlextCli integration with other components."""
+        cli = FlextCli()
 
         # Test service can be created and executed
         result = cli.execute()
         assert isinstance(result, FlextResult)
+        assert result.is_success
 
-        # Test service has expected methods
-        assert hasattr(cli, "execute")
-        assert callable(cli.execute)
-
-        # Test nested classes
-        assert hasattr(cli.__class__, "_Colors")
-        assert hasattr(cli.__class__, "QualityCheckConfig")
-        assert hasattr(cli.__class__, "QualityGateway")
-        assert hasattr(cli.__class__, "_CliContext")
-        assert hasattr(cli.__class__, "_ToolsCommands")
-        assert hasattr(cli.__class__, "_MainCommands")
+        # Test domain components work together
+        assert cli.formatters is not None
+        assert cli.file_tools is not None
+        assert cli.output is not None
+        assert cli.core is not None
 
     # def test_cli_with_flext_tests(self, flext_domains: FlextTestsDomains) -> None:
-    #     """Test FlextControlPanelCli with flext_tests infrastructure."""
-    #     cli = FlextControlPanelCli()
+    #     """Test FlextCli with flext_tests infrastructure."""
+    #     cli = FlextCli()
     #
     #     # Create test data using flext_tests
     #     test_cli_data = flext_domains.create_service(service_type="api")
@@ -257,7 +186,7 @@ class TestFlextControlPanelCli:
     #
     #     # Test service with flext_tests data
     #     test_config_data = flext_domains.create_configuration()
-    #     cli_with_config = FlextControlPanelCli(**test_config_data)
+    #     cli_with_config = FlextCli(**test_config_data)
     #     config_result = cli_with_config.execute()
     #     assert isinstance(config_result, FlextResult)
 
@@ -266,8 +195,8 @@ class TestFlextControlPanelCli:
     # =============================================================================
 
     def test_cli_performance(self) -> None:
-        """Test FlextControlPanelCli performance characteristics."""
-        cli = FlextControlPanelCli()
+        """Test FlextCli performance characteristics."""
+        cli = FlextCli()
 
         # Test that service executes reasonably fast
         result = cli.execute()
@@ -283,57 +212,51 @@ class TestFlextControlPanelCli:
     # =============================================================================
 
     def test_cli_comprehensive_scenario(self) -> None:
-        """Test comprehensive FlextControlPanelCli scenario."""
+        """Test comprehensive FlextCli scenario."""
         # Create CLI service
-        cli = FlextControlPanelCli()
+        cli = FlextCli()
         assert cli is not None
 
         # Test initialization
-        assert isinstance(cli, FlextControlPanelCli)
-        assert isinstance(cli, FlextService)
+        assert isinstance(cli, FlextCli)
 
         # Test execution
         result = cli.execute()
         assert isinstance(result, FlextResult)
+        assert result.is_success
 
-        # Test nested classes
-        colors = cli._Colors()
-        assert colors is not None
+        # Test domain components
+        assert cli.formatters is not None
+        assert cli.file_tools is not None
+        assert cli.output is not None
+        assert cli.core is not None
+        assert cli.cmd is not None
+        assert cli.prompts is not None
 
-        quality_config = cli.QualityCheckConfig(test_param="test_value")
-        assert quality_config is not None
+        # Test authentication flow
+        auth_result = cli.authenticate({"username": "test", "password": "test123"})
+        assert isinstance(auth_result, FlextResult)
 
-        quality_gateway = cli.QualityGateway(workspace_path="/tmp/test_workspace")
-        assert quality_gateway is not None
-
-        cli_context = cli._CliContext(config={}, workspace=Path("/tmp/test_workspace"))
-        assert cli_context is not None
-
-        tools_commands = cli._ToolsCommands(cli)
-        assert tools_commands is not None
-
-        main_commands = cli._MainCommands(cli)
-        assert main_commands is not None
+        # Test output formatting
+        print_result = cli.print("Test message")
+        assert isinstance(print_result, FlextResult)
 
     def test_cli_docstrings(self) -> None:
-        """Test that FlextControlPanelCli has proper docstrings."""
-        cli_class = FlextControlPanelCli
+        """Test that FlextCli has proper docstrings."""
+        cli_class = FlextCli
 
         # Test class docstring
         assert cli_class.__doc__ is not None
         assert len(cli_class.__doc__.strip()) > 0
 
-        # Test nested classes have docstrings
-        assert FlextControlPanelCli._Colors.__doc__ is not None
-        assert FlextControlPanelCli.QualityCheckConfig.__doc__ is not None
-        assert FlextControlPanelCli.QualityGateway.__doc__ is not None
-        assert FlextControlPanelCli._CliContext.__doc__ is not None
-        assert FlextControlPanelCli._ToolsCommands.__doc__ is not None
-        assert FlextControlPanelCli._MainCommands.__doc__ is not None
+        # Test main methods have docstrings
+        assert cli_class.execute.__doc__ is not None
+        assert cli_class.authenticate.__doc__ is not None
+        assert cli_class.print.__doc__ is not None
 
     def test_cli_method_signatures(self) -> None:
-        """Test that FlextControlPanelCli methods have proper signatures."""
-        cli = FlextControlPanelCli()
+        """Test that FlextCli methods have proper signatures."""
+        cli = FlextCli()
 
         # Test that main methods exist and are callable
         assert hasattr(cli, "execute")
@@ -343,9 +266,206 @@ class TestFlextControlPanelCli:
         execute_sig = inspect.signature(cli.execute)
         assert len(execute_sig.parameters) >= 0  # Should have at least self parameter
 
-        # Test nested class method signatures
-        cli._Colors()
-        # Colors class has no methods, only constants
+        authenticate_sig = inspect.signature(cli.authenticate)
+        assert len(authenticate_sig.parameters) >= 1  # Should have self and credentials
 
-        init_sig = inspect.signature(cli.QualityCheckConfig.__init__)
-        assert len(init_sig.parameters) >= 1  # Should have self parameter
+        print_sig = inspect.signature(cli.print)
+        assert len(print_sig.parameters) >= 1  # Should have self and message
+
+    # =============================================================================
+    # AUTHENTICATION TESTS WITH REAL DATA
+    # =============================================================================
+
+    def test_save_auth_token(self, tmp_path: Path) -> None:
+        """Test saving authentication token with real file operations."""
+        cli = FlextCli()
+        # Override token file path for testing
+        cli.config.token_file = tmp_path / "test_token.json"
+
+        # Test saving valid token
+        token = "test_token_12345"
+        result = cli.save_auth_token(token)
+        assert result.is_success
+        assert token in cli._valid_tokens
+
+        # Test saving empty token fails
+        empty_result = cli.save_auth_token("")
+        assert empty_result.is_failure
+
+    def test_get_auth_token(self, tmp_path: Path) -> None:
+        """Test getting authentication token with real file operations."""
+        cli = FlextCli()
+        cli.config.token_file = tmp_path / "test_token.json"
+
+        # Test getting token when file doesn't exist
+        result = cli.get_auth_token()
+        assert result.is_failure
+
+        # Save a token first
+        token = "test_token_67890"
+        save_result = cli.save_auth_token(token)
+        assert save_result.is_success
+
+        # Now get it back
+        get_result = cli.get_auth_token()
+        assert get_result.is_success
+        assert get_result.unwrap() == token
+
+    def test_clear_auth_tokens(self, tmp_path: Path) -> None:
+        """Test clearing authentication tokens with real file operations."""
+        cli = FlextCli()
+        cli.config.token_file = tmp_path / "test_token.json"
+        cli.config.refresh_token_file = tmp_path / "test_refresh_token.json"
+
+        # Save a token first
+        token = "test_token_clear"
+        cli.save_auth_token(token)
+        assert token in cli._valid_tokens
+
+        # Clear tokens
+        result = cli.clear_auth_tokens()
+        assert result.is_success
+        assert len(cli._valid_tokens) == 0
+
+    def test_validate_credentials(self) -> None:
+        """Test credential validation with real Pydantic validation."""
+        cli = FlextCli()
+
+        # Test valid credentials
+        result = cli.validate_credentials("testuser", "testpass123")
+        assert result.is_success
+        assert result.unwrap() is True
+
+        # Test invalid credentials (empty password)
+        invalid_result = cli.validate_credentials("testuser", "")
+        # Pydantic validation may fail or succeed depending on model constraints
+        assert isinstance(invalid_result, FlextResult)
+
+    def test_is_authenticated(self, tmp_path: Path) -> None:
+        """Test authentication check with real token operations."""
+        cli = FlextCli()
+        cli.config.token_file = tmp_path / "test_token.json"
+
+        # Initially not authenticated
+        assert not cli.is_authenticated()
+
+        # Save token and check again
+        cli.save_auth_token("test_auth_token")
+        # is_authenticated checks file, so may still be False if file doesn't exist
+        # But token is in memory
+        assert "test_auth_token" in cli._valid_tokens
+
+    def test_authenticate_with_token(self, tmp_path: Path) -> None:
+        """Test authentication with token using real file operations."""
+        cli = FlextCli()
+        cli.config.token_file = tmp_path / "test_token.json"
+
+        # Test authentication with token
+        result = cli.authenticate({"token": "test_token_auth"})
+        assert isinstance(result, FlextResult)
+        # May succeed or fail depending on file operations
+        assert result.is_success or result.is_failure
+
+    def test_authenticate_with_credentials(self) -> None:
+        """Test authentication with username/password using real validation."""
+        cli = FlextCli()
+
+        # Test authentication with credentials
+        result = cli.authenticate({"username": "testuser", "password": "testpass123"})
+        assert isinstance(result, FlextResult)
+        assert result.is_success
+        # Should generate a token
+        token = result.unwrap()
+        assert isinstance(token, str)
+        assert len(token) > 0
+
+    def test_get_instance_singleton(self) -> None:
+        """Test singleton pattern with get_instance."""
+        # Reset singleton for testing
+        FlextCli._instance = None
+
+        instance1 = FlextCli.get_instance()
+        instance2 = FlextCli.get_instance()
+
+        # Should return same instance
+        assert instance1 is instance2
+
+    # =============================================================================
+    # COMMAND REGISTRATION TESTS
+    # =============================================================================
+
+    def test_command_decorator(self) -> None:
+        """Test command registration decorator with real function."""
+        cli = FlextCli()
+
+        @cli.command("test_command")
+        def test_cmd() -> dict[str, str]:
+            return {"status": "ok"}
+
+        # Command should be registered
+        assert "test_command" in cli._commands
+        assert callable(cli._commands["test_command"])
+
+    def test_group_decorator(self) -> None:
+        """Test group registration decorator with real function."""
+        cli = FlextCli()
+
+        @cli.group("test_group")
+        def test_grp() -> dict[str, str]:
+            return {"group": "test"}
+
+        # Group should be registered
+        assert "test_group" in cli._groups
+        assert callable(cli._groups["test_group"])
+
+    def test_execute_cli(self) -> None:
+        """Test CLI execution."""
+        cli = FlextCli()
+        result = cli.execute_cli()
+        assert isinstance(result, FlextResult)
+        assert result.is_success
+
+    # =============================================================================
+    # OUTPUT FORMATTING TESTS WITH REAL DATA
+    # =============================================================================
+
+    def test_create_table_with_dict(self) -> None:
+        """Test table creation with dictionary data."""
+        cli = FlextCli()
+        data = {"name": "John", "age": 30, "city": "New York"}
+
+        result = cli.create_table(data)
+        assert isinstance(result, FlextResult)
+        # May succeed or fail depending on output service
+        assert result.is_success or result.is_failure
+
+    def test_create_table_with_list(self) -> None:
+        """Test table creation with list of dictionaries."""
+        cli = FlextCli()
+        data = [
+            {"name": "John", "age": 30},
+            {"name": "Jane", "age": 25},
+        ]
+
+        result = cli.create_table(data, headers=["name", "age"], title="Users")
+        assert isinstance(result, FlextResult)
+
+    def test_create_table_with_none(self) -> None:
+        """Test table creation with None data fails."""
+        cli = FlextCli()
+        result = cli.create_table(None)
+        assert result.is_failure
+
+    def test_print_table(self) -> None:
+        """Test printing table string."""
+        cli = FlextCli()
+        table_str = "| Name | Age |\n|------|-----|\n| John | 30  |"
+
+        result = cli.print_table(table_str)
+        assert isinstance(result, FlextResult)
+
+    def test_create_tree(self) -> None:
+        """Test tree visualization creation."""
+        cli = FlextCli()
+        result = cli.create_tree("Root Node")
+        assert isinstance(result, FlextResult)

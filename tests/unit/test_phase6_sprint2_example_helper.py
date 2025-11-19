@@ -62,7 +62,7 @@ class TestPhase6Sprint2ExampleHelperConversion:
         # Find function and check conversion
         assert "def validate_examples_directory(" in content
         assert (
-            "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
+            "FlextUtilities.CommandExecution.run_external_command"
             in content
         )
         assert "python3" in content  # Should still run python3
@@ -74,7 +74,7 @@ class TestPhase6Sprint2ExampleHelperConversion:
         # Find function and check conversion
         assert "def validate_example_imports(" in content
         assert (
-            "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
+            "FlextUtilities.CommandExecution.run_external_command"
             in content
         )
 
@@ -85,7 +85,7 @@ class TestPhase6Sprint2ExampleHelperConversion:
         # Find function and check conversion
         assert "def run_example_safely(" in content
         assert (
-            "FlextUtilities.FlextUtilities.CommandExecution.run_external_command"
+            "FlextUtilities.CommandExecution.run_external_command"
             in content
         )
 

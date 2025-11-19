@@ -108,12 +108,13 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_app_execution(self) -> None:
         """Test FlextApiApp execution functionality."""
-        # Test that API app class has execution capabilities
-        assert (
-            hasattr(FlextApiApp, "execute")
-            or hasattr(FlextApiApp, "run")
-            or hasattr(FlextApiApp, "main")
-        )
+        # Test that API app class has creation capabilities
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        app = FlextApiApp.create(config)
+        assert app is not None
+        assert hasattr(app, "openapi")
 
     def test_flext_api_app_response_building(self) -> None:
         """Test FlextApiApp response building."""
@@ -154,12 +155,10 @@ class TestFlextApiConsolidated:
     def test_flext_api_integration(self) -> None:
         """Test flext-api components working together."""
         # Create API configuration
-        config = FlextApiConfig(base_url="https://test-api.com")
-
-        # Create API client
+        from flext_api.client import FlextApiClient
         from flext_api.config import FlextApiConfig
 
-        config = FlextApiConfig()
+        config = FlextApiConfig(base_url="https://test-api.com")
         client = FlextApiClient(config)
 
         # Test API app class exists
@@ -172,7 +171,11 @@ class TestFlextApiConsolidated:
 
     def test_flext_api_request_handling(self) -> None:
         """Test API request handling functionality."""
-        FlextApiClient()
+        from flext_api.config import FlextApiConfig
+
+        config = FlextApiConfig()
+        client = FlextApiClient(config)
+        assert client is not None
 
         # Test request data creation
         request_data = self._TestDataHelper.create_request_data()
@@ -382,12 +385,10 @@ class TestFlextApiConsolidated:
         config = FlextApiConfig()
         client = FlextApiClient(config)
 
-        # Test timeout handling
-        assert (
-            hasattr(client, "timeout")
-            or hasattr(client, "set_timeout")
-            or hasattr(client, "handle_timeout")
-        )
+        # Test timeout property access
+        assert hasattr(client, "timeout")
+        assert isinstance(client.timeout, float)
+        assert client.timeout > 0
 
     # =============================================================================
     # API AUTHENTICATION TESTS
