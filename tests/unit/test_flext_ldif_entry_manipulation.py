@@ -23,9 +23,7 @@ class TestEntryManipulationServices:
         parsed_user_entry: FlextLdifModels.Entry,
     ) -> None:
         """Test getting attribute from entry successfully."""
-        result = EntryManipulationServices.get_entry_attribute(
-            parsed_user_entry, "cn"
-        )
+        result = EntryManipulationServices.get_entry_attribute(parsed_user_entry, "cn")
 
         assert result.is_success, f"Should get attribute: {result.error}"
         value = result.unwrap()
@@ -53,7 +51,10 @@ class TestEntryManipulationServices:
 
     def test_normalize_attribute_value_list(self) -> None:
         """Test normalizing list attribute value."""
-        result = EntryManipulationServices.normalize_attribute_value(["first", "second"])
+        result = EntryManipulationServices.normalize_attribute_value([
+            "first",
+            "second",
+        ])
 
         assert result.is_success, f"Should normalize list: {result.error}"
         assert result.unwrap() == "first"

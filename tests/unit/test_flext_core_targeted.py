@@ -173,6 +173,7 @@ class TestFlextTargeted:
 
     def test_flext_result_pipeline(self) -> None:
         """Test pipeline composition."""
+
         def double(x: int) -> FlextResult[int]:
             return FlextResult[int].ok(x * 2)
 
@@ -187,6 +188,7 @@ class TestFlextTargeted:
 
     def test_flext_result_traverse(self) -> None:
         """Test traverse operation."""
+
         def double(x: int) -> FlextResult[int]:
             return FlextResult[int].ok(x * 2)
 
@@ -304,7 +306,9 @@ class TestFlextTargeted:
         # validate_pipeline returns FlextResult[bool]
         assert isinstance(pipeline_valid, FlextResult)
         # Check if validation passed (is_success indicates validation passed)
-        assert pipeline_valid.is_success or pipeline_valid.is_failure  # Just verify it returns a result
+        assert (
+            pipeline_valid.is_success or pipeline_valid.is_failure
+        )  # Just verify it returns a result
 
         # Test email validation using Pydantic v2 EmailStr
         adapter = TypeAdapter(EmailStr)

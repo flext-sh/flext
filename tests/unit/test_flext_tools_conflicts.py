@@ -334,7 +334,9 @@ class TestConflictAnalyzer:
         assert isinstance(result, FlextResult)
         # Empty string returns error - this is the correct behavior
         assert result.is_failure
-        assert "empty" in result.error.lower() or "cannot be empty" in result.error.lower()
+        assert (
+            "empty" in result.error.lower() or "cannot be empty" in result.error.lower()
+        )
 
         # Test with relative path
         result = analyzer.analyze_dependencies("./test")

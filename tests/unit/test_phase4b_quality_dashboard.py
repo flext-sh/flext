@@ -174,11 +174,11 @@ class TestQualityDashboardIntegration:
         script_path = (
             Path(__file__).parent.parent.parent / "scripts" / "quality_dashboard.py"
         )
-        
+
         # Skip test if file doesn't exist
         if not script_path.exists():
             return
-        
+
         source_code = script_path.read_text()
 
         # Count subprocess references (should only be in comments)

@@ -61,10 +61,7 @@ class TestPhase6Sprint2ExampleHelperConversion:
 
         # Find function and check conversion
         assert "def validate_examples_directory(" in content
-        assert (
-            "FlextUtilities.CommandExecution.run_external_command"
-            in content
-        )
+        assert "FlextUtilities.CommandExecution.run_external_command" in content
         assert "python3" in content  # Should still run python3
 
     def test_validate_example_imports_converted(self) -> None:
@@ -73,10 +70,7 @@ class TestPhase6Sprint2ExampleHelperConversion:
 
         # Find function and check conversion
         assert "def validate_example_imports(" in content
-        assert (
-            "FlextUtilities.CommandExecution.run_external_command"
-            in content
-        )
+        assert "FlextUtilities.CommandExecution.run_external_command" in content
 
     def test_run_example_safely_converted(self) -> None:
         """Verify run_example_safely uses FlextUtilities."""
@@ -84,10 +78,7 @@ class TestPhase6Sprint2ExampleHelperConversion:
 
         # Find function and check conversion
         assert "def run_example_safely(" in content
-        assert (
-            "FlextUtilities.CommandExecution.run_external_command"
-            in content
-        )
+        assert "FlextUtilities.CommandExecution.run_external_command" in content
 
     def test_timeout_expired_handlers_removed(self) -> None:
         """Verify subprocess.TimeoutExpired handlers are removed."""

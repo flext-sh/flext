@@ -303,14 +303,18 @@ class TestFlextCliPromptsConvenienceMethods:
         prompts = FlextCliPrompts()
         result = prompts.print_error("Error message")
         assert result.is_success
-        assert result.unwrap() is True  # print_error returns FlextResult[bool] with True
+        assert (
+            result.unwrap() is True
+        )  # print_error returns FlextResult[bool] with True
 
     def test_print_warning(self) -> None:
         """Test print warning method."""
         prompts = FlextCliPrompts()
         result = prompts.print_warning("Warning message")
         assert result.is_success
-        assert result.unwrap() is True  # print_warning returns FlextResult[bool] with True
+        assert (
+            result.unwrap() is True
+        )  # print_warning returns FlextResult[bool] with True
 
     def test_print_info(self) -> None:
         """Test print info method."""

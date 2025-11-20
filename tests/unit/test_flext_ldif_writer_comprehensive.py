@@ -89,7 +89,9 @@ sn: Test
 
         # Verify attributes are sorted alphabetically
         lines = result.split("\n")
-        dn_line_idx = next((i for i, line in enumerate(lines) if line.startswith("dn:")), -1)
+        dn_line_idx = next(
+            (i for i, line in enumerate(lines) if line.startswith("dn:")), -1
+        )
         assert dn_line_idx >= 0, "DN line should exist"
 
         # Find attribute lines after DN (excluding continuation lines)
@@ -135,12 +137,20 @@ emptyAttr:
         result = post_processor.apply_format_options(ldif_content, format_options)
 
         # Verify empty values are removed
-        assert "description: " not in result or "description:" not in result.split("\n")[
-            result.split("\n").index("dn: cn=test,dc=example,dc=com") + 1 :
-        ], "Empty description should be removed"
-        assert "emptyAttr: " not in result or "emptyAttr:" not in result.split("\n")[
-            result.split("\n").index("dn: cn=test,dc=example,dc=com") + 1 :
-        ], "Empty attr should be removed"
+        assert (
+            "description: " not in result
+            or "description:"
+            not in result.split("\n")[
+                result.split("\n").index("dn: cn=test,dc=example,dc=com") + 1 :
+            ]
+        ), "Empty description should be removed"
+        assert (
+            "emptyAttr: " not in result
+            or "emptyAttr:"
+            not in result.split("\n")[
+                result.split("\n").index("dn: cn=test,dc=example,dc=com") + 1 :
+            ]
+        ), "Empty attr should be removed"
 
         # Verify non-empty values remain
         assert "cn: test" in result, "Non-empty cn should remain"
@@ -250,7 +260,9 @@ description: {long_value}
         )
 
         output = StringIO()
-        quirk_result = serializer._get_entry_quirk(FlextLdifConstants.ServerTypes.OPENLDAP)
+        quirk_result = serializer._get_entry_quirk(
+            FlextLdifConstants.ServerTypes.OPENLDAP
+        )
         assert quirk_result.is_success, f"Failed to get quirk: {quirk_result.error}"
         entry_quirk = quirk_result.unwrap()
 
@@ -286,7 +298,9 @@ description: {long_value}
         )
 
         output = StringIO()
-        quirk_result = serializer._get_entry_quirk(FlextLdifConstants.ServerTypes.OPENLDAP)
+        quirk_result = serializer._get_entry_quirk(
+            FlextLdifConstants.ServerTypes.OPENLDAP
+        )
         assert quirk_result.is_success, f"Failed to get quirk: {quirk_result.error}"
         entry_quirk = quirk_result.unwrap()
 
@@ -393,9 +407,7 @@ description: {long_value}
         assert result.is_failure, "Should fail for nonexistent server"
         assert result.error is not None, "Error message should be provided"
 
-    def test_writer_execute_health_check(
-        self, flext_ldif_instance: FlextLdif
-    ) -> None:
+    def test_writer_execute_health_check(self, flext_ldif_instance: FlextLdif) -> None:
         """Test writer execute method (health check)."""
         writer = FlextLdifWriter()
 
@@ -405,4 +417,6 @@ description: {long_value}
 
         response = result.unwrap()
         assert hasattr(response, "statistics"), "Response should have statistics"
-        assert response.statistics.total_entries == 0, "Health check should have 0 entries"
+        assert response.statistics.total_entries == 0, (
+            "Health check should have 0 entries"
+        )

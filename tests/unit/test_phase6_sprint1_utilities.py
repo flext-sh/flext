@@ -63,7 +63,9 @@ class TestPhase6Sprint1UtilitiesConversion:
         # Import the wrapper class - it's nested inside FlextUtilities
         from flext_core.utilities import FlextUtilities
 
-        wrapper_fields = {f.name for f in fields(FlextUtilities._CompletedProcessWrapper)}
+        wrapper_fields = {
+            f.name for f in fields(FlextUtilities._CompletedProcessWrapper)
+        }
         required_fields = {"returncode", "stdout", "stderr", "args"}
 
         assert required_fields.issubset(wrapper_fields), (
@@ -92,7 +94,9 @@ class TestPhase6Sprint1UtilitiesConversion:
                         if item.returns:
                             annotation_str = ast.unparse(item.returns)
                             # Should NOT contain subprocess.CompletedProcess
-                            assert "subprocess.CompletedProcess" not in annotation_str, (
+                            assert (
+                                "subprocess.CompletedProcess" not in annotation_str
+                            ), (
                                 f"Return type still references subprocess.CompletedProcess: {annotation_str}"
                             )
                             # Should contain _CompletedProcessWrapper
@@ -103,7 +107,9 @@ class TestPhase6Sprint1UtilitiesConversion:
                 if found_method:
                     break
 
-        assert found_method, "run_external_command method not found in CommandExecution class"
+        assert found_method, (
+            "run_external_command method not found in CommandExecution class"
+        )
 
     def test_subprocess_timeout_expired_handler_removed(self) -> None:
         """Verify subprocess.TimeoutExpired exception handler removed."""
@@ -132,7 +138,9 @@ class TestPhase6Sprint1UtilitiesConversion:
                 if found_method:
                     break
 
-        assert found_method, "run_external_command method not found in CommandExecution class"
+        assert found_method, (
+            "run_external_command method not found in CommandExecution class"
+        )
 
     def test_threading_used_for_timeout(self) -> None:
         """Verify threading is used for timeout handling."""
@@ -221,9 +229,10 @@ class TestPhase6Sprint1UtilitiesConversion:
         utilities_content = self.UTILITIES_PATH.read_text()
 
         # Should have return statements using FlextResult with _CompletedProcessWrapper
-        assert "FlextResult" in utilities_content and "_CompletedProcessWrapper" in utilities_content, (
-            "Return type should be FlextResult with _CompletedProcessWrapper"
-        )
+        assert (
+            "FlextResult" in utilities_content
+            and "_CompletedProcessWrapper" in utilities_content
+        ), "Return type should be FlextResult with _CompletedProcessWrapper"
 
     def test_no_subprocess_called_process_error_handling(self) -> None:
         """Verify CalledProcessError replaced with FlextResult error handling."""
@@ -259,7 +268,9 @@ class TestPhase6Sprint1UtilitiesConversion:
                 if found_method:
                     break
 
-        assert found_method, "run_external_command method not found in CommandExecution class"
+        assert found_method, (
+            "run_external_command method not found in CommandExecution class"
+        )
 
     def test_os_getcwd_and_chdir_used(self) -> None:
         """Verify os.getcwd() and os.chdir() for directory management."""
@@ -467,9 +478,10 @@ class TestPhase6Sprint1SourceCodeInspection:
             "subprocess.Popen not found - command execution should use subprocess.Popen"
         )
         # Verify threading timeout handling exists
-        assert "threading.Thread" in utilities_content and "thread.join(timeout=" in utilities_content, (
-            "Threading timeout handling not found in command execution"
-        )
+        assert (
+            "threading.Thread" in utilities_content
+            and "thread.join(timeout=" in utilities_content
+        ), "Threading timeout handling not found in command execution"
 
     def test_context_restoration_guaranteed(self) -> None:
         """Verify working directory is always restored (finally block)."""
@@ -490,8 +502,8 @@ class TestPhase6Sprint1SourceCodeInspection:
                         # Check that os.chdir is in finally
                         finally_str = ast.unparse(subnode)
                         assert "os.chdir(original_cwd)" in finally_str, (
-                                "finally block should restore original directory"
-                            )
+                            "finally block should restore original directory"
+                        )
 
                 assert has_finally, (
                     "Should have try-finally for guaranteed directory restoration"

@@ -91,20 +91,22 @@ class TestPhase6Sprint2ExternalBackendConversion:
         direct_count = content.count(
             "FlextUtilities.CommandExecution.run_external_command("
         )
-        
+
         # Count indirect calls through _run_tool_with_json_output
         # (ruff, mypy, bandit, vulture use _run_tool_with_json_output which uses FlextUtilities)
         indirect_count = content.count("_run_tool_with_json_output(")
-        
+
         # Total: direct calls (coverage: 1, radon: 2) + indirect calls (4 methods use _run_tool_with_json_output)
         # _run_tool_with_json_output itself has 1 FlextUtilities call, used by 4 methods
         # So we have: 1 (coverage) + 2 (radon) + 1 (_run_tool_with_json_output definition) = 4 direct
         # Plus 4 indirect calls through _run_tool_with_json_output
         total_count = direct_count
-        
+
         # Should have at least 4 direct calls (coverage + radon x2 + _run_tool_with_json_output)
         # The _run_tool_with_json_output is used by ruff, mypy, bandit, vulture
-        assert total_count >= 4, f"Expected at least 4 FlextUtilities calls, found {total_count} (direct={direct_count}, indirect methods={indirect_count})"
+        assert total_count >= 4, (
+            f"Expected at least 4 FlextUtilities calls, found {total_count} (direct={direct_count}, indirect methods={indirect_count})"
+        )
 
     def test_ruff_method_converted(self) -> None:
         """Verify _run_ruff method uses FlextUtilities."""
@@ -123,9 +125,7 @@ class TestPhase6Sprint2ExternalBackendConversion:
                     "FlextUtilities.CommandExecution.run_external_command"
                     in method_code
                 )
-                assert (
-                    has_flext_utilities or uses_helper
-                ), (
+                assert has_flext_utilities or uses_helper, (
                     "_run_ruff must use FlextUtilities.CommandExecution.run_external_command directly or through _run_tool_with_json_output"
                 )
 
@@ -148,9 +148,9 @@ class TestPhase6Sprint2ExternalBackendConversion:
                     or ".unwrap()" in method_code
                     or uses_helper  # Helper returns FlextResult
                 )
-                assert (
-                    has_flext_result_pattern
-                ), "_run_ruff must use FlextResult pattern directly or through helper"
+                assert has_flext_result_pattern, (
+                    "_run_ruff must use FlextResult pattern directly or through helper"
+                )
 
         assert found_ruff, "_run_ruff method not found"
 
@@ -168,7 +168,8 @@ class TestPhase6Sprint2ExternalBackendConversion:
                 # _run_mypy uses _run_tool_with_json_output which uses FlextUtilities
                 assert (
                     "_run_tool_with_json_output" in method_code
-                    or "FlextUtilities.CommandExecution.run_external_command" in method_code
+                    or "FlextUtilities.CommandExecution.run_external_command"
+                    in method_code
                 )
                 assert "subprocess.run" not in method_code
                 assert "'mypy'" in method_code or '"mypy"' in method_code
@@ -189,7 +190,8 @@ class TestPhase6Sprint2ExternalBackendConversion:
                 # _run_bandit uses _run_tool_with_json_output which uses FlextUtilities
                 assert (
                     "_run_tool_with_json_output" in method_code
-                    or "FlextUtilities.CommandExecution.run_external_command" in method_code
+                    or "FlextUtilities.CommandExecution.run_external_command"
+                    in method_code
                 )
                 assert "subprocess.run" not in method_code
                 assert "'bandit'" in method_code or '"bandit"' in method_code
@@ -210,7 +212,8 @@ class TestPhase6Sprint2ExternalBackendConversion:
                 # _run_vulture uses _run_tool_with_json_output which uses FlextUtilities
                 assert (
                     "_run_tool_with_json_output" in method_code
-                    or "FlextUtilities.CommandExecution.run_external_command" in method_code
+                    or "FlextUtilities.CommandExecution.run_external_command"
+                    in method_code
                 )
                 assert "subprocess.run" not in method_code
                 assert "'vulture'" in method_code or '"vulture"' in method_code
@@ -246,18 +249,21 @@ class TestPhase6Sprint2ExternalBackendConversion:
         found_maintainability = False
         radon_code = ""
         maintainability_code = ""
-        
+
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef) and node.name == "_run_radon":
                 found_radon = True
                 radon_code = ast.unparse(node)
-            if isinstance(node, ast.FunctionDef) and node.name == "_run_radon_maintainability":
+            if (
+                isinstance(node, ast.FunctionDef)
+                and node.name == "_run_radon_maintainability"
+            ):
                 found_maintainability = True
                 maintainability_code = ast.unparse(node)
 
         assert found_radon, "_run_radon method not found"
         assert found_maintainability, "_run_radon_maintainability method not found"
-        
+
         # Count FlextUtilities calls in both methods
         radon_count = radon_code.count(
             "FlextUtilities.CommandExecution.run_external_command"
@@ -266,7 +272,7 @@ class TestPhase6Sprint2ExternalBackendConversion:
             "FlextUtilities.CommandExecution.run_external_command"
         )
         total_count = radon_count + maintainability_count
-        
+
         # Must have at least 2 FlextUtilities calls total (1 in _run_radon, 1 in _run_radon_maintainability)
         assert total_count >= 2, (
             f"_run_radon and _run_radon_maintainability must have at least 2 FlextUtilities calls total, "
@@ -425,9 +431,9 @@ class TestPhase6Sprint2ExternalBackendSourceCodeInspection:
                             "FlextUtilities.CommandExecution.run_external_command"
                             in method_code
                         )
-                        assert (
-                            has_flext_utilities or uses_helper
-                        ), f"{method.name} must use FlextUtilities directly or through _run_tool_with_json_output"
+                        assert has_flext_utilities or uses_helper, (
+                            f"{method.name} must use FlextUtilities directly or through _run_tool_with_json_output"
+                        )
 
                         # 2. Check result.is_failure (directly or through helper)
                         uses_helper = "_run_tool_with_json_output" in method_code
@@ -436,9 +442,9 @@ class TestPhase6Sprint2ExternalBackendSourceCodeInspection:
                             or "result_" in method_code
                             or uses_helper  # Helper handles this
                         )
-                        assert (
-                            has_failure_check
-                        ), f"{method.name} must check result.is_failure or use helper"
+                        assert has_failure_check, (
+                            f"{method.name} must check result.is_failure or use helper"
+                        )
 
                         # 3. Check error message for tool_not_found (directly or through helper)
                         # Methods that use _run_tool_with_json_output delegate to _handle_tool_error
@@ -454,9 +460,9 @@ class TestPhase6Sprint2ExternalBackendSourceCodeInspection:
                             or has_helper_error_handling
                             or uses_helper  # Helper has error handling
                         )
-                        assert (
-                            has_error_handling
-                        ), f"{method.name} must handle 'not found' errors directly or through helper method"
+                        assert has_error_handling, (
+                            f"{method.name} must handle 'not found' errors directly or through helper method"
+                        )
 
                         # 4. Return FlextResult (directly or through helper)
                         # Check return type annotation or return statement
@@ -467,9 +473,9 @@ class TestPhase6Sprint2ExternalBackendSourceCodeInspection:
                             or "return self._run_radon_maintainability" in method_code
                             or uses_helper  # Helper returns FlextResult
                         )
-                        assert (
-                            has_return_type and has_return_statement
-                        ), f"{method.name} must return FlextResult (type annotation and return statement)"
+                        assert has_return_type and has_return_statement, (
+                            f"{method.name} must return FlextResult (type annotation and return statement)"
+                        )
 
         # Should have at least 6 tool methods
         assert len(tool_methods) >= 6, (
@@ -482,7 +488,9 @@ class TestPhase6Sprint2ExternalBackendSourceCodeInspection:
 
         # Check file has correct imports (can be single line or multi-line)
         has_flext_result = "FlextResult" in content and "from flext_core" in content
-        has_flext_utilities = "FlextUtilities" in content and "from flext_core" in content
+        has_flext_utilities = (
+            "FlextUtilities" in content and "from flext_core" in content
+        )
         assert has_flext_result and has_flext_utilities, (
             "Must import FlextResult and FlextUtilities from flext_core (can be separate imports)"
         )

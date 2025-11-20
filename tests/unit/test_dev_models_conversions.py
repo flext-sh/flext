@@ -38,7 +38,7 @@ class TestSubprocessRemovalFromDevModels:
     def test_importlib_added_for_pytest_check(self) -> None:
         """✅ Verify importlib.util.find_spec is imported for pytest checks."""
         source = self.get_dev_models_source()
-        
+
         # Skip test if file doesn't exist
         if not source:
             return
@@ -49,7 +49,7 @@ class TestSubprocessRemovalFromDevModels:
     def test_shutil_which_used_for_tool_checks(self) -> None:
         """✅ Verify shutil.which() is used for tool availability checks."""
         source = self.get_dev_models_source()
-        
+
         # Skip test if file doesn't exist
         if not source:
             return
@@ -63,7 +63,7 @@ class TestSubprocessRemovalFromDevModels:
     def test_no_subprocess_timeoutexpired(self) -> None:
         """✅ CRITICAL: Verify subprocess.TimeoutExpired is not used."""
         source = self.get_dev_models_source()
-        
+
         # Skip test if file doesn't exist
         if not source:
             return
@@ -90,7 +90,7 @@ class TestSubprocessRemovalFromDevModels:
     def test_lint_operation_tool_checks(self) -> None:
         """✅ Verify lint tool checks use shutil.which pattern."""
         source = self.get_dev_models_source()
-        
+
         # Skip test if file doesn't exist
         if not source:
             return
@@ -114,7 +114,7 @@ class TestSubprocessRemovalFromDevModels:
     def test_no_subprocess_run_calls(self) -> None:
         """✅ CRITICAL: Verify subprocess.run() calls are completely removed."""
         source = self.get_dev_models_source()
-        
+
         # Skip test if file doesn't exist
         if not source:
             return
@@ -134,7 +134,7 @@ class TestSubprocessRemovalFromDevModels:
     def test_flext_result_return_type_maintained(self) -> None:
         """✅ Verify FlextResult[None] return type is maintained."""
         source = self.get_dev_models_source()
-        
+
         # Skip test if file doesn't exist
         if not source:
             return

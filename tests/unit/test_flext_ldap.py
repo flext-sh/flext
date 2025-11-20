@@ -270,7 +270,9 @@ class TestFlextLdapIntegration:
         # After context exit, should be disconnected
         assert not api.is_connected
 
-    def test_flext_ldap_search_with_real_options(self, real_ldif_user_entry: str) -> None:
+    def test_flext_ldap_search_with_real_options(
+        self, real_ldif_user_entry: str
+    ) -> None:
         """Test LDAP search with real search options."""
         from flext_ldif import FlextLdif
 

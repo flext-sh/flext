@@ -130,13 +130,16 @@ class TestFlextConsolidated:
     def test_flext_container_registration(self) -> None:
         """Test FlextContainer service registration."""
         import uuid
+
         container = FlextContainer.get_global()
 
         # Use unique key to avoid conflicts with other tests
         unique_key = f"test_key_{uuid.uuid4().hex[:8]}"
         test_service = "test_service"
         register_result = container.register_service(unique_key, test_service)
-        assert register_result.is_success, f"Registration failed: {register_result.error}"
+        assert register_result.is_success, (
+            f"Registration failed: {register_result.error}"
+        )
 
         # Test retrieving the service
         retrieved = container.get(unique_key)
@@ -305,7 +308,9 @@ class TestFlextConsolidated:
                     # Use container
                     register_result = self._container.register_service("test", "value")
                     if register_result.is_failure:
-                        return FlextResult[dict[str, object]].fail(f"Registration failed: {register_result.error}")
+                        return FlextResult[dict[str, object]].fail(
+                            f"Registration failed: {register_result.error}"
+                        )
 
                     # Return success result
                     return FlextResult[dict[str, object]].ok({

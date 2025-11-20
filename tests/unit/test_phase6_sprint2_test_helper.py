@@ -61,10 +61,7 @@ class TestPhase6Sprint2TestHelperConversion:
 
         # Find function and check conversion
         assert "def suggest_tests_from_coverage(project_path: Path)" in content
-        assert (
-            "FlextUtilities.CommandExecution.run_external_command"
-            in content
-        )
+        assert "FlextUtilities.CommandExecution.run_external_command" in content
         assert "pytest" in content  # Should still run pytest
 
     def test_validate_test_execution_converted(self) -> None:
@@ -73,10 +70,7 @@ class TestPhase6Sprint2TestHelperConversion:
 
         # Find function and check conversion
         assert "def validate_test_execution(test_path: Path)" in content
-        assert (
-            "FlextUtilities.CommandExecution.run_external_command"
-            in content
-        )
+        assert "FlextUtilities.CommandExecution.run_external_command" in content
 
     def test_timeout_expired_handlers_removed(self) -> None:
         """Verify subprocess.TimeoutExpired handlers are removed."""

@@ -148,7 +148,9 @@ class TestFlextToolsConfigManager:
 
     def test_config_with_pathlib(self) -> None:
         """Test config with Path object."""
-        manager = config_manager.ConfigurationManager(config_path=Path("test_config.json"))
+        manager = config_manager.ConfigurationManager(
+            config_path=Path("test_config.json")
+        )
         result = manager.load_config()
         assert isinstance(result, FlextResult)
 
