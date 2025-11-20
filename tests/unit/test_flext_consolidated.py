@@ -30,7 +30,9 @@ from flext_core import (
     FlextUtilities,
 )
 
-pytestmark = pytest.mark.skip(reason="flext module doesn't exist yet - classes need to be imported from correct modules")
+pytestmark = pytest.mark.skip(
+    reason="flext module doesn't exist yet - classes need to be imported from correct modules"
+)
 
 
 class TestFlextControlPanelCli:

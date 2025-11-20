@@ -220,9 +220,7 @@ class TestLdifGenerationRealData:
             if line.startswith(" "):
                 assert i > 0, "Continuation line must follow another line"
                 prev_line = lines[i - 1]
-                assert prev_line.strip(), (
-                    "Continuation line must follow non-blank line"
-                )
+                assert prev_line.strip(), "Continuation line must follow non-blank line"
 
     def test_generate_ldif_with_special_characters(
         self,
@@ -257,9 +255,9 @@ class TestLdifGenerationRealData:
                     if len(parts) == 2:
                         encoded_value = parts[1].strip()
                         # Basic base64 validation (alphanumeric, +, /, =)
-                        assert all(
-                            c.isalnum() or c in "+/=" for c in encoded_value
-                        ), f"Invalid base64 encoding: {encoded_value}"
+                        assert all(c.isalnum() or c in "+/=" for c in encoded_value), (
+                            f"Invalid base64 encoding: {encoded_value}"
+                        )
 
     def test_generate_ldif_with_long_values_folding(
         self,
@@ -292,9 +290,8 @@ class TestLdifGenerationRealData:
                 if len(line_bytes) > write_format_options_default.line_width:
                     found_long_line = True
                     # Next line should be continuation if folding is enabled
-                    if (
-                        write_format_options_default.fold_long_lines
-                        and i + 1 < len(lines)
+                    if write_format_options_default.fold_long_lines and i + 1 < len(
+                        lines
                     ):
                         next_line = lines[i + 1]
                         assert next_line.startswith(" "), (
@@ -303,9 +300,9 @@ class TestLdifGenerationRealData:
 
         # If we have long values, folding should have occurred
         if found_long_line:
-            assert any(
-                line.startswith(" ") for line in lines
-            ), "Long lines should be folded"
+            assert any(line.startswith(" ") for line in lines), (
+                "Long lines should be folded"
+            )
 
     def test_generate_ldif_file_output(
         self,

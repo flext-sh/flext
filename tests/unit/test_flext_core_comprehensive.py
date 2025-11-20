@@ -152,7 +152,9 @@ class TestFlextComprehensive:
         # Test handler registration - register_handler returns FlextResult
         handler = TestHandler()
         register_result = dispatcher.register_handler(TestCommand, handler)
-        assert register_result.is_success, f"Handler registration failed: {register_result.error}"
+        assert register_result.is_success, (
+            f"Handler registration failed: {register_result.error}"
+        )
 
         # Test command dispatch
         test_cmd = TestCommand("test")
@@ -176,8 +178,10 @@ class TestFlextComprehensive:
 
         failing_handler = FailingHandler()
         register_result = dispatcher.register_handler(TestCommand, failing_handler)
-        assert register_result.is_success, f"Handler registration failed: {register_result.error}"
-        
+        assert register_result.is_success, (
+            f"Handler registration failed: {register_result.error}"
+        )
+
         result = dispatcher.dispatch(TestCommand("test"))
 
         # Dispatcher should propagate handler errors
@@ -225,11 +229,15 @@ class TestFlextComprehensive:
         assert empty_result.is_failure
 
         # Test pattern validation
-        pattern_result = FlextUtilities.Validation.validate_pattern("test123", r"^[a-z0-9]+$")
+        pattern_result = FlextUtilities.Validation.validate_pattern(
+            "test123", r"^[a-z0-9]+$"
+        )
         assert pattern_result.is_success
 
         # Test invalid pattern
-        invalid_pattern = FlextUtilities.Validation.validate_pattern("TEST", r"^[a-z]+$")
+        invalid_pattern = FlextUtilities.Validation.validate_pattern(
+            "TEST", r"^[a-z]+$"
+        )
         assert invalid_pattern.is_failure
 
     def test_flext_utilities_conversion(self) -> None:
@@ -366,7 +374,7 @@ class TestFlextComprehensive:
             # Use model fields instead of arbitrary attributes
             executed: bool = False
             cleaned: bool = False
-            
+
             def __init__(self) -> None:
                 super().__init__()
                 self.executed = False
@@ -460,10 +468,12 @@ class TestFlextComprehensive:
 
         # Test basic logging with correlation ID in message
         logger.info("Message with context", correlation_id="test-123")
-        
+
         # Test logging with multiple context values
-        logger.info("Message with multiple context", user_id="user-456", operation="test_op")
-        
+        logger.info(
+            "Message with multiple context", user_id="user-456", operation="test_op"
+        )
+
         # Verify logger exists and is functional
         assert logger is not None
         assert hasattr(logger, "info")
@@ -515,20 +525,11 @@ class TestFlextComprehensive:
 
     def test_flext_config_nested_access(self) -> None:
         """Test FlextConfig with nested data structures."""
-        nested_config = {
-            "database": {
-                "host": "localhost",
-                "port": 5432,
-                "credentials": {"username": "REDACTED_LDAP_BIND_PASSWORD", "password": "secret"},
-            },
-            "cache": {"redis": {"host": "redis-host", "port": 6379}},
-        }
-
         # FlextConfig doesn't support nested dicts directly - use model_dump for dict access
         # For nested configs, use namespace pattern with FlextConfig.AutoConfig
         config = FlextConfig()
-        config_dict = config.model_dump()
-        
+        config.model_dump()
+
         # Note: FlextConfig doesn't have database/cache fields by default
         # These would need to be added as namespaces or custom config classes
         # For now, test that config is accessible
@@ -539,16 +540,16 @@ class TestFlextComprehensive:
         # FlextConfig uses Pydantic validation automatically
         # Test that invalid values raise ValidationError
         from pydantic import ValidationError
-        
+
         # Valid config
         config = FlextConfig(app_name="test", debug=True)
         assert config.app_name == "test"
         assert config.debug is True
-        
+
         # Invalid config (app_name too short)
         with pytest.raises(ValidationError):
             FlextConfig(app_name="")  # min_length=1
-        
+
         # Test that Pydantic validation works
         config_dict = config.model_dump()
         assert "app_name" in config_dict
@@ -567,9 +568,10 @@ class TestFlextComprehensive:
         assert callable(FlextModels.Validation.validate_cross_fields)
         assert hasattr(FlextModels.Validation, "validate_domain_invariants")
         assert callable(FlextModels.Validation.validate_domain_invariants)
-        
+
         # Test basic validation using FlextUtilities.Validation (which has basic validators)
         from flext_core import FlextUtilities
+
         test_string = "test@example.com"
         email_result = FlextUtilities.Validation.validate_pattern(
             test_string, r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -589,7 +591,7 @@ class TestFlextComprehensive:
     def test_flext_models_data_transformation(self) -> None:
         """Test FlextModels data transformation capabilities."""
         from flext_core import FlextUtilities
-        
+
         raw_data = {
             "old_name": "john_doe",
             "old_email": "john@example.com",
@@ -602,7 +604,7 @@ class TestFlextComprehensive:
         transformed = transform_result.data
         assert transformed["user_name"] == "john_doe"
         assert transformed["user_email"] == "john@example.com"
-        
+
         # Test data normalization
         normalized = FlextUtilities.Cache.normalize_component(transformed)
         assert normalized is not None
@@ -654,9 +656,13 @@ class TestFlextComprehensive:
                     self.logger.info("Starting comprehensive test")
 
                     # Use container
-                    register_result = self.container.register_service("test_start_time", time.time())
+                    register_result = self.container.register_service(
+                        "test_start_time", time.time()
+                    )
                     if register_result.is_failure:
-                        return FlextResult[dict[str, object]].fail(f"Container registration failed: {register_result.error}")
+                        return FlextResult[dict[str, object]].fail(
+                            f"Container registration failed: {register_result.error}"
+                        )
 
                     # Use utilities
                     correlation_id = FlextUtilities.Generators.generate_correlation_id()
@@ -665,7 +671,10 @@ class TestFlextComprehensive:
                     # Process some data - simple chunking without external utility
                     test_data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
                     chunk_size = 3
-                    chunks = [test_data[i:i + chunk_size] for i in range(0, len(test_data), chunk_size)]
+                    chunks = [
+                        test_data[i : i + chunk_size]
+                        for i in range(0, len(test_data), chunk_size)
+                    ]
 
                     # Create result
                     result_data = {
@@ -736,12 +745,16 @@ class TestFlextComprehensive:
                 # Chain multiple operations that could fail
                 # Use FlextUtilities.Validation instead of Conversion (which doesn't exist)
                 from flext_core import FlextUtilities
-                
+
                 # Step 1: Validation operation that will fail
-                validation_result = FlextUtilities.Validation.validate_required_string("")
+                validation_result = FlextUtilities.Validation.validate_required_string(
+                    ""
+                )
                 if validation_result.is_failure:
                     self.logger.error(f"Validation failed: {validation_result.error}")
-                    return FlextResult[str].fail(f"Step 1 failed: {validation_result.error}")
+                    return FlextResult[str].fail(
+                        f"Step 1 failed: {validation_result.error}"
+                    )
 
                 # This won't be reached due to validation failure
                 return FlextResult[str].ok("success")  # pragma: no cover
@@ -749,7 +762,10 @@ class TestFlextComprehensive:
             def test_recovery(self) -> FlextResult[str]:
                 # Test error recovery patterns
                 from flext_core import FlextUtilities
-                validation_result = FlextUtilities.Validation.validate_required_string("")
+
+                validation_result = FlextUtilities.Validation.validate_required_string(
+                    ""
+                )
 
                 # Recover from error
                 recovered_value = validation_result.unwrap_or("default")
