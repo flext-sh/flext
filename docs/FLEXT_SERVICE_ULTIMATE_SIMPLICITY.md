@@ -19,7 +19,7 @@ class ParseLdif(FlextService[list[Entry]]):
 # 2. Factory function (DUPLICAÇÃO!)
 def parse_ldif(source: str) -> list[Entry]:
     return ParseLdif(source=source).value
-    
+
 # 3. Usage (ainda tem .value!)
 entries = parse_ldif("file.ldif")  # Ou
 entries = ParseLdif(source="file.ldif").value
@@ -47,47 +47,47 @@ P = ParamSpec('P')
 
 class FlextService[TResult](BaseModel):
     """Service that executes automatically when called.
-    
+
     NO .execute() needed!
     NO .value needed!
     NO .result needed!
     NO factory functions needed!
-    
+
     Just implement compute() and call the instance!
-    
+
     Example:
         class ParseLdif(FlextService[list[Entry]]):
             source: str
-            
+
             def compute(self) -> list[Entry]:
                 return parse(self.source)
-        
+
         # Direct usage - ZERO ceremony!
         entries = ParseLdif(source="file.ldif")()
-        
+
         # Or even simpler with __new__:
         entries = ParseLdif("file.ldif")  # Auto-executes!
     """
-    
+
     def __call__(self) -> TResult:
         """Execute service when called - ZERO ceremony!
-        
+
         This allows:
             service = MyService(param="value")
             result = service()  # Execute!
-        
+
         Or even:
             result = MyService(param="value")()
         """
         return self.compute()
-    
+
     def compute(self) -> TResult:
         """Override this - return value directly, NOT FlextResult!
-        
+
         Example:
             def compute(self) -> list[Entry]:
                 return parse(self.source)
-        
+
         Raise exceptions on error (we'll catch them).
         """
         raise NotImplementedError(f"{self.__class__.__name__}.compute() not implemented")
@@ -96,33 +96,33 @@ class FlextService[TResult](BaseModel):
 # Even better - auto-execute on creation!
 class AutoFlextService[TResult](BaseModel):
     """Service that executes AUTOMATICALLY on instantiation.
-    
+
     ULTIMATE simplicity - just instantiate and get the result!
-    
+
     Example:
         class ParseLdif(AutoFlextService[list[Entry]]):
             source: str
-            
+
             def compute(self) -> list[Entry]:
                 return parse(self.source)
-        
+
         # ZERO ceremony - auto-executes!
         entries = ParseLdif(source="file.ldif")
         # That's it! entries is list[Entry], not a service instance!
     """
-    
+
     def __new__(cls, **kwargs):
         """Intercept creation to auto-execute.
-        
+
         Instead of returning instance, execute and return result!
         """
         # Create instance for validation
         instance = super().__new__(cls)
         instance.__init__(**kwargs)  # Pydantic validation
-        
+
         # Execute and return result directly!
         return instance.compute()
-    
+
     def compute(self) -> TResult:
         """Override this - return value directly."""
         raise NotImplementedError
@@ -144,14 +144,14 @@ from flext_core.service import FlextService
 
 class ParseLdif(FlextService[list[Entry]]):
     """Parse LDIF - callable service.
-    
+
     Usage:
         entries = ParseLdif(source="file.ldif")()
     """
-    
+
     source: Annotated[str | Path, Field(description="LDIF source")]
     encoding: str = "utf-8"
-    
+
     def compute(self) -> list[Entry]:
         """Return entries directly (NOT FlextResult)."""
         # Load
@@ -160,7 +160,7 @@ class ParseLdif(FlextService[list[Entry]]):
                 content = path.read_text(encoding=self.encoding)
             case str() as content:
                 pass
-        
+
         # Parse
         return parse_ldif_content(content)
 
@@ -182,15 +182,15 @@ from flext_core.service import AutoFlextService
 
 class ParseLdif(AutoFlextService[list[Entry]]):
     """Parse LDIF - auto-executing service.
-    
+
     Usage:
         entries = ParseLdif(source="file.ldif")
         # That's it! Returns list[Entry] directly!
     """
-    
+
     source: Annotated[str | Path, Field(description="LDIF source")]
     encoding: str = "utf-8"
-    
+
     def compute(self) -> list[Entry]:
         """Compute result."""
         match self.source:
@@ -198,7 +198,7 @@ class ParseLdif(AutoFlextService[list[Entry]]):
                 content = path.read_text(encoding=self.encoding)
             case str() as content:
                 pass
-        
+
         return parse_ldif_content(content)
 
 
@@ -223,7 +223,7 @@ except ValidationError as e:
 # 1. Service with execute()
 class ParseLdif(FlextService[list[Entry]]):
     source: str
-    
+
     def execute(self) -> FlextResult[list[Entry]]:
         try:
             return FlextResult.ok(parse(self.source))
@@ -247,7 +247,7 @@ entries = ParseLdif(source="file.ldif").value
 # 1. Service with compute()
 class ParseLdif(AutoFlextService[list[Entry]]):
     source: str
-    
+
     def compute(self) -> list[Entry]:
         return parse(self.source)
 
@@ -280,28 +280,28 @@ from flext_ldif.models import Entry
 
 class ParseLdif(AutoFlextService[list[Entry]]):
     """Parse LDIF file.
-    
+
     Auto-executing service - just instantiate to get results!
-    
+
     Example:
         >>> entries = ParseLdif(source="users.ldif")
         >>> for entry in entries:
         ...     print(entry.dn)
     """
-    
+
     # Pydantic validation
     source: Annotated[
         str | Path,
         Field(description="LDIF file path or content")
     ]
-    
+
     encoding: Annotated[
         str,
         Field(default="utf-8")
     ] = "utf-8"
-    
+
     strict: bool = True
-    
+
     # Field validators
     @field_validator('source')
     @classmethod
@@ -309,7 +309,7 @@ class ParseLdif(AutoFlextService[list[Entry]]):
         if isinstance(v, Path) and not v.exists():
             raise ValueError(f"File not found: {v}")
         return v
-    
+
     # Implementation
     def compute(self) -> list[Entry]:
         """Parse LDIF and return entries."""
@@ -319,10 +319,10 @@ class ParseLdif(AutoFlextService[list[Entry]]):
                 content = path.read_text(encoding=self.encoding)
             case str() as content:
                 pass
-        
+
         # Parse
         entries = parse_ldif_content(content, strict=self.strict)
-        
+
         # Return directly (no FlextResult!)
         return entries
 
@@ -366,12 +366,12 @@ match ParseLdif(source="users.ldif"):
 ```python
 class ParseLdif(AutoFlextService[list[Entry]]):
     source: str
-    
+
     def compute(self) -> list[Entry]:
         """Raise exceptions on error (simple)."""
         if not self.source:
             raise ValueError("Source cannot be empty")
-        
+
         return parse(self.source)
 
 
@@ -388,7 +388,7 @@ except ValueError as e:
 class ParseLdifSafe(AutoFlextService[list[Entry] | None]):
     """Safe version - returns None on error."""
     source: str
-    
+
     def compute(self) -> list[Entry] | None:
         """Return None on error (never raises)."""
         try:
@@ -417,7 +417,7 @@ type Result[T] = Success[T] | Failure
 class ParseLdifResult(AutoFlextService[Result[list[Entry]]]):
     """Returns Result type."""
     source: str
-    
+
     def compute(self) -> Result[list[Entry]]:
         """Return Success or Failure."""
         try:
@@ -441,13 +441,13 @@ match ParseLdifResult(source="file.ldif"):
 
 ### Code Reduction
 
-| Aspect | Old | New | Reduction |
-|--------|-----|-----|-----------|
-| Service code | 15 lines | 8 lines | 47% |
-| Factory function | 3 lines | 0 lines | 100% |
-| Usage | 1 line + .value | 1 line | .value eliminated |
-| execute() | Required | NO (use compute()) | Simpler |
-| FlextResult | Required | NO (return direct) | Simpler |
+| Aspect           | Old             | New                | Reduction         |
+| ---------------- | --------------- | ------------------ | ----------------- |
+| Service code     | 15 lines        | 8 lines            | 47%               |
+| Factory function | 3 lines         | 0 lines            | 100%              |
+| Usage            | 1 line + .value | 1 line             | .value eliminated |
+| execute()        | Required        | NO (use compute()) | Simpler           |
+| FlextResult      | Required        | NO (return direct) | Simpler           |
 
 ### Concepts Eliminated
 
@@ -486,15 +486,15 @@ from abc import ABC, abstractmethod
 
 class FlextService[TResult](BaseModel, ABC):
     """Service that executes when called.
-    
+
     Usage:
         result = MyService(params)()  # Call to execute
     """
-    
+
     def __call__(self) -> TResult:
         """Execute service."""
         return self.compute()
-    
+
     @abstractmethod
     def compute(self) -> TResult:
         """Override this to implement service logic."""
@@ -507,22 +507,22 @@ class FlextService[TResult](BaseModel, ABC):
 
 class AutoFlextService[TResult](BaseModel, ABC):
     """Service that auto-executes on instantiation.
-    
+
     ULTIMATE simplicity - instantiate and get result!
-    
+
     Usage:
         result = MyService(params)  # Auto-executes!
     """
-    
+
     def __new__(cls, **kwargs):
         """Auto-execute on creation."""
         # Validate with Pydantic
         instance = super().__new__(cls)
         instance.__init__(**kwargs)
-        
+
         # Execute and return result (not instance!)
         return instance.compute()
-    
+
     @abstractmethod
     def compute(self) -> TResult:
         """Override this to implement service logic."""
@@ -535,13 +535,13 @@ class AutoFlextService[TResult](BaseModel, ABC):
 
 class FlextServiceMixin:
     """Mixin for infrastructure access (optional)."""
-    
+
     @property
     def logger(self):
         """Get logger."""
         from flext_core.loggings import FlextLogger
         return FlextLogger(self.__class__.__name__)
-    
+
     @property
     def config(self):
         """Get config."""
@@ -552,20 +552,20 @@ class FlextServiceMixin:
 # Full-featured auto-executing service
 class FlextAutoService[TResult](AutoFlextService[TResult], FlextServiceMixin):
     """Auto-executing service with infrastructure.
-    
+
     Combines:
     - Auto-execution (from AutoFlextService)
     - Infrastructure access (from FlextServiceMixin)
     - Pydantic validation (from BaseModel)
-    
+
     Usage:
         class MyService(FlextAutoService[Result]):
             param: str
-            
+
             def compute(self) -> Result:
                 self.logger.info(f"Processing {self.param}")
                 return process(self.param)
-        
+
         # Zero ceremony!
         result = MyService(param="value")
     """
@@ -592,7 +592,7 @@ from flext_core.service import AutoFlextService
 class ParseLdif(AutoFlextService[list[Entry]]):
     """Parse LDIF - ultra-simple!"""
     source: str
-    
+
     def compute(self) -> list[Entry]:
         return parse(self.source)
 
@@ -601,6 +601,7 @@ entries = ParseLdif(source="file.ldif")
 ```
 
 **Benefits:**
+
 - ✅ NO factory functions (eliminated)
 - ✅ NO .value (eliminated)
 - ✅ NO .result (eliminated)
@@ -611,10 +612,10 @@ entries = ParseLdif(source="file.ldif")
 - ✅ Minimal code
 
 **Trade-off:**
+
 - Instance is consumed on creation (can't reuse)
 - For reusable instances, use `FlextService` (callable)
 
 ---
 
 **This is ULTIMATE simplicity!** 🎯
-

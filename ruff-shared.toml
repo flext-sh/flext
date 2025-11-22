@@ -105,7 +105,6 @@ target-version = "py313"
             "N818",    # Exception naming (custom test exceptions)
             "N999",    # Invalid module name (project root uses 'flext-auth' for package distribution)
             "PLC0206", # dict iteration (test data structures)
-            "PLC0415", # Import not at top (test-specific imports for isolation)
             "PLC1901", # comparison-to-membership (test simplicity)
             "PLC2701", # Private imports (testing internal implementation)
             "PLR0912",
@@ -148,7 +147,6 @@ target-version = "py313"
         "**/config.py" = [
             "ANN401",  # any-type - examples can legitimately use object for Pydantic 2 models
             "FBT001",  # Boolean positional argument - required by Pydantic field serializers
-            "PLC0415", # allow lazy imports in fix circular imports in base level
             "SLF001",  # private-member-access - necessary for config synchronization across modules
         ]
         "**/constants.py" = [
@@ -181,7 +179,6 @@ target-version = "py313"
         "**/exceptions.py" = [
             "A001",    # variable-is-ambiguous - Allow ambiguous variable names in exceptions
             "BLE001",  # blind-except - Allow blind exceptions in exceptions
-            "PLC0415", # allow lazy imports in fix circular imports in base level
             "S105",    # hardcoded-password-string - false positives in error code constants
             "SLF001",  # private-member-access - Allow private member access in exception classes
         ]
@@ -189,7 +186,6 @@ target-version = "py313"
             "BLE001",  # blind-except - framework code validates user messages and executes handlers
         ]
         "**/loggings.py" = [
-            "PLC0415", # allow lazy imports in fix circular imports in base level
             "PLW0603", # global-statement - necessary for lazy config loading to avoid circular imports
         ]
         "**/middleware.py" = [
@@ -203,7 +199,20 @@ target-version = "py313"
             "ANN401",  # any-type - Pydantic 2 models legitimately use object in dict[str, object]
             "F821",    # undefined-name - DomainEvent forward references in string literals for Pydantic
             "FBT001",  # Boolean positional argument - required by Pydantic field serializers
-            "PLC0415", # allow lazy imports to fix circular imports at base level
+            "PLC2701", # private-member-access - necessary for Pydantic model inheritance
+            "PLR0206", # property-with-parameters - Pydantic @computed_field + @property is valid pattern
+            "PLW0603", # global-statement - necessary for lazy config loading to avoid circular imports
+            # NOTE: Pydantic 2.11+ @computed_field + @property is a legitimate pattern:
+            # @computed_field
+            # @property
+            # def field_name(self) -> Type:
+            #     return computed_value
+        ]
+        "**/_models/*.py" = [
+            "ANN401",  # any-type - Pydantic 2 models legitimately use object in dict[str, object]
+            "F821",    # undefined-name - DomainEvent forward references in string literals for Pydantic
+            "FBT001",  # Boolean positional argument - required by Pydantic field serializers
+            "PLC2701", # private-member-access - necessary for Pydantic model inheritance
             "PLR0206", # property-with-parameters - Pydantic @computed_field + @property is valid pattern
             "PLW0603", # global-statement - necessary for lazy config loading to avoid circular imports
             # NOTE: Pydantic 2.11+ @computed_field + @property is a legitimate pattern:

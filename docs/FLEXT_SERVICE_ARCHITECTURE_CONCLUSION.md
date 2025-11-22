@@ -11,6 +11,7 @@
 ### The Core Problem
 
 The flext ecosystem suffered from **over-engineered high-level abstractions** that were:
+
 - ❌ Almost NEVER used correctly
 - ❌ Too complex and academic (DDD/CQRS/Event Sourcing)
 - ❌ Created confusion instead of value
@@ -111,17 +112,17 @@ The flext ecosystem suffered from **over-engineered high-level abstractions** th
 
 class FlextService[TResult](FlextModels.ArbitraryTypesModel, FlextMixins, ABC):
     """Enhanced FlextService with lazy execution and monadic operations."""
-    
+
     # Lazy execution state
     _result: FlextResult[TResult] | None = PrivateAttr(default=None)
     _executed: bool = PrivateAttr(default=False)
-    
+
     # Abstract method (must implement)
     @abstractmethod
     def execute(self) -> FlextResult[TResult]:
         """Execute the service operation."""
         ...
-    
+
     # Lazy execution property
     @property
     def result(self) -> FlextResult[TResult]:
@@ -130,40 +131,40 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, FlextMixins, ABC):
             self._result = self.execute()
             self._executed = True
         return self._result
-    
+
     # Direct value access
     @property
     def value(self) -> TResult:
         """Get value (executes if needed, unwraps)."""
         return self.result.unwrap()
-    
+
     # Optional safe value access
     @property
     def value_or_none(self) -> TResult | None:
         """Get value or None on failure."""
         return self.result.value_or(None)
-    
+
     def value_or(self, default: TResult) -> TResult:
         """Get value or default on failure."""
         return self.result.value_or(default)
-    
+
     # Monadic operations (delegate to result)
     def map(self, func: Callable[[TResult], U]) -> FlextResult[U]:
         """Map over successful result."""
         return self.result.map(func)
-    
+
     def flat_map(self, func: Callable[[TResult], FlextResult[U]]) -> FlextResult[U]:
         """Flat map (monadic bind)."""
         return self.result.flat_map(func)
-    
+
     def and_then(self, func: Callable[[TResult], FlextResult[U]]) -> FlextResult[U]:
         """Chain operations."""
         return self.result.and_then(func)
-    
+
     def or_else(self, func: Callable[[str], FlextResult[TResult]]) -> FlextResult[TResult]:
         """Provide fallback on failure."""
         return self.result.or_else(func)
-    
+
     def filter(
         self,
         predicate: Callable[[TResult], bool],
@@ -171,17 +172,17 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, FlextMixins, ABC):
     ) -> FlextResult[TResult]:
         """Filter result based on predicate."""
         return self.result.filter(predicate, error_msg)
-    
+
     def tap(self, func: Callable[[TResult], None]) -> FlextResult[TResult]:
         """Execute side effect without changing result."""
         return self.result.tap(func)
-    
+
     # Static factory methods
     @classmethod
     def run(cls, **kwargs) -> TResult:
         """Create and execute, return value directly."""
         return cls(**kwargs).value
-    
+
     @classmethod
     def try_run(cls, **kwargs) -> FlextResult[TResult]:
         """Create and execute, return result."""
@@ -189,6 +190,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, FlextMixins, ABC):
 ```
 
 **Tasks:**
+
 1. ✅ Implement lazy execution (`.result` property)
 2. ✅ Implement direct value access (`.value` property)
 3. ✅ Implement monadic methods
@@ -201,6 +203,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, FlextMixins, ABC):
 **Goal:** Guide developers away from complex abstractions
 
 **Tasks:**
+
 1. ✅ Mark `FlextDispatcher` as "Advanced Use Only" in docs
 2. ✅ Mark `FlextHandlers` as deprecated
 3. ✅ Update all code examples to use direct services
@@ -208,6 +211,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, FlextMixins, ABC):
 5. ✅ Create migration guide from old patterns
 
 **Documentation Updates:**
+
 - `/docs/README.md` - Remove dispatcher/handler examples
 - `/docs/GETTING_STARTED.md` - Show simple service pattern
 - `/docs/ADVANCED.md` - Move dispatcher/handlers here
@@ -218,6 +222,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, FlextMixins, ABC):
 **Goal:** Add function-like public APIs to all libraries
 
 **Example Pattern:**
+
 ```python
 # flext-ldif/src/flext_ldif/__init__.py
 
@@ -227,18 +232,18 @@ def ParseLdif(
     **kwargs
 ) -> list[FlextLdifModels.Entry]:
     """Parse LDIF - simple function interface.
-    
+
     Args:
         source: LDIF file path or string content
         encoding: Character encoding (default: utf-8)
         **kwargs: Additional parser options
-    
+
     Returns:
         list[Entry]: Parsed LDIF entries
-    
+
     Raises:
         FlextError: If parsing fails
-    
+
     Example:
         >>> entries = ParseLdif("users.ldif")
         >>> print(f"Parsed {len(entries)} entries")
@@ -257,16 +262,16 @@ def WriteLdif(
     **kwargs
 ) -> FlextLdifModels.WriteResponse:
     """Write LDIF - simple function interface.
-    
+
     Args:
         entries: LDIF entries to write
         output_path: Output file path (for file target)
         output_target: Output format (string or file)
         **kwargs: Additional writer options
-    
+
     Returns:
         WriteResponse: Write statistics and content
-    
+
     Example:
         >>> response = WriteLdif(entries, output_path=Path("output.ldif"))
         >>> print(f"Wrote {response.statistics.entries_written} entries")
@@ -291,6 +296,7 @@ __all__ = [
 ```
 
 **Libraries to Update:**
+
 1. ✅ flext-ldif (ParseLdif, WriteLdif, FilterLdif, SortLdif)
 2. ✅ flext-api (HttpGet, HttpPost, HttpPut, HttpDelete)
 3. ✅ flext-oracle (OracleQuery, OracleExecute, OracleTransaction)
@@ -301,6 +307,7 @@ __all__ = [
 **Goal:** Update all services to use new patterns
 
 **Refactoring Checklist per Service:**
+
 ```
 □ Remove `execute()` parameters → Move to Pydantic fields
 □ Use `self.project_config` → Remove config parameter
@@ -312,6 +319,7 @@ __all__ = [
 ```
 
 **Priority Order:**
+
 1. **flext-ldif** (most used, good example)
 2. **flext-api** (multi-operation example)
 3. **flext-oracle** (database example)
@@ -359,10 +367,11 @@ __all__ = [
 ### 1. Make Simple Things Simple
 
 **90% of use cases should be one service class:**
+
 ```python
 class ParseLdif(FlextService[list[Entry]]):
     source: str | Path
-    
+
     def execute(self) -> FlextResult[list[Entry]]:
         # Just do it!
         return self._parse()
@@ -374,6 +383,7 @@ entries = ParseLdif(source="file.ldif").value
 ### 2. Complex Things Possible
 
 **Keep advanced features for those who need them:**
+
 ```python
 # Still available for advanced users:
 dispatcher = FlextDispatcher()  # For routing/retry
@@ -386,13 +396,14 @@ event = FlextModels.DomainEvent()  # For event sourcing
 ### 3. Leverage Pydantic
 
 **Use what developers already know:**
+
 ```python
 class MyService(FlextService[Result]):
     # Standard Pydantic fields
     email: str = Field(pattern=r'^[\w\.-]+@[\w\.-]+\.\w+$')
     age: int = Field(gt=0, le=150)
     tags: list[str] = Field(default_factory=list)
-    
+
     # Standard Pydantic validators
     @field_validator('email')
     @classmethod
@@ -403,6 +414,7 @@ class MyService(FlextService[Result]):
 ### 4. Infrastructure via Properties
 
 **No constructor parameters for infrastructure:**
+
 ```python
 def execute(self) -> FlextResult[T]:
     # All available via properties (from FlextMixins)
@@ -415,6 +427,7 @@ def execute(self) -> FlextResult[T]:
 ### 5. Railway Pattern Everywhere
 
 **All operations return `FlextResult[T]`:**
+
 ```python
 result = (
     ServiceA(params)
@@ -541,6 +554,7 @@ value = ServiceA(params).value  # Throws on error
 The flext ecosystem should feel like using standard Python libraries, not learning a new framework.
 
 **Focus on:**
+
 - ✅ Simple service classes
 - ✅ Pydantic validation
 - ✅ Railway pattern
@@ -548,6 +562,7 @@ The flext ecosystem should feel like using standard Python libraries, not learni
 - ✅ Property-based infrastructure
 
 **De-emphasize:**
+
 - ❌ Dispatchers
 - ❌ Handlers
 - ❌ CQRS commands/events
@@ -563,4 +578,3 @@ The flext ecosystem should feel like using standard Python libraries, not learni
 **Review Date:** After Phase 1 completion
 
 ---
-

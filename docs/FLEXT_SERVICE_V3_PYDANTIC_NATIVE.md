@@ -15,13 +15,13 @@
 class MyService(ComplexBaseClass):
     def __init__(self, param1, param2, config, logger, container):
         # So much ceremony...
-        
+
 # ✅ NEW WAY: Services are just Pydantic models that compute results
 class MyService(BaseModel):
     # Input fields
     param1: str
     param2: int
-    
+
     # Computed output (Pydantic v2 computed_field)
     @computed_field
     @property
@@ -49,13 +49,13 @@ from typing import Annotated
 
 class FlextService(BaseModel):
     """Minimal service base - just Pydantic + Result pattern.
-    
+
     Philosophy:
     - Services are data models with computed results
     - Use Pydantic v2 computed_field for execution
     - No magic, no ceremony, just functions
     """
-    
+
     # Pydantic v2 config
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
@@ -63,28 +63,28 @@ class FlextService(BaseModel):
         extra="forbid",  # Fail fast on typos
         frozen=False,    # Allow mutation if needed
     )
-    
+
     # Optional: Infrastructure injection via class vars
     _config: ClassVar[FlextConfig | None] = None
     _container: ClassVar[FlextContainer | None] = None
     _logger: ClassVar[FlextLogger | None] = None
-    
+
     @computed_field
     @property
     def result(self) -> FlextResult[Any]:
         """Computed result - override in subclasses."""
         return self.execute()
-    
+
     def execute(self) -> FlextResult[Any]:
         """Override this in subclasses."""
         raise NotImplementedError
-    
+
     # Convenience: Direct value access
     @property
     def value(self) -> Any:
         """Get result value (raises on error)."""
         return self.result.unwrap()
-    
+
     # Pydantic v2 serialization includes computed fields
     def to_dict(self) -> dict[str, Any]:
         """Serialize with result."""
@@ -92,6 +92,7 @@ class FlextService(BaseModel):
 ```
 
 **What Changed:**
+
 - ✅ Pure Pydantic BaseModel (no complex inheritance)
 - ✅ `computed_field` for lazy result
 - ✅ ClassVar for optional infrastructure
@@ -107,11 +108,11 @@ class FlextService(BaseModel):
 ```python
 class ParseLdif(BaseModel):
     """Parser as pure Pydantic model."""
-    
+
     # Input fields
     source: Annotated[str | Path, Field(description="LDIF source")]
     encoding: str = "utf-8"
-    
+
     # Computed result - automatic!
     @computed_field
     @property
@@ -120,7 +121,7 @@ class ParseLdif(BaseModel):
         # This runs when accessed, not at construction
         content = self._load_source()
         return self._parse_content(content)
-    
+
     @computed_field
     @property
     def statistics(self) -> dict[str, int]:
@@ -129,13 +130,13 @@ class ParseLdif(BaseModel):
             "total": len(self.entries),
             "users": sum(1 for e in self.entries if "user" in e.dn),
         }
-    
+
     # Private helpers
     def _load_source(self) -> str:
         if isinstance(self.source, Path):
             return self.source.read_text(encoding=self.encoding)
         return self.source
-    
+
     def _parse_content(self, content: str) -> list[Entry]:
         # Parsing logic...
         return parse_ldif_content(content)
@@ -148,6 +149,7 @@ print(parser.model_dump())  # Serializes everything!
 ```
 
 **Benefits:**
+
 - ✅ No `.execute()` call needed
 - ✅ Results are properties (natural)
 - ✅ Automatic serialization
@@ -171,7 +173,7 @@ class HttpOperation(BaseModel):
 class HttpGet(HttpOperation):
     """GET operation."""
     operation: Literal["get"] = "get"
-    
+
     @computed_field
     @property
     def response(self) -> dict[str, Any]:
@@ -186,7 +188,7 @@ class HttpPost(HttpOperation):
     """POST operation."""
     operation: Literal["post"] = "post"
     body: dict[str, Any] = Field(default_factory=dict)
-    
+
     @computed_field
     @property
     def response(self) -> dict[str, Any]:
@@ -220,6 +222,7 @@ print(post_req.response)  # POST executed
 ```
 
 **Benefits:**
+
 - ✅ Type-safe discrimination
 - ✅ Each operation is independent model
 - ✅ Pydantic handles routing
@@ -230,7 +233,7 @@ print(post_req.response)  # POST executed
 ```python
 class CreateUser(BaseModel):
     """User creation with Pydantic validation."""
-    
+
     # Annotated types for complex validation
     email: Annotated[
         str,
@@ -239,24 +242,24 @@ class CreateUser(BaseModel):
             examples=["user@example.com"]
         )
     ]
-    
+
     age: Annotated[
         int,
         Field(gt=0, le=150, description="Age in years")
     ]
-    
+
     username: Annotated[
         str,
         Field(min_length=3, max_length=20, pattern=r'^[a-z0-9_]+$')
     ]
-    
+
     # Field validators
     @field_validator('email')
     @classmethod
     def normalize_email(cls, v: str) -> str:
         """Normalize email to lowercase."""
         return v.lower().strip()
-    
+
     @field_validator('username')
     @classmethod
     def check_username_available(cls, v: str) -> str:
@@ -264,7 +267,7 @@ class CreateUser(BaseModel):
         if is_username_taken(v):
             raise ValueError(f"Username '{v}' already taken")
         return v
-    
+
     # Model validators
     @model_validator(mode='after')
     def validate_age_username(self) -> Self:
@@ -272,7 +275,7 @@ class CreateUser(BaseModel):
         if self.age < 13 and not self.username.endswith("_kid"):
             raise ValueError("Usernames for users under 13 must end with '_kid'")
         return self
-    
+
     # Computed result
     @computed_field
     @property
@@ -294,6 +297,7 @@ user = service.user  # Already validated!
 ```
 
 **Benefits:**
+
 - ✅ Pydantic does validation
 - ✅ Clear error messages
 - ✅ No custom validation layer
@@ -319,15 +323,15 @@ class QueryConfig(BaseModel):
 
 class DatabaseQuery(BaseModel):
     """Database query with composed configs."""
-    
+
     # Composition!
     db_config: DatabaseConfig
     query_config: QueryConfig = Field(default_factory=QueryConfig)
-    
+
     # Query parameters
     sql: str
     params: dict[str, Any] = Field(default_factory=dict)
-    
+
     @computed_field
     @property
     def results(self) -> list[dict[str, Any]]:
@@ -352,6 +356,7 @@ results = query.results
 ```
 
 **Benefits:**
+
 - ✅ Explicit composition
 - ✅ Reusable configs
 - ✅ Type-safe
@@ -363,7 +368,7 @@ results = query.results
 # Factory functions for ergonomics
 def parse_ldif(source: str | Path, **kwargs) -> ParseLdif:
     """Factory: Create parser model.
-    
+
     Returns the MODEL, not the result.
     User decides what to access.
     """
@@ -387,6 +392,7 @@ data = parse_ldif("users.ldif").model_dump()
 ```
 
 **Benefits:**
+
 - ✅ Returns model (more flexible)
 - ✅ User controls access
 - ✅ Can serialize
@@ -415,11 +421,11 @@ from pydantic import BaseModel, computed_field
 
 class MyService(BaseModel):
     """Pure Pydantic model with computed result."""
-    
+
     # Inputs
     param1: str
     param2: int
-    
+
     # Computed result
     @computed_field
     @property
@@ -438,23 +444,23 @@ class MyService(FlextService):
     def execute(self):
         self.logger.info("Starting")  # From mixin
         config = self.project_config  # From mixin
-        
+
 # ✅ NEW: Infrastructure via functions
 from flext_core import get_logger, get_config, get_container
 
 class MyService(BaseModel):
     param: str
-    
+
     @computed_field
     @property
     def result(self) -> Any:
         """Computed with infrastructure."""
         logger = get_logger(__name__)  # Function!
         config = get_config()  # Function!
-        
+
         logger.info(f"Processing {self.param}")
         timeout = config.timeout_seconds
-        
+
         return self._process(timeout)
 
 # Even better: Dependency injection via function params
@@ -480,43 +486,43 @@ from typing import Any, ClassVar
 
 class FlextService(BaseModel):
     """Minimal Pydantic-based service.
-    
+
     Services are just data models with computed results.
     Override the `compute()` method to define your logic.
-    
+
     Example:
         class ParseLdif(FlextService):
             source: str
-            
+
             def compute(self) -> list[Entry]:
                 return parse(self.source)
-        
+
         # Usage
         parser = ParseLdif(source="file.ldif")
         entries = parser.result  # Computed automatically
     """
-    
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         validate_assignment=True,
         extra="forbid",
     )
-    
+
     @computed_field
     @property
     def result(self) -> Any:
         """Computed result (override compute())."""
         return self.compute()
-    
+
     def compute(self) -> Any:
         """Override this to define your computation.
-        
+
         This is called by the `result` property.
         """
         raise NotImplementedError(
             f"{self.__class__.__name__}.compute() not implemented"
         )
-    
+
     # Convenience
     @property
     def value(self) -> Any:
@@ -534,7 +540,7 @@ class ParseLdif(FlextService):
     """Parse LDIF file."""
     source: str | Path
     encoding: str = "utf-8"
-    
+
     def compute(self) -> list[Entry]:
         """Parse and return entries."""
         content = Path(self.source).read_text(encoding=self.encoding)
@@ -545,7 +551,7 @@ class HttpGet(FlextService):
     """HTTP GET request."""
     url: HttpUrl
     headers: dict[str, str] = Field(default_factory=dict)
-    
+
     def compute(self) -> dict[str, Any]:
         """Execute GET."""
         return httpx.get(str(self.url), headers=self.headers).json()
@@ -556,7 +562,7 @@ class QueryDatabase(FlextService):
     connection_string: str
     sql: str
     params: dict[str, Any] = Field(default_factory=dict)
-    
+
     def compute(self) -> list[dict[str, Any]]:
         """Execute query."""
         with create_connection(self.connection_string) as conn:
@@ -583,15 +589,15 @@ from contextlib import contextmanager
 @contextmanager
 def flext_context(service_name: str):
     """Context manager for infrastructure.
-    
+
     Provides logger, config, container in context.
     """
     logger = get_logger(service_name)
     config = get_config()
     container = get_container()
-    
+
     logger.info(f"Starting {service_name}")
-    
+
     try:
         yield {
             "logger": logger,
@@ -604,13 +610,13 @@ def flext_context(service_name: str):
 # Usage
 class MyService(FlextService):
     param: str
-    
+
     def compute(self) -> Any:
         """Compute with infrastructure context."""
         with flext_context(self.__class__.__name__) as ctx:
             logger = ctx["logger"]
             config = ctx["config"]
-            
+
             logger.info(f"Processing {self.param}")
             return self._process(config.timeout_seconds)
 ```
@@ -619,17 +625,17 @@ class MyService(FlextService):
 
 ## 📊 Comparison: Old vs New
 
-| Aspect | Old (FlextService v2) | New (Pydantic-Native) |
-|--------|----------------------|----------------------|
-| **Base class** | Complex (4-level inheritance) | Simple (BaseModel only) |
-| **Execution** | `.execute().unwrap()` | `.result` property |
-| **Infrastructure** | Mixins (hidden magic) | Functions/context managers (explicit) |
-| **Validation** | Custom + Pydantic | Pure Pydantic v2 |
-| **Serialization** | Custom `to_dict()` | Pydantic `model_dump()` |
-| **Multi-operation** | `match` statement in execute | Discriminated unions |
-| **Error handling** | FlextResult wrapper | Pydantic ValidationError |
-| **Lines of code** | ~500 (base class) | ~30 (base class) |
-| **Concepts to learn** | 10+ (service, handler, dispatcher, etc.) | 2 (BaseModel, computed_field) |
+| Aspect                | Old (FlextService v2)                    | New (Pydantic-Native)                 |
+| --------------------- | ---------------------------------------- | ------------------------------------- |
+| **Base class**        | Complex (4-level inheritance)            | Simple (BaseModel only)               |
+| **Execution**         | `.execute().unwrap()`                    | `.result` property                    |
+| **Infrastructure**    | Mixins (hidden magic)                    | Functions/context managers (explicit) |
+| **Validation**        | Custom + Pydantic                        | Pure Pydantic v2                      |
+| **Serialization**     | Custom `to_dict()`                       | Pydantic `model_dump()`               |
+| **Multi-operation**   | `match` statement in execute             | Discriminated unions                  |
+| **Error handling**    | FlextResult wrapper                      | Pydantic ValidationError              |
+| **Lines of code**     | ~500 (base class)                        | ~30 (base class)                      |
+| **Concepts to learn** | 10+ (service, handler, dispatcher, etc.) | 2 (BaseModel, computed_field)         |
 
 ---
 
@@ -653,14 +659,14 @@ from flext_core.pydantic_service import PydanticService  # New
 # Old pattern (still works)
 class OldStyle(FlextService[list[Entry]]):
     source: str
-    
+
     def execute(self) -> FlextResult[list[Entry]]:
         return FlextResult.ok(parse(self.source))
 
 # New pattern (recommended)
 class NewStyle(PydanticService):
     source: str
-    
+
     def compute(self) -> list[Entry]:
         return parse(self.source)
 ```
@@ -757,4 +763,3 @@ class NewStyle(PydanticService):
 ---
 
 **Next Steps:** Implement PydanticService base class and migrate one library (flext-ldif) as proof of concept.
-
