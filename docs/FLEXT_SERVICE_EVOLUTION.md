@@ -13,11 +13,11 @@
 ```python
 class MyService(FlextService[Result]):
     """Current pattern - actually pretty good!"""
-    
+
     # Pydantic fields - WORKS GREAT
     param1: str
     param2: int = Field(gt=0)
-    
+
     # Infrastructure via properties - WORKS GREAT
     def execute(self) -> FlextResult[Result]:
         self.logger.info("Starting")  # From mixin
@@ -29,6 +29,7 @@ result = MyService(param1="test", param2=42).execute().unwrap()
 ```
 
 **What's RIGHT:**
+
 - ✅ Single base class (not multiple)
 - ✅ Pydantic validation
 - ✅ Infrastructure via mixins
@@ -47,6 +48,7 @@ result = service.execute().unwrap()  # ← Too much ceremony!
 ```
 
 **That's it!** Just 2 small issues:
+
 1. Need to call `.execute()` explicitly
 2. Need to call `.unwrap()` to get value
 
@@ -67,47 +69,47 @@ class FlextService[TResult](
     ABC
 ):
     """Enhanced FlextService - minimal changes, maximum impact."""
-    
+
     # KEEP EVERYTHING THAT EXISTS
     # Just ADD these 3 properties:
-    
+
     # Property 1: Lazy execution
     @computed_field
     @property
     def result(self) -> FlextResult[TResult]:
         """Execute lazily and return result.
-        
+
         Executes automatically on first access, caches result.
         """
         if not hasattr(self, '_cached_result'):
             self._cached_result = self.execute()
         return self._cached_result
-    
+
     # Property 2: Direct value access
     @property
     def value(self) -> TResult:
         """Get value directly (executes + unwraps).
-        
+
         Raises exception on failure.
         """
         return self.result.unwrap()
-    
+
     # Property 3: Safe value access
     @property
     def value_or_none(self) -> TResult | None:
         """Get value or None on failure.
-        
+
         Never raises, returns None if execution fails.
         """
         result = self.result
         return result.value if result.is_success else None
-    
+
     # KEEP: Abstract execute() - subclasses override
     @abstractmethod
     def execute(self) -> FlextResult[TResult]:
         """Override this in subclasses."""
         ...
-    
+
     # KEEP: Everything else (mixins, config, etc.)
 ```
 
@@ -160,10 +162,10 @@ if result.is_success:
 ```python
 class ParseLdif(FlextService[list[Entry]]):
     """LDIF parser - no changes needed!"""
-    
+
     source: str | Path
     encoding: str = "utf-8"
-    
+
     def execute(self) -> FlextResult[list[Entry]]:
         """Parse LDIF."""
         try:
@@ -187,11 +189,11 @@ entries = ParseLdif(source="file.ldif").execute().unwrap()  # ✅
 ```python
 class HttpClient(FlextService[dict[str, Any]]):
     """HTTP client - no changes needed!"""
-    
+
     operation: Literal["get", "post", "put", "delete"]
     url: str
     body: dict[str, Any] | None = None
-    
+
     def execute(self) -> FlextResult[dict[str, Any]]:
         """Execute HTTP operation."""
         match self.operation:
@@ -222,10 +224,10 @@ response = http_post("https://api.com/users", data={"name": "John"})
 ```python
 class AsyncQuery(FlextService[list[dict]]):
     """Async database query."""
-    
+
     sql: str
     params: dict[str, Any] = Field(default_factory=dict)
-    
+
     async def execute(self) -> FlextResult[list[dict]]:
         """Execute async query."""
         try:
@@ -234,7 +236,7 @@ class AsyncQuery(FlextService[list[dict]]):
                 return FlextResult.ok([dict(row) for row in rows])
         except Exception as e:
             return FlextResult.fail(str(e))
-    
+
     # Override for async
     @property
     async def value_async(self) -> list[dict]:
@@ -255,7 +257,7 @@ rows = await AsyncQuery(sql="SELECT * FROM users").value_async
 ```python
 class FlextService[TResult](...):
     """With optional monadic methods."""
-    
+
     # Existing properties...
     @property
     def result(self) -> FlextResult[TResult]:
@@ -263,16 +265,16 @@ class FlextService[TResult](...):
         if not hasattr(self, '_cached_result'):
             self._cached_result = self.execute()
         return self._cached_result
-    
+
     # Monadic operations (delegate to result)
     def map(self, func: Callable[[TResult], U]) -> FlextResult[U]:
         """Transform result."""
         return self.result.map(func)
-    
+
     def and_then(self, func: Callable[[TResult], FlextResult[U]]) -> FlextResult[U]:
         """Chain operations."""
         return self.result.and_then(func)
-    
+
     def or_else(self, func: Callable[[str], FlextResult[TResult]]) -> FlextResult[TResult]:
         """Fallback on error."""
         return self.result.or_else(func)
@@ -298,14 +300,14 @@ result = (
 
 def ParseLdif(source: str | Path, **kwargs) -> list[Entry]:
     """Parse LDIF - function interface.
-    
+
     Args:
         source: LDIF file path or content
         **kwargs: Additional options
-    
+
     Returns:
         list[Entry]: Parsed entries
-    
+
     Example:
         >>> entries = ParseLdif("users.ldif")
     """
@@ -333,6 +335,7 @@ __all__ = [
 ```
 
 **Simple pattern:**
+
 - Factory function = service name without "Service" suffix
 - Returns `.value` directly
 - Services still available for advanced usage
@@ -430,6 +433,7 @@ def value_or_none(self) -> TResult | None:
 ```
 
 **Tasks:**
+
 - [ ] Add 3 properties to FlextService
 - [ ] Add tests for new properties
 - [ ] Update docstrings
@@ -447,6 +451,7 @@ def ServiceName(params) -> Result:
 ```
 
 **Libraries:**
+
 - [ ] flext-ldif (ParseLdif, WriteLdif, etc.)
 - [ ] flext-api (HttpGet, HttpPost, etc.)
 - [ ] flext-oracle (QueryDB, ExecuteSQL, etc.)
@@ -529,7 +534,7 @@ def ServiceName(params) -> Result:
    - New code is simpler
    - Gradual migration possible
 
-### What About Pydantic-Native?
+### What About Pydantic-Native
 
 ```python
 # ❌ BAD: Multiple classes for one concept
@@ -542,7 +547,7 @@ class HttpDelete(BaseModel): ...
 class HttpClient(FlextService[dict]):
     operation: Literal["get", "post", "put", "delete"]
     url: str
-    
+
     def execute(self) -> FlextResult[dict]:
         match self.operation:
             case "get": return self._get()
@@ -570,12 +575,12 @@ class HttpClient(FlextService[dict]):
 
 class FlextLdifParser(Flext[list[Entry]]):
     """Parse LDIF - complete example."""
-    
+
     # Input fields (Pydantic validation)
     source: str | Path = Field(description="LDIF source")
     encoding: str = "utf-8"
     strict: bool = True
-    
+
     # Validation
     @field_validator('source')
     @classmethod
@@ -583,31 +588,31 @@ class FlextLdifParser(Flext[list[Entry]]):
         if isinstance(v, Path) and not v.exists():
             raise ValueError(f"File not found: {v}")
         return v
-    
+
     # Implementation
     def execute(self) -> FlextResult[list[Entry]]:
         """Parse LDIF."""
         try:
             # Infrastructure from mixins
             self.logger.info(f"Parsing {self.source}")
-            
+
             # Config from property
             max_entries = self.project_config.max_ldif_entries
-            
+
             # Implementation
             content = self._load_content()
             entries = parse_ldif(content, strict=self.strict)
-            
+
             if len(entries) > max_entries:
                 return FlextResult.fail(f"Too many entries: {len(entries)}")
-            
+
             self.logger.info(f"Parsed {len(entries)} entries")
             return FlextResult.ok(entries)
-            
+
         except Exception as e:
             self.logger.error(f"Parse failed: {e}")
             return FlextResult.fail(str(e))
-    
+
     def _load_content(self) -> str:
         """Load content from source."""
         if isinstance(self.source, Path):
@@ -635,4 +640,3 @@ result = FlextLdifParser(source="users.ldif").result  # ← With error info
 **Breaking changes:** NONE  
 **Time to implement:** 5-6 days  
 **Lines of code changed:** ~30 in core, ~100 per library for factories
-

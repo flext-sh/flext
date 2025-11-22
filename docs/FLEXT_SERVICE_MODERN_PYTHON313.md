@@ -30,6 +30,7 @@ entries = parse_ldif("file.ldif")
 ```
 
 **Eliminate:**
+
 - ❌ `.execute()` - automatic via property
 - ❌ `.unwrap()` - automatic via property
 - ❌ `.run()` - not needed
@@ -42,7 +43,7 @@ entries = parse_ldif("file.ldif")
 
 ### File: `flext-core/src/flext_core/service.py`
 
-```python
+````python
 """Modern FlextService with Python 3.13 + Pydantic v2.
 
 Zero ceremony service pattern with automatic execution.
@@ -68,7 +69,7 @@ class FlextService[TResult](
     Generic[TResult]
 ):
     """Modern service base with zero-ceremony execution.
-    
+
     Features:
     - Automatic execution via computed properties
     - Direct value access (.value)
@@ -76,58 +77,58 @@ class FlextService[TResult](
     - Full result access (.result)
     - Infrastructure via mixins (logger, config, container)
     - Pydantic v2 validation
-    
+
     Example:
         ```python
         class ParseLdif(FlextService[list[Entry]]):
             source: str
-            
+
             def execute(self) -> FlextResult[list[Entry]]:
                 entries = parse(self.source)
                 return FlextResult.ok(entries)
-        
+
         # Zero ceremony usage!
         entries = ParseLdif(source="file.ldif").value
         ```
-    
+
     Python 3.13 + Pydantic v2 optimizations:
     - Type parameter syntax for cleaner generics
     - computed_field for automatic execution
     - PrivateAttr for caching
     - Enhanced type hints
     """
-    
+
     # Private cache (Pydantic v2 pattern)
     _cached_result: TResult | None = PrivateAttr(default=None)
     _is_executed: bool = PrivateAttr(default=False)
-    
+
     @abstractmethod
     def execute(self) -> FlextResult[TResult]:
         """Execute service operation.
-        
+
         Override this in subclasses. This is called automatically
         by the .result property on first access.
-        
+
         Returns:
             FlextResult[TResult]: Result monad
         """
         ...
-    
+
     # =========================================================================
     # ZERO CEREMONY PROPERTIES
     # =========================================================================
-    
+
     @computed_field
     @property
     def result(self) -> FlextResult[TResult]:
         """Get result (executes automatically, cached).
-        
+
         This property executes the service on first access and caches
         the result for subsequent accesses.
-        
+
         Returns:
             FlextResult[TResult]: Complete result with success/failure info
-        
+
         Example:
             >>> service = ParseLdif(source="file.ldif")
             >>> result = service.result  # Executes here
@@ -138,35 +139,35 @@ class FlextService[TResult](
             self._cached_result = self.execute()
             self._is_executed = True
         return self._cached_result
-    
+
     @property
     def value(self) -> TResult:
         """Get value directly (auto-execute + unwrap).
-        
+
         Most common usage pattern. Executes the service and returns
         the value directly. Raises exception on failure.
-        
+
         Returns:
             TResult: The actual result value
-        
+
         Raises:
             FlextError: If execution failed
-        
+
         Example:
             >>> entries = ParseLdif(source="file.ldif").value
             >>> print(f"Got {len(entries)} entries")
         """
         return self.result.unwrap()
-    
+
     @property
     def value_or_none(self) -> TResult | None:
         """Get value or None on failure (auto-execute, safe).
-        
+
         Safe access pattern. Never raises exceptions.
-        
+
         Returns:
             TResult | None: Value if successful, None if failed
-        
+
         Example:
             >>> entries = ParseLdif(source="file.ldif").value_or_none
             >>> if entries:
@@ -176,36 +177,36 @@ class FlextService[TResult](
         """
         r = self.result
         return r.value if r.is_success else None
-    
+
     def value_or(self, default: TResult) -> TResult:
         """Get value or default on failure.
-        
+
         Args:
             default: Value to return on failure
-        
+
         Returns:
             TResult: Value if successful, default if failed
-        
+
         Example:
             >>> entries = ParseLdif(source="bad.ldif").value_or([])
             >>> print(f"Got {len(entries)} entries")  # Always works
         """
         r = self.result
         return r.value if r.is_success else default
-    
+
     # =========================================================================
     # MONADIC OPERATIONS (Delegate to result)
     # =========================================================================
-    
+
     def map[U](self, func: callable[[TResult], U]) -> FlextResult[U]:
         """Transform result value.
-        
+
         Args:
             func: Transformation function
-        
+
         Returns:
             FlextResult[U]: Transformed result
-        
+
         Example:
             >>> result = (
             ...     ParseLdif(source="file.ldif")
@@ -214,19 +215,19 @@ class FlextService[TResult](
             >>> print(result.value)  # Number of entries
         """
         return self.result.map(func)
-    
+
     def and_then[U](
         self,
         func: callable[[TResult], FlextResult[U]]
     ) -> FlextResult[U]:
         """Chain operations (railway pattern).
-        
+
         Args:
             func: Function returning another result
-        
+
         Returns:
             FlextResult[U]: Chained result
-        
+
         Example:
             >>> result = (
             ...     ParseLdif(source="input.ldif")
@@ -234,19 +235,19 @@ class FlextService[TResult](
             ... )
         """
         return self.result.and_then(func)
-    
+
     def or_else(
         self,
         func: callable[[str], FlextResult[TResult]]
     ) -> FlextResult[TResult]:
         """Provide fallback on failure.
-        
+
         Args:
             func: Function to call on error (receives error message)
-        
+
         Returns:
             FlextResult[TResult]: Original result or fallback
-        
+
         Example:
             >>> entries = (
             ...     ParseLdif(source="file.ldif")
@@ -263,7 +264,7 @@ class FlextService[TResult](
 
 type Service[T] = FlextService[T]
 type ServiceResult[T] = FlextResult[T]
-```
+````
 
 ---
 
@@ -282,26 +283,26 @@ from flext_ldif.models import Entry
 
 class FlextLdifParser(Flext[list[Entry]]):
     """Parse LDIF files.
-    
+
     Python 3.13 + Pydantic v2 optimized implementation.
     """
-    
+
     # Annotated fields (Pydantic v2 pattern)
     source: Annotated[
         str | Path,
         Field(description="LDIF file path or string content")
     ]
-    
+
     encoding: Annotated[
         str,
         Field(default="utf-8", description="Character encoding")
     ] = "utf-8"
-    
+
     strict_mode: Annotated[
         bool,
         Field(default=True, description="Enable strict parsing")
     ] = True
-    
+
     # Field validator (Pydantic v2)
     @field_validator('source')
     @classmethod
@@ -310,34 +311,34 @@ class FlextLdifParser(Flext[list[Entry]]):
         if isinstance(v, Path) and not v.exists():
             raise ValueError(f"File not found: {v}")
         return v
-    
+
     # Implementation
     def execute(self) -> ServiceResult[list[Entry]]:
         """Parse LDIF and return entries."""
         try:
             # Infrastructure from mixins (automatic!)
             self.logger.info(f"Parsing LDIF from {self.source}")
-            
+
             # Config from auto-resolution (automatic!)
             max_entries = self.project_config.max_ldif_entries
-            
+
             # Load and parse
             content = self._load_content()
             entries = self._parse_ldif(content)
-            
+
             # Validation
             if len(entries) > max_entries:
                 return FlextResult.fail(
                     f"Too many entries: {len(entries)} > {max_entries}"
                 )
-            
+
             self.logger.info(f"Parsed {len(entries)} entries")
             return FlextResult.ok(entries)
-            
+
         except Exception as e:
             self.logger.error(f"Parse failed: {e}")
             return FlextResult.fail(str(e))
-    
+
     def _load_content(self) -> str:
         """Load content from source."""
         match self.source:
@@ -345,7 +346,7 @@ class FlextLdifParser(Flext[list[Entry]]):
                 return path.read_text(encoding=self.encoding)
             case str() as content:
                 return content
-    
+
     def _parse_ldif(self, content: str) -> list[Entry]:
         """Parse LDIF content."""
         # Implementation...
@@ -363,23 +364,23 @@ def parse_ldif(
     strict_mode: bool = True
 ) -> list[Entry]:
     """Parse LDIF file - zero ceremony interface.
-    
+
     Args:
         source: LDIF file path or string content
         encoding: Character encoding (default: utf-8)
         strict_mode: Enable strict parsing (default: True)
-    
+
     Returns:
         list[Entry]: Parsed LDIF entries
-    
+
     Raises:
         FlextError: If parsing fails
-    
+
     Example:
         >>> entries = parse_ldif("users.ldif")
         >>> for entry in entries:
         ...     print(entry.dn)
-    
+
     Python 3.13 optimized:
     - Direct value return (no .value needed in function)
     - Keyword-only args for clarity
@@ -397,9 +398,9 @@ def parse_ldif_safe(
     **kwargs
 ) -> list[Entry] | None:
     """Parse LDIF file - safe interface (never raises).
-    
+
     Returns None on failure instead of raising exception.
-    
+
     Example:
         >>> entries = parse_ldif_safe("might_fail.ldif")
         >>> if entries:
@@ -448,7 +449,7 @@ else:
 result = (
     FlextLdifParser(source="input.ldif")
     .map(lambda entries: [e for e in entries if "user" in e.dn])
-    .and_then(lambda filtered: 
+    .and_then(lambda filtered:
         FlextLdifWriter(entries=filtered, output_path="out.ldif").result
     )
 )
@@ -468,41 +469,41 @@ import httpx
 
 class FlextHttpClient(FlextService[dict[str, Any]]):
     """HTTP client with multiple operations.
-    
+
     Python 3.13 + Pydantic v2 optimized.
     """
-    
+
     # Multi-operation via Literal
     operation: Annotated[
         Literal["get", "post", "put", "delete", "patch"],
         Field(description="HTTP method")
     ]
-    
+
     url: Annotated[
         HttpUrl,
         Field(description="Request URL")
     ]
-    
+
     headers: Annotated[
         dict[str, str],
         Field(default_factory=dict, description="HTTP headers")
     ] = Field(default_factory=dict)
-    
+
     body: Annotated[
         dict[str, Any] | None,
         Field(default=None, description="Request body (POST/PUT/PATCH)")
     ] = None
-    
+
     params: Annotated[
         dict[str, Any],
         Field(default_factory=dict, description="Query parameters")
     ] = Field(default_factory=dict)
-    
+
     timeout: Annotated[
         int,
         Field(default=30, gt=0, le=300, description="Timeout in seconds")
     ] = 30
-    
+
     def execute(self) -> ServiceResult[dict[str, Any]]:
         """Execute HTTP request."""
         try:
@@ -542,10 +543,10 @@ class FlextHttpClient(FlextService[dict[str, Any]]):
                         headers=self.headers,
                         timeout=self.timeout
                     )
-            
+
             response.raise_for_status()
             return FlextResult.ok(response.json())
-            
+
         except httpx.HTTPError as e:
             return FlextResult.fail(f"HTTP error: {e}")
 
@@ -609,25 +610,25 @@ import oracledb
 
 class FlextOracleQuery(FlextService[list[dict[str, Any]]]):
     """Execute Oracle query.
-    
+
     Python 3.13 + Pydantic v2 + Async support.
     """
-    
+
     connection_string: Annotated[
         str,
         Field(description="Oracle connection string")
     ]
-    
+
     sql: Annotated[
         str,
         Field(min_length=1, description="SQL query")
     ]
-    
+
     params: Annotated[
         dict[str, Any],
         Field(default_factory=dict, description="Query parameters")
     ] = Field(default_factory=dict)
-    
+
     @field_validator('sql')
     @classmethod
     def validate_select_only(cls, v: str) -> str:
@@ -635,7 +636,7 @@ class FlextOracleQuery(FlextService[list[dict[str, Any]]]):
         if not v.strip().upper().startswith('SELECT'):
             raise ValueError("Only SELECT queries allowed")
         return v
-    
+
     def execute(self) -> ServiceResult[list[dict[str, Any]]]:
         """Execute query synchronously."""
         try:
@@ -650,7 +651,7 @@ class FlextOracleQuery(FlextService[list[dict[str, Any]]]):
                     return FlextResult.ok(rows)
         except Exception as e:
             return FlextResult.fail(str(e))
-    
+
     async def execute_async(self) -> ServiceResult[list[dict[str, Any]]]:
         """Execute query asynchronously."""
         try:
@@ -855,30 +856,30 @@ if __name__ == "__main__":
     # Example 1: Parse LDIF (zero ceremony)
     entries = parse_ldif("users.ldif")
     print(f"Parsed {len(entries)} entries")
-    
+
     # Example 2: Safe parsing (no exceptions)
     entries = parse_ldif_safe("might_fail.ldif")
     if entries:
         print(f"Success: {len(entries)} entries")
     else:
         print("Parsing failed")
-    
+
     # Example 3: Filter and write
     users = [e for e in entries if "user" in e.dn]
     write_ldif(users, output_path=Path("users_only.ldif"))
-    
+
     # Example 4: Functional composition
     result = (
         FlextLdifParser(source="input.ldif")
         .map(lambda entries: [e for e in entries if "active" in e.dn])
-        .and_then(lambda filtered: 
+        .and_then(lambda filtered:
             FlextLdifWriter(
                 entries=filtered,
                 output_path=Path("active_users.ldif")
             ).result
         )
     )
-    
+
     if result.is_success:
         print(f"Processed successfully")
 ```
@@ -889,12 +890,12 @@ if __name__ == "__main__":
 
 ### Eliminated Boilerplate
 
-| Pattern | Before | After | Reduction |
-|---------|--------|-------|-----------|
-| Basic usage | 3 lines | 1 line | 67% |
-| Method calls | `.execute().unwrap()` | `.value` | 75% |
-| Safe access | try/except block | `.value_or_none` | 80% |
-| Factory | Not available | `parse_ldif()` | 90% |
+| Pattern      | Before                | After            | Reduction |
+| ------------ | --------------------- | ---------------- | --------- |
+| Basic usage  | 3 lines               | 1 line           | 67%       |
+| Method calls | `.execute().unwrap()` | `.value`         | 75%       |
+| Safe access  | try/except block      | `.value_or_none` | 80%       |
+| Factory      | Not available         | `parse_ldif()`   | 90%       |
 
 ### Python 3.13 Benefits
 
@@ -922,4 +923,3 @@ if __name__ == "__main__":
 ---
 
 **Next Step:** Implementar estas 3 propriedades no FlextService atual!
-

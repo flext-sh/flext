@@ -14,5 +14,6 @@
   "evenBetterToml.formatter.reorderInlineTables": true,
   "evenBetterToml.formatter.reorderKeys": true,
   "evenBetterToml.formatter.trailingNewline": true,
-  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python"
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "makefile.configureOnOpen": false
 }
