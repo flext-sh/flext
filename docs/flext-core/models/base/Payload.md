@@ -11,15 +11,15 @@ Envelope fortemente tipado destinado a carregar entidades/comandos/respostas den
 - `model_validator(mode="after")`: garante que `data` corresponda ao tipo esperado. Usa `isinstance` ou `beartype.door.is_bearable` para suportar `typing.Protocol`/`TypedDict`.
 - `computed_field is_expired`: compara `expires_at` com `FlextUtilities.Generators.generate_datetime_utc()`.
 
-| Campo              | Tipo                                | Observações |
-| ------------------ | ----------------------------------- | ----------- |
-| `_expected_data_type` | `type \| tuple[type, ...] \| None` | ClassVar preenchido automaticamente por `__class_getitem__`. |
-| `data`             | `T`                                 | Carga principal (command/event/entity). |
-| `metadata`         | `dict[str, str \| int \| float]`   | Cabeçalhos simples (correlação, tags) — ainda não utiliza `FlextModels.Metadata`. |
-| `expires_at`       | `datetime \| None`                  | Suporte a TTL/expiração. |
-| `correlation_id`   | `str \| None`                       | Deve acompanhar `FlextContext`. |
-| `source_service`   | `str \| None`                       | Identifica produtor (tap, target, handler). |
-| `message_type`     | `str \| None`                       | Discriminador livre (command/query/event). |
+| Campo                 | Tipo                               | Observações                                                                       |
+| --------------------- | ---------------------------------- | --------------------------------------------------------------------------------- |
+| `_expected_data_type` | `type \| tuple[type, ...] \| None` | ClassVar preenchido automaticamente por `__class_getitem__`.                      |
+| `data`                | `T`                                | Carga principal (command/event/entity).                                           |
+| `metadata`            | `dict[str, str \| int \| float]`   | Cabeçalhos simples (correlação, tags) — ainda não utiliza `FlextModels.Metadata`. |
+| `expires_at`          | `datetime \| None`                 | Suporte a TTL/expiração.                                                          |
+| `correlation_id`      | `str \| None`                      | Deve acompanhar `FlextContext`.                                                   |
+| `source_service`      | `str \| None`                      | Identifica produtor (tap, target, handler).                                       |
+| `message_type`        | `str \| None`                      | Discriminador livre (command/query/event).                                        |
 
 ## Arquitetura e dependências
 
@@ -37,6 +37,40 @@ Envelope fortemente tipado destinado a carregar entidades/comandos/respostas den
 - **Dispatcher**: `flext_core/src/flext_core/dispatcher.py` manipula hoje `dict[str, object]`. O campo `metadata` + `correlation_id` do payload foi desenhado para alimentar `_extract_dispatch_configuration` diretamente, evitando conversões.
 - **Handlers (CQRS)**: `FlextHandlers.handle` poderia exigir `Payload[FlextModels.Command]`, garantindo que todo handler receba envelope com `source_service` e `message_type` preenchidos.
 - **Metadata**: existe esforço planejado para trocar `dict[str, str|int|float]` por `FlextModels.Metadata`, reforçando a ligação com registry/observability.
+
+### Interações concretas no flext-core
+- `flext_core/src/flext_core/models.py:333-365` expõe `Payload` como parte do namespace `FlextModels` e chama `model_rebuild` na sequência (`linhas 530-533`) para compatibilidade com Pydantic v2.
+- `flext_core/src/flext_core/_models/base.py:46-145` mostra a implementação completa, incluindo `create_dynamic_type_subclass`, `model_validator` e `computed_field` — qualquer mudança nesses utilitários impacta diretamente `Payload`.
+- `flext_core/src/flext_core/handlers.py:439-520` espera hoje objetos serializáveis (`dict`, `BaseModel`, `attrs`). `Payload` foi desenhado para encaixar nesse pipeline (via `model_dump`), entregando informações extras (`source_service`, `expires_at`).
+- `flext_core/src/flext_core/context.py:430-520` manipula `FlextContext.ContextData` com `Metadata`; integrar `Payload.metadata` à mesma estrutura simplificaria a conversão de contexto → payload.
+
+### Motivação detalhada
+- **Traces completos**: `correlation_id`, `source_service` e `message_type` permitem reconstruir o caminho de uma mensagem, algo essencial para targets Singer e pipelines LDIF.
+- **Compatibilidade com mixins**: por herdar `IdentifiableMixin` e `TimestampableMixin`, todo payload ganha `unique_id`, `created_at`, `updated_at`, atributos usados por `LogOperation` e `Metadata`.
+- **Segurança em runtime**: `__class_getitem__` evita que um handler receba `Payload[User]` contendo `Product` — proteção útil em ambientes com plugins carregados dinamicamente onde MyPy não alcança.
+
+### Exemplo adicional (trecho do módulo base)
+`flext_core/src/flext_core/_models/base.py:64-112`
+
+```python
+typed_cls = FlextUtilities.Generators.create_dynamic_type_subclass(
+    f"{cls_name}[{type_name}]",
+    cls,
+    {
+        "_expected_data_type": actual_type,
+        "__module__": cls.__module__,
+        "__qualname__": f"{cls_qualname}[{type_name}]",
+    },
+)
+```
+
+Esse trecho reforça como o namespace Base depende de `FlextUtilities` para gerar tipos auxiliares preservando metadados (módulo, qualname), requisito importante para inspeção em logs/dashboards.
+
+### Roteiro de adoção multi-projeto
+1. **Dispatcher** – aceitar `Payload` diretamente, extraindo `metadata` e `correlation_id` antes de despachar para handlers.
+2. **FlextHandlers** – atualizar assinaturas para `def handle(self, message: FlextModels.Payload[TMsg])` e expor adaptadores para quem ainda envia dicts.
+3. **Targets/Taps** – encapsular comandos Singer (`flext-target-oracle`, `flext-target-ldif`) com `Payload`, garantindo que `source_service` e `message_type` viajem juntos.
+4. **Observability** – usar `Payload.unique_id` como chave para correlacionar `LogOperation`, `Metadata` e métricas em `flext-observability`.
 
 ## Cenários concretos
 

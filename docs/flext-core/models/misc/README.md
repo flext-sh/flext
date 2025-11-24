@@ -16,6 +16,7 @@ Tipos auxiliares como o discriminated union que habilita o roteamento automátic
 **Como funciona**
 
 - Definido inline em `flext_core/models.py`:
+
   ```python
   _MessageUnion = Annotated[
       Cqrs.Command | Cqrs.Query | DomainEvent,
@@ -23,6 +24,7 @@ Tipos auxiliares como o discriminated union que habilita o roteamento automátic
   ]
   MessageUnion = _MessageUnion
   ```
+
 - Cada tipo (Command/Query/DomainEvent) define `message_type` com valores literais (`"command"`, `"query"`, `"event"`). Quando um objeto é validado contra o union, o Pydantic escolhe o ramo correto automaticamente.
 
 **Aplicações esperadas**

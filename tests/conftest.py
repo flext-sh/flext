@@ -184,7 +184,7 @@ def user_registration_data() -> dict[str, object]:
 
 
 @pytest.fixture
-def order_data() -> dict[str, object]:
+def order_data() -> dict[str, object]:  # type: ignore[misc]
     """Provide realistic order data."""
     return FlextTestsDomains.order_data()
 

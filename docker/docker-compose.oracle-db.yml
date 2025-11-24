@@ -15,7 +15,10 @@ services:
       APP_USER_PASSWORD: flext_test_password
       ORACLE_DATABASE: FLEXTDB
     volumes:
+      # Use named Docker volumes instead of bind mounts to avoid permission issues
+      # and prevent directories from being tracked in git
       - flext_oracle_data:/opt/oracle/oradata
+      # Keep init.sql as bind mount (read-only, no permission issues)
       - ./oracle-db/init.sql:/container-entrypoint-initdb.d/init.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "healthcheck.sh"]
@@ -28,6 +31,8 @@ services:
       - flext-shared-network
 
 volumes:
+  # Named volumes for Oracle data
+  # These are managed by Docker and avoid permission issues
   flext_oracle_data:
     driver: local
 
