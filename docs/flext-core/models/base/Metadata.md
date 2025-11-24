@@ -8,14 +8,14 @@
 
 Herda diretamente de `pydantic.BaseModel` (`frozen=True`, `extra="forbid"`, validação de atribuição). O uso de `datetime.now(UTC)` preserva o princípio de zero dependências.
 
-| Campo        | Tipo                | Padrão                | Observações |
-| ------------ | ------------------- | --------------------- | ----------- |
-| `created_by` | `str \| None`       | `None`                | Usuário/serviço que originou o recurso. |
-| `created_at` | `datetime` (UTC)    | `datetime.now(UTC)`   | Sempre UTC, não depende de `FlextUtilities` para evitar ciclos. |
-| `modified_by`| `str \| None`       | `None`                | Último agente que alterou o recurso. |
-| `modified_at`| `datetime \| None`  | `None`                | Mantém `None` enquanto o objeto for imutável. |
-| `tags`       | `list[str]`         | `[]`                  | Coleção imutável (modelo congelado). |
-| `attributes` | `dict[str, object]` | `{}`                  | Dicionário serializável usado como lingua franca entre módulos. |
+| Campo         | Tipo                | Padrão              | Observações                                                     |
+| ------------- | ------------------- | ------------------- | --------------------------------------------------------------- |
+| `created_by`  | `str \| None`       | `None`              | Usuário/serviço que originou o recurso.                         |
+| `created_at`  | `datetime` (UTC)    | `datetime.now(UTC)` | Sempre UTC, não depende de `FlextUtilities` para evitar ciclos. |
+| `modified_by` | `str \| None`       | `None`              | Último agente que alterou o recurso.                            |
+| `modified_at` | `datetime \| None`  | `None`              | Mantém `None` enquanto o objeto for imutável.                   |
+| `tags`        | `list[str]`         | `[]`                | Coleção imutável (modelo congelado).                            |
+| `attributes`  | `dict[str, object]` | `{}`                | Dicionário serializável usado como lingua franca entre módulos. |
 
 ## Arquitetura e dependências
 
@@ -24,6 +24,23 @@ Herda diretamente de `pydantic.BaseModel` (`frozen=True`, `extra="forbid"`, vali
 - **Registry/Container**: `FlextRegistry.register` e `FlextContainer._store_service` persistem `Metadata` junto às entradas de DI (`flext_core/src/flext_core/registry.py:930-964`, `flext_core/src/flext_core/container.py:353-374`).
 - **Handlers**: quando há falha de validação, `FlextHandlers` anexa um `Metadata` rico à exceção para rastreabilidade (`flext_core/src/flext_core/handlers.py:319-333`).
 - **Decorators/Services**: `FlextDecorators.railway` cria `Metadata` para registrar steps (`flext_core/src/flext_core/decorators.py:1134-1165`), enquanto `FlextService` injeta `Metadata` em `OperationExecutionRequest` e contextos.
+
+### Mapa de dependências internas
+- `flext_core/src/flext_core/protocols.py:619-622` define o contrato de `Metadata` dentro do conjunto de protocolos, permitindo que componentes externos dependam de structural typing em vez do módulo concreto.
+- `flext_core/src/flext_core/dispatcher.py:3050-3165` implementa rotinas dedicadas para converter e validar `Metadata` antes de serializar mensagens, evidenciando dependência bidirecional entre dispatcher e este modelo.
+- `flext_core/src/flext_core/decorators.py:1120-1185` injeta `Metadata` em steps Railway combinando `@inject`, `@log_operation` e `@track_performance` — qualquer pipeline decorado já recebe o DTO automaticamente.
+- `flext_core/src/flext_core/container.py:340-470` grava `Metadata` dentro de `ServiceRegistration`, tornando obrigatório que todo serviço registrado tenha atributos/ tags mesmo que vazios.
+- `flext_core/src/flext_core/handlers.py:585-620` trata `metadata` explicitamente como `FlextModels.Metadata` ao revalidar mensagens, mantendo a consistência com dispatcher.
+
+### Uso cruzado em projetos do monorepo
+- **flext-ldif**: `flext-ldif/src/flext_ldif/api.py:420-449` registra parser/config/constants com `Metadata` e `_utilities/metadata.py:137-230` converte dicts em instâncias estruturadas antes de repassar ao dispatcher.
+- **Targets Oracle (Singer)**: `flext-target-oracle/src/flext_target_oracle/target_commands.py:259-276` e equivalentes em `flext-target-oracle-oic`/`wms` usam `Metadata` para identificar handlers, incluindo tags como `domain`, `handler_type` e descrições.
+- **Decoradores compostos**: `flext_core/src/flext_core/decorators.py:1246-1255` injeta `Metadata` em comandos Railway, garantindo que stacks externos (plugins, CLI) também carreguem atributos padronizados.
+
+### Interoperabilidade com outros namespaces
+- **Entity/Collections**: `Metadata` aparece como campo em modelos de contexto (`ContextData`, `ContextExport`) e em estruturas mutuáveis como `ServiceRegistration`, integrando Base + Collections.
+- **Context**: `FlextContext.Serialization` exporta snapshots com `Metadata`, permitindo transportar atributos e tags entre micro-serviços (`flext_core/src/flext_core/context.py:1666-1810`).
+- **Service/Handler**: os campos `metadata` em `OperationExecutionRequest`, `HandlerExecutionConfig` e `FlextHandlers` criam ponte direta entre `Metadata`, `Payload` e `LogOperation`, indicando dependência transversal.
 
 ## Uso em projetos satélite
 

@@ -7524,7 +7524,7 @@ class FlextCliCore(FlextService[CliDataDict]):
 **Problemas:**
 
 - ❌ **execute() inútil** - Só retorna status
-- ❌ ****init** manual** - Não usa Pydantic fields
+- ❌ \***\*init** manual\*\* - Não usa Pydantic fields
 - ❌ **Private attrs** - `_config`, `_commands` ao invés de Pydantic fields
 - ❌ **Não segue padrão** - Documento recomenda Pydantic fields + execute()
 
