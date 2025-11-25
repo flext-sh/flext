@@ -12,12 +12,14 @@ Tests verify that subprocess usage in external_backend.py has been properly conv
 from __future__ import annotations
 
 import ast
+import inspect
 import pathlib
 import sys
 import tempfile
 from pathlib import Path
 
 import pytest
+from flext_quality.external_backend import FlextQualityExternalBackend
 
 # Add flext to path
 sys.path.insert(
@@ -326,8 +328,6 @@ class TestPhase6Sprint2ExternalBackendConversion:
 
     def test_module_can_be_imported(self) -> None:
         """Verify the module can be imported without errors."""
-        from flext_quality.external_backend import FlextQualityExternalBackend
-
         # Should be able to import and instantiate
         assert FlextQualityExternalBackend is not None
         backend = FlextQualityExternalBackend()
@@ -335,8 +335,6 @@ class TestPhase6Sprint2ExternalBackendConversion:
 
     def test_get_capabilities_returns_six_tools(self) -> None:
         """Verify backend reports all 6 tools as capabilities."""
-        from flext_quality.external_backend import FlextQualityExternalBackend
-
         backend = FlextQualityExternalBackend()
         capabilities = backend.get_capabilities()
 
@@ -347,8 +345,6 @@ class TestPhase6Sprint2ExternalBackendConversion:
 
     def test_analyze_method_exists(self) -> None:
         """Verify analyze method exists and can be called."""
-        from flext_quality.external_backend import FlextQualityExternalBackend
-
         backend = FlextQualityExternalBackend()
 
         # Create a temporary Python file for testing
@@ -510,10 +506,6 @@ class TestPhase6Sprint2ExternalBackendSourceCodeInspection:
 
     def test_method_signatures_unchanged(self) -> None:
         """Verify method signatures remain unchanged for backward compatibility."""
-        import inspect
-
-        from flext_quality.external_backend import FlextQualityExternalBackend
-
         backend = FlextQualityExternalBackend()
 
         # All these methods should exist with correct signatures

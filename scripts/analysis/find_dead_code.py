@@ -11,13 +11,25 @@ Analyzes Python files to find:
 import ast
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
+from typing import TypedDict
+
+UnusedDict = dict[str, list[str]]
+ClassMethodsDict = dict[str, dict[str, set[str]]]
+
+
+class AnalysisResults(TypedDict):
+    """Type definition for analysis results."""
+
+    unused: UnusedDict
+    class_methods: ClassMethodsDict
 
 
 class CodeAnalyzer(ast.NodeVisitor):
     """Analyze Python code using AST to find unused definitions."""
 
     def __init__(self, project_root: Path) -> None:
+        """Initialize CodeAnalyzer with project root path."""
+        super().__init__()
         self.project_root = project_root
         # Track all definitions (what's defined)
         self.definitions: dict[str, set[str]] = defaultdict(set)
@@ -31,7 +43,7 @@ class CodeAnalyzer(ast.NodeVisitor):
         self.current_file: str = ""
         self.current_class: str = ""
 
-    def analyze_project(self, paths: list[Path]) -> dict[str, Any]:
+    def analyze_project(self, paths: list[Path]) -> AnalysisResults:
         """Analyze all Python files in given paths."""
         print(f"🔍 Analyzing {len(paths)} projects...")
 
@@ -106,12 +118,15 @@ class CodeAnalyzer(ast.NodeVisitor):
     def visit_Call(self, node: ast.Call) -> None:
         """Track function/method calls (usages)."""
         # Track method calls (self.method_name)
-        if isinstance(node.func, ast.Attribute):
-            if isinstance(node.func.value, ast.Name) and node.func.value.id == "self":
-                # self.method_name() call
-                if self.current_class:
-                    key = f"{self.current_class}.{node.func.attr}"
-                    self.usages[self.current_file].add(f"method:{key}")
+        if (
+            isinstance(node.func, ast.Attribute)
+            and isinstance(node.func.value, ast.Name)
+            and node.func.value.id == "self"
+            and self.current_class
+        ):
+            # self.method_name() call
+            key = f"{self.current_class}.{node.func.attr}"
+            self.usages[self.current_file].add(f"method:{key}")
 
         # Track function calls
         elif isinstance(node.func, ast.Name):
@@ -125,7 +140,7 @@ class CodeAnalyzer(ast.NodeVisitor):
         self.usages[self.current_file].add(f"class:{node.id}")
         self.generic_visit(node)
 
-    def find_unused(self) -> dict[str, Any]:
+    def find_unused(self) -> AnalysisResults:
         """Find unused definitions."""
         unused: dict[str, list[str]] = defaultdict(list)
 
@@ -153,7 +168,7 @@ class CodeAnalyzer(ast.NodeVisitor):
         return {"unused": unused, "class_methods": dict(self.class_methods)}
 
 
-def print_results(results: dict[str, Any]) -> None:
+def print_results(results: AnalysisResults) -> None:
     """Print analysis results."""
     unused = results["unused"]
 

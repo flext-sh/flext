@@ -11,10 +11,17 @@ Tests verify that subprocess usage in example_helper.py has been properly conver
 
 from __future__ import annotations
 
+import inspect
 import pathlib
 import sys
 
 import pytest
+from flext_quality.tools.example_helper import (
+    check_example_structure,
+    run_example_safely,
+    validate_example_imports,
+    validate_examples_directory,
+)
 
 # Add paths for testing
 sys.path.insert(
@@ -112,87 +119,39 @@ class TestPhase6Sprint2ExampleHelperConversion:
 
     def test_module_can_be_imported(self) -> None:
         """Verify the module can be imported without errors."""
-        try:
-            from flext_quality.tools.example_helper import (
-                check_example_structure,
-                run_example_safely,
-                validate_example_imports,
-                validate_examples_directory,
-            )
-
-            # Should be able to import all functions
-            assert validate_examples_directory is not None
-            assert check_example_structure is not None
-            assert validate_example_imports is not None
-            assert run_example_safely is not None
-        except ModuleNotFoundError as e:
-            # Skip if infrastructure dependencies are missing (not a conversion issue)
-            if "toml" in str(e):
-                pytest.skip(f"Infrastructure dependency missing: {e}")
-            raise
+        # Should be able to import all functions
+        assert validate_examples_directory is not None
+        assert check_example_structure is not None
+        assert validate_example_imports is not None
+        assert run_example_safely is not None
 
     def test_all_functions_callable(self) -> None:
         """Verify all functions are callable."""
-        try:
-            from flext_quality.tools.example_helper import (
-                check_example_structure,
-                run_example_safely,
-                validate_example_imports,
-                validate_examples_directory,
-            )
-
-            # All functions should be callable
-            assert callable(validate_examples_directory)
-            assert callable(check_example_structure)
-            assert callable(validate_example_imports)
-            assert callable(run_example_safely)
-        except ModuleNotFoundError as e:
-            # Skip if infrastructure dependencies are missing (not a conversion issue)
-            if "toml" in str(e):
-                pytest.skip(f"Infrastructure dependency missing: {e}")
-            raise
+        # All functions should be callable
+        assert callable(validate_examples_directory)
+        assert callable(check_example_structure)
+        assert callable(validate_example_imports)
+        assert callable(run_example_safely)
 
     def test_function_signatures_unchanged(self) -> None:
         """Verify function signatures are unchanged."""
-        try:
-            import inspect
+        # Check validate_examples_directory signature
+        sig = inspect.signature(validate_examples_directory)
+        assert "examples_dir" in str(sig)
 
-            from flext_quality.tools.example_helper import (
-                run_example_safely,
-                validate_example_imports,
-                validate_examples_directory,
-            )
+        # Check validate_example_imports signature
+        sig = inspect.signature(validate_example_imports)
+        assert "example_file" in str(sig)
 
-            # Check validate_examples_directory signature
-            sig = inspect.signature(validate_examples_directory)
-            assert "examples_dir" in str(sig)
-
-            # Check validate_example_imports signature
-            sig = inspect.signature(validate_example_imports)
-            assert "example_file" in str(sig)
-
-            # Check run_example_safely signature
-            sig = inspect.signature(run_example_safely)
-            assert "example_file" in str(sig)
-            assert "timeout" in str(sig)
-        except ModuleNotFoundError as e:
-            # Skip if infrastructure dependencies are missing (not a conversion issue)
-            if "toml" in str(e):
-                pytest.skip(f"Infrastructure dependency missing: {e}")
-            raise
+        # Check run_example_safely signature
+        sig = inspect.signature(run_example_safely)
+        assert "example_file" in str(sig)
+        assert "timeout" in str(sig)
 
     def test_check_example_structure_unchanged(self) -> None:
         """Verify check_example_structure is unchanged."""
-        try:
-            from flext_quality.tools.example_helper import check_example_structure
-
-            assert check_example_structure is not None
-            assert callable(check_example_structure)
-        except ModuleNotFoundError as e:
-            # Skip if infrastructure dependencies are missing (not a conversion issue)
-            if "toml" in str(e):
-                pytest.skip(f"Infrastructure dependency missing: {e}")
-            raise
+        assert check_example_structure is not None
+        assert callable(check_example_structure)
 
     def test_timeout_handling_preserved(self) -> None:
         """Verify timeout handling is preserved across all functions."""

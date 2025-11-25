@@ -17,6 +17,7 @@ import ast
 import io
 import json
 import logging
+import os
 import runpy
 import shutil
 import sys
@@ -145,7 +146,7 @@ class EcosystemValidator:
 
             # Change to project directory and set up ruff arguments
             original_dir = str(original_cwd)
-            sys.chdir(str(project_path))
+            os.chdir(str(project_path))
             sys.argv = ["ruff", "check", str(src_dir), "--output-format=json"]
 
             # Capture stdout to get JSON output
@@ -160,7 +161,7 @@ class EcosystemValidator:
                 pass
             finally:
                 # Restore original state
-                sys.chdir(original_dir)
+                os.chdir(original_dir)
                 sys.argv = original_argv
 
             # Parse captured output

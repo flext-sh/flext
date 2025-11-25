@@ -349,8 +349,6 @@ class TestMyPyChecker:
 
     def test_mypy_checker_edge_cases(self) -> None:
         """Test MyPyChecker edge cases."""
-        from pathlib import Path
-
         checker = MyPyChecker()
 
         # Test with empty string path (should fail if path doesn't exist)

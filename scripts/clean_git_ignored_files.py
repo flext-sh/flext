@@ -62,7 +62,9 @@ def check_if_ignored(project_dir: Path, file_path: str) -> bool:
         result = repo.git.check_ignore("-q", file_path, with_exceptions=False)
         # If result is empty, file is not ignored
         # If result has content, file is ignored
-        return result != ""
+        if isinstance(result, str):
+            return bool(result)
+        return False
     except Exception:
         return False
 
@@ -104,7 +106,7 @@ def clean_project(
     # Determine if this is a dry run
     dry_run = mode == CleanMode.DRY_RUN
 
-    results = {
+    results: dict[str, list[str]] = {
         "to_remove": [],
         "removed": [],
         "failed": [],

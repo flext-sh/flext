@@ -16,12 +16,15 @@ from flext_core import (
     FlextConfig,
     FlextConstants,
     FlextContainer,
+    FlextDispatcher,
     FlextLogger,
     FlextModels,
     FlextResult,
     FlextService,
     FlextUtilities,
 )
+from flext_core.exceptions import FlextExceptions
+from pydantic import EmailStr, TypeAdapter
 
 
 class TestFlextTargeted:
@@ -58,8 +61,6 @@ class TestFlextTargeted:
         assert success.unwrap() == "data"
 
         # unwrap() raises FlextExceptions.BaseError when called on failure
-        from flext_core.exceptions import FlextExceptions
-
         with pytest.raises(FlextExceptions.BaseError):
             failure.unwrap()
 
@@ -238,8 +239,6 @@ class TestFlextTargeted:
         failure = FlextResult[str].fail("error")
 
         # value property raises FlextExceptions.BaseError when accessed on failure
-        from flext_core.exceptions import FlextExceptions
-
         with pytest.raises(FlextExceptions.BaseError):
             _ = failure.value  # Should raise
 
@@ -298,8 +297,6 @@ class TestFlextTargeted:
 
     def test_flext_utilities_validation(self) -> None:
         """Test FlextUtilities.Validation methods using Pydantic v2 types."""
-        from pydantic import EmailStr, TypeAdapter
-
         # Test pipeline validation (remaining FlextUtilities validator)
         validators: list[object] = [lambda x: len(x) > 0]
         pipeline_valid = FlextUtilities.Validation.validate_pipeline("test", validators)
@@ -357,8 +354,6 @@ class TestFlextTargeted:
 
     def test_flext_dispatcher_basic_pubsub(self) -> None:
         """Test FlextDispatcher basic handler registration and execution."""
-        from flext_core import FlextDispatcher
-
         dispatcher = FlextDispatcher()
 
         def handler(command: object) -> FlextResult[str]:
@@ -390,7 +385,7 @@ class TestFlextTargeted:
         """Test FlextService basic functionality."""
 
         class TestService(FlextService[str]):
-            def execute(self, **kwargs: object) -> FlextResult[str]:
+            def execute(self, **_kwargs: object) -> FlextResult[str]:
                 return FlextResult[str].ok("service_executed")
 
         service = TestService()
@@ -403,7 +398,7 @@ class TestFlextTargeted:
         """Test FlextService error handling."""
 
         class ErrorService(FlextService[str]):
-            def execute(self, **kwargs: object) -> FlextResult[str]:
+            def execute(self, **_kwargs: object) -> FlextResult[str]:
                 return FlextResult[str].fail("service_error")
 
         service = ErrorService()
@@ -576,7 +571,7 @@ class TestFlextTargeted:
         logger = FlextLogger("integration_test")
 
         class IntegrationService(FlextService[dict[str, object]]):
-            def execute(self, **kwargs: object) -> FlextResult[dict[str, object]]:
+            def execute(self, **_kwargs: object) -> FlextResult[dict[str, object]]:
                 # Use container
                 container.with_service("integration_key", "integration_value")
 

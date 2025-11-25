@@ -15,8 +15,6 @@ from pathlib import Path
 
 from flext_core import FlextLogger
 
-from flext import FlextWorkspaceService
-
 logger = FlextLogger(__name__)
 
 
@@ -24,28 +22,18 @@ def discover_projects(
     workspace_root: Path,
     projects_filter: Sequence[str] | None = None,
 ) -> list[Path]:
-    """Discover FLEXT projects using flext-core workspace management.
+    """Discover FLEXT projects using filesystem enumeration.
 
-    DELEGATES to flext-core FlextWorkspaceService - NO local implementation.
+    Uses direct filesystem discovery to find flext-* projects with pyproject.toml.
     """
     try:
-        # Use flext-core workspace discovery
-        workspace_service = FlextWorkspaceService()
-        result = workspace_service.discover_workspace_projects(str(workspace_root))
-
-        if result.is_failure:
-            logger.error(f"Project discovery failed: {result.error}")
-            return []
-
-        project_infos = result.unwrap()
         project_paths: list[Path] = []
-        for project_info in project_infos:
-            if project_info.repository_path:
-                project_path = Path(project_info.repository_path)
-                if project_path.exists() and (
-                    projects_filter is None or project_info.name in projects_filter
-                ):
-                    project_paths.append(project_path)
+        for item in workspace_root.iterdir():
+            if item.is_dir() and item.name.startswith("flext-"):
+                pyproject_file = item / "pyproject.toml"
+                if pyproject_file.exists():
+                    if projects_filter is None or item.name in projects_filter:
+                        project_paths.append(item)
 
         return project_paths
 

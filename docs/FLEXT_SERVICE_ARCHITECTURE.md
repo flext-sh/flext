@@ -1,25 +1,25 @@
 # Arquitetura FlextService - Padrão Zero Ceremony
 
-**Versão:** 6.1 ✨ **V2 IMPLEMENTADO + Railway Clarificado**  
-**Data:** 1 de Novembro, 2025  
-**Python:** 3.13+  
-**Pydantic:** 2.x  
-**Filosofia:** "Zero Ceremony, Maximum Power, Total Flexibility"  
-**Status:** ✅ V2 Completo - 2238 Testes Passando (100%) - Railway Pattern ✅
+**Versão:** 6.1 ⚠️ **VALIDAÇÃO EM PROGRESSO (2025-11-25)**
+**Data:** Atualizado 25 de Novembro, 2025 (validação e correções)
+**Python:** 3.13+
+**Pydantic:** 2.x
+**Filosofia:** "Zero Ceremony, Maximum Power, Total Flexibility"
+**Status:** 🔴 CORREÇÃO EM PROGRESSO - V1 Funciona ✅, V2 Patterns com Testes Falhando
 
 ## 🎯 Insight Central
 
 Services são apenas **Pydantic models com um método `execute()`** que retornam `FlextResult[T]`.
 Todo o resto é **syntactic sugar** para eliminar boilerplate.
 
-**✅ V2 IMPLEMENTADO - Eliminações Alcançadas:**
+**⚠️ STATUS REAL - Validação de 2025-11-25:**
 
-- ✅ `.execute().unwrap()` → `.result` property (68% menos código)
-- ✅ Instanciação direta → `auto_execute = True` (95% menos código)
-- ✅ Config, logger, container → Properties lazy automáticas
-- ✅ Campo `id` liberado → Entity usa `unique_id` agora
-- ✅ Zero type ignores → 100% type-safe
-- ✅ 2238 testes passando → 100% backward compatible
+- ✅ **V1 EXPLÍCITO** - `.execute().unwrap()` funciona perfeitamente (service.py:107-142 intact)
+- 🔴 **V2 PROPERTY** - Código implementado (service.py:166-188) MAS 10+ testes falhando
+- 🔴 **V2 AUTO** - Código implementado (service.py:108-142) MAS 3+ testes falhando
+- ✅ Config, logger, container → Properties lazy automáticas - via FlextMixins (FUNCIONA)
+- ✅ Zero type ignores → 100% type-safe (em código implementado)
+- 🔴 **Testes:** 1783 passed, 30 failed, 15 errors (NÃO 2238 como alegado)
 
 ---
 
@@ -31,13 +31,14 @@ Todo o resto é **syntactic sugar** para eliminar boilerplate.
 2. [**Princípios de Coesão**](#princípios-de-coesão-deste-documento) 📐 **ENTENDA A ESTRUTURA**
 3. [**Roadmap de Evolução**](#roadmap-de-evolução) 🗺️ **V1 vs V2 Property vs V2 Auto**
 
-### ✨ Novidades V6.0 (1 Nov 2025)
+### ⚠️ Status V6.0 (VALIDAÇÃO 25 NOV 2025)
 
-- ✅ **V2 Property implementado** - `.result` property (68% redução)
-- ✅ **V2 Auto implementado** - `auto_execute = True` (95% redução)
-- ✅ **Campo `id` liberado** - Entity usa `unique_id` agora
-- ✅ **2238 testes passando** - 100% backward compatible
-- ✅ **Zero type ignores** - 100% type-safe
+- ✅ **V1 (Original)** - `.execute().unwrap()` funciona perfeitamente
+- 🔴 **V2 Property** - Código pronto (service.py:166-188) MAS testes falhando (10+ errors)
+- 🔴 **V2 Auto** - Código pronto (service.py:108-142) MAS testes falhando (3+ errors)
+- ✅ **Campo `id` liberado** - Pode estar implementado
+- 🔴 **Testes:** 1783 passando (NÃO 2238) - 30 falhando, 15 com erro
+- ✅ **Zero type ignores** - 100% type-safe (no código que funciona)
 - 👉 [**Ver Validação Completa**](#v2-implementado---validação-completa-e-testes)
 
 ### 📚 Conteúdo Principal
@@ -50,16 +51,17 @@ Todo o resto é **syntactic sugar** para eliminar boilerplate.
 9. [Infraestrutura Avançada: FlextDispatcher, FlextRegistry e FlextContext](#infraestrutura-avançada-flextdispatcher-flextregistry-e-flextcontext)
 10. [Guia de Implementação](#guia-de-implementação)
 11. [Padrões de Uso](#padrões-de-uso)
-12. [Guia de Migração](#guia-de-migração)
-13. [Exemplos](#exemplos)
-14. [Estudos de Caso](#estudos-de-caso)
+12. [**Integração com Camada CQRS**](#integração-com-camada-cqrs-tier-31-32) 🔗 **NOVO!**
+13. [Guia de Migração](#guia-de-migração)
+14. [Exemplos](#exemplos)
+15. [Estudos de Caso](#estudos-de-caso)
     - [flext-cli](#estudo-de-caso-flext-cli)
     - [flext-core](#estudo-de-caso-flext-core)
 
 ### ✅ Validação e Testes
 
-15. [**V2 IMPLEMENTADO - Validação Completa**](#v2-implementado---validação-completa-e-testes) 🎉 **NOVO!**
-16. [**Validação de Coesão**](#validação-de-coesão---checklist-final) ✅ **CHECKLIST**
+16. [**V2 IMPLEMENTADO - Validação Completa**](#v2-implementado---validação-completa-e-testes) 🎉 **NOVO!**
+17. [**Validação de Coesão**](#validação-de-coesão---checklist-final) ✅ **CHECKLIST**
 
 ---
 
@@ -88,12 +90,12 @@ class MyService(FlextService[Result]):
 
 ### ✅ Como Usar (Zero Ceremony V2)
 
-> ✨ **VERSÃO:** Este exemplo mostra **V2 IMPLEMENTADO** - código que funciona AGORA!
+> ✨ **VERSÃO:** Implementado - código que funciona AGORA!
 
 **Infraestrutura automática via properties herdadas:**
 
 ```python
-# ✨ V2 IMPLEMENTADO - Funciona agora!
+# ✨ IMPLEMENTADO - Funciona agora!
 class MyService(FlextService[Result]):
     """Service com ZERO setup de infraestrutura."""
 
@@ -107,7 +109,7 @@ class MyService(FlextService[Result]):
 
         - self.config: FlextConfig      ← Global singleton
         - self.logger: FlextLogger      ← Structured logging com cache
-        - self.container: FlextContainer ← DI container
+        - self.container: FlextContainer ← DI container (retorna FlextResult!)
         - self.context: FlextContext    ← Correlation IDs, tracing
         - self.track(): ContextManager  ← Performance monitoring
 
@@ -118,8 +120,11 @@ class MyService(FlextService[Result]):
         if self.config.debug:
             self.logger.debug(f"Processing {self.action} for user {self.user_id}")
 
-        # ✅ Acesso ao container para DI (retorna UserRepository direto em V2!)
-        user_repo = self.container.get("UserRepository")
+        # ✅ Acesso ao container para DI (retorna FlextResult[T]!)
+        user_repo_result = self.container.get("UserRepository")
+        if user_repo_result.is_failure:
+            return FlextResult.fail(user_repo_result.error)
+        user_repo = user_repo_result.unwrap()
 
         # ✅ Performance tracking automático
         with self.track("process_action"):
@@ -133,21 +138,28 @@ class MyService(FlextService[Result]):
 
         return FlextResult.ok(result)
 
-# ✅ V2: ULTIMATE - Instanciar retorna o valor diretamente!
-result = MyService(user_id="123", action="create")  # ← Retorna Result direto!
-print(result.status)  # ✅ Funciona!
+# ✅ USO PADRÃO (auto_execute = False):
+service = MyService(user_id="123", action="create")
+result = service.execute()
+if result.is_success:
+    print(f"Success: {result.value}")
+else:
+    print(f"Error: {result.error}")
 
-# ✅ V2: Error handling via try/except
+# ✅ COM .result PROPERTY (syntax sugar para .execute()):
 try:
-    result = MyService(user_id="123", action="create")
-    print(result.status)
+    value = MyService(user_id="123", action="create").result
+    print(f"Success: {value}")
 except Exception as e:
     print(f"Error: {e}")
 
-# OU use V1 mode para FlextResult explícito
-result_monad = MyService(user_id="123", action="create", _flext_v1_mode=True).execute()
-if result_monad.is_failure:
-    print(f"Error: {result_monad.error}")
+# ✅ ADVANCED: auto_execute = True (opt-in, retorna valor direto):
+class MyAutoService(MyService):
+    auto_execute = True  # ← Opt-in auto-execution
+
+# Agora retorna Result direto, não service instance:
+result_value = MyAutoService(user_id="123", action="create")
+print(f"Success: {result_value}")
 ```
 
 **Como fica HOJE (V1 - Código Atual):**
@@ -198,25 +210,25 @@ if result_monad.is_success:
 **Código Auditado (flext-core/src/flext_core/mixins.py):**
 
 ```python
-# Linha 434-436: ✅ LAZY - Só inicializa quando acessa
+# VALIDADO (mixins.py:607-610): ✅ LAZY - Singleton initialization
 @property
 def container(self) -> FlextContainer:
-    return FlextContainer.get_global()  # Singleton lazy
+    return FlextContainer()  # Singleton (get_global implícito)
 
-# Linha 464-474: ✅ LAZY - Global singleton com cache
+# VALIDADO (mixins.py:621-629): ✅ LAZY com CACHE - DI + thread-safe
+@property
+def logger(self) -> FlextLogger:
+    return self._get_or_create_logger()  # Cache ClassVar + DI lookup
+
+# VALIDADO (mixins.py:612-619): ✅ LAZY - Task-local via FlextContext
+@property
+def context(self) -> FlextContext:
+    return FlextContext()  # Creates new instance (task-local)
+
+# VALIDADO (mixins.py ~730+): ✅ LAZY - Global singleton
 @property
 def config(self) -> FlextConfig:
     return FlextConfig.get_global_instance()  # Singleton lazy
-
-# Linha 448-548: ✅ LAZY com CACHE - DI + thread-safe caching
-@property
-def logger(self) -> FlextLogger:
-    return self._get_or_create_logger()  # Cache ClassVar + DI
-
-# Linha 438-445: ✅ LAZY - Contextvars são lazy por natureza
-@property
-def context(self) -> FlextContext:
-    return FlextContext()  # Task-local storage (lazy)
 ```
 
 **Garantias de Performance:**
@@ -246,6 +258,13 @@ def context(self) -> FlextContext:
 
 ## 📐 Princípios de Coesão deste Documento
 
+**📋 STATUS DE VALIDAÇÃO (2025-11-25)**:
+- ✅ **V1 (Explícito)**: Validado e funcionando (100% backward compatible)
+- 🔴 **V2 Property (.result)**: Código implementado (service.py:166-188) mas 10+ testes falhando
+- 🔴 **V2 Auto (auto_execute)**: Código implementado (service.py:108-142) mas 3+ testes falhando
+- 🔴 **Test Count**: Documentação alegava "2238 TESTES" mas atual é 1783 passed, 30 failed, 15 errors
+- 📊 **Próximo passo**: Corrigir testes em test_documented_patterns.py e test_migration_validation.py
+
 ### 🎯 Estrutura Mental
 
 Este documento descreve **2 estados** do FlextService:
@@ -264,26 +283,28 @@ Este documento descreve **2 estados** do FlextService:
 │ ⚠️ Verbose (19 chars)                                  │
 └────────────────────────────────────────────────────────┘
 
-              ↓ ✅ IMPLEMENTADO!
+              ⏳ EVOLUÇÃO (Parcialmente implementada)
 
 ┌────────────────────────────────────────────────────────┐
-│ V2 PROPERTY: .result (✅ IMPLEMENTADO)                 │
+│ V2 PROPERTY: .result (🔴 PARCIALMENTE IMPLEMENTADO)    │
 │ ────────────────────────────────────────────────────── │
 │ • Service(params).result retorna valor direto          │
-│ • @computed_field Pydantic-native                      │
+│ • @computed_field Pydantic-native (✅ service.py:166-188) │
 │ • Redução 68% código (7 chars vs 19)                  │
 │ • FlextResult obrigatório em execute() (type-safe)     │
 │ • Error handling via try/except                        │
 │ • Infraestrutura automática (mesma de V1)              │
 │                                                         │
-│ ✅ IMPLEMENTADO - 2238 TESTES PASSANDO                 │
-│ ✅ Zero type ignores                                   │
+│ 🔴 CÓDIGO: Implementado (service.py:166-188)           │
+│ 🔴 TESTES: 10+ falhando (test_documented_patterns.py)  │
+│ 🔴 STATUS: Requer correção de testes                   │
+│ 📊 Atual: 1783 tests passed, 30 failed, 15 errors      │
 └────────────────────────────────────────────────────────┘
 
-              ↓ ✅ IMPLEMENTADO!
+              ⏳ PARCIALMENTE IMPLEMENTADO
 
 ┌────────────────────────────────────────────────────────┐
-│ V2 AUTO: auto_execute (✅ IMPLEMENTADO)                │
+│ V2 AUTO: auto_execute (🔴 PARCIALMENTE IMPLEMENTADO)   │
 │ ────────────────────────────────────────────────────── │
 │ • Service(params) retorna valor direto (sem .result)   │
 │ • __new__ override + auto_execute = True               │
@@ -292,8 +313,10 @@ Este documento descreve **2 estados** do FlextService:
 │ • Error handling via try/except                        │
 │ • Infraestrutura automática (mesma de V1)              │
 │                                                         │
-│ ✅ IMPLEMENTADO - 2238 TESTES PASSANDO                 │
-│ ✅ Zero type ignores, zero hacks                       │
+│ 🔴 CÓDIGO: Implementado (service.py:108-142)           │
+│ 🔴 TESTES: 3+ falhando (test_documented_patterns.py)   │
+│ 🔴 STATUS: Requer correção de testes                   │
+│ 📊 Atual: 1783 tests passed, 30 failed, 15 errors      │
 └────────────────────────────────────────────────────────┘
 ```
 
@@ -410,65 +433,63 @@ user = UserService(user_id="123")  # ← Tipo: User
 - ✅ Mypy valida automaticamente
 - ✅ IDE autocomplete funciona
 
-**Implementação V2 com `__new__` override:**
+**Implementação Atual V2 com `__new__` override (service.py:108-142):**
 
 ```python
-# flext-core/src/flext_core/service.py (PROPOSTA V2)
+# flext-core/src/flext_core/service.py (IMPLEMENTAÇÃO REAL - com limitações)
 class FlextService[TDomainResult](
     FlextModels.ArbitraryTypesModel,
     FlextMixins,
     ABC,
 ):
-    """Base service com auto-execution V2 Ultimate.
+    """Base service com auto-execution pattern.
 
-    Type parameter TDomainResult é inferido automaticamente:
-    - execute() retorna FlextResult[TDomainResult] (implícito)
-    - Usuário não precisa declarar FlextResult[] explicitamente
-    - Type inference Python 3.13 simplifica tudo
+    Nota: Testes estão falhando para V2 Property e V2 Auto.
+    Requer correção de testes antes de marcar como "IMPLEMENTADO".
     """
 
-    def __new__(cls, **kwargs):
+    # Auto-execute desativado por padrão (False)
+    auto_execute: ClassVar[bool] = False
+
+    def __new__(cls, **data: object) -> Self:
+        """Handle auto-execution pattern and instance creation.
+
+        When auto_execute is False: Returns normal service instance
+        When auto_execute is True: Executes service and returns result value directly
+
+        Raises:
+            FlextExceptions.BaseError: When auto-execution fails
         """
-        V2 Magic: Retorna valor direto (zero ceremony).
-
-        FlextResult é OBRIGATÓRIO internamente:
-        - Type-safe error handling garantido
-        - Railway pattern sempre presente
-        - Validação mypy em tempo de compilação
-
-        Error handling:
-        - V2 Default: try/except (Pythonic)
-        - V1 Compatible: _flext_v1_mode=True para .execute()
-        """
-        v1_mode = kwargs.pop("_flext_v1_mode", False)
-
-        # V1 Compatibility: Retorna instância
-        if v1_mode:
-            instance = super().__new__(cls)
-            return instance
-
-        # V2 Ultimate: Auto-execute e unwrap
         instance = super().__new__(cls)
-        instance.__init__(**kwargs)
-
-        # execute() retorna FlextResult[TDomainResult] (inferido!)
-        result = instance.execute()
-
-        # Unwrap: lança exception se falhou (Pythonic)
-        return result.unwrap()
+        if cls.auto_execute:
+            # Auto-execution pattern: create, initialize, execute, return result
+            object.__init__(instance)
+            cls.__init__(instance, **data)
+            # Call execute via object.__getattribute__ to bypass abstract method check
+            execute_fn = object.__getattribute__(instance, "execute")
+            result = execute_fn()
+            if result.is_success:
+                # Return result directly instead of service instance
+                return cast("Self", result.value)
+            raise FlextExceptions.BaseError(result.error or "Service execution failed")
+        return instance
 
     @abstractmethod
     def execute(self) -> FlextResult[TDomainResult]:
-        """Implementar lógica de negócio.
-
-        Retorno FlextResult[TDomainResult] é inferido do tipo genérico!
-        """
+        """Execute domain service logic - abstract method to be implemented by subclasses."""
 ```
 
-**Uso ZERO Ceremony:**
+**⚠️ OBSERVAÇÕES IMPORTANTES SOBRE A IMPLEMENTAÇÃO**:
+
+1. **auto_execute é False por padrão** (opt-in, não default)
+2. **Não há suporte a `_flext_v1_mode`** como mostrado na proposta - está comentado ou não implementado
+3. **Testes para V2 estão falhando** - Não deve ser marcado como ✅ IMPLEMENTADO
+4. **Type inference Python 3.13** - Necessita validação adicional se está funcionando corretamente
+
+**Padrões de Uso ATUAIS (o que realmente funciona):**
 
 ```python
-# ✅ ULTIMATE SIMPLICITY - Sem .value, sem .result, sem nada!
+# 💡 V1 PATTERN - Explícito (sempre funciona, 32+ projetos usam)
 class UserService(FlextService[User]):
     user_id: str
 
@@ -477,81 +498,72 @@ class UserService(FlextService[User]):
         return FlextResult.ok(user)
 
 # ═══════════════════════════════════════════════════════
-# USO: Apenas instancie - retorna o valor diretamente!
+# USO V1: Padrão explícito e confiável
 # ═══════════════════════════════════════════════════════
 
-# ✅ Retorna User diretamente (sem .value!)
-user = UserService(user_id="123")
-print(user.name)  # ✅ Funciona!
-
-# ✅ V2: Error handling Pythonic
-try:
-    user = UserService(user_id="123")
-    print(user.name)
-except Exception as e:
-    print(f"Error: {e}")
-
-# ✅ V1 Compatible: FlextResult explícito
-result = UserService(user_id="123", _flext_v1_mode=True).execute()
+# ✅ V1: Execute + unwrap (padrão consolidado)
+result = UserService(user_id="123").execute()
 if result.is_success:
     user = result.unwrap()
+    print(user.name)
 else:
     print(f"Error: {result.error}")
 
-# ✅ Composição monádica (quando necessário)
-users = (
-    GetUserIds()  # Retorna list[str] direto
-    |> map(lambda id: UserService(user_id=id))  # Cada um retorna User
-    |> filter(lambda u: u.is_active)
-)
+# 💡 V2 PROPERTY PATTERN (parcialmente implementado - testes falhando)
+# NÃO use ainda até testes serem corrigidos:
+# user_value = UserService(user_id="123").result  # ⚠️ Testes falhando
+
+# 💡 V2 AUTO PATTERN (parcialmente implementado - testes falhando)
+# Para usar este padrão, defina auto_execute=True:
+# class QuickUserService(FlextService[User]):
+#     auto_execute = True  # ⚠️ Testes falhando
+#     ...
+# user = QuickUserService(user_id="123")  # ⚠️ Não use ainda
 ```
 
-**Comparação Final:**
+**Comparação de Padrões Disponíveis:**
 
-| Padrão                | Código                       | Boilerplate   |
-| --------------------- | ---------------------------- | ------------- |
-| **Antes (Original)**  | `service.execute().unwrap()` | ❌ 3 calls    |
-| **Meio (Properties)** | `service.value`              | ⚠️ 1 property |
-| **ULTIMATE (Magic)**  | `Service(params)`            | ✅ **ZERO**   |
+| Padrão                | Código                       | Status        | Notas |
+| --------------------- | ---------------------------- | ------------- | ------ |
+| **V1 (Original)**     | `service.execute().unwrap()` | ✅ Funciona   | 32+ projetos, consolidado |
+| **V2 Property**       | `service.result`             | 🔴 Testes falhando | service.py:166-188 implementado |
+| **V2 Auto**           | `Service(params)`            | 🔴 Testes falhando | service.py:108-142 implementado |
 
-**Quando Usar Cada Modo:**
+**Quando Usar Cada Modo (HOJE):**
 
 ```python
-# 🎯 Caso 1: Happy path (90% dos casos)
-user = UserService(user_id="123")  # Direto, lança exception se falhar
+# 🎯 Padrão Recomendado AGORA (V1):
+result = UserService(user_id="123").execute()
+if result.is_success:
+    user = result.unwrap()
+    print(user.name)
+else:
+    logger.error(f"User service failed: {result.error}")
 
-# 🎯 Caso 2: Error handling via try/except (V2)
-try:
-    user = UserService(user_id="123")
-except Exception as e:
-    logger.error(f"User service failed: {e}")
+# 🎯 Alternativa: Usar .result() method diretamente
+# (sem decorator, executar manualmente)
+result = UserService(user_id="123").execute()
+user_value = result.value if result.is_success else None
 
-# OU V1 mode para FlextResult
-result = UserService(user_id="123", _flext_v1_mode=True).execute()
-if result.is_failure:
-    logger.error(result.error)
-
-# 🎯 Caso 3: Composição monádica
-pipeline = (
-    LoadData(source="file.csv")  # Retorna data direto
-    |> ProcessData  # Retorna processed direto
-    |> SaveData  # Retorna saved direto
-)
+# ❌ NÃO USE AINDA (testes falhando):
+# result = UserService(user_id="123", _flext_v1_mode=True).execute()  # Não existe
+# user = UserService(user_id="123")  # Requer auto_execute=True (testes falhando)
 ```
 
-**Benefícios:**
+**Status Atual das Funcionalidades:**
 
-- ✅ **Zero boilerplate** - Nada de `.value`, `.result`, `.execute()`
-- ✅ **Type-safe** - IDE sabe que `UserService()` retorna `User`
-- ✅ **FlextResult transparente** - Sempre retorna FlextResult internamente
-- ✅ **Pythonic** - Instanciar = executar (como funções)
-- ✅ **Backward compatible** - 100% compatível com V1
+- ✅ **V1 (Explícito)** - Funciona perfeitamente, 32+ projetos usando
+- 🔴 **V2 Property (.result)** - Código implementado, mas testes falhando
+- 🔴 **V2 Auto (auto_execute)** - Código implementado, mas testes falhando
+- ❌ **_flext_v1_mode parameter** - Não foi implementado
+- ❌ **Pipe operator |>** - Sintaxe futura (PEP 701), não disponível ainda
 
-**Características do Design (imutáveis):**
+**Próximos Passos:**
 
-- 📌 Instanciar **sempre** executa (by design - zero ceremony)
-- 📌 `__new__` override (implementação interna transparente)
-- 📌 FlextResult **obrigatório** em `execute()` (type-safe error handling)
+1. Corrigir testes em `tests/test_documented_patterns.py`
+2. Corrigir testes em `tests/test_migration_validation.py`
+3. Validar type inference Python 3.13
+4. Apenas então marcar V2 patterns como ✅ IMPLEMENTADO
 
 **Por Que Este Design:**
 
@@ -574,17 +586,17 @@ pipeline = (
 
 ## 🗺️ Roadmap de Evolução
 
-### 📊 Visão Geral: 3 Padrões do FlextService ✅ IMPLEMENTADOS
+### 📊 Visão Geral: Status Atual dos Padrões do FlextService (2025-11-25)
 
-O FlextService evoluiu em **3 padrões progressivos** para **eliminar TODO o boilerplate**:
+O FlextService tem **3 padrões**, mas apenas V1 está pronto para uso em produção:
 
-| Versão            | Status              | Boilerplate                      | Redução  | Quando Usar                     |
+| Versão            | Status              | Boilerplate                      | Redução  | Notas                           |
 | ----------------- | ------------------- | -------------------------------- | -------- | ------------------------------- |
-| **V1: Explícito** | ✅ Implementado     | `.execute().unwrap()` (19 chars) | Baseline | Código existente (32+ projetos) |
-| **V2 Property**   | ✅ **IMPLEMENTADO** | `.result` (7 chars)              | **68%**  | Uso geral recomendado           |
-| **V2 Auto**       | ✅ **IMPLEMENTADO** | Instanciação direta (4 chars)    | **95%**  | Scripts e CLIs                  |
+| **V1: Explícito** | ✅ Pronto para usar | `.execute().unwrap()` (19 chars) | Baseline | 32+ projetos, 100% confiável    |
+| **V2 Property**   | 🔴 Testes falhando  | `.result` (7 chars)              | **68%**  | Código em service.py:166-188    |
+| **V2 Auto**       | 🔴 Testes falhando  | Instanciação direta (4 chars)    | **95%**  | Código em service.py:108-142    |
 
-**Migração:** Direta de V1 → V2 Property ou V2 Auto (100% backward compatible)
+**IMPORTANTE**: Não migre para V2 patterns ainda - testes estão falhando e precisam de correção antes de uso em produção.
 
 ---
 
@@ -628,44 +640,52 @@ if result.is_success:
 
 ---
 
-### 📌 Versão 2 Property: `.result` ✅ IMPLEMENTADO
+### 📌 Versão 2 Property: `.result` 🔴 PARCIALMENTE IMPLEMENTADO
 
-**Status:** ✅ **IMPLEMENTADO** no flext-core (produção ready)  
+**Status:** 🔴 **Código implementado mas TESTES FALHANDO** (NÃO use em produção)
 **Código:** 7 chars - **68% redução** vs V1
+**Implementação:** service.py:166-188 (linhas corretas)
+**Testes:** 10+ falhando em test_documented_patterns.py
 
-**Como funciona:**
+**Implementação Real (service.py:166-188):**
 
 ```python
-# flext-core/src/flext_core/service.py - linha 233
-@computed_field  # Pydantic 2 native API
+# flext-core/src/flext_core/service.py - LINHAS 166-188 (não 233!)
+@computed_field
 def result(self) -> TDomainResult:
-    """Auto-execute and unwrap shorthand (V2 pattern)."""
-    return self.execute().unwrap()
+    """Get execution result with lazy evaluation.
 
-# ✅ V2 Property: Zero ceremony (7 chars)
-user = UserService(user_id="123").result
-print(user.name)  # ✅ Type-safe!
+    Raises:
+        FlextExceptions.BaseError: When execution fails
+    """
+    result = self.execute()
+    if result.is_success:
+        return result.value
+    raise FlextExceptions.BaseError(result.error or "Service execution failed")
 
-# ✅ V2: Error handling Pythonic
-try:
-    user = UserService(user_id="123").result
-    print(user.name)
-except FlextExceptions.BaseError as e:
-    print(f"Error: {e}")
+# ⚠️ PADRÃO: Não use ainda - testes falhando!
+# user = UserService(user_id="123").result  # ❌ Testes falhando
 
-# ✅ V1: Ainda funciona (backward compatible)
+# ✅ V1: Use este padrão por enquanto (funciona garantidamente)
 result = UserService(user_id="123").execute()
-if result.is_failure:
-    print(result.error)
+if result.is_success:
+    user = result.unwrap()
+    print(user.name)
 ```
 
-**Características:**
+**Por que os testes estão falhando:**
+
+- AttributeError ao tentar acessar campos que deveriam estar no resultado
+- Parece ser incompatibilidade com como o objeto é serializado/desserializado
+- Necessita debug detalhado para identificar raiz do problema
+
+**Características (quando funcionar):**
 
 - ✅ **68% redução de código** - 7 chars vs 19 chars
 - ✅ **Pydantic-native** - @computed_field (zero hacks)
-- ✅ **Type-safe** - Type checkers inferem TDomainResult
+- ⚠️ **Type-safe** - Type checkers inferem TDomainResult (mas testes falhando)
 - ✅ **Lazy evaluation** - Só executa quando acessado
-- ✅ **Serializable** - Incluído em model_dump se configurado
+- ⚠️ **Serializable** - Precisa validação (testes falhando)
 - ✅ **100% backward compatible** - V1 continua funcionando
 - ✅ **Zero type ignores** - 100% type-safe
 
@@ -677,178 +697,191 @@ if result.is_failure:
 - ✅ Scripts, CLIs, APIs
 - ✅ Máxima legibilidade e flexibilidade
 
-### 📌 Versão 2 Auto: `auto_execute` ✅ IMPLEMENTADO
+### 📌 Versão 2 Auto: `auto_execute` 🔴 PARCIALMENTE IMPLEMENTADO
 
-**Status:** ✅ **IMPLEMENTADO** no flext-core (produção ready)  
+**Status:** 🔴 **Código implementado mas TESTES FALHANDO** (NÃO use em produção)
 **Código:** 4 chars - **95% redução** vs V1
+**Implementação:** service.py:92 (auto_execute) e 108-142 (__new__)
+**Testes:** 3+ falhando em test_documented_patterns.py
 
-**Como funciona:**
+**Implementação Real (service.py:92 e 108-142):**
 
 ```python
-# flext-core/src/flext_core/service.py - linha 179
-auto_execute: ClassVar[bool] = False  # Default: manual
+# flext-core/src/flext_core/service.py - LINHA 92
+auto_execute: ClassVar[bool] = False  # Default: manual (False)
 
-def __new__(cls, **kwargs: object) -> Self:
-    """Control execution flow based on auto_execute."""
-    instance = cast("Self", super().__new__(cls))
-    type(instance).__init__(instance, **kwargs)
-
+# flext-core/src/flext_core/service.py - LINHAS 108-142
+def __new__(cls, **data: object) -> Self:
+    """Handle auto-execution pattern and instance creation."""
+    instance = super().__new__(cls)
     if cls.auto_execute:
-        return cast("Self", instance.execute().unwrap())
-
+        object.__init__(instance)
+        cls.__init__(instance, **data)
+        execute_fn = object.__getattribute__(instance, "execute")
+        result = execute_fn()
+        if result.is_success:
+            return cast("Self", result.value)
+        raise FlextExceptions.BaseError(result.error or "Service execution failed")
     return instance
 
-# Habilitar auto-execution na classe
-class AutoUserService(FlextService[User]):
-    auto_execute = True  # ← Enable auto-execution
-    user_id: str
+# ⚠️ PADRÃO: Não use ainda - testes falhando!
+# class AutoUserService(FlextService[User]):
+#     auto_execute = True  # ← Enable auto-execution (❌ Testes falhando)
+#     user_id: str
+#
+#     def execute(self) -> FlextResult[User]:
+#         return FlextResult.ok(User(id=self.user_id, name="Alice"))
+#
+# user = AutoUserService(user_id="123")  # ❌ Testes falhando
 
-    def execute(self) -> FlextResult[User]:
-        return FlextResult.ok(User(id=self.user_id, name="Alice"))
-
-# ✅ V2 Auto: Ultimate zero ceremony (4 chars!)
-user = AutoUserService(user_id="123")  # Returns User directly!
-print(user.name)  # ✅ Type-safe!
-print(user.id)    # ✅ 'id' agora disponível (não conflita com unique_id)!
-
-# ✅ Error handling Pythonic
-try:
-    user = AutoUserService(user_id="123")
+# ✅ V1: Use este padrão por enquanto (funciona garantidamente)
+result = UserService(user_id="123").execute()
+if result.is_success:
+    user = result.unwrap()
     print(user.name)
-except FlextExceptions.BaseError as e:
-    print(f"Error: {e}")
 ```
 
-**Características:**
+**Por que os testes estão falhando:**
+
+- AttributeError e outras exceções ao tentar usar auto_execute=True
+- Parece ser relacionado à ordem de inicialização ou como o resultado é desempacotado
+- Necessita debug detalhado para identificar raiz do problema
+
+**Características (quando funcionar):**
 
 - ✅ **95% redução de código** - 4 chars vs 19 chars
 - ✅ **ZERO ceremony** - Apenas instantiate
-- ✅ **Type-safe com cast** - Mypy happy
-- ✅ **Zero type ignores** - 100% type-safe
-- ✅ **Zero hacks** - Clean **new** implementation
+- ⚠️ **Type-safe** - Usa cast mas testes falhando
+- ⚠️ **Zero type ignores** - Objetivo 100% type-safe
+- ⚠️ **Zero hacks** - Clean __new__ implementation
 - ✅ **100% backward compatible** - Default False
 - ✅ **Opt-in** - Controle por classe
 
 **Quando usar:**
 
-- ✅ **Scripts simples** - Maximum simplicity
-- ✅ **CLIs** - Comandos one-liner
-- ✅ **Uso direto** - Quando não precisa de FlextResult
-- 💡 **Railway pattern:** Use `.execute()` ao invés de auto-execute (set `auto_execute = False`)
+- ❌ **Não use em produção** - Testes falhando
+- ⏳ **Scripts simples** - Aguarde correção dos testes
+- ⏳ **CLIs** - Aguarde correção dos testes
+- 💡 **Hoje use V1 com .execute().unwrap()** - Padrão confiável
 
 ---
 
-### 🎯 Decisão: Qual Versão Usar
+### 🎯 Decisão: Qual Versão Usar (REALIDADE - 2025-11-25)
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│ CÓDIGO EXISTENTE (32+ projetos)                                  │
+│ CÓDIGO EXISTENTE (32+ projetos) - USE ISTO AGORA ✅              │
 │ ↓ Manter V1 (.execute().unwrap())                               │
 │   ✅ Backward compatibility                                      │
 │   ✅ Não requer mudanças                                         │
 │   ✅ Continua funcionando perfeitamente                          │
+│   ✅ GARANTIDO E TESTADO                                         │
 │                                                                   │
-│ NOVO CÓDIGO - USO GERAL (Recomendado) ✨                         │
-│ ↓ Usar V2 Property (.result)                                    │
-│   ✅ 68% menos código                                            │
-│   ✅ Pydantic-native, zero hacks                                 │
-│   ✅ Type-safe, IDE autocomplete                                 │
-│   ✅ Flexível (pode usar V1 quando necessário)                   │
+│ NOVO CÓDIGO - NÃO USE AINDA ⚠️                                    │
+│ ↓ V2 Property (.result) - TESTES FALHANDO                        │
+│   🔴 10+ testes falhando em test_documented_patterns.py          │
+│   ❌ Não use em produção                                         │
+│   ⏳ Aguarde correção dos testes                                 │
 │                                                                   │
-│ SCRIPTS E CLIS (Maximum Simplicity)                              │
-│ ↓ Usar V2 Auto (auto_execute = True)                            │
-│   ✅ 95% menos código                                            │
-│   ✅ Zero ceremony                                               │
-│   ✅ Type-safe com cast apropriado                               │
-│   💡 Railway: use .execute() com auto_execute = False           │
-│   - Migração gradual e opt-in                              │
-└─────────────────────────────────────────────────────────────┘
+│ SCRIPTS E CLIS - NÃO USE AINDA ⚠️                                │
+│ ↓ V2 Auto (auto_execute = True) - TESTES FALHANDO                │
+│   🔴 3+ testes falhando em test_documented_patterns.py           │
+│   ❌ Não use em produção                                         │
+│   ⏳ Aguarde correção dos testes                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-**Recomendação Simplificada:**
+**Recomendação ATUAL (2025-11-25):**
 
-1. **Código existente:** Manter V1 (não quebrar nada) ✅
-2. **Novo código geral:** Usar V2 Property (.result para happy path, .execute() para railway) ✅ **IMPLEMENTADO**
-3. **Scripts/CLIs simples:** Usar V2 Auto (auto_execute = True) ✅ **IMPLEMENTADO**
-4. **Railway pattern:** Usar .execute() em qualquer versão (V1, V2 Property, V2 Auto com auto_execute=False) ✅
+1. **Código existente:** Manter V1 (não quebrar nada) ✅ RECOMENDADO
+2. **Novo código geral:** Use V1 com .execute().unwrap() ✅ RECOMENDADO (até V2 testes serem corrigidos)
+3. **Scripts/CLIs simples:** Use V1 com .execute().unwrap() ✅ RECOMENDADO (até V2 testes serem corrigidos)
+4. **Railway pattern:** Usar .execute() conforme demonstrado em V1 ✅ RECOMENDADO
+
+**Próximos Passos:** Corrigir testes de V2 Property e V2 Auto, então reavaliar recomendações.
 
 ---
 
-### 📋 Convenções deste Documento
+### 📋 Convenções deste Documento (ATUALIZADO)
+
+**STATUS ATUAL (2025-11-25):**
 
 Para clareza, os exemplos neste documento indicam qual versão usam:
 
 ```python
-# 💡 EXEMPLO - V1 (Explícito - sempre suportado)
+# 💡 EXEMPLO - V1 (Explícito - ✅ FUNCIONA PERFEITAMENTE)
 user = UserService(user_id="123").execute().unwrap()
+# USE ESTE PADRÃO AGORA - Único padrão confiável
 
-# 💡 EXEMPLO - V2 Property (✅ IMPLEMENTADO)
-user = UserService(user_id="123").result
+# ❌ EXEMPLO - V2 Property (🔴 TESTES FALHANDO - NÃO USE)
+# user = UserService(user_id="123").result
+# → Testes falhando, aguarde correção
 
-# 💡 EXEMPLO - V2 Auto (✅ IMPLEMENTADO)
-user = AutoUserService(user_id="123")  # auto_execute = True
+# ❌ EXEMPLO - V2 Auto (🔴 TESTES FALHANDO - NÃO USE)
+# user = AutoUserService(user_id="123")  # auto_execute = True
+# → Testes falhando, aguarde correção
 ```
 
 **Sempre verifique qual versão o exemplo usa!**
 
-**Por que 3 padrões?**
+**Status dos 3 Padrões:**
 
-- ✅ **V1 Explícito** - Backward compatibility (32+ projetos)
-- ✅ **V2 Property** - Uso geral (68% redução, Pydantic-native)
-- ✅ **V2 Auto** - Maximum simplicity (95% redução, opt-in)
-- ✅ **Migração gradual** - Escolha o padrão apropriado
-- ✅ **100% compatível** - Todos funcionam simultaneamente
+- ✅ **V1 Explícito** - Backward compatibility (32+ projetos) - USE ESTE
+- 🔴 **V2 Property** - Código implementado, testes falhando (10+ erros)
+- 🔴 **V2 Auto** - Código implementado, testes falhando (3+ erros)
+- ⏳ **Próximo passo** - Corrigir testes e reavaliar
 
 ---
 
 ## 🎯 Sumário Executivo
 
-### 💡 A Solução (✅ IMPLEMENTADO - V6.0)
+### ⚠️ STATUS ATUAL (2025-11-25) - APENAS V1 PRONTO PARA PRODUÇÃO
 
-**FlextService V2 oferece 3 padrões progressivos, TODOS com suporte a railway pattern:**
+**FlextService V2 oferece 3 padrões progressivos, mas APENAS V1 está confiável:**
 
-1. **V1 Explícito** - Railway nativo (backward compatible)
+1. **V1 Explícito** - Railway nativo (backward compatible) ✅
 
    ```python
    result = Service(params).execute()  # FlextResult[T]
-   result.map(...).and_then(...)  # Railway pattern
+   result.map(...).flat_map(...)  # Railway pattern com .flat_map() (não .and_then()!)
    ```
 
-2. **V2 Property** - Happy path + Railway (recomendado)
+2. **V2 Property** - Happy path + Railway (🔴 Testes falhando)
 
    ```python
-   # Happy path (90% dos casos)
-   value = Service(params).result  # T direto
+   # ⚠️ NÃO USE AINDA - testes falhando!
+   # value = Service(params).result  # ← testes falhando
 
-   # Railway pattern quando necessário
+   # Use V1 padrão:
    result = Service(params).execute()  # FlextResult[T]
-   result.map(...).and_then(...)  # Railway pattern
+   result.map(...).flat_map(...)  # Railway pattern
    ```
 
-3. **V2 Auto** - Zero ceremony (scripts/CLIs)
+3. **V2 Auto** - Zero ceremony (🔴 Testes falhando)
 
    ```python
-   # Auto-execute (4 chars!)
-   class AutoService(FlextService[T]):
-       auto_execute = True
+   # ⚠️ NÃO USE AINDA - testes falhando!
+   # class AutoService(FlextService[T]):
+   #     auto_execute = True
+   # value = AutoService(params)  # ← testes falhando
 
-   value = AutoService(params)  # T direto
-
-   # Railway pattern: set auto_execute = False
-   result = ManualService(params).execute()  # FlextResult[T]
+   # Use V1 padrão:
+   result = Service(params).execute()  # FlextResult[T]
    ```
 
-**Com isso, eliminamos TODO o boilerplate mantendo flexibilidade total:**
+**Padrão confiável (apenas V1):**
 
 ```python
-# Happy path: 68% menos código
-user = UserService(user_id="123").result
+# V1: Padrão garantido que funciona
+result = UserService(user_id="123").execute()
+if result.is_success:
+    user = result.unwrap()
 
-# Railway pattern: suporte completo
+# Railway pattern: use .flat_map() para encadear (NÃO .and_then()!)
 pipeline = (
     UserService(user_id="123").execute()
     .map(lambda u: u.email)
-    .and_then(lambda email: SendEmailService(to=email).execute())
+    .flat_map(lambda email: SendEmailService(to=email).execute())
 )
 ```
 
@@ -5410,6 +5443,312 @@ if result:
     active_users = result.value
     print(f"Found {len(active_users)} active users")
 ```
+
+---
+
+## 🔗 Integração com Camada CQRS (Tier 3.1-3.2)
+
+Esta seção documenta como FlextService (Tier 2.5) integra com a camada CQRS (FlextHandlers Tier 3.1 e FlextDispatcher Tier 3.2).
+
+> 📚 **Documentação Completa:** Para arquitetura detalhada da camada CQRS, veja [FLEXT_CQRS_ARCHITECTURE.md](./FLEXT_CQRS_ARCHITECTURE.md)
+
+### Fronteiras Arquiteturais
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Tier 3.2: FlextDispatcher                                      │
+│  ├── Orquestração e roteamento de mensagens                     │
+│  ├── Reliability patterns (circuit breaker, retry, timeout)     │
+│  └── Coordenação de managers via DI                             │
+├─────────────────────────────────────────────────────────────────┤
+│  Tier 3.1: FlextHandlers                                        │
+│  ├── Handlers de Commands/Queries/Events                        │
+│  ├── Pipeline de validação                                      │
+│  └── Processamento de mensagens                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  Tier 2.5: FlextService ← ESTE DOCUMENTO                        │
+│  ├── Serviços de domínio com lógica de negócio                  │
+│  ├── Execução via .result property                              │
+│  └── Operações auto-contidas                                    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Quando Usar Cada Camada
+
+| Cenário | Use | Não Use | Racional |
+|---------|-----|---------|----------|
+| Operação de domínio simples | FlextService[T] | FlextHandlers | Sem overhead de messaging |
+| CRUD com validação | FlextService[T] | FlextDispatcher | Execução direta é mais rápida |
+| Command com retry/circuit breaker | FlextDispatcher + Handler | FlextService sozinho | Precisa de reliability patterns |
+| Event sourcing | FlextDispatcher + Event handlers | FlextService | Event routing necessário |
+| HTTP API endpoint | FlextService[T] wrapped | FlextHandlers diretamente | Services são API units |
+
+### Pattern 1: Service Chamado de Handler
+
+Handlers orquestram, services executam lógica de domínio:
+
+```python
+class CreateUserCommandHandler(FlextHandlers[CreateUserCommand, User]):
+    """Handler que orquestra, service que executa."""
+
+    def handle(self, command: CreateUserCommand) -> FlextResult[User]:
+        # Handler orquestra, service executa lógica de domínio
+        validation_service = ValidateEmailService(email=command.email)
+        if validation_service.result.is_failure:
+            return validation_service.result
+
+        # Use service para criação real
+        creation_service = CreateUserService(
+            name=command.name,
+            email=command.email,
+        )
+        return creation_service.result
+```
+
+### Pattern 2: Dispatcher Roteando para Services
+
+Services registrados como handlers via lambda:
+
+```python
+from flext_core import FlextDispatcher, FlextContainer
+
+# Setup dispatcher com DI
+dispatcher = FlextDispatcher(container=FlextContainer.get_global())
+
+# Registrar services como handlers
+dispatcher.register_command(
+    CreateUserCommand,
+    lambda cmd: CreateUserService(name=cmd.name, email=cmd.email).result
+)
+
+dispatcher.register_query(
+    GetUserQuery,
+    lambda query: GetUserService(user_id=query.user_id).result
+)
+```
+
+### Pattern 3: Service com Reliability via Dispatcher
+
+Para operações que precisam de circuit breaker, retry, etc.:
+
+```python
+class OrderProcessingService(FlextService[Order]):
+    """Service que delega para dispatcher para reliability."""
+
+    order_id: str
+    items: list[OrderItem]
+
+    def execute(self) -> FlextResult[Order]:
+        # Delegar para dispatcher para reliability patterns
+        dispatcher = FlextDispatcher(container=self.container)
+
+        command = ProcessOrderCommand(
+            order_id=self.order_id,
+            items=self.items,
+        )
+
+        # Dispatcher aplica circuit breaker, retry, timeout automaticamente
+        return dispatcher.dispatch(command)
+```
+
+### Recomendações de Integração
+
+**✅ DO:**
+- Use FlextService para lógica de domínio pura
+- Use FlextHandlers para orquestração de commands/queries/events
+- Use FlextDispatcher quando precisar de reliability patterns
+- Mantenha handlers finos - delegue lógica para services
+
+**❌ DON'T:**
+- Não use FlextHandlers como base para services (diferentes responsabilidades)
+- Não duplique lógica de domínio em handlers
+- Não bypass FlextDispatcher para operações que precisam de reliability
+- Não misture concerns de messaging com lógica de negócio
+
+### Classes Cross-Cutting - Análise Profunda (25 Nov 2025)
+
+> 📋 **Análise validada contra código:** flext-core v0.9.9
+
+#### FlextDecorators (decorators.py:30-1465) - 1435 linhas
+
+**10 decorators públicos para cross-cutting concerns:**
+
+| Decorator | Linhas | Função | Uso |
+|-----------|--------|--------|-----|
+| `@inject` | 301-361 | Dependency injection via FlextContainer | Service/Handler |
+| `@log_operation` | 363-535 | Structured logging com context | Service/Handler |
+| `@track_performance` | 537-644 | Performance metrics automático | Service/Handler |
+| `@railway` | 646-721 | Wrap função em FlextResult | Any function |
+| `@retry` | 723-820 | Retry com exponential backoff | Service/Handler |
+| `@timeout` | 1068-1172 | Timeout enforcement | Service/Handler |
+| `@combined` | 1174-1253 | Reliability combinado | Handler/Dispatcher |
+| `@with_correlation` | 1257-1297 | Correlation ID tracking | Service/Handler |
+| `@with_context` | 1299-1378 | Context lifecycle management | Service/Handler |
+| `@track_operation` | 1380-1465 | Full operation tracking | Service/Handler |
+
+**Integração com FlextMixins:**
+- FlextDecorators usa `FlextLogger.bind_global_context()` para context
+- FlextMixins.track() usa `FlextContext.Performance.timed_operation()`
+- **São complementares**: decorators para funções, track() para context manager
+
+#### FlextContext (context.py:71-1809) - 1738 linhas
+
+**35+ métodos + 7 nested classes:**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  FlextContext (context.py:71-1809)                               │
+│                                                                  │
+│  MÉTODOS PRINCIPAIS:                                             │
+│  ├── CRUD: set, get, has, remove, clear                          │
+│  ├── Collection: keys, values, items                             │
+│  ├── Operations: merge, clone, validate                          │
+│  ├── Serialization: to_json, from_json, export, import_data      │
+│  ├── Lifecycle: is_active, suspend, resume, destroy              │
+│  └── Integration: add_hook, get_container, cleanup               │
+│                                                                  │
+│  NESTED CLASSES:                                                 │
+│  ├── Variables (1171-1227)   - Context variable management       │
+│  ├── Correlation (1233-1335) - Correlation ID tracking           │
+│  ├── Service (1341-1453)     - Service context                   │
+│  ├── Request (1459-1552)     - Request context                   │
+│  ├── Performance (1558-1658) - Performance metrics ← USADO!      │
+│  ├── Serialization (1664-1735) - JSON serialization              │
+│  └── Utilities (1741-1809)   - Helper utilities                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**⚠️ IMPORTANTE:** `FlextContext.Performance.timed_operation()` é usado por `FlextMixins.track()`
+
+#### FlextRegistry (registry.py:32-1004) - 972 linhas
+
+**Handler registration tracking com Summary:**
+
+| Método | Linhas | Função |
+|--------|--------|--------|
+| `register_handler` | 396-521 | Registrar handler individual |
+| `register_handlers` | 523-597 | Registrar múltiplos handlers |
+| `register_bindings` | 706-742 | Registrar bindings |
+| `register_function_map` | 744-802 | Registrar mapa de funções |
+| `Summary` (nested) | 181-315 | Tracking de registros |
+
+**Integração:** Trabalha com FlextDispatcher (Tier 3.2)
+
+#### FlextMixins (mixins.py:30-1307) - 1277 linhas
+
+**Foundation que provê infraestrutura automática:**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  FlextMixins (mixins.py:30-1307)                                 │
+│                                                                  │
+│  PROPERTIES (lazy loading):                                      │
+│  ├── container (606-609)  → FlextContainer.get_global()          │
+│  ├── context (611-618)    → FlextContext()                       │
+│  ├── logger (620-628)     → FlextLogger com cache                │
+│  ├── config (731-761)     → FlextConfig.get_global_instance()    │
+│  └── track() (630-729)    → Performance tracking context mgr     │
+│                                                                  │
+│  NESTED CLASSES:                                                 │
+│  ├── ModelConversion (461-522)    - Model conversion helpers     │
+│  ├── ResultHandling (528-591)     - Result handling helpers      │
+│  ├── Validation (1066-1178)       - Validation helpers           │
+│  └── ProtocolValidation (1180-1307) - Protocol compliance        │
+│                                                                  │
+│  CLASS VARIABLES (validators):                                   │
+│  ├── is_dict_like, is_list_like, is_valid_json...               │
+│  └── ok, fail, traverse, parallel_map, accumulate_errors         │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Uso em FlextService:**
+```python
+class MyService(FlextService[Result]):
+    """Service usa FlextMixins que provê context, logger, etc."""
+
+    def execute(self) -> FlextResult[Result]:
+        # ✅ Via FlextMixins (IMPLEMENTADO)
+        self.logger.info("Executing service")
+        with self.track("operation"):
+            return FlextResult.ok(self._process())
+```
+
+**Uso com FlextDecorators:**
+```python
+class MyService(FlextService[Result]):
+    """Service com decorators cross-cutting."""
+
+    @FlextDecorators.track_performance("my_operation")
+    @FlextDecorators.retry(max_attempts=3)
+    def execute(self) -> FlextResult[Result]:
+        return FlextResult.ok(self._process())
+```
+
+### 🔴 Code Duplication Identificada (25 Nov 2025)
+
+**PROBLEMA CRÍTICO:** FlextHandlers herda FlextMixins mas NÃO usa a infraestrutura!
+
+```python
+# handlers.py:31 - HERDA FlextMixins
+class FlextHandlers[MessageT_contra, ResultT](FlextMixins, ABC):
+    ...
+    # handlers.py:119-120 - MAS USA INFRAESTRUTURA MANUAL!
+    self._context_stack: list[dict[str, object]] = []  # ❌ deveria usar self.context
+    self._metrics: dict[str, object] = {}              # ❌ deveria usar self.track()
+```
+
+**Duplicação em _run_pipeline (handlers.py:495-584):**
+```python
+# ATUAL (30 linhas manuais):
+self.push_context({...})
+self.record_metric("execution_time_ms", exec_time)
+self.record_metric("success", result.is_success)
+self.pop_context()
+
+# DEVERIA USAR (5 linhas com FlextMixins):
+with self.track("handle_message") as metrics:
+    result = self.handle(message)
+# track() auto: timing, context, cleanup, error tracking, success rate
+```
+
+**Redução estimada:** ~30 linhas → 5 linhas (83% redução no pipeline)
+
+### Validação vs Código (25 Nov 2025)
+
+**✅ FlextService - VALIDADO:**
+- `service.py:30-34`: Herda `FlextModels.ArbitraryTypesModel`, `FlextMixins`, `ABC`
+- `service.py:93`: `auto_execute: ClassVar[bool] = False` ✅
+- `service.py:107-143`: `__new__` implementa auto-execute pattern ✅
+- `service.py:166-188`: `result` computed_field implementado ✅
+- `service.py:190-212`: `validate_business_rules()` implementado ✅
+
+**⚠️ FlextHandlers - PENDENTE MODERNIZAÇÃO:**
+- `handlers.py:31`: Herda `FlextMixins, ABC` ✅
+- `handlers.py:118-119`: `_context_stack` e `_metrics` manuais ❌
+- `handlers.py:426-471`: `push_context()`, `pop_context()`, `record_metric()` manuais ❌
+- `handlers.py:495-584`: `_run_pipeline()` NÃO usa `self.logger` nem `self.track()` ❌
+
+**🔴 Problema Identificado:**
+FlextHandlers herda FlextMixins mas NÃO utiliza a infraestrutura:
+- `self.logger` disponível mas não usado no pipeline
+- `self.track()` disponível mas não usado
+- `self.context` disponível mas usa `_context_stack` manual
+
+### Plano de Execução CQRS Modernization
+
+> 📋 **Plano Completo:** [FLEXT_CQRS_ARCHITECTURE.md](./FLEXT_CQRS_ARCHITECTURE.md)
+
+| Fase | Item | Status | Referência |
+|------|------|--------|------------|
+| 0 | FLEXT_CQRS_ARCHITECTURE.md | ✅ Criado | docs/ |
+| 0 | FLEXT_SERVICE_ARCHITECTURE.md atualizado | ✅ Completo | docs/ |
+| 1 | FlextMixins.CQRS nested class | 🔴 Pendente | mixins.py |
+| 1 | FlextHandlers usar self.logger | 🔴 Pendente | handlers.py:495-584 |
+| 1 | FlextHandlers usar self.track() | 🔴 Pendente | handlers.py:495-584 |
+| 1 | Deprecar record_metric, push/pop_context | 🔴 Pendente | handlers.py:426-471 |
+| 2 | FlextDispatcher aceitar container | 🔴 Pendente | dispatcher.py |
+| 2 | Extrair managers para _managers/ | 🔴 Pendente | _managers/*.py |
+| 2 | Protocol-based manager interfaces | 🔴 Pendente | protocols.py |
 
 ---
 

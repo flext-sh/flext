@@ -9,6 +9,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import importlib.util
+import tempfile
 from pathlib import Path
 
 
@@ -199,9 +201,6 @@ class TestQualityDashboardIntegration:
 
     def test_importlib_module_loading_works(self) -> None:
         """Functional test: Verify importlib module loading works."""
-        import importlib.util
-        import tempfile
-
         # Create a simple test module
         test_code = "def test_func():\n    return 'test'\n"
         with tempfile.NamedTemporaryFile(
@@ -224,8 +223,6 @@ class TestQualityDashboardIntegration:
 
     def test_os_system_works(self) -> None:
         """Functional test: Verify os.system can execute commands."""
-        import tempfile
-
         # Test that os.system works
         with tempfile.NamedTemporaryFile(
             encoding="utf-8", mode="w+", delete=False
@@ -234,8 +231,6 @@ class TestQualityDashboardIntegration:
 
         try:
             # Use Path.write_text instead of os.system to avoid shell injection
-            from pathlib import Path
-
             Path(tmp_path).write_text("test\n", encoding="utf-8")
 
             # Verify output

@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-"""Script para correção automática de violações arquiteturais.
+"""refactor_imports.py - Import Refactoring Script.
 
-Aplica REFATORACAO_ARQUITETURA_FLEXT.md rigorosamente.
+This script provides automated refactoring of import statements to comply
+with FLEXT architectural standards. It fixes submodule to root module imports
+and consolidates multiple imports from the same module.
+
+Scope: Batch processing script for import standardization across all FLEXT projects,
+ensuring architectural compliance and reducing import complexity.
 
 Copyright (c) 2025 FLEXT Team
 SPDX-License-Identifier: MIT
@@ -64,7 +69,7 @@ def fix_imports_in_file(file_path: Path) -> bool:
             )
 
         if content != original_content:
-            file_path.write_text(content, encoding="utf-8")
+            _ = file_path.write_text(content, encoding="utf-8")
             return True
 
     except (OSError, UnicodeDecodeError):

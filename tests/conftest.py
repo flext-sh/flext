@@ -8,11 +8,12 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import tempfile
-from collections.abc import Generator, Sequence
+from collections.abc import Generator, Mapping, Sequence
 from pathlib import Path
+from typing import Union
 
 import pytest
-from flext_core import FlextContainer, FlextLogger, FlextResult, FlextTypes
+from flext_core import FlextContainer, FlextLogger, FlextResult
 from flext_ldif import FlextLdif, FlextLdifModels
 from flext_ldif.constants import FlextLdifConstants
 from flext_tests import (
@@ -22,18 +23,43 @@ from flext_tests import (
     FlextTestsMatchers,
 )
 
+TestDataValue = Union[
+    str, int, float, bool, list["TestDataValue"], dict[str, "TestDataValue"]
+]
+TestDataDict = dict[str, TestDataValue]
+
+
+def _convert_value_to_test_data(value: object) -> TestDataValue:
+    """Convert a single value to TestDataValue through type narrowing."""
+    if isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, list):
+        return [_convert_value_to_test_data(v) for v in value]
+    if isinstance(value, dict):
+        return {str(k): _convert_value_to_test_data(v) for k, v in value.items()}
+    return str(value)
+
+
+def _convert_to_test_data(data: Mapping[str, object]) -> TestDataDict:
+    """Convert Mapping to TestDataDict through type narrowing."""
+    result: TestDataDict = {}
+    for key, value in data.items():
+        result[key] = _convert_value_to_test_data(value)
+    return result
+
 
 class FileManager:
     """Simple file manager for tests."""
 
     def __init__(self, temp_dir: Path) -> None:
         """Initialize FileManager with temporary directory."""
+        super().__init__()
         self.temp_dir = temp_dir
 
     def create_file(self, filename: str, content: str) -> Path:
         """Create a temporary file with content."""
         file_path = self.temp_dir / filename
-        file_path.write_text(content, encoding="utf-8")
+        _ = file_path.write_text(content, encoding="utf-8")
         return file_path
 
 
@@ -45,7 +71,7 @@ class FileManager:
 @pytest.fixture
 def flext_container() -> FlextContainer:
     """Provide FlextContainer instance for tests."""
-    return FlextContainer.get_global()
+    return FlextContainer()
 
 
 @pytest.fixture
@@ -55,9 +81,9 @@ def flext_logger() -> FlextLogger:
 
 
 @pytest.fixture
-def flext_result_success() -> FlextResult[dict[str, object]]:
+def flext_result_success() -> FlextResult[dict[str, Union[str, int, float, bool]]]:
     """Provide successful FlextResult for tests."""
-    return FlextResult[dict[str, object]].ok({"success": True})
+    return FlextResult.ok({"success": True})
 
 
 @pytest.fixture
@@ -74,9 +100,9 @@ def test_file_manager(temp_dir: Path) -> FileManager:
 
 
 @pytest.fixture
-def flext_result_failure() -> FlextResult[dict[str, object]]:
+def flext_result_failure() -> FlextResult[dict[str, Union[str, int, float, bool]]]:
     """Provide failed FlextResult for tests."""
-    return FlextResult[dict[str, object]].fail("Test error")
+    return FlextResult.fail("Test error")
 
 
 # =============================================================================
@@ -114,31 +140,31 @@ def flext_matchers() -> FlextTestsMatchers:
 
 
 @pytest.fixture
-def test_user_data() -> dict[str, object]:
+def test_user_data() -> dict[str, Union[str, bool]]:
     """Provide test user data."""
     return FlextTestsDomains.create_user()
 
 
 @pytest.fixture
-def test_config_data() -> dict[str, object]:
+def test_config_data() -> TestDataDict:
     """Provide test configuration data."""
-    return FlextTestsDomains.create_configuration()
+    return _convert_to_test_data(FlextTestsDomains.create_configuration())
 
 
 @pytest.fixture
-def test_service_data() -> dict[str, object]:
+def test_service_data() -> TestDataDict:
     """Provide test service data."""
-    return FlextTestsDomains.create_service()
+    return _convert_to_test_data(FlextTestsDomains.create_service())
 
 
 @pytest.fixture
-def test_payload_data() -> dict[str, object]:
+def test_payload_data() -> TestDataDict:
     """Provide test payload data."""
-    return FlextTestsDomains.create_payload()
+    return _convert_to_test_data(FlextTestsDomains.create_payload())
 
 
 @pytest.fixture
-def batch_user_data() -> list[dict[str, object]]:
+def batch_user_data() -> list[dict[str, Union[str, bool]]]:
     """Provide batch of test user data."""
     return FlextTestsDomains.batch_users(5)
 
@@ -149,25 +175,25 @@ def batch_user_data() -> list[dict[str, object]]:
 
 
 @pytest.fixture
-def valid_email_cases() -> list[str]:
+def valid_email_cases() -> list[tuple[str, bool]]:
     """Provide valid email test cases."""
     return FlextTestsDomains.valid_email_cases()
 
 
 @pytest.fixture
-def invalid_email_cases() -> list[str]:
+def invalid_email_cases() -> list[tuple[str, bool]]:
     """Provide invalid email test cases."""
     return FlextTestsDomains.invalid_email_cases()
 
 
 @pytest.fixture
-def valid_ages() -> FlextTypes.IntList:
+def valid_ages() -> list[int]:
     """Provide valid age test cases."""
     return FlextTestsDomains.valid_ages()
 
 
 @pytest.fixture
-def invalid_ages() -> FlextTypes.IntList:
+def invalid_ages() -> list[int]:
     """Provide invalid age test cases."""
     return FlextTestsDomains.invalid_ages()
 
@@ -178,21 +204,21 @@ def invalid_ages() -> FlextTypes.IntList:
 
 
 @pytest.fixture
-def user_registration_data() -> dict[str, object]:
+def user_registration_data() -> dict[str, Union[str, bool]]:
     """Provide realistic user registration data."""
-    return FlextTestsDomains.user_registration_data()
+    return FlextTestsDomains.create_user()
 
 
 @pytest.fixture
-def order_data() -> dict[str, object]:  # type: ignore[misc]
+def order_data() -> TestDataDict:
     """Provide realistic order data."""
-    return FlextTestsDomains.order_data()
+    return _convert_to_test_data(FlextTestsDomains.create_payload(data_type="order"))
 
 
 @pytest.fixture
-def api_response_data() -> dict[str, object]:
+def api_response_data() -> TestDataDict:
     """Provide realistic API response data."""
-    return FlextTestsDomains.api_response_data()
+    return _convert_to_test_data(FlextTestsDomains.api_response_data())
 
 
 # =============================================================================

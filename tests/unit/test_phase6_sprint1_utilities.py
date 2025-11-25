@@ -14,8 +14,10 @@ import ast
 import pathlib
 import sys
 import tempfile
+from dataclasses import fields
 
 import pytest
+from flext_core import FlextResult, FlextUtilities
 
 # Add src to path for isolated testing
 sys.path.insert(
@@ -58,11 +60,6 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_completed_process_wrapper_has_required_fields(self) -> None:
         """Verify wrapper has required fields matching subprocess.CompletedProcess."""
-        from dataclasses import fields
-
-        # Import the wrapper class - it's nested inside FlextUtilities
-        from flext_core.utilities import FlextUtilities
-
         wrapper_fields = {
             f.name for f in fields(FlextUtilities._CompletedProcessWrapper)
         }
@@ -198,8 +195,6 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_wrapper_class_can_be_instantiated(self) -> None:
         """Verify _CompletedProcessWrapper can be created and used."""
-        from flext_core.utilities import FlextUtilities
-
         # Create instance - wrapper is nested inside FlextUtilities
         wrapper = FlextUtilities._CompletedProcessWrapper(
             returncode=0, stdout="output", stderr="", args=["test"]
@@ -212,8 +207,6 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_wrapper_is_frozen_dataclass(self) -> None:
         """Verify wrapper is immutable (frozen=True)."""
-        from flext_core.utilities import FlextUtilities
-
         wrapper = FlextUtilities._CompletedProcessWrapper(
             returncode=0, stdout="output", stderr="", args=["test"]
         )
@@ -290,8 +283,6 @@ class TestPhase6Sprint1UtilitiesConversion:
         self,
     ) -> None:
         """Verify FlextUtilities.CommandExecution.run_external_command can be called and works correctly."""
-        from flext_core import FlextResult, FlextUtilities
-
         # Test with a simple command
         result = FlextUtilities.CommandExecution.run_external_command(
             ["python", "--version"], capture_output=True, timeout=10.0
@@ -315,8 +306,6 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_command_not_found_handling(self) -> None:
         """Verify command not found returns proper error."""
-        from flext_core import FlextUtilities
-
         result = FlextUtilities.CommandExecution.run_external_command(
             ["nonexistent_command_xyz_abc"], capture_output=True
         )
@@ -328,8 +317,6 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_exit_code_handling(self) -> None:
         """Verify exit code is properly captured and handled."""
-        from flext_core import FlextUtilities
-
         # Command that will fail
         result = FlextUtilities.CommandExecution.run_external_command(
             ["sh", "-c", "exit 42"], capture_output=True, check=False
@@ -345,8 +332,6 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_check_flag_enforces_exit_code(self) -> None:
         """Verify check=True enforces exit code checking."""
-        from flext_core import FlextUtilities
-
         # Command that will fail
         result = FlextUtilities.CommandExecution.run_external_command(
             ["sh", "-c", "exit 42"], capture_output=True, check=True
@@ -361,8 +346,6 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_output_capture_functionality(self) -> None:
         """Verify stdout/stderr capture works."""
-        from flext_core import FlextUtilities
-
         result = FlextUtilities.CommandExecution.run_external_command(
             [
                 "python",
@@ -382,8 +365,6 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_environment_variables_passed(self) -> None:
         """Verify environment variables are passed to command."""
-        from flext_core import FlextUtilities
-
         test_env_var = "TEST_FLEXT_VAR_UNIQUE_12345"
         test_env_value = "test_value_xyz"
 
@@ -405,8 +386,6 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_command_input_handling(self) -> None:
         """Verify command input is passed to stdin."""
-        from flext_core import FlextUtilities
-
         result = FlextUtilities.CommandExecution.run_external_command(
             ["cat"], capture_output=True, command_input="test input data\n"
         )
@@ -419,8 +398,6 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_working_directory_handling(self) -> None:
         """Verify working directory changes are handled correctly."""
-        from flext_core import FlextUtilities
-
         # Create temp directory
         with tempfile.TemporaryDirectory() as tmpdir:
             result = FlextUtilities.CommandExecution.run_external_command(

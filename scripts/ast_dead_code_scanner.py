@@ -16,13 +16,44 @@ Usage:
 
 from __future__ import annotations
 
+import argparse
 import ast
 import json
 import sys
 from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import TypedDict
+
+
+class DeadCodeEntry(TypedDict):
+    """Type definition for a dead code entry."""
+
+    name: str
+    file: str
+    line: int
+    confidence: float
+    usages: int
+
+
+DeadCodeDict = dict[str, list[DeadCodeEntry]]
+
+
+class ReportSummary(TypedDict):
+    """Type definition for report summary."""
+
+    total_symbols: int
+    total_dead_code: int
+    dead_percentage: float
+    errors: int
+
+
+class FullReport(TypedDict):
+    """Type definition for full analysis report."""
+
+    summary: ReportSummary
+    dead_code: DeadCodeDict
+    errors: list[str]
 
 
 @dataclass
@@ -124,16 +155,19 @@ class DeadCodeScanner:
             elif isinstance(node, ast.Assign):
                 # Check for constants (UPPER_CASE at module level)
                 for target in node.targets:
-                    if isinstance(target, ast.Name):
-                        if target.id.isupper() and "_" in target.id:
-                            symbol = Symbol(
-                                name=target.id,
-                                kind="constant",
-                                file=file_path,
-                                line=node.lineno,
-                            )
-                            key = f"{file_path}:{target.id}"
-                            self.symbols[key] = symbol
+                    if (
+                        isinstance(target, ast.Name)
+                        and target.id.isupper()
+                        and "_" in target.id
+                    ):
+                        symbol = Symbol(
+                            name=target.id,
+                            kind="constant",
+                            file=file_path,
+                            line=node.lineno,
+                        )
+                        key = f"{file_path}:{target.id}"
+                        self.symbols[key] = symbol
 
             elif isinstance(node, (ast.Import, ast.ImportFrom)):
                 for alias in node.names:
@@ -174,9 +208,9 @@ class DeadCodeScanner:
                 elif isinstance(node.func, ast.Attribute):
                     self.usages[node.func.attr].append((file_path, node.lineno))
 
-    def find_dead_code(self) -> dict[str, list[dict[str, Any]]]:
+    def find_dead_code(self) -> DeadCodeDict:
         """Find unused symbols."""
-        dead_code: dict[str, list[dict[str, Any]]] = {
+        dead_code: DeadCodeDict = {
             "functions": [],
             "classes": [],
             "methods": [],
@@ -197,7 +231,7 @@ class DeadCodeScanner:
                 confidence = self._calculate_confidence(symbol, usage_count)
 
                 if confidence >= 0.5:  # Only report if confidence >= 50%
-                    entry = {
+                    entry: DeadCodeEntry = {
                         "name": symbol.full_name,
                         "file": str(symbol.file.relative_to(self.base_path)),
                         "line": symbol.line,
@@ -248,20 +282,22 @@ class DeadCodeScanner:
 
         return min(confidence, 1.0)
 
-    def generate_report(self) -> dict[str, Any]:
+    def generate_report(self) -> FullReport:
         """Generate full report."""
         dead_code = self.find_dead_code()
 
         total_dead = sum(len(items) for items in dead_code.values())
         total_symbols = len(self.symbols)
 
+        summary: ReportSummary = {
+            "total_symbols": total_symbols,
+            "total_dead_code": total_dead,
+            "dead_percentage": round(total_dead / max(total_symbols, 1) * 100, 2),
+            "errors": len(self.errors),
+        }
+
         return {
-            "summary": {
-                "total_symbols": total_symbols,
-                "total_dead_code": total_dead,
-                "dead_percentage": round(total_dead / max(total_symbols, 1) * 100, 2),
-                "errors": len(self.errors),
-            },
+            "summary": summary,
             "dead_code": dead_code,
             "errors": self.errors[:20],  # Limit errors
         }
@@ -269,8 +305,6 @@ class DeadCodeScanner:
 
 def main() -> int:
     """Main entry point."""
-    import argparse
-
     parser = argparse.ArgumentParser(description="AST Dead Code Scanner for FLEXT")
     parser.add_argument(
         "--projects",

@@ -9,8 +9,11 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import shutil
 from importlib.util import find_spec
 from pathlib import Path
+
+import pytest
 
 
 class TestSubprocessRemovalFromDevModels:
@@ -75,8 +78,6 @@ class TestSubprocessRemovalFromDevModels:
 
     def test_pytest_check_implementation(self) -> None:
         """✅ Verify pytest check uses find_spec pattern."""
-        import pytest
-
         source = self.get_dev_models_source()
 
         # Skip test if file doesn't exist
@@ -155,8 +156,6 @@ class TestSubprocessRemovalFromDevModels:
 
     def test_shutil_which_function_works(self) -> None:
         """✅ Functional test: Verify shutil.which works correctly."""
-        import shutil
-
         # Python should exist
         python_path = shutil.which("python")
         assert python_path is not None, "python should be in PATH"

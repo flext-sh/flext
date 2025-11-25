@@ -1,8 +1,20 @@
-"""Tests for flext_cli.cli module."""
+"""Tests for flext_cli.api.FlextCli class - initialization, execution, component validation, and edge cases.
 
-from unittest.mock import MagicMock, patch
+Comprehensive testing of CLI coordinator with real implementations, advanced Python 3.13 patterns,
+factories for test data generation, and 100% edge case coverage using dynamic parametrized tests.
+Uses FlextTestsUtilities for assertions, domain helpers from tests.helpers, and constants from tests.fixtures.constants.
 
-from click.testing import CliRunner
+Scope: FlextCli initialization, execute() method, component validation, data structures, and error handling.
+Tested modules: flext_cli.api.FlextCli, flext_cli.config.FlextCliConfig, flext_cli.core.FlextCliCore,
+flext_cli.formatters.FlextCliFormatters, flext_cli.prompts.FlextCliPrompts.
+"""
+
+from __future__ import annotations
+
+from enum import StrEnum
+from typing import TypedDict, cast
+
+import pytest
 from flext_cli import (
     FlextCli,
     FlextCliConfig,
@@ -10,112 +22,391 @@ from flext_cli import (
     FlextCliFormatters,
     FlextCliPrompts,
 )
+from flext_core import FlextResult, FlextTypes
+from flext_tests import FlextTestsUtilities
+
+from tests.fixtures.constants import TestConstants
+
+CliTestData = StrEnum(
+    "CliTestData",
+    {
+        "OPERATIONAL": TestConstants.Cli.SERVICE_STATUS,
+        "FLEXT_CLI": TestConstants.Cli.SERVICE_NAME,
+        "AVAILABLE": TestConstants.Cli.COMPONENT_AVAILABLE,
+        "STATUS": "status",
+        "SERVICE": "service",
+        "TIMESTAMP": "timestamp",
+        "VERSION": "version",
+        "COMPONENTS": "components",
+    },
+)
+
+
+class ComponentTestCase(TypedDict):
+    """TypedDict for component test cases."""
+
+    component_name: str
+    component_attr: str
+    expected_type: type
+    expected_available: bool
+
+
+class ExecuteResultTestCase(TypedDict):
+    """TypedDict for execute result test cases."""
+
+    field: str
+    expected_type: type
+    expected_value: object
 
 
 class TestFlextCli:
-    """Test cases for FlextCli class."""
+    """Comprehensive test suite for FlextCli class using advanced Python patterns."""
 
-    def test_init(self) -> None:
-        """Test FlextCli initialization."""
-        cli = FlextCli()
+    # =========================================================================
+    # NESTED: Test Cases Factory
+    # =========================================================================
 
-        # Check that all components are initialized
+    class TestCasesFactory:
+        """Factory for generating test cases using flext_tests patterns."""
+
+        @staticmethod
+        def get_component_test_cases() -> list[ComponentTestCase]:
+            """Generate component validation test cases."""
+            return [
+                {
+                    "component_name": "config",
+                    "component_attr": "config",
+                    "expected_type": FlextCliConfig,
+                    "expected_available": True,
+                },
+                {
+                    "component_name": "formatters",
+                    "component_attr": "formatters",
+                    "expected_type": FlextCliFormatters,
+                    "expected_available": True,
+                },
+                {
+                    "component_name": "core",
+                    "component_attr": "core",
+                    "expected_type": FlextCliCore,
+                    "expected_available": True,
+                },
+                {
+                    "component_name": "prompts",
+                    "component_attr": "prompts",
+                    "expected_type": FlextCliPrompts,
+                    "expected_available": True,
+                },
+            ]
+
+        @staticmethod
+        def get_execute_result_test_cases() -> list[ExecuteResultTestCase]:
+            """Generate execute result validation test cases."""
+            return [
+                {
+                    "field": CliTestData.STATUS,
+                    "expected_type": str,
+                    "expected_value": CliTestData.OPERATIONAL,
+                },
+                {
+                    "field": CliTestData.SERVICE,
+                    "expected_type": str,
+                    "expected_value": CliTestData.FLEXT_CLI,
+                },
+                {
+                    "field": CliTestData.TIMESTAMP,
+                    "expected_type": str,
+                    "expected_value": None,  # Will be validated as string
+                },
+                {
+                    "field": CliTestData.VERSION,
+                    "expected_type": str,
+                    "expected_value": None,  # Will be validated as string
+                },
+                {
+                    "field": CliTestData.COMPONENTS,
+                    "expected_type": dict,
+                    "expected_value": None,  # Will be validated separately
+                },
+            ]
+
+        @staticmethod
+        def get_flext_result_property_test_cases() -> list[tuple[str, bool]]:
+            """Generate FlextResult property validation test cases."""
+            return [
+                ("is_success", True),
+                ("is_failure", False),
+                ("unwrap", True),  # Has method
+                ("error", False),  # Should be None
+            ]
+
+    # =========================================================================
+    # NESTED: Test Helpers
+    # =========================================================================
+
+    class TestHelpers:
+        """Test-specific helpers for CLI testing."""
+
+        @staticmethod
+        def create_cli_instance() -> FlextCli:
+            """Create a FlextCli instance using factory pattern."""
+            return FlextCli()
+
+        @staticmethod
+        def execute_and_validate(cli: FlextCli) -> FlextResult[FlextTypes.JsonDict]:
+            """Execute CLI and perform basic validation using FlextTestsUtilities."""
+            result = cli.execute()
+            FlextTestsUtilities.TestUtilities.assert_result_success(result)
+            return result
+
+        @staticmethod
+        def validate_component_status(components: dict[str, object]) -> None:
+            """Validate component status dictionary."""
+            assert len(components) == TestConstants.Cli.COMPONENT_COUNT
+
+            components_dict = cast("dict[str, str]", components)
+            for name, status in components_dict.items():
+                assert isinstance(name, str), f"Component name {name} not string"
+                assert isinstance(status, str), f"Component status {status} not string"
+                assert status == TestConstants.Cli.COMPONENT_AVAILABLE, (
+                    f"Component {name} not available"
+                )
+
+    # =========================================================================
+    # TEST METHODS
+    # =========================================================================
+
+    @pytest.mark.parametrize(
+        "component_case",
+        TestCasesFactory.get_component_test_cases(),
+        ids=lambda case: f"{case['component_name']}_component",
+    )
+    def test_cli_component_initialization(
+        self, component_case: ComponentTestCase
+    ) -> None:
+        """Test CLI component initialization using parametrized cases."""
+        cli = self.TestHelpers.create_cli_instance()
+
+        # Get component attribute
+        component = getattr(cli, component_case["component_attr"])
+        assert component is not None, (
+            f"Component {component_case['component_name']} not initialized"
+        )
+
+        # Validate type
+        assert isinstance(component, component_case["expected_type"]), (
+            f"Component {component_case['component_name']} type mismatch"
+        )
+
+        # Validate availability (if expected)
+        if component_case["expected_available"]:
+            assert hasattr(component, "__class__"), "Component lacks class attribute"
+
+    def test_cli_initialization_comprehensive(self) -> None:
+        """Test comprehensive CLI initialization."""
+        cli = self.TestHelpers.create_cli_instance()
+
+        # Validate all components exist
         assert cli.config is not None
         assert cli.formatters is not None
         assert cli.core is not None
         assert cli.prompts is not None
 
-    def test_execute_success(self) -> None:
-        """Test execute method returns success."""
-        cli = FlextCli()
-        result = cli.execute()
+        # Validate component types
+        assert isinstance(cli.config, FlextCliConfig)
+        assert isinstance(cli.formatters, FlextCliFormatters)
+        assert isinstance(cli.core, FlextCliCore)
+        assert isinstance(cli.prompts, FlextCliPrompts)
 
-        assert result.is_success
+    @pytest.mark.parametrize(
+        "field_case",
+        TestCasesFactory.get_execute_result_test_cases(),
+        ids=lambda case: f"execute_{case['field']}_field",
+    )
+    def test_execute_result_structure(self, field_case: ExecuteResultTestCase) -> None:
+        """Test execute result data structure using parametrized cases."""
+        cli = self.TestHelpers.create_cli_instance()
+        result = self.TestHelpers.execute_and_validate(cli)
         data = result.unwrap()
-        assert data["status"] == "operational"
-        assert data["service"] == "flext-cli"
 
-    @patch("flext_cli.cli.click")
-    def test_cli_status_command(self, mock_click: MagicMock) -> None:
-        """Test CLI status command."""
-        cli = FlextCli()
+        # Validate field presence
+        field_name = field_case["field"]
+        assert field_name in data, f"Missing field: {field_name}"
 
-        # Mock click.echo and click.Abort
-        mock_click.echo = MagicMock()
-        mock_click.Abort = Exception("Abort")
+        # Validate field type
+        field_value = data[field_name]
+        assert isinstance(field_value, field_case["expected_type"]), (
+            f"Field {field_name} type mismatch: {type(field_value)} != {field_case['expected_type']}"
+        )
 
-        # Mock the CLI runner
-        _runner = CliRunner()
+        # Validate specific values where expected
+        if field_case["expected_value"] is not None:
+            assert field_value == field_case["expected_value"], (
+                f"Field {field_name} value mismatch: {field_value} != {field_case['expected_value']}"
+            )
 
-        # Test that the CLI can be created and run
-        # This is a basic test since the actual CLI execution is complex
-        # Verify CLI has expected components
-        assert cli.config is not None
-        assert cli.formatters is not None
-        assert cli.core is not None
-
-    @patch("flext_cli.cli.click")
-    def test_cli_version_command(self, mock_click: MagicMock) -> None:
-        """Test CLI version command."""
-        cli = FlextCli()
-
-        # Mock click.echo
-        mock_click.echo = MagicMock()
-
-        # Test that the CLI can be created
-        # Verify CLI has expected components
-        assert cli.config is not None
-        assert cli.formatters is not None
-        assert cli.core is not None
+        # Special validation for components
+        if field_name == CliTestData.COMPONENTS:
+            self.TestHelpers.validate_component_status(
+                cast("dict[str, object]", field_value)
+            )
 
     def test_execute_returns_flext_result(self) -> None:
-        """Test that execute returns FlextResult."""
-        cli = FlextCli()
+        """Test that execute returns proper FlextResult."""
+        cli = self.TestHelpers.create_cli_instance()
         result = cli.execute()
 
-        # Check FlextResult properties
+        # Validate FlextResult interface
         assert hasattr(result, "is_success")
         assert hasattr(result, "is_failure")
         assert hasattr(result, "unwrap")
         assert hasattr(result, "error")
 
-        # Should be successful
+        # Validate success state
         assert result.is_success
         assert not result.is_failure
         assert result.error is None
 
-    def test_execute_data_structure(self) -> None:
-        """Test execute method data structure."""
-        cli = FlextCli()
+        # Validate data extraction
+        data = result.unwrap()
+        assert isinstance(data, dict)
+        assert len(data) > 0
+
+    @pytest.mark.parametrize(
+        ("property_name", "expected"),
+        TestCasesFactory.get_flext_result_property_test_cases(),
+    )
+    def test_flext_result_properties(self, property_name: str, expected: bool) -> None:
+        """Test FlextResult properties using parametrized cases."""
+        cli = self.TestHelpers.create_cli_instance()
         result = cli.execute()
 
-        assert result.is_success
+        if property_name in {"is_success", "is_failure"}:
+            # Boolean properties
+            value = getattr(result, property_name)
+            assert value == expected, (
+                f"Property {property_name} = {value}, expected {expected}"
+            )
+        elif property_name == "unwrap":
+            # Method presence
+            assert hasattr(result, property_name), f"Missing method: {property_name}"
+            # Can unwrap successfully
+            data = result.unwrap()
+            assert data is not None
+        elif property_name == "error":
+            # Error property
+            error_value = getattr(result, property_name)
+            if expected:
+                assert error_value is None, f"Unexpected error: {error_value}"
+            else:
+                # For failure cases, would expect error, but this is success case
+                assert error_value is None
+
+    def test_execute_success_state(self) -> None:
+        """Test execute method success state and data."""
+        cli = self.TestHelpers.create_cli_instance()
+        result = self.TestHelpers.execute_and_validate(cli)
         data = result.unwrap()
 
-        # Check required fields
-        required_fields = ["status", "service", "timestamp", "version", "components"]
-        for field in required_fields:
-            assert field in data, f"Missing field: {field}"
+        # Validate core success indicators
+        assert data[CliTestData.STATUS] == CliTestData.OPERATIONAL
+        assert data[CliTestData.SERVICE] == CliTestData.FLEXT_CLI
 
-        # Check data types
-        assert isinstance(data["status"], str)
-        assert isinstance(data["service"], str)
-        assert isinstance(data["timestamp"], str)
-        assert isinstance(data["version"], str)
-        assert isinstance(data["components"], dict)
+        # Validate timestamp and version are present and valid
+        timestamp = data[CliTestData.TIMESTAMP]
+        version = data[CliTestData.VERSION]
+        assert isinstance(timestamp, str) and len(timestamp) > 0
+        assert isinstance(version, str) and len(version) > 0
 
-        # Check component data types
-        for component_name, component_status in data["components"].items():
-            assert isinstance(component_name, str)
-            assert isinstance(component_status, str)
-            assert component_status == "available"
+    def test_execute_component_validation(self) -> None:
+        """Test execute method component validation."""
+        cli = self.TestHelpers.create_cli_instance()
+        result = self.TestHelpers.execute_and_validate(cli)
+        data = result.unwrap()
 
-    def test_cli_components_initialization(self) -> None:
-        """Test that all CLI components are properly initialized."""
-        cli = FlextCli()
+        components = data[CliTestData.COMPONENTS]
+        self.TestHelpers.validate_component_status(
+            cast("dict[str, object]", components)
+        )
 
-        # Check component types
-        assert isinstance(cli.config, FlextCliConfig)
-        assert isinstance(cli.formatters, FlextCliFormatters)
-        assert isinstance(cli.core, FlextCliCore)
-        assert isinstance(cli.prompts, FlextCliPrompts)
+        # Validate all expected components are present
+
+        components_dict = cast("dict[str, str]", components)
+        expected_components = {"config", "formatters", "core", "prompts"}
+        actual_components = set(components_dict.keys())
+        assert actual_components == expected_components, (
+            f"Component mismatch: {actual_components} != {expected_components}"
+        )
+
+    def test_execute_data_integrity(self) -> None:
+        """Test execute method data integrity and completeness."""
+        cli = self.TestHelpers.create_cli_instance()
+        result = self.TestHelpers.execute_and_validate(cli)
+        data = result.unwrap()
+
+        # Required fields presence
+        required_fields = {
+            CliTestData.STATUS,
+            CliTestData.SERVICE,
+            CliTestData.TIMESTAMP,
+            CliTestData.VERSION,
+            CliTestData.COMPONENTS,
+        }
+        actual_fields = set(data.keys())
+        missing_fields = {str(field) for field in required_fields} - actual_fields
+        assert not missing_fields, f"Missing required fields: {missing_fields}"
+
+        # Data type validation
+        type_validations = {
+            CliTestData.STATUS: str,
+            CliTestData.SERVICE: str,
+            CliTestData.TIMESTAMP: str,
+            CliTestData.VERSION: str,
+            CliTestData.COMPONENTS: dict,
+        }
+
+        for field, expected_type in type_validations.items():
+            value = data[field]
+            assert isinstance(value, expected_type), (
+                f"Field {field} type error: {type(value)} != {expected_type}"
+            )
+
+    @pytest.mark.parametrize("execution_count", range(3))
+    def test_execute_idempotent(self, execution_count: int) -> None:
+        """Test execute method idempotency across multiple calls."""
+        cli = self.TestHelpers.create_cli_instance()
+
+        # Execute multiple times
+        results = []
+        for _ in range(execution_count + 1):  # At least once
+            result = cli.execute()
+            results.append(result)
+            assert result.is_success
+
+        # All results should be consistent
+        first_data = results[0].unwrap()
+        for result in results[1:]:
+            data = result.unwrap()
+            assert data == first_data, "Execute results not consistent"
+
+    def test_cli_instance_isolation(self) -> None:
+        """Test that CLI instances are properly isolated."""
+        cli1 = self.TestHelpers.create_cli_instance()
+        cli2 = self.TestHelpers.create_cli_instance()
+
+        # Different instances
+        assert cli1 is not cli2
+
+        # Execute both
+        result1 = self.TestHelpers.execute_and_validate(cli1)
+        result2 = self.TestHelpers.execute_and_validate(cli2)
+
+        # Results should be equivalent but independent
+        data1 = result1.unwrap()
+        data2 = result2.unwrap()
+
+        # Core fields should match
+        assert data1["status"] == data2["status"]
+        assert data1["service"] == data2["service"]
+        # Timestamps might differ slightly, versions should match
+        assert data1["version"] == data2["version"]

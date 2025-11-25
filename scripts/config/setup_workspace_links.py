@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
-"""Comprehensive Workspace Management - Clean FLEXT Domain Service Implementation.
+"""setup_workspace_links.py - Workspace Link Setup Script.
 
-Unified workspace management using flext-core domain services:
-- Setup of project links
-- Environment configuration
-- Dependency management
-- Type checking with MyPy
-- SSL setup for staging
-- Monitoring configuration
+This script sets up symbolic links for FLEXT workspace projects, creating
+a unified directory structure for source code and tests across all flext-* projects.
 
-Using clean flext-core architecture patterns without external dependencies.
+Scope: CLI utility for workspace management, automating symbolic link creation
+and validation for development environment setup.
+
+Copyright (c) 2025 FLEXT Team
+SPDX-License-Identifier: MIT
 """
 
 import argparse
@@ -19,7 +18,6 @@ from pathlib import Path
 
 from flext_core import (
     FlextContainer,
-    FlextLogger,
     FlextResult,
     FlextService,
 )
@@ -31,11 +29,10 @@ class WorkspaceManagementService(FlextService[dict[str, object]]):
     Unified class for managing workspace symbolic links and directory structure.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, **kwargs: object) -> None:
         """Initialize workspace management service."""
-        super().__init__()
-        self._container = FlextContainer.get_global()
-        self.logger = FlextLogger(__name__)
+        super().__init__(**kwargs)
+        self._container = FlextContainer()
         self._workspace_root = Path.cwd()
 
     class _LinkHelper:
@@ -98,7 +95,7 @@ class WorkspaceManagementService(FlextService[dict[str, object]]):
         ) -> FlextResult[list[Path]]:
             """Discover FLEXT projects in workspace."""
             try:
-                projects: list[object] = []
+                projects: list[Path] = []
                 for item in workspace_root.iterdir():
                     if item.is_dir() and item.name.startswith("flext-"):
                         pyproject_file = item / "pyproject.toml"
@@ -239,7 +236,7 @@ class WorkspaceManagementService(FlextService[dict[str, object]]):
                             f"tests/{item.name}: {validation_result.error}",
                         )
 
-        result = {
+        result: dict[str, object] = {
             "valid_links": valid_links,
             "invalid_links": invalid_links,
             "total_checked": len(valid_links) + len(invalid_links),
@@ -290,7 +287,7 @@ def main() -> int:
         description="Comprehensive FLEXT workspace management",
         prog="setup_workspace_links",
     )
-    parser.add_argument(
+    _ = parser.add_argument(
         "operation",
         choices=["links", "deps", "types", "monitoring", "all"],
         default="all",
@@ -298,10 +295,10 @@ def main() -> int:
         help="Operation to perform",
     )
 
-    parser.parse_args()
+    _ = parser.parse_args()
 
     # Create service using proper dependency injection
-    FlextContainer.get_global()
+    _ = FlextContainer()
     service = WorkspaceManagementService()
 
     # Execute operation
