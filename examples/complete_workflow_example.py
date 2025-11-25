@@ -1,11 +1,11 @@
 """08_complete_workflow.py - Complete Workflow Example.
 
 Demonstrates complete workflow integration with:
-|- Integração completa de todas as capacidades
-|- Railway pattern abrangente
-|- Processamento paralelo em todas as etapas
-|- Auto-detecção e builders inteligentes
-|- Validação integrada end-to-end
+- Integração completa de todas as capacidades
+- Railway pattern abrangente
+- Processamento paralelo em todas as etapas
+- Auto-detecção e builders inteligentes
+- Validação integrada end-to-end
 
 This example showcases the complete FLEXT enterprise data integration
 workflow with comprehensive capabilities.
@@ -20,339 +20,387 @@ import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
-from typing import Any
+from enum import StrEnum
+from typing import Union, cast
 
 from flext_core import FlextResult, FlextService
 
-
-@dataclass
-class WorkflowContext:
-    """Complete workflow context with correlation and metadata."""
-
-    workflow_id: str
-    correlation_id: str
-    start_time: float
-    stages: list[str] = field(default_factory=list)
-    metadata: dict[str, Any] = field(default_factory=dict)
-    performance_metrics: dict[str, Any] = field(default_factory=dict)
+ItemType = dict[str, object]
 
 
-@dataclass
-class WorkflowStageResult:
-    """Result of a workflow stage with comprehensive tracking."""
+class CompleteWorkflowExample:
+    """Complete workflow example demonstrating FLEXT enterprise data integration capabilities."""
 
-    stage_name: str
-    workflow_id: str
-    correlation_id: str
-    success: bool
-    items_processed: int
-    items_succeeded: int
-    items_failed: int
-    processing_time: float
-    errors: list[str] = field(default_factory=list)
-    warnings: list[str] = field(default_factory=list)
-    stage_metadata: dict[str, Any] = field(default_factory=dict)
+    class Stage(StrEnum):
+        """Workflow stages enumeration."""
 
+        VALIDATION = "validation"
+        PROCESSING = "processing"
+        ANALYSIS = "analysis"
+        AGGREGATION = "aggregation"
 
-@dataclass
-class CompleteWorkflowResult:
-    """Complete workflow result with all stages aggregated."""
+    @dataclass
+    class WorkflowContext:
+        """Complete workflow context with correlation and metadata."""
 
-    workflow_id: str
-    correlation_id: str
-    total_stages: int
-    completed_stages: int
-    failed_stages: int
-    total_processing_time: float
-    stage_results: list[WorkflowStageResult] = field(default_factory=list)
-    aggregated_metrics: dict[str, Any] = field(default_factory=dict)
-    workflow_status: str = "unknown"
+        workflow_id: str
+        correlation_id: str
+        start_time: float
+        stages: list[str] = field(
+            default_factory=lambda: [
+                "validation",
+                "processing",
+                "analysis",
+                "aggregation",
+            ]
+        )
+        metadata: dict[str, Union[str, int, float, bool]] = field(default_factory=dict)
+        performance_metrics: dict[
+            str, Union[float, int, dict[str, Union[float, int]]]
+        ] = field(default_factory=dict)
 
+    @dataclass
+    class WorkflowStageResult:
+        """Result of a workflow stage with comprehensive tracking."""
 
-class WorkflowOrchestrator(FlextService[dict]):
-    """Resource-managed workflow orchestrator with automatic context lifecycle."""
+        stage_name: str
+        workflow_id: str
+        correlation_id: str
+        success: bool
+        items_processed: int
+        items_succeeded: int
+        items_failed: int
+        processing_time: float
+        errors: list[str] = field(default_factory=list)
+        warnings: list[str] = field(default_factory=list)
+        stage_metadata: dict[str, Union[float, int, bool]] = field(default_factory=dict)
 
-    auto_execute = True
+    @dataclass
+    class CompleteWorkflowResult:
+        """Complete workflow result with all stages aggregated."""
 
-    data: Any
-    workflow_config: dict
+        workflow_id: str
+        correlation_id: str
+        total_stages: int
+        completed_stages: int
+        failed_stages: int
+        total_processing_time: float
+        stage_results: list[CompleteWorkflowExample.WorkflowStageResult] = field(
+            default_factory=list
+        )
+        aggregated_metrics: dict[str, Union[float, int]] = field(default_factory=dict)
+        workflow_status: str = "unknown"
 
-    def execute(self) -> FlextResult[dict]:
-        """Execute complete workflow with automatic resource management."""
-        return FlextResult.ok(self.data).with_resource(
-            resource_factory=self._setup_context,
-            operation=self._execute_workflow,
-            cleanup=self._cleanup_context,
+    class WorkflowOrchestrator(FlextService[dict[str, object]]):
+        """Resource-managed workflow orchestrator with automatic context lifecycle."""
+
+        auto_execute = True
+
+        data: list[ItemType] = field(default_factory=list)
+        workflow_config: dict[str, Union[str, int, bool, float]] = field(
+            default_factory=dict
         )
 
-    def _setup_context(self) -> WorkflowContext:
-        """Setup workflow context with correlation tracking."""
-        workflow_id = self.workflow_config.get(
-            "workflow_id", f"workflow_{int(time.time())}"
-        )
-        correlation_id = f"{workflow_id}_{int(time.time() * 1000)}"
-
-        return WorkflowContext(
-            workflow_id=workflow_id,
-            correlation_id=correlation_id,
-            start_time=time.time(),
-            stages=["validation", "processing", "analysis", "aggregation"],
-            metadata={
-                "parallel_enabled": self.workflow_config.get("parallel", True),
-                "max_workers": self.workflow_config.get("max_workers", 4),
-                "strict_mode": self.workflow_config.get("strict_mode", False),
-            },
-        )
-
-    def _execute_workflow(
-        self, data: Any, context: WorkflowContext
-    ) -> FlextResult[dict]:
-        """Execute workflow stages with parallel processing."""
-        # Prepare data for processing
-        items = data if isinstance(data, list) else [data]
-
-        # Execute stages in parallel
-        stage_results = []
-        current_data = items
-
-        for stage_name in context.stages:
-            stage_func = self._get_stage_function(stage_name)
-            if not stage_func:
-                return FlextResult.fail(f"Unknown stage: {stage_name}")
-
-            # Execute stage
-            result = self._execute_stage_parallel(
-                stage_name, current_data, stage_func, context
-            )
-
-            if result.is_failure:
-                return FlextResult.fail(f"Stage {stage_name} failed: {result.error}")
-
-            stage_result = result.unwrap()
-            stage_results.append(stage_result)
-
-            # Update context with performance metrics
-            context.performance_metrics[stage_name] = {
-                "processing_time": stage_result.processing_time,
-                "success_rate": stage_result.items_succeeded
-                / stage_result.items_processed
-                if stage_result.items_processed > 0
-                else 0,
-                "throughput": stage_result.items_processed
-                / stage_result.processing_time
-                if stage_result.processing_time > 0
-                else 0,
-            }
-
-            # Prepare data for next stage
-            current_data = self._transform_data_for_next_stage(
-                stage_name, current_data, stage_result
-            )
-
-        # Aggregate final results
-        total_time = time.time() - context.start_time
-        aggregated_metrics = self._aggregate_workflow_metrics(stage_results, total_time)
-
-        workflow_result = CompleteWorkflowResult(
-            workflow_id=context.workflow_id,
-            correlation_id=context.correlation_id,
-            total_stages=len(context.stages),
-            completed_stages=len(stage_results),
-            failed_stages=0,  # All stages succeeded if we reach here
-            total_processing_time=total_time,
-            stage_results=stage_results,
-            aggregated_metrics=aggregated_metrics,
-            workflow_status="completed",
-        )
-
-        return FlextResult.ok({
-            "workflow_result": workflow_result,
-            "final_data": current_data,
-            "performance_summary": aggregated_metrics,
-        })
-
-    def _cleanup_context(self, context: WorkflowContext) -> None:
-        """Cleanup workflow context and log completion."""
-        total_time = time.time() - context.start_time
-        context.performance_metrics["total_workflow_time"] = total_time
-
-        # Log workflow completion (in real implementation)
-        print(f"Workflow {context.workflow_id} completed in {total_time:.3f}s")
-
-    def _get_stage_function(self, stage_name: str) -> Callable | None:
-        """Get stage function by name."""
-        stage_functions = {
-            "validation": self._validate_items,
-            "processing": self._process_items,
-            "analysis": self._analyze_items,
-            "aggregation": self._aggregate_results,
-        }
-        return stage_functions.get(stage_name)
-
-    def _execute_stage_parallel(
-        self,
-        stage_name: str,
-        items: list[dict[str, Any]],
-        stage_func: Callable,
-        context: WorkflowContext,
-    ) -> FlextResult[WorkflowStageResult]:
-        """Execute a workflow stage in parallel."""
-        stage_start = time.time()
-        max_workers = context.metadata.get("max_workers", 4)
-
-        def process_single_item(item: dict[str, Any]) -> dict[str, Any] | None:
-            """Process single item in stage."""
+        def execute(self) -> FlextResult[dict[str, object]]:
+            """Execute complete workflow with automatic resource management."""
+            context = self._setup_context()
             try:
-                result = stage_func(item, context)
-                return result.unwrap() if result.is_success else None
-            except Exception as e:
-                return {"error": str(e), "item": item}
+                return self._execute_workflow(self.data, context)
+            finally:
+                self._cleanup_context(context)
 
-        processed_results = []
+        def _setup_context(self) -> CompleteWorkflowExample.WorkflowContext:
+            """Setup workflow context with correlation tracking."""
+            workflow_id = str(
+                self.workflow_config.get("workflow_id", f"workflow_{int(time.time())}")
+            )
+            correlation_id = f"{workflow_id}_{int(time.time() * 1000)}"
 
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            future_to_item = {
-                executor.submit(process_single_item, item): item for item in items
+            return CompleteWorkflowExample.WorkflowContext(
+                workflow_id=workflow_id,
+                correlation_id=correlation_id,
+                start_time=time.time(),
+                metadata={
+                    "parallel_enabled": bool(
+                        self.workflow_config.get("parallel", True)
+                    ),
+                    "max_workers": int(self.workflow_config.get("max_workers", 4)),
+                    "strict_mode": bool(self.workflow_config.get("strict_mode", False)),
+                },
+            )
+
+        def _execute_workflow(
+            self, data: list[ItemType], context: CompleteWorkflowExample.WorkflowContext
+        ) -> FlextResult[dict[str, object]]:
+            """Execute workflow stages with parallel processing."""
+            items = data
+            stage_results = []
+            current_data = items
+
+            stage_functions = {
+                "validation": self._validate_items,
+                "processing": self._process_items,
+                "analysis": self._analyze_items,
+                "aggregation": self._aggregate_results,
             }
 
-            for future in as_completed(future_to_item):
-                result = future.result()
-                if result is not None:
-                    processed_results.append(result)
+            for stage_name in context.stages:
+                stage_func = stage_functions.get(stage_name)
+                if not stage_func:
+                    return FlextResult.fail(f"Unknown stage: {stage_name}")
 
-        processing_time = time.time() - stage_start
+                result = self._execute_stage_parallel(
+                    stage_name, current_data, stage_func, context
+                )
+                if result.is_failure:
+                    return FlextResult.fail(
+                        f"Stage {stage_name} failed: {result.error}"
+                    )
 
-        stage_result = WorkflowStageResult(
-            stage_name=stage_name,
-            workflow_id=context.workflow_id,
-            correlation_id=context.correlation_id,
-            success=len(processed_results) > 0,
-            items_processed=len(items),
-            items_succeeded=len(processed_results),
-            items_failed=len(items) - len(processed_results),
-            processing_time=processing_time,
-            errors=[],  # Would populate with actual errors
-            warnings=[],  # Would populate with warnings
-            stage_metadata={
-                "parallel_execution": True,
-                "max_workers": max_workers,
-                "throughput": len(items) / processing_time
-                if processing_time > 0
+                stage_result = result.unwrap()
+                stage_results.append(stage_result)
+
+                context.performance_metrics[stage_name] = {
+                    "processing_time": stage_result.processing_time,
+                    "success_rate": stage_result.items_succeeded
+                    / stage_result.items_processed
+                    if stage_result.items_processed > 0
+                    else 0,
+                    "throughput": stage_result.items_processed
+                    / stage_result.processing_time
+                    if stage_result.processing_time > 0
+                    else 0,
+                }
+
+                current_data = current_data[: stage_result.items_succeeded]
+
+            total_time = time.time() - context.start_time
+            aggregated_metrics = self._aggregate_workflow_metrics(
+                stage_results, total_time
+            )
+
+            workflow_result = CompleteWorkflowExample.CompleteWorkflowResult(
+                workflow_id=context.workflow_id,
+                correlation_id=context.correlation_id,
+                total_stages=len(context.stages),
+                completed_stages=len(stage_results),
+                failed_stages=0,
+                total_processing_time=total_time,
+                stage_results=stage_results,
+                aggregated_metrics=aggregated_metrics,
+                workflow_status="completed",
+            )
+
+            return FlextResult.ok({
+                "workflow_result": workflow_result,
+                "final_data": current_data,
+                "performance_summary": aggregated_metrics,
+            })
+
+        def _cleanup_context(
+            self, context: CompleteWorkflowExample.WorkflowContext
+        ) -> None:
+            """Cleanup workflow context and log completion."""
+            total_time = time.time() - context.start_time
+            context.performance_metrics["total_workflow_time"] = total_time
+            print(f"Workflow {context.workflow_id} completed in {total_time:.3f}s")
+
+        def _execute_stage_parallel(
+            self,
+            stage_name: str,
+            items: list[ItemType],
+            stage_func: Callable[
+                [ItemType, CompleteWorkflowExample.WorkflowContext],
+                FlextResult[ItemType],
+            ],
+            context: CompleteWorkflowExample.WorkflowContext,
+        ) -> FlextResult[CompleteWorkflowExample.WorkflowStageResult]:
+            """Execute a workflow stage in parallel."""
+            stage_start = time.time()
+            max_workers = int(context.metadata.get("max_workers", 4))
+
+            def process_single_item(item: ItemType) -> ItemType | None:
+                try:
+                    result = stage_func(item, context)
+                    return result.unwrap() if result.is_success else None
+                except Exception as e:
+                    return {"error": str(e), "item": item}
+
+            processed_results = []
+            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                future_to_item = {
+                    executor.submit(process_single_item, item): item for item in items
+                }
+                for future in as_completed(future_to_item):
+                    result = future.result()
+                    if result is not None:
+                        processed_results.append(result)
+
+            processing_time = time.time() - stage_start
+            stage_result = CompleteWorkflowExample.WorkflowStageResult(
+                stage_name=stage_name,
+                workflow_id=context.workflow_id,
+                correlation_id=context.correlation_id,
+                success=len(processed_results) > 0,
+                items_processed=len(items),
+                items_succeeded=len(processed_results),
+                items_failed=len(items) - len(processed_results),
+                processing_time=processing_time,
+                stage_metadata={
+                    "parallel_execution": True,
+                    "max_workers": max_workers,
+                    "throughput": len(items) / processing_time
+                    if processing_time > 0
+                    else 0,
+                    "success_rate": len(processed_results) / len(items) if items else 0,
+                },
+            )
+            return FlextResult.ok(stage_result)
+
+        def _process_stage(
+            self,
+            item: ItemType,
+            sleep_time: float,
+            add_field: str,
+            value: Union[str, float, bool],
+            extra_logic: Callable[[ItemType], dict[str, Union[str, int, float, bool]]]
+            | None = None,
+        ) -> ItemType:
+            """Generic stage processing helper."""
+            time.sleep(sleep_time)
+            result = item.copy()
+            result[add_field] = value
+            if extra_logic:
+                result.update(extra_logic(item))
+            return result
+
+        def _validate_items(
+            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
+        ) -> FlextResult[ItemType]:
+            """Validate single item."""
+            return FlextResult.ok(
+                self._process_stage(
+                    item,
+                    0.005,
+                    "validated",
+                    True,
+                    lambda _i: {"is_valid": bool(item.get("id") and item.get("name"))},
+                )
+            )
+
+        def _process_items(
+            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
+        ) -> FlextResult[ItemType]:
+            """Process single item."""
+            return FlextResult.ok(
+                self._process_stage(
+                    item,
+                    0.01,
+                    "processed",
+                    True,
+                    lambda _i: {"processed_at": time.time()},
+                )
+            )
+
+        def _analyze_items(
+            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
+        ) -> FlextResult[ItemType]:
+            """Analyze single item."""
+            return FlextResult.ok(
+                self._process_stage(
+                    item,
+                    0.005,
+                    "analyzed",
+                    True,
+                    lambda _i: {"complexity_score": len(str(item)) * 0.1},
+                )
+            )
+
+        def _aggregate_results(
+            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
+        ) -> FlextResult[ItemType]:
+            """Aggregate results."""
+            return FlextResult.ok(
+                self._process_stage(
+                    item,
+                    0,
+                    "aggregated",
+                    True,
+                    lambda _i: {
+                        "final_score": cast("float", item.get("complexity_score", 0))
+                        + (1 if cast("bool", item.get("is_valid", False)) else 0)
+                    },
+                )
+            )
+
+        def _aggregate_workflow_metrics(
+            self,
+            stage_results: list[CompleteWorkflowExample.WorkflowStageResult],
+            total_time: float,
+        ) -> dict[str, Union[float, int]]:
+            """Aggregate metrics across all workflow stages."""
+            if not stage_results:
+                return {}
+            total_items_processed = sum(r.items_processed for r in stage_results)
+            total_items_succeeded = sum(r.items_succeeded for r in stage_results)
+            total_processing_time = sum(r.processing_time for r in stage_results)
+            return {
+                "total_items_processed": total_items_processed,
+                "total_items_succeeded": total_items_succeeded,
+                "total_items_failed": total_items_processed - total_items_succeeded,
+                "workflow_efficiency": total_items_succeeded / total_items_processed
+                if total_items_processed > 0
                 else 0,
-                "success_rate": len(processed_results) / len(items) if items else 0,
-            },
+                "average_stage_time": total_processing_time / len(stage_results)
+                if stage_results
+                else 0,
+                "workflow_throughput": total_items_processed / total_time
+                if total_time > 0
+                else 0,
+                "parallel_utilization": total_processing_time / total_time
+                if total_time > 0
+                else 0,
+            }
+
+    @staticmethod
+    def create_sample_workflow_data(count: int = 100) -> list[ItemType]:
+        """Create sample data for workflow testing."""
+        return [
+            {
+                "id": f"item_{i}",
+                "dn": f"cn=user{i},ou=users,dc=example,dc=com",
+                "name": f"User {i}",
+                "attributes": {
+                    "objectClass": ["person", "organizationalPerson"],
+                    "cn": f"user{i}",
+                    "sn": f"User{i}",
+                },
+                "timestamp": time.time() + i,
+            }
+            for i in range(count)
+        ]
+
+    @staticmethod
+    def run_example() -> None:
+        """Run the complete workflow example."""
+        sample_data: list[ItemType] = (
+            CompleteWorkflowExample.create_sample_workflow_data(50)
         )
-
-        return FlextResult.ok(stage_result)
-
-    def _validate_items(
-        self, item: dict[str, Any], context: WorkflowContext
-    ) -> FlextResult[dict[str, Any]]:
-        """Validate single item."""
-        time.sleep(0.005)  # Simulate validation time
-        result = item.copy()
-        result["validated"] = True
-        result["is_valid"] = bool(item.get("id") and item.get("name"))
-        return FlextResult.ok(result)
-
-    def _process_items(
-        self, item: dict[str, Any], context: WorkflowContext
-    ) -> FlextResult[dict[str, Any]]:
-        """Process single item."""
-        time.sleep(0.01)  # Simulate processing time
-        result = item.copy()
-        result["processed"] = True
-        result["processed_at"] = time.time()
-        return FlextResult.ok(result)
-
-    def _analyze_items(
-        self, item: dict[str, Any], context: WorkflowContext
-    ) -> FlextResult[dict[str, Any]]:
-        """Analyze single item."""
-        time.sleep(0.005)  # Simulate analysis time
-        result = item.copy()
-        result["analyzed"] = True
-        result["complexity_score"] = len(str(item)) * 0.1
-        return FlextResult.ok(result)
-
-    def _aggregate_results(
-        self, item: dict[str, Any], context: WorkflowContext
-    ) -> FlextResult[dict[str, Any]]:
-        """Aggregate results."""
-        result = item.copy()
-        result["aggregated"] = True
-        result["final_score"] = item.get("complexity_score", 0) + (
-            1 if item.get("is_valid") else 0
-        )
-        return FlextResult.ok(result)
-
-    def _transform_data_for_next_stage(
-        self,
-        stage_name: str,
-        current_data: list[dict[str, Any]],
-        stage_result: WorkflowStageResult,
-    ) -> list[dict[str, Any]]:
-        """Transform data for next stage."""
-        # Simplified: just return current data (in real implementation would transform)
-        return current_data[: stage_result.items_succeeded]
-
-    def _aggregate_workflow_metrics(
-        self, stage_results: list[WorkflowStageResult], total_time: float
-    ) -> dict[str, Any]:
-        """Aggregate metrics across all workflow stages."""
-        if not stage_results:
-            return {}
-
-        total_items_processed = sum(r.items_processed for r in stage_results)
-        total_items_succeeded = sum(r.items_succeeded for r in stage_results)
-        total_processing_time = sum(r.processing_time for r in stage_results)
-
-        return {
-            "total_items_processed": total_items_processed,
-            "total_items_succeeded": total_items_succeeded,
-            "total_items_failed": total_items_processed - total_items_succeeded,
-            "workflow_efficiency": total_items_succeeded / total_items_processed
-            if total_items_processed > 0
-            else 0,
-            "average_stage_time": total_processing_time / len(stage_results)
-            if stage_results
-            else 0,
-            "workflow_throughput": total_items_processed / total_time
-            if total_time > 0
-            else 0,
-            "parallel_utilization": total_processing_time / total_time
-            if total_time > 0
-            else 0,
+        workflow_config: dict[str, Union[str, int, bool, float]] = {
+            "workflow_id": "comprehensive_workflow",
+            "parallel": True,
+            "max_workers": 4,
+            "strict_mode": False,
         }
-
-
-def create_sample_workflow_data(count: int = 100) -> list[dict[str, Any]]:
-    """Create sample data for workflow testing."""
-    return [
-        {
-            "id": f"item_{i}",
-            "dn": f"cn=user{i},ou=users,dc=example,dc=com",
-            "name": f"User {i}",
-            "attributes": {
-                "objectClass": ["person", "organizationalPerson"],
-                "cn": f"user{i}",
-                "sn": f"User{i}",
-            },
-            "timestamp": time.time() + i,
-        }
-        for i in range(count)
-    ]
+        orchestrator = CompleteWorkflowExample.WorkflowOrchestrator()
+        orchestrator.data = sample_data
+        orchestrator.workflow_config = workflow_config
+        result = orchestrator.execute()
+        if result.is_success:
+            print("Workflow completed successfully")
+        else:
+            print(f"Workflow failed: {result.error}")
 
 
 # Example usage (commented out - no main blocks or print statements as per requirements)
-#
-# sample_data = create_sample_workflow_data(50)
-# workflow_config = {
-#     "workflow_id": "comprehensive_workflow",
-#     "parallel": True,
-#     "max_workers": 4,
-#     "strict_mode": False,
-# }
-#
-# result = WorkflowOrchestrator(sample_data, workflow_config)
-# Context automatically managed - setup and cleanup happen transparently!
+# CompleteWorkflowExample.run_example()

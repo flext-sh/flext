@@ -11,10 +11,16 @@ Tests verify that subprocess usage in test_helper.py has been properly converted
 
 from __future__ import annotations
 
+import inspect
 import pathlib
 import sys
 
 import pytest
+from flext_quality.tools.test_helper import (
+    check_test_quality,
+    suggest_tests_from_coverage,
+    validate_test_execution,
+)
 
 # Add paths for testing
 sys.path.insert(
@@ -104,32 +110,18 @@ class TestPhase6Sprint2TestHelperConversion:
 
     def test_module_can_be_imported(self) -> None:
         """Verify the module can be imported without errors."""
-        from flext_quality.tools.test_helper import (
-            suggest_tests_from_coverage,
-            validate_test_execution,
-        )
-
         # Should be able to import both functions
         assert suggest_tests_from_coverage is not None
         assert validate_test_execution is not None
 
     def test_functions_callable(self) -> None:
         """Verify the functions are callable."""
-        from flext_quality.tools.test_helper import (
-            suggest_tests_from_coverage,
-            validate_test_execution,
-        )
-
         # Functions should be callable
         assert callable(suggest_tests_from_coverage)
         assert callable(validate_test_execution)
 
     def test_suggest_tests_function_signature(self) -> None:
         """Verify suggest_tests_from_coverage signature is unchanged."""
-        import inspect
-
-        from flext_quality.tools.test_helper import suggest_tests_from_coverage
-
         sig = inspect.signature(suggest_tests_from_coverage)
 
         # Should take project_path parameter
@@ -137,10 +129,6 @@ class TestPhase6Sprint2TestHelperConversion:
 
     def test_validate_test_execution_signature(self) -> None:
         """Verify validate_test_execution signature is unchanged."""
-        import inspect
-
-        from flext_quality.tools.test_helper import validate_test_execution
-
         sig = inspect.signature(validate_test_execution)
 
         # Should take test_path parameter
@@ -148,8 +136,6 @@ class TestPhase6Sprint2TestHelperConversion:
 
     def test_check_test_quality_unchanged(self) -> None:
         """Verify check_test_quality function exists and is unchanged."""
-        from flext_quality.tools.test_helper import check_test_quality
-
         assert check_test_quality is not None
         assert callable(check_test_quality)
 

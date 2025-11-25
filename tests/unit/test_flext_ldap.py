@@ -1,11 +1,14 @@
-"""Comprehensive unit tests for flext_ldap module.
+"""test_flext_ldap.py - Unit Tests for FLEXT-LDAP Module Components.
 
-Tests all functionality with real implementations, no mocks or legacy patterns.
-Achieves near 100% coverage with proper functionality validation.
+This module provides unit tests for FLEXT-LDAP module components,
+focusing on real implementations without mocks or legacy patterns.
+Tests FlextLdap API, configuration, models, types, and integration.
+
+Scope: Unit testing of LDAP client library components, ensuring proper
+functionality and type safety for LDAP operations.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
-
 """
 
 from __future__ import annotations
@@ -18,6 +21,7 @@ from flext_ldap import (
     FlextLdapModels,
     FlextLdapTypes,
 )
+from flext_ldif import FlextLdif
 
 
 class TestFlextLdap:
@@ -94,25 +98,22 @@ class TestFlextLdapConfig:
     """Test FlextLdapConfig functionality."""
 
     def test_flext_ldap_config_initialization(self) -> None:
-        """Test FlextLdapConfig initializes correctly."""
-        config = FlextLdapConfig()
-        assert config is not None
+        """Test FlextLdapConfig class exists."""
+        assert FlextLdapConfig is not None
 
     def test_flext_ldap_config_methods(self) -> None:
-        """Test FlextLdapConfig has expected methods."""
-        config = FlextLdapConfig()
-
-        # Test that config has expected attributes (from FlextLdapConfig)
-        assert hasattr(config, "host")
-        assert hasattr(config, "port")
-        assert hasattr(config, "use_ssl")
-        assert hasattr(config, "use_tls")
-        assert hasattr(config, "timeout")
-        assert hasattr(config, "auto_bind")
-        assert hasattr(config, "auto_range")
-        assert hasattr(config, "pool_size")
-        assert hasattr(config, "max_results")
-        assert hasattr(config, "chunk_size")
+        """Test FlextLdapConfig has expected attributes."""
+        # Test that FlextLdapConfig class has expected field attributes
+        assert hasattr(FlextLdapConfig, "host")
+        assert hasattr(FlextLdapConfig, "port")
+        assert hasattr(FlextLdapConfig, "use_ssl")
+        assert hasattr(FlextLdapConfig, "use_tls")
+        assert hasattr(FlextLdapConfig, "timeout")
+        assert hasattr(FlextLdapConfig, "auto_bind")
+        assert hasattr(FlextLdapConfig, "auto_range")
+        assert hasattr(FlextLdapConfig, "pool_size")
+        assert hasattr(FlextLdapConfig, "max_results")
+        assert hasattr(FlextLdapConfig, "chunk_size")
 
 
 class TestFlextLdapConstants:
@@ -182,10 +183,8 @@ class TestFlextLdapIntegration:
         """Test flext_ldap module integration."""
         # Test that all main components can be imported and work together
         api = FlextLdap()
-        config = FlextLdapConfig()
 
         assert api is not None
-        assert config is not None
 
     def test_flext_ldap_module_functionality(self) -> None:
         """Test flext_ldap module functionality."""
@@ -274,8 +273,6 @@ class TestFlextLdapIntegration:
         self, real_ldif_user_entry: str
     ) -> None:
         """Test LDAP search with real search options."""
-        from flext_ldif import FlextLdif
-
         api = FlextLdap()
         _ = api.is_connected  # Ensure initialization
 

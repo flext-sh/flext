@@ -9,6 +9,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import io
+import runpy
+from contextlib import redirect_stdout
 from pathlib import Path
 
 
@@ -136,8 +139,6 @@ class TestEcosystemValidationIntegration:
 
     def test_runpy_module_functionality(self) -> None:
         """Functional test: Verify runpy can execute modules."""
-        import runpy
-
         # Create a simple test module in memory
         # Just verify runpy module exists and can be imported
         assert hasattr(runpy, "run_module")
@@ -145,9 +146,6 @@ class TestEcosystemValidationIntegration:
 
     def test_io_stdout_capture_works(self) -> None:
         """Functional test: Verify io.StringIO and stdout redirection work."""
-        import io
-        from contextlib import redirect_stdout
-
         # Test that StringIO and redirect_stdout work
         captured = io.StringIO()
         with redirect_stdout(captured):

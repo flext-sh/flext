@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
-"""Standardize pyproject.toml files across FLEXT workspace.
+"""standardize_pyproject.py - Pyproject.toml Standardization Script.
 
-This script applies PEP 518/621 standards to all projects in the workspace
-using flext_quality.tools.poetry for professional enterprise standardization.
+This script standardizes pyproject.toml files across all FLEXT projects in the workspace,
+applying PEP 518/621 standards and using flext_quality.tools for validation.
+
+Scope: Batch processing script for pyproject.toml standardization and validation
+across multiple FLEXT projects, ensuring consistent dependency management.
+
+Copyright (c) 2025 FLEXT Team
+SPDX-License-Identifier: MIT
 """
 
 from __future__ import annotations
@@ -38,7 +44,7 @@ class PyprojectStandardizer(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> FlextResult[None]:
+    def validate_preconditions(self) -> FlextResult[bool]:
         """Validate preconditions."""
         workspace_root = Path.cwd()
 
@@ -53,19 +59,16 @@ class PyprojectStandardizer(FlextScript):
 
         if not flext_projects:
             print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return FlextResult[None].fail("Not in FLEXT workspace root")
+            return FlextResult[bool].fail("Not in FLEXT workspace root")
 
         print_colored(f"✅ Found {len(flext_projects)} FLEXT projects", Colors.GREEN)
-        return FlextResult[None].ok(None)
+        return FlextResult[bool].ok(True)
 
-    def execute_main_logic(
-        self, **kwargs: dict[str, str]
-    ) -> FlextResult[dict[str, str]]:
-        """Execute main script logic."""
+    def execute_implementation(self, args: dict[str, object]) -> FlextResult[object]:
         """Execute pyproject.toml standardization."""
         try:
             workspace_root = Path.cwd()
-            projects_filter = kwargs.get("projects")
+            projects_filter = args.get("projects")
 
             print_colored("🔧 PYPROJECT.TOML STANDARDIZATION", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
@@ -173,7 +176,7 @@ class PyprojectStandardizer(FlextScript):
         """Create parser with specific arguments."""
         parser = super().create_parser()
 
-        parser.add_argument(
+        _ = parser.add_argument(
             "--projects",
             help="Filter specific projects (comma-separated)",
         )

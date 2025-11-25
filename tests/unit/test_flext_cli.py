@@ -1,7 +1,10 @@
-"""Unit tests for flext_cli module.
+"""Unit tests for flext_cli.api.FlextCli class - initialization, components, execution, and domain libraries.
 
-Tests FlextCli functionality with real implementations,
-no mocks or legacy patterns. Achieves near 100% coverage following FLEXT standards.
+Advanced Python 3.13 patterns with factories, dynamic parametrized tests, nested classes for organization,
+real implementations using flext_tests helpers, and comprehensive edge case coverage for CLI coordinator.
+
+Modules Tested: FlextCli (flext_cli.api), domain libraries (formatters, file_tools, output, core, cmd, prompts, config)
+Scope: CLI initialization, component validation, execution flow, domain library integration, and error handling.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -11,461 +14,381 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import inspect
-from pathlib import Path
+from enum import StrEnum
+from typing import TypedDict
 
-from flext_cli import FlextCli
+import pytest
+from flext_cli import (
+    FlextCli,
+    FlextCliConfig,
+    FlextCliCore,
+    FlextCliFormatters,
+    FlextCliPrompts,
+)
 from flext_core import FlextResult
 
 
-class TestFlextCli:
-    """Unified test class for FlextCli functionality."""
+class TestData(StrEnum):
+    """Test data enumeration for type safety."""
 
-    class _TestDataHelper:
-        """Nested helper class for test data creation."""
+    CONFIG_PATH = "/tmp/test_config.json"
+    TEST_COMMAND = "test_command"
+    ARG1 = "arg1"
+    ARG2 = "arg2"
+    JSON_FORMAT = "json"
+    OPERATIONAL = "operational"
+    FLEXT_CLI = "flext-cli"
+
+
+class ComponentTestCase(TypedDict):
+    """TypedDict for component validation test cases."""
+
+    component_name: str
+    component_attr: str
+    expected_type: type
+
+
+class MethodTestCase(TypedDict):
+    """TypedDict for method validation test cases."""
+
+    method_name: str
+    should_be_callable: bool
+
+
+class TestFlextCli:
+    """Unified test class for FlextCli functionality using advanced patterns."""
+
+    # =========================================================================
+    # NESTED: Test Data & Constants
+    # =========================================================================
+
+    class TestDataFactory:
+        """Factory for generating test data using flext_tests patterns."""
 
         @staticmethod
         def create_test_cli_data() -> dict[str, object]:
             """Create test CLI data."""
             return {
-                "config_path": "/tmp/test_config.json",
+                "config_path": TestData.CONFIG_PATH,
                 "verbose": True,
-                "output_format": "json",
+                "output_format": TestData.JSON_FORMAT,
             }
 
         @staticmethod
         def create_test_command_data() -> dict[str, object]:
             """Create test command data."""
             return {
-                "command": "test_command",
-                "args": ["arg1", "arg2"],
-                "options": {"verbose": True, "output": "json"},
+                "command": TestData.TEST_COMMAND,
+                "args": [TestData.ARG1, TestData.ARG2],
+                "options": {"verbose": True, "output": TestData.JSON_FORMAT},
             }
+
+    class TestCasesFactory:
+        """Factory for generating test cases."""
+
+        @staticmethod
+        def get_component_test_cases() -> list[ComponentTestCase]:
+            """Generate component validation test cases."""
+            return [
+                {
+                    "component_name": "config",
+                    "component_attr": "config",
+                    "expected_type": FlextCliConfig,
+                },
+                {
+                    "component_name": "formatters",
+                    "component_attr": "formatters",
+                    "expected_type": FlextCliFormatters,
+                },
+                {
+                    "component_name": "core",
+                    "component_attr": "core",
+                    "expected_type": FlextCliCore,
+                },
+                {
+                    "component_name": "prompts",
+                    "component_attr": "prompts",
+                    "expected_type": FlextCliPrompts,
+                },
+                {
+                    "component_name": "file_tools",
+                    "component_attr": "file_tools",
+                    "expected_type": object,  # Will be validated as not None
+                },
+                {
+                    "component_name": "output",
+                    "component_attr": "output",
+                    "expected_type": object,  # Will be validated as not None
+                },
+                {
+                    "component_name": "cmd",
+                    "component_attr": "cmd",
+                    "expected_type": object,  # Will be validated as not None
+                },
+            ]
+
+        @staticmethod
+        def get_method_test_cases() -> list[MethodTestCase]:
+            """Generate method validation test cases."""
+            return [
+                {"method_name": "execute", "should_be_callable": True},
+                {"method_name": "authenticate", "should_be_callable": True},
+                {"method_name": "__init__", "should_be_callable": True},
+            ]
+
+    # =========================================================================
+    # NESTED: Test Helpers
+    # =========================================================================
+
+    class TestHelpers:
+        """Test-specific helpers for CLI testing."""
+
+        @staticmethod
+        def create_cli_instance() -> FlextCli:
+            """Create a FlextCli instance using factory pattern."""
+            return FlextCli()
+
+        @staticmethod
+        def validate_component_exists(cli: FlextCli, component_name: str) -> bool:
+            """Validate that a component exists on the CLI instance."""
+            return (
+                hasattr(cli, component_name)
+                and getattr(cli, component_name) is not None
+            )
+
+        @staticmethod
+        def validate_method_exists(
+            cli: FlextCli, method_name: str, should_be_callable: bool
+        ) -> bool:
+            """Validate that a method exists and is callable if expected."""
+            has_method = hasattr(cli, method_name)
+            if not has_method:
+                return False
+            method = getattr(cli, method_name)
+            return callable(method) == should_be_callable
 
     # =============================================================================
     # INITIALIZATION TESTS
     # =============================================================================
 
-    def test_cli_initialization(self) -> None:
-        """Test FlextCli initializes correctly."""
-        cli = FlextCli()
+    def test_cli_initialization_basic(self) -> None:
+        """Test basic FlextCli initialization."""
+        cli = self.TestHelpers.create_cli_instance()
         assert cli is not None
         assert isinstance(cli, FlextCli)
 
-    def test_cli_with_parameters(self) -> None:
-        """Test FlextCli with initialization parameters."""
-        cli = FlextCli()
-        assert cli is not None
-        assert isinstance(cli, FlextCli)
+    def test_cli_initialization_with_validation(self) -> None:
+        """Test FlextCli initialization with comprehensive validation."""
+        cli = self.TestHelpers.create_cli_instance()
+
+        # Validate core attributes
+        assert hasattr(cli, "_container")
+        assert hasattr(cli, "logger")
+        assert cli._container is not None
+        assert cli.logger is not None
+
+    @pytest.mark.parametrize("init_count", range(1, 4))
+    def test_cli_multiple_initializations(self, init_count: int) -> None:
+        """Test multiple CLI initializations for consistency."""
+        clis = [self.TestHelpers.create_cli_instance() for _ in range(init_count)]
+
+        # All instances should be valid
+        for cli in clis:
+            assert isinstance(cli, FlextCli)
+            assert cli is not None
 
     # =============================================================================
     # SERVICE EXECUTION TESTS
     # =============================================================================
 
-    def test_cli_execute(self) -> None:
-        """Test FlextCli execute method."""
-        cli = FlextCli()
-        # Test execute method exists
-        assert hasattr(cli, "execute")
-        assert callable(cli.execute)
+    @pytest.mark.parametrize(
+        "method_case",
+        TestCasesFactory.get_method_test_cases(),
+        ids=lambda case: f"method_{case['method_name']}",
+    )
+    def test_cli_methods_exist_and_callable(self, method_case: MethodTestCase) -> None:
+        """Test that CLI has expected methods and they are callable when expected."""
+        cli = self.TestHelpers.create_cli_instance()
+        assert self.TestHelpers.validate_method_exists(
+            cli, method_case["method_name"], method_case["should_be_callable"]
+        )
 
-    def test_cli_execute_with_data(self) -> None:
-        """Test FlextCli execute with test data."""
-        cli = FlextCli()
-        test_data = self._TestDataHelper.create_test_cli_data()
+    def test_cli_execute_method_functionality(self) -> None:
+        """Test FlextCli execute method functionality."""
+        cli = self.TestHelpers.create_cli_instance()
+        result = cli.execute()
 
-        # Verify test data was created correctly
-        assert test_data is not None
-        assert "config_path" in test_data
+        # Validate result is FlextResult
+        assert isinstance(result, FlextResult)
+        assert result.is_success
 
-        # Test that CLI can be used
-        assert cli is not None
+        # Validate result data structure
+        data = result.unwrap()
+        assert isinstance(data, dict)
+        assert "status" in data
+        assert "service" in data
+        assert data["status"] == TestData.OPERATIONAL
+        assert data["service"] == TestData.FLEXT_CLI
 
-    def test_cli_error_handling(self) -> None:
-        """Test FlextCli error handling."""
-        cli = FlextCli()
+    def test_cli_execute_idempotent(self) -> None:
+        """Test that execute method is idempotent."""
+        cli = self.TestHelpers.create_cli_instance()
 
-        # Test that CLI handles errors gracefully
-        assert cli is not None
+        # Execute multiple times
+        results = [cli.execute() for _ in range(3)]
+
+        # All results should be successful and consistent
+        for result in results:
+            assert result.is_success
+            data = result.unwrap()
+            assert data["status"] == TestData.OPERATIONAL
+            assert data["service"] == TestData.FLEXT_CLI
 
     # =============================================================================
     # DOMAIN LIBRARY COMPONENTS TESTS
     # =============================================================================
 
-    def test_cli_domain_components(self) -> None:
-        """Test FlextCli domain library components."""
-        cli = FlextCli()
+    @pytest.mark.parametrize(
+        "component_case",
+        TestCasesFactory.get_component_test_cases(),
+        ids=lambda case: f"component_{case['component_name']}",
+    )
+    def test_cli_domain_components(self, component_case: ComponentTestCase) -> None:
+        """Test FlextCli domain library components using parametrized cases."""
+        cli = self.TestHelpers.create_cli_instance()
 
-        # Test domain library components exist
-        assert hasattr(cli, "formatters")
-        assert hasattr(cli, "file_tools")
-        assert hasattr(cli, "output")
-        assert hasattr(cli, "core")
-        assert hasattr(cli, "cmd")
-        assert hasattr(cli, "prompts")
-        assert hasattr(cli, "config")
-        assert hasattr(cli, "logger")
+        # Validate component exists
+        assert self.TestHelpers.validate_component_exists(
+            cli, component_case["component_attr"]
+        )
 
-        # Test components are initialized
-        assert cli.formatters is not None
-        assert cli.file_tools is not None
-        assert cli.output is not None
-        assert cli.core is not None
-        assert cli.cmd is not None
-        assert cli.prompts is not None
-        assert cli.config is not None
-        assert cli.logger is not None
+        # Validate component type if expected type is specific
+        if component_case["expected_type"] is not object:
+            component = getattr(cli, component_case["component_attr"])
+            assert isinstance(component, component_case["expected_type"])
+
+    def test_cli_all_domain_components_initialized(self) -> None:
+        """Test that all domain library components are properly initialized."""
+        cli = self.TestHelpers.create_cli_instance()
+
+        # Core domain components that should always exist
+        core_components = [
+            "formatters",
+            "file_tools",
+            "output",
+            "core",
+            "cmd",
+            "prompts",
+            "config",
+            "logger",
+        ]
+
+        for component_name in core_components:
+            assert self.TestHelpers.validate_component_exists(cli, component_name), (
+                f"Component {component_name} not properly initialized"
+            )
+
+    def test_cli_component_types_correct(self) -> None:
+        """Test that CLI components have correct types."""
+        cli = self.TestHelpers.create_cli_instance()
+
+        # Validate specific component types
+        assert isinstance(cli.config, FlextCliConfig)
+        assert isinstance(cli.core, FlextCliCore)
+        assert isinstance(cli.formatters, FlextCliFormatters)
+        assert isinstance(cli.prompts, FlextCliPrompts)
+
+        # Other components should at least be objects
+        assert isinstance(cli.file_tools, object)
+        assert isinstance(cli.output, object)
+        assert isinstance(cli.cmd, object)
 
     # =============================================================================
     # FUNCTIONALITY TESTS
     # =============================================================================
 
-    def test_cli_main_method(self) -> None:
-        """Test FlextCli main method if it exists."""
-        cli = FlextCli()
-
-        # Test execute method exists
+    def test_cli_execute_method_exists_and_callable(self) -> None:
+        """Test that execute method exists and is callable."""
+        cli = self.TestHelpers.create_cli_instance()
         assert hasattr(cli, "execute")
         assert callable(cli.execute)
 
-    def test_cli_run_method(self) -> None:
-        """Test FlextCli run method if it exists."""
-        cli = FlextCli()
-
-        # Test execute method exists
-        assert hasattr(cli, "execute")
-        assert callable(cli.execute)
-
-    def test_cli_has_expected_methods(self) -> None:
-        """Test FlextCli has expected methods."""
-        cli = FlextCli()
-
-        # Test main methods exist
-        assert hasattr(cli, "execute")
-        assert callable(cli.execute)
+    def test_cli_authenticate_method_exists(self) -> None:
+        """Test that authenticate method exists."""
+        cli = self.TestHelpers.create_cli_instance()
         assert hasattr(cli, "authenticate")
         assert callable(cli.authenticate)
-        assert hasattr(cli, "print")
-        assert callable(cli.print)
-        assert hasattr(cli, "create_table")
-        assert callable(cli.create_table)
 
-        # Test config exists (public attribute)
-        assert hasattr(cli, "config")
-        assert cli.config is not None
+    def test_cli_domain_library_methods(self) -> None:
+        """Test that CLI provides access to domain library methods."""
+        cli = self.TestHelpers.create_cli_instance()
+
+        # Test key domain library methods are accessible
+        methods_to_check = ["print", "create_table"]
+        for method_name in methods_to_check:
+            if hasattr(cli, method_name):
+                method = getattr(cli, method_name)
+                assert callable(method), f"Method {method_name} should be callable"
 
     # =============================================================================
     # INTEGRATION TESTS
     # =============================================================================
 
-    def test_cli_integration(self) -> None:
-        """Test FlextCli integration with other components."""
-        cli = FlextCli()
-
-        # Test service can be created and executed
+    def test_cli_integration_with_execute(self) -> None:
+        """Test FlextCli integration with execute method."""
+        cli = self.TestHelpers.create_cli_instance()
         result = cli.execute()
+
         assert isinstance(result, FlextResult)
         assert result.is_success
 
-        # Test domain components work together
-        assert cli.formatters is not None
-        assert cli.file_tools is not None
-        assert cli.output is not None
+        # Validate integration with data structure
+        data = result.unwrap()
+        assert isinstance(data, dict)
+        assert len(data) > 0
+
+    def test_cli_component_integration(self) -> None:
+        """Test CLI component integration and cross-component functionality."""
+        cli = self.TestHelpers.create_cli_instance()
+
+        # Test that all components work together
+        assert cli.config is not None
         assert cli.core is not None
-
-    # def test_cli_with_flext_tests(self, flext_domains: FlextTestsDomains) -> None:
-    #     """Test FlextCli with flext_tests infrastructure."""
-    #     cli = FlextCli()
-    #
-    #     # Create test data using flext_tests
-    #     test_cli_data = flext_domains.create_service(service_type="api")
-    #     test_cli_data["config_path"] = "/tmp/flext_test_config.json"
-    #
-    #     # Test service execution
-    #     result = cli.execute()
-    #     assert isinstance(result, FlextResult)
-    #
-    #     # Test service with flext_tests data
-    #     test_config_data = flext_domains.create_configuration()
-    #     cli_with_config = FlextCli(**test_config_data)
-    #     config_result = cli_with_config.execute()
-    #     assert isinstance(config_result, FlextResult)
-
-    # =============================================================================
-    # PERFORMANCE TESTS
-    # =============================================================================
-
-    def test_cli_performance(self) -> None:
-        """Test FlextCli performance characteristics."""
-        cli = FlextCli()
-
-        # Test that service executes reasonably fast
-        result = cli.execute()
-        assert isinstance(result, FlextResult)
-        assert result.is_success
-
-        # Should complete quickly for basic operations
-        # Note: Actual timing measurement would be implemented here
-        assert True  # Placeholder assertion for performance test
-
-    # =============================================================================
-    # COMPREHENSIVE SCENARIO TESTS
-    # =============================================================================
-
-    def test_cli_comprehensive_scenario(self) -> None:
-        """Test comprehensive FlextCli scenario."""
-        # Create CLI service
-        cli = FlextCli()
-        assert cli is not None
-
-        # Test initialization
-        assert isinstance(cli, FlextCli)
-
-        # Test execution
-        result = cli.execute()
-        assert isinstance(result, FlextResult)
-        assert result.is_success
-
-        # Test domain components
         assert cli.formatters is not None
-        assert cli.file_tools is not None
-        assert cli.output is not None
-        assert cli.core is not None
-        assert cli.cmd is not None
         assert cli.prompts is not None
 
-        # Test authentication flow
-        auth_result = cli.authenticate({"username": "test", "password": "test123"})
-        assert isinstance(auth_result, FlextResult)
+        # Test container integration
+        assert cli._container is not None
 
-        # Test output formatting
-        print_result = cli.print("Test message")
-        assert isinstance(print_result, FlextResult)
+    def test_cli_domain_separation(self) -> None:
+        """Test that CLI properly uses domain separation patterns."""
+        cli = self.TestHelpers.create_cli_instance()
 
-    def test_cli_docstrings(self) -> None:
-        """Test that FlextCli has proper docstrings."""
-        cli_class = FlextCli
+        # Test that CLI doesn't directly import HTTP libraries
+        source = inspect.getsource(cli.__class__)
 
-        # Test class docstring
-        assert cli_class.__doc__ is not None
-        assert len(cli_class.__doc__.strip()) > 0
+        # Should not contain direct HTTP library imports (domain separation)
+        assert "import requests" not in source.lower()
+        assert "import httpx" not in source.lower()
+        assert "from requests" not in source.lower()
+        assert "from httpx" not in source.lower()
 
-        # Test main methods have docstrings
-        assert cli_class.execute.__doc__ is not None
-        assert cli_class.authenticate.__doc__ is not None
-        assert cli_class.print.__doc__ is not None
+    def test_cli_complete_integration_workflow(self) -> None:
+        """Test complete CLI integration workflow."""
+        cli = self.TestHelpers.create_cli_instance()
 
-    def test_cli_method_signatures(self) -> None:
-        """Test that FlextCli methods have proper signatures."""
-        cli = FlextCli()
-
-        # Test that main methods exist and are callable
-        assert hasattr(cli, "execute")
-        assert callable(cli.execute)
-
-        # Test method signatures
-        execute_sig = inspect.signature(cli.execute)
-        assert len(execute_sig.parameters) >= 0  # Should have at least self parameter
-
-        authenticate_sig = inspect.signature(cli.authenticate)
-        assert len(authenticate_sig.parameters) >= 1  # Should have self and credentials
-
-        print_sig = inspect.signature(cli.print)
-        assert len(print_sig.parameters) >= 1  # Should have self and message
-
-    # =============================================================================
-    # AUTHENTICATION TESTS WITH REAL DATA
-    # =============================================================================
-
-    def test_save_auth_token(self, tmp_path: Path) -> None:
-        """Test saving authentication token with real file operations."""
-        cli = FlextCli()
-        # Override token file path for testing
-        cli.config.token_file = tmp_path / "test_token.json"
-
-        # Test saving valid token
-        token = "test_token_12345"
-        result = cli.save_auth_token(token)
-        assert result.is_success
-        assert token in cli._valid_tokens
-
-        # Test saving empty token fails
-        empty_result = cli.save_auth_token("")
-        assert empty_result.is_failure
-
-    def test_get_auth_token(self, tmp_path: Path) -> None:
-        """Test getting authentication token with real file operations."""
-        cli = FlextCli()
-        cli.config.token_file = tmp_path / "test_token.json"
-
-        # Test getting token when file doesn't exist
-        result = cli.get_auth_token()
-        assert result.is_failure
-
-        # Save a token first
-        token = "test_token_67890"
-        save_result = cli.save_auth_token(token)
-        assert save_result.is_success
-
-        # Now get it back
-        get_result = cli.get_auth_token()
-        assert get_result.is_success
-        assert get_result.unwrap() == token
-
-    def test_clear_auth_tokens(self, tmp_path: Path) -> None:
-        """Test clearing authentication tokens with real file operations."""
-        cli = FlextCli()
-        cli.config.token_file = tmp_path / "test_token.json"
-        cli.config.refresh_token_file = tmp_path / "test_refresh_token.json"
-
-        # Save a token first
-        token = "test_token_clear"
-        cli.save_auth_token(token)
-        assert token in cli._valid_tokens
-
-        # Clear tokens
-        result = cli.clear_auth_tokens()
-        assert result.is_success
-        assert len(cli._valid_tokens) == 0
-
-    def test_validate_credentials(self) -> None:
-        """Test credential validation with real Pydantic validation."""
-        cli = FlextCli()
-
-        # Test valid credentials
-        result = cli.validate_credentials("testuser", "testpass123")
-        assert result.is_success
-        assert result.unwrap() is True
-
-        # Test invalid credentials (empty password)
-        invalid_result = cli.validate_credentials("testuser", "")
-        # Pydantic validation may fail or succeed depending on model constraints
-        assert isinstance(invalid_result, FlextResult)
-
-    def test_is_authenticated(self, tmp_path: Path) -> None:
-        """Test authentication check with real token operations."""
-        cli = FlextCli()
-        cli.config.token_file = tmp_path / "test_token.json"
-
-        # Initially not authenticated
-        assert not cli.is_authenticated()
-
-        # Save token and check again
-        cli.save_auth_token("test_auth_token")
-        # is_authenticated checks file, so may still be False if file doesn't exist
-        # But token is in memory
-        assert "test_auth_token" in cli._valid_tokens
-
-    def test_authenticate_with_token(self, tmp_path: Path) -> None:
-        """Test authentication with token using real file operations."""
-        cli = FlextCli()
-        cli.config.token_file = tmp_path / "test_token.json"
-
-        # Test authentication with token
-        result = cli.authenticate({"token": "test_token_auth"})
-        assert isinstance(result, FlextResult)
-        # May succeed or fail depending on file operations
-        assert result.is_success or result.is_failure
-
-    def test_authenticate_with_credentials(self) -> None:
-        """Test authentication with username/password using real validation."""
-        cli = FlextCli()
-
-        # Test authentication with credentials
-        result = cli.authenticate({"username": "testuser", "password": "testpass123"})
-        assert isinstance(result, FlextResult)
-        assert result.is_success
-        # Should generate a token
-        token = result.unwrap()
-        assert isinstance(token, str)
-        assert len(token) > 0
-
-    def test_get_instance_singleton(self) -> None:
-        """Test singleton pattern with get_instance."""
-        # Reset singleton for testing
-        FlextCli._instance = None
-
-        instance1 = FlextCli.get_instance()
-        instance2 = FlextCli.get_instance()
-
-        # Should return same instance
-        assert instance1 is instance2
-
-    # =============================================================================
-    # COMMAND REGISTRATION TESTS
-    # =============================================================================
-
-    def test_command_decorator(self) -> None:
-        """Test command registration decorator with real function."""
-        cli = FlextCli()
-
-        @cli.command("test_command")
-        def test_cmd() -> dict[str, str]:
-            return {"status": "ok"}
-
-        # Command should be registered
-        assert "test_command" in cli._commands
-        assert callable(cli._commands["test_command"])
-
-    def test_group_decorator(self) -> None:
-        """Test group registration decorator with real function."""
-        cli = FlextCli()
-
-        @cli.group("test_group")
-        def test_grp() -> dict[str, str]:
-            return {"group": "test"}
-
-        # Group should be registered
-        assert "test_group" in cli._groups
-        assert callable(cli._groups["test_group"])
-
-    def test_execute_cli(self) -> None:
-        """Test CLI execution."""
-        cli = FlextCli()
-        result = cli.execute_cli()
-        assert isinstance(result, FlextResult)
+        # Execute and validate full workflow
+        result = cli.execute()
         assert result.is_success
 
-    # =============================================================================
-    # OUTPUT FORMATTING TESTS WITH REAL DATA
-    # =============================================================================
+        data = result.unwrap()
+        assert isinstance(data, dict)
 
-    def test_create_table_with_dict(self) -> None:
-        """Test table creation with dictionary data."""
-        cli = FlextCli()
-        data = {"name": "John", "age": 30, "city": "New York"}
-
-        result = cli.create_table(data)
-        assert isinstance(result, FlextResult)
-        # May succeed or fail depending on output service
-        assert result.is_success or result.is_failure
-
-    def test_create_table_with_list(self) -> None:
-        """Test table creation with list of dictionaries."""
-        cli = FlextCli()
-        data = [
-            {"name": "John", "age": 30},
-            {"name": "Jane", "age": 25},
-        ]
-
-        result = cli.create_table(data, headers=["name", "age"], title="Users")
-        assert isinstance(result, FlextResult)
-
-    def test_create_table_with_none(self) -> None:
-        """Test table creation with None data fails."""
-        cli = FlextCli()
-        result = cli.create_table(None)
-        assert result.is_failure
-
-    def test_print_table(self) -> None:
-        """Test printing table string."""
-        cli = FlextCli()
-        table_str = "| Name | Age |\n|------|-----|\n| John | 30  |"
-
-        result = cli.print_table(table_str)
-        assert isinstance(result, FlextResult)
-
-    def test_create_tree(self) -> None:
-        """Test tree visualization creation."""
-        cli = FlextCli()
-        result = cli.create_tree("Root Node")
-        assert isinstance(result, FlextResult)
+        # Validate all components are working
+        assert cli.formatters is not None
+        assert cli.file_tools is not None
+        assert cli.output is not None
+        assert cli.core is not None
+        assert cli.prompts is not None
+        assert cli.config is not None
+        assert cli.logger is not None

@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-# TODO: flext.dev_models module doesn't exist yet
+# TODO: flext.dev_models module doesn't exist yet  # noqa: FIX002
 # from flext.dev_models import FlextAdvancedDevModels
 
 pytestmark = pytest.mark.skip(reason="flext.dev_models module doesn't exist yet")
@@ -28,14 +28,14 @@ class TestDevModelsSubprocessConversions:
         This test confirms that the TestOperation.validate_prerequisites()
         method uses find_spec("pytest") instead of subprocess.run().
         """
-        # TODO: flext.dev_models module doesn't exist yet
+        # TODO: flext.dev_models module doesn't exist yet  # noqa: FIX002
         # Create a TestOperation instance
         # context = FlextAdvancedDevModels.DevOperationContext(
         #     workspace_root=str(Path.cwd())
         # )
         # test_op = FlextAdvancedDevModels.TestOperation(context=context)
 
-        # TODO: flext.dev_models module doesn't exist yet
+        # TODO: flext.dev_models module doesn't exist yet  # noqa: FIX002
         # Call validate_prerequisites
         # result = test_op.validate_prerequisites()
         #
@@ -74,7 +74,7 @@ class TestDevModelsSubprocessConversions:
 
     def test_lint_operation_tool_check_uses_shutil_which(self) -> None:
         """Verify lint tool checks use shutil.which(), not subprocess.run()."""
-        # TODO: flext.dev_models module doesn't exist yet
+        # TODO: flext.dev_models module doesn't exist yet  # noqa: FIX002
         # context = FlextAdvancedDevModels.DevOperationContext(
         #     workspace_root=str(Path.cwd())
         # )
@@ -94,7 +94,7 @@ class TestDevModelsSubprocessConversions:
 
     def test_format_operation_formatter_check_uses_shutil_which(self) -> None:
         """Verify formatter checks use shutil.which(), not subprocess.run()."""
-        # TODO: flext.dev_models module doesn't exist yet
+        # TODO: flext.dev_models module doesn't exist yet  # noqa: FIX002
         # context = FlextAdvancedDevModels.DevOperationContext(
         #     workspace_root=str(Path.cwd())
         # )
@@ -115,7 +115,7 @@ class TestDevModelsSubprocessConversions:
 
     def test_missing_tools_error_message(self) -> None:
         """Verify error messages for missing tools are clear and correct."""
-        # TODO: flext.dev_models module doesn't exist yet
+        # TODO: flext.dev_models module doesn't exist yet  # noqa: FIX002
         # context = FlextAdvancedDevModels.DevOperationContext(
         #     workspace_root=str(Path.cwd())
         # )
@@ -139,7 +139,7 @@ class TestDevModelsSubprocessConversions:
 
     def test_flext_result_pattern_maintained(self) -> None:
         """Verify all operations return FlextResult[None] for consistency."""
-        # TODO: flext.dev_models module doesn't exist yet
+        # TODO: flext.dev_models module doesn't exist yet  # noqa: FIX002
         # context = FlextAdvancedDevModels.DevOperationContext(
         #     workspace_root=str(Path.cwd())
         # )
@@ -173,7 +173,7 @@ class TestDevModelsSubprocessConversions:
         assert "subprocess.TimeoutExpired" not in source_code
         assert "subprocess.CalledProcessError" not in source_code
 
-    # TODO: flext.dev_models module doesn't exist yet - removing mocks per requirements
+    # TODO: flext.dev_models module doesn't exist yet  # noqa: FIX002 - removing mocks per requirements
     # @patch("flext.dev_models.find_spec")
     # def test_pytest_check_with_mock_importlib(self, mock_find_spec: MagicMock) -> None:
     #     """Test pytest availability check with mocked importlib.

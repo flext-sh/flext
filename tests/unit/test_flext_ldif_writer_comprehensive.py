@@ -11,10 +11,12 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from collections.abc import Sequence
+from io import StringIO
 from pathlib import Path
 
 from flext_core import FlextResult
 from flext_ldif import FlextLdif, FlextLdifModels
+from flext_ldif.config import FlextLdifConfig
 from flext_ldif.constants import FlextLdifConstants
 from flext_ldif.services.writer import FlextLdifWriter
 
@@ -34,8 +36,6 @@ class TestFlextLdifWriterComprehensive:
         self, flext_ldif_instance: FlextLdif
     ) -> None:
         """Test writer initialization with custom config."""
-        from flext_ldif.config import FlextLdifConfig
-
         config = FlextLdifConfig()
         writer = FlextLdifWriter(config=config)
         assert writer is not None
@@ -199,8 +199,6 @@ description: {long_value}
         self, flext_ldif_instance: FlextLdif
     ) -> None:
         """Test serializer _write_headers method."""
-        from io import StringIO
-
         writer = FlextLdifWriter()
         serializer = writer.LdifSerializer(
             registry=writer._registry, parent_logger=writer.logger
@@ -252,8 +250,6 @@ description: {long_value}
         flext_ldif_instance: FlextLdif,
     ) -> None:
         """Test _write_all_entries with multiple entries."""
-        from io import StringIO
-
         writer = FlextLdifWriter()
         serializer = writer.LdifSerializer(
             registry=writer._registry, parent_logger=writer.logger
@@ -290,8 +286,6 @@ description: {long_value}
         flext_ldif_instance: FlextLdif,
     ) -> None:
         """Test _write_all_entries with basic entry."""
-        from io import StringIO
-
         writer = FlextLdifWriter()
         serializer = writer.LdifSerializer(
             registry=writer._registry, parent_logger=writer.logger

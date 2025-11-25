@@ -14,13 +14,11 @@ from __future__ import annotations
 import re
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from flext_core import FlextLogger, FlextModels, FlextResult, FlextService
 
-if TYPE_CHECKING:
-    type VerificationResult = dict[str, bool]
-    type ProjectVerification = dict[str, object]
+VerificationResult = dict[str, bool]
+ProjectVerification = dict[str, object]
 
 
 class FlextVersionVerificationService(FlextService[dict[str, object]]):
@@ -132,11 +130,17 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
 
     def execute(self) -> FlextResult[dict[str, object]]:
         """Execute version verification with railway pattern."""
-        return (
-            self._discover_projects()
-            .flat_map(self._verify_all_projects)
-            .flat_map(self._generate_summary)
-        )
+        projects_result = self._discover_projects()
+        if projects_result.is_failure:
+            error_msg = projects_result.error or "Project discovery failed"
+            return FlextResult[dict[str, object]].fail(error_msg)
+
+        verifications_result = self._verify_all_projects(projects_result.value)
+        if verifications_result.is_failure:
+            error_msg = verifications_result.error or "Project verification failed"
+            return FlextResult[dict[str, object]].fail(error_msg)
+
+        return self._generate_summary(verifications_result.value)
 
     def _discover_projects(self) -> FlextResult[list[Path]]:
         """Railway-oriented project discovery."""
@@ -174,7 +178,7 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
             if not package_name:
                 return {"project": project_dir.name, "error": "No package directory"}
 
-            verification = {
+            verification: ProjectVerification = {
                 "project": project_dir.name,
                 "package": package_name,
                 "version_file": self._VersionFileVerifier.verify(
@@ -187,9 +191,31 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
             }
 
             # Calculate overall status
-            version_ok = all(verification["version_file"].values())
-            init_ok = all(verification["init_file"].values())
-            constants_ok = verification["constants_file"]["no_hardcoded_metadata"]
+            version_file_result = verification["version_file"]
+            init_file_result = verification["init_file"]
+            constants_file_result = verification["constants_file"]
+
+            if isinstance(version_file_result, dict) and all(
+                isinstance(v, bool) for v in version_file_result.values()
+            ):
+                version_ok = all(version_file_result.values())
+            else:
+                version_ok = False
+
+            if isinstance(init_file_result, dict) and all(
+                isinstance(v, bool) for v in init_file_result.values()
+            ):
+                init_ok = all(init_file_result.values())
+            else:
+                init_ok = False
+
+            if (
+                isinstance(constants_file_result, dict)
+                and "no_hardcoded_metadata" in constants_file_result
+            ):
+                constants_ok = bool(constants_file_result["no_hardcoded_metadata"])
+            else:
+                constants_ok = False
             verification["status"] = (
                 "✅" if (version_ok and init_ok and constants_ok) else "⚠️"
             )
@@ -250,29 +276,41 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
             if verification.get("status") != "⚠️":
                 continue
 
-            project = verification["project"]
-            version_file = verification["version_file"]
-            init_file = verification["init_file"]
-            constants_file = verification["constants_file"]
+            project_obj = verification.get("project")
+            if not isinstance(project_obj, str):
+                continue
+            project = project_obj
 
-            if not version_file["has_version_file"]:
-                issues.append(f"  • {project}: Missing __version__.py")
-            elif not version_file["uses_importlib"]:
-                issues.append(
-                    f"  • {project}: __version__.py doesn't use importlib.metadata"
-                )
-            elif not version_file["no_hardcoded_version"]:
-                issues.append(f"  • {project}: __version__.py has hardcoded version")
+            version_file_obj = verification.get("version_file")
+            init_file_obj = verification.get("init_file")
+            constants_file_obj = verification.get("constants_file")
 
-            if not init_file["imports_from_version"]:
-                issues.append(
-                    f"  • {project}: __init__.py doesn't import from __version__"
-                )
-            if not init_file["no_hardcoded_version"]:
-                issues.append(f"  • {project}: __init__.py has hardcoded version")
+            if isinstance(version_file_obj, dict):
+                version_file = version_file_obj
+                if not version_file.get("has_version_file", False):
+                    issues.append(f"  • {project}: Missing __version__.py")
+                elif not version_file.get("uses_importlib", False):
+                    issues.append(
+                        f"  • {project}: __version__.py doesn't use importlib.metadata"
+                    )
+                elif not version_file.get("no_hardcoded_version", False):
+                    issues.append(
+                        f"  • {project}: __version__.py has hardcoded version"
+                    )
 
-            if not constants_file["no_hardcoded_metadata"]:
-                issues.append(f"  • {project}: constants.py has hardcoded metadata")
+            if isinstance(init_file_obj, dict):
+                init_file = init_file_obj
+                if not init_file.get("imports_from_version", False):
+                    issues.append(
+                        f"  • {project}: __init__.py doesn't import from __version__"
+                    )
+                if not init_file.get("no_hardcoded_version", False):
+                    issues.append(f"  • {project}: __init__.py has hardcoded version")
+
+            if isinstance(constants_file_obj, dict):
+                constants_file = constants_file_obj
+                if not constants_file.get("no_hardcoded_metadata", False):
+                    issues.append(f"  • {project}: constants.py has hardcoded metadata")
 
         return issues
 
@@ -286,16 +324,26 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
         print(f"⚠️  Need attention: {summary['warning_count']}")
         print(f"❌ Errors: {summary['error_count']}")
 
-        issues = summary["issues"]
-        if issues:
-            print(f"\n⚠️  Issues Found ({len(issues)}):")
-            for issue in issues:
-                print(issue)
+        issues_obj = summary.get("issues")
+        if isinstance(issues_obj, list):
+            issues = issues_obj
+            if issues:
+                print(f"\n⚠️  Issues Found ({len(issues)}):")
+                for issue in issues:
+                    if isinstance(issue, str):
+                        print(issue)
 
         print("\n" + "=" * 80)
 
-        warning_count = summary["warning_count"]
-        error_count = summary["error_count"]
+        warning_count_obj = summary.get("warning_count")
+        error_count_obj = summary.get("error_count")
+        warning_count = (
+            int(warning_count_obj) if isinstance(warning_count_obj, (int, float)) else 0
+        )
+        error_count = (
+            int(error_count_obj) if isinstance(error_count_obj, (int, float)) else 0
+        )
+
         if warning_count == 0 and error_count == 0:
             print("✅ ALL PROJECTS FULLY STANDARDIZED!")
             sys.exit(0)

@@ -11,10 +11,12 @@ Tests verify that subprocess usage in python_tools.py has been properly converte
 
 from __future__ import annotations
 
+import inspect
 import pathlib
 import sys
 
 import pytest
+from flext_quality.backends.python_tools import FlextQualityPythonTools
 
 # Add paths for testing
 sys.path.insert(
@@ -105,15 +107,11 @@ class TestPhase6Sprint2PythonToolsConversion:
 
     def test_module_can_be_imported(self) -> None:
         """Verify the module can be imported without errors."""
-        from flext_quality.backends.python_tools import FlextQualityPythonTools
-
         # Should be able to import and instantiate
         assert FlextQualityPythonTools is not None
 
     def test_class_can_be_instantiated(self) -> None:
         """Verify the class can be instantiated."""
-        from flext_quality.backends.python_tools import FlextQualityPythonTools
-
         tools = FlextQualityPythonTools()
         assert tools is not None
         assert hasattr(tools, "run_ruff_check")
@@ -121,10 +119,6 @@ class TestPhase6Sprint2PythonToolsConversion:
 
     def test_run_ruff_check_signature_unchanged(self) -> None:
         """Verify run_ruff_check signature is unchanged."""
-        import inspect
-
-        from flext_quality.backends.python_tools import FlextQualityPythonTools
-
         tools = FlextQualityPythonTools()
         method = tools.run_ruff_check
         sig = inspect.signature(method)
@@ -134,10 +128,6 @@ class TestPhase6Sprint2PythonToolsConversion:
 
     def test_run_pylint_check_signature_unchanged(self) -> None:
         """Verify run_pylint_check signature is unchanged."""
-        import inspect
-
-        from flext_quality.backends.python_tools import FlextQualityPythonTools
-
         tools = FlextQualityPythonTools()
         method = tools.run_pylint_check
         sig = inspect.signature(method)
