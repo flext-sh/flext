@@ -261,7 +261,7 @@ class TestFlextCliPromptsStatusPrinting:
         with FlextTestsUtilities.test_context(
             prompts.logger,
             "info",
-            lambda *a, **k: (_ for _ in ()).throw(Exception("Logger error")),  # type: ignore
+            lambda *a, **k: (_ for _ in ()).throw(Exception("Logger error")),
         ):
             result = prompts.print_status(
                 TestConstants.CliPrompts.TEST_MESSAGE, status=PromptStatus.INFO.value
@@ -415,7 +415,7 @@ class TestFlextCliPromptsProgress:
         with FlextTestsUtilities.test_context(
             prompts.logger,
             "info",
-            lambda *a, **k: (_ for _ in ()).throw(Exception("Logger error")),  # type: ignore
+            lambda *a, **k: (_ for _ in ()).throw(Exception("Logger error")),
         ):
             result = prompts.create_progress(TestConstants.CliPrompts.PROGRESS_DESC)
             PromptTestHelpers.test_result_assertions(
@@ -428,7 +428,7 @@ class TestFlextCliPromptsProgress:
         with FlextTestsUtilities.test_context(
             prompts.logger,
             "info",
-            lambda *a, **k: (_ for _ in ()).throw(Exception("Logger error")),  # type: ignore
+            lambda *a, **k: (_ for _ in ()).throw(Exception("Logger error")),
         ):
             result = prompts.with_progress(
                 [1, 2], TestConstants.CliPrompts.PROGRESS_DESC
