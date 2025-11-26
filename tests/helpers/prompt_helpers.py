@@ -29,17 +29,17 @@ class PromptTestHelpers:
     @staticmethod
     def create_quiet_prompt(**kwargs: object) -> FlextCliPrompts:
         """Create a quiet mode prompt instance."""
-        return FlextCliPrompts(quiet=True, **kwargs)  # type: ignore[arg-type]
+        return FlextCliPrompts(quiet=True, **kwargs)
 
     @staticmethod
     def create_interactive_prompt(**kwargs: object) -> FlextCliPrompts:
         """Create an interactive mode prompt instance."""
-        return FlextCliPrompts(interactive_mode=True, quiet=False, **kwargs)  # type: ignore[arg-type]
+        return FlextCliPrompts(interactive_mode=True, quiet=False, **kwargs)
 
     @staticmethod
     def create_non_interactive_prompt(**kwargs: object) -> FlextCliPrompts:
         """Create a non-interactive mode prompt instance."""
-        return FlextCliPrompts(interactive_mode=False, **kwargs)  # type: ignore[arg-type]
+        return FlextCliPrompts(interactive_mode=False, **kwargs)
 
     @classmethod
     def test_quiet_mode_behavior(
@@ -214,9 +214,9 @@ class PromptTestHelpers:
 
             result = cls.test_quiet_mode_behavior(
                 method_name,
-                *args,  # type: ignore[arg-type]
+                *args,
                 expected_result=expected,
-                **kwargs,  # type: ignore[arg-type]
+                **kwargs,
             )
             results.append(result)
 

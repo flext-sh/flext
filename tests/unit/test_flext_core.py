@@ -97,7 +97,9 @@ class TestFlextConsolidated:
             """Generate container test cases using flext_tests."""
             return [
                 {
-                    "name": FlextTestsUtilities.TestUtilities.generate_test_id("service"),
+                    "name": FlextTestsUtilities.TestUtilities.generate_test_id(
+                        "service"
+                    ),
                     "service": TestConstants.Common.VALUE_DEFAULT,
                     "expected_registration": True,
                     "expected_retrieval": True,
