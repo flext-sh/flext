@@ -147,7 +147,8 @@ class TestEntryManipulationServices:
         parsed_user_entry: FlextLdifModels.Entry,
     ) -> None:
         """Test getting entry attributes with various cases."""
-        result = EntryManipulationServices.get_entry_attribute(
+        service = EntryManipulationServices()
+        result = service.get_entry_attribute(
             parsed_user_entry, cast("str", attribute_case["attribute"])
         )
 
@@ -170,7 +171,8 @@ class TestEntryManipulationServices:
         normalization_case: dict[str, object],
     ) -> None:
         """Test attribute value normalization with various inputs."""
-        result = EntryManipulationServices.normalize_attribute_value(
+        service = EntryManipulationServices()
+        result = service.normalize_attribute_value(
             normalization_case["input_value"]
         )
 
@@ -188,7 +190,8 @@ class TestEntryManipulationServices:
         parsed_user_entry: FlextLdifModels.Entry,
     ) -> None:
         """Test getting normalized attributes for various attribute names."""
-        result = EntryManipulationServices.get_normalized_attribute(
+        service = EntryManipulationServices()
+        result = service.get_normalized_attribute(
             parsed_user_entry, attribute
         )
 
@@ -215,7 +218,8 @@ class TestEntryManipulationServices:
 
     def test_normalize_attribute_value_none_input(self) -> None:
         """Test normalizing None input fails appropriately."""
-        result = EntryManipulationServices.normalize_attribute_value(None)
+        service = EntryManipulationServices()
+        result = service.normalize_attribute_value(None)
 
         assert result.is_failure, "None input should fail"
         if result.error:
@@ -227,7 +231,8 @@ class TestEntryManipulationServices:
         # Since we can't create invalid entries due to strict typing,
         # this test ensures the method is robust
         assert hasattr(EntryManipulationServices, "get_entry_attribute")
-        assert callable(EntryManipulationServices.get_entry_attribute)
+        service = EntryManipulationServices()
+        assert callable(service.get_entry_attribute)
 
     def test_get_normalized_attribute_edge_cases(
         self,
@@ -235,14 +240,16 @@ class TestEntryManipulationServices:
     ) -> None:
         """Test normalized attribute access with edge cases."""
         # Test with empty string attribute name
-        result = EntryManipulationServices.get_normalized_attribute(
+        service = EntryManipulationServices()
+        result = service.get_normalized_attribute(
             parsed_user_entry, ""
         )
         # Should fail gracefully
         assert isinstance(result, FlextResult)
 
         # Test with special characters in attribute name
-        result = EntryManipulationServices.get_normalized_attribute(
+        service = EntryManipulationServices()
+        result = service.get_normalized_attribute(
             parsed_user_entry, "test@attr#123"
         )
         # Should fail gracefully
