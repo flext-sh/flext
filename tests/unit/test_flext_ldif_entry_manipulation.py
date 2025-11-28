@@ -172,9 +172,7 @@ class TestEntryManipulationServices:
     ) -> None:
         """Test attribute value normalization with various inputs."""
         service = EntryManipulationServices()
-        result = service.normalize_attribute_value(
-            normalization_case["input_value"]
-        )
+        result = service.normalize_attribute_value(normalization_case["input_value"])
 
         assert result.is_success, f"Normalization failed: {result.error}"
         assert result.unwrap() == normalization_case["expected_output"]
@@ -191,9 +189,7 @@ class TestEntryManipulationServices:
     ) -> None:
         """Test getting normalized attributes for various attribute names."""
         service = EntryManipulationServices()
-        result = service.get_normalized_attribute(
-            parsed_user_entry, attribute
-        )
+        result = service.get_normalized_attribute(parsed_user_entry, attribute)
 
         # Result should be a FlextResult
         assert isinstance(result, FlextResult)
@@ -241,16 +237,12 @@ class TestEntryManipulationServices:
         """Test normalized attribute access with edge cases."""
         # Test with empty string attribute name
         service = EntryManipulationServices()
-        result = service.get_normalized_attribute(
-            parsed_user_entry, ""
-        )
+        result = service.get_normalized_attribute(parsed_user_entry, "")
         # Should fail gracefully
         assert isinstance(result, FlextResult)
 
         # Test with special characters in attribute name
         service = EntryManipulationServices()
-        result = service.get_normalized_attribute(
-            parsed_user_entry, "test@attr#123"
-        )
+        result = service.get_normalized_attribute(parsed_user_entry, "test@attr#123")
         # Should fail gracefully
         assert isinstance(result, FlextResult)
