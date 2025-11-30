@@ -27,13 +27,14 @@ def discover_projects(
     Uses direct filesystem discovery to find flext-* projects with pyproject.toml.
     """
     try:
-        project_paths: list[Path] = []
-        for item in workspace_root.iterdir():
-            if item.is_dir() and item.name.startswith("flext-"):
-                pyproject_file = item / "pyproject.toml"
-                if pyproject_file.exists():
-                    if projects_filter is None or item.name in projects_filter:
-                        project_paths.append(item)
+        project_paths: list[Path] = [
+            item
+            for item in workspace_root.iterdir()
+            if item.is_dir()
+            and item.name.startswith("flext-")
+            and (item / "pyproject.toml").exists()
+            and (projects_filter is None or item.name in projects_filter)
+        ]
 
         return project_paths
 
