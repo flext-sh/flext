@@ -167,17 +167,13 @@ def merge_gitignore(project_dir: Path) -> bool:
     # Build merged content
     merged_lines = []
 
-    # 1. Add whitelist header
-    merged_lines.append(WHITELIST_HEADER)
-
-    # 2. Add block everything rules
-    merged_lines.append(WHITELIST_BLOCK)
-
-    # 3. Add whitelist allows
-    merged_lines.append(WHITELIST_ALLOW)
-
-    # 4. Add security blocks
-    merged_lines.append(SECURITY_BLOCKS)
+    # 1-4. Add core rules
+    merged_lines.extend((
+        WHITELIST_HEADER,
+        WHITELIST_BLOCK,
+        WHITELIST_ALLOW,
+        SECURITY_BLOCKS,
+    ))
 
     # 5. Add project-specific rules if any
     if project_specific:
@@ -188,37 +184,29 @@ def merge_gitignore(project_dir: Path) -> bool:
         ))
         merged_lines.extend(project_specific)
 
-    # 6. Add common Python ignores that work with whitelist
-    merged_lines.append(
-        "\n# ============================================================================"
-    )
-    merged_lines.append("# COMMON PATTERNS: Artifacts inside allowed directories")
-    merged_lines.append(
-        "# ============================================================================"
-    )
-    merged_lines.append("**/__pycache__/")
-    merged_lines.append("**/*.pyc")
-    merged_lines.append("**/*.pyo")
-    merged_lines.append("**/*.pyd")
-    merged_lines.append(".pytest_cache/")
-    merged_lines.append(".mypy_cache/")
-    merged_lines.append(".ruff_cache/")
-    merged_lines.append(".hypothesis/")
-    merged_lines.append(".coverage")
-    merged_lines.append("htmlcov/")
-    merged_lines.append("dist/")
-    merged_lines.append("build/")
-    merged_lines.append("*.egg-info/")
-
-    # 7. Add final safety
-    merged_lines.append(
-        "\n# ============================================================================"
-    )
-    merged_lines.append("# SAFETY: Keep .gitkeep files")
-    merged_lines.append(
-        "# ============================================================================"
-    )
-    merged_lines.append("!**/.gitkeep")
+    # 6-7. Add common patterns and safety rules
+    merged_lines.extend((
+        "\n# ============================================================================",
+        "# COMMON PATTERNS: Artifacts inside allowed directories",
+        "# ============================================================================",
+        "**/__pycache__/",
+        "**/*.pyc",
+        "**/*.pyo",
+        "**/*.pyd",
+        ".pytest_cache/",
+        ".mypy_cache/",
+        ".ruff_cache/",
+        ".hypothesis/",
+        ".coverage",
+        "htmlcov/",
+        "dist/",
+        "build/",
+        "*.egg-info/",
+        "\n# ============================================================================",
+        "# SAFETY: Keep .gitkeep files",
+        "# ============================================================================",
+        "!**/.gitkeep",
+    ))
 
     merged_content = "\n".join(merged_lines)
 

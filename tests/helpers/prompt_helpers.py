@@ -121,6 +121,7 @@ class PromptTestHelpers:
     def test_result_assertions(
         cls,
         result: FlextResult[T],
+        *,
         expected_success: bool = True,
         expected_data: T | None = None,
         expected_error_contains: str | None = None,
