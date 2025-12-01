@@ -482,6 +482,15 @@
 			"scripts",
 		]
 
+		# Ignore unknown-name errors in typings.py files
+		# These files contain recursive type definitions (PEP 695) that are valid
+		# but pyrefly has limitations with self-referential types
+		[[tool.pyrefly.sub-config]]
+		matches = "**/typings.py"
+
+			[tool.pyrefly.sub-config.errors]
+			unknown-name = false
+
 	[tool.ruff]
 		extend = "./ruff-shared.toml"
 
