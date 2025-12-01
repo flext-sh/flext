@@ -51,15 +51,15 @@ target-version = "py313"
         "ERA001",  # commented-out-code - False positives on legitimate comments
         "FBT003",
         "G004",    # logging-f-string
-        "PLR0904",
-        "PLR0911", # too-many-return-statements - Many returns allowed in some processors/validators
-        "PLR0912", # too-many-branches - High complexity acceptable in orchestrators
-        "PLR0913", # too-many-arguments - Too many arguments in function definition (sometimes necessary)
-        "PLR0914",
-        "PLR0915", # too-many-statements - Many statements in some builder functions
-        "PLR0917",
-        "PLR1702",
-        "PLR6301", # no-self-use
+        # "PLR0904",
+        # "PLR0911", # too-many-return-statements - Many returns allowed in some processors/validators
+        # "PLR0912", # too-many-branches - High complexity acceptable in orchestrators
+        # "PLR0913", # too-many-arguments - Too many arguments in function definition (sometimes necessary)
+        # "PLR0914",
+        # "PLR0915", # too-many-statements - Many statements in some builder functions
+        # "PLR0917",
+        # "PLR1702",
+        # "PLR6301", # no-self-use
         "Q000",
         "S608",
         "RUF001",  # ambiguous-unicode-character-docstring - false positives when using certain images
@@ -107,6 +107,7 @@ target-version = "py313"
             "PLC0206", # dict iteration (test data structures)
             "PLC1901", # comparison-to-membership (test simplicity)
             "PLC2701", # Private imports (testing internal implementation)
+            "PLR6301",
             "PLR0912",
             "PLR0915",
             "PLR1704", # Redefined-while-unused (test setup/teardown)
@@ -187,6 +188,7 @@ target-version = "py313"
         ]
         "**/loggings.py" = [
             "PLW0603", # global-statement - necessary for lazy config loading to avoid circular imports
+            "PLR0904", # too-many-public-methods - foundational logging class legitimately needs many public methods for its API
         ]
         "**/middleware.py" = [
             "ANN401",  # any-type - intentional to avoid circular imports between flext-auth/flext-api/flext-web
