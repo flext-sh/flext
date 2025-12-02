@@ -107,6 +107,10 @@ target-version = "py313"
             "PLC0206", # dict iteration (test data structures)
             "PLC1901", # comparison-to-membership (test simplicity)
             "PLC2701", # Private imports (testing internal implementation)
+            "PLR0904", # too-many-public-methods - test helpers and test classes can have many methods
+            "PLR0913", # too-many-arguments - test functions can have many parameters for flexibility
+            "PLR0914", # too-many-local-variables - test helper functions can have many local variables
+            "PLR0917", # too-many-positional-arguments - test setup can require many positional args
             "PLR6301",
             "PLR0912",
             "PLR0915",
