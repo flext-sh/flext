@@ -23,6 +23,7 @@ DTO pensado para padronizar a inicialização de estados compartilhados (cache e
 - Idealmente, o modelo seria usado em `FlextService` dentro de um método `initialize_state` que configurasse `self.state` (ou campo custom) antes do processamento.
 
 ### Locais candidatos imediatos
+
 - `flext_core/src/flext_core/service.py:200-420` já mantém atributos como `self.state` e `self.context`; inserir um hook `initialize_state(request)` reduziria duplicação nas subclasses de serviço.
 - `flext_core/src/flext_core/context.py:900-1100` trata `state` dentro do contexto (ex.: `ContextState`), oferecendo um ponto natural para aplicar `StateInitializationRequest` antes de compartilhar dados com handlers.
 - `flext-core/examples/14_flext_handlers_complete.py:298-760` mostra handlers que constroem estado manualmente; reescrever os exemplos com o DTO demonstraria o fluxo recomendado.
@@ -45,7 +46,7 @@ DTO pensado para padronizar a inicialização de estados compartilhados (cache e
 
 ## Backlog recomendado
 
-1. **Integração com `FlextService`**: adicionar método `initialize_state(request: StateInitializationRequest)` chamando `setattr(self, request.field_name, request.initial_value)` e respeitando `persistence_level`/`ttl` (possivelmente conectando a `FlextContext` ou `FlextUtilities.Cache`).
+1. **Integração com `FlextService`**: adicionar método `initialize_state(request: StateInitializationRequest)` chamando `setattr(self, request.field_name, request.initial_value)` e respeitando `persistence_level`/`ttl` (possivelmente conectando a `FlextContext` ou `u.Cache`).
 2. **Validação de campos**: aplicar regex `^[a-zA-Z_][a-zA-Z0-9_]*$` para `state_key`/`field_name`, evitando nomes inválidos.
 3. **Serializer complementar**: permitir anexar um `SerializationRequest` para estados que precisam ser persistidos fora da memória.
 4. **Implantações externas**: documentar no README dos targets (Oracle, LDIF) que `StateInitializationRequest` deve ser usado ao provisionar dicionários que guardam progresso de sync.

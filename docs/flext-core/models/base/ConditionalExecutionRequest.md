@@ -27,9 +27,10 @@ Em `flext_core/src/flext_core/service.py:1412-1455`, o método `execute_conditio
 4. Se a condição passa e `true_action` existe, chama `_execute_action` novamente.
 5. Caso não haja ações explícitas, segue com a operação padrão do serviço.
 
-Esse fluxo garante compatibilidade com `FlextResult`, `FlextLogger` e `FlextUtilities` dentro da classe base `FlextService`.
+Esse fluxo garante compatibilidade com `FlextResult`, `FlextLogger` e `u` dentro da classe base `FlextService`.
 
 ### Relação direta com `_execute_action`
+
 - `flext_core/src/flext_core/service.py:1190-1405` implementa `_execute_action`, método que executa qualquer callable (sincrono ou result wrapper), valida `FlextResult`, captura exceções e propaga mensagens padronizadas.
 - `ConditionalExecutionRequest` é a única estrutura que passa `true_action` e `false_action` para `_execute_action`, garantindo que as ações condicionais recebam o mesmo tratamento dos métodos principais.
 - Documentar essa relação ajuda a justificar futuras validações no DTO (ex.: type hints para retornos, checagem de assinatura via `inspect`).

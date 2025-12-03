@@ -4,11 +4,11 @@ from __future__ import annotations
 
 from typing import Protocol, runtime_checkable
 
-from flext_core import FlextProtocols
+from flext_core import p
 
 
-class FlextLdapProtocols(FlextProtocols):
-    """LDAP domain protocols extending FlextProtocols."""
+class FlextLdapProtocols(p):
+    """LDAP domain protocols extending p."""
 
     class Entry:
         """Entry-related protocols."""

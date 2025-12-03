@@ -32,7 +32,7 @@
   - [Error Handling Strategy](#error-handling-strategy)
     - [FlextExceptions Hierarchy](#flextexceptions-hierarchy)
   - [Utilities and Helpers](#utilities-and-helpers)
-    - [FlextUtilities](#flextutilities)
+    - [u](#u)
 - [String operations](#string-operations)
 - [File operations](#file-operations)
 - [Data validation](#data-validation)
@@ -82,18 +82,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 # Register services
 container = FlextContainer()
@@ -117,18 +117,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 # Register handlers
 dispatcher = FlextDispatcher()
@@ -153,18 +153,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 def divide(a: float, b: float) -> FlextResult[float, Exception]:
     if b == 0:
@@ -195,18 +195,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 # Subscribe to events
 bus = FlextBus()
@@ -230,18 +230,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 logger = FlextLogger.get_logger(__name__)
 
@@ -307,18 +307,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 class AppConfig(FlextConfig):
     database_url: str
@@ -353,7 +353,7 @@ class DatabaseConnectionException(FlextInfrastructureException):
 
 ## Utilities and Helpers
 
-### FlextUtilities
+### u
 
 Common utility functions and helpers used across the ecosystem.
 
@@ -366,29 +366,29 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 # String operations
-camel_case = FlextUtilities.to_camel_case("snake_case_string")
-kebab_case = FlextUtilities.to_kebab_case("camelCaseString")
+camel_case = u.to_camel_case("snake_case_string")
+kebab_case = u.to_kebab_case("camelCaseString")
 
 # File operations
-exists = FlextUtilities.file_exists("/path/to/file")
-content = FlextUtilities.read_file("/path/to/file")
+exists = u.file_exists("/path/to/file")
+content = u.read_file("/path/to/file")
 
 # Data validation
-is_valid_email = FlextUtilities.is_valid_email("user@example.com")
+is_valid_email = u.is_valid_email("user@example.com")
 ```
 
 ## Performance Features
@@ -425,18 +425,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 class TestUserService:
     def test_create_user_success(self):
@@ -496,18 +496,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 container = FlextContainer()
 result = FlextResult.success(data)

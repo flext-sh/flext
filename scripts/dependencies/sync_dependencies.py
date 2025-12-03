@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 from typing import cast
 
-from flext_core import FlextTypes
+from flext_core import t
 from flext_quality.tools import (
     Colors,
     ConflictAnalyzer,
@@ -32,7 +32,7 @@ def check_validation_lock() -> bool:
     return lock_file.exists()
 
 
-def parse_args() -> FlextTypes.BoolDict:
+def parse_args() -> t.BoolDict:
     """Parseia argumentos de linha de comando."""
     return {
         "dry_run": "--dry-run" in sys.argv,

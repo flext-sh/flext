@@ -101,18 +101,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 container = FlextContainer()
 container.register(FlextLdif, FlextLdif())
@@ -131,18 +131,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 def process_data(data: str) -> FlextResult[List[Entry], Exception]:
     try:
@@ -163,18 +163,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 dispatcher = FlextDispatcher()
 dispatcher.register_handler(CreateEntryCommand, CreateEntryHandler)
@@ -209,18 +209,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 result = some_operation()
 if result.is_failure:
@@ -243,18 +243,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 logger = FlextLogger.get_logger(__name__)
 logger.info("Operation completed", extra={"entries_count": len(entries)})

@@ -263,18 +263,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 try:
     config = FlextConfig()
@@ -295,18 +295,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 # Print all FLEXT environment variables
 for key, value in os.environ.items():
@@ -358,7 +358,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 ```python
 # Check for common LDIF issues
-def validate_ldif_content(content: str) -> FlextTypes.StringList:
+def validate_ldif_content(content: str) -> t.StringList:
     issues = []
 
     if not content.strip():
@@ -494,18 +494,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 # Configure logging
 logging.basicConfig(
@@ -532,18 +532,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 def safe_operation(data: dict) -> FlextResult[dict]:
     try:
@@ -569,18 +569,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 # Enable debug mode
 config = FlextConfig(debug=True)
@@ -772,18 +772,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 # Your minimal example here
 

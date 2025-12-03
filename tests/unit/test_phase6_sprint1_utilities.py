@@ -3,7 +3,7 @@
 Tests verify that subprocess usage in utilities.py has been properly converted:
 1. Subprocess import still present (unavoidable for command execution)
 2. CompletedProcessWrapper class exists and functions correctly
-3. FlextUtilities.CommandExecution.run_external_command uses threading-based timeout (no subprocess.TimeoutExpired)
+3. u.CommandExecution.run_external_command uses threading-based timeout (no subprocess.TimeoutExpired)
 4. All subprocess exception handlers properly replaced
 5. Return type changed from subprocess.CompletedProcess to wrapper
 """
@@ -17,7 +17,7 @@ import tempfile
 from dataclasses import fields
 
 import pytest
-from flext_core import FlextResult, FlextUtilities
+from flext_core import FlextResult, u
 
 # Add src to path for isolated testing
 sys.path.insert(
@@ -60,10 +60,8 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_completed_process_wrapper_has_required_fields(self) -> None:
         """Verify wrapper has required fields matching subprocess.CompletedProcess."""
-        wrapper_fields = {
-            f.name for f in fields(FlextUtilities._CompletedProcessWrapper)
-        }
-        required_fields = {"returncode", "stdout", "stderr", "args"}
+        wrapper_fields = {f.name for f in fields(u._CompletedProcessWrapper)}
+        required_fields = {"returncode", "stderr", "args"}
 
         assert required_fields.issubset(wrapper_fields), (
             f"Missing fields: {required_fields - wrapper_fields}"
@@ -72,9 +70,9 @@ class TestPhase6Sprint1UtilitiesConversion:
     def test_flext_utilities_command_execution_run_external_command_signature_changed(
         self,
     ) -> None:
-        """Verify FlextUtilities.CommandExecution.run_external_command return type changed to wrapper."""
+        """Verify u.CommandExecution.run_external_command return type changed to wrapper."""
         utilities_content = self.UTILITIES_PATH.read_text()
-        tree = ast.parse(utilities_content)
+        tree = astues_content)
 
         # Find CommandExecution class and then run_external_command method
         found_method = False
@@ -195,10 +193,10 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_wrapper_class_can_be_instantiated(self) -> None:
         """Verify _CompletedProcessWrapper can be created and used."""
-        # Create instance - wrapper is nested inside FlextUtilities
-        wrapper = FlextUtilities._CompletedProcessWrapper(
-            returncode=0, stdout="output", stderr="", args=["test"]
-        )
+        # Create instance - wrapper is nested inside u
+        wrapper = u._CompletedProcessWrapper(
+            returncode=0, stdout="output", stderr="",u
+        )u
 
         assert wrapper.returncode == 0
         assert wrapper.stdout == "output"
@@ -207,9 +205,9 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_wrapper_is_frozen_dataclass(self) -> None:
         """Verify wrapper is immutable (frozen=True)."""
-        wrapper = FlextUtilities._CompletedProcessWrapper(
+        wrapper = u._CompletedProcessWrapper(
             returncode=0, stdout="output", stderr="", args=["test"]
-        )
+        )u
 
         # Try to modify - should fail
         with pytest.raises((AttributeError, ValueError)):
@@ -218,9 +216,9 @@ class TestPhase6Sprint1UtilitiesConversion:
     def test_flext_utilities_command_execution_run_external_command_returns_flext_result(
         self,
     ) -> None:
-        """Verify FlextUtilities.CommandExecution.run_external_command returns FlextResult type."""
+        """Verify u.CommandExecution.run_external_command returns FlextResult type."""
         utilities_content = self.UTILITIES_PATH.read_text()
-
+u
         # Should have return statements using FlextResult with _CompletedProcessWrapper
         assert (
             "FlextResult" in utilities_content
@@ -282,11 +280,11 @@ class TestPhase6Sprint1UtilitiesConversion:
     def test_can_call_flext_utilities_command_execution_run_external_command(
         self,
     ) -> None:
-        """Verify FlextUtilities.CommandExecution.run_external_command can be called and works correctly."""
+        """Verify u.CommandExecution.run_external_command can be called and works correctly."""
         # Test with a simple command
-        result = FlextUtilities.CommandExecution.run_external_command(
+        result = uuion.run_external_command(
             ["python", "--version"], capture_output=True, timeout=10.0
-        )
+        )u
 
         # Should return FlextResult
         assert isinstance(result, FlextResult), "Should return FlextResult"
@@ -296,9 +294,9 @@ class TestPhase6Sprint1UtilitiesConversion:
 
         # Should contain wrapper
         wrapper = result.unwrap()
-        assert isinstance(wrapper, FlextUtilities._CompletedProcessWrapper), (
+        assert isinstance(wrapper, u._CompletedProcessWrapper), (
             "Should return _CompletedProcessWrapper"
-        )
+        )u
         assert wrapper.returncode == 0, "python --version should succeed"
         assert "Python" in wrapper.stdout or "python" in wrapper.stdout, (
             "Should have Python version in output"
@@ -306,9 +304,9 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_command_not_found_handling(self) -> None:
         """Verify command not found returns proper error."""
-        result = FlextUtilities.CommandExecution.run_external_command(
+        result = u.CommandExecution.run_external_command(
             ["nonexistent_command_xyz_abc"], capture_output=True
-        )
+        )u
 
         assert result.is_failure, "Should fail for non-existent command"
         assert (
@@ -318,9 +316,9 @@ class TestPhase6Sprint1UtilitiesConversion:
     def test_exit_code_handling(self) -> None:
         """Verify exit code is properly captured and handled."""
         # Command that will fail
-        result = FlextUtilities.CommandExecution.run_external_command(
+        result = u.CommandExecution.run_external_command(
             ["sh", "-c", "exit 42"], capture_output=True, check=False
-        )
+        )u
 
         assert result.is_success, (
             "Should capture non-zero exit code as success when check=False"
@@ -333,9 +331,9 @@ class TestPhase6Sprint1UtilitiesConversion:
     def test_check_flag_enforces_exit_code(self) -> None:
         """Verify check=True enforces exit code checking."""
         # Command that will fail
-        result = FlextUtilities.CommandExecution.run_external_command(
+        result = u.CommandExecution.run_external_command(
             ["sh", "-c", "exit 42"], capture_output=True, check=True
-        )
+        )u
 
         assert result.is_failure, (
             "Should fail when exit code is non-zero and check=True"
@@ -346,9 +344,9 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_output_capture_functionality(self) -> None:
         """Verify stdout/stderr capture works."""
-        result = FlextUtilities.CommandExecution.run_external_command(
+        result = u.CommandExecution.run_external_command(
             [
-                "python",
+                "u
                 "-c",
                 'print("hello from stdout"); import sys; print("error", file=sys.stderr)',
             ],
@@ -368,9 +366,9 @@ class TestPhase6Sprint1UtilitiesConversion:
         test_env_var = "TEST_FLEXT_VAR_UNIQUE_12345"
         test_env_value = "test_value_xyz"
 
-        result = FlextUtilities.CommandExecution.run_external_command(
+        result = u.CommandExecution.run_external_command(
             [
-                "python",
+                "u
                 "-c",
                 f'import os; print(os.environ.get("{test_env_var}", "NOT_FOUND"))',
             ],
@@ -386,9 +384,9 @@ class TestPhase6Sprint1UtilitiesConversion:
 
     def test_command_input_handling(self) -> None:
         """Verify command input is passed to stdin."""
-        result = FlextUtilities.CommandExecution.run_external_command(
+        result = u.CommandExecution.run_external_command(
             ["cat"], capture_output=True, command_input="test input data\n"
-        )
+        )u
 
         assert result.is_success, f"Command should succeed: {result.error}"
         wrapper = result.unwrap()
@@ -400,9 +398,9 @@ class TestPhase6Sprint1UtilitiesConversion:
         """Verify working directory changes are handled correctly."""
         # Create temp directory
         with tempfile.TemporaryDirectory() as tmpdir:
-            result = FlextUtilities.CommandExecution.run_external_command(
+            result = u.CommandExecution.run_external_command(
                 ["python", "-c", "import os; print(os.getcwd())"],
-                capture_output=True,
+                captuu,
                 cwd=tmpdir,
             )
 
@@ -465,13 +463,13 @@ class TestPhase6Sprint1SourceCodeInspection:
         utilities_content = self.UTILITIES_PATH.read_text()
         tree = ast.parse(utilities_content)
 
-        # Find FlextUtilities.CommandExecution.run_external_command
+        # Find u.CommandExecution.run_external_command
         for node in ast.walk(tree):
-            if (
+            if u
                 isinstance(node, ast.FunctionDef)
-                and node.name == "FlextUtilities.CommandExecution.run_external_command"
+                and node.name == "u.CommandExecution.run_external_command"
             ):
-                # Check for try-finally structure
+                # Check for try-fiue
                 has_finally = False
                 for subnode in ast.walk(node):
                     if isinstance(subnode, ast.Try) and subnode.finalbody:

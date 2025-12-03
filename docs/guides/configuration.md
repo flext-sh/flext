@@ -123,18 +123,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 from flext_ldif import FlextLdifConfig
 
 # Core configuration
@@ -257,18 +257,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 try:
     config = FlextConfig(
@@ -291,18 +291,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 # Base configuration
 base_config = FlextConfig(
@@ -339,18 +339,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 def main():
     # Validate configuration at startup
@@ -375,18 +375,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 class MyAppConfig(FlextConfig):
     custom_setting: str = "default_value"
@@ -447,18 +447,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 
 # Enable debug logging
 config = FlextConfig(debug=True)
@@ -490,18 +490,18 @@ from flext_core import FlextContext
 from flext_core import FlextDecorators
 from flext_core import FlextDispatcher
 from flext_core import FlextExceptions
-from flext_core import FlextHandlers
+from flext_core import h
 from flext_core import FlextLogger
-from flext_core import FlextMixins
+from flext_core import x
 from flext_core import FlextModels
 from flext_core import FlextProcessors
-from flext_core import FlextProtocols
+from flext_core import p
 from flext_core import FlextRegistry
 from flext_core import FlextResult
 from flext_core import FlextRuntime
 from flext_core import FlextService
-from flext_core import FlextTypes
-from flext_core import FlextUtilities
+from flext_core import t
+from flext_core import u
 from flext_ldif import FlextLdifConfig
 from flext_api import FlextApiConfig
 

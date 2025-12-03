@@ -169,7 +169,7 @@ class TestFlextLdapTypes:
         """Test FlextLdapTypes has expected methods."""
         types = FlextLdapTypes()
 
-        # Test that types has expected type classes (inherited from FlextTypes)
+        # Test that types has expected type classes (inherited from t)
         assert hasattr(types, "DnInput")
         assert hasattr(types, "EntryOrString")
         assert hasattr(types, "SearchScope")

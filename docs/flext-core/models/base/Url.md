@@ -12,7 +12,7 @@ Objeto de valor imutável que encapsula URLs HTTP/HTTPS com validação do Pydan
 
 ## Arquitetura e dependências
 
-- Depende apenas do namespace Entity e do tipo `HttpUrl`. Não exige `FlextUtilities`, então pode ser importado por qualquer módulo sem risco de ciclos.
+- Depende apenas do namespace Entity e do tipo `HttpUrl`. Não exige `u`, então pode ser importado por qualquer módulo sem risco de ciclos.
 - Foi planejado para conviver com `FlextConfig` (`flext_core/config.py`) — onde hoje lidamos com `str` vindos de variáveis de ambiente.
 - As configurações de endpoints espalhadas pelos projetos (ex.: `flext-api/config.py`, `flext-target-oracle/configuration.py`, `flext-observability/config.py`) poderiam trocar `str` por `FlextModels.Url` dando validação automática.
 
@@ -38,7 +38,7 @@ Objeto de valor imutável que encapsula URLs HTTP/HTTPS com validação do Pydan
 
 - **Protocolos adicionais**: muitos projetos (LDAP taps, Oracle OIC) usam esquemas não suportados por `HttpUrl`. Uma subclasse (`EndpointUrl`) deveria aceitar `ldap`, `ldaps`, `wss`, `oracle` usando `StrictStr` + validadores custom.
 - **Factories**: helpers como `Url.from_env("SERVICE_URL")` ou `Url.from_config(FlextConfig, "registry_url")` para eliminar repetição de parsing.
-- **Listas de permissão**: integrar `FlextConfig`/`FlextUtilities.Validation` para validar hostnames contra uma allowlist (evita endpoints externos inesperados).
+- **Listas de permissão**: integrar `FlextConfig`/`u.Validation` para validar hostnames contra uma allowlist (evita endpoints externos inesperados).
 
 ## Pontos fortes x riscos
 

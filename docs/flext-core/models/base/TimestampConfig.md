@@ -9,7 +9,7 @@ DTO configurável para sincronizar campos de data/hora em entidades, agregados o
 | Campo              | Tipo             | Padrão / Observações                                                              |
 | ------------------ | ---------------- | --------------------------------------------------------------------------------- |
 | `obj`              | `object`         | Destino a ser sincronizado. Hoje aceita qualquer tipo, dificultando validação.    |
-| `use_utc`          | `bool`           | `True` – direciona uso de `FlextUtilities.Generators.generate_datetime_utc`.      |
+| `use_utc`          | `bool`           | `True` – direciona uso de `u.Generators.generate_datetime_utc`.                   |
 | `auto_update`      | `bool`           | `True` – permite atualizar `updated_at` automaticamente quando mudanças ocorrem.  |
 | `format`           | `str`            | `%Y-%m-%dT%H:%M:%S.%fZ`.                                                          |
 | `timezone`         | `str \| None`    | Permite sobrescrever o fuso horário padrão.                                       |
@@ -21,9 +21,10 @@ DTO configurável para sincronizar campos de data/hora em entidades, agregados o
 
 - Baseia-se no namespace Collections (`Config`), alinhando-se com outros DTOs de configuração (HandlerExecutionConfig, RetryConfiguration, etc.).
 - Foi planejado para ser aplicado em objetos que não herdam `TimestampableMixin` (por exemplo, modelos `attrs`, `dataclasses` ou DTOs externos).
-- Deveria conversar diretamente com `FlextModelsEntity.TimestampableMixin`, `FlextUtilities.Generators` e `FlextUtilities.Validation`, mas essa integração ainda não existe.
+- Deveria conversar diretamente com `FlextModelsEntity.TimestampableMixin`, `u.Generators` e `u.Validation`, mas essa integração ainda não existe.
 
 ### Conexões mapeadas
+
 - `flext_core/src/flext_core/_models/entity.py:94-205` define `TimestampableMixin` e `IdentifiableMixin`; `TimestampConfig` é o complemento configurável para objetos que não herdam essas mixins.
 - `flext_core/src/flext_core/context.py:470-620` normaliza timestamps de contexto; aplicar `TimestampConfig` nesse trecho evitaria duplicação de lógica de formatação/timezone.
 - `flext_core/src/flext_core/constants.py:1278-1308` lista defaults de timestamp e formatos; `TimestampConfig` deveria reutilizar esses valores em vez de declarar strings manualmente.
@@ -32,12 +33,12 @@ DTO configurável para sincronizar campos de data/hora em entidades, agregados o
 ## Situação atual no código
 
 - `rg -n "TimestampConfig" --glob "*.py" --glob "!*tests*"` retorna apenas as declarações (em `_models/base.py` e `models.py`). Não há instâncias do DTO no runtime.
-- `FlextService` e `FlextHandlers` continuam manipulando timestamps manualmente (via mixins ou `datetime.utcnow()`), o que gera divergência quando o objeto não usa `TimestampableMixin`.
+- `FlextService` e `h` continuam manipulando timestamps manualmente (via mixins ou `datetime.utcnow()`), o que gera divergência quando o objeto não usa `TimestampableMixin`.
 
 ## Fluxo pretendido
 
 1. Criar `TimestampConfig` para cada objeto não Pydantic que precise de `created_at/updated_at` antes de persistência.
-2. Executar `FlextUtilities.Timestamp.apply(config)` (utilitário ainda não implementado) para atualizar os campos indicados (respeitando `use_utc/auto_update`).
+2. Executar `u.Timestamp.apply(config)` (utilitário ainda não implementado) para atualizar os campos indicados (respeitando `use_utc/auto_update`).
 3. Em pipelines LDIF/targets, usar `field_names` para mapear atributos esperados pelo destino (ex.: `{"created_at": "entryCreated", "updated_at": "entryUpdated"}`).
 
 ## Pontos fortes x limitações
@@ -47,7 +48,7 @@ DTO configurável para sincronizar campos de data/hora em entidades, agregados o
 
 ## Backlog recomendado
 
-1. **Aplicador oficial**: implementar `FlextUtilities.Timestamp.apply(config: TimestampConfig)` utilizando `setattr` seguro, validação dos campos definidos e respeito a `field_names`.
+1. **Aplicador oficial**: implementar `u.Timestamp.apply(config: TimestampConfig)` utilizando `setattr` seguro, validação dos campos definidos e respeito a `field_names`.
 2. **Tipagem mais forte**: permitir `obj: BaseModel | TimestampableMixin | Protocol` para habilitar validações estáticas e oferecer `bind_model(type[BaseModel])`.
 3. **Ampliação de campos**: estender `field_names`/config para incluir `deleted_at`, `synced_at`, `expires_at` e permitir múltiplos formatos (ISO, epoch, ms).
 4. **Integração com projetos**: documentar cenários como `flext-ldif` (normalização de entradas com timestamps customizados) e `flext-target-oracle` (campos `creation_date`/`last_update`), mostrando como `TimestampConfig` evita duplicação.

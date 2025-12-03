@@ -14,7 +14,7 @@ Para cada modelo descrevemos por que ele existe, funcionamento interno, cenário
 
 **Como funciona**
 
-- `ArbitraryTypesModel` com `operation_id` gerado por `FlextUtilities`, `context` normalizado via `ensure_trace_context` (inclui `correlation_id` e timestamp), `timeout_seconds`/`retry_attempts` alimentados por `FlextConfig` e validados contra `FlextConstants`. Possui `validate_processing_constraints` que retorna `FlextResult` para bloquear timeouts superiores ao limite corporativo.
+- `ArbitraryTypesModel` com `operation_id` gerado por `u`, `context` normalizado via `ensure_trace_context` (inclui `correlation_id` e timestamp), `timeout_seconds`/`retry_attempts` alimentados por `FlextConfig` e validados contra `FlextConstants`. Possui `validate_processing_constraints` que retorna `FlextResult` para bloquear timeouts superiores ao limite corporativo.
 
 **Aplicações esperadas no negócio**
 
@@ -67,7 +67,7 @@ Para cada modelo descrevemos por que ele existe, funcionamento interno, cenário
 
 **Como funciona**
 
-- `ArbitraryTypesModel` com campos booleanos, limites numéricos e lista de validadores extras. A lista passa por `validate_additional_validators`, que usa `FlextUtilities.Validation.validate_callable` e lança `FlextExceptions.TypeError` quando necessário.
+- `ArbitraryTypesModel` com campos booleanos, limites numéricos e lista de validadores extras. A lista passa por `validate_additional_validators`, que usa `u.Validation.validate_callable` e lança `FlextExceptions.TypeError` quando necessário.
 
 **Aplicações esperadas no negócio**
 

@@ -2,7 +2,7 @@
 
 Tests verify that subprocess usage in example_helper.py has been properly converted:
 1. Subprocess import removed
-2. FlextUtilities imported and used
+2. u imported and used
 3. All three functions converted
 4. subprocess.TimeoutExpired handlers removed
 5. Error handling uses FlextResult pattern
@@ -51,41 +51,41 @@ class TestPhase6Sprint2ExampleHelperConversion:
         lines = content.split("\n")
         for line in lines[:30]:  # Check first 30 lines for imports
             if line.startswith("import subprocess"):
-                pytest.fail("subprocess import still present - must use FlextUtilities")
+                pytest.fail("subprocess import still present - must use u.CommandExecution")
 
     def test_flext_utilities_imported(self) -> None:
-        """Verify FlextUtilities is imported."""
+        """Verify u"""
         content = self.EXAMPLE_HELPER_PATH.read_text()
 
-        assert "FlextUtilities" in content, "FlextUtilities not imported"
-        assert "from flext_core import" in content and "FlextUtilities" in content, (
-            "FlextUtilities must be imported from flext_core"
+        assert "u "u not importeu
+        assert "from flext_core import" in content and "u (
+            "urted from flext_core"
         )
 
     def test_validate_examples_directory_converted(self) -> None:
-        """Verify validate_examples_directory uses FlextUtilities."""
+        """Verify validate_examples_directory uses u
         content = self.EXAMPLE_HELPER_PATH.read_text()
 
         # Find function and check conversion
         assert "def validate_examples_directory(" in content
-        assert "FlextUtilities.CommandExecution.run_external_command" in content
+        assert "ution.run_external_command" in content
         assert "python3" in content  # Should still run python3
 
     def test_validate_example_imports_converted(self) -> None:
-        """Verify validate_example_imports uses FlextUtilities."""
+        """Verify validate_example_imports uses u
         content = self.EXAMPLE_HELPER_PATH.read_text()
 
         # Find function and check conversion
         assert "def validate_example_imports(" in content
-        assert "FlextUtilities.CommandExecution.run_external_command" in content
+        assert "ution.run_external_command" in content
 
     def test_run_example_safely_converted(self) -> None:
-        """Verify run_example_safely uses FlextUtilities."""
+        """Verify run_example_safely uses u
         content = self.EXAMPLE_HELPER_PATH.read_text()
 
         # Find function and check conversion
         assert "def run_example_safely(" in content
-        assert "FlextUtilities.CommandExecution.run_external_command" in content
+        assert "ution.run_external_command" in content
 
     def test_timeout_expired_handlers_removed(self) -> None:
         """Verify subprocess.TimeoutExpired handlers are removed."""

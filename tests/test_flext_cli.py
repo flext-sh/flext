@@ -22,7 +22,7 @@ from flext_cli import (
     FlextCliFormatters,
     FlextCliPrompts,
 )
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextResult, t
 from flext_tests import FlextTestsUtilities
 
 from tests.fixtures.constants import TestConstants
@@ -153,7 +153,7 @@ class TestFlextCli:
             return FlextCli()
 
         @staticmethod
-        def execute_and_validate(cli: FlextCli) -> FlextResult[FlextTypes.JsonDict]:
+        def execute_and_validate(cli: FlextCli) -> FlextResult[t.JsonDict]:
             """Execute CLI and perform basic validation using FlextTestsUtilities."""
             result = cli.execute()
             FlextTestsUtilities.TestUtilities.assert_result_success(result)

@@ -2,7 +2,7 @@
 
 Tests verify that subprocess usage in python_tools.py has been properly converted:
 1. Subprocess import removed
-2. FlextUtilities imported and used
+2. u imported and used
 3. Both tool methods converted (ruff, pylint)
 4. subprocess.TimeoutExpired handlers removed
 5. Error handling uses FlextResult pattern
@@ -46,33 +46,33 @@ class TestPhase6Sprint2PythonToolsConversion:
         lines = content.split("\n")
         for line in lines[:30]:  # Check first 30 lines for imports
             if line.startswith("import subprocess"):
-                pytest.fail("subprocess import still present - must use FlextUtilities")
+                pytest.fail("subprocess import still present - must use u
 
     def test_flext_utilities_imported(self) -> None:
-        """Verify FlextUtilities is imported."""
+        """Verify u"""
         content = self.PYTHON_TOOLS_PATH.read_text()
 
-        assert "FlextUtilities" in content, "FlextUtilities not imported"
-        assert "from flext_core import" in content and "FlextUtilities" in content, (
-            "FlextUtilities must be imported from flext_core"
+        assert "u "u not importeu
+        assert "from flext_core import" in content and "u (
+            "urted from flext_core"
         )
 
     def test_ruff_method_uses_flext_utilities(self) -> None:
-        """Verify run_ruff_check uses FlextUtilities."""
+        """Verify run_ruff_check uses u
         content = self.PYTHON_TOOLS_PATH.read_text()
 
         # Find run_ruff_check method
         assert "def run_ruff_check(self, path: Path)" in content
-        assert "FlextUtilities.CommandExecution.run_external_command" in content
+        assert "ution.run_external_command" in content
         assert "subprocess.run" not in content
 
     def test_pylint_method_uses_flext_utilities(self) -> None:
-        """Verify run_pylint_check uses FlextUtilities."""
+        """Verify run_pylint_check uses u
         content = self.PYTHON_TOOLS_PATH.read_text()
 
         # Find run_pylint_check method
         assert "def run_pylint_check(self, path: Path)" in content
-        assert "FlextUtilities.CommandExecution.run_external_command" in content
+        assert "ution.run_external_command" in content
 
     def test_timeout_expired_handlers_removed(self) -> None:
         """Verify subprocess.TimeoutExpired handlers are removed."""

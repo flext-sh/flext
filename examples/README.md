@@ -17,6 +17,7 @@ Demonstrates comprehensive Access Control List (ACL) processing capabilities:
 - **Performance analytics**: Comprehensive metrics and throughput analysis
 
 **Key Features:**
+
 - Server-specific ACL attribute detection
 - Parallel batch processing with configurable worker threads
 - Complex validation rules with forbidden permission combinations
@@ -36,6 +37,7 @@ Demonstrates modern processing capabilities with corrected APIs:
 - **Performance analytics**: Comprehensive metrics across all processing stages
 
 **Key Features:**
+
 - Advanced processor with configurable parallel execution
 - Validation processor with parallel item checking
 - Analysis processor for data insights and aggregation
@@ -55,6 +57,7 @@ Demonstrates the complete FLEXT enterprise workflow with all capabilities integr
 - **Validação end-to-end**: Complete workflow validation with multiple aspects
 
 **Key Features:**
+
 - Intelligent builder for workflow components
 - Parallel stage executor with correlation tracking
 - Comprehensive railway pattern for workflow orchestration
@@ -65,27 +68,35 @@ Demonstrates the complete FLEXT enterprise workflow with all capabilities integr
 ## Architecture Patterns Demonstrated
 
 ### Railway Pattern
+
 All examples implement the railway pattern for robust error handling:
+
 - Operations return `FlextResult[T]` for type-safe error handling
 - Pipeline stops on first failure (no exception propagation)
 - Comprehensive error reporting and context tracking
 
 ### Parallel Processing
+
 Extensive use of parallel processing throughout:
+
 - `ThreadPoolExecutor` for concurrent operations
 - Configurable worker thread pools
 - Batch processing for memory efficiency
 - Parallel validation and analysis stages
 
 ### Type Safety
+
 Full type safety with modern Python features:
+
 - `from __future__ import annotations` for forward references
 - Comprehensive type hints throughout
 - Generic types with proper variance
 - Protocol-based design where appropriate
 
 ### Enterprise Features
+
 Production-ready enterprise capabilities:
+
 - Comprehensive logging and metrics
 - Configurable processing parameters
 - Performance analytics and monitoring
@@ -95,6 +106,7 @@ Production-ready enterprise capabilities:
 ## Usage Examples
 
 ### Basic ACL Processing
+
 ```python
 from examples.acl_processing_example import AclProcessingPipeline
 
@@ -115,6 +127,7 @@ if result.is_success:
 ```
 
 ### Advanced Processing Pipeline
+
 ```python
 from examples.advanced_processing_example import IntegratedProcessingPipeline
 
@@ -132,6 +145,7 @@ result = pipeline.execute_integrated_pipeline(
 ```
 
 ### Complete Workflow
+
 ```python
 from examples.complete_workflow_example import (
     ComprehensiveRailwayPattern,
@@ -157,16 +171,19 @@ result = railway.execute_workflow_railway(
 ## Performance Characteristics
 
 ### Parallel Processing
+
 - **Scalability**: Linear scaling with worker threads
 - **Memory efficiency**: Batch processing prevents memory exhaustion
 - **CPU utilization**: Optimal thread pool sizing based on workload
 
 ### Railway Pattern
+
 - **Error resilience**: Fail-fast behavior prevents cascading failures
 - **Debugging**: Comprehensive error context and correlation tracking
 - **Monitoring**: Detailed performance metrics at each stage
 
 ### Type Safety
+
 - **IDE support**: Full autocomplete and type checking
 - **Runtime safety**: Pydantic validation where applicable
 - **Maintainability**: Self-documenting code with type hints
@@ -174,6 +191,7 @@ result = railway.execute_workflow_railway(
 ## Quality Assurance
 
 All examples follow FLEXT quality standards:
+
 - **Linting**: Pass Ruff checks with zero errors
 - **Type checking**: Full mypy compliance
 - **Testing**: Designed for comprehensive test coverage
@@ -183,6 +201,7 @@ All examples follow FLEXT quality standards:
 ## Dependencies
 
 Examples use only FLEXT core dependencies:
+
 - `flext-core`: Core FLEXT functionality
 - Standard library modules (concurrent.futures, dataclasses, typing)
 
@@ -191,6 +210,7 @@ No external dependencies required for basic functionality.
 ## Integration with FLEXT Ecosystem
 
 These examples demonstrate integration with the complete FLEXT ecosystem:
+
 - **FLEXT-LDIF**: LDAP-specific processing capabilities
 - **FLEXT-Core**: Foundation patterns and utilities
 - **FLEXT-Result**: Railway pattern implementation
@@ -199,6 +219,7 @@ These examples demonstrate integration with the complete FLEXT ecosystem:
 ## Enterprise Readiness
 
 All examples are production-ready with:
+
 - Comprehensive error handling
 - Performance monitoring and analytics
 - Configurable execution parameters
