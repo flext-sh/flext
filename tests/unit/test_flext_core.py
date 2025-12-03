@@ -362,9 +362,7 @@ class TestFlextConsolidated:
 
         # Test that it has expected methods
         assert (
-            hasattr(u, "Validation")
-            or hasattr(u, "Generators")
-            or hasattr(u, "Cache")
+            hasattr(u, "Validation") or hasattr(u, "Generators") or hasattr(u, "Cache")
         )
 
     # =============================================================================
