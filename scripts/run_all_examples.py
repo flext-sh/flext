@@ -26,8 +26,6 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
-from flext_core import FlextUtilities
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -69,7 +67,7 @@ def run_example(project_root: Path, example_file: Path, timeout: int) -> RunResu
     env = os.environ.copy()
     # Prefer project-local src so examples can import their package
     env["PYTHONPATH"] = "src"
-    result = FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
+    result = ucurnal_command(
         [sys.executable, str(example_file.name)],
         cwd=str(project_root / "examples"),
         env=env,

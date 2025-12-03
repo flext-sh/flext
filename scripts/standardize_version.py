@@ -69,10 +69,10 @@ SPDX-License-Identifier: Proprietary
 from __future__ import annotations
 from flext_core import (
     FlextBus, FlextConfig, FlextConstants, FlextContainer, FlextContext,
-    FlextDecorators, FlextDispatcher, FlextExceptions, FlextHandlers,
-    FlextLogger, FlextMixins, FlextModels, FlextProcessors, FlextProtocols,
-    FlextRegistry, FlextResult, FlextRuntime, FlextService, FlextTypes,
-    FlextUtilities
+    FlextDecorators, FlextDispatcher, FlextExceptions, h,
+    FlextLogger, x, FlextModels, FlextProcessors, p,
+    FlextRegistry, FlextResult, FlextRuntime, FlextService, t,
+    u
 )
 from importlib.metadata import metadata
 

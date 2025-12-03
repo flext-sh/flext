@@ -51,6 +51,7 @@ target-version = "py313"
         "ERA001",  # commented-out-code - False positives on legitimate comments
         "FBT003",
         "G004",    # logging-f-string
+        "N813",
         # "PLR0904",
         # "PLR0911", # too-many-return-statements - Many returns allowed in some processors/validators
         # "PLR0912", # too-many-branches - High complexity acceptable in orchestrators

@@ -15,7 +15,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextResult, t
 from flext_quality.tools import PoetryValidator
 
 
@@ -51,7 +51,7 @@ class TestPoetryValidator:
             }
 
         @staticmethod
-        def create_test_validation_data() -> FlextTypes.BoolDict:
+        def create_test_validation_data() -> t.BoolDict:
             """Create test validation data."""
             return {
                 "pyproject_exists": True,

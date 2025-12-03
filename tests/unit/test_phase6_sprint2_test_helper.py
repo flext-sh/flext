@@ -2,7 +2,7 @@
 
 Tests verify that subprocess usage in test_helper.py has been properly converted:
 1. Subprocess import removed
-2. FlextUtilities imported and used
+2. u imported and used
 3. Both functions converted (suggest_tests_from_coverage, validate_test_execution)
 4. subprocess.TimeoutExpired handlers removed
 5. Error handling uses FlextResult pattern
@@ -50,33 +50,33 @@ class TestPhase6Sprint2TestHelperConversion:
         lines = content.split("\n")
         for line in lines[:30]:  # Check first 30 lines for imports
             if line.startswith("import subprocess"):
-                pytest.fail("subprocess import still present - must use FlextUtilities")
+                pytest.fail("subprocess import still present - must use u
 
     def test_flext_utilities_imported(self) -> None:
-        """Verify FlextUtilities is imported."""
+        """Verify u"""
         content = self.TEST_HELPER_PATH.read_text()
 
-        assert "FlextUtilities" in content, "FlextUtilities not imported"
-        assert "from flext_core import" in content and "FlextUtilities" in content, (
-            "FlextUtilities must be imported from flext_core"
+        assert "u "u not importeu
+        assert "from flext_core import" in content and "u (
+            "urted from flext_core"
         )
 
     def test_suggest_tests_from_coverage_converted(self) -> None:
-        """Verify suggest_tests_from_coverage uses FlextUtilities."""
+        """Verify suggest_tests_from_coverage uses u
         content = self.TEST_HELPER_PATH.read_text()
 
         # Find function and check conversion
         assert "def suggest_tests_from_coverage(project_path: Path)" in content
-        assert "FlextUtilities.CommandExecution.run_external_command" in content
+        assert "ution.run_external_command" in content
         assert "pytest" in content  # Should still run pytest
 
     def test_validate_test_execution_converted(self) -> None:
-        """Verify validate_test_execution uses FlextUtilities."""
+        """Verify validate_test_execution uses u
         content = self.TEST_HELPER_PATH.read_text()
 
         # Find function and check conversion
         assert "def validate_test_execution(test_path: Path)" in content
-        assert "FlextUtilities.CommandExecution.run_external_command" in content
+        assert "ution.run_external_command" in content
 
     def test_timeout_expired_handlers_removed(self) -> None:
         """Verify subprocess.TimeoutExpired handlers are removed."""

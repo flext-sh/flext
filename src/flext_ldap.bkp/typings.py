@@ -5,18 +5,18 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping, Sequence
 from typing import TypeVar
 
-from flext_core import FlextTypes
+from flext_core import t
 
 from .protocols import FlextLdapProtocols
 
 TEntry = TypeVar("TEntry", bound="FlextLdapProtocols.Entry.EntryProtocol")
 
 
-class FlextLdapTypes(FlextTypes):
-    """FlextLdap type definitions extending FlextTypes.
+class FlextLdapTypes(t):
+    """FlextLdap type definitions extending t.
 
     Hierarchy:
-        FlextTypes (flext-core)
+        t (flext-core)
         └── FlextLdapTypes (this module)
     """
 

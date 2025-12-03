@@ -24,6 +24,6 @@ Este README funciona como hub para os modelos do namespace `FlextModels.Base`. C
 - A documentação foi dividida em oito arquivos específicos para cada modelo, substituindo o antigo `DETAIL.md`.
 - Registramos que apenas `Metadata` possui adoção cruzada (dispatcher, registry, LDIF, targets Oracle). Todos os outros continuam restritos a testes ou sem uso (`Url`, `TimestampConfig`, `SerializationRequest`).
 - `Payload`, `LogOperation` e `ConditionalExecutionRequest` receberam diagnóstico de maturidade técnica, mas falta adoção no runtime; cada guia descreve riscos e próximos passos para incorporá-los (ex.: integrar Payload ao dispatcher, ligar LogOperation ao decorator homônimo, validar callables em ConditionalExecutionRequest).
-- Modelos de suporte (`StateInitializationRequest`, `TimestampConfig`, `SerializationRequest`) agora têm recomendações explícitas para integração com `FlextService`, `FlextUtilities` e pipelines de serialização.
+- Modelos de suporte (`StateInitializationRequest`, `TimestampConfig`, `SerializationRequest`) agora têm recomendações explícitas para integração com `FlextService`, `u` e pipelines de serialização.
 
 > Consulte os arquivos individuais sempre que precisar de campos, validações e exemplos concretos antes de expor novos serviços ou refatorar código legado.

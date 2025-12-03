@@ -9,7 +9,7 @@ the complex flext-core integrations that may have circular import issues.
 ## 📚 QUICK REFERENCE - Key Sections
 
 **Core Patterns** (Most Important):
-- **[Namespace Class Pattern](#-namespace-class-pattern-critical-flext-core-foundation)** - FlextConstants, FlextModels, FlextTypes, FlextExceptions, FlextProtocols
+- **[Namespace Class Pattern](#-namespace-class-pattern-critical-flext-core-foundation)** - FlextConstants, FlextModels, t, FlextExceptions, p
 - **[Extending Namespace Classes](#-extending-namespace-classes-domain-library-pattern)** - How domain libraries extend flext-core
 - **[FlextConfig Advanced](#-flextconfig-advanced-patterns-pydantic-211-basesettings)** - Pydantic 2.11+ BaseSettings, validators, computed fields
 - **[FlextResult Railway](#-flextresult-railway-pattern-monadic-error-handling)** - Monadic operations, railway-oriented programming
@@ -93,6 +93,7 @@ import operator
 import os
 import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 from typing import ClassVar, TypeVar
@@ -102,7 +103,6 @@ from flext_core import (
     FlextConstants,
     FlextLogger,
     FlextResult,
-    FlextUtilities,
 )
 
 T = TypeVar("T")
@@ -630,14 +630,15 @@ class FlextModuleOptimizer:
         """Validate optimized file."""
         try:
             # Run ruff check
-            result = (
-                FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
-                    [RUFF_CMD, "check", file_path],
-                    check=False,
-                    capture_output=True,
-                    text=True,
-                    cwd=Path(file_path).parent.parent.parent,  # Project root
-                )
+            ruff_path = shutil.which("ruff")
+            if not ruff_path:
+                return FlextResult.fail("Ruff not found in PATH")
+            result = subprocess.run(
+                [ruff_path, "check", file_path],
+                check=False,
+                capture_output=True,
+                text=True,
+                cwd=Path(file_path).parent.parent.parent,  # Project root
             )
 
             if result.returncode != 0:

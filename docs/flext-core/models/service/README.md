@@ -14,7 +14,7 @@ Requisições de execução, lote, métricas e recursos usadas em serviços de d
 
 **Como funciona**
 
-- `ArbitraryTypesModel` com campos `service_name`, `method_name`, `parameters`, `context` e `timeout_seconds`. Os validadores empregam `FlextUtilities.Generators.ensure_trace_context` e `FlextUtilities.Validation.validate_timeout`, garantindo correlação e limites seguros.
+- `ArbitraryTypesModel` com campos `service_name`, `method_name`, `parameters`, `context` e `timeout_seconds`. Os validadores empregam `u.Generators.ensure_trace_context` e `u.Validation.validate_timeout`, garantindo correlação e limites seguros.
 
 **Aplicações**
 
@@ -102,7 +102,7 @@ Requisições de execução, lote, métricas e recursos usadas em serviços de d
 
 **Funcionamento**
 
-- `ArbitraryTypesModel` com `operation_name`, `operation_callable`, `arguments`, `keyword_arguments`, `timeout_seconds` e `retry_config`. O validador `validate_operation_callable` usa `FlextUtilities.Validation.validate_callable` para garantir a assinatura.
+- `ArbitraryTypesModel` com `operation_name`, `operation_callable`, `arguments`, `keyword_arguments`, `timeout_seconds` e `retry_config`. O validador `validate_operation_callable` usa `u.Validation.validate_callable` para garantir a assinatura.
 
 **Aplicações**
 

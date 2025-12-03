@@ -6,15 +6,15 @@ Modelo pensado para capturar logs estruturados de operações, preservando conte
 
 ## Contrato
 
-| Campo       | Tipo                | Detalhes                                                           |
-| ----------- | ------------------- | ------------------------------------------------------------------ |
-| `level`     | `str`               | Default `"INFO"` via lambda; aceita qualquer string atualmente.    |
-| `message`   | `str`               | Texto principal (obrigatório).                                     |
-| `context`   | `dict[str, object]` | Metadados adicionais (ex.: ids, métricas).                         |
-| `timestamp` | `datetime`          | `FlextUtilities.Generators.generate_datetime_utc`, garantindo UTC. |
-| `source`    | `str \| None`       | Subsistema/projeto emissor.                                        |
-| `operation` | `str \| None`       | Nome lógico (padrão: decorator `log_operation`).                   |
-| `obj`       | `object \| None`    | Referência opcional ao objeto alvo (handler, service, etc.).       |
+| Campo       | Tipo                | Detalhes                                                        |
+| ----------- | ------------------- | --------------------------------------------------------------- |
+| `level`     | `str`               | Default `"INFO"` via lambda; aceita qualquer string atualmente. |
+| `message`   | `str`               | Texto principal (obrigatório).                                  |
+| `context`   | `dict[str, object]` | Metadados adicionais (ex.: ids, métricas).                      |
+| `timestamp` | `datetime`          | `u.Generators.generate_datetime_utc`, garantindo UTC.           |
+| `source`    | `str \| None`       | Subsistema/projeto emissor.                                     |
+| `operation` | `str \| None`       | Nome lógico (padrão: decorator `log_operation`).                |
+| `obj`       | `object \| None`    | Referência opcional ao objeto alvo (handler, service, etc.).    |
 
 ## Arquitetura e dependências
 
@@ -23,12 +23,14 @@ Modelo pensado para capturar logs estruturados de operações, preservando conte
 - **Observability**: `flext-observability` e `flext-quality` coletam métricas a partir de logs. Representar cada evento como `LogOperation` facilitaria conversão para `structlog` e pipelines (Elastic, New Relic).
 
 ### Onde o modelo deveria entrar
+
 - `flext_core/src/flext_core/service.py:500-780` possui chamadas diretas a `self.logger.debug/info` durante execuções; substituir por `FlextModels.LogOperation` padronizaria os campos.
 - `flext_core/src/flext_core/decorators.py:365-476` conhece `operation`, `logger`, `correlation_id`, `duration_ms`; basta mapear esses valores para o DTO antes de emitir logs.
 - `flext_core/src/flext_core/handlers.py:250-360` já injeta `Metadata` em erros; adicionar `LogOperation` fecharia o ciclo de observabilidade (metadados + evento).
 - `flext_core/src/flext_core/result.py` poderia anexar `LogOperation` em `FlextResult.error_data`, melhorando diagnósticos em targets externos.
 
 ### Exemplos de dados disponíveis no decorator
+
 `flext_core/src/flext_core/decorators.py:399-446`
 
 ```python
@@ -51,7 +53,7 @@ Todos esses campos mapeiam diretamente para `LogOperation` (`message`, `context`
 
 1. `@FlextDecorators.log_operation` cria um `LogOperation` no início da execução, preenchendo `operation`, `source`, `context` (ex.: `correlation_id` via `FlextContext`).
 2. O modelo é enviado ao logger/observability (ex.: `self.logger.emit_log_operation(log_op)`), garantindo formato consistente.
-3. `FlextService` e `FlextHandlers` podem anexar `LogOperation` ao `FlextResult` em caso de falha, simplificando debugging em `flext-ldif`/`targets`.
+3. `FlextService` e `h` podem anexar `LogOperation` ao `FlextResult` em caso de falha, simplificando debugging em `flext-ldif`/`targets`.
 
 ## Pontos fortes x riscos
 

@@ -21,15 +21,17 @@ DTO para encapsular políticas de serialização (formato, encoding, compressão
 ## Arquitetura e dependências
 
 - Acompanha o mesmo núcleo de `FlextConstants.Cqrs.SerializationFormat`, garantindo que as opções batam com o que os handlers suportam.
-- Complementa `FlextRuntime.is_dict_like` e `FlextHandlers._try_common_serialization_methods` (`flext_core/src/flext_core/handlers.py:439-520`), oferecendo metadados para o pipeline decidir como serializar.
+- Complementa `FlextRuntime.is_dict_like` e `h._try_common_serialization_methods` (`flext_core/src/flext_core/handlers.py:439-520`), oferecendo metadados para o pipeline decidir como serializar.
 - Se integra naturalmente com `FlextContext.Serialization` (`flext_core/src/flext_core/context.py:1666-1810`), que hoje expõe apenas funções globais.
 
 ### Onde usar imediatamente
+
 - `flext_core/src/flext_core/handlers.py:439-520` – métodos `_serialize_message`, `_try_common_serialization_methods` e `_try_slots_serialization` hoje percorrem heurísticas; receber um `SerializationRequest` permitiria decidir rapidamente entre `model_dump`, `dict` ou `vars` e aplicar `encoding`/`compression`.
 - `flext_core/src/flext_core/context.py:1666-1810` – `FlextContext.Serialization.export_snapshot` poderia aceitar `SerializationRequest` para decidir se exporta JSON, dict ou bytes, obedecendo `pretty_print` e `ensure_ascii`.
-- `flext-target-ldif` e `flext-target-ldif` – ambos geram arquivos LDIF/json; encapsular os parâmetros (indentação, encoding) no DTO reduziria divergências entre CLI e pipelines.
+- `flext-target-ldif` e `flext-target-ldif` – ambos geram arquivos LDIF/JSON; encapsular os parâmetros (indentação, encoding) no DTO reduziria divergências entre CLI e pipelines.
 
 ### Trecho relevante (handlers)
+
 `flext_core/src/flext_core/handlers.py:439-487`
 
 ```python
@@ -49,7 +51,7 @@ Ao receber `SerializationRequest`, o handler poderia priorizar o método correto
 
 ## Fluxo pretendido
 
-1. `FlextHandlers` recebe `SerializationRequest` contendo `data` e preferências (ex.: `format="json"`, `pretty_print=False`).
+1. `h` recebe `SerializationRequest` contendo `data` e preferências (ex.: `format="json"`, `pretty_print=False`).
 2. `_serialize_message` usa `request.use_model_dump` para escolher entre `model_dump`, `dict` ou `vars`, e depois aplica `FlextRuntime`/`json`/`orjson` de acordo com `request.format`.
 3. Projetos Singer (targets/taps) constroem instâncias com `format="ldif"` ou `"jsonl"`, garantindo que `compression` e `encoding` estejam documentados.
 
@@ -62,7 +64,7 @@ request = FlextModels.SerializationRequest(
     encoding="utf-8",
     sort_keys=True,
 )
-serialized = FlextHandlers.Serialization.serialize_message(request)
+serialized = h.Serialization.serialize_message(request)
 ```
 
 > `serialize_message` representa `_serialize_message` + `_try_common_serialization_methods` em `flext_core/src/flext_core/handlers.py:439-520`, que hoje não recebe nenhum DTO.
@@ -70,7 +72,7 @@ serialized = FlextHandlers.Serialization.serialize_message(request)
 ## Pontos fortes x limitações
 
 - **Fortes**: centraliza políticas de serialização, reduz duplicação de opções (`pretty_print`, `indent`), torna comportamento previsível e auditável.
-- **Limitações**: ausência de adoção; campos `format`/`compression` aceitam qualquer `str`; não há integração com `FlextUtilities.Serialization` (ex.: compressão real); não expõe métodos auxiliares (`to_json_kwargs`) que facilitem uso.
+- **Limitações**: ausência de adoção; campos `format`/`compression` aceitam qualquer `str`; não há integração com `u.Serialization` (ex.: compressão real); não expõe métodos auxiliares (`to_json_kwargs`) que facilitem uso.
 
 ## Backlog recomendado
 

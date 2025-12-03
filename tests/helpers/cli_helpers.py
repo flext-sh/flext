@@ -18,7 +18,7 @@ from flext_cli import (
     FlextCliFormatters,
     FlextCliPrompts,
 )
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextResult, t
 from flext_tests import FlextTestsUtilities
 
 from tests.fixtures.constants import TestConstants
@@ -36,7 +36,7 @@ class CliTestHelpers:
         return FlextCli()
 
     @staticmethod
-    def execute_and_validate(cli: FlextCli) -> FlextResult[FlextTypes.JsonDict]:
+    def execute_and_validate(cli: FlextCli) -> FlextResult[t.JsonDict]:
         """Execute CLI and perform basic validation using FlextTestsUtilities.
 
         Reduces 2-3 lines per test by centralizing success assertion.
@@ -70,9 +70,9 @@ class CliTestHelpers:
 
     @staticmethod
     def validate_execute_result_structure(
-        result: FlextResult[FlextTypes.JsonDict],
+        result: FlextResult[t.JsonDict],
         expected_fields: list[str],
-    ) -> FlextTypes.JsonDict:
+    ) -> t.JsonDict:
         """Validate execute result has required fields and return data.
 
         Reduces 5-6 lines per test by centralizing result structure validation.

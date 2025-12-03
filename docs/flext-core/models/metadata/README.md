@@ -39,7 +39,7 @@ Dados levantados via AST (`flext_core/models.py`) e uso confirmado com busca est
 
 - **Consistência**: todos os pipelines que aderem ao modelo conseguem consumir/exportar metadata imediatamente, sem escrever adaptadores.
 - **Observabilidade/Auditoria**: facilita construir dashboards e consultas (ex.: “quais operações foram modificadas pelo serviço X?”) porque os campos são previsíveis.
-- **Resiliência contra ciclos de import**: por não depender de `FlextUtilities` ou `FlextResult`, pode ser importado inclusive em utilitários de baixo nível, mantendo a hierarquia de dependências organizada.
+- **Resiliência contra ciclos de import**: por não depender de `u` ou `FlextResult`, pode ser importado inclusive em utilitários de baixo nível, mantendo a hierarquia de dependências organizada.
 
 **Oportunidades / decisões**
 

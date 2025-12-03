@@ -138,7 +138,7 @@ import io
 import contextlib
 from flext_quality import cli as quality_cli
 
-def run_cli_help(args: FlextTypes.StringList) -> int:
+def run_cli_help(args: t.StringList) -> int:
     out = io.StringIO()
     err = io.StringIO()
     with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):

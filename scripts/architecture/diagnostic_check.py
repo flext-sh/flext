@@ -12,13 +12,14 @@ import contextlib
 import io
 import json
 import shutil
+import subprocess
 import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-from flext_core import FlextConstants, FlextLogger, FlextUtilities
+from flext_core import FlextConstants, FlextLogger, u
 from mypy import api as mypy_api
 
 logger = FlextLogger(__name__)
@@ -117,15 +118,13 @@ class FlextDiagnostic:
             if not ruff_path_obj.is_absolute() or not ruff_path_obj.exists():
                 return 1, "", f"Invalid ruff executable: {ruff_path}"
 
-            result = (
-                FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
-                    [str(ruff_path), "check", "."],
-                    check=False,
-                    capture_output=True,
-                    shell=False,
-                    text=True,
-                    cwd=str(project_path),
-                )
+            result = subprocess.run(
+                [ruff_path, "check", str(project_path)],
+                check=False,
+                capture_output=True,
+                shell=False,
+                text=True,
+                cwd=str(project_path),
             )
             return result.returncode, result.stdout, result.stderr
         except Exception as e:
@@ -168,15 +167,13 @@ class FlextDiagnostic:
             if not Path(poetry_path).is_absolute() or not Path(poetry_path).exists():
                 return 1, "", f"Invalid poetry executable: {poetry_path}"
 
-            result = (
-                FlextUtilities.FlextUtilities.CommandExecution.run_external_command(
-                    [str(poetry_path), "install", "--no-interaction"],
-                    check=False,
-                    capture_output=True,
-                    text=True,
-                    shell=False,
-                    cwd=str(workspace_path),
-                )
+            result = u.u.CommandExecution.run_external_command(
+                [str(poetry_path), "install", "--no-interaction"],
+                check=False,
+                u=u
+                text=True,
+                shell=False,
+                cwd=str(workspace_path),
             )
             return result.returncode, result.stdout, result.stderr
         except Exception as e:

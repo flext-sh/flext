@@ -1,6 +1,6 @@
 # FlextModels · Validação Oficial
 
-Namespace que expõe funções corporativas de validação para entidades, agregados, CQRS e pipelines. Serve como “façade” pública para rotinas implementadas em `flext_core/_models/validation.py`, `FlextMixins.Validation` e constantes.
+Namespace que expõe funções corporativas de validação para entidades, agregados, CQRS e pipelines. Serve como “façade” pública para rotinas implementadas em `flext_core/_models/validation.py`, `x.Validation` e constantes.
 
 > Fonte: AST de `flext_core/models.py` + busca estática (testes ignorados).
 
@@ -28,7 +28,7 @@ Namespace que expõe funções corporativas de validação para entidades, agreg
 
 **Adoções atuais**
 
-- Até o momento não encontramos chamadas diretas fora do módulo base; muitos projetos ainda usam `FlextMixins.Validation`. Há oportunidade para migrar o uso público para este namespace.
+- Até o momento não encontramos chamadas diretas fora do módulo base; muitos projetos ainda usam `x.Validation`. Há oportunidade para migrar o uso público para este namespace.
 
 **Benefícios tangíveis**
 
@@ -38,7 +38,7 @@ Namespace que expõe funções corporativas de validação para entidades, agreg
 **Duplicidades e relação com outros módulos**
 
 - `flext_core/constants.py` define limites e literais usados pelos validadores (por exemplo, tamanhos máximos, enumerações). Não é uma duplicação, mas sim fonte de parâmetros.
-- `flext_core/mixins.py` expõe `FlextMixins.Validation` com foco em railway-oriented programming (ROP). Ele pode chamar internamente as mesmas funções ou estender comportamentos.
+- `flext_core/mixins.py` expõe `x.Validation` com foco em railway-oriented programming (ROP). Ele pode chamar internamente as mesmas funções ou estender comportamentos.
 
 **Oportunidades / próximos passos**
 

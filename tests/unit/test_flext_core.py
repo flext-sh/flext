@@ -3,7 +3,7 @@
 Advanced Python 3.13 patterns with factories, dynamic parametrized tests, nested classes for organization,
 real implementations using flext_tests helpers, and comprehensive edge case coverage.
 
-Modules Tested: FlextResult, FlextContainer, FlextService, FlextConfig, FlextLogger, FlextConstants, FlextUtilities
+Modules Tested: FlextResult, FlextContainer, FlextService, FlextConfig, FlextLogger, FlextConstants, u
 Scope: Core functionality, railway-oriented programming, dependency injection, service patterns, and integration workflows.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -24,7 +24,7 @@ from flext_core import (
     FlextModels,
     FlextResult,
     FlextService,
-    FlextUtilities,
+    u,
 )
 from flext_tests import FlextTestsUtilities
 
@@ -335,14 +335,14 @@ class TestFlextConsolidated:
     # =============================================================================
 
     def test_flext_types_access(self) -> None:
-        """Test FlextTypes access."""
+        """Test t access."""
         # Test core types
         assert dict[str, object] is not None
         assert list[object] is not None
         assert list[str] is not None
 
     def test_flext_types_usage(self) -> None:
-        """Test FlextTypes usage in type annotations."""
+        """Test t usage in type annotations."""
         # Test that types can be used in annotations
         test_dict: dict[str, object] = {"key": "value"}
         test_list: list[object] = [1, 2, 3]
@@ -357,14 +357,14 @@ class TestFlextConsolidated:
     # =============================================================================
 
     def test_flext_utilities_access(self) -> None:
-        """Test FlextUtilities access."""
-        assert FlextUtilities is not None
+        """Test u access."""
+        assert u is not None
 
         # Test that it has expected methods
         assert (
-            hasattr(FlextUtilities, "Validation")
-            or hasattr(FlextUtilities, "Processing")
-            or hasattr(FlextUtilities, "Conversion")
+            hasattr(u, "Validation")
+            or hasattr(u, "Generators")
+            or hasattr(u, "Cache")
         )
 
     # =============================================================================

@@ -3,7 +3,7 @@
 Advanced Python 3.13 patterns with factories, dynamic parametrized tests, nested classes for organization,
 real implementations using flext_tests helpers, and comprehensive edge case coverage.
 
-Modules Tested: FlextCli, FlextResult, FlextContainer, FlextService, FlextConfig, FlextLogger, FlextUtilities
+Modules Tested: FlextCli, FlextResult, FlextContainer, FlextService, FlextConfig, FlextLogger, u
 Scope: Core functionality, railway-oriented programming, dependency injection, service patterns, and integration workflows.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -19,7 +19,7 @@ from flext_core import (
     FlextLogger,
     FlextResult,
     FlextService,
-    FlextUtilities,
+    u
 )
 from flext_tests import FlextTestsUtilities
 
@@ -146,23 +146,23 @@ class TestFlextMain:
     # =========================================================================
 
     def test_flext_utilities_creation(self) -> None:
-        """Test FlextUtilities creation."""
-        utilities = FlextUtilities()
+        """Test u
+        utilities = u
         assert utilities is not None
-        assert isinstance(utilities, FlextUtilities)
+        assert isinstance(utilities, u
 
     @pytest.mark.parametrize(
         "nested_class",
         ["Validation", "Generators", "Cache", "TextProcessor"],
     )
     def test_flext_utilities_methods(self, nested_class: str) -> None:
-        """Test FlextUtilities has expected nested classes."""
-        utilities = FlextUtilities()
+        """Test u nested classes."""
+        utilities = u()
         assert hasattr(utilities, nested_class)
 
     def test_flext_utilities_validation(self) -> None:
-        """Test FlextUtilities validation methods."""
-        utilities = FlextUtilities()
+        """Test uethods."""
+        utilities = u
         # validate_required_string returns the string directly if valid
         result = utilities.Validation.validate_required_string(
             TestConstants.Common.VALUE_DEFAULT
@@ -195,5 +195,5 @@ class TestFlextMain:
         logger = FlextLogger(__name__)
         assert logger is not None
 
-        utilities = FlextUtilities()
+        utilities = u
         assert utilities is not None
