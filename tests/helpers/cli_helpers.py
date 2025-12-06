@@ -19,7 +19,7 @@ from flext_cli import (
     FlextCliPrompts,
 )
 from flext_core import FlextResult, t
-from flext_tests import FlextTestsUtilities
+from flext_tests import u
 
 from tests.fixtures.constants import TestConstants
 
@@ -42,7 +42,7 @@ class CliTestHelpers:
         Reduces 2-3 lines per test by centralizing success assertion.
         """
         result = cli.execute()
-        FlextTestsUtilities.TestUtilities.assert_result_success(result)
+        u.Tests.Result.assert_success(result)
         return result
 
     @staticmethod
@@ -51,7 +51,7 @@ class CliTestHelpers:
 
         Reduces 4-5 lines per test by centralizing component validation logic.
         """
-        FlextTestsUtilities.TestUtilities.assert_result_success(
+        u.Tests.Result.assert_success(
             FlextResult.ok(components)
             if isinstance(components, dict)
             else FlextResult.fail("Not a dict")
@@ -77,7 +77,7 @@ class CliTestHelpers:
 
         Reduces 5-6 lines per test by centralizing result structure validation.
         """
-        FlextTestsUtilities.TestUtilities.assert_result_success(result)
+        u.Tests.Result.assert_success(result)
         data = result.unwrap()
 
         for field in expected_fields:

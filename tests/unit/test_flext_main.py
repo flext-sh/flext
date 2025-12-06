@@ -15,7 +15,7 @@ from __future__ import annotations
 import pytest
 from flext_cli import FlextCli
 from flext_core import FlextContainer, FlextLogger, FlextResult, FlextService, u
-from flext_tests import FlextTestsUtilities
+from flext_tests import u
 
 from tests.fixtures.constants import TestConstants
 
@@ -55,16 +55,14 @@ class TestFlextMain:
     def test_flext_result_success(self, test_data: str) -> None:
         """Test FlextResult success functionality with various data."""
         result = FlextResult[str].ok(test_data)
-        FlextTestsUtilities.TestUtilities.assert_result_success(result)
+        u.Tests.Result.assert_success(result)
         assert result.value == test_data
         assert result.error is None
 
     def test_flext_result_failure(self) -> None:
         """Test FlextResult failure functionality using constants."""
-        result = FlextTestsUtilities.ResultHelpers.create_failure_result(
-            TestConstants.ResultValues.ERROR_MESSAGE
-        )
-        FlextTestsUtilities.TestUtilities.assert_result_failure(result)
+        result = r[object].fail(TestConstants.ResultValues.ERROR_MESSAGE)
+        u.Tests.Result.assert_failure(result)
         assert result.error == TestConstants.ResultValues.ERROR_MESSAGE
 
     # =========================================================================
@@ -76,10 +74,10 @@ class TestFlextMain:
         container = FlextContainer()
         assert container is not None
 
-        test_key = FlextTestsUtilities.TestUtilities.generate_test_id("key")
+        test_key = u.Tests.Factory.generate_id("key")
         test_value = TestConstants.Common.VALUE_DEFAULT
         result = container.register(test_key, test_value)
-        FlextTestsUtilities.TestUtilities.assert_result_success(result)
+        u.Tests.Result.assert_success(result)
 
         retrieved = container.get(test_key)
         if retrieved.is_success:
@@ -132,7 +130,7 @@ class TestFlextMain:
         assert isinstance(service, FlextService)
 
         result = service.execute()
-        FlextTestsUtilities.TestUtilities.assert_result_success(result)
+        u.Tests.Result.assert_success(result)
         assert result.value == result_data
 
     # =========================================================================

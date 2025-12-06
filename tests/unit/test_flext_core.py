@@ -26,7 +26,7 @@ from flext_core import (
     FlextService,
     u,
 )
-from flext_tests import FlextTestsUtilities
+from flext_tests import u
 
 from tests.fixtures.constants import TestConstants
 
@@ -97,9 +97,7 @@ class TestFlextConsolidated:
             """Generate container test cases using flext_tests."""
             return [
                 {
-                    "name": FlextTestsUtilities.TestUtilities.generate_test_id(
-                        "service"
-                    ),
+                    "name": u.Tests.Factory.generate_id("service"),
                     "service": TestConstants.Common.VALUE_DEFAULT,
                     "expected_registration": True,
                     "expected_retrieval": True,
@@ -178,7 +176,7 @@ class TestFlextConsolidated:
     ) -> None:
         """Test FlextResult success creation with various data types."""
         result = FlextResult[object].ok(result_case["data"])
-        FlextTestsUtilities.TestUtilities.assert_result_success(result)
+        u.Tests.Result.assert_success(result)
         assert result.data == result_case["data"]
         assert result.error is None
         assert result.is_failure == result_case["expected_failure"]
@@ -186,8 +184,8 @@ class TestFlextConsolidated:
     def test_flext_result_failure_creation(self) -> None:
         """Test FlextResult failure creation using flext_tests."""
         error_msg = self.TestDataFactory.create_failure_data()
-        result = FlextTestsUtilities.ResultHelpers.create_failure_result(error_msg)
-        FlextTestsUtilities.TestUtilities.assert_result_failure(result)
+        result = r[object].fail(error_msg)
+        u.Tests.Result.assert_failure(result)
         assert result.error == error_msg
         # Test that accessing data on failure raises exception
         with pytest.raises(RuntimeError):
@@ -458,7 +456,7 @@ class TestFlextConsolidated:
         start_time = time.time()
         for _ in range(operation_count):
             result = FlextResult[str].ok(TestConstants.Common.VALUE_DEFAULT)
-            FlextTestsUtilities.TestUtilities.assert_result_success(result)
+            u.Tests.Result.assert_success(result)
         elapsed = time.time() - start_time
         # Should complete quickly (less than 1 second per 100 operations)
         assert elapsed < (operation_count / 100.0) + 0.1

@@ -13,7 +13,7 @@ from typing import TypeVar
 
 from flext_cli import FlextCliPrompts
 from flext_core import FlextResult
-from flext_tests import FlextTestsUtilities
+from flext_tests import u
 
 from tests.fixtures.constants import TestConstants
 
@@ -128,11 +128,11 @@ class PromptTestHelpers:
     ) -> None:
         """Generic result assertions reducing 3-5 lines per test."""
         if expected_success:
-            FlextTestsUtilities.TestUtilities.assert_result_success(result)
+            u.Tests.Result.assert_success(result)
             if expected_data is not None:
                 assert result.unwrap() == expected_data
         else:
-            FlextTestsUtilities.TestUtilities.assert_result_failure(result)
+            u.Tests.Result.assert_failure(result)
             if expected_error_contains:
                 assert result.error is not None
                 assert expected_error_contains in result.error
