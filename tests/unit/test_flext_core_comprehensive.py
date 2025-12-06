@@ -27,7 +27,7 @@ from flext_core import (
     FlextModels,
     FlextResult,
     FlextService,
-    u
+    u,
 )
 
 
@@ -202,11 +202,11 @@ class TestFlextComprehensive:
     # =============================================================================
 
     def test_flext_utilities_generators(self) -> None:
-        """Test all uethods."""
+        """Test all u methods."""
         # Test timestamp generation - use generate_iso_timestamp (non-deprecated)
-        ts1 = uenerate_iso_timestamp()
+        ts1 = u.Generators.generate_iso_timestamp()
         time.sleep(1.1)  # Sleep more than 1 second to ensure different timestamp
-        ts2 = uenerate_iso_timestamp()
+        ts2 = u.Generators.generate_iso_timestamp()
 
         assert ts1 != ts2
         assert isinstance(ts1, str)
@@ -215,28 +215,28 @@ class TestFlextComprehensive:
         # Note: generate_uuid method not available
 
         # Test correlation ID
-        corr1 = uenerate_correlation_id()
-        corr2 = uenerate_correlation_id()
+        corr1 = u.Generators.generate_correlation_id()
+        corr2 = u.Generators.generate_correlation_id()
 
         assert corr1 != corr2
         assert len(corr1) > 0
 
     def test_flext_utilities_validation(self) -> None:
-        """Test uethods."""
+        """Test u methods."""
         # Test string validation
-        valid_result = ualidate_pattern("test123", r"^[a-z0-9]+$")
+        valid_result = u.Validation.validate_pattern("test123", r"^[a-z0-9]+$")
         assert isinstance(valid_result, FlextResult)
         assert valid_result.is_success
 
         # Test empty string validation
         empty_result = u.Validation.validate_length("", min_length=1)
         assert isinstance(empty_result, FlextResult)
-        assert empty_reue
+        assert empty_result.is_failure
 
         # Test pattern validation
         pattern_result = u.Validation.validate_pattern("test123", r"^[a-z0-9]+$")
         assert isinstance(pattern_result, FlextResult)
-        assert pattern_reus
+        assert pattern_result.is_success
 
         # Test invalid pattern
         invalid_pattern = u.Validation.validate_pattern("TEST", r"^[a-z]+$")
@@ -250,13 +250,13 @@ class TestFlextComprehensive:
         normalized = u.Cache.normalize_component(test_data)
         assert normalized is not None
         assert isinstance(normalized, dict)
-        assert nu1"] == "value1"
+        assert normalized["key1"] == "value1"
         assert normalized["key2"] == 42
 
-        # Test dict kuing DataMapper which exists)
+        # Test dict key mapping (using Mapper which exists)
         source_dict: dict[str, object] = {"old_key": "value1", "other": "value2"}
         mapping = {"old_key": "new_key"}
-        mapped_result = u.DataMapper.map_dict_keys(source_dict, mapping)
+        mapped_result = u.Mapper.map_dict_keys(source_dict, mapping)
         assert mapped_result.is_success
         mapped_dict = mapped_result.data
         assert "new_key" in mapped_dict
@@ -269,44 +269,44 @@ class TestFlextComprehensive:
         key_result = u.Cache.generate_cache_key(test_list, list)
         assert key_result is not None
         assert isinstance(key_result, str)
-        assert lu > 0
+        assert len(key_result) > 0
 
         # Test cache key generation with nested structures
-        nested_data =u 2, 3], "metadata": {"count": 3}}
+        nested_data = {"items": [1, 2, 3], "metadata": {"count": 3}}
         nested_key = u.Cache.generate_cache_key(nested_data, dict)
         assert nested_key is not None
         assert isinstance(nested_key, str)
 
         # Test component normalization with collections
         normalized = u.Cache.normalize_component(test_list)
-        assert normalune
+        assert normalized is not None
         assert isinstance(normalized, list)
         assert normalized == [1, 2, 3, 4, 5]
 
     def test_flext_utilities_string_operations(self) -> None:
-        """Test u stru."""
+        """Test u string operations."""
         # Test text cleaning
         dirty_text = "  Hello   World  "
-        clean_result = u.TextProcessor.clean_text(dirty_text)
+        clean_result = u.Text.clean_text(dirty_text)
         assert isinstance(clean_result, str)
         assert clean_result == "Hello World"
-u
+
         # Test truncation
         long_string = "This is a very long string that should be truncated"
-        trunc_result = ur.truncate_text(long_string, 20)
+        trunc_result = u.Text.truncate_text(long_string, 20)
         assert trunc_result.is_success
         assert isinstance(trunc_result.data, str)
         assert len(trunc_result.data) <= 20
         assert trunc_result.data.endswith("...")
 
-        # Test safe stru
-        safe_result = u.TextProcessor.safe_string("valid text")
+        # Test safe string
+        safe_result = u.Text.safe_string("valid text")
         assert isinstance(safe_result, str)
         assert safe_result == "valid text"
 
     # =============================================================================
     # FLEXT CONTAINER COMPREHENSIVE TESTS
-    # ================u===============================================
+    # =============================================================================
 
     def test_flext_container_registration_and_retrieval(self) -> None:
         """Test FlextContainer comprehensive functionality."""
@@ -577,7 +577,7 @@ u
             test_string, r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         )
         assert email_result.is_success
-u
+
     def test_flext_models_type_validation(self) -> None:
         """Test FlextMoun methods exist and are callable."""
         # Test that validation methods exist
@@ -595,9 +595,9 @@ u
             "old_email": "john@example.com",
         }
 
-        # Test key mapping transformation using DataMapper
+        # Test key mapping transformation using Mapper
         mapping = {"old_name": "user_name", "old_email": "user_email"}
-        transform_result = u.DataMapper.map_dict_keys(raw_data, mapping)
+        transform_result = u.Mapper.map_dict_keys(raw_data, mapping)
         assert transform_result.is_success
         transformed = transform_result.data
         assert transformed["user_name"] == "john_doe"
@@ -670,8 +670,8 @@ u
                     # Process some data - simple chunking without external utility
                     test_data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
                     chunk_size = 3
-                    chunks: list[objeu
-                        test_datuk_size]
+                    chunks: list[object] = [
+                        test_data[i : i + chunk_size]
                         for i in range(0, len(test_data), chunk_size)
                     ]
 
@@ -729,8 +729,8 @@ u
                 assert len(uuid) > 0
 
         end_time = time.time()
-        elapsed = end_time -u
-u
+        elapsed = end_time - start_time
+
         # Should complete reasonably quickly
         assert elapsed < 5.0  # Allow up to 5 seconds for 1000 operations
 
@@ -750,7 +750,7 @@ u
                 if validation_result.is_failure:
                     error_msg = validation_result.error or "Unknown error"
                     self.logger.error(f"Validation failed: {error_msg}")
-                    reult[str].fail(f"Step 1 failed: {error_msg}")
+                    return FlextResult[str].fail(f"Step 1 failed: {error_msg}")
 
                 # This won't be reacuidation failure
                 return FlextResult[str].ok("success")  # pragma: no cover
@@ -765,7 +765,7 @@ u
                 else:
                     recovered_value = "default"
 
-                return FlextResult[suered with value: {recovered_value}")
+                return FlextResult[str].ok(f"Recovered with value: {recovered_value}")
 
         # Test error propagation
         service = ErrorTestService()

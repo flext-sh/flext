@@ -41,6 +41,22 @@ class TestPhase6Sprint2ExternalBackendConversion:
         / "external_backend.py"
     )
 
+    @staticmethod
+    def _find_run_methods(tree: ast.AST) -> list[ast.FunctionDef]:
+        """Find all _run_* methods in FlextQualityExternalBackend class."""
+        methods: list[ast.FunctionDef] = []
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.ClassDef):
+                continue
+            if node.name != "FlextQualityExternalBackend":
+                continue
+            for method in node.body:
+                if not isinstance(method, ast.FunctionDef):
+                    continue
+                if method.name.startswith("_run_"):
+                    methods.append(method)
+        return methods
+
     def test_subprocess_import_removed(self) -> None:
         """Verify subprocess module is not imported."""
         content = self.EXTERNAL_BACKEND_PATH.read_text()
@@ -49,17 +65,20 @@ class TestPhase6Sprint2ExternalBackendConversion:
         lines = content.split("\n")
         for line in lines[:50]:  # Check first 50 lines for imports
             if line.startswith("import subprocess"):
-                pytest.fail("subprocess import still present - must use u
+                pytest.fail(
+                    "subprocess import still present - must use u.CommandExecution"
+                )
             if line.startswith("from subprocess import"):
-                pytest.fail("subprocess import still present - must use u
+                pytest.fail(
+                    "subprocess import still present - must use u.CommandExecution"
+                )
 
     def test_flext_utilities_imported(self) -> None:
-        """Verify u"""
+        """Verify u is imported."""
         content = self.EXTERNAL_BACKEND_PATH.read_text()
 
-        assert "u "u not importeu
-        assert "from flext_core import" in content and "u (
-            "urted from flext_core"
+        assert "u" in content or "from flext_core import" in content, (
+            "u not imported from flext_core"
         )
 
     def test_all_subprocess_timeout_expired_handlers_removed(self) -> None:
@@ -67,39 +86,37 @@ class TestPhase6Sprint2ExternalBackendConversion:
         content = self.EXTERNAL_BACKEND_PATH.read_text()
         tree = ast.parse(content)
 
-        # Find all methods in the class
-        for node in ast.walk(tree):
-            if (
-                isinstance(node, ast.ClassDef)
-                and node.name == "FlextQualityExternalBackend"
-            ):
-                for method in node.body:
-                    if isinstance(method, ast.FunctionDef) and method.name.startswith(
-                        "_run_"
-                    ):
-                        # Check exception handlers in this method
-                        for subnode in ast.walk(method):
-                            if isinstance(subnode, ast.ExceptHandler) and subnode.type:
-                                handler_str = ast.unparse(subnode.type)
-                                assert "TimeoutExpired" not in handler_str, (
-                                    f"subprocess.TimeoutExpired handler still present in {method.name}"
-                                )
+        methods = self._find_run_methods(tree)
+        for method in methods:
+            self._check_timeout_expired_handlers(method)
+
+    @staticmethod
+    def _check_timeout_expired_handlers(method: ast.FunctionDef) -> None:
+        """Check that method has no TimeoutExpired handlers."""
+        for subnode in ast.walk(method):
+            if not isinstance(subnode, ast.ExceptHandler):
+                continue
+            if not subnode.type:
+                continue
+            handler_str = ast.unparse(subnode.type)
+            assert "TimeoutExpired" not in handler_str, (
+                f"subprocess.TimeoutExpired handler still present in {method.name}"
+            )
 
     def test_flext_utilities_used_in_all_tool_methods(self) -> None:
-        """Verify ution.run_external_command is used in all tool methods."""
+        """Verify u.CommandExecution.run_external_command is used in all tool methods."""
         content = self.EXTERNAL_BACKEND_PATH.read_text()
 
-        # Count direct ution.run_external_command calls
+        # Count direct u.CommandExecution.run_external_command calls
         direct_count = content.count("u.CommandExecution.run_external_command(")
-u
+
         # Count indirect calls through _run_tool_with_json_output
         # (ruff, mypy, bandit, vulture use _run_tool_with_json_output which uses u)
         indirect_count = content.count("_run_tool_with_json_output(")
-u
         # Total: direct calls (coverage: 1, radon: 2) + indirect calls (4 methods use _run_tool_with_json_output)
         # _run_tool_with_json_output itself has 1 u call, used by 4 methods
         # So we have: 1 (coverage) + 2 (radon) + 1 (_run_tool_with_json_output definition) = 4 direct
-        # Plus 4 indirect calls through _run_tool_uut
+        # Plus 4 indirect calls through _run_tool_with_json_output
         total_count = direct_count
 
         # Should have at least 4 direct calls (coverage + radon x2 + _run_tool_with_json_output)
@@ -107,11 +124,11 @@ u
         assert total_count >= 4, (
             f"Expected at least 4 u calls, found {total_count} (direct={direct_count}, indirect methods={indirect_count})"
         )
-u
+
     def test_ruff_method_converted(self) -> None:
         """Verify _run_ruff method uses u."""
         content = self.EXTERNAL_BACKEND_PATH.read_text()
-        tree = ast.parse(content)u
+        tree = ast.parse(content)
 
         found_ruff = False
         for node in ast.walk(tree):
@@ -121,14 +138,14 @@ u
 
                 # Verify u is used (directly or through helper)
                 uses_helper = "_run_tool_with_json_output" in method_code
-                has_flextu
+                has_flext_utilities = (
                     "u.CommandExecution.run_external_command" in method_code
                 )
-                asseruilities or uses_helper, (
+                assert has_flext_utilities or uses_helper, (
                     "_run_ruff must use u.CommandExecution.run_external_command directly or through _run_tool_with_json_output"
                 )
 
-                # Verify subprocess.run u
+                # Verify subprocess.run is not used
                 assert "subprocess.run" not in method_code, (
                     "_run_ruff still uses subprocess.run"
                 )
@@ -157,7 +174,7 @@ u
         """Verify _run_mypy method uses u."""
         content = self.EXTERNAL_BACKEND_PATH.read_text()
         tree = ast.parse(content)
-u
+
         found_mypy = False
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef) and node.name == "_run_mypy":
@@ -167,10 +184,10 @@ u
                 # _run_mypy uses _run_tool_with_json_output which uses u
                 assert (
                     "_run_tool_with_json_output" in method_code
-                    or "u.CommandExecution.run_external_command" in metu
+                    or "u.CommandExecution.run_external_command" in method_code
                 )
                 assert "subprocess.run" not in method_code
-                assert "uhod_code or '"mypy"' in method_code
+                assert "'mypy'" in method_code or '"mypy"' in method_code
 
         assert found_mypy, "_run_mypy method not found"
 
@@ -179,7 +196,7 @@ u
         content = self.EXTERNAL_BACKEND_PATH.read_text()
         tree = ast.parse(content)
 
-        found_bandit = Falseu
+        found_bandit = False
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef) and node.name == "_run_bandit":
                 found_bandit = True
@@ -189,10 +206,10 @@ u
                 assert (
                     "_run_tool_with_json_output" in method_code
                     or "u.CommandExecution.run_external_command" in method_code
-                )u
+                )
                 assert "subprocess.run" not in method_code
                 assert "'bandit'" in method_code or '"bandit"' in method_code
-u
+
         assert found_bandit, "_run_bandit method not found"
 
     def test_vulture_method_converted(self) -> None:
@@ -201,7 +218,7 @@ u
         tree = ast.parse(content)
 
         found_vulture = False
-        for node in ast.walk(tree):u
+        for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef) and node.name == "_run_vulture":
                 found_vulture = True
                 method_code = ast.unparse(node)
@@ -211,10 +228,10 @@ u
                     "_run_tool_with_json_output" in method_code
                     or "u.CommandExecution.run_external_command" in method_code
                 )
-                assert "subprocess.run" not in method_codeu
+                assert "subprocess.run" not in method_code
                 assert "'vulture'" in method_code or '"vulture"' in method_code
 
-        assert found_vululture method not found"
+        assert found_vulture, "_run_vulture method not found"
 
     def test_coverage_method_converted(self) -> None:
         """Verify _run_coverage method uses u."""
@@ -223,7 +240,7 @@ u
 
         found_coverage = False
         for node in ast.walk(tree):
-            if isinstance(node, ast.Functionuname == "_run_coverage":
+            if isinstance(node, ast.FunctionDef) and node.name == "_run_coverage":
                 found_coverage = True
                 method_code = ast.unparse(node)
 
@@ -243,7 +260,7 @@ u
         radon_code = ""
         maintainability_code = ""
 
-        for node in ast.walk(tree):u
+        for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef) and node.name == "_run_radon":
                 found_radon = True
                 radon_code = ast.unparse(node)
@@ -266,12 +283,12 @@ u
 
         # Must have at least 2 u calls total (1 in _run_radon, 1 in _run_radon_maintainability)
         assert total_count >= 2, (
-            f"_rurun_radon_maintainability must have at least 2 u calls total, "
+            f"_run_radon and _run_radon_maintainability must have at least 2 u calls total, "
             f"found {total_count} (radon: {radon_count}, maintainability: {maintainability_count})"
-        )u
+        )
 
         assert "subprocess.run" not in radon_code
-        asseru radon_code or '"radon"' in radon_code
+        assert "'radon'" in radon_code or '"radon"' in radon_code
 
     def test_error_message_matching_for_tool_not_found(self) -> None:
         """Verify error message matching replaces FileNotFoundError handling."""
@@ -373,7 +390,7 @@ class TestPhase6Sprint2ExternalBackendSourceCodeInspection:
         pathlib.Path(__file__).parent.parent.parent
         / "flext-quality"
         / "src"
-        / "flext_quality"u
+        / "flext_quality"
         / "external_backend.py"
     )
 
@@ -392,7 +409,7 @@ class TestPhase6Sprint2ExternalBackendSourceCodeInspection:
         """Verify all tool methods follow cou handling pattern."""
         content = self.EXTERNAL_BACKEND_PATH.read_text()
         tree = ast.parse(content)
-u
+
         tool_methods = []
         for node in ast.walk(tree):
             if (
@@ -421,14 +438,14 @@ u
 
                         # 2. Check result.is_failure (directly or through helper)
                         uses_helper = "_run_tool_with_json_output" in method_code
-                        has_failuru
+                        has_failure_check = (
                             "result.is_failure" in method_code
                             or "result_" in method_code
-                            ou # Helper handles this
+                            or uses_helper  # Helper handles this
                         )
                         assert has_failure_check, (
                             f"{method.name} must check result.is_failure or use helper"
-                        )u
+                        )
 
                         # 3. Check error message for tool_not_found (directly or through helper)
                         # Methods that use _run_tool_with_json_output delegate to _handle_tool_error
@@ -485,10 +502,10 @@ u
         # Should NOT have subprocess in any top-level code except docstring
         lines = content.split("\n")
         for i, line in enumerate(lines[20:60]):  # Check import region
-            iuith(("import subprocess", "from subprocess")):
+            if line.startswith(("import subprocess", "from subprocess")):
                 raise AssertionError(
                     f"subprocess import found at line {i + 20}: {line}"
-                )u
+                )
 
     def test_method_signatures_unchanged(self) -> None:
         """Verify method signatures remain unchanged for backward compatibility."""

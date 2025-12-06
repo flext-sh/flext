@@ -110,16 +110,16 @@ volumes:
 - ✅ Use **bind mounts** only for specific files that need to be accessible from host
 - ✅ Always use `:ro` (read-only) for files that should not be modified by container
 
-## FlextTestDocker Integration
+## FlextTestsDocker Integration
 
 ### Auto-Start Configuration
 
-FlextTestDocker provides idempotent container management with check-first auto-start:
+FlextTestsDocker provides idempotent container management with check-first auto-start:
 
 ```python
-from flext_tests import FlextTestDocker
+from flext_tests import FlextTestsDocker
 
-docker = FlextTestDocker()
+docker = FlextTestsDocker()
 
 # Idempotent start - checks if running first, only starts if needed
 result = docker.start_container("flext-openldap-test")
@@ -155,16 +155,16 @@ SHARED_CONTAINERS: ClassVar[dict[str, dict[str, str | int]]] = {
 
 ```python
 import pytest
-from flext_tests import FlextTestDocker
+from flext_tests import FlextTestsDocker
 
 @pytest.fixture(scope="session")
 def docker_control():
     """Provide Docker control instance for tests."""
-    return FlextTestDocker()
+    return FlextTestsDocker()
 
 @pytest.fixture(scope="session")
 def shared_ldap_container(docker_control):
-    """Managed LDAP container using FlextTestDocker with auto-start."""
+    """Managed LDAP container using FlextTestsDocker with auto-start."""
     # Auto-start with check-first behavior
     result = docker_control.start_container("flext-openldap-test")
     if result.is_failure:
@@ -219,7 +219,7 @@ docker-compose -f docker/docker-compose.flext-openldap-test.yml up -d
 ### Testing
 
 ```python
-# Projects should rely on FlextTestDocker auto-start
+# Projects should rely on FlextTestsDocker auto-start
 # No manual container management needed in tests
 ```
 
@@ -233,7 +233,7 @@ When adding a new test container:
 - [ ] Update container_name in compose to `flext-{service}-test` (e.g., `flext-openldap-test`)
 - [ ] Configure named Docker volumes for persistent data
 - [ ] Use bind mounts only for specific files (read-only with `:ro`)
-- [ ] Add to FlextTestDocker.SHARED_CONTAINERS with correct service name
+- [ ] Add to FlextTestsDocker.SHARED_CONTAINERS with correct service name
 - [ ] Update project conftest.py to use new container identifier
 - [ ] Test auto-start behavior
 - [ ] Update documentation
@@ -242,7 +242,7 @@ When adding a new test container:
 
 1. **Consistency**: All containers follow same naming pattern
 2. **Discoverability**: Easy to find compose files and artifacts
-3. **Automation**: FlextTestDocker can manage all containers uniformly
+3. **Automation**: FlextTestsDocker can manage all containers uniformly
 4. **Maintainability**: Clear structure for new contributors
 5. **Reliability**: Idempotent auto-start prevents race conditions
 6. **Efficiency**: Containers kept running between test runs

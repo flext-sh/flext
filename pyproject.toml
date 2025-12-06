@@ -428,6 +428,14 @@
 		strictSetInference = true
 		useLibraryCodeForTypes = true
 
+		# Execution environment for specific directory with known pyright limitations
+		# Known limitation: kwargs unpacking with type aliases (pyright issue #11136)
+		# Dynamic attribute access with hasattr checks (pyright limitation)
+		[[tool.pyright.executionEnvironments]]
+		root = "flext-ldif/tests/helpers"
+		reportArgumentType = false
+		reportAttributeAccessIssue = false
+
 	[tool.pytest.ini_options]
 		addopts = [
 			"--cov-report=term-missing",

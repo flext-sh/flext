@@ -34,7 +34,7 @@ target-version = "py313"
         # "B009",    # get-attr-with-constant
         # "B010",    # set-attr-with-constant
         # "B017",    # assert-raises-exception
-        "BLE001",  # blind-except
+        "BLE001",  # blind-except - utility functions return FlextResult, catching all exceptions
         # "C901",    # complex-structure
         "COM812",
         "CPY001",
@@ -52,15 +52,16 @@ target-version = "py313"
         "FBT003",
         "G004",    # logging-f-string
         "N813",
-        # "PLR0904",
-        # "PLR0911", # too-many-return-statements - Many returns allowed in some processors/validators
-        # "PLR0912", # too-many-branches - High complexity acceptable in orchestrators
-        # "PLR0913", # too-many-arguments - Too many arguments in function definition (sometimes necessary)
-        # "PLR0914",
-        # "PLR0915", # too-many-statements - Many statements in some builder functions
-        # "PLR0917",
-        # "PLR1702",
-        # "PLR6301", # no-self-use
+        "N816",    # mixed-case-variable-in-global - false positives in certain patterns
+        "PLR0904", # too-many-public-methods - sometimes necessary in certain classes
+        "PLR0911", # too-many-return-statements - Many returns allowed in some processors/validators
+        "PLR0912", # too-many-branches - High complexity acceptable in orchestrators
+        "PLR0913", # too-many-arguments - Too many arguments in function definition (sometimes necessary)
+        "PLR0914", # too-many-local-variables - Many local variables in complex functions
+        "PLR0915", # too-many-statements - Many statements in some builder functions
+        "PLR0917", # too-many-positional-arguments - Sometimes necessary for flexibility
+        "PLR6301", # no-self-use
+        "PYI042",  # type-alias-without-annotation - Allow short aliases (r, t, c, m, u, p, etc.) for FLEXT pattern
         "Q000",
         "S608",
         "RUF001",  # ambiguous-unicode-character-docstring - false positives when using certain images
@@ -87,7 +88,7 @@ target-version = "py313"
     [lint.per-file-ignores]
         "**/.vulture_whitelist.py" = ["ALL"]
         "**/*_pb2*.py" = ["ALL"]
-        "**/*tests*/**" = [
+        "**/*tests*" = [
             "ARG001",  # Unused function argument (helper functions for testing)
             "ARG002",  # Unused method argument (test fixtures)
             "ARG004",  # Unused static method argument (test helpers)
@@ -101,13 +102,14 @@ target-version = "py313"
             "FBT001",  # Boolean positional argument - acceptable in tests
             "FBT003",
             # "FIX002",  # TODO comments are acceptable in tests
-            # "FURB118", # operator usage (test readability more important)
+            "FURB118", # operator usage (test readability more important)
             "INP001",  # Allow implicit namespace packages in tests
             "N818",    # Exception naming (custom test exceptions)
             "N999",    # Invalid module name (project root uses 'flext-auth' for package distribution)
             "PLC0206", # dict iteration (test data structures)
             "PLC1901", # comparison-to-membership (test simplicity)
             "PLC2701", # Private imports (testing internal implementation)
+            "PLC2801", # object.__setattr__ - necessary for testing Pydantic frozen models        
             "PLR0904", # too-many-public-methods - test helpers and test classes can have many methods
             "PLR0913", # too-many-arguments - test functions can have many parameters for flexibility
             "PLR0914", # too-many-local-variables - test helper functions can have many local variables
@@ -155,16 +157,29 @@ target-version = "py313"
             "FBT001",  # Boolean positional argument - required by Pydantic field serializers
             "SLF001",  # private-member-access - necessary for config synchronization across modules
         ]
+        "**/models.py" = [
+            "S102",    # exec - necessary for dynamic command wrapper generation
+            "PLC2801", # object.__setattr__ - necessary for Pydantic frozen models
+        ]
         "**/constants.py" = [
             "S105", # hardcoded-password-string - false positives in error messages and descriptions
         ]
-        "**/docs/**" = [
+        "**/container.py" = [
+        #    "BLE001",  # blind-except - DI container executes user factories
+        ]
+        "**/context.py" = [
+        #    "BLE001",  # blind-except - context operations return FlextResult
+        ]
+        "**/*dispatcher*" = [
+        #    "BLE001",  # blind-except - framework code executes user handlers/callables
+        ]
+        "**/*docs*" = [
             "INP001",
             "S404",   # subprocess import - docs scripts need subprocess for generation
             "S603",   # subprocess calls - docs scripts need subprocess for generation
             "T201",   # print - docs scripts demonstrate output
         ]
-        "**/examples/**" = [
+        "**/*examples*" = [
             "ANN401",  # any-type - examples can legitimately use object for flexibility
             "C901",    # complex-structure - demonstration functions intentionally comprehensive
             "EXE001",  # shebang - examples are meant to be executable
@@ -179,30 +194,28 @@ target-version = "py313"
             "T201",    # print - examples demonstrate output
             "TID252",  # relative-imports
         ]
-        "**/dispatcher.py" = [
-            "BLE001",  # blind-except - framework code executes user handlers/callables
-        ]
-        "**/exceptions.py" = [
+        "**/*exceptions*" = [
             "A001",    # variable-is-ambiguous - Allow ambiguous variable names in exceptions
-            "BLE001",  # blind-except - Allow blind exceptions in exceptions
+        #    "BLE001",  # blind-except - Allow blind exceptions in exceptions
             "S105",    # hardcoded-password-string - false positives in error code constants
             "SLF001",  # private-member-access - Allow private member access in exception classes
         ]
-        "**/handlers.py" = [
-            "BLE001",  # blind-except - framework code validates user messages and executes handlers
+        "**/*handlers*" = [
+        #    "BLE001",  # blind-except - framework code validates user messages and executes handlers
         ]
-        "**/loggings.py" = [
+        "**/*loggings*" = [
+        #    "BLE001",  # blind-except - logging fallbacks must not raise
             "PLW0603", # global-statement - necessary for lazy config loading to avoid circular imports
             "PLR0904", # too-many-public-methods - foundational logging class legitimately needs many public methods for its API
         ]
-        "**/middleware.py" = [
+        "**/*middleware*" = [
             "ANN401",  # any-type - intentional to avoid circular imports between flext-auth/flext-api/flext-web
             "FBT001",  # boolean-type-hint-positional-argument - middleware configuration pattern
             "FBT002",  # boolean-default-value-positional-argument - middleware configuration pattern
             "PLC2801", # unnecessary-dunder-call - object.__setattr__ required for Pydantic extra="forbid"
             "S107",    # hardcoded-password-default - "Bearer" is HTTP protocol keyword, not password
         ]
-        "**/models.py" = [
+        "**/*models*" = [
             "ANN401",  # any-type - Pydantic 2 models legitimately use object in dict[str, object]
             "F821",    # undefined-name - DomainEvent forward references in string literals for Pydantic
             "FBT001",  # Boolean positional argument - required by Pydantic field serializers
@@ -215,26 +228,13 @@ target-version = "py313"
             # def field_name(self) -> Type:
             #     return computed_value
         ]
-        "**/_models/*.py" = [
-            "ANN401",  # any-type - Pydantic 2 models legitimately use object in dict[str, object]
-            "F821",    # undefined-name - DomainEvent forward references in string literals for Pydantic
-            "FBT001",  # Boolean positional argument - required by Pydantic field serializers
-            "PLC2701", # private-member-access - necessary for Pydantic model inheritance
-            "PLR0206", # property-with-parameters - Pydantic @computed_field + @property is valid pattern
-            "PLW0603", # global-statement - necessary for lazy config loading to avoid circular imports
-            # NOTE: Pydantic 2.11+ @computed_field + @property is a legitimate pattern:
-            # @computed_field
-            # @property
-            # def field_name(self) -> Type:
-            #     return computed_value
+        "**/*result*" = [
+        #    "BLE001", # broad-exception-catching - framework code executes user callables
         ]
-        "**/result.py" = [
-            "BLE001", # broad-exception-catching - framework code executes user callables
+        "**/*runtime*" = [
+        #    "BLE001",  # blind-except - runtime operations must never fail
         ]
-        "**/service.py" = [
-            "BLE001",  # blind-except - service layer handles user operations
-        ]
-        "**/scripts/**" = [
+        "**/*scripts*" = [
             "EXE001",
             "FIX002",  # line-contains-todo - scripts may have legitimate TODOs
             "INP001",
@@ -249,30 +249,25 @@ target-version = "py313"
             "T201",    # print
             "TID252",  # relative-imports
         ]
-        "**/services.py" = [
+        "**/*service*" = [
             "S404",   # subprocess import for controlled test execution
             "S603",   # subprocess calls for controlled testing operations
             "SLF001", # private member access within class hierarchy
+            "PLC2801", # object.__setattr__ - necessary for Pydantic frozen models and session management
         ]
-        "**/typings.py" = ["ANN401"]
-        "**/utilities.py" = ["PLW1510", "S404", "S603"]
-        "**/tests/sandbox/**" = [
-            # Allow experimental code patterns in sandbox
-            "ANN",     # All annotation rules - sandbox experiments flexible typing
-            "D",       # All docstring rules - sandbox code doesn't need docs
-            "E731",    # Lambda assignments - quick test functions
-            "EM101",   # Exception string literals - sandbox error messages
-            "F841",    # Unused variables - leftover from experiments
-            "FURB",    # Refurb suggestions - sandbox clarity over performance
-            "N8",      # Naming conventions - sandbox uses descriptive test names
-            "PGH003",  # Blanket type:ignore - sandbox uses generic ignores
-            "RET",     # Return statements - sandbox code clarity
-            "SIM",     # Simplification - sandbox readability over simplicity
-            "T201",    # Print statements - sandbox manual debugging
-            "UP",      # Upgrade suggestions - sandbox may use older patterns
+        "**/*typings*" = [
+            "ANN401",
+        #    "BLE001",  # blind-except - utility functions return FlextResult, catching all exceptions
+        ]
+        "**/*utilities*" = [
+            "C901", # complex-structure - utility methods may be intentionally complex
+            "PLW1510",
+            "S404",
+            "S603",
         ]
 
         # =============================================================================
         # SHARED CONFIGURATION FOR ALL FLEXT PROJECTS
         # =============================================================================
         # Per-project overrides should be defined in individual project pyproject.toml files
+

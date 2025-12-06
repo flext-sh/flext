@@ -95,13 +95,13 @@ fi
 echo ""
 
 # ============================================================================
-# CHECK 6: Verify FlextTestDocker availability
+# CHECK 6: Verify FlextTestsDocker availability
 # ============================================================================
-echo -e "${BLUE}[6/8]${NC} Verifying FlextTestDocker availability..."
-if python3 -c "from flext_tests import FlextTestDocker; print('OK')" 2>/dev/null | grep -q "OK"; then
-	echo -e "${GREEN}✅ PASSED${NC}: FlextTestDocker is importable"
+echo -e "${BLUE}[6/8]${NC} Verifying FlextTestsDocker availability..."
+if python3 -c "from flext_tests import FlextTestsDocker; print('OK')" 2>/dev/null | grep -q "OK"; then
+	echo -e "${GREEN}✅ PASSED${NC}: FlextTestsDocker is importable"
 else
-	echo -e "${RED}❌ FAILED${NC}: Cannot import FlextTestDocker from flext_tests"
+	echo -e "${RED}❌ FAILED${NC}: Cannot import FlextTestsDocker from flext_tests"
 	((ERRORS++))
 fi
 echo ""
@@ -127,7 +127,7 @@ DOCKER_SCRIPTS=$(find ~/flext -name "*docker*.sh" ! -path "*/docker/*" ! -name "
 if [ "$DOCKER_SCRIPTS" -gt 0 ]; then
 	echo -e "${YELLOW}⚠️  WARNING${NC}: Found $DOCKER_SCRIPTS Docker-related shell scripts:"
 	find ~/flext -name "*docker*.sh" ! -path "*/docker/*" ! -name "*.bak" 2>/dev/null | head -5
-	echo -e "    ${YELLOW}Consider using FlextTestDocker API instead${NC}"
+	echo -e "    ${YELLOW}Consider using FlextTestsDocker API instead${NC}"
 	((WARNINGS++))
 else
 	echo -e "${GREEN}✅ PASSED${NC}: No prohibited Docker scripts found"

@@ -29,7 +29,6 @@ import operator
 import re
 import shlex
 import shutil
-import subprocess
 import sys
 import tarfile
 from datetime import UTC, datetime
@@ -58,10 +57,9 @@ class GitUltimateCleanup:
     ) -> FlextResult[Any]:
         """Run a git command with proper error handling and type annotations."""
         cmd = [GIT_CMD, "-C", str(repo_path)] + args
-        return ucurnal_command(
+        return u.CommandExecution.run_external_command(
             cmd,
             capture_output=True,
-            text=True,
             check=check,
         )
 
@@ -266,7 +264,8 @@ class GitUltimateCleanup:
             )
             if status_result.is_failure:
                 return False, f"Failed to check git status: {status_result.error}"
-            if status_result.value.stdout.strip():
+            wrapper = status_result.unwrap()
+            if wrapper.stdout.strip():
                 return False, "Uncommitted changes detected. Commit or stash first."
 
         # Check git-filter-repo
@@ -283,22 +282,22 @@ class GitUltimateCleanup:
         )
         if head_result.is_failure:
             return False, f"Failed to check HEAD: {head_result.error}"
-        if head_result.value.returncode != 0:
+        head_wrapper = head_result.unwrap()
+        if head_wrapper.returncode != 0:
             return False, "Detached HEAD state. Checkout a branch first."
 
         # Check disk space
-        disk_result = subprocess.run(
+        disk_result = u.CommandExecution.run_external_command(
             ["df", "-h", "."],
             capture_output=True,
-            text=True,
             check=False,
         )
         if disk_result.is_failure:
             return False, f"Failed to check disk space: {disk_result.error}"
 
-        disk_process = disk_result.value
-        if disk_process.returncode == 0:
-            lines = disk_process.stdout.strip().split("\n")
+        disk_wrapper = disk_result.unwrap()
+        if disk_wrapper.returncode == 0:
+            lines = disk_wrapper.stdout.strip().split("\n")
             if len(lines) > 1:
                 avail = lines[1].split()[3]
                 print(f"   💾 Available disk space: {avail}")
@@ -344,20 +343,20 @@ class GitUltimateCleanup:
         # 2. Create git mirror clone
         print("2️⃣  Creating git mirror clone...")
         mirror_path = repo_backup / f"{self.repo_path.name}.git"
-        mirror_result = u.u.CommandExecution.run_external_command(
+        mirror_result = u.CommandExecution.run_external_command(
             [GIT_CMD, "clone", "--mirror", str(self.repo_path), str(mirror_path)],
             check=False,
-            u=u
+            u=u,
             text=True,
         )
         if mirror_result.is_failure:
             print(f"   ❌ Mirror clone failed: {mirror_result.error}")
         else:
-            mirror_process = mirror_result.value
-            if mirror_process.returncode == 0:
+            mirror_wrapper = mirror_result.unwrap()
+            if mirror_wrapper.returncode == 0:
                 print("   ✅ Mirror clone created")
             else:
-                print(f"   ⚠️  Mirror clone failed: {mirror_process.stderr}")
+                print(f"   ⚠️  Mirror clone failed: {mirror_wrapper.stderr}")
 
         # 3. Export commit history
         print("3️⃣  Exporting commit history...")
@@ -369,10 +368,10 @@ class GitUltimateCleanup:
         if history_result.is_failure:
             print(f"   ❌ History export failed: {history_result.error}")
         else:
-            history_process = history_result.value
-            if history_process.returncode == 0:
-                history_file.write_text(history_process.stdout)
-            lines = len(history_process.stdout.strip().split("\n"))
+            history_wrapper = history_result.unwrap()
+            if history_wrapper.returncode == 0:
+                history_file.write_text(history_wrapper.stdout)
+            lines = len(history_wrapper.stdout.strip().split("\n"))
             print(f"   ✅ Exported {lines} commits")
 
         # 4. Export reflog
@@ -384,35 +383,42 @@ class GitUltimateCleanup:
         if reflog_result.is_failure:
             print(f"   ❌ Reflog export failed: {reflog_result.error}")
         else:
-            reflog_process = reflog_result.value
-            if reflog_process.returncode == 0:
-                reflog_file.write_text(reflog_process.stdout)
+            reflog_wrapper = reflog_result.unwrap()
+            if reflog_wrapper.returncode == 0:
+                reflog_file.write_text(reflog_wrapper.stdout)
                 print("   ✅ Reflog exported")
 
         # 5. Export branch info
         print("5️⃣  Exporting branch information...")
         branch_file = repo_backup / "branches.txt"
         branch_result = self._run_git_command(self.repo_path, ["branch", "-a"])
-        if branch_result.value.returncode == 0:
-            branch_file.write_text(branch_result.value.stdout)
-            print("   ✅ Branch info exported")
+        if branch_result.is_failure:
+            print(f"   ❌ Branch export failed: {branch_result.error}")
+        else:
+            branch_wrapper = branch_result.unwrap()
+            if branch_wrapper.returncode == 0:
+                branch_file.write_text(branch_wrapper.stdout)
+                print("   ✅ Branch info exported")
 
         # 6. Export tags
         print("6️⃣  Exporting tags...")
         tags_file = repo_backup / "tags.txt"
         tags_result = self._run_git_command(self.repo_path, ["tag", "-l"])
-        if tags_result.value.returncode == 0:
-            tags_file.write_text(tags_result.value.stdout)
-            print("   ✅ Tags exported")
+        if tags_result.is_failure:
+            print(f"   ❌ Tags export failed: {tags_result.error}")
+        else:
+            tags_wrapper = tags_result.unwrap()
+            if tags_wrapper.returncode == 0:
+                tags_file.write_text(tags_wrapper.stdout)
+                print("   ✅ Tags exported")
 
         # 7. Create safety tag in repo
         print("7️⃣  Creating safety tag in repository...")
         safety_tag = f"pre-cleanup-{self.timestamp}"
-        u.u.CommandExecution.run_external_command(
+        u.CommandExecution.run_external_command(
             [GIT_CMD, "-C", str(self.repo_path), "tag", safety_tag],
             check=False,
             capture_output=True,
-        uu
         )
         print(f"   ✅ Tag created: {safety_tag}")
 
@@ -748,12 +754,16 @@ wc -l commit-history.txt
         # Execute
         print("Processing commits...")
         try:
-            cleanup_result = u.u.CommandExecution.run_external_command(
+            cleanup_result = u.CommandExecution.run_external_command(
                 cmd, check=False, cwd=str(self.repo_path)
             )
 
-            if cleanup_result.value.returncode != 0:
-                uau
+            if cleanup_result.is_failure:
+                print(f"   Recover: cd {self.backup_root} && ./RECOVER.sh")
+                return False
+
+            wrapper = cleanup_result.unwrap()
+            if wrapper.returncode != 0:
                 print(f"   Recover: cd {self.backup_root} && ./RECOVER.sh")
                 return False
 
@@ -770,17 +780,25 @@ wc -l commit-history.txt
         verify_result = self._run_git_command(
             self.repo_path, ["log", "-1", "--format=%an %ae"]
         )
-        if verify_result.value.returncode == 0:
-            author = verify_result.value.stdout.strip()
-            if self.AUTHOR_NAME not in author:
-                print(f"\n⚠️  Author verification failed: {author}")
+        if verify_result.is_failure:
+            print(f"\n⚠️  Author verification failed: {verify_result.error}")
+        else:
+            verify_wrapper = verify_result.unwrap()
+            if verify_wrapper.returncode == 0:
+                author = verify_wrapper.stdout.strip()
+                if self.AUTHOR_NAME not in author:
+                    print(f"\n⚠️  Author verification failed: {author}")
 
         # Show statistics
         stats_result = self._run_git_command(self.repo_path, ["count-objects", "-vH"])
-        if stats_result.value.returncode == 0:
-            print("\n📊 Repository statistics:")
-            for line in stats_result.value.stdout.strip().split("\n")[:5]:
-                print(f"   {line}")
+        if stats_result.is_failure:
+            print(f"\n⚠️  Statistics failed: {stats_result.error}")
+        else:
+            stats_wrapper = stats_result.unwrap()
+            if stats_wrapper.returncode == 0:
+                print("\n📊 Repository statistics:")
+                for line in stats_wrapper.stdout.strip().split("\n")[:5]:
+                    print(f"   {line}")
 
         print(f"\n✅ {self.repo_path.name} cleaned successfully!")
         print()
@@ -856,13 +874,12 @@ def callback(commit, metadata):
 
         # Main repo
         main_remote = "git@github.com:flext-sh/flext.git"
-        u.u.CommandExecution.run_external_command(
+        u.CommandExecution.run_external_command(
             [
                 GIT_CMD,
                 "-C",
                 str(self.repo_path),
                 "remote",
-        uu
                 "origin",
                 main_remote,
             ],
@@ -878,39 +895,41 @@ def callback(commit, metadata):
             print()
             return
 
-        submodule_result = u.u.CommandExecution.run_external_command(
+        submodule_result = u.CommandExecution.run_external_command(
             [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
             check=False,
             capture_output=True,
-            text=True,
         )
 
-        if sutuode != 0:
+        if submodule_result.is_failure:
             print()
             return
 
-        for line in submodule_result.value.stdout.strip().split("\n"):
+        wrapper = submodule_result.unwrap()
+        for line in wrapper.stdout.strip().split("\n"):
             if not line:
                 continue
 
             key, path = line.split()
             name = key.split(".")[1]
 
-            url_result = u.u.CommandExecution.run_external_command(
+            url_result = u.CommandExecution.run_external_command(
                 [GIT_CMD, "config", "-f", str(gitmodules), f"submodule.{name}.url"],
                 check=False,
                 capture_output=True,
                 text=True,
             )
 
-            if url_result.value.returncode != 0:
+            if url_result.is_failure:
                 continue
-uu
-            url = url_result.value.stdout.strip()
+            url_wrapper = url_result.unwrap()
+            if url_wrapper.returncode != 0:
+                continue
+            url = url_wrapper.stdout.strip()
             submodule_path = self.repo_path / path
 
             if submodule_path.exists():
-                u.u.CommandExecution.run_external_command(
+                u.CommandExecution.run_external_command(
                     [
                         GIT_CMD,
                         "-C",
@@ -920,7 +939,6 @@ uu
                         "origin",
                         url,
                     ],
-                ueu
                     capture_output=True,
                     text=True,
                 )
@@ -934,18 +952,22 @@ uu
         if not gitmodules.exists():
             return []
 
-        submodule_config_result = u.u.CommandExecution.run_external_command(
+        submodule_config_result = u.CommandExecution.run_external_command(
             [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
             check=False,
             capture_output=True,
             text=True,
         )
 
-        if submodule_config_result.value.returncode != 0:
+        if submodule_config_result.is_failure:
+            return []
+
+        submodule_wrapper = submodule_config_result.unwrap()
+        if submodule_wrapper.returncode != 0:
             return []
 
         submodules = []
-        for uuult.value.stdout.strip().split("\n"):
+        for line in submodule_wrapper.stdout.strip().split("\n"):
             if not line:
                 continue
             path = line.split()[1]
@@ -974,11 +996,16 @@ uu
             self.repo_path, ["remote", "get-url", "origin"]
         )
 
-        if remote_result.value.returncode != 0:
+        if remote_result.is_failure:
             print("❌ No remote 'origin' found. Run --restore-remotes first.")
             return False
 
-        remote_url = remote_result.value.stdout.strip()
+        remote_wrapper = remote_result.unwrap()
+        if remote_wrapper.returncode != 0:
+            print("❌ No remote 'origin' found. Run --restore-remotes first.")
+            return False
+
+        remote_url = remote_wrapper.stdout.strip()
         print(f"Remote: {remote_url}")
         print()
 
@@ -996,8 +1023,13 @@ uu
             self.repo_path, ["push", "origin", "--force", "--all"]
         )
 
-        if push_branches_result.value.returncode != 0:
-            print(f"❌ Push failed: {push_branches_result.value.stderr}")
+        if push_branches_result.is_failure:
+            print(f"❌ Push failed: {push_branches_result.error}")
+            return False
+
+        push_branches_wrapper = push_branches_result.unwrap()
+        if push_branches_wrapper.returncode != 0:
+            print(f"❌ Push failed: {push_branches_wrapper.stderr}")
             return False
 
         print("   ✅ Branches pushed")
@@ -1009,10 +1041,14 @@ uu
                 self.repo_path, ["push", "origin", "--force", "--tags"]
             )
 
-            if push_tags_result.value.returncode != 0:
-                print(f"   ⚠️  Tag push failed: {push_tags_result.value.stderr}")
+            if push_tags_result.is_failure:
+                print(f"   ⚠️  Tag push failed: {push_tags_result.error}")
             else:
-                print("   ✅ Tags pushed")
+                push_tags_wrapper = push_tags_result.unwrap()
+                if push_tags_wrapper.returncode != 0:
+                    print(f"   ⚠️  Tag push failed: {push_tags_wrapper.stderr}")
+                else:
+                    print("   ✅ Tags pushed")
 
         print(f"\n✅ {self.repo_path.name} pushed successfully!")
         print()
@@ -1083,12 +1119,16 @@ uu
             ["log", "--all", "--diff-filter=D", "--name-only", "--format="],
         )
 
-        if result.value.returncode != 0:
+        if result.is_failure:
+            return {}
+
+        result_wrapper = result.unwrap()
+        if result_wrapper.returncode != 0:
             return {}
 
         # Count deletion frequency
         deletion_counts: dict[str, int] = {}
-        for line in result.value.stdout.strip().split("\n"):
+        for line in result_wrapper.stdout.strip().split("\n"):
             if not line:
                 continue
             deletion_counts[line] = deletion_counts.get(line, 0) + 1

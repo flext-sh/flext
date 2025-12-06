@@ -10,6 +10,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
+from collections.abc import Callable
 
 import pytest
 from flext_core import (
@@ -21,6 +22,7 @@ from flext_core import (
     FlextModels,
     FlextResult,
     FlextService,
+    u,
 )
 from flext_core.exceptions import FlextExceptions
 from pydantic import EmailStr, TypeAdapter
@@ -264,11 +266,11 @@ class TestFlextTargeted:
     # =============================================================================
 
     def test_flext_utilities_generators(self) -> None:
-        """Test uethods."""
+        """Test utility methods."""
         # Test timestamp generation (using non-deprecated method)
-        ts1 = uenerate_iso_timestamp()
+        ts1 = u.Generators.generate_iso_timestamp()
         time.sleep(0.01)  # Sleep longer to ensure different timestamps
-        ts2 = uenerate_iso_timestamp()
+        ts2 = u.Generators.generate_iso_timestamp()
 
         # Timestamps should be different (or at least valid ISO format)
         assert isinstance(ts1, str)
@@ -279,26 +281,29 @@ class TestFlextTargeted:
         assert "T" in ts1
 
         # Test UUID generation
-        uuid1 = uenerate_uuid()
-        uuid2 = uenerate_uuid()
+        uuid1 = u.Generators.generate_id()
+        uuid2 = u.Generators.generate_id()
 
         assert uuid1 != uuid2
         assert len(uuid1) == 36
         assert uuid1.count("-") == 4
 
         # Test correlation ID
-        corr1 = uenerate_correlation_id()
-        corr2 = uenerate_correlation_id()
+        corr1 = u.Generators.generate_correlation_id()
+        corr2 = u.Generators.generate_correlation_id()
 
         assert corr1 != corr2
         assert isinstance(corr1, str)
         assert len(corr1) > 0
 
     def test_flext_utilities_validation(self) -> None:
-        """Test uethods using Pydantic v2 types."""
-        # Test pipeline validation (remaining u
-        validators: list[object] = [lambda x: len(x) > 0]
-        pipeline_valid = ualidate_pipeline("test", validators)
+        """Test utility methods using Pydantic v2 types."""
+        # Test pipeline validation
+
+        validators: list[Callable[[str], FlextResult[bool]]] = [
+            lambda x: FlextResult[bool].ok(len(x) > 0)
+        ]
+        pipeline_valid = u.Validation.validate_pipeline("test", validators)
         # validate_pipeline returns FlextResult[bool]
         assert isinstance(pipeline_valid, FlextResult)
         # Check if validation passed (is_success indicates validation passed)
@@ -578,7 +583,7 @@ class TestFlextTargeted:
                 logger.info("Integration service executing")
 
                 # Create result with timestamp (using non-deprecated method)
-                timestamp = uenerate_iso_timestamp()
+                timestamp = u.Generators.generate_iso_timestamp()
 
                 return FlextResult[dict[str, object]].ok({
                     "status": "success",
