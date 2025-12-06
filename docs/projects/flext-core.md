@@ -3,50 +3,31 @@
 ## Table of Contents
 
 - [flext-core](#flext-core)
+  - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
   - [Installation](#installation)
   - [Key Components](#key-components)
     - [FlextContainer (Dependency Injection)](#flextcontainer-dependency-injection)
-- [Register services](#register-services)
-- [Resolve dependencies](#resolve-dependencies)
-  - [FlextDispatcher (CQRS Pattern)](#flextdispatcher-cqrs-pattern)
-- [Register handlers](#register-handlers)
-- [Dispatch operations](#dispatch-operations)
-  - [FlextResult (Railway-Oriented Programming)](#flextresult-railway-oriented-programming)
-- [Compose operations](#compose-operations)
-  - [FlextBus (Domain Events)](#flextbus-domain-events)
-- [Subscribe to events](#subscribe-to-events)
-- [Publish events](#publish-events)
-  - [FlextLogger (Structured Logging)](#flextlogger-structured-logging)
-- [Structured logging](#structured-logging)
-- [Different log levels](#different-log-levels)
+    - [FlextDispatcher (CQRS Pattern)](#flextdispatcher-cqrs-pattern)
+    - [FlextResult (Railway-Oriented Programming)](#flextresult-railway-oriented-programming)
+    - [FlextBus (Domain Events)](#flextbus-domain-events)
+    - [FlextLogger (Structured Logging)](#flextlogger-structured-logging)
   - [Architecture Patterns](#architecture-patterns)
     - [Clean Architecture Implementation](#clean-architecture-implementation)
     - [SOLID Principles](#solid-principles)
-- [Single Responsibility: Each class has one job](#single-responsibility-each-class-has-one-job)
-- [Open/Closed: Open for extension, closed for modification](#openclosed-open-for-extension-closed-for-modification)
   - [Configuration Management](#configuration-management)
     - [FlextConfig](#flextconfig)
-- [Load from environment](#load-from-environment)
-- [Access configuration](#access-configuration)
   - [Error Handling Strategy](#error-handling-strategy)
     - [FlextExceptions Hierarchy](#flextexceptions-hierarchy)
   - [Utilities and Helpers](#utilities-and-helpers)
     - [u](#u)
-- [String operations](#string-operations)
-- [File operations](#file-operations)
-- [Data validation](#data-validation)
   - [Performance Features](#performance-features)
     - [FlextMetrics](#flextmetrics)
-- [Decorator for automatic timing](#decorator-for-automatic-timing)
-- [Manual metrics](#manual-metrics)
   - [Development Guidelines](#development-guidelines)
     - [Testing with flext-core](#testing-with-flext-core)
   - [Migration from Previous Versions](#migration-from-previous-versions)
     - [From v0.x to v1.0.0](#from-v0x-to-v100)
     - [Migration Guide](#migration-guide)
-- [Before (v0.x)](#before-v0x)
-- [After (v1.0.0)](#after-v100)
   - [Best Practices](#best-practices)
     - [Dependency Injection Best Practices](#dependency-injection-best-practices)
     - [Error Handling Best Practices](#error-handling-best-practices)
@@ -59,7 +40,7 @@
 
 flext-core is the foundational framework that provides the core patterns and abstractions used throughout the FLEXT ecosystem. It implements enterprise-grade patterns like Dependency Injection,
 
-     CQRS, Railway-Oriented Programming, and Domain Events.
+CQRS, Railway-Oriented Programming, and Domain Events.
 
 ## Installation
 
@@ -339,9 +320,9 @@ db_url = config.database_url
 Structured exception hierarchy for consistent error handling across the ecosystem.
 
 ```python
-from flext_core import FlextException, FlextDomainException, FlextInfrastructureException
+from flext_core import FlextException, FlextUtilitiesDomainException, FlextInfrastructureException
 
-class UserNotFoundException(FlextDomainException):
+class UserNotFoundException(FlextUtilitiesDomainException):
     def __init__(self, user_id: str):
         super().__init__(f"User not found: {user_id}")
         self.user_id = user_id

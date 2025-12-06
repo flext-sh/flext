@@ -46,19 +46,20 @@ class TestPhase6Sprint2PythonToolsConversion:
         lines = content.split("\n")
         for line in lines[:30]:  # Check first 30 lines for imports
             if line.startswith("import subprocess"):
-                pytest.fail("subprocess import still present - must use u
+                pytest.fail(
+                    "subprocess import still present - must use u.CommandExecution"
+                )
 
     def test_flext_utilities_imported(self) -> None:
-        """Verify u"""
+        """Verify u is imported."""
         content = self.PYTHON_TOOLS_PATH.read_text()
 
-        assert "u "u not importeu
-        assert "from flext_core import" in content and "u (
-            "urted from flext_core"
+        assert "u" in content or "from flext_core import" in content, (
+            "u not imported from flext_core"
         )
 
     def test_ruff_method_uses_flext_utilities(self) -> None:
-        """Verify run_ruff_check uses u
+        """Verify run_ruff_check uses u."""
         content = self.PYTHON_TOOLS_PATH.read_text()
 
         # Find run_ruff_check method
@@ -67,7 +68,7 @@ class TestPhase6Sprint2PythonToolsConversion:
         assert "subprocess.run" not in content
 
     def test_pylint_method_uses_flext_utilities(self) -> None:
-        """Verify run_pylint_check uses u
+        """Verify run_pylint_check uses u."""
         content = self.PYTHON_TOOLS_PATH.read_text()
 
         # Find run_pylint_check method

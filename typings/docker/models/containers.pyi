@@ -1,53 +1,33 @@
-"""Type stubs for docker.models.containers module."""
+"""Type stubs for docker.models.containers."""
 
 from typing import Any
+from docker.models.resource import Collection
 
 class Container:
-    """Docker container model.
+    """Docker container model."""
 
-    Represents a Docker container with methods for lifecycle management.
-    """
-
-    # Attributes
-    attrs: dict[str, Any]
     id: str
     name: str
     status: str
+    image: Any
+    ports: dict[str, Any]
+    attrs: dict[str, Any]
 
-    def kill(self, signal: str | int | None = None) -> None:
-        """Kill or send a signal to the container.
+    def start(self) -> None: ...
+    def stop(self) -> None: ...
+    def remove(self) -> None: ...
+    def reload(self) -> None: ...
+    def logs(self, *args: Any, **kwargs: Any) -> bytes: ...
+    def wait(self, *args: Any, **kwargs: Any) -> dict[str, Any]: ...
 
-        Args:
-            signal: The signal to send. Can be a signal name (str) like "SIGKILL"
-                   or a signal number (int). Defaults to SIGKILL if not specified.
+class ContainerCollection(Collection[Container]):
+    """Collection of Docker containers."""
 
-        Raises:
-            docker.errors.APIError: If the server returns an error.
+    model: type[Container]
 
-        """
-        ...
-
-    def stop(self, timeout: int | None = None) -> None:
-        """Stop the container.
-
-        Args:
-            timeout: Timeout in seconds to wait for the container to stop
-                    before sending SIGKILL.
-
-        """
-        ...
-
-    def reload(self) -> None:
-        """Reload this object from the server."""
-        ...
-
-    def remove(self, v: bool = False, link: bool = False, force: bool = False) -> None:
-        """Remove the container.
-
-        Args:
-            v: Remove volumes associated with the container.
-            link: Remove the specified link.
-            force: Force removal of a running container.
-
-        """
-        ...
+    def __init__(self, client: Any = None) -> None: ...
+    def get(self, container_id: str) -> Container: ...
+    def list(self, *args: Any, **kwargs: Any) -> list[Container]: ...
+    def create(self, *args: Any, **kwargs: Any) -> Container: ...
+    def run(self, *args: Any, **kwargs: Any) -> Container | bytes: ...
+    def prune(self, filters: dict[str, Any] | None = None) -> dict[str, Any]: ...

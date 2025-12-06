@@ -9,12 +9,12 @@
 
 ## Executive Summary
 
-The FLEXT ecosystem has successfully achieved **near-complete Docker standardization** across all 30+ projects. The centralized Docker management infrastructure through `FlextTestDocker` is operational and widely adopted.
+The FLEXT ecosystem has successfully achieved **near-complete Docker standardization** across all 30+ projects. The centralized Docker management infrastructure through `FlextTestsDocker` is operational and widely adopted.
 
 ### Key Findings
 
 - ✅ **Centralized Infrastructure**: All Docker artifacts consolidated in `~/flext/docker/`
-- ✅ **Unified Management**: FlextTestDocker (1797 lines) provides comprehensive container lifecycle
+- ✅ **Unified Management**: FlextTestsDocker (1797 lines) provides comprehensive container lifecycle
 - ✅ **Standardized Fixtures**: 6 container types properly exported and documented
 - ✅ **Zero Critical Issues**: No direct Docker module usage, no subprocess calls
 - ⚠️ **Minor Cleanup**: 1 legacy helper file identified for refactoring
@@ -27,7 +27,7 @@ The FLEXT ecosystem has successfully achieved **near-complete Docker standardiza
 [3/8] ✅ PASSED: No duplicate docker fixtures
 [4/8] ✅ PASSED: Found 16 centralized docker-compose files
 [5/8] ✅ PASSED: Found 21 centralized Dockerfiles
-[6/8] ✅ PASSED: FlextTestDocker is importable
+[6/8] ✅ PASSED: FlextTestsDocker is importable
 [7/8] ✅ PASSED: Centralized fixtures are importable
 [8/8] ⚠️  WARNING: 2 vendor scripts (acceptable - dbt_expectations)
 ```
@@ -78,7 +78,7 @@ Dockerfile.flext-tap-oracle*      # Oracle tap (+ test variant)
 Dockerfile.flext-meltano-test     # Meltano testing
 ```
 
-### FlextTestDocker Implementation
+### FlextTestsDocker Implementation
 
 **Location**: `flext-core/src/flext_tests/docker.py`
 **Size**: 1797 lines (comprehensive implementation)
@@ -126,7 +126,7 @@ from flext_tests.fixtures import (
 
 ### ✅ Fully Standardized Projects (28 projects)
 
-All projects properly using `FlextTestDocker` through centralized fixtures:
+All projects properly using `FlextTestsDocker` through centralized fixtures:
 
 - **Core Infrastructure**: flext-core, flext-auth, flext-cli, flext-api, flext-web
 - **Database Projects**: flext-db-oracle, flext-ldap, flext-ldif
@@ -141,7 +141,7 @@ All projects properly using `FlextTestDocker` through centralized fixtures:
 
 #### **client-a-oud-mig** - Helper File Simplification
 
-**Status**: Already using FlextTestDocker but has redundant helper file
+**Status**: Already using FlextTestsDocker but has redundant helper file
 **Issue**: `/tests/helpers/docker_helpers.py` contains simple port-checking utilities
 **Impact**: Low - file is lightweight and doesn't violate standardization
 **Recommendation**: Consider moving utilities to project-level test utilities or inline in conftest.py
@@ -174,7 +174,7 @@ These containers start once and serve multiple tests:
 
 **Lifecycle**:
 
-1. First test requests container → FlextTestDocker starts it
+1. First test requests container → FlextTestsDocker starts it
 2. Subsequent tests reuse running container
 3. Tests clean up their own data
 4. Container persists until explicit shutdown or marked dirty
@@ -224,7 +224,7 @@ def test_that_corrupts_container(flext_docker):
 
 ### ✅ Security Strengths
 
-1. **No Direct Docker Access**: All Docker operations through FlextTestDocker API
+1. **No Direct Docker Access**: All Docker operations through FlextTestsDocker API
 2. **Centralized Configuration**: Single source of truth for all container configs
 3. **Credential Management**: No hardcoded credentials in source code
 4. **Network Isolation**: Containers properly networked
@@ -233,7 +233,7 @@ def test_that_corrupts_container(flext_docker):
 ### ✅ Best Practices Implemented
 
 1. **Fixtures Over Setup**: pytest fixtures for container management
-2. **Automatic Cleanup**: FlextTestDocker handles lifecycle
+2. **Automatic Cleanup**: FlextTestsDocker handles lifecycle
 3. **Error Recovery**: Retry logic and health checks built-in
 4. **Documentation**: Complete README.md with usage patterns
 5. **Validation**: Automated validation script
@@ -400,7 +400,7 @@ Oracle Database: ~45 seconds to ready state
 ### ✅ FLEXT Docker Standards Compliance
 
 - [x] All Docker artifacts centralized in `~/flext/docker/`
-- [x] All projects use FlextTestDocker for container management
+- [x] All projects use FlextTestsDocker for container management
 - [x] All fixtures exported from `flext_tests.fixtures`
 - [x] No direct `docker` module imports (except flext-core)
 - [x] No subprocess Docker calls
@@ -436,8 +436,8 @@ Oracle Database: ~45 seconds to ready state
 ### Project-Specific Validation
 
 ```bash
-# Test FlextTestDocker import
-python -c "from flext_tests import FlextTestDocker; print('OK')"
+# Test FlextTestsDocker import
+python -c "from flext_tests import FlextTestsDocker; print('OK')"
 
 # Test centralized fixtures
 python -c "from flext_tests.fixtures import ldap_container, oracle_container; print('OK')"
@@ -458,7 +458,7 @@ pytest -v -k ldap --setup-show  # Should show fixture setup/teardown
 
 ## Conclusion
 
-The FLEXT ecosystem has successfully achieved **industry-leading Docker standardization** with 98% compliance. The centralized infrastructure through `FlextTestDocker` provides:
+The FLEXT ecosystem has successfully achieved **industry-leading Docker standardization** with 98% compliance. The centralized infrastructure through `FlextTestsDocker` provides:
 
 ✅ **Unified Management**: Single source of truth for all Docker operations
 ✅ **Excellent Coverage**: All 30+ projects properly integrated

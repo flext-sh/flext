@@ -1,10 +1,10 @@
 """FLEXT LDIF Entry Manipulation Services Tests - Comprehensive coverage.
 
-Tests EntryManipulationServices with real LDIF data using advanced Python 3.13 patterns,
+Tests FlextLdifEntries with real LDIF data using advanced Python 3.13 patterns,
 factories for test data generation, nested classes for organization, and dynamic testing
 for all attribute extraction, normalization, and manipulation operations.
 
-Modules Tested: EntryManipulationServices (flext_ldif.services.entry_manipulation)
+Modules Tested: FlextLdifEntries (flext_ldif.services.entries)
 Scope: Entry attribute access, value normalization, DN operations, and manipulation utilities.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -20,7 +20,7 @@ from typing import cast
 import pytest
 from flext_core import FlextResult
 from flext_ldif import FlextLdifModels
-from flext_ldif.services.entry_manipulation import EntryManipulationServices
+from flext_ldif.services.entries import FlextLdifEntries
 
 
 class LdifTestData(StrEnum):
@@ -38,8 +38,8 @@ class LdifTestData(StrEnum):
     NORMALIZED_MAIL = "mail"
 
 
-class TestEntryManipulationServices:
-    """Comprehensive test suite for EntryManipulationServices using modern patterns."""
+class TestFlextLdifEntries:
+    """Comprehensive test suite for FlextLdifEntries using modern patterns."""
 
     # =========================================================================
     # NESTED: Test Data & Constants
@@ -147,7 +147,7 @@ class TestEntryManipulationServices:
         parsed_user_entry: FlextLdifModels.Entry,
     ) -> None:
         """Test getting entry attributes with various cases."""
-        service = EntryManipulationServices()
+        service = FlextLdifEntries()
         result = service.get_entry_attribute(
             parsed_user_entry, cast("str", attribute_case["attribute"])
         )
@@ -171,7 +171,7 @@ class TestEntryManipulationServices:
         normalization_case: dict[str, object],
     ) -> None:
         """Test attribute value normalization with various inputs."""
-        service = EntryManipulationServices()
+        service = FlextLdifEntries()
         result = service.normalize_attribute_value(normalization_case["input_value"])
 
         assert result.is_success, f"Normalization failed: {result.error}"
@@ -188,7 +188,7 @@ class TestEntryManipulationServices:
         parsed_user_entry: FlextLdifModels.Entry,
     ) -> None:
         """Test getting normalized attributes for various attribute names."""
-        service = EntryManipulationServices()
+        service = FlextLdifEntries()
         result = service.get_normalized_attribute(parsed_user_entry, attribute)
 
         # Result should be a FlextResult
@@ -214,7 +214,7 @@ class TestEntryManipulationServices:
 
     def test_normalize_attribute_value_none_input(self) -> None:
         """Test normalizing None input fails appropriately."""
-        service = EntryManipulationServices()
+        service = FlextLdifEntries()
         result = service.normalize_attribute_value(None)
 
         assert result.is_failure, "None input should fail"
@@ -226,8 +226,8 @@ class TestEntryManipulationServices:
         # Test with None as entry (should be handled by type checking)
         # Since we can't create invalid entries due to strict typing,
         # this test ensures the method is robust
-        assert hasattr(EntryManipulationServices, "get_entry_attribute")
-        service = EntryManipulationServices()
+        assert hasattr(FlextLdifEntries, "get_entry_attribute")
+        service = FlextLdifEntries()
         assert callable(service.get_entry_attribute)
 
     def test_get_normalized_attribute_edge_cases(
@@ -236,13 +236,13 @@ class TestEntryManipulationServices:
     ) -> None:
         """Test normalized attribute access with edge cases."""
         # Test with empty string attribute name
-        service = EntryManipulationServices()
+        service = FlextLdifEntries()
         result = service.get_normalized_attribute(parsed_user_entry, "")
         # Should fail gracefully
         assert isinstance(result, FlextResult)
 
         # Test with special characters in attribute name
-        service = EntryManipulationServices()
+        service = FlextLdifEntries()
         result = service.get_normalized_attribute(parsed_user_entry, "test@attr#123")
         # Should fail gracefully
         assert isinstance(result, FlextResult)

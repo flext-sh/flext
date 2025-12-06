@@ -1,21 +1,14 @@
-"""Type stubs for docker (docker-py).
-
-PEP 561 compliant type stubs for the docker library.
-"""
+"""Type stubs for docker package."""
 
 from typing import Any
 
-from docker.client import DockerClient
-from docker.errors import APIError, DockerException, NotFound
+from docker.models.containers import Container, ContainerCollection
 
-def from_env(
-    version: str | None = None,
-    timeout: int | None = None,
-    ssl_version: int | None = None,
-    assert_hostname: bool | None = None,
-    **kwargs: Any,
-) -> DockerClient:
-    """Create a Docker client configured from environment variables."""
-    ...
+def from_env(**kwargs: Any) -> DockerClient: ...
 
-__all__ = ["DockerClient", "APIError", "DockerException", "NotFound", "from_env"]
+class DockerClient:
+    def __init__(self, *args: Any, **kwargs: Any) -> None: ...
+    @property
+    def containers(self) -> ContainerCollection: ...
+    @property
+    def api(self) -> Any: ...

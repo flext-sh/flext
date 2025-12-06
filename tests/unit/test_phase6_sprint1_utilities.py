@@ -36,6 +36,21 @@ class TestPhase6Sprint1UtilitiesConversion:
         / "utilities.py"
     )
 
+    @staticmethod
+    def _find_command_execution_method(
+        tree: ast.AST,
+    ) -> ast.FunctionDef | None:
+        """Find run_external_command method in CommandExecution class."""
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef) and node.name == "CommandExecution":
+                for item in node.body:
+                    if (
+                        isinstance(item, ast.FunctionDef)
+                        and item.name == "run_external_command"
+                    ):
+                        return item
+        return None
+
     def test_completed_process_wrapper_exists(self) -> None:
         """Verify _CompletedProcessWrapper dataclass exists."""
         utilities_content = self.UTILITIES_PATH.read_text()
@@ -72,70 +87,42 @@ class TestPhase6Sprint1UtilitiesConversion:
     ) -> None:
         """Verify u.CommandExecution.run_external_command return type changed to wrapper."""
         utilities_content = self.UTILITIES_PATH.read_text()
-        tree = astues_content)
+        tree = ast.parse(utilities_content)
 
-        # Find CommandExecution class and then run_external_command method
-        found_method = False
-        for node in ast.walk(tree):
-            if isinstance(node, ast.ClassDef) and node.name == "CommandExecution":
-                # Look for run_external_command method inside CommandExecution
-                for item in node.body:
-                    if (
-                        isinstance(item, ast.FunctionDef)
-                        and item.name == "run_external_command"
-                    ):
-                        found_method = True
-                        # Check return annotation
-                        if item.returns:
-                            annotation_str = ast.unparse(item.returns)
-                            # Should NOT contain subprocess.CompletedProcess
-                            assert (
-                                "subprocess.CompletedProcess" not in annotation_str
-                            ), (
-                                f"Return type still references subprocess.CompletedProcess: {annotation_str}"
-                            )
-                            # Should contain _CompletedProcessWrapper
-                            assert "_CompletedProcessWrapper" in annotation_str, (
-                                f"Return type should reference _CompletedProcessWrapper: {annotation_str}"
-                            )
-                        break
-                if found_method:
-                    break
-
-        assert found_method, (
+        method = self._find_command_execution_method(tree)
+        assert method is not None, (
             "run_external_command method not found in CommandExecution class"
         )
+
+        # Check return annotation
+        if method.returns:
+            annotation_str = ast.unparse(method.returns)
+            # Should NOT contain subprocess.CompletedProcess
+            assert "subprocess.CompletedProcess" not in annotation_str, (
+                f"Return type still references subprocess.CompletedProcess: {annotation_str}"
+            )
+            # Should contain _CompletedProcessWrapper
+            assert "_CompletedProcessWrapper" in annotation_str, (
+                f"Return type should reference _CompletedProcessWrapper: {annotation_str}"
+            )
 
     def test_subprocess_timeout_expired_handler_removed(self) -> None:
         """Verify subprocess.TimeoutExpired exception handler removed."""
         utilities_content = self.UTILITIES_PATH.read_text()
         tree = ast.parse(utilities_content)
 
-        # Find CommandExecution class and then run_external_command method
-        found_method = False
-        for node in ast.walk(tree):
-            if isinstance(node, ast.ClassDef) and node.name == "CommandExecution":
-                # Look for run_external_command method inside CommandExecution
-                for item in node.body:
-                    if (
-                        isinstance(item, ast.FunctionDef)
-                        and item.name == "run_external_command"
-                    ):
-                        found_method = True
-                        # Check exception handlers
-                        for subnode in ast.walk(item):
-                            if isinstance(subnode, ast.ExceptHandler) and subnode.type:
-                                handler_str = ast.unparse(subnode.type)
-                                assert "TimeoutExpired" not in handler_str, (
-                                    "subprocess.TimeoutExpired handler still present - should use threading timeout"
-                                )
-                        break
-                if found_method:
-                    break
-
-        assert found_method, (
+        method = self._find_command_execution_method(tree)
+        assert method is not None, (
             "run_external_command method not found in CommandExecution class"
         )
+
+        # Check exception handlers
+        for subnode in ast.walk(method):
+            if isinstance(subnode, ast.ExceptHandler) and subnode.type:
+                handler_str = ast.unparse(subnode.type)
+                assert "TimeoutExpired" not in handler_str, (
+                    "subprocess.TimeoutExpired handler still present - should use threading timeout"
+                )
 
     def test_threading_used_for_timeout(self) -> None:
         """Verify threading is used for timeout handling."""
@@ -195,8 +182,8 @@ class TestPhase6Sprint1UtilitiesConversion:
         """Verify _CompletedProcessWrapper can be created and used."""
         # Create instance - wrapper is nested inside u
         wrapper = u._CompletedProcessWrapper(
-            returncode=0, stdout="output", stderr="",u
-        )u
+            returncode=0, stdout="output", stderr="", args=["test"]
+        )
 
         assert wrapper.returncode == 0
         assert wrapper.stdout == "output"
@@ -207,7 +194,7 @@ class TestPhase6Sprint1UtilitiesConversion:
         """Verify wrapper is immutable (frozen=True)."""
         wrapper = u._CompletedProcessWrapper(
             returncode=0, stdout="output", stderr="", args=["test"]
-        )u
+        )
 
         # Try to modify - should fail
         with pytest.raises((AttributeError, ValueError)):
@@ -218,7 +205,7 @@ class TestPhase6Sprint1UtilitiesConversion:
     ) -> None:
         """Verify u.CommandExecution.run_external_command returns FlextResult type."""
         utilities_content = self.UTILITIES_PATH.read_text()
-u
+
         # Should have return statements using FlextResult with _CompletedProcessWrapper
         assert (
             "FlextResult" in utilities_content
@@ -228,40 +215,26 @@ u
     def test_no_subprocess_called_process_error_handling(self) -> None:
         """Verify CalledProcessError replaced with FlextResult error handling."""
         utilities_content = self.UTILITIES_PATH.read_text()
-
-        # Find CommandExecution class and then run_external_command method
         tree = ast.parse(utilities_content)
-        found_method = False
 
-        for node in ast.walk(tree):
-            if isinstance(node, ast.ClassDef) and node.name == "CommandExecution":
-                # Look for run_external_command method inside CommandExecution
-                for item in node.body:
-                    if (
-                        isinstance(item, ast.FunctionDef)
-                        and item.name == "run_external_command"
-                    ):
-                        found_method = True
-                        for subnode in ast.walk(item):
-                            if (
-                                isinstance(subnode, ast.ExceptHandler)
-                                and subnode.type
-                                and isinstance(subnode.type, ast.Attribute)
-                            ):
-                                handler_str = ast.unparse(subnode.type)
-                                # CalledProcessError should not be explicitly caught
-                                # (subprocess.run raises it with check=True, but we handle it with FlextResult)
-                                assert (
-                                    "CalledProcessError" not in handler_str
-                                    or "except Exception" in ast.unparse(subnode)
-                                ), "Should not have explicit CalledProcessError handler"
-                        break
-                if found_method:
-                    break
-
-        assert found_method, (
+        method = self._find_command_execution_method(tree)
+        assert method is not None, (
             "run_external_command method not found in CommandExecution class"
         )
+
+        for subnode in ast.walk(method):
+            if (
+                isinstance(subnode, ast.ExceptHandler)
+                and subnode.type
+                and isinstance(subnode.type, ast.Attribute)
+            ):
+                handler_str = ast.unparse(subnode.type)
+                # CalledProcessError should not be explicitly caught
+                # (subprocess.run raises it with check=True, but we handle it with FlextResult)
+                assert (
+                    "CalledProcessError" not in handler_str
+                    or "except Exception" in ast.unparse(subnode)
+                ), "Should not have explicit CalledProcessError handler"
 
     def test_os_getcwd_and_chdir_used(self) -> None:
         """Verify os.getcwd() and os.chdir() for directory management."""
@@ -282,9 +255,9 @@ u
     ) -> None:
         """Verify u.CommandExecution.run_external_command can be called and works correctly."""
         # Test with a simple command
-        result = uuion.run_external_command(
+        result = u.CommandExecution.run_external_command(
             ["python", "--version"], capture_output=True, timeout=10.0
-        )u
+        )
 
         # Should return FlextResult
         assert isinstance(result, FlextResult), "Should return FlextResult"
@@ -296,7 +269,7 @@ u
         wrapper = result.unwrap()
         assert isinstance(wrapper, u._CompletedProcessWrapper), (
             "Should return _CompletedProcessWrapper"
-        )u
+        )
         assert wrapper.returncode == 0, "python --version should succeed"
         assert "Python" in wrapper.stdout or "python" in wrapper.stdout, (
             "Should have Python version in output"
@@ -306,7 +279,7 @@ u
         """Verify command not found returns proper error."""
         result = u.CommandExecution.run_external_command(
             ["nonexistent_command_xyz_abc"], capture_output=True
-        )u
+        )
 
         assert result.is_failure, "Should fail for non-existent command"
         assert (
@@ -318,7 +291,7 @@ u
         # Command that will fail
         result = u.CommandExecution.run_external_command(
             ["sh", "-c", "exit 42"], capture_output=True, check=False
-        )u
+        )
 
         assert result.is_success, (
             "Should capture non-zero exit code as success when check=False"
@@ -333,7 +306,7 @@ u
         # Command that will fail
         result = u.CommandExecution.run_external_command(
             ["sh", "-c", "exit 42"], capture_output=True, check=True
-        )u
+        )
 
         assert result.is_failure, (
             "Should fail when exit code is non-zero and check=True"
@@ -346,7 +319,7 @@ u
         """Verify stdout/stderr capture works."""
         result = u.CommandExecution.run_external_command(
             [
-                "u
+                "python",
                 "-c",
                 'print("hello from stdout"); import sys; print("error", file=sys.stderr)',
             ],
@@ -368,7 +341,7 @@ u
 
         result = u.CommandExecution.run_external_command(
             [
-                "u
+                "python",
                 "-c",
                 f'import os; print(os.environ.get("{test_env_var}", "NOT_FOUND"))',
             ],
@@ -386,7 +359,7 @@ u
         """Verify command input is passed to stdin."""
         result = u.CommandExecution.run_external_command(
             ["cat"], capture_output=True, command_input="test input data\n"
-        )u
+        )
 
         assert result.is_success, f"Command should succeed: {result.error}"
         wrapper = result.unwrap()
@@ -400,7 +373,7 @@ u
         with tempfile.TemporaryDirectory() as tmpdir:
             result = u.CommandExecution.run_external_command(
                 ["python", "-c", "import os; print(os.getcwd())"],
-                captuu,
+                capture_output=True,
                 cwd=tmpdir,
             )
 
@@ -465,11 +438,11 @@ class TestPhase6Sprint1SourceCodeInspection:
 
         # Find u.CommandExecution.run_external_command
         for node in ast.walk(tree):
-            if u
+            if (
                 isinstance(node, ast.FunctionDef)
-                and node.name == "u.CommandExecution.run_external_command"
+                and node.name == "run_external_command"
             ):
-                # Check for try-fiue
+                # Check for try-finally
                 has_finally = False
                 for subnode in ast.walk(node):
                     if isinstance(subnode, ast.Try) and subnode.finalbody:

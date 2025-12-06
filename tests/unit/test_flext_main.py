@@ -14,13 +14,7 @@ from __future__ import annotations
 
 import pytest
 from flext_cli import FlextCli
-from flext_core import (
-    FlextContainer,
-    FlextLogger,
-    FlextResult,
-    FlextService,
-    u
-)
+from flext_core import FlextContainer, FlextLogger, FlextResult, FlextService, u
 from flext_tests import FlextTestsUtilities
 
 from tests.fixtures.constants import TestConstants
@@ -146,14 +140,14 @@ class TestFlextMain:
     # =========================================================================
 
     def test_flext_utilities_creation(self) -> None:
-        """Test u
-        utilities = u
+        """Test u creation."""
+        utilities = u()
         assert utilities is not None
-        assert isinstance(utilities, u
+        assert isinstance(utilities, u)
 
     @pytest.mark.parametrize(
         "nested_class",
-        ["Validation", "Generators", "Cache", "TextProcessor"],
+        ["Validation", "Generators", "Cache", "Text"],
     )
     def test_flext_utilities_methods(self, nested_class: str) -> None:
         """Test u nested classes."""
@@ -161,8 +155,8 @@ class TestFlextMain:
         assert hasattr(utilities, nested_class)
 
     def test_flext_utilities_validation(self) -> None:
-        """Test uethods."""
-        utilities = u
+        """Test u methods."""
+        utilities = u()
         # validate_required_string returns the string directly if valid
         result = utilities.Validation.validate_required_string(
             TestConstants.Common.VALUE_DEFAULT

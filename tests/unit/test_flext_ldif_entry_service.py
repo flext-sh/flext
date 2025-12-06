@@ -11,7 +11,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from flext_ldif import FlextLdif, FlextLdifModels
-from flext_ldif.services.entry import FlextLdifEntry
+from flext_ldif.services.entries import FlextLdifEntries as FlextLdifEntry
 
 
 class TestFlextLdifEntryService:

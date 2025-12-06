@@ -170,7 +170,7 @@ class FlextDiagnostic:
             result = u.u.CommandExecution.run_external_command(
                 [str(poetry_path), "install", "--no-interaction"],
                 check=False,
-                u=u
+                u=u,
                 text=True,
                 shell=False,
                 cwd=str(workspace_path),

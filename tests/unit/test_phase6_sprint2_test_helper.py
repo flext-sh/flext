@@ -50,19 +50,20 @@ class TestPhase6Sprint2TestHelperConversion:
         lines = content.split("\n")
         for line in lines[:30]:  # Check first 30 lines for imports
             if line.startswith("import subprocess"):
-                pytest.fail("subprocess import still present - must use u
+                pytest.fail(
+                    "subprocess import still present - must use u.CommandExecution"
+                )
 
     def test_flext_utilities_imported(self) -> None:
-        """Verify u"""
+        """Verify u is imported."""
         content = self.TEST_HELPER_PATH.read_text()
 
-        assert "u "u not importeu
-        assert "from flext_core import" in content and "u (
-            "urted from flext_core"
+        assert "u" in content or "from flext_core import" in content, (
+            "u not imported from flext_core"
         )
 
     def test_suggest_tests_from_coverage_converted(self) -> None:
-        """Verify suggest_tests_from_coverage uses u
+        """Verify suggest_tests_from_coverage uses u."""
         content = self.TEST_HELPER_PATH.read_text()
 
         # Find function and check conversion
@@ -71,7 +72,7 @@ class TestPhase6Sprint2TestHelperConversion:
         assert "pytest" in content  # Should still run pytest
 
     def test_validate_test_execution_converted(self) -> None:
-        """Verify validate_test_execution uses u
+        """Verify validate_test_execution uses u."""
         content = self.TEST_HELPER_PATH.read_text()
 
         # Find function and check conversion

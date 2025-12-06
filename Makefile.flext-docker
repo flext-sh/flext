@@ -1,133 +1,133 @@
 # =============================================================================
-# FLEXT WORKSPACE - DOCKER OPERATIONS (FlextTestDocker Edition)
+# FLEXT WORKSPACE - DOCKER OPERATIONS (FlextTestsDocker Edition)
 # =============================================================================
-# This file contains FlextTestDocker-enhanced Docker operations for FLEXT workspace
+# This file contains FlextTestsDocker-enhanced Docker operations for FLEXT workspace
 # Use: include Makefile.flext-docker in main Makefile to enable unified Docker management
 # =============================================================================
 
-# FlextTestDocker Configuration
+# FlextTestsDocker Configuration
 FLEXT_DOCKER_MANAGER := python flext-core/src/flext_tests/docker_workspace_manager.py
 FLEXT_DOCKER_IMAGE_PREFIX := flext
 FLEXT_DOCKER_NETWORK := flext-network
 
 # =============================================================================
-# ENHANCED DOCKER OPERATIONS (FlextTestDocker Edition)
+# ENHANCED DOCKER OPERATIONS (FlextTestsDocker Edition)
 # =============================================================================
 
 .PHONY: docker-init-flext
-docker-init-flext: ## Initialize FlextTestDocker workspace management
-	@echo "🚀 Initializing FlextTestDocker workspace management..."
+docker-init-flext: ## Initialize FlextTestsDocker workspace management
+	@echo "🚀 Initializing FlextTestsDocker workspace management..."
 	@$(FLEXT_DOCKER_MANAGER) init --workspace-root $(WORKSPACE_ROOT)
 
 .PHONY: docker-build-all-flext
-docker-build-all-flext: ## Build all Docker images using FlextTestDocker
-	@echo "🐳 Building all Docker images with FlextTestDocker..."
+docker-build-all-flext: ## Build all Docker images using FlextTestsDocker
+	@echo "🐳 Building all Docker images with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) build-workspace --projects "$(ALL_PYTHON_PROJECTS)" --registry $(DOCKER_REGISTRY)
 
 .PHONY: docker-build-service-flext
-docker-build-service-flext: ## Build FLEXT service Docker image using FlextTestDocker
-	@echo "🐳 Building FLEXT service image with FlextTestDocker..."
+docker-build-service-flext: ## Build FLEXT service Docker image using FlextTestsDocker
+	@echo "🐳 Building FLEXT service image with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) build-image --name $(DOCKER_REGISTRY)/flext:$(DOCKER_TAG) --dockerfile $(DOCKER_DIR)/Dockerfile.flext-service
 
 .PHONY: docker-build-flexcore-flext
-docker-build-flexcore-flext: ## Build FlexCore service Docker image using FlextTestDocker
-	@echo "🐳 Building FlexCore service image with FlextTestDocker..."
+docker-build-flexcore-flext: ## Build FlexCore service Docker image using FlextTestsDocker
+	@echo "🐳 Building FlexCore service image with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) build-image --name $(DOCKER_REGISTRY)/flexcore:$(DOCKER_TAG) --dockerfile $(DOCKER_DIR)/Dockerfile.flexcore
 
 .PHONY: docker-run-stack-flext
-docker-run-stack-flext: ## Run complete Docker stack using FlextTestDocker
-	@echo "🐳 Starting FLEXT Docker stack with FlextTestDocker..."
+docker-run-stack-flext: ## Run complete Docker stack using FlextTestsDocker
+	@echo "🐳 Starting FLEXT Docker stack with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) start-stack --compose-file $(DOCKER_DIR)/docker-compose.yml --network $(FLEXT_DOCKER_NETWORK)
 
 .PHONY: docker-stop-stack-flext
-docker-stop-stack-flext: ## Stop Docker stack using FlextTestDocker
-	@echo "🛑 Stopping FLEXT Docker stack with FlextTestDocker..."
+docker-stop-stack-flext: ## Stop Docker stack using FlextTestsDocker
+	@echo "🛑 Stopping FLEXT Docker stack with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) stop-stack --compose-file $(DOCKER_DIR)/docker-compose.yml
 
 .PHONY: docker-restart-stack-flext
-docker-restart-stack-flext: ## Restart Docker stack using FlextTestDocker
-	@echo "🔄 Restarting FLEXT Docker stack with FlextTestDocker..."
+docker-restart-stack-flext: ## Restart Docker stack using FlextTestsDocker
+	@echo "🔄 Restarting FLEXT Docker stack with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) restart-stack --compose-file $(DOCKER_DIR)/docker-compose.yml
 
 .PHONY: docker-logs-flext
-docker-logs-flext: ## Show Docker stack logs using FlextTestDocker
-	@echo "📋 Showing FLEXT Docker stack logs with FlextTestDocker..."
+docker-logs-flext: ## Show Docker stack logs using FlextTestsDocker
+	@echo "📋 Showing FLEXT Docker stack logs with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) show-logs --compose-file $(DOCKER_DIR)/docker-compose.yml --follow
 
 .PHONY: docker-status-flext
-docker-status-flext: ## Show Docker stack status using FlextTestDocker
-	@echo "📊 Showing FLEXT Docker stack status with FlextTestDocker..."
+docker-status-flext: ## Show Docker stack status using FlextTestsDocker
+	@echo "📊 Showing FLEXT Docker stack status with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) show-status --compose-file $(DOCKER_DIR)/docker-compose.yml
 
 .PHONY: docker-connect-flext
-docker-connect-flext: ## Connect to running container using FlextTestDocker
-	@echo "🔗 Connecting to container with FlextTestDocker..."
+docker-connect-flext: ## Connect to running container using FlextTestsDocker
+	@echo "🔗 Connecting to container with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) connect --service $(filter-out $@,$(MAKECMDGOALS))
 
 .PHONY: docker-exec-flext
-docker-exec-flext: ## Execute command in container using FlextTestDocker
-	@echo "⚡ Executing command in container with FlextTestDocker..."
+docker-exec-flext: ## Execute command in container using FlextTestsDocker
+	@echo "⚡ Executing command in container with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) exec --service $(word 2, $(MAKECMDGOALS)) --command "$(wordlist 3, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS))"
 
 .PHONY: docker-clean-flext
-docker-clean-flext: ## Clean Docker artifacts using FlextTestDocker
-	@echo "🧹 Cleaning Docker artifacts with FlextTestDocker..."
+docker-clean-flext: ## Clean Docker artifacts using FlextTestsDocker
+	@echo "🧹 Cleaning Docker artifacts with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) cleanup --remove-volumes --remove-networks --prune-system
 
 .PHONY: docker-health-check-flext
-docker-health-check-flext: ## Perform comprehensive Docker health check using FlextTestDocker
-	@echo "🏥 Performing Docker health check with FlextTestDocker..."
+docker-health-check-flext: ## Perform comprehensive Docker health check using FlextTestsDocker
+	@echo "🏥 Performing Docker health check with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) health-check --compose-file $(DOCKER_DIR)/docker-compose.yml --timeout 30
 
 .PHONY: docker-network-create-flext
-docker-network-create-flext: ## Create FLEXT Docker network using FlextTestDocker
-	@echo "🌐 Creating FLEXT Docker network with FlextTestDocker..."
+docker-network-create-flext: ## Create FLEXT Docker network using FlextTestsDocker
+	@echo "🌐 Creating FLEXT Docker network with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) create-network --name $(FLEXT_DOCKER_NETWORK) --driver bridge
 
 .PHONY: docker-volumes-list-flext
-docker-volumes-list-flext: ## List Docker volumes using FlextTestDocker
-	@echo "💾 Listing Docker volumes with FlextTestDocker..."
+docker-volumes-list-flext: ## List Docker volumes using FlextTestsDocker
+	@echo "💾 Listing Docker volumes with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) list-volumes --filter "name=flext"
 
 .PHONY: docker-images-list-flext
-docker-images-list-flext: ## List Docker images using FlextTestDocker
-	@echo "🖼️ Listing Docker images with FlextTestDocker..."
+docker-images-list-flext: ## List Docker images using FlextTestsDocker
+	@echo "🖼️ Listing Docker images with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) list-images --filter "repository=$(FLEXT_DOCKER_IMAGE_PREFIX)"
 
 .PHONY: docker-containers-list-flext
-docker-containers-list-flext: ## List Docker containers using FlextTestDocker
-	@echo "📦 Listing Docker containers with FlextTestDocker..."
+docker-containers-list-flext: ## List Docker containers using FlextTestsDocker
+	@echo "📦 Listing Docker containers with FlextTestsDocker..."
 	@$(FLEXT_DOCKER_MANAGER) list-containers --filter "name=flext" --show-all
 
 # =============================================================================
-# PROJECT-SPECIFIC DOCKER OPERATIONS (FlextTestDocker Edition)
+# PROJECT-SPECIFIC DOCKER OPERATIONS (FlextTestsDocker Edition)
 # =============================================================================
 
 .PHONY: docker-test-core-flext
-docker-test-core-flext: ## Test flext-core with Docker using FlextTestDocker
-	@echo "🧪 Testing flext-core with FlextTestDocker..."
+docker-test-core-flext: ## Test flext-core with Docker using FlextTestsDocker
+	@echo "🧪 Testing flext-core with FlextTestsDocker..."
 	@cd flext-core && $(FLEXT_DOCKER_MANAGER) test-project --project-name flext-core
 
 .PHONY: docker-test-api-flext
-docker-test-api-flext: ## Test flext-api with Docker using FlextTestDocker
-	@echo "🧪 Testing flext-api with FlextTestDocker..."
+docker-test-api-flext: ## Test flext-api with Docker using FlextTestsDocker
+	@echo "🧪 Testing flext-api with FlextTestsDocker..."
 	@cd flext-api && $(FLEXT_DOCKER_MANAGER) test-project --project-name flext-api
 
 .PHONY: docker-test-client-a-flext
-docker-test-client-a-flext: ## Test client-a-oud-mig with Docker using FlextTestDocker
-	@echo "🧪 Testing client-a-oud-mig with FlextTestDocker..."
+docker-test-client-a-flext: ## Test client-a-oud-mig with Docker using FlextTestsDocker
+	@echo "🧪 Testing client-a-oud-mig with FlextTestsDocker..."
 	@cd client-a-oud-mig && python scripts/docker_test_manager.py test --verbose --coverage
 
 # =============================================================================
-# MIGRATION HELPERS (Gradual transition from direct Docker to FlextTestDocker)
+# MIGRATION HELPERS (Gradual transition from direct Docker to FlextTestsDocker)
 # =============================================================================
 
 .PHONY: docker-migration-status
-docker-migration-status: ## Show Docker-to-FlextTestDocker migration status
-	@echo "📊 Docker-to-FlextTestDocker Migration Status"
+docker-migration-status: ## Show Docker-to-FlextTestsDocker migration status
+	@echo "📊 Docker-to-FlextTestsDocker Migration Status"
 	@echo "=============================================="
 	@echo ""
-	@echo "🚀 AVAILABLE FlextTestDocker Operations:"
+	@echo "🚀 AVAILABLE FlextTestsDocker Operations:"
 	@echo "  ✅ docker-build-all-flext       (replaces docker-build-all)"
 	@echo "  ✅ docker-run-stack-flext       (replaces docker-run-stack)"
 	@echo "  ✅ docker-stop-stack-flext      (replaces docker-stop-stack)"
@@ -139,7 +139,7 @@ docker-migration-status: ## Show Docker-to-FlextTestDocker migration status
 	@echo ""
 	@echo "🔄 TO MIGRATE:"
 	@echo "  1. Replace 'make docker-*' with 'make docker-*-flext'"
-	@echo "  2. Update CI/CD pipelines to use FlextTestDocker targets"
+	@echo "  2. Update CI/CD pipelines to use FlextTestsDocker targets"
 	@echo "  3. Test enhanced functionality with 'make docker-status-flext'"
 	@echo ""
 	@echo "🧪 PROJECT-SPECIFIC TESTING:"
@@ -148,25 +148,25 @@ docker-migration-status: ## Show Docker-to-FlextTestDocker migration status
 	@echo "  make docker-test-client-a-flext   # Test client-a-oud-mig"
 
 .PHONY: docker-validate-flext
-docker-validate-flext: ## Validate FlextTestDocker functionality
-	@echo "🔍 Validating FlextTestDocker functionality..."
+docker-validate-flext: ## Validate FlextTestsDocker functionality
+	@echo "🔍 Validating FlextTestsDocker functionality..."
 	@$(FLEXT_DOCKER_MANAGER) validate --workspace-root $(WORKSPACE_ROOT)
-	@echo "✅ FlextTestDocker validation complete"
+	@echo "✅ FlextTestsDocker validation complete"
 
 # =============================================================================
 # ALIASES AND COMPATIBILITY (Gradual Migration Support)
 # =============================================================================
 
-# Provide FlextTestDocker versions of all original Docker operations
+# Provide FlextTestsDocker versions of all original Docker operations
 .PHONY: docker-build-all-unified docker-run-stack-unified docker-stop-stack-unified
-docker-build-all-unified: docker-build-all-flext ## Unified build using FlextTestDocker
-docker-run-stack-unified: docker-run-stack-flext ## Unified stack start using FlextTestDocker
-docker-stop-stack-unified: docker-stop-stack-flext ## Unified stack stop using FlextTestDocker
+docker-build-all-unified: docker-build-all-flext ## Unified build using FlextTestsDocker
+docker-run-stack-unified: docker-run-stack-flext ## Unified stack start using FlextTestsDocker
+docker-stop-stack-unified: docker-stop-stack-flext ## Unified stack stop using FlextTestsDocker
 
-# Enhanced operations only available with FlextTestDocker
+# Enhanced operations only available with FlextTestsDocker
 .PHONY: docker-enhanced-operations
-docker-enhanced-operations: ## Show enhanced operations only available with FlextTestDocker
-	@echo "🚀 Enhanced Docker operations with FlextTestDocker:"
+docker-enhanced-operations: ## Show enhanced operations only available with FlextTestsDocker
+	@echo "🚀 Enhanced Docker operations with FlextTestsDocker:"
 	@echo "  🏥 docker-health-check-flext    - Comprehensive health checks"
 	@echo "  📊 docker-status-flext          - Detailed status reporting"
 	@echo "  🔗 docker-connect-flext         - Interactive container access"
