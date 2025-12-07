@@ -6,8 +6,8 @@ Este documento foi migrado para a documentação oficial do flext-core.
 
 ## Documentação de destino
 
-- **Service Patterns:** [`flext-core/docs/guides/service-patterns.md`](../flext-core/docs/guides/service-patterns.md)
-- **CQRS Architecture:** [`flext-core/docs/architecture/cqrs.md`](../flext-core/docs/architecture/cqrs.md)
+- **Service Patterns:** [`flext-core/docs/guides/service-patterns.md`](https://github.com/organization/flext/tree/main/flext-core/docs/guides/service-patterns.md)
+- **CQRS Architecture:** [`flext-core/docs/architecture/cqrs.md`](https://github.com/organization/flext/tree/main/flext-core/docs/architecture/cqrs.md)
 
 ## Conteúdo restante (preservado como referência)
 

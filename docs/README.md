@@ -9,7 +9,6 @@
     - [🔌 [API Reference](./api-reference/README.md)](#-api-referenceapi-referencereadmemd)
     - [📦 [Projects](./projects/README.md)](#-projectsprojectsreadmemd)
     - [📋 [Standards](./standards/README.md)](#-standardsstandardsreadmemd)
-    - [📊 [Reports](./reports/README.md)](#-reportsreportsreadmemd)
   - [🎯 Key Features](#-key-features)
   - [🛠️ Quick Links](#-quick-links)
   - [📞 Support](#-support)
@@ -52,9 +51,6 @@ Detailed documentation for each FLEXT project and library:
 
 Coding standards, best practices, and development guidelines.
 
-### 📊 [Reports](./reports/README.md)
-
-Project status, QA reports, and technical documentation.
 
 ## 🎯 Key Features
 

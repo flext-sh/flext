@@ -326,9 +326,9 @@ MIT License - See [LICENSE](../../LICENSE) file for details.
 
 ## Links
 
-- **[FLEXT Hub](../../docs/NAVIGATION.md)**: Complete ecosystem navigation
+- **[FLEXT Hub](../../docs/INDEX.md)**: Complete ecosystem navigation
 - **[FLEXT Service](../flext/)**: Main data integration service
 - **[FlexCore](../../flexcore/)**: Go runtime service
-- **[FLEXT Core](../../flext-core/)**: Foundation library
+- **[FLEXT Core](https://github.com/organization/flext/tree/main/flext-core/)**: Foundation library
 
 ---
