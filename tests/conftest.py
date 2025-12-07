@@ -16,7 +16,7 @@ import pytest
 from flext_core import FlextContainer, FlextLogger, FlextResult
 from flext_ldif import FlextLdif, FlextLdifModels
 from flext_ldif.constants import FlextLdifConstants
-from flext_tests import FlextTestsDocker, FlextTestsDomains, tb, tm, tt
+from flext_tests import FlextTestsDomains, tm, tt
 
 TestDataValue = Union[
     str, int, float, bool, list["TestDataValue"], dict[str, "TestDataValue"]
@@ -120,8 +120,6 @@ def flext_domains() -> FlextTestsDomains:
 @pytest.fixture
 def flext_factories() -> FlextTestsFactories:
     """Provide FlextTestsFactories for test data creation."""
-    from flext_tests import tt
-
     return tt()
 
 

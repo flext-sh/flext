@@ -93,6 +93,8 @@ target-version = "py313"
             "ARG002",  # Unused method argument (test fixtures)
             "ARG004",  # Unused static method argument (test helpers)
             "ARG005",  # Unused lambda argument (test lambdas)
+            "B009",    # get-attr-with-constant - needed for dynamic module attributes in tests
+            "B010",    # set-attr-with-constant - needed for dynamic module attributes in tests
             "B018",    # Useless attribute access (test assertions)
             "B903",    # Dataclass suggestion (test classes don't need dataclass)
             "C901",    # Function too complex (test helper functions can be complex)

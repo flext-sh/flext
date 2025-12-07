@@ -747,7 +747,7 @@ Documenting the JSON Schema input type is only possible for validators where the
 value can be anything. That is why it isn't available for `after` validators, where
 the value is first validated against the type annotation.
 
-#r
+# r
 
 If you use `@root_validator` with `pre=False` (the default) you MUST specify `skip_on_failure=True`.
 The `skip_on_failure=False` option is no longer available.
