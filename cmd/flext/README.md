@@ -389,7 +389,7 @@ MIT License - See project root for license details.
 
 - **[FLEXT Hub](../../docs/README.md)**: Complete ecosystem navigation
 - **[FlexCore](../../flexcore/)**: Go runtime service (port 8080)
-- **[FLEXT Core](../../flext-core/)**: Foundation library with FlextResult patterns
+- **[FLEXT Core](https://github.com/organization/flext/tree/main/flext-core/)**: Foundation library with FlextResult patterns
 - **[Complete Documentation](../../docs/README.md)**: Architecture and integration guides
 
 ---

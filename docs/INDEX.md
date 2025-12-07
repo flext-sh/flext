@@ -63,7 +63,7 @@ transformation, and enterprise connectivity.
 
 ### 🏗️ Architecture & Design
 
-- **[Architecture Overview](./architecture/overview.md)** - System architecture and design principles
+- **[Architecture Overview](./architecture/README.md)** - System architecture and design principles
 - **[Design Patterns](./architecture/patterns/)** - Established patterns and conventions
 - **[Standards](./architecture/standards/)** - Architecture standards and guidelines
 - **[Detailed Plans](./architecture/detailed-plans/)** - Architecture roadmaps and detailed plans
@@ -94,45 +94,45 @@ transformation, and enterprise connectivity.
 
 #### Core Libraries
 
-- **[flext-core](../flext-core/docs/)** - Foundation library documentation
-- **[flext-api](../flext-api/docs/)** - HTTP client and FastAPI integration
-- **[flext-auth](../flext-auth/docs/)** - Authentication services
-- **[flext-grpc](../flext-grpc/docs/)** - gRPC communication
+- **[flext-core](https://github.com/organization/flext/tree/main/flext-core/docs/)** - Foundation library documentation
+- **[flext-api](https://github.com/organization/flext/tree/main/flext-api/docs/)** - HTTP client and FastAPI integration
+- **[flext-auth](https://github.com/organization/flext/tree/main/flext-auth/docs/)** - Authentication services
+- **[flext-grpc](https://github.com/organization/flext/tree/main/flext-grpc/docs/)** - gRPC communication
 
 #### Infrastructure Libraries
 
-- **[flext-db-oracle](../flext-db-oracle/docs/)** - Oracle database connectivity
-- **[flext-ldap](../flext-ldap/docs/)** - LDAP directory services
-- **[flext-ldif](../flext-ldif/docs/)** - LDIF file processing
-- **[flext-observability](../flext-observability/docs/)** - Monitoring and observability
+- **[flext-db-oracle](https://github.com/organization/flext/tree/main/flext-db-oracle/docs/)** - Oracle database connectivity
+- **[flext-ldap](https://github.com/organization/flext/tree/main/flext-ldap/docs/)** - LDAP directory services
+- **[flext-ldif](https://github.com/organization/flext/tree/main/flext-ldif/docs/)** - LDIF file processing
+- **[flext-observability](https://github.com/organization/flext/tree/main/flext-observability/docs/)** - Monitoring and observability
 
 #### Data Integration Tools
 
-- **[flext-meltano](../flext-meltano/docs/)** - Singer/Meltano integration
-- **[flext-plugin](../flext-plugin/docs/)** - Plugin system
+- **[flext-meltano](https://github.com/organization/flext/tree/main/flext-meltano/docs/)** - Singer/Meltano integration
+- **[flext-plugin](https://github.com/organization/flext/tree/main/flext-plugin/docs/)** - Plugin system
 
 #### Singer Ecosystem
 
-- **Taps**: [LDAP](../flext-tap-ldap/docs/), [LDIF](../flext-tap-ldif/docs/), [Oracle](../flext-tap-oracle/)
-- **Targets**: [LDAP](../flext-target-ldap/docs/), [LDIF](../flext-target-ldif/docs/), [Oracle](../flext-target-oracle/)
+- **Taps**: [LDAP](https://github.com/organization/flext/tree/main/flext-tap-ldap/docs/), [LDIF](https://github.com/organization/flext/tree/main/flext-tap-ldif/docs/), [Oracle](https://github.com/organization/flext/tree/main/flext-tap-oracle/docs/)
+- **Targets**: [LDAP](https://github.com/organization/flext/tree/main/flext-target-ldap/docs/), [LDIF](https://github.com/organization/flext/tree/main/flext-target-ldif/docs/), [Oracle](https://github.com/organization/flext/tree/main/flext-target-oracle/docs/)
 
 #### DBT Projects
 
-- **[DBT LDAP](../flext-dbt-ldap/docs/)** - LDAP transformations
-- **[DBT LDIF](../flext-dbt-ldif/docs/)** - LDIF transformations
-- **[DBT Oracle](../flext-dbt-oracle/docs/)** - Oracle transformations
+- **[DBT LDAP](https://github.com/organization/flext/tree/main/flext-dbt-ldap/docs/)** - LDAP transformations
+- **[DBT LDIF](https://github.com/organization/flext/tree/main/flext-dbt-ldif/docs/)** - LDIF transformations
+- **[DBT Oracle](https://github.com/organization/flext/tree/main/flext-dbt-oracle/docs/)** - Oracle transformations
 
 #### Enterprise Integration
 
-- **[Oracle OIC](../flext-oracle-oic/docs/)** - Oracle Integration Cloud
-- **[Oracle WMS](../flext-oracle-wms/docs/)** - Oracle Warehouse Management
-- **[Quality Tools](../flext-quality/docs/)** - Code quality and testing
-- **[Web Interface](../flext-web/docs/)** - Web application framework
+- **[Oracle OIC](https://github.com/organization/flext/tree/main/flext-oracle-oic/docs/)** - Oracle Integration Cloud
+- **[Oracle WMS](https://github.com/organization/flext/tree/main/flext-oracle-wms/docs/)** - Oracle Warehouse Management
+- **[Quality Tools](https://github.com/organization/flext/tree/main/flext-quality/docs/)** - Code quality and testing
+- **[Web Interface](https://github.com/organization/flext/tree/main/flext-web/docs/)** - Web application framework
 
 #### Development Tools
 
-- **[CLI Tools](../flext-cli/docs/)** - Command-line interface
-- **[Test Framework](../flext-tests/docs/)** - Testing utilities
+- **[CLI Tools](https://github.com/organization/flext/tree/main/flext-cli/docs/)** - Command-line interface
+- **[Test Framework](https://github.com/organization/flext/tree/main/flext-tests/docs/)** - Testing utilities
 
 ---
 

@@ -238,6 +238,6 @@ MIT License - See [LICENSE](../../LICENSE) file for details.
 
 - **[FlexCore](../../flexcore/)**: Go runtime service
 - **[FLEXT Service](../flext/)**: Main Go/Python service
-- **[FLEXT Core](../../flext-core/)**: Foundation library
+- **[FLEXT Core](https://github.com/organization/flext/tree/main/flext-core/)**: Foundation library
 
 ---
