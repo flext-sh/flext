@@ -129,28 +129,28 @@ servir como referência futura para implementação:
 
 ~~### Comparativo V1 → V2~~ ✅
 
-~~| Aspecto                   | V1 (Atual)                                | V2 (Target)                        |~~
+~~| Aspecto | V1 (Atual) | V2 (Target) |~~
 ~~| ------------------------- | ----------------------------------------- | ---------------------------------- |~~
-~~| **Métricas**              | `self._metrics` manual (50+ linhas)       | `self.cqrs_metrics` via x          |~~
-~~| **Contexto**              | `self._context_stack` manual (30+ linhas) | `self.context` via x               |~~
-~~| **Logging**               | Inconsistente, pouco usado                | `self.logger` automático           |~~
-~~| **Tracking**              | Manual ou inexistente                     | `self.track()` automático          |~~
-~~| **Managers (Dispatcher)** | Hardcoded (700+ linhas)                   | Injetados via FlextContainer       |~~
-~~| **Circuit Breaker**       | `self._circuit_breaker` interno           | `container.get("circuit_breaker")` |~~
-~~| **Rate Limiter**          | `self._rate_limiter` interno              | `container.get("rate_limiter")`    |~~
+~~| **Métricas** | `self._metrics` manual (50+ linhas) | `self.cqrs_metrics` via x |~~
+~~| **Contexto** | `self._context_stack` manual (30+ linhas) | `self.context` via x |~~
+~~| **Logging** | Inconsistente, pouco usado | `self.logger` automático |~~
+~~| **Tracking** | Manual ou inexistente | `self.track()` automático |~~
+~~| **Managers (Dispatcher)** | Hardcoded (700+ linhas) | Injetados via FlextContainer |~~
+~~| **Circuit Breaker** | `self._circuit_breaker` interno | `container.get("circuit_breaker")` |~~
+~~| **Rate Limiter** | `self._rate_limiter` interno | `container.get("rate_limiter")` |~~
 
 ~~### Linha do Tempo~~ ✅
 
 ~~```~~
-~~V1 (Atual)           V2 Integration         V2 Complete~~
-~~    │                      │                      │~~
-~~    │  Manual metrics      │  x.CQRS    │  Full observability~~
-~~    │  Manual context      │  Container DI        │  Auto-discovery~~
-~~    │  Hardcoded managers  │  Protocol-based      │  Zero ceremony~~
-~~    │                      │                      │~~
+~~V1 (Atual) V2 Integration V2 Complete~~
+~~ │ │ │~~
+~~ │ Manual metrics │ x.CQRS │ Full observability~~
+~~ │ Manual context │ Container DI │ Auto-discovery~~
+~~ │ Hardcoded managers │ Protocol-based │ Zero ceremony~~
+~~ │ │ │~~
 ~~────┼──────────────────────┼──────────────────────┼─────────────────→~~
-~~    │                      │                      │~~
-~~ Nov 2025           Jan 2026 (Phase 1-2)    Mar 2026 (Phase 3-5)~~
+~~ │ │ │~~
+~~ Nov 2025 Jan 2026 (Phase 1-2) Mar 2026 (Phase 3-5)~~
 ~~```~~
 
 ---
@@ -190,16 +190,16 @@ servir como referência futura para implementação:
 ~~**Estratégia de Modernização:**~~
 
 ~~1. **x.CQRS** (Fase 1):~~
-~~   - Extrair métricas para `self.cqrs_metrics`~~
-~~   - Extrair contexto para `self.context`~~
-~~   - Integrar logging/tracking no pipeline~~
-~~   - Deprecar métodos manuais com grace period~~
+~~ - Extrair métricas para `self.cqrs_metrics`~~
+~~ - Extrair contexto para `self.context`~~
+~~ - Integrar logging/tracking no pipeline~~
+~~ - Deprecar métodos manuais com grace period~~
 
 ~~2. **FlextContainer DI** (Fase 2):~~
-~~   - Definir protocols para managers~~
-~~   - Extrair managers para módulo `_managers/`~~
-~~   - Refatorar `FlextDispatcher.__init__()` para aceitar container~~
-~~   - Registrar managers default no container~~
+~~ - Definir protocols para managers~~
+~~ - Extrair managers para módulo `_managers/`~~
+~~ - Refatorar `FlextDispatcher.__init__()` para aceitar container~~
+~~ - Registrar managers default no container~~
 
 ~~**Benefícios:**~~
 
@@ -220,45 +220,45 @@ servir como referência futura para implementação:
 
 ~~```~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│                    Application Layer                            │~~
+~~│ Application Layer │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
-~~│  Tier 3.2: FlextDispatcher                                      │~~
-~~│  ├── Orchestration and routing                                  │~~
-~~│  ├── Reliability patterns (circuit breaker, retry, timeout)     │~~
-~~│  └── Manager coordination                                       │~~
+~~│ Tier 3.2: FlextDispatcher │~~
+~~│ ├── Orchestration and routing │~~
+~~│ ├── Reliability patterns (circuit breaker, retry, timeout) │~~
+~~│ └── Manager coordination │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
-~~│  Tier 3.1: h                                        │~~
-~~│  ├── Command/Query/Event handlers                               │~~
-~~│  ├── Validation pipeline                                        │~~
-~~│  └── Message processing                                         │~~
+~~│ Tier 3.1: h │~~
+~~│ ├── Command/Query/Event handlers │~~
+~~│ ├── Validation pipeline │~~
+~~│ └── Message processing │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
-~~│  Tier 2.5: FlextService                                         │~~
-~~│  ├── Domain services with business logic                        │~~
-~~│  ├── Execute via .result property                               │~~
-~~│  └── Self-contained operations                                  │~~
+~~│ Tier 2.5: FlextService │~~
+~~│ ├── Domain services with business logic │~~
+~~│ ├── Execute via .result property │~~
+~~│ └── Self-contained operations │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
-~~│  Tier 2: Domain Foundation                                      │~~
-~~│  ├── FlextModels - Domain entities                              │~~
-~~│  ├── u - Validation, conversion                    │~~
-~~│  └── x - Reusable behaviors                           │~~
+~~│ Tier 2: Domain Foundation │~~
+~~│ ├── FlextModels - Domain entities │~~
+~~│ ├── u - Validation, conversion │~~
+~~│ └── x - Reusable behaviors │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
-~~│  Tier 1.5: FlextLogger                                          │~~
-~~│  └── Structured logging with context                            │~~
+~~│ Tier 1.5: FlextLogger │~~
+~~│ └── Structured logging with context │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
-~~│  Tier 1: Core Abstractions                                      │~~
-~~│  ├── FlextResult - Railway pattern                              │~~
-~~│  └── FlextExceptions - Error handling                           │~~
+~~│ Tier 1: Core Abstractions │~~
+~~│ ├── FlextResult - Railway pattern │~~
+~~│ └── FlextExceptions - Error handling │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
-~~│  Tier 0.5: FlextRuntime                                         │~~
-~~│  └── Runtime utilities                                          │~~
+~~│ Tier 0.5: FlextRuntime │~~
+~~│ └── Runtime utilities │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
-~~│  Tier 0.1: FlextConfig                                          │~~
-~~│  └── Configuration management                                   │~~
+~~│ Tier 0.1: FlextConfig │~~
+~~│ └── Configuration management │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
-~~│  Tier 0: Pure Foundation                                        │~~
-~~│  ├── FlextConstants - Error codes, defaults                     │~~
-~~│  ├── t - Type aliases                                  │~~
-~~│  └── p - Interfaces                                │~~
+~~│ Tier 0: Pure Foundation │~~
+~~│ ├── FlextConstants - Error codes, defaults │~~
+~~│ ├── t - Type aliases │~~
+~~│ └── p - Interfaces │~~
 ~~└─────────────────────────────────────────────────────────────────┘~~
 ~~```~~
 
@@ -275,23 +275,23 @@ servir como referência futura para implementação:
 
 ~~**Estrutura Atual:**~~
 
-~~```python~~
+~~```Python~~
 ~~class h(x, Generic[TCommand_contra, TResult_co]):~~
-~~    """Base class for CQRS message handlers."""~~
+~~ """Base class for CQRS message handlers."""~~
 
-~~    # ⚠️ Infraestrutura manual (será deprecated)~~
-~~    _metrics: dict[str, int | float]~~
-~~    _context_stack: list[dict[str, object]]~~
+~~ # ⚠️ Infraestrutura manual (será deprecated)~~
+~~ \_metrics: dict[str, int | float]~~
+~~\_context_stack: list[dict[str, object]]~~
 
-~~    # ✅ Pipeline methods~~
-~~    def handle(self, message: TCommand_contra) -> FlextResult[TResult_co]: ...~~
-~~    def _run_pipeline(self, message: TCommand_contra) -> FlextResult[TResult_co]: ...~~
+~~ # ✅ Pipeline methods~~
+~~ def handle(self, message: TCommand_contra) -> FlextResult[TResult_co]: ...~~
+~~ def \_run_pipeline(self, message: TCommand_contra) -> FlextResult[TResult_co]: ...~~
 
-~~    # ⚠️ Métodos manuais (serão deprecated em V2)~~
-~~    def record_metric(self, key: str, value: int | float) -> None: ...~~
-~~    def get_metrics(self) -> dict[str, int | float]: ...~~
-~~    def push_context(self, ctx: dict[str, object]) -> None: ...~~
-~~    def pop_context(self) -> dict[str, object] | None: ...~~
+~~ # ⚠️ Métodos manuais (serão deprecated em V2)~~
+~~ def record_metric(self, key: str, value: int | float) -> None: ...~~
+~~ def get_metrics(self) -> dict[str, int | float]: ...~~
+~~ def push_context(self, ctx: dict[str, object]) -> None: ...~~
+~~ def pop_context(self) -> dict[str, object] | None: ...~~
 ~~```~~
 
 ~~**Dependências:**~~
@@ -314,22 +314,22 @@ servir como referência futura para implementação:
 
 ~~**Estrutura Atual:**~~
 
-~~```python~~
+~~```Python~~
 ~~class FlextDispatcher:~~
-~~    """CQRS dispatcher with reliability patterns."""~~
+~~ """CQRS dispatcher with reliability patterns."""~~
 
-~~    # ⚠️ Managers hardcoded (serão extraídos para DI)~~
-~~    _circuit_breaker_manager: CircuitBreakerManager  # ~200 linhas~~
-~~    _rate_limiter_manager: RateLimiterManager        # ~150 linhas~~
-~~    _timeout_enforcer: TimeoutEnforcer               # ~100 linhas~~
-~~    _retry_policy_manager: RetryPolicyManager        # ~150 linhas~~
-~~    _cache: dict[str, object]                        # ~100 linhas~~
+~~ # ⚠️ Managers hardcoded (serão extraídos para DI)~~
+~~ \_circuit_breaker_manager: CircuitBreakerManager # ~200 linhas~~
+~~\_rate_limiter_manager: RateLimiterManager # ~150 linhas~~
+~~ \_timeout_enforcer: TimeoutEnforcer # ~100 linhas~~
+~~ \_retry_policy_manager: RetryPolicyManager # ~150 linhas~~
+~~\_cache: dict[str, object] # ~100 linhas~~
 
-~~    # ✅ Core methods~~
-~~    def dispatch(self, message: object) -> FlextResult[object]: ...~~
-~~    def register_command(self, cmd_type: type, handler: h) -> None: ...~~
-~~    def register_query(self, query_type: type, handler: h) -> None: ...~~
-~~    def register_event(self, event_type: type, handler: h) -> None: ...~~
+~~ # ✅ Core methods~~
+~~ def dispatch(self, message: object) -> FlextResult[object]: ...~~
+~~ def register_command(self, cmd_type: type, handler: h) -> None: ...~~
+~~ def register_query(self, query_type: type, handler: h) -> None: ...~~
+~~ def register_event(self, event_type: type, handler: h) -> None: ...~~
 ~~```~~
 
 ~~**Dependências:**~~
@@ -350,7 +350,7 @@ servir como referência futura para implementação:
 
 ~~**Target:** Managers registrados e injetados via FlextContainer.~~
 
-~~```python~~
+~~```Python~~
 ~~# Target: Registro de managers default~~
 ~~container = FlextContainer.get_global()~~
 ~~container.register("circuit_breaker", CircuitBreakerManager())~~
@@ -389,21 +389,21 @@ servir como referência futura para implementação:
 
 ~~**FlextHandlers:**~~
 
-~~| Problema          | Impacto                    | Linhas | Solução              |~~
+~~| Problema | Impacto | Linhas | Solução |~~
 ~~| ----------------- | -------------------------- | ------ | -------------------- |~~
-~~| Métricas manuais  | Duplicação em 32+ projetos | 50+    | x.CQRS               |~~
-~~| Contexto manual   | Inconsistência             | 30+    | self.context         |~~
-~~| Logger não usado  | Sem observabilidade        | 0      | Integrar no pipeline |~~
-~~| Tracker não usado | Sem performance data       | 0      | Integrar no pipeline |~~
+~~| Métricas manuais | Duplicação em 32+ projetos | 50+ | x.CQRS |~~
+~~| Contexto manual | Inconsistência | 30+ | self.context |~~
+~~| Logger não usado | Sem observabilidade | 0 | Integrar no pipeline |~~
+~~| Tracker não usado | Sem performance data | 0 | Integrar no pipeline |~~
 
 ~~**FlextDispatcher:**~~
 
-~~| Problema              | Impacto               | Linhas   | Solução            |~~
+~~| Problema | Impacto | Linhas | Solução |~~
 ~~| --------------------- | --------------------- | -------- | ------------------ |~~
-~~| Managers hardcoded    | Impossível customizar | 700+     | FlextContainer DI  |~~
-~~| Cache manual          | Duplicação            | 100+     | u.Caching          |~~
-~~| Logging inconsistente | Debugging difícil     | 18 calls | FlextLogger padrão |~~
-~~| Tracking mínimo       | Sem métricas          | 2 calls  | x.track()          |~~
+~~| Managers hardcoded | Impossível customizar | 700+ | FlextContainer DI |~~
+~~| Cache manual | Duplicação | 100+ | u.Caching |~~
+~~| Logging inconsistente | Debugging difícil | 18 calls | FlextLogger padrão |~~
+~~| Tracking mínimo | Sem métricas | 2 calls | x.track() |~~
 
 ### ~~Anti-Patterns Identificados~~ ✅
 
@@ -414,50 +414,50 @@ servir como referência futura para implementação:
 ~~```python~~
 ~~# ❌ Anti-pattern: Managers criados internamente~~
 ~~class FlextDispatcher:~~
-~~    def __init__(self):~~
-~~        self._circuit_breaker = CircuitBreakerManager(~~
-~~            default_failure_threshold=5,~~
-~~            default_recovery_timeout=30.0,~~
-~~            # ... 200+ linhas de configuração~~
-~~        )~~
-~~        self._rate_limiter = RateLimiterManager(~~
-~~            default_max_requests=100,~~
-~~            default_time_window=60.0,~~
-~~            # ... 150+ linhas de configuração~~
-~~        )~~
-~~        # ... mais managers~~
+~~ def **init**(self):~~
+~~ self.\_circuit_breaker = CircuitBreakerManager(~~
+~~ default_failure_threshold=5,~~
+~~ default_recovery_timeout=30.0,~~
+~~ # ... 200+ linhas de configuração~~
+~~ )~~
+~~ self.\_rate_limiter = RateLimiterManager(~~
+~~ default_max_requests=100,~~
+~~ default_time_window=60.0,~~
+~~ # ... 150+ linhas de configuração~~
+~~ )~~
+~~ # ... mais managers~~
 ~~```~~
 
 ~~**2. Manual State Management (FlextHandlers):**~~
 
-~~```python~~
+~~```Python~~
 ~~# ❌ Anti-pattern: Estado gerenciado manualmente~~
 ~~class FlextHandlers:~~
-~~    def __init__(self):~~
-~~        self._metrics: dict[str, int | float] = {}      # Manual!~~
-~~        self._context_stack: list[dict] = []             # Manual!~~
+~~ def **init**(self):~~
+~~ self.\_metrics: dict[str, int | float] = {} # Manual!~~
+~~ self.\_context_stack: list[dict] = [] # Manual!~~
 
     def record_metric(self, key: str, value: int | float) -> None:
         self._metrics[key] = self._metrics.get(key, 0) + value
 
-~~    def push_context(self, ctx: dict) -> None:~~
-~~        self._context_stack.append(ctx)~~
+~~ def push_context(self, ctx: dict) -> None:~~
+~~ self.\_context_stack.append(ctx)~~
 ~~```~~
 
 ~~**3. Unused Infrastructure (FlextHandlers):**~~
 
-~~```python~~
+~~```Python~~
 ~~# ❌ Anti-pattern: Herda x mas não usa~~
 ~~class FlextHandlers(FlextMixins, Generic[TCommand, TResult]):~~
-~~    # Disponível mas NUNCA usado:~~
-~~    # - self.logger    → 0 chamadas em _run_pipeline~~
-~~    # - self.track()   → 0 chamadas em _run_pipeline~~
-~~    # - self.config    → 0 chamadas em _run_pipeline~~
-~~    # - self.container → 0 chamadas em _run_pipeline~~
+~~ # Disponível mas NUNCA usado:~~
+~~ # - self.logger → 0 chamadas em \_run_pipeline~~
+~~ # - self.track() → 0 chamadas em \_run_pipeline~~
+~~ # - self.config → 0 chamadas em \_run_pipeline~~
+~~ # - self.container → 0 chamadas em \_run_pipeline~~
 
-~~    def _run_pipeline(self, message: TCommand) -> FlextResult[TResult]:~~
-~~        # Manual em vez de usar infraestrutura!~~
-~~        self._metrics["processed"] += 1  # Em vez de self.track()~~
+~~ def \_run_pipeline(self, message: TCommand) -> FlextResult[TResult]:~~
+~~ # Manual em vez de usar infraestrutura!~~
+~~ self.\_metrics["processed"] += 1 # Em vez de self.track()~~
 ~~```~~
 
 ---
@@ -474,42 +474,42 @@ servir como referência futura para implementação:
 
 ~~```~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│                     FlextDispatcher V2                          │~~
-~~│  ┌─────────────────────────────────────────────────────────┐   │~~
-~~│  │                   FlextContainer                         │   │~~
-~~│  │  ┌─────────────┐ ┌──────────────┐ ┌────────────────┐   │   │~~
-~~│  │  │ Circuit     │ │ Rate         │ │ Timeout        │   │   │~~
-~~│  │  │ Breaker     │ │ Limiter      │ │ Enforcer       │   │   │~~
-~~│  │  └─────────────┘ └──────────────┘ └────────────────┘   │   │~~
-~~│  │  ┌─────────────┐ ┌──────────────┐ ┌────────────────┐   │   │~~
-~~│  │  │ Retry       │ │ Cache        │ │ Custom         │   │   │~~
-~~│  │  │ Policy      │ │ Manager      │ │ Managers...    │   │   │~~
-~~│  │  └─────────────┘ └──────────────┘ └────────────────┘   │   │~~
-~~│  └─────────────────────────────────────────────────────────┘   │~~
-~~│                              │                                  │~~
-~~│                              ▼                                  │~~
-~~│  ┌─────────────────────────────────────────────────────────┐   │~~
-~~│  │                 Handler Registry                         │   │~~
-~~│  │  ┌─────────────┐ ┌──────────────┐ ┌────────────────┐   │   │~~
-~~│  │  │ Command     │ │ Query        │ │ Event          │   │   │~~
-~~│  │  │ Handlers    │ │ Handlers     │ │ Handlers       │   │   │~~
-~~│  │  └─────────────┘ └──────────────┘ └────────────────┘   │   │~~
-~~│  └─────────────────────────────────────────────────────────┘   │~~
+~~│ FlextDispatcher V2 │~~
+~~│ ┌─────────────────────────────────────────────────────────┐ │~~
+~~│ │ FlextContainer │ │~~
+~~│ │ ┌─────────────┐ ┌──────────────┐ ┌────────────────┐ │ │~~
+~~│ │ │ Circuit │ │ Rate │ │ Timeout │ │ │~~
+~~│ │ │ Breaker │ │ Limiter │ │ Enforcer │ │ │~~
+~~│ │ └─────────────┘ └──────────────┘ └────────────────┘ │ │~~
+~~│ │ ┌─────────────┐ ┌──────────────┐ ┌────────────────┐ │ │~~
+~~│ │ │ Retry │ │ Cache │ │ Custom │ │ │~~
+~~│ │ │ Policy │ │ Manager │ │ Managers... │ │ │~~
+~~│ │ └─────────────┘ └──────────────┘ └────────────────┘ │ │~~
+~~│ └─────────────────────────────────────────────────────────┘ │~~
+~~│ │ │~~
+~~│ ▼ │~~
+~~│ ┌─────────────────────────────────────────────────────────┐ │~~
+~~│ │ Handler Registry │ │~~
+~~│ │ ┌─────────────┐ ┌──────────────┐ ┌────────────────┐ │ │~~
+~~│ │ │ Command │ │ Query │ │ Event │ │ │~~
+~~│ │ │ Handlers │ │ Handlers │ │ Handlers │ │ │~~
+~~│ │ └─────────────┘ └──────────────┘ └────────────────┘ │ │~~
+~~│ └─────────────────────────────────────────────────────────┘ │~~
 ~~└─────────────────────────────────────────────────────────────────┘~~
-~~                               │~~
-~~                               ▼~~
+~~ │~~
+~~ ▼~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│                     FlextHandlers V2                            │~~
-~~│  ┌─────────────────────────────────────────────────────────┐   │~~
-~~│  │                    FlextMixins                           │   │~~
-~~│  │  ┌─────────────┐ ┌──────────────┐ ┌────────────────┐   │   │~~
-~~│  │  │ self.config │ │ self.logger  │ │ self.container │   │   │~~
-~~│  │  └─────────────┘ └──────────────┘ └────────────────┘   │   │~~
-~~│  │  ┌─────────────┐ ┌──────────────┐ ┌────────────────┐   │   │~~
-~~│  │  │ self.context│ │ self.track() │ │ FlextMixins    │   │   │~~
-~~│  │  │             │ │              │ │ .CQRS          │   │   │~~
-~~│  │  └─────────────┘ └──────────────┘ └────────────────┘   │   │~~
-~~│  └─────────────────────────────────────────────────────────┘   │~~
+~~│ FlextHandlers V2 │~~
+~~│ ┌─────────────────────────────────────────────────────────┐ │~~
+~~│ │ FlextMixins │ │~~
+~~│ │ ┌─────────────┐ ┌──────────────┐ ┌────────────────┐ │ │~~
+~~│ │ │ self.config │ │ self.logger │ │ self.container │ │ │~~
+~~│ │ └─────────────┘ └──────────────┘ └────────────────┘ │ │~~
+~~│ │ ┌─────────────┐ ┌──────────────┐ ┌────────────────┐ │ │~~
+~~│ │ │ self.context│ │ self.track() │ │ FlextMixins │ │ │~~
+~~│ │ │ │ │ │ │ .CQRS │ │ │~~
+~~│ │ └─────────────┘ └──────────────┘ └────────────────┘ │ │~~
+~~│ └─────────────────────────────────────────────────────────┘ │~~
 ~~└─────────────────────────────────────────────────────────────────┘~~
 ~~```~~
 
@@ -522,59 +522,59 @@ servir como referência futura para implementação:
 
 ~~**Propósito:** Fornecer funcionalidades CQRS-específicas que complementam as capacidades base de FlextMixins.~~
 
-~~```python~~
+~~```Python~~
 ~~class FlextMixins(BaseModel, ABC):~~
-~~    """Existing mixin class with infrastructure properties."""~~
+~~ """Existing mixin class with infrastructure properties."""~~
 
-~~    class CQRS:~~
-~~        """CQRS-specific utilities extracted from FlextHandlers."""~~
+~~ class CQRS:~~
+~~ """CQRS-specific utilities extracted from FlextHandlers."""~~
 
-~~        class MetricsTracker:~~
-~~            """Thread-safe metrics tracking for handlers."""~~
+~~ class MetricsTracker:~~
+~~ """Thread-safe metrics tracking for handlers."""~~
 
-~~            def __init__(self) -> None:~~
-~~                self._metrics: dict[str, int | float] = {}~~
-~~                self._lock = threading.Lock()~~
+~~ def **init**(self) -> None:~~
+~~ self.\_metrics: dict[str, int | float] = {}~~
+~~ self.\_lock = threading.Lock()~~
 
-~~            def record(self, key: str, value: int | float) -> None:~~
-~~                """Record a metric value (thread-safe)."""~~
-~~                with self._lock:~~
-~~                    current = self._metrics.get(key, 0)~~
-~~                    self._metrics[key] = current + value~~
+~~ def record(self, key: str, value: int | float) -> None:~~
+~~ """Record a metric value (thread-safe)."""~~
+~~ with self.\_lock:~~
+~~ current = self.\_metrics.get(key, 0)~~
+~~ self.\_metrics[key] = current + value~~
 
-~~            def get(self, key: str) -> int | float:~~
-~~                """Get metric value."""~~
-~~                return self._metrics.get(key, 0)~~
+~~ def get(self, key: str) -> int | float:~~
+~~ """Get metric value."""~~
+~~ return self.\_metrics.get(key, 0)~~
 
-~~            def all(self) -> dict[str, int | float]:~~
-~~                """Get all metrics."""~~
-~~                return dict(self._metrics)~~
+~~ def all(self) -> dict[str, int | float]:~~
+~~ """Get all metrics."""~~
+~~ return dict(self.\_metrics)~~
 
-~~            def reset(self) -> None:~~
-~~                """Reset all metrics."""~~
-~~                with self._lock:~~
-~~                    self._metrics.clear()~~
+~~ def reset(self) -> None:~~
+~~ """Reset all metrics."""~~
+~~ with self.\_lock:~~
+~~ self.\_metrics.clear()~~
 
-~~        class ContextStack:~~
-~~            """Thread-safe context stack for handlers."""~~
+~~ class ContextStack:~~
+~~ """Thread-safe context stack for handlers."""~~
 
-~~            def __init__(self) -> None:~~
-~~                self._stack: list[dict[str, object]] = []~~
+~~ def **init**(self) -> None:~~
+~~ self.\_stack: list[dict[str, object]] = []~~
 
-~~            def push(self, ctx: dict[str, object]) -> None:~~
-~~                """Push context onto stack."""~~
-~~                self._stack.append(ctx)~~
+~~ def push(self, ctx: dict[str, object]) -> None:~~
+~~ """Push context onto stack."""~~
+~~ self.\_stack.append(ctx)~~
 
-~~            def pop(self) -> dict[str, object] | None:~~
-~~                """Pop context from stack."""~~
-~~                return self._stack.pop() if self._stack else None~~
+~~ def pop(self) -> dict[str, object] | None:~~
+~~ """Pop context from stack."""~~
+~~ return self.\_stack.pop() if self.\_stack else None~~
 
-~~            def current(self) -> dict[str, object]:~~
-~~                """Get current context (merged stack)."""~~
-~~                result: dict[str, object] = {}~~
-~~                for ctx in self._stack:~~
-~~                    result.update(ctx)~~
-~~                return result~~
+~~ def current(self) -> dict[str, object]:~~
+~~ """Get current context (merged stack)."""~~
+~~ result: dict[str, object] = {}~~
+~~ for ctx in self.\_stack:~~
+~~ result.update(ctx)~~
+~~ return result~~
 ~~```~~
 
 ### ~~Protocol-Based Manager Interfaces~~ 📋 SPEC PENDENTE
@@ -586,231 +586,231 @@ servir como referência futura para implementação:
 
 ~~**Propósito:** Definir interfaces para managers que podem ser injetados via DI.~~
 
-~~```python~~
+~~```Python~~
 ~~class FlextProtocols:~~
-~~    """Protocol definitions for flext-core."""~~
+~~ """Protocol definitions for flext-core."""~~
 
-~~    class CircuitBreakerProtocol(Protocol):~~
-~~        """Protocol for circuit breaker managers."""~~
+~~ class CircuitBreakerProtocol(Protocol):~~
+~~ """Protocol for circuit breaker managers."""~~
 
-~~        def is_open(self, key: str) -> bool:~~
-~~            """Check if circuit is open (failing)."""~~
-~~            ...~~
+~~ def is_open(self, key: str) -> bool:~~
+~~ """Check if circuit is open (failing)."""~~
+~~ ...~~
 
-~~        def record_success(self, key: str) -> None:~~
-~~            """Record successful call."""~~
-~~            ...~~
+~~ def record_success(self, key: str) -> None:~~
+~~ """Record successful call."""~~
+~~ ...~~
 
-~~        def record_failure(self, key: str) -> None:~~
-~~            """Record failed call."""~~
-~~            ...~~
+~~ def record_failure(self, key: str) -> None:~~
+~~ """Record failed call."""~~
+~~ ...~~
 
-~~        def reset(self, key: str) -> None:~~
-~~            """Reset circuit state."""~~
-~~            ...~~
+~~ def reset(self, key: str) -> None:~~
+~~ """Reset circuit state."""~~
+~~ ...~~
 
-~~    class RateLimiterProtocol(Protocol):~~
-~~        """Protocol for rate limiter managers."""~~
+~~ class RateLimiterProtocol(Protocol):~~
+~~ """Protocol for rate limiter managers."""~~
 
-~~        def acquire(self, key: str, permits: int = 1) -> bool:~~
-~~            """Try to acquire permits."""~~
-~~            ...~~
+~~ def acquire(self, key: str, permits: int = 1) -> bool:~~
+~~ """Try to acquire permits."""~~
+~~ ...~~
 
-~~        def remaining(self, key: str) -> int:~~
-~~            """Get remaining permits."""~~
-~~            ...~~
+~~ def remaining(self, key: str) -> int:~~
+~~ """Get remaining permits."""~~
+~~ ...~~
 
-~~    class TimeoutEnforcerProtocol(Protocol):~~
-~~        """Protocol for timeout enforcement."""~~
+~~ class TimeoutEnforcerProtocol(Protocol):~~
+~~ """Protocol for timeout enforcement."""~~
 
-~~        def execute_with_timeout(~~
-~~            self,~~
-~~            func: Callable[[], T],~~
-~~            timeout_seconds: float,~~
-~~        ) -> FlextResult[T]:~~
-~~            """Execute function with timeout."""~~
-~~            ...~~
+~~ def execute_with_timeout(~~
+~~ self,~~
+~~ func: Callable[[], T],~~
+~~ timeout_seconds: float,~~
+~~ ) -> FlextResult[T]:~~
+~~ """Execute function with timeout."""~~
+~~ ...~~
 
-~~    class RetryPolicyProtocol(Protocol):~~
-~~        """Protocol for retry policies."""~~
+~~ class RetryPolicyProtocol(Protocol):~~
+~~ """Protocol for retry policies."""~~
 
-~~        def execute_with_retry(~~
-~~            self,~~
-~~            func: Callable[[], FlextResult[T]],~~
-~~            max_attempts: int,~~
-~~            backoff_factor: float,~~
-~~        ) -> FlextResult[T]:~~
-~~            """Execute function with retry logic."""~~
-~~            ...~~
+~~ def execute_with_retry(~~
+~~ self,~~
+~~ func: Callable[[], FlextResult[T]],~~
+~~ max_attempts: int,~~
+~~ backoff_factor: float,~~
+~~ ) -> FlextResult[T]:~~
+~~ """Execute function with retry logic."""~~
+~~ ...~~
 ~~```~~
 
 ### ~~FlextDispatcher V2 Refactored~~ 📋 SPEC PENDENTE
 
 > **STATUS:** Especificação de implementação futura (Phase 2)
 
-~~```python~~
+~~```Python~~
 ~~class FlextDispatcher:~~
-~~    """CQRS dispatcher with dependency injection."""~~
+~~ """CQRS dispatcher with dependency injection."""~~
 
-~~    def __init__(~~
-~~        self,~~
-~~        container: FlextContainer | None = None,~~
-~~        *,~~
-~~        # Legacy support - deprecated, use container instead~~
-~~        circuit_breaker: FlextProtocols.CircuitBreakerProtocol | None = None,~~
-~~        rate_limiter: FlextProtocols.RateLimiterProtocol | None = None,~~
-~~        timeout_enforcer: FlextProtocols.TimeoutEnforcerProtocol | None = None,~~
-~~        retry_policy: FlextProtocols.RetryPolicyProtocol | None = None,~~
-~~    ) -> None:~~
-~~        """Initialize dispatcher with optional container.~~
+~~ def **init**(~~
+~~ self,~~
+~~ container: FlextContainer | None = None,~~
+~~ \*,~~
+~~ # Legacy support - deprecated, use container instead~~
+~~ circuit_breaker: FlextProtocols.CircuitBreakerProtocol | None = None,~~
+~~ rate_limiter: FlextProtocols.RateLimiterProtocol | None = None,~~
+~~ timeout_enforcer: FlextProtocols.TimeoutEnforcerProtocol | None = None,~~
+~~ retry_policy: FlextProtocols.RetryPolicyProtocol | None = None,~~
+~~ ) -> None:~~
+~~ """Initialize dispatcher with optional container.~~
 
-~~        Args:~~
-~~            container: FlextContainer for dependency injection.~~
-~~                      If provided, managers are resolved from container.~~
-~~                      If None, uses default implementations.~~
+~~ Args:~~
+~~ container: FlextContainer for dependency injection.~~
+~~ If provided, managers are resolved from container.~~
+~~ If None, uses default implementations.~~
 
-~~            circuit_breaker: Deprecated. Use container.register() instead.~~
-~~            rate_limiter: Deprecated. Use container.register() instead.~~
-~~            timeout_enforcer: Deprecated. Use container.register() instead.~~
-~~            retry_policy: Deprecated. Use container.register() instead.~~
-~~        """~~
-~~        self._container = container or FlextContainer.get_global()~~
+~~ circuit_breaker: Deprecated. Use container.register() instead.~~
+~~ rate_limiter: Deprecated. Use container.register() instead.~~
+~~ timeout_enforcer: Deprecated. Use container.register() instead.~~
+~~ retry_policy: Deprecated. Use container.register() instead.~~
+~~ """~~
+~~ self.\_container = container or FlextContainer.get_global()~~
 
-~~        # Resolve managers from container or use defaults~~
-~~        self._circuit_breaker = self._resolve_manager(~~
-~~            "circuit_breaker",~~
-~~            circuit_breaker,~~
-~~            CircuitBreakerManager,~~
-~~        )~~
-~~        self._rate_limiter = self._resolve_manager(~~
-~~            "rate_limiter",~~
-~~            rate_limiter,~~
-~~            RateLimiterManager,~~
-~~        )~~
-~~        # ... etc~~
+~~ # Resolve managers from container or use defaults~~
+~~ self.\_circuit_breaker = self.\_resolve_manager(~~
+~~ "circuit_breaker",~~
+~~ circuit_breaker,~~
+~~ CircuitBreakerManager,~~
+~~ )~~
+~~ self.\_rate_limiter = self.\_resolve_manager(~~
+~~ "rate_limiter",~~
+~~ rate_limiter,~~
+~~ RateLimiterManager,~~
+~~ )~~
+~~ # ... etc~~
 
-~~    def _resolve_manager(~~
-~~        self,~~
-~~        key: str,~~
-~~        explicit: T | None,~~
-~~        default_factory: Callable[[], T],~~
-~~    ) -> T:~~
-~~        """Resolve manager from container, explicit, or default."""~~
-~~        if explicit is not None:~~
-~~            import warnings~~
-~~            warnings.warn(~~
-~~                f"Passing {key} directly is deprecated. "~~
-~~                f"Use container.register('{key}', ...) instead.",~~
-~~                DeprecationWarning,~~
-~~                stacklevel=3,~~
-~~            )~~
-~~            return explicit~~
+~~ def \_resolve_manager(~~
+~~ self,~~
+~~ key: str,~~
+~~ explicit: T | None,~~
+~~ default_factory: Callable[[], T],~~
+~~ ) -> T:~~
+~~ """Resolve manager from container, explicit, or default."""~~
+~~ if explicit is not None:~~
+~~ import warnings~~
+~~ warnings.warn(~~
+~~ f"Passing {key} directly is deprecated. "~~
+~~ f"Use container.register('{key}', ...) instead.",~~
+~~ DeprecationWarning,~~
+~~ stacklevel=3,~~
+~~ )~~
+~~ return explicit~~
 
-~~        result = self._container.get(key)~~
-~~        if result.is_success:~~
-~~            return result.unwrap()~~
+~~ result = self.\_container.get(key)~~
+~~ if result.is_success:~~
+~~ return result.unwrap()~~
 
-~~        # Create default and register for future use~~
-~~        default = default_factory()~~
-~~        self._container.register(key, default)~~
-~~        return default~~
+~~ # Create default and register for future use~~
+~~ default = default_factory()~~
+~~ self.\_container.register(key, default)~~
+~~ return default~~
 ~~```~~
 
 ### ~~FlextHandlers V2 Refactored~~ 📋 SPEC PENDENTE
 
 > **STATUS:** Especificação de implementação futura (Phase 1)
 
-~~```python~~
+~~```Python~~
 ~~class FlextHandlers(FlextMixins, Generic[TCommand_contra, TResult_co]):~~
-~~    """CQRS message handler with automatic infrastructure."""~~
+~~ """CQRS message handler with automatic infrastructure."""~~
 
-~~    # ✅ V2: CQRS utilities via FlextMixins.CQRS~~
-~~    _cqrs_metrics: FlextMixins.CQRS.MetricsTracker | None = None~~
-~~    _cqrs_context: FlextMixins.CQRS.ContextStack | None = None~~
+~~ # ✅ V2: CQRS utilities via FlextMixins.CQRS~~
+~~ \_cqrs_metrics: FlextMixins.CQRS.MetricsTracker | None = None~~
+~~ \_cqrs_context: FlextMixins.CQRS.ContextStack | None = None~~
 
-~~    @property~~
-~~    def cqrs_metrics(self) -> FlextMixins.CQRS.MetricsTracker:~~
-~~        """Get metrics tracker (lazy initialized)."""~~
-~~        if self._cqrs_metrics is None:~~
-~~            self._cqrs_metrics = FlextMixins.CQRS.MetricsTracker()~~
-~~        return self._cqrs_metrics~~
+~~ @property~~
+~~ def cqrs_metrics(self) -> FlextMixins.CQRS.MetricsTracker:~~
+~~ """Get metrics tracker (lazy initialized)."""~~
+~~ if self.\_cqrs_metrics is None:~~
+~~ self.\_cqrs_metrics = FlextMixins.CQRS.MetricsTracker()~~
+~~ return self.\_cqrs_metrics~~
 
-~~    @property~~
-~~    def cqrs_context(self) -> FlextMixins.CQRS.ContextStack:~~
-~~        """Get context stack (lazy initialized)."""~~
-~~        if self._cqrs_context is None:~~
-~~            self._cqrs_context = FlextMixins.CQRS.ContextStack()~~
-~~        return self._cqrs_context~~
+~~ @property~~
+~~ def cqrs_context(self) -> FlextMixins.CQRS.ContextStack:~~
+~~ """Get context stack (lazy initialized)."""~~
+~~ if self.\_cqrs_context is None:~~
+~~ self.\_cqrs_context = FlextMixins.CQRS.ContextStack()~~
+~~ return self.\_cqrs_context~~
 
-~~    # ⚠️ Legacy methods - deprecated in V2~~
-~~    def record_metric(self, key: str, value: int | float) -> None:~~
-~~        """Record a metric value.~~
+~~ # ⚠️ Legacy methods - deprecated in V2~~
+~~ def record_metric(self, key: str, value: int | float) -> None:~~
+~~ """Record a metric value.~~
 
-~~        .. deprecated:: 1.0~~
-~~            Use `self.cqrs_metrics.record(key, value)` instead.~~
-~~        """~~
-~~        import warnings~~
-~~        warnings.warn(~~
-~~            "record_metric() is deprecated. Use self.cqrs_metrics.record() instead.",~~
-~~            DeprecationWarning,~~
-~~            stacklevel=2,~~
-~~        )~~
-~~        self.cqrs_metrics.record(key, value)~~
+~~ .. deprecated:: 1.0~~
+~~ Use `self.cqrs_metrics.record(key, value)` instead.~~
+~~ """~~
+~~ import warnings~~
+~~ warnings.warn(~~
+~~ "record_metric() is deprecated. Use self.cqrs_metrics.record() instead.",~~
+~~ DeprecationWarning,~~
+~~ stacklevel=2,~~
+~~ )~~
+~~ self.cqrs_metrics.record(key, value)~~
 
-~~    def get_metrics(self) -> dict[str, int | float]:~~
-~~        """Get all recorded metrics.~~
+~~ def get_metrics(self) -> dict[str, int | float]:~~
+~~ """Get all recorded metrics.~~
 
-~~        .. deprecated:: 1.0~~
-~~            Use `self.cqrs_metrics.all()` instead.~~
-~~        """~~
-~~        import warnings~~
-~~        warnings.warn(~~
-~~            "get_metrics() is deprecated. Use self.cqrs_metrics.all() instead.",~~
-~~            DeprecationWarning,~~
-~~            stacklevel=2,~~
-~~        )~~
-~~        return self.cqrs_metrics.all()~~
+~~ .. deprecated:: 1.0~~
+~~ Use `self.cqrs_metrics.all()` instead.~~
+~~ """~~
+~~ import warnings~~
+~~ warnings.warn(~~
+~~ "get_metrics() is deprecated. Use self.cqrs_metrics.all() instead.",~~
+~~ DeprecationWarning,~~
+~~ stacklevel=2,~~
+~~ )~~
+~~ return self.cqrs_metrics.all()~~
 
-~~    # ... similar deprecation for push_context, pop_context~~
+~~ # ... similar deprecation for push_context, pop_context~~
 
-~~    def _run_pipeline(~~
-~~        self,~~
-~~        message: TCommand_contra,~~
-~~    ) -> FlextResult[TResult_co]:~~
-~~        """Run handler pipeline with automatic observability.~~
+~~ def \_run_pipeline(~~
+~~ self,~~
+~~ message: TCommand_contra,~~
+~~ ) -> FlextResult[TResult_co]:~~
+~~ """Run handler pipeline with automatic observability.~~
 
-~~        V2 Enhancement: Automatically uses FlextMixins infrastructure.~~
-~~        """~~
-~~        # ✅ V2: Automatic logging~~
-~~        self.logger.info(~~
-~~            f"Processing {type(message).__name__}",~~
-~~            extra={"message_type": type(message).__name__},~~
-~~        )~~
+~~ V2 Enhancement: Automatically uses FlextMixins infrastructure.~~
+~~ """~~
+~~ # ✅ V2: Automatic logging~~
+~~ self.logger.info(~~
+~~ f"Processing {type(message).**name**}",~~
+~~ extra={"message_type": type(message).**name**},~~
+~~ )~~
 
-~~        # ✅ V2: Automatic tracking~~
-~~        with self.track(f"handle_{type(message).__name__}"):~~
-~~            # ✅ V2: Automatic context~~
-~~            self.cqrs_context.push({"message_id": getattr(message, "id", "unknown")})~~
-~~            try:~~
-~~                # Run pre-processors~~
-~~                for processor in self._pre_processors:~~
-~~                    processor(message)~~
+~~ # ✅ V2: Automatic tracking~~
+~~ with self.track(f"handle\_{type(message).**name**}"):~~
+~~ # ✅ V2: Automatic context~~
+~~ self.cqrs_context.push({"message_id": getattr(message, "id", "unknown")})~~
+~~ try:~~
+~~ # Run pre-processors~~
+~~ for processor in self.\_pre_processors:~~
+~~ processor(message)~~
 
-~~                # Execute handler~~
-~~                result = self.handle(message)~~
+~~ # Execute handler~~
+~~ result = self.handle(message)~~
 
-~~                # ✅ V2: Automatic metrics~~
-~~                self.cqrs_metrics.record("messages_processed", 1)~~
-~~                if result.is_failure:~~
-~~                    self.cqrs_metrics.record("messages_failed", 1)~~
+~~ # ✅ V2: Automatic metrics~~
+~~ self.cqrs_metrics.record("messages_processed", 1)~~
+~~ if result.is_failure:~~
+~~ self.cqrs_metrics.record("messages_failed", 1)~~
 
-~~                # Run post-processors~~
-~~                for processor in self._post_processors:~~
-~~                    processor(result)~~
+~~ # Run post-processors~~
+~~ for processor in self.\_post_processors:~~
+~~ processor(result)~~
 
-~~                return result~~
-~~            finally:~~
-~~                self.cqrs_context.pop()~~
+~~ return result~~
+~~ finally:~~
+~~ self.cqrs_context.pop()~~
 ~~```~~
 
 ---
@@ -845,50 +845,50 @@ servir como referência futura para implementação:
 
 > Migrado para: `flext-core/docs/guides/service-patterns.md#when-to-use`
 
-~~| Cenário                           | Use                              | Não Use              | Racional                        |~~
+~~| Cenário | Use | Não Use | Racional |~~
 ~~| --------------------------------- | -------------------------------- | -------------------- | ------------------------------- |~~
-~~| Operação de domínio simples       | FlextService[T]                  | FlextHandlers        | Sem overhead de messaging       |~~
-~~| CRUD com validação                | FlextService[T]                  | FlextDispatcher      | Execução direta é mais rápida   |~~
-~~| Command com retry/circuit breaker | FlextDispatcher + Handler        | FlextService sozinho | Precisa de reliability patterns |~~
-~~| Event sourcing                    | FlextDispatcher + Event handlers | FlextService         | Event routing necessário        |~~
-~~| HTTP API endpoint                 | FlextService[T] wrapped          | FlextHandlers diret. | Services são API units          |~~
+~~| Operação de domínio simples | FlextService[T] | FlextHandlers | Sem overhead de messaging |~~
+~~| CRUD com validação | FlextService[T] | FlextDispatcher | Execução direta é mais rápida |~~
+~~| Command com retry/circuit breaker | FlextDispatcher + Handler | FlextService sozinho | Precisa de reliability patterns |~~
+~~| Event sourcing | FlextDispatcher + Event handlers | FlextService | Event routing necessário |~~
+~~| HTTP API endpoint | FlextService[T] wrapped | FlextHandlers diret. | Services são API units |~~
 
 ### ~~Pattern 1: Service Chamado de Handler~~ ✅
 
 > Migrado para: `flext-core/docs/guides/service-patterns.md#handler-integration`
 
-~~```python~~
+~~```Python~~
 ~~class CreateUserCommandHandler(FlextHandlers[CreateUserCommand, User]):~~
-~~    """Handler que orquestra, service que executa."""~~
+~~ """Handler que orquestra, service que executa."""~~
 
-~~    def handle(self, command: CreateUserCommand) -> FlextResult[User]:~~
-~~        # Handler orquestra, service executa lógica de domínio~~
-~~        validation_service = ValidateEmailService(email=command.email)~~
-~~        if validation_service.result.is_failure:~~
-~~            return validation_service.result~~
+~~ def handle(self, command: CreateUserCommand) -> FlextResult[User]:~~
+~~ # Handler orquestra, service executa lógica de domínio~~
+~~ validation_service = ValidateEmailService(email=command.email)~~
+~~ if validation_service.result.is_failure:~~
+~~ return validation_service.result~~
 
-~~        # Use service para criação real~~
-~~        creation_service = CreateUserService(~~
-~~            name=command.name,~~
-~~            email=command.email,~~
-~~        )~~
-~~        return creation_service.result~~
+~~ # Use service para criação real~~
+~~ creation_service = CreateUserService(~~
+~~ name=command.name,~~
+~~ email=command.email,~~
+~~ )~~
+~~ return creation_service.result~~
 ~~```~~
 
 ### ~~Pattern 2: Dispatcher Roteando para Services~~ ✅
 
-~~```python~~
+~~```Python~~
 ~~# Register service-based handlers~~
 ~~dispatcher = FlextDispatcher(container=FlextContainer.get_global())~~
 
 ~~dispatcher.register_command(~~
-~~    CreateUserCommand,~~
-~~    lambda cmd: CreateUserService(name=cmd.name, email=cmd.email).result~~
+~~ CreateUserCommand,~~
+~~ lambda cmd: CreateUserService(name=cmd.name, email=cmd.email).result~~
 ~~)~~
 
 ~~dispatcher.register_query(~~
-~~    GetUserQuery,~~
-~~    lambda query: GetUserService(user_id=query.user_id).result~~
+~~ GetUserQuery,~~
+~~ lambda query: GetUserService(user_id=query.user_id).result~~
 ~~)~~
 ~~```~~
 
@@ -896,36 +896,36 @@ servir como referência futura para implementação:
 
 > **STATUS:** Exemplo de implementação futura (Phase 3)
 
-~~```python~~
+~~```Python~~
 ~~class ProcessOrderCommandHandler(FlextHandlers[ProcessOrderCommand, Order]):~~
-~~    """Handler com observabilidade completa via FlextMixins."""~~
+~~ """Handler com observabilidade completa via FlextMixins."""~~
 
-~~    def handle(self, command: ProcessOrderCommand) -> FlextResult[Order]:~~
-~~        # ✅ Logging automático via FlextMixins~~
-~~        self.logger.info(f"Processing order {command.order_id}")~~
+~~ def handle(self, command: ProcessOrderCommand) -> FlextResult[Order]:~~
+~~ # ✅ Logging automático via FlextMixins~~
+~~ self.logger.info(f"Processing order {command.order_id}")~~
 
-~~        # ✅ Tracking automático via FlextMixins~~
-~~        with self.track("process_order"):~~
-~~            # ✅ Contexto via FlextMixins.CQRS~~
-~~            self.cqrs_context.push({~~
-~~                "order_id": command.order_id,~~
-~~                "customer_id": command.customer_id,~~
-~~            })~~
+~~ # ✅ Tracking automático via FlextMixins~~
+~~ with self.track("process_order"):~~
+~~ # ✅ Contexto via FlextMixins.CQRS~~
+~~ self.cqrs_context.push({~~
+~~ "order_id": command.order_id,~~
+~~ "customer_id": command.customer_id,~~
+~~ })~~
 
-~~            try:~~
-~~                # Business logic~~
-~~                order = self._process_order(command)~~
+~~ try:~~
+~~ # Business logic~~
+~~ order = self.\_process_order(command)~~
 
-~~                # ✅ Métricas via FlextMixins.CQRS~~
-~~                self.cqrs_metrics.record("orders_processed", 1)~~
-~~                self.cqrs_metrics.record("order_total", order.total)~~
+~~ # ✅ Métricas via FlextMixins.CQRS~~
+~~ self.cqrs_metrics.record("orders_processed", 1)~~
+~~ self.cqrs_metrics.record("order_total", order.total)~~
 
-~~                return FlextResult.ok(order)~~
-~~            except OrderProcessingError as e:~~
-~~                self.cqrs_metrics.record("orders_failed", 1)~~
-~~                return FlextResult.fail(str(e))~~
-~~            finally:~~
-~~                self.cqrs_context.pop()~~
+~~ return FlextResult.ok(order)~~
+~~ except OrderProcessingError as e:~~
+~~ self.cqrs_metrics.record("orders_failed", 1)~~
+~~ return FlextResult.fail(str(e))~~
+~~ finally:~~
+~~ self.cqrs_context.pop()~~
 ~~```~~
 
 ---
@@ -939,41 +939,41 @@ servir como referência futura para implementação:
 
 ~~```~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│                    Message Input                                │~~
+~~│ Message Input │~~
 ~~└─────────────────────────┬───────────────────────────────────────┘~~
-~~                          │~~
-~~                          ▼~~
+~~ │~~
+~~ ▼~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│                  Pre-Processors                                 │~~
-~~│  ┌─────────────┐ ┌──────────────┐ ┌────────────────┐           │~~
-~~│  │ Validation  │ │ Authorization │ │ Logging        │           │~~
-~~│  └─────────────┘ └──────────────┘ └────────────────┘           │~~
+~~│ Pre-Processors │~~
+~~│ ┌─────────────┐ ┌──────────────┐ ┌────────────────┐ │~~
+~~│ │ Validation │ │ Authorization │ │ Logging │ │~~
+~~│ └─────────────┘ └──────────────┘ └────────────────┘ │~~
 ~~└─────────────────────────┬───────────────────────────────────────┘~~
-~~                          │~~
-~~                          ▼~~
+~~ │~~
+~~ ▼~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│                    _run_pipeline()                              │~~
-~~│  ┌─────────────────────────────────────────────────────────┐   │~~
-~~│  │ with self.track("handle_message"):                       │   │~~
-~~│  │     self.logger.info("Processing message")               │   │~~
-~~│  │     self.cqrs_context.push({"message_id": ...})         │   │~~
-~~│  │     result = self.handle(message)                        │   │~~
-~~│  │     self.cqrs_metrics.record("processed", 1)            │   │~~
-~~│  │     self.cqrs_context.pop()                             │   │~~
-~~│  └─────────────────────────────────────────────────────────┘   │~~
+~~│ \_run_pipeline() │~~
+~~│ ┌─────────────────────────────────────────────────────────┐ │~~
+~~│ │ with self.track("handle_message"): │ │~~
+~~│ │ self.logger.info("Processing message") │ │~~
+~~│ │ self.cqrs_context.push({"message_id": ...}) │ │~~
+~~│ │ result = self.handle(message) │ │~~
+~~│ │ self.cqrs_metrics.record("processed", 1) │ │~~
+~~│ │ self.cqrs_context.pop() │ │~~
+~~│ └─────────────────────────────────────────────────────────┘ │~~
 ~~└─────────────────────────┬───────────────────────────────────────┘~~
-~~                          │~~
-~~                          ▼~~
+~~ │~~
+~~ ▼~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│                  Post-Processors                                │~~
-~~│  ┌─────────────┐ ┌──────────────┐ ┌────────────────┐           │~~
-~~│  │ Audit       │ │ Notification  │ │ Cleanup        │           │~~
-~~│  └─────────────┘ └──────────────┘ └────────────────┘           │~~
+~~│ Post-Processors │~~
+~~│ ┌─────────────┐ ┌──────────────┐ ┌────────────────┐ │~~
+~~│ │ Audit │ │ Notification │ │ Cleanup │ │~~
+~~│ └─────────────┘ └──────────────┘ └────────────────┘ │~~
 ~~└─────────────────────────┬───────────────────────────────────────┘~~
-~~                          │~~
-~~                          ▼~~
+~~ │~~
+~~ ▼~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│                    FlextResult[T]                               │~~
+~~│ FlextResult[T] │~~
 ~~└─────────────────────────────────────────────────────────────────┘~~
 ~~```~~
 
@@ -981,56 +981,56 @@ servir como referência futura para implementação:
 
 ~~```~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│                    Message Dispatch                             │~~
+~~│ Message Dispatch │~~
 ~~└─────────────────────────┬───────────────────────────────────────┘~~
-~~                          │~~
-~~                          ▼~~
+~~ │~~
+~~ ▼~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│                  Rate Limiter Check                             │~~
-~~│  ┌─────────────────────────────────────────────────────────┐   │~~
-~~│  │ if not rate_limiter.acquire(handler_key):               │   │~~
-~~│  │     return FlextResult.fail("Rate limit exceeded")      │   │~~
-~~│  └─────────────────────────────────────────────────────────┘   │~~
+~~│ Rate Limiter Check │~~
+~~│ ┌─────────────────────────────────────────────────────────┐ │~~
+~~│ │ if not rate_limiter.acquire(handler_key): │ │~~
+~~│ │ return FlextResult.fail("Rate limit exceeded") │ │~~
+~~│ └─────────────────────────────────────────────────────────┘ │~~
 ~~└─────────────────────────┬───────────────────────────────────────┘~~
-                          │
-~~                          ▼~~
+│
+~~ ▼~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│                Circuit Breaker Check                            │~~
-~~│  ┌─────────────────────────────────────────────────────────┐   │~~
-~~│  │ if circuit_breaker.is_open(handler_key):                │   │~~
-~~│  │     return FlextResult.fail("Circuit open")             │   │~~
-~~│  └─────────────────────────────────────────────────────────┘   │~~
+~~│ Circuit Breaker Check │~~
+~~│ ┌─────────────────────────────────────────────────────────┐ │~~
+~~│ │ if circuit_breaker.is_open(handler_key): │ │~~
+~~│ │ return FlextResult.fail("Circuit open") │ │~~
+~~│ └─────────────────────────────────────────────────────────┘ │~~
 ~~└─────────────────────────┬───────────────────────────────────────┘~~
-~~                          │~~
-~~                          ▼~~
+~~ │~~
+~~ ▼~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│               Timeout + Retry Execution                         │~~
-~~│  ┌─────────────────────────────────────────────────────────┐   │~~
-~~│  │ retry_policy.execute_with_retry(                        │   │~~
-~~│  │     lambda: timeout_enforcer.execute_with_timeout(      │   │~~
-~~│  │         lambda: handler.handle(message),                │   │~~
-~~│  │         timeout_seconds,                                │   │~~
-~~│  │     ),                                                  │   │~~
-~~│  │     max_attempts=3,                                     │   │~~
-~~│  │     backoff_factor=2.0,                                 │   │~~
-~~│  │ )                                                       │   │~~
-~~│  └─────────────────────────────────────────────────────────┘   │~~
+~~│ Timeout + Retry Execution │~~
+~~│ ┌─────────────────────────────────────────────────────────┐ │~~
+~~│ │ retry_policy.execute_with_retry( │ │~~
+~~│ │ lambda: timeout_enforcer.execute_with_timeout( │ │~~
+~~│ │ lambda: handler.handle(message), │ │~~
+~~│ │ timeout_seconds, │ │~~
+~~│ │ ), │ │~~
+~~│ │ max_attempts=3, │ │~~
+~~│ │ backoff_factor=2.0, │ │~~
+~~│ │ ) │ │~~
+~~│ └─────────────────────────────────────────────────────────┘ │~~
 ~~└─────────────────────────┬───────────────────────────────────────┘~~
-~~                          │~~
-~~                          ▼~~
+~~ │~~
+~~ ▼~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│              Circuit Breaker Update                             │~~
-~~│  ┌─────────────────────────────────────────────────────────┐   │~~
-~~│  │ if result.is_success:                                   │   │~~
-~~│  │     circuit_breaker.record_success(handler_key)         │   │~~
-~~│  │ else:                                                   │   │~~
-~~│  │     circuit_breaker.record_failure(handler_key)         │   │~~
-~~│  └─────────────────────────────────────────────────────────┘   │~~
+~~│ Circuit Breaker Update │~~
+~~│ ┌─────────────────────────────────────────────────────────┐ │~~
+~~│ │ if result.is_success: │ │~~
+~~│ │ circuit_breaker.record_success(handler_key) │ │~~
+~~│ │ else: │ │~~
+~~│ │ circuit_breaker.record_failure(handler_key) │ │~~
+~~│ └─────────────────────────────────────────────────────────┘ │~~
 ~~└─────────────────────────┬───────────────────────────────────────┘~~
-~~                          │~~
-~~                          ▼~~
+~~ │~~
+~~ ▼~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│                    FlextResult[T]                               │~~
+~~│ FlextResult[T] │~~
 ~~└─────────────────────────────────────────────────────────────────┘~~
 ~~```~~
 
@@ -1042,42 +1042,42 @@ servir como referência futura para implementação:
 
 ~~```~~
 ~~flext_core/~~
-~~├── _managers/~~
-~~│   ├── __init__.py          # Re-exports all managers~~
-~~│   ├── circuit_breaker.py   # CircuitBreakerManager~~
-~~│   ├── rate_limiter.py      # RateLimiterManager~~
-~~│   ├── timeout_enforcer.py  # TimeoutEnforcer~~
-~~│   └── retry_policy.py      # RetryPolicyManager~~
-~~├── dispatcher.py            # FlextDispatcher (refactored)~~
-~~└── protocols.py             # Manager protocols~~
+~~├── \_managers/~~
+~~│ ├── **init**.py # Re-exports all managers~~
+~~│ ├── circuit_breaker.py # CircuitBreakerManager~~
+~~│ ├── rate_limiter.py # RateLimiterManager~~
+~~│ ├── timeout_enforcer.py # TimeoutEnforcer~~
+~~│ └── retry_policy.py # RetryPolicyManager~~
+~~├── dispatcher.py # FlextDispatcher (refactored)~~
+~~└── protocols.py # Manager protocols~~
 ~~```~~
 
 ~~**Registro Default no Container:**~~
 
-~~```python~~
-~~# flext_core/_managers/__init__.py~~
+~~```Python~~
+~~# flext_core/\_managers/**init**.py~~
 ~~from flext_core.container import FlextContainer~~
 
 ~~def register_default_managers() -> None:~~
-~~    """Register default managers in global container."""~~
-~~    container = FlextContainer.get_global()~~
+~~ """Register default managers in global container."""~~
+~~ container = FlextContainer.get_global()~~
 
-~~    # Only register if not already present~~
-~~    if container.get("circuit_breaker").is_failure:~~
-~~        from flext_core._managers.circuit_breaker import CircuitBreakerManager~~
-~~        container.register("circuit_breaker", CircuitBreakerManager())~~
+~~ # Only register if not already present~~
+~~ if container.get("circuit_breaker").is_failure:~~
+~~ from flext_core.\_managers.circuit_breaker import CircuitBreakerManager~~
+~~ container.register("circuit_breaker", CircuitBreakerManager())~~
 
-~~    if container.get("rate_limiter").is_failure:~~
-~~        from flext_core._managers.rate_limiter import RateLimiterManager~~
-~~        container.register("rate_limiter", RateLimiterManager())~~
+~~ if container.get("rate_limiter").is_failure:~~
+~~ from flext_core.\_managers.rate_limiter import RateLimiterManager~~
+~~ container.register("rate_limiter", RateLimiterManager())~~
 
-~~    if container.get("timeout_enforcer").is_failure:~~
-~~        from flext_core._managers.timeout_enforcer import TimeoutEnforcer~~
-~~        container.register("timeout_enforcer", TimeoutEnforcer())~~
+~~ if container.get("timeout_enforcer").is_failure:~~
+~~ from flext_core.\_managers.timeout_enforcer import TimeoutEnforcer~~
+~~ container.register("timeout_enforcer", TimeoutEnforcer())~~
 
-~~    if container.get("retry_policy").is_failure:~~
-~~        from flext_core._managers.retry_policy import RetryPolicyManager~~
-~~        container.register("retry_policy", RetryPolicyManager())~~
+~~ if container.get("retry_policy").is_failure:~~
+~~ from flext_core.\_managers.retry_policy import RetryPolicyManager~~
+~~ container.register("retry_policy", RetryPolicyManager())~~
 ~~```~~
 
 ---
@@ -1089,37 +1089,37 @@ servir como referência futura para implementação:
 
 ### ~~Setup Básico de Handler (V2)~~ ✅
 
-~~```python~~
+~~```Python~~
 ~~from flext_core import FlextHandlers, FlextResult~~
 
 ~~class MyCommandHandler(FlextHandlers[MyCommand, MyResult]):~~
-~~    """Handler com setup mínimo."""~~
+~~ """Handler com setup mínimo."""~~
 
-~~    def handle(self, command: MyCommand) -> FlextResult[MyResult]:~~
-~~        # Infraestrutura automática via FlextMixins:~~
-~~        # - self.logger: FlextLogger~~
-~~        # - self.config: FlextConfig~~
-~~        # - self.container: FlextContainer~~
-~~        # - self.context: FlextContext~~
-~~        # - self.track(): Performance tracking~~
-~~        # - self.cqrs_metrics: MetricsTracker~~
-~~        # - self.cqrs_context: ContextStack~~
+~~ def handle(self, command: MyCommand) -> FlextResult[MyResult]:~~
+~~ # Infraestrutura automática via FlextMixins:~~
+~~ # - self.logger: FlextLogger~~
+~~ # - self.config: FlextConfig~~
+~~ # - self.container: FlextContainer~~
+~~ # - self.context: FlextContext~~
+~~ # - self.track(): Performance tracking~~
+~~ # - self.cqrs_metrics: MetricsTracker~~
+~~ # - self.cqrs_context: ContextStack~~
 
-~~        self.logger.info(f"Processing {command.id}")~~
+~~ self.logger.info(f"Processing {command.id}")~~
 
-~~        with self.track("handle_command"):~~
-~~            result = self._process(command)~~
+~~ with self.track("handle_command"):~~
+~~ result = self.\_process(command)~~
 
-~~        self.cqrs_metrics.record("commands_processed", 1)~~
+~~ self.cqrs_metrics.record("commands_processed", 1)~~
 
-~~        return FlextResult.ok(result)~~
+~~ return FlextResult.ok(result)~~
 ~~```~~
 
 ### ~~Setup de Dispatcher com DI (V2)~~ 📋 SPEC PENDENTE
 
 > **STATUS:** Especificação de implementação futura (Phase 2)
 
-~~```python~~
+~~```Python~~
 ~~from flext_core import FlextDispatcher, FlextContainer~~
 
 ~~# Option 1: Use default managers (auto-registered)~~
@@ -1137,56 +1137,56 @@ servir como referência futura para implementação:
 ~~dispatcher.register_event(UserCreatedEvent, UserCreatedHandler())~~
 
 ~~# Dispatch messages~~
-~~result = dispatcher.dispatch(CreateUserCommand(name="John", email="john@example.com"))~~
+~~result = dispatcher.dispatch(CreateUserCommand(name="John", email="<john@example.com>"))~~
 ~~```~~
 
 ### ~~Criando Custom Reliability Policy~~ 📋 SPEC PENDENTE
 
 > **STATUS:** Especificação de implementação futura (Phase 2)
 
-~~```python~~
+~~```Python~~
 ~~from flext_core import FlextProtocols, FlextResult~~
 
 ~~class CustomCircuitBreaker:~~
-~~    """Custom circuit breaker implementation."""~~
+~~ """Custom circuit breaker implementation."""~~
 
-~~    def __init__(~~
-~~        self,~~
-~~        failure_threshold: int = 5,~~
-~~        recovery_timeout: float = 30.0,~~
-~~    ) -> None:~~
-~~        self._failure_threshold = failure_threshold~~
-~~        self._recovery_timeout = recovery_timeout~~
-~~        self._failures: dict[str, int] = {}~~
-~~        self._last_failure: dict[str, float] = {}~~
+~~ def **init**(~~
+~~ self,~~
+~~ failure_threshold: int = 5,~~
+~~ recovery_timeout: float = 30.0,~~
+~~ ) -> None:~~
+~~ self.\_failure_threshold = failure_threshold~~
+~~ self.\_recovery_timeout = recovery_timeout~~
+~~ self.\_failures: dict[str, int] = {}~~
+~~ self.\_last_failure: dict[str, float] = {}~~
 
-~~    def is_open(self, key: str) -> bool:~~
-~~        """Check if circuit is open."""~~
-~~        failures = self._failures.get(key, 0)~~
-~~        if failures < self._failure_threshold:~~
-~~            return False~~
+~~ def is_open(self, key: str) -> bool:~~
+~~ """Check if circuit is open."""~~
+~~ failures = self.\_failures.get(key, 0)~~
+~~ if failures < self.\_failure_threshold:~~
+~~ return False~~
 
-~~        last = self._last_failure.get(key, 0)~~
-~~        if time.time() - last > self._recovery_timeout:~~
-~~            # Half-open: allow one attempt~~
-~~            return False~~
+~~ last = self.\_last_failure.get(key, 0)~~
+~~ if time.time() - last > self.\_recovery_timeout:~~
+~~ # Half-open: allow one attempt~~
+~~ return False~~
 
-~~        return True~~
+~~ return True~~
 
-~~    def record_success(self, key: str) -> None:~~
-~~        """Record successful call - reset failures."""~~
-~~        self._failures[key] = 0~~
+~~ def record_success(self, key: str) -> None:~~
+~~ """Record successful call - reset failures."""~~
+~~ self.\_failures[key] = 0~~
 
-~~    def record_failure(self, key: str) -> None:~~
-~~        """Record failed call."""~~
-~~        self._failures[key] = self._failures.get(key, 0) + 1~~
-~~        self._last_failure[key] = time.time()~~
+~~ def record_failure(self, key: str) -> None:~~
+~~ """Record failed call."""~~
+~~ self.\_failures[key] = self.\_failures.get(key, 0) + 1~~
+~~ self.\_last_failure[key] = time.time()~~
 
 ~~# Register custom implementation~~
 ~~container = FlextContainer.get_global()~~
 ~~container.register("circuit_breaker", CustomCircuitBreaker(~~
-~~    failure_threshold=10,~~
-~~    recovery_timeout=60.0,~~
+~~ failure_threshold=10,~~
+~~ recovery_timeout=60.0,~~
 ~~))~~
 ~~```~~
 
@@ -1199,170 +1199,170 @@ servir como referência futura para implementação:
 
 ### ~~Simple Command Handling~~ ✅
 
-~~```python~~
+~~```Python~~
 ~~from dataclasses import dataclass~~
 ~~from flext_core import FlextHandlers, FlextResult, FlextDispatcher~~
 
 ~~@dataclass~~
 ~~class CreateUserCommand:~~
-~~    name: str~~
-~~    email: str~~
+~~ name: str~~
+~~ email: str~~
 
 ~~@dataclass~~
 ~~class User:~~
-~~    id: str~~
-~~    name: str~~
-~~    email: str~~
+~~ id: str~~
+~~ name: str~~
+~~ email: str~~
 
 ~~class CreateUserHandler(FlextHandlers[CreateUserCommand, User]):~~
-~~    def handle(self, command: CreateUserCommand) -> FlextResult[User]:~~
-~~        self.logger.info(f"Creating user: {command.name}")~~
+~~ def handle(self, command: CreateUserCommand) -> FlextResult[User]:~~
+~~ self.logger.info(f"Creating user: {command.name}")~~
 
-~~        # Business logic~~
-~~        user = User(~~
-~~            id=str(uuid.uuid4()),~~
-~~            name=command.name,~~
-~~            email=command.email,~~
-~~        )~~
+~~ # Business logic~~
+~~ user = User(~~
+~~ id=str(uuid.uuid4()),~~
+~~ name=command.name,~~
+~~ email=command.email,~~
+~~ )~~
 
-~~        self.cqrs_metrics.record("users_created", 1)~~
+~~ self.cqrs_metrics.record("users_created", 1)~~
 
-~~        return FlextResult.ok(user)~~
+~~ return FlextResult.ok(user)~~
 
 ~~# Usage~~
 ~~dispatcher = FlextDispatcher()~~
 ~~dispatcher.register_command(CreateUserCommand, CreateUserHandler())~~
 
-~~result = dispatcher.dispatch(CreateUserCommand(name="John", email="john@example.com"))~~
+~~result = dispatcher.dispatch(CreateUserCommand(name="John", email="<john@example.com>"))~~
 ~~if result.is_success:~~
-~~    user = result.unwrap()~~
-~~    print(f"Created user: {user.id}")~~
+~~ user = result.unwrap()~~
+~~ print(f"Created user: {user.id}")~~
 ~~```~~
 
 ### ~~Query with Caching~~ ✅
 
-~~```python~~
+~~```Python~~
 ~~@dataclass~~
 ~~class GetUserQuery:~~
-~~    user_id: str~~
+~~ user_id: str~~
 
 ~~class GetUserHandler(FlextHandlers[GetUserQuery, User]):~~
-~~    _cache: dict[str, User] = {}~~
+~~ \_cache: dict[str, User] = {}~~
 
-~~    def handle(self, query: GetUserQuery) -> FlextResult[User]:~~
-~~        # Check cache first~~
-~~        if query.user_id in self._cache:~~
-~~            self.cqrs_metrics.record("cache_hits", 1)~~
-~~            return FlextResult.ok(self._cache[query.user_id])~~
+~~ def handle(self, query: GetUserQuery) -> FlextResult[User]:~~
+~~ # Check cache first~~
+~~ if query.user_id in self.\_cache:~~
+~~ self.cqrs_metrics.record("cache_hits", 1)~~
+~~ return FlextResult.ok(self.\_cache[query.user_id])~~
 
-~~        self.cqrs_metrics.record("cache_misses", 1)~~
+~~ self.cqrs_metrics.record("cache_misses", 1)~~
 
-~~        # Fetch from repository~~
-~~        with self.track("fetch_user"):~~
-~~            user = self._fetch_user(query.user_id)~~
+~~ # Fetch from repository~~
+~~ with self.track("fetch_user"):~~
+~~ user = self.\_fetch_user(query.user_id)~~
 
-~~        if user is None:~~
-~~            return FlextResult.fail(f"User not found: {query.user_id}")~~
+~~ if user is None:~~
+~~ return FlextResult.fail(f"User not found: {query.user_id}")~~
 
-~~        # Cache result~~
-~~        self._cache[query.user_id] = user~~
+~~ # Cache result~~
+~~ self.\_cache[query.user_id] = user~~
 
-~~        return FlextResult.ok(user)~~
+~~ return FlextResult.ok(user)~~
 ~~```~~
 
 ### ~~Event Processing with Audit~~ ✅
 
-~~```python~~
+~~```Python~~
 ~~@dataclass~~
 ~~class UserCreatedEvent:~~
-~~    user_id: str~~
-~~    name: str~~
-~~    email: str~~
-~~    created_at: datetime~~
+~~ user_id: str~~
+~~ name: str~~
+~~ email: str~~
+~~ created_at: datetime~~
 
 ~~class UserCreatedHandler(FlextHandlers[UserCreatedEvent, None]):~~
-~~    def handle(self, event: UserCreatedEvent) -> FlextResult[None]:~~
-~~        self.cqrs_context.push({~~
-~~            "event_type": "UserCreated",~~
-~~            "user_id": event.user_id,~~
-~~            "timestamp": event.created_at.isoformat(),~~
-~~        })~~
+~~ def handle(self, event: UserCreatedEvent) -> FlextResult[None]:~~
+~~ self.cqrs_context.push({~~
+~~ "event_type": "UserCreated",~~
+~~ "user_id": event.user_id,~~
+~~ "timestamp": event.created_at.isoformat(),~~
+~~ })~~
 
-~~        try:~~
-~~            # Send welcome email~~
-~~            self._send_welcome_email(event)~~
-~~            self.cqrs_metrics.record("welcome_emails_sent", 1)~~
+~~ try:~~
+~~ # Send welcome email~~
+~~ self.\_send_welcome_email(event)~~
+~~ self.cqrs_metrics.record("welcome_emails_sent", 1)~~
 
-~~            # Update analytics~~
-~~            self._update_analytics(event)~~
+~~ # Update analytics~~
+~~ self.\_update_analytics(event)~~
 
-~~            # Audit log~~
-~~            self.logger.info(~~
-~~                "User created event processed",~~
-~~                extra=self.cqrs_context.current(),~~
-~~            )~~
+~~ # Audit log~~
+~~ self.logger.info(~~
+~~ "User created event processed",~~
+~~ extra=self.cqrs_context.current(),~~
+~~ )~~
 
-~~            return FlextResult.ok(None)~~
-~~        except Exception as e:~~
-~~            self.cqrs_metrics.record("event_processing_errors", 1)~~
-~~            return FlextResult.fail(str(e))~~
-~~        finally:~~
-~~            self.cqrs_context.pop()~~
+~~ return FlextResult.ok(None)~~
+~~ except Exception as e:~~
+~~ self.cqrs_metrics.record("event_processing_errors", 1)~~
+~~ return FlextResult.fail(str(e))~~
+~~ finally:~~
+~~ self.cqrs_context.pop()~~
 ~~```~~
 
 ### ~~Multi-Operation Handler~~ ✅
 
-~~```python~~
+~~```Python~~
 ~~@dataclass~~
 ~~class ProcessOrderCommand:~~
-~~    order_id: str~~
-~~    customer_id: str~~
-~~    items: list[OrderItem]~~
+~~ order_id: str~~
+~~ customer_id: str~~
+~~ items: list[OrderItem]~~
 
 ~~class ProcessOrderHandler(FlextHandlers[ProcessOrderCommand, Order]):~~
-~~    def handle(self, command: ProcessOrderCommand) -> FlextResult[Order]:~~
-~~        self.cqrs_context.push({~~
-~~            "order_id": command.order_id,~~
-~~            "customer_id": command.customer_id,~~
-~~            "item_count": len(command.items),~~
-~~        })~~
+~~ def handle(self, command: ProcessOrderCommand) -> FlextResult[Order]:~~
+~~ self.cqrs_context.push({~~
+~~ "order_id": command.order_id,~~
+~~ "customer_id": command.customer_id,~~
+~~ "item_count": len(command.items),~~
+~~ })~~
 
-~~        try:~~
-~~            # Step 1: Validate inventory~~
-~~            with self.track("validate_inventory"):~~
-~~                for item in command.items:~~
-~~                    if not self._check_inventory(item):~~
-~~                        return FlextResult.fail(f"Item out of stock: {item.product_id}")~~
+~~ try:~~
+~~ # Step 1: Validate inventory~~
+~~ with self.track("validate_inventory"):~~
+~~ for item in command.items:~~
+~~ if not self.\_check_inventory(item):~~
+~~ return FlextResult.fail(f"Item out of stock: {item.product_id}")~~
 
-~~            # Step 2: Reserve inventory~~
-~~            with self.track("reserve_inventory"):~~
-~~                reservation_ids = self._reserve_items(command.items)~~
+~~ # Step 2: Reserve inventory~~
+~~ with self.track("reserve_inventory"):~~
+~~ reservation_ids = self.\_reserve_items(command.items)~~
 
-~~            # Step 3: Process payment~~
-~~            with self.track("process_payment"):~~
-~~                payment_result = self._process_payment(command)~~
-~~                if payment_result.is_failure:~~
-~~                    # Rollback reservations~~
-~~                    self._release_reservations(reservation_ids)~~
-~~                    return payment_result~~
+~~ # Step 3: Process payment~~
+~~ with self.track("process_payment"):~~
+~~ payment_result = self.\_process_payment(command)~~
+~~ if payment_result.is_failure:~~
+~~ # Rollback reservations~~
+~~ self.\_release_reservations(reservation_ids)~~
+~~ return payment_result~~
 
-~~            # Step 4: Create order~~
-~~            with self.track("create_order"):~~
-~~                order = self._create_order(command, payment_result.unwrap())~~
+~~ # Step 4: Create order~~
+~~ with self.track("create_order"):~~
+~~ order = self.\_create_order(command, payment_result.unwrap())~~
 
-~~            # Record metrics~~
-~~            self.cqrs_metrics.record("orders_processed", 1)~~
-~~            self.cqrs_metrics.record("items_processed", len(command.items))~~
-~~            self.cqrs_metrics.record("order_total", order.total)~~
+~~ # Record metrics~~
+~~ self.cqrs_metrics.record("orders_processed", 1)~~
+~~ self.cqrs_metrics.record("items_processed", len(command.items))~~
+~~ self.cqrs_metrics.record("order_total", order.total)~~
 
-~~            return FlextResult.ok(order)~~
+~~ return FlextResult.ok(order)~~
 
-~~        except Exception as e:~~
-~~            self.cqrs_metrics.record("orders_failed", 1)~~
-~~            self.logger.error(f"Order processing failed: {e}")~~
-~~            return FlextResult.fail(str(e))~~
-~~        finally:~~
-~~            self.cqrs_context.pop()~~
+~~ except Exception as e:~~
+~~ self.cqrs_metrics.record("orders_failed", 1)~~
+~~ self.logger.error(f"Order processing failed: {e}")~~
+~~ return FlextResult.fail(str(e))~~
+~~ finally:~~
+~~ self.cqrs_context.pop()~~
 ~~```~~
 
 ---
@@ -1375,34 +1375,34 @@ servir como referência futura para implementação:
 
 ~~**Antes (V1):**~~
 
-~~```python~~
+~~```Python~~
 ~~class MyHandler(FlextHandlers[MyCommand, MyResult]):~~
-~~    def handle(self, command: MyCommand) -> FlextResult[MyResult]:~~
-~~        # ❌ V1: Métricas manuais~~
-~~        self.record_metric("commands_processed", 1)~~
+~~ def handle(self, command: MyCommand) -> FlextResult[MyResult]:~~
+~~ # ❌ V1: Métricas manuais~~
+~~ self.record_metric("commands_processed", 1)~~
 
-~~        result = self._process(command)~~
+~~ result = self.\_process(command)~~
 
-~~        if result.is_failure:~~
-~~            self.record_metric("commands_failed", 1)~~
+~~ if result.is_failure:~~
+~~ self.record_metric("commands_failed", 1)~~
 
-~~        return result~~
+~~ return result~~
 ~~```~~
 
 ~~**Depois (V2):**~~
 
-~~```python~~
+~~```Python~~
 ~~class MyHandler(FlextHandlers[MyCommand, MyResult]):~~
-~~    def handle(self, command: MyCommand) -> FlextResult[MyResult]:~~
-~~        # ✅ V2: Métricas via FlextMixins.CQRS~~
-~~        self.cqrs_metrics.record("commands_processed", 1)~~
+~~ def handle(self, command: MyCommand) -> FlextResult[MyResult]:~~
+~~ # ✅ V2: Métricas via FlextMixins.CQRS~~
+~~ self.cqrs_metrics.record("commands_processed", 1)~~
 
-~~        result = self._process(command)~~
+~~ result = self.\_process(command)~~
 
-~~        if result.is_failure:~~
-~~            self.cqrs_metrics.record("commands_failed", 1)~~
+~~ if result.is_failure:~~
+~~ self.cqrs_metrics.record("commands_failed", 1)~~
 
-~~        return result~~
+~~ return result~~
 ~~```~~
 
 ### ~~De Managers Hardcoded para DI~~ ✅
@@ -1417,7 +1417,7 @@ servir como referência futura para implementação:
 
 ~~**Depois (V2):**~~
 
-~~```python~~
+~~```Python~~
 ~~# ✅ V2: Managers via DI~~
 ~~from flext_core import FlextContainer, FlextDispatcher~~
 
@@ -1427,12 +1427,12 @@ servir como referência futura para implementação:
 ~~# Option B: Custom managers~~
 ~~container = FlextContainer.get_global()~~
 ~~container.register("circuit_breaker", CustomCircuitBreaker(~~
-~~    failure_threshold=10,~~
-~~    recovery_timeout=60.0,~~
+~~ failure_threshold=10,~~
+~~ recovery_timeout=60.0,~~
 ~~))~~
 ~~container.register("rate_limiter", CustomRateLimiter(~~
-~~    max_requests=1000,~~
-~~    time_window=60.0,~~
+~~ max_requests=1000,~~
+~~ time_window=60.0,~~
 ~~))~~
 ~~dispatcher = FlextDispatcher(container=container)~~
 ~~```~~
@@ -1441,18 +1441,18 @@ servir como referência futura para implementação:
 
 > Migrado para: `flext-core/docs/architecture/cqrs.md#handler-patterns` (Migration Path)
 
-~~| Método                                 | Status V1    | Status V2     | Remoção       |~~
+~~| Método | Status V1 | Status V2 | Remoção |~~
 ~~| -------------------------------------- | ------------ | ------------- | ------------- |~~
-~~| `record_metric()`                      | ✅ Funcional | ⚠️ Deprecated | V3 (6+ meses) |~~
-~~| `get_metrics()`                        | ✅ Funcional | ⚠️ Deprecated | V3 (6+ meses) |~~
-~~| `push_context()`                       | ✅ Funcional | ⚠️ Deprecated | V3 (6+ meses) |~~
-~~| `pop_context()`                        | ✅ Funcional | ⚠️ Deprecated | V3 (6+ meses) |~~
+~~| `record_metric()` | ✅ Funcional | ⚠️ Deprecated | V3 (6+ meses) |~~
+~~| `get_metrics()` | ✅ Funcional | ⚠️ Deprecated | V3 (6+ meses) |~~
+~~| `push_context()` | ✅ Funcional | ⚠️ Deprecated | V3 (6+ meses) |~~
+~~| `pop_context()` | ✅ Funcional | ⚠️ Deprecated | V3 (6+ meses) |~~
 ~~| `FlextDispatcher(circuit_breaker=...)` | ✅ Funcional | ⚠️ Deprecated | V3 (6+ meses) |~~
-~~| `FlextDispatcher(rate_limiter=...)`    | ✅ Funcional | ⚠️ Deprecated | V3 (6+ meses) |~~
+~~| `FlextDispatcher(rate_limiter=...)` | ✅ Funcional | ⚠️ Deprecated | V3 (6+ meses) |~~
 
 ### ~~Warnings Durante Migração~~ ✅
 
-~~```python~~
+~~```Python~~
 ~~# O que você verá durante o grace period:~~
 
 ~~>>> handler.record_metric("key", 1)~~
@@ -1478,7 +1478,7 @@ servir como referência futura para implementação:
 
 > Exemplo extensivo - manter como referência de implementação
 
-~~```python~~
+~~```Python~~
 ~~"""Complete CQRS application with FlextHandlers and FlextDispatcher."""~~
 
 ~~from dataclasses import dataclass~~
@@ -1487,88 +1487,80 @@ servir como referência futura para implementação:
 ~~import uuid~~
 
 ~~from flext_core import (~~
-~~    FlextContainer,~~
-~~    FlextDispatcher,~~
-~~    FlextHandlers,~~
-~~    FlextResult,~~
+~~ FlextContainer,~~
+~~ FlextDispatcher,~~
+~~ FlextHandlers,~~
+~~ FlextResult,~~
 ~~)~~
-
 
 ~~# Domain Models~~
 ~~@dataclass~~
 ~~class User:~~
-~~    id: str~~
-~~    name: str~~
-~~    email: str~~
-~~    created_at: datetime~~
-
+~~ id: str~~
+~~ name: str~~
+~~ email: str~~
+~~ created_at: datetime~~
 
 ~~# Commands~~
 ~~@dataclass~~
 ~~class CreateUserCommand:~~
-~~    name: str~~
-~~    email: str~~
-
+~~ name: str~~
+~~ email: str~~
 
 ~~@dataclass~~
 ~~class UpdateUserCommand:~~
-~~    user_id: str~~
-~~    name: str | None = None~~
-~~    email: str | None = None~~
-
+~~ user_id: str~~
+~~ name: str | None = None~~
+~~ email: str | None = None~~
 
 ~~# Queries~~
 ~~@dataclass~~
 ~~class GetUserQuery:~~
-~~    user_id: str~~
-
+~~ user_id: str~~
 
 ~~@dataclass~~
 ~~class ListUsersQuery:~~
-~~    limit: int = 100~~
-~~    offset: int = 0~~
-
+~~ limit: int = 100~~
+~~ offset: int = 0~~
 
 ~~# Events~~
 ~~@dataclass~~
 ~~class UserCreatedEvent:~~
-~~    user_id: str~~
-~~    name: str~~
-~~    email: str~~
-~~    created_at: datetime~~
-
+~~ user_id: str~~
+~~ name: str~~
+~~ email: str~~
+~~ created_at: datetime~~
 
 ~~# In-memory repository (for demo)~~
 ~~class UserRepository:~~
-~~    _users: ClassVar[dict[str, User]] = {}~~
+~~ \_users: ClassVar[dict[str, User]] = {}~~
 
-~~    @classmethod~~
-~~    def save(cls, user: User) -> None:~~
-~~        cls._users[user.id] = user~~
+~~ @classmethod~~
+~~ def save(cls, user: User) -> None:~~
+~~ cls.\_users[user.id] = user~~
 
-~~    @classmethod~~
-~~    def get(cls, user_id: str) -> User | None:~~
-~~        return cls._users.get(user_id)~~
+~~ @classmethod~~
+~~ def get(cls, user_id: str) -> User | None:~~
+~~ return cls.\_users.get(user_id)~~
 
-~~    @classmethod~~
-~~    def list(cls, limit: int, offset: int) -> list[User]:~~
-~~        users = list(cls._users.values())~~
-~~        return users[offset:offset + limit]~~
-
+~~ @classmethod~~
+~~ def list(cls, limit: int, offset: int) -> list[User]:~~
+~~ users = list(cls.\_users.values())~~
+~~ return users[offset:offset + limit]~~
 
 ~~# Command Handlers~~
 ~~class CreateUserHandler(FlextHandlers[CreateUserCommand, User]):~~
-~~    def handle(self, command: CreateUserCommand) -> FlextResult[User]:~~
-~~        self.logger.info(f"Creating user: {command.name}")~~
+~~ def handle(self, command: CreateUserCommand) -> FlextResult[User]:~~
+~~ self.logger.info(f"Creating user: {command.name}")~~
 
-~~        with self.track("create_user"):~~
-            user = User(
-                id=str(uuid.uuid4()),
-                name=command.name,
-                email=command.email,
-                created_at=datetime.now(),
-            )
-            UserRepository.save(user)
+~~ with self.track("create_user"):~~
+user = User(
+id=str(uuid.uuid4()),
+name=command.name,
+email=command.email,
+created_at=datetime.now(),
+)
+UserRepository.save(user)
 
         self.cqrs_metrics.record("users_created", 1)
 
@@ -1577,10 +1569,9 @@ servir como referência futura para implementação:
 
         return FlextResult.ok(user)
 
-
 class UpdateUserHandler(h[UpdateUserCommand, User]):
-    def handle(self, command: UpdateUserCommand) -> FlextResult[User]:
-        self.logger.info(f"Updating user: {command.user_id}")
+def handle(self, command: UpdateUserCommand) -> FlextResult[User]:
+self.logger.info(f"Updating user: {command.user_id}")
 
         user = UserRepository.get(command.user_id)
         if user is None:
@@ -1597,11 +1588,11 @@ class UpdateUserHandler(h[UpdateUserCommand, User]):
 
         return FlextResult.ok(user)
 
-
 # Query Handlers
+
 class GetUserHandler(h[GetUserQuery, User]):
-    def handle(self, query: GetUserQuery) -> FlextResult[User]:
-        self.logger.debug(f"Getting user: {query.user_id}")
+def handle(self, query: GetUserQuery) -> FlextResult[User]:
+self.logger.debug(f"Getting user: {query.user_id}")
 
         with self.track("get_user"):
             user = UserRepository.get(query.user_id)
@@ -1613,10 +1604,9 @@ class GetUserHandler(h[GetUserQuery, User]):
         self.cqrs_metrics.record("users_found", 1)
         return FlextResult.ok(user)
 
-
 class ListUsersHandler(h[ListUsersQuery, list[User]]):
-    def handle(self, query: ListUsersQuery) -> FlextResult[list[User]]:
-        self.logger.debug(f"Listing users: limit={query.limit}, offset={query.offset}")
+def handle(self, query: ListUsersQuery) -> FlextResult[list[User]]:
+self.logger.debug(f"Listing users: limit={query.limit}, offset={query.offset}")
 
         with self.track("list_users"):
             users = UserRepository.list(query.limit, query.offset)
@@ -1624,11 +1614,11 @@ class ListUsersHandler(h[ListUsersQuery, list[User]]):
         self.cqrs_metrics.record("users_listed", len(users))
         return FlextResult.ok(users)
 
-
 # Event Handlers
+
 class UserCreatedHandler(h[UserCreatedEvent, None]):
-    def handle(self, event: UserCreatedEvent) -> FlextResult[None]:
-        self.logger.info(f"Processing UserCreatedEvent: {event.user_id}")
+def handle(self, event: UserCreatedEvent) -> FlextResult[None]:
+self.logger.info(f"Processing UserCreatedEvent: {event.user_id}")
 
         self.cqrs_context.push({
             "event": "UserCreated",
@@ -1645,12 +1635,12 @@ class UserCreatedHandler(h[UserCreatedEvent, None]):
         finally:
             self.cqrs_context.pop()
 
-
 # Application Setup
+
 def create_dispatcher() -> FlextDispatcher:
-    """Create and configure dispatcher."""
-    container = FlextContainer.get_global()
-    dispatcher = FlextDispatcher(container=container)
+"""Create and configure dispatcher."""
+container = FlextContainer.get_global()
+dispatcher = FlextDispatcher(container=container)
 
     # Register command handlers
     dispatcher.register_command(CreateUserCommand, CreateUserHandler())
@@ -1665,10 +1655,10 @@ def create_dispatcher() -> FlextDispatcher:
 
     return dispatcher
 
-
 # Usage
-if __name__ == "__main__":
-    dispatcher = create_dispatcher()
+
+if **name** == "**main**":
+dispatcher = create_dispatcher()
 
     # Create user
     result = dispatcher.dispatch(CreateUserCommand(
@@ -1693,7 +1683,8 @@ if __name__ == "__main__":
             print(f"Total users: {len(users)}")
     else:
         print(f"Error: {result.error}")
-```
+
+````
 
 ### Exemplo 2: Custom Circuit Breaker
 
@@ -1807,7 +1798,7 @@ container.register("circuit_breaker", CustomCircuitBreaker(
     failure_threshold=10,
     recovery_timeout=60.0,
 ))
-```
+````
 
 ### Exemplo 3: Handler com Full Observability
 
@@ -1988,27 +1979,27 @@ class ProcessPaymentHandler(h[ProcessPaymentCommand, PaymentResult]):
 ~~- Contexto automático via FlextMixins~~
 ~~- Logging estruturado com correlation IDs~~
 
-~~```python~~
+~~```Python~~
 ~~# flext-ldif: Batch processing handler V2~~
 ~~class ProcessLdifBatchHandler(FlextHandlers[ProcessLdifBatchCommand, BatchResult]):~~
-~~    def handle(self, command: ProcessLdifBatchCommand) -> FlextResult[BatchResult]:~~
-~~        self.cqrs_context.push({~~
-~~            "batch_id": command.batch_id,~~
-~~            "file_count": len(command.files),~~
-~~        })~~
+~~ def handle(self, command: ProcessLdifBatchCommand) -> FlextResult[BatchResult]:~~
+~~ self.cqrs_context.push({~~
+~~ "batch_id": command.batch_id,~~
+~~ "file_count": len(command.files),~~
+~~ })~~
 
-~~        try:~~
-~~            processed = 0~~
-~~            errors = 0~~
+~~ try:~~
+~~ processed = 0~~
+~~ errors = 0~~
 
-~~            for file_path in command.files:~~
-~~                with self.track(f"process_file_{file_path.name}"):~~
-~~                    result = self._process_file(file_path)~~
-                    if result.is_success:
-                        processed += 1
-                    else:
-                        errors += 1
-                        self.logger.warning(f"Failed to process {file_path}: {result.error}")
+~~ for file*path in command.files:~~
+~~ with self.track(f"process_file*{file_path.name}"):~~
+~~ result = self.\_process_file(file_path)~~
+if result.is_success:
+processed += 1
+else:
+errors += 1
+self.logger.warning(f"Failed to process {file_path}: {result.error}")
 
             self.cqrs_metrics.record("files_processed", processed)
             self.cqrs_metrics.record("files_failed", errors)
@@ -2017,7 +2008,8 @@ class ProcessPaymentHandler(h[ProcessPaymentCommand, PaymentResult]):
             return FlextResult.ok(BatchResult(processed=processed, errors=errors))
         finally:
             self.cqrs_context.pop()
-```
+
+````
 
 ### Estudo de Caso: flext-api
 
@@ -2073,7 +2065,7 @@ async def get_user(user_id: str) -> UserResponse:
         name=user.name,
         email=user.email,
     )
-```
+````
 
 ### Estudo de Caso: client-a-oud-mig
 
@@ -2159,7 +2151,7 @@ class MigrateEntryHandler(h[MigrateEntryCommand, MigrationResult]):
 
 ## ~~✅ Validação e Testes~~ 📋 EXEMPLOS DE TESTES PRESERVADOS
 
-> *Esta seção contém exemplos de código de testes. A estrutura foi migrada para cqrs.md.*
+> _Esta seção contém exemplos de código de testes. A estrutura foi migrada para cqrs.md._
 > Veja: `flext-core/docs/architecture/cqrs.md` → Testing Structure
 
 ### ~~Estrutura de Testes CQRS~~
@@ -2429,7 +2421,7 @@ class TestDispatcherLatency:
 
 ## ~~📚 Referências~~ ✅ MIGRADO
 
-> *Seção migrada para `flext-core/docs/architecture/cqrs.md` → External References*
+> _Seção migrada para `flext-core/docs/architecture/cqrs.md` → External References_
 
 ~~### Documentos Relacionados~~
 
@@ -2453,7 +2445,7 @@ class TestDispatcherLatency:
 
 ## ~~📋 Plano de Execução - CQRS Modernization~~ 📋 SPEC PENDENTE
 
-> *Esta seção contém o plano de execução detalhado. Mantida como referência para implementação futura.*
+> _Esta seção contém o plano de execução detalhado. Mantida como referência para implementação futura._
 > Roadmap resumido disponível em: `flext-core/docs/architecture/cqrs.md` → Modernization Roadmap
 
 ### ~~Classes Cross-Cutting e Integração CQRS (25 Nov 2025)~~
@@ -2674,7 +2666,7 @@ class FlextDispatcher:
 
 ## ~~📅 Histórico de Versões~~ 📋 METADADO
 
-> *Histórico do documento original - para referência.*
+> _Histórico do documento original - para referência._
 
 | Versão | Data        | Mudanças                                                      |
 | ------ | ----------- | ------------------------------------------------------------- |

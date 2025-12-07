@@ -9,7 +9,7 @@ echo "" >>/tmp/baseline_metrics.txt
 # Core projects
 for project in flext-core flext-meltano flext-api flext-cli flext-ldap flext-ldif; do
 	if [ -d "$project" ]; then
-		cd "$project"
+		cd "$project" || exit
 		echo "=== $project ===" >>/tmp/baseline_metrics.txt
 
 		# Ruff check
@@ -30,7 +30,7 @@ done
 # Singer projects (taps and targets)
 for project in flext-tap-* flext-target-* flext-dbt-*; do
 	if [ -d "$project" ]; then
-		cd "$project"
+		cd "$project" || exit
 		echo "=== $project ===" >>/tmp/baseline_metrics.txt
 
 		# Ruff check
