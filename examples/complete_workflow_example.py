@@ -191,13 +191,11 @@ class CompleteWorkflowExample:
                 workflow_status="completed",
             )
 
-            return FlextResult.ok(
-                {
-                    "workflow_result": workflow_result,
-                    "final_data": current_data,
-                    "performance_summary": aggregated_metrics,
-                }
-            )
+            return FlextResult.ok({
+                "workflow_result": workflow_result,
+                "final_data": current_data,
+                "performance_summary": aggregated_metrics,
+            })
 
         def _cleanup_context(
             self, context: CompleteWorkflowExample.WorkflowContext

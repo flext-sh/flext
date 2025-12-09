@@ -372,14 +372,12 @@ class FlextModuleOptimizer:
                     "Consider using domain libraries for better architecture"
                 )
 
-            return FlextResult.ok(
-                {
-                    "violations": violations,
-                    "suggestions": suggestions,
-                    "complexity_score": complexity_score,
-                    "domain_library_usage": domain_library_usage,
-                }
-            )
+            return FlextResult.ok({
+                "violations": violations,
+                "suggestions": suggestions,
+                "complexity_score": complexity_score,
+                "domain_library_usage": domain_library_usage,
+            })
 
         except Exception as e:
             return FlextResult.fail(f"Analysis error: {e}")
@@ -428,18 +426,18 @@ class FlextModuleOptimizer:
         score = 0.0
 
         # Count classes (should be 1 per module)
-        class_count = len(
-            [node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)]
-        )
+        class_count = len([
+            node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)
+        ])
         if class_count > 1:
             score += 0.3
         elif class_count == 0:
             score += 0.2
 
         # Count functions (should be minimal in optimized modules)
-        func_count = len(
-            [node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)]
-        )
+        func_count = len([
+            node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)
+        ])
         if func_count > 10:
             score += 0.3
 
