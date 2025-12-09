@@ -40,7 +40,7 @@ graph TB
         EventHandlers[Event Handlers<br/>Event Sourcing]
 
         %% Domain Layer
-        DomainServices[Domain Services<br/>Business Logic]
+        DomainServices[Services<br/>Business Logic]
         Aggregates[Aggregates<br/>Domain Models]
         ValueObjects[Value Objects<br/>Immutable Data]
 
@@ -409,7 +409,7 @@ graph TB
 
 ### 2. Event-Driven Pattern
 
-- **Event Handlers** → **Domain Services** → **Event Store**
+- **Event Handlers** → **Services** → **Event Store**
 - Asynchronous communication for decoupled operations
 - Used for data synchronization and business process automation
 
@@ -421,7 +421,7 @@ graph TB
 
 ### 4. CQRS Pattern
 
-- **Command Handlers** → **Domain Services** → **Event Store**
+- **Command Handlers** → **Services** → **Event Store**
 - **Query Handlers** → **Read Models** → **Database**
 - Separation of read and write operations for scalability
 

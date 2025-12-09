@@ -215,8 +215,8 @@ class TestFlextComprehensive:
         # Note: generate_uuid method not available
 
         # Test correlation ID
-        corr1 = u.Generators.generate_correlation_id()
-        corr2 = u.Generators.generate_correlation_id()
+        corr1 = u.generate("correlation")
+        corr2 = u.generate("correlation")
 
         assert corr1 != corr2
         assert len(corr1) > 0
@@ -664,7 +664,7 @@ class TestFlextComprehensive:
                         )
 
                     # Use utilities
-                    correlation_id = u.Generators.generate_correlation_id()
+                    correlation_id = u.generate("correlation")
                     timestamp = u.Generators.generate_iso_timestamp()
 
                     # Process some data - simple chunking without external utility
@@ -724,7 +724,7 @@ class TestFlextComprehensive:
             # Use utilities
             if i % 100 == 0:
                 timestamp = u.Generators.generate_iso_timestamp()
-                uuid = u.Generators.generate_correlation_id()
+                uuid = u.generate("correlation")
                 assert len(timestamp) > 0
                 assert len(uuid) > 0
 

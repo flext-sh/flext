@@ -4,34 +4,34 @@
 
 - [Standards and Guidelines](#standards-and-guidelines)
   - [Code Standards](#code-standards)
-    - [[Python Standards](./python.md)](#Python-standardspythonmd)
-    - [[PEP Compliance](./pep-semantic.md)](#pep-compliancepep-semanticmd)
-    - [[Docstring Standards](./docstring_standard.md)](#docstring-standardsdocstring_standardmd)
+    - Python Standards (*Documentation coming soon*)
+    - PEP Compliance (*Documentation coming soon*)
+    - Docstring Standards (*Documentation coming soon*)
   - [Development Practices](#development-practices)
-    - [[Documentation Standards](./documentation.md)](#documentation-standardsdocumentationmd)
-    - [[Template Standards](./templates/)](#template-standardstemplates)
+    - Documentation Standards (*Documentation coming soon*)
+    - Template Standards (*Documentation coming soon*)
   - [Quality Assurance](#quality-assurance)
-    - [[Testing Standards](./testing.md)](#testing-standardstestingmd)
-    - [[Code Quality](./code-quality.md)](#code-qualitycode-qualitymd)
-    - [[Performance Standards](./performance.md)](#performance-standardsperformancemd)
+    - Testing Standards (*Documentation coming soon*)
+    - Code Quality (*Documentation coming soon*)
+    - Performance Standards (*Documentation coming soon*)
   - [Architecture Standards](#architecture-standards)
-    - [[Clean Architecture](./clean-architecture.md)](#clean-architectureclean-architecturemd)
-    - [[Design Patterns](./design-patterns.md)](#design-patternsdesign-patternsmd)
-    - [[SOLID Principles](./solid-principles.md)](#solid-principlessolid-principlesmd)
+    - Clean Architecture (*Documentation coming soon*)
+    - Design Patterns (*Documentation coming soon*)
+    - SOLID Principles (*Documentation coming soon*)
   - [Development Workflow](#development-workflow)
-    - [[Git Workflow](./git-workflow.md)](#git-workflowgit-workflowmd)
-    - [[Release Process](./release-process.md)](#release-processrelease-processmd)
-    - [[CI/CD Standards](./cicd.md)](#cicd-standardscicdmd)
+    - Git Workflow (*Documentation coming soon*)
+    - Release Process (*Documentation coming soon*)
+    - CI/CD Standards (*Documentation coming soon*)
   - [Security Standards](#security-standards)
-    - [[Security Guidelines](./security.md)](#security-guidelinessecuritymd)
-    - [[Data Protection](./data-protection.md)](#data-protectiondata-protectionmd)
+    - Security Guidelines (*Documentation coming soon*)
+    - Data Protection (*Documentation coming soon*)
   - [Operational Standards](#operational-standards)
-    - [[Monitoring Standards](./monitoring.md)](#monitoring-standardsmonitoringmd)
-    - [[Error Handling](./error-handling.md)](#error-handlingerror-handlingmd)
-    - [[Configuration Management](./configuration.md)](#configuration-managementconfigurationmd)
+    - Monitoring Standards (*Documentation coming soon*)
+    - Error Handling (*Documentation coming soon*)
+    - Configuration Management (*Documentation coming soon*)
   - [Compliance](#compliance)
-    - [[Industry Standards](./industry-standards.md)](#industry-standardsindustry-standardsmd)
-    - [[Accessibility](./accessibility.md)](#accessibilityaccessibilitymd)
+    - Industry Standards (*Documentation coming soon*)
+    - Accessibility (*Documentation coming soon*)
   - [Contributing to Standards](#contributing-to-standards)
   - [Standards Enforcement](#standards-enforcement)
   - [Standards Categories](#standards-categories)
@@ -44,103 +44,103 @@ Coding standards, best practices, and development guidelines for the FLEXT ecosy
 
 ## Code Standards
 
-### [Python Standards](./python.md)
+### Python Standards
 
-Python coding standards, style guidelines, and best practices for FLEXT development.
+Python coding standards, style guidelines, and best practices for FLEXT development. (*Documentation coming soon*)
 
-### [PEP Compliance](./pep-semantic.md)
+### PEP Compliance
 
-PEP compliance requirements and semantic versioning standards.
+PEP compliance requirements and semantic versioning standards. (*Documentation coming soon*)
 
-### [Docstring Standards](./docstring_standard.md)
+### Docstring Standards
 
-Documentation standards for docstrings, comments, and code documentation.
+Documentation standards for docstrings, comments, and code documentation. (*Documentation coming soon*)
 
 ## Development Practices
 
-### [Documentation Standards](./documentation.md)
+### Documentation Standards
 
-Standards for creating and maintaining project documentation.
+Standards for creating and maintaining project documentation. (*Documentation coming soon*)
 
-### [Template Standards](./templates/)
+### Template Standards
 
-Standard templates for documentation, configuration, and project structure.
+Standard templates for documentation, configuration, and project structure. (*Documentation coming soon*)
 
 ## Quality Assurance
 
-### [Testing Standards](./testing.md)
+### Testing Standards
 
-Standards for unit testing, integration testing, and end-to-end testing.
+Standards for unit testing, integration testing, and end-to-end testing. (*Documentation coming soon*)
 
-### [Code Quality](./code-quality.md)
+### Code Quality
 
-Code quality metrics, linting standards, and static analysis requirements.
+Code quality metrics, linting standards, and static analysis requirements. (*Documentation coming soon*)
 
-### [Performance Standards](./performance.md)
+### Performance Standards
 
-Performance benchmarks, optimization guidelines, and monitoring standards.
+Performance benchmarks, optimization guidelines, and monitoring standards. (*Documentation coming soon*)
 
 ## Architecture Standards
 
-### [Clean Architecture](./clean-architecture.md)
+### Clean Architecture
 
-Implementation of clean architecture principles in FLEXT projects.
+Implementation of clean architecture principles in FLEXT projects. (*Documentation coming soon*)
 
-### [Design Patterns](./design-patterns.md)
+### Design Patterns
 
-Standard design patterns used throughout the FLEXT ecosystem.
+Standard design patterns used throughout the FLEXT ecosystem. (*Documentation coming soon*)
 
-### [SOLID Principles](./solid-principles.md)
+### SOLID Principles
 
-Application of SOLID principles in FLEXT development.
+Application of SOLID principles in FLEXT development. (*Documentation coming soon*)
 
 ## Development Workflow
 
-### [Git Workflow](./git-workflow.md)
+### Git Workflow
 
-Git workflow, branching strategy, and commit message standards.
+Git workflow, branching strategy, and commit message standards. (*Documentation coming soon*)
 
-### [Release Process](./release-process.md)
+### Release Process
 
-Release management, versioning, and deployment standards.
+Release management, versioning, and deployment standards. (*Documentation coming soon*)
 
-### [CI/CD Standards](./cicd.md)
+### CI/CD Standards
 
-Continuous integration and deployment pipeline standards.
+Continuous integration and deployment pipeline standards. (*Documentation coming soon*)
 
 ## Security Standards
 
-### [Security Guidelines](./security.md)
+### Security Guidelines
 
-Security best practices, authentication, and authorization standards.
+Security best practices, authentication, and authorization standards. (*Documentation coming soon*)
 
-### [Data Protection](./data-protection.md)
+### Data Protection
 
-Data protection, encryption, and privacy standards.
+Data protection, encryption, and privacy standards. (*Documentation coming soon*)
 
 ## Operational Standards
 
-### [Monitoring Standards](./monitoring.md)
+### Monitoring Standards
 
-Monitoring, logging, and observability standards.
+Monitoring, logging, and observability standards. (*Documentation coming soon*)
 
-### [Error Handling](./error-handling.md)
+### Error Handling
 
-Error handling patterns and exception management standards.
+Error handling patterns and exception management standards. (*Documentation coming soon*)
 
-### [Configuration Management](./configuration.md)
+### Configuration Management
 
-Configuration management and environment variable standards.
+Configuration management and environment variable standards. (*Documentation coming soon*)
 
 ## Compliance
 
-### [Industry Standards](./industry-standards.md)
+### Industry Standards
 
-Industry compliance requirements and regulatory standards.
+Industry compliance requirements and regulatory standards. (*Documentation coming soon*)
 
-### [Accessibility](./accessibility.md)
+### Accessibility
 
-Accessibility guidelines and web standards compliance.
+Accessibility guidelines and web standards compliance. (*Documentation coming soon*)
 
 ## Contributing to Standards
 

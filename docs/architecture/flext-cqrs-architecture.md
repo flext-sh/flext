@@ -145,7 +145,7 @@ servir como referência futura para implementação:
 ~~V1 (Atual) V2 Integration V2 Complete~~
 ~~ │ │ │~~
 ~~ │ Manual metrics │ x.CQRS │ Full observability~~
-~~ │ Manual context │ Container DI │ Auto-discovery~~
+~~ │ Manual context │ DI │ Auto-discovery~~
 ~~ │ Hardcoded managers │ Protocol-based │ Zero ceremony~~
 ~~ │ │ │~~
 ~~────┼──────────────────────┼──────────────────────┼─────────────────→~~
@@ -195,7 +195,7 @@ servir como referência futura para implementação:
 ~~ - Integrar logging/tracking no pipeline~~
 ~~ - Deprecar métodos manuais com grace period~~
 
-~~2. **FlextContainer DI** (Fase 2):~~
+~~2. **FlextDI** (Fase 2):~~
 ~~ - Definir protocols para managers~~
 ~~ - Extrair managers para módulo `_managers/`~~
 ~~ - Refatorar `FlextDispatcher.__init__()` para aceitar container~~
@@ -400,7 +400,7 @@ servir como referência futura para implementação:
 
 ~~| Problema | Impacto | Linhas | Solução |~~
 ~~| --------------------- | --------------------- | -------- | ------------------ |~~
-~~| Managers hardcoded | Impossível customizar | 700+ | FlextContainer DI |~~
+~~| Managers hardcoded | Impossível customizar | 700+ | FlextDI |~~
 ~~| Cache manual | Duplicação | 100+ | u.Caching |~~
 ~~| Logging inconsistente | Debugging difícil | 18 calls | FlextLogger padrão |~~
 ~~| Tracking mínimo | Sem métricas | 2 calls | x.track() |~~
@@ -2525,7 +2525,7 @@ print(f"Registered: {summary.successful_count}, Failed: {summary.failed_count}")
 | --------------- | ------------------------------ | ------------------------- | ------------------------ |
 | h               | 80+ linhas de métricas manuais | Duplicação com x          | x.CQRS                   |
 | h               | \_context_stack manual         | Não usa self.context      | Integrar x               |
-| FlextDispatcher | 700+ linhas managers hardcoded | Sem DI, sem testabilidade | FlextContainer DI        |
+| FlextDispatcher | 700+ linhas managers hardcoded | Sem DI, sem testabilidade | FlextDI        |
 | FlextDispatcher | Todos managers internos        | Não reutilizável          | Extrair para \_managers/ |
 
 ### Plano de Execução Detalhado

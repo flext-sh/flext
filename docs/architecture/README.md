@@ -56,7 +56,7 @@ FLEXT is built on a clean architecture foundation with flext-core providing the 
 │           Domain Layer              │
 │   - Business Logic & Rules         │
 │   - Domain Models & Value Objects  │
-│   - Domain Services                │
+│   - Services                │
 └─────────────────┬───────────────────┘
                   │
 ┌─────────────────────────────────────┐

@@ -55,48 +55,48 @@ This directory contains Architecture Decision Records (ADRs) for the FLEXT Enter
 ### Foundation Decisions
 
 - [ADR-001: Railway-Oriented Programming with FlextResult[T]](./001-railway-oriented-programming.md)
-- [ADR-002: Dependency Injection with FlextContainer](./002-dependency-injection-container.md)
-- [ADR-003: Domain-Driven Design with FlextModels](./003-domain-driven-design-models.md)
-- [ADR-004: Clean Architecture Layer Separation](./004-clean-architecture-layers.md)
+- ADR-002: Dependency Injection with FlextContainer (*Documentation coming soon*)
+- ADR-003: Domain-Driven Design with FlextModels (*Documentation coming soon*)
+- ADR-004: Clean Architecture Layer Separation (*Documentation coming soon*)
 
 ### Technology Decisions
 
-- [ADR-005: Python 3.13+ as Primary Language](./005-python-primary-language.md)
-- [ADR-006: Go 1.24+ for Runtime Container](./006-go-runtime-container.md)
-- [ADR-007: PostgreSQL as Primary Database](./007-postgresql-primary-database.md)
-- [ADR-008: Redis for Caching and Sessions](./008-redis-caching-sessions.md)
+- ADR-005: Python 3.13+ as Primary Language (*Documentation coming soon*)
+- ADR-006: Go 1.24+ for Runtime Container (*Documentation coming soon*)
+- ADR-007: PostgreSQL as Primary Database (*Documentation coming soon*)
+- ADR-008: Redis for Caching and Sessions (*Documentation coming soon*)
 
 ### Architecture Decisions
 
-- [ADR-009: Microservices Architecture](./009-microservices-architecture.md)
-- [ADR-010: Event-Driven Architecture](./010-event-driven-architecture.md)
-- [ADR-011: CQRS Pattern Implementation](./011-cqrs-pattern.md)
-- [ADR-012: Event Sourcing for Audit Trail](./012-event-sourcing-audit.md)
+- ADR-009: Microservices Architecture (*Documentation coming soon*)
+- ADR-010: Event-Driven Architecture (*Documentation coming soon*)
+- ADR-011: CQRS Pattern Implementation (*Documentation coming soon*)
+- ADR-012: Event Sourcing for Audit Trail (*Documentation coming soon*)
 
 ### Integration Decisions
 
-- [ADR-013: Singer Platform for Data Integration](./013-singer-platform-integration.md)
-- [ADR-014: LDAP Integration Strategy](./014-ldap-integration-strategy.md)
-- [ADR-015: Oracle Database Integration](./015-oracle-database-integration.md)
-- [ADR-016: REST API Design Standards](./016-rest-api-design-standards.md)
+- ADR-013: Singer Platform for Data Integration (*Documentation coming soon*)
+- ADR-014: LDAP Integration Strategy (*Documentation coming soon*)
+- ADR-015: Oracle Database Integration (*Documentation coming soon*)
+- ADR-016: REST API Design Standards (*Documentation coming soon*)
 
 ### Security Decisions
 
-- [ADR-017: Authentication and Authorization Strategy](./017-auth-strategy.md)
-- [ADR-018: Data Encryption Standards](./018-data-encryption-standards.md)
-- [ADR-019: Security Audit and Compliance](./019-security-audit-compliance.md)
+- **ADR-017: Authentication and Authorization Strategy** - (*Documentation coming soon*)
+- **ADR-018: Data Encryption Standards** - (*Documentation coming soon*)
+- **ADR-019: Security Audit and Compliance** - (*Documentation coming soon*)
 
 ### Quality Decisions
 
-- [ADR-020: Testing Strategy and Coverage](./020-testing-strategy-coverage.md)
-- [ADR-021: Code Quality Standards](./021-code-quality-standards.md)
-- [ADR-022: Monitoring and Observability](./022-monitoring-observability.md)
+- **ADR-020: Testing Strategy and Coverage** - (*Documentation coming soon*)
+- **ADR-021: Code Quality Standards** - (*Documentation coming soon*)
+- **ADR-022: Monitoring and Observability** - (*Documentation coming soon*)
 
 ### Deployment Decisions
 
-- [ADR-023: Containerization with Docker](./023-containerization-docker.md)
-- [ADR-024: Orchestration Strategy](./024-orchestration-strategy.md)
-- [ADR-025: CI/CD Pipeline Design](./025-cicd-pipeline-design.md)
+- **ADR-023: Containerization with Docker** - (*Documentation coming soon*)
+- **ADR-024: Orchestration Strategy** - (*Documentation coming soon*)
+- **ADR-025: CI/CD Pipeline Design** - (*Documentation coming soon*)
 
 ## 📝 ADR Template
 
@@ -232,8 +232,8 @@ Decisions about deployment, infrastructure, and operations.
 
 - [C4 Model Diagrams](../c4-model/README.md)
 - [Arc42 Architecture Documentation](../arc42/README.md)
-- [Deployment Architecture](../deployment/README.md)
-- [Security Architecture](../security/README.md)
+- **Deployment Architecture** - (*Documentation coming soon*)
+- **Security Architecture** - (*Documentation coming soon*)
 - [Data Architecture](../data/README.md)
 
 ## 🤝 Contributing to ADRs

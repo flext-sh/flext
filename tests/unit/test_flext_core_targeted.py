@@ -281,16 +281,16 @@ class TestFlextTargeted:
         assert "T" in ts1
 
         # Test UUID generation
-        uuid1 = u.Generators.generate_id()
-        uuid2 = u.Generators.generate_id()
+        uuid1 = u.generate()
+        uuid2 = u.generate()
 
         assert uuid1 != uuid2
         assert len(uuid1) == 36
         assert uuid1.count("-") == 4
 
         # Test correlation ID
-        corr1 = u.Generators.generate_correlation_id()
-        corr2 = u.Generators.generate_correlation_id()
+        corr1 = u.generate("correlation")
+        corr2 = u.generate("correlation")
 
         assert corr1 != corr2
         assert isinstance(corr1, str)
