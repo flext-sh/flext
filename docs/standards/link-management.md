@@ -18,15 +18,18 @@ This document defines the standards and procedures for managing links and cross-
 
 ```markdown
 ✅ CORRECT - Relative paths within project
+
 - [Getting Started](./getting-started.md)
 - [Architecture Overview](../architecture/overview.md)
 - [API Reference](./api-reference/foundation.md)
 
 ❌ WRONG - GitHub URLs within project
+
 - [Getting Started](https://github.com/organization/flext/tree/main/flext-core/docs/getting-started.md)
 ```
 
 **Rationale**:
+
 - Works in local development environment
 - Faster (no external HTTP requests)
 - Works offline
@@ -38,14 +41,17 @@ This document defines the standards and procedures for managing links and cross-
 
 ```markdown
 ✅ CORRECT - GitHub URLs for cross-project
+
 - [flext-core Foundation](https://github.com/organization/flext/tree/main/flext-core/docs/architecture/overview.md)
 - [flext-ldif Processing](https://github.com/organization/flext/tree/main/flext-ldif/docs/architecture.md)
 
 ❌ WRONG - Relative paths for cross-project
+
 - [flext-core](../../flext-core/docs/architecture/overview.md)
 ```
 
 **Rationale**:
+
 - GitHub URLs remain valid when viewing individual project repos
 - Works across different repository setups (monorepo, separate repos)
 - Consistent regardless of workspace organization
@@ -56,10 +62,12 @@ This document defines the standards and procedures for managing links and cross-
 
 ```markdown
 ✅ CORRECT - Relative from root
+
 - [Workspace Documentation](../../docs/index.md)
 - [FLEXT Standards](../../CLAUDE.md)
 
 ❌ WRONG - GitHub URLs for workspace docs
+
 - [Workspace Documentation](https://github.com/organization/flext/tree/main/docs/index.md)
 ```
 
@@ -69,10 +77,12 @@ This document defines the standards and procedures for managing links and cross-
 
 ```markdown
 ✅ CORRECT - Full HTTPS URLs
+
 - [PEP 257 - Docstring Conventions](https://peps.python.org/pep-0257/)
 - [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
 
 ❌ WRONG - HTTP or incomplete URLs
+
 - [PEP 257](http://peps.python.org/pep-0257/)
 - [Google Style](google.github.io/styleguide/pyguide.html)
 ```
@@ -87,15 +97,18 @@ All major documentation files must include a "Related Documentation" section at 
 ## Related Documentation
 
 **Within Project**:
+
 - [Getting Started](getting-started.md) - Installation and basic usage
 - [Architecture](architecture.md) - Architecture and design patterns
 - [API Reference](api-reference.md) - Complete API documentation
 
 **Across Projects**:
+
 - [flext-core Foundation](https://github.com/organization/flext/tree/main/flext-core/docs/architecture/overview.md) - Clean architecture and CQRS patterns
 - [flext-core Service Patterns](https://github.com/organization/flext/tree/main/flext-core/docs/guides/service-patterns.md) - Service patterns and dependency injection
 
 **External Resources**:
+
 - [PEP 257 - Docstring Conventions](https://peps.python.org/pep-0257/)
 - [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
 ```
@@ -109,6 +122,7 @@ All major documentation files must include a "Related Documentation" section at 
 ### When to Add
 
 Add "Related Documentation" sections to:
+
 - ✅ All `getting-started.md` files
 - ✅ All `architecture.md` files
 - ✅ All `api-reference.md` files
@@ -134,14 +148,18 @@ When document A references document B, consider adding a reciprocal reference in
 ### Example
 
 **Document A** (`flext-ldif/docs/getting-started.md`):
+
 ```markdown
 **Across Projects**:
+
 - [flext-core Foundation](https://github.com/organization/flext/tree/main/flext-core/docs/architecture/overview.md)
 ```
 
 **Document B** (`flext-core/docs/architecture/overview.md`):
+
 ```markdown
 **Across Projects**:
+
 - [flext-ldif Processing](https://github.com/organization/flext/tree/main/flext-ldif/docs/getting-started.md)
 ```
 
@@ -205,6 +223,7 @@ flext-docs validate_links --project-root ~/flext/flext-core
 **Symptoms**: Link returns 404 or points to wrong file
 
 **Solution**:
+
 1. Verify file exists at target path
 2. Check relative path calculation
 3. Update link to correct path
@@ -215,6 +234,7 @@ flext-docs validate_links --project-root ~/flext/flext-core
 **Symptoms**: GitHub link returns 404 or points to wrong location
 
 **Solution**:
+
 1. Verify file exists in target project
 2. Check GitHub URL format: `https://github.com/organization/flext/tree/main/project/path/to/file.md`
 3. Update link to correct GitHub URL
@@ -225,6 +245,7 @@ flext-docs validate_links --project-root ~/flext/flext-core
 **Symptoms**: Major documentation file lacks cross-references
 
 **Solution**:
+
 1. Add "Related Documentation" section following standard pattern
 2. Include relevant "Within Project", "Across Projects", and "External Resources"
 3. Verify all links resolve correctly
@@ -234,6 +255,7 @@ flext-docs validate_links --project-root ~/flext/flext-core
 **Symptoms**: Mix of relative paths and GitHub URLs for same link type
 
 **Solution**:
+
 1. Audit all links in file
 2. Convert to correct pattern (relative for same-project, GitHub for cross-project)
 3. Update all occurrences consistently
@@ -288,14 +310,17 @@ For now, maintain awareness of key cross-project relationships:
 ## Related Documentation
 
 **Within Project**:
+
 - [Documentation Standards](documentation.md) - General documentation standards
 - [README](../README.md) - Standards overview
 
 **Across Projects**:
+
 - [flext-core Documentation Standards](https://github.com/organization/flext/tree/main/flext-core/docs/standards/documentation.md) - Core documentation patterns
 - [FLEXT Workspace Documentation](../README.md) - Workspace-level documentation
 
 **External Resources**:
+
 - [Markdown Link Syntax](https://www.markdownguide.org/basic-syntax/#links)
 - [GitHub Markdown Guide](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#links)
 
@@ -304,4 +329,3 @@ For now, maintain awareness of key cross-project relationships:
 **Maintained By**: FLEXT Documentation Team  
 **Last Review**: 2025-12-07  
 **Next Review**: 2026-01-07
-

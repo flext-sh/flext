@@ -2525,7 +2525,7 @@ print(f"Registered: {summary.successful_count}, Failed: {summary.failed_count}")
 | --------------- | ------------------------------ | ------------------------- | ------------------------ |
 | h               | 80+ linhas de métricas manuais | Duplicação com x          | x.CQRS                   |
 | h               | \_context_stack manual         | Não usa self.context      | Integrar x               |
-| FlextDispatcher | 700+ linhas managers hardcoded | Sem DI, sem testabilidade | FlextDI        |
+| FlextDispatcher | 700+ linhas managers hardcoded | Sem DI, sem testabilidade | FlextDI                  |
 | FlextDispatcher | Todos managers internos        | Não reutilizável          | Extrair para \_managers/ |
 
 ### Plano de Execução Detalhado

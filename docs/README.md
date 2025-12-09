@@ -51,7 +51,6 @@ Detailed documentation for each FLEXT project and library:
 
 Coding standards, best practices, and development guidelines.
 
-
 ## 🎯 Key Features
 
 - **Unified API**: Single facade pattern across all libraries

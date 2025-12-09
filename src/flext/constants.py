@@ -1,7 +1,7 @@
-"""Constants for flext package.
+"""Constants for flext-core package.
 
-This module provides centralized constants for the flext package,
-inheriting from FlextCliConstants and extending with workspace-specific values.
+This module provides centralized constants for the flext-core package.
+No inheritance from higher domains - core is the foundation.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -11,17 +11,29 @@ from __future__ import annotations
 
 from typing import Final
 
-from flext_cli import FlextCliConstants
 
+class FlextConstants:
+    """Centralized constants for flext-core package."""
 
-class FlextConstants(FlextCliConstants):
-    """Centralized constants for flext package."""
+    # =========================================================================
+    # NAMESPACE: .Core - All core domain constants
+    # =========================================================================
 
-    class Workspace:
-        """Workspace-specific constants."""
+    class Core:
+        """Core domain constants."""
 
-        NAME: Final[str] = "flext"
-        ENV_PREFIX: Final[str] = "FLEXT"
+        class Status:
+            """Status constants."""
+
+            OK: Final[str] = "ok"
+            ERROR: Final[str] = "error"
+            WARNING: Final[str] = "warning"
+
+        class Workspace:
+            """Workspace-specific constants."""
+
+            NAME: Final[str] = "flext"
+            ENV_PREFIX: Final[str] = "FLEXT"
 
 
 # Alias for convenience

@@ -191,6 +191,7 @@
 		disallow_untyped_decorators = false
 		disallow_untyped_defs = true
 		error_summary = true
+    enable_incomplete_feature = ["NewGenericSyntax"]
 		exclude = [
 			".*/generate_config.py",
 			".*/manage.py",
@@ -251,6 +252,12 @@
 			]
 			disallow_untyped_defs = false
 			module = "tests.*"
+
+		[[tool.mypy.overrides]]
+			disable_error_code = [
+				"name-defined",
+			]
+			module = "*.protocols"
 
 	[tool.poetry]
 
