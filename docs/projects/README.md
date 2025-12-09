@@ -1,116 +1,211 @@
-# Project Documentation
+# FLEXT Projects Documentation
 
-## Table of Contents
+## Overview
 
-- [Project Documentation](#project-documentation)
-  - [Core Projects](#core-projects)
-    - [🚀 [flext-core](./flext-core.md)](#-flext-coreflext-coremd)
-    - [📄 [flext-ldif](./flext-ldif.md)](#-flext-ldifflext-ldifmd)
-  - [Infrastructure Projects](#infrastructure-projects)
-    - [🌐 [flext-api](./flext-api.md)](#-flext-apiflext-apimd)
-    - [🔐 [flext-auth](./flext-auth.md)](#-flext-authflext-authmd)
-    - [🗄️ [flext-ldap](./flext-ldap.md)](#-flext-ldapflext-ldapmd)
-    - [🗃️ [flext-oracle](./flext-oracle.md)](#-flext-oracleflext-oraclemd)
-    - [🔗 [flext-grpc](./flext-grpc.md)](#-flext-grpcflext-grpcmd)
-  - [Domain Projects](#domain-projects)
-    - [📦 [flext-meltano](./flext-meltano.md)](#-flext-meltanoflext-meltanomd)
-    - [🔍 [flext-observability](./flext-observability.md)](#-flext-observabilityflext-observabilitymd)
-    - [✨ [flext-quality](./flext-quality.md)](#-flext-qualityflext-qualitymd)
-  - [Specialized Projects](#specialized-projects)
-    - [🎯 [flext-plugin](./flext-plugin.md)](#-flext-pluginflext-pluginmd)
-    - [🧪 [flext-tests](./flext-tests.md)](#-flext-testsflext-testsmd)
-    - [🏭 [flext-cli](./flext-cli.md)](#-flext-cliflext-climd)
-  - [Integration Guidelines](#integration-guidelines)
-    - [Project Dependencies](#project-dependencies)
-    - [Development Workflow](#development-workflow)
-    - [Release Process](#release-process)
-  - [Getting Started with Projects](#getting-started-with-projects)
-    - [Using flext-core](#using-flext-core)
-- [Set up dependency injection](#set-up-dependency-injection)
-- [Use railway-oriented programming](#use-railway-oriented-programming)
-  - [Using flext-ldif](#using-flext-ldif)
-- [Parse LDIF content](#parse-ldif-content)
-- [Migrate between servers](#migrate-between-servers)
-  - [Project Standards](#project-standards)
-  - [Contributing to Projects](#contributing-to-projects)
+Individual documentation for all 30 projects in the FLEXT ecosystem.
 
-Detailed documentation for each FLEXT project and library.
+## Navigation
 
-## Core Projects
+- [← Back to Main Index](../index.md)
+- [Architecture Overview](../architecture/README.md)
+- [API Reference](../api-reference/README.md)
+- [Standards](../standards/README.md)
 
-### 🚀 [flext-core](./flext-core.md)
+## Core Foundation (4 projects)
 
-The foundation framework providing core patterns, abstractions, and utilities for the entire FLEXT ecosystem.
+### [flext-core](./flext-core.md)
+**Purpose**: Foundation library with patterns, abstractions, type system  
+**Version**: 0.10.0  
+**Status**: ✅ Production ready  
+**Documentation**: ✅ Complete (38 files)
 
-**Key Features:**
+### [flext-cli](./flext-cli.md)
+**Purpose**: CLI framework (Click/Rich abstraction)  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-- Dependency injection with FlextContainer
-- CQRS pattern with FlextDispatcher
-- Railway-oriented programming with FlextResult
-- Domain event system with FlextBus
-- Structured logging with FlextLogger
+### [flext-api](./flext-api.md)
+**Purpose**: HTTP framework with FastAPI integration  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-### 📄 [flext-ldif](./flext-ldif.md)
+### [flexcore](./flexcore.md)
+**Purpose**: Go implementation of FLEXT core patterns  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-RFC-compliant LDIF processing library with enterprise-grade patterns and server-specific quirks handling.
+## LDAP/Directory Services (3 projects)
 
-**Key Features:**
+### [flext-ldap](./flext-ldap.md)
+**Purpose**: LDAP operations and directory services  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-- Unified FlextLdif facade
-- RFC 2849/4512 compliant parsing and writing
-- Server-specific quirks system (OID, OUD, OpenLDAP, etc.)
-- Generic migration pipeline for server transitions
-- Type-safe Pydantic v2 models
+### [flext-ldif](./flext-ldif.md)
+**Purpose**: LDIF processing with RFC compliance  
+**Version**: 0.9.0  
+**Status**: ✅ Production ready  
+**Documentation**: ✅ Complete
 
-## Infrastructure Projects
+### [flext-auth](./flext-auth.md)
+**Purpose**: Authentication and authorization services  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-### 🌐 [flext-api](./flext-api.md)
+## Infrastructure (4 projects)
 
-REST API framework with OpenAPI/Swagger support and flext-core integration.
+### [flext-db-oracle](./flext-db-oracle.md)
+**Purpose**: Oracle database connectivity  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-### 🔐 [flext-auth](./flext-auth.md)
+### [flext-grpc](./flext-grpc.md)
+**Purpose**: gRPC communication framework  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-Authentication and authorization services with JWT and LDAP integration.
+### [flext-observability](./flext-observability.md)
+**Purpose**: Monitoring and observability services  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-### 🗄️ [flext-ldap](./flext-ldap.md)
+### [flext-web](./flext-web.md)
+**Purpose**: Web application framework  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-LDAP client operations and management with connection pooling and failover.
+## Data Integration (3 projects)
 
-### 🗃️ [flext-oracle](./flext-oracle.md)
+### [flext-meltano](./flext-meltano.md)
+**Purpose**: Singer/Meltano integration for data orchestration  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-Oracle database integration with advanced query building and transaction management.
+### [flext-plugin](./flext-plugin.md)
+**Purpose**: Plugin system and discovery mechanism  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-### 🔗 [flext-grpc](./flext-grpc.md)
+### [flext-quality](./flext-quality.md)
+**Purpose**: Code quality tools and static analysis  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-gRPC services framework with protocol buffer generation and service discovery.
+## Singer Ecosystem - Taps (5 projects)
 
-## Domain Projects
+### [flext-tap-ldap](./flext-tap-ldap.md)
+**Purpose**: LDAP tap for Singer protocol  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-### 📦 [flext-meltano](./flext-meltano.md)
+### [flext-tap-ldif](./flext-tap-ldif.md)
+**Purpose**: LDIF tap for Singer protocol  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-Meltano integration for data pipeline orchestration and plugin management.
+### [flext-tap-oracle](./flext-tap-oracle.md)
+**Purpose**: Oracle tap for Singer protocol  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-### 🔍 [flext-observability](./flext-observability.md)
+### [flext-tap-oracle-wms](./flext-tap-oracle-wms.md)
+**Purpose**: Oracle WMS tap for Singer protocol  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-Monitoring, logging, and observability services with metrics collection.
+### [flext-tap-oracle-oic](./flext-tap-oracle-oic.md)
+**Purpose**: Oracle OIC tap for Singer protocol  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-### ✨ [flext-quality](./flext-quality.md)
+## Singer Ecosystem - Targets (5 projects)
 
-Code quality tools, linting, and static analysis integration.
+### [flext-target-ldap](./flext-target-ldap.md)
+**Purpose**: LDAP target for Singer protocol  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-## Specialized Projects
+### [flext-target-ldif](./flext-target-ldif.md)
+**Purpose**: LDIF target for Singer protocol  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-### 🎯 [flext-plugin](./flext-plugin.md)
+### [flext-target-oracle](./flext-target-oracle.md)
+**Purpose**: Oracle target for Singer protocol  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-Plugin architecture and discovery system for extending FLEXT functionality.
+### [flext-target-oracle-wms](./flext-target-oracle-wms.md)
+**Purpose**: Oracle WMS target for Singer protocol  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-### 🧪 [flext-tests](./flext-tests.md)
+### [flext-target-oracle-oic](./flext-target-oracle-oic.md)
+**Purpose**: Oracle OIC target for Singer protocol  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-Testing utilities and fixtures for comprehensive test coverage.
+## DBT Adapters (4 projects)
 
-### 🏭 [flext-cli](./flext-cli.md)
+### [flext-dbt-ldap](./flext-dbt-ldap.md)
+**Purpose**: LDAP transformations for DBT  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
-Command-line interface framework for building CLI applications.
+### [flext-dbt-ldif](./flext-dbt-ldif.md)
+**Purpose**: LDIF transformations for DBT  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
+
+### [flext-dbt-oracle](./flext-dbt-oracle.md)
+**Purpose**: Oracle transformations for DBT  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
+
+### [flext-dbt-oracle-wms](./flext-dbt-oracle-wms.md)
+**Purpose**: Oracle WMS transformations for DBT  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
+
+## Enterprise Integration (2 projects)
+
+### [flext-oracle-wms](./flext-oracle-wms.md)
+**Purpose**: Oracle Warehouse Management integration  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
+
+### [flext-oracle-oic](./flext-oracle-oic.md)
+**Purpose**: Oracle Integration Cloud integration  
+**Version**: -  
+**Status**: ✅ Production ready  
+**Documentation**: ⏳ In progress
 
 ## Integration Guidelines
 

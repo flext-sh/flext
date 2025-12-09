@@ -7281,7 +7281,7 @@ def read_json(filepath: Path) -> dict[str, object]:
 ✅ **Testável** - Mock Pydantic fields, não **init**
 ✅ **Padrão consistente** - Segue FlextService pattern do documento
 
-#### **Solução 2: Eliminar God Object - Domain Services**
+#### **Solução 2: Eliminar God Object - Services**
 
 **Proposta:**
 
@@ -7429,7 +7429,7 @@ class FlextCli:
     pass
 ```
 
-#### **Fase 2: Extrair Domain Services** (3-4 dias)
+#### **Fase 2: Extrair Services** (3-4 dias)
 
 **2.1: CliOutputService**
 

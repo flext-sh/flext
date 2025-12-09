@@ -14,7 +14,7 @@ Para cada componente detalhamos motivação, funcionamento, usos recomendados, a
 
 **Funcionamento**
 
-- Herda `FlextModelsEntity.Core` (que já incorpora mixins de ID, timestamps, validação) e habilita `FlextResult` como tipo de retorno padrão. Inclui métodos auxiliares para lifecycle (`is_valid`, `to_dict`).
+- Herda `FlextModelsEntity.Entry` (que já incorpora mixins de ID, timestamps, validação) e habilita `FlextResult` como tipo de retorno padrão. Inclui métodos auxiliares para lifecycle (`is_valid`, `to_dict`).
 
 **Usos recomendados**
 

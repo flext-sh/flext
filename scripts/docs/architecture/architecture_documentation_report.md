@@ -51,7 +51,7 @@
 
 - **flext-core**: Foundation library with Clean Architecture patterns
 
-#### Domain Services (10)
+#### Services (10)
 
 - **flext-api**: REST API framework with OpenAPI support
 - **flext-auth**: Authentication and authorization services

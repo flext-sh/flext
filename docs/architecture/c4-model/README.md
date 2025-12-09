@@ -97,8 +97,8 @@ FLEXT is an enterprise-grade data integration platform built with:
 
 - [Arc42 Architecture Documentation](../arc42/README.md)
 - [Architecture Decision Records](../adr/README.md)
-- [Deployment Architecture](../deployment/README.md)
-- [Security Architecture](../security/README.md)
+- Deployment Architecture (*Documentation coming soon*)
+- Security Architecture (*Documentation coming soon*)
 - [Data Architecture](../data/README.md)
 
 ---

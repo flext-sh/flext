@@ -9,7 +9,7 @@ participant "API Gateway" as gateway
 participant "Authentication" as auth
 participant "Rate Limiter" as rate
 participant "Request Router" as router
-participant "Domain Service" as domain
+participant "Service" as domain
 database "Database" as db
 participant "Response Formatter" as formatter
 

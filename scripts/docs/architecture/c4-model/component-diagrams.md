@@ -20,7 +20,7 @@ Container_Boundary(core, "FLEXT Core Library") {
     Component(config, "FlextConfig", "Configuration", "Environment-aware configuration management")
 }
 
-Container_Boundary(domain, "Domain Services") {
+Container_Boundary(domain, "Services") {
 
     Component(ldap_client, "LDAP Client", "Directory Operations", "LDAP protocol implementation")
     Component(ldif_parser, "LDIF Parser", "File Processing", "RFC 2849/4512 LDIF processing")

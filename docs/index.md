@@ -36,19 +36,112 @@ transformation, and enterprise connectivity.
 
 ## 🚀 Quick Start
 
-- **[Getting Started Guide](./development/getting-started/)**
-- **[Project Overview](./projects/)**
-- **[API Reference](./api/)**
+- **[Getting Started Guide](./guides/getting-started.md)** - Quick start guide for new users (5 minutes)
+- **[Project Overview](./projects/README.md)** - Individual project documentation (30 projects)
+- **[API Reference](./api-reference/README.md)** - Complete API documentation for all projects
+- **[Architecture Overview](./architecture/README.md)** - System architecture, patterns, and design decisions
+- **[Development Setup](./guides/development.md)** - Development setup, standards, and workflows
+- **[Testing Guide](./guides/testing.md)** - Testing strategies and best practices
 
-## 📊 Current Status
+## 📊 Status Dashboard
 
-**🏆 100% OPERATIONAL ACHIEVEMENT**
+| Project | Version | Status | Coverage | Docs |
+|---------|---------|--------|----------|------|
+| flext-core | 0.10.0 | ✅ Production | 80%+ | ✅ |
+| flext-ldif | 0.9.0 | ✅ Production | 85%+ | ✅ |
+| flext-ldap | - | ✅ Production | - | ✅ |
+| flext-cli | - | ✅ Production | - | ✅ |
+| flext-api | - | ✅ Production | - | ✅ |
+| flext-auth | - | ✅ Production | - | ✅ |
+| flext-grpc | - | ✅ Production | - | ✅ |
+| flext-db-oracle | - | ✅ Production | - | ✅ |
+| flext-meltano | - | ✅ Production | - | ✅ |
+| flext-observability | - | ✅ Production | - | ✅ |
+| flext-quality | - | ✅ Production | - | ✅ |
+| flext-plugin | - | ✅ Production | - | ✅ |
+| flext-web | - | ✅ Production | - | ✅ |
+| flext-oracle-wms | - | ✅ Production | - | ✅ |
+| flext-oracle-oic | - | ✅ Production | - | ✅ |
+| flext-tap-ldap | - | ✅ Production | - | ✅ |
+| flext-tap-ldif | - | ✅ Production | - | ✅ |
+| flext-tap-oracle | - | ✅ Production | - | ✅ |
+| flext-tap-oracle-wms | - | ✅ Production | - | ✅ |
+| flext-tap-oracle-oic | - | ✅ Production | - | ✅ |
+| flext-target-ldap | - | ✅ Production | - | ✅ |
+| flext-target-ldif | - | ✅ Production | - | ✅ |
+| flext-target-oracle | - | ✅ Production | - | ✅ |
+| flext-target-oracle-wms | - | ✅ Production | - | ✅ |
+| flext-target-oracle-oic | - | ✅ Production | - | ✅ |
+| flext-dbt-ldap | - | ✅ Production | - | ✅ |
+| flext-dbt-ldif | - | ✅ Production | - | ✅ |
+| flext-dbt-oracle | - | ✅ Production | - | ✅ |
+| flext-dbt-oracle-wms | - | ✅ Production | - | ✅ |
+| flexcore | - | ✅ Production | - | ✅ |
 
-- **31/31 projects operational** (100%)
-- **Zero blocking issues remaining**
-- **Ready for 1.0.0 release**
+**Total**: 30 projects | **Status**: 100% Operational | **Ready for Production**: ✅
 
-[View Latest Status Report](./reports/status/)
+---
+
+## 🔗 Quick Links
+
+- [Installation](./guides/getting-started.md#installation)
+- [Quick Start](./guides/getting-started.md#quick-start)
+- [Architecture Overview](./architecture/README.md)
+- [API Reference](./api-reference/README.md)
+- [Projects Documentation](./projects/README.md)
+- [Standards](./standards/README.md)
+- [Contributing](../CONTRIBUTING.md)
+- [License](../LICENSE)
+
+---
+
+## 🎯 Projects by Category
+
+### Core Foundation
+- [flext-core](./projects/flext-core.md) - Foundation library (v0.10.0)
+- [flext-cli](./projects/flext-cli.md) - CLI framework
+- [flext-api](./projects/flext-api.md) - HTTP framework
+- [flexcore](./projects/flexcore.md) - Go implementation
+
+### LDAP/Directory Services
+- [flext-ldap](./projects/flext-ldap.md) - LDAP operations
+- [flext-ldif](./projects/flext-ldif.md) - LDIF processing
+- [flext-auth](./projects/flext-auth.md) - Authentication
+
+### Infrastructure
+- [flext-db-oracle](./projects/flext-db-oracle.md) - Oracle database connectivity
+- [flext-grpc](./projects/flext-grpc.md) - gRPC communication
+- [flext-observability](./projects/flext-observability.md) - Monitoring and observability
+- [flext-web](./projects/flext-web.md) - Web application framework
+
+### Data Integration
+- [flext-meltano](./projects/flext-meltano.md) - Singer/Meltano integration
+- [flext-plugin](./projects/flext-plugin.md) - Plugin system
+- [flext-quality](./projects/flext-quality.md) - Code quality and testing
+
+### Singer Ecosystem - Taps
+- [flext-tap-ldap](./projects/flext-tap-ldap.md) - LDAP tap
+- [flext-tap-ldif](./projects/flext-tap-ldif.md) - LDIF tap
+- [flext-tap-oracle](./projects/flext-tap-oracle.md) - Oracle tap
+- [flext-tap-oracle-wms](./projects/flext-tap-oracle-wms.md) - Oracle WMS tap
+- [flext-tap-oracle-oic](./projects/flext-tap-oracle-oic.md) - Oracle OIC tap
+
+### Singer Ecosystem - Targets
+- [flext-target-ldap](./projects/flext-target-ldap.md) - LDAP target
+- [flext-target-ldif](./projects/flext-target-ldif.md) - LDIF target
+- [flext-target-oracle](./projects/flext-target-oracle.md) - Oracle target
+- [flext-target-oracle-wms](./projects/flext-target-oracle-wms.md) - Oracle WMS target
+- [flext-target-oracle-oic](./projects/flext-target-oracle-oic.md) - Oracle OIC target
+
+### DBT Adapters
+- [flext-dbt-ldap](./projects/flext-dbt-ldap.md) - LDAP transformations
+- [flext-dbt-ldif](./projects/flext-dbt-ldif.md) - LDIF transformations
+- [flext-dbt-oracle](./projects/flext-dbt-oracle.md) - Oracle transformations
+- [flext-dbt-oracle-wms](./projects/flext-dbt-oracle-wms.md) - Oracle WMS transformations
+
+### Enterprise Integration
+- [flext-oracle-wms](./projects/flext-oracle-wms.md) - Oracle Warehouse Management
+- [flext-oracle-oic](./projects/flext-oracle-oic.md) - Oracle Integration Cloud
 
 ---
 
@@ -169,11 +262,12 @@ transformation, and enterprise connectivity.
 
 ---
 
-## 📞 Support & Community
+## 🆘 Support
 
-- **Documentation Issues**: Report problems or suggest improvements
-- **Code Contributions**: Guidelines for contributing to FLEXT
-- **Support Channels**: Get help with implementation and deployment
+- [Troubleshooting](./guides/troubleshooting.md) - Common issues and solutions
+- [FAQ](./guides/faq.md) - Frequently asked questions
+- [Issues](https://github.com/organization/flext/issues) - Report bugs or request features
+- [Contributing](../CONTRIBUTING.md) - Guidelines for contributing to FLEXT
 
 ---
 

@@ -9,7 +9,7 @@ actor "Data Engineer" as user
 participant "FLEXT CLI" as cli
 participant "FLEXT API" as api
 participant "FLEXT Core" as core
-participant "Domain Services" as domain
+participant "Services" as domain
 database "LDAP Directory" as ldap
 database "Oracle Database" as oracle
 database "Data Warehouse" as warehouse

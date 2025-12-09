@@ -17,7 +17,7 @@ System_Boundary(flext_system, "FLEXT Platform") {
 
     Container(flext_core, "FLEXT Core", "Python", "Foundation library with Clean Architecture patterns")
 
-    Container(domain_services, "Domain Services", "Python", "Business logic and domain services") {
+    Container(domain_services, "Services", "Python", "Business logic and domain services") {
         Container(ldap_service, "LDAP Service", "Python", "LDAP directory operations")
         Container(ldif_service, "LDIF Service", "Python", "LDIF processing and migration")
         Container(oracle_service, "Oracle Service", "Python", "Oracle database operations")
@@ -96,7 +96,7 @@ Rel_D(domain_services, monitoring, "Reports", "Logs")
   - FlextModels domain patterns
   - FlextLogger structured logging
 
-#### Domain Services
+#### Services
 
 - **Technology**: Python
 - **Purpose**: Business logic and domain services
