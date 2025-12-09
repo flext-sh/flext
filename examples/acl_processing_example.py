@@ -284,12 +284,10 @@ class AclProcessingExample:
                     return FlextResult.fail(f"Server detection failed: {result.error}")
 
             server_types_set = {s for _, s in detected_entries}
-            return FlextResult.ok(
-                {
-                    "entries": detected_entries,
-                    "server_types": sorted(server_types_set),
-                }
-            )
+            return FlextResult.ok({
+                "entries": detected_entries,
+                "server_types": sorted(server_types_set),
+            })
 
         def _extract_acls(
             self, data: dict[str, object]

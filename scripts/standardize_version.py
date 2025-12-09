@@ -227,13 +227,11 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
         self._print_stats(stats)
         self._print_project_groups(grouped_projects)
 
-        return FlextResult[dict[str, object]].ok(
-            {
-                "stats": stats,
-                "projects": grouped_projects,
-                "config": self._config,
-            }
-        )
+        return FlextResult[dict[str, object]].ok({
+            "stats": stats,
+            "projects": grouped_projects,
+            "config": self._config,
+        })
 
     def _calculate_stats(self) -> dict[str, int]:
         """Functional statistics calculation."""
@@ -295,12 +293,10 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
     ) -> FlextResult[dict[str, object]]:
         """Railway-oriented standardization execution."""
         if self._config.dry_run:
-            return FlextResult[dict[str, object]].ok(
-                {
-                    "dry_run": True,
-                    "report": report,
-                }
-            )
+            return FlextResult[dict[str, object]].ok({
+                "dry_run": True,
+                "report": report,
+            })
 
         update_projects = [p for p in self._projects if p.needs_update]
         if not update_projects:
@@ -318,12 +314,10 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
         print(
             f"\n✅ Standardization complete: {success_count}/{len(update_projects)} projects updated"
         )
-        return FlextResult[dict[str, object]].ok(
-            {
-                "success_count": success_count,
-                "total": len(update_projects),
-            }
-        )
+        return FlextResult[dict[str, object]].ok({
+            "success_count": success_count,
+            "total": len(update_projects),
+        })
 
     def _standardize_single_project(
         self, project: ProjectAnalysis
