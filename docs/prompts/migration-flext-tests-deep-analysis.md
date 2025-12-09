@@ -7,11 +7,13 @@ Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os p
 ## Escopo
 
 ### Projetos a Analisar
+
 - ✅ Todos os projetos `flext-*` no diretório raiz
 - ✅ Todos os projetos `client-a-*` no diretório raiz
 - ✅ Qualquer outro projeto que use `flext_tests`
 
 ### Diretórios a Verificar
+
 - ✅ `tests/` - Todos os arquivos de teste
 - ✅ `src/` - Código fonte (pode ter testes inline)
 - ✅ `examples/` - Exemplos que podem usar flext_tests
@@ -19,6 +21,7 @@ Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os p
 - ✅ `docs/` - Documentação com exemplos de código
 
 ### Arquivos a Verificar
+
 - ✅ Todos os arquivos `.py` nos diretórios acima
 - ✅ Arquivos de configuração de teste (pytest.ini, conftest.py, etc.)
 
@@ -28,24 +31,25 @@ Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os p
 
 #### ❌ DEPRECADOS → ✅ MIGRAR PARA
 
-| Método Deprecado | Método Público Atual | Exemplo de Migração |
-|------------------|---------------------|---------------------|
-| `tm.eq(actual, expected)` | `tm.that(actual, eq=expected)` | `tm.eq(x, 5)` → `tm.that(x, eq=5)` |
-| `tm.true(condition)` | `tm.that(condition, eq=True)` | `tm.true(x > 0)` → `tm.that(x > 0, eq=True)` |
-| `tm.assert_contains(container, item)` | `tm.that(container, contains=item)` | `tm.assert_contains(d, "key")` → `tm.that(d, contains="key")` |
-| `tm.str_(text, ...)` | `tm.that(text, ...)` | `tm.str_(url, starts="http")` → `tm.that(url, starts="http")` |
-| `tm.is_(value, type)` | `tm.that(value, is_=type)` | `tm.is_(x, str)` → `tm.that(x, is_=str)` |
-| `tm.len(items, expected)` | `tm.that(items, length=expected)` | `tm.len(lst, 5)` → `tm.that(lst, length=5)` |
-| `tm.hasattr(obj, *attrs)` | `tm.that(hasattr(obj, attr), eq=True)` | `tm.hasattr(obj, "attr")` → `tm.that(hasattr(obj, "attr"), eq=True)` |
-| `tm.method(obj, name)` | `tm.that(hasattr(...), eq=True)` + `tm.that(callable(...), eq=True)` | Ver exemplo abaixo |
-| `tm.not_none(*values)` | `tm.that(value, none=False)` | `tm.not_none(x, y)` → `tm.that(x, none=False); tm.that(y, none=False)` |
-| `tm.dict_(data, ...)` | `tm.that(data, keys=...)` ou `tm.that(data, length=...)` | Ver exemplo abaixo |
-| `tm.list_(items, ...)` | `tm.that(items, has=...)` ou `tm.that(items, length=...)` | Ver exemplo abaixo |
-| `tm.assert_is_type(value, type)` | `tm.that(value, is_=type, none=False)` | `tm.assert_is_type(x, str)` → `tm.that(x, is_=str, none=False)` |
+| Método Deprecado                      | Método Público Atual                                                 | Exemplo de Migração                                                    |
+| ------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `tm.eq(actual, expected)`             | `tm.that(actual, eq=expected)`                                       | `tm.eq(x, 5)` → `tm.that(x, eq=5)`                                     |
+| `tm.true(condition)`                  | `tm.that(condition, eq=True)`                                        | `tm.true(x > 0)` → `tm.that(x > 0, eq=True)`                           |
+| `tm.assert_contains(container, item)` | `tm.that(container, contains=item)`                                  | `tm.assert_contains(d, "key")` → `tm.that(d, contains="key")`          |
+| `tm.str_(text, ...)`                  | `tm.that(text, ...)`                                                 | `tm.str_(url, starts="http")` → `tm.that(url, starts="http")`          |
+| `tm.is_(value, type)`                 | `tm.that(value, is_=type)`                                           | `tm.is_(x, str)` → `tm.that(x, is_=str)`                               |
+| `tm.len(items, expected)`             | `tm.that(items, length=expected)`                                    | `tm.len(lst, 5)` → `tm.that(lst, length=5)`                            |
+| `tm.hasattr(obj, *attrs)`             | `tm.that(hasattr(obj, attr), eq=True)`                               | `tm.hasattr(obj, "attr")` → `tm.that(hasattr(obj, "attr"), eq=True)`   |
+| `tm.method(obj, name)`                | `tm.that(hasattr(...), eq=True)` + `tm.that(callable(...), eq=True)` | Ver exemplo abaixo                                                     |
+| `tm.not_none(*values)`                | `tm.that(value, none=False)`                                         | `tm.not_none(x, y)` → `tm.that(x, none=False); tm.that(y, none=False)` |
+| `tm.dict_(data, ...)`                 | `tm.that(data, keys=...)` ou `tm.that(data, length=...)`             | Ver exemplo abaixo                                                     |
+| `tm.list_(items, ...)`                | `tm.that(items, has=...)` ou `tm.that(items, length=...)`            | Ver exemplo abaixo                                                     |
+| `tm.assert_is_type(value, type)`      | `tm.that(value, is_=type, none=False)`                               | `tm.assert_is_type(x, str)` → `tm.that(x, is_=str, none=False)`        |
 
 #### Exemplos Detalhados de Migração
 
 **tm.method():**
+
 ```python
 # ❌ ANTES
 tm.method(api, "connect")
@@ -55,7 +59,8 @@ tm.that(hasattr(api, "connect"), eq=True)
 tm.that(callable(getattr(api, "connect", None)), eq=True)
 ```
 
-**tm.dict_():**
+**tm.dict\_():**
+
 ```python
 # ❌ ANTES
 tm.dict_(data, has_key="name", length=5)
@@ -64,7 +69,8 @@ tm.dict_(data, has_key="name", length=5)
 tm.that(data, keys=["name"], length=5)
 ```
 
-**tm.list_():**
+**tm.list\_():**
+
 ```python
 # ❌ ANTES
 tm.list_(items, contains="item", length=3)
@@ -77,42 +83,43 @@ tm.that(items, has="item", length=3)
 
 #### ❌ DEPRECADOS → ✅ MIGRAR PARA
 
-| Método Deprecado | Método Público Atual | Exemplo de Migração |
-|------------------|---------------------|---------------------|
-| `tt.create_user(...)` | `tt.model("user", ...)` | `tt.create_user(name="John")` → `tt.model("user", name="John")` |
-| `tt.create_config(...)` | `tt.model("config", ...)` | `tt.create_config(debug=True)` → `tt.model("config", debug=True)` |
-| `tt.create_service(...)` | `tt.model("service", ...)` | `tt.create_service(type="api")` → `tt.model("service", type="api")` |
-| `tt.batch_users(count)` | `tt.batch("user", count=count)` | `tt.batch_users(5)` → `tt.batch("user", count=5)` |
-| `tt.create_test_operation(...)` | `tt.op(kind, ...)` | `tt.create_test_operation("simple")` → `tt.op("simple")` |
-| `tt.create_test_service(...)` | `tt.svc(...)` | `tt.create_test_service(type="test")` → `tt.svc(type="test")` |
+| Método Deprecado                | Método Público Atual            | Exemplo de Migração                                                 |
+| ------------------------------- | ------------------------------- | ------------------------------------------------------------------- |
+| `tt.create_user(...)`           | `tt.model("user", ...)`         | `tt.create_user(name="John")` → `tt.model("user", name="John")`     |
+| `tt.create_config(...)`         | `tt.model("config", ...)`       | `tt.create_config(debug=True)` → `tt.model("config", debug=True)`   |
+| `tt.create_service(...)`        | `tt.model("service", ...)`      | `tt.create_service(type="api")` → `tt.model("service", type="api")` |
+| `tt.batch_users(count)`         | `tt.batch("user", count=count)` | `tt.batch_users(5)` → `tt.batch("user", count=5)`                   |
+| `tt.create_test_operation(...)` | `tt.op(kind, ...)`              | `tt.create_test_operation("simple")` → `tt.op("simple")`            |
+| `tt.create_test_service(...)`   | `tt.svc(...)`                   | `tt.create_test_service(type="test")` → `tt.svc(type="test")`       |
 
-#### Classes Aninhadas Deprecadas (tb.*)
+#### Classes Aninhadas Deprecadas (tb.\*)
 
-| Classe/Método Deprecado | Método Público Atual | Exemplo de Migração |
-|------------------------|---------------------|---------------------|
-| `tb.Tests.Result.ok(value)` | `tt.res("ok", value=value)` | `tb.Tests.Result.ok("data")` → `tt.res("ok", value="data")` |
-| `tb.Tests.Result.fail(error)` | `tt.res("fail", error=error)` | `tb.Tests.Result.fail("err")` → `tt.res("fail", error="err")` |
-| `tb.Tests.Model.user(...)` | `tt.model("user", ...)` | `tb.Tests.Model.user(name="John")` → `tt.model("user", name="John")` |
-| `tb.Tests.Model.config(...)` | `tt.model("config", ...)` | `tb.Tests.Model.config(debug=True)` → `tt.model("config", debug=True)` |
-| `tb.Tests.Model.batch_users(count)` | `tt.batch("user", count=count)` | `tb.Tests.Model.batch_users(5)` → `tt.batch("user", count=5)` |
+| Classe/Método Deprecado             | Método Público Atual            | Exemplo de Migração                                                    |
+| ----------------------------------- | ------------------------------- | ---------------------------------------------------------------------- |
+| `tb.Tests.Result.ok(value)`         | `tt.res("ok", value=value)`     | `tb.Tests.Result.ok("data")` → `tt.res("ok", value="data")`            |
+| `tb.Tests.Result.fail(error)`       | `tt.res("fail", error=error)`   | `tb.Tests.Result.fail("err")` → `tt.res("fail", error="err")`          |
+| `tb.Tests.Model.user(...)`          | `tt.model("user", ...)`         | `tb.Tests.Model.user(name="John")` → `tt.model("user", name="John")`   |
+| `tb.Tests.Model.config(...)`        | `tt.model("config", ...)`       | `tb.Tests.Model.config(debug=True)` → `tt.model("config", debug=True)` |
+| `tb.Tests.Model.batch_users(count)` | `tt.batch("user", count=count)` | `tb.Tests.Model.batch_users(5)` → `tt.batch("user", count=5)`          |
 
 ### 3. tf (FlextTestsFiles) - Métodos Deprecados
 
 #### ❌ DEPRECADOS → ✅ MIGRAR PARA
 
-| Método Deprecado | Método Público Atual | Exemplo de Migração |
-|------------------|---------------------|---------------------|
-| `tf.create_file_set(files)` | `tf.files(files)` (context manager) | Ver exemplo abaixo |
-| `tf.get_file_info(path)` | `tf.info(path)` | `tf.get_file_info(p)` → `tf.info(p).unwrap()` |
-| `tf.create_text_file(...)` | `tf.create(content, name)` | `tf.create_text_file("text", "file.txt")` → `tf.create("text", "file.txt")` |
-| `tf.create_binary_file(...)` | `tf.create(content, name)` | `tf.create_binary_file(b"data", "file.bin")` → `tf.create(b"data", "file.bin")` |
-| `tf.create_empty_file(name)` | `tf.create("", name)` | `tf.create_empty_file("empty.txt")` → `tf.create("", "empty.txt")` |
-| `tf.create_config_file(...)` | `tf.create(content, name)` | `tf.create_config_file("{}", "config.json")` → `tf.create("{}", "config.json")` |
-| `tf.temporary_files(files)` | `tf.files(files)` (context manager) | Ver exemplo abaixo |
+| Método Deprecado             | Método Público Atual                | Exemplo de Migração                                                             |
+| ---------------------------- | ----------------------------------- | ------------------------------------------------------------------------------- |
+| `tf.create_file_set(files)`  | `tf.files(files)` (context manager) | Ver exemplo abaixo                                                              |
+| `tf.get_file_info(path)`     | `tf.info(path)`                     | `tf.get_file_info(p)` → `tf.info(p).unwrap()`                                   |
+| `tf.create_text_file(...)`   | `tf.create(content, name)`          | `tf.create_text_file("text", "file.txt")` → `tf.create("text", "file.txt")`     |
+| `tf.create_binary_file(...)` | `tf.create(content, name)`          | `tf.create_binary_file(b"data", "file.bin")` → `tf.create(b"data", "file.bin")` |
+| `tf.create_empty_file(name)` | `tf.create("", name)`               | `tf.create_empty_file("empty.txt")` → `tf.create("", "empty.txt")`              |
+| `tf.create_config_file(...)` | `tf.create(content, name)`          | `tf.create_config_file("{}", "config.json")` → `tf.create("{}", "config.json")` |
+| `tf.temporary_files(files)`  | `tf.files(files)` (context manager) | Ver exemplo abaixo                                                              |
 
 #### Exemplos Detalhados de Migração
 
 **tf.create_file_set():**
+
 ```python
 # ❌ ANTES
 files = tf.create_file_set({"file1.txt": "content1", "file2.txt": "content2"})
@@ -124,6 +131,7 @@ with tf.files({"file1.txt": "content1", "file2.txt": "content2"}) as files:
 ```
 
 **tf.get_file_info():**
+
 ```python
 # ❌ ANTES
 info = tf.get_file_info(path)
@@ -214,6 +222,7 @@ Qualquer método que não esteja na documentação pública deve ser investigado
 ### Fase 1: Identificação Completa
 
 1. **Buscar todos os usos de métodos deprecados:**
+
    ```bash
    # Padrões a buscar
    - tm\.eq\(
@@ -245,6 +254,7 @@ Qualquer método que não esteja na documentação pública deve ser investigado
    ```
 
 2. **Buscar usos de classes aninhadas deprecadas:**
+
    ```bash
    - tb\.Tests\.Result\.
    - tb\.Tests\.Model\.
@@ -253,6 +263,7 @@ Qualquer método que não esteja na documentação pública deve ser investigado
    ```
 
 3. **Buscar imports incorretos:**
+
    ```bash
    - from flext_tests import FlextTestsMatchers
    - from flext_tests import FlextTestsFactories
@@ -261,6 +272,7 @@ Qualquer método que não esteja na documentação pública deve ser investigado
    ```
 
 4. **Buscar usos de métodos privados:**
+
    ```bash
    - tm\._[a-z]
    - tt\._[a-z]
@@ -313,6 +325,7 @@ Para cada uso encontrado:
 ### Fase 4: Validação
 
 1. **Executar testes:**
+
    ```bash
    # Para cada projeto
    cd <projeto>
@@ -325,6 +338,7 @@ Para cada uso encontrado:
    - Todos os métodos deprecados devem ter sido migrados
 
 3. **Verificar linters:**
+
    ```bash
    ruff check .
    mypy .
@@ -337,7 +351,7 @@ Para cada uso encontrado:
 
 ## Checklist de Verificação
 
-### Para cada projeto:
+### Para cada projeto
 
 - [ ] Todos os arquivos `.py` em `tests/` foram verificados
 - [ ] Todos os arquivos `.py` em `src/` foram verificados (se aplicável)
@@ -410,7 +424,8 @@ Ao final do processo:
 
 ## Comandos Úteis
 
-### Buscar usos deprecados em um projeto:
+### Buscar usos deprecados em um projeto
+
 ```bash
 cd <projeto>
 grep -r "tm\.eq(" tests/ src/ examples/ scripts/ 2>/dev/null || true
@@ -418,14 +433,16 @@ grep -r "tt\.create_user(" tests/ src/ examples/ scripts/ 2>/dev/null || true
 # ... repetir para todos os padrões
 ```
 
-### Executar testes de um projeto:
+### Executar testes de um projeto
+
 ```bash
 cd <projeto>
 source ~/flext/.venv/bin/activate
 pytest tests/ -v --tb=short
 ```
 
-### Verificar warnings:
+### Verificar warnings
+
 ```bash
 pytest tests/ -v -W error::DeprecationWarning
 ```
@@ -451,6 +468,7 @@ def test_database_connection():
 ```
 
 **Regras:**
+
 - ✅ Unit tests: marcados com `@pytest.mark.unit`
 - ✅ Integration tests: marcados com `@pytest.mark.integration`
 - ✅ E2E tests: marcados com `@pytest.mark.e2e` (se aplicável)
@@ -473,16 +491,18 @@ def test_database_connection():
 **Regras de Namespace:**
 
 1. **Classes base em `~/flext`** devem estender as de `flext_tests`:
+
    ```python
    # ~/flext/constants.py
    from flext_tests.constants import FlextTestsConstants
-   
+
    class FlextConstants(FlextTestsConstants):
        """Constants base que estende flext_tests."""
        pass
    ```
 
 2. **Imports rápidos por projeto:**
+
    ```python
    # Em cada projeto, criar namespaces fáceis:
    from flext.constants import FlextConstants as c
@@ -499,23 +519,24 @@ def test_database_connection():
    - `.Tests` - Para flext-tests (sem conflito)
 
 **Exemplo de estrutura:**
+
 ```python
 # ~/flext/models.py
 from flext_tests.models import FlextTestsModels
 
 class FlextModels(FlextTestsModels):
     """Models base que estende flext_tests."""
-    
+
     class TestsLdap:
         """Domínio de testes para flext-ldap."""
         class User:
             pass
-    
+
     class TestsCli:
         """Domínio de testes para flext-cli."""
         class Command:
             pass
-    
+
     class TestsCore:
         """Domínio de testes para flext-core."""
         class Service:
@@ -544,6 +565,7 @@ class FlextModels(FlextTestsModels):
    - Remover após confirmação de que tudo funciona
 
 **Comando de busca:**
+
 ```bash
 # Buscar classes base duplicadas
 find . -name "constants.py" -o -name "models.py" -o -name "typings.py" -o -name "protocols.py" -o -name "utilities.py" | grep -v "~/flext"
@@ -574,6 +596,7 @@ find . -name "conftest.py" | wc -l  # Deve retornar 1 (apenas em ~/flext)
 ```
 
 **Regras:**
+
 - ✅ `tests/fixtures/` - Apenas geradores de dados (código Python)
 - ✅ `tests/unit/` - Testes de unidade com 100% de cobertura real
 - ✅ `tests/integration/` - Testes de integração
@@ -584,16 +607,19 @@ find . -name "conftest.py" | wc -l  # Deve retornar 1 (apenas em ~/flext)
 #### 5. Nomenclatura de Arquivos e Classes
 
 **Arquivos de teste:**
+
 - ✅ `tests/unit/[namespace/]test_[modulo].py`
 - ✅ `tests/integration/test_[modulo].py`
 - ✅ `tests/e2e/test_[modulo].py`
 
 **Classes de teste:**
+
 - ✅ Uma única classe por arquivo: `Tests[Projeto][Modulo]`
 - ✅ Prefixo obrigatório: `Tests[Projeto]`
 - ✅ Nome do módulo em PascalCase após o prefixo
 
 **Exemplos:**
+
 ```python
 # tests/unit/test_user.py
 class TestsLdapUser:
@@ -621,13 +647,14 @@ class TestsLdapSync:
    - ✅ Validação de comportamento real
 
 2. **Uma única classe por arquivo:**
+
    ```python
    # ✅ CORRETO
    # tests/unit/test_user.py
    class TestsLdapUser:
        def test_create_user(self):
            pass
-       
+
        def test_validate_user(self):
            pass
    ```
@@ -639,6 +666,7 @@ class TestsLdapSync:
    - ✅ Mínimo de código, máximo de automação
 
 4. **Estrutura de diretórios:**
+
    ```
    tests/unit/
    ├── test_user.py              # TestsLdapUser
@@ -654,12 +682,14 @@ class TestsLdapSync:
 **Localização:** `tests/fixtures/`
 
 **Regras:**
+
 - ✅ Apenas geradores de dados (código Python)
 - ✅ Funções que retornam dados de teste
 - ✅ Não devem conter lógica de teste
 - ✅ Importáveis e reutilizáveis
 
 **Exemplo:**
+
 ```python
 # tests/fixtures/users.py
 def generate_user_data(count: int = 1) -> list[dict]:
@@ -672,6 +702,7 @@ def generate_user_data(count: int = 1) -> list[dict]:
 **Localização:** `~/flext/conftest.py` (ÚNICO)
 
 **Deve conter:**
+
 - ✅ Todas as inicializações globais
 - ✅ Fixtures compartilhadas
 - ✅ Configurações de conexões
@@ -680,6 +711,7 @@ def generate_user_data(count: int = 1) -> list[dict]:
 - ✅ Automação máxima para mínimo de código
 
 **Exemplo de estrutura:**
+
 ```python
 # ~/flext/conftest.py
 import pytest
@@ -703,12 +735,14 @@ def setup_test_environment():
 #### 9. Priorização de Refatoração
 
 **Sempre priorizar:**
+
 1. ✅ **Renomear e concatenar módulos** - Juntar módulos similares
 2. ✅ **Reutilizar código existente** - Evitar duplicação
 3. ✅ **Automatizar com conftest** - Máxima automação
 4. ❌ **Recriar do zero** - Última opção, apenas se necessário
 
 **Processo de refatoração:**
+
 1. Identificar módulos similares
 2. Analisar código comum
 3. Consolidar em um único módulo
@@ -717,9 +751,10 @@ def setup_test_environment():
 
 ## Checklist de Estrutura e Organização
 
-### Para cada projeto:
+### Para cada projeto
 
-#### Classes Base e Namespaces:
+#### Classes Base e Namespaces
+
 - [ ] Classes base (`constants.py`, `models.py`, etc.) movidas para `~/flext/`
 - [ ] Classes base estendem de `flext_tests`
 - [ ] Namespaces fáceis criados (`c`, `m`, `t`, `p`, `u`)
@@ -727,33 +762,38 @@ def setup_test_environment():
 - [ ] Imports atualizados para usar `~/flext/`
 - [ ] Arquivos locais renomeados para `.bak` e removidos
 
-#### Estrutura de Diretórios:
+#### Estrutura de Diretórios
+
 - [ ] `tests/fixtures/` existe e contém apenas geradores de dados
 - [ ] `tests/unit/` existe e contém testes de unidade
 - [ ] `tests/integration/` existe e contém testes de integração
 - [ ] `tests/e2e/` existe (se aplicável)
 - [ ] Não há `tests/conftest.py` local (usar `~/flext/conftest.py`)
 
-#### Nomenclatura:
+#### Nomenclatura
+
 - [ ] Todos os arquivos seguem padrão `test_[modulo].py`
 - [ ] Todas as classes seguem padrão `Tests[Projeto][Modulo]`
 - [ ] Uma única classe por arquivo
 - [ ] Namespaces em diretórios quando necessário
 
-#### Marcação de Testes:
+#### Marcação de Testes
+
 - [ ] Todos os unit tests marcados com `@pytest.mark.unit`
 - [ ] Todos os integration tests marcados com `@pytest.mark.integration`
 - [ ] Todos os e2e tests marcados com `@pytest.mark.e2e` (se aplicável)
 - [ ] Nenhum teste sem marcação
 
-#### Automação:
+#### Automação
+
 - [ ] `~/flext/conftest.py` contém todas as inicializações
 - [ ] Fixtures automáticas configuradas
 - [ ] Containers e conexões automatizados
 - [ ] Classes base avançadas de pytest implementadas
 - [ ] Mínimo de código, máximo de automação
 
-#### Cobertura:
+#### Cobertura
+
 - [ ] Unit tests alcançam 100% de cobertura
 - [ ] Testes usam implementações reais (sem mocks desnecessários)
 - [ ] Comportamento real validado
@@ -763,13 +803,14 @@ def setup_test_environment():
 ### Fase 1: Identificação e Análise
 
 1. **Identificar estrutura atual:**
+
    ```bash
    # Buscar classes base duplicadas
    find . -name "constants.py" -o -name "models.py" -o -name "typings.py" | grep -v "~/flext"
-   
+
    # Buscar conftest.py duplicados
    find . -name "conftest.py" | grep -v "~/flext"
-   
+
    # Analisar estrutura de testes
    find . -type d -name "tests" | xargs -I {} find {} -type f -name "*.py"
    ```
@@ -831,6 +872,7 @@ def setup_test_environment():
 ### Fase 5: Limpeza
 
 1. **Renomear arquivos antigos:**
+
    ```bash
    # Renomear para .bak
    mv constants.py constants.py.bak
@@ -850,7 +892,8 @@ def setup_test_environment():
 
 ## Comandos Úteis de Reorganização
 
-### Buscar estrutura atual:
+### Buscar estrutura atual
+
 ```bash
 # Classes base duplicadas
 find . -name "constants.py" -o -name "models.py" | grep -v "~/flext"
@@ -862,20 +905,23 @@ find . -name "conftest.py" | grep -v "~/flext"
 tree tests/ -I "__pycache__|*.pyc"
 ```
 
-### Reorganizar testes:
+### Reorganizar testes
+
 ```bash
 # Mover testes para diretórios corretos
 mkdir -p tests/unit tests/integration tests/fixtures
 # ... mover arquivos conforme necessário
 ```
 
-### Verificar marcações:
+### Verificar marcações
+
 ```bash
 # Buscar testes sem marcação
 grep -r "def test_" tests/ | grep -v "@pytest.mark"
 ```
 
-### Verificar nomenclatura:
+### Verificar nomenclatura
+
 ```bash
 # Buscar classes que não seguem padrão
 grep -r "class.*Test" tests/ | grep -v "Tests\[Projeto\]"
@@ -893,4 +939,3 @@ grep -r "class.*Test" tests/ | grep -v "Tests\[Projeto\]"
 
 **Última atualização:** 2025-01-XX
 **Status:** Pronto para execução
-

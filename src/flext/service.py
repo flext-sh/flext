@@ -1,7 +1,7 @@
-"""Service base for flext package.
+"""Service base for flext-core package.
 
-This module provides the base service class for the flext package,
-inheriting from FlextCliServiceBase.
+This module provides the base service class for the flext-core package.
+No inheritance from higher domains - core is the foundation.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -11,22 +11,24 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from flext_cli import FlextCliServiceBase
-
-from flext.constants import FlextConstants
-from flext.models import FlextModels
-from flext.types import FlextTypes
-from flext.utilities import FlextUtilities
+from flext.constants import c
+from flext.models import m
+from flext.types import t
+from flext.utilities import u
 
 
-class FlextServiceBase(FlextCliServiceBase):
-    """Base service class for flext package."""
+class FlextServiceBase:
+    """Base service class for flext-core package."""
+
+    # =========================================================================
+    # NAMESPACE: .Core - All core domain service base
+    # =========================================================================
 
     # Use local domain types/models/constants/utilities
-    Constants: ClassVar[type[FlextConstants]] = FlextConstants
-    Models: ClassVar[type[FlextModels]] = FlextModels
-    Types: ClassVar[type[FlextTypes]] = FlextTypes
-    Utilities: ClassVar[type[FlextUtilities]] = FlextUtilities
+    Constants: ClassVar[type] = c
+    Models: ClassVar[type] = m
+    Types: ClassVar[type] = t
+    Utilities: ClassVar[type] = u
 
 
 # Alias for convenience

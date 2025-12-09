@@ -585,13 +585,15 @@ class TestFlextTargeted:
                 # Create result with timestamp (using non-deprecated method)
                 timestamp = u.Generators.generate_iso_timestamp()
 
-                return FlextResult[dict[str, object]].ok({
-                    "status": "success",
-                    "timestamp": timestamp,
-                    "container_value": container.get("integration_key").unwrap_or(
-                        "default"
-                    ),
-                })
+                return FlextResult[dict[str, object]].ok(
+                    {
+                        "status": "success",
+                        "timestamp": timestamp,
+                        "container_value": container.get("integration_key").unwrap_or(
+                            "default"
+                        ),
+                    }
+                )
 
         service = IntegrationService()
         result = service.execute()

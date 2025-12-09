@@ -417,10 +417,12 @@ class TestFlextConsolidated:
                         return FlextResult[dict[str, object]].fail("Unexpected success")
 
                     # Return success result
-                    return FlextResult[dict[str, object]].ok({
-                        "status": "success",
-                        "message": "Integration test passed",
-                    })
+                    return FlextResult[dict[str, object]].ok(
+                        {
+                            "status": "success",
+                            "message": "Integration test passed",
+                        }
+                    )
                 except Exception as e:
                     return FlextResult[dict[str, object]].fail(str(e))
 

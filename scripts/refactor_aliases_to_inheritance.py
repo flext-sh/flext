@@ -70,10 +70,12 @@ def process_file(filepath: Path) -> tuple[int, bool]:
             indent = match.group(1)
             class_name = match.group(2)
             parent_class = match.group(3)
-            modified_lines.extend([
-                f"{indent}class {class_name}({parent_class}):",
-                f'{indent}    """{class_name} - real inheritance."""',
-            ])
+            modified_lines.extend(
+                [
+                    f"{indent}class {class_name}({parent_class}):",
+                    f'{indent}    """{class_name} - real inheritance."""',
+                ]
+            )
             conversions += 1
         else:
             modified_lines.append(line)

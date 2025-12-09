@@ -1,7 +1,7 @@
-"""Protocol definitions for flext package.
+"""Protocol definitions for flext-core package.
 
-This module provides centralized protocol definitions for the flext package,
-inheriting from FlextCliProtocols and extending with workspace-specific protocols.
+This module provides centralized protocol definitions for the flext-core package.
+Uses constants and types, defines protocols with protocol types.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -9,13 +9,23 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_cli import FlextCliProtocols
+from typing import Protocol
 
 
-class FlextProtocols(FlextCliProtocols):
-    """Centralized protocol definitions for flext package."""
+class FlextProtocols:
+    """Centralized protocol definitions for flext-core package."""
 
-    # Add workspace-specific protocols here if needed
+    # =========================================================================
+    # NAMESPACE: .Core - All core domain protocols
+    # =========================================================================
+
+    class Core:
+        """Core domain protocols."""
+
+        class ResultProtocol(Protocol):
+            """Protocol for result types."""
+
+            # Define protocol methods here
 
 
 # Alias for convenience

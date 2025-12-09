@@ -1,7 +1,7 @@
-"""Type definitions for flext package.
+"""Type definitions for flext-core package.
 
-This module provides centralized type definitions for the flext package,
-inheriting from FlextCliTypes and extending with workspace-specific types.
+This module provides centralized type definitions for the flext-core package.
+Uses constants for constant values, defines complex types.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -11,13 +11,18 @@ from __future__ import annotations
 
 from typing import TypeVar
 
-from flext_cli import FlextCliTypes
 
+class FlextTypes:
+    """Centralized type definitions for flext-core package."""
 
-class FlextTypes(FlextCliTypes):
-    """Centralized type definitions for flext package."""
+    # =========================================================================
+    # NAMESPACE: .Core - All core domain types
+    # =========================================================================
 
-    # Add workspace-specific types here if needed
+    class Core:
+        """Core domain types."""
+
+        # Complex types here if needed
 
 
 # TypeVars
