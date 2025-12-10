@@ -191,7 +191,6 @@
 		disallow_untyped_decorators = false
 		disallow_untyped_defs = true
 		error_summary = true
-    enable_incomplete_feature = ["NewGenericSyntax"]
 		exclude = [
 			".*/generate_config.py",
 			".*/manage.py",
@@ -212,10 +211,9 @@
 		explicit_package_bases = true
 		extra_checks = true
 		follow_imports = "normal"
-		follow_imports_for_stubs = true
+		follow_imports_for_stubs = true 
 		incremental = true
 		local_partial_types = true
-		mypy_path = "src"
 		namespace_packages = true
 		no_implicit_optional = true
 		no_implicit_reexport = true
@@ -239,6 +237,7 @@
 		warn_unreachable = true
 		warn_unused_configs = true
 		warn_unused_ignores = false
+
 		[[tool.mypy.overrides]]
 			disable_error_code = [
 				"call-overload",
