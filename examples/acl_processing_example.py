@@ -253,7 +253,7 @@ class AclProcessingExample:
             if detect_result.is_failure:
                 return detect_result
 
-            data = detect_result.unwrap()
+            data = detect_result.value
             data["start_time"] = start_time
             extract_result = (
                 self._extract_acls(data)
@@ -263,12 +263,12 @@ class AclProcessingExample:
             if extract_result.is_failure:
                 return extract_result
 
-            data = extract_result.unwrap()
+            data = extract_result.value
             validate_result = self._validate_batch(data)
             if validate_result.is_failure:
                 return validate_result
 
-            data = validate_result.unwrap()
+            data = validate_result.value
             return self._analyze_performance(data)
 
         def _detect_servers(
@@ -279,7 +279,7 @@ class AclProcessingExample:
             for entry in entries:
                 result = AclProcessingExample.detect_server_type(entry)
                 if result.is_success:
-                    detected_entries.append((entry, result.unwrap()))
+                    detected_entries.append((entry, result.value))
                 else:
                     return FlextResult.fail(f"Server detection failed: {result.error}")
 
@@ -315,7 +315,7 @@ class AclProcessingExample:
                 for future in as_completed(futures):
                     result = future.result()
                     if result.is_success:
-                        all_acls.extend(result.unwrap())
+                        all_acls.extend(result.value)
                     else:
                         return FlextResult.fail(
                             f"ACL extraction failed: {result.error}"
@@ -344,7 +344,7 @@ class AclProcessingExample:
                     entry, server_type
                 )
                 if result.is_success:
-                    all_acls.extend(result.unwrap())
+                    all_acls.extend(result.value)
                 else:
                     return FlextResult.fail(f"ACL extraction failed: {result.error}")
 
@@ -370,7 +370,7 @@ class AclProcessingExample:
                     acl, {"strict_mode": True}
                 )
                 if result.is_success:
-                    validation_results.append(result.unwrap())
+                    validation_results.append(result.value)
                 else:
                     return FlextResult.fail(f"ACL validation failed: {result.error}")
 
@@ -447,4 +447,4 @@ class AclProcessingExample:
 # Example usage (commented out - no main blocks or print statements as per requirements)
 # sample_entries = AclProcessingExample.create_sample_acl_entries()
 # result = AclProcessingExample.AclProcessor(sample_entries, parallel=True)
-# Result is dict directly - no .execute() or .unwrap() needed!
+# Result is dict directly - no .execute() or .value needed!

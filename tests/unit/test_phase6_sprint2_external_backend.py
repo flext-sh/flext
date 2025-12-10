@@ -161,7 +161,7 @@ class TestPhase6Sprint2ExternalBackendConversion:
                 # Methods that use _run_tool_with_json_output return FlextResult directly
                 has_flext_result_pattern = (
                     "result.is_failure" in method_code
-                    or ".unwrap()" in method_code
+                    or ".value" in method_code
                     or uses_helper  # Helper returns FlextResult
                 )
                 assert has_flext_result_pattern, (
@@ -312,8 +312,8 @@ class TestPhase6Sprint2ExternalBackendConversion:
         """Verify wrapper pattern is used to access command results."""
         content = self.EXTERNAL_BACKEND_PATH.read_text()
 
-        # Should use .unwrap() to get wrapper
-        assert ".unwrap()" in content, "Must use .unwrap() to get wrapper from result"
+        # Should use .value to get wrapper
+        assert ".value" in content, "Must use .value to get wrapper from result"
 
         # Should access wrapper.returncode, wrapper.stdout, wrapper.stderr
         assert "wrapper.returncode" in content or "wrapper_" in content, (

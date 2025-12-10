@@ -188,11 +188,11 @@ class TestPhase6Sprint2ExampleHelperConversion:
                 pytest.fail(f"subprocess import found at line {i + 10}: {line}")
 
     def test_wrapper_pattern_used(self) -> None:
-        """Verify wrapper.unwrap() pattern is used correctly."""
+        """Verify wrapper.value pattern is used correctly."""
         content = self.EXAMPLE_HELPER_PATH.read_text()
 
-        # Should use wrapper.unwrap() pattern
-        assert "wrapper = result.unwrap()" in content
+        # Should use wrapper.value pattern
+        assert "wrapper = result.value" in content
 
     def test_python3_execution_preserved(self) -> None:
         """Verify python3 execution is preserved in commands."""

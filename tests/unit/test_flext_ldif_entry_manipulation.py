@@ -126,9 +126,9 @@ class TestFlextLdifEntries:
             if expected_success:
                 assert result.is_success, f"Expected success: {result.error}"
                 if expected_type:
-                    assert isinstance(result.unwrap(), expected_type)
+                    assert isinstance(result.value, expected_type)
             else:
-                assert result.is_failure, f"Expected failure: {result.unwrap()}"
+                assert result.is_failure, f"Expected failure: {result.value}"
                 if expected_error_contains and result.error:
                     assert expected_error_contains in result.error.lower()
 
@@ -175,7 +175,7 @@ class TestFlextLdifEntries:
         result = service.normalize_attribute_value(normalization_case["input_value"])
 
         assert result.is_success, f"Normalization failed: {result.error}"
-        assert result.unwrap() == normalization_case["expected_output"]
+        assert result.value == normalization_case["expected_output"]
 
     @pytest.mark.parametrize(
         "attribute",
@@ -196,7 +196,7 @@ class TestFlextLdifEntries:
 
         # If attribute exists, should return string
         if result.is_success:
-            value = result.unwrap()
+            value = result.value
             assert isinstance(value, str)
             if attribute == LdifTestData.NORMALIZED_MAIL:
                 # Email should contain @ or be non-empty

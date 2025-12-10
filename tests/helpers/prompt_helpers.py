@@ -60,7 +60,7 @@ class PromptTestHelpers:
         # Assertions
         assert result.is_success, f"Expected success in quiet mode for {method_name}"
         if expected_result is not None:
-            assert result.unwrap() == expected_result, (
+            assert result.value == expected_result, (
                 f"Unexpected result for {method_name}"
             )
 
@@ -97,7 +97,7 @@ class PromptTestHelpers:
         result = method(*args, **kwargs)
 
         assert result.is_success, f"Non-interactive {method_name} should succeed"
-        assert result.unwrap() == expected_default, (
+        assert result.value == expected_default, (
             f"Expected default {expected_default}"
         )
 
@@ -130,7 +130,7 @@ class PromptTestHelpers:
         if expected_success:
             u.Tests.Result.assert_success(result)
             if expected_data is not None:
-                assert result.unwrap() == expected_data
+                assert result.value == expected_data
         else:
             u.Tests.Result.assert_failure(result)
             if expected_error_contains:

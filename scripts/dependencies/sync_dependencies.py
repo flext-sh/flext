@@ -92,7 +92,7 @@ def validate_projects(
             )
             continue
 
-        validation = validation_result.unwrap()
+        validation = validation_result.value
         # Type validation for validation result structure
         if not isinstance(validation, dict):
             print_colored(
@@ -185,7 +185,7 @@ def analyze_conflicts(
     def get_conflicts() -> dict[str, object]:
         result = analyzer.analyze_workspace_conflicts(workspace_path)
         if result.is_success:
-            conflict_result = result.unwrap()
+            conflict_result = result.value
             return conflict_result.model_dump()
         return {"error": result.error or "Analysis failed"}
 

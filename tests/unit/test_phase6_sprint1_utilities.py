@@ -266,7 +266,7 @@ class TestPhase6Sprint1UtilitiesConversion:
         assert result.is_success, f"Command should succeed: {result.error}"
 
         # Should contain wrapper
-        wrapper = result.unwrap()
+        wrapper = result.value
         assert isinstance(wrapper, u._CompletedProcessWrapper), (
             "Should return _CompletedProcessWrapper"
         )
@@ -296,7 +296,7 @@ class TestPhase6Sprint1UtilitiesConversion:
         assert result.is_success, (
             "Should capture non-zero exit code as success when check=False"
         )
-        wrapper = result.unwrap()
+        wrapper = result.value
         assert wrapper.returncode == 42, (
             f"Should capture exit code 42, got {wrapper.returncode}"
         )
@@ -328,7 +328,7 @@ class TestPhase6Sprint1UtilitiesConversion:
 
         assert result.is_success, f"Command should succeed: {result.error}"
 
-        wrapper = result.unwrap()
+        wrapper = result.value
         assert "hello from stdout" in wrapper.stdout, (
             f"Should capture stdout: {wrapper.stdout}"
         )
@@ -350,7 +350,7 @@ class TestPhase6Sprint1UtilitiesConversion:
         )
 
         assert result.is_success, f"Command should succeed: {result.error}"
-        wrapper = result.unwrap()
+        wrapper = result.value
         assert test_env_value in wrapper.stdout, (
             f"Environment variable not passed: {wrapper.stdout}"
         )
@@ -362,7 +362,7 @@ class TestPhase6Sprint1UtilitiesConversion:
         )
 
         assert result.is_success, f"Command should succeed: {result.error}"
-        wrapper = result.unwrap()
+        wrapper = result.value
         assert "test input data" in wrapper.stdout, (
             f"Input not echoed: {wrapper.stdout}"
         )
@@ -378,7 +378,7 @@ class TestPhase6Sprint1UtilitiesConversion:
             )
 
             assert result.is_success, f"Command should succeed: {result.error}"
-            wrapper = result.unwrap()
+            wrapper = result.value
             assert tmpdir in wrapper.stdout, (
                 f"Should execute in specified directory: {wrapper.stdout}"
             )

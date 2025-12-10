@@ -35,7 +35,7 @@ class TestFlextLdifEntryService:
         result = FlextLdifEntry.remove_operational_attributes(parsed_user_entry)
 
         assert result.is_success, f"Should succeed: {result.error}"
-        cleaned_entry = result.unwrap()
+        cleaned_entry = result.value
 
         # Verify operational attributes are removed
         if cleaned_entry.attributes:
@@ -62,7 +62,7 @@ class TestFlextLdifEntryService:
         )
 
         assert result.is_success, f"Should succeed: {result.error}"
-        cleaned_entries = result.unwrap()
+        cleaned_entries = result.value
 
         assert len(cleaned_entries) == len(parsed_multiple_entries)
 
@@ -87,7 +87,7 @@ class TestFlextLdifEntryService:
         )
 
         assert result.is_success, f"Should succeed: {result.error}"
-        cleaned_entry = result.unwrap()
+        cleaned_entry = result.value
 
         # Verify specified attributes are removed
         if cleaned_entry.attributes:
@@ -112,7 +112,7 @@ class TestFlextLdifEntryService:
         )
 
         assert result.is_success, f"Should succeed: {result.error}"
-        cleaned_entry = result.unwrap()
+        cleaned_entry = result.value
 
         # Verify attribute removed (case-insensitive)
         if cleaned_entry.attributes:
@@ -136,7 +136,7 @@ class TestFlextLdifEntryService:
         result = service.execute()
 
         assert result.is_success, f"Should succeed: {result.error}"
-        cleaned_entries = result.unwrap()
+        cleaned_entries = result.value
 
         assert len(cleaned_entries) == 1
         if cleaned_entries[0].attributes:
@@ -159,7 +159,7 @@ class TestFlextLdifEntryService:
         result = service.execute()
 
         assert result.is_success, f"Should succeed: {result.error}"
-        cleaned_entries = result.unwrap()
+        cleaned_entries = result.value
 
         assert len(cleaned_entries) == 1
         if cleaned_entries[0].attributes:

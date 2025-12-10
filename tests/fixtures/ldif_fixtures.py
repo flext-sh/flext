@@ -138,7 +138,7 @@ def parsed_user_entry(
     """Parse real LDIF user entry into Entry model."""
     result = flext_ldif_instance.parse(real_ldif_user_entry)
     assert result.is_success, f"Failed to parse user entry: {result.error}"
-    entries = result.unwrap()
+    entries = result.value
     assert len(entries) == 1, f"Expected 1 entry, got {len(entries)}"
     return entries[0]
 
@@ -150,7 +150,7 @@ def parsed_multiple_entries(
     """Parse real LDIF with multiple entries."""
     result = flext_ldif_instance.parse(real_ldif_multiple_entries)
     assert result.is_success, f"Failed to parse entries: {result.error}"
-    return result.unwrap()
+    return result.value
 
 
 @pytest.fixture

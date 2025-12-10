@@ -78,7 +78,7 @@ class CliTestHelpers:
         Reduces 5-6 lines per test by centralizing result structure validation.
         """
         u.Tests.Result.assert_success(result)
-        data = result.unwrap()
+        data = result.value
 
         for field in expected_fields:
             assert field in data, f"Missing required field: {field}"

@@ -174,7 +174,7 @@ class TestFlextConsolidated:
 
         # Validate result structure
         assert result.is_success
-        data = result.unwrap()
+        data = result.value
         assert isinstance(data, dict)
 
         # Validate expected fields
@@ -193,7 +193,7 @@ class TestFlextConsolidated:
         # All results should be consistent
         for result in results:
             assert result.is_success
-            data = result.unwrap()
+            data = result.value
             assert data["status"] == TestConstants.OPERATIONAL
             assert data["service"] == TestConstants.FLEXT_CLI
 

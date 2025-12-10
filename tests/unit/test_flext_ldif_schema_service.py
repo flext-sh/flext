@@ -26,7 +26,7 @@ class TestFlextLdifSchemaService:
         result = service.parse_attribute(attr_def)
 
         assert result.is_success, f"Should parse valid attribute: {result.error}"
-        attr = result.unwrap()
+        attr = result.value
 
         assert attr.oid == "2.5.4.3"
         assert attr.name == "cn"
@@ -60,7 +60,7 @@ class TestFlextLdifSchemaService:
         result = service.parse_objectclass(oc_def)
 
         assert result.is_success, f"Should parse valid objectClass: {result.error}"
-        oc = result.unwrap()
+        oc = result.value
 
         assert oc.oid == "2.5.6.6"
         assert oc.name == "person"
@@ -89,7 +89,7 @@ class TestFlextLdifSchemaService:
         result = service.validate_attribute(attr)
 
         assert result.is_success, f"Should validate valid attribute: {result.error}"
-        assert result.unwrap() is True
+        assert result.value is True
 
     def test_validate_attribute_empty_oid(self) -> None:
         """Test validating attribute with empty OID."""
@@ -129,7 +129,7 @@ class TestFlextLdifSchemaService:
         result = service.validate_objectclass(oc)
 
         assert result.is_success, f"Should validate valid objectClass: {result.error}"
-        assert result.unwrap() is True
+        assert result.value is True
 
     def test_validate_objectclass_empty_oid(self) -> None:
         """Test validating objectClass with empty OID."""

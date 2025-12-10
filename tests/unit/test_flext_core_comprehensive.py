@@ -69,7 +69,7 @@ class TestFlextComprehensive:
         fail = FlextResult[str].fail("error")
 
         # Test successful unwrap
-        assert success.unwrap() == "data"
+        assert success.value == "data"
 
         # Test unwrap_or
         assert success.unwrap_or("default") == "data"
@@ -77,7 +77,7 @@ class TestFlextComprehensive:
 
         # Test unwrap with failure raises RuntimeError
         with pytest.raises(RuntimeError, match="Cannot unwrap failed result: error"):
-            _ = fail.unwrap()
+            _ = fail.value
 
     def test_flext_result_map_operations(self) -> None:
         """Test map and flatmap operations."""

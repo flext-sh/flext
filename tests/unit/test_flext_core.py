@@ -202,14 +202,14 @@ class TestFlextConsolidated:
     def test_flext_result_unwrap_success(self, test_data: object) -> None:
         """Test FlextResult unwrap on success with various data types."""
         result = FlextResult[object].ok(test_data)
-        unwrapped = result.unwrap()
+        unwrapped = result.value
         assert unwrapped == test_data
 
     def test_flext_result_unwrap_failure(self) -> None:
         """Test FlextResult unwrap on failure raises exception."""
         result = FlextResult[str].fail(TestConstants.ResultValues.ERROR_MESSAGE)
         with pytest.raises(RuntimeError):
-            result.unwrap()
+            result.value
 
     @pytest.mark.parametrize(
         "test_data",

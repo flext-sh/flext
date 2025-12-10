@@ -280,7 +280,7 @@ class TestFlextLdapIntegration:
         ldif = FlextLdif.get_instance()
         parse_result = ldif.parse(real_ldif_user_entry)
         if parse_result.is_success:
-            entries = parse_result.unwrap()
+            entries = parse_result.value
             if entries:
                 entry = entries[0]
 

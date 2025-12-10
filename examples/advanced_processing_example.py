@@ -240,7 +240,7 @@ class AdvancedProcessingExample:
                 result = operation(current_data)
                 if result.is_failure:
                     return result
-                unwrapped = result.unwrap()
+                unwrapped = result.value
                 if isinstance(unwrapped, dict):
                     current_data = unwrapped
 
@@ -304,7 +304,7 @@ class AdvancedProcessingExample:
             for item in items_to_validate:
                 result = self._validate_single_item(item)
                 if result.is_success:
-                    validation_results.append(result.unwrap())
+                    validation_results.append(result.value)
                 else:
                     return FlextResult.fail(f"Validation failed: {result.error}")
 

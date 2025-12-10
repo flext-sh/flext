@@ -143,7 +143,7 @@ class WorkspaceManagementService(FlextService[dict[str, object]]):
                 f"Project discovery failed: {projects_result.error}",
             )
 
-        projects = projects_result.unwrap()
+        projects = projects_result.value
 
         # Create workspace structure
         structure_result = self._WorkspaceHelper.create_workspace_structure(
@@ -154,7 +154,7 @@ class WorkspaceManagementService(FlextService[dict[str, object]]):
                 f"Workspace structure creation failed: {structure_result.error}",
             )
 
-        directories = structure_result.unwrap()
+        directories = structure_result.value
 
         # Setup links for each project
         links_created: list[object] = []
@@ -206,7 +206,7 @@ class WorkspaceManagementService(FlextService[dict[str, object]]):
                 f"Workspace structure access failed: {structure_result.error}",
             )
 
-        directories = structure_result.unwrap()
+        directories = structure_result.value
 
         valid_links: list[object] = []
         invalid_links: list[object] = []
@@ -263,8 +263,8 @@ class WorkspaceManagementService(FlextService[dict[str, object]]):
             )
 
         # Combine results
-        setup_data = setup_result.unwrap()
-        validation_data = validation_result.unwrap()
+        setup_data = setup_result.value
+        validation_data = validation_result.value
 
         combined_result: dict[str, object] = {
             "workspace_setup": setup_data,

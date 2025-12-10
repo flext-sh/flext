@@ -59,11 +59,11 @@ class TestFlextTargeted:
         failure = FlextResult[str].fail("error")
 
         # Test unwrap
-        assert success.unwrap() == "data"
+        assert success.value == "data"
 
         # unwrap() raises FlextExceptions.BaseError when called on failure
         with pytest.raises(FlextExceptions.BaseError):
-            failure.unwrap()
+            failure.value
 
         # Test unwrap_or
         assert success.unwrap_or("default") == "data"
@@ -149,13 +149,13 @@ class TestFlextTargeted:
         # Test lash on failure
         lash_result = failure.lash(retry_on_network_error)
         assert lash_result.is_success
-        assert lash_result.unwrap() == 42
+        assert lash_result.value == 42
 
         # Test lash on success (should not apply)
         success = FlextResult[int].ok(10)
         lash_success = success.lash(retry_on_network_error)
         assert lash_success.is_success
-        assert lash_success.unwrap() == 10
+        assert lash_success.value == 10
 
     def test_flext_result_alt_operation(self) -> None:
         """Test alt (alternative) operation."""
@@ -165,13 +165,13 @@ class TestFlextTargeted:
         # Test alt on failure
         alt_result = failure.alt(alternative)
         assert alt_result.is_success
-        assert alt_result.unwrap() == 99
+        assert alt_result.value == 99
 
         # Test alt on success (should not use alternative)
         success = FlextResult[int].ok(5)
         alt_success = success.alt(alternative)
         assert alt_success.is_success
-        assert alt_success.unwrap() == 5
+        assert alt_success.value == 5
 
     def test_flext_result_pipeline(self) -> None:
         """Test pipeline composition."""
@@ -186,7 +186,7 @@ class TestFlextTargeted:
         result = FlextResult[int].pipeline(5, double, add_one)
         assert result.is_success
         # (5 * 2) + 1 = 11
-        assert result.unwrap() == 11
+        assert result.value == 11
 
     def test_flext_result_traverse(self) -> None:
         """Test traverse operation."""
@@ -197,7 +197,7 @@ class TestFlextTargeted:
         items = [1, 2, 3, 4, 5]
         result = FlextResult[int].traverse(items, double)
         assert result.is_success
-        assert result.unwrap() == [2, 4, 6, 8, 10]
+        assert result.value == [2, 4, 6, 8, 10]
 
         # Test traverse with failure
         def fail_on_three(x: int) -> FlextResult[int]:

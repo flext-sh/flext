@@ -264,7 +264,7 @@ class GitUltimateCleanup:
             )
             if status_result.is_failure:
                 return False, f"Failed to check git status: {status_result.error}"
-            wrapper = status_result.unwrap()
+            wrapper = status_result.value
             if wrapper.stdout.strip():
                 return False, "Uncommitted changes detected. Commit or stash first."
 
@@ -282,7 +282,7 @@ class GitUltimateCleanup:
         )
         if head_result.is_failure:
             return False, f"Failed to check HEAD: {head_result.error}"
-        head_wrapper = head_result.unwrap()
+        head_wrapper = head_result.value
         if head_wrapper.returncode != 0:
             return False, "Detached HEAD state. Checkout a branch first."
 
@@ -295,7 +295,7 @@ class GitUltimateCleanup:
         if disk_result.is_failure:
             return False, f"Failed to check disk space: {disk_result.error}"
 
-        disk_wrapper = disk_result.unwrap()
+        disk_wrapper = disk_result.value
         if disk_wrapper.returncode == 0:
             lines = disk_wrapper.stdout.strip().split("\n")
             if len(lines) > 1:
@@ -352,7 +352,7 @@ class GitUltimateCleanup:
         if mirror_result.is_failure:
             print(f"   ❌ Mirror clone failed: {mirror_result.error}")
         else:
-            mirror_wrapper = mirror_result.unwrap()
+            mirror_wrapper = mirror_result.value
             if mirror_wrapper.returncode == 0:
                 print("   ✅ Mirror clone created")
             else:
@@ -368,7 +368,7 @@ class GitUltimateCleanup:
         if history_result.is_failure:
             print(f"   ❌ History export failed: {history_result.error}")
         else:
-            history_wrapper = history_result.unwrap()
+            history_wrapper = history_result.value
             if history_wrapper.returncode == 0:
                 history_file.write_text(history_wrapper.stdout)
             lines = len(history_wrapper.stdout.strip().split("\n"))
@@ -383,7 +383,7 @@ class GitUltimateCleanup:
         if reflog_result.is_failure:
             print(f"   ❌ Reflog export failed: {reflog_result.error}")
         else:
-            reflog_wrapper = reflog_result.unwrap()
+            reflog_wrapper = reflog_result.value
             if reflog_wrapper.returncode == 0:
                 reflog_file.write_text(reflog_wrapper.stdout)
                 print("   ✅ Reflog exported")
@@ -395,7 +395,7 @@ class GitUltimateCleanup:
         if branch_result.is_failure:
             print(f"   ❌ Branch export failed: {branch_result.error}")
         else:
-            branch_wrapper = branch_result.unwrap()
+            branch_wrapper = branch_result.value
             if branch_wrapper.returncode == 0:
                 branch_file.write_text(branch_wrapper.stdout)
                 print("   ✅ Branch info exported")
@@ -407,7 +407,7 @@ class GitUltimateCleanup:
         if tags_result.is_failure:
             print(f"   ❌ Tags export failed: {tags_result.error}")
         else:
-            tags_wrapper = tags_result.unwrap()
+            tags_wrapper = tags_result.value
             if tags_wrapper.returncode == 0:
                 tags_file.write_text(tags_wrapper.stdout)
                 print("   ✅ Tags exported")
@@ -762,7 +762,7 @@ wc -l commit-history.txt
                 print(f"   Recover: cd {self.backup_root} && ./RECOVER.sh")
                 return False
 
-            wrapper = cleanup_result.unwrap()
+            wrapper = cleanup_result.value
             if wrapper.returncode != 0:
                 print(f"   Recover: cd {self.backup_root} && ./RECOVER.sh")
                 return False
@@ -783,7 +783,7 @@ wc -l commit-history.txt
         if verify_result.is_failure:
             print(f"\n⚠️  Author verification failed: {verify_result.error}")
         else:
-            verify_wrapper = verify_result.unwrap()
+            verify_wrapper = verify_result.value
             if verify_wrapper.returncode == 0:
                 author = verify_wrapper.stdout.strip()
                 if self.AUTHOR_NAME not in author:
@@ -794,7 +794,7 @@ wc -l commit-history.txt
         if stats_result.is_failure:
             print(f"\n⚠️  Statistics failed: {stats_result.error}")
         else:
-            stats_wrapper = stats_result.unwrap()
+            stats_wrapper = stats_result.value
             if stats_wrapper.returncode == 0:
                 print("\n📊 Repository statistics:")
                 for line in stats_wrapper.stdout.strip().split("\n")[:5]:
@@ -905,7 +905,7 @@ def callback(commit, metadata):
             print()
             return
 
-        wrapper = submodule_result.unwrap()
+        wrapper = submodule_result.value
         for line in wrapper.stdout.strip().split("\n"):
             if not line:
                 continue
@@ -922,7 +922,7 @@ def callback(commit, metadata):
 
             if url_result.is_failure:
                 continue
-            url_wrapper = url_result.unwrap()
+            url_wrapper = url_result.value
             if url_wrapper.returncode != 0:
                 continue
             url = url_wrapper.stdout.strip()
@@ -962,7 +962,7 @@ def callback(commit, metadata):
         if submodule_config_result.is_failure:
             return []
 
-        submodule_wrapper = submodule_config_result.unwrap()
+        submodule_wrapper = submodule_config_result.value
         if submodule_wrapper.returncode != 0:
             return []
 
@@ -1000,7 +1000,7 @@ def callback(commit, metadata):
             print("❌ No remote 'origin' found. Run --restore-remotes first.")
             return False
 
-        remote_wrapper = remote_result.unwrap()
+        remote_wrapper = remote_result.value
         if remote_wrapper.returncode != 0:
             print("❌ No remote 'origin' found. Run --restore-remotes first.")
             return False
@@ -1027,7 +1027,7 @@ def callback(commit, metadata):
             print(f"❌ Push failed: {push_branches_result.error}")
             return False
 
-        push_branches_wrapper = push_branches_result.unwrap()
+        push_branches_wrapper = push_branches_result.value
         if push_branches_wrapper.returncode != 0:
             print(f"❌ Push failed: {push_branches_wrapper.stderr}")
             return False
@@ -1044,7 +1044,7 @@ def callback(commit, metadata):
             if push_tags_result.is_failure:
                 print(f"   ⚠️  Tag push failed: {push_tags_result.error}")
             else:
-                push_tags_wrapper = push_tags_result.unwrap()
+                push_tags_wrapper = push_tags_result.value
                 if push_tags_wrapper.returncode != 0:
                     print(f"   ⚠️  Tag push failed: {push_tags_wrapper.stderr}")
                 else:
@@ -1122,7 +1122,7 @@ def callback(commit, metadata):
         if result.is_failure:
             return {}
 
-        result_wrapper = result.unwrap()
+        result_wrapper = result.value
         if result_wrapper.returncode != 0:
             return {}
 

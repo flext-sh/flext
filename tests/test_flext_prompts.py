@@ -65,7 +65,7 @@ class TestFlextCliPromptsInitialization:
         prompts = PromptTestHelpers.create_interactive_prompt()
         result = prompts.execute()
         PromptTestHelpers.test_result_assertions(result, expected_data={})
-        assert isinstance(result.unwrap(), dict)
+        assert isinstance(result.value, dict)
 
 
 class TestFlextCliPromptsConfirmation:
@@ -80,7 +80,7 @@ class TestFlextCliPromptsConfirmation:
             default=default,
             expected_result=default,
         )
-        assert cast("FlextResult[bool]", result["result"]).unwrap() is default
+        assert cast("FlextResult[bool]", result["result"]).value is default
 
     def test_confirm_non_interactive_mode(self) -> None:
         """Test confirm in non-interactive mode returns defaults."""
