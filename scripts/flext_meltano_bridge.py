@@ -31,7 +31,7 @@ class FlextMeltanoBridgeScript:
     ) -> CommandResult:
         """Generic handler for bridge results."""
         if result_obj.is_success:
-            value = result_obj.unwrap()
+            value = result_obj.value
             return {"status": "success", success_key: value}
         error_msg = result_obj.error or "Unknown error"
         return {"status": "error", "error": str(error_msg)}

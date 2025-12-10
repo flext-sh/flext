@@ -227,7 +227,7 @@ class TestFlextCli:
         """Test execute result data structure using parametrized cases."""
         cli = self.TestHelpers.create_cli_instance()
         result = self.TestHelpers.execute_and_validate(cli)
-        data = result.unwrap()
+        data = result.value
 
         # Validate field presence
         field_name = field_case["field"]
@@ -268,7 +268,7 @@ class TestFlextCli:
         assert result.error is None
 
         # Validate data extraction
-        data = result.unwrap()
+        data = result.value
         assert isinstance(data, dict)
         assert len(data) > 0
 
@@ -291,7 +291,7 @@ class TestFlextCli:
             # Method presence
             assert hasattr(result, property_name), f"Missing method: {property_name}"
             # Can unwrap successfully
-            data = result.unwrap()
+            data = result.value
             assert data is not None
         elif property_name == "error":
             # Error property
@@ -306,7 +306,7 @@ class TestFlextCli:
         """Test execute method success state and data."""
         cli = self.TestHelpers.create_cli_instance()
         result = self.TestHelpers.execute_and_validate(cli)
-        data = result.unwrap()
+        data = result.value
 
         # Validate core success indicators
         assert data[CliTestData.STATUS] == CliTestData.OPERATIONAL
@@ -322,7 +322,7 @@ class TestFlextCli:
         """Test execute method component validation."""
         cli = self.TestHelpers.create_cli_instance()
         result = self.TestHelpers.execute_and_validate(cli)
-        data = result.unwrap()
+        data = result.value
 
         components = data[CliTestData.COMPONENTS]
         self.TestHelpers.validate_component_status(
@@ -342,7 +342,7 @@ class TestFlextCli:
         """Test execute method data integrity and completeness."""
         cli = self.TestHelpers.create_cli_instance()
         result = self.TestHelpers.execute_and_validate(cli)
-        data = result.unwrap()
+        data = result.value
 
         # Required fields presence
         required_fields = {
@@ -384,9 +384,9 @@ class TestFlextCli:
             assert result.is_success
 
         # All results should be consistent
-        first_data = results[0].unwrap()
+        first_data = results[0].value
         for result in results[1:]:
-            data = result.unwrap()
+            data = result.value
             assert data == first_data, "Execute results not consistent"
 
     def test_cli_instance_isolation(self) -> None:
@@ -402,8 +402,8 @@ class TestFlextCli:
         result2 = self.TestHelpers.execute_and_validate(cli2)
 
         # Results should be equivalent but independent
-        data1 = result1.unwrap()
-        data2 = result2.unwrap()
+        data1 = result1.value
+        data2 = result2.value
 
         # Core fields should match
         assert data1["status"] == data2["status"]

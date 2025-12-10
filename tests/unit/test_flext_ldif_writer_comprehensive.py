@@ -61,7 +61,7 @@ class TestFlextLdifWriterComprehensive:
         )
 
         assert result.is_success, f"Failed to write empty entries: {result.error}"
-        content = result.unwrap()
+        content = result.value
         assert "version: 1" in content, "Should include version header"
 
     def test_writer_post_processor_sort_attributes(
@@ -228,7 +228,7 @@ description: {long_value}
 
         result = serializer._get_entry_quirk(FlextLdifConstants.ServerTypes.OPENLDAP)
         assert result.is_success, f"Failed to get entry quirk: {result.error}"
-        quirk = result.unwrap()
+        quirk = result.value
         assert quirk is not None, "Quirk should not be None"
 
     def test_writer_serializer_get_entry_quirk_invalid_server(
@@ -260,7 +260,7 @@ description: {long_value}
             FlextLdifConstants.ServerTypes.OPENLDAP
         )
         assert quirk_result.is_success, f"Failed to get quirk: {quirk_result.error}"
-        entry_quirk = quirk_result.unwrap()
+        entry_quirk = quirk_result.value
 
         format_options = FlextLdifModels.WriteFormatOptions()
 
@@ -296,7 +296,7 @@ description: {long_value}
             FlextLdifConstants.ServerTypes.OPENLDAP
         )
         assert quirk_result.is_success, f"Failed to get quirk: {quirk_result.error}"
-        entry_quirk = quirk_result.unwrap()
+        entry_quirk = quirk_result.value
 
         format_options = FlextLdifModels.WriteFormatOptions()
 
@@ -346,7 +346,7 @@ description: {long_value}
         )
 
         assert result.is_success, f"Failed to write string: {result.error}"
-        content = result.unwrap()
+        content = result.value
         assert isinstance(content, str), "Result should be string"
         assert "dn: " in content, "String should contain DN"
 
@@ -373,7 +373,7 @@ description: {long_value}
         )
 
         assert result.is_success, f"Failed to write: {result.error}"
-        content = result.unwrap()
+        content = result.value
 
         # Verify all options are applied
         assert "version: 1" in content, "Version header should be included"
@@ -409,7 +409,7 @@ description: {long_value}
         assert isinstance(result, FlextResult), "Should return FlextResult"
         assert result.is_success, f"Health check should succeed: {result.error}"
 
-        response = result.unwrap()
+        response = result.value
         assert hasattr(response, "statistics"), "Response should have statistics"
         assert response.statistics.total_entries == 0, (
             "Health check should have 0 entries"

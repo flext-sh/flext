@@ -90,7 +90,7 @@ def run_example(project_root: Path, example_file: Path, timeout: int) -> RunResu
         return RunResult(project=project, example=example_file.name, returncode=1)
 
     # Success - check exit code
-    proc = result.unwrap()
+    proc = result.value
     status = "OK" if proc.returncode == 0 else f"FAIL({proc.returncode})"
     print(f"[{project}] {example_file.name}: {status}")
 

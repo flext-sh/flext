@@ -155,7 +155,7 @@ class TestMyPyChecker:
         # Should succeed if path exists, or fail if mypy not available
         assert result.is_success or result.is_failure
         if result.is_success:
-            assert isinstance(result.unwrap(), list)
+            assert isinstance(result.value, list)
 
         # Test with non-existent paths (should fail)
         for path in ["/home/user/project", "/var/www/project"]:

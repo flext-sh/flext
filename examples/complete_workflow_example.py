@@ -157,7 +157,7 @@ class CompleteWorkflowExample:
                         f"Stage {stage_name} failed: {result.error}"
                     )
 
-                stage_result = result.unwrap()
+                stage_result = result.value
                 stage_results.append(stage_result)
 
                 context.performance_metrics[stage_name] = {
@@ -222,7 +222,7 @@ class CompleteWorkflowExample:
             def process_single_item(item: ItemType) -> ItemType | None:
                 try:
                     result = stage_func(item, context)
-                    return result.unwrap() if result.is_success else None
+                    return result.value if result.is_success else None
                 except Exception as e:
                     return {"error": str(e), "item": item}
 

@@ -35,7 +35,7 @@ target-version = "py313"
         "B010",    # set-attr-with-constant
         "B017",    # assert-raises-exception
         "BLE001",  # blind-except - utility functions return FlextResult, catching all exceptions
-        # "C901",    # complex-structure
+        "C901",    # complex-structure
         "COM812",
         "CPY001",
         "D203",    # incorrect-blank-line-before-class - conflicting with D211 (blank line before class)

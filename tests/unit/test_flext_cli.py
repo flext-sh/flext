@@ -223,7 +223,7 @@ class TestFlextCli:
         assert result.is_success
 
         # Validate result data structure
-        data = result.unwrap()
+        data = result.value
         assert isinstance(data, dict)
         assert "status" in data
         assert "service" in data
@@ -240,7 +240,7 @@ class TestFlextCli:
         # All results should be successful and consistent
         for result in results:
             assert result.is_success
-            data = result.unwrap()
+            data = result.value
             assert data["status"] == TestData.OPERATIONAL
             assert data["service"] == TestData.FLEXT_CLI
 
@@ -343,7 +343,7 @@ class TestFlextCli:
         assert result.is_success
 
         # Validate integration with data structure
-        data = result.unwrap()
+        data = result.value
         assert isinstance(data, dict)
         assert len(data) > 0
 
@@ -381,7 +381,7 @@ class TestFlextCli:
         result = cli.execute()
         assert result.is_success
 
-        data = result.unwrap()
+        data = result.value
         assert isinstance(data, dict)
 
         # Validate all components are working

@@ -218,7 +218,7 @@ class FlextModuleOptimizer:
             if discovery_result.is_failure:
                 return FlextResult.fail(f"Discovery failed: {discovery_result.error}")
 
-            targets = discovery_result.unwrap()
+            targets = discovery_result.value
 
             # Phase 2: Quality gate validation
             quality_result = self._validate_quality_gates(targets)
@@ -288,7 +288,7 @@ class FlextModuleOptimizer:
                         )
                         continue
 
-                    analysis = analysis_result.unwrap()
+                    analysis = analysis_result.value
 
                     if self._needs_optimization(analysis):
                         target = {
@@ -789,7 +789,7 @@ Examples:
         result = asyncio.run(optimizer.optimize_project(project_path))
 
         if result.is_success:
-            summary = result.unwrap()
+            summary = result.value
             print("✅ Optimization completed successfully!")
             print(f"   Targets processed: {summary['total_targets']}")
             print(f"   Successful: {summary['successful_targets']}")

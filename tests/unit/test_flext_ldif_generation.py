@@ -36,7 +36,7 @@ class TestLdifGenerationRealData:
         )
 
         assert result.is_success, f"Failed to generate LDIF: {result.error}"
-        ldif_content = result.unwrap()
+        ldif_content = result.value
 
         # Validate LDIF syntax
         assert "dn: " in ldif_content, "LDIF must contain DN line"
@@ -79,7 +79,7 @@ class TestLdifGenerationRealData:
             assert result.is_success, (
                 f"Failed to generate LDIF for {server_type}: {result.error}"
             )
-            ldif_content = result.unwrap()
+            ldif_content = result.value
 
             # All server types should produce valid LDIF
             assert "dn: " in ldif_content, f"{server_type} LDIF must contain DN"
@@ -101,7 +101,7 @@ class TestLdifGenerationRealData:
         )
 
         assert result.is_success, f"Failed to generate LDIF: {result.error}"
-        ldif_content = result.unwrap()
+        ldif_content = result.value
 
         # Validate custom options
         if write_format_options_custom.include_version_header:
@@ -124,7 +124,7 @@ class TestLdifGenerationRealData:
         )
 
         assert result.is_success, f"Failed to generate LDIF: {result.error}"
-        ldif_content = result.unwrap()
+        ldif_content = result.value
 
         # Validate all entries are present
         assert "dn: dc=example,dc=com" in ldif_content
@@ -148,7 +148,7 @@ class TestLdifGenerationRealData:
         # Parse original
         parse_result = flext_ldif_instance.parse(real_ldif_user_entry)
         assert parse_result.is_success, f"Failed to parse: {parse_result.error}"
-        original_entries = parse_result.unwrap()
+        original_entries = parse_result.value
 
         # Generate LDIF
         write_result = flext_ldif_instance.write(
@@ -157,14 +157,14 @@ class TestLdifGenerationRealData:
             format_options=write_format_options_default,
         )
         assert write_result.is_success, f"Failed to generate: {write_result.error}"
-        generated_ldif = write_result.unwrap()
+        generated_ldif = write_result.value
 
         # Parse generated LDIF
         parse_result2 = flext_ldif_instance.parse(generated_ldif)
         assert parse_result2.is_success, (
             f"Failed to parse generated LDIF: {parse_result2.error}"
         )
-        regenerated_entries = parse_result2.unwrap()
+        regenerated_entries = parse_result2.value
 
         # Validate entries match
         assert len(regenerated_entries) == len(original_entries), (
@@ -188,7 +188,7 @@ class TestLdifGenerationRealData:
         )
 
         assert result.is_success, f"Failed to generate LDIF: {result.error}"
-        ldif_content = result.unwrap()
+        ldif_content = result.value
 
         # Validate RFC 2849 syntax rules
         lines = ldif_content.split("\n")
@@ -232,7 +232,7 @@ class TestLdifGenerationRealData:
         # Parse entry with special chars
         parse_result = flext_ldif_instance.parse(real_ldif_entry_with_special_chars)
         assert parse_result.is_success, f"Failed to parse: {parse_result.error}"
-        entries = parse_result.unwrap()
+        entries = parse_result.value
 
         # Generate LDIF
         result = flext_ldif_instance.write(
@@ -242,7 +242,7 @@ class TestLdifGenerationRealData:
         )
 
         assert result.is_success, f"Failed to generate LDIF: {result.error}"
-        ldif_content = result.unwrap()
+        ldif_content = result.value
 
         # Validate special characters are properly encoded
         assert "dn: " in ldif_content, "LDIF must contain DN"
@@ -269,7 +269,7 @@ class TestLdifGenerationRealData:
         # Parse entry with long value
         parse_result = flext_ldif_instance.parse(real_ldif_entry_with_long_value)
         assert parse_result.is_success, f"Failed to parse: {parse_result.error}"
-        entries = parse_result.unwrap()
+        entries = parse_result.value
 
         # Generate LDIF
         result = flext_ldif_instance.write(
@@ -279,7 +279,7 @@ class TestLdifGenerationRealData:
         )
 
         assert result.is_success, f"Failed to generate LDIF: {result.error}"
-        ldif_content = result.unwrap()
+        ldif_content = result.value
 
         # Validate long lines are folded
         lines = ldif_content.split("\n")
@@ -358,7 +358,7 @@ class TestLdifGenerationRealData:
                         assert result.is_success, (
                             f"Failed with options {options}: {result.error}"
                         )
-                        ldif_content = result.unwrap()
+                        ldif_content = result.value
 
                         # Validate options are applied
                         if include_version:
