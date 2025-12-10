@@ -39,7 +39,7 @@ para implementações futuras. A documentação oficial está nos links acima.
 ~~- ✅ Zero type ignores → 100% type-safe nas áreas tocadas~~
 ~~- 🟡 **Cobertura:** Executar arquivos isolados aciona `fail-under=79` (coverage); rodar a suíte completa ou ajustar configuração futura~~
 
-> ~~TODO(service.py::result): avaliar migrar para `@computed_field` quando a serialização Pydantic estiver validada; ver seção [Zero Ceremony](#zero-ceremony---o-principio-fundamental).~~
+> ~~TODO(service.py::result): avaliar migrar para `@computed_field` quando a serialização Pydantic estiver validada; ver seção Zero Ceremony.~~
 
 ---
 
@@ -49,9 +49,9 @@ para implementações futuras. A documentação oficial está nos links acima.
 
 ### ~~🌟 Início Rápido (Novo no FLEXT?)~~
 
-~~1. [**Zero Ceremony - O Princípio Fundamental**](#zero-ceremony---o-princípio-fundamental) ⭐ **COMECE AQUI**~~
-~~2. [**Princípios de Coesão**](#princípios-de-coesão-deste-documento) 📐 **ENTENDA A ESTRUTURA**~~
-~~3. [**Roadmap de Evolução**](#roadmap-de-evolução) 🗺️ **V1 vs V2 Property vs V2 Auto**~~
+~~1. **Zero Ceremony - O Princípio Fundamental** ⭐ **COMECE AQUI**~~
+~~2. **Princípios de Coesão** 📐 **ENTENDA A ESTRUTURA**~~
+~~3. **Roadmap de Evolução** 🗺️ **V1 vs V2 Property vs V2 Auto**~~
 
 ### ~~⚠️ Status V6.0 (VALIDAÇÃO 25 NOV 2025)~~
 
@@ -61,29 +61,29 @@ para implementações futuras. A documentação oficial está nos links acima.
 ~~- ✅ **Campo `id` liberado** - segue disponível~~
 ~~- 🟡 **Cobertura:** rodar subconjuntos dispara `fail-under=79` (coverage) — ajustar quando a suite completa estiver automatizada~~
 ~~- ✅ **Zero type ignores** - 100% type-safe (no código tocado)~~
-~~- 👉 [**Ver Validação Completa**](#v2-implementado---validacao-completa-e-testes)~~
+~~- 👉 **Ver Validação Completa**~~
 
 ### ~~📚 Conteúdo Principal~~
 
-~~4. [Sumário Executivo](#sumário-executivo)~~
-~~5. [Análise do Ecossistema flext-core](#análise-do-ecossistema-flext-core)~~
-~~6. [Análise do Estado Atual](#análise-do-estado-atual)~~
-~~7. [Arquitetura Proposta](#arquitetura-proposta)~~
-~~8. [Padrões de Integração Profunda](#padrões-de-integração-profunda)~~
-~~9. [Infraestrutura Avançada: FlextDispatcher, FlextRegistry e FlextContext](#infraestrutura-avançada-flextdispatcher-flextregistry-e-flextcontext)~~
-~~10. [Guia de Implementação](#guia-de-implementação)~~
-~~11. [Padrões de Uso](#padrões-de-uso)~~
-~~12. [**Integração com Camada CQRS**](#integração-com-camada-cqrs-tier-31-32) 🔗 **NOVO!**~~
-~~13. [Guia de Migração](#guia-de-migração)~~
-~~14. [Exemplos](#exemplos)~~
-~~15. [Estudos de Caso](#estudos-de-caso)~~
-~~ - [flext-cli](#estudo-de-caso-flext-cli)~~
-~~ - [flext-core](#estudo-de-caso-flext-core)~~
+~~4. **Sumário Executivo**~~
+~~5. **Análise do Ecossistema flext-core**~~
+~~6. **Análise do Estado Atual**~~
+~~7. **Arquitetura Proposta**~~
+~~8. **Padrões de Integração Profunda**~~
+~~9. **Infraestrutura Avançada: FlextDispatcher, FlextRegistry e FlextContext**~~
+~~10. **Guia de Implementação**~~
+~~11. **Padrões de Uso**~~
+~~12. **Integração com Camada CQRS** 🔗 **NOVO!**~~
+~~13. **Guia de Migração**~~
+~~14. **Exemplos**~~
+~~15. **Estudos de Caso**~~
+~~- **flext-cli**~~
+~~- **flext-core**~~
 
 ### ~~✅ Validação e Testes~~
 
-~~16. [**V2 IMPLEMENTADO - Validação Completa**](#v2-implementado---validação-completa-e-testes) 🎉 **NOVO!**~~
-~~17. [**Validação de Coesão**](#validação-de-coesão---checklist-final) ✅ **CHECKLIST**~~
+~~16. **V2 IMPLEMENTADO - Validação Completa** 🎉 **NOVO!**~~
+~~17. **Validação de Coesão** ✅ **CHECKLIST**~~
 
 ---
 
@@ -2047,9 +2047,21 @@ Use **FlextService[T] + x** para casos comuns.~~
 4. **Middleware Pipeline** - Pipeline de middleware para cross-cutting concerns
 5. **Event Subscribers** - Pub/sub pattern para domain events
 
-**LAYER 2: Reliability Patterns** (Confiabilidade) 6. **Circuit Breaker** - Proteção contra falhas em cascata (per-message-type) 7. **Rate Limiting** - Throttling com sliding window (per-message-type) 8. **Retry Logic** - Exponential backoff com tentativas configuráveis 9. **Timeout Enforcement** - Deadlines com ThreadPoolExecutor 10. **Context Propagation** - Correlation IDs e tracing distribuído
+**LAYER 2: Reliability Patterns** (Confiabilidade)
 
-**LAYER 3: Advanced Processing** (do FlextProcessors) 11. **Processor Registry** - Registro de processadores customizados 12. **Batch Processing** - Processamento em lote com batch configurável 13. **Parallel Processing** - Processamento paralelo com workers configuráveis 14. **Pipeline Composition** - Pipeline de processamento com composição funcional 15. **Metrics & Auditing** - Métricas por processador e audit log completo
+6. **Circuit Breaker** - Proteção contra falhas em cascata (per-message-type)
+7. **Rate Limiting** - Throttling com sliding window (per-message-type)
+8. **Retry Logic** - Exponential backoff com tentativas configuráveis
+9. **Timeout Enforcement** - Deadlines com ThreadPoolExecutor
+10. **Context Propagation** - Correlation IDs e tracing distribuído
+
+**LAYER 3: Advanced Processing** (do FlextProcessors)
+
+11. **Processor Registry** - Registro de processadores customizados
+12. **Batch Processing** - Processamento em lote com batch configurável
+13. **Parallel Processing** - Processamento paralelo com workers configuráveis
+14. **Pipeline Composition** - Pipeline de processamento com composição funcional
+15. **Metrics & Auditing** - Métricas por processador e audit log completo
 
 #### 📋 API Principais
 
@@ -3657,8 +3669,8 @@ class FlextLdifModels:
     # ❌ PROBLEMA: Não herda de FlextModels.Value ou Entity
     class Entry(BaseModel):
         """LDIF entry - SHOULD be Entity (tem identidade = DN)."""
-        dn: DistinguishedName  # Identidade única
-        attributes: LdifAttributes
+        dn: DN  # Identidade única
+        attributes: Attributes
         objectclasses: list[str] | None = None
 
         # ❌ Falta: created_at, updated_at (se fosse Entity)
@@ -4008,7 +4020,7 @@ class FlextLdifProtocols:
     class Entry:
         class EntryWithDnProtocol(Protocol):
             """Entry protocol with DN."""
-            dn: str | DistinguishedName
+            dn: str | DN
             attributes: dict[str, Any]
 ```
 

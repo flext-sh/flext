@@ -31,9 +31,9 @@ target-version = "py313"
 
 [lint]
     ignore = [
-        # "B009",    # get-attr-with-constant
-        # "B010",    # set-attr-with-constant
-        # "B017",    # assert-raises-exception
+        "B009",    # get-attr-with-constant
+        "B010",    # set-attr-with-constant
+        "B017",    # assert-raises-exception
         "BLE001",  # blind-except - utility functions return FlextResult, catching all exceptions
         # "C901",    # complex-structure
         "COM812",
@@ -166,6 +166,13 @@ target-version = "py313"
         "**/constants.py" = [
             "S105", # hardcoded-password-string - false positives in error messages and descriptions
         ]
+        "**/managers.py" = [
+            "S105", # hardcoded-password-string - false positives in event names (not passwords)
+        ]
+        "**/providers/*.py" = [
+            "S106", # hardcoded-password-func-arg - false positives in token_type parameters
+            "S107", # hardcoded-password-default - false positives in token_type defaults
+        ]
         "**/container.py" = [
         #    "BLE001",  # blind-except - DI container executes user factories
         ]
@@ -195,6 +202,21 @@ target-version = "py313"
             "S106",    # hardcoded-password-func-arg
             "T201",    # print - examples demonstrate output
             "TID252",  # relative-imports
+        ]
+        "**/*oracle*" = [
+            "DTZ007", # call-datetime-strptime-without-zone - timezone handled explicitly in code
+        ]
+        "**/*instrumentation*" = [
+            "C901",   # complex-structure - instrumentation setup functions are inherently complex
+            "FBT001", # boolean-type-hint-positional-argument - required by framework callbacks
+            "SLF001", # private-member-access - framework instrumentation patterns
+        ]
+        "**/*subprocess_utils*" = [
+            "S404", # suspicious-subprocess-import - controlled subprocess usage for quality checks
+            "S603", # subprocess-without-shell-equals-true - safe subprocess calls with controlled input
+        ]
+        "**/typings.py" = [
+            "RUF036", # none-not-at-end-of-union - None is correctly positioned at end of unions in FLEXT patterns
         ]
         "**/*exceptions*" = [
             "A001",    # variable-is-ambiguous - Allow ambiguous variable names in exceptions

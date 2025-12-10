@@ -151,7 +151,7 @@ class TestFlextLdapModels:
 
         # Test that models has expected model classes (reuses FlextLdifModels)
         assert hasattr(models, "Entry")
-        assert hasattr(models, "DistinguishedName")
+        assert hasattr(models, "DN")
         assert hasattr(models, "ConnectionConfig")
         assert hasattr(models, "SearchOptions")
         assert hasattr(models, "SearchResult")
