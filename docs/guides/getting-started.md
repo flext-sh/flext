@@ -117,7 +117,7 @@ docker run -v $(pwd)/data:/app/data flext:latest
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -172,7 +172,7 @@ else:
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -223,7 +223,7 @@ else:
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -290,10 +290,10 @@ export FLEXT_LDIF_STRICT_VALIDATION=true
 ### Programmatic Configuration
 
 ```python
-from flext_ldif import FlextLdifConfig
+from flext_ldif import FlextLdifSettings
 
 # Create custom configuration
-config = FlextLdifConfig(
+config = FlextLdifSettings(
     default_encoding="utf-8",
     strict_validation=True,
     servers_enabled=True,

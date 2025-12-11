@@ -256,7 +256,7 @@ env | grep FLEXT_
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -277,7 +277,7 @@ from flext_core import t
 from flext_core import u
 
 try:
-    config = FlextConfig()
+    config = FlextSettings()
     print("Configuration valid")
 except ValidationError as e:
     print(f"Configuration error: {e}")
@@ -288,7 +288,7 @@ except ValidationError as e:
 ```python
 import os
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -314,7 +314,7 @@ for key, value in os.environ.items():
         print(f"{key}={value}")
 
 # Load and print configuration
-config = FlextConfig()
+config = FlextSettings()
 print(f"Config: {config.dict()}")
 ```
 
@@ -389,9 +389,9 @@ LdifMigrationException: Server compatibility error
 **Check server configuration:**
 
 ```python
-from flext_ldif import FlextLdifConfig
+from flext_ldif import FlextLdifSettings
 
-config = FlextLdifConfig(
+config = FlextLdifSettings(
     source_server="oid",
     target_server="oud",
     preserve_oid_modifiers=True,
@@ -404,7 +404,7 @@ print(f"Config: {config.dict()}")
 **Enable server quirks:**
 
 ```python
-config = FlextLdifConfig(
+config = FlextLdifSettings(
     servers_enabled=True,
     source_server="oid",
     target_server="oud"
@@ -462,10 +462,10 @@ profile_memory()
 **Optimize batch size:**
 
 ```python
-from flext_ldif import FlextLdifConfig
+from flext_ldif import FlextLdifSettings
 
 # Reduce batch size for memory-constrained environments
-config = FlextLdifConfig(
+config = FlextLdifSettings(
     batch_size=100,  # Instead of default 1000
     parallel_processing=False  # Disable for memory issues
 )
@@ -474,7 +474,7 @@ config = FlextLdifConfig(
 **Enable parallel processing:**
 
 ```python
-config = FlextLdifConfig(
+config = FlextLdifSettings(
     parallel_processing=True,
     max_workers=4  # Adjust based on CPU cores
 )
@@ -487,7 +487,7 @@ config = FlextLdifConfig(
 ```python
 import logging
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -525,7 +525,7 @@ logger.error("Error message")
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -562,7 +562,7 @@ def safe_operation(data: dict) -> FlextResult[dict]:
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -583,7 +583,7 @@ from flext_core import t
 from flext_core import u
 
 # Enable debug mode
-config = FlextConfig(debug=True)
+config = FlextSettings(debug=True)
 
 # Debug information will be printed
 print(f"Debug mode: {config.debug}")
@@ -765,7 +765,7 @@ When reporting issues, include:
    from flext_core import FlextBus
    ```
 
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext

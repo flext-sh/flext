@@ -17,7 +17,6 @@ Namespace que expõe funções corporativas de validação para entidades, agreg
 
 - O namespace simplesmente referencia as funções definidas em `FlextModelsValidation` (interno). São funções puras que retornam `FlextResult[bool]`, permitindo composição com o padrão railway (`flat_map`). Exemplos:
   - `validate_business_rules(entity)` – verifica invariantes declarados.
-  - `validate_cross_fields(data)` – valida dependências entre campos.
   - `validate_event_sourcing(events)` – garante consistência em replays.
 - Por ser uma camada de façade, não possui campos ou estado adicional.
 

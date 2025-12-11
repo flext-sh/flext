@@ -116,7 +116,7 @@ Configure FLEXT programmatically in your code:
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -135,17 +135,17 @@ from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
 from flext_core import u
-from flext_ldif import FlextLdifConfig
+from flext_ldif import FlextLdifSettings
 
 # Core configuration
-config = FlextConfig(
+config = FlextSettings(
     log_level="INFO",
     debug=False,
     environment="production"
 )
 
 # LDIF configuration
-ldif_config = FlextLdifConfig(
+ldif_config = FlextLdifSettings(
     default_encoding="utf-8",
     strict_validation=True,
     servers_enabled=True,
@@ -158,9 +158,9 @@ ldif_config = FlextLdifConfig(
 ### flext-ldif Configuration
 
 ```python
-from flext_ldif import FlextLdifConfig
+from flext_ldif import FlextLdifSettings
 
-config = FlextLdifConfig(
+config = FlextLdifSettings(
     # Server-specific settings
     source_server="oid",
     target_server="oud",
@@ -180,9 +180,9 @@ config = FlextLdifConfig(
 ### flext-api Configuration
 
 ```python
-from flext_api import FlextApiConfig
+from flext_api import FlextApiSettings
 
-config = FlextApiConfig(
+config = FlextApiSettings(
     base_url="https://api.example.com",
     timeout=30,
     retry_attempts=3,
@@ -196,9 +196,9 @@ config = FlextApiConfig(
 ### flext-auth Configuration
 
 ```python
-from flext_auth import FlextAuthConfig
+from flext_auth import FlextAuthSettings
 
-config = FlextAuthConfig(
+config = FlextAuthSettings(
     secret_key="your-secret-key",
     algorithm="HS256",
     access_token_expire_minutes=30,
@@ -250,7 +250,7 @@ All configuration is validated using Pydantic v2 models:
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -271,7 +271,7 @@ from flext_core import t
 from flext_core import u
 
 try:
-    config = FlextConfig(
+    config = FlextSettings(
         log_level="INVALID_LEVEL"  # This will raise ValidationError
     )
 except ValidationError as e:
@@ -284,7 +284,7 @@ FLEXT supports configuration inheritance for complex setups:
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -305,13 +305,13 @@ from flext_core import t
 from flext_core import u
 
 # Base configuration
-base_config = FlextConfig(
+base_config = FlextSettings(
     log_level="INFO",
     environment="production"
 )
 
 # Extended configuration
-extended_config = FlextConfig(
+extended_config = FlextSettings(
     **base_config.dict(),
     debug=True,  # Override for development
     custom_setting="value"
@@ -332,7 +332,7 @@ export FLEXT_API_KEY=your_api_key
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -354,7 +354,7 @@ from flext_core import u
 
 def main():
     # Validate configuration at startup
-    config = FlextConfig()
+    config = FlextSettings()
 
     if not config.is_valid():
         print("Invalid configuration")
@@ -368,7 +368,7 @@ def main():
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -388,7 +388,7 @@ from flext_core import FlextService
 from flext_core import t
 from flext_core import u
 
-class MyAppConfig(FlextConfig):
+class MyAppConfig(FlextSettings):
     custom_setting: str = "default_value"
     another_setting: int = 42
 
@@ -403,7 +403,7 @@ class MyAppConfig(FlextConfig):
 ### 4. Document Configuration Options
 
 ```python
-class FlextLdifConfig(BaseModel):
+class FlextLdifSettings(BaseModel):
     """Configuration for LDIF processing."""
 
     default_encoding: str = Field(
@@ -440,7 +440,7 @@ class FlextLdifConfig(BaseModel):
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -461,7 +461,7 @@ from flext_core import t
 from flext_core import u
 
 # Enable debug logging
-config = FlextConfig(debug=True)
+config = FlextSettings(debug=True)
 
 # Print configuration
 print(config.dict())
@@ -483,7 +483,7 @@ else:
 
 import os
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -502,22 +502,22 @@ from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
 from flext_core import u
-from flext_ldif import FlextLdifConfig
-from flext_api import FlextApiConfig
+from flext_ldif import FlextLdifSettings
+from flext_api import FlextApiSettings
 
 def main():
     # Load configuration from environment
-    config = FlextConfig()
+    config = FlextSettings()
 
     # Configure LDIF processing
-    ldif_config = FlextLdifConfig(
+    ldif_config = FlextLdifSettings(
         source_server=os.getenv("FLEXT_SOURCE_SERVER", "oid"),
         target_server=os.getenv("FLEXT_TARGET_SERVER", "oud"),
         batch_size=int(os.getenv("FLEXT_BATCH_SIZE", "1000"))
     )
 
     # Configure API client
-    api_config = FlextApiConfig(
+    api_config = FlextApiSettings(
         base_url=os.getenv("FLEXT_API_URL", "http://localhost:8000"),
         timeout=int(os.getenv("FLEXT_API_TIMEOUT", "30"))
     )

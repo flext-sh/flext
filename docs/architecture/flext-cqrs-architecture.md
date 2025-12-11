@@ -252,7 +252,7 @@ servir como referência futura para implementação:
 ~~│ Tier 0.5: FlextRuntime │~~
 ~~│ └── Runtime utilities │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
-~~│ Tier 0.1: FlextConfig │~~
+~~│ Tier 0.1: FlextSettings │~~
 ~~│ └── Configuration management │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
 ~~│ Tier 0: Pure Foundation │~~
@@ -1098,7 +1098,7 @@ servir como referência futura para implementação:
 ~~ def handle(self, command: MyCommand) -> FlextResult[MyResult]:~~
 ~~ # Infraestrutura automática via FlextMixins:~~
 ~~ # - self.logger: FlextLogger~~
-~~ # - self.config: FlextConfig~~
+~~ # - self.config: FlextSettings~~
 ~~ # - self.container: FlextContainer~~
 ~~ # - self.context: FlextContext~~
 ~~ # - self.track(): Performance tracking~~

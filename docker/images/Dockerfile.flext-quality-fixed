@@ -136,8 +136,8 @@ class FlextModels.Value(BaseModel):
     """Mock FlextModels.Value base class."""
     pass
 
-class FlextConfig(BaseSettings):
-    """Mock FlextConfig for configuration."""
+class FlextSettings(BaseSettings):
+    """Mock FlextSettings for configuration."""
     pass
 
 class FlextConstants:
@@ -153,7 +153,7 @@ TConfigDict = t.Dict
 # Export all required symbols
 __all__: t.StringList = [
     "FlextResult", "FlextLogger", "FlextContainer", "get_flext_container",
-    "FlextModels.Entity", "FlextModels.Value", "FlextConfig", "FlextConstants", 
+    "FlextModels.Entity", "FlextModels.Value", "FlextSettings", "FlextConstants", 
     "TAnyDict", "TConfigDict", "FlextExceptions.Error", "FlextExceptions.ValidationError",
     "FlextExceptions.ConfigurationError", "FlextExceptions.ConnectionError", "FlextExceptions.ProcessingError",
     "FlextExceptions.AuthenticationError", "FlextExceptions.TimeoutError"

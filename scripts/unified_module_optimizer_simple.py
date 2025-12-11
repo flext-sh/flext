@@ -11,7 +11,7 @@ the complex flext-core integrations that may have circular import issues.
 **Core Patterns** (Most Important):
 - **[Namespace Class Pattern](#-namespace-class-pattern-critical-flext-core-foundation)** - FlextConstants, FlextModels, t, FlextExceptions, p
 - **[Extending Namespace Classes](#-extending-namespace-classes-domain-library-pattern)** - How domain libraries extend flext-core
-- **[FlextConfig Advanced](#-flextconfig-advanced-patterns-pydantic-211-basesettings)** - Pydantic 2.11+ BaseSettings, validators, computed fields
+- **[FlextSettings Advanced](#-flextconfig-advanced-patterns-pydantic-211-basesettings)** - Pydantic 2.11+ BaseSettings, validators, computed fields
 - **[FlextResult Railway](#-flextresult-railway-pattern-monadic-error-handling)** - Monadic operations, railway-oriented programming
 - **[Complete API Surface](#-complete-flext-core-api-surface-20-exports)** - All 20+ flext-core exports
 - **[Module-Only-One-Class](#-module-only-one-class-pattern-unified-single-class)** - Single unified class pattern with nested helpers
@@ -99,10 +99,10 @@ from pathlib import Path
 from typing import ClassVar, TypeVar
 
 from flext_core import (
-    FlextConfig,
     FlextConstants,
     FlextLogger,
     FlextResult,
+    FlextSettings,
 )
 
 T = TypeVar("T")
@@ -167,7 +167,7 @@ class FlextModuleOptimizerConstants(FlextConstants):
         ]
 
 
-class FlextModuleOptimizerConfig(FlextConfig):
+class FlextModuleOptimizerSettings(FlextSettings):
     """Optimization configuration."""
 
     def __init__(self, **kwargs: object) -> None:
@@ -192,10 +192,10 @@ class FlextModuleOptimizer:
     circular import issues in the current flext-core implementation.
     """
 
-    def __init__(self, config: FlextModuleOptimizerConfig | None = None) -> None:
+    def __init__(self, config: FlextModuleOptimizerSettings | None = None) -> None:
         """Initialize optimizer."""
         super().__init__()
-        self._config = config or FlextModuleOptimizerConfig()
+        self._config = config or FlextModuleOptimizerSettings()
         self.logger = FlextLogger(__name__)
 
     def optimize_project(self, project_path: str) -> FlextResult[None]:
@@ -740,7 +740,7 @@ Examples:
     args = parser.parse_args()
 
     # Create configuration
-    config = FlextModuleOptimizerConfig(
+    config = FlextModuleOptimizerSettings(
         batch_size=args.batch_size,
         dry_run=args.dry_run,
         verbose=args.verbose,

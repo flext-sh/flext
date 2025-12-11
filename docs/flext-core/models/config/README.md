@@ -14,7 +14,7 @@ Para cada modelo descrevemos por que ele existe, funcionamento interno, cenário
 
 **Como funciona**
 
-- `ArbitraryTypesModel` com `operation_id` gerado por `u`, `context` normalizado via `ensure_trace_context` (inclui `correlation_id` e timestamp), `timeout_seconds`/`retry_attempts` alimentados por `FlextConfig` e validados contra `FlextConstants`. Possui `validate_processing_constraints` que retorna `FlextResult` para bloquear timeouts superiores ao limite corporativo.
+- `ArbitraryTypesModel` com `operation_id` gerado por `u`, `context` normalizado via `ensure_trace_context` (inclui `correlation_id` e timestamp), `timeout_seconds`/`retry_attempts` alimentados por `FlextSettings` e validados contra `FlextConstants`. Possui `validate_processing_constraints` que retorna `FlextResult` para bloquear timeouts superiores ao limite corporativo.
 
 **Aplicações esperadas no negócio**
 
@@ -27,7 +27,7 @@ Para cada modelo descrevemos por que ele existe, funcionamento interno, cenário
 
 **Benefícios concretos**
 
-- Garantia de que todo processamento tenha correlação e timeouts alinhados ao `FlextConfig`. Facilita logging/auditoria (todos carregam `operation_id`).
+- Garantia de que todo processamento tenha correlação e timeouts alinhados ao `FlextSettings`. Facilita logging/auditoria (todos carregam `operation_id`).
 
 **Oportunidades / decisões**
 
@@ -41,7 +41,7 @@ Para cada modelo descrevemos por que ele existe, funcionamento interno, cenário
 
 **Como funciona**
 
-- `ArbitraryTypesModel` com `max_attempts`, delays, `exponential_backoff`, listas de exceções/códigos HTTP e validadores (`validate_backoff_strategy`, `validate_delay_consistency`). Reusa limites de `FlextConstants` e `FlextConfig` garantindo que não extrapolamos políticas definidas.
+- `ArbitraryTypesModel` com `max_attempts`, delays, `exponential_backoff`, listas de exceções/códigos HTTP e validadores (`validate_backoff_strategy`, `validate_delay_consistency`). Reusa limites de `FlextConstants` e `FlextSettings` garantindo que não extrapolamos políticas definidas.
 
 **Aplicações esperadas no negócio**
 
@@ -93,7 +93,7 @@ Para cada modelo descrevemos por que ele existe, funcionamento interno, cenário
 
 **Como funciona**
 
-- Herda `FlextModelsCollections.Config`. Campos puxam defaults de `FlextConfig` e aplicam limites de `FlextConstants`. O `model_validator` garante que `batch_size` não ultrapasse o máximo e ajusta `max_workers` para não exceder o tamanho do lote.
+- Herda `FlextModelsCollections.Config`. Campos puxam defaults de `FlextSettings` e aplicam limites de `FlextConstants`. O `model_validator` garante que `batch_size` não ultrapasse o máximo e ajusta `max_workers` para não exceder o tamanho do lote.
 
 **Aplicações esperadas no negócio**
 
@@ -119,7 +119,7 @@ Para cada modelo descrevemos por que ele existe, funcionamento interno, cenário
 
 **Como funciona**
 
-- Herda `FlextModelsCollections.Config`. Campos incluem `handler_name` (regex), `input_data`, `execution_context`, `timeout_seconds`, `retry_on_failure`, `max_retries` (defaults baseados no `FlextConfig`).
+- Herda `FlextModelsCollections.Config`. Campos incluem `handler_name` (regex), `input_data`, `execution_context`, `timeout_seconds`, `retry_on_failure`, `max_retries` (defaults baseados no `FlextSettings`).
 
 **Aplicações esperadas no negócio**
 

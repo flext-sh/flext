@@ -36,7 +36,7 @@ Requisições de execução, lote, métricas e recursos usadas em serviços de d
 
 **Funcionamento**
 
-- `ArbitraryTypesModel` com lista de operações (min 1/max definido em `FlextConstants`), flags `parallel_execution`, `stop_on_error`, `batch_size`, `timeout_per_operation` amarrados ao `FlextConfig`.
+- `ArbitraryTypesModel` com lista de operações (min 1/max definido em `FlextConstants`), flags `parallel_execution`, `stop_on_error`, `batch_size`, `timeout_per_operation` amarrados ao `FlextSettings`.
 
 **Aplicações esperadas**
 
