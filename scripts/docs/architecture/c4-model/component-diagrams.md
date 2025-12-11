@@ -17,7 +17,7 @@ Container_Boundary(core, "FLEXT Core Library") {
 
     Component(dispatcher, "FlextDispatcher", "CQRS Dispatcher", "Command and query dispatching")
     Component(bus, "FlextBus", "Event Bus", "Domain event publishing and subscription")
-    Component(config, "FlextConfig", "Configuration", "Environment-aware configuration management")
+    Component(config, "FlextSettings", "Configuration", "Environment-aware configuration management")
 }
 
 Container_Boundary(domain, "Services") {

@@ -53,7 +53,7 @@ type _StrictInstallerType = Callable[[Requirement], _DistributionT]
 type _InstallerType = Callable[[Requirement], Distribution | None]
 type _PkgReqType = str | Requirement
 type _EPDistType = Distribution | _PkgReqType
-type _MetadataType = IResourceProvider | None
+type _t.Ldif.MetadataType = IResourceProvider | None
 type _ResolvedEntryPoint = Any
 type _ResourceStream = Any
 type _ModuleLike = object | types.ModuleType
@@ -665,7 +665,7 @@ class Distribution:
     def __init__(
         self,
         location: str | None = ...,
-        metadata: _MetadataType = ...,
+        metadata: _t.Ldif.MetadataType = ...,
         project_name: str | None = ...,
         version: str | None = ...,
         py_version: str | None = ...,
@@ -674,7 +674,7 @@ class Distribution:
     ) -> None: ...
     @classmethod
     def from_location(
-        cls, location: str, basename: StrPath, metadata: _MetadataType = ..., **kw: int
+        cls, location: str, basename: StrPath, metadata: _t.Ldif.MetadataType = ..., **kw: int
     ) -> Distribution: ...
     @property
     def hashcmp(self):  # -> tuple[parse_version, int, str, str | None, str, str]:
@@ -705,7 +705,7 @@ class Distribution:
         ...
     @classmethod
     def from_filename(
-        cls, filename: StrPath, metadata: _MetadataType = ..., **kw: int
+        cls, filename: StrPath, metadata: _t.Ldif.MetadataType = ..., **kw: int
     ) -> Distribution: ...
     def as_requirement(self):  # -> Requirement:
         ...

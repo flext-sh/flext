@@ -102,13 +102,13 @@ para implementações futuras. A documentação oficial está nos links acima.
 class MyService(FlextService[Result]):
     def __init__(self):
         super().__init__()
-        self._config = FlextConfig.get_global_instance()     # ❌ Desnecessário!
+        self._config = FlextSettings.get_global_instance()     # ❌ Desnecessário!
         self._container = FlextContainer.get_global()        # ❌ Desnecessário!
         self._logger = FlextLogger(__name__)                 # ❌ Desnecessário!
         self._context = FlextContext()                       # ❌ Desnecessário!
 
     def execute(self) -> FlextResult[Result]:
-        config = FlextConfig.get_global_instance()           # ❌ Desnecessário!
+        config = FlextSettings.get_global_instance()           # ❌ Desnecessário!
         logger = FlextLogger(__name__)                       # ❌ Desnecessário!
 ```
 
@@ -131,7 +131,7 @@ class MyService(FlextService[Result]):
         """
         Infraestrutura AUTOMATICAMENTE disponível via properties:
 
-        - self.config: FlextConfig      ← Global singleton
+        - self.config: FlextSettings      ← Global singleton
         - self.logger: FlextLogger      ← Structured logging com cache
         - self.container: FlextContainer ← DI container (retorna FlextResult!)
         - self.context: FlextContext    ← Correlation IDs, tracing
@@ -226,7 +226,7 @@ if result_monad.is_success:
 
 | Property             | Lazy? | Implementação                       | Performance            |
 | -------------------- | ----- | ----------------------------------- | ---------------------- |
-| **`self.config`**    | ✅    | `FlextConfig.get_global_instance()` | O(1) - Singleton lazy  |
+| **`self.config`**    | ✅    | `FlextSettings.get_global_instance()` | O(1) - Singleton lazy  |
 | **`self.logger`**    | ✅    | Cache + DI lookup                   | O(1) após 1ª chamada   |
 | **`self.container`** | ✅    | `FlextContainer.get_global()`       | O(1) - Singleton lazy  |
 | **`self.context`**   | ✅    | `FlextContext()` usa contextvars    | O(1) - Task-local lazy |
@@ -251,8 +251,8 @@ def context(self) -> FlextContext:
 
 # VALIDADO (mixins.py ~730+): ✅ LAZY - Global singleton
 @property
-def config(self) -> FlextConfig:
-    return FlextConfig.get_global_instance()  # Singleton lazy
+def config(self) -> FlextSettings:
+    return FlextSettings.get_global_instance()  # Singleton lazy
 ```
 
 **Garantias de Performance:**
@@ -267,7 +267,7 @@ def config(self) -> FlextConfig:
    - Primeira chamada: O(n), demais: O(1)
 
 3. **Singletons globais**
-   - `FlextConfig` e `FlextContainer` são singletons
+   - `FlextSettings` e `FlextContainer` são singletons
    - Uma única instância por aplicação
    - Inicialização lazy (só quando usados)
 
@@ -937,7 +937,7 @@ pipeline = (
 ```
 ✅ FlextService[T]           → Simples, direto, todos usam
 ✅ FlextResult[T]            → Railway pattern, valor claro
-✅ FlextConfig (singleton)   → Acesso a config, funciona ótimo
+✅ FlextSettings (singleton)   → Acesso a config, funciona ótimo
 ✅ FlextContainer (DI básico) → Resolução de dependências simples
 ✅ Validação Pydantic        → Validação de campos, natural
 ✅ Properties x    → Acesso a infraestrutura, transparente
@@ -1033,7 +1033,7 @@ pipeline = (
 │                                                                  │
 │  Layer 1: Foundation (Building Blocks)                          │
 │  ├─ FlextResult[T]          → Railway pattern monad             │
-│  ├─ FlextConfig             → Singleton configuration           │
+│  ├─ FlextSettings             → Singleton configuration           │
 │  ├─ FlextContainer          → DI container (singleton)          │
 │  └─ x             → Infrastructure access             │
 │                                                                  │
@@ -1162,7 +1162,7 @@ class FlextContainer:
 
 - ✅ x fornece property `self.container`
 - ✅ FlextService auto-registra em `__init_subclass__`
-- ✅ Singleton FlextConfig registrado automaticamente
+- ✅ Singleton FlextSettings registrado automaticamente
 - ✅ Suporta padrões dependency-injector
 
 ### 3. p - Tipagem Estrutural
@@ -1242,9 +1242,9 @@ class x:
         return FlextContext.get_current()
 
     @property
-    def config(self) -> FlextConfig:
+    def config(self) -> FlextSettings:
         """Access global config singleton."""
-        return FlextConfig.get_global_instance()
+        return FlextSettings.get_global_instance()
 ```
 
 **Como Usar (Usuário Final):**
@@ -1255,7 +1255,7 @@ class x:
 class MyService(FlextService[Result]):
     def execute(self) -> FlextResult[Result]:
         # Tudo disponível automaticamente:
-        self.config    # ✅ FlextConfig singleton
+        self.config    # ✅ FlextSettings singleton
         self.logger    # ✅ Logger com cache
         self.container # ✅ DI container
         self.context   # ✅ Correlation IDs
@@ -1279,7 +1279,7 @@ FlextService[T]
 ~~    ├─ Inherits: x (Infrastructure)~~
 ~~    ├─ Implements: p.Service (Protocol)~~
 ~~    ├─ Uses: FlextContainer (DI)~~
-~~    ├─ Uses: FlextConfig (Config singleton)~~
+~~    ├─ Uses: FlextSettings (Config singleton)~~
 ~~    ├─ Returns: FlextResult[T] (Railway pattern)~~
 ~~    └─ Registers: In FlextContainer (Auto-registration)~~
 ```
@@ -1297,7 +1297,7 @@ flext-core/src/flext_core/
 ├── service.py          → FlextService (base class)
 ├── handlers.py         → h (CQRS)
 ├── dispatcher.py       → FlextDispatcher (command bus)
-├── config.py           → FlextConfig (singleton)
+├── config.py           → FlextSettings (singleton)
 ├── result.py           → FlextResult (monad)
 ├── container.py        → FlextContainer (DI)
 └── mixins.py           → x (logger, context, etc)
@@ -1490,7 +1490,7 @@ class CreateUser(FlextService[User]):
 Layer 4: Integration (FlextBus, FlextLogger, FlextContext)
 Layer 3: Service Layer (FlextService, h, FlextDispatcher)
 Layer 2: Domain Models (FlextModels with DDD)
-Layer 1: Foundation (FlextResult, FlextConfig, FlextContainer)
+Layer 1: Foundation (FlextResult, FlextSettings, FlextContainer)
 Layer 0: Protocols (p)
 ```
 
@@ -1520,7 +1520,7 @@ Layer 0: Protocols (p)
 ┌─────────────────────────────────────────────────────────┐
 │  LAYER 1: Foundation (INFRASTRUCTURE)                   │
 │  - FlextResult[T]     (Railway pattern)                 │
-│  - FlextConfig        (Singleton config)                │
+│  - FlextSettings        (Singleton config)                │
 │  - FlextContainer     (Basic DI)                        │
 │  - x        (Property access)                 │
 │  - FlextLogger        (Structured logging)              │
@@ -1937,18 +1937,18 @@ result = HttpPost("https://api.example.com/users", data={"name": "John"})
 
 class FlextService[T]:
     @property
-    def project_config(self) -> FlextConfig:
+    def project_config(self) -> FlextSettings:
         """Auto-resolve project-specific config.
 
         Resolution order:
         1. Try: ServiceClassName → ConfigClassName
-           (FlextLdifWriter → FlextLdifConfig)
-        2. Fallback: FlextConfig.get_global_instance()
+           (FlextLdifWriter → FlextLdifSettings)
+        2. Fallback: FlextSettings.get_global_instance()
         """
         try:
             # Extract project name: FlextXyzService → FlextXyz
             service_class_name = self.__class__.__name__
-            # Pattern: FlextXyzService → FlextXyzConfig
+            # Pattern: FlextXyzService → FlextXyzSettings
             config_class_name = service_class_name.replace("Service", "Config")
 
             container = self.container
@@ -1960,13 +1960,13 @@ class FlextService[T]:
             pass
 
         # Fallback to global config
-        return FlextConfig.get_global_instance()
+        return FlextSettings.get_global_instance()
 
 # This means:
-# 1. FlextLdifWriter → auto-resolves FlextLdifConfig
-# 2. FlextApiClient → auto-resolves FlextApiConfig
-# 3. FlextOracleQuery → auto-resolves FlextOracleConfig
-# 4. CustomService → falls back to FlextConfig
+# 1. FlextLdifWriter → auto-resolves FlextLdifSettings
+# 2. FlextApiClient → auto-resolves FlextApiSettings
+# 3. FlextOracleQuery → auto-resolves FlextOracleSettings
+# 4. CustomService → falls back to FlextSettings
 ```
 
 ### Padrão 8: Execução Lazy com Caching
@@ -2074,7 +2074,7 @@ dispatcher.register_function(func, config)  # Function as handler
 dispatcher.dispatch(command)  # Execute with all reliability patterns
 dispatcher.dispatch_batch(CommandType, [cmd1, cmd2, cmd3])  # Batch dispatch
 
-# LAYER 2: Reliability Configuration (via FlextConfig)
+# LAYER 2: Reliability Configuration (via FlextSettings)
 config.circuit_breaker_threshold = 5  # Failures before open
 config.rate_limit_max_requests = 100  # Max requests per window
 config.rate_limit_window_seconds = 60  # Window size
@@ -2157,7 +2157,7 @@ CreateUserService(name="Alice").value
 dispatcher = FlextDispatcher()
 dispatcher.register_command(HttpGetRequest, http_get_handler)
 
-# Config em FlextConfig
+# Config em FlextSettings
 config.max_retry_attempts = 3
 config.circuit_breaker_threshold = 5
 
@@ -2514,7 +2514,7 @@ with FlextContext.Request.request_context(
        tags: list[str] = Field(default_factory=list)
    ```
 
-4. **FlextConfig singleton** - Via `self.project_config`
+4. **FlextSettings singleton** - Via `self.project_config`
 
    ```python
    def execute(self) -> FlextResult[T]:
@@ -2623,7 +2623,7 @@ with FlextContext.Request.request_context(
 │  LAYER 1: Foundation (Infrastructure)                           │
 │  ─────────────────────────────────────────────────────────────  │
 │  ✅ FlextResult[T]     → Railway pattern monad                  │
-│  ✅ FlextConfig        → Singleton configuration                │
+│  ✅ FlextSettings        → Singleton configuration                │
 │  ✅ FlextContainer     → Basic DI (service registry)            │
 │  ✅ x        → Property-based infrastructure access   │
 │  ✅ FlextLogger        → Structured logging with context        │
@@ -3113,7 +3113,7 @@ def parser(self) -> ParserService:
 
 ---
 
-### 2. FlextConfig - Configuration Management (Automated & Singleton)
+### 2. FlextSettings - Configuration Management (Automated & Singleton)
 
 > **🎯 Core Principle:** Config é 100% automático - singleton, environment vars, validation, tudo sem código manual.
 
@@ -3123,7 +3123,7 @@ def parser(self) -> ParserService:
 
 ```python
 # ✅ AUTOMÁTICO: Instanciar = carregar tudo
-config = FlextLdifConfig()  # ← Carrega .env, valida, singleton
+config = FlextLdifSettings()  # ← Carrega .env, valida, singleton
 
 # ✅ AUTOMÁTICO: Environment vars (FLEXT_*)
 # $ export FLEXT_DEBUG=true
@@ -3152,7 +3152,7 @@ class MyService(FlextService[T]):
 **Arquitetura Automática:**
 
 ```python
-class FlextConfig(BaseSettings):
+class FlextSettings(BaseSettings):
     """Pydantic BaseSettings - 100% automático."""
 
     # ═══════════════════════════════════════════════════════════════
@@ -3237,10 +3237,10 @@ class FlextConfig(BaseSettings):
 
 #### 📈 Uso Real no Ecossistema
 
-**Exemplo 1: Extending FlextConfig (flext-ldif)** ✅
+**Exemplo 1: Extending FlextSettings (flext-ldif)** ✅
 
 ```python
-class FlextLdifConfig(FlextConfig):
+class FlextLdifSettings(FlextSettings):
     """Project config - apenas novos fields, herda tudo."""
 
     # ✅ AUTOMÁTICO: Inherit model_config (NO override needed)
@@ -3285,7 +3285,7 @@ class FlextLdifConfig(FlextConfig):
 
 **Por que funciona perfeitamente:**
 
-- ✅ **Zero duplication** - herda 27 fields de FlextConfig
+- ✅ **Zero duplication** - herda 27 fields de FlextSettings
 - ✅ **Auto environment** - `FLEXT_LDIF__ENCODING=utf-16` funciona
 - ✅ **Auto validation** - Pydantic valida constraints
 - ✅ **Auto computed** - usa `is_debug_enabled` herdado
@@ -3327,13 +3327,13 @@ class MyService(FlextService[list[Entry]]):
 
 ```python
 # ✅ Auto: Multiple calls = same instance
-config1 = FlextLdifConfig()
-config2 = FlextLdifConfig()
+config1 = FlextLdifSettings()
+config2 = FlextLdifSettings()
 assert config1 is config2  # ✅ True - Singleton
 
 # ✅ Auto: Each subclass = own singleton
-core = FlextConfig()
-ldif = FlextLdifConfig()
+core = FlextSettings()
+ldif = FlextLdifSettings()
 assert core is not ldif  # ✅ True - Isolated singletons
 ```
 
@@ -3347,7 +3347,7 @@ export FLEXT_LDIF__ENCODING=utf-16  # ← Nested delimiter (__) works!
 ```
 
 ```python
-config = FlextLdifConfig()
+config = FlextLdifSettings()
 # ✅ Auto: All loaded from environment
 assert config.debug == True
 assert config.log_level == "DEBUG"
@@ -3358,16 +3358,16 @@ assert config.ldif_encoding == "utf-16"
 
 ```python
 # ✅ Auto: Pydantic validates on instantiation
-config = FlextConfig(max_workers=10, timeout_seconds=30.5)  # OK
+config = FlextSettings(max_workers=10, timeout_seconds=30.5)  # OK
 
 # ❌ Auto: Validation error raised
-config = FlextConfig(max_workers=100)  # Error: max 64 workers
+config = FlextSettings(max_workers=100)  # Error: max 64 workers
 ```
 
 **4. Computed Fields (Cached)**
 
 ```python
-config = FlextConfig(trace=True)
+config = FlextSettings(trace=True)
 
 # ✅ Auto: Computed once, cached
 assert config.is_debug_enabled == True      # Computed from trace
@@ -3381,7 +3381,7 @@ log_config = config.log_config  # Dict ready for logger
 
 ```python
 # ✅ Auto: Config controls logger behavior
-config = FlextConfig(
+config = FlextSettings(
     debug=True,
     log_level="DEBUG",
     log_format="json"
@@ -3405,7 +3405,7 @@ class MyService(FlextService[T]):
 ```python
 # ❌ ERRADO: Config como parâmetro (não usa singleton!)
 class MyService(FlextService[T]):
-    def __init__(self, config: FlextConfig):
+    def __init__(self, config: FlextSettings):
         super().__init__()
         self._config = config  # ← Duplicação desnecessária!
 
@@ -3425,7 +3425,7 @@ class MyService(FlextService[T]):
 class MyService(FlextService[T]):
     def __init__(self):
         super().__init__()
-        self.config = FlextLdifConfig()  # ← Desnecessário!
+        self.config = FlextLdifSettings()  # ← Desnecessário!
 
 # ✅ CORRETO: Property automática (x)
 class MyService(FlextService[T]):
@@ -3438,14 +3438,14 @@ class MyService(FlextService[T]):
 **Anti-Pattern 3: Duplicar Fields Herdados** ❌
 
 ```python
-# ❌ ERRADO: Duplicar campos que FlextConfig já tem
-class MyConfig(FlextConfig):
+# ❌ ERRADO: Duplicar campos que FlextSettings já tem
+class MyConfig(FlextSettings):
     debug: bool = Field(default=False)      # ← JÁ existe!
     max_workers: int = Field(default=4)     # ← JÁ existe!
     my_field: str = Field(default="value")  # ✅ OK: novo
 
 # ✅ CORRETO: Apenas novos campos
-class MyConfig(FlextConfig):
+class MyConfig(FlextSettings):
     # Inherit debug, max_workers (27 fields total)
     my_field: str = Field(default="value")  # ✅ Apenas novos
 ```
@@ -3454,10 +3454,10 @@ class MyConfig(FlextConfig):
 
 #### ✅ Como Usar Corretamente (3 Patterns)
 
-**Pattern 1: Extend FlextConfig (Project Config)**
+**Pattern 1: Extend FlextSettings (Project Config)**
 
 ```python
-class MyProjectConfig(FlextConfig):
+class MyProjectConfig(FlextSettings):
     """Apenas NOVOS campos, herda resto."""
 
     # ✅ Auto: Inherit model_config, debug, log_level, max_workers (27 fields)
@@ -3523,7 +3523,7 @@ config = MyProjectConfig()  # Singleton, env-loaded, validated
 grep -r "config: Flext.*Config" src/
 
 # 2. Remove config from __init__
-# ANTES: __init__(self, config: FlextConfig)
+# ANTES: __init__(self, config: FlextSettings)
 # DEPOIS: (nada - use property)
 
 # 3. Use self.project_config everywhere
@@ -3536,7 +3536,7 @@ grep -r "config: Flext.*Config" src/
 | Situação               | Solução Automática    | ❌ Não Fazer             |
 | ---------------------- | --------------------- | ------------------------ |
 | Service precisa config | `self.project_config` | Passar no `__init__`     |
-| Project fields         | Extend FlextConfig    | Duplicar fields herdados |
+| Project fields         | Extend FlextSettings    | Duplicar fields herdados |
 | Environment vars       | `FLEXT_*` prefix      | Manual loading           |
 | Computed values        | `@computed_field`     | Manual calculation       |
 | Validation             | `@model_validator`    | Manual checks            |
@@ -4064,7 +4064,7 @@ class FlextLdifProtocols:
    - Preferem facades diretos
 
 3. **p.Configurable não usado**
-   - Config é singleton via FlextConfig
+   - Config é singleton via FlextSettings
    - Não precisa de protocol
 
 #### 📊 Recomendação
@@ -4114,9 +4114,9 @@ class x:
         return FlextContext.get_current()
 
     @property
-    def config(self) -> FlextConfig:
+    def config(self) -> FlextSettings:
         """Access global config singleton."""
-        return FlextConfig.get_global_instance()
+        return FlextSettings.get_global_instance()
 ```
 
 **Capabilities (Automáticas!):**
@@ -4215,7 +4215,7 @@ class FlextLdif(Flext[dict[str, object]]):
 
 ### 6. FlextLogger - Structured Logging (Auto-Configured)
 
-> **🎯 Core Principle:** Logger é 100% automático - configurado por FlextConfig, accessed via property, zero setup.
+> **🎯 Core Principle:** Logger é 100% automático - configurado por FlextSettings, accessed via property, zero setup.
 
 #### 🚀 Automação: Config → Logger Integration
 
@@ -4223,7 +4223,7 @@ class FlextLdif(Flext[dict[str, object]]):
 
 ```python
 # 1️⃣ Config controls logger behavior
-config = FlextConfig(
+config = FlextSettings(
     debug=True,
     log_level="DEBUG",
     log_format="json"
@@ -4256,18 +4256,18 @@ class MyService(FlextService[T]):
 
 ```python
 class FlextLogger:
-    """Auto-configured logger via FlextConfig."""
+    """Auto-configured logger via FlextSettings."""
 
-    def __init__(self, name: str, config: FlextConfig | None = None):
+    def __init__(self, name: str, config: FlextSettings | None = None):
         """Auto: Initialize with config integration."""
         self._logger = logging.getLogger(name)
-        self._config = config or FlextConfig()
+        self._config = config or FlextSettings()
 
         # ✅ Auto: Apply config to logger
         self._configure_from_config()
 
     def _configure_from_config(self):
-        """Auto: Apply FlextConfig settings."""
+        """Auto: Apply FlextSettings settings."""
         # ✅ Auto: Level from config
         self._logger.setLevel(self._config.effective_log_level)
 
@@ -4350,7 +4350,7 @@ export FLEXT_LOG_FORMAT=json     # ← Config field
 
 ```python
 # ✅ Auto: Config loaded from env
-config = FlextConfig()
+config = FlextSettings()
 
 # ✅ Auto: Logger configured from config
 class MyService(FlextService[T]):
@@ -4429,7 +4429,7 @@ class MyService(FlextService[T]):
 ~~| Componente | Status | Uso no Ecossistema | Recomendação |~~
 ~~| ------------------ | --------------- | ------------------------- | -------------------------------------------- |~~
 ~~| **FlextContainer** | ✅ Maduro | ✅ Amplamente usado | Use para DI, registre services no setup |~~
-~~| **FlextConfig** | ✅ Maduro | ✅ Amplamente usado | Extend para projeto, use singleton |~~
+~~| **FlextSettings** | ✅ Maduro | ✅ Amplamente usado | Extend para projeto, use singleton |~~
 ~~| **FlextModels** | ✅ Maduro | ⚠️ Parcialmente usado | Use Value/Entity, migre models legacy |~~
 ~~| **p** | ✅ Implementado | ❌ Pouco usado | Use localmente, evite p core |~~
 ~~| **x** | ✅ Maduro | ✅ Usado via FlextService | Inherit via FlextService, use properties |~~
@@ -5067,9 +5067,9 @@ class FlextServiceResult[T]:
 
 ```python
 class FlextLdifWriter(Flext[Any]):
-    def __init__(self, config: FlextLdifConfig | None = None):
+    def __init__(self, config: FlextLdifSettings | None = None):
         super().__init__()
-        self._config = config or FlextLdifConfig()
+        self._config = config or FlextLdifSettings()
 
     def write(
         self,
@@ -5131,7 +5131,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
 
 ```python
 class FlextApi(FlextService[dict]):
-    def __init__(self, config: FlextApiConfig):
+    def __init__(self, config: FlextApiSettings):
         super().__init__()
         self._config = config
 
@@ -5718,7 +5718,7 @@ class OrderProcessingService(FlextService[Order]):
 │  ├── container (606-609)  → FlextContainer.get_global()          │
 │  ├── context (611-618)    → FlextContext()                       │
 │  ├── logger (620-628)     → FlextLogger com cache                │
-│  ├── config (731-761)     → FlextConfig.get_global_instance()    │
+│  ├── config (731-761)     → FlextSettings.get_global_instance()    │
 │  └── track() (630-729)    → Performance tracking context mgr     │
 │                                                                  │
 │  NESTED CLASSES:                                                 │
@@ -5904,10 +5904,10 @@ h herda x mas NÃO utiliza a infraestrutura:
 class FlextLdifWriter(Flext[WriteResponse]):
     def __init__(
         self,
-        config: FlextLdifConfig | None = None
+        config: FlextLdifSettings | None = None
     ):
         super().__init__()
-        self._config = config or FlextLdifConfig()
+        self._config = config or FlextLdifSettings()
 
     def write(
         self,
@@ -6544,9 +6544,9 @@ def complex_migration(
 
 # 1. Service definition (com stub execute)
 class FlextLdifParser(Flext[Any]):
-    def __init__(self, config: FlextLdifConfig | None = None):
+    def __init__(self, config: FlextLdifSettings | None = None):
         super().__init__()
-        self._config = config or FlextLdifConfig()
+        self._config = config or FlextLdifSettings()
 
     def parse(
         self,
@@ -6572,7 +6572,7 @@ def parse_ldif_safe(source: str | Path, **kwargs) -> list[Entry] | None:
     return result.value if result.is_success else None
 
 # 3. Usage (verbose)
-config = FlextLdifConfig()
+config = FlextLdifSettings()
 service = FlextLdifParser(config=config)
 result = service.parse(source="file.ldif", source_server_type="oud")
 if result.is_success:
@@ -6930,7 +6930,7 @@ Semana 2+:
 **Mantivemos:**
 
 - ✅ `FlextResult[T]` (Railway pattern)
-- ✅ `FlextConfig` (Singleton)
+- ✅ `FlextSettings` (Singleton)
 - ✅ `FlextContainer` (DI básico)
 - ✅ `x` (Infrastructure properties)
 - ✅ Protocolo `execute()` (contract)
@@ -6994,7 +6994,7 @@ A solução está clara, o caminho está mapeado, o esforço é baixo.
 
 - **FlextCli** (api.py) - Singleton coordinator com acesso direto a domain libraries
 - **FlextCliCore** (core.py) - Extends `FlextService[CliDataDict]`
-- **FlextCliConfig** (config.py) - Extends `FlextConfig` com CLI-specific fields
+- **FlextCliSettings** (config.py) - Extends `FlextSettings` com CLI-specific fields
 - **Domain Libraries**: FlextCliFormatters, FlextCliOutput, FlextCliFileTools, FlextCliPrompts, FlextCliCmd
 - **FlextCliCli** (cli.py) - Typer/Click abstraction layer (ONLY file allowed to import Typer/Click)
 
@@ -7042,12 +7042,12 @@ def save_auth_token(self, token: str) -> FlextResult[None]:
 ✅ **No try/except** - errors como valores
 ✅ **Composable** - pode encadear com `.map()`, `.and_then()`
 
-**3. Extensão Correta de FlextConfig**
+**3. Extensão Correta de FlextSettings**
 
 ```python
 # flext-cli/src/flext_cli/config.py
-class FlextCliConfig(FlextConfig):
-    """Extends FlextConfig with CLI-specific fields."""
+class FlextCliSettings(FlextSettings):
+    """Extends FlextSettings with CLI-specific fields."""
 
     profile: str = Field(default="default")
     output_format: Literal["json", "yaml", "csv", "table", "plain"] = Field(default="table")
@@ -7055,7 +7055,7 @@ class FlextCliConfig(FlextConfig):
     config_dir: Path = Field(default_factory=lambda: Path.home() / ".flext")
 ```
 
-✅ **Herança correta** de `FlextConfig`
+✅ **Herança correta** de `FlextSettings`
 ✅ **Pydantic v2** com `Field` descriptors
 ✅ **Type-safe** com `Literal` types
 ✅ **Computed fields** para derivações
@@ -7096,7 +7096,7 @@ class FlextCli:
 
     # Public service instances
     logger: FlextLogger
-    config: FlextCliConfig
+    config: FlextCliSettings
     formatters: FlextCliFormatters
     file_tools: FlextCliFileTools
     output: FlextCliOutput
@@ -7136,7 +7136,7 @@ class FlextCli:
 FlextCli          # api.py - Coordinator
 FlextCliCore      # core.py - FlextService[CliDataDict]
 FlextCliCli       # cli.py - Typer abstraction
-FlextCliConfig    # config.py - Configuration
+FlextCliSettings    # config.py - Configuration
 FlextCliFormatters # formatters.py - Rich output
 FlextCliOutput    # output.py - Output formatting
 FlextCliFileTools # file_tools.py - File I/O
@@ -7209,7 +7209,7 @@ class FlextCli:
 ```python
 # flext-cli/src/flext_cli/api.py (REFATORADO)
 from flext_core import FlextService, FlextResult
-from flext_cli.config import FlextCliConfig
+from flext_cli.settings import FlextCliSettings
 from pathlib import Path
 from typing import Literal
 
@@ -7353,13 +7353,13 @@ class CliAuthService(FlextService[str]):
 ✅ **Testable** - Mock individual services, não God Object
 ✅ **Reusable** - Auth service pode ser usado standalone
 
-#### **Solução 3: Simplificar FlextCliConfig**
+#### **Solução 3: Simplificar FlextCliSettings**
 
 **Estado Atual:**
 
 ```python
-# 40+ fields em FlextCliConfig
-class FlextCliConfig(FlextConfig):
+# 40+ fields em FlextCliSettings
+class FlextCliSettings(FlextSettings):
     profile: str = ...
     output_format: Literal[...] = ...
     no_color: bool = ...
@@ -7373,7 +7373,7 @@ class FlextCliConfig(FlextConfig):
 **Proposta Simplificada:**
 
 ```python
-class FlextCliConfig(FlextConfig):
+class FlextCliSettings(FlextSettings):
     """Simplified CLI config - only essentials."""
 
     # Output
@@ -7392,7 +7392,7 @@ class FlextCliConfig(FlextConfig):
     def log_file(self) -> Path:
         return self.config_dir / "flext-cli.log"
 
-    # Herdado de FlextConfig:
+    # Herdado de FlextSettings:
     # - debug, log_level, log_format
     # - max_retries, timeout
     # - enable_cache, cache_ttl
@@ -7401,7 +7401,7 @@ class FlextCliConfig(FlextConfig):
 **Benefícios:**
 ✅ **Menos fields** - 8 fields vs 40+
 ✅ **Computed fields** - Derivar ao invés de armazenar
-✅ **Herança** - Usar FlextConfig para common fields
+✅ **Herança** - Usar FlextSettings para common fields
 
 ### 📋 Plano de Migração
 
@@ -7481,12 +7481,12 @@ class CliAuthService(FlextService[str]):
 
 #### **Fase 3: Simplificar Config** (1 dia)
 
-**3.1: Reduzir fields em FlextCliConfig**
+**3.1: Reduzir fields em FlextCliSettings**
 
 ```python
 # Remove 30+ fields, keep only 8 essentials
 # Use computed_field para derivações
-# Herdar mais de FlextConfig
+# Herdar mais de FlextSettings
 ```
 
 **3.2: Migrar computed fields**
@@ -7584,7 +7584,7 @@ if result.is_success:
 
 #### **O Que Fazer AGORA**
 
-1. ✅ **Manter** - FlextCliConfig extends FlextConfig (já correto)
+1. ✅ **Manter** - FlextCliSettings extends FlextSettings (já correto)
 2. ✅ **Manter** - FlextResult railway pattern (já correto)
 3. ✅ **Manter** - Singleton pattern (mas simplificar acesso)
 4. ❌ **Refatorar** - FlextCli → FlextCliService (seguir padrão)
@@ -7610,7 +7610,7 @@ if result.is_success:
 **Semana 1:** Factory functions + Deprecation warnings
 **Semana 2:** Extrair CliOutputService, CliFileService  
 **Semana 3:** Extrair CliAuthService, CliPromptService
-**Semana 4:** Simplificar FlextCliConfig (8 fields)
+**Semana 4:** Simplificar FlextCliSettings (8 fields)
 **Semana 5:** Migration guide + Update examples
 **Semana 6:** Remover FlextCli deprecated code
 
@@ -7636,7 +7636,7 @@ if result.is_success:
 - Base classes para domain services (FlextService[T])
 - Railway pattern (FlextResult[T])
 - Dependency injection (FlextContainer)
-- Configuration management (FlextConfig)
+- Configuration management (FlextSettings)
 - Structured logging (FlextLogger)
 - Context management (FlextContext)
 - Domain modeling (FlextModels)
@@ -7645,7 +7645,7 @@ if result.is_success:
 **Arquitetura Atual:**
 
 - **22 módulos** em `flext-core/src/flext_core/`
-- **7 classes principais**: FlextService, FlextConfig, FlextContainer, FlextModels, x, FlextResult, FlextLogger
+- **7 classes principais**: FlextService, FlextSettings, FlextContainer, FlextModels, x, FlextResult, FlextLogger
 - **Usado por 32+ projetos** do ecossistema FLEXT
 
 ### 🔍 Análise do Estado Atual
@@ -7680,17 +7680,17 @@ class FlextResult[T_co]:
 ✅ **No exceptions** - Errors como valores
 ✅ **Python 3.13** - Type parameter syntax moderna
 
-**2. FlextConfig - Singleton Pattern + Pydantic**
+**2. FlextSettings - Singleton Pattern + Pydantic**
 
 ```python
 # flext-core/src/flext_core/config.py
-class FlextConfig(BaseSettings):
+class FlextSettings(BaseSettings):
     """Global configuration singleton extending Pydantic BaseSettings."""
 
-    _instance: ClassVar[FlextConfig | None] = None
+    _instance: ClassVar[FlextSettings | None] = None
 
     @classmethod
-    def get_global_instance(cls) -> FlextConfig:
+    def get_global_instance(cls) -> FlextSettings:
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
@@ -7708,7 +7708,7 @@ class FlextConfig(BaseSettings):
 ✅ **Pydantic BaseSettings** - Environment variable support
 ✅ **Type-safe** - NewType para RetryCount, TimeoutSeconds, LogLevel
 ✅ **Computed fields** - Derivações automáticas
-✅ **Extensível** - Projetos podem estender (FlextCliConfig, FlextApiConfig)
+✅ **Extensível** - Projetos podem estender (FlextCliSettings, FlextApiSettings)
 
 **3. FlextService[T] - Base Class com DI**
 
@@ -7729,14 +7729,14 @@ class FlextService[TDomainResult](
         """Execute domain operation."""
 
     @computed_field
-    def service_config(self) -> FlextConfig:
+    def service_config(self) -> FlextSettings:
         """Auto-resolve global config."""
-        return FlextConfig.get_global_instance()
+        return FlextSettings.get_global_instance()
 
     @property
-    def project_config(self) -> FlextConfig:
+    def project_config(self) -> FlextSettings:
         """Auto-resolve project-specific config by naming convention."""
-        # FlextCliCore → FlextCliConfig
+        # FlextCliCore → FlextCliSettings
         config_class_name = self.__class__.__name__.replace("Service", "Config")
         return self.container.get(config_class_name).unwrap_or(self.service_config)
 ```
@@ -7774,8 +7774,8 @@ class x:
         return FlextContext()
 
     @property
-    def config(self) -> FlextConfig:
-        return FlextConfig.get_global_instance()
+    def config(self) -> FlextSettings:
+        return FlextSettings.get_global_instance()
 
     @contextmanager
     def track(self, operation_name: str) -> Iterator[dict[str, object]]:
@@ -7854,10 +7854,10 @@ class FlextService[TDomainResult]:
 
     # ✅ Properties - ÓTIMOS
     @computed_field
-    def service_config(self) -> FlextConfig: ...
+    def service_config(self) -> FlextSettings: ...
 
     @property
-    def project_config(self) -> FlextConfig: ...
+    def project_config(self) -> FlextSettings: ...
 
     @property
     def project_models(self) -> type: ...
@@ -7909,9 +7909,9 @@ class FlextModels:
 ```python
 class FlextService[T]:
     @property
-    def project_config(self) -> FlextConfig:
+    def project_config(self) -> FlextSettings:
         """Auto-resolve by naming convention."""
-        # FlextCliCore → FlextCliConfig
+        # FlextCliCore → FlextCliSettings
         service_class_name = self.__class__.__name__
         config_class_name = service_class_name.replace("Service", "Config")
 
@@ -7985,12 +7985,12 @@ class FlextService[TDomainResult](
 
     # ============ PROPERTIES (AUTO-RESOLVED) ============
     @computed_field
-    def service_config(self) -> FlextConfig:
+    def service_config(self) -> FlextSettings:
         """Global config via computed field."""
-        return FlextConfig.get_global_instance()
+        return FlextSettings.get_global_instance()
 
     @property
-    def project_config(self) -> FlextConfig:
+    def project_config(self) -> FlextSettings:
         """Project config via naming convention."""
         # Keep this - it's useful!
         return self._resolve_project_config()
@@ -8098,7 +8098,7 @@ class DomainEvent(Value):
 **Proposta:**
 
 ```python
-class FlextService[TDomainResult, TConfig: FlextConfig = FlextConfig]:
+class FlextService[TDomainResult, TConfig: FlextSettings = FlextSettings]:
     """Add config type parameter."""
 
     @property
@@ -8110,11 +8110,11 @@ class FlextService[TDomainResult, TConfig: FlextConfig = FlextConfig]:
         return config_result.unwrap_or(self.service_config)
 
 # Usage - Type-safe!
-class FlextCliCore(FlextService[CliDataDict, FlextCliConfig]):
+class FlextCliCore(FlextService[CliDataDict, FlextCliSettings]):
     def execute(self) -> FlextResult[CliDataDict]:
         # ✅ Type-safe! IDE autocomplete works
-        debug = self.project_config.debug  # FlextCliConfig.debug
-        profile = self.project_config.profile  # FlextCliConfig.profile
+        debug = self.project_config.debug  # FlextCliSettings.debug
+        profile = self.project_config.profile  # FlextCliSettings.profile
         return FlextResult.ok({})
 ```
 
@@ -8248,7 +8248,7 @@ from flext_core.models.cqrs import Command
 **3.1: Add config type parameter**
 
 ```python
-class FlextService[TDomainResult, TConfig: FlextConfig = FlextConfig]:
+class FlextService[TDomainResult, TConfig: FlextSettings = FlextSettings]:
     @property
     def project_config(self) -> TConfig:
         ...
@@ -8258,11 +8258,11 @@ class FlextService[TDomainResult, TConfig: FlextConfig = FlextConfig]:
 
 ```python
 # Update signature to include config type
-class FlextCliCore(FlextService[CliDataDict, FlextCliConfig]):
+class FlextCliCore(FlextService[CliDataDict, FlextCliSettings]):
     ...
 ```
 
-**3.3: Gradual rollout** - Backward compatible (default to FlextConfig)
+**3.3: Gradual rollout** - Backward compatible (default to FlextSettings)
 
 ### 📊 Antes vs Depois
 
@@ -8286,7 +8286,7 @@ class FlextCliCore(FlextService[CliDataDict, FlextCliConfig]):
 
 | Antes                          | Depois                     | Mudança            |
 | ------------------------------ | -------------------------- | ------------------ |
-| `project_config` → FlextConfig | `project_config` → TConfig | **100% type-safe** |
+| `project_config` → FlextSettings | `project_config` → TConfig | **100% type-safe** |
 | Magic naming convention        | Explicit type parameter    | **+100% clarity**  |
 | Silent failures                | Type errors at compile     | **+100% safety**   |
 
@@ -8306,7 +8306,7 @@ class FlextCliCore(FlextService[CliDataDict, FlextCliConfig]):
 #### **O Que Está PERFEITO (Não Tocar!)**
 
 1. ✅ **FlextResult[T]** - Railway pattern impecável
-2. ✅ **FlextConfig** - Singleton + Pydantic perfeito
+2. ✅ **FlextSettings** - Singleton + Pydantic perfeito
 3. ✅ **FlextContainer** - DI singleton sólido
 4. ✅ **x** - Infrastructure access transparente
 5. ✅ **FlextLogger** - Structured logging excelente
@@ -8321,7 +8321,7 @@ class FlextCliCore(FlextService[CliDataDict, FlextCliConfig]):
 
 #### **O Que NÃO Fazer**
 
-- ❌ **Não quebrar** FlextResult, FlextConfig, FlextContainer (perfeitos como estão)
+- ❌ **Não quebrar** FlextResult, FlextSettings, FlextContainer (perfeitos como estão)
 - ❌ **Não remover** backward compatibility
 - ❌ **Não forçar** migration (gradual, opt-in)
 - ❌ **Não tocar** em FlextLogger, FlextContext (funcionam bem)

@@ -16,7 +16,7 @@
     - [Clean Architecture Implementation](#clean-architecture-implementation)
     - [SOLID Principles](#solid-principles)
   - [Configuration Management](#configuration-management)
-    - [FlextConfig](#flextconfig)
+    - [FlextSettings](#flextconfig)
   - [Error Handling Strategy](#error-handling-strategy)
     - [FlextExceptions Hierarchy](#flextexceptions-hierarchy)
   - [Utilities and Helpers](#utilities-and-helpers)
@@ -56,7 +56,7 @@ Central dependency injection container for managing component lifecycles and dep
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -91,7 +91,7 @@ Command Query Responsibility Segregation implementation for handling commands an
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -127,7 +127,7 @@ Functional error handling with happy path and sad path composition.
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -169,7 +169,7 @@ Event-driven architecture support with domain event publishing and subscription.
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -204,7 +204,7 @@ Enterprise-grade logging with structured data support and multiple output format
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -275,13 +275,13 @@ class UserHandler(BaseHandler):
 
 ## Configuration Management
 
-### FlextConfig
+### FlextSettings
 
 Centralized configuration management with environment variable support and validation.
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -301,7 +301,7 @@ from flext_core import FlextService
 from flext_core import t
 from flext_core import u
 
-class AppConfig(FlextConfig):
+class AppConfig(FlextSettings):
     database_url: str
     debug_mode: bool = False
     log_level: str = "INFO"
@@ -340,7 +340,7 @@ Common utility functions and helpers used across the ecosystem.
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -399,7 +399,7 @@ FlextMetrics.gauge("active_users", 150)
 ```python
 import pytest
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -470,7 +470,7 @@ result = Result.success(data)
 
 # After (v1.0.0)
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext

@@ -258,7 +258,7 @@ pytest --cov=src --cov-report=html
 ```python
 import pytest
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -343,7 +343,7 @@ cd flext-newlib
 ```python
 # src/flext_newlib/__init__.py
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -365,7 +365,7 @@ from flext_core import u
 
 # Main API class
 class FlextNewlib:
-    def __init__(self, config: FlextNewlibConfig):
+    def __init__(self, config: FlextNewlibSettings):
         self.config = config
 
     def process(self, data: dict) -> FlextResult[dict]:
@@ -472,9 +472,9 @@ result = lib.new_feature()
 ### Configuration
 
 ```python
-from flext_newlib import FlextNewlibConfig
+from flext_newlib import FlextNewlibSettings
 
-config = FlextNewlibConfig(
+config = FlextNewlibSettings(
     new_setting="value"
 )
 ```

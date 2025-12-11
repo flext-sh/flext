@@ -440,7 +440,7 @@ classDiagram
 
 ```mermaid
 classDiagram
-    class FlextConfig {
+    class FlextSettings {
         <<Singleton>>
         -Dict~str, object~ settings
         -ConfigSource source
@@ -485,7 +485,7 @@ classDiagram
         INI
     }
 
-    FlextConfig --> ConfigSource : uses
+    FlextSettings --> ConfigSource : uses
     ConfigSource <|-- EnvironmentConfigSource
     ConfigSource <|-- FileConfigSource
     ConfigSource <|-- DatabaseConfigSource

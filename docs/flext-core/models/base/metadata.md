@@ -1,4 +1,4 @@
-# Metadata (`FlextModels.Base.Metadata`)
+# Metadata (`FlextModels.Metadata`)
 
 ## Visão geral
 

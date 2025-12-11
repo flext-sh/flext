@@ -166,7 +166,7 @@ if timeout 10 python -c "
 import sys
 sys.path.insert(0, 'flext-core/src')
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext

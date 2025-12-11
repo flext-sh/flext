@@ -225,9 +225,9 @@ openldap.handle_schema_extensions(schema_entry)
 ### Migration Configuration
 
 ```python
-from flext_ldif import FlextLdifConfig
+from flext_ldif import FlextLdifSettings
 
-config = FlextLdifConfig(
+config = FlextLdifSettings(
     # Server-specific settings
     source_server="oid",
     target_server="oud",
@@ -303,7 +303,7 @@ if migration_result.is_success:
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -348,7 +348,7 @@ batch_result = ldif.Processors.process_entries_batch(
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -392,9 +392,9 @@ export FLEXT_LDIF_BATCH_SIZE=1000
 ### Programmatic Configuration
 
 ```python
-from flext_ldif import FlextLdifConfig
+from flext_ldif import FlextLdifSettings
 
-config = FlextLdifConfig(
+config = FlextLdifSettings(
     default_encoding="utf-8",
     strict_validation=True,
     servers_enabled=True,
@@ -414,7 +414,7 @@ ldif = FlextLdif(config=config)
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -478,7 +478,7 @@ for i in range(0, total_entries, batch_size):
 
 ```python
 # Enable parallel processing for better performance
-config = FlextLdifConfig(parallel_processing=True, max_workers=4)
+config = FlextLdifSettings(parallel_processing=True, max_workers=4)
 ldif = FlextLdif(config=config)
 
 # Process multiple files in parallel
@@ -583,11 +583,11 @@ Complete LDIF migration example from OID to OUD
 """
 
 from pathlib import Path
-from flext_ldif import FlextLdif, FlextLdifConfig
+from flext_ldif import FlextLdif, FlextLdifSettings
 
 def main():
     # Configure for migration
-    config = FlextLdifConfig(
+    config = FlextLdifSettings(
         source_server="oid",
         target_server="oud",
         preserve_oid_modifiers=True,

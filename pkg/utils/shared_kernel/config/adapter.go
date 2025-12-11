@@ -171,7 +171,7 @@ func (a *ConfigAdapter) GetPipelineConfig() PipelineConfig {
 }
 
 // GetPluginConfig returns plugin configuration
-func (a *ConfigAdapter) GetPluginConfig() FlextPluginConfig {
+func (a *ConfigAdapter) GetPluginConfig() FlextPluginSettings {
 	return a.unified.Plugin
 }
 

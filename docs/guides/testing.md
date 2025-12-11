@@ -86,7 +86,7 @@ Test individual functions and classes in isolation:
 ```python
 import pytest
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -140,7 +140,7 @@ Test component interactions and workflows:
 ```python
 import pytest
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -159,7 +159,7 @@ from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
 from flext_core import u
-from flext_ldif import FlextLdif, FlextLdifConfig
+from flext_ldif import FlextLdif, FlextLdifSettings
 
 class TestLdifIntegration:
     def test_ldif_with_container(self):
@@ -167,7 +167,7 @@ class TestLdifIntegration:
         container = FlextContainer.get_global()
 
         # Register LDIF service
-        config = FlextLdifConfig(batch_size=100)
+        config = FlextLdifSettings(batch_size=100)
         ldif = FlextLdif(config=config)
         container.register("ldif", ldif)
 
@@ -188,7 +188,7 @@ Test complete workflows and user scenarios:
 ```python
 import pytest
 from pathlib import Path
-from flext_ldif import FlextLdif, FlextLdifConfig
+from flext_ldif import FlextLdif, FlextLdifSettings
 
 class TestLdifMigration:
     def test_oid_to_oud_migration(self):
@@ -209,7 +209,7 @@ objectClass: inetOrgPerson"""
             f.write(sample_ldif)
 
         # Configure and run migration
-        config = FlextLdifConfig(
+        config = FlextLdifSettings(
             source_server="oid",
             target_server="oud",
             preserve_oid_modifiers=True
@@ -302,12 +302,12 @@ pytest -n 4
 ```python
 import pytest
 from pathlib import Path
-from flext_ldif import FlextLdif, FlextLdifConfig
+from flext_ldif import FlextLdif, FlextLdifSettings
 
 @pytest.fixture
 def ldif_config():
     """Provide LDIF configuration for tests."""
-    return FlextLdifConfig(
+    return FlextLdifSettings(
         batch_size=10,
         strict_validation=False
     )
@@ -365,7 +365,7 @@ def test_file_migration(ldif_service, temp_directories):
 ```python
 from unittest.mock import Mock, patch
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -404,7 +404,7 @@ def test_with_mocked_dependency():
 ```python
 from unittest.mock import Mock
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext

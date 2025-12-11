@@ -45,7 +45,7 @@ type UnifiedConfig struct {
 
 	// Bounded context configurations
 	Pipeline PipelineConfig
-	Plugin   FlextPluginConfig
+	Plugin   FlextPluginSettings
 	Singer   SingerConfig
 	Meltano  MeltanoConfig
 	DBT      DBTConfig
@@ -138,8 +138,8 @@ type PipelineConfig struct {
 	ArtifactsPath    string
 }
 
-// FlextPluginConfig contains plugin-specific settings
-type FlextPluginConfig struct {
+// FlextPluginSettings contains plugin-specific settings
+type FlextPluginSettings struct {
 	PluginsDirectory string
 	AllowedTypes     []string
 	EnableSandbox    bool
@@ -361,7 +361,7 @@ func (c *UnifiedConfig) loadBoundedContextConfigs() error {
 		ArtifactsPath:    getEnvOrDefault("PIPELINE_ARTIFACTS_PATH", "/var/lib/flext/artifacts"),
 	}
 
-	c.Plugin = FlextPluginConfig{
+	c.Plugin = FlextPluginSettings{
 		PluginsDirectory: getEnvOrDefault("PLUGINS_DIRECTORY", "/var/lib/flext/plugins"),
 		AllowedTypes:     getStringSliceEnv("PLUGIN_ALLOWED_TYPES", []string{"tap", "target", "transformer"}),
 		EnableSandbox:    getBoolEnvOrDefault("PLUGIN_ENABLE_SANDBOX", true),

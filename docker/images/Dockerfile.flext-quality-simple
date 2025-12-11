@@ -105,7 +105,7 @@ RUN echo "🧪 Testing imports..." && \
     python -c "from flext_quality.analyzer import CodeAnalyzer; print('✅ CodeAnalyzer')" && \
     python -c "from flext_quality.exceptions import FlextQualityError; print('✅ Exceptions')" && \
     python -c "from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext

@@ -133,11 +133,11 @@ if result.is_success:
 ### Enterprise Migration Example
 
 ```python
-from flext_ldif import FlextLdif, FlextLdifConfig
+from flext_ldif import FlextLdif, FlextLdifSettings
 from pathlib import Path
 
 # Configure for Oracle UD migration
-config = FlextLdifConfig(
+config = FlextLdifSettings(
     source_server="oid",
     target_server="oud",
     preserve_oid_modifiers=True,
@@ -163,7 +163,7 @@ if migration_result.is_success:
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -251,9 +251,9 @@ flext/
 FLEXT supports configuration through environment variables and Pydantic models:
 
 ```python
-from flext_ldif import FlextLdifConfig
+from flext_ldif import FlextLdifSettings
 
-config = FlextLdifConfig(
+config = FlextLdifSettings(
     default_encoding="utf-8",
     strict_validation=True,
     servers_enabled=True,

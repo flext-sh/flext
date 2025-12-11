@@ -69,7 +69,7 @@ migration_result = ldif.migrate(
 
 - `FlextLdif` - Main facade API
 - `FlextLdifModels` - Pydantic models for LDIF entities
-- `FlextLdifConfig` - Configuration management
+- `FlextLdifSettings` - Configuration management
 - `FlextLdifMigrationPipeline` - Migration orchestration
 
 ### 🌐 flext-api
@@ -94,7 +94,7 @@ Oracle database integration and operations.
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -124,7 +124,7 @@ service = container.resolve(FlextLdif)
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -156,7 +156,7 @@ def process_data(data: str) -> FlextResult[List[Entry], Exception]:
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -187,9 +187,9 @@ result = dispatcher.dispatch(CreateEntryCommand(data))
 All FLEXT libraries support configuration through Pydantic models:
 
 ```python
-from flext_ldif import FlextLdifConfig
+from flext_ldif import FlextLdifSettings
 
-config = FlextLdifConfig(
+config = FlextLdifSettings(
     default_encoding="utf-8",
     strict_validation=True,
     servers_enabled=True
@@ -202,7 +202,7 @@ Unified error handling across all libraries:
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext
@@ -236,7 +236,7 @@ Structured logging with flext-core:
 
 ```python
 from flext_core import FlextBus
-from flext_core import FlextConfig
+from flext_core import FlextSettings
 from flext_core import FlextConstants
 from flext_core import FlextContainer
 from flext_core import FlextContext

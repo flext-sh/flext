@@ -138,15 +138,15 @@ Cada item a seguir mostra motivação, funcionamento interno, aplicações recom
 
 **Motivação**
 
-- Funções internas usadas em testes para garantir que os defaults de timeout/retentativa puxam valores de `FlextConfig` antes de cair nos `FlextConstants`.
+- Funções internas usadas em testes para garantir que os defaults de timeout/retentativa puxam valores de `FlextSettings` antes de cair nos `FlextConstants`.
 
 **Funcionamento**
 
-- Obtêm `FlextConfig.get_global_instance().dispatcher_timeout_seconds` / `max_retry_attempts` e, se zero ou negativo, retornam o default definido em `FlextConstants.Cqrs`.
+- Obtêm `FlextSettings.get_global_instance().dispatcher_timeout_seconds` / `max_retry_attempts` e, se zero ou negativo, retornam o default definido em `FlextConstants.Cqrs`.
 
 **Aplicações**
 
-- Garantem backwards compatibility entre config dinâmico e constantes, principalmente em ambientes onde `FlextConfig` pode ser reconfigurado em runtime.
+- Garantem backwards compatibility entre config dinâmico e constantes, principalmente em ambientes onde `FlextSettings` pode ser reconfigurado em runtime.
 
 **Uso atual**
 
