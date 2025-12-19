@@ -61,18 +61,22 @@ client-a-oud-mig (depends on flext-core, flext-cli, flext-ldif, flext-ldap)
 ### Architecture Layering within Projects
 
 **Tier 0 - Foundation (ZERO internal dependencies)**:
+
 - `constants.py` - StrEnum, Final, Literal definitions only
 - `typings.py` - Type aliases, TypeVars
 - `protocols.py` - Interface definitions (Protocol classes)
 
 **Tier 1 - Domain Foundation**:
+
 - `models.py` - Pydantic models (depends on: constants, typings, protocols)
 - `utilities.py` - Helper functions (depends on: constants, typings, protocols, models)
 
 **Tier 2 - Infrastructure**:
+
 - `services/*.py` - Business logic (depends on: Tier 0, Tier 1)
 
 **Tier 3 - Application**:
+
 - `api.py` - Facade/API (depends on: all lower tiers)
 - CLI/commands modules (depends on: all lower tiers)
 
@@ -171,7 +175,7 @@ def process_data(provider: DataProvider) -> None:
 
 ```python
 # ✅ CORRECT: Use centralized TypeVars from flext-core
-from flext_core.typings import FlextTypes as t
+from flext_core.typings import t
 
 T = t.T            # Generic type variable
 M = t.M            # Generic mapping type
@@ -214,6 +218,7 @@ class FlextTypes:
 ### Namespace Organization by Project
 
 **flext-core**:
+
 ```
 t.Core                      # Foundation (Result, Config, Handler)
 t.Utilities                 # Reusable (Json, Collection, Validation)
@@ -223,6 +228,7 @@ t.Decorators                # Type decorators
 ```
 
 **flext-cli**:
+
 ```
 t.Cli                       # CLI-specific
   .Data                     # Data structures (Tables, Progress)
@@ -231,6 +237,7 @@ t.Cli                       # CLI-specific
 ```
 
 **flext-ldif**:
+
 ```
 t.Ldif                      # LDIF domain
   .Entry                    # Entry types
@@ -240,6 +247,7 @@ t.Ldif                      # LDIF domain
 ```
 
 **flext-ldap**:
+
 ```
 t.Ldap                      # LDAP operations
   .Client                   # Client types
@@ -249,11 +257,95 @@ t.Ldap.Protocol             # Infrastructure (ldap3 wrappers)
 ```
 
 **client-a-oud-mig**:
+
 ```
 t.client-aOudMig               # Migration tool
   .Migration                # Migration types
   .Status                   # Status types
   .Output                   # Output types
+```
+
+### Models Namespace Architecture (m.\*)
+
+**CRITICAL RULE**: Models follow **2-level maximum** namespace: `m.Domain.Class` (not `m.Domain.Concern.SubClass`)
+
+**Pattern**: Domain-level classes directly in namespace, no nested sub-namespaces
+
+```python
+# ✅ CORRECT: 2-level namespace (flext-cli examples)
+m.Cli.SystemInfo                    # CLI-specific system info model
+m.Cli.SessionStatistics             # CLI session statistics
+m.Cli.CommandStatistics             # CLI command statistics
+m.Cli.CliCommand                    # CLI command model
+m.Cli.CliSession                    # CLI session model
+
+# ✅ CORRECT: Module-level aliases for common classes
+from flext_cli.models import (
+    SystemInfo,                     # alias for m.Cli.SystemInfo
+    SessionStatistics,              # alias for m.Cli.SessionStatistics
+    CommandStatistics,              # alias for m.Cli.CommandStatistics
+)
+
+# ❌ WRONG: Over-nesting (3+ levels - PROHIBITED)
+m.Cli.Value.SystemInfo              # TOO DEEP - violates 2-level rule
+m.Cli.Data.Command.Execution        # TOO DEEP - nested sub-concerns
+
+# ❌ WRONG: Root-level aliases without domain
+m.SystemInfo                        # Missing domain context (m.Cli.*)
+m.Statistics                        # Ambiguous - which domain?
+```
+
+**Models Organization by Project**:
+
+**flext-core**:
+
+```
+m.Config                    # Configuration models
+m.ProcessingConfig          # Processing-specific config
+m.RuntimeScopeOptions       # Runtime options
+m.Options                   # Generic options
+```
+
+**flext-cli**:
+
+```
+m.Cli                       # CLI domain
+  .CliCommand               # Command model
+  .CliSession               # Session model
+  .CliConfig                # CLI configuration
+  .SystemInfo               # System information (module alias available)
+  .EnvironmentInfo          # Environment info (module alias available)
+  .PathInfo                 # Path information (module alias available)
+  .CommandStatistics        # Command stats (module alias available)
+  .SessionStatistics        # Session stats (module alias available)
+  .ServiceExecutionResult   # Service result (module alias available)
+```
+
+**flext-ldif**:
+
+```
+m.Ldif                      # LDIF domain
+  .Entry                    # LDIF entry
+  .Attribute                # LDIF attribute
+  .Schema                   # LDIF schema
+```
+
+**flext-ldap**:
+
+```
+m.Ldap                      # LDAP domain
+  .Connection               # Connection model
+  .Operation                # Operation model
+  .Result                   # Operation result
+```
+
+**client-a-oud-mig**:
+
+```
+m.client-aOudMig               # Migration tool domain
+  .MigrationTask            # Migration task
+  .MigrationStatus          # Migration status
+  .MigrationResult          # Migration result
 ```
 
 ---
@@ -440,6 +532,7 @@ FlextCliOutputT = TypeVar("FlextCliOutputT")   # NO - use R
 #### Migration 1: Union → Protocol
 
 **Before**:
+
 ```python
 type ProgressCallback = (
     Callable[[int], None] |
@@ -454,6 +547,7 @@ def track_progress(callback: ProgressCallback) -> None:
 ```
 
 **After**:
+
 ```python
 @runtime_checkable
 class ProgressCallbackProtocol(Protocol):
@@ -473,6 +567,7 @@ def track_progress(callback: ProgressCallbackProtocol) -> None:
 #### Migration 2: dict → Mapping in Protocols
 
 **Before**:
+
 ```python
 @runtime_checkable
 class AttributeProvider(Protocol):
@@ -485,6 +580,7 @@ provider.get_attributes()  # May fail type check
 ```
 
 **After**:
+
 ```python
 @runtime_checkable
 class AttributeProvider(Protocol):
@@ -503,6 +599,7 @@ provider.get_attributes()  # Works with covariance
 #### Migration 3: Duplicate Aliases → Single Source of Truth
 
 **Before**:
+
 ```python
 # typings.py (Tier 0)
 class FlextLdapTypes:
@@ -517,6 +614,7 @@ class FlextLdapTypes:
 ```
 
 **After**:
+
 ```python
 # typings.py (Tier 0) - Single definition
 class FlextLdapTypes:
@@ -610,13 +708,13 @@ t.Ldif.Domain.Entry.Transformation   # NO: 4 levels!
 
 ### ✅ Completed Projects
 
-| Project | Tier 0 | Tier 1 | Tier 2 | Status |
-|---------|--------|--------|--------|--------|
-| **flext-core** | ✅ | ✅ | ✅ | Reference template |
-| **flext-cli** | ✅ | ✅ | ✅ | Consolidated namespaces |
-| **flext-ldif** | ✅ | ✅ | ✅ | Validated |
-| **flext-ldap** | ✅ | ✅ | ✅ | Variance fixed |
-| **client-a-oud-mig** | ✅ | ✅ | ✅ | Composition validated |
+| Project           | Tier 0 | Tier 1 | Tier 2 | Status                  |
+| ----------------- | ------ | ------ | ------ | ----------------------- |
+| **flext-core**    | ✅     | ✅     | ✅     | Reference template      |
+| **flext-cli**     | ✅     | ✅     | ✅     | Consolidated namespaces |
+| **flext-ldif**    | ✅     | ✅     | ✅     | Validated               |
+| **flext-ldap**    | ✅     | ✅     | ✅     | Variance fixed          |
+| **client-a-oud-mig** | ✅     | ✅     | ✅     | Composition validated   |
 
 ### Type System Metrics
 

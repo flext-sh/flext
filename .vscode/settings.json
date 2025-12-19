@@ -1,19 +1,151 @@
 {
-  "[python]": {
-    "editor.codeActionsOnSave": {
-      "source.fixAll": "explicit",
-      "source.organizeImports": "explicit"
+    // Python interpreter - use workspace .venv
+    "python.defaultInterpreterPath": "./.venv/bin/python",
+
+    // Pylance/Pyright configuration - aligned with pyproject.toml [tool.pyright]
+    "python.analysis.typeCheckingMode": "strict",
+    "python.analysis.pythonVersion": "3.13",
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.indexing": true,
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.useLibraryCodeForTypes": true,
+
+    // Type checking strictness - match pyproject.toml
+    "python.analysis.enableTypeIgnoreComments": false,
+    "python.analysis.strictListInference": true,
+    "python.analysis.strictDictionaryInference": true,
+    "python.analysis.strictSetInference": true,
+    "python.analysis.strictParameterNoneValue": true,
+
+    // Inlay hints
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "python.analysis.inlayHints.variableTypes": true,
+
+    // Report settings - aligned with pyproject.toml [tool.pyright]
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingImports": "error",
+        "reportMissingModuleSource": "error",
+        "reportMissingParameterType": "error",
+        "reportMissingTypeArgument": "error",
+        "reportMissingTypeStubs": "warning",
+        "reportUnusedImport": "error",
+        "reportUnusedVariable": "error",
+        "reportUnusedClass": "warning",
+        "reportUnusedFunction": "warning",
+        "reportUnusedExpression": "warning",
+        "reportUnusedCallResult": "warning",
+        "reportUnusedCoroutine": "error",
+        "reportUnnecessaryCast": "warning",
+        "reportUnnecessaryComparison": "warning",
+        "reportUnnecessaryIsInstance": "warning",
+        "reportUnnecessaryTypeIgnoreComment": "warning",
+        "reportOptionalCall": "error",
+        "reportOptionalMemberAccess": "error",
+        "reportOptionalSubscript": "error",
+        "reportOptionalIterable": "error",
+        "reportOptionalOperand": "error",
+        "reportOptionalContextManager": "error",
+        "reportIncompatibleMethodOverride": "error",
+        "reportIncompatibleVariableOverride": "error",
+        "reportInconsistentConstructor": "error",
+        "reportImportCycles": "error",
+        "reportUnboundVariable": "error",
+        "reportConstantRedefinition": "error",
+        "reportDuplicateImport": "error",
+        "reportInvalidStringEscapeSequence": "error",
+        "reportInvalidTypeVarUse": "error",
+        "reportInvalidStubStatement": "error",
+        "reportSelfClsParameterName": "error",
+        "reportTypedDictNotRequiredAccess": "error",
+        "reportUntypedBaseClass": "error",
+        "reportUntypedFunctionDecorator": "error",
+        "reportUntypedClassDecorator": "error",
+        "reportUntypedNamedTuple": "error",
+        "reportCallInDefaultInitializer": "error",
+        "reportCallIssue": "error",
+        "reportFunctionMemberAccess": "error",
+        "reportGeneralTypeIssues": "error",
+        "reportPropertyTypeMismatch": "error",
+        "reportUnsupportedDunderAll": "error",
+        "reportWildcardImportFromLibrary": "error",
+        "reportMatchNotExhaustive": "warning",
+        "reportMissingSuperCall": "warning",
+        "reportImplicitStringConcatenation": "warning",
+        "reportIncompleteStub": "warning",
+        "reportUninitializedInstanceVariable": "warning",
+        "reportUnknownLambdaType": "error",
+        "reportPrivateUsage": false,
+        "reportUnknownArgumentType": false,
+        "reportUnknownMemberType": false,
+        "reportUnknownParameterType": false,
+        "reportUnknownVariableType": false,
+        "reportAssertAlwaysTrue": false,
+        "reportInvalidTypeForm": false,
+        "reportImplicitRelativeImport": false
     },
-    "editor.formatOnSave": true
-  },
-  "evenBetterToml.formatter.columnWidth": 0,
-  "evenBetterToml.formatter.indentEntries": true,
-  "evenBetterToml.formatter.indentTables": true,
-  "evenBetterToml.formatter.inlineTableExpand": true,
-  "evenBetterToml.formatter.reorderArrays": true,
-  "evenBetterToml.formatter.reorderInlineTables": true,
-  "evenBetterToml.formatter.reorderKeys": true,
-  "evenBetterToml.formatter.trailingNewline": true,
-  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-  "makefile.configureOnOpen": false
+
+    // Ruff configuration - use .venv ruff
+    "ruff.path": ["./.venv/bin/ruff"],
+    "ruff.lint.enable": true,
+    "ruff.format.args": [],
+    "ruff.configurationPreference": "filesystemFirst",
+
+    // Formatter - use Ruff (not Black)
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true
+    },
+
+    // Code actions on save - explicit (manual trigger)
+    "editor.codeActionsOnSave": {
+        "source.fixAll.ruff": "explicit",
+        "source.organizeImports.ruff": "explicit"
+    },
+
+    // Testing configuration
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestPath": "./.venv/bin/pytest",
+    "python.testing.pytestArgs": [
+        "--tb=short",
+        "-v"
+    ],
+
+    // Pylance cache
+    "python.analysis.cacheFolderPath": ".pylance_cache",
+
+    // File exclusions - aligned with pyproject.toml exclude patterns
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/.mypy_cache": true,
+        "**/.ruff_cache": true,
+        "**/.pytest_cache": true,
+        "**/*.pb2.py": true,
+        "**/*.pb2_grpc.py": true,
+        "**/build": true,
+        "**/dist": true,
+        "**/*.egg-info": true,
+        "**/.venv": true,
+        "**/venv": true,
+        ".meltano": true,
+        "vectorbt.pro": true,
+        "external-docs": true
+    },
+
+    // Search exclusions
+    "search.exclude": {
+        "**/__pycache__": true,
+        "**/.mypy_cache": true,
+        "**/.ruff_cache": true,
+        "**/.pytest_cache": true,
+        "**/*.pb2.py": true,
+        "**/*.pb2_grpc.py": true,
+        "**/build": true,
+        "**/dist": true,
+        "**/*.egg-info": true,
+        "**/.venv": true,
+        "**/venv": true,
+        ".meltano": true,
+        "vectorbt.pro": true,
+        "external-docs": true
+    }
 }

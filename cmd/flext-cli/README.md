@@ -128,7 +128,7 @@ go build -o flext-cli main.go
 # Build with Makefile
 make build
 
-# Cross-platform builds (if configured)
+# Cross-platform.Cli.builds (if configured)
 make build-cli
 ```
 

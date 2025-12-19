@@ -47,7 +47,7 @@ services:
 
     volumes:
       - flext_ldap_data:/var/lib/ldap
-      - flext_ldap_config:/etc/ldap/slapd.d
+      - flext_ldap.settings:/etc/ldap/slapd.d
       - ./openldap/bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom:ro
 
     command: --copy-service --loglevel debug
@@ -86,7 +86,7 @@ services:
 volumes:
   flext_ldap_data:
     driver: local
-  flext_ldap_config:
+  flext_ldap.settings:
     driver: local
 
 networks:

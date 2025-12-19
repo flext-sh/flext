@@ -3,7 +3,7 @@ from _pytest._code import ExceptionInfo
 from _pytest.assertion import register_assert_rewrite
 from _pytest.cacheprovider import Cache
 from _pytest.capture import CaptureFixture
-from _pytest.config import (
+from _pytest.settings import (
     Config,
     ExitCode,
     PytestPluginManager,

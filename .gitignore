@@ -52,6 +52,7 @@
 # Build and automation
 !Makefile
 !Makefile.flext-docker
+!*.mk
 
 # Documentation
 !README.md
@@ -175,6 +176,7 @@
 **/*_backup
 **/*_backup_*
 **/*.md.backup
+**/archived
 
 # Database files inside allowed directories
 **/*.db
