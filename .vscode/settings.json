@@ -80,8 +80,7 @@
         "reportUnknownParameterType": false,
         "reportUnknownVariableType": false,
         "reportAssertAlwaysTrue": false,
-        "reportInvalidTypeForm": false,
-        "reportImplicitRelativeImport": false
+        "reportInvalidTypeForm": false
     },
 
     // Ruff configuration - use .venv ruff
