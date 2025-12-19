@@ -1,0 +1,24 @@
+// .vscode/extensions.json
+// Recommended VSCode extensions for the Neptor project.
+// Add or update extension recommendations as needed.
+//
+// Changelog
+// - 2025-05-03 - Initial documentation header and changelog added. (by marlonsc@gmail.com)
+// .vscode/extensions.json
+{
+    "recommendations": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.flake8",
+        "ms-python.mypy-type-checker",
+        "foxundermoon.shell-format", // Shell formatting
+        "ms-azuretools.vscode-docker",
+        "redhat.ansible",
+        "redhat.vscode-yaml",
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+        "mikestead.dotenv",
+        "oderwat.indent-rainbow",
+        "davidanson.vscode-markdownlint"
+    ]
+}

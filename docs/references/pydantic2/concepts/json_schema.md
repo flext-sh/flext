@@ -47,7 +47,7 @@ from enum import Enum
 from typing import Annotated, Union
 
 from pydantic import BaseModel, Field
-from pydantic.config import ConfigDict
+from pydantic.settings import ConfigDict
 
 
 class FooBar(BaseModel):

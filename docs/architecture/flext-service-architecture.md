@@ -224,12 +224,12 @@ if result_monad.is_success:
 
 **Status:** ✅ **AUDITADO e VALIDADO** - Toda infraestrutura é lazy!
 
-| Property             | Lazy? | Implementação                       | Performance            |
-| -------------------- | ----- | ----------------------------------- | ---------------------- |
+| Property             | Lazy? | Implementação                         | Performance            |
+| -------------------- | ----- | ------------------------------------- | ---------------------- |
 | **`self.config`**    | ✅    | `FlextSettings.get_global_instance()` | O(1) - Singleton lazy  |
-| **`self.logger`**    | ✅    | Cache + DI lookup                   | O(1) após 1ª chamada   |
-| **`self.container`** | ✅    | `FlextContainer.get_global()`       | O(1) - Singleton lazy  |
-| **`self.context`**   | ✅    | `FlextContext()` usa contextvars    | O(1) - Task-local lazy |
+| **`self.logger`**    | ✅    | Cache + DI lookup                     | O(1) após 1ª chamada   |
+| **`self.container`** | ✅    | `FlextContainer.get_global()`         | O(1) - Singleton lazy  |
+| **`self.context`**   | ✅    | `FlextContext()` usa contextvars      | O(1) - Task-local lazy |
 
 **Código Auditado (flext-core/src/flext_core/mixins.py):**
 
@@ -3536,7 +3536,7 @@ grep -r "config: Flext.*Config" src/
 | Situação               | Solução Automática    | ❌ Não Fazer             |
 | ---------------------- | --------------------- | ------------------------ |
 | Service precisa config | `self.project_config` | Passar no `__init__`     |
-| Project fields         | Extend FlextSettings    | Duplicar fields herdados |
+| Project fields         | Extend FlextSettings  | Duplicar fields herdados |
 | Environment vars       | `FLEXT_*` prefix      | Manual loading           |
 | Computed values        | `@computed_field`     | Manual calculation       |
 | Validation             | `@model_validator`    | Manual checks            |
@@ -8284,11 +8284,11 @@ class FlextCliCore(FlextService[CliDataDict, FlextCliSettings]):
 
 #### **Type Safety**
 
-| Antes                          | Depois                     | Mudança            |
-| ------------------------------ | -------------------------- | ------------------ |
+| Antes                            | Depois                     | Mudança            |
+| -------------------------------- | -------------------------- | ------------------ |
 | `project_config` → FlextSettings | `project_config` → TConfig | **100% type-safe** |
-| Magic naming convention        | Explicit type parameter    | **+100% clarity**  |
-| Silent failures                | Type errors at compile     | **+100% safety**   |
+| Magic naming convention          | Explicit type parameter    | **+100% clarity**  |
+| Silent failures                  | Type errors at compile     | **+100% safety**   |
 
 ### 📈 Métricas de Melhoria
 
