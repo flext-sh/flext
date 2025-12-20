@@ -21,7 +21,6 @@ from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from enum import StrEnum
-from typing import Union, cast
 
 from flext_core import FlextResult, FlextService
 
@@ -54,10 +53,10 @@ class CompleteWorkflowExample:
                 "aggregation",
             ]
         )
-        metadata: dict[str, Union[str, int, float, bool]] = field(default_factory=dict)
-        performance_metrics: dict[
-            str, Union[float, int, dict[str, Union[float, int]]]
-        ] = field(default_factory=dict)
+        metadata: dict[str, str | int | float | bool] = field(default_factory=dict)
+        performance_metrics: dict[str, float | int | dict[str, float | int]] = field(
+            default_factory=dict
+        )
 
     @dataclass
     class WorkflowStageResult:
@@ -73,7 +72,7 @@ class CompleteWorkflowExample:
         processing_time: float
         errors: list[str] = field(default_factory=list)
         warnings: list[str] = field(default_factory=list)
-        stage_metadata: dict[str, Union[float, int, bool]] = field(default_factory=dict)
+        stage_metadata: dict[str, float | int | bool] = field(default_factory=dict)
 
     @dataclass
     class CompleteWorkflowResult:
@@ -88,7 +87,7 @@ class CompleteWorkflowExample:
         stage_results: list[CompleteWorkflowExample.WorkflowStageResult] = field(
             default_factory=list
         )
-        aggregated_metrics: dict[str, Union[float, int]] = field(default_factory=dict)
+        aggregated_metrics: dict[str, float | int] = field(default_factory=dict)
         workflow_status: str = "unknown"
 
     class WorkflowOrchestrator(FlextService[dict[str, object]]):
@@ -97,7 +96,7 @@ class CompleteWorkflowExample:
         auto_execute = True
 
         data: list[ItemType] = field(default_factory=list)
-        workflow_config: dict[str, Union[str, int, bool, float]] = field(
+        workflow_config: dict[str, str | int | bool | float] = field(
             default_factory=dict
         )
 
@@ -262,8 +261,8 @@ class CompleteWorkflowExample:
             item: ItemType,
             sleep_time: float,
             add_field: str,
-            value: Union[str, float, bool],
-            extra_logic: Callable[[ItemType], dict[str, Union[str, int, float, bool]]]
+            value: str | float | bool,
+            extra_logic: Callable[[ItemType], dict[str, str | int | float | bool]]
             | None = None,
         ) -> ItemType:
             """Generic stage processing helper."""
@@ -327,8 +326,8 @@ class CompleteWorkflowExample:
                     "aggregated",
                     True,
                     lambda _i: {
-                        "final_score": cast("float", item.get("complexity_score", 0))
-                        + (1 if cast("bool", item.get("is_valid", False)) else 0)
+                        "final_score": float(item.get("complexity_score", 0))
+                        + (1 if bool(item.get("is_valid", False)) else 0)
                     },
                 )
             )
@@ -337,7 +336,7 @@ class CompleteWorkflowExample:
             self,
             stage_results: list[CompleteWorkflowExample.WorkflowStageResult],
             total_time: float,
-        ) -> dict[str, Union[float, int]]:
+        ) -> dict[str, float | int]:
             """Aggregate metrics across all workflow stages."""
             if not stage_results:
                 return {}
@@ -386,7 +385,7 @@ class CompleteWorkflowExample:
         sample_data: list[ItemType] = (
             CompleteWorkflowExample.create_sample_workflow_data(50)
         )
-        workflow_config: dict[str, Union[str, int, bool, float]] = {
+        workflow_config: dict[str, str | int | bool | float] = {
             "workflow_id": "comprehensive_workflow",
             "parallel": True,
             "max_workers": 4,

@@ -18,11 +18,10 @@ from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from enum import StrEnum
-from typing import Union
 
 from flext_core import FlextResult, FlextService
 
-ItemDict = dict[str, Union[str, int, float, bool]]
+ItemDict = dict[str, str | int | float | bool]
 
 
 class AdvancedProcessingExample:
@@ -45,7 +44,7 @@ class AdvancedProcessingExample:
         items_failed: int
         processing_time: float
         errors: list[str] = field(default_factory=list)
-        metadata: dict[str, Union[str, int, float, bool]] = field(default_factory=dict)
+        metadata: dict[str, str | int | float | bool] = field(default_factory=dict)
 
     @dataclass
     class ValidationResult:
@@ -61,21 +60,13 @@ class AdvancedProcessingExample:
         FlextService[
             dict[
                 str,
-                Union[
-                    list[ItemDict],
-                    list["AdvancedProcessingExample.ValidationResult"],
-                    int,
-                    float,
-                    dict[
-                        str,
-                        Union[
-                            int,
-                            float,
-                            dict[int, int],
-                            list[float],
-                            dict[str, Union[int, float]],
-                        ],
-                    ],
+                list[ItemDict]
+                | list["AdvancedProcessingExample.ValidationResult"]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ]
         ]
@@ -92,21 +83,13 @@ class AdvancedProcessingExample:
         ) -> FlextResult[
             dict[
                 str,
-                Union[
-                    list[ItemDict],
-                    list[AdvancedProcessingExample.ValidationResult],
-                    int,
-                    float,
-                    dict[
-                        str,
-                        Union[
-                            int,
-                            float,
-                            dict[int, int],
-                            list[float],
-                            dict[str, Union[int, float]],
-                        ],
-                    ],
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ]
         ]:
@@ -117,42 +100,34 @@ class AdvancedProcessingExample:
                     [
                         dict[
                             str,
-                            Union[
-                                list[ItemDict],
-                                list[AdvancedProcessingExample.ValidationResult],
-                                int,
-                                float,
-                                dict[
-                                    str,
-                                    Union[
-                                        int,
-                                        float,
-                                        dict[int, int],
-                                        list[float],
-                                        dict[str, Union[int, float]],
-                                    ],
-                                ],
+                            list[ItemDict]
+                            | list[AdvancedProcessingExample.ValidationResult]
+                            | int
+                            | float
+                            | dict[
+                                str,
+                                int
+                                | float
+                                | dict[int, int]
+                                | list[float]
+                                | dict[str, int | float],
                             ],
                         ]
                     ],
                     FlextResult[
                         dict[
                             str,
-                            Union[
-                                list[ItemDict],
-                                list[AdvancedProcessingExample.ValidationResult],
-                                int,
-                                float,
-                                dict[
-                                    str,
-                                    Union[
-                                        int,
-                                        float,
-                                        dict[int, int],
-                                        list[float],
-                                        dict[str, Union[int, float]],
-                                    ],
-                                ],
+                            list[ItemDict]
+                            | list[AdvancedProcessingExample.ValidationResult]
+                            | int
+                            | float
+                            | dict[
+                                str,
+                                int
+                                | float
+                                | dict[int, int]
+                                | list[float]
+                                | dict[str, int | float],
                             ],
                         ]
                     ],
@@ -168,42 +143,34 @@ class AdvancedProcessingExample:
                     [
                         dict[
                             str,
-                            Union[
-                                list[ItemDict],
-                                list[AdvancedProcessingExample.ValidationResult],
-                                int,
-                                float,
-                                dict[
-                                    str,
-                                    Union[
-                                        int,
-                                        float,
-                                        dict[int, int],
-                                        list[float],
-                                        dict[str, Union[int, float]],
-                                    ],
-                                ],
+                            list[ItemDict]
+                            | list[AdvancedProcessingExample.ValidationResult]
+                            | int
+                            | float
+                            | dict[
+                                str,
+                                int
+                                | float
+                                | dict[int, int]
+                                | list[float]
+                                | dict[str, int | float],
                             ],
                         ]
                     ],
                     FlextResult[
                         dict[
                             str,
-                            Union[
-                                list[ItemDict],
-                                list[AdvancedProcessingExample.ValidationResult],
-                                int,
-                                float,
-                                dict[
-                                    str,
-                                    Union[
-                                        int,
-                                        float,
-                                        dict[int, int],
-                                        list[float],
-                                        dict[str, Union[int, float]],
-                                    ],
-                                ],
+                            list[ItemDict]
+                            | list[AdvancedProcessingExample.ValidationResult]
+                            | int
+                            | float
+                            | dict[
+                                str,
+                                int
+                                | float
+                                | dict[int, int]
+                                | list[float]
+                                | dict[str, int | float],
                             ],
                         ]
                     ],
@@ -218,21 +185,13 @@ class AdvancedProcessingExample:
 
             current_data: dict[
                 str,
-                Union[
-                    list[ItemDict],
-                    list[AdvancedProcessingExample.ValidationResult],
-                    int,
-                    float,
-                    dict[
-                        str,
-                        Union[
-                            int,
-                            float,
-                            dict[int, int],
-                            list[float],
-                            dict[str, Union[int, float]],
-                        ],
-                    ],
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ] = {"items": self.items}
 
@@ -250,41 +209,25 @@ class AdvancedProcessingExample:
             self,
             data: dict[
                 str,
-                Union[
-                    list[ItemDict],
-                    list[AdvancedProcessingExample.ValidationResult],
-                    int,
-                    float,
-                    dict[
-                        str,
-                        Union[
-                            int,
-                            float,
-                            dict[int, int],
-                            list[float],
-                            dict[str, Union[int, float]],
-                        ],
-                    ],
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ],
         ) -> FlextResult[
             dict[
                 str,
-                Union[
-                    list[ItemDict],
-                    list[AdvancedProcessingExample.ValidationResult],
-                    int,
-                    float,
-                    dict[
-                        str,
-                        Union[
-                            int,
-                            float,
-                            dict[int, int],
-                            list[float],
-                            dict[str, Union[int, float]],
-                        ],
-                    ],
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ]
         ]:
@@ -310,21 +253,13 @@ class AdvancedProcessingExample:
 
             result_data: dict[
                 str,
-                Union[
-                    list[ItemDict],
-                    list[AdvancedProcessingExample.ValidationResult],
-                    int,
-                    float,
-                    dict[
-                        str,
-                        Union[
-                            int,
-                            float,
-                            dict[int, int],
-                            list[float],
-                            dict[str, Union[int, float]],
-                        ],
-                    ],
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ] = {
                 **data,
@@ -338,41 +273,25 @@ class AdvancedProcessingExample:
             self,
             data: dict[
                 str,
-                Union[
-                    list[ItemDict],
-                    list[AdvancedProcessingExample.ValidationResult],
-                    int,
-                    float,
-                    dict[
-                        str,
-                        Union[
-                            int,
-                            float,
-                            dict[int, int],
-                            list[float],
-                            dict[str, Union[int, float]],
-                        ],
-                    ],
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ],
         ) -> FlextResult[
             dict[
                 str,
-                Union[
-                    list[ItemDict],
-                    list[AdvancedProcessingExample.ValidationResult],
-                    int,
-                    float,
-                    dict[
-                        str,
-                        Union[
-                            int,
-                            float,
-                            dict[int, int],
-                            list[float],
-                            dict[str, Union[int, float]],
-                        ],
-                    ],
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ]
         ]:
@@ -417,21 +336,13 @@ class AdvancedProcessingExample:
 
             result_data: dict[
                 str,
-                Union[
-                    list[ItemDict],
-                    list[AdvancedProcessingExample.ValidationResult],
-                    int,
-                    float,
-                    dict[
-                        str,
-                        Union[
-                            int,
-                            float,
-                            dict[int, int],
-                            list[float],
-                            dict[str, Union[int, float]],
-                        ],
-                    ],
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ] = {
                 **data,
@@ -447,41 +358,25 @@ class AdvancedProcessingExample:
             self,
             data: dict[
                 str,
-                Union[
-                    list[ItemDict],
-                    list[AdvancedProcessingExample.ValidationResult],
-                    int,
-                    float,
-                    dict[
-                        str,
-                        Union[
-                            int,
-                            float,
-                            dict[int, int],
-                            list[float],
-                            dict[str, Union[int, float]],
-                        ],
-                    ],
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ],
         ) -> FlextResult[
             dict[
                 str,
-                Union[
-                    list[ItemDict],
-                    list[AdvancedProcessingExample.ValidationResult],
-                    int,
-                    float,
-                    dict[
-                        str,
-                        Union[
-                            int,
-                            float,
-                            dict[int, int],
-                            list[float],
-                            dict[str, Union[int, float]],
-                        ],
-                    ],
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ]
         ]:
@@ -519,7 +414,7 @@ class AdvancedProcessingExample:
                 else 0.0
             )
 
-            validation_summary: dict[str, Union[int, float]] = {
+            validation_summary: dict[str, int | float] = {
                 "total_validated": len(validation_results),
                 "valid_items": sum(
                     1
@@ -540,13 +435,7 @@ class AdvancedProcessingExample:
             }
             analysis: dict[
                 str,
-                Union[
-                    int,
-                    float,
-                    dict[int, int],
-                    list[float],
-                    dict[str, Union[int, float]],
-                ],
+                int | float | dict[int, int] | list[float] | dict[str, int | float],
             ] = {
                 "total_processed": len(items_to_analyze),
                 "field_distribution": field_counts,
@@ -559,21 +448,13 @@ class AdvancedProcessingExample:
 
             result_data: dict[
                 str,
-                Union[
-                    list[ItemDict],
-                    list[AdvancedProcessingExample.ValidationResult],
-                    int,
-                    float,
-                    dict[
-                        str,
-                        Union[
-                            int,
-                            float,
-                            dict[int, int],
-                            list[float],
-                            dict[str, Union[int, float]],
-                        ],
-                    ],
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ] = {
                 **data,

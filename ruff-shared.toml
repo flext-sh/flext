@@ -42,6 +42,7 @@ target-version = "py313"
         "D213",    # multi-line-summary-second-line - conflicting with D212 (summary line position)
         "D401",    # non-imperative-mood - too opinionated in multilingual codebase
         "D417",
+        "ANN202",  # missing-return-type-private-function - nested functions in methods
         "DOC201",
         "DOC202",
         "DOC402",
@@ -51,6 +52,7 @@ target-version = "py313"
         "ERA001",  # commented-out-code - False positives on legitimate comments
         "FBT003",
         "G004",    # logging-f-string
+        "N805",   # invalid-first-argument-name-for-method - false positives on @overload functions
         "N813",
         "N816",    # mixed-case-variable-in-global - false positives in certain patterns
         "PLR0904", # too-many-public-methods - sometimes necessary in certain classes
@@ -74,7 +76,7 @@ target-version = "py313"
         "TRY003",
         "TRY300",  # try-consider-else
         "TRY301",  # raise-within-try - Abstract raise
-        "UP007",  # Use X | Y for type annotations (adds __future__ annotations)
+        # UP007 ENABLED - Python 3.13+ supports X | Y natively without __future__ imports
         "UP040",  # type aliases may break inside classes
         "W293",
     ]
@@ -269,6 +271,7 @@ target-version = "py313"
             "PLW2901", # redefined-loop-name - scripts may reassign loop variables
             "S105",    # hardcoded-password-string - false positives in scripts
             "S107",    # hardcoded-password-default
+            "S404",    # suspicious-subprocess-import - scripts need subprocess for automation
             "S603",    # subprocess-without-shell-equals-true - scripts need subprocess calls
             "T201",    # print
             "TID252",  # relative-imports

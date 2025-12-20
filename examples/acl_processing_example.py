@@ -21,7 +21,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from enum import StrEnum
-from typing import ClassVar, Union
+from typing import ClassVar
 
 from flext_core import FlextResult, FlextService
 
@@ -94,7 +94,7 @@ class AclProcessingExample:
         }
 
         VALIDATION_RULES: ClassVar[
-            dict[str, dict[str, Union[list[str], list[tuple[str, str]]]]]
+            dict[str, dict[str, list[str] | list[tuple[str, str]]]]
         ] = {
             "openldap": {
                 "required_permissions": ["read", "write", "search"],
