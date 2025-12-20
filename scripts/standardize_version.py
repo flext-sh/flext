@@ -14,7 +14,6 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from flext_core import (
     FlextLogger,
@@ -22,9 +21,6 @@ from flext_core import (
     FlextResult,
     FlextService,
 )
-
-if TYPE_CHECKING:
-    type ProjectAnalysis = FlextVersionStandardizationService.ProjectAnalysis
 
 
 class FlextVersionStandardizationService(FlextService[dict[str, object]]):
@@ -132,11 +128,17 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
                     projects.append(analysis)
             self._projects = projects
             self._logger.info(f"✅ Found {len(projects)} FLEXT projects")
-            return FlextResult[list[ProjectAnalysis]].ok(projects)
+            return FlextResult[
+                list[FlextVersionStandardizationService.ProjectAnalysis]
+            ].ok(projects)
         except Exception as e:
-            return FlextResult[list[ProjectAnalysis]].fail(f"Project scan failed: {e}")
+            return FlextResult[
+                list[FlextVersionStandardizationService.ProjectAnalysis]
+            ].fail(f"Project scan failed: {e}")
 
-    def _analyze_project(self, project_dir: Path) -> ProjectAnalysis | None:
+    def _analyze_project(
+        self, project_dir: Path
+    ) -> FlextVersionStandardizationService.ProjectAnalysis | None:
         """Advanced project analysis with pattern matching."""
         try:
             pyproject_toml = project_dir / "pyproject.toml"
@@ -320,7 +322,7 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
         })
 
     def _standardize_single_project(
-        self, project: ProjectAnalysis
+        self, project: FlextVersionStandardizationService.ProjectAnalysis
     ) -> FlextResult[bool]:
         """Railway-oriented single project standardization."""
         try:
@@ -342,7 +344,9 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
         except Exception as e:
             return FlextResult[bool].fail(f"Failed to standardize {project.name}: {e}")
 
-    def _create_version_file(self, project: ProjectAnalysis) -> FlextResult[Path]:
+    def _create_version_file(
+        self, project: FlextVersionStandardizationService.ProjectAnalysis
+    ) -> FlextResult[Path]:
         """Railway-oriented version file creation."""
         version_file = project.src_path / project.package_name / "__version__.py"
         content = self._VersionTemplate.format(project.package_name)
@@ -354,7 +358,9 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
         except Exception as e:
             return FlextResult[Path].fail(f"Failed to create version file: {e}")
 
-    def _remove_old_version_file(self, project: ProjectAnalysis) -> FlextResult[bool]:
+    def _remove_old_version_file(
+        self, project: FlextVersionStandardizationService.ProjectAnalysis
+    ) -> FlextResult[bool]:
         """Railway-oriented old version file removal."""
         old_version = project.src_path / project.package_name / "version.py"
         if old_version.exists():
@@ -367,7 +373,9 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
                 return FlextResult[bool].fail(f"Failed to remove old version file: {e}")
         return FlextResult[bool].ok(True)
 
-    def _update_init_file(self, project: ProjectAnalysis) -> FlextResult[bool]:
+    def _update_init_file(
+        self, project: FlextVersionStandardizationService.ProjectAnalysis
+    ) -> FlextResult[bool]:
         """Railway-oriented init file updates."""
         init_file = project.src_path / project.package_name / "__init__.py"
         if not init_file.exists():
@@ -390,7 +398,9 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
         except Exception as e:
             return FlextResult[bool].fail(f"Failed to update init file: {e}")
 
-    def _check_constants_file(self, project: ProjectAnalysis) -> FlextResult[bool]:
+    def _check_constants_file(
+        self, project: FlextVersionStandardizationService.ProjectAnalysis
+    ) -> FlextResult[bool]:
         """Railway-oriented constants file checking."""
         constants_file = project.src_path / project.package_name / "constants.py"
         if not constants_file.exists():

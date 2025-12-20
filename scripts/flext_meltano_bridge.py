@@ -10,13 +10,13 @@ from __future__ import annotations
 import json
 import sys
 from collections.abc import Callable
-from typing import TypeVar, Union
+from typing import TypeVar
 
 from flext_core import FlextResult
 from flext_meltano.bridge import FlextMeltanoBridge
 
 T = TypeVar("T", str, bool, dict[str, object])
-CommandResult = dict[str, Union[str, bool, dict[str, object]]]
+CommandResult = dict[str, str | bool | dict[str, object]]
 
 
 class FlextMeltanoBridgeScript:
