@@ -255,6 +255,7 @@ target-version = "py313"
             #     return computed_value
         ]
         "**/*result*" = [
+            "PLC2701", # private-member-access - necessary for Pydantic model inheritance in result models
         #    "BLE001", # broad-exception-catching - framework code executes user callables
         ]
         "**/*runtime*" = [
