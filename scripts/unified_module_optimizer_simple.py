@@ -547,7 +547,9 @@ class FlextModuleOptimizer:
 
             # Apply changes if not dry run
             if not self._config.dry_run and optimized_content != original_content:
-                Path(target["file_path"]).write_text(optimized_content, encoding="utf-8")
+                Path(target["file_path"]).write_text(
+                    optimized_content, encoding="utf-8"
+                )
 
                 # Validate the optimized file
                 validation_result = self._validate_optimized_file(target["file_path"])
