@@ -39,8 +39,7 @@ def analyze_flext_core_violations() -> list[dict[str, str]]:
             continue
 
         try:
-            with Path(py_file).open(encoding="utf-8") as f:
-                content = f.read()
+            content = Path(py_file).read_text(encoding="utf-8")
 
             # Usar word boundaries para evitar matches dentro de outras palavras
             violations.extend(

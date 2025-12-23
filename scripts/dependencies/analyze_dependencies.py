@@ -126,8 +126,7 @@ def main() -> int:
         ]
         report = "\n".join(report_lines)
 
-        with Path(report_path).open("w", encoding="utf-8") as f:
-            f.write(report)
+        Path(report_path).write_text(report, encoding="utf-8")
 
         print_colored(f"\n📄 Relatório completo salvo em: {report_path}", Colors.GREEN)
 

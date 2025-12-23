@@ -208,9 +208,8 @@
 			"node_modules/",
 			"vendor/",
 		]
-		explicit_package_bases = true
 		extra_checks = true
-		follow_imports = "normal"
+		follow_imports = "silent"
 		follow_imports_for_stubs = true 
 		incremental = true
 		local_partial_types = true
@@ -237,6 +236,8 @@
 		warn_unreachable = true
 		warn_unused_configs = true
 		warn_unused_ignores = false
+mypy_path = ["src", "flext-api/src", "flext-auth/src", "flext-cli/src", "flext-core/src", "flext-db-oracle/src", "flext-dbt-ldap/src", "flext-dbt-ldif/src", "flext-dbt-oracle/src", "flext-dbt-oracle-wms/src", "flext-grpc/src", "flext-ldap/src", "flext-ldif/src", "flext-meltano/src", "flext-observability/src", "flext-oracle-oic/src", "flext-oracle-wms/src", "flext-plugin/src", "flext-quality/src", "flext-tap-ldap/src", "flext-tap-ldif/src", "flext-tap-oracle/src", "flext-tap-oracle-oic/src", "flext-tap-oracle-wms/src", "flext-target-ldap/src", "flext-target-ldif/src", "flext-target-oracle/src", "flext-target-oracle-oic/src", "flext-target-oracle-wms/src", "flext-web/src"]
+files = ["src/flext"]
 
 		[[tool.mypy.overrides]]
 			disable_error_code = [
@@ -309,12 +310,13 @@
 			pytest-benchmark = "^5.1.0"
 			pytest-clarity = "^1.0.1"
 			pytest-cov = "^6.2.1"
+			pytest-json-report = "^1.5.0"
 			pytest-randomly = "^3.16.0"
 			pytest-xdist = "^3.8.0"
 			redis = ">=5.0.0"
 			twisted = "^25.5.0"
 			types-pyyaml = "^6.0.12.20250809"
-                        beartype = "^0.22.5"
+            beartype = "^0.22.5"
 
 		[tool.poetry.group.typings.dependencies]
 			aiofiles = "^24.1.0"

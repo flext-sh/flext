@@ -316,8 +316,7 @@ class FlextModuleOptimizer:
     ) -> FlextResult[dict[str, object]]:
         """Analyze file for optimization opportunities."""
         try:
-            with Path(file_path).open(encoding="utf-8") as f:
-                content = f.read()
+            content = Path(file_path).read_text(encoding="utf-8")
 
             # Parse AST for structural analysis
             try:
@@ -529,8 +528,7 @@ class FlextModuleOptimizer:
 
         try:
             # Read current content
-            with Path(target["file_path"]).open(encoding="utf-8") as f:
-                original_content = f.read()
+            original_content = Path(target["file_path"]).read_text(encoding="utf-8")
 
             # Apply optimizations based on type
             if target["optimization_type"] == "pattern_violation":
@@ -549,8 +547,7 @@ class FlextModuleOptimizer:
 
             # Apply changes if not dry run
             if not self._config.dry_run and optimized_content != original_content:
-                with Path(target["file_path"]).open("w", encoding="utf-8") as f:
-                    f.write(optimized_content)
+                Path(target["file_path"]).write_text(optimized_content, encoding="utf-8")
 
                 # Validate the optimized file
                 validation_result = self._validate_optimized_file(target["file_path"])
