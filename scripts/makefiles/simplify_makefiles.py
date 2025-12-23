@@ -52,8 +52,7 @@ def main() -> None:
 
         # Write simplified Makefile
         try:
-            with Path(makefile_path).open("w", encoding="utf-8") as f:
-                f.write(simplified_makefile)
+            Path(makefile_path).write_text(simplified_makefile, encoding="utf-8")
             simplified_count += 1
         except (OSError, ValueError, TypeError):
             pass

@@ -101,8 +101,7 @@ class DeadCodeScanner:
     def _scan_file(self, file_path: Path) -> None:
         """Scan a single Python file."""
         try:
-            with Path(file_path).open(encoding="utf-8") as f:
-                source = f.read()
+            source = Path(file_path).read_text(encoding="utf-8")
             tree = ast.parse(source, filename=str(file_path))
 
             # Phase 1: Collect definitions

@@ -68,8 +68,7 @@ def process_file(filepath: Path, *, dry_run: bool = False) -> tuple[int, bool]:
 
     """
     try:
-        with Path(filepath).open("r", encoding="utf-8") as f:
-            content = f.read()
+        content = Path(filepath).read_text(encoding="utf-8")
     except Exception as e:
         print(f"Error reading {filepath}: {e}", file=sys.stderr)
         return 0, False
@@ -110,8 +109,7 @@ def process_file(filepath: Path, *, dry_run: bool = False) -> tuple[int, bool]:
         if new_content != original_content:
             if not dry_run:
                 try:
-                    with Path(filepath).open("w", encoding="utf-8") as f:
-                        f.write(new_content)
+                    Path(filepath).write_text(new_content, encoding="utf-8")
                     return conversions, True
                 except Exception as e:
                     print(f"Error writing {filepath}: {e}", file=sys.stderr)

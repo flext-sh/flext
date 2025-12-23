@@ -79,10 +79,10 @@ discover: ## Show all discovered projects
 	$(Q)echo "  Oracle: $(ORACLE_PROJECTS)"
 
 # =============================================================================
-# SETUP
+# SETUP & INSTALL
 # =============================================================================
 
-.PHONY: install setup
+.PHONY: install setup setup-interactive
 
 install: ## Install all project dependencies
 	$(Q)for proj in $(ALL_PROJECTS); do \
@@ -90,7 +90,7 @@ install: ## Install all project dependencies
 		$(MAKE) -C $$proj install -s 2>/dev/null || true; \
 	done
 
-setup: ## Complete workspace development setup (all 31 projects)
+setup: ## Complete workspace development setup (all projects)
 	$(Q)echo "=== FLEXT Workspace Development Setup ===" && \
 	echo "" && \
 	echo "Step 1: Validating Python 3.13..." && \
@@ -125,6 +125,9 @@ setup: ## Complete workspace development setup (all 31 projects)
 		echo "⚠️  $$failed projects failed - review output above"; \
 		exit 1; \
 	fi
+
+setup-interactive: ## Interactive workspace setup wizard
+	$(Q)bash scripts/setup.sh
 
 # =============================================================================
 # QUALITY GATES
@@ -319,10 +322,38 @@ status: ## Show project status
 	done
 
 # =============================================================================
+# MONOREPO MANAGEMENT
+# =============================================================================
+
+.PHONY: add-project remove-project deploy release commit
+
+add-project: ## Adicionar projeto externo (datacosmos-br, etc.)
+	$(Q)bash scripts/add-project.sh
+
+remove-project: ## Remover projeto externo (uso: make remove-project PROJECT=nome)
+ifdef PROJECT
+	$(Q)bash scripts/remove-project.sh $(PROJECT)
+else
+	$(Q)echo "Uso: make remove-project PROJECT=nome-do-projeto"
+	$(Q)echo ""
+	$(Q)echo "Projetos externos registrados:"
+	$(Q)jq -r '.projects | keys[]' .flext/external-projects.json 2>/dev/null || echo "  (nenhum)"
+endif
+
+deploy: ## Deploy pipeline com validacao
+	$(Q)bash scripts/deploy.sh
+
+release: ## Release automatizado com bump de versao
+	$(Q)bash scripts/release.sh
+
+commit: ## Commit inteligente (conventional commits)
+	$(Q)bash scripts/commit.sh
+
+# =============================================================================
 # SHORT ALIASES
 # =============================================================================
 
-.PHONY: l f tc t c v d s dp
+.PHONY: l f tc t c v d s dp ap rp si
 
 l: lint
 f: format
@@ -333,3 +364,6 @@ v: validate
 d: discover
 s: status
 dp: deps-all
+ap: add-project
+rp: remove-project
+si: setup-interactive
