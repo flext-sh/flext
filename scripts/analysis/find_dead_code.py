@@ -6,7 +6,12 @@ Analyzes Python files to find:
 - Unused methods/functions
 - Unused imports
 - Unreachable code
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
+
+from __future__ import annotations
 
 import ast
 from collections import defaultdict

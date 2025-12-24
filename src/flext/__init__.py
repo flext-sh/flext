@@ -21,13 +21,12 @@ from flext_core import (
     FlextService,
     FlextSettings,
 )
-
-from flext.constants import FlextConstants, c
-from flext.models import FlextModels, m
-from flext.protocols import FlextProtocols, p
-from flext.service import FlextServiceBase
-from flext.types import FlextTypes, t
-from flext.utilities import FlextUtilities, u
+from flext_core.constants import FlextConstants, c
+from flext_core.models import FlextModels, m
+from flext_core.protocols import FlextProtocols, p
+from flext_core.service import FlextService as FlextServiceBase
+from flext_core.typings import FlextTypes, t
+from flext_core.utilities import FlextUtilities, u
 
 # Shared from flext-core
 container = FlextContainer

@@ -8,6 +8,8 @@ SPDX-License-Identifier: MIT
 
 """
 
+from __future__ import annotations
+
 import contextlib
 import io
 import json
@@ -167,7 +169,7 @@ class FlextDiagnostic:
             if not Path(poetry_path).is_absolute() or not Path(poetry_path).exists():
                 return 1, "", f"Invalid poetry executable: {poetry_path}"
 
-            result = u.u.CommandExecution.run_external_command(
+            result = u.CommandExecution.run_external_command(
                 [str(poetry_path), "install", "--no-interaction"],
                 check=False,
                 u=u,

@@ -3,7 +3,12 @@
 
 This script finds all main project Makefiles and ensures they have comprehensive
 clean targets that remove build artifacts, cache files, and project-specific cruft.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
+
+from __future__ import annotations
 
 import re
 from pathlib import Path

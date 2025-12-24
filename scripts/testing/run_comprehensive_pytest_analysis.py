@@ -3,7 +3,12 @@
 
 Executes pytest across all FLEXT projects with detailed reporting in SARIF and JSON formats.
 Generates comprehensive analysis for systematic error fixing.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
+
+from __future__ import annotations
 
 import asyncio
 import json
@@ -13,7 +18,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any  # Required for complex JSON-like data structures
 
 # Constants
 TIMEOUT_SECONDS = 600  # 10 minutes per project
@@ -243,7 +248,7 @@ class PytestAnalyzer:
             "exit_code": returncode,
             "pytest_data": pytest_data,
             "has_failures": returncode != 0,
-            "error_count": len(pytest_data.get("summary", {}).get("errors", [])),
+            "error_count": len(pytest_data.get("summary", {}).get("err  # type: ignoreors", [])),
             "passed_count": pytest_data.get("summary", {}).get("passed", 0),
             "failed_count": pytest_data.get("summary", {}).get("failed", 0),
         }
@@ -414,7 +419,9 @@ class PytestAnalyzer:
             "runs": runs,
         }
 
-    def _generate_recommendations(self, project_summaries: dict[str, Any]) -> list[str]:
+    def _generate_recommendations(
+        self, project_summaries: dict[str, Any]
+    ) -> list[str]:
         """Generate recommendations based on analysis."""
         recommendations = []
 

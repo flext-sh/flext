@@ -17,5 +17,7 @@ SPDX-License-Identifier: MIT
 
 """
 
+from __future__ import annotations
+
 
 # FlextResult moved to flext_core.domain.shared_types

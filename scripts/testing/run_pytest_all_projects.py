@@ -1,4 +1,10 @@
-"""FLEXT Pytest Runner - Execute pytest across all workspace projects with timeout."""
+"""FLEXT Pytest Runner - Execute pytest across all workspace projects with timeout.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
+
+from __future__ import annotations
 
 import asyncio
 import json
