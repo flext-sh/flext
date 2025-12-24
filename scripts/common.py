@@ -13,9 +13,9 @@ from __future__ import annotations
 from collections.abc import Sequence
 from pathlib import Path
 
-from flext_core import FlextLogger
+from flext_core import FlextLogger as logger_core
 
-logger = FlextLogger(__name__)
+logger = logger_core(__name__)
 
 
 def discover_projects(
