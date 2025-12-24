@@ -23,7 +23,10 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import ClassVar
 
-from flext_core import FlextResult, FlextService
+from flext_core import (
+    r as r,
+    FlextService as service,
+)
 
 EntryDict = dict[str, object]
 ContextDict = dict[str, object]
@@ -107,11 +110,11 @@ class AclProcessingExample:
         }
 
     @staticmethod
-    def detect_server_type(entry: EntryDict) -> FlextResult[str]:
+    def detect_server_type(entry: EntryDict) -> r[str]:
         """Auto-detect server type from entry attributes."""
         attributes = entry.get("attributes", {})
         if not isinstance(attributes, dict):
-            return FlextResult.fail("Invalid entry attributes format")
+            return r.fail("Invalid entry attributes format")
         attr_keys = set(attributes.keys())
 
         for (
@@ -119,15 +122,15 @@ class AclProcessingExample:
             signatures,
         ) in AclProcessingExample.Constants.SERVER_SIGNATURES.items():
             if any(sig in attr_keys for sig in signatures):
-                return FlextResult.ok(server_type)
+                return r.ok(server_type)
 
-        return FlextResult.fail("Unable to detect server type from entry attributes")
+        return r.fail("Unable to detect server type from entry attributes")
 
     @staticmethod
     def extract_acls_from_entry(
         entry: EntryDict,
         server_type: str,
-    ) -> FlextResult[list[AclProcessingExample.AclEntry]]:
+    ) -> r[list[AclProcessingExample.AclEntry]]:
         """Extract ACLs using server-specific attribute detection."""
         start_time = time.time()
         acl_attrs = AclProcessingExample.Constants.SERVER_ACL_ATTRIBUTES.get(
@@ -136,14 +139,14 @@ class AclProcessingExample:
         )
 
         if not acl_attrs:
-            return FlextResult.fail(
+            return r.fail(
                 f"No ACL attributes defined for server type: {server_type}",
             )
 
         extracted_acls = []
         attributes = entry.get("attributes", {})
         if not isinstance(attributes, dict):
-            return FlextResult.fail("Invalid attributes format")
+            return r.fail("Invalid attributes format")
 
         for attr_name in acl_attrs:
             if attr_name in attributes:
@@ -169,7 +172,7 @@ class AclProcessingExample:
                     )
                     extracted_acls.append(acl_entry)
 
-        return FlextResult.ok(extracted_acls)
+        return r.ok(extracted_acls)
 
     @staticmethod
     def _parse_acl_permissions(acl_value: str) -> list[str]:
@@ -187,7 +190,7 @@ class AclProcessingExample:
     def validate_acl_entry(
         acl_entry: AclProcessingExample.AclEntry,
         _context: ContextDict,
-    ) -> FlextResult[AclProcessingExample.AclValidationResult]:
+    ) -> r[AclProcessingExample.AclValidationResult]:
         """Validate ACL entry with complex context evaluation."""
         start_time = time.time()
         violations = []
@@ -232,7 +235,7 @@ class AclProcessingExample:
         if not acl_entry.dn:
             warnings.append("Empty DN may indicate configuration issue")
 
-        return FlextResult.ok(
+        return r.ok(
             AclProcessingExample.AclValidationResult(
                 entry_dn=acl_entry.dn,
                 is_valid=len(violations) == 0,
@@ -242,7 +245,7 @@ class AclProcessingExample:
             ),
         )
 
-    class AclProcessor(FlextService[dict[str, object]]):
+    class AclProcessor(service[dict[str, object]]):
         """Monadic ACL processor with zero-ceremony execution."""
 
         auto_execute: bool = True
@@ -250,7 +253,7 @@ class AclProcessingExample:
         entries: list[EntryDict]
         parallel: bool = True
 
-        def execute(self) -> FlextResult[dict[str, object]]:
+        def execute(self) -> r[dict[str, object]]:
             """Execute ACL processing pipeline using monadic flow."""
             start_time = time.time()
             detect_result = self._detect_servers(self.entries)
@@ -278,7 +281,7 @@ class AclProcessingExample:
         def _detect_servers(
             self,
             entries: list[EntryDict],
-        ) -> FlextResult[dict[str, object]]:
+        ) -> r[dict[str, object]]:
             """Auto-detect server types for all entries."""
             detected_entries: list[EntryWithServer] = []
             for entry in entries:
@@ -286,10 +289,10 @@ class AclProcessingExample:
                 if result.is_success:
                     detected_entries.append((entry, result.value))
                 else:
-                    return FlextResult.fail(f"Server detection failed: {result.error}")
+                    return r.fail(f"Server detection failed: {result.error}")
 
             server_types_set = {s for _, s in detected_entries}
-            return FlextResult.ok({
+            return r.ok({
                 "entries": detected_entries,
                 "server_types": sorted(server_types_set),
             })
@@ -297,11 +300,11 @@ class AclProcessingExample:
         def _extract_acls(
             self,
             data: dict[str, object],
-        ) -> FlextResult[dict[str, object]]:
+        ) -> r[dict[str, object]]:
             """Extract ACLs in parallel."""
             entries_data = data.get("entries", [])
             if not isinstance(entries_data, list):
-                return FlextResult.fail("Invalid entries format")
+                return r.fail("Invalid entries format")
 
             entries_with_servers: list[EntryWithServer] = [
                 item
@@ -325,21 +328,21 @@ class AclProcessingExample:
                     if result.is_success:
                         all_acls.extend(result.value)
                     else:
-                        return FlextResult.fail(
+                        return r.fail(
                             f"ACL extraction failed: {result.error}",
                         )
 
             result_data = {**data, "acls": all_acls, "total_acls": len(all_acls)}
-            return FlextResult.ok(result_data)
+            return r.ok(result_data)
 
         def _extract_sequential(
             self,
             data: dict[str, object],
-        ) -> FlextResult[dict[str, object]]:
+        ) -> r[dict[str, object]]:
             """Extract ACLs sequentially."""
             entries_data = data.get("entries", [])
             if not isinstance(entries_data, list):
-                return FlextResult.fail("Invalid entries format")
+                return r.fail("Invalid entries format")
 
             entries_with_servers: list[EntryWithServer] = [
                 item
@@ -356,19 +359,19 @@ class AclProcessingExample:
                 if result.is_success:
                     all_acls.extend(result.value)
                 else:
-                    return FlextResult.fail(f"ACL extraction failed: {result.error}")
+                    return r.fail(f"ACL extraction failed: {result.error}")
 
             result_data = {**data, "acls": all_acls, "total_acls": len(all_acls)}
-            return FlextResult.ok(result_data)
+            return r.ok(result_data)
 
         def _validate_batch(
             self,
             data: dict[str, object],
-        ) -> FlextResult[dict[str, object]]:
+        ) -> r[dict[str, object]]:
             """Validate all extracted ACLs."""
             acls_data = data.get("acls", [])
             if not isinstance(acls_data, list):
-                return FlextResult.fail("Invalid ACLs format")
+                return r.fail("Invalid ACLs format")
 
             validation_results: list[AclProcessingExample.AclValidationResult] = []
             acl_entries: list[AclProcessingExample.AclEntry] = [
@@ -384,7 +387,7 @@ class AclProcessingExample:
                 if result.is_success:
                     validation_results.append(result.value)
                 else:
-                    return FlextResult.fail(f"ACL validation failed: {result.error}")
+                    return r.fail(f"ACL validation failed: {result.error}")
 
             result_data = {
                 **data,
@@ -394,12 +397,12 @@ class AclProcessingExample:
                 "total_violations": sum(len(r.violations) for r in validation_results),
                 "total_warnings": sum(len(r.warnings) for r in validation_results),
             }
-            return FlextResult.ok(result_data)
+            return r.ok(result_data)
 
         def _analyze_performance(
             self,
             data: dict[str, object],
-        ) -> FlextResult[dict[str, object]]:
+        ) -> r[dict[str, object]]:
             """Analyze processing performance."""
             total_entries = len(self.entries)
             total_acls_data = data.get("total_acls", 0)
@@ -427,7 +430,7 @@ class AclProcessingExample:
                 "performance_analytics": analytics,
                 "processing_time_seconds": processing_time,
             }
-            return FlextResult.ok(result_data)
+            return r.ok(result_data)
 
     @staticmethod
     def create_sample_acl_entries() -> list[EntryDict]:

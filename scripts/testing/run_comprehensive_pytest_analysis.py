@@ -10,8 +10,6 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-# type: ignore  # Complex JSON data structures require Any for pytest output parsing
-
 import asyncio
 import json
 import os
@@ -20,7 +18,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any  # Required for complex JSON-like data structures
+from typing import Any
 
 # Constants
 TIMEOUT_SECONDS = 600  # 10 minutes per project
@@ -250,7 +248,9 @@ class PytestAnalyzer:
             "exit_code": returncode,
             "pytest_data": pytest_data,
             "has_failures": returncode != 0,
-            "error_count": len(pytest_data.get("summary", {}).get("err  # type: ignoreors", [])),
+            "error_count": len(
+                pytest_data.get("summary", {}).get("err  # type: ignoreors", [])
+            ),
             "passed_count": pytest_data.get("summary", {}).get("passed", 0),
             "failed_count": pytest_data.get("summary", {}).get("failed", 0),
         }
@@ -421,9 +421,7 @@ class PytestAnalyzer:
             "runs": runs,
         }
 
-    def _generate_recommendations(
-        self, project_summaries: dict[str, Any]
-    ) -> list[str]:
+    def _generate_recommendations(self, project_summaries: dict[str, Any]) -> list[str]:
         """Generate recommendations based on analysis."""
         recommendations = []
 

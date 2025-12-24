@@ -22,7 +22,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from enum import StrEnum
 
-from flext_core import FlextResult, FlextService
+from flext_core import (
+    r as r,
+    service as service,
+)
 
 ItemType = dict[str, object]
 
@@ -90,7 +93,7 @@ class CompleteWorkflowExample:
         aggregated_metrics: dict[str, float | int] = field(default_factory=dict)
         workflow_status: str = "unknown"
 
-    class WorkflowOrchestrator(FlextService[dict[str, object]]):
+    class WorkflowOrchestrator(service[dict[str, object]]):
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True
@@ -100,7 +103,7 @@ class CompleteWorkflowExample:
             default_factory=dict,
         )
 
-        def execute(self) -> FlextResult[dict[str, object]]:
+        def execute(self) -> r[dict[str, object]]:
             """Execute complete workflow with automatic resource management."""
             context = self._setup_context()
             try:
@@ -132,7 +135,7 @@ class CompleteWorkflowExample:
             self,
             data: list[ItemType],
             context: CompleteWorkflowExample.WorkflowContext,
-        ) -> FlextResult[dict[str, object]]:
+        ) -> r[dict[str, object]]:
             """Execute workflow stages with parallel processing."""
             items = data
             stage_results = []
@@ -148,7 +151,7 @@ class CompleteWorkflowExample:
             for stage_name in context.stages:
                 stage_func = stage_functions.get(stage_name)
                 if not stage_func:
-                    return FlextResult.fail(f"Unknown stage: {stage_name}")
+                    return r.fail(f"Unknown stage: {stage_name}")
 
                 result = self._execute_stage_parallel(
                     stage_name,
@@ -157,7 +160,7 @@ class CompleteWorkflowExample:
                     context,
                 )
                 if result.is_failure:
-                    return FlextResult.fail(
+                    return r.fail(
                         f"Stage {stage_name} failed: {result.error}",
                     )
 
@@ -196,7 +199,7 @@ class CompleteWorkflowExample:
                 workflow_status="completed",
             )
 
-            return FlextResult.ok({
+            return r.ok({
                 "workflow_result": workflow_result,
                 "final_data": current_data,
                 "performance_summary": aggregated_metrics,
@@ -217,10 +220,10 @@ class CompleteWorkflowExample:
             items: list[ItemType],
             stage_func: Callable[
                 [ItemType, CompleteWorkflowExample.WorkflowContext],
-                FlextResult[ItemType],
+                r[ItemType],
             ],
             context: CompleteWorkflowExample.WorkflowContext,
-        ) -> FlextResult[CompleteWorkflowExample.WorkflowStageResult]:
+        ) -> r[CompleteWorkflowExample.WorkflowStageResult]:
             """Execute a workflow stage in parallel."""
             stage_start = time.time()
             max_workers = int(context.metadata.get("max_workers", 4))
@@ -261,7 +264,7 @@ class CompleteWorkflowExample:
                     "success_rate": len(processed_results) / len(items) if items else 0,
                 },
             )
-            return FlextResult.ok(stage_result)
+            return r.ok(stage_result)
 
         def _process_stage(
             self,
@@ -284,9 +287,9 @@ class CompleteWorkflowExample:
             self,
             item: ItemType,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> FlextResult[ItemType]:
+        ) -> r[ItemType]:
             """Validate single item."""
-            return FlextResult.ok(
+            return r.ok(
                 self._process_stage(
                     item,
                     0.005,
@@ -300,9 +303,9 @@ class CompleteWorkflowExample:
             self,
             item: ItemType,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> FlextResult[ItemType]:
+        ) -> r[ItemType]:
             """Process single item."""
-            return FlextResult.ok(
+            return r.ok(
                 self._process_stage(
                     item,
                     0.01,
@@ -316,9 +319,9 @@ class CompleteWorkflowExample:
             self,
             item: ItemType,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> FlextResult[ItemType]:
+        ) -> r[ItemType]:
             """Analyze single item."""
-            return FlextResult.ok(
+            return r.ok(
                 self._process_stage(
                     item,
                     0.005,
@@ -332,9 +335,9 @@ class CompleteWorkflowExample:
             self,
             item: ItemType,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> FlextResult[ItemType]:
+        ) -> r[ItemType]:
             """Aggregate results."""
-            return FlextResult.ok(
+            return r.ok(
                 self._process_stage(
                     item,
                     0,

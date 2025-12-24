@@ -19,7 +19,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from enum import StrEnum
 
-from flext_core import FlextResult, FlextService
+from flext_core import (
+    r as r,
+    service as service,
+)
 
 ItemDict = dict[str, str | int | float | bool]
 
@@ -57,7 +60,7 @@ class AdvancedProcessingExample:
         validation_time: float = 0.0
 
     class ProcessingPipeline(
-        FlextService[
+        service[
             dict[
                 str,
                 list[ItemDict]
@@ -80,7 +83,7 @@ class AdvancedProcessingExample:
 
         def execute(
             self,
-        ) -> FlextResult[
+        ) -> r[
             dict[
                 str,
                 list[ItemDict]
@@ -114,7 +117,7 @@ class AdvancedProcessingExample:
                             ],
                         ],
                     ],
-                    FlextResult[
+                    r[
                         dict[
                             str,
                             list[ItemDict]
@@ -157,7 +160,7 @@ class AdvancedProcessingExample:
                             ],
                         ],
                     ],
-                    FlextResult[
+                    r[
                         dict[
                             str,
                             list[ItemDict]
@@ -181,7 +184,7 @@ class AdvancedProcessingExample:
                 if stage_func:
                     operations.append(stage_func)
                 else:
-                    return FlextResult.fail(f"Unknown stage: {stage}")
+                    return r.fail(f"Unknown stage: {stage}")
 
             current_data: dict[
                 str,
@@ -203,7 +206,7 @@ class AdvancedProcessingExample:
                 if isinstance(unwrapped, dict):
                     current_data = unwrapped
 
-            return FlextResult.ok(current_data)
+            return r.ok(current_data)
 
         def _validate_batch(
             self,
@@ -218,7 +221,7 @@ class AdvancedProcessingExample:
                     int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ],
-        ) -> FlextResult[
+        ) -> r[
             dict[
                 str,
                 list[ItemDict]
@@ -234,7 +237,7 @@ class AdvancedProcessingExample:
             """Validate batch of items."""
             items_data = data.get("items", [])
             if not isinstance(items_data, list):
-                return FlextResult.fail("Invalid items data")
+                return r.fail("Invalid items data")
 
             validation_results: list[AdvancedProcessingExample.ValidationResult] = []
             items_to_validate: list[ItemDict] = [
@@ -249,7 +252,7 @@ class AdvancedProcessingExample:
                 if result.is_success:
                     validation_results.append(result.value)
                 else:
-                    return FlextResult.fail(f"Validation failed: {result.error}")
+                    return r.fail(f"Validation failed: {result.error}")
 
             result_data: dict[
                 str,
@@ -267,7 +270,7 @@ class AdvancedProcessingExample:
                 "valid_count": sum(1 for r in validation_results if r.is_valid),
                 "invalid_count": sum(1 for r in validation_results if not r.is_valid),
             }
-            return FlextResult.ok(result_data)
+            return r.ok(result_data)
 
         def _process_parallel(
             self,
@@ -282,7 +285,7 @@ class AdvancedProcessingExample:
                     int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ],
-        ) -> FlextResult[
+        ) -> r[
             dict[
                 str,
                 list[ItemDict]
@@ -298,7 +301,7 @@ class AdvancedProcessingExample:
             """Process items in parallel."""
             items_data = data.get("items", [])
             if not isinstance(items_data, list):
-                return FlextResult.fail("Invalid items data")
+                return r.fail("Invalid items data")
 
             start_time = time.time()
 
@@ -352,7 +355,7 @@ class AdvancedProcessingExample:
                 if items_data
                 else 0,
             }
-            return FlextResult.ok(result_data)
+            return r.ok(result_data)
 
         def _analyze_results(
             self,
@@ -367,7 +370,7 @@ class AdvancedProcessingExample:
                     int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ],
-        ) -> FlextResult[
+        ) -> r[
             dict[
                 str,
                 list[ItemDict]
@@ -460,12 +463,12 @@ class AdvancedProcessingExample:
                 **data,
                 "analysis": analysis,
             }
-            return FlextResult.ok(result_data)
+            return r.ok(result_data)
 
         def _validate_single_item(
             self,
             item: ItemDict,
-        ) -> FlextResult[AdvancedProcessingExample.ValidationResult]:
+        ) -> r[AdvancedProcessingExample.ValidationResult]:
             """Validate a single item."""
             start_time = time.time()
             violations: list[str] = []
@@ -483,7 +486,7 @@ class AdvancedProcessingExample:
             if isinstance(value, str) and len(value) > 100:
                 warnings.append("Value field is very long")
 
-            return FlextResult.ok(
+            return r.ok(
                 AdvancedProcessingExample.ValidationResult(
                     item_id=str(item_id) if item_id else "unknown",
                     is_valid=len(violations) == 0,
