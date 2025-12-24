@@ -8,7 +8,12 @@ Funcionalidades:
 3. Identifica bloqueadores de atualização
 4. Adiciona dependências automaticamente
 5. Valida configurações Poetry
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
+
+from __future__ import annotations
 
 import sys
 from pathlib import Path
@@ -70,7 +75,7 @@ def get_workspace_projects(workspace_path: Path) -> list[Path]:
 
 def validate_projects(
     projects: list[Path],
-    validator: "PoetryValidator",
+    validator: PoetryValidator,
     *,
     verbose: bool,
 ) -> bool:
@@ -127,7 +132,7 @@ def validate_projects(
 
 def discover_missing_dependencies(
     projects: list[Path],
-    discovery: "DependencyDiscovery",
+    discovery: DependencyDiscovery,
     *,
     verbose: bool,
 ) -> dict[Path, dict[str, list[str]]]:

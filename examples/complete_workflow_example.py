@@ -341,7 +341,7 @@ class CompleteWorkflowExample:
                     "aggregated",
                     True,
                     lambda _i: {
-                        "final_score": float(item.get("complexity_score", 0))
+                        "final_score": float(item.get("complexity_score", 0) or 0)
                         + (1 if bool(item.get("is_valid", False)) else 0),
                     },
                 ),

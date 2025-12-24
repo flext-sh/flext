@@ -7,9 +7,11 @@ a unified directory structure for source code and tests across all flext-* proje
 Scope: CLI utility for workspace management, automating symbolic link creation
 and validation for development environment setup.
 
-Copyright (c) 2025 FLEXT Team
+Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
+
+from __future__ import annotations
 
 import argparse
 import json

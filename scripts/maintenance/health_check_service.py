@@ -3,7 +3,12 @@
 
 Serviço de monitoramento de saúde usando flext_quality.tools.health
 para máxima confiabilidade e padronização enterprise.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
+
+from __future__ import annotations
 
 import argparse
 import sys

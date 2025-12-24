@@ -7,9 +7,11 @@ It checks for the presence of required configuration files and validates environ
 Scope: CLI script for configuration management, ensuring staging environments are
 properly set up before deployment or testing.
 
-Copyright (c) 2025 FLEXT Team
+Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
+
+from __future__ import annotations
 
 import argparse
 import sys

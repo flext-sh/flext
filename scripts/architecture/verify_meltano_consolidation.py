@@ -22,12 +22,8 @@ def main() -> None:
     """Main execution function."""
     flext_root = Path("../..")
 
-    # TODO(@flext-team): Implement actual consolidation verification using flext-meltano classes (https://github.com/flext-team/flext-meltano/issues/2)
     print("Meltano consolidation verification not yet implemented")
     print(f"Workspace root: {flext_root}")
-
-    # Exit with appropriate code
-    # TODO(@flext-team): Implement proper exit codes based on verification results (https://github.com/flext-team/flext-meltano/issues/3)
 
 
 if __name__ == "__main__":

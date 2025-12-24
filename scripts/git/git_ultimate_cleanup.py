@@ -22,7 +22,12 @@ Usage:
     python3 scripts/git_ultimate_cleanup.py --all --push-all                 # All + push all
     python3 scripts/git_ultimate_cleanup.py --backup-only                    # Just backup
     python3 scripts/git_ultimate_cleanup.py --restore-remotes                # Just restore remotes
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
+
+from __future__ import annotations
 
 import argparse
 import operator
