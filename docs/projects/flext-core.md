@@ -16,11 +16,11 @@
     - [Clean Architecture Implementation](#clean-architecture-implementation)
     - [SOLID Principles](#solid-principles)
   - [Configuration Management](#configuration-management)
-    - [FlextSettings](#flextconfig)
+    - [FlextSettings](#flextsettings)
   - [Error Handling Strategy](#error-handling-strategy)
     - [FlextExceptions Hierarchy](#flextexceptions-hierarchy)
   - [Utilities and Helpers](#utilities-and-helpers)
-    - [u](#u)
+    - [Utility Functions](#utility-functions)
   - [Performance Features](#performance-features)
     - [FlextMetrics](#flextmetrics)
   - [Development Guidelines](#development-guidelines)
@@ -334,7 +334,7 @@ class DatabaseConnectionException(FlextInfrastructureException):
 
 ## Utilities and Helpers
 
-### u
+### Utility Functions
 
 Common utility functions and helpers used across the ecosystem.
 

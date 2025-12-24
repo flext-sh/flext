@@ -1,3 +1,5 @@
+# Usage Errors
+
 Pydantic attempts to provide useful errors. The following sections provide details on common errors developers may
 encounter when working with Pydantic, along with suggestions for addressing the error condition.
 

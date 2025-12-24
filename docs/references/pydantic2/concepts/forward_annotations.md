@@ -1,3 +1,5 @@
+# Forward Annotations
+
 Forward annotations (wrapped in quotes) or using the `from __future__ import annotations` [future statement]
 (as introduced in [PEP563](https://www.python.org/dev/peps/pep-0563/)) are supported:
 

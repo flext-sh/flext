@@ -1,3 +1,5 @@
+# Pydantic Data Conversion Table
+
 The following table provides details on how Pydantic converts data during validation in both strict and lax modes.
 
 The "Strict" column contains checkmarks for type conversions that are allowed when validating in

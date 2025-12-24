@@ -1,3 +1,5 @@
+# HTTP Requests
+
 Pydantic models are a great way to validate and serialize data for requests and responses.
 Pydantic is instrumental in many web frameworks and libraries, such as FastAPI, Django, Flask, and HTTPX.
 

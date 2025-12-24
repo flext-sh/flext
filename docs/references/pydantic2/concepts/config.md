@@ -1,3 +1,5 @@
+# Configuration
+
 The behaviour of Pydantic can be controlled via a variety of configuration values, documented
 on the [`ConfigDict`][pydantic.ConfigDict] class. This page describes how configuration can be
 specified for Pydantic's supported types.

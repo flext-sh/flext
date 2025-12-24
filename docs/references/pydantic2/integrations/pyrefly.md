@@ -1,3 +1,5 @@
+# Pyrefly Integration
+
 [Pyrefly](https://pyrefly.org/) is a Python type checker and language server with built-in support for a number of Pydantic-specific features. This support works out-of-the-box with Pydantic and Pyrefly installed, with no additional configuration needed.
 
 Pyrefly is available as both an [IDE extension](https://pyrefly.org/en/docs/IDE/) and a [command-line type checker](https://pyrefly.org/en/docs/installation/).

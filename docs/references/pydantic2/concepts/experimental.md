@@ -147,7 +147,12 @@ Partial validation is particularly helpful when processing the output of an LLM,
 !!! warning
 Partial validation is an experimental feature and may change in future versions of Pydantic. The current implementation should be considered a proof of concept at this time and has a number of [limitations](#limitations-of-partial-validation).
 
-Partial validation can be enabled when using the three validation methods on `TypeAdapter`: [`TypeAdapter.validate_json()`][pydantic.TypeAdapter.validate_JSON], [`TypeAdapter.validate_python()`][pydantic.TypeAdapter.validate_Python], and [`TypeAdapter.validate_strings()`][pydantic.TypeAdapter.validate_strings]. This allows you to parse and validation incomplete JSON, but also to validate Python objects created by parsing incomplete data of any format.
+Partial validation can be enabled when using the three validation methods on `TypeAdapter`:
+[`TypeAdapter.validate_json()`][pydantic.TypeAdapter.validate_JSON],
+[`TypeAdapter.validate_python()`][pydantic.TypeAdapter.validate_Python], and
+[`TypeAdapter.validate_strings()`][pydantic.TypeAdapter.validate_strings].
+This allows you to parse and validation incomplete JSON, but also to validate Python objects
+created by parsing incomplete data of any format.
 
 The `experimental_allow_partial` flag can be passed to these methods to enable partial validation.
 It can take the following values (and is `False`, by default):
@@ -160,8 +165,8 @@ It can take the following values (and is `False`, by default):
 `'trailing-strings'` mode allows for trailing incomplete strings at the end of partial JSON to be included in the output.
 For example, if you're validating against the following model:
 
-    ```python
-    from typing import TypedDict
+```python
+from typing import TypedDict
 
 
     class Model(TypedDict):
