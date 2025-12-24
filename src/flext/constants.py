@@ -41,6 +41,16 @@ class FlextConstants:
         FLEXT_API_PORT: Final[int] = 8000
         DEFAULT_HOST: Final[str] = "localhost"
 
+    class Pagination:
+        """Pagination configuration."""
+
+        DEFAULT_PAGE_NUMBER: Final[int] = 1
+        DEFAULT_PAGE_SIZE: Final[int] = 10
+        MAX_PAGE_SIZE: Final[int] = 1000
+        MIN_PAGE_SIZE: Final[int] = 1
+        MIN_PAGE_NUMBER: Final[int] = 1
+        MAX_PAGE_NUMBER: Final[int] = 10000
+
 
 # Alias for convenience
 c = FlextConstants
