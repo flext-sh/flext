@@ -8,6 +8,11 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from flext_cli import (
+    FlextCliCommonParams,
+    FlextCliSettings,
+)
+
 # Import core aliases for convenience
 from flext_core import (
     FlextContainer,
@@ -41,6 +46,8 @@ s = FlextService
 settings = FlextSettings
 
 __all__ = [
+    "FlextCliCommonParams",
+    "FlextCliSettings",
     "FlextConstants",
     "FlextContainer",
     "FlextContext",
