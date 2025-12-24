@@ -22,7 +22,9 @@ class FlextTypes:
     class Core:
         """Core domain types."""
 
-        # Complex types here if needed
+        # JSON types
+        type JsonPrimitive = str | int | float | bool | None
+        type JsonValue = JsonPrimitive | Sequence[object] | Mapping[str, object]
 
 
 # TypeVars
