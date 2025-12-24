@@ -9,7 +9,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult
+from flext import FlextResult
 from flext_quality.tools import (
     Colors,
     ScriptMetadata,
@@ -35,7 +35,7 @@ class ProductionSecretsScript(BaseSecurityScript):
     # validate_preconditions is inherited from BaseSecurityScript
 
     def execute_main_logic(
-        self, **kwargs: dict[str, str]
+        self, **kwargs: dict[str, str],
     ) -> FlextResult[dict[str, str]]:
         """Execute main script logic."""
         """Execute secrets generation."""

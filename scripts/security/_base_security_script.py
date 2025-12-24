@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextResult
+from flext import FlextResult
 from flext_quality.tools import Colors, FlextScriptService as FlextScript, print_colored
 
 

@@ -21,7 +21,7 @@ from re import Match
 
 # Pattern to match class aliases: ClassName = Parent.ClassName (not .value, not in type alias)
 ALIAS_PATTERN = re.compile(
-    r"^(\s*)([A-Z][a-zA-Z0-9_]*)\s*=\s*([A-Z][a-zA-Z0-9_]*\.[A-Z][a-zA-Z0-9_]*)(?!\.value)\s*$"
+    r"^(\s*)([A-Z][a-zA-Z0-9_]*)\s*=\s*([A-Z][a-zA-Z0-9_]*\.[A-Z][a-zA-Z0-9_]*)(?!\.value)\s*$",
 )
 
 # Pattern to detect if we're in a type alias context (PEP 695)
@@ -34,7 +34,7 @@ def is_protocol_file(filepath: Path) -> bool:
 
 
 def convert_alias_to_inheritance(
-    match: Match[str], line_num: int, lines: list[str], filepath: Path
+    match: Match[str], line_num: int, lines: list[str], filepath: Path,
 ) -> str:
     """Convert alias to inheritance class."""
     indent = match.group(1)

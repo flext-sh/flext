@@ -28,10 +28,10 @@ class FlextModels:
             """Workspace information model."""
 
             name: str = Field(
-                default=c.Core.Workspace.NAME, description="Workspace name"
+                default=c.Core.Workspace.NAME, description="Workspace name",
             )
             env_prefix: str = Field(
-                default=c.Core.Workspace.ENV_PREFIX, description="Environment prefix"
+                default=c.Core.Workspace.ENV_PREFIX, description="Environment prefix",
             )
 
 

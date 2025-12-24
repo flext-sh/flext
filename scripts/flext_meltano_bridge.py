@@ -12,7 +12,7 @@ import sys
 from collections.abc import Callable
 from typing import TypeVar
 
-from flext_core import FlextResult
+from flext import FlextResult
 from flext_meltano.bridge import FlextMeltanoBridge
 
 T = TypeVar("T", str, bool, dict[str, object])
@@ -27,7 +27,7 @@ class FlextMeltanoBridgeScript:
         self.bridge = FlextMeltanoBridge()
 
     def _handle_result(
-        self, result_obj: FlextResult[T], success_key: str
+        self, result_obj: FlextResult[T], success_key: str,
     ) -> CommandResult:
         """Generic handler for bridge results."""
         if result_obj.is_success:
@@ -56,7 +56,7 @@ class FlextMeltanoBridgeScript:
         exec_command = args[0]
         exec_args = json.loads(args[1]) if len(args) > 1 else None
         return self._handle_result(
-            self.bridge.execute_command(exec_command, exec_args), "result"
+            self.bridge.execute_command(exec_command, exec_args), "result",
         )
 
     def run(self) -> None:

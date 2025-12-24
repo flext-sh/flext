@@ -13,7 +13,6 @@ Usage:
 """
 
 import argparse
-import glob
 import json
 import subprocess
 import sys
@@ -25,6 +24,7 @@ class MarkdownLinter:
     """Comprehensive markdown linting for FLEXT workspace."""
 
     def __init__(self, workspace_root: str) -> None:
+        """Initialize the markdown linter with workspace root."""
         self.workspace_root = Path(workspace_root)
         self.config_file = self.workspace_root / ".markdownlint.json"
 
@@ -47,9 +47,7 @@ class MarkdownLinter:
 
         all_md_files = []
         for pattern in ["**/*.md", "**/*.markdown"]:
-            all_md_files.extend(
-                glob.glob(pattern, root_dir=self.workspace_root, recursive=True)
-            )
+            all_md_files.extend(self.workspace_root.rglob(pattern))
 
         # Convert to Path objects and filter
         md_files = []
@@ -60,7 +58,7 @@ class MarkdownLinter:
             should_ignore = False
             for ignore_pattern in ignore_patterns:
                 if path.match(ignore_pattern) or ignore_pattern.rstrip("/").replace(
-                    "**/", ""
+                    "**/", "",
                 ) in str(path):
                     should_ignore = True
                     break
@@ -71,7 +69,7 @@ class MarkdownLinter:
         return sorted(md_files)
 
     def run_markdownlint(
-        self, files: list[Path], fix: bool = False, verbose: bool = False
+        self, files: list[Path], *, fix: bool = False, verbose: bool = False,
     ) -> dict[str, Any]:
         """Run markdownlint on the specified files."""
         cmd = ["npx", "markdownlint-cli"]
@@ -116,7 +114,7 @@ class MarkdownLinter:
             return {"success": False, "issues": [], "stderr": str(e), "returncode": -1}
 
     def generate_sarif_report(
-        self, issues: list[dict], output_file: str | None = None
+        self, issues: list[dict], output_file: str | None = None,
     ) -> str:
         """Generate SARIF report from markdownlint issues."""
         sarif_report = {
@@ -130,10 +128,10 @@ class MarkdownLinter:
                             "version": "0.40.0",
                             "informationUri": "https://github.com/DavidAnson/markdownlint",
                             "rules": [],
-                        }
+                        },
                     },
                     "results": [],
-                }
+                },
             ],
         }
 
@@ -145,7 +143,7 @@ class MarkdownLinter:
             line_number = issue.get("lineNumber", 1)
             rule_id = issue.get("ruleNames", ["unknown"])[0]
             message = issue.get(
-                "ruleDescription", issue.get("ruleInformation", "Unknown issue")
+                "ruleDescription", issue.get("ruleInformation", "Unknown issue"),
             )
             rule_info = issue.get("ruleInformation", "")
 
@@ -173,8 +171,8 @@ class MarkdownLinter:
                                 "startLine": line_number,
                                 "startColumn": issue.get("columnNumber", 1),
                             },
-                        }
-                    }
+                        },
+                    },
                 ],
             }
 
@@ -267,7 +265,7 @@ class MarkdownLinter:
         return categories
 
     def print_report(
-        self, issues: list[dict], categories: dict[str, list[dict]]
+        self, issues: list[dict], categories: dict[str, list[dict]],
     ) -> None:
         """Print a comprehensive report of issues found."""
         print("🔍 MARKDOWN LINTING REPORT")
@@ -289,7 +287,7 @@ class MarkdownLinter:
             }
 
             print(
-                f"{category_names.get(category, category.upper())}: {len(category_issues)}"
+                f"{category_names.get(category, category.upper())}: {len(category_issues)}",
             )
 
             # Group by file
@@ -315,6 +313,7 @@ class MarkdownLinter:
 
 
 def main() -> None:
+    """Main entry point for markdown linting."""
     parser = argparse.ArgumentParser(
         description="Comprehensive Markdown Linting for FLEXT Workspace.",
     )
@@ -326,7 +325,7 @@ def main() -> None:
     )
     parser.add_argument("--verbose", action="store_true", help="Verbose output")
     parser.add_argument(
-        "--workspace-root", type=str, default=".", help="Workspace root directory"
+        "--workspace-root", type=str, default=".", help="Workspace root directory",
     )
 
     args = parser.parse_args()
@@ -383,7 +382,7 @@ def main() -> None:
 
         try:
             final_result = linter.run_markdownlint(
-                batch, fix=False, verbose=args.verbose
+                batch, fix=False, verbose=args.verbose,
             )
 
             if final_result["success"] and final_result["issues"]:
@@ -434,7 +433,7 @@ def main() -> None:
         print(f"📂 Files needing fixes: {len(issues_by_file)}")
         # Show top 5 files with most issues
         sorted_files = sorted(
-            issues_by_file.items(), key=lambda x: len(x[1]), reverse=True
+            issues_by_file.items(), key=lambda x: len(x[1]), reverse=True,
         )
         for file_path, issues in sorted_files[:5]:
             print(f"  • {file_path}: {len(issues)} issues")
@@ -476,6 +475,16 @@ def main() -> None:
 
     # Always save summary, even if no issues remain
     summary_file = "markdown-lint-manual-fixes.md"
+    _save_processing_summary(summary_file, fixed_count, remaining_issues, md_files)
+
+
+def _save_processing_summary(
+    summary_file: str,
+    fixed_count: int,
+    remaining_issues: list[dict[str, Any]],
+    md_files: list[Path],
+) -> None:
+    """Save processing summary to file."""
     try:
         with Path(summary_file).open("w", encoding="utf-8") as f:
             f.write("# Markdown Lint - Processing Results\n\n")
@@ -484,96 +493,108 @@ def main() -> None:
             f.write(f"- **Total files processed:** {len(md_files)}\n\n")
 
             if remaining_issues:
-                f.write("## Files Requiring Manual Fixes\n\n")
-                f.write(
-                    "**Process these files one by one, starting with the ones with fewer issues.**\n\n"
-                )
-
-                # Group all issues by file
-                issues_by_file = {}
-                for issue in remaining_issues:
-                    file_path = issue.get("fileName", "unknown")
-                    if file_path not in issues_by_file:
-                        issues_by_file[file_path] = []
-                    issues_by_file[file_path].append(issue)
-
-                # Sort files by number of issues (easiest first)
-                sorted_files = sorted(issues_by_file.items(), key=lambda x: len(x[1]))
-
-                for file_path, file_issues in sorted_files:
-                    f.write(f"### {file_path} ({len(file_issues)} issues)\n\n")
-
-                    # Group by rule within each file
-                    rules_in_file = {}
-                    for issue in file_issues:
-                        rule_id = issue.get("ruleNames", ["unknown"])[0]
-                        if rule_id not in rules_in_file:
-                            rules_in_file[rule_id] = []
-                        rules_in_file[rule_id].append(issue)
-
-                    for rule_id, issues in rules_in_file.items():
-                        rule_desc = issues[0].get("ruleDescription", "Unknown issue")
-                        f.write(f"#### {rule_id}: {rule_desc}\n\n")
-
-                        for issue in issues[:15]:  # Show up to 15 issues per rule
-                            line = issue.get("lineNumber", "?")
-                            error_context = issue.get("errorContext", "").strip()
-                            if error_context:
-                                f.write(f"- **Line {line}**: `{error_context}`\n")
-                            else:
-                                error_detail = issue.get("errorDetail", "No details")
-                                f.write(f"- **Line {line}**: {error_detail}\n")
-
-                        if len(issues) > 15:
-                            f.write(f"- ... and {len(issues) - 15} more occurrences\n")
-
-                        f.write("\n")
-
-                    f.write("---\n\n")
-
-                f.write("## How to Fix Issues\n\n")
-                f.write("1. Open each file listed above in your editor\n")
-                f.write("2. Go to the line numbers shown\n")
-                f.write("3. Fix the issues according to the rule descriptions\n")
-                f.write("4. Save the file\n")
-                f.write("5. Run this script again to verify the fix\n")
-                f.write("6. Move to the next file\n\n")
-
-                f.write("## Common Fix Patterns\n\n")
-                f.write("### MD035 - Horizontal rule style\n")
-                f.write("**Problem:** Using underscores instead of dashes\n")
-                f.write(
-                    "**Fix:** Replace `______________________________________________________________________` with `---`\n\n"
-                )
-
-                f.write("### MD060 - Table column style\n")
-                f.write("**Problem:** Table columns not properly aligned\n")
-                f.write("**Fix:** Manually adjust table column alignment\n\n")
-
-                f.write("### MD051 - Link fragments\n")
-                f.write("**Problem:** Broken link fragments (e.g., `#invalid-link`)\n")
-                f.write("**Fix:** Remove invalid links or fix fragment names\n\n")
-
-                f.write("### MD025 - Multiple top-level headings\n")
-                f.write("**Problem:** Multiple H1 headings in same file\n")
-                f.write("**Fix:** Change extra H1 to H2 or remove duplicates\n\n")
-
+                _write_remaining_issues(f, remaining_issues)
             else:
-                f.write("## ✅ All Issues Resolved!\n\n")
-                f.write(
-                    "All markdown files in the workspace are now compliant with the linting rules.\n\n"
-                )
-
-        print(f"📄 Processing summary saved to {summary_file}")
-
-        if remaining_issues:
-            print(
-                f"📄 Process files in order: easiest to hardest ({len(sorted_files)} files total)"
-            )
-            print("💡 Start with files that have fewer issues!")
-
+                _write_success_message(f)
     except Exception as e:
         print(f"❌ Error saving summary: {e}")
+
+
+def _write_remaining_issues(f: Path, remaining_issues: list[dict[str, Any]]) -> None:
+    """Write remaining issues section."""
+    f.write("## Files Requiring Manual Fixes\n\n")
+    f.write(
+        "**Process these files one by one, starting with the ones with fewer issues.**\n\n",
+    )
+
+    # Group all issues by file
+    issues_by_file = {}
+    for issue in remaining_issues:
+        file_path = issue.get("fileName", "unknown")
+        if file_path not in issues_by_file:
+            issues_by_file[file_path] = []
+        issues_by_file[file_path].append(issue)
+
+    # Sort files by number of issues (easiest first)
+    sorted_files = sorted(issues_by_file.items(), key=lambda x: len(x[1]))
+
+    for file_path, file_issues in sorted_files:
+        _write_file_issues(f, file_path, file_issues)
+
+    _write_fix_instructions(f)
+
+
+def _write_file_issues(
+    f: Path, file_path: str, file_issues: list[dict[str, Any]],
+) -> None:
+    """Write issues for a specific file."""
+    f.write(f"### {file_path} ({len(file_issues)} issues)\n\n")
+
+    # Group by rule within each file
+    rules_in_file = {}
+    for issue in file_issues:
+        rule_id = issue.get("ruleNames", ["unknown"])[0]
+        if rule_id not in rules_in_file:
+            rules_in_file[rule_id] = []
+        rules_in_file[rule_id].append(issue)
+
+    for rule_id, issues in rules_in_file.items():
+        rule_desc = issues[0].get("ruleDescription", "Unknown issue")
+        f.write(f"#### {rule_id}: {rule_desc}\n\n")
+
+        for issue in issues[:15]:  # Show up to 15 issues per rule
+            line = issue.get("lineNumber", "?")
+            error_context = issue.get("errorContext", "").strip()
+            if error_context:
+                f.write(f"- **Line {line}**: `{error_context}`\n")
+            else:
+                error_detail = issue.get("errorDetail", "No details")
+                f.write(f"- **Line {line}**: {error_detail}\n")
+
+        if len(issues) > 15:
+            f.write(f"- ... and {len(issues) - 15} more occurrences\n")
+
+        f.write("\n")
+
+    f.write("---\n\n")
+
+
+def _write_fix_instructions(f: Path) -> None:
+    """Write fix instructions section."""
+    f.write("## How to Fix Issues\n\n")
+    f.write("1. Open each file listed above in your editor\n")
+    f.write("2. Go to the line numbers shown\n")
+    f.write("3. Fix the issues according to the rule descriptions\n")
+    f.write("4. Save the file\n")
+    f.write("5. Run this script again to verify the fix\n")
+    f.write("6. Move to the next file\n\n")
+
+    f.write("## Common Fix Patterns\n\n")
+    f.write("### MD035 - Horizontal rule style\n")
+    f.write("**Problem:** Using underscores instead of dashes\n")
+    f.write(
+        "**Fix:** Replace `______________________________________________________________________` with `---`\n\n",
+    )
+
+    f.write("### MD060 - Table column style\n")
+    f.write("**Problem:** Table columns not properly aligned\n")
+    f.write("**Fix:** Manually adjust table column alignment\n\n")
+
+    f.write("### MD051 - Link fragments\n")
+    f.write("**Problem:** Broken link fragments (e.g., `#invalid-link`)\n")
+    f.write("**Fix:** Remove invalid links or fix fragment names\n\n")
+
+    f.write("### MD025 - Multiple top-level headings\n")
+    f.write("**Problem:** Multiple H1 headings in same file\n")
+    f.write("**Fix:** Change extra H1 to H2 or remove duplicates\n\n")
+
+
+def _write_success_message(f: Path) -> None:
+    """Write success message when no issues remain."""
+    f.write("## ✅ All Issues Resolved!\n\n")
+    f.write(
+        "All markdown files in the workspace are now compliant with the linting rules.\n\n",
+    )
 
 
 if __name__ == "__main__":

@@ -25,10 +25,10 @@ def fix_imports_in_file(file_path: Path) -> bool:
         original_content = content
 
         # 1. Fix submódulo → módulo raiz imports
-        # flext_core.domain.shared_types → flext_core
+        # flext_core.domain.shared_types → flext
         content = re.sub(
-            r"from flext_core import (.+)",
-            r"from flext_core import \1",
+            r"from flext import (.+)",
+            r"from flext import \1",
             content,
         )
 
@@ -55,16 +55,16 @@ def fix_imports_in_file(file_path: Path) -> bool:
 
         # 2. Consolidate multiple imports from same module
         # Find patterns like:
-        # from flext_core import A
-        # from flext_core import B
-        # Combine into: from flext_core import A, B
+        # from flext import A
+        # from flext import B
+        # Combine into: from flext import A, B
 
         # 3. Add architectural compliance comments
         if content != original_content:
             # Add comment at top of changed imports
             content = content.replace(
-                "from flext_core import",
-                "# 🚨 ARCHITECTURAL COMPLIANCE: Using módulo raiz imports\nfrom flext_core import",
+                "from flext import",
+                "# 🚨 ARCHITECTURAL COMPLIANCE: Using centralized imports\nfrom flext import",
                 1,  # Only first occurrence
             )
 

@@ -15,7 +15,7 @@ from re import Match
 
 # Pattern to match class aliases: ClassName = Parent.ClassName
 ALIAS_PATTERN = re.compile(
-    r"^(\s*)([A-Z][a-zA-Z0-9_]*)\s*=\s*([A-Z][a-zA-Z0-9_]*\.[A-Z][a-zA-Z0-9_]*)\s*$"
+    r"^(\s*)([A-Z][a-zA-Z0-9_]*)\s*=\s*([A-Z][a-zA-Z0-9_]*\.[A-Z][a-zA-Z0-9_]*)\s*$",
 )
 
 
@@ -60,7 +60,7 @@ def process_file(filepath: Path) -> tuple[int, bool]:
                     class_name = match.group(2)
                     parent_class = match.group(3)
                     modified_lines.append(
-                        f"{indent}class {class_name}({parent_class}):"
+                        f"{indent}class {class_name}({parent_class}):",
                     )
                     conversions += 1
                     continue

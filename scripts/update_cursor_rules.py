@@ -20,24 +20,31 @@ from typing import Any
 
 # FLEXT result pattern
 class Result[T]:
+    """A result type that can contain either a value or an error."""
+
     def __init__(self, value: T | None = None, error: str | None = None) -> None:
+        """Initialize a Result with either a value or an error."""
         self.value = value
         self.error = error
 
     @property
     def is_success(self) -> bool:
+        """Return True if the result contains a value (no error)."""
         return self.error is None
 
     @property
     def is_failure(self) -> bool:
+        """Return True if the result contains an error."""
         return self.error is not None
 
     @classmethod
     def ok(cls, value: T) -> Result[T]:
+        """Create a successful result with the given value."""
         return cls(value=value)
 
     @classmethod
     def err(cls, error: str) -> Result[T]:
+        """Create a failed result with the given error message."""
         return cls(error=error)
 
 
@@ -45,6 +52,7 @@ class CursorRulesUpdater:
     """Automatically updates Cursor rules from CLAUDE.md."""
 
     def __init__(self, project_root: Path) -> None:
+        """Initialize the Cursor rules updater with project root."""
         self.project_root = project_root
         self.claude_md = project_root / "CLAUDE.md"
         self.cursorrules = project_root / ".cursorrules"
@@ -85,15 +93,15 @@ class CursorRulesUpdater:
         content = self.claude_md.read_text(encoding="utf-8")
 
         return {
-            "import_order": self._extract_import_order_rules(content),
-            "type_system": self._extract_type_system_rules(content),
-            "architecture": self._extract_architecture_rules(content),
-            "quality_gates": self._extract_quality_gates(content),
-            "patterns": self._extract_patterns(content),
+            "import_order": self._extract_import_order_rules(),
+            "type_system": self._extract_type_system_rules(),
+            "architecture": self._extract_architecture_rules(),
+            "quality_gates": self._extract_quality_gates(),
+            "patterns": self._extract_patterns(),
             "skills": self._extract_skills(content),
         }
 
-    def _extract_import_order_rules(self, content: str) -> dict[str, Any]:
+    def _extract_import_order_rules(self) -> dict[str, Any]:
         """Extract import order rules."""
         return {
             "enforce_order": True,
@@ -104,7 +112,7 @@ class CursorRulesUpdater:
             "local_imports_last": True,
         }
 
-    def _extract_type_system_rules(self, content: str) -> dict[str, Any]:
+    def _extract_type_system_rules(self) -> dict[str, Any]:
         """Extract type system rules."""
         return {
             "forbid_type_checking": True,
@@ -115,7 +123,7 @@ class CursorRulesUpdater:
             "require_concrete_types": True,
         }
 
-    def _extract_architecture_rules(self, content: str) -> dict[str, Any]:
+    def _extract_architecture_rules(self) -> dict[str, Any]:
         """Extract architecture rules."""
         return {
             "tier_0": ["constants.py", "typings.py", "protocols.py"],
@@ -125,7 +133,7 @@ class CursorRulesUpdater:
             "forbidden_cross_imports": True,
         }
 
-    def _extract_quality_gates(self, content: str) -> dict[str, Any]:
+    def _extract_quality_gates(self) -> dict[str, Any]:
         """Extract quality gates."""
         return {
             "import_order_check": True,
@@ -135,7 +143,7 @@ class CursorRulesUpdater:
             "documentation_required": True,
         }
 
-    def _extract_patterns(self, content: str) -> dict[str, Any]:
+    def _extract_patterns(self) -> dict[str, Any]:
         """Extract FLEXT patterns."""
         return {
             "railway_oriented": True,
@@ -325,7 +333,8 @@ class CursorRulesUpdater:
         """Check if update is needed."""
         current_config = self.load_current_config()
         current_hash = (
-            current_config.get("flext", {})
+            current_config
+            .get("flext", {})
             .get("automation", {})
             .get("last_updated", "")
         )
@@ -334,7 +343,7 @@ class CursorRulesUpdater:
         return current_hash != new_hash
 
     def update(
-        self, force: bool = False, dry_run: bool = False
+        self, *, force: bool = False, dry_run: bool = False,
     ) -> Result[dict[str, Any]]:
         """Update Cursor configuration from CLAUDE.md."""
         try:
@@ -378,7 +387,7 @@ def main() -> int:
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Update FLEXT Cursor Rules")
     parser.add_argument(
-        "--force", action="store_true", help="Force update even if no changes detected"
+        "--force", action="store_true", help="Force update even if no changes detected",
     )
     parser.add_argument(
         "--dry-run",
@@ -386,7 +395,7 @@ def main() -> int:
         help="Show what would be updated without making changes",
     )
     parser.add_argument(
-        "--project-root", type=Path, default=Path.cwd(), help="Project root directory"
+        "--project-root", type=Path, default=Path.cwd(), help="Project root directory",
     )
 
     args = parser.parse_args()
@@ -406,7 +415,7 @@ def main() -> int:
             print(f"  • Rules: {len(data['rules'])} sections")
             print(f"  • Skills: {len(data['rules'].get('skills', {}))} skills")
             print(
-                f"  • Commands: {len(data['config'].get('flext', {}).get('commands', {}))} commands"
+                f"  • Commands: {len(data['config'].get('flext', {}).get('commands', {}))} commands",
             )
             return 0
 
@@ -415,7 +424,7 @@ def main() -> int:
             print(f"  • Rules: {len(data['rules'])} sections")
             print(f"  • Skills: {len(data['rules'].get('skills', {}))} skills")
             print(
-                f"  • Commands: {len(data['config'].get('flext', {}).get('commands', {}))} commands"
+                f"  • Commands: {len(data['config'].get('flext', {}).get('commands', {}))} commands",
             )
             return 0
 

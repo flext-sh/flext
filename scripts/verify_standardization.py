@@ -15,7 +15,7 @@ import re
 import sys
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextModels, FlextResult, FlextService
+from flext import FlextLogger, FlextModels, FlextResult, FlextService
 
 VerificationResult = dict[str, bool]
 ProjectVerification = dict[str, object]
@@ -64,7 +64,7 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
                 "has_version_file": True,
                 "uses_importlib": "from importlib.metadata import metadata" in content,
                 "no_hardcoded_version": not bool(
-                    re.search(r'__version__\s*=\s*["\'][\d.]+["\']', content)
+                    re.search(r'__version__\s*=\s*["\'][\d.]+["\']', content),
                 ),
                 "exports_all_metadata": all(
                     export in content
@@ -91,7 +91,7 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
                 "imports_from_version": f"from {package_name}.__version__ import"
                 in content,
                 "no_hardcoded_version": not bool(
-                    re.search(r'__version__\s*=\s*["\'][\d.]+["\']', content)
+                    re.search(r'__version__\s*=\s*["\'][\d.]+["\']', content),
                 ),
             }
 
@@ -156,7 +156,7 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
             return FlextResult[list[Path]].fail(f"Project discovery failed: {e}")
 
     def _verify_all_projects(
-        self, projects: list[Path]
+        self, projects: list[Path],
     ) -> FlextResult[list[ProjectVerification]]:
         """Railway-oriented bulk project verification."""
         try:
@@ -168,7 +168,7 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
             return FlextResult[list[ProjectVerification]].ok(results)
         except Exception as e:
             return FlextResult[list[ProjectVerification]].fail(
-                f"Project verification failed: {e}"
+                f"Project verification failed: {e}",
             )
 
     def _verify_single_project(self, project_dir: Path) -> ProjectVerification | None:
@@ -182,11 +182,11 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
                 "project": project_dir.name,
                 "package": package_name,
                 "version_file": self._VersionFileVerifier.verify(
-                    project_dir, package_name
+                    project_dir, package_name,
                 ),
                 "init_file": self._InitFileVerifier.verify(project_dir, package_name),
                 "constants_file": self._ConstantsFileVerifier.verify(
-                    project_dir, package_name
+                    project_dir, package_name,
                 ),
             }
 
@@ -243,7 +243,7 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
         return package_dirs[0].name if package_dirs else None
 
     def _generate_summary(
-        self, verifications: list[ProjectVerification]
+        self, verifications: list[ProjectVerification],
     ) -> FlextResult[dict[str, object]]:
         """Railway-oriented summary generation."""
         try:
@@ -266,7 +266,7 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
             return FlextResult[dict[str, object]].ok(summary)
         except Exception as e:
             return FlextResult[dict[str, object]].fail(
-                f"Summary generation failed: {e}"
+                f"Summary generation failed: {e}",
             )
 
     def _collect_issues(self, verifications: list[ProjectVerification]) -> list[str]:
@@ -291,18 +291,18 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
                     issues.append(f"  • {project}: Missing __version__.py")
                 elif not version_file.get("uses_importlib", False):
                     issues.append(
-                        f"  • {project}: __version__.py doesn't use importlib.metadata"
+                        f"  • {project}: __version__.py doesn't use importlib.metadata",
                     )
                 elif not version_file.get("no_hardcoded_version", False):
                     issues.append(
-                        f"  • {project}: __version__.py has hardcoded version"
+                        f"  • {project}: __version__.py has hardcoded version",
                     )
 
             if isinstance(init_file_obj, dict):
                 init_file = init_file_obj
                 if not init_file.get("imports_from_version", False):
                     issues.append(
-                        f"  • {project}: __init__.py doesn't import from __version__"
+                        f"  • {project}: __init__.py doesn't import from __version__",
                     )
                 if not init_file.get("no_hardcoded_version", False):
                     issues.append(f"  • {project}: __init__.py has hardcoded version")

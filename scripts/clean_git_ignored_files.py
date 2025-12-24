@@ -91,7 +91,7 @@ def untrack_file(project_dir: Path, file_path: str) -> bool:
 
 
 def clean_project(
-    project_dir: Path, mode: CleanMode = CleanMode.DRY_RUN
+    project_dir: Path, mode: CleanMode = CleanMode.DRY_RUN,
 ) -> dict[str, list[str]]:
     """Clean tracked files that should be ignored.
 
@@ -233,7 +233,7 @@ def main() -> None:
     else:
         print("  1. Review: cd <project> && git status")
         print(
-            "  2. Commit: git add .gitignore && git commit -m 'chore: untrack ignored files'"
+            "  2. Commit: git add .gitignore && git commit -m 'chore: untrack ignored files'",
         )
         print("  3. The untracked files are still on disk (not deleted)")
 

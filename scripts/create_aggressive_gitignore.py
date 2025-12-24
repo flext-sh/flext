@@ -318,7 +318,7 @@ def main() -> None:
 
     print("\n" + "=" * 80)
     print(
-        f"✅ Created aggressive .gitignore in {success_count}/{len(projects)} projects"
+        f"✅ Created aggressive .gitignore in {success_count}/{len(projects)} projects",
     )
     print("=" * 80)
     print("\n⚠️  IMPORTANT NOTES:")

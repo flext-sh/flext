@@ -98,12 +98,10 @@ import sys
 from pathlib import Path
 from typing import ClassVar, TypeVar
 
-from flext_core import (
-    FlextConstants,
+from flext import FlextConstants,
     FlextLogger,
     FlextResult,
-    FlextSettings,
-)
+    FlextSettings
 
 T = TypeVar("T")
 
@@ -174,14 +172,14 @@ class FlextModuleOptimizerSettings(FlextSettings):
         """Initialize the optimizer configuration."""
         super().__init__()
         self.batch_size: int = kwargs.get(
-            "batch_size", FlextModuleOptimizerConstants.Optimization.DEFAULT_BATCH_SIZE
+            "batch_size", FlextModuleOptimizerConstants.Optimization.DEFAULT_BATCH_SIZE,
         )
         self.dry_run = kwargs.get("dry_run", True)
         self.verbose = kwargs.get("verbose", False)
         self.force = kwargs.get("force", False)
         self.project_type = kwargs.get("project_type", "library")
         self.exclude_patterns = list(
-            FlextModuleOptimizerConstants.Optimization.EXCLUDE_PATTERNS
+            FlextModuleOptimizerConstants.Optimization.EXCLUDE_PATTERNS,
         )
 
 
@@ -209,7 +207,7 @@ class FlextModuleOptimizer:
 
         """
         self.logger.info(
-            "Starting unified module optimization", extra={"project_path": project_path}
+            "Starting unified module optimization", extra={"project_path": project_path},
         )
 
         try:
@@ -236,11 +234,11 @@ class FlextModuleOptimizer:
             return FlextResult.fail(f"Optimization error: {e}")
 
     def _discover_optimization_targets(
-        self, project_path: str
+        self, project_path: str,
     ) -> FlextResult[list[dict[str, object]]]:
         """Discover modules that need optimization."""
         self.logger.info(
-            "Discovering optimization targets", extra={"project_path": project_path}
+            "Discovering optimization targets", extra={"project_path": project_path},
         )
 
         targets = []
@@ -277,14 +275,14 @@ class FlextModuleOptimizer:
                         file_path.stat().st_size
                         > FlextModuleOptimizerConstants.Optimization.MAX_FILE_SIZE
                     ):
-                        self.logger.info(f"Skipping large file: {file_path}")
+                        self.logger.info("Skipping large file: %s", file_path)
                         continue
 
                     # Analyze file for optimization needs
                     analysis_result = self._analyze_file_for_optimization(file_path)
                     if analysis_result.is_failure:
                         self.logger.info(
-                            f"Analysis failed for {file_path}: {analysis_result.error}"
+                            f"Analysis failed for {file_path}: {analysis_result.error}",
                         )
                         continue
 
@@ -296,7 +294,7 @@ class FlextModuleOptimizer:
                             "module_name": file_path.stem,
                             "file_path": str(file_path),
                             "optimization_type": self._determine_optimization_type(
-                                analysis
+                                analysis,
                             ),
                             "priority": self._calculate_priority(analysis),
                         }
@@ -312,7 +310,7 @@ class FlextModuleOptimizer:
             return FlextResult.fail(f"Discovery error: {e}")
 
     def _analyze_file_for_optimization(
-        self, file_path: Path
+        self, file_path: Path,
     ) -> FlextResult[dict[str, object]]:
         """Analyze file for optimization opportunities."""
         try:
@@ -350,7 +348,7 @@ class FlextModuleOptimizer:
             ):
                 if forbidden_import in content:
                     violations.append(
-                        f"Domain library violation: {forbidden_import} should use {required_library}"
+                        f"Domain library violation: {forbidden_import} should use {required_library}",
                     )
 
             # Check for positive domain library usage
@@ -368,7 +366,7 @@ class FlextModuleOptimizer:
                 suggestions.append("Consider breaking down complex module")
             if not any(domain_library_usage.values()):
                 suggestions.append(
-                    "Consider using domain libraries for better architecture"
+                    "Consider using domain libraries for better architecture",
                 )
 
             return FlextResult.ok({
@@ -465,11 +463,11 @@ class FlextModuleOptimizer:
         return max_child_depth
 
     def _validate_quality_gates(
-        self, targets: list[dict[str, object]]
+        self, targets: list[dict[str, object]],
     ) -> FlextResult[None]:
         """Validate targets against quality gates."""
         self.logger.info(
-            "Validating quality gates", extra={"target_count": len(targets)}
+            "Validating quality gates", extra={"target_count": len(targets)},
         )
 
         violations = []
@@ -478,12 +476,12 @@ class FlextModuleOptimizer:
             # Check for critical violations
             if "Domain library violation" in target["optimization_type"]:
                 violations.append(
-                    f"Critical: {target['file_path']} has domain library violations"
+                    f"Critical: {target['file_path']} has domain library violations",
                 )
 
             if target["priority"] > 100:
                 violations.append(
-                    f"High priority: {target['file_path']} needs immediate attention"
+                    f"High priority: {target['file_path']} needs immediate attention",
                 )
 
         if violations and not self._config.force:
@@ -492,11 +490,11 @@ class FlextModuleOptimizer:
         return FlextResult[None].ok(None)
 
     def _optimize_in_batches(
-        self, targets: list[dict[str, object]]
+        self, targets: list[dict[str, object]],
     ) -> list[dict[str, object]]:
         """Optimize targets in batches."""
         self.logger.info(
-            "Starting batch optimization", extra={"total_targets": len(targets)}
+            "Starting batch optimization", extra={"total_targets": len(targets)},
         )
 
         results = []
@@ -505,7 +503,7 @@ class FlextModuleOptimizer:
         for i in range(0, len(targets), batch_size):
             batch = targets[i : i + batch_size]
             self.logger.info(
-                f"Processing batch {i // batch_size + 1}/{(len(targets) - 1) // batch_size + 1}"
+                f"Processing batch {i // batch_size + 1}/{(len(targets) - 1) // batch_size + 1}",
             )
 
             # Run tasks sequentially since we're removing async
@@ -537,7 +535,7 @@ class FlextModuleOptimizer:
                 optimized_content = self._reduce_complexity(original_content)
             elif target["optimization_type"] == "domain_library_integration":
                 optimized_content = self._integrate_domain_libraries(
-                    original_content, target
+                    original_content, target,
                 )
             else:
                 optimized_content = self.general_improvements(original_content)
@@ -548,7 +546,7 @@ class FlextModuleOptimizer:
             # Apply changes if not dry run
             if not self._config.dry_run and optimized_content != original_content:
                 Path(target["file_path"]).write_text(
-                    optimized_content, encoding="utf-8"
+                    optimized_content, encoding="utf-8",
                 )
 
                 # Validate the optimized file
@@ -649,7 +647,7 @@ class FlextModuleOptimizer:
             return FlextResult.fail(f"Validation error: {e}")
 
     def _validate_optimization_results(
-        self, results: list[dict[str, object]]
+        self, results: list[dict[str, object]],
     ) -> FlextResult[dict[str, object]]:
         """Validate final optimization results."""
         total_targets = len(results)
@@ -670,7 +668,7 @@ class FlextModuleOptimizer:
 
         if total_errors > 0 and not self._config.force:
             return FlextResult[dict[str, object]].fail(
-                f"Optimization had {total_errors} errors"
+                f"Optimization had {total_errors} errors",
             )
 
         return FlextResult[dict[str, object]].ok(summary)
