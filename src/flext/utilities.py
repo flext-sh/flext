@@ -15,7 +15,6 @@ from typing import TypeVar
 from pydantic import BaseModel
 
 from flext.models import m
-from flext.result import r
 
 T = TypeVar("T")
 U = TypeVar("U")
@@ -100,6 +99,17 @@ class FlextUtilities:
                 else:
                     result[key] = value
             return result
+
+    class Model:
+        """Model utility class."""
+
+        @staticmethod
+        def from_dict(model_cls: type[T_Model], data: Mapping[str, object], *, strict: bool = False) -> T_Model:
+            """Create Pydantic model from dict."""
+            if strict:
+                return model_cls.model_validate(data)
+            else:
+                return model_cls.model_validate(data)
 
 
 # Alias for convenience

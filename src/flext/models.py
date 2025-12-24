@@ -34,6 +34,21 @@ class FlextModels:
                 default=c.Core.Workspace.ENV_PREFIX, description="Environment prefix",
             )
 
+    class Value(BaseModel):
+        """Base class for value objects - immutable and compared by value."""
+
+        model_config = {"frozen": True}
+
+        def __eq__(self, other: object) -> bool:
+            """Compare by value."""
+            if not isinstance(other, BaseModel):
+                return NotImplemented
+            return self.model_dump() == other.model_dump()
+
+        def __hash__(self) -> int:
+            """Hash based on values for use in sets/dicts."""
+            return hash(tuple(sorted(self.model_dump().items())))
+
 
 # Alias for convenience
 m = FlextModels
