@@ -23,7 +23,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import ClassVar
 
-from flext import FlextResult, FlextService
+from flext_core import FlextResult, FlextService
 
 EntryDict = dict[str, object]
 ContextDict = dict[str, object]
@@ -125,12 +125,14 @@ class AclProcessingExample:
 
     @staticmethod
     def extract_acls_from_entry(
-        entry: EntryDict, server_type: str,
+        entry: EntryDict,
+        server_type: str,
     ) -> FlextResult[list[AclProcessingExample.AclEntry]]:
         """Extract ACLs using server-specific attribute detection."""
         start_time = time.time()
         acl_attrs = AclProcessingExample.Constants.SERVER_ACL_ATTRIBUTES.get(
-            server_type, [],
+            server_type,
+            [],
         )
 
         if not acl_attrs:
@@ -183,7 +185,8 @@ class AclProcessingExample:
 
     @staticmethod
     def validate_acl_entry(
-        acl_entry: AclProcessingExample.AclEntry, _context: ContextDict,
+        acl_entry: AclProcessingExample.AclEntry,
+        _context: ContextDict,
     ) -> FlextResult[AclProcessingExample.AclValidationResult]:
         """Validate ACL entry with complex context evaluation."""
         start_time = time.time()
@@ -191,7 +194,8 @@ class AclProcessingExample:
         warnings = []
 
         rules = AclProcessingExample.Constants.VALIDATION_RULES.get(
-            acl_entry.server_type, {},
+            acl_entry.server_type,
+            {},
         )
         if "required_permissions" in rules:
             required_perms = rules["required_permissions"]
@@ -241,7 +245,7 @@ class AclProcessingExample:
     class AclProcessor(FlextService[dict[str, object]]):
         """Monadic ACL processor with zero-ceremony execution."""
 
-        auto_execute = True
+        auto_execute: bool = True
 
         entries: list[EntryDict]
         parallel: bool = True
@@ -272,7 +276,8 @@ class AclProcessingExample:
             return self._analyze_performance(data)
 
         def _detect_servers(
-            self, entries: list[EntryDict],
+            self,
+            entries: list[EntryDict],
         ) -> FlextResult[dict[str, object]]:
             """Auto-detect server types for all entries."""
             detected_entries: list[EntryWithServer] = []
@@ -290,7 +295,8 @@ class AclProcessingExample:
             })
 
         def _extract_acls(
-            self, data: dict[str, object],
+            self,
+            data: dict[str, object],
         ) -> FlextResult[dict[str, object]]:
             """Extract ACLs in parallel."""
             entries_data = data.get("entries", [])
@@ -306,7 +312,9 @@ class AclProcessingExample:
             with ThreadPoolExecutor(max_workers=4) as executor:
                 futures = [
                     executor.submit(
-                        AclProcessingExample.extract_acls_from_entry, entry, server_type,
+                        AclProcessingExample.extract_acls_from_entry,
+                        entry,
+                        server_type,
                     )
                     for entry, server_type in entries_with_servers
                 ]
@@ -325,7 +333,8 @@ class AclProcessingExample:
             return FlextResult.ok(result_data)
 
         def _extract_sequential(
-            self, data: dict[str, object],
+            self,
+            data: dict[str, object],
         ) -> FlextResult[dict[str, object]]:
             """Extract ACLs sequentially."""
             entries_data = data.get("entries", [])
@@ -341,7 +350,8 @@ class AclProcessingExample:
             all_acls: list[AclProcessingExample.AclEntry] = []
             for entry, server_type in entries_with_servers:
                 result = AclProcessingExample.extract_acls_from_entry(
-                    entry, server_type,
+                    entry,
+                    server_type,
                 )
                 if result.is_success:
                     all_acls.extend(result.value)
@@ -352,7 +362,8 @@ class AclProcessingExample:
             return FlextResult.ok(result_data)
 
         def _validate_batch(
-            self, data: dict[str, object],
+            self,
+            data: dict[str, object],
         ) -> FlextResult[dict[str, object]]:
             """Validate all extracted ACLs."""
             acls_data = data.get("acls", [])
@@ -367,7 +378,8 @@ class AclProcessingExample:
             ]
             for acl in acl_entries:
                 result = AclProcessingExample.validate_acl_entry(
-                    acl, {"strict_mode": True},
+                    acl,
+                    {"strict_mode": True},
                 )
                 if result.is_success:
                     validation_results.append(result.value)
@@ -385,7 +397,8 @@ class AclProcessingExample:
             return FlextResult.ok(result_data)
 
         def _analyze_performance(
-            self, data: dict[str, object],
+            self,
+            data: dict[str, object],
         ) -> FlextResult[dict[str, object]]:
             """Analyze processing performance."""
             total_entries = len(self.entries)

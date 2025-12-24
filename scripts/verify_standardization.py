@@ -15,7 +15,7 @@ import re
 import sys
 from pathlib import Path
 
-from flext import FlextLogger, FlextModels, FlextResult, FlextService
+from flext_core import FlextLogger, FlextModels, FlextResult, FlextService
 
 VerificationResult = dict[str, bool]
 ProjectVerification = dict[str, object]
@@ -156,7 +156,8 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
             return FlextResult[list[Path]].fail(f"Project discovery failed: {e}")
 
     def _verify_all_projects(
-        self, projects: list[Path],
+        self,
+        projects: list[Path],
     ) -> FlextResult[list[ProjectVerification]]:
         """Railway-oriented bulk project verification."""
         try:
@@ -182,11 +183,13 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
                 "project": project_dir.name,
                 "package": package_name,
                 "version_file": self._VersionFileVerifier.verify(
-                    project_dir, package_name,
+                    project_dir,
+                    package_name,
                 ),
                 "init_file": self._InitFileVerifier.verify(project_dir, package_name),
                 "constants_file": self._ConstantsFileVerifier.verify(
-                    project_dir, package_name,
+                    project_dir,
+                    package_name,
                 ),
             }
 
@@ -243,7 +246,8 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
         return package_dirs[0].name if package_dirs else None
 
     def _generate_summary(
-        self, verifications: list[ProjectVerification],
+        self,
+        verifications: list[ProjectVerification],
     ) -> FlextResult[dict[str, object]]:
         """Railway-oriented summary generation."""
         try:

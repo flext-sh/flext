@@ -9,7 +9,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext import FlextResult
+from flext_core import FlextResult
 from flext_quality.tools import (
     Colors,
     FlextScriptService as FlextScript,
@@ -45,7 +45,8 @@ class HealthCheckServiceRunner(FlextScript):
         return True
 
     def execute_main_logic(
-        self, **kwargs: dict[str, str],
+        self,
+        **kwargs: dict[str, str],
     ) -> FlextResult[dict[str, str]]:
         """Execute health check service."""
         try:

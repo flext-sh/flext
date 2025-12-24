@@ -11,7 +11,7 @@ import os
 import re
 from pathlib import Path
 
-from flext import FlextLogger
+from flext_core import FlextLogger
 
 logger = FlextLogger(__name__)
 
@@ -61,7 +61,9 @@ def _process_file(py_file: Path, specific_patterns: list[str]) -> list[dict[str,
     return violations
 
 
-def _check_patterns(py_file: Path, content: str, specific_patterns: list[str]) -> list[dict[str, str]]:
+def _check_patterns(
+    py_file: Path, content: str, specific_patterns: list[str]
+) -> list[dict[str, str]]:
     """Check content for specific violation patterns."""
     return [
         {
@@ -108,8 +110,7 @@ def _check_imports(py_file: Path, content: str) -> list[dict[str, str]]:
 def _is_violation_import(import_name: str) -> bool:
     """Check if import is a violation."""
     return any(
-        p in import_name.lower()
-        for p in ["meltano", "oracle", "client-a", "client-b"]
+        p in import_name.lower() for p in ["meltano", "oracle", "client-a", "client-b"]
     )
 
 

@@ -108,8 +108,7 @@ class FlextUtilities:
             """Create Pydantic model from dict."""
             if strict:
                 return model_cls.model_validate(data)
-            else:
-                return model_cls.model_validate(data)
+            return model_cls.model_validate(data)
 
 
 # Alias for convenience

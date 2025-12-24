@@ -15,7 +15,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext import FlextLogger, FlextModels, FlextResult, FlextService
+from flext_core import FlextLogger, FlextModels, FlextResult, FlextService
 
 
 class FlextVersionStandardizationService(FlextService[dict[str, object]]):
@@ -58,7 +58,7 @@ SPDX-License-Identifier: Proprietary
 """
 
 from __future__ import annotations
-from flext import FlextBus, FlextSettings, FlextConstants, FlextContainer, FlextContext,
+from flext_core import  FlextBus, FlextSettings, FlextConstants, FlextContainer, FlextContext,
     FlextDecorators, FlextDispatcher, FlextExceptions, h,
     FlextLogger, x, FlextModels, FlextProcessors, p,
     FlextRegistry, FlextResult, FlextRuntime, FlextService, t,
@@ -93,7 +93,8 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
     def execute(self) -> FlextResult[dict[str, object]]:
         """Execute version standardization with railway pattern."""
         return (
-            self._scan_projects()
+            self
+            ._scan_projects()
             .flat_map(lambda _: self._generate_report())
             .flat_map(self._execute_standardization)
         )
@@ -130,7 +131,8 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
             ].fail(f"Project scan failed: {e}")
 
     def _analyze_project(
-        self, project_dir: Path,
+        self,
+        project_dir: Path,
     ) -> FlextVersionStandardizationService.ProjectAnalysis | None:
         """Advanced project analysis with pattern matching."""
         try:
@@ -170,7 +172,9 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
             return None
 
     def _resolve_package_dir(
-        self, project_dir: Path, package_dirs: list[Path],
+        self,
+        project_dir: Path,
+        package_dirs: list[Path],
     ) -> Path | None:
         """Advanced package directory resolution with pattern matching."""
         if len(package_dirs) == 1:
@@ -178,7 +182,8 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
 
         project_name_snake = project_dir.name.replace("-", "_")
         if matching := next(
-            (d for d in package_dirs if d.name == project_name_snake), None,
+            (d for d in package_dirs if d.name == project_name_snake),
+            None,
         ):
             return matching
 
@@ -186,7 +191,8 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
         return non_test_packages[0] if non_test_packages else package_dirs[0]
 
     def _analyze_version_files(
-        self, package_dir: Path,
+        self,
+        package_dir: Path,
     ) -> tuple[Path | None, bool, list[str]]:
         """Advanced version file analysis with pattern matching."""
         version_py = package_dir / "version.py"
@@ -284,7 +290,8 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
                     print(f"     ❌ {issue}")
 
     def _execute_standardization(
-        self, report: dict[str, object],
+        self,
+        report: dict[str, object],
     ) -> FlextResult[dict[str, object]]:
         """Railway-oriented standardization execution."""
         if self._config.dry_run:
@@ -315,7 +322,8 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
         })
 
     def _standardize_single_project(
-        self, project: FlextVersionStandardizationService.ProjectAnalysis,
+        self,
+        project: FlextVersionStandardizationService.ProjectAnalysis,
     ) -> FlextResult[bool]:
         """Railway-oriented single project standardization."""
         try:
@@ -323,7 +331,8 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
 
             # Functional composition of steps
             return (
-                self._create_version_file(project)
+                self
+                ._create_version_file(project)
                 .flat_map(lambda _: self._remove_old_version_file(project))
                 .flat_map(lambda _: self._update_init_file(project))
                 .flat_map(lambda _: self._check_constants_file(project))
@@ -338,7 +347,8 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
             return FlextResult[bool].fail(f"Failed to standardize {project.name}: {e}")
 
     def _create_version_file(
-        self, project: FlextVersionStandardizationService.ProjectAnalysis,
+        self,
+        project: FlextVersionStandardizationService.ProjectAnalysis,
     ) -> FlextResult[Path]:
         """Railway-oriented version file creation."""
         version_file = project.src_path / project.package_name / "__version__.py"
@@ -352,7 +362,8 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
             return FlextResult[Path].fail(f"Failed to create version file: {e}")
 
     def _remove_old_version_file(
-        self, project: FlextVersionStandardizationService.ProjectAnalysis,
+        self,
+        project: FlextVersionStandardizationService.ProjectAnalysis,
     ) -> FlextResult[bool]:
         """Railway-oriented old version file removal."""
         old_version = project.src_path / project.package_name / "version.py"
@@ -367,7 +378,8 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
         return FlextResult[bool].ok(True)
 
     def _update_init_file(
-        self, project: FlextVersionStandardizationService.ProjectAnalysis,
+        self,
+        project: FlextVersionStandardizationService.ProjectAnalysis,
     ) -> FlextResult[bool]:
         """Railway-oriented init file updates."""
         init_file = project.src_path / project.package_name / "__init__.py"
@@ -392,7 +404,8 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
             return FlextResult[bool].fail(f"Failed to update init file: {e}")
 
     def _check_constants_file(
-        self, project: FlextVersionStandardizationService.ProjectAnalysis,
+        self,
+        project: FlextVersionStandardizationService.ProjectAnalysis,
     ) -> FlextResult[bool]:
         """Railway-oriented constants file checking."""
         constants_file = project.src_path / project.package_name / "constants.py"
@@ -424,11 +437,14 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
 
 
 def create_standardization_service(
-    *, dry_run: bool = True, verbose: bool = False,
+    *,
+    dry_run: bool = True,
+    verbose: bool = False,
 ) -> FlextVersionStandardizationService:
     """Factory function for version standardization service."""
     config = FlextVersionStandardizationService.StandardizationConfig(
-        dry_run=dry_run, verbose=verbose,
+        dry_run=dry_run,
+        verbose=verbose,
     )
     return FlextVersionStandardizationService(config)
 
@@ -446,12 +462,17 @@ def main() -> None:
     )
     parser.add_argument("--execute", action="store_true", help="Actually make changes")
     parser.add_argument(
-        "--verbose", "-v", action="store_true", help="Show detailed output",
+        "--verbose",
+        "-v",
+        action="store_true",
+        help="Show detailed output",
     )
     parser.add_argument("--project", type=str, help="Standardize specific project only")
     parser.add_argument("--all", action="store_true", help="Standardize all projects")
     parser.add_argument(
-        "--yes-i-am-sure", action="store_true", help="Skip confirmation prompt",
+        "--yes-i-am-sure",
+        action="store_true",
+        help="Skip confirmation prompt",
     )
 
     args = parser.parse_args()
@@ -464,7 +485,8 @@ def main() -> None:
     )
 
     service = create_standardization_service(
-        dry_run=not args.execute, verbose=args.verbose,
+        dry_run=not args.execute,
+        verbose=args.verbose,
     )
 
     result = service.execute()

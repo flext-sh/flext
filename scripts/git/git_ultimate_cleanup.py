@@ -35,7 +35,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, ClassVar
 
-from flext import FlextResult, u
+from flext_core import FlextResult, u
 
 # Ensure git is available
 _git_cmd = shutil.which("git")
@@ -53,7 +53,10 @@ class GitUltimateCleanup:
 
     @staticmethod
     def _run_git_command(
-        repo_path: Path, args: list[str], *, check: bool = False,
+        repo_path: Path,
+        args: list[str],
+        *,
+        check: bool = False,
     ) -> FlextResult[Any]:
         """Run a git command with proper error handling and type annotations."""
         cmd = [GIT_CMD, "-C", str(repo_path)] + args
@@ -260,7 +263,8 @@ class GitUltimateCleanup:
         # Check uncommitted changes (skip in dry-run mode)
         if not self.dry_run:
             status_result = self._run_git_command(
-                self.repo_path, ["status", "--porcelain"],
+                self.repo_path,
+                ["status", "--porcelain"],
             )
             if status_result.is_failure:
                 return False, f"Failed to check git status: {status_result.error}"
@@ -278,7 +282,8 @@ class GitUltimateCleanup:
 
         # Check not detached HEAD
         head_result = self._run_git_command(
-            self.repo_path, ["symbolic-ref", "-q", "HEAD"],
+            self.repo_path,
+            ["symbolic-ref", "-q", "HEAD"],
         )
         if head_result.is_failure:
             return False, f"Failed to check HEAD: {head_result.error}"
@@ -325,16 +330,18 @@ class GitUltimateCleanup:
             tar.add(
                 self.repo_path,
                 arcname=self.repo_path.name,
-                filter=lambda t: None
-                if any([
-                    "__pycache__" in t.name,
-                    ".pyc" in t.name,
-                    ".ruff_cache" in t.name,
-                    ".mypy_cache" in t.name,
-                    ".pytest_cache" in t.name,
-                    "htmlcov" in t.name,
-                ])
-                else t,
+                filter=lambda t: (
+                    None
+                    if any([
+                        "__pycache__" in t.name,
+                        ".pyc" in t.name,
+                        ".ruff_cache" in t.name,
+                        ".mypy_cache" in t.name,
+                        ".pytest_cache" in t.name,
+                        "htmlcov" in t.name,
+                    ])
+                    else t
+                ),
             )
 
         size_mb = tar_file.stat().st_size / (1024 * 1024)
@@ -378,7 +385,8 @@ class GitUltimateCleanup:
         print("4️⃣  Exporting reflog...")
         reflog_file = repo_backup / "reflog.txt"
         reflog_result = self._run_git_command(
-            self.repo_path, ["reflog", "--format=%H|%gd|%gs"],
+            self.repo_path,
+            ["reflog", "--format=%H|%gd|%gs"],
         )
         if reflog_result.is_failure:
             print(f"   ❌ Reflog export failed: {reflog_result.error}")
@@ -434,7 +442,11 @@ class GitUltimateCleanup:
         return self.backup_root
 
     def _create_recovery_script(
-        self, backup_dir: Path, safety_tag: str, tar_file: Path, mirror_path: Path,
+        self,
+        backup_dir: Path,
+        safety_tag: str,
+        tar_file: Path,
+        mirror_path: Path,
     ) -> None:
         """Create recovery script."""
         created: str = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")
@@ -755,7 +767,9 @@ wc -l commit-history.txt
         print("Processing commits...")
         try:
             cleanup_result = u.CommandExecution.run_external_command(
-                cmd, check=False, cwd=str(self.repo_path),
+                cmd,
+                check=False,
+                cwd=str(self.repo_path),
             )
 
             if cleanup_result.is_failure:
@@ -778,7 +792,8 @@ wc -l commit-history.txt
 
         # Verify
         verify_result = self._run_git_command(
-            self.repo_path, ["log", "-1", "--format=%an %ae"],
+            self.repo_path,
+            ["log", "-1", "--format=%an %ae"],
         )
         if verify_result.is_failure:
             print(f"\n⚠️  Author verification failed: {verify_result.error}")
@@ -993,7 +1008,8 @@ def callback(commit, metadata):
 
         # Check if remote exists
         remote_result = self._run_git_command(
-            self.repo_path, ["remote", "get-url", "origin"],
+            self.repo_path,
+            ["remote", "get-url", "origin"],
         )
 
         if remote_result.is_failure:
@@ -1020,7 +1036,8 @@ def callback(commit, metadata):
         # Push branches
         print("📤 Pushing all branches...")
         push_branches_result = self._run_git_command(
-            self.repo_path, ["push", "origin", "--force", "--all"],
+            self.repo_path,
+            ["push", "origin", "--force", "--all"],
         )
 
         if push_branches_result.is_failure:
@@ -1038,7 +1055,8 @@ def callback(commit, metadata):
         if push_tags:
             print("🏷️  Pushing all tags...")
             push_tags_result = self._run_git_command(
-                self.repo_path, ["push", "origin", "--force", "--tags"],
+                self.repo_path,
+                ["push", "origin", "--force", "--tags"],
             )
 
             if push_tags_result.is_failure:
@@ -1136,7 +1154,9 @@ def callback(commit, metadata):
         return deletion_counts
 
     def detect_additional_cruft(
-        self, *, silent: bool = False,
+        self,
+        *,
+        silent: bool = False,
     ) -> dict[str, list[str] | str | int]:
         """Detect additional cruft patterns from git history and .gitignore."""
         if not silent:
@@ -1219,7 +1239,9 @@ def callback(commit, metadata):
         # Sort by frequency and filter out existing patterns
         new_from_history = []
         for pattern, count in sorted(
-            pattern_counts.items(), key=operator.itemgetter(1), reverse=True,
+            pattern_counts.items(),
+            key=operator.itemgetter(1),
+            reverse=True,
         ):
             is_new = True
             for existing in current_patterns_set:
@@ -1546,13 +1568,16 @@ def callback(commit, metadata):
                         repos_by_pattern[pattern] = []
                     repos_list = repos_by_pattern[pattern]
                     if isinstance(repos_list, list) and isinstance(
-                        result["repo_name"], str,
+                        result["repo_name"],
+                        str,
                     ):
                         repos_list.append(result["repo_name"])
 
         # Sort by frequency
         sorted_patterns = sorted(
-            pattern_frequency.items(), key=operator.itemgetter(1), reverse=True,
+            pattern_frequency.items(),
+            key=operator.itemgetter(1),
+            reverse=True,
         )
 
         # Generate markdown report
@@ -1629,9 +1654,11 @@ def callback(commit, metadata):
 
         for result in sorted(
             all_results,
-            key=lambda x: len(patterns)
-            if isinstance((patterns := x.get("recommended_patterns")), list)
-            else 0,
+            key=lambda x: (
+                len(patterns)
+                if isinstance((patterns := x.get("recommended_patterns")), list)
+                else 0
+            ),
             reverse=True,
         ):
             repo_name = result["repo_name"]
@@ -1726,11 +1753,15 @@ def main() -> None:
     )
     parser.add_argument("--repo", type=Path, default=Path.cwd(), help="Repository path")
     parser.add_argument(
-        "--all", action="store_true", help="Process main + all submodules",
+        "--all",
+        action="store_true",
+        help="Process main + all submodules",
     )
     parser.add_argument("--backup-only", action="store_true", help="Only create backup")
     parser.add_argument(
-        "--restore-remotes", action="store_true", help="Only restore remotes",
+        "--restore-remotes",
+        action="store_true",
+        help="Only restore remotes",
     )
     parser.add_argument(
         "--dry-run",
@@ -1738,13 +1769,19 @@ def main() -> None:
         help="Test mode - simulate operations without changes",
     )
     parser.add_argument(
-        "--test", action="store_true", help="Run principal function tests and exit",
+        "--test",
+        action="store_true",
+        help="Run principal function tests and exit",
     )
     parser.add_argument(
-        "--push", action="store_true", help="Push to GitHub after cleanup",
+        "--push",
+        action="store_true",
+        help="Push to GitHub after cleanup",
     )
     parser.add_argument(
-        "--push-all", action="store_true", help="Push main + all submodules to GitHub",
+        "--push-all",
+        action="store_true",
+        help="Push main + all submodules to GitHub",
     )
     parser.add_argument(
         "--detect-cruft",

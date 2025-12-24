@@ -98,10 +98,12 @@ import sys
 from pathlib import Path
 from typing import ClassVar, TypeVar
 
-from flext import FlextConstants,
+from flext_core import (
+    FlextConstants,
     FlextLogger,
     FlextResult,
-    FlextSettings
+    FlextSettings,
+)
 
 T = TypeVar("T")
 
@@ -172,7 +174,8 @@ class FlextModuleOptimizerSettings(FlextSettings):
         """Initialize the optimizer configuration."""
         super().__init__()
         self.batch_size: int = kwargs.get(
-            "batch_size", FlextModuleOptimizerConstants.Optimization.DEFAULT_BATCH_SIZE,
+            "batch_size",
+            FlextModuleOptimizerConstants.Optimization.DEFAULT_BATCH_SIZE,
         )
         self.dry_run = kwargs.get("dry_run", True)
         self.verbose = kwargs.get("verbose", False)
@@ -207,7 +210,8 @@ class FlextModuleOptimizer:
 
         """
         self.logger.info(
-            "Starting unified module optimization", extra={"project_path": project_path},
+            "Starting unified module optimization",
+            extra={"project_path": project_path},
         )
 
         try:
@@ -234,11 +238,13 @@ class FlextModuleOptimizer:
             return FlextResult.fail(f"Optimization error: {e}")
 
     def _discover_optimization_targets(
-        self, project_path: str,
+        self,
+        project_path: str,
     ) -> FlextResult[list[dict[str, object]]]:
         """Discover modules that need optimization."""
         self.logger.info(
-            "Discovering optimization targets", extra={"project_path": project_path},
+            "Discovering optimization targets",
+            extra={"project_path": project_path},
         )
 
         targets = []
@@ -310,7 +316,8 @@ class FlextModuleOptimizer:
             return FlextResult.fail(f"Discovery error: {e}")
 
     def _analyze_file_for_optimization(
-        self, file_path: Path,
+        self,
+        file_path: Path,
     ) -> FlextResult[dict[str, object]]:
         """Analyze file for optimization opportunities."""
         try:
@@ -463,11 +470,13 @@ class FlextModuleOptimizer:
         return max_child_depth
 
     def _validate_quality_gates(
-        self, targets: list[dict[str, object]],
+        self,
+        targets: list[dict[str, object]],
     ) -> FlextResult[None]:
         """Validate targets against quality gates."""
         self.logger.info(
-            "Validating quality gates", extra={"target_count": len(targets)},
+            "Validating quality gates",
+            extra={"target_count": len(targets)},
         )
 
         violations = []
@@ -490,11 +499,13 @@ class FlextModuleOptimizer:
         return FlextResult[None].ok(None)
 
     def _optimize_in_batches(
-        self, targets: list[dict[str, object]],
+        self,
+        targets: list[dict[str, object]],
     ) -> list[dict[str, object]]:
         """Optimize targets in batches."""
         self.logger.info(
-            "Starting batch optimization", extra={"total_targets": len(targets)},
+            "Starting batch optimization",
+            extra={"total_targets": len(targets)},
         )
 
         results = []
@@ -535,7 +546,8 @@ class FlextModuleOptimizer:
                 optimized_content = self._reduce_complexity(original_content)
             elif target["optimization_type"] == "domain_library_integration":
                 optimized_content = self._integrate_domain_libraries(
-                    original_content, target,
+                    original_content,
+                    target,
                 )
             else:
                 optimized_content = self.general_improvements(original_content)
@@ -546,7 +558,8 @@ class FlextModuleOptimizer:
             # Apply changes if not dry run
             if not self._config.dry_run and optimized_content != original_content:
                 Path(target["file_path"]).write_text(
-                    optimized_content, encoding="utf-8",
+                    optimized_content,
+                    encoding="utf-8",
                 )
 
                 # Validate the optimized file
@@ -647,7 +660,8 @@ class FlextModuleOptimizer:
             return FlextResult.fail(f"Validation error: {e}")
 
     def _validate_optimization_results(
-        self, results: list[dict[str, object]],
+        self,
+        results: list[dict[str, object]],
     ) -> FlextResult[dict[str, object]]:
         """Validate final optimization results."""
         total_targets = len(results)
