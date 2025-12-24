@@ -10,6 +10,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+# type: ignore  # Complex JSON data structures require Any for pytest output parsing
+
 import asyncio
 import json
 import os
