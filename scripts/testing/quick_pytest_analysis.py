@@ -7,6 +7,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+# type: ignore  # Script de análise trabalha com dados JSON dinâmicos
+
 import json
 import os
 import subprocess
