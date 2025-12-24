@@ -61,7 +61,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext import FlextResult
+from flext_core import FlextResult
 from flext_quality.tools import (
     Colors,
     FlextScriptService as FlextScript,
@@ -228,7 +228,8 @@ class SecurityAuditScript(FlextScript):
             return FlextResult[None].fail(f"Precondition validation failed: {e}")
 
     def execute_main_logic(
-        self, **kwargs: dict[str, str],
+        self,
+        **kwargs: dict[str, str],
     ) -> FlextResult[dict[str, str]]:
         """Execute main script logic."""
         """Execute security audit with comprehensive analysis."""
@@ -429,7 +430,8 @@ class SecurityAuditScript(FlextScript):
             else:
                 # Console summary report
                 print_colored(
-                    f"Found {len(violations)} security violations:", Colors.YELLOW,
+                    f"Found {len(violations)} security violations:",
+                    Colors.YELLOW,
                 )
                 for violation in violations:
                     print_colored(

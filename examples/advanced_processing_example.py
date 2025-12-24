@@ -19,7 +19,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from enum import StrEnum
 
-from flext import FlextResult, FlextService
+from flext_core import FlextResult, FlextService
 
 ItemDict = dict[str, str | int | float | bool]
 
@@ -73,7 +73,7 @@ class AdvancedProcessingExample:
     ):
         """Declarative processing pipeline with automatic parallel execution."""
 
-        auto_execute = True
+        auto_execute: bool = True
 
         items: list[ItemDict]
         stages: list[str]
@@ -463,7 +463,8 @@ class AdvancedProcessingExample:
             return FlextResult.ok(result_data)
 
         def _validate_single_item(
-            self, item: ItemDict,
+            self,
+            item: ItemDict,
         ) -> FlextResult[AdvancedProcessingExample.ValidationResult]:
             """Validate a single item."""
             start_time = time.time()

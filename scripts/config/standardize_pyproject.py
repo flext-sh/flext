@@ -17,7 +17,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext import FlextResult
+from flext_core import FlextResult
 from flext_quality.tools import (
     Colors,
     FlextScriptService as FlextScript,
