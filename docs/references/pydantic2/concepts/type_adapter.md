@@ -1,3 +1,5 @@
+# Type Adapter
+
 You may have types that are not `BaseModel`s that you want to validate data against.
 Or you may want to validate a `list[SomeModel]`, or dump it to JSON.
 

@@ -1,3 +1,5 @@
+# Queue Integration
+
 Pydantic is quite helpful for validating data that goes into and comes out of queues. Below,
 we'll explore how to validate / serialize data with various queue systems.
 

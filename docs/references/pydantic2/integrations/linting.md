@@ -1,3 +1,5 @@
+# Linting Integration
+
 ## Flake8 plugin
 
 If using Flake8 in your project, a [plugin](https://pypi.org/project/flake8-pydantic/) is available

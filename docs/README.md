@@ -3,14 +3,15 @@
 ## Table of Contents
 
 - [FLEXT Documentation](#flext-documentation)
+  - [Table of Contents](#table-of-contents)
   - [📚 Documentation Structure](#-documentation-structure)
-    - [🚀 [Getting Started](./guides/getting-started.md)](#-getting-startedguidesgetting-startedmd)
-    - [🏗️ [Architecture](./architecture/README.md)](#-architecturearchitecturereadmemd)
-    - [🔌 [API Reference](./api-reference/README.md)](#-api-referenceapi-referencereadmemd)
-    - [📦 [Projects](./projects/README.md)](#-projectsprojectsreadmemd)
-    - [📋 [Standards](./standards/README.md)](#-standardsstandardsreadmemd)
+    - [🚀 Getting Started](#-getting-started)
+    - [🏗️ Architecture](#️-architecture)
+    - [🔌 API Reference](#-api-reference)
+    - [📦 Projects](#-projects)
+    - [📋 Standards](#-standards)
   - [🎯 Key Features](#-key-features)
-  - [🛠️ Quick Links](#-quick-links)
+  - [🛠️ Quick Links](#️-quick-links)
   - [📞 Support](#-support)
 
 **FLEXT** - Enterprise Data Integration Platform

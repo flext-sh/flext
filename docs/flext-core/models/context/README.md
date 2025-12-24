@@ -48,7 +48,7 @@ Cada componente abaixo traz motivação, funcionamento interno, aplicações rec
 
 **Benefícios / decisões**
 
-- Garante que toda alteração de contexto apareça automaticamente nos logs. Manter como padrão oficial e desencorajar o uso direto de `contextvars.ContextVar`.<Address any duplication.>
+- Garante que toda alteração de contexto apareça automaticamente nos logs. Manter como padrão oficial e desencorajar o uso direto de `contextvars.ContextVar`.
 
 ### `Token`
 
