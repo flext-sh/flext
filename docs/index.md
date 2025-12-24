@@ -2,30 +2,30 @@
 
 ## Table of Contents
 
-- [FLEXT Ecosystem Documentation](#flext-ecosystem-documentation)
-  - [🚀 Quick Start](#-quick-start)
-  - [📊 Current Status](#-current-status)
-  - [📚 Documentation Sections](#-documentation-sections)
-    - [📈 Reports & Status](#-reports--status)
-    - [🏗️ Architecture & Design](#-architecture--design)
-    - [🔧 Development & Operations](#-development--operations)
-    - [📖 API Reference](#-api-reference)
-    - [📋 Standards & Conventions](#-standards--conventions)
-    - [🏭 Projects](#-projects)
-      - [Core Libraries](#core-libraries)
-      - [Infrastructure Libraries](#infrastructure-libraries)
-      - [Data Integration Tools](#data-integration-tools)
-      - [Singer Ecosystem](#singer-ecosystem)
-      - [DBT Projects](#dbt-projects)
-      - [Enterprise Integration](#enterprise-integration)
-      - [Development Tools](#development-tools)
-  - [🎯 Key Features](#-key-features)
-    - [Core Framework](#core-framework)
-    - [Enterprise Integration](#enterprise-integration)
-    - [Data Pipeline](#data-pipeline)
-    - [Quality Assurance](#quality-assurance)
-  - [📞 Support & Community](#-support--community)
-  - [🔄 Recent Updates](#-recent-updates)
+- FLEXT Ecosystem Documentation
+  - 🚀 Quick Start
+  - 📊 Current Status
+  - 📚 Documentation Sections
+    - 📈 Reports & Status
+    - 🏗️ Architecture & Design
+    - 🔧 Development & Operations
+    - 📖 API Reference
+    - 📋 Standards & Conventions
+    - 🏭 Projects
+      - Core Libraries
+      - Infrastructure Libraries
+      - Data Integration Tools
+      - Singer Ecosystem
+      - DBT Projects
+      - Enterprise Integration
+      - Development Tools
+  - 🎯 Key Features
+    - Core Framework
+    - Enterprise Integration
+    - Data Pipeline
+    - Quality Assurance
+  - 📞 Support & Community
+  - 🔄 Recent Updates
 
 **Version**: 1.0.0 | **Status**: 100% Operational | **Last Updated**: October 2025
 
@@ -45,39 +45,36 @@ transformation, and enterprise connectivity.
 
 ## 📊 Status Dashboard
 
-| Project                 | Version | Status        | Coverage | Docs |
-| ----------------------- | ------- | ------------- | -------- | ---- |
-| flext-core              | 0.10.0  | ✅ Production | 80%+     | ✅   |
-| flext-ldif              | 0.9.0   | ✅ Production | 85%+     | ✅   |
-| flext-ldap              | -       | ✅ Production | -        | ✅   |
-| flext-cli               | -       | ✅ Production | -        | ✅   |
-| flext-api               | -       | ✅ Production | -        | ✅   |
-| flext-auth              | -       | ✅ Production | -        | ✅   |
-| flext-grpc              | -       | ✅ Production | -        | ✅   |
-| flext-db-oracle         | -       | ✅ Production | -        | ✅   |
-| flext-meltano           | -       | ✅ Production | -        | ✅   |
-| flext-observability     | -       | ✅ Production | -        | ✅   |
-| flext-quality           | -       | ✅ Production | -        | ✅   |
-| flext-plugin            | -       | ✅ Production | -        | ✅   |
-| flext-web               | -       | ✅ Production | -        | ✅   |
-| flext-oracle-wms        | -       | ✅ Production | -        | ✅   |
-| flext-oracle-oic        | -       | ✅ Production | -        | ✅   |
-| flext-tap-ldap          | -       | ✅ Production | -        | ✅   |
-| flext-tap-ldif          | -       | ✅ Production | -        | ✅   |
-| flext-tap-oracle        | -       | ✅ Production | -        | ✅   |
-| flext-tap-oracle-wms    | -       | ✅ Production | -        | ✅   |
-| flext-tap-oracle-oic    | -       | ✅ Production | -        | ✅   |
-| flext-target-ldap       | -       | ✅ Production | -        | ✅   |
-| flext-target-ldif       | -       | ✅ Production | -        | ✅   |
-| flext-target-oracle     | -       | ✅ Production | -        | ✅   |
-| flext-target-oracle-wms | -       | ✅ Production | -        | ✅   |
-| flext-target-oracle-oic | -       | ✅ Production | -        | ✅   |
-| flext-dbt-ldap          | -       | ✅ Production | -        | ✅   |
-| flext-dbt-ldif          | -       | ✅ Production | -        | ✅   |
-| flext-dbt-oracle        | -       | ✅ Production | -        | ✅   |
-| flext-dbt-oracle-wms    | -       | ✅ Production | -        | ✅   |
-| flexcore                | -       | ✅ Production | -        | ✅   |
-
+Project: flext-core - Version: 0.10.0 - Status: ✅ Production - Coverage: 80%+ - Docs: ✅
+Project: flext-ldif - Version: 0.9.0 - Status: ✅ Production - Coverage: 85%+ - Docs: ✅
+Project: flext-ldap - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-cli - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-api - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-auth - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-grpc - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-db-oracle - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-meltano - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-observability - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-quality - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-plugin - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-web - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-oracle-wms - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-oracle-oic - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-tap-ldap - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-tap-ldif - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-tap-oracle - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-tap-oracle-wms - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-tap-oracle-oic - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-target-ldap - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-target-ldif - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-target-oracle - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-target-oracle-wms - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-target-oracle-oic - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-dbt-ldap - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-dbt-ldif - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-dbt-oracle - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flext-dbt-oracle-wms - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
+Project: flexcore - Version: - - Status: ✅ Production - Coverage: - - Docs: ✅
 **Total**: 30 projects | **Status**: 100% Operational | **Ready for Production**: ✅
 
 ---
