@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Quick FLEXT Pytest Analysis - Generate SARIF/JSON reports for failing tests."""
+"""Quick FLEXT Pytest Analysis - Generate SARIF/JSON reports for failing tests.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
+
+from __future__ import annotations
 
 import json
 import os
@@ -24,7 +30,7 @@ PROJECTS = [
 ]
 
 
-def run_pytest_quick(project_path: Path, project_name: str) -> dict:
+def run_pytest_quick(project_path: Path, project_name: str) -> dict[str, object]:
     """Run pytest and return basic results."""
     try:
         cmd = [
@@ -91,7 +97,7 @@ def run_pytest_quick(project_path: Path, project_name: str) -> dict:
         }
 
 
-def generate_sarif_report(results: list) -> dict:
+def generate_sarif_report(results: list[dict[str, object]]) -> dict[str, object]:
     """Generate SARIF report from results."""
     runs = []
 
