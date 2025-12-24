@@ -249,7 +249,7 @@ class PytestAnalyzer:
             "pytest_data": pytest_data,
             "has_failures": returncode != 0,
             "error_count": len(
-                pytest_data.get("summary", {}).get("err  # type: ignoreors", [])
+                pytest_data.get("summary", {}).get("err
             ),
             "passed_count": pytest_data.get("summary", {}).get("passed", 0),
             "failed_count": pytest_data.get("summary", {}).get("failed", 0),
