@@ -22,7 +22,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from enum import StrEnum
 
-from flext_core import FlextResult, FlextService
+from flext import FlextResult, FlextService
 
 ItemType = dict[str, object]
 
@@ -51,11 +51,11 @@ class CompleteWorkflowExample:
                 "processing",
                 "analysis",
                 "aggregation",
-            ]
+            ],
         )
         metadata: dict[str, str | int | float | bool] = field(default_factory=dict)
         performance_metrics: dict[str, float | int | dict[str, float | int]] = field(
-            default_factory=dict
+            default_factory=dict,
         )
 
     @dataclass
@@ -85,7 +85,7 @@ class CompleteWorkflowExample:
         failed_stages: int
         total_processing_time: float
         stage_results: list[CompleteWorkflowExample.WorkflowStageResult] = field(
-            default_factory=list
+            default_factory=list,
         )
         aggregated_metrics: dict[str, float | int] = field(default_factory=dict)
         workflow_status: str = "unknown"
@@ -97,7 +97,7 @@ class CompleteWorkflowExample:
 
         data: list[ItemType] = field(default_factory=list)
         workflow_config: dict[str, str | int | bool | float] = field(
-            default_factory=dict
+            default_factory=dict,
         )
 
         def execute(self) -> FlextResult[dict[str, object]]:
@@ -111,7 +111,7 @@ class CompleteWorkflowExample:
         def _setup_context(self) -> CompleteWorkflowExample.WorkflowContext:
             """Setup workflow context with correlation tracking."""
             workflow_id = str(
-                self.workflow_config.get("workflow_id", f"workflow_{int(time.time())}")
+                self.workflow_config.get("workflow_id", f"workflow_{int(time.time())}"),
             )
             correlation_id = f"{workflow_id}_{int(time.time() * 1000)}"
 
@@ -121,7 +121,7 @@ class CompleteWorkflowExample:
                 start_time=time.time(),
                 metadata={
                     "parallel_enabled": bool(
-                        self.workflow_config.get("parallel", True)
+                        self.workflow_config.get("parallel", True),
                     ),
                     "max_workers": int(self.workflow_config.get("max_workers", 4)),
                     "strict_mode": bool(self.workflow_config.get("strict_mode", False)),
@@ -129,7 +129,7 @@ class CompleteWorkflowExample:
             )
 
         def _execute_workflow(
-            self, data: list[ItemType], context: CompleteWorkflowExample.WorkflowContext
+            self, data: list[ItemType], context: CompleteWorkflowExample.WorkflowContext,
         ) -> FlextResult[dict[str, object]]:
             """Execute workflow stages with parallel processing."""
             items = data
@@ -149,11 +149,11 @@ class CompleteWorkflowExample:
                     return FlextResult.fail(f"Unknown stage: {stage_name}")
 
                 result = self._execute_stage_parallel(
-                    stage_name, current_data, stage_func, context
+                    stage_name, current_data, stage_func, context,
                 )
                 if result.is_failure:
                     return FlextResult.fail(
-                        f"Stage {stage_name} failed: {result.error}"
+                        f"Stage {stage_name} failed: {result.error}",
                     )
 
                 stage_result = result.value
@@ -175,7 +175,7 @@ class CompleteWorkflowExample:
 
             total_time = time.time() - context.start_time
             aggregated_metrics = self._aggregate_workflow_metrics(
-                stage_results, total_time
+                stage_results, total_time,
             )
 
             workflow_result = CompleteWorkflowExample.CompleteWorkflowResult(
@@ -197,7 +197,7 @@ class CompleteWorkflowExample:
             })
 
         def _cleanup_context(
-            self, context: CompleteWorkflowExample.WorkflowContext
+            self, context: CompleteWorkflowExample.WorkflowContext,
         ) -> None:
             """Cleanup workflow context and log completion."""
             total_time = time.time() - context.start_time
@@ -274,7 +274,7 @@ class CompleteWorkflowExample:
             return result
 
         def _validate_items(
-            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
+            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext,
         ) -> FlextResult[ItemType]:
             """Validate single item."""
             return FlextResult.ok(
@@ -284,11 +284,11 @@ class CompleteWorkflowExample:
                     "validated",
                     True,
                     lambda _i: {"is_valid": bool(item.get("id") and item.get("name"))},
-                )
+                ),
             )
 
         def _process_items(
-            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
+            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext,
         ) -> FlextResult[ItemType]:
             """Process single item."""
             return FlextResult.ok(
@@ -298,11 +298,11 @@ class CompleteWorkflowExample:
                     "processed",
                     True,
                     lambda _i: {"processed_at": time.time()},
-                )
+                ),
             )
 
         def _analyze_items(
-            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
+            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext,
         ) -> FlextResult[ItemType]:
             """Analyze single item."""
             return FlextResult.ok(
@@ -312,11 +312,11 @@ class CompleteWorkflowExample:
                     "analyzed",
                     True,
                     lambda _i: {"complexity_score": len(str(item)) * 0.1},
-                )
+                ),
             )
 
         def _aggregate_results(
-            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
+            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext,
         ) -> FlextResult[ItemType]:
             """Aggregate results."""
             return FlextResult.ok(
@@ -327,9 +327,9 @@ class CompleteWorkflowExample:
                     True,
                     lambda _i: {
                         "final_score": float(item.get("complexity_score", 0))
-                        + (1 if bool(item.get("is_valid", False)) else 0)
+                        + (1 if bool(item.get("is_valid", False)) else 0),
                     },
-                )
+                ),
             )
 
         def _aggregate_workflow_metrics(

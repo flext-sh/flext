@@ -47,13 +47,17 @@ def fix_syntax_errors_in_file(file_path: Path) -> bool:
             # Pattern 1: TYPE_CHECKING block with misplaced imports
             (
                 r"(if TYPE_CHECKING:)\s*\n\s*# [^\n]+\nfrom (\w+) import",
-                r"\1\n    # 🚨 ARCHITECTURAL COMPLIANCE: "
-                r"Using módulo raiz imports\n    from \2 import",
+                (
+                    r"\1\n    # 🚨 ARCHITECTURAL COMPLIANCE: "
+                    r"Using módulo raiz imports\n    from \2 import"
+                ),
             ),
             # Pattern 2: Dangling imports after TYPE_CHECKING
             (
-                r"(# 🚨 ARCHITECTURAL COMPLIANCE[^\n]*)\n"
-                r"from (\w+) import([^\n]+)\n\n(\s+from)",
+                (
+                    r"(# 🚨 ARCHITECTURAL COMPLIANCE[^\n]*)\n"
+                    r"from (\w+) import([^\n]+)\n\n(\s+from)"
+                ),
                 r"\1\n    from \2 import\3\n\n\4",
             ),
             # Pattern 3: Missing indentation in TYPE_CHECKING blocks

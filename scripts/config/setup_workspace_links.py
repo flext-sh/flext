@@ -16,11 +16,9 @@ import json
 import sys
 from pathlib import Path
 
-from flext_core import (
-    FlextContainer,
+from flext import FlextContainer,
     FlextResult,
-    FlextService,
-)
+    FlextService
 
 
 class WorkspaceManagementService(FlextService[dict[str, object]]):

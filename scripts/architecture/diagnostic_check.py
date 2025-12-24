@@ -19,7 +19,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-from flext_core import FlextConstants, FlextLogger, u
+from flext import FlextConstants, FlextLogger, u
 from mypy import api as mypy_api
 
 logger = FlextLogger(__name__)
@@ -365,24 +365,24 @@ class FlextDiagnostic:
                     status_icons = [
                         str(
                             data.get(
-                                "lint_status", FlextConstants.Mixins.STATUS_UNKNOWN
-                            )
+                                "lint_status", FlextConstants.Mixins.STATUS_UNKNOWN,
+                            ),
                         ),
                         str(
                             data.get(
-                                "mypy_status", FlextConstants.Mixins.STATUS_UNKNOWN
-                            )
+                                "mypy_status", FlextConstants.Mixins.STATUS_UNKNOWN,
+                            ),
                         ),
                         str(
                             data.get(
-                                "test_status", FlextConstants.Mixins.STATUS_UNKNOWN
-                            )
+                                "test_status", FlextConstants.Mixins.STATUS_UNKNOWN,
+                            ),
                         ),
                         str(
                             data.get(
                                 "poetry_install",
                                 FlextConstants.Mixins.STATUS_UNKNOWN,
-                            )
+                            ),
                         ),
                     ]
                     " | ".join(status_icons)

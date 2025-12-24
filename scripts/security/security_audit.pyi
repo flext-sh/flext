@@ -1,4 +1,4 @@
-from flext_core import t
+from flext import t
 
 class SecurityViolation:
     def __init__(self, message: str, risk_level: str = "MEDIUM") -> None: ...

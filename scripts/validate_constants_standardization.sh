@@ -165,26 +165,26 @@ info "Checking FlextConstants accessibility..."
 if timeout 10 python -c "
 import sys
 sys.path.insert(0, 'flext-core/src')
-from flext_core import FlextBus
-from flext_core import FlextSettings
-from flext_core import FlextConstants
-from flext_core import FlextContainer
-from flext_core import FlextContext
-from flext_core import FlextDecorators
-from flext_core import FlextDispatcher
-from flext_core import FlextExceptions
-from flext_core import h
-from flext_core import FlextLogger
-from flext_core import x
-from flext_core import FlextModels
-from flext_core import FlextProcessors
-from flext_core import p
-from flext_core import FlextRegistry
-from flext_core import FlextResult
-from flext_core import FlextRuntime
-from flext_core import FlextService
-from flext_core import t
-from flext_core import u
+from flext import FlextBus
+from flext import FlextSettings
+from flext import FlextConstants
+from flext import FlextContainer
+from flext import FlextContext
+from flext import FlextDecorators
+from flext import FlextDispatcher
+from flext import FlextExceptions
+from flext import h
+from flext import FlextLogger
+from flext import x
+from flext import FlextModels
+from flext import FlextProcessors
+from flext import p
+from flext import FlextRegistry
+from flext import FlextResult
+from flext import FlextRuntime
+from flext import FlextService
+from flext import t
+from flext import u
 print('FlextConstants available')
 print(f'API Port: {FlextConstants.Platform.FLEXT_API_PORT}')
 print(f'Default Timeout: {FlextConstants.Network.DEFAULT_TIMEOUT}')

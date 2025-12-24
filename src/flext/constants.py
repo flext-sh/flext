@@ -35,6 +35,12 @@ class FlextConstants:
             NAME: Final[str] = "flext"
             ENV_PREFIX: Final[str] = "FLEXT"
 
+    class Platform:
+        """Platform-specific constants."""
+
+        FLEXT_API_PORT: Final[int] = 8000
+        DEFAULT_HOST: Final[str] = "localhost"
+
 
 # Alias for convenience
 c = FlextConstants

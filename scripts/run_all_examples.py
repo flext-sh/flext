@@ -26,7 +26,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
-from flext_core import u
+from flext import u
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 

@@ -261,7 +261,7 @@ def main() -> None:
 
     print("\n" + "=" * 80)
     print(
-        f"✅ Merged aggressive .gitignore in {success_count}/{len(projects)} projects"
+        f"✅ Merged aggressive .gitignore in {success_count}/{len(projects)} projects",
     )
     print("=" * 80)
     print("\n📋 Next Steps:")

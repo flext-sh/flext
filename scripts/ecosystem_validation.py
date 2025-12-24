@@ -121,7 +121,7 @@ class EcosystemValidator:
                 ast.parse(py_file.read_text())
             except SyntaxError as e:
                 errors.append(
-                    f"{py_file.relative_to(project_path)}: {e.msg} at line {e.lineno}"
+                    f"{py_file.relative_to(project_path)}: {e.msg} at line {e.lineno}",
                 )
                 error_count += 1
 
@@ -172,7 +172,7 @@ class EcosystemValidator:
                 warnings = len(violations) - errors
                 return errors, warnings
         except (json.JSONDecodeError, FileNotFoundError, Exception) as e:
-            logger.warning(f"Ruff linting check failed for {project}: {e}")
+            logger.warning("Ruff linting check failed for %s: %s", project, e)
 
         return 0, 0
 
@@ -273,7 +273,7 @@ class EcosystemValidator:
             result.recommendations.append("Add Makefile for quality gates")
         if result.domain_violations:
             result.recommendations.append(
-                f"Fix {len(result.domain_violations)} domain library violations"
+                f"Fix {len(result.domain_violations)} domain library violations",
             )
         if lint_errors > 0:
             result.recommendations.append(f"Fix {lint_errors} lint errors")
@@ -338,7 +338,7 @@ class EcosystemValidator:
                 lines.append(f"  {status_icon} {project}: {r.status}")
                 if r.domain_violations:
                     lines.append(
-                        f"      ⚠️  Must use flext-* libraries ({len(r.domain_violations)} violations)"
+                        f"      ⚠️  Must use flext-* libraries ({len(r.domain_violations)} violations)",
                     )
         lines.append("")
 

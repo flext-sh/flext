@@ -11,7 +11,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult
+from flext import FlextResult
 from flext_quality.tools import (
     Colors,
     DependencyDiscovery,
@@ -60,7 +60,7 @@ class MissingDependenciesDiscoverer(FlextScript):
         return True
 
     def execute_main_logic(
-        self, **kwargs: dict[str, str]
+        self, **kwargs: dict[str, str],
     ) -> FlextResult[dict[str, str]]:
         """Executar descoberta de dependências faltantes."""
         try:

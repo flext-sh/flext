@@ -10,7 +10,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult
+from flext import FlextResult
 from flext_quality.tools import Colors, ScriptMetadata, print_colored
 
 

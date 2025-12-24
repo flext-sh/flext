@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 from typing import cast
 
-from flext_core import t
+from flext import t
 from flext_quality.tools import (
     Colors,
     ConflictAnalyzer,

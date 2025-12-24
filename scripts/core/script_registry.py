@@ -17,7 +17,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
 
-from flext_core import FlextLogger
+from flext import FlextLogger
 from flext_quality.tools import Colors, ScriptMetadata, print_colored
 
 

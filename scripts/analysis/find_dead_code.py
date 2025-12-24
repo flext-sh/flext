@@ -37,7 +37,7 @@ class CodeAnalyzer(ast.NodeVisitor):
         self.usages: dict[str, set[str]] = defaultdict(set)
         # Track methods per class
         self.class_methods: dict[str, dict[str, set[str]]] = defaultdict(
-            lambda: defaultdict(set)
+            lambda: defaultdict(set),
         )
         # Current context
         self.current_file: str = ""
@@ -77,9 +77,9 @@ class CodeAnalyzer(ast.NodeVisitor):
         self.current_file = str(filepath.relative_to(self.project_root))
 
         try:
-            with Path(filepath).open("r", encoding="utf-8") as f:
-                tree = ast.parse(f.read(), filename=str(filepath))
-                self.visit(tree)
+            content = Path(filepath).read_text(encoding="utf-8")
+            tree = ast.parse(content, filename=str(filepath))
+            self.visit(tree)
         except SyntaxError as e:
             print(f"  ⚠️  Syntax error in {filepath.name}: {e}")
 

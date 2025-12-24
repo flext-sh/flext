@@ -11,7 +11,7 @@ import os
 import re
 from pathlib import Path
 
-from flext_core import FlextLogger
+from flext import FlextLogger
 
 logger = FlextLogger(__name__)
 
@@ -38,58 +38,79 @@ def analyze_flext_core_violations() -> list[dict[str, str]]:
         if py_file.name == "__init__.py" or py_file.name.endswith(".bak"):
             continue
 
-        try:
-            content = Path(py_file).read_text(encoding="utf-8")
-
-            # Usar word boundaries para evitar matches dentro de outras palavras
-            violations.extend(
-                {
-                    "file": str(py_file),
-                    "pattern": pattern,
-                    "action": f"Renomear {py_file.name} para {py_file.name}.bak",
-                }
-                for pattern in specific_patterns
-                if re.search(r"\b" + pattern + r"\b", content, re.IGNORECASE)
-            )
-
-            # Analisar imports AST
-            try:
-                tree = ast.parse(content)
-                for node in ast.walk(tree):
-                    if isinstance(node, ast.Import):
-                        for alias in node.names:
-                            import_name = alias.name.split(".")[0]
-                            if any(
-                                p in import_name.lower()
-                                for p in ["meltano", "oracle", "client-a", "client-b"]
-                            ):
-                                violations.append(
-                                    {
-                                        "file": str(py_file),
-                                        "pattern": f"import {import_name}",
-                                        "action": f"Remover import violador em {py_file.name}",
-                                    },
-                                )
-                    elif isinstance(node, ast.ImportFrom) and node.module:
-                        import_name = node.module.split(".")[0]
-                        if any(
-                            p in import_name.lower()
-                            for p in ["meltano", "oracle", "client-a", "client-b"]
-                        ):
-                            violations.append(
-                                {
-                                    "file": str(py_file),
-                                    "pattern": f"from {node.module}",
-                                    "action": f"Remover import violador em {py_file.name}",
-                                },
-                            )
-            except SyntaxError:
-                pass
-
-        except (OSError, ValueError, TypeError):
-            pass
+        violations.extend(_process_file(py_file, specific_patterns))
 
     return violations
+
+
+def _process_file(py_file: Path, specific_patterns: list[str]) -> list[dict[str, str]]:
+    """Process a single file for violations."""
+    violations: list[dict[str, str]] = []
+
+    try:
+        content = Path(py_file).read_text(encoding="utf-8")
+    except (OSError, ValueError, TypeError):
+        return violations
+
+    # Check for specific patterns
+    violations.extend(_check_patterns(py_file, content, specific_patterns))
+
+    # Check for import violations
+    violations.extend(_check_imports(py_file, content))
+
+    return violations
+
+
+def _check_patterns(py_file: Path, content: str, specific_patterns: list[str]) -> list[dict[str, str]]:
+    """Check content for specific violation patterns."""
+    return [
+        {
+            "file": str(py_file),
+            "pattern": pattern,
+            "action": f"Renomear {py_file.name} para {py_file.name}.bak",
+        }
+        for pattern in specific_patterns
+        if re.search(r"\b" + pattern + r"\b", content, re.IGNORECASE)
+    ]
+
+
+def _check_imports(py_file: Path, content: str) -> list[dict[str, str]]:
+    """Check content for import violations."""
+    violations: list[dict[str, str]] = []
+
+    try:
+        tree = ast.parse(content)
+    except SyntaxError:
+        return violations
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                import_name = alias.name.split(".")[0]
+                if _is_violation_import(import_name):
+                    violations.append({
+                        "file": str(py_file),
+                        "pattern": f"import {import_name}",
+                        "action": f"Remover import violador em {py_file.name}",
+                    })
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            import_name = node.module.split(".")[0]
+            if _is_violation_import(import_name):
+                violations.append({
+                    "file": str(py_file),
+                    "pattern": f"from {node.module}",
+                    "action": f"Remover import violador em {py_file.name}",
+                })
+
+    return violations
+
+
+def _is_violation_import(import_name: str) -> bool:
+    """Check if import is a violation."""
+    return any(
+        p in import_name.lower()
+        for p in ["meltano", "oracle", "client-a", "client-b"]
+    )
 
 
 def analyze_ignore_comments() -> list[Path]:
@@ -107,12 +128,11 @@ def analyze_ignore_comments() -> list[Path]:
             if file.endswith(".py"):
                 file_path = Path(root) / file
                 try:
-                    with Path(file_path).open(encoding="utf-8") as f:
-                        content = f.read()
-                        if "# ignore" in content.lower():
-                            ignore_files.append(file_path)
+                    content = Path(file_path).read_text(encoding="utf-8")
+                    if "# ignore" in content.lower():
+                        ignore_files.append(file_path)
                 except (OSError, ValueError, TypeError):
-                    logger.exception(f"Error processing file {file_path}")
+                    logger.exception("Error processing file %s", file_path)
                     continue
 
     return ignore_files

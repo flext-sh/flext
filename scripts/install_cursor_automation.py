@@ -24,31 +24,39 @@ from typing import Any
 
 # FLEXT result pattern
 class Result[T]:
+    """A result type that can contain either a value or an error."""
+
     def __init__(self, value: T | None = None, error: str | None = None) -> None:
+        """Initialize a Result with either a value or an error."""
         self.value = value
         self.error = error
 
     @property
     def is_success(self) -> bool:
+        """Return True if the result contains a value (no error)."""
         return self.error is None
 
     @property
     def is_failure(self) -> bool:
+        """Return True if the result contains an error."""
         return self.error is not None
 
     @classmethod
     def ok(cls, value: T) -> Result[T]:
+        """Create a successful result with the given value."""
         return cls(value=value)
 
     @classmethod
     def err(cls, error: str) -> Result[T]:
+        """Create a failed result with the given error message."""
         return cls(error=error)
 
 
 class CursorAutomationInstaller:
     """Installs FLEXT automation for Cursor Agent."""
 
-    def __init__(self, project_root: Path, verbose: bool = False) -> None:
+    def __init__(self, project_root: Path, *, verbose: bool = False) -> None:
+        """Initialize the Cursor automation installer."""
         self.project_root = project_root
         self.verbose = verbose
         self.cursor_dir = project_root / ".cursor"
@@ -155,7 +163,7 @@ class CursorAutomationInstaller:
                 self.log("✅ FLEXT Cursor extension ready")
             else:
                 self.log(
-                    "ℹ️  FLEXT extension not found (this is normal if using external extension)"
+                    "ℹ️  FLEXT extension not found (this is normal if using external extension)",
                 )
 
             return Result.ok(True)
@@ -177,7 +185,7 @@ class CursorAutomationInstaller:
                     config = json.load(f)
 
                 if "flext" in config and config["flext"].get("automation", {}).get(
-                    "enabled"
+                    "enabled",
                 ):
                     self.log("✅ Cursor config validated")
                 else:
@@ -226,7 +234,7 @@ class CursorAutomationInstaller:
                     self.log("✅ Automation script working")
                 else:
                     self.log(
-                        f"⚠️  Automation script test failed: {result.stderr.strip()}"
+                        f"⚠️  Automation script test failed: {result.stderr.strip()}",
                     )
 
             return Result.ok({
@@ -260,20 +268,18 @@ class CursorAutomationInstaller:
         if cursor_config.exists():
             info["has_config"] = True
             try:
-                with Path(cursor_config).open("r", encoding="utf-8") as f:
-                    config = json.load(f)
-                    info["automation_ready"] = (
-                        config.get("flext", {})
-                        .get("automation", {})
-                        .get("enabled", False)
-                    )
-            except:
+                config = json.loads(cursor_config.read_text(encoding="utf-8"))
+                info["automation_ready"] = (
+                    config.get("flext", {}).get("automation", {}).get("enabled", False)
+                )
+            except (OSError, ValueError, json.JSONDecodeError):
+                # Config file exists but is unreadable/corrupted - use defaults
                 pass
 
         # Check extensions
         extensions_dir = self.cursor_dir / "extensions"
         info["has_extensions"] = extensions_dir.exists() and any(
-            extensions_dir.iterdir()
+            extensions_dir.iterdir(),
         )
 
         # Check hooks
@@ -282,7 +288,7 @@ class CursorAutomationInstaller:
 
         return info
 
-    def install(self, force: bool = False) -> Result[dict[str, Any]]:
+    def install(self, *, force: bool = False) -> Result[dict[str, Any]]:
         """Install FLEXT automation for Cursor Agent."""
         try:
             self.log("🚀 Starting FLEXT Cursor Agent Automation Installation")
@@ -303,7 +309,7 @@ class CursorAutomationInstaller:
             results["steps"]["automation_script"] = result.is_success
             if result.is_failure:
                 return Result.err(
-                    f"Automation script installation failed: {result.error}"
+                    f"Automation script installation failed: {result.error}",
                 )
 
             # Step 2: Install Git hooks
@@ -345,7 +351,7 @@ class CursorAutomationInstaller:
             }
 
             self.log(
-                f"✅ Installation completed: {successful_steps}/{total_steps} steps successful"
+                f"✅ Installation completed: {successful_steps}/{total_steps} steps successful",
             )
 
             if successful_steps == total_steps:
@@ -353,7 +359,7 @@ class CursorAutomationInstaller:
                 self.log("💡 Use '/flext-validate' in Cursor to test the integration")
             else:
                 self.log(
-                    f"⚠️  Partial installation: {successful_steps}/{total_steps} steps completed"
+                    f"⚠️  Partial installation: {successful_steps}/{total_steps} steps completed",
                 )
 
             return Result.ok(results)
@@ -365,14 +371,14 @@ class CursorAutomationInstaller:
 def main() -> int:
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="Install FLEXT Cursor Agent Automation"
+        description="Install FLEXT Cursor Agent Automation",
     )
     parser.add_argument(
-        "--force", action="store_true", help="Force installation even with errors"
+        "--force", action="store_true", help="Force installation even with errors",
     )
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
     parser.add_argument(
-        "--project-root", type=Path, default=Path.cwd(), help="Project root directory"
+        "--project-root", type=Path, default=Path.cwd(), help="Project root directory",
     )
 
     args = parser.parse_args()
@@ -392,7 +398,7 @@ def main() -> int:
 
         summary = data["summary"]
         print(
-            f"\n✅ Installation completed: {summary['successful_steps']}/{summary['total_steps']} steps"
+            f"\n✅ Installation completed: {summary['successful_steps']}/{summary['total_steps']} steps",
         )
         return 0
 

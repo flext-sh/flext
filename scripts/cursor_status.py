@@ -10,7 +10,9 @@ Usage:
 
 from __future__ import annotations
 
+import argparse
 import json
+import stat
 import subprocess
 import sys
 from pathlib import Path
@@ -19,24 +21,31 @@ from typing import Any
 
 # FLEXT result pattern
 class Result[T]:
+    """A result type that can contain either a value or an error."""
+
     def __init__(self, value: T | None = None, error: str | None = None) -> None:
+        """Initialize a Result with either a value or an error."""
         self.value = value
         self.error = error
 
     @property
     def is_success(self) -> bool:
+        """Return True if the result contains a value (no error)."""
         return self.error is None
 
     @property
     def is_failure(self) -> bool:
+        """Return True if the result contains an error."""
         return self.error is not None
 
     @classmethod
     def ok(cls, value: T) -> Result[T]:
+        """Create a successful result with the given value."""
         return cls(value=value)
 
     @classmethod
     def err(cls, error: str) -> Result[T]:
+        """Create a failed result with the given error message."""
         return cls(error=error)
 
 
@@ -44,6 +53,7 @@ class CursorStatusMonitor:
     """Monitor FLEXT Cursor Agent automation status."""
 
     def __init__(self, project_root: Path) -> None:
+        """Initialize the Cursor status monitor with project root."""
         self.project_root = project_root
         self.cursor_dir = project_root / ".cursor"
 
@@ -90,8 +100,6 @@ class CursorStatusMonitor:
 
         if status["exists"]:
             # Check if executable
-            import stat
-
             mode = script_path.stat().st_mode
             status["executable"] = bool(mode & stat.S_IEXEC)
 
@@ -171,11 +179,8 @@ class CursorStatusMonitor:
         if status["claude_md_exists"] and status["cursorrules_exists"]:
             try:
                 # Check if cursorrules mentions being auto-generated from CLAUDE.md
-                with Path(cursorrules).open("r", encoding="utf-8") as f:
-                    content = f.read()
-                    status["auto_generated"] = (
-                        "Auto-generated from CLAUDE.md" in content
-                    )
+                content = Path(cursorrules).read_text(encoding="utf-8")
+                status["auto_generated"] = "Auto-generated from CLAUDE.md" in content
 
                 # Run update script to check sync
                 update_script = self.project_root / "scripts" / "update_cursor_rules.py"
@@ -212,7 +217,7 @@ class CursorStatusMonitor:
         if not automation["exists"]:
             health["issues"].append("Automation script not found")
             health["recommendations"].append(
-                "Run: python3 scripts/install_cursor_automation.py"
+                "Run: python3 scripts/install_cursor_automation.py",
             )
         elif not automation["working"]:
             health["issues"].append("Automation script not working")
@@ -227,7 +232,7 @@ class CursorStatusMonitor:
         elif not hooks["installed_hooks"]:
             health["issues"].append("No Git hooks installed")
             health["recommendations"].append(
-                "Run: python3 scripts/install_cursor_automation.py"
+                "Run: python3 scripts/install_cursor_automation.py",
             )
 
         # Check extensions
@@ -241,7 +246,7 @@ class CursorStatusMonitor:
         if not rules_sync["in_sync"]:
             health["issues"].append("Cursor rules not in sync with CLAUDE.md")
             health["recommendations"].append(
-                "Run: python3 scripts/update_cursor_rules.py --force"
+                "Run: python3 scripts/update_cursor_rules.py --force",
             )
 
         # Determine overall status
@@ -253,7 +258,7 @@ class CursorStatusMonitor:
         return health
 
     def display_status(
-        self, detailed: bool = False, health_check: bool = False
+        self, *, detailed: bool = False, health_check: bool = False,
     ) -> None:
         """Display status information."""
         print("🔍 FLEXT Cursor Agent Automation Status")
@@ -265,7 +270,7 @@ class CursorStatusMonitor:
         else:
             self.display_basic_status(detailed)
 
-    def display_basic_status(self, detailed: bool) -> None:
+    def display_basic_status(self, *, detailed: bool) -> None:
         """Display basic status."""
         # Automation script
         automation = self.check_automation_script()
@@ -273,7 +278,7 @@ class CursorStatusMonitor:
             "✅" if automation["working"] else "❌" if automation["exists"] else "⚠️"
         )
         print(
-            f"{status_icon} Automation Script: {'Working' if automation['working'] else 'Issues' if automation['exists'] else 'Not found'}"
+            f"{status_icon} Automation Script: {'Working' if automation['working'] else 'Issues' if automation['exists'] else 'Not found'}",
         )
 
         # Git hooks
@@ -294,7 +299,7 @@ class CursorStatusMonitor:
         rules_sync = self.check_rules_sync()
         status_icon = "✅" if rules_sync["in_sync"] else "⚠️"
         print(
-            f"{status_icon} Rules Sync: {'In sync' if rules_sync['in_sync'] else 'Out of sync'}"
+            f"{status_icon} Rules Sync: {'In sync' if rules_sync['in_sync'] else 'Out of sync'}",
         )
 
         if detailed:
@@ -311,15 +316,15 @@ class CursorStatusMonitor:
                 for ext in extensions["extensions"]:
                     print(f"    • {ext['name']} ({ext['size']} bytes)")
 
-    def display_health_status(self, health: dict[str, Any], detailed: bool) -> None:
+    def display_health_status(self, health: dict[str, Any], *, detailed: bool) -> None:
         """Display health status."""
         overall_status = health["overall_status"]
         status_icon = {"healthy": "✅", "issues_found": "⚠️", "unknown": "❓"}.get(
-            overall_status, "❓"
+            overall_status, "❓",
         )
 
         print(
-            f"{status_icon} Overall Status: {overall_status.replace('_', ' ').title()}"
+            f"{status_icon} Overall Status: {overall_status.replace('_', ' ').title()}",
         )
 
         # Issues
@@ -335,40 +340,52 @@ class CursorStatusMonitor:
                 print(f"  • {rec}")
 
         if detailed:
-            print("\n📊 Component Details:")
-            for component_name, component_data in health["components"].items():
-                print(f"\n  {component_name.title()}:")
-                for key, value in component_data.items():
-                    if isinstance(value, list):
-                        if value:
-                            print(f"    {key}: {len(value)} items")
-                            for item in value[:3]:  # Show first 3
-                                if isinstance(item, dict):
-                                    item_desc = item.get("name", str(item))
-                                else:
-                                    item_desc = str(item)
-                                print(f"      • {item_desc}")
-                            if len(value) > 3:
-                                print(f"      ... and {len(value) - 3} more")
-                        else:
-                            print(f"    {key}: empty")
-                    else:
-                        print(f"    {key}: {value}")
+            _display_component_details(health["components"])
+
+
+def _display_component_details(components: dict[str, Any]) -> None:
+    """Display detailed component information."""
+    print("\n📊 Component Details:")
+    for component_name, component_data in components.items():
+        print(f"\n  {component_name.title()}:")
+        _display_component_data(component_data)
+
+
+def _display_component_data(component_data: dict[str, Any]) -> None:
+    """Display data for a single component."""
+    for key, value in component_data.items():
+        if isinstance(value, list):
+            _display_list_value(key, value)
+        else:
+            print(f"    {key}: {value}")
+
+
+def _display_list_value(key: str, value: list[Any]) -> None:
+    """Display a list value with proper formatting."""
+    if value:
+        print(f"    {key}: {len(value)} items")
+        for item in value[:3]:  # Show first 3
+            item_desc = (
+                item.get("name", str(item)) if isinstance(item, dict) else str(item)
+            )
+            print(f"      • {item_desc}")
+        if len(value) > 3:
+            print(f"      ... and {len(value) - 3} more")
+    else:
+        print(f"    {key}: empty")
 
 
 def main() -> None:
     """Main entry point."""
-    import argparse
-
     parser = argparse.ArgumentParser(description="FLEXT Cursor Agent Status Monitor")
     parser.add_argument(
-        "--detailed", "-d", action="store_true", help="Show detailed information"
+        "--detailed", "-d", action="store_true", help="Show detailed information",
     )
     parser.add_argument(
-        "--check-health", action="store_true", help="Run comprehensive health check"
+        "--check-health", action="store_true", help="Run comprehensive health check",
     )
     parser.add_argument(
-        "--project-root", type=Path, default=Path.cwd(), help="Project root directory"
+        "--project-root", type=Path, default=Path.cwd(), help="Project root directory",
     )
 
     args = parser.parse_args()
