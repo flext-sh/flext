@@ -3,7 +3,12 @@
 
 This script finds Makefiles without clean targets and adds a comprehensive
 clean target that removes build artifacts, cache files, and cruft.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
+
+from __future__ import annotations
 
 from pathlib import Path
 

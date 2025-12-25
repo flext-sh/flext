@@ -12,7 +12,12 @@ Handles:
 - Protocols (with @runtime_checkable)
 - Skips enum values (.value)
 - Skips Literal type aliases
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
+
+from __future__ import annotations
 
 import re
 import sys
@@ -120,7 +125,7 @@ def process_file(filepath: Path, *, dry_run: bool = False) -> tuple[int, bool]:
     return conversions, False
 
 
-def main() -> None:
+def main() -> int:
     """Main entry point."""
     dry_run = "--dry-run" in sys.argv
 

@@ -3,7 +3,12 @@
 
 This script finds Makefiles that still have basic clean targets and updates them
 with comprehensive cruft removal capabilities.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
+
+from __future__ import annotations
 
 from pathlib import Path
 
