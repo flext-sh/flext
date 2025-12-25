@@ -10,14 +10,20 @@ This script:
 
 Usage:
     python markdown_lint_workspace.py [--fix] [--sarif-output FILE] [--verbose]
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
+
+from __future__ import annotations
 
 import argparse
 import json
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
+
+# No Any types used - using object for JSON data structures
 
 
 class MarkdownLinter:
@@ -58,7 +64,8 @@ class MarkdownLinter:
             should_ignore = False
             for ignore_pattern in ignore_patterns:
                 if path.match(ignore_pattern) or ignore_pattern.rstrip("/").replace(
-                    "**/", "",
+                    "**/",
+                    "",
                 ) in str(path):
                     should_ignore = True
                     break
@@ -69,8 +76,12 @@ class MarkdownLinter:
         return sorted(md_files)
 
     def run_markdownlint(
-        self, files: list[Path], *, fix: bool = False, verbose: bool = False,
-    ) -> dict[str, Any]:
+        self,
+        files: list[Path],
+        *,
+        fix: bool = False,
+        verbose: bool = False,
+    ) -> dict[str, object]:
         """Run markdownlint on the specified files."""
         cmd = ["npx", "markdownlint-cli"]
 
@@ -114,7 +125,9 @@ class MarkdownLinter:
             return {"success": False, "issues": [], "stderr": str(e), "returncode": -1}
 
     def generate_sarif_report(
-        self, issues: list[dict], output_file: str | None = None,
+        self,
+        issues: list[dict],
+        output_file: str | None = None,
     ) -> str:
         """Generate SARIF report from markdownlint issues."""
         sarif_report = {
@@ -143,7 +156,8 @@ class MarkdownLinter:
             line_number = issue.get("lineNumber", 1)
             rule_id = issue.get("ruleNames", ["unknown"])[0]
             message = issue.get(
-                "ruleDescription", issue.get("ruleInformation", "Unknown issue"),
+                "ruleDescription",
+                issue.get("ruleInformation", "Unknown issue"),
             )
             rule_info = issue.get("ruleInformation", "")
 
@@ -265,7 +279,9 @@ class MarkdownLinter:
         return categories
 
     def print_report(
-        self, issues: list[dict], categories: dict[str, list[dict]],
+        self,
+        issues: list[dict],
+        categories: dict[str, list[dict]],
     ) -> None:
         """Print a comprehensive report of issues found."""
         print("🔍 MARKDOWN LINTING REPORT")
@@ -325,7 +341,10 @@ def main() -> None:
     )
     parser.add_argument("--verbose", action="store_true", help="Verbose output")
     parser.add_argument(
-        "--workspace-root", type=str, default=".", help="Workspace root directory",
+        "--workspace-root",
+        type=str,
+        default=".",
+        help="Workspace root directory",
     )
 
     args = parser.parse_args()
@@ -382,7 +401,9 @@ def main() -> None:
 
         try:
             final_result = linter.run_markdownlint(
-                batch, fix=False, verbose=args.verbose,
+                batch,
+                fix=False,
+                verbose=args.verbose,
             )
 
             if final_result["success"] and final_result["issues"]:
@@ -433,7 +454,9 @@ def main() -> None:
         print(f"📂 Files needing fixes: {len(issues_by_file)}")
         # Show top 5 files with most issues
         sorted_files = sorted(
-            issues_by_file.items(), key=lambda x: len(x[1]), reverse=True,
+            issues_by_file.items(),
+            key=lambda x: len(x[1]),
+            reverse=True,
         )
         for file_path, issues in sorted_files[:5]:
             print(f"  • {file_path}: {len(issues)} issues")
@@ -481,7 +504,7 @@ def main() -> None:
 def _save_processing_summary(
     summary_file: str,
     fixed_count: int,
-    remaining_issues: list[dict[str, Any]],
+    remaining_issues: list[dict[str, object]],
     md_files: list[Path],
 ) -> None:
     """Save processing summary to file."""
@@ -500,7 +523,7 @@ def _save_processing_summary(
         print(f"❌ Error saving summary: {e}")
 
 
-def _write_remaining_issues(f: Path, remaining_issues: list[dict[str, Any]]) -> None:
+def _write_remaining_issues(f: Path, remaining_issues: list[dict[str, object]]) -> None:
     """Write remaining issues section."""
     f.write("## Files Requiring Manual Fixes\n\n")
     f.write(
@@ -525,7 +548,9 @@ def _write_remaining_issues(f: Path, remaining_issues: list[dict[str, Any]]) -> 
 
 
 def _write_file_issues(
-    f: Path, file_path: str, file_issues: list[dict[str, Any]],
+    f: Path,
+    file_path: str,
+    file_issues: list[dict[str, object]],
 ) -> None:
     """Write issues for a specific file."""
     f.write(f"### {file_path} ({len(file_issues)} issues)\n\n")

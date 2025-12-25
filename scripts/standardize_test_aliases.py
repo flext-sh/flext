@@ -7,7 +7,12 @@ Converts:
 - u = TestsUtilities -> tu = TestsUtilities
 - c = TestsConstants -> tc = TestsConstants
 - p = TestsProtocols -> tp = TestsProtocols
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
 """
+
+from __future__ import annotations
 
 import re
 import sys

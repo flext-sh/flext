@@ -23,8 +23,8 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 
 from flext_core import (
-    r as r,
-    service as service,
+    r,
+    service,
 )
 
 ItemType = dict[str, object]
