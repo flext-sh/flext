@@ -24,7 +24,7 @@ from enum import StrEnum
 
 from flext_core import (
     r,
-    service,
+    FlextService,
 )
 
 ItemType = dict[str, object]
@@ -93,7 +93,7 @@ class CompleteWorkflowExample:
         aggregated_metrics: dict[str, float | int] = field(default_factory=dict)
         workflow_status: str = "unknown"
 
-    class WorkflowOrchestrator(service[dict[str, object]]):
+    class WorkflowOrchestrator(FlextService[dict[str, object]]):
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True

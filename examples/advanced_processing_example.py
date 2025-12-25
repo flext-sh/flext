@@ -21,7 +21,7 @@ from enum import StrEnum
 
 from flext_core import (
     r as r,
-    service as service,
+    FlextService,
 )
 
 ItemDict = dict[str, str | int | float | bool]
@@ -60,7 +60,7 @@ class AdvancedProcessingExample:
         validation_time: float = 0.0
 
     class ProcessingPipeline(
-        service[
+        FlextService[
             dict[
                 str,
                 list[ItemDict]
