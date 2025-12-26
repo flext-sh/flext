@@ -24,8 +24,8 @@ from enum import StrEnum
 from typing import ClassVar
 
 from flext_core import (
-    r as r,
     FlextService as service,
+    r,
 )
 
 EntryDict = dict[str, object]

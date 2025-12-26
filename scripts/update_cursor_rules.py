@@ -343,7 +343,10 @@ class CursorRulesUpdater:
         return current_hash != new_hash
 
     def update(
-        self, *, force: bool = False, dry_run: bool = False,
+        self,
+        *,
+        force: bool = False,
+        dry_run: bool = False,
     ) -> Result[dict[str, Any]]:
         """Update Cursor configuration from CLAUDE.md."""
         try:
@@ -387,7 +390,9 @@ def main() -> int:
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Update FLEXT Cursor Rules")
     parser.add_argument(
-        "--force", action="store_true", help="Force update even if no changes detected",
+        "--force",
+        action="store_true",
+        help="Force update even if no changes detected",
     )
     parser.add_argument(
         "--dry-run",
@@ -395,7 +400,10 @@ def main() -> int:
         help="Show what would be updated without making changes",
     )
     parser.add_argument(
-        "--project-root", type=Path, default=Path.cwd(), help="Project root directory",
+        "--project-root",
+        type=Path,
+        default=Path.cwd(),
+        help="Project root directory",
     )
 
     args = parser.parse_args()

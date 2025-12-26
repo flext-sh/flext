@@ -20,8 +20,8 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 
 from flext_core import (
-    r as r,
     FlextService,
+    r,
 )
 
 ItemDict = dict[str, str | int | float | bool]

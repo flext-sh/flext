@@ -91,7 +91,8 @@ def untrack_file(project_dir: Path, file_path: str) -> bool:
 
 
 def clean_project(
-    project_dir: Path, mode: CleanMode = CleanMode.DRY_RUN,
+    project_dir: Path,
+    mode: CleanMode = CleanMode.DRY_RUN,
 ) -> dict[str, list[str]]:
     """Clean tracked files that should be ignored.
 

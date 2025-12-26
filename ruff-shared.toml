@@ -63,6 +63,7 @@ target-version = "py313"
         "PLR0915", # too-many-statements - Many statements in some builder functions
         "PLR0917", # too-many-positional-arguments - Sometimes necessary for flexibility
         "PLR6301", # no-self-use
+        "PLW0108", # unnecessary-lambda - lambdas in Validator definitions are clearer than alternatives
         "PYI042",  # type-alias-without-annotation - Allow short aliases (r, t, c, m, u, p, etc.) for FLEXT pattern
         "Q000",
         "S608",
@@ -282,6 +283,10 @@ target-version = "py313"
             "S603",   # subprocess calls for controlled testing operations
             "SLF001", # private member access within class hierarchy
             "PLC2801", # object.__setattr__ - necessary for Pydantic frozen models and session management
+        ]
+        "**/singer/*.py" = [
+            "S404",   # subprocess import for CLI execution of Singer taps/targets
+            "S603",   # subprocess calls for Singer CLI commands with validated input
         ]
         "**/*typings*" = [
             "ANN401",

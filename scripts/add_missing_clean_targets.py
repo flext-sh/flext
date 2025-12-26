@@ -207,7 +207,8 @@ def main() -> None:
             # Check if it already has a clean target
             content = makefile_path.read_text(encoding="utf-8")
             if ".PHONY: clean" not in content and add_clean_target(
-                makefile_path, project,
+                makefile_path,
+                project,
             ):
                 added_count += 1
         else:

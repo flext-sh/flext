@@ -23,8 +23,8 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 
 from flext_core import (
-    r,
     FlextService,
+    r,
 )
 
 ItemType = dict[str, object]
@@ -231,7 +231,7 @@ class CompleteWorkflowExample:
             def process_single_item(item: ItemType) -> ItemType | None:
                 try:
                     result = stage_func(item, context)
-                    return result.value if result.is_success else None
+                    return result.map_or(None)
                 except Exception as e:
                     return {"error": str(e), "item": item}
 
