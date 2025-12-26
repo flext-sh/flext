@@ -333,7 +333,8 @@ class CursorRulesUpdater:
         """Check if update is needed."""
         current_config = self.load_current_config()
         current_hash = (
-            current_config.get("flext", {})
+            current_config
+            .get("flext", {})
             .get("automation", {})
             .get("last_updated", "")
         )

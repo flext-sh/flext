@@ -62,7 +62,9 @@ target-version = "py313"
         "PLR0914", # too-many-local-variables - Many local variables in complex functions
         "PLR0915", # too-many-statements - Many statements in some builder functions
         "PLR0917", # too-many-positional-arguments - Sometimes necessary for flexibility
+        "PLR1702", # too-many-nested-blocks - Complex algorithms require nesting
         "PLR6301", # no-self-use
+        "PLW2901", # outer-for-loop-variable-overwritten - Intentional in batch processing
         "PLW0108", # unnecessary-lambda - lambdas in Validator definitions are clearer than alternatives
         "PYI042",  # type-alias-without-annotation - Allow short aliases (r, t, c, m, u, p, etc.) for FLEXT pattern
         "Q000",

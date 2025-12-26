@@ -106,9 +106,9 @@ def generate_sarif_report(results: list[dict[str, object]]) -> dict[str, object]
                 "locations": [
                     {
                         "physicalLocation": {
-                            "artifactLocation": {"uri": f"{result['project']}/tests/"}
-                        }
-                    }
+                            "artifactLocation": {"uri": f"{result['project']}/tests/"},
+                        },
+                    },
                 ],
             })
 
