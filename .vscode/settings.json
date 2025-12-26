@@ -146,5 +146,11 @@
         ".meltano": true,
         "vectorbt.pro": true,
         "external-docs": true
+    },
+    "makefile.configureOnOpen": false,
+    "python.languageServer": "None",
+    "sonarlint.connectedMode.project": {
+        "connectionId": "flext-sh",
+        "projectKey": "dc-code-analyzer"
     }
 }

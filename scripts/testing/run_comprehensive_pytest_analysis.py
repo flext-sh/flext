@@ -89,7 +89,10 @@ class PytestAnalyzer:
         return PROJECT_ROOT / f"{project_name}"
 
     def run_pytest_with_analysis(
-        self, project_path: Path, project_name: str, timeout: int = TIMEOUT_SECONDS
+        self,
+        project_path: Path,
+        project_name: str,
+        timeout: int = TIMEOUT_SECONDS,
     ) -> tuple[int, str, str, dict[str, Any]]:
         """Run pytest with comprehensive analysis and capture detailed results."""
         try:
@@ -249,7 +252,7 @@ class PytestAnalyzer:
             "pytest_data": pytest_data,
             "has_failures": returncode != 0,
             "error_count": len(
-                pytest_data.get("summary", {}).get("err
+                pytest_data.get("summary", {}).get("error", []),
             ),
             "passed_count": pytest_data.get("summary", {}).get("passed", 0),
             "failed_count": pytest_data.get("summary", {}).get("failed", 0),
@@ -259,7 +262,10 @@ class PytestAnalyzer:
             json.dump(summary, f, indent=2)
 
     def _generate_sarif_for_project(
-        self, _project_name: str, pytest_data: dict[str, Any], _stderr: str
+        self,
+        _project_name: str,
+        pytest_data: dict[str, Any],
+        _stderr: str,
     ) -> dict[str, Any]:
         """Generate SARIF format results for a project."""
         runs = []
@@ -275,7 +281,7 @@ class PytestAnalyzer:
                     "name": "pytest",
                     "version": "7.0.0",
                     "informationUri": "https://pytest.org/",
-                }
+                },
             },
             "results": [],
         }
@@ -288,9 +294,9 @@ class PytestAnalyzer:
                 "locations": [
                     {
                         "physicalLocation": {
-                            "artifactLocation": {"uri": failure.get("nodeid", "")}
-                        }
-                    }
+                            "artifactLocation": {"uri": failure.get("nodeid", "")},
+                        },
+                    },
                 ],
             }
             run["results"].append(result)
@@ -318,7 +324,8 @@ class PytestAnalyzer:
         self.log(f"🔍 Analyzing {project_name}...")
 
         returncode, stdout, stderr, pytest_data = self.run_pytest_with_analysis(
-            project_path, project_name
+            project_path,
+            project_name,
         )
 
         # Save results
@@ -403,7 +410,8 @@ class PytestAnalyzer:
         return all_projects
 
     def _generate_consolidated_sarif(
-        self, project_summaries: dict[str, Any]
+        self,
+        project_summaries: dict[str, Any],
     ) -> dict[str, Any]:
         """Generate consolidated SARIF report."""
         runs = []
@@ -433,7 +441,7 @@ class PytestAnalyzer:
 
         if failed_projects:
             recommendations.append(
-                f"Fix test failures in {len(failed_projects)} projects: {', '.join(failed_projects[:5])}{'...' if len(failed_projects) > 5 else ''}"
+                f"Fix test failures in {len(failed_projects)} projects: {', '.join(failed_projects[:5])}{'...' if len(failed_projects) > 5 else ''}",
             )
 
             # Prioritize by tier
@@ -442,12 +450,12 @@ class PytestAnalyzer:
             ]
             if tier0_failed:
                 recommendations.append(
-                    f"🚨 CRITICAL: Fix Tier 0 (Foundation) failures first: {', '.join(tier0_failed)}"
+                    f"🚨 CRITICAL: Fix Tier 0 (Foundation) failures first: {', '.join(tier0_failed)}",
                 )
 
         if len(failed_projects) == 0:
             recommendations.append(
-                "🎉 All tests passing! Consider adding more test coverage."
+                "🎉 All tests passing! Consider adding more test coverage.",
             )
 
         return recommendations
@@ -475,7 +483,9 @@ class PytestAnalyzer:
             for project in projects:
                 try:
                     success = await asyncio.get_event_loop().run_in_executor(
-                        None, self.analyze_project, project
+                        None,
+                        self.analyze_project,
+                        project,
                     )
                     if not success:
                         failed_projects.append(project)

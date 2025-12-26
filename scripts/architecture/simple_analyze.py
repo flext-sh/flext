@@ -64,7 +64,9 @@ def _process_file(py_file: Path, specific_patterns: list[str]) -> list[dict[str,
 
 
 def _check_patterns(
-    py_file: Path, content: str, specific_patterns: list[str]
+    py_file: Path,
+    content: str,
+    specific_patterns: list[str],
 ) -> list[dict[str, str]]:
     """Check content for specific violation patterns."""
     return [
