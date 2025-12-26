@@ -242,6 +242,10 @@ target-version = "py313"
             "PLC2801", # unnecessary-dunder-call - object.__setattr__ required for Pydantic extra="forbid"
             "S107",    # hardcoded-password-default - "Bearer" is HTTP protocol keyword, not password
         ]
+        "**/_utilities/parser.py" = [
+            "ARG004",  # unused-static-method-argument - overload implementations may not use all parameters
+            "FBT001",  # boolean-type-hint-positional-argument - required by type-generic conversion overloads
+        ]
         "**/*models*" = [
             "ANN401",  # any-type - Pydantic 2 models legitimately use object in dict[str, object]
             "F821",    # undefined-name - DomainEvent forward references in string literals for Pydantic
