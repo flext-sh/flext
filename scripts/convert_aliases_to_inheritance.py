@@ -39,7 +39,10 @@ def is_protocol_file(filepath: Path) -> bool:
 
 
 def convert_alias_to_inheritance(
-    match: Match[str], line_num: int, lines: list[str], filepath: Path,
+    match: Match[str],
+    line_num: int,
+    lines: list[str],
+    filepath: Path,
 ) -> str:
     """Convert alias to inheritance class."""
     indent = match.group(1)

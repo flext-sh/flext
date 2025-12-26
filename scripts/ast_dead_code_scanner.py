@@ -174,7 +174,9 @@ class DeadCodeScanner:
                     self.imports[name].append((file_path, node.lineno))
 
     def _get_parent_class(
-        self, tree: ast.AST, func_node: ast.FunctionDef | ast.AsyncFunctionDef,
+        self,
+        tree: ast.AST,
+        func_node: ast.FunctionDef | ast.AsyncFunctionDef,
     ) -> str | None:
         """Get parent class name for a function node if it's a method."""
         for node in ast.walk(tree):

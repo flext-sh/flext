@@ -258,7 +258,10 @@ class CursorStatusMonitor:
         return health
 
     def display_status(
-        self, *, detailed: bool = False, health_check: bool = False,
+        self,
+        *,
+        detailed: bool = False,
+        health_check: bool = False,
     ) -> None:
         """Display status information."""
         print("🔍 FLEXT Cursor Agent Automation Status")
@@ -320,7 +323,8 @@ class CursorStatusMonitor:
         """Display health status."""
         overall_status = health["overall_status"]
         status_icon = {"healthy": "✅", "issues_found": "⚠️", "unknown": "❓"}.get(
-            overall_status, "❓",
+            overall_status,
+            "❓",
         )
 
         print(
@@ -379,13 +383,21 @@ def main() -> None:
     """Main entry point."""
     parser = argparse.ArgumentParser(description="FLEXT Cursor Agent Status Monitor")
     parser.add_argument(
-        "--detailed", "-d", action="store_true", help="Show detailed information",
+        "--detailed",
+        "-d",
+        action="store_true",
+        help="Show detailed information",
     )
     parser.add_argument(
-        "--check-health", action="store_true", help="Run comprehensive health check",
+        "--check-health",
+        action="store_true",
+        help="Run comprehensive health check",
     )
     parser.add_argument(
-        "--project-root", type=Path, default=Path.cwd(), help="Project root directory",
+        "--project-root",
+        type=Path,
+        default=Path.cwd(),
+        help="Project root directory",
     )
 
     args = parser.parse_args()

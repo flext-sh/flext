@@ -374,11 +374,16 @@ def main() -> int:
         description="Install FLEXT Cursor Agent Automation",
     )
     parser.add_argument(
-        "--force", action="store_true", help="Force installation even with errors",
+        "--force",
+        action="store_true",
+        help="Force installation even with errors",
     )
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
     parser.add_argument(
-        "--project-root", type=Path, default=Path.cwd(), help="Project root directory",
+        "--project-root",
+        type=Path,
+        default=Path.cwd(),
+        help="Project root directory",
     )
 
     args = parser.parse_args()
