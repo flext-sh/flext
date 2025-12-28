@@ -115,13 +115,13 @@ security: ## Security checks (Bandit)
 
 # === DEAD CODE & MODERNIZATION ===
 dead-code: ## Dead code detection (Vulture)
-	$(Q)vulture $(SRC_DIR) --min-confidence 80 --exclude "tests,examples" 2>/dev/null || { echo "WARN: vulture not installed"; exit 0; }
+	$(Q)$(POETRY) run vulture $(SRC_DIR) --min-confidence 80 --exclude "tests,examples" || true
 
 modernize: ## Modern patterns suggestions (Refurb)
-	$(Q)refurb $(SRC_DIR) --enable-all --quiet 2>/dev/null || true
+	$(Q)$(POETRY) run refurb $(SRC_DIR) --enable-all --quiet || true
 
 cognitive-complexity: ## Cognitive complexity (Complexipy)
-	$(Q)complexipy $(SRC_DIR) --max-complexity 15 2>/dev/null || { echo "WARN: complexipy not installed"; exit 0; }
+	$(Q)$(POETRY) run complexipy $(SRC_DIR) --max-complexity 15 || true
 
 # === QUALITY GATES ===
 validate: lint format-check type-check complexity docstring-check security test ## Full validation
