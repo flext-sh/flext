@@ -132,8 +132,8 @@ class FlextModels.Entity(BaseModel):
     def validate_domain_rules(self):
         return FlextResult.ok(None)
 
-class FlextModels.Value(BaseModel):
-    """Mock FlextModels.Value base class."""
+class m.Value(BaseModel):
+    """Mock m.Value base class."""
     pass
 
 class FlextSettings(BaseSettings):
@@ -153,7 +153,7 @@ TConfigDict = t.Dict
 # Export all required symbols
 __all__: t.StringList = [
     "FlextResult", "FlextLogger", "FlextContainer", "get_flext_container",
-    "FlextModels.Entity", "FlextModels.Value", "FlextSettings", "FlextConstants", 
+    "FlextModels.Entity", "m.Value", "FlextSettings", "FlextConstants", 
     "TAnyDict", "TConfigDict", "FlextExceptions.Error", "FlextExceptions.ValidationError",
     "FlextExceptions.ConfigurationError", "FlextExceptions.ConnectionError", "FlextExceptions.ProcessingError",
     "FlextExceptions.AuthenticationError", "FlextExceptions.TimeoutError"

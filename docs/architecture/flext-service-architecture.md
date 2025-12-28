@@ -1179,7 +1179,7 @@ pipeline = (
 │                                                                  │
 │  Layer 2: Domain Models (DDD Patterns)                          │
 │  ├─ FlextModels.Entity      → Domain entities                   │
-│  ├─ FlextModels.Value       → Value objects                     │
+│  ├─ m.Value       → Value objects                     │
 │  ├─ FlextModels.Command     → CQRS commands                     │
 │  ├─ FlextModels.Query       → CQRS queries                      │
 │  └─ FlextModels.ArbitraryTypesModel → Pydantic base            │
@@ -4017,8 +4017,8 @@ class FlextModels:
 class FlextApiModels:
     """HTTP domain models extending FlextModels."""
 
-    # ✅ BOM: Herda de FlextModels.Value (immutable)
-    class HttpRequest(FlextModels.Value):
+    # ✅ BOM: Herda de m.Value (immutable)
+    class HttpRequest(m.Value):
         """Immutable HTTP request value object."""
 
         method: str = Field(
@@ -4036,8 +4036,8 @@ class FlextApiModels:
         def content_type(self) -> str | None:
             return self.headers.get("Content-Type")
 
-    # ✅ BOM: Herda de FlextModels.Value (immutable)
-    class HttpResponse(FlextModels.Value):
+    # ✅ BOM: Herda de m.Value (immutable)
+    class HttpResponse(m.Value):
         """Immutable HTTP response value object."""
 
         status_code: int = Field(..., ge=100, le=599)
@@ -4057,7 +4057,7 @@ class FlextApiModels:
             return self.status_code >= 400
 ```
 
-**Análise:** FlextApiModels usa FlextModels.Value perfeitamente:
+**Análise:** FlextApiModels usa m.Value perfeitamente:
 
 - Herda de `Value` (immutability via `frozen=True`)
 - Usa `computed_field` para derived properties
@@ -4073,7 +4073,7 @@ class FlextApiModels:
 class FlextLdifModels:
     """LDIF domain models."""
 
-    # ❌ PROBLEMA: Não herda de FlextModels.Value ou Entity
+    # ❌ PROBLEMA: Não herda de m.Value ou Entity
     class Entry(BaseModel):
         """LDIF entry - SHOULD be Entity (tem identidade = DN)."""
         dn: DN  # Identidade única
@@ -4191,8 +4191,8 @@ class MyValueObject(BaseModel):
     # ❌ Falta: frozen=True (immutability)
 
 
-# ✅ CORRETO: Herdar de FlextModels.Value
-class MyValueObject(FlextModels.Value):
+# ✅ CORRETO: Herdar de m.Value
+class MyValueObject(m.Value):
     field1: str
     field2: int
     # ✅ Herda: frozen=True automaticamente
@@ -4229,7 +4229,7 @@ class HttpResponse(BaseModel):
 
 
 # ✅ CORRETO: computed_field
-class HttpResponse(FlextModels.Value):
+class HttpResponse(m.Value):
     status_code: int
 
     @computed_field
@@ -4255,7 +4255,7 @@ class MyProjectModels:
     """Project models extending FlextModels."""
 
     # ✅ BOM: Value objects herdam de Value
-    class Address(FlextModels.Value):
+    class Address(m.Value):
         """Immutable address."""
         street: str
         city: str
@@ -4338,7 +4338,7 @@ class Order(FlextModels.Entity):
 grep -r "class.*BaseModel" src/ | grep -v "frozen=True"
 ```
 
-**Passo 2: Migrar Para FlextModels.Value**
+**Passo 2: Migrar Para m.Value**
 
 ```python
 
@@ -4349,7 +4349,7 @@ class MyValueObject(BaseModel):
 
 
 # DEPOIS
-class MyValueObject(FlextModels.Value):
+class MyValueObject(m.Value):
     # Herda frozen=True
     field1: str
 ```
@@ -4925,7 +4925,7 @@ class MyService(FlextService[T]):
 
 2. **Padronizar Models com FlextModels**
    - Migrar `FlextLdifModels.Entry` para `FlextModels.Entity`
-   - Migrar Value Objects para `FlextModels.Value`
+   - Migrar Value Objects para `m.Value`
    - **Impacto:** Padronização, features automáticas
    - **Esforço:** 4-6 horas
 
