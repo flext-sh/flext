@@ -34,7 +34,6 @@ LDIF: Final[int]
 RESTARTABLE: Final[int]
 REUSABLE: Final[int]
 
-
 class Server:
     """LDAP Server representation."""
 
@@ -56,7 +55,6 @@ class Server:
         connect_timeout: int | None = None,
         **kwargs: Any,
     ) -> None: ...
-
 
 class Connection:
     """LDAP Connection object."""
@@ -158,44 +156,23 @@ class Connection:
 
     def extend(self) -> Any: ...
 
-
 class LDAPException(Exception):
     """Base exception for LDAP operations."""
-
-    ...
-
 
 class LDAPBindError(LDAPException):
     """Bind operation failed."""
 
-    ...
-
-
 class LDAPSocketOpenError(LDAPException):
     """Socket open failed."""
-
-    ...
-
 
 class LDAPSocketCloseError(LDAPException):
     """Socket close failed."""
 
-    ...
-
-
 class LDAPCommunicationError(LDAPException):
     """Communication error."""
-
-    ...
-
 
 class LDAPEntryAlreadyExistsResult(LDAPException):
     """Entry already exists."""
 
-    ...
-
-
 class LDAPNoSuchObjectResult(LDAPException):
     """No such object."""
-
-    ...

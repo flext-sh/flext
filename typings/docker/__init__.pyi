@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from docker.models.containers import Container, ContainerCollection
+from docker.models.containers import ContainerCollection
 
 def from_env(**kwargs: Any) -> DockerClient: ...
 

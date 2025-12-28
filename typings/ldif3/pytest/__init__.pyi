@@ -3,17 +3,6 @@ from _pytest._code import ExceptionInfo
 from _pytest.assertion import register_assert_rewrite
 from _pytest.cacheprovider import Cache
 from _pytest.capture import CaptureFixture
-from _pytest.settings import (
-    Config,
-    ExitCode,
-    PytestPluginManager,
-    UsageError,
-    cmdline,
-    console_main,
-    hookimpl,
-    hookspec,
-    main,
-)
 from _pytest.config.argparsing import OptionGroup, Parser
 from _pytest.doctest import DoctestItem
 from _pytest.fixtures import (
@@ -51,6 +40,17 @@ from _pytest.raises import RaisesExc, RaisesGroup, raises
 from _pytest.recwarn import WarningsRecorder, deprecated_call, warns
 from _pytest.reports import CollectReport, TestReport
 from _pytest.runner import CallInfo
+from _pytest.settings import (
+    Config,
+    ExitCode,
+    PytestPluginManager,
+    UsageError,
+    cmdline,
+    console_main,
+    hookimpl,
+    hookspec,
+    main,
+)
 from _pytest.stash import Stash, StashKey
 from _pytest.terminal import TerminalReporter, TestShortLogReport
 from _pytest.tmpdir import TempPathFactory
