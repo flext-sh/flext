@@ -36,7 +36,8 @@ $(LINT_CACHE_DIR):
 .PHONY: help install install-dev setup lint format fix type-check test test-fast upgrade
 .PHONY: test-unit test-integration security validate check clean clean-all reset
 .PHONY: build shell deps complexity docstring-check coverage-html
-.PHONY: t l f tc c v s dp cx dc
+.PHONY: dead-code modernize cognitive-complexity validate-full
+.PHONY: t l f tc c v s dp cx dc vf
 
 # === HELP ===
 help: ## Show commands
