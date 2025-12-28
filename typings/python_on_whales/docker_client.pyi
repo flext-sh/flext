@@ -28,7 +28,6 @@ class ComposeManager:
         wait: bool = False,
     ) -> None:
         """Bring up compose services."""
-        ...
 
     def down(
         self,
@@ -38,7 +37,6 @@ class ComposeManager:
         volumes: bool = False,
     ) -> None:
         """Bring down compose services."""
-        ...
 
 class DockerClient:
     """Python-on-whales Docker client.
@@ -77,4 +75,3 @@ class DockerClient:
         client_type: Literal["docker", "podman", "nerdctl", "unknown"] = "unknown",
     ) -> None:
         """Initialize Docker client."""
-        ...

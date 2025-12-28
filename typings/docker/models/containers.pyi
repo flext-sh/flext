@@ -1,6 +1,7 @@
 """Type stubs for docker.models.containers."""
 
 from typing import Any
+
 from docker.models.resource import Collection
 
 class Container:

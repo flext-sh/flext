@@ -19,7 +19,6 @@ class DockerClient:
         **kwargs: Any,
     ) -> None:
         """Initialize Docker client."""
-        ...
 
     @classmethod
     def from_env(
@@ -31,4 +30,3 @@ class DockerClient:
         **kwargs: Any,
     ) -> DockerClient:
         """Create a Docker client configured from environment variables."""
-        ...
