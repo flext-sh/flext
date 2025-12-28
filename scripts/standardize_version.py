@@ -93,8 +93,7 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
     def execute(self) -> FlextResult[dict[str, object]]:
         """Execute version standardization with railway pattern."""
         return (
-            self
-            ._scan_projects()
+            self._scan_projects()
             .flat_map(lambda _: self._generate_report())
             .flat_map(self._execute_standardization)
         )
@@ -331,8 +330,7 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
 
             # Functional composition of steps
             return (
-                self
-                ._create_version_file(project)
+                self._create_version_file(project)
                 .flat_map(lambda _: self._remove_old_version_file(project))
                 .flat_map(lambda _: self._update_init_file(project))
                 .flat_map(lambda _: self._check_constants_file(project))
