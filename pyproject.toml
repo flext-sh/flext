@@ -317,6 +317,10 @@ files = ["src/flext"]
 			twisted = "^25.5.0"
 			types-pyyaml = "^6.0.12.20250809"
             beartype = "^0.22.5"
+vulture = "^2.14"
+refurb = "^2.2.0"
+complexipy = "^5.1.0"
+rope = "^1.14.0"
 
 		[tool.poetry.group.typings.dependencies]
 			aiofiles = "^24.1.0"

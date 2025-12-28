@@ -113,8 +113,20 @@ shell: ## Python shell
 security: ## Security checks (Bandit)
 	$(Q)$(POETRY) run bandit -r $(SRC_DIR) -q -ll 2>/dev/null || { echo "WARN: bandit found issues or not installed"; exit 0; }
 
+# === DEAD CODE & MODERNIZATION ===
+dead-code: ## Dead code detection (Vulture)
+	$(Q)vulture $(SRC_DIR) --min-confidence 80 --exclude "tests,examples" 2>/dev/null || { echo "WARN: vulture not installed"; exit 0; }
+
+modernize: ## Modern patterns suggestions (Refurb)
+	$(Q)refurb $(SRC_DIR) --enable-all --quiet 2>/dev/null || true
+
+cognitive-complexity: ## Cognitive complexity (Complexipy)
+	$(Q)complexipy $(SRC_DIR) --max-complexity 15 2>/dev/null || { echo "WARN: complexipy not installed"; exit 0; }
+
 # === QUALITY GATES ===
 validate: lint format-check type-check complexity docstring-check security test ## Full validation
+
+validate-full: lint format-check type-check dead-code cognitive-complexity security test ## Full + dead code
 
 check: lint type-check ## Quick check
 
@@ -149,7 +161,11 @@ f: format
 tc: type-check
 c: clean
 v: validate
+vf: validate-full
 s: setup
 dp: deps
 cx: complexity
 dc: docstring-check
+dd: dead-code
+mod: modernize
+cc: cognitive-complexity
