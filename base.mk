@@ -121,7 +121,7 @@ modernize: ## Modern patterns suggestions (Refurb)
 	$(Q)$(POETRY) run refurb $(SRC_DIR) --enable-all --quiet || true
 
 cognitive-complexity: ## Cognitive complexity (Complexipy)
-	$(Q)$(POETRY) run complexipy $(SRC_DIR) --max-complexity 15 || true
+	$(Q)$(POETRY) run complexipy $(SRC_DIR) --max-complexity-allowed 15 || true
 
 # === QUALITY GATES ===
 validate: lint format-check type-check complexity docstring-check security test ## Full validation
