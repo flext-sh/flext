@@ -12,7 +12,8 @@ set -euo pipefail
 
 FLEXT_DIR="${HOME}/flext"
 BASELINE_FILE="${FLEXT_DIR}/.duplicate-code-baseline"
-SIMILARITY_THRESHOLD="0.8"
+# Read threshold from constants (aggressive: 0.65)
+SIMILARITY_THRESHOLD="0.65"
 MIN_FILE_SIZE="100"
 
 # Colors
