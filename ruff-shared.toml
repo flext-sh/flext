@@ -290,6 +290,22 @@ target-version = "py313"
             "SLF001", # private member access within class hierarchy
             "PLC2801", # object.__setattr__ - necessary for Pydantic frozen models and session management
         ]
+        "**/tools/*.py" = [
+            "FBT001", # boolean-type-hint-positional-argument - CLI tools use boolean flags
+            "FBT002", # boolean-default-value-positional-argument - CLI tools use boolean defaults
+            "S404",   # subprocess import - quality tools need subprocess for external tools
+            "S603",   # subprocess calls - quality tools run external linters
+            "S607",   # start-process-with-partial-path - quality tools run installed commands
+            "T201",   # print - CLI runners output to console
+        ]
+        "**/plugins/*.py" = [
+            "FBT001", # boolean-type-hint-positional-argument - plugin configs use booleans
+            "FBT002", # boolean-default-value-positional-argument - plugin configs use boolean defaults
+            "S404",   # subprocess import - plugins execute external tools
+            "S603",   # subprocess calls - plugins run external commands
+            "S607",   # start-process-with-partial-path - plugins run installed commands
+            "TID252", # relative-imports - plugins may use relative imports
+        ]
         "**/singer/*.py" = [
             "S404",   # subprocess import for CLI execution of Singer taps/targets
             "S603",   # subprocess calls for Singer CLI commands with validated input
