@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextLogger, FlextResult, FlextService
+from pydantic import BaseModel
 
 
 class FlextVersionStandardizationService(FlextService[dict[str, object]]):
@@ -25,7 +26,7 @@ class FlextVersionStandardizationService(FlextService[dict[str, object]]):
     across the FLEXT ecosystem using advanced patterns and minimal line count.
     """
 
-    class ProjectAnalysis(m.Value):
+    class ProjectAnalysis(BaseModel):
         """Immutable project analysis data."""
 
         name: str
@@ -38,7 +39,7 @@ class FlextVersionStandardizationService(FlextService[dict[str, object]]):
         has_pyproject: bool
         issues: frozenset[str]  # Immutable set for thread safety
 
-    class StandardizationConfig(m.Value):
+    class StandardizationConfig(BaseModel):
         """Immutable standardization configuration."""
 
         dry_run: bool
