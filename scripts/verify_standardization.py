@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 from flext_core import FlextLogger, FlextResult, FlextService
+from pydantic import BaseModel
 
 VerificationResult = dict[str, bool]
 ProjectVerification = dict[str, object]
@@ -28,7 +29,7 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
     __version__.py standardization across the FLEXT ecosystem.
     """
 
-    class VerificationConfig(m.Value):
+    class VerificationConfig(BaseModel):
         """Immutable verification configuration."""
 
         flext_root: Path = Path("/home/marlonsc/flext")
