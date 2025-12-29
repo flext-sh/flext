@@ -16,6 +16,10 @@ MIN_COVERAGE ?= 80
 DOCSTRING_MIN ?= 80
 COMPLEXITY_MAX ?= 10
 
+# Quality tool (flext-quality with fallback)
+QUALITY_CMD ?= flext-quality
+QUALITY_AVAILABLE := $(shell command -v $(QUALITY_CMD) 2>/dev/null)
+
 # Export for subprocesses
 export PROJECT_NAME PYTHON_VERSION MIN_COVERAGE
 
@@ -82,10 +86,15 @@ docstring-check: ## Docstring coverage check
 	$(Q)$(POETRY) run interrogate $(SRC_DIR) --fail-under=$(DOCSTRING_MIN) --ignore-init-method --ignore-magic -q 2>/dev/null || { echo "WARN: interrogate not installed or coverage below $(DOCSTRING_MIN)%"; exit 0; }
 
 # === TEST ===
+ifdef QUALITY_AVAILABLE
+test: ## Run tests with coverage
+	$(Q)$(QUALITY_CMD) test --project . --min-coverage $(MIN_COVERAGE)
+else
 test: ## Run tests with coverage
 	$(Q)PYTHONPATH=$(SRC_DIR) $(POETRY) run pytest $(TESTS_DIR) \
 		--cov=$(COV_DIR) --cov-report=term-missing:skip-covered \
 		--cov-fail-under=$(MIN_COVERAGE) -q
+endif
 
 test-fast: ## Run tests (no coverage)
 	$(Q)PYTHONPATH=$(SRC_DIR) $(POETRY) run pytest $(TESTS_DIR) -q --tb=short
@@ -110,8 +119,13 @@ shell: ## Python shell
 	$(Q)PYTHONPATH=$(SRC_DIR) $(POETRY) run python
 
 # === SECURITY (FAIL on issues) ===
+ifdef QUALITY_AVAILABLE
+security: ## Security checks (Bandit)
+	$(Q)$(QUALITY_CMD) security --project . || { echo "WARN: security issues"; exit 0; }
+else
 security: ## Security checks (Bandit)
 	$(Q)$(POETRY) run bandit -r $(SRC_DIR) -q -ll 2>/dev/null || { echo "WARN: bandit found issues or not installed"; exit 0; }
+endif
 
 # === DEAD CODE & MODERNIZATION ===
 dead-code: ## Dead code detection (Vulture)
@@ -124,11 +138,21 @@ cognitive-complexity: ## Cognitive complexity (Complexipy)
 	$(Q)$(POETRY) run complexipy $(SRC_DIR) --max-complexity-allowed 15 || true
 
 # === QUALITY GATES ===
+ifdef QUALITY_AVAILABLE
+check: ## Quick check (lint + type)
+	$(Q)$(QUALITY_CMD) check .
+else
+check: lint type-check ## Quick check (lint + type)
+endif
+
+ifdef QUALITY_AVAILABLE
+validate: ## Full validation
+	$(Q)$(QUALITY_CMD) validate . --min-coverage $(MIN_COVERAGE)
+else
 validate: lint format-check type-check complexity docstring-check security test ## Full validation
+endif
 
 validate-full: lint format-check type-check dead-code cognitive-complexity security test ## Full + dead code
-
-check: lint type-check ## Quick check
 
 # === UPGRADE ===
 upgrade: ## Upgrade all dependencies to latest versions

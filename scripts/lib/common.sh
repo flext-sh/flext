@@ -346,6 +346,85 @@ ensure_poetry() {
 }
 
 # =============================================================================
+# FLEXT QUALITY INTEGRATION
+# =============================================================================
+# Shell wrappers for flext-quality Python library
+# Provides: validation, backup, daemon health checks
+
+# Count lint + type errors in a file
+# Usage: errors=$(flext_count_errors "/path/to/file.py")
+flext_count_errors() {
+    local file="$1"
+    python3 -c "
+from flext_quality.tools.validation import FlextQualityValidationTools
+v = FlextQualityValidationTools()
+r = v.count_errors('$file')
+print(r.value if r.is_success else -1)
+" 2>/dev/null || echo "-1"
+}
+
+# Count only ruff errors in a file
+# Usage: errors=$(flext_count_ruff_errors "/path/to/file.py")
+flext_count_ruff_errors() {
+    local file="$1"
+    python3 -c "
+from flext_quality.tools.validation import FlextQualityValidationTools
+v = FlextQualityValidationTools()
+r = v.count_ruff_errors('$file')
+print(r.value if r.is_success else -1)
+" 2>/dev/null || echo "-1"
+}
+
+# Count only mypy errors in a file
+# Usage: errors=$(flext_count_mypy_errors "/path/to/file.py")
+flext_count_mypy_errors() {
+    local file="$1"
+    python3 -c "
+from flext_quality.tools.validation import FlextQualityValidationTools
+v = FlextQualityValidationTools()
+r = v.count_mypy_errors('$file')
+print(r.value if r.is_success else -1)
+" 2>/dev/null || echo "-1"
+}
+
+# Backup a file before modification
+# Usage: backup_id=$(flext_backup "/path/to/file.py")
+flext_backup() {
+    local file="$1"
+    python3 -c "
+from flext_quality.tools.backup import BackupManager
+b = BackupManager()
+r = b.backup_file('$file')
+print(r.value if r.is_success else 'ERROR')
+" 2>/dev/null || echo "ERROR"
+}
+
+# Restore a file from backup
+# Usage: result=$(flext_restore "backup-abc123")
+flext_restore() {
+    local backup_id="$1"
+    python3 -c "
+from flext_quality.tools.backup import BackupManager
+b = BackupManager()
+r = b.restore_file('$backup_id')
+print('OK' if r.is_success else 'ERROR')
+" 2>/dev/null || echo "ERROR"
+}
+
+# Check quality daemon status (ruff, mypy)
+# Usage: status=$(flext_daemon_status) # Returns JSON
+flext_daemon_status() {
+    local workspace="${1:-$FLEXT_ROOT}"
+    python3 -c "
+import json
+from flext_quality.tools.health import HealthCheckService
+h = HealthCheckService('$workspace')
+r = h.check_daemons()
+print(json.dumps(r.value) if r.is_success else '{}')
+" 2>/dev/null || echo "{}"
+}
+
+# =============================================================================
 # INITIALIZATION
 # =============================================================================
 
