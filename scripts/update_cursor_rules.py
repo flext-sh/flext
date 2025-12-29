@@ -93,6 +93,8 @@ class CursorRulesUpdater:
         content = self.claude_md.read_text(encoding="utf-8")
 
         return {
+            "tool_usage": self._extract_tool_usage_rules(content),
+            "hooks_integration": self._extract_hooks_integration(content),
             "import_order": self._extract_import_order_rules(),
             "type_system": self._extract_type_system_rules(),
             "architecture": self._extract_architecture_rules(),
@@ -143,6 +145,40 @@ class CursorRulesUpdater:
             "documentation_required": True,
         }
 
+    def _extract_hooks_integration(self, content: str) -> dict[str, Any]:
+        """Extract hooks integration information."""
+        # Check if hooks section exists
+        if "## 🪝 HOOKS INTEGRATION" not in content:
+            return {"enabled": False}
+
+        return {
+            "enabled": True,
+            "pre_hooks": [
+                "05-dead-code-detector.sh",
+                "06-modernization-advisor.sh",
+                "07-duplicate-code-detector.sh",
+                "pre_tool_use.py"
+            ],
+            "post_hooks": [
+                "post_tool_use.py",
+                "stop_quality_gate.py"
+            ],
+            "hook_skill_mapping": {
+                "pre_tool_use.py": ["/flext-type-system", "/flext-architecture-rules", "/flext-patterns"],
+                "07-duplicate-code-detector.sh": ["/duplication-analysis"],
+                "post_tool_use.py": ["/flext-quality-gates"],
+                "05-dead-code-detector.sh": ["/flext-quality-gates"],
+                "06-modernization-advisor.sh": ["/flext-patterns", "/flext-type-system"]
+            },
+            "workflow_pattern": [
+                "Hook blocks edit with specific error",
+                "Hook references appropriate skill for help",
+                "Use skill to get detailed guidance",
+                "Apply fix using proper patterns",
+                "Retry edit - hook allows if fixed"
+            ]
+        }
+
     def _extract_patterns(self) -> dict[str, Any]:
         """Extract FLEXT patterns."""
         return {
@@ -150,6 +186,37 @@ class CursorRulesUpdater:
             "result_types": True,
             "namespace_aliases": True,
             "structural_typing": True,
+        }
+
+    def _extract_tool_usage_rules(self, content: str) -> dict[str, Any]:
+        """Extract tool usage rules from CLAUDE.md."""
+        # Check if the tool usage section exists
+        if "## 🔧 CORE DEVELOPMENT TOOLS" not in content:
+            return {"enabled": False}
+
+        return {
+            "enabled": True,
+            "mandatory_tools": [
+                "Shell", "Glob", "Grep", "ReadFile", "SemanticSearch",
+                "StrReplace", "TodoWrite"
+            ],
+            "tool_priority": [
+                "Search/Analyze", "Read/Understand", "Plan", "Execute", "Validate"
+            ],
+            "efficiency_rules": {
+                "batch_calls": True,
+                "read_before_edit": True,
+                "search_before_assume": True,
+                "plan_complex_work": True,
+                "validate_after_changes": True,
+            },
+            "common_workflows": {
+                "understanding_code": ["SemanticSearch", "Grep", "ReadFile", "Glob"],
+                "making_changes": ["ReadFile", "Grep", "StrReplace", "Shell"],
+                "refactoring": ["TodoWrite", "Grep", "StrReplace", "Shell"],
+                "debugging": ["Grep", "SemanticSearch", "ReadFile", "Shell"],
+                "adding_features": ["TodoWrite", "Glob", "ReadFile", "Write/StrReplace", "Shell"],
+            },
         }
 
     def _extract_skills(self, content: str) -> dict[str, str]:
@@ -242,12 +309,112 @@ class CursorRulesUpdater:
             f"# Generated: {self.get_claude_md_hash()[:8]}",
             "# DO NOT EDIT - Regenerate with: python3 scripts/update_cursor_rules.py",
             "",
+        ]
+
+        # Add tool usage section first (highest priority)
+        if "tool_usage" in rules and rules["tool_usage"].get("enabled"):
+            lines.extend([
+                "## 🔧 CORE DEVELOPMENT TOOLS - ALWAYS USE THESE FIRST",
+                "",
+                "### Essential Tool Usage Protocol (MANDATORY)",
+                "",
+                "**ALWAYS use these tools BEFORE any manual work:**",
+                "",
+                "1. **Shell**: Execute system commands, run tests, build projects",
+                "   - Use for: `make check`, `make validate`, `pytest`, `mypy`, etc.",
+                "   - Always specify `description` for clarity",
+                "",
+                "2. **Glob**: Find files quickly across the codebase",
+                "   - Use for: Finding all `.py` files, test files, config files",
+                "   - Better than manual `ls`/`find` commands",
+                "",
+                "3. **Grep**: Search code patterns and text",
+                "   - Use for: Finding function definitions, imports, TODOs, bugs",
+                "   - Set `output_mode: \"files_with_matches\"` to list files only",
+                "   - Use `type: \"py\"` for Python-specific searches",
+                "",
+                "4. **ReadFile**: Read file contents",
+                "   - Use for: Understanding code before editing, checking imports",
+                "   - Prefer over `cat`/`head`/`tail` terminal commands",
+                "",
+                "5. **SemanticSearch**: Find code by meaning",
+                "   - Use for: Understanding how features work, finding implementations",
+                "   - Better than exact text searches for complex queries",
+                "",
+                "6. **StrReplace**: Make precise text changes",
+                "   - Use for: Fixing imports, renaming variables, updating code",
+                "   - Always unique `old_string` to avoid wrong replacements",
+                "",
+                "7. **TodoWrite**: Plan complex multi-step tasks",
+                "   - Use for: Any task with 3+ steps, refactors, new features",
+                "   - Set `merge: false` for new task lists",
+                "",
+                "### Tool Usage Patterns (MANDATORY)",
+                "",
+                "**NEVER do this manually:**",
+                "- ❌ `grep \"pattern\" file` → Use **Grep** tool",
+                "- ❌ `find . -name \"*.py\"` → Use **Glob** tool",
+                "- ❌ `cat file.py` → Use **ReadFile** tool",
+                "- ❌ `sed -i 's/old/new/' file` → Use **StrReplace** tool",
+                "",
+                "**ALWAYS use tools for:**",
+                "- ✅ Code searches and analysis",
+                "- ✅ File reading and exploration",
+                "- ✅ Precise text replacements",
+                "- ✅ Task planning and tracking",
+                "- ✅ Semantic code understanding",
+                "",
+                "### Efficiency Rules",
+                "",
+                "- **Batch tool calls**: Use multiple tools in parallel when possible",
+                "- **Read before edit**: Always **ReadFile** before **StrReplace**",
+                "- **Search before assume**: Use **Grep**/**SemanticSearch** to verify code exists",
+                "- **Plan complex work**: Use **TodoWrite** for multi-step tasks",
+                "- **Validate after changes**: Run tests via **Shell** after modifications",
+                "",
+                "### Critical Reminders",
+                "",
+                "🚨 **MANDATORY**: Never use terminal commands for file operations when tools exist",
+                "🚨 **MANDATORY**: Always read files before making changes",
+                "🚨 **MANDATORY**: Use **TodoWrite** for complex tasks (3+ steps)",
+                "🚨 **MANDATORY**: Run validation after any code changes",
+                "🚨 **MANDATORY**: Use batch tool calls to maximize efficiency",
+                "",
+                "### 🪝 Hook Integration - Automatic Quality Enforcement",
+                "",
+                "**Hooks work with tools and skills for complete quality assurance:**",
+                "",
+                "- **PreToolUse hooks** prevent violations before they happen",
+                "- **PostToolUse hooks** validate after successful edits",
+                "- **Hooks reference skills** when you need help fixing issues",
+                "- **Hook + skill pattern** ensures quality while providing guidance",
+                "",
+                "**When hooks block you:**",
+                "1. Read the error message (explains the violation)",
+                "2. Use the referenced skill for detailed help",
+                "3. Apply the fix using proper patterns",
+                "4. Retry your edit (hook will allow if fixed)",
+                "",
+                "**Example:** Hook blocks duplication → Use `/duplication-analysis` skill → Fix duplication → Retry edit",
+                "",
+                "### 🤖 Cursor-Agent Manual Hook Execution",
+                "",
+                "**Cursor-agent should execute hooks manually after code changes:**",
+                "",
+                "- **After StrReplace/Write**: Run `post_tool_use.py` for syntax/lint validation",
+                "- **Before changes**: Run `pre_tool_use.py` for violation checks",
+                "- **Quality gates**: Run `stop_quality_gate.py` for final validation",
+                "- **Handle blocks**: Parse stderr, use referenced skills, retry after fixes",
+                "",
+            ])
+
+        lines.extend([
             "## FLEXT Ecosystem Standards",
             "",
             "You are an AI assistant working on the FLEXT Enterprise Data Integration Platform.",
             "Follow all global rules plus these FLEXT-specific standards.",
             "",
-        ]
+        ])
 
         # Add architecture rules
         if "architecture" in rules:

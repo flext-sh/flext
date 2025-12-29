@@ -293,6 +293,16 @@ target-version = "py313"
         "**/tools/*.py" = [
             "FBT001", # boolean-type-hint-positional-argument - CLI tools use boolean flags
             "FBT002", # boolean-default-value-positional-argument - CLI tools use boolean defaults
+            "N802",   # invalid-function-name - libcst visitor methods require CamelCase (visit_ClassDef, etc.)
+            "S404",   # subprocess import - quality tools need subprocess for external tools
+            "S603",   # subprocess calls - quality tools run external linters
+            "S607",   # start-process-with-partial-path - quality tools run installed commands
+            "T201",   # print - CLI runners output to console
+        ]
+        "**/tools/**/*.py" = [
+            "FBT001", # boolean-type-hint-positional-argument - CLI tools use boolean flags
+            "FBT002", # boolean-default-value-positional-argument - CLI tools use boolean defaults
+            "N802",   # invalid-function-name - libcst visitor methods require CamelCase (visit_ClassDef, etc.)
             "S404",   # subprocess import - quality tools need subprocess for external tools
             "S603",   # subprocess calls - quality tools run external linters
             "S607",   # start-process-with-partial-path - quality tools run installed commands
