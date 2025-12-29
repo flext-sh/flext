@@ -23,7 +23,6 @@ import sys
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any
 
 # Configuration
 FLEXT_ROOT = Path("/home/marlonsc/flext")
@@ -169,7 +168,7 @@ class RuffValidator:
                 ["ruff", "check", "--output-format=json", str(file_path)],
                 capture_output=True,
                 text=True,
-                timeout=RUFF_TIMEOUT,
+                timeout=RUFF_TIMEOUT, check=False,
             )
             if result.returncode == 0:
                 return 0
@@ -189,7 +188,7 @@ class RuffValidator:
                 ["ruff", "check", str(file_path)],
                 capture_output=True,
                 text=True,
-                timeout=RUFF_TIMEOUT,
+                timeout=RUFF_TIMEOUT, check=False,
             )
             return result.returncode == 0, result.stdout + result.stderr
         except subprocess.TimeoutExpired:
@@ -482,7 +481,7 @@ class SummaryPrinter:
         print("-" * 60)
         print(f"  Total files processed: {total_files}")
         print(f"  Total violations: {total_violations}")
-        if mode in ("dry-run", "exec"):
+        if mode in {"dry-run", "exec"}:
             print(f"  Total fixes: {total_fixed}")
             print(f"  Files modified: {total_modified}")
             if total_rolled_back > 0:
