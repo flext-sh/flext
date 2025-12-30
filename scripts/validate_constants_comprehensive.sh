@@ -105,26 +105,7 @@ has_constants_file() {
 # Check if file imports FlextConstants
 imports_flext_constants() {
 	local file="$1"
-	grep -q "from flext import FlextBus
-from flext import FlextSettings
-from flext import FlextConstants
-from flext import FlextContainer
-from flext import FlextContext
-from flext import FlextDecorators
-from flext import FlextDispatcher
-from flext import FlextExceptions
-from flext import h
-from flext import FlextLogger
-from flext import x
-from flext import FlextModels
-from flext import FlextProcessors
-from flext import p
-from flext import FlextRegistry
-from flext import FlextResult
-from flext import FlextRuntime
-from flext import FlextService
-from flext import t
-from flext import u" "$file" 2>/dev/null
+	grep -q "from flext import FlextConstants" "$file" 2>/dev/null
 }
 
 # Check if file imports project constants
