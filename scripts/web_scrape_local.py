@@ -56,6 +56,7 @@ def scrape_url(
 
     Returns:
         Extracted content as string, or error message
+
     """
     downloaded = trafilatura.fetch_url(url)
     if not downloaded:
