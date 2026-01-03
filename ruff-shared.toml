@@ -55,6 +55,7 @@ target-version = "py313"
         "N805",   # invalid-first-argument-name-for-method - false positives on @overload functions
         "N813",
         "N816",    # mixed-case-variable-in-global - false positives in certain patterns
+        "PIE790",  # unecessary ... notation - false positives in certain patterns
         "PLR0904", # too-many-public-methods - sometimes necessary in certain classes
         "PLR0911", # too-many-return-statements - Many returns allowed in some processors/validators
         "PLR0912", # too-many-branches - High complexity acceptable in orchestrators
@@ -66,6 +67,7 @@ target-version = "py313"
         "PLR6301", # no-self-use
         "PLW2901", # outer-for-loop-variable-overwritten - Intentional in batch processing
         "PLW0108", # unnecessary-lambda - lambdas in Validator definitions are clearer than alternatives
+        "PLW3201", # snake_case name in method definition - Allow snake_case method names for PEP8
         "PYI042",  # type-alias-without-annotation - Allow short aliases (r, t, c, m, u, p, etc.) for FLEXT pattern
         "Q000",
         "S608",
@@ -116,7 +118,7 @@ target-version = "py313"
             "PLC0206", # dict iteration (test data structures)
             "PLC1901", # comparison-to-membership (test simplicity)
             "PLC2701", # Private imports (testing internal implementation)
-            "PLC2801", # object.__setattr__ - necessary for testing Pydantic frozen models        
+            "PLC2801", # object.__setattr__ - necessary for testing Pydantic frozen models
             "PLR0904", # too-many-public-methods - test helpers and test classes can have many methods
             "PLR0913", # too-many-arguments - test functions can have many parameters for flexibility
             "PLR0914", # too-many-local-variables - test helper functions can have many local variables

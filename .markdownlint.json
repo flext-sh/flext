@@ -94,19 +94,7 @@
   },
   "MD042": true,
   "MD043": false,
-  "MD044": {
-    "names": [
-      "JavaScript",
-      "TypeScript",
-      "Python",
-      "HTML",
-      "CSS",
-      "JSON",
-      "YAML",
-      "XML"
-    ],
-    "code_blocks": false
-  },
+  "MD044": false,
   "MD045": true,
   "MD046": {
     "style": "fenced"

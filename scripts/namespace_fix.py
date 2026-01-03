@@ -168,7 +168,8 @@ class RuffValidator:
                 ["ruff", "check", "--output-format=json", str(file_path)],
                 capture_output=True,
                 text=True,
-                timeout=RUFF_TIMEOUT, check=False,
+                timeout=RUFF_TIMEOUT,
+                check=False,
             )
             if result.returncode == 0:
                 return 0
@@ -188,7 +189,8 @@ class RuffValidator:
                 ["ruff", "check", str(file_path)],
                 capture_output=True,
                 text=True,
-                timeout=RUFF_TIMEOUT, check=False,
+                timeout=RUFF_TIMEOUT,
+                check=False,
             )
             return result.returncode == 0, result.stdout + result.stderr
         except subprocess.TimeoutExpired:

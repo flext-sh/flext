@@ -157,26 +157,30 @@ class CursorRulesUpdater:
                 "05-dead-code-detector.sh",
                 "06-modernization-advisor.sh",
                 "07-duplicate-code-detector.sh",
-                "pre_tool_use.py"
+                "pre_tool_use.py",
             ],
-            "post_hooks": [
-                "post_tool_use.py",
-                "stop_quality_gate.py"
-            ],
+            "post_hooks": ["post_tool_use.py", "stop_quality_gate.py"],
             "hook_skill_mapping": {
-                "pre_tool_use.py": ["/flext-type-system", "/flext-architecture-rules", "/flext-patterns"],
+                "pre_tool_use.py": [
+                    "/flext-type-system",
+                    "/flext-architecture-rules",
+                    "/flext-patterns",
+                ],
                 "07-duplicate-code-detector.sh": ["/duplication-analysis"],
                 "post_tool_use.py": ["/flext-quality-gates"],
                 "05-dead-code-detector.sh": ["/flext-quality-gates"],
-                "06-modernization-advisor.sh": ["/flext-patterns", "/flext-type-system"]
+                "06-modernization-advisor.sh": [
+                    "/flext-patterns",
+                    "/flext-type-system",
+                ],
             },
             "workflow_pattern": [
                 "Hook blocks edit with specific error",
                 "Hook references appropriate skill for help",
                 "Use skill to get detailed guidance",
                 "Apply fix using proper patterns",
-                "Retry edit - hook allows if fixed"
-            ]
+                "Retry edit - hook allows if fixed",
+            ],
         }
 
     def _extract_patterns(self) -> dict[str, Any]:
@@ -197,11 +201,20 @@ class CursorRulesUpdater:
         return {
             "enabled": True,
             "mandatory_tools": [
-                "Shell", "Glob", "Grep", "ReadFile", "SemanticSearch",
-                "StrReplace", "TodoWrite"
+                "Shell",
+                "Glob",
+                "Grep",
+                "ReadFile",
+                "SemanticSearch",
+                "StrReplace",
+                "TodoWrite",
             ],
             "tool_priority": [
-                "Search/Analyze", "Read/Understand", "Plan", "Execute", "Validate"
+                "Search/Analyze",
+                "Read/Understand",
+                "Plan",
+                "Execute",
+                "Validate",
             ],
             "efficiency_rules": {
                 "batch_calls": True,
@@ -215,7 +228,13 @@ class CursorRulesUpdater:
                 "making_changes": ["ReadFile", "Grep", "StrReplace", "Shell"],
                 "refactoring": ["TodoWrite", "Grep", "StrReplace", "Shell"],
                 "debugging": ["Grep", "SemanticSearch", "ReadFile", "Shell"],
-                "adding_features": ["TodoWrite", "Glob", "ReadFile", "Write/StrReplace", "Shell"],
+                "adding_features": [
+                    "TodoWrite",
+                    "Glob",
+                    "ReadFile",
+                    "Write/StrReplace",
+                    "Shell",
+                ],
             },
         }
 
@@ -500,7 +519,8 @@ class CursorRulesUpdater:
         """Check if update is needed."""
         current_config = self.load_current_config()
         current_hash = (
-            current_config.get("flext", {})
+            current_config
+            .get("flext", {})
             .get("automation", {})
             .get("last_updated", "")
         )

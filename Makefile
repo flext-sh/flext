@@ -82,52 +82,18 @@ discover: ## Show all discovered projects
 # SETUP & INSTALL
 # =============================================================================
 
-.PHONY: install setup setup-interactive
+.PHONY: install setup
 
-install: ## Install all project dependencies
-	$(Q)for proj in $(ALL_PROJECTS); do \
-		[ -d "$$proj" ] && echo "Installing $$proj..." && \
-		$(MAKE) -C $$proj install -s 2>/dev/null || true; \
-	done
+install: setup ## Alias for setup
 
-setup: ## Complete workspace development setup (all projects)
-	$(Q)echo "=== FLEXT Workspace Development Setup ===" && \
-	echo "" && \
-	echo "Step 1: Validating Python 3.13..." && \
-	python3.13 --version 2>&1 || { echo "ERROR: Python 3.13 not found"; exit 1; } && \
-	echo "✓ Python 3.13 available" && \
-	echo "" && \
-	echo "Step 2: Setting up $(words $(ALL_PROJECTS)) projects in development mode..." && \
-	echo "" && \
-	success=0; failed=0; \
-	for proj in $(ALL_PROJECTS); do \
-		if [ -d "$$proj" ]; then \
-			proj_num=$$((success + failed + 1)); \
-			printf "  [%2d/$(words $(ALL_PROJECTS))] %-25s ... " $$proj_num "$$proj"; \
-			if $(MAKE) -C $$proj setup -s 2>&1 | grep -q "ERROR\|FAIL\|exit 1"; then \
-				echo "✗ FAILED"; \
-				failed=$$((failed + 1)); \
-			else \
-				echo "✓"; \
-				success=$$((success + 1)); \
-			fi; \
-		fi; \
-	done; \
-	echo ""; \
-	echo "=== Setup Summary ==="; \
-	echo "  Total:   $(words $(ALL_PROJECTS)) projects"; \
-	echo "  Success: $$success"; \
-	echo "  Failed:  $$failed"; \
-	echo ""; \
-	if [ $$failed -eq 0 ]; then \
-		echo "✅ All projects configured successfully"; \
-	else \
-		echo "⚠️  $$failed projects failed - review output above"; \
-		exit 1; \
-	fi
-
-setup-interactive: ## Interactive workspace setup wizard
-	$(Q)bash scripts/setup.sh
+setup: ## Complete workspace setup (idempotent)
+	$(Q)python3.13 --version >/dev/null 2>&1 || { echo "ERROR: Python 3.13 required"; exit 1; }
+	$(Q)[ -d ".venv" ] || { echo "🔧 Creating .venv with Python 3.13..."; python3.13 -m venv .venv; }
+	$(Q)echo "🔒 Locking dependencies..."
+	$(Q)poetry lock
+	$(Q)echo "📦 Installing all dependencies via Poetry..."
+	$(Q)poetry install --all-extras --all-groups
+	$(Q)echo "✅ Setup complete"
 
 # =============================================================================
 # QUALITY GATES
