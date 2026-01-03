@@ -384,3 +384,11 @@ __pycache__/
 credentials.json
 secrets.yaml
 secrets.yml
+.milvus/
+
+# ============================================================================
+# CLAUDE CODE PRO - Persistent Data (survives container rebuilds)
+# ============================================================================
+.claude-data/
+.devcontainer/.host-gitconfig
+.devcontainer/.env

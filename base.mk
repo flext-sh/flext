@@ -15,6 +15,7 @@ COV_DIR ?= $(subst -,_,$(PROJECT_NAME))
 MIN_COVERAGE ?= 80
 DOCSTRING_MIN ?= 80
 COMPLEXITY_MAX ?= 10
+WORKSPACE_ROOT ?= $(shell git rev-parse --show-toplevel 2>/dev/null || (cd .. && pwd))
 
 # Quality tool (flext-quality with fallback)
 QUALITY_CMD ?= flext-quality
@@ -40,8 +41,8 @@ $(LINT_CACHE_DIR):
 .PHONY: help install install-dev setup lint format fix type-check test test-fast upgrade
 .PHONY: test-unit test-integration security validate check clean clean-all reset
 .PHONY: build shell deps complexity docstring-check coverage-html
-.PHONY: dead-code modernize cognitive-complexity validate-full
-.PHONY: t l f tc c v s dp cx dc vf
+.PHONY: dead-code modernize cognitive-complexity spell-check validate-full
+.PHONY: t l f tc c v s dp cx dc vf sp
 
 # === HELP ===
 help: ## Show commands
@@ -86,15 +87,10 @@ docstring-check: ## Docstring coverage check
 	$(Q)$(POETRY) run interrogate $(SRC_DIR) --fail-under=$(DOCSTRING_MIN) --ignore-init-method --ignore-magic -q 2>/dev/null || { echo "WARN: interrogate not installed or coverage below $(DOCSTRING_MIN)%"; exit 0; }
 
 # === TEST ===
-ifdef QUALITY_AVAILABLE
-test: ## Run tests with coverage
-	$(Q)$(QUALITY_CMD) test --project . --min-coverage $(MIN_COVERAGE)
-else
 test: ## Run tests with coverage
 	$(Q)PYTHONPATH=$(SRC_DIR) $(POETRY) run pytest $(TESTS_DIR) \
 		--cov=$(COV_DIR) --cov-report=term-missing:skip-covered \
 		--cov-fail-under=$(MIN_COVERAGE) -q
-endif
 
 test-fast: ## Run tests (no coverage)
 	$(Q)PYTHONPATH=$(SRC_DIR) $(POETRY) run pytest $(TESTS_DIR) -q --tb=short
@@ -119,23 +115,24 @@ shell: ## Python shell
 	$(Q)PYTHONPATH=$(SRC_DIR) $(POETRY) run python
 
 # === SECURITY (FAIL on issues) ===
-ifdef QUALITY_AVAILABLE
-security: ## Security checks (Bandit)
-	$(Q)$(QUALITY_CMD) security --project . || { echo "WARN: security issues"; exit 0; }
-else
 security: ## Security checks (Bandit)
 	$(Q)$(POETRY) run bandit -r $(SRC_DIR) -q -ll 2>/dev/null || { echo "WARN: bandit found issues or not installed"; exit 0; }
-endif
 
 # === DEAD CODE & MODERNIZATION ===
+# Note: These tools run from WORKSPACE_ROOT environment where they are installed
 dead-code: ## Dead code detection (Vulture)
-	$(Q)$(POETRY) run vulture $(SRC_DIR) --min-confidence 80 --exclude "tests,examples" || true
+	$(Q)cd $(WORKSPACE_ROOT) && $(POETRY) run vulture $(CURDIR)/$(SRC_DIR) --min-confidence 80 --exclude "tests,examples" || true
 
-modernize: ## Modern patterns suggestions (Refurb)
-	$(Q)$(POETRY) run refurb $(SRC_DIR) --enable-all --quiet || true
+modernize: ## Modern patterns suggestions (via Ruff FURB rules)
+	@echo "Note: Ruff already applies 36 FURB rules from refurb (see: ruff rule --all | grep FURB)"
+	@echo "Refurb standalone disabled - incompatible with Python 3.13 TypeAliasStmt"
+	@echo "Run 'make lint' to apply modernization suggestions via Ruff"
 
 cognitive-complexity: ## Cognitive complexity (Complexipy)
-	$(Q)$(POETRY) run complexipy $(SRC_DIR) --max-complexity-allowed 15 || true
+	$(Q)cd $(WORKSPACE_ROOT) && $(POETRY) run complexipy $(CURDIR)/$(SRC_DIR) --max-complexity-allowed 15 || true
+
+spell-check: ## Spell checking (Codespell)
+	$(Q)cd $(WORKSPACE_ROOT) && $(POETRY) run codespell $(CURDIR)/$(SRC_DIR) --toml $(WORKSPACE_ROOT)/pyproject.toml --quiet-level 3 || true
 
 # === QUALITY GATES ===
 ifdef QUALITY_AVAILABLE
@@ -152,7 +149,7 @@ else
 validate: lint format-check type-check complexity docstring-check security test ## Full validation
 endif
 
-validate-full: lint format-check type-check dead-code cognitive-complexity security test ## Full + dead code
+validate-full: lint format-check type-check dead-code cognitive-complexity spell-check security test ## Full + extended checks
 
 # === UPGRADE ===
 upgrade: ## Upgrade all dependencies to latest versions
@@ -193,3 +190,4 @@ dc: docstring-check
 dd: dead-code
 mod: modernize
 cc: cognitive-complexity
+sp: spell-check

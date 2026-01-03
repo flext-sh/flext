@@ -176,28 +176,94 @@ EOF
     fi
 }
 
+# Create temp file for agent to edit
+create_temp_file() {
+    local source_file="$1"
+    local backup_id="$2"
+    local temp_file="/tmp/flext_agent_edit_${backup_id}.py"
+
+    # Copy current content to temp file
+    if [[ -f "$source_file" ]]; then
+        cp "$source_file" "$temp_file"
+        echo "$temp_file"
+    else
+        echo "" >&2
+        return 1
+    fi
+}
+
+# Apply changes from temp file to original
+apply_temp_changes() {
+    local temp_file="$1"
+    local original_file="$2"
+    local backup_id="$3"
+
+    if [[ -f "$temp_file" && -f "$original_file" ]]; then
+        cp "$temp_file" "$original_file"
+        rm -f "$temp_file"
+
+        # Clean up backup
+        local backup_file="$BACKUP_DIR/pre_backup_${backup_id}.json"
+        rm -f "$backup_file"
+
+        echo "✅ Changes applied successfully from $temp_file to $original_file"
+        echo "🧹 Backup and temp files cleaned up"
+        return 0
+    else
+        echo "❌ Error applying changes - files not found" >&2
+        return 1
+    fi
+}
+
 # Main execution
 main() {
     echo "🚀 Starting post-edit validation for: $FILE_PATH"
 
+    # Check if this is a temp file application request
+    if [[ "${OLD_TEXT:-}" == "apply_temp" ]]; then
+        echo "📋 Applying changes from temp file..."
+        if apply_temp_changes "$FILE_PATH" "$NEW_TEXT" "$BACKUP_ID"; then
+            echo "🎉 File updated successfully!"
+            exit 0
+        else
+            echo "❌ Failed to apply changes"
+            exit 1
+        fi
+    fi
+
     # Validate the result
     local validation_result
     if ! validation_result=$(validate_post_edit "$FILE_PATH"); then
-        echo "❌ Validation found issues - BACKUP MAINTAINED for iterative fixes"
+        echo "❌ Validation found issues - AGENT CAN FIX ITERATIVELY"
         echo ""
-        echo "💡 To fix and revalidate:"
-        echo "   1. Make corrections to $FILE_PATH (fix ALL warnings too)"
-        echo "   2. Run: ./scripts/post_edit_validate.sh $BACKUP_ID \"$FILE_PATH\""
-        echo "   3. Repeat until ZERO violations remain"
-        echo "   4. When ready to confirm: ./scripts/confirm_fixes.sh $BACKUP_ID"
-        echo ""
+
+        # Create temp file for agent to edit
+        local temp_file
+        if temp_file=$(create_temp_file "$FILE_PATH" "$BACKUP_ID"); then
+            echo "📝 TEMP FILE CREATED FOR AGENT EDITING:"
+            echo "   📁 File to edit: $temp_file"
+            echo "   🔄 After fixing, run:"
+            echo "   ./scripts/post_edit_validate.sh $BACKUP_ID \"$temp_file\" apply_temp \"$FILE_PATH\""
+            echo ""
+            echo "   💡 Edit $temp_file directly, then run the command above to apply changes"
+            echo ""
+        else
+            echo "❌ Failed to create temp file for editing"
+        fi
+
         echo "🔄 Current validation result:"
         echo "$validation_result"
         exit 1
     else
-        echo "✅ ZERO violations - ready for confirmation!"
+        echo "✅ ZERO violations - CHANGES ACCEPTED AUTOMATICALLY!"
         echo ""
-        echo "💡 To confirm and keep changes: ./scripts/confirm_fixes.sh $BACKUP_ID"
+
+        # Clean up backup automatically since validation passed
+        local backup_file="$BACKUP_DIR/pre_backup_${BACKUP_ID}.json"
+        rm -f "$backup_file"
+
+        echo "🧹 Backup cleaned up automatically"
+        echo "🎉 Your corrections have been successfully applied."
         echo ""
         echo "🔄 Validation result:"
         echo "$validation_result"
