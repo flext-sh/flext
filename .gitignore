@@ -31,6 +31,7 @@
 !tests/
 !typings/
 !.vscode/
+!.planning/
 
 # ============================================================================
 # WHITELIST: Root-Level Configuration Files
