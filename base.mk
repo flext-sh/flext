@@ -8,14 +8,54 @@
 # === CONFIGURATION (override before include) ===
 PROJECT_NAME ?= unnamed
 PYTHON_VERSION ?= 3.13
-POETRY ?= poetry
 SRC_DIR ?= src
 TESTS_DIR ?= tests
 COV_DIR ?= $(subst -,_,$(PROJECT_NAME))
 MIN_COVERAGE ?= 80
 DOCSTRING_MIN ?= 80
 COMPLEXITY_MAX ?= 10
-WORKSPACE_ROOT ?= $(shell git rev-parse --show-toplevel 2>/dev/null || (cd .. && pwd))
+
+# === WORKSPACE DETECTION ===
+# Detect workspace root (FLEXT monorepo root)
+# For submodules, use superproject; otherwise use parent dir (standard FLEXT layout)
+# Note: git commands can return empty strings, so we check for non-empty output
+WORKSPACE_ROOT := $(shell \
+	super="$$(git rev-parse --show-superproject-working-tree 2>/dev/null)"; \
+	if [ -n "$$super" ]; then echo "$$super"; \
+	elif [ -d "../.venv" ]; then cd .. && pwd; \
+	else git rev-parse --show-toplevel 2>/dev/null || (cd .. && pwd); \
+	fi \
+)
+
+# === VIRTUAL ENVIRONMENT CONFIGURATION ===
+# Use workspace-level venv (shared across all projects)
+WORKSPACE_VENV := $(WORKSPACE_ROOT)/.venv
+VENV_PYTHON := $(WORKSPACE_VENV)/bin/python
+VENV_ACTIVATE := source $(WORKSPACE_VENV)/bin/activate
+
+# Poetry configuration to use workspace venv
+export POETRY_VIRTUALENVS_PATH := $(WORKSPACE_ROOT)
+export POETRY_VIRTUALENVS_IN_PROJECT := false
+export POETRY_VIRTUALENVS_CREATE := false
+export VIRTUAL_ENV := $(WORKSPACE_VENV)
+export PATH := $(WORKSPACE_VENV)/bin:$(PATH)
+
+# Poetry command (uses workspace venv automatically)
+POETRY := poetry
+
+# === PYTHONPATH CONFIGURATION ===
+# Build PYTHONPATH with all core dependencies (in dependency order)
+# This ensures cross-project imports work correctly
+FLEXT_PYTHONPATH := $(shell \
+	paths="$(CURDIR)/$(SRC_DIR)"; \
+	for proj in flext-core flext-cli flext-ldif flext-ldap flext-api flext-auth flext-grpc flext-observability client-a-oud-mig; do \
+		proj_src="$(WORKSPACE_ROOT)/$$proj/src"; \
+		if [ -d "$$proj_src" ]; then \
+			paths="$$paths:$$proj_src"; \
+		fi; \
+	done; \
+	echo "$$paths" \
+)
 
 # Quality tool (flext-quality with fallback)
 QUALITY_CMD ?= flext-quality
@@ -23,6 +63,8 @@ QUALITY_AVAILABLE := $(shell command -v $(QUALITY_CMD) 2>/dev/null)
 
 # Export for subprocesses
 export PROJECT_NAME PYTHON_VERSION MIN_COVERAGE
+export PYTHONPATH := $(FLEXT_PYTHONPATH)
+export FLEXT_ROOT := $(WORKSPACE_ROOT)
 
 # === SILENT MODE ===
 Q := @
@@ -37,12 +79,20 @@ CACHE_TIMEOUT := 300
 $(LINT_CACHE_DIR):
 	$(Q)mkdir -p $(LINT_CACHE_DIR)
 
+# === LOCAL VENV CHECK ===
+# Warn if local .venv exists (should use workspace venv)
+LOCAL_VENV_EXISTS := $(shell [ -d ".venv" ] && echo "yes" || echo "no")
+ifeq ($(LOCAL_VENV_EXISTS),yes)
+$(warning ⚠️  Local .venv found! Run 'make clean-local-venv' to use workspace venv)
+endif
+
 # === PHONY DECLARATIONS ===
 .PHONY: help install install-dev setup lint format fix type-check test test-fast upgrade
 .PHONY: test-unit test-integration security validate check clean clean-all reset
 .PHONY: build shell deps complexity docstring-check coverage-html
 .PHONY: dead-code modernize cognitive-complexity spell-check validate-full
 .PHONY: t l f tc c v s dp cx dc vf sp
+.PHONY: check-venv clean-local-venv venv-info
 
 # === HELP ===
 help: ## Show commands
@@ -76,7 +126,7 @@ format-check: ## Check formatting
 
 # === TYPE CHECK (PyRefly - ZERO TOLERANCE) ===
 type-check: ## Run type checking
-	$(Q)PYTHONPATH=$(SRC_DIR) $(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml 2>/dev/null || { echo "FAIL: types"; exit 1; }
+	$(Q)$(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml 2>/dev/null || { echo "FAIL: types"; exit 1; }
 
 # === CODE QUALITY ===
 complexity: ## Code complexity analysis (Radon CC + MI)
@@ -88,31 +138,31 @@ docstring-check: ## Docstring coverage check
 
 # === TEST ===
 test: ## Run tests with coverage
-	$(Q)PYTHONPATH=$(SRC_DIR) $(POETRY) run pytest $(TESTS_DIR) \
+	$(Q)$(POETRY) run pytest $(TESTS_DIR) \
 		--cov=$(COV_DIR) --cov-report=term-missing:skip-covered \
 		--cov-fail-under=$(MIN_COVERAGE) -q
 
 test-fast: ## Run tests (no coverage)
-	$(Q)PYTHONPATH=$(SRC_DIR) $(POETRY) run pytest $(TESTS_DIR) -q --tb=short
+	$(Q)$(POETRY) run pytest $(TESTS_DIR) -q --tb=short
 
 test-verbose: ## Run tests with output
-	$(Q)PYTHONPATH=$(SRC_DIR) $(POETRY) run pytest $(TESTS_DIR) -v
+	$(Q)$(POETRY) run pytest $(TESTS_DIR) -v
 
 test-unit: ## Unit tests only
-	$(Q)PYTHONPATH=$(SRC_DIR) $(POETRY) run pytest $(TESTS_DIR) -m "not integration" -q
+	$(Q)$(POETRY) run pytest $(TESTS_DIR) -m "not integration" -q
 
 test-integration: ## Integration tests
-	$(Q)PYTHONPATH=$(SRC_DIR) $(POETRY) run pytest $(TESTS_DIR) -m integration -q
+	$(Q)$(POETRY) run pytest $(TESTS_DIR) -m integration -q
 
 coverage-html: ## Generate HTML coverage report
-	$(Q)PYTHONPATH=$(SRC_DIR) $(POETRY) run pytest --cov=$(COV_DIR) --cov-report=html -q
+	$(Q)$(POETRY) run pytest --cov=$(COV_DIR) --cov-report=html -q
 
 # === BUILD ===
 build: ## Build package
 	$(Q)$(POETRY) build
 
 shell: ## Python shell
-	$(Q)PYTHONPATH=$(SRC_DIR) $(POETRY) run python
+	$(Q)$(POETRY) run python
 
 # === SECURITY (FAIL on issues) ===
 security: ## Security checks (Bandit)
@@ -175,6 +225,38 @@ clean-all: clean ## Deep clean
 
 reset: clean-all setup ## Full reset
 
+# === VIRTUAL ENVIRONMENT MANAGEMENT ===
+venv-info: ## Show venv configuration
+	@echo "=== FLEXT Virtual Environment Info ==="
+	@echo "WORKSPACE_ROOT:   $(WORKSPACE_ROOT)"
+	@echo "WORKSPACE_VENV:   $(WORKSPACE_VENV)"
+	@echo "VIRTUAL_ENV:      $(VIRTUAL_ENV)"
+	@echo "Local .venv:      $(LOCAL_VENV_EXISTS)"
+	@echo "Poetry path:      $$(poetry env info --path 2>/dev/null || echo 'not configured')"
+	@echo "Python:           $$(which python)"
+
+check-venv: ## Verify using workspace venv
+	@if [ -d ".venv" ]; then \
+		echo "ERROR: Local .venv exists. Run 'make clean-local-venv' first"; \
+		exit 1; \
+	fi
+	@if [ "$$(poetry env info --path 2>/dev/null)" != "$(WORKSPACE_VENV)" ]; then \
+		echo "WARNING: Poetry not using workspace venv"; \
+		echo "  Expected: $(WORKSPACE_VENV)"; \
+		echo "  Got:      $$(poetry env info --path 2>/dev/null)"; \
+	else \
+		echo "OK: Using workspace venv at $(WORKSPACE_VENV)"; \
+	fi
+
+clean-local-venv: ## Remove local .venv (use workspace venv)
+	@if [ -d ".venv" ]; then \
+		echo "Removing local .venv..."; \
+		rm -rf .venv; \
+		echo "Done. Run 'make check-venv' to verify."; \
+	else \
+		echo "No local .venv found."; \
+	fi
+
 # === SHORT ALIASES ===
 t: test
 l: lint
@@ -191,3 +273,6 @@ dd: dead-code
 mod: modernize
 cc: cognitive-complexity
 sp: spell-check
+vi: venv-info
+cv: check-venv
+clv: clean-local-venv
