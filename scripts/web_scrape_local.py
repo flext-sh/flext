@@ -43,6 +43,7 @@ except ImportError:
 def scrape_url(
     url: str,
     output_format: str = "markdown",
+    *,
     include_links: bool = True,
     include_images: bool = True,
 ) -> str:
@@ -72,6 +73,7 @@ def scrape_url(
 
 
 def main() -> None:
+    """Parse arguments and scrape URL."""
     parser = argparse.ArgumentParser(
         description="Local web scraping via trafilatura (Firecrawl alternative)",
         formatter_class=argparse.RawDescriptionHelpFormatter,

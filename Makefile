@@ -319,7 +319,13 @@ commit: ## Commit inteligente (conventional commits)
 # SHORT ALIASES
 # =============================================================================
 
-.PHONY: l f tc t c v d s dp ap rp si
+# Update VSCode settings to exclude files not tracked by git
+vscode-update:
+	@echo "🔧 Updating VSCode settings for git exclusions..."
+	@python scripts/update_vscode_git_exclusions.py
+	@echo "✅ VSCode settings updated. Restart VSCode to apply changes."
+
+.PHONY: l f tc t c v d s dp ap rp si vscode-update
 
 l: lint
 f: format

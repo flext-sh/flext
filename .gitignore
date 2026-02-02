@@ -31,7 +31,12 @@
 !tests/
 !typings/
 !.vscode/
-!.planning/
+
+# ============================================================================
+# BLOCK: Beads Workflow (local-only, not tracked)
+# ============================================================================
+.beads/
+**/.beads/
 
 # ============================================================================
 # WHITELIST: Root-Level Configuration Files
@@ -57,6 +62,7 @@
 
 # Documentation
 !README.md
+!AGENTS.md
 !.markdownlint.json
 
 # Git configuration
@@ -85,6 +91,63 @@
 !tests/**
 !typings/**
 !.vscode/**
+
+# ============================================================================
+# BLOCK: AI/Agent Data and Planning (NEVER track these)
+# ============================================================================
+
+# Claude Code local data (315MB+, contains debug, history, credentials)
+.claude/
+**/.claude/
+
+# AI Planning directories
+.planning/
+**/.planning/
+
+# AI Plans in docs
+docs/plans/
+
+# Aider AI data
+.aider/
+.aider.conf.yml
+.aider.chat.history.md
+**/.aider/
+
+# Other AI assistants
+.cursor/
+.copilot/
+.codeium/
+
+# Temporary test/debug scripts (keep main scripts, block test_* pattern at root)
+scripts/test_*.py
+scripts/test-*.py
+
+# ============================================================================
+# BLOCK: Oracle Reference and Test Data
+# ============================================================================
+
+# Oracle dump files
+**/*.dmp
+**/*.DMP
+
+# Oracle logs
+**/*.trc
+**/*.aud
+
+# Oracle wallet files
+**/cwallet.sso
+**/ewallet.p12
+**/tnsnames.ora
+**/sqlnet.ora
+
+# Oracle test/reference data directories
+**/oracle_data/
+**/oracle_dump/
+**/oracle_export/
+**/oracle_import/
+**/expdp_*/
+**/impdp_*/
+
 
 # ============================================================================
 # AGGRESSIVE BLACKLIST: Block artifacts INSIDE whitelisted directories
@@ -167,8 +230,7 @@
 # Build and quality tool artifacts inside allowed directories
 **/.qlty/
 **/.meltano/
-**/.serena/cache/
-**/.claude/cache/
+**/.serena/
 
 # Backup files inside allowed directories
 **/*.bak
@@ -177,7 +239,7 @@
 **/*_backup
 **/*_backup_*
 **/*.md.backup
-**/archived
+**/archived/
 
 # Database files inside allowed directories
 **/*.db
@@ -215,113 +277,10 @@
 *.p12
 *.pfx
 credentials.json
+**/credentials.json
 secrets.yaml
 secrets.yml
-
-# ============================================================================
-# BLOCK: Build Artifacts and Caches
-# ============================================================================
-
-# Python artifacts
-**/__pycache__/
-**/*.pyc
-**/*.pyo
-**/*.pyd
-.Python
-dist/
-build/
-*.egg-info/
-
-# Python caches
-.mypy_cache/
-.ruff_cache/
-.pytest_cache/
-.hypothesis/
-.benchmarks/
-
-# Coverage
-htmlcov/
-.coverage
-coverage.json
-.coverage.*
-
-# Go build artifacts
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-*.test
-*.out
-
-# Meltano
-.meltano/
-
-# Quality tools
-.qlty/
-
-# Virtual environments
-.venv/
-venv/
-env/
-ENV/
-
-# ============================================================================
-# BLOCK: IDE and Editor Files
-# ============================================================================
-
-# VS Code workspace files (allow .vscode/ directory but block workspace files)
-.vscode/*.code-workspace
-.vscode/internal.invalid.json
-
-# JetBrains IDEs
-.idea/
-*.iml
-*.ipr
-*.iws
-
-# Vim
-*.swp
-*.swo
-*~
-.*.sw?
-
-# Emacs
-*~
-\#*\#
-.\#*
-
-# Sublime Text
-*.sublime-project
-*.sublime-workspace
-
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# ============================================================================
-# BLOCK: Temporary and Log Files
-# ============================================================================
-
-*.log
-*.tmp
-*.temp
-.tmp/
-tmp/
-temp/
-logs/
-
-# ============================================================================
-# BLOCK: Project-Level .gitignore Files (they have their own)
-# ============================================================================
-
-# Each project manages its own .gitignore, no need to duplicate here
+**/.credentials*
 
 # ============================================================================
 # ALLOW: Preserve Empty Directories
@@ -330,66 +289,11 @@ logs/
 !**/.gitkeep
 
 # ============================================================================
-# BACKUP AND TEMPORARY FILES - NEVER commit
-# ============================================================================
-# Backup files with various extensions
-*.bak
-*.backup
-*.orig
-*.old
-*_backup*
-*_old*
-*_temp*
-*backup*
-
-# Validation and test scripts outside proper directories
-**/validate*.sh
-**/validate*.py
-**/validate*.yml
-**/validate*.yaml
-**/test*.sh
-**/test*.py
-**/test*.yml
-**/test*.yaml
-
-# Temporary and working files
-*.tmp
-*.temp
-temp/
-staging/
-.cache/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# IDE and editor files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Claude AI files
-.claude/
-
-# ============================================================================
 # FINAL SAFETY NET
 # ============================================================================
 
 # Ensure these are NEVER committed, even if explicitly added
-.env
-**/.env
-*.key
-*.pem
-credentials.json
-secrets.yaml
-secrets.yml
 .milvus/
-
-# ============================================================================
-# CLAUDE CODE PRO - Persistent Data (survives container rebuilds)
-# ============================================================================
 .claude-data/
 .devcontainer/.host-gitconfig
 .devcontainer/.env

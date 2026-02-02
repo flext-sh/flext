@@ -21,8 +21,9 @@ import shutil
 import subprocess
 import sys
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
+from typing import ClassVar
 
 # Configuration
 FLEXT_ROOT = Path("/home/marlonsc/flext")
@@ -92,22 +93,27 @@ class Logger:
 
     @staticmethod
     def info(msg: str) -> None:
+        """Print info message."""
         print(f"{Colors.BLUE}[INFO]{Colors.NC} {msg}")
 
     @staticmethod
     def success(msg: str) -> None:
+        """Print success message."""
         print(f"{Colors.GREEN}[SUCCESS]{Colors.NC} {msg}")
 
     @staticmethod
     def warning(msg: str) -> None:
+        """Print warning message."""
         print(f"{Colors.YELLOW}[WARNING]{Colors.NC} {msg}")
 
     @staticmethod
     def error(msg: str) -> None:
+        """Print error message."""
         print(f"{Colors.RED}[ERROR]{Colors.NC} {msg}")
 
     @staticmethod
     def dry_run(msg: str) -> None:
+        """Print dry-run message."""
         print(f"{Colors.CYAN}[DRY-RUN]{Colors.NC} {msg}")
 
 
@@ -116,7 +122,7 @@ class NamespacePatterns:
 
     # Pattern: (regex, replacement_func or str, description)
     # INTENTIONAL CAST - These are pattern definitions for the fixer tool
-    PATTERNS: list[tuple[re.Pattern[str], str | None, str]] = [
+    PATTERNS: ClassVar[list[tuple[re.Pattern[str], str | None, str]]] = [
         # typing.cast removal  # INTENTIONAL CAST
         (
             re.compile(r"from typing import .*\bcast\b"),
@@ -165,7 +171,7 @@ class RuffValidator:
         """Count ruff errors for a file."""
         try:
             result = subprocess.run(
-                ["ruff", "check", "--output-format=json", str(file_path)],
+                ["/usr/bin/env", "ruff", "check", "--output-format=json", str(file_path)],
                 capture_output=True,
                 text=True,
                 timeout=RUFF_TIMEOUT,
@@ -186,7 +192,7 @@ class RuffValidator:
         """Run ruff check on a file, return (passed, output)."""
         try:
             result = subprocess.run(
-                ["ruff", "check", str(file_path)],
+                ["/usr/bin/env", "ruff", "check", str(file_path)],
                 capture_output=True,
                 text=True,
                 timeout=RUFF_TIMEOUT,
@@ -213,7 +219,7 @@ class FileManager:
     @staticmethod
     def create_backup(file_path: Path) -> Path:
         """Create a timestamped backup of a file."""
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
         backup_dir = FLEXT_ROOT / ".backups" / "namespace_fix" / timestamp
         backup_dir.mkdir(parents=True, exist_ok=True)
 
@@ -271,7 +277,7 @@ class ViolationFixer:
     """Apply fixes to files."""
 
     @staticmethod
-    def apply_fixes(file_path: Path, dry_run: bool = False) -> tuple[str, int]:
+    def apply_fixes(file_path: Path, *, dry_run: bool = False) -> tuple[str, int]:
         """Apply all fixes to a file, return (new_content, fixes_applied)."""
         try:
             content = file_path.read_text(encoding="utf-8")
@@ -303,6 +309,7 @@ class ProjectProcessor:
     """Process projects for validation and fixing."""
 
     def __init__(self) -> None:
+        """Initialize the project processor."""
         self.file_manager = FileManager()
         self.violation_finder = ViolationFinder()
         self.violation_fixer = ViolationFixer()
@@ -352,7 +359,7 @@ class ProjectProcessor:
                 result.total_violations += len(violations)
 
                 print(f"\n  {file_path.relative_to(FLEXT_ROOT)}:")
-                _, fixes = self.violation_fixer.apply_fixes(file_path, dry_run=True)
+                _, fixes = self.violation_fixer.apply_fixes(file_path)
                 if fixes > 0:
                     result.files_modified += 1
                     result.total_fixed += fixes
@@ -495,6 +502,7 @@ class CLI:
     """Command-line interface."""
 
     def __init__(self) -> None:
+        """Initialize CLI with processor."""
         self.processor = ProjectProcessor()
         self.summary_printer = SummaryPrinter()
 
