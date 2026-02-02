@@ -1,96 +1,54 @@
-# FLEXT Documentation
+# FLEXT Documentation Portal
 
-## Table of Contents
+## Overview
 
-- [FLEXT Documentation](#flext-documentation)
-  - [Table of Contents](#table-of-contents)
-  - [📚 Documentation Structure](#-documentation-structure)
-    - [🚀 Getting Started](#-getting-started)
-    - [🏗️ Architecture](#️-architecture)
-    - [🔌 API Reference](#-api-reference)
-    - [📦 Projects](#-projects)
-    - [📋 Standards](#-standards)
-  - [🎯 Key Features](#-key-features)
-  - [🛠️ Quick Links](#️-quick-links)
-  - [📞 Support](#-support)
+This folder is the curated portal for every FLEXT document; the entry point at `docs/index.md` keeps the picture fresh while the subdirectories host detailed guides, standards, and project manuals. Use this page when you need a quick refresher about what the documentation contains and how to reach the pieces you care about.
 
-**FLEXT** - Enterprise Data Integration Platform
+## Highlighted Content
 
-A comprehensive,
-enterprise-grade data integration framework built with Python 3.13+ and modern architectural patterns. FLEXT provides a unified platform for data processing,
+### Getting Started & Guides
 
-     transformation, and integration across multiple domains including LDAP, Oracle, and various enterprise systems.
+- **[Guides](guides/README.md)** – Installation, development workflows, testing playbooks, configuration, and troubleshooting live inside the dedicated Guides folder and its companion files.
+- **[Getting Started](guides/getting-started.md)** – Step-by-step setup, sample projects, and onboarding notes appear in the Getting Started document within that folder.
 
-## 📚 Documentation Structure
+### Architecture & Patterns
 
-### 🚀 [Getting Started](./guides/getting-started.md)
+- **[Architecture Overview](architecture/README.md)** – Clean architecture layers, dependency diagrams, and the CQRS + Railway-oriented programming mix are explained in the architecture chapter.
+- **[Standards](standards/README.md)** – The coding, documentation, and deployment rules that keep the 30+ FLEXT projects aligned are consolidated in the standards guide.
 
-Quick start guides, installation instructions, and basic usage examples.
+### API & Project References
 
-### 🏗️ [Architecture](./architecture/README.md)
+- **[API Reference](api-reference/README.md)** – Handbooks for every exported module and service in the ecosystem appear inside the API Reference section.
+- **[Projects](projects/README.md)** – The project catalog lists flext-core, flext-ldif, flext-auth, flext-ldap, flext-grpc, and the rest with metadata and status notes.
 
-System architecture, design patterns, and technical decisions.
+### Reports & Quality Assurance
 
-### 🔌 [API Reference](./api-reference/README.md)
+- **Reports** – The root reports directory stores the dashboards, validation summaries, and security analyses that keep this portal honest.
+- **Validation Guides** – Consult the standards guide and the lint-output artifacts to understand the Ruff, Pyrefly, and Bandit gates that every merge must satisfy.
 
-Complete API documentation for all FLEXT components and libraries.
+## Quality Assurance & Maintenance
 
-### 📦 [Projects](./projects/README.md)
+- **Documentation Audits** – Each release runs Markdown linting, spell checking, and `lsp_diagnostics` on writers’ editors to eliminate drift before the docs reach the portal.
+- **Pattern Analysis** – Metadata harvesters detect outdated anchors and unused references, then feed results back into the standards docs for rewrites and cleanup.
+- **Batch Operations** – When an API surface changes, a single report reroutes every link in `docs/README.md`/`docs/index.md` so future readers get current details without manual hunting.
 
-Detailed documentation for each FLEXT project and library:
+## Quick Links
 
-- **flext-core** - Core framework and patterns
-- **flext-ldif** - LDIF processing and migration
-- **flext-api** - REST API framework
-- **flext-auth** - Authentication and authorization
-- **flext-ldap** - LDAP operations
-- **flext-oracle** - Oracle database integration
-- **flext-grpc** - gRPC services
-- And more...
+- [Documentation Index](index.md) – Aggregates highlights, project statuses, and recent updates.
+- [Architecture Guide](architecture/README.md) – Start with the architecture overview, then drill into the pattern documentation.
+- [API Reference](api-reference/README.md) – Review the API handbook for each published module.
+- [Standards & Practices](standards/README.md) – Follow the standards guide to keep code and docs aligned.
+- [Getting Started](guides/getting-started.md) – The Getting Started article details the onboarding steps.
+- [Guides Catalog](guides/README.md) – The Guides folder collects deployment, configuration, and troubleshooting playbooks.
+- Quality Reports – The reports folder holds the latest artifacts from the Ruff, Pyrefly, and Bandit pipelines.
 
-### 📋 [Standards](./standards/README.md)
+## Support & Contributions
 
-Coding standards, best practices, and development guidelines.
-
-## 🎯 Key Features
-## 🔧 Quality Assurance
-
-FLEXT provides comprehensive automated quality assurance that ensures enterprise-grade standards across the entire ecosystem:
-
-- **Pattern Analysis**: Automatic detection of architectural violations and code duplication
-- **Consolidation Guidance**: SOLID-based refactoring recommendations
-- **Batch Operations**: Safe, automated fixes with backup and rollback capabilities
-- **Quality Gates**: Enterprise-grade validation before integration
-
-### Development Workflows
-
-- **Automated Validation**: Continuous quality checks during development
-- **Consolidation Strategies**: Intelligent code organization following SOLID principles
-- **Safe Refactoring**: Batch-enabled fixes with comprehensive rollback capabilities
-
-
-
-- **Unified API**: Single facade pattern across all libraries
-- **Type Safety**: Full Pydantic v2 integration with Python 3.13+
-- **Enterprise Patterns**: CQRS, Railway-oriented programming, Dependency Injection
-- **Extensible**: Plugin architecture with flext-core patterns
-- **Production Ready**: Comprehensive testing, monitoring, and error handling
-
-## 🛠️ Quick Links
-
-- [Installation Guide](./guides/getting-started.md#installation)
-- [API Overview](./api-reference/README.md)
-- [Project Structure](./projects/README.md)
-- [Development Guide](./guides/README.md#development) (Coming Soon)
-
-## 📞 Support
-
-For support and questions:
-
-- 📧 Email: <dev@flext.com>
-- 📖 [Contributing Guide](./guides/README.md#development) (Coming Soon)
-- 🐛 [Issue Tracker](https://github.com/flext/flext/issues)
+- **Email**: <dev@flext.com>
+- **Issues**: https://github.com/flext/flext/issues
+- **Contributing**: The standards guide outlines how to propose content, including the expectation that every submission passes linter checks and links to the relevant `lsp_diagnostics` configuration. 
+- **Review Cycle**: New or modified documentation flows through the same CI that exercises `flext-core`; reference the standards checklist and the lint-output logs before submitting.
 
 ---
 
-_Built with ❤️ by the FLEXT Team_
+_FLEXT Documentation is maintained by the platform team. Keep the portal accurate, keep the links alive, and share the portal with anyone onboarding to FLEXT._
