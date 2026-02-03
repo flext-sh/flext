@@ -17,6 +17,34 @@ poetry run pytest --lf -x                  # last failed, stop on first
 PYTHONPATH=flext-core/src poetry run pytest flext-core/tests/unit/test_result.py -v
 ```
 
+## Package Management (MANDATORY - Poetry Only)
+
+**All Python package operations MUST use Poetry commands:**
+
+```bash
+# Add new dependency
+poetry add <package>                    # Production dependency
+poetry add --group dev <package>        # Development dependency
+
+# Update dependencies
+poetry update <package>                 # Update specific package
+poetry update                           # Update all packages
+
+# Remove dependency
+poetry remove <package>
+
+# Install from lock file (reproducible builds)
+poetry install                          # All dependencies
+poetry install --only main              # Production only
+poetry install --sync                   # Sync with lock file
+
+# Show dependency info
+poetry show <package>                   # Package details
+poetry show --tree                      # Dependency tree
+```
+
+**FORBIDDEN**: Direct `pip install`, `pip uninstall`, or manual `pyproject.toml` edits for dependencies.
+
 ## Build/Lint/Test Commands
 
 | Command | Description |
