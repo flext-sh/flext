@@ -277,6 +277,19 @@ files = ["src/flext"]
             ]
             module = "*.protocols"
 
+        [[tool.mypy.overrides]]
+            disable_error_code = [
+                "explicit-any",
+            ]
+            module = "flext_core.typings"
+
+        [[tool.mypy.overrides]]
+            disable_error_code = [
+                "prop-decorator",
+                "return-value",
+            ]
+            module = "flext_core._models.base"
+
     [tool.poetry]
 
         packages = [

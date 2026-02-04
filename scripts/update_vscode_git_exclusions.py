@@ -25,9 +25,9 @@ def get_git_tracked_files() -> set[str]:
             capture_output=True,
             text=True,
             check=True,
-            cwd=Path(__file__).parent.parent
+            cwd=Path(__file__).parent.parent,
         )
-        return set(result.stdout.strip().split('\n'))
+        return set(result.stdout.strip().split("\n"))
     except subprocess.CalledProcessError as e:
         print(f"Error getting git tracked files: {e}", file=sys.stderr)
         return set()
@@ -42,17 +42,27 @@ def get_git_untracked_files() -> set[str]:
             capture_output=True,
             text=True,
             check=True,
-            cwd=Path(__file__).parent.parent
+            cwd=Path(__file__).parent.parent,
         )
-        untracked_files = set(result.stdout.strip().split('\n'))
-        untracked_files.discard('')  # Remove empty strings
+        untracked_files = set(result.stdout.strip().split("\n"))
+        untracked_files.discard("")  # Remove empty strings
         return untracked_files
     except subprocess.CalledProcessError as e:
         print(f"Error getting untracked files: {e}", file=sys.stderr)
         # Fallback: return common untracked patterns
         return {
-            "*.tmp", "*.temp", "*.bak", "*.backup", "*.swp", "*.swo", "*~",
-            ".DS_Store", "Thumbs.db", "*.log", ".env", ".internal.invalid"
+            "*.tmp",
+            "*.temp",
+            "*.bak",
+            "*.backup",
+            "*.swp",
+            "*.swo",
+            "*~",
+            ".DS_Store",
+            "Thumbs.db",
+            "*.log",
+            ".env",
+            ".internal.invalid",
         }
 
 
@@ -99,7 +109,7 @@ def generate_exclusion_patterns(untracked_files: set[str]) -> list[str]:
         "**/temp",
         "**/.meltano",
         "**/vectorbt.pro",
-        "**/external-docs"
+        "**/external-docs",
     ]
 
     patterns.extend(standard_exclusions)
@@ -132,11 +142,13 @@ def update_vscode_settings(exclusion_patterns: list[str]) -> None:
 
     # Load existing settings
     if settings_file.exists():
-        with Path(settings_file).open('r', encoding='utf-8') as f:
+        with Path(settings_file).open("r", encoding="utf-8") as f:
             try:
                 settings = json.load(f)
             except json.JSONDecodeError:
-                print("Warning: Could not parse existing settings.json, creating new one")
+                print(
+                    "Warning: Could not parse existing settings.json, creating new one"
+                )
                 settings = {}
     else:
         settings = {}
@@ -156,7 +168,7 @@ def update_vscode_settings(exclusion_patterns: list[str]) -> None:
     settings["files.watcherExclude"] = file_watcher_exclude
 
     # Write updated settings
-    with Path(settings_file).open('w', encoding='utf-8') as f:
+    with Path(settings_file).open("w", encoding="utf-8") as f:
         json.dump(settings, f, indent=4)
 
     print(f"Updated {settings_file} with {len(exclusion_patterns)} exclusion patterns")
