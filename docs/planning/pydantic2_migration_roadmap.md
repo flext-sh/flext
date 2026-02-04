@@ -2,39 +2,202 @@
 
 ## Executive Summary
 
-**Objective**: Complete transformation of the Flext monorepo (29 projects) from legacy typing patterns to Pydantic 2 BaseModels, eliminating all `cast()` usage and converting all `TypedDict` definitions.
+**Objective**: Complete transformation of the Flext monorepo (29 projects) to modern Pydantic 2.11+ patterns with hierarchical BaseModel inheritance, eliminating all `cast()` usage, converting all `TypedDict` definitions to structural Pydantic models, standardizing `ConfigDict` settings, and modernizing validators.
 
-**Current State**:
-- **41 `cast()` usages** remaining across 10 projects
-- **402 `TypedDict` definitions** remaining across 10 projects
+**Current State** (from exhaustive codebase analysis):
+- **627 `cast()` usages** across the codebase (~500 in tests, ~127 in src/)
+- **305 `TypedDict` definitions** across 74 files
+- **249+ `model_config = ConfigDict()`** patterns - **codebase ALREADY uses Pydantic v2**
+- **127 BaseModel subclasses** across the monorepo
+- **ZERO `@validator` or `@root_validator`** (Pydantic v1) - already migrated to v2
 - Multiple projects with lint/type errors requiring correction
 
 **Target State**:
-- Zero `cast()` usage
-- Zero `TypedDict` for data models (only for external API contracts)
-- All projects passing `make check` (lint + types)
+- Zero `cast()` usage in ALL code (src/ AND tests/)
+- Zero `TypedDict` - ALL converted to structural Pydantic 2 models with hierarchical inheritance
+- Standardized `ConfigDict` settings across all 127+ models
+- Modern validator patterns (`@field_validator`, `@model_validator`, `computed_field`)
+- All projects passing `make validate`
 - 80%+ test coverage maintained
+
+---
+
+## Key Decisions
+
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| **cast() in tests** | Convert ALL to TypeGuards | Consistent type safety, no exceptions |
+| **TypedDict treatment** | Convert ALL to structural Pydantic 2 models | Hierarchical inheritance enables reuse |
+| **Namespace pattern** | Hybrid with max reuse | `m.Entity`, `m.Ldif.Entry`, `m.Cli.Command` |
+| **ConfigDict standardization** | YES | Consistent validation, serialization across projects |
+| **Validator modernization** | YES | Leverage Pydantic 2.11 features |
+| **Phase parallelization** | YES | Reduce timeline from 38 to ~25-28 days |
+| **flext-tap-oracle-wms** | Final phase | 100+ errors, isolate risk |
+
+---
+
+## Migration Patterns
+
+### TypeGuard Pattern (Replaces cast())
+
+```python
+# BEFORE: Using cast() - FORBIDDEN
+from typing import cast
+config = cast(ConfigDict, data)
+
+# AFTER: Using TypeGuard
+from flext_core.utilities import u
+
+if u.Guards.is_config(data):
+    config = data  # Type narrowed automatically
+    config.app_name  # Safe access
+
+# For tests, create test-specific TypeGuards in conftest.py
+def is_user_response(obj: object) -> TypeGuard[UserResponse]:
+    return isinstance(obj, dict) and "user_id" in obj and "email" in obj
+```
+
+### TypedDict to Pydantic Model (Hierarchical Inheritance)
+
+```python
+# BEFORE: TypedDict - FORBIDDEN
+class DispatcherConfig(TypedDict):
+    timeout: int
+    retries: int
+    batch_size: int
+
+class BatchResultDict(TypedDict):
+    success_count: int
+    failure_count: int
+
+# AFTER: Structural Pydantic models with inheritance
+class FlextModels:
+    """Hierarchical model namespace with max reuse."""
+    
+    class Base(BaseModel):
+        """Base for all Flext models."""
+        model_config = ConfigDict(
+            validate_assignment=True,
+            use_enum_values=True,
+            extra="forbid",
+            str_strip_whitespace=True,
+        )
+    
+    class Config:
+        """Configuration models namespace."""
+        
+        class Dispatcher(FlextModels.Base):
+            timeout: int = Field(ge=0, description="Timeout in seconds")
+            retries: int = Field(ge=0, le=10, description="Max retry attempts")
+            batch_size: int = Field(ge=1, le=10000, description="Batch size")
+    
+    class Result:
+        """Result models namespace."""
+        
+        class Batch(FlextModels.Base):
+            success_count: int = Field(ge=0)
+            failure_count: int = Field(ge=0)
+            
+            @computed_field
+            @property
+            def total(self) -> int:
+                return self.success_count + self.failure_count
+```
+
+### Standard ConfigDict Settings
+
+```python
+# Standard production model
+model_config = ConfigDict(
+    validate_assignment=True,      # Validate on attribute assignment
+    use_enum_values=True,          # Serialize enums to values
+    extra="forbid",                # Reject unknown fields
+    str_strip_whitespace=True,     # Clean string inputs
+    frozen=False,                  # Mutable by default
+)
+
+# Immutable value object
+model_config = ConfigDict(
+    frozen=True,                   # Immutable
+    validate_assignment=True,
+    extra="forbid",
+)
+
+# API response model (allows extra for forward compatibility)
+model_config = ConfigDict(
+    extra="ignore",                # Ignore unknown fields from API
+    validate_assignment=True,
+)
+```
+
+### Modern Validator Patterns (Pydantic 2.11+)
+
+```python
+from pydantic import BaseModel, field_validator, model_validator, computed_field
+
+class User(BaseModel):
+    email: str
+    password: str
+    
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, v: str) -> str:
+        if "@" not in v:
+            raise ValueError("Invalid email format")
+        return v.lower()
+    
+    @model_validator(mode="after")
+    def validate_model(self) -> Self:
+        if len(self.password) < 8:
+            raise ValueError("Password too short")
+        return self
+    
+    @computed_field
+    @property
+    def domain(self) -> str:
+        return self.email.split("@")[1]
+```
+
+### Namespace Hierarchy Standard
+
+```python
+# Project-level namespace pattern
+# flext-core/src/flext_core/models.py
+class FlextModels:
+    class Core:
+        class Config(BaseModel): ...
+        class Context(BaseModel): ...
+    class Result:
+        class Success(BaseModel): ...
+        class Failure(BaseModel): ...
+
+# flext-ldif/src/flext_ldif/models.py  
+class FlextLdifModels:
+    class Entry(BaseModel): ...      # m.Ldif.Entry
+    class Attribute(BaseModel): ...  # m.Ldif.Attribute
+
+# Usage with short aliases
+from flext_core.models import m
+from flext_ldif.models import m as ldif_m
+
+config: m.Core.Config = ...
+entry: ldif_m.Entry = ...
+```
 
 ---
 
 ## Migration Metrics
 
-### Cast() Usage by Project
-| Project | Count | Priority |
-|---------|-------|----------|
-| flext-target-oracle | 12 | High |
-| flext-core | 8 | Critical |
-| flext-tap-ldap | 8 | High |
-| flext-ldif | 5 | Medium |
-| flext-dbt-oracle | 3 | Medium |
-| flext-api | 1 | Critical |
-| flext-dbt-ldap | 1 | Low |
-| flext-dbt-ldif | 1 | Low |
-| flext-dbt-oracle-wms | 1 | Low |
-| flext-tap-oracle | 1 | Medium |
-| **Total** | **41** | |
+### Cast() Usage by Location (627 total)
 
-### TypedDict Usage by Project
+| Location | Count | Strategy |
+|----------|-------|----------|
+| **tests/** | ~500 | TypeGuards in conftest.py |
+| **src/ production** | ~127 | TypeGuards in utilities.py |
+| **Total** | **627** | |
+
+### TypedDict Usage by Project (305 total)
+
 | Project | Count | Priority |
 |---------|-------|----------|
 | flext-ldif | 93 | High |
@@ -42,313 +205,370 @@
 | flext-core | 86 | Critical |
 | flext-cli | 84 | Medium |
 | flext-dbt-oracle-wms | 22 | Medium |
-| flext-auth | 19 | Critical (partial done) |
+| flext-auth | 19 | Low (partially done) |
 | flext-target-oracle-oic | 5 | Low |
 | flext-dbt-ldif | 2 | Low |
-| flext-plugin | 1 | Low (done) |
 | flext-tap-ldap | 1 | Low |
-| **Total** | **402** | |
+| Other projects | 4 | Low |
+| **Total** | **305** | |
+
+### ConfigDict Standardization Scope
+
+| Pattern | Current Count | Action |
+|---------|---------------|--------|
+| `model_config = ConfigDict(...)` | 249+ | Standardize settings |
+| Missing `extra="forbid"` | TBD | Add to all models |
+| Missing `validate_assignment` | TBD | Add to all models |
 
 ---
 
-## Phase Structure
+## Phase Structure (Parallelized)
 
 ### Phase 0: Foundation (COMPLETED)
-**Status**: ✅ Done
+
+**Status**: Done
 
 | Task | Project | Status |
 |------|---------|--------|
-| Remove cast() in utilities | flext-core | ✅ |
-| Remove cast() in models | flext-core | ✅ |
-| Convert Plugin to BaseModel | flext-api | ✅ |
-| Migrate TypedDicts to Pydantic | flext-auth | ✅ |
-| Remove cast() in handlers | flext-plugin | ✅ |
+| Remove cast() in utilities | flext-core | Done |
+| Remove cast() in models | flext-core | Done |
+| Convert Plugin to BaseModel | flext-api | Done |
+| Migrate TypedDicts to Pydantic | flext-auth | Done |
+| Remove cast() in handlers | flext-plugin | Done |
 
 ---
 
-### Phase 1: Core Completion
-**Goal**: Complete flext-core migration, foundation for all other projects
-**Duration**: 2-3 days
+### Phase 1: Core Completion + Pattern Establishment
+
+**Goal**: Complete flext-core migration, establish patterns for all other projects
+**Duration**: 3-4 days
 **Dependencies**: None
+**Parallel Tracks**: None (foundation phase)
 
 #### Tasks
 
-**1.1 flext-core TypedDict Migration**
-- Convert 86 TypedDicts in `typings.py` to Pydantic models in `models.py`
-- Organize into nested classes: `FlextModels.Core.*`, `FlextModels.Config.*`
-- Update all internal imports
+**1.1 TypeGuard Infrastructure**
+- Create `flext_core/utilities/guards.py` with comprehensive TypeGuards
+- Add test utilities in `flext_core/testing/guards.py`
+- Document pattern in AGENTS.md
 
-**1.2 flext-core cast() Elimination**
-- Remove remaining 8 cast() usages
-- Replace with isinstance checks or proper type narrowing
-- Update affected functions with TypeGuard where needed
+**1.2 flext-core TypedDict Migration**
+- Convert 86 TypedDicts to hierarchical Pydantic models
+- Organize into `FlextModels.Core.*`, `FlextModels.Config.*`, `FlextModels.Result.*`
+- Ensure all models inherit from common base with standard ConfigDict
 
-**1.3 flext-core Validation**
-- Run `make check` - zero errors
-- Run `make test` - 80%+ coverage
-- Update AGENTS.md if patterns changed
+**1.3 flext-core cast() Elimination**
+- Remove all 8 cast() usages in src/
+- Replace with TypeGuards from 1.1
+- Update affected functions
+
+**1.4 ConfigDict Standardization Template**
+- Create base model classes with standard ConfigDict
+- Document which settings apply to which model types
+- Create migration checklist for other projects
+
+**1.5 Validation**
+- Run `make validate` - zero errors
+- 80%+ coverage maintained
+- Update AGENTS.md with final patterns
 
 #### Deliverables
-- [ ] `flext-core/src/flext_core/typings.py` - Type aliases only
-- [ ] `flext-core/src/flext_core/models.py` - All Pydantic models
+- [ ] `flext_core/utilities/guards.py` - TypeGuard implementations
+- [ ] `flext_core/testing/guards.py` - Test TypeGuards
+- [ ] `flext_core/models.py` - All Pydantic models with hierarchy
+- [ ] `flext_core/typings.py` - Type aliases only (no TypedDict)
 - [ ] Zero cast() usage
+- [ ] Standard ConfigDict documented
 - [ ] `make validate` passing
 
 ---
 
-### Phase 2: API Layer
-**Goal**: Complete flext-api and flext-grpc migration
-**Duration**: 1-2 days
-**Dependencies**: Phase 1
+### Phase 2: API Layer + Infrastructure (PARALLEL)
 
-#### Tasks
-
-**2.1 flext-api cast() Elimination**
-- Remove remaining 1 cast() usage
-- Verify Plugin model integration
-
-**2.2 flext-grpc Lint Fixes**
-- Fix RUF052 warnings (dummy variables)
-- Rename `_network` → `network_config`, etc.
-
-**2.3 flext-api/grpc Validation**
-- Run `make check` for both projects
-- Integration tests passing
-
-#### Deliverables
-- [ ] Zero cast() in flext-api
-- [ ] Zero lint warnings in flext-grpc
-- [ ] Both projects passing `make validate`
-
----
-
-### Phase 3: Infrastructure Layer
-**Goal**: Migrate supporting infrastructure projects
+**Goal**: Migrate API and infrastructure projects in parallel
 **Duration**: 2-3 days
 **Dependencies**: Phase 1
 
-#### Tasks
+#### Track A: API Layer
 
-**3.1 flext-observability**
+**2A.1 flext-api cast() Elimination**
+- Remove remaining 1 cast() usage
+- Apply TypeGuard pattern
+
+**2A.2 flext-grpc Lint Fixes**
+- Fix RUF052 warnings (dummy variables)
+- Standardize ConfigDict in any models
+
+#### Track B: Infrastructure Layer
+
+**2B.1 flext-observability**
 - Fix lint failures
 - Migrate any TypedDicts to Pydantic
+- Standardize ConfigDict
 
-**3.2 flext-quality**
+**2B.2 flext-quality**
 - Review and migrate types
 - Ensure quality checks work with new patterns
 
-**3.3 flext-plugin Completion**
+**2B.3 flext-plugin Completion**
 - Fix ARG002 (unused paths argument)
 - Add missing docstrings (D106)
 
 #### Deliverables
-- [ ] All three projects passing `make validate`
-- [ ] No lint errors or warnings
+- [ ] Track A + Track B all passing `make validate`
+- [ ] Zero cast(), zero TypedDict in these projects
 
 ---
 
-### Phase 4: Data Layer
+### Phase 3: Data Layer
+
 **Goal**: Migrate data access and serialization projects
 **Duration**: 3-4 days
 **Dependencies**: Phase 1
 
 #### Tasks
 
-**4.1 flext-ldif Migration (LARGE)**
-- Convert 93 TypedDicts to Pydantic models
+**3.1 flext-ldif Migration (LARGE - 93 TypedDicts)**
+- Convert all TypedDicts to hierarchical models
+- Create `FlextLdifModels` namespace
 - Remove 5 cast() usages
-- Organize into `FlextLdifModels.*` namespace
+- Standardize all ConfigDict settings
 
-**4.2 flext-ldap Migration**
+**3.2 flext-ldap Migration**
 - Review existing models
 - Ensure LDAP operations use Pydantic validation
+- Standardize ConfigDict
 
-**4.3 flext-db-oracle Migration**
+**3.3 flext-db-oracle Migration**
 - Verify Oracle DB operations use proper types
-- No TypedDicts or casts detected
+- Standardize any existing models
 
 #### Deliverables
-- [ ] flext-ldif: Zero TypedDict, zero cast()
+- [ ] flext-ldif: Zero TypedDict, zero cast(), standard ConfigDict
 - [ ] All data layer projects passing `make validate`
 
 ---
 
-### Phase 5: Oracle Integration Layer
-**Goal**: Migrate Oracle-specific integration projects
-**Duration**: 2-3 days
-**Dependencies**: Phase 4
+### Phase 4: Oracle Integration + Meltano (PARALLEL)
 
-#### Tasks
+**Goal**: Migrate Oracle and Meltano projects in parallel
+**Duration**: 3 days
+**Dependencies**: Phase 3 (for Oracle), Phase 1 (for Meltano)
 
-**5.1 flext-oracle-wms**
+#### Track A: Oracle Integration
+
+**4A.1 flext-oracle-wms**
 - Fix missing imports
 - Migrate TypedDicts to models
-- Has untracked content requiring review
+- Standardize ConfigDict
 
-**5.2 flext-oracle-oic**
+**4A.2 flext-oracle-oic**
 - Fix PIE794 (duplicate OIC class field)
 - Review and consolidate constants
+- Standardize ConfigDict
 
-#### Deliverables
-- [ ] Both Oracle projects passing `make validate`
-- [ ] Clean lint and type checks
+#### Track B: Meltano/Singer Framework
 
----
-
-### Phase 6: Meltano/Singer Framework
-**Goal**: Migrate the Singer framework integration
-**Duration**: 2-3 days
-**Dependencies**: Phase 1
-
-#### Tasks
-
-**6.1 flext-meltano**
+**4B.1 flext-meltano**
 - Fix bad-override error in `FlextMeltanoTapAbstractions.create_instance`
 - Review Singer protocol implementations
+- Standardize ConfigDict in any models
 
 #### Deliverables
-- [ ] flext-meltano passing `make validate`
+- [ ] Both tracks passing `make validate`
 - [ ] Singer protocol compliance verified
 
 ---
 
-### Phase 7: Taps (Source Connectors)
-**Goal**: Migrate all tap (source) connectors
+### Phase 5: Taps + Targets (PARALLEL)
+
+**Goal**: Migrate source and destination connectors in parallel
 **Duration**: 4-5 days
-**Dependencies**: Phase 5, Phase 6
+**Dependencies**: Phase 4
 
-#### Tasks
+#### Track A: Taps (Source Connectors)
 
-**7.1 flext-tap-ldap**
+**5A.1 flext-tap-ldap**
 - Remove 8 cast() usages
 - Convert 1 TypedDict
-- Fix RUF022 (__all__ sorting)
-- Fix F841 (unused loop variable)
+- Fix RUF022, F841
 
-**7.2 flext-tap-ldif**
+**5A.2 flext-tap-ldif**
 - Review and verify types
+- Standardize ConfigDict
 
-**7.3 flext-tap-oracle**
+**5A.3 flext-tap-oracle**
 - Remove 1 cast() usage
+- Standardize ConfigDict
 
-**7.4 flext-tap-oracle-oic**
+**5A.4 flext-tap-oracle-oic**
 - Review and verify types
+- Standardize ConfigDict
 
-**7.5 flext-tap-oracle-wms (LARGE)**
-- Fix 100+ type errors
-- Missing imports: config, exceptions modules
-- Fix bad-override errors
-- Fix missing attributes on FlextModels/FlextTypes
-- This is the most problematic project
+#### Track B: Targets (Destination Connectors)
 
-#### Deliverables
-- [ ] All tap projects passing `make validate`
-- [ ] Zero cast() usage across all taps
-
----
-
-### Phase 8: Targets (Destination Connectors)
-**Goal**: Migrate all target (destination) connectors
-**Duration**: 4-5 days
-**Dependencies**: Phase 5, Phase 6
-
-#### Tasks
-
-**8.1 flext-target-oracle (LARGE)**
+**5B.1 flext-target-oracle (LARGE - 12 cast())**
 - Remove 12 cast() usages
-- Major refactoring needed
+- Major TypeGuard refactoring
+- Standardize ConfigDict
 
-**8.2 flext-target-ldap**
+**5B.2 flext-target-ldap**
 - Fix missing orchestrator import
 - Fix bad-dunder-all error
 
-**8.3 flext-target-ldif**
+**5B.3 flext-target-ldif**
 - Review and verify types
+- Standardize ConfigDict
 
-**8.4 flext-target-oracle-oic**
+**5B.4 flext-target-oracle-oic**
 - Convert 5 TypedDicts to Pydantic models
+- Standardize ConfigDict
 
-**8.5 flext-target-oracle-wms**
+**5B.5 flext-target-oracle-wms**
 - Review and align with tap-oracle-wms fixes
 
 #### Deliverables
-- [ ] All target projects passing `make validate`
-- [ ] Zero cast() usage across all targets
+- [ ] All tap and target projects passing `make validate`
+- [ ] Zero cast() across all connectors
 
 ---
 
-### Phase 9: DBT Integration
-**Goal**: Migrate DBT transformation projects
-**Duration**: 2-3 days
-**Dependencies**: Phase 4, Phase 5
+### Phase 6: DBT Integration + User-Facing (PARALLEL)
 
-#### Tasks
+**Goal**: Migrate DBT and user-facing applications in parallel
+**Duration**: 4-5 days
+**Dependencies**: Phase 3, Phase 4
 
-**9.1 flext-dbt-oracle**
+#### Track A: DBT Integration
+
+**6A.1 flext-dbt-oracle**
 - Remove 3 cast() usages
+- Standardize ConfigDict
 
-**9.2 flext-dbt-ldap**
+**6A.2 flext-dbt-ldap**
 - Remove 1 cast() usage
+- Standardize ConfigDict
 
-**9.3 flext-dbt-ldif**
+**6A.3 flext-dbt-ldif**
 - Remove 1 cast() usage
 - Convert 2 TypedDicts
+- Standardize ConfigDict
 
-**9.4 flext-dbt-oracle-wms**
+**6A.4 flext-dbt-oracle-wms**
 - Remove 1 cast() usage
 - Convert 22 TypedDicts to Pydantic models
+- Standardize ConfigDict
+
+#### Track B: User-Facing Applications
+
+**6B.1 flext-cli (LARGE - 84 TypedDicts)**
+- Convert all TypedDicts to hierarchical models
+- Create `FlextCliModels` namespace
+- Update command handlers
+- Standardize ConfigDict
+
+**6B.2 flext-web (LARGE - 89 TypedDicts)**
+- Convert all TypedDicts to hierarchical models
+- Create `FlextWebModels` namespace
+- Update API endpoints and handlers
+- Standardize ConfigDict
 
 #### Deliverables
 - [ ] All DBT projects passing `make validate`
-- [ ] Zero cast() usage across all DBT projects
-
----
-
-### Phase 10: User-Facing Applications
-**Goal**: Migrate CLI and Web applications
-**Duration**: 3-4 days
-**Dependencies**: All previous phases
-
-#### Tasks
-
-**10.1 flext-cli (LARGE)**
-- Convert 84 TypedDicts to Pydantic models
-- Organize into `FlextCliModels.*` namespace
-- Update command handlers
-
-**10.2 flext-web (LARGE)**
-- Convert 89 TypedDicts to Pydantic models
-- Organize into `FlextWebModels.*` namespace
-- Update API endpoints and handlers
-
-#### Deliverables
 - [ ] Both user-facing projects passing `make validate`
 - [ ] UI/UX functionality preserved
 
 ---
 
-### Phase 11: Final Validation & Documentation
+### Phase 7: Test Suite Migration
+
+**Goal**: Eliminate all cast() in tests (~500 usages)
+**Duration**: 3-4 days
+**Dependencies**: Phases 1-6 (TypeGuard infrastructure must exist)
+
+#### Tasks
+
+**7.1 Create Test TypeGuard Library**
+- Add comprehensive TypeGuards in each project's `conftest.py`
+- Create shared test utilities in `flext-core/testing/`
+
+**7.2 Migrate Tests by Project**
+- flext-core tests (highest count)
+- flext-ldif tests
+- flext-tap-* tests
+- flext-target-* tests
+- flext-dbt-* tests
+- flext-cli tests
+- flext-web tests
+
+**7.3 Verify Test Coverage**
+- Ensure 80%+ coverage maintained
+- No test regressions
+
+#### Deliverables
+- [ ] Zero cast() in all test files
+- [ ] 80%+ coverage maintained across all projects
+
+---
+
+### Phase 8: Problem Project (flext-tap-oracle-wms)
+
+**Goal**: Fix the most problematic project separately
+**Duration**: 3-4 days
+**Dependencies**: All previous phases
+
+#### Tasks
+
+**8.1 Import Structure Fixes**
+- Fix missing config module imports
+- Fix missing exceptions module imports
+- Resolve circular dependencies
+
+**8.2 Type Error Resolution**
+- Fix 100+ type errors systematically
+- Fix bad-override errors
+- Fix missing attributes on FlextModels/FlextTypes
+
+**8.3 Model Migration**
+- Apply all patterns established in earlier phases
+- Convert any remaining TypedDicts
+- Remove any remaining cast()
+- Standardize ConfigDict
+
+#### Deliverables
+- [ ] flext-tap-oracle-wms passing `make validate`
+- [ ] Zero type errors
+- [ ] Patterns consistent with rest of monorepo
+
+---
+
+### Phase 9: Final Validation & Documentation
+
 **Goal**: Ensure complete migration and update documentation
 **Duration**: 2-3 days
 **Dependencies**: All previous phases
 
 #### Tasks
 
-**11.1 Global Validation**
+**9.1 Global Validation**
 - Run `make validate` on entire monorepo
-- Verify zero cast() across all projects
-- Verify minimal TypedDict usage (only for external contracts)
+- Verify zero cast() across ALL projects (src/ AND tests/)
+- Verify zero TypedDict (all converted to Pydantic models)
+- Verify ConfigDict standardized across all 127+ models
 
-**11.2 Test Coverage**
+**9.2 Test Coverage**
 - Ensure 80%+ coverage on all projects
 - Fix any broken tests from migration
 
-**11.3 Documentation Update**
+**9.3 Documentation Update**
 - Update AGENTS.md with final patterns
 - Update type-system-architecture.md
 - Create migration guide for future reference
+- Document TypeGuard patterns
+- Document hierarchical model inheritance patterns
+- Document ConfigDict standards
 
-**11.4 Cleanup**
+**9.4 Cleanup**
 - Remove deprecated type aliases
 - Archive migration plan
 - Close all related Beads issues
@@ -356,54 +576,64 @@
 #### Deliverables
 - [ ] `make validate` passing on full monorepo
 - [ ] All Beads issues closed
-- [ ] Documentation updated
+- [ ] Documentation complete
+- [ ] Zero technical debt from migration
+
+---
+
+## Timeline Estimate (Parallelized)
+
+| Phase | Duration | Parallel With | Cumulative |
+|-------|----------|---------------|------------|
+| Phase 1: Core | 4 days | - | 4 days |
+| Phase 2: API + Infra | 3 days | (A \|\| B) | 7 days |
+| Phase 3: Data | 4 days | - | 11 days |
+| Phase 4: Oracle + Meltano | 3 days | (A \|\| B) | 14 days |
+| Phase 5: Taps + Targets | 5 days | (A \|\| B) | 19 days |
+| Phase 6: DBT + User-Facing | 5 days | (A \|\| B) | 24 days |
+| Phase 7: Test Suite | 4 days | - | 28 days |
+| Phase 8: Problem Project | 4 days | - | 32 days |
+| Phase 9: Validation | 3 days | - | 35 days |
+
+**Total Estimated Duration**: ~5-6 weeks (reduced from 6-8 weeks via parallelization)
+
+**Savings from Parallelization**: ~10-12 days
 
 ---
 
 ## Risk Assessment
 
 ### High Risk Projects
-1. **flext-tap-oracle-wms**: 100+ type errors, missing modules
-2. **flext-ldif**: 93 TypedDicts to convert
-3. **flext-web**: 89 TypedDicts, UI implications
-4. **flext-core**: 86 TypedDicts, foundation for all projects
+
+| Project | Risk | Mitigation |
+|---------|------|------------|
+| **flext-tap-oracle-wms** | 100+ type errors | Isolated in Phase 8 |
+| **flext-ldif** | 93 TypedDicts | Dedicated time in Phase 3 |
+| **flext-web** | 89 TypedDicts, UI impact | Parallel track, thorough testing |
+| **flext-cli** | 84 TypedDicts | Parallel track with web |
+| **flext-core** | 86 TypedDicts, foundation | Phase 1 priority, sets patterns |
 
 ### Mitigation Strategies
-- Start with flext-core to establish patterns
-- Use incremental commits per file/module
-- Run tests after each significant change
-- Create rollback points before large migrations
 
----
-
-## Timeline Estimate
-
-| Phase | Duration | Cumulative |
-|-------|----------|------------|
-| Phase 1: Core | 3 days | 3 days |
-| Phase 2: API | 2 days | 5 days |
-| Phase 3: Infrastructure | 3 days | 8 days |
-| Phase 4: Data | 4 days | 12 days |
-| Phase 5: Oracle | 3 days | 15 days |
-| Phase 6: Meltano | 3 days | 18 days |
-| Phase 7: Taps | 5 days | 23 days |
-| Phase 8: Targets | 5 days | 28 days |
-| Phase 9: DBT | 3 days | 31 days |
-| Phase 10: User-Facing | 4 days | 35 days |
-| Phase 11: Validation | 3 days | 38 days |
-
-**Total Estimated Duration**: ~6-8 weeks (with buffer for issues)
+1. **Pattern First**: Phase 1 establishes all patterns before parallel work
+2. **Incremental Commits**: Atomic commits per file/module
+3. **Continuous Testing**: Run tests after each significant change
+4. **Rollback Points**: Create git tags before large migrations
+5. **Problem Isolation**: flext-tap-oracle-wms separated to Phase 8
 
 ---
 
 ## Success Criteria
 
-1. **Zero `cast()` usage** in any production code
-2. **Zero `TypedDict` for data models** (only allowed for external API contracts)
-3. **All 29 projects** passing `make validate`
-4. **80%+ test coverage** maintained or improved
-5. **No regression** in functionality
-6. **Documentation** updated and complete
+1. **Zero `cast()` usage** in ALL code (src/ AND tests/)
+2. **Zero `TypedDict`** - all converted to structural Pydantic 2 models
+3. **Hierarchical inheritance** - models organized in namespaced hierarchies
+4. **Standard ConfigDict** - consistent settings across all 127+ models
+5. **Modern validators** - `@field_validator`, `@model_validator`, `computed_field`
+6. **All 29 projects** passing `make validate`
+7. **80%+ test coverage** maintained or improved
+8. **No regression** in functionality
+9. **Documentation** complete with patterns and examples
 
 ---
 
@@ -411,13 +641,16 @@
 
 For each project migration:
 
-1. **Analyze**: Grep for cast() and TypedDict, read affected files
+1. **Analyze**: Grep for cast(), TypedDict, ConfigDict patterns
 2. **Plan**: Create task breakdown in Beads
-3. **Execute**: Convert TypedDicts → Pydantic, remove casts
-4. **Verify**: Run `make check` on project
-5. **Test**: Run `make test` on project
-6. **Commit**: Atomic commits per logical change
-7. **Push**: Sync to remote after verification
+3. **Infrastructure**: Add TypeGuards to project's utilities
+4. **Convert**: TypedDicts -> hierarchical Pydantic models
+5. **Eliminate**: cast() -> TypeGuards
+6. **Standardize**: ConfigDict settings per model type
+7. **Verify**: Run `make check` on project
+8. **Test**: Run `make test` on project
+9. **Commit**: Atomic commits per logical change
+10. **Push**: Sync to remote after verification
 
 ---
 
@@ -425,3 +658,16 @@ For each project migration:
 
 - `flext-53o`: Remove all cast() usage (IN PROGRESS)
 - Additional issues to be created per phase
+
+---
+
+## Appendix: Reference Files
+
+Key files demonstrating target patterns:
+
+| File | Content |
+|------|---------|
+| `flext-core/src/flext_core/typings.py` | Type system (888 lines) |
+| `flext-core/src/flext_core/models.py` | Model patterns (313 lines) |
+| `flext-core/src/flext_core/result.py` | Railway patterns with Pydantic |
+| `flext-tap-ldif/src/flext_tap_ldif/models.py` | Pydantic 2.11 patterns |
