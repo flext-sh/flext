@@ -144,6 +144,99 @@ def test_validate_user_with_valid_email_returns_success():
 | Linting | Ruff | ZERO violations |
 | Security | Bandit | ZERO high/medium |
 
+## Pydantic 2 Patterns (MANDATORY)
+
+### TypeGuard Pattern (Replaces cast())
+
+Use TypeGuards for type narrowing instead of cast():
+
+```python
+from flext_core.utilities import u
+
+# Type-safe narrowing without cast()
+if u.Guards.is_configuration_dict(data):
+    config = data  # Type narrowed automatically
+    config.app_name  # Safe access
+```
+
+Benefits:
+- Type-safe narrowing without cast()
+- No type: ignore comments
+- Runtime validation
+- Better IDE support
+
+### Hierarchical Model Organization
+
+Models are organized in nested namespaces for maximum reuse:
+
+```python
+from flext_core.models import m
+
+config: m.Core.Config = ...
+context: m.Core.Context = ...
+result: m.Result.Success = ...
+```
+
+Pattern:
+- `m.Base` - Standard ConfigDict
+- `m.Core.*` - Core framework models
+- `m.Result.*` - Result models
+- `m.Data.*` - Data models
+
+### ConfigDict Standards
+
+All models use standard ConfigDict settings:
+
+```python
+model_config = ConfigDict(
+    validate_assignment=True,
+    use_enum_values=True,
+    extra="forbid",
+    str_strip_whitespace=True,
+)
+```
+
+Settings:
+- `validate_assignment`: Validate on attribute assignment
+- `use_enum_values`: Serialize enums to values
+- `extra="forbid"`: Reject unknown fields
+- `str_strip_whitespace`: Clean string inputs
+
+### Modern Validator Patterns (Pydantic 2.11+)
+
+Use modern validators instead of deprecated patterns:
+
+```python
+from pydantic import field_validator, model_validator, computed_field
+
+class User(BaseModel):
+    email: str
+    password: str
+    
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, v: str) -> str:
+        if "@" not in v:
+            raise ValueError("Invalid email format")
+        return v.lower()
+    
+    @model_validator(mode="after")
+    def validate_model(self) -> Self:
+        if len(self.password) < 8:
+            raise ValueError("Password too short")
+        return self
+    
+    @computed_field
+    @property
+    def domain(self) -> str:
+        return self.email.split("@")[1]
+```
+
+Patterns:
+- `@field_validator`: Validate individual fields
+- `@model_validator`: Validate entire model
+- `@computed_field`: Computed properties
+
 ## Forbidden Patterns (ZERO TOLERANCE)
 
 ```python
@@ -152,6 +245,7 @@ cast(SomeType, value)           # NO cast()
 # type: ignore                  # NO type ignores
 if TYPE_CHECKING:               # NO TYPE_CHECKING blocks
 Optional[X]                     # Use X | None
+TypedDict                       # Use Pydantic models instead
 ```
 
 ## Key Patterns
