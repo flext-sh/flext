@@ -93,16 +93,16 @@
 !.vscode/**
 
 # ============================================================================
-# BLOCK: AI/Agent Data and Planning (NEVER track these)
+# BLOCK: AI/Agent Local Data (NEVER track these)
 # ============================================================================
 
 # Claude Code local data (315MB+, contains debug, history, credentials)
 .claude/
 **/.claude/
 
-# AI Planning directories
-.planning/
-**/.planning/
+# NOTE: .planning/ is NOW TRACKED (commit_docs: true in config.json)
+# Archive directories within .planning are still local
+.planning/archive/
 
 # AI Plans in docs
 docs/plans/
