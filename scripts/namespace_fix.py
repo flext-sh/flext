@@ -171,7 +171,13 @@ class RuffValidator:
         """Count ruff errors for a file."""
         try:
             result = subprocess.run(
-                ["/usr/bin/env", "ruff", "check", "--output-format=json", str(file_path)],
+                [
+                    "/usr/bin/env",
+                    "ruff",
+                    "check",
+                    "--output-format=json",
+                    str(file_path),
+                ],
                 capture_output=True,
                 text=True,
                 timeout=RUFF_TIMEOUT,
