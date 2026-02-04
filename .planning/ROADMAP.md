@@ -1,153 +1,263 @@
-## Phase 70: Foundation Fixes
+# Roadmap - v0.10.0 Pydantic 2 Complete Migration
 
-Install missing dependencies (returns, beartype) in all venvs
-- [ ] Fix flext-ldif test timeout issue
-- [ ] Fix ldif_max_line_length default (199 vs 100)
-- [ ] Verify flext-core passes make validate
-
-**Success:** All 5 projects can run `make test` without crashes or timeouts
+**Version**: 0.10.0  
+**Created**: 2026-02-04  
+**Timeline**: 35 days (parallelized)
 
 ---
 
-## Phase 70.1: Urgent Beads Sync (INSERTED)
+## Phase 1: Foundation (Days 1-4) - CURRENT
 
-**Goal:** [Urgent work - to be planned]
-**Depends on:** Phase 70
-**Plans:** 0 plans
+**Goal**: Establish patterns and infrastructure for all subsequent phases
 
-Plans:
-- [ ] TBD (run /gsd-plan-phase 70.1 to break down)
+**Directory**: `.planning/phases/01-foundation/`
 
-**Details:**
-[To be added during planning]
+**Requirements Mapped**: TYPE-01, TYPE-04, PYDANTIC-01, PYDANTIC-04
 
----
+### Plans
 
-## Phase 70.2: Security Baseline (URGENT RECOVERY)
+| Plan | Description | Status | Days |
+|------|-------------|--------|------|
+| 01-01 | TypeGuard Infrastructure | Validated | 1 |
+| 01-02 | TypedDict Migration | Executing | 1.5 |
+| 01-03 | cast() Elimination | Discovered | 1 |
+| 01-04 | ConfigDict Standardization | Executing | 0.5 |
+| 01-05 | Validation & Documentation | Planned | 0.5 |
 
-**Goal:** Establish security baseline, audit secrets/dependencies, verify compliance
-**Depends on:** Phase 70
-**Plans:** 0 plans
+### Success Criteria
 
-Plans:
-- [ ] TBD (run /gsd-plan-phase 70.2 to break down)
-
-**Details:**
-- Run detect-secrets
-- Run poetry audit
-- Verify 02-constraints.md compliance
-
----
-
-## Phase 70.3: Dead Code Exorcism (URGENT RECOVERY)
-
-**Goal:** Remove legacy code (process_entry, models_v2) and stale artifacts
-**Depends on:** Phase 70.2
-**Plans:** 0 plans
-
-Plans:
-- [ ] TBD (run /gsd-plan-phase 70.3 to break down)
-
-**Details:**
-- Remove models_v2.py, constants_v2.py
-- Remove process_entry/convert_entry
-- Prune refactor/remove-dead-code branch
+- [ ] TypeGuard utilities created and tested
+- [ ] All 86 TypedDicts in flext-core converted to Pydantic models
+- [ ] Zero cast() in flext-core src/
+- [ ] Standard ConfigDict across all models
+- [ ] AGENTS.md updated with final patterns
+- [ ] `make validate PROJECT=flext-core` passes
 
 ---
 
-## Phase 71: flext-core Stabilization
+## Phase 2: API Layer + Infrastructure (Days 5-7)
 
-**Goal:** Foundation project must be stable first (all others depend on it)
+**Goal**: Migrate API and infrastructure projects in parallel
+
+**Directory**: `.planning/phases/02-api-infra/`
+
+**Requirements Mapped**: TYPE-01, TYPE-03, PYDANTIC-01, PYDANTIC-03
+
+### Parallel Tracks
+
+**Track A** (API Layer):
+- flext-api (0.5 days)
+- flext-grpc (1 day)
+
+**Track B** (Infrastructure):
+- flext-observability (1 day)
+- flext-quality (0.5 days)
+- flext-plugin (0.5 days)
+
+### Success Criteria
+
+- [ ] Zero cast() in all 5 projects
+- [ ] Zero TypedDict in all 5 projects
+- [ ] Standard ConfigDict applied
+- [ ] All projects passing `make validate`
+
+---
+
+## Phase 3: Data Layer (Days 8-11)
+
+**Goal**: Migrate data access and serialization projects
+
+**Directory**: `.planning/phases/03-data-layer/`
+
+**Requirements Mapped**: TYPE-01, TYPE-03, PYDANTIC-01, PYDANTIC-02
+
+### Projects
+
+- **flext-ldif** (93 TypedDicts - HIGH RISK)
+- **flext-ldap**
+- **flext-db-oracle**
+
+### Success Criteria
+
+- [ ] All 93 TypedDicts in flext-ldif converted
+- [ ] Zero cast() in all 3 projects
+- [ ] Hierarchical model pattern established
+- [ ] All projects passing `make validate`
+
+---
+
+## Phase 4: Oracle + Meltano (Days 12-14)
+
+**Goal**: Migrate Oracle and Meltano projects in parallel
+
+**Directory**: `.planning/phases/04-oracle-meltano/`
+
+**Requirements Mapped**: TYPE-01, TYPE-03, PYDANTIC-01
+
+### Parallel Tracks
+
+**Track A** (Oracle):
+- flext-oracle-wms (1.5 days)
+- flext-oracle-oic (1 day)
+
+**Track B** (Meltano):
+- flext-meltano (1.5 days)
+
+### Success Criteria
+
+- [ ] Zero cast() in all 3 projects
+- [ ] Zero TypedDict in all 3 projects
+- [ ] All projects passing `make validate`
+
+---
+
+## Phase 5: Taps + Targets (Days 15-19)
+
+**Goal**: Migrate source and destination connectors in parallel
+
+**Directory**: `.planning/phases/05-taps-targets/`
+
+**Requirements Mapped**: TYPE-01, TYPE-03, PYDANTIC-01
+
+### Parallel Tracks
+
+**Track A** (Taps):
+- flext-tap-ldap (1.5 days)
+- flext-tap-ldif (0.5 days)
+- flext-tap-oracle (0.5 days)
+- flext-tap-oracle-oic (0.5 days)
+
+**Track B** (Targets):
+- flext-target-oracle (2 days)
+- flext-target-ldap (0.5 days)
+- flext-target-ldif (0.5 days)
+- flext-target-oracle-oic (1 day)
+- flext-target-oracle-wms (0.5 days)
+
+### Success Criteria
+
+- [ ] Zero cast() in all 9 projects
+- [ ] Zero TypedDict in all 9 projects
+- [ ] All projects passing `make validate`
+
+---
+
+## Phase 6: DBT + User-Facing (Days 20-24)
+
+**Goal**: Migrate DBT and user-facing applications in parallel
+
+**Directory**: `.planning/phases/06-dbt-user-facing/`
+
+**Requirements Mapped**: TYPE-01, TYPE-03, PYDANTIC-01
+
+### Parallel Tracks
+
+**Track A** (DBT):
+- flext-dbt-oracle (0.5 days)
+- flext-dbt-ldap (0.5 days)
+- flext-dbt-ldif (1 day)
+- flext-dbt-oracle-wms (1.5 days)
+
+**Track B** (User-Facing):
+- flext-cli (84 TypedDicts - 2.5 days)
+- flext-web (89 TypedDicts - 2.5 days)
+
+### Success Criteria
+
+- [ ] All TypedDicts in flext-cli converted
+- [ ] All TypedDicts in flext-web converted
+- [ ] Zero cast() in all 6 projects
+- [ ] All projects passing `make validate`
+
+---
+
+## Phase 7: Test Suite (Days 25-28)
+
+**Goal**: Eliminate all ~500 cast() in test files
+
+**Directory**: `.planning/phases/07-test-suite/`
+
+**Requirements Mapped**: TYPE-02, VAL-02
 
 ### Tasks
-- [ ] Replace Optional[T] with T | None in flext-core
-- [ ] Remove cast() usages in flext-core
-- [ ] Remove TYPE_CHECKING blocks in flext-core
-- [ ] Fix all MyPy errors in flext-core
-- [ ] Achieve 80%+ test coverage in flext-core
-- [ ] Verify make validate passes in flext-core
 
-**Success:** `make validate` passes in flext-core with 80%+ coverage
+- 07-01: Create test TypeGuard library
+- 07-02: Migrate tests by project
+- 07-03: Verify coverage maintained
+
+### Success Criteria
+
+- [ ] Zero cast() in all test files
+- [ ] 80%+ coverage maintained
+- [ ] All tests passing
 
 ---
 
-## Phase 72: flext-cli Stabilization
+## Phase 8: Problem Project (Days 29-32)
 
-**Goal:** CLI foundation depends only on flext-core
+**Goal**: Fix flext-tap-oracle-wms (100+ type errors)
+
+**Directory**: `.planning/phases/08-problem-project/`
+
+**Requirements Mapped**: VAL-01
 
 ### Tasks
-- [ ] Replace Optional[T] with T | None in flext-cli
-- [ ] Remove cast() usages in flext-cli
-- [ ] Remove TYPE_CHECKING blocks in flext-cli
-- [ ] Fix all MyPy errors in flext-cli
-- [ ] Achieve 80%+ test coverage in flext-cli
-- [ ] Verify make validate passes in flext-cli
 
-**Success:** `make validate` passes in flext-cli with 80%+ coverage
+- 08-01: Import structure fixes
+- 08-02: Type error resolution
+- 08-03: Model migration
+
+### Success Criteria
+
+- [ ] flext-tap-oracle-wms passing validation
+- [ ] Zero type errors
+- [ ] Patterns consistent with other projects
 
 ---
 
-## Phase 73: flext-ldif Stabilization
+## Phase 9: Final Validation (Days 33-35)
 
-**Goal:** LDIF processing library (depends on flext-core)
+**Goal**: Ensure complete migration and update documentation
+
+**Directory**: `.planning/phases/09-final-validation/`
+
+**Requirements Mapped**: VAL-01, VAL-02, VAL-03, DOCS-01, DOCS-02
 
 ### Tasks
-- [ ] Replace Optional[T] with T | None in flext-ldif
-- [ ] Remove cast() usages in flext-ldif
-- [ ] Remove TYPE_CHECKING blocks in flext-ldif
-- [ ] Fix all MyPy errors in flext-ldif
-- [ ] Achieve 80%+ test coverage in flext-ldif
-- [ ] Verify make validate passes in flext-ldif
 
-**Success:** `make validate` passes in flext-ldif with 80%+ coverage
+- 09-01: Global validation (`make validate` on all 29 projects)
+- 09-02: Test coverage verification (80%+ across all)
+- 09-03: Documentation update (AGENTS.md, migration guide)
+- 09-04: Cleanup and issue closure
 
----
+### Success Criteria
 
-## Phase 74: flext-ldap Stabilization
-
-**Goal:** LDAP operations (depends on flext-core, flext-ldif)
-
-### Tasks
-- [ ] Replace Optional[T] with T | None in flext-ldap
-- [ ] Remove cast() usages in flext-ldap
-- [ ] Remove TYPE_CHECKING blocks in flext-ldap
-- [ ] Fix all MyPy errors in flext-ldap
-- [ ] Achieve 80%+ test coverage in flext-ldap
-- [ ] Verify make validate passes in flext-ldap
-
-**Success:** `make validate` passes in flext-ldap with 80%+ coverage
+- [ ] `make validate` passes on full monorepo
+- [ ] All 29 projects passing
+- [ ] 80%+ coverage maintained
+- [ ] Documentation complete
+- [ ] All Beads issues closed
 
 ---
 
-## Phase 75: client-a-oud-mig Stabilization
+## Summary
 
-**Goal:** Migration tool (depends on all previous projects)
+| Phase | Name | Duration | Days | Status |
+|-------|------|----------|------|--------|
+| 1 | Foundation | 4 days | 1-4 | EXECUTING |
+| 2 | API + Infrastructure | 3 days | 5-7 | PLANNED |
+| 3 | Data Layer | 4 days | 8-11 | PLANNED |
+| 4 | Oracle + Meltano | 3 days | 12-14 | PLANNED |
+| 5 | Taps + Targets | 5 days | 15-19 | PLANNED |
+| 6 | DBT + User-Facing | 5 days | 20-24 | PLANNED |
+| 7 | Test Suite | 4 days | 25-28 | PLANNED |
+| 8 | Problem Project | 4 days | 29-32 | PLANNED |
+| 9 | Final Validation | 3 days | 33-35 | PLANNED |
+| **Total** | | **35 days** | | |
 
-### Tasks
-- [ ] Replace Optional[T] with T | None in client-a-oud-mig
-- [ ] Remove cast() usages in client-a-oud-mig
-- [ ] Remove TYPE_CHECKING blocks in client-a-oud-mig
-- [ ] Fix all MyPy errors in client-a-oud-mig
-- [ ] Achieve 80%+ test coverage in client-a-oud-mig
-- [ ] Verify make validate passes in client-a-oud-mig
-
-**Success:** `make validate` passes in client-a-oud-mig with 80%+ coverage
-
----
-
-## Phase 76: Final Validation
-
-**Goal:** Cross-project integration and final verification
-
-### Tasks
-- [ ] Run make validate on all 5 projects sequentially
-- [ ] Verify no cross-project import issues
-- [ ] Document final coverage numbers
-- [ ] Tag v0.9.0 release
-
-**Success:** All 5 projects pass `make validate`, ready for production
+**Savings**: ~10-12 days from parallelization vs sequential execution
 
 ---
 
-*Created: 2026-01-31*
-*Milestone: v0.9.0 - Production Stability*
+*Last updated: 2026-02-04*
+*Milestone: v0.10.0 - Pydantic 2 Complete Migration*
