@@ -166,6 +166,11 @@ if [[ "$DEGRADED" == "true" ]]; then
   DEGRADED_FLAG="--degraded"
 fi
 
+backup_name_for() {
+  local filepath="$1"
+  echo "$TMP_DIR/backup_$(echo "$filepath" | sed 's|/|__|g')"
+}
+
 collect_before_metrics() {
   local file="$1"
   local project="$2"
