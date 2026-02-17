@@ -41,28 +41,28 @@ class WorkspaceManagementService(FlextService[dict[str, object]]):
         """Nested helper for symbolic link operations."""
 
         @staticmethod
-        def create_symbolic_link(source: Path, target: Path) -> FlextResult[None]:
+        def create_symbolic_link(source: Path, target: Path) -> FlextResult[bool]:
             """Create symbolic link with validation."""
             try:
                 if not source.exists():
-                    return FlextResult[None].fail(
+                    return FlextResult[bool].fail(
                         f"Source path does not exist: {source}",
                     )
 
                 if target.exists() and target.is_symlink():
                     target.unlink()
                 elif target.exists():
-                    return FlextResult[None].fail(
+                    return FlextResult[bool].fail(
                         f"Target exists and is not a symlink: {target}",
                     )
 
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.symlink_to(source)
 
-                return FlextResult[None].ok(None)
+                return FlextResult[bool].ok(value=True)
 
             except OSError as e:
-                return FlextResult[None].fail(f"Failed to create symlink: {e}")
+                return FlextResult[bool].fail(f"Failed to create symlink: {e}")
 
         @staticmethod
         def validate_link(link_path: Path) -> FlextResult[bool]:

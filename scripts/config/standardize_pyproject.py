@@ -62,7 +62,7 @@ class PyprojectStandardizer(FlextScript):
             return FlextResult[bool].fail("Not in FLEXT workspace root")
 
         print_colored(f"✅ Found {len(flext_projects)} FLEXT projects", Colors.GREEN)
-        return FlextResult[bool].ok(True)
+        return FlextResult[bool].ok(value=True)
 
     def execute_implementation(self, args: dict[str, object]) -> FlextResult[object]:
         """Execute pyproject.toml standardization."""
@@ -183,9 +183,9 @@ class PyprojectStandardizer(FlextScript):
 
         return parser
 
-    def cleanup(self) -> FlextResult[None]:
+    def cleanup(self) -> FlextResult[bool]:
         """Limpeza após execução."""
-        return FlextResult[None].ok(None)
+        return FlextResult[bool].ok(value=True)
 
 
 def main() -> int:

@@ -129,9 +129,9 @@ class SecretsVaultDecryptor(BaseSecurityScript):
         kwargs["mask_secrets"] = not getattr(args, "no_mask", False)
         return kwargs
 
-    def cleanup(self) -> FlextResult[None]:
+    def cleanup(self) -> FlextResult[bool]:
         """Limpeza após execução."""
-        return FlextResult[None].ok(None)
+        return FlextResult[bool].ok(value=True)
 
 
 def main() -> int:

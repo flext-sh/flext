@@ -1,0 +1,82 @@
+id: ban-dict-literal
+language: python
+rule:
+  kind: dictionary
+message: Dict literal is banned
+severity: error
+---
+id: ban-dict-comprehension
+language: python
+rule:
+  kind: dictionary_comprehension
+message: Dict comprehension is banned
+severity: error
+---
+id: ban-dict-constructor
+language: python
+rule:
+  pattern: dict($$$ARGS)
+message: dict() constructor is banned
+severity: error
+---
+id: ban-dict-type-annotation
+language: python
+rule:
+  any:
+    - pattern:
+        context: "a: Dict[$$$ARGS]"
+        selector: generic_type
+    - pattern:
+        context: "a: dict[$$$ARGS]"
+        selector: generic_type
+    - all:
+        - kind: identifier
+        - regex: "^dict$"
+        - inside:
+            kind: type
+            stopBy: end
+message: dict in type annotations is banned
+severity: error
+---
+id: ban-typing-dict-attribute
+language: python
+rule:
+  all:
+    - kind: attribute
+    - pattern: typing.Dict
+message: typing.Dict is banned
+severity: error
+---
+id: ban-typing-dict-import
+language: python
+rule:
+  any:
+    - pattern: from typing import Dict
+    - pattern: from typing import Dict, $$$AFTER
+    - pattern: from typing import $$$BEFORE, Dict
+    - pattern: from typing import $$$BEFORE, Dict, $$$AFTER
+message: typing.Dict import is banned
+severity: error
+---
+id: ban-isinstance-dict
+language: python
+rule:
+  any:
+    - pattern: isinstance($VAR, dict)
+    - pattern: isinstance($VAR, ($$$BEFORE, dict, $$$AFTER))
+    - pattern: isinstance($VAR, (dict, $$$AFTER))
+    - pattern: isinstance($VAR, ($$$BEFORE, dict))
+message: isinstance(..., dict) is banned
+severity: error
+---
+id: ban-default-factory-dict
+language: python
+rule:
+  pattern: field($$$ARGS)
+  has:
+    pattern:
+      context: "f(default_factory=dict)"
+      selector: keyword_argument
+    stopBy: end
+message: default_factory=dict is banned
+severity: error

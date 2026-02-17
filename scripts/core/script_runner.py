@@ -42,16 +42,16 @@ class ScriptRunner(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> FlextResult[None]:
+    def validate_preconditions(self) -> FlextResult[bool]:
         """Validate preconditions."""
         scripts_dir = Path(__file__).parent.parent
 
         if not scripts_dir.exists():
             print_colored("❌ Scripts directory not found", Colors.RED)
-            return FlextResult[None].fail("Scripts directory not found")
+            return FlextResult[bool].fail("Scripts directory not found")
 
         print_colored("✅ Scripts directory found", Colors.GREEN)
-        return FlextResult[None].ok(None)
+        return FlextResult[bool].ok(value=True)
 
     def execute_main_logic(
         self,
@@ -193,9 +193,9 @@ class ScriptRunner(FlextScript):
 
         return parser
 
-    def cleanup(self) -> FlextResult[None]:
+    def cleanup(self) -> FlextResult[bool]:
         """Limpeza após execução."""
-        return FlextResult[None].ok(None)
+        return FlextResult[bool].ok(value=True)
 
 
 # Helper to check if a function accepts arbitrary keyword arguments
