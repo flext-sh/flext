@@ -24,7 +24,12 @@
   "quality_attributes": {
     "performance": {
       "enabled": true,
-      "metrics": ["throughput", "latency", "scalability", "efficiency"]
+      "metrics": [
+        "throughput",
+        "latency",
+        "scalability",
+        "efficiency"
+      ]
     },
     "security": {
       "enabled": true,
@@ -46,7 +51,12 @@
     },
     "maintainability": {
       "enabled": true,
-      "metrics": ["modularity", "testability", "documentation", "extensibility"]
+      "metrics": [
+        "modularity",
+        "testability",
+        "documentation",
+        "extensibility"
+      ]
     },
     "usability": {
       "enabled": true,
@@ -80,7 +90,7 @@
   "metadata": {
     "author": "FLEXT Architecture Team",
     "version": "0.9.0",
-    "last_updated": "2025-01-XX",
+    "last_updated": "2026-02-17",
     "review_cycle": "quarterly"
   },
   "integration": {

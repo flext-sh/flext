@@ -1,5 +1,8 @@
 # Architecture Decision Records (ADRs)
 
+**Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
+
+
 ## Table of Contents
 
 - [Architecture Decision Records (ADRs)](#architecture-decision-records-adrs)
