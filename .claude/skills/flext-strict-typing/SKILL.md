@@ -5,6 +5,9 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 
 # FLEXT Strict Typing Rules
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 > **Source of truth**: Extracted from `flext-core/src/flext_core/typings.py` (534 lines)
 > and cross-referenced with `models.py`, `protocols.py`, and `ruff-shared.toml`.
 

@@ -47,6 +47,9 @@ description: Pydantic SettingsConfigDict and singleton config patterns across FL
 
 ```python
 # flext-core/src/flext_core/settings.py
+
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
 class FlextSettings(p.ProtocolSettings, p.Config, FlextRuntime):
     _instances: ClassVar[dict[type[BaseSettings], BaseSettings]] = {}
     _lock: ClassVar[threading.RLock] = threading.RLock()

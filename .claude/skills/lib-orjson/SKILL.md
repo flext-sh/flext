@@ -31,6 +31,9 @@ description: Deterministic high-performance JSON serialization with orjson in fl
 
 ```python
 # flext-core/src/flext_core/_utilities/validation.py
+
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
 @staticmethod
 def sort_key(value: t.GeneralValueType) -> tuple[str, str]:
     ...

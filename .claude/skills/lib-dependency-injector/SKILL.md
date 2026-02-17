@@ -148,6 +148,9 @@ Bad:
 container = FlextContainer.get_global()
 _ = container.register("clock", "fake-clock")
 # no cleanup, mutates shared singleton for unrelated tests
+
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
 ```
 
 Why bad: shared mutable DI state causes cross-test leakage.
