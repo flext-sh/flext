@@ -110,10 +110,11 @@ def print_ok(path: Path) -> None:
 
 
 def print_violation(violation: NamingViolation) -> None:
-    print(
+    details = (
         f"{violation.path:<70} {Ansi.RED}{'VIOLATION':<10}{Ansi.RESET} "
-        f"{violation.reason}; suggestion: {violation.suggestion}",
+        + f"{violation.reason}; suggestion: {violation.suggestion}"
     )
+    print(details)
 
 
 def write_report(violations: list[NamingViolation]) -> None:
@@ -130,14 +131,14 @@ def write_report(violations: list[NamingViolation]) -> None:
             for item in sorted(violations, key=lambda entry: entry.path)
         ],
     }
-    REPORT_PATH.write_text(
+    _ = REPORT_PATH.write_text(
         json.dumps(payload, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
 
 
 def main() -> int:
-    parse_args()
+    _ = parse_args()
 
     artifacts = collect_artifacts()
     violations: list[NamingViolation] = []
@@ -162,11 +163,12 @@ def main() -> int:
         print_violation(violation)
 
     write_report(violations)
-    print(
+    summary = (
         f"\n{Ansi.CYAN}Summary:{Ansi.RESET} total={len(artifacts)} "
-        f"{Ansi.GREEN}ok={len(artifacts) - len(violations)}{Ansi.RESET} "
-        f"{Ansi.RED}violations={len(violations)}{Ansi.RESET}",
+        + f"{Ansi.GREEN}ok={len(artifacts) - len(violations)}{Ansi.RESET} "
+        + f"{Ansi.RED}violations={len(violations)}{Ansi.RESET}"
     )
+    print(summary)
     print(f"Violations report: {REPORT_PATH.relative_to(REPO_ROOT)}")
 
     return 0 if not violations else 1

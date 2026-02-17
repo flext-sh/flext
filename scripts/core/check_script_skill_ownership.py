@@ -241,14 +241,14 @@ def write_candidates(candidates: list[dict[str, str]]) -> None:
         "total_candidates": len(candidates),
         "candidates": sorted(candidates, key=lambda item: item["script"]),
     }
-    CANDIDATE_REPORT_PATH.write_text(
+    _ = CANDIDATE_REPORT_PATH.write_text(
         json.dumps(payload, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
 
 
 def main() -> int:
-    parse_args()
+    _ = parse_args()
 
     try:
         scripts = tracked_scripts()
@@ -271,12 +271,13 @@ def main() -> int:
     unowned_count = sum(1 for item in results if item.status == "UNOWNED")
     violation_count = sum(1 for item in results if item.status == "VIOLATION")
 
-    print(
+    summary = (
         f"\n{Ansi.CYAN}Summary:{Ansi.RESET} total={len(results)} "
-        f"{Ansi.GREEN}ok={ok_count}{Ansi.RESET} "
-        f"{Ansi.YELLOW}unowned={unowned_count}{Ansi.RESET} "
-        f"{Ansi.RED}violations={violation_count}{Ansi.RESET}",
+        + f"{Ansi.GREEN}ok={ok_count}{Ansi.RESET} "
+        + f"{Ansi.YELLOW}unowned={unowned_count}{Ansi.RESET} "
+        + f"{Ansi.RED}violations={violation_count}{Ansi.RESET}"
     )
+    print(summary)
     print(f"Candidates report: {CANDIDATE_REPORT_PATH.relative_to(REPO_ROOT)}")
 
     return 0 if (unowned_count == 0 and violation_count == 0) else 1
