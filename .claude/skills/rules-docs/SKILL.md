@@ -1,38 +1,62 @@
 ---
 name: rules-docs
-description: Scoped contribution rules for `docs/` that align with root CLAUDE and project conventions.
-scope: /home/marlonsc/flext/docs/
-tags: [rules,scope,docs]
-last_verified: 2026-02-17
+description: Rules for documentation under `docs/` to keep architecture and project guides aligned with current code and policy. Use when editing docs pages or docs structure.
 ---
 
-## Applies To
+# Rules Docs
 
-- `/home/marlonsc/flext/docs/`
+## Scope
+- `docs/index.md`
+- `docs/architecture/`
+- `docs/guides/`
+- `docs/projects/`
+- `docs/standards/`
 
-## Sources
+## References
+- `docs/README.md`
+- `docs/architecture/overview.md`
+- `docs/architecture/clean-architecture.md`
+- `CLAUDE.md`
 
-- `/home/marlonsc/flext/CLAUDE.md`
-- `/home/marlonsc/flext/AGENTS.md`
-- `/home/marlonsc/flext/CONVENTIONS.md`
-- `/home/marlonsc/flext/docs/`
+## Rules
+- Keep docs paths and file references repository-relative.
+- Align architectural claims with current source files.
+- Prefer concrete file/symbol anchors over generic statements.
+- Avoid duplicating canonical policy text from root governance files.
 
-## Enforced Rules
+## Instructions
+- Verify referenced files exist before publishing links or commands.
+- Update related docs pages when structure/naming changes.
+- For architecture docs, include source-aligned module names.
 
-- Guideline: keep changes local to this scope and follow existing file naming and structure patterns.
-- Guideline: do not duplicate global governance text from root `CLAUDE.md` inside scope docs.
+```bash
+ls -la docs
+```
 
-## Guidance
-
-- Before editing, read sibling files in the same directory to match style and structure.
-- Prefer incremental edits and verify with scope-relevant commands (tests/build/docs checks).
-- Keep references path-anchored so future contributors can verify quickly.
+## Workflow
+1. Identify docs pages affected by the change.
+2. Update content with concrete source anchors.
+3. Validate links/paths and remove stale references.
+4. Re-check docs index/navigation consistency.
 
 ## Examples
+Good:
 
-- When working in `docs/`, cite concrete files under `/home/marlonsc/flext/docs/` instead of generic statements.
+```markdown
+See `flext-core/src/flext_core/result.py` for `FlextResult` behavior.
+```
+
+Why good: links documentation to a concrete source file and symbol.
+
+Bad:
+
+```markdown
+The core handles results somewhere in the project.
+```
+
+Why bad: vague guidance with no verifiable anchor.
 
 ## Verification
-
 - `ls -la docs`
+- `rg -n "flext-core/src/flext_core|CLAUDE.md|AGENTS.md" docs`
 - `rg -n "TODO|FIXME" docs || true`

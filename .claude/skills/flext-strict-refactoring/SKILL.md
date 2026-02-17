@@ -1,36 +1,72 @@
 ---
 name: flext-strict-refactoring
-description: Strict refactor guardrails for removing ambiguous or contradictory documentation/policy text.
-scope: /home/marlonsc/flext/
-tags: [skills,workflow,patterns]
-last_verified: 2026-02-17
+description: Strict cleanup rules for removing duplication, stale policy text, and conflicting guidance in docs and skills. Use when normalizing documentation content.
 ---
 
-## Applies To
+# Flext Strict Refactoring
 
-- `/home/marlonsc/flext/`
+## Scope
 
-## Sources
+- Documentation governance files:
+  - `CLAUDE.md`
+  - `AGENTS.md`
+  - `.claude/skills/*/SKILL.md`
+- Agent pointer files:
+  - `codex.md`
+  - `.github/copilot-instructions.md`
+  - `.gemini/styleguide.md`
 
-- `/home/marlonsc/flext/CLAUDE.md`
-- `/home/marlonsc/flext/AGENTS.md`
-- `/home/marlonsc/flext/context/core/error-handling.md`
+## References
 
-## Enforced Rules
+- `AGENTS.md` (no-duplication maintenance rule)
+- `CLAUDE.md` (canonical policy)
+- `.claude/skills/skill-format-universal/SKILL.md`
 
-- Guideline: delete stale guidance instead of layering contradictory caveats on top.
-- Guideline: preserve one canonical statement for each behavior and cross-reference from others.
+## Rules
 
-## Guidance
+- Remove duplicated guidance when canonical source exists.
+- Keep terminology consistent across related files.
+- Delete stale sections that conflict with active policy.
+- Preserve repository-relative paths in examples and references.
 
-- Use this skill when consolidating overlapping docs and policy files.
-- After strict refactors, verify that references still point to valid files.
+## Instructions
+
+- Compare candidate content against canonical source before copying.
+- Prefer referencing canonical files over re-explaining identical policy.
+- Keep each skill focused on domain-specific action, not global boilerplate.
+
+```bash
+rg -n "single source of truth|Canonical source|CLAUDE.md" AGENTS.md .claude/skills/*/SKILL.md
+```
+
+## Workflow
+
+1. Detect duplicated sections across docs/skills.
+2. Decide canonical location for each concept.
+3. Remove duplicates and replace with pointers.
+4. Verify section completeness and coherence.
 
 ## Examples
 
-- Single-source policy in root CLAUDE is the anchor for strict documentation refactors.
+Good:
+
+```markdown
+Canonical source: `CLAUDE.md`.
+```
+
+Why good: one source reduces drift and conflict.
+
+Bad:
+
+```markdown
+## Global Rules
+[copy of 150 lines from CLAUDE.md]
+```
+
+Why bad: duplicated policy rapidly becomes inconsistent.
 
 ## Verification
 
-- `rg -n "^##\s+Guidance$" .claude/skills/flext-strict-refactoring/SKILL.md`
-- `rg -n "`/home/marlonsc/flext/" .claude/skills/flext-strict-refactoring/SKILL.md`
+- `rg -n "TODO|TBD|placeholder" .claude/skills/*/SKILL.md || true`
+- `rg -n "(^|[\"'`])/(Users|home)/" .claude/skills/*/SKILL.md || true`
+- `rg -n "Canonical source:`CLAUDE.md`|single source of truth" AGENTS.md codex.md .github/copilot-instructions.md .gemini/styleguide.md`

@@ -1,38 +1,67 @@
 ---
 name: rules-docker
-description: Scoped contribution rules for `docker/` that align with root CLAUDE and project conventions.
-scope: /home/marlonsc/flext/docker/
-tags: [rules,scope,docs]
-last_verified: 2026-02-17
+description: Rules for Docker assets in `docker/`, including compose files and image folders. Use when editing container configs, service wiring, or docker validation scripts.
 ---
 
-## Applies To
+# Rules Docker
 
-- `/home/marlonsc/flext/docker/`
+## Scope
+- `docker/docker-compose.*.yml`
+- `docker/images/`
+- `docker/openldap/`
+- `docker/oracle-db/`
+- `docker/validate_docker_standardization.sh`
 
-## Sources
+## References
+- `docker/README.md`
+- `docker/docker-compose.flext.yml`
+- `docker/docker-compose.oracle-db.yml`
+- `docker/validate_docker_standardization.sh`
 
-- `/home/marlonsc/flext/CLAUDE.md`
-- `/home/marlonsc/flext/AGENTS.md`
-- `/home/marlonsc/flext/CONVENTIONS.md`
-- `/home/marlonsc/flext/docker/`
+## Rules
+- Keep compose service names and network references consistent across related files.
+- Do not leave zero-byte placeholder compose files for active environments.
+- Keep environment-specific compose files explicit (`flext`, `oracle-db`, `openldap`, etc.).
+- Validate docker changes with repository scripts when available.
 
-## Enforced Rules
+## Instructions
+- Anchor changes to exact compose file(s) under `docker/`.
+- Preserve existing naming conventions for service blocks and compose filenames.
+- When adding a new compose variant, document it in `docker/README.md`.
 
-- Guideline: keep changes local to this scope and follow existing file naming and structure patterns.
-- Guideline: do not duplicate global governance text from root `CLAUDE.md` inside scope docs.
+```bash
+ls -la docker
+```
 
-## Guidance
-
-- Before editing, read sibling files in the same directory to match style and structure.
-- Prefer incremental edits and verify with scope-relevant commands (tests/build/docs checks).
-- Keep references path-anchored so future contributors can verify quickly.
+## Workflow
+1. Select target compose file(s).
+2. Apply minimal service/network/volume changes.
+3. Check sibling compose files for consistency.
+4. Run docker standardization script or equivalent checks.
+5. Update docs if new compose targets were introduced.
 
 ## Examples
+Good:
 
-- When working in `docker/`, cite concrete files under `/home/marlonsc/flext/docker/` instead of generic statements.
+```yaml
+services:
+  redis:
+    image: redis:7
+```
+
+Why good: explicit service declaration in a concrete compose file.
+
+Bad:
+
+```yaml
+services:
+  cache: {}
+```
+
+Why bad: empty service stubs obscure runtime behavior and break reproducibility.
 
 ## Verification
-
 - `ls -la docker`
+- `rg -n "services:|networks:|volumes:" docker/docker-compose*.yml`
 - `rg -n "TODO|FIXME" docker || true`
+- `bash docker/validate_docker_standardization.sh || true`

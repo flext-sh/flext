@@ -1,38 +1,63 @@
 ---
 name: rules-scripts
-description: Scoped contribution rules for `scripts/` that align with root CLAUDE and project conventions.
-scope: /home/marlonsc/flext/scripts/
-tags: [rules,scope,docs]
-last_verified: 2026-02-17
+description: Rules for automation and maintenance scripts under `scripts/`. Use when editing shell/python scripts that drive validation, cleanup, release, or tooling workflows.
 ---
 
-## Applies To
+# Rules Scripts
 
-- `/home/marlonsc/flext/scripts/`
+## Scope
+- `scripts/validate_all_projects.sh`
+- `scripts/architecture/`
+- `scripts/security/`
+- `scripts/testing/`
+- `scripts/*.py`
+- `scripts/*.sh`
 
-## Sources
+## References
+- `scripts/README.md`
+- `Makefile`
+- `AGENTS.md`
 
-- `/home/marlonsc/flext/CLAUDE.md`
-- `/home/marlonsc/flext/AGENTS.md`
-- `/home/marlonsc/flext/CONVENTIONS.md`
-- `/home/marlonsc/flext/scripts/`
+## Rules
+- Keep scripts non-interactive by default for CI compatibility.
+- Fail fast with clear error output for validation scripts.
+- Preserve executable permissions and shebang correctness.
+- Keep script behavior deterministic and root-relative.
 
-## Enforced Rules
+## Instructions
+- Anchor changes to concrete script files, not generic script categories.
+- For shell scripts, prefer explicit command checks over implicit assumptions.
+- For Python scripts, keep imports and file paths workspace-relative.
 
-- Guideline: keep changes local to this scope and follow existing file naming and structure patterns.
-- Guideline: do not duplicate global governance text from root `CLAUDE.md` inside scope docs.
+```bash
+ls -la scripts
+```
 
-## Guidance
-
-- Before editing, read sibling files in the same directory to match style and structure.
-- Prefer incremental edits and verify with scope-relevant commands (tests/build/docs checks).
-- Keep references path-anchored so future contributors can verify quickly.
+## Workflow
+1. Select target script and its caller(s).
+2. Apply minimal behavior change.
+3. Run script in representative mode (`--help` or safe validation mode).
+4. Verify downstream docs/make targets still align.
 
 ## Examples
+Good:
 
-- When working in `scripts/`, cite concrete files under `/home/marlonsc/flext/scripts/` instead of generic statements.
+```bash
+bash scripts/validate_all_projects.sh
+```
+
+Why good: explicit validation script invocation with reproducible behavior.
+
+Bad:
+
+```bash
+./some_script.sh
+```
+
+Why bad: ambiguous path and unclear contract from repository root.
 
 ## Verification
-
 - `ls -la scripts`
+- `rg -n "^#!/|set -e|set -eu|argparse|if __name__ == '__main__'" scripts/*.sh scripts/*.py || true`
+- `rg -n "validate_all_projects" Makefile scripts || true`
 - `rg -n "TODO|FIXME" scripts || true`

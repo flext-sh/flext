@@ -1,50 +1,68 @@
 ---
 name: rules-flext-core
-description: Concrete implementation rules for result flow, typing, DI, and logging in flext-core.
-scope: /home/marlonsc/flext/flext-core/
-tags: [rules,flext-core,architecture,typing]
-last_verified: 2026-02-17
+description: Authoritative rules for `flext-core` architecture, typing, result flow, DI, and logging boundaries. Use when modifying files under `flext-core/`.
 ---
 
-## Applies To
+# Rules Flext Core
 
-- `/home/marlonsc/flext/flext-core/`
+## Scope
+- `flext-core/src/flext_core/`
+- `flext-core/docs/architecture/`
+- `flext-core/pyproject.toml`
 
-## Sources
+## References
+- `flext-core/docs/architecture/overview.md`
+- `flext-core/docs/architecture/clean-architecture.md`
+- `flext-core/src/flext_core/result.py`
+- `flext-core/src/flext_core/container.py`
+- `flext-core/src/flext_core/runtime.py`
+- `flext-core/src/flext_core/typings.py`
+- `flext-core/src/flext_core/loggings.py`
 
-- `/home/marlonsc/flext/flext-core/src/flext_core/result.py`
-- `/home/marlonsc/flext/flext-core/src/flext_core/typings.py`
-- `/home/marlonsc/flext/flext-core/src/flext_core/runtime.py`
-- `/home/marlonsc/flext/flext-core/src/flext_core/container.py`
-- `/home/marlonsc/flext/flext-core/src/flext_core/loggings.py`
-- `/home/marlonsc/flext/flext-core/src/flext_core/protocols.py`
-- `/home/marlonsc/flext/flext-core/docs/architecture/overview.md`
-- `/home/marlonsc/flext/flext-core/docs/architecture/patterns.md`
-- `/home/marlonsc/flext/flext-core/pyproject.toml`
+## Rules
+- Keep dependency direction inward only (L3 -> L2 -> L1 -> L0).
+- Keep failure/success boundaries on `FlextResult` (`r`) and compose with `map/flat_map/lash`.
+- Keep dependency-injector usage routed through runtime/container bridges.
+- Keep shared type contracts centralized in `typings.py`.
+- Consume public API from `flext_core` exports in non-internal modules.
 
-## Enforced Rules
+## Instructions
+- Reuse canonical aliases where established: `r`, `t`, `c`, `m`, `p`, `u`.
+- Anchor behavior changes to concrete declarations before refactoring.
+- For new exported symbols, update `flext-core/src/flext_core/__init__.py` deliberately.
 
-- Enforced by: result flow uses `FlextResult` and recovery via `.lash` (not ad-hoc exception swallowing).
-- Enforced by: map-like public payloads use typed containers from `typings.py` (`ConfigMap`, `ServiceMap`, `ErrorMap`).
-- Enforced by: DI wiring goes through `FlextRuntime` bridge + `FlextContainer`, not direct framework leakage into handlers.
-- Enforced by: structured logging goes through `FlextRuntime.configure_structlog` and `FlextLogger` context helpers.
+```python
+from flext_core import r
 
-## Guidance
+def run(value: str):
+    return r[str].ok(value).map(str.strip)
+```
 
-- Prefer `r[T].ok(...)` / `r[T].fail(...)` at module boundaries where operations can fail.
-- Use `t.*` aliases from `typings.py` instead of redefining local type aliases for shared concepts.
-- Use protocol contracts in `protocols.py` when a boundary should be structurally typed.
-- Keep external library access behind runtime/container/logging wrappers already present in flext-core.
+## Workflow
+1. Classify touched files by architecture layer.
+2. Apply minimal change aligned with local pattern.
+3. Verify imports/exports and boundary integrity.
+4. Run lint/type/test checks for `flext-core`.
 
 ## Examples
+Good:
 
-- Result recovery: `result.lash(handler)` pattern in `flext-core/src/flext_core/result.py`.
-- DI bridge: `dependency_containers()` / `dependency_providers()` in `flext-core/src/flext_core/runtime.py` and usage in `container.py`.
-- Logger context: `bind_global_context` and context operations in `flext-core/src/flext_core/loggings.py`.
+```python
+result = r[str].ok("x").flat_map(lambda v: r[str].ok(v.upper()))
+```
+
+Why good: typed railway composition with explicit success chain.
+
+Bad:
+
+```python
+from dependency_injector import providers
+```
+
+Why bad: bypasses `FlextRuntime`/`FlextContainer` bridge contract.
 
 ## Verification
-
-- `rg -n "\.lash\(" flext-core/src/flext_core/result.py`
-- `rg -n "class ConfigMap|class ServiceMap|class ErrorMap" flext-core/src/flext_core/typings.py`
-- `rg -n "dependency_containers|dependency_providers|FlextContainer" flext-core/src/flext_core/runtime.py flext-core/src/flext_core/container.py`
-- `rg -n "configure_structlog|bind_global_context" flext-core/src/flext_core/runtime.py flext-core/src/flext_core/loggings.py`
+- `rg -n "class FlextResult|\.flat_map\(|\.lash\(" flext-core/src/flext_core/result.py`
+- `rg -n "class FlextContainer|def register\(|def get_typed\(" flext-core/src/flext_core/container.py`
+- `rg -n "class FlextRuntime|class DependencyIntegration" flext-core/src/flext_core/runtime.py`
+- `rg -n "TypeVar\(|TypeAlias|class FlextTypes" flext-core/src/flext_core/typings.py`

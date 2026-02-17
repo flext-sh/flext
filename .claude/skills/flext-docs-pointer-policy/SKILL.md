@@ -1,40 +1,77 @@
 ---
 name: flext-docs-pointer-policy
-description: Single-root CLAUDE policy and root-skills-only governance model.
-scope: /home/marlonsc/flext/
-tags: [skills,policy,docs]
-last_verified: 2026-02-17
+description: Canonical documentation-governance policy for agent configs: one root source, lightweight pointers everywhere else.
 ---
 
-## Applies To
+# Flext Docs Pointer Policy
 
-- `/home/marlonsc/flext/`
+## Scope
 
-## Sources
+- Root governance docs (`CLAUDE.md`, `AGENTS.md`)
+- Agent pointer files under root and tool directories
 
-- `/home/marlonsc/flext/CLAUDE.md`
-- `/home/marlonsc/flext/AGENTS.md`
-- `/home/marlonsc/flext/.gitignore`
+## References
 
-## Enforced Rules
+- `AGENTS.md` states a single source of truth: root `CLAUDE.md`.
+- `AGENTS.md` maps all agent config entrypoints and enforces pointer-file limits.
+- Pointer files reference root policy:
+  - `.github/copilot-instructions.md`
+  - `.gemini/styleguide.md`
+  - `.cursor/rules/flext.mdc`
+  - `.clinerules`
+  - `.windsurfrules`
+  - `.continue/rules/flext.md`
+  - `CONVENTIONS.md`
+  - `codex.md`
 
-- Enforced by: exactly one `CLAUDE.md` must exist at workspace root.
-- Guideline: scoped guidance belongs in `.claude/skills/*/SKILL.md`, not extra CLAUDE files.
+## Rules
 
-## Guidance
+- All normative rule updates happen in `CLAUDE.md` first.
+- Agent-specific files remain pointers, not policy mirrors.
+- Never duplicate governance rules across multiple agent files.
+- Pointer files must remain concise and reference scoped skills instead of restating them.
 
-- Keep governance hierarchy simple: root `CLAUDE.md` + root skill files.
-- When adding a new scope rule, create/update a skill instead of creating another CLAUDE file.
-- Reference root CLAUDE from other agent configs (Copilot/Cursor/etc.) through pointer-style docs already present in repo.
+## Instructions
+
+- `.github/copilot-instructions.md` points to root canonical governance.
+- `.gemini/styleguide.md` defines tool-specific behavior without duplicating policy text.
+- `.cursor/rules/flext.mdc` keeps frontmatter + brief pointer instructions only.
+- `.clinerules`, `.windsurfrules`, `.continue/rules/flext.md` remain concise bridge docs.
+- `CONVENTIONS.md` and `codex.md` behave as entrypoint pointers for their tools.
+
+## Workflow
+
+1. Update `CLAUDE.md` when governance changes.
+2. Check `AGENTS.md` mapping for impacted pointers.
+3. Update only references or short tool-specific usage hints in pointer files.
+4. Remove duplicated rule text from pointers.
 
 ## Examples
 
-- Valid state: `/home/marlonsc/flext/CLAUDE.md` exists and no other `CLAUDE.md` exists anywhere under the workspace.
+```md
+<!-- Good: concise pointer -->
+Canonical source: `CLAUDE.md` at repository root.
+Use `.claude/skills/` for scoped behavior.
+```
+
+```md
+<!-- Bad: duplicated governance spec -->
+## Full Policy
+<hundreds of lines copied from CLAUDE.md>
+```
+
+Why bad: duplicated policy drifts over time and breaks the single-source governance model.
+
+```md
+<!-- Bad: agent-specific contradiction -->
+Use local rules in this file as priority over CLAUDE.md.
+```
+
+Why bad: inverts repository governance and creates conflicting behavior between tools.
 
 ## Verification
 
-- `python - <<'PY'
-from pathlib import Path
-root=Path('/home/marlonsc/flext')
-print([str(p) for p in root.rglob('CLAUDE.md')])
-PY`
+- `rg -n "single source of truth|CLAUDE.md|Never duplicate rules|under 50 lines" AGENTS.md`
+- `rg -n "Canonical source|CLAUDE.md" .github/copilot-instructions.md .gemini/styleguide.md .cursor/rules/flext.mdc .clinerules .windsurfrules .continue/rules/flext.md CONVENTIONS.md codex.md`
+- `rg -n "full policy|single source" CLAUDE.md AGENTS.md`
+- `wc -l .github/copilot-instructions.md .gemini/styleguide.md .cursor/rules/flext.mdc .clinerules .windsurfrules .continue/rules/flext.md CONVENTIONS.md codex.md`

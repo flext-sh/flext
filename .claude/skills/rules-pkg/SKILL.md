@@ -1,38 +1,68 @@
 ---
 name: rules-pkg
-description: Scoped contribution rules for `pkg/` that align with root CLAUDE and project conventions.
-scope: /home/marlonsc/flext/pkg/
-tags: [rules,scope,docs]
-last_verified: 2026-02-17
+description: Rules for package metadata and package-layer structure under `pkg/`. Use when editing package descriptors, plugin manifests, or packaging utilities.
 ---
 
-## Applies To
+# Rules Pkg
 
-- `/home/marlonsc/flext/pkg/`
+## Scope
 
-## Sources
+- `pkg/controlpanel/`
+- `pkg/domain/`
+- `pkg/flextservice/`
+- `pkg/infrastructure/`
+- `pkg/plugins/`
 
-- `/home/marlonsc/flext/CLAUDE.md`
-- `/home/marlonsc/flext/AGENTS.md`
-- `/home/marlonsc/flext/CONVENTIONS.md`
-- `/home/marlonsc/flext/pkg/`
+## References
 
-## Enforced Rules
+- `pyproject.toml`
+- `pkg/`
+- `Makefile`
 
-- Guideline: keep changes local to this scope and follow existing file naming and structure patterns.
-- Guideline: do not duplicate global governance text from root `CLAUDE.md` inside scope docs.
+## Rules
 
-## Guidance
+- Keep package metadata consistent with workspace naming/version patterns.
+- Keep package boundaries clear (domain vs infrastructure vs plugin layers).
+- Avoid leaking internal-only code via package exports.
+- Update consuming docs/scripts when package paths change.
 
-- Before editing, read sibling files in the same directory to match style and structure.
-- Prefer incremental edits and verify with scope-relevant commands (tests/build/docs checks).
-- Keep references path-anchored so future contributors can verify quickly.
+## Instructions
+
+- Verify package path exists and matches intended layer.
+- Keep naming stable and deterministic across related files.
+- Validate packaging-related references in build/test scripts.
+
+```bash
+ls -la pkg
+```
+
+## Workflow
+
+1. Identify package area being modified.
+2. Apply minimal metadata/structure change.
+3. Confirm references in build scripts/docs still resolve.
+4. Verify no accidental layer boundary drift.
 
 ## Examples
 
-- When working in `pkg/`, cite concrete files under `/home/marlonsc/flext/pkg/` instead of generic statements.
+Good:
+
+```text
+pkg/domain/ contains domain-focused package artifacts only.
+```
+
+Why good: preserves package-layer responsibility.
+
+Bad:
+
+```text
+Place infrastructure bootstrap files inside pkg/domain/ for convenience.
+```
+
+Why bad: layer mixing increases maintenance and dependency confusion.
 
 ## Verification
 
 - `ls -la pkg`
+- `rg -n "pkg/" Makefile scripts/*.sh docs || true`
 - `rg -n "TODO|FIXME" pkg || true`
