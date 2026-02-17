@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 set -euo pipefail
 

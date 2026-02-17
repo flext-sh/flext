@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 # FLEXT Constants Standardization Validator
 # Validates and enforces [Project]Constants pattern across all FLEXT projects

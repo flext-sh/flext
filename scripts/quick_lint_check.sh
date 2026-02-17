@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 # Quick lint check across all FLEXT projects
+
+set -euo pipefail
 
 echo "=== FLEXT ECOSYSTEM QUICK LINT CHECK ==="
 echo "Date: $(date)"

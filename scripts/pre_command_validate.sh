@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # pre_command_validate.sh - Pre-command validation using Claude Code hooks
 # Usage: ./pre_command_validate.sh <command>

@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 # detect_violations_large_scale.sh - Workspace-wide FLEXT violation detection
+
+set -euo pipefail
 
 set -uo pipefail # Don't exit on first error in pipes
 

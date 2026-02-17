@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
+
+set -euo pipefail
 
 echo "🧪 TESTE COMPLETO DE TODOS OS PROJETOS - FASE 3"
 echo "========================================================"

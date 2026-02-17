@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # post_edit_validate.sh - Post-edit validation with backup maintenance for iterative fixes
 # Usage: ./post_edit_validate.sh <backup_id> <file_path> [old_text] [new_text]

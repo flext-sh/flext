@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # auto_edit_with_hooks.sh - Fully automatic edit execution with transparent hook validation and rollback
 # Usage: ./auto_edit_with_hooks.sh <tool_name> <file_path> <old_string> <new_string>

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # pre_edit_validate.sh - Pre-edit backup and warnings only
 # Usage: ./pre_edit_validate.sh <file_path>

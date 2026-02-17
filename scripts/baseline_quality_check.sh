@@ -1,7 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 
 # PHASE 1.3: Baseline Quality Metrics Collection Script
+
+set -euo pipefail
 
 echo "=== FLEXT ECOSYSTEM BASELINE QUALITY METRICS ===" >/tmp/baseline_metrics.txt
 echo "Date: $(date)" >>/tmp/baseline_metrics.txt

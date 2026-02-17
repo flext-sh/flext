@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # Wrapper script for editing files with lock coordination
 # Usage: ./edit_with_lock.sh <file_path> <agent_name> <editor_command>

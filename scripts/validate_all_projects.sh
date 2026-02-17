@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 # Comprehensive validation script for all FLEXT projects
 # Runs ruff, mypy, pyrefly, and pytest across all projects
 
-set -e
+set -euo pipefail
 
 echo "=== FLEXT ECOSYSTEM VALIDATION REPORT ==="
 echo "Date: $(date)"

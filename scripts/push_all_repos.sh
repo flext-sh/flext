@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 
 # Script para fazer push forçado de todos os repositórios FLEXT
 # com merge em main
 
-set -e
+set -euo pipefail
 
 echo "🚀 Iniciando push forçado de todos os repositórios FLEXT..."
 
