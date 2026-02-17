@@ -279,3 +279,8 @@ scripts/validation/enforce_pydantic_v2_skill.sh --mode baseline --root .
 # Confirm dependency version
 rg "pydantic>=" flext-core/pyproject.toml
 ```
+
+<!-- AUTOMATION MARKERS (machine-readable, do not edit) -->
+<!-- ASTGREP_SCAN_PACK: scripts/validation/ast-grep-pydantic-v2.yml -->
+<!-- ASTGREP_FIX_PACK: scripts/validation/ast-grep-pydantic-v2.yml -->
+<!-- AUTOFIX_MODE: safe -->

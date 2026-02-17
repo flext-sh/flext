@@ -71,8 +71,20 @@ if [[ "$MODE" == "quick" ]]; then
 fi
 
 run_step_allow_fail "Workspace validator" "scripts/validate_all_projects.sh" "$REPORT_DIR/workspace_validator.log"
-run_step_allow_fail "Mypy all" "./validate_mypy_all.sh" "$REPORT_DIR/mypy_all.log"
-run_step_allow_fail "Pyright all" "./analyze_pyright_all_projects.sh" "$REPORT_DIR/pyright_all.log"
+
+if [[ -x "scripts/validate_mypy_all.sh" ]]; then
+  run_step_allow_fail "Mypy all" "scripts/validate_mypy_all.sh" "$REPORT_DIR/mypy_all.log"
+else
+  echo "SKIP: Mypy all (scripts/validate_mypy_all.sh not found)"
+  echo "SKIP|Mypy all|not_found" >>"$SUMMARY_FILE"
+fi
+
+if [[ -x "scripts/analyze_pyright_all_projects.sh" ]]; then
+  run_step_allow_fail "Pyright all" "scripts/analyze_pyright_all_projects.sh" "$REPORT_DIR/pyright_all.log"
+else
+  echo "SKIP: Pyright all (scripts/analyze_pyright_all_projects.sh not found)"
+  echo "SKIP|Pyright all|not_found" >>"$SUMMARY_FILE"
+fi
 
 printf '\nFull validation completed\n'
 if [[ ${#FAILED_STEPS[@]} -eq 0 ]]; then
