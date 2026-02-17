@@ -499,7 +499,6 @@ obj.app_name # Type narrowed, no cast() needed
 Models are organized in nested namespaces:
 
 \`\`\`python
-from flext_core.models import m
 
 config: m.Core.Config = ...
 context: m.Core.Context = ...
