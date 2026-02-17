@@ -51,6 +51,7 @@ tap-oracle-oic --config config.json --catalog catalog.json --state state.json
 - Related projects: `flext-oracle-oic`, `flext-meltano`, `flext-dbt-oracle-wms`, `flext-target-oracle-oic`, `flext-observability`
 
 ## Support & contributions
+
 - GitHub issues: <https://github.com/flext-sh/flext-tap-oracle-oic/issues>
 - Discussions: <https://github.com/flext-sh/flext-tap-oracle-oic/discussions>
 - Follow `docs/standards/README.md` and the project CLAUDE before editing docs or code so the portal stays accurate.

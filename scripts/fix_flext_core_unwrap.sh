@@ -32,156 +32,156 @@ echo ""
 
 # Function: Dry run - show what will change
 dry_run() {
-    echo -e "${BLUE}[DRY-RUN] Analyzing changes...${NC}"
-    echo ""
+	echo -e "${BLUE}[DRY-RUN] Analyzing changes...${NC}"
+	echo ""
 
-    local file_count=0
-    local occurrence_count=0
-    local files=()
+	local file_count=0
+	local occurrence_count=0
+	local files=()
 
-    while IFS= read -r file; do
-        local count=$(grep -o "\.unwrap()" "$file" | wc -l)
-        if [ "$count" -gt 0 ]; then
-            files+=("$file")
-            occurrence_count=$((occurrence_count + count))
-            file_count=$((file_count + 1))
-            echo -e "${YELLOW}File: $(basename $file)${NC}"
-            echo -e "  Occurrences: ${count}"
-            echo ""
-        fi
-    done < <(find "$PROJECT_DIR" \( -name "*.md" -o -name "*.py" \) -type f)
+	while IFS= read -r file; do
+		local count=$(grep -o "\.unwrap()" "$file" | wc -l)
+		if [ "$count" -gt 0 ]; then
+			files+=("$file")
+			occurrence_count=$((occurrence_count + count))
+			file_count=$((file_count + 1))
+			echo -e "${YELLOW}File: $(basename $file)${NC}"
+			echo -e "  Occurrences: ${count}"
+			echo ""
+		fi
+	done < <(find "$PROJECT_DIR" \( -name "*.md" -o -name "*.py" \) -type f)
 
-    echo -e "${GREEN}Summary:${NC}"
-    echo "  Files affected: ${file_count}"
-    echo "  Total occurrences: ${occurrence_count}"
-    echo ""
-    echo -e "${BLUE}Sample changes (first 3 files):${NC}"
+	echo -e "${GREEN}Summary:${NC}"
+	echo "  Files affected: ${file_count}"
+	echo "  Total occurrences: ${occurrence_count}"
+	echo ""
+	echo -e "${BLUE}Sample changes (first 3 files):${NC}"
 
-    local sample_count=0
-    for file in "${files[@]:0:3}"; do
-        echo ""
-        echo -e "${YELLOW}File: $(basename $file)${NC}"
-        grep -n "\.unwrap()" "$file" | head -3 | while IFS=: read -r line_num line_content; do
-            echo "  Line $line_num:"
-            echo -e "    ${RED}✗ $line_content${NC}"
-            echo -e "    ${GREEN}✓ ${line_content//.unwrap()/.value}${NC}"
-        done
-    done
+	local sample_count=0
+	for file in "${files[@]:0:3}"; do
+		echo ""
+		echo -e "${YELLOW}File: $(basename $file)${NC}"
+		grep -n "\.unwrap()" "$file" | head -3 | while IFS=: read -r line_num line_content; do
+			echo "  Line $line_num:"
+			echo -e "    ${RED}✗ $line_content${NC}"
+			echo -e "    ${GREEN}✓ ${line_content//.unwrap()/.value}${NC}"
+		done
+	done
 
-    echo ""
-    echo -e "${BLUE}To apply changes, run:${NC}"
-    echo "  ${YELLOW}$0 exec${NC}"
-    echo ""
+	echo ""
+	echo -e "${BLUE}To apply changes, run:${NC}"
+	echo "  ${YELLOW}$0 exec${NC}"
+	echo ""
 }
 
 # Function: Create backup before execution
 create_backup() {
-    echo -e "${BLUE}[BACKUP] Creating timestamped backup...${NC}"
+	echo -e "${BLUE}[BACKUP] Creating timestamped backup...${NC}"
 
-    mkdir -p "$BACKUP_DIR"
-    mkdir -p "$BACKUP_DIR/$BACKUP_NAME"
+	mkdir -p "$BACKUP_DIR"
+	mkdir -p "$BACKUP_DIR/$BACKUP_NAME"
 
-    # Backup all affected files
-    find "$PROJECT_DIR" \( -name "*.md" -o -name "result.py" \) -type f | while read -r file; do
-        if grep -q "\.unwrap()" "$file"; then
-            local rel_path="${file#$PROJECT_DIR/}"
-            local backup_file="$BACKUP_DIR/$BACKUP_NAME/$rel_path"
-            mkdir -p "$(dirname "$backup_file")"
-            cp "$file" "$backup_file"
-        fi
-    done
+	# Backup all affected files
+	find "$PROJECT_DIR" \( -name "*.md" -o -name "result.py" \) -type f | while read -r file; do
+		if grep -q "\.unwrap()" "$file"; then
+			local rel_path="${file#$PROJECT_DIR/}"
+			local backup_file="$BACKUP_DIR/$BACKUP_NAME/$rel_path"
+			mkdir -p "$(dirname "$backup_file")"
+			cp "$file" "$backup_file"
+		fi
+	done
 
-    echo -e "${GREEN}✓ Backup created at: $BACKUP_DIR/$BACKUP_NAME${NC}"
-    echo "  Files backed up: $(find "$BACKUP_DIR/$BACKUP_NAME" -type f | wc -l)"
-    echo ""
+	echo -e "${GREEN}✓ Backup created at: $BACKUP_DIR/$BACKUP_NAME${NC}"
+	echo "  Files backed up: $(find "$BACKUP_DIR/$BACKUP_NAME" -type f | wc -l)"
+	echo ""
 }
 
 # Function: Execute the fix
 execute_fix() {
-    echo -e "${BLUE}[EXEC] Applying fixes...${NC}"
+	echo -e "${BLUE}[EXEC] Applying fixes...${NC}"
 
-    local fixed_count=0
-    local file_count=0
+	local fixed_count=0
+	local file_count=0
 
-    find "$PROJECT_DIR" \( -name "*.md" -o -name "result.py" \) -type f | while read -r file; do
-        local before_count=$(grep -o "\.unwrap()" "$file" 2>/dev/null | wc -l || echo 0)
-        if [ "$before_count" -gt 0 ]; then
-            # Use sed for in-place replacement
-            sed -i 's/\.unwrap()/.value/g' "$file"
-            local after_count=$(grep -o "\.unwrap()" "$file" 2>/dev/null | wc -l || echo 0)
-            echo -e "  ${GREEN}✓ $(basename $file): ${before_count} → ${after_count}${NC}"
-        fi
-    done
+	find "$PROJECT_DIR" \( -name "*.md" -o -name "result.py" \) -type f | while read -r file; do
+		local before_count=$(grep -o "\.unwrap()" "$file" 2>/dev/null | wc -l || echo 0)
+		if [ "$before_count" -gt 0 ]; then
+			# Use sed for in-place replacement
+			sed -i 's/\.unwrap()/.value/g' "$file"
+			local after_count=$(grep -o "\.unwrap()" "$file" 2>/dev/null | wc -l || echo 0)
+			echo -e "  ${GREEN}✓ $(basename $file): ${before_count} → ${after_count}${NC}"
+		fi
+	done
 
-    echo ""
-    echo -e "${GREEN}[DONE] All replacements completed${NC}"
-    echo ""
+	echo ""
+	echo -e "${GREEN}[DONE] All replacements completed${NC}"
+	echo ""
 }
 
 # Function: Validate the fix
 validate_fix() {
-    echo -e "${BLUE}[VALIDATE] Checking results...${NC}"
+	echo -e "${BLUE}[VALIDATE] Checking results...${NC}"
 
-    local remaining=$(grep -r "\.unwrap()" "$PROJECT_DIR" --include="*.md" --include="*.py" 2>/dev/null | wc -l || echo 0)
+	local remaining=$(grep -r "\.unwrap()" "$PROJECT_DIR" --include="*.md" --include="*.py" 2>/dev/null | wc -l || echo 0)
 
-    if [ "$remaining" -eq 0 ]; then
-        echo -e "${GREEN}✓ Success! All .unwrap() calls replaced${NC}"
-        return 0
-    else
-        echo -e "${RED}✗ Error: ${remaining} occurrences still remaining${NC}"
-        grep -r "\.unwrap()" "$PROJECT_DIR" --include="*.md" --include="*.py" 2>/dev/null | head -5
-        return 1
-    fi
+	if [ "$remaining" -eq 0 ]; then
+		echo -e "${GREEN}✓ Success! All .unwrap() calls replaced${NC}"
+		return 0
+	else
+		echo -e "${RED}✗ Error: ${remaining} occurrences still remaining${NC}"
+		grep -r "\.unwrap()" "$PROJECT_DIR" --include="*.md" --include="*.py" 2>/dev/null | head -5
+		return 1
+	fi
 }
 
 # Function: Rollback from backup
 rollback() {
-    if [ ! -d "$BACKUP_DIR/$BACKUP_NAME" ]; then
-        echo -e "${RED}✗ Backup not found: $BACKUP_DIR/$BACKUP_NAME${NC}"
-        echo ""
-        echo "Available backups:"
-        ls -1 "$BACKUP_DIR/" 2>/dev/null || echo "  No backups found"
-        return 1
-    fi
+	if [ ! -d "$BACKUP_DIR/$BACKUP_NAME" ]; then
+		echo -e "${RED}✗ Backup not found: $BACKUP_DIR/$BACKUP_NAME${NC}"
+		echo ""
+		echo "Available backups:"
+		ls -1 "$BACKUP_DIR/" 2>/dev/null || echo "  No backups found"
+		return 1
+	fi
 
-    echo -e "${BLUE}[ROLLBACK] Restoring from backup...${NC}"
+	echo -e "${BLUE}[ROLLBACK] Restoring from backup...${NC}"
 
-    find "$BACKUP_DIR/$BACKUP_NAME" -type f | while read -r backup_file; do
-        local rel_path="${backup_file#$BACKUP_DIR/$BACKUP_NAME/}"
-        local target_file="$PROJECT_DIR/$rel_path"
-        echo -e "  Restoring: $(basename $target_file)"
-        cp "$backup_file" "$target_file"
-    done
+	find "$BACKUP_DIR/$BACKUP_NAME" -type f | while read -r backup_file; do
+		local rel_path="${backup_file#$BACKUP_DIR/$BACKUP_NAME/}"
+		local target_file="$PROJECT_DIR/$rel_path"
+		echo -e "  Restoring: $(basename $target_file)"
+		cp "$backup_file" "$target_file"
+	done
 
-    echo -e "${GREEN}✓ Rollback complete${NC}"
-    echo ""
+	echo -e "${GREEN}✓ Rollback complete${NC}"
+	echo ""
 }
 
 # Main execution
 case "$MODE" in
-    dry-run)
-        dry_run
-        ;;
-    backup)
-        create_backup
-        ;;
-    exec)
-        create_backup
-        execute_fix
-        validate_fix
-        ;;
-    rollback)
-        rollback
-        ;;
-    *)
-        echo -e "${RED}Unknown mode: $MODE${NC}"
-        echo "Usage: $0 [dry-run|backup|exec|rollback]"
-        echo ""
-        echo "Modes:"
-        echo "  dry-run  - Show what will change (default)"
-        echo "  backup   - Create backup only"
-        echo "  exec     - Create backup and apply fixes"
-        echo "  rollback - Restore from last backup"
-        exit 1
-        ;;
+dry-run)
+	dry_run
+	;;
+backup)
+	create_backup
+	;;
+exec)
+	create_backup
+	execute_fix
+	validate_fix
+	;;
+rollback)
+	rollback
+	;;
+*)
+	echo -e "${RED}Unknown mode: $MODE${NC}"
+	echo "Usage: $0 [dry-run|backup|exec|rollback]"
+	echo ""
+	echo "Modes:"
+	echo "  dry-run  - Show what will change (default)"
+	echo "  backup   - Create backup only"
+	echo "  exec     - Create backup and apply fixes"
+	echo "  rollback - Restore from last backup"
+	exit 1
+	;;
 esac

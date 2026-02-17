@@ -17,9 +17,9 @@ NC='\033[0m'
 
 # Validate arguments
 if [[ $# -lt 1 ]]; then
-    echo -e "${RED}Usage: $0 <command>${NC}" >&2
-    echo -e "${BLUE}Example: $0 'ls -la'${NC}" >&2
-    exit 1
+	echo -e "${RED}Usage: $0 <command>${NC}" >&2
+	echo -e "${BLUE}Example: $0 'ls -la'${NC}" >&2
+	exit 1
 fi
 
 COMMAND="$*"
@@ -35,17 +35,17 @@ VALIDATION_RESULT=$("$PRE_VALIDATE_SCRIPT" "$COMMAND")
 VALIDATION=$(echo "$VALIDATION_RESULT" | jq -r '.validation // "unknown"' 2>/dev/null)
 RISK_LEVEL=$(echo "$VALIDATION_RESULT" | jq -r '.risk_level // "unknown"' 2>/dev/null)
 
-if [[ "$VALIDATION" == "blocked" ]]; then
-    echo -e "${RED}❌ COMMAND BLOCKED${NC}"
-    echo -e "${RED}Risk Level: ${YELLOW}$RISK_LEVEL${NC}"
-    echo -e "${RED}Reason: $(echo "$VALIDATION_RESULT" | jq -r '.reason' 2>/dev/null)${NC}"
-    echo
-    echo -e "${YELLOW}💡 Alternatives:${NC}"
-    echo -e "  • Execute manually with caution"
-    echo -e "  • Use safer commands"
-    echo -e "  • Check command documentation"
-    echo
-    exit 1
+if [[ $VALIDATION == "blocked" ]]; then
+	echo -e "${RED}❌ COMMAND BLOCKED${NC}"
+	echo -e "${RED}Risk Level: ${YELLOW}$RISK_LEVEL${NC}"
+	echo -e "${RED}Reason: $(echo "$VALIDATION_RESULT" | jq -r '.reason' 2>/dev/null)${NC}"
+	echo
+	echo -e "${YELLOW}💡 Alternatives:${NC}"
+	echo -e "  • Execute manually with caution"
+	echo -e "  • Use safer commands"
+	echo -e "  • Check command documentation"
+	echo
+	exit 1
 fi
 
 echo -e "${GREEN}✅ Pre-validation passed${NC}"
@@ -58,18 +58,18 @@ echo -e "${BLUE}Output:${NC}"
 echo
 
 # Execute command and capture exit code
-set +e  # Temporarily disable exit on error to capture command result
+set +e # Temporarily disable exit on error to capture command result
 eval "$COMMAND"
 EXIT_CODE=$?
-set -e  # Re-enable exit on error
+set -e # Re-enable exit on error
 
 echo
 echo -e "${BLUE}Step 3: Execution Summary${NC}"
 
 if [[ $EXIT_CODE -eq 0 ]]; then
-    echo -e "${GREEN}✅ Command executed successfully (exit code: $EXIT_CODE)${NC}"
+	echo -e "${GREEN}✅ Command executed successfully (exit code: $EXIT_CODE)${NC}"
 else
-    echo -e "${RED}❌ Command failed (exit code: $EXIT_CODE)${NC}"
+	echo -e "${RED}❌ Command failed (exit code: $EXIT_CODE)${NC}"
 fi
 
 echo -e "${BLUE}Command completed with safety validation${NC}"

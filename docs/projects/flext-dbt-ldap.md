@@ -20,13 +20,13 @@ poetry install
 cp profiles.yml.example profiles.yml  # fill in the PostgreSQL or DuckDB target
 dbt deps
 dbt run
-``` 
+```
 
 ```bash
 make validate          # run lint/type/security/test/dbt checks
 dbt docs generate
 dbt docs serve --port 8080
-``` 
+```
 
 ## Architecture & layers
 
@@ -44,7 +44,7 @@ dbt docs serve --port 8080
 
 ## Testing & quality
 
-- `make validate` runs Pett, Pyrefly, Ruff, Bandit, coverage, and dbt tests (unit + integration + dbt compilation). 
+- `make validate` runs Pett, Pyrefly, Ruff, Bandit, coverage, and dbt tests (unit + integration + dbt compilation).
 - dbt tests cover staging/intermediate/mart models plus LDAP macros (`dbt test --select staging`).
 - Python tests run via `pytest tests/` with markers for `unit`, `integration`, `dbt`, `ldap`, and `validation`.
 - `reports/coverage-scan-*`, `reports/lint-output/*`, and `reports/pytest/*` contain the artifacts referenced in the portal.

@@ -41,9 +41,11 @@ The Pydantic 2 migration roadmap has been completely planned with:
 ## Planning Documents
 
 ### 1. Main Roadmap
+
 **File**: `docs/planning/pydantic2_migration_roadmap.md` (673 lines)
 
 **Contents**:
+
 - Executive summary with corrected metrics
 - Key decisions matrix
 - Migration patterns (TypeGuard, hierarchical models, ConfigDict, validators)
@@ -54,6 +56,7 @@ The Pydantic 2 migration roadmap has been completely planned with:
 - Execution protocol
 
 **Key Sections**:
+
 - TypeGuard Pattern (replaces cast())
 - TypedDict to Pydantic Model (hierarchical inheritance)
 - Standard ConfigDict Settings
@@ -61,9 +64,11 @@ The Pydantic 2 migration roadmap has been completely planned with:
 - Namespace Hierarchy Standard
 
 ### 2. Phase 1 Detailed Plan
+
 **File**: `docs/planning/phase1_detailed_plan.md` (400+ lines)
 
 **Contents**:
+
 - Task 1.1: TypeGuard Infrastructure
   - Create `flext_core/utilities/guards.py`
   - Create `flext_core/testing/guards.py`
@@ -87,6 +92,7 @@ The Pydantic 2 migration roadmap has been completely planned with:
   - Update AGENTS.md
 
 **Deliverables**:
+
 - TypeGuard utilities created
 - All 86 TypedDicts converted
 - Zero cast() in src/
@@ -94,9 +100,11 @@ The Pydantic 2 migration roadmap has been completely planned with:
 - AGENTS.md updated
 
 ### 3. Phases 2-6 Parallel Tracks
+
 **File**: `docs/planning/phases2_6_parallel_tracks.md` (600+ lines)
 
 **Contents**:
+
 - Phase 2: API Layer || Infrastructure (3 days)
   - Track A: flext-api, flext-grpc
   - Track B: flext-observability, flext-quality, flext-plugin
@@ -119,15 +127,18 @@ The Pydantic 2 migration roadmap has been completely planned with:
   - Track B: flext-cli (84 TypedDicts), flext-web (89 TypedDicts - LARGE)
 
 **Parallelization Strategy**:
+
 - Day-by-day breakdown
 - Coordination points
 - Merge conflict resolution
 - Pattern consistency checks
 
 ### 4. Phases 7-9 Completion
+
 **File**: `docs/planning/phases7_9_completion.md` (500+ lines)
 
 **Contents**:
+
 - Phase 7: Test Suite Migration (4 days)
   - Create test TypeGuard library
   - Migrate ~500 cast() in tests
@@ -146,6 +157,7 @@ The Pydantic 2 migration roadmap has been completely planned with:
   - Cleanup and issue closure
 
 **Success Criteria**:
+
 - Zero cast() across ALL projects
 - Zero TypedDict (all converted)
 - ConfigDict standardized
@@ -157,29 +169,32 @@ The Pydantic 2 migration roadmap has been completely planned with:
 ## Key Metrics
 
 ### Before Migration
-| Metric | Count |
-|--------|-------|
-| cast() usages | 627 |
-| TypedDict definitions | 305 |
-| ConfigDict patterns | 249+ (inconsistent) |
-| BaseModel subclasses | 127+ |
-| Projects affected | 29 |
+
+| Metric                | Count               |
+| --------------------- | ------------------- |
+| cast() usages         | 627                 |
+| TypedDict definitions | 305                 |
+| ConfigDict patterns   | 249+ (inconsistent) |
+| BaseModel subclasses  | 127+                |
+| Projects affected     | 29                  |
 
 ### After Migration (Target)
-| Metric | Target |
-|--------|--------|
-| cast() usages | 0 |
-| TypedDict definitions | 0 |
-| ConfigDict patterns | 127+ (standardized) |
-| Modern validators | 100% |
-| Projects passing validate | 29/29 |
-| Test coverage | 80%+ |
+
+| Metric                    | Target              |
+| ------------------------- | ------------------- |
+| cast() usages             | 0                   |
+| TypedDict definitions     | 0                   |
+| ConfigDict patterns       | 127+ (standardized) |
+| Modern validators         | 100%                |
+| Projects passing validate | 29/29               |
+| Test coverage             | 80%+                |
 
 ---
 
 ## Timeline
 
 ### Sequential Baseline: 38 days
+
 - Phase 1: 4 days
 - Phases 2-6: 25 days (sequential)
 - Phase 7: 4 days
@@ -187,6 +202,7 @@ The Pydantic 2 migration roadmap has been completely planned with:
 - Phase 9: 2 days
 
 ### Parallelized Plan: 35 days
+
 - Phase 1: 4 days (foundation)
 - Phases 2-6: 20 days (parallelized)
 - Phase 7: 4 days
@@ -200,15 +216,17 @@ The Pydantic 2 migration roadmap has been completely planned with:
 ## Beads Issues Created
 
 ### Phase 1 Issues
-| ID | Title | Priority | Status |
-|---|---|---|---|
-| flext-fin | Phase 1.1: Create TypeGuard infrastructure | 0 | open |
-| flext-pf3 | Phase 1.2: Migrate TypedDicts to hierarchical models | 0 | open |
-| flext-5dr | Phase 1.3: Eliminate cast() from src/ | 0 | open |
-| flext-jt2 | Phase 1.4: Standardize ConfigDict | 0 | open |
-| flext-nya | Phase 1.5: Validate and update AGENTS.md | 0 | open |
+
+| ID        | Title                                                | Priority | Status |
+| --------- | ---------------------------------------------------- | -------- | ------ |
+| flext-fin | Phase 1.1: Create TypeGuard infrastructure           | 0        | open   |
+| flext-pf3 | Phase 1.2: Migrate TypedDicts to hierarchical models | 0        | open   |
+| flext-5dr | Phase 1.3: Eliminate cast() from src/                | 0        | open   |
+| flext-jt2 | Phase 1.4: Standardize ConfigDict                    | 0        | open   |
+| flext-nya | Phase 1.5: Validate and update AGENTS.md             | 0        | open   |
 
 ### Additional Issues to Create
+
 - Phase 2 issues (5 tasks)
 - Phase 3 issues (3 tasks)
 - Phase 4 issues (3 tasks)
@@ -277,12 +295,14 @@ def domain(self) -> str:
 ## Next Steps
 
 ### Immediate (Ready Now)
+
 1. ✅ Review planning documents
 2. ✅ Confirm Phase 1 approach
 3. ✅ Create remaining Beads issues (Phases 2-9)
 4. ✅ Start Phase 1 execution
 
 ### Phase 1 Execution
+
 1. Create TypeGuard infrastructure
 2. Migrate 86 TypedDicts
 3. Eliminate 8 cast()
@@ -290,12 +310,14 @@ def domain(self) -> str:
 5. Update documentation
 
 ### Phases 2-6 Execution
+
 1. Execute parallel tracks
 2. Maintain pattern consistency
 3. Coordinate between tracks
 4. Verify quality gates
 
 ### Phases 7-9 Execution
+
 1. Migrate test suite
 2. Fix problem project
 3. Final validation
@@ -306,22 +328,26 @@ def domain(self) -> str:
 ## Success Criteria
 
 ✅ **Code Quality**
+
 - Zero cast() in ALL code (src/ AND tests/)
 - Zero TypedDict (all converted to Pydantic models)
 - Standard ConfigDict across 127+ models
 - Modern validators throughout
 
 ✅ **Testing**
+
 - All tests passing
 - 80%+ coverage maintained
 - No regressions
 
 ✅ **Validation**
+
 - `make validate` passes on full monorepo
 - Zero lint violations
 - Zero type errors
 
 ✅ **Documentation**
+
 - AGENTS.md updated with patterns
 - type-system-architecture.md created
 - MIGRATION_GUIDE.md created
@@ -332,6 +358,7 @@ def domain(self) -> str:
 ## Risk Mitigation
 
 ### High Risk Projects
+
 1. **flext-tap-oracle-wms** (100+ errors)
    - Isolated in Phase 8
    - Doesn't block other work
@@ -345,6 +372,7 @@ def domain(self) -> str:
    - UI/UX testing required
 
 ### Mitigation Strategies
+
 - Phase 1 establishes all patterns
 - Incremental commits per file/module
 - Continuous testing after changes
@@ -368,6 +396,7 @@ If critical issues arise:
 ## Post-Migration Maintenance
 
 ### Ongoing Standards
+
 - New projects follow Phase 1 patterns
 - Code reviews check for cast() (forbidden)
 - Code reviews check for TypedDict (forbidden)
@@ -375,6 +404,7 @@ If critical issues arise:
 - Modern validator patterns encouraged
 
 ### Monitoring
+
 - CI/CD enforces zero cast() and TypedDict
 - Linting rules prevent regressions
 - Type checking maintains strict mode
@@ -384,13 +414,13 @@ If critical issues arise:
 
 ## Files Created
 
-| File | Lines | Purpose |
-|------|-------|---------|
-| pydantic2_migration_roadmap.md | 673 | Main roadmap with metrics and phases |
-| phase1_detailed_plan.md | 400+ | Detailed Phase 1 execution plan |
-| phases2_6_parallel_tracks.md | 600+ | Parallel track execution plans |
-| phases7_9_completion.md | 500+ | Final phases and validation |
-| MIGRATION_SUMMARY.md | This file | Planning summary and next steps |
+| File                           | Lines     | Purpose                              |
+| ------------------------------ | --------- | ------------------------------------ |
+| pydantic2_migration_roadmap.md | 673       | Main roadmap with metrics and phases |
+| phase1_detailed_plan.md        | 400+      | Detailed Phase 1 execution plan      |
+| phases2_6_parallel_tracks.md   | 600+      | Parallel track execution plans       |
+| phases7_9_completion.md        | 500+      | Final phases and validation          |
+| MIGRATION_SUMMARY.md           | This file | Planning summary and next steps      |
 
 **Total**: ~2,200 lines of comprehensive planning documentation
 
@@ -399,6 +429,7 @@ If critical issues arise:
 ## Conclusion
 
 The Pydantic 2 migration is fully planned with:
+
 - ✅ Corrected metrics from exhaustive analysis
 - ✅ Comprehensive phase-by-phase execution plans
 - ✅ Parallelized timeline (35 days, 10-12 day savings)

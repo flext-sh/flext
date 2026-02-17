@@ -45,8 +45,8 @@ This folder is the curated portal for every FLEXT document; the entry point at `
 ## Support & Contributions
 
 - **Email**: <dev@flext.com>
-- **Issues**: https://github.com/flext/flext/issues
-- **Contributing**: The standards guide outlines how to propose content, including the expectation that every submission passes linter checks and links to the relevant `lsp_diagnostics` configuration. 
+- **Issues**: <https://github.com/flext/flext/issues>
+- **Contributing**: The standards guide outlines how to propose content, including the expectation that every submission passes linter checks and links to the relevant `lsp_diagnostics` configuration.
 - **Review Cycle**: New or modified documentation flows through the same CI that exercises `flext-core`; reference the standards checklist and the lint-output logs before submitting.
 
 ---

@@ -32,7 +32,7 @@ poetry run ruff check src/
 ## Architecture & integration
 
 - **Core layers**: Tier-0 (`constants.py`, `typings.py`, `protocols.py`), Tier-1 (`models`, `utilities`), Tier-2 (`services`, `platform`, `settings`), Tier-3 (`api.py`, `service_impls`, `streaming`). Each tier only imports lower layers.
-- **Responsibilities**: gRPC abstraction (unary/bidirectional streams), service management (FlextGrpcService, FlextGrpcPlatform), client/server lifecycle, configuration (FlextGrpcSettings), instrumentation (FlextLogger, FlextObservability). 
+- **Responsibilities**: gRPC abstraction (unary/bidirectional streams), service management (FlextGrpcService, FlextGrpcPlatform), client/server lifecycle, configuration (FlextGrpcSettings), instrumentation (FlextLogger, FlextObservability).
 - **Integration**: Depends on `flext-core` for FlextResult/FlextContainer/FlextLogger, plugs into `flext-cli` for CLI flows, aligned with `flext-observability` for telemetry, and provides gRPC wiring for other FLEXT services.
 - **Code status**: 4,923 source lines + 18 018 test lines; core imports (protobuf) verified after the latest fixes.
 

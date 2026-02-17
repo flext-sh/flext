@@ -31,10 +31,10 @@ log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 # Generate test baseline
 ################################################################################
 generate_baseline() {
-    log_info "Generating test duplication baseline..."
+	log_info "Generating test duplication baseline..."
 
-    # Use Python to run workspace test analysis
-    python3 << 'PYTHON_SCRIPT'
+	# Use Python to run workspace test analysis
+	python3 <<'PYTHON_SCRIPT'
 from pathlib import Path
 from datetime import datetime
 from operator import itemgetter
@@ -147,13 +147,13 @@ print(baseline)
 
 PYTHON_SCRIPT
 
-    log_success "Test baseline generated"
+	log_success "Test baseline generated"
 }
 
 # Main execution
-generate_baseline > "$BASELINE_FILE" 2>&1 || {
-    log_error "Failed to generate test baseline"
-    exit 1
+generate_baseline >"$BASELINE_FILE" 2>&1 || {
+	log_error "Failed to generate test baseline"
+	exit 1
 }
 
 log_success "Test baseline saved to: $BASELINE_FILE"

@@ -30,7 +30,7 @@ tap-ldif --config config.json --catalog catalog.json --state state.json
 
 ## Architecture & patterns
 
-- **Clean Architecture**:  domain, application, infrastructure, and protocol layers enforce one-way dependencies with short alias imports (`r`, `t`, `m`).
+- **Clean Architecture**: domain, application, infrastructure, and protocol layers enforce one-way dependencies with short alias imports (`r`, `t`, `m`).
 - **Core components**: `FlextTapLdif` (Singer tap), `LDIFEntriesStream` (Singer stream), `TapLdifConfig` (Pydantic config), `FlextLdifProcessorWrapper`, `exception` hierarchy, watchers, and CLI/hot reload helpers.
 - **Infrastructure reuse**: reuses `flext-ldif` for LDIF parsing/validation, `flext-meltano` for Singer orchestration, and `flext-core` for FlextResult, container, and logging patterns.
 - **Configuration**: rich config options (file/directory/batch/perf settings, filters, encoding, strict parsing) defined in docs and enforced through typed Pydantic models.

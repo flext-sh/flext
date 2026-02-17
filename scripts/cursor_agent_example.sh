@@ -29,11 +29,11 @@ PRE_RESULT=$(./scripts/pre_edit_validate.sh "$FILE" "$OLD_TEXT" "$NEW_TEXT")
 echo "Result: $PRE_RESULT"
 
 VALIDATION=$(echo "$PRE_RESULT" | jq -r '.validation // "error"' 2>/dev/null)
-if [[ "$VALIDATION" == "blocked" ]]; then
-    echo "❌ EDITION BLOCKED"
-    REASON=$(echo "$PRE_RESULT" | jq -r '.reason // "Unknown reason"' 2>/dev/null)
-    echo "Reason: $REASON"
-    exit 1
+if [[ $VALIDATION == "blocked" ]]; then
+	echo "❌ EDITION BLOCKED"
+	REASON=$(echo "$PRE_RESULT" | jq -r '.reason // "Unknown reason"' 2>/dev/null)
+	echo "Reason: $REASON"
+	exit 1
 fi
 
 BACKUP_ID=$(echo "$PRE_RESULT" | jq -r '.backup_id // ""' 2>/dev/null)
@@ -51,9 +51,9 @@ POST_RESULT=$(./scripts/post_edit_validate.sh "$BACKUP_ID" "$FILE" "$OLD_TEXT" "
 echo "Result: $POST_RESULT"
 
 VALIDATION=$(echo "$POST_RESULT" | jq -r '.validation // "error"' 2>/dev/null)
-if [[ "$VALIDATION" == "blocked" ]]; then
-    echo "❌ POST-VALIDATION FAILED - AUTO-ROLLBACK EXECUTED"
-    exit 1
+if [[ $VALIDATION == "blocked" ]]; then
+	echo "❌ POST-VALIDATION FAILED - AUTO-ROLLBACK EXECUTED"
+	exit 1
 fi
 
 echo "✅ Edit completed successfully"
@@ -72,9 +72,9 @@ CMD_RESULT=$(./scripts/pre_command_validate.sh "$SAFE_COMMAND")
 echo "Result: $CMD_RESULT"
 
 VALIDATION=$(echo "$CMD_RESULT" | jq -r '.validation // "error"' 2>/dev/null)
-if [[ "$VALIDATION" == "blocked" ]]; then
-    echo "❌ COMMAND BLOCKED"
-    exit 1
+if [[ $VALIDATION == "blocked" ]]; then
+	echo "❌ COMMAND BLOCKED"
+	exit 1
 fi
 
 echo "✅ Command validation passed"
@@ -97,12 +97,12 @@ DANGER_RESULT=$(./scripts/pre_command_validate.sh "$DANGER_COMMAND")
 echo "Result: $DANGER_RESULT"
 
 VALIDATION=$(echo "$DANGER_RESULT" | jq -r '.validation // "error"' 2>/dev/null)
-if [[ "$VALIDATION" == "blocked" ]]; then
-    echo "✅ COMMAND CORRECTLY BLOCKED"
-    RISK_LEVEL=$(echo "$DANGER_RESULT" | jq -r '.risk_level // "unknown"' 2>/dev/null)
-    echo "Risk Level: $RISK_LEVEL"
+if [[ $VALIDATION == "blocked" ]]; then
+	echo "✅ COMMAND CORRECTLY BLOCKED"
+	RISK_LEVEL=$(echo "$DANGER_RESULT" | jq -r '.risk_level // "unknown"' 2>/dev/null)
+	echo "Risk Level: $RISK_LEVEL"
 else
-    echo "❌ COMMAND SHOULD HAVE BEEN BLOCKED"
+	echo "❌ COMMAND SHOULD HAVE BEEN BLOCKED"
 fi
 
 echo ""

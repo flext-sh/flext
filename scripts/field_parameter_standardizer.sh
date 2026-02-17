@@ -9,20 +9,20 @@ MODE="${1:-dry-run}"
 PROJECT_FILTER="${2:-.}"
 
 case "$MODE" in
-    dry-run)
-        echo "[DRY-RUN] Would standardize Field() parameters in $PROJECT_FILTER"
-        ;;
-    backup)
-        echo "[BACKUP] Creating backups of Python files"
-        ;;
-    exec)
-        echo "[EXEC] Executing Field() parameter standardization"
-        ;;
-    rollback)
-        echo "[ROLLBACK] Restoring from backup"
-        ;;
-    *)
-        echo "Usage: $0 {dry-run|backup|exec|rollback} [project_filter]"
-        exit 1
-        ;;
+dry-run)
+	echo "[DRY-RUN] Would standardize Field() parameters in $PROJECT_FILTER"
+	;;
+backup)
+	echo "[BACKUP] Creating backups of Python files"
+	;;
+exec)
+	echo "[EXEC] Executing Field() parameter standardization"
+	;;
+rollback)
+	echo "[ROLLBACK] Restoring from backup"
+	;;
+*)
+	echo "Usage: $0 {dry-run|backup|exec|rollback} [project_filter]"
+	exit 1
+	;;
 esac

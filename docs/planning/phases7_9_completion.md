@@ -16,6 +16,7 @@
 Phase 7 focuses on test files across all projects. This is the largest single category of cast() usage (~500 instances).
 
 **Strategy**:
+
 1. Create comprehensive test TypeGuard library
 2. Migrate tests by project (largest first)
 3. Verify coverage maintained
@@ -37,7 +38,7 @@ from typing import TypeGuard
 
 class TestGuards:
     """Base test guards."""
-    
+
     @staticmethod
     def is_user_response(obj: object) -> TypeGuard[dict]:
         """Check if object is a user response fixture."""
@@ -46,7 +47,7 @@ class TestGuards:
             and "user_id" in obj
             and "email" in obj
         )
-    
+
     @staticmethod
     def is_config_response(obj: object) -> TypeGuard[dict]:
         """Check if object is a config response fixture."""
@@ -59,7 +60,7 @@ class TestGuards:
 
 class LdifTestGuards:
     """LDIF-specific test guards."""
-    
+
     @staticmethod
     def is_entry_fixture(obj: object) -> TypeGuard[dict]:
         """Check if object is an LDIF entry fixture."""
@@ -72,7 +73,7 @@ class LdifTestGuards:
 
 class CliTestGuards:
     """CLI-specific test guards."""
-    
+
     @staticmethod
     def is_command_fixture(obj: object) -> TypeGuard[dict]:
         """Check if object is a command fixture."""
@@ -85,7 +86,7 @@ class CliTestGuards:
 
 class WebTestGuards:
     """Web-specific test guards."""
-    
+
     @staticmethod
     def is_request_fixture(obj: object) -> TypeGuard[dict]:
         """Check if object is a request fixture."""
@@ -109,11 +110,13 @@ __all__ = ["TestGuards", "LdifTestGuards"]
 ```
 
 **Validation**:
+
 - [ ] Test guards created in flext-core/testing/
 - [ ] conftest.py updated in each project
 - [ ] Guards exported and accessible in tests
 
 **Commit**:
+
 ```
 test(flext-core): create comprehensive test TypeGuard library
 ```
@@ -123,11 +126,12 @@ test(flext-core): create comprehensive test TypeGuard library
 **Duration**: 2.5 days
 
 **Projects** (by cast() count in tests):
+
 1. flext-core (~150 cast())
 2. flext-ldif (~80 cast())
-3. flext-tap-* (~100 cast() combined)
-4. flext-target-* (~100 cast() combined)
-5. flext-dbt-* (~30 cast() combined)
+3. flext-tap-\* (~100 cast() combined)
+4. flext-target-\* (~100 cast() combined)
+5. flext-dbt-\* (~30 cast() combined)
 6. flext-cli (~20 cast())
 7. flext-web (~20 cast())
 
@@ -158,11 +162,13 @@ def test_process_config():
 For each project:
 
 1. **Identify all cast() in tests**
+
    ```bash
    grep -r "cast(" flext-{project}/tests/ | wc -l
    ```
 
 2. **Create project-specific guards** (if needed)
+
    ```python
    # In tests/conftest.py
    class ProjectTestGuards:
@@ -176,22 +182,26 @@ For each project:
    - Verify type checking after each batch
 
 4. **Run tests**
+
    ```bash
    pytest flext-{project}/tests/ -v
    ```
 
 5. **Verify coverage**
+
    ```bash
    pytest flext-{project}/tests/ --cov=flext_{project} --cov-report=term-missing
    ```
 
 **Validation**:
+
 - [ ] Zero cast() in all test files
 - [ ] All tests passing
 - [ ] 80%+ coverage maintained
 - [ ] Type checking passes
 
 **Commits** (per project):
+
 ```
 test(flext-core): eliminate cast() from tests using TypeGuards
 test(flext-ldif): eliminate cast() from tests using TypeGuards
@@ -207,17 +217,20 @@ test(flext-web): eliminate cast() from tests using TypeGuards
 **Duration**: 0.5 days
 
 **Steps**:
+
 1. Run full test suite: `make test`
 2. Verify 80%+ coverage maintained
 3. Fix any coverage gaps
 4. Document any exceptions
 
 **Validation**:
+
 - [ ] `make test` passes
 - [ ] 80%+ coverage across all projects
 - [ ] No coverage regressions
 
 **Commit**:
+
 ```
 test: verify 80%+ coverage maintained after cast() elimination
 ```
@@ -232,6 +245,7 @@ test: verify 80%+ coverage maintained after cast() elimination
 ### Overview
 
 flext-tap-oracle-wms is isolated in its own phase due to:
+
 - 100+ type errors
 - Missing imports
 - Complex dependency issues
@@ -242,6 +256,7 @@ flext-tap-oracle-wms is isolated in its own phase due to:
 **Duration**: 1.5 days
 
 **Current Issues**:
+
 - Missing config module imports
 - Missing exceptions module imports
 - Circular dependencies
@@ -249,6 +264,7 @@ flext-tap-oracle-wms is isolated in its own phase due to:
 **Steps**:
 
 1. **Analyze Import Errors**
+
    ```bash
    make type-check PROJECT=flext-tap-oracle-wms 2>&1 | grep "import"
    ```
@@ -259,16 +275,19 @@ flext-tap-oracle-wms is isolated in its own phase due to:
    - Resolve circular dependencies
 
 3. **Verify Import Structure**
+
    ```bash
    python -c "import flext_tap_oracle_wms; print('OK')"
    ```
 
 **Validation**:
+
 - [ ] All imports resolve
 - [ ] No circular dependencies
 - [ ] Module loads successfully
 
 **Commit**:
+
 ```
 fix(flext-tap-oracle-wms): resolve missing imports and circular dependencies
 ```
@@ -278,6 +297,7 @@ fix(flext-tap-oracle-wms): resolve missing imports and circular dependencies
 **Duration**: 1.5 days
 
 **Current Issues**:
+
 - 100+ type errors
 - bad-override errors
 - Missing attributes on FlextModels/FlextTypes
@@ -285,6 +305,7 @@ fix(flext-tap-oracle-wms): resolve missing imports and circular dependencies
 **Steps**:
 
 1. **Categorize Type Errors**
+
    ```bash
    make type-check PROJECT=flext-tap-oracle-wms 2>&1 | sort | uniq -c | sort -rn
    ```
@@ -295,15 +316,18 @@ fix(flext-tap-oracle-wms): resolve missing imports and circular dependencies
    - Type mismatches (function signatures)
 
 3. **Verify Type Checking**
+
    ```bash
    make type-check PROJECT=flext-tap-oracle-wms
    ```
 
 **Validation**:
+
 - [ ] Zero type errors
 - [ ] `pyrefly` passes
 
 **Commits** (per category):
+
 ```
 fix(flext-tap-oracle-wms): resolve bad-override errors
 fix(flext-tap-oracle-wms): add missing model attributes
@@ -327,17 +351,20 @@ fix(flext-tap-oracle-wms): fix type mismatches in function signatures
    - No TypedDict or cast()
 
 3. **Run Full Validation**
+
    ```bash
    make validate PROJECT=flext-tap-oracle-wms
    ```
 
 **Validation**:
+
 - [ ] Zero TypedDict
 - [ ] Zero cast()
 - [ ] Standard ConfigDict
 - [ ] `make validate` passes
 
 **Commit**:
+
 ```
 refactor(flext-tap-oracle-wms): apply Pydantic 2 patterns and standardize models
 ```
@@ -356,35 +383,41 @@ refactor(flext-tap-oracle-wms): apply Pydantic 2 patterns and standardize models
 **Steps**:
 
 1. **Full Monorepo Validation**
+
    ```bash
    make validate
    ```
 
 2. **Verify Zero cast()**
+
    ```bash
    grep -r "cast(" flext-*/src/ flext-*/tests/ | grep -v "\.pyc" | wc -l
    # Expected: 0
    ```
 
 3. **Verify Zero TypedDict**
+
    ```bash
    grep -r "TypedDict" flext-*/src/ | grep -v "\.pyc" | wc -l
    # Expected: 0 (or only in external contracts)
    ```
 
 4. **Verify ConfigDict Standardization**
+
    ```bash
    grep -r "model_config = ConfigDict" flext-*/src/ | wc -l
    # Expected: 127+
    ```
 
 **Validation**:
+
 - [ ] `make validate` passes on full monorepo
 - [ ] Zero cast() across all projects
 - [ ] Zero TypedDict (all converted)
 - [ ] ConfigDict standardized
 
 **Commit**:
+
 ```
 ci: verify full monorepo passes make validate
 ```
@@ -396,11 +429,13 @@ ci: verify full monorepo passes make validate
 **Steps**:
 
 1. **Run Full Test Suite**
+
    ```bash
    make test
    ```
 
 2. **Verify Coverage**
+
    ```bash
    pytest --cov=flext_* --cov-report=term-missing | grep -E "TOTAL|^flext"
    ```
@@ -410,11 +445,13 @@ ci: verify full monorepo passes make validate
    - Add tests as needed
 
 **Validation**:
+
 - [ ] All tests passing
 - [ ] 80%+ coverage across all projects
 - [ ] No coverage regressions
 
 **Commit**:
+
 ```
 test: verify 80%+ coverage across all projects
 ```
@@ -454,7 +491,7 @@ Use TypeGuards for type narrowing instead of cast():
 from flext_core.utilities.guards import Guards
 
 if Guards.is_config(obj):
-    obj.app_name  # Type narrowed, no cast() needed
+obj.app_name # Type narrowed, no cast() needed
 \`\`\`
 
 ### Hierarchical Model Organization
@@ -475,10 +512,10 @@ All models use standard ConfigDict:
 
 \`\`\`python
 model_config = ConfigDict(
-    validate_assignment=True,
-    use_enum_values=True,
-    extra="forbid",
-    str_strip_whitespace=True,
+validate_assignment=True,
+use_enum_values=True,
+extra="forbid",
+str_strip_whitespace=True,
 )
 \`\`\`
 
@@ -490,29 +527,32 @@ Use Pydantic 2.11+ validators:
 from pydantic import field_validator, model_validator, computed_field
 
 class User(BaseModel):
-    email: str
-    
+email: str
+
     @field_validator("email")
     @classmethod
     def validate_email(cls, v: str) -> str:
         if "@" not in v:
             raise ValueError("Invalid email")
         return v.lower()
-    
+
     @computed_field
     @property
     def domain(self) -> str:
         return self.email.split("@")[1]
+
 \`\`\`
 ```
 
 **Validation**:
+
 - [ ] AGENTS.md updated with patterns
 - [ ] type-system-architecture.md created/updated
 - [ ] MIGRATION_GUIDE.md created
 - [ ] All documentation links valid
 
 **Commits**:
+
 ```
 docs(AGENTS.md): add Pydantic 2 migration patterns and standards
 docs: create type-system-architecture.md with design documentation
@@ -535,12 +575,14 @@ docs: create MIGRATION_GUIDE.md for future migrations
    - Create summary of what was done
 
 3. **Close Beads Issues**
+
    ```bash
    bd close flext-fin flext-pf3 flext-5dr flext-jt2 flext-nya
    bd close <all other phase issues>
    ```
 
 4. **Final Sync**
+
    ```bash
    git status
    git add .
@@ -549,12 +591,14 @@ docs: create MIGRATION_GUIDE.md for future migrations
    ```
 
 **Validation**:
+
 - [ ] No deprecated type aliases
 - [ ] Migration plan archived
 - [ ] All Beads issues closed
 - [ ] Changes pushed to remote
 
 **Commit**:
+
 ```
 chore: cleanup after Pydantic 2 migration completion
 ```
@@ -564,28 +608,33 @@ chore: cleanup after Pydantic 2 migration completion
 ## Success Criteria for Phases 7-9
 
 ✅ **Test Suite**
+
 - Zero cast() in all test files (~500 eliminated)
 - All tests passing
 - 80%+ coverage maintained
 
 ✅ **Problem Project**
+
 - flext-tap-oracle-wms fully migrated
 - Zero type errors
 - Patterns consistent with rest of monorepo
 
 ✅ **Global Validation**
+
 - `make validate` passes on full monorepo
 - Zero cast() across ALL projects
 - Zero TypedDict (all converted)
 - ConfigDict standardized across 127+ models
 
 ✅ **Documentation**
+
 - AGENTS.md updated with patterns
 - type-system-architecture.md created
 - MIGRATION_GUIDE.md created
 - All links valid
 
 ✅ **Cleanup**
+
 - Deprecated code removed
 - Migration plan archived
 - All Beads issues closed
@@ -595,18 +644,18 @@ chore: cleanup after Pydantic 2 migration completion
 
 ## Timeline Summary
 
-| Phase | Duration | Days | Status |
-|-------|----------|------|--------|
-| Phase 1: Core | 4 days | 1-4 | Foundation |
-| Phase 2: API + Infra | 3 days | 5-7 | Parallel |
-| Phase 3: Data | 4 days | 8-11 | Sequential |
-| Phase 4: Oracle + Meltano | 3 days | 12-14 | Parallel |
-| Phase 5: Taps + Targets | 5 days | 15-19 | Parallel |
-| Phase 6: DBT + User-Facing | 5 days | 20-24 | Parallel |
-| Phase 7: Test Suite | 4 days | 25-28 | Sequential |
-| Phase 8: Problem Project | 4 days | 29-32 | Sequential |
-| Phase 9: Validation | 3 days | 33-35 | Sequential |
-| **Total** | **35 days** | | |
+| Phase                      | Duration    | Days  | Status     |
+| -------------------------- | ----------- | ----- | ---------- |
+| Phase 1: Core              | 4 days      | 1-4   | Foundation |
+| Phase 2: API + Infra       | 3 days      | 5-7   | Parallel   |
+| Phase 3: Data              | 4 days      | 8-11  | Sequential |
+| Phase 4: Oracle + Meltano  | 3 days      | 12-14 | Parallel   |
+| Phase 5: Taps + Targets    | 5 days      | 15-19 | Parallel   |
+| Phase 6: DBT + User-Facing | 5 days      | 20-24 | Parallel   |
+| Phase 7: Test Suite        | 4 days      | 25-28 | Sequential |
+| Phase 8: Problem Project   | 4 days      | 29-32 | Sequential |
+| Phase 9: Validation        | 3 days      | 33-35 | Sequential |
+| **Total**                  | **35 days** |       |            |
 
 **Savings from Parallelization**: ~10-12 days vs. sequential approach
 
@@ -615,12 +664,14 @@ chore: cleanup after Pydantic 2 migration completion
 ## Final Metrics
 
 ### Before Migration
+
 - 627 cast() usages
 - 305 TypedDict definitions
 - 249+ ConfigDict patterns (inconsistent)
 - Multiple validator patterns (v1 and v2 mixed)
 
 ### After Migration
+
 - ✅ 0 cast() usages
 - ✅ 0 TypedDict definitions
 - ✅ 127+ models with standard ConfigDict
