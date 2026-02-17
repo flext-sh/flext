@@ -6,8 +6,8 @@ set -euo pipefail
 ROOT_DIR="."
 MODE="${FLEXT_PYDANTIC_POLICY_MODE:-baseline}"
 UPDATE_BASELINE="false"
-BASELINE_FILE=".sisyphus/baselines/pydantic_v2_policy_baseline.json"
-REPORT_FILE=".sisyphus/reports/pydantic_v2_policy_latest.json"
+BASELINE_FILE=".sisyphus/baselines/scripts-validation--json--pydantic-v2-policy-baseline.json"
+REPORT_FILE=".sisyphus/reports/scripts-validation--json--pydantic-v2-policy-latest.json"
 BASELINE_STRATEGY="${FLEXT_PYDANTIC_BASELINE_STRATEGY:-total}"
 
 while [[ $# -gt 0 ]]; do

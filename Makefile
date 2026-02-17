@@ -170,7 +170,17 @@ validate-scripts: ## Validate scripts/ (ownership, syntax, structure)
 	done; [ $$fail -eq 0 ] && echo "✓ All bash scripts pass syntax check" || { echo "✗ Bash syntax errors found"; exit 1; }
 	$(Q)echo ""
 	$(Q)echo "--- Python compile check ---"
-	$(Q)python -m compileall -q scripts/ 2>&1 && echo "✓ All Python scripts compile" || { echo "✗ Python compile errors found"; exit 1; }
+	$(Q)fail=0; for f in $$(git ls-files 'scripts/*.py' 'scripts/**/*.py'); do \
+		python -m py_compile "$$f" 2>&1 || fail=1; \
+	done; [ $$fail -eq 0 ] && echo "✓ All Python scripts compile" || { echo "✗ Python compile errors found"; exit 1; }
+	$(Q)echo ""
+	$(Q)echo "--- ast-grep structural checks ---"
+	$(Q)if command -v sg >/dev/null 2>&1; then \
+		echo "  No-interactive check:"; \
+		sg scan --rule scripts/validation/scripts-validation--ast-grep--no-interactive.yml scripts/ 2>&1 && echo "  ✓ No interactive prompts" || echo "  ⚠ Interactive prompts found (review needed)"; \
+	else \
+		echo "  ⚠ sg (ast-grep) not installed, skipping structural checks"; \
+	fi
 	$(Q)echo ""
 	$(Q)echo "--- Artifact naming ---"
 	$(Q)python scripts/core/check_script_artifact_naming.py || true

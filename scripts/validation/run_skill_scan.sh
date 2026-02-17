@@ -4,7 +4,7 @@ set -euo pipefail
 
 ROOT_DIR="${1:-.}"
 SKILLS_DIR=".claude/skills"
-REPORT_FILE=".sisyphus/reports/skill_scan_latest.json"
+REPORT_FILE=".sisyphus/reports/scripts-validation--json--skill-scan-latest.json"
 
 mkdir -p "$(dirname "$REPORT_FILE")"
 
