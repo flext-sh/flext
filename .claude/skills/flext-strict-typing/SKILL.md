@@ -38,20 +38,16 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 ### The Type Hierarchy (from `typings.py` lines 153-176)
 
 ```
-t.ScalarValue = str | int | float | bool | datetime | None       ← Tier 1 (primitives)
-    ↓
-t.MetadataScalarValue = str | int | float | bool | None           ← Tier 2 (no datetime)
-t.MetadataListValue = list[str | int | float | bool | None]
-t.PydanticConfigValue = str | int | float | bool | None | list[...]   ← Tier 2.5
-    ↓
-t.GeneralScalarValue = str | int | float | bool | datetime | None ← Tier 3
-t.GeneralListValue = list[str | int | float | bool | datetime | None]
-    ↓
-GeneralValueType = str | int | float | bool | datetime | None    ← TOP (recursive)
-    | BaseModel | Path
-    | Sequence[GeneralValueType]
-    | Mapping[str, GeneralValueType]
+
+## Verification
+
+```bash
+scripts/validation/enforce_no_dict_no_any.sh --mode baseline --root .
 ```
+
+<!-- AUTOMATION MARKERS (machine-readable, do not edit) -->
+<!-- ASTGREP_SCAN_PACK: scripts/validation/ast-grep-no-dict.yml -->
+<!-- AUTOFIX_MODE: detect-only -->
 
 ### Special RootModel Containers (from `typings.py` lines 357-462)
 
