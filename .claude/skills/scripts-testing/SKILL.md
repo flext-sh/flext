@@ -17,6 +17,7 @@ description: Testing scripts — pytest runners, test analysis, quality gates, s
 - `scripts/testing/test-end-to-end-pipeline.sh`
 - `scripts/testing/testing_metrics_dashboard.sh`
 - `scripts/testing/testing_quality_gates.sh`
+- `scripts/run_all_examples.py`
 
 ## References
 
@@ -83,3 +84,4 @@ Why bad: Requires manual directory change, not reproducible.
 | `scripts/testing/test-end-to-end-pipeline.sh` | End-to-end pipeline testing | `bash scripts/testing/test-end-to-end-pipeline.sh` |
 | `scripts/testing/testing_metrics_dashboard.sh` | Testing metrics dashboard | `bash scripts/testing/testing_metrics_dashboard.sh` |
 | `scripts/testing/testing_quality_gates.sh` | Testing quality gates | `bash scripts/testing/testing_quality_gates.sh` |
+| `scripts/run_all_examples.py` | Run all example scripts | `python scripts/run_all_examples.py` |
