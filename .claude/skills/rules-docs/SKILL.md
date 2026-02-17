@@ -5,6 +5,9 @@ description: Rules for documentation under `docs/` to keep architecture and proj
 
 # Rules Docs
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 ## Scope
 - `docs/index.md`
 - `docs/architecture/`

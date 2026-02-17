@@ -5,6 +5,9 @@ description: Rules for Docker assets in `docker/`, including compose files and i
 
 # Rules Docker
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 ## Scope
 - `docker/docker-compose.*.yml`
 - `docker/images/`

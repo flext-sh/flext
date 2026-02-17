@@ -6,6 +6,7 @@ description: Rules for typing support assets in `typings/` (stubs, compatibility
 # Rules Typings
 
 ## Scope
+
 - `typings/__init__.pyi`
 - `typings/factory.pyi`
 - `typings/returns/`
@@ -14,17 +15,20 @@ description: Rules for typing support assets in `typings/` (stubs, compatibility
 - `typings/ldif3/`
 
 ## References
+
 - `flext-core/src/flext_core/typings.py`
 - `pyproject.toml`
 - `typings/`
 
 ## Rules
+
 - Keep stubs synchronized with runtime/public API signatures.
 - Prefer precise types over broad fallback annotations.
 - Keep package-specific typing shims isolated under their own stub namespace.
 - Do not introduce broken/incomplete stubs without clear compatibility intent.
 
 ## Instructions
+
 - Update `.pyi` signatures when corresponding runtime signatures change.
 - Keep import paths and exported names aligned with package contracts.
 - Validate that stub packages do not shadow unrelated modules.
@@ -34,12 +38,14 @@ ls -la typings
 ```
 
 ## Workflow
+
 1. Identify runtime API change requiring stub update.
 2. Update matching `.pyi` declarations.
 3. Validate imports/exports in stubs remain coherent.
 4. Re-run type checks for impacted packages.
 
 ## Examples
+
 Good:
 
 ```python
@@ -59,6 +65,7 @@ def create(*args, **kwargs): ...
 Why bad: loses useful type information and weakens analyzer value.
 
 ## Verification
+
 - `ls -la typings`
 - `rg -n "\.pyi$" -g "*.pyi" typings`
 - `rg -n "TODO|FIXME|pass" typings || true`

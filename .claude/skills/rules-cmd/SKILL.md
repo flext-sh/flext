@@ -5,6 +5,9 @@ description: Rules for command entrypoints under `cmd/` and their package wiring
 
 # Rules Cmd
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 ## Scope
 - `cmd/flext/`
 - `cmd/flext-cli/`

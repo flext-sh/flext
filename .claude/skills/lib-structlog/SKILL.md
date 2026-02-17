@@ -5,6 +5,9 @@ description: FlextLogger structured logging with context propagation, DI factori
 
 # Lib Structlog — FlextLogger and Context-Aware Logging
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 ## Scope
 
 - `flext-core/src/flext_core/loggings.py` — FlextLogger class (context-aware, DI-ready logger)
