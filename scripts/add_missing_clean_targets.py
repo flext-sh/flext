@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Script to add clean targets to Makefiles that don't have them.
 
 This script finds Makefiles without clean targets and adds a comprehensive

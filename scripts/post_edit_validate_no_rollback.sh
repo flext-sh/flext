@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # post_edit_validate_no_rollback.sh - Post-edit validation WITHOUT automatic rollback
 # Usage: ./post_edit_validate_no_rollback.sh <backup_id> <file_path> <old_text> <new_text>
 # Returns: JSON with validation result, NO automatic rollback

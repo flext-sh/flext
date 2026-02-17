@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 # =============================================================================
 # FLEXT - Cleanup Local Virtual Environments
 # =============================================================================

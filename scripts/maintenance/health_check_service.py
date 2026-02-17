@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """FLEXT Health Check Service.
 
 Serviço de monitoramento de saúde usando flext_quality.tools.health

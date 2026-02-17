@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-testing/SKILL.md
 # testing_quality_gates.sh - Validate testing standards across FLEXT ecosystem
 #
 # Usage: ./scripts/testing_quality_gates.sh [options]

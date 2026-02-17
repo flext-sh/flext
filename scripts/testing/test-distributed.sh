@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-testing/SKILL.md
 
 # FLEXT Distributed Testing Script
 # Tests the distributed architecture capabilities

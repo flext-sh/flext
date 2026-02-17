@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 
 # Script para fazer push forçado de todos os repositórios FLEXT
 # com merge em main

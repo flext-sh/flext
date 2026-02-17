@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """Update VSCode settings to exclude files not tracked by git.
 
 This script dynamically generates VSCode exclusion patterns based on:

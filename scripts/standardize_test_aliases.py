@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """Standardize test helper aliases to tm, tt, tu, tc, tp pattern.
 
 Converts:

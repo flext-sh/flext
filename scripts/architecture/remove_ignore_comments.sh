@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 # Script para remoção de comentários # ignore conforme FASE 1.1 do guia
 # Remove comentários que silenciam warnings ao invés de corrigir problemas reais
 

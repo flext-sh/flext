@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Script to update all FLEXT project Makefiles with comprehensive clean targets.
 
 This script finds all main project Makefiles and ensures they have comprehensive

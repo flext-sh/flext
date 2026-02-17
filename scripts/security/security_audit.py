@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-security/SKILL.md
 """FLEXT Security Audit Script - Enterprise Security Analysis Tool.
 
 Comprehensive security auditing script for the FLEXT ecosystem that identifies

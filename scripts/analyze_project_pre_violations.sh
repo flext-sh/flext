@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 # analyze_project_pre_violations.sh - Analyze all pre-edit violations in any FLEXT project
 # Usage: ./analyze_project_pre_violations.sh <project_name> [src_dir]
 # Examples:

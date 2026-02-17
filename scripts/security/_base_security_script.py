@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-security/SKILL.md
 """Base security script with common validation logic.
 
 Classe base para scripts de segurança com validações comuns reutilizáveis.

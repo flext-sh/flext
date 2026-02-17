@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """FLEXT Architecture Diagnostic Tool.
 
 Comprehensive diagnostic tool for FLEXT workspace architecture validation.

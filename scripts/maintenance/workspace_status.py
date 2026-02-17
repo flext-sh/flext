@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """FLEXT Workspace Status - Dashboard Completo do Workspace.
 
 Script para mostrar status detalhado e saúde geral do workspace FLEXT,

@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # edit_with_hooks.sh - Automatic edit execution with integrated hook validation
 # Usage: ./edit_with_hooks.sh <tool_name> <file_path> <old_string> <new_string>
 

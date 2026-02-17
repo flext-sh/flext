@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 set -euo pipefail
 
 ROOT_DIR="${1:-.}"

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Git repository cleanup script.
 
 Repository cleanup with safety features:

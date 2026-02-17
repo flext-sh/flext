@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """ARCHITECTURAL FIX: FlextResult[object] Standardization Across FLEXT Workspace.
 
 This script fixes the FlextResult duplicate/inconsistent usage across all projects:

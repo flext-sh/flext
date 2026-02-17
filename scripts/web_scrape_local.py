@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """Local web scraping without Firecrawl API.
 
 Uses trafilatura for content extraction.

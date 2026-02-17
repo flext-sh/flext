@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """FLEXT Namespace Fix Script.
 
 Validates and fixes namespace violations across FLEXT projects with:

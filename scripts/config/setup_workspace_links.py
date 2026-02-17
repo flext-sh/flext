@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """setup_workspace_links.py - Workspace Link Setup Script.
 
 This script sets up symbolic links for FLEXT workspace projects, creating

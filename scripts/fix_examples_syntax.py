@@ -1,3 +1,4 @@
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 import pathlib
 
 FILES = [

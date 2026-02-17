@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """Common utilities for FLEXT scripts - Facade for flext-core patterns.
 
 ANTI-DUPLICATION ENFORCEMENT: Uses flext-core exclusively, NO local implementations.

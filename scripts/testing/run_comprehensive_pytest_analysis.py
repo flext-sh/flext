@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-testing/SKILL.md
 """Comprehensive FLEXT Pytest Analysis Runner.
 
 Executes pytest across all FLEXT projects with detailed reporting in SARIF and JSON formats.

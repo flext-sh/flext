@@ -1,3 +1,4 @@
+# Owner-Skill: .claude/skills/scripts-testing/SKILL.md
 """FLEXT Pytest Runner - Execute pytest across all workspace projects with timeout.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.

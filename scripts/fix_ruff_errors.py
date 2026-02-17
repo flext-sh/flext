@@ -1,3 +1,4 @@
+# Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 import json
 import pathlib
 

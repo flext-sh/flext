@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 
 echo "🧪 TESTE COMPLETO DE TODOS OS PROJETOS - FASE 3"
 echo "========================================================"

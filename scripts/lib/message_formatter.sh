@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # Message Formatter - Consistent messaging for validation scripts
 #
 # Provides functions for formatting validation output with colors and emojis.

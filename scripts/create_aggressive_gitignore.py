@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Create aggressive whitelist .gitignore for all FLEXT projects.
 
 Only permits specific whitelisted files and directories.

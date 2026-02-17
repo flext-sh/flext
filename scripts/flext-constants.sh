@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # FLEXT Constants Quality Assurance Script v7.0.0
 # Ultra-thin wrapper around flext-quality
 

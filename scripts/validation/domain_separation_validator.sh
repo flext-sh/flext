@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 # FLEXT Domain Separation Validation Script
 # Automatically validates domain separation compliance across FLEXT ecosystem
 # Usage: ./scripts/domain_separation_validator.sh [project_name]

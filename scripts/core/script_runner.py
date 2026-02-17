@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """FLEXT Script Runner - Executor centralizado de scripts.
 
 Este script serve como ponto de entrada único para execução de todos os scripts

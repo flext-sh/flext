@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """refactor_imports.py - Import Refactoring Script.
 
 This script provides automated refactoring of import statements to comply

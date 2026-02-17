@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """Simplify Makefile structures across all FLEXT projects following KISS principle.
 
 This script consolidates 62 complex Makefiles into a single standardized template

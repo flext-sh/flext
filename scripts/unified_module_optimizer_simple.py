@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """FLEXT: Unified Module Optimization Command (Simplified Version).
 
 MANDATORY: Uses serena, sequential-thinking, and context7 MCP tools for best results.

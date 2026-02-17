@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 ################################################################################
 # FLEXT Global Workspace Duplicate Code Baseline Generator
 #

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """load_staging_config.py - Staging Configuration Loader Script.
 
 This script loads and validates staging environment configuration for FLEXT projects.

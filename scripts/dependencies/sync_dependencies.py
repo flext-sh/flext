@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-dependencies/SKILL.md
 """Script principal REFATORADO para sincronização de dependências.
 
 Agora usa flext_quality.tools para operações modulares e eficientes.

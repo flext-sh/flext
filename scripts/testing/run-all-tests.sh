@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-testing/SKILL.md
 set -e
 
 echo "🚀 Starting FLEXT Comprehensive Test Suite..."
