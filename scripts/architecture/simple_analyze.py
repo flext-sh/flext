@@ -94,23 +94,19 @@ def _check_imports(py_file: Path, content: str) -> list[dict[str, str]]:
             for alias in node.names:
                 import_name = alias.name.split(".")[0]
                 if _is_violation_import(import_name):
-                    violations.append(
-                        {
-                            "file": str(py_file),
-                            "pattern": f"import {import_name}",
-                            "action": f"Remover import violador em {py_file.name}",
-                        }
-                    )
+                    violations.append({
+                        "file": str(py_file),
+                        "pattern": f"import {import_name}",
+                        "action": f"Remover import violador em {py_file.name}",
+                    })
         elif isinstance(node, ast.ImportFrom) and node.module:
             import_name = node.module.split(".")[0]
             if _is_violation_import(import_name):
-                violations.append(
-                    {
-                        "file": str(py_file),
-                        "pattern": f"from {node.module}",
-                        "action": f"Remover import violador em {py_file.name}",
-                    }
-                )
+                violations.append({
+                    "file": str(py_file),
+                    "pattern": f"from {node.module}",
+                    "action": f"Remover import violador em {py_file.name}",
+                })
 
     return violations
 

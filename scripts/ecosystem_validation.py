@@ -286,14 +286,12 @@ class EcosystemValidator:
     def generate_report(self) -> str:
         """Generate human-readable report."""
         lines: list[str] = []
-        lines.extend(
-            (
-                "=" * 80,
-                "FLEXT ECOSYSTEM TRANSFORMATION STATUS REPORT",
-                "=" * 80,
-                "",
-            )
-        )
+        lines.extend((
+            "=" * 80,
+            "FLEXT ECOSYSTEM TRANSFORMATION STATUS REPORT",
+            "=" * 80,
+            "",
+        ))
 
         # Summary statistics
         total = len(self.results)
@@ -301,16 +299,14 @@ class EcosystemValidator:
         warned = sum(1 for r in self.results.values() if r.status == "WARN")
         failed = sum(1 for r in self.results.values() if r.status == "FAIL")
 
-        lines.extend(
-            [
-                "SUMMARY:",
-                f"  Total projects: {total}",
-                f"  ✅ Production ready: {passed}",
-                f"  ⚠️  Need attention: {warned}",
-                f"  ❌ Critical issues: {failed}",
-                "",
-            ]
-        )
+        lines.extend([
+            "SUMMARY:",
+            f"  Total projects: {total}",
+            f"  ✅ Production ready: {passed}",
+            f"  ⚠️  Need attention: {warned}",
+            f"  ❌ Critical issues: {failed}",
+            "",
+        ])
 
         # Foundation status
         lines.append("FOUNDATION:")

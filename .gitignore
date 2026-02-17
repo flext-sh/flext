@@ -96,9 +96,8 @@
 # BLOCK: AI/Agent Local Data (NEVER track these)
 # ============================================================================
 
-# Claude Code local data (315MB+, contains debug, history, credentials)
 .claude/
-**/.claude/
+!.claude/skills/
 
 # NOTE: .planning/ is NOW TRACKED (commit_docs: true in config.json)
 # Archive directories within .planning are still local
