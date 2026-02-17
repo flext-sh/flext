@@ -32,3 +32,30 @@ rule:
   pattern: $MODEL.json($$$ARGS)
 message: Pydantic v1 .json() is banned; use model_dump_json()
 severity: error
+---
+id: ban-pydantic-v1-from-orm
+language: python
+rule:
+  pattern: $MODEL.from_orm($ARG)
+message: Pydantic v1 from_orm() is banned; use model_validate()
+severity: error
+---
+id: ban-pydantic-v1-validator-decorator
+language: python
+rule:
+  pattern: |
+    @validator($$$ARGS)
+    def $FN($$$PARAMS):
+      $$$BODY
+message: Pydantic v1 @validator is banned; use @field_validator
+severity: error
+---
+id: ban-pydantic-v1-root-validator-decorator
+language: python
+rule:
+  pattern: |
+    @root_validator($$$ARGS)
+    def $FN($$$PARAMS):
+      $$$BODY
+message: Pydantic v1 @root_validator is banned; use @model_validator
+severity: error
