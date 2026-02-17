@@ -178,12 +178,14 @@ if ast_path.exists() and ast_path.stat().st_size > 0:
         except json.JSONDecodeError:
             continue
 
+import hashlib
 keys = sorted({v["key"] for v in violations})
+key_hashes = sorted({hashlib.sha256(k.encode()).hexdigest()[:16] for k in keys})
 Path(out_file).write_text(json.dumps({
     "scan_succeeded": True,
     "violation_count": len(violations),
     "unique_keys": len(keys),
-    "keys": keys,
+    "key_hashes": key_hashes,
     "counts": {
         "dict_legacy": sum(1 for v in violations if v["group"] == "dict_legacy"),
         "any_object_cast_ignore": sum(1 for v in violations if v["group"] == "any_object_cast_ignore"),
@@ -211,7 +213,7 @@ report = {
         "total": int(total_c),
     },
     "unique_keys": keyed.get("unique_keys", 0),
-    "keys": keyed.get("keys", []),
+    "key_hashes": keyed.get("key_hashes", []),
 }
 Path(report_file).write_text(json.dumps(report, indent=2) + "\n")
 PY_REPORT
@@ -233,7 +235,7 @@ baseline = {
         "total": int(total_c),
     },
     "unique_keys": keyed.get("unique_keys", 0),
-    "keys": keyed.get("keys", []),
+    "key_hashes": keyed.get("key_hashes", []),
 }
 Path(baseline_file).write_text(json.dumps(baseline, indent=2) + "\n")
 PY_BASELINE
@@ -315,8 +317,8 @@ else
 import json, sys
 from pathlib import Path
 keyed_file, baseline_file = sys.argv[1:3]
-current_keys = set(json.loads(Path(keyed_file).read_text()).get("keys", []))
-baseline_keys = set(json.loads(Path(baseline_file).read_text()).get("keys", []))
+current_keys = set(json.loads(Path(keyed_file).read_text()).get("key_hashes", []))
+baseline_keys = set(json.loads(Path(baseline_file).read_text()).get("key_hashes", []))
 new_keys = current_keys - baseline_keys
 fixed_keys = baseline_keys - current_keys
 print(f"{len(new_keys)}|{len(fixed_keys)}")
