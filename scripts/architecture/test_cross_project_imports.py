@@ -9,6 +9,7 @@ across projects as required by the refactoring.
 
 from __future__ import annotations
 
+import sys
 import traceback
 
 
@@ -68,6 +69,10 @@ def test_imports() -> bool:
     return success_count == total_count
 
 
-if __name__ == "__main__":
+def main() -> int:
     success = test_imports()
-    raise SystemExit(0 if success else 1)
+    return 0 if success else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

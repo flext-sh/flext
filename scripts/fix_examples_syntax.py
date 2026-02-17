@@ -1,5 +1,6 @@
 # Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 import pathlib
+import sys
 
 FILES = [
     "flext-core/examples/04_config_basics.py",
@@ -40,5 +41,11 @@ def fix(filepath) -> None:
     print(f"Fixed {filepath}")
 
 
-for f in FILES:
-    fix(f)
+def main() -> int:
+    for f in FILES:
+        fix(f)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
