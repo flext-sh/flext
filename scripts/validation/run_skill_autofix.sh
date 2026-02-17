@@ -6,7 +6,7 @@ ROOT_DIR="."
 FIX_MODE="safe"
 DRY_RUN="false"
 APPLY="false"
-REPORT_FILE=".sisyphus/reports/autofix_latest.json"
+REPORT_FILE=".sisyphus/reports/scripts-validation--json--autofix-latest.json"
 SKILLS_DIR=".claude/skills"
 DEGRADED="false"
 

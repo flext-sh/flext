@@ -6,8 +6,8 @@ set -euo pipefail
 ROOT_DIR="."
 MODE="${FLEXT_POLICY_MODE:-baseline}"
 UPDATE_BASELINE="false"
-BASELINE_FILE=".sisyphus/baselines/policy_gate_baseline.json"
-REPORT_FILE=".sisyphus/reports/policy_gate_latest.json"
+BASELINE_FILE=".sisyphus/baselines/scripts-validation--json--policy-gate-baseline.json"
+REPORT_FILE=".sisyphus/reports/scripts-validation--json--policy-gate-latest.json"
 BASELINE_STRATEGY="${FLEXT_POLICY_BASELINE_STRATEGY:-total}"
 KEY_STRICT="${FLEXT_POLICY_KEY_STRICT:-false}"
 
