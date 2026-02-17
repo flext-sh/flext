@@ -19,8 +19,8 @@ PROJECT_ROOT="/home/marlonsc/flext"
 
 # Validate arguments
 if [[ $# -lt 2 ]]; then
-    echo "{\"error\": \"Usage: $0 <backup_id> <file_path> [old_text] [new_text]\"}" >&2
-    exit 1
+	echo "{\"error\": \"Usage: $0 <backup_id> <file_path> [old_text] [new_text]\"}" >&2
+	exit 1
 fi
 
 BACKUP_ID="$1"
@@ -32,50 +32,50 @@ BACKUP_FILE="$BACKUP_DIR/pre_backup_${BACKUP_ID}.json"
 
 # Restore from backup
 restore_backup() {
-    local backup_file="$1"
+	local backup_file="$1"
 
-    if [[ ! -f "$backup_file" ]]; then
-        echo "❌ Backup file not found: $backup_file" >&2
-        return 1
-    fi
+	if [[ ! -f $backup_file ]]; then
+		echo "❌ Backup file not found: $backup_file" >&2
+		return 1
+	fi
 
-    local file_path
-    file_path=$(jq -r '.file_path' "$backup_file" 2>/dev/null || echo "")
+	local file_path
+	file_path=$(jq -r '.file_path' "$backup_file" 2>/dev/null || echo "")
 
-    if [[ -z "$file_path" ]]; then
-        echo "❌ Invalid backup file format" >&2
-        return 1
-    fi
+	if [[ -z $file_path ]]; then
+		echo "❌ Invalid backup file format" >&2
+		return 1
+	fi
 
-    local original_content_base64
-    original_content_base64=$(jq -r '.original_content_base64' "$backup_file" 2>/dev/null || echo "")
+	local original_content_base64
+	original_content_base64=$(jq -r '.original_content_base64' "$backup_file" 2>/dev/null || echo "")
 
-    if [[ -n "$original_content_base64" ]]; then
-        echo "$original_content_base64" | base64 -d > "$file_path"
-    else
-        echo "❌ No content found in backup" >&2
-        return 1
-    fi
+	if [[ -n $original_content_base64 ]]; then
+		echo "$original_content_base64" | base64 -d >"$file_path"
+	else
+		echo "❌ No content found in backup" >&2
+		return 1
+	fi
 
-    echo "✅ File restored from backup: $file_path" >&2
+	echo "✅ File restored from backup: $file_path" >&2
 
-    # Clean up backup
-    rm -f "$backup_file"
-    return 0
+	# Clean up backup
+	rm -f "$backup_file"
+	return 0
 }
 
 # Validate after edit using comprehensive FLEXT quality checks
 validate_post_edit() {
-    local file_path="$1"
+	local file_path="$1"
 
-    echo "🔍 Running comprehensive FLEXT post-validation..."
+	echo "🔍 Running comprehensive FLEXT post-validation..."
 
-    # Quality validation using FLEXT modules
-    echo "  🛡️ Running code quality validation..."
+	# Quality validation using FLEXT modules
+	echo "  🛡️ Running code quality validation..."
 
-    # Create a temporary validation script
-    local validation_script="/tmp/validate_post_$$.py"
-    cat > "$validation_script" << 'EOF'
+	# Create a temporary validation script
+	local validation_script="/tmp/validate_post_$$.py"
+	cat >"$validation_script" <<'EOF'
 import sys
 import json
 sys.path.insert(0, '/home/marlonsc/.claude/hooks/utils')
@@ -141,134 +141,134 @@ except Exception as e:
     sys.stdout.flush()
 EOF
 
-    local quality_result
-    quality_result=$(python3 "$validation_script" "$file_path" 2>&1)
+	local quality_result
+	quality_result=$(python3 "$validation_script" "$file_path" 2>&1)
 
-    # Clean up validation script
-    rm -f "$validation_script"
+	# Clean up validation script
+	rm -f "$validation_script"
 
-    # Extract JSON from quality result
-    local json_result
-    json_result=$(echo "$quality_result" | grep '^{' | tail -1)
+	# Extract JSON from quality result
+	local json_result
+	json_result=$(echo "$quality_result" | grep '^{' | tail -1)
 
-    # Parse quality results
-    local total_violations
-    total_violations=$(echo "$json_result" | jq -r '.total_violations // 0' 2>/dev/null || echo "0")
+	# Parse quality results
+	local total_violations
+	total_violations=$(echo "$json_result" | jq -r '.total_violations // 0' 2>/dev/null || echo "0")
 
-    local blocking_violations
-    blocking_violations=$(echo "$json_result" | jq -r '.blocking_violations // 0' 2>/dev/null || echo "0")
+	local blocking_violations
+	blocking_violations=$(echo "$json_result" | jq -r '.blocking_violations // 0' 2>/dev/null || echo "0")
 
-    echo "Found $total_violations total violations ($blocking_violations blocking)"
+	echo "Found $total_violations total violations ($blocking_violations blocking)"
 
-    if [[ "$blocking_violations" -gt 0 ]]; then
-        echo "❌ BLOCKING violations found - fix ALL issues before proceeding"
-        echo "$json_result"
-        return 1
-    elif [[ "$total_violations" -gt 0 ]]; then
-        echo "⚠️ WARNINGS found - fix ALL warnings for quality compliance"
-        echo "💡 Warnings must be resolved before confirmation"
-        echo "$json_result"
-        return 1
-    else
-        echo "✅ NO violations found - ready for confirmation"
-        echo "$json_result"
-        return 0
-    fi
+	if [[ $blocking_violations -gt 0 ]]; then
+		echo "❌ BLOCKING violations found - fix ALL issues before proceeding"
+		echo "$json_result"
+		return 1
+	elif [[ $total_violations -gt 0 ]]; then
+		echo "⚠️ WARNINGS found - fix ALL warnings for quality compliance"
+		echo "💡 Warnings must be resolved before confirmation"
+		echo "$json_result"
+		return 1
+	else
+		echo "✅ NO violations found - ready for confirmation"
+		echo "$json_result"
+		return 0
+	fi
 }
 
 # Create temp file for agent to edit
 create_temp_file() {
-    local source_file="$1"
-    local backup_id="$2"
-    local temp_file="/tmp/flext_agent_edit_${backup_id}.py"
+	local source_file="$1"
+	local backup_id="$2"
+	local temp_file="/tmp/flext_agent_edit_${backup_id}.py"
 
-    # Copy current content to temp file
-    if [[ -f "$source_file" ]]; then
-        cp "$source_file" "$temp_file"
-        echo "$temp_file"
-    else
-        echo "" >&2
-        return 1
-    fi
+	# Copy current content to temp file
+	if [[ -f $source_file ]]; then
+		cp "$source_file" "$temp_file"
+		echo "$temp_file"
+	else
+		echo "" >&2
+		return 1
+	fi
 }
 
 # Apply changes from temp file to original
 apply_temp_changes() {
-    local temp_file="$1"
-    local original_file="$2"
-    local backup_id="$3"
+	local temp_file="$1"
+	local original_file="$2"
+	local backup_id="$3"
 
-    if [[ -f "$temp_file" && -f "$original_file" ]]; then
-        cp "$temp_file" "$original_file"
-        rm -f "$temp_file"
+	if [[ -f $temp_file && -f $original_file ]]; then
+		cp "$temp_file" "$original_file"
+		rm -f "$temp_file"
 
-        # Clean up backup
-        local backup_file="$BACKUP_DIR/pre_backup_${backup_id}.json"
-        rm -f "$backup_file"
+		# Clean up backup
+		local backup_file="$BACKUP_DIR/pre_backup_${backup_id}.json"
+		rm -f "$backup_file"
 
-        echo "✅ Changes applied successfully from $temp_file to $original_file"
-        echo "🧹 Backup and temp files cleaned up"
-        return 0
-    else
-        echo "❌ Error applying changes - files not found" >&2
-        return 1
-    fi
+		echo "✅ Changes applied successfully from $temp_file to $original_file"
+		echo "🧹 Backup and temp files cleaned up"
+		return 0
+	else
+		echo "❌ Error applying changes - files not found" >&2
+		return 1
+	fi
 }
 
 # Main execution
 main() {
-    echo "🚀 Starting post-edit validation for: $FILE_PATH"
+	echo "🚀 Starting post-edit validation for: $FILE_PATH"
 
-    # Check if this is a temp file application request
-    if [[ "${OLD_TEXT:-}" == "apply_temp" ]]; then
-        echo "📋 Applying changes from temp file..."
-        if apply_temp_changes "$FILE_PATH" "$NEW_TEXT" "$BACKUP_ID"; then
-            echo "🎉 File updated successfully!"
-            exit 0
-        else
-            echo "❌ Failed to apply changes"
-            exit 1
-        fi
-    fi
+	# Check if this is a temp file application request
+	if [[ ${OLD_TEXT:-} == "apply_temp" ]]; then
+		echo "📋 Applying changes from temp file..."
+		if apply_temp_changes "$FILE_PATH" "$NEW_TEXT" "$BACKUP_ID"; then
+			echo "🎉 File updated successfully!"
+			exit 0
+		else
+			echo "❌ Failed to apply changes"
+			exit 1
+		fi
+	fi
 
-    # Validate the result
-    local validation_result
-    if ! validation_result=$(validate_post_edit "$FILE_PATH"); then
-        echo "❌ Validation found issues - AGENT CAN FIX ITERATIVELY"
-        echo ""
+	# Validate the result
+	local validation_result
+	if ! validation_result=$(validate_post_edit "$FILE_PATH"); then
+		echo "❌ Validation found issues - AGENT CAN FIX ITERATIVELY"
+		echo ""
 
-        # Create temp file for agent to edit
-        local temp_file
-        if temp_file=$(create_temp_file "$FILE_PATH" "$BACKUP_ID"); then
-            echo "📝 TEMP FILE CREATED FOR AGENT EDITING:"
-            echo "   📁 File to edit: $temp_file"
-            echo "   🔄 After fixing, run:"
-            echo "   ./scripts/post_edit_validate.sh $BACKUP_ID \"$temp_file\" apply_temp \"$FILE_PATH\""
-            echo ""
-            echo "   💡 Edit $temp_file directly, then run the command above to apply changes"
-            echo ""
-        else
-            echo "❌ Failed to create temp file for editing"
-        fi
+		# Create temp file for agent to edit
+		local temp_file
+		if temp_file=$(create_temp_file "$FILE_PATH" "$BACKUP_ID"); then
+			echo "📝 TEMP FILE CREATED FOR AGENT EDITING:"
+			echo "   📁 File to edit: $temp_file"
+			echo "   🔄 After fixing, run:"
+			echo "   ./scripts/post_edit_validate.sh $BACKUP_ID \"$temp_file\" apply_temp \"$FILE_PATH\""
+			echo ""
+			echo "   💡 Edit $temp_file directly, then run the command above to apply changes"
+			echo ""
+		else
+			echo "❌ Failed to create temp file for editing"
+		fi
 
-        echo "🔄 Current validation result:"
-        echo "$validation_result"
-        exit 1
-    else
-        echo "✅ ZERO violations - CHANGES ACCEPTED AUTOMATICALLY!"
-        echo ""
+		echo "🔄 Current validation result:"
+		echo "$validation_result"
+		exit 1
+	else
+		echo "✅ ZERO violations - CHANGES ACCEPTED AUTOMATICALLY!"
+		echo ""
 
-        # Clean up backup automatically since validation passed
-        local backup_file="$BACKUP_DIR/pre_backup_${BACKUP_ID}.json"
-        rm -f "$backup_file"
+		# Clean up backup automatically since validation passed
+		local backup_file="$BACKUP_DIR/pre_backup_${BACKUP_ID}.json"
+		rm -f "$backup_file"
 
-        echo "🧹 Backup cleaned up automatically"
-        echo "🎉 Your corrections have been successfully applied."
-        echo ""
-        echo "🔄 Validation result:"
-        echo "$validation_result"
-        exit 0
-    fi
+		echo "🧹 Backup cleaned up automatically"
+		echo "🎉 Your corrections have been successfully applied."
+		echo ""
+		echo "🔄 Validation result:"
+		echo "$validation_result"
+		exit 0
+	fi
 }
 
 main "$@"

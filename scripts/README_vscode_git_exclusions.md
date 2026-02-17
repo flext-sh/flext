@@ -5,12 +5,14 @@ Este documento explica como configurar o VSCode para excluir arquivos que não e
 ## Problema
 
 Por padrão, o VSCode executa lints (Pylance, Ruff, etc.) em todos os arquivos Python do workspace, incluindo:
+
 - Arquivos temporários
 - Arquivos de cache
 - Arquivos ignorados pelo .gitignore
 - Arquivos não rastreados pelo git
 
 Isso pode causar:
+
 - Lentidão na análise
 - Falsos positivos nos lints
 - Análise de arquivos que não fazem parte do projeto
@@ -30,6 +32,7 @@ python scripts/update_vscode_git_exclusions.py
 ```
 
 Este script:
+
 1. Identifica arquivos não rastreados pelo git
 2. Gera padrões de exclusão apropriados
 3. Atualiza `.vscode/settings.json` automaticamente
@@ -39,6 +42,7 @@ Este script:
 O script configura as seguintes exclusões no VSCode:
 
 #### Python Analysis Exclusions
+
 ```json
 "python.analysis.exclude": [
     "**/node_modules",
@@ -57,6 +61,7 @@ O script configura as seguintes exclusões no VSCode:
 ```
 
 #### Ruff Exclusions
+
 ```json
 "ruff.exclude": [
     // Mesmas exclusões do Python analysis
@@ -64,6 +69,7 @@ O script configura as seguintes exclusões no VSCode:
 ```
 
 #### File Watcher Exclusions
+
 ```json
 "files.watcherExclude": {
     "node_modules": true,
@@ -84,6 +90,7 @@ O script configura as seguintes exclusões no VSCode:
 ## Uso Contínuo
 
 ### Atualização Manual
+
 Sempre que adicionar/remover arquivos do git:
 
 ```bash
@@ -91,6 +98,7 @@ make vscode-update
 ```
 
 ### Verificação
+
 Para verificar se as configurações estão aplicadas:
 
 1. Abra o VSCode
@@ -101,13 +109,16 @@ Para verificar se as configurações estão aplicadas:
 ## Troubleshooting
 
 ### Script não encontra arquivos
+
 Se o script não encontrar arquivos não rastreados, ele usa padrões padrão do .gitignore.
 
 ### VSCode não aplica as configurações
+
 - Feche e reabra o VSCode
 - Execute `Developer: Reload Window` no Command Palette
 
 ### Exclusões muito agressivas
+
 Edite `.vscode/settings.json` manualmente para ajustar os padrões de exclusão.
 
 ## Arquivos Afetados

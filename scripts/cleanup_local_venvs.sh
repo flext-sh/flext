@@ -18,13 +18,13 @@ echo ""
 LOCAL_VENVS=$(find "$WORKSPACE_ROOT" -maxdepth 2 -type d -name ".venv" ! -path "$WORKSPACE_ROOT/.venv" 2>/dev/null || true)
 
 if [ -z "$LOCAL_VENVS" ]; then
-    echo "No local .venv directories found. Already clean!"
-    exit 0
+	echo "No local .venv directories found. Already clean!"
+	exit 0
 fi
 
 echo "Found local .venv directories to remove:"
 echo "$LOCAL_VENVS" | while read -r venv; do
-    echo "  - $venv"
+	echo "  - $venv"
 done
 echo ""
 
@@ -33,18 +33,18 @@ read -p "Remove all these directories? [y/N] " -n 1 -r
 echo ""
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "$LOCAL_VENVS" | while read -r venv; do
-        if [ -d "$venv" ]; then
-            echo "Removing $venv..."
-            rm -rf "$venv"
-        fi
-    done
-    echo ""
-    echo "Done! All local .venv directories removed."
-    echo ""
-    echo "Next steps:"
-    echo "  1. Run 'source scripts/setup_env.sh' to configure environment"
-    echo "  2. Run 'make check' in any project to verify"
+	echo "$LOCAL_VENVS" | while read -r venv; do
+		if [ -d "$venv" ]; then
+			echo "Removing $venv..."
+			rm -rf "$venv"
+		fi
+	done
+	echo ""
+	echo "Done! All local .venv directories removed."
+	echo ""
+	echo "Next steps:"
+	echo "  1. Run 'source scripts/setup_env.sh' to configure environment"
+	echo "  2. Run 'make check' in any project to verify"
 else
-    echo "Aborted."
+	echo "Aborted."
 fi

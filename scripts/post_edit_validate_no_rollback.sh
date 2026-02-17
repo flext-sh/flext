@@ -20,8 +20,8 @@ PROJECT_ROOT="/home/marlonsc/flext"
 
 # Validate arguments
 if [[ $# -ne 4 ]]; then
-    echo "{\"error\": \"Usage: $0 <backup_id> <file_path> <old_text> <new_text>\"}" >&2
-    exit 1
+	echo "{\"error\": \"Usage: $0 <backup_id> <file_path> <old_text> <new_text>\"}" >&2
+	exit 1
 fi
 
 BACKUP_ID="$1"
@@ -33,16 +33,16 @@ BACKUP_FILE="$BACKUP_DIR/pre_backup_${BACKUP_ID}.json"
 
 # Validate after edit using comprehensive FLEXT quality checks (NO ROLLBACK)
 validate_post_edit() {
-    local file_path="$1"
+	local file_path="$1"
 
-    echo "🔍 Running comprehensive FLEXT post-validation (NO AUTO-ROLLBACK)..."
+	echo "🔍 Running comprehensive FLEXT post-validation (NO AUTO-ROLLBACK)..."
 
-    # Quality validation using FLEXT modules
-    echo "  🛡️ Running code quality validation..."
+	# Quality validation using FLEXT modules
+	echo "  🛡️ Running code quality validation..."
 
-    # Create a temporary validation script
-    local validation_script="/tmp/validate_post_$$.py"
-    cat > "$validation_script" << 'EOF'
+	# Create a temporary validation script
+	local validation_script="/tmp/validate_post_$$.py"
+	cat >"$validation_script" <<'EOF'
 import sys
 import json
 sys.path.insert(0, '/home/marlonsc/.claude/hooks/utils')
@@ -110,80 +110,80 @@ except Exception as e:
     sys.stdout.flush()
 EOF
 
-    local quality_result
-    quality_result=$(python3 "$validation_script" "$FILE_PATH" "$BACKUP_ID" "$BACKUP_FILE" 2>&1)
+	local quality_result
+	quality_result=$(python3 "$validation_script" "$FILE_PATH" "$BACKUP_ID" "$BACKUP_FILE" 2>&1)
 
-    # Clean up validation script
-    rm -f "$validation_script"
+	# Clean up validation script
+	rm -f "$validation_script"
 
-    # Extract JSON from quality result
-    local json_result
-    json_result=$(echo "$quality_result" | grep '^{' | tail -1)
+	# Extract JSON from quality result
+	local json_result
+	json_result=$(echo "$quality_result" | grep '^{' | tail -1)
 
-    # Parse quality results
-    local total_violations
-    total_violations=$(echo "$json_result" | jq -r '.total_violations // 0' 2>/dev/null || echo "0")
+	# Parse quality results
+	local total_violations
+	total_violations=$(echo "$json_result" | jq -r '.total_violations // 0' 2>/dev/null || echo "0")
 
-    local blocking_violations
-    blocking_violations=$(echo "$json_result" | jq -r '.blocking_violations // 0' 2>/dev/null || echo "0")
+	local blocking_violations
+	blocking_violations=$(echo "$json_result" | jq -r '.blocking_violations // 0' 2>/dev/null || echo "0")
 
-    echo "Found $total_violations total violations ($blocking_violations blocking)"
+	echo "Found $total_violations total violations ($blocking_violations blocking)"
 
-    if [[ "$blocking_violations" -gt 0 ]]; then
-        echo "❌ BLOCKING violations found - NO AUTO-ROLLBACK (you can fix and revalidate)"
-        echo "$json_result"
-        return 1
-    else
-        echo "✅ No blocking violations - validation passed"
-        if [[ "$total_violations" -gt 0 ]]; then
-            echo "⚠️ Found $((total_violations - blocking_violations)) warnings"
-        fi
-        echo "$json_result"
-        return 0
-    fi
+	if [[ $blocking_violations -gt 0 ]]; then
+		echo "❌ BLOCKING violations found - NO AUTO-ROLLBACK (you can fix and revalidate)"
+		echo "$json_result"
+		return 1
+	else
+		echo "✅ No blocking violations - validation passed"
+		if [[ $total_violations -gt 0 ]]; then
+			echo "⚠️ Found $((total_violations - blocking_violations)) warnings"
+		fi
+		echo "$json_result"
+		return 0
+	fi
 }
 
 # Confirm and apply changes (only when user says it's good)
 confirm_changes() {
-    local backup_file="$1"
+	local backup_file="$1"
 
-    if [[ ! -f "$backup_file" ]]; then
-        echo "❌ Backup file not found: $backup_file" >&2
-        return 1
-    fi
+	if [[ ! -f $backup_file ]]; then
+		echo "❌ Backup file not found: $backup_file" >&2
+		return 1
+	fi
 
-    # Clean up backup (confirm changes are good)
-    rm -f "$backup_file"
-    echo "✅ Changes confirmed - backup cleaned up"
-    return 0
+	# Clean up backup (confirm changes are good)
+	rm -f "$backup_file"
+	echo "✅ Changes confirmed - backup cleaned up"
+	return 0
 }
 
 # Main execution
 main() {
-    echo "🚀 Starting post-edit validation (NO AUTO-ROLLBACK) for: $FILE_PATH"
+	echo "🚀 Starting post-edit validation (NO AUTO-ROLLBACK) for: $FILE_PATH"
 
-    # Validate the result (NO rollback)
-    local validation_result
-    if ! validation_result=$(validate_post_edit "$FILE_PATH"); then
-        echo ""
-        echo "💡 To fix violations and revalidate:"
-        echo "   1. Make your corrections to $FILE_PATH"
-        echo "   2. Run: ./scripts/post_edit_validate_no_rollback.sh $BACKUP_ID \"$FILE_PATH\" \"$OLD_TEXT\" \"$NEW_TEXT\""
-        echo "   3. When ready to confirm: ./scripts/confirm_changes.sh $BACKUP_ID"
-        echo ""
-        echo "🔄 Current validation result:"
-        echo "$validation_result"
-        exit 1
-    else
-        echo ""
-        echo "🎉 SUCCESS! No blocking violations found."
-        echo "💡 To confirm and keep these changes, run:"
-        echo "   ./scripts/confirm_changes.sh $BACKUP_ID"
-        echo ""
-        echo "🔄 Validation result:"
-        echo "$validation_result"
-        exit 0
-    fi
+	# Validate the result (NO rollback)
+	local validation_result
+	if ! validation_result=$(validate_post_edit "$FILE_PATH"); then
+		echo ""
+		echo "💡 To fix violations and revalidate:"
+		echo "   1. Make your corrections to $FILE_PATH"
+		echo "   2. Run: ./scripts/post_edit_validate_no_rollback.sh $BACKUP_ID \"$FILE_PATH\" \"$OLD_TEXT\" \"$NEW_TEXT\""
+		echo "   3. When ready to confirm: ./scripts/confirm_changes.sh $BACKUP_ID"
+		echo ""
+		echo "🔄 Current validation result:"
+		echo "$validation_result"
+		exit 1
+	else
+		echo ""
+		echo "🎉 SUCCESS! No blocking violations found."
+		echo "💡 To confirm and keep these changes, run:"
+		echo "   ./scripts/confirm_changes.sh $BACKUP_ID"
+		echo ""
+		echo "🔄 Validation result:"
+		echo "$validation_result"
+		exit 0
+	fi
 }
 
 main "$@"

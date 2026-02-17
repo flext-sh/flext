@@ -47,14 +47,14 @@ poetry show --tree                      # Dependency tree
 
 ## Build/Lint/Test Commands
 
-| Command | Description |
-|---------|-------------|
-| `make lint` | Ruff linting (ZERO violations) |
-| `make format` | Auto-format with Ruff |
-| `make type-check` | Pyrefly (ZERO errors) |
-| `make test` | Tests with 80% coverage |
-| `make test-fast` | Tests without coverage |
-| `make validate` | Full pipeline (before PR) |
+| Command           | Description                    |
+| ----------------- | ------------------------------ |
+| `make lint`       | Ruff linting (ZERO violations) |
+| `make format`     | Auto-format with Ruff          |
+| `make type-check` | Pyrefly (ZERO errors)          |
+| `make test`       | Tests with 80% coverage        |
+| `make test-fast`  | Tests without coverage         |
+| `make validate`   | Full pipeline (before PR)      |
 
 ## Code Style
 
@@ -137,12 +137,12 @@ def test_validate_user_with_valid_email_returns_success():
 
 ## Quality Thresholds
 
-| Check | Tool | Threshold |
-|-------|------|-----------|
-| Coverage | pytest-cov | 80% minimum |
-| Types | Pyrefly | ZERO errors |
-| Linting | Ruff | ZERO violations |
-| Security | Bandit | ZERO high/medium |
+| Check    | Tool       | Threshold        |
+| -------- | ---------- | ---------------- |
+| Coverage | pytest-cov | 80% minimum      |
+| Types    | Pyrefly    | ZERO errors      |
+| Linting  | Ruff       | ZERO violations  |
+| Security | Bandit     | ZERO high/medium |
 
 ## Pydantic 2 Patterns (MANDATORY)
 
@@ -160,6 +160,7 @@ if u.Guards.is_configuration_dict(data):
 ```
 
 Benefits:
+
 - Type-safe narrowing without cast()
 - No type: ignore comments
 - Runtime validation
@@ -178,6 +179,7 @@ result: m.Result.Success = ...
 ```
 
 Pattern:
+
 - `m.Base` - Standard ConfigDict
 - `m.Core.*` - Core framework models
 - `m.Result.*` - Result models
@@ -197,6 +199,7 @@ model_config = ConfigDict(
 ```
 
 Settings:
+
 - `validate_assignment`: Validate on attribute assignment
 - `use_enum_values`: Serialize enums to values
 - `extra="forbid"`: Reject unknown fields
@@ -212,20 +215,20 @@ from pydantic import field_validator, model_validator, computed_field
 class User(BaseModel):
     email: str
     password: str
-    
+
     @field_validator("email")
     @classmethod
     def validate_email(cls, v: str) -> str:
         if "@" not in v:
             raise ValueError("Invalid email format")
         return v.lower()
-    
+
     @model_validator(mode="after")
     def validate_model(self) -> Self:
         if len(self.password) < 8:
             raise ValueError("Password too short")
         return self
-    
+
     @computed_field
     @property
     def domain(self) -> str:
@@ -233,6 +236,7 @@ class User(BaseModel):
 ```
 
 Patterns:
+
 - `@field_validator`: Validate individual fields
 - `@model_validator`: Validate entire model
 - `@computed_field`: Computed properties
@@ -250,16 +254,16 @@ TypedDict                       # Use Pydantic models instead
 
 ## Key Patterns
 
-| Pattern | Usage |
-|---------|-------|
-| `r[T].ok(value)` | Success result |
-| `r[T].fail(msg)` | Failure result |
-| `result.flat_map(fn)` | Chain operations |
-| `result.is_success` | Check success |
-| `result.value` | Get value |
-| `p.Domain.Service` | Protocol (full namespace) |
-| `m.Entity.Entity` | Model (full namespace) |
-| `c.Core.CONSTANT` | Constant (full namespace) |
+| Pattern               | Usage                     |
+| --------------------- | ------------------------- |
+| `r[T].ok(value)`      | Success result            |
+| `r[T].fail(msg)`      | Failure result            |
+| `result.flat_map(fn)` | Chain operations          |
+| `result.is_success`   | Check success             |
+| `result.value`        | Get value                 |
+| `p.Domain.Service`    | Protocol (full namespace) |
+| `m.Entity.Entity`     | Model (full namespace)    |
+| `c.Core.CONSTANT`     | Constant (full namespace) |
 
 ## Dependency Injection
 

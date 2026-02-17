@@ -27,16 +27,18 @@ OLD_STRING="$3"
 NEW_STRING="$4"
 
 # Create JSON for hooks
-TOOL_INPUT_JSON=$(cat <<EOF
+TOOL_INPUT_JSON=$(
+	cat <<EOF
 {
   "file_path": "$FILE_PATH",
-  "old_string": $(jq -R <<< "$OLD_STRING"),
-  "new_string": $(jq -R <<< "$NEW_STRING")
+  "old_string": $(jq -R <<<"$OLD_STRING"),
+  "new_string": $(jq -R <<<"$NEW_STRING")
 }
 EOF
 )
 
-HOOK_DATA=$(cat <<EOF
+HOOK_DATA=$(
+	cat <<EOF
 {
   "tool_name": "$TOOL_NAME",
   "tool_input": $TOOL_INPUT_JSON,
@@ -54,9 +56,9 @@ log_info "Running pre-edit validation..."
 PRE_RESULT=$(echo "$HOOK_DATA" | python3 "$HOOKS_DIR/pre_tool_use.py" 2>&1)
 
 if echo "$PRE_RESULT" | grep -q '"decision": "block"'; then
-    log_error "PRE-EDIT VALIDATION FAILED"
-    echo "$PRE_RESULT" | jq -r '.reason'
-    exit 1
+	log_error "PRE-EDIT VALIDATION FAILED"
+	echo "$PRE_RESULT" | jq -r '.reason'
+	exit 1
 fi
 
 log_success "Pre-edit validation passed"
@@ -71,19 +73,19 @@ log_info "Running post-edit validation..."
 POST_RESULT=$(echo "$HOOK_DATA" | python3 "$HOOKS_DIR/post_tool_use.py" 2>&1)
 
 if echo "$POST_RESULT" | grep -q '"decision": "block"'; then
-    log_error "POST-EDIT VALIDATION FAILED"
+	log_error "POST-EDIT VALIDATION FAILED"
 
-    # Extract error and check for skill reference
-    ERROR_MSG=$(echo "$POST_RESULT" | jq -r '.reason')
-    REFERENCED_SKILL=$(echo "$ERROR_MSG" | grep -o '/[a-z-]*' | head -1 || echo "")
+	# Extract error and check for skill reference
+	ERROR_MSG=$(echo "$POST_RESULT" | jq -r '.reason')
+	REFERENCED_SKILL=$(echo "$ERROR_MSG" | grep -o '/[a-z-]*' | head -1 || echo "")
 
-    echo "$ERROR_MSG"
+	echo "$ERROR_MSG"
 
-    if [ -n "$REFERENCED_SKILL" ]; then
-        log_warning "Consider using skill: $REFERENCED_SKILL"
-    fi
+	if [ -n "$REFERENCED_SKILL" ]; then
+		log_warning "Consider using skill: $REFERENCED_SKILL"
+	fi
 
-    exit 1
+	exit 1
 fi
 
 log_success "Post-edit validation passed"

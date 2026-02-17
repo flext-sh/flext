@@ -13,9 +13,9 @@ NC='\033[0m'
 
 # Validate arguments
 if [[ $# -ne 1 ]]; then
-    echo "Usage: $0 <backup_id>" >&2
-    echo "Example: $0 1767030885_2967137_21051" >&2
-    exit 1
+	echo "Usage: $0 <backup_id>" >&2
+	echo "Example: $0 1767030885_2967137_21051" >&2
+	exit 1
 fi
 
 BACKUP_ID="$1"
@@ -23,18 +23,18 @@ BACKUP_FILE="$BACKUP_DIR/pre_backup_${BACKUP_ID}.json"
 
 echo "🔄 Confirming fixes for backup: $BACKUP_ID"
 
-if [[ ! -f "$BACKUP_FILE" ]]; then
-    echo "❌ Backup file not found: $BACKUP_FILE" >&2
-    echo "💡 This backup may have already been confirmed or the validation failed." >&2
-    exit 1
+if [[ ! -f $BACKUP_FILE ]]; then
+	echo "❌ Backup file not found: $BACKUP_FILE" >&2
+	echo "💡 This backup may have already been confirmed or the validation failed." >&2
+	exit 1
 fi
 
 # Get file path from backup for confirmation
 FILE_PATH=$(jq -r '.file_path' "$BACKUP_FILE" 2>/dev/null || echo "")
 
-if [[ -z "$FILE_PATH" ]]; then
-    echo "❌ Could not determine file path from backup" >&2
-    exit 1
+if [[ -z $FILE_PATH ]]; then
+	echo "❌ Could not determine file path from backup" >&2
+	exit 1
 fi
 
 echo "📁 File: $FILE_PATH"

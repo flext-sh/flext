@@ -44,30 +44,30 @@ from flext_core._utilities.conversion import FlextUtilitiesConversion
 
 ### Core Classes (20+ utility classes)
 
-| Class | Namespace | Purpose | Count |
-|-------|-----------|---------|-------|
-| **FlextUtilitiesConversion** | `u.Conversion` | Value type conversion (3 methods) | NEW |
-| **FlextUtilitiesMapper** | `u.Mapper` | Data structure mapping (91 methods) | UPDATED |
-| **FlextUtilitiesCollection** | `u.Collection` | List/dict/set operations | 40+ |
-| **FlextUtilitiesValidator** | `u.Validator` | Value validation | 30+ |
-| **FlextUtilitiesParser** | `u.Parser` | String/data parsing | 25+ |
-| **FlextUtilitiesPattern** | `u.Pattern` | Regex pattern matching | 20+ |
-| **FlextUtilitiesGuards** | `u.Guards` | Type guards and narrowing | 20+ |
-| **FlextUtilitiesCast** | `u.Cast` | Type casting utilities | 15+ |
-| **FlextUtilitiesText** | `u.Text` | String manipulation | 20+ |
-| **FlextUtilitiesEnum** | `u.Enum` | Enum utilities | 10+ |
-| **FlextUtilitiesContext** | `u.Context` | Context/state management | 8+ |
-| **FlextUtilitiesCache** | `u.Cache` | Caching utilities | 5+ |
-| **FlextUtilitiesConfiguration** | `u.Configuration` | Config handling | 8+ |
-| **FlextUtilitiesDomain** | `u.Domain` | Domain model utilities | 10+ |
-| **FlextUtilitiesDeprecation** | `u.Deprecation` | Deprecation handling | 4 |
-| **FlextUtilitiesGenerators** | `u.Generators` | Data generators | 10+ |
-| **FlextUtilitiesModel** | `u.Model` | Pydantic model utilities | 12+ |
-| **FlextUtilitiesPagination** | `u.Pagination` | Pagination utilities | 5+ |
-| **FlextUtilitiesReliability** | `u.Reliability` | Retry/circuit breaker | 8+ |
-| **FlextUtilitiesValidation** | `u.Validation` | Data validation | 15+ |
-| **FlextUtilitiesChecker** | `u.Checker` | Type/value checking | 12+ |
-| **FlextUtilitiesArgs** | `u.Args` | CLI argument handling | 8+ |
+| Class                           | Namespace         | Purpose                             | Count   |
+| ------------------------------- | ----------------- | ----------------------------------- | ------- |
+| **FlextUtilitiesConversion**    | `u.Conversion`    | Value type conversion (3 methods)   | NEW     |
+| **FlextUtilitiesMapper**        | `u.Mapper`        | Data structure mapping (91 methods) | UPDATED |
+| **FlextUtilitiesCollection**    | `u.Collection`    | List/dict/set operations            | 40+     |
+| **FlextUtilitiesValidator**     | `u.Validator`     | Value validation                    | 30+     |
+| **FlextUtilitiesParser**        | `u.Parser`        | String/data parsing                 | 25+     |
+| **FlextUtilitiesPattern**       | `u.Pattern`       | Regex pattern matching              | 20+     |
+| **FlextUtilitiesGuards**        | `u.Guards`        | Type guards and narrowing           | 20+     |
+| **FlextUtilitiesCast**          | `u.Cast`          | Type casting utilities              | 15+     |
+| **FlextUtilitiesText**          | `u.Text`          | String manipulation                 | 20+     |
+| **FlextUtilitiesEnum**          | `u.Enum`          | Enum utilities                      | 10+     |
+| **FlextUtilitiesContext**       | `u.Context`       | Context/state management            | 8+      |
+| **FlextUtilitiesCache**         | `u.Cache`         | Caching utilities                   | 5+      |
+| **FlextUtilitiesConfiguration** | `u.Configuration` | Config handling                     | 8+      |
+| **FlextUtilitiesDomain**        | `u.Domain`        | Domain model utilities              | 10+     |
+| **FlextUtilitiesDeprecation**   | `u.Deprecation`   | Deprecation handling                | 4       |
+| **FlextUtilitiesGenerators**    | `u.Generators`    | Data generators                     | 10+     |
+| **FlextUtilitiesModel**         | `u.Model`         | Pydantic model utilities            | 12+     |
+| **FlextUtilitiesPagination**    | `u.Pagination`    | Pagination utilities                | 5+      |
+| **FlextUtilitiesReliability**   | `u.Reliability`   | Retry/circuit breaker               | 8+      |
+| **FlextUtilitiesValidation**    | `u.Validation`    | Data validation                     | 15+     |
+| **FlextUtilitiesChecker**       | `u.Checker`       | Type/value checking                 | 12+     |
+| **FlextUtilitiesArgs**          | `u.Args`          | CLI argument handling               | 8+      |
 
 **Total**: 548+ centralized utility methods in flext-core
 
@@ -78,6 +78,7 @@ from flext_core._utilities.conversion import FlextUtilitiesConversion
 **Purpose**: Safe conversion to list of strings, filtering nested list structures
 
 **Signature**:
+
 ```python
 @staticmethod
 def to_str_list_safe(
@@ -89,6 +90,7 @@ def to_str_list_safe(
 ```
 
 **Usage**:
+
 ```python
 from flext_core.utilities import u
 
@@ -106,6 +108,7 @@ result = u.Conversion.to_str_list_safe(["a", ["b"]], filter_list_like=False)
 ```
 
 **Use Cases**:
+
 - Flatten mixed data structures to flat strings
 - Prevent deeply nested lists in results
 - Safe user input processing
@@ -115,6 +118,7 @@ result = u.Conversion.to_str_list_safe(["a", ["b"]], filter_list_like=False)
 **Purpose**: Safe conversion to list of strings, filtering falsy values
 
 **Signature**:
+
 ```python
 @staticmethod
 def to_str_list_truthy(
@@ -124,6 +128,7 @@ def to_str_list_truthy(
 ```
 
 **Usage**:
+
 ```python
 from flext_core.utilities import u
 
@@ -141,6 +146,7 @@ result = u.Conversion.to_str_list_truthy(None)
 ```
 
 **Use Cases**:
+
 - Clean up lists with empty/None values
 - Filter empty strings from results
 - Prepare data for downstream processing
@@ -150,6 +156,7 @@ result = u.Conversion.to_str_list_truthy(None)
 **Purpose**: Find first matching predicate from dictionary of predicates
 
 **Signature**:
+
 ```python
 @staticmethod
 def find_callable[T](
@@ -160,6 +167,7 @@ def find_callable[T](
 ```
 
 **Usage**:
+
 ```python
 from flext_core.utilities import u
 
@@ -182,6 +190,7 @@ result = u.Mapper.find_callable(predicates, "no_match")
 ```
 
 **Use Cases**:
+
 - Pattern matching on values
 - Dynamic dispatch based on predicates
 - Classification of input types
@@ -196,6 +205,7 @@ result = u.Mapper.find_callable(predicates, "no_match")
 **Namespace**: `u.Ldif.*`
 
 **Domain-specific utilities** (NOT in flext-core):
+
 - LDIF entry parsing and validation
 - DN (Distinguished Name) manipulation
 - LDIF schema handling
@@ -203,6 +213,7 @@ result = u.Mapper.find_callable(predicates, "no_match")
 - Custom LDIF operations
 
 **Example**:
+
 ```python
 from flext_ldif.utilities import u
 
@@ -218,6 +229,7 @@ entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
 **Namespace**: `u.Ldap.*`
 
 **Domain-specific utilities** (NOT in flext-core):
+
 - LDAP directory operations
 - Active Directory integration
 - User/group management
@@ -229,6 +241,7 @@ entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
 **Namespace**: `u.Cli.*`
 
 **Domain-specific utilities** (NOT in flext-core):
+
 - Command-line argument parsing
 - Interactive prompts
 - Output formatting
@@ -240,6 +253,7 @@ entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
 **Namespace**: `u.Migration.*`
 
 **Domain-specific utilities** (NOT in flext-core):
+
 - OUD migration-specific operations
 - Data transformation for migration
 - Validation rules for migration
@@ -329,4 +343,4 @@ All utilities must meet:
 
 ---
 
-**Questions?** File an issue at https://github.com/anthropics/flext/issues
+**Questions?** File an issue at <https://github.com/anthropics/flext/issues>

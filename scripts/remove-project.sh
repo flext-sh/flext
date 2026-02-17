@@ -23,18 +23,18 @@ ensure_jq
 
 PROJECT="${1:-}"
 
-if [[ -z "$PROJECT" ]]; then
-    echo ""
-    echo "Uso: $0 <project-name>"
-    echo ""
-    echo "Projetos externos registrados:"
-    list_external_projects | while read -r p; do
-        local org
-        org=$(get_project_info "$p" "org")
-        echo "  - $p ($org)"
-    done
-    echo ""
-    exit 1
+if [[ -z $PROJECT ]]; then
+	echo ""
+	echo "Uso: $0 <project-name>"
+	echo ""
+	echo "Projetos externos registrados:"
+	list_external_projects | while read -r p; do
+		local org
+		org=$(get_project_info "$p" "org")
+		echo "  - $p ($org)"
+	done
+	echo ""
+	exit 1
 fi
 
 # =============================================================================
@@ -45,9 +45,9 @@ box "Remover Projeto Externo"
 
 # 1. Check if project is registered
 if ! is_external_project "$PROJECT"; then
-    error "Projeto $PROJECT nao esta registrado como externo"
-    echo -e "  ${DIM}Verifique com: make discover${NC}"
-    exit 1
+	error "Projeto $PROJECT nao esta registrado como externo"
+	echo -e "  ${DIM}Verifique com: make discover${NC}"
+	exit 1
 fi
 
 # Get project info before removal
@@ -62,21 +62,21 @@ info "URL: $URL"
 # 2. Confirm removal
 echo ""
 if ! confirm "Remover projeto $PROJECT do workspace?" "n"; then
-    info "Cancelado"
-    exit 0
+	info "Cancelado"
+	exit 0
 fi
 
 # 3. Remove from external-projects.json
 echo ""
 info "Removendo de .flext/external-projects.json..."
-jq "del(.projects[\"$PROJECT\"])" .flext/external-projects.json > .flext/external-projects.json.tmp
+jq "del(.projects[\"$PROJECT\"])" .flext/external-projects.json >.flext/external-projects.json.tmp
 mv .flext/external-projects.json.tmp .flext/external-projects.json
 success "Removido de .flext/external-projects.json"
 
 # 4. Remove from pyproject.toml
 echo ""
 info "Removendo de pyproject.toml..."
-python3 << EOF || true
+python3 <<EOF || true
 try:
     import tomlkit
     with open('pyproject.toml', 'r') as f:
@@ -100,36 +100,36 @@ success "Removido de pyproject.toml"
 # 5. Remove directory
 echo ""
 if [[ -d "./$PROJECT" ]]; then
-    if confirm "Remover diretorio ./$PROJECT?" "n"; then
-        # Check for uncommitted changes
-        if has_changes "./$PROJECT"; then
-            warn "Existem mudancas nao commitadas em $PROJECT"
-            if ! confirm "Remover mesmo assim? (mudancas serao perdidas)" "n"; then
-                info "Diretorio mantido"
-            else
-                rm -rf "./$PROJECT"
-                success "Diretorio removido"
-            fi
-        else
-            rm -rf "./$PROJECT"
-            success "Diretorio removido"
-        fi
-    else
-        info "Diretorio mantido em ./$PROJECT"
-    fi
+	if confirm "Remover diretorio ./$PROJECT?" "n"; then
+		# Check for uncommitted changes
+		if has_changes "./$PROJECT"; then
+			warn "Existem mudancas nao commitadas em $PROJECT"
+			if ! confirm "Remover mesmo assim? (mudancas serao perdidas)" "n"; then
+				info "Diretorio mantido"
+			else
+				rm -rf "./$PROJECT"
+				success "Diretorio removido"
+			fi
+		else
+			rm -rf "./$PROJECT"
+			success "Diretorio removido"
+		fi
+	else
+		info "Diretorio mantido em ./$PROJECT"
+	fi
 else
-    info "Diretorio ./$PROJECT nao existe"
+	info "Diretorio ./$PROJECT nao existe"
 fi
 
 # 6. Update poetry.lock
 echo ""
 if confirm "Executar poetry lock?" "n"; then
-    info "Atualizando poetry.lock..."
-    if poetry lock --no-update 2>/dev/null; then
-        success "Lock atualizado"
-    else
-        warn "poetry lock falhou - execute manualmente depois"
-    fi
+	info "Atualizando poetry.lock..."
+	if poetry lock --no-update 2>/dev/null; then
+		success "Lock atualizado"
+	else
+		warn "poetry lock falhou - execute manualmente depois"
+	fi
 fi
 
 # Summary

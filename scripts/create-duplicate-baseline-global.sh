@@ -30,10 +30,10 @@ log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 # Generate global baseline
 ################################################################################
 generate_baseline() {
-    log_info "Generating global workspace duplicate baseline..."
+	log_info "Generating global workspace duplicate baseline..."
 
-    # Use Python to run workspace analysis
-    python3 << 'PYTHON_SCRIPT'
+	# Use Python to run workspace analysis
+	python3 <<'PYTHON_SCRIPT'
 from pathlib import Path
 import json
 import sys
@@ -105,13 +105,13 @@ consolidation_target_priority = [
 
 PYTHON_SCRIPT
 
-    log_success "Global baseline generated"
+	log_success "Global baseline generated"
 }
 
 # Main execution
-generate_baseline > "$BASELINE_FILE" 2>&1 || {
-    log_error "Failed to generate baseline"
-    exit 1
+generate_baseline >"$BASELINE_FILE" 2>&1 || {
+	log_error "Failed to generate baseline"
+	exit 1
 }
 
 log_success "Baseline saved to: $BASELINE_FILE"

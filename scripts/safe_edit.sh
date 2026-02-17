@@ -16,8 +16,8 @@ NC='\033[0m'
 
 # Validate arguments
 if [[ $# -ne 3 ]]; then
-    echo -e "${RED}Usage: $0 <file_path> <old_text> <new_text>${NC}" >&2
-    exit 1
+	echo -e "${RED}Usage: $0 <file_path> <old_text> <new_text>${NC}" >&2
+	exit 1
 fi
 
 FILE_PATH="$1"
@@ -26,9 +26,9 @@ NEW_TEXT="$3"
 
 # Execute automatic edit with full hook integration
 if "$AUTO_EDIT_SCRIPT" "Edit" "$FILE_PATH" "$OLD_TEXT" "$NEW_TEXT"; then
-    echo -e "${GREEN}✅ Edit completed successfully with quality assurance${NC}"
-    exit 0
+	echo -e "${GREEN}✅ Edit completed successfully with quality assurance${NC}"
+	exit 0
 else
-    echo -e "${RED}❌ Edit failed - automatic rollback performed${NC}" >&2
-    exit 1
+	echo -e "${RED}❌ Edit failed - automatic rollback performed${NC}" >&2
+	exit 1
 fi

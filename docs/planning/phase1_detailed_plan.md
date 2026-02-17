@@ -9,6 +9,7 @@
 Phase 1 is the **foundation phase** that establishes all patterns and infrastructure for the entire migration. All subsequent phases depend on the patterns created here.
 
 **Key Deliverables**:
+
 1. TypeGuard infrastructure (replaces cast())
 2. Hierarchical Pydantic model patterns
 3. Standard ConfigDict settings
@@ -43,32 +44,32 @@ from flext_core.typings import t
 
 class Guards:
     """Type guards for common Flext types."""
-    
+
     @staticmethod
     def is_config(obj: object) -> TypeGuard[m.Core.Config]:
         """Check if object is a Config model."""
         return isinstance(obj, m.Core.Config)
-    
+
     @staticmethod
     def is_context(obj: object) -> TypeGuard[m.Core.Context]:
         """Check if object is a Context model."""
         return isinstance(obj, m.Core.Context)
-    
+
     @staticmethod
     def is_result_success(obj: object) -> TypeGuard[m.Result.Success]:
         """Check if object is a successful Result."""
         return isinstance(obj, m.Result.Success)
-    
+
     @staticmethod
     def is_result_failure(obj: object) -> TypeGuard[m.Result.Failure]:
         """Check if object is a failed Result."""
         return isinstance(obj, m.Result.Failure)
-    
+
     @staticmethod
     def is_dict_with_keys(obj: object, *keys: str) -> TypeGuard[dict]:
         """Check if object is a dict with specific keys."""
         return isinstance(obj, dict) and all(k in obj for k in keys)
-    
+
     @staticmethod
     def is_list_of(obj: object, item_type: type) -> TypeGuard[list]:
         """Check if object is a list of specific type."""
@@ -86,7 +87,7 @@ from typing import TypeGuard
 
 class TestGuards:
     """Type guards for test fixtures and mock data."""
-    
+
     @staticmethod
     def is_user_response(obj: object) -> TypeGuard[dict]:
         """Check if object is a user response fixture."""
@@ -96,7 +97,7 @@ class TestGuards:
             and "email" in obj
             and "created_at" in obj
         )
-    
+
     @staticmethod
     def is_config_response(obj: object) -> TypeGuard[dict]:
         """Check if object is a config response fixture."""
@@ -105,7 +106,7 @@ class TestGuards:
             and "app_name" in obj
             and "version" in obj
         )
-    
+
     @staticmethod
     def is_error_response(obj: object) -> TypeGuard[dict]:
         """Check if object is an error response fixture."""
@@ -164,6 +165,7 @@ grep -r "TypedDict" flext-core/src/ | grep -v "test" | wc -l
 #### Step 1: Analyze TypedDict Categories
 
 Group the 86 TypedDicts into categories:
+
 - **Config models**: DispatcherConfig, BatchConfig, etc.
 - **Result models**: BatchResultDict, ProcessResultDict, etc.
 - **Context models**: ContextDict, StateDict, etc.
@@ -178,7 +180,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class FlextModels:
     """Hierarchical namespace for all Flext models."""
-    
+
     class Base(BaseModel):
         """Base model with standard Flext configuration."""
         model_config = ConfigDict(
@@ -187,30 +189,30 @@ class FlextModels:
             extra="forbid",
             str_strip_whitespace=True,
         )
-    
+
     class Core:
         """Core framework models."""
-        
+
         class Config(FlextModels.Base):
             """Configuration models."""
             app_name: str = Field(description="Application name")
             version: str = Field(description="Version string")
             # ... other config fields
-        
+
         class Context(FlextModels.Base):
             """Context models."""
             request_id: str = Field(description="Request ID")
             user_id: str | None = Field(None, description="User ID")
             # ... other context fields
-    
+
     class Result:
         """Result models."""
-        
+
         class Success(FlextModels.Base):
             """Successful result."""
             data: dict = Field(description="Result data")
             timestamp: str = Field(description="Timestamp")
-        
+
         class Failure(FlextModels.Base):
             """Failed result."""
             error_code: str = Field(description="Error code")
@@ -496,10 +498,11 @@ Use TypeGuards for type narrowing instead of cast():
 from flext_core.utilities.guards import Guards
 
 if Guards.is_config(obj):
-    obj.app_name  # Type narrowed, no cast() needed
+obj.app_name # Type narrowed, no cast() needed
 \`\`\`
 
 Benefits:
+
 - Type-safe narrowing
 - No type: ignore comments
 - Runtime validation
@@ -522,10 +525,11 @@ result: m.Result.Success = ...
 \`\`\`
 
 Pattern:
+
 - FlextModels.Base - Standard ConfigDict
-- FlextModels.Core.* - Core framework models
-- FlextModels.Result.* - Result models
-- FlextModels.Data.* - Data models
+- FlextModels.Core.\* - Core framework models
+- FlextModels.Result.\* - Result models
+- FlextModels.Data.\* - Data models
 ```
 
 #### ConfigDict Standards
@@ -537,10 +541,10 @@ All models use standard ConfigDict settings:
 
 \`\`\`python
 model_config = ConfigDict(
-    validate_assignment=True,
-    use_enum_values=True,
-    extra="forbid",
-    str_strip_whitespace=True,
+validate_assignment=True,
+use_enum_values=True,
+extra="forbid",
+str_strip_whitespace=True,
 )
 \`\`\`
 
@@ -573,30 +577,36 @@ docs(flext-core): update AGENTS.md with Pydantic 2 patterns
 ## Success Criteria for Phase 1
 
 ✅ **Infrastructure**
+
 - TypeGuard utilities created and tested
 - Test guards available for all projects
 
 ✅ **Models**
+
 - All 86 TypedDicts converted to Pydantic models
 - Hierarchical organization in FlextModels namespace
 - All models inherit from FlextModels.Base
 
 ✅ **Type Safety**
+
 - Zero cast() in flext-core src/
 - All replaced with TypeGuards
 - Type checking passes
 
 ✅ **Standardization**
+
 - All 127+ models have standard ConfigDict
 - Settings consistent across project
 
 ✅ **Quality**
+
 - `make validate PROJECT=flext-core` passes
 - 80%+ coverage maintained
 - Zero lint violations
 - Zero type errors
 
 ✅ **Documentation**
+
 - AGENTS.md updated with patterns
 - Patterns documented with examples
 - Ready for other projects to follow
@@ -605,14 +615,14 @@ docs(flext-core): update AGENTS.md with Pydantic 2 patterns
 
 ## Timeline
 
-| Task | Duration | Start | End |
-|------|----------|-------|-----|
-| 1.1: TypeGuard Infrastructure | 1 day | Day 1 | Day 1 |
-| 1.2: TypedDict Migration | 1.5 days | Day 1 | Day 2 |
-| 1.3: cast() Elimination | 1 day | Day 2 | Day 3 |
-| 1.4: ConfigDict Standardization | 0.5 days | Day 3 | Day 3 |
-| 1.5: Validation & Docs | 0.5 days | Day 3 | Day 3 |
-| **Total** | **4 days** | | |
+| Task                            | Duration   | Start | End   |
+| ------------------------------- | ---------- | ----- | ----- |
+| 1.1: TypeGuard Infrastructure   | 1 day      | Day 1 | Day 1 |
+| 1.2: TypedDict Migration        | 1.5 days   | Day 1 | Day 2 |
+| 1.3: cast() Elimination         | 1 day      | Day 2 | Day 3 |
+| 1.4: ConfigDict Standardization | 0.5 days   | Day 3 | Day 3 |
+| 1.5: Validation & Docs          | 0.5 days   | Day 3 | Day 3 |
+| **Total**                       | **4 days** |       |       |
 
 ---
 
@@ -630,6 +640,7 @@ If issues arise:
 ## Next Phase
 
 Once Phase 1 completes successfully:
+
 - All patterns established
 - Infrastructure ready
 - Ready to parallelize Phases 2-6
