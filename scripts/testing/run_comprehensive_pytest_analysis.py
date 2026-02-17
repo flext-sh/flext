@@ -174,20 +174,24 @@ class PytestAnalyzer:
                 passed += 1
                 if "::" in line:
                     test_name = line.split("::")[-1].strip()
-                    test_results.append({
-                        "nodeid": test_name,
-                        "outcome": "passed",
-                        "longrepr": None,
-                    })
+                    test_results.append(
+                        {
+                            "nodeid": test_name,
+                            "outcome": "passed",
+                            "longrepr": None,
+                        }
+                    )
             elif line.startswith(("FAILED", "ERROR")):
                 failed += 1
                 if "::" in line:
                     test_name = line.split("::")[-1].strip()
-                    test_results.append({
-                        "nodeid": test_name,
-                        "outcome": "failed",
-                        "longrepr": line,
-                    })
+                    test_results.append(
+                        {
+                            "nodeid": test_name,
+                            "outcome": "failed",
+                            "longrepr": line,
+                        }
+                    )
                     errors.append(line)
 
             # Extract summary from result lines

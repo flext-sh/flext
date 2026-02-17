@@ -136,12 +136,14 @@ class CursorStatusMonitor:
                 if hook_file.is_file():
                     git_hook = hooks_dir / hook_file.name
                     installed = git_hook.exists()
-                    status["installed_hooks"].append({
-                        "name": hook_file.name,
-                        "installed": installed,
-                        "source": str(hook_file),
-                        "target": str(git_hook),
-                    })
+                    status["installed_hooks"].append(
+                        {
+                            "name": hook_file.name,
+                            "installed": installed,
+                            "source": str(hook_file),
+                            "target": str(git_hook),
+                        }
+                    )
 
         return status
 
@@ -157,11 +159,13 @@ class CursorStatusMonitor:
         if extensions_dir.exists():
             for ext_file in extensions_dir.glob("*.js"):
                 if ext_file.is_file():
-                    status["extensions"].append({
-                        "name": ext_file.name,
-                        "path": str(ext_file),
-                        "size": ext_file.stat().st_size,
-                    })
+                    status["extensions"].append(
+                        {
+                            "name": ext_file.name,
+                            "path": str(ext_file),
+                            "size": ext_file.stat().st_size,
+                        }
+                    )
 
         return status
 
