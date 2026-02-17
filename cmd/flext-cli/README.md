@@ -1,8 +1,13 @@
 # flext-cli
 
+**Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
+
+
 **Type**: Go Service | **Status**: Active Development | **Dependencies**: Go 1.24+
 
 Command-line interface service for FLEXT data integration platform.
+
+Part of the [FLEXT](https://github.com/flext/flext) ecosystem.
 
 > ⚠️ Development Status: Basic CLI bootstrap working; shared_kernel package conflicts; pipeline commands not implemented yet.
 

@@ -1,5 +1,8 @@
 # ADR-001: Railway-Oriented Programming with FlextResult[T]
 
+**Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
+
+
 ## Table of Contents
 
 - [ADR-001: Railway-Oriented Programming with FlextResult[T]](#adr-001-railway-oriented-programming-with-flextresultt)

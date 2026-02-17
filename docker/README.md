@@ -1,5 +1,8 @@
 # FLEXT Docker Infrastructure - Centralized Management
 
+**Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
+
+
 **Version**: 1.0.0 | **Updated**: 2025-09-30
 **Authority**: FLEXT Ecosystem Docker Standardization
 
@@ -10,6 +13,8 @@
 This directory contains ALL Docker artifacts for the FLEXT ecosystem in a centralized location. This eliminates duplicate Docker configurations and ensures consistent container management across all projects.
 
 **Core Principle**: All Docker operations go through `FlextTestsDocker` from `flext_tests` library.
+
+Part of the [FLEXT](https://github.com/flext/flext) ecosystem.
 
 ---
 
