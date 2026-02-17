@@ -16,6 +16,7 @@ description: Shared script infrastructure — bash/python libraries, core runner
 - `scripts/core/artifact_naming.py`
 - `scripts/core/check_script_skill_ownership.py`
 - `scripts/core/check_script_artifact_naming.py`
+- `scripts/core/_add_owner_markers.py`
 - `scripts/core/__init__.py`
 - `scripts/common.py`
 - `scripts/config/load_staging_config.py`
@@ -128,6 +129,7 @@ Why bad: Hardcoded path bypasses artifact naming contract.
 | `scripts/core/artifact_naming.py` | Python helper: artifact naming contract | `from scripts.core.artifact_naming import artifact_path` |
 | `scripts/core/check_script_skill_ownership.py` | Ownership validator (hard gate) | `python scripts/core/check_script_skill_ownership.py` |
 | `scripts/core/check_script_artifact_naming.py` | Artifact naming validator | `python scripts/core/check_script_artifact_naming.py` |
+| `scripts/core/_add_owner_markers.py` | One-shot marker insertion (temporary) | `python scripts/core/_add_owner_markers.py` |
 | `scripts/common.py` | Python shared utils: workspace/project discovery | `from scripts.common import discover_projects` |
 | `scripts/config/__init__.py` | Package marker | — |
 | `scripts/config/load_staging_config.py` | Load staging environment config | `python scripts/config/load_staging_config.py` |
