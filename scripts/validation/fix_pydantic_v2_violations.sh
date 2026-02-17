@@ -4,6 +4,7 @@ set -euo pipefail
 
 ROOT_DIR="."
 DRY_RUN="false"
+AGGRESSIVE_INSTANCE_METHODS="${FLEXT_PYDANTIC_AUTOFIX_AGGRESSIVE:-false}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -13,6 +14,10 @@ while [[ $# -gt 0 ]]; do
     ;;
   --dry-run)
     DRY_RUN="true"
+    shift
+    ;;
+  --aggressive)
+    AGGRESSIVE_INSTANCE_METHODS="true"
     shift
     ;;
   *)
@@ -50,6 +55,7 @@ fi
 echo "=== Auto-fix Pydantic v2 Violations ==="
 echo "Root: $ROOT_DIR"
 echo "Dry-run: $DRY_RUN"
+echo "Aggressive instance-method rewrites: $AGGRESSIVE_INSTANCE_METHODS"
 
 rewrite_rule() {
   local label=$1
@@ -68,6 +74,13 @@ rewrite_rule() {
 rewrite_rule "Rewrite .dict() -> .model_dump()" '$MODEL.dict($$$ARGS)' '$MODEL.model_dump($$$ARGS)'
 rewrite_rule "Rewrite .parse_obj() -> .model_validate()" '$MODEL.parse_obj($ARG)' '$MODEL.model_validate($ARG)'
 rewrite_rule "Rewrite .parse_raw() -> .model_validate_json()" '$MODEL.parse_raw($ARG)' '$MODEL.model_validate_json($ARG)'
-rewrite_rule "Rewrite .json() -> .model_dump_json()" '$MODEL.json($$$ARGS)' '$MODEL.model_dump_json($$$ARGS)'
+rewrite_rule "Rewrite .from_orm() -> .model_validate()" '$MODEL.from_orm($ARG)' '$MODEL.model_validate($ARG)'
+
+if [[ "$AGGRESSIVE_INSTANCE_METHODS" == "true" ]]; then
+  rewrite_rule "Rewrite .dict() -> .model_dump()" '$MODEL.dict($$$ARGS)' '$MODEL.model_dump($$$ARGS)'
+  rewrite_rule "Rewrite .json() -> .model_dump_json()" '$MODEL.json($$$ARGS)' '$MODEL.model_dump_json($$$ARGS)'
+else
+  echo "\nSkipping aggressive rewrites for .dict() and .json() by default"
+fi
 
 echo "\nAuto-fix run completed"
