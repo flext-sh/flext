@@ -5,6 +5,9 @@ description: Rules for GitHub automation files in `.github/`, including workflow
 
 # Rules GitHub
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 ## Scope
 - `.github/workflows/`
 - `.github/copilot-instructions.md`
