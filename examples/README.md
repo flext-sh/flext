@@ -10,11 +10,11 @@ This directory contains comprehensive examples demonstrating advanced FLEXT capa
 
 Demonstrates comprehensive Access Control List (ACL) processing capabilities:
 
-- **Batch processing paralelo**: Using `ThreadPoolExecutor` for concurrent ACL operations
-- **Intelligent server auto-detection**: Automatic detection of LDAP server types (OpenLDAP, Oracle OID, Oracle Unified Directory, Active Directory, Apache DS)
-- **Integrated ACL validation**: Complex context-based validation with custom rules per server type
-- **Railway pattern**: Failure-resistant pipeline that stops on first error
-- **Performance analytics**: Comprehensive metrics and throughput analysis
+- **Parallel Batch Processing**: Using `ThreadPoolExecutor` for concurrent ACL operations.
+- **Intelligent Server Auto-detection**: Automatic detection of LDAP server types (OpenLDAP, Oracle OID, Oracle Unified Directory, Active Directory, Apache DS).
+- **Integrated ACL Validation**: Complex context-based validation with custom rules per server type.
+- **Railway Pattern**: Failure-resistant pipeline that follows functional error handling principles.
+- **Performance Analytics**: Comprehensive metrics and throughput analysis.
 
 **Key Features:**
 
@@ -28,13 +28,13 @@ Demonstrates comprehensive Access Control List (ACL) processing capabilities:
 
 **Advanced Processing with Current APIs**
 
-Demonstrates modern processing capabilities with corrected APIs:
+Demonstrates modern processing capabilities with updated APIs:
 
-- **Parallel processing**: Using `ThreadPoolExecutor` for concurrent operations
-- **Batch processing**: Sequential processing for heavy operations
-- **Integrated pipeline**: Combined processing, validation, and analysis stages
-- **Railway pattern**: Error handling with early termination on failures
-- **Performance analytics**: Comprehensive metrics across all processing stages
+- **Parallel Processing**: Using `ThreadPoolExecutor` for concurrent operations.
+- **Batch Processing**: Sequential processing for heavy operations.
+- **Integrated Pipeline**: Combined processing, validation, and analysis stages.
+- **Railway Pattern**: Error handling with early termination on failures.
+- **Performance Analytics**: Comprehensive metrics across all processing stages.
 
 **Key Features:**
 
@@ -50,11 +50,11 @@ Demonstrates modern processing capabilities with corrected APIs:
 
 Demonstrates the complete FLEXT enterprise workflow with all capabilities integrated:
 
-- **Railway pattern abrangente**: Comprehensive error handling across all stages
-- **Processamento paralelo**: Parallel execution in all workflow stages
-- **Auto-detecção inteligente**: Automatic data source and pipeline configuration
-- **Builders inteligentes**: Dynamic workflow construction based on requirements
-- **Validação end-to-end**: Complete workflow validation with multiple aspects
+- **Comprehensive Railway Pattern**: Robust error handling across all stages.
+- **Parallel Processing**: Parallel execution in all workflow stages.
+- **Intelligent Auto-detection**: Automatic data source and pipeline configuration.
+- **Smart Builders**: Dynamic workflow construction based on requirements.
+- **End-to-End Validation**: Complete workflow validation with multiple aspects.
 
 **Key Features:**
 
@@ -188,25 +188,6 @@ result = railway.execute_workflow_railway(
 - **Runtime safety**: Pydantic validation where applicable
 - **Maintainability**: Self-documenting code with type hints
 
-## Quality Assurance
-
-All examples follow FLEXT quality standards:
-
-- **Linting**: Pass Ruff checks with zero errors
-- **Type checking**: Full mypy compliance
-- **Testing**: Designed for comprehensive test coverage
-- **Documentation**: Extensive docstrings and examples
-- **Performance**: Optimized for enterprise workloads
-
-## Dependencies
-
-Examples use only FLEXT core dependencies:
-
-- `flext-core`: Core FLEXT functionality
-- Standard library modules (concurrent.futures, dataclasses, typing)
-
-No external dependencies required for basic functionality.
-
 ## Integration with FLEXT Ecosystem
 
 These examples demonstrate integration with the complete FLEXT ecosystem:
@@ -215,14 +196,3 @@ These examples demonstrate integration with the complete FLEXT ecosystem:
 - **FLEXT-Core**: Foundation patterns and utilities
 - **FLEXT-Result**: Railway pattern implementation
 - **FLEXT-Services**: Service-oriented architecture patterns
-
-## Enterprise Readiness
-
-All examples are production-ready with:
-
-- Comprehensive error handling
-- Performance monitoring and analytics
-- Configurable execution parameters
-- Correlation tracking for distributed operations
-- Type-safe APIs throughout
-- Extensive documentation and examples
