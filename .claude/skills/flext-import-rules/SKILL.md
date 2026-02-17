@@ -5,6 +5,9 @@ description: Exact import rules and patterns verified from the actual FLEXT code
 
 # FLEXT Import Rules
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 > **Verified from**: Static analysis of all `.py` files in `flext-core` and consuming
 > projects (`flext-auth`, `flext-cli`, `flext-ldap`) on 2026-02-17.
 

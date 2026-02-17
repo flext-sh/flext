@@ -5,6 +5,9 @@ description: Mandatory verification gates with exact tool commands, thresholds, 
 
 # FLEXT Quality Gates
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 > **Source of truth**: Verified from `base.mk` lines 114-202, `ruff-shared.toml`,
 > and individual `pyproject.toml` files on 2026-02-17.
 

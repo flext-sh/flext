@@ -5,6 +5,9 @@ description: Verified development workflow including toolchain, testing, and CI/
 
 # FLEXT Development Workflow
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 > **Source of truth**: Verified from `base.mk`, `pyproject.toml`, `.pre-commit-config.yaml`,
 > and actual project structure on 2026-02-17.
 

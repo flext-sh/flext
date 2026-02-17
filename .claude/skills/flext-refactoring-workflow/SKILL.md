@@ -5,6 +5,9 @@ description: Step-by-step refactoring process with verified quality gates and Ma
 
 # FLEXT Refactoring Workflow
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 > **Source of truth**: Verified from `base.mk` (shared Makefile), `ruff-shared.toml`,
 > and actual `pyproject.toml` configurations across the monorepo.
 

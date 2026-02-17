@@ -5,6 +5,9 @@ description: Canonical documentation-governance policy for agent configs: one ro
 
 # Flext Docs Pointer Policy
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 ## Scope
 
 - Root governance docs (`CLAUDE.md`, `AGENTS.md`)
