@@ -5,6 +5,9 @@ description: Canonical format for project SKILL.md files using Anthropic standar
 
 # Skill Format Universal
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 ## Scope
 
 - `.claude/skills/`

@@ -5,6 +5,9 @@ description: Rules for runnable examples in `examples/` so they stay aligned wit
 
 # Rules Examples
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 ## Scope
 - `examples/acl_processing_example.py`
 - `examples/advanced_processing_example.py`
