@@ -282,5 +282,5 @@ rg "pydantic>=" flext-core/pyproject.toml
 
 <!-- AUTOMATION MARKERS (machine-readable, do not edit) -->
 <!-- ASTGREP_SCAN_PACK: scripts/validation/ast-grep-pydantic-v2.yml -->
-<!-- ASTGREP_FIX_PACK: scripts/validation/ast-grep-pydantic-v2.yml -->
+<!-- ASTGREP_FIX_PACK: scripts/validation/ast-grep-safe-fixes.yml -->
 <!-- AUTOFIX_MODE: safe -->
