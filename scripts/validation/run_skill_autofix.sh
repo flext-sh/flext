@@ -248,13 +248,13 @@ for line in sys.stdin:
 print(total)
 " 2>/dev/null || echo "0")
 
-  cp "$candidate" "$TMP_DIR/backup_$(basename "$candidate")"
+  cp "$candidate" "$(backup_name_for "$candidate")"
 
   for pack in $FIX_PACKS; do
     sg scan --rule "$pack" --update-all --no-ignore hidden "${SG_GLOBS[@]}" "$candidate" 2>/dev/null || true
   done
 
-  if cmp -s "$candidate" "$TMP_DIR/backup_$(basename "$candidate")"; then
+  if cmp -s "$candidate" "$(backup_name_for "$candidate")"; then
     echo "  No changes made"
     continue
   fi
@@ -304,7 +304,7 @@ After metrics:
 $AFTER_METRICS
 REJEOF
 
-    cp "$TMP_DIR/backup_$(basename "$candidate")" "$candidate"
+    cp "$(backup_name_for "$candidate")" "$candidate"
     echo "  Restored original, created $REJ_BAK and $REJ_REPORT"
     echo "{\"file\":\"$candidate\",\"project\":\"$project\",\"before\":$BEFORE_TOTAL,\"after\":$AFTER_TOTAL,\"status\":\"rejected\",\"rej_bak\":\"$REJ_BAK\",\"rej_report\":\"$REJ_REPORT\"}" >>"$TMP_DIR/rejected.jsonl"
   fi
@@ -325,7 +325,7 @@ for project in "${!PROJECT_BEFORE_TOTALS[@]}"; do
 
     for accepted_file in ${PROJECT_FILES[$project]}; do
       [[ -z "$accepted_file" ]] && continue
-      backup_name="$TMP_DIR/backup_$(basename "$accepted_file")"
+      backup_name="$(backup_name_for "$accepted_file")"
       if [[ -f "$backup_name" ]]; then
         REJ_BAK="${accepted_file}.rej-${TIMESTAMP}.bak"
         REJ_REPORT="${accepted_file}.rej-${TIMESTAMP}.rej"
