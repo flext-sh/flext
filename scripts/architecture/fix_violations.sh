@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 # Script gerado automaticamente para correção de violações
 
 echo '🚀 Iniciando correção de violações arquiteturais...'

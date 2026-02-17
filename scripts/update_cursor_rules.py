@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """FLEXT Cursor Rules Auto-Update Script.
 
 Automatically updates Cursor rules based on CLAUDE.md changes.

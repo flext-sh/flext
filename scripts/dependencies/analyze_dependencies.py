@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-dependencies/SKILL.md
 """Script refatorado para analisar conflitos e bloqueadores de atualização.
 
 Usa flext_quality.tools para análise modular e cache.

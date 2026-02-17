@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """Analisador de Violações Arquiteturais - FLEXT Workspace.
 
 Identifica módulos em camadas incorretas e violations de dependências.

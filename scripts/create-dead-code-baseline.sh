@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 # =============================================================================
 # FLEXT Dead Code Baseline Generator
 # =============================================================================

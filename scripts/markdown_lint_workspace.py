@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Comprehensive Markdown Linting Script for FLEXT Workspace.
 
 This script:

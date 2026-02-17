@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Merge aggressive whitelist rules with existing .gitignore files.
 
 Preserves existing project-specific rules while adding whitelist protection.

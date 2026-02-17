@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Generate or update markdown TOC blocks."""
 
 from __future__ import annotations

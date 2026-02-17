@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """Script de correção de erros de sintaxe introduzidos pelo fix_imports.py.
 
 Aplica correções RIGOROSAS seguindo REFATORACAO_ARQUITETURA_FLEXT.md

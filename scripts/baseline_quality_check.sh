@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 
 # PHASE 1.3: Baseline Quality Metrics Collection Script
 

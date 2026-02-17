@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Remove tracked files that are now ignored by .gitignore.
 
 Untrack files from git that should be ignored according to the new aggressive

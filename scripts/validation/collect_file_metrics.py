@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 """Canonical 4-lint metrics collector for FLEXT validation pipeline.
 
 Runs ruff, mypy, pyright, and pyrefly on individual files or project

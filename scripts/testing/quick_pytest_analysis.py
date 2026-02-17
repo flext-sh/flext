@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-testing/SKILL.md
 """Quick FLEXT Pytest Analysis - Generate SARIF/JSON reports for failing tests.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.

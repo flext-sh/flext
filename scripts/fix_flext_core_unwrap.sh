@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 
 # Batch fix script: Replace deprecated .unwrap() with .value in flext-core documentation and code
 # Author: Claude Code

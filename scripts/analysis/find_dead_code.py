@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """AST-based dead code analyzer for flext projects.
 
 Analyzes Python files to find:

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-security/SKILL.md
 """Example usage of FLEXT Security Tools - Programmatic API Examples.
 
 This script demonstrates how to use the FLEXT security scanner programmatically

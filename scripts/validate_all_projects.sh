@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 # Comprehensive validation script for all FLEXT projects
 # Runs ruff, mypy, pyrefly, and pytest across all projects
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """Convert class aliases to real inheritance in all modules.
 
 Converts patterns like:

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """Fix DI container ordering issues in FLEXT API files.
 
 This script fixes issues where DI container functions are called before import,

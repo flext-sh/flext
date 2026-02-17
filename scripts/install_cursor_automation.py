@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """FLEXT Cursor Agent Automation Installer.
 
 Automatically installs and configures FLEXT automation for Cursor Agent.

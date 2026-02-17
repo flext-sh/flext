@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """Fix import order violations (E402) in FLEXT API files.
 
 This script systematically fixes import ordering violations by moving

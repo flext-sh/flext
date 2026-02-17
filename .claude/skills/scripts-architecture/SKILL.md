@@ -23,6 +23,22 @@ description: Architecture scripts — import analysis, violation detection, code
 - `scripts/architecture/test_cross_project_imports.py`
 - `scripts/architecture/verify_meltano_consolidation.py`
 - `scripts/analysis/find_dead_code.py`
+- `scripts/analyze-duplication.sh`
+- `scripts/ast_dead_code_scanner.py`
+- `scripts/create-dead-code-baseline.sh`
+- `scripts/create-duplicate-baseline.sh`
+- `scripts/create-duplicate-baseline-global.sh`
+- `scripts/create-duplicate-baseline-tests.sh`
+- `scripts/convert_aliases_to_inheritance.py`
+- `scripts/refactor_aliases_to_inheritance.py`
+- `scripts/content_optimizer.py`
+- `scripts/fix_flext_core_unwrap.sh`
+- `scripts/namespace_fix.py`
+- `scripts/unified_module_optimizer_simple.py`
+- `scripts/standardize_test_aliases.py`
+- `scripts/standardize_tests.py`
+- `scripts/fix_examples_syntax.py`
+- `scripts/flext_meltano_bridge.py`
 
 ## References
 

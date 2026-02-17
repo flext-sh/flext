@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-dependencies/SKILL.md
 """Dependency Cache Management.
 
 Gerencia cache de dependências usando flext_quality.tools

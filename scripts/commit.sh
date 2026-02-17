@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # =============================================================================
 # FLEXT Monorepo - Smart Commit (Conventional Commits)
 # =============================================================================

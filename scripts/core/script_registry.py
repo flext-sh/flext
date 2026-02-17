@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """FLEXT Script Registry - Sistema de Automação e Organização de Scripts.
 
 Este módulo fornece um sistema centralizado para registrar, categorizar e executar

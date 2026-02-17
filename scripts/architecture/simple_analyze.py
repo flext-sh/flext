@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """Análise simples de violações arquiteturais no flext-core.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Documentation link fixer used by Makefile.docs."""
 
 from __future__ import annotations

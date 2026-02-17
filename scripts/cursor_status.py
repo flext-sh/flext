@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """FLEXT Cursor Agent Status Monitor.
 
 Shows the current status of FLEXT automation in Cursor Agent.

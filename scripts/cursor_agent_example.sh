@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # cursor_agent_example.sh - Example implementation for cursor-agent
 # Demonstrates proper integration of validation scripts
 

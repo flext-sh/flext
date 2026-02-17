@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # confirm_changes.sh - Confirm changes and clean up backup
 # Usage: ./confirm_changes.sh <backup_id>
 

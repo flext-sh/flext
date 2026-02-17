@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # FLEXT File Locking Protocol for Multi-Agent Coordination
 # Usage: ./file_lock.sh lock <file_path> <agent_name>
 #        ./file_lock.sh unlock <file_path> <agent_name>

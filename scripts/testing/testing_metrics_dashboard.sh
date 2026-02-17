@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-testing/SKILL.md
 # testing_metrics_dashboard.sh - Generate ecosystem-wide testing metrics dashboard
 #
 # Usage: ./scripts/testing_metrics_dashboard.sh [options]

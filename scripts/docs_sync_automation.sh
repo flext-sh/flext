@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 set -euo pipefail
 
 ROOT_DIR="."

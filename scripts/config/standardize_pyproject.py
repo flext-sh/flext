@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """standardize_pyproject.py - Pyproject.toml Standardization Script.
 
 This script standardizes pyproject.toml files across all FLEXT projects in the workspace,

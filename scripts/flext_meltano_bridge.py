@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """FlextMeltano Bridge Script - CLI interface para integração Go ↔ Python.
 
 Este script fornece interface CLI para comunicação entre FlexCore Go service

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Documentation audit utility for Makefile.docs and CI workflow."""
 
 from __future__ import annotations

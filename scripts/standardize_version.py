@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """FLEXT Version Standardization Service.
 
 Unified class implementation with flext-core patterns for __version__.py standardization

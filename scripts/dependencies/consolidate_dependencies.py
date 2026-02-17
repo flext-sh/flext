@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-dependencies/SKILL.md
 """Consolidate dependencies across all FLEXT projects following KISS principle.
 
 This script removes duplicate dependencies and applies centralized dev dependencies

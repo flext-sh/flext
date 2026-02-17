@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # Runtime Detector - Detect execution environment (Claude Code vs Standalone)
 #
 # Detects whether code is running in Claude Code (with hooks) or standalone (cursor-agent).

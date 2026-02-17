@@ -23,6 +23,37 @@ description: Shared script infrastructure — bash/python libraries, core runner
 - `scripts/config/standardize_pyproject.py`
 - `scripts/config/__init__.py`
 - `scripts/makefiles/simplify_makefiles.py`
+- `scripts/add-project.sh`
+- `scripts/remove-project.sh`
+- `scripts/deploy.sh`
+- `scripts/release.sh`
+- `scripts/commit.sh`
+- `scripts/setup.sh`
+- `scripts/setup_env.sh`
+- `scripts/flext-constants.sh`
+- `scripts/file_lock.sh`
+- `scripts/safe_command.sh`
+- `scripts/safe_edit.sh`
+- `scripts/edit_with_hooks.sh`
+- `scripts/edit_with_lock.sh`
+- `scripts/auto_edit_with_hooks.sh`
+- `scripts/pre_edit_validate.sh`
+- `scripts/post_edit_validate.sh`
+- `scripts/post_edit_validate_no_rollback.sh`
+- `scripts/pre_command_validate.sh`
+- `scripts/confirm_changes.sh`
+- `scripts/confirm_fixes.sh`
+- `scripts/push_all_repos.sh`
+- `scripts/push_repos_parallel.sh`
+- `scripts/push_submodules.sh`
+- `scripts/generate_all_reports.sh`
+- `scripts/cursor_agent_example.sh`
+- `scripts/cursor_status.py`
+- `scripts/install_cursor_automation.py`
+- `scripts/update_cursor_rules.py`
+- `scripts/update_vscode_git_exclusions.py`
+- `scripts/web_scrape_local.py`
+- `scripts/standardize_version.py`
 
 ## References
 
@@ -103,3 +134,34 @@ Why bad: Hardcoded path bypasses artifact naming contract.
 | `scripts/config/setup_workspace_links.py` | Setup workspace symlinks | `python scripts/config/setup_workspace_links.py` |
 | `scripts/config/standardize_pyproject.py` | Standardize pyproject.toml files | `python scripts/config/standardize_pyproject.py` |
 | `scripts/makefiles/simplify_makefiles.py` | Simplify project Makefiles | `python scripts/makefiles/simplify_makefiles.py` |
+| `scripts/add-project.sh` | Add external project to workspace | `bash scripts/add-project.sh` |
+| `scripts/remove-project.sh` | Remove external project | `bash scripts/remove-project.sh <name>` |
+| `scripts/deploy.sh` | Deploy pipeline with validation | `bash scripts/deploy.sh` |
+| `scripts/release.sh` | Automated release with version bump | `bash scripts/release.sh` |
+| `scripts/commit.sh` | Conventional commit helper | `bash scripts/commit.sh` |
+| `scripts/setup.sh` | Workspace setup | `bash scripts/setup.sh` |
+| `scripts/setup_env.sh` | Environment setup | `bash scripts/setup_env.sh` |
+| `scripts/flext-constants.sh` | Shared constants for bash scripts | `source scripts/flext-constants.sh` |
+| `scripts/file_lock.sh` | File locking utilities | `source scripts/file_lock.sh` |
+| `scripts/safe_command.sh` | Safe command execution wrapper | `bash scripts/safe_command.sh` |
+| `scripts/safe_edit.sh` | Safe file editing with rollback | `bash scripts/safe_edit.sh` |
+| `scripts/edit_with_hooks.sh` | Edit with pre/post hooks | `bash scripts/edit_with_hooks.sh` |
+| `scripts/edit_with_lock.sh` | Edit with file locking | `bash scripts/edit_with_lock.sh` |
+| `scripts/auto_edit_with_hooks.sh` | Auto-edit with hooks | `bash scripts/auto_edit_with_hooks.sh` |
+| `scripts/pre_edit_validate.sh` | Pre-edit validation hook | `bash scripts/pre_edit_validate.sh` |
+| `scripts/post_edit_validate.sh` | Post-edit validation hook | `bash scripts/post_edit_validate.sh` |
+| `scripts/post_edit_validate_no_rollback.sh` | Post-edit validation (no rollback) | `bash scripts/post_edit_validate_no_rollback.sh` |
+| `scripts/pre_command_validate.sh` | Pre-command validation hook | `bash scripts/pre_command_validate.sh` |
+| `scripts/confirm_changes.sh` | Confirm changes interactively | `bash scripts/confirm_changes.sh` |
+| `scripts/confirm_fixes.sh` | Confirm fixes interactively | `bash scripts/confirm_fixes.sh` |
+| `scripts/push_all_repos.sh` | Push all repos | `bash scripts/push_all_repos.sh` |
+| `scripts/push_repos_parallel.sh` | Push repos in parallel | `bash scripts/push_repos_parallel.sh` |
+| `scripts/push_submodules.sh` | Push submodules | `bash scripts/push_submodules.sh` |
+| `scripts/generate_all_reports.sh` | Generate all reports | `bash scripts/generate_all_reports.sh` |
+| `scripts/cursor_agent_example.sh` | Cursor agent example | `bash scripts/cursor_agent_example.sh` |
+| `scripts/cursor_status.py` | Cursor automation status | `python scripts/cursor_status.py` |
+| `scripts/install_cursor_automation.py` | Install cursor automation | `python scripts/install_cursor_automation.py` |
+| `scripts/update_cursor_rules.py` | Update cursor rules | `python scripts/update_cursor_rules.py` |
+| `scripts/update_vscode_git_exclusions.py` | Update VSCode git exclusions | `python scripts/update_vscode_git_exclusions.py` |
+| `scripts/web_scrape_local.py` | Web scraping utility | `python scripts/web_scrape_local.py` |
+| `scripts/standardize_version.py` | Standardize version strings | `python scripts/standardize_version.py` |

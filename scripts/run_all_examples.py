@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-testing/SKILL.md
 """Run all project examples in a consistent, safe way.
 
 Features:

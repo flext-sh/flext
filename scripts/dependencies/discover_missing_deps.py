@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-dependencies/SKILL.md
 """Descobrir e analisar dependências faltantes em projetos FLEXT.
 
 Script que usa flext_quality.tools.DependencyDiscovery para encontrar dependências

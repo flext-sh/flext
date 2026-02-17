@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # safe_edit.sh - Ultra-simple safe edit wrapper for cursor-agent
 # Usage: ./safe_edit.sh <file_path> <old_text> <new_text>
 # Automatically handles: backup, validation, rollback on failure

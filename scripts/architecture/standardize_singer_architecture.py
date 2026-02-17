@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """Singer Architecture Standardizer - consolidated in flext-meltano.
 
 This module is now a compatibility layer that imports from flext-meltano.

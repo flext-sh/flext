@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 # FLEXT Singer Protocol Compliance Validation Script
 # Validates Singer specification compliance across FLEXT tap/target projects
 # Usage: ./scripts/singer_protocol_validator.sh [project_name]

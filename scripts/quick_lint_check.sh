@@ -1,4 +1,5 @@
 #!/bin/bash
+# Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 # Quick lint check across all FLEXT projects
 
 echo "=== FLEXT ECOSYSTEM QUICK LINT CHECK ==="

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 """Ecosystem validation script.
 
 Validates all FLEXT projects for:

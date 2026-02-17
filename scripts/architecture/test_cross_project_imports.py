@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """Cross-project import validation test.
 
 Tests that all 6 FLEXT projects can be imported successfully and their

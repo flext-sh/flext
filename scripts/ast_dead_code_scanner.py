@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 """AST-based Dead Code Scanner for FLEXT Projects.
 
 Scans Python files to identify:
