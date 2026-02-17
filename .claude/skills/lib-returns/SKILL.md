@@ -5,6 +5,9 @@ description: FlextResult railway composition built on dry-python/returns. Use wh
 
 # Lib Returns — FlextResult Railway Composition
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 ## Scope
 
 - `flext-core/src/flext_core/result.py` — canonical FlextResult implementation (813 lines)

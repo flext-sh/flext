@@ -5,6 +5,9 @@ description: Pydantic v2 model, validation, and serialization patterns used acro
 
 # Lib Pydantic V2 — Models, Validators, and Adapters
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 ## Scope
 
 - `flext-core/src/flext_core/settings.py` — FlextSettings (BaseSettings + SettingsConfigDict)

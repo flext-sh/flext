@@ -49,6 +49,9 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 
 ```python
 # flext-quality/src/flext_quality/utilities.py
+
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
 @staticmethod
 def load_yaml_rules(path: Path) -> r[list[dict[str, object]]]:
     with path.open(encoding="utf-8") as f:

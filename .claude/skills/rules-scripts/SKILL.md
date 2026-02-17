@@ -6,6 +6,7 @@ description: Rules for automation and maintenance scripts under `scripts/`. Use 
 # Rules Scripts
 
 ## Scope
+
 - `scripts/validate_all_projects.sh`
 - `scripts/architecture/`
 - `scripts/security/`
@@ -14,11 +15,13 @@ description: Rules for automation and maintenance scripts under `scripts/`. Use 
 - `scripts/*.sh`
 
 ## References
+
 - `scripts/README.md`
 - `Makefile`
 - `AGENTS.md`
 
 ## Rules
+
 - Every script MUST have exactly one `# Owner-Skill: .claude/skills/<skill>/SKILL.md` marker in its header (line 2).
 - Keep scripts non-interactive by default for CI compatibility; interactive prompts require explicit `--interactive` flag.
 - Fail fast with clear error output for validation scripts.
@@ -29,6 +32,7 @@ description: Rules for automation and maintenance scripts under `scripts/`. Use 
 - Keep script behavior deterministic and root-relative.
 
 ## Instructions
+
 - When adding a new script, assign it to one of the 7 domain skills (scripts-infra, scripts-validation, scripts-security, scripts-architecture, scripts-testing, scripts-dependencies, scripts-maintenance).
 - Add the `# Owner-Skill:` marker and list it in the owning skill's `## Scripts` table.
 - For shell scripts, prefer explicit command checks over implicit assumptions.
@@ -39,12 +43,14 @@ ls -la scripts
 ```
 
 ## Workflow
+
 1. Select target script and its caller(s).
 2. Apply minimal behavior change.
 3. Run script in representative mode (`--help` or safe validation mode).
 4. Verify downstream docs/make targets still align.
 
 ## Examples
+
 Good:
 
 ```bash
@@ -62,6 +68,7 @@ Bad:
 Why bad: ambiguous path and unclear contract from repository root.
 
 ## Verification
+
 - `make validate-scripts` — runs ownership, bash -n, py_compile, ast-grep, artifact naming
 - `python scripts/core/check_script_skill_ownership.py` — ownership validator (hard gate)
 - `python scripts/core/check_script_artifact_naming.py` — artifact naming validator
