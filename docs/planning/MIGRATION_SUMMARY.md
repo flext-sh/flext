@@ -255,7 +255,6 @@ if Guards.is_config(obj):
 ### 2. Hierarchical Model Organization
 
 ```python
-from flext_core.models import m
 
 config: m.Core.Config = ...
 context: m.Core.Context = ...

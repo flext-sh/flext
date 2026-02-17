@@ -38,7 +38,6 @@ from __future__ import annotations
 
 from typing import TypeGuard
 
-from flext_core.models import m
 from flext_core.typings import t
 
 
@@ -228,7 +227,6 @@ Replace all TypedDict imports:
 from flext_core.typings import DispatcherConfig, BatchResultDict
 
 # AFTER
-from flext_core.models import m
 
 config: m.Core.Config = ...
 result: m.Result.Success = ...
@@ -242,7 +240,6 @@ Remove all TypedDict definitions, keep only type aliases:
 # flext-core/src/flext_core/typings.py
 """Type aliases and protocols (no TypedDict)."""
 
-from flext_core.models import m
 
 # Type aliases for convenience
 ConfigType = m.Core.Config
@@ -331,7 +328,6 @@ grep -r "cast(" flext-core/src/ | grep -v test
 ```python
 # BEFORE
 from typing import cast
-from flext_core.models import m
 
 def process_config(data: dict) -> str:
     config = cast(m.Core.Config, data)
@@ -339,7 +335,6 @@ def process_config(data: dict) -> str:
 
 # AFTER
 from flext_core.utilities.guards import Guards
-from flext_core.models import m
 
 def process_config(data: dict) -> str:
     if Guards.is_config(data):
@@ -517,7 +512,6 @@ Benefits:
 Models are organized in nested namespaces for maximum reuse:
 
 \`\`\`python
-from flext_core.models import m
 
 config: m.Core.Config = ...
 context: m.Core.Context = ...
