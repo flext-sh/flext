@@ -1,38 +1,64 @@
 ---
 name: rules-typings
-description: Scoped contribution rules for `typings/` that align with root CLAUDE and project conventions.
-scope: /home/marlonsc/flext/typings/
-tags: [rules,scope,docs]
-last_verified: 2026-02-17
+description: Rules for typing support assets in `typings/` (stubs, compatibility shims, and local type metadata). Use when editing `.pyi` files or typing helper packages.
 ---
 
-## Applies To
+# Rules Typings
 
-- `/home/marlonsc/flext/typings/`
+## Scope
+- `typings/__init__.pyi`
+- `typings/factory.pyi`
+- `typings/returns/`
+- `typings/radon/`
+- `typings/ruff/`
+- `typings/ldif3/`
 
-## Sources
+## References
+- `flext-core/src/flext_core/typings.py`
+- `pyproject.toml`
+- `typings/`
 
-- `/home/marlonsc/flext/CLAUDE.md`
-- `/home/marlonsc/flext/AGENTS.md`
-- `/home/marlonsc/flext/CONVENTIONS.md`
-- `/home/marlonsc/flext/typings/`
+## Rules
+- Keep stubs synchronized with runtime/public API signatures.
+- Prefer precise types over broad fallback annotations.
+- Keep package-specific typing shims isolated under their own stub namespace.
+- Do not introduce broken/incomplete stubs without clear compatibility intent.
 
-## Enforced Rules
+## Instructions
+- Update `.pyi` signatures when corresponding runtime signatures change.
+- Keep import paths and exported names aligned with package contracts.
+- Validate that stub packages do not shadow unrelated modules.
 
-- Guideline: keep changes local to this scope and follow existing file naming and structure patterns.
-- Guideline: do not duplicate global governance text from root `CLAUDE.md` inside scope docs.
+```bash
+ls -la typings
+```
 
-## Guidance
-
-- Before editing, read sibling files in the same directory to match style and structure.
-- Prefer incremental edits and verify with scope-relevant commands (tests/build/docs checks).
-- Keep references path-anchored so future contributors can verify quickly.
+## Workflow
+1. Identify runtime API change requiring stub update.
+2. Update matching `.pyi` declarations.
+3. Validate imports/exports in stubs remain coherent.
+4. Re-run type checks for impacted packages.
 
 ## Examples
+Good:
 
-- When working in `typings/`, cite concrete files under `/home/marlonsc/flext/typings/` instead of generic statements.
+```python
+# factory.pyi
+def create(name: str) -> object: ...
+```
+
+Why good: explicit callable contract for static tools.
+
+Bad:
+
+```python
+# factory.pyi
+def create(*args, **kwargs): ...
+```
+
+Why bad: loses useful type information and weakens analyzer value.
 
 ## Verification
-
 - `ls -la typings`
-- `rg -n "TODO|FIXME" typings || true`
+- `rg -n "\.pyi$" -g "*.pyi" typings`
+- `rg -n "TODO|FIXME|pass" typings || true`

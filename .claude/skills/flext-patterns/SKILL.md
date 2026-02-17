@@ -1,38 +1,101 @@
 ---
 name: flext-patterns
-description: Reusable project patterns for result flow, DI, logging, and typed payload handling.
-scope: /home/marlonsc/flext/
-tags: [skills,workflow,patterns]
-last_verified: 2026-02-17
+description: Repository-native implementation patterns for result flow, DI, logging, and typed boundaries. Use when selecting or standardizing implementation style.
 ---
 
-## Applies To
+# Flext Patterns
 
-- `/home/marlonsc/flext/`
+## Scope
 
-## Sources
+- Canonical pattern anchors:
+  - `flext-core/src/flext_core/result.py`
+  - `flext-core/src/flext_core/container.py`
+  - `flext-core/src/flext_core/loggings.py`
+  - `flext-core/src/flext_core/settings.py`
 
-- `/home/marlonsc/flext/flext-core/docs/architecture/patterns.md`
-- `/home/marlonsc/flext/flext-core/docs/guides/railway-oriented-programming.md`
-- `/home/marlonsc/flext/flext-core/src/flext_core/result.py`
-- `/home/marlonsc/flext/flext-core/src/flext_core/container.py`
-- `/home/marlonsc/flext/flext-core/src/flext_core/loggings.py`
+## References
+- `flext-core/docs/architecture/patterns.md`
+- `flext-core/docs/guides/railway-oriented-programming.md`
+- `flext-core/src/flext_core/runtime.py`
 
-## Enforced Rules
+## Rules
+- Prefer existing repository patterns over ad-hoc abstractions.
+- Use `FlextResult` composition at error boundaries.
+- Keep DI through `FlextContainer` bridge methods.
+- Use structured logging via `FlextLogger` context APIs.
 
-- Guideline: prefer documented pattern implementations from flext-core over ad-hoc new abstractions.
-- Guideline: examples must point to concrete repository files.
+## Pattern Catalog
 
-## Guidance
+- ROP (`FlextResult` monadic chains)
+- DI (`FlextContainer` singleton + scoped instances)
+- DDD (entity/value/service models)
+- CQRS (handler command/query separation)
+- Event-Driven patterns in service/dispatcher flows
+- Hexagonal ports/adapters boundaries
+- Validation/middleware pipeline composition
+- Factory/Adapter object-creation integration patterns
 
-- Use this skill when reviewing a change for architectural fit and consistency with existing platform patterns.
-- Extract examples from runtime/result/container/loggings rather than inventing pseudo-code.
+## Instructions
+- Anchor new code to nearby proven implementations in same module family.
+- For fallible operations use `ok/fail + map/flat_map/lash` chains.
+- For context-aware logging use bind/scope patterns instead of manual dict payload assembly.
+- Prefer `t.*` contracts for payload typing and `p.*` protocols for interfaces.
+
+```python
+from flext_core import r
+
+def transform(value: str):
+    return r[str].ok(value).map(str.strip).flat_map(lambda v: r[str].ok(v.lower()))
+```
+
+## Workflow
+1. Find closest existing pattern for the target behavior.
+2. Reuse pattern with minimal adaptation.
+3. Verify no anti-patterns (raw dict envelopes, direct external DI imports).
+4. Confirm consistency with tests/type checks.
 
 ## Examples
+Good:
 
-- Railway pattern and monadic composition are already documented and implemented; reuse them directly.
+```python
+result = r[int].ok(10).map(lambda v: v * 2).lash(lambda err: r[int].ok(0))
+```
+
+Why good: preserves typed success/failure flow with explicit recovery.
+
+Bad:
+
+```python
+try:
+    value = fn()
+    return {"ok": True, "value": value}
+except Exception as exc:
+    return {"ok": False, "error": str(exc)}
+```
+
+Why bad: custom envelope duplicates core result abstraction and weakens type safety.
+
+Bad:
+
+```python
+from dependency_injector import providers
+
+services = providers.DynamicContainer()
+```
+
+Why bad: imports infrastructure directly instead of using runtime/container bridge APIs.
+
+Bad:
+
+```python
+logger = {"scope": "request"}
+logger["user_id"] = user_id
+```
+
+Why bad: bypasses structured context APIs (`bind_global_context`, `scoped_context`) and loses standardized log behavior.
 
 ## Verification
-
-- `rg -n "^##\s+Guidance$" .claude/skills/flext-patterns/SKILL.md`
-- `rg -n "`/home/marlonsc/flext/" .claude/skills/flext-patterns/SKILL.md`
+- `rg -n "\.map\(|\.flat_map\(|\.lash\(|\.recover\(" flext-core/src/flext_core/result.py`
+- `rg -n "class FlextContainer|def register\(|def get_typed\(" flext-core/src/flext_core/container.py`
+- `rg -n "class FlextLogger|bind_global_context|scoped_context" flext-core/src/flext_core/loggings.py`
+- `rg -n "CQRS|Event-Driven|Hexagonal|Pipeline|Factory|Adapter|DDD" flext-core/docs/architecture/patterns.md`

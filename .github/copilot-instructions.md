@@ -1,11 +1,17 @@
 # GitHub Copilot Instructions
 
-This repository uses a **Single Source of Truth** for all AI coding rules.
-Please refer to [CLAUDE.md](../../CLAUDE.md) for:
+Canonical source: [`CLAUDE.md`](../../CLAUDE.md).
 
-- Project Architecture & Layers
-- Code Style & Conventions
-- Testing Standards
-- Command Reference
+## How To Apply Here
 
-**DO NOT** invent new patterns. Follow the project's established conventions defined in CLAUDE.md.
+- Use this file only as an entrypoint; project rules live in root `CLAUDE.md`.
+- Map file scope to the right root skill (for example, `rules-flext-core` for `flext-core/`).
+- Prefer repository patterns over generic assistant defaults.
+- Keep changes small, typed, and evidence-backed.
+
+## Quick Workflow
+
+1. Open `CLAUDE.md`.
+2. Load relevant `.claude/skills/*/SKILL.md`.
+3. Apply rule-consistent changes.
+4. Verify using commands/tests for touched scope.

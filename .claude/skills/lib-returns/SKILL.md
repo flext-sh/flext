@@ -1,41 +1,249 @@
 ---
 name: lib-returns
-description: Official returns library usage mapped to FLEXT result patterns.
-scope: /home/marlonsc/flext/
-tags: [libraries,skills,references]
-last_verified: 2026-02-17
+description: FlextResult railway composition built on dry-python/returns. Use when implementing result-flow operations, error recovery chains, or converting between container types.
 ---
 
-## Applies To
+# Lib Returns — FlextResult Railway Composition
 
-- `/home/marlonsc/flext/`
+## Scope
 
-## Sources
+- `flext-core/src/flext_core/result.py` — canonical FlextResult implementation (813 lines)
+- `flext-core/src/flext_core/runtime.py` — RuntimeResult base class that FlextResult extends
+- `flext-core/tests/unit/test_result_behaviors.py` — behavior test suite demonstrating correct usage
+- `flext-core/tests/unit/test_result_coverage_100.py` — exhaustive coverage tests
 
-- `https://returns.readthedocs.io/en/latest/`
-- `https://returns.readthedocs.io/en/latest/pages/result.html`
-- `https://returns.readthedocs.io/en/latest/pages/pipeline.html`
-- `https://github.com/dry-python/returns`
-- `/home/marlonsc/flext/flext-core/src/flext_core/result.py`
-- `/home/marlonsc/flext/flext-core/docs/guides/railway-oriented-programming.md`
-- `/home/marlonsc/flext/flext-core/pyproject.toml`
+## References
 
-## Enforced Rules
+- <https://returns.readthedocs.io/en/latest/> — dry-python/returns official docs
+- `flext-core/pyproject.toml` — pins `returns>=0.26.0`
+- `flext-core/src/flext_core/protocols.py` — `p.ResultLike` protocol that FlextResult satisfies
 
-- Enforced by: dependency presence and version constraints in workspace/package pyproject files.
-- Guideline: external library usage should follow project wrappers and boundaries already present in flext-core.
+## Rules
 
-## Guidance
+- **Always** use `r[T].ok(value)` / `r[T].fail(error)` factory methods — never construct `FlextResult()` directly.
+- **Never** pass `None` to `r[T].ok()` — it raises `ValueError`. Use `r[T].fail()` for absent values.
+- Compose with `.map()` for pure transforms and `.flat_map()` for result-returning transforms.
+- Use `.lash()` / `.recover()` for failure recovery — never imperative `if result.is_failure:` branching in composition chains.
+- Keep `returns` library types (`IOResult`, `Maybe`, `Result`) inside `result.py` only — subprojects must use `FlextResult` / `r` exclusively.
 
-- Use `Result` composition with `.bind`/`.map` and project wrapper `FlextResult` at boundaries.
-- Use `.lash` for failure recovery branches (project-standard pattern).
-- Keep impure side-effect boundaries explicit when crossing IO-related operations.
+## Instructions
+
+### Public API Surface — `FlextResult[T_co]`
+
+**Alias**: `r = FlextResult` — use `r` throughout application code.
+
+**Import pattern** (all subprojects):
+
+```python
+from flext_core import FlextResult, r
+# or via short alias:
+from flext_core import r
+```
+
+### Factory Methods
+
+| Method | Signature | Purpose |
+| -------- | ----------- | --------- |
+| `r[T].ok(value)` | `ok[T](cls, value: T) -> FlextResult[T]` | Wrap success value (raises `ValueError` if `None`) |
+| `r.fail(error)` | `fail[U](cls, error: str \| None, error_code: str \| None = None, error_data: t.ConfigMap \| None = None) -> FlextResult[U]` | Create failure with message, optional code and metadata |
+| `FlextResult.safe` | `safe[T](func: p.VariadicCallable[T]) -> p.VariadicCallable[FlextResult[T]]` | Decorator — catches exceptions, returns `.fail()` |
+| `create_from_callable` | `create_from_callable(cls, func: Callable[[], T_co], error_code: str \| None = None) -> FlextResult[T_co]` | Execute callable, wrap result or exception |
+
+### Monadic Composition Chain
+
+| Method | Signature | When to use |
+| -------- | ----------- | ------------- |
+| `.map(func)` | `map[U](self, func: Callable[[T_co], U]) -> FlextResult[U]` | Transform success value with a pure function |
+| `.flat_map(func)` | `flat_map[U](self, func: Callable[[T_co], RuntimeResult[U]]) -> FlextResult[U]` | Chain operations returning `FlextResult` |
+| `.and_then(func)` | alias for `.flat_map()` | RFC-compliant name |
+| `.filter(pred)` | `filter(self, predicate: Callable[[T_co], bool]) -> FlextResult[T_co]` | Keep value if predicate passes, else fail |
+
+### Failure Recovery
+
+| Method | Signature | When to use |
+| -------- | ----------- | ------------- |
+| `.recover(func)` | `recover(self, func: Callable[[str], T_co]) -> FlextResult[T_co]` | Replace failure with computed fallback value |
+| `.lash(func)` | `lash(self, func: Callable[[str], RuntimeResult[T_co]]) -> FlextResult[T_co]` | Recover from failure by returning a new result |
+| `.or_else(func)` | alias for `.lash()` | RFC-standard name |
+| `.alt(func)` / `.map_error(func)` | `alt(self, func: Callable[[str], str]) -> FlextResult[T_co]` | Transform error message without recovering |
+
+### Side Effects
+
+| Method | Signature | When to use |
+| -------- | ----------- | ------------- |
+| `.tap(func)` | `tap(self, func: Callable[[T_co], None]) -> FlextResult[T_co]` | Logging/metrics on success, result unchanged |
+| `.tap_error(func)` | `tap_error(self, func: Callable[[str], None]) -> Self` | Logging/metrics on failure, result unchanged |
+
+### Value Extraction
+
+| Method | Signature | When to use |
+| -------- | ----------- | ------------- |
+| `.unwrap_or(default)` | `unwrap_or(self, default: T_co) -> T_co` | Get value or default |
+| `.get_or_else(default)` | alias for `.unwrap_or()` | Haskell/Scala naming |
+| `.map_or(default, func)` | `map_or[U](self, default: U, func: Callable[[T_co], U] \| None = None) -> U \| T_co` | Transform + default in one call |
+| `.fold(on_failure, on_success)` | `fold[U](self, on_failure: Callable[[str], U], on_success: Callable[[T_co], U]) -> U` | Catamorphism — collapse to single value |
+
+### Collection Operations
+
+| Method | Signature | When to use |
+| -------- | ----------- | ------------- |
+| `FlextResult.traverse(items, func)` | `traverse[T, U](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> FlextResult[list[U]]` | Map over sequence, fail-fast or accumulate |
+| `FlextResult.accumulate_errors(*results)` | `accumulate_errors(cls, *results: FlextResult[U]) -> FlextResult[list[U]]` | Collect all successes, combine all errors |
+| `FlextResult.parallel_map(items, func)` | `parallel_map[T, U2](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> FlextResult[list[U2]]` | Same semantics as traverse |
+
+### Pydantic Integration
+
+| Method | Signature | When to use |
+| -------- | ----------- | ------------- |
+| `.from_validation(data, model)` | `from_validation(cls, data: t.GeneralValueType, model: type[T_Model]) -> FlextResult[T_Model]` | Validate data against Pydantic model |
+| `.to_model(model)` | `to_model[U: BaseModel](self, model: type[U]) -> FlextResult[U]` | Convert success value to Pydantic model |
+
+### Returns Library Interop (inside `result.py` only)
+
+| Method | Direction | Container |
+| -------- | ----------- | ----------- |
+| `.to_io()` | FlextResult → `IO[T]` | Raises on failure |
+| `.to_io_result()` | FlextResult → `IOResult[T, str]` | `IOSuccess` / `IOFailure` |
+| `.to_maybe()` | FlextResult → `Maybe[T]` | `Some` / `Nothing` |
+| `FlextResult.from_maybe(maybe)` | `Maybe[T]` → FlextResult | `Some` → ok, `Nothing` → fail |
+| `FlextResult.from_io_result(io_result)` | `IOResult[T, str]` → FlextResult | Unwraps nested IO wrappers |
+
+### Resource Management
+
+```python
+FlextResult.with_resource(
+    factory=lambda: open("data.json"),
+    op=lambda f: r[str].ok(f.read()),
+    cleanup=lambda f: f.close(),
+)
+```
+
+### Type Guards
+
+```python
+from flext_core.result import is_success_result, is_failure_result
+
+if is_success_result(result):
+    # TypeIs narrows: result.value is guaranteed non-None
+    process(result.value)
+```
+
+## Workflow
+
+1. Import `r` from `flext_core`
+2. Create results via `r[T].ok(value)` or `r.fail("error")`
+3. Compose with `.map()` → `.flat_map()` → `.lash()` chains
+4. Extract at boundaries with `.fold()`, `.unwrap_or()`, or `.map_or()`
+5. For batch operations use `FlextResult.traverse()` or `.accumulate_errors()`
+6. Validate Pydantic input with `FlextResult.from_validation(data, Model)`
 
 ## Examples
 
-- Project anchors: `/home/marlonsc/flext/flext-core/src/flext_core/result.py`, `/home/marlonsc/flext/flext-core/docs/guides/railway-oriented-programming.md`, `/home/marlonsc/flext/flext-core/pyproject.toml`
+### Good: Railway composition chain
+
+```python
+from flext_core import r
+
+def process_user(user_id: str) -> r[UserResponse]:
+    return (
+        r[User].from_validation({"id": user_id}, User)
+        .flat_map(lambda user: fetch_permissions(user))
+        .map(lambda perms: UserResponse(permissions=perms))
+        .tap(lambda resp: logger.info("processed", user_id=user_id))
+        .lash(lambda err: r[UserResponse].fail(f"User processing failed: {err}"))
+    )
+```
+
+### Good: Batch processing with error accumulation
+
+```python
+results = FlextResult.traverse(
+    items=user_ids,
+    func=lambda uid: r[User].from_validation({"id": uid}, User),
+    fail_fast=False,  # collect ALL errors
+)
+```
+
+### Good: Safe decorator for exception boundaries
+
+```python
+@FlextResult.safe
+def parse_config(raw: str) -> dict:
+    return json.loads(raw)  # exception → r.fail() automatically
+```
+
+### Good: Fold to HTTP response
+
+```python
+response = result.fold(
+    on_failure=lambda err: {"status": 400, "error": err},
+    on_success=lambda data: {"status": 200, "data": data},
+)
+```
+
+### Bad: Imperative branching instead of composition
+
+```python
+# ✗ WRONG — breaks railway pattern
+result = get_user(user_id)
+if result.is_failure:
+    return {"error": result.error}
+perms = get_permissions(result.value)
+if perms.is_failure:
+    return {"error": perms.error}
+return {"data": perms.value}
+```
+
+**Why bad**: Duplicated error handling at every step. Use `.flat_map()` chain instead.
+
+### Bad: Bare try/except bypassing FlextResult
+
+```python
+# ✗ WRONG — exceptions bypass result flow
+try:
+    user = fetch_user(user_id)
+    return {"data": user}
+except Exception as e:
+    return {"error": str(e)}
+```
+
+**Why bad**: Loses error_code/error_data metadata, breaks composition. Use `@FlextResult.safe` or explicit `r[T].fail()`.
+
+### Bad: Constructing FlextResult directly
+
+```python
+# ✗ WRONG — internal constructor, not guaranteed stable
+result = FlextResult(Success(value))
+```
+
+**Why bad**: Constructor has complex dual-mode logic (legacy vs new). Always use `r[T].ok()` / `r[T].fail()`.
+
+## Subproject Usage Map
+
+| Subproject | Files | Pattern |
+| ------------ | ------- | --------- |
+| `flext-auth` | `provider_service.py`, `token_service.py`, `registry.py`, `api.py` | `from flext_core import FlextResult as r` — service results, auth flows |
+| `flext-grpc` | `api.py` | FlextResult for gRPC operation results |
+| `flext-dbt-ldif` | `dbt_client.py`, `models.py`, `settings.py` | Business rule validation, DBT workflow results |
+| `flext-tap-ldif` | `utilities.py` | `from flext_core import FlextResult, FlextTypes as t` |
+| `flext-meltano` | `dbt/service.py` | `from flext_core import FlextResult as r, FlextService` |
+| `flext-cli` | service modules | CLI operation results |
 
 ## Verification
 
-- `rg -n "https?://" .claude/skills/lib-returns/SKILL.md`
-- `rg -n "Project anchors:" .claude/skills/lib-returns/SKILL.md`
+```bash
+# Confirm FlextResult declarations
+rg -n "def ok|def fail|def map|def flat_map|def lash|def recover|def traverse|def fold|def tap" flext-core/src/flext_core/result.py
+
+# Confirm r alias export
+rg -n "^r = FlextResult" flext-core/src/flext_core/result.py
+
+# Confirm subproject usage
+rg -n "from flext_core import.*FlextResult|from flext_core import.*\br\b" --glob "**/*.py" flext-auth flext-grpc flext-meltano
+
+# Verify no direct constructor usage (anti-pattern)
+rg -n "FlextResult\(Success\|FlextResult\(Failure" --glob "**/*.py" flext-auth/src/ flext-grpc/src/
+
+# Confirm returns library pinned
+rg "returns>=" flext-core/pyproject.toml
+```

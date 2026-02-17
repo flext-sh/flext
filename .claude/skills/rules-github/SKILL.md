@@ -1,38 +1,63 @@
 ---
 name: rules-github
-description: Scoped contribution rules for `.github/` that align with root CLAUDE and project conventions.
-scope: /home/marlonsc/flext/.github/
-tags: [rules,scope,docs]
-last_verified: 2026-02-17
+description: Rules for GitHub automation files in `.github/`, including workflows, templates, and dependency policy. Use when editing CI/CD or repo automation config.
 ---
 
-## Applies To
+# Rules GitHub
 
-- `/home/marlonsc/flext/.github/`
+## Scope
+- `.github/workflows/`
+- `.github/copilot-instructions.md`
+- `.github/dependabot.yml`
 
-## Sources
+## References
+- `.github/workflows/flx_comprehensive_tests.yml`
+- `.github/workflows/docs_maintenance.yml`
+- `.github/dependabot.yml`
+- `AGENTS.md`
 
-- `/home/marlonsc/flext/CLAUDE.md`
-- `/home/marlonsc/flext/AGENTS.md`
-- `/home/marlonsc/flext/CONVENTIONS.md`
-- `/home/marlonsc/flext/.github/`
+## Rules
+- Keep workflow triggers explicit (`on:` paths/branches/events).
+- Keep job names meaningful and aligned with reported checks.
+- Keep policy pointer files concise and linked to canonical source.
+- Update docs/policy references when workflow names change.
 
-## Enforced Rules
+## Instructions
+- Validate workflow syntax and key blocks (`name`, `on`, `jobs`).
+- Keep secrets/environment references scoped and explicit.
+- For documentation workflows, ensure path filters match docs locations.
 
-- Guideline: keep changes local to this scope and follow existing file naming and structure patterns.
-- Guideline: do not duplicate global governance text from root `CLAUDE.md` inside scope docs.
+```bash
+ls -la .github/workflows
+```
 
-## Guidance
-
-- Before editing, read sibling files in the same directory to match style and structure.
-- Prefer incremental edits and verify with scope-relevant commands (tests/build/docs checks).
-- Keep references path-anchored so future contributors can verify quickly.
+## Workflow
+1. Select workflow/template to change.
+2. Update trigger and job blocks intentionally.
+3. Validate consistency with project Makefile/gates.
+4. Recheck dependent docs or pointer files.
 
 ## Examples
+Good:
 
-- When working in `.github/`, cite concrete files under `/home/marlonsc/flext/.github/` instead of generic statements.
+```yaml
+name: FLEXT Comprehensive Tests
+on:
+  pull_request:
+```
+
+Why good: explicit workflow identity and trigger event.
+
+Bad:
+
+```yaml
+on: [push]
+```
+
+Why bad: overly broad trigger often causes unnecessary CI load and unclear intent.
 
 ## Verification
-
-- `ls -la .github`
+- `ls -la .github/workflows`
+- `rg -n "^name:|^on:|^jobs:" .github/workflows/*.yml`
+- `rg -n "Canonical source|CLAUDE.md" .github/copilot-instructions.md`
 - `rg -n "TODO|FIXME" .github || true`

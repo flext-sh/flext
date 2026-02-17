@@ -12,6 +12,7 @@ Welcome to the master index for the FLEXT documentation ecosystem. The portal bl
 - **API reference**: `docs/api-reference/README.md` leads to the complete surfaces for flext-core, flext-ldif, flext-auth, and the other published packages.
 - **Testing + validation**: `docs/guides/testing.md` describes the testing strategy and how the published `reports/` directory tracks every Ruff, Pyrefly, and pytest run.
 - **Development workflow**: `docs/guides/development.md` collects tooling, git conventions, and the automation humans and bots use to keep docs healthy.
+- **Automation pattern**: `docs/guides/skill-automation-pattern.md` standardizes how to ship future script-backed skills (skill + scripts + docs + reports).
 
 ## Status & Quality
 
@@ -30,6 +31,7 @@ All documentation changes are cross-checked against the generated artifacts in `
 ### Development & Testing Guides
 
 - `docs/guides/*` hosts the practical playbooks: `getting-started.md`, `development.md`, `testing.md`, `configuration.md`, `troubleshooting.md`, and the companion README that maps the subtopics.
+- `docs/guides/skill-automation-pattern.md` is the canonical playbook for creating reusable automation skills and validation orchestrators.
 
 ### API & Libraries
 

@@ -1,38 +1,63 @@
 ---
 name: rules-cmd
-description: Scoped contribution rules for `cmd/` that align with root CLAUDE and project conventions.
-scope: /home/marlonsc/flext/cmd/
-tags: [rules,scope,docs]
-last_verified: 2026-02-17
+description: Rules for command entrypoints under `cmd/` and their package wiring. Use when modifying command bootstrap files, CLI wrappers, or command-path docs.
 ---
 
-## Applies To
+# Rules Cmd
 
-- `/home/marlonsc/flext/cmd/`
+## Scope
+- `cmd/flext/`
+- `cmd/flext-cli/`
+- `cmd/flext-control-panel/`
+- `cmd/flext-demo/`
+- `cmd/flext-server/`
 
-## Sources
+## References
+- `AGENTS.md`
+- `Makefile`
+- `cmd/flext/`
+- `cmd/flext-cli/`
 
-- `/home/marlonsc/flext/CLAUDE.md`
-- `/home/marlonsc/flext/AGENTS.md`
-- `/home/marlonsc/flext/CONVENTIONS.md`
-- `/home/marlonsc/flext/cmd/`
+## Rules
+- Keep command entrypoints thin: parse/dispatch/bootstrap only.
+- Keep command paths and names consistent with directory names.
+- Avoid embedding business logic directly in command wrappers.
+- Ensure command examples are runnable from repository root.
 
-## Enforced Rules
+## Instructions
+- Verify target command directory exists before adding references.
+- Anchor docs to actual command files/scripts under `cmd/<name>/`.
+- When moving command code, update all docs and call paths in same change.
 
-- Guideline: keep changes local to this scope and follow existing file naming and structure patterns.
-- Guideline: do not duplicate global governance text from root `CLAUDE.md` inside scope docs.
+```bash
+ls -la cmd
+```
 
-## Guidance
-
-- Before editing, read sibling files in the same directory to match style and structure.
-- Prefer incremental edits and verify with scope-relevant commands (tests/build/docs checks).
-- Keep references path-anchored so future contributors can verify quickly.
+## Workflow
+1. Identify command entrypoint being changed.
+2. Verify invocation path from repository root.
+3. Apply minimal bootstrap-level changes.
+4. Update command references in docs/scripts if path changed.
+5. Validate command directory structure remains coherent.
 
 ## Examples
+Good:
 
-- When working in `cmd/`, cite concrete files under `/home/marlonsc/flext/cmd/` instead of generic statements.
+```bash
+python cmd/flext-demo/main.py --help
+```
+
+Why good: explicit command path and predictable root-relative invocation.
+
+Bad:
+
+```text
+run the demo command module somehow
+```
+
+Why bad: ambiguous instruction that cannot be executed or validated.
 
 ## Verification
-
 - `ls -la cmd`
+- `rg -n "cmd/" docs README.md .claude/skills/*/SKILL.md`
 - `rg -n "TODO|FIXME" cmd || true`

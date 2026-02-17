@@ -1192,7 +1192,7 @@ class FlextContainer:
         ...
 
     # Service registration
-    def register[T](self, name: str, service: T) -> FlextResult[None]:
+    def register[T](self, name: str, service: T) -> FlextResult[bool]:
         """Register service instance."""
         ...
 
@@ -1200,7 +1200,7 @@ class FlextContainer:
         self,
         name: str,
         factory: Callable[[], T]
-    ) -> FlextResult[None]:
+    ) -> FlextResult[bool]:
         """Register factory for lazy instantiation."""
         ...
 
@@ -1238,8 +1238,8 @@ class p:
         """Base service protocol."""
         def execute(self) -> object: ...
         def is_valid(self) -> bool: ...
-        def validate_business_rules(self) -> FlextResult[None]: ...
-        def validate_config(self) -> FlextResult[None]: ...
+        def validate_business_rules(self) -> FlextResult[bool]: ...
+        def validate_config(self) -> FlextResult[bool]: ...
         def get_service_info(self) -> dict[str, object]: ...
 
     @runtime_checkable
@@ -1253,7 +1253,7 @@ class p:
     @runtime_checkable
     class Configurable(Protocol):
         """Configuration protocol."""
-        def configure(self, config: dict[str, object]) -> FlextResult[None]: ...
+        def configure(self, config: dict[str, object]) -> FlextResult[bool]: ...
         def get_config(self) -> dict[str, object]: ...
 
     @runtime_checkable
@@ -1767,8 +1767,8 @@ class UserService(FlextService[User]):
     def execute(self) -> FlextResult[User]:
         return FlextResult[User].ok(User(name="John"))
 
-    def validate_business_rules(self) -> FlextResult[None]:
-        return FlextResult[None].ok(None)
+    def validate_business_rules(self) -> FlextResult[bool]:
+        return FlextResult[bool].| ok(value=True)
 
     def is_valid(self) -> bool:
         return True
@@ -2895,7 +2895,7 @@ class CreateUser(FlextService[User]):
 
 #### 📊 Estado Atual da Implementação
 
-**Localização:** `/home/marlonsc/flext/flext-core/src/flext_core/container.py` (1485 linhas)
+**Localização:** `flext-core/src/flext_core/container.py` (1485 linhas)
 
 **Features Implementadas:**
 
@@ -2908,15 +2908,15 @@ class FlextContainer:
     _global_lock: threading.RLock = threading.RLock()
 
     # Core operations
-    def register(self, name: str, service: object) -> FlextResult[None]
-    def register_factory(self, name: str, factory: Callable[[], T]) -> FlextResult[None]
+    def register(self, name: str, service: object) -> FlextResult[bool]
+    def register_factory(self, name: str, factory: Callable[[], T]) -> FlextResult[bool]
     def get(self, name: str) -> FlextResult[object]
     def get_typed(self, name: str, expected_type: type[T]) -> FlextResult[T]
 
     # Advanced features
     def auto_wire(self, service_class: type[T]) -> FlextResult[object]
     def create_service(self, service_class: type[T], service_name: str | None) -> FlextResult[object]
-    def batch_register(self, services: dict[str, object]) -> FlextResult[None]
+    def batch_register(self, services: dict[str, object]) -> FlextResult[bool]
 
     # Integration com dependency-injector
     _di_container: DynamicContainer  # Internal DI wrapper
@@ -3328,7 +3328,7 @@ class MyService(FlextService[T]):
 
 #### 📊 Estado Atual da Implementação
 
-**Localização:** `/home/marlonsc/flext/flext-core/src/flext_core/config.py` (688 linhas)
+**Localização:** `flext-core/src/flext_core/config.py` (688 linhas)
 
 **Arquitetura Automática:**
 
@@ -3751,7 +3751,7 @@ Situação: Multiple envs - Solução Automática: `.env` files - ❌ Não Fazer
 
 #### 📊 Estado Atual da Implementação
 
-**Localização:** `/home/marlonsc/flext/flext-core/src/flext_core/models.py` (linhas estimadas: ~800)
+**Localização:** `flext-core/src/flext_core/models.py` (linhas estimadas: ~800)
 
 **Features Implementadas:**
 
@@ -4172,7 +4172,7 @@ class User(FlextModels.Entity):
 
 #### 📊 Estado Atual da Implementação
 
-**Localização:** `/home/marlonsc/flext/flext-core/src/flext_core/protocols.py` (linhas estimadas: ~400)
+**Localização:** `flext-core/src/flext_core/protocols.py` (linhas estimadas: ~400)
 
 **Features Implementadas:**
 
@@ -4191,13 +4191,13 @@ class p:
     class Repository(Protocol):
         """Repository protocol."""
         def get(self, id: str) -> FlextResult[object]: ...
-        def save(self, entity: object) -> FlextResult[None]: ...
-        def delete(self, id: str) -> FlextResult[None]: ...
+        def save(self, entity: object) -> FlextResult[bool]: ...
+        def delete(self, id: str) -> FlextResult[bool]: ...
 
     @runtime_checkable
     class Configurable(Protocol):
         """Configurable protocol."""
-        def configure(self, config: dict[str, object]) -> FlextResult[None]: ...
+        def configure(self, config: dict[str, object]) -> FlextResult[bool]: ...
         def get_config(self) -> dict[str, object]: ...
 ```
 
@@ -4303,7 +4303,7 @@ class FlextLdifProtocols:
 
 #### 📊 Estado Atual da Implementação
 
-**Localização:** `/home/marlonsc/flext/flext-core/src/flext_core/mixins.py` (linhas estimadas: ~200)
+**Localização:** `flext-core/src/flext_core/mixins.py` (linhas estimadas: ~200)
 
 **Features Implementadas:**
 
@@ -4479,7 +4479,7 @@ class MyService(FlextService[T]):
 
 #### 📊 Estado Atual da Implementação
 
-**Localização:** `/home/marlonsc/flext/flext-core/src/flext_core/loggings.py` (600 linhas)
+**Localização:** `flext-core/src/flext_core/loggings.py` (600 linhas)
 
 **Arquitetura Automática:**
 
@@ -7367,15 +7367,15 @@ class FlextCli:
 ```python
 
 # Exemplo real de flext-cli
-def save_auth_token(self, token: str) -> FlextResult[None]:
+def save_auth_token(self, token: str) -> FlextResult[bool]:
     if not token.strip():
-        return FlextResult[None].fail(FlextCliConstants.ErrorMessages.TOKEN_EMPTY)
+        return FlextResult[bool].fail(FlextCliConstants.ErrorMessages.TOKEN_EMPTY)
 
     write_result = self.file_tools.write_json_file(str(token_path), json_data)
     if write_result.is_failure:
-        return FlextResult[None].fail(...)
+        return FlextResult[bool].fail(...)
 
-    return FlextResult[None].ok(None)
+    return FlextResult[bool].| ok(value=True)
 ```
 
 ✅ **Railway Pattern** usado consistentemente
@@ -7455,7 +7455,7 @@ class FlextCli:
         # ...
 
     # ❌ Convenience methods que duplicam domain libraries
-    def print(self, message: str, style: str | None = None) -> FlextResult[None]:
+    def print(self, message: str, style: str | None = None) -> FlextResult[bool]:
         return self.formatters.print(message, style)
 
     def create_table(self, data: object | None = None, ...) -> FlextResult[str]:
@@ -8220,8 +8220,8 @@ class FlextService[TDomainResult]:
     def execute_operation(self, request: OperationExecutionRequest) -> FlextResult[TDomainResult]: ...
 
     # ❌ Validation methods raramente usados
-    def validate_business_rules(self) -> FlextResult[None]: ...
-    def validate_config(self) -> FlextResult[None]: ...
+    def validate_business_rules(self) -> FlextResult[bool]: ...
+    def validate_config(self) -> FlextResult[bool]: ...
     def is_valid(self) -> bool: ...
 
     # ❌ Service info raramente usado
@@ -8394,7 +8394,7 @@ class FlextService[TDomainResult](
 class MyService(FlextService[Result]):
     def execute(self) -> FlextResult[Result]: ...
     def execute_with_context_cleanup(self) -> FlextResult[Result]: ...  # ❌ Boilerplate
-    def validate_business_rules(self) -> FlextResult[None]: ...  # ❌ Raramente usado
+    def validate_business_rules(self) -> FlextResult[bool]: ...  # ❌ Raramente usado
 
 
 # DEPOIS - Only execute + Pydantic validators
@@ -8573,7 +8573,7 @@ def execute_with_context_cleanup(self) -> FlextResult[TDomainResult]:
     ...
 
 @deprecated("Use Pydantic @model_validator instead")
-def validate_business_rules(self) -> FlextResult[None]:
+def validate_business_rules(self) -> FlextResult[bool]:
     ...
 ```
 

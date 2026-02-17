@@ -1,36 +1,66 @@
 ---
 name: flext-type-system
-description: Type-system anchors and usage map for FLEXT aliases and containers.
-scope: /home/marlonsc/flext/
-tags: [skills,workflow,patterns]
-last_verified: 2026-02-17
+description: Canonical FLEXT type-system map for aliases, generics, result interplay, and settings contracts. Use when changing shared typing primitives.
 ---
 
-## Applies To
+# Flext Type System
 
-- `/home/marlonsc/flext/`
+## Scope
+- Type-system source of truth:
+  - `flext-core/src/flext_core/typings.py`
+- Type consumers:
+  - `flext-core/src/flext_core/result.py`
+  - `flext-core/src/flext_core/settings.py`
+  - `flext-core/src/flext_core/protocols.py`
 
-## Sources
+## References
+- `flext-core/src/flext_core/typings.py` (type vars + aliases + `FlextTypes`)
+- `flext-core/src/flext_core/result.py` (`FlextResult[T_co]` and alias `r`)
+- `flext-core/src/flext_core/settings.py` (`T_Settings` bound usage)
+- `flext-core/src/flext_core/__init__.py` (exported aliases)
 
-- `/home/marlonsc/flext/flext-core/src/flext_core/typings.py`
-- `/home/marlonsc/flext/flext-core/docs/api-reference/foundation.md`
-- `/home/marlonsc/flext/flext-core/docs/guides/railway-oriented-programming.md`
+## Rules
+- Add shared aliases in `typings.py` rather than re-declaring in feature modules.
+- Keep recursive/general value aliases compatible with existing boundaries.
+- Preserve generic covariance/contravariance semantics where defined.
+- Keep exported short aliases (`t`, `r`) stable across refactors.
 
-## Enforced Rules
+## Instructions
+- Use existing type var definitions before introducing new generic parameters.
+- Prefer `FlextTypes` aliases (`GeneralValueType`, maps, scalar groups) for public contracts.
+- Ensure downstream users (`result.py`, `settings.py`, `protocols.py`) still type-check.
 
-- Guideline: use centralized aliases from `typings.py` for shared vocabulary and consistency.
-- Guideline: avoid redefining JSON/general value types in feature code when canonical aliases already exist.
+```python
+T = TypeVar("T")
+T_Settings = TypeVar("T_Settings", bound=BaseSettings)
 
-## Guidance
+type GeneralValueType = str | int | float | bool | datetime | None | BaseModel | Path | Sequence[GeneralValueType] | Mapping[str, GeneralValueType]
+```
 
-- Use `t.GeneralValueType`, `t.JsonValue`, and container classes where data contracts cross module boundaries.
-- Pair type usage with result flow patterns (`r[T]`) for clear success/failure contracts.
+## Workflow
+1. Locate existing alias/type-var nearest to intended change.
+2. Extend or refine canonical alias in `typings.py`.
+3. Validate impacted consumers in result/settings/protocol modules.
+4. Re-run type checks for affected packages.
 
 ## Examples
+Good:
 
-- `typings.py` documents both module-level aliases and container classes used throughout flext-core.
+```python
+type JsonPrimitive = str | int | float | bool | None
+```
+
+Why good: focused alias with clear semantic purpose.
+
+Bad:
+
+```python
+JsonPrimitive = object
+```
+
+Why bad: overly broad type erases constraints and degrades static analysis.
 
 ## Verification
-
-- `rg -n "^##\s+Guidance$" .claude/skills/flext-type-system/SKILL.md`
-- `rg -n "`/home/marlonsc/flext/" .claude/skills/flext-type-system/SKILL.md`
+- `rg -n "TypeVar\(|type GeneralValueType|class FlextTypes|JsonPrimitive" flext-core/src/flext_core/typings.py`
+- `rg -n "class FlextResult|type .*=" flext-core/src/flext_core/result.py`
+- `rg -n "T_Settings|BaseSettings" flext-core/src/flext_core/settings.py flext-core/src/flext_core/typings.py`

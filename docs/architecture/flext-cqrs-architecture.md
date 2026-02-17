@@ -1281,7 +1281,7 @@ servir como referência futura para implementação:
 ~~ created_at: datetime~~
 
 ~~class UserCreatedHandler(FlextHandlers[UserCreatedEvent, None]):~~
-~~ def handle(self, event: UserCreatedEvent) -> FlextResult[None]:~~
+~~ def handle(self, event: UserCreatedEvent) -> FlextResult[bool]:~~
 ~~ self.cqrs_context.push({~~
 ~~ "event_type": "UserCreated",~~
 ~~ "user_id": event.user_id,~~
@@ -1302,7 +1302,7 @@ servir como referência futura para implementação:
 ~~ extra=self.cqrs_context.current(),~~
 ~~ )~~
 
-~~ return FlextResult.ok(None)~~
+~~ return FlextResult.| ok(value=True)~~
 ~~ except Exception as e:~~
 ~~ self.cqrs_metrics.record("event_processing_errors", 1)~~
 ~~ return FlextResult.fail(str(e))~~
@@ -1617,7 +1617,7 @@ self.logger.debug(f"Listing users: limit={query.limit}, offset={query.offset}")
 # Event Handlers
 
 class UserCreatedHandler(h[UserCreatedEvent, None]):
-def handle(self, event: UserCreatedEvent) -> FlextResult[None]:
+def handle(self, event: UserCreatedEvent) -> FlextResult[bool]:
 self.logger.info(f"Processing UserCreatedEvent: {event.user_id}")
 
         self.cqrs_context.push({
@@ -1631,7 +1631,7 @@ self.logger.info(f"Processing UserCreatedEvent: {event.user_id}")
                 self.logger.info(f"Sending welcome email to {event.email}")
 
             self.cqrs_metrics.record("welcome_emails_sent", 1)
-            return FlextResult.ok(None)
+            return FlextResult.| ok(value=True)
         finally:
             self.cqrs_context.pop()
 
@@ -1926,22 +1926,22 @@ class ProcessPaymentHandler(h[ProcessPaymentCommand, PaymentResult]):
     def _validate_payment_method(
         self,
         command: ProcessPaymentCommand,
-    ) -> FlextResult[None]:
+    ) -> FlextResult[bool]:
         """Validate payment method is supported."""
         supported = ["credit_card", "debit_card", "pix", "boleto"]
         if command.payment_method not in supported:
             return FlextResult.fail(f"Unsupported payment method: {command.payment_method}")
-        return FlextResult.ok(None)
+        return FlextResult.| ok(value=True)
 
     def _check_fraud(
         self,
         command: ProcessPaymentCommand,
-    ) -> FlextResult[None]:
+    ) -> FlextResult[bool]:
         """Check for potential fraud."""
         # Simplified fraud check
         if command.amount > 10000:
             return FlextResult.fail("Amount exceeds fraud threshold")
-        return FlextResult.ok(None)
+        return FlextResult.| ok(value=True)
 
     def _process_with_gateway(
         self,

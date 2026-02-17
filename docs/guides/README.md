@@ -9,6 +9,7 @@
     - [[Configuration Guide](./configuration.md) ✅](#configuration-guideconfigurationmd-)
   - [Development](#development)
     - [[Development Setup](./development.md) ✅](#development-setupdevelopmentmd-)
+    - [[Automation Skill Pattern](./skill-automation-pattern.md) ✅](#automation-skill-patternskill-automation-patternmd-)
     - [Contributing Guide (Coming Soon)](#contributing-guide-coming-soon)
     - [[Testing Guide](./testing.md) ✅](#testing-guidetestingmd-)
   - [Operations](#operations)
@@ -48,6 +49,10 @@ How to configure FLEXT for your specific environment and requirements.
 ### [Development Setup](./development.md) ✅
 
 Setting up a development environment for FLEXT contributions.
+
+### [Automation Skill Pattern](./skill-automation-pattern.md) ✅
+
+Standard pattern for creating future script-backed automation skills and docs.
 
 ### Contributing Guide (Coming Soon)
 

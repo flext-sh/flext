@@ -1,38 +1,60 @@
 ---
 name: rules-examples
-description: Scoped contribution rules for `examples/` that align with root CLAUDE and project conventions.
-scope: /home/marlonsc/flext/examples/
-tags: [rules,scope,docs]
-last_verified: 2026-02-17
+description: Rules for runnable examples in `examples/` so they stay aligned with current APIs and tooling. Use when editing or adding example scripts.
 ---
 
-## Applies To
+# Rules Examples
 
-- `/home/marlonsc/flext/examples/`
+## Scope
+- `examples/acl_processing_example.py`
+- `examples/advanced_processing_example.py`
+- `examples/complete_workflow_example.py`
+- `examples/README.md`
 
-## Sources
+## References
+- `examples/README.md`
+- `flext-core/src/flext_core/__init__.py`
+- `flext-core/src/flext_core/result.py`
 
-- `/home/marlonsc/flext/CLAUDE.md`
-- `/home/marlonsc/flext/AGENTS.md`
-- `/home/marlonsc/flext/CONVENTIONS.md`
-- `/home/marlonsc/flext/examples/`
+## Rules
+- Keep examples executable from repository root.
+- Use current public APIs; avoid stale/internal imports.
+- Include realistic input/output flow, not placeholder pseudo-code.
+- Keep example naming and README references synchronized.
 
-## Enforced Rules
+## Instructions
+- Anchor imports to public package surfaces (`flext_core`, package root exports).
+- Update `examples/README.md` when files are added/renamed.
+- Remove outdated APIs from examples when core contracts change.
 
-- Guideline: keep changes local to this scope and follow existing file naming and structure patterns.
-- Guideline: do not duplicate global governance text from root `CLAUDE.md` inside scope docs.
+```bash
+python examples/complete_workflow_example.py --help || true
+```
 
-## Guidance
-
-- Before editing, read sibling files in the same directory to match style and structure.
-- Prefer incremental edits and verify with scope-relevant commands (tests/build/docs checks).
-- Keep references path-anchored so future contributors can verify quickly.
+## Workflow
+1. Choose target example and its API dependencies.
+2. Update script with current public imports and behavior.
+3. Verify script syntax and invocation.
+4. Sync README references.
 
 ## Examples
+Good:
 
-- When working in `examples/`, cite concrete files under `/home/marlonsc/flext/examples/` instead of generic statements.
+```python
+from flext_core import r
+```
+
+Why good: stable public import with canonical alias.
+
+Bad:
+
+```python
+from flext_core._models import m
+```
+
+Why bad: example couples to private internals and will drift quickly.
 
 ## Verification
-
 - `ls -la examples`
+- `rg -n "from flext_core|from flext_core\._" examples/*.py`
 - `rg -n "TODO|FIXME" examples || true`

@@ -1,38 +1,65 @@
 ---
 name: rules-src
-description: Scoped contribution rules for `src/` that align with root CLAUDE and project conventions.
-scope: /home/marlonsc/flext/src/
-tags: [rules,scope,docs]
-last_verified: 2026-02-17
+description: Rules for shared source modules under top-level `src/`. Use when editing common source code that impacts multiple packages or utilities.
 ---
 
-## Applies To
+# Rules Src
 
-- `/home/marlonsc/flext/src/`
+## Scope
 
-## Sources
+- `src/flext/`
+- `src/.coverage`
 
-- `/home/marlonsc/flext/CLAUDE.md`
-- `/home/marlonsc/flext/AGENTS.md`
-- `/home/marlonsc/flext/CONVENTIONS.md`
-- `/home/marlonsc/flext/src/`
+## References
 
-## Enforced Rules
+- `src/flext/`
+- `flext-core/docs/architecture/clean-architecture.md`
+- `Makefile`
 
-- Guideline: keep changes local to this scope and follow existing file naming and structure patterns.
-- Guideline: do not duplicate global governance text from root `CLAUDE.md` inside scope docs.
+## Rules
 
-## Guidance
+- Keep source changes aligned with architecture boundaries.
+- Avoid package-internal imports that bypass public contracts.
+- Keep typing explicit for public/module-level APIs.
+- Preserve deterministic behavior and avoid hidden side effects.
 
-- Before editing, read sibling files in the same directory to match style and structure.
-- Prefer incremental edits and verify with scope-relevant commands (tests/build/docs checks).
-- Keep references path-anchored so future contributors can verify quickly.
+## Instructions
+
+- Inspect nearest existing module pattern before changing logic.
+- Keep imports and exports explicit.
+- Update related tests/docs when shared source behavior changes.
+
+```bash
+ls -la src
+```
+
+## Workflow
+
+1. Identify the shared source module being changed.
+2. Apply scoped edits with explicit contract impact.
+3. Verify no boundary violations in imports.
+4. Run relevant checks for affected packages.
 
 ## Examples
 
-- When working in `src/`, cite concrete files under `/home/marlonsc/flext/src/` instead of generic statements.
+Good:
+
+```python
+from flext_core import r
+```
+
+Why good: uses stable public boundary from shared source logic.
+
+Bad:
+
+```python
+from flext_core._utilities import *
+```
+
+Why bad: private/wildcard import makes source behavior fragile and hard to analyze.
 
 ## Verification
 
 - `ls -la src`
+- `rg -n "from flext_core\._|import \*" --glob "**/*.py" src flext-* flext-core/src || true`
 - `rg -n "TODO|FIXME" src || true`

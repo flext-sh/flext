@@ -23,3 +23,10 @@ for project rules, architecture, and conventions: [`CLAUDE.md`](CLAUDE.md).
 2. **Never duplicate rules** across agent configs — reference `CLAUDE.md` sections instead.
 3. **Agent-specific files must stay under 50 lines** — they are pointers, not copies.
 4. When updating architecture, conventions, or quality gates, update `CLAUDE.md` only.
+
+## Practical Usage
+
+1. Start with root `CLAUDE.md`, then load scoped skills from `.claude/skills/` by touched path.
+2. For `flext-core` changes, include `rules-flext-core` and matching `lib-*` skills for dependencies in scope.
+3. For docs/governance changes, include `skill-format-universal` and `flext-docs-pointer-policy`.
+4. In final reports, reference changed paths and provide validation evidence with concrete commands.

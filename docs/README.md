@@ -9,6 +9,7 @@ This folder is the curated portal for every FLEXT document; the entry point at `
 ### Getting Started & Guides
 
 - **[Guides](guides/README.md)** – Installation, development workflows, testing playbooks, configuration, and troubleshooting live inside the dedicated Guides folder and its companion files.
+- **[Automation Skill Pattern](guides/skill-automation-pattern.md)** – Canonical pattern for future automation work (skill + checker + orchestrator + docs + baseline/report artifacts).
 - **[Getting Started](guides/getting-started.md)** – Step-by-step setup, sample projects, and onboarding notes appear in the Getting Started document within that folder.
 
 ### Architecture & Patterns
@@ -40,6 +41,7 @@ This folder is the curated portal for every FLEXT document; the entry point at `
 - [Standards & Practices](standards/README.md) – Follow the standards guide to keep code and docs aligned.
 - [Getting Started](guides/getting-started.md) – The Getting Started article details the onboarding steps.
 - [Guides Catalog](guides/README.md) – The Guides folder collects deployment, configuration, and troubleshooting playbooks.
+- [Automation Skill Pattern](guides/skill-automation-pattern.md) – Reusable standard for creating script-backed skills and validation automation.
 - Quality Reports – The reports folder holds the latest artifacts from the Ruff, Pyrefly, and Bandit pipelines.
 
 ## Support & Contributions
