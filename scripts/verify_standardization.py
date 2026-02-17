@@ -33,16 +33,18 @@ class FlextVersionVerificationService(FlextService[dict[str, object]]):
         """Immutable verification configuration."""
 
         flext_root: Path = Path("/home/marlonsc/flext")
-        required_version_exports: frozenset[str] = frozenset({
-            "__version__",
-            "__version_info__",
-            "__title__",
-            "__description__",
-            "__author__",
-            "__author_email__",
-            "__license__",
-            "__url__",
-        })
+        required_version_exports: frozenset[str] = frozenset(
+            {
+                "__version__",
+                "__version_info__",
+                "__title__",
+                "__description__",
+                "__author__",
+                "__author_email__",
+                "__license__",
+                "__url__",
+            }
+        )
 
     class _VersionFileVerifier:
         """Advanced version file verification with functional composition."""

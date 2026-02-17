@@ -263,33 +263,35 @@ class CursorRulesUpdater:
         # Update FLEXT section
         flext_config = current_config.get("flext", {})
 
-        flext_config.update({
-            "automation": {
-                "enabled": True,
-                "auto_validate": True,
-                "auto_fix": False,
-                "rules": rules,
-                "last_updated": self.get_claude_md_hash(),
-            },
-            "commands": {
-                "/flext-validate": {
-                    "description": "Run FLEXT quality validations",
-                    "command": "python3 cursor-agent-automation.py validate",
+        flext_config.update(
+            {
+                "automation": {
+                    "enabled": True,
+                    "auto_validate": True,
+                    "auto_fix": False,
+                    "rules": rules,
+                    "last_updated": self.get_claude_md_hash(),
                 },
-                "/flext-fix": {
-                    "description": "Auto-fix FLEXT violations",
-                    "command": "python3 cursor-agent-automation.py fix",
+                "commands": {
+                    "/flext-validate": {
+                        "description": "Run FLEXT quality validations",
+                        "command": "python3 cursor-agent-automation.py validate",
+                    },
+                    "/flext-fix": {
+                        "description": "Auto-fix FLEXT violations",
+                        "command": "python3 cursor-agent-automation.py fix",
+                    },
+                    "/flext-skills": {
+                        "description": "Show available FLEXT skills",
+                        "command": "python3 cursor-agent-automation.py skills",
+                    },
+                    "/flext-dev": {
+                        "description": "FLEXT development helper",
+                        "command": "make help",
+                    },
                 },
-                "/flext-skills": {
-                    "description": "Show available FLEXT skills",
-                    "command": "python3 cursor-agent-automation.py skills",
-                },
-                "/flext-dev": {
-                    "description": "FLEXT development helper",
-                    "command": "make help",
-                },
-            },
-        })
+            }
+        )
 
         # Add skills as individual commands
         for skill_name, skill_desc in rules.get("skills", {}).items():
@@ -332,186 +334,198 @@ class CursorRulesUpdater:
 
         # Add tool usage section first (highest priority)
         if "tool_usage" in rules and rules["tool_usage"].get("enabled"):
-            lines.extend([
-                "## 🔧 CORE DEVELOPMENT TOOLS - ALWAYS USE THESE FIRST",
-                "",
-                "### Essential Tool Usage Protocol (MANDATORY)",
-                "",
-                "**ALWAYS use these tools BEFORE any manual work:**",
-                "",
-                "1. **Shell**: Execute system commands, run tests, build projects",
-                "   - Use for: `make check`, `make validate`, `pytest`, `mypy`, etc.",
-                "   - Always specify `description` for clarity",
-                "",
-                "2. **Glob**: Find files quickly across the codebase",
-                "   - Use for: Finding all `.py` files, test files, config files",
-                "   - Better than manual `ls`/`find` commands",
-                "",
-                "3. **Grep**: Search code patterns and text",
-                "   - Use for: Finding function definitions, imports, TODOs, bugs",
-                '   - Set `output_mode: "files_with_matches"` to list files only',
-                '   - Use `type: "py"` for Python-specific searches',
-                "",
-                "4. **ReadFile**: Read file contents",
-                "   - Use for: Understanding code before editing, checking imports",
-                "   - Prefer over `cat`/`head`/`tail` terminal commands",
-                "",
-                "5. **SemanticSearch**: Find code by meaning",
-                "   - Use for: Understanding how features work, finding implementations",
-                "   - Better than exact text searches for complex queries",
-                "",
-                "6. **StrReplace**: Make precise text changes",
-                "   - Use for: Fixing imports, renaming variables, updating code",
-                "   - Always unique `old_string` to avoid wrong replacements",
-                "",
-                "7. **TodoWrite**: Plan complex multi-step tasks",
-                "   - Use for: Any task with 3+ steps, refactors, new features",
-                "   - Set `merge: false` for new task lists",
-                "",
-                "### Tool Usage Patterns (MANDATORY)",
-                "",
-                "**NEVER do this manually:**",
-                '- ❌ `grep "pattern" file` → Use **Grep** tool',
-                '- ❌ `find . -name "*.py"` → Use **Glob** tool',
-                "- ❌ `cat file.py` → Use **ReadFile** tool",
-                "- ❌ `sed -i 's/old/new/' file` → Use **StrReplace** tool",
-                "",
-                "**ALWAYS use tools for:**",
-                "- ✅ Code searches and analysis",
-                "- ✅ File reading and exploration",
-                "- ✅ Precise text replacements",
-                "- ✅ Task planning and tracking",
-                "- ✅ Semantic code understanding",
-                "",
-                "### Efficiency Rules",
-                "",
-                "- **Batch tool calls**: Use multiple tools in parallel when possible",
-                "- **Read before edit**: Always **ReadFile** before **StrReplace**",
-                "- **Search before assume**: Use **Grep**/**SemanticSearch** to verify code exists",
-                "- **Plan complex work**: Use **TodoWrite** for multi-step tasks",
-                "- **Validate after changes**: Run tests via **Shell** after modifications",
-                "",
-                "### Critical Reminders",
-                "",
-                "🚨 **MANDATORY**: Never use terminal commands for file operations when tools exist",
-                "🚨 **MANDATORY**: Always read files before making changes",
-                "🚨 **MANDATORY**: Use **TodoWrite** for complex tasks (3+ steps)",
-                "🚨 **MANDATORY**: Run validation after any code changes",
-                "🚨 **MANDATORY**: Use batch tool calls to maximize efficiency",
-                "",
-                "### 🪝 Hook Integration - Automatic Quality Enforcement",
-                "",
-                "**Hooks work with tools and skills for complete quality assurance:**",
-                "",
-                "- **PreToolUse hooks** prevent violations before they happen",
-                "- **PostToolUse hooks** validate after successful edits",
-                "- **Hooks reference skills** when you need help fixing issues",
-                "- **Hook + skill pattern** ensures quality while providing guidance",
-                "",
-                "**When hooks block you:**",
-                "1. Read the error message (explains the violation)",
-                "2. Use the referenced skill for detailed help",
-                "3. Apply the fix using proper patterns",
-                "4. Retry your edit (hook will allow if fixed)",
-                "",
-                "**Example:** Hook blocks duplication → Use `/duplication-analysis` skill → Fix duplication → Retry edit",
-                "",
-                "### 🤖 Cursor-Agent Manual Hook Execution",
-                "",
-                "**Cursor-agent should execute hooks manually after code changes:**",
-                "",
-                "- **After StrReplace/Write**: Run `post_tool_use.py` for syntax/lint validation",
-                "- **Before changes**: Run `pre_tool_use.py` for violation checks",
-                "- **Quality gates**: Run `stop_quality_gate.py` for final validation",
-                "- **Handle blocks**: Parse stderr, use referenced skills, retry after fixes",
-                "",
-            ])
+            lines.extend(
+                [
+                    "## 🔧 CORE DEVELOPMENT TOOLS - ALWAYS USE THESE FIRST",
+                    "",
+                    "### Essential Tool Usage Protocol (MANDATORY)",
+                    "",
+                    "**ALWAYS use these tools BEFORE any manual work:**",
+                    "",
+                    "1. **Shell**: Execute system commands, run tests, build projects",
+                    "   - Use for: `make check`, `make validate`, `pytest`, `mypy`, etc.",
+                    "   - Always specify `description` for clarity",
+                    "",
+                    "2. **Glob**: Find files quickly across the codebase",
+                    "   - Use for: Finding all `.py` files, test files, config files",
+                    "   - Better than manual `ls`/`find` commands",
+                    "",
+                    "3. **Grep**: Search code patterns and text",
+                    "   - Use for: Finding function definitions, imports, TODOs, bugs",
+                    '   - Set `output_mode: "files_with_matches"` to list files only',
+                    '   - Use `type: "py"` for Python-specific searches',
+                    "",
+                    "4. **ReadFile**: Read file contents",
+                    "   - Use for: Understanding code before editing, checking imports",
+                    "   - Prefer over `cat`/`head`/`tail` terminal commands",
+                    "",
+                    "5. **SemanticSearch**: Find code by meaning",
+                    "   - Use for: Understanding how features work, finding implementations",
+                    "   - Better than exact text searches for complex queries",
+                    "",
+                    "6. **StrReplace**: Make precise text changes",
+                    "   - Use for: Fixing imports, renaming variables, updating code",
+                    "   - Always unique `old_string` to avoid wrong replacements",
+                    "",
+                    "7. **TodoWrite**: Plan complex multi-step tasks",
+                    "   - Use for: Any task with 3+ steps, refactors, new features",
+                    "   - Set `merge: false` for new task lists",
+                    "",
+                    "### Tool Usage Patterns (MANDATORY)",
+                    "",
+                    "**NEVER do this manually:**",
+                    '- ❌ `grep "pattern" file` → Use **Grep** tool',
+                    '- ❌ `find . -name "*.py"` → Use **Glob** tool',
+                    "- ❌ `cat file.py` → Use **ReadFile** tool",
+                    "- ❌ `sed -i 's/old/new/' file` → Use **StrReplace** tool",
+                    "",
+                    "**ALWAYS use tools for:**",
+                    "- ✅ Code searches and analysis",
+                    "- ✅ File reading and exploration",
+                    "- ✅ Precise text replacements",
+                    "- ✅ Task planning and tracking",
+                    "- ✅ Semantic code understanding",
+                    "",
+                    "### Efficiency Rules",
+                    "",
+                    "- **Batch tool calls**: Use multiple tools in parallel when possible",
+                    "- **Read before edit**: Always **ReadFile** before **StrReplace**",
+                    "- **Search before assume**: Use **Grep**/**SemanticSearch** to verify code exists",
+                    "- **Plan complex work**: Use **TodoWrite** for multi-step tasks",
+                    "- **Validate after changes**: Run tests via **Shell** after modifications",
+                    "",
+                    "### Critical Reminders",
+                    "",
+                    "🚨 **MANDATORY**: Never use terminal commands for file operations when tools exist",
+                    "🚨 **MANDATORY**: Always read files before making changes",
+                    "🚨 **MANDATORY**: Use **TodoWrite** for complex tasks (3+ steps)",
+                    "🚨 **MANDATORY**: Run validation after any code changes",
+                    "🚨 **MANDATORY**: Use batch tool calls to maximize efficiency",
+                    "",
+                    "### 🪝 Hook Integration - Automatic Quality Enforcement",
+                    "",
+                    "**Hooks work with tools and skills for complete quality assurance:**",
+                    "",
+                    "- **PreToolUse hooks** prevent violations before they happen",
+                    "- **PostToolUse hooks** validate after successful edits",
+                    "- **Hooks reference skills** when you need help fixing issues",
+                    "- **Hook + skill pattern** ensures quality while providing guidance",
+                    "",
+                    "**When hooks block you:**",
+                    "1. Read the error message (explains the violation)",
+                    "2. Use the referenced skill for detailed help",
+                    "3. Apply the fix using proper patterns",
+                    "4. Retry your edit (hook will allow if fixed)",
+                    "",
+                    "**Example:** Hook blocks duplication → Use `/duplication-analysis` skill → Fix duplication → Retry edit",
+                    "",
+                    "### 🤖 Cursor-Agent Manual Hook Execution",
+                    "",
+                    "**Cursor-agent should execute hooks manually after code changes:**",
+                    "",
+                    "- **After StrReplace/Write**: Run `post_tool_use.py` for syntax/lint validation",
+                    "- **Before changes**: Run `pre_tool_use.py` for violation checks",
+                    "- **Quality gates**: Run `stop_quality_gate.py` for final validation",
+                    "- **Handle blocks**: Parse stderr, use referenced skills, retry after fixes",
+                    "",
+                ]
+            )
 
-        lines.extend([
-            "## FLEXT Ecosystem Standards",
-            "",
-            "You are an AI assistant working on the FLEXT Enterprise Data Integration Platform.",
-            "Follow all global rules plus these FLEXT-specific standards.",
-            "",
-        ])
+        lines.extend(
+            [
+                "## FLEXT Ecosystem Standards",
+                "",
+                "You are an AI assistant working on the FLEXT Enterprise Data Integration Platform.",
+                "Follow all global rules plus these FLEXT-specific standards.",
+                "",
+            ]
+        )
 
         # Add architecture rules
         if "architecture" in rules:
             rules["architecture"]
-            lines.extend([
-                "### Architecture Layering (ZERO TOLERANCE)",
-                "",
-                "```",
-                "Tier 0 - Foundation (ZERO internal dependencies):",
-                "  ├── constants.py    # Only StrEnum, Final, Literal",
-                "  ├── typings.py      # Type aliases, TypeVars",
-                "  └── protocols.py    # Interface definitions (Protocol classes)",
-                "",
-                "Tier 1 - Domain Foundation:",
-                "  ├── models.py       # Pydantic models → Tier 0 only",
-                "  └── utilities.py    # Helper functions → Tier 0, models",
-                "",
-                "Tier 2 - Infrastructure:",
-                "  └── servers/*.py    # Server implementations → Tier 0, Tier 1 only",
-                "",
-                "Tier 3 - Application (Top Layer):",
-                "  ├── services/*.py   # Business logic → All lower tiers",
-                "  └── api.py          # Facade/API → All lower tiers",
-                "```",
-                "",
-                "**RULE**: Lower tiers NEVER import from higher tiers.",
-                "",
-            ])
+            lines.extend(
+                [
+                    "### Architecture Layering (ZERO TOLERANCE)",
+                    "",
+                    "```",
+                    "Tier 0 - Foundation (ZERO internal dependencies):",
+                    "  ├── constants.py    # Only StrEnum, Final, Literal",
+                    "  ├── typings.py      # Type aliases, TypeVars",
+                    "  └── protocols.py    # Interface definitions (Protocol classes)",
+                    "",
+                    "Tier 1 - Domain Foundation:",
+                    "  ├── models.py       # Pydantic models → Tier 0 only",
+                    "  └── utilities.py    # Helper functions → Tier 0, models",
+                    "",
+                    "Tier 2 - Infrastructure:",
+                    "  └── servers/*.py    # Server implementations → Tier 0, Tier 1 only",
+                    "",
+                    "Tier 3 - Application (Top Layer):",
+                    "  ├── services/*.py   # Business logic → All lower tiers",
+                    "  └── api.py          # Facade/API → All lower tiers",
+                    "```",
+                    "",
+                    "**RULE**: Lower tiers NEVER import from higher tiers.",
+                    "",
+                ]
+            )
 
         # Add type system rules
         if "type_system" in rules:
             rules["type_system"]
-            lines.extend([
-                "### FLEXT Type System",
-                "",
-                "**Type Safety (Zero Tolerance)**:",
-                "- No `TYPE_CHECKING` blocks - fix architecture",
-                "- No `# type: ignore` - fix types properly",
-                "- No `cast()` - use Models/Protocols/TypeGuards",
-                "- No `Any` - concrete types everywhere",
-                "",
-                "**Modern Python Syntax**:",
-                "```python",
-                "# CORRECT",
-                "status: str | None = None",
-                "items: list[str] = []",
-                "config: dict[str, int] = {}",
-                "",
-                "# WRONG",
-                "status: Optional[str] = None",
-                "items: List[str] = []",
-                "config: Dict[str, int] = {}",
-                "```",
-                "",
-            ])
+            lines.extend(
+                [
+                    "### FLEXT Type System",
+                    "",
+                    "**Type Safety (Zero Tolerance)**:",
+                    "- No `TYPE_CHECKING` blocks - fix architecture",
+                    "- No `# type: ignore` - fix types properly",
+                    "- No `cast()` - use Models/Protocols/TypeGuards",
+                    "- No `Any` - concrete types everywhere",
+                    "",
+                    "**Modern Python Syntax**:",
+                    "```python",
+                    "# CORRECT",
+                    "status: str | None = None",
+                    "items: list[str] = []",
+                    "config: dict[str, int] = {}",
+                    "",
+                    "# WRONG",
+                    "status: Optional[str] = None",
+                    "items: List[str] = []",
+                    "config: Dict[str, int] = {}",
+                    "```",
+                    "",
+                ]
+            )
 
         # Add quality gates
         if "quality_gates" in rules:
-            lines.extend([
-                "### Quality Gates (Mandatory)",
-                "",
-                "- Import order validation",
-                "- Architecture compliance",
-                "- Type safety enforcement",
-                "- Railway-oriented programming",
-                "- Namespace alias usage",
-                "",
-            ])
+            lines.extend(
+                [
+                    "### Quality Gates (Mandatory)",
+                    "",
+                    "- Import order validation",
+                    "- Architecture compliance",
+                    "- Type safety enforcement",
+                    "- Railway-oriented programming",
+                    "- Namespace alias usage",
+                    "",
+                ]
+            )
 
         # Add automation note
-        lines.extend([
-            "### Automation",
-            "",
-            "This file is automatically updated when CLAUDE.md changes.",
-            "Use `/flext-validate` to run validations, `/flext-fix` to auto-fix issues.",
-            "",
-            "---",
-        ])
+        lines.extend(
+            [
+                "### Automation",
+                "",
+                "This file is automatically updated when CLAUDE.md changes.",
+                "Use `/flext-validate` to run validations, `/flext-fix` to auto-fix issues.",
+                "",
+                "---",
+            ]
+        )
 
         return "\n".join(lines)
 
@@ -519,8 +533,7 @@ class CursorRulesUpdater:
         """Check if update is needed."""
         current_config = self.load_current_config()
         current_hash = (
-            current_config
-            .get("flext", {})
+            current_config.get("flext", {})
             .get("automation", {})
             .get("last_updated", "")
         )
@@ -546,11 +559,13 @@ class CursorRulesUpdater:
             new_config = self.generate_cursor_config(rules)
 
             if dry_run:
-                return Result.ok({
-                    "status": "dry_run",
-                    "rules": rules,
-                    "config": new_config,
-                })
+                return Result.ok(
+                    {
+                        "status": "dry_run",
+                        "rules": rules,
+                        "config": new_config,
+                    }
+                )
 
             # Save configuration
             config_result = self.save_config(new_config)
@@ -562,11 +577,13 @@ class CursorRulesUpdater:
             if rules_result.is_failure:
                 return rules_result
 
-            return Result.ok({
-                "status": "updated",
-                "rules": rules,
-                "config": new_config,
-            })
+            return Result.ok(
+                {
+                    "status": "updated",
+                    "rules": rules,
+                    "config": new_config,
+                }
+            )
 
         except Exception as e:
             return Result.err(f"Update failed: {e}")

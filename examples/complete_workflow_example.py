@@ -199,11 +199,13 @@ class CompleteWorkflowExample:
                 workflow_status="completed",
             )
 
-            return r.ok({
-                "workflow_result": workflow_result,
-                "final_data": current_data,
-                "performance_summary": aggregated_metrics,
-            })
+            return r.ok(
+                {
+                    "workflow_result": workflow_result,
+                    "final_data": current_data,
+                    "performance_summary": aggregated_metrics,
+                }
+            )
 
         def _cleanup_context(
             self,
