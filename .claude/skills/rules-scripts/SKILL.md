@@ -19,13 +19,18 @@ description: Rules for automation and maintenance scripts under `scripts/`. Use 
 - `AGENTS.md`
 
 ## Rules
-- Keep scripts non-interactive by default for CI compatibility.
+- Every script MUST have exactly one `# Owner-Skill: .claude/skills/<skill>/SKILL.md` marker in its header (line 2).
+- Keep scripts non-interactive by default for CI compatibility; interactive prompts require explicit `--interactive` flag.
 - Fail fast with clear error output for validation scripts.
+- Bash scripts: `#!/usr/bin/env bash` shebang + `set -euo pipefail`.
+- Python scripts: `if __name__ == "__main__": sys.exit(main())` pattern for entrypoints.
+- Artifact output must follow `<skill>--<kind>--<slug>.<ext>` naming contract.
 - Preserve executable permissions and shebang correctness.
 - Keep script behavior deterministic and root-relative.
 
 ## Instructions
-- Anchor changes to concrete script files, not generic script categories.
+- When adding a new script, assign it to one of the 7 domain skills (scripts-infra, scripts-validation, scripts-security, scripts-architecture, scripts-testing, scripts-dependencies, scripts-maintenance).
+- Add the `# Owner-Skill:` marker and list it in the owning skill's `## Scripts` table.
 - For shell scripts, prefer explicit command checks over implicit assumptions.
 - For Python scripts, keep imports and file paths workspace-relative.
 
@@ -57,7 +62,8 @@ Bad:
 Why bad: ambiguous path and unclear contract from repository root.
 
 ## Verification
-- `ls -la scripts`
-- `rg -n "^#!/|set -e|set -eu|argparse|if __name__ == '__main__'" scripts/*.sh scripts/*.py || true`
-- `rg -n "validate_all_projects" Makefile scripts || true`
-- `rg -n "TODO|FIXME" scripts || true`
+- `make validate-scripts` — runs ownership, bash -n, py_compile, ast-grep, artifact naming
+- `python scripts/core/check_script_skill_ownership.py` — ownership validator (hard gate)
+- `python scripts/core/check_script_artifact_naming.py` — artifact naming validator
+- `sg scan --rule scripts/validation/scripts-validation--ast-grep--no-interactive.yml scripts/` — interactive prompt detection
+- `bash -n <file>` for bash, `python -m py_compile <file>` for Python

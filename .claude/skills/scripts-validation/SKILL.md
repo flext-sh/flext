@@ -19,6 +19,9 @@ description: Validation scripts — policy gates, automated checks, ast-grep enf
 - `scripts/validation/ast-grep-no-dict.yml`
 - `scripts/validation/ast-grep-safe-fixes.yml`
 - `scripts/validation/ast-grep-pydantic-v2.yml`
+- `scripts/validation/scripts-validation--ast-grep--bash-strict-mode.yml`
+- `scripts/validation/scripts-validation--ast-grep--python-main-guard.yml`
+- `scripts/validation/scripts-validation--ast-grep--no-interactive.yml`
 - `scripts/validate_all_projects.sh`
 - `scripts/quick_lint_check.sh`
 - `scripts/baseline_quality_check.sh`
