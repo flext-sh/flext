@@ -243,6 +243,10 @@ scripts/test-*.py
 **/*.md.backup
 **/archived/
 
+# Autofix rejection artifacts (run_skill_autofix.sh rollback output)
+**/*.rej-*.bak
+**/*.rej-*.rej
+
 # Database files inside allowed directories
 **/*.db
 **/*.sqlite

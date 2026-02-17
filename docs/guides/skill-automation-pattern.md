@@ -58,22 +58,38 @@ The skill must follow the canonical format from `skill-format-universal` and inc
 
 ## Example (Current Pattern)
 
-Current repository implementation for dict-to-pydantic enforcement:
+Current repository implementation for dict/Any enforcement and Pydantic v2 migration:
 
-- Skill: `.claude/skills/flext-dict-to-pydantic-plan/SKILL.md`
+**Dict/Any Policy Gate**:
+- Skill: `.claude/skills/flext-strict-typing/SKILL.md`
 - Checker: `scripts/validation/enforce_no_dict_no_any.sh`
-- AST rules: `scripts/validation/ast-grep-no-dict.yml`
+- AST rules (detect-only): `scripts/validation/ast-grep-no-dict.yml`
 - Orchestrator: `scripts/validation/run_automated_validation.sh`
 - Baseline: `.sisyphus/baselines/policy_gate_baseline.json`
 - Report: `.sisyphus/reports/policy_gate_latest.json`
+
+**Pydantic v2 Policy Gate**:
+- Skill: `.claude/skills/lib-pydantic-v2/SKILL.md`
+- Checker: `scripts/validation/enforce_pydantic_v2_skill.sh`
+- AST rules (detect): `scripts/validation/ast-grep-pydantic-v2.yml`
+- AST rules (safe-fix): `scripts/validation/ast-grep-safe-fixes.yml`
+- Baseline: `.sisyphus/baselines/pydantic_v2_policy_baseline.json`
+
+**Skill-driven runners**:
+- Scan runner: `scripts/validation/run_skill_scan.sh`
+- Auto-fix runner: `scripts/validation/run_skill_autofix.sh`
+- Metrics collector: `scripts/validation/collect_file_metrics.py`
 
 ## Verification Commands
 
 ```bash
 bash -n scripts/validation/enforce_no_dict_no_any.sh
 bash -n scripts/validation/run_automated_validation.sh
+bash -n scripts/validation/run_skill_scan.sh
+bash -n scripts/validation/run_skill_autofix.sh
 scripts/validation/run_automated_validation.sh quick
-scripts/validate_all_projects.sh
+scripts/validation/run_skill_scan.sh .
+scripts/validation/run_skill_autofix.sh --mode safe --dry-run --root .
 ```
 
 ## Adoption Rule
