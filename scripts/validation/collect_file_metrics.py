@@ -177,7 +177,7 @@ def collect_file_metrics(
     project_dir: str | None = None,
     tools: tuple[str, ...] = TOOLS,
     degraded: bool = False,
-) -> list[dict]:
+) -> list[dict[str, str | int]]:
     """Collect metrics for a single file across all 4 tools.
 
     Returns a list of dicts: [{"file", "tool", "count"}, ...]
@@ -246,7 +246,7 @@ def main() -> None:
     project_dir = args.project_dir or "."
     tools = tuple(args.tools)
 
-    all_results: list[dict] = []
+    all_results: list[dict[str, str | int]] = []
     for fpath in files_to_check:
         metrics = collect_file_metrics(fpath, project_dir, tools, args.degraded)
         all_results.extend(metrics)
@@ -254,13 +254,12 @@ def main() -> None:
             print(json.dumps(m))
 
     if args.summary:
-        # Aggregate per-tool totals
         totals: dict[str, int] = {}
         for r in all_results:
-            tool = r["tool"]
-            count = r["count"]
-            if count >= 0:
-                totals[tool] = totals.get(tool, 0) + count
+            tool_name = str(r["tool"])
+            count_val = int(r["count"])
+            if count_val >= 0:
+                totals[tool_name] = totals.get(tool_name, 0) + count_val
         summary = {
             "type": "project_summary",
             "project_dir": project_dir,
