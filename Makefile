@@ -99,7 +99,7 @@ setup: ## Complete workspace setup (idempotent)
 # QUALITY GATES
 # =============================================================================
 
-.PHONY: lint format fix type-check test validate check
+.PHONY: lint format fix type-check test validate validate-scripts check
 .PHONY: upgrade-all deps-all
 
 lint: ## Lint all projects
@@ -351,6 +351,7 @@ tc: type-check
 t: test
 c: check
 v: validate
+vs: validate-scripts
 d: discover
 s: status
 dp: deps-all
