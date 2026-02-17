@@ -6,8 +6,8 @@ This script fixes the FlextResult duplicate/inconsistent usage across all projec
 1. Remove duplicated FlextResult definitions
 
 2. Standardize all imports to use flext_core.domain.shared_types.FlextResult
-3. Convert old syntax FlextResult[None].ok(...) to FlextResult[None].ok(...)
-4. Convert old syntax FlextResult[None].fail(...) to FlextResult[None].fail(...)
+3. Convert old syntax FlextResult[bool].ok(...) to FlextResult[bool].ok(...)
+4. Convert old syntax FlextResult[bool].fail(...) to FlextResult[bool].fail(...)
 5. Ensure consistent typing FlextResult[T] usage
 
 ZERO TOLERANCE: Every FlextResult usage must be correct and consistent.

@@ -376,7 +376,7 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
                 )
             except Exception as e:
                 return FlextResult[bool].fail(f"Failed to remove old version file: {e}")
-        return FlextResult[bool].ok(True)
+        return FlextResult[bool].ok(value=True)
 
     def _update_init_file(
         self,
@@ -385,7 +385,7 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
         """Railway-oriented init file updates."""
         init_file = project.src_path / project.package_name / "__init__.py"
         if not init_file.exists():
-            return FlextResult[bool].ok(True)
+            return FlextResult[bool].ok(value=True)
 
         try:
             content = init_file.read_text(encoding="utf-8")
@@ -393,14 +393,14 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
 
             if import_statement in content:
                 print("   ℹ️  __init__.py already imports from __version__")
-                return FlextResult[bool].ok(True)
+                return FlextResult[bool].ok(value=True)
 
             # Advanced content manipulation - would add import if needed
             print(
                 f"   ⚠️  Manual review needed: {init_file.relative_to(self._config.flext_root)}",
             )
             print(f"      Add: {import_statement}")
-            return FlextResult[bool].ok(True)
+            return FlextResult[bool].ok(value=True)
         except Exception as e:
             return FlextResult[bool].fail(f"Failed to update init file: {e}")
 
@@ -411,7 +411,7 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
         """Railway-oriented constants file checking."""
         constants_file = project.src_path / project.package_name / "constants.py"
         if not constants_file.exists():
-            return FlextResult[bool].ok(True)
+            return FlextResult[bool].ok(value=True)
 
         try:
             content = constants_file.read_text(encoding="utf-8")
@@ -432,7 +432,7 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
                     f"      Manual review needed: {constants_file.relative_to(self._config.flext_root)}",
                 )
 
-            return FlextResult[bool].ok(True)
+            return FlextResult[bool].ok(value=True)
         except Exception as e:
             return FlextResult[bool].fail(f"Failed to check constants file: {e}")
 

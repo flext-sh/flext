@@ -33,17 +33,17 @@ class DependencyCacheManager(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> FlextResult[None]:
+    def validate_preconditions(self) -> FlextResult[bool]:
         """Validate preconditions."""
         workspace_root = Path.cwd()
 
         # Check if we're in FLEXT workspace
         if not (workspace_root / "pyproject.toml").exists():
             print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return FlextResult[None].fail("Not in FLEXT workspace root")
+            return FlextResult[bool].fail("Not in FLEXT workspace root")
 
         print_colored("✅ FLEXT workspace detected", Colors.GREEN)
-        return FlextResult[None].ok(None)
+        return FlextResult[bool].ok(value=True)
 
     def execute_main_logic(
         self,
@@ -106,9 +106,9 @@ class DependencyCacheManager(FlextScript):
 
         return parser
 
-    def cleanup(self) -> FlextResult[None]:
+    def cleanup(self) -> FlextResult[bool]:
         """Limpeza após execução."""
-        return FlextResult[None].ok(None)
+        return FlextResult[bool].ok(value=True)
 
 
 def main() -> int:

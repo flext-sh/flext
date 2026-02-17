@@ -128,11 +128,11 @@ class ScanConfig:
         self.target_paths = target_paths
         self.include_dependencies = include_dependencies
 
-    def validate_business_rules(self) -> FlextResult[None]:
+    def validate_business_rules(self) -> FlextResult[bool]:
         """Validate configuration business rules."""
         if not self.target_paths:
-            return FlextResult[None].fail("Target paths cannot be empty")
-        return FlextResult[None].ok(None)
+            return FlextResult[bool].fail("Target paths cannot be empty")
+        return FlextResult[bool].ok(value=True)
 
 
 class AntipatternScanner:
@@ -161,7 +161,7 @@ class AntipatternScanner:
         self,
         violations: list[SecurityViolation],
         output_file: str,
-    ) -> FlextResult[None]:
+    ) -> FlextResult[bool]:
         """Generate report file."""
         try:
             with Path(output_file).open("w", encoding="utf-8") as f:
@@ -171,9 +171,9 @@ class AntipatternScanner:
                     f"- {violation.violation_type}: {violation.description}\n"
                     for violation in violations
                 )
-            return FlextResult[None].ok(None)
+            return FlextResult[bool].ok(value=True)
         except Exception as e:
-            return FlextResult[None].fail(f"Report generation failed: {e}")
+            return FlextResult[bool].fail(f"Report generation failed: {e}")
 
     def _generate_summary_report(self, violations: list[SecurityViolation]) -> None:
         """Generate console summary report."""
@@ -215,7 +215,7 @@ class SecurityAuditScript(FlextScript):
             dry_run_supported=False,
         )
 
-    def validate_preconditions(self) -> FlextResult[None]:
+    def validate_preconditions(self) -> FlextResult[bool]:
         """Validate that security audit can run successfully.
 
         Returns:
@@ -225,10 +225,10 @@ class SecurityAuditScript(FlextScript):
         try:
             # Basic validation - no specific preconditions for security scan
             self.logger.info("Security audit preconditions validated")
-            return FlextResult[None].ok(None)
+            return FlextResult[bool].ok(value=True)
 
         except Exception as e:
-            return FlextResult[None].fail(f"Precondition validation failed: {e}")
+            return FlextResult[bool].fail(f"Precondition validation failed: {e}")
 
     def execute_main_logic(
         self,

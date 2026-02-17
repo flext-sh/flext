@@ -1,0 +1,84 @@
+#!/bin/bash
+
+set -euo pipefail
+
+MODE="${1:-quick}"
+POLICY_MODE="${FLEXT_POLICY_MODE:-baseline}"
+ROOT_DIR="${FLEXT_VALIDATION_ROOT:-.}"
+REPORT_DIR="${FLEXT_VALIDATION_REPORT_DIR:-.sisyphus/reports/validation}"
+PYDANTIC_POLICY_MODE="${FLEXT_PYDANTIC_POLICY_MODE:-baseline}"
+AUTO_FIX_PYDANTIC="${FLEXT_PYDANTIC_AUTO_FIX:-false}"
+
+mkdir -p "$REPORT_DIR"
+SUMMARY_FILE="$REPORT_DIR/automated_validation_summary.txt"
+FAILED_STEPS=()
+
+if [[ "$MODE" != "quick" && "$MODE" != "full" ]]; then
+  echo "Usage: $0 [quick|full]"
+  exit 2
+fi
+
+echo "=== FLEXT AUTOMATED VALIDATION ==="
+echo "Mode: $MODE"
+echo "Policy mode: $POLICY_MODE"
+echo "Pydantic policy mode: $PYDANTIC_POLICY_MODE"
+echo "Auto-fix pydantic: $AUTO_FIX_PYDANTIC"
+echo "Root: $ROOT_DIR"
+echo "Report dir: $REPORT_DIR"
+
+run_step() {
+  local step=$1
+  local cmd=$2
+  local log_file=$3
+  printf '\n--- %s ---\n' "$step"
+  if eval "$cmd" >"$log_file" 2>&1; then
+    echo "PASS: $step"
+    echo "PASS|$step|$log_file" >>"$SUMMARY_FILE"
+  else
+    echo "FAIL: $step"
+    echo "FAIL|$step|$log_file" >>"$SUMMARY_FILE"
+    FAILED_STEPS+=("$step")
+    tail -n 40 "$log_file" || true
+    return 1
+  fi
+}
+
+run_step_allow_fail() {
+  local step=$1
+  local cmd=$2
+  local log_file=$3
+  if ! run_step "$step" "$cmd" "$log_file"; then
+    return 0
+  fi
+}
+
+: >"$SUMMARY_FILE"
+
+run_step_allow_fail "Policy gate" "scripts/validation/enforce_no_dict_no_any.sh --mode $POLICY_MODE --root '$ROOT_DIR'" "$REPORT_DIR/policy_gate.log"
+if [[ "$AUTO_FIX_PYDANTIC" == "true" ]]; then
+  run_step_allow_fail "Pydantic auto-fix" "scripts/validation/fix_pydantic_v2_violations.sh --root '$ROOT_DIR'" "$REPORT_DIR/pydantic_autofix.log"
+fi
+run_step_allow_fail "Pydantic v2 skill gate" "scripts/validation/enforce_pydantic_v2_skill.sh --mode $PYDANTIC_POLICY_MODE --root '$ROOT_DIR'" "$REPORT_DIR/pydantic_policy_gate.log"
+run_step_allow_fail "Shell syntax" "bash -n scripts/validation/enforce_no_dict_no_any.sh && bash -n scripts/validation/enforce_pydantic_v2_skill.sh && bash -n scripts/validation/fix_pydantic_v2_violations.sh && bash -n scripts/validation/run_automated_validation.sh && bash -n scripts/validate_all_projects.sh" "$REPORT_DIR/shell_syntax.log"
+
+if [[ "$MODE" == "quick" ]]; then
+  printf '\nQuick validation completed\n'
+  if [[ ${#FAILED_STEPS[@]} -eq 0 ]]; then
+    exit 0
+  fi
+  printf 'Quick mode failed steps: %s\n' "${FAILED_STEPS[*]}"
+  exit 1
+fi
+
+run_step_allow_fail "Workspace validator" "scripts/validate_all_projects.sh" "$REPORT_DIR/workspace_validator.log"
+run_step_allow_fail "Mypy all" "./validate_mypy_all.sh" "$REPORT_DIR/mypy_all.log"
+run_step_allow_fail "Pyright all" "./analyze_pyright_all_projects.sh" "$REPORT_DIR/pyright_all.log"
+
+printf '\nFull validation completed\n'
+if [[ ${#FAILED_STEPS[@]} -eq 0 ]]; then
+  exit 0
+fi
+
+printf 'Failed steps: %s\n' "${FAILED_STEPS[*]}"
+echo "See summary: $SUMMARY_FILE"
+exit 1

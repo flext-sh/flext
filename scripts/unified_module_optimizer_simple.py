@@ -199,7 +199,7 @@ class FlextModuleOptimizer:
         self._config = config or FlextModuleOptimizerSettings()
         self.logger = FlextLogger(__name__)
 
-    def optimize_project(self, project_path: str) -> FlextResult[None]:
+    def optimize_project(self, project_path: str) -> FlextResult[bool]:
         """Optimize entire project according to FLEXT patterns.
 
         Args:
@@ -472,7 +472,7 @@ class FlextModuleOptimizer:
     def _validate_quality_gates(
         self,
         targets: list[dict[str, object]],
-    ) -> FlextResult[None]:
+    ) -> FlextResult[bool]:
         """Validate targets against quality gates."""
         self.logger.info(
             "Validating quality gates",
@@ -494,9 +494,9 @@ class FlextModuleOptimizer:
                 )
 
         if violations and not self._config.force:
-            return FlextResult[None].fail("Quality gate violations found")
+            return FlextResult[bool].fail("Quality gate violations found")
 
-        return FlextResult[None].ok(None)
+        return FlextResult[bool].ok(value=True)
 
     def _optimize_in_batches(
         self,
@@ -636,7 +636,7 @@ class FlextModuleOptimizer:
         optimized_lines = set(optimized.split("\n"))
         return len(original_lines.symmetric_difference(optimized_lines))
 
-    def _validate_optimized_file(self, file_path: str) -> FlextResult[None]:
+    def _validate_optimized_file(self, file_path: str) -> FlextResult[bool]:
         """Validate optimized file."""
         try:
             # Run ruff check

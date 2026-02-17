@@ -126,9 +126,9 @@ class ProductionSecretsScript(BaseSecurityScript):
         kwargs["encrypt"] = not getattr(args, "no_encrypt", False)
         return kwargs
 
-    def cleanup(self) -> FlextResult[None]:
+    def cleanup(self) -> FlextResult[bool]:
         """Limpeza após execução."""
-        return FlextResult[None].ok(None)
+        return FlextResult[bool].ok(value=True)
 
 
 def main() -> int:

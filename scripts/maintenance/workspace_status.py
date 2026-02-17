@@ -27,7 +27,7 @@ class WorkspaceStatus:
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> FlextResult[None]:
+    def validate_preconditions(self) -> FlextResult[bool]:
         """Validar se estamos no workspace FLEXT."""
         workspace_root = Path.cwd()
         flext_projects = [
@@ -38,9 +38,9 @@ class WorkspaceStatus:
 
         if not flext_projects:
             print_colored("❌ Execute do diretório raiz do workspace FLEXT", Colors.RED)
-            return FlextResult[None].fail("Not in FLEXT workspace root")
+            return FlextResult[bool].fail("Not in FLEXT workspace root")
 
-        return FlextResult[None].ok(None)
+        return FlextResult[bool].ok(value=True)
 
     def execute_main_logic(self) -> FlextResult[object]:
         """Executar análise completa do workspace."""
