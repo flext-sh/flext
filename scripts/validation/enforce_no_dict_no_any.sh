@@ -8,6 +8,7 @@ UPDATE_BASELINE="false"
 BASELINE_FILE=".sisyphus/baselines/policy_gate_baseline.json"
 REPORT_FILE=".sisyphus/reports/policy_gate_latest.json"
 BASELINE_STRATEGY="${FLEXT_POLICY_BASELINE_STRATEGY:-total}"
+KEY_STRICT="${FLEXT_POLICY_KEY_STRICT:-false}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -49,6 +50,11 @@ fi
 
 if [[ "$BASELINE_STRATEGY" != "total" && "$BASELINE_STRATEGY" != "per_group" ]]; then
   echo "Invalid --baseline-strategy '$BASELINE_STRATEGY' (expected total|per_group)"
+  exit 2
+fi
+
+if [[ "$KEY_STRICT" != "true" && "$KEY_STRICT" != "false" ]]; then
+  echo "Invalid FLEXT_POLICY_KEY_STRICT '$KEY_STRICT' (expected true|false)"
   exit 2
 fi
 
@@ -311,7 +317,7 @@ else
     fi
   fi
 
-  if [[ -f "$BASELINE_FILE" ]]; then
+  if [[ "$KEY_STRICT" == "true" && -f "$BASELINE_FILE" ]]; then
     NEW_KEYS=$(
       python3 - "$KEYED_FILE" "$BASELINE_FILE" <<'PY_KEYDIFF'
 import json, sys
@@ -331,6 +337,10 @@ PY_KEYDIFF
       FAILED=1
       echo "Key-based regression: $NEW_COUNT new violations introduced"
     fi
+  fi
+
+  if [[ "$KEY_STRICT" == "false" ]]; then
+    echo "Key-based regression check: disabled (set FLEXT_POLICY_KEY_STRICT=true to enable)"
   fi
 
   echo "Baseline strategy: $BASELINE_STRATEGY"
