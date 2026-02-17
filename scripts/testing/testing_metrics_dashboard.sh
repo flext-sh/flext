@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-testing/SKILL.md
 # testing_metrics_dashboard.sh - Generate ecosystem-wide testing metrics dashboard
 #
@@ -18,7 +18,7 @@
 #   ./scripts/testing_metrics_dashboard.sh --projects "flext-core,flext-api" --detailed
 #   ./scripts/testing_metrics_dashboard.sh --output json --benchmarks
 
-set -e
+set -euo pipefail
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

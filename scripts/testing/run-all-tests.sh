@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-testing/SKILL.md
-set -e
+set -euo pipefail
 
 echo "🚀 Starting FLEXT Comprehensive Test Suite..."
 echo "================================================"

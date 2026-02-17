@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 # field_parameter_standardizer.sh - Standardize Field() parameters across FLEXT projects
 # Purpose: Fix B008 violations where default mutable arguments use Field()

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # safe_command.sh - Safe command execution with pre-validation
 # Usage: ./safe_command.sh <command>

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 # =============================================================================
 # FLEXT Environment Setup Script
@@ -7,7 +7,7 @@
 # Usage: source scripts/setup_env.sh
 # =============================================================================
 
-set -e
+set -euo pipefail
 
 # Determine workspace root
 if [ -n "$FLEXT_ROOT" ]; then

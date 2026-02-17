@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 # FLEXT Ecosystem Comprehensive Quality Validator
 # Validates quality gates across the entire FLEXT ecosystem for enterprise excellence

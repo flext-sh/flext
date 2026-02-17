@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-testing/SKILL.md
-set -e
+set -euo pipefail
 
 # Load FLEXT constants
 source "$(dirname "$0")/../constants.env" 2>/dev/null || {

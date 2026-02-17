@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-testing/SKILL.md
 # testing_quality_gates.sh - Validate testing standards across FLEXT ecosystem
 #
@@ -14,7 +14,7 @@
 #   1 - Critical validation failures found
 #   2 - Warning-level issues found
 
-set -e
+set -euo pipefail
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

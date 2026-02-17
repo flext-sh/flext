@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 # =============================================================================
 # FLEXT - Cleanup Local Virtual Environments
@@ -7,7 +7,7 @@
 # keeping only the workspace .venv at /home/marlonsc/flext/.venv
 # =============================================================================
 
-set -e
+set -euo pipefail
 
 WORKSPACE_ROOT="${FLEXT_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 

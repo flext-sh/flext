@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Owner-Skill: .claude/skills/scripts-architecture/SKILL.md
 
 # Batch fix script: Replace deprecated .unwrap() with .value in flext-core documentation and code
@@ -6,7 +6,7 @@
 # Modes: dry-run, backup, exec, rollback
 # Target: 113 occurrences across 22 markdown files + 4 in result.py
 
-set -e
+set -euo pipefail
 
 PROJECT_DIR="/home/marlonsc/flext/flext-core"
 BACKUP_DIR="/tmp/flext_core_unwrap_backups"
