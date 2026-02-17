@@ -85,7 +85,7 @@ For development and testing:
 
 ```bash
 # Clone the repository
-git clone https://github.com/flext/flext.git
+git clone https://github.com/flext-sh/flext.git
 cd flext
 
 # Create virtual environment

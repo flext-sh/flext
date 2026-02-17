@@ -14,7 +14,7 @@ This directory contains ALL Docker artifacts for the FLEXT ecosystem in a centra
 
 **Core Principle**: All Docker operations go through `FlextTestsDocker` from `flext_tests` library.
 
-Part of the [FLEXT](https://github.com/flext/flext) ecosystem.
+Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 
 ---
 

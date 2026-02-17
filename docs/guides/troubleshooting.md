@@ -722,12 +722,12 @@ monitor_cpu()
 ### Community Support
 
 1. **GitHub Issues**
-   - [Create Issue](https://github.com/flext/flext/issues)
+   - [Create Issue](https://github.com/flext-sh/flext/issues)
    - Search existing issues
    - Check closed issues for solutions
 
 2. **GitHub Discussions**
-   - [Ask Question](https://github.com/flext/flext/discussions)
+   - [Ask Question](https://github.com/flext-sh/flext/discussions)
    - Share solutions
    - Discuss best practices
 
@@ -852,5 +852,5 @@ def process(data: dict) -> ProcessedData:
 - [Configuration Guide](./configuration.md)
 - [Development Guide](./development.md)
 - [Testing Guide](./testing.md)
-- [GitHub Issues](https://github.com/flext/flext/issues)
-- [GitHub Discussions](https://github.com/flext/flext/discussions)
+- [GitHub Issues](https://github.com/flext-sh/flext/issues)
+- [GitHub Discussions](https://github.com/flext-sh/flext/discussions)

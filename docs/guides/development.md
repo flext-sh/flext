@@ -96,7 +96,7 @@ This guide covers setting up a development environment for FLEXT contributions a
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/flext/flext.git
+git clone https://github.com/flext-sh/flext.git
 cd flext
 ```
 
@@ -543,6 +543,6 @@ config = FlextNewlibSettings(
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/flext/flext/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/flext/flext/discussions)
+- **Issues**: [GitHub Issues](https://github.com/flext-sh/flext/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/flext-sh/flext/discussions)
 - **Email**: <dev@flext.com>

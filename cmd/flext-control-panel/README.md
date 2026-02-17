@@ -7,7 +7,7 @@
 
 FLEXT Control Panel service launcher using the common flextservice framework. This service provides a standardized launch mechanism for control panel functionality within the FLEXT ecosystem.
 
-Part of the [FLEXT](https://github.com/flext/flext) ecosystem.
+Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 
 > **⚠️ Current Status**: Basic service launcher implemented, full control panel features in development
 

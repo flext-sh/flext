@@ -7,7 +7,7 @@
 
 FLEXT Service is the enterprise-grade data integration engine serving as the primary Python bridge and multi-modal interface for the entire FLEXT ecosystem. Built with Go/Python hybrid architecture, it implements Clean Architecture, Domain-Driven Design, and Railway-oriented programming for production scalability.
 
-Part of the [FLEXT](https://github.com/flext/flext) ecosystem.
+Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 
 > **⚠️ Critical Configuration**: FLEXT Service runs on **port 8081** (not 8080 - that's FlexCore). Ensure correct port configuration in deployment environments.
 
