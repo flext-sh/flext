@@ -31,6 +31,7 @@
 !tests/
 !typings/
 !.vscode/
+!.claude/
 
 # ============================================================================
 # BLOCK: Beads Workflow (local-only, not tracked)
@@ -91,13 +92,15 @@
 !tests/**
 !typings/**
 !.vscode/**
+!.claude/**
 
 # ============================================================================
 # BLOCK: AI/Agent Local Data (NEVER track these)
 # ============================================================================
 
-.claude/
+.claude/*
 !.claude/skills/
+!.claude/skills/**
 
 # NOTE: .planning/ is NOW TRACKED (commit_docs: true in config.json)
 # Archive directories within .planning are still local
