@@ -71,7 +71,6 @@ rewrite_rule() {
     "$ROOT_DIR" || true
 }
 
-rewrite_rule "Rewrite .dict() -> .model_dump()" '$MODEL.dict($$$ARGS)' '$MODEL.model_dump($$$ARGS)'
 rewrite_rule "Rewrite .parse_obj() -> .model_validate()" '$MODEL.parse_obj($ARG)' '$MODEL.model_validate($ARG)'
 rewrite_rule "Rewrite .parse_raw() -> .model_validate_json()" '$MODEL.parse_raw($ARG)' '$MODEL.model_validate_json($ARG)'
 rewrite_rule "Rewrite .from_orm() -> .model_validate()" '$MODEL.from_orm($ARG)' '$MODEL.model_validate($ARG)'
