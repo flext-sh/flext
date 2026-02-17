@@ -11,7 +11,7 @@ PYDANTIC_POLICY_MODE="${FLEXT_PYDANTIC_POLICY_MODE:-baseline}"
 AUTO_FIX_PYDANTIC="${FLEXT_PYDANTIC_AUTO_FIX:-false}"
 
 mkdir -p "$REPORT_DIR"
-SUMMARY_FILE="$REPORT_DIR/automated_validation_summary.txt"
+SUMMARY_FILE="$REPORT_DIR/scripts-validation--txt--automated-validation-summary.txt"
 FAILED_STEPS=()
 
 if [[ "$MODE" != "quick" && "$MODE" != "full" ]]; then
@@ -55,12 +55,12 @@ run_step_allow_fail() {
 
 : >"$SUMMARY_FILE"
 
-run_step_allow_fail "Policy gate" "scripts/validation/enforce_no_dict_no_any.sh --mode $POLICY_MODE --root '$ROOT_DIR'" "$REPORT_DIR/policy_gate.log"
+run_step_allow_fail "Policy gate" "scripts/validation/enforce_no_dict_no_any.sh --mode $POLICY_MODE --root '$ROOT_DIR'" "$REPORT_DIR/scripts-validation--log--policy-gate.log"
 if [[ "$AUTO_FIX_PYDANTIC" == "true" ]]; then
-  run_step_allow_fail "Pydantic auto-fix" "scripts/validation/fix_pydantic_v2_violations.sh --root '$ROOT_DIR'" "$REPORT_DIR/pydantic_autofix.log"
+  run_step_allow_fail "Pydantic auto-fix" "scripts/validation/fix_pydantic_v2_violations.sh --root '$ROOT_DIR'" "$REPORT_DIR/scripts-validation--log--pydantic-autofix.log"
 fi
-run_step_allow_fail "Pydantic v2 skill gate" "scripts/validation/enforce_pydantic_v2_skill.sh --mode $PYDANTIC_POLICY_MODE --root '$ROOT_DIR'" "$REPORT_DIR/pydantic_policy_gate.log"
-run_step_allow_fail "Shell syntax" "bash -n scripts/validation/enforce_no_dict_no_any.sh && bash -n scripts/validation/enforce_pydantic_v2_skill.sh && bash -n scripts/validation/fix_pydantic_v2_violations.sh && bash -n scripts/validation/run_automated_validation.sh && bash -n scripts/validate_all_projects.sh" "$REPORT_DIR/shell_syntax.log"
+run_step_allow_fail "Pydantic v2 skill gate" "scripts/validation/enforce_pydantic_v2_skill.sh --mode $PYDANTIC_POLICY_MODE --root '$ROOT_DIR'" "$REPORT_DIR/scripts-validation--log--pydantic-policy-gate.log"
+run_step_allow_fail "Shell syntax" "bash -n scripts/validation/enforce_no_dict_no_any.sh && bash -n scripts/validation/enforce_pydantic_v2_skill.sh && bash -n scripts/validation/fix_pydantic_v2_violations.sh && bash -n scripts/validation/run_automated_validation.sh && bash -n scripts/validate_all_projects.sh" "$REPORT_DIR/scripts-validation--log--shell-syntax.log"
 
 if [[ "$MODE" == "quick" ]]; then
   printf '\nQuick validation completed\n'
@@ -71,17 +71,17 @@ if [[ "$MODE" == "quick" ]]; then
   exit 1
 fi
 
-run_step_allow_fail "Workspace validator" "scripts/validate_all_projects.sh" "$REPORT_DIR/workspace_validator.log"
+run_step_allow_fail "Workspace validator" "scripts/validate_all_projects.sh" "$REPORT_DIR/scripts-validation--log--workspace-validator.log"
 
 if [[ -x "scripts/validate_mypy_all.sh" ]]; then
-  run_step_allow_fail "Mypy all" "scripts/validate_mypy_all.sh" "$REPORT_DIR/mypy_all.log"
+  run_step_allow_fail "Mypy all" "scripts/validate_mypy_all.sh" "$REPORT_DIR/scripts-validation--log--mypy-all.log"
 else
   echo "SKIP: Mypy all (scripts/validate_mypy_all.sh not found)"
   echo "SKIP|Mypy all|not_found" >>"$SUMMARY_FILE"
 fi
 
 if [[ -x "scripts/analyze_pyright_all_projects.sh" ]]; then
-  run_step_allow_fail "Pyright all" "scripts/analyze_pyright_all_projects.sh" "$REPORT_DIR/pyright_all.log"
+  run_step_allow_fail "Pyright all" "scripts/analyze_pyright_all_projects.sh" "$REPORT_DIR/scripts-validation--log--pyright-all.log"
 else
   echo "SKIP: Pyright all (scripts/analyze_pyright_all_projects.sh not found)"
   echo "SKIP|Pyright all|not_found" >>"$SUMMARY_FILE"
