@@ -159,11 +159,29 @@ else
 	$(Q)$(MAKE) lint type-check
 endif
 
+validate-scripts: ## Validate scripts/ (ownership, syntax, structure)
+	$(Q)echo "=== Scripts Validation ==="
+	$(Q)echo "--- Ownership markers ---"
+	$(Q)python scripts/core/check_script_skill_ownership.py
+	$(Q)echo ""
+	$(Q)echo "--- Bash syntax (bash -n) ---"
+	$(Q)fail=0; for f in $$(git ls-files 'scripts/*.sh' 'scripts/**/*.sh'); do \
+		bash -n "$$f" 2>&1 || fail=1; \
+	done; [ $$fail -eq 0 ] && echo "✓ All bash scripts pass syntax check" || { echo "✗ Bash syntax errors found"; exit 1; }
+	$(Q)echo ""
+	$(Q)echo "--- Python compile check ---"
+	$(Q)python -m compileall -q scripts/ 2>&1 && echo "✓ All Python scripts compile" || { echo "✗ Python compile errors found"; exit 1; }
+	$(Q)echo ""
+	$(Q)echo "--- Artifact naming ---"
+	$(Q)python scripts/core/check_script_artifact_naming.py || true
+	$(Q)echo ""
+	$(Q)echo "=== Scripts Validation Complete ==="
+
 validate: ## Full validation
 ifdef PROJECT
 	$(Q)$(MAKE) -C $(PROJECT) validate
 else
-	$(Q)$(MAKE) lint type-check test
+	$(Q)$(MAKE) lint type-check test validate-scripts
 endif
 
 # =============================================================================
