@@ -20,6 +20,16 @@ description: Validation scripts — policy gates, automated checks, ast-grep enf
 - `scripts/validation/ast-grep-safe-fixes.yml`
 - `scripts/validation/ast-grep-pydantic-v2.yml`
 - `scripts/validate_all_projects.sh`
+- `scripts/quick_lint_check.sh`
+- `scripts/baseline_quality_check.sh`
+- `scripts/constants_standardization_validator.sh`
+- `scripts/detect_violations_large_scale.sh`
+- `scripts/analyze_project_pre_violations.sh`
+- `scripts/ecosystem_validation.py`
+- `scripts/verify_standardization.py`
+- `scripts/fix_ruff_errors.py`
+- `scripts/singer_protocol_validator.sh`
+- `scripts/field_parameter_standardizer.sh`
 
 ## References
 
@@ -93,3 +103,13 @@ Why bad: No baseline comparison, no structured output, no gate behavior.
 | `scripts/validation/domain_separation_validator.sh` | Validate domain separation | `scripts/validation/domain_separation_validator.sh` |
 | `scripts/validation/ecosystem_quality_validator.sh` | Validate ecosystem quality | `scripts/validation/ecosystem_quality_validator.sh` |
 | `scripts/validate_all_projects.sh` | Workspace-wide validation across all projects | `bash scripts/validate_all_projects.sh` |
+| `scripts/quick_lint_check.sh` | Quick lint check | `bash scripts/quick_lint_check.sh` |
+| `scripts/baseline_quality_check.sh` | Baseline quality check | `bash scripts/baseline_quality_check.sh` |
+| `scripts/constants_standardization_validator.sh` | Constants standardization validator | `bash scripts/constants_standardization_validator.sh` |
+| `scripts/detect_violations_large_scale.sh` | Large-scale violation detection | `bash scripts/detect_violations_large_scale.sh` |
+| `scripts/analyze_project_pre_violations.sh` | Pre-violation analysis | `bash scripts/analyze_project_pre_violations.sh` |
+| `scripts/ecosystem_validation.py` | Ecosystem validation | `python scripts/ecosystem_validation.py` |
+| `scripts/verify_standardization.py` | Verify standardization | `python scripts/verify_standardization.py` |
+| `scripts/fix_ruff_errors.py` | Fix ruff errors | `python scripts/fix_ruff_errors.py` |
+| `scripts/singer_protocol_validator.sh` | Singer protocol validator | `bash scripts/singer_protocol_validator.sh` |
+| `scripts/field_parameter_standardizer.sh` | Field parameter standardizer | `bash scripts/field_parameter_standardizer.sh` |

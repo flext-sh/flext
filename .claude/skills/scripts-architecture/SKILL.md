@@ -110,3 +110,19 @@ Why bad: Mutations without explicit opt-in.
 | `scripts/architecture/test_cross_project_imports.py` | Test cross-project imports | `python scripts/architecture/test_cross_project_imports.py` |
 | `scripts/architecture/verify_meltano_consolidation.py` | Verify Meltano consolidation | `python scripts/architecture/verify_meltano_consolidation.py` |
 | `scripts/analysis/find_dead_code.py` | Find dead/unused code | `python scripts/analysis/find_dead_code.py` |
+| `scripts/analyze-duplication.sh` | Analyze code duplication | `bash scripts/analyze-duplication.sh` |
+| `scripts/ast_dead_code_scanner.py` | AST-based dead code scanner | `python scripts/ast_dead_code_scanner.py` |
+| `scripts/create-dead-code-baseline.sh` | Create dead code baseline | `bash scripts/create-dead-code-baseline.sh` |
+| `scripts/create-duplicate-baseline.sh` | Create duplication baseline | `bash scripts/create-duplicate-baseline.sh` |
+| `scripts/create-duplicate-baseline-global.sh` | Create global duplication baseline | `bash scripts/create-duplicate-baseline-global.sh` |
+| `scripts/create-duplicate-baseline-tests.sh` | Create test duplication baseline | `bash scripts/create-duplicate-baseline-tests.sh` |
+| `scripts/convert_aliases_to_inheritance.py` | Convert aliases to inheritance | `python scripts/convert_aliases_to_inheritance.py` |
+| `scripts/refactor_aliases_to_inheritance.py` | Refactor aliases to inheritance | `python scripts/refactor_aliases_to_inheritance.py` |
+| `scripts/content_optimizer.py` | Content optimization | `python scripts/content_optimizer.py` |
+| `scripts/fix_flext_core_unwrap.sh` | Fix flext-core unwrap calls | `bash scripts/fix_flext_core_unwrap.sh` |
+| `scripts/namespace_fix.py` | Fix namespace issues | `python scripts/namespace_fix.py` |
+| `scripts/unified_module_optimizer_simple.py` | Unified module optimizer | `python scripts/unified_module_optimizer_simple.py` |
+| `scripts/standardize_test_aliases.py` | Standardize test aliases | `python scripts/standardize_test_aliases.py` |
+| `scripts/standardize_tests.py` | Standardize test patterns | `python scripts/standardize_tests.py` |
+| `scripts/fix_examples_syntax.py` | Fix examples syntax | `python scripts/fix_examples_syntax.py` |
+| `scripts/flext_meltano_bridge.py` | Meltano bridge utility | `python scripts/flext_meltano_bridge.py` |
