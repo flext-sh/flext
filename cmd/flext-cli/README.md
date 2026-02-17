@@ -7,7 +7,7 @@
 
 Command-line interface service for FLEXT data integration platform.
 
-Part of the [FLEXT](https://github.com/flext/flext) ecosystem.
+Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 
 > ⚠️ Development Status: Basic CLI bootstrap working; shared_kernel package conflicts; pipeline commands not implemented yet.
 

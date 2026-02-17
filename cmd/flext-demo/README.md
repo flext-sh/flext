@@ -1,11 +1,10 @@
 # FLEXT Demo Server
 
-**Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
+**FLEXT Demo Server** is a simple HTTP server demonstration showcasing basic FLEXT controlpanel integration patterns. It provides a basic server implementation using FLEXT's controlpanel configuration and monitoring components.
 
+**Reviewed**: 2026-02-17 | **Version**: 0.10.0-dev
 
-**Type**: Go Service | **Status**: Active Development | **Dependencies**: Go 1.24+, pkg/controlpanel
-
-FLEXT Demo Server is a simple HTTP server demonstration showcasing basic FLEXT controlpanel integration patterns. It provides a basic server implementation using FLEXT's controlpanel configuration and monitoring components.
+Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 
 > **⚠️ Current Reality**: Simple HTTP server with controlpanel integration, not the elaborate demo system described in previous versions
 

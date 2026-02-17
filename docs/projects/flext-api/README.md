@@ -14,7 +14,7 @@ FLEXT API provides the HTTP client foundation, FastAPI application factory, and 
 
 ```bash
 # From source (recommended for development):
-git clone https://github.com/flext/flext-api.git
+git clone https://github.com/flext-sh/flext-api.git
 cd flext-api
 poetry install
 
