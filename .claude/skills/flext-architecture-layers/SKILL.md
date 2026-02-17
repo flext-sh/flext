@@ -5,6 +5,9 @@ description: Layer map and dependency-direction contract for flext-core. Use whe
 
 # Flext Architecture Layers
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 ## Scope
 
 - `flext-core/src/flext_core/`

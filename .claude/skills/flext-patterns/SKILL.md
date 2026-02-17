@@ -5,6 +5,9 @@ description: Repository-native implementation patterns for result flow, DI, logg
 
 # Flext Patterns
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 ## Scope
 
 - Canonical pattern anchors:
