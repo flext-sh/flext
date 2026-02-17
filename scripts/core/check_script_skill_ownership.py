@@ -54,7 +54,14 @@ def parse_args() -> argparse.Namespace:
 
 def tracked_scripts() -> list[Path]:
     result = subprocess.run(
-        ["git", "ls-files", "scripts/**/*.sh", "scripts/**/*.py"],
+        [
+            "git",
+            "ls-files",
+            "scripts/*.sh",
+            "scripts/*.py",
+            "scripts/**/*.sh",
+            "scripts/**/*.py",
+        ],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
