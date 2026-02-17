@@ -20,5 +20,15 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import sys
+
 
 # FlextResult moved to flext_core.domain.shared_types
+
+
+def main() -> int:
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
