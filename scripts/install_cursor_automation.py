@@ -237,13 +237,11 @@ class CursorAutomationInstaller:
                         f"⚠️  Automation script test failed: {result.stderr.strip()}",
                     )
 
-            return Result.ok(
-                {
-                    "automation_script": automation_script.exists(),
-                    "cursor_config": (self.cursor_dir / "config.json").exists(),
-                    "manifest": (self.cursor_dir / "manifest.json").exists(),
-                }
-            )
+            return Result.ok({
+                "automation_script": automation_script.exists(),
+                "cursor_config": (self.cursor_dir / "config.json").exists(),
+                "manifest": (self.cursor_dir / "manifest.json").exists(),
+            })
 
         except Exception as e:
             return Result.err(f"Initial setup failed: {e}")

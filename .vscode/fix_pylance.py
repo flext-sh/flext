@@ -6,14 +6,13 @@ Uso: python .vscode/fix_pylance.py
 
 import os
 import shutil
-import subprocess  # noqa: S404
+import subprocess
 import sys
 from pathlib import Path
 
 
 def clean_pycache(root: Path) -> None:
     """Remove directories __pycache__ recursively."""
-    print("Limpando cache Python (__pycache__)...")  # noqa: T201
     for p in root.rglob("__pycache__"):
         if p.is_dir():
             shutil.rmtree(p)
@@ -30,7 +29,6 @@ def main() -> None:
     # 2. Limpar cache do Pylance
     pylance_cache = workspace_root / ".pylance_cache"
     if pylance_cache.exists():
-        print("Limpando cache do Pylance...")  # noqa: T201
         shutil.rmtree(pylance_cache)
 
     # 3. Verificar configurações do pyright (Checks only, no side effects)
@@ -51,7 +49,7 @@ def main() -> None:
         mt5linux_dir = workspace_root / "mt5linux"
         if mt5linux_dir.exists():
             target_file = mt5linux_dir / "mt5linux" / "mt5_pb2_grpc.py"
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 [
                     sys.executable,
                     "-m",
@@ -69,7 +67,7 @@ def main() -> None:
             if str(result.stdout) and "grpc._utilities" in str(result.stdout):
                 pass
     except (FileNotFoundError, OSError):
-        print("Pyright execution failed")  # noqa: T201
+        pass
 
 
 if __name__ == "__main__":

@@ -99,22 +99,18 @@ def generate_sarif_report(results: list[dict[str, object]]) -> dict[str, object]
         }
 
         for test_name in result.get("failed_tests", []):
-            run["results"].append(
-                {
-                    "ruleId": test_name,
-                    "level": "error",
-                    "message": {"text": f"Test failed in {result['project']}"},
-                    "locations": [
-                        {
-                            "physicalLocation": {
-                                "artifactLocation": {
-                                    "uri": f"{result['project']}/tests/"
-                                },
-                            },
+            run["results"].append({
+                "ruleId": test_name,
+                "level": "error",
+                "message": {"text": f"Test failed in {result['project']}"},
+                "locations": [
+                    {
+                        "physicalLocation": {
+                            "artifactLocation": {"uri": f"{result['project']}/tests/"},
                         },
-                    ],
-                }
-            )
+                    },
+                ],
+            })
 
         if run["results"]:  # Only add runs with failures
             runs.append(run)
