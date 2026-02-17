@@ -5,6 +5,9 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 
 # Flext Type System
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 ## Scope
 - Type-system source of truth:
   - `flext-core/src/flext_core/typings.py`

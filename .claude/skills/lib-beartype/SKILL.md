@@ -40,6 +40,9 @@ description: Package-wide beartype integration for flext_core runtime checks. Tr
 
 ```python
 # flext-core/src/flext_core/_beartype_conf.py
+
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
 from beartype import BeartypeConf, BeartypeStrategy
 
 BEARTYPE_CONF = BeartypeConf(

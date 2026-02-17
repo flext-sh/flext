@@ -5,6 +5,9 @@ description: Strict cleanup rules for removing duplication, stale policy text, a
 
 # Flext Strict Refactoring
 
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+
 ## Scope
 
 - Documentation governance files:
