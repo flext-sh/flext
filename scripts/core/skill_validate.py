@@ -7,6 +7,7 @@ from __future__ import annotations
 import argparse
 import fnmatch
 import json
+import re
 import subprocess
 import sys
 import time
@@ -56,9 +57,11 @@ def run_cmd(
             check=False,
         )
     except FileNotFoundError as exc:
-        raise SkillInfraError(f"Command not found: {command[0]}") from exc
+        msg = f"Command not found: {command[0]}"
+        raise SkillInfraError(msg) from exc
     except subprocess.TimeoutExpired as exc:
-        raise SkillInfraError(f"Command timed out: {' '.join(command[:3])}") from exc
+        msg = f"Command timed out: {' '.join(command[:3])}"
+        raise SkillInfraError(msg) from exc
 
 
 def tool_available(name: str) -> bool:
@@ -72,7 +75,7 @@ def tool_available(name: str) -> bool:
         )
     except (FileNotFoundError, subprocess.TimeoutExpired):
         return False
-    return result.returncode in (0, 1)
+    return result.returncode in {0, 1}
 
 
 def normalize_rel_path(value: str) -> str:
@@ -94,28 +97,31 @@ def load_rules_yml(path: Path) -> dict[str, object]:
     try:
         raw = path.read_text(encoding="utf-8")
     except OSError as exc:
-        raise SkillInfraError(f"Cannot read rules file: {path}") from exc
+        msg = f"Cannot read rules file: {path}"
+        raise SkillInfraError(msg) from exc
 
     if yaml is not None:
         try:
             parsed = yaml.safe_load(raw)
         except Exception as exc:
-            raise SkillInfraError(f"Invalid YAML at {path}: {exc}") from exc
+            msg = f"Invalid YAML at {path}: {exc}"
+            raise SkillInfraError(msg) from exc
         if parsed is None:
             return {}
         if not isinstance(parsed, dict):
-            raise SkillUsageError(f"rules.yml must be a mapping: {path}")
+            msg = f"rules.yml must be a mapping: {path}"
+            raise SkillUsageError(msg)
         return dict(parsed)
 
     try:
         parsed_json = json.loads(raw)
     except json.JSONDecodeError as exc:
-        raise SkillInfraError(
-            f"PyYAML unavailable and rules file is not JSON: {path}"
-        ) from exc
+        msg = f"PyYAML unavailable and rules file is not JSON: {path}"
+        raise SkillInfraError(msg) from exc
 
     if not isinstance(parsed_json, dict):
-        raise SkillUsageError(f"rules file must parse as an object: {path}")
+        msg = f"rules file must parse as an object: {path}"
+        raise SkillUsageError(msg)
     return dict(parsed_json)
 
 
@@ -127,7 +133,8 @@ def write_json(path: Path, payload: dict[str, object]) -> None:
             encoding="utf-8",
         )
     except OSError as exc:
-        raise SkillInfraError(f"Cannot write JSON file: {path}") from exc
+        msg = f"Cannot write JSON file: {path}"
+        raise SkillInfraError(msg) from exc
 
 
 def read_json(path: Path) -> dict[str, object]:
@@ -136,9 +143,11 @@ def read_json(path: Path) -> dict[str, object]:
     try:
         parsed = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        raise SkillInfraError(f"Cannot parse JSON file: {path}") from exc
+        msg = f"Cannot parse JSON file: {path}"
+        raise SkillInfraError(msg) from exc
     if not isinstance(parsed, dict):
-        raise SkillInfraError(f"JSON file must be an object: {path}")
+        msg = f"JSON file must be an object: {path}"
+        raise SkillInfraError(msg)
     return dict(parsed)
 
 
@@ -148,7 +157,7 @@ def render_path_template(
     skill: str,
     fallback: str,
 ) -> Path:
-    value = template if template else fallback
+    value = template or fallback
     rendered = value.replace("{skill}", skill)
     candidate = Path(rendered)
     if candidate.is_absolute():
@@ -163,6 +172,7 @@ def discover_projects(root: Path) -> dict[str, object]:
         {"flext": ["flext-core", "flext-api", ...],
          "external": ["client-a-oud-mig", ...],
          "root": "."}
+
     """
     gitmodules = root / ".gitmodules"
     gitmodules_text = ""
@@ -170,7 +180,8 @@ def discover_projects(root: Path) -> dict[str, object]:
         try:
             gitmodules_text = gitmodules.read_text(encoding="utf-8")
         except OSError as exc:
-            raise SkillInfraError(f"Cannot read {gitmodules}") from exc
+            msg = f"Cannot read {gitmodules}"
+            raise SkillInfraError(msg) from exc
 
     flext_projects: list[str] = []
     for line in gitmodules_text.splitlines():
@@ -196,7 +207,8 @@ def discover_projects(root: Path) -> dict[str, object]:
         try:
             pyproject_text = pyproject.read_text(encoding="utf-8")
         except OSError as exc:
-            raise SkillInfraError(f"Cannot read {pyproject}") from exc
+            msg = f"Cannot read {pyproject}"
+            raise SkillInfraError(msg) from exc
         if "flext-core" in pyproject_text or "flext_core" in pyproject_text:
             external_projects.append(name)
 
@@ -241,12 +253,14 @@ def get_tracked_files(project_path: Path) -> list[str]:
         return cached[1]
 
     if not project_path.exists():
-        raise SkillUsageError(f"Project path does not exist: {project_path}")
+        msg = f"Project path does not exist: {project_path}"
+        raise SkillUsageError(msg)
 
     result = run_cmd(["git", "ls-files"], cwd=project_path, timeout=120)
     if result.returncode != 0:
         stderr = (result.stderr or "").strip()
-        raise SkillInfraError(f"git ls-files failed in {project_path}: {stderr}")
+        msg = f"git ls-files failed in {project_path}: {stderr}"
+        raise SkillInfraError(msg)
 
     files = unique_sorted([
         normalize_rel_path(line)
@@ -264,8 +278,8 @@ def filter_files(
     exclude_globs: list[str],
     project_path: Path | None = None,
 ) -> list[str]:
-    includes = include_globs if include_globs else ["**/*"]
-    excludes = exclude_globs if exclude_globs else []
+    includes = include_globs or ["**/*"]
+    excludes = exclude_globs or []
 
     selected: list[str] = []
     for rel in tracked_files:
@@ -284,9 +298,9 @@ def filter_files(
 def chunk_list(items: list[str], size: int) -> list[list[str]]:
     if size <= 0:
         return [items]
-    out: list[list[str]] = []
-    for idx in range(0, len(items), size):
-        out.append(items[idx : idx + size])
+    out: list[list[str]] = [
+        items[idx : idx + size] for idx in range(0, len(items), size)
+    ]
     return out
 
 
@@ -319,23 +333,27 @@ def run_ast_grep_rule(
     allowed_files: set[str],
 ) -> tuple[dict[str, int], int]:
     if not tool_available("sg"):
-        raise SkillInfraError("ast-grep (sg) is required but not available")
+        msg = "ast-grep (sg) is required but not available"
+        raise SkillInfraError(msg)
 
     rule_id = str(rule.get("id", "")).strip()
     rule_file_raw = str(rule.get("file", "")).strip()
     if not rule_file_raw:
-        raise SkillUsageError(f"ast-grep rule '{rule_id}' is missing 'file'")
+        msg = f"ast-grep rule '{rule_id}' is missing 'file'"
+        raise SkillUsageError(msg)
 
     rule_file = Path(rule_file_raw)
     if not rule_file.is_absolute():
         rule_file = (skill_dir / rule_file_raw).resolve()
     if not rule_file.exists():
-        raise SkillUsageError(f"ast-grep rule file not found: {rule_file}")
+        msg = f"ast-grep rule file not found: {rule_file}"
+        raise SkillUsageError(msg)
 
     group = str(rule.get("group", rule_id)).strip() or rule_id
     count_by = str(rule.get("count_by", "aggregate")).strip() or "aggregate"
-    if count_by not in ("aggregate", "rule_id"):
-        raise SkillUsageError(f"Invalid count_by for rule '{rule_id}': {count_by}")
+    if count_by not in {"aggregate", "rule_id"}:
+        msg = f"Invalid count_by for rule '{rule_id}': {count_by}"
+        raise SkillUsageError(msg)
 
     command = ["sg", "scan", "--rule", str(rule_file), "--json=stream"]
     for pattern in include_globs:
@@ -345,9 +363,10 @@ def run_ast_grep_rule(
     command.append(str(project_path))
 
     result = run_cmd(command, cwd=project_path, timeout=300)
-    if result.returncode not in (0, 1):
+    if result.returncode not in {0, 1}:
         stderr = (result.stderr or "").strip()
-        raise SkillInfraError(f"ast-grep failed for {project_name}/{rule_id}: {stderr}")
+        msg = f"ast-grep failed for {project_name}/{rule_id}: {stderr}"
+        raise SkillInfraError(msg)
 
     grouped: dict[str, int] = {}
     raw_matches = 0
@@ -377,10 +396,7 @@ def run_ast_grep_rule(
                 continue
 
         raw_matches += 1
-        if count_by == "rule_id":
-            key = str(payload.get("ruleId", "unknown"))
-        else:
-            key = group
+        key = str(payload.get("ruleId", "unknown")) if count_by == "rule_id" else group
         grouped[key] = grouped.get(key, 0) + 1
 
     return grouped, raw_matches
@@ -394,16 +410,19 @@ def run_ripgrep_rule(
     target_files: list[str],
 ) -> tuple[int, int]:
     if not tool_available("rg"):
-        raise SkillInfraError("ripgrep (rg) is required but not available")
+        msg = "ripgrep (rg) is required but not available"
+        raise SkillInfraError(msg)
 
     rule_id = str(rule.get("id", "")).strip()
     pattern = str(rule.get("pattern", "")).strip()
     if not pattern:
-        raise SkillUsageError(f"ripgrep rule '{rule_id}' is missing 'pattern'")
+        msg = f"ripgrep rule '{rule_id}' is missing 'pattern'"
+        raise SkillUsageError(msg)
 
     match_mode = str(rule.get("match", "present")).strip() or "present"
-    if match_mode not in ("present", "absent"):
-        raise SkillUsageError(f"Invalid match mode for '{rule_id}': {match_mode}")
+    if match_mode not in {"present", "absent"}:
+        msg = f"Invalid match mode for '{rule_id}': {match_mode}"
+        raise SkillUsageError(msg)
 
     if not target_files:
         return (1, 0) if match_mode == "absent" else (0, 0)
@@ -412,14 +431,81 @@ def run_ripgrep_rule(
     for batch in chunk_list(target_files, 1500):
         command = ["rg", "-n", "-H", "-P", "-e", pattern, "--"] + batch
         result = run_cmd(command, cwd=project_path, timeout=300)
-        if result.returncode not in (0, 1):
+        if result.returncode not in {0, 1}:
             stderr = (result.stderr or "").strip()
-            raise SkillInfraError(
-                f"ripgrep failed for {project_name}/{rule_id}: {stderr}"
-            )
+            msg = f"ripgrep failed for {project_name}/{rule_id}: {stderr}"
+            raise SkillInfraError(msg)
         total_matches += len([
             line for line in (result.stdout or "").splitlines() if line.strip()
         ])
+
+    if match_mode == "absent":
+        return (1, total_matches) if total_matches == 0 else (0, total_matches)
+    return total_matches, total_matches
+
+
+def _parse_re_flags(flags_raw: object) -> int:
+    """Parse a list of flag names into a combined ``re`` flags int."""
+    if not isinstance(flags_raw, list):
+        return 0
+    flags = 0
+    flag_map = {
+        "MULTILINE": re.MULTILINE,
+        "DOTALL": re.DOTALL,
+        "IGNORECASE": re.IGNORECASE,
+        "VERBOSE": re.VERBOSE,
+    }
+    for item in flags_raw:
+        name = str(item).upper()
+        if name in flag_map:
+            flags |= flag_map[name]
+    return flags
+
+
+def run_regex_rule(
+    *,
+    rule: dict[str, object],
+    project_name: str,
+    project_path: Path,
+    target_files: list[str],
+) -> tuple[int, int]:
+    """Run a Python regex rule on target files.
+
+    Returns ``(violations, raw_matches)`` following the same convention as
+    ``run_ripgrep_rule``.
+    """
+    rule_id = str(rule.get("id", "")).strip()
+    pattern = str(rule.get("pattern", "")).strip()
+    if not pattern:
+        msg = f"regex rule '{rule_id}' is missing 'pattern'"
+        raise SkillUsageError(msg)
+
+    match_mode = str(rule.get("match", "present")).strip() or "present"
+    if match_mode not in {"present", "absent"}:
+        msg = f"Invalid match mode for '{rule_id}': {match_mode}"
+        raise SkillUsageError(msg)
+
+    flags = _parse_re_flags(rule.get("flags", []))
+
+    try:
+        compiled = re.compile(pattern, flags)
+    except re.error as exc:
+        msg = f"Invalid regex in rule '{rule_id}': {exc}"
+        raise SkillUsageError(msg) from exc
+
+    if not target_files:
+        return (1, 0) if match_mode == "absent" else (0, 0)
+
+    total_matches = 0
+    for rel in target_files:
+        filepath = project_path / rel
+        if not filepath.exists() or not filepath.is_file():
+            continue
+        try:
+            content = filepath.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        total_matches += len(compiled.findall(content))
 
     if match_mode == "absent":
         return (1, total_matches) if total_matches == 0 else (0, total_matches)
@@ -442,26 +528,30 @@ def run_custom_rule(
     rule_id = str(rule.get("id", "")).strip()
     script_raw = str(rule.get("script", "")).strip()
     if not script_raw:
-        raise SkillUsageError(f"custom rule '{rule_id}' is missing 'script'")
+        msg = f"custom rule '{rule_id}' is missing 'script'"
+        raise SkillUsageError(msg)
 
     script = Path(script_raw)
     if not script.is_absolute():
         script = (skill_dir / script_raw).resolve()
     if not script.exists():
-        raise SkillUsageError(f"custom script not found: {script}")
+        msg = f"custom script not found: {script}"
+        raise SkillUsageError(msg)
 
     command = build_custom_command(script)
     command.extend(["--root", str(project_path)])
-    if bool(rule.get("pass_mode", False)):
+    if bool(rule.get("pass_mode")):
         command.extend(["--mode", mode])
 
     result = run_cmd(command, cwd=project_path, timeout=300)
     if result.returncode == 2:
         stderr = (result.stderr or "").strip()
-        raise SkillUsageError(f"custom rule invalid args for '{rule_id}': {stderr}")
-    if result.returncode not in (0, 1):
+        msg = f"custom rule invalid args for '{rule_id}': {stderr}"
+        raise SkillUsageError(msg)
+    if result.returncode not in {0, 1}:
         stderr = (result.stderr or "").strip()
-        raise SkillInfraError(f"custom rule runtime failed for '{rule_id}': {stderr}")
+        msg = f"custom rule runtime failed for '{rule_id}': {stderr}"
+        raise SkillInfraError(msg)
 
     count = parse_count_from_json_lines(result.stdout or "")
     if result.returncode == 1:
@@ -481,17 +571,20 @@ def run_custom_validate(
     if not script.is_absolute():
         script = (skill_dir / custom_script_raw).resolve()
     if not script.exists():
-        raise SkillUsageError(f"custom_validate script not found: {script}")
+        msg = f"custom_validate script not found: {script}"
+        raise SkillUsageError(msg)
 
     command = build_custom_command(script)
     command.extend(["--root", str(project_path), "--mode", mode])
     result = run_cmd(command, cwd=project_path, timeout=300)
 
     if result.returncode == 2:
-        raise SkillUsageError(f"custom_validate invalid args on project {project_name}")
-    if result.returncode not in (0, 1):
+        msg = f"custom_validate invalid args on project {project_name}"
+        raise SkillUsageError(msg)
+    if result.returncode not in {0, 1}:
         stderr = (result.stderr or "").strip()
-        raise SkillInfraError(f"custom_validate failed on {project_name}: {stderr}")
+        msg = f"custom_validate failed on {project_name}: {stderr}"
+        raise SkillInfraError(msg)
 
     count = parse_count_from_json_lines(result.stdout or "")
     if result.returncode == 1:
@@ -505,8 +598,9 @@ def compare_baseline(
     baseline_counts: dict[str, int],
     strategy: str,
 ) -> tuple[bool, dict[str, int], int, int]:
-    if strategy not in ("total", "per_group"):
-        raise SkillUsageError(f"Unsupported baseline strategy: {strategy}")
+    if strategy not in {"total", "per_group"}:
+        msg = f"Unsupported baseline strategy: {strategy}"
+        raise SkillUsageError(msg)
 
     all_groups = sorted(set(current_counts) | set(baseline_counts))
     deltas: dict[str, int] = {}
@@ -542,11 +636,12 @@ def _extract_fixes(rules_list: list[object]) -> list[dict[str, object]]:
 
         # Reject nested fix: — flat keys are the only supported format
         if isinstance(rule.get("fix"), dict):
-            raise SkillUsageError(
+            msg = (
                 f"Rule '{rule_id}' uses nested 'fix:' sub-dict. "
                 "Use flat keys instead: fix_auto, fix_type, fix_instruction, "
                 "fix_file, fix_description."
             )
+            raise SkillUsageError(msg)
 
         has_fix = any(
             key.startswith("fix_") and rule.get(key) is not None
@@ -590,10 +685,12 @@ def normalize_string_list(value: object, field_name: str) -> list[str]:
         out: list[str] = []
         for item in value:
             if not isinstance(item, str):
-                raise SkillUsageError(f"{field_name} must be a list[str]")
+                msg = f"{field_name} must be a list[str]"
+                raise SkillUsageError(msg)
             out.append(item)
         return out
-    raise SkillUsageError(f"{field_name} must be a list[str]")
+    msg = f"{field_name} must be a list[str]"
+    raise SkillUsageError(msg)
 
 
 def resolve_scan_projects(
@@ -617,14 +714,16 @@ def resolve_scan_projects(
         scan_list: list[str] = []
         for item in scan_projects:
             if not isinstance(item, str):
-                raise SkillUsageError("scan_targets.projects must be a list[str]")
+                msg = "scan_targets.projects must be a list[str]"
+                raise SkillUsageError(msg)
             scan_list.append(item)
         if not scan_list or scan_list == ["auto"]:
             selected = auto
         else:
             selected = unique_sorted(scan_list)
     else:
-        raise SkillUsageError("scan_targets.projects must be null or list[str]")
+        msg = "scan_targets.projects must be null or list[str]"
+        raise SkillUsageError(msg)
 
     if cli_projects:
         allowed = set(cli_projects)
@@ -651,7 +750,8 @@ def validate_skill(
     if scan_targets_obj is None:
         scan_targets_obj = {}
     if not isinstance(scan_targets_obj, dict):
-        raise SkillUsageError(f"scan_targets must be a mapping: {rules_path}")
+        msg = f"scan_targets must be a mapping: {rules_path}"
+        raise SkillUsageError(msg)
 
     include_globs = normalize_string_list(
         scan_targets_obj.get("include", ["**/*.py"]),
@@ -670,10 +770,12 @@ def validate_skill(
         cli_projects=cli_projects,
     )
     if not selected_projects:
-        raise SkillUsageError(f"No projects selected for skill '{skill_name}'")
+        msg = f"No projects selected for skill '{skill_name}'"
+        raise SkillUsageError(msg)
     for name in selected_projects:
         if name not in project_lookup:
-            raise SkillUsageError(f"Unknown project '{name}' in skill '{skill_name}'")
+            msg = f"Unknown project '{name}' in skill '{skill_name}'"
+            raise SkillUsageError(msg)
 
     baseline_obj = rules.get("baseline", {})
     report_obj = rules.get("report", {})
@@ -682,7 +784,8 @@ def validate_skill(
     if report_obj is None:
         report_obj = {}
     if not isinstance(baseline_obj, dict) or not isinstance(report_obj, dict):
-        raise SkillUsageError("baseline/report must be mappings")
+        msg = "baseline/report must be mappings"
+        raise SkillUsageError(msg)
 
     baseline_strategy = str(baseline_obj.get("strategy", "total"))
     baseline_path = render_path_template(
@@ -702,7 +805,8 @@ def validate_skill(
     if rules_obj is None:
         rules_obj = []
     if not isinstance(rules_obj, list):
-        raise SkillUsageError("rules must be a list")
+        msg = "rules must be a list"
+        raise SkillUsageError(msg)
 
     counts: dict[str, int] = {}
     per_project_counts: dict[str, dict[str, int]] = {}
@@ -728,11 +832,13 @@ def validate_skill(
 
         for rule_obj in rules_obj:
             if not isinstance(rule_obj, dict):
-                raise SkillUsageError("Each rule must be a mapping")
+                msg = "Each rule must be a mapping"
+                raise SkillUsageError(msg)
 
             rule_id = str(rule_obj.get("id", "")).strip()
             if not rule_id:
-                raise SkillUsageError("Rule missing id")
+                msg = "Rule missing id"
+                raise SkillUsageError(msg)
 
             rule_type = str(rule_obj.get("type", "")).strip()
             group = str(rule_obj.get("group", rule_id)).strip() or rule_id
@@ -765,6 +871,19 @@ def validate_skill(
                     f"    [{rule_id}] ripgrep matches={raw_matches} violations={violations}"
                 )
 
+            elif rule_type == "regex":
+                violations, raw_matches = run_regex_rule(
+                    rule=rule_obj,
+                    project_name=project_name,
+                    project_path=project_path,
+                    target_files=selected_files,
+                )
+                counts[group] = counts.get(group, 0) + violations
+                project_groups[group] = project_groups.get(group, 0) + violations
+                print(
+                    f"    [{rule_id}] regex matches={raw_matches} violations={violations}"
+                )
+
             elif rule_type == "custom":
                 custom_count = run_custom_rule(
                     rule=rule_obj,
@@ -777,9 +896,8 @@ def validate_skill(
                 print(f"    [{rule_id}] custom violations={custom_count}")
 
             else:
-                raise SkillUsageError(
-                    f"Unsupported rule type '{rule_type}' in rule '{rule_id}'"
-                )
+                msg = f"Unsupported rule type '{rule_type}' in rule '{rule_id}'"
+                raise SkillUsageError(msg)
 
         custom_validate = rules.get("custom_validate")
         if isinstance(custom_validate, str) and custom_validate.strip():
@@ -834,7 +952,8 @@ def validate_skill(
 
     raw_baseline_counts = baseline_data.get("counts", {}) if baseline_data else {}
     if raw_baseline_counts and not isinstance(raw_baseline_counts, dict):
-        raise SkillUsageError(f"Invalid baseline counts format: {baseline_path}")
+        msg = f"Invalid baseline counts format: {baseline_path}"
+        raise SkillUsageError(msg)
 
     baseline_counts: dict[str, int] = {}
     if isinstance(raw_baseline_counts, dict):
@@ -856,21 +975,20 @@ def validate_skill(
         comparison["passed"] = passed
         comparison["deltas"] = {"total": total}
         comparison["baseline_total"] = 0
+    elif baseline_initialized:
+        passed = True
+        comparison["deltas"] = {"total": 0}
+        comparison["baseline_total"] = total
     else:
-        if baseline_initialized:
-            passed = True
-            comparison["deltas"] = {"total": 0}
-            comparison["baseline_total"] = total
-        else:
-            passed, deltas, current_total, baseline_total = compare_baseline(
-                current_counts=counts,
-                baseline_counts=baseline_counts,
-                strategy=baseline_strategy,
-            )
-            comparison["passed"] = passed
-            comparison["deltas"] = deltas
-            comparison["current_total"] = current_total
-            comparison["baseline_total"] = baseline_total
+        passed, deltas, current_total, baseline_total = compare_baseline(
+            current_counts=counts,
+            baseline_counts=baseline_counts,
+            strategy=baseline_strategy,
+        )
+        comparison["passed"] = passed
+        comparison["deltas"] = deltas
+        comparison["current_total"] = current_total
+        comparison["baseline_total"] = baseline_total
 
     report: dict[str, object] = {
         "skill": skill_name,
@@ -965,15 +1083,14 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         + int(bool(args.skill))
     )
     if action_count == 0:
-        raise SkillUsageError(
-            "Specify one of: --skill, --all, --list-skills, --list-projects"
-        )
+        msg = "Specify one of: --skill, --all, --list-skills, --list-projects"
+        raise SkillUsageError(msg)
     if args.all and args.skill:
-        raise SkillUsageError("Use either --all or --skill")
+        msg = "Use either --all or --skill"
+        raise SkillUsageError(msg)
     if (args.list_skills or args.list_projects) and (args.all or args.skill):
-        raise SkillUsageError(
-            "Listing options cannot be combined with validation options"
-        )
+        msg = "Listing options cannot be combined with validation options"
+        raise SkillUsageError(msg)
 
     return args
 
@@ -986,7 +1103,7 @@ def run_main(argv: list[str]) -> int:
         return EXIT_USAGE
     except SystemExit as exc:
         code = int(exc.code) if isinstance(exc.code, int) else EXIT_USAGE
-        return code if code in (0, 1, 2, 3) else EXIT_USAGE
+        return code if code in {0, 1, 2, 3} else EXIT_USAGE
 
     root = Path(args.root).resolve()
     skills_dir = Path(args.skills_dir)
@@ -1066,7 +1183,7 @@ def run_main(argv: list[str]) -> int:
     print(f"\n{'=' * 72}")
     print(f"Validation summary: {len(skills)} skill(s)")
     for skill_name, _rules_path in skills:
-        status = "PASS" if pass_map.get(skill_name, False) else "FAIL"
+        status = "PASS" if pass_map.get(skill_name) else "FAIL"
         total = 0
         for report in reports:
             if report.get("skill") == skill_name:
@@ -1102,7 +1219,7 @@ def run_main(argv: list[str]) -> int:
 
 def main() -> None:
     code = run_main(sys.argv[1:])
-    if code not in (EXIT_PASS, EXIT_FAIL, EXIT_USAGE, EXIT_INFRA):
+    if code not in {EXIT_PASS, EXIT_FAIL, EXIT_USAGE, EXIT_INFRA}:
         code = EXIT_INFRA
     raise SystemExit(code)
 

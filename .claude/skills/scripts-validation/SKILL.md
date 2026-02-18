@@ -7,8 +7,7 @@ description: Validation scripts — policy gates, automated checks, ast-grep enf
 
 ## Scope
 
-- `scripts/validation/run_automated_validation.sh`
-- `scripts/validation/gate-policy.json`
+- `scripts/validation/run_automated_validation.sh` — thin wrapper around `skill_validate.py --all`
 - `scripts/core/skill_validate.py`
 - `scripts/validate_all_projects.sh`
 - `.claude/skills/*/rules.yml`
@@ -32,7 +31,7 @@ description: Validation scripts — policy gates, automated checks, ast-grep enf
 ## Instructions
 
 - When adding a new validation gate, create a `rules.yml` in the relevant skill folder.
-- Wire orchestrator integration via `scripts/validation/run_automated_validation.sh`.
+- The orchestrator `scripts/validation/run_automated_validation.sh` auto-discovers all skills — no wiring needed.
 - Use `python3 scripts/core/skill_validate.py --skill <name> --update-baseline` to initialize baselines.
 - Use `--mode strict` for zero-tolerance enforcement, `--mode baseline` for ratchet-only.
 
@@ -42,7 +41,7 @@ description: Validation scripts — policy gates, automated checks, ast-grep enf
 2. Add rules to the relevant skill's `rules.yml` (type: ast-grep, ripgrep, or custom).
 3. Place ast-grep rule files in the skill's `rules/` directory.
 4. Run `python3 scripts/core/skill_validate.py --skill <name> --update-baseline` to set baseline.
-5. Run `scripts/validation/run_automated_validation.sh quick` to verify integration.
+5. Run `python3 scripts/core/skill_validate.py --all` to verify integration.
 
 ## Examples
 
@@ -51,7 +50,7 @@ Good:
 ```bash
 python3 scripts/core/skill_validate.py --skill flext-strict-typing --mode baseline
 python3 scripts/core/skill_validate.py --all
-scripts/validation/run_automated_validation.sh quick
+scripts/validation/run_automated_validation.sh
 ```
 
 Why good: Data-driven, reproducible, non-interactive, baseline-aware.
@@ -69,13 +68,12 @@ Why bad: No baseline comparison, no structured output, no gate behavior.
 - `bash -n scripts/validation/run_automated_validation.sh`
 - `bash -n scripts/validate_all_projects.sh`
 - `python3 scripts/core/skill_validate.py --all`
-- `scripts/validation/run_automated_validation.sh quick`
+- `scripts/validation/run_automated_validation.sh`
 
 ## Scripts
 
 | Path | Purpose | Invocation |
 |------|---------|------------|
-| `scripts/validation/run_automated_validation.sh` | Orchestrator: quick/full validation | `scripts/validation/run_automated_validation.sh quick` |
-| `scripts/core/skill_validate.py` | Generic skill runner (discovers rules.yml) | `python3 scripts/core/skill_validate.py --all` |
-| `scripts/validation/gate-policy.json` | Gate policy configuration | Referenced by orchestrator |
+| `scripts/validation/run_automated_validation.sh` | Thin orchestrator wrapper | `scripts/validation/run_automated_validation.sh` |
+| `scripts/core/skill_validate.py` | Generic skill runner (auto-discovers rules.yml) | `python3 scripts/core/skill_validate.py --all` |
 | `scripts/validate_all_projects.sh` | Workspace-wide validation across all projects | `bash scripts/validate_all_projects.sh` |

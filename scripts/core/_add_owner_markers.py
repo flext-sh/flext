@@ -177,10 +177,7 @@ def write_lines(path: Path, lines: list[str]) -> None:
 
 def has_marker(lines: list[str]) -> bool:
     """Check if any of the first 10 lines has an Owner-Skill marker."""
-    for line in lines[:10]:
-        if line.startswith("# Owner-Skill:"):
-            return True
-    return False
+    return any(line.startswith("# Owner-Skill:") for line in lines[:10])
 
 
 def insert_marker(path: Path, skill: str, dry_run: bool) -> str:
@@ -201,10 +198,7 @@ def insert_marker(path: Path, skill: str, dry_run: bool) -> str:
     # Determine insertion point:
     # - If line 0 is a shebang (#!), insert at line 1
     # - Otherwise insert at line 0
-    if lines[0].startswith("#!"):
-        insert_at = 1
-    else:
-        insert_at = 0
+    insert_at = 1 if lines[0].startswith("#!") else 0
 
     lines.insert(insert_at, marker_line)
 
@@ -233,7 +227,7 @@ def main() -> int:
         result = insert_marker(script_path, skill, args.dry_run)
         print(result)
 
-        if result.startswith("ADDED") or result.startswith("DRY-RUN"):
+        if result.startswith(("ADDED", "DRY-RUN")):
             added += 1
         elif result.startswith("SKIP"):
             skipped += 1

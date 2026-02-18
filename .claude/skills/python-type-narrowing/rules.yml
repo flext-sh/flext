@@ -1,0 +1,31 @@
+skill: python-type-narrowing
+description: "Detect type narrowing anti-patterns: type() comparison, bare type checks."
+
+scan_targets:
+  include: ["**/*.py"]
+  exclude: []
+  projects: []
+
+rules:
+  - id: no-type-comparison
+    type: ripgrep
+    pattern: 'type\([^)]+\)\s*(==|!=|is )\s*'
+    severity: warning
+    group: type_narrowing
+    description: "type() comparison — use isinstance() for type narrowing."
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Replace type(x) == SomeType with isinstance(x, SomeType)."
+
+  - id: no-type-in-condition
+    type: ripgrep
+    pattern: 'if type\('
+    severity: warning
+    group: type_narrowing
+    description: "type() in condition — use isinstance() for proper type narrowing."
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Replace if type(x) is/== Y with if isinstance(x, Y)."
+
+baseline:
+  strategy: total

@@ -1,0 +1,51 @@
+skill: backend-api-patterns
+description: "Detect SQL injection patterns and unsafe query construction."
+
+scan_targets:
+  include: ["**/*.py"]
+  exclude: []
+  projects: []
+
+rules:
+  - id: no-fstring-execute
+    type: ripgrep
+    pattern: 'execute\(f["\x27]'
+    severity: error
+    group: sql_injection
+    description: "f-string in execute() — SQL injection risk."
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Use parameterized queries: execute('SELECT ... WHERE id = %s', (value,))."
+
+  - id: no-format-execute
+    type: ripgrep
+    pattern: 'execute\(["\x27].*\.format\('
+    severity: error
+    group: sql_injection
+    description: ".format() in execute() — SQL injection risk."
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Use parameterized queries instead of .format()."
+
+  - id: no-concat-execute
+    type: ripgrep
+    pattern: 'execute\(["\x27].*\+\s'
+    severity: error
+    group: sql_injection
+    description: "String concatenation in execute() — SQL injection risk."
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Use parameterized queries instead of string concatenation."
+
+  - id: no-hardcoded-credentials
+    type: ripgrep
+    pattern: '(password|secret|api_key|token)\s*=\s*["\x27][^"\x27]{4,}'
+    severity: error
+    group: security
+    description: "Possible hardcoded credential in source code."
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Use environment variables or vault for secrets."
+
+baseline:
+  strategy: total

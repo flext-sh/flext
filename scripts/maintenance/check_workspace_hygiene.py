@@ -20,8 +20,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _discover import discover_all_paths  # noqa: E402
-
+from _discover import discover_all_paths
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 REPORT_PATH = (
@@ -135,14 +134,14 @@ def check_untracked_cruft(project_path: Path) -> list[Violation]:
 
     for pattern in CRUFT_GLOBS:
         matches = list(project_path.glob(pattern))
-        for match in matches:
-            violations.append(
-                Violation(
-                    project=name,
-                    check="untracked-cruft",
-                    message=f"found cruft: {match.name}/",
-                )
+        violations.extend(
+            Violation(
+                project=name,
+                check="untracked-cruft",
+                message=f"found cruft: {match.name}/",
             )
+            for match in matches
+        )
 
     return violations
 
@@ -178,45 +177,44 @@ def check_gitignore_coverage(project_path: Path) -> list[Violation]:
         return violations
 
     lines = {line.strip() for line in content.splitlines()}
-    for pattern in REQUIRED_GITIGNORE_PATTERNS:
-        if pattern not in lines:
-            violations.append(
-                Violation(
-                    project=name,
-                    check="gitignore-coverage",
-                    message=f"missing pattern in .gitignore: {pattern}",
-                )
-            )
+    violations.extend(
+        Violation(
+            project=name,
+            check="gitignore-coverage",
+            message=f"missing pattern in .gitignore: {pattern}",
+        )
+        for pattern in REQUIRED_GITIGNORE_PATTERNS
+        if pattern not in lines
+    )
 
     return violations
 
 
 def check_required_files(project_path: Path) -> list[Violation]:
     """Verify required project files and directories exist."""
-    violations: list[Violation] = []
     name = project_path.name
 
-    for filename in REQUIRED_FILES:
-        if not (project_path / filename).exists():
-            violations.append(
-                Violation(
-                    project=name,
-                    check="required-files",
-                    message=f"missing required file: {filename}",
-                    severity="error" if filename == "pyproject.toml" else "warning",
-                )
-            )
+    violations: list[Violation] = [
+        Violation(
+            project=name,
+            check="required-files",
+            message=f"missing required file: {filename}",
+            severity="error" if filename == "pyproject.toml" else "warning",
+        )
+        for filename in REQUIRED_FILES
+        if not (project_path / filename).exists()
+    ]
 
-    for dirname in REQUIRED_DIRS:
-        if not (project_path / dirname).is_dir():
-            violations.append(
-                Violation(
-                    project=name,
-                    check="required-dirs",
-                    message=f"missing required directory: {dirname}/",
-                    severity="warning",
-                )
-            )
+    violations.extend(
+        Violation(
+            project=name,
+            check="required-dirs",
+            message=f"missing required directory: {dirname}/",
+            severity="warning",
+        )
+        for dirname in REQUIRED_DIRS
+        if not (project_path / dirname).is_dir()
+    )
 
     return violations
 
@@ -405,9 +403,9 @@ def main() -> int:
         return 1
 
     # Per-project checks
-    infos: list[ProjectInfo] = []
-    for project_path in projects:
-        infos.append(validate_project(project_path))
+    infos: list[ProjectInfo] = [
+        validate_project(project_path) for project_path in projects
+    ]
 
     # Root-level submodule check
     submodule_violations = check_submodule_alignment(root)

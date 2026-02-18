@@ -1,103 +1,146 @@
 skill: flext-strict-typing
-description: "Enforce strict typing standards: no Dict, no Any, no implicit generic Any."
+description: 'Enforce strict typing standards: no Dict, no Any, no implicit generic Any.'
 scan_targets:
-  include: ["**/*.py"]
+  include:
+  - '**/*.py'
   exclude: []
   projects: []
 rules:
-  - id: ban-dict-literal
-    type: ast-grep
-    file: rules/no-dict.yml
-    severity: error
-    group: strict_typing
-    description: "Use dict() constructor or specific types, strictly no `Dict` type hint."
-    fix_auto: false
-    fix_instruction: "Replace Dict with dict or specialized type."
-
-  - id: ban-dict-comprehension
-    type: ast-grep
-    file: rules/no-dict.yml
-    severity: error
-    group: strict_typing
-    description: "Dict comprehension is banned (use concrete types)."
-    fix_auto: false
-    fix_instruction: "Use concrete types instead of generic dict comprehension."
-
-  - id: ban-dict-constructor
-    type: ast-grep
-    file: rules/no-dict.yml
-    severity: error
-    group: strict_typing
-    description: "dict() constructor is banned (use concrete types)."
-    fix_auto: false
-    fix_instruction: "Replace dict() with specific type constructor."
-
-  - id: ban-dict-type-annotation
-    type: ast-grep
-    file: rules/no-dict.yml
-    severity: error
-    group: strict_typing
-    description: "dict in type annotations is banned (use mapping/typeddict)."
-    fix_auto: false
-    fix_instruction: "Use Mapping, MutableMapping, or TypedDict."
-
-  - id: ban-typing-dict-attribute
-    type: ast-grep
-    file: rules/no-dict.yml
-    severity: error
-    group: strict_typing
-    description: "typing.Dict is banned."
-    fix_auto: false
-    fix_instruction: "Remove typing.Dict usage."
-
-  - id: ban-typing-dict-import
-    type: ast-grep
-    file: rules/no-dict.yml
-    severity: error
-    group: strict_typing
-    description: "Importing Dict from typing is banned."
-    fix_auto: false
-    fix_instruction: "Remove Dict import from typing."
-
-  - id: ban-isinstance-dict
-    type: ast-grep
-    file: rules/no-dict.yml
-    severity: error
-    group: strict_typing
-    description: "isinstance(..., dict) is banned."
-    fix_auto: false
-    fix_instruction: "Check against Mapping or specific type."
-
-  - id: ban-default-factory-dict
-    type: ast-grep
-    file: rules/no-dict.yml
-    severity: error
-    group: strict_typing
-    description: "default_factory=dict is banned."
-    fix_auto: false
-    fix_instruction: "Use default_factory=list or other specific factory."
-
-  - id: grep-typing-any
-    type: ripgrep
-    pattern: 'typing\.Any'
-    severity: error
-    group: strict_typing
-    description: "Direct usage of typing.Any is banned."
-    fix_auto: false
-    fix_instruction: "Replace Any with specific type or object."
-
-  - id: grep-any-import
-    type: ripgrep
-    pattern: "from typing import.*Any"
-    severity: error
-    group: strict_typing
-    description: "Importing Any from typing is banned."
-    fix_auto: false
-    fix_instruction: "Remove Any import."
-
+- id: ban-dict-literal
+  type: ast-grep
+  file: rules/no-dict.yml
+  severity: error
+  group: strict_typing
+  description: Use dict() constructor or specific types, strictly no `Dict` type hint.
+  fix_auto: false
+  fix_instruction: Replace Dict with dict or specialized type.
+  fix_type: manual
+- id: ban-dict-comprehension
+  type: ast-grep
+  file: rules/no-dict.yml
+  severity: error
+  group: strict_typing
+  description: Dict comprehension is banned (use concrete types).
+  fix_auto: false
+  fix_instruction: Use concrete types instead of generic dict comprehension.
+  fix_type: manual
+- id: ban-dict-constructor
+  type: ast-grep
+  file: rules/no-dict.yml
+  severity: error
+  group: strict_typing
+  description: dict() constructor is banned (use concrete types).
+  fix_auto: false
+  fix_instruction: Replace dict() with specific type constructor.
+  fix_type: manual
+- id: ban-dict-type-annotation
+  type: ast-grep
+  file: rules/no-dict.yml
+  severity: error
+  group: strict_typing
+  description: dict in type annotations is banned (use mapping/typeddict).
+  fix_auto: false
+  fix_instruction: Use Mapping, MutableMapping, or TypedDict.
+  fix_type: manual
+- id: ban-typing-dict-attribute
+  type: ast-grep
+  file: rules/no-dict.yml
+  severity: error
+  group: strict_typing
+  description: typing.Dict is banned.
+  fix_auto: true
+  fix_type: ast-grep
+  fix_file: rules/no-dict-fix.yml
+  fix_instruction: 'Auto-rewrite: typing.Dict -> dict attribute access. Standalone import removal also auto-applied.'
+  fix_description: Rewrites typing.Dict attribute and removes standalone import.
+- id: ban-typing-dict-import
+  type: ast-grep
+  file: rules/no-dict.yml
+  severity: error
+  group: strict_typing
+  description: Importing Dict from typing is banned.
+  fix_auto: true
+  fix_type: ast-grep
+  fix_file: rules/no-dict-fix.yml
+  fix_instruction: Auto-removes standalone 'from typing import Dict'. Multi-import lines require manual cleanup.
+  fix_description: Removes standalone Dict import line.
+- id: ban-isinstance-dict
+  type: ast-grep
+  file: rules/isinstance-dict-detect.yml
+  severity: warning
+  group: strict_typing
+  count_by: rule_id
+  description: isinstance(x, dict) — prefer isinstance(x, Mapping) for broader compatibility.
+  fix_auto: true
+  fix_type: ast-grep
+  fix_file: rules/isinstance-dict-fix.yml
+  fix_instruction: Auto-rewrite isinstance(x, dict) to isinstance(x, Mapping). Add 'from collections.abc import Mapping' if
+    missing.
+- id: ban-default-factory-dict
+  type: ast-grep
+  file: rules/no-dict.yml
+  severity: error
+  group: strict_typing
+  description: default_factory=dict is banned.
+  fix_auto: false
+  fix_instruction: Use default_factory=list or other specific factory.
+  fix_type: manual
+- id: grep-typing-any
+  type: ripgrep
+  pattern: typing\.Any
+  severity: error
+  group: strict_typing
+  description: Direct usage of typing.Any is banned.
+  fix_auto: false
+  fix_instruction: Replace Any with specific type or object.
+  fix_type: manual
+- id: grep-any-import
+  type: ripgrep
+  pattern: from typing import.*Any
+  severity: error
+  group: strict_typing
+  description: Importing Any from typing is banned.
+  fix_auto: false
+  fix_instruction: Remove Any import.
+  fix_type: manual
+- id: ban-type-ignore-comment
+  type: ripgrep
+  pattern: '#\s*type:\s*ignore'
+  severity: warning
+  group: suppress_comments
+  description: 'type: ignore comments suppress type checker — fix the underlying issue instead.'
+  fix_auto: false
+  fix_instruction: 'Remove the # type: ignore comment and fix the type error it was suppressing.'
+  fix_type: manual
+- id: ban-noqa-comment
+  type: ripgrep
+  pattern: '#\s*noqa'
+  severity: warning
+  group: suppress_comments
+  description: noqa comments suppress linter — fix the underlying issue instead.
+  fix_auto: false
+  fix_instruction: 'Remove the # noqa comment and fix the lint violation it was suppressing.'
+  fix_type: manual
+- id: ban-pylint-disable-comment
+  type: ripgrep
+  pattern: '#\s*pylint:\s*disable'
+  severity: warning
+  group: suppress_comments
+  description: 'pylint: disable comments suppress linter — fix the underlying issue.'
+  fix_auto: false
+  fix_instruction: 'Remove the # pylint: disable comment and fix the violation.'
+  fix_type: manual
+- id: ban-mypy-ignore-comment
+  type: ripgrep
+  pattern: '#\s*mypy:\s*ignore'
+  severity: warning
+  group: suppress_comments
+  description: 'mypy: ignore comments suppress type checker.'
+  fix_auto: false
+  fix_instruction: 'Remove the # mypy: ignore comment and fix the type error.'
+  fix_type: manual
 baseline:
   strategy: total
   file: baseline.json
-
 report:
   file: report.json

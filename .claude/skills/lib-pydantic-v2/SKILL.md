@@ -28,7 +28,7 @@ description: Pydantic v2 model, validation, and serialization patterns used acro
 - **Never** use v1 API: `@validator`, `.dict()`, `.json()`, `class Config:`, `from_orm`, `orm_mode`.
 - **Critical violation**: never use `model_rebuild(...)` to patch unresolved annotations.
 - Models must resolve all references at definition time via explicit imports/type aliases and stable declaration order.
-- Use `scripts/validation/enforce_pydantic_v2_skill.sh` as enforcement gate and `scripts/validation/fix_pydantic_v2_violations.sh` for safe codemod fixes.
+- Use `python3 scripts/core/skill_validate.py --skill lib-pydantic-v2` as enforcement gate. Auto-fix rules are declared in `rules.yml` (`fix_auto: true`, `fix_file: rules/pydantic-v2-fix.yml`) and will be executed by `skill_fix.py` when available.
 - Use `TypeAdapter` for validating non-model types — never ad-hoc casting with `isinstance` chains.
 - Set `ConfigDict(extra="forbid")` on strict boundary models, `extra="ignore"` on flexible internal models.
 - Use `Field(...)` with explicit `description=` on all public model fields.
@@ -163,9 +163,8 @@ instance = Model.model_validate_json(json_bytes) # from JSON
 8. Run pydantic skill automation:
 
 ```bash
-scripts/validation/fix_pydantic_v2_violations.sh --root . --dry-run
-scripts/validation/enforce_pydantic_v2_skill.sh --mode baseline --root .
-scripts/validation/enforce_pydantic_v2_skill.sh --mode strict --root .
+python3 scripts/core/skill_validate.py --skill lib-pydantic-v2
+python3 scripts/core/skill_validate.py --skill lib-pydantic-v2 --mode strict
 ```
 
 ## Examples
@@ -275,15 +274,12 @@ rg -n "class Config:" --glob "**/*.py" flext-core/src/
 # Detect critical rebuild anti-pattern (should return zero hits)
 rg -n "model_rebuild\(" --glob "**/*.py" flext-core/src/ flext-core/tests/ flext-auth/src/ flext-api/src/ flext-cli/src/ flext-grpc/src/ flext-ldif/src/ flext-web/src/
 
-# Skill automation gate + autofix
-scripts/validation/fix_pydantic_v2_violations.sh --root . --dry-run
-scripts/validation/enforce_pydantic_v2_skill.sh --mode baseline --root .
+# Skill automation gate
+python3 scripts/core/skill_validate.py --skill lib-pydantic-v2
+python3 scripts/core/skill_validate.py --skill lib-pydantic-v2 --mode strict
 
 # Confirm dependency version
 rg "pydantic>=" flext-core/pyproject.toml
 ```
 
-<!-- AUTOMATION MARKERS (machine-readable, do not edit) -->
-<!-- ASTGREP_SCAN_PACK: scripts/validation/ast-grep-pydantic-v2.yml -->
-<!-- ASTGREP_FIX_PACK: scripts/validation/ast-grep-safe-fixes.yml -->
-<!-- AUTOFIX_MODE: safe -->
+<!-- AUTOMATION: Managed by scripts/core/skill_validate.py via .claude/skills/lib-pydantic-v2/rules.yml -->

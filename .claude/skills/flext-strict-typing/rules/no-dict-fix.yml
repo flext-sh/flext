@@ -1,0 +1,17 @@
+id: fix-typing-dict-attr
+language: python
+rule:
+  all:
+    - kind: attribute
+    - pattern: typing.Dict
+fix: dict
+message: "Rewrite typing.Dict -> dict"
+severity: error
+---
+id: fix-typing-dict-import-solo
+language: python
+rule:
+  pattern: from typing import Dict
+fix: ""
+message: "Remove standalone 'from typing import Dict'"
+severity: error

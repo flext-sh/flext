@@ -19,8 +19,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _discover import discover_all_paths  # noqa: E402
-
+from _discover import discover_all_paths
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 REPORT_PATH = (
@@ -342,9 +341,10 @@ def main() -> int:
         )
         return 1
 
-    infos: list[ProjectInfo] = []
-    for project_path in projects:
-        infos.append(validate_project(project_path, skip_outdated=args.skip_outdated))
+    infos: list[ProjectInfo] = [
+        validate_project(project_path, skip_outdated=args.skip_outdated)
+        for project_path in projects
+    ]
 
     # Apply lock updates if requested
     if args.apply:

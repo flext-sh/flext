@@ -1,0 +1,34 @@
+skill: flext-quality-gates
+description: Baseline checks for quality-gate configuration entrypoints.
+scan_targets:
+  include:
+  - pyproject.toml
+  - Makefile
+  - '**/base.mk'
+  exclude: []
+  projects:
+  - .
+rules:
+- id: require-ruff-config
+  type: ripgrep
+  pattern: 'ruff|^test:|^\s*test\s*:'
+  match: absent
+  severity: warning
+  group: quality_gate_config
+  description: Core gate configuration files should include Ruff config or test targets.
+  fix_auto: false
+  fix_instruction: Ensure pyproject.toml references Ruff and Makefile/base.mk expose
+    test targets.
+  fix_type: manual
+- id: require-test-target
+  type: ripgrep
+  pattern: ^test:|^\s*test\s*:|pytest|ruff
+  match: absent
+  severity: warning
+  group: quality_gate_config
+  description: Core gate configuration files should include test gate command wiring.
+  fix_auto: false
+  fix_instruction: Define a test target (or delegated pytest call) in Makefile/base.mk.
+  fix_type: manual
+baseline:
+  strategy: total

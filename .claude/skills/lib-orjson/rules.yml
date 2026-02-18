@@ -1,0 +1,32 @@
+skill: lib-orjson
+description: Enforce deterministic orjson serialization patterns in flext-core utilities.
+scan_targets:
+  include:
+  - src/flext_core/_utilities/validation.py
+  exclude: []
+  projects: []
+rules:
+- id: prefer-orjson-dumps
+  type: ripgrep
+  pattern: json\.dumps\(
+  severity: warning
+  group: orjson_usage
+  description: json.dumps usage in validation utilities should remain a fallback path
+    behind orjson.dumps.
+  fix_auto: false
+  fix_instruction: Use orjson.dumps as primary serializer and keep json.dumps only
+    as guarded fallback.
+  fix_type: manual
+- id: require-sort-keys
+  type: ripgrep
+  pattern: orjson\.OPT_SORT_KEYS
+  match: absent
+  severity: error
+  group: orjson_determinism
+  description: orjson serialization must include OPT_SORT_KEYS for deterministic ordering.
+  fix_auto: false
+  fix_instruction: Pass option=orjson.OPT_SORT_KEYS to every orjson.dumps call in
+    this utility.
+  fix_type: manual
+baseline:
+  strategy: total

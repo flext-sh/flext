@@ -6,17 +6,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import operator
 import re
 import subprocess
 import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from artifact_naming import artifact_path
-
 
 OWNER_MARKER_RE = re.compile(
     r"^# Owner-Skill:\s+\.claude/skills/([a-z0-9][-a-z0-9]*)/SKILL\.md\s*$",
@@ -249,8 +249,8 @@ def build_inventory(root: Path) -> dict[str, Any]:
     )
     by_extension = Counter(item.extension for item in metas)
 
-    inventory = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+    return {
+        "generated_at": datetime.now(UTC).isoformat(),
         "repo_root": str(root.resolve()),
         "total_scripts": sum(1 for item in metas if item.item_type == "script"),
         "by_classification": dict(sorted(by_classification.items())),
@@ -275,11 +275,10 @@ def build_inventory(root: Path) -> dict[str, Any]:
             for item in sorted(metas, key=lambda entry: entry.path)
         ],
     }
-    return inventory
 
 
 def extract_script_paths(text: str) -> list[str]:
-    return sorted(set(match.group(0) for match in SCRIPT_PATH_RE.finditer(text)))
+    return sorted({match.group(0) for match in SCRIPT_PATH_RE.finditer(text)})
 
 
 def parse_makefile_wiring(
@@ -300,16 +299,16 @@ def parse_makefile_wiring(
         if not line.startswith(("\t", " ")):
             continue
         scripts = extract_script_paths(line)
-        for script in scripts:
-            if script in inventory_scripts:
-                entries.append(
-                    {
-                        "target": current_target,
-                        "script": script,
-                        "blocking": "|| true" not in line,
-                    },
-                )
-    return sorted(entries, key=lambda item: (item["target"], item["script"]))
+        entries.extend(
+            {
+                "target": current_target,
+                "script": script,
+                "blocking": "|| true" not in line,
+            }
+            for script in scripts
+            if script in inventory_scripts
+        )
+    return sorted(entries, key=operator.itemgetter("target", "script"))
 
 
 def parse_orchestrator_wiring(
@@ -325,16 +324,16 @@ def parse_orchestrator_wiring(
         allow_fail = bool(match.group(1))
         step_name = match.group(2)
         cmd = match.group(3)
-        for script in extract_script_paths(cmd):
-            if script in inventory_scripts:
-                entries.append(
-                    {
-                        "step": step_name,
-                        "script": script,
-                        "allow_fail": allow_fail,
-                    },
-                )
-    return sorted(entries, key=lambda item: (item["step"], item["script"]))
+        entries.extend(
+            {
+                "step": step_name,
+                "script": script,
+                "allow_fail": allow_fail,
+            }
+            for script in extract_script_paths(cmd)
+            if script in inventory_scripts
+        )
+    return sorted(entries, key=operator.itemgetter("step", "script"))
 
 
 def parse_legacy_makefile_wiring(
@@ -370,7 +369,7 @@ def parse_legacy_makefile_wiring(
             script_key.replace("-", "_"),
         )
         if candidates:
-            script_path = sorted(candidates)[0]
+            script_path = min(candidates)
             entries.append(
                 {
                     "target": current_target,
@@ -378,7 +377,7 @@ def parse_legacy_makefile_wiring(
                     "included_by_root": False,
                 },
             )
-    return sorted(entries, key=lambda item: (item["target"], item["script"]))
+    return sorted(entries, key=operator.itemgetter("target", "script"))
 
 
 def module_to_script_path(module_name: str) -> str:
@@ -428,7 +427,8 @@ def parse_inter_script_deps(
 def build_wiring(root: Path, inventory: dict[str, Any]) -> dict[str, Any]:
     inventory_items = inventory.get("scripts", [])
     if not isinstance(inventory_items, list):
-        raise RuntimeError("inventory payload is missing scripts list")
+        msg = "inventory payload is missing scripts list"
+        raise RuntimeError(msg)
 
     script_entries = [
         item
@@ -452,7 +452,7 @@ def build_wiring(root: Path, inventory: dict[str, Any]) -> dict[str, Any]:
     unwired_scripts = sorted(inventory_scripts - wired_scripts)
 
     return {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(UTC).isoformat(),
         "wiring_sources": {
             "root_makefile": root_makefile,
             "orchestrator": orchestrator,
@@ -575,7 +575,7 @@ def build_external_candidates(root: Path) -> dict[str, Any]:
         )
 
     return {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(UTC).isoformat(),
         "candidates": sorted(candidates, key=lambda item: str(item["path"])),
         "makefiles_referencing_root_scripts": parse_makefiles_with_parent_scripts(
             root,

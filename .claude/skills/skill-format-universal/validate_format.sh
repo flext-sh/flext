@@ -5,7 +5,7 @@
 # the skill-format-universal contract.
 #
 # Usage:
-#   scripts/validation/check_skill_format.sh [--root DIR]
+#   .claude/skills/skill-format-universal/validate_format.sh [--root DIR]
 #
 # Exit codes:
 #   0 = all skills pass

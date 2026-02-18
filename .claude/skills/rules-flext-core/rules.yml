@@ -1,0 +1,54 @@
+skill: rules-flext-core
+description: Directory-scoped checks for flext-core result and typing conventions.
+scan_targets:
+  include:
+  - src/**/*.py
+  - '**/src/**/*.py'
+  exclude: []
+  projects:
+  - flext-core
+rules:
+- id: require-future-annotations
+  type: ripgrep
+  pattern: from __future__ import annotations
+  match: absent
+  severity: error
+  group: flext_core_style
+  description: Python modules should enable postponed annotation evaluation.
+  fix_auto: false
+  fix_instruction: Add 'from __future__ import annotations' near the top of each module.
+  fix_type: manual
+- id: require-flext-result-pattern
+  type: ripgrep
+  pattern: ->\s*r\[|FlextResult
+  match: absent
+  severity: warning
+  group: flext_core_result
+  description: Service boundaries should prefer FlextResult-based result flow.
+  fix_auto: false
+  fix_instruction: Use FlextResult typing (for example '-> r[...]') on boundary methods
+    where applicable.
+  fix_type: manual
+- id: standardize-test-aliases
+  type: ast-grep
+  file: rules/test-alias-fix.yml
+  severity: warning
+  group: flext_core_style
+  count_by: rule_id
+  description: Standardize test helper aliases to tm/tt/tu/tc/tp naming.
+  fix_auto: true
+  fix_type: ast-grep
+  fix_file: rules/test-alias-fix.yml
+  fix_instruction: Auto-rewrite test alias assignments to standardized names.
+- id: require-flext-constants-import
+  type: ripgrep
+  pattern: from flext_core.*import.*FlextConstants|from flext_core import.*c
+  match: absent
+  severity: warning
+  group: constants_standards
+  description: Subproject constants.py should import FlextConstants from flext_core.
+  fix_auto: false
+  fix_instruction: Add 'from flext_core import FlextConstants' and inherit from it.
+  fix_type: manual
+baseline:
+  strategy: total

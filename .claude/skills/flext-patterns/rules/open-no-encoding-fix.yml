@@ -1,0 +1,7 @@
+id: fix-open-no-encoding
+language: python
+rule:
+  pattern: open($PATH)
+fix: open($PATH, encoding="utf-8")
+message: "Rewrite open(path) -> open(path, encoding='utf-8')"
+severity: warning

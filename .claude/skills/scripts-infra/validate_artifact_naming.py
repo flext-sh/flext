@@ -11,7 +11,6 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-
 EXIT_PASS = 0
 EXIT_FAIL = 1
 EXIT_USAGE = 2
@@ -71,7 +70,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         code = int(exc.code) if isinstance(exc.code, int) else EXIT_USAGE
         if code == 0:
             raise
-        raise UsageError("invalid CLI arguments") from exc
+        msg = "invalid CLI arguments"
+        raise UsageError(msg) from exc
 
 
 def should_validate(path: Path, sisyphus_root: Path) -> bool:
@@ -185,7 +185,8 @@ def write_report(report_path: Path, violations: list[NamingViolation]) -> None:
             encoding="utf-8",
         )
     except OSError as exc:
-        raise InfraError(f"cannot write report: {report_path}") from exc
+        msg = f"cannot write report: {report_path}"
+        raise InfraError(msg) from exc
 
 
 def run_main(argv: list[str]) -> int:
@@ -196,7 +197,8 @@ def run_main(argv: list[str]) -> int:
         _mode = str(args.mode)
 
         if not repo_root.exists() or not repo_root.is_dir():
-            raise UsageError(f"--root must point to an existing directory: {repo_root}")
+            msg = f"--root must point to an existing directory: {repo_root}"
+            raise UsageError(msg)
 
         sisyphus_root = repo_root / ".sisyphus"
         report_path = repo_root / ".claude" / "skills" / "scripts-infra" / "report.json"

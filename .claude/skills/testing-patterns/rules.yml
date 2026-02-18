@@ -1,0 +1,53 @@
+skill: testing-patterns
+description: "Detect test anti-patterns: useless assertions, flaky sleep, broad asserts."
+
+scan_targets:
+  include: ["**/test_*.py", "**/tests/**/*.py"]
+  exclude: []
+  projects: []
+
+rules:
+  - id: no-assert-true
+    type: ripgrep
+    pattern: '^\s*assert True\b'
+    severity: warning
+    group: test_quality
+    description: "assert True is a no-op — tests must verify actual behavior."
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Replace assert True with a meaningful assertion on actual output. Requires understanding test intent."
+
+  - id: no-assert-false
+    type: ripgrep
+    pattern: '^\s*assert False\b'
+    severity: warning
+    group: test_quality
+    description: "assert False should be pytest.fail() with a message."
+    fix_auto: true
+    fix_type: regex
+    fix_pattern: '^(\s*)assert False\b(.*)'
+    fix_replacement: '\1pytest.fail("TODO: add failure reason")\2'
+    fix_instruction: "Auto-rewrites assert False -> pytest.fail('TODO: add failure reason'). Update the message after fix."
+
+  - id: no-sleep-in-tests
+    type: ripgrep
+    pattern: 'time\.sleep\('
+    severity: warning
+    group: test_quality
+    description: "time.sleep() in tests makes them flaky and slow."
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Use mocks, events, or polling instead of sleep."
+
+  - id: no-bare-assert
+    type: ripgrep
+    pattern: '^\s*assert [a-zA-Z_][a-zA-Z0-9_]*\s*$'
+    severity: warning
+    group: test_quality
+    description: "Bare assert on variable (truthy-only) — use specific assertions."
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Use assert x == expected or assert x is not None."
+
+baseline:
+  strategy: total

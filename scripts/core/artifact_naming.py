@@ -1,9 +1,8 @@
 # Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """Artifact naming helpers for the <skill>--<kind>--<slug>.<ext> contract."""
 
-from pathlib import Path
 import re
-
+from pathlib import Path
 
 ARTIFACT_PATTERN = re.compile(r"^[a-z][-a-z0-9]*--[a-z]+--[a-z][-a-z0-9]*\.[a-z]+$")
 SISYPHUS_ROOT = Path(".sisyphus")
