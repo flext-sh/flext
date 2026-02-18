@@ -314,3 +314,4 @@ secrets.yml
 .claude-data/
 .devcontainer/.host-gitconfig
 .devcontainer/.env
+.github/*.rej
