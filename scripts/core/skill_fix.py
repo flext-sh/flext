@@ -122,7 +122,9 @@ def load_rules_yml(path: Path) -> dict[str, object]:
 
 def write_json(path: Path, data: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, indent=2, default=str) + "\n", encoding="utf-8")
+    _ = path.write_text(
+        json.dumps(data, indent=2, default=str) + "\n", encoding="utf-8"
+    )
 
 
 def read_json(path: Path) -> dict[str, object]:
@@ -210,7 +212,7 @@ def check_syntax(filepath: Path) -> tuple[bool, str]:
 
     try:
         source = filepath.read_text(encoding="utf-8")
-        _ast.parse(source, filename=str(filepath))
+        _ = _ast.parse(source, filename=str(filepath))
         return True, ""
     except SyntaxError as exc:
         return False, f"SyntaxError: {exc}"
@@ -251,14 +253,46 @@ def check_import(filepath: Path) -> tuple[bool, str]:
 
     builtin_names = set(dir(builtins))
 
+    def _collect_target_names(target: _ast.AST) -> set[str]:
+        names: set[str] = set()
+        if isinstance(target, _ast.Name):
+            names.add(target.id)
+        elif isinstance(target, (_ast.Tuple, _ast.List)):
+            for elt in target.elts:
+                names.update(_collect_target_names(elt))
+        return names
+
     defined_names: set[str] = set()
-    for node in _ast.iter_child_nodes(tree):
+    for node in _ast.walk(tree):
         if isinstance(node, (_ast.FunctionDef, _ast.AsyncFunctionDef, _ast.ClassDef)):
             defined_names.add(node.name)
+            # Parameters are local definitions; including them avoids false positives.
+            args = getattr(node, "args", None)
+            if args:
+                defined_names.update(
+                    arg.arg
+                    for arg in (
+                        list(args.posonlyargs) + list(args.args) + list(args.kwonlyargs)
+                    )
+                )
+                if args.vararg:
+                    defined_names.add(args.vararg.arg)
+                if args.kwarg:
+                    defined_names.add(args.kwarg.arg)
         elif isinstance(node, _ast.Assign):
             for target in node.targets:
-                if isinstance(target, _ast.Name):
-                    defined_names.add(target.id)
+                defined_names.update(_collect_target_names(target))
+        elif isinstance(node, _ast.AnnAssign) or isinstance(
+            node, (_ast.For, _ast.AsyncFor)
+        ):
+            defined_names.update(_collect_target_names(node.target))
+        elif isinstance(node, _ast.With):
+            for item in node.items:
+                if item.optional_vars:
+                    defined_names.update(_collect_target_names(item.optional_vars))
+        elif isinstance(node, _ast.ExceptHandler):
+            if node.name:
+                defined_names.add(node.name)
 
     suspicious: list[str] = []
     for name in load_names_in_body:
@@ -371,7 +405,7 @@ def write_rej_file(
         lines.extend(("Syntax check output:", syntax_output, ""))
     if diff_text:
         lines.extend(("Diff:", diff_text, ""))
-    rej_path.write_text("\n".join(lines), encoding="utf-8")
+    _ = rej_path.write_text("\n".join(lines), encoding="utf-8")
     return rej_path
 
 
@@ -523,6 +557,22 @@ def _resolve_fix_mechanism(
     return "none", None
 
 
+def _validate_fix_auto_rule(rule_obj: dict[str, object], skill_dir: Path) -> None:
+    if not bool(rule_obj.get("fix_auto")):
+        return
+    rule_id = str(rule_obj.get("id", "unknown"))
+    mechanism, fix_target = _resolve_fix_mechanism(rule_obj, skill_dir)
+    if mechanism == "none" or fix_target is None:
+        msg = (
+            f"Rule '{rule_id}' has fix_auto=true but no executable fix mechanism. "
+            "Set fix_type + fix_file/fix_script."
+        )
+        raise ValueError(msg)
+    if not fix_target.exists():
+        msg = f"Rule '{rule_id}' points to missing fix target: {fix_target}"
+        raise FileNotFoundError(msg)
+
+
 def _parse_existing_imports(source: str) -> dict[str, set[str]]:
     """Parse all imports from source using AST.
 
@@ -541,7 +591,7 @@ def _parse_existing_imports(source: str) -> dict[str, set[str]]:
     for node in _ast.walk(tree):
         if isinstance(node, _ast.Import):
             for alias in node.names:
-                result.setdefault(alias.name, set())
+                _ = result.setdefault(alias.name, set())
         elif isinstance(node, _ast.ImportFrom):
             module = node.module or ""
             names = result.setdefault(module, set())
@@ -550,7 +600,7 @@ def _parse_existing_imports(source: str) -> dict[str, set[str]]:
     return result
 
 
-def _import_already_present(imp: str, source: str, parsed: dict[str, set[str]]) -> bool:
+def _import_already_present(imp: str, parsed: dict[str, set[str]]) -> bool:
     """Check if an import is already present using pre-parsed AST data."""
     import ast as _ast
 
@@ -608,9 +658,7 @@ def ensure_imports(target: Path, import_lines: list[str]) -> bool:
     text = target.read_text(encoding="utf-8")
 
     parsed = _parse_existing_imports(text)
-    missing = [
-        imp for imp in import_lines if not _import_already_present(imp, text, parsed)
-    ]
+    missing = [imp for imp in import_lines if not _import_already_present(imp, parsed)]
     if not missing:
         return False
 
@@ -620,7 +668,7 @@ def ensure_imports(target: Path, import_lines: list[str]) -> bool:
 
     block = "".join(imp.rstrip() + "\n" for imp in missing)
     lines.insert(insert_idx, block)
-    target.write_text("".join(lines), encoding="utf-8")
+    _ = target.write_text("".join(lines), encoding="utf-8")
     return True
 
 
@@ -672,6 +720,7 @@ def process_fix_rule(
     exclude_globs: list[str],
     dry_run: bool,
     tmpdir: Path,
+    import_check_mode: str,
 ) -> dict[str, object]:
     """Process one fix rule on one project. Returns fix report entry."""
     validate_flat_fix_keys(rule_obj)
@@ -710,22 +759,19 @@ def process_fix_rule(
     mechanism, fix_target = _resolve_fix_mechanism(rule_obj, skill_dir)
 
     if mechanism == "none":
-        entry["error"] = (
-            "fix_auto=true but no fix mechanism — set fix_type "
-            "(ast-grep + fix_file, custom + fix_script)"
+        msg = (
+            f"Rule '{rule_id}' has fix_auto=true but no executable fix mechanism. "
+            "Set fix_type + fix_file/fix_script."
         )
-        eprint(f"  Warning: {entry['error']} for rule '{rule_id}'")
-        return entry
+        raise ValueError(msg)
 
     if mechanism == "ast-grep" and fix_target and not fix_target.exists():
-        eprint(f"  Warning: fix_file not found: {fix_target}")
-        entry["error"] = f"fix_file not found: {fix_target}"
-        return entry
+        msg = f"Rule '{rule_id}' fix_file not found: {fix_target}"
+        raise FileNotFoundError(msg)
 
     if mechanism == "custom" and fix_target and not fix_target.exists():
-        eprint(f"  Warning: fix_script not found: {fix_target}")
-        entry["error"] = f"fix_script not found: {fix_target}"
-        return entry
+        msg = f"Rule '{rule_id}' fix_script not found: {fix_target}"
+        raise FileNotFoundError(msg)
 
     scan_file = (skill_dir / scan_file_rel).resolve() if scan_file_rel else None
 
@@ -767,7 +813,7 @@ def process_fix_rule(
         backup_path = tmpdir / backup_name
         if backup_path.exists():
             backup_path = tmpdir / f"{before_hash[:12]}_{backup_name}"
-        shutil.copy2(target, backup_path)
+        _ = shutil.copy2(target, backup_path)
 
         fix_applied = _apply_fix(
             mechanism,
@@ -777,12 +823,12 @@ def process_fix_rule(
         )
 
         if not fix_applied:
-            shutil.copy2(backup_path, target)
+            _ = shutil.copy2(backup_path, target)
             continue
 
         fix_imports_raw = rule_obj.get("fix_imports")
         if fix_imports_raw and isinstance(fix_imports_raw, list):
-            ensure_imports(target, [str(i) for i in fix_imports_raw])
+            _ = ensure_imports(target, [str(i) for i in fix_imports_raw])
 
         after_hash = sha256_file(target)
         if after_hash == before_hash:
@@ -813,7 +859,7 @@ def process_fix_rule(
                 syntax_output,
                 diff_text,
             )
-            shutil.copy2(backup_path, target)
+            _ = shutil.copy2(backup_path, target)
             rejected.append({
                 "file": str(target),
                 "reason": "syntax_error",
@@ -825,6 +871,29 @@ def process_fix_rule(
             print(f"      REJECTED (syntax error): {target.name}")
 
         elif not import_ok:
+            should_reject_import = False
+            if import_check_mode == "strict":
+                should_reject_import = True
+            elif import_check_mode == "smart":
+                should_reject_import = after_violations >= before_violations
+            elif import_check_mode == "off":
+                should_reject_import = False
+
+            if not should_reject_import:
+                accepted.append({
+                    "file": str(target),
+                    "before_hash": before_hash,
+                    "after_hash": after_hash,
+                    "before_violations": before_violations,
+                    "after_violations": after_violations,
+                    "delta": after_violations - before_violations,
+                    "import_check_warning": import_output,
+                })
+                print(
+                    f"      ACCEPTED (import-check {import_check_mode}): {target.name} ({before_violations} -> {after_violations})"
+                )
+                continue
+
             rej_path = write_rej_file(
                 target,
                 f"Import check failed: {import_output}",
@@ -837,7 +906,7 @@ def process_fix_rule(
                 import_output,
                 diff_text,
             )
-            shutil.copy2(backup_path, target)
+            _ = shutil.copy2(backup_path, target)
             rejected.append({
                 "file": str(target),
                 "reason": "import_check_failed",
@@ -866,7 +935,7 @@ def process_fix_rule(
                 "",
                 diff_text,
             )
-            shutil.copy2(backup_path, target)
+            _ = shutil.copy2(backup_path, target)
             rejected.append({
                 "file": str(target),
                 "reason": reason,
@@ -910,6 +979,7 @@ def fix_skill(
     project_filter: str | None,
     rule_filters: list[str] | None = None,
     max_rejections: int | None = None,
+    import_check_mode: str = "smart",
 ) -> tuple[bool, dict[str, object]]:
     """Run fixes for a single skill. Returns (success, report)."""
     skill_dir = root / SKILLS_DIR / skill_name
@@ -953,6 +1023,7 @@ def fix_skill(
     for r in rules_list:
         if isinstance(r, dict):
             validate_flat_fix_keys(r)
+            _validate_fix_auto_rule(r, skill_dir)
     fixable_rules = [
         r for r in rules_list if isinstance(r, dict) and r.get("fix_auto") is not None
     ]
@@ -960,9 +1031,7 @@ def fix_skill(
     if rule_filters:
         allowed = {rf.strip() for rf in rule_filters if rf.strip()}
         fixable_rules = [
-            r
-            for r in fixable_rules
-            if isinstance(r, dict) and str(r.get("id", "")).strip() in allowed
+            r for r in fixable_rules if str(r.get("id", "")).strip() in allowed
         ]
 
     if not fixable_rules:
@@ -1001,14 +1070,12 @@ def fix_skill(
                     ]
                     snap_name = f"snap_{project_name}_{rel_hash}_{tracked_path.name}"
                     snap_path = tmpdir_path / snap_name
-                    shutil.copy2(tracked_path, snap_path)
+                    _ = shutil.copy2(tracked_path, snap_path)
                     project_snapshots[str(tracked_path)] = snap_path
 
             project_entries: list[dict[str, object]] = []
 
             for rule_obj in fixable_rules:
-                if not isinstance(rule_obj, dict):
-                    continue
                 entry = process_fix_rule(
                     rule_obj=rule_obj,
                     skill_dir=skill_dir,
@@ -1019,6 +1086,7 @@ def fix_skill(
                     exclude_globs=exclude_globs,
                     dry_run=dry_run,
                     tmpdir=tmpdir_path,
+                    import_check_mode=import_check_mode,
                 )
                 project_entries.append(entry)
                 all_entries.append(entry)
@@ -1042,7 +1110,7 @@ def fix_skill(
                         f"max_rejections exceeded ({total_rejected} > {max_rejections})"
                     )
                     report_path = root / FIX_REPORT_DEFAULT.format(skill=skill_name)
-                    report: dict[str, object] = {
+                    abort_report: dict[str, object] = {
                         "skill": skill_name,
                         "mode": "dry-run" if dry_run else "apply",
                         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
@@ -1055,9 +1123,9 @@ def fix_skill(
                         },
                         "error": entry["error"],
                     }
-                    write_json(report_path, report)
+                    write_json(report_path, abort_report)
                     eprint(f"Aborting: {entry['error']}")
-                    return False, report
+                    return False, abort_report
 
             project_accepted = 0
             for entry in project_entries:
@@ -1075,7 +1143,7 @@ def fix_skill(
                     for original_path_str, snap_path in project_snapshots.items():
                         original_path = Path(original_path_str)
                         if original_path.exists() and snap_path.exists():
-                            shutil.copy2(snap_path, original_path)
+                            _ = shutil.copy2(snap_path, original_path)
                             restored_count += 1
                     print(f"    Restored {restored_count} files from snapshot")
 
@@ -1169,6 +1237,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         default=-1,
         help="Abort when total rejected files exceeds this value (-1 disables)",
     )
+    _ = parser.add_argument(
+        "--import-check",
+        choices=["strict", "smart", "off"],
+        default="smart",
+        help="Import check rejection mode: strict rejects all, smart rejects only non-improving fixes, off ignores import checker rejections",
+    )
     mode_group = parser.add_mutually_exclusive_group(required=True)
     _ = mode_group.add_argument(
         "--dry-run", action="store_true", help="Show what would be fixed"
@@ -1197,6 +1271,7 @@ def main() -> None:
                 project_filter=args.project,
                 rule_filters=list(args.rule or []),
                 max_rejections=args.max_rejections,
+                import_check_mode=str(args.import_check),
             )
             if not success:
                 any_failure = True
@@ -1209,6 +1284,7 @@ def main() -> None:
         project_filter=args.project,
         rule_filters=list(args.rule or []),
         max_rejections=args.max_rejections,
+        import_check_mode=str(args.import_check),
     )
     raise SystemExit(EXIT_OK if success else EXIT_FAIL)
 

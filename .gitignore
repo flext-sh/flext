@@ -64,6 +64,8 @@
 # Documentation
 !README.md
 !AGENTS.md
+!CLAUDE.md
+!codex.md
 !.markdownlint.json
 
 # Git configuration

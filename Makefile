@@ -104,7 +104,8 @@ setup: ## Complete workspace setup (idempotent)
 # QUALITY GATES
 # =============================================================================
 
-.PHONY: lint format fix type-check test validate validate-scripts check
+.PHONY: lint format fix type-check test validate validate-scripts check preflight
+.PHONY: quality-report check-clean
 .PHONY: validate-fix
 .PHONY: upgrade-all deps-all
 
@@ -112,6 +113,7 @@ lint: ## Lint all projects
 ifdef PROJECT
 	$(Q)$(POETRY_ENV) $(MAKE) -C $(PROJECT) lint
 else
+	$(Q)$(MAKE) preflight
 	$(Q)failed=0; \
 	for proj in $(ALL_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
@@ -133,6 +135,7 @@ format: ## Format all projects
 ifdef PROJECT
 	$(Q)$(POETRY_ENV) $(MAKE) -C $(PROJECT) format
 else
+	$(Q)$(MAKE) preflight
 	$(Q)failed=0; \
 	for proj in $(ALL_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
@@ -153,6 +156,7 @@ fix: ## Auto-fix lint issues
 ifdef PROJECT
 	$(Q)$(POETRY_ENV) $(MAKE) -C $(PROJECT) fix
 else
+	$(Q)$(MAKE) preflight
 	$(Q)failed=0; \
 	for proj in $(ALL_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
@@ -173,6 +177,7 @@ type-check: ## Type-check all projects
 ifdef PROJECT
 	$(Q)$(POETRY_ENV) $(MAKE) -C $(PROJECT) type-check
 else
+	$(Q)$(MAKE) preflight
 	$(Q)failed=0; \
 	for proj in $(ALL_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
@@ -194,6 +199,7 @@ test: ## Test all projects
 ifdef PROJECT
 	$(Q)$(POETRY_ENV) $(MAKE) -C $(PROJECT) test
 else
+	$(Q)$(MAKE) preflight
 	$(Q)failed=0; \
 	for proj in $(ALL_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
@@ -220,20 +226,25 @@ endif
 
 validate-scripts: ## Validate scripts/ (ownership, syntax, structure)
 	$(Q)echo "=== Scripts Validation (skill-driven) ==="
-	$(Q)python scripts/core/skill_validate.py --all
+	$(Q)python scripts/core/skill_validate.py --all --mode strict
 	$(Q)echo "=== Scripts Validation Complete ==="
 
 validate: ## Full validation
 ifdef PROJECT
 	$(Q)$(POETRY_ENV) $(MAKE) -C $(PROJECT) validate
 else
+	$(Q)$(MAKE) preflight
 	$(Q)$(MAKE) lint type-check test validate-scripts
 endif
 
 # --- Validate with report artifacts ---
 REPORT_DIR := $(CURDIR)/.reports/validate
+QUALITY_DIR := $(CURDIR)/.reports/quality
+QUALITY_INCLUDE_TEST ?= 0
+QUALITY_INCLUDE_SCRIPTS ?= 0
 
 validate-report: ## Validate with machine-readable report artifacts
+	$(Q)$(MAKE) preflight
 	$(Q)mkdir -p $(REPORT_DIR)/type-check $(REPORT_DIR)/lint
 	$(Q)echo '{"projects":[],"gates":[]}' > $(REPORT_DIR)/summary.json
 	$(Q)for proj in $(ALL_PROJECTS); do \
@@ -254,8 +265,107 @@ validate-report: ## Validate with machine-readable report artifacts
 	done
 	$(Q)echo "Report written to $(REPORT_DIR)/summary.json"
 
+quality-report: ## Clean quality report with actionable next steps
+	$(Q)$(MAKE) preflight
+	$(Q)mkdir -p $(QUALITY_DIR)/lint $(QUALITY_DIR)/type-check $(QUALITY_DIR)/test $(QUALITY_DIR)/scripts
+	$(Q)lock_file="$(QUALITY_DIR)/.quality-report.lock"; \
+	exec 9>"$$lock_file"; \
+	if ! flock -n 9; then \
+		echo "ERROR: another quality-report process is running"; \
+		exit 3; \
+	fi; \
+	report="$(QUALITY_DIR)/summary.txt"; \
+	echo "FLEXT Clean Quality Report" > "$$report"; \
+	echo "Generated: $$(date -Iseconds)" >> "$$report"; \
+	echo "" >> "$$report"; \
+	echo "Mode:" >> "$$report"; \
+	echo "  QUALITY_INCLUDE_TEST=$(QUALITY_INCLUDE_TEST)" >> "$$report"; \
+	echo "  QUALITY_INCLUDE_SCRIPTS=$(QUALITY_INCLUDE_SCRIPTS)" >> "$$report"; \
+	echo "" >> "$$report"; \
+	echo "Per-project status:" >> "$$report"; \
+	echo "-------------------" >> "$$report"; \
+	total_projects=0; \
+	ok_projects=0; \
+	failed_projects=0; \
+	failed_lint=0; \
+	failed_type=0; \
+	failed_test=0; \
+	for proj in $(ALL_PROJECTS); do \
+		if [ -d "$$proj" ]; then \
+			total_projects=$$((total_projects + 1)); \
+			lint_log="$(QUALITY_DIR)/lint/$$proj.txt"; \
+			type_log="$(QUALITY_DIR)/type-check/$$proj.txt"; \
+			test_log="$(QUALITY_DIR)/test/$$proj.txt"; \
+			echo "[RUN] $$proj"; \
+			$(POETRY_ENV) $(MAKE) -C "$$proj" lint -s > "$$lint_log" 2>&1; lint_status=$$?; \
+			$(POETRY_ENV) $(MAKE) -C "$$proj" type-check -s > "$$type_log" 2>&1; type_status=$$?; \
+			test_status=0; \
+			if [ "$(QUALITY_INCLUDE_TEST)" = "1" ]; then \
+				$(POETRY_ENV) $(MAKE) -C "$$proj" test -s > "$$test_log" 2>&1; test_status=$$?; \
+			fi; \
+			if [ $$lint_status -eq 0 ] && [ $$type_status -eq 0 ] && [ $$test_status -eq 0 ]; then \
+				ok_projects=$$((ok_projects + 1)); \
+				echo "[OK] $$proj" >> "$$report"; \
+			else \
+				failed_projects=$$((failed_projects + 1)); \
+				echo "[FAIL] $$proj" >> "$$report"; \
+				if [ $$lint_status -ne 0 ]; then \
+					failed_lint=$$((failed_lint + 1)); \
+					echo "  - TODO: make PROJECT=$$proj lint" >> "$$report"; \
+					echo "    log: $$lint_log" >> "$$report"; \
+				fi; \
+				if [ $$type_status -ne 0 ]; then \
+					failed_type=$$((failed_type + 1)); \
+					echo "  - TODO: make PROJECT=$$proj type-check" >> "$$report"; \
+					echo "    log: $$type_log" >> "$$report"; \
+				fi; \
+				if [ $$test_status -ne 0 ]; then \
+					failed_test=$$((failed_test + 1)); \
+					echo "  - TODO: make PROJECT=$$proj test" >> "$$report"; \
+					echo "    log: $$test_log" >> "$$report"; \
+				fi; \
+			fi; \
+		fi; \
+	done; \
+	scripts_status=0; \
+	scripts_log="$(QUALITY_DIR)/scripts/validate-scripts.txt"; \
+	if [ "$(QUALITY_INCLUDE_SCRIPTS)" = "1" ]; then \
+		$(MAKE) validate-scripts -s > "$$scripts_log" 2>&1; scripts_status=$$?; \
+	fi; \
+	echo "" >> "$$report"; \
+	echo "Global scripts validation:" >> "$$report"; \
+	if [ "$(QUALITY_INCLUDE_SCRIPTS)" != "1" ]; then \
+		echo "[SKIP] validate-scripts (set QUALITY_INCLUDE_SCRIPTS=1 to enable)" >> "$$report"; \
+	elif [ $$scripts_status -eq 0 ]; then \
+		echo "[OK] validate-scripts" >> "$$report"; \
+	else \
+		echo "[FAIL] validate-scripts" >> "$$report"; \
+		echo "  - TODO: make validate-scripts" >> "$$report"; \
+		echo "    log: $$scripts_log" >> "$$report"; \
+	fi; \
+	echo "" >> "$$report"; \
+	echo "Summary:" >> "$$report"; \
+	echo "  projects_total=$$total_projects" >> "$$report"; \
+	echo "  projects_ok=$$ok_projects" >> "$$report"; \
+	echo "  projects_failed=$$failed_projects" >> "$$report"; \
+	echo "  lint_failed=$$failed_lint" >> "$$report"; \
+	echo "  type_check_failed=$$failed_type" >> "$$report"; \
+	echo "  test_failed=$$failed_test" >> "$$report"; \
+	if [ "$(QUALITY_INCLUDE_SCRIPTS)" = "1" ] && [ $$scripts_status -ne 0 ]; then scripts_failed=1; else scripts_failed=0; fi; \
+	echo "  scripts_failed=$$scripts_failed" >> "$$report"; \
+	echo ""; \
+	cat "$$report"; \
+	echo ""; \
+	echo "Quality report written to $(QUALITY_DIR)/summary.txt"; \
+	if [ $$failed_projects -ne 0 ] || [ $$scripts_failed -ne 0 ]; then \
+		exit 1; \
+	fi
+
+check-clean: quality-report ## Run clean report and fail on issues
+
 # --- Validate-Fix: check + auto-fix + re-check (non-degrading, transactional) ---
 validate-fix: ## Full validation with automatic fixes
+	$(Q)$(MAKE) preflight
 	$(Q)echo "=== FLEXT Validate-Fix Pipeline ==="
 	$(Q)echo "Step 1/6: Baseline snapshot..."
 	$(Q)$(MAKE) validate-report
@@ -266,7 +376,7 @@ validate-fix: ## Full validation with automatic fixes
 	$(Q)echo "Step 3/6: Skill-driven auto-fix (ast-grep)..."
 	$(Q)python scripts/core/skill_fix.py --all --apply
 	$(Q)echo "Step 4/6: Typing stub supply chain..."
-	$(Q)python scripts/core/stub_supply_chain.py --all --apply
+	$(Q)python scripts/core/stub_supply_chain.py --all --apply --idempotency-check
 	$(Q)echo "Step 5/6: Pyrefly infer (annotation backfill)..."
 	$(Q)failed=0; \
 	for proj in $(ALL_PROJECTS); do \
@@ -295,6 +405,7 @@ validate-fix: ## Full validation with automatic fixes
 # =============================================================================
 
 upgrade-all: ## Upgrade dependencies for all projects
+	$(Q)$(MAKE) preflight
 	$(Q)echo "=== Upgrading all $(words $(ALL_PROJECTS)) projects ===" && \
 	upgraded=0; failed=0; \
 	for proj in $(ALL_PROJECTS); do \
@@ -327,6 +438,7 @@ upgrade-all: ## Upgrade dependencies for all projects
 # =============================================================================
 
 deps-all: ## Analyze dependencies for all projects with deptry
+	$(Q)$(MAKE) preflight
 	$(Q)echo "=== Analyzing dependencies in $(words $(ALL_PROJECTS)) projects ===" && \
 	for proj in $(ALL_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
@@ -342,6 +454,7 @@ deps-all: ## Analyze dependencies for all projects with deptry
 .PHONY: core taps targets dbt oracle external
 
 core: ## Validate core projects
+	$(Q)$(MAKE) preflight
 	$(Q)failed=0; \
 	for proj in $(CORE_PROJECTS); do \
 		if $(POETRY_ENV) $(MAKE) -C $$proj validate -s; then echo "✓ $$proj"; else echo "✗ $$proj"; failed=$$((failed + 1)); fi; \
@@ -349,6 +462,7 @@ core: ## Validate core projects
 	if [ $$failed -ne 0 ]; then echo "FAIL: core ($$failed projects)"; exit 1; fi
 
 taps: ## Validate tap projects
+	$(Q)$(MAKE) preflight
 	$(Q)failed=0; \
 	for proj in $(TAP_PROJECTS); do \
 		if $(POETRY_ENV) $(MAKE) -C $$proj validate -s; then echo "✓ $$proj"; else echo "✗ $$proj"; failed=$$((failed + 1)); fi; \
@@ -356,6 +470,7 @@ taps: ## Validate tap projects
 	if [ $$failed -ne 0 ]; then echo "FAIL: taps ($$failed projects)"; exit 1; fi
 
 targets: ## Validate target projects
+	$(Q)$(MAKE) preflight
 	$(Q)failed=0; \
 	for proj in $(TARGET_PROJECTS); do \
 		if $(POETRY_ENV) $(MAKE) -C $$proj validate -s; then echo "✓ $$proj"; else echo "✗ $$proj"; failed=$$((failed + 1)); fi; \
@@ -363,6 +478,7 @@ targets: ## Validate target projects
 	if [ $$failed -ne 0 ]; then echo "FAIL: targets ($$failed projects)"; exit 1; fi
 
 dbt: ## Validate dbt projects
+	$(Q)$(MAKE) preflight
 	$(Q)failed=0; \
 	for proj in $(DBT_PROJECTS); do \
 		if $(POETRY_ENV) $(MAKE) -C $$proj validate -s; then echo "✓ $$proj"; else echo "✗ $$proj"; failed=$$((failed + 1)); fi; \
@@ -370,6 +486,7 @@ dbt: ## Validate dbt projects
 	if [ $$failed -ne 0 ]; then echo "FAIL: dbt ($$failed projects)"; exit 1; fi
 
 oracle: ## Validate Oracle projects
+	$(Q)$(MAKE) preflight
 	$(Q)failed=0; \
 	for proj in $(ORACLE_PROJECTS); do \
 		if $(POETRY_ENV) $(MAKE) -C $$proj validate -s; then echo "✓ $$proj"; else echo "✗ $$proj"; failed=$$((failed + 1)); fi; \
@@ -377,6 +494,7 @@ oracle: ## Validate Oracle projects
 	if [ $$failed -ne 0 ]; then echo "FAIL: oracle ($$failed projects)"; exit 1; fi
 
 external: ## Validate external projects
+	$(Q)$(MAKE) preflight
 	$(Q)failed=0; \
 	for proj in $(EXTERNAL_PROJECTS); do \
 		if $(POETRY_ENV) $(MAKE) -C $$proj validate -s; then echo "✓ $$proj"; else echo "✗ $$proj"; failed=$$((failed + 1)); fi; \
@@ -393,6 +511,7 @@ clean: ## Clean build artifacts
 ifdef PROJECT
 	$(Q)$(POETRY_ENV) $(MAKE) -C $(PROJECT) clean
 else
+	$(Q)$(MAKE) preflight
 	$(Q)failed=0; \
 	for proj in $(ALL_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
@@ -408,6 +527,21 @@ else
 	fi
 endif
 	$(Q)rm -rf .pytest_cache/ htmlcov/ .coverage* .mypy_cache/ .ruff_cache/
+
+preflight: ## Enforce workspace preconditions before loops
+	$(Q)if [ ! -d "$(WORKSPACE_VENV)" ]; then \
+		echo "ERROR: workspace venv not found at $(WORKSPACE_VENV). Run 'make setup'."; \
+		exit 1; \
+	fi
+	$(Q)local_venvs=$$(for proj in $(ALL_PROJECTS); do \
+		if [ -d "$$proj/.venv" ]; then echo "$$proj/.venv"; fi; \
+	done); \
+	if [ -n "$$local_venvs" ]; then \
+		echo "ERROR: project-local .venv directories detected (must use workspace .venv):"; \
+		printf '%s\n' "$$local_venvs"; \
+		echo "Run: for p in $(ALL_PROJECTS); do rm -rf \"\$$p/.venv\"; done"; \
+		exit 1; \
+	fi
 
 clean-all: clean ## Deep clean
 	$(Q)find . -maxdepth 2 -type d -name __pycache__ -exec rm -rf {} +
@@ -475,7 +609,7 @@ commit: ## Commit inteligente (conventional commits)
 # SHORT ALIASES
 # =============================================================================
 
-.PHONY: l f tc t c v vf vr d s dp ap rp si
+.PHONY: l f tc t c v vf vr vs qr qc d s dp ap rp si
 
 l: lint
 f: format
@@ -486,6 +620,8 @@ v: validate
 vf: validate-fix
 vr: validate-report
 vs: validate-scripts
+qr: quality-report
+qc: check-clean
 d: discover
 s: status
 dp: deps-all

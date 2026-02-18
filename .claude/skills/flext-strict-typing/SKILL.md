@@ -54,7 +54,11 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 
 ```bash
 python3 scripts/core/skill_validate.py --skill flext-strict-typing --mode baseline
+make validate-scripts
+make check-clean
 ```
+
+Custom checks for this skill must live in `.claude/skills/flext-strict-typing/` and emit `{"violation_count": N}` when using `type: custom`.
 
 ### Special RootModel Containers (from `typings.py` lines 357-462)
 

@@ -27,6 +27,7 @@ description: Canonical format for project SKILL.md files using Anthropic standar
 - Put trigger guidance in `description`, not in a body section called "When to use".
 - Keep body operational and evidence-backed with repository paths and runnable checks.
 - Keep names aligned with directory names under `.claude/skills/<name>/SKILL.md`.
+- Keep policy text aligned with `CLAUDE.md` (canonical), do not invent parallel policy.
 - Use exactly these body sections for project consistency:
   - `## Scope`
   - `## References`
@@ -45,6 +46,9 @@ description: Canonical format for project SKILL.md files using Anthropic standar
 - Include at least one Good and one Bad code/example pair with a "Why bad" explanation.
 - For `lib-*` skills, include concrete declarations (classes/methods) and subproject usage map.
 - For `rules-*` skills, include concrete file anchors in target directory and enforceable grep checks.
+- For skills with `rules.yml`, keep rule metadata in flat keys only (`fix_auto`, `fix_type`, `fix_file`, `fix_script`, `fix_instruction`, `fix_description`).
+- Prefer `type: ast-grep`; use `type: custom` only when AST matching is not applicable, and document the reason in `description`.
+- `fix_auto: true` must point to a real executable mechanism (`fix_type + fix_file` for ast-grep or `fix_type + fix_script` for custom).
 
 ## Workflow
 

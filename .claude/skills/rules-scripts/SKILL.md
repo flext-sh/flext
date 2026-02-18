@@ -7,7 +7,6 @@ description: Rules for automation and maintenance scripts under `scripts/`. Use 
 
 ## Scope
 
-- `scripts/validate_all_projects.sh`
 - `scripts/architecture/`
 - `scripts/security/`
 - `scripts/testing/`
@@ -30,11 +29,14 @@ description: Rules for automation and maintenance scripts under `scripts/`. Use 
 - Artifact output must follow `<skill>--<kind>--<slug>.<ext>` naming contract.
 - Preserve executable permissions and shebang correctness.
 - Keep script behavior deterministic and root-relative.
+- Prefer `ast-grep`-driven rules first; only use custom script checks when AST matching is insufficient.
+- Custom checks must be placed in the owning skill folder and expose machine-readable `violation_count`.
 
 ## Instructions
 
 - When adding a new script, assign it to one of the 7 domain skills (scripts-infra, scripts-validation, scripts-security, scripts-architecture, scripts-testing, scripts-dependencies, scripts-maintenance).
 - Add the `# Owner-Skill:` marker and list it in the owning skill's `## Scripts` table.
+- When defining rule automation, prefer `make validate-scripts` and `make check-clean` as session gates.
 - For shell scripts, prefer explicit command checks over implicit assumptions.
 - For Python scripts, keep imports and file paths workspace-relative.
 
@@ -54,10 +56,10 @@ ls -la scripts
 Good:
 
 ```bash
-bash scripts/validate_all_projects.sh
+make validate-scripts
 ```
 
-Why good: explicit validation script invocation with reproducible behavior.
+Why good: explicit repository validation gate with reproducible behavior.
 
 Bad:
 
@@ -70,7 +72,7 @@ Why bad: ambiguous path and unclear contract from repository root.
 ## Verification
 
 - `make validate-scripts` — runs ownership, bash -n, py_compile, ast-grep, artifact naming
-- `python scripts/core/check_script_skill_ownership.py` — ownership validator (hard gate)
-- `python scripts/core/check_script_artifact_naming.py` — artifact naming validator
+- `python .claude/skills/scripts-infra/validate_ownership.py --root .` — ownership validator (hard gate)
+- `python .claude/skills/scripts-infra/validate_artifact_naming.py --root .` — artifact naming validator
 - `python3 scripts/core/skill_validate.py --skill rules-scripts` — interactive prompt detection via skill rules
 - `bash -n <file>` for bash, `python -m py_compile <file>` for Python

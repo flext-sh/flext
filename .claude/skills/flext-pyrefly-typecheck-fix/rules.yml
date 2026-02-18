@@ -37,6 +37,22 @@ rules:
   fix_type: ast-grep
   fix_file: rules/fix-result-object.yml
   fix_instruction: 'Rewrite FlextResult[object] to FlextResult[t.GeneralValueType] at boundaries.'
+  fix_imports:
+  - from flext_core.typings import t
+
+- id: detect-jsondict-legacy
+  type: ast-grep
+  file: rules/detect-jsondict-legacy.yml
+  severity: error
+  group: jsondict_legacy
+  count_by: rule_id
+  description: 'Legacy dict[str, t.JsonValue] annotation — normalize to t.JsonDict alias.'
+  fix_auto: true
+  fix_type: ast-grep
+  fix_file: rules/fix-jsondict-legacy.yml
+  fix_instruction: 'Rewrite dict[str, t.JsonValue] to t.JsonDict.'
+  fix_imports:
+  - from flext_core.typings import t
 
 # =========================================================================
 # Cluster 3: Logger annotation drift (BindableLogger vs StructlogLogger)

@@ -9,7 +9,6 @@ description: Canonical pattern for creating reusable automation skills with scri
 
 - `.claude/skills/**/SKILL.md`
 - `scripts/validation/`
-- `scripts/validate_all_projects.sh`
 - `docs/guides/`
 - `.claude/skills/*/baseline.json`
 - `.claude/skills/*/report.json`
@@ -28,6 +27,8 @@ description: Canonical pattern for creating reusable automation skills with scri
 - The generic runner auto-discovers all skills — no orchestrator wiring needed.
 - Every run must emit machine-readable report artifacts (`report.json`).
 - Skills must provide concrete verification commands.
+- Prefer `ast-grep` for checks/fixes; use `custom` scripts only when AST cannot express the rule.
+- Place `custom` scripts in the owning skill directory, not in `scripts/core`.
 
 ## Instructions
 
@@ -46,6 +47,7 @@ description: Canonical pattern for creating reusable automation skills with scri
 4. Verify detection with `python3 scripts/core/skill_validate.py --skill <name>`.
 5. Update skill SKILL.md and docs with exact command contract.
 6. Run `python3 scripts/core/skill_validate.py --all` to verify integration.
+7. Run `make validate-scripts` and `make check-clean` for workspace-level clean reporting.
 
 ## Examples
 
@@ -70,4 +72,6 @@ Why bad: no reusable command surface and no persisted evidence.
 
 - `python3 scripts/core/skill_validate.py --list-skills`
 - `python3 scripts/core/skill_validate.py --all`
+- `make validate-scripts`
+- `make check-clean`
 - `rg -n "## Scope|## References|## Rules|## Instructions|## Workflow|## Examples|## Verification" .claude/skills/flext-automation-skill-pattern/SKILL.md`

@@ -2,7 +2,7 @@
 
 > Canonical specification for all validator and fixer scripts in the FLEXT repository.
 >
-> **Status**: Active | **Reviewed**: 2026-02-17
+> **Status**: Active | **Reviewed**: 2026-02-18
 
 ---
 
@@ -25,6 +25,11 @@ composable by the orchestrator and safe for CI.
 
 A script is exactly ONE role. A single script must never combine validate + fix
 in its default path.
+
+Canonical implementations in this repository:
+
+- Validator orchestrator: `scripts/core/skill_validate.py`
+- Fix orchestrator: `scripts/core/skill_fix.py`
 
 ---
 
@@ -137,9 +142,21 @@ All artifacts follow: `<skill>--<kind>--<slug>.<ext>`
 
 | Type | Path pattern | Example |
 |------|-------------|---------|
-| Latest report | `.sisyphus/reports/<skill>--<kind>--<slug>.<ext>` | `.sisyphus/reports/scripts-validation--json--policy-gate-latest.json` |
-| Baseline | `.sisyphus/baselines/<skill>--<kind>--<slug>.<ext>` | `.sisyphus/baselines/scripts-validation--json--policy-gate-baseline.json` |
-| Per-step log | `.sisyphus/reports/validation/<skill>--<kind>--<slug>.<ext>` | `.sisyphus/reports/validation/scripts-validation--log--policy-gate.log` |
+| Latest report | `.reports/validate/<gate>/<project>.txt` (workspace) or `.claude/skills/<skill>/report.json` (skill) | `.reports/validate/type-check/flext-core.txt` |
+| Baseline | `.claude/skills/<skill>/baseline.json` | `.claude/skills/flext-strict-typing/baseline.json` |
+| Fix report | `.claude/skills/<skill>/fix-report.json` | `.claude/skills/flext-pyrefly-typecheck-fix/fix-report.json` |
+
+Do not write validation artifacts to `.sisyphus/`.
+
+---
+
+## Skill Rule Contract
+
+- Skill rules are loaded only from `.claude/skills/*/rules.yml`.
+- Rule fix metadata must use flat keys only: `fix_auto`, `fix_type`, `fix_file`, `fix_script`, `fix_instruction`, `fix_description`.
+- Nested `fix:` metadata in `rules.yml` is invalid.
+- If `fix_auto: true`, the fix mechanism must be executable and target files must exist.
+- Prefer `type: ast-grep` rules; use `type: custom` only when AST matching is not applicable.
 
 ### Report JSON Structure
 
@@ -238,5 +255,5 @@ exempt from gate contract validation but must still have Owner-Skill markers.
 - `python3 scripts/core/skill_validate.py --all` — runs all discovered skills
 
 ### Validator (python — standalone)
-- `scripts/core/check_script_skill_ownership.py` — exits 0/1; produces JSON report
-- `scripts/core/check_script_artifact_naming.py` — exits 0/1; produces JSON report
+- `.claude/skills/scripts-infra/validate_ownership.py --root .` — exits 0/1; produces JSON report
+- `.claude/skills/scripts-infra/validate_artifact_naming.py --root .` — exits 0/1; produces JSON report
