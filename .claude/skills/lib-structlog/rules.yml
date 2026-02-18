@@ -46,7 +46,7 @@ rules:
   group: structlog_bridge
   count_by: rule_id
   description: Direct structlog.get_logger usage is banned outside FlextLogger/FlextRuntime bridge files.
-  fix_auto: true
+  fix_auto: false
   fix_type: ast-grep
   fix_file: rules/direct-get-logger-fix.yml
   fix_imports:

@@ -1,0 +1,10 @@
+id: ban-mapping-fix-annotation
+language: python
+rule:
+  kind: identifier
+  regex: "^Mapping$"
+  not:
+    inside:
+      kind: import_from_statement
+      stopBy: end
+fix: dict

@@ -1,0 +1,11 @@
+id: ban-mapping-usage
+language: python
+rule:
+  kind: identifier
+  regex: "^Mapping$"
+  not:
+    inside:
+      kind: import_from_statement
+      stopBy: end
+message: "Mapping used - prefer dict in FLEXT (use dict instead)"
+severity: error
