@@ -1,5 +1,13 @@
-id: no-type-in-condition-python
+id: no-type-in-condition
 language: python
 rule:
-  kind: module
-  regex: if type\(
+  kind: if_statement
+  has:
+    kind: call
+    has:
+      kind: identifier
+      regex: "^type$"
+      field: function
+    stopBy: neighbor
+message: "type() in condition - use isinstance()"
+severity: warning

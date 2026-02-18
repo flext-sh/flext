@@ -1,5 +1,20 @@
-id: no-concat-execute-python
+id: no-concat-execute
 language: python
 rule:
-  kind: module
-  regex: execute\(["\x27].*\+\s
+  kind: call
+  all:
+    - has:
+        kind: attribute
+        regex: "execute$"
+        stopBy: end
+    - has:
+        kind: argument_list
+        has:
+          kind: binary_operator
+          has:
+            kind: string
+            stopBy: end
+          stopBy: end
+        stopBy: end
+message: "String concatenation in execute() is SQL injection risk"
+severity: error

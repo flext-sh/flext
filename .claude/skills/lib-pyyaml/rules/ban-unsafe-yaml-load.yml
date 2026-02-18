@@ -1,5 +1,6 @@
-id: ban-unsafe-yaml-load-python
+id: ban-unsafe-yaml-load
 language: python
 rule:
-  kind: module
-  regex: yaml\.load\(
+  pattern: "yaml.load($$$ARGS)"
+message: "Unsafe yaml.load() - use yaml.safe_load()"
+severity: error

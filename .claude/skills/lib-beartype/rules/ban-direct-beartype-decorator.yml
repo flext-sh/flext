@@ -1,5 +1,10 @@
-id: ban-direct-beartype-decorator-python
+id: ban-direct-beartype-decorator
 language: python
 rule:
-  kind: module
-  regex: '@beartype'
+  kind: decorator
+  has:
+    kind: identifier
+    regex: "^beartype$"
+    stopBy: end
+message: "Direct @beartype decorator banned - use package-level conf"
+severity: error

@@ -1,5 +1,9 @@
-id: require-healthcheck-yaml
+id: require-healthcheck
 language: yaml
 rule:
-  kind: stream
-  regex: 'HEALTHCHECK|^services:'
+  kind: block_mapping_pair
+  has:
+    field: key
+    regex: "^(HEALTHCHECK|healthcheck)$"
+message: "Healthcheck configuration found (tracking)"
+severity: warning

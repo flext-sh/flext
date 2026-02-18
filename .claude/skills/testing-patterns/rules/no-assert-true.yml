@@ -1,5 +1,6 @@
-id: no-assert-true-python
+id: no-assert-true
 language: python
 rule:
-  kind: module
-  regex: ^\s*assert True\b
+  pattern: assert True
+message: "assert True is always true - use proper assertion"
+severity: error

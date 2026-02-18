@@ -4,6 +4,7 @@ rule:
   kind: attribute
   has:
     kind: attribute_name
-    regex: ^style$
-message: Inline style attribute — use CSS classes instead.
+    regex: "^style$"
+    stopBy: end
+message: "Inline style attribute - use CSS classes"
 severity: warning

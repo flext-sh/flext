@@ -1,5 +1,6 @@
-id: no-sys-exit-in-library-python
+id: no-sys-exit-in-library
 language: python
 rule:
-  kind: module
-  regex: sys\.exit\(
+  pattern: "sys.exit($$$ARGS)"
+message: "sys.exit() in library code - raise SystemExit instead"
+severity: error

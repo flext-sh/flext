@@ -1,5 +1,9 @@
-id: ban-star-import-python
+id: ban-star-import-src
 language: python
 rule:
-  kind: module
-  regex: from\s+.+\s+import\s+\*
+  kind: import_from_statement
+  has:
+    kind: wildcard_import
+    stopBy: end
+message: "Star import banned in src"
+severity: error

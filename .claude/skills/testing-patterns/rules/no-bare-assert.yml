@@ -1,5 +1,19 @@
-id: no-bare-assert-python
+id: no-bare-assert
 language: python
 rule:
-  kind: module
-  regex: ^\s*assert [a-zA-Z_][a-zA-Z0-9_]*\s*$
+  kind: assert_statement
+  all:
+    - has:
+        kind: identifier
+        stopBy: neighbor
+    - not:
+        has:
+          any:
+            - kind: comparison_operator
+            - kind: boolean_operator
+            - kind: call
+            - kind: not_operator
+            - kind: parenthesized_expression
+          stopBy: neighbor
+message: "Bare assert (just variable) - use assertEqual or assert with message"
+severity: warning

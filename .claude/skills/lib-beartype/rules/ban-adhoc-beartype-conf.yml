@@ -1,5 +1,6 @@
-id: ban-adhoc-beartype-conf-python
+id: ban-adhoc-beartype-conf
 language: python
 rule:
-  kind: module
-  regex: BeartypeConf\(
+  pattern: "BeartypeConf($$$ARGS)"
+message: "Ad-hoc BeartypeConf() banned - use centralized configuration"
+severity: error

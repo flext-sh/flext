@@ -1,5 +1,16 @@
-id: ban-direct-ldap3-import-python
+id: ban-direct-ldap3-import
 language: python
 rule:
-  kind: module
-  regex: (?:^import ldap3|^from ldap3)
+  any:
+    - kind: import_statement
+      has:
+        kind: dotted_name
+        regex: "^ldap3"
+        stopBy: end
+    - kind: import_from_statement
+      has:
+        kind: dotted_name
+        field: module_name
+        regex: "^ldap3"
+message: "Direct ldap3 import banned - use flext_core adapter"
+severity: error

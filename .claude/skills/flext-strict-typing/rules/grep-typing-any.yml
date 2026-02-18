@@ -1,5 +1,6 @@
-id: grep-typing-any-python
+id: grep-typing-any
 language: python
 rule:
-  kind: module
-  regex: typing\.Any
+  pattern: typing.Any
+message: "Direct typing.Any usage banned"
+severity: error

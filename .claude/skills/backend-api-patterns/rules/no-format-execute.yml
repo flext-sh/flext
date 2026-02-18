@@ -1,5 +1,21 @@
-id: no-format-execute-python
+id: no-format-execute
 language: python
 rule:
-  kind: module
-  regex: execute\(["\x27].*\.format\(
+  kind: call
+  all:
+    - has:
+        kind: attribute
+        regex: "execute$"
+        stopBy: end
+    - has:
+        kind: argument_list
+        has:
+          kind: call
+          has:
+            kind: attribute
+            regex: "format$"
+            stopBy: end
+          stopBy: end
+        stopBy: end
+message: ".format() in execute() is SQL injection risk"
+severity: error

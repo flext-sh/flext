@@ -1,5 +1,13 @@
-id: pydantic-v1-validator-decorator-python
+id: pydantic-v1-validator-decorator
 language: python
 rule:
-  kind: module
-  regex: '@validator\('
+  kind: decorator
+  has:
+    kind: call
+    has:
+      kind: identifier
+      regex: "^validator$"
+      stopBy: end
+    stopBy: end
+message: "Pydantic v1 @validator - use @field_validator"
+severity: error

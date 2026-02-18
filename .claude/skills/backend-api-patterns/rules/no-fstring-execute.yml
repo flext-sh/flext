@@ -1,5 +1,20 @@
-id: no-fstring-execute-python
+id: no-fstring-execute
 language: python
 rule:
-  kind: module
-  regex: execute\(f["\x27]
+  kind: call
+  all:
+    - has:
+        kind: attribute
+        regex: "execute$"
+        stopBy: end
+    - has:
+        kind: argument_list
+        has:
+          kind: string
+          has:
+            kind: string_start
+            regex: "^f"
+          stopBy: end
+        stopBy: end
+message: "f-string in execute() is SQL injection risk"
+severity: error

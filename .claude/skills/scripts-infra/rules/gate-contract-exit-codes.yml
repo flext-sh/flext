@@ -1,11 +1,9 @@
-id: gate-contract-exit-codes-bash
-language: bash
-rule:
-  kind: program
-  regex: exit [0123]|EXIT_PASS|EXIT_FAIL|EXIT_USAGE|EXIT_INFRA|sys\.exit\(
----
-id: gate-contract-exit-codes-python
+id: gate-contract-exit-codes
 language: python
 rule:
-  kind: module
-  regex: exit [0123]|EXIT_PASS|EXIT_FAIL|EXIT_USAGE|EXIT_INFRA|sys\.exit\(
+  any:
+    - pattern: sys.exit($$$ARGS)
+    - kind: identifier
+      regex: "^(EXIT_PASS|EXIT_FAIL|EXIT_USAGE|EXIT_INFRA)$"
+message: "Exit code contract found (tracking)"
+severity: warning

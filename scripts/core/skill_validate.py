@@ -463,6 +463,14 @@ def run_custom_rule(
 
     command = build_custom_command(script)
     command.extend(["--root", str(project_path)])
+    args_obj = rule.get("args", [])
+    if args_obj is not None:
+        if not isinstance(args_obj, list) or not all(
+            isinstance(item, str) for item in args_obj
+        ):
+            msg = f"custom rule '{rule_id}' has invalid 'args' (expected list[str])"
+            raise SkillUsageError(msg)
+        command.extend([str(item) for item in args_obj])
     if bool(rule.get("pass_mode")):
         command.extend(["--mode", mode])
 
@@ -745,20 +753,17 @@ def validate_skill(
         fa = rule.get("fix_auto", False)
         if ft == "manual":
             eprint(
-                f"  ERROR [{rid}]: fix_type: manual is invalid. "
-                "Remove fix_type when fix_auto: false."
+                f"  ERROR [{rid}]: fix_type: manual is invalid. Remove fix_type when fix_auto: false."
             )
         if ft and ft not in VALID_FIX_TYPES and ft != "manual":
             eprint(
-                f"  ERROR [{rid}]: fix_type: '{ft}' is invalid. "
-                f"Valid: {sorted(VALID_FIX_TYPES)}"
+                f"  ERROR [{rid}]: fix_type: '{ft}' is invalid. Valid: {sorted(VALID_FIX_TYPES)}"
             )
         if fa and not ft:
             fix_file = rule.get("fix_file")
             if not fix_file:
                 eprint(
-                    f"  WARNING [{rid}]: fix_auto: true but no fix_type/fix_file — "
-                    "auto-fix will be skipped."
+                    f"  WARNING [{rid}]: fix_auto: true but no fix_type/fix_file — auto-fix will be skipped."
                 )
 
     counts: dict[str, int] = {}

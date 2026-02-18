@@ -1,5 +1,8 @@
-id: no-union-annotation-python
+id: no-union-annotation
 language: python
 rule:
-  kind: module
-  regex: Union\[
+  pattern:
+    context: "a: Union[$$$TYPES]"
+    selector: generic_type
+message: "Union[X, Y] annotation - use X | Y syntax"
+severity: warning

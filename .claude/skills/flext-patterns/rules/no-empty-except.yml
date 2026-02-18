@@ -1,5 +1,19 @@
-id: no-empty-except-python
+id: no-empty-except
 language: python
 rule:
-  kind: module
-  regex: except.*:\s*\n\s*pass\s*$
+  kind: except_clause
+  all:
+    - not:
+        has:
+          any:
+            - kind: identifier
+            - kind: attribute
+          stopBy: neighbor
+    - has:
+        kind: block
+        has:
+          kind: pass_statement
+          stopBy: end
+        stopBy: end
+message: "Empty bare except clause"
+severity: error

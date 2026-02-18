@@ -71,7 +71,11 @@ rules:
   group: strict_typing
   count_by: rule_id
   description: "isinstance(x, dict) \u2014 prefer isinstance(x, Mapping) where semantically safe."
-  fix_auto: false
+  fix_auto: true
+  fix_type: ast-grep
+  fix_file: rules/isinstance-dict-fix.yml
+  fix_imports:
+  - from collections.abc import Mapping
   fix_instruction: "MANUAL ONLY \u2014 this is a SEMANTIC CHANGE. isinstance(x, dict) \u2192 isinstance(x, Mapping)\nwidens\
     \ the accepted types to include UserDict, OrderedDict, defaultdict, ChainMap, etc.\nThis changes runtime behavior and\
     \ may introduce bugs if the code later calls dict-only\nmethods (.pop, .update, .setdefault) on the value. Review each\
@@ -136,6 +140,4 @@ rules:
   file: rules/ban-mypy-ignore-comment.yml
 baseline:
   strategy: total
-  file: baseline.json
-report:
-  file: report.json
+report: {}

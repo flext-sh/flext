@@ -1,5 +1,6 @@
-id: ban-print-in-src-python
+id: ban-print-in-src
 language: python
 rule:
-  kind: module
-  regex: ^\s*print\(
+  pattern: "print($$$ARGS)"
+message: "print() in src code - use FlextLogger"
+severity: error
