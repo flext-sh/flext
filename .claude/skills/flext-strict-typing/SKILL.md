@@ -18,6 +18,14 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 - **Pydantic v2** — Required for all models (`pydantic>=2.0`)
 - **`from __future__ import annotations`** in every file
 
+## FLEXT Mapping-First Policy (Contract Layer)
+
+- **Default contract type**: `Mapping[K, V]` for read-only boundaries.
+- **Explicit mutable contract**: `MutableMapping[K, V]` only when mutation is part of the contract.
+- **`dict[K, V]` is almost-banned in annotations**: keep `dict` primarily for local mutation hotspots and short-lived intermediate states.
+- **Schema-bearing payloads**: prefer `TypedDict` or Pydantic models instead of plain map contracts.
+- **Runtime checks**: prefer protocol/Mapping checks over `isinstance(x, dict)` unless dict-only behavior is required.
+
 ---
 
 ## Rule 1: NEVER Use `Any` or `object`
@@ -128,12 +136,12 @@ from flext_core.typings import T, T_co, U, P, R, T_Model, T_Settings
 
 ## Rule 4: Modern Python Typing (Python 3.13+)
 
-### Always use modern syntax
+### Always use modern syntax (with Mapping-first contracts)
 
 | Old (FORBIDDEN) | New (REQUIRED) | Ruff Rule |
 | --- | --- | --- |
 | `typing.List[X]` | `list[X]` | UP006 |
-| `typing.Dict[str, X]` | `dict[str, X]` | UP006 |
+| `typing.Dict[str, X]` | `Mapping[str, X]` (contract) / `dict[str, X]` (local mutation) | UP006 + FLEXT policy |
 | `typing.Tuple[X, ...]` | `tuple[X, ...]` | UP006 |
 | `typing.Optional[X]` | `X \| None` | UP007 |
 | `typing.Union[X, Y]` | `X \| Y` | UP007 |
@@ -284,6 +292,18 @@ class FlextConstants:
     # Immutable maps: use MappingProxyType with Mapping type
     DEFAULTS: Final[Mapping[str, int]] = MappingProxyType({"x": 1, "y": 2})
 ```
+
+---
+
+## Rule 13: Advanced Fix Strategy (No Simplistic Rewrites)
+
+When a typing rule is violated, prefer architecture-aware fixes over mechanical substitutions:
+
+1. **Contract intent analysis**: determine whether the boundary is read-only (`Mapping`) or mutating (`MutableMapping`).
+2. **Mutation path isolation**: keep mutation localized; materialize `dict(...)` only at mutation hotspots.
+3. **Schema upgrade**: if map keys are known/stable, upgrade to `TypedDict` or Pydantic model.
+4. **Runtime compatibility review**: replacing `isinstance(x, dict)` with `isinstance(x, Mapping)` is semantic and must be reviewed manually.
+5. **Auto-fix scope**: allow auto-fix only for unambiguous syntactic migrations (`typing.Dict -> Mapping`), then run semantic validation.
 
 ---
 

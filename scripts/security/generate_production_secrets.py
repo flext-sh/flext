@@ -86,16 +86,16 @@ class ProductionSecretsScript(BaseSecurityScript):
                 # Security reminders
                 print_colored("\n🛡️ Security Reminders:", Colors.YELLOW)
 
-                return FlextResult[object].ok(
+                return FlextResult[t.GeneralValueType].ok(
                     {"secrets_result": secrets_result, "environment": environment},
                 )
 
             print_colored("❌ Failed to generate production secrets", Colors.RED)
-            return FlextResult[object].fail("Failed to generate production secrets")
+            return FlextResult[t.GeneralValueType].fail("Failed to generate production secrets")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during secrets generation: {e}", Colors.RED)
-            return FlextResult[object].fail(f"Secrets generation error: {e}")
+            return FlextResult[t.GeneralValueType].fail(f"Secrets generation error: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""

@@ -72,7 +72,7 @@ class ScriptRunner(FlextScript):
 
             if list_scripts:
                 self._list_all_scripts(registry)
-                return FlextResult[object].ok({"action": "list_scripts"})
+                return FlextResult[t.GeneralValueType].ok({"action": "list_scripts"})
 
             if script_name:
                 # Pass script_name as positional and kwargs as keyword arguments
@@ -81,7 +81,7 @@ class ScriptRunner(FlextScript):
                     str(script_name),
                     **kwargs,
                 )  # Pass kwargs correctly
-                return FlextResult[object].ok(
+                return FlextResult[t.GeneralValueType].ok(
                     {
                         "action": "run_script",
                         "script_name": script_name,
@@ -93,11 +93,11 @@ class ScriptRunner(FlextScript):
                 "❌ No script specified. Use --list to see available scripts.",
                 Colors.RED,
             )
-            return FlextResult[object].fail("No script specified")
+            return FlextResult[t.GeneralValueType].fail("No script specified")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error in script runner: {e}", Colors.RED)
-            return FlextResult[object].fail(f"Script runner error: {e}")
+            return FlextResult[t.GeneralValueType].fail(f"Script runner error: {e}")
 
     def _list_all_scripts(self, registry: ScriptRegistry) -> None:
         """List all available scripts."""

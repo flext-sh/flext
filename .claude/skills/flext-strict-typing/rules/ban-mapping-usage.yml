@@ -2,10 +2,10 @@ id: ban-mapping-usage
 language: python
 rule:
   kind: identifier
-  regex: "^Mapping$"
+  regex: "^__FLEXT_MAPPING_RULE_RETIRED__$"
   not:
     inside:
       kind: import_from_statement
       stopBy: end
-message: "Mapping used - prefer dict in FLEXT (use dict instead)"
-severity: error
+message: "Rule retired: Mapping is preferred for read-only contracts in FLEXT."
+severity: warning

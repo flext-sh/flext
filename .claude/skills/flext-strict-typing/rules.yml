@@ -1,5 +1,5 @@
 skill: flext-strict-typing
-description: 'Enforce strict typing standards: no Dict, no Any, no implicit generic Any.'
+description: 'Enforce Mapping-first typing standards: almost-ban dict in contracts, preserve explicit mutable exceptions.'
 scan_targets:
   include:
   - '**/*.py'
@@ -8,58 +8,60 @@ scan_targets:
 rules:
 - id: ban-dict-literal
   type: ast-grep
-  file: rules/no-dict.yml
-  severity: error
-  group: strict_typing
+  file: rules/ban-dict-literal.yml
+  severity: warning
+  group: strict_typing_runtime
   count_by: rule_id
-  description: Use dict() constructor or specific types, strictly no `Dict` type hint.
+  description: Dict literal is discouraged. Prefer TypedDict/Pydantic model/MappingProxy at boundaries.
   fix_auto: false
-  fix_instruction: Replace Dict with dict or specialized type.
+  fix_instruction: 'Manual review: keep dict literal only for local mutation hotspots; prefer structured models at boundaries.'
 - id: ban-dict-comprehension
   type: ast-grep
-  file: rules/no-dict.yml
-  severity: error
-  group: strict_typing
+  file: rules/ban-dict-comprehension.yml
+  severity: warning
+  group: strict_typing_runtime
   count_by: rule_id
-  description: Dict comprehension is banned (use concrete types).
+  description: Dict comprehension is discouraged for public contracts and DTO boundaries.
   fix_auto: false
-  fix_instruction: Use concrete types instead of generic dict comprehension.
+  fix_instruction: 'Manual review: prefer typed builders returning TypedDict/Pydantic models. Keep only for local transient computation.'
 - id: ban-dict-constructor
   type: ast-grep
-  file: rules/no-dict.yml
-  severity: error
-  group: strict_typing
+  file: rules/ban-dict-constructor.yml
+  severity: warning
+  group: strict_typing_runtime
   count_by: rule_id
-  description: dict() constructor is banned (use concrete types).
+  description: dict() constructor is discouraged except in mutation hotspots.
   fix_auto: false
-  fix_instruction: Replace dict() with specific type constructor.
+  fix_instruction: 'Manual review: prefer explicit model construction or Mapping adapters. Keep dict() only where mutation is required.'
 - id: ban-dict-type-annotation
   type: ast-grep
-  file: rules/no-dict.yml
+  file: rules/ban-dict-type-annotation.yml
   severity: error
-  group: strict_typing
+  group: strict_typing_contract
   count_by: rule_id
-  description: dict in type annotations is banned (use mapping/typeddict).
+  description: dict in type annotations is banned for contracts (prefer Mapping, MutableMapping, or TypedDict).
   fix_auto: false
-  fix_instruction: Use Mapping, MutableMapping, or TypedDict.
+  fix_instruction: 'Manual semantic fix: use Mapping for read-only contracts, MutableMapping for mutating contracts, TypedDict/Pydantic for schema-bearing payloads.'
 - id: ban-typing-dict-attribute
   type: ast-grep
-  file: rules/no-dict.yml
+  file: rules/ban-typing-dict-attribute.yml
   severity: error
-  group: strict_typing
+  group: strict_typing_contract
   count_by: rule_id
-  description: typing.Dict is banned.
+  description: typing.Dict is banned (prefer collections.abc.Mapping-family types).
   fix_auto: true
   fix_type: ast-grep
   fix_file: rules/no-dict-fix.yml
-  fix_instruction: 'Auto-rewrite: typing.Dict -> dict.'
+  fix_imports:
+  - from collections.abc import Mapping
+  fix_instruction: 'Auto-rewrite: typing.Dict -> Mapping. Then manually validate mutability intent.'
 - id: ban-typing-dict-import
   type: ast-grep
-  file: rules/no-dict.yml
+  file: rules/ban-typing-dict-import.yml
   severity: error
-  group: strict_typing
+  group: strict_typing_contract
   count_by: rule_id
-  description: Importing Dict from typing is banned.
+  description: Importing Dict from typing is banned (use collections.abc.Mapping or built-in dict only for mutation hotspots).
   fix_auto: true
   fix_type: ast-grep
   fix_file: rules/no-dict-fix.yml
@@ -67,10 +69,10 @@ rules:
 - id: ban-isinstance-dict
   type: ast-grep
   file: rules/isinstance-dict-detect.yml
-  severity: warning
-  group: strict_typing
+  severity: error
+  group: strict_typing_runtime
   count_by: rule_id
-  description: "isinstance(x, dict) — prefer isinstance(x, Mapping) where semantically safe."
+  description: "isinstance(x, dict) is almost-banned — prefer Mapping or explicit protocol checks."
   fix_auto: false
   fix_type: ast-grep
   fix_file: rules/isinstance-dict-fix.yml
@@ -83,13 +85,13 @@ rules:
     \ truly needs duck-typed mapping support, not when it expects an actual dict.\n"
 - id: ban-default-factory-dict
   type: ast-grep
-  file: rules/no-dict.yml
+  file: rules/ban-default-factory-dict.yml
   severity: error
-  group: strict_typing
+  group: strict_typing_contract
   count_by: rule_id
   description: default_factory=dict is banned.
   fix_auto: false
-  fix_instruction: Use default_factory=list or other specific factory.
+  fix_instruction: 'Use explicit factory returning TypedDict-compatible structure, model constructor, or MappingProxyType wrapper.'
 - id: grep-typing-any
   type: ast-grep
   severity: error
@@ -138,16 +140,6 @@ rules:
   fix_auto: false
   fix_instruction: Remove the comment and fix the underlying type error.
   file: rules/ban-mypy-ignore-comment.yml
-- id: ban-mapping-usage
-  type: ast-grep
-  file: rules/ban-mapping-usage.yml
-  severity: error
-  group: strict_typing
-  description: 'Mapping used without import — prefer dict in FLEXT codebase.'
-  fix_auto: true
-  fix_type: ast-grep
-  fix_file: rules/ban-mapping-fix.yml
-  fix_instruction: 'Auto-rewrite: Mapping -> dict.'
 baseline:
   strategy: total
 report: {}

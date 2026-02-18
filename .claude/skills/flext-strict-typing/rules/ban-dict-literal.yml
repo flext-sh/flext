@@ -1,0 +1,6 @@
+id: ban-dict-literal
+language: python
+rule:
+  kind: dictionary
+message: Dict literal is discouraged
+severity: warning

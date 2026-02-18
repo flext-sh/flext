@@ -241,12 +241,13 @@ def check_import(filepath: Path) -> tuple[bool, str]:
                     continue
                 imported_names.add(alias.asname or alias.name)
 
-    all_names_in_body: set[str] = set()
+    load_names_in_body: set[str] = set()
     for node in _ast.walk(tree):
-        if isinstance(node, _ast.Name):
-            all_names_in_body.add(node.id)
+        # Only consider LOAD contexts. Store/Del contexts are definitions/assignments.
+        if isinstance(node, _ast.Name) and isinstance(node.ctx, _ast.Load):
+            load_names_in_body.add(node.id)
         elif isinstance(node, _ast.Attribute) and isinstance(node.value, _ast.Name):
-            all_names_in_body.add(node.value.id)
+            load_names_in_body.add(node.value.id)
 
     builtin_names = set(dir(builtins))
 
@@ -260,7 +261,7 @@ def check_import(filepath: Path) -> tuple[bool, str]:
                     defined_names.add(target.id)
 
     suspicious: list[str] = []
-    for name in all_names_in_body:
+    for name in load_names_in_body:
         if name in builtin_names or name in defined_names or name in imported_names:
             continue
         if name[0:1].isupper() and name not in {"True", "False", "None", "Ellipsis"}:
@@ -644,10 +645,10 @@ def run_project_tests(project_path: Path, timeout: int = 300) -> tuple[bool, str
         or bool(list(project_path.glob("test_*.py")))
     )
     if not has_tests:
-        return True, "no tests found - skipped"
+        return False, "no tests found"
 
     if not (project_path / "pyproject.toml").exists():
-        return True, "no pyproject.toml - skipped"
+        return False, "no pyproject.toml"
 
     result = run_cmd(
         [sys.executable, "-m", "pytest", "--tb=short", "-q", "--no-header", "-x"],
@@ -907,6 +908,8 @@ def fix_skill(
     root: Path,
     dry_run: bool,
     project_filter: str | None,
+    rule_filters: list[str] | None = None,
+    max_rejections: int | None = None,
 ) -> tuple[bool, dict[str, object]]:
     """Run fixes for a single skill. Returns (success, report)."""
     skill_dir = root / SKILLS_DIR / skill_name
@@ -953,6 +956,14 @@ def fix_skill(
     fixable_rules = [
         r for r in rules_list if isinstance(r, dict) and r.get("fix_auto") is not None
     ]
+
+    if rule_filters:
+        allowed = {rf.strip() for rf in rule_filters if rf.strip()}
+        fixable_rules = [
+            r
+            for r in fixable_rules
+            if isinstance(r, dict) and str(r.get("id", "")).strip() in allowed
+        ]
 
     if not fixable_rules:
         print(f"No rules with fix metadata in skill '{skill_name}'")
@@ -1021,6 +1032,32 @@ def fix_skill(
                     total_rejected += len(rej)
                 if isinstance(man, list):
                     total_manual += len(man)
+
+                if (
+                    max_rejections is not None
+                    and max_rejections >= 0
+                    and total_rejected > max_rejections
+                ):
+                    entry["error"] = (
+                        f"max_rejections exceeded ({total_rejected} > {max_rejections})"
+                    )
+                    report_path = root / FIX_REPORT_DEFAULT.format(skill=skill_name)
+                    report: dict[str, object] = {
+                        "skill": skill_name,
+                        "mode": "dry-run" if dry_run else "apply",
+                        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                        "projects_scanned": selected,
+                        "entries": all_entries,
+                        "summary": {
+                            "total_accepted": total_accepted,
+                            "total_rejected": total_rejected,
+                            "total_manual": total_manual,
+                        },
+                        "error": entry["error"],
+                    }
+                    write_json(report_path, report)
+                    eprint(f"Aborting: {entry['error']}")
+                    return False, report
 
             project_accepted = 0
             for entry in project_entries:
@@ -1120,6 +1157,18 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     _ = skill_group.add_argument("--skill", help="Fix one skill by folder name")
     _ = skill_group.add_argument("--all", action="store_true", help="Fix all skills")
     _ = parser.add_argument("--project", help="Limit to one project")
+    _ = parser.add_argument(
+        "--rule",
+        action="append",
+        default=[],
+        help="Limit to specific rule id (repeatable)",
+    )
+    _ = parser.add_argument(
+        "--max-rejections",
+        type=int,
+        default=-1,
+        help="Abort when total rejected files exceeds this value (-1 disables)",
+    )
     mode_group = parser.add_mutually_exclusive_group(required=True)
     _ = mode_group.add_argument(
         "--dry-run", action="store_true", help="Show what would be fixed"
@@ -1146,6 +1195,8 @@ def main() -> None:
                 root=root,
                 dry_run=args.dry_run,
                 project_filter=args.project,
+                rule_filters=list(args.rule or []),
+                max_rejections=args.max_rejections,
             )
             if not success:
                 any_failure = True
@@ -1156,6 +1207,8 @@ def main() -> None:
         root=root,
         dry_run=args.dry_run,
         project_filter=args.project,
+        rule_filters=list(args.rule or []),
+        max_rejections=args.max_rejections,
     )
     raise SystemExit(EXIT_OK if success else EXIT_FAIL)
 
