@@ -1,0 +1,3 @@
+import grpc._cython.cygrpc as _cygrpc
+
+def init_gevent(): ...

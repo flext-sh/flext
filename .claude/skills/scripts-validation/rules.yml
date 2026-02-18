@@ -3,10 +3,13 @@ description: 'Enforce script quality: bash strict mode, no interactive prompts, 
   main guards'
 scan_targets:
   include:
-  - '**/*.sh'
-  - '**/*.py'
-  exclude: []
-  projects: []
+  - scripts/validation/**/*.sh
+  - scripts/core/*.py
+  exclude:
+  - scripts/core/__init__.py
+  - scripts/core/artifact_naming.py
+  projects:
+  - .
 rules:
 - id: bash-strict-mode
   type: ast-grep

@@ -23,10 +23,13 @@ class Some(Maybe[T_co]):
     def unwrap(self) -> T_co: ...
 
 
-class Nothing(Maybe[Any]):
-    """Nothing/None value wrapper - singleton."""
+class _Nothing(Maybe[Any]):
+    """Nothing/None value wrapper - singleton type."""
 
     @property
     def value(self) -> None: ...
 
     def unwrap(self) -> None: ...
+
+
+Nothing: _Nothing

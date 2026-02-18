@@ -1,0 +1,3 @@
+import sqlalchemy.engine.interfaces
+
+class Connector(sqlalchemy.engine.interfaces.Dialect): ...

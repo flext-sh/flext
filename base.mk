@@ -79,20 +79,17 @@ CACHE_TIMEOUT := 300
 $(LINT_CACHE_DIR):
 	$(Q)mkdir -p $(LINT_CACHE_DIR)
 
-# === LOCAL VENV CHECK ===
-# Fail if local .venv exists (must use workspace venv)
-LOCAL_VENV_EXISTS := $(shell [ -d ".venv" ] && echo "yes" || echo "no")
-ifeq ($(LOCAL_VENV_EXISTS),yes)
-$(error Local .venv found in $(CURDIR). Run 'make clean-local-venv' and use workspace .venv at $(WORKSPACE_VENV))
-endif
-
 # === PHONY DECLARATIONS ===
 .PHONY: help install install-dev setup lint format fix type-check type-check-json pyrefly-infer test test-fast upgrade
 .PHONY: test-unit test-integration security validate check clean clean-all reset
 .PHONY: build shell deps complexity docstring-check coverage-html
 .PHONY: dead-code modernize cognitive-complexity spell-check validate-full
 .PHONY: t l f tc tcj pi c v s dp cx dc vf sp
-.PHONY: check-venv clean-local-venv venv-info
+.PHONY: check-venv clean-local-venv venv-info enforce-workspace-venv
+
+# Enforce workspace-level .venv and prohibit project-local .venv.
+VENV_ENFORCED_TARGETS := install install-dev setup lint format fix format-check type-check type-check-json pyrefly-infer test test-fast test-verbose test-unit test-integration coverage-html build shell security complexity docstring-check dead-code cognitive-complexity spell-check deps check validate validate-full
+$(VENV_ENFORCED_TARGETS): enforce-workspace-venv
 
 # === HELP ===
 help: ## Show commands
@@ -267,31 +264,43 @@ clean-all: clean ## Deep clean
 reset: clean-all setup ## Full reset
 
 # === VIRTUAL ENVIRONMENT MANAGEMENT ===
+enforce-workspace-venv: ## Remove local .venv and enforce workspace venv
+	@if [ -d ".venv" ]; then \
+		echo "Enforcing workspace venv: removing local .venv in $(CURDIR)"; \
+		rm -rf .venv; \
+	fi
+	@if [ ! -d "$(WORKSPACE_VENV)" ]; then \
+		echo "ERROR: workspace .venv not found at $(WORKSPACE_VENV). Run 'make setup' in workspace root."; \
+		exit 1; \
+	fi
+
 venv-info: ## Show venv configuration
 	@echo "=== FLEXT Virtual Environment Info ==="
 	@echo "WORKSPACE_ROOT:   $(WORKSPACE_ROOT)"
 	@echo "WORKSPACE_VENV:   $(WORKSPACE_VENV)"
 	@echo "VIRTUAL_ENV:      $(VIRTUAL_ENV)"
-	@echo "Local .venv:      $(LOCAL_VENV_EXISTS)"
+	@if [ -d ".venv" ]; then \
+		echo "Local .venv:      yes"; \
+	else \
+		echo "Local .venv:      no"; \
+	fi
 	@poetry_path="not configured"; \
 	if poetry_path=$$(poetry env info --path 2>/dev/null); then :; fi; \
 	echo "Poetry path:      $$poetry_path"
 	@echo "Python:           $$(which python)"
 
 check-venv: ## Verify using workspace venv
-	@if [ -d ".venv" ]; then \
-		echo "ERROR: Local .venv exists. Run 'make clean-local-venv' first"; \
-		exit 1; \
-	fi
+	@$(MAKE) enforce-workspace-venv -s
 	@poetry_path=""; \
 	if ! poetry_path=$$(poetry env info --path 2>/dev/null); then \
 		echo "ERROR: Poetry environment is not configured"; \
 		exit 1; \
 	fi; \
 	if [ "$$poetry_path" != "$(WORKSPACE_VENV)" ]; then \
-		echo "WARNING: Poetry not using workspace venv"; \
+		echo "ERROR: Poetry not using workspace venv"; \
 		echo "  Expected: $(WORKSPACE_VENV)"; \
 		echo "  Got:      $$poetry_path"; \
+		exit 1; \
 	else \
 		echo "OK: Using workspace venv at $(WORKSPACE_VENV)"; \
 	fi

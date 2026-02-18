@@ -87,7 +87,7 @@ discover: ## Show all discovered projects
 # SETUP & INSTALL
 # =============================================================================
 
-.PHONY: install setup
+.PHONY: install setup setup-projects typings
 
 install: setup ## Alias for setup
 
@@ -96,9 +96,41 @@ setup: ## Complete workspace setup (idempotent)
 	$(Q)[ -d ".venv" ] || { echo "🔧 Creating .venv with Python 3.13..."; python3.13 -m venv .venv; }
 	$(Q)echo "🔒 Locking dependencies..."
 	$(Q)poetry lock
-	$(Q)echo "📦 Installing all dependencies via Poetry..."
+	$(Q)echo "📦 Installing root dependencies (all groups + extras)..."
 	$(Q)poetry install --all-extras --all-groups
-	$(Q)echo "✅ Setup complete"
+	$(Q)echo "📦 Installing all project dependencies (all groups + extras)..."
+	$(Q)$(MAKE) setup-projects
+	$(Q)echo "✅ Setup complete (workspace + all projects)"
+
+setup-projects: ## Install every project into workspace .venv (all groups + extras)
+	$(Q)$(MAKE) preflight
+	$(Q)failed=0; installed=0; \
+	for proj in $(ALL_PROJECTS); do \
+		if [ -d "$$proj" ] && [ -f "$$proj/pyproject.toml" ]; then \
+			printf "  [%2d/$(words $(ALL_PROJECTS))] %-25s ... " $$((installed + failed + 1)) "$$proj"; \
+			if $(POETRY_ENV) poetry -C "$$proj" lock >/tmp/flext-setup-project.log 2>&1 && \
+			   $(POETRY_ENV) poetry -C "$$proj" install --all-extras --all-groups >>/tmp/flext-setup-project.log 2>&1; then \
+				echo "✓"; \
+				installed=$$((installed + 1)); \
+			else \
+				echo "✗"; \
+				cat /tmp/flext-setup-project.log; \
+				failed=$$((failed + 1)); \
+			fi; \
+		fi; \
+	done; \
+	rm -f /tmp/flext-setup-project.log; \
+	echo "Installed: $$installed  Failed: $$failed"; \
+	if [ $$failed -ne 0 ]; then \
+		echo "FAIL: setup-projects ($$failed projects)"; \
+		exit 1; \
+	fi
+
+typings: ## Auto-add missing types deps and generate stubs for all projects
+	$(Q)$(MAKE) preflight
+	$(Q)echo "=== Typings automation (all projects) ==="
+	$(Q)python scripts/core/stub_supply_chain.py --all --apply --idempotency-check
+	$(Q)echo "✅ Typings automation complete"
 
 # =============================================================================
 # QUALITY GATES
@@ -108,6 +140,7 @@ setup: ## Complete workspace setup (idempotent)
 .PHONY: quality-report check-clean
 .PHONY: validate-fix
 .PHONY: upgrade-all deps-all
+.PHONY: enforce-workspace-venv clean-project-venvs
 
 lint: ## Lint all projects
 ifdef PROJECT
@@ -226,7 +259,7 @@ endif
 
 validate-scripts: ## Validate scripts/ (ownership, syntax, structure)
 	$(Q)echo "=== Scripts Validation (skill-driven) ==="
-	$(Q)python scripts/core/skill_validate.py --all --mode strict
+	$(Q)scripts/validation/run_automated_validation.sh
 	$(Q)echo "=== Scripts Validation Complete ==="
 
 validate: ## Full validation
@@ -537,11 +570,24 @@ preflight: ## Enforce workspace preconditions before loops
 		if [ -d "$$proj/.venv" ]; then echo "$$proj/.venv"; fi; \
 	done); \
 	if [ -n "$$local_venvs" ]; then \
-		echo "ERROR: project-local .venv directories detected (must use workspace .venv):"; \
+		echo "Enforcing workspace venv by removing project-local .venv directories:"; \
 		printf '%s\n' "$$local_venvs"; \
-		echo "Run: for p in $(ALL_PROJECTS); do rm -rf \"\$$p/.venv\"; done"; \
+		for venv_path in $$local_venvs; do rm -rf "$$venv_path"; done; \
+		echo "Project-local .venv directories removed."; \
+	fi
+	$(Q)residual_venvs=$$(for proj in $(ALL_PROJECTS); do \
+		if [ -d "$$proj/.venv" ]; then echo "$$proj/.venv"; fi; \
+	done); \
+	if [ -n "$$residual_venvs" ]; then \
+		echo "ERROR: unable to remove some project-local .venv directories:"; \
+		printf '%s\n' "$$residual_venvs"; \
 		exit 1; \
 	fi
+
+enforce-workspace-venv: preflight ## Enforce workspace .venv policy
+
+clean-project-venvs: ## Remove all project-local .venv directories
+	$(Q)$(MAKE) preflight
 
 clean-all: clean ## Deep clean
 	$(Q)find . -maxdepth 2 -type d -name __pycache__ -exec rm -rf {} +
