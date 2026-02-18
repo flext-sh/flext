@@ -1,0 +1,22 @@
+skill: lib-pydantic-v2
+description: "Ban Pydantic v1 API usage, enforce v2 migration across all FLEXT projects"
+
+scan_targets:
+  include: ["**/*.py"]
+  exclude: []
+  projects: []
+
+rules:
+  - id: pydantic-v1-violations
+    type: ast-grep
+    file: rules/pydantic-v2.yml
+    severity: error
+    group: pydantic_v1_violations
+    count_by: rule_id
+    description: "AST-level Pydantic v1 API detection (8 rules: model_rebuild, .dict, parse_obj, parse_raw, .json, from_orm, @validator, @root_validator)"
+    fix_auto: true
+    fix_file: rules/pydantic-v2-fix.yml
+    fix_instruction: "Auto-rewrites: .dict()->model_dump(), parse_obj()->model_validate(), parse_raw()->model_validate_json(), .json()->model_dump_json(). Manual: model_rebuild (remove), from_orm (use model_validate+from_attributes), @validator->@field_validator, @root_validator->@model_validator."
+
+baseline:
+  strategy: total

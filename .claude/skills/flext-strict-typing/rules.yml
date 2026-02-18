@@ -1,0 +1,103 @@
+skill: flext-strict-typing
+description: "Enforce strict typing standards: no Dict, no Any, no implicit generic Any."
+scan_targets:
+  include: ["**/*.py"]
+  exclude: []
+  projects: []
+rules:
+  - id: ban-dict-literal
+    type: ast-grep
+    file: rules/no-dict.yml
+    severity: error
+    group: strict_typing
+    description: "Use dict() constructor or specific types, strictly no `Dict` type hint."
+    fix_auto: false
+    fix_instruction: "Replace Dict with dict or specialized type."
+
+  - id: ban-dict-comprehension
+    type: ast-grep
+    file: rules/no-dict.yml
+    severity: error
+    group: strict_typing
+    description: "Dict comprehension is banned (use concrete types)."
+    fix_auto: false
+    fix_instruction: "Use concrete types instead of generic dict comprehension."
+
+  - id: ban-dict-constructor
+    type: ast-grep
+    file: rules/no-dict.yml
+    severity: error
+    group: strict_typing
+    description: "dict() constructor is banned (use concrete types)."
+    fix_auto: false
+    fix_instruction: "Replace dict() with specific type constructor."
+
+  - id: ban-dict-type-annotation
+    type: ast-grep
+    file: rules/no-dict.yml
+    severity: error
+    group: strict_typing
+    description: "dict in type annotations is banned (use mapping/typeddict)."
+    fix_auto: false
+    fix_instruction: "Use Mapping, MutableMapping, or TypedDict."
+
+  - id: ban-typing-dict-attribute
+    type: ast-grep
+    file: rules/no-dict.yml
+    severity: error
+    group: strict_typing
+    description: "typing.Dict is banned."
+    fix_auto: false
+    fix_instruction: "Remove typing.Dict usage."
+
+  - id: ban-typing-dict-import
+    type: ast-grep
+    file: rules/no-dict.yml
+    severity: error
+    group: strict_typing
+    description: "Importing Dict from typing is banned."
+    fix_auto: false
+    fix_instruction: "Remove Dict import from typing."
+
+  - id: ban-isinstance-dict
+    type: ast-grep
+    file: rules/no-dict.yml
+    severity: error
+    group: strict_typing
+    description: "isinstance(..., dict) is banned."
+    fix_auto: false
+    fix_instruction: "Check against Mapping or specific type."
+
+  - id: ban-default-factory-dict
+    type: ast-grep
+    file: rules/no-dict.yml
+    severity: error
+    group: strict_typing
+    description: "default_factory=dict is banned."
+    fix_auto: false
+    fix_instruction: "Use default_factory=list or other specific factory."
+
+  - id: grep-typing-any
+    type: ripgrep
+    pattern: 'typing\.Any'
+    severity: error
+    group: strict_typing
+    description: "Direct usage of typing.Any is banned."
+    fix_auto: false
+    fix_instruction: "Replace Any with specific type or object."
+
+  - id: grep-any-import
+    type: ripgrep
+    pattern: "from typing import.*Any"
+    severity: error
+    group: strict_typing
+    description: "Importing Any from typing is banned."
+    fix_auto: false
+    fix_instruction: "Remove Any import."
+
+baseline:
+  strategy: total
+  file: baseline.json
+
+report:
+  file: report.json

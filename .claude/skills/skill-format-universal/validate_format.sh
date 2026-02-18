@@ -13,7 +13,20 @@
 
 set -euo pipefail
 
-ROOT_DIR="${1:-.}"
+ROOT_DIR="."
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+	--root)
+		ROOT_DIR="$2"
+		shift 2
+		;;
+	--mode) shift 2 ;;
+	*)
+		ROOT_DIR="$1"
+		shift
+		;;
+	esac
+done
 SKILLS_DIR="$ROOT_DIR/.claude/skills"
 FAIL=0
 CHECKED=0
@@ -86,23 +99,34 @@ for skill_dir in "$SKILLS_DIR"/*/; do
 		FAIL=1
 	fi
 
-	# Check for TODO/TBD/placeholder
-	if grep -qiE "\bTODO\b|\bTBD\b|\bplaceholder\b" "$skill_file"; then
-		ERRORS+=("$skill_name: contains TODO/TBD/placeholder text")
+	# Check for TODO/TBD/placeholder (skip code blocks and grep/rg verification commands)
+	todo_hits=$(awk '
+		/^```/   { in_code = !in_code; next }
+		in_code  { next }
+		/rg -n|grep -[a-zA-Z]*n|rg .*TODO|grep .*TODO/ { next }
+		/\bTODO\b|\bTBD\b/ { found++; next }
+		/[Dd]o not.*placeholder|not.*placeholder/ { next }
+		/\bplaceholder\b/ { found++ }
+		END { print found+0 }
+	' "$skill_file")
+	if [[ "$todo_hits" -gt 0 ]]; then
+		ERRORS+=("$skill_name: contains TODO/TBD/placeholder text ($todo_hits occurrence(s) outside code blocks)")
 		FAIL=1
 	fi
 done
 
-echo "=== Skill Format Validation ==="
-echo "Checked: $CHECKED skills"
+echo "=== Skill Format Validation ===" >&2
+echo "Checked: $CHECKED skills" >&2
 
 if [[ ${#ERRORS[@]} -eq 0 ]]; then
-	echo "✓ All skills pass format checks"
+	echo "✓ All skills pass format checks" >&2
+	echo "{\"violation_count\": 0}"
 	exit 0
 fi
 
-echo "✗ ${#ERRORS[@]} violation(s) found:"
+echo "✗ ${#ERRORS[@]} violation(s) found:" >&2
 for err in "${ERRORS[@]}"; do
-	echo "  - $err"
+	echo "  - $err" >&2
 done
+echo "{\"violation_count\": ${#ERRORS[@]}}"
 exit 1

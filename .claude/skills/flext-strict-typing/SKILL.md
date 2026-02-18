@@ -45,12 +45,8 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 ## Verification
 
 ```bash
-scripts/validation/enforce_no_dict_no_any.sh --mode baseline --root .
+python3 scripts/core/skill_validate.py --skill flext-strict-typing --mode baseline
 ```
-
-<!-- AUTOMATION MARKERS (machine-readable, do not edit) -->
-<!-- ASTGREP_SCAN_PACK: scripts/validation/ast-grep-no-dict.yml -->
-<!-- AUTOFIX_MODE: detect-only -->
 
 ### Special RootModel Containers (from `typings.py` lines 357-462)
 

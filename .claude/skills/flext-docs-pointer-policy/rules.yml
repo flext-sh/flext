@@ -1,0 +1,37 @@
+skill: flext-docs-pointer-policy
+description: "Enforce pointer-only content in agent config files."
+scan_targets:
+  include:
+    - ".github/copilot-instructions.md"
+    - ".gemini/styleguide.md"
+    - ".cursor/rules/flext.mdc"
+    - ".clinerules"
+    - ".windsurfrules"
+    - ".continue/rules/flext.md"
+    - "CONVENTIONS.md"
+    - "codex.md"
+  exclude: []
+  projects: []
+rules:
+  - id: pointer-reference-claude
+    type: ripgrep
+    pattern: 'CLAUDE\.md'
+    match: absent
+    severity: error
+    group: pointer_policy
+    description: "Pointer files must reference the canonical 'CLAUDE.md' policy."
+    fix_auto: false
+    fix_instruction: "Add a reference to 'CLAUDE.md' as the single source of truth."
+
+  - id: pointer-no-duplication-policy
+    type: ripgrep
+    pattern: "Governance|Full Policy|Architecture Overview"
+    match: present
+    severity: warning
+    group: pointer_policy
+    description: "Pointer files should not duplicate full policy or architecture content."
+    fix_auto: false
+    fix_instruction: "Remove detailed policy content and link to 'CLAUDE.md' or 'docs/' instead."
+
+baseline:
+  strategy: total

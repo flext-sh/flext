@@ -1,0 +1,81 @@
+skill: readme-standardization
+description: "Verify README.md structure: preamble, ecosystem link, and required sections."
+scan_targets:
+  include: ["README.md"]
+  exclude: []
+  projects: []
+rules:
+  - id: readme-preamble
+    type: ripgrep
+    pattern: '\\*\\*Reviewed\\*\\*: \\d{4}-\\d{2}-\\d{2} \\| \\*\\*Version\\*\\*: [a-zA-Z0-9.\\-]+'
+    match: absent
+    group: readme_preamble
+    description: "README.md must start with a standardized preamble (Reviewed|Version)."
+    fix_auto: false
+    fix_instruction: "Add preamble: '**Reviewed**: YYYY-MM-DD | **Version**: X.Y.Z'"
+
+  - id: readme-ecosystem-link
+    type: ripgrep
+    pattern: 'Part of the \[FLEXT\]\(https://github.com/flext-sh/flext\) ecosystem'
+    match: absent
+    group: readme_preamble
+    description: "README.md must link back to 'flext-sh/flext'."
+    fix_auto: false
+    fix_instruction: "Add 'Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.'"
+
+  - id: readme-has-key-features
+    type: ripgrep
+    pattern: "^## Key Features"
+    match: absent
+    group: readme_structure
+    description: "README.md must have a '## Key Features' section."
+    fix_auto: false
+    fix_instruction: "Add '## Key Features' section listing specific capabilities."
+
+  - id: readme-has-installation
+    type: ripgrep
+    pattern: "^## Installation"
+    match: absent
+    group: readme_structure
+    description: "README.md must have a '## Installation' section."
+    fix_auto: false
+    fix_instruction: "Add '## Installation' section with setup steps."
+
+  - id: readme-has-usage
+    type: ripgrep
+    pattern: "^## Usage"
+    match: absent
+    group: readme_structure
+    description: "README.md must have a '## Usage' section."
+    fix_auto: false
+    fix_instruction: "Add '## Usage' section with examples."
+
+  - id: readme-has-architecture
+    type: ripgrep
+    pattern: "^## Architecture"
+    match: absent
+    group: readme_structure
+    description: "README.md must have a '## Architecture' section."
+    fix_auto: false
+    fix_instruction: "Add '## Architecture' section explaining internals."
+
+  - id: readme-has-contributing
+    type: ripgrep
+    pattern: "^## Contributing"
+    match: absent
+    group: readme_structure
+    description: "README.md must have a '## Contributing' section."
+    fix_auto: false
+    fix_instruction: "Add '## Contributing' section (link to CONTRIBUTING.md or guidelines)."
+
+  - id: readme-has-license
+    type: ripgrep
+    pattern: "^## License"
+    match: absent
+    group: readme_structure
+    description: "README.md must have a '## License' section."
+    fix_auto: false
+    fix_instruction: "Add '## License' section (e.g. Apache 2.0)."
+
+baseline:
+  strategy: total

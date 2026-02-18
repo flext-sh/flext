@@ -13,17 +13,15 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 OWNER_MARKER_RE = re.compile(
     r"^# Owner-Skill:\s+(.claude/skills/([a-z0-9][-a-z0-9]*)/SKILL\.md)\s*$"
 )
 MAX_HEADER_LINES = 10
-CANDIDATE_REPORT_PATH = (
-    REPO_ROOT
-    / ".sisyphus"
-    / "reports"
-    / "scripts-infra--json--ownership-candidates.json"
-)
+
+EXIT_PASS = 0
+EXIT_FAIL = 1
+EXIT_USAGE = 2
+EXIT_INFRA = 3
 
 
 class Ansi:
@@ -34,6 +32,14 @@ class Ansi:
     RESET = "\033[0m"
 
 
+class SkillUsageError(Exception):
+    pass
+
+
+class SkillInfraError(Exception):
+    pass
+
+
 @dataclass(frozen=True)
 class ScriptCheckResult:
     script: str
@@ -42,17 +48,32 @@ class ScriptCheckResult:
     owner_skill: str | None
 
 
-def parse_args() -> argparse.Namespace:
+def eprint(message: str) -> None:
+    print(message, file=sys.stderr)
+
+
+def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Validate that each tracked script under scripts/ has exactly one "
             "Owner-Skill marker and a matching SKILL.md scripts entry."
         ),
     )
-    return parser.parse_args()
+    _ = parser.add_argument(
+        "--root",
+        required=True,
+        help="Repository root path used to resolve files and run git ls-files",
+    )
+    _ = parser.add_argument(
+        "--mode",
+        choices=["baseline", "strict"],
+        default="baseline",
+        help="Validation mode (accepted for skill_validate contract compatibility)",
+    )
+    return parser.parse_args(argv)
 
 
-def tracked_scripts() -> list[Path]:
+def tracked_scripts(repo_root: Path) -> list[Path]:
     result = subprocess.run(
         [
             "git",
@@ -62,13 +83,13 @@ def tracked_scripts() -> list[Path]:
             "scripts/**/*.sh",
             "scripts/**/*.py",
         ],
-        cwd=REPO_ROOT,
+        cwd=repo_root,
         capture_output=True,
         text=True,
         check=False,
     )
     if result.returncode != 0:
-        raise RuntimeError(result.stderr.strip() or "git ls-files failed")
+        raise SkillInfraError(result.stderr.strip() or "git ls-files failed")
 
     scripts: list[Path] = []
     for line in sorted(set(result.stdout.splitlines())):
@@ -77,24 +98,33 @@ def tracked_scripts() -> list[Path]:
         path = Path(line)
         if path.name == "__init__.py":
             continue
+        if not (repo_root / path).exists():
+            continue
         scripts.append(path)
     return scripts
 
 
-def read_header(script_path: Path) -> list[str]:
-    full_path = REPO_ROOT / script_path
-    with full_path.open("r", encoding="utf-8") as handle:
-        lines = []
-        for _ in range(MAX_HEADER_LINES):
-            line = handle.readline()
-            if not line:
-                break
-            lines.append(line.rstrip("\n"))
+def read_header(repo_root: Path, script_path: Path) -> list[str]:
+    full_path = repo_root / script_path
+    try:
+        with full_path.open("r", encoding="utf-8") as handle:
+            lines = []
+            for _ in range(MAX_HEADER_LINES):
+                line = handle.readline()
+                if not line:
+                    break
+                lines.append(line.rstrip("\n"))
+    except OSError as exc:
+        raise SkillInfraError(f"cannot read script header: {script_path}") from exc
     return lines
 
 
 def scripts_section(skill_file: Path) -> str:
-    content = skill_file.read_text(encoding="utf-8")
+    try:
+        content = skill_file.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise SkillInfraError(f"cannot read skill file: {skill_file}") from exc
+
     lines = content.splitlines()
     in_section = False
     section_lines: list[str] = []
@@ -153,9 +183,10 @@ def candidate_skill(script_path: Path) -> str:
 
 
 def validate_script(
+    repo_root: Path,
     script_path: Path,
 ) -> tuple[ScriptCheckResult, dict[str, str] | None]:
-    header = read_header(script_path)
+    header = read_header(repo_root, script_path)
     markers = [match for line in header if (match := OWNER_MARKER_RE.match(line))]
 
     if not markers:
@@ -189,7 +220,7 @@ def validate_script(
     marker = markers[0]
     owner_rel = marker.group(1)
     owner_skill = marker.group(2)
-    owner_file = REPO_ROOT / owner_rel
+    owner_file = repo_root / owner_rel
 
     if not owner_file.exists():
         return (
@@ -233,62 +264,99 @@ def status_color(status: str) -> str:
 
 
 def print_table(results: list[ScriptCheckResult]) -> None:
-    print(f"{Ansi.CYAN}Script Ownership Validation{Ansi.RESET}")
-    print(f"{Ansi.CYAN}{'SCRIPT':<55} {'STATUS':<10} DETAILS{Ansi.RESET}")
+    eprint(f"{Ansi.CYAN}Script Ownership Validation{Ansi.RESET}")
+    eprint(f"{Ansi.CYAN}{'SCRIPT':<55} {'STATUS':<10} DETAILS{Ansi.RESET}")
     for result in results:
         color = status_color(result.status)
-        print(
+        eprint(
             f"{result.script:<55} {color}{result.status:<10}{Ansi.RESET} {result.details}",
         )
 
 
-def write_candidates(candidates: list[dict[str, str]]) -> None:
-    CANDIDATE_REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    payload = {
-        "total_candidates": len(candidates),
-        "candidates": sorted(candidates, key=lambda item: item["script"]),
-    }
-    _ = CANDIDATE_REPORT_PATH.write_text(
-        json.dumps(payload, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
+def write_candidates(
+    repo_root: Path,
+    candidates: list[dict[str, str]],
+) -> Path:
+    report_path = repo_root / ".claude" / "skills" / "scripts-infra" / "report.json"
+    try:
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "total_candidates": len(candidates),
+            "candidates": sorted(candidates, key=lambda item: item["script"]),
+        }
+        _ = report_path.write_text(
+            json.dumps(payload, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+    except OSError as exc:
+        raise SkillInfraError(f"cannot write candidate report: {report_path}") from exc
+    return report_path
 
 
-def main() -> int:
-    _ = parse_args()
+def run_main(argv: list[str]) -> int:
+    try:
+        args = parse_args(argv)
+    except SystemExit as exc:
+        code = int(exc.code) if isinstance(exc.code, int) else EXIT_USAGE
+        return (
+            code
+            if code in (EXIT_PASS, EXIT_FAIL, EXIT_USAGE, EXIT_INFRA)
+            else EXIT_USAGE
+        )
+
+    repo_root = Path(args.root).resolve()
+    if not repo_root.exists() or not repo_root.is_dir():
+        eprint(f"{Ansi.RED}error:{Ansi.RESET} --root is not a directory: {repo_root}")
+        return EXIT_USAGE
 
     try:
-        scripts = tracked_scripts()
-    except RuntimeError as error:
-        print(f"{Ansi.RED}error:{Ansi.RESET} {error}")
-        return 1
+        scripts = tracked_scripts(repo_root)
 
-    results: list[ScriptCheckResult] = []
-    candidates: list[dict[str, str]] = []
-    for script in scripts:
-        result, candidate = validate_script(script)
-        results.append(result)
-        if candidate is not None:
-            candidates.append(candidate)
+        results: list[ScriptCheckResult] = []
+        candidates: list[dict[str, str]] = []
+        for script in scripts:
+            result, candidate = validate_script(repo_root, script)
+            results.append(result)
+            if candidate is not None:
+                candidates.append(candidate)
 
-    print_table(results)
-    write_candidates(candidates)
+        print_table(results)
+        report_path = write_candidates(repo_root, candidates)
 
-    ok_count = sum(1 for item in results if item.status == "OK")
-    unowned_count = sum(1 for item in results if item.status == "UNOWNED")
-    violation_count = sum(1 for item in results if item.status == "VIOLATION")
+        ok_count = sum(1 for item in results if item.status == "OK")
+        unowned_count = sum(1 for item in results if item.status == "UNOWNED")
+        violation_only_count = sum(1 for item in results if item.status == "VIOLATION")
+        total_violations = unowned_count + violation_only_count
 
-    summary = (
-        f"\n{Ansi.CYAN}Summary:{Ansi.RESET} total={len(results)} "
-        + f"{Ansi.GREEN}ok={ok_count}{Ansi.RESET} "
-        + f"{Ansi.YELLOW}unowned={unowned_count}{Ansi.RESET} "
-        + f"{Ansi.RED}violations={violation_count}{Ansi.RESET}"
-    )
-    print(summary)
-    print(f"Candidates report: {CANDIDATE_REPORT_PATH.relative_to(REPO_ROOT)}")
+        summary = (
+            f"\n{Ansi.CYAN}Summary:{Ansi.RESET} total={len(results)} "
+            + f"{Ansi.GREEN}ok={ok_count}{Ansi.RESET} "
+            + f"{Ansi.YELLOW}unowned={unowned_count}{Ansi.RESET} "
+            + f"{Ansi.RED}violations={violation_only_count}{Ansi.RESET} "
+            + f"{Ansi.RED}total_noncompliant={total_violations}{Ansi.RESET}"
+        )
+        eprint(summary)
+        eprint(f"Candidates report: {report_path.relative_to(repo_root)}")
 
-    return 0 if (unowned_count == 0 and violation_count == 0) else 1
+        print(json.dumps({"violation_count": total_violations}, separators=(",", ":")))
+        return EXIT_PASS if total_violations == 0 else EXIT_FAIL
+    except SkillUsageError as exc:
+        eprint(f"{Ansi.RED}error:{Ansi.RESET} {exc}")
+        return EXIT_USAGE
+    except SkillInfraError as exc:
+        eprint(f"{Ansi.RED}error:{Ansi.RESET} {exc}")
+        return EXIT_INFRA
+    except Exception as exc:
+        eprint(f"{Ansi.RED}error:{Ansi.RESET} unexpected failure: {exc}")
+        return EXIT_INFRA
+
+
+def main() -> None:
+    code = run_main(sys.argv[1:])
+    if code not in (EXIT_PASS, EXIT_FAIL, EXIT_USAGE, EXIT_INFRA):
+        code = EXIT_INFRA
+    raise SystemExit(code)
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
