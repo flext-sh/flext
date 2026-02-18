@@ -1,0 +1,5 @@
+id: no-union-import-python
+language: python
+rule:
+  kind: module
+  regex: from typing import.*\bUnion\b

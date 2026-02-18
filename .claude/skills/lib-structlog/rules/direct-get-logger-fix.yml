@@ -1,7 +1,0 @@
-id: fix-structlog-getlogger
-language: python
-rule:
-  pattern: structlog.get_logger($NAME)
-fix: FlextLogger.create_module_logger($NAME)
-message: "Rewrite structlog.get_logger() -> FlextLogger.create_module_logger()"
-severity: error

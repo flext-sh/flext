@@ -1,0 +1,5 @@
+id: no-type-in-condition-python
+language: python
+rule:
+  kind: module
+  regex: if type\(

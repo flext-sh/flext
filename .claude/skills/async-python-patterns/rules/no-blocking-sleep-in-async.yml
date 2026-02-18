@@ -1,0 +1,5 @@
+id: no-blocking-sleep-in-async-python
+language: python
+rule:
+  kind: module
+  regex: time\.sleep\(

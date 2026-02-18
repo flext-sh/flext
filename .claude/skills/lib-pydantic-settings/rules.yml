@@ -16,17 +16,16 @@ rules:
   fix_auto: true
   fix_type: ast-grep
   fix_file: rules/legacy-config-fix.yml
-  fix_instruction: Auto-rewrite class Config blocks to model_config = SettingsConfigDict();
-    then fill explicit settings keys as needed.
+  fix_instruction: Auto-rewrite class Config blocks to model_config = SettingsConfigDict(); then fill explicit settings keys
+    as needed.
 - id: require-env-prefix
-  type: ripgrep
-  pattern: env_prefix\s*=
+  type: ast-grep
   match: absent
   severity: warning
   group: pydantic_settings
   description: Settings modules should define env_prefix explicitly.
   fix_auto: false
   fix_instruction: Define env_prefix in SettingsConfigDict for each settings model.
-  fix_type: manual
+  file: rules/require-env-prefix.yml
 baseline:
   strategy: total

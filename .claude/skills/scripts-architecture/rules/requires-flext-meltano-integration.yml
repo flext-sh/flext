@@ -1,0 +1,5 @@
+id: requires-flext-meltano-integration-python
+language: python
+rule:
+  kind: module
+  regex: ^(from singer_sdk|import singer_sdk)

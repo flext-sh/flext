@@ -1,0 +1,5 @@
+id: ban-mypy-ignore-comment-python
+language: python
+rule:
+  kind: module
+  regex: '#\s*mypy:\s*ignore'

@@ -1,0 +1,5 @@
+id: pydantic-model-rebuild-critical-python
+language: python
+rule:
+  kind: module
+  regex: \.model_rebuild\(

@@ -8,23 +8,21 @@ scan_targets:
   - .
 rules:
 - id: require-future-annotations
-  type: ripgrep
-  pattern: from __future__ import annotations
+  type: ast-grep
   match: absent
   severity: error
   group: src_style
   description: Shared source modules should use postponed annotations.
   fix_auto: false
   fix_instruction: Add 'from __future__ import annotations' near the top of each module.
-  fix_type: manual
+  file: rules/require-future-annotations.yml
 - id: ban-star-import
-  type: ripgrep
-  pattern: from\s+.+\s+import\s+\*
+  type: ast-grep
   severity: error
   group: src_imports
   description: Shared source code should avoid wildcard imports.
   fix_auto: false
   fix_instruction: Replace wildcard imports with explicit imported symbols.
-  fix_type: manual
+  file: rules/ban-star-import.yml
 baseline:
   strategy: total

@@ -1,0 +1,8 @@
+id: no-hardcoded-version-in-constants
+language: python
+rule:
+  pattern: VERSION = $VAL
+  has:
+    kind: string
+message: Hardcoded VERSION string — should reference __version__.py or importlib.metadata.
+severity: warning

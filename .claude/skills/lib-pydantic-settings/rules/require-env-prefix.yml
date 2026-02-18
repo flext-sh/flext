@@ -1,0 +1,5 @@
+id: require-env-prefix-python
+language: python
+rule:
+  kind: module
+  regex: env_prefix\s*=

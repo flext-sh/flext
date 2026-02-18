@@ -1,0 +1,5 @@
+id: requires-singer-message-handling-python
+language: python
+rule:
+  kind: module
+  regex: singer\.(write_message|RecordMessage|SchemaMessage|StateMessage)

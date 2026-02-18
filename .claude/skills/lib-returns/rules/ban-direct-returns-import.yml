@@ -1,0 +1,5 @@
+id: ban-direct-returns-import-python
+language: python
+rule:
+  kind: module
+  regex: from returns\.|import returns\.

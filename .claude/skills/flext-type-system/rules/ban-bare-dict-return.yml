@@ -1,0 +1,5 @@
+id: ban-bare-dict-return-python
+language: python
+rule:
+  kind: module
+  regex: '->\s*dict:|->\s*dict\[str,\s*object\]:'

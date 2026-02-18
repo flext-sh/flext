@@ -9,14 +9,12 @@ scan_targets:
   - .
 rules:
 - id: require-typing-extensions-compat
-  type: ripgrep
-  pattern: typing_extensions
+  type: ast-grep
   severity: warning
   group: typings_compat
-  description: Prefer explicit typing_extensions imports when backport compatibility
-    is needed.
+  description: Prefer explicit typing_extensions imports when backport compatibility is needed.
   fix_auto: false
   fix_instruction: If using backported typing features, import them from typing_extensions.
-  fix_type: manual
+  file: rules/require-typing-extensions-compat.yml
 baseline:
   strategy: total

@@ -22,7 +22,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import re
 import shutil
 import subprocess
 import sys
@@ -39,14 +38,32 @@ SKILLS_DIR = Path(".claude/skills")
 FIX_REPORT_DEFAULT = ".claude/skills/{skill}/fix-report.json"
 
 
+VALID_FIX_TYPES = frozenset({"ast-grep", "custom"})
+
+
 def validate_flat_fix_keys(rule: dict[str, object]) -> None:
-    """Reject nested fix: sub-dict — only flat fix_* keys are allowed."""
+    """Reject nested fix: sub-dict and invalid fix_type values."""
     if isinstance(rule.get("fix"), dict):
         rule_id = str(rule.get("id", "unknown"))
         msg = (
             f"Rule '{rule_id}' uses nested 'fix:' sub-dict. "
             "Use flat keys: fix_auto, fix_type, fix_instruction, "
             "fix_file, fix_description."
+        )
+        raise ValueError(msg)
+    ft = rule.get("fix_type")
+    if ft == "manual":
+        rule_id = str(rule.get("id", "unknown"))
+        msg = (
+            f"Rule '{rule_id}': fix_type: manual is invalid. "
+            "Remove fix_type entirely when fix_auto: false."
+        )
+        raise ValueError(msg)
+    if ft and ft not in VALID_FIX_TYPES:
+        rule_id = str(rule.get("id", "unknown"))
+        msg = (
+            f"Rule '{rule_id}': fix_type: '{ft}' is invalid. "
+            f"Valid values: {sorted(VALID_FIX_TYPES)}"
         )
         raise ValueError(msg)
 
@@ -183,13 +200,75 @@ def all_project_paths(root: Path) -> dict[str, Path]:
 
 
 def check_syntax(filepath: Path) -> tuple[bool, str]:
-    """Run python -m py_compile for syntax errors. Returns (ok, output)."""
-    result = run_cmd(
-        [sys.executable, "-m", "py_compile", str(filepath)],
-        cwd=filepath.parent,
-        timeout=30,
-    )
-    return result.returncode == 0, (result.stdout or "") + (result.stderr or "")
+    """Parse file with ast.parse for pure syntax checking (no imports).
+
+    Uses ast.parse instead of py_compile to avoid false failures from
+    module-name shadowing (e.g. a project's enum.py shadowing stdlib enum).
+    """
+    import ast as _ast
+
+    try:
+        source = filepath.read_text(encoding="utf-8")
+        _ast.parse(source, filename=str(filepath))
+        return True, ""
+    except SyntaxError as exc:
+        return False, f"SyntaxError: {exc}"
+
+
+def check_import(filepath: Path) -> tuple[bool, str]:
+    import ast as _ast
+    import builtins
+
+    try:
+        source = filepath.read_text(encoding="utf-8")
+        tree = _ast.parse(source, filename=str(filepath))
+    except SyntaxError as exc:
+        return False, f"SyntaxError: {exc}"
+
+    imported_names: set[str] = set()
+    has_star_import = False
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.Import):
+            for alias in node.names:
+                imported_names.add(alias.asname or alias.name.split(".")[0])
+        elif isinstance(node, _ast.ImportFrom) and node.module:
+            imported_names.add(node.module.split(".")[0])
+            for alias in node.names:
+                if alias.name == "*":
+                    has_star_import = True
+                    continue
+                imported_names.add(alias.asname or alias.name)
+
+    all_names_in_body: set[str] = set()
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.Name):
+            all_names_in_body.add(node.id)
+        elif isinstance(node, _ast.Attribute) and isinstance(node.value, _ast.Name):
+            all_names_in_body.add(node.value.id)
+
+    builtin_names = set(dir(builtins))
+
+    defined_names: set[str] = set()
+    for node in _ast.iter_child_nodes(tree):
+        if isinstance(node, (_ast.FunctionDef, _ast.AsyncFunctionDef, _ast.ClassDef)):
+            defined_names.add(node.name)
+        elif isinstance(node, _ast.Assign):
+            for target in node.targets:
+                if isinstance(target, _ast.Name):
+                    defined_names.add(target.id)
+
+    suspicious: list[str] = []
+    for name in all_names_in_body:
+        if name in builtin_names or name in defined_names or name in imported_names:
+            continue
+        if name[0:1].isupper() and name not in {"True", "False", "None", "Ellipsis"}:
+            if not has_star_import:
+                suspicious.append(name)
+
+    if suspicious:
+        joined = ", ".join(sorted(suspicious))
+        return False, f"Possibly undefined names (missing imports?): {joined}"
+    return True, ""
 
 
 # ---------------------------------------------------------------------------
@@ -233,83 +312,6 @@ def count_ast_grep_violations(
         except json.JSONDecodeError:
             continue
     return count
-
-
-def count_ripgrep_violations(
-    pattern: str,
-    target_file: Path,
-    project_root: Path,
-) -> int:
-    """Count ripgrep violations in a single file."""
-    result = run_cmd(
-        ["rg", "-c", pattern, str(target_file)],
-        cwd=project_root,
-        timeout=30,
-    )
-    if result.returncode == 127:
-        eprint("Warning: ripgrep (rg) not found")
-        return 0
-    try:
-        return int((result.stdout or "").strip().split(":")[-1])
-    except (ValueError, IndexError):
-        return 0
-
-
-def _parse_re_flags(flags_raw: object) -> int:
-    if not isinstance(flags_raw, list):
-        return 0
-    flags = 0
-    flag_map = {
-        "MULTILINE": re.MULTILINE,
-        "DOTALL": re.DOTALL,
-        "IGNORECASE": re.IGNORECASE,
-        "VERBOSE": re.VERBOSE,
-    }
-    for item in flags_raw:
-        name = str(item).upper()
-        if name in flag_map:
-            flags |= flag_map[name]
-    return flags
-
-
-def count_regex_violations(
-    pattern: str,
-    flags_raw: object,
-    target_file: Path,
-) -> int:
-    re_flags = _parse_re_flags(flags_raw)
-    try:
-        compiled = re.compile(pattern, re_flags)
-    except re.error:
-        return 0
-    try:
-        content = target_file.read_text(encoding="utf-8", errors="replace")
-    except OSError:
-        return 0
-    return len(compiled.findall(content))
-
-
-def apply_regex_fix(
-    target_file: Path,
-    fix_pattern: str,
-    fix_replacement: str,
-    flags_raw: object,
-) -> bool:
-    """Apply regex substitution to a file. Returns True if content changed."""
-    re_flags = _parse_re_flags(flags_raw)
-    try:
-        compiled = re.compile(fix_pattern, re_flags)
-    except re.error:
-        return False
-    try:
-        content = target_file.read_text(encoding="utf-8", errors="replace")
-    except OSError:
-        return False
-    new_content = compiled.sub(fix_replacement, content)
-    if new_content == content:
-        return False
-    target_file.write_text(new_content, encoding="utf-8")
-    return True
 
 
 def _build_script_command(script: Path) -> list[str]:
@@ -370,9 +372,29 @@ def write_rej_file(
     return rej_path
 
 
-# ---------------------------------------------------------------------------
-# Core fix logic per rule
-# ---------------------------------------------------------------------------
+def normalize_exclude_globs(
+    excludes: list[str],
+    known_projects: set[str],
+) -> list[str]:
+    """Strip project-name prefixes from exclude globs.
+
+    Exclude patterns like ``flext-core/src/foo.py`` never match tracked
+    files which are project-relative (``src/foo.py``).  This converts
+    them to ``src/foo.py`` and emits a warning.
+    """
+    result: list[str] = []
+    for pat in excludes:
+        stripped = pat
+        for proj in known_projects:
+            prefix = proj + "/"
+            if pat.startswith(prefix):
+                stripped = pat[len(prefix) :]
+                eprint(
+                    f"  Warning: exclude '{pat}' stripped to '{stripped}' (project-relative)"
+                )
+                break
+        result.append(stripped)
+    return result
 
 
 def find_candidate_files(
@@ -381,6 +403,7 @@ def find_candidate_files(
     project_path: Path,
     tracked_files: list[str],
     include_globs: list[str],
+    exclude_globs: list[str] | None = None,
 ) -> list[Path]:
     """Find files that have violations for a given rule."""
     import fnmatch
@@ -390,8 +413,12 @@ def find_candidate_files(
 
     # Filter tracked files by include globs
     includes = include_globs or ["**/*.py"]
+    excludes = exclude_globs or []
     filtered = [
-        f for f in tracked_files if any(fnmatch.fnmatch(f, pat) for pat in includes)
+        f
+        for f in tracked_files
+        if any(fnmatch.fnmatch(f, pat) for pat in includes)
+        and not any(fnmatch.fnmatch(f, epat) for epat in excludes)
     ]
 
     if rule_type == "ast-grep":
@@ -405,39 +432,6 @@ def find_candidate_files(
                 continue
             count = count_ast_grep_violations(rule_file, full, project_path)
             if count > 0:
-                candidates.append(full)
-
-    elif rule_type == "ripgrep":
-        pattern = str(rule_obj.get("pattern", ""))
-        if not pattern:
-            return []
-        match_mode = str(rule_obj.get("match", "present")).strip() or "present"
-        for rel in filtered:
-            full = project_path / rel
-            if not full.exists() or not full.is_file():
-                continue
-            count = count_ripgrep_violations(pattern, full, project_path)
-            if match_mode == "absent":
-                if count == 0:
-                    candidates.append(full)
-            elif count > 0:
-                candidates.append(full)
-
-    elif rule_type == "regex":
-        pattern = str(rule_obj.get("pattern", ""))
-        if not pattern:
-            return []
-        flags_raw = rule_obj.get("flags", [])
-        match_mode = str(rule_obj.get("match", "present")).strip() or "present"
-        for rel in filtered:
-            full = project_path / rel
-            if not full.exists() or not full.is_file():
-                continue
-            count = count_regex_violations(pattern, flags_raw, full)
-            if match_mode == "absent":
-                if count == 0:
-                    candidates.append(full)
-            elif count > 0:
                 candidates.append(full)
 
     elif rule_type == "custom":
@@ -492,80 +486,178 @@ def _count_violations_for_rule(
     rule_type = str(rule_obj.get("type", ""))
     if rule_type == "ast-grep" and scan_file and scan_file.exists():
         return count_ast_grep_violations(scan_file, target, project_path)
-    if rule_type == "ripgrep":
-        pattern = str(rule_obj.get("pattern", ""))
-        return count_ripgrep_violations(pattern, target, project_path) if pattern else 0
-    if rule_type == "regex":
-        pattern = str(rule_obj.get("pattern", ""))
-        return (
-            count_regex_violations(pattern, rule_obj.get("flags", []), target)
-            if pattern
-            else 0
-        )
+    if rule_type == "custom":
+        return 0
     return 0
 
 
 def _resolve_fix_mechanism(
     rule_obj: dict[str, object],
     skill_dir: Path,
-) -> tuple[str, Path | None, str, str, object]:
-    """Determine fix mechanism from explicit ``fix_type`` key.
-
-    Returns (mechanism, fix_target, fix_pattern, fix_replacement, flags_raw).
-    mechanism is one of: "ast-grep", "regex", "custom", "none".
-    ``fix_type`` is independent of the detection ``type`` — a ripgrep
-    detection rule can use an ast-grep fix, a regex fix, or a custom fix.
-    """
+) -> tuple[str, Path | None]:
     fix_type = str(rule_obj.get("fix_type", "") or "").strip()
-    flags_raw = rule_obj.get("flags", [])
 
     if fix_type == "ast-grep":
         fix_file_rel = str(rule_obj.get("fix_file", "") or "")
         if not fix_file_rel:
-            return "none", None, "", "", flags_raw
-        return "ast-grep", (skill_dir / fix_file_rel).resolve(), "", "", flags_raw
-
-    if fix_type == "regex":
-        fix_pattern = str(rule_obj.get("fix_pattern", "") or "")
-        fix_replacement = rule_obj.get("fix_replacement")
-        if not fix_pattern or fix_replacement is None:
-            return "none", None, "", "", flags_raw
-        return "regex", None, fix_pattern, str(fix_replacement), flags_raw
+            return "none", None
+        return "ast-grep", (skill_dir / fix_file_rel).resolve()
 
     if fix_type == "custom":
         fix_script_rel = str(rule_obj.get("fix_script", "") or "")
         if not fix_script_rel:
-            return "none", None, "", "", flags_raw
-        return "custom", (skill_dir / fix_script_rel).resolve(), "", "", flags_raw
+            return "none", None
+        return "custom", (skill_dir / fix_script_rel).resolve()
 
     if fix_type:
-        return "none", None, "", "", flags_raw
+        return "none", None
 
     # Backwards compat: infer from keys when fix_type is absent
     fix_file_rel = str(rule_obj.get("fix_file", "") or "")
     if fix_file_rel:
-        return "ast-grep", (skill_dir / fix_file_rel).resolve(), "", "", flags_raw
+        return "ast-grep", (skill_dir / fix_file_rel).resolve()
 
-    return "none", None, "", "", flags_raw
+    return "none", None
+
+
+def _parse_existing_imports(source: str) -> dict[str, set[str]]:
+    """Parse all imports from source using AST.
+
+    Returns a dict mapping module name to set of imported names.
+    Bare ``import X`` is stored as ``{"X": set()}``.
+    ``from X import a, b`` is stored as ``{"X": {"a", "b"}}``.
+    """
+    import ast as _ast
+
+    result: dict[str, set[str]] = {}
+    try:
+        tree = _ast.parse(source)
+    except SyntaxError:
+        return result
+
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.Import):
+            for alias in node.names:
+                result.setdefault(alias.name, set())
+        elif isinstance(node, _ast.ImportFrom):
+            module = node.module or ""
+            names = result.setdefault(module, set())
+            for alias in node.names:
+                names.add(alias.name)
+    return result
+
+
+def _import_already_present(imp: str, source: str, parsed: dict[str, set[str]]) -> bool:
+    """Check if an import is already present using pre-parsed AST data."""
+    import ast as _ast
+
+    try:
+        tree = _ast.parse(imp.strip())
+    except SyntaxError:
+        return False
+
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.Import):
+            for alias in node.names:
+                if alias.name in parsed:
+                    return True
+        elif isinstance(node, _ast.ImportFrom):
+            module = node.module or ""
+            existing_names = parsed.get(module, set())
+            for alias in node.names:
+                if alias.name in existing_names:
+                    return True
+    return False
+
+
+def _find_last_import_line(source: str) -> int:
+    """Return the 1-based line number of the last top-level import using AST.
+
+    Returns 0 if no imports found (insert at top of file).
+    """
+    import ast as _ast
+
+    try:
+        tree = _ast.parse(source)
+    except SyntaxError:
+        return 0
+
+    last_import_line = 0
+    for node in tree.body:
+        if isinstance(node, (_ast.Import, _ast.ImportFrom)):
+            end = getattr(node, "end_lineno", node.lineno) or node.lineno
+            if end > last_import_line:
+                last_import_line = end
+    return last_import_line
+
+
+def ensure_imports(target: Path, import_lines: list[str]) -> bool:
+    """Add missing import lines to *target* using full AST analysis.
+
+    Uses ``ast.parse`` to detect existing imports and find the correct
+    insertion point after the last top-level import statement.
+    Handles multi-import lines, aliased imports, and multiline imports.
+
+    Returns True if the file was modified.
+    """
+    if not import_lines:
+        return False
+
+    text = target.read_text(encoding="utf-8")
+
+    parsed = _parse_existing_imports(text)
+    missing = [
+        imp for imp in import_lines if not _import_already_present(imp, text, parsed)
+    ]
+    if not missing:
+        return False
+
+    lines = text.splitlines(keepends=True)
+    last_import_lineno = _find_last_import_line(text)
+    insert_idx = last_import_lineno  # 1-based → 0-based index after that line
+
+    block = "".join(imp.rstrip() + "\n" for imp in missing)
+    lines.insert(insert_idx, block)
+    target.write_text("".join(lines), encoding="utf-8")
+    return True
 
 
 def _apply_fix(
     mechanism: str,
     fix_file: Path | None,
-    fix_pattern: str,
-    fix_replacement: str,
-    flags_raw: object,
     target: Path,
     project_path: Path,
 ) -> bool:
     """Apply a fix using the resolved mechanism. Returns True if changes were made."""
     if mechanism == "ast-grep" and fix_file and fix_file.exists():
         return apply_ast_grep_fix(fix_file, target, project_path)
-    if mechanism == "regex" and fix_pattern:
-        return apply_regex_fix(target, fix_pattern, fix_replacement, flags_raw)
     if mechanism == "custom" and fix_file and fix_file.exists():
         return apply_custom_fix(fix_file, target, project_path)
     return False
+
+
+def run_project_tests(project_path: Path, timeout: int = 300) -> tuple[bool, str]:
+    has_tests = (
+        (project_path / "tests").is_dir()
+        or (project_path / "test").is_dir()
+        or bool(list(project_path.glob("test_*.py")))
+    )
+    if not has_tests:
+        return True, "no tests found - skipped"
+
+    if not (project_path / "pyproject.toml").exists():
+        return True, "no pyproject.toml - skipped"
+
+    result = run_cmd(
+        [sys.executable, "-m", "pytest", "--tb=short", "-q", "--no-header", "-x"],
+        cwd=project_path,
+        timeout=timeout,
+    )
+    passed = result.returncode == 0
+    output = (result.stdout or "") + (result.stderr or "")
+    if len(output) > 2000:
+        output = "...(truncated)...\n" + output[-2000:]
+    return passed, output
 
 
 def process_fix_rule(
@@ -575,6 +667,7 @@ def process_fix_rule(
     project_name: str,
     tracked_files: list[str],
     include_globs: list[str],
+    exclude_globs: list[str],
     dry_run: bool,
     tmpdir: Path,
 ) -> dict[str, object]:
@@ -603,6 +696,7 @@ def process_fix_rule(
             project_path,
             tracked_files,
             include_globs,
+            exclude_globs,
         )
         entry["candidates"] = len(candidates)
         if fix_instruction and candidates:
@@ -611,15 +705,12 @@ def process_fix_rule(
             ]
         return entry
 
-    mechanism, fix_target, fix_pattern, fix_replacement, flags_raw = (
-        _resolve_fix_mechanism(rule_obj, skill_dir)
-    )
+    mechanism, fix_target = _resolve_fix_mechanism(rule_obj, skill_dir)
 
     if mechanism == "none":
         entry["error"] = (
             "fix_auto=true but no fix mechanism — set fix_type "
-            "(ast-grep + fix_file, regex + fix_pattern/fix_replacement, "
-            "custom + fix_script)"
+            "(ast-grep + fix_file, custom + fix_script)"
         )
         eprint(f"  Warning: {entry['error']} for rule '{rule_id}'")
         return entry
@@ -642,6 +733,7 @@ def process_fix_rule(
         project_path,
         tracked_files,
         include_globs,
+        exclude_globs,
     )
     entry["candidates"] = len(candidates)
 
@@ -678,9 +770,6 @@ def process_fix_rule(
         fix_applied = _apply_fix(
             mechanism,
             fix_target,
-            fix_pattern,
-            fix_replacement,
-            flags_raw,
             target,
             project_path,
         )
@@ -689,11 +778,16 @@ def process_fix_rule(
             shutil.copy2(backup_path, target)
             continue
 
+        fix_imports_raw = rule_obj.get("fix_imports")
+        if fix_imports_raw and isinstance(fix_imports_raw, list):
+            ensure_imports(target, [str(i) for i in fix_imports_raw])
+
         after_hash = sha256_file(target)
         if after_hash == before_hash:
             continue
 
         syntax_ok, syntax_output = check_syntax(target)
+        import_ok, import_output = check_import(target)
 
         after_violations = _count_violations_for_rule(
             rule_obj,
@@ -727,6 +821,30 @@ def process_fix_rule(
             })
             rej_files.append(str(rej_path))
             print(f"      REJECTED (syntax error): {target.name}")
+
+        elif not import_ok:
+            rej_path = write_rej_file(
+                target,
+                f"Import check failed: {import_output}",
+                rule_id,
+                before_hash,
+                after_hash,
+                before_violations,
+                after_violations,
+                True,
+                import_output,
+                diff_text,
+            )
+            shutil.copy2(backup_path, target)
+            rejected.append({
+                "file": str(target),
+                "reason": "import_check_failed",
+                "before_violations": before_violations,
+                "after_violations": after_violations,
+                "rej_file": str(rej_path),
+            })
+            rej_files.append(str(rej_path))
+            print(f"      REJECTED (import check): {target.name} - {import_output}")
 
         elif after_violations >= before_violations:
             reason = (
@@ -809,9 +927,12 @@ def fix_skill(
     include_globs = scan_targets.get("include", ["**/*.py"])
     if not isinstance(include_globs, list):
         include_globs = ["**/*.py"]
+    exclude_globs = scan_targets.get("exclude", [])
+    if not isinstance(exclude_globs, list):
+        exclude_globs = []
 
-    # Resolve projects
     project_lookup = all_project_paths(root)
+    exclude_globs = normalize_exclude_globs(exclude_globs, set(project_lookup.keys()))
     if project_filter:
         if project_filter not in project_lookup:
             eprint(f"Unknown project: {project_filter}")
@@ -857,6 +978,22 @@ def fix_skill(
 
             print(f"\n  Project: {project_name} ({len(tracked)} tracked files)")
 
+            project_snapshots: dict[str, Path] = {}
+            if not dry_run:
+                for tracked_file in tracked:
+                    tracked_path = project_path / tracked_file
+                    if tracked_path.suffix != ".py" or not tracked_path.exists():
+                        continue
+                    rel_hash = hashlib.sha256(tracked_file.encode("utf-8")).hexdigest()[
+                        :12
+                    ]
+                    snap_name = f"snap_{project_name}_{rel_hash}_{tracked_path.name}"
+                    snap_path = tmpdir_path / snap_name
+                    shutil.copy2(tracked_path, snap_path)
+                    project_snapshots[str(tracked_path)] = snap_path
+
+            project_entries: list[dict[str, object]] = []
+
             for rule_obj in fixable_rules:
                 if not isinstance(rule_obj, dict):
                     continue
@@ -867,9 +1004,11 @@ def fix_skill(
                     project_name=project_name,
                     tracked_files=tracked,
                     include_globs=include_globs,
+                    exclude_globs=exclude_globs,
                     dry_run=dry_run,
                     tmpdir=tmpdir_path,
                 )
+                project_entries.append(entry)
                 all_entries.append(entry)
 
                 acc = entry.get("accepted", [])
@@ -881,6 +1020,47 @@ def fix_skill(
                     total_rejected += len(rej)
                 if isinstance(man, list):
                     total_manual += len(man)
+
+            project_accepted = 0
+            for entry in project_entries:
+                accepted_obj = entry.get("accepted", [])
+                if isinstance(accepted_obj, list):
+                    project_accepted += len(accepted_obj)
+            if not dry_run and project_accepted > 0:
+                print(f"\n    Running project tests for {project_name}...")
+                test_ok, test_output = run_project_tests(project_path)
+                if not test_ok:
+                    print(f"    TESTS FAILED - restoring all files in {project_name}")
+                    if test_output:
+                        print(f"    Test output (tail):\n{test_output[-500:]}")
+                    restored_count = 0
+                    for original_path_str, snap_path in project_snapshots.items():
+                        original_path = Path(original_path_str)
+                        if original_path.exists() and snap_path.exists():
+                            shutil.copy2(snap_path, original_path)
+                            restored_count += 1
+                    print(f"    Restored {restored_count} files from snapshot")
+
+                    for entry in project_entries:
+                        accepted_list = entry.get("accepted", [])
+                        if not isinstance(accepted_list, list) or not accepted_list:
+                            continue
+                        moved_count = len(accepted_list)
+                        entry["restored"] = True
+                        entry["restore_reason"] = "project_tests_failed"
+                        for accepted_item in accepted_list:
+                            if isinstance(accepted_item, dict):
+                                accepted_item["reason"] = "project_tests_failed"
+                        rejected_list = entry.get("rejected")
+                        if isinstance(rejected_list, list):
+                            rejected_list.extend(accepted_list)
+                        else:
+                            entry["rejected"] = list(accepted_list)
+                        entry["accepted"] = []
+                        total_rejected += moved_count
+                        total_accepted -= moved_count
+                else:
+                    print(f"    TEST PASS for {project_name}")
 
     # Write fix report
     report_path = root / FIX_REPORT_DEFAULT.format(skill=skill_name)

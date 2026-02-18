@@ -1,0 +1,5 @@
+id: no-hardcoded-version-string-python
+language: python
+rule:
+  kind: module
+  regex: __version__\s*=\s*["\x27]\d+\.\d+\.\d+

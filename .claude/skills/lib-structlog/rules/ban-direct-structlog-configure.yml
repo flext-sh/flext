@@ -1,0 +1,5 @@
+id: ban-direct-structlog-configure-python
+language: python
+rule:
+  kind: module
+  regex: structlog\.configure\(

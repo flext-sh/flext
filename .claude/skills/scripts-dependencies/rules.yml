@@ -9,25 +9,22 @@ scan_targets:
   - .
 rules:
 - id: require-owner-skill-marker
-  type: ripgrep
-  pattern: 'Owner-Skill:'
+  type: ast-grep
   match: absent
   severity: error
   group: ownership
   description: Every dependency script must declare Owner-Skill marker
   fix_auto: false
-  fix_instruction: 'Add ''# Owner-Skill: .claude/skills/scripts-dependencies/SKILL.md''
-    in the first 10 lines.'
-  fix_type: manual
+  fix_instruction: 'Add ''# Owner-Skill: .claude/skills/scripts-dependencies/SKILL.md'' in the first 10 lines.'
+  file: rules/require-owner-skill-marker.yml
 - id: require-docstring
-  type: ripgrep
-  pattern: '"""'
+  type: ast-grep
   match: absent
   severity: error
   group: documentation
   description: Dependency scripts should include a module docstring
   fix_auto: false
   fix_instruction: Add a module docstring near the top of the file using triple quotes.
-  fix_type: manual
+  file: rules/require-docstring.yml
 baseline:
   strategy: total

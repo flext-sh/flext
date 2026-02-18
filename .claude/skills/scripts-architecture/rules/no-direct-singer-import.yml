@@ -1,0 +1,5 @@
+id: no-direct-singer-import-python
+language: python
+rule:
+  kind: module
+  regex: ^(import singer[^_]|from singer[^_]|import meltano|from meltano)

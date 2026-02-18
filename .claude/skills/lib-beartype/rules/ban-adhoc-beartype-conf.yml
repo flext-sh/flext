@@ -1,0 +1,5 @@
+id: ban-adhoc-beartype-conf-python
+language: python
+rule:
+  kind: module
+  regex: BeartypeConf\(

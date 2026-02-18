@@ -1,0 +1,5 @@
+id: require-healthcheck-yaml
+language: yaml
+rule:
+  kind: stream
+  regex: 'HEALTHCHECK|^services:'

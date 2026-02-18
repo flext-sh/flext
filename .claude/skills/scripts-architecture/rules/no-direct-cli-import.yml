@@ -1,0 +1,5 @@
+id: no-direct-cli-import-python
+language: python
+rule:
+  kind: module
+  regex: ^(import click|from click|import rich|from rich|import typer|from typer)

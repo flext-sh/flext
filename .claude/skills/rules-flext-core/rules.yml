@@ -9,26 +9,23 @@ scan_targets:
   - flext-core
 rules:
 - id: require-future-annotations
-  type: ripgrep
-  pattern: from __future__ import annotations
+  type: ast-grep
   match: absent
   severity: error
   group: flext_core_style
   description: Python modules should enable postponed annotation evaluation.
   fix_auto: false
   fix_instruction: Add 'from __future__ import annotations' near the top of each module.
-  fix_type: manual
+  file: rules/require-future-annotations.yml
 - id: require-flext-result-pattern
-  type: ripgrep
-  pattern: ->\s*r\[|FlextResult
+  type: ast-grep
   match: absent
   severity: warning
   group: flext_core_result
   description: Service boundaries should prefer FlextResult-based result flow.
   fix_auto: false
-  fix_instruction: Use FlextResult typing (for example '-> r[...]') on boundary methods
-    where applicable.
-  fix_type: manual
+  fix_instruction: Use FlextResult typing (for example '-> r[...]') on boundary methods where applicable.
+  file: rules/require-flext-result-pattern.yml
 - id: standardize-test-aliases
   type: ast-grep
   file: rules/test-alias-fix.yml
@@ -41,14 +38,13 @@ rules:
   fix_file: rules/test-alias-fix.yml
   fix_instruction: Auto-rewrite test alias assignments to standardized names.
 - id: require-flext-constants-import
-  type: ripgrep
-  pattern: from flext_core.*import.*FlextConstants|from flext_core import.*c
+  type: ast-grep
   match: absent
   severity: warning
   group: constants_standards
   description: Subproject constants.py should import FlextConstants from flext_core.
   fix_auto: false
   fix_instruction: Add 'from flext_core import FlextConstants' and inherit from it.
-  fix_type: manual
+  file: rules/require-flext-constants-import.yml
 baseline:
   strategy: total

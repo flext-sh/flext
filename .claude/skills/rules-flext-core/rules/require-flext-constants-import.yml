@@ -1,0 +1,5 @@
+id: require-flext-constants-import-python
+language: python
+rule:
+  kind: module
+  regex: from flext_core.*import.*FlextConstants|from flext_core import.*c

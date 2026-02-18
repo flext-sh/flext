@@ -14,18 +14,17 @@ scan_targets:
   projects: []
 rules:
 - id: pointer-reference-claude
-  type: ripgrep
-  pattern: CLAUDE\.md
+  type: ast-grep
   match: absent
   severity: error
   group: pointer_policy
   description: Pointer files must reference the canonical 'CLAUDE.md' policy.
   fix_auto: false
   fix_instruction: Add a reference to 'CLAUDE.md' as the single source of truth.
-  fix_type: manual
+  file: rules/pointer-reference-claude.yml
+  count_by: rule_id
 - id: pointer-no-duplication-policy
-  type: ripgrep
-  pattern: Governance|Full Policy|Architecture Overview
+  type: ast-grep
   match: present
   severity: warning
   group: pointer_policy
@@ -33,6 +32,7 @@ rules:
   fix_auto: false
   fix_instruction: Remove detailed policy content and link to 'CLAUDE.md' or 'docs/'
     instead.
-  fix_type: manual
+  file: rules/pointer-no-duplication-policy.yml
+  count_by: rule_id
 baseline:
   strategy: total

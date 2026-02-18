@@ -15,7 +15,6 @@ rules:
   description: Bash scripts must use strict mode (set -euo pipefail).
   fix_auto: false
   fix_instruction: Add 'set -euo pipefail' at the beginning of the script.
-  fix_type: manual
 - id: no-interactive-mode
   type: ast-grep
   file: rules/no-interactive.yml
@@ -24,7 +23,6 @@ rules:
   description: Scripts should avoid interactive prompts (read -p, etc.) for automation.
   fix_auto: false
   fix_instruction: Remove interactive prompts or protect them with a flag.
-  fix_type: manual
 - id: python-main-guard
   type: ast-grep
   file: rules/python-main-guard.yml
@@ -33,6 +31,5 @@ rules:
   description: Python scripts must use `if __name__ == "__main__":` guard.
   fix_auto: false
   fix_instruction: Add `if __name__ == "__main__":` block.
-  fix_type: manual
 baseline:
   strategy: total

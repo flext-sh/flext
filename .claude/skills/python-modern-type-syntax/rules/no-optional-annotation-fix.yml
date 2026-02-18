@@ -1,0 +1,5 @@
+id: no-optional-annotation-fix
+language: python
+rule:
+  pattern: Optional[$A]
+fix: $A | None

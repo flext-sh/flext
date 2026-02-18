@@ -1,0 +1,7 @@
+id: require-ruff-config
+language: yaml
+rule:
+  kind: flow_node
+  regex: (ruff|pytest)
+message: Core gate configuration files should include Ruff config or test targets.
+severity: warning

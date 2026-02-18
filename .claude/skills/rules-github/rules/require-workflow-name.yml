@@ -1,0 +1,5 @@
+id: require-workflow-name-yaml
+language: yaml
+rule:
+  kind: stream
+  regex: '^name:'

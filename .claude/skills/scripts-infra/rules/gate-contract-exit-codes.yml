@@ -1,0 +1,11 @@
+id: gate-contract-exit-codes-bash
+language: bash
+rule:
+  kind: program
+  regex: exit [0123]|EXIT_PASS|EXIT_FAIL|EXIT_USAGE|EXIT_INFRA|sys\.exit\(
+---
+id: gate-contract-exit-codes-python
+language: python
+rule:
+  kind: module
+  regex: exit [0123]|EXIT_PASS|EXIT_FAIL|EXIT_USAGE|EXIT_INFRA|sys\.exit\(

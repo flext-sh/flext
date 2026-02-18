@@ -7,26 +7,21 @@ scan_targets:
   projects: []
 rules:
 - id: prefer-orjson-dumps
-  type: ripgrep
-  pattern: json\.dumps\(
+  type: ast-grep
   severity: warning
   group: orjson_usage
-  description: json.dumps usage in validation utilities should remain a fallback path
-    behind orjson.dumps.
+  description: json.dumps usage in validation utilities should remain a fallback path behind orjson.dumps.
   fix_auto: false
-  fix_instruction: Use orjson.dumps as primary serializer and keep json.dumps only
-    as guarded fallback.
-  fix_type: manual
+  fix_instruction: Use orjson.dumps as primary serializer and keep json.dumps only as guarded fallback.
+  file: rules/prefer-orjson-dumps.yml
 - id: require-sort-keys
-  type: ripgrep
-  pattern: orjson\.OPT_SORT_KEYS
+  type: ast-grep
   match: absent
   severity: error
   group: orjson_determinism
   description: orjson serialization must include OPT_SORT_KEYS for deterministic ordering.
   fix_auto: false
-  fix_instruction: Pass option=orjson.OPT_SORT_KEYS to every orjson.dumps call in
-    this utility.
-  fix_type: manual
+  fix_instruction: Pass option=orjson.OPT_SORT_KEYS to every orjson.dumps call in this utility.
+  file: rules/require-sort-keys.yml
 baseline:
   strategy: total

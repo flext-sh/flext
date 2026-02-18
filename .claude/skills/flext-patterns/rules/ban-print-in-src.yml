@@ -1,0 +1,5 @@
+id: ban-print-in-src-python
+language: python
+rule:
+  kind: module
+  regex: ^\s*print\(

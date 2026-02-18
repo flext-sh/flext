@@ -1,0 +1,5 @@
+id: ban-direct-constructor-python
+language: python
+rule:
+  kind: module
+  regex: FlextResult\(Success|FlextResult\(Failure

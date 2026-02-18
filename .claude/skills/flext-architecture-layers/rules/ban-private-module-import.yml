@@ -1,0 +1,5 @@
+id: ban-private-module-import-python
+language: python
+rule:
+  kind: module
+  regex: from flext_core\._

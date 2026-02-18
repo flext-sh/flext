@@ -1,0 +1,5 @@
+id: no-union-annotation-python
+language: python
+rule:
+  kind: module
+  regex: Union\[

@@ -4,8 +4,8 @@ scan_targets:
   include:
   - src/**/*.py
   exclude:
-  - flext-core/src/flext_core/runtime.py
-  - flext-core/src/flext_core/loggings.py
+  - '**/runtime.py'
+  - '**/loggings.py'
   projects:
   - client-a-oud-mig
   - flext-api
@@ -46,28 +46,28 @@ rules:
   group: structlog_bridge
   count_by: rule_id
   description: Direct structlog.get_logger usage is banned outside FlextLogger/FlextRuntime bridge files.
-  fix_auto: true
-  fix_type: ast-grep
-  fix_file: rules/direct-get-logger-fix.yml
-  fix_instruction: Auto-rewrite structlog.get_logger(name) to FlextLogger.create_module_logger(name) when a single name argument
-    is present.
+  fix_auto: false
+  fix_instruction: "MANUAL ONLY \u2014 do NOT auto-apply. Rewrite structlog.get_logger(name) to\nFlextLogger.create_module_logger(name)\
+    \ AND add 'from flext_core.loggings import\nFlextLogger' if missing. NEVER apply in runtime.py, loggings.py, or parser.py\
+    \ \u2014\nthese files use structlog.get_logger() directly because they are part of the\nlow-level logging bridge. FlextRuntime.get_logger()\
+    \ MUST use structlog.get_logger()\n\u2014 it is the bridge that FlextLogger.__init__() calls. Applying this fix creates\n\
+    circular import: FlextLogger \u2192 FlextRuntime \u2192 FlextLogger. Also excluded: any file\ncontaining 'class FlextRuntime'\
+    \ or 'class FlextLogger' definitions.\n"
 - id: ban-print-in-src
-  type: ripgrep
-  pattern: ^\s*print\(
+  type: ast-grep
   severity: warning
   group: structured_logging
   description: Avoid print statements in Python sources; use structured logging.
   fix_auto: false
   fix_instruction: Replace print(...) with FlextLogger/FlextRuntime logging methods.
-  fix_type: manual
+  file: rules/ban-print-in-src.yml
 - id: ban-direct-structlog-configure
-  type: ripgrep
-  pattern: structlog\.configure\(
+  type: ast-grep
   severity: error
   group: structlog_bridge
   description: Direct structlog.configure usage is banned outside runtime bridge files.
   fix_auto: false
   fix_instruction: Centralize logging setup via FlextRuntime.configure_structlog(...).
-  fix_type: manual
+  file: rules/ban-direct-structlog-configure.yml
 baseline:
   strategy: total

@@ -1,0 +1,5 @@
+id: require-future-annotations-python
+language: python
+rule:
+  kind: module
+  regex: from __future__ import annotations

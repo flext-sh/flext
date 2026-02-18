@@ -1,0 +1,5 @@
+id: ban-direct-oracledb-import-python
+language: python
+rule:
+  kind: module
+  regex: (?:^import oracledb|^from oracledb)

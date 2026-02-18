@@ -1,0 +1,17 @@
+id: missing-final-annotation
+language: python
+rule:
+  kind: assignment
+  all:
+  - has:
+      kind: identifier
+      regex: ^[A-Z][A-Z_]{2,}$
+  - not:
+      has:
+        kind: type
+        regex: Final
+  inside:
+    kind: class_definition
+    stopBy: end
+message: Class constant without Final[type] annotation.
+severity: warning

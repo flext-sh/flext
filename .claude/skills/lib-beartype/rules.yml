@@ -9,22 +9,20 @@ scan_targets:
   projects: []
 rules:
 - id: ban-direct-beartype-decorator
-  type: ripgrep
-  pattern: '@beartype'
+  type: ast-grep
   severity: error
   group: beartype_bridge
   description: Direct @beartype decorator usage is banned outside flext-core bridge files.
   fix_auto: false
   fix_instruction: Remove @beartype and rely on FlextRuntime.enable_runtime_checking().
-  fix_type: manual
+  file: rules/ban-direct-beartype-decorator.yml
 - id: ban-adhoc-beartype-conf
-  type: ripgrep
-  pattern: BeartypeConf\(
+  type: ast-grep
   severity: error
   group: beartype_bridge
   description: Ad hoc BeartypeConf construction is banned outside flext-core bridge files.
   fix_auto: false
   fix_instruction: Reuse flext_core.BEARTYPE_CONF or the runtime bridge configuration path.
-  fix_type: manual
+  file: rules/ban-adhoc-beartype-conf.yml
 baseline:
   strategy: total

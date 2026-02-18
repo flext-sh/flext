@@ -1,0 +1,5 @@
+id: no-fstring-execute-python
+language: python
+rule:
+  kind: module
+  regex: execute\(f["\x27]

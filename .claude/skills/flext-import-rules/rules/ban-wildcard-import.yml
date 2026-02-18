@@ -1,0 +1,5 @@
+id: ban-wildcard-import-python
+language: python
+rule:
+  kind: module
+  regex: from .+ import \*

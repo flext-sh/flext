@@ -26,23 +26,21 @@ scan_targets:
   - client-b-meltano-native
 rules:
 - id: ban-wildcard-import
-  type: ripgrep
-  pattern: from .+ import \*
+  type: ast-grep
   severity: error
   group: import_hygiene
   description: Wildcard imports are banned.
   fix_auto: false
   fix_instruction: Replace wildcard imports with explicit imported symbols.
-  fix_type: manual
+  file: rules/ban-wildcard-import.yml
 - id: ban-relative-import
-  type: ripgrep
-  pattern: from \.\.|from \.
+  type: ast-grep
   severity: error
   group: import_hygiene
   description: Relative imports are banned in this workspace.
   fix_auto: false
   fix_instruction: Use absolute package imports instead of relative imports.
-  fix_type: manual
+  file: rules/ban-relative-import.yml
 - id: ban-legacy-typing-imports
   type: ast-grep
   file: rules/legacy-typing-imports.yml
@@ -58,40 +56,36 @@ rules:
   fix_description: Rewrites typing.X attribute usages to builtin equivalents. Import line cleanup requires manual removal
     of unused typing imports.
 - id: ban-direct-oracledb-import
-  type: ripgrep
-  pattern: (?:^import oracledb|^from oracledb)
+  type: ast-grep
   severity: error
   group: domain_isolation
-  description: Direct oracledb import — use flext-db-oracle wrapper instead.
+  description: "Direct oracledb import \u2014 use flext-db-oracle wrapper instead."
   fix_auto: false
   fix_instruction: Import from flext_db_oracle instead of oracledb directly.
-  fix_type: manual
+  file: rules/ban-direct-oracledb-import.yml
 - id: ban-direct-sqlalchemy-import
-  type: ripgrep
-  pattern: (?:^import sqlalchemy|^from sqlalchemy)
+  type: ast-grep
   severity: error
   group: domain_isolation
-  description: Direct sqlalchemy import — use flext-db-oracle wrapper instead.
+  description: "Direct sqlalchemy import \u2014 use flext-db-oracle wrapper instead."
   fix_auto: false
   fix_instruction: Import from flext_db_oracle instead of sqlalchemy directly.
-  fix_type: manual
+  file: rules/ban-direct-sqlalchemy-import.yml
 - id: ban-direct-ldap3-import
-  type: ripgrep
-  pattern: (?:^import ldap3|^from ldap3)
+  type: ast-grep
   severity: error
   group: domain_isolation
-  description: Direct ldap3 import — use flext-ldap wrapper instead.
+  description: "Direct ldap3 import \u2014 use flext-ldap wrapper instead."
   fix_auto: false
   fix_instruction: Import from flext_ldap instead of ldap3 directly.
-  fix_type: manual
+  file: rules/ban-direct-ldap3-import.yml
 - id: ban-direct-grpc-import
-  type: ripgrep
-  pattern: (?:^import grpc|^from grpc)
+  type: ast-grep
   severity: error
   group: domain_isolation
-  description: Direct grpc import — use flext-grpc wrapper instead.
+  description: "Direct grpc import \u2014 use flext-grpc wrapper instead."
   fix_auto: false
   fix_instruction: Import from flext_grpc instead of grpc directly.
-  fix_type: manual
+  file: rules/ban-direct-grpc-import.yml
 baseline:
   strategy: total

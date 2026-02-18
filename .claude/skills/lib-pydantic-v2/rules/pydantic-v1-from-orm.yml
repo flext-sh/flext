@@ -1,0 +1,5 @@
+id: pydantic-v1-from-orm-python
+language: python
+rule:
+  kind: module
+  regex: \.from_orm\(

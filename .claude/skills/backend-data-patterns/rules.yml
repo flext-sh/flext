@@ -1,58 +1,60 @@
 skill: backend-data-patterns
-description: "Enforce constants standardization and database model patterns across FLEXT projects."
-
+description: Enforce constants standardization and database model patterns across
+  FLEXT projects.
 scan_targets:
-  include: ["**/constants.py", "**/models.py"]
-  exclude: ["**/test_*", "**/tests/**"]
+  include:
+  - '**/constants.py'
+  - '**/models.py'
+  exclude:
+  - '**/test_*'
+  - '**/tests/**'
   projects:
-    [
-      "flext-core",
-      "flext-api",
-      "flext-auth",
-      "flext-cli",
-      "flext-db-oracle",
-      "flext-grpc",
-      "flext-ldap",
-      "flext-ldif",
-      "flext-meltano",
-      "flext-observability",
-      "flext-plugin",
-      "flext-quality",
-      "flext-web",
-      "client-a-oud-mig",
-      "client-b-meltano-native",
-    ]
-
+  - flext-core
+  - flext-api
+  - flext-auth
+  - flext-cli
+  - flext-db-oracle
+  - flext-grpc
+  - flext-ldap
+  - flext-ldif
+  - flext-meltano
+  - flext-observability
+  - flext-plugin
+  - flext-quality
+  - flext-web
+  - client-a-oud-mig
+  - client-b-meltano-native
 rules:
-  - id: no-hardcoded-version-in-constants
-    type: ripgrep
-    pattern: '^\s*VERSION\s*[:=]\s*["\x27]\d+\.\d+'
-    severity: warning
-    group: constants_hygiene
-    description: "Hardcoded VERSION string in constants.py — should reference __version__.py or importlib.metadata."
-    fix_auto: false
-    fix_type: manual
-    fix_instruction: "Replace hardcoded VERSION with: from <package>.__version__ import __version__; VERSION = __version__"
-
-  - id: no-bare-constant-outside-class
-    type: ripgrep
-    pattern: '^[A-Z][A-Z_]{2,}\s*[:=]\s*'
-    severity: warning
-    group: constants_hygiene
-    description: "Top-level ALL_CAPS constant outside a class in constants.py — should be nested in a [Project]Constants class."
-    fix_auto: false
-    fix_type: manual
-    fix_instruction: "Move loose constants into a [Project]Constants class with nested domain organization."
-
-  - id: missing-final-annotation
-    type: ripgrep
-    pattern: '^\s+[A-Z][A-Z_]{2,}\s*[:=]\s*(?!.*Final)'
-    severity: warning
-    group: constants_hygiene
-    description: "Class constant without Final[type] annotation."
-    fix_auto: false
-    fix_type: manual
-    fix_instruction: "Add Final[type] annotation: MY_CONST: Final[str] = 'value'"
-
+- id: no-hardcoded-version-in-constants
+  type: ast-grep
+  severity: warning
+  group: constants_hygiene
+  description: Hardcoded VERSION string in constants.py — should reference __version__.py
+    or importlib.metadata.
+  fix_auto: false
+  fix_instruction: 'Replace hardcoded VERSION with: from <package>.__version__ import
+    __version__; VERSION = __version__'
+  file: rules/no-hardcoded-version-in-constants.yml
+  count_by: rule_id
+- id: no-bare-constant-outside-class
+  type: ast-grep
+  severity: warning
+  group: constants_hygiene
+  description: Top-level ALL_CAPS constant outside a class in constants.py — should
+    be nested in a [Project]Constants class.
+  fix_auto: false
+  fix_instruction: Move loose constants into a [Project]Constants class with nested
+    domain organization.
+  file: rules/no-bare-constant-outside-class.yml
+  count_by: rule_id
+- id: missing-final-annotation
+  type: ast-grep
+  severity: warning
+  group: constants_hygiene
+  description: Class constant without Final[type] annotation.
+  fix_auto: false
+  fix_instruction: 'Add Final[type] annotation: MY_CONST: Final[str] = ''value'''
+  file: rules/missing-final-annotation.yml
+  count_by: rule_id
 baseline:
   strategy: total

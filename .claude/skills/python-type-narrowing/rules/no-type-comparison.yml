@@ -1,0 +1,5 @@
+id: no-type-comparison-python
+language: python
+rule:
+  kind: module
+  regex: type\([^)]+\)\s*(==|!=|is )\s*

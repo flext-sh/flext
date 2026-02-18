@@ -1,0 +1,9 @@
+id: no-inline-style
+language: html
+rule:
+  kind: attribute
+  has:
+    kind: attribute_name
+    regex: ^style$
+message: Inline style attribute — use CSS classes instead.
+severity: warning

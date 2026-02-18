@@ -1,0 +1,5 @@
+id: detect-todo-fixme-python
+language: python
+rule:
+  kind: module
+  regex: '#\s*(TODO|FIXME|HACK|XXX)\b'

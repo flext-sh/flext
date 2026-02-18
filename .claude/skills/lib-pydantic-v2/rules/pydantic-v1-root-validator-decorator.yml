@@ -1,0 +1,5 @@
+id: pydantic-v1-root-validator-decorator-python
+language: python
+rule:
+  kind: module
+  regex: '@root_validator\('

@@ -1,51 +1,42 @@
 skill: backend-api-patterns
-description: "Detect SQL injection patterns and unsafe query construction."
-
+description: Detect SQL injection patterns and unsafe query construction.
 scan_targets:
-  include: ["**/*.py"]
+  include:
+  - '**/*.py'
   exclude: []
   projects: []
-
 rules:
-  - id: no-fstring-execute
-    type: ripgrep
-    pattern: 'execute\(f["\x27]'
-    severity: error
-    group: sql_injection
-    description: "f-string in execute() — SQL injection risk."
-    fix_auto: false
-    fix_type: manual
-    fix_instruction: "Use parameterized queries: execute('SELECT ... WHERE id = %s', (value,))."
-
-  - id: no-format-execute
-    type: ripgrep
-    pattern: 'execute\(["\x27].*\.format\('
-    severity: error
-    group: sql_injection
-    description: ".format() in execute() — SQL injection risk."
-    fix_auto: false
-    fix_type: manual
-    fix_instruction: "Use parameterized queries instead of .format()."
-
-  - id: no-concat-execute
-    type: ripgrep
-    pattern: 'execute\(["\x27].*\+\s'
-    severity: error
-    group: sql_injection
-    description: "String concatenation in execute() — SQL injection risk."
-    fix_auto: false
-    fix_type: manual
-    fix_instruction: "Use parameterized queries instead of string concatenation."
-
-  - id: no-hardcoded-credentials
-    type: ripgrep
-    pattern: '(password|secret|api_key|token)\s*=\s*["\x27][^"\x27]{4,}'
-    severity: error
-    group: security
-    description: "Possible hardcoded credential in source code."
-    fix_auto: false
-    fix_type: manual
-    fix_instruction: "Use environment variables or vault for secrets."
-
+- id: no-fstring-execute
+  type: ast-grep
+  severity: error
+  group: sql_injection
+  description: "f-string in execute() \u2014 SQL injection risk."
+  fix_auto: false
+  fix_instruction: 'Use parameterized queries: execute(''SELECT ... WHERE id = %s'', (value,)).'
+  file: rules/no-fstring-execute.yml
+- id: no-format-execute
+  type: ast-grep
+  severity: error
+  group: sql_injection
+  description: ".format() in execute() \u2014 SQL injection risk."
+  fix_auto: false
+  fix_instruction: Use parameterized queries instead of .format().
+  file: rules/no-format-execute.yml
+- id: no-concat-execute
+  type: ast-grep
+  severity: error
+  group: sql_injection
+  description: "String concatenation in execute() \u2014 SQL injection risk."
+  fix_auto: false
+  fix_instruction: Use parameterized queries instead of string concatenation.
+  file: rules/no-concat-execute.yml
+- id: no-hardcoded-credentials
+  type: ast-grep
+  severity: error
+  group: security
+  description: Possible hardcoded credential in source code.
+  fix_auto: false
+  fix_instruction: Use environment variables or vault for secrets.
+  file: rules/no-hardcoded-credentials.yml
 baseline:
   strategy: total

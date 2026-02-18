@@ -10,24 +10,23 @@ scan_targets:
   - .
 rules:
 - id: require-workflow-name
-  type: ripgrep
-  pattern: '^name:'
+  type: ast-grep
   match: absent
   severity: error
   group: github_workflows
   description: Workflow files should define a top-level name.
   fix_auto: false
   fix_instruction: Add a top-level 'name:' field to each workflow YAML file.
-  fix_type: manual
+  file: rules/require-workflow-name.yml
 - id: ban-hardcoded-secrets
-  type: ripgrep
-  pattern: (?i)\b(password|secret|token)\b\s*:\s*(?!\$\{\{)["']?[A-Za-z0-9_\-]{8,}
+  type: ast-grep
   severity: error
   group: github_security
   description: Do not hardcode secret-like values in GitHub configuration.
   fix_auto: false
   fix_instruction: Use GitHub encrypted secrets or inherited env references instead
     of literal secret values.
-  fix_type: manual
+  file: rules/ban-hardcoded-secrets.yml
+  count_by: rule_id
 baseline:
   strategy: total

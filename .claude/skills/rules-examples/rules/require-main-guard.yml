@@ -1,0 +1,5 @@
+id: require-main-guard-python
+language: python
+rule:
+  kind: module
+  regex: if __name__\s*==\s*["']__main__["']

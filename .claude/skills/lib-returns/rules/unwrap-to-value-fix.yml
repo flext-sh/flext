@@ -1,7 +1,0 @@
-id: fix-unwrap-to-value
-language: python
-rule:
-  pattern: $RESULT.unwrap()
-fix: $RESULT.value
-message: "Rewrite .unwrap() -> .value"
-severity: warning

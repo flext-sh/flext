@@ -1,0 +1,6 @@
+id: no-direct-db-import-python
+language: python
+rule:
+  kind: module
+  regex: ^(import sqlalchemy|from sqlalchemy|import oracledb|from oracledb|import
+    cx_Oracle|from cx_Oracle|import ldap3|from ldap3)

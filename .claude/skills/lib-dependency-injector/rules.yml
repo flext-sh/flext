@@ -1,6 +1,5 @@
 skill: lib-dependency-injector
-description: Prevent direct dependency_injector imports outside flext-core bridge
-  modules.
+description: Prevent direct dependency_injector imports outside flext-core bridge modules.
 scan_targets:
   include:
   - '**/*.py'
@@ -38,15 +37,12 @@ scan_targets:
   - client-b-meltano-native
 rules:
 - id: ban-direct-di-import
-  type: ripgrep
-  pattern: from dependency_injector|import dependency_injector
+  type: ast-grep
   severity: error
   group: di_bridge
-  description: Direct dependency_injector imports are banned outside flext-core bridge
-    files.
+  description: Direct dependency_injector imports are banned outside flext-core bridge files.
   fix_auto: false
-  fix_instruction: Use FlextContainer/FlextRuntime bridge APIs instead of importing
-    dependency_injector directly.
-  fix_type: manual
+  fix_instruction: Use FlextContainer/FlextRuntime bridge APIs instead of importing dependency_injector directly.
+  file: rules/ban-direct-di-import.yml
 baseline:
   strategy: total

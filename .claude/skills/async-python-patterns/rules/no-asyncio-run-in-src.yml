@@ -1,0 +1,5 @@
+id: no-asyncio-run-in-src-python
+language: python
+rule:
+  kind: module
+  regex: asyncio\.run\(
