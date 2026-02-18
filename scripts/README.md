@@ -1,8 +1,26 @@
-# FLEXT Git History Cleanup Scripts
+# FLEXT Scripts
 
-Quick reference for git history reorganization tools.
+[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-## Quick Start (Safe 4-Step Process)
+Collection of maintenance, validation, and automation scripts for the FLEXT ecosystem.
+
+**Reviewed**: 2026-02-17 | **Version**: 0.10.0-dev
+
+Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
+
+## Installation
+
+Ensure you have the required dependencies:
+
+```bash
+pip install git-filter-repo
+```
+
+## Usage
+
+### Quick Start (Safe 4-Step Process)
 
 ```bash
 # Step 1: DETECT CRUFT (analyzes .gitignore and git history)
@@ -18,7 +36,7 @@ python3 scripts/git_ultimate_cleanup.py --dry-run
 python3 scripts/git_ultimate_cleanup.py --all --push-all
 ```
 
-## Scripts
+## Key Features
 
 **THE ONLY SCRIPT YOU NEED**: `git_ultimate_cleanup.py`
 
@@ -34,7 +52,9 @@ python3 scripts/git_ultimate_cleanup.py --all --push-all
 | `python3 scripts/git_ultimate_cleanup.py --backup-only`     | **Backup only** - Creates external backup without cleanup | ✅ SAFE        |
 | `python3 scripts/git_ultimate_cleanup.py --restore-remotes` | **Restore remotes** - Re-add after filter-repo            | ✅ SAFE        |
 
-## Detailed Workflow
+## Architecture
+
+### Detailed Workflow
 
 ### 1. Cruft Detection (Safe)
 
@@ -273,3 +293,11 @@ git log --oneline --format='%h %an: %s' | head -20
 ---
 
 **Remember**: Always test in temporary clone before applying to production!
+
+## Contributing
+
+Please see our [Contributing Guide](../docs/CONTRIBUTING.md) for details.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.

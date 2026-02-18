@@ -1,0 +1,67 @@
+skill: scripts-architecture
+description: "Enforce domain separation: no direct imports of singer, database, HTTP, CLI libraries in leaf projects"
+
+scan_targets:
+  include: ["**/src/**/*.py"]
+  exclude: []
+  projects:
+    - flext-tap-oracle-oic
+    - flext-tap-oracle
+    - flext-tap-oracle-wms
+    - flext-target-oracle
+    - flext-target-oracle-wms
+    - flext-target-oracle-oic
+    - flext-target-ldap
+    - flext-target-ldif
+    - client-a-oud-mig
+    - flext-dbt-oracle
+    - flext-dbt-ldap
+    - flext-dbt-ldif
+
+rules:
+  - id: no-direct-singer-import
+    type: ripgrep
+    pattern: '^(import singer[^_]|from singer[^_]|import meltano|from meltano)'
+    severity: error
+    group: singer_separation
+    description: "Direct Singer/Meltano imports banned"
+    fix_auto: false
+    fix_instruction: "Replace direct singer/meltano imports with flext-meltano wrappers."
+
+  - id: no-direct-db-import
+    type: ripgrep
+    pattern: '^(import sqlalchemy|from sqlalchemy|import oracledb|from oracledb|import cx_Oracle|from cx_Oracle|import ldap3|from ldap3)'
+    severity: error
+    group: database_separation
+    description: "Direct database library imports banned"
+    fix_auto: false
+    fix_instruction: "Replace direct sqlalchemy/oracledb/cx_Oracle/ldap3 imports with flext-db-oracle/flext-ldap/flext-ldif wrappers."
+
+  - id: no-direct-http-import
+    type: ripgrep
+    pattern: '^(import requests|from requests|import httpx|from httpx|import urllib|from urllib)'
+    severity: error
+    group: http_separation
+    description: "Direct HTTP client imports banned"
+    fix_auto: false
+    fix_instruction: "Replace direct requests/httpx/urllib imports with flext-api wrappers."
+
+  - id: no-direct-cli-import
+    type: ripgrep
+    pattern: '^(import click|from click|import rich|from rich|import typer|from typer)'
+    severity: error
+    group: cli_separation
+    description: "Direct CLI library imports banned"
+    fix_auto: false
+    fix_instruction: "Replace direct click/rich/typer imports with flext-cli wrappers."
+
+  - id: requires-flext-core
+    type: ripgrep
+    pattern: '(from flext_core|import flext_core)'
+    match: absent
+    severity: warning
+    group: flext_core_integration
+    description: "Projects should import flext_core"
+
+baseline:
+  strategy: total

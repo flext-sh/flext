@@ -23,6 +23,9 @@ description: Maintenance and git scripts — health checks, workspace status, gi
 - `scripts/docs_sync_automation.sh`
 - `scripts/docs_toc_generator.py`
 - `scripts/markdown_lint_workspace.py`
+- `scripts/maintenance/check_workspace_hygiene.py`
+- `scripts/maintenance/check_dependabot_config.py`
+- `scripts/maintenance/check_poetry_health.py`
 
 ## References
 
@@ -93,3 +96,6 @@ Why bad: Destructive without confirmation or dry-run.
 | `scripts/docs_sync_automation.sh` | Documentation sync automation | `bash scripts/docs_sync_automation.sh` |
 | `scripts/docs_toc_generator.py` | Documentation TOC generator | `python scripts/docs_toc_generator.py` |
 | `scripts/markdown_lint_workspace.py` | Lint markdown workspace-wide | `python scripts/markdown_lint_workspace.py` |
+| `scripts/maintenance/check_workspace_hygiene.py` | Workspace cleanliness validation | `python scripts/maintenance/check_workspace_hygiene.py` |
+| `scripts/maintenance/check_dependabot_config.py` | Dependabot config standardization | `python scripts/maintenance/check_dependabot_config.py` |
+| `scripts/maintenance/check_poetry_health.py` | Poetry lock health and outdated deps | `python scripts/maintenance/check_poetry_health.py` |

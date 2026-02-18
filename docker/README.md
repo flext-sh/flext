@@ -1,17 +1,12 @@
 # FLEXT Docker Infrastructure - Centralized Management
 
-**Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
-
-
-**FLEXT Docker Infrastructure** provides centralized container management for the entire ecosystem. This directory contains ALL Docker artifacts, eliminating duplication and ensuring consistent container management across all projects.
-
 **Reviewed**: 2026-02-17 | **Version**: 0.10.0-dev
 
-Part of the [FLEXT](https://github.com/flext/flext) ecosystem.
+Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 
 ---
 
-## 📁 DIRECTORY STRUCTURE
+## Key Features
 
 ```
 ~/flext/docker/
@@ -25,7 +20,11 @@ Part of the [FLEXT](https://github.com/flext/flext) ecosystem.
 
 ---
 
-## 🚀 USAGE
+## Installation
+
+Ensure you have Docker and Docker Compose installed.
+
+## Usage
 
 ### For pytest Tests
 
@@ -43,7 +42,7 @@ from flext_tests.fixtures import (
 
 # Example 1: Using Generic OpenLDAP for LDAP/LDIF projects
 def test_with_ldap(ldap_container):
-    \"\"\"Test using generic OpenLDAP container (port 3390).\"\"\"
+    """Test using generic OpenLDAP container (port 3390)."""
     # Container automatically started and managed
     # Cleanup handled automatically after test
     connection_string = ldap_container  # ldap://localhost:3390
@@ -51,14 +50,14 @@ def test_with_ldap(ldap_container):
 
 # Example 2: Using client-a OUD for client-a migration
 def test_client-a_migration(client-a_oud_container):
-    \"\"\"Test using client-a OUD container (port 3389).\"\"\"
+    """Test using client-a OUD container (port 3389)."""
     # client-a-specific OpenLDAP with dc=invaliddc, cn=invalid_user
     connection_string = client-a_oud_container  # ldap://localhost:3389
     # Use for client-a-oud-mig project exclusively
 
 # Example 3: Using Oracle Database for Oracle projects
 def test_with_oracle(oracle_container):
-    \"\"\"Test using Oracle Database (port 1522).\"\"\"
+    """Test using Oracle Database (port 1522)."""
     # Standard Oracle Database
     connection_string = oracle_container  # oracle://flext:password@localhost:1522/FLEXT
     # Use for flext-db-oracle, flext-(dbt|tap|target)-oracle
@@ -97,7 +96,9 @@ if test_failed:
 
 ---
 
-## 🏗️ DOCKER COMPOSE FILES (17 CENTRALIZED)
+## Architecture
+
+### DOCKER COMPOSE FILES (17 CENTRALIZED)
 
 All compose files follow naming convention: `docker-compose.{project}-{purpose}.yml`
 
@@ -155,7 +156,7 @@ docker-compose -f ~/flext/docker/docker-compose.db-oracle.yml up -d
 
 ---
 
-## 🐳 DOCKERFILES (21 CONSOLIDATED)
+### DOCKERFILES (21 CONSOLIDATED)
 
 All Dockerfiles are consolidated in `images/` directory with descriptive names:
 
@@ -187,7 +188,7 @@ docker build -f ~/flext/docker/images/Dockerfile.flext-api -t flext-api:latest ~
 
 ---
 
-## 🧹 CONTAINER LIFECYCLE MANAGEMENT
+### CONTAINER LIFECYCLE MANAGEMENT
 
 ### Automatic Cleanup
 
@@ -221,7 +222,7 @@ Dirty state tracked in: `~/.flext/docker_state.json`
 
 ---
 
-## 🔧 MIGRATION FROM OLD PATTERNS
+### MIGRATION FROM OLD PATTERNS
 
 ### Old Pattern (DEPRECATED)
 
@@ -255,7 +256,7 @@ from flext_tests.fixtures import postgres_container
 
 ---
 
-## 🚨 PROHIBITED PATTERNS
+### PROHIBITED PATTERNS
 
 ### NEVER Create These Files
 
@@ -273,7 +274,7 @@ from flext_tests.fixtures import postgres_container
 
 ---
 
-## 📊 VALIDATION
+### VALIDATION
 
 ### Verify Docker Standardization
 
@@ -305,7 +306,7 @@ ls ~/flext/docker/images/Dockerfile.* | wc -l
 
 ---
 
-## 📖 FURTHER READING
+### FURTHER READING
 
 - **FlextTestsDocker API**: See `flext-core/src/flext_tests/docker.py` (1649 lines)
 - **Centralized Fixtures**: See `flext-core/src/flext_tests/fixtures/docker_fixtures.py`
@@ -322,3 +323,11 @@ ls ~/flext/docker/images/Dockerfile.* | wc -l
 
 **Last Updated**: 2025-09-30
 **Maintained By**: FLEXT Core Team
+
+## Contributing
+
+Please see our [Contributing Guide](../docs/CONTRIBUTING.md) for details.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.

@@ -1,8 +1,18 @@
 # FLEXT Examples
 
-This directory contains comprehensive examples demonstrating advanced FLEXT capabilities for enterprise data integration.
+[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-## Examples Overview
+Comprehensive examples demonstrating advanced FLEXT capabilities for enterprise data integration.
+
+**Reviewed**: 2026-02-17 | **Version**: 0.10.0-dev
+
+Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
+
+## Key Features
+
+### Examples Overview
 
 ### 1. ACL Processing Example (`acl_processing_example.py`)
 
@@ -103,7 +113,17 @@ Production-ready enterprise capabilities:
 - Correlation ID tracking for distributed operations
 - Context management across pipeline stages
 
-## Usage Examples
+## Installation
+
+Ensure you have the required dependencies for the example scripts:
+
+```bash
+pip install flext-core flext-ldif flext-api
+```
+
+## Usage
+
+### Usage Examples
 
 ### Basic ACL Processing
 
@@ -195,4 +215,11 @@ These examples demonstrate integration with the complete FLEXT ecosystem:
 - **FLEXT-LDIF**: LDAP-specific processing capabilities
 - **FLEXT-Core**: Foundation patterns and utilities
 - **FLEXT-Result**: Railway pattern implementation
-- **FLEXT-Services**: Service-oriented architecture patterns
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](../docs/CONTRIBUTING.md) for details.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.

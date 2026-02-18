@@ -1,8 +1,18 @@
 # FLEXT Documentation Portal
 
-## Overview
+[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-This folder is the curated portal for every FLEXT document; the entry point at `docs/index.md` keeps the picture fresh while the subdirectories host detailed guides, standards, and project manuals. Use this page when you need a quick refresher about what the documentation contains and how to reach the pieces you care about.
+Curated portal for every FLEXT document, detailed guides, standards, and project manuals.
+
+**Reviewed**: 2026-02-17 | **Version**: 0.10.0-dev
+
+Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
+
+## Key Features
+
+### Overview
 
 ## Highlighted Content
 
@@ -11,6 +21,8 @@ This folder is the curated portal for every FLEXT document; the entry point at `
 - **[Guides](guides/README.md)** – Installation, development workflows, testing playbooks, configuration, and troubleshooting live inside the dedicated Guides folder and its companion files.
 - **[Automation Skill Pattern](guides/skill-automation-pattern.md)** – Canonical pattern for future automation work (skill + checker + orchestrator + docs + baseline/report artifacts).
 - **[Getting Started](guides/getting-started.md)** – Step-by-step setup, sample projects, and onboarding notes appear in the Getting Started document within that folder.
+
+## Architecture
 
 ### Architecture & Patterns
 
@@ -33,7 +45,17 @@ This folder is the curated portal for every FLEXT document; the entry point at `
 - **Pattern Analysis** – Metadata harvesters detect outdated anchors and unused references, then feed results back into the standards docs for rewrites and cleanup.
 - **Batch Operations** – When an API surface changes, a single report reroutes every link in `docs/README.md`/`docs/index.md` so future readers get current details without manual hunting.
 
-## Quick Links
+## Installation
+
+Documentation does not require installation. However, you can run the documentation server:
+
+```bash
+mkdocs serve
+```
+
+## Usage
+
+### Quick Links
 
 - [Documentation Index](index.md) – Aggregates highlights, project statuses, and recent updates.
 - [Architecture Guide](architecture/README.md) – Start with the architecture overview, then drill into the pattern documentation.
@@ -44,12 +66,16 @@ This folder is the curated portal for every FLEXT document; the entry point at `
 - [Automation Skill Pattern](guides/skill-automation-pattern.md) – Reusable standard for creating script-backed skills and validation automation.
 - Quality Reports – The reports folder holds the latest artifacts from the Ruff, Pyrefly, and Bandit pipelines.
 
-## Support & Contributions
+## Contributing
 
 - **Email**: <dev@flext.com>
 - **Issues**: <https://github.com/flext-sh/flext/issues>
 - **Contributing**: The standards guide outlines how to propose content, including the expectation that every submission passes linter checks and links to the relevant `lsp_diagnostics` configuration.
 - **Review Cycle**: New or modified documentation flows through the same CI that exercises `flext-core`; reference the standards checklist and the lint-output logs before submitting.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
 
 ---
 
