@@ -1,5 +1,10 @@
-id: requires-singer-message-handling-python
+id: requires-singer-message-handling
 language: python
 rule:
-  kind: module
-  regex: singer\.(write_message|RecordMessage|SchemaMessage|StateMessage)
+  any:
+    - pattern: singer.write_message($$$ARGS)
+    - pattern: singer.RecordMessage($$$ARGS)
+    - pattern: singer.SchemaMessage($$$ARGS)
+    - pattern: singer.StateMessage($$$ARGS)
+message: "Singer message handling found (tracking)"
+severity: warning

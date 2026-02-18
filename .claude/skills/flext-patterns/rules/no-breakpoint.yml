@@ -1,5 +1,8 @@
-id: no-breakpoint-python
+id: no-breakpoint
 language: python
 rule:
-  kind: module
-  regex: breakpoint\(\)|import pdb|pdb\.set_trace
+  any:
+    - pattern: "breakpoint()"
+    - pattern: "pdb.set_trace()"
+message: "Debug breakpoint in code"
+severity: error

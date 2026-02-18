@@ -1,5 +1,8 @@
-id: require-main-guard-python
+id: require-main-guard
 language: python
 rule:
-  kind: module
-  regex: if __name__\s*==\s*["']__main__["']
+  pattern: |
+    if __name__ == "__main__":
+        $$$BODY
+message: "Main guard found (tracking)"
+severity: warning

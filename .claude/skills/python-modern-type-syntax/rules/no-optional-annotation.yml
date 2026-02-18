@@ -1,5 +1,8 @@
-id: no-optional-annotation-python
+id: no-optional-annotation
 language: python
 rule:
-  kind: module
-  regex: Optional\[
+  pattern:
+    context: "a: Optional[$T]"
+    selector: generic_type
+message: "Optional[X] annotation - use X | None syntax"
+severity: warning

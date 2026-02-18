@@ -1,6 +1,16 @@
-id: no-direct-http-import-python
+id: no-direct-http-import
 language: python
 rule:
-  kind: module
-  regex: ^(import requests|from requests|import httpx|from httpx|import urllib|from
-    urllib)
+  any:
+    - kind: import_statement
+      has:
+        kind: dotted_name
+        regex: "^(requests|httpx|urllib)$"
+        stopBy: end
+    - kind: import_from_statement
+      has:
+        kind: dotted_name
+        field: module_name
+        regex: "^(requests|httpx|urllib)"
+message: "Direct HTTP library import - use flext_core adapter"
+severity: error

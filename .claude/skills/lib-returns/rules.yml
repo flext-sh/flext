@@ -32,7 +32,9 @@ rules:
   group: result_flow
   count_by: rule_id
   description: Detect deprecated .unwrap() calls on FlextResult-like values.
-  fix_auto: false
+  fix_auto: true
+  fix_type: ast-grep
+  fix_file: rules/unwrap-to-value-fix.yml
   fix_instruction: "MANUAL ONLY \u2014 do NOT auto-apply. The .unwrap() \u2192 .value rewrite is ONLY valid on\nFlextResult\
     \ (aliased as r[T]) objects after an is_success guard. NEVER rewrite\n.unwrap() on returns library types (Success, Some,\
     \ IOSuccess, Failure, Nothing,\nIOFailure) \u2014 they use .unwrap() as their public API and do NOT have a .value\nattribute.\

@@ -7,76 +7,116 @@ scan_targets:
   projects: []
 rules:
 - id: readme-preamble
-  type: ast-grep
-  match: absent
+  type: custom
   group: readme_preamble
   description: README.md must start with a standardized preamble (Reviewed|Version).
   fix_auto: false
   fix_instruction: 'Add preamble: ''**Reviewed**: YYYY-MM-DD | **Version**: X.Y.Z'''
-  file: rules/readme-preamble.yml
-  count_by: rule_id
+  script: ../../../scripts/core/text_pattern_scanner.py
+  args:
+  - --pattern
+  - \*\*Reviewed\*\*.*\*\*Version\*\*
+  - --match
+  - absent
+  - --include
+  - README.md
 - id: readme-ecosystem-link
-  type: ast-grep
-  match: absent
+  type: custom
   group: readme_preamble
   description: README.md must link back to 'flext-sh/flext'.
   fix_auto: false
   fix_instruction: Add 'Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.'
-  file: rules/readme-ecosystem-link.yml
-  count_by: rule_id
+  script: ../../../scripts/core/text_pattern_scanner.py
+  args:
+  - --pattern
+  - Part of the.*FLEXT.*ecosystem
+  - --match
+  - absent
+  - --include
+  - README.md
 - id: readme-has-key-features
-  type: ast-grep
-  match: absent
+  type: custom
   group: readme_structure
   description: README.md must have a '## Key Features' section.
   fix_auto: false
   fix_instruction: Add '## Key Features' section listing specific capabilities.
-  file: rules/readme-has-key-features.yml
-  count_by: rule_id
+  script: ../../../scripts/core/text_pattern_scanner.py
+  args:
+  - --pattern
+  - ^## Key Features
+  - --match
+  - absent
+  - --include
+  - README.md
 - id: readme-has-installation
-  type: ast-grep
-  match: absent
+  type: custom
   group: readme_structure
   description: README.md must have a '## Installation' section.
   fix_auto: false
   fix_instruction: Add '## Installation' section with setup steps.
-  file: rules/readme-has-installation.yml
-  count_by: rule_id
+  script: ../../../scripts/core/text_pattern_scanner.py
+  args:
+  - --pattern
+  - ^## Installation
+  - --match
+  - absent
+  - --include
+  - README.md
 - id: readme-has-usage
-  type: ast-grep
-  match: absent
+  type: custom
   group: readme_structure
   description: README.md must have a '## Usage' section.
   fix_auto: false
   fix_instruction: Add '## Usage' section with examples.
-  file: rules/readme-has-usage.yml
-  count_by: rule_id
+  script: ../../../scripts/core/text_pattern_scanner.py
+  args:
+  - --pattern
+  - ^## Usage
+  - --match
+  - absent
+  - --include
+  - README.md
 - id: readme-has-architecture
-  type: ast-grep
-  match: absent
+  type: custom
   group: readme_structure
   description: README.md must have a '## Architecture' section.
   fix_auto: false
   fix_instruction: Add '## Architecture' section explaining internals.
-  file: rules/readme-has-architecture.yml
-  count_by: rule_id
+  script: ../../../scripts/core/text_pattern_scanner.py
+  args:
+  - --pattern
+  - ^## Architecture
+  - --match
+  - absent
+  - --include
+  - README.md
 - id: readme-has-contributing
-  type: ast-grep
-  match: absent
+  type: custom
   group: readme_structure
   description: README.md must have a '## Contributing' section.
   fix_auto: false
   fix_instruction: Add '## Contributing' section (link to CONTRIBUTING.md or guidelines).
-  file: rules/readme-has-contributing.yml
-  count_by: rule_id
+  script: ../../../scripts/core/text_pattern_scanner.py
+  args:
+  - --pattern
+  - ^## Contributing
+  - --match
+  - absent
+  - --include
+  - README.md
 - id: readme-has-license
-  type: ast-grep
-  match: absent
+  type: custom
   group: readme_structure
   description: README.md must have a '## License' section.
   fix_auto: false
   fix_instruction: Add '## License' section (e.g. Apache 2.0).
-  file: rules/readme-has-license.yml
-  count_by: rule_id
+  script: ../../../scripts/core/text_pattern_scanner.py
+  args:
+  - --pattern
+  - ^## License
+  - --match
+  - absent
+  - --include
+  - README.md
 baseline:
   strategy: total

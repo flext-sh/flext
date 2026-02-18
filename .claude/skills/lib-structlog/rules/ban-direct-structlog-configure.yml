@@ -1,5 +1,6 @@
-id: ban-direct-structlog-configure-python
+id: ban-direct-structlog-configure
 language: python
 rule:
-  kind: module
-  regex: structlog\.configure\(
+  pattern: "structlog.configure($$$ARGS)"
+message: "Direct structlog.configure() - use FlextLogger factory"
+severity: error

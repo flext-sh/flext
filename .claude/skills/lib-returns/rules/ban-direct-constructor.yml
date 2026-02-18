@@ -1,5 +1,8 @@
-id: ban-direct-constructor-python
+id: ban-direct-constructor
 language: python
 rule:
-  kind: module
-  regex: FlextResult\(Success|FlextResult\(Failure
+  any:
+    - pattern: FlextResult(Success($$$))
+    - pattern: FlextResult(Failure($$$))
+message: "Direct FlextResult constructor with Success/Failure is banned. Use r[T].ok() or r.fail()."
+severity: error

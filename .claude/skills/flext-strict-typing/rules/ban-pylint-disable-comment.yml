@@ -1,5 +1,7 @@
-id: ban-pylint-disable-comment-python
+id: ban-pylint-disable-comment
 language: python
 rule:
-  kind: module
-  regex: '#\s*pylint:\s*disable'
+  kind: comment
+  regex: "^#\\s*pylint:\\s*disable"
+message: "pylint: disable comment - fix the underlying violation"
+severity: warning

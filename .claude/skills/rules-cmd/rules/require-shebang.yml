@@ -1,11 +1,7 @@
-id: require-shebang-python
+id: require-shebang
 language: python
 rule:
-  kind: module
-  regex: ^#!/usr/bin/env
----
-id: require-shebang-bash
-language: bash
-rule:
-  kind: program
-  regex: ^#!/usr/bin/env
+  kind: comment
+  regex: "^#!/usr/bin/env"
+message: "Shebang line found (tracking)"
+severity: warning

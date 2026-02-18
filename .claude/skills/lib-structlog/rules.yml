@@ -46,7 +46,11 @@ rules:
   group: structlog_bridge
   count_by: rule_id
   description: Direct structlog.get_logger usage is banned outside FlextLogger/FlextRuntime bridge files.
-  fix_auto: false
+  fix_auto: true
+  fix_type: ast-grep
+  fix_file: rules/direct-get-logger-fix.yml
+  fix_imports:
+  - from flext_core.loggings import FlextLogger
   fix_instruction: "MANUAL ONLY \u2014 do NOT auto-apply. Rewrite structlog.get_logger(name) to\nFlextLogger.create_module_logger(name)\
     \ AND add 'from flext_core.loggings import\nFlextLogger' if missing. NEVER apply in runtime.py, loggings.py, or parser.py\
     \ \u2014\nthese files use structlog.get_logger() directly because they are part of the\nlow-level logging bridge. FlextRuntime.get_logger()\

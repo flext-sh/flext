@@ -2,16 +2,19 @@ id: img-requires-alt
 language: html
 rule:
   kind: element
-  has:
-    kind: start_tag
-    has:
-      kind: tag_name
-      regex: ^img$
-  not:
-    has:
-      kind: attribute
-      has:
-        kind: attribute_name
-        regex: ^alt$
-message: img tag without alt attribute — accessibility violation.
+  all:
+    - has:
+        kind: start_tag
+        has:
+          kind: tag_name
+          regex: "^img$"
+        stopBy: end
+    - not:
+        has:
+          kind: attribute
+          has:
+            kind: attribute_name
+            regex: "^alt$"
+          stopBy: end
+message: "img element missing alt attribute"
 severity: error

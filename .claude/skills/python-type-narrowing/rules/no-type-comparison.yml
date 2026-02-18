@@ -1,5 +1,13 @@
-id: no-type-comparison-python
+id: no-type-comparison
 language: python
 rule:
-  kind: module
-  regex: type\([^)]+\)\s*(==|!=|is )\s*
+  kind: comparison_operator
+  has:
+    kind: call
+    has:
+      kind: identifier
+      regex: "^type$"
+      field: function
+    stopBy: end
+message: "type() comparison - use isinstance() instead"
+severity: warning

@@ -1,5 +1,6 @@
-id: prefer-orjson-dumps-python
+id: prefer-orjson-dumps
 language: python
 rule:
-  kind: module
-  regex: json\.dumps\(
+  pattern: "json.dumps($$$ARGS)"
+message: "Use orjson.dumps() instead of json.dumps()"
+severity: error

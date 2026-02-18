@@ -1,5 +1,7 @@
-id: require-owner-skill-marker-python
+id: require-owner-skill-marker-ws
 language: python
 rule:
-  kind: module
-  regex: 'Owner-Skill:'
+  kind: comment
+  regex: "^#\\s*Owner-Skill:"
+message: "Owner-Skill marker found (tracking)"
+severity: warning

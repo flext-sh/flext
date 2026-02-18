@@ -1,5 +1,16 @@
-id: require-flext-result-pattern-python
+id: require-flext-result-pattern
 language: python
 rule:
-  kind: module
-  regex: ->\s*r\[|FlextResult
+  any:
+    - kind: import_from_statement
+      has:
+        kind: identifier
+        regex: "^FlextResult$"
+        stopBy: end
+    - kind: function_definition
+      has:
+        field: return_type
+        regex: "FlextResult"
+        stopBy: end
+message: "FlextResult pattern found (tracking)"
+severity: warning

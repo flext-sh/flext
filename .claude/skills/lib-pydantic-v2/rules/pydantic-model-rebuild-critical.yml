@@ -1,5 +1,6 @@
-id: pydantic-model-rebuild-critical-python
+id: pydantic-model-rebuild-critical
 language: python
 rule:
-  kind: module
-  regex: \.model_rebuild\(
+  pattern: $OBJ.model_rebuild($$$ARGS)
+message: "model_rebuild() call - verify necessity"
+severity: warning

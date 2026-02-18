@@ -1,8 +1,17 @@
 id: no-hardcoded-version-in-constants
 language: python
 rule:
-  pattern: VERSION = $VAL
+  kind: expression_statement
   has:
-    kind: string
-message: Hardcoded VERSION string — should reference __version__.py or importlib.metadata.
+    kind: assignment
+    all:
+      - has:
+          kind: identifier
+          regex: "^VERSION$"
+          field: left
+      - has:
+          kind: string
+          field: right
+          regex: "\\d+\\.\\d+"
+message: "Hardcoded VERSION constant"
 severity: warning

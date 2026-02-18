@@ -1,5 +1,6 @@
-id: no-asyncio-run-in-src-python
+id: no-asyncio-run-in-src
 language: python
 rule:
-  kind: module
-  regex: asyncio\.run\(
+  pattern: "asyncio.run($$$ARGS)"
+message: "asyncio.run() blocks event loop - use await instead"
+severity: error

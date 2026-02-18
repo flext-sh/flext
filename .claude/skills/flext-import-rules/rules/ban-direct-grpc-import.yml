@@ -1,5 +1,16 @@
-id: ban-direct-grpc-import-python
+id: ban-direct-grpc-import
 language: python
 rule:
-  kind: module
-  regex: (?:^import grpc|^from grpc)
+  any:
+    - kind: import_statement
+      has:
+        kind: dotted_name
+        regex: "^grpc"
+        stopBy: end
+    - kind: import_from_statement
+      has:
+        kind: dotted_name
+        field: module_name
+        regex: "^grpc"
+message: "Direct grpc import banned - use flext_core adapter"
+severity: error

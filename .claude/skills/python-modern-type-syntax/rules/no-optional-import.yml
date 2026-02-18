@@ -1,5 +1,15 @@
-id: no-optional-import-python
+id: no-optional-import
 language: python
 rule:
-  kind: module
-  regex: from typing import.*\bOptional\b
+  kind: import_from_statement
+  all:
+    - has:
+        kind: dotted_name
+        field: module_name
+        regex: "^typing$"
+    - has:
+        stopBy: end
+        kind: identifier
+        regex: "^Optional$"
+message: "Optional import from typing - use X | None syntax"
+severity: error

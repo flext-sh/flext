@@ -1,5 +1,6 @@
-id: require-future-annotations-python
+id: require-future-annotations-core
 language: python
 rule:
-  kind: module
-  regex: from __future__ import annotations
+  pattern: from __future__ import annotations
+message: "Future annotations import found (tracking)"
+severity: warning

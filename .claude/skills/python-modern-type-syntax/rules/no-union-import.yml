@@ -1,5 +1,15 @@
-id: no-union-import-python
+id: no-union-import
 language: python
 rule:
-  kind: module
-  regex: from typing import.*\bUnion\b
+  kind: import_from_statement
+  all:
+    - has:
+        kind: dotted_name
+        field: module_name
+        regex: "^typing$"
+    - has:
+        stopBy: end
+        kind: identifier
+        regex: "^Union$"
+message: "Union import from typing - use X | Y syntax"
+severity: error

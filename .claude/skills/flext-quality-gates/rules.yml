@@ -10,25 +10,43 @@ scan_targets:
   - .
 rules:
 - id: require-ruff-config
-  type: ast-grep
-  match: absent
+  type: custom
   severity: warning
   group: quality_gate_config
   description: Core gate configuration files should include Ruff config or test targets.
   fix_auto: false
   fix_instruction: Ensure pyproject.toml references Ruff and Makefile/base.mk expose
     test targets.
-  file: rules/require-ruff-config.yml
-  count_by: rule_id
+  script: ../../../scripts/core/text_pattern_scanner.py
+  args:
+  - --pattern
+  - (ruff|pytest)
+  - --match
+  - absent
+  - --include
+  - pyproject.toml
+  - --include
+  - Makefile
+  - --include
+  - '**/base.mk'
 - id: require-test-target
-  type: ast-grep
-  match: absent
+  type: custom
   severity: warning
   group: quality_gate_config
   description: Core gate configuration files should include test gate command wiring.
   fix_auto: false
   fix_instruction: Define a test target (or delegated pytest call) in Makefile/base.mk.
-  file: rules/require-test-target.yml
-  count_by: rule_id
+  script: ../../../scripts/core/text_pattern_scanner.py
+  args:
+  - --pattern
+  - (pytest|ruff|test)
+  - --match
+  - absent
+  - --include
+  - pyproject.toml
+  - --include
+  - Makefile
+  - --include
+  - '**/base.mk'
 baseline:
   strategy: total

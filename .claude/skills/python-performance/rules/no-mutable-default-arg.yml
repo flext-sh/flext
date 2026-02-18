@@ -1,5 +1,11 @@
-id: no-mutable-default-arg-python
+id: no-mutable-default-arg
 language: python
 rule:
-  kind: module
-  regex: def \w+\([^)]*=\s*(\[\]|\{\})\)
+  kind: default_parameter
+  has:
+    any:
+      - kind: list
+      - kind: dictionary
+    stopBy: end
+message: "Mutable default argument (list/dict) - use None with factory"
+severity: error
