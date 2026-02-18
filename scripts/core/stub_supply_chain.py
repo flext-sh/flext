@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -35,6 +36,19 @@ class ProjectResult:
 def run_cmd(
     command: list[str], cwd: Path, timeout: int = 900
 ) -> subprocess.CompletedProcess[str]:
+    env = os.environ.copy()
+    workspace_venv: Path | None = None
+    if (cwd / ".venv").exists():
+        workspace_venv = cwd / ".venv"
+    elif (cwd.parent / ".venv").exists():
+        workspace_venv = cwd.parent / ".venv"
+
+    if workspace_venv is not None:
+        env["VIRTUAL_ENV"] = str(workspace_venv)
+        env["POETRY_VIRTUALENVS_CREATE"] = "false"
+        env["POETRY_VIRTUALENVS_IN_PROJECT"] = "false"
+        env["PATH"] = f"{workspace_venv / 'bin'}:{env.get('PATH', '')}"
+
     try:
         return subprocess.run(
             command,
@@ -42,6 +56,7 @@ def run_cmd(
             check=False,
             capture_output=True,
             text=True,
+            env=env,
             timeout=timeout,
         )
     except FileNotFoundError as exc:
@@ -194,6 +209,23 @@ def existing_stub(module_name: str, root: Path) -> bool:
     return any(path.exists() for path in candidates)
 
 
+def stub_presence(module_name: str, root: Path) -> tuple[bool, bool]:
+    rel = module_name.replace(".", "/")
+    manual = root / "typings" / rel
+    generated = root / "typings" / "generated" / rel
+    manual_candidates = [
+        manual.with_suffix(".pyi"),
+        manual / "__init__.pyi",
+    ]
+    generated_candidates = [
+        generated.with_suffix(".pyi"),
+        generated / "__init__.pyi",
+    ]
+    has_manual = any(path.exists() for path in manual_candidates)
+    has_generated = any(path.exists() for path in generated_candidates)
+    return has_manual, has_generated
+
+
 def snapshot_tree(root: Path) -> dict[str, str]:
     if not root.exists():
         return {}
@@ -299,11 +331,11 @@ def process_project(project_dir: Path, root: Path, apply: bool) -> ProjectResult
         for module_name in missing_imports
         if not is_internal_module(module_name, project_dir.name)
     ]
-    unresolved = [
-        module_name
-        for module_name in third_party_missing
-        if not existing_stub(module_name, root)
-    ]
+    unresolved: list[str] = []
+    for module_name in third_party_missing:
+        _, has_generated = stub_presence(module_name, root)
+        if not has_generated:
+            unresolved.append(module_name)
 
     generated_files: list[str] = []
     if apply:

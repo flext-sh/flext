@@ -1,0 +1,16 @@
+import sqlalchemy.sql.sqltypes
+import sqlalchemy.types as sqltypes
+from typing import ClassVar
+
+class JSON(sqlalchemy.sql.sqltypes.JSON):
+    __parameters__: ClassVar[tuple] = ...
+
+class _FormatTypeMixin:
+    def bind_processor(self, dialect): ...
+    def literal_processor(self, dialect): ...
+
+class JSONIndexType(_FormatTypeMixin, sqlalchemy.sql.sqltypes.JSON.JSONIndexType):
+    __parameters__: ClassVar[tuple] = ...
+
+class JSONPathType(_FormatTypeMixin, sqlalchemy.sql.sqltypes.JSON.JSONPathType):
+    __parameters__: ClassVar[tuple] = ...

@@ -1,0 +1,117 @@
+import google._upb._message
+import google.protobuf.descriptor as _descriptor
+import google.protobuf.descriptor_pool as _descriptor_pool
+import internal.invalid.builder as _builder
+import google.protobuf.message
+import google.protobuf.runtime_version as _runtime_version
+import google.protobuf.symbol_database as _symbol_database
+from typing import ClassVar
+
+EDITION_UNKNOWN: int
+EDITION_LEGACY: int
+EDITION_PROTO2: int
+EDITION_PROTO3: int
+EDITION_2023: int
+EDITION_2024: int
+EDITION_1_TEST_ONLY: int
+EDITION_2_TEST_ONLY: int
+EDITION_99997_TEST_ONLY: int
+EDITION_99998_TEST_ONLY: int
+EDITION_99999_TEST_ONLY: int
+EDITION_MAX: int
+VISIBILITY_UNSET: int
+VISIBILITY_LOCAL: int
+VISIBILITY_EXPORT: int
+
+class FileDescriptorSet(google._upb._message.Message, google.protobuf.message.Message):
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class FileDescriptorProto(google._upb._message.Message, google.protobuf.message.Message):
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class DescriptorProto(google._upb._message.Message, google.protobuf.message.Message):
+    class ExtensionRange(google._upb._message.Message, google.protobuf.message.Message):
+        DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+    class ReservedRange(google._upb._message.Message, google.protobuf.message.Message):
+        DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class ExtensionRangeOptions(google._upb._message.Message, google.protobuf.message.Message):
+    class Declaration(google._upb._message.Message, google.protobuf.message.Message):
+        DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class FieldDescriptorProto(google._upb._message.Message, google.protobuf.message.Message):
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class OneofDescriptorProto(google._upb._message.Message, google.protobuf.message.Message):
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class EnumDescriptorProto(google._upb._message.Message, google.protobuf.message.Message):
+    class EnumReservedRange(google._upb._message.Message, google.protobuf.message.Message):
+        DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class EnumValueDescriptorProto(google._upb._message.Message, google.protobuf.message.Message):
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class ServiceDescriptorProto(google._upb._message.Message, google.protobuf.message.Message):
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class MethodDescriptorProto(google._upb._message.Message, google.protobuf.message.Message):
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class FileOptions(google._upb._message.Message, google.protobuf.message.Message):
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class MessageOptions(google._upb._message.Message, google.protobuf.message.Message):
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class FieldOptions(google._upb._message.Message, google.protobuf.message.Message):
+    class EditionDefault(google._upb._message.Message, google.protobuf.message.Message):
+        DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+    class FeatureSupport(google._upb._message.Message, google.protobuf.message.Message):
+        DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class OneofOptions(google._upb._message.Message, google.protobuf.message.Message):
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class EnumOptions(google._upb._message.Message, google.protobuf.message.Message):
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class EnumValueOptions(google._upb._message.Message, google.protobuf.message.Message):
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class ServiceOptions(google._upb._message.Message, google.protobuf.message.Message):
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class MethodOptions(google._upb._message.Message, google.protobuf.message.Message):
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class UninterpretedOption(google._upb._message.Message, google.protobuf.message.Message):
+    class NamePart(google._upb._message.Message, google.protobuf.message.Message):
+        DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class FeatureSet(google._upb._message.Message, google.protobuf.message.Message):
+    class VisibilityFeature(google._upb._message.Message, google.protobuf.message.Message):
+        DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class FeatureSetDefaults(google._upb._message.Message, google.protobuf.message.Message):
+    class FeatureSetEditionDefault(google._upb._message.Message, google.protobuf.message.Message):
+        DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class SourceCodeInfo(google._upb._message.Message, google.protobuf.message.Message):
+    class Location(google._upb._message.Message, google.protobuf.message.Message):
+        DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+
+class GeneratedCodeInfo(google._upb._message.Message, google.protobuf.message.Message):
+    class Annotation(google._upb._message.Message, google.protobuf.message.Message):
+        DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
+    DESCRIPTOR: ClassVar[google._upb._message.Descriptor] = ...
