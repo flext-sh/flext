@@ -6,33 +6,6 @@ scan_targets:
   exclude: []
   projects: []
 rules:
-- id: ban-dict-literal
-  type: ast-grep
-  file: rules/ban-dict-literal.yml
-  severity: warning
-  group: strict_typing_runtime
-  count_by: rule_id
-  description: Dict literal is discouraged. Prefer TypedDict/Pydantic model/MappingProxy at boundaries.
-  fix_auto: false
-  fix_instruction: 'Manual review: keep dict literal only for local mutation hotspots; prefer structured models at boundaries.'
-- id: ban-dict-comprehension
-  type: ast-grep
-  file: rules/ban-dict-comprehension.yml
-  severity: warning
-  group: strict_typing_runtime
-  count_by: rule_id
-  description: Dict comprehension is discouraged for public contracts and DTO boundaries.
-  fix_auto: false
-  fix_instruction: 'Manual review: prefer typed builders returning TypedDict/Pydantic models. Keep only for local transient computation.'
-- id: ban-dict-constructor
-  type: ast-grep
-  file: rules/ban-dict-constructor.yml
-  severity: warning
-  group: strict_typing_runtime
-  count_by: rule_id
-  description: dict() constructor is discouraged except in mutation hotspots.
-  fix_auto: false
-  fix_instruction: 'Manual review: prefer explicit model construction or Mapping adapters. Keep dict() only where mutation is required.'
 - id: ban-dict-type-annotation
   type: ast-grep
   file: rules/ban-dict-type-annotation.yml

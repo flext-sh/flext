@@ -32,4 +32,5 @@ for project rules, architecture, and conventions: [`CLAUDE.md`](CLAUDE.md).
 1. Start with root `CLAUDE.md`, then load scoped skills from `.claude/skills/` by touched path.
 2. For `flext-core` changes, include `rules-flext-core` and matching `lib-*` skills for dependencies in scope.
 3. For docs/governance changes, include `skill-format-universal` and `flext-docs-pointer-policy`.
-4. In final reports, reference changed paths and provide validation evidence with concrete commands.
+4. Run `make validate-scripts` and `make check-clean` before finalizing workspace-wide governance edits.
+5. In final reports, reference changed paths and provide validation evidence with concrete commands.

@@ -1,6 +1,0 @@
-id: ban-dict-constructor
-language: python
-rule:
-  pattern: dict($$$ARGS)
-message: dict() constructor is discouraged
-severity: warning

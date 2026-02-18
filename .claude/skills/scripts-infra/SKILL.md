@@ -14,8 +14,8 @@ description: Shared script infrastructure — bash/python libraries, core runner
 - `scripts/core/script_runner.py`
 - `scripts/core/script_registry.py`
 - `scripts/core/artifact_naming.py`
-- `scripts/core/check_script_skill_ownership.py`
-- `scripts/core/check_script_artifact_naming.py`
+- `.claude/skills/scripts-infra/validate_ownership.py`
+- `.claude/skills/scripts-infra/validate_artifact_naming.py`
 - `scripts/core/_add_owner_markers.py`
 - `scripts/core/__init__.py`
 - `scripts/common.py`
@@ -56,11 +56,14 @@ description: Shared script infrastructure — bash/python libraries, core runner
 - Artifact output must follow the `<skill>--<kind>--<slug>.<ext>` naming contract.
 - Python scripts must use `pathlib.Path` exclusively (no `os.path`).
 - Bash scripts must use `set -euo pipefail` and `#!/usr/bin/env bash`.
+- `scripts/core` is for cross-workspace orchestrators and shared infra only.
+- Skill-specific validation/fix logic must live in `.claude/skills/<skill>/` scripts.
 
 ## Instructions
 
 - When modifying shared libs, verify all downstream scripts still work.
-- When adding a new helper function, add it to the appropriate shared lib (bash → `scripts/lib/`, python → `scripts/core/`).
+- When adding a new helper function, add it to the appropriate shared lib (bash → `scripts/lib/`, python shared infra → `scripts/core/`).
+- For policy-specific validation/fix scripts, use the owning skill folder instead of `scripts/core`.
 - When editing config scripts, ensure they can run from any CWD.
 - Keep `scripts/core/` as the canonical location for cross-cutting Python infrastructure.
 
@@ -70,7 +73,7 @@ description: Shared script infrastructure — bash/python libraries, core runner
 2. Check which scripts source/import it via `rg 'source.*common.sh' scripts/` or `rg 'from.*core.*import' scripts/`.
 3. Apply minimal change.
 4. Run `bash -n` on modified bash files, `python -m compileall scripts/core` for Python.
-5. Run `python scripts/core/check_script_skill_ownership.py` to verify ownership markers.
+5. Run `python .claude/skills/scripts-infra/validate_ownership.py --root .` to verify ownership markers.
 
 ## Examples
 
@@ -98,7 +101,7 @@ Why bad: Hardcoded path bypasses artifact naming contract.
 - `bash -n scripts/lib/common.sh`
 - `bash -n scripts/lib/artifact_naming.sh`
 - `python -m compileall scripts/core`
-- `python scripts/core/check_script_skill_ownership.py`
+- `python .claude/skills/scripts-infra/validate_ownership.py --root .`
 - `rg "Owner-Skill:.*scripts-infra" scripts/lib scripts/core scripts/common.py scripts/config scripts/makefiles`
 
 ## Scripts
@@ -113,8 +116,8 @@ Why bad: Hardcoded path bypasses artifact naming contract.
 | `scripts/core/script_runner.py` | Central script executor | `python scripts/core/script_runner.py <name>` |
 | `scripts/core/script_registry.py` | Script discovery and metadata | (imported by script_runner) |
 | `scripts/core/artifact_naming.py` | Python helper: artifact naming contract | `from scripts.core.artifact_naming import artifact_path` |
-| `scripts/core/check_script_skill_ownership.py` | Ownership validator (hard gate) | `python scripts/core/check_script_skill_ownership.py` |
-| `scripts/core/check_script_artifact_naming.py` | Artifact naming validator | `python scripts/core/check_script_artifact_naming.py` |
+| `.claude/skills/scripts-infra/validate_ownership.py` | Ownership validator (hard gate) | `python .claude/skills/scripts-infra/validate_ownership.py --root .` |
+| `.claude/skills/scripts-infra/validate_artifact_naming.py` | Artifact naming validator | `python .claude/skills/scripts-infra/validate_artifact_naming.py --root .` |
 | `scripts/core/_add_owner_markers.py` | One-shot marker insertion (temporary) | `python scripts/core/_add_owner_markers.py` |
 | `scripts/common.py` | Python shared utils: workspace/project discovery | `from scripts.common import discover_projects` |
 | `scripts/config/__init__.py` | Package marker | — |

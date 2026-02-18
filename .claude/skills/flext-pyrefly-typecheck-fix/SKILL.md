@@ -52,10 +52,19 @@ python3 scripts/core/skill_fix.py --skill flext-pyrefly-typecheck-fix --dry-run
 
 # Apply fixes
 python3 scripts/core/skill_fix.py --skill flext-pyrefly-typecheck-fix --apply
+make 
+# Workspace gates
+make validate-scripts
+make check-clean
 ```
+
+When `type: custom` is necessary, keep script implementations inside `.claude/skills/flext-pyrefly-typecheck-fix/` and return `{"violation_count": N}`.
 
 ## Hard Rules
 
 - **NO suppressions**: No `# pyrefly: ignore`, no baselines, no suppress commands
 - **Non-degrading**: All fixes must reduce or maintain error count; never increase
 - **Rollback safety**: skill_fix.py handles hash+backup+rewrite+verify+rollback per file
+- **Stub boundary**: `typings/generated/` is for third-party stubs only; never generate stubs for internal modules (`flext_*`, `client-a_*`, `client-b_*`)
+- **Root-cause only**: Internal missing imports must be fixed in source/type architecture, not patched with generated stubs
+- **Skill contract**: rules consumed by `skill_validate.py` / `skill_fix.py` must remain flat-key format and executable for `fix_auto: true`

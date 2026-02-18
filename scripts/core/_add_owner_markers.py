@@ -35,8 +35,8 @@ SKILL_MAP: dict[str, str] = {
     "scripts/lib/runtime_detector.sh": "scripts-infra",
     "scripts/lib/artifact_naming.sh": "scripts-infra",  # already has marker
     "scripts/core/artifact_naming.py": "scripts-infra",  # already has marker
-    "scripts/core/check_script_skill_ownership.py": "scripts-infra",  # already has marker
-    "scripts/core/check_script_artifact_naming.py": "scripts-infra",  # already has marker
+    ".claude/skills/scripts-infra/validate_ownership.py": "scripts-infra",  # already has marker
+    ".claude/skills/scripts-infra/validate_artifact_naming.py": "scripts-infra",  # already has marker
     "scripts/core/script_registry.py": "scripts-infra",
     "scripts/core/script_runner.py": "scripts-infra",
     "scripts/config/load_staging_config.py": "scripts-infra",
@@ -63,7 +63,6 @@ SKILL_MAP: dict[str, str] = {
     # ── scripts-validation (linting, quality gates, baselines) ──
     "scripts/validation/run_automated_validation.sh": "scripts-validation",
     "scripts/core/skill_validate.py": "scripts-infra",
-    "scripts/validate_all_projects.sh": "scripts-validation",
     "scripts/singer_protocol_validator.sh": "scripts-validation",
     # ── scripts-security ──
     "scripts/security/_base_security_script.py": "scripts-security",
