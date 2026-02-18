@@ -182,8 +182,14 @@ validate-scripts: ## Validate scripts/ (ownership, syntax, structure)
 		echo "  ⚠ sg (ast-grep) not installed, skipping structural checks"; \
 	fi
 	$(Q)echo ""
+	$(Q)echo "--- Gate contract ---"
+	$(Q)python scripts/core/check_script_gate_contract.py || true
+	$(Q)echo ""
 	$(Q)echo "--- Artifact naming ---"
 	$(Q)python scripts/core/check_script_artifact_naming.py || true
+	$(Q)echo ""
+	$(Q)echo "--- Skill format ---"
+	$(Q)scripts/validation/check_skill_format.sh || echo "✗ Skill format violations found (non-blocking — pre-existing)"
 	$(Q)echo ""
 	$(Q)echo "=== Scripts Validation Complete ==="
 
