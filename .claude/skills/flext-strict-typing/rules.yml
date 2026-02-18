@@ -70,8 +70,8 @@ rules:
   severity: warning
   group: strict_typing
   count_by: rule_id
-  description: "isinstance(x, dict) \u2014 prefer isinstance(x, Mapping) where semantically safe."
-  fix_auto: true
+  description: "isinstance(x, dict) — prefer isinstance(x, Mapping) where semantically safe."
+  fix_auto: false
   fix_type: ast-grep
   fix_file: rules/isinstance-dict-fix.yml
   fix_imports:
@@ -138,6 +138,16 @@ rules:
   fix_auto: false
   fix_instruction: Remove the comment and fix the underlying type error.
   file: rules/ban-mypy-ignore-comment.yml
+- id: ban-mapping-usage
+  type: ast-grep
+  file: rules/ban-mapping-usage.yml
+  severity: error
+  group: strict_typing
+  description: 'Mapping used without import — prefer dict in FLEXT codebase.'
+  fix_auto: true
+  fix_type: ast-grep
+  fix_file: rules/ban-mapping-fix.yml
+  fix_instruction: 'Auto-rewrite: Mapping -> dict.'
 baseline:
   strategy: total
 report: {}

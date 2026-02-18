@@ -8,7 +8,7 @@
 #   - External projects: pyproject.toml + uses flext-core + NOT in .gitmodules
 # =============================================================================
 
-SHELL := /bin/bash
+SHELL := /usr/bin/bash
 .DEFAULT_GOAL := help
 
 # === SILENT MODE ===

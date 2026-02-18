@@ -32,7 +32,7 @@ rules:
   group: result_flow
   count_by: rule_id
   description: Detect deprecated .unwrap() calls on FlextResult-like values.
-  fix_auto: true
+  fix_auto: false
   fix_type: ast-grep
   fix_file: rules/unwrap-to-value-fix.yml
   fix_instruction: "MANUAL ONLY \u2014 do NOT auto-apply. The .unwrap() \u2192 .value rewrite is ONLY valid on\nFlextResult\
