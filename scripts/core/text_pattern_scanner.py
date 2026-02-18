@@ -77,10 +77,7 @@ def main() -> int:
     files = collect_files(root, includes, excludes)
     matches = count_matches(files, regex)
 
-    if match_mode == "present":
-        violation_count = matches
-    else:
-        violation_count = 0 if matches > 0 else 1
+    violation_count = matches if match_mode == "present" else 0 if matches > 0 else 1
 
     print(json.dumps({"violation_count": violation_count}))
     return 1 if violation_count > 0 else 0

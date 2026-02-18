@@ -7,7 +7,6 @@ Also updates rules.yml to set all detection rules to type: ast-grep.
 
 from __future__ import annotations
 
-import os
 import textwrap
 from pathlib import Path
 
