@@ -7,11 +7,9 @@ and writes back. Preserves all other fields (fix_auto, fix_instruction, etc).
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import yaml
-
 
 SKILLS_DIR = Path(".claude/skills")
 
@@ -60,7 +58,7 @@ def update_rules_yml(skill_dir: Path) -> bool:
     if not rules_yml.exists():
         return False
 
-    with open(rules_yml) as f:
+    with Path(rules_yml).open(encoding="utf-8") as f:
         data = yaml.safe_load(f)
 
     if not data or "rules" not in data:
@@ -74,7 +72,7 @@ def update_rules_yml(skill_dir: Path) -> bool:
         rule_id = rule.get("id", "")
         rule_type = rule.get("type", "")
 
-        if rule_type not in ("ripgrep", "regex"):
+        if rule_type not in {"ripgrep", "regex"}:
             continue
 
         if rule_id in CUSTOM_ONLY_RULES:
@@ -120,7 +118,7 @@ def update_rules_yml(skill_dir: Path) -> bool:
         changed = True
 
     if changed:
-        with open(rules_yml, "w") as f:
+        with Path(rules_yml).open("w", encoding="utf-8") as f:
             yaml.dump(
                 data,
                 f,

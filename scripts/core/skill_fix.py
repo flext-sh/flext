@@ -86,6 +86,7 @@ def run_cmd(
     try:
         return subprocess.run(
             command,
+            check=False,
             cwd=cwd,
             capture_output=True,
             text=True,
@@ -229,8 +230,9 @@ def check_import(filepath: Path) -> tuple[bool, str]:
     has_star_import = False
     for node in _ast.walk(tree):
         if isinstance(node, _ast.Import):
-            for alias in node.names:
-                imported_names.add(alias.asname or alias.name.split(".")[0])
+            imported_names.update(
+                alias.asname or alias.name.split(".")[0] for alias in node.names
+            )
         elif isinstance(node, _ast.ImportFrom) and node.module:
             imported_names.add(node.module.split(".")[0])
             for alias in node.names:
@@ -586,8 +588,7 @@ def _find_last_import_line(source: str) -> int:
     for node in tree.body:
         if isinstance(node, (_ast.Import, _ast.ImportFrom)):
             end = getattr(node, "end_lineno", node.lineno) or node.lineno
-            if end > last_import_line:
-                last_import_line = end
+            last_import_line = max(last_import_line, end)
     return last_import_line
 
 
