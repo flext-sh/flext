@@ -1,0 +1,4 @@
+id: detect-ok-none
+language: python
+rule:
+  pattern: $EXPR.ok(None)

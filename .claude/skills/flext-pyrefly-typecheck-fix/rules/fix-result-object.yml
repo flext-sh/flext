@@ -1,0 +1,5 @@
+id: fix-result-object
+language: python
+rule:
+  pattern: FlextResult[object]
+fix: FlextResult[t.GeneralValueType]
