@@ -1,0 +1,5 @@
+id: ban-type-ignore-comment-python
+language: python
+rule:
+  kind: module
+  regex: '#\s*type:\s*ignore'

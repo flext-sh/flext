@@ -7,7 +7,6 @@ from __future__ import annotations
 import argparse
 import fnmatch
 import json
-import re
 import subprocess
 import sys
 import time
@@ -80,6 +79,31 @@ def tool_available(name: str) -> bool:
 
 def normalize_rel_path(value: str) -> str:
     return value.replace("\\", "/").lstrip("./")
+
+
+def normalize_exclude_globs(
+    excludes: list[str],
+    known_projects: set[str],
+) -> list[str]:
+    """Strip project-name prefixes from exclude globs.
+
+    Exclude patterns like ``flext-core/src/foo.py`` never match tracked
+    files which are project-relative (``src/foo.py``).
+    """
+    result: list[str] = []
+    for pat in excludes:
+        stripped = pat
+        for proj in known_projects:
+            prefix = proj + "/"
+            if pat.startswith(prefix):
+                stripped = pat[len(prefix) :]
+                print(
+                    f"  Warning: exclude '{pat}' stripped to '{stripped}' (project-relative)",
+                    file=sys.stderr,
+                )
+                break
+        result.append(stripped)
+    return result
 
 
 def unique_sorted(items: list[str]) -> list[str]:
@@ -354,6 +378,10 @@ def run_ast_grep_rule(
     if count_by not in {"aggregate", "rule_id"}:
         msg = f"Invalid count_by for rule '{rule_id}': {count_by}"
         raise SkillUsageError(msg)
+    match_mode = str(rule.get("match", "present")).strip() or "present"
+    if match_mode not in {"present", "absent"}:
+        msg = f"Invalid match mode for '{rule_id}': {match_mode}"
+        raise SkillUsageError(msg)
 
     command = ["sg", "scan", "--rule", str(rule_file), "--json=stream"]
     for pattern in include_globs:
@@ -399,117 +427,12 @@ def run_ast_grep_rule(
         key = str(payload.get("ruleId", "unknown")) if count_by == "rule_id" else group
         grouped[key] = grouped.get(key, 0) + 1
 
+    if match_mode == "absent":
+        if raw_matches == 0:
+            return ({group: 1}, 0)
+        return ({}, raw_matches)
+
     return grouped, raw_matches
-
-
-def run_ripgrep_rule(
-    *,
-    rule: dict[str, object],
-    project_name: str,
-    project_path: Path,
-    target_files: list[str],
-) -> tuple[int, int]:
-    if not tool_available("rg"):
-        msg = "ripgrep (rg) is required but not available"
-        raise SkillInfraError(msg)
-
-    rule_id = str(rule.get("id", "")).strip()
-    pattern = str(rule.get("pattern", "")).strip()
-    if not pattern:
-        msg = f"ripgrep rule '{rule_id}' is missing 'pattern'"
-        raise SkillUsageError(msg)
-
-    match_mode = str(rule.get("match", "present")).strip() or "present"
-    if match_mode not in {"present", "absent"}:
-        msg = f"Invalid match mode for '{rule_id}': {match_mode}"
-        raise SkillUsageError(msg)
-
-    if not target_files:
-        return (1, 0) if match_mode == "absent" else (0, 0)
-
-    total_matches = 0
-    for batch in chunk_list(target_files, 1500):
-        command = ["rg", "-n", "-H", "-P", "-e", pattern, "--"] + batch
-        result = run_cmd(command, cwd=project_path, timeout=300)
-        if result.returncode not in {0, 1}:
-            stderr = (result.stderr or "").strip()
-            msg = f"ripgrep failed for {project_name}/{rule_id}: {stderr}"
-            raise SkillInfraError(msg)
-        total_matches += len([
-            line for line in (result.stdout or "").splitlines() if line.strip()
-        ])
-
-    if match_mode == "absent":
-        return (1, total_matches) if total_matches == 0 else (0, total_matches)
-    return total_matches, total_matches
-
-
-def _parse_re_flags(flags_raw: object) -> int:
-    """Parse a list of flag names into a combined ``re`` flags int."""
-    if not isinstance(flags_raw, list):
-        return 0
-    flags = 0
-    flag_map = {
-        "MULTILINE": re.MULTILINE,
-        "DOTALL": re.DOTALL,
-        "IGNORECASE": re.IGNORECASE,
-        "VERBOSE": re.VERBOSE,
-    }
-    for item in flags_raw:
-        name = str(item).upper()
-        if name in flag_map:
-            flags |= flag_map[name]
-    return flags
-
-
-def run_regex_rule(
-    *,
-    rule: dict[str, object],
-    project_name: str,
-    project_path: Path,
-    target_files: list[str],
-) -> tuple[int, int]:
-    """Run a Python regex rule on target files.
-
-    Returns ``(violations, raw_matches)`` following the same convention as
-    ``run_ripgrep_rule``.
-    """
-    rule_id = str(rule.get("id", "")).strip()
-    pattern = str(rule.get("pattern", "")).strip()
-    if not pattern:
-        msg = f"regex rule '{rule_id}' is missing 'pattern'"
-        raise SkillUsageError(msg)
-
-    match_mode = str(rule.get("match", "present")).strip() or "present"
-    if match_mode not in {"present", "absent"}:
-        msg = f"Invalid match mode for '{rule_id}': {match_mode}"
-        raise SkillUsageError(msg)
-
-    flags = _parse_re_flags(rule.get("flags", []))
-
-    try:
-        compiled = re.compile(pattern, flags)
-    except re.error as exc:
-        msg = f"Invalid regex in rule '{rule_id}': {exc}"
-        raise SkillUsageError(msg) from exc
-
-    if not target_files:
-        return (1, 0) if match_mode == "absent" else (0, 0)
-
-    total_matches = 0
-    for rel in target_files:
-        filepath = project_path / rel
-        if not filepath.exists() or not filepath.is_file():
-            continue
-        try:
-            content = filepath.read_text(encoding="utf-8", errors="replace")
-        except OSError:
-            continue
-        total_matches += len(compiled.findall(content))
-
-    if match_mode == "absent":
-        return (1, total_matches) if total_matches == 0 else (0, total_matches)
-    return total_matches, total_matches
 
 
 def build_custom_command(script: Path) -> list[str]:
@@ -763,6 +686,11 @@ def validate_skill(
         scan_targets_obj.get("exclude", []),
         "scan_targets.exclude",
     )
+    all_known = set()
+    for group in discovered_projects.values():
+        if isinstance(group, list):
+            all_known.update(str(p) for p in group)
+    exclude_globs = normalize_exclude_globs(exclude_globs, all_known)
 
     selected_projects = resolve_scan_projects(
         scan_projects=scan_targets_obj.get("projects", []),
@@ -807,6 +735,31 @@ def validate_skill(
     if not isinstance(rules_obj, list):
         msg = "rules must be a list"
         raise SkillUsageError(msg)
+
+    VALID_FIX_TYPES = {"ast-grep", "custom"}
+    for rule in rules_obj:
+        if not isinstance(rule, dict):
+            continue
+        rid = rule.get("id", "?")
+        ft = rule.get("fix_type")
+        fa = rule.get("fix_auto", False)
+        if ft == "manual":
+            eprint(
+                f"  ERROR [{rid}]: fix_type: manual is invalid. "
+                "Remove fix_type when fix_auto: false."
+            )
+        if ft and ft not in VALID_FIX_TYPES and ft != "manual":
+            eprint(
+                f"  ERROR [{rid}]: fix_type: '{ft}' is invalid. "
+                f"Valid: {sorted(VALID_FIX_TYPES)}"
+            )
+        if fa and not ft:
+            fix_file = rule.get("fix_file")
+            if not fix_file:
+                eprint(
+                    f"  WARNING [{rid}]: fix_auto: true but no fix_type/fix_file — "
+                    "auto-fix will be skipped."
+                )
 
     counts: dict[str, int] = {}
     per_project_counts: dict[str, dict[str, int]] = {}
@@ -857,32 +810,6 @@ def validate_skill(
                     counts[key] = counts.get(key, 0) + amount
                     project_groups[key] = project_groups.get(key, 0) + amount
                 print(f"    [{rule_id}] ast-grep matches={raw}")
-
-            elif rule_type == "ripgrep":
-                violations, raw_matches = run_ripgrep_rule(
-                    rule=rule_obj,
-                    project_name=project_name,
-                    project_path=project_path,
-                    target_files=selected_files,
-                )
-                counts[group] = counts.get(group, 0) + violations
-                project_groups[group] = project_groups.get(group, 0) + violations
-                print(
-                    f"    [{rule_id}] ripgrep matches={raw_matches} violations={violations}"
-                )
-
-            elif rule_type == "regex":
-                violations, raw_matches = run_regex_rule(
-                    rule=rule_obj,
-                    project_name=project_name,
-                    project_path=project_path,
-                    target_files=selected_files,
-                )
-                counts[group] = counts.get(group, 0) + violations
-                project_groups[group] = project_groups.get(group, 0) + violations
-                print(
-                    f"    [{rule_id}] regex matches={raw_matches} violations={violations}"
-                )
 
             elif rule_type == "custom":
                 custom_count = run_custom_rule(

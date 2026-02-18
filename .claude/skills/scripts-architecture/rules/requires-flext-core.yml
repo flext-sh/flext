@@ -1,0 +1,5 @@
+id: requires-flext-core-python
+language: python
+rule:
+  kind: module
+  regex: (from flext_core|import flext_core)

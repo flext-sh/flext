@@ -1,0 +1,5 @@
+id: no-assert-false-python
+language: python
+rule:
+  kind: module
+  regex: ^\s*assert False\s*$

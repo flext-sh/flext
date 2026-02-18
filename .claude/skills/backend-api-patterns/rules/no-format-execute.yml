@@ -1,0 +1,5 @@
+id: no-format-execute-python
+language: python
+rule:
+  kind: module
+  regex: execute\(["\x27].*\.format\(

@@ -1,0 +1,5 @@
+id: prefer-orjson-dumps-python
+language: python
+rule:
+  kind: module
+  regex: json\.dumps\(

@@ -1,0 +1,5 @@
+id: ban-noqa-comment-python
+language: python
+rule:
+  kind: module
+  regex: '#\s*noqa'

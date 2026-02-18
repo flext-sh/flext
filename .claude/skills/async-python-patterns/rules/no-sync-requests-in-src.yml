@@ -1,0 +1,5 @@
+id: no-sync-requests-in-src-python
+language: python
+rule:
+  kind: module
+  regex: requests\.(get|post|put|delete|patch|head)\(

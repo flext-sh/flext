@@ -1,0 +1,5 @@
+id: no-sys-exit-in-library-python
+language: python
+rule:
+  kind: module
+  regex: sys\.exit\(

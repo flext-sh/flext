@@ -4,27 +4,27 @@ scan_targets:
   include:
   - '**/*.py'
   exclude:
-  - flext-core/src/flext_core/result.py
+  - '**/result.py'
+  - '**/test_result_coverage_100.py'
+  - '**/test_result_additional.py'
   projects: []
 rules:
 - id: ban-direct-constructor
-  type: ripgrep
-  pattern: FlextResult\(Success|FlextResult\(Failure
+  type: ast-grep
   severity: error
   group: result_flow
   description: Direct FlextResult constructor usage with Success/Failure is banned.
   fix_auto: false
   fix_instruction: Use r[T].ok(...) or r.fail(...) factory methods instead.
-  fix_type: manual
+  file: rules/ban-direct-constructor.yml
 - id: ban-direct-returns-import
-  type: ripgrep
-  pattern: from returns\.|import returns\.
+  type: ast-grep
   severity: error
   group: result_flow
   description: Direct returns imports are banned outside flext_core/result.py.
   fix_auto: false
   fix_instruction: Use flext_core.FlextResult (r alias) APIs instead of importing returns directly.
-  fix_type: manual
+  file: rules/ban-direct-returns-import.yml
 - id: ban-unwrap-call
   type: ast-grep
   file: rules/unwrap-to-value.yml
@@ -32,9 +32,11 @@ rules:
   group: result_flow
   count_by: rule_id
   description: Detect deprecated .unwrap() calls on FlextResult-like values.
-  fix_auto: true
-  fix_type: ast-grep
-  fix_file: rules/unwrap-to-value-fix.yml
-  fix_instruction: Auto-rewrite .unwrap() to .value.
+  fix_auto: false
+  fix_instruction: "MANUAL ONLY \u2014 do NOT auto-apply. The .unwrap() \u2192 .value rewrite is ONLY valid on\nFlextResult\
+    \ (aliased as r[T]) objects after an is_success guard. NEVER rewrite\n.unwrap() on returns library types (Success, Some,\
+    \ IOSuccess, Failure, Nothing,\nIOFailure) \u2014 they use .unwrap() as their public API and do NOT have a .value\nattribute.\
+    \ When rewriting, prefer .value_or(default) over bare .value to avoid\nUnwrapFailedError on failure paths. Excluded files:\
+    \ result.py (internal bridge).\n"
 baseline:
   strategy: total

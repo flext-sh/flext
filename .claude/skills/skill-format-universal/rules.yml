@@ -16,6 +16,5 @@ rules:
   fix_instruction: 'Ensure SKILL.md has: YAML frontmatter (name matching dir, description),
     sections (Scope, References, Rules, Instructions, Workflow, Examples, Verification),
     no TODO/TBD.'
-  fix_type: manual
 baseline:
   strategy: total

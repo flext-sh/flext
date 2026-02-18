@@ -7,14 +7,12 @@ scan_targets:
   projects: []
 rules:
 - id: ban-unsafe-yaml-load
-  type: ripgrep
-  pattern: yaml\.load\(
+  type: ast-grep
   severity: error
   group: yaml_safety
   description: yaml.load is unsafe and must not be used.
   fix_auto: false
-  fix_instruction: Replace yaml.load(...) with yaml.safe_load(...) or an explicit
-    safe loader policy.
-  fix_type: manual
+  fix_instruction: Replace yaml.load(...) with yaml.safe_load(...) or an explicit safe loader policy.
+  file: rules/ban-unsafe-yaml-load.yml
 baseline:
   strategy: total

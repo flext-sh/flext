@@ -1,0 +1,5 @@
+id: require-flext-result-pattern-python
+language: python
+rule:
+  kind: module
+  regex: ->\s*r\[|FlextResult

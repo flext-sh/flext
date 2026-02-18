@@ -1,0 +1,5 @@
+id: ban-latest-tag-yaml
+language: yaml
+rule:
+  kind: stream
+  regex: image:\s*[^#\n]+:latest\b

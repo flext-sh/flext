@@ -1,0 +1,5 @@
+id: no-optional-annotation-python
+language: python
+rule:
+  kind: module
+  regex: Optional\[

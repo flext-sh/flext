@@ -1,0 +1,5 @@
+id: require-typing-extensions-compat-python
+language: python
+rule:
+  kind: module
+  regex: typing_extensions

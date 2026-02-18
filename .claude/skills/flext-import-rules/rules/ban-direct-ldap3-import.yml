@@ -1,0 +1,5 @@
+id: ban-direct-ldap3-import-python
+language: python
+rule:
+  kind: module
+  regex: (?:^import ldap3|^from ldap3)

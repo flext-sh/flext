@@ -1,0 +1,5 @@
+id: ban-direct-sqlalchemy-import-python
+language: python
+rule:
+  kind: module
+  regex: (?:^import sqlalchemy|^from sqlalchemy)

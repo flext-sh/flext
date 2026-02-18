@@ -1,6 +1,5 @@
 skill: scripts-infra
-description: 'Validate script infrastructure: Owner-Skill markers, shebangs, gate
-  exit codes'
+description: 'Validate script infrastructure: Owner-Skill markers, shebangs, gate exit codes'
 scan_targets:
   include:
   - '**/*.sh'
@@ -9,35 +8,31 @@ scan_targets:
   projects: []
 rules:
 - id: owner-skill-marker
-  type: ripgrep
-  pattern: 'Owner-Skill:'
+  type: ast-grep
   match: absent
   severity: error
   group: ownership
   description: Every script must have Owner-Skill marker
   fix_auto: false
-  fix_instruction: 'Add ''# Owner-Skill: .claude/skills/<skill-name>/SKILL.md'' in
-    the first 10 lines.'
-  fix_type: manual
+  fix_instruction: 'Add ''# Owner-Skill: .claude/skills/<skill-name>/SKILL.md'' in the first 10 lines.'
+  file: rules/owner-skill-marker.yml
 - id: shebang-env-bash
-  type: ripgrep
-  pattern: ^#!/usr/bin/env (bash|python3)
+  type: ast-grep
   match: absent
   severity: warning
   group: shebang
   description: Scripts should use portable shebang
   fix_auto: false
   fix_instruction: Use '#!/usr/bin/env bash' or '#!/usr/bin/env python3'.
-  fix_type: manual
+  file: rules/shebang-env-bash.yml
 - id: gate-contract-exit-codes
-  type: ripgrep
-  pattern: exit [0123]|EXIT_PASS|EXIT_FAIL|EXIT_USAGE|EXIT_INFRA|sys\.exit\(
+  type: ast-grep
   match: absent
   severity: warning
   group: gate_contract
   description: Gate scripts should use standard exit codes (0/1/2/3)
   fix_auto: false
   fix_instruction: Use exit 0 (pass), 1 (fail), 2 (usage), 3 (infra).
-  fix_type: manual
+  file: rules/gate-contract-exit-codes.yml
 baseline:
   strategy: total

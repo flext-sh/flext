@@ -1,0 +1,5 @@
+id: no-mutable-default-arg-python
+language: python
+rule:
+  kind: module
+  regex: def \w+\([^)]*=\s*(\[\]|\{\})\)

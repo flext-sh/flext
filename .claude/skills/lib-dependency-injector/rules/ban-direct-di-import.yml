@@ -1,0 +1,5 @@
+id: ban-direct-di-import-python
+language: python
+rule:
+  kind: module
+  regex: from dependency_injector|import dependency_injector

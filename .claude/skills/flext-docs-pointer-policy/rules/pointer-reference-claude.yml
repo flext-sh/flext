@@ -1,0 +1,7 @@
+id: pointer-reference-claude
+language: yaml
+rule:
+  kind: flow_node
+  regex: CLAUDE\.md
+message: Pointer files must reference the canonical CLAUDE.md policy.
+severity: warning

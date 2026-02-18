@@ -10,24 +10,21 @@ scan_targets:
   - .
 rules:
 - id: require-healthcheck
-  type: ripgrep
-  pattern: 'HEALTHCHECK|^services:'
+  type: ast-grep
   match: absent
   severity: warning
   group: docker_runtime
   description: Docker images should define a HEALTHCHECK.
   fix_auto: false
-  fix_instruction: Add a HEALTHCHECK in Dockerfiles when the container should report
-    readiness/liveness.
-  fix_type: manual
+  fix_instruction: Add a HEALTHCHECK in Dockerfiles when the container should report readiness/liveness.
+  file: rules/require-healthcheck.yml
 - id: ban-latest-tag
-  type: ripgrep
-  pattern: image:\s*[^#\n]+:latest\b
+  type: ast-grep
   severity: warning
   group: docker_runtime
   description: Compose services should avoid floating :latest tags.
   fix_auto: false
   fix_instruction: Pin image tags to explicit versions instead of ':latest'.
-  fix_type: manual
+  file: rules/ban-latest-tag.yml
 baseline:
   strategy: total

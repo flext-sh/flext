@@ -1,0 +1,17 @@
+id: img-requires-alt
+language: html
+rule:
+  kind: element
+  has:
+    kind: start_tag
+    has:
+      kind: tag_name
+      regex: ^img$
+  not:
+    has:
+      kind: attribute
+      has:
+        kind: attribute_name
+        regex: ^alt$
+message: img tag without alt attribute — accessibility violation.
+severity: error

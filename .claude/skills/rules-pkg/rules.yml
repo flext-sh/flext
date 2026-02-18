@@ -8,14 +8,13 @@ scan_targets:
   - .
 rules:
 - id: require-future-annotations
-  type: ripgrep
-  pattern: from __future__ import annotations
+  type: ast-grep
   match: absent
   severity: error
   group: pkg_style
   description: Package modules should enable postponed annotation evaluation.
   fix_auto: false
   fix_instruction: Add 'from __future__ import annotations' near the top of each module.
-  fix_type: manual
+  file: rules/require-future-annotations.yml
 baseline:
   strategy: total

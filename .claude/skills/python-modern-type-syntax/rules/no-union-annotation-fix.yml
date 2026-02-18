@@ -1,0 +1,5 @@
+id: no-union-annotation-fix
+language: python
+rule:
+  pattern: Union[$A, $B]
+fix: $A | $B

@@ -1,0 +1,11 @@
+id: shebang-env-bash-bash
+language: bash
+rule:
+  kind: program
+  regex: ^#!/usr/bin/env (bash|python3)
+---
+id: shebang-env-bash-python
+language: python
+rule:
+  kind: module
+  regex: ^#!/usr/bin/env (bash|python3)

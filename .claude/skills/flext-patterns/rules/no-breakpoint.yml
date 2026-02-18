@@ -1,0 +1,5 @@
+id: no-breakpoint-python
+language: python
+rule:
+  kind: module
+  regex: breakpoint\(\)|import pdb|pdb\.set_trace

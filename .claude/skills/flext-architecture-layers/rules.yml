@@ -1,6 +1,5 @@
 skill: flext-architecture-layers
-description: Guard architecture boundaries by banning private flext_core module imports
-  in subprojects.
+description: Guard architecture boundaries by banning private flext_core module imports in subprojects.
 scan_targets:
   include:
   - '**/*.py'
@@ -38,14 +37,12 @@ scan_targets:
   - client-b-meltano-native
 rules:
 - id: ban-private-module-import
-  type: ripgrep
-  pattern: from flext_core\._
+  type: ast-grep
   severity: error
   group: architecture_layers
   description: Subprojects must not import private flext_core modules.
   fix_auto: false
-  fix_instruction: Import from flext_core public facades instead of private underscore
-    modules.
-  fix_type: manual
+  fix_instruction: Import from flext_core public facades instead of private underscore modules.
+  file: rules/ban-private-module-import.yml
 baseline:
   strategy: total

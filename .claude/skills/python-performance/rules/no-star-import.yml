@@ -1,0 +1,5 @@
+id: no-star-import-python
+language: python
+rule:
+  kind: module
+  regex: from \S+ import \*

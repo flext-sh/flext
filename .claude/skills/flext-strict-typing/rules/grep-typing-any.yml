@@ -1,0 +1,5 @@
+id: grep-typing-any-python
+language: python
+rule:
+  kind: module
+  regex: typing\.Any

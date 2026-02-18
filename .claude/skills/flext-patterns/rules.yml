@@ -18,71 +18,63 @@ rules:
   fix_file: rules/bare-except-fix.yml
   fix_instruction: Auto-rewrite bare except to except Exception; prefer specific exception types when possible.
 - id: ban-print-in-src
-  type: ripgrep
-  pattern: ^\s*print\(
+  type: ast-grep
   severity: warning
   group: code_quality
-  description: print() in source code — use FlextLogger for structured logging.
+  description: "print() in source code \u2014 use FlextLogger for structured logging."
   fix_auto: false
   fix_instruction: Replace print() with logger.info() or logger.debug().
-  fix_type: manual
+  file: rules/ban-print-in-src.yml
 - id: detect-todo-fixme
-  type: ripgrep
-  pattern: '#\s*(TODO|FIXME|HACK|XXX)\b'
+  type: ast-grep
   severity: warning
   group: code_quality
-  description: TODO/FIXME/HACK/XXX comment — track as issue or resolve.
+  description: "TODO/FIXME/HACK/XXX comment \u2014 track as issue or resolve."
   fix_auto: false
   fix_instruction: Create a tracking issue and remove the comment, or resolve the issue inline.
-  fix_type: manual
+  file: rules/detect-todo-fixme.yml
 - id: no-breakpoint
-  type: ripgrep
-  pattern: breakpoint\(\)|import pdb|pdb\.set_trace
+  type: ast-grep
   severity: error
   group: code_quality
   description: Debug breakpoint left in code.
   fix_auto: true
-  fix_type: regex
-  fix_pattern: ^\s*(breakpoint\(\)|import pdb|pdb\.set_trace\(\))\s*\n
-  fix_replacement: ''
-  flags:
-  - MULTILINE
+  fix_type: ast-grep
   fix_instruction: Auto-removes breakpoint()/import pdb/pdb.set_trace() lines.
+  file: rules/no-breakpoint.yml
+  fix_file: rules/no-breakpoint-fix.yml
 - id: no-empty-except
-  type: ripgrep
-  pattern: except.*:\s*\n\s*pass\s*$
+  type: ast-grep
   severity: warning
   group: pattern_consistency
   description: Empty except/pass block silently swallows errors.
   fix_auto: false
   fix_instruction: Log the error or re-raise with context.
-  fix_type: manual
+  file: rules/no-empty-except.yml
 - id: no-hardcoded-version-string
-  type: ripgrep
-  pattern: __version__\s*=\s*["\x27]\d+\.\d+\.\d+
+  type: ast-grep
   severity: error
   group: version_hygiene
-  description: Hardcoded __version__ string — use importlib.metadata instead.
+  description: "Hardcoded __version__ string \u2014 use importlib.metadata instead."
   fix_auto: false
   fix_instruction: 'Replace with: from importlib.metadata import metadata; __version__ = metadata(''package-name'')[''Version'']'
-  fix_type: manual
+  file: rules/no-hardcoded-version-string.yml
 - id: no-sys-exit-in-library
-  type: ripgrep
-  pattern: sys\.exit\(
+  type: ast-grep
   severity: warning
   group: code_quality
-  description: sys.exit() in library code — raise an exception instead; only use in __main__ or CLI entry points.
+  description: "sys.exit() in library code \u2014 raise an exception instead; only use in __main__ or CLI entry points."
   fix_auto: false
   fix_instruction: Replace sys.exit(N) with raising an appropriate exception. sys.exit() is acceptable only in if __name__
     == '__main__' blocks.
-  fix_type: manual
+  file: rules/no-sys-exit-in-library.yml
 - id: ban-open-no-encoding
   type: ast-grep
   file: rules/open-no-encoding-detect.yml
   severity: warning
   group: code_quality
   count_by: rule_id
-  description: open(path) without encoding — use open(path, encoding='utf-8') for portable I/O.
+  description: "open(path) without encoding \u2014 use open(path, encoding='utf-8') for portable I/O."
   fix_auto: true
   fix_type: ast-grep
   fix_file: rules/open-no-encoding-fix.yml

@@ -1,0 +1,5 @@
+id: no-assert-true-python
+language: python
+rule:
+  kind: module
+  regex: ^\s*assert True\b

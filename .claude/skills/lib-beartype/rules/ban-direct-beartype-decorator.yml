@@ -1,0 +1,5 @@
+id: ban-direct-beartype-decorator-python
+language: python
+rule:
+  kind: module
+  regex: '@beartype'

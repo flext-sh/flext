@@ -1,0 +1,5 @@
+id: require-sort-keys-python
+language: python
+rule:
+  kind: module
+  regex: orjson\.OPT_SORT_KEYS

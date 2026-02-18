@@ -1,0 +1,14 @@
+id: no-bare-constant-outside-class
+language: python
+rule:
+  kind: assignment
+  has:
+    kind: identifier
+    regex: ^[A-Z][A-Z_]{2,}$
+  not:
+    inside:
+      kind: class_definition
+      stopBy: end
+message: Top-level ALL_CAPS constant outside a class — should be nested in a constants
+  class.
+severity: warning

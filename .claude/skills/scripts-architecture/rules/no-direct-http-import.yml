@@ -1,0 +1,6 @@
+id: no-direct-http-import-python
+language: python
+rule:
+  kind: module
+  regex: ^(import requests|from requests|import httpx|from httpx|import urllib|from
+    urllib)

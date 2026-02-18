@@ -1,0 +1,5 @@
+id: ban-relative-import-python
+language: python
+rule:
+  kind: module
+  regex: from \.\.|from \.

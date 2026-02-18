@@ -8,24 +8,22 @@ scan_targets:
   - .
 rules:
 - id: require-main-guard
-  type: ripgrep
-  pattern: if __name__\s*==\s*["']__main__["']
+  type: ast-grep
   match: absent
   severity: warning
   group: examples_runnable
   description: Examples should be directly runnable via a __main__ guard.
   fix_auto: false
   fix_instruction: Add an 'if __name__ == "__main__":' entrypoint block.
-  fix_type: manual
+  file: rules/require-main-guard.yml
 - id: require-future-annotations
-  type: ripgrep
-  pattern: from __future__ import annotations
+  type: ast-grep
   match: absent
   severity: error
   group: examples_runnable
   description: Examples should opt into postponed annotations for consistency.
   fix_auto: false
   fix_instruction: Add 'from __future__ import annotations' near the top of each example.
-  fix_type: manual
+  file: rules/require-future-annotations.yml
 baseline:
   strategy: total

@@ -1,0 +1,11 @@
+id: require-shebang-in-sh-python
+language: python
+rule:
+  kind: module
+  regex: ^#!/usr/bin/env
+---
+id: require-shebang-in-sh-bash
+language: bash
+rule:
+  kind: program
+  regex: ^#!/usr/bin/env

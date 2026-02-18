@@ -1,0 +1,5 @@
+id: no-bare-assert-python
+language: python
+rule:
+  kind: module
+  regex: ^\s*assert [a-zA-Z_][a-zA-Z0-9_]*\s*$

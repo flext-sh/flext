@@ -1,0 +1,11 @@
+id: require-docstring-python
+language: python
+rule:
+  kind: module
+  regex: ^("""|''')|^#!/usr/bin/env (bash|sh)$
+---
+id: require-docstring-bash
+language: bash
+rule:
+  kind: program
+  regex: ^("""|''')|^#!/usr/bin/env (bash|sh)$

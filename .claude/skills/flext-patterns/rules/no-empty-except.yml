@@ -1,0 +1,5 @@
+id: no-empty-except-python
+language: python
+rule:
+  kind: module
+  regex: except.*:\s*\n\s*pass\s*$

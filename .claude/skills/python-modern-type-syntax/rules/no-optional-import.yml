@@ -1,0 +1,5 @@
+id: no-optional-import-python
+language: python
+rule:
+  kind: module
+  regex: from typing import.*\bOptional\b

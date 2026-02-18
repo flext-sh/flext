@@ -1,0 +1,5 @@
+id: ban-star-import-python
+language: python
+rule:
+  kind: module
+  regex: from\s+.+\s+import\s+\*
