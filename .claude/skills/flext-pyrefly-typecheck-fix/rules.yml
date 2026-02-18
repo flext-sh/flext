@@ -74,12 +74,12 @@ rules:
 - id: detect-mapping-mutation
   type: ast-grep
   file: rules/detect-mapping-mutation.yml
-  severity: warning
+  severity: error
   group: mapping_mutation
   count_by: rule_id
-  description: 'Mapping type used at mutation site — mutation requires dict or MutableMapping.'
+  description: 'Mapping type used at mutation site — contract must be MutableMapping or local dict materialization.'
   fix_auto: false
-  fix_instruction: 'Change annotation to dict[...] or MutableMapping[...] where mutation occurs.'
+  fix_instruction: 'Architecture-aware fix: keep Mapping at read-only boundaries, use MutableMapping for mutating contracts, or create local dict copy before mutation.'
 
 baseline:
   strategy: total

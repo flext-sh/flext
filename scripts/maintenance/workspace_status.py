@@ -71,7 +71,7 @@ class WorkspaceStatus:
             )
             self._print_health_score(health_score)
 
-            return FlextResult[object].ok(
+            return FlextResult[t.GeneralValueType].ok(
                 {
                     "projects_info": projects_info,
                     "quality_info": quality_info,
@@ -82,7 +82,7 @@ class WorkspaceStatus:
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
-            return FlextResult[object].fail(f"Analysis error: {e}")
+            return FlextResult[t.GeneralValueType].fail(f"Analysis error: {e}")
 
     def _analyze_projects(self, workspace_root: Path) -> dict[str, object]:
         """Analisar projetos do workspace."""

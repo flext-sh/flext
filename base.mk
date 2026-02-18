@@ -80,10 +80,10 @@ $(LINT_CACHE_DIR):
 	$(Q)mkdir -p $(LINT_CACHE_DIR)
 
 # === LOCAL VENV CHECK ===
-# Warn if local .venv exists (should use workspace venv)
+# Fail if local .venv exists (must use workspace venv)
 LOCAL_VENV_EXISTS := $(shell [ -d ".venv" ] && echo "yes" || echo "no")
 ifeq ($(LOCAL_VENV_EXISTS),yes)
-$(warning ⚠️  Local .venv found! Run 'make clean-local-venv' to use workspace venv)
+$(error Local .venv found in $(CURDIR). Run 'make clean-local-venv' and use workspace .venv at $(WORKSPACE_VENV))
 endif
 
 # === PHONY DECLARATIONS ===
@@ -109,7 +109,7 @@ install-dev: ## Install dev dependencies
 	$(Q)$(POETRY) install --with dev,test
 
 setup: install-dev ## Complete setup
-	$(Q)$(POETRY) run pre-commit install 2>/dev/null || true
+	$(Q)$(POETRY) run pre-commit install
 
 # === LINT (Ruff - ZERO TOLERANCE) ===
 lint: $(LINT_CACHE_DIR) ## Run linting
@@ -126,32 +126,51 @@ format-check: ## Check formatting
 
 # === TYPE CHECK (PyRefly - ZERO TOLERANCE) ===
 type-check: ## Run type checking
-	$(Q)$(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml 2>/dev/null || { echo "FAIL: types"; exit 1; }
+	$(Q)$(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml || { echo "FAIL: types"; exit 1; }
 
 type-check-json: ## Type-check with JSON output for artifact capture
-	$(Q)$(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml 2>&1 | tee /dev/stderr | grep -c "^ERROR" > .pyrefly-error-count.txt || true
-	$(Q)echo "{\"project\":\"$(PROJECT_NAME)\",\"error_count\":$$(cat .pyrefly-error-count.txt 2>/dev/null || echo 0)}" > .pyrefly-report.json
+	$(Q)$(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml > .pyrefly-output.txt 2>&1; \
+	error_count=$$(awk '/^ERROR/ {count++} END {print count+0}' .pyrefly-output.txt); \
+	echo "{\"project\":\"$(PROJECT_NAME)\",\"error_count\":$$error_count}" > .pyrefly-report.json; \
+	rm -f .pyrefly-output.txt
 
 pyrefly-infer: ## Run pyrefly infer for annotation backfill (guarded, non-degrading)
 	$(Q)echo "pyrefly-infer: $(PROJECT_NAME)"
-	$(Q)before=$$($(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml 2>&1 | grep -c "^ERROR" || echo 0); \
-	$(POETRY) run pyrefly infer $(SRC_DIR) 2>/dev/null || true; \
-	$(MAKE) format -s 2>/dev/null || true; \
-	after=$$($(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml 2>&1 | grep -c "^ERROR" || echo 0); \
+	$(Q)backup_dir=$$(mktemp -d); \
+	cp -a $(SRC_DIR) "$$backup_dir/src_backup"; \
+	before=$$($(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml 2>&1 | awk '/^ERROR/ {count++} END {print count+0}'); \
+	if ! $(POETRY) run pyrefly infer $(SRC_DIR); then \
+		echo "FAIL: pyrefly-infer failed for $(PROJECT_NAME), restoring backup"; \
+		rm -rf $(SRC_DIR); \
+		cp -a "$$backup_dir/src_backup" $(SRC_DIR); \
+		rm -rf "$$backup_dir"; \
+		exit 1; \
+	fi; \
+	if ! $(MAKE) format -s; then \
+		echo "FAIL: format failed after pyrefly infer for $(PROJECT_NAME), restoring backup"; \
+		rm -rf $(SRC_DIR); \
+		cp -a "$$backup_dir/src_backup" $(SRC_DIR); \
+		rm -rf "$$backup_dir"; \
+		exit 1; \
+	fi; \
+	after=$$($(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml 2>&1 | awk '/^ERROR/ {count++} END {print count+0}'); \
 	if [ "$$after" -gt "$$before" ]; then \
-		echo "REJECT: pyrefly-infer made errors worse ($$before -> $$after), reverting"; \
-		git checkout -- $(SRC_DIR) 2>/dev/null || true; \
-	else \
-		echo "ACCEPT: pyrefly-infer ($$before -> $$after errors)"; \
-	fi
+		echo "REJECT: pyrefly-infer made errors worse ($$before -> $$after), restoring backup"; \
+		rm -rf $(SRC_DIR); \
+		cp -a "$$backup_dir/src_backup" $(SRC_DIR); \
+		rm -rf "$$backup_dir"; \
+		exit 1; \
+	fi; \
+	echo "ACCEPT: pyrefly-infer ($$before -> $$after errors)"; \
+	rm -rf "$$backup_dir"
 
 # === CODE QUALITY ===
 complexity: ## Code complexity analysis (Radon CC + MI)
-	$(Q)$(POETRY) run radon cc $(SRC_DIR) -a -nb --total-average 2>/dev/null || echo "WARN: radon not installed"
-	$(Q)$(POETRY) run radon mi $(SRC_DIR) -nb 2>/dev/null || true
+	$(Q)$(POETRY) run radon cc $(SRC_DIR) -a -nb --total-average
+	$(Q)$(POETRY) run radon mi $(SRC_DIR) -nb
 
 docstring-check: ## Docstring coverage check
-	$(Q)$(POETRY) run interrogate $(SRC_DIR) --fail-under=$(DOCSTRING_MIN) --ignore-init-method --ignore-magic -q 2>/dev/null || { echo "WARN: interrogate not installed or coverage below $(DOCSTRING_MIN)%"; exit 0; }
+	$(Q)$(POETRY) run interrogate $(SRC_DIR) --fail-under=$(DOCSTRING_MIN) --ignore-init-method --ignore-magic -q
 
 # === TEST ===
 test: ## Run tests with coverage
@@ -183,12 +202,12 @@ shell: ## Python shell
 
 # === SECURITY (FAIL on issues) ===
 security: ## Security checks (Bandit)
-	$(Q)$(POETRY) run bandit -r $(SRC_DIR) -q -ll 2>/dev/null || { echo "WARN: bandit found issues or not installed"; exit 0; }
+	$(Q)$(POETRY) run bandit -r $(SRC_DIR) -q -ll
 
 # === DEAD CODE & MODERNIZATION ===
 # Note: These tools run from WORKSPACE_ROOT environment where they are installed
 dead-code: ## Dead code detection (Vulture)
-	$(Q)cd $(WORKSPACE_ROOT) && $(POETRY) run vulture $(CURDIR)/$(SRC_DIR) --min-confidence 80 --exclude "tests,examples" || true
+	$(Q)cd $(WORKSPACE_ROOT) && $(POETRY) run vulture $(CURDIR)/$(SRC_DIR) --min-confidence 80 --exclude "tests,examples"
 
 modernize: ## Modern patterns suggestions (via Ruff FURB rules)
 	@echo "Note: Ruff already applies 36 FURB rules from refurb (see: ruff rule --all | grep FURB)"
@@ -196,10 +215,10 @@ modernize: ## Modern patterns suggestions (via Ruff FURB rules)
 	@echo "Run 'make lint' to apply modernization suggestions via Ruff"
 
 cognitive-complexity: ## Cognitive complexity (Complexipy)
-	$(Q)cd $(WORKSPACE_ROOT) && $(POETRY) run complexipy $(CURDIR)/$(SRC_DIR) --max-complexity-allowed 15 || true
+	$(Q)cd $(WORKSPACE_ROOT) && $(POETRY) run complexipy $(CURDIR)/$(SRC_DIR) --max-complexity-allowed 15
 
 spell-check: ## Spell checking (Codespell)
-	$(Q)cd $(WORKSPACE_ROOT) && $(POETRY) run codespell $(CURDIR)/$(SRC_DIR) --toml $(WORKSPACE_ROOT)/pyproject.toml --quiet-level 3 || true
+	$(Q)cd $(WORKSPACE_ROOT) && $(POETRY) run codespell $(CURDIR)/$(SRC_DIR) --toml $(WORKSPACE_ROOT)/pyproject.toml --quiet-level 3
 
 # === QUALITY GATES ===
 ifdef QUALITY_AVAILABLE
@@ -227,15 +246,20 @@ upgrade: ## Upgrade all dependencies to latest versions
 # === DEPENDENCY ANALYSIS ===
 deps: ## Analyze dependencies with deptry (missing, unused, transitive)
 	$(Q)echo "Analyzing dependencies in $(PROJECT_NAME)..."
-	$(Q)uvx deptry . --no-ansi 2>&1 | grep -E "(DEP00|Found)" || echo "✓ No issues"
+	$(Q)output=$$(uvx deptry . --no-ansi 2>&1); \
+	if printf '%s\n' "$$output" | grep -Eq "(DEP00|Found)"; then \
+		printf '%s\n' "$$output" | grep -E "(DEP00|Found)"; \
+	else \
+		echo "✓ No issues"; \
+	fi
 
 # === CLEAN ===
 clean: ## Clean artifacts
 	$(Q)rm -rf build/ dist/ *.egg-info/ .pytest_cache/ htmlcov/ .coverage* \
 		.mypy_cache/ .pyrefly_cache/ .ruff_cache/ $(LINT_CACHE_DIR)/ \
-		.pyright/ .pytype/
-	$(Q)find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
-	$(Q)find . -type f -name "*.pyc" -delete 2>/dev/null || true
+		.pyright/ .pytype/ .pyrefly-report.json .pyrefly-output.txt
+	$(Q)find . -type d -name __pycache__ -exec rm -rf {} +
+	$(Q)find . -type f -name "*.pyc" -delete
 
 clean-all: clean ## Deep clean
 	$(Q)rm -rf .venv/ node_modules/
@@ -249,7 +273,9 @@ venv-info: ## Show venv configuration
 	@echo "WORKSPACE_VENV:   $(WORKSPACE_VENV)"
 	@echo "VIRTUAL_ENV:      $(VIRTUAL_ENV)"
 	@echo "Local .venv:      $(LOCAL_VENV_EXISTS)"
-	@echo "Poetry path:      $$(poetry env info --path 2>/dev/null || echo 'not configured')"
+	@poetry_path="not configured"; \
+	if poetry_path=$$(poetry env info --path 2>/dev/null); then :; fi; \
+	echo "Poetry path:      $$poetry_path"
 	@echo "Python:           $$(which python)"
 
 check-venv: ## Verify using workspace venv
@@ -257,10 +283,15 @@ check-venv: ## Verify using workspace venv
 		echo "ERROR: Local .venv exists. Run 'make clean-local-venv' first"; \
 		exit 1; \
 	fi
-	@if [ "$$(poetry env info --path 2>/dev/null)" != "$(WORKSPACE_VENV)" ]; then \
+	@poetry_path=""; \
+	if ! poetry_path=$$(poetry env info --path 2>/dev/null); then \
+		echo "ERROR: Poetry environment is not configured"; \
+		exit 1; \
+	fi; \
+	if [ "$$poetry_path" != "$(WORKSPACE_VENV)" ]; then \
 		echo "WARNING: Poetry not using workspace venv"; \
 		echo "  Expected: $(WORKSPACE_VENV)"; \
-		echo "  Got:      $$(poetry env info --path 2>/dev/null)"; \
+		echo "  Got:      $$poetry_path"; \
 	else \
 		echo "OK: Using workspace venv at $(WORKSPACE_VENV)"; \
 	fi

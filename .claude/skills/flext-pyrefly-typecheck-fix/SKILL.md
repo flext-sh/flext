@@ -39,7 +39,7 @@ Works with `skill_validate.py` (reporting) and `skill_fix.py` (safe fixes with r
 
 ### 5. Mapping Mutation
 - **Symptom**: `Mapping` has no `setdefault`, cannot be item-assigned
-- **Fix**: Mutation sites must use `dict[...]` / `MutableMapping`, or convert locally
+- **Fix**: Keep `Mapping[...]` at read-only boundaries; use `MutableMapping[...]` for mutating contracts, or materialize a local `dict(...)` copy before mutation
 
 ## Verification
 

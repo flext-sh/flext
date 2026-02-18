@@ -15,7 +15,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from flext_core import FlextResult
+from flext_core import FlextResult, t
 from flext_quality.tools import (
     Colors,
     ScriptMetadata,
@@ -41,7 +41,7 @@ class SecretsVaultDecryptor(BaseSecurityScript):
 
     # validate_preconditions is inherited from BaseSecurityScript
 
-    def execute_main_logic(self, **kwargs: object) -> FlextResult[object]:
+    def execute_main_logic(self, **kwargs: object) -> FlextResult[t.GeneralValueType]:
         """Execute main script logic."""
         """Execute vault decryption."""
         try:
@@ -51,12 +51,12 @@ class SecretsVaultDecryptor(BaseSecurityScript):
 
             if not vault_file:
                 print_colored("❌ Vault file path is required", Colors.RED)
-                return FlextResult[object].fail("Vault file path is required")
+                return FlextResult[t.GeneralValueType].fail("Vault file path is required")
 
             vault_path = workspace_root / str(vault_file)
             if not vault_path.exists():
                 print_colored(f"❌ Vault file not found: {vault_path}", Colors.RED)
-                return FlextResult[object].fail(f"Vault file not found: {vault_path}")
+                return FlextResult[t.GeneralValueType].fail(f"Vault file not found: {vault_path}")
 
             print_colored("🔓 SECRETS VAULT DECRYPTOR", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
@@ -87,16 +87,16 @@ class SecretsVaultDecryptor(BaseSecurityScript):
                 # Security warnings
                 print_colored("\n⚠️ Security Warnings:", Colors.RED)
 
-                return FlextResult[object].ok(
+                return FlextResult[t.GeneralValueType].ok(
                     {"decrypt_result": decrypt_result, "output_format": output_format},
                 )
 
             print_colored("❌ Failed to decrypt vault", Colors.RED)
-            return FlextResult[object].fail("Failed to decrypt vault")
+            return FlextResult[t.GeneralValueType].fail("Failed to decrypt vault")
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during vault decryption: {e}", Colors.RED)
-            return FlextResult[object].fail(f"Vault decryption error: {e}")
+            return FlextResult[t.GeneralValueType].fail(f"Vault decryption error: {e}")
 
     def create_parser(self) -> argparse.ArgumentParser:
         """Create parser with specific arguments."""

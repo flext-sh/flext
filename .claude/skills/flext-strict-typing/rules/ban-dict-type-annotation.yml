@@ -1,0 +1,18 @@
+id: ban-dict-type-annotation
+language: python
+rule:
+  any:
+    - pattern:
+        context: "a: Dict[$$$ARGS]"
+        selector: generic_type
+    - pattern:
+        context: "a: dict[$$$ARGS]"
+        selector: generic_type
+    - all:
+        - kind: identifier
+        - regex: "^dict$"
+        - inside:
+            kind: type
+            stopBy: end
+message: dict in type annotations is banned for contracts
+severity: error

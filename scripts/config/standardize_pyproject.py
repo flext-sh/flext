@@ -116,7 +116,7 @@ class PyprojectStandardizer(FlextScript):
             # Summary
             self._print_summary(len(projects), total_standardized, failed_projects)
 
-            return FlextResult[object].ok(
+            return FlextResult[t.GeneralValueType].ok(
                 {
                     "total_projects": len(projects),
                     "standardized": total_standardized,
@@ -126,7 +126,7 @@ class PyprojectStandardizer(FlextScript):
 
         except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during standardization: {e}", Colors.RED)
-            return FlextResult[object].fail(f"Standardization error: {e}")
+            return FlextResult[t.GeneralValueType].fail(f"Standardization error: {e}")
 
     def _discover_projects(
         self,

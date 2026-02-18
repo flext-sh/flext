@@ -762,9 +762,11 @@ def validate_skill(
         if fa and not ft:
             fix_file = rule.get("fix_file")
             if not fix_file:
-                eprint(
-                    f"  WARNING [{rid}]: fix_auto: true but no fix_type/fix_file — auto-fix will be skipped."
+                msg = (
+                    f"[{rid}] fix_auto=true requires fix_type/fix_file; "
+                    "auto-fix cannot be skipped in strict mode"
                 )
+                raise SkillUsageError(msg)
 
     counts: dict[str, int] = {}
     per_project_counts: dict[str, dict[str, int]] = {}

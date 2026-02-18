@@ -1,0 +1,6 @@
+id: ban-dict-comprehension
+language: python
+rule:
+  kind: dictionary_comprehension
+message: Dict comprehension is discouraged
+severity: warning

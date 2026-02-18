@@ -246,7 +246,7 @@ class SecurityAuditScript(FlextScript):
             return self._execute_custom_scan(**kwargs)
 
         except Exception as e:
-            return FlextResult[object].fail(f"Security audit execution failed: {e}")
+            return FlextResult[t.GeneralValueType].fail(f"Security audit execution failed: {e}")
 
     def _validate_target_paths(self, paths: list[str]) -> list[str]:
         """Validate and filter target paths for scanning.
@@ -362,7 +362,7 @@ class SecurityAuditScript(FlextScript):
                 _output_file=str(output_file) if output_file else None,
             )
 
-            return FlextResult[object].ok(
+            return FlextResult[t.GeneralValueType].ok(
                 {
                     "violations": violations,
                     "total_count": len(violations),
@@ -371,7 +371,7 @@ class SecurityAuditScript(FlextScript):
             )
 
         except Exception as e:
-            return FlextResult[object].fail(f"Ecosystem scan failed: {e}")
+            return FlextResult[t.GeneralValueType].fail(f"Ecosystem scan failed: {e}")
 
     def _execute_custom_scan(self, **kwargs: object) -> FlextResult[object]:
         """Execute custom path scanning."""
@@ -388,7 +388,7 @@ class SecurityAuditScript(FlextScript):
             # Validate paths
             validated_paths = self._validate_target_paths(paths)
             if not validated_paths:
-                return FlextResult[object].fail(
+                return FlextResult[t.GeneralValueType].fail(
                     "No valid target paths found for scanning",
                 )
 
@@ -411,7 +411,7 @@ class SecurityAuditScript(FlextScript):
             # Validate configuration
             config_validation = config.validate_business_rules()
             if config_validation.is_failure:
-                return FlextResult[object].fail(
+                return FlextResult[t.GeneralValueType].fail(
                     f"Invalid configuration: {config_validation.error}",
                 )
 
@@ -444,7 +444,7 @@ class SecurityAuditScript(FlextScript):
                     )
 
             # Return scan results for further processing
-            return FlextResult[object].ok(
+            return FlextResult[t.GeneralValueType].ok(
                 {
                     "violations": violations,
                     "total_count": len(violations),
@@ -455,7 +455,7 @@ class SecurityAuditScript(FlextScript):
         except Exception as e:
             error_msg = f"Custom security scan failed: {e}"
             self.logger.exception(error_msg)
-            return FlextResult[object].fail(error_msg)
+            return FlextResult[t.GeneralValueType].fail(error_msg)
 
 
 def main() -> int:
