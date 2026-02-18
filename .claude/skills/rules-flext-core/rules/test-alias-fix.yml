@@ -1,0 +1,39 @@
+id: fix-test-models-alias
+language: python
+rule:
+  pattern: m = TestsModels
+fix: tm = TestsModels
+message: "Rewrite m = TestsModels -> tm = TestsModels"
+severity: warning
+---
+id: fix-test-typings-alias
+language: python
+rule:
+  pattern: t = TestsTypings
+fix: tt = TestsTypings
+message: "Rewrite t = TestsTypings -> tt = TestsTypings"
+severity: warning
+---
+id: fix-test-utilities-alias
+language: python
+rule:
+  pattern: u = TestsUtilities
+fix: tu = TestsUtilities
+message: "Rewrite u = TestsUtilities -> tu = TestsUtilities"
+severity: warning
+---
+id: fix-test-constants-alias
+language: python
+rule:
+  pattern: c = TestsConstants
+fix: tc = TestsConstants
+message: "Rewrite c = TestsConstants -> tc = TestsConstants"
+severity: warning
+---
+id: fix-test-protocols-alias
+language: python
+rule:
+  pattern: p = TestsProtocols
+fix: tp = TestsProtocols
+message: "Rewrite p = TestsProtocols -> tp = TestsProtocols"
+severity: warning

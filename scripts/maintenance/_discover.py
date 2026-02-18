@@ -84,7 +84,7 @@ def discover_external_projects(workspace_root: Path) -> list[ProjectInfo]:
             continue
         name = item.name
         # Skip hidden dirs, __pycache__, common non-project dirs
-        if name.startswith(".") or name.startswith("_"):
+        if name.startswith((".", "_")):
             continue
         # Skip if it's a submodule
         if name in submodule_paths:

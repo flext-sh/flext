@@ -72,5 +72,5 @@ Why bad: ambiguous path and unclear contract from repository root.
 - `make validate-scripts` — runs ownership, bash -n, py_compile, ast-grep, artifact naming
 - `python scripts/core/check_script_skill_ownership.py` — ownership validator (hard gate)
 - `python scripts/core/check_script_artifact_naming.py` — artifact naming validator
-- `sg scan --rule scripts/validation/scripts-validation--ast-grep--no-interactive.yml scripts/` — interactive prompt detection
+- `python3 scripts/core/skill_validate.py --skill rules-scripts` — interactive prompt detection via skill rules
 - `bash -n <file>` for bash, `python -m py_compile <file>` for Python

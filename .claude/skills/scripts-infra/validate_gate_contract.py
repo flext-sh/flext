@@ -10,7 +10,6 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
-
 EXIT_PASS = 0
 EXIT_FAIL = 1
 EXIT_USAGE = 2
@@ -218,7 +217,7 @@ def check_exit_codes(content: str, extension: str) -> list[Violation]:
         if not match:
             continue
         code = int(match.group(1))
-        if code not in (0, 1, 2, 3):
+        if code not in {0, 1, 2, 3}:
             violations.append(
                 Violation(
                     script="",
@@ -424,13 +423,15 @@ def write_report(root: Path, scripts: list[ScriptInfo], mode: str) -> Path:
 
     all_violations: list[dict[str, str]] = []
     for script in scripts:
-        for violation in script.violations:
-            all_violations.append({
+        all_violations.extend(
+            {
                 "check": violation.check,
                 "message": violation.message,
                 "script": violation.script,
                 "severity": violation.severity,
-            })
+            }
+            for violation in script.violations
+        )
 
     checked_count = sum(1 for s in scripts if s.role != "other" or s.violations)
     error_count = sum(1 for s in scripts for v in s.violations if v.severity == "error")
@@ -461,11 +462,12 @@ def run_main(argv: list[str]) -> tuple[int, int]:
         args = parse_args(argv)
     except SystemExit as exc:
         code = int(exc.code) if isinstance(exc.code, int) else EXIT_USAGE
-        return (EXIT_USAGE if code not in (0, 1, 2, 3) else code, 0)
+        return (EXIT_USAGE if code not in {0, 1, 2, 3} else code, 0)
 
     root = Path(args.root).resolve()
     if not root.exists() or not root.is_dir():
-        raise UsageError(f"root directory not found: {root}")
+        msg = f"root directory not found: {root}"
+        raise UsageError(msg)
 
     try:
         scripts_list = tracked_scripts(root)
@@ -480,24 +482,25 @@ def run_main(argv: list[str]) -> tuple[int, int]:
     try:
         report_path = write_report(root, results, str(args.mode))
     except OSError as exc:
-        raise InfraError(f"failed to write report: {exc}") from exc
+        msg = f"failed to write report: {exc}"
+        raise InfraError(msg) from exc
 
     error_count = sum(1 for s in results for v in s.violations if v.severity == "error")
     warning_count = sum(
         1 for s in results for v in s.violations if v.severity == "warning"
     )
 
-    gate_scripts = [s for s in results if s.role in ("validator", "fixer")]
+    gate_scripts = [s for s in results if s.role in {"validator", "fixer"}]
     ok_count = sum(
         1 for s in gate_scripts if not any(v.severity == "error" for v in s.violations)
     )
 
     summary_line = (
         f"\n{Ansi.CYAN}Summary:{Ansi.RESET} "
-        + f"gate_scripts={len(gate_scripts)} "
-        + f"{Ansi.GREEN}ok={ok_count}{Ansi.RESET} "
-        + f"{Ansi.RED}errors={error_count}{Ansi.RESET} "
-        + f"{Ansi.YELLOW}warnings={warning_count}{Ansi.RESET}"
+        f"gate_scripts={len(gate_scripts)} "
+        f"{Ansi.GREEN}ok={ok_count}{Ansi.RESET} "
+        f"{Ansi.RED}errors={error_count}{Ansi.RESET} "
+        f"{Ansi.YELLOW}warnings={warning_count}{Ansi.RESET}"
     )
     eprint(summary_line)
     eprint(f"Report: {report_path}")

@@ -1,27 +1,47 @@
 skill: rules-docs
-description: "Ensure documentation quality, relative paths, and absence of placeholders."
+description: Ensure documentation quality, relative paths, and absence of placeholders.
 scan_targets:
-  include: ["docs/**/*.md"]
+  include:
+  - docs/**/*.md
   exclude: []
   projects: []
 rules:
-  - id: docs-no-todo-fixme
-    type: ripgrep
-    pattern: "TODO|FIXME|TBD"
-    severity: warning
-    group: docs_quality
-    description: "Documentation should not contain TODO/FIXME/TBD placeholders."
-    fix_auto: false
-    fix_instruction: "Resolve the TODO/FIXME items or move them to issue tracker."
-
-  - id: docs-absolute-paths
-    type: ripgrep
-    pattern: '/home/|/Users/|[A-Za-z]:\\'
-    severity: error
-    group: docs_quality
-    description: "Documentation should not contain absolute system paths."
-    fix_auto: false
-    fix_instruction: "Replace absolute paths with repository-relative paths."
-
+- id: docs-no-todo-fixme
+  type: ripgrep
+  pattern: TODO|FIXME|TBD
+  severity: warning
+  group: docs_quality
+  description: Documentation should not contain TODO/FIXME/TBD placeholders.
+  fix_auto: false
+  fix_instruction: Resolve the TODO/FIXME items or move them to issue tracker.
+  fix_type: manual
+- id: docs-absolute-paths
+  type: ripgrep
+  pattern: /home/|/Users/|[A-Za-z]:\\
+  severity: error
+  group: docs_quality
+  description: Documentation should not contain absolute system paths.
+  fix_auto: false
+  fix_instruction: Replace absolute paths with repository-relative paths.
+  fix_type: manual
+- id: no-trailing-whitespace-in-md
+  type: ripgrep
+  pattern: '[[:blank:]]+$'
+  severity: warning
+  group: markdown_hygiene
+  description: Markdown files should not have trailing whitespace.
+  fix_auto: false
+  fix_instruction: Remove trailing whitespace from lines.
+  fix_type: manual
+- id: docs-has-readme
+  type: ripgrep
+  pattern: '#'
+  match: absent
+  severity: warning
+  group: docs_structure
+  description: Markdown files should have at least one heading.
+  fix_auto: false
+  fix_instruction: Add a heading to the markdown file.
+  fix_type: manual
 baseline:
   strategy: total

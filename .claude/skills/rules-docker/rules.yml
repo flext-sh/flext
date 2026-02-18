@@ -1,0 +1,33 @@
+skill: rules-docker
+description: Directory-scoped checks for compose files and Dockerfiles under docker/.
+scan_targets:
+  include:
+  - docker/**/*.yml
+  - docker/**/*.yaml
+  - docker/**/Dockerfile*
+  exclude: []
+  projects:
+  - .
+rules:
+- id: require-healthcheck
+  type: ripgrep
+  pattern: 'HEALTHCHECK|^services:'
+  match: absent
+  severity: warning
+  group: docker_runtime
+  description: Docker images should define a HEALTHCHECK.
+  fix_auto: false
+  fix_instruction: Add a HEALTHCHECK in Dockerfiles when the container should report
+    readiness/liveness.
+  fix_type: manual
+- id: ban-latest-tag
+  type: ripgrep
+  pattern: image:\s*[^#\n]+:latest\b
+  severity: warning
+  group: docker_runtime
+  description: Compose services should avoid floating :latest tags.
+  fix_auto: false
+  fix_instruction: Pin image tags to explicit versions instead of ':latest'.
+  fix_type: manual
+baseline:
+  strategy: total

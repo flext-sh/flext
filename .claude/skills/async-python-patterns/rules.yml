@@ -1,0 +1,41 @@
+skill: async-python-patterns
+description: "Detect async anti-patterns: nested asyncio.run(), blocking calls in async code."
+
+scan_targets:
+  include: ["**/src/**/*.py"]
+  exclude: []
+  projects: []
+
+rules:
+  - id: no-asyncio-run-in-src
+    type: ripgrep
+    pattern: 'asyncio\.run\('
+    severity: warning
+    group: async_safety
+    description: "asyncio.run() in source — may cause nested event loop error."
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Use await directly or restructure to avoid nested asyncio.run()."
+
+  - id: no-blocking-sleep-in-async
+    type: ripgrep
+    pattern: 'time\.sleep\('
+    severity: warning
+    group: async_safety
+    description: "Blocking time.sleep() in src/ — use asyncio.sleep() in async code."
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Replace time.sleep() with await asyncio.sleep() in async contexts."
+
+  - id: no-sync-requests-in-src
+    type: ripgrep
+    pattern: 'requests\.(get|post|put|delete|patch|head)\('
+    severity: warning
+    group: async_safety
+    description: "Blocking requests.* call — use httpx.AsyncClient or aiohttp in async code."
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Replace requests.get() with async HTTP client (httpx.AsyncClient)."
+
+baseline:
+  strategy: total

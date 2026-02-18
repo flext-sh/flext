@@ -1,0 +1,31 @@
+skill: python-performance
+description: "Detect performance anti-patterns: global imports of heavy modules, mutable defaults."
+
+scan_targets:
+  include: ["**/*.py"]
+  exclude: []
+  projects: []
+
+rules:
+  - id: no-mutable-default-arg
+    type: ripgrep
+    pattern: 'def \w+\([^)]*=\s*(\[\]|\{\})\)'
+    severity: warning
+    group: performance
+    description: "Mutable default argument — use None and create inside function."
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Replace def f(x=[]) with def f(x=None): x = x or []."
+
+  - id: no-star-import
+    type: ripgrep
+    pattern: 'from \S+ import \*'
+    severity: warning
+    group: performance
+    description: "Wildcard import — pollutes namespace and prevents dead-code analysis."
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Import only needed names explicitly."
+
+baseline:
+  strategy: total

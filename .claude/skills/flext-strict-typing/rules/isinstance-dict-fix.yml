@@ -1,0 +1,7 @@
+id: fix-isinstance-dict-to-mapping
+language: python
+rule:
+  pattern: isinstance($X, dict)
+fix: isinstance($X, Mapping)
+message: "Rewrite isinstance(x, dict) -> isinstance(x, Mapping)"
+severity: warning

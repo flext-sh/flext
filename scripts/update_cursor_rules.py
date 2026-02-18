@@ -484,7 +484,7 @@ class CursorRulesUpdater:
                 "config: dict[str, int] = {}",
                 "",
                 "# WRONG",
-                "status: Optional[str] = None",
+                "status: str | None = None",
                 "items: List[str] = []",
                 "config: Dict[str, int] = {}",
                 "```",

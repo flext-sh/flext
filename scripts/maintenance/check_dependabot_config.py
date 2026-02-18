@@ -19,7 +19,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _discover import discover_all_paths  # noqa: E402
+from _discover import discover_all_paths
 
 try:
     import yaml
@@ -206,30 +206,30 @@ def check_dependabot_structure(project_path: Path) -> list[Violation]:
             continue
 
         # Required fields
-        for req_field in REQUIRED_UPDATE_FIELDS:
-            if req_field not in entry:
-                violations.append(
-                    Violation(
-                        project=name,
-                        check="dependabot-entry",
-                        message=f"updates[{idx}] missing required field: {req_field}",
-                        severity="error",
-                    )
-                )
+        violations.extend(
+            Violation(
+                project=name,
+                check="dependabot-entry",
+                message=f"updates[{idx}] missing required field: {req_field}",
+                severity="error",
+            )
+            for req_field in REQUIRED_UPDATE_FIELDS
+            if req_field not in entry
+        )
 
         # Schedule fields
         schedule = entry.get("schedule")
         if isinstance(schedule, dict):
-            for sched_field in REQUIRED_SCHEDULE_FIELDS:
-                if sched_field not in schedule:
-                    violations.append(
-                        Violation(
-                            project=name,
-                            check="dependabot-schedule",
-                            message=f"updates[{idx}].schedule missing: {sched_field}",
-                            severity="error",
-                        )
-                    )
+            violations.extend(
+                Violation(
+                    project=name,
+                    check="dependabot-schedule",
+                    message=f"updates[{idx}].schedule missing: {sched_field}",
+                    severity="error",
+                )
+                for sched_field in REQUIRED_SCHEDULE_FIELDS
+                if sched_field not in schedule
+            )
             # Timezone check
             tz = schedule.get("timezone")
             if tz and tz != EXPECTED_TIMEZONE:
@@ -335,9 +335,9 @@ def main() -> int:
         )
         return 1
 
-    infos: list[ProjectInfo] = []
-    for project_path in projects:
-        infos.append(validate_project(project_path))
+    infos: list[ProjectInfo] = [
+        validate_project(project_path) for project_path in projects
+    ]
 
     if args.json_output:
         write_report(infos)

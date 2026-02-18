@@ -1,0 +1,6 @@
+id: ban-isinstance-dict
+language: python
+rule:
+  pattern: isinstance($X, dict)
+message: "isinstance(x, dict) — prefer isinstance(x, Mapping) for broader compatibility"
+severity: warning

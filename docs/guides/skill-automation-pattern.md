@@ -10,29 +10,30 @@ Create automations that are reproducible, script-first, and enforceable by CI-st
 
 For each new automation family, deliver all items below:
 
-1. One skill: `.claude/skills/<automation-name>/SKILL.md`
-2. One checker script: `scripts/validation/<checker>.sh`
-3. One orchestrator script: `scripts/validation/<orchestrator>.sh`
-4. One docs page in `docs/guides/`
-5. One baseline/report artifact path under `.sisyphus/`
-
-## Standard Script Contract
-
-Checker scripts must support policy modes:
-
-```bash
-scripts/validation/<checker>.sh --mode baseline --root .
-scripts/validation/<checker>.sh --mode strict --root .
-```
-
-Orchestrator scripts must support execution depth:
-
-```bash
-scripts/validation/<orchestrator>.sh quick
-scripts/validation/<orchestrator>.sh full
-```
+1. One skill folder: `.claude/skills/<automation-name>/` containing:
+   - `SKILL.md` — canonical skill document
+   - `rules.yml` — detection rules (ast-grep, ripgrep, or custom)
+   - `rules/` — ast-grep rule files (if any)
+   - `baseline.json` — violation baseline (auto-generated)
+2. One docs page in `docs/guides/` (if cross-cutting)
 
 ## Standard Skill Contract
+
+Skills are validated by the generic runner:
+
+```bash
+python3 scripts/core/skill_validate.py --skill <name>
+python3 scripts/core/skill_validate.py --skill <name> --mode strict
+python3 scripts/core/skill_validate.py --skill <name> --update-baseline
+```
+
+The runner auto-discovers all skills:
+
+```bash
+python3 scripts/core/skill_validate.py --all
+```
+
+## Standard Skill Format
 
 The skill must follow the canonical format from `skill-format-universal` and include:
 
@@ -47,49 +48,42 @@ The skill must follow the canonical format from `skill-format-universal` and inc
 ## Implementation Checklist
 
 1. Define the invariant (policy or quality requirement).
-2. Build checker script with machine-readable output.
-3. Add baseline mode for no-regression enforcement.
-4. Add strict mode for zero-violation enforcement.
-5. Build orchestrator for quick/full runs.
-6. Wire automation into `scripts/validate_all_projects.sh`.
-7. Write or update skill doc with exact commands.
-8. Add or update a docs guide in `docs/guides/`.
-9. Run quick validation and integrated validation.
+2. Create `rules.yml` with detection rules (ast-grep, ripgrep, or custom).
+3. Place ast-grep rule files in skill `rules/` directory.
+4. Initialize baseline with `python3 scripts/core/skill_validate.py --skill <name> --update-baseline`.
+5. Write or update skill doc with exact commands.
+6. Add or update a docs guide in `docs/guides/` (if cross-cutting).
+7. Run `python3 scripts/core/skill_validate.py --all` to verify integration.
 
 ## Example (Current Pattern)
 
-Current repository implementation for dict/Any enforcement and Pydantic v2 migration:
+Current repository implementation uses the **self-contained skill architecture**. Each skill
+folder (`.claude/skills/<skill>/`) owns its own `rules.yml`, `rules/` ast-grep files,
+`baseline.json`, and `report.json`. The generic runner `scripts/core/skill_validate.py`
+discovers and executes everything.
 
 **Dict/Any Policy Gate**:
 - Skill: `.claude/skills/flext-strict-typing/SKILL.md`
-- Checker: `scripts/validation/enforce_no_dict_no_any.sh`
-- AST rules (detect-only): `scripts/validation/ast-grep-no-dict.yml`
-- Orchestrator: `scripts/validation/run_automated_validation.sh`
-- Baseline: `.sisyphus/baselines/policy_gate_baseline.json`
-- Report: `.sisyphus/reports/policy_gate_latest.json`
+- Rules: `.claude/skills/flext-strict-typing/rules.yml` (10 rules: 8 ast-grep + 2 ripgrep)
+- AST rules: `.claude/skills/flext-strict-typing/rules/*.yml`
+- Baseline: `.claude/skills/flext-strict-typing/baseline.json`
 
 **Pydantic v2 Policy Gate**:
 - Skill: `.claude/skills/lib-pydantic-v2/SKILL.md`
-- Checker: `scripts/validation/enforce_pydantic_v2_skill.sh`
-- AST rules (detect): `scripts/validation/ast-grep-pydantic-v2.yml`
-- AST rules (safe-fix): `scripts/validation/ast-grep-safe-fixes.yml`
-- Baseline: `.sisyphus/baselines/pydantic_v2_policy_baseline.json`
+- Rules: `.claude/skills/lib-pydantic-v2/rules.yml` (8 ast-grep rules)
+- AST rules: `.claude/skills/lib-pydantic-v2/rules/*.yml`
+- Baseline: `.claude/skills/lib-pydantic-v2/baseline.json`
 
-**Skill-driven runners**:
-- Scan runner: `scripts/validation/run_skill_scan.sh`
-- Auto-fix runner: `scripts/validation/run_skill_autofix.sh`
-- Metrics collector: `scripts/validation/collect_file_metrics.py`
+**Generic runner**:
+- `scripts/core/skill_validate.py` — auto-discovers `.claude/skills/*/rules.yml`
 
 ## Verification Commands
 
 ```bash
-bash -n scripts/validation/enforce_no_dict_no_any.sh
-bash -n scripts/validation/run_automated_validation.sh
-bash -n scripts/validation/run_skill_scan.sh
-bash -n scripts/validation/run_skill_autofix.sh
-scripts/validation/run_automated_validation.sh quick
-scripts/validation/run_skill_scan.sh .
-scripts/validation/run_skill_autofix.sh --mode safe --dry-run --root .
+python3 scripts/core/skill_validate.py --list-skills
+python3 scripts/core/skill_validate.py --skill flext-strict-typing
+python3 scripts/core/skill_validate.py --skill lib-pydantic-v2
+python3 scripts/core/skill_validate.py --all
 ```
 
 ## Adoption Rule

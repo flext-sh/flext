@@ -6,12 +6,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import operator
 import re
 import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-
 
 OWNER_MARKER_RE = re.compile(
     r"^# Owner-Skill:\s+(.claude/skills/([a-z0-9][-a-z0-9]*)/SKILL\.md)\s*$"
@@ -115,7 +115,8 @@ def read_header(repo_root: Path, script_path: Path) -> list[str]:
                     break
                 lines.append(line.rstrip("\n"))
     except OSError as exc:
-        raise SkillInfraError(f"cannot read script header: {script_path}") from exc
+        msg = f"cannot read script header: {script_path}"
+        raise SkillInfraError(msg) from exc
     return lines
 
 
@@ -123,7 +124,8 @@ def scripts_section(skill_file: Path) -> str:
     try:
         content = skill_file.read_text(encoding="utf-8")
     except OSError as exc:
-        raise SkillInfraError(f"cannot read skill file: {skill_file}") from exc
+        msg = f"cannot read skill file: {skill_file}"
+        raise SkillInfraError(msg) from exc
 
     lines = content.splitlines()
     in_section = False
@@ -282,14 +284,15 @@ def write_candidates(
         report_path.parent.mkdir(parents=True, exist_ok=True)
         payload = {
             "total_candidates": len(candidates),
-            "candidates": sorted(candidates, key=lambda item: item["script"]),
+            "candidates": sorted(candidates, key=operator.itemgetter("script")),
         }
         _ = report_path.write_text(
             json.dumps(payload, indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
         )
     except OSError as exc:
-        raise SkillInfraError(f"cannot write candidate report: {report_path}") from exc
+        msg = f"cannot write candidate report: {report_path}"
+        raise SkillInfraError(msg) from exc
     return report_path
 
 
@@ -300,7 +303,7 @@ def run_main(argv: list[str]) -> int:
         code = int(exc.code) if isinstance(exc.code, int) else EXIT_USAGE
         return (
             code
-            if code in (EXIT_PASS, EXIT_FAIL, EXIT_USAGE, EXIT_INFRA)
+            if code in {EXIT_PASS, EXIT_FAIL, EXIT_USAGE, EXIT_INFRA}
             else EXIT_USAGE
         )
 
@@ -330,10 +333,10 @@ def run_main(argv: list[str]) -> int:
 
         summary = (
             f"\n{Ansi.CYAN}Summary:{Ansi.RESET} total={len(results)} "
-            + f"{Ansi.GREEN}ok={ok_count}{Ansi.RESET} "
-            + f"{Ansi.YELLOW}unowned={unowned_count}{Ansi.RESET} "
-            + f"{Ansi.RED}violations={violation_only_count}{Ansi.RESET} "
-            + f"{Ansi.RED}total_noncompliant={total_violations}{Ansi.RESET}"
+            f"{Ansi.GREEN}ok={ok_count}{Ansi.RESET} "
+            f"{Ansi.YELLOW}unowned={unowned_count}{Ansi.RESET} "
+            f"{Ansi.RED}violations={violation_only_count}{Ansi.RESET} "
+            f"{Ansi.RED}total_noncompliant={total_violations}{Ansi.RESET}"
         )
         eprint(summary)
         eprint(f"Candidates report: {report_path.relative_to(repo_root)}")
@@ -353,7 +356,7 @@ def run_main(argv: list[str]) -> int:
 
 def main() -> None:
     code = run_main(sys.argv[1:])
-    if code not in (EXIT_PASS, EXIT_FAIL, EXIT_USAGE, EXIT_INFRA):
+    if code not in {EXIT_PASS, EXIT_FAIL, EXIT_USAGE, EXIT_INFRA}:
         code = EXIT_INFRA
     raise SystemExit(code)
 

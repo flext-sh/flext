@@ -29,3 +29,19 @@ rule:
 fix: $MODEL.model_dump_json($$$ARGS)
 message: "Rewrite .json() -> .model_dump_json()"
 severity: error
+---
+id: fix-pydantic-v1-validator-import
+language: python
+rule:
+  pattern: from pydantic import validator
+fix: from pydantic import field_validator
+message: "Rewrite validator import -> field_validator import"
+severity: error
+---
+id: fix-pydantic-v1-root-validator-import
+language: python
+rule:
+  pattern: from pydantic import root_validator
+fix: from pydantic import model_validator
+message: "Rewrite root_validator import -> model_validator import"
+severity: error

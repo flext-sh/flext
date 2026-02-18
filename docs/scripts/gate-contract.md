@@ -232,14 +232,11 @@ exempt from gate contract validation but must still have Owner-Skill markers.
 
 ## Examples of Conforming Scripts
 
-### Validator (bash)
-- `scripts/validation/enforce_no_dict_no_any.sh` — accepts `--mode`, `--root`, `--baseline-file`, `--report-file`, `--update-baseline`, `--baseline-strategy`; exits 0/1/2
-- `scripts/validation/enforce_pydantic_v2_skill.sh` — same contract
+### Validator (python — skill-based)
+- `python3 scripts/core/skill_validate.py --skill flext-strict-typing` — discovers rules from `.claude/skills/flext-strict-typing/rules.yml`; accepts `--mode baseline|strict`; exits 0/1/2/3
+- `python3 scripts/core/skill_validate.py --skill lib-pydantic-v2` — same contract
+- `python3 scripts/core/skill_validate.py --all` — runs all discovered skills
 
-### Fixer (bash)
-- `scripts/validation/fix_pydantic_v2_violations.sh` — requires `--dry-run` or `--apply`; accepts `--mode safe|risky`; exits 0/1/2
-- `scripts/validation/run_skill_autofix.sh` — requires `--dry-run` or `--apply`; accepts `--mode safe|risky`
-
-### Validator (python)
+### Validator (python — standalone)
 - `scripts/core/check_script_skill_ownership.py` — exits 0/1; produces JSON report
 - `scripts/core/check_script_artifact_naming.py` — exits 0/1; produces JSON report

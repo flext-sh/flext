@@ -1,0 +1,73 @@
+skill: lib-structlog
+description: Enforce structured logging through FlextLogger and FlextRuntime bridges.
+scan_targets:
+  include:
+  - src/**/*.py
+  exclude:
+  - flext-core/src/flext_core/runtime.py
+  - flext-core/src/flext_core/loggings.py
+  projects:
+  - client-a-oud-mig
+  - flext-api
+  - flext-auth
+  - flext-cli
+  - flext-core
+  - flext-db-oracle
+  - flext-dbt-ldap
+  - flext-dbt-ldif
+  - flext-dbt-oracle
+  - flext-dbt-oracle-wms
+  - flext-grpc
+  - flext-ldap
+  - flext-ldif
+  - flext-meltano
+  - flext-observability
+  - flext-oracle-oic
+  - flext-oracle-wms
+  - flext-plugin
+  - flext-quality
+  - flext-tap-ldap
+  - flext-tap-ldif
+  - flext-tap-oracle
+  - flext-tap-oracle-oic
+  - flext-tap-oracle-wms
+  - flext-target-ldap
+  - flext-target-ldif
+  - flext-target-oracle
+  - flext-target-oracle-oic
+  - flext-target-oracle-wms
+  - flext-web
+  - client-b-meltano-native
+rules:
+- id: ban-direct-structlog-getlogger
+  type: ast-grep
+  file: rules/direct-get-logger.yml
+  severity: error
+  group: structlog_bridge
+  count_by: rule_id
+  description: Direct structlog.get_logger usage is banned outside FlextLogger/FlextRuntime bridge files.
+  fix_auto: true
+  fix_type: ast-grep
+  fix_file: rules/direct-get-logger-fix.yml
+  fix_instruction: Auto-rewrite structlog.get_logger(name) to FlextLogger.create_module_logger(name) when a single name argument
+    is present.
+- id: ban-print-in-src
+  type: ripgrep
+  pattern: ^\s*print\(
+  severity: warning
+  group: structured_logging
+  description: Avoid print statements in Python sources; use structured logging.
+  fix_auto: false
+  fix_instruction: Replace print(...) with FlextLogger/FlextRuntime logging methods.
+  fix_type: manual
+- id: ban-direct-structlog-configure
+  type: ripgrep
+  pattern: structlog\.configure\(
+  severity: error
+  group: structlog_bridge
+  description: Direct structlog.configure usage is banned outside runtime bridge files.
+  fix_auto: false
+  fix_instruction: Centralize logging setup via FlextRuntime.configure_structlog(...).
+  fix_type: manual
+baseline:
+  strategy: total

@@ -1,0 +1,22 @@
+skill: rules-typings
+description: Directory-scoped checks for typing stubs and local typing shims.
+scan_targets:
+  include:
+  - typings/**/*.py
+  - typings/**/*.pyi
+  exclude: []
+  projects:
+  - .
+rules:
+- id: require-typing-extensions-compat
+  type: ripgrep
+  pattern: typing_extensions
+  severity: warning
+  group: typings_compat
+  description: Prefer explicit typing_extensions imports when backport compatibility
+    is needed.
+  fix_auto: false
+  fix_instruction: If using backported typing features, import them from typing_extensions.
+  fix_type: manual
+baseline:
+  strategy: total

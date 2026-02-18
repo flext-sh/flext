@@ -113,8 +113,10 @@ def to_markdown(summary: Summary, issues: list[Issue]) -> str:
         "## Severity Breakdown",
     ]
     severity_counts = summary.severity_counts
-    for sev in ("critical", "high", "medium", "low"):
-        lines.append(f"- {sev}: {severity_counts.get(sev, 0)}")
+    lines.extend(
+        f"- {sev}: {severity_counts.get(sev, 0)}"
+        for sev in ("critical", "high", "medium", "low")
+    )
 
     lines.append("")
     if not issues:
@@ -129,10 +131,10 @@ def to_markdown(summary: Summary, issues: list[Issue]) -> str:
             "|---|---|---|---|",
         ],
     )
-    for issue in issues:
-        lines.append(
-            f"| {issue.file} | {issue.issue_type} | {issue.severity} | {issue.message} |",
-        )
+    lines.extend(
+        f"| {issue.file} | {issue.issue_type} | {issue.severity} | {issue.message} |"
+        for issue in issues
+    )
     return "\n".join(lines) + "\n"
 
 

@@ -1,22 +1,62 @@
 skill: lib-pydantic-v2
-description: "Ban Pydantic v1 API usage, enforce v2 migration across all FLEXT projects"
-
+description: Ban Pydantic v1 API usage, enforce v2 migration across all FLEXT projects
 scan_targets:
-  include: ["**/*.py"]
+  include:
+  - '**/*.py'
   exclude: []
   projects: []
-
 rules:
-  - id: pydantic-v1-violations
-    type: ast-grep
-    file: rules/pydantic-v2.yml
-    severity: error
-    group: pydantic_v1_violations
-    count_by: rule_id
-    description: "AST-level Pydantic v1 API detection (8 rules: model_rebuild, .dict, parse_obj, parse_raw, .json, from_orm, @validator, @root_validator)"
-    fix_auto: true
-    fix_file: rules/pydantic-v2-fix.yml
-    fix_instruction: "Auto-rewrites: .dict()->model_dump(), parse_obj()->model_validate(), parse_raw()->model_validate_json(), .json()->model_dump_json(). Manual: model_rebuild (remove), from_orm (use model_validate+from_attributes), @validator->@field_validator, @root_validator->@model_validator."
-
+- id: pydantic-v1-auto-fixable
+  type: ast-grep
+  file: rules/pydantic-v2.yml
+  severity: error
+  group: pydantic_v1_violations
+  count_by: rule_id
+  description: 'Auto-fixable Pydantic v1 APIs: .dict(), parse_obj(), parse_raw(), .json()'
+  fix_auto: true
+  fix_type: ast-grep
+  fix_file: rules/pydantic-v2-fix.yml
+  fix_instruction: 'Auto-rewrites: .dict()->model_dump(), parse_obj()->model_validate(), parse_raw()->model_validate_json(),
+    .json()->model_dump_json().'
+  fix_description: Applies ast-grep rewrites for 4 method renames.
+- id: pydantic-model-rebuild-critical
+  type: ripgrep
+  pattern: \.model_rebuild\(
+  severity: error
+  group: pydantic_critical
+  description: 'CRITICAL: model_rebuild() calls must be removed — resolve type references at definition time.'
+  fix_auto: false
+  fix_instruction: Remove model_rebuild() call entirely. Resolve forward references with from __future__ import annotations
+    or TYPE_CHECKING guard.
+  fix_type: manual
+- id: pydantic-v1-from-orm
+  type: ripgrep
+  pattern: \.from_orm\(
+  severity: error
+  group: pydantic_v1_violations
+  description: Pydantic v1 from_orm() is banned.
+  fix_auto: false
+  fix_instruction: Replace .from_orm(obj) with .model_validate(obj) and set model_config = ConfigDict(from_attributes=True).
+  fix_type: manual
+- id: pydantic-v1-validator-decorator
+  type: ripgrep
+  pattern: '@validator\('
+  severity: error
+  group: pydantic_v1_violations
+  description: Pydantic v1 @validator decorator is banned.
+  fix_auto: false
+  fix_instruction: 'Replace @validator with @field_validator. Update function signature: use @field_validator(''field_name'',
+    mode=''before''|''after'') and (cls, v) -> (cls, v, info).'
+  fix_type: manual
+- id: pydantic-v1-root-validator-decorator
+  type: ripgrep
+  pattern: '@root_validator\('
+  severity: error
+  group: pydantic_v1_violations
+  description: Pydantic v1 @root_validator decorator is banned.
+  fix_auto: false
+  fix_instruction: Replace @root_validator with @model_validator(mode='before'|'after'). Update signature to use model_validator
+    patterns.
+  fix_type: manual
 baseline:
   strategy: total

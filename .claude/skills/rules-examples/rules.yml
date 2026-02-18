@@ -1,0 +1,31 @@
+skill: rules-examples
+description: Directory-scoped checks for runnable example scripts.
+scan_targets:
+  include:
+  - examples/**/*.py
+  exclude: []
+  projects:
+  - .
+rules:
+- id: require-main-guard
+  type: ripgrep
+  pattern: if __name__\s*==\s*["']__main__["']
+  match: absent
+  severity: warning
+  group: examples_runnable
+  description: Examples should be directly runnable via a __main__ guard.
+  fix_auto: false
+  fix_instruction: Add an 'if __name__ == "__main__":' entrypoint block.
+  fix_type: manual
+- id: require-future-annotations
+  type: ripgrep
+  pattern: from __future__ import annotations
+  match: absent
+  severity: error
+  group: examples_runnable
+  description: Examples should opt into postponed annotations for consistency.
+  fix_auto: false
+  fix_instruction: Add 'from __future__ import annotations' near the top of each example.
+  fix_type: manual
+baseline:
+  strategy: total

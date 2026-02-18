@@ -1,0 +1,68 @@
+skill: workspace-maintenance
+description: "Validate workspace hygiene: script ownership, gitignore patterns, cruft detection."
+scan_targets:
+  include:
+    [
+      "scripts/maintenance/*.py",
+      "scripts/maintenance/**/*.py",
+      "scripts/git/*.py",
+      "scripts/git/**/*.py",
+      ".gitignore",
+      "**/.gitignore",
+    ]
+  exclude: []
+  projects:
+    [
+      ".",
+      "flext-core",
+      "flext-api",
+      "flext-auth",
+      "flext-cli",
+      "flext-db-oracle",
+      "flext-grpc",
+      "flext-ldap",
+      "flext-ldif",
+      "flext-meltano",
+      "flext-observability",
+      "flext-plugin",
+      "flext-quality",
+      "flext-web",
+      "client-a-oud-mig",
+      "client-b-meltano-native",
+    ]
+rules:
+  - id: require-owner-skill-marker
+    type: ripgrep
+    pattern: 'Owner-Skill:'
+    match: absent
+    severity: error
+    group: ownership
+    description: "Workspace maintenance scripts must declare Owner-Skill marker"
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Add '# Owner-Skill: .claude/skills/workspace-maintenance/SKILL.md' in the first 10 lines."
+
+  - id: gitignore-has-pycache-pattern
+    type: ripgrep
+    pattern: '__pycache__/'
+    match: absent
+    severity: warning
+    group: gitignore_coverage
+    description: "Missing __pycache__/ pattern in .gitignore"
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Add '__pycache__/' to .gitignore."
+
+  - id: gitignore-has-dist-pattern
+    type: ripgrep
+    pattern: 'dist/'
+    match: absent
+    severity: warning
+    group: gitignore_coverage
+    description: "Missing dist/ pattern in .gitignore"
+    fix_auto: false
+    fix_type: manual
+    fix_instruction: "Add 'dist/' to .gitignore."
+
+baseline:
+  strategy: total
