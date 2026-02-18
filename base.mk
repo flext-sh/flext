@@ -87,11 +87,11 @@ $(warning ⚠️  Local .venv found! Run 'make clean-local-venv' to use workspac
 endif
 
 # === PHONY DECLARATIONS ===
-.PHONY: help install install-dev setup lint format fix type-check test test-fast upgrade
+.PHONY: help install install-dev setup lint format fix type-check type-check-json pyrefly-infer test test-fast upgrade
 .PHONY: test-unit test-integration security validate check clean clean-all reset
 .PHONY: build shell deps complexity docstring-check coverage-html
 .PHONY: dead-code modernize cognitive-complexity spell-check validate-full
-.PHONY: t l f tc c v s dp cx dc vf sp
+.PHONY: t l f tc tcj pi c v s dp cx dc vf sp
 .PHONY: check-venv clean-local-venv venv-info
 
 # === HELP ===
@@ -127,6 +127,23 @@ format-check: ## Check formatting
 # === TYPE CHECK (PyRefly - ZERO TOLERANCE) ===
 type-check: ## Run type checking
 	$(Q)$(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml 2>/dev/null || { echo "FAIL: types"; exit 1; }
+
+type-check-json: ## Type-check with JSON output for artifact capture
+	$(Q)$(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml 2>&1 | tee /dev/stderr | grep -c "^ERROR" > .pyrefly-error-count.txt || true
+	$(Q)echo "{\"project\":\"$(PROJECT_NAME)\",\"error_count\":$$(cat .pyrefly-error-count.txt 2>/dev/null || echo 0)}" > .pyrefly-report.json
+
+pyrefly-infer: ## Run pyrefly infer for annotation backfill (guarded, non-degrading)
+	$(Q)echo "pyrefly-infer: $(PROJECT_NAME)"
+	$(Q)before=$$($(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml 2>&1 | grep -c "^ERROR" || echo 0); \
+	$(POETRY) run pyrefly infer $(SRC_DIR) 2>/dev/null || true; \
+	$(MAKE) format -s 2>/dev/null || true; \
+	after=$$($(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml 2>&1 | grep -c "^ERROR" || echo 0); \
+	if [ "$$after" -gt "$$before" ]; then \
+		echo "REJECT: pyrefly-infer made errors worse ($$before -> $$after), reverting"; \
+		git checkout -- $(SRC_DIR) 2>/dev/null || true; \
+	else \
+		echo "ACCEPT: pyrefly-infer ($$before -> $$after errors)"; \
+	fi
 
 # === CODE QUALITY ===
 complexity: ## Code complexity analysis (Radon CC + MI)
@@ -262,6 +279,8 @@ t: test
 l: lint
 f: format
 tc: type-check
+tcj: type-check-json
+pi: pyrefly-infer
 c: clean
 v: validate
 vf: validate-full

@@ -1,0 +1,86 @@
+skill: flext-pyrefly-typecheck-fix
+description: 'Pyrefly type-check error detection and safe auto-fix rules for FLEXT ecosystem.'
+scan_targets:
+  include:
+  - '**/*.py'
+  exclude:
+  - '**/tests/**'
+  - '**/__pycache__/**'
+  projects: []
+rules:
+# =========================================================================
+# Cluster 1: FlextResult.ok(None) — Real bug (None rejected at runtime)
+# =========================================================================
+- id: detect-ok-none
+  type: ast-grep
+  file: rules/detect-ok-none.yml
+  severity: error
+  group: result_ok_none
+  count_by: rule_id
+  description: 'FlextResult.ok(None) is a runtime bug — ok() rejects None values.'
+  fix_auto: true
+  fix_type: ast-grep
+  fix_file: rules/fix-ok-none.yml
+  fix_instruction: 'Replace .ok(None) with .ok(True) for FlextResult[bool] return types.'
+
+# =========================================================================
+# Cluster 2: FlextResult[object] type erasure
+# =========================================================================
+- id: detect-result-object
+  type: ast-grep
+  file: rules/detect-result-object.yml
+  severity: error
+  group: result_type_erasure
+  count_by: rule_id
+  description: 'FlextResult[object] uses type erasure — prefer FlextResult[t.GeneralValueType].'
+  fix_auto: true
+  fix_type: ast-grep
+  fix_file: rules/fix-result-object.yml
+  fix_instruction: 'Rewrite FlextResult[object] to FlextResult[t.GeneralValueType] at boundaries.'
+
+# =========================================================================
+# Cluster 3: Logger annotation drift (BindableLogger vs StructlogLogger)
+# =========================================================================
+- id: detect-bindable-logger-annotation
+  type: ast-grep
+  file: rules/detect-bindable-logger.yml
+  severity: error
+  group: logger_typing
+  count_by: rule_id
+  description: 'BindableLogger annotation lacks logging method signatures — use p.Log.StructlogLogger.'
+  fix_auto: true
+  fix_type: ast-grep
+  fix_file: rules/fix-bindable-logger.yml
+  fix_instruction: 'Rewrite BindableLogger type annotations to p.Log.StructlogLogger.'
+  fix_imports:
+  - from flext_core.protocols import p
+
+# =========================================================================
+# Cluster 4: RootModel dict() coercion
+# =========================================================================
+- id: detect-dict-rootmodel-coercion
+  type: ast-grep
+  file: rules/detect-dict-rootmodel.yml
+  severity: error
+  group: rootmodel_coercion
+  count_by: rule_id
+  description: 'dict(rootmodel_instance) causes no-matching-overload — use .root instead.'
+  fix_auto: false
+  fix_instruction: 'Replace dict(rootmodel_instance) with rootmodel_instance.root for RootModel containers.'
+
+# =========================================================================
+# Cluster 5: Mapping mutation (Mapping has no setdefault/item assignment)
+# =========================================================================
+- id: detect-mapping-mutation
+  type: ast-grep
+  file: rules/detect-mapping-mutation.yml
+  severity: warning
+  group: mapping_mutation
+  count_by: rule_id
+  description: 'Mapping type used at mutation site — mutation requires dict or MutableMapping.'
+  fix_auto: false
+  fix_instruction: 'Change annotation to dict[...] or MutableMapping[...] where mutation occurs.'
+
+baseline:
+  strategy: total
+report: {}

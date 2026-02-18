@@ -1,0 +1,5 @@
+id: fix-ok-none
+language: python
+rule:
+  pattern: $EXPR.ok(None)
+fix: $EXPR.ok(True)

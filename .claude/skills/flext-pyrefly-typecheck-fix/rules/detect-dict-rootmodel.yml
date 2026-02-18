@@ -1,0 +1,7 @@
+id: detect-dict-rootmodel
+language: python
+rule:
+  pattern: dict($ARG)
+  inside:
+    kind: call
+    stopBy: end
