@@ -19,6 +19,7 @@ description: Rules for documentation under `docs/` to keep architecture and proj
 - `docs/README.md`
 - `docs/architecture/overview.md`
 - `docs/architecture/clean-architecture.md`
+- `docs/architecture/adr/README.md`
 - `CLAUDE.md`
 
 ## Rules
@@ -60,6 +61,14 @@ The core handles results somewhere in the project.
 Why bad: vague guidance with no verifiable anchor.
 
 ## Verification
+
+Make gates:
+
+- `make docs PROJECT=<name>` — build docs for a specific project
+- `make validate VALIDATE_SCOPE=workspace` — workspace-level validation
+
+File checks:
+
 - `ls -la docs`
 - `rg -n "flext-core/src/flext_core|CLAUDE.md|AGENTS.md" docs`
 - `rg -n "TODO|FIXME" docs || true`

@@ -17,7 +17,7 @@ from pathlib import Path
 
 from git import InvalidGitRepositoryError, Repo
 
-FLEXT_ROOT = Path("/home/marlonsc/flext")
+FLEXT_ROOT = Path(__file__).resolve().parents[1]
 
 
 class CleanMode(Enum):

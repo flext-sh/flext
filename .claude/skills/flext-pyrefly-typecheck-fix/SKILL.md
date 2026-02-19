@@ -7,7 +7,7 @@ description: Pyrefly type-check error detection and safe auto-fix rules for recu
 
 **Reviewed**: 2026-02-18 | **Scope**: Automated detection and fix for recurring pyrefly error clusters
 
-> **Source of truth**: Error patterns extracted from `make type-check` output across all FLEXT projects.
+> **Source of truth**: Error patterns extracted from `make check` and `make validate` output across FLEXT projects.
 > Cross-referenced with `flext-core/src/flext_core/typings.py`, `protocols.py`, and `result.py`.
 
 ## Purpose
@@ -17,7 +17,7 @@ Encodes each recurring pyrefly error family into:
 - A **safe fix rule** (ast-grep rewrite) when mechanical
 - A **manual-only instruction** when semantic
 
-Works with `skill_validate.py` (reporting) and `skill_fix.py` (safe fixes with rollback).
+Use `make validate` as the primary execution entrypoint. Internal script orchestration remains an implementation detail.
 
 ## Error Clusters Covered
 
@@ -44,18 +44,12 @@ Works with `skill_validate.py` (reporting) and `skill_fix.py` (safe fixes with r
 ## Verification
 
 ```bash
-# Detection (count violations)
-python3 scripts/core/skill_validate.py --skill flext-pyrefly-typecheck-fix --mode baseline
+# Recommended gates
+make validate PROJECT=<name>
+make validate PROJECT=<name> FIX=1
 
-# Safe auto-fix (dry run)
-python3 scripts/core/skill_fix.py --skill flext-pyrefly-typecheck-fix --dry-run
-
-# Apply fixes
-python3 scripts/core/skill_fix.py --skill flext-pyrefly-typecheck-fix --apply
-make 
-# Workspace gates
-make validate-scripts
-make check-clean
+# Workspace slice
+make validate PROJECTS="proj-a proj-b"
 ```
 
 When `type: custom` is necessary, keep script implementations inside `.claude/skills/flext-pyrefly-typecheck-fix/` and return `{"violation_count": N}`.

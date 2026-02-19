@@ -74,6 +74,7 @@ description: Shared script infrastructure — bash/python libraries, core runner
 3. Apply minimal change.
 4. Run `bash -n` on modified bash files, `python -m compileall scripts/core` for Python.
 5. Run `python .claude/skills/scripts-infra/validate_ownership.py --root .` to verify ownership markers.
+6. Run `make check PROJECT=flext-core` to verify no regressions in dependent projects.
 
 ## Examples
 
@@ -97,6 +98,14 @@ REPORT=".sisyphus/reports/my_report.json"
 Why bad: Hardcoded path bypasses artifact naming contract.
 
 ## Verification
+
+Make gates (primary):
+
+- `make check PROJECT=flext-core` — verify dependent projects pass lint/type/format/security
+- `make validate VALIDATE_SCOPE=workspace` — run workspace inventory + wiring map
+- `make validate PROJECT=flext-core` — verify complexity + docstring gates
+
+Script-level checks (internal):
 
 - `bash -n scripts/lib/common.sh`
 - `bash -n scripts/lib/artifact_naming.sh`

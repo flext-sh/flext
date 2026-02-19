@@ -187,6 +187,16 @@ process_request()
 
 ## Verification
 
+Make gates:
+
+```bash
+make check PROJECT=flext-core                  # lint + type gates for logging module
+make check PROJECT=flext-core CHECK_GATES=lint # lint catches direct structlog imports
+make test PROJECT=flext-core                   # logging integration tests
+```
+
+Pattern checks:
+
 ```bash
 # Confirm FlextLogger declarations
 rg -n "class FlextLogger|class Context:|class Factory:|class Performance:|class ResultAdapter" flext-core/src/flext_core/loggings.py

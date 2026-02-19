@@ -61,6 +61,13 @@ run the demo command module somehow
 Why bad: ambiguous instruction that cannot be executed or validated.
 
 ## Verification
+
+Make gates:
+
+- `make check PROJECT=<name>` — verify project quality after command changes
+
+File checks:
+
 - `ls -la cmd`
 - `rg -n "cmd/" docs README.md .claude/skills/*/SKILL.md`
 - `rg -n "TODO|FIXME" cmd || true`

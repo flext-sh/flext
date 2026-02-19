@@ -13,11 +13,15 @@ This skill provides a standardized workflow for maintaining `README.md` files, e
 2. **Structural Integrity**: Enforce consistent section ordering (Overview, Installation, Usage, Architecture).
 3. **Link Validation**: Ensure all internal and external links are valid and point to the correct organizations (e.g., `flext-sh/flext`).
 4. **Metadata Accuracy**: Keep version numbers, status badges, and reviewed dates up to date.
-5. **Automated Compliance**: Use the `scripts/readme_standardizer.py` tool to check and fix issues automatically.
+5. **Automated Compliance**: Use `make docs` as the default docs automation entrypoint; use `DOCS_PHASE` only when you need a narrowed operation.
 
 ## 🛠️ Tools
 
-The primary tool for this skill is `scripts/readme_standardizer.py`.
+The primary entrypoint for this skill is `make docs`.
+
+## 🔗 ADR Reference
+
+- `docs/architecture/adr/README.md`
 
 ### Installation
 
@@ -25,15 +29,25 @@ No extra installation required if you have the dev dependencies. The script uses
 
 ### Usage
 
-```bash
-# Check all READMEs in the workspace
-python scripts/readme_standardizer.py --check
+Primary (Make verbs):
 
-# Fix issues automatically where possible
-python scripts/readme_standardizer.py --fix
+```bash
+make validate VALIDATE_SCOPE=workspace    # workspace-level validation including docs
+make check PROJECT=flext-core             # standard quality gates
+```
+
+Internal (phase-focused usage when needed):
+
+```bash
+# Run full docs automation (default)
+make docs
+
+# Target README-related validation/fix behavior via phase controls
+make docs DOCS_PHASE=validate
+make docs DOCS_PHASE=fix FIX=1
 
 # Target specific projects
-python scripts/readme_standardizer.py --projects flext-core flext-api --fix
+make docs PROJECTS="flext-core flext-api"
 ```
 
 ## 📝 Standards
@@ -90,5 +104,5 @@ Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 
 ## 🧩 Integration with other Skills
 
-- **markdown-lint**: Run `scripts/markdown_lint_workspace.py` _after_ standardization to ensure formatting compliance.
+- **markdown-lint**: Run `make docs DOCS_PHASE=audit` _after_ standardization to ensure formatting and link compliance.
 - **scripts-architecture**: Use in conjunction with architectural validation scripts.

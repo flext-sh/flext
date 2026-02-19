@@ -132,27 +132,37 @@ else:
 
 ## 🛠️ Development
 
+All development and maintenance run via Make from the repository root. No ad-hoc script invocations as the primary workflow.
+
 ### Prerequisites
 
 - Python 3.13+
 - Poetry (for dependency management)
 - Git
 
-### Setup
+### Workflow (Make)
 
 ```bash
-# Clone the repository
-git clone https://github.com/flext-sh/flext.git
+# Clone with submodules
+git clone --recursive https://github.com/flext-sh/flext.git
 cd flext
 
-# Create virtual environment and install dependencies
-python -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
+# Setup: single workspace .venv, all projects (optional: PROJECT= or PROJECTS=)
+make setup
 
-# Run tests
-pytest
+# Upgrade deps + dependency report (use DEPS_REPORT=0 to skip report)
+make upgrade
+
+# Quality gates
+make check
+make test
+make validate
+
+# Typings: stub supply-chain + typing report (optional: PROJECT=, DEPS_REPORT=0)
+make typings
 ```
+
+Run **make help** for all verbs and parameters (e.g. `PROJECT=flext-core`, `FAIL_FAST=1`, `FIX=1`). See [CLAUDE.md](CLAUDE.md) for the full automation contract and standard places.
 
 ## 🤝 Contributing
 

@@ -18,11 +18,12 @@ description: Maintenance and git scripts — health checks, workspace status, gi
 - `scripts/merge_aggressive_gitignore.py`
 - `scripts/add_missing_clean_targets.py`
 - `scripts/update_clean_targets.py`
-- `scripts/docs_link_fixer.py`
-- `scripts/docs_maintenance_audit.py`
-- `scripts/docs_sync_automation.sh`
-- `scripts/docs_toc_generator.py`
-- `scripts/markdown_lint_workspace.py`
+- `scripts/documentation/fix.py`
+- `scripts/documentation/audit.py`
+- `scripts/documentation/build.py`
+- `scripts/documentation/generate.py`
+- `scripts/documentation/validate.py`
+- `scripts/documentation/readme_standardizer.py`
 - `scripts/maintenance/check_workspace_hygiene.py`
 - `scripts/maintenance/check_dependabot_config.py`
 - `scripts/maintenance/check_poetry_health.py`
@@ -30,6 +31,7 @@ description: Maintenance and git scripts — health checks, workspace status, gi
 ## References
 
 - `.claude/skills/rules-scripts/SKILL.md`
+- `docs/architecture/adr/README.md`
 
 ## Rules
 
@@ -49,18 +51,27 @@ description: Maintenance and git scripts — health checks, workspace status, gi
 1. Identify the maintenance concern.
 2. Create or modify the script under `scripts/maintenance/` or `scripts/git/`.
 3. Test with `--help` and `--dry-run` first.
-4. Verify with `python -m compileall scripts/maintenance scripts/git`.
+4. Verify script compiles: `python -m compileall scripts/maintenance scripts/git`.
+5. Run standard gates: `make check PROJECT=<name>` and `make clean PROJECT=<name>`.
 
 ## Examples
 
-Good:
+Good (Make verbs for standard gates):
+
+```bash
+make check
+make validate
+make clean
+```
+
+Good (direct scripts for maintenance utilities without Make targets):
 
 ```bash
 python scripts/maintenance/health_check_service.py
 python scripts/git/git_ultimate_cleanup.py --dry-run
 ```
 
-Why good: Safe defaults, explicit opt-in for destructive actions.
+Why good: Make verbs for standard workflow; safe defaults and explicit opt-in for maintenance scripts.
 
 Bad:
 
@@ -71,6 +82,14 @@ git clean -fdx  # directly in script without guard
 Why bad: Destructive without confirmation or dry-run.
 
 ## Verification
+
+Make gates (primary):
+
+- `make check PROJECT=flext-core` — lint + format + type + security
+- `make clean PROJECT=flext-core` — verify clean targets work
+- `make validate VALIDATE_SCOPE=workspace` — workspace-level inventory validation
+
+Script-level checks (internal):
 
 - `python -m compileall scripts/maintenance scripts/git`
 - `python scripts/maintenance/workspace_status.py --help`
@@ -91,11 +110,12 @@ Why bad: Destructive without confirmation or dry-run.
 | `scripts/merge_aggressive_gitignore.py` | Merge aggressive gitignore | `python scripts/merge_aggressive_gitignore.py` |
 | `scripts/add_missing_clean_targets.py` | Add missing clean targets | `python scripts/add_missing_clean_targets.py` |
 | `scripts/update_clean_targets.py` | Update clean targets | `python scripts/update_clean_targets.py` |
-| `scripts/docs_link_fixer.py` | Fix documentation links | `python scripts/docs_link_fixer.py` |
-| `scripts/docs_maintenance_audit.py` | Documentation maintenance audit | `python scripts/docs_maintenance_audit.py` |
-| `scripts/docs_sync_automation.sh` | Documentation sync automation | `bash scripts/docs_sync_automation.sh` |
-| `scripts/docs_toc_generator.py` | Documentation TOC generator | `python scripts/docs_toc_generator.py` |
-| `scripts/markdown_lint_workspace.py` | Lint markdown workspace-wide | `python scripts/markdown_lint_workspace.py` |
+| `scripts/documentation/fix.py` | Documentation fix phase (links + TOC) | `make docs DOCS_PHASE=fix FIX=1` |
+| `scripts/documentation/audit.py` | Documentation audit phase | `make docs DOCS_PHASE=audit` |
+| `scripts/documentation/build.py` | Documentation build phase | `make docs DOCS_PHASE=build` |
+| `scripts/documentation/generate.py` | Documentation generate phase | `make docs DOCS_PHASE=generate` |
+| `scripts/documentation/validate.py` | Documentation validate phase | `make docs DOCS_PHASE=validate` |
+| `scripts/documentation/readme_standardizer.py` | README standardization automation | `make docs` |
 | `scripts/maintenance/check_workspace_hygiene.py` | Workspace cleanliness validation | `python scripts/maintenance/check_workspace_hygiene.py` |
 | `scripts/maintenance/check_dependabot_config.py` | Dependabot config standardization | `python scripts/maintenance/check_dependabot_config.py` |
 | `scripts/maintenance/check_poetry_health.py` | Poetry lock health and outdated deps | `python scripts/maintenance/check_poetry_health.py` |

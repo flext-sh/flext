@@ -10,35 +10,55 @@ PROJECT_NAME ?= unnamed
 PYTHON_VERSION ?= 3.13
 SRC_DIR ?= src
 TESTS_DIR ?= tests
-COV_DIR ?= $(subst -,_,$(PROJECT_NAME))
-MIN_COVERAGE ?= 80
 DOCSTRING_MIN ?= 80
 COMPLEXITY_MAX ?= 10
+PYTEST_ARGS ?=
+CHECK_GATES ?=
+VALIDATE_GATES ?=
+DOCS_PHASE ?= all
 
-# === WORKSPACE DETECTION ===
-# Detect workspace root (FLEXT monorepo root)
-# For submodules, use superproject; otherwise use parent dir (standard FLEXT layout)
-# Note: git commands can return empty strings, so we check for non-empty output
-WORKSPACE_ROOT := $(shell \
-	super="$$(git rev-parse --show-superproject-working-tree 2>/dev/null)"; \
-	if [ -n "$$super" ]; then echo "$$super"; \
-	elif [ -d "../.venv" ]; then cd .. && pwd; \
-	else git rev-parse --show-toplevel 2>/dev/null || (cd .. && pwd); \
-	fi \
-)
+# === WORKSPACE/STANDALONE DETECTION ===
+BASE_MK_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+GIT_TOPLEVEL := $(shell git rev-parse --show-toplevel 2>/dev/null)
+SUPERPROJECT_ROOT := $(shell git rev-parse --show-superproject-working-tree 2>/dev/null)
+PROJECT_ROOT := $(CURDIR)
 
-# === VIRTUAL ENVIRONMENT CONFIGURATION ===
-# Use workspace-level venv (shared across all projects)
+ifeq ($(FLEXT_STANDALONE),1)
+FLEXT_MODE := standalone
+else ifneq ($(SUPERPROJECT_ROOT),)
+FLEXT_MODE := workspace
+else ifneq ($(and $(GIT_TOPLEVEL),$(wildcard $(BASE_MK_DIR)/.gitmodules),$(wildcard $(BASE_MK_DIR)/base.mk)),)
+FLEXT_MODE := workspace
+else
+FLEXT_MODE := standalone
+endif
+
+ifeq ($(FLEXT_MODE),workspace)
+WORKSPACE_ROOT := $(BASE_MK_DIR)
 WORKSPACE_VENV := $(WORKSPACE_ROOT)/.venv
-VENV_PYTHON := $(WORKSPACE_VENV)/bin/python
-VENV_ACTIVATE := source $(WORKSPACE_VENV)/bin/activate
-
-# Poetry configuration to use workspace venv
+ifeq ($(wildcard $(WORKSPACE_VENV)),)
+ACTIVE_VENV := $(PROJECT_ROOT)/.venv
+export POETRY_VIRTUALENVS_PATH := $(PROJECT_ROOT)
+export POETRY_VIRTUALENVS_IN_PROJECT := true
+export POETRY_VIRTUALENVS_CREATE := true
+else
+ACTIVE_VENV := $(WORKSPACE_VENV)
 export POETRY_VIRTUALENVS_PATH := $(WORKSPACE_ROOT)
 export POETRY_VIRTUALENVS_IN_PROJECT := false
 export POETRY_VIRTUALENVS_CREATE := false
-export VIRTUAL_ENV := $(WORKSPACE_VENV)
-export PATH := $(WORKSPACE_VENV)/bin:$(PATH)
+endif
+else
+WORKSPACE_ROOT := $(PROJECT_ROOT)
+ACTIVE_VENV := $(PROJECT_ROOT)/.venv
+export POETRY_VIRTUALENVS_PATH := $(PROJECT_ROOT)
+export POETRY_VIRTUALENVS_IN_PROJECT := true
+export POETRY_VIRTUALENVS_CREATE := true
+endif
+
+VENV_PYTHON := $(ACTIVE_VENV)/bin/python
+VENV_ACTIVATE := source $(ACTIVE_VENV)/bin/activate
+export VIRTUAL_ENV := $(ACTIVE_VENV)
+export PATH := $(ACTIVE_VENV)/bin:$(PATH)
 
 # Poetry command (uses workspace venv automatically)
 POETRY := poetry
@@ -54,6 +74,13 @@ FLEXT_PYTHONPATH := $(shell \
 			paths="$$paths:$$proj_src"; \
 		fi; \
 	done; \
+	if [ -d "$(WORKSPACE_ROOT)/.flext-deps" ]; then \
+		for dep_src in "$(WORKSPACE_ROOT)"/.flext-deps/*/src; do \
+			if [ -d "$$dep_src" ]; then \
+				paths="$$paths:$$dep_src"; \
+			fi; \
+		done; \
+	fi; \
 	echo "$$paths" \
 )
 
@@ -62,7 +89,7 @@ QUALITY_CMD ?= flext-quality
 QUALITY_AVAILABLE := $(shell command -v $(QUALITY_CMD) 2>/dev/null)
 
 # Export for subprocesses
-export PROJECT_NAME PYTHON_VERSION MIN_COVERAGE
+export PROJECT_NAME PYTHON_VERSION
 export PYTHONPATH := $(FLEXT_PYTHONPATH)
 export FLEXT_ROOT := $(WORKSPACE_ROOT)
 
@@ -79,259 +106,187 @@ CACHE_TIMEOUT := 300
 $(LINT_CACHE_DIR):
 	$(Q)mkdir -p $(LINT_CACHE_DIR)
 
-# === PHONY DECLARATIONS ===
-.PHONY: help install install-dev setup lint format fix type-check type-check-json pyrefly-infer test test-fast upgrade
-.PHONY: test-unit test-integration security validate check clean clean-all reset
-.PHONY: build shell deps complexity docstring-check coverage-html
-.PHONY: dead-code modernize cognitive-complexity spell-check validate-full
-.PHONY: t l f tc tcj pi c v s dp cx dc vf sp
-.PHONY: check-venv clean-local-venv venv-info enforce-workspace-venv
+# === SIMPLE VERB SURFACE ===
+.PHONY: help setup check security format docs docs-base docs-sync-scripts test validate clean _preflight
+STANDARD_VERBS := setup check security format docs test validate clean
+$(STANDARD_VERBS): _preflight
 
-# Enforce workspace-level .venv and prohibit project-local .venv.
-VENV_ENFORCED_TARGETS := install install-dev setup lint format fix format-check type-check type-check-json pyrefly-infer test test-fast test-verbose test-unit test-integration coverage-html build shell security complexity docstring-check dead-code cognitive-complexity spell-check deps check validate validate-full
-$(VENV_ENFORCED_TARGETS): enforce-workspace-venv
+define ENFORCE_WORKSPACE_VENV
+if [ "$(FLEXT_MODE)" = "workspace" ]; then \
+	if [ -d "$(WORKSPACE_ROOT)/.venv" ]; then \
+		if [ -d ".venv" ] && [ "$(CURDIR)" != "$(WORKSPACE_ROOT)" ]; then \
+			echo "Enforcing workspace venv: removing local .venv in $(CURDIR)"; \
+			rm -rf .venv; \
+			if [ -d ".venv" ]; then \
+				echo "ERROR: unable to remove local .venv in $(CURDIR)"; \
+				exit 1; \
+			fi; \
+		fi; \
+	elif [ "$(CURDIR)" = "$(WORKSPACE_ROOT)" ]; then \
+		echo "ERROR: workspace .venv not found at $(ACTIVE_VENV). Run 'make setup' in workspace root."; \
+		exit 1; \
+	elif [ "$(filter setup,$(MAKECMDGOALS))" != "setup" ] && [ ! -d "$(ACTIVE_VENV)" ]; then \
+		echo "ERROR: workspace .venv not found; fallback local .venv missing at $(ACTIVE_VENV). Run 'make setup' in $(PROJECT_NAME)."; \
+		exit 1; \
+	else \
+		echo "INFO: workspace .venv not found; using project-local fallback in $(PROJECT_NAME)."; \
+	fi; \
+elif [ "$(filter setup,$(MAKECMDGOALS))" != "setup" ] && [ ! -d "$(ACTIVE_VENV)" ]; then \
+	echo "ERROR: local .venv not found at $(ACTIVE_VENV). Run 'make setup' in $(PROJECT_NAME)."; \
+	exit 1; \
+fi
+endef
 
-# === HELP ===
+_preflight: ## Internal preflight for standardized verbs
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+
 help: ## Show commands
 	$(Q)echo "$(PROJECT_NAME) - FLEXT Project"
 	$(Q)echo ""
-	$(Q)grep -hE '^[a-zA-Z_-]+:.*?##' $(MAKEFILE_LIST) | \
-		awk 'BEGIN {FS = ":.*?## "}; {printf "  %-15s %s\n", $$1, $$2}'
+	$(Q)echo "Core verbs:"
+	$(Q)echo "  setup      Install dependencies and hooks"
+	$(Q)echo "  check      Run the 6 lint gates"
+	$(Q)echo "  security   Run all security checks"
+	$(Q)echo "  format     Run all formatting"
+	$(Q)echo "  docs       Build docs"
+	$(Q)echo "  test       Run pytest only"
+	$(Q)echo "  validate   Run validate gates only (use FIX=1 to auto-fix first)"
+	$(Q)echo "  clean      Clean build/test/type artifacts"
 
-# === SETUP ===
-install: ## Install dependencies
-	$(Q)$(POETRY) install
-
-install-dev: ## Install dev dependencies
-	$(Q)$(POETRY) install --with dev,test
-
-setup: install-dev ## Complete setup
+setup: ## Complete setup
+	$(Q)if [ -f "$(WORKSPACE_ROOT)/scripts/dependencies/sync_internal_deps.py" ]; then \
+		python3 "$(WORKSPACE_ROOT)/scripts/dependencies/sync_internal_deps.py" --project-root "$(CURDIR)"; \
+	fi
+	$(Q)$(POETRY) lock
+	$(Q)$(POETRY) install --all-extras --all-groups
 	$(Q)$(POETRY) run pre-commit install
 
-# === LINT (Ruff - ZERO TOLERANCE) ===
-lint: $(LINT_CACHE_DIR) ## Run linting
-	$(Q)$(POETRY) run ruff check . --quiet || { echo "FAIL: lint"; exit 1; }
-
-format: ## Format code
-	$(Q)$(POETRY) run ruff format . --quiet
-
-fix: ## Auto-fix lint issues
-	$(Q)$(POETRY) run ruff check --fix . --quiet
-
-format-check: ## Check formatting
-	$(Q)$(POETRY) run ruff format --check . --quiet || { echo "FAIL: format"; exit 1; }
-
-# === TYPE CHECK (PyRefly - ZERO TOLERANCE) ===
-type-check: ## Run type checking
-	$(Q)$(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml || { echo "FAIL: types"; exit 1; }
-
-type-check-json: ## Type-check with JSON output for artifact capture
-	$(Q)$(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml > .pyrefly-output.txt 2>&1; \
-	error_count=$$(awk '/^ERROR/ {count++} END {print count+0}' .pyrefly-output.txt); \
-	echo "{\"project\":\"$(PROJECT_NAME)\",\"error_count\":$$error_count}" > .pyrefly-report.json; \
-	rm -f .pyrefly-output.txt
-
-pyrefly-infer: ## Run pyrefly infer for annotation backfill (guarded, non-degrading)
-	$(Q)echo "pyrefly-infer: $(PROJECT_NAME)"
-	$(Q)backup_dir=$$(mktemp -d); \
-	cp -a $(SRC_DIR) "$$backup_dir/src_backup"; \
-	before=$$($(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml 2>&1 | awk '/^ERROR/ {count++} END {print count+0}'); \
-	if ! $(POETRY) run pyrefly infer $(SRC_DIR); then \
-		echo "FAIL: pyrefly-infer failed for $(PROJECT_NAME), restoring backup"; \
-		rm -rf $(SRC_DIR); \
-		cp -a "$$backup_dir/src_backup" $(SRC_DIR); \
-		rm -rf "$$backup_dir"; \
-		exit 1; \
-	fi; \
-	if ! $(MAKE) format -s; then \
-		echo "FAIL: format failed after pyrefly infer for $(PROJECT_NAME), restoring backup"; \
-		rm -rf $(SRC_DIR); \
-		cp -a "$$backup_dir/src_backup" $(SRC_DIR); \
-		rm -rf "$$backup_dir"; \
-		exit 1; \
-	fi; \
-	after=$$($(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml 2>&1 | awk '/^ERROR/ {count++} END {print count+0}'); \
-	if [ "$$after" -gt "$$before" ]; then \
-		echo "REJECT: pyrefly-infer made errors worse ($$before -> $$after), restoring backup"; \
-		rm -rf $(SRC_DIR); \
-		cp -a "$$backup_dir/src_backup" $(SRC_DIR); \
-		rm -rf "$$backup_dir"; \
-		exit 1; \
-	fi; \
-	echo "ACCEPT: pyrefly-infer ($$before -> $$after errors)"; \
-	rm -rf "$$backup_dir"
-
-# === CODE QUALITY ===
-complexity: ## Code complexity analysis (Radon CC + MI)
-	$(Q)$(POETRY) run radon cc $(SRC_DIR) -a -nb --total-average
-	$(Q)$(POETRY) run radon mi $(SRC_DIR) -nb
-
-docstring-check: ## Docstring coverage check
-	$(Q)$(POETRY) run interrogate $(SRC_DIR) --fail-under=$(DOCSTRING_MIN) --ignore-init-method --ignore-magic -q
-
-# === TEST ===
-test: ## Run tests with coverage
-	$(Q)$(POETRY) run pytest $(TESTS_DIR) \
-		--cov=$(COV_DIR) --cov-report=term-missing:skip-covered \
-		--cov-fail-under=$(MIN_COVERAGE) -q
-
-test-fast: ## Run tests (no coverage)
-	$(Q)$(POETRY) run pytest $(TESTS_DIR) -q --tb=short
-
-test-verbose: ## Run tests with output
-	$(Q)$(POETRY) run pytest $(TESTS_DIR) -v
-
-test-unit: ## Unit tests only
-	$(Q)$(POETRY) run pytest $(TESTS_DIR) -m "not integration" -q
-
-test-integration: ## Integration tests
-	$(Q)$(POETRY) run pytest $(TESTS_DIR) -m integration -q
-
-coverage-html: ## Generate HTML coverage report
-	$(Q)$(POETRY) run pytest --cov=$(COV_DIR) --cov-report=html -q
-
-# === BUILD ===
-build: ## Build package
-	$(Q)$(POETRY) build
-
-shell: ## Python shell
-	$(Q)$(POETRY) run python
-
-# === SECURITY (FAIL on issues) ===
-security: ## Security checks (Bandit)
-	$(Q)$(POETRY) run bandit -r $(SRC_DIR) -q -ll
-
-# === DEAD CODE & MODERNIZATION ===
-# Note: These tools run from WORKSPACE_ROOT environment where they are installed
-dead-code: ## Dead code detection (Vulture)
-	$(Q)cd $(WORKSPACE_ROOT) && $(POETRY) run vulture $(CURDIR)/$(SRC_DIR) --min-confidence 80 --exclude "tests,examples"
-
-modernize: ## Modern patterns suggestions (via Ruff FURB rules)
-	@echo "Note: Ruff already applies 36 FURB rules from refurb (see: ruff rule --all | grep FURB)"
-	@echo "Refurb standalone disabled - incompatible with Python 3.13 TypeAliasStmt"
-	@echo "Run 'make lint' to apply modernization suggestions via Ruff"
-
-cognitive-complexity: ## Cognitive complexity (Complexipy)
-	$(Q)cd $(WORKSPACE_ROOT) && $(POETRY) run complexipy $(CURDIR)/$(SRC_DIR) --max-complexity-allowed 15
-
-spell-check: ## Spell checking (Codespell)
-	$(Q)cd $(WORKSPACE_ROOT) && $(POETRY) run codespell $(CURDIR)/$(SRC_DIR) --toml $(WORKSPACE_ROOT)/pyproject.toml --quiet-level 3
-
-# === QUALITY GATES ===
-ifdef QUALITY_AVAILABLE
-check: ## Quick check (lint + type)
-	$(Q)$(QUALITY_CMD) check .
-else
-check: lint type-check ## Quick check (lint + type)
-endif
-
-ifdef QUALITY_AVAILABLE
-validate: ## Full validation
-	$(Q)$(QUALITY_CMD) validate . --min-coverage $(MIN_COVERAGE)
-else
-validate: lint format-check type-check complexity docstring-check security test ## Full validation
-endif
-
-validate-full: lint format-check type-check dead-code cognitive-complexity spell-check security test ## Full + extended checks
-
-# === UPGRADE ===
-upgrade: ## Upgrade all dependencies to latest versions
-	$(Q)echo "Upgrading dependencies in $(PROJECT_NAME)..."
-	$(Q)$(POETRY) upgrade
-	$(Q)echo "✓ Dependencies upgraded - verify with: make test"
-
-# === DEPENDENCY ANALYSIS ===
-deps: ## Analyze dependencies with deptry (missing, unused, transitive)
-	$(Q)echo "Analyzing dependencies in $(PROJECT_NAME)..."
-	$(Q)output=$$(uvx deptry . --no-ansi 2>&1); \
-	if printf '%s\n' "$$output" | grep -Eq "(DEP00|Found)"; then \
-		printf '%s\n' "$$output" | grep -E "(DEP00|Found)"; \
+check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,type to select)
+	$(Q)gates="$(CHECK_GATES)"; \
+	if [ -n "$$gates" ]; then \
+		for g in $$(echo "$$gates" | tr ',' ' '); do \
+			case "$$g" in \
+				lint|format|pyrefly|mypy|pyright|security|type) ;; \
+				*) echo "ERROR: unknown CHECK_GATES value '$$g' (allowed: lint,format,pyrefly,mypy,pyright,security,type)"; exit 2;; \
+			esac; \
+		done; \
 	else \
-		echo "✓ No issues"; \
+		gates="lint,format,pyrefly,mypy,pyright,security"; \
+	fi; \
+	gates=$$(echo "$$gates" | tr ',' ' ' | sed 's/\btype\b/pyrefly/g' | tr ' ' ','); \
+	if [ -f "$(WORKSPACE_ROOT)/scripts/check/workspace_check.py" ]; then \
+		project_key="$(PROJECT_NAME)"; \
+		if [ "$(CURDIR)" = "$(WORKSPACE_ROOT)" ]; then \
+			project_key="."; \
+		fi; \
+		if [ -f "$(WORKSPACE_ROOT)/scripts/check/fix_pyrefly_config.py" ]; then \
+			$(POETRY) run python "$(WORKSPACE_ROOT)/scripts/check/fix_pyrefly_config.py" "$$project_key"; \
+		fi; \
+		$(POETRY) run python "$(WORKSPACE_ROOT)/scripts/check/workspace_check.py" --gates "$$gates" --reports-dir "$(CURDIR)/.reports/check" "$$project_key"; \
+		exit $$?; \
+	fi; \
+	if echo "$$gates" | grep -qw lint; then \
+		$(POETRY) run ruff check . --quiet || { echo "FAIL: lint"; exit 1; }; \
+	fi; \
+	if echo "$$gates" | grep -qw format; then \
+		$(POETRY) run ruff format --check . --quiet || { echo "FAIL: format"; exit 1; }; \
+	fi; \
+	if echo "$$gates" | grep -qw pyrefly; then \
+		$(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml \
+			--count-errors=0 --summarize-errors=1 --summary full || { echo "FAIL: pyrefly"; exit 1; }; \
+	fi; \
+	if echo "$$gates" | grep -qw mypy; then \
+		$(POETRY) run mypy $(SRC_DIR) || { echo "FAIL: mypy"; exit 1; }; \
+	fi; \
+	if echo "$$gates" | grep -qw pyright; then \
+		$(POETRY) run pyright $(SRC_DIR) || { echo "FAIL: pyright"; exit 1; }; \
+	fi; \
+	if echo "$$gates" | grep -qw security; then \
+		$(POETRY) run bandit -r $(SRC_DIR) -q -ll || { echo "FAIL: security"; exit 1; }; \
 	fi
 
-# === CLEAN ===
+security: ## Run all security checks
+	$(Q)$(POETRY) run bandit -r $(SRC_DIR) -q -ll
+
+format: ## Run all formatting
+	$(Q)$(POETRY) run ruff format . --quiet
+
+docs: docs-base ## Build docs
+
+docs-base:
+	$(Q)$(MAKE) docs-sync-scripts -s
+	$(Q)if [ "$(DOCS_PHASE)" = "all" ]; then \
+		phases="audit fix build generate validate"; \
+	else \
+		phases="$(DOCS_PHASE)"; \
+	fi; \
+	for phase in $$phases; do \
+		case "$$phase" in \
+			audit) script="scripts/documentation/audit.py"; extra="--strict 0" ;; \
+			fix) script="scripts/documentation/fix.py"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
+			build) script="scripts/documentation/build.py"; extra="" ;; \
+			generate) script="scripts/documentation/generate.py"; extra="--apply" ;; \
+			validate) script="scripts/documentation/validate.py"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
+			*) echo "ERROR: invalid DOCS_PHASE=$$phase"; exit 2 ;; \
+		esac; \
+		if [ ! -f "$$script" ]; then \
+			echo "PROJECT=$(PROJECT_NAME) PHASE=$$phase RESULT=FAIL REASON=missing-script:$$script"; \
+			exit 1; \
+		fi; \
+		cmd="python $$script --root . --output-dir .reports/docs"; \
+		if [ -n "$$extra" ]; then cmd="$$cmd $$extra"; fi; \
+		eval $$cmd || exit $$?; \
+	done
+
+docs-sync-scripts: ## Sync docs scripts from workspace SSOT when available
+	$(Q)src="$(WORKSPACE_ROOT)/scripts/documentation"; \
+	dst="$(CURDIR)/scripts/documentation"; \
+	if [ "$(FLEXT_MODE)" = "workspace" ] && [ -d "$$src" ] && [ "$(CURDIR)" != "$(WORKSPACE_ROOT)" ]; then \
+		mkdir -p "$$(dirname "$$dst")"; \
+		rm -rf "$$dst"; \
+		cp -a "$$src" "$$dst"; \
+		echo "PROJECT=$(PROJECT_NAME) PHASE=sync RESULT=OK REASON=workspace-docs-scripts-synced"; \
+	elif [ -d "$$dst" ]; then \
+		echo "PROJECT=$(PROJECT_NAME) PHASE=sync RESULT=OK REASON=local-docs-scripts-present"; \
+	else \
+		echo "PROJECT=$(PROJECT_NAME) PHASE=sync RESULT=FAIL REASON=docs-scripts-missing"; \
+		exit 1; \
+	fi
+
+test: ## Run pytest only
+	$(Q)$(POETRY) run pytest $(TESTS_DIR) \
+		-p no:metadata \
+		--cov --cov-report=term-missing:skip-covered \
+		-q $(PYTEST_ARGS)
+
+validate: ## Run validate gates (VALIDATE_GATES=complexity,docstring to select, FIX=1)
+	$(Q)if [ -n "$(FIX)" ] && [ "$(FIX)" != "1" ]; then \
+		echo "ERROR: FIX must be empty or 1, got '$(FIX)'"; \
+		exit 1; \
+	fi
+	$(Q)if [ "$(FIX)" = "1" ]; then $(POETRY) run ruff check --fix . --quiet; fi
+	$(Q)gates="$(VALIDATE_GATES)"; \
+	if [ -n "$$gates" ]; then \
+		for g in $$(echo "$$gates" | tr ',' ' '); do \
+			case "$$g" in \
+				complexity|docstring) ;; \
+				*) echo "ERROR: unknown VALIDATE_GATES value '$$g' (allowed: complexity,docstring)"; exit 2;; \
+			esac; \
+		done; \
+	else \
+		gates="complexity,docstring"; \
+	fi; \
+	if echo "$$gates" | grep -qw complexity; then \
+		$(POETRY) run radon cc $(SRC_DIR) -n E -a --total-average; \
+		$(POETRY) run radon mi $(SRC_DIR) -n C -s --sort; \
+	fi; \
+	if echo "$$gates" | grep -qw docstring; then \
+		$(POETRY) run interrogate $(SRC_DIR) --fail-under=$(DOCSTRING_MIN) --ignore-init-method --ignore-magic -q; \
+	fi
+
 clean: ## Clean artifacts
 	$(Q)rm -rf build/ dist/ *.egg-info/ .pytest_cache/ htmlcov/ .coverage* \
 		.mypy_cache/ .pyrefly_cache/ .ruff_cache/ $(LINT_CACHE_DIR)/ \
 		.pyright/ .pytype/ .pyrefly-report.json .pyrefly-output.txt
 	$(Q)find . -type d -name __pycache__ -exec rm -rf {} +
 	$(Q)find . -type f -name "*.pyc" -delete
-
-clean-all: clean ## Deep clean
-	$(Q)rm -rf .venv/ node_modules/
-
-reset: clean-all setup ## Full reset
-
-# === VIRTUAL ENVIRONMENT MANAGEMENT ===
-enforce-workspace-venv: ## Remove local .venv and enforce workspace venv
-	@if [ -d ".venv" ]; then \
-		echo "Enforcing workspace venv: removing local .venv in $(CURDIR)"; \
-		rm -rf .venv; \
-	fi
-	@if [ ! -d "$(WORKSPACE_VENV)" ]; then \
-		echo "ERROR: workspace .venv not found at $(WORKSPACE_VENV). Run 'make setup' in workspace root."; \
-		exit 1; \
-	fi
-
-venv-info: ## Show venv configuration
-	@echo "=== FLEXT Virtual Environment Info ==="
-	@echo "WORKSPACE_ROOT:   $(WORKSPACE_ROOT)"
-	@echo "WORKSPACE_VENV:   $(WORKSPACE_VENV)"
-	@echo "VIRTUAL_ENV:      $(VIRTUAL_ENV)"
-	@if [ -d ".venv" ]; then \
-		echo "Local .venv:      yes"; \
-	else \
-		echo "Local .venv:      no"; \
-	fi
-	@poetry_path="not configured"; \
-	if poetry_path=$$(poetry env info --path 2>/dev/null); then :; fi; \
-	echo "Poetry path:      $$poetry_path"
-	@echo "Python:           $$(which python)"
-
-check-venv: ## Verify using workspace venv
-	@$(MAKE) enforce-workspace-venv -s
-	@poetry_path=""; \
-	if ! poetry_path=$$(poetry env info --path 2>/dev/null); then \
-		echo "ERROR: Poetry environment is not configured"; \
-		exit 1; \
-	fi; \
-	if [ "$$poetry_path" != "$(WORKSPACE_VENV)" ]; then \
-		echo "ERROR: Poetry not using workspace venv"; \
-		echo "  Expected: $(WORKSPACE_VENV)"; \
-		echo "  Got:      $$poetry_path"; \
-		exit 1; \
-	else \
-		echo "OK: Using workspace venv at $(WORKSPACE_VENV)"; \
-	fi
-
-clean-local-venv: ## Remove local .venv (use workspace venv)
-	@if [ -d ".venv" ]; then \
-		echo "Removing local .venv..."; \
-		rm -rf .venv; \
-		echo "Done. Run 'make check-venv' to verify."; \
-	else \
-		echo "No local .venv found."; \
-	fi
-
-# === SHORT ALIASES ===
-t: test
-l: lint
-f: format
-tc: type-check
-tcj: type-check-json
-pi: pyrefly-infer
-c: clean
-v: validate
-vf: validate-full
-s: setup
-dp: deps
-cx: complexity
-dc: docstring-check
-dd: dead-code
-mod: modernize
-cc: cognitive-complexity
-sp: spell-check
-vi: venv-info
-cv: check-venv
-clv: clean-local-venv

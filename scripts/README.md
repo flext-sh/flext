@@ -10,6 +10,16 @@ Collection of maintenance, validation, and automation scripts for the FLEXT ecos
 
 Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 
+## Workspace maintenance (Make)
+
+From the repository root, all dependency and typing workflows run via Make:
+
+- **make setup** — Install all projects into workspace `.venv` (optional: `PROJECT=<name>` or `PROJECTS="p1 p2"`).
+- **make upgrade** — Modernize pyproject, upgrade dependencies, then write a dependency report to `.reports/dependencies/` (use `DEPS_REPORT=0` to skip the report).
+- **make typings** — Run stub supply-chain and typing report (optional: `PROJECT=` or `PROJECTS=`; use `DEPS_REPORT=0` to skip the report).
+
+Run **make help** at the root for verbs and parameters. See [CLAUDE.md](../CLAUDE.md) for the full Make automation contract and standard places.
+
 ## Installation
 
 Ensure you have the required dependencies:

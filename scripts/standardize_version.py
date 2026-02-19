@@ -45,7 +45,7 @@ class FlextVersionStandardizationService(FlextService[dict[str, object]]):
 
         dry_run: bool
         verbose: bool
-        flext_root: Path = Path("/home/marlonsc/flext")
+        flext_root: Path = Path(__file__).resolve().parents[1]
 
     class _VersionTemplate:
         """Advanced template composition using nested class pattern."""

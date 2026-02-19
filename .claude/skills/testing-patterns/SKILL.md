@@ -157,8 +157,8 @@ tests/
 1. Write a failing test for the desired behavior (Red).
 2. Write minimal code to make the test pass (Green).
 3. Refactor while keeping tests green.
-4. Run full suite: `make test` or `pytest tests/ -q`.
-5. Check coverage if required: `pytest --cov=src tests/`.
+4. Run full suite with standardized gate: `make test`.
+5. For focused runs, use selectors: `make test PYTEST_ARGS="-k <expr>"`.
 
 ## Examples
 
@@ -186,7 +186,7 @@ Why bad: vague name, no scenario described, `assert config` doesn't verify anyth
 ## Verification
 
 ```bash
-rg -n "def test_" --glob "test_*.py" flext-core/tests/ | wc -l
-rg -n "@pytest.fixture" --glob "conftest.py" flext-core/tests/
-rg -n "is_success\|is_failure\|\.value\|\.error" --glob "test_*.py" flext-core/tests/
+make PROJECT=flext-core test
+make PROJECT=flext-core validate
+make PROJECTS="flext-core flext-api" test
 ```

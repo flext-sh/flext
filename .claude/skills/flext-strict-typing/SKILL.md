@@ -53,9 +53,9 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 ## Verification
 
 ```bash
-python3 scripts/core/skill_validate.py --skill flext-strict-typing --mode baseline
-make validate-scripts
-make check-clean
+make validate PROJECT=<name>
+make validate PROJECT=<name> FIX=1
+make validate PROJECTS="proj-a proj-b"
 ```
 
 Custom checks for this skill must live in `.claude/skills/flext-strict-typing/` and emit `{"violation_count": N}` when using `type: custom`.

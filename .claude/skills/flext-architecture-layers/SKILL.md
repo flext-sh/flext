@@ -80,6 +80,14 @@ Why bad: inverts `L1 -> L2` direction and violates the documented architecture t
 
 ## Verification
 
+Make gates:
+
+- `make check PROJECT=flext-core` — lint + type gates enforce import boundaries
+- `make check PROJECT=flext-core CHECK_GATES=lint,type` — focused boundary checks
+- `make test PROJECT=flext-core` — layer integrity verified by tests
+
+Pattern checks:
+
 - `rg -n "Layered Topology|L3|L2|L1|L0" flext-core/docs/architecture/overview.md`
 - `rg -n "class FlextRuntime|class DependencyIntegration|configure_structlog" flext-core/src/flext_core/runtime.py`
 - `rg -n "class FlextContainer|def register\(|def register_factory\(|def register_resource\(" flext-core/src/flext_core/container.py`

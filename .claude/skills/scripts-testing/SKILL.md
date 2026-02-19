@@ -34,7 +34,7 @@ description: Testing scripts — pytest runners, test analysis, quality gates, s
 ## Instructions
 
 - When adding test runners, follow the pattern in `run_pytest_all_projects.py`.
-- When modifying quality gates, ensure they align with `base.mk` targets.
+- When modifying quality gates, ensure they align with `base.mk` targets. Coverage thresholds live in `pyproject.toml` `[tool.coverage.report] fail_under`, not in Makefiles/workflows/docker/CLI flags.
 - Keep test scripts independent of each other.
 
 ## Workflow
@@ -42,18 +42,30 @@ description: Testing scripts — pytest runners, test analysis, quality gates, s
 1. Identify the testing scope (unit, integration, stress, e2e).
 2. Create or modify the script under `scripts/testing/`.
 3. Test locally with `--help` first.
-4. Verify with `bash -n` for shell scripts, `python -m compileall` for Python.
+4. Verify script syntax: `bash -n` for shell scripts, `python -m compileall` for Python.
+5. Run tests via Make: `make test PROJECT=<name>` or `make test PROJECT=<name> PYTEST_ARGS="-k unit"`.
 
 ## Examples
 
-Good:
+Good (primary — use Make verbs):
+
+```bash
+make test
+make test PROJECT=flext-core
+make test PROJECT=flext-core PYTEST_ARGS="-k unit"
+make test FAIL_FAST=1
+```
+
+Why good: Canonical Make contract, consistent with CLAUDE.md.
+
+Good (internal — scripts behind Make):
 
 ```bash
 python scripts/testing/run_pytest_all_projects.py --quick
 bash scripts/testing/run-all-tests.sh
 ```
 
-Why good: Clear entrypoints, non-interactive, runnable from root.
+Why acceptable: Direct script invocation for debugging/development, but Make verbs are the recommended workflow.
 
 Bad:
 
@@ -64,6 +76,15 @@ cd flext-core && pytest  # not from root
 Why bad: Requires manual directory change, not reproducible.
 
 ## Verification
+
+Make gates (primary):
+
+- `make test PROJECT=flext-core` — run tests for a single project
+- `make test PROJECT=flext-core PYTEST_ARGS="-k unit"` — filtered test run
+- `make test FAIL_FAST=1` — run all projects, stop on first failure
+- `make check PROJECT=flext-core CHECK_GATES=lint` — quick lint check
+
+Script-level checks (internal):
 
 - `python -m compileall scripts/testing`
 - `bash -n scripts/testing/run-all-tests.sh`

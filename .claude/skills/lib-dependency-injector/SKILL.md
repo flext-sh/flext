@@ -157,6 +157,14 @@ Why bad: shared mutable DI state causes cross-test leakage.
 
 ## Verification
 
+Make gates:
+
+- `make check PROJECT=flext-core` — lint + type gates verify DI import boundaries
+- `make test PROJECT=flext-core` — DI integration tests
+- `make validate PROJECT=flext-core` — complexity gates
+
+Pattern checks:
+
 - `rg -n "from dependency_injector|class DependencyIntegration|class BridgeContainer|Provide = wiring\.Provide|inject =" flext-core/src/flext_core/runtime.py`
 - `rg -n "class FlextContainer|def register\(|def register_factory\(|def register_resource\(|def get_typed|def scoped\(|_services: dict\[str, m\.Container\.ServiceRegistration\]" flext-core/src/flext_core/container.py`
 - `rg -n "class DI\(|def wire_modules\(|def get_typed" flext-core/src/flext_core/protocols.py`

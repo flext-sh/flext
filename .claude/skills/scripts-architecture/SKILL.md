@@ -50,7 +50,8 @@ description: Architecture scripts — import analysis, violation detection, code
 
 - Architecture scripts must not modify code without explicit `--fix` or `--apply` flag.
 - Analysis output must go to `.sisyphus/reports/` using artifact naming contract.
-- Cross-project tests must pass from repo root using `bash scripts/architecture/test_all_projects.sh`.
+- Standard quality gates run via Make verbs (`make check`, `make validate`); architecture scripts are implementation details behind Make.
+- Cross-project tests run via `make test` (or `make test FAIL_FAST=1` to stop on first failure).
 
 ## Instructions
 
@@ -63,17 +64,29 @@ description: Architecture scripts — import analysis, violation detection, code
 1. Identify the architecture invariant to enforce or analyze.
 2. Create or modify the script under `scripts/architecture/`.
 3. Test with `--help` and a dry-run mode first.
-4. Verify with `python -m compileall scripts/architecture`.
+4. Verify script compiles: `python -m compileall scripts/architecture`.
+5. Run project gates: `make check PROJECT=<name>` and `make validate PROJECT=<name>`.
 
 ## Examples
 
-Good:
+Good (primary — use Make verbs for standard gates):
+
+```bash
+make check PROJECT=flext-core
+make check PROJECT=flext-core CHECK_GATES=lint,type
+make validate PROJECT=flext-core VALIDATE_GATES=complexity
+make test PROJECT=flext-core FAIL_FAST=1
+```
+
+Why good: Canonical Make contract, consistent with CLAUDE.md.
+
+Good (internal — architecture analysis scripts behind Make):
 
 ```bash
 python scripts/architecture/analyze_violations.py --output .sisyphus/reports/scripts-architecture--json--violations-latest.json
 ```
 
-Why good: Explicit output path, artifact naming, read-only by default.
+Why acceptable: Direct script invocation for detailed architecture analysis. Make verbs are the recommended workflow for standard gates.
 
 Bad:
 
@@ -84,6 +97,15 @@ python scripts/architecture/fix_violations.sh  # no --dry-run
 Why bad: Mutations without explicit opt-in.
 
 ## Verification
+
+Make gates (primary):
+
+- `make check PROJECT=flext-core` — lint + format + type + security gates
+- `make check CHECK_GATES=lint,type` — selective check gates
+- `make validate PROJECT=flext-core` — complexity + docstring gates
+- `make test PROJECT=flext-core` — run project tests
+
+Script-level checks (internal):
 
 - `python -m compileall scripts/architecture scripts/analysis`
 - `bash -n scripts/architecture/fix_violations.sh`

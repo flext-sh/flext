@@ -5,11 +5,11 @@ description: Step-by-step refactoring process with verified quality gates and Ma
 
 # FLEXT Refactoring Workflow
 
-**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+**Reviewed**: 2026-02-19 | **Scope**: Coverage source-of-truth migration to pyproject.toml
 
 
 > **Source of truth**: Verified from `base.mk` (shared Makefile), `ruff-shared.toml`,
-> and actual `pyproject.toml` configurations across the monorepo.
+> and actual `pyproject.toml` configurations across the monorepo on 2026-02-19.
 
 ## Pre-Refactoring Checklist
 
@@ -26,14 +26,13 @@ Before touching any code:
 3. **Run `make check` first** - Establish the current baseline state.
 
    ```bash
-   cd flext-core  # or whichever project
-   make check     # = lint + type-check (via flext-quality or fallback)
+   make PROJECT=flext-core check
    ```
 
-4. **Run `make test-fast` first** - Confirm tests pass before changes.
+4. **Run `make test` first** - Confirm tests pass before changes.
 
    ```bash
-   make test-fast  # = pytest -q --tb=short (no coverage)
+   make test
    ```
 
 ---
@@ -77,25 +76,21 @@ After modifying any file, run the quick check:
 # Quick validation (lint + type-check)
 make check
 
-# Or specifically:
-make lint       # ruff check . --quiet
-make type-check # pyrefly check src/ --config pyproject.toml
+# Keep the standardized surface:
+make check
 ```
 
 ### Step 4: Run Tests
 
 ```bash
-# Fast test (no coverage)
-make test-fast
-
-# Full test with coverage (must pass MIN_COVERAGE=80)
+# Full test with coverage (threshold from pyproject.toml [tool.coverage.report] fail_under)
 make test
 
 # Specific test file:
-poetry run pytest tests/unit/test_MODULE.py -q --timeout=120
+make PROJECT=flext-core test PYTEST_ARGS="tests/unit/test_MODULE.py -q --timeout=120"
 
 # Specific test with verbose output:
-poetry run pytest tests/unit/test_MODULE.py -v -k "test_specific_case" --timeout=120
+make PROJECT=flext-core test PYTEST_ARGS="tests/unit/test_MODULE.py -v -k test_specific_case --timeout=120"
 ```
 
 ### Step 5: Extended Validation (before commits)
@@ -104,51 +99,39 @@ poetry run pytest tests/unit/test_MODULE.py -v -k "test_specific_case" --timeout
 # Full validation: lint + format + type-check + complexity + docstrings + security + test
 make validate
 
-# Complete validation (includes dead-code, cognitive-complexity, spell-check):
-make validate-full
+# Optional auto-fix before validate:
+make validate FIX=1
 ```
 
 ---
 
 ## Make Targets Quick Reference (from base.mk)
 
-| Target | Alias | What It Does |
-| --- | --- | --- |
-| `make help` | | Show all available commands |
-| `make lint` | `make l` | `ruff check . --quiet` (ZERO tolerance) |
-| `make format` | `make f` | `ruff format . --quiet` |
-| `make fix` | | `ruff check --fix . --quiet` (auto-fix) |
-| `make type-check` | `make tc` | `pyrefly check src/` |
-| `make check` | | `lint + type-check` (quick gate) |
-| `make test` | `make t` | `pytest` with coverage (min 80%) |
-| `make test-fast` | | `pytest` without coverage |
-| `make test-unit` | | Tests marked `not integration` |
-| `make test-integration` | | Tests marked `integration` |
-| `make validate` | `make v` | Full gate: lint+format+type+complexity+docstrings+security+test |
-| `make validate-full` | `make vf` | Full + dead-code + cognitive-complexity + spell-check |
-| `make complexity` | `make cx` | Radon CC+MI analysis |
-| `make docstring-check` | `make dc` | Interrogate (min 80%) |
-| `make dead-code` | `make dd` | Vulture (min-confidence 80) |
-| `make cognitive-complexity` | `make cc` | Complexipy (max 15) |
-| `make spell-check` | `make sp` | Codespell |
-| `make security` | | Bandit security scan |
-| `make deps` | `make dp` | Dependency analysis (deptry) |
-| `make clean` | `make c` | Clean build artifacts |
-| `make setup` | `make s` | Install dev+test deps |
+| Target | What It Does |
+| --- | --- |
+| `make help` | Show available standardized commands |
+| `make setup` | Install dependencies and hooks |
+| `make check` | Fast quality gate (ruff + format check + pyrefly + bandit) |
+| `make security` | Security scan gate |
+| `make format` | Code formatting |
+| `make docs` | Build docs |
+| `make test` | Pytest with coverage gate |
+| `make validate` | Extended non-lint validation (`FIX=1` optional) |
+| `make clean` | Clean artifacts |
 
 ---
 
-## Quality Gate Thresholds (from base.mk)
+## Quality Gate Thresholds
 
 | Metric | Threshold | Config Source |
 | --- | --- | --- |
-| Coverage | >= 80% (`MIN_COVERAGE`) | `base.mk` line 14, overridable per project |
-| Docstring coverage | >= 80% (`DOCSTRING_MIN`) | `base.mk` line 15 |
-| Cognitive complexity | <= 15 | `base.mk` line 182 |
-| Complexity | <= 10 (`COMPLEXITY_MAX`) | `base.mk` line 16 |
-| Dead code confidence | >= 80% | `base.mk` line 174 |
-| Line length | 88 chars | `ruff-shared.toml` line 19 |
-| Python version | 3.13 | `ruff-shared.toml` line 24 |
+| Coverage | Per-project `fail_under` | `pyproject.toml` `[tool.coverage.report] fail_under` |
+| Docstring coverage | >= 80% (`DOCSTRING_MIN`) | `base.mk` variable `DOCSTRING_MIN` |
+| Cognitive complexity | <= 15 | `base.mk` complexipy gate parameters |
+| Complexity | <= 10 (`COMPLEXITY_MAX`) | `base.mk` variable `COMPLEXITY_MAX` |
+| Dead code confidence | >= 80% | `base.mk` vulture gate parameters |
+| Line length | 88 chars | `ruff-shared.toml` `line-length` setting |
+| Python version | 3.13 | `ruff-shared.toml` `target-version` setting |
 
 ---
 
@@ -199,15 +182,19 @@ When a change in `flext-core` affects subprojects:
 
 ```bash
 # 1. Fix flext-core first
-cd flext-core && make check && make test-fast
+make PROJECT=flext-core check
+make PROJECT=flext-core test
 
 # 2. Check each dependent project
-cd ../flext-auth && make check && make test-fast
-cd ../flext-cli && make check && make test-fast
-cd ../flext-ldap && make check && make test-fast
+make PROJECT=flext-auth check
+make PROJECT=flext-auth test
+make PROJECT=flext-cli check
+make PROJECT=flext-cli test
+make PROJECT=flext-ldap check
+make PROJECT=flext-ldap test
 
 # 3. Workspace-level validation
-cd .. && make check-all  # Or: make PROJECT=flext-auth check
+make PROJECTS="flext-core flext-auth flext-cli flext-ldap" check
 ```
 
 ### Finding cross-project consumers
@@ -224,11 +211,11 @@ grep -rn "from flext_core.MODULE" --include='*.py' flext-*/src/
 ### Ruff Errors
 
 ```bash
-# See the exact error with explanation:
-ruff check src/flext_core/MODULE.py --select RULE_CODE
+# Re-run standardized fast gate:
+make PROJECT=flext-core check
 
-# Auto-fix what can be fixed:
-make fix
+# Auto-fix path:
+make validate FIX=1
 
 # For format issues:
 make format
@@ -237,21 +224,21 @@ make format
 ### Type Check Errors (pyrefly)
 
 ```bash
-# Run type-check with full output:
-poetry run pyrefly check src/flext_core/ --config pyproject.toml
+# Run standardized validation gate:
+make PROJECT=flext-core validate
 
-# For specific file:
-poetry run pyrefly check src/flext_core/MODULE.py --config pyproject.toml
+# With auto-fix first:
+make PROJECT=flext-core validate FIX=1
 ```
 
 ### Test Failures
 
 ```bash
 # Run specific failing test with full output:
-poetry run pytest tests/unit/test_MODULE.py -v -k "test_name" --timeout=120 -s
+make PROJECT=flext-core test PYTEST_ARGS="tests/unit/test_MODULE.py -v -k test_name --timeout=120 -s"
 
 # With traceback:
-poetry run pytest tests/unit/test_MODULE.py --tb=long -v
+make PROJECT=flext-core test PYTEST_ARGS="tests/unit/test_MODULE.py --tb=long -v"
 ```
 
 ---

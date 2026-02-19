@@ -1,123 +1,74 @@
 ---
 name: flext-quality-gates
-description: Mandatory verification gates with exact tool commands, thresholds, and configuration sources from base.mk
+description: Mandatory verification gates with exact tool commands, thresholds, and configuration sources from base.mk and pyproject.toml
 ---
 
 # FLEXT Quality Gates
 
-**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+**Reviewed**: 2026-02-19 | **Scope**: Coverage source-of-truth migration to pyproject.toml
 
 
-> **Source of truth**: Verified from `base.mk` lines 114-202, `ruff-shared.toml`,
-> and individual `pyproject.toml` files on 2026-02-17.
+> **Source of truth**: Verified from `base.mk` (`check`, `test`, and `validate` targets), `ruff-shared.toml`,
+> and individual `pyproject.toml` files on 2026-02-19.
 
-## Gate 1: Lint (Ruff) - ZERO TOLERANCE
+## Standardized Make Gate Surface
 
-```bash
-make lint    # or: make l
-# Runs: ruff check . --quiet
-# Config: ruff-shared.toml (workspace) + pyproject.toml (project extensions)
-```
-
-- **ANY lint error = build failure**
-- Auto-fix available: `make fix` (runs `ruff check --fix . --quiet`)
-- Format check: `make format-check` (runs `ruff format --check . --quiet`)
-
-## Gate 2: Type Check (Pyrefly) - ZERO TOLERANCE
+Project `base.mk` and workspace `Makefile` expose only these command verbs:
 
 ```bash
-make type-check    # or: make tc
-# Runs: pyrefly check src/ --config pyproject.toml
-```
-
-- **ANY type error = build failure**
-- Pyrefly is the ONLY type checker used (`base.mk` line 128-129)
-- mypy/pyright are NOT used in the make targets
-
-## Gate 3: Tests (Pytest) - MIN 80% COVERAGE
-
-```bash
-make test    # or: make t
-# Runs: pytest tests/ --cov=COV_DIR --cov-report=term-missing:skip-covered --cov-fail-under=80
-```
-
-- Coverage minimum: 80% (configurable per project via `MIN_COVERAGE`)
-- Fast mode (no coverage): `make test-fast`
-
-## Gate 4: Complexity (Radon) - MAX CC 10
-
-```bash
-make complexity    # or: make cx
-# Runs: radon cc src/ -a -nb --total-average
-# Also: radon mi src/ -nb (Maintainability Index)
-```
-
-## Gate 5: Cognitive Complexity (Complexipy) - MAX 15
-
-```bash
-make cognitive-complexity    # or: make cc
-# Runs: complexipy src/ --max-complexity-allowed 15
-```
-
-## Gate 6: Docstring Coverage (Interrogate) - MIN 80%
-
-```bash
-make docstring-check    # or: make dc
-# Runs: interrogate src/ --fail-under=80 --ignore-init-method --ignore-magic -q
-```
-
-## Gate 7: Dead Code Detection (Vulture) - MIN CONFIDENCE 80%
-
-```bash
-make dead-code    # or: make dd
-# Runs: vulture src/ --min-confidence 80 --exclude "tests,examples"
-# Note: Runs from WORKSPACE_ROOT where vulture is installed
-```
-
-## Gate 8: Spell Check (Codespell)
-
-```bash
-make spell-check    # or: make sp
-# Runs: codespell src/ --toml pyproject.toml --quiet-level 3
-```
-
-## Gate 9: Security (Bandit)
-
-```bash
+make setup
+make check
 make security
-# Runs: bandit -r src/ -q -ll
+make format
+make docs
+make test
+make validate
+make clean
 ```
 
-## Gate 10: Dependency Analysis (deptry)
+Execution semantics:
+
+- `make check`: fast quality gate (ruff + format check + pyrefly + bandit).
+- `make test`: pytest with coverage (threshold from `pyproject.toml` `[tool.coverage.report] fail_under`).
+- `make validate`: non-lint extended gates (radon + interrogate), optional `FIX=1`.
+- `make security`: explicit security scan gate.
+- `make format`: canonical formatter gate.
+
+---
+
+## Workspace Automation Selectors
+
+Use root `Makefile` selectors to avoid running full workspace loops when not needed:
 
 ```bash
-make deps    # or: make dp
-# Runs: uvx deptry . --no-ansi
+# Single project
+make PROJECT=flext-core check
+make PROJECT=flext-core validate FIX=1
+
+# Multi-project slice
+make PROJECTS="flext-core flext-api" check
+
+# Scoped test execution with pytest args
+make PROJECT=flext-api test PYTEST_ARGS="-k unit"
 ```
 
----
+Selector contract:
 
-## Composite Gates
-
-| Target | What It Runs |
-| --- | --- |
-| `make check` | lint + type-check (quick daily gate) |
-| `make validate` | lint + format-check + type-check + complexity + docstring-check + security + test |
-| `make validate-full` | validate + dead-code + cognitive-complexity + spell-check |
-
----
+- `PROJECT=<name>` selects one project.
+- `PROJECTS="a b c"` selects multiple projects.
+- `PYTEST_ARGS="..."` is forwarded to project `make test`.
 
 ## Thresholds Summary
 
 | Metric | Value | Source |
 | --- | --- | --- |
-| Line length | 88 | `ruff-shared.toml` line 19 |
-| Python target | 3.13 | `ruff-shared.toml` line 24 |
-| Coverage min | 80% | `base.mk` line 14 (`MIN_COVERAGE`) |
-| Docstring min | 80% | `base.mk` line 15 (`DOCSTRING_MIN`) |
-| Max cyclomatic complexity | 10 | `base.mk` line 16 (`COMPLEXITY_MAX`) |
-| Max cognitive complexity | 15 | `base.mk` line 182 |
-| Dead code confidence | 80% | `base.mk` line 174 |
+| Line length | 88 | `ruff-shared.toml` `line-length` setting |
+| Python target | 3.13 | `ruff-shared.toml` `target-version` setting |
+| Coverage min | Per-project (see `fail_under`) | `pyproject.toml` `[tool.coverage.report] fail_under` |
+| Docstring min | 80% | `base.mk` variable `DOCSTRING_MIN` |
+| Max cyclomatic complexity | 10 | `base.mk` variable `COMPLEXITY_MAX` |
+| Max cognitive complexity | 15 | `base.mk` complexipy gate parameters |
+| Dead code confidence | 80% | `base.mk` vulture gate parameters |
 
 ---
 
@@ -125,10 +76,9 @@ make deps    # or: make dp
 
 | Change Type | Required Gates |
 | --- | --- |
-| Any code change | `make check` (lint + type-check) |
+| Any code change | `make check` |
 | Before PR/commit | `make validate` |
-| Release prep | `make validate-full` |
 | Type/model changes | `make check && make test` |
 | Security-sensitive | `make security` + `make validate` |
-| New public API | `make validate` + verify docstring coverage |
-| Docs only | `make lint` (catches doc formatting issues) |
+| New public API | `make validate` + `make test` |
+| Docs only | `make docs` |
