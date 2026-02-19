@@ -65,34 +65,12 @@ export PATH := $(ACTIVE_VENV)/bin:$(PATH)
 # Poetry command (uses workspace venv automatically)
 POETRY := poetry
 
-# === PYTHONPATH CONFIGURATION ===
-# Build PYTHONPATH with all core dependencies (in dependency order)
-# This ensures cross-project imports work correctly
-FLEXT_PYTHONPATH := $(shell \
-	paths="$(CURDIR)/$(SRC_DIR)"; \
-	for proj in flext-core flext-cli flext-ldif flext-ldap flext-api flext-auth flext-grpc flext-observability client-a-oud-mig; do \
-		proj_src="$(WORKSPACE_ROOT)/$$proj/src"; \
-		if [ -d "$$proj_src" ]; then \
-			paths="$$paths:$$proj_src"; \
-		fi; \
-	done; \
-	if [ -d "$(WORKSPACE_ROOT)/.flext-deps" ]; then \
-		for dep_src in "$(WORKSPACE_ROOT)"/.flext-deps/*/src; do \
-			if [ -d "$$dep_src" ]; then \
-				paths="$$paths:$$dep_src"; \
-			fi; \
-		done; \
-	fi; \
-	echo "$$paths" \
-)
-
 # Quality tool (flext-quality with fallback)
 QUALITY_CMD ?= flext-quality
 QUALITY_AVAILABLE := $(shell command -v $(QUALITY_CMD) 2>/dev/null)
 
 # Export for subprocesses
 export PROJECT_NAME PYTHON_VERSION
-export PYTHONPATH := $(FLEXT_PYTHONPATH)
 export FLEXT_ROOT := $(WORKSPACE_ROOT)
 
 # === SILENT MODE ===

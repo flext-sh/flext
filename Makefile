@@ -20,21 +20,9 @@ ifdef VERBOSE
 Q :=
 endif
 
-# Discover flext-* submodules from .gitmodules that have pyproject.toml
-FLEXT_PROJECTS := $(shell if [ -f .gitmodules ]; then \
-	grep -E 'path = flext-' .gitmodules | \
-	sed 's/.*path = //' | \
-	while read p; do [ -f "$$p/pyproject.toml" ] && echo "$$p"; done | \
-	tr '\n' ' '; \
-fi)
-
-# Discover external projects: have pyproject.toml, use flext-core, NOT in .gitmodules
-EXTERNAL_PROJECTS := $(shell for dir in */; do \
-	name=$${dir%/}; \
-	[ -f "$$dir/pyproject.toml" ] || continue; \
-	if [ -f .gitmodules ] && grep -q "path = $$name" .gitmodules; then continue; fi; \
-	if grep -qE "flext-core|flext_core" "$$dir/pyproject.toml"; then echo "$$name"; fi; \
-	done | tr '\n' ' ')
+# Project discovery: single source of truth via scripts/maintenance/_discover.py
+FLEXT_PROJECTS := $(shell python3 scripts/maintenance/_discover.py --kind submodule --format makefile 2>/dev/null)
+EXTERNAL_PROJECTS := $(shell python3 scripts/maintenance/_discover.py --kind external --format makefile 2>/dev/null)
 
 ALL_PROJECTS := $(FLEXT_PROJECTS) $(EXTERNAL_PROJECTS)
 SELECTED_PROJECTS := $(strip $(if $(PROJECT),$(PROJECT),$(if $(PROJECTS),$(PROJECTS),$(ALL_PROJECTS))))
@@ -134,21 +122,26 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  make validate PROJECTS=\"flext-core flext-api\" FIX=1"
 	$(Q)echo "  make test PROJECT=flext-api PYTEST_ARGS=\"-k unit\" FAIL_FAST=1"
 	$(Q)echo "  make validate VALIDATE_SCOPE=workspace"
+	$(Q)echo "  NOTE: External projects (not in .gitmodules) require manual clone."
 
 setup: ## Install all projects into workspace .venv
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)python3.13 --version >/dev/null 2>&1 || { echo "ERROR: Python 3.13 required"; exit 1; }
-	$(Q)$(ENSURE_SELECTED_PROJECTS)
-	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)echo "Initializing git submodules..."; \
+	if [ -f .gitmodules ]; then \
+		git submodule update --init 2>&1; \
+		echo "Submodules initialized."; \
+	fi
 	$(Q)[ -d ".venv" ] || { echo "Creating .venv with Python 3.13..."; python3.13 -m venv .venv; }
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)echo "Modernizing pyproject.toml files..."; \
 	$(POETRY_ENV) python scripts/dependencies/modernize_pyproject.py --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
-	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
-	echo "Starting workspace setup for $(words $(SELECTED_PROJECTS)) project(s) + root"; \
+	$(Q)projects=$$(python3 scripts/maintenance/_discover.py --kind all --format makefile 2>/dev/null); \
+	total_steps=$$(echo "$$projects" | wc -w); total_steps=$$(( total_steps + 1 )); \
+	echo "Starting workspace setup for $$total_steps item(s) (projects + root)"; \
 	failed=0; installed=0; step=1; failed_projects=""; \
-	for proj in $(SELECTED_PROJECTS); do \
+	for proj in $$projects; do \
 		if [ -d "$$proj" ] && [ -f "$$proj/pyproject.toml" ]; then \
 			log_file="/tmp/flext-setup-$$proj.log"; \
 			start_ts=$$(date +%s); \
@@ -248,6 +241,16 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 			log_file="/tmp/flext-upgrade-$$proj.log"; \
 			start_ts=$$(date +%s); \
 			printf "[%2d/%2d] upgrade %s\n" $$step $$total_steps "$$proj"; \
+			if python scripts/dependencies/sync_internal_deps.py --project-root "$$proj" >>"$$log_file" 2>&1; then \
+				:; \
+			else \
+				echo "          sync    ... failed"; \
+				cat "$$log_file"; \
+				failed=$$((failed + 1)); \
+				failed_projects="$$failed_projects $$proj"; \
+				step=$$((step + 1)); \
+				continue; \
+			fi; \
 			printf "          update  ... "; \
 			if $(POETRY_ENV) poetry -C "$$proj" update >"$$log_file" 2>&1; then \
 				echo "ok"; \
@@ -278,6 +281,12 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	start_ts=$$(date +%s); \
 	root_update_ok=0; \
 	printf "[%2d/%2d] upgrade %s\n" $$step $$total_steps "root"; \
+	if ! python scripts/dependencies/sync_internal_deps.py --project-root . >"$$log_file" 2>&1; then \
+		echo "          sync    ... failed"; \
+		cat "$$log_file"; \
+		failed=$$((failed + 1)); \
+		failed_projects="$$failed_projects root"; \
+	fi; \
 	printf "          update  ... "; \
 	if poetry update >"$$log_file" 2>&1; then \
 		echo "ok"; \

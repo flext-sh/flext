@@ -53,16 +53,15 @@ def _is_flext_core_consumer(pyproject_path: Path) -> bool:
 
 
 def discover_flext_projects(workspace_root: Path) -> list[ProjectInfo]:
-    """Discover flext-* submodule projects (phase 1 — mirrors Makefile FLEXT_PROJECTS).
+    """Discover submodule projects (phase 1 — all .gitmodules entries with pyproject.toml).
 
-    Logic: grep .gitmodules for 'path = flext-*', verify pyproject.toml exists.
+    Logic: parse .gitmodules for all path = ... entries, verify pyproject.toml exists.
+    Includes flext-* and flexcore (and any future submodule with pyproject.toml).
     """
     submodule_paths = _parse_gitmodules(workspace_root)
     projects: list[ProjectInfo] = []
 
     for name in sorted(submodule_paths):
-        if not name.startswith("flext-"):
-            continue
         project_dir = workspace_root / name
         if project_dir.is_dir() and (project_dir / "pyproject.toml").exists():
             projects.append(ProjectInfo(path=project_dir, name=name, kind="submodule"))
@@ -74,7 +73,6 @@ def discover_external_projects(workspace_root: Path) -> list[ProjectInfo]:
     """Discover external projects that consume flext-core (phase 2 — mirrors Makefile EXTERNAL_PROJECTS).
 
     Logic: dirs with pyproject.toml + references flext-core + NOT in .gitmodules.
-    Examples: client-a-oud-mig, client-b-meltano-native.
     """
     submodule_paths = _parse_gitmodules(workspace_root)
     projects: list[ProjectInfo] = []
@@ -118,39 +116,74 @@ def discover_all_paths(workspace_root: Path) -> list[Path]:
 
 
 # ---------------------------------------------------------------------------
-# CLI: run standalone to verify discovery matches `make discover`
+# CLI: run standalone; consumable by Makefile via --kind/--format
 # ---------------------------------------------------------------------------
 
 
 def main() -> int:
-    """Print discovered projects (matches `make discover` output)."""
+    """Print discovered projects; supports --kind/--format for Makefile consumption."""
+    import argparse
     import sys
 
-    root = Path.cwd()
+    parser = argparse.ArgumentParser(
+        description="Unified project discovery for FLEXT workspace (single source of truth)."
+    )
+    parser.add_argument(
+        "--kind",
+        choices=("submodule", "external", "all"),
+        default=None,
+        help="Output only submodule, external, or all projects.",
+    )
+    parser.add_argument(
+        "--format",
+        choices=("human", "makefile"),
+        default="human",
+        help="human: report; makefile: space-separated names for $(shell ...).",
+    )
+    parser.add_argument(
+        "--workspace-root",
+        type=Path,
+        default=None,
+        metavar="DIR",
+        help="Workspace root (default: cwd).",
+    )
+    args = parser.parse_args()
+
+    root = args.workspace_root or Path.cwd()
     flext = discover_flext_projects(root)
     external = discover_external_projects(root)
     all_projects = discover_all_projects(root)
 
-    print(f"=== FLEXT Submodule Projects ({len(flext)}) ===")
-    for p in flext:
-        print(f"  {p.name}")
+    if args.format == "makefile":
+        if args.kind == "submodule":
+            names = [p.name for p in flext]
+        elif args.kind == "external":
+            names = [p.name for p in external]
+        elif args.kind == "all":
+            names = [p.name for p in all_projects]
+        else:
+            names = [p.name for p in all_projects]
+        print(" ".join(names))
+        return 0
 
-    print(f"\n=== External Projects ({len(external)}) ===")
-    for p in external:
-        print(f"  {p.name}")
+    # Human report
+    if args.kind in (None, "all"):
+        print(f"=== FLEXT Submodule Projects ({len(flext)}) ===")
+        for p in flext:
+            print(f"  {p.name}")
+        print(f"\n=== External Projects ({len(external)}) ===")
+        for p in external:
+            print(f"  {p.name} (manual clone required)")
+        print(f"\n=== Total: {len(all_projects)} Python projects ===")
+    elif args.kind == "submodule":
+        print(f"=== FLEXT Submodule Projects ({len(flext)}) ===")
+        for p in flext:
+            print(f"  {p.name}")
+    else:
+        print(f"=== External Projects ({len(external)}) ===")
+        for p in external:
+            print(f"  {p.name} (manual clone required)")
 
-    print(f"\n=== Total: {len(all_projects)} Python projects ===")
-
-    # Verify against make discover count
-    expected_flext = 29
-    expected_external = 2
-    if len(flext) != expected_flext or len(external) != expected_external:
-        print(
-            f"\nWARNING: Expected {expected_flext} flext + {expected_external} external, "
-            f"got {len(flext)} + {len(external)}",
-            file=sys.stderr,
-        )
-        return 1
     return 0
 
 
