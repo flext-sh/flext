@@ -109,7 +109,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  FAIL_FAST=1                              Stop on first project failure"
 	$(Q)echo "  FIX=1                                    Auto-fix before validate"
 	$(Q)echo "  PYTEST_ARGS=\"-k expr -x\"               Extra pytest args for test"
-	$(Q)echo "  CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,type    Select check gates (default: all)"
+	$(Q)echo "  CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,go,type    Select check gates (default: all)"
 	$(Q)echo "  VALIDATE_GATES=complexity,docstring      Select validate gates (default: all)"
 	$(Q)echo "  VALIDATE_SCOPE=project|workspace         Validate scope (default: project)"
 	$(Q)echo "  DOCS_PHASE=audit|fix|build|generate|validate|all"
@@ -327,7 +327,7 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 		$(POETRY_ENV) python scripts/dependencies/detect_runtime_dev_deps.py -q --no-fail || true; \
 	fi
 
-check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security)
+check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,go)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)

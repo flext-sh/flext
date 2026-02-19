@@ -141,17 +141,17 @@ setup: ## Complete setup
 	$(Q)$(POETRY) install --all-extras --all-groups
 	$(Q)$(POETRY) run pre-commit install
 
-check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,type to select)
+check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,go,type to select)
 	$(Q)gates="$(CHECK_GATES)"; \
 	if [ -n "$$gates" ]; then \
 		for g in $$(echo "$$gates" | tr ',' ' '); do \
 			case "$$g" in \
-				lint|format|pyrefly|mypy|pyright|security|type) ;; \
-				*) echo "ERROR: unknown CHECK_GATES value '$$g' (allowed: lint,format,pyrefly,mypy,pyright,security,type)"; exit 2;; \
+				lint|format|pyrefly|mypy|pyright|security|markdown|go|type) ;; \
+				*) echo "ERROR: unknown CHECK_GATES value '$$g' (allowed: lint,format,pyrefly,mypy,pyright,security,markdown,go,type)"; exit 2;; \
 			esac; \
 		done; \
 	else \
-		gates="lint,format,pyrefly,mypy,pyright,security"; \
+		gates="lint,format,pyrefly,mypy,pyright,security,markdown,go"; \
 	fi; \
 	gates=$$(echo "$$gates" | tr ',' ' ' | sed 's/\btype\b/pyrefly/g' | tr ' ' ','); \
 	if [ -f "$(WORKSPACE_ROOT)/scripts/check/workspace_check.py" ]; then \
@@ -183,6 +183,25 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 	fi; \
 	if echo "$$gates" | grep -qw security; then \
 		$(POETRY) run bandit -r $(SRC_DIR) -q -ll || { echo "FAIL: security"; exit 1; }; \
+	fi; \
+	if echo "$$gates" | grep -qw markdown; then \
+		md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.venv/*' ! -path './node_modules/*' ! -path './.flext-deps/*' ! -path './.mypy_cache/*' ! -path './.pytest_cache/*' ! -path './.ruff_cache/*' ! -path './dist/*' ! -path './build/*'); \
+		if [ -n "$$md_files" ]; then \
+			printf '%s\n' "$$md_files" | xargs -r markdownlint || { echo "FAIL: markdown"; exit 1; }; \
+		fi; \
+	fi; \
+	if echo "$$gates" | grep -qw go; then \
+		if [ -f go.mod ]; then \
+			go vet ./... || { echo "FAIL: go"; exit 1; }; \
+			if [ -n "$$(find . -type f -name '*.go' ! -path './.git/*')" ]; then \
+				gofmt_diff=$$(find . -type f -name '*.go' ! -path './.git/*' -print0 | xargs -0 gofmt -l); \
+				if [ -n "$$gofmt_diff" ]; then \
+					echo "FAIL: gofmt"; \
+					printf '%s\n' "$$gofmt_diff"; \
+					exit 1; \
+				fi; \
+			fi; \
+		fi; \
 	fi
 
 security: ## Run all security checks
@@ -190,6 +209,13 @@ security: ## Run all security checks
 
 format: ## Run all formatting
 	$(Q)$(POETRY) run ruff format . --quiet
+	$(Q)md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.venv/*' ! -path './node_modules/*' ! -path './.flext-deps/*' ! -path './.mypy_cache/*' ! -path './.pytest_cache/*' ! -path './.ruff_cache/*' ! -path './dist/*' ! -path './build/*'); \
+	if [ -n "$$md_files" ]; then \
+		printf '%s\n' "$$md_files" | xargs -r mdformat; \
+	fi
+	$(Q)if [ -f go.mod ] && [ -n "$$(find . -type f -name '*.go' ! -path './.git/*')" ]; then \
+		find . -type f -name '*.go' ! -path './.git/*' -print0 | xargs -0 gofmt -w; \
+	fi
 
 docs: docs-base ## Build docs
 

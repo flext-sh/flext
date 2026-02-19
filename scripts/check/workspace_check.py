@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Run lint gates across FLEXT workspace projects and generate reports.
 
-Gates: ruff lint, ruff format, pyrefly, mypy, pyright, bandit security.
+Gates: ruff lint/format, pyrefly, mypy, pyright, bandit, markdownlint, go vet.
 Outputs: ``.reports/check/check-report.md`` and ``.reports/check/check-report.sarif``.
 
 Usage::
@@ -24,7 +24,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 REPORTS_DIR = ROOT / ".reports" / "check"
-DEFAULT_GATES = "lint,format,pyrefly,mypy,pyright,security"
+DEFAULT_GATES = "lint,format,pyrefly,mypy,pyright,security,markdown,go"
 DEFAULT_SRC_DIR = "src"
 
 
@@ -279,6 +279,110 @@ def _run_pyright(project_dir: Path, src_dir: str) -> GateResult:
     )
 
 
+def _collect_markdown_files(project_dir: Path) -> list[Path]:
+    excluded = {
+        ".git",
+        ".venv",
+        "node_modules",
+        ".flext-deps",
+        ".mypy_cache",
+        ".pytest_cache",
+        ".ruff_cache",
+        "dist",
+        "build",
+    }
+    files: list[Path] = []
+    for path in project_dir.rglob("*.md"):
+        if any(part in excluded for part in path.parts):
+            continue
+        files.append(path)
+    return files
+
+
+def _run_markdown(project_dir: Path) -> GateResult:
+    md_files = _collect_markdown_files(project_dir)
+    if not md_files:
+        return GateResult(gate="markdown", project=project_dir.name, passed=True)
+    result = _run(
+        ["markdownlint", *[str(p.relative_to(project_dir)) for p in md_files]],
+        project_dir,
+    )
+    errors: list[CheckError] = []
+    pattern = re.compile(
+        r"^(?P<file>.*?):(?P<line>\d+)(?::(?P<col>\d+))?\s+error\s+(?P<code>MD\d+)(?:/[^\s]+)?\s+(?P<msg>.*)$"
+    )
+    for line in (result.stdout + "\n" + result.stderr).splitlines():
+        match = pattern.match(line.strip())
+        if not match:
+            continue
+        errors.append(
+            CheckError(
+                file=match.group("file"),
+                line=int(match.group("line")),
+                column=int(match.group("col") or 1),
+                code=match.group("code"),
+                message=match.group("msg"),
+            )
+        )
+    if result.returncode != 0 and not errors:
+        errors.append(
+            CheckError(
+                file=".",
+                line=1,
+                column=1,
+                code="markdownlint",
+                message=(
+                    result.stdout or result.stderr or "markdownlint failed"
+                ).strip(),
+            )
+        )
+
+    return GateResult(
+        gate="markdown",
+        project=project_dir.name,
+        passed=result.returncode == 0,
+        errors=errors,
+        raw_output=result.stderr,
+    )
+
+
+def _run_go(project_dir: Path) -> GateResult:
+    if not (project_dir / "go.mod").exists():
+        return GateResult(gate="go", project=project_dir.name, passed=True)
+    errors: list[CheckError] = []
+    raw_output = ""
+
+    go_files = list(project_dir.rglob("*.go"))
+    if go_files:
+        fmt_result = _run(
+            ["gofmt", "-l", *[str(p.relative_to(project_dir)) for p in go_files]],
+            project_dir,
+            timeout=900,
+        )
+        raw_output = fmt_result.stderr
+        for file_name in fmt_result.stdout.splitlines():
+            file_name = file_name.strip()
+            if not file_name:
+                continue
+            errors.append(
+                CheckError(
+                    file=file_name,
+                    line=1,
+                    column=1,
+                    code="gofmt",
+                    message="File is not gofmt-formatted",
+                )
+            )
+
+    return GateResult(
+        gate="go",
+        project=project_dir.name,
+        passed=len(errors) == 0,
+        errors=errors,
+        raw_output=raw_output,
+    )
+
+
 def check_project(
     project_dir: Path, gates: list[str], reports_dir: Path
 ) -> ProjectResult:
@@ -291,6 +395,8 @@ def check_project(
         "mypy": lambda: _run_mypy(project_dir, src_dir),
         "pyright": lambda: _run_pyright(project_dir, src_dir),
         "security": lambda: _run_bandit(project_dir, src_dir),
+        "markdown": lambda: _run_markdown(project_dir),
+        "go": lambda: _run_go(project_dir),
     }
     for gate in gates:
         runner = runners.get(gate)
@@ -372,6 +478,8 @@ def _generate_sarif(
         "mypy": ("Mypy", "https://mypy.readthedocs.io/"),
         "pyright": ("Pyright", "https://github.com/microsoft/pyright"),
         "security": ("Bandit", "https://bandit.readthedocs.io/"),
+        "markdown": ("MarkdownLint", "https://github.com/DavidAnson/markdownlint"),
+        "go": ("Go Vet", "https://pkg.go.dev/cmd/vet"),
     }
 
     runs = []
@@ -451,6 +559,8 @@ def main() -> int:
             "mypy",
             "pyright",
             "security",
+            "markdown",
+            "go",
         ):
             print(f"ERROR: unknown gate '{gate}'", file=sys.stderr)
             return 2
