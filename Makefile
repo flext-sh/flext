@@ -129,8 +129,7 @@ setup: ## Install all projects into workspace .venv
 	$(Q)python3.13 --version >/dev/null 2>&1 || { echo "ERROR: Python 3.13 required"; exit 1; }
 	$(Q)echo "Initializing git submodules..."; \
 	if [ -f .gitmodules ]; then \
-		submods=$$(python3 scripts/maintenance/_discover.py --kind submodule --format makefile 2>/dev/null); \
-		for p in $$submods; do git submodule update --init "$$p" 2>&1; done; \
+		git submodule update --init --recursive 2>&1; \
 		echo "Submodules initialized."; \
 	fi
 	$(Q)[ -d ".venv" ] || { echo "Creating .venv with Python 3.13..."; python3.13 -m venv .venv; }
@@ -140,7 +139,7 @@ setup: ## Install all projects into workspace .venv
 	echo ""
 	$(Q)projects=$$(python3 scripts/maintenance/_discover.py --kind submodule --format makefile 2>/dev/null); \
 	total_steps=$$(echo "$$projects" | wc -w); total_steps=$$(( total_steps + 1 )); \
-	echo "Starting workspace setup for $$total_steps item(s) (submodules + root, no client-a/client-b)"; \
+	echo "Starting workspace setup for $$total_steps item(s) (submodules + root)"; \
 	failed=0; installed=0; step=1; failed_projects=""; \
 	for proj in $$projects; do \
 		if [ -d "$$proj" ] && [ -f "$$proj/pyproject.toml" ]; then \
