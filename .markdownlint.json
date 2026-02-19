@@ -21,7 +21,7 @@
   },
   "MD011": true,
   "MD012": {
-    "maximum": 2
+    "maximum": 3
   },
   "MD013": {
     "line_length": 400,
@@ -91,9 +91,7 @@
   "MD048": {
     "style": "backtick"
   },
-  "MD049": {
-    "style": "underscore"
-  },
+  "MD049": false,
   "MD050": {
     "style": "asterisk"
   },
