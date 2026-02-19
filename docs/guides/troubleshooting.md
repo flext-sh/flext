@@ -1,11 +1,6 @@
 # FLEXT Troubleshooting Guide
 
 
-
-
-
-
-
 <!-- TOC START -->
 - [Quick Diagnosis](#quick-diagnosis)
   - [Health Check Commands](#health-check-commands)

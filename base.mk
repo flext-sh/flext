@@ -125,7 +125,7 @@ help: ## Show commands
 	$(Q)echo ""
 	$(Q)echo "Core verbs:"
 	$(Q)echo "  setup      Install dependencies and hooks"
-	$(Q)echo "  check      Run the 6 lint gates"
+	$(Q)echo "  check      Run the 8 lint gates"
 	$(Q)echo "  security   Run all security checks"
 	$(Q)echo "  format     Run all formatting"
 	$(Q)echo "  docs       Build docs"
@@ -185,9 +185,15 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 		$(POETRY) run bandit -r $(SRC_DIR) -q -ll || { echo "FAIL: security"; exit 1; }; \
 	fi; \
 	if echo "$$gates" | grep -qw markdown; then \
-		md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.venv/*' ! -path './node_modules/*' ! -path './.flext-deps/*' ! -path './.mypy_cache/*' ! -path './.pytest_cache/*' ! -path './.ruff_cache/*' ! -path './dist/*' ! -path './build/*'); \
+		md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.reports/*' ! -path './.venv/*' ! -path './node_modules/*' ! -path './.flext-deps/*' ! -path './.mypy_cache/*' ! -path './.pytest_cache/*' ! -path './.ruff_cache/*' ! -path './dist/*' ! -path './build/*'); \
+		md_config=""; \
+		if [ -f "$(WORKSPACE_ROOT)/.markdownlint.json" ]; then \
+			md_config="--config $(WORKSPACE_ROOT)/.markdownlint.json"; \
+		elif [ -f ".markdownlint.json" ]; then \
+			md_config="--config .markdownlint.json"; \
+		fi; \
 		if [ -n "$$md_files" ]; then \
-			printf '%s\n' "$$md_files" | xargs -r markdownlint || { echo "FAIL: markdown"; exit 1; }; \
+			markdownlint $$md_config $$md_files || { echo "FAIL: markdown"; exit 1; }; \
 		fi; \
 	fi; \
 	if echo "$$gates" | grep -qw go; then \
@@ -209,9 +215,16 @@ security: ## Run all security checks
 
 format: ## Run all formatting
 	$(Q)$(POETRY) run ruff format . --quiet
-	$(Q)md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.venv/*' ! -path './node_modules/*' ! -path './.flext-deps/*' ! -path './.mypy_cache/*' ! -path './.pytest_cache/*' ! -path './.ruff_cache/*' ! -path './dist/*' ! -path './build/*'); \
+	$(Q)md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.reports/*' ! -path './.venv/*' ! -path './node_modules/*' ! -path './.flext-deps/*' ! -path './.mypy_cache/*' ! -path './.pytest_cache/*' ! -path './.ruff_cache/*' ! -path './dist/*' ! -path './build/*'); \
+	md_config=""; \
+	if [ -f "$(WORKSPACE_ROOT)/.markdownlint.json" ]; then \
+		md_config="--config $(WORKSPACE_ROOT)/.markdownlint.json"; \
+	elif [ -f ".markdownlint.json" ]; then \
+		md_config="--config .markdownlint.json"; \
+	fi; \
 	if [ -n "$$md_files" ]; then \
 		printf '%s\n' "$$md_files" | xargs -r mdformat; \
+		markdownlint --fix $$md_config $$md_files || true; \
 	fi
 	$(Q)if [ -f go.mod ] && [ -n "$$(find . -type f -name '*.go' ! -path './.git/*')" ]; then \
 		find . -type f -name '*.go' ! -path './.git/*' -print0 | xargs -0 gofmt -w; \

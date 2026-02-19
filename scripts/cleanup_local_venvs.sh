@@ -7,6 +7,15 @@
 
 set -euo pipefail
 
+INTERACTIVE=0
+CONFIRM=0
+for arg in "$@"; do
+	case "$arg" in
+	--interactive) INTERACTIVE=1 ;;
+	--yes) CONFIRM=1 ;;
+	esac
+done
+
 WORKSPACE_ROOT="${FLEXT_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 
 echo "=== FLEXT Local .venv Cleanup ==="
@@ -27,11 +36,13 @@ echo "$LOCAL_VENVS" | while read -r venv; do
 done
 echo ""
 
-# Confirm before deletion
-read -p "Remove all these directories? [y/N] " -n 1 -r
-echo ""
+if [[ $INTERACTIVE -eq 1 ]]; then
+	read -p "Remove all these directories? [y/N] " -n 1 -r
+	echo ""
+	[[ $REPLY =~ ^[Yy]$ ]] && CONFIRM=1
+fi
 
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+if [[ $CONFIRM -eq 1 ]]; then
 	echo "$LOCAL_VENVS" | while read -r venv; do
 		if [ -d "$venv" ]; then
 			echo "Removing $venv..."
@@ -45,5 +56,5 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 	echo "  1. Run 'source scripts/setup_env.sh' to configure environment"
 	echo "  2. Run 'make check' in any project to verify"
 else
-	echo "Aborted."
+	echo "Aborted. Re-run with --interactive to confirm or --yes to proceed non-interactively."
 fi

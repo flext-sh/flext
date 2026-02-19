@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """Generate proper AST-aware rule files for all skills.
 
 Replaces fake `kind: module` + `regex` rules with real AST patterns.

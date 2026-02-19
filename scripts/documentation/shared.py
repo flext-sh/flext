@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Shared utilities for documentation maintenance scripts."""
 
 from __future__ import annotations

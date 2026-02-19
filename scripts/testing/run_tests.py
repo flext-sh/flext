@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Owner-Skill: .claude/skills/scripts-testing/SKILL.md
 """FLEXT Test Runner - Execute tests across workspace projects.
 

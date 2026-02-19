@@ -1,10 +1,6 @@
 # Skill Automation Pattern
 
 
-
-
-
-
 <!-- TOC START -->
 - [Goal](#goal)
 - [Required Outputs](#required-outputs)
