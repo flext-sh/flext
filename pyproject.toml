@@ -15,7 +15,6 @@
         "Typing :: Typed",
     ]
     dependencies = [
-        "client-a-oud-mig @ ./.flext-deps/client-a-oud-mig",
         "flexcore @ ./.flext-deps/flexcore",
         "flext-api @ ./.flext-deps/flext-api",
         "flext-auth @ ./.flext-deps/flext-auth",
@@ -46,7 +45,6 @@
         "flext-target-oracle-oic @ ./.flext-deps/flext-target-oracle-oic",
         "flext-target-oracle-wms @ ./.flext-deps/flext-target-oracle-wms",
         "flext-web @ ./.flext-deps/flext-web",
-        "client-b-meltano-native @ ./.flext-deps/client-b-meltano-native",
     ]
 
     description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
@@ -171,10 +169,8 @@
             "venv",
         ]
         extend_exclude = [
-            "client-a-.*/",
             "flexcore/",
             "flext-.*/",
-            "client-b-.*/",
         ]
         known_first_party = [
             "flext",
@@ -311,7 +307,6 @@ files = ["src/flext"]
             pydantic-core = ">=2.41.4"
             trafilatura = ">=2.0.0"
             # Path dependencies (editable installs - paths defined in [project.dependencies])
-            client-a-oud-mig = {path = ".flext-deps/client-a-oud-mig", develop = true}
             flexcore = {path = ".flext-deps/flexcore", develop = true}
             flext-api = {path = ".flext-deps/flext-api", develop = true}
             flext-auth = {path = ".flext-deps/flext-auth", develop = true}
@@ -342,7 +337,6 @@ files = ["src/flext"]
             flext-target-oracle-oic = {path = ".flext-deps/flext-target-oracle-oic", develop = true}
             flext-target-oracle-wms = {path = ".flext-deps/flext-target-oracle-wms", develop = true}
             flext-web = {path = ".flext-deps/flext-web", develop = true}
-            client-b-meltano-native = {path = ".flext-deps/client-b-meltano-native", develop = true}
 
         [tool.poetry.group.dev.dependencies]
             aiohttp = ">=3.12.14"

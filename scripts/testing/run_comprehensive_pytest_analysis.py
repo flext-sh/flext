@@ -64,7 +64,7 @@ PROJECT_HIERARCHY = {
         "flext-plugin",
         "flext-quality",
     ],
-    "special": ["client-a-oud-mig", "client-b-meltano-native", "flexcore"],
+    "special": ["flexcore"],
 }
 
 
