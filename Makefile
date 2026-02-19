@@ -92,7 +92,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "Selection: $(words $(SELECTED_PROJECTS)) selected"
 	$(Q)echo ""
 	$(Q)echo "Core verbs:"
-	$(Q)echo "  setup      Install all projects into workspace .venv"
+	$(Q)echo "  setup      Install all projects into workspace .venv, then run validate VALIDATE_SCOPE=workspace"
 	$(Q)echo "  upgrade    Upgrade deps + modernize + dependency report (.reports/dependencies/)"
 	$(Q)echo "  check      Run the 6 lint gates in all projects"
 	$(Q)echo "  security   Run all security checks in all projects"
@@ -223,7 +223,9 @@ setup: ## Install all projects into workspace .venv
 		echo "Failed projects:$$failed_projects"; \
 		echo "FAIL: setup ($$failed projects)"; \
 		exit 1; \
-	fi
+	fi; \
+	echo "Validating workspace (validate VALIDATE_SCOPE=workspace)..."; \
+	$(MAKE) validate VALIDATE_SCOPE=workspace || { echo "FAIL: setup validation"; exit 1; }
 
 upgrade: ## Upgrade Python dependencies to latest via Poetry
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
