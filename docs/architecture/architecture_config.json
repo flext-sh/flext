@@ -113,7 +113,7 @@
       "max_issues_default": 0,
       "max_issues_by_scope": {
         "root": 0,
-        "client-a-oud-mig": 0,
+        "flext-oud-mig": 0,
         "flexcore": 0,
         "flext-api": 0,
         "flext-auth": 0,
@@ -144,7 +144,7 @@
         "flext-target-oracle-oic": 0,
         "flext-target-oracle-wms": 0,
         "flext-web": 0,
-        "client-b-meltano-native": 0
+        "flext-meltano-native": 0
       }
     }
   },

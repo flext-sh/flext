@@ -30,8 +30,8 @@ PROJECTS_NEEDING_CLEAN = [
     "flext-target-oracle",
     "flext-target-oracle-oic",
     "flext-target-oracle-wms",
-    "client-a-oud-mig",
-    "client-b-meltano-native",
+    "flext-oud-mig",
+    "flext-meltano-native",
 ]
 
 # Basic clean target template for projects without specific requirements
@@ -143,12 +143,12 @@ PROJECT_SPECIFIC_ADDITIONS = {
 	# Target-specific files
 	rm -rf state.json state-*.json
 	rm -rf data/ output/ temp/""",
-    "client-a-oud-mig": """
+    "flext-oud-mig": """
 	# Migration-specific files
 	rm -rf *.ldif output.ldif test.ldif input.ldif
 	rm -rf data/input/ data/output/ data/test/
 	rm -rf migration.log migration-*.log""",
-    "client-b-meltano-native": """
+    "flext-meltano-native": """
 	# Meltano-specific files
 	rm -rf .meltano/ catalog-*.json state.json state-*.json
 	rm -rf .meltano-tmp/ meltano-*.log

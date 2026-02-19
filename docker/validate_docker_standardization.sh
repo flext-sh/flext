@@ -110,8 +110,8 @@ echo ""
 # CHECK 7: Verify centralized fixtures availability
 # ============================================================================
 echo -e "${BLUE}[7/8]${NC} Verifying centralized fixtures availability..."
-if python3 -c "from flext_tests.fixtures import flext_docker, client-a_oud_container, ldap_container, oracle_container, postgres_container, redis_container; print('OK')" 2>/dev/null | grep -q "OK"; then
-	echo -e "${GREEN}✅ PASSED${NC}: Centralized fixtures are importable (including client-a_oud_container)"
+if python3 -c "from flext_tests.fixtures import flext_docker, flext_oud_container, ldap_container, oracle_container, postgres_container, redis_container; print('OK')" 2>/dev/null | grep -q "OK"; then
+	echo -e "${GREEN}✅ PASSED${NC}: Centralized fixtures are importable (including flext_oud_container)"
 else
 	echo -e "${YELLOW}⚠️  WARNING${NC}: Some centralized fixtures may not be available"
 	((WARNINGS++))
@@ -144,7 +144,7 @@ if [ "$PARALLEL_DOCKER_USAGE" -gt 0 ]; then
 	echo -e "${YELLOW}⚠️  WARNING${NC}: Found $PARALLEL_DOCKER_USAGE files using deprecated parallel_docker:"
 	find ~/flext -name "*.py" -type f ! -name "*.bak" -exec grep -l "from flext_tests.parallel_docker\|import.*parallel_docker" {} \; 2>/dev/null | head -5
 	echo -e "    ${YELLOW}Migrate to centralized fixtures from flext_tests.fixtures${NC}"
-	echo -e "    ${YELLOW}Use: client-a_oud_container, ldap_container, oracle_container${NC}"
+	echo -e "    ${YELLOW}Use: flext_oud_container, ldap_container, oracle_container${NC}"
 	((WARNINGS++))
 else
 	echo -e "${GREEN}✅ PASSED${NC}: No deprecated parallel_docker usage found"

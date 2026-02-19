@@ -79,10 +79,10 @@ def main() -> None:
             project_config["tool"]["poetry"]["group.dev.dependencies"][
                 "types-decorator"
             ] = "^5.2.0.20250324"
-        elif project_name == "client-a-oud-mig":
-            # Add specific dependencies for client-a project
-            client-a_types = project_config["tool"]["poetry"]["group.typings.dependencies"]
-            client-a_types.update(
+        elif project_name == "flext-oud-mig":
+            # Add specific dependencies for FLEXT project
+            flext_types = project_config["tool"]["poetry"]["group.typings.dependencies"]
+            flext_types.update(
                 {
                     "types-click": "^7.1.8",
                     "types-pygments": "^2.19.0.20250516",

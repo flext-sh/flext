@@ -386,7 +386,7 @@
         "Tests: ImportError while loading conftest '..flext-plugin/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-plugin/tests/conftest.py'))"
       ]
     },
-    "client-a-oud-mig": {
+    "flext-oud-mig": {
       "level": 6,
       "has_makefile": true,
       "has_pyproject": true,
@@ -396,10 +396,10 @@
       "poetry_install": "\u2705 PASS",
       "errors": [
         "Lint: Ruff execution failed: 'str' object has no attribute 'is_absolute'",
-        "Tests: ImportError while loading conftest '..client-a-oud-mig/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..client-a-oud-mig/tests/conftest.py'))"
+        "Tests: ImportError while loading conftest '..flext-oud-mig/tests/conftest.py'.\n_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', '..flext-core/tests/conftest.py', PosixPath('..flext-oud-mig/tests/conftest.py'))"
       ]
     },
-    "client-b-meltano-native": {
+    "flext-meltano-native": {
       "level": 6,
       "has_makefile": true,
       "has_pyproject": true,
@@ -420,7 +420,7 @@
       "Import oracle: ..flext-core/src/flext_core/constants.py",
       "Import ldap: ..flext-core/src/flext_core/constants.py",
       "Import singer: ..flext-core/src/flext_core/constants.py",
-      "Import client-a: ..flext-core/src/flext_core/constants.py",
+      "Import flext: ..flext-core/src/flext_core/constants.py",
       "Import ldap: ..flext-core/src/flext_tests/utilities.py"
     ]
   },

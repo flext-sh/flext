@@ -71,6 +71,6 @@ When `type: custom` is necessary, keep script implementations inside `.claude/sk
 - **NO suppressions**: No `# pyrefly: ignore`, no baselines, no suppress commands
 - **Non-degrading**: All fixes must reduce or maintain error count; never increase
 - **Rollback safety**: skill_fix.py handles hash+backup+rewrite+verify+rollback per file
-- **Stub boundary**: `typings/generated/` is for third-party stubs only; never generate stubs for internal modules (`flext_*`, `client-a_*`, `client-b_*`)
+- **Stub boundary**: `typings/generated/` is for third-party stubs only; never generate stubs for internal modules (`flext_*`, `flext_*`, `flext_*`)
 - **Root-cause only**: Internal missing imports must be fixed in source/type architecture, not patched with generated stubs
 - **Skill contract**: rules consumed by `skill_validate.py` / `skill_fix.py` must remain flat-key format and executable for `fix_auto: true`

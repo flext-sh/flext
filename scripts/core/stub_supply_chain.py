@@ -19,7 +19,7 @@ from pathlib import Path
 MISSING_IMPORT_RE = re.compile(r"Cannot find module `([^`]+)` \[missing-import\]")
 MYPY_HINT_RE = re.compile(r'note: Hint: "python3 -m pip install ([^"]+)"')
 MYPY_STUB_RE = re.compile(r'Library stubs not installed for "([^"]+)"')
-INTERNAL_PREFIXES = ("flext_", "client-a_", "client-b_")
+INTERNAL_PREFIXES = ("flext_", "flext_", "flext_")
 
 
 @dataclass(frozen=True)

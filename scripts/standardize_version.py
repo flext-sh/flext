@@ -55,7 +55,7 @@ class FlextVersionStandardizationService(FlextService[dict[str, object]]):
 Single source of truth pattern following flext-core standards.
 All metadata comes from pyproject.toml via importlib.metadata.
 
-Copyright (c) 2025 client-a Telecom. Todos os direitos reservados.
+Copyright (c) 2025 Flext Telecom. Todos os direitos reservados.
 SPDX-License-Identifier: Proprietary
 """
 
@@ -211,7 +211,7 @@ __all__ = ["__version__", "__version_info__", "__title__", "__description__", "_
         content = current_file.read_text()
         issues = []
 
-        if "class " in content or "client-aOudMigVersion" in content:
+        if "class " in content or "FlextOudMigVersion" in content:
             issues.append("Uses custom version class (non-standard)")
         if "importlib.metadata" not in content:
             issues.append("Doesn't use importlib.metadata")
