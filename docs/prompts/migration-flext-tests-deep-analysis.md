@@ -63,7 +63,7 @@ Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os p
 ### Projetos a Analisar
 
 - ✅ Todos os projetos `flext-*` no diretório raiz
-- ✅ Todos os projetos `client-a-*` no diretório raiz
+- ✅ Todos os projetos `flext-*` no diretório raiz
 - ✅ Qualquer outro projeto que use `flext_tests`
 
 ### Diretórios a Verificar

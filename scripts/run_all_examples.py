@@ -13,7 +13,7 @@ Usage:
     python scripts/run_all_examples.py [--project SUBSTR] [--timeout 20] [--include-docker]
 
 Notes:
-- Per-project "run all" scripts that already exist (e.g., client-a-oud-mig/examples/run_all_examples.py)
+- Per-project "run all" scripts that already exist (e.g., flext-oud-mig/examples/run_all_examples.py)
   are preserved and can still be used directly. This script is an orchestrator across the repo.
 
 """

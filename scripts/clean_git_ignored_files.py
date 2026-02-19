@@ -5,7 +5,7 @@
 Untrack files from git that should be ignored according to the new aggressive
 .gitignore, but keep them locally (uses git rm --cached).
 
-Copyright (c) 2025 client-a Telecom. Todos os direitos reservados.
+Copyright (c) 2025 Flext Telecom. Todos os direitos reservados.
 SPDX-License-Identifier: Proprietary
 """
 

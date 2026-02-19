@@ -114,8 +114,8 @@ def main() -> None:
         "flext-dbt-ldif",
         "flext-dbt-oracle",
         "flext-dbt-oracle-wms",
-        "client-a-oud-mig",
-        "client-b-meltano-native",
+        "flext-oud-mig",
+        "flext-meltano-native",
     ]
 
     total_fixed = 0

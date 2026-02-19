@@ -37,8 +37,8 @@ SUBMODULES=(
 	"flext-target-ldif"
 	"flext-target-oracle-oic"
 	"flext-target-oracle-wms"
-	"client-b-meltano-native"
-	"client-a-oud-mig"
+	"flext-meltano-native"
+	"flext-oud-mig"
 	"flexcore"
 )
 

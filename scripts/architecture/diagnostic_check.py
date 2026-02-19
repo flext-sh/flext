@@ -100,8 +100,8 @@ class FlextDiagnostic:
             "flext-dbt-oracle-wms": 4,
             "flext-plugin": 4,
             # LEVEL 6 - SPECIFIC PROJECTS
-            "client-a-oud-mig": 6,
-            "client-b-meltano-native": 6,
+            "flext-oud-mig": 6,
+            "flext-meltano-native": 6,
         }
 
     def _run_lint(self, project_path: Path) -> tuple[int, str, str]:
@@ -253,7 +253,7 @@ class FlextDiagnostic:
             violations["flext-core"] = []
 
             # Search problematic imports by scanning files directly
-            keywords = ["meltano", "oracle", "ldap", "singer", "client-a", "client-b"]
+            keywords = ["meltano", "oracle", "ldap", "singer", "flext", "flext"]
             for file_path in core_path.rglob("*.py"):
                 try:
                     content = file_path.read_text(encoding="utf-8", errors="ignore")

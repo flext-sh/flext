@@ -25,8 +25,8 @@ scan_targets:
   - flext-plugin
   - flext-quality
   - flext-web
-  - client-a-oud-mig
-  - client-b-meltano-native
+  - flext-oud-mig
+  - flext-meltano-native
 rules:
 - id: require-owner-skill-marker
   type: ast-grep

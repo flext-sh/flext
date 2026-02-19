@@ -46,7 +46,7 @@ fi
 
 # 3. Organization selection
 ORG_CHOICE=$(select_option "Organizacao GitHub?" \
-	"datacosmos-br (Recomendado para client-a/client-b)" \
+	"datacosmos-br (Recomendado para flext/flext)" \
 	"flext-sh" \
 	"Outra")
 

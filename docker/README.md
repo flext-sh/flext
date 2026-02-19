@@ -48,7 +48,7 @@ Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 ├── docker-compose.*.yml    # All compose files (17 centralized configs)
 ├── images/                  # All Dockerfiles (21 consolidated images)
 │   ├── Dockerfile.flext-*       # FLEXT service images
-│   ├── Dockerfile.client-a-*       # client-a project images
+│   ├── Dockerfile.flext-*       # FLEXT project images
 │   └── Dockerfile.*             # Other project images
 └── README.md               # This file
 ```
@@ -68,7 +68,7 @@ All tests MUST use centralized fixtures from `flext_tests.fixtures`:
 ```python
 from flext_tests.fixtures import (
     flext_docker,          # Main Docker management fixture
-    client-a_oud_container,   # client-a OUD container (port 3389)
+    flext_oud_container,   # FLEXT OUD container (port 3389)
     ldap_container,        # Generic OpenLDAP (port 3390)
     oracle_container,      # Oracle Database (port 1522)
     postgres_container,    # PostgreSQL fixture
@@ -83,12 +83,12 @@ def test_with_ldap(ldap_container):
     connection_string = ldap_container  # ldap://localhost:3390
     # Use for flext-ldap, flext-ldif, flext-(dbt|tap|target)-(ldap|ldif)
 
-# Example 2: Using client-a OUD for client-a migration
-def test_client-a_migration(client-a_oud_container):
-    """Test using client-a OUD container (port 3389)."""
-    # client-a-specific OpenLDAP with dc=invaliddc, cn=invalid_user
-    connection_string = client-a_oud_container  # ldap://localhost:3389
-    # Use for client-a-oud-mig project exclusively
+# Example 2: Using FLEXT OUD for FLEXT migration
+def test_flext_migration(flext_oud_container):
+    """Test using FLEXT OUD container (port 3389)."""
+    # FLEXT-specific OpenLDAP with dc=invaliddc, cn=invalid_user
+    connection_string = flext_oud_container  # ldap://localhost:3389
+    # Use for flext-oud-mig project exclusively
 
 # Example 3: Using Oracle Database for Oracle projects
 def test_with_oracle(oracle_container):
@@ -147,12 +147,12 @@ All compose files follow naming convention: `docker-compose.{project}-{purpose}.
    - **Purpose**: Standard Oracle Database for flext-db-oracle, flext-(dbt|tap|target)-oracle
    - **Fixture**: `oracle_container` from `flext_tests.fixtures`
 
-2. **client-a Oracle Unified Directory** (`flext-client-a-oud-test`)
-   - **Port**: 3389 (client-a production port)
-   - **Compose File**: `docker-compose.client-a-oud.yml`
-   - **Purpose**: client-a Telecom OUD migration (OpenLDAP simulating OUD with dc=invaliddc, cn=invalid_user)
-   - **Fixture**: `client-a_oud_container` from `flext_tests.fixtures`
-   - **Projects**: client-a-oud-mig
+2. **FLEXT Oracle Unified Directory** (`flext-flext-oud-test`)
+   - **Port**: 3389 (FLEXT production port)
+   - **Compose File**: `docker-compose.flext-oud.yml`
+   - **Purpose**: FLEXT Telecom OUD migration (OpenLDAP simulating OUD with dc=invaliddc, cn=invalid_user)
+   - **Fixture**: `flext_oud_container` from `flext_tests.fixtures`
+   - **Projects**: flext-oud-mig
 
 3. **Generic OpenLDAP** (`flext-openldap-test`)
    - **Port**: 3390
@@ -165,7 +165,7 @@ All compose files follow naming convention: `docker-compose.{project}-{purpose}.
 - `docker-compose.flext-auth.yml` - Authentication services
 - `docker-compose.flext-web.yml` - Web application services
 - `docker-compose.db-oracle.yml` - **Oracle Database** (port 1522)
-- `docker-compose.client-a-oud.yml` - **client-a OUD** (port 3389)
+- `docker-compose.flext-oud.yml` - **FLEXT OUD** (port 3389)
 - `docker-compose.openldap.yml` - **Generic OpenLDAP** (port 3390)
 - `docker-compose.ldap-flext.yml` - FLEXT LDAP server
 - `docker-compose.ldap-oracle-db.yml` - LDAP + Oracle integration
@@ -209,7 +209,7 @@ All Dockerfiles are consolidated in `images/` directory with descriptive names:
 
 ### Project Images
 
-- `Dockerfile.client-a-oud`, `Dockerfile.client-a-oud-mig`
+- `Dockerfile.flext-oud`, `Dockerfile.flext-oud-mig`
 - `Dockerfile.flext`, `Dockerfile.flexcore`
 
 **Build Example**:

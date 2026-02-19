@@ -1,0 +1,58 @@
+# Oracle Unified Directory (OUD) Docker image for FLEXT migration testing
+# Based on official Oracle images with FLEXT-specific configuration
+
+FROM registry.example.com/ocr/middleware/oud:14.1.2.1.0-jdk17-ol8-250314
+
+# Maintainer information
+LABEL maintainer="FLEXT OUD Migration Team"
+LABEL description="Oracle Unified Directory configured for FLEXT migration testing"
+LABEL version="1.0"
+
+# Environment variables for OUD configuration
+ENV ORACLE_PWD="iDm55OID"
+ENV OUD_INSTANCE_NAME="flext_oud_test"
+ENV BASE_DN="dc=network,dc=invaliddc"
+ENV ADMIN_CONNECTOR_PORT=4449
+ENV LDAP_PORT=3389
+ENV LDAPS_PORT=3639
+ENV ROOT_USER_DN="cn=Directory Manager"
+ENV ROOT_USER_PASSWORD="iDm55OID"
+
+# Create necessary directories
+RUN mkdir -p /opt/oracle/oud/instances/${OUD_INSTANCE_NAME} \
+    && mkdir -p /opt/oracle/oud/test-data \
+    && mkdir -p /opt/oracle/oud/config \
+    && mkdir -p /opt/oracle/oud/scripts
+
+# Copy test configuration files
+COPY configs/ /opt/oracle/oud/config/
+COPY data/ /opt/oracle/oud/test-data/
+
+# Copy OUD setup script
+COPY setup-oud.sh /opt/oracle/oud/scripts/
+COPY configure-oud.sh /opt/oracle/oud/scripts/
+COPY dsconfig-commands.dsconfig /opt/oracle/oud/config/
+
+# Make scripts executable
+RUN chmod +x /opt/oracle/oud/scripts/*.sh
+
+# Set up OUD instance with FLEXT-specific configuration
+RUN /opt/oracle/oud/scripts/setup-oud.sh
+
+# Configure OUD for FLEXT migration requirements
+RUN /opt/oracle/oud/scripts/configure-oud.sh
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \
+    CMD ldapsearch -x -H ldap://localhost:${LDAP_PORT} \
+    -D "${ROOT_USER_DN}" -w "${ROOT_USER_PASSWORD}" \
+    -b "${BASE_DN}" -s base "(objectClass=*)" || exit 1
+
+# Expose ports
+EXPOSE ${LDAP_PORT} ${LDAPS_PORT} ${ADMIN_CONNECTOR_PORT}
+
+# Set working directory
+WORKDIR /opt/oracle/oud
+
+# Start OUD with proper initialization
+CMD ["/opt/oracle/oud/scripts/start-oud.sh"]

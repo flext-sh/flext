@@ -72,7 +72,7 @@ The FLEXT type system provides a unified, composable type architecture across 5 
 2. **flext-cli** - Command-line interface with CLI-specific types
 3. **flext-ldif** - LDIF processing domain library
 4. **flext-ldap** - LDAP operations library
-5. **client-a-oud-mig** - Oracle Unified Directory migration tool
+5. **flext-oud-mig** - Oracle Unified Directory migration tool
 
 **Key Principles**:
 
@@ -97,7 +97,7 @@ flext-ldif (depends on flext-core)
     ↓
 flext-ldap (depends on flext-core, flext-ldif)
     ↓
-client-a-oud-mig (depends on flext-core, flext-cli, flext-ldif, flext-ldap)
+flext-oud-mig (depends on flext-core, flext-cli, flext-ldif, flext-ldap)
 ```
 
 ### Architecture Layering within Projects
@@ -157,13 +157,13 @@ class FlextCliTypes:
 
 ```python
 # In typings.py (Tier 0)
-Flextclient-aOudMigEntryT = TypeVar("Flextclient-aOudMigEntryT", bound=object)
+FlextFlextOudMigEntryT = TypeVar("FlextFlextOudMigEntryT", bound=object)
 
 # In protocols.py (Tier 0) - declare actual protocol
 @runtime_checkable
 class EntryServiceProtocol[T: "fldif.Ldif.EntryProtocol"](Protocol):
     """Service for entry operations with generic type parameter."""
-    def get(self, dn: str) -> "client-aOudMigProtocols.client-aOudMig.Result[T]": ...
+    def get(self, dn: str) -> "FlextOudMigProtocols.FlextOudMig.Result[T]": ...
 ```
 
 ### Pattern 4: Union → Protocol (Complexity Reduction)
@@ -298,10 +298,10 @@ t.Ldap                      # LDAP operations
 t.Ldap.Protocol             # Infrastructure (ldap3 wrappers)
 ```
 
-**client-a-oud-mig**:
+**flext-oud-mig**:
 
 ```
-t.client-aOudMig               # Migration tool
+t.FlextOudMig               # Migration tool
   .Migration                # Migration types
   .Status                   # Status types
   .Output                   # Output types
@@ -381,10 +381,10 @@ m.Ldap                      # LDAP domain
   .Result                   # Operation result
 ```
 
-**client-a-oud-mig**:
+**flext-oud-mig**:
 
 ```
-m.client-aOudMig               # Migration tool domain
+m.FlextOudMig               # Migration tool domain
   .MigrationTask            # Migration task
   .MigrationStatus          # Migration status
   .MigrationResult          # Migration result
@@ -552,12 +552,12 @@ FlextServiceT = TypeVar("FlextServiceT", bound="FlextService")
 
 ```python
 # ✅ ONLY add domain TypeVars if truly specialized
-# Example: client-a-oud-mig has specialized entry types
+# Example: flext-oud-mig has specialized entry types
 
-Flextclient-aOudMigEntryT = TypeVar(
-    "Flextclient-aOudMigEntryT",
+FlextFlextOudMigEntryT = TypeVar(
+    "FlextFlextOudMigEntryT",
     bound=object  # Bounded to object to avoid circular imports
-    # Actual constraint: p.client-aOudMig.EntryProtocol (enforced at runtime)
+    # Actual constraint: p.FlextOudMig.EntryProtocol (enforced at runtime)
 )
 
 # ❌ DON'T create redundant TypeVars
@@ -756,7 +756,7 @@ t.Ldif.Domain.Entry.Transformation   # NO: 4 levels!
 | **flext-cli**     | ✅     | ✅     | ✅     | Consolidated namespaces |
 | **flext-ldif**    | ✅     | ✅     | ✅     | Validated               |
 | **flext-ldap**    | ✅     | ✅     | ✅     | Variance fixed          |
-| **client-a-oud-mig** | ✅     | ✅     | ✅     | Composition validated   |
+| **flext-oud-mig** | ✅     | ✅     | ✅     | Composition validated   |
 
 ### Type System Metrics
 
@@ -775,7 +775,7 @@ flext-core:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 flext-cli:       Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 flext-ldif:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 flext-ldap:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
-client-a-oud-mig:   Pyright: 0 errors | Ruff: ✅ | Tests: ✅
+flext-oud-mig:   Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 ```
 
 ---

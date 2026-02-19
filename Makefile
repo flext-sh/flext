@@ -156,15 +156,16 @@ setup: ## Install all projects into workspace .venv
 	fi
 	$(Q)[ -d ".venv" ] || { echo "Creating .venv with Python 3.13..."; python3.13 -m venv .venv; }
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)echo "Modernizing pyproject.toml files..."; \
 	$(POETRY_ENV) python scripts/dependencies/modernize_pyproject.py --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
-	$(Q)projects=$$(python3 scripts/maintenance/_discover.py --kind submodule --format makefile 2>/dev/null); \
-	total_steps=$$(echo "$$projects" | wc -w); total_steps=$$(( total_steps + 1 )); \
-	echo "Starting workspace setup for $$total_steps item(s) (submodules + root)"; \
+	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
+	echo "Starting workspace setup for $$total_steps item(s) ($(words $(SELECTED_PROJECTS)) projects + root)"; \
 	failed=0; installed=0; step=1; failed_projects=""; \
-	for proj in $$projects; do \
+	for proj in $(SELECTED_PROJECTS); do \
 		if [ -d "$$proj" ] && [ -f "$$proj/pyproject.toml" ]; then \
 			log_file="/tmp/flext-setup-$$proj.log"; \
 			start_ts=$$(date +%s); \
