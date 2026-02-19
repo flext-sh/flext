@@ -112,7 +112,7 @@ class FLEXTTestRunner:
                 capture_output=True,
                 text=True,
                 timeout=timeout,
-                env={**os.environ, "PYTHONPATH": str(project_path / "src")},
+                env=os.environ.copy(),
             )
 
             return result.returncode, result.stdout, result.stderr

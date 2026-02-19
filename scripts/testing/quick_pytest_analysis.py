@@ -43,7 +43,7 @@ def run_pytest_quick(project_path: Path, project_name: str) -> dict[str, object]
             text=True,
             timeout=120,  # 2 minutes per project
             check=False,
-            env={**os.environ, "PYTHONPATH": str(project_path / "src")},
+            env=os.environ.copy(),
         )
 
         # Parse basic results

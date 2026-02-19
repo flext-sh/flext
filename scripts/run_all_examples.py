@@ -68,8 +68,6 @@ class RunResult:
 def run_example(project_root: Path, example_file: Path, timeout: int) -> RunResult:
     """Run example."""
     env = os.environ.copy()
-    # Prefer project-local src so examples can import their package
-    env["PYTHONPATH"] = "src"
     result = u.CommandExecution.run_external_command(
         [sys.executable, str(example_file.name)],
         cwd=str(project_root / "examples"),

@@ -122,7 +122,6 @@ class PytestAnalyzer:
                 check=False,
                 env={
                     **os.environ,
-                    "PYTHONPATH": str(project_path / "src"),
                     "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",  # Avoid plugin conflicts
                 },
             )
