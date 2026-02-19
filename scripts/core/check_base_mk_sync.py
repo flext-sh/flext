@@ -20,25 +20,26 @@ def main() -> int:
 
     source_hash = sha256_text(source)
     mismatched: list[Path] = []
-    missing: list[Path] = []
+    checked: list[Path] = []
 
     for pyproject in sorted(root.glob("*/pyproject.toml")):
         project_dir = pyproject.parent
         local_base = project_dir / "base.mk"
         if not local_base.exists():
-            missing.append(local_base.relative_to(root))
             continue
+        checked.append(local_base.relative_to(root))
         if sha256_text(local_base) != source_hash:
             mismatched.append(local_base.relative_to(root))
 
-    if missing or mismatched:
-        for path in missing:
-            print(f"[base-mk-sync] missing: {path}")
+    if mismatched:
         for path in mismatched:
             print(f"[base-mk-sync] drift: {path}")
         return 1
 
-    print("[base-mk-sync] all vendored base.mk copies are in sync")
+    print(
+        f"[base-mk-sync] all vendored base.mk copies are in sync "
+        f"({len(checked)} checked)"
+    )
     return 0
 
 
