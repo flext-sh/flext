@@ -1,3 +1,19 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+  - [RESTful URL Design](#restful-url-design)
+  - [HTTP Status Codes](#http-status-codes)
+  - [SQL Injection Prevention](#sql-injection-prevention)
+  - [N+1 Query Prevention](#n1-query-prevention)
+  - [Indexing Strategy](#indexing-strategy)
+  - [Transactions](#transactions)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: backend-api-patterns
 description: REST API design and database query patterns — endpoint design, status codes, SQL injection prevention, N+1 prevention, indexing, transactions. Use when building or optimizing API endpoints or database queries.

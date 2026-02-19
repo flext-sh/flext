@@ -1,5 +1,37 @@
 # CLAUDE.md — Canonical Engineering Rules
 
+
+<!-- TOC START -->
+- [Non-Negotiable Rules](#non-negotiable-rules)
+- [Zero-Tolerance Delivery and Integrity Policy](#zero-tolerance-delivery-and-integrity-policy)
+- [Namespaced Alias Composition (CRITICAL — Read Every Word)](#namespaced-alias-composition-critical-read-every-word)
+  - [Alias Definitions (module-level, mandatory)](#alias-definitions-module-level-mandatory)
+  - [Import Rules](#import-rules)
+  - [Namespaced Composition (usage pattern)](#namespaced-composition-usage-pattern)
+  - [Complete Alias Map (flext-core)](#complete-alias-map-flext-core)
+  - [Prohibited Actions](#prohibited-actions)
+- [`__init__.py` Rules](#initpy-rules)
+- [One Class Per Module](#one-class-per-module)
+- [Skill System Contract](#skill-system-contract)
+- [Make Automation Contract](#make-automation-contract)
+  - [Workspace Verbs (root `Makefile`)](#workspace-verbs-root-makefile)
+  - [Project Verbs (per-project `base.mk`)](#project-verbs-per-project-basemk)
+  - [Parameters](#parameters)
+  - [Exit Code Contract](#exit-code-contract)
+  - [Reporting and Artifacts](#reporting-and-artifacts)
+  - [Maintenance and standard places](#maintenance-and-standard-places)
+- [AST-Grep First and Script Locality](#ast-grep-first-and-script-locality)
+- [Typing Supply Chain Rules](#typing-supply-chain-rules)
+- [Workspace Virtual Environment](#workspace-virtual-environment)
+- [pyproject.toml Hygiene](#pyprojecttoml-hygiene)
+  - [Workspace anti-drift gate](#workspace-anti-drift-gate)
+- [Required Preflight for Workspace Loops](#required-preflight-for-workspace-loops)
+- [Change Management](#change-management)
+- [Code Instrumentation Minimum Standard](#code-instrumentation-minimum-standard)
+- [Skills Usage Baseline](#skills-usage-baseline)
+- [Skill Enforcement and Fast Context Lookup](#skill-enforcement-and-fast-context-lookup)
+<!-- TOC END -->
+
 **Reviewed**: 2026-02-18
 
 This file is the canonical source of truth for agent behavior in this repository.

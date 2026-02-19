@@ -1,5 +1,14 @@
 # Code Diagrams
 
+
+<!-- TOC START -->
+- [Overview](#overview)
+- [Key Classes and Interfaces](#key-classes-and-interfaces)
+  - [Error Handling](#error-handling)
+  - [Dependency Injection](#dependency-injection)
+  - [Domain Models](#domain-models)
+<!-- TOC END -->
+
 ## Overview
 
 Code-level architecture showing class relationships and implementation patterns:

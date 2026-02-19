@@ -1,3 +1,24 @@
+<!-- TOC START -->
+- [Rule 1: Always Use `from __future__ import annotations`](#rule-1-always-use-from-future-import-annotations)
+- [Rule 2: Import Order (enforced by ruff `I` rules)](#rule-2-import-order-enforced-by-ruff-i-rules)
+- [Rule 3: How to Import from flext-core (Inside flext-core)](#rule-3-how-to-import-from-flext-core-inside-flext-core)
+  - [WITHIN flext-core, import via ABSOLUTE paths to submodules](#within-flext-core-import-via-absolute-paths-to-submodules)
+  - [Exception: Docstrings use `from flext_core import ...` style for user-facing examples](#exception-docstrings-use-from-flextcore-import-style-for-user-facing-examples)
+- [Rule 4: How to Import from flext-core (From Subprojects)](#rule-4-how-to-import-from-flext-core-from-subprojects)
+  - [Pattern A: Import with alias (most common, used in 90%+ of files)](#pattern-a-import-with-alias-most-common-used-in-90-of-files)
+  - [Pattern B: Import specific class from submodule (used for non-aliased classes)](#pattern-b-import-specific-class-from-submodule-used-for-non-aliased-classes)
+  - [Pattern C: Import for extension/inheritance](#pattern-c-import-for-extensioninheritance)
+  - [What is NEVER done in subprojects](#what-is-never-done-in-subprojects)
+- [Rule 5: Tier Enforcement](#rule-5-tier-enforcement)
+  - [Verified violations (these exist but should not be referenced as patterns)](#verified-violations-these-exist-but-should-not-be-referenced-as-patterns)
+- [Rule 6: Private Module Convention](#rule-6-private-module-convention)
+- [Rule 7: The Facade Alias Pattern](#rule-7-the-facade-alias-pattern)
+- [Rule 8: TYPE_CHECKING Imports](#rule-8-typechecking-imports)
+- [Rule 9: Ruff Configuration (from ruff-shared.toml)](#rule-9-ruff-configuration-from-ruff-sharedtoml)
+- [Rule 10: What NOT to Do](#rule-10-what-not-to-do)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: flext-import-rules
 description: Exact import rules and patterns verified from the actual FLEXT codebase

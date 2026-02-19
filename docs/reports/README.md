@@ -1,5 +1,11 @@
 # Reports & Validation Artifacts
 
+
+<!-- TOC START -->
+- [Key Subdirectories](#key-subdirectories)
+- [Keeping Reports Fresh](#keeping-reports-fresh)
+<!-- TOC END -->
+
 The `reports/` directory at the repository root stores every automated validation artifact referenced from the documentation portal. Use this page as a quick map to what lives there so you can trace statements in `docs/README.md` back to actual scan outputs.
 
 ## Key Subdirectories

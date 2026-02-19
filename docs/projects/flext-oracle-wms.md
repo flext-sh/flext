@@ -1,5 +1,15 @@
 # FLEXT Oracle WMS
 
+
+<!-- TOC START -->
+- [Status & metrics](#status-metrics)
+- [Quick start](#quick-start)
+- [Architecture & compliance snapshot](#architecture-compliance-snapshot)
+- [Key features & blockers](#key-features-blockers)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT Oracle WMS (v0.9.9 RC) is the Oracle Warehouse Management System integration framework that stands ready to join the FLEXT ecosystem once the compliance refactor finishes. It already defines the full LGF v10/legacy API catalog, configuration helpers, and instrumentation wiring, but connectivity validation, OAuth2 authentication, and Flext-compliant imports are still outstanding.
 
 ## Status & metrics

@@ -1,5 +1,21 @@
 # Payload (`FlextModels.Base.Payload[T]`)
 
+
+<!-- TOC START -->
+- [Visão geral](#viso-geral)
+- [Contrato detalhado](#contrato-detalhado)
+- [Arquitetura e dependências](#arquitetura-e-dependncias)
+- [Estado atual de adoção](#estado-atual-de-adoo)
+- [Integração pretendida com outros modelos](#integrao-pretendida-com-outros-modelos)
+  - [Interações concretas no flext-core](#interaes-concretas-no-flext-core)
+  - [Motivação detalhada](#motivao-detalhada)
+  - [Exemplo adicional (trecho do módulo base)](#exemplo-adicional-trecho-do-mdulo-base)
+  - [Roteiro de adoção multi-projeto](#roteiro-de-adoo-multi-projeto)
+- [Cenários concretos](#cenrios-concretos)
+- [Pontos fortes x riscos](#pontos-fortes-x-riscos)
+- [Backlog sugerido](#backlog-sugerido)
+<!-- TOC END -->
+
 ## Visão geral
 
 Envelope fortemente tipado destinado a carregar entidades/comandos/respostas dentro do `FlextModels`. O modelo une validação dinâmica, rastreamento temporal e identificação automática para garantir que mensagens trafeguem pelo dispatcher e pelos handlers com contexto completo. A implementação encontra-se em `flext_core/_models/base.py` e é exposta como `FlextModels.Payload` em `flext_core/models.py`.

@@ -1,3 +1,33 @@
+<!-- TOC START -->
+- [Workspace Setup](#workspace-setup)
+  - [Prerequisites](#prerequisites)
+  - [Initial Setup](#initial-setup)
+  - [Key Principle: Single Shared .venv](#key-principle-single-shared-venv)
+- [Day-to-Day Development Loop](#day-to-day-development-loop)
+  - [1. Start Working on a Subproject](#1-start-working-on-a-subproject)
+  - [2. Edit Code](#2-edit-code)
+  - [3. Quick Feedback Loop](#3-quick-feedback-loop)
+  - [4. Pre-Commit Validation](#4-pre-commit-validation)
+- [Toolchain Details](#toolchain-details)
+  - [Ruff (Linting + Formatting)](#ruff-linting-formatting)
+  - [Pyrefly (Type Checking)](#pyrefly-type-checking)
+  - [Pytest (Testing)](#pytest-testing)
+  - [Additional Quality Tools](#additional-quality-tools)
+- [PYTHONPATH Auto-Discovery](#pythonpath-auto-discovery)
+- [Testing Conventions](#testing-conventions)
+  - [Test File Structure](#test-file-structure)
+  - [Naming Convention](#naming-convention)
+  - [Test Execution](#test-execution)
+- [Working with Multiple Projects](#working-with-multiple-projects)
+  - [Workspace-Level Commands (from root Makefile)](#workspace-level-commands-from-root-makefile)
+  - [Cross-Project Impact Analysis](#cross-project-impact-analysis)
+- [Pre-Commit Hooks](#pre-commit-hooks)
+- [Docstring Convention](#docstring-convention)
+- [File Header Convention](#file-header-convention)
+- [Version Management](#version-management)
+- [Branching and Git Workflow](#branching-and-git-workflow)
+<!-- TOC END -->
+
 ---
 name: flext-development-workflow
 description: Verified development workflow including toolchain, testing, and CI/CD for the FLEXT monorepo

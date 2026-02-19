@@ -1,5 +1,30 @@
 # FLEXT Architecture Documentation Report
 
+
+<!-- TOC START -->
+- [📋 Documentation Generated](#-documentation-generated)
+  - [C4 Model Architecture](#c4-model-architecture)
+  - [Arc42 Documentation Framework](#arc42-documentation-framework)
+  - [Architecture Decision Records](#architecture-decision-records)
+  - [PlantUML Diagrams](#plantuml-diagrams)
+- [🏗️ System Architecture Analysis](#-system-architecture-analysis)
+  - [Component Inventory](#component-inventory)
+  - [Quality Attributes Assessed](#quality-attributes-assessed)
+- [📊 Architecture Metrics](#-architecture-metrics)
+  - [Structural Metrics](#structural-metrics)
+  - [Quality Metrics](#quality-metrics)
+  - [Performance Characteristics](#performance-characteristics)
+- [🎯 Documentation Framework Benefits](#-documentation-framework-benefits)
+  - [Multiple Perspectives](#multiple-perspectives)
+  - [Consistency and Quality](#consistency-and-quality)
+  - [Stakeholder Value](#stakeholder-value)
+- [📚 Generated Documentation Structure](#-generated-documentation-structure)
+- [🚀 Implementation Recommendations](#-implementation-recommendations)
+  - [Immediate Actions](#immediate-actions)
+  - [Short-term Goals (Next Sprint)](#short-term-goals-next-sprint)
+  - [Long-term Vision (Next Quarter)](#long-term-vision-next-quarter)
+<!-- TOC END -->
+
 **Generated:** 2025-10-10 15:19:05
 **System Version:** 0.9.0
 **Components Analyzed:** 54

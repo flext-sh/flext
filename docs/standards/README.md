@@ -1,5 +1,46 @@
 # Standards and Guidelines
 
+
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [Code Standards](#code-standards)
+  - [Python Standards](#python-standards)
+  - [PEP Compliance](#pep-compliance)
+  - [Docstring Standards](#docstring-standards)
+- [Development Practices](#development-practices)
+  - [Documentation Standards](#documentation-standards)
+  - [Template Standards](#template-standards)
+- [Quality Assurance](#quality-assurance)
+  - [Testing Standards](#testing-standards)
+  - [Code Quality](#code-quality)
+  - [Performance Standards](#performance-standards)
+- [Architecture Standards](#architecture-standards)
+  - [Clean Architecture](#clean-architecture)
+  - [Design Patterns](#design-patterns)
+  - [SOLID Principles](#solid-principles)
+- [Development Workflow](#development-workflow)
+  - [Git Workflow](#git-workflow)
+  - [Release Process](#release-process)
+  - [CI/CD Standards](#cicd-standards)
+- [Security Standards](#security-standards)
+  - [Security Guidelines](#security-guidelines)
+  - [Data Protection](#data-protection)
+- [Operational Standards](#operational-standards)
+  - [Monitoring Standards](#monitoring-standards)
+  - [Error Handling](#error-handling)
+  - [Configuration Management](#configuration-management)
+- [Compliance](#compliance)
+  - [Industry Standards](#industry-standards)
+  - [Accessibility](#accessibility)
+- [Contributing to Standards](#contributing-to-standards)
+- [Standards Enforcement](#standards-enforcement)
+- [Standards Categories](#standards-categories)
+  - [Must-Follow Standards](#must-follow-standards)
+  - [Recommended Standards](#recommended-standards)
+  - [Project-Specific Standards](#project-specific-standards)
+- [Getting Help with Standards](#getting-help-with-standards)
+<!-- TOC END -->
+
 ## Table of Contents
 
 - [Standards and Guidelines](#standards-and-guidelines)

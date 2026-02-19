@@ -1,5 +1,10 @@
 # ORM Integration
 
+
+<!-- TOC START -->
+- [SQLAlchemy](#sqlalchemy)
+<!-- TOC END -->
+
 Pydantic serves as a great tool for defining models for ORM (object relational mapping) libraries.
 ORMs are used to map objects to database tables, and vice versa.
 

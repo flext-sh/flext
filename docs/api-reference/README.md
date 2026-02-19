@@ -1,5 +1,24 @@
 # API Reference
 
+
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [Core Components](#core-components)
+  - [🚀 flext-core](#-flext-core)
+  - [📄 flext-ldif](#-flext-ldif)
+  - [🌐 flext-api](#-flext-api)
+  - [🔐 flext-auth](#-flext-auth)
+  - [🗄️ flext-ldap](#-flext-ldap)
+  - [🗃️ flext-oracle](#-flext-oracle)
+- [Architecture Patterns](#architecture-patterns)
+  - [Dependency Injection](#dependency-injection)
+  - [Railway-Oriented Programming](#railway-oriented-programming)
+  - [CQRS Pattern](#cqrs-pattern)
+- [Configuration](#configuration)
+- [Error Handling](#error-handling)
+- [Logging](#logging)
+<!-- TOC END -->
+
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
 
 

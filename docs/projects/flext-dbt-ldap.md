@@ -1,5 +1,16 @@
 # FLEXT DBT LDAP
 
+
+<!-- TOC START -->
+- [Status & metrics](#status-metrics)
+- [Quick start](#quick-start)
+- [Architecture & layers](#architecture-layers)
+- [Key features](#key-features)
+- [Testing & quality](#testing-quality)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT DBT LDAP (v1.0.0) is the dbt Core transformation suite that turns LDAP/Active Directory data into analytics-ready marts using the CLEAN ARCHITECTURE patterns from the FLEXT ecosystem.
 
 ## Status & metrics

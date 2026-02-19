@@ -1,5 +1,29 @@
 # Architecture Overview
 
+
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [System Architecture](#system-architecture)
+  - [Core Principles](#core-principles)
+  - [Architecture Layers](#architecture-layers)
+- [flext-core Architecture](#flext-core-architecture)
+  - [Core Components](#core-components)
+- [Project Structure](#project-structure)
+  - [Monorepo Organization](#monorepo-organization)
+  - [Package Structure](#package-structure)
+- [Integration Patterns](#integration-patterns)
+  - [Cross-Project Dependencies](#cross-project-dependencies)
+  - [Import Strategy](#import-strategy)
+- [Deployment Architecture](#deployment-architecture)
+  - [Container Strategy](#container-strategy)
+  - [Service Architecture](#service-architecture)
+- [Quality Assurance](#quality-assurance)
+  - [Testing Strategy](#testing-strategy)
+  - [Code Quality](#code-quality)
+- [Security Architecture](#security-architecture)
+- [Performance Considerations](#performance-considerations)
+<!-- TOC END -->
+
 ## Table of Contents
 
 - [Architecture Overview](#architecture-overview)

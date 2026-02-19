@@ -1,3 +1,17 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+  - [Session Start Checklist](#session-start-checklist)
+  - [Skill Selection by Path](#skill-selection-by-path)
+  - [Memory Search Patterns](#memory-search-patterns)
+  - [Context7 for Library Docs](#context7-for-library-docs)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: flext-agent-integration
 description: Guide for using MCP tools, skills, and agents in the FLEXT development workflow. Use at session start or when configuring agent tooling for FLEXT work.

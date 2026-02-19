@@ -1,5 +1,15 @@
 # FLEXT Tap Oracle WMS
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+- [Quick start](#quick-start)
+- [Architecture & integration](#architecture-integration)
+- [Quality & operations](#quality-operations)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT Tap Oracle WMS (v1.0.0 release preparation) is the Singer tap that continuously extracts Oracle Warehouse Management System data with enterprise-grade telemetry, instrumentation, and documentation. The project is production-ready, but a major refactor is ongoing to simplify the architecture and unblock disabled tests.
 
 ## Status & health

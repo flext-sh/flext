@@ -1,5 +1,12 @@
 # Queue Integration
 
+
+<!-- TOC START -->
+- [Redis queue](#redis-queue)
+- [RabbitMQ](#rabbitmq)
+- [ARQ](#arq)
+<!-- TOC END -->
+
 Pydantic is quite helpful for validating data that goes into and comes out of queues. Below,
 we'll explore how to validate / serialize data with various queue systems.
 

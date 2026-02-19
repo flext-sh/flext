@@ -1,5 +1,17 @@
 # FLEXT LDIF
 
+
+<!-- TOC START -->
+- [Status & metrics](#status-metrics)
+- [Quick start](#quick-start)
+- [Key capabilities](#key-capabilities)
+- [Architecture overview](#architecture-overview)
+- [Usage highlights](#usage-highlights)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & contribution](#support-contribution)
+<!-- TOC END -->
+
 FLEXT LDIF is the RFC 2849/4512-compliant LDIF processor for the FLEXT platform. It combines a strict parser, a quirk registry for server-specific rules, and migration pipelines that can target Oracle (OID/OUD), OpenLDAP, Active Directory, and any RFC-compliant LDAP server.
 
 ## Status & metrics

@@ -1,3 +1,18 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+  - [PEP 696 — Type Parameter Defaults](#pep-696-type-parameter-defaults)
+  - [PEP 702 — @deprecated](#pep-702-deprecated)
+  - [PEP 705 — ReadOnly TypedDict](#pep-705-readonly-typeddict)
+  - [PEP 742 — TypeIs](#pep-742-typeis)
+  - [Other 3.13 Improvements](#other-313-improvements)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: python-313-typing
 description: Comprehensive Python 3.13 typing PEPs reference — PEP 696 (type defaults), PEP 702 (@deprecated), PEP 705 (ReadOnly), PEP 742 (TypeIs). Use when working with Python 3.13+ type features.

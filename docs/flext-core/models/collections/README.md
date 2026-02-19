@@ -1,5 +1,16 @@
 # FlextModels · Coleções e Estruturas Configuráveis
 
+
+<!-- TOC START -->
+- [Componentes](#componentes)
+  - [`Categories`](#categories)
+  - [`Statistics`](#statistics)
+  - [`Config`](#config)
+  - [`Results`](#results)
+  - [`Rules`](#rules)
+  - [`Options`](#options)
+<!-- TOC END -->
+
 Este conjunto agrupa modelos genéricos usados para estruturar coleções categorizadas, consolidação de métricas, configuração dinamicamente mesclável, resultados agregáveis e regras/opções declarativas. Todos os dados foram levantados via AST em `flext_core/models.py` e confirmados com uma varredura estática (ignorando testes) para mapear uso real no monorepo.
 
 Para cada componente listamos por que ele existe, como funciona internamente, onde deveria ser aplicado no negócio, o que já o consome hoje, benefícios tangíveis e recomendações de adoção ou descarte.

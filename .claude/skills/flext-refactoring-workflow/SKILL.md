@@ -1,3 +1,27 @@
+<!-- TOC START -->
+- [Pre-Refactoring Checklist](#pre-refactoring-checklist)
+- [Refactoring Steps](#refactoring-steps)
+  - [Step 1: Analyze Before Editing](#step-1-analyze-before-editing)
+  - [Step 2: Make Changes in Tier Order (Bottom-Up)](#step-2-make-changes-in-tier-order-bottom-up)
+  - [Step 3: Validate After Each File](#step-3-validate-after-each-file)
+  - [Step 4: Run Tests](#step-4-run-tests)
+  - [Step 5: Extended Validation (before commits)](#step-5-extended-validation-before-commits)
+- [Make Targets Quick Reference (from base.mk)](#make-targets-quick-reference-from-basemk)
+- [Quality Gate Thresholds](#quality-gate-thresholds)
+- [Common Refactoring Patterns](#common-refactoring-patterns)
+  - [Pattern A: Replacing dict with ConfigMap](#pattern-a-replacing-dict-with-configmap)
+  - [Pattern B: Removing Legacy Aliases](#pattern-b-removing-legacy-aliases)
+  - [Pattern C: Moving Private to Facade](#pattern-c-moving-private-to-facade)
+  - [Pattern D: Extracting Large Methods](#pattern-d-extracting-large-methods)
+- [Cross-Project Refactoring](#cross-project-refactoring)
+  - [Finding cross-project consumers](#finding-cross-project-consumers)
+- [Error Handling During Refactoring](#error-handling-during-refactoring)
+  - [Ruff Errors](#ruff-errors)
+  - [Type Check Errors (pyrefly)](#type-check-errors-pyrefly)
+  - [Test Failures](#test-failures)
+- [CRITICAL RULES](#critical-rules)
+<!-- TOC END -->
+
 ---
 name: flext-refactoring-workflow
 description: Step-by-step refactoring process with verified quality gates and Make targets

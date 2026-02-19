@@ -1,3 +1,14 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+- [Scripts](#scripts)
+<!-- TOC END -->
+
 ---
 name: scripts-testing
 description: Testing scripts — pytest runners, test analysis, quality gates, stress tests, and distributed testing. Use when editing scripts/testing/.

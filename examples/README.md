@@ -1,5 +1,32 @@
 # FLEXT Examples
 
+
+<!-- TOC START -->
+- [Key Features](#key-features)
+  - [Examples Overview](#examples-overview)
+  - [1. ACL Processing Example (`acl_processing_example.py`)](#1-acl-processing-example-aclprocessingexamplepy)
+  - [2. Advanced Processing Example (`advanced_processing_example.py`)](#2-advanced-processing-example-advancedprocessingexamplepy)
+  - [3. Complete Workflow Example (`complete_workflow_example.py`)](#3-complete-workflow-example-completeworkflowexamplepy)
+- [Architecture Patterns Demonstrated](#architecture-patterns-demonstrated)
+  - [Railway Pattern](#railway-pattern)
+  - [Parallel Processing](#parallel-processing)
+  - [Type Safety](#type-safety)
+  - [Enterprise Features](#enterprise-features)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Usage Examples](#usage-examples)
+  - [Basic ACL Processing](#basic-acl-processing)
+  - [Advanced Processing Pipeline](#advanced-processing-pipeline)
+  - [Complete Workflow](#complete-workflow)
+- [Performance Characteristics](#performance-characteristics)
+  - [Parallel Processing](#parallel-processing)
+  - [Railway Pattern](#railway-pattern)
+  - [Type Safety](#type-safety)
+- [Integration with FLEXT Ecosystem](#integration-with-flext-ecosystem)
+- [Contributing](#contributing)
+- [License](#license)
+<!-- TOC END -->
+
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)

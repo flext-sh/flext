@@ -1,3 +1,16 @@
+<!-- TOC START -->
+- [Configure VS Code](#configure-vs-code)
+  - [Install Pylance](#install-pylance)
+  - [Configure your environment](#configure-your-environment)
+  - [Configure Pylance](#configure-pylance)
+  - [Configure mypy](#configure-mypy)
+- [Tips and tricks](#tips-and-tricks)
+  - [Strict errors](#strict-errors)
+  - [Config in class arguments](#config-in-class-arguments)
+- [Adding a default with `Field`](#adding-a-default-with-field)
+- [Technical Details](#technical-details)
+<!-- TOC END -->
+
 Pydantic works well with any editor or IDE out of the box because it's made on top of standard Python type annotations.
 
 When using [Visual Studio Code (VS Code)](https://code.visualstudio.com/), there are some **additional editor features** supported, comparable to the ones provided by the [PyCharm plugin](../integrations/pycharm.md).

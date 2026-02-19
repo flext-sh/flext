@@ -71,9 +71,11 @@ def _run(
     return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, timeout=timeout)
 
 
-def _run_ruff_lint(project_dir: Path) -> GateResult:
+def _run_ruff_lint(project_dir: Path, src_dir: str) -> GateResult:
+    target = src_dir if (project_dir / src_dir).exists() else "."
     result = _run(
-        ["ruff", "check", ".", "--output-format", "json", "--quiet"], project_dir
+        ["ruff", "check", target, "--output-format", "json", "--quiet"],
+        project_dir,
     )
     errors: list[CheckError] = []
     try:
@@ -99,8 +101,9 @@ def _run_ruff_lint(project_dir: Path) -> GateResult:
     )
 
 
-def _run_ruff_format(project_dir: Path) -> GateResult:
-    result = _run(["ruff", "format", "--check", ".", "--quiet"], project_dir)
+def _run_ruff_format(project_dir: Path, src_dir: str) -> GateResult:
+    target = src_dir if (project_dir / src_dir).exists() else "."
+    result = _run(["ruff", "format", "--check", target, "--quiet"], project_dir)
     errors: list[CheckError] = []
     if result.returncode != 0 and result.stdout.strip():
         for line in result.stdout.strip().splitlines():
@@ -282,8 +285,8 @@ def check_project(
     result = ProjectResult(project=project_dir.name)
     src_dir = DEFAULT_SRC_DIR
     runners = {
-        "lint": lambda: _run_ruff_lint(project_dir),
-        "format": lambda: _run_ruff_format(project_dir),
+        "lint": lambda: _run_ruff_lint(project_dir, src_dir),
+        "format": lambda: _run_ruff_format(project_dir, src_dir),
         "pyrefly": lambda: _run_pyrefly(project_dir, src_dir, reports_dir),
         "mypy": lambda: _run_mypy(project_dir, src_dir),
         "pyright": lambda: _run_pyright(project_dir, src_dir),

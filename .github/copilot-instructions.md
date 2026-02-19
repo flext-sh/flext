@@ -1,5 +1,11 @@
 # GitHub Copilot Instructions
 
+
+<!-- TOC START -->
+- [How To Apply Here](#how-to-apply-here)
+- [Quick Workflow](#quick-workflow)
+<!-- TOC END -->
+
 Canonical source: [`CLAUDE.md`](../../CLAUDE.md).
 
 ## How To Apply Here

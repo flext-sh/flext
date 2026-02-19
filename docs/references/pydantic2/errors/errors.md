@@ -1,5 +1,11 @@
 # Validation Errors
 
+
+<!-- TOC START -->
+- [Error messages](#error-messages)
+  - [Customize error messages](#customize-error-messages)
+<!-- TOC END -->
+
 Pydantic will raise a [`ValidationError`][pydantic_core.ValidationError] whenever it finds an error in the data it's validating.
 
 !!! note

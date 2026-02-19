@@ -1,5 +1,29 @@
 # Phases 2-6: Parallel Track Execution Plans
 
+
+<!-- TOC START -->
+- [Phase 2: API Layer + Infrastructure (Days 5-7)](#phase-2-api-layer-infrastructure-days-5-7)
+  - [Track A: API Layer](#track-a-api-layer)
+  - [Track B: Infrastructure Layer](#track-b-infrastructure-layer)
+- [Phase 3: Data Layer (Days 8-11)](#phase-3-data-layer-days-8-11)
+  - [Task 3.1: flext-ldif Migration (LARGE - 93 TypedDicts)](#task-31-flext-ldif-migration-large-93-typeddicts)
+  - [Task 3.2: flext-ldap Migration](#task-32-flext-ldap-migration)
+  - [Task 3.3: flext-db-oracle Migration](#task-33-flext-db-oracle-migration)
+- [Phase 4: Oracle Integration + Meltano (Days 12-14)](#phase-4-oracle-integration-meltano-days-12-14)
+  - [Track A: Oracle Integration](#track-a-oracle-integration)
+  - [Track B: Meltano/Singer Framework](#track-b-meltanosinger-framework)
+- [Phase 5: Taps + Targets (Days 15-19)](#phase-5-taps-targets-days-15-19)
+  - [Track A: Taps (Source Connectors)](#track-a-taps-source-connectors)
+  - [Track B: Targets (Destination Connectors)](#track-b-targets-destination-connectors)
+- [Phase 6: DBT Integration + User-Facing (Days 20-24)](#phase-6-dbt-integration-user-facing-days-20-24)
+  - [Track A: DBT Integration](#track-a-dbt-integration)
+  - [Track B: User-Facing Applications](#track-b-user-facing-applications)
+- [Parallel Execution Strategy](#parallel-execution-strategy)
+  - [Day-by-Day Breakdown](#day-by-day-breakdown)
+  - [Coordination Points](#coordination-points)
+- [Success Criteria for Phases 2-6](#success-criteria-for-phases-2-6)
+<!-- TOC END -->
+
 **Timeline**: Days 5-24 (after Phase 1 completes)  
 **Strategy**: Parallel execution of Track A and Track B for each phase  
 **Dependency**: Phase 1 must complete successfully

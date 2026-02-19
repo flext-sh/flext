@@ -1,5 +1,17 @@
 # FlextModels · Configurações de Processamento
 
+
+<!-- TOC START -->
+- [Componentes](#componentes)
+  - [`ProcessingRequest`](#processingrequest)
+  - [`RetryConfiguration`](#retryconfiguration)
+  - [`ValidationConfiguration`](#validationconfiguration)
+  - [`BatchProcessingConfig`](#batchprocessingconfig)
+  - [`HandlerExecutionConfig`](#handlerexecutionconfig)
+  - [`MiddlewareConfig`](#middlewareconfig)
+  - [`RateLimiterState`](#ratelimiterstate)
+<!-- TOC END -->
+
 Essas estruturas encapsulam o contrato de configuração usado por orquestradores, handlers e middleware no FLEXT. Todas foram levantadas via AST em `flext_core/models.py` e auditadas com busca estática (testes ignorados) para confirmar o uso real.
 
 Para cada modelo descrevemos por que ele existe, funcionamento interno, cenários de negócio recomendados, adoções atuais, benefícios tangíveis e decisões sugeridas (adotar, mover para experimento ou aposentar).

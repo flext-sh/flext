@@ -1,5 +1,22 @@
 # FLEXT Ecosystem Documentation Portal
 
+
+<!-- TOC START -->
+- [Quick Start](#quick-start)
+- [Status & Quality](#status-quality)
+- [Documentation Sections](#documentation-sections)
+  - [Reports & Status](#reports-status)
+  - [Architecture & Design](#architecture-design)
+  - [Development & Testing Guides](#development-testing-guides)
+  - [API & Libraries](#api-libraries)
+  - [Projects & Integrations](#projects-integrations)
+  - [Standards & Practices](#standards-practices)
+  - [Support & Community](#support-community)
+- [Projects by Category](#projects-by-category)
+- [Key Features](#key-features)
+- [Support & Recent Updates](#support-recent-updates)
+<!-- TOC END -->
+
 **Version**: 1.0.0 | **Status**: Updated 2026-02-02
 
 Welcome to the master index for the FLEXT documentation ecosystem. The portal blends the curated narrative inside `docs/README.md` with detailed guides, architecture blueprints, API references, and the per-project manuals that sit beside each library. Use this page to orient yourself, find the right section, and understand how the documentation is kept in sync with the lint, test, and coverage reports in `reports/`.

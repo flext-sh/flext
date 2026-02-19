@@ -1,5 +1,18 @@
 # Experimental Features
 
+
+<!-- TOC START -->
+- [Feedback](#feedback)
+- [Pipeline API](#pipeline-api)
+  - [Mapping from `BeforeValidator`, `AfterValidator` and `WrapValidator`](#mapping-from-beforevalidator-aftervalidator-and-wrapvalidator)
+  - [Alternative patterns](#alternative-patterns)
+- [Partial Validation](#partial-validation)
+  - [How Partial Validation Works](#how-partial-validation-works)
+  - [Limitations of Partial Validation](#limitations-of-partial-validation)
+- [Validation of a callable's arguments](#validation-of-a-callables-arguments)
+- [`MISSING` sentinel](#missing-sentinel)
+<!-- TOC END -->
+
 In this section you will find documentation for new, experimental features in Pydantic. These features are subject to change or removal, and we are looking for feedback and suggestions before making them a permanent part of Pydantic.
 
 See our [Version Policy](../version-policy.md#experimental-features) for more information on experimental features.

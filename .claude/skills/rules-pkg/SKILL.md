@@ -1,3 +1,13 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: rules-pkg
 description: Rules for package metadata and package-layer structure under `pkg/`. Use when editing package descriptors, plugin manifests, or packaging utilities.

@@ -1,5 +1,27 @@
 # FLEXT System Context Diagram
 
+
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [Overview](#overview)
+- [System Context Diagram](#system-context-diagram)
+- [Key Stakeholders](#key-stakeholders)
+  - [Primary Users](#primary-users)
+  - [External Systems](#external-systems)
+- [System Responsibilities](#system-responsibilities)
+  - [Core Capabilities](#core-capabilities)
+- [Quality Attributes](#quality-attributes)
+  - [Performance](#performance)
+  - [Reliability](#reliability)
+  - [Security](#security)
+  - [Maintainability](#maintainability)
+- [Technology Stack](#technology-stack)
+  - [Runtime Environment](#runtime-environment)
+  - [Data Storage](#data-storage)
+  - [Integration Protocols](#integration-protocols)
+  - [Monitoring and Observability](#monitoring-and-observability)
+<!-- TOC END -->
+
 ## Table of Contents
 
 - [FLEXT System Context Diagram](#flext-system-context-diagram)

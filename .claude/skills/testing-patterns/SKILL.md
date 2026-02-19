@@ -1,3 +1,20 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+  - [Test Structure (AAA)](#test-structure-aaa)
+  - [Testing FlextResult](#testing-flextresult)
+  - [Fixtures (conftest.py)](#fixtures-conftestpy)
+  - [Parameterized Tests](#parameterized-tests)
+  - [Mocking Strategy](#mocking-strategy)
+  - [Anti-Patterns to Avoid](#anti-patterns-to-avoid)
+  - [Test Organization](#test-organization)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: testing-patterns
 description: Testing patterns, anti-patterns, and guidelines for Python/pytest in FLEXT — fixtures, parameterization, mocking strategy, FlextResult testing, and TDD. Use when writing or reviewing tests.

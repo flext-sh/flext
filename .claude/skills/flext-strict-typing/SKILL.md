@@ -1,3 +1,38 @@
+<!-- TOC START -->
+- [Python Version & Core Requirements](#python-version-core-requirements)
+- [FLEXT Mapping-First Policy (Contract Layer)](#flext-mapping-first-policy-contract-layer)
+- [Rule 1: NEVER Use `Any` or `object`](#rule-1-never-use-any-or-object)
+  - [Replace with the appropriate type from the `FlextTypes` hierarchy](#replace-with-the-appropriate-type-from-the-flexttypes-hierarchy)
+  - [The Type Hierarchy (from `typings.py` lines 153-176)](#the-type-hierarchy-from-typingspy-lines-153-176)
+- [Verification](#verification)
+  - [Special RootModel Containers (from `typings.py` lines 357-462)](#special-rootmodel-containers-from-typingspy-lines-357-462)
+- [Rule 2: TypeAlias Declaration Format](#rule-2-typealias-declaration-format)
+  - [Within the `FlextTypes` class — use `TypeAlias` annotation](#within-the-flexttypes-class-use-typealias-annotation)
+  - [At module level — use PEP 695 `type` statement (required for recursive types)](#at-module-level-use-pep-695-type-statement-required-for-recursive-types)
+- [Rule 3: TypeVars — Module-Level Only](#rule-3-typevars-module-level-only)
+- [Rule 4: Modern Python Typing (Python 3.13+)](#rule-4-modern-python-typing-python-313)
+  - [Always use modern syntax (with Mapping-first contracts)](#always-use-modern-syntax-with-mapping-first-contracts)
+  - [Use `typing.Self` for return self patterns](#use-typingself-for-return-self-patterns)
+- [Rule 5: Pydantic v2 Model Typing](#rule-5-pydantic-v2-model-typing)
+  - [ConfigDict (not inner `class Config`)](#configdict-not-inner-class-config)
+  - [Field declarations](#field-declarations)
+  - [Validators use `@field_validator` and `@model_validator`](#validators-use-fieldvalidator-and-modelvalidator)
+- [Rule 6: Annotated Validation Types](#rule-6-annotated-validation-types)
+- [Rule 7: protocols.py — Structural Typing](#rule-7-protocolspy-structural-typing)
+- [Rule 8: Enum Typing — StrEnum Only](#rule-8-enum-typing-strenum-only)
+- [Rule 9: Constants Typing — Final + Immutable Collections](#rule-9-constants-typing-final-immutable-collections)
+- [Rule 13: Advanced Fix Strategy (No Simplistic Rewrites)](#rule-13-advanced-fix-strategy-no-simplistic-rewrites)
+- [Rule 10: Return Types — ALWAYS Explicit](#rule-10-return-types-always-explicit)
+- [Rule 11: Callable Typing](#rule-11-callable-typing)
+- [Ruff Rules That Enforce Typing (from ruff-shared.toml)](#ruff-rules-that-enforce-typing-from-ruff-sharedtoml)
+- [Rule 12: FlextResult Factory Method Typing](#rule-12-flextresult-factory-method-typing)
+  - [`r` Alias — Universal Import Pattern](#r-alias-universal-import-pattern)
+  - [`ok()` vs `fail()` — Asymmetric Generics](#ok-vs-fail-asymmetric-generics)
+  - [Internal Implementation Pattern (in `result.py`)](#internal-implementation-pattern-in-resultpy)
+  - [Why `cast` Is Required](#why-cast-is-required)
+  - [Usage Examples](#usage-examples)
+<!-- TOC END -->
+
 ---
 name: flext-strict-typing
 description: Verified type system rules, type hierarchy, and enforcement policies for the FLEXT ecosystem

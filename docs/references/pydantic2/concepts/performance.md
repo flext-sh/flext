@@ -1,5 +1,18 @@
 # Performance tips
 
+
+<!-- TOC START -->
+- [In general, use `model_validate_json()` not `model_validate(json.loads(...))`](#in-general-use-modelvalidatejson-not-modelvalidatejsonloads)
+- [`TypeAdapter` instantiated once](#typeadapter-instantiated-once)
+- [`Sequence` vs `list` or `tuple` with `Mapping` vs `dict`](#sequence-vs-list-or-tuple-with-mapping-vs-dict)
+- [Don't do validation when you don't have to, use `Any` to keep the value unchanged](#dont-do-validation-when-you-dont-have-to-use-any-to-keep-the-value-unchanged)
+- [Avoid extra information via subclasses of primitives](#avoid-extra-information-via-subclasses-of-primitives)
+- [Use tagged union, not union](#use-tagged-union-not-union)
+- [Use `TypedDict` over nested models](#use-typeddict-over-nested-models)
+- [Avoid wrap validators if you really care about performance](#avoid-wrap-validators-if-you-really-care-about-performance)
+- [Failing early with `FailFast`](#failing-early-with-failfast)
+<!-- TOC END -->
+
 In most cases Pydantic won't be your bottle neck, only follow this if you're sure it's necessary.
 
 ## In general, use `model_validate_json()` not `model_validate(json.loads(...))`

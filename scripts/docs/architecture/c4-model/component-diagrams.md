@@ -1,5 +1,13 @@
 # Core Components Diagram
 
+
+<!-- TOC START -->
+- [Overview](#overview)
+- [Component Details](#component-details)
+  - [Core Components](#core-components)
+  - [Domain Components](#domain-components)
+<!-- TOC END -->
+
 ## Overview
 
 Detailed view of FLEXT core components and their relationships:

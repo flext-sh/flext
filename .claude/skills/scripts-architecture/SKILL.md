@@ -1,3 +1,14 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+- [Scripts](#scripts)
+<!-- TOC END -->
+
 ---
 name: scripts-architecture
 description: Architecture scripts — import analysis, violation detection, code reorganization, dead code scanning, and cross-project testing. Use when editing scripts/architecture/ or scripts/analysis/.

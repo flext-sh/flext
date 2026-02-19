@@ -1,5 +1,17 @@
 # StateInitializationRequest (`FlextModels.Base.StateInitializationRequest`)
 
+
+<!-- TOC START -->
+- [Visão geral](#viso-geral)
+- [Contrato detalhado](#contrato-detalhado)
+- [Arquitetura e dependências](#arquitetura-e-dependncias)
+  - [Locais candidatos imediatos](#locais-candidatos-imediatos)
+- [Situação atual](#situao-atual)
+- [Cenários de uso sugeridos](#cenrios-de-uso-sugeridos)
+- [Pontos fortes x riscos](#pontos-fortes-x-riscos)
+- [Backlog recomendado](#backlog-recomendado)
+<!-- TOC END -->
+
 ## Visão geral
 
 DTO pensado para padronizar a inicialização de estados compartilhados (cache em memória, storage em disco/redis, estruturas internas de serviços). Está definido em `flext_core/_models/base.py:197-211` e herda de `FlextModelsEntity.ArbitraryTypesModel`, herdando `extra="forbid"`, validação de atribuição e compatibilidade com `model_dump`.

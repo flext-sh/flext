@@ -1,5 +1,17 @@
 # TimestampConfig (`FlextModels.Base.TimestampConfig`)
 
+
+<!-- TOC START -->
+- [Visão geral](#viso-geral)
+- [Contrato detalhado](#contrato-detalhado)
+- [Arquitetura e dependências](#arquitetura-e-dependncias)
+  - [Conexões mapeadas](#conexes-mapeadas)
+- [Situação atual no código](#situao-atual-no-cdigo)
+- [Fluxo pretendido](#fluxo-pretendido)
+- [Pontos fortes x limitações](#pontos-fortes-x-limitaes)
+- [Backlog recomendado](#backlog-recomendado)
+<!-- TOC END -->
+
 ## Visão geral
 
 DTO configurável para sincronizar campos de data/hora em entidades, agregados ou objetos externos antes de persistência. A classe está definida em `flext_core/_models/base.py:149-165` e herda todo o comportamento de `FlextModelsCollections.Config`, o que significa validação estrita e utilitários como `merge`, `diff`, `with_updates`.

@@ -1,5 +1,16 @@
 # FLEXT API
 
+
+<!-- TOC START -->
+- [Status & metrics](#status-metrics)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+- [Key features](#key-features)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & contribution](#support-contribution)
+<!-- TOC END -->
+
 FLEXT API provides the HTTP client foundation, FastAPI application factory, and reusable transports that wire the FLEXT ecosystem into REST, GraphQL, WebSocket, and SSE surfaces.
 
 ## Status & metrics

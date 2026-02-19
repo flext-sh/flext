@@ -1,3 +1,14 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+- [Scripts](#scripts)
+<!-- TOC END -->
+
 ---
 name: workspace-maintenance
 description: Workspace-wide maintenance automation — hygiene checks, dependabot config standardization, poetry health, and security enforcement across all submodules.

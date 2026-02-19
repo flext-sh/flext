@@ -1,3 +1,22 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+  - [Union Syntax (3.10+)](#union-syntax-310)
+  - [Type Alias Syntax (3.12+)](#type-alias-syntax-312)
+  - [Generic Class Syntax (3.12+)](#generic-class-syntax-312)
+  - [Generic Function Syntax (3.12+)](#generic-function-syntax-312)
+  - [Self Type (3.11+)](#self-type-311)
+  - [ParamSpec (3.10+)](#paramspec-310)
+  - [TypeVarTuple (3.11+)](#typevartuple-311)
+  - [Never and NoReturn (3.11+)](#never-and-noreturn-311)
+  - [Required/NotRequired (3.11+)](#requirednotrequired-311)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: python-modern-type-syntax
 description: Modern Python type annotation patterns for 3.10+ including union syntax, type aliases, generics, Self, ParamSpec, and TypeVarTuple. Use when writing or modernizing type annotations.

@@ -1,5 +1,32 @@
 # FLEXT Scripts
 
+
+<!-- TOC START -->
+- [Workspace maintenance (Make)](#workspace-maintenance-make)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Quick Start (Safe 4-Step Process)](#quick-start-safe-4-step-process)
+- [Key Features](#key-features)
+- [Architecture](#architecture)
+  - [Detailed Workflow](#detailed-workflow)
+  - [1. Cruft Detection (Safe)](#1-cruft-detection-safe)
+  - [2. Test Mode (Safe)](#2-test-mode-safe)
+  - [2. Dry Run (Safe Testing)](#2-dry-run-safe-testing)
+  - [3. Production Cleanup (Dangerous)](#3-production-cleanup-dangerous)
+- [Documentation](#documentation)
+- [Current State](#current-state)
+- [Safety Features](#safety-features)
+  - [Multiple Safety Layers](#multiple-safety-layers)
+  - [Automatic Backups](#automatic-backups)
+- [Requirements](#requirements)
+- [Troubleshooting](#troubleshooting)
+  - [Test before running](#test-before-running)
+  - [Check repository size](#check-repository-size)
+  - [Verify changes](#verify-changes)
+- [Contributing](#contributing)
+- [License](#license)
+<!-- TOC END -->
+
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)

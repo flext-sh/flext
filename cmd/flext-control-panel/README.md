@@ -1,5 +1,37 @@
 # FLEXT Control Panel
 
+
+<!-- TOC START -->
+- [Quick Start](#quick-start)
+- [Current Reality](#current-reality)
+- [Architecture Role in FLEXT Ecosystem](#architecture-role-in-flext-ecosystem)
+  - [**Service Launcher Component**](#service-launcher-component)
+  - [**Core Responsibilities**](#core-responsibilities)
+- [Key Features](#key-features)
+  - [**Current Implementation**](#current-implementation)
+  - [**Package Dependencies**](#package-dependencies)
+- [Installation & Usage](#installation-usage)
+  - [Build and Run](#build-and-run)
+  - [Configuration](#configuration)
+- [Development Commands](#development-commands)
+  - [Build Operations](#build-operations)
+  - [Testing](#testing)
+- [Quality Standards](#quality-standards)
+  - [**Current Code Quality**](#current-code-quality)
+  - [**Development Standards**](#development-standards)
+- [Integration with FLEXT Ecosystem](#integration-with-flext-ecosystem)
+  - [**Service Framework Integration**](#service-framework-integration)
+  - [**Package Structure**](#package-structure)
+- [Current Status](#current-status)
+- [Future Architecture](#future-architecture)
+  - [**Planned Control Panel Features**](#planned-control-panel-features)
+- [Contributing](#contributing)
+  - [Development Workflow](#development-workflow)
+  - [Architecture Guidelines](#architecture-guidelines)
+- [License](#license)
+- [Links](#links)
+<!-- TOC END -->
+
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
 
 

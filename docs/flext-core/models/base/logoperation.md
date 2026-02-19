@@ -1,5 +1,18 @@
 # LogOperation (`FlextModels.Base.LogOperation`)
 
+
+<!-- TOC START -->
+- [Visão geral](#viso-geral)
+- [Contrato](#contrato)
+- [Arquitetura e dependências](#arquitetura-e-dependncias)
+  - [Onde o modelo deveria entrar](#onde-o-modelo-deveria-entrar)
+  - [Exemplos de dados disponíveis no decorator](#exemplos-de-dados-disponveis-no-decorator)
+- [Situação atual](#situao-atual)
+- [Fluxo pretendido](#fluxo-pretendido)
+- [Pontos fortes x riscos](#pontos-fortes-x-riscos)
+- [Backlog recomendado](#backlog-recomendado)
+<!-- TOC END -->
+
 ## Visão geral
 
 Modelo pensado para capturar logs estruturados de operações, preservando contexto (nível, mensagem, dados complementares, origem e objeto associado). Implementado em `flext_core/_models/base.py`, ele herda de `FlextModelsEntity.ArbitraryTypesModel` e, portanto, usufrui de validação estrita e serialização consistente.

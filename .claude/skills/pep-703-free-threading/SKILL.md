@@ -1,3 +1,18 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+  - [Checking GIL Status](#checking-gil-status)
+  - [CPU-Bound Parallelism](#cpu-bound-parallelism)
+  - [Thread-Safe Patterns](#thread-safe-patterns)
+  - [Thread-Safe Queue Communication](#thread-safe-queue-communication)
+  - [Thread-Local Storage](#thread-local-storage)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: pep-703-free-threading
 description: Experimental GIL-free CPython for true parallelism. Use when evaluating free-threaded Python builds, writing thread-safe code, or optimizing CPU-bound parallel workloads.

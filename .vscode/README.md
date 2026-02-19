@@ -1,5 +1,12 @@
 # .vscode Directory
 
+
+<!-- TOC START -->
+- [Purpose](#purpose)
+- [Example Files](#example-files)
+- [Changelog](#changelog)
+<!-- TOC END -->
+
 This directory contains VSCode/Cursor workspace settings and extension recommendations for Neptor.
 
 ## Purpose

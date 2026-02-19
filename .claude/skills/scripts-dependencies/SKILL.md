@@ -1,3 +1,16 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+- [Scripts](#scripts)
+- [Runtime vs dev dependency detection (automatic)](#runtime-vs-dev-dependency-detection-automatic)
+- [Typing libraries (types-*) and dependency limits](#typing-libraries-types-and-dependency-limits)
+<!-- TOC END -->
+
 ---
 name: scripts-dependencies
 description: Dependency management scripts — analysis, consolidation, discovery, caching, and synchronization. Use when editing scripts/dependencies/.

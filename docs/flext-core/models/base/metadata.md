@@ -1,5 +1,20 @@
 # Metadata (`FlextModels.Metadata`)
 
+
+<!-- TOC START -->
+- [Visão geral](#viso-geral)
+- [Contrato detalhado](#contrato-detalhado)
+- [Arquitetura e dependências](#arquitetura-e-dependncias)
+  - [Mapa de dependências internas](#mapa-de-dependncias-internas)
+  - [Uso cruzado em projetos do monorepo](#uso-cruzado-em-projetos-do-monorepo)
+  - [Interoperabilidade com outros namespaces](#interoperabilidade-com-outros-namespaces)
+- [Uso em projetos satélite](#uso-em-projetos-satlite)
+- [Relação com outros modelos](#relao-com-outros-modelos)
+- [Exemplos conectados ao runtime](#exemplos-conectados-ao-runtime)
+- [Pontos fortes x riscos](#pontos-fortes-x-riscos)
+- [Próximos passos e recomendações](#prximos-passos-e-recomendaes)
+<!-- TOC END -->
+
 ## Visão geral
 
 `Metadata` é a peça fundadora do namespace Base. O modelo vive em `flext_core/_models/metadata.py`, não importa outros módulos do flext-core e, por isso, pode ser importado por qualquer serviço, decorator ou plugin sem risco de ciclos. Toda a cadeia de Dispatcher → Registry → Handlers → Targets depende dele para transportar autoria, timestamps, tags e atributos auditáveis.

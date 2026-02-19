@@ -1,5 +1,19 @@
 # FlextModels · Contexto e Observabilidade
 
+
+<!-- TOC START -->
+- [Componentes](#componentes)
+  - [`StructlogProxyToken`](#structlogproxytoken)
+  - [`StructlogProxyContextVar`](#structlogproxycontextvar)
+  - [`Token`](#token)
+  - [`ContextData`](#contextdata)
+  - [`ContextExport`](#contextexport)
+  - [`ContextScopeData`](#contextscopedata)
+  - [`ContextStatistics`](#contextstatistics)
+  - [`ContextMetadata`](#contextmetadata)
+  - [`ContextDomainData`](#contextdomaindata)
+<!-- TOC END -->
+
 Modelos responsáveis por propagar dados de contexto, tokens e estatísticas de execução. Todos foram extraídos de `flext_core/models.py` via AST e tiveram seu uso real verificado com busca estática (testes ignorados).
 
 Cada componente abaixo traz motivação, funcionamento interno, aplicações recomendadas no negócio, adoções atuais, benefícios e decisões sugeridas (adotar, mover para experimento ou arquivar).

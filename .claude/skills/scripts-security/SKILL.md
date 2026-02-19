@@ -1,3 +1,14 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+- [Scripts](#scripts)
+<!-- TOC END -->
+
 ---
 name: scripts-security
 description: Security scripts — secrets management, vault operations, and security auditing. Use when editing scripts/security/.

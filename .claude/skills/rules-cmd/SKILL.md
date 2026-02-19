@@ -1,3 +1,13 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: rules-cmd
 description: Rules for command entrypoints under `cmd/` and their package wiring. Use when modifying command bootstrap files, CLI wrappers, or command-path docs.

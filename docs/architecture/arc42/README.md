@@ -1,5 +1,37 @@
 # FLEXT Arc42 Architecture Documentation
 
+
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [📋 Arc42 Template Structure](#-arc42-template-structure)
+  - [1. [Introduction and Goals](./01-introduction-and-goals.md)](#1-introduction-and-goals01-introduction-and-goalsmd)
+  - [2. [Constraints](./02-constraints.md)](#2-constraints02-constraintsmd)
+  - [3. [Context and Scope](./03-context-and-scope.md)](#3-context-and-scope03-context-and-scopemd)
+  - [4. [Solution Strategy](./04-solution-strategy.md)](#4-solution-strategy04-solution-strategymd)
+  - [5. [Building Block View](./05-building-block-view.md)](#5-building-block-view05-building-block-viewmd)
+  - [6. [Runtime View](./06-runtime-view.md)](#6-runtime-view06-runtime-viewmd)
+  - [7. [Deployment View](./07-deployment-view.md)](#7-deployment-view07-deployment-viewmd)
+  - [8. [Cross-Cutting Concepts](./08-cross-cutting-concepts.md)](#8-cross-cutting-concepts08-cross-cutting-conceptsmd)
+  - [9. [Architectural Decisions](./09-architectural-decisions.md)](#9-architectural-decisions09-architectural-decisionsmd)
+  - [10. [Quality Requirements](./10-quality-requirements.md)](#10-quality-requirements10-quality-requirementsmd)
+  - [11. [Risks and Technical Debt](./11-risks-and-technical-debt.md)](#11-risks-and-technical-debt11-risks-and-technical-debtmd)
+  - [12. [Glossary](./12-glossary.md)](#12-glossary12-glossarymd)
+- [🎯 FLEXT Architecture Overview](#-flext-architecture-overview)
+- [🏗️ Key Architectural Principles](#-key-architectural-principles)
+  - [1. Clean Architecture](#1-clean-architecture)
+  - [2. Domain-Driven Design](#2-domain-driven-design)
+  - [3. Railway-Oriented Programming](#3-railway-oriented-programming)
+  - [4. Event-Driven Architecture](#4-event-driven-architecture)
+  - [5. Microservices Architecture](#5-microservices-architecture)
+- [📊 Quality Attributes](#-quality-attributes)
+  - [Performance](#performance)
+  - [Reliability](#reliability)
+  - [Security](#security)
+  - [Maintainability](#maintainability)
+- [🔗 Related Documentation](#-related-documentation)
+- [📚 Additional Resources](#-additional-resources)
+<!-- TOC END -->
+
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
 
 

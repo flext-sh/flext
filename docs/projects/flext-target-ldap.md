@@ -1,5 +1,15 @@
 # FLEXT Target LDAP
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+- [Quick start](#quick-start)
+- [Architecture & patterns](#architecture-patterns)
+- [Quality & operations](#quality-operations)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT Target LDAP (v1.0.0 release preparation) is the Singer target that loads LDAP/LDIF data into authoritative LDAP directories. It provides real-time loading, comprehensive authentication, retries, and performance tuning while absorbing the FlextResult and Clean Architecture practices.
 
 ## Status & health

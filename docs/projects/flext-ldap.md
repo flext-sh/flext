@@ -1,5 +1,15 @@
 # FLEXT LDAP
 
+
+<!-- TOC START -->
+- [Status & signals](#status-signals)
+- [Quick start](#quick-start)
+- [Architecture highlights](#architecture-highlights)
+- [Quality & operations](#quality-operations)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT LDAP (v0.10.3) is the universal directory-services foundation that every FLEXT project uses for LDAP operations. It wraps `ldap3`, FlextResult, and the flext-ldif converters in a clean architecture stack so teams can rely on server-specific implementations (OpenLDAP, Oracle OID/OUD, Active Directory, generic LDAP) without copying code.
 
 ## Status & signals

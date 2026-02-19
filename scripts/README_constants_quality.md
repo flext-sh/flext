@@ -1,5 +1,48 @@
 # FLEXT Constants Quality Assurance
 
+
+<!-- TOC START -->
+- [Visão Geral](#viso-geral)
+- [Funcionalidades](#funcionalidades)
+  - [✅ Validação de Conformidade de Constantes](#-validao-de-conformidade-de-constantes)
+  - [✅ Detecção de Declarações Duplicadas](#-deteco-de-declaraes-duplicadas)
+  - [✅ Validação de Padrões FLEXT](#-validao-de-padres-flext)
+  - [✅ Detecção de Uso Incorreto](#-deteco-de-uso-incorreto)
+  - [✅ Infraestrutura de Qualidade](#-infraestrutura-de-qualidade)
+- [Uso](#uso)
+  - [Uso Básico (Recomendado)](#uso-bsico-recomendado)
+  - [Correção Automática](#correo-automtica)
+  - [Operações Avançadas](#operaes-avanadas)
+- [Exemplos Práticos](#exemplos-prticos)
+  - [1. Workflow Completo para FLEXT-Core](#1-workflow-completo-para-flext-core)
+  - [2. Análise Rápida de Todos os Projetos](#2-anlise-rpida-de-todos-os-projetos)
+  - [3. Correção Automática com Backup](#3-correo-automtica-com-backup)
+  - [4. Recuperação de Emergência](#4-recuperao-de-emergncia)
+- [Tipos de Violações Detectadas](#tipos-de-violaes-detectadas)
+  - [CONSTANTS - Violações de Conformidade](#constants-violaes-de-conformidade)
+  - [DUPLICATE - Declarações Duplicadas](#duplicate-declaraes-duplicadas)
+  - [PATTERN - Violações de Padrões FLEXT](#pattern-violaes-de-padres-flext)
+  - [USAGE - Uso Incorreto](#usage-uso-incorreto)
+- [Relatórios Gerados](#relatrios-gerados)
+- [Infraestrutura Técnica](#infraestrutura-tcnica)
+  - [Dependências](#dependncias)
+  - [Estrutura de Arquivos](#estrutura-de-arquivos)
+  - [Segurança e Robustez](#segurana-e-robustez)
+- [Integração CI/CD](#integrao-cicd)
+  - [GitHub Actions](#github-actions)
+  - [GitLab CI](#gitlab-ci)
+  - [Jenkins Pipeline](#jenkins-pipeline)
+- [Resolução de Problemas](#resoluo-de-problemas)
+  - [Problema: Script não encontra projetos](#problema-script-no-encontra-projetos)
+  - [Problema: Backup falha](#problema-backup-falha)
+  - [Problema: Ruff não disponível](#problema-ruff-no-disponvel)
+  - [Problema: Rollback necessário](#problema-rollback-necessrio)
+- [Desenvolvimento e Contribuição](#desenvolvimento-e-contribuio)
+  - [Adicionando Novos Padrões](#adicionando-novos-padres)
+  - [Melhorando Correções Automáticas](#melhorando-correes-automticas)
+- [Histórico de Versões](#histrico-de-verses)
+<!-- TOC END -->
+
 ## Visão Geral
 
 O script `flext-constants.sh` é uma ferramenta unificada e avançada para garantia de qualidade de constantes no ecossistema FLEXT. Ele consolida todas as funcionalidades em um único script poderoso com infraestrutura de qualidade enterprise.

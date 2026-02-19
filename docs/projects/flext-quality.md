@@ -1,5 +1,15 @@
 # FLEXT Quality
 
+
+<!-- TOC START -->
+- [Status & metrics](#status-metrics)
+- [Quick start](#quick-start)
+- [Architecture & patterns](#architecture-patterns)
+- [Quality & compliance](#quality-compliance)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT Quality (v0.9.9) is the centralized code quality analysis framework for the FLEXT ecosystem. It runs static analysis, metrics collection, reporting, and quality gates so every other project can validate architecture, tests, and security through a common protocol.
 
 ## Status & metrics

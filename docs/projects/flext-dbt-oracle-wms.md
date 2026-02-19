@@ -1,5 +1,15 @@
 # FLEXT dbt Oracle WMS
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+- [Quick start](#quick-start)
+- [Architecture & integration](#architecture-integration)
+- [Features & quality](#features-quality)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT dbt Oracle WMS (v2.1.0) is the enterprise dbt project for Oracle Warehouse Management System data transformations. It blends flext-db-oracle and flext-oracle-wms connectivity with flext-meltano orchestration so every analyst can deliver WMS dashboards with Singer, dbt, and Clean Architecture patterns.
 
 ## Status & health

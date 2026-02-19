@@ -1,5 +1,32 @@
 # Gate Contract
 
+
+<!-- TOC START -->
+- [Overview](#overview)
+- [Script Roles](#script-roles)
+- [CLI Contract](#cli-contract)
+  - [Validators](#validators)
+  - [Fixers](#fixers)
+  - [Environment Variables](#environment-variables)
+- [Exit Codes](#exit-codes)
+- [Modes](#modes)
+  - [`baseline` (default)](#baseline-default)
+  - [`strict`](#strict)
+  - [Mode not applicable](#mode-not-applicable)
+- [Artifact Output](#artifact-output)
+  - [Naming Contract](#naming-contract)
+  - [Report Locations](#report-locations)
+- [Skill Rule Contract](#skill-rule-contract)
+  - [Report JSON Structure](#report-json-structure)
+- [Non-Interactive Guarantee](#non-interactive-guarantee)
+- [Determinism](#determinism)
+- [Script Header](#script-header)
+- [Conformance Checking](#conformance-checking)
+- [Examples of Conforming Scripts](#examples-of-conforming-scripts)
+  - [Validator (python — skill-based)](#validator-python-skill-based)
+  - [Validator (python — standalone)](#validator-python-standalone)
+<!-- TOC END -->
+
 > Canonical specification for all validator and fixer scripts in the FLEXT repository.
 >
 > **Status**: Active | **Reviewed**: 2026-02-18

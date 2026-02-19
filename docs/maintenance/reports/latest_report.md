@@ -1,5 +1,18 @@
 # 📊 Documentation Quality Summary
 
+
+<!-- TOC START -->
+- [🎯 Overall Quality Score: 77.5/100](#-overall-quality-score-775100)
+  - [Quality Breakdown](#quality-breakdown)
+  - [Trends](#trends)
+- [📈 Key Metrics](#-key-metrics)
+  - [Content Quality](#content-quality)
+  - [Link Health](#link-health)
+  - [Style Consistency](#style-consistency)
+- [🎯 Priority Actions](#-priority-actions)
+  - [Schedule Regular Maintenance (Info Priority)](#schedule-regular-maintenance-info-priority)
+<!-- TOC END -->
+
 **Generated:** 2025-10-17 23:18:25
 
 ## 🎯 Overall Quality Score: 77.5/100

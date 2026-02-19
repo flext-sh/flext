@@ -1,3 +1,10 @@
+<!-- TOC START -->
+- [The challenges of runtime evaluation](#the-challenges-of-runtime-evaluation)
+- [Resolving annotations at class definition](#resolving-annotations-at-class-definition)
+  - [Limitations and backwards compatibility concerns](#limitations-and-backwards-compatibility-concerns)
+- [Resolving annotations when rebuilding a model](#resolving-annotations-when-rebuilding-a-model)
+<!-- TOC END -->
+
 !!! note
 This section is part of the _internals_ documentation, and is partly targeted to contributors.
 

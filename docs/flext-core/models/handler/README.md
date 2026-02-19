@@ -1,5 +1,13 @@
 # FlextModels · Gerenciamento de Handlers
 
+
+<!-- TOC START -->
+- [Componentes](#componentes)
+  - [`HandlerRegistration`](#handlerregistration)
+  - [`RegistrationDetails`](#registrationdetails)
+  - [`HandlerExecutionContext`](#handlerexecutioncontext)
+<!-- TOC END -->
+
 Modelos para registrar handlers, detalhar capacidades e monitorar execução. Dados extraídos via AST em `flext_core/models.py` e confirmados com busca estática (testes ignorados).
 
 Para cada componente descrevemos motivação, funcionamento, aplicações no negócio, uso atual, benefícios e decisões recomendadas.

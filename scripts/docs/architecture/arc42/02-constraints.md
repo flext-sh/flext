@@ -1,5 +1,25 @@
 # 2. Constraints
 
+
+<!-- TOC START -->
+- [2.1 Technical Constraints](#21-technical-constraints)
+  - [Programming Languages](#programming-languages)
+  - [Infrastructure Constraints](#infrastructure-constraints)
+  - [External Systems Integration](#external-systems-integration)
+- [2.2 Organizational Constraints](#22-organizational-constraints)
+  - [Development Team](#development-team)
+  - [Time Constraints](#time-constraints)
+  - [Budget Constraints](#budget-constraints)
+- [2.3 Regulatory Constraints](#23-regulatory-constraints)
+  - [Data Protection](#data-protection)
+  - [Security Standards](#security-standards)
+  - [Industry Regulations](#industry-regulations)
+- [2.4 Business Constraints](#24-business-constraints)
+  - [Market Position](#market-position)
+  - [Business Goals](#business-goals)
+  - [Operational Requirements](#operational-requirements)
+<!-- TOC END -->
+
 ## 2.1 Technical Constraints
 
 ### Programming Languages

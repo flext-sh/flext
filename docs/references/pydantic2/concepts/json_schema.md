@@ -1,3 +1,25 @@
+<!-- TOC START -->
+- [Generating JSON Schema](#generating-json-schema)
+  - [Configuring the `JsonSchemaMode`](#configuring-the-jsonschemamode)
+- [Customizing JSON Schema](#customizing-json-schema)
+  - [Field-Level Customization](#field-level-customization)
+  - [Programmatic field title generation](#programmatic-field-title-generation)
+  - [Model-Level Customization](#model-level-customization)
+  - [Using `json_schema_extra`](#using-jsonschemaextra)
+  - [`WithJsonSchema` annotation](#withjsonschema-annotation)
+  - [`SkipJsonSchema` annotation](#skipjsonschema-annotation)
+  - [Implementing `__get_pydantic_core_schema__` <a name="implementing_get_pydantic_core_schema"></a>](#implementing-getpydanticcoreschema-a-nameimplementinggetpydanticcoreschemaa)
+  - [Implementing `__get_pydantic_json_schema__` <a name="implementing_get_pydantic_json_schema"></a>](#implementing-getpydanticjsonschema-a-nameimplementinggetpydanticjsonschemaa)
+  - [Using `field_title_generator`](#using-fieldtitlegenerator)
+  - [Using `model_title_generator`](#using-modeltitlegenerator)
+- [JSON schema types](#json-schema-types)
+- [Top-level schema generation](#top-level-schema-generation)
+- [Customizing the JSON Schema Generation Process](#customizing-the-json-schema-generation-process)
+  - [JSON schema sorting](#json-schema-sorting)
+- [Customizing the `$ref`s in JSON Schema](#customizing-the-refs-in-json-schema)
+- [Miscellaneous Notes on JSON Schema Generation](#miscellaneous-notes-on-json-schema-generation)
+<!-- TOC END -->
+
 ??? api "API Documentation"
 [`pydantic.json_schema`][pydantic.JSON_schema]<br>
 

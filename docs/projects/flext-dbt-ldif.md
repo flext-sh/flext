@@ -1,5 +1,15 @@
 # FLEXT dbt LDIF
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+- [Quick start](#quick-start)
+- [Architecture & patterns](#architecture-patterns)
+- [Quality & operations](#quality-operations)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT dbt LDIF (v1.0.0 release prep) is the dbt project that turns LDAP/LDIF data into analytics-ready marts, pairing flext-core discipline with programmatic model generation, anomaly/risk detection, and 90%+ coverage.
 
 ## Status & health

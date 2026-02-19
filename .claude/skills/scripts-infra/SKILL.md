@@ -1,3 +1,14 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+- [Scripts](#scripts)
+<!-- TOC END -->
+
 ---
 name: scripts-infra
 description: Shared script infrastructure — bash/python libraries, core runner/registry, artifact naming, config utilities, and Makefile helpers. Use when editing scripts/lib/, scripts/core/, scripts/config/, scripts/makefiles/, or scripts/common.py.

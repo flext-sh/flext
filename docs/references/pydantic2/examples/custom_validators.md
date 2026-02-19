@@ -1,5 +1,11 @@
 # Custom Validators
 
+
+<!-- TOC START -->
+- [Custom `datetime` Validator via [`Annotated`][typing.Annotated] Metadata](#custom-datetime-validator-via-annotatedtypingannotated-metadata)
+- [Validating Nested Model Fields](#validating-nested-model-fields)
+<!-- TOC END -->
+
 This page provides example snippets for creating more complex, custom validators in Pydantic.
 Many of these examples are adapted from Pydantic issues and discussions, and are intended to showcase
 the flexibility and power of Pydantic's validation system.

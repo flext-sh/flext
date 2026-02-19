@@ -1,5 +1,13 @@
 # JSON
 
+
+<!-- TOC START -->
+- [JSON Parsing](#json-parsing)
+  - [Partial JSON Parsing](#partial-json-parsing)
+  - [Caching Strings](#caching-strings)
+- [JSON Serialization](#json-serialization)
+<!-- TOC END -->
+
 ## JSON Parsing
 
 ??? api "API Documentation"

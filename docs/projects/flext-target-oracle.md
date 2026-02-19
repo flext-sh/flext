@@ -1,5 +1,15 @@
 # FLEXT Target Oracle
 
+
+<!-- TOC START -->
+- [Status & signals](#status-signals)
+- [Quick start](#quick-start)
+- [Architecture & patterns](#architecture-patterns)
+- [Quality & concerns](#quality-concerns)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT Target Oracle is the Singer target that loads data into Oracle databases while enforcing the FLEXT platform's zero-tolerance rules. Status is release-prep (v0.9.9/1.0.0), documentation is complete, but production deployment is blocked until the critical SQL injection and Singer compliance gaps are fixed.
 
 ## Status & signals

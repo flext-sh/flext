@@ -1,5 +1,15 @@
 # FLEXT Tap Oracle
 
+
+<!-- TOC START -->
+- [Status & signals](#status-signals)
+- [Quick start](#quick-start)
+- [Architecture overview](#architecture-overview)
+- [Features & quality](#features-quality)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT Tap Oracle (v1.0.0 release prep) is the Singer tap for Oracle Database extraction within the FLEXT data mesh. It pairs flext-db-oracle connectivity with flext-meltano orchestration, implements the Singer SDK, and enforces Clean Architecture plus zero-tolerance policies.
 
 ## Status & signals

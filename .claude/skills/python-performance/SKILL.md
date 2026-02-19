@@ -1,3 +1,19 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+  - [CPU Profiling with cProfile](#cpu-profiling-with-cprofile)
+  - [Line-by-Line Profiling](#line-by-line-profiling)
+  - [Memory Profiling](#memory-profiling)
+  - [Production Profiling with py-spy](#production-profiling-with-py-spy)
+  - [Optimization Patterns](#optimization-patterns)
+  - [String Performance](#string-performance)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: python-performance
 description: Profile and optimize Python code using cProfile, memory profilers, and performance best practices. Use when debugging slow pipelines, optimizing bottlenecks, or improving application throughput.

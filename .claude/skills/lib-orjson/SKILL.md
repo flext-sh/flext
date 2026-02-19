@@ -1,3 +1,14 @@
+<!-- TOC START -->
+- [Scope](#scope)
+  - [Subproject Usage Map](#subproject-usage-map)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: lib-orjson
 description: Deterministic high-performance JSON serialization with orjson in flext_core utilities. Trigger when editing sort keys, cache normalization, or JSON boundary conversion logic.

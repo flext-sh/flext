@@ -1,5 +1,18 @@
 # FLEXT CLI
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Layering policy](#layering-policy)
+  - [Core modules & responsibilities](#core-modules-responsibilities)
+- [Key features](#key-features)
+- [Quality & compliance](#quality-compliance)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT CLI is the production-ready command-line foundation that wires Click, Rich, and Tabulate behind the FlextResult/Railway discipline so every downstream project shares the same CLI contracts, configuration patterns, and output helpers.
 
 ## Status & health

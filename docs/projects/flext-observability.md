@@ -1,5 +1,15 @@
 # FLEXT Observability
 
+
+<!-- TOC START -->
+- [Status & metrics](#status-metrics)
+- [Quick start](#quick-start)
+- [Architecture snapshot](#architecture-snapshot)
+- [Key features](#key-features)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT Observability (v0.9.0) is the platform-wide monitoring, metrics, tracing, and alerting foundation. The architecture is complete, but the quality pipeline remains blocked by a `flext-core` import issue, so status calls out the blockers while still describing the ready entities, services, and instruments the project ships.
 
 ## Status & metrics

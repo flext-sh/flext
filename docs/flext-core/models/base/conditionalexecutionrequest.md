@@ -1,5 +1,16 @@
 # ConditionalExecutionRequest (`FlextModels.Base.ConditionalExecutionRequest`)
 
+
+<!-- TOC START -->
+- [Visão geral](#viso-geral)
+- [Contrato detalhado](#contrato-detalhado)
+- [Fluxo dentro do `FlextService`](#fluxo-dentro-do-flextservice)
+  - [Relação direta com `_execute_action`](#relao-direta-com-executeaction)
+- [Integrações e usos](#integraes-e-usos)
+- [Pontos fortes x riscos](#pontos-fortes-x-riscos)
+- [Backlog recomendado](#backlog-recomendado)
+<!-- TOC END -->
+
 ## Visão geral
 
 DTO para encapsular fluxos condicionais executados dentro de `FlextService`. Foi concebido para eliminar ramos `if/else` espalhados pelos serviços e garantir que condições, ações e contexto trafeguem juntos. A classe vive em `flext_core/_models/base.py:181-196` e é exposta como `FlextModels.ConditionalExecutionRequest`.

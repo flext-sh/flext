@@ -55,6 +55,8 @@ export POETRY_VIRTUALENVS_IN_PROJECT := true
 export POETRY_VIRTUALENVS_CREATE := true
 endif
 
+export PYTHON_KEYRING_BACKEND := keyring.backends.null.Keyring
+
 VENV_PYTHON := $(ACTIVE_VENV)/bin/python
 VENV_ACTIVATE := source $(ACTIVE_VENV)/bin/activate
 export VIRTUAL_ENV := $(ACTIVE_VENV)

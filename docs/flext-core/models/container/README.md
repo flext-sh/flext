@@ -1,5 +1,13 @@
 # FlextModels · Container de Injeção de Dependências
 
+
+<!-- TOC START -->
+- [Componentes](#componentes)
+  - [`ServiceRegistration`](#serviceregistration)
+  - [`FactoryRegistration`](#factoryregistration)
+  - [`ContainerConfig`](#containerconfig)
+<!-- TOC END -->
+
 Modelos do registro de serviços/fábricas e configuração do container.
 
 > Fonte dos dados: AST de `flext_core/models.py` e busca estática com AST (testes ignorados).

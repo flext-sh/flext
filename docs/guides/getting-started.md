@@ -1,5 +1,30 @@
 # Getting Started with FLEXT
 
+
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [What is FLEXT](#what-is-flext)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+  - [Basic Installation](#basic-installation)
+  - [Development Installation](#development-installation)
+  - [Docker Installation](#docker-installation)
+- [Your First FLEXT Application](#your-first-flext-application)
+  - [1. Basic Setup](#1-basic-setup)
+  - [2. Using flext-ldif for LDIF Processing](#2-using-flext-ldif-for-ldif-processing)
+  - [3. Railway-Oriented Error Handling](#3-railway-oriented-error-handling)
+  - [4. CQRS Pattern with Commands and Queries](#4-cqrs-pattern-with-commands-and-queries)
+- [Configuration](#configuration)
+  - [Basic Configuration](#basic-configuration)
+  - [Programmatic Configuration](#programmatic-configuration)
+- [Next Steps](#next-steps)
+  - [Explore the Ecosystem](#explore-the-ecosystem)
+  - [Learn Key Patterns](#learn-key-patterns)
+  - [Build Real Applications](#build-real-applications)
+- [Getting Help](#getting-help)
+- [What's Next](#whats-next)
+<!-- TOC END -->
+
 ## Table of Contents
 
 - [Getting Started with FLEXT](#getting-started-with-flext)
