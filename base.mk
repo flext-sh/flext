@@ -197,18 +197,21 @@ docs-base:
 	$(Q)$(MAKE) docs-sync-scripts -s
 	$(Q)if [ "$(DOCS_PHASE)" = "all" ]; then \
 		phases="audit fix build generate validate"; \
+		all_mode=1; \
 	else \
 		phases="$(DOCS_PHASE)"; \
+		all_mode=0; \
 	fi; \
 	for phase in $$phases; do \
 		case "$$phase" in \
-			audit) script="scripts/documentation/audit.py"; extra="--strict 0" ;; \
+			audit) script="scripts/documentation/audit.py"; extra="--strict 1" ;; \
 			fix) script="scripts/documentation/fix.py"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
 			build) script="scripts/documentation/build.py"; extra="" ;; \
 			generate) script="scripts/documentation/generate.py"; extra="--apply" ;; \
 			validate) script="scripts/documentation/validate.py"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
 			*) echo "ERROR: invalid DOCS_PHASE=$$phase"; exit 2 ;; \
 		esac; \
+		if [ "$$phase" = "fix" ] && [ "$$all_mode" = "1" ]; then extra="--apply"; fi; \
 		if [ ! -f "$$script" ]; then \
 			echo "PROJECT=$(PROJECT_NAME) PHASE=$$phase RESULT=FAIL REASON=missing-script:$$script"; \
 			exit 1; \
