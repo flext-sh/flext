@@ -97,9 +97,9 @@
 
 #### Enterprise Solutions (3)
 
-- **client-a-oud-mig**: Oracle Unified Directory migration with server quirks
+- **flext-oud-mig**: Oracle Unified Directory migration with server quirks
 - **flexcore**: Go-based runtime container for plugin execution
-- **client-b-meltano-native**: Custom Meltano integration framework
+- **flext-meltano-native**: Custom Meltano integration framework
 
 ### Quality Attributes Assessed
 

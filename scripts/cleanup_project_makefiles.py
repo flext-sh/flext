@@ -45,8 +45,8 @@ MAIN_PROJECTS = [
     "flext-target-oracle-oic",
     "flext-target-oracle-wms",
     "flext-web",
-    "client-a-oud-mig",
-    "client-b-meltano-native",
+    "flext-oud-mig",
+    "flext-meltano-native",
 ]
 
 # Comprehensive clean target template
@@ -119,12 +119,12 @@ PROJECT_SPECIFIC_CLEANUP = {
 	# gRPC-specific files
 	rm -rf *.pb2.py *.pb2.pyi
 	rm -rf data/ output/ temp/""",
-    "client-a-oud-mig": """
+    "flext-oud-mig": """
 	# Migration-specific files
 	rm -rf *.ldif output.ldif test.ldif input.ldif
 	rm -rf data/input/ data/output/ data/test/
 	rm -rf migration.log migration-*.log""",
-    "client-b-meltano-native": """
+    "flext-meltano-native": """
 	# Meltano-specific files
 	rm -rf .meltano/ catalog-*.json state.json state-*.json
 	rm -rf .meltano-tmp/ meltano-*.log

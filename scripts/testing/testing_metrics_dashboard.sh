@@ -31,7 +31,7 @@ CORE_PROJECTS=("flext-core" "flext-api" "flext-cli" "flext-auth")
 INFRASTRUCTURE_PROJECTS=("flext-db-oracle" "flext-ldap" "flext-grpc" "flext-observability")
 SINGER_PROJECTS=("flext-tap-oracle" "flext-tap-ldap" "flext-target-oracle" "flext-target-ldap")
 DBT_PROJECTS=("flext-dbt-oracle" "flext-dbt-ldap" "flext-dbt-ldif")
-ENTERPRISE_PROJECTS=("client-b-meltano-native" "client-a-oud-mig")
+ENTERPRISE_PROJECTS=("flext-meltano-native" "flext-oud-mig")
 
 # Colors for console output
 RED='\033[0;31m'
@@ -274,7 +274,7 @@ collect_metrics() {
 		done < <(find . -maxdepth 1 -name "flext-*" -type d -print0)
 
 		# Add other known projects
-		for other_project in "client-a-oud-mig" "client-b-meltano-native"; do
+		for other_project in "flext-oud-mig" "flext-meltano-native"; do
 			if [ -d "$other_project" ]; then
 				projects_to_analyze+=("$other_project")
 			fi

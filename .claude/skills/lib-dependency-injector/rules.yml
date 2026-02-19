@@ -5,7 +5,7 @@ scan_targets:
   - '**/*.py'
   exclude: []
   projects:
-  - client-a-oud-mig
+  - flext-oud-mig
   - flext-api
   - flext-auth
   - flext-cli
@@ -34,7 +34,7 @@ scan_targets:
   - flext-target-oracle-oic
   - flext-target-oracle-wms
   - flext-web
-  - client-b-meltano-native
+  - flext-meltano-native
 rules:
 - id: ban-direct-di-import
   type: ast-grep

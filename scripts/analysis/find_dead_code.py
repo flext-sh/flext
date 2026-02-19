@@ -236,7 +236,7 @@ def main() -> None:
     projects = [
         project_root / "flext-ldif" / "src" / "flext_ldif",
         project_root / "flext-ldap" / "src" / "flext_ldap",
-        project_root / "client-a-oud-mig" / "src" / "client-a_oud_mig",
+        project_root / "flext-oud-mig" / "src" / "flext_oud_mig",
     ]
 
     analyzer = CodeAnalyzer(project_root)

@@ -32,7 +32,7 @@ Para cada componente listamos por que ele existe, como funciona internamente, on
 
 - Pipelines LDIF/LDAP que agrupam entradas por tipo (usado em relatórios e dashboards).
 - Ferramentas de observabilidade que precisam classificar eventos/respostas por categoria antes de gerar métricas.
-- DSLs de ETL (client-b-meltano-native) para organizar entidades por “tabelas” ou “streams”.
+- DSLs de ETL (flext-meltano-native) para organizar entidades por “tabelas” ou “streams”.
 
 **Adoções atuais**
 

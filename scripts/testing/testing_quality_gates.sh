@@ -428,7 +428,7 @@ main() {
 		done < <(find . -maxdepth 1 -name "flext-*" -type d -print0)
 
 		# Add other known projects
-		for other_project in "client-a-oud-mig" "client-b-meltano-native"; do
+		for other_project in "flext-oud-mig" "flext-meltano-native"; do
 			if [ -d "$other_project" ]; then
 				projects_to_validate+=("$other_project")
 			fi

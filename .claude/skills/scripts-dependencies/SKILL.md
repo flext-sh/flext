@@ -124,7 +124,7 @@ Script-level checks (internal):
   - `[limits]`: optional version caps per package (e.g. `django = ">=4,<6"`).
   - `[typing_libraries].exclude`: list of packages to never auto-add as typings.
   - `[typing_libraries.module_to_package]`: override importable module name -> types-* PyPI name (e.g. `yaml = "types-pyyaml"`).
-- **Typing detection** — Uses mypy output ("Library stubs not installed for X", "Hint: pip install Y") to infer required types-* packages; maps module names to PyPI names via defaults and dependency_limits.toml. Internal modules (`flext_*`, `client-a_*`, `client-b_*`) are never suggested as typings.
+- **Typing detection** — Uses mypy output ("Library stubs not installed for X", "Hint: pip install Y") to infer required types-* packages; maps module names to PyPI names via defaults and dependency_limits.toml. Internal modules (`flext_*`, `flext_*`, `flext_*`) are never suggested as typings.
 - **detect_runtime_dev_deps.py**:
   - `--typings` — Run mypy stub detection per project; add to report `projects.<name>.typings` (required_packages, to_add, current, limits_applied, python_version).
   - `--apply-typings` — Add missing typings to each project (`poetry add --group typings <pkg>`). Implies `--typings`. Use `--dry-run` to only report.

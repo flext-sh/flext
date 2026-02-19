@@ -342,7 +342,7 @@ def main() -> int:
             "flext-core",
             "flext-cli",
             "flext-ldap",
-            "client-a-oud-mig",
+            "flext-oud-mig",
         ]
     else:
         projects = args.projects

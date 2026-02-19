@@ -13,7 +13,7 @@ scan_targets:
   - flext-target-oracle-oic
   - flext-target-ldap
   - flext-target-ldif
-  - client-a-oud-mig
+  - flext-oud-mig
   - flext-dbt-oracle
   - flext-dbt-ldap
   - flext-dbt-ldif
