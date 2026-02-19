@@ -35,13 +35,60 @@ import operator
 import re
 import shlex
 import shutil
+import subprocess
 import sys
 import tarfile
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, ClassVar
 
-from flext_core import FlextResult, u
+
+@dataclass(frozen=True)
+class CommandResult:
+    value: subprocess.CompletedProcess[str]
+    error: str
+    is_failure: bool
+
+
+def run_external_command(
+    cmd: list[str],
+    *,
+    check: bool = False,
+    capture_output: bool = True,
+    text: bool = True,
+    cwd: str | None = None,
+    env: dict[str, str] | None = None,
+    timeout: float | None = None,
+    shell: bool = False,
+) -> CommandResult:
+    try:
+        completed = subprocess.run(
+            cmd,
+            check=False,
+            capture_output=capture_output,
+            text=text,
+            cwd=cwd,
+            env=env,
+            timeout=timeout,
+            shell=shell,
+        )
+    except Exception as exc:
+        failed = subprocess.CompletedProcess(
+            args=cmd,
+            returncode=1,
+            stdout="",
+            stderr=str(exc),
+        )
+        return CommandResult(value=failed, error=str(exc), is_failure=True)
+    if check and completed.returncode != 0:
+        return CommandResult(
+            value=completed,
+            error=completed.stderr or completed.stdout,
+            is_failure=True,
+        )
+    return CommandResult(value=completed, error="", is_failure=False)
+
 
 # Ensure git is available
 _git_cmd = shutil.which("git")
@@ -63,10 +110,10 @@ class GitUltimateCleanup:
         args: list[str],
         *,
         check: bool = False,
-    ) -> FlextResult[Any]:
+    ) -> CommandResult:
         """Run a git command with proper error handling and type annotations."""
         cmd = [GIT_CMD, "-C", str(repo_path)] + args
-        return u.CommandExecution.run_external_command(
+        return run_external_command(
             cmd,
             capture_output=True,
             check=check,
@@ -305,7 +352,7 @@ class GitUltimateCleanup:
             return False, "Detached HEAD state. Checkout a branch first."
 
         # Check disk space
-        disk_result = u.CommandExecution.run_external_command(
+        disk_result = run_external_command(
             ["df", "-h", "."],
             capture_output=True,
             check=False,
@@ -363,10 +410,9 @@ class GitUltimateCleanup:
         # 2. Create git mirror clone
         print("2️⃣  Creating git mirror clone...")
         mirror_path = repo_backup / f"{self.repo_path.name}.git"
-        mirror_result = u.CommandExecution.run_external_command(
+        mirror_result = run_external_command(
             [GIT_CMD, "clone", "--mirror", str(self.repo_path), str(mirror_path)],
             check=False,
-            u=u,
             text=True,
         )
         if mirror_result.is_failure:
@@ -436,7 +482,7 @@ class GitUltimateCleanup:
         # 7. Create safety tag in repo
         print("7️⃣  Creating safety tag in repository...")
         safety_tag = f"pre-cleanup-{self.timestamp}"
-        u.CommandExecution.run_external_command(
+        run_external_command(
             [GIT_CMD, "-C", str(self.repo_path), "tag", safety_tag],
             check=False,
             capture_output=True,
@@ -779,7 +825,7 @@ wc -l commit-history.txt
         # Execute
         print("Processing commits...")
         try:
-            cleanup_result = u.CommandExecution.run_external_command(
+            cleanup_result = run_external_command(
                 cmd,
                 check=False,
                 cwd=str(self.repo_path),
@@ -902,7 +948,7 @@ def callback(commit, metadata):
 
         # Main repo
         main_remote = "git@github.com:flext-sh/flext.git"
-        u.CommandExecution.run_external_command(
+        run_external_command(
             [
                 GIT_CMD,
                 "-C",
@@ -923,7 +969,7 @@ def callback(commit, metadata):
             print()
             return
 
-        submodule_result = u.CommandExecution.run_external_command(
+        submodule_result = run_external_command(
             [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
             check=False,
             capture_output=True,
@@ -941,7 +987,7 @@ def callback(commit, metadata):
             key, path = line.split()
             name = key.split(".")[1]
 
-            url_result = u.CommandExecution.run_external_command(
+            url_result = run_external_command(
                 [GIT_CMD, "config", "-f", str(gitmodules), f"submodule.{name}.url"],
                 check=False,
                 capture_output=True,
@@ -957,7 +1003,7 @@ def callback(commit, metadata):
             submodule_path = self.repo_path / path
 
             if submodule_path.exists():
-                u.CommandExecution.run_external_command(
+                run_external_command(
                     [
                         GIT_CMD,
                         "-C",
@@ -980,7 +1026,7 @@ def callback(commit, metadata):
         if not gitmodules.exists():
             return []
 
-        submodule_config_result = u.CommandExecution.run_external_command(
+        submodule_config_result = run_external_command(
             [GIT_CMD, "config", "-f", str(gitmodules), "--get-regexp", r"\.path$"],
             check=False,
             capture_output=True,

@@ -744,7 +744,7 @@ from flext_core import FlextService
 from flext_core import t
 from flext_core import u
 
-# Your minimal example here
+### Your minimal example here
 
 4. **Expected vs Actual Behavior**
 - What you expected to happen
