@@ -1,5 +1,23 @@
 # FLEXT Documentation Portal
 
+
+<!-- TOC START -->
+- [Key Features](#key-features)
+  - [Overview](#overview)
+- [Highlighted Content](#highlighted-content)
+  - [Getting Started & Guides](#getting-started-guides)
+- [Architecture](#architecture)
+  - [Architecture & Patterns](#architecture-patterns)
+  - [API & Project References](#api-project-references)
+  - [Reports & Quality Assurance](#reports-quality-assurance)
+- [Quality Assurance & Maintenance](#quality-assurance-maintenance)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Quick Links](#quick-links)
+- [Contributing](#contributing)
+- [License](#license)
+<!-- TOC END -->
+
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)

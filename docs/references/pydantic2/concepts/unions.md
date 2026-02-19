@@ -1,3 +1,14 @@
+<!-- TOC START -->
+- [Union Modes](#union-modes)
+  - [Left to Right Mode](#left-to-right-mode)
+  - [Smart Mode](#smart-mode)
+- [Discriminated Unions](#discriminated-unions)
+  - [Discriminated Unions with `str` discriminators](#discriminated-unions-with-str-discriminators)
+  - [Discriminated Unions with callable `Discriminator`](#discriminated-unions-with-callable-discriminator)
+  - [Nested Discriminated Unions](#nested-discriminated-unions)
+- [Union Validation Errors](#union-validation-errors)
+<!-- TOC END -->
+
 Unions are fundamentally different to all other types Pydantic validates - instead of requiring all fields/items/values to be valid, unions require only one member to be valid.
 
 This leads to some nuance around how to validate unions:

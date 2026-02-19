@@ -1,5 +1,12 @@
 # FlextModels · Base (Índice)
 
+
+<!-- TOC START -->
+- [Documentação por modelo](#documentao-por-modelo)
+- [Como aproveitar o guia](#como-aproveitar-o-guia)
+- [Resumo das mudanças e insights documentados](#resumo-das-mudanas-e-insights-documentados)
+<!-- TOC END -->
+
 Este README funciona como hub para os modelos do namespace `FlextModels.Base`. Cada link abaixo aponta para o guia completo do respectivo modelo, incluindo especificação, relacionamentos, exemplos reais e recomendações de adoção.
 
 ## Documentação por modelo

@@ -1,5 +1,11 @@
 # Type Adapter
 
+
+<!-- TOC START -->
+- [Parsing data into a specified type](#parsing-data-into-a-specified-type)
+- [Rebuilding a `TypeAdapter`'s schema](#rebuilding-a-typeadapters-schema)
+<!-- TOC END -->
+
 You may have types that are not `BaseModel`s that you want to validate data against.
 Or you may want to validate a `list[SomeModel]`, or dump it to JSON.
 

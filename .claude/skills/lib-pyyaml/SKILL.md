@@ -1,3 +1,14 @@
+<!-- TOC START -->
+- [Scope](#scope)
+  - [Subproject Usage Map](#subproject-usage-map)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: lib-pyyaml
 description: Safe and deterministic YAML read/write patterns across FLEXT subprojects. Trigger when modifying YAML parsing, config files, CLI output formatting, or docs-maintenance tooling.

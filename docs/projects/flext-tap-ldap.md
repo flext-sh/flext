@@ -1,5 +1,15 @@
 # FLEXT Tap LDAP
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+- [Quick start](#quick-start)
+- [Architecture & patterns](#architecture-patterns)
+- [Quality & operations](#quality-operations)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT Tap LDAP v1.0.0 (release preparation) is the Singer tap that streams LDAP directory and LDIF data into the FLEXT data mesh. It combines stringent flext-core, flext-ldap, and flext-meltano integrations with Clean Architecture and Singer compliance so every extraction workflow is reusable and testable.
 
 ## Status & health

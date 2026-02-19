@@ -1,5 +1,16 @@
 # Configuration
 
+
+<!-- TOC START -->
+- [Configuration on Pydantic models](#configuration-on-pydantic-models)
+- [Configuration on Pydantic dataclasses](#configuration-on-pydantic-dataclasses)
+- [Configuration on `TypeAdapter`](#configuration-on-typeadapter)
+- [Configuration on other supported types](#configuration-on-other-supported-types)
+- [Configuration on the `@validate_call` decorator](#configuration-on-the-validatecall-decorator)
+- [Change behaviour globally](#change-behaviour-globally)
+- [Configuration propagation](#configuration-propagation)
+<!-- TOC END -->
+
 The behaviour of Pydantic can be controlled via a variety of configuration values, documented
 on the [`ConfigDict`][pydantic.ConfigDict] class. This page describes how configuration can be
 specified for Pydantic's supported types.

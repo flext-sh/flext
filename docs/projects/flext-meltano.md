@@ -1,5 +1,15 @@
 # FLEXT Meltano
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+- [Quick start](#quick-start)
+- [Architecture snapshot](#architecture-snapshot)
+- [Key features](#key-features)
+- [Resources](#resources)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT Meltano is the enterprise Meltano integration and orchestration foundation for FLEXT pipelines. It delivers Singer protocol compliance, Meltano project management, plus plugin scaffolding and production automation so every downstream project reuses the same ELT controls.
 
 ## Status & health

@@ -1,5 +1,15 @@
 # FLEXT gRPC
 
+
+<!-- TOC START -->
+- [Status & metrics](#status-metrics)
+- [Quick start](#quick-start)
+- [Architecture & integration](#architecture-integration)
+- [Quality & operations](#quality-operations)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT gRPC (v0.9.0) is the gRPC communication foundation for the FLEXT platform. It abstracts grpcio/protobuf concerns, delivers FlextResult-based services, and enforces Clean Architecture across server/client lifecycles while the team ramps coverage toward 90%.
 
 ## Status & metrics

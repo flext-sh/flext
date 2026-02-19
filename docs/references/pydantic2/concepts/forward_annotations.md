@@ -1,5 +1,11 @@
 # Forward Annotations
 
+
+<!-- TOC START -->
+- [Self-referencing (or "Recursive") Models](#self-referencing-or-recursive-models)
+  - [Cyclic references](#cyclic-references)
+<!-- TOC END -->
+
 Forward annotations (wrapped in quotes) or using the `from __future__ import annotations` [future statement]
 (as introduced in [PEP563](https://www.python.org/dev/peps/pep-0563/)) are supported:
 

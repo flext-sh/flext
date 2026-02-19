@@ -1,5 +1,10 @@
 # LLM Integration
 
+
+<!-- TOC START -->
+- No sections found
+<!-- TOC END -->
+
 The Pydantic documentation is available in the [llms.txt](https://llmstxt.org/) format.
 This format is defined in Markdown and suited for large language models.
 

@@ -1,5 +1,47 @@
 # FLEXT Type System Architecture Guide
 
+
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [Overview](#overview)
+- [Type System Hierarchy](#type-system-hierarchy)
+  - [Project Dependency Order](#project-dependency-order)
+  - [Architecture Layering within Projects](#architecture-layering-within-projects)
+- [Canonical Type Patterns](#canonical-type-patterns)
+  - [Pattern 1: Simple Type Alias (No Namespace Needed)](#pattern-1-simple-type-alias-no-namespace-needed)
+  - [Pattern 2: Domain Collection Type (Nested Namespace)](#pattern-2-domain-collection-type-nested-namespace)
+  - [Pattern 3: TypeVar Bounded to Object (Avoiding Circular Imports)](#pattern-3-typevar-bounded-to-object-avoiding-circular-imports)
+  - [Pattern 4: Union → Protocol (Complexity Reduction)](#pattern-4-union-protocol-complexity-reduction)
+  - [Pattern 5: Covariance in Protocols](#pattern-5-covariance-in-protocols)
+  - [Pattern 6: TypeVar Reuse (Centralized)](#pattern-6-typevar-reuse-centralized)
+- [Namespace Architecture](#namespace-architecture)
+  - [Standard Namespace Structure](#standard-namespace-structure)
+  - [Namespace Organization by Project](#namespace-organization-by-project)
+  - [Models Namespace Architecture (m.\*)](#models-namespace-architecture-m)
+- [Covariance and Variance Rules](#covariance-and-variance-rules)
+  - [Covariance (Subtype Compatibility)](#covariance-subtype-compatibility)
+  - [Protocol Return Types (Always Covariant)](#protocol-return-types-always-covariant)
+  - [Type Parameter Bounds (Always Covariant)](#type-parameter-bounds-always-covariant)
+- [Protocol Design](#protocol-design)
+  - [Protocol Organization Rules](#protocol-organization-rules)
+- [TypeVar Organization](#typevar-organization)
+  - [Centralized TypeVars (flext-core)](#centralized-typevars-flext-core)
+  - [Domain-Specific TypeVars (When Necessary)](#domain-specific-typevars-when-necessary)
+- [Migration Guide](#migration-guide)
+  - [Migrating from Old Patterns to New](#migrating-from-old-patterns-to-new)
+- [Best Practices](#best-practices)
+  - [1. Use Complete Namespace Always](#1-use-complete-namespace-always)
+  - [2. No cast(), Any, or TYPE_CHECKING](#2-no-cast-any-or-typechecking)
+  - [3. Covariant Protocols for Read-Only](#3-covariant-protocols-for-read-only)
+  - [4. TypeVar with Proper Bounds](#4-typevar-with-proper-bounds)
+  - [5. Namespace Depth Management](#5-namespace-depth-management)
+- [Project Status](#project-status)
+  - [✅ Completed Projects](#-completed-projects)
+  - [Type System Metrics](#type-system-metrics)
+  - [Validation Results](#validation-results)
+- [Summary](#summary)
+<!-- TOC END -->
+
 **Version**: 1.0.0
 **Last Updated**: 2025-12-10
 **Scope**: Complete FLEXT ecosystem type system (5 projects)

@@ -1,5 +1,34 @@
 # FLEXT Container Diagram
 
+
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [Overview](#overview)
+- [Container Diagram](#container-diagram)
+- [Container Responsibilities](#container-responsibilities)
+  - [Web Layer](#web-layer)
+  - [API Layer](#api-layer)
+  - [Core Services](#core-services)
+  - [Data Integration Services](#data-integration-services)
+  - [Singer Platform](#singer-platform)
+  - [Runtime Container](#runtime-container)
+  - [Quality and Observability](#quality-and-observability)
+  - [CLI and Tools](#cli-and-tools)
+- [Data Storage Layer](#data-storage-layer)
+  - [PostgreSQL](#postgresql)
+  - [Redis](#redis)
+  - [File Storage](#file-storage)
+- [Communication Patterns](#communication-patterns)
+  - [Synchronous Communication](#synchronous-communication)
+  - [Asynchronous Communication](#asynchronous-communication)
+  - [Data Flow Patterns](#data-flow-patterns)
+- [Technology Decisions](#technology-decisions)
+  - [Programming Languages](#programming-languages)
+  - [Frameworks and Libraries](#frameworks-and-libraries)
+  - [Data Storage](#data-storage)
+  - [Integration Protocols](#integration-protocols)
+<!-- TOC END -->
+
 ## Table of Contents
 
 - [FLEXT Container Diagram](#flext-container-diagram)

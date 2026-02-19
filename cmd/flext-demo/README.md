@@ -1,5 +1,42 @@
 # FLEXT Demo Server
 
+
+<!-- TOC START -->
+- [Quick Start](#quick-start)
+- [Current Reality](#current-reality)
+- [Architecture Role in FLEXT Ecosystem](#architecture-role-in-flext-ecosystem)
+  - [**Demo Service Component**](#demo-service-component)
+  - [**Core Responsibilities**](#core-responsibilities)
+- [Key Features](#key-features)
+  - [**Current Implementation**](#current-implementation)
+  - [**Package Dependencies**](#package-dependencies)
+- [Installation & Usage](#installation-usage)
+  - [Build and Run](#build-and-run)
+  - [Command Line Options](#command-line-options)
+  - [Configuration](#configuration)
+- [Development Commands](#development-commands)
+  - [Build Operations](#build-operations)
+  - [Testing](#testing)
+  - [Server Operations](#server-operations)
+- [Quality Standards](#quality-standards)
+  - [**Current Code Quality**](#current-code-quality)
+  - [**Development Standards**](#development-standards)
+- [Integration with FLEXT Ecosystem](#integration-with-flext-ecosystem)
+  - [**Controlpanel Integration**](#controlpanel-integration)
+  - [**Package Structure**](#package-structure)
+- [Current Status](#current-status)
+- [Future Architecture](#future-architecture)
+  - [**Planned Demo Features**](#planned-demo-features)
+- [Contributing](#contributing)
+  - [Development Workflow](#development-workflow)
+  - [Architecture Guidelines](#architecture-guidelines)
+- [Troubleshooting](#troubleshooting)
+  - [Common Issues](#common-issues)
+  - [Diagnostic Commands](#diagnostic-commands)
+- [License](#license)
+- [Links](#links)
+<!-- TOC END -->
+
 **FLEXT Demo Server** is a simple HTTP server demonstration showcasing basic FLEXT controlpanel integration patterns. It provides a basic server implementation using FLEXT's controlpanel configuration and monitoring components.
 
 **Reviewed**: 2026-02-17 | **Version**: 0.10.0-dev

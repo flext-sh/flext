@@ -1,5 +1,38 @@
 # Phases 7-9: Test Suite, Problem Project, and Final Validation
 
+
+<!-- TOC START -->
+- [Phase 7: Test Suite Migration (Days 25-28)](#phase-7-test-suite-migration-days-25-28)
+  - [Overview](#overview)
+  - [Task 7.1: Create Test TypeGuard Library](#task-71-create-test-typeguard-library)
+  - [Task 7.2: Migrate Tests by Project](#task-72-migrate-tests-by-project)
+  - [Task 7.3: Verify Test Coverage](#task-73-verify-test-coverage)
+- [Phase 8: Problem Project (Days 29-32)](#phase-8-problem-project-days-29-32)
+  - [Overview](#overview)
+  - [Task 8.1: Import Structure Fixes](#task-81-import-structure-fixes)
+  - [Task 8.2: Type Error Resolution](#task-82-type-error-resolution)
+  - [Task 8.3: Model Migration](#task-83-model-migration)
+- [Phase 9: Final Validation & Documentation (Days 33-35)](#phase-9-final-validation-documentation-days-33-35)
+  - [Task 9.1: Global Validation](#task-91-global-validation)
+  - [Task 9.2: Test Coverage Verification](#task-92-test-coverage-verification)
+  - [Task 9.3: Documentation Update](#task-93-documentation-update)
+- [Pydantic 2 Migration Complete](#pydantic-2-migration-complete)
+  - [TypeGuard Pattern](#typeguard-pattern)
+  - [Hierarchical Model Organization](#hierarchical-model-organization)
+  - [ConfigDict Standards](#configdict-standards)
+  - [Modern Validators](#modern-validators)
+  - [Task 9.4: Cleanup and Issue Closure](#task-94-cleanup-and-issue-closure)
+- [Success Criteria for Phases 7-9](#success-criteria-for-phases-7-9)
+- [Timeline Summary](#timeline-summary)
+- [Final Metrics](#final-metrics)
+  - [Before Migration](#before-migration)
+  - [After Migration](#after-migration)
+- [Rollback Plan](#rollback-plan)
+- [Post-Migration Maintenance](#post-migration-maintenance)
+  - [Ongoing Standards](#ongoing-standards)
+  - [Monitoring](#monitoring)
+<!-- TOC END -->
+
 **Timeline**: Days 25-35 (after Phases 2-6 complete)  
 **Strategy**: Sequential execution with increasing scope  
 **Dependency**: Phases 1-6 must complete successfully

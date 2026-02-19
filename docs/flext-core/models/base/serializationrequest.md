@@ -1,5 +1,19 @@
 # SerializationRequest (`FlextModels.Base.SerializationRequest`)
 
+
+<!-- TOC START -->
+- [Visão geral](#viso-geral)
+- [Contrato detalhado](#contrato-detalhado)
+- [Arquitetura e dependências](#arquitetura-e-dependncias)
+  - [Onde usar imediatamente](#onde-usar-imediatamente)
+  - [Trecho relevante (handlers)](#trecho-relevante-handlers)
+- [Situação atual](#situao-atual)
+- [Fluxo pretendido](#fluxo-pretendido)
+- [Exemplo (integração com handlers)](#exemplo-integrao-com-handlers)
+- [Pontos fortes x limitações](#pontos-fortes-x-limitaes)
+- [Backlog recomendado](#backlog-recomendado)
+<!-- TOC END -->
+
 ## Visão geral
 
 DTO para encapsular políticas de serialização (formato, encoding, compressão, ordenação, uso de `model_dump`). A implementação vive em `flext_core/_models/base.py:166-194` e deveria substituir as tuplas/dicionários ad-hoc usados hoje em handlers, serviços e targets Singer.

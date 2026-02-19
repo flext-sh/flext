@@ -1,5 +1,15 @@
 # FLEXT Plugin
 
+
+<!-- TOC START -->
+- [Status & metrics](#status-metrics)
+- [Quick start](#quick-start)
+- [Architecture overview](#architecture-overview)
+- [Quality & compliance](#quality-compliance)
+- [Resources](#resources)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT Plugin (v0.9.0) is the production-grade plugin management platform for the FLEXT ecosystem. It handles discovery, lifecycle, hot reload, sandboxing, and security validation so every FLEXT service can load and manage plugins with a unified architecture.
 
 ## Status & metrics

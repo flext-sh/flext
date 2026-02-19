@@ -1,5 +1,22 @@
 # 1. Introduction and Goals
 
+
+<!-- TOC START -->
+- [1.1 Purpose of the System](#11-purpose-of-the-system)
+- [1.2 Quality Goals](#12-quality-goals)
+  - [Performance](#performance)
+  - [Security](#security)
+  - [Reliability](#reliability)
+  - [Maintainability](#maintainability)
+  - [Usability](#usability)
+- [1.3 Stakeholders](#13-stakeholders)
+  - [Data Engineers](#data-engineers)
+  - [System Administrators](#system-REDACTED_LDAP_BIND_PASSWORDistrators)
+  - [Application Developers](#application-developers)
+  - [Enterprise Architects](#enterprise-architects)
+  - [Business Users](#business-users)
+<!-- TOC END -->
+
 ## 1.1 Purpose of the System
 
 FLEXT is an enterprise-grade data integration platform designed to simplify and automate the complex process of integrating data from diverse enterprise systems. The platform provides a unified, scalable, and maintainable solution for data engineers, REDACTED_LDAP_BIND_PASSWORDistrators, and developers working with corporate data infrastructure.

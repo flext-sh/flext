@@ -1,3 +1,32 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+  - [Public API Surface — `FlextResult[T_co]`](#public-api-surface-flextresulttco)
+  - [Factory Methods](#factory-methods)
+  - [Monadic Composition Chain](#monadic-composition-chain)
+  - [Failure Recovery](#failure-recovery)
+  - [Side Effects](#side-effects)
+  - [Value Extraction](#value-extraction)
+  - [Collection Operations](#collection-operations)
+  - [Pydantic Integration](#pydantic-integration)
+  - [Returns Library Interop (inside `result.py` only)](#returns-library-interop-inside-resultpy-only)
+  - [Resource Management](#resource-management)
+  - [Type Guards](#type-guards)
+- [Workflow](#workflow)
+- [Examples](#examples)
+  - [Good: Railway composition chain](#good-railway-composition-chain)
+  - [Good: Batch processing with error accumulation](#good-batch-processing-with-error-accumulation)
+  - [Good: Safe decorator for exception boundaries](#good-safe-decorator-for-exception-boundaries)
+  - [Good: Fold to HTTP response](#good-fold-to-http-response)
+  - [Bad: Imperative branching instead of composition](#bad-imperative-branching-instead-of-composition)
+  - [Bad: Bare try/except bypassing FlextResult](#bad-bare-tryexcept-bypassing-flextresult)
+  - [Bad: Constructing FlextResult directly](#bad-constructing-flextresult-directly)
+- [Subproject Usage Map](#subproject-usage-map)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: lib-returns
 description: FlextResult railway composition built on dry-python/returns. Use when implementing result-flow operations, error recovery chains, or converting between container types.

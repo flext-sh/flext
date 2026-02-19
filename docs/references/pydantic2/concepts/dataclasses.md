@@ -1,3 +1,14 @@
+<!-- TOC START -->
+- [Dataclass config](#dataclass-config)
+- [Rebuilding dataclass schema](#rebuilding-dataclass-schema)
+- [Stdlib dataclasses and Pydantic dataclasses](#stdlib-dataclasses-and-pydantic-dataclasses)
+  - [Inherit from stdlib dataclasses](#inherit-from-stdlib-dataclasses)
+  - [Usage of stdlib dataclasses with `BaseModel`](#usage-of-stdlib-dataclasses-with-basemodel)
+  - [Using custom types](#using-custom-types)
+  - [Checking if a dataclass is a Pydantic dataclass](#checking-if-a-dataclass-is-a-pydantic-dataclass)
+- [Validators and initialization hooks](#validators-and-initialization-hooks)
+<!-- TOC END -->
+
 ??? api "API Documentation"
 [`@pydantic.dataclasses.dataclass`][pydantic.dataclasses.dataclass]<br>
 

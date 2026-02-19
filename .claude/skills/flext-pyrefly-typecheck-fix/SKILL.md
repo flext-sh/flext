@@ -1,3 +1,15 @@
+<!-- TOC START -->
+- [Purpose](#purpose)
+- [Error Clusters Covered](#error-clusters-covered)
+  - [1. Logger Typing Drift](#1-logger-typing-drift)
+  - [2. `FlextResult.ok(None)` — Real Bug](#2-flextresultoknone-real-bug)
+  - [3. `FlextResult[object]` Type Erasure](#3-flextresultobject-type-erasure)
+  - [4. RootModel Container Coercion](#4-rootmodel-container-coercion)
+  - [5. Mapping Mutation](#5-mapping-mutation)
+- [Verification](#verification)
+- [Hard Rules](#hard-rules)
+<!-- TOC END -->
+
 ---
 name: flext-pyrefly-typecheck-fix
 description: Pyrefly type-check error detection and safe auto-fix rules for recurring error patterns across the FLEXT ecosystem

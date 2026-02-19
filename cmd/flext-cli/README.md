@@ -1,5 +1,37 @@
 # flext-cli
 
+
+<!-- TOC START -->
+- [Quick Start](#quick-start)
+- [Current Reality](#current-reality)
+- [Architecture Role in FLEXT Ecosystem](#architecture-role-in-flext-ecosystem)
+  - [**Go Service Component**](#go-service-component)
+  - [**Core Responsibilities**](#core-responsibilities)
+- [Key Features](#key-features)
+  - [**Current Implementation**](#current-implementation)
+  - [**Package Dependencies**](#package-dependencies)
+- [Installation & Usage](#installation-usage)
+  - [Build from Source](#build-from-source)
+  - [Current Usage](#current-usage)
+- [Development Commands](#development-commands)
+  - [Build Operations](#build-operations)
+  - [Testing](#testing)
+- [Configuration](#configuration)
+  - [Current Configuration](#current-configuration)
+  - [Environment Variables](#environment-variables)
+- [Quality Standards](#quality-standards)
+  - [**Current Code Quality**](#current-code-quality)
+- [Integration with FLEXT Ecosystem](#integration-with-flext-ecosystem)
+  - [**Service Integration**](#service-integration)
+  - [**Package Structure**](#package-structure)
+- [Current Status](#current-status)
+- [Contributing](#contributing)
+  - [Development Standards](#development-standards)
+  - [Development Workflow](#development-workflow)
+- [License](#license)
+- [Links](#links)
+<!-- TOC END -->
+
 **Reviewed**: 2026-02-17 | **Version**: 0.10.0-dev
 
 Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.

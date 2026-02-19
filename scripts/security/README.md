@@ -1,5 +1,42 @@
 # FLEXT Security Tools
 
+
+<!-- TOC START -->
+- [🔒 Security Audit Script](#-security-audit-script)
+  - [Quick Start](#quick-start)
+  - [Key Features](#key-features)
+  - [Command Line Options](#command-line-options)
+- [📋 Security Violation Types](#-security-violation-types)
+  - [1. Silent Failures (CRITICAL Risk)](#1-silent-failures-critical-risk)
+  - [2. Exception Swallowing (CRITICAL Risk)](#2-exception-swallowing-critical-risk)
+  - [3. Fake Data Generation (HIGH Risk)](#3-fake-data-generation-high-risk)
+- [🛡️ Security Best Practices](#-security-best-practices)
+  - [Fail-Fast Principles](#fail-fast-principles)
+  - [FLEXT-Specific Patterns](#flext-specific-patterns)
+  - [Production Readiness](#production-readiness)
+- [📊 Integration with CI/CD](#-integration-with-cicd)
+  - [GitHub Actions Example](#github-actions-example)
+  - [Quality Gate Integration](#quality-gate-integration)
+- [🔧 Technical Architecture](#-technical-architecture)
+  - [Core Components](#core-components)
+  - [Performance Characteristics](#performance-characteristics)
+  - [Error Handling](#error-handling)
+- [🚀 Usage Examples](#-usage-examples)
+  - [Development Workflow](#development-workflow)
+  - [Production Monitoring](#production-monitoring)
+  - [Specific Project Analysis](#specific-project-analysis)
+- [📈 Reporting and Analysis](#-reporting-and-analysis)
+  - [Report Formats](#report-formats)
+  - [Key Metrics](#key-metrics)
+  - [Trend Analysis](#trend-analysis)
+- [⚙️ Configuration](#-configuration)
+- [🔍 Extending the Scanner](#-extending-the-scanner)
+  - [Adding New Violation Types](#adding-new-violation-types)
+  - [Custom Risk Assessment](#custom-risk-assessment)
+  - [Integration with External Tools](#integration-with-external-tools)
+- [📞 Support and Contribution](#-support-and-contribution)
+<!-- TOC END -->
+
 Enterprise-grade security analysis and auditing tools for the FLEXT ecosystem. This directory contains comprehensive security scanning, analysis, and remediation tools designed to identify and eliminate dangerous code patterns across all 32 FLEXT projects.
 
 ## 🔒 Security Audit Script

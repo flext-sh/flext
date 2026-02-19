@@ -1,5 +1,34 @@
 # Architecture Decision Records (ADRs)
 
+
+<!-- TOC START -->
+- [ADR Status Overview](#adr-status-overview)
+- [Decision Categories](#decision-categories)
+  - [Foundation Decisions (ADRs 001-005)](#foundation-decisions-adrs-001-005)
+  - [Technology Stack (ADRs 006-010)](#technology-stack-adrs-006-010)
+  - [Integration Patterns (ADRs 011-015)](#integration-patterns-adrs-011-015)
+  - [Security & Quality (ADRs 016-022)](#security-quality-adrs-016-022)
+- [ADR Lifecycle](#adr-lifecycle)
+  - [1. Proposed 📝](#1-proposed-)
+  - [2. Accepted ✅](#2-accepted-)
+  - [3. Rejected ❌](#3-rejected-)
+  - [4. Deprecated 📋](#4-deprecated-)
+  - [5. Superseded 🔄](#5-superseded-)
+- [Creating New ADRs](#creating-new-adrs)
+  - [Process](#process)
+  - [Template](#template)
+  - [Naming Convention](#naming-convention)
+- [Decision Principles](#decision-principles)
+  - [1. Record Important Decisions](#1-record-important-decisions)
+  - [2. Context is Critical](#2-context-is-critical)
+  - [3. Consider Alternatives](#3-consider-alternatives)
+  - [4. Document Consequences](#4-document-consequences)
+  - [5. Keep Current](#5-keep-current)
+- [Tools and Automation](#tools-and-automation)
+  - [ADR Management Tools](#adr-management-tools)
+  - [Integration](#integration)
+<!-- TOC END -->
+
 This directory contains Architecture Decision Records (ADRs) for the FLEXT Enterprise Data Integration Platform. ADRs document important architectural decisions, their context, and consequences.
 
 ## ADR Status Overview

@@ -1,5 +1,50 @@
 # Phase 1: Core Completion + Pattern Establishment
 
+
+<!-- TOC START -->
+- [Overview](#overview)
+- [Task 1.1: Create TypeGuard Infrastructure](#task-11-create-typeguard-infrastructure)
+  - [Objective](#objective)
+  - [Files to Create/Modify](#files-to-createmodify)
+  - [Validation Checklist](#validation-checklist)
+  - [Commit Message](#commit-message)
+- [Task 1.2: Migrate flext-core TypedDicts to Hierarchical Pydantic Models](#task-12-migrate-flext-core-typeddicts-to-hierarchical-pydantic-models)
+  - [Objective](#objective)
+  - [Current State Analysis](#current-state-analysis)
+  - [Migration Strategy](#migration-strategy)
+  - [Files to Modify](#files-to-modify)
+  - [Validation Checklist](#validation-checklist)
+  - [Commit Strategy](#commit-strategy)
+- [Task 1.3: Eliminate cast() from flext-core src/](#task-13-eliminate-cast-from-flext-core-src)
+  - [Objective](#objective)
+  - [Current State](#current-state)
+  - [Migration Pattern](#migration-pattern)
+  - [Files to Modify](#files-to-modify)
+  - [Validation Checklist](#validation-checklist)
+  - [Commit Message](#commit-message)
+- [Task 1.4: Standardize ConfigDict Settings Across Models](#task-14-standardize-configdict-settings-across-models)
+  - [Objective](#objective)
+  - [Standard Settings by Model Type](#standard-settings-by-model-type)
+  - [Audit Checklist](#audit-checklist)
+  - [Standardization Tasks](#standardization-tasks)
+  - [Validation Checklist](#validation-checklist)
+  - [Commit Message](#commit-message)
+- [Task 1.5: Validate flext-core and Update AGENTS.md](#task-15-validate-flext-core-and-update-agentsmd)
+  - [Objective](#objective)
+  - [Validation Steps](#validation-steps)
+  - [Expected Results](#expected-results)
+  - [AGENTS.md Updates](#agentsmd-updates)
+  - [TypeGuard Pattern (Replaces cast())](#typeguard-pattern-replaces-cast)
+  - [Hierarchical Model Organization](#hierarchical-model-organization)
+  - [ConfigDict Standards](#configdict-standards)
+  - [Validation Checklist](#validation-checklist)
+  - [Commit Message](#commit-message)
+- [Success Criteria for Phase 1](#success-criteria-for-phase-1)
+- [Timeline](#timeline)
+- [Rollback Plan](#rollback-plan)
+- [Next Phase](#next-phase)
+<!-- TOC END -->
+
 **Duration**: 3-4 days  
 **Status**: Ready to start  
 **Beads Issues**: flext-fin, flext-pf3, flext-5dr, flext-jt2, flext-nya

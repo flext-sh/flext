@@ -1,5 +1,41 @@
 # Link Management and Cross-Reference Procedures
 
+
+<!-- TOC START -->
+- [Overview](#overview)
+- [Link Reference Standards](#link-reference-standards)
+  - [Link Types and Patterns](#link-types-and-patterns)
+- ["Related Documentation" Section Pattern](#related-documentation-section-pattern)
+  - [Standard Structure](#standard-structure)
+- [Related Documentation](#related-documentation)
+  - [Section Guidelines](#section-guidelines)
+  - [When to Add](#when-to-add)
+- [Bidirectional Links](#bidirectional-links)
+  - [Principle](#principle)
+  - [Guidelines](#guidelines)
+  - [Example](#example)
+- [Link Update Procedures](#link-update-procedures)
+  - [When Adding New Documentation](#when-adding-new-documentation)
+  - [When Moving or Renaming Files](#when-moving-or-renaming-files)
+  - [When Removing Documentation](#when-removing-documentation)
+  - [Regular Maintenance](#regular-maintenance)
+- [Link Validation](#link-validation)
+  - [Automated Validation](#automated-validation)
+  - [Manual Validation Checklist](#manual-validation-checklist)
+- [Common Issues and Solutions](#common-issues-and-solutions)
+  - [Issue: Broken Internal Link](#issue-broken-internal-link)
+  - [Issue: Broken Cross-Project Link](#issue-broken-cross-project-link)
+  - [Issue: Missing "Related Documentation" Section](#issue-missing-related-documentation-section)
+  - [Issue: Inconsistent Link Patterns](#issue-inconsistent-link-patterns)
+- [Link Registry (Future Enhancement)](#link-registry-future-enhancement)
+  - [Automated Registry](#automated-registry)
+  - [Manual Registry](#manual-registry)
+- [Best Practices](#best-practices)
+  - [✅ DO](#-do)
+  - [❌ DON'T](#-dont)
+- [Related Documentation](#related-documentation)
+<!-- TOC END -->
+
 **Version**: 1.0  
 **Last Updated**: 2025-12-07  
 **Status**: Active

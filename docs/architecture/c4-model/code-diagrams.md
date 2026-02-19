@@ -1,5 +1,25 @@
 # FLEXT Code Diagrams
 
+
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [Overview](#overview)
+- [1. FlextResult[T] Class Diagram](#1-flextresultt-class-diagram)
+- [2. FlextContainer Class Diagram](#2-flextcontainer-class-diagram)
+- [3. FlextModels Domain Model](#3-flextmodels-domain-model)
+- [4. LDAP Service Entity Relationship Diagram](#4-ldap-service-entity-relationship-diagram)
+- [5. API Gateway Request Flow Sequence Diagram](#5-api-gateway-request-flow-sequence-diagram)
+- [6. Data Pipeline Execution Sequence Diagram](#6-data-pipeline-execution-sequence-diagram)
+- [7. Error Handling Flow Sequence Diagram](#7-error-handling-flow-sequence-diagram)
+- [8. Plugin Execution Architecture](#8-plugin-execution-architecture)
+- [9. Configuration Management Class Diagram](#9-configuration-management-class-diagram)
+- [10. Event Sourcing Architecture](#10-event-sourcing-architecture)
+- [Code Quality Metrics](#code-quality-metrics)
+  - [Test Coverage by Component](#test-coverage-by-component)
+  - [Performance Benchmarks](#performance-benchmarks)
+  - [Memory Usage](#memory-usage)
+<!-- TOC END -->
+
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
 
 

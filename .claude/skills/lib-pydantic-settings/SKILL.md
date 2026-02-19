@@ -1,3 +1,14 @@
+<!-- TOC START -->
+- [Scope](#scope)
+  - [Subproject Usage Map](#subproject-usage-map)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: lib-pydantic-settings
 description: Pydantic SettingsConfigDict and singleton config patterns across FLEXT subprojects. Trigger when editing settings.py models, env bindings, or configuration validation behavior.

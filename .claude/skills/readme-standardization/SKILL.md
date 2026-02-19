@@ -1,3 +1,17 @@
+<!-- TOC START -->
+- [🎯 Objectives](#-objectives)
+- [🛠️ Tools](#-tools)
+- [🔗 ADR Reference](#-adr-reference)
+  - [Installation](#installation)
+  - [Usage](#usage)
+- [📝 Standards](#-standards)
+  - [1. Preamble Structure](#1-preamble-structure)
+  - [2. Mandatory Sections](#2-mandatory-sections)
+  - [3. Link Standards](#3-link-standards)
+- [🔄 Workflow](#-workflow)
+- [🧩 Integration with other Skills](#-integration-with-other-skills)
+<!-- TOC END -->
+
 ---
 name: readme-standardization
 description: Comprehensive guide and tooling for creating, maintaining, and updating README.md files across the FLEXT ecosystem.

@@ -1,3 +1,14 @@
+<!-- TOC START -->
+- [Scope](#scope)
+  - [Subproject Usage Map](#subproject-usage-map)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: lib-beartype
 description: Package-wide beartype integration for flext_core runtime checks. Trigger when changing runtime type-check activation, config, or error-handling policy.

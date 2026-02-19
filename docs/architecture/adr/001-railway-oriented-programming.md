@@ -1,5 +1,30 @@
 # ADR-001: Railway-Oriented Programming with FlextResult[T]
 
+
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [Status](#status)
+- [Context](#context)
+- [Decision](#decision)
+  - [Core Implementation](#core-implementation)
+  - [Usage Patterns](#usage-patterns)
+- [Consequences](#consequences)
+  - [Positive Consequences](#positive-consequences)
+  - [Negative Consequences](#negative-consequences)
+- [Alternatives Considered](#alternatives-considered)
+  - [1. Traditional Exception Handling](#1-traditional-exception-handling)
+  - [2. Optional/Maybe Pattern](#2-optionalmaybe-pattern)
+  - [3. Either/Result Pattern](#3-eitherresult-pattern)
+  - [4. Custom Exception Hierarchy](#4-custom-exception-hierarchy)
+  - [5. Go-style Error Handling](#5-go-style-error-handling)
+- [Implementation Notes](#implementation-notes)
+  - [1. Migration Strategy](#1-migration-strategy)
+  - [2. Integration with Existing Code](#2-integration-with-existing-code)
+  - [3. Testing Strategy](#3-testing-strategy)
+  - [4. Performance Optimization](#4-performance-optimization)
+- [References](#references)
+<!-- TOC END -->
+
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
 
 

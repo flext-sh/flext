@@ -1,3 +1,10 @@
+<!-- TOC START -->
+- [As a validation parameter](#as-a-validation-parameter)
+- [At the field level](#at-the-field-level)
+  - [Using the `Strict()` metadata class](#using-the-strict-metadata-class)
+- [As a configuration value](#as-a-configuration-value)
+<!-- TOC END -->
+
 ??? api "API Documentation"
 [`pydantic.types.Strict`][pydantic.types.Strict]<br>
 

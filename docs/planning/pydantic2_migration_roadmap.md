@@ -1,5 +1,40 @@
 # Pydantic 2 Migration Roadmap
 
+
+<!-- TOC START -->
+- [Executive Summary](#executive-summary)
+- [Key Decisions](#key-decisions)
+- [Migration Patterns](#migration-patterns)
+  - [TypeGuard Pattern (Replaces cast())](#typeguard-pattern-replaces-cast)
+  - [TypedDict to Pydantic Model (Hierarchical Inheritance)](#typeddict-to-pydantic-model-hierarchical-inheritance)
+  - [Standard ConfigDict Settings](#standard-configdict-settings)
+  - [Modern Validator Patterns (Pydantic 2.11+)](#modern-validator-patterns-pydantic-211)
+  - [Namespace Hierarchy Standard](#namespace-hierarchy-standard)
+- [Migration Metrics](#migration-metrics)
+  - [Cast() Usage by Location (627 total)](#cast-usage-by-location-627-total)
+  - [TypedDict Usage by Project (305 total)](#typeddict-usage-by-project-305-total)
+  - [ConfigDict Standardization Scope](#configdict-standardization-scope)
+- [Phase Structure (Parallelized)](#phase-structure-parallelized)
+  - [Phase 0: Foundation (COMPLETED)](#phase-0-foundation-completed)
+  - [Phase 1: Core Completion + Pattern Establishment](#phase-1-core-completion-pattern-establishment)
+  - [Phase 2: API Layer + Infrastructure (PARALLEL)](#phase-2-api-layer-infrastructure-parallel)
+  - [Phase 3: Data Layer](#phase-3-data-layer)
+  - [Phase 4: Oracle Integration + Meltano (PARALLEL)](#phase-4-oracle-integration-meltano-parallel)
+  - [Phase 5: Taps + Targets (PARALLEL)](#phase-5-taps-targets-parallel)
+  - [Phase 6: DBT Integration + User-Facing (PARALLEL)](#phase-6-dbt-integration-user-facing-parallel)
+  - [Phase 7: Test Suite Migration](#phase-7-test-suite-migration)
+  - [Phase 8: Problem Project (flext-tap-oracle-wms)](#phase-8-problem-project-flext-tap-oracle-wms)
+  - [Phase 9: Final Validation & Documentation](#phase-9-final-validation-documentation)
+- [Timeline Estimate (Parallelized)](#timeline-estimate-parallelized)
+- [Risk Assessment](#risk-assessment)
+  - [High Risk Projects](#high-risk-projects)
+  - [Mitigation Strategies](#mitigation-strategies)
+- [Success Criteria](#success-criteria)
+- [Execution Protocol](#execution-protocol)
+- [Related Beads Issues](#related-beads-issues)
+- [Appendix: Reference Files](#appendix-reference-files)
+<!-- TOC END -->
+
 ## Executive Summary
 
 **Objective**: Complete transformation of the Flext monorepo (29 projects) to modern Pydantic 2.11+ patterns with hierarchical BaseModel inheritance, eliminating all `cast()` usage, converting all `TypedDict` definitions to structural Pydantic models, standardizing `ConfigDict` settings, and modernizing validators.

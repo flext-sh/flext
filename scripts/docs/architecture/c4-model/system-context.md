@@ -1,5 +1,22 @@
 # System Context Diagram
 
+
+<!-- TOC START -->
+- [Overview](#overview)
+- [External Systems](#external-systems)
+  - [Data Sources](#data-sources)
+  - [Data Targets](#data-targets)
+  - [Infrastructure](#infrastructure)
+- [User Personas](#user-personas)
+  - [Data Engineer](#data-engineer)
+  - [System Administrator](#system-REDACTED_LDAP_BIND_PASSWORDistrator)
+  - [Application Developer](#application-developer)
+- [Quality Attributes](#quality-attributes)
+  - [Performance](#performance)
+  - [Security](#security)
+  - [Reliability](#reliability)
+<!-- TOC END -->
+
 ## Overview
 
 FLEXT Enterprise Data Integration Platform operates within the following system context:

@@ -1,3 +1,32 @@
+<!-- TOC START -->
+- [Basic model usage](#basic-model-usage)
+  - [Model methods and properties](#model-methods-and-properties)
+- [Data conversion](#data-conversion)
+- [Extra data](#extra-data)
+- [Nested models](#nested-models)
+- [Rebuilding model schema](#rebuilding-model-schema)
+- [Arbitrary class instances](#arbitrary-class-instances)
+  - [Nested attributes](#nested-attributes)
+- [Error handling](#error-handling)
+- [Validating data](#validating-data)
+  - [Creating models without validation](#creating-models-without-validation)
+- [Model copy](#model-copy)
+- [Generic models](#generic-models)
+  - [Validation of unparametrized type variables](#validation-of-unparametrized-type-variables)
+  - [Serialization of unparametrized type variables](#serialization-of-unparametrized-type-variables)
+- [Dynamic model creation](#dynamic-model-creation)
+- [`RootModel` and custom root types](#rootmodel-and-custom-root-types)
+- [Faux immutability](#faux-immutability)
+- [Abstract base classes](#abstract-base-classes)
+- [Field ordering](#field-ordering)
+- [Automatically excluded attributes](#automatically-excluded-attributes)
+  - [Class variables](#class-variables)
+  - [Private model attributes](#private-model-attributes)
+- [Model signature](#model-signature)
+- [Structural pattern matching](#structural-pattern-matching)
+- [Attribute copies](#attribute-copies)
+<!-- TOC END -->
+
 ??? api "API Documentation"
 [`pydantic.main.BaseModel`][pydantic.main.BaseModel]<br>
 

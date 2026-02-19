@@ -1,5 +1,44 @@
 # Pydantic 2 Migration: Complete Planning Summary
 
+
+<!-- TOC START -->
+- [Executive Summary](#executive-summary)
+- [Planning Documents](#planning-documents)
+  - [1. Main Roadmap](#1-main-roadmap)
+  - [2. Phase 1 Detailed Plan](#2-phase-1-detailed-plan)
+  - [3. Phases 2-6 Parallel Tracks](#3-phases-2-6-parallel-tracks)
+  - [4. Phases 7-9 Completion](#4-phases-7-9-completion)
+- [Key Metrics](#key-metrics)
+  - [Before Migration](#before-migration)
+  - [After Migration (Target)](#after-migration-target)
+- [Timeline](#timeline)
+  - [Sequential Baseline: 38 days](#sequential-baseline-38-days)
+  - [Parallelized Plan: 35 days](#parallelized-plan-35-days)
+- [Beads Issues Created](#beads-issues-created)
+  - [Phase 1 Issues](#phase-1-issues)
+  - [Additional Issues to Create](#additional-issues-to-create)
+- [Patterns Established](#patterns-established)
+  - [1. TypeGuard Pattern (Replaces cast())](#1-typeguard-pattern-replaces-cast)
+  - [2. Hierarchical Model Organization](#2-hierarchical-model-organization)
+  - [3. Standard ConfigDict](#3-standard-configdict)
+  - [4. Modern Validators](#4-modern-validators)
+- [Next Steps](#next-steps)
+  - [Immediate (Ready Now)](#immediate-ready-now)
+  - [Phase 1 Execution](#phase-1-execution)
+  - [Phases 2-6 Execution](#phases-2-6-execution)
+  - [Phases 7-9 Execution](#phases-7-9-execution)
+- [Success Criteria](#success-criteria)
+- [Risk Mitigation](#risk-mitigation)
+  - [High Risk Projects](#high-risk-projects)
+  - [Mitigation Strategies](#mitigation-strategies)
+- [Rollback Plan](#rollback-plan)
+- [Post-Migration Maintenance](#post-migration-maintenance)
+  - [Ongoing Standards](#ongoing-standards)
+  - [Monitoring](#monitoring)
+- [Files Created](#files-created)
+- [Conclusion](#conclusion)
+<!-- TOC END -->
+
 **Status**: ✅ Planning Complete - Ready for Execution  
 **Created**: 2026-02-04  
 **Timeline**: 35 days (parallelized, ~10-12 day savings)  

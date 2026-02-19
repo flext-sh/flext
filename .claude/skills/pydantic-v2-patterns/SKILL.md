@@ -1,3 +1,19 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+  - [Validators](#validators)
+  - [Computed Fields](#computed-fields)
+  - [Discriminated Unions](#discriminated-unions)
+  - [Serializers](#serializers)
+  - [Strict Mode](#strict-mode)
+  - [TypeAdapter](#typeadapter)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: pydantic-v2-patterns
 description: Deep-dive patterns companion to lib-pydantic-v2 for advanced Pydantic v2 implementation in FLEXT.

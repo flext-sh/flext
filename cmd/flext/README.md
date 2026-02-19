@@ -1,5 +1,40 @@
 # FLEXT Service - Enterprise Data Integration Engine
 
+
+<!-- TOC START -->
+- [Quick Start](#quick-start)
+- [Current Reality](#current-reality)
+- [Architecture Role in FLEXT Ecosystem](#architecture-role-in-flext-ecosystem)
+  - [**Enterprise Hybrid Architecture**](#enterprise-hybrid-architecture)
+  - [**Key Responsibilities**](#key-responsibilities)
+- [Installation & Usage](#installation-usage)
+  - [Multi-Modal Operation](#multi-modal-operation)
+  - [Configuration](#configuration)
+  - [Environment Variables](#environment-variables)
+- [Development Commands](#development-commands)
+  - [Essential Workflow](#essential-workflow)
+  - [Service Operations](#service-operations)
+  - [API Endpoints (Development)](#api-endpoints-development)
+- [Docker & Production Deployment](#docker-production-deployment)
+  - [Development Environment](#development-environment)
+  - [Production Dockerfile](#production-dockerfile)
+  - [Kubernetes Deployment](#kubernetes-deployment)
+- [Quality Standards](#quality-standards)
+  - [**Enterprise Quality Gates**](#enterprise-quality-gates)
+  - [**Production Readiness**](#production-readiness)
+- [Integration with FLEXT Ecosystem](#integration-with-flext-ecosystem)
+  - [**Service Coordination**](#service-coordination)
+  - [**Ecosystem Position**](#ecosystem-position)
+- [Troubleshooting](#troubleshooting)
+  - [Common Production Issues](#common-production-issues)
+  - [Diagnostic Commands](#diagnostic-commands)
+- [Contributing](#contributing)
+  - [Architecture Standards](#architecture-standards)
+  - [Development Workflow](#development-workflow)
+- [License](#license)
+- [Links](#links)
+<!-- TOC END -->
+
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
 
 

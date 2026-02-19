@@ -1,5 +1,15 @@
 # FLEXT Tap Oracle OIC
 
+
+<!-- TOC START -->
+- [Status & signals](#status-signals)
+- [Quick start](#quick-start)
+- [Architecture & patterns](#architecture-patterns)
+- [Quality & operations](#quality-operations)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT Tap Oracle OIC (v1.0.0 release prep) is the Singer tap that extracts metadata, configurations, and streams from Oracle Integration Cloud (OIC). It pairs the flext-core patterns with flext-oracle-oic and flext-meltano to deliver OAuth2/IDCS authentication, retrying stream discovery, and error recovery inside a clean architecture shell.
 
 ## Status & signals

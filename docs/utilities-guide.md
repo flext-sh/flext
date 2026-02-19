@@ -1,5 +1,30 @@
 # FLEXT Utilities Usage Guide
 
+
+<!-- TOC START -->
+- [Overview](#overview)
+- [Utilities Architecture](#utilities-architecture)
+  - [Inheritance Hierarchy](#inheritance-hierarchy)
+  - [Import Pattern (MANDATORY)](#import-pattern-mandatory)
+- [Centralized Utilities in flext-core](#centralized-utilities-in-flext-core)
+  - [Core Classes (20+ utility classes)](#core-classes-20-utility-classes)
+  - [New Methods (Added December 28, 2025)](#new-methods-added-december-28-2025)
+- [Project-Specific Utilities](#project-specific-utilities)
+  - [flext-ldif Utilities (extending flext-core)](#flext-ldif-utilities-extending-flext-core)
+  - [flext-ldap Utilities (extending flext-ldif)](#flext-ldap-utilities-extending-flext-ldif)
+  - [flext-cli Utilities (extending flext-core)](#flext-cli-utilities-extending-flext-core)
+  - [client-a-oud-mig Utilities (extending all)](#client-a-oud-mig-utilities-extending-all)
+- [Best Practices](#best-practices)
+  - [DO's ✅](#dos-)
+  - [DON'Ts ❌](#donts-)
+- [Adding New Utilities](#adding-new-utilities)
+  - [When to Add to flext-core](#when-to-add-to-flext-core)
+  - [How to Add](#how-to-add)
+  - [Example: Add new utility method](#example-add-new-utility-method)
+- [Quality Standards](#quality-standards)
+- [See Also](#see-also)
+<!-- TOC END -->
+
 **Last Updated**: 2025-12-28
 **Version**: 1.0.0
 

@@ -1,5 +1,14 @@
 # Container Diagram
 
+
+<!-- TOC START -->
+- [Overview](#overview)
+- [Container Descriptions](#container-descriptions)
+  - [User-Facing Containers](#user-facing-containers)
+  - [Core Containers](#core-containers)
+  - [External Systems](#external-systems)
+<!-- TOC END -->
+
 ## Overview
 
 FLEXT container architecture showing the high-level technology choices and deployment units:

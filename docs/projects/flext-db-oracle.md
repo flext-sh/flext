@@ -1,5 +1,15 @@
 # FLEXT DB Oracle
 
+
+<!-- TOC START -->
+- [Status & metrics](#status-metrics)
+- [Quick start](#quick-start)
+- [Architecture overview](#architecture-overview)
+- [Key features](#key-features)
+- [References & resources](#references-resources)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT DB Oracle (v0.9.9) is the enterprise Oracle database integration foundation for the FLEXT ecosystem. It wraps SQLAlchemy 2.0 + python-oracledb behind FlextResult-driven services, connection pooling, schema introspection, and CLI helpers so every Oracle-focused project reuses identical patterns.
 
 ## Status & metrics

@@ -1,5 +1,11 @@
 # FlextUtilities · ModelsValidation
 
+
+<!-- TOC START -->
+- [Componentes](#componentes)
+  - [`ModelsValidation`](#modelsvalidation)
+<!-- TOC END -->
+
 Namespace que expõe funções corporativas de validação para entidades, agregados, CQRS e pipelines. Serve como "façade" pública para rotinas implementadas em `flext_core/_utilities/validation.py`.
 
 > **ATUALIZADO**: A validação agora é acessada via `FlextUtilities.ModelsValidation` (ou `u.ModelsValidation`), não mais via `FlextModels.Validation`.

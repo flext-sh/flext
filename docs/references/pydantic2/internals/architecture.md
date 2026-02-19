@@ -1,3 +1,11 @@
+<!-- TOC START -->
+- [Model definition](#model-definition)
+  - [Communicating between `pydantic` and `pydantic-core`: the core schema](#communicating-between-pydantic-and-pydantic-core-the-core-schema)
+  - [JSON Schema generation](#json-schema-generation)
+  - [Customizing the core schema and JSON schema](#customizing-the-core-schema-and-json-schema)
+- [Model validation and serialization](#model-validation-and-serialization)
+<!-- TOC END -->
+
 !!! note
 This section is part of the _internals_ documentation, and is partly targeted to contributors.
 

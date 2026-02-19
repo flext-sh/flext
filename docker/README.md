@@ -1,5 +1,40 @@
 # FLEXT Docker Infrastructure - Centralized Management
 
+
+<!-- TOC START -->
+- [Key Features](#key-features)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [For pytest Tests](#for-pytest-tests)
+  - [Direct FlextTestsDocker Usage](#direct-flexttestsdocker-usage)
+- [Architecture](#architecture)
+  - [DOCKER COMPOSE FILES (17 CENTRALIZED)](#docker-compose-files-17-centralized)
+  - [Container Type Reference (THREE PRIMARY TYPES)](#container-type-reference-three-primary-types)
+  - [Infrastructure Services](#infrastructure-services)
+  - [Testing Services](#testing-services)
+  - [Integration Services](#integration-services)
+  - [DOCKERFILES (21 CONSOLIDATED)](#dockerfiles-21-consolidated)
+  - [FLEXT Service Images](#flext-service-images)
+  - [Project Images](#project-images)
+  - [CONTAINER LIFECYCLE MANAGEMENT](#container-lifecycle-management)
+  - [Automatic Cleanup](#automatic-cleanup)
+  - [Dirty State Management](#dirty-state-management)
+  - [Persistent State Location](#persistent-state-location)
+  - [MIGRATION FROM OLD PATTERNS](#migration-from-old-patterns)
+  - [Old Pattern (DEPRECATED)](#old-pattern-deprecated)
+  - [New Pattern (REQUIRED)](#new-pattern-required)
+  - [Fixture Migration](#fixture-migration)
+  - [PROHIBITED PATTERNS](#prohibited-patterns)
+  - [NEVER Create These Files](#never-create-these-files)
+  - [Always Use](#always-use)
+  - [VALIDATION](#validation)
+  - [Verify Docker Standardization](#verify-docker-standardization)
+  - [Verify Centralization](#verify-centralization)
+  - [FURTHER READING](#further-reading)
+- [Contributing](#contributing)
+- [License](#license)
+<!-- TOC END -->
+
 **Reviewed**: 2026-02-17 | **Version**: 0.10.0-dev
 
 Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.

@@ -1,5 +1,11 @@
 # FlextModels · Roteamento de Mensagens
 
+
+<!-- TOC START -->
+- [Componentes](#componentes)
+  - [`MessageUnion`](#messageunion)
+<!-- TOC END -->
+
 Tipos auxiliares como o discriminated union que habilita o roteamento automático de mensagens CQRS.
 
 > Dados extraídos via AST em `flext_core/models.py` e confirmados com busca estática (testes ignorados).

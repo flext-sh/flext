@@ -1,5 +1,17 @@
 # FLEXT Core
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Core is the dispatcher-centric foundation library for the FLEXT platform. It delivers railway-oriented error handling, context-aware dependency injection, CQRS dispatching, and domain primitives that every downstream project reuses.
 
 ## Status & health

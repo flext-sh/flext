@@ -1,3 +1,19 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+  - [Model Design](#model-design)
+  - [Relationships](#relationships)
+  - [Indexes](#indexes)
+  - [Alembic Migration](#alembic-migration)
+  - [Zero-Downtime Column Addition](#zero-downtime-column-addition)
+  - [Idempotent Data Migrations](#idempotent-data-migrations)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: backend-data-patterns
 description: Database model design and migration patterns — naming, constraints, relationships, indexes, Alembic migrations, zero-downtime deployments. Use when defining models or creating database migrations.

@@ -1,5 +1,15 @@
 # FLEXT Tap LDIF
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+- [Quick start](#quick-start)
+- [Architecture & patterns](#architecture-patterns)
+- [Quality & operations](#quality-operations)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT Tap LDIF (v1.0.0 release prep) is the Singer tap responsible for extracting LDAP/LDIF data for the FLEXT data mesh. It implements Singer protocols, cleans LDIF via flext-ldif parsers, and complies with the workspace zero-tolerance standards.
 
 ## Status & health

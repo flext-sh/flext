@@ -1,3 +1,20 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+  - [isinstance Narrowing](#isinstance-narrowing)
+  - [None Checks](#none-checks)
+  - [TypeIs (Python 3.13+)](#typeis-python-313)
+  - [TypeGuard (Python 3.10+)](#typeguard-python-310)
+  - [assert_type (Python 3.11+)](#asserttype-python-311)
+  - [Exhaustiveness Checking](#exhaustiveness-checking)
+  - [Discriminated Union Narrowing](#discriminated-union-narrowing)
+- [Workflow](#workflow)
+- [Examples](#examples)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: python-type-narrowing
 description: Type narrowing techniques including isinstance, TypeIs, TypeGuard, assert_type, and exhaustiveness checking. Use when writing conditional type logic or discriminated union handling.

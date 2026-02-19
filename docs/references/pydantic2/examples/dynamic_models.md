@@ -1,3 +1,7 @@
+<!-- TOC START -->
+- No sections found
+<!-- TOC END -->
+
 Models can be [created dynamically](../concepts/models.md#dynamic-model-creation) using the [`create_model()`][pydantic.create_model]
 factory function.
 

@@ -1,3 +1,26 @@
+<!-- TOC START -->
+- [Scope](#scope)
+- [References](#references)
+- [Rules](#rules)
+- [Instructions](#instructions)
+  - [Core Model Patterns](#core-model-patterns)
+  - [TypeAdapter for Non-Model Validation](#typeadapter-for-non-model-validation)
+  - [RootModel Containers (from `typings.py`)](#rootmodel-containers-from-typingspy)
+  - [Forward Reference Discipline (no model_rebuild)](#forward-reference-discipline-no-modelrebuild)
+  - [Serialization Patterns](#serialization-patterns)
+- [Workflow](#workflow)
+- [Examples](#examples)
+  - [Good: FlextSettings model_config](#good-flextsettings-modelconfig)
+  - [Good: FlextResult.from_validation integration](#good-flextresultfromvalidation-integration)
+  - [Bad: v1-style validator](#bad-v1-style-validator)
+  - [Bad: .dict() / .json()](#bad-dict-json)
+  - [Bad: class Config instead of ConfigDict](#bad-class-config-instead-of-configdict)
+  - [Bad: model_rebuild patching](#bad-modelrebuild-patching)
+  - [Good: all references defined before model declaration](#good-all-references-defined-before-model-declaration)
+- [Subproject Usage Map](#subproject-usage-map)
+- [Verification](#verification)
+<!-- TOC END -->
+
 ---
 name: lib-pydantic-v2
 description: Pydantic v2 model, validation, and serialization patterns used across FLEXT. Use when creating models, adding validators, using ConfigDict, TypeAdapter, or model_validate/model_dump.

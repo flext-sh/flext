@@ -1,5 +1,15 @@
 # FLEXT dbt Oracle
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+- [Quick start](#quick-start)
+- [Architecture & integration](#architecture-integration)
+- [Quality & operations](#quality-operations)
+- [Resources & references](#resources-references)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT dbt Oracle (v1.0.0 release prep) is the dbt integration for Oracle Database inside the FLEXT ecosystem. It pairs flext-db-oracle connectivity, flext-meltano orchestration, and Singer compliance to deliver Oracle analytics while enforcing zero-tolerance dependency rules.
 
 ## Status & health

@@ -1,5 +1,15 @@
 # FLEXT Auth
 
+
+<!-- TOC START -->
+- [Status & metrics](#status-metrics)
+- [Quick start](#quick-start)
+- [Architecture snapshot](#architecture-snapshot)
+- [Key features & challenges](#key-features-challenges)
+- [Resources](#resources)
+- [Support & contributions](#support-contributions)
+<!-- TOC END -->
+
 FLEXT Auth v2.0.0 is the generic, multi-provider authentication foundation for the FLEXT ecosystem. It exposes a registry-centric API (`FlextAuth`, `FlextAuthRegistry`, `FlextAuthBaseProvider`) that lets every project plug in JWT, OAuth2, OIDC, SAML, API key, LDAP, Kerberos, or custom transports behind the same validation pipeline.
 
 ## Status & metrics

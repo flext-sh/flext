@@ -1,5 +1,12 @@
 # AGENTS.md — AI Agent Configuration Index
 
+
+<!-- TOC START -->
+- [Agent Configuration Map](#agent-configuration-map)
+- [Maintenance Rules](#maintenance-rules)
+- [Practical Usage](#practical-usage)
+<!-- TOC END -->
+
 **Reviewed**: 2026-02-17 | **Scope**: Pointer policy and mapping consistency
 
 

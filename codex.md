@@ -1,5 +1,10 @@
 # codex.md
 
+
+<!-- TOC START -->
+- No sections found
+<!-- TOC END -->
+
 OpenAI Codex instructions for this repository are defined in `CLAUDE.md`.
 
 - Read `CLAUDE.md` first.

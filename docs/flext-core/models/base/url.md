@@ -1,5 +1,18 @@
 # Url (`FlextModels.Base.Url`)
 
+
+<!-- TOC START -->
+- [Visão geral](#viso-geral)
+- [Contrato](#contrato)
+- [Arquitetura e dependências](#arquitetura-e-dependncias)
+- [Situação atual no repositório](#situao-atual-no-repositrio)
+- [Oportunidades de integração](#oportunidades-de-integrao)
+- [Integrações atuais (strings que deveriam virar `Url`)](#integraes-atuais-strings-que-deveriam-virar-url)
+- [Extensões planejadas](#extenses-planejadas)
+- [Pontos fortes x riscos](#pontos-fortes-x-riscos)
+- [Backlog recomendado](#backlog-recomendado)
+<!-- TOC END -->
+
 ## Visão geral
 
 Objeto de valor imutável que encapsula URLs HTTP/HTTPS com validação do Pydantic v2 (`HttpUrl`). Disponível em `flext_core/_models/base.py` e exposto por `FlextModels.Url`. Apesar de ainda não ter sido adotado, ele foi criado para ser o “tipo oficial” dos endpoints usados em APIs internas, taps/targets Singer e integrações observability.

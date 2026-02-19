@@ -1,5 +1,16 @@
 # File Validation
 
+
+<!-- TOC START -->
+- [JSON data](#json-data)
+- [JSON lines files](#json-lines-files)
+- [CSV files](#csv-files)
+- [TOML files](#toml-files)
+- [YAML files](#yaml-files)
+- [XML files](#xml-files)
+- [INI files](#ini-files)
+<!-- TOC END -->
+
 `pydantic` is a great tool for validating data coming from various sources.
 In this section, we will look at how to validate data from different types of files.
 

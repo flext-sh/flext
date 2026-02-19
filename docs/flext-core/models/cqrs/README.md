@@ -1,5 +1,12 @@
 # FlextModels · CQRS e Mensageria
 
+
+<!-- TOC START -->
+- [Componentes](#componentes)
+  - [`Cqrs`](#cqrs)
+  - [`_MessageUnion`](#messageunion)
+<!-- TOC END -->
+
 Namespace oficial para comandos, queries, handlers e utilidades de roteamento de mensagens. Dados extraídos via AST em `flext_core/models.py` e confirmados com busca estática (testes ignorados) para mapear uso real.
 
 Cada item a seguir mostra motivação, funcionamento interno, aplicações recomendadas, adoções atuais, benefícios e decisões sugeridas.

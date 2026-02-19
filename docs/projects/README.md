@@ -1,5 +1,13 @@
 # FLEXT Projects Documentation
 
+
+<!-- TOC START -->
+- [Active project briefs](#active-project-briefs)
+- [Projects without a dedicated brief](#projects-without-a-dedicated-brief)
+- [Keeping the briefs accurate](#keeping-the-briefs-accurate)
+- [Related resources](#related-resources)
+<!-- TOC END -->
+
 This directory keeps one-page summaries that mirror the authoritative README/CLAUDE guidance inside each project. Think of each brief as the "project status" card that points readers back to the real implementation, the quality gate reports, and the release information stored in `reports/`.
 
 ## Active project briefs

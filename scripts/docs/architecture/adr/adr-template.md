@@ -1,5 +1,17 @@
 # ADR Template
 
+
+<!-- TOC START -->
+- [ADR-[Number]: [Title]](#adr-number-title)
+- [Context](#context)
+- [Decision](#decision)
+- [Consequences](#consequences)
+- [Alternatives Considered](#alternatives-considered)
+- [Implementation Notes](#implementation-notes)
+- [References](#references)
+- [Related ADRs](#related-adrs)
+<!-- TOC END -->
+
 ## ADR-[Number]: [Title]
 
 **Status:** [Proposed | Accepted | Rejected | Deprecated | Superseded]

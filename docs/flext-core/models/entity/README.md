@@ -1,5 +1,20 @@
 # FlextModels · Entidades e Objetos de Valor
 
+
+<!-- TOC START -->
+- [Componentes](#componentes)
+  - [`Entity`](#entity)
+  - [`Value`](#value)
+  - [`AggregateRoot`](#aggregateroot)
+  - [`DomainEvent`](#domainevent)
+  - [`ArbitraryTypesModel`](#arbitrarytypesmodel)
+  - [`FrozenStrictModel`](#frozenstrictmodel)
+  - [`IdentifiableMixin`](#identifiablemixin)
+  - [`TimestampableMixin`](#timestampablemixin)
+  - [`TimestampedModel`](#timestampedmodel)
+  - [`VersionableMixin`](#versionablemixin)
+<!-- TOC END -->
+
 Camada central de DDD que expõe entidades, objetos de valor, agregados e eventos com validação Pydantic. Dados levantados via AST (`flext_core/models.py`) e uso confirmado com busca estática (testes ignorados).
 
 Para cada componente detalhamos motivação, funcionamento, usos recomendados, adoções atuais, benefícios e decisões sugeridas.
