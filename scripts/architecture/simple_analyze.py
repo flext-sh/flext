@@ -31,8 +31,8 @@ def analyze_flext_core_violations() -> list[dict[str, str]]:
         "oracle",
         "ldap",
         "singer",
-        "client-a",
-        "client-b",
+        "flext",
+        "flext",
     ]
 
     violations: list[dict[str, str]] = []
@@ -115,7 +115,7 @@ def _check_imports(py_file: Path, content: str) -> list[dict[str, str]]:
 def _is_violation_import(import_name: str) -> bool:
     """Check if import is a violation."""
     return any(
-        p in import_name.lower() for p in ["meltano", "oracle", "client-a", "client-b"]
+        p in import_name.lower() for p in ["meltano", "oracle", "flext", "flext"]
     )
 
 

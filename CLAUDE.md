@@ -310,7 +310,7 @@ All routine maintenance runs via Make; no ad-hoc script invocations as the prima
 - Manual stubs belong in `typings/`.
 - Generated stubs belong in `typings/generated/`.
 - Generated stubs are for third-party dependencies only.
-- Never generate stubs for internal FLEXT modules (`flext_*`, `client-a_*`, `client-b_*`).
+- Never generate stubs for internal FLEXT modules (`flext_*`, `flext_*`, `flext_*`).
 - Internal missing imports are source/type architecture defects and must be fixed in code, not stubbed.
 
 ## Workspace Virtual Environment

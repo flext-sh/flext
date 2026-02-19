@@ -94,12 +94,12 @@ generate_baseline() {
 		fi
 	done
 
-	# Process client-a-oud-mig if exists
-	if [[ -d "${FLEXT_DIR}/client-a-oud-mig" ]]; then
+	# Process flext-oud-mig if exists
+	if [[ -d "${FLEXT_DIR}/flext-oud-mig" ]]; then
 		local count
-		count=$(get_dead_code_count "${FLEXT_DIR}/client-a-oud-mig")
-		echo "client-a-oud-mig:${count}" >>"$BASELINE_FILE"
-		log_success "client-a-oud-mig: ${count}"
+		count=$(get_dead_code_count "${FLEXT_DIR}/flext-oud-mig")
+		echo "flext-oud-mig:${count}" >>"$BASELINE_FILE"
+		log_success "flext-oud-mig: ${count}"
 		total=$((total + count))
 	fi
 

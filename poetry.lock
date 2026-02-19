@@ -2550,7 +2550,7 @@ files = []
 develop = true
 
 [package.dependencies]
-prompt-toolkit = ">=3.0.52,<4"
+prompt-toolkit = ">=3.0.52,<4.0.0"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
 
@@ -2569,25 +2569,23 @@ files = []
 develop = true
 
 [package.dependencies]
-cbor2 = ">=5.7"
-fastapi = ">=0.116"
-flext-core = {path = ".flext-deps/flext-core"}
-flext-web = {path = ".flext-deps/flext-web"}
-gql = ">=4"
+cbor2 = ">=5.7.0"
+fastapi = ">=0.116.0"
+gql = ">=4.0.0"
 httpx = ">=0.28.1"
 msgpack = ">=1.1.2"
 orjson = ">=3.11.3"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
 pydantic-settings = ">=2.10.1"
-typing-extensions = ">=4.15"
+typing-extensions = ">=4.15.0"
 websockets = ">=15.0.1"
 
 [package.extras]
-dev = ["autoflake (>=2.3.1)", "black (>=25.1)", "codespell (>=2.3)", "deptry (>=0.23)", "isort (>=6.0.1)", "pre-commit (>=4.0.1)", "pylint (>=3.3)", "pyupgrade (>=3.19)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
-security = ["bandit (>=1.8)", "pip-audit (>=2.7.3)"]
-test = ["factory-boy (>=3.3.1)", "faker (>=37.4)", "hypothesis (>=6.125)", "pytest (>=8.4)", "pytest-asyncio (>=0.25)", "pytest-benchmark (>=5.1)", "pytest-clarity (>=1.0.1)", "pytest-cov (>=6.2)", "pytest-deadfixtures (>=2.2.1)", "pytest-env (>=1.1.5)", "pytest-mock (>=3.14)", "pytest-randomly (>=3.16)", "pytest-sugar (>=1)", "pytest-timeout (>=2.4)", "pytest-xdist (>=3.8)"]
-typings = ["django-stubs (>=5.2.2)", "types-ldap3 (>=2.9.13.20250622)", "types-protobuf (>=6.30.2.20250703)", "types-psutil (>=7)", "types-psycopg2 (>=2.9.21.20250718)", "types-python-dateutil (>=2.9)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9)", "types-toml (>=0.10.8.20240310)"]
+dev = ["autoflake (>=2.3.1)", "black (>=25.1.0)", "codespell (>=2.3.0)", "deptry (>=0.23.0)", "isort (>=6.0.1)", "pre-commit (>=4.0.1)", "pylint (>=3.3.0)", "pyupgrade (>=3.19.0)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
+security = ["bandit (>=1.8.0)", "pip-audit (>=2.7.3)"]
+test = ["factory-boy (>=3.3.1)", "faker (>=37.4.0)", "hypothesis (>=6.125.0)", "pytest (>=8.4.0)", "pytest-asyncio (>=0.25.0)", "pytest-benchmark (>=5.1.0)", "pytest-clarity (>=1.0.1)", "pytest-cov (>=6.2.0)", "pytest-deadfixtures (>=2.2.1)", "pytest-env (>=1.1.5)", "pytest-mock (>=3.14.0)", "pytest-randomly (>=3.16.0)", "pytest-sugar (>=1.0.0)", "pytest-timeout (>=2.4.0)", "pytest-xdist (>=3.8.0)"]
+typings = ["django-stubs (>=5.2.2)", "types-ldap3 (>=2.9.13.20250622)", "types-protobuf (>=6.30.2.20250703)", "types-psutil (>=7.0.0)", "types-psycopg2 (>=2.9.21.20250718)", "types-python-dateutil (>=2.9.0)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6.0)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9.0)", "types-toml (>=0.10.8.20240310)"]
 
 [package.source]
 type = "directory"
@@ -2604,18 +2602,18 @@ files = []
 develop = true
 
 [package.dependencies]
-bcrypt = ">=4.3"
+bcrypt = ">=4.3.0"
 cryptography = ">=45.0.5"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
 pydantic-settings = ">=2.10.1"
-pyjwt = ">=2.9"
+pyjwt = ">=2.9.0"
 
 [package.extras]
-dev = ["autoflake (>=2.3.1)", "black (>=25.1)", "codespell (>=2.3)", "deptry (>=0.23)", "isort (>=6.0.1)", "pre-commit (>=4.0.1)", "pylint (>=3.3)", "pyupgrade (>=3.19)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
-security = ["bandit (>=1.8)", "pip-audit (>=2.7.3)"]
-test = ["factory-boy (>=3.3.1)", "faker (>=37.4)", "hypothesis (>=6.125)", "pytest (>=8.4)", "pytest-benchmark (>=5.1)", "pytest-clarity (>=1.0.1)", "pytest-cov (>=6.2)", "pytest-deadfixtures (>=2.2.1)", "pytest-env (>=1.1.5)", "pytest-httpx (>=0.35)", "pytest-mock (>=3.14)", "pytest-randomly (>=3.16)", "pytest-sugar (>=1)", "pytest-timeout (>=2.4)", "pytest-xdist (>=3.8)"]
-typings = ["django-stubs (>=5.2.2)", "types-ldap3 (>=2.9.13.20250622)", "types-passlib (>=1.7.7)", "types-protobuf (>=6.30.2.20250703)", "types-psutil (>=7)", "types-psycopg2 (>=2.9.21.20250718)", "types-pyjwt (>=1.7.1)", "types-python-dateutil (>=2.9)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9)", "types-toml (>=0.10.8.20240310)"]
+dev = ["autoflake (>=2.3.1)", "black (>=25.1.0)", "codespell (>=2.3.0)", "deptry (>=0.23.0)", "isort (>=6.0.1)", "pre-commit (>=4.0.1)", "pylint (>=3.3.0)", "pyupgrade (>=3.19.0)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
+security = ["bandit (>=1.8.0)", "pip-audit (>=2.7.3)"]
+test = ["factory-boy (>=3.3.1)", "faker (>=37.4.0)", "hypothesis (>=6.125.0)", "pytest (>=8.4.0)", "pytest-benchmark (>=5.1.0)", "pytest-clarity (>=1.0.1)", "pytest-cov (>=6.2.0)", "pytest-deadfixtures (>=2.2.1)", "pytest-env (>=1.1.5)", "pytest-httpx (>=0.35.0)", "pytest-mock (>=3.14.0)", "pytest-randomly (>=3.16.0)", "pytest-sugar (>=1.0.0)", "pytest-timeout (>=2.4.0)", "pytest-xdist (>=3.8.0)"]
+typings = ["django-stubs (>=5.2.2)", "types-ldap3 (>=2.9.13.20250622)", "types-passlib (>=1.7.7)", "types-protobuf (>=6.30.2.20250703)", "types-psutil (>=7.0.0)", "types-psycopg2 (>=2.9.21.20250718)", "types-pyjwt (>=1.7.1)", "types-python-dateutil (>=2.9.0)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6.0)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9.0)", "types-toml (>=0.10.8.20240310)"]
 
 [package.source]
 type = "directory"
@@ -2632,21 +2630,24 @@ files = []
 develop = true
 
 [package.dependencies]
-attrs = ">=25.4,<26"
-cachetools = ">=5.3"
+attrs = ">=25.4.0,<26.0.0"
+cachetools = ">=5.3.0"
 click = ">=8.2.1"
-pluggy = ">=1.3"
-prompt-toolkit = ">=3.0.52,<4"
+pluggy = ">=1.3.0"
+prompt-toolkit = ">=3.0.52,<4.0.0"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
 pydantic-settings = ">=2.10.1"
-pyyaml = ">=6"
-rich = ">=14.2,<15"
-tabulate = ">=0.9"
-typer = ">=0.12"
+pyyaml = ">=6.0"
+rich = ">=14.2.0,<15.0.0"
+tabulate = ">=0.9.0"
+typer = ">=0.12.0"
 
 [package.extras]
-dev = ["autoflake (>=2.3.1)", "bandit (>=1.8)", "black (>=25.1)", "codespell (>=2.3)", "deptry (>=0.23)", "django-stubs (>=5.2.2)", "factory-boy (>=3.3.1)", "faker (>=37.4)", "hypothesis (>=6.125)", "isort (>=6.0.1)", "pip-audit (>=2.7.3)", "pre-commit (>=4.0.1)", "psutil (>=6)", "pylint (>=3.3)", "pytest (>=8.4)", "pytest-benchmark (>=5.1)", "pytest-clarity (>=1.0.1)", "pytest-cov (>=6.2)", "pytest-deadfixtures (>=2.2.1)", "pytest-env (>=1.1.5)", "pytest-mock (>=3.14)", "pytest-randomly (>=3.16)", "pytest-sugar (>=1)", "pytest-timeout (>=2.4)", "pytest-xdist (>=3.8)", "pyupgrade (>=3.19)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "types-ldap3 (>=2.9.13.20250622)", "types-protobuf (>=6.30.2.20250703)", "types-psutil (>=7)", "types-psycopg2 (>=2.9.21.20250718)", "types-python-dateutil (>=2.9)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9)", "types-tabulate (>=0.9.0.20241207)", "types-toml (>=0.10.8.20240310)", "vulture (>=2.13)"]
+dev = ["autoflake (>=2.3.1)", "black (>=25.1.0)", "codespell (>=2.3.0)", "deptry (>=0.23.0)", "isort (>=6.0.1)", "pre-commit (>=4.0.1)", "pylint (>=3.3.0)", "pyupgrade (>=3.19.0)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
+security = ["bandit (>=1.8.0)", "pip-audit (>=2.7.3)"]
+test = ["factory-boy (>=3.3.1)", "faker (>=37.4.0)", "hypothesis (>=6.125.0)", "psutil (>=6.0.0)", "pytest (>=8.4.0)", "pytest-benchmark (>=5.1.0)", "pytest-clarity (>=1.0.1)", "pytest-cov (>=6.2.0)", "pytest-deadfixtures (>=2.2.1)", "pytest-env (>=1.1.5)", "pytest-mock (>=3.14.0)", "pytest-randomly (>=3.16.0)", "pytest-sugar (>=1.0.0)", "pytest-timeout (>=2.4.0)", "pytest-xdist (>=3.8.0)"]
+typings = ["django-stubs (>=5.2.2)", "types-ldap3 (>=2.9.13.20250622)", "types-protobuf (>=6.30.2.20250703)", "types-psutil (>=7.0.0)", "types-psycopg2 (>=2.9.21.20250718)", "types-python-dateutil (>=2.9.0)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6.0)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9.0)", "types-tabulate (>=0.9.0.20241207)", "types-toml (>=0.10.8.20240310)"]
 
 [package.source]
 type = "directory"
@@ -2663,26 +2664,29 @@ files = []
 develop = true
 
 [package.dependencies]
-attrs = ">=25.4,<26"
-beartype = ">=0.19"
-cachetools = ">=5.3"
-dependency-injector = ">=4.41"
-docker = ">=7.1,<8"
-limits = ">=3.6"
+attrs = ">=25.4.0,<26.0.0"
+beartype = ">=0.19.0"
+cachetools = ">=5.3.0"
+dependency-injector = ">=4.41.0"
+docker = ">=7.1.0,<8.0.0"
+limits = ">=3.6.0"
 orjson = ">=3.11.3"
-pybreaker = ">=0.8"
+pybreaker = ">=0.8.0"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
 pydantic-settings = ">=2.10.1"
-python-dotenv = ">=1"
-python-on-whales = ">=0.79,<0.80"
+python-dotenv = ">=1.0.0"
+python-on-whales = ">=0.79.0,<0.80.0"
 pyyaml = ">=6.0.2"
-returns = ">=0.26"
-structlog = ">=25.4"
-wrapt = ">=1.17,<2"
+returns = ">=0.26.0"
+structlog = ">=25.4.0"
+wrapt = ">=1.17.0,<2.0.0"
 
 [package.extras]
-dev = ["autoflake (>=2.3.1)", "bandit (>=1.8)", "beartype (>=0.19)", "black (>=25.1)", "codespell (>=2.3)", "deptry (>=0.23)", "detect-secrets (>=1.5)", "django-stubs (>=5.2.2)", "factory-boy (>=3.3.1)", "faker (>=37.4)", "hypothesis (>=6.125)", "interrogate (>=1.7)", "isort (>=6.0.1)", "mypy (>=1.18.2)", "pip-audit (>=2.7.3)", "pre-commit (>=4.0.1)", "pylint (>=3.3)", "pytest (>=8.4)", "pytest-benchmark (>=5.1)", "pytest-clarity (>=1.0.1)", "pytest-cov (>=6.2)", "pytest-deadfixtures (>=2.2.1)", "pytest-env (>=1.1.5)", "pytest-mock (>=3.14)", "pytest-randomly (>=3.16)", "pytest-sugar (>=1)", "pytest-timeout (>=2.4)", "pytest-xdist (>=3.8)", "pyupgrade (>=3.19)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "types-cachetools (>=5.3)", "types-docker (>=7.1)", "types-ldap3 (>=2.9.13.20250622)", "types-protobuf (>=6.30.2.20250703)", "types-psutil (>=7)", "types-psycopg2 (>=2.9.21.20250718)", "types-python-dateutil (>=2.9)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9)", "types-toml (>=0.10.8.20240310)", "uv (>=0.9.6)", "vulture (>=2.13)"]
+dev = ["autoflake (>=2.3.1)", "black (>=25.1.0)", "codespell (>=2.3.0)", "deptry (>=0.23.0)", "detect-secrets (>=1.5.0)", "interrogate (>=1.7.0)", "isort (>=6.0.1)", "mypy (>=1.18.2)", "pre-commit (>=4.0.1)", "pylint (>=3.3.0)", "pyupgrade (>=3.19.0)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
+security = ["bandit (>=1.8.0)", "pip-audit (>=2.7.3)", "uv (>=0.9.6)"]
+test = ["beartype (>=0.19.0)", "factory-boy (>=3.3.1)", "faker (>=37.4.0)", "hypothesis (>=6.125.0)", "pytest (>=8.4.0)", "pytest-benchmark (>=5.1.0)", "pytest-clarity (>=1.0.1)", "pytest-cov (>=6.2.0)", "pytest-deadfixtures (>=2.2.1)", "pytest-env (>=1.1.5)", "pytest-mock (>=3.14.0)", "pytest-randomly (>=3.16.0)", "pytest-sugar (>=1.0.0)", "pytest-timeout (>=2.4.0)", "pytest-xdist (>=3.8.0)"]
+typings = ["django-stubs (>=5.2.2)", "types-cachetools (>=5.3.0)", "types-docker (>=7.1.0)", "types-ldap3 (>=2.9.13.20250622)", "types-protobuf (>=6.30.2.20250703)", "types-psutil (>=7.0.0)", "types-psycopg2 (>=2.9.21.20250718)", "types-python-dateutil (>=2.9.0)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6.0)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9.0)", "types-toml (>=0.10.8.20240310)"]
 
 [package.source]
 type = "directory"
@@ -2690,7 +2694,7 @@ url = "flext-core"
 
 [[package]]
 name = "flext-db-oracle"
-version = "0.10.0-dev"
+version = "0.9.0"
 description = "FLEXT DB Oracle - Enterprise Oracle Database Operations Library"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2699,7 +2703,7 @@ files = []
 develop = true
 
 [package.dependencies]
-oracledb = ">=2"
+oracledb = ">=2.0.0"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
 
@@ -2755,7 +2759,7 @@ develop = true
 
 [package.dependencies]
 agate = ">=1.7"
-dbt-common = ">=1.27"
+dbt-common = ">=1.27.0"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
 
@@ -2815,7 +2819,7 @@ url = "flext-grpc"
 
 [[package]]
 name = "flext-ldap"
-version = "0.10.0-dev"
+version = "0.9.0"
 description = "Enterprise LDAP Operations Library for FLEXT Framework"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2824,13 +2828,13 @@ files = []
 develop = true
 
 [package.dependencies]
-beartype = ">=0.19"
+beartype = ">=0.19.0"
 cryptography = ">=45.0.5"
-ldap3 = ">=2.9"
+ldap3 = ">=2.9.0"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
-pydantic-settings = ">=2.11"
-structlog = ">=25.4"
+pydantic-settings = ">=2.11.0"
+structlog = ">=25.4.0"
 
 [package.source]
 type = "directory"
@@ -2847,13 +2851,13 @@ files = []
 develop = true
 
 [package.dependencies]
-beartype = ">=0.22.6,<0.23"
-colorlog = ">=6.9"
+beartype = ">=0.22.6,<0.23.0"
+colorlog = ">=6.9.0"
 ldap3 = ">=2.9.1"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
-pydantic-settings = ">=2.11"
-structlog = ">=25.4"
+pydantic-settings = ">=2.11.0"
+structlog = ">=25.4.0"
 
 [package.source]
 type = "directory"
@@ -2861,7 +2865,7 @@ url = "flext-ldif"
 
 [[package]]
 name = "flext-meltano"
-version = "0.10.0-dev"
+version = "0.9.0"
 description = "FLEXT Meltano - Enterprise Data Integration Platform"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2909,27 +2913,27 @@ files = []
 develop = true
 
 [package.dependencies]
-opentelemetry-api = ">=1.39.1,<2"
-opentelemetry-exporter-otlp-proto-grpc = ">=1.39.1,<2"
+opentelemetry-api = ">=1.39.1,<2.0.0"
+opentelemetry-exporter-otlp-proto-grpc = ">=1.39.1,<2.0.0"
 opentelemetry-exporter-prometheus = ">=0.60b1,<0.61"
-opentelemetry-sdk = ">=1.39.1,<2"
-prometheus-client = ">=0.23"
-psutil = ">=6.1"
+opentelemetry-sdk = ">=1.39.1,<2.0.0"
+prometheus-client = ">=0.23.0"
+psutil = ">=6.1.0"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
 pydantic-settings = ">=2.10.1"
-rich = ">=14.2,<15"
-structlog = ">=25.4"
-typer = ">=0.15"
+rich = ">=14.2.0,<15.0.0"
+structlog = ">=25.4.0"
+typer = ">=0.15.0"
 
 [package.extras]
-dev = ["autoflake (>=2.3.1)", "black (>=25.1)", "codespell (>=2.3)", "deptry (>=0.23)", "isort (>=6.0.1)", "pre-commit (>=4.0.1)", "pylint (>=3.3)", "pyupgrade (>=3.19)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
-fastapi = ["fastapi (>=0.115)"]
-flask = ["flask (>=3)"]
-security = ["bandit (>=1.8)", "pip-audit (>=2.7.3)"]
-sqlalchemy = ["sqlalchemy (>=2)"]
-test = ["factory-boy (>=3.3.1)", "faker (>=37.4)", "hypothesis (>=6.125)", "pytest (>=8.4)", "pytest-benchmark (>=5.1)", "pytest-clarity (>=1.0.1)", "pytest-cov (>=6.2)", "pytest-deadfixtures (>=2.2.1)", "pytest-env (>=1.1.5)", "pytest-mock (>=3.14)", "pytest-randomly (>=3.16)", "pytest-sugar (>=1)", "pytest-timeout (>=2.4)", "pytest-xdist (>=3.8)"]
-typings = ["django-stubs (>=5.2.2)", "types-ldap3 (>=2.9.13.20250622)", "types-protobuf (>=6.30.2.20250703)", "types-psutil (>=7)", "types-psycopg2 (>=2.9.21.20250718)", "types-python-dateutil (>=2.9)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9)", "types-toml (>=0.10.8.20240310)"]
+dev = ["autoflake (>=2.3.1)", "black (>=25.1.0)", "codespell (>=2.3.0)", "deptry (>=0.23.0)", "isort (>=6.0.1)", "pre-commit (>=4.0.1)", "pylint (>=3.3.0)", "pyupgrade (>=3.19.0)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
+fastapi = ["fastapi (>=0.115.0)"]
+flask = ["flask (>=3.0.0)"]
+security = ["bandit (>=1.8.0)", "pip-audit (>=2.7.3)"]
+sqlalchemy = ["sqlalchemy (>=2.0.0)"]
+test = ["factory-boy (>=3.3.1)", "faker (>=37.4.0)", "hypothesis (>=6.125.0)", "pytest (>=8.4.0)", "pytest-benchmark (>=5.1.0)", "pytest-clarity (>=1.0.1)", "pytest-cov (>=6.2.0)", "pytest-deadfixtures (>=2.2.1)", "pytest-env (>=1.1.5)", "pytest-mock (>=3.14.0)", "pytest-randomly (>=3.16.0)", "pytest-sugar (>=1.0.0)", "pytest-timeout (>=2.4.0)", "pytest-xdist (>=3.8.0)"]
+typings = ["django-stubs (>=5.2.2)", "types-ldap3 (>=2.9.13.20250622)", "types-protobuf (>=6.30.2.20250703)", "types-psutil (>=7.0.0)", "types-psycopg2 (>=2.9.21.20250718)", "types-python-dateutil (>=2.9.0)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6.0)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9.0)", "types-toml (>=0.10.8.20240310)"]
 
 [package.source]
 type = "directory"
@@ -2947,14 +2951,14 @@ develop = true
 
 [package.dependencies]
 httpx = ">=0.28.1"
-meltano = {version = ">=3", extras = ["edk"]}
+meltano = {version = ">=3.0.0", extras = ["edk"]}
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
-pydantic-settings = ">=2.11"
-requests = ">=2.31"
+pydantic-settings = ">=2.11.0"
+requests = ">=2.31.0"
 tenacity = ">=9.1.2"
-typer = ">=0.12"
-urllib3 = ">=2"
+typer = ">=0.12.0"
+urllib3 = ">=2.0.0"
 
 [package.source]
 type = "directory"
@@ -2962,7 +2966,7 @@ url = "flext-oracle-oic"
 
 [[package]]
 name = "flext-oracle-wms"
-version = "0.10.0-dev"
+version = "0.9.0"
 description = "Enterprise Oracle WMS client library for FLEXT data integration platform"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2973,7 +2977,7 @@ develop = true
 [package.dependencies]
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
-pydantic-settings = ">=2.11"
+pydantic-settings = ">=2.11.0"
 python-dotenv = ">=1.1.1"
 
 [package.source]
@@ -3020,25 +3024,25 @@ files = []
 develop = true
 
 [package.dependencies]
-click = ">=8.1"
-fastapi = ">=0.115"
-fastmcp = ">=2.14.2,<3"
-httpx = ">=0.28"
-libcst = ">=1.8.6,<2"
+click = ">=8.1.0"
+fastapi = ">=0.115.0"
+fastmcp = ">=2.14.2,<3.0.0"
+httpx = ">=0.28.0"
+libcst = ">=1.8.6,<2.0.0"
 mypy = ">=1.18.2"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
-pydantic-settings = ">=2.11"
+pydantic-settings = ">=2.11.0"
 pyright = ">=1.1.406"
-pyyaml = ">=6.0.3,<7"
-referencing = ">=0.28.4,<0.37"
-rich = ">=14.2,<15"
+pyyaml = ">=6.0.3,<7.0.0"
+referencing = ">=0.28.4,<0.37.0"
+rich = ">=14.2.0,<15.0.0"
 typer = ">=0.12.3"
-uvicorn = ">=0.30"
-wrapt = ">=1.17,<2"
+uvicorn = ">=0.30.0"
+wrapt = ">=1.17.0,<2.0.0"
 
 [package.extras]
-tools = ["bandit (>=1.8)", "black (>=25.1)", "complexipy (>=4.0.2)", "coverage (>=7)", "isort (>=6.0.1)", "mypy (>=1.18.2)", "pylint (>=3.3)", "pytest (>=8.4)", "radon (>=6.0.1)", "refurb (>=2)", "rope (>=1.11)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
+tools = ["bandit (>=1.8.0)", "black (>=25.1.0)", "complexipy (>=4.0.2)", "coverage (>=7.0.0)", "isort (>=6.0.1)", "mypy (>=1.18.2)", "pylint (>=3.3.0)", "pytest (>=8.4.0)", "radon (>=6.0.1)", "refurb (>=2.0.0)", "rope (>=1.11.0)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
 
 [package.source]
 type = "directory"
@@ -3064,7 +3068,7 @@ url = "flext-tap-ldap"
 
 [[package]]
 name = "flext-tap-ldif"
-version = "0.10.0-dev"
+version = "0.9.0"
 description = "FLEXT Tap LDIF - Singer Tap for LDIF file format data extraction"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -3095,17 +3099,17 @@ files = []
 develop = true
 
 [package.dependencies]
-fastapi = ">=0.119"
-flext-core = ">=0.8"
-flext-db-oracle = ">=0.9"
-flext-meltano = ">=0.9"
-flext-observability = ">=0.9"
-prometheus-client = ">=0.23"
+fastapi = ">=0.119.0"
+flext-core = ">=0.8.0"
+flext-db-oracle = ">=0.9.0"
+flext-meltano = ">=0.9.0"
+flext-observability = ">=0.9.0"
+prometheus-client = ">=0.23.0"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
-setuptools = ">=80.9"
-singer-sdk = ">=0.52"
-uvicorn = ">=0.38"
+setuptools = ">=80.9.0"
+singer-sdk = ">=0.52.0"
+uvicorn = ">=0.38.0"
 
 [package.source]
 type = "directory"
@@ -3125,7 +3129,7 @@ develop = true
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
 pydantic-settings = ">=2.10.1"
-requests = ">=2.31"
+requests = ">=2.31.0"
 
 [package.source]
 type = "directory"
@@ -3145,7 +3149,7 @@ develop = true
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
 pydantic-settings = ">=2.10.1"
-requests = ">=2.31"
+requests = ">=2.31.0"
 
 [package.source]
 type = "directory"
@@ -3173,7 +3177,7 @@ url = "flext-target-ldap"
 
 [[package]]
 name = "flext-target-ldif"
-version = "0.10.0-dev"
+version = "0.9.0"
 description = "FLEXT Target LDIF - Singer Target for LDAP Data Interchange Format (LDIF) output"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -3196,25 +3200,22 @@ url = "flext-target-ldif"
 
 [[package]]
 name = "flext-target-oracle"
-version = "0.10.0-dev"
-description = "FLEXT Target Oracle - Singer Target for Oracle Database Data Loading"
+version = "1.0.0"
+description = "Advanced Singer Target for Oracle Database with SQLAlchemy 2.0+ and oracledb - FLEXT ETL Framework"
 optional = false
-python-versions = ">=3.13,<3.14"
+python-versions = ">=3.10,<4.0"
 groups = ["main"]
 files = []
 develop = true
 
 [package.dependencies]
-click = ">=8"
-flext-cli = "*"
-flext-core = "*"
-flext-db-oracle = "*"
-flext-meltano = "*"
-pydantic = ">=2.12.3"
-pydantic-core = ">=2.41.4"
-pydantic-settings = ">=2.10.1"
-pyyaml = ">=6.0.2"
-rich = ">=14.2,<15"
+oracledb = ">=2.5.0"
+singer-sdk = ">=0.47.4"
+sqlalchemy = ">=2.0.0"
+
+[package.extras]
+all = ["prometheus-client (>=0.21.0)", "structlog (>=24.4.0)"]
+monitoring = ["prometheus-client (>=0.21.0)", "structlog (>=24.4.0)"]
 
 [package.source]
 type = "directory"
@@ -3241,9 +3242,9 @@ flext-oracle-oic = "*"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
 pydantic-settings = ">=2.10.1"
-requests = ">=2.31"
+requests = ">=2.31.0"
 singer-sdk = ">=0.44.1"
-urllib3 = ">=2.3"
+urllib3 = ">=2.3.0"
 
 [package.source]
 type = "directory"
@@ -3286,19 +3287,19 @@ files = []
 develop = true
 
 [package.dependencies]
-fastapi = ">=0.119"
-flask = ">=3"
+fastapi = ">=0.119.0"
+flask = ">=3.0.0"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
-pydantic-settings = ">=2.11"
-requests = ">=2.31"
-uvicorn = ">=0.38"
+pydantic-settings = ">=2.11.0"
+requests = ">=2.31.0"
+uvicorn = ">=0.38.0"
 
 [package.extras]
-dev = ["autoflake (>=2.3.1)", "black (>=25.1)", "codespell (>=2.3)", "isort (>=6.0.1)", "pre-commit (>=4.0.1)", "pylint (>=3.3)", "pyupgrade (>=3.19)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
-security = ["bandit (>=1.8)", "pip-audit (>=2.7.3)"]
-test = ["factory-boy (>=3.3.1)", "faker (>=37.4)", "hypothesis (>=6.125)", "pytest (>=8.4)", "pytest-benchmark (>=5.1)", "pytest-clarity (>=1.0.1)", "pytest-cov (>=6.2)", "pytest-deadfixtures (>=2.2.1)", "pytest-env (>=1.1.5)", "pytest-mock (>=3.14)", "pytest-randomly (>=3.16)", "pytest-sugar (>=1)", "pytest-timeout (>=2.4)", "pytest-xdist (>=3.8)"]
-typings = ["types-psutil (>=7)", "types-python-dateutil (>=2.9)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9)", "types-toml (>=0.10.8.20240310)"]
+dev = ["autoflake (>=2.3.1)", "black (>=25.1.0)", "codespell (>=2.3.0)", "isort (>=6.0.1)", "pre-commit (>=4.0.1)", "pylint (>=3.3.0)", "pyupgrade (>=3.19.0)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
+security = ["bandit (>=1.8.0)", "pip-audit (>=2.7.3)"]
+test = ["factory-boy (>=3.3.1)", "faker (>=37.4.0)", "hypothesis (>=6.125.0)", "pytest (>=8.4.0)", "pytest-benchmark (>=5.1.0)", "pytest-clarity (>=1.0.1)", "pytest-cov (>=6.2.0)", "pytest-deadfixtures (>=2.2.1)", "pytest-env (>=1.1.5)", "pytest-mock (>=3.14.0)", "pytest-randomly (>=3.16.0)", "pytest-sugar (>=1.0.0)", "pytest-timeout (>=2.4.0)", "pytest-xdist (>=3.8.0)"]
+typings = ["types-psutil (>=7.0.0)", "types-python-dateutil (>=2.9.0)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6.0)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9.0)", "types-toml (>=0.10.8.20240310)"]
 
 [package.source]
 type = "directory"

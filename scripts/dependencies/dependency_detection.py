@@ -22,7 +22,7 @@ from typing import Any
 MYPY_HINT_RE = re.compile(r'note: Hint: "python3 -m pip install ([^"]+)"')
 MYPY_STUB_RE = re.compile(r'Library stubs not installed for "([^"]+)"')
 # Internal FLEXT modules: do not suggest types-* for these (fix in code)
-INTERNAL_PREFIXES = ("flext_", "client-a_", "client-b_")
+INTERNAL_PREFIXES = ("flext_", "flext_", "flext_")
 
 # Default module name -> types-* PyPI package (overridable via dependency_limits.toml)
 DEFAULT_MODULE_TO_TYPES_PACKAGE: dict[str, str] = {

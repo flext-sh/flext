@@ -59,7 +59,7 @@ Para cada componente detalhamos motivação, funcionamento, usos recomendados, a
 
 **Adoções atuais**
 
-- 20 arquivos em 9 projetos (client-a-oud-mig, flext-api, flext-core, flext-ldif, flext-observability, flext-oracle-oic, flext-plugin, client-b-meltano-native, scripts).
+- 20 arquivos em 9 projetos (flext-oud-mig, flext-api, flext-core, flext-ldif, flext-observability, flext-oracle-oic, flext-plugin, flext-meltano-native, scripts).
 
 **Benefícios / decisões**
 

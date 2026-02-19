@@ -131,19 +131,19 @@ setup-grafana: ## Setup Grafana dashboards
 	@echo "$(BLUE)📈 Setting up Grafana...$(NC)"
 	@$(POETRY_RUN) python -m flext_observability.setup grafana
 """,
-        "client-a-oud-mig": """
-# client-a OUD Migration project
-PROJECT_NAME := client-a_oud_mig
-SRC_MODULE := client-a_oud_mig
+        "flext-oud-mig": """
+# FLEXT OUD Migration project
+PROJECT_NAME := flext_oud_mig
+SRC_MODULE := flext_oud_mig
 
-# client-a-specific commands
+# FLEXT-specific commands
 process-ldif: poetry-check ## Process LDIF files
 	@echo "$(BLUE)🔄 Processing LDIF files...$(NC)"
-	@$(POETRY_RUN) python -m client-a_oud_mig.cli process
+	@$(POETRY_RUN) python -m flext_oud_mig.cli process
 
 validate-ldap: poetry-check ## Validate LDAP connection
 	@echo "$(BLUE)🔍 Validating LDAP connection...$(NC)"
-	@$(POETRY_RUN) python -m client-a_oud_mig.cli validate
+	@$(POETRY_RUN) python -m flext_oud_mig.cli validate
 """,
     }
 

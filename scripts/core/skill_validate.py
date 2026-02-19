@@ -194,7 +194,7 @@ def discover_projects(root: Path) -> dict[str, object]:
 
     Returns:
         {"flext": ["flext-core", "flext-api", ...],
-         "external": ["client-a-oud-mig", ...],
+         "external": ["flext-oud-mig", ...],
          "root": "."}
 
     """

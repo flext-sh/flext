@@ -4,7 +4,7 @@
 
 Preserves existing project-specific rules while adding whitelist protection.
 
-Copyright (c) 2025 client-a Telecom. Todos os direitos reservados.
+Copyright (c) 2025 Flext Telecom. Todos os direitos reservados.
 SPDX-License-Identifier: Proprietary
 """
 

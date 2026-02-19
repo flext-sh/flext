@@ -42,7 +42,7 @@ class LayerType(Enum):
     BASE = "base"  # flext-core
     INTERMEDIATE = "intermediate"  # flext-cli, flext-observability, etc
     SPECIFIC = "specific"  # flext-*-oracle, flext-*-ldap, etc
-    APPLICATION = "application"  # client-a-oud-mig, client-b-meltano-native
+    APPLICATION = "application"  # flext-oud-mig, flext-meltano-native
 
 
 @dataclass
@@ -110,7 +110,7 @@ class ArchitectureAnalyzer:
             return LayerType.BASE
 
         # Camada APPLICATION
-        if project_name in {"client-a-oud-mig", "client-b-meltano-native"}:
+        if project_name in {"flext-oud-mig", "flext-meltano-native"}:
             return LayerType.APPLICATION
 
         # Camada INTERMEDIATE
@@ -220,7 +220,7 @@ class ArchitectureAnalyzer:
 
     def _is_flext_import(self, import_name: str) -> bool:
         """Verifica se é um import de projeto FLEXT."""
-        flext_patterns = [r"^flext[_-]", r"^client-a[_-]", r"^client-b[_-]"]
+        flext_patterns = [r"^flext[_-]", r"^flext[_-]", r"^flext[_-]"]
 
         return any(re.match(pattern, import_name) for pattern in flext_patterns)
 
@@ -231,7 +231,7 @@ class ArchitectureAnalyzer:
             "flext_core": "flext-core",
             "flext_cli": "flext-cli",
             "flext_quality": "flext-core",  # flext_quality está em flext-core
-            "client-a_oud_mig": "client-a-oud-mig",
+            "flext_oud_mig": "flext-oud-mig",
             # ... adicionar outros mapeamentos conforme necessário
         }
         project_name = import_mappings.get(import_name)
@@ -289,8 +289,8 @@ class ArchitectureAnalyzer:
                 r"oracle",
                 r"ldap",
                 r"singer",
-                r"client-a",
-                r"client-b",
+                r"flext",
+                r"flext",
             ]
 
             # Se está no flext-core mas tem código específico/concreto
