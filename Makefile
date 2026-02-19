@@ -94,7 +94,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "Core verbs:"
 	$(Q)echo "  setup      Install all projects into workspace .venv, then run validate VALIDATE_SCOPE=workspace"
 	$(Q)echo "  upgrade    Upgrade deps + modernize + dependency report (.reports/dependencies/)"
-	$(Q)echo "  check      Run the 8 lint gates in all projects"
+	$(Q)echo "  check      Run the 6 lint gates in all projects"
 	$(Q)echo "  security   Run all security checks in all projects"
 	$(Q)echo "  format     Run all formatting in all projects"
 	$(Q)echo "  docs       Build docs in all projects"
@@ -109,7 +109,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  FAIL_FAST=1                              Stop on first project failure"
 	$(Q)echo "  FIX=1                                    Auto-fix before validate"
 	$(Q)echo "  PYTEST_ARGS=\"-k expr -x\"               Extra pytest args for test"
-	$(Q)echo "  CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,go,type    Select check gates (default: all)"
+	$(Q)echo "  CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,type    Select check gates (default: all)"
 	$(Q)echo "  VALIDATE_GATES=complexity,docstring      Select validate gates (default: all)"
 	$(Q)echo "  VALIDATE_SCOPE=project|workspace         Validate scope (default: project)"
 	$(Q)echo "  DOCS_PHASE=audit|fix|build|generate|validate|all"
@@ -134,14 +134,15 @@ setup: ## Install all projects into workspace .venv
 	fi
 	$(Q)[ -d ".venv" ] || { echo "Creating .venv with Python 3.13..."; python3.13 -m venv .venv; }
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)echo "Modernizing pyproject.toml files..."; \
 	$(POETRY_ENV) python scripts/dependencies/modernize_pyproject.py --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
-	$(Q)projects=$$(python3 scripts/maintenance/_discover.py --kind submodule --format makefile 2>/dev/null); \
-	total_steps=$$(echo "$$projects" | wc -w); total_steps=$$(( total_steps + 1 )); \
-	echo "Starting workspace setup for $$total_steps item(s) (submodules + root)"; \
+	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
+	echo "Starting workspace setup for $$total_steps item(s) ($(words $(SELECTED_PROJECTS)) projects + root)"; \
 	failed=0; installed=0; step=1; failed_projects=""; \
-	for proj in $$projects; do \
+	for proj in $(SELECTED_PROJECTS); do \
 		if [ -d "$$proj" ] && [ -f "$$proj/pyproject.toml" ]; then \
 			log_file="/tmp/flext-setup-$$proj.log"; \
 			start_ts=$$(date +%s); \
@@ -326,7 +327,7 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 		$(POETRY_ENV) python scripts/dependencies/detect_runtime_dev_deps.py -q --no-fail || true; \
 	fi
 
-check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,go)
+check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
@@ -368,19 +369,6 @@ format: ## Run all formatting in all projects
 	for proj in $(SELECTED_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
 			if $(POETRY_ENV) $(MAKE) -C "$$proj" format -s; then \
-				md_files=$$(find "$$proj" -type f -name '*.md' ! -path "$$proj/.git/*" ! -path "$$proj/.reports/*" ! -path "$$proj/.venv/*" ! -path "$$proj/node_modules/*" ! -path "$$proj/.flext-deps/*" ! -path "$$proj/.mypy_cache/*" ! -path "$$proj/.pytest_cache/*" ! -path "$$proj/.ruff_cache/*" ! -path "$$proj/dist/*" ! -path "$$proj/build/*"); \
-				md_config=""; \
-				if [ -f ".markdownlint.json" ]; then md_config="--config .markdownlint.json"; fi; \
-				if [ -n "$$md_files" ]; then \
-					printf '%s\n' "$$md_files" | xargs -r $(WORKSPACE_VENV)/bin/mdformat; \
-					markdownlint --fix $$md_config $$md_files || true; \
-				fi; \
-				if [ -f "$$proj/go.mod" ]; then \
-					go_files=$$(find "$$proj" -type f -name '*.go' ! -path "$$proj/.git/*"); \
-					if [ -n "$$go_files" ]; then \
-						printf '%s\n' "$$go_files" | xargs -r gofmt -w; \
-					fi; \
-				fi; \
 				echo "✓ $$proj"; \
 			else \
 				echo "✗ $$proj"; \
