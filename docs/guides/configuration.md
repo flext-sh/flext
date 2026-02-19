@@ -1,35 +1,6 @@
 # FLEXT Configuration Guide
 
 
-<!-- TOC START -->
-- [Table of Contents](#table-of-contents)
-- [Overview](#overview)
-- [Configuration Sources](#configuration-sources)
-- [Basic Configuration](#basic-configuration)
-  - [Environment Variables](#environment-variables)
-  - [Configuration Files](#configuration-files)
-  - [Programmatic Configuration](#programmatic-configuration)
-- [Project-Specific Configuration](#project-specific-configuration)
-  - [flext-ldif Configuration](#flext-ldif-configuration)
-  - [flext-api Configuration](#flext-api-configuration)
-  - [flext-auth Configuration](#flext-auth-configuration)
-- [Environment-Specific Configuration](#environment-specific-configuration)
-  - [Development Environment](#development-environment)
-  - [Production Environment](#production-environment)
-- [Configuration Validation](#configuration-validation)
-- [Configuration Inheritance](#configuration-inheritance)
-- [Best Practices](#best-practices)
-  - [1. Use Environment Variables for Secrets](#1-use-environment-variables-for-secrets)
-  - [2. Validate Configuration Early](#2-validate-configuration-early)
-  - [3. Use Configuration Classes](#3-use-configuration-classes)
-  - [4. Document Configuration Options](#4-document-configuration-options)
-- [Troubleshooting](#troubleshooting)
-  - [Common Configuration Issues](#common-configuration-issues)
-  - [Debug Configuration](#debug-configuration)
-- [Examples](#examples)
-  - [Complete Configuration Example](#complete-configuration-example)
-- [Reference](#reference)
-<!-- TOC END -->
 
 ## Table of Contents
 
