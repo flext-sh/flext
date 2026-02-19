@@ -129,7 +129,8 @@ setup: ## Install all projects into workspace .venv
 	$(Q)python3.13 --version >/dev/null 2>&1 || { echo "ERROR: Python 3.13 required"; exit 1; }
 	$(Q)echo "Initializing git submodules..."; \
 	if [ -f .gitmodules ]; then \
-		git submodule update --init 2>&1; \
+		submods=$$(python3 scripts/maintenance/_discover.py --kind submodule --format makefile 2>/dev/null); \
+		for p in $$submods; do git submodule update --init "$$p" 2>&1; done; \
 		echo "Submodules initialized."; \
 	fi
 	$(Q)[ -d ".venv" ] || { echo "Creating .venv with Python 3.13..."; python3.13 -m venv .venv; }
@@ -137,9 +138,9 @@ setup: ## Install all projects into workspace .venv
 	$(Q)echo "Modernizing pyproject.toml files..."; \
 	$(POETRY_ENV) python scripts/dependencies/modernize_pyproject.py --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
-	$(Q)projects=$$(python3 scripts/maintenance/_discover.py --kind all --format makefile 2>/dev/null); \
+	$(Q)projects=$$(python3 scripts/maintenance/_discover.py --kind submodule --format makefile 2>/dev/null); \
 	total_steps=$$(echo "$$projects" | wc -w); total_steps=$$(( total_steps + 1 )); \
-	echo "Starting workspace setup for $$total_steps item(s) (projects + root)"; \
+	echo "Starting workspace setup for $$total_steps item(s) (submodules + root, no client-a/client-b)"; \
 	failed=0; installed=0; step=1; failed_projects=""; \
 	for proj in $$projects; do \
 		if [ -d "$$proj" ] && [ -f "$$proj/pyproject.toml" ]; then \
@@ -390,19 +391,22 @@ docs: ## Run docs pipeline (DOCS_PHASE=audit|fix|build|generate|validate|all)
 	projects_arg="$(PROJECTS)"; \
 	if [ "$(DOCS_PHASE)" = "all" ]; then \
 		phases="audit fix build generate validate"; \
+		all_mode=1; \
 	else \
 		phases="$(DOCS_PHASE)"; \
+		all_mode=0; \
 	fi; \
 	for phase in $$phases; do \
 		echo "Running docs phase=$$phase"; \
 		case "$$phase" in \
-			audit) script="scripts/documentation/audit.py"; extra="" ;; \
+			audit) script="scripts/documentation/audit.py"; extra="--strict 1" ;; \
 			fix) script="scripts/documentation/fix.py"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
 			build) script="scripts/documentation/build.py"; extra="" ;; \
 			generate) script="scripts/documentation/generate.py"; extra="--apply" ;; \
 			validate) script="scripts/documentation/validate.py"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
 			*) echo "ERROR: invalid DOCS_PHASE=$$phase"; exit 2 ;; \
 		esac; \
+		if [ "$$phase" = "fix" ] && [ "$$all_mode" = "1" ]; then extra="--apply"; fi; \
 		cmd="python $$script --root . --output-dir .reports/docs"; \
 		if [ -n "$$project_arg" ]; then cmd="$$cmd --project $$project_arg"; fi; \
 		if [ -n "$$projects_arg" ]; then cmd="$$cmd --projects '$$projects_arg'"; fi; \
