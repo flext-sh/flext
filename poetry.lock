@@ -2817,6 +2817,8 @@ develop = true
 [package.dependencies]
 cbor2 = ">=5.7"
 fastapi = ">=0.116"
+flext-core = {path = ".flext-deps/flext-core"}
+flext-web = {path = ".flext-deps/flext-web"}
 gql = ">=4"
 httpx = ">=0.28.1"
 msgpack = ">=1.1.2"

@@ -2,7 +2,8 @@
 
 
 
-## Table of Contents
+
+
 
 This guide covers common issues, their solutions, and debugging techniques for FLEXT applications and libraries.
 

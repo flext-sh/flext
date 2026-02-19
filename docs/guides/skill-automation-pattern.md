@@ -2,6 +2,8 @@
 
 
 
+
+
 This guide defines the standard way to create reusable automation skills in this repository.
 
 ## Goal

@@ -107,7 +107,7 @@
       "flext-docs-pointer-policy"
     ],
     "gate_contract": {
-      "max_violations": 50
+      "max_violations": 46
     }
   },
   "automation": {
