@@ -43,19 +43,19 @@ description: Canonical pattern for creating reusable automation skills with scri
 
 1. Define the invariant (policy or quality behavior).
 2. Create `rules.yml` with detection rules (ast-grep, ripgrep, or custom).
-3. Initialize baseline with `python3 scripts/core/skill_validate.py --skill <name> --update-baseline`.
-4. Verify detection with `python3 scripts/core/skill_validate.py --skill <name>`.
+3. Run standardized gate on target project with `make validate PROJECT=<name>`.
+4. Verify with `make validate PROJECT=<name> FIX=1` when autofix is needed.
 5. Update skill SKILL.md and docs with exact command contract.
-6. Run `python3 scripts/core/skill_validate.py --all` to verify integration.
-7. Run `make validate-scripts` and `make check-clean` for workspace-level clean reporting.
+6. Run `make validate PROJECTS="proj-a proj-b"` for integration scope.
+7. Use root `make validate` as the workspace gate entrypoint.
 
 ## Examples
 
 Good:
 
 ```bash
-python3 scripts/core/skill_validate.py --skill flext-strict-typing
-python3 scripts/core/skill_validate.py --all
+make validate PROJECT=flext-core
+make validate PROJECT=flext-core FIX=1
 ```
 
 Why good: reproducible, non-interactive, and tied to artifacts.
@@ -70,8 +70,7 @@ Why bad: no reusable command surface and no persisted evidence.
 
 ## Verification
 
-- `python3 scripts/core/skill_validate.py --list-skills`
-- `python3 scripts/core/skill_validate.py --all`
-- `make validate-scripts`
-- `make check-clean`
+- `make validate PROJECT=<name>`
+- `make validate PROJECT=<name> FIX=1`
+- `make validate PROJECTS="proj-a proj-b"`
 - `rg -n "## Scope|## References|## Rules|## Instructions|## Workflow|## Examples|## Verification" .claude/skills/flext-automation-skill-pattern/SKILL.md`

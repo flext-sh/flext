@@ -66,6 +66,13 @@ Why bad: layer mixing increases maintenance and dependency confusion.
 
 ## Verification
 
+Make gates:
+
+- `make setup PROJECT=<name>` — verify package installation
+- `make check PROJECT=<name>` — quality gates for package changes
+
+File checks:
+
 - `ls -la pkg`
 - `rg -n "pkg/" Makefile scripts/*.sh docs || true`
 - `rg -n "TODO|FIXME" pkg || true`

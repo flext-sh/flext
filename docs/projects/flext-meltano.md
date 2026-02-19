@@ -23,7 +23,7 @@ make setup
 ```bash
 make check         # lint + type-check
 make validate      # lint + type + security + test (blocks noted in README)
-make docs-comprehensive
+make docs
 dbt deps
 dbt run
 dbt docs serve --port 8080
@@ -42,7 +42,7 @@ dbt docs serve --port 8080
 - Plugin development toolkit with scaffolding, dependency resolution, automatic docs, and discovery/validation pipelines.
 - Workflow engine supporting multi-pipeline orchestration, resource pooling, conditional logic, monitoring, and failure recovery.
 - Docker/Kubernetes deployment recipes, Meltano docs generation (`dbt docs generate` + `dbt docs serve`), and instrumentation tasks baked into `make` scripts.
-- Quality automation triggered by `make validate`/`make docs-comprehensive` plus `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` artifacts.
+- Quality automation triggered by `make validate`/`make docs` plus `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` artifacts.
 
 ## Resources
 

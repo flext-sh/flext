@@ -64,6 +64,15 @@ JsonPrimitive = object
 Why bad: overly broad type erases constraints and degrades static analysis.
 
 ## Verification
+
+Make gates:
+
+- `make check PROJECT=flext-core CHECK_GATES=type` — type-check validates type system contracts
+- `make check PROJECT=flext-core` — full lint + type + format + security
+- `make test PROJECT=flext-core` — type contracts exercised by test suite
+
+Pattern checks:
+
 - `rg -n "TypeVar\(|type GeneralValueType|class FlextTypes|JsonPrimitive" flext-core/src/flext_core/typings.py`
 - `rg -n "class FlextResult|type .*=" flext-core/src/flext_core/result.py`
 - `rg -n "T_Settings|BaseSettings" flext-core/src/flext_core/settings.py flext-core/src/flext_core/typings.py`

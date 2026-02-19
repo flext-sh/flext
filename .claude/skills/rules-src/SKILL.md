@@ -63,6 +63,13 @@ Why bad: private/wildcard import makes source behavior fragile and hard to analy
 
 ## Verification
 
+Make gates:
+
+- `make check PROJECT=flext-core` — lint + type gates for import validation
+- `make check PROJECT=flext-core CHECK_GATES=lint,type` — focused import checks
+
+File checks:
+
 - `ls -la src`
 - `rg -n "from flext_core\._|import \*" --glob "**/*.py" src flext-* flext-core/src || true`
 - `rg -n "TODO|FIXME" src || true`

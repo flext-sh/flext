@@ -64,6 +64,13 @@ services:
 Why bad: empty service stubs obscure runtime behavior and break reproducibility.
 
 ## Verification
+
+Make gates:
+
+- `make validate VALIDATE_SCOPE=workspace` — verify script references in docker configs
+
+File checks:
+
 - `ls -la docker`
 - `rg -n "services:|networks:|volumes:" docker/docker-compose*.yml`
 - `rg -n "TODO|FIXME" docker || true`

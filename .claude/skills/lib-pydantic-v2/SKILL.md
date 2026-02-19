@@ -28,7 +28,7 @@ description: Pydantic v2 model, validation, and serialization patterns used acro
 - **Never** use v1 API: `@validator`, `.dict()`, `.json()`, `class Config:`, `from_orm`, `orm_mode`.
 - **Critical violation**: never use `model_rebuild(...)` to patch unresolved annotations.
 - Models must resolve all references at definition time via explicit imports/type aliases and stable declaration order.
-- Use `python3 scripts/core/skill_validate.py --skill lib-pydantic-v2` as enforcement gate. Auto-fix rules are declared in `rules.yml` (`fix_auto: true`, `fix_file: rules/pydantic-v2-fix.yml`) and will be executed by `skill_fix.py` when available.
+- Use `make validate` as enforcement gate (with `PROJECT`/`PROJECTS` selectors). Auto-fix path is `make validate FIX=1`.
 - Use `TypeAdapter` for validating non-model types — never ad-hoc casting with `isinstance` chains.
 - Set `ConfigDict(extra="forbid")` on strict boundary models, `extra="ignore"` on flexible internal models.
 - Use `Field(...)` with explicit `description=` on all public model fields.
@@ -160,11 +160,11 @@ instance = Model.model_validate_json(json_bytes) # from JSON
 5. Use `@model_validator(mode="after")` for cross-field validation
 6. Run `rg "@validator\(" --glob "**/*.py"` to verify no v1 validators
 7. Run `rg "model_rebuild\(" --glob "**/*.py"` and keep zero hits in production and tests
-8. Run pydantic skill automation:
+8. Run standardized validation automation:
 
 ```bash
-python3 scripts/core/skill_validate.py --skill lib-pydantic-v2
-python3 scripts/core/skill_validate.py --skill lib-pydantic-v2 --mode strict
+make validate PROJECT=<name>
+make validate PROJECT=<name> FIX=1
 ```
 
 ## Examples
@@ -275,8 +275,8 @@ rg -n "class Config:" --glob "**/*.py" flext-core/src/
 rg -n "model_rebuild\(" --glob "**/*.py" flext-core/src/ flext-core/tests/ flext-auth/src/ flext-api/src/ flext-cli/src/ flext-grpc/src/ flext-ldif/src/ flext-web/src/
 
 # Skill automation gate
-python3 scripts/core/skill_validate.py --skill lib-pydantic-v2
-python3 scripts/core/skill_validate.py --skill lib-pydantic-v2 --mode strict
+make validate PROJECT=<name>
+make validate PROJECT=<name> FIX=1
 
 # Confirm dependency version
 rg "pydantic>=" flext-core/pyproject.toml

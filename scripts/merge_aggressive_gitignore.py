@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-FLEXT_ROOT = Path("/home/marlonsc/flext")
+FLEXT_ROOT = Path(__file__).resolve().parents[1]
 
 # Core whitelist rules to add
 WHITELIST_HEADER = """# ============================================================================

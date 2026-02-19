@@ -39,16 +39,25 @@ description: Security scripts — secrets management, vault operations, and secu
 3. Ensure the script extends `_base_security_script.py` if applicable.
 4. Test with `python scripts/security/<script>.py --help`.
 5. Verify no secrets leak in output.
+6. Run security gate: `make security PROJECT=<name>` or `make check PROJECT=<name> CHECK_GATES=security`.
 
 ## Examples
 
-Good:
+Good (primary — Make verbs for security gates):
+
+```bash
+make security PROJECT=flext-core                     # dedicated security check
+make check PROJECT=flext-core CHECK_GATES=security   # security via check gate selector
+make check PROJECT=flext-core                        # all 4 gates including security
+```
+
+Good (internal — security audit scripts):
 
 ```bash
 python scripts/security/security_audit.py --output .sisyphus/reports/scripts-security--json--audit-latest.json
 ```
 
-Why good: Structured output, artifact naming, no interactive prompts.
+Why good: Make verbs for standard security gates; artifact naming for detailed audits.
 
 Bad:
 
@@ -59,6 +68,14 @@ echo "$SECRET_KEY" | python decrypt.py
 Why bad: Secrets piped through shell, no structured output.
 
 ## Verification
+
+Make gates (primary):
+
+- `make security PROJECT=flext-core` — run bandit security check
+- `make check PROJECT=flext-core CHECK_GATES=security` — security via gate selector
+- `make check PROJECT=flext-core` — all 4 gates including security
+
+Script-level checks (internal):
 
 - `python -m compileall scripts/security`
 - `python scripts/security/security_audit.py --help`

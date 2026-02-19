@@ -274,15 +274,14 @@ pytest -m "not slow"     # Skip slow tests
 
 ### Coverage Analysis
 
+Coverage thresholds and source directories are configured in each project's `pyproject.toml` under `[tool.coverage]`. Use `make test` which reads these automatically.
+
 ```bash
-# Run with coverage
-pytest --cov=src --cov-report=html
+# Run with coverage (reads [tool.coverage] from pyproject.toml)
+make test
 
-# Coverage with specific threshold
-pytest --cov=src --cov-fail-under=85
-
-# Coverage for specific module
-pytest --cov=src.flext_core --cov-report=html
+# HTML coverage report
+pytest --cov --cov-report=html
 ```
 
 ### Parallel Test Execution

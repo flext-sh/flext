@@ -132,6 +132,14 @@ Why bad: silent defaults can diverge from required O(log n) strategy and warning
 
 ## Verification
 
+Make gates:
+
+- `make check PROJECT=flext-core` — full lint + type + security gates
+- `make check PROJECT=flext-core CHECK_GATES=type` — type-check validates beartype integration
+- `make test PROJECT=flext-core` — runtime checks exercised by test suite
+
+Pattern checks:
+
 - `rg -n "BEARTYPE_CONF|BeartypeConf\(|BeartypeStrategy\.Ologn|claw_is_pep526|warning_cls_on_decorator_exception" flext-core/src/flext_core/_beartype_conf.py`
 - `rg -n "def enable_runtime_checking|beartype_package\(\"flext_core\", conf=conf\)" flext-core/src/flext_core/runtime.py`
 - `rg -n "from flext_core\._beartype_conf import BEARTYPE_CONF|\"BEARTYPE_CONF\"" flext-core/src/flext_core/__init__.py`

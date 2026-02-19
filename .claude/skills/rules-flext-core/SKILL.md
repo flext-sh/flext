@@ -65,6 +65,16 @@ from dependency_injector import providers
 Why bad: bypasses `FlextRuntime`/`FlextContainer` bridge contract.
 
 ## Verification
+
+Make gates (run after any flext-core change):
+
+- `make check PROJECT=flext-core` — lint + format + type + security
+- `make check PROJECT=flext-core CHECK_GATES=type` — type-check only
+- `make validate PROJECT=flext-core` — complexity + docstring gates
+- `make test PROJECT=flext-core` — full test suite
+
+Pattern checks:
+
 - `rg -n "class FlextResult|\.flat_map\(|\.lash\(" flext-core/src/flext_core/result.py`
 - `rg -n "class FlextContainer|def register\(|def get_typed\(" flext-core/src/flext_core/container.py`
 - `rg -n "class FlextRuntime|class DependencyIntegration" flext-core/src/flext_core/runtime.py`

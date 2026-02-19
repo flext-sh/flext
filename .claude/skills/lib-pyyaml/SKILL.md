@@ -7,7 +7,7 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 - Primary YAML-heavy areas:
   - `flext-quality/docs/maintenance/core/config_manager.py`
   - `flext-quality/src/flext_quality/utilities.py`
-  - `flext-quality/docs/maintenance/scripts/audit.py`
+  - `scripts/documentation/audit.py`
   - `flext-cli/src/flext_cli/file_tools.py`
   - `flext-cli/src/flext_cli/settings.py`
   - `flext-cli/src/flext_cli/services/output.py`
@@ -140,6 +140,15 @@ if not isinstance(parsed, dict):
 Why good: validates structure before typed access.
 
 ## Verification
+
+Make gates:
+
+- `make check PROJECT=flext-core` — lint gates catch unsafe yaml usage
+- `make check PROJECT=flext-quality` — yaml-heavy project quality gates
+- `make test PROJECT=flext-cli` — yaml file operations tested
+
+Pattern checks:
+
 - `rg -n "import yaml|yaml\.safe_load\(|yaml\.dump\(|yaml\.safe_dump\(" --glob "**/*.py" flext-quality flext-cli flext-meltano flext-dbt-oracle flext-db-oracle flext-core/tests`
 - `rg -n "yaml\.load\(" --glob "**/*.py" flext-quality flext-cli flext-meltano flext-dbt-oracle flext-db-oracle flext-core`
 - `rg -n "def load_yaml_rules|def read_yaml_file|def write_yaml_file|def load_yaml_config|def validate_yaml_file" flext-quality/src/flext_quality/utilities.py flext-cli/src/flext_cli/file_tools.py flext-meltano/src/flext_meltano/file_managers.py`

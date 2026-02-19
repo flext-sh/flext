@@ -1,11 +1,5 @@
 # =============================================================================
-# FLEXT Workspace Makefile - Auto-Discovery & Orchestration
-# =============================================================================
-# Usage: make [target] [VERBOSE=1] [PROJECT=name]
-#
-# Project Discovery:
-#   - FLEXT projects: flext-* in .gitmodules + pyproject.toml
-#   - External projects: pyproject.toml + uses flext-core + NOT in .gitmodules
+# FLEXT Workspace Makefile - Simple Verbs Only
 # =============================================================================
 
 SHELL := /usr/bin/bash
@@ -13,16 +7,18 @@ SHELL := /usr/bin/bash
 
 WORKSPACE_VENV := $(CURDIR)/.venv
 POETRY_ENV := VIRTUAL_ENV=$(WORKSPACE_VENV) PATH=$(WORKSPACE_VENV)/bin:$$PATH POETRY_VIRTUALENVS_CREATE=false POETRY_VIRTUALENVS_IN_PROJECT=false
+PYTEST_ARGS ?=
+VALIDATE_SCOPE ?= project
+DOCS_PHASE ?= all
+FAIL_FAST ?=
+JOBS ?=
+CHECK_GATES ?=
+VALIDATE_GATES ?=
 
-# === SILENT MODE ===
 Q := @
 ifdef VERBOSE
 Q :=
 endif
-
-# =============================================================================
-# AUTO-DISCOVERY
-# =============================================================================
 
 # Discover flext-* submodules from .gitmodules that have pyproject.toml
 FLEXT_PROJECTS := $(shell if [ -f .gitmodules ]; then \
@@ -40,141 +36,332 @@ EXTERNAL_PROJECTS := $(shell for dir in */; do \
 	if grep -qE "flext-core|flext_core" "$$dir/pyproject.toml"; then echo "$$name"; fi; \
 	done | tr '\n' ' ')
 
-# All Python projects
 ALL_PROJECTS := $(FLEXT_PROJECTS) $(EXTERNAL_PROJECTS)
+SELECTED_PROJECTS := $(strip $(if $(PROJECT),$(PROJECT),$(if $(PROJECTS),$(PROJECTS),$(ALL_PROJECTS))))
 
-# Project categories (for grouping)
-CORE_PROJECTS := $(filter flext-core flext-cli flext-ldif flext-ldap,$(ALL_PROJECTS))
-TAP_PROJECTS := $(filter flext-tap-%,$(ALL_PROJECTS))
-TARGET_PROJECTS := $(filter flext-target-%,$(ALL_PROJECTS))
-DBT_PROJECTS := $(filter flext-dbt-%,$(ALL_PROJECTS))
-ORACLE_PROJECTS := $(filter flext-db-oracle flext-oracle-%,$(ALL_PROJECTS))
+define ENSURE_NO_PROJECT_CONFLICT
+if [ -n "$(PROJECT)" ] && [ -n "$(PROJECTS)" ]; then \
+	echo "ERROR: Cannot use PROJECT and PROJECTS together"; \
+	echo "Use PROJECT=<name> or PROJECTS=\"proj-a proj-b\""; \
+	exit 1; \
+fi
+endef
 
-# =============================================================================
-# HELP
-# =============================================================================
+define VALIDATE_FIX_PARAM
+if [ -n "$(FIX)" ] && [ "$(FIX)" != "1" ]; then \
+	echo "ERROR: FIX must be empty or 1, got '$(FIX)'"; \
+	exit 1; \
+fi
+endef
 
-.PHONY: help
-help: ## Show available targets
-	$(Q)echo "FLEXT Workspace - Auto-Discovery Makefile"
+define ENSURE_SELECTED_PROJECTS
+if [ -z "$(SELECTED_PROJECTS)" ]; then \
+	echo "ERROR: no projects selected"; \
+	echo "Use PROJECT=<name> or PROJECTS=\"proj-a proj-b\""; \
+	exit 1; \
+fi
+endef
+
+define ENSURE_PROJECTS_EXIST
+for proj in $(SELECTED_PROJECTS); do \
+	if [ ! -d "$$proj" ] || [ ! -f "$$proj/pyproject.toml" ]; then \
+		echo "ERROR: invalid project '$$proj'"; \
+		exit 1; \
+	fi; \
+done
+endef
+
+define ENFORCE_WORKSPACE_VENV
+if [ ! -d "$(WORKSPACE_VENV)" ]; then \
+	echo "ERROR: workspace venv not found at $(WORKSPACE_VENV). Run 'make setup'."; \
+	exit 1; \
+fi; \
+local_venvs=$$(for proj in $(ALL_PROJECTS); do \
+	if [ -d "$$proj/.venv" ]; then echo "$$proj/.venv"; fi; \
+done); \
+if [ -n "$$local_venvs" ]; then \
+	echo "Enforcing workspace venv by removing project-local .venv directories:"; \
+	printf '%s\n' "$$local_venvs"; \
+	for venv_path in $$local_venvs; do rm -rf "$$venv_path"; done; \
+	echo "Project-local .venv directories removed."; \
+fi; \
+residual_venvs=$$(for proj in $(ALL_PROJECTS); do \
+	if [ -d "$$proj/.venv" ]; then echo "$$proj/.venv"; fi; \
+done); \
+if [ -n "$$residual_venvs" ]; then \
+	echo "ERROR: unable to remove some project-local .venv directories:"; \
+	printf '%s\n' "$$residual_venvs"; \
+	exit 1; \
+fi
+endef
+
+.PHONY: help setup upgrade check security format docs test validate typings clean
+
+help: ## Show simple workspace verbs
+	$(Q)echo "FLEXT Workspace"
 	$(Q)echo ""
-	$(Q)echo "Discovered Projects:"
-	$(Q)echo "  FLEXT: $(words $(FLEXT_PROJECTS)) projects"
-	$(Q)echo "  External: $(words $(EXTERNAL_PROJECTS)) projects"
-	$(Q)echo "  Total: $(words $(ALL_PROJECTS)) Python projects"
+	$(Q)echo "Projects: $(words $(ALL_PROJECTS)) total"
+	$(Q)echo "Selection: $(words $(SELECTED_PROJECTS)) selected"
 	$(Q)echo ""
-	$(Q)grep -hE '^[a-zA-Z_-]+:.*?##' $(MAKEFILE_LIST) | \
-		awk 'BEGIN {FS = ":.*?## "}; {printf "  %-18s %s\n", $$1, $$2}'
+	$(Q)echo "Core verbs:"
+	$(Q)echo "  setup      Install all projects into workspace .venv"
+	$(Q)echo "  upgrade    Upgrade deps + modernize + dependency report (.reports/dependencies/)"
+	$(Q)echo "  check      Run the 6 lint gates in all projects"
+	$(Q)echo "  security   Run all security checks in all projects"
+	$(Q)echo "  format     Run all formatting in all projects"
+	$(Q)echo "  docs       Build docs in all projects"
+	$(Q)echo "  test       Run tests only in all projects"
+	$(Q)echo "  validate   Run validate gates (FIX=1 auto-fix, VALIDATE_SCOPE=workspace for repo-level)"
+	$(Q)echo "  typings    Stub supply-chain + typing report (PROJECT/PROJECTS to scope)"
+	$(Q)echo "  clean      Clean all projects"
 	$(Q)echo ""
-	$(Q)echo "Options: VERBOSE=1, PROJECT=name"
-
-.PHONY: discover
-discover: ## Show all discovered projects
-	$(Q)echo "=== FLEXT Submodule Projects ($(words $(FLEXT_PROJECTS))) ==="
-	$(Q)for p in $(FLEXT_PROJECTS); do echo "  $$p"; done
+	$(Q)echo "Selectors:"
+	$(Q)echo "  PROJECT=<name>                          Single project"
+	$(Q)echo "  PROJECTS=\"proj-a proj-b\"               Multi-project"
+	$(Q)echo "  FAIL_FAST=1                              Stop on first project failure"
+	$(Q)echo "  FIX=1                                    Auto-fix before validate"
+	$(Q)echo "  PYTEST_ARGS=\"-k expr -x\"               Extra pytest args for test"
+	$(Q)echo "  CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,type    Select check gates (default: all)"
+	$(Q)echo "  VALIDATE_GATES=complexity,docstring      Select validate gates (default: all)"
+	$(Q)echo "  VALIDATE_SCOPE=project|workspace         Validate scope (default: project)"
+	$(Q)echo "  DOCS_PHASE=audit|fix|build|generate|validate|all"
+	$(Q)echo "  DEPS_REPORT=0                            Skip dependency report after upgrade/typings"
 	$(Q)echo ""
-	$(Q)echo "=== External Projects ($(words $(EXTERNAL_PROJECTS))) ==="
-	$(Q)for p in $(EXTERNAL_PROJECTS); do echo "  $$p"; done
-	$(Q)echo ""
-	$(Q)echo "=== Categories ==="
-	$(Q)echo "  Core: $(CORE_PROJECTS)"
-	$(Q)echo "  Taps: $(TAP_PROJECTS)"
-	$(Q)echo "  Targets: $(TARGET_PROJECTS)"
-	$(Q)echo "  DBT: $(DBT_PROJECTS)"
-	$(Q)echo "  Oracle: $(ORACLE_PROJECTS)"
+	$(Q)echo "Examples:"
+	$(Q)echo "  make check PROJECT=flext-core"
+	$(Q)echo "  make typings PROJECT=flext-api"
+	$(Q)echo "  make check CHECK_GATES=lint,type"
+	$(Q)echo "  make validate PROJECTS=\"flext-core flext-api\" FIX=1"
+	$(Q)echo "  make test PROJECT=flext-api PYTEST_ARGS=\"-k unit\" FAIL_FAST=1"
+	$(Q)echo "  make validate VALIDATE_SCOPE=workspace"
 
-# =============================================================================
-# SETUP & INSTALL
-# =============================================================================
-
-.PHONY: install setup setup-projects typings
-
-install: setup ## Alias for setup
-
-setup: ## Complete workspace setup (idempotent)
+setup: ## Install all projects into workspace .venv
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)python3.13 --version >/dev/null 2>&1 || { echo "ERROR: Python 3.13 required"; exit 1; }
-	$(Q)[ -d ".venv" ] || { echo "🔧 Creating .venv with Python 3.13..."; python3.13 -m venv .venv; }
-	$(Q)echo "🔒 Locking dependencies..."
-	$(Q)poetry lock
-	$(Q)echo "📦 Installing root dependencies (all groups + extras)..."
-	$(Q)poetry install --all-extras --all-groups
-	$(Q)echo "📦 Installing all project dependencies (all groups + extras)..."
-	$(Q)$(MAKE) setup-projects
-	$(Q)echo "✅ Setup complete (workspace + all projects)"
-
-setup-projects: ## Install every project into workspace .venv (all groups + extras)
-	$(Q)$(MAKE) preflight
-	$(Q)failed=0; installed=0; \
-	for proj in $(ALL_PROJECTS); do \
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)[ -d ".venv" ] || { echo "Creating .venv with Python 3.13..."; python3.13 -m venv .venv; }
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)echo "Modernizing pyproject.toml files..."; \
+	$(POETRY_ENV) python scripts/dependencies/modernize_pyproject.py --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
+	echo ""
+	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
+	echo "Starting workspace setup for $(words $(SELECTED_PROJECTS)) project(s) + root"; \
+	failed=0; installed=0; step=1; failed_projects=""; \
+	for proj in $(SELECTED_PROJECTS); do \
 		if [ -d "$$proj" ] && [ -f "$$proj/pyproject.toml" ]; then \
-			printf "  [%2d/$(words $(ALL_PROJECTS))] %-25s ... " $$((installed + failed + 1)) "$$proj"; \
-			if $(POETRY_ENV) poetry -C "$$proj" lock >/tmp/flext-setup-project.log 2>&1 && \
-			   $(POETRY_ENV) poetry -C "$$proj" install --all-extras --all-groups >>/tmp/flext-setup-project.log 2>&1; then \
-				echo "✓"; \
+			log_file="/tmp/flext-setup-$$proj.log"; \
+			start_ts=$$(date +%s); \
+			printf "[%2d/%2d] setup %s\n" $$step $$total_steps "$$proj"; \
+			if python scripts/dependencies/sync_internal_deps.py --project-root "$$proj" >>"$$log_file" 2>&1; then \
+				:; \
+			else \
+				echo "          sync    ... failed"; \
+				cat "$$log_file"; \
+				failed=$$((failed + 1)); \
+				failed_projects="$$failed_projects $$proj"; \
+				step=$$((step + 1)); \
+				continue; \
+			fi; \
+			printf "          lock    ... "; \
+			if $(POETRY_ENV) poetry -C "$$proj" lock >"$$log_file" 2>&1; then \
+				echo "ok"; \
+			else \
+				echo "failed"; \
+				cat "$$log_file"; \
+				failed=$$((failed + 1)); \
+				failed_projects="$$failed_projects $$proj"; \
+				step=$$((step + 1)); \
+				continue; \
+			fi; \
+			printf "          install ... "; \
+			if $(POETRY_ENV) poetry -C "$$proj" install --all-extras --all-groups >>"$$log_file" 2>&1; then \
+				elapsed=$$(( $$(date +%s) - start_ts )); \
+				echo "ok ($${elapsed}s)"; \
 				installed=$$((installed + 1)); \
 			else \
-				echo "✗"; \
-				cat /tmp/flext-setup-project.log; \
+				echo "failed"; \
+				cat "$$log_file"; \
 				failed=$$((failed + 1)); \
+				failed_projects="$$failed_projects $$proj"; \
 			fi; \
+			rm -f "$$log_file"; \
+			step=$$((step + 1)); \
 		fi; \
 	done; \
-	rm -f /tmp/flext-setup-project.log; \
-	echo "Installed: $$installed  Failed: $$failed"; \
+	log_file="/tmp/flext-setup-root.log"; \
+	start_ts=$$(date +%s); \
+	root_lock_ok=0; \
+	printf "[%2d/%2d] setup %s\n" $$step $$total_steps "root"; \
+	if ! python scripts/dependencies/sync_internal_deps.py --project-root . >"$$log_file" 2>&1; then \
+		echo "          sync    ... failed"; \
+		cat "$$log_file"; \
+		failed=$$((failed + 1)); \
+		failed_projects="$$failed_projects root"; \
+	fi; \
+	printf "          lock    ... "; \
+	if poetry lock >"$$log_file" 2>&1; then \
+		echo "ok"; \
+		root_lock_ok=1; \
+	else \
+		echo "failed"; \
+		cat "$$log_file"; \
+		failed=$$((failed + 1)); \
+		failed_projects="$$failed_projects root"; \
+	fi; \
+	if [ $$root_lock_ok -eq 1 ]; then \
+		printf "          install ... "; \
+		if poetry install --all-extras --all-groups >>"$$log_file" 2>&1; then \
+			elapsed=$$(( $$(date +%s) - start_ts )); \
+			echo "ok ($${elapsed}s)"; \
+			installed=$$((installed + 1)); \
+		else \
+			echo "failed"; \
+			cat "$$log_file"; \
+			failed=$$((failed + 1)); \
+			failed_projects="$$failed_projects root"; \
+		fi; \
+	else \
+		printf "          install ... skipped\n"; \
+	fi; \
+	rm -f "$$log_file"; \
+	echo "Setup summary: Installed=$$installed Failed=$$failed Total=$$total_steps"; \
 	if [ $$failed -ne 0 ]; then \
-		echo "FAIL: setup-projects ($$failed projects)"; \
+		echo "Failed projects:$$failed_projects"; \
+		echo "FAIL: setup ($$failed projects)"; \
 		exit 1; \
 	fi
 
-typings: ## Auto-add missing types deps and generate stubs for all projects
-	$(Q)$(MAKE) preflight
-	$(Q)echo "=== Typings automation (all projects) ==="
-	$(Q)python scripts/core/stub_supply_chain.py --all --apply --idempotency-check
-	$(Q)echo "✅ Typings automation complete"
+upgrade: ## Upgrade Python dependencies to latest via Poetry
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)echo "Modernizing pyproject.toml files..."; \
+	$(POETRY_ENV) python scripts/dependencies/modernize_pyproject.py --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
+	echo ""
+	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
+	echo "Upgrading Python dependencies for $(words $(SELECTED_PROJECTS)) project(s) + root"; \
+	failed=0; upgraded=0; step=1; failed_projects=""; \
+	for proj in $(SELECTED_PROJECTS); do \
+		if [ -d "$$proj" ] && [ -f "$$proj/pyproject.toml" ]; then \
+			log_file="/tmp/flext-upgrade-$$proj.log"; \
+			start_ts=$$(date +%s); \
+			printf "[%2d/%2d] upgrade %s\n" $$step $$total_steps "$$proj"; \
+			printf "          update  ... "; \
+			if $(POETRY_ENV) poetry -C "$$proj" update >"$$log_file" 2>&1; then \
+				echo "ok"; \
+			else \
+				echo "failed"; \
+				cat "$$log_file"; \
+				failed=$$((failed + 1)); \
+				failed_projects="$$failed_projects $$proj"; \
+				step=$$((step + 1)); \
+				continue; \
+			fi; \
+			printf "          install ... "; \
+			if $(POETRY_ENV) poetry -C "$$proj" install --all-extras --all-groups >>"$$log_file" 2>&1; then \
+				elapsed=$$(( $$(date +%s) - start_ts )); \
+				echo "ok ($${elapsed}s)"; \
+				upgraded=$$((upgraded + 1)); \
+			else \
+				echo "failed"; \
+				cat "$$log_file"; \
+				failed=$$((failed + 1)); \
+				failed_projects="$$failed_projects $$proj"; \
+			fi; \
+			rm -f "$$log_file"; \
+			step=$$((step + 1)); \
+		fi; \
+	done; \
+	log_file="/tmp/flext-upgrade-root.log"; \
+	start_ts=$$(date +%s); \
+	root_update_ok=0; \
+	printf "[%2d/%2d] upgrade %s\n" $$step $$total_steps "root"; \
+	printf "          update  ... "; \
+	if poetry update >"$$log_file" 2>&1; then \
+		echo "ok"; \
+		root_update_ok=1; \
+	else \
+		echo "failed"; \
+		cat "$$log_file"; \
+		failed=$$((failed + 1)); \
+		failed_projects="$$failed_projects root"; \
+	fi; \
+	if [ $$root_update_ok -eq 1 ]; then \
+		printf "          install ... "; \
+		if poetry install --all-extras --all-groups >>"$$log_file" 2>&1; then \
+			elapsed=$$(( $$(date +%s) - start_ts )); \
+			echo "ok ($${elapsed}s)"; \
+			upgraded=$$((upgraded + 1)); \
+		else \
+			echo "failed"; \
+			cat "$$log_file"; \
+			failed=$$((failed + 1)); \
+			failed_projects="$$failed_projects root"; \
+		fi; \
+	else \
+		printf "          install ... skipped\n"; \
+	fi; \
+	rm -f "$$log_file"; \
+	echo "Upgrade summary: Upgraded=$$upgraded Failed=$$failed Total=$$total_steps"; \
+	if [ $$failed -ne 0 ]; then \
+		echo "Failed projects:$$failed_projects"; \
+		echo "FAIL: upgrade ($$failed projects)"; \
+		exit 1; \
+	fi; \
+	if [ "$(DEPS_REPORT)" != "0" ]; then \
+		echo "Dependency report (deptry + pip check)..."; \
+		$(POETRY_ENV) python scripts/dependencies/detect_runtime_dev_deps.py -q --no-fail || true; \
+	fi
 
-# =============================================================================
-# QUALITY GATES
-# =============================================================================
+check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security)
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)$(POETRY_ENV) python scripts/check/fix_pyrefly_config.py $(SELECTED_PROJECTS)
+	$(Q)$(POETRY_ENV) python scripts/check/workspace_check.py \
+		$(if $(CHECK_GATES),--gates "$(CHECK_GATES)") \
+		$(if $(FAIL_FAST),--fail-fast) \
+		$(SELECTED_PROJECTS)
 
-.PHONY: lint format fix type-check test validate validate-scripts check preflight
-.PHONY: quality-report check-clean
-.PHONY: validate-fix
-.PHONY: upgrade-all deps-all
-.PHONY: enforce-workspace-venv clean-project-venvs
-
-lint: ## Lint all projects
-ifdef PROJECT
-	$(Q)$(POETRY_ENV) $(MAKE) -C $(PROJECT) lint
-else
-	$(Q)$(MAKE) preflight
+security: ## Run all security checks in all projects
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)failed=0; \
-	for proj in $(ALL_PROJECTS); do \
+	for proj in $(SELECTED_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
-			if $(POETRY_ENV) $(MAKE) -C $$proj lint -s; then \
+			if $(POETRY_ENV) $(MAKE) -C "$$proj" security -s; then \
 				echo "✓ $$proj"; \
 			else \
 				echo "✗ $$proj"; \
 				failed=$$((failed + 1)); \
+				if [ "$(FAIL_FAST)" = "1" ]; then echo "FAIL: security (fail-fast on $$proj)"; exit 1; fi; \
 			fi; \
 		fi; \
 	done; \
 	if [ $$failed -ne 0 ]; then \
-		echo "FAIL: lint ($$failed projects)"; \
+		echo "FAIL: security ($$failed projects)"; \
 		exit 1; \
 	fi
-endif
 
-format: ## Format all projects
-ifdef PROJECT
-	$(Q)$(POETRY_ENV) $(MAKE) -C $(PROJECT) format
-else
-	$(Q)$(MAKE) preflight
+format: ## Run all formatting in all projects
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)failed=0; \
-	for proj in $(ALL_PROJECTS); do \
+	for proj in $(SELECTED_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
-			if ! $(POETRY_ENV) $(MAKE) -C $$proj format -s; then \
+			if $(POETRY_ENV) $(MAKE) -C "$$proj" format -s; then \
+				echo "✓ $$proj"; \
+			else \
 				echo "✗ $$proj"; \
 				failed=$$((failed + 1)); \
+				if [ "$(FAIL_FAST)" = "1" ]; then echo "FAIL: format (fail-fast on $$proj)"; exit 1; fi; \
 			fi; \
 		fi; \
 	done; \
@@ -182,65 +369,50 @@ else
 		echo "FAIL: format ($$failed projects)"; \
 		exit 1; \
 	fi
-	$(Q)echo "Format complete"
-endif
 
-fix: ## Auto-fix lint issues
-ifdef PROJECT
-	$(Q)$(POETRY_ENV) $(MAKE) -C $(PROJECT) fix
-else
-	$(Q)$(MAKE) preflight
-	$(Q)failed=0; \
-	for proj in $(ALL_PROJECTS); do \
-		if [ -d "$$proj" ]; then \
-			if ! $(POETRY_ENV) $(MAKE) -C $$proj fix -s; then \
-				echo "✗ $$proj"; \
-				failed=$$((failed + 1)); \
-			fi; \
-		fi; \
-	done; \
-	if [ $$failed -ne 0 ]; then \
-		echo "FAIL: fix ($$failed projects)"; \
-		exit 1; \
-	fi
-	$(Q)echo "Fix complete"
-endif
+docs: ## Run docs pipeline (DOCS_PHASE=audit|fix|build|generate|validate|all)
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)project_arg="$(PROJECT)"; \
+	projects_arg="$(PROJECTS)"; \
+	if [ "$(DOCS_PHASE)" = "all" ]; then \
+		phases="audit fix build generate validate"; \
+	else \
+		phases="$(DOCS_PHASE)"; \
+	fi; \
+	for phase in $$phases; do \
+		echo "Running docs phase=$$phase"; \
+		case "$$phase" in \
+			audit) script="scripts/documentation/audit.py"; extra="" ;; \
+			fix) script="scripts/documentation/fix.py"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
+			build) script="scripts/documentation/build.py"; extra="" ;; \
+			generate) script="scripts/documentation/generate.py"; extra="--apply" ;; \
+			validate) script="scripts/documentation/validate.py"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
+			*) echo "ERROR: invalid DOCS_PHASE=$$phase"; exit 2 ;; \
+		esac; \
+		cmd="python $$script --root . --output-dir .reports/docs"; \
+		if [ -n "$$project_arg" ]; then cmd="$$cmd --project $$project_arg"; fi; \
+		if [ -n "$$projects_arg" ]; then cmd="$$cmd --projects '$$projects_arg'"; fi; \
+		if [ -n "$$extra" ]; then cmd="$$cmd $$extra"; fi; \
+		eval $$cmd || exit $$?; \
+	done
 
-type-check: ## Type-check all projects
-ifdef PROJECT
-	$(Q)$(POETRY_ENV) $(MAKE) -C $(PROJECT) type-check
-else
-	$(Q)$(MAKE) preflight
+test: ## Run tests only in all projects
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)failed=0; \
-	for proj in $(ALL_PROJECTS); do \
+	for proj in $(SELECTED_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
-			if $(POETRY_ENV) $(MAKE) -C $$proj type-check -s; then \
+			if $(POETRY_ENV) $(MAKE) -C "$$proj" test -s PYTEST_ARGS="$(PYTEST_ARGS)"; then \
 				echo "✓ $$proj"; \
 			else \
 				echo "✗ $$proj"; \
 				failed=$$((failed + 1)); \
-			fi; \
-		fi; \
-	done; \
-	if [ $$failed -ne 0 ]; then \
-		echo "FAIL: type-check ($$failed projects)"; \
-		exit 1; \
-	fi
-endif
-
-test: ## Test all projects
-ifdef PROJECT
-	$(Q)$(POETRY_ENV) $(MAKE) -C $(PROJECT) test
-else
-	$(Q)$(MAKE) preflight
-	$(Q)failed=0; \
-	for proj in $(ALL_PROJECTS); do \
-		if [ -d "$$proj" ]; then \
-			if $(POETRY_ENV) $(MAKE) -C $$proj test -s; then \
-				echo "✓ $$proj"; \
-			else \
-				echo "✗ $$proj"; \
-				failed=$$((failed + 1)); \
+				if [ "$(FAIL_FAST)" = "1" ]; then echo "FAIL: test (fail-fast on $$proj)"; exit 1; fi; \
 			fi; \
 		fi; \
 	done; \
@@ -248,309 +420,72 @@ else
 		echo "FAIL: test ($$failed projects)"; \
 		exit 1; \
 	fi
-endif
 
-check: ## Quick check (lint + type-check)
-ifdef PROJECT
-	$(Q)$(POETRY_ENV) $(MAKE) -C $(PROJECT) check
-else
-	$(Q)$(MAKE) lint type-check
-endif
-
-validate-scripts: ## Validate scripts/ (ownership, syntax, structure)
-	$(Q)echo "=== Scripts Validation (skill-driven) ==="
-	$(Q)scripts/validation/run_automated_validation.sh
-	$(Q)echo "=== Scripts Validation Complete ==="
-
-validate: ## Full validation
-ifdef PROJECT
-	$(Q)$(POETRY_ENV) $(MAKE) -C $(PROJECT) validate
-else
-	$(Q)$(MAKE) preflight
-	$(Q)$(MAKE) lint type-check test validate-scripts
-endif
-
-# --- Validate with report artifacts ---
-REPORT_DIR := $(CURDIR)/.reports/validate
-QUALITY_DIR := $(CURDIR)/.reports/quality
-QUALITY_INCLUDE_TEST ?= 0
-QUALITY_INCLUDE_SCRIPTS ?= 0
-
-validate-report: ## Validate with machine-readable report artifacts
-	$(Q)$(MAKE) preflight
-	$(Q)mkdir -p $(REPORT_DIR)/type-check $(REPORT_DIR)/lint
-	$(Q)echo '{"projects":[],"gates":[]}' > $(REPORT_DIR)/summary.json
-	$(Q)for proj in $(ALL_PROJECTS); do \
-		if [ -d "$$proj" ]; then \
-			$(POETRY_ENV) $(MAKE) -C $$proj lint -s > $(REPORT_DIR)/lint/$$proj.txt 2>&1 && \
-			lint_status="pass" || lint_status="fail"; \
-			$(POETRY_ENV) $(MAKE) -C $$proj type-check -s > $(REPORT_DIR)/type-check/$$proj.txt 2>&1 && \
-			tc_status="pass" || tc_status="fail"; \
-			python3 -c "import json; \
-				p='$(REPORT_DIR)/summary.json'; \
-				d=json.load(open(p)); \
-				d['projects'].append('$$proj'); \
-				d['gates'].append({'project':'$$proj','lint':'$$lint_status','type_check':'$$tc_status', \
-					'lint_artifact':'$(REPORT_DIR)/lint/$$proj.txt', \
-					'type_check_artifact':'$(REPORT_DIR)/type-check/$$proj.txt'}); \
-				json.dump(d,open(p,'w'),indent=2)"; \
-		fi; \
-	done
-	$(Q)echo "Report written to $(REPORT_DIR)/summary.json"
-
-quality-report: ## Clean quality report with actionable next steps
-	$(Q)$(MAKE) preflight
-	$(Q)mkdir -p $(QUALITY_DIR)/lint $(QUALITY_DIR)/type-check $(QUALITY_DIR)/test $(QUALITY_DIR)/scripts
-	$(Q)lock_file="$(QUALITY_DIR)/.quality-report.lock"; \
-	exec 9>"$$lock_file"; \
-	if ! flock -n 9; then \
-		echo "ERROR: another quality-report process is running"; \
-		exit 3; \
-	fi; \
-	report="$(QUALITY_DIR)/summary.txt"; \
-	echo "FLEXT Clean Quality Report" > "$$report"; \
-	echo "Generated: $$(date -Iseconds)" >> "$$report"; \
-	echo "" >> "$$report"; \
-	echo "Mode:" >> "$$report"; \
-	echo "  QUALITY_INCLUDE_TEST=$(QUALITY_INCLUDE_TEST)" >> "$$report"; \
-	echo "  QUALITY_INCLUDE_SCRIPTS=$(QUALITY_INCLUDE_SCRIPTS)" >> "$$report"; \
-	echo "" >> "$$report"; \
-	echo "Per-project status:" >> "$$report"; \
-	echo "-------------------" >> "$$report"; \
-	total_projects=0; \
-	ok_projects=0; \
-	failed_projects=0; \
-	failed_lint=0; \
-	failed_type=0; \
-	failed_test=0; \
-	for proj in $(ALL_PROJECTS); do \
-		if [ -d "$$proj" ]; then \
-			total_projects=$$((total_projects + 1)); \
-			lint_log="$(QUALITY_DIR)/lint/$$proj.txt"; \
-			type_log="$(QUALITY_DIR)/type-check/$$proj.txt"; \
-			test_log="$(QUALITY_DIR)/test/$$proj.txt"; \
-			echo "[RUN] $$proj"; \
-			$(POETRY_ENV) $(MAKE) -C "$$proj" lint -s > "$$lint_log" 2>&1; lint_status=$$?; \
-			$(POETRY_ENV) $(MAKE) -C "$$proj" type-check -s > "$$type_log" 2>&1; type_status=$$?; \
-			test_status=0; \
-			if [ "$(QUALITY_INCLUDE_TEST)" = "1" ]; then \
-				$(POETRY_ENV) $(MAKE) -C "$$proj" test -s > "$$test_log" 2>&1; test_status=$$?; \
-			fi; \
-			if [ $$lint_status -eq 0 ] && [ $$type_status -eq 0 ] && [ $$test_status -eq 0 ]; then \
-				ok_projects=$$((ok_projects + 1)); \
-				echo "[OK] $$proj" >> "$$report"; \
-			else \
-				failed_projects=$$((failed_projects + 1)); \
-				echo "[FAIL] $$proj" >> "$$report"; \
-				if [ $$lint_status -ne 0 ]; then \
-					failed_lint=$$((failed_lint + 1)); \
-					echo "  - TODO: make PROJECT=$$proj lint" >> "$$report"; \
-					echo "    log: $$lint_log" >> "$$report"; \
-				fi; \
-				if [ $$type_status -ne 0 ]; then \
-					failed_type=$$((failed_type + 1)); \
-					echo "  - TODO: make PROJECT=$$proj type-check" >> "$$report"; \
-					echo "    log: $$type_log" >> "$$report"; \
-				fi; \
-				if [ $$test_status -ne 0 ]; then \
-					failed_test=$$((failed_test + 1)); \
-					echo "  - TODO: make PROJECT=$$proj test" >> "$$report"; \
-					echo "    log: $$test_log" >> "$$report"; \
-				fi; \
-			fi; \
-		fi; \
-	done; \
-	scripts_status=0; \
-	scripts_log="$(QUALITY_DIR)/scripts/validate-scripts.txt"; \
-	if [ "$(QUALITY_INCLUDE_SCRIPTS)" = "1" ]; then \
-		$(MAKE) validate-scripts -s > "$$scripts_log" 2>&1; scripts_status=$$?; \
-	fi; \
-	echo "" >> "$$report"; \
-	echo "Global scripts validation:" >> "$$report"; \
-	if [ "$(QUALITY_INCLUDE_SCRIPTS)" != "1" ]; then \
-		echo "[SKIP] validate-scripts (set QUALITY_INCLUDE_SCRIPTS=1 to enable)" >> "$$report"; \
-	elif [ $$scripts_status -eq 0 ]; then \
-		echo "[OK] validate-scripts" >> "$$report"; \
-	else \
-		echo "[FAIL] validate-scripts" >> "$$report"; \
-		echo "  - TODO: make validate-scripts" >> "$$report"; \
-		echo "    log: $$scripts_log" >> "$$report"; \
-	fi; \
-	echo "" >> "$$report"; \
-	echo "Summary:" >> "$$report"; \
-	echo "  projects_total=$$total_projects" >> "$$report"; \
-	echo "  projects_ok=$$ok_projects" >> "$$report"; \
-	echo "  projects_failed=$$failed_projects" >> "$$report"; \
-	echo "  lint_failed=$$failed_lint" >> "$$report"; \
-	echo "  type_check_failed=$$failed_type" >> "$$report"; \
-	echo "  test_failed=$$failed_test" >> "$$report"; \
-	if [ "$(QUALITY_INCLUDE_SCRIPTS)" = "1" ] && [ $$scripts_status -ne 0 ]; then scripts_failed=1; else scripts_failed=0; fi; \
-	echo "  scripts_failed=$$scripts_failed" >> "$$report"; \
-	echo ""; \
-	cat "$$report"; \
-	echo ""; \
-	echo "Quality report written to $(QUALITY_DIR)/summary.txt"; \
-	if [ $$failed_projects -ne 0 ] || [ $$scripts_failed -ne 0 ]; then \
+validate: ## Run validate gates (VALIDATE_SCOPE=project|workspace, FIX=1)
+ifeq ($(VALIDATE_SCOPE),workspace)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)mkdir -p .sisyphus/reports
+	$(Q)echo "Running workspace validation (inventory + strict anti-drift gates)..."
+	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/generate_scripts_inventory.py --root .
+	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/check_base_mk_sync.py
+	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/skill_validate.py --skill scripts-validation --mode strict
+	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/skill_validate.py --skill rules-github --mode strict
+	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/skill_validate.py --skill rules-docker --mode strict
+	$(Q)$(WORKSPACE_VENV)/bin/python scripts/dependencies/modernize_pyproject.py --audit
+	$(Q)if git grep -nE '/home/.*/flext|file:///home/.*/flext' -- . ':!Makefile' ':!scripts/doc_scripts_analysis.json' ':!scripts/doc_scripts_inventory.json'; then \
+		echo "ERROR: absolute workspace paths detected in tracked sources/config"; \
 		exit 1; \
 	fi
-
-check-clean: quality-report ## Run clean report and fail on issues
-
-# --- Validate-Fix: check + auto-fix + re-check (non-degrading, transactional) ---
-validate-fix: ## Full validation with automatic fixes
-	$(Q)$(MAKE) preflight
-	$(Q)echo "=== FLEXT Validate-Fix Pipeline ==="
-	$(Q)echo "Step 1/6: Baseline snapshot..."
-	$(Q)$(MAKE) validate-report
-	$(Q)rm -rf $(REPORT_DIR).baseline
-	$(Q)cp -r $(REPORT_DIR) $(REPORT_DIR).baseline
-	$(Q)echo "Step 2/6: Ruff auto-fix..."
-	$(Q)$(MAKE) fix
-	$(Q)echo "Step 3/6: Skill-driven auto-fix (ast-grep)..."
-	$(Q)python scripts/core/skill_fix.py --all --apply
-	$(Q)echo "Step 4/6: Typing stub supply chain..."
-	$(Q)python scripts/core/stub_supply_chain.py --all --apply --idempotency-check
-	$(Q)echo "Step 5/6: Pyrefly infer (annotation backfill)..."
+else
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(VALIDATE_FIX_PARAM)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)if [ -z "$(FIX)" ]; then echo "INFO: run 'make validate FIX=1' to auto-fix before validate"; fi
 	$(Q)failed=0; \
-	for proj in $(ALL_PROJECTS); do \
+	for proj in $(SELECTED_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
-			if ! $(POETRY_ENV) $(MAKE) -C $$proj pyrefly-infer -s; then \
+			if $(POETRY_ENV) $(MAKE) -C "$$proj" validate FIX=$(FIX) VALIDATE_GATES="$(VALIDATE_GATES)" -s; then \
+				echo "✓ $$proj"; \
+			else \
 				echo "✗ $$proj"; \
 				failed=$$((failed + 1)); \
+				if [ "$(FAIL_FAST)" = "1" ]; then echo "FAIL: validate (fail-fast on $$proj)"; exit 1; fi; \
 			fi; \
 		fi; \
 	done; \
 	if [ $$failed -ne 0 ]; then \
-		echo "FAIL: pyrefly-infer ($$failed projects)"; \
+		echo "FAIL: validate ($$failed projects)"; \
 		exit 1; \
 	fi
-	$(Q)echo "Step 6/6: Format + re-validate..."
-	$(Q)$(MAKE) format
-	$(Q)$(MAKE) validate-report
-	$(Q)echo "=== Validate-Fix Complete ==="
-	$(Q)echo "Reports: $(REPORT_DIR)/summary.json"
-	$(Q)if [ -d "$(REPORT_DIR).baseline" ]; then \
-		echo "Baseline: $(REPORT_DIR).baseline/summary.json"; \
+endif
+
+typings: ## Run typings supply-chain (stub_supply_chain + dependency report with typings). Use PROJECT= or PROJECTS= to scope.
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)$(POETRY_ENV) python scripts/core/stub_supply_chain.py --apply --idempotency-check \
+		$(if $(PROJECT),--project $(PROJECT),$(if $(PROJECTS),$(addprefix --project ,$(PROJECTS)),--all))
+	$(Q)if [ "$(DEPS_REPORT)" != "0" ]; then \
+		$(POETRY_ENV) python scripts/dependencies/detect_runtime_dev_deps.py --typings -q --no-fail || true; \
 	fi
 
-# =============================================================================
-# DEPENDENCY UPGRADE
-# =============================================================================
-
-upgrade-all: ## Upgrade dependencies for all projects
-	$(Q)$(MAKE) preflight
-	$(Q)echo "=== Upgrading all $(words $(ALL_PROJECTS)) projects ===" && \
-	upgraded=0; failed=0; \
-	for proj in $(ALL_PROJECTS); do \
+clean: ## Clean all projects
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)failed=0; \
+	for proj in $(SELECTED_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
-			printf "  [%2d/$(words $(ALL_PROJECTS))] %-25s ... " $$((upgraded + failed + 1)) "$$proj"; \
-			if $(MAKE) -C $$proj upgrade -s 2>&1 | grep -q "ERROR\|FAIL"; then \
-				echo "✗ FAILED"; \
-				failed=$$((failed + 1)); \
+			if $(POETRY_ENV) $(MAKE) -C "$$proj" clean -s; then \
+				echo "✓ $$proj"; \
 			else \
-				echo "✓"; \
-				upgraded=$$((upgraded + 1)); \
-			fi; \
-		fi; \
-	done; \
-	echo ""; \
-	echo "=== Upgrade Summary ==="; \
-	echo "  Total:    $(words $(ALL_PROJECTS)) projects"; \
-	echo "  Upgraded: $$upgraded"; \
-	echo "  Failed:   $$failed"; \
-	echo ""; \
-	if [ $$failed -eq 0 ]; then \
-		echo "✅ All projects upgraded successfully"; \
-	else \
-		echo "⚠️  $$failed projects failed - review output above"; \
-		exit 1; \
-	fi
-
-# =============================================================================
-# DEPENDENCY ANALYSIS
-# =============================================================================
-
-deps-all: ## Analyze dependencies for all projects with deptry
-	$(Q)$(MAKE) preflight
-	$(Q)echo "=== Analyzing dependencies in $(words $(ALL_PROJECTS)) projects ===" && \
-	for proj in $(ALL_PROJECTS); do \
-		if [ -d "$$proj" ]; then \
-			printf "  %-25s " "$$proj"; \
-			$(MAKE) -C $$proj deps -s 2>&1 | tail -1; \
-		fi; \
-	done
-
-# =============================================================================
-# PROJECT GROUPS
-# =============================================================================
-
-.PHONY: core taps targets dbt oracle external
-
-core: ## Validate core projects
-	$(Q)$(MAKE) preflight
-	$(Q)failed=0; \
-	for proj in $(CORE_PROJECTS); do \
-		if $(POETRY_ENV) $(MAKE) -C $$proj validate -s; then echo "✓ $$proj"; else echo "✗ $$proj"; failed=$$((failed + 1)); fi; \
-	done; \
-	if [ $$failed -ne 0 ]; then echo "FAIL: core ($$failed projects)"; exit 1; fi
-
-taps: ## Validate tap projects
-	$(Q)$(MAKE) preflight
-	$(Q)failed=0; \
-	for proj in $(TAP_PROJECTS); do \
-		if $(POETRY_ENV) $(MAKE) -C $$proj validate -s; then echo "✓ $$proj"; else echo "✗ $$proj"; failed=$$((failed + 1)); fi; \
-	done; \
-	if [ $$failed -ne 0 ]; then echo "FAIL: taps ($$failed projects)"; exit 1; fi
-
-targets: ## Validate target projects
-	$(Q)$(MAKE) preflight
-	$(Q)failed=0; \
-	for proj in $(TARGET_PROJECTS); do \
-		if $(POETRY_ENV) $(MAKE) -C $$proj validate -s; then echo "✓ $$proj"; else echo "✗ $$proj"; failed=$$((failed + 1)); fi; \
-	done; \
-	if [ $$failed -ne 0 ]; then echo "FAIL: targets ($$failed projects)"; exit 1; fi
-
-dbt: ## Validate dbt projects
-	$(Q)$(MAKE) preflight
-	$(Q)failed=0; \
-	for proj in $(DBT_PROJECTS); do \
-		if $(POETRY_ENV) $(MAKE) -C $$proj validate -s; then echo "✓ $$proj"; else echo "✗ $$proj"; failed=$$((failed + 1)); fi; \
-	done; \
-	if [ $$failed -ne 0 ]; then echo "FAIL: dbt ($$failed projects)"; exit 1; fi
-
-oracle: ## Validate Oracle projects
-	$(Q)$(MAKE) preflight
-	$(Q)failed=0; \
-	for proj in $(ORACLE_PROJECTS); do \
-		if $(POETRY_ENV) $(MAKE) -C $$proj validate -s; then echo "✓ $$proj"; else echo "✗ $$proj"; failed=$$((failed + 1)); fi; \
-	done; \
-	if [ $$failed -ne 0 ]; then echo "FAIL: oracle ($$failed projects)"; exit 1; fi
-
-external: ## Validate external projects
-	$(Q)$(MAKE) preflight
-	$(Q)failed=0; \
-	for proj in $(EXTERNAL_PROJECTS); do \
-		if $(POETRY_ENV) $(MAKE) -C $$proj validate -s; then echo "✓ $$proj"; else echo "✗ $$proj"; failed=$$((failed + 1)); fi; \
-	done; \
-	if [ $$failed -ne 0 ]; then echo "FAIL: external ($$failed projects)"; exit 1; fi
-
-# =============================================================================
-# CLEANUP
-# =============================================================================
-
-.PHONY: clean clean-all
-
-clean: ## Clean build artifacts
-ifdef PROJECT
-	$(Q)$(POETRY_ENV) $(MAKE) -C $(PROJECT) clean
-else
-	$(Q)$(MAKE) preflight
-	$(Q)failed=0; \
-	for proj in $(ALL_PROJECTS); do \
-		if [ -d "$$proj" ]; then \
-			if ! $(POETRY_ENV) $(MAKE) -C $$proj clean -s; then \
 				echo "✗ $$proj"; \
 				failed=$$((failed + 1)); \
+				if [ "$(FAIL_FAST)" = "1" ]; then echo "FAIL: clean (fail-fast on $$proj)"; exit 1; fi; \
 			fi; \
 		fi; \
 	done; \
@@ -558,119 +493,4 @@ else
 		echo "FAIL: clean ($$failed projects)"; \
 		exit 1; \
 	fi
-endif
 	$(Q)rm -rf .pytest_cache/ htmlcov/ .coverage* .mypy_cache/ .ruff_cache/
-
-preflight: ## Enforce workspace preconditions before loops
-	$(Q)if [ ! -d "$(WORKSPACE_VENV)" ]; then \
-		echo "ERROR: workspace venv not found at $(WORKSPACE_VENV). Run 'make setup'."; \
-		exit 1; \
-	fi
-	$(Q)local_venvs=$$(for proj in $(ALL_PROJECTS); do \
-		if [ -d "$$proj/.venv" ]; then echo "$$proj/.venv"; fi; \
-	done); \
-	if [ -n "$$local_venvs" ]; then \
-		echo "Enforcing workspace venv by removing project-local .venv directories:"; \
-		printf '%s\n' "$$local_venvs"; \
-		for venv_path in $$local_venvs; do rm -rf "$$venv_path"; done; \
-		echo "Project-local .venv directories removed."; \
-	fi
-	$(Q)residual_venvs=$$(for proj in $(ALL_PROJECTS); do \
-		if [ -d "$$proj/.venv" ]; then echo "$$proj/.venv"; fi; \
-	done); \
-	if [ -n "$$residual_venvs" ]; then \
-		echo "ERROR: unable to remove some project-local .venv directories:"; \
-		printf '%s\n' "$$residual_venvs"; \
-		exit 1; \
-	fi
-
-enforce-workspace-venv: preflight ## Enforce workspace .venv policy
-
-clean-project-venvs: ## Remove all project-local .venv directories
-	$(Q)$(MAKE) preflight
-
-clean-all: clean ## Deep clean
-	$(Q)find . -maxdepth 2 -type d -name __pycache__ -exec rm -rf {} +
-	$(Q)find . -maxdepth 2 -type d -name .pytest_cache -exec rm -rf {} +
-	$(Q)find . -maxdepth 2 -type d -name "*.egg-info" -exec rm -rf {} +
-
-# =============================================================================
-# STATUS
-# =============================================================================
-
-.PHONY: status
-
-status: ## Show project status
-	$(Q)echo "=== FLEXT Projects ($(words $(FLEXT_PROJECTS))) ==="
-	$(Q)for proj in $(FLEXT_PROJECTS); do \
-		if [ -f "$$proj/Makefile" ] && grep -q "base.mk" "$$proj/Makefile"; then \
-			echo "  ✓ $$proj (base.mk)"; \
-		else \
-			echo "  ○ $$proj"; \
-		fi; \
-	done
-	$(Q)echo ""
-	$(Q)echo "=== External Projects ($(words $(EXTERNAL_PROJECTS))) ==="
-	$(Q)for proj in $(EXTERNAL_PROJECTS); do \
-		if [ -f "$$proj/Makefile" ] && grep -q "base.mk" "$$proj/Makefile"; then \
-			echo "  ✓ $$proj (base.mk)"; \
-		else \
-			echo "  ○ $$proj"; \
-		fi; \
-	done
-
-# =============================================================================
-# MONOREPO MANAGEMENT
-# =============================================================================
-
-.PHONY: add-project remove-project deploy release commit
-
-add-project: ## Adicionar projeto externo (datacosmos-br, etc.)
-	$(Q)bash scripts/add-project.sh
-
-remove-project: ## Remover projeto externo (uso: make remove-project PROJECT=nome)
-ifdef PROJECT
-	$(Q)bash scripts/remove-project.sh $(PROJECT)
-else
-	$(Q)echo "Uso: make remove-project PROJECT=nome-do-projeto"
-	$(Q)echo ""
-	$(Q)echo "Projetos externos registrados:"
-	$(Q)if [ -f .flext/external-projects.json ]; then \
-		jq -r '.projects | keys[]' .flext/external-projects.json; \
-	else \
-		echo "  (nenhum)"; \
-	fi
-endif
-
-deploy: ## Deploy pipeline com validacao
-	$(Q)bash scripts/deploy.sh
-
-release: ## Release automatizado com bump de versao
-	$(Q)bash scripts/release.sh
-
-commit: ## Commit inteligente (conventional commits)
-	$(Q)bash scripts/commit.sh
-
-# =============================================================================
-# SHORT ALIASES
-# =============================================================================
-
-.PHONY: l f tc t c v vf vr vs qr qc d s dp ap rp si
-
-l: lint
-f: format
-tc: type-check
-t: test
-c: check
-v: validate
-vf: validate-fix
-vr: validate-report
-vs: validate-scripts
-qr: quality-report
-qc: check-clean
-d: discover
-s: status
-dp: deps-all
-ap: add-project
-rp: remove-project
-si: setup-interactive

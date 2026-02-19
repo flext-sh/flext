@@ -153,6 +153,15 @@ _lock: ClassVar[threading.RLock] = threading.RLock()
 Why good: thread-safe singleton storage for globally shared settings model.
 
 ## Verification
+
+Make gates:
+
+- `make check PROJECT=flext-core CHECK_GATES=type` — type-check settings models
+- `make test PROJECT=flext-core` — settings singleton and validation tests
+- `make validate PROJECT=flext-core` — complexity + docstring gates
+
+Pattern checks:
+
 - `rg -n "class FlextSettings|_instances: ClassVar\[dict\[type\[BaseSettings\], BaseSettings\]\]|_lock: ClassVar\[threading\.RLock\]|model_config = SettingsConfigDict\(" flext-core/src/flext_core/settings.py`
 - `rg -n "@model_validator\(mode=\"after\"\)|class AutoConfig\(BaseModel\)|ConfigDict\(" flext-core/src/flext_core/settings.py`
 - `rg -n "class .*Settings|SettingsConfigDict\(" --glob "**/settings.py" flext-core flext-*`

@@ -36,13 +36,27 @@ description: Workspace-wide maintenance automation — hygiene checks, dependabo
 ## Workflow
 
 1. Identify the maintenance concern (hygiene, dependabot, poetry, security).
-2. Run the relevant checker with `--help` first, then default (dry-run) mode.
-3. Review the JSON report in `.sisyphus/reports/` or the ANSI terminal output.
-4. If fixes are needed, re-run with `--apply` to mutate state.
+2. Run standard gates first: `make check` and `make validate`.
+3. Run specific maintenance checker with `--help` first, then default (dry-run) mode.
+4. Review the JSON report in `.sisyphus/reports/` or the ANSI terminal output.
+5. If fixes are needed, re-run with `--apply` to mutate state.
+6. Verify: `make validate VALIDATE_SCOPE=workspace` for workspace-level inventory.
 
 ## Examples
 
-Good:
+Good (primary — Make verbs for standard gates):
+
+```bash
+make check                                  # all 4 lint gates across all projects
+make validate                               # complexity + docstring gates
+make validate VALIDATE_SCOPE=workspace      # workspace-level inventory validation
+make clean                                  # clean all projects
+make setup                                  # reinstall dependencies
+make upgrade                                # upgrade deps + dependency report (.reports/dependencies/)
+make typings                                # stub supply-chain + typing report (DEPS_REPORT=0 to skip report)
+```
+
+Good (internal — maintenance checkers for specific concerns):
 
 ```bash
 python scripts/maintenance/check_workspace_hygiene.py
@@ -50,7 +64,7 @@ python scripts/maintenance/check_dependabot_config.py --json
 python scripts/maintenance/check_poetry_health.py --apply
 ```
 
-Why good: Safe defaults, explicit opt-in for mutations, structured output available.
+Why good: Make verbs for standard workflow; maintenance scripts for specialized checks with safe defaults.
 
 Bad:
 
@@ -62,6 +76,17 @@ poetry update   # in root without per-project isolation
 Why bad: Destructive without confirmation, no per-project isolation or reporting.
 
 ## Verification
+
+Make gates (primary):
+
+- `make check` — all lint gates across all projects
+- `make validate` — complexity + docstring gates across all projects
+- `make validate VALIDATE_SCOPE=workspace` — workspace-level inventory + wiring validation
+- `make clean` — verify clean targets
+- `make setup` — verify dependency installation
+- `make upgrade` / `make typings` — dependency and typing reports under `.reports/dependencies/` (see CLAUDE.md Maintenance and standard places)
+
+Script-level checks (internal):
 
 - `python -m compileall scripts/maintenance/check_workspace_hygiene.py scripts/maintenance/check_dependabot_config.py scripts/maintenance/check_poetry_health.py`
 - `python scripts/maintenance/check_workspace_hygiene.py --help`

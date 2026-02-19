@@ -166,7 +166,6 @@ While the namespace fetching logic is trying to be as accurate as possible, we s
 For backwards compatibility reasons, and to be able to support valid use cases without having to rebuild models,
 the namespace logic described above is a bit different when it comes to core schema generation.
 Taking the following example:
-{#backwards-compatibility-logic}
 
 ```python
 from dataclasses import dataclass
@@ -190,7 +189,7 @@ However, to evaluate the `'Bar | None'` annotation, `Bar` needs to be present in
 _not_ the case: `Bar` is being created, so it is not "assigned" to the current module's `__dict__` at that point.
 
 To avoid having to call [`model_rebuild()`][pydantic.BaseModel.model_rebuild] on `Bar`, both the parent namespace
-(if `Bar` was to be defined inside a function, and [the namespace provided during a model rebuild](#model-rebuild-semantics))
+(if `Bar` was to be defined inside a function, and the namespace provided during a model rebuild)
 and the `{Bar.__name__: Bar}` namespace are included in the locals during annotations evaluation of `Foo`
 (with the lowest priority) (1).
 { .annotate }
@@ -248,13 +247,13 @@ Foo.__pydantic_core_schema__
 ```
 
 The [`model_rebuild()`][pydantic.BaseModel.model_rebuild] method uses a _rebuild namespace_, with the following semantics:
-{#model-rebuild-semantics}
+
 
 - If an explicit `_types_namespace` argument is provided, it is used as the rebuild namespace.
 - If no namespace is provided, the namespace where the method is called will be used as the rebuild namespace.
 
 This _rebuild namespace_ will be merged with the model's parent namespace (if it was defined in a function) and used as is
-(see the [backwards compatibility logic](#backwards-compatibility-logic) described above).
+(see the backwards compatibility logic described above).
 
 [Mypy]: https://www.mypy-lang.org/
 [Pyright]: https://github.com/microsoft/pyright/

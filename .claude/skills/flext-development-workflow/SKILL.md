@@ -5,11 +5,11 @@ description: Verified development workflow including toolchain, testing, and CI/
 
 # FLEXT Development Workflow
 
-**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+**Reviewed**: 2026-02-19 | **Scope**: Coverage source-of-truth migration to pyproject.toml
 
 
 > **Source of truth**: Verified from `base.mk`, `pyproject.toml`, `.pre-commit-config.yaml`,
-> and actual project structure on 2026-02-17.
+> and actual project structure on 2026-02-19.
 
 ## Workspace Setup
 
@@ -30,8 +30,17 @@ cd flext
 python3.13 -m venv .venv
 source .venv/bin/activate
 
-# Install all dependencies
-make setup  # Runs: poetry install --with dev,test + pre-commit install
+# Install workspace + selected project dependencies
+make setup
+# Optional scope:
+# make setup PROJECT=flext-core
+# make setup PROJECTS="flext-core flext-api"
+
+# After setup: upgrade deps and refresh dependency report (or DEPS_REPORT=0 to skip report)
+make upgrade
+
+# Typings: stub supply-chain + typing report (optional PROJECT=, PROJECTS=, DEPS_REPORT=0)
+make typings
 ```
 
 ### Key Principle: Single Shared .venv
@@ -45,11 +54,7 @@ export VIRTUAL_ENV := $(WORKSPACE_VENV)
 export PATH := $(WORKSPACE_VENV)/bin:$(PATH)
 ```
 
-If a local `.venv/` exists inside a subproject, the build warns you:
-
-```
-WARNING: Local .venv found! Run 'make clean-local-venv' to use workspace venv
-```
+If a local `.venv/` exists inside a subproject, workspace enforcement removes it automatically during standardized make verb execution.
 
 ---
 
@@ -58,8 +63,7 @@ WARNING: Local .venv found! Run 'make clean-local-venv' to use workspace venv
 ### 1. Start Working on a Subproject
 
 ```bash
-cd flext-core   # or flext-auth, flext-cli, etc.
-make check      # Verify baseline (lint + type-check)
+make PROJECT=flext-core check
 ```
 
 ### 2. Edit Code
@@ -73,14 +77,16 @@ Follow the rules in these skill documents:
 ### 3. Quick Feedback Loop
 
 ```bash
-make check      # lint + type-check (fast, ~5-10 seconds)
-make test-fast  # tests without coverage (faster)
+make check
+make test
+# Optional focused run:
+# make test PYTEST_ARGS="-k unit"
 ```
 
 ### 4. Pre-Commit Validation
 
 ```bash
-make validate   # Full gate: lint + format + type + complexity + docstrings + security + tests
+make validate   # Extended non-lint validation (optional FIX=1)
 ```
 
 ---
@@ -91,9 +97,9 @@ make validate   # Full gate: lint + format + type + complexity + docstrings + se
 
 - Config: `ruff-shared.toml` at workspace root
 - Each project's `pyproject.toml` extends it: `extend = "../ruff-shared.toml"`
-- Zero tolerance: ANY lint error fails the build
+- Zero tolerance: lint/type/security failures fail `make check`
 - Preview mode enabled for latest rules
-- Auto-fix available: `make fix`
+- Auto-fix path: `make validate FIX=1`
 - Line length: 88 characters
 - Quote style: double
 - Indent: spaces
@@ -111,28 +117,26 @@ TCH, TD, TID, TRY, UP, W, YTT
 ### Pyrefly (Type Checking)
 
 - Config: `pyproject.toml` section `[tool.pyrefly]`
-- Run: `make type-check` or `make tc`
+- Run through standardized gate: `make check`
 - Zero tolerance: ANY type error fails the build
 
 ### Pytest (Testing)
 
 - Config: `pyproject.toml` section `[tool.pytest.ini_options]`
-- Run: `make test` (with coverage) or `make test-fast` (without)
-- Coverage minimum: 80% (configurable per project via `MIN_COVERAGE`)
-- Timeout: configurable per test
+- Coverage config: `pyproject.toml` section `[tool.coverage]` (source of truth for `run.source` and `report.fail_under`)
+- Run: `make test`
+- Coverage threshold: per-project via `pyproject.toml` `[tool.coverage.report] fail_under`
+- No `--cov*` flags in pytest addopts — coverage is owned by `[tool.coverage]` only
+- Optional selector: `PYTEST_ARGS="-k <expr>"`
 - Markers: `unit`, `integration`
 
 ### Additional Quality Tools
 
-| Tool | Purpose | Make Target |
-| --- | --- | --- |
-| Radon | Cyclomatic complexity + maintainability | `make complexity` |
-| Interrogate | Docstring coverage (min 80%) | `make docstring-check` |
-| Vulture | Dead code detection | `make dead-code` |
-| Complexipy | Cognitive complexity (max 15) | `make cognitive-complexity` |
-| Codespell | Spell checking | `make spell-check` |
-| Bandit | Security scanning | `make security` |
-| deptry | Dependency analysis | `make deps` |
+These tools run behind standardized verbs:
+
+- `make check`: ruff + format check + pyrefly + bandit
+- `make validate`: radon + interrogate (with optional `FIX=1`)
+- `make security`: explicit bandit gate
 
 ---
 
@@ -183,20 +187,14 @@ flext-core/
 # All tests
 make test
 
-# Fast (no coverage)
-make test-fast
+# Focused selection through pytest arguments
+make test PYTEST_ARGS="-k unit"
 
-# Unit only
-make test-unit
+# Specific file (scoped project)
+make PROJECT=flext-core test PYTEST_ARGS="tests/unit/test_models.py -v --timeout=120"
 
-# Integration only
-make test-integration
-
-# Specific file
-poetry run pytest tests/unit/test_models.py -v --timeout=120
-
-# Specific test
-poetry run pytest tests/unit/test_models.py -k "test_entity_creation" -v
+# Specific test selector (scoped project)
+make PROJECT=flext-core test PYTEST_ARGS="tests/unit/test_models.py -k test_entity_creation -v"
 ```
 
 ---
@@ -206,13 +204,20 @@ poetry run pytest tests/unit/test_models.py -k "test_entity_creation" -v
 ### Workspace-Level Commands (from root Makefile)
 
 ```bash
-# Run across all FLEXT projects
-make check-all        # lint + type-check for each project
-make test-all         # test all projects
+# Default scope: all discovered projects
+make check
+make test
+make validate
 
-# Target specific project
+# Target a single project
 make PROJECT=flext-auth check
 make PROJECT=flext-auth test
+
+# Target multiple projects
+make PROJECTS="flext-core flext-api" validate FIX=1
+
+# Pass pytest selectors to project tests
+make PROJECT=flext-auth test PYTEST_ARGS="-k unit"
 ```
 
 ### Cross-Project Impact Analysis

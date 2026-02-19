@@ -66,6 +66,13 @@ Why bad: loses useful type information and weakens analyzer value.
 
 ## Verification
 
+Make gates:
+
+- `make typings` — run typings supply-chain automation
+- `make check PROJECT=flext-core CHECK_GATES=type` — type-check after stub changes
+
+File checks:
+
 - `ls -la typings`
 - `rg -n "\.pyi$" -g "*.pyi" typings`
 - `rg -n "TODO|FIXME|pass" typings || true`

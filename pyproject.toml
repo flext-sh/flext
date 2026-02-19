@@ -1,55 +1,52 @@
 [build-system]
     build-backend = "poetry.core.masonry.api"
     requires = [
-        "poetry-core>=1.9.0",
+        "poetry-core>=2.0",
     ]
 
 [project]
     classifiers = [
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: 3.13",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Typing :: Typed",
     ]
-    # Path dependencies with absolute file:// URLs (Poetry 2.x requirement)
-    # Enriched with develop=true in [tool.poetry.dependencies] for editable installs
     dependencies = [
-        "client-a-oud-mig @ file:///home/marlonsc/flext/client-a-oud-mig",
-        "flexcore @ file:///home/marlonsc/flext/flexcore",
-        "flext-api @ file:///home/marlonsc/flext/flext-api",
-        "flext-auth @ file:///home/marlonsc/flext/flext-auth",
-        "flext-cli @ file:///home/marlonsc/flext/flext-cli",
-        "flext-core @ file:///home/marlonsc/flext/flext-core",
-        "flext-db-oracle @ file:///home/marlonsc/flext/flext-db-oracle",
-        "flext-dbt-ldap @ file:///home/marlonsc/flext/flext-dbt-ldap",
-        "flext-dbt-ldif @ file:///home/marlonsc/flext/flext-dbt-ldif",
-        "flext-dbt-oracle @ file:///home/marlonsc/flext/flext-dbt-oracle",
-        "flext-dbt-oracle-wms @ file:///home/marlonsc/flext/flext-dbt-oracle-wms",
-        "flext-grpc @ file:///home/marlonsc/flext/flext-grpc",
-        "flext-ldap @ file:///home/marlonsc/flext/flext-ldap",
-        "flext-ldif @ file:///home/marlonsc/flext/flext-ldif",
-        "flext-meltano @ file:///home/marlonsc/flext/flext-meltano",
-        "flext-observability @ file:///home/marlonsc/flext/flext-observability",
-        "flext-oracle-oic @ file:///home/marlonsc/flext/flext-oracle-oic",
-        "flext-oracle-wms @ file:///home/marlonsc/flext/flext-oracle-wms",
-        "flext-plugin @ file:///home/marlonsc/flext/flext-plugin",
-        "flext-quality @ file:///home/marlonsc/flext/flext-quality",
-        "flext-tap-ldap @ file:///home/marlonsc/flext/flext-tap-ldap",
-        "flext-tap-ldif @ file:///home/marlonsc/flext/flext-tap-ldif",
-        "flext-tap-oracle @ file:///home/marlonsc/flext/flext-tap-oracle",
-        "flext-tap-oracle-oic @ file:///home/marlonsc/flext/flext-tap-oracle-oic",
-        "flext-tap-oracle-wms @ file:///home/marlonsc/flext/flext-tap-oracle-wms",
-        "flext-target-ldap @ file:///home/marlonsc/flext/flext-target-ldap",
-        "flext-target-ldif @ file:///home/marlonsc/flext/flext-target-ldif",
-        "flext-target-oracle @ file:///home/marlonsc/flext/flext-target-oracle",
-        "flext-target-oracle-oic @ file:///home/marlonsc/flext/flext-target-oracle-oic",
-        "flext-target-oracle-wms @ file:///home/marlonsc/flext/flext-target-oracle-wms",
-        "flext-web @ file:///home/marlonsc/flext/flext-web",
-        "client-b-meltano-native @ file:///home/marlonsc/flext/client-b-meltano-native",
+        "client-a-oud-mig @ ./.flext-deps/client-a-oud-mig",
+        "flexcore @ ./.flext-deps/flexcore",
+        "flext-api @ ./.flext-deps/flext-api",
+        "flext-auth @ ./.flext-deps/flext-auth",
+        "flext-cli @ ./.flext-deps/flext-cli",
+        "flext-core @ ./.flext-deps/flext-core",
+        "flext-db-oracle @ ./.flext-deps/flext-db-oracle",
+        "flext-dbt-ldap @ ./.flext-deps/flext-dbt-ldap",
+        "flext-dbt-ldif @ ./.flext-deps/flext-dbt-ldif",
+        "flext-dbt-oracle @ ./.flext-deps/flext-dbt-oracle",
+        "flext-dbt-oracle-wms @ ./.flext-deps/flext-dbt-oracle-wms",
+        "flext-grpc @ ./.flext-deps/flext-grpc",
+        "flext-ldap @ ./.flext-deps/flext-ldap",
+        "flext-ldif @ ./.flext-deps/flext-ldif",
+        "flext-meltano @ ./.flext-deps/flext-meltano",
+        "flext-observability @ ./.flext-deps/flext-observability",
+        "flext-oracle-oic @ ./.flext-deps/flext-oracle-oic",
+        "flext-oracle-wms @ ./.flext-deps/flext-oracle-wms",
+        "flext-plugin @ ./.flext-deps/flext-plugin",
+        "flext-quality @ ./.flext-deps/flext-quality",
+        "flext-tap-ldap @ ./.flext-deps/flext-tap-ldap",
+        "flext-tap-ldif @ ./.flext-deps/flext-tap-ldif",
+        "flext-tap-oracle @ ./.flext-deps/flext-tap-oracle",
+        "flext-tap-oracle-oic @ ./.flext-deps/flext-tap-oracle-oic",
+        "flext-tap-oracle-wms @ ./.flext-deps/flext-tap-oracle-wms",
+        "flext-target-ldap @ ./.flext-deps/flext-target-ldap",
+        "flext-target-ldif @ ./.flext-deps/flext-target-ldif",
+        "flext-target-oracle @ ./.flext-deps/flext-target-oracle",
+        "flext-target-oracle-oic @ ./.flext-deps/flext-target-oracle-oic",
+        "flext-target-oracle-wms @ ./.flext-deps/flext-target-oracle-wms",
+        "flext-web @ ./.flext-deps/flext-web",
+        "client-b-meltano-native @ ./.flext-deps/client-b-meltano-native",
     ]
 
     description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
@@ -64,14 +61,11 @@
     readme = "README.md"
     requires-python = ">=3.13,<3.14"
     version = "0.10.0-dev"
+    license = "MIT"
 
     [[project.authors]]
         email = "team@flext.sh"
         name = "FLEXT Team"
-
-    [project.license]
-        text = "MIT"
-
     [[project.maintainers]]
         email = "team@flext.sh"
         name = "FLEXT Team"
@@ -317,38 +311,38 @@ files = ["src/flext"]
             pydantic-core = ">=2.41.4"
             trafilatura = ">=2.0.0"
             # Path dependencies (editable installs - paths defined in [project.dependencies])
-            client-a-oud-mig = {develop = true}
-            flexcore = {develop = true}
-            flext-api = {develop = true}
-            flext-auth = {develop = true}
-            flext-cli = {develop = true}
-            flext-core = {develop = true}
-            flext-db-oracle = {develop = true}
-            flext-dbt-ldap = {develop = true}
-            flext-dbt-ldif = {develop = true}
-            flext-dbt-oracle = {develop = true}
-            flext-dbt-oracle-wms = {develop = true}
-            flext-grpc = {develop = true}
-            flext-ldap = {develop = true}
-            flext-ldif = {develop = true}
-            flext-meltano = {develop = true}
-            flext-observability = {develop = true}
-            flext-oracle-oic = {develop = true}
-            flext-oracle-wms = {develop = true}
-            flext-plugin = {develop = true}
-            flext-quality = {develop = true}
-            flext-tap-ldap = {develop = true}
-            flext-tap-ldif = {develop = true}
-            flext-tap-oracle = {develop = true}
-            flext-tap-oracle-oic = {develop = true}
-            flext-tap-oracle-wms = {develop = true}
-            flext-target-ldap = {develop = true}
-            flext-target-ldif = {develop = true}
-            flext-target-oracle = {develop = true}
-            flext-target-oracle-oic = {develop = true}
-            flext-target-oracle-wms = {develop = true}
-            flext-web = {develop = true}
-            client-b-meltano-native = {develop = true}
+            client-a-oud-mig = {path = ".flext-deps/client-a-oud-mig", develop = true}
+            flexcore = {path = ".flext-deps/flexcore", develop = true}
+            flext-api = {path = ".flext-deps/flext-api", develop = true}
+            flext-auth = {path = ".flext-deps/flext-auth", develop = true}
+            flext-cli = {path = ".flext-deps/flext-cli", develop = true}
+            flext-core = {path = ".flext-deps/flext-core", develop = true}
+            flext-db-oracle = {path = ".flext-deps/flext-db-oracle", develop = true}
+            flext-dbt-ldap = {path = ".flext-deps/flext-dbt-ldap", develop = true}
+            flext-dbt-ldif = {path = ".flext-deps/flext-dbt-ldif", develop = true}
+            flext-dbt-oracle = {path = ".flext-deps/flext-dbt-oracle", develop = true}
+            flext-dbt-oracle-wms = {path = ".flext-deps/flext-dbt-oracle-wms", develop = true}
+            flext-grpc = {path = ".flext-deps/flext-grpc", develop = true}
+            flext-ldap = {path = ".flext-deps/flext-ldap", develop = true}
+            flext-ldif = {path = ".flext-deps/flext-ldif", develop = true}
+            flext-meltano = {path = ".flext-deps/flext-meltano", develop = true}
+            flext-observability = {path = ".flext-deps/flext-observability", develop = true}
+            flext-oracle-oic = {path = ".flext-deps/flext-oracle-oic", develop = true}
+            flext-oracle-wms = {path = ".flext-deps/flext-oracle-wms", develop = true}
+            flext-plugin = {path = ".flext-deps/flext-plugin", develop = true}
+            flext-quality = {path = ".flext-deps/flext-quality", develop = true}
+            flext-tap-ldap = {path = ".flext-deps/flext-tap-ldap", develop = true}
+            flext-tap-ldif = {path = ".flext-deps/flext-tap-ldif", develop = true}
+            flext-tap-oracle = {path = ".flext-deps/flext-tap-oracle", develop = true}
+            flext-tap-oracle-oic = {path = ".flext-deps/flext-tap-oracle-oic", develop = true}
+            flext-tap-oracle-wms = {path = ".flext-deps/flext-tap-oracle-wms", develop = true}
+            flext-target-ldap = {path = ".flext-deps/flext-target-ldap", develop = true}
+            flext-target-ldif = {path = ".flext-deps/flext-target-ldif", develop = true}
+            flext-target-oracle = {path = ".flext-deps/flext-target-oracle", develop = true}
+            flext-target-oracle-oic = {path = ".flext-deps/flext-target-oracle-oic", develop = true}
+            flext-target-oracle-wms = {path = ".flext-deps/flext-target-oracle-wms", develop = true}
+            flext-web = {path = ".flext-deps/flext-web", develop = true}
+            client-b-meltano-native = {path = ".flext-deps/client-b-meltano-native", develop = true}
 
         [tool.poetry.group.dev.dependencies]
             aiohttp = ">=3.12.14"
@@ -510,8 +504,6 @@ types-tabulate = "^0.9.0.20241207"
 
     [tool.pytest.ini_options]
         addopts = [
-            "--cov-report=term-missing",
-            "--cov=src/",
             "--strict-config",
             "--strict-markers",
             "--tb=short",
@@ -553,24 +545,18 @@ types-tabulate = "^0.9.0.20241207"
             "tests/",
         ]
 
-
     [tool.pyrefly]
         search-path = [
+            "../typings",
+            "../typings/generated",
+            "typings",
+            "typings/generated",
             "src",
-            "tests",
             "examples",
             "scripts",
         ]
+        project-excludes = ["**/*_pb2*.py", "**/*_pb2_grpc*.py"]
 
-        # Ignore all errors in gRPC auto-generated files
-        # These files are auto-generated by protoc and should not be linted
-        [[tool.pyrefly.sub-config]]
-        matches = "**/*_pb2*.py"
-        ignore = true
-
-        # Ignore unknown-name errors in typings.py files
-        # These files contain recursive type definitions (PEP 695) that are valid
-        # but pyrefly has limitations with self-referential types
         [[tool.pyrefly.sub-config]]
         matches = "**/typings.py"
 
@@ -593,6 +579,7 @@ types-tabulate = "^0.9.0.20241207"
             "B603",  # subprocess without shell=True - actually MORE secure
             "B607",  # partial paths - standard for CLI tool discovery via PATH
             "B105",  # "PASS" constant - not a password, it's a result status
+            "B608",  # hardcoded_sql_expressions - DBT/template code-gen; identifiers from config
         ]
         exclude_dirs = [
             ".git",
@@ -666,6 +653,7 @@ types-tabulate = "^0.9.0.20241207"
         relative_files = true
 
     [tool.coverage.report]
+        fail_under = 100
         exclude_lines = [
             "pragma: no cover",
             'if __name__ == .__main__.:',

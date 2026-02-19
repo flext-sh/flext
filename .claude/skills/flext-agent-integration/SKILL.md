@@ -26,6 +26,7 @@ description: Guide for using MCP tools, skills, and agents in the FLEXT developm
 - Use Context7 (`mcp_context7_resolve-library-id` + `mcp_context7_query-docs`) for external library documentation.
 - Start sessions by checking `CLAUDE.md` for current project rules and conventions.
 - Prefer `make validate` for verification over ad-hoc lint/type-check commands.
+- Use scoped root Make selectors to avoid workspace-wide runs when not required: `PROJECT=<name>`, `PROJECTS="a b"`, `PYTEST_ARGS="..."`.
 
 ## Instructions
 

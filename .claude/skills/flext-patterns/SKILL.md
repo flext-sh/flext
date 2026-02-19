@@ -98,6 +98,15 @@ logger["user_id"] = user_id
 Why bad: bypasses structured context APIs (`bind_global_context`, `scoped_context`) and loses standardized log behavior.
 
 ## Verification
+
+Make gates:
+
+- `make check PROJECT=flext-core` — lint + type gates enforce pattern contracts
+- `make test PROJECT=flext-core` — pattern usage exercised by test suite
+- `make validate PROJECT=flext-core VALIDATE_GATES=complexity` — complexity gates
+
+Pattern checks:
+
 - `rg -n "\.map\(|\.flat_map\(|\.lash\(|\.recover\(" flext-core/src/flext_core/result.py`
 - `rg -n "class FlextContainer|def register\(|def get_typed\(" flext-core/src/flext_core/container.py`
 - `rg -n "class FlextLogger|bind_global_context|scoped_context" flext-core/src/flext_core/loggings.py`

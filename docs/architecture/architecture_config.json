@@ -94,10 +94,21 @@
     "review_cycle": "quarterly"
   },
   "integration": {
-    "github_pages": false,
+    "github_pages": true,
     "mkdocs": true,
     "sphinx": false,
     "custom_portal": false
+  },
+  "docs_validation": {
+    "required_skills": [
+      "rules-docs",
+      "scripts-maintenance",
+      "readme-standardization",
+      "flext-docs-pointer-policy"
+    ],
+    "gate_contract": {
+      "max_violations": 50
+    }
   },
   "automation": {
     "ci_integration": true,

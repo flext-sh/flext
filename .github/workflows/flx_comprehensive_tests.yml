@@ -238,7 +238,7 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: ${{ github.run_id }}
           POSTGRES_DB: test_db
         options: >-
           --health-cmd pg_isready
@@ -268,7 +268,7 @@ jobs:
       - name: Set up test environment
         run: |
           echo "🔧 Setting up integration test environment..."
-          export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/test_db"
+          export DATABASE_URL="postgresql://postgres:${{ github.run_id }}@localhost:5432/test_db"
           export TEST_MODE="integration"
 
       - name: Run integration tests

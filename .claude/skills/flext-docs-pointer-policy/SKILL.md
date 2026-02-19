@@ -17,6 +17,7 @@ description: Canonical documentation-governance policy for agent configs: one ro
 
 - `AGENTS.md` states a single source of truth: root `CLAUDE.md`.
 - `AGENTS.md` maps all agent config entrypoints and enforces pointer-file limits.
+- `docs/architecture/adr/README.md` tracks architecture decisions for governance changes.
 - Pointer files reference root policy:
   - `.github/copilot-instructions.md`
   - `.gemini/styleguide.md`
@@ -73,6 +74,12 @@ Use local rules in this file as priority over CLAUDE.md.
 Why bad: inverts repository governance and creates conflicting behavior between tools.
 
 ## Verification
+
+Make gates:
+
+- `make validate VALIDATE_SCOPE=workspace` — workspace validation ensures doc consistency
+
+Policy checks:
 
 - `rg -n "single source of truth|CLAUDE.md|Never duplicate rules|under 50 lines" AGENTS.md`
 - `rg -n "Canonical source|CLAUDE.md" .github/copilot-instructions.md .gemini/styleguide.md .cursor/rules/flext.mdc .clinerules .windsurfrules .continue/rules/flext.md CONVENTIONS.md codex.md`

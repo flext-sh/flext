@@ -60,6 +60,14 @@ on: [push]
 Why bad: overly broad trigger often causes unnecessary CI load and unclear intent.
 
 ## Verification
+
+Make gates:
+
+- `make validate VALIDATE_SCOPE=workspace` — verify CI workflow references match real scripts
+- `make check PROJECT=flext-core` — verify CI-referenced gates work
+
+File checks:
+
 - `ls -la .github/workflows`
 - `rg -n "^name:|^on:|^jobs:" .github/workflows/*.yml`
 - `rg -n "Canonical source|CLAUDE.md" .github/copilot-instructions.md`

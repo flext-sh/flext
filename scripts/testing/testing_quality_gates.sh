@@ -18,8 +18,7 @@ set -euo pipefail
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-WORKSPACE_ROOT="$(dirname "$SCRIPT_DIR")"
-MIN_COVERAGE_DEFAULT=75
+WORKSPACE_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
 REQUIRED_MARKERS=("unit" "integration" "slow" "oracle" "performance" "smoke" "e2e")
 CORE_PROJECTS=("flext-core" "flext-api" "flext-cli" "flext-auth")
 
@@ -266,6 +265,31 @@ check_test_dependencies() {
 	return 0
 }
 
+read_fail_under() {
+	local project=$1
+	local pyproject_file="$project/pyproject.toml"
+
+	if [ ! -f "$pyproject_file" ]; then
+		return 1
+	fi
+
+	python3 - "$pyproject_file" <<'PY'
+from __future__ import annotations
+
+import sys
+import tomllib
+from pathlib import Path
+
+path = Path(sys.argv[1])
+data = tomllib.loads(path.read_text(encoding="utf-8"))
+report = data.get("tool", {}).get("coverage", {}).get("report", {})
+value = report.get("fail_under")
+if value is None:
+    raise SystemExit(1)
+print(value)
+PY
+}
+
 # Function to run tests and check coverage
 run_tests() {
 	local project=$1
@@ -304,6 +328,20 @@ run_tests() {
 			cd - >/dev/null
 			return 1
 		fi
+	fi
+
+	if ! fail_under="$(read_fail_under "$project")"; then
+		log_error "$project: Missing [tool.coverage.report].fail_under in pyproject.toml"
+		cd - >/dev/null
+		return 1
+	fi
+
+	if poetry run python -m coverage report >/dev/null 2>&1; then
+		log_verbose "$project: Coverage threshold gate passed (fail_under=$fail_under)"
+	else
+		log_error "$project: Coverage threshold gate failed (fail_under=$fail_under)"
+		cd - >/dev/null
+		return 1
 	fi
 
 	cd - >/dev/null

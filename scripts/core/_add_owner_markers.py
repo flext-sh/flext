@@ -131,11 +131,12 @@ SKILL_MAP: dict[str, str] = {
     "scripts/merge_aggressive_gitignore.py": "scripts-maintenance",
     "scripts/add_missing_clean_targets.py": "scripts-maintenance",
     "scripts/update_clean_targets.py": "scripts-maintenance",
-    "scripts/docs_link_fixer.py": "scripts-maintenance",
-    "scripts/docs_maintenance_audit.py": "scripts-maintenance",
-    "scripts/docs_sync_automation.sh": "scripts-maintenance",
-    "scripts/docs_toc_generator.py": "scripts-maintenance",
-    "scripts/markdown_lint_workspace.py": "scripts-maintenance",
+    "scripts/documentation/audit.py": "scripts-maintenance",
+    "scripts/documentation/fix.py": "scripts-maintenance",
+    "scripts/documentation/build.py": "scripts-maintenance",
+    "scripts/documentation/generate.py": "scripts-maintenance",
+    "scripts/documentation/validate.py": "scripts-maintenance",
+    "scripts/documentation/readme_standardizer.py": "scripts-maintenance",
 }
 
 

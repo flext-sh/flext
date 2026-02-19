@@ -334,7 +334,7 @@ def main() -> int:
 
     args = parser.parse_args()
 
-    base_path = Path("/home/marlonsc/flext")
+    base_path = Path(__file__).resolve().parents[1]
 
     if args.all:
         projects = [

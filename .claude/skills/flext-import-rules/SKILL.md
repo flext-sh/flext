@@ -269,3 +269,17 @@ from typing import Sequence  # Use: from collections.abc import Sequence
 # ❌ Shadowing aliases inconsistently
 from flext_core import FlextResult as result  # Use: FlextResult as r (or just r)
 ```
+
+## Verification
+
+Make gates:
+
+- `make check PROJECT=flext-core CHECK_GATES=lint` — ruff import ordering rules
+- `make check PROJECT=flext-core CHECK_GATES=type` — type-check verifies import resolution
+- `make check PROJECT=flext-core` — all 4 gates including import enforcement
+
+Pattern checks:
+
+- `rg -n "from flext_core\._" --glob "**/*.py" flext-*/src/` — detect private import violations
+- `rg -n "from typing import List|from typing import Dict|from typing import Optional" --glob "**/*.py" flext-core/src/` — detect legacy typing imports
+- `rg -n "import \*" --glob "**/*.py" flext-core/src/` — detect wildcard imports

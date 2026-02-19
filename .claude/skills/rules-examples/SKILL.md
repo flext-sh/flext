@@ -58,6 +58,13 @@ from flext_core._models import m
 Why bad: example couples to private internals and will drift quickly.
 
 ## Verification
+
+Make gates:
+
+- `make check PROJECT=flext-core` — verify core imports used by examples still pass
+
+File checks:
+
 - `ls -la examples`
 - `rg -n "from flext_core|from flext_core\._" examples/*.py`
 - `rg -n "TODO|FIXME" examples || true`

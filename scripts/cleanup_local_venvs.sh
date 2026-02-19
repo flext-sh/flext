@@ -3,8 +3,6 @@
 # =============================================================================
 # FLEXT - Cleanup Local Virtual Environments
 # =============================================================================
-# This script removes all local .venv directories from subprojects,
-# keeping only the workspace .venv at /home/marlonsc/flext/.venv
 # =============================================================================
 
 set -euo pipefail

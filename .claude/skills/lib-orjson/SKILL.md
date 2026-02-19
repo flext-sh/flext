@@ -99,6 +99,14 @@ serialized = orjson.dumps(value).decode("utf-16")
 Why bad: hardcoded wrong encoding breaks compatibility with project default encoding and can corrupt output.
 
 ## Verification
+
+Make gates:
+
+- `make check PROJECT=flext-core` — lint + type gates
+- `make test PROJECT=flext-core` — verify serialization behavior
+
+Pattern checks:
+
 - `rg -n "import orjson|orjson\.dumps|OPT_SORT_KEYS|decode\(c\.Utilities\.DEFAULT_ENCODING\)|json\.dumps\(value, sort_keys=True, default=str\)" flext-core/src/flext_core/_utilities/validation.py`
 - `rg -n "orjson \(>=3\.11\.3\)|orjson" flext-core/pyproject.toml pyproject.toml`
 - `rg -n "import orjson" --glob "**/*.py"`

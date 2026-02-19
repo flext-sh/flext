@@ -234,6 +234,17 @@ result = FlextResult(Success(value))
 
 ## Verification
 
+Make gates:
+
+```bash
+make check PROJECT=flext-core                  # lint + type gates for result.py
+make check PROJECT=flext-core CHECK_GATES=type # type-check FlextResult composition
+make test PROJECT=flext-core                   # railway composition tests
+make validate PROJECT=flext-core               # complexity gates
+```
+
+Pattern checks:
+
 ```bash
 # Confirm FlextResult declarations
 rg -n "def ok|def fail|def map|def flat_map|def lash|def recover|def traverse|def fold|def tap" flext-core/src/flext_core/result.py

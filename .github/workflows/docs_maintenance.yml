@@ -9,7 +9,7 @@ on:
       check_external_links:
         description: "Check external links (slower)"
         required: false
-        default: "false"
+        default: false
         type: boolean
   pull_request:
     paths:
@@ -47,25 +47,24 @@ jobs:
       - name: Run documentation audit
         id: audit
         run: |
-          python scripts/docs_maintenance_audit.py \
-            --root . \
-            --output docs_audit_report.md \
-            --format markdown \
-            ${{ github.event.inputs.check_external_links == 'true' && '--check-external-links' || '' }}
+          make docs DOCS_PHASE=audit
+
+          cp .reports/docs/audit-report.md docs_audit_report.md
 
       - name: Generate JSON report for metrics
         run: |
-          python scripts/docs_maintenance_audit.py \
-            --root . \
-            --output docs_audit_report.json \
-            --format json
+          cp .reports/docs/audit-summary.json docs_audit_report.json
 
       - name: Generate HTML dashboard
         run: |
-          python scripts/docs_maintenance_audit.py \
-            --root . \
-            --output docs_audit_report.html \
-            --format html
+          python - <<'PY'
+          from pathlib import Path
+          source = Path(".reports/docs/audit-report.md")
+          target = Path("docs_audit_report.html")
+          body = source.read_text(encoding="utf-8") if source.exists() else "No report"
+          html = "<html><body><pre>" + body.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") + "</pre></body></html>\n"
+          target.write_text(html, encoding="utf-8")
+          PY
 
       - name: Upload audit reports as artifacts
         uses: actions/upload-artifact@v4
@@ -191,10 +190,8 @@ jobs:
 
       - name: Validate internal links
         run: |
-          python scripts/docs_maintenance_audit.py \
-            --root . \
-            --output link_validation.md \
-            --format markdown
+          make docs DOCS_PHASE=audit
+          cp .reports/docs/audit-report.md link_validation.md
 
       - name: Check for broken links
         run: |
@@ -221,12 +218,22 @@ jobs:
 
       - name: Check for common issues
         run: |
-          # Check for trailing whitespace
-          if grep -r -n " $" --include="*.md" .; then
+          if git grep -nE " +$" -- "*.md"; then
             echo "::warning::Found trailing whitespace in markdown files"
           fi
 
-          # Check for multiple blank lines
-          if grep -Pzo -r "(?s)\n\n\n+" --include="*.md" .; then
+          if python - <<'PY'
+          from pathlib import Path
+
+          files = [p for p in Path('.').rglob('*.md') if '.git' not in p.parts]
+          found = False
+          for path in files:
+              text = path.read_text(encoding='utf-8', errors='ignore')
+              if '\n\n\n' in text:
+                  print(path.as_posix())
+                  found = True
+          raise SystemExit(0 if found else 1)
+          PY
+          then
             echo "::warning::Found multiple consecutive blank lines"
           fi

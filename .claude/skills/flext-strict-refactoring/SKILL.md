@@ -70,6 +70,15 @@ Why bad: duplicated policy rapidly becomes inconsistent.
 
 ## Verification
 
+Make gates:
+
+- `make check PROJECT=flext-core` — verify no regressions after refactoring
+- `make validate PROJECT=flext-core` — complexity + docstring gates
+- `make test PROJECT=flext-core` — test suite must pass after any refactor
+- `make validate VALIDATE_SCOPE=workspace` — workspace-level validation
+
+Policy checks:
+
 - `rg -n "TODO|TBD|placeholder" .claude/skills/*/SKILL.md || true`
 - `rg -n "(^|[\"'`])/(Users|home)/" .claude/skills/*/SKILL.md || true`
 - `rg -n "Canonical source:`CLAUDE.md`|single source of truth" AGENTS.md codex.md .github/copilot-instructions.md .gemini/styleguide.md`
