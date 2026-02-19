@@ -1,11 +1,6 @@
 # User Guides
 
 
-
-
-
-
-
 <!-- TOC START -->
 - [Getting Started](#getting-started)
   - [[Installation Guide](./getting-started.md) ✅](#installation-guidegetting-startedmd-)

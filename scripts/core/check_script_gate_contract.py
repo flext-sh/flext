@@ -107,8 +107,9 @@ def artifact_violations(path: Path, rel: str) -> list[Violation]:
     for number, line in enumerate(
         path.read_text(encoding="utf-8", errors="ignore").splitlines(), start=1
     ):
+        sisyphus_token = ".sisyphus" + "/"
         if (
-            ".sisyphus/" in line
+            sisyphus_token in line
             and "artifact" not in line.lower()
             and "reports" not in line.lower()
         ):

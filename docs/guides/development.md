@@ -1,11 +1,6 @@
 # FLEXT Development Guide
 
 
-
-
-
-
-
 <!-- TOC START -->
 - [Prerequisites](#prerequisites)
 - [Development Environment Setup](#development-environment-setup)

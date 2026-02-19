@@ -1,10 +1,6 @@
 # Security Guide
 
 
-
-
-
-
 <!-- TOC START -->
 - No sections found
 <!-- TOC END -->

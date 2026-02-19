@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Owner-Skill: .claude/skills/scripts-testing/SKILL.md
 """FLEXT Pytest Runner - Execute pytest across all workspace projects with timeout.
 
@@ -58,7 +59,7 @@ PROJECT_HIERARCHY = {
         "flext-plugin",
         "flext-quality",
     ],
-    "special": ["client-a-oud-mig", "client-b-meltano-native", "flexcore"],
+    "special": ["flexcore"],
 }
 
 

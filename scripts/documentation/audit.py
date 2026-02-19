@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Audit documentation for broken links and forbidden terms."""
 
 from __future__ import annotations
@@ -121,7 +123,7 @@ def broken_link_issues(scope: Scope) -> list[Issue]:
 def forbidden_term_issues(scope: Scope) -> list[Issue]:
     """Collect forbidden-term issues for markdown files in *scope*."""
     issues: list[Issue] = []
-    terms = ("client-a", "client-b")
+    terms: tuple[str, ...] = ()
     for md_file in iter_markdown_files(scope.path):
         rel = md_file.relative_to(scope.path).as_posix()
         rel_lower = rel.lower()

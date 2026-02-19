@@ -1,10 +1,6 @@
 # FLEXT Testing Guide
 
 
-
-
-
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Test Structure](#test-structure)

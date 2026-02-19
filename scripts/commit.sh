@@ -8,6 +8,18 @@
 
 set -euo pipefail
 
+INTERACTIVE=0
+for arg in "$@"; do
+	if [[ $arg == "--interactive" ]]; then
+		INTERACTIVE=1
+	fi
+done
+
+if [[ $INTERACTIVE -ne 1 ]]; then
+	echo "This command is interactive. Re-run with --interactive."
+	exit 1
+fi
+
 # Get script directory and source common functions
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/lib/common.sh"
