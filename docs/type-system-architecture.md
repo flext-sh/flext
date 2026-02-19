@@ -36,7 +36,7 @@
   - [4. TypeVar with Proper Bounds](#4-typevar-with-proper-bounds)
   - [5. Namespace Depth Management](#5-namespace-depth-management)
 - [Project Status](#project-status)
-  - [✅ Completed Projects](#-completed-projects)
+  - [✅ Completed Projects](#completed-projects)
   - [Type System Metrics](#type-system-metrics)
   - [Validation Results](#validation-results)
 - [Summary](#summary)

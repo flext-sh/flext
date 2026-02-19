@@ -3,7 +3,7 @@
 
 <!-- TOC START -->
 - [Table of Contents](#table-of-contents)
-- [📋 Arc42 Template Structure](#-arc42-template-structure)
+- [📋 Arc42 Template Structure](#arc42-template-structure)
   - [1. [Introduction and Goals](./01-introduction-and-goals.md)](#1-introduction-and-goals01-introduction-and-goalsmd)
   - [2. [Constraints](./02-constraints.md)](#2-constraints02-constraintsmd)
   - [3. [Context and Scope](./03-context-and-scope.md)](#3-context-and-scope03-context-and-scopemd)
@@ -16,20 +16,20 @@
   - [10. [Quality Requirements](./10-quality-requirements.md)](#10-quality-requirements10-quality-requirementsmd)
   - [11. [Risks and Technical Debt](./11-risks-and-technical-debt.md)](#11-risks-and-technical-debt11-risks-and-technical-debtmd)
   - [12. [Glossary](./12-glossary.md)](#12-glossary12-glossarymd)
-- [🎯 FLEXT Architecture Overview](#-flext-architecture-overview)
-- [🏗️ Key Architectural Principles](#-key-architectural-principles)
+- [🎯 FLEXT Architecture Overview](#flext-architecture-overview)
+- [🏗️ Key Architectural Principles](#key-architectural-principles)
   - [1. Clean Architecture](#1-clean-architecture)
   - [2. Domain-Driven Design](#2-domain-driven-design)
   - [3. Railway-Oriented Programming](#3-railway-oriented-programming)
   - [4. Event-Driven Architecture](#4-event-driven-architecture)
   - [5. Microservices Architecture](#5-microservices-architecture)
-- [📊 Quality Attributes](#-quality-attributes)
+- [📊 Quality Attributes](#quality-attributes)
   - [Performance](#performance)
   - [Reliability](#reliability)
   - [Security](#security)
   - [Maintainability](#maintainability)
-- [🔗 Related Documentation](#-related-documentation)
-- [📚 Additional Resources](#-additional-resources)
+- [🔗 Related Documentation](#related-documentation)
+- [📚 Additional Resources](#additional-resources)
 <!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency

@@ -12,7 +12,7 @@
 - [Serializing subclasses](#serializing-subclasses)
   - [Subclasses of supported types](#subclasses-of-supported-types)
   - [Subclasses of model-like types](#subclasses-of-model-like-types)
-  - [Serializing with duck typing 🦆](#serializing-with-duck-typing-)
+  - [Serializing with duck typing 🦆](#serializing-with-duck-typing)
 - [Field inclusion and exclusion](#field-inclusion-and-exclusion)
   - [At the field level](#at-the-field-level)
   - [As parameters to the serialization methods](#as-parameters-to-the-serialization-methods)
