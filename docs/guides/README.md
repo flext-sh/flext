@@ -1,33 +1,6 @@
 # User Guides
 
 
-<!-- TOC START -->
-- [Table of Contents](#table-of-contents)
-- [Getting Started](#getting-started)
-  - [[Installation Guide](./getting-started.md) ✅](#installation-guidegetting-startedmd-)
-  - [Quick Start Tutorial (Coming Soon)](#quick-start-tutorial-coming-soon)
-  - [[Configuration Guide](./configuration.md) ✅](#configuration-guideconfigurationmd-)
-- [Development](#development)
-  - [[Development Setup](./development.md) ✅](#development-setupdevelopmentmd-)
-  - [[Automation Skill Pattern](./skill-automation-pattern.md) ✅](#automation-skill-patternskill-automation-patternmd-)
-  - [Contributing Guide (Coming Soon)](#contributing-guide-coming-soon)
-  - [[Testing Guide](./testing.md) ✅](#testing-guidetestingmd-)
-- [Operations](#operations)
-  - [Deployment Guide (Coming Soon)](#deployment-guide-coming-soon)
-  - [Monitoring Guide (Coming Soon)](#monitoring-guide-coming-soon)
-  - [[Troubleshooting Guide](./troubleshooting.md) ✅](#troubleshooting-guidetroubleshootingmd-)
-- [Integration](#integration)
-  - [LDAP Integration (Coming Soon)](#ldap-integration-coming-soon)
-  - [Database Integration (Coming Soon)](#database-integration-coming-soon)
-  - [API Integration (Coming Soon)](#api-integration-coming-soon)
-- [Migration](#migration)
-  - [LDIF Migration Guide (Coming Soon)](#ldif-migration-guide-coming-soon)
-  - [Data Migration (Coming Soon)](#data-migration-coming-soon)
-- [Best Practices](#best-practices)
-  - [Performance Optimization (Coming Soon)](#performance-optimization-coming-soon)
-  - [Security Best Practices (Coming Soon)](#security-best-practices-coming-soon)
-  - [Error Handling (Coming Soon)](#error-handling-coming-soon)
-<!-- TOC END -->
 
 ## Table of Contents
 
