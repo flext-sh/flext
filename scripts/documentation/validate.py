@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Documentation validation script for FLEXT projects.
 
 Checks ADR skill references and generates validation reports per project scope.

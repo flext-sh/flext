@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 """Auto-heal ``[tool.pyrefly]`` in every pyproject.toml before check runs.
 
 Fixes search-path for root vs subproject, removes nonexistent dirs,

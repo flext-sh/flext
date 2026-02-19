@@ -1,11 +1,6 @@
 # Getting Started with FLEXT
 
 
-
-
-
-
-
 <!-- TOC START -->
 - [What is FLEXT](#what-is-flext)
 - [Prerequisites](#prerequisites)
@@ -325,6 +320,6 @@ Now that you have FLEXT installed and running, explore these areas:
 1. **[Architecture Guide](../architecture/README.md)**: Understand FLEXT's design principles
 2. **[API Reference](../api-reference/README.md)**: Complete API documentation
 3. **[Project Guides](../projects/README.md)**: Deep dive into specific libraries
-4. **[Examples](../../../examples/)**: Real-world usage examples
+4. **[Examples](../../examples/README.md)**: Real-world usage examples
 
 Happy coding with FLEXT! 🚀

@@ -5738,7 +5738,6 @@ class FlextLdifParser(Flext[list[Entry]]):
         return parse_ldif_impl(content, strict=self.strict_mode)
 
 
-
 # ═══════════════════════════════════════════════════════════════════════
 
 # NO FACTORY FUNCTIONS! Service is clean enough to use directly!
@@ -7790,7 +7789,6 @@ class FlextCliService(FlextService[dict[str, object]]):
         return FlextResult.ok({"table": "rendered"})
 
     # ... other operation methods
-
 
 
 # ============ PUBLIC API - Zero Ceremony ============

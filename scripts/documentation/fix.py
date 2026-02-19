@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Auto-fix broken links and insert/update TOC in markdown files."""
 
 from __future__ import annotations

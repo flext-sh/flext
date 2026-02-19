@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Generate project-level docs from workspace SSOT guides."""
 
 from __future__ import annotations
