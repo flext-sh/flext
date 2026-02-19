@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-validation/SKILL.md
 """Run lint gates across FLEXT workspace projects and generate reports.
 
 Gates: ruff lint/format, pyrefly, mypy, pyright, bandit, markdownlint, go vet.
@@ -282,6 +283,7 @@ def _run_pyright(project_dir: Path, src_dir: str) -> GateResult:
 def _collect_markdown_files(project_dir: Path) -> list[Path]:
     excluded = {
         ".git",
+        ".reports",
         ".venv",
         "node_modules",
         ".flext-deps",
@@ -303,8 +305,16 @@ def _run_markdown(project_dir: Path) -> GateResult:
     md_files = _collect_markdown_files(project_dir)
     if not md_files:
         return GateResult(gate="markdown", project=project_dir.name, passed=True)
+    cmd = ["markdownlint"]
+    root_config = ROOT / ".markdownlint.json"
+    local_config = project_dir / ".markdownlint.json"
+    if root_config.exists():
+        cmd.extend(["--config", str(root_config)])
+    elif local_config.exists():
+        cmd.extend(["--config", str(local_config)])
+    cmd.extend(str(p.relative_to(project_dir)) for p in md_files)
     result = _run(
-        ["markdownlint", *[str(p.relative_to(project_dir)) for p in md_files]],
+        cmd,
         project_dir,
     )
     errors: list[CheckError] = []
@@ -352,6 +362,39 @@ def _run_go(project_dir: Path) -> GateResult:
     errors: list[CheckError] = []
     raw_output = ""
 
+    vet_result = _run(["go", "vet", "./..."], project_dir, timeout=900)
+    raw_output = "\n".join(
+        part for part in (vet_result.stdout, vet_result.stderr) if part
+    )
+    vet_pattern = re.compile(
+        r"^(?P<file>[^:\n]+\.go):(?P<line>\d+)(?::(?P<col>\d+))?:\s*(?P<msg>.*)$"
+    )
+    for line in (vet_result.stdout + "\n" + vet_result.stderr).splitlines():
+        match = vet_pattern.match(line.strip())
+        if not match:
+            continue
+        errors.append(
+            CheckError(
+                file=match.group("file"),
+                line=int(match.group("line")),
+                column=int(match.group("col") or 1),
+                code="govet",
+                message=match.group("msg"),
+            )
+        )
+    if vet_result.returncode != 0 and not errors:
+        errors.append(
+            CheckError(
+                file=".",
+                line=1,
+                column=1,
+                code="govet",
+                message=(
+                    vet_result.stdout or vet_result.stderr or "go vet failed"
+                ).strip(),
+            )
+        )
+
     go_files = list(project_dir.rglob("*.go"))
     if go_files:
         fmt_result = _run(
@@ -359,7 +402,10 @@ def _run_go(project_dir: Path) -> GateResult:
             project_dir,
             timeout=900,
         )
-        raw_output = fmt_result.stderr
+        fmt_raw_output = "\n".join(
+            part for part in (fmt_result.stdout, fmt_result.stderr) if part
+        )
+        raw_output = "\n".join(part for part in (raw_output, fmt_raw_output) if part)
         for file_name in fmt_result.stdout.splitlines():
             file_name = file_name.strip()
             if not file_name:

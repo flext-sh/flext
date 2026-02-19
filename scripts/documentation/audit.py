@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# Owner-Skill: .claude/skills/scripts-maintenance/SKILL.md
 """Audit documentation for broken links and forbidden terms."""
 
 from __future__ import annotations

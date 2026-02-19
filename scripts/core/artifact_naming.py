@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Owner-Skill: .claude/skills/scripts-infra/SKILL.md
 """Artifact naming helpers for the <skill>--<kind>--<slug>.<ext> contract."""
 

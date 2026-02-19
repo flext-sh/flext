@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Owner-Skill: .claude/skills/scripts-testing/SKILL.md
 """FLEXT Pytest Runner - Execute pytest across all workspace projects with timeout.
 

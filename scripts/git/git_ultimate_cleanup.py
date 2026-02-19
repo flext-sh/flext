@@ -247,7 +247,13 @@ class GitUltimateCleanup:
         r"noreply@anthropic\.com.*",
     ]
 
-    def __init__(self, repo_path: Path, *, dry_run: bool = False) -> None:
+    def __init__(
+        self,
+        repo_path: Path,
+        *,
+        dry_run: bool = False,
+        interactive: bool = False,
+    ) -> None:
         """Initialize the Git repository cleaner.
 
         Args:
@@ -259,6 +265,7 @@ class GitUltimateCleanup:
         self.timestamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
         self.backup_root = Path.home() / f"flext-ultimate-backup-{self.timestamp}"
         self.dry_run = dry_run
+        self.interactive = interactive
 
     def validate_repository(self) -> tuple[bool, str]:
         """Comprehensive repository validation."""
@@ -1034,6 +1041,9 @@ def callback(commit, metadata):
         # Safety confirmation
         print("⚠️  WARNING: This will FORCE PUSH to GitHub!")
         print("   This will overwrite remote history with local changes.")
+        if not self.interactive:
+            print("❌ Interactive confirmation required. Re-run with --interactive.")
+            return False
         response = input("Continue? (yes/NO): ")
         if response.lower() != "yes":
             print("Cancelled.")
@@ -1552,7 +1562,10 @@ def callback(commit, metadata):
             for i, submodule in enumerate(submodules, 1):
                 print(f"   [{i:2d}/{len(submodules)}] {submodule.name}...", end=" ")
                 try:
-                    sub_cleanup = GitUltimateCleanup(submodule)
+                    sub_cleanup = GitUltimateCleanup(
+                        submodule,
+                        interactive=self.interactive,
+                    )
                     sub_result = sub_cleanup.detect_additional_cruft(silent=True)
                     all_results.append(sub_result)
                     print("✅")
@@ -1805,6 +1818,11 @@ def main() -> None:
         action="store_true",
         help="Update all .gitignore files with comprehensive cruft patterns",
     )
+    parser.add_argument(
+        "--interactive",
+        action="store_true",
+        help="Allow interactive prompts",
+    )
 
     args = parser.parse_args()
 
@@ -1812,7 +1830,11 @@ def main() -> None:
         print(f"❌ Repository not found: {args.repo}")
         sys.exit(1)
 
-    cleanup = GitUltimateCleanup(args.repo, dry_run=args.dry_run)
+    cleanup = GitUltimateCleanup(
+        args.repo,
+        dry_run=args.dry_run,
+        interactive=args.interactive,
+    )
 
     # Just test
     if args.test:
@@ -1866,6 +1888,9 @@ def main() -> None:
         if args.all:
             print("Scope: Main repo + ALL submodules")
         print()
+        if not args.interactive:
+            print("❌ Interactive confirmation required. Re-run with --interactive.")
+            sys.exit(1)
         response = input("Continue? (yes/NO): ")
         if response.lower() != "yes":
             print("Cancelled.")
@@ -1895,7 +1920,11 @@ def main() -> None:
             print(f"{'=' * 70}\n")
 
             for submodule in submodules:
-                sub_cleanup = GitUltimateCleanup(submodule, dry_run=args.dry_run)
+                sub_cleanup = GitUltimateCleanup(
+                    submodule,
+                    dry_run=args.dry_run,
+                    interactive=args.interactive,
+                )
                 sub_cleanup.cleanup_repository()
 
     # Restore remotes (not in dry-run)
