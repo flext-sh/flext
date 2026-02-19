@@ -23,6 +23,8 @@ class GeneratedFile:
 HEADING_RE = re.compile(r"^#{1,6}\s+(.+?)\s*$", re.MULTILINE)
 ANCHOR_LINK_RE = re.compile(r"\[([^\]]+)\]\(#([^)]+)\)")
 MARKDOWN_LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
+TOC_START = "<!-- TOC START -->"
+TOC_END = "<!-- TOC END -->"
 
 
 def normalize_anchor(value: str) -> str:
@@ -45,6 +47,43 @@ def sanitize_internal_anchor_links(content: str) -> str:
         return label
 
     return MARKDOWN_LINK_RE.sub(replace, content)
+
+
+def build_toc(content: str) -> str:
+    items: list[str] = []
+    for level, title in re.findall(
+        r"^(##|###)\s+(.+?)\s*$", content, flags=re.MULTILINE
+    ):
+        anchor = normalize_anchor(title)
+        if not anchor:
+            continue
+        indent = "  " if level == "###" else ""
+        items.append(f"{indent}- [{title}](#{anchor})")
+    if not items:
+        items = ["- No sections found"]
+    return f"{TOC_START}\n" + "\n".join(items) + f"\n{TOC_END}"
+
+
+def update_toc(content: str) -> str:
+    toc = build_toc(content)
+    if TOC_START in content and TOC_END in content:
+        return re.sub(
+            r"<!-- TOC START -->.*?<!-- TOC END -->",
+            toc,
+            content,
+            count=1,
+            flags=re.DOTALL,
+        )
+    lines = content.splitlines()
+    if lines and lines[0].startswith("# "):
+        insert_at = 1
+        while insert_at < len(lines) and not lines[insert_at].strip():
+            insert_at += 1
+        lines.insert(insert_at, "")
+        lines.insert(insert_at + 1, toc)
+        lines.insert(insert_at + 2, "")
+        return "\n".join(lines).rstrip() + "\n"
+    return toc + "\n\n" + content.rstrip() + "\n"
 
 
 def write_if_needed(path: Path, content: str, *, apply: bool) -> GeneratedFile:
@@ -81,16 +120,18 @@ def project_guide_content(content: str, project: str, source_name: str) -> str:
             continue
         out.append(line)
     rendered = "\n".join(out).rstrip() + "\n"
-    return sanitize_internal_anchor_links(rendered)
+    return update_toc(sanitize_internal_anchor_links(rendered))
 
 
 def generate_root_docs(scope: Scope, *, apply: bool) -> list[GeneratedFile]:
     """Generate placeholder docs at the workspace root."""
-    changelog = (
+    changelog = update_toc(
         "# Changelog\n\nThis file is managed by `make docs DOCS_PHASE=generate`.\n"
     )
-    release = "# Latest Release\n\nNo tagged release notes were generated yet.\n"
-    roadmap = (
+    release = update_toc(
+        "# Latest Release\n\nNo tagged release notes were generated yet.\n"
+    )
+    roadmap = update_toc(
         "# Roadmap\n\nRoadmap updates are generated from docs validation outputs.\n"
     )
     return [

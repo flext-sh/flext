@@ -12,10 +12,12 @@ SRC_DIR ?= src
 TESTS_DIR ?= tests
 DOCSTRING_MIN ?= 80
 COMPLEXITY_MAX ?= 10
+CORE_STACK ?= python
 PYTEST_ARGS ?=
 CHECK_GATES ?=
 VALIDATE_GATES ?=
 DOCS_PHASE ?= all
+AUTO_ADJUST ?= 1
 
 # === WORKSPACE/STANDALONE DETECTION ===
 BASE_MK_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
@@ -117,23 +119,53 @@ elif [ "$(filter setup,$(MAKECMDGOALS))" != "setup" ] && [ ! -d "$(ACTIVE_VENV)"
 fi
 endef
 
+define AUTO_ADJUST_PROJECT
+if [ "$(AUTO_ADJUST)" = "1" ]; then \
+	md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.reports/*' ! -path './reports/*' ! -path './.venv/*' ! -path './node_modules/*' ! -path './.flext-deps/*' ! -path './.mypy_cache/*' ! -path './.pytest_cache/*' ! -path './.ruff_cache/*' ! -path './dist/*' ! -path './build/*'); \
+	if [ -n "$$md_files" ] && command -v mdformat >/dev/null 2>&1; then \
+		printf '%s\n' "$$md_files" | xargs -r mdformat; \
+	fi; \
+	if [ -n "$$md_files" ] && command -v markdownlint >/dev/null 2>&1; then \
+		md_config=""; \
+		if [ -f "$(WORKSPACE_ROOT)/.markdownlint.json" ]; then \
+			md_config="--config $(WORKSPACE_ROOT)/.markdownlint.json"; \
+		elif [ -f ".markdownlint.json" ]; then \
+			md_config="--config .markdownlint.json"; \
+		fi; \
+		markdownlint --fix $$md_config $$md_files || true; \
+	fi; \
+	if [ -f go.mod ] && command -v gofmt >/dev/null 2>&1; then \
+		go_files=$$(find . -type f -name '*.go' ! -path './.git/*'); \
+		if [ -n "$$go_files" ]; then \
+			printf '%s\n' "$$go_files" | xargs -r gofmt -w; \
+		fi; \
+	fi; \
+fi
+endef
+
 _preflight: ## Internal preflight for standardized verbs
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(AUTO_ADJUST_PROJECT)
 
 help: ## Show commands
 	$(Q)echo "$(PROJECT_NAME) - FLEXT Project"
 	$(Q)echo ""
 	$(Q)echo "Core verbs:"
-	$(Q)echo "  setup      Install dependencies and hooks"
+	$(Q)echo "  setup      Install dependencies and hooks (with automatic md/go adjustment)"
 	$(Q)echo "  check      Run the 8 lint gates"
 	$(Q)echo "  security   Run all security checks"
-	$(Q)echo "  format     Run all formatting"
+	$(Q)echo "  format     Run all formatting (including automatic md/go adjustment)"
 	$(Q)echo "  docs       Build docs"
 	$(Q)echo "  test       Run pytest only"
 	$(Q)echo "  validate   Run validate gates only (use FIX=1 to auto-fix first)"
 	$(Q)echo "  clean      Clean build/test/type artifacts"
 
 setup: ## Complete setup
+	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
+		go mod download; \
+		go mod tidy; \
+		exit 0; \
+	fi
 	$(Q)if [ -f "$(WORKSPACE_ROOT)/scripts/dependencies/sync_internal_deps.py" ]; then \
 		python3 "$(WORKSPACE_ROOT)/scripts/dependencies/sync_internal_deps.py" --project-root "$(CURDIR)"; \
 	fi
@@ -142,6 +174,50 @@ setup: ## Complete setup
 	$(Q)$(POETRY) run pre-commit install
 
 check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,go,type to select)
+	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
+		gates="$(CHECK_GATES)"; \
+		if [ -n "$$gates" ]; then \
+			for g in $$(echo "$$gates" | tr ',' ' '); do \
+				case "$$g" in \
+					lint|format|security|markdown|go|type) ;; \
+					*) echo "ERROR: unknown CHECK_GATES value '$$g' (allowed: lint,format,security,markdown,go,type)"; exit 2;; \
+				esac; \
+			done; \
+		else \
+			gates="lint,format,security,markdown,go"; \
+		fi; \
+		gates=$$(echo "$$gates" | tr ',' ' ' | sed 's/\btype\b/go/g' | tr ' ' ','); \
+		if echo "$$gates" | grep -qw lint; then \
+			golangci-lint run || { echo "FAIL: lint"; exit 1; }; \
+		fi; \
+		if echo "$$gates" | grep -qw format; then \
+			if [ -n "$$(find . -type f -name '*.go' ! -path './.git/*')" ]; then \
+				gofmt_diff=$$(find . -type f -name '*.go' ! -path './.git/*' -print0 | xargs -0 gofmt -l); \
+				if [ -n "$$gofmt_diff" ]; then \
+					echo "FAIL: gofmt"; \
+					printf '%s\n' "$$gofmt_diff"; \
+					exit 1; \
+				fi; \
+			fi; \
+		fi; \
+		if echo "$$gates" | grep -qw security; then \
+			gosec ./... || { echo "FAIL: security"; exit 1; }; \
+		fi; \
+		if echo "$$gates" | grep -qw markdown; then \
+			md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.reports/*' ! -path './reports/*' ! -path './.venv/*' ! -path './node_modules/*' ! -path './.flext-deps/*' ! -path './.mypy_cache/*' ! -path './.pytest_cache/*' ! -path './.ruff_cache/*' ! -path './dist/*' ! -path './build/*'); \
+			md_config=""; \
+			if [ -f "$(WORKSPACE_ROOT)/.markdownlint.json" ]; then \
+				md_config="--config $(WORKSPACE_ROOT)/.markdownlint.json"; \
+			elif [ -f ".markdownlint.json" ]; then \
+				md_config="--config .markdownlint.json"; \
+			fi; \
+			if [ -n "$$md_files" ]; then markdownlint $$md_config $$md_files || { echo "FAIL: markdown"; exit 1; }; fi; \
+		fi; \
+		if echo "$$gates" | grep -qw go; then \
+			go vet ./... || { echo "FAIL: go"; exit 1; }; \
+		fi; \
+		exit 0; \
+	fi
 	$(Q)gates="$(CHECK_GATES)"; \
 	if [ -n "$$gates" ]; then \
 		for g in $$(echo "$$gates" | tr ',' ' '); do \
@@ -211,10 +287,22 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 	fi
 
 security: ## Run all security checks
+	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
+		gosec ./...; \
+		exit 0; \
+	fi
 	$(Q)$(POETRY) run bandit -r $(SRC_DIR) -q -ll
 
 format: ## Run all formatting
-	$(Q)$(POETRY) run ruff format . --quiet
+	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
+		if [ -n "$$(find . -type f -name '*.go' ! -path './.git/*')" ]; then \
+			find . -type f -name '*.go' ! -path './.git/*' -print0 | xargs -0 gofmt -w; \
+			if command -v goimports >/dev/null 2>&1; then \
+				find . -type f -name '*.go' ! -path './.git/*' -print0 | xargs -0 goimports -w; \
+			fi; \
+		fi; \
+	fi
+	$(Q)if [ "$(CORE_STACK)" != "go" ]; then $(POETRY) run ruff format . --quiet; fi
 	$(Q)md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.reports/*' ! -path './reports/*' ! -path './.venv/*' ! -path './node_modules/*' ! -path './.flext-deps/*' ! -path './.mypy_cache/*' ! -path './.pytest_cache/*' ! -path './.ruff_cache/*' ! -path './dist/*' ! -path './build/*'); \
 	md_config=""; \
 	if [ -f "$(WORKSPACE_ROOT)/.markdownlint.json" ]; then \
@@ -230,12 +318,22 @@ format: ## Run all formatting
 		find . -type f -name '*.go' ! -path './.git/*' -print0 | xargs -0 gofmt -w; \
 	fi
 
-docs: docs-base ## Build docs
-
-docs-base:
-	$(Q)$(MAKE) docs-sync-scripts -s
+docs: ## Build docs
+	$(Q)src="$(WORKSPACE_ROOT)/scripts/documentation"; \
+	dst="$(CURDIR)/scripts/documentation"; \
+	if [ "$(FLEXT_MODE)" = "workspace" ] && [ -d "$$src" ] && [ "$(CURDIR)" != "$(WORKSPACE_ROOT)" ]; then \
+		mkdir -p "$$(dirname "$$dst")"; \
+		rm -rf "$$dst"; \
+		cp -a "$$src" "$$dst"; \
+		echo "PROJECT=$(PROJECT_NAME) PHASE=sync RESULT=OK REASON=workspace-docs-scripts-synced"; \
+	elif [ -d "$$dst" ]; then \
+		echo "PROJECT=$(PROJECT_NAME) PHASE=sync RESULT=OK REASON=local-docs-scripts-present"; \
+	else \
+		echo "PROJECT=$(PROJECT_NAME) PHASE=sync RESULT=FAIL REASON=docs-scripts-missing"; \
+		exit 1; \
+	fi
 	$(Q)if [ "$(DOCS_PHASE)" = "all" ]; then \
-		phases="audit fix build generate validate"; \
+		phases="generate fix audit build validate"; \
 		all_mode=1; \
 	else \
 		phases="$(DOCS_PHASE)"; \
@@ -260,28 +358,25 @@ docs-base:
 		eval $$cmd || exit $$?; \
 	done
 
-docs-sync-scripts: ## Sync docs scripts from workspace SSOT when available
-	$(Q)src="$(WORKSPACE_ROOT)/scripts/documentation"; \
-	dst="$(CURDIR)/scripts/documentation"; \
-	if [ "$(FLEXT_MODE)" = "workspace" ] && [ -d "$$src" ] && [ "$(CURDIR)" != "$(WORKSPACE_ROOT)" ]; then \
-		mkdir -p "$$(dirname "$$dst")"; \
-		rm -rf "$$dst"; \
-		cp -a "$$src" "$$dst"; \
-		echo "PROJECT=$(PROJECT_NAME) PHASE=sync RESULT=OK REASON=workspace-docs-scripts-synced"; \
-	elif [ -d "$$dst" ]; then \
-		echo "PROJECT=$(PROJECT_NAME) PHASE=sync RESULT=OK REASON=local-docs-scripts-present"; \
-	else \
-		echo "PROJECT=$(PROJECT_NAME) PHASE=sync RESULT=FAIL REASON=docs-scripts-missing"; \
-		exit 1; \
-	fi
-
 test: ## Run pytest only
+	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
+		go test -v -race -coverprofile=coverage.out -covermode=atomic ./...; \
+		go tool cover -func=coverage.out; \
+		exit 0; \
+	fi
 	$(Q)$(POETRY) run pytest $(TESTS_DIR) \
 		-p no:metadata \
 		--cov --cov-report=term-missing:skip-covered \
 		-q $(PYTEST_ARGS)
 
 validate: ## Run validate gates (VALIDATE_GATES=complexity,docstring to select, FIX=1)
+	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
+		if [ "$(FIX)" = "1" ]; then \
+			$(MAKE) format; \
+		fi; \
+		go mod verify; \
+		exit 0; \
+	fi
 	$(Q)if [ -n "$(FIX)" ] && [ "$(FIX)" != "1" ]; then \
 		echo "ERROR: FIX must be empty or 1, got '$(FIX)'"; \
 		exit 1; \
@@ -307,6 +402,10 @@ validate: ## Run validate gates (VALIDATE_GATES=complexity,docstring to select, 
 	fi
 
 clean: ## Clean artifacts
+	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
+		rm -f coverage.out coverage.html; \
+		go clean; \
+	fi
 	$(Q)rm -rf build/ dist/ *.egg-info/ .pytest_cache/ htmlcov/ .coverage* \
 		.mypy_cache/ .pyrefly_cache/ .ruff_cache/ $(LINT_CACHE_DIR)/ \
 		.pyright/ .pytype/ .pyrefly-report.json .pyrefly-output.txt

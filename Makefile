@@ -59,6 +59,28 @@ for proj in $(SELECTED_PROJECTS); do \
 done
 endef
 
+define AUTO_ADJUST_SELECTED_PROJECTS
+for proj in $(SELECTED_PROJECTS); do \
+	if [ -d "$$proj" ]; then \
+		md_files=$$(find "$$proj" -type f -name '*.md' ! -path "$$proj/.git/*" ! -path "$$proj/.reports/*" ! -path "$$proj/reports/*" ! -path "$$proj/.venv/*" ! -path "$$proj/node_modules/*" ! -path "$$proj/.flext-deps/*" ! -path "$$proj/.mypy_cache/*" ! -path "$$proj/.pytest_cache/*" ! -path "$$proj/.ruff_cache/*" ! -path "$$proj/dist/*" ! -path "$$proj/build/*"); \
+		md_config=""; \
+		if [ -f ".markdownlint.json" ]; then md_config="--config .markdownlint.json"; fi; \
+		if [ -n "$$md_files" ] && [ -x "$(WORKSPACE_VENV)/bin/mdformat" ]; then \
+			printf '%s\n' "$$md_files" | xargs -r $(WORKSPACE_VENV)/bin/mdformat; \
+		fi; \
+		if [ -n "$$md_files" ] && command -v markdownlint >/dev/null 2>&1; then \
+			markdownlint --fix $$md_config $$md_files || true; \
+		fi; \
+		if [ -f "$$proj/go.mod" ] && command -v gofmt >/dev/null 2>&1; then \
+			go_files=$$(find "$$proj" -type f -name '*.go' ! -path "$$proj/.git/*"); \
+			if [ -n "$$go_files" ]; then \
+				printf '%s\n' "$$go_files" | xargs -r gofmt -w; \
+			fi; \
+		fi; \
+	fi; \
+done
+endef
+
 define ENFORCE_WORKSPACE_VENV
 if [ ! -d "$(WORKSPACE_VENV)" ]; then \
 	echo "ERROR: workspace venv not found at $(WORKSPACE_VENV). Run 'make setup'."; \
@@ -134,6 +156,7 @@ setup: ## Install all projects into workspace .venv
 	fi
 	$(Q)[ -d ".venv" ] || { echo "Creating .venv with Python 3.13..."; python3.13 -m venv .venv; }
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)echo "Modernizing pyproject.toml files..."; \
 	$(POETRY_ENV) python scripts/dependencies/modernize_pyproject.py --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
@@ -331,6 +354,7 @@ check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,p
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)$(POETRY_ENV) python scripts/check/fix_pyrefly_config.py $(SELECTED_PROJECTS)
 	$(Q)$(POETRY_ENV) python scripts/check/workspace_check.py \
 		$(if $(CHECK_GATES),--gates "$(CHECK_GATES)") \
@@ -342,6 +366,7 @@ security: ## Run all security checks in all projects
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)failed=0; \
 	for proj in $(SELECTED_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
@@ -364,6 +389,7 @@ format: ## Run all formatting in all projects
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)failed=0; \
 	for proj in $(SELECTED_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
@@ -399,38 +425,14 @@ docs: ## Run docs pipeline (DOCS_PHASE=audit|fix|build|generate|validate|all)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)project_arg="$(PROJECT)"; \
-	projects_arg="$(PROJECTS)"; \
-	if [ "$(DOCS_PHASE)" = "all" ]; then \
-		phases="audit fix build generate validate"; \
-		all_mode=1; \
-	else \
-		phases="$(DOCS_PHASE)"; \
-		all_mode=0; \
-	fi; \
-	for phase in $$phases; do \
-		echo "Running docs phase=$$phase"; \
-		case "$$phase" in \
-			audit) script="scripts/documentation/audit.py"; extra="--strict 1" ;; \
-			fix) script="scripts/documentation/fix.py"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
-			build) script="scripts/documentation/build.py"; extra="" ;; \
-			generate) script="scripts/documentation/generate.py"; extra="--apply" ;; \
-			validate) script="scripts/documentation/validate.py"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
-			*) echo "ERROR: invalid DOCS_PHASE=$$phase"; exit 2 ;; \
-		esac; \
-		if [ "$$phase" = "fix" ] && [ "$$all_mode" = "1" ]; then extra="--apply"; fi; \
-		cmd="python $$script --root . --output-dir .reports/docs"; \
-		if [ -n "$$project_arg" ]; then cmd="$$cmd --project $$project_arg"; fi; \
-		if [ -n "$$projects_arg" ]; then cmd="$$cmd --projects '$$projects_arg'"; fi; \
-		if [ -n "$$extra" ]; then cmd="$$cmd $$extra"; fi; \
-		eval $$cmd || exit $$?; \
-	done
+	$(Q)$(WORKSPACE_VENV)/bin/python scripts/documentation/workspace_run.py --root . --projects "$(SELECTED_PROJECTS)" --phase "$(DOCS_PHASE)" --fix "$(FIX)" --fail-fast "$(FAIL_FAST)"
 
 test: ## Run tests only in all projects
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)failed=0; \
 	for proj in $(SELECTED_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
@@ -451,6 +453,7 @@ test: ## Run tests only in all projects
 validate: ## Run validate gates (VALIDATE_SCOPE=project|workspace, FIX=1)
 ifeq ($(VALIDATE_SCOPE),workspace)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)mkdir -p .sisyphus/reports
 	$(Q)echo "Running workspace validation (inventory + strict anti-drift gates)..."
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/generate_scripts_inventory.py --root .
@@ -469,6 +472,7 @@ else
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)if [ -z "$(FIX)" ]; then echo "INFO: run 'make validate FIX=1' to auto-fix before validate"; fi
 	$(Q)failed=0; \
 	for proj in $(SELECTED_PROJECTS); do \
@@ -504,6 +508,7 @@ clean: ## Clean all projects
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)failed=0; \
 	for proj in $(SELECTED_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
