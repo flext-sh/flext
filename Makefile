@@ -368,7 +368,7 @@ format: ## Run all formatting in all projects
 	for proj in $(SELECTED_PROJECTS); do \
 		if [ -d "$$proj" ]; then \
 			if $(POETRY_ENV) $(MAKE) -C "$$proj" format -s; then \
-				md_files=$$(find "$$proj" -type f -name '*.md' ! -path "$$proj/.git/*" ! -path "$$proj/.reports/*" ! -path "$$proj/.venv/*" ! -path "$$proj/node_modules/*" ! -path "$$proj/.flext-deps/*" ! -path "$$proj/.mypy_cache/*" ! -path "$$proj/.pytest_cache/*" ! -path "$$proj/.ruff_cache/*" ! -path "$$proj/dist/*" ! -path "$$proj/build/*"); \
+				md_files=$$(find "$$proj" -type f -name '*.md' ! -path "$$proj/.git/*" ! -path "$$proj/.reports/*" ! -path "$$proj/reports/*" ! -path "$$proj/.venv/*" ! -path "$$proj/node_modules/*" ! -path "$$proj/.flext-deps/*" ! -path "$$proj/.mypy_cache/*" ! -path "$$proj/.pytest_cache/*" ! -path "$$proj/.ruff_cache/*" ! -path "$$proj/dist/*" ! -path "$$proj/build/*"); \
 				md_config=""; \
 				if [ -f ".markdownlint.json" ]; then md_config="--config .markdownlint.json"; fi; \
 				if [ -n "$$md_files" ]; then \

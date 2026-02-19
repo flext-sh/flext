@@ -41,7 +41,7 @@ import tarfile
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, ClassVar
+from typing import ClassVar
 
 
 @dataclass(frozen=True)
@@ -1593,7 +1593,7 @@ def callback(commit, metadata):
         print("🔍 WORKSPACE-WIDE CRUFT DETECTION")
         print(f"{'=' * 70}\n")
 
-        all_results = []
+        all_results: list[dict[str, list[str] | str | int]] = []
 
         # Analyze main repository
         print(f"📁 Analyzing main repository: {self.repo_path.name}")
@@ -1717,15 +1717,11 @@ def callback(commit, metadata):
         # Per-Repository Breakdown
         report.append("## 📁 Per-Repository Analysis\n\n")
 
-        for result in sorted(
-            all_results,
-            key=lambda x: (
-                len(patterns)
-                if isinstance((patterns := x.get("recommended_patterns")), list)
-                else 0
-            ),
-            reverse=True,
-        ):
+        def recommended_count(result: dict[str, list[str] | str | int]) -> int:
+            patterns = result.get("recommended_patterns", [])
+            return len(patterns) if isinstance(patterns, list) else 0
+
+        for result in sorted(all_results, key=recommended_count, reverse=True):
             repo_name = result["repo_name"]
             gitignore_count = result.get("total_gitignore_patterns", 0)
             deletions_count = result.get("total_deletions", 0)
