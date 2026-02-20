@@ -168,14 +168,19 @@ def test_merge_triggers_release_dispatch_when_workspace_repo(
     _ = workflows.mkdir(parents=True)
     _ = (workflows / "release.yml").write_text("name: release\n", encoding="utf-8")
 
-    calls: list[list[str]] = []
+    run_calls: list[list[str]] = []
+
+    def _fake_run_stream_with_output(command: list[str], _cwd: Path) -> tuple[int, str]:
+        run_calls.append(command)
+        return 0, ""
 
     def _fake_run_stream(command: list[str], _cwd: Path) -> int:
-        calls.append(command)
+        run_calls.append(command)
         if command[:3] == ["gh", "release", "view"]:
             return 1
         return 0
 
+    monkeypatch.setattr(mod, "_run_stream_with_output", _fake_run_stream_with_output)
     monkeypatch.setattr(mod, "_run_stream", _fake_run_stream)
 
     exit_code = mod._merge_pr(
@@ -189,7 +194,81 @@ def test_merge_triggers_release_dispatch_when_workspace_repo(
     )
 
     assert exit_code == 0
-    assert calls[0] == ["gh", "pr", "merge", "123", "--squash", "--auto"]
-    assert calls[1] == ["gh", "release", "view", "v0.11.0"]
-    assert calls[2] == ["gh", "workflow", "run", "release.yml", "-f", "tag=v0.11.0"]
+    assert run_calls[0] == ["gh", "pr", "merge", "123", "--squash", "--auto"]
+    assert run_calls[1] == ["gh", "release", "view", "v0.11.0"]
+    assert run_calls[2] == ["gh", "workflow", "run", "release.yml", "-f", "tag=v0.11.0"]
     assert "status=release-dispatched tag=v0.11.0" in capsys.readouterr().out
+
+
+def test_merge_retries_after_update_branch_on_non_mergeable(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    mod = _load_module("pr_manager_merge_retry", "scripts/github/pr_manager.py")
+
+    calls: list[list[str]] = []
+    responses = [
+        (1, "X Pull request #7 is not mergeable"),
+        (0, "updated"),
+        (0, "merged"),
+    ]
+
+    def _fake_run_stream_with_output(command: list[str], _cwd: Path) -> tuple[int, str]:
+        calls.append(command)
+        return responses.pop(0)
+
+    def _fake_trigger_release_if_needed(repo_root: Path, head: str) -> None:
+        _ = repo_root, head
+
+    monkeypatch.setattr(mod, "_run_stream_with_output", _fake_run_stream_with_output)
+    monkeypatch.setattr(
+        mod, "_trigger_release_if_needed", _fake_trigger_release_if_needed
+    )
+
+    exit_code = mod._merge_pr(
+        repo_root=tmp_path,
+        selector="7",
+        head="0.11.0-dev",
+        method="squash",
+        auto=0,
+        delete_branch=0,
+        release_on_merge=0,
+    )
+
+    assert exit_code == 0
+    assert calls[0] == ["gh", "pr", "merge", "7", "--squash"]
+    assert calls[1] == ["gh", "pr", "update-branch", "7", "--rebase"]
+    assert calls[2] == ["gh", "pr", "merge", "7", "--squash"]
+
+
+def test_merge_returns_success_when_no_open_pr_for_head(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    mod = _load_module("pr_manager_merge_no_open", "scripts/github/pr_manager.py")
+
+    def _fake_open_pr_for_head(
+        _repo_root: Path, _head: str
+    ) -> dict[str, object] | None:
+        return None
+
+    def _unexpected_run_stream_with_output(
+        _command: list[str], _cwd: Path
+    ) -> tuple[int, str]:
+        raise AssertionError("merge command should not run when PR is absent")
+
+    monkeypatch.setattr(mod, "_open_pr_for_head", _fake_open_pr_for_head)
+    monkeypatch.setattr(
+        mod, "_run_stream_with_output", _unexpected_run_stream_with_output
+    )
+
+    exit_code = mod._merge_pr(
+        repo_root=tmp_path,
+        selector="0.11.0-dev",
+        head="0.11.0-dev",
+        method="squash",
+        auto=0,
+        delete_branch=0,
+        release_on_merge=1,
+    )
+
+    assert exit_code == 0
+    assert "status=no-open-pr" in capsys.readouterr().out

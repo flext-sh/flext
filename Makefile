@@ -22,6 +22,7 @@ PUSH ?=
 VERSION ?=
 TAG ?=
 BUMP ?=
+RELEASE_DEV_SUFFIX ?= 0
 CREATE_BRANCHES ?= 1
 PR_ACTION ?= status
 PR_BASE ?= main
@@ -36,6 +37,8 @@ PR_DELETE_BRANCH ?= 0
 PR_CHECKS_STRICT ?= 0
 PR_RELEASE_ON_MERGE ?= 1
 PR_INCLUDE_ROOT ?= 1
+PR_BRANCH ?= 0.11.0-dev
+PR_CHECKPOINT ?= 1
 
 Q := @
 ifdef VERBOSE
@@ -134,7 +137,7 @@ if [ -n "$$residual_venvs" ]; then \
 fi
 endef
 
-.PHONY: help setup upgrade build check security format docs test validate typings clean release release-ci pr
+.PHONY: help setup upgrade build check security format docs test validate typings clean release pr
 
 help: ## Show simple workspace verbs
 	$(Q)echo "FLEXT Workspace"
@@ -153,7 +156,6 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  test       Run tests only in all projects"
 	$(Q)echo "  validate   Run validate gates (FIX=1 auto-fix, VALIDATE_SCOPE=workspace for repo-level)"
 	$(Q)echo "  release    Interactive workspace release orchestration"
-	$(Q)echo "  release-ci Non-interactive release run for CI/tag workflows"
 	$(Q)echo "  pr         Manage PRs for selected projects"
 	$(Q)echo "  typings    Stub supply-chain + typing report (PROJECT/PROJECTS to scope)"
 	$(Q)echo "  clean      Clean all projects"
@@ -173,6 +175,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  DRY_RUN=1                                Print plan, do not tag/push"
 	$(Q)echo "  PUSH=1                                   Push release commit/tag"
 	$(Q)echo "  VERSION=<semver> TAG=v<semver> BUMP=patch Release controls"
+	$(Q)echo "  RELEASE_DEV_SUFFIX=0|1                  Append -dev during release version phase"
 	$(Q)echo "  CREATE_BRANCHES=1|0                      Create release branches in workspace + projects"
 	$(Q)echo "  PR_ACTION=status|create|view|checks|merge|close"
 	$(Q)echo "  PR_BASE=main PR_HEAD=<branch> PR_NUMBER=<id> PR_DRAFT=0|1"
@@ -181,6 +184,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  PR_CHECKS_STRICT=0|1                    checks action strict failure toggle"
 	$(Q)echo "  PR_RELEASE_ON_MERGE=0|1                 merge action: dispatch release workflow"
 	$(Q)echo "  PR_INCLUDE_ROOT=0|1                     include root repo in workspace PR automation"
+	$(Q)echo "  PR_BRANCH=<name> PR_CHECKPOINT=0|1      normalize branch + checkpoint before action"
 	$(Q)echo "  DEPS_REPORT=0                            Skip dependency report after upgrade/typings"
 	$(Q)echo ""
 	$(Q)echo "Examples:"
@@ -192,7 +196,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  make test PROJECT=flext-api PYTEST_ARGS=\"-k unit\" FAIL_FAST=1"
 	$(Q)echo "  make validate VALIDATE_SCOPE=workspace"
 	$(Q)echo "  make release BUMP=minor"
-	$(Q)echo "  make release-ci VERSION=0.11.0 TAG=v0.11.0 RELEASE_PHASE=all"
+	$(Q)echo "  make release INTERACTIVE=0 CREATE_BRANCHES=0 VERSION=0.11.0 TAG=v0.11.0 RELEASE_PHASE=all"
 	$(Q)echo "  make pr PROJECT=flext-core PR_ACTION=status"
 	$(Q)echo "  make pr PROJECT=flext-core PR_ACTION=create PR_TITLE='release: 0.11.0-dev'"
 	$(Q)echo "  NOTE: External projects (not in .gitmodules) require manual clone."
@@ -433,24 +437,8 @@ release: ## Interactive workspace release orchestration
 		--root "$(CURDIR)" \
 		--phase "$(RELEASE_PHASE)" \
 		--interactive "$(INTERACTIVE)" \
+		--dev-suffix "$(RELEASE_DEV_SUFFIX)" \
 		--create-branches "$(CREATE_BRANCHES)" \
-		--projects $(SELECTED_PROJECTS) \
-		$(if $(DRY_RUN),--dry-run "$(DRY_RUN)",) \
-		$(if $(PUSH),--push "$(PUSH)",) \
-		$(if $(VERSION),--version "$(VERSION)",) \
-		$(if $(TAG),--tag "$(TAG)",) \
-		$(if $(BUMP),--bump "$(BUMP)",)
-
-release-ci: ## Non-interactive release run for CI/tag workflows
-	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
-	$(Q)$(ENFORCE_WORKSPACE_VENV)
-	$(Q)$(ENSURE_SELECTED_PROJECTS)
-	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)python scripts/release/run.py \
-		--root "$(CURDIR)" \
-		--phase "$(RELEASE_PHASE)" \
-		--interactive 0 \
-		--create-branches 0 \
 		--projects $(SELECTED_PROJECTS) \
 		$(if $(DRY_RUN),--dry-run "$(DRY_RUN)",) \
 		$(if $(PUSH),--push "$(PUSH)",) \
@@ -462,37 +450,25 @@ pr: ## Manage pull requests for selected projects
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)$(ORCHESTRATOR) --verb pr \
-		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
-		--make-arg "PR_ACTION=$(PR_ACTION)" \
-		--make-arg "PR_BASE=$(PR_BASE)" \
-		$(if $(PR_HEAD),--make-arg "PR_HEAD=$(PR_HEAD)",) \
-		$(if $(PR_NUMBER),--make-arg "PR_NUMBER=$(PR_NUMBER)",) \
-		$(if $(PR_TITLE),--make-arg "PR_TITLE=$(PR_TITLE)",) \
-		$(if $(PR_BODY),--make-arg "PR_BODY=$(PR_BODY)",) \
-		--make-arg "PR_DRAFT=$(PR_DRAFT)" \
-		--make-arg "PR_MERGE_METHOD=$(PR_MERGE_METHOD)" \
-		--make-arg "PR_AUTO=$(PR_AUTO)" \
-		--make-arg "PR_DELETE_BRANCH=$(PR_DELETE_BRANCH)" \
-		--make-arg "PR_CHECKS_STRICT=$(PR_CHECKS_STRICT)" \
-		--make-arg "PR_RELEASE_ON_MERGE=$(PR_RELEASE_ON_MERGE)" \
-		$(SELECTED_PROJECTS)
-	$(Q)if [ "$(PR_INCLUDE_ROOT)" = "1" ]; then \
-		python scripts/github/pr_manager.py \
-			--repo-root "$(CURDIR)" \
-			--action "$(PR_ACTION)" \
-			--base "$(PR_BASE)" \
-			$(if $(PR_HEAD),--head "$(PR_HEAD)",) \
-			$(if $(PR_NUMBER),--number "$(PR_NUMBER)",) \
-			$(if $(PR_TITLE),--title "$(PR_TITLE)",) \
-			$(if $(PR_BODY),--body "$(PR_BODY)",) \
-			--draft "$(PR_DRAFT)" \
-			--merge-method "$(PR_MERGE_METHOD)" \
-			--auto "$(PR_AUTO)" \
-			--delete-branch "$(PR_DELETE_BRANCH)" \
-			--checks-strict "$(PR_CHECKS_STRICT)" \
-			--release-on-merge "$(PR_RELEASE_ON_MERGE)"; \
-	fi
+	$(Q)python scripts/github/pr_workspace.py \
+		--workspace-root "$(CURDIR)" \
+		$(foreach proj,$(SELECTED_PROJECTS),--project "$(proj)") \
+		--include-root "$(PR_INCLUDE_ROOT)" \
+		--branch "$(PR_BRANCH)" \
+		--checkpoint "$(PR_CHECKPOINT)" \
+		--fail-fast "$(if $(filter 1,$(FAIL_FAST)),1,0)" \
+		--pr-action "$(PR_ACTION)" \
+		--pr-base "$(PR_BASE)" \
+		$(if $(PR_HEAD),--pr-head "$(PR_HEAD)",) \
+		$(if $(PR_NUMBER),--pr-number "$(PR_NUMBER)",) \
+		$(if $(PR_TITLE),--pr-title "$(PR_TITLE)",) \
+		$(if $(PR_BODY),--pr-body "$(PR_BODY)",) \
+		--pr-draft "$(PR_DRAFT)" \
+		--pr-merge-method "$(PR_MERGE_METHOD)" \
+		--pr-auto "$(PR_AUTO)" \
+		--pr-delete-branch "$(PR_DELETE_BRANCH)" \
+		--pr-checks-strict "$(PR_CHECKS_STRICT)" \
+		--pr-release-on-merge "$(PR_RELEASE_ON_MERGE)"
 
 security: ## Run all security checks in all projects
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)

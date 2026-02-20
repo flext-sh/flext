@@ -2520,7 +2520,7 @@ dotenv = ["python-dotenv"]
 
 [[package]]
 name = "flexcore"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FlexCore - High-Performance Go-Python Hybrid Enterprise Framework"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2539,7 +2539,7 @@ url = "flexcore"
 
 [[package]]
 name = "flext-api"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT API - High-Performance REST API with FastAPI"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2574,7 +2574,7 @@ url = "flext-api"
 
 [[package]]
 name = "flext-auth"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Auth - Enterprise Authentication & Authorization Service"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2602,7 +2602,7 @@ url = "flext-auth"
 
 [[package]]
 name = "flext-cli"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT CLI - Developer Command Line Interface"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2669,7 +2669,7 @@ url = "flext-core"
 
 [[package]]
 name = "flext-db-oracle"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT DB Oracle - Enterprise Oracle Database Operations Library"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2688,7 +2688,7 @@ url = "flext-db-oracle"
 
 [[package]]
 name = "flext-dbt-ldap"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT dbt LDAP - dbt Models for LDAP Data Transformation"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2706,7 +2706,7 @@ url = "flext-dbt-ldap"
 
 [[package]]
 name = "flext-dbt-ldif"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT dbt LDAP - dbt Models for LDIF Data Transformation"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2724,7 +2724,7 @@ url = "flext-dbt-ldif"
 
 [[package]]
 name = "flext-dbt-oracle"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT dbt Oracle - dbt Models for Oracle Database"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2744,7 +2744,7 @@ url = "flext-dbt-oracle"
 
 [[package]]
 name = "flext-dbt-oracle-wms"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT DBT Oracle WMS - Oracle WMS data transformation with DBT"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2763,7 +2763,7 @@ url = "flext-dbt-oracle-wms"
 
 [[package]]
 name = "flext-grpc"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT gRPC - High-Performance gRPC Services"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2794,7 +2794,7 @@ url = "flext-grpc"
 
 [[package]]
 name = "flext-ldap"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "Enterprise LDAP Operations Library for FLEXT Framework"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2817,7 +2817,7 @@ url = "flext-ldap"
 
 [[package]]
 name = "flext-ldif"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT LDIF - Enterprise LDIF Processing Library"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2840,7 +2840,7 @@ url = "flext-ldif"
 
 [[package]]
 name = "flext-meltano"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Meltano - Enterprise Data Integration Platform"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2879,7 +2879,7 @@ url = "flext-meltano"
 
 [[package]]
 name = "flext-observability"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Observability - Enterprise Monitoring, Metrics & Telemetry"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2916,7 +2916,7 @@ url = "flext-observability"
 
 [[package]]
 name = "flext-oracle-oic"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Oracle OIC Extension - Advanced Oracle Integration Cloud Extensions"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2941,7 +2941,7 @@ url = "flext-oracle-oic"
 
 [[package]]
 name = "flext-oracle-wms"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "Enterprise Oracle WMS client library for FLEXT data integration platform"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2961,7 +2961,7 @@ url = "flext-oracle-wms"
 
 [[package]]
 name = "flext-plugin"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Plugin - Plugin System for FLEXT Platform"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2990,7 +2990,7 @@ url = "flext-plugin"
 
 [[package]]
 name = "flext-quality"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Quality - Unified orchestration platform for Claude Code tooling"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -3025,7 +3025,7 @@ url = "flext-quality"
 
 [[package]]
 name = "flext-tap-ldap"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Tap LDAP - Singer Tap for LDAP Directory Services"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -3043,7 +3043,7 @@ url = "flext-tap-ldap"
 
 [[package]]
 name = "flext-tap-ldif"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Tap LDIF - Singer Tap for LDIF file format data extraction"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -3065,7 +3065,7 @@ url = "flext-tap-ldif"
 
 [[package]]
 name = "flext-tap-oracle"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Tap Oracle - Modern Singer Tap for Oracle Database"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -3092,7 +3092,7 @@ url = "flext-tap-oracle"
 
 [[package]]
 name = "flext-tap-oracle-oic"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Tap Oracle OIC - Singer Tap for Oracle Integration Cloud"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -3112,7 +3112,7 @@ url = "flext-tap-oracle-oic"
 
 [[package]]
 name = "flext-tap-oracle-wms"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Tap Oracle WMS - Singer Tap for Oracle Warehouse Management System"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -3132,7 +3132,7 @@ url = "flext-tap-oracle-wms"
 
 [[package]]
 name = "flext-target-ldap"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Target for LDAP directory loading"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -3152,7 +3152,7 @@ url = "flext-target-ldap"
 
 [[package]]
 name = "flext-target-ldif"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Target LDIF - Singer Target for LDAP Data Interchange Format (LDIF) output"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -3175,7 +3175,7 @@ url = "flext-target-ldif"
 
 [[package]]
 name = "flext-target-oracle"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Target Oracle - Singer Target for Oracle Database Data Loading"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -3201,7 +3201,7 @@ url = "flext-target-oracle"
 
 [[package]]
 name = "flext-target-oracle-oic"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Target Oracle OIC - Singer Target for Oracle Integration Cloud"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -3230,7 +3230,7 @@ url = "flext-target-oracle-oic"
 
 [[package]]
 name = "flext-target-oracle-wms"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Target Oracle WMS - Singer Target for Oracle WMS Data"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -3256,7 +3256,7 @@ url = "flext-target-oracle-wms"
 
 [[package]]
 name = "flext-web"
-version = "0.10.0-dev"
+version = "0.10.0"
 description = "FLEXT Web - Modern Web Interface for FLEXT Platform"
 optional = false
 python-versions = ">=3.13,<3.14"
