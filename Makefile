@@ -36,6 +36,8 @@ PR_DELETE_BRANCH ?= 0
 PR_CHECKS_STRICT ?= 0
 PR_RELEASE_ON_MERGE ?= 1
 PR_INCLUDE_ROOT ?= 1
+PR_BRANCH ?= 0.11.0-dev
+PR_CHECKPOINT ?= 1
 
 Q := @
 ifdef VERBOSE
@@ -181,6 +183,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  PR_CHECKS_STRICT=0|1                    checks action strict failure toggle"
 	$(Q)echo "  PR_RELEASE_ON_MERGE=0|1                 merge action: dispatch release workflow"
 	$(Q)echo "  PR_INCLUDE_ROOT=0|1                     include root repo in workspace PR automation"
+	$(Q)echo "  PR_BRANCH=<name> PR_CHECKPOINT=0|1      normalize branch + checkpoint before action"
 	$(Q)echo "  DEPS_REPORT=0                            Skip dependency report after upgrade/typings"
 	$(Q)echo ""
 	$(Q)echo "Examples:"
@@ -462,37 +465,25 @@ pr: ## Manage pull requests for selected projects
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)$(ORCHESTRATOR) --verb pr \
-		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
-		--make-arg "PR_ACTION=$(PR_ACTION)" \
-		--make-arg "PR_BASE=$(PR_BASE)" \
-		$(if $(PR_HEAD),--make-arg "PR_HEAD=$(PR_HEAD)",) \
-		$(if $(PR_NUMBER),--make-arg "PR_NUMBER=$(PR_NUMBER)",) \
-		$(if $(PR_TITLE),--make-arg "PR_TITLE=$(PR_TITLE)",) \
-		$(if $(PR_BODY),--make-arg "PR_BODY=$(PR_BODY)",) \
-		--make-arg "PR_DRAFT=$(PR_DRAFT)" \
-		--make-arg "PR_MERGE_METHOD=$(PR_MERGE_METHOD)" \
-		--make-arg "PR_AUTO=$(PR_AUTO)" \
-		--make-arg "PR_DELETE_BRANCH=$(PR_DELETE_BRANCH)" \
-		--make-arg "PR_CHECKS_STRICT=$(PR_CHECKS_STRICT)" \
-		--make-arg "PR_RELEASE_ON_MERGE=$(PR_RELEASE_ON_MERGE)" \
-		$(SELECTED_PROJECTS)
-	$(Q)if [ "$(PR_INCLUDE_ROOT)" = "1" ]; then \
-		python scripts/github/pr_manager.py \
-			--repo-root "$(CURDIR)" \
-			--action "$(PR_ACTION)" \
-			--base "$(PR_BASE)" \
-			$(if $(PR_HEAD),--head "$(PR_HEAD)",) \
-			$(if $(PR_NUMBER),--number "$(PR_NUMBER)",) \
-			$(if $(PR_TITLE),--title "$(PR_TITLE)",) \
-			$(if $(PR_BODY),--body "$(PR_BODY)",) \
-			--draft "$(PR_DRAFT)" \
-			--merge-method "$(PR_MERGE_METHOD)" \
-			--auto "$(PR_AUTO)" \
-			--delete-branch "$(PR_DELETE_BRANCH)" \
-			--checks-strict "$(PR_CHECKS_STRICT)" \
-			--release-on-merge "$(PR_RELEASE_ON_MERGE)"; \
-	fi
+	$(Q)python scripts/github/pr_workspace.py \
+		--workspace-root "$(CURDIR)" \
+		$(foreach proj,$(SELECTED_PROJECTS),--project "$(proj)") \
+		--include-root "$(PR_INCLUDE_ROOT)" \
+		--branch "$(PR_BRANCH)" \
+		--checkpoint "$(PR_CHECKPOINT)" \
+		--fail-fast "$(if $(filter 1,$(FAIL_FAST)),1,0)" \
+		--pr-action "$(PR_ACTION)" \
+		--pr-base "$(PR_BASE)" \
+		$(if $(PR_HEAD),--pr-head "$(PR_HEAD)",) \
+		$(if $(PR_NUMBER),--pr-number "$(PR_NUMBER)",) \
+		$(if $(PR_TITLE),--pr-title "$(PR_TITLE)",) \
+		$(if $(PR_BODY),--pr-body "$(PR_BODY)",) \
+		--pr-draft "$(PR_DRAFT)" \
+		--pr-merge-method "$(PR_MERGE_METHOD)" \
+		--pr-auto "$(PR_AUTO)" \
+		--pr-delete-branch "$(PR_DELETE_BRANCH)" \
+		--pr-checks-strict "$(PR_CHECKS_STRICT)" \
+		--pr-release-on-merge "$(PR_RELEASE_ON_MERGE)"
 
 security: ## Run all security checks in all projects
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
