@@ -34,6 +34,8 @@ PR_MERGE_METHOD ?= squash
 PR_AUTO ?= 0
 PR_DELETE_BRANCH ?= 0
 PR_CHECKS_STRICT ?= 0
+PR_RELEASE_ON_MERGE ?= 1
+PR_INCLUDE_ROOT ?= 1
 
 Q := @
 ifdef VERBOSE
@@ -177,6 +179,8 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  PR_TITLE='title' PR_BODY='body' PR_MERGE_METHOD=squash|merge|rebase"
 	$(Q)echo "  PR_AUTO=0|1 PR_DELETE_BRANCH=0|1"
 	$(Q)echo "  PR_CHECKS_STRICT=0|1                    checks action strict failure toggle"
+	$(Q)echo "  PR_RELEASE_ON_MERGE=0|1                 merge action: dispatch release workflow"
+	$(Q)echo "  PR_INCLUDE_ROOT=0|1                     include root repo in workspace PR automation"
 	$(Q)echo "  DEPS_REPORT=0                            Skip dependency report after upgrade/typings"
 	$(Q)echo ""
 	$(Q)echo "Examples:"
@@ -471,7 +475,24 @@ pr: ## Manage pull requests for selected projects
 		--make-arg "PR_AUTO=$(PR_AUTO)" \
 		--make-arg "PR_DELETE_BRANCH=$(PR_DELETE_BRANCH)" \
 		--make-arg "PR_CHECKS_STRICT=$(PR_CHECKS_STRICT)" \
+		--make-arg "PR_RELEASE_ON_MERGE=$(PR_RELEASE_ON_MERGE)" \
 		$(SELECTED_PROJECTS)
+	$(Q)if [ "$(PR_INCLUDE_ROOT)" = "1" ]; then \
+		python scripts/github/pr_manager.py \
+			--repo-root "$(CURDIR)" \
+			--action "$(PR_ACTION)" \
+			--base "$(PR_BASE)" \
+			$(if $(PR_HEAD),--head "$(PR_HEAD)",) \
+			$(if $(PR_NUMBER),--number "$(PR_NUMBER)",) \
+			$(if $(PR_TITLE),--title "$(PR_TITLE)",) \
+			$(if $(PR_BODY),--body "$(PR_BODY)",) \
+			--draft "$(PR_DRAFT)" \
+			--merge-method "$(PR_MERGE_METHOD)" \
+			--auto "$(PR_AUTO)" \
+			--delete-branch "$(PR_DELETE_BRANCH)" \
+			--checks-strict "$(PR_CHECKS_STRICT)" \
+			--release-on-merge "$(PR_RELEASE_ON_MERGE)"; \
+	fi
 
 security: ## Run all security checks in all projects
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
