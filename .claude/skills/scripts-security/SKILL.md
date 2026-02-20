@@ -35,7 +35,7 @@ description: Security scripts — secrets management, vault operations, and secu
 - Security scripts must never log or print secrets to stdout/stderr.
 - All scripts must be non-interactive by default; interactive prompts require `--interactive` flag.
 - Secrets must be read from environment variables or encrypted vaults, never hardcoded.
-- Security audit output must go to `.sisyphus/reports/` using artifact naming contract.
+- Security audit output must go to `.reports/` using artifact naming contract.
 
 ## Instructions
 
@@ -65,7 +65,7 @@ make check PROJECT=flext-core                        # all 4 gates including sec
 Good (internal — security audit scripts):
 
 ```bash
-python scripts/security/security_audit.py --output .sisyphus/reports/scripts-security--json--audit-latest.json
+python scripts/security/security_audit.py --output .reports/scripts-security--json--audit-latest.json
 ```
 
 Why good: Make verbs for standard security gates; artifact naming for detailed audits.

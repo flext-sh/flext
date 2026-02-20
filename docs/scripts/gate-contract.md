@@ -111,7 +111,7 @@ this naming convention:
 |----------|----------------|---------|
 | `FLEXT_POLICY_MODE` | `--mode` | `baseline` |
 | `FLEXT_VALIDATION_ROOT` | `--root` | `.` |
-| `FLEXT_VALIDATION_REPORT_DIR` | `--report-file` directory | `.sisyphus/reports/validation` |
+| `FLEXT_VALIDATION_REPORT_DIR` | `--report-file` directory | `.reports/validation` |
 
 CLI flags take precedence over environment variables.
 
@@ -266,7 +266,7 @@ The contract validator (`scripts/core/check_script_gate_contract.py`) verifies:
 2. **Shebang line** present (`#!/usr/bin/env bash` or `#!/usr/bin/env python3`).
 3. **Exit code hygiene**: bash scripts use only `exit 0`, `exit 1`, `exit 2`, `exit 3`.
 4. **No interactive prompts** in default path (unless `--interactive` gated).
-5. **Artifact naming**: any `.sisyphus/` paths in the script follow the naming contract.
+5. **Artifact naming**: any explicit report paths in scripts must target `.reports/` and follow the naming contract.
 6. **Non-empty**: scripts classified as validators/fixers have >= 20 lines of code.
 
 Scripts not classified as validators or fixers (libraries, orchestrators) are

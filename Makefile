@@ -178,7 +178,7 @@ setup: ## Install all projects into workspace .venv
 			log_file="/tmp/flext-setup-$$proj.log"; \
 			start_ts=$$(date +%s); \
 			printf "[%2d/%2d] setup %s\n" $$step $$total_steps "$$proj"; \
-			if python scripts/dependencies/sync_internal_deps.py --project-root "$$proj" >>"$$log_file" 2>&1; then \
+			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" python scripts/dependencies/sync_internal_deps.py --project-root "$$proj" >>"$$log_file" 2>&1; then \
 				:; \
 			else \
 				echo "          sync    ... failed"; \
@@ -218,7 +218,7 @@ setup: ## Install all projects into workspace .venv
 	start_ts=$$(date +%s); \
 	root_lock_ok=0; \
 	printf "[%2d/%2d] setup %s\n" $$step $$total_steps "root"; \
-	if ! python scripts/dependencies/sync_internal_deps.py --project-root . >"$$log_file" 2>&1; then \
+	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" python scripts/dependencies/sync_internal_deps.py --project-root . >"$$log_file" 2>&1; then \
 		echo "          sync    ... failed"; \
 		cat "$$log_file"; \
 		failed=$$((failed + 1)); \
@@ -275,7 +275,7 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 			log_file="/tmp/flext-upgrade-$$proj.log"; \
 			start_ts=$$(date +%s); \
 			printf "[%2d/%2d] upgrade %s\n" $$step $$total_steps "$$proj"; \
-			if python scripts/dependencies/sync_internal_deps.py --project-root "$$proj" >>"$$log_file" 2>&1; then \
+			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" python scripts/dependencies/sync_internal_deps.py --project-root "$$proj" >>"$$log_file" 2>&1; then \
 				:; \
 			else \
 				echo "          sync    ... failed"; \
@@ -315,7 +315,7 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	start_ts=$$(date +%s); \
 	root_update_ok=0; \
 	printf "[%2d/%2d] upgrade %s\n" $$step $$total_steps "root"; \
-	if ! python scripts/dependencies/sync_internal_deps.py --project-root . >"$$log_file" 2>&1; then \
+	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" python scripts/dependencies/sync_internal_deps.py --project-root . >"$$log_file" 2>&1; then \
 		echo "          sync    ... failed"; \
 		cat "$$log_file"; \
 		failed=$$((failed + 1)); \
@@ -357,6 +357,8 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 		echo "Dependency report (deptry + pip check)..."; \
 		$(POETRY_ENV) python scripts/dependencies/detect_runtime_dev_deps.py -q --no-fail || true; \
 	fi
+	$(Q)echo "Syncing GitHub workflow templates..."
+	$(Q)$(WORKSPACE_VENV)/bin/python scripts/github/sync_workflows.py --workspace-root "$(CURDIR)" --apply --prune --report .reports/workflows/sync.json
 
 check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
@@ -413,7 +415,7 @@ ifeq ($(VALIDATE_SCOPE),workspace)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(AUTO_SYNC_ALL_PROJECTS)
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
-	$(Q)mkdir -p .sisyphus/reports
+	$(Q)mkdir -p .reports
 	$(Q)echo "Running workspace validation (inventory + strict anti-drift gates)..."
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/generate_scripts_inventory.py --root .
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/check_base_mk_sync.py
