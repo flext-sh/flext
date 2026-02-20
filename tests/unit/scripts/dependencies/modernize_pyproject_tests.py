@@ -94,6 +94,9 @@ license = { text = "MIT" }
 name = "workspace"
 version = "0.1.0"
 
+[tool.pytest.ini_options]
+addopts = ["--strict-config", "--strict-markers", "--tb=short", "-p no:sugar", "-q", "-ra"]
+
 [tool.bandit]
 skips = ["B404", "B603", "B607", "B105", "B608"]
 """.strip()
@@ -208,6 +211,9 @@ def test_bandit_skips_are_loaded_from_root_ssot(
 [project]
 name = "workspace"
 version = "0.1.0"
+
+[tool.pytest.ini_options]
+addopts = ["--strict-config", "--strict-markers", "--tb=short", "-p no:sugar", "-q", "-ra"]
 
 [tool.bandit]
 skips = ["B105", "B999"]
