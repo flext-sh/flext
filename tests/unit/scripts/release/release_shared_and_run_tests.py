@@ -62,3 +62,28 @@ version = "0.10.0-dev"
     )
 
     assert run_mod._current_version(tmp_path) == "0.10.0"
+
+
+def test_phase_version_passes_dev_suffix_flag(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    run_mod = _load_module("release_run_phase_version_dev", "scripts/release/run.py")
+    recorded: list[list[str]] = []
+
+    def _fake_run_checked(command: list[str], cwd: Path | None = None) -> None:
+        _ = cwd
+        recorded.append(command)
+
+    monkeypatch.setattr(run_mod, "run_checked", _fake_run_checked)
+
+    run_mod._phase_version(
+        root=tmp_path,
+        version="0.12.0",
+        dry_run=False,
+        project_names=["flext-core"],
+        dev_suffix=True,
+    )
+
+    assert recorded
+    assert "--dev-suffix" in recorded[0]
+    assert "1" in recorded[0]

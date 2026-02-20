@@ -238,3 +238,37 @@ def test_merge_retries_after_update_branch_on_non_mergeable(
     assert calls[0] == ["gh", "pr", "merge", "7", "--squash"]
     assert calls[1] == ["gh", "pr", "update-branch", "7", "--rebase"]
     assert calls[2] == ["gh", "pr", "merge", "7", "--squash"]
+
+
+def test_merge_returns_success_when_no_open_pr_for_head(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    mod = _load_module("pr_manager_merge_no_open", "scripts/github/pr_manager.py")
+
+    def _fake_open_pr_for_head(
+        _repo_root: Path, _head: str
+    ) -> dict[str, object] | None:
+        return None
+
+    def _unexpected_run_stream_with_output(
+        _command: list[str], _cwd: Path
+    ) -> tuple[int, str]:
+        raise AssertionError("merge command should not run when PR is absent")
+
+    monkeypatch.setattr(mod, "_open_pr_for_head", _fake_open_pr_for_head)
+    monkeypatch.setattr(
+        mod, "_run_stream_with_output", _unexpected_run_stream_with_output
+    )
+
+    exit_code = mod._merge_pr(
+        repo_root=tmp_path,
+        selector="0.11.0-dev",
+        head="0.11.0-dev",
+        method="squash",
+        auto=0,
+        delete_branch=0,
+        release_on_merge=1,
+    )
+
+    assert exit_code == 0
+    assert "status=no-open-pr" in capsys.readouterr().out
