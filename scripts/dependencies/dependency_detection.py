@@ -45,8 +45,16 @@ DEFAULT_MODULE_TO_TYPES_PACKAGE: dict[str, str] = {
 
 # Skip directories when discovering projects (same as sync_dependencies / modernize)
 SKIP_DIRS = frozenset({
-    "archive", "backup", "node_modules", ".git", ".venv",
-    "cmd", "scripts", "docs", "typings", ".claude.disabled",
+    "archive",
+    "backup",
+    "node_modules",
+    ".git",
+    ".venv",
+    "cmd",
+    "scripts",
+    "docs",
+    "typings",
+    ".claude.disabled",
 })
 
 
@@ -93,8 +101,10 @@ def run_deptry(
     cmd: list[str] = [
         str(venv_bin / "deptry"),
         ".",
-        "--config", str(config),
-        "--json-output", str(out_file),
+        "--config",
+        str(config),
+        "--json-output",
+        str(out_file),
         "--no-ansi",
     ]
     if extend_exclude:
@@ -204,10 +214,15 @@ def run_mypy_stub_hints(
     cmd: list[str] = [
         str(mypy_bin),
         "src",
-        "--config-file", "pyproject.toml",
+        "--config-file",
+        "pyproject.toml",
         "--no-error-summary",
     ]
-    env = {**subprocess.os.environ, "VIRTUAL_ENV": str(venv_bin.parent), "PATH": f"{venv_bin}:{subprocess.os.environ.get('PATH', '')}"}
+    env = {
+        **subprocess.os.environ,
+        "VIRTUAL_ENV": str(venv_bin.parent),
+        "PATH": f"{venv_bin}:{subprocess.os.environ.get('PATH', '')}",
+    }
     result = subprocess.run(
         cmd,
         cwd=project_path,
@@ -278,7 +293,9 @@ def get_current_typings_from_pyproject(project_path: Path) -> list[str]:
             if isinstance(typings, list):
                 for spec in typings:
                     if isinstance(spec, str):
-                        names.add(spec.split("[")[0].split(">=")[0].split("==")[0].strip())
+                        names.add(
+                            spec.split("[")[0].split(">=")[0].split("==")[0].strip()
+                        )
             elif isinstance(typings, dict):
                 names.update(str(k) for k in typings)
 
@@ -318,7 +335,9 @@ def get_required_typings(
     current = get_current_typings_from_pyproject(project_path)
     current_set = set(current)
     to_add = sorted(required_set - current_set)
-    to_remove = sorted(current_set - required_set)  # optional: suggest removing unused typings
+    to_remove = sorted(
+        current_set - required_set
+    )  # optional: suggest removing unused typings
 
     return {
         "required_packages": required_packages,
@@ -328,5 +347,7 @@ def get_required_typings(
         "to_add": to_add,
         "to_remove": to_remove,
         "limits_applied": bool(limits),
-        "python_version": (limits.get("python") or {}).get("version") if isinstance(limits.get("python"), dict) else None,
+        "python_version": (limits.get("python") or {}).get("version")
+        if isinstance(limits.get("python"), dict)
+        else None,
     }

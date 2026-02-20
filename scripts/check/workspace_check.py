@@ -292,6 +292,7 @@ def _collect_markdown_files(project_dir: Path) -> list[Path]:
         ".ruff_cache",
         "dist",
         "build",
+        "reports",
     }
     files: list[Path] = []
     for path in project_dir.rglob("*.md"):

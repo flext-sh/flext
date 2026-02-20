@@ -31,8 +31,8 @@
   - [Automated Registry](#automated-registry)
   - [Manual Registry](#manual-registry)
 - [Best Practices](#best-practices)
-  - [✅ DO](#-do)
-  - [❌ DON'T](#-dont)
+  - [✅ DO](#do)
+  - [❌ DON'T](#dont)
 - [Related Documentation](#related-documentation)
 <!-- TOC END -->
 
