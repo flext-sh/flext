@@ -1,7 +1,8 @@
 # Oracle Unified Directory (OUD) Docker image for FLEXT migration testing
 # Based on official Oracle images with FLEXT-specific configuration
 
-FROM registry.example.com/ocr/middleware/oud:14.1.2.1.0-jdk17-ol8-250314
+ARG FLEXT_OUD_IMAGE
+FROM ${FLEXT_OUD_IMAGE}
 
 # Maintainer information
 LABEL maintainer="FLEXT OUD Migration Team"
