@@ -158,7 +158,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  INTERACTIVE=1|0                          Release prompt mode"
 	$(Q)echo "  DRY_RUN=1                                Print plan, do not tag/push"
 	$(Q)echo "  PUSH=1                                   Push release commit/tag"
-	$(Q)echo "  VERSION=0.10.0 TAG=v0.10.0 BUMP=patch    Release controls"
+	$(Q)echo "  VERSION=<semver> TAG=v<semver> BUMP=patch Release controls"
 	$(Q)echo "  CREATE_BRANCHES=1|0                      Create release branches in workspace + projects"
 	$(Q)echo "  DEPS_REPORT=0                            Skip dependency report after upgrade/typings"
 	$(Q)echo ""
@@ -171,7 +171,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  make test PROJECT=flext-api PYTEST_ARGS=\"-k unit\" FAIL_FAST=1"
 	$(Q)echo "  make validate VALIDATE_SCOPE=workspace"
 	$(Q)echo "  make release BUMP=minor"
-	$(Q)echo "  make release-ci VERSION=0.10.0 TAG=v0.10.0 RELEASE_PHASE=all"
+	$(Q)echo "  make release-ci VERSION=0.11.0 TAG=v0.11.0 RELEASE_PHASE=all"
 	$(Q)echo "  NOTE: External projects (not in .gitmodules) require manual clone."
 
 setup: ## Install all projects into workspace .venv
@@ -186,6 +186,7 @@ setup: ## Install all projects into workspace .venv
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)echo "Enforcing Python 3.13 version guards..."; python3.13 scripts/maintenance/enforce_python_version.py || exit 1
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)echo "Modernizing pyproject.toml files..."; \
 	$(POETRY_ENV) python scripts/dependencies/modernize_pyproject.py --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
@@ -284,6 +285,7 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)echo "Enforcing Python 3.13 version guards..."; python3.13 scripts/maintenance/enforce_python_version.py || exit 1
 	$(Q)echo "Modernizing pyproject.toml files..."; \
 	$(POETRY_ENV) python scripts/dependencies/modernize_pyproject.py --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
@@ -400,12 +402,16 @@ build: ## Build/package all selected projects
 	$(Q)$(ORCHESTRATOR) --verb build $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(SELECTED_PROJECTS)
 
 release: ## Interactive workspace release orchestration
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)python scripts/release/run.py \
 		--root "$(CURDIR)" \
 		--phase "$(RELEASE_PHASE)" \
 		--interactive "$(INTERACTIVE)" \
 		--create-branches "$(CREATE_BRANCHES)" \
+		--projects $(SELECTED_PROJECTS) \
 		$(if $(DRY_RUN),--dry-run "$(DRY_RUN)",) \
 		$(if $(PUSH),--push "$(PUSH)",) \
 		$(if $(VERSION),--version "$(VERSION)",) \
@@ -413,12 +419,16 @@ release: ## Interactive workspace release orchestration
 		$(if $(BUMP),--bump "$(BUMP)",)
 
 release-ci: ## Non-interactive release run for CI/tag workflows
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)python scripts/release/run.py \
 		--root "$(CURDIR)" \
 		--phase "$(RELEASE_PHASE)" \
 		--interactive 0 \
 		--create-branches 0 \
+		--projects $(SELECTED_PROJECTS) \
 		$(if $(DRY_RUN),--dry-run "$(DRY_RUN)",) \
 		$(if $(PUSH),--push "$(PUSH)",) \
 		$(if $(VERSION),--version "$(VERSION)",) \
@@ -470,6 +480,7 @@ ifeq ($(VALIDATE_SCOPE),workspace)
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)mkdir -p .reports
 	$(Q)echo "Running workspace validation (inventory + strict anti-drift gates)..."
+	$(Q)python3.13 scripts/maintenance/enforce_python_version.py --check || exit 1
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/generate_scripts_inventory.py --root .
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/check_base_mk_sync.py
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/github/lint_workflows.py --root . --report .reports/workflows/actionlint.json
