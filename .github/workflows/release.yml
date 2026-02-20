@@ -72,9 +72,9 @@ jobs:
       - name: Setup workspace
         run: make setup
 
-      - name: Run release-ci pipeline
+      - name: Run release pipeline
         run: |
-          make release-ci \
+          make release \
             RELEASE_PHASE=validate,version,build,publish \
             VERSION="${{ steps.release.outputs.version }}" \
             TAG="${{ steps.release.outputs.tag }}" \

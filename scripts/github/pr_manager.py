@@ -3,9 +3,16 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import subprocess
 from pathlib import Path
+import sys
+
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from libs.versioning import release_tag_from_branch
 
 
 def _run_capture(command: list[str], cwd: Path) -> str:
@@ -27,6 +34,23 @@ def _run_capture(command: list[str], cwd: Path) -> str:
 def _run_stream(command: list[str], cwd: Path) -> int:
     result = subprocess.run(command, cwd=cwd, check=False)
     return result.returncode
+
+
+def _run_stream_with_output(command: list[str], cwd: Path) -> tuple[int, str]:
+    result = subprocess.run(
+        command,
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    output_parts = [
+        part.strip() for part in (result.stdout, result.stderr) if part.strip()
+    ]
+    output = "\n".join(output_parts)
+    if output:
+        print(output)
+    return result.returncode, output
 
 
 def _current_branch(repo_root: Path) -> str:
@@ -81,13 +105,7 @@ def _selector(pr_number: str, head: str) -> str:
 
 
 def _release_tag_from_head(head: str) -> str | None:
-    version = head.removesuffix("-dev")
-    if re.fullmatch(r"\d+\.\d+\.\d+", version):
-        return f"v{version}"
-    match = re.fullmatch(r"release/(?P<version>\d+\.\d+\.\d+)", head)
-    if match:
-        return f"v{match.group('version')}"
-    return None
+    return release_tag_from_branch(head)
 
 
 def _is_workspace_release_repo(repo_root: Path) -> bool:
@@ -160,6 +178,10 @@ def _merge_pr(
     delete_branch: int,
     release_on_merge: int,
 ) -> int:
+    if selector == head and _open_pr_for_head(repo_root, head) is None:
+        print("status=no-open-pr")
+        return 0
+
     command = ["gh", "pr", "merge", selector]
     merge_flag = {
         "merge": "--merge",
@@ -171,7 +193,14 @@ def _merge_pr(
         command.append("--auto")
     if delete_branch == 1:
         command.append("--delete-branch")
-    exit_code = _run_stream(command, repo_root)
+    exit_code, output = _run_stream_with_output(command, repo_root)
+    if exit_code != 0 and "not mergeable" in output:
+        update_code, _ = _run_stream_with_output(
+            ["gh", "pr", "update-branch", selector, "--rebase"],
+            repo_root,
+        )
+        if update_code == 0:
+            exit_code, _ = _run_stream_with_output(command, repo_root)
     if exit_code == 0:
         print("status=merged")
         if release_on_merge == 1:
