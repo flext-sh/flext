@@ -146,6 +146,14 @@ SomeNamespace = CanonicalNamespace
 
 Why bad: namespace aliases hide canonical access paths and spread non-essential compatibility names across the codebase.
 
+Bad:
+
+```python
+STATUS_ACTIVE = Status.ACTIVE
+```
+
+Why bad: duplicated alias constants multiply symbols and force broad compatibility maintenance; prefer direct enum member usage at call sites.
+
 ## Verification
 
 Make gates:
