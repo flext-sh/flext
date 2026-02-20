@@ -62,3 +62,70 @@ version = "0.10.0-dev"
     )
 
     assert run_mod._current_version(tmp_path) == "0.10.0"
+
+
+def test_phase_publish_does_not_tag_when_push_disabled(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    run_mod = _load_module("release_run_no_tag", "scripts/release/run.py")
+
+    recorded: list[list[str]] = []
+
+    def _fake_run_checked(command: list[str], cwd: Path | None = None) -> None:
+        _ = cwd
+        recorded.append(command)
+
+    def _fake_mkdir(
+        self: Path, mode: int = 0o777, parents: bool = False, exist_ok: bool = False
+    ) -> None:
+        _ = self, mode, parents, exist_ok
+
+    monkeypatch.setattr(run_mod, "run_checked", _fake_run_checked)
+    monkeypatch.setattr(run_mod.Path, "mkdir", _fake_mkdir)
+
+    run_mod._phase_publish(
+        root=tmp_path,
+        version="0.11.0",
+        tag="v0.11.0",
+        push=False,
+        dry_run=False,
+        project_names=[],
+    )
+
+    assert not any(cmd[:2] == ["git", "tag"] for cmd in recorded)
+
+
+def test_phase_publish_tags_when_push_enabled(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    run_mod = _load_module("release_run_with_tag", "scripts/release/run.py")
+
+    recorded: list[list[str]] = []
+
+    def _fake_run_checked(command: list[str], cwd: Path | None = None) -> None:
+        _ = cwd
+        recorded.append(command)
+
+    def _fake_run_capture(command: list[str], cwd: Path | None = None) -> str:
+        _ = command, cwd
+        return ""
+
+    def _fake_mkdir(
+        self: Path, mode: int = 0o777, parents: bool = False, exist_ok: bool = False
+    ) -> None:
+        _ = self, mode, parents, exist_ok
+
+    monkeypatch.setattr(run_mod, "run_checked", _fake_run_checked)
+    monkeypatch.setattr(run_mod, "run_capture", _fake_run_capture)
+    monkeypatch.setattr(run_mod.Path, "mkdir", _fake_mkdir)
+
+    run_mod._phase_publish(
+        root=tmp_path,
+        version="0.11.0",
+        tag="v0.11.0",
+        push=True,
+        dry_run=False,
+        project_names=[],
+    )
+
+    assert any(cmd[:2] == ["git", "tag"] for cmd in recorded)
