@@ -30,6 +30,7 @@
 !src/
 !tests/
 !typings/
+!libs/
 !.vscode/
 !.claude/
 
@@ -93,6 +94,7 @@
 !src/**
 !tests/**
 !typings/**
+!libs/**
 !.vscode/**
 !.claude/**
 

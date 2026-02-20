@@ -10,7 +10,7 @@ from _pytest.monkeypatch import MonkeyPatch
 
 def load_module() -> Any:
     module_path = (
-        Path(__file__).resolve().parents[3]
+        Path(__file__).resolve().parents[4]
         / "scripts"
         / "dependencies"
         / "modernize_pyproject.py"
@@ -26,7 +26,7 @@ def load_module() -> Any:
 
 def write_pyproject(project_dir: Path, content: str) -> Path:
     pyproject = project_dir / "pyproject.toml"
-    pyproject.write_text(content, encoding="utf-8")
+    _ = pyproject.write_text(content, encoding="utf-8")
     return pyproject
 
 
@@ -73,7 +73,7 @@ def test_audit_exit_codes_reflect_violations(
     project_dir = tmp_path / "pkg"
     project_dir.mkdir()
 
-    write_pyproject(
+    _ = write_pyproject(
         project_dir,
         """
 [build-system]
@@ -87,12 +87,15 @@ license = { text = "MIT" }
         + "\n",
     )
 
-    write_pyproject(
+    _ = write_pyproject(
         tmp_path,
         """
 [project]
 name = "workspace"
 version = "0.1.0"
+
+[tool.pytest.ini_options]
+addopts = ["--strict-config", "--strict-markers", "--tb=short", "-p no:sugar", "-q", "-ra"]
 
 [tool.bandit]
 skips = ["B404", "B603", "B607", "B105", "B608"]
@@ -107,7 +110,7 @@ skips = ["B404", "B603", "B607", "B105", "B608"]
     )
     assert mod.main() == 1
 
-    write_pyproject(
+    _ = write_pyproject(
         project_dir,
         """
 [build-system]
@@ -135,7 +138,7 @@ skips = ["B404", "B603", "B607", "B105", "B608"]
     )
     (project_dir / "src" / "pkg").mkdir(parents=True)
 
-    write_pyproject(
+    _ = write_pyproject(
         tmp_path,
         """
 [project]
@@ -202,12 +205,15 @@ def test_bandit_skips_are_loaded_from_root_ssot(
     project_dir = root_dir / "pkg"
     project_dir.mkdir(parents=True)
 
-    write_pyproject(
+    _ = write_pyproject(
         root_dir,
         """
 [project]
 name = "workspace"
 version = "0.1.0"
+
+[tool.pytest.ini_options]
+addopts = ["--strict-config", "--strict-markers", "--tb=short", "-p no:sugar", "-q", "-ra"]
 
 [tool.bandit]
 skips = ["B105", "B999"]

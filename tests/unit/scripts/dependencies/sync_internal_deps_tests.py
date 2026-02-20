@@ -11,7 +11,7 @@ from _pytest.monkeypatch import MonkeyPatch
 
 def load_module() -> Any:
     module_path = (
-        Path(__file__).resolve().parents[3]
+        Path(__file__).resolve().parents[4]
         / "scripts"
         / "dependencies"
         / "sync_internal_deps.py"
