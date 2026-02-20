@@ -19,6 +19,16 @@ CHECK_GATES ?=
 VALIDATE_GATES ?=
 DOCS_PHASE ?= all
 AUTO_ADJUST ?= 1
+PR_ACTION ?= status
+PR_BASE ?= main
+PR_HEAD ?=
+PR_NUMBER ?=
+PR_TITLE ?=
+PR_BODY ?=
+PR_DRAFT ?= 0
+PR_MERGE_METHOD ?= squash
+PR_AUTO ?= 0
+PR_DELETE_BRANCH ?= 0
 
 PYTEST_REPORT_ARGS := -ra --durations=25 --durations-min=0.001 --tb=short
 PYTEST_DIAG_ARGS := -rA --durations=0 --tb=long --showlocals
@@ -89,8 +99,8 @@ $(LINT_CACHE_DIR):
 	$(Q)mkdir -p $(LINT_CACHE_DIR)
 
 # === SIMPLE VERB SURFACE ===
-.PHONY: help setup build check security format docs docs-base docs-sync-scripts test validate clean _preflight
-STANDARD_VERBS := setup build check security format docs test validate clean
+.PHONY: help setup build check security format docs docs-base docs-sync-scripts test validate clean pr _preflight
+STANDARD_VERBS := setup build check security format docs test validate clean pr
 $(STANDARD_VERBS): _preflight
 
 define ENFORCE_WORKSPACE_VENV
@@ -170,7 +180,14 @@ help: ## Show commands
 	$(Q)echo "  docs       Build docs"
 	$(Q)echo "  test       Run pytest only"
 	$(Q)echo "  validate   Run validate gates only (use FIX=1 to auto-fix first)"
+	$(Q)echo "  pr         Manage this repository PR (default: status)"
 	$(Q)echo "  clean      Clean build/test/type artifacts"
+	$(Q)echo ""
+	$(Q)echo "PR variables:"
+	$(Q)echo "  PR_ACTION=status|create|view|checks|merge|close"
+	$(Q)echo "  PR_BASE=main PR_HEAD=<branch> PR_NUMBER=<id>"
+	$(Q)echo "  PR_TITLE='title' PR_BODY='body' PR_DRAFT=0|1"
+	$(Q)echo "  PR_MERGE_METHOD=squash|merge|rebase PR_AUTO=0|1 PR_DELETE_BRANCH=0|1"
 
 setup: ## Complete setup
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
@@ -483,6 +500,20 @@ validate: ## Run validate gates (VALIDATE_GATES=complexity,docstring to select, 
 	if echo "$$gates" | grep -qw docstring; then \
 		$(POETRY) run interrogate $(SRC_DIR) --fail-under=$(DOCSTRING_MIN) --ignore-init-method --ignore-magic -q; \
 	fi
+
+pr: ## Manage pull requests for this repository
+	$(Q)python3 "$(WORKSPACE_ROOT)/scripts/github/pr_manager.py" \
+		--repo-root "$(CURDIR)" \
+		--action "$(PR_ACTION)" \
+		--base "$(PR_BASE)" \
+		$(if $(PR_HEAD),--head "$(PR_HEAD)",) \
+		$(if $(PR_NUMBER),--number "$(PR_NUMBER)",) \
+		$(if $(PR_TITLE),--title "$(PR_TITLE)",) \
+		$(if $(PR_BODY),--body "$(PR_BODY)",) \
+		--draft "$(PR_DRAFT)" \
+		--merge-method "$(PR_MERGE_METHOD)" \
+		--auto "$(PR_AUTO)" \
+		--delete-branch "$(PR_DELETE_BRANCH)"
 
 clean: ## Clean artifacts
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
