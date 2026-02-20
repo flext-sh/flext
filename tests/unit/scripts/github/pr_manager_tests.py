@@ -151,3 +151,45 @@ def test_checks_action_strict_mode_returns_failure(
     )
 
     assert mod.main() == 8
+
+
+def test_release_tag_from_head_patterns() -> None:
+    mod = _load_module("pr_manager_release_tag", "scripts/github/pr_manager.py")
+    assert mod._release_tag_from_head("0.11.0-dev") == "v0.11.0"
+    assert mod._release_tag_from_head("release/0.12.3") == "v0.12.3"
+    assert mod._release_tag_from_head("feature/x") is None
+
+
+def test_merge_triggers_release_dispatch_when_workspace_repo(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    mod = _load_module("pr_manager_merge_release", "scripts/github/pr_manager.py")
+    workflows = tmp_path / ".github" / "workflows"
+    _ = workflows.mkdir(parents=True)
+    _ = (workflows / "release.yml").write_text("name: release\n", encoding="utf-8")
+
+    calls: list[list[str]] = []
+
+    def _fake_run_stream(command: list[str], _cwd: Path) -> int:
+        calls.append(command)
+        if command[:3] == ["gh", "release", "view"]:
+            return 1
+        return 0
+
+    monkeypatch.setattr(mod, "_run_stream", _fake_run_stream)
+
+    exit_code = mod._merge_pr(
+        repo_root=tmp_path,
+        selector="123",
+        head="0.11.0-dev",
+        method="squash",
+        auto=1,
+        delete_branch=0,
+        release_on_merge=1,
+    )
+
+    assert exit_code == 0
+    assert calls[0] == ["gh", "pr", "merge", "123", "--squash", "--auto"]
+    assert calls[1] == ["gh", "release", "view", "v0.11.0"]
+    assert calls[2] == ["gh", "workflow", "run", "release.yml", "-f", "tag=v0.11.0"]
+    assert "status=release-dispatched tag=v0.11.0" in capsys.readouterr().out
