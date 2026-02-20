@@ -32,7 +32,7 @@ description: Workspace-wide maintenance automation — hygiene checks, dependabo
 - All checks must be idempotent and safe by default (read-only unless `--apply`).
 - Mutations (cleanup, lock updates) require explicit `--apply` flag.
 - Scripts must discover `flext-*` projects with `pyproject.toml` for workspace iteration.
-- Reports output to `.sisyphus/reports/workspace-maintenance--json--<slug>.json`.
+- Reports output to `.reports/workspace-maintenance--json--<slug>.json`.
 - Exit 0 = all checks pass, exit 1 = violations found.
 - Each script must be standalone (stdlib + PyYAML only, no flext_core imports).
 
@@ -49,7 +49,7 @@ description: Workspace-wide maintenance automation — hygiene checks, dependabo
 1. Identify the maintenance concern (hygiene, dependabot, poetry, security).
 2. Run standard gates first: `make check` and `make validate`.
 3. Run specific maintenance checker with `--help` first, then default (dry-run) mode.
-4. Review the JSON report in `.sisyphus/reports/` or the ANSI terminal output.
+4. Review the JSON report in `.reports/` or the ANSI terminal output.
 5. If fixes are needed, re-run with `--apply` to mutate state.
 6. Verify: `make validate VALIDATE_SCOPE=workspace` for workspace-level inventory.
 

@@ -70,7 +70,7 @@ make check PROJECT=flext-core      # verify after dependency changes
 Good (internal — dependency analysis scripts):
 
 ```bash
-python scripts/dependencies/analyze_dependencies.py --output .sisyphus/reports/scripts-dependencies--json--analysis-latest.json
+python scripts/dependencies/analyze_dependencies.py --output .reports/scripts-dependencies--json--analysis-latest.json
 ```
 
 Why good: Make verbs for standard workflow; artifact naming and structured output for detailed analysis.

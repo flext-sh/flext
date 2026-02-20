@@ -39,7 +39,7 @@ description: Testing scripts — pytest runners, test analysis, quality gates, s
 ## Rules
 
 - Test runners must support `--help` and be runnable from repo root.
-- Test output must go to stdout; structured reports to `.sisyphus/reports/` via artifact naming.
+- Test output must go to stdout; structured reports to `.reports/` via artifact naming.
 - Stress tests and distributed tests must be explicitly opt-in (not part of quick validation).
 
 ## Instructions
