@@ -1,0 +1,133 @@
+name: Workspace Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (example: v0.10.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: release-${{ github.ref_name || inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      FLEXT_USE_HTTPS: "1"
+      FLEXT_WORKSPACE_ROOT: ${{ github.workspace }}
+    steps:
+      - name: Resolve tag and version
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="${{ inputs.tag }}"
+          else
+            TAG="${GITHUB_REF_NAME}"
+          fi
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid release tag: $TAG" >&2
+            exit 1
+          fi
+          VERSION="${TAG#v}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: false
+          installer-parallel: true
+
+      - name: Setup workspace
+        run: make setup
+
+      - name: Run release-ci pipeline
+        run: |
+          make release-ci \
+            RELEASE_PHASE=validate,version,build,publish \
+            VERSION="${{ steps.release.outputs.version }}" \
+            TAG="${{ steps.release.outputs.tag }}" \
+            INTERACTIVE=0 \
+            CREATE_BRANCHES=0 \
+            PUSH=0
+
+      - name: Create or update GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.release.outputs.tag }}"
+          NOTES=".reports/release/${TAG}/RELEASE_NOTES.md"
+          REPORT=".reports/release/v${{ steps.release.outputs.version }}/build-report.json"
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --notes-file "$NOTES"
+            gh release upload "$TAG" "$REPORT" --clobber
+          else
+            gh release create "$TAG" \
+              "$REPORT" \
+              --title "Release $TAG" \
+              --notes-file "$NOTES"
+          fi
+
+      - name: Open or update release PR to main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.release.outputs.tag }}"
+          VERSION="${{ steps.release.outputs.version }}"
+          BRANCH="release/${VERSION}-sync"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin main --tags
+          if git merge-base --is-ancestor "$TAG" origin/main; then
+            echo "tag $TAG already reachable from main"
+            exit 0
+          fi
+
+          git checkout -B "$BRANCH" "$TAG"
+          if ! git diff --quiet; then
+            git add docs/CHANGELOG.md docs/releases/latest.md docs/releases/${TAG}.md || true
+            if ! git diff --cached --quiet; then
+              git commit -m "docs: close changelog for ${TAG}"
+            fi
+          fi
+
+          git push -u origin "$BRANCH" --force-with-lease
+
+          if gh pr view "$BRANCH" >/dev/null 2>&1; then
+            PR_URL="$(gh pr view "$BRANCH" --json url --jq .url)"
+          else
+            PR_URL="$(gh pr create --base main --head "$BRANCH" --title "release: ${TAG}" --body "Automated release merge for ${TAG}.\n\n- release: ${TAG}\n- version: ${VERSION}\n- status: alpha, non-production")"
+          fi
+
+          gh pr merge "$PR_URL" --auto --squash
