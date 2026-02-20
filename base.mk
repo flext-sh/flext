@@ -30,6 +30,7 @@ PR_MERGE_METHOD ?= squash
 PR_AUTO ?= 0
 PR_DELETE_BRANCH ?= 0
 PR_CHECKS_STRICT ?= 0
+PR_RELEASE_ON_MERGE ?= 1
 
 PYTEST_REPORT_ARGS := -ra --durations=25 --durations-min=0.001 --tb=short
 PYTEST_DIAG_ARGS := -rA --durations=0 --tb=long --showlocals
@@ -190,6 +191,7 @@ help: ## Show commands
 	$(Q)echo "  PR_TITLE='title' PR_BODY='body' PR_DRAFT=0|1"
 	$(Q)echo "  PR_MERGE_METHOD=squash|merge|rebase PR_AUTO=0|1 PR_DELETE_BRANCH=0|1"
 	$(Q)echo "  PR_CHECKS_STRICT=0|1 (checks: fail command only when strict=1)"
+	$(Q)echo "  PR_RELEASE_ON_MERGE=0|1 (merge: dispatch release workflow when branch maps to semver)"
 
 setup: ## Complete setup
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
@@ -516,7 +518,8 @@ pr: ## Manage pull requests for this repository
 		--merge-method "$(PR_MERGE_METHOD)" \
 		--auto "$(PR_AUTO)" \
 		--delete-branch "$(PR_DELETE_BRANCH)" \
-		--checks-strict "$(PR_CHECKS_STRICT)"
+		--checks-strict "$(PR_CHECKS_STRICT)" \
+		--release-on-merge "$(PR_RELEASE_ON_MERGE)"
 
 clean: ## Clean artifacts
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
