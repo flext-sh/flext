@@ -23,6 +23,16 @@ VERSION ?=
 TAG ?=
 BUMP ?=
 CREATE_BRANCHES ?= 1
+PR_ACTION ?= status
+PR_BASE ?= main
+PR_HEAD ?=
+PR_NUMBER ?=
+PR_TITLE ?=
+PR_BODY ?=
+PR_DRAFT ?= 0
+PR_MERGE_METHOD ?= squash
+PR_AUTO ?= 0
+PR_DELETE_BRANCH ?= 0
 
 Q := @
 ifdef VERBOSE
@@ -121,7 +131,7 @@ if [ -n "$$residual_venvs" ]; then \
 fi
 endef
 
-.PHONY: help setup upgrade build check security format docs test validate typings clean release release-ci
+.PHONY: help setup upgrade build check security format docs test validate typings clean release release-ci pr
 
 help: ## Show simple workspace verbs
 	$(Q)echo "FLEXT Workspace"
@@ -141,6 +151,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  validate   Run validate gates (FIX=1 auto-fix, VALIDATE_SCOPE=workspace for repo-level)"
 	$(Q)echo "  release    Interactive workspace release orchestration"
 	$(Q)echo "  release-ci Non-interactive release run for CI/tag workflows"
+	$(Q)echo "  pr         Manage PRs for selected projects"
 	$(Q)echo "  typings    Stub supply-chain + typing report (PROJECT/PROJECTS to scope)"
 	$(Q)echo "  clean      Clean all projects"
 	$(Q)echo ""
@@ -160,6 +171,10 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  PUSH=1                                   Push release commit/tag"
 	$(Q)echo "  VERSION=<semver> TAG=v<semver> BUMP=patch Release controls"
 	$(Q)echo "  CREATE_BRANCHES=1|0                      Create release branches in workspace + projects"
+	$(Q)echo "  PR_ACTION=status|create|view|checks|merge|close"
+	$(Q)echo "  PR_BASE=main PR_HEAD=<branch> PR_NUMBER=<id> PR_DRAFT=0|1"
+	$(Q)echo "  PR_TITLE='title' PR_BODY='body' PR_MERGE_METHOD=squash|merge|rebase"
+	$(Q)echo "  PR_AUTO=0|1 PR_DELETE_BRANCH=0|1"
 	$(Q)echo "  DEPS_REPORT=0                            Skip dependency report after upgrade/typings"
 	$(Q)echo ""
 	$(Q)echo "Examples:"
@@ -172,6 +187,8 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  make validate VALIDATE_SCOPE=workspace"
 	$(Q)echo "  make release BUMP=minor"
 	$(Q)echo "  make release-ci VERSION=0.11.0 TAG=v0.11.0 RELEASE_PHASE=all"
+	$(Q)echo "  make pr PROJECT=flext-core PR_ACTION=status"
+	$(Q)echo "  make pr PROJECT=flext-core PR_ACTION=create PR_TITLE='release: 0.11.0-dev'"
 	$(Q)echo "  NOTE: External projects (not in .gitmodules) require manual clone."
 
 setup: ## Install all projects into workspace .venv
@@ -434,6 +451,24 @@ release-ci: ## Non-interactive release run for CI/tag workflows
 		$(if $(VERSION),--version "$(VERSION)",) \
 		$(if $(TAG),--tag "$(TAG)",) \
 		$(if $(BUMP),--bump "$(BUMP)",)
+
+pr: ## Manage pull requests for selected projects
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)$(ORCHESTRATOR) --verb pr \
+		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
+		--make-arg "PR_ACTION=$(PR_ACTION)" \
+		--make-arg "PR_BASE=$(PR_BASE)" \
+		$(if $(PR_HEAD),--make-arg "PR_HEAD=$(PR_HEAD)",) \
+		$(if $(PR_NUMBER),--make-arg "PR_NUMBER=$(PR_NUMBER)",) \
+		$(if $(PR_TITLE),--make-arg "PR_TITLE=$(PR_TITLE)",) \
+		$(if $(PR_BODY),--make-arg "PR_BODY=$(PR_BODY)",) \
+		--make-arg "PR_DRAFT=$(PR_DRAFT)" \
+		--make-arg "PR_MERGE_METHOD=$(PR_MERGE_METHOD)" \
+		--make-arg "PR_AUTO=$(PR_AUTO)" \
+		--make-arg "PR_DELETE_BRANCH=$(PR_DELETE_BRANCH)" \
+		$(SELECTED_PROJECTS)
 
 security: ## Run all security checks in all projects
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
