@@ -33,6 +33,7 @@ PR_DRAFT ?= 0
 PR_MERGE_METHOD ?= squash
 PR_AUTO ?= 0
 PR_DELETE_BRANCH ?= 0
+PR_CHECKS_STRICT ?= 0
 
 Q := @
 ifdef VERBOSE
@@ -175,6 +176,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  PR_BASE=main PR_HEAD=<branch> PR_NUMBER=<id> PR_DRAFT=0|1"
 	$(Q)echo "  PR_TITLE='title' PR_BODY='body' PR_MERGE_METHOD=squash|merge|rebase"
 	$(Q)echo "  PR_AUTO=0|1 PR_DELETE_BRANCH=0|1"
+	$(Q)echo "  PR_CHECKS_STRICT=0|1                    checks action strict failure toggle"
 	$(Q)echo "  DEPS_REPORT=0                            Skip dependency report after upgrade/typings"
 	$(Q)echo ""
 	$(Q)echo "Examples:"
@@ -468,6 +470,7 @@ pr: ## Manage pull requests for selected projects
 		--make-arg "PR_MERGE_METHOD=$(PR_MERGE_METHOD)" \
 		--make-arg "PR_AUTO=$(PR_AUTO)" \
 		--make-arg "PR_DELETE_BRANCH=$(PR_DELETE_BRANCH)" \
+		--make-arg "PR_CHECKS_STRICT=$(PR_CHECKS_STRICT)" \
 		$(SELECTED_PROJECTS)
 
 security: ## Run all security checks in all projects

@@ -78,3 +78,76 @@ def test_open_pr_for_head_parses_payload(monkeypatch: pytest.MonkeyPatch) -> Non
     pr = mod._open_pr_for_head(Path("/tmp/repo"), "0.11.0-dev")
     assert pr is not None
     assert pr.get("number") == 5
+
+
+def test_checks_action_nonblocking_by_default(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    mod = _load_module("pr_manager_checks_nonblocking", "scripts/github/pr_manager.py")
+
+    def _fake_current_branch(_repo_root: Path) -> str:
+        return "0.11.0-dev"
+
+    def _fake_run_stream(_command: list[str], _cwd: Path) -> int:
+        return 8
+
+    monkeypatch.setattr(mod, "_current_branch", _fake_current_branch)
+    monkeypatch.setattr(mod, "_run_stream", _fake_run_stream)
+    monkeypatch.setattr(
+        mod,
+        "_parse_args",
+        lambda: mod.argparse.Namespace(
+            repo_root=Path("."),
+            action="checks",
+            base="main",
+            head="",
+            number="",
+            title="",
+            body="",
+            draft=0,
+            merge_method="squash",
+            auto=0,
+            delete_branch=0,
+            checks_strict=0,
+        ),
+    )
+
+    exit_code = mod.main()
+    output = capsys.readouterr().out
+    assert exit_code == 0
+    assert "status=checks-nonblocking" in output
+
+
+def test_checks_action_strict_mode_returns_failure(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    mod = _load_module("pr_manager_checks_strict", "scripts/github/pr_manager.py")
+
+    def _fake_current_branch(_repo_root: Path) -> str:
+        return "0.11.0-dev"
+
+    def _fake_run_stream(_command: list[str], _cwd: Path) -> int:
+        return 8
+
+    monkeypatch.setattr(mod, "_current_branch", _fake_current_branch)
+    monkeypatch.setattr(mod, "_run_stream", _fake_run_stream)
+    monkeypatch.setattr(
+        mod,
+        "_parse_args",
+        lambda: mod.argparse.Namespace(
+            repo_root=Path("."),
+            action="checks",
+            base="main",
+            head="",
+            number="",
+            title="",
+            body="",
+            draft=0,
+            merge_method="squash",
+            auto=0,
+            delete_branch=0,
+            checks_strict=1,
+        ),
+    )
+
+    assert mod.main() == 8

@@ -29,6 +29,7 @@ PR_DRAFT ?= 0
 PR_MERGE_METHOD ?= squash
 PR_AUTO ?= 0
 PR_DELETE_BRANCH ?= 0
+PR_CHECKS_STRICT ?= 0
 
 PYTEST_REPORT_ARGS := -ra --durations=25 --durations-min=0.001 --tb=short
 PYTEST_DIAG_ARGS := -rA --durations=0 --tb=long --showlocals
@@ -188,6 +189,7 @@ help: ## Show commands
 	$(Q)echo "  PR_BASE=main PR_HEAD=<branch> PR_NUMBER=<id>"
 	$(Q)echo "  PR_TITLE='title' PR_BODY='body' PR_DRAFT=0|1"
 	$(Q)echo "  PR_MERGE_METHOD=squash|merge|rebase PR_AUTO=0|1 PR_DELETE_BRANCH=0|1"
+	$(Q)echo "  PR_CHECKS_STRICT=0|1 (checks: fail command only when strict=1)"
 
 setup: ## Complete setup
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
@@ -513,7 +515,8 @@ pr: ## Manage pull requests for this repository
 		--draft "$(PR_DRAFT)" \
 		--merge-method "$(PR_MERGE_METHOD)" \
 		--auto "$(PR_AUTO)" \
-		--delete-branch "$(PR_DELETE_BRANCH)"
+		--delete-branch "$(PR_DELETE_BRANCH)" \
+		--checks-strict "$(PR_CHECKS_STRICT)"
 
 clean: ## Clean artifacts
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
