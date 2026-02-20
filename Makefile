@@ -22,6 +22,7 @@ PUSH ?=
 VERSION ?=
 TAG ?=
 BUMP ?=
+RELEASE_DEV_SUFFIX ?= 0
 CREATE_BRANCHES ?= 1
 PR_ACTION ?= status
 PR_BASE ?= main
@@ -175,6 +176,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  DRY_RUN=1                                Print plan, do not tag/push"
 	$(Q)echo "  PUSH=1                                   Push release commit/tag"
 	$(Q)echo "  VERSION=<semver> TAG=v<semver> BUMP=patch Release controls"
+	$(Q)echo "  RELEASE_DEV_SUFFIX=0|1                  Append -dev during release version phase"
 	$(Q)echo "  CREATE_BRANCHES=1|0                      Create release branches in workspace + projects"
 	$(Q)echo "  PR_ACTION=status|create|view|checks|merge|close"
 	$(Q)echo "  PR_BASE=main PR_HEAD=<branch> PR_NUMBER=<id> PR_DRAFT=0|1"
@@ -436,6 +438,7 @@ release: ## Interactive workspace release orchestration
 		--root "$(CURDIR)" \
 		--phase "$(RELEASE_PHASE)" \
 		--interactive "$(INTERACTIVE)" \
+		--dev-suffix "$(RELEASE_DEV_SUFFIX)" \
 		--create-branches "$(CREATE_BRANCHES)" \
 		--projects $(SELECTED_PROJECTS) \
 		$(if $(DRY_RUN),--dry-run "$(DRY_RUN)",) \
@@ -453,6 +456,7 @@ release-ci: ## Non-interactive release run for CI/tag workflows
 		--root "$(CURDIR)" \
 		--phase "$(RELEASE_PHASE)" \
 		--interactive 0 \
+		--dev-suffix "$(RELEASE_DEV_SUFFIX)" \
 		--create-branches 0 \
 		--projects $(SELECTED_PROJECTS) \
 		$(if $(DRY_RUN),--dry-run "$(DRY_RUN)",) \
