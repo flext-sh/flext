@@ -23,6 +23,8 @@ VERSION ?=
 TAG ?=
 BUMP ?=
 RELEASE_DEV_SUFFIX ?= 0
+RELEASE_NEXT_DEV ?= 0
+RELEASE_NEXT_BUMP ?= minor
 CREATE_BRANCHES ?= 1
 PR_ACTION ?= status
 PR_BASE ?= main
@@ -176,6 +178,8 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  PUSH=1                                   Push release commit/tag"
 	$(Q)echo "  VERSION=<semver> TAG=v<semver> BUMP=patch Release controls"
 	$(Q)echo "  RELEASE_DEV_SUFFIX=0|1                  Append -dev during release version phase"
+	$(Q)echo "  RELEASE_NEXT_DEV=0|1                    After release, auto-bump to next <RELEASE_NEXT_BUMP>-dev"
+	$(Q)echo "  RELEASE_NEXT_BUMP=major|minor|patch     Next dev bump strategy (default: minor)"
 	$(Q)echo "  CREATE_BRANCHES=1|0                      Create release branches in workspace + projects"
 	$(Q)echo "  PR_ACTION=status|create|view|checks|merge|close"
 	$(Q)echo "  PR_BASE=main PR_HEAD=<branch> PR_NUMBER=<id> PR_DRAFT=0|1"
@@ -196,7 +200,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  make test PROJECT=flext-api PYTEST_ARGS=\"-k unit\" FAIL_FAST=1"
 	$(Q)echo "  make validate VALIDATE_SCOPE=workspace"
 	$(Q)echo "  make release BUMP=minor"
-	$(Q)echo "  make release INTERACTIVE=0 CREATE_BRANCHES=0 VERSION=0.11.0 TAG=v0.11.0 RELEASE_PHASE=all"
+	$(Q)echo "  make release INTERACTIVE=0 CREATE_BRANCHES=0 VERSION=0.11.0 TAG=v0.11.0 RELEASE_PHASE=all RELEASE_NEXT_DEV=1"
 	$(Q)echo "  make pr PROJECT=flext-core PR_ACTION=status"
 	$(Q)echo "  make pr PROJECT=flext-core PR_ACTION=create PR_TITLE='release: 0.11.0-dev'"
 	$(Q)echo "  NOTE: External projects (not in .gitmodules) require manual clone."
@@ -438,6 +442,8 @@ release: ## Interactive workspace release orchestration
 		--phase "$(RELEASE_PHASE)" \
 		--interactive "$(INTERACTIVE)" \
 		--dev-suffix "$(RELEASE_DEV_SUFFIX)" \
+		--next-dev "$(RELEASE_NEXT_DEV)" \
+		--next-bump "$(RELEASE_NEXT_BUMP)" \
 		--create-branches "$(CREATE_BRANCHES)" \
 		--projects $(SELECTED_PROJECTS) \
 		$(if $(DRY_RUN),--dry-run "$(DRY_RUN)",) \
