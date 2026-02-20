@@ -9,7 +9,7 @@ from typing import Any
 
 def load_module() -> Any:
     module_path = (
-        Path(__file__).resolve().parents[3] / "scripts" / "github" / "sync_workflows.py"
+        Path(__file__).resolve().parents[4] / "scripts" / "github" / "sync_workflows.py"
     )
     spec = importlib.util.spec_from_file_location("sync_workflows", module_path)
     assert spec is not None
