@@ -87,3 +87,32 @@ def test_phase_version_passes_dev_suffix_flag(
     assert recorded
     assert "--dev-suffix" in recorded[0]
     assert "1" in recorded[0]
+
+
+def test_phase_next_dev_bumps_and_appends_dev(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    run_mod = _load_module("release_run_next_dev", "scripts/release/run.py")
+    recorded: list[list[str]] = []
+
+    def _fake_phase_version(
+        root: Path,
+        version: str,
+        dry_run: bool,
+        project_names: list[str],
+        dev_suffix: bool,
+    ) -> None:
+        _ = root, dry_run, project_names
+        recorded.append([version, "dev" if dev_suffix else "nodev"])
+
+    monkeypatch.setattr(run_mod, "_phase_version", _fake_phase_version)
+
+    next_version = run_mod._phase_next_dev(
+        root=tmp_path,
+        version="0.11.0",
+        project_names=["flext-core"],
+        bump="minor",
+    )
+
+    assert next_version == "0.12.0"
+    assert recorded == [["0.12.0", "dev"]]
