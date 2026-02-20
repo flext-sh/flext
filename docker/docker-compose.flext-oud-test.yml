@@ -3,7 +3,7 @@
 # Port 3489, baseDN dc=flext,dc=local (matches OpenLDAP for cross-server testing)
 services:
   flext-oud-test:
-    image: registry.example.com/ocr/middleware/oud:14.1.2.1.0-jdk17-ol8-250314
+    image: ${FLEXT_OUD_IMAGE:?Set FLEXT_OUD_IMAGE in .env}
     container_name: flext-oud-test
     hostname: flext-oud-test
     ports:
