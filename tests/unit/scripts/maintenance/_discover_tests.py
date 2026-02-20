@@ -12,7 +12,7 @@ from _pytest.monkeypatch import MonkeyPatch
 
 def load_module() -> Any:
     module_path = (
-        Path(__file__).resolve().parents[3] / "scripts" / "maintenance" / "_discover.py"
+        Path(__file__).resolve().parents[4] / "scripts" / "maintenance" / "_discover.py"
     )
     spec = importlib.util.spec_from_file_location("_discover", module_path)
     assert spec is not None

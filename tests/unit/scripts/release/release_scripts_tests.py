@@ -8,7 +8,7 @@ from typing import Any
 
 
 def _load_module(relative_path: str, module_name: str) -> Any:
-    module_path = Path(__file__).resolve().parents[3] / relative_path
+    module_path = Path(__file__).resolve().parents[4] / relative_path
     spec = importlib.util.spec_from_file_location(module_name, module_path)
     assert spec is not None
     assert spec.loader is not None
