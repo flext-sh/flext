@@ -198,6 +198,24 @@ When a method exceeds the cognitive complexity threshold (15):
 3. Keep the original method as orchestrator
 4. Each extracted method should have its own type hints
 
+### Pattern E: Dead Wrapper Module Purge
+
+When entire operation modules are unreferenced and duplicate behavior from a canonical facade:
+
+1. Verify zero inbound references with repo-wide search.
+2. Delete the module(s) outright (do not keep compatibility wrappers).
+3. Re-run project gates.
+4. Record deletion in the ledger/evidence file.
+
+### Pattern F: Compatibility Alias Elimination
+
+When public surfaces expose `*API = *` aliases or free-function wrappers that only instantiate a facade:
+
+1. Remove alias and wrapper functions.
+2. Export only the canonical class/module surface.
+3. Rewrite all tests and call sites to direct method calls.
+4. Re-run project gates and document any pre-existing unrelated failures.
+
 ---
 
 ## Cross-Project Refactoring

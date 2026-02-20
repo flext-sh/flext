@@ -97,7 +97,7 @@ def test_checks_action_nonblocking_by_default(
         mod,
         "_parse_args",
         lambda: mod.argparse.Namespace(
-            repo_root=Path("."),
+            repo_root=Path(),
             action="checks",
             base="main",
             head="",
@@ -135,7 +135,7 @@ def test_checks_action_strict_mode_returns_failure(
         mod,
         "_parse_args",
         lambda: mod.argparse.Namespace(
-            repo_root=Path("."),
+            repo_root=Path(),
             action="checks",
             base="main",
             head="",
@@ -253,7 +253,8 @@ def test_merge_returns_success_when_no_open_pr_for_head(
     def _unexpected_run_stream_with_output(
         _command: list[str], _cwd: Path
     ) -> tuple[int, str]:
-        raise AssertionError("merge command should not run when PR is absent")
+        msg = "merge command should not run when PR is absent"
+        raise AssertionError(msg)
 
     monkeypatch.setattr(mod, "_open_pr_for_head", _fake_open_pr_for_head)
     monkeypatch.setattr(

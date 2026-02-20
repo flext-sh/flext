@@ -1,73 +1,112 @@
+"""Utilities for managing project and workspace versioning."""
+
 from __future__ import annotations
 
 import re
-import tomllib
 from pathlib import Path
 
-import tomlkit
-from tomlkit.items import Table
-
-
-SEMVER_RE = re.compile(
-    r"^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)$"
-)
+from libs.subprocess import run_capture
 
 
 def parse_semver(version: str) -> tuple[int, int, int]:
-    match = SEMVER_RE.match(version)
+    """Parse a semantic version string into a tuple of (major, minor, patch).
+
+    Args:
+        version: The version string to parse.
+
+    Returns:
+        A tuple of three integers.
+
+    Raises:
+        RuntimeError: If the version string is not a valid semantic version.
+
+    """
+    match = re.match(r"^(\d+)\.(\d+)\.(\d+)(?:-dev)?$", version)
     if not match:
-        raise ValueError(f"invalid semver version: {version}")
-    return (
-        int(match.group("major")),
-        int(match.group("minor")),
-        int(match.group("patch")),
+        msg = f"invalid version: {version}"
+        raise RuntimeError(msg)
+    return int(match.group(1)), int(match.group(2)), int(match.group(3))
+
+
+def bump_version(version: str, bump_type: str) -> str:
+    """Bump a semantic version string according to the specified bump type.
+
+    Args:
+        version: The current version string.
+        bump_type: The type of bump ("major", "minor", or "patch").
+
+    Returns:
+        The bumped version string.
+
+    Raises:
+        RuntimeError: If the bump type is invalid.
+
+    """
+    major, minor, patch = parse_semver(version)
+    if bump_type == "major":
+        major += 1
+        minor = 0
+        patch = 0
+    elif bump_type == "minor":
+        minor += 1
+        patch = 0
+    elif bump_type == "patch":
+        patch += 1
+    else:
+        msg = f"invalid bump type: {bump_type}"
+        raise RuntimeError(msg)
+    return f"{major}.{minor}.{patch}"
+
+
+def release_tag_from_branch(branch: str) -> str:
+    """Extract a release tag name from a release branch name.
+
+    Args:
+        branch: The release branch name (e.g., "release/1.2.3").
+
+    Returns:
+        The corresponding tag name (e.g., "v1.2.3").
+
+    """
+    if branch.startswith("release/"):
+        return f"v{branch.removeprefix('release/')}"
+    return ""
+
+
+def current_workspace_version(workspace_root: Path) -> str:
+    """Read the current version from the main pyproject.toml file.
+
+    Args:
+        workspace_root: The root directory of the workspace.
+
+    Returns:
+        The version string.
+
+    """
+    pyproject = workspace_root / "pyproject.toml"
+    content = pyproject.read_text(encoding="utf-8")
+    match = re.search(r'^version\s*=\s*"(.+?)"', content, re.MULTILINE)
+    if not match:
+        msg = "version not found in pyproject.toml"
+        raise RuntimeError(msg)
+    return match.group(1)
+
+
+def replace_project_version(project_path: Path, version: str) -> None:
+    """Update the version field in a project's pyproject.toml file.
+
+    Args:
+        project_path: The directory containing the pyproject.toml file.
+        version: The new version string to set.
+
+    """
+    pyproject = project_path / "pyproject.toml"
+    content = pyproject.read_text(encoding="utf-8")
+    updated = re.sub(
+        r'^version\s*=\s*".+?"',
+        f'version = "{version}"',
+        content,
+        count=1,
+        flags=re.MULTILINE,
     )
-
-
-def bump_version(current_version: str, bump: str) -> str:
-    major, minor, patch = parse_semver(current_version)
-    if bump == "major":
-        return f"{major + 1}.0.0"
-    if bump == "minor":
-        return f"{major}.{minor + 1}.0"
-    if bump == "patch":
-        return f"{major}.{minor}.{patch + 1}"
-    raise ValueError(f"unsupported bump: {bump}")
-
-
-def release_tag_from_branch(branch: str) -> str | None:
-    version = branch.removesuffix("-dev")
-    if SEMVER_RE.fullmatch(version):
-        return f"v{version}"
-    match = re.fullmatch(r"release/(?P<version>\d+\.\d+\.\d+)", branch)
-    if not match:
-        return None
-    return f"v{match.group('version')}"
-
-
-def current_workspace_version(root: Path) -> str:
-    pyproject = root / "pyproject.toml"
-    data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
-    project = data.get("project")
-    if not isinstance(project, dict):
-        raise RuntimeError("unable to detect [project] section from pyproject.toml")
-    version = project.get("version")
-    if not isinstance(version, str) or not version:
-        raise RuntimeError("unable to detect version from pyproject.toml")
-    return version.removesuffix("-dev")
-
-
-def replace_project_version(content: str, version: str) -> tuple[str, bool]:
-    document = tomlkit.parse(content)
-    project = document.get("project")
-    if not isinstance(project, Table):
-        return content, False
-    current = project.get("version")
-    if not isinstance(current, str) or not current:
-        return content, False
-    _ = parse_semver(current.removesuffix("-dev"))
-    if current == version:
-        return content, False
-    project["version"] = version
-    updated = tomlkit.dumps(document)
-    return updated, updated != content
+    _ = pyproject.write_text(updated, encoding="utf-8")

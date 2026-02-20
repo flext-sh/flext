@@ -408,9 +408,8 @@ test: ## Run pytest only
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
 		go test -v -race -coverprofile=coverage.out -covermode=atomic ./...; \
 		go tool cover -func=coverage.out; \
-		exit 0; \
-	fi
-	$(Q)run_id=$$(date -u +%Y%m%dT%H%M%SZ)-$$$$; \
+	else \
+		run_id=$$(date -u +%Y%m%dT%H%M%SZ)-$$$$; \
 	report_dir="$(PYTEST_REPORTS_DIR)/$$run_id"; \
 	mkdir -p "$$report_dir"; \
 	log_file="$$report_dir/pytest.log"; \
@@ -471,7 +470,8 @@ test: ## Run pytest only
 	ln -sfn "$$run_id" "$(PYTEST_REPORTS_DIR)/latest"; \
 	echo "Reports: $$report_dir (latest: $(PYTEST_REPORTS_DIR)/latest)" >&2; \
 	echo "Details: $$summary_file | $$failed_file | $$errors_file | $$warnings_file | $$slowest_file | $$skips_file | $$log_file" >&2; \
-	exit $$rc
+	exit $$rc; \
+	fi
 
 validate: ## Run validate gates (VALIDATE_GATES=complexity,docstring to select, FIX=1)
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
