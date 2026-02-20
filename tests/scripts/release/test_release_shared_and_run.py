@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import importlib.util
-import json
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -23,21 +22,14 @@ def _load_module(module_name: str, relative_path: str) -> Any:
 
 def test_resolve_projects_uses_auto_discovery(monkeypatch: pytest.MonkeyPatch) -> None:
     shared = _load_module("release_shared", "scripts/release/shared.py")
-    payload = {
-        "projects": [
-            {"name": "flext-api", "path": "/tmp/ws/flext-api", "kind": "submodule"},
-            {
-                "name": "external-tool",
-                "path": "/tmp/ws/external-tool",
-                "kind": "external",
-            },
+
+    def _fake_resolve(_root: Path, _names: list[str]) -> list[SimpleNamespace]:
+        return [
+            SimpleNamespace(name="external-tool"),
+            SimpleNamespace(name="flext-api"),
         ]
-    }
 
-    def _fake_run(*_args: object, **_kwargs: object) -> SimpleNamespace:
-        return SimpleNamespace(returncode=0, stdout=json.dumps(payload), stderr="")
-
-    monkeypatch.setattr(shared.subprocess, "run", _fake_run)
+    monkeypatch.setattr(shared, "_resolve_projects", _fake_resolve)
 
     projects = shared.resolve_projects(Path("/tmp/ws"), [])
     assert [project.name for project in projects] == ["external-tool", "flext-api"]
@@ -45,16 +37,11 @@ def test_resolve_projects_uses_auto_discovery(monkeypatch: pytest.MonkeyPatch) -
 
 def test_resolve_projects_rejects_unknown(monkeypatch: pytest.MonkeyPatch) -> None:
     shared = _load_module("release_shared_unknown", "scripts/release/shared.py")
-    payload = {
-        "projects": [
-            {"name": "flext-api", "path": "/tmp/ws/flext-api", "kind": "submodule"},
-        ]
-    }
 
-    def _fake_run(*_args: object, **_kwargs: object) -> SimpleNamespace:
-        return SimpleNamespace(returncode=0, stdout=json.dumps(payload), stderr="")
+    def _fake_resolve(_root: Path, _names: list[str]) -> list[object]:
+        raise RuntimeError("unknown projects: missing-project")
 
-    monkeypatch.setattr(shared.subprocess, "run", _fake_run)
+    monkeypatch.setattr(shared, "_resolve_projects", _fake_resolve)
 
     with pytest.raises(RuntimeError, match="unknown release projects"):
         _ = shared.resolve_projects(Path("/tmp/ws"), ["missing-project"])
