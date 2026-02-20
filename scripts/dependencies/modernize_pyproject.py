@@ -65,15 +65,6 @@ SKIP_DIRS = frozenset({
     ".git",
 })
 
-STANDARD_PYTEST_ADDOPTS = [
-    "--strict-config",
-    "--strict-markers",
-    "--tb=short",
-    "-p no:sugar",
-    "-q",
-    "-ra",
-]
-
 COV_FLAG = re.compile(r"^--cov")
 
 
@@ -192,6 +183,31 @@ def _get_ssot_bandit_skips() -> list[str]:
     if not unique:
         raise RuntimeError("workspace pyproject defines empty [tool.bandit].skips")
     return unique
+
+
+def _get_ssot_pytest_addopts() -> list[str]:
+    """Read canonical pytest addopts from workspace pyproject SSOT."""
+    root_doc = tomlkit.parse((ROOT / "pyproject.toml").read_text())
+    tool = root_doc.get("tool")
+    if not tool:
+        raise RuntimeError("workspace pyproject missing [tool] for pytest SSOT")
+    pytest_section = tool.get("pytest")
+    if not pytest_section:
+        raise RuntimeError("workspace pyproject missing [tool.pytest] for pytest SSOT")
+    ini_options = pytest_section.get("ini_options")
+    if not ini_options:
+        raise RuntimeError(
+            "workspace pyproject missing [tool.pytest.ini_options] for pytest SSOT"
+        )
+    addopts = ini_options.get("addopts")
+    if not addopts or not isinstance(addopts, list):
+        raise RuntimeError(
+            "workspace pyproject missing [tool.pytest.ini_options].addopts list for pytest SSOT"
+        )
+    normalized: list[str] = [str(item) for item in addopts if str(item).strip()]
+    if not normalized:
+        raise RuntimeError("workspace pyproject defines empty pytest addopts SSOT")
+    return normalized
 
 
 # ── Fix functions ────────────────────────────────────────────────────
@@ -398,16 +414,52 @@ def fix_coverage_config(doc: tomlkit.TOMLDocument, spec: ProjectSpec) -> str | N
 
 def fix_pytest_section(doc: tomlkit.TOMLDocument) -> str | None:
     """Add [tool.pytest] with standard addopts if missing entirely."""
+    standard_addopts = _get_ssot_pytest_addopts()
     tool = doc.get("tool")
     if tool and "pytest" in tool:
         return None
     tool = _ensure_tool(doc)
     pt = tomlkit.table()
     ini = tomlkit.table()
-    ini["addopts"] = list(STANDARD_PYTEST_ADDOPTS)
+    ini["addopts"] = list(standard_addopts)
     pt.add("ini_options", ini)
     tool.add("pytest", pt)  # type: ignore[union-attr]
     return "pytest: added standard ini_options"
+
+
+def fix_pytest_addopts_sync(doc: tomlkit.TOMLDocument, spec: ProjectSpec) -> str | None:
+    """Sync pytest addopts to workspace SSOT for all non-root projects."""
+    if spec.is_root:
+        return None
+
+    standard_addopts = _get_ssot_pytest_addopts()
+    tool = doc.get("tool")
+    if not tool:
+        return None
+
+    pytest_cfg = tool.get("pytest")
+    if not pytest_cfg:
+        return None
+
+    ini = pytest_cfg.get("ini_options") if hasattr(pytest_cfg, "get") else None
+    if ini is None:
+        ini = pytest_cfg
+
+    addopts = ini.get("addopts") if hasattr(ini, "get") else None
+    if addopts is None:
+        ini["addopts"] = list(standard_addopts)
+        return "pytest: set addopts from workspace SSOT"
+
+    if not isinstance(addopts, list):
+        ini["addopts"] = list(standard_addopts)
+        return "pytest: normalized non-list addopts from workspace SSOT"
+
+    current = [str(item) for item in addopts]
+    if current == standard_addopts:
+        return None
+
+    _replace_inplace(addopts, list(standard_addopts))
+    return "pytest: synced addopts from workspace SSOT"
 
 
 def fix_pytest_cov_flags(doc: tomlkit.TOMLDocument) -> str | None:
@@ -512,6 +564,7 @@ def process_file(path: Path, spec: ProjectSpec, *, dry_run: bool = False) -> lis
     _apply(fix_ruff_extend(doc, spec))
     _apply(fix_coverage_config(doc, spec))
     _apply(fix_pytest_section(doc))
+    _apply(fix_pytest_addopts_sync(doc, spec))
     _apply(fix_pytest_cov_flags(doc))
     _apply(fix_pyrefly_search_path(doc))
     _apply(fix_bandit_skips(doc, spec))
@@ -671,6 +724,42 @@ def _apply_regex_fixes(path: Path, spec: ProjectSpec, fixes: list[str]) -> None:
             if not COV_FLAG.search(l.strip().strip('"').strip("'").strip(","))
         ]
         text = "\n".join(filtered)
+
+    if any(
+        "pytest: synced addopts" in f
+        or "pytest: set addopts" in f
+        or "pytest: normalized non-list addopts" in f
+        for f in fixes
+    ):
+        ssot_addopts = _get_ssot_pytest_addopts()
+        addopts_literal = "[ " + ", ".join(f'"{opt}"' for opt in ssot_addopts) + " ]"
+        text, replaced = re.subn(
+            r"(^\s*ini_options\.addopts\s*=\s*)(\[[\s\S]*?\]|\"[^\"]*\")",
+            rf"\1{addopts_literal}",
+            text,
+            count=1,
+            flags=re.MULTILINE,
+        )
+        if replaced == 0:
+
+            def _replace_pytest_ini_options_section(match: re.Match[str]) -> str:
+                section_header = match.group(1)
+                section_body = match.group(2)
+                updated_body, _ = re.subn(
+                    r"(^\s*addopts\s*=\s*)(\[[\s\S]*?\]|\"[^\"]*\")",
+                    rf"\1{addopts_literal}",
+                    section_body,
+                    count=1,
+                    flags=re.MULTILINE,
+                )
+                return f"{section_header}{updated_body}"
+
+            text = re.sub(
+                r"(?ms)(^\s*\[tool\.pytest\.ini_options\]\s*\n)(.*?)(?=^\s*\[|\Z)",
+                _replace_pytest_ini_options_section,
+                text,
+                count=1,
+            )
 
     if any(f.startswith("bandit:") for f in fixes):
         ssot_skips = _get_ssot_bandit_skips()

@@ -54,7 +54,7 @@ def anchorize(text: str) -> str:
     value = text.strip().lower()
     value = re.sub(r"[^a-z0-9\s-]", "", value)
     value = re.sub(r"\s+", "-", value)
-    return re.sub(r"-+", "-", value)
+    return re.sub(r"-+", "-", value).strip("-")
 
 
 def build_toc(content: str) -> str:

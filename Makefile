@@ -7,6 +7,7 @@ SHELL := /usr/bin/bash
 
 WORKSPACE_VENV := $(CURDIR)/.venv
 POETRY_ENV := VIRTUAL_ENV=$(WORKSPACE_VENV) PATH=$(WORKSPACE_VENV)/bin:$$PATH POETRY_VIRTUALENVS_CREATE=false POETRY_VIRTUALENVS_IN_PROJECT=false
+ORCHESTRATOR := $(POETRY_ENV) python scripts/workspace_orchestrator.py
 PYTEST_ARGS ?=
 VALIDATE_SCOPE ?= project
 DOCS_PHASE ?= all
@@ -55,6 +56,35 @@ for proj in $(SELECTED_PROJECTS); do \
 	if [ ! -d "$$proj" ] || [ ! -f "$$proj/pyproject.toml" ]; then \
 		echo "ERROR: invalid project '$$proj'"; \
 		exit 1; \
+	fi; \
+done
+endef
+
+define AUTO_SYNC_ALL_PROJECTS
+for proj in $(ALL_PROJECTS); do \
+	python3 scripts/sync.py --project-root "$$proj" --canonical-root "$(CURDIR)" >/dev/null || exit 1; \
+done
+endef
+
+define AUTO_ADJUST_SELECTED_PROJECTS
+for proj in $(SELECTED_PROJECTS); do \
+	if [ -d "$$proj" ]; then \
+		md_files=$$(find "$$proj" -type f -name '*.md' ! -path "$$proj/.git/*" ! -path "$$proj/.reports/*" ! -path "$$proj/reports/*" ! -path "$$proj/.venv/*" ! -path "$$proj/node_modules/*" ! -path "$$proj/.flext-deps/*" ! -path "$$proj/.mypy_cache/*" ! -path "$$proj/.pytest_cache/*" ! -path "$$proj/.ruff_cache/*" ! -path "$$proj/dist/*" ! -path "$$proj/build/*"); \
+		md_config=""; \
+		if [ -f ".markdownlint.json" ]; then md_config="--config .markdownlint.json"; fi; \
+		if [ -n "$$md_files" ] && [ -x "$(WORKSPACE_VENV)/bin/mdformat" ]; then \
+			mkdir -p .reports/workspace/preflight; \
+			printf '%s\n' "$$md_files" | xargs -r $(WORKSPACE_VENV)/bin/mdformat 2>>.reports/workspace/preflight/mdformat.log || true; \
+		fi; \
+		if [ -n "$$md_files" ] && command -v markdownlint >/dev/null 2>&1; then \
+			markdownlint --fix $$md_config $$md_files || true; \
+		fi; \
+		if [ -f "$$proj/go.mod" ] && command -v gofmt >/dev/null 2>&1; then \
+			go_files=$$(find "$$proj" -type f -name '*.go' ! -path "$$proj/.git/*"); \
+			if [ -n "$$go_files" ]; then \
+				printf '%s\n' "$$go_files" | xargs -r gofmt -w; \
+			fi; \
+		fi; \
 	fi; \
 done
 endef
@@ -136,6 +166,7 @@ setup: ## Install all projects into workspace .venv
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)echo "Modernizing pyproject.toml files..."; \
 	$(POETRY_ENV) python scripts/dependencies/modernize_pyproject.py --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
@@ -332,10 +363,11 @@ check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,p
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)$(POETRY_ENV) python scripts/check/fix_pyrefly_config.py $(SELECTED_PROJECTS)
-	$(Q)$(POETRY_ENV) python scripts/check/workspace_check.py \
-		$(if $(CHECK_GATES),--gates "$(CHECK_GATES)") \
-		$(if $(FAIL_FAST),--fail-fast) \
+	$(Q)$(ORCHESTRATOR) --verb check \
+		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
+		$(if $(CHECK_GATES),--make-arg "CHECK_GATES=$(CHECK_GATES)") \
 		$(SELECTED_PROJECTS)
 
 security: ## Run all security checks in all projects
@@ -343,102 +375,44 @@ security: ## Run all security checks in all projects
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)failed=0; \
-	for proj in $(SELECTED_PROJECTS); do \
-		if [ -d "$$proj" ]; then \
-			if $(POETRY_ENV) $(MAKE) -C "$$proj" security -s; then \
-				echo "✓ $$proj"; \
-			else \
-				echo "✗ $$proj"; \
-				failed=$$((failed + 1)); \
-				if [ "$(FAIL_FAST)" = "1" ]; then echo "FAIL: security (fail-fast on $$proj)"; exit 1; fi; \
-			fi; \
-		fi; \
-	done; \
-	if [ $$failed -ne 0 ]; then \
-		echo "FAIL: security ($$failed projects)"; \
-		exit 1; \
-	fi
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
+	$(Q)$(ORCHESTRATOR) --verb security $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(SELECTED_PROJECTS)
 
 format: ## Run all formatting in all projects
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)failed=0; \
-	for proj in $(SELECTED_PROJECTS); do \
-		if [ -d "$$proj" ]; then \
-			if $(POETRY_ENV) $(MAKE) -C "$$proj" format -s; then \
-				echo "✓ $$proj"; \
-			else \
-				echo "✗ $$proj"; \
-				failed=$$((failed + 1)); \
-				if [ "$(FAIL_FAST)" = "1" ]; then echo "FAIL: format (fail-fast on $$proj)"; exit 1; fi; \
-			fi; \
-		fi; \
-	done; \
-	if [ $$failed -ne 0 ]; then \
-		echo "FAIL: format ($$failed projects)"; \
-		exit 1; \
-	fi
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
+	$(Q)$(ORCHESTRATOR) --verb format $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(SELECTED_PROJECTS)
 
 docs: ## Run docs pipeline (DOCS_PHASE=audit|fix|build|generate|validate|all)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)project_arg="$(PROJECT)"; \
-	projects_arg="$(PROJECTS)"; \
-	if [ "$(DOCS_PHASE)" = "all" ]; then \
-		phases="audit fix build generate validate"; \
-		all_mode=1; \
-	else \
-		phases="$(DOCS_PHASE)"; \
-		all_mode=0; \
-	fi; \
-	for phase in $$phases; do \
-		echo "Running docs phase=$$phase"; \
-		case "$$phase" in \
-			audit) script="scripts/documentation/audit.py"; extra="--strict 1" ;; \
-			fix) script="scripts/documentation/fix.py"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
-			build) script="scripts/documentation/build.py"; extra="" ;; \
-			generate) script="scripts/documentation/generate.py"; extra="--apply" ;; \
-			validate) script="scripts/documentation/validate.py"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
-			*) echo "ERROR: invalid DOCS_PHASE=$$phase"; exit 2 ;; \
-		esac; \
-		if [ "$$phase" = "fix" ] && [ "$$all_mode" = "1" ]; then extra="--apply"; fi; \
-		cmd="python $$script --root . --output-dir .reports/docs"; \
-		if [ -n "$$project_arg" ]; then cmd="$$cmd --project $$project_arg"; fi; \
-		if [ -n "$$projects_arg" ]; then cmd="$$cmd --projects '$$projects_arg'"; fi; \
-		if [ -n "$$extra" ]; then cmd="$$cmd $$extra"; fi; \
-		eval $$cmd || exit $$?; \
-	done
+	$(Q)$(ORCHESTRATOR) --verb docs \
+		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
+		--make-arg "DOCS_PHASE=$(DOCS_PHASE)" \
+		$(if $(FIX),--make-arg "FIX=$(FIX)") \
+		$(SELECTED_PROJECTS)
 
 test: ## Run tests only in all projects
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)failed=0; \
-	for proj in $(SELECTED_PROJECTS); do \
-		if [ -d "$$proj" ]; then \
-			if $(POETRY_ENV) $(MAKE) -C "$$proj" test -s PYTEST_ARGS="$(PYTEST_ARGS)"; then \
-				echo "✓ $$proj"; \
-			else \
-				echo "✗ $$proj"; \
-				failed=$$((failed + 1)); \
-				if [ "$(FAIL_FAST)" = "1" ]; then echo "FAIL: test (fail-fast on $$proj)"; exit 1; fi; \
-			fi; \
-		fi; \
-	done; \
-	if [ $$failed -ne 0 ]; then \
-		echo "FAIL: test ($$failed projects)"; \
-		exit 1; \
-	fi
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
+	$(Q)$(ORCHESTRATOR) --verb test \
+		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
+		$(if $(PYTEST_ARGS),--make-arg "PYTEST_ARGS=$(PYTEST_ARGS)") \
+		$(SELECTED_PROJECTS)
 
 validate: ## Run validate gates (VALIDATE_SCOPE=project|workspace, FIX=1)
 ifeq ($(VALIDATE_SCOPE),workspace)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(AUTO_SYNC_ALL_PROJECTS)
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)mkdir -p .sisyphus/reports
 	$(Q)echo "Running workspace validation (inventory + strict anti-drift gates)..."
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/generate_scripts_inventory.py --root .
@@ -457,23 +431,13 @@ else
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)if [ -z "$(FIX)" ]; then echo "INFO: run 'make validate FIX=1' to auto-fix before validate"; fi
-	$(Q)failed=0; \
-	for proj in $(SELECTED_PROJECTS); do \
-		if [ -d "$$proj" ]; then \
-			if $(POETRY_ENV) $(MAKE) -C "$$proj" validate FIX=$(FIX) VALIDATE_GATES="$(VALIDATE_GATES)" -s; then \
-				echo "✓ $$proj"; \
-			else \
-				echo "✗ $$proj"; \
-				failed=$$((failed + 1)); \
-				if [ "$(FAIL_FAST)" = "1" ]; then echo "FAIL: validate (fail-fast on $$proj)"; exit 1; fi; \
-			fi; \
-		fi; \
-	done; \
-	if [ $$failed -ne 0 ]; then \
-		echo "FAIL: validate ($$failed projects)"; \
-		exit 1; \
-	fi
+	$(Q)$(ORCHESTRATOR) --verb validate \
+		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
+		$(if $(FIX),--make-arg "FIX=$(FIX)") \
+		$(if $(VALIDATE_GATES),--make-arg "VALIDATE_GATES=$(VALIDATE_GATES)") \
+		$(SELECTED_PROJECTS)
 endif
 
 typings: ## Run typings supply-chain (stub_supply_chain + dependency report with typings). Use PROJECT= or PROJECTS= to scope.
@@ -492,20 +456,6 @@ clean: ## Clean all projects
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)failed=0; \
-	for proj in $(SELECTED_PROJECTS); do \
-		if [ -d "$$proj" ]; then \
-			if $(POETRY_ENV) $(MAKE) -C "$$proj" clean -s; then \
-				echo "✓ $$proj"; \
-			else \
-				echo "✗ $$proj"; \
-				failed=$$((failed + 1)); \
-				if [ "$(FAIL_FAST)" = "1" ]; then echo "FAIL: clean (fail-fast on $$proj)"; exit 1; fi; \
-			fi; \
-		fi; \
-	done; \
-	if [ $$failed -ne 0 ]; then \
-		echo "FAIL: clean ($$failed projects)"; \
-		exit 1; \
-	fi
+	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
+	$(Q)$(ORCHESTRATOR) --verb clean $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(SELECTED_PROJECTS)
 	$(Q)rm -rf .pytest_cache/ htmlcov/ .coverage* .mypy_cache/ .ruff_cache/

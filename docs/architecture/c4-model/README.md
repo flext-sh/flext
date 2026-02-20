@@ -3,20 +3,20 @@
 
 <!-- TOC START -->
 - [Table of Contents](#table-of-contents)
-- [📋 C4 Model Levels](#-c4-model-levels)
+- [📋 C4 Model Levels](#c4-model-levels)
   - [1. [System Context Diagram](./system-context.md)](#1-system-context-diagramsystem-contextmd)
   - [2. [Container Diagram](./container-diagram.md)](#2-container-diagramcontainer-diagrammd)
   - [3. [Component Diagrams](./component-diagrams.md)](#3-component-diagramscomponent-diagramsmd)
   - [4. [Code Diagrams](./code-diagrams.md)](#4-code-diagramscode-diagramsmd)
-- [🎯 FLEXT Architecture Overview](#-flext-architecture-overview)
-- [🏗️ Key Architectural Patterns](#-key-architectural-patterns)
+- [🎯 FLEXT Architecture Overview](#flext-architecture-overview)
+- [🏗️ Key Architectural Patterns](#key-architectural-patterns)
   - [Foundation Layer (flext-core)](#foundation-layer-flext-core)
   - [Application Layer](#application-layer)
   - [Infrastructure Layer](#infrastructure-layer)
   - [Data Integration Layer (Singer Platform)](#data-integration-layer-singer-platform)
   - [Runtime Layer](#runtime-layer)
-- [📊 Architecture Quality Attributes](#-architecture-quality-attributes)
-- [🔗 Related Documentation](#-related-documentation)
+- [📊 Architecture Quality Attributes](#architecture-quality-attributes)
+- [🔗 Related Documentation](#related-documentation)
 <!-- TOC END -->
 
 ## Table of Contents
