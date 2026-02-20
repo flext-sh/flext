@@ -286,7 +286,7 @@ Strictness policy:
 
 - Validation reports are machine-readable JSON artifacts.
 - Dependency and typing reports live under `.reports/dependencies/` (produced by `make upgrade` and `make typings` unless `DEPS_REPORT=0`). Stub supply-chain report: `.reports/validate/stub-supply-chain.json`.
-- Workspace validation artifacts (e.g. scripts inventory) may live under `.sisyphus/reports/` when produced by `make validate VALIDATE_SCOPE=workspace`.
+- Workspace validation artifacts (e.g. scripts inventory) must live under `.reports/` when produced by `make validate VALIDATE_SCOPE=workspace`.
 - Skill-local reports remain under `.claude/skills/<skill>/report.json` and `.claude/skills/<skill>/fix-report.json`.
 - Reports must include explicit next actions (`TODO: make PROJECT=<name> <target>`) for every failed gate.
 

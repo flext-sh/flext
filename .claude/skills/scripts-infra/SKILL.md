@@ -103,7 +103,7 @@ Why good: Uses shared lib for artifact naming, deterministic path construction.
 Bad:
 
 ```bash
-REPORT=".sisyphus/reports/my_report.json"
+REPORT=".reports/my_report.json"
 ```
 
 Why bad: Hardcoded path bypasses artifact naming contract.
