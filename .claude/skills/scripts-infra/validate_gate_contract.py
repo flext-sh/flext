@@ -19,7 +19,7 @@ OWNER_MARKER_RE = re.compile(
     r"^# Owner-Skill:\s+(.claude/skills/[a-z0-9][-a-z0-9]*/SKILL\.md)\s*$"
 )
 ARTIFACT_NAME_RE = re.compile(r"[a-z][-a-z0-9]*--[a-z]+--[a-z][-a-z0-9]*\.[a-z]+")
-SISYPHUS_PATH_RE = re.compile(r"\.sisyphus/(?:reports|baselines|evidence)/([^\s\"']+)")
+REPORTS_PATH_RE = re.compile(r"\.reports/([^\s\"']+)")
 BASH_EXIT_RE = re.compile(r"^\s*exit\s+(\d+)")
 INTERACTIVE_PY_RE = re.compile(r"\binput\s*\(")
 INTERACTIVE_SH_RE = re.compile(
@@ -259,7 +259,7 @@ def check_interactive(
 def check_artifact_naming(content: str) -> list[Violation]:
     violations: list[Violation] = []
     for i, line in enumerate(content.splitlines(), 1):
-        for match in SISYPHUS_PATH_RE.finditer(line):
+        for match in REPORTS_PATH_RE.finditer(line):
             filename = Path(match.group(1)).name
             if "$" in filename or "*" in filename or "{" in filename:
                 continue

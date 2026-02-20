@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Owner-Skill: .claude/skills/scripts-infra/SKILL.md
-"""Validate script-generated artifact naming under .sisyphus/."""
+"""Validate script-generated artifact naming under .reports/."""
 
 from __future__ import annotations
 
@@ -17,8 +17,8 @@ EXIT_USAGE = 2
 EXIT_INFRA = 3
 
 ARTIFACT_PATTERN = re.compile(r"^[a-z][-a-z0-9]*--[a-z]+--[a-z][-a-z0-9]*\.[a-z]+$")
-VALIDATED_TOP_DIRS = {"reports", "baselines"}
-SKIPPED_TOP_DIRS = {"evidence", "plans", "drafts"}
+VALIDATED_TOP_DIRS = {"."}
+SKIPPED_TOP_DIRS = {"evidence", "plans", "drafts", "validation", "dependencies"}
 SKIPPED_FILES = {".gitkeep"}
 
 
@@ -53,7 +53,7 @@ def validate_artifact_name(filename: str) -> bool:
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Validate .sisyphus artifact files follow "
+            "Validate .reports artifact files follow "
             "<skill>--<kind>--<slug>.<ext> naming contract."
         ),
     )
@@ -74,33 +74,33 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         raise UsageError(msg) from exc
 
 
-def should_validate(path: Path, sisyphus_root: Path) -> bool:
+def should_validate(path: Path, reports_root: Path) -> bool:
     if not path.is_file():
         return False
     if path.name in SKIPPED_FILES:
         return False
 
     try:
-        relative = path.relative_to(sisyphus_root)
+        relative = path.relative_to(reports_root)
     except ValueError:
         return False
 
     if not relative.parts:
         return False
 
+    if len(relative.parts) == 1:
+        return True
     top_dir = relative.parts[0]
     if top_dir in SKIPPED_TOP_DIRS:
         return False
     return top_dir in VALIDATED_TOP_DIRS
 
 
-def collect_artifacts(sisyphus_root: Path) -> list[Path]:
-    if not sisyphus_root.exists():
+def collect_artifacts(reports_root: Path) -> list[Path]:
+    if not reports_root.exists():
         return []
     return sorted(
-        path
-        for path in sisyphus_root.rglob("*")
-        if should_validate(path, sisyphus_root)
+        path for path in reports_root.rglob("*") if should_validate(path, reports_root)
     )
 
 
@@ -130,9 +130,9 @@ def suggest_filename(filename: str) -> str:
 def validate(
     *,
     repo_root: Path,
-    sisyphus_root: Path,
+    reports_root: Path,
 ) -> list[NamingViolation]:
-    artifacts = collect_artifacts(sisyphus_root)
+    artifacts = collect_artifacts(reports_root)
     violations: list[NamingViolation] = []
 
     eprint("Artifact Naming Validation")
@@ -200,10 +200,10 @@ def run_main(argv: list[str]) -> int:
             msg = f"--root must point to an existing directory: {repo_root}"
             raise UsageError(msg)
 
-        sisyphus_root = repo_root / ".sisyphus"
+        reports_root = repo_root / ".reports"
         report_path = repo_root / ".claude" / "skills" / "scripts-infra" / "report.json"
 
-        violations = validate(repo_root=repo_root, sisyphus_root=sisyphus_root)
+        violations = validate(repo_root=repo_root, reports_root=reports_root)
         violation_count = len(violations)
         write_report(report_path, violations)
         eprint(f"Violations report: {report_path}")

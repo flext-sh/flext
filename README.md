@@ -1,190 +1,61 @@
-# FLEXT - Enterprise Data Integration Platform
+# FLEXT
 
+Portifolio de 33 projetos de integracao de dados, revisados individualmente para orientar decisao tecnica e operacao.
 
-<!-- TOC START -->
-- [🚀 Key Features](#-key-features)
-- [📦 Ecosystem Overview](#-ecosystem-overview)
-- [🏗️ Architecture](#-architecture)
-- [🚀 Quick Start](#-quick-start)
-- [Installation](#installation)
-- [Usage](#usage)
-  - [Basic Usage: LDIF Processing](#basic-usage-ldif-processing)
-  - [Railway-Oriented Error Handling](#railway-oriented-error-handling)
-- [🛠️ Development](#-development)
-  - [Prerequisites](#prerequisites)
-  - [Workflow (Make)](#workflow-make)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-<!-- TOC END -->
+## O que o repositorio consolida
 
-[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+- Bases arquiteturais para API, autenticacao, runtime, observabilidade e qualidade.
+- Conectores Singer (taps e targets) para LDAP, LDIF, Oracle, OIC e WMS.
+- Projetos dbt para publicacao de camada analitica por dominio.
+- Solucoes operacionais dedicadas para cenarios de migracao e clientes.
 
-**FLEXT** is a comprehensive, enterprise-grade data integration platform built with Python 3.13+ and modern architectural patterns.
+## Projetos revisados caso a caso
 
-**Reviewed**: 2026-02-17 | **Version**: 0.10.0-dev
+| Projeto | Papel funcional no ecossistema |
+| --- | --- |
+| `algar-oud-mig` | Ferramenta operacional para migracao LDAP/LDIF de Oracle Internet Directory (OID) para Oracle Unified Directory (OUD) com execucao por fases. |
+| `flexcore` | Runtime hibrido Go/Python para inicializacao de servicos e coordenacao operacional de componentes FLEXT. |
+| `flext-api` | Camada de API HTTP para exposicao e consumo de servicos de dados no ecossistema FLEXT. |
+| `flext-auth` | Servico de autenticacao e autorizacao para controle de acesso entre APIs, CLIs e componentes FLEXT. |
+| `flext-cli` | Framework de linha de comando para construir interfaces operacionais padronizadas no portfolio FLEXT. |
+| `flext-core` | Base arquitetural compartilhada do ecossistema, com contratos, utilitarios e padroes transversais. |
+| `flext-db-oracle` | Biblioteca de acesso Oracle para leitura, escrita e suporte de persistencia em pipelines de dados. |
+| `flext-dbt-ldap` | Projeto dbt para transformar dados LDAP em modelos analiticos operacionais e de auditoria. |
+| `flext-dbt-ldif` | Projeto dbt para modelagem analitica de dados extraidos de arquivos LDIF. |
+| `flext-dbt-oracle` | Projeto dbt para transformar dados Oracle em estruturas analiticas reutilizaveis. |
+| `flext-dbt-oracle-wms` | Projeto dbt especializado na transformacao de dados Oracle WMS para analise operacional logistica. |
+| `flext-grpc` | Camada gRPC para comunicacao service-to-service de baixa latencia entre componentes FLEXT. |
+| `flext-ldap` | Biblioteca de operacoes LDAP para leitura, escrita e sincronizacao de identidades em diretorios corporativos. |
+| `flext-ldif` | Biblioteca para parsing, validacao e transformacao de arquivos LDIF em fluxos de migracao de diretorio. |
+| `flext-meltano` | Camada de orquestracao Singer/Meltano para coordenar extracao, carga e transformacao em pipelines FLEXT. |
+| `flext-observability` | Componente de observabilidade para metricas, tracing e diagnostico operacional de servicos e pipelines. |
+| `flext-oracle-oic` | Biblioteca de integracao com Oracle Integration Cloud para operacoes de conectividade e interoperabilidade. |
+| `flext-oracle-wms` | Biblioteca de integracao com Oracle WMS para acesso a dados operacionais de armazem. |
+| `flext-plugin` | Sistema de plugins para extensao modular de funcionalidades sem alterar o nucleo da plataforma. |
+| `flext-quality` | Camada de validacao tecnica para qualidade, conformidade e seguranca no ecossistema FLEXT. |
+| `flext-tap-ldap` | Singer Tap para extracao de dados de diretorios LDAP em pipelines de integracao. |
+| `flext-tap-ldif` | Singer Tap para extracao de dados a partir de arquivos LDIF. |
+| `flext-tap-oracle` | Singer Tap para extracao de dados de bancos Oracle para pipelines ELT. |
+| `flext-tap-oracle-oic` | Singer Tap para extracao de entidades e dados de Oracle Integration Cloud. |
+| `flext-tap-oracle-wms` | Singer Tap para extracao de dados operacionais de Oracle Warehouse Management System. |
+| `flext-target-ldap` | Singer Target para aplicacao de dados em destinos LDAP. |
+| `flext-target-ldif` | Singer Target para materializar saida de pipeline em formato LDIF. |
+| `flext-target-oracle` | Singer Target para carga de dados em banco Oracle como destino final de pipeline. |
+| `flext-target-oracle-oic` | Singer Target para enviar dados a recursos Oracle Integration Cloud. |
+| `flext-target-oracle-wms` | Singer Target para aplicar dados em Oracle WMS como destino operacional. |
+| `flext-web` | Camada web para operacao e visualizacao das capacidades do ecossistema FLEXT. |
+| `gruponos-meltano-native` | Pipeline ETL Meltano dedicado ao contexto Grupo Nos, com foco operacional em cargas Oracle WMS. |
 
-Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
+## Estado atual do portfolio
 
-## 🚀 Key Features
+- Qualidade global: **Alpha**
+- Uso recomendado: **Nao produtivo**
+- Aplicacao permitida: desenvolvimento, POC e homologacao controlada.
 
-- **Unified API**: Single facade pattern across all libraries with `flext-core` integration.
-- **Type Safety**: Full Pydantic v2 integration with comprehensive validation and strict type checking.
-- **Enterprise Patterns**: Implements CQRS, Railway-oriented programming, and Dependency Injection.
-- **Extensible Architecture**: Plugin system built on robust `flext-core` abstractions.
-- **RFC Compliant**: Full RFC 2849/4512 LDIF processing capabilities with quirk handling.
-- **Production Ready**: Comprehensive testing, monitoring, and structured logging.
+## Diretriz de governanca desta revisao
 
-## 📦 Ecosystem Overview
+Cada README foi tratado individualmente com foco no que o projeto faz, no contexto operacional de uso e no risco atual de adocao.
 
-FLEXT is composed of specialized libraries designed to work together or independently.
+## Repositorio oficial
 
-| Library | Description |
-| ------- | ----------- |
-| **[flext-core](flext-core/)** | Core framework providing base patterns, dependency injection, and error handling. |
-| **[flext-api](flext-api/)** | REST API framework with OpenAPI support and unified HTTP clients. |
-| **[flext-auth](flext-auth/)** | Authentication and authorization services supporting multiple providers. |
-| **[flext-ldif](flext-ldif/)** | High-performance, RFC-compliant LDIF processing and migration engine. |
-| **[flext-ldap](flext-ldap/)** | Universal LDAP client operations and directory management. |
-| **[flext-oracle](flext-db-oracle/)** | Enterprise Oracle database integration with SQLAlchemy 2.0. |
-| **[flext-grpc](flext-grpc/)** | gRPC services framework for high-performance microservices. |
-| **[flext-meltano](flext-meltano/)** | Meltano integration for ELT pipelines and Singer taps/targets. |
-| **[flext-web](flext-web/)** | Web application patterns and dashboarding components. |
-
-## 🏗️ Architecture
-
-FLEXT is built on a clean architecture foundation:
-
-- **Clean Architecture**: Clear separation of concerns with dependency inversion.
-- **CQRS Pattern**: Command Query Responsibility Segregation for complex business logic.
-- **Railway-Oriented Programming**: Functional error handling returning `FlextResult[T]`.
-- **Dependency Injection**: `FlextContainer` for managing component lifecycles.
-
-```
-┌─────────────────────────────────────┐
-│         Application Layer           │
-│   - Use Cases & Application Services│
-│   - Command/Query Handlers          │
-└─────────────────┬───────────────────┘
-                  │
-┌─────────────────────────────────────┐
-│           Domain Layer              │
-│   - Business Logic & Rules          │
-│   - Domain Models & Value Objects   │
-└─────────────────┬───────────────────┘
-                  │
-┌─────────────────────────────────────┐
-│     Infrastructure Layer            │
-│   - External Services (DB, LDAP)    │
-│   - File System, Network I/O        │
-└─────────────────┬───────────────────┘
-                  │
-┌─────────────────────────────────────┐
-│           Core Layer                │
-│   - flext-core Framework            │
-│   - Common Patterns & Abstractions  │
-└─────────────────────────────────────┘
-```
-
-## 🚀 Quick Start
-
-## Installation
-
-Install the core framework:
-
-```bash
-pip install flext-core
-```
-
-Install specific capabilities as needed:
-
-```bash
-pip install flext-ldif flext-api flext-auth
-```
-
-## Usage
-
-### Basic Usage: LDIF Processing
-
-```python
-from flext_ldif import FlextLdif
-
-# Initialize LDIF API
-ldif = FlextLdif()
-
-# Parse LDIF content
-ldif_content = """dn: cn=test,dc=example,dc=com
-cn: test
-sn: user
-objectClass: inetOrgPerson"""
-
-result = ldif.parse(ldif_content)
-if result.is_success:
-    entries = result.unwrap()
-    print(f"Successfully parsed {len(entries)} LDIF entries")
-```
-
-### Railway-Oriented Error Handling
-
-FLEXT uses `FlextResult` for consistent error handling across the ecosystem.
-
-```python
-from flext_core import FlextResult
-
-def process_data(data: str) -> FlextResult[str]:
-    if not data:
-        return FlextResult.failure("Data cannot be empty")
-    
-    # Process data...
-    return FlextResult.success("processed data")
-
-# Usage
-result = process_data("input")
-if result.is_success:
-    print(result.unwrap())
-else:
-    print(f"Error: {result.error}")
-```
-
-## 🛠️ Development
-
-All development and maintenance run via Make from the repository root. No ad-hoc script invocations as the primary workflow.
-
-### Prerequisites
-
-- Python 3.13+
-- Poetry (for dependency management)
-- Git
-
-### Workflow (Make)
-
-```bash
-# Clone with submodules
-git clone --recursive https://github.com/flext-sh/flext.git
-cd flext
-
-# Setup: single workspace .venv, all projects (optional: PROJECT= or PROJECTS=)
-make setup
-
-# Upgrade deps + dependency report (use DEPS_REPORT=0 to skip report)
-make upgrade
-
-# Quality gates
-make check
-make test
-make validate
-
-# Typings: stub supply-chain + typing report (optional: PROJECT=, DEPS_REPORT=0)
-make typings
-```
-
-Run **make help** for all verbs and parameters (e.g. `PROJECT=flext-core`, `FAIL_FAST=1`, `FIX=1`). See [CLAUDE.md](CLAUDE.md) for the full automation contract and standard places.
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](docs/CONTRIBUTING.md) for details on the development workflow, coding standards, and submission process.
-
-## 📄 License
-
-FLEXT is released under the MIT License. See [LICENSE](LICENSE) for details.
+Codigo-fonte e governanca: [github.com/flext-sh/flext](https://github.com/flext-sh/flext).

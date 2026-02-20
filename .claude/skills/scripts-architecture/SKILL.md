@@ -60,7 +60,7 @@ description: Architecture scripts — import analysis, violation detection, code
 ## Rules
 
 - Architecture scripts must not modify code without explicit `--fix` or `--apply` flag.
-- Analysis output must go to `.sisyphus/reports/` using artifact naming contract.
+- Analysis output must go to `.reports/` using artifact naming contract.
 - Standard quality gates run via Make verbs (`make check`, `make validate`); architecture scripts are implementation details behind Make.
 - Cross-project tests run via `make test` (or `make test FAIL_FAST=1` to stop on first failure).
 
@@ -94,7 +94,7 @@ Why good: Canonical Make contract, consistent with CLAUDE.md.
 Good (internal — architecture analysis scripts behind Make):
 
 ```bash
-python scripts/architecture/analyze_violations.py --output .sisyphus/reports/scripts-architecture--json--violations-latest.json
+python scripts/architecture/analyze_violations.py --output .reports/scripts-architecture--json--violations-latest.json
 ```
 
 Why acceptable: Direct script invocation for detailed architecture analysis. Make verbs are the recommended workflow for standard gates.
