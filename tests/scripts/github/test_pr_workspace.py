@@ -148,3 +148,83 @@ def test_main_respects_fail_fast(
 
     assert mod.main() == 1
     assert seen == [proj_a]
+
+
+def test_run_pr_uses_pr_manager_for_workspace_root(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    mod = _load_module("pr_workspace_root_command", "scripts/github/pr_workspace.py")
+    workspace = tmp_path / "workspace"
+    _ = workspace.mkdir(parents=True)
+
+    commands: list[list[str]] = []
+
+    def _fake_run(command: list[str], **_kwargs: Any) -> Any:
+        commands.append(command)
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(mod.subprocess, "run", _fake_run)
+
+    args = mod.argparse.Namespace(
+        pr_action="status",
+        pr_base="main",
+        pr_head="",
+        pr_number="",
+        pr_title="",
+        pr_body="",
+        pr_draft="0",
+        pr_merge_method="squash",
+        pr_auto="0",
+        pr_delete_branch="0",
+        pr_checks_strict="0",
+        pr_release_on_merge="1",
+    )
+
+    exit_code = mod._run_pr(workspace, workspace, args)
+    assert exit_code == 0
+    assert commands
+    assert commands[0][:4] == [
+        "python",
+        "scripts/github/pr_manager.py",
+        "--repo-root",
+        str(workspace),
+    ]
+
+
+def test_run_pr_uses_make_for_non_root_repo(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    mod = _load_module("pr_workspace_project_command", "scripts/github/pr_workspace.py")
+    workspace = tmp_path / "workspace"
+    repo = workspace / "flext-core"
+    _ = repo.mkdir(parents=True)
+
+    commands: list[list[str]] = []
+
+    def _fake_run(command: list[str], **_kwargs: Any) -> Any:
+        commands.append(command)
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(mod.subprocess, "run", _fake_run)
+
+    args = mod.argparse.Namespace(
+        pr_action="status",
+        pr_base="main",
+        pr_head="",
+        pr_number="",
+        pr_title="",
+        pr_body="",
+        pr_draft="0",
+        pr_merge_method="squash",
+        pr_auto="0",
+        pr_delete_branch="0",
+        pr_checks_strict="0",
+        pr_release_on_merge="1",
+    )
+
+    exit_code = mod._run_pr(repo, workspace, args)
+    assert exit_code == 0
+    assert commands
+    assert commands[0][:4] == ["make", "-C", str(repo), "pr"]
