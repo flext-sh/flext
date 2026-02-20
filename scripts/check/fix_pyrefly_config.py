@@ -126,7 +126,7 @@ def _ensure_project_excludes(text: str) -> tuple[str, list[str]]:
 
 
 def process_file(path: Path, *, dry_run: bool = False) -> list[str]:
-    text = path.read_text()
+    text = path.read_text(encoding="utf-8")
     if "[tool.pyrefly]" not in text:
         return []
 
@@ -144,7 +144,7 @@ def process_file(path: Path, *, dry_run: bool = False) -> list[str]:
         all_fixes.extend(fixes)
 
     if text != original and not dry_run:
-        path.write_text(text)
+        path.write_text(text, encoding="utf-8")
 
     return all_fixes
 

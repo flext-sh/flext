@@ -43,4 +43,4 @@ def test_update_changelog_is_idempotent_by_version_heading() -> None:
     second = mod._update_changelog(first, "0.11.0", "v0.11.0")
 
     assert first == second
-    assert len(re.findall(r"^## 0\.11\.0 - ", second, flags=re.M)) == 1
+    assert len(re.findall(r"^## 0\.11\.0 - ", second, flags=re.MULTILINE)) == 1

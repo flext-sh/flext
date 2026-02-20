@@ -39,7 +39,8 @@ def test_resolve_projects_rejects_unknown(monkeypatch: pytest.MonkeyPatch) -> No
     shared = _load_module("release_shared_unknown", "scripts/release/shared.py")
 
     def _fake_resolve(_root: Path, _names: list[str]) -> list[object]:
-        raise RuntimeError("unknown projects: missing-project")
+        msg = "unknown projects: missing-project"
+        raise RuntimeError(msg)
 
     monkeypatch.setattr(shared, "_resolve_projects", _fake_resolve)
 

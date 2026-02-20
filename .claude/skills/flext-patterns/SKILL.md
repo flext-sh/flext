@@ -54,6 +54,8 @@ description: Repository-native implementation patterns for result flow, DI, logg
 - For fallible operations use `ok/fail + map/flat_map/lash` chains.
 - For context-aware logging use bind/scope patterns instead of manual dict payload assembly.
 - Prefer `t.*` contracts for payload typing and `p.*` protocols for interfaces.
+- Delete unreferenced operation wrappers when a canonical facade already implements the same behavior (do not keep duplicate module families alive).
+- In domain packages, remove generic helper re-implementations when `flext-core` primitives already provide equivalent behavior.
 
 ```python
 from flext_core import r
@@ -107,6 +109,42 @@ logger["user_id"] = user_id
 ```
 
 Why bad: bypasses structured context APIs (`bind_global_context`, `scoped_context`) and loses standardized log behavior.
+
+Bad:
+
+```python
+# duplicate operation wrappers that are never consumed
+class DomainAPIOperationsA: ...
+class DomainAPIOperationsB: ...
+```
+
+Why bad: multiplies maintenance surface and drifts from the canonical facade API.
+
+Bad:
+
+```python
+# compatibility aliases that hide canonical call sites
+LegacyAPI = NewDirectAPI
+```
+
+Why bad: keeps obsolete surfaces alive, delays full reference migration, and prevents true source reduction.
+
+Bad:
+
+```python
+def do_work(...):
+    return DomainFacade().do_work(...)
+```
+
+Why bad: free-function pass-through wrappers duplicate the class surface and inflate code without adding domain behavior.
+
+Bad:
+
+```python
+SomeNamespace = CanonicalNamespace
+```
+
+Why bad: namespace aliases hide canonical access paths and spread non-essential compatibility names across the codebase.
 
 ## Verification
 
