@@ -126,3 +126,32 @@ flext-core = { path = ".flext-deps/flext-core" }
     assert dep_path == project_root / ".flext-deps" / "flext-core"
     assert repo_url == "git@github.com:flext-sh/flext-core.git"
     assert ref_name == "main"
+
+
+def test_ensure_checkout_removes_preexisting_non_git_path(
+    tmp_path: Path, monkeypatch: MonkeyPatch
+) -> None:
+    mod = load_module()
+    dep_path = tmp_path / ".flext-deps" / "flext-core"
+    dep_path.parent.mkdir(parents=True)
+    _ = dep_path.write_text("placeholder", encoding="utf-8")
+
+    calls: list[list[str]] = []
+
+    def _fake_run(
+        args: list[str], *, text: bool, capture_output: bool, check: bool
+    ) -> subprocess.CompletedProcess[str]:
+        _ = text, capture_output, check
+        calls.append(args)
+        return subprocess.CompletedProcess(
+            args=args, returncode=0, stdout="", stderr=""
+        )
+
+    monkeypatch.setattr(mod.subprocess, "run", _fake_run)
+
+    mod._ensure_checkout(dep_path, "git@github.com:flext-sh/flext-core.git", "main")
+
+    assert dep_path.exists() is False
+    assert calls
+    assert calls[0][0] == mod.GIT_BIN
+    assert calls[0][1] == "clone"
