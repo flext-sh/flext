@@ -15,6 +15,14 @@ FAIL_FAST ?=
 JOBS ?=
 CHECK_GATES ?=
 VALIDATE_GATES ?=
+RELEASE_PHASE ?= all
+INTERACTIVE ?= 1
+DRY_RUN ?=
+PUSH ?=
+VERSION ?=
+TAG ?=
+BUMP ?=
+CREATE_BRANCHES ?= 1
 
 Q := @
 ifdef VERBOSE
@@ -113,7 +121,7 @@ if [ -n "$$residual_venvs" ]; then \
 fi
 endef
 
-.PHONY: help setup upgrade check security format docs test validate typings clean
+.PHONY: help setup upgrade build check security format docs test validate typings clean release release-ci
 
 help: ## Show simple workspace verbs
 	$(Q)echo "FLEXT Workspace"
@@ -124,12 +132,15 @@ help: ## Show simple workspace verbs
 	$(Q)echo "Core verbs:"
 	$(Q)echo "  setup      Install all projects into workspace .venv, then run validate VALIDATE_SCOPE=workspace"
 	$(Q)echo "  upgrade    Upgrade deps + modernize + dependency report (.reports/dependencies/)"
+	$(Q)echo "  build      Build/package all selected projects"
 	$(Q)echo "  check      Run the 6 lint gates in all projects"
 	$(Q)echo "  security   Run all security checks in all projects"
 	$(Q)echo "  format     Run all formatting in all projects"
 	$(Q)echo "  docs       Build docs in all projects"
 	$(Q)echo "  test       Run tests only in all projects"
 	$(Q)echo "  validate   Run validate gates (FIX=1 auto-fix, VALIDATE_SCOPE=workspace for repo-level)"
+	$(Q)echo "  release    Interactive workspace release orchestration"
+	$(Q)echo "  release-ci Non-interactive release run for CI/tag workflows"
 	$(Q)echo "  typings    Stub supply-chain + typing report (PROJECT/PROJECTS to scope)"
 	$(Q)echo "  clean      Clean all projects"
 	$(Q)echo ""
@@ -143,15 +154,24 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  VALIDATE_GATES=complexity,docstring      Select validate gates (default: all)"
 	$(Q)echo "  VALIDATE_SCOPE=project|workspace         Validate scope (default: project)"
 	$(Q)echo "  DOCS_PHASE=audit|fix|build|generate|validate|all"
+	$(Q)echo "  RELEASE_PHASE=validate,version,build,publish|all"
+	$(Q)echo "  INTERACTIVE=1|0                          Release prompt mode"
+	$(Q)echo "  DRY_RUN=1                                Print plan, do not tag/push"
+	$(Q)echo "  PUSH=1                                   Push release commit/tag"
+	$(Q)echo "  VERSION=0.10.0 TAG=v0.10.0 BUMP=patch    Release controls"
+	$(Q)echo "  CREATE_BRANCHES=1|0                      Create release branches in workspace + projects"
 	$(Q)echo "  DEPS_REPORT=0                            Skip dependency report after upgrade/typings"
 	$(Q)echo ""
 	$(Q)echo "Examples:"
 	$(Q)echo "  make check PROJECT=flext-core"
+	$(Q)echo "  make build"
 	$(Q)echo "  make typings PROJECT=flext-api"
 	$(Q)echo "  make check CHECK_GATES=lint,type"
 	$(Q)echo "  make validate PROJECTS=\"flext-core flext-api\" FIX=1"
 	$(Q)echo "  make test PROJECT=flext-api PYTEST_ARGS=\"-k unit\" FAIL_FAST=1"
 	$(Q)echo "  make validate VALIDATE_SCOPE=workspace"
+	$(Q)echo "  make release BUMP=minor"
+	$(Q)echo "  make release-ci VERSION=0.10.0 TAG=v0.10.0 RELEASE_PHASE=all"
 	$(Q)echo "  NOTE: External projects (not in .gitmodules) require manual clone."
 
 setup: ## Install all projects into workspace .venv
@@ -372,6 +392,39 @@ check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,p
 		$(if $(CHECK_GATES),--make-arg "CHECK_GATES=$(CHECK_GATES)") \
 		$(SELECTED_PROJECTS)
 
+build: ## Build/package all selected projects
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)$(ORCHESTRATOR) --verb build $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(SELECTED_PROJECTS)
+
+release: ## Interactive workspace release orchestration
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)python scripts/release/run.py \
+		--root "$(CURDIR)" \
+		--phase "$(RELEASE_PHASE)" \
+		--interactive "$(INTERACTIVE)" \
+		--create-branches "$(CREATE_BRANCHES)" \
+		$(if $(DRY_RUN),--dry-run "$(DRY_RUN)",) \
+		$(if $(PUSH),--push "$(PUSH)",) \
+		$(if $(VERSION),--version "$(VERSION)",) \
+		$(if $(TAG),--tag "$(TAG)",) \
+		$(if $(BUMP),--bump "$(BUMP)",)
+
+release-ci: ## Non-interactive release run for CI/tag workflows
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)python scripts/release/run.py \
+		--root "$(CURDIR)" \
+		--phase "$(RELEASE_PHASE)" \
+		--interactive 0 \
+		--create-branches 0 \
+		$(if $(DRY_RUN),--dry-run "$(DRY_RUN)",) \
+		$(if $(PUSH),--push "$(PUSH)",) \
+		$(if $(VERSION),--version "$(VERSION)",) \
+		$(if $(TAG),--tag "$(TAG)",) \
+		$(if $(BUMP),--bump "$(BUMP)",)
+
 security: ## Run all security checks in all projects
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
@@ -419,6 +472,7 @@ ifeq ($(VALIDATE_SCOPE),workspace)
 	$(Q)echo "Running workspace validation (inventory + strict anti-drift gates)..."
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/generate_scripts_inventory.py --root .
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/check_base_mk_sync.py
+	$(Q)$(WORKSPACE_VENV)/bin/python scripts/github/lint_workflows.py --root . --report .reports/workflows/actionlint.json
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/skill_validate.py --skill scripts-validation --mode strict
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/skill_validate.py --skill rules-github --mode strict
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/skill_validate.py --skill rules-docker --mode strict

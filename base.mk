@@ -89,8 +89,8 @@ $(LINT_CACHE_DIR):
 	$(Q)mkdir -p $(LINT_CACHE_DIR)
 
 # === SIMPLE VERB SURFACE ===
-.PHONY: help setup check security format docs docs-base docs-sync-scripts test validate clean _preflight
-STANDARD_VERBS := setup check security format docs test validate clean
+.PHONY: help setup build check security format docs docs-base docs-sync-scripts test validate clean _preflight
+STANDARD_VERBS := setup build check security format docs test validate clean
 $(STANDARD_VERBS): _preflight
 
 define ENFORCE_WORKSPACE_VENV
@@ -163,6 +163,7 @@ help: ## Show commands
 	$(Q)echo ""
 	$(Q)echo "Core verbs:"
 	$(Q)echo "  setup      Install dependencies and hooks (with automatic md/go adjustment)"
+	$(Q)echo "  build      Build distributable artifacts"
 	$(Q)echo "  check      Run the 8 lint gates"
 	$(Q)echo "  security   Run all security checks"
 	$(Q)echo "  format     Run all formatting (including automatic md/go adjustment)"
@@ -187,6 +188,14 @@ setup: ## Complete setup
 	else \
 		echo "INFO: skipping pre-commit install (no git repository)"; \
 	fi
+
+build: ## Build distributable artifacts
+	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
+		mkdir -p .reports/build; \
+		go build -o .reports/build/$(PROJECT_NAME) ./...; \
+		exit 0; \
+	fi
+	$(Q)$(POETRY) build
 
 check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,go,type to select)
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
