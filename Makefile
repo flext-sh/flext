@@ -137,7 +137,7 @@ if [ -n "$$residual_venvs" ]; then \
 fi
 endef
 
-.PHONY: help setup upgrade build check security format docs test validate typings clean release release-ci pr
+.PHONY: help setup upgrade build check security format docs test validate typings clean release pr
 
 help: ## Show simple workspace verbs
 	$(Q)echo "FLEXT Workspace"
@@ -156,7 +156,6 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  test       Run tests only in all projects"
 	$(Q)echo "  validate   Run validate gates (FIX=1 auto-fix, VALIDATE_SCOPE=workspace for repo-level)"
 	$(Q)echo "  release    Interactive workspace release orchestration"
-	$(Q)echo "  release-ci Non-interactive release run for CI/tag workflows"
 	$(Q)echo "  pr         Manage PRs for selected projects"
 	$(Q)echo "  typings    Stub supply-chain + typing report (PROJECT/PROJECTS to scope)"
 	$(Q)echo "  clean      Clean all projects"
@@ -197,7 +196,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  make test PROJECT=flext-api PYTEST_ARGS=\"-k unit\" FAIL_FAST=1"
 	$(Q)echo "  make validate VALIDATE_SCOPE=workspace"
 	$(Q)echo "  make release BUMP=minor"
-	$(Q)echo "  make release-ci VERSION=0.11.0 TAG=v0.11.0 RELEASE_PHASE=all"
+	$(Q)echo "  make release INTERACTIVE=0 CREATE_BRANCHES=0 VERSION=0.11.0 TAG=v0.11.0 RELEASE_PHASE=all"
 	$(Q)echo "  make pr PROJECT=flext-core PR_ACTION=status"
 	$(Q)echo "  make pr PROJECT=flext-core PR_ACTION=create PR_TITLE='release: 0.11.0-dev'"
 	$(Q)echo "  NOTE: External projects (not in .gitmodules) require manual clone."
@@ -440,24 +439,6 @@ release: ## Interactive workspace release orchestration
 		--interactive "$(INTERACTIVE)" \
 		--dev-suffix "$(RELEASE_DEV_SUFFIX)" \
 		--create-branches "$(CREATE_BRANCHES)" \
-		--projects $(SELECTED_PROJECTS) \
-		$(if $(DRY_RUN),--dry-run "$(DRY_RUN)",) \
-		$(if $(PUSH),--push "$(PUSH)",) \
-		$(if $(VERSION),--version "$(VERSION)",) \
-		$(if $(TAG),--tag "$(TAG)",) \
-		$(if $(BUMP),--bump "$(BUMP)",)
-
-release-ci: ## Non-interactive release run for CI/tag workflows
-	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
-	$(Q)$(ENFORCE_WORKSPACE_VENV)
-	$(Q)$(ENSURE_SELECTED_PROJECTS)
-	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)python scripts/release/run.py \
-		--root "$(CURDIR)" \
-		--phase "$(RELEASE_PHASE)" \
-		--interactive 0 \
-		--dev-suffix "$(RELEASE_DEV_SUFFIX)" \
-		--create-branches 0 \
 		--projects $(SELECTED_PROJECTS) \
 		$(if $(DRY_RUN),--dry-run "$(DRY_RUN)",) \
 		$(if $(PUSH),--push "$(PUSH)",) \
