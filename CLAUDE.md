@@ -163,6 +163,143 @@ c.Errors.VALIDATION_ERROR  # constant access
 e.BaseError       # exception access
 ```
 
+### Cross-Project Namespace Inheritance (CRITICAL)
+
+Every downstream project **inherits** its parent project's facade class, NOT `FlextModels`/`FlextProtocols` directly. This gives automatic access to all parent namespaces via MRO — no re-declaration, no aliasing, no duplication.
+
+**The pattern applies to ALL aliases: `m`, `c`, `t`, `u`, `p`.**
+
+```python
+# flext-target-oracle/src/flext_target_oracle/models.py
+from flext_meltano import FlextMeltanoModels
+from pydantic import Field
+
+class FlextTargetOracleModels(FlextMeltanoModels):  # ← inherits, NOT FlextModels
+    """m.Meltano.* inherited via MRO. m.TargetOracle.* defined here."""
+
+    class TargetOracle:
+        """Domain-specific models for Oracle target."""
+
+        class ExecuteResult(FlextMeltanoModels.ArbitraryTypesModel):
+            name: str = Field(description="Target name")
+
+m = FlextTargetOracleModels
+# m.Meltano.SingerSchemaMessage  → inherited from FlextMeltanoModels
+# m.TargetOracle.ExecuteResult   → defined locally
+# m.ArbitraryTypesModel          → inherited via chain
+```
+
+**Same pattern for protocols, types, utilities, constants:**
+
+```python
+# protocols.py
+from flext_meltano.protocols import FlextMeltanoProtocols
+
+class FlextTargetOracleProtocols(FlextMeltanoProtocols):
+    class TargetOracle:
+        class MyProtocol(Protocol): ...
+
+p = FlextTargetOracleProtocols
+# p.Meltano.* inherited, p.TargetOracle.* local
+```
+
+**Runtime code only imports the local alias:**
+
+```python
+from .models import m    # ONLY import needed — gives m.Meltano.*, m.TargetOracle.*
+from flext_core import r  # result alias
+
+schema = m.Meltano.SingerSchemaMessage.model_validate(data)
+config = m.TargetOracle.ExecuteResult(name="oracle")
+result = r[bool].ok(True)
+```
+
+**Why inheritance (not assignment or subclass-per-type):**
+
+| Approach | Result |
+|----------|--------|
+| `Meltano = FlextMeltanoModels.Meltano` | ❌ mypy `name-defined` with `from __future__ import annotations` |
+| `class Meltano:` + per-type subclasses | ❌ Invariance errors — `list[SubType]` ≠ `list[ParentType]` |
+| `class Meltano(FlextMeltanoModels.Meltano):` | ✅ Works but redundant if parent is inherited |
+| `class Models(FlextMeltanoModels):` (top-level) | ✅ **Correct** — clean MRO, zero duplication, exact types |
+
+**Anti-patterns (NEVER do these):**
+
+```python
+# ❌ Import separate aliases — creates duplicate surfaces
+from flext_meltano import FlextMeltanoModels as m_meltano
+
+# ❌ Assign individual classes — mypy rejects as types
+class Meltano:
+    SingerSchemaMessage = FlextMeltanoModels.Meltano.SingerSchemaMessage  # not valid-type
+
+# ❌ Inherit FlextModels instead of parent project
+class FlextTargetOracleModels(FlextModels):  # loses m.Meltano.* namespace
+```
+
+### Workspace Project Dependency Map (CRITICAL — Domain Boundaries)
+
+The workspace contains **distinct domain projects**. Do NOT confuse them. Each serves a different system and has its own models namespace.
+
+#### Domain Layer Projects (provide `m.<Domain>.*` namespaces)
+
+| Project | Models Class | Namespace | Domain | NOT the same as |
+|---------|-------------|-----------|--------|-----------------|
+| `flext-core` | `FlextModels` | `m.Base`, `m.Entity`, `m.Cqrs`, etc. | Framework primitives | — |
+| `flext-meltano` | `FlextMeltanoModels` | `m.Meltano.*` | Singer/Meltano pipeline protocol | — |
+| `flext-db-oracle` | `FlextDbOracleModels` | `m.DbOracle.*` | Oracle **Database** connectivity | `flext-oracle-wms` |
+| `flext-oracle-wms` | `FlextOracleWmsModels` | `m.OracleWms.*` | Oracle **WMS** (Warehouse Management System) | `flext-db-oracle` |
+| `flext-ldap` | `FlextLdapModels` | `m.Ldap.*` | LDAP directory operations | — |
+| `flext-ldif` | `FlextLdifModels` | `m.Ldif.*` | LDIF file operations | — |
+
+#### Integration Layer Projects (inherit from domain layers)
+
+Each target/tap/dbt project inherits from the domain layers it **actually uses**:
+
+| Project | Inherits From | Why |
+|---------|--------------|-----|
+| `flext-target-oracle-wms` | `FlextMeltanoModels, FlextOracleWmsModels` | Singer target loading into Oracle **WMS** |
+| `flext-tap-oracle-wms` | `FlextMeltanoModels, FlextOracleWmsModels` | Singer tap extracting from Oracle **WMS** |
+| `flext-dbt-oracle-wms` | `FlextMeltanoModels, FlextOracleWmsModels` | DBT transforms for Oracle **WMS** |
+| `flext-target-oracle` | `FlextMeltanoModels, FlextDbOracleModels` | Singer target loading into Oracle **Database** |
+| `flext-tap-oracle` | `FlextMeltanoModels, FlextDbOracleModels` | Singer tap extracting from Oracle **Database** |
+| `flext-dbt-oracle` | `FlextMeltanoModels, FlextDbOracleModels` | DBT transforms for Oracle **Database** |
+| `flext-target-ldap` | `FlextMeltanoModels, FlextLdapModels` | Singer target loading into LDAP |
+| `flext-tap-ldap` | `FlextMeltanoModels, FlextLdapModels` | Singer tap extracting from LDAP |
+| `flext-dbt-ldap` | `FlextMeltanoModels, FlextLdapModels` | DBT transforms for LDAP |
+| `flext-target-ldif` | `FlextMeltanoModels, FlextLdifModels` | Singer target writing LDIF files |
+| `flext-tap-ldif` | `FlextMeltanoModels, FlextLdifModels` | Singer tap reading LDIF files |
+| `flext-dbt-ldif` | `FlextMeltanoModels, FlextLdifModels` | DBT transforms for LDIF |
+| `flext-target-oracle-oic` | `FlextMeltanoModels, FlextDbOracleModels` | Singer target for Oracle OIC |
+| `flext-tap-oracle-oic` | `FlextMeltanoModels, FlextDbOracleModels` | Singer tap from Oracle OIC |
+
+#### Concrete Inheritance Example
+
+```python
+# flext-target-oracle-wms/src/flext_target_oracle_wms/models.py
+from flext_meltano.models import FlextMeltanoModels
+from flext_oracle_wms.wms_models import FlextOracleWmsModels
+
+class FlextTargetOracleWmsModels(FlextMeltanoModels, FlextOracleWmsModels):
+    class TargetOracleWms:
+        class WmsTargetConfig(FlextMeltanoModels.ArbitraryTypesModel):
+            ...
+
+m = FlextTargetOracleWmsModels
+# m.Meltano.SingerSchemaMessage  → from FlextMeltanoModels
+# m.OracleWms.Entity             → from FlextOracleWmsModels (NOT FlextDbOracleModels!)
+# m.TargetOracleWms.WmsTargetConfig → defined locally
+```
+
+#### NEVER Confuse These
+
+| If the project name contains... | It uses... | NOT... |
+|---------------------------------|-----------|--------|
+| `oracle-wms` | `FlextOracleWmsModels` (Warehouse Management) | `FlextDbOracleModels` (Database) |
+| `oracle` (without `-wms`) | `FlextDbOracleModels` (Database) | `FlextOracleWmsModels` (WMS) |
+| `ldap` | `FlextLdapModels` | `FlextLdifModels` |
+| `ldif` | `FlextLdifModels` | `FlextLdapModels` |
+
 ### Complete Alias Map (flext-core)
 
 | Alias | Full Class | Module |

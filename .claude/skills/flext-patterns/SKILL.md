@@ -48,6 +48,39 @@ description: Repository-native implementation patterns for result flow, DI, logg
 - Hexagonal ports/adapters boundaries
 - Validation/middleware pipeline composition
 - Factory/Adapter object-creation integration patterns
+- **Namespace Inheritance** (cross-project `m`, `c`, `t`, `u`, `p` composition via MRO)
+
+## Namespace Inheritance Pattern
+
+Downstream projects inherit parent facade classes to compose namespaces. This avoids duplicate aliases, assignment-based type errors, and invariance issues.
+
+```python
+# models.py — inherit parent, define local domain namespace
+from flext_meltano import FlextMeltanoModels
+
+class FlextTargetOracleModels(FlextMeltanoModels):
+    class TargetOracle:
+        class ExecuteResult(FlextMeltanoModels.ArbitraryTypesModel):
+            name: str
+
+m = FlextTargetOracleModels
+# m.Meltano.*       → from FlextMeltanoModels via MRO
+# m.TargetOracle.*  → local domain
+```
+
+```python
+# Runtime usage — only import m
+from .models import m
+from flext_core import r
+
+schema = m.Meltano.SingerSchemaMessage.model_validate(data)
+result = r[m.TargetOracle.ExecuteResult].ok(m.TargetOracle.ExecuteResult(name="x"))
+```
+
+Anti-patterns:
+- `from flext_meltano import FlextMeltanoModels as m_meltano` — duplicate alias surface
+- `class Meltano: X = Parent.Meltano.X` — assignment not valid as type
+- Inheriting `FlextModels` when parent namespaces are needed — loses `m.Meltano.*`
 
 ## Instructions
 - Anchor new code to nearby proven implementations in same module family.
@@ -56,6 +89,7 @@ description: Repository-native implementation patterns for result flow, DI, logg
 - Prefer `t.*` contracts for payload typing and `p.*` protocols for interfaces.
 - Delete unreferenced operation wrappers when a canonical facade already implements the same behavior (do not keep duplicate module families alive).
 - In domain packages, remove generic helper re-implementations when `flext-core` primitives already provide equivalent behavior.
+- For protocol payloads (Singer/CLI/API), prefer canonical Pydantic message models over repeated ad-hoc dict key/type checks in handlers.
 
 ```python
 from flext_core import r
