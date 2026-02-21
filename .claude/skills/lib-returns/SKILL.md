@@ -254,11 +254,11 @@ result = FlextResult(Success(value))
 
 | Subproject | Files | Pattern |
 | ------------ | ------- | --------- |
-| `flext-auth` | `provider_service.py`, `token_service.py`, `registry.py`, `api.py` | `from flext_core import FlextResult as r` — service results, auth flows |
+| `flext-auth` | `provider_service.py`, `token_service.py`, `registry.py`, `api.py` | `from flext_core import r` — service results, auth flows |
 | `flext-grpc` | `api.py` | FlextResult for gRPC operation results |
 | `flext-dbt-ldif` | `dbt_client.py`, `models.py`, `settings.py` | Business rule validation, DBT workflow results |
-| `flext-tap-ldif` | `utilities.py` | `from flext_core import FlextResult, FlextTypes as t` |
-| `flext-meltano` | `dbt/service.py` | `from flext_core import FlextResult as r, FlextService` |
+| `flext-tap-ldif` | `utilities.py` | `from flext_core import FlextResult, t` |
+| `flext-meltano` | `dbt/service.py` | `from flext_core import r, FlextService` |
 | `flext-cli` | service modules | CLI operation results |
 
 ## Verification

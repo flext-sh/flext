@@ -114,8 +114,8 @@ class FlextModels:
 ### Pattern A: Import with alias (most common, used in 90%+ of files)
 
 ```python
-from flext_core import FlextResult as r, FlextTypes as t
-from flext_core import FlextModels, FlextUtilities as u
+from flext_core import r, t
+from flext_core import FlextModels, u
 from flext_core import r, s, t, e  # pre-aliased letters
 ```
 
@@ -322,7 +322,7 @@ from typing import List, Dict, Optional, Union  # Use list, dict, X | None, X | 
 from typing import Sequence  # Use: from collections.abc import Sequence
 
 # ❌ Shadowing aliases inconsistently
-from flext_core import FlextResult as result  # Use: FlextResult as r (or just r)
+from flext_core import result  # Use: r (or just r)
 ```
 
 ## Verification

@@ -560,7 +560,7 @@ def test_database_connection():
    ```python
    # Em cada projeto, criar namespaces fáceis:
    from flext.constants import c
-   from flext.models import FlextModels as m
+   from flext.models import m
    from flext.typings import t
    from flext.protocols import p
    from flext.utilities import u
