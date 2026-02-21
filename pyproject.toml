@@ -216,12 +216,14 @@ exclude = [
   "vendor/",
 ]
 extra_checks = true
-files = [ "src/flext" ]
+files = [ "src", "scripts", "tests", "examples" ]
 follow_imports = "silent"
 follow_imports_for_stubs = true
 incremental = true
 local_partial_types = true
 mypy_path = [
+  "../typings",
+  "../typings/generated",
   "src",
   "flext-api/src",
   "flext-auth/src",
@@ -433,6 +435,8 @@ warn_required_dynamic_aliases = true
 
 [tool.pyright]
 enableTypeIgnoreComments = false
+extraPaths = [ "scripts", "src", "../typings", "../typings/generated" ]
+include = [ "src", "scripts", "tests", "examples" ]
 exclude = [
   "**/*.pb2.py",
   "**/*.pb2_grpc.py",
