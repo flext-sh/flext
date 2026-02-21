@@ -398,6 +398,7 @@ complexipy = "^5.1.0"
 rope = "^1.14.0"
 detect-secrets = "^1.5.0"
 safety = "^3.7.0"
+pyproject-fmt = "^2.16.1"
 
 [tool.poetry.group.typings.dependencies]
 aiofiles = "^24.1.0"
@@ -578,13 +579,12 @@ testpaths = [
 [tool.pyrefly]
 project-excludes = [ "**/*_pb2*.py", "**/*_pb2_grpc*.py" ]
 search-path = [
-  ".",
-  "typings",
-  "typings/generated",
-  "src",
-  "examples",
-  "scripts",
-]
+            "typings",
+            "typings/generated",
+            "src",
+            "examples",
+            "scripts",
+        ]
 
 [[tool.pyrefly.sub-config]]
 matches = "**/typings.py"
