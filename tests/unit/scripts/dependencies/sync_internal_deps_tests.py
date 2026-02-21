@@ -1,3 +1,5 @@
+"""Unit tests for scripts.dependencies.sync_internal_deps."""
+
 from __future__ import annotations
 
 import importlib.util
@@ -57,7 +59,7 @@ def test_workspace_mode_uses_explicit_workspace_env(
     mod = load_module()
     workspace_root = tmp_path / "workspace"
     project_root = workspace_root / "nested" / "project"
-    _ = project_root.mkdir(parents=True)
+    project_root.mkdir(parents=True)
 
     monkeypatch.setenv("FLEXT_WORKSPACE_ROOT", str(workspace_root))
     monkeypatch.delenv("FLEXT_STANDALONE", raising=False)
@@ -75,7 +77,7 @@ def test_workspace_mode_finds_parent_gitmodules(
     mod = load_module()
     workspace_root = tmp_path / "workspace"
     project_root = workspace_root / "nested" / "project"
-    _ = project_root.mkdir(parents=True)
+    project_root.mkdir(parents=True)
     _ = (workspace_root / ".gitmodules").write_text("", encoding="utf-8")
 
     monkeypatch.delenv("FLEXT_WORKSPACE_ROOT", raising=False)
@@ -93,7 +95,7 @@ def test_standalone_fallback_synthesizes_repo_urls(
 ) -> None:
     mod = load_module()
     project_root = tmp_path / "flext-cli"
-    _ = project_root.mkdir(parents=True)
+    project_root.mkdir(parents=True)
     _ = (project_root / "pyproject.toml").write_text(
         """
 [tool.poetry]

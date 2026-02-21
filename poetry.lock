@@ -2774,21 +2774,21 @@ files = []
 develop = true
 
 [package.dependencies]
-grpcio = ">=1.76.0,<2.0.0"
+grpcio = ">=1.76,<2"
 grpcio-tools = ">=1.75.1"
-prometheus-client = ">=0.23.0"
+prometheus-client = ">=0.23"
 protobuf = ">=6.33.5"
-psutil = ">=5.9.0"
+psutil = ">=5.9"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
-pydantic-settings = ">=2.11.0"
+pydantic-settings = ">=2.11"
 sqlalchemy = ">=2.0.44"
 
 [package.extras]
-dev = ["autoflake (>=2.3.1)", "black (>=25.1.0)", "codespell (>=2.3.0)", "deptry (>=0.23.0)", "isort (>=6.0.1)", "pre-commit (>=4.0.1)", "pylint (>=3.3.0)", "pyupgrade (>=3.19.0)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
-security = ["bandit (>=1.8.0)", "pip-audit (>=2.7.3)"]
+dev = ["autoflake (>=2.3.1)", "black (>=25.1)", "codespell (>=2.3)", "deptry (>=0.23)", "isort (>=6.0.1)", "pre-commit (>=4.0.1)", "pylint (>=3.3)", "pyupgrade (>=3.19)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
+security = ["bandit (>=1.8)", "pip-audit (>=2.7.3)"]
 test = []
-typings = ["django-stubs (>=5.2.2)", "types-ldap3 (>=2.9.13.20250622)", "types-protobuf (>=6.30.2.20250703)", "types-psutil (>=7.0.0)", "types-psycopg2 (>=2.9.21.20250718)", "types-python-dateutil (>=2.9.0)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6.0)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9.0)", "types-toml (>=0.10.8.20240310)"]
+typings = ["django-stubs (>=5.2.2)", "types-ldap3 (>=2.9.13.20250622)", "types-protobuf (>=6.30.2.20250703)", "types-psutil (>=7)", "types-psycopg2 (>=2.9.21.20250718)", "types-python-dateutil (>=2.9)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9)", "types-toml (>=0.10.8.20240310)"]
 
 [package.source]
 type = "directory"
@@ -2851,29 +2851,29 @@ files = []
 develop = true
 
 [package.dependencies]
-alembic = ">=1.15.0"
+alembic = ">=1.15"
 dbt-core = ">=1.10.5"
-duckdb = ">=1.0.0"
-fastapi = ">=0.119.0"
-httpx = ">=0.28.0"
+duckdb = ">=1"
+fastapi = ">=0.119"
+httpx = ">=0.28"
 injectable = ">=4.0.1"
-jinja2 = ">=3.1.0"
-meltano = ">=4.0.8,<5.0.0"
-pandas = ">=2.0.0"
-prometheus-client = ">=0.23.0"
+jinja2 = ">=3.1"
+meltano = ">=4.0.8,<5"
+pandas = ">=2"
+prometheus-client = ">=0.23"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
 pydantic-settings = ">=2.10.1"
-python-dotenv = ">=1.0.0"
+python-dotenv = ">=1"
 pyyaml = ">=6.0.2"
-referencing = ">=0.28.4,<0.37.0"
-requests = ">=2.31.0"
-setuptools = ">=80.9.0"
-singer-sdk = ">=0.52.0"
-sqlalchemy = ">=2.0.0"
-structlog = ">=25.1.0"
-uvicorn = ">=0.38.0"
-wrapt = ">=1.17.0,<2.0.0"
+referencing = ">=0.28.4,<0.37"
+requests = ">=2.31"
+setuptools = ">=80.9"
+singer-sdk = ">=0.52"
+sqlalchemy = ">=2"
+structlog = ">=25.1"
+uvicorn = ">=0.38"
+wrapt = ">=1.17,<2"
 
 [package.source]
 type = "directory"
@@ -2972,19 +2972,19 @@ files = []
 develop = true
 
 [package.dependencies]
-anyio = ">=4.0.0"
-jsonschema = ">=4.25.0"
-psutil = ">=7.0.0"
+anyio = ">=4"
+jsonschema = ">=4.25"
+psutil = ">=7"
 pydantic = ">=2.12.3"
 pydantic-core = ">=2.41.4"
-pydantic-settings = ">=2.11.0"
-watchdog = ">=6.0.0"
+pydantic-settings = ">=2.11"
+watchdog = ">=6"
 
 [package.extras]
-dev = ["autoflake (>=2.3.1)", "black (>=25.1.0)", "codespell (>=2.3.0)", "deptry (>=0.23.0)", "isort (>=6.0.1)", "pre-commit (>=4.0.1)", "pylint (>=3.3.0)", "pyupgrade (>=3.19.0)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
-security = ["bandit (>=1.8.0)", "pip-audit (>=2.7.3)"]
+dev = ["autoflake (>=2.3.1)", "black (>=25.1)", "codespell (>=2.3)", "deptry (>=0.23)", "isort (>=6.0.1)", "pre-commit (>=4.0.1)", "pylint (>=3.3)", "pyupgrade (>=3.19)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
+security = ["bandit (>=1.8)", "pip-audit (>=2.7.3)"]
 test = []
-typings = ["django-stubs (>=5.2.2)", "types-ldap3 (>=2.9.13.20250622)", "types-protobuf (>=6.30.2.20250703)", "types-psutil (>=7.0.0)", "types-psycopg2 (>=2.9.21.20250718)", "types-python-dateutil (>=2.9.0)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6.0)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9.0)", "types-toml (>=0.10.8.20240310)"]
+typings = ["django-stubs (>=5.2.2)", "types-ldap3 (>=2.9.13.20250622)", "types-protobuf (>=6.30.2.20250703)", "types-psutil (>=7)", "types-psycopg2 (>=2.9.21.20250718)", "types-python-dateutil (>=2.9)", "types-pyyaml (>=6.0.12)", "types-redis (>=4.6)", "types-requests (>=2.32.4)", "types-setuptools (>=80.9)", "types-toml (>=0.10.8.20240310)"]
 
 [package.source]
 type = "directory"
@@ -10206,7 +10206,7 @@ files = [
     {file = "types_pyyaml-6.0.12.20250915-py3-none-any.whl", hash = "sha256:e7d4d9e064e89a3b3cae120b4990cd370874d2bf12fa5f46c97018dd5d3c9ab6"},
     {file = "types_pyyaml-6.0.12.20250915.tar.gz", hash = "sha256:0f8b54a528c303f0e6f7165687dd33fafa81c807fcac23f632b63aa624ced1d3"},
 ]
-markers = {main = "extra == \"typings\""}
+markers = {main = "extra == \"dev\" or extra == \"typings\""}
 
 [[package]]
 name = "types-redis"
@@ -11096,7 +11096,7 @@ test = ["coverage[toml]", "zope.event", "zope.testing"]
 testing = ["coverage[toml]", "zope.event", "zope.testing"]
 
 [extras]
-dev = ["autoflake", "black", "codespell", "deptry", "isort", "pre-commit", "pylint", "pyupgrade", "radon", "ruff", "vulture"]
+dev = ["autoflake", "black", "codespell", "deptry", "isort", "pre-commit", "pylint", "pyupgrade", "radon", "ruff", "types-pyyaml", "vulture"]
 docs = ["mkdocs", "mkdocs-awesome-pages-plugin", "mkdocs-encryptcontent-plugin", "mkdocs-exclude", "mkdocs-get-deps", "mkdocs-git-revision-date-localized-plugin", "mkdocs-literate-nav", "mkdocs-macros-plugin", "mkdocs-material", "mkdocs-material-extensions", "mkdocs-mermaid2-plugin", "mkdocs-minify-plugin", "mkdocs-newsletter", "mkdocs-print-site-plugin", "mkdocs-redirects", "mkdocs-section-index", "mkdocs-versioning", "mkdocstrings", "mkdocstrings-python"]
 security = ["bandit", "pip-audit"]
 test = ["factory-boy", "faker", "hypothesis", "pytest", "pytest-benchmark", "pytest-clarity", "pytest-cov", "pytest-deadfixtures", "pytest-env", "pytest-mock", "pytest-randomly", "pytest-sugar", "pytest-timeout", "pytest-xdist"]
@@ -11105,4 +11105,4 @@ typings = ["django-stubs", "types-docker", "types-ldap3", "types-protobuf", "typ
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "41375ba80f53e5b9e1be851042627088570d8372077d902dab63a3537a8b4281"
+content-hash = "3b77b16981e6a8500a4d228e2f67dc792ecba2901356f536e8492f0b33573eb2"

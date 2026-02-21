@@ -14,7 +14,7 @@ from flext_cli import FlextCli
 def main() -> None:
     """Entry point for flext-docs."""
     cli = FlextCli()
-    cli.execute()
+    _ = cli.execute()
 
 
 if __name__ == "__main__":

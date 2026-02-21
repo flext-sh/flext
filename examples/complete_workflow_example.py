@@ -30,6 +30,13 @@ from flext_core import (
 ItemType = dict[str, object]
 
 
+def _to_float(value: object) -> float:
+    """Coerce object to float; return 0.0 for non-numeric."""
+    if isinstance(value, (int, float)):
+        return float(value)
+    return 0.0
+
+
 class CompleteWorkflowExample:
     """Complete workflow example demonstrating FLEXT enterprise data integration capabilities."""
 
@@ -344,7 +351,7 @@ class CompleteWorkflowExample:
                     "aggregated",
                     True,
                     lambda _i: {
-                        "final_score": float(item.get("complexity_score", 0) or 0)
+                        "final_score": _to_float(item.get("complexity_score", 0))
                         + (1 if bool(item.get("is_valid", False)) else 0),
                     },
                 ),

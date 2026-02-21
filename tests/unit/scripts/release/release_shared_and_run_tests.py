@@ -1,3 +1,5 @@
+"""Unit tests for scripts.release.release_shared_and_run."""
+
 from __future__ import annotations
 
 import importlib.util

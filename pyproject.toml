@@ -79,6 +79,7 @@ dev = [
   "pyupgrade>=3.19.0",
   "radon>=6.0.1",
   "ruff>=0.12.3",
+  "types-pyyaml>=6.0.12",
   "vulture>=2.13",
 ]
 docs = [
@@ -221,40 +222,7 @@ follow_imports = "silent"
 follow_imports_for_stubs = true
 incremental = true
 local_partial_types = true
-mypy_path = [
-  "../typings",
-  "../typings/generated",
-  "src",
-  "flext-api/src",
-  "flext-auth/src",
-  "flext-cli/src",
-  "flext-core/src",
-  "flext-db-oracle/src",
-  "flext-dbt-ldap/src",
-  "flext-dbt-ldif/src",
-  "flext-dbt-oracle/src",
-  "flext-dbt-oracle-wms/src",
-  "flext-grpc/src",
-  "flext-ldap/src",
-  "flext-ldif/src",
-  "flext-meltano/src",
-  "flext-observability/src",
-  "flext-oracle-oic/src",
-  "flext-oracle-wms/src",
-  "flext-plugin/src",
-  "flext-quality/src",
-  "flext-tap-ldap/src",
-  "flext-tap-ldif/src",
-  "flext-tap-oracle/src",
-  "flext-tap-oracle-oic/src",
-  "flext-tap-oracle-wms/src",
-  "flext-target-ldap/src",
-  "flext-target-ldif/src",
-  "flext-target-oracle/src",
-  "flext-target-oracle-oic/src",
-  "flext-target-oracle-wms/src",
-  "flext-web/src",
-]
+mypy_path = ["../typings", "../typings/generated", "src", "flexcore/src", "flext-api/src", "flext-auth/src", "flext-cli/src", "flext-core/src", "flext-db-oracle/src", "flext-dbt-ldap/src", "flext-dbt-ldif/src", "flext-dbt-oracle/src", "flext-dbt-oracle-wms/src", "flext-grpc/src", "flext-ldap/src", "flext-ldif/src", "flext-meltano/src", "flext-observability/src", "flext-oracle-oic/src", "flext-oracle-wms/src", "flext-plugin/src", "flext-quality/src", "flext-tap-ldap/src", "flext-tap-ldif/src", "flext-tap-oracle/src", "flext-tap-oracle-oic/src", "flext-tap-oracle-wms/src", "flext-target-ldap/src", "flext-target-ldif/src", "flext-target-oracle/src", "flext-target-oracle-oic/src", "flext-target-oracle-wms/src", "flext-web/src"]
 namespace_packages = true
 no_implicit_optional = true
 no_implicit_reexport = true
@@ -435,7 +403,7 @@ warn_required_dynamic_aliases = true
 
 [tool.pyright]
 enableTypeIgnoreComments = false
-extraPaths = [ "scripts", "src", "../typings", "../typings/generated" ]
+extraPaths = ["scripts", "src", "../typings", "../typings/generated", "flexcore/src", "flext-api/src", "flext-auth/src", "flext-cli/src", "flext-core/src", "flext-db-oracle/src", "flext-dbt-ldap/src", "flext-dbt-ldif/src", "flext-dbt-oracle/src", "flext-dbt-oracle-wms/src", "flext-grpc/src", "flext-ldap/src", "flext-ldif/src", "flext-meltano/src", "flext-observability/src", "flext-oracle-oic/src", "flext-oracle-wms/src", "flext-plugin/src", "flext-quality/src", "flext-tap-ldap/src", "flext-tap-ldif/src", "flext-tap-oracle/src", "flext-tap-oracle-oic/src", "flext-tap-oracle-wms/src", "flext-target-ldap/src", "flext-target-ldif/src", "flext-target-oracle/src", "flext-target-oracle-oic/src", "flext-target-oracle-wms/src", "flext-web/src"]
 include = [ "src", "scripts", "tests", "examples" ]
 exclude = [
   "**/*.pb2.py",
@@ -683,7 +651,7 @@ omit = [
   "*/conftest.py",
 ]
 relative_files = true
-source = [ "src" ]
+source = ["src/flext"]
 
 [tool.coverage.report]
 exclude_lines = [

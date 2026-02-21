@@ -25,8 +25,8 @@ def load_module() -> types.ModuleType:
 
 def _create_project(root: Path, name: str) -> None:
     project = root / name
-    _ = project.mkdir(parents=True)
-    _ = (project / ".git").mkdir()
+    project.mkdir(parents=True)
+    (project / ".git").mkdir()
     _ = (project / "Makefile").write_text("all:\n\t@true\n", encoding="utf-8")
     _ = (project / "pyproject.toml").write_text(
         "[project]\nname='demo'\nversion='0.1.0'\n", encoding="utf-8"

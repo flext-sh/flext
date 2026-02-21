@@ -1,3 +1,5 @@
+"""Unit tests for scripts.sync."""
+
 from __future__ import annotations
 
 import importlib.util
@@ -24,9 +26,9 @@ def test_sync_tree_ignores_pycache_and_dot_paths(tmp_path: Path) -> None:
 
     source = tmp_path / "source"
     target = tmp_path / "target"
-    _ = (source / "__pycache__").mkdir(parents=True)
-    _ = (source / ".hidden").mkdir(parents=True)
-    _ = (source / "nested").mkdir(parents=True)
+    (source / "__pycache__").mkdir(parents=True)
+    (source / ".hidden").mkdir(parents=True)
+    (source / "nested").mkdir(parents=True)
     _ = (source / "__pycache__" / "x.pyc").write_bytes(b"binary")
     _ = (source / ".hidden" / "keep.txt").write_text("skip", encoding="utf-8")
     _ = (source / "nested" / "tool.py").write_text("print('ok')\n", encoding="utf-8")
@@ -45,9 +47,9 @@ def test_main_syncs_scripts_and_libs(
 
     canonical = tmp_path / "canonical"
     project = tmp_path / "project"
-    _ = (canonical / "scripts").mkdir(parents=True)
-    _ = (canonical / "libs").mkdir(parents=True)
-    _ = (project / "scripts").mkdir(parents=True)
+    (canonical / "scripts").mkdir(parents=True)
+    (canonical / "libs").mkdir(parents=True)
+    (project / "scripts").mkdir(parents=True)
     _ = (canonical / "base.mk").write_text("BASE\n", encoding="utf-8")
     _ = (canonical / "scripts" / "tool.py").write_text(
         "print('sync')\n", encoding="utf-8"
