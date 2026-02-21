@@ -36,6 +36,7 @@ def _resolve_project_path(raw: str) -> Path:
 
 
 def find_pyproject_files(project_paths: list[Path] | None = None) -> list[Path]:
+    """Find pyproject files for selected projects or whole workspace."""
     if not project_paths:
         return [
             p
@@ -126,6 +127,7 @@ def _ensure_project_excludes(text: str) -> tuple[str, list[str]]:
 
 
 def process_file(path: Path, *, dry_run: bool = False) -> list[str]:
+    """Apply pyrefly config repairs to a single pyproject file."""
     text = path.read_text(encoding="utf-8")
     if "[tool.pyrefly]" not in text:
         return []
@@ -150,6 +152,7 @@ def process_file(path: Path, *, dry_run: bool = False) -> list[str]:
 
 
 def main() -> int:
+    """Run pyrefly config fixes across discovered projects."""
     parser = argparse.ArgumentParser()
     parser.add_argument("projects", nargs="*")
     parser.add_argument("--dry-run", action="store_true")

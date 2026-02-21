@@ -5,8 +5,6 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from libs.subprocess import run_capture
-
 
 def parse_semver(version: str) -> tuple[int, int, int]:
     """Parse a semantic version string into a tuple of (major, minor, patch).

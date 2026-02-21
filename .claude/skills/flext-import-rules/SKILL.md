@@ -144,6 +144,40 @@ class FlextAuthProtocols(FlextProtocols):
     ...
 ```
 
+### Pattern D: Cross-project namespace inheritance (CRITICAL for m, c, t, u, p)
+
+When a project depends on another FLEXT project's namespaced types, it MUST inherit the parent project's facade class — NOT `FlextModels`/`FlextProtocols` directly. This gives automatic access to all parent namespaces (e.g., `m.Meltano.*`) via MRO.
+
+```python
+# ✅ CORRECT — inherit parent facade, namespaces cascade via MRO
+from flext_meltano import FlextMeltanoModels
+
+class FlextTargetOracleModels(FlextMeltanoModels):  # NOT FlextModels!
+    class TargetOracle:
+        class MyModel(FlextMeltanoModels.ArbitraryTypesModel): ...
+
+m = FlextTargetOracleModels
+# m.Meltano.* inherited, m.TargetOracle.* local
+
+# In runtime code — ONLY import m:
+from .models import m
+schema = m.Meltano.SingerSchemaMessage.model_validate(data)
+```
+
+```python
+# ❌ WRONG — duplicate alias, extra import surface
+from flext_meltano import FlextMeltanoModels as m_meltano  # NEVER
+
+# ❌ WRONG — loses parent namespaces
+class FlextTargetOracleModels(FlextModels):  # loses m.Meltano.*
+
+# ❌ WRONG — assignment not valid as type with from __future__ import annotations
+class Meltano:
+    SingerSchemaMessage = FlextMeltanoModels.Meltano.SingerSchemaMessage
+```
+
+This pattern applies identically to `p` (protocols), `c` (constants), `t` (types), `u` (utilities).
+
 ### What is NEVER done in subprojects
 
 ```python

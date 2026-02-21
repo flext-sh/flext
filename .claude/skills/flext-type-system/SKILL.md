@@ -37,11 +37,44 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 - Keep recursive/general value aliases compatible with existing boundaries.
 - Preserve generic covariance/contravariance semantics where defined.
 - Keep exported short aliases (`t`, `r`) stable across refactors.
+- **Cross-project namespace inheritance**: downstream projects MUST inherit parent facade classes (e.g., `FlextMeltanoModels`, not `FlextModels`) so namespaces cascade via MRO. This applies to `m`, `c`, `t`, `u`, `p`.
+
+## Cross-Project Namespace Inheritance (m, c, t, u, p)
+
+Each downstream project inherits its parent project's facade, gaining all parent namespaces via MRO:
+
+```python
+# flext-target-oracle/models.py
+from flext_meltano import FlextMeltanoModels
+
+class FlextTargetOracleModels(FlextMeltanoModels):  # NOT FlextModels
+    class TargetOracle:
+        class MyModel(FlextMeltanoModels.ArbitraryTypesModel): ...
+
+m = FlextTargetOracleModels
+# m.Meltano.*       → inherited from FlextMeltanoModels
+# m.TargetOracle.*  → defined locally
+```
+
+**Why this pattern is mandatory:**
+
+| Approach | Problem |
+|----------|---------|
+| `Meltano = FlextMeltanoModels.Meltano` (assignment) | mypy `name-defined` error with `from __future__ import annotations` |
+| Per-type subclasses inside `class Meltano:` | Invariance errors: `list[SubType]` ≠ `list[ParentType]` |
+| `from flext_meltano import m as m_meltano` | Anti-pattern: duplicates namespace surface, adds unnecessary aliases |
+| Top-level inheritance (`class Models(Parent):`) | ✅ Clean MRO, zero duplication, exact same types |
+
+**Anti-patterns (NEVER):**
+- `from flext_meltano import FlextMeltanoModels as m_meltano` — duplicate alias
+- `class Meltano: SingerSchemaMessage = FlextMeltanoModels.Meltano.SingerSchemaMessage` — not valid as type
+- Inheriting `FlextModels` directly when parent project namespaces are needed
 
 ## Instructions
 - Use existing type var definitions before introducing new generic parameters.
 - Prefer `FlextTypes` aliases (`GeneralValueType`, maps, scalar groups) for public contracts.
 - Ensure downstream users (`result.py`, `settings.py`, `protocols.py`) still type-check.
+- When creating a new project that depends on another FLEXT project's types, ALWAYS inherit the parent facade class in your models/protocols/etc.
 
 ```python
 T = TypeVar("T")
