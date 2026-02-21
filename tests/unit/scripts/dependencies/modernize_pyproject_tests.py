@@ -1,3 +1,5 @@
+"""Unit tests for scripts.dependencies.modernize_pyproject."""
+
 from __future__ import annotations
 
 import importlib.util

@@ -18,6 +18,7 @@ from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from enum import StrEnum
+from typing import cast
 
 from flext_core import (
     FlextService,
@@ -202,7 +203,7 @@ class AdvancedProcessingExample:
                 result = operation(current_data)
                 if result.is_failure:
                     return result
-                unwrapped = result.value
+                unwrapped = cast("object", result.value)
                 if isinstance(unwrapped, dict):
                     current_data = unwrapped
 

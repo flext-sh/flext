@@ -1,3 +1,5 @@
+"""Unit tests for scripts.github.pr_workspace."""
+
 from __future__ import annotations
 
 import argparse
@@ -30,8 +32,8 @@ def test_main_runs_projects_and_root(
     proj_a = tmp_path / "a"
     proj_b = tmp_path / "b"
     for path in (proj_a, proj_b, tmp_path):
-        _ = path.mkdir(parents=True, exist_ok=True)
-        _ = (path / ".git").mkdir(exist_ok=True)
+        path.mkdir(parents=True, exist_ok=True)
+        (path / ".git").mkdir(exist_ok=True)
 
     calls: list[tuple[str, Path]] = []
 
@@ -94,8 +96,8 @@ def test_main_respects_fail_fast(
     proj_a = tmp_path / "a"
     proj_b = tmp_path / "b"
     for path in (proj_a, proj_b):
-        _ = path.mkdir(parents=True, exist_ok=True)
-        _ = (path / ".git").mkdir(exist_ok=True)
+        path.mkdir(parents=True, exist_ok=True)
+        (path / ".git").mkdir(exist_ok=True)
 
     seen: list[Path] = []
 
@@ -157,7 +159,7 @@ def test_run_pr_uses_pr_manager_for_workspace_root(
 ) -> None:
     mod = _load_module("pr_workspace_root_command", "scripts/github/pr_workspace.py")
     workspace = tmp_path / "workspace"
-    _ = workspace.mkdir(parents=True)
+    workspace.mkdir(parents=True)
 
     commands: list[list[str]] = []
 
@@ -200,7 +202,7 @@ def test_run_pr_uses_make_for_non_root_repo(
     mod = _load_module("pr_workspace_project_command", "scripts/github/pr_workspace.py")
     workspace = tmp_path / "workspace"
     repo = workspace / "flext-core"
-    _ = repo.mkdir(parents=True)
+    repo.mkdir(parents=True)
 
     commands: list[list[str]] = []
 

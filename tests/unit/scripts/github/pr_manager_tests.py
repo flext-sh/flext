@@ -1,3 +1,5 @@
+"""Unit tests for scripts.github.pr_manager."""
+
 from __future__ import annotations
 
 import importlib.util
@@ -165,7 +167,7 @@ def test_merge_triggers_release_dispatch_when_workspace_repo(
 ) -> None:
     mod = _load_module("pr_manager_merge_release", "scripts/github/pr_manager.py")
     workflows = tmp_path / ".github" / "workflows"
-    _ = workflows.mkdir(parents=True)
+    workflows.mkdir(parents=True)
     _ = (workflows / "release.yml").write_text("name: release\n", encoding="utf-8")
 
     run_calls: list[list[str]] = []

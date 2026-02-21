@@ -17,14 +17,11 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-SKIP_DIRS = frozenset({
-    ".venv",
-    "node_modules",
-    "__pycache__",
-    ".git",
-    ".claude.disabled",
-})
+from scripts.libs.config import DEFAULT_ENCODING
+from scripts.libs.discovery import find_all_pyproject_files
+from scripts.libs.paths import workspace_root_from_file
+
+ROOT = workspace_root_from_file(__file__)
 REQUIRED_EXCLUDES = ['"**/*_pb2*.py"', '"**/*_pb2_grpc*.py"']
 
 
@@ -36,23 +33,8 @@ def _resolve_project_path(raw: str) -> Path:
 
 
 def find_pyproject_files(project_paths: list[Path] | None = None) -> list[Path]:
-    """Find pyproject files for selected projects or whole workspace."""
-    if not project_paths:
-        return [
-            p
-            for p in sorted(ROOT.rglob("pyproject.toml"))
-            if not any(skip in p.parts for skip in SKIP_DIRS)
-        ]
-
-    selected: list[Path] = []
-    for project_path in project_paths:
-        if project_path.name == "pyproject.toml":
-            pyproject_path = project_path
-        else:
-            pyproject_path = project_path / "pyproject.toml"
-        if pyproject_path.exists() and pyproject_path.is_file():
-            selected.append(pyproject_path)
-    return sorted(set(selected))
+    """Return list of pyproject.toml paths under ROOT, optionally filtered by project_paths."""
+    return find_all_pyproject_files(ROOT, project_paths=project_paths)
 
 
 def _fix_search_paths(text: str, project_dir: Path) -> tuple[str, list[str]]:
@@ -126,7 +108,7 @@ def _ensure_project_excludes(text: str) -> tuple[str, list[str]]:
 
 def process_file(path: Path, *, dry_run: bool = False) -> list[str]:
     """Apply pyrefly config repairs to a single pyproject file."""
-    text = path.read_text(encoding="utf-8")
+    text = path.read_text(encoding=DEFAULT_ENCODING)
     if "[tool.pyrefly]" not in text:
         return []
 
@@ -144,7 +126,7 @@ def process_file(path: Path, *, dry_run: bool = False) -> list[str]:
         all_fixes.extend(fixes)
 
     if text != original and not dry_run:
-        _ = path.write_text(text, encoding="utf-8")
+        _ = path.write_text(text, encoding=DEFAULT_ENCODING)
 
     return all_fixes
 

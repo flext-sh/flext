@@ -96,9 +96,7 @@ class AclProcessingExample:
             "apache_ds": ["accessControlSubentry"],
         }
 
-        VALIDATION_RULES: ClassVar[
-            dict[str, dict[str, list[str] | list[tuple[str, str]]]]
-        ] = {
+        VALIDATION_RULES: ClassVar[dict[str, dict[str, object]]] = {
             "openldap": {
                 "required_permissions": ["read", "write", "search"],
                 "forbidden_combinations": [("read", "delete")],
