@@ -318,10 +318,13 @@ m = FlextTargetOracleWmsModels
 
 ### Prohibited Actions
 
-- Never remove alias definitions (`c = FlextConstants`) from module files.
-- Never remove alias re-exports from `__init__.py`.
-- Never replace alias imports with full class name imports.
-- Never rename or reassign aliases.
+- **Never** remove alias definitions (`c = FlextConstants`) from module files.
+- **Never** remove alias re-exports from `__init__.py`.
+- **Never** replace alias imports with full class name imports.
+- **Never** rename or reassign aliases.
+- **NEVER** define secondary or backward compatibility aliases (e.g., `m_core = FlextModels`, `User = Auth.User`, `class LegacyModel(NewModel):`). Use exactly one namespace alias (`m`, `c`, `t`, `p`) per file.
+- **NEVER** use `__init_subclass__` to warn about subclassing or generate dynamic references. The architecture relies on clean Pydantic v2 inheritance without metaclass magic.
+- **NEVER** use `cast()`, `isinstance()` for primitive type conversions, or `Optional`/`dict` for business logic models. Use Pydantic v2 validation via `m.*` models and `FlextResult`.
 
 ## `__init__.py` Rules
 
