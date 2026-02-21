@@ -3,11 +3,11 @@ from __future__ import annotations
 import importlib.util
 import re
 import sys
+import types
 from pathlib import Path
-from typing import Any
 
 
-def _load_module(relative_path: str, module_name: str) -> Any:
+def _load_module(relative_path: str, module_name: str) -> types.ModuleType:
     module_path = Path(__file__).resolve().parents[4] / relative_path
     spec = importlib.util.spec_from_file_location(module_name, module_path)
     assert spec is not None

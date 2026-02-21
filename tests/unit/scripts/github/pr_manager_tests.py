@@ -3,13 +3,13 @@ from __future__ import annotations
 import importlib.util
 import json
 import sys
+import types
 from pathlib import Path
-from typing import Any
 
 import pytest
 
 
-def _load_module(module_name: str, relative_path: str) -> Any:
+def _load_module(module_name: str, relative_path: str) -> types.ModuleType:
     module_path = Path(__file__).resolve().parents[4] / relative_path
     spec = importlib.util.spec_from_file_location(module_name, module_path)
     assert spec is not None

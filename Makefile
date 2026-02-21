@@ -6,8 +6,9 @@ SHELL := /usr/bin/bash
 .DEFAULT_GOAL := help
 
 WORKSPACE_VENV := $(CURDIR)/.venv
+PY := $(WORKSPACE_VENV)/bin/python
 POETRY_ENV := VIRTUAL_ENV=$(WORKSPACE_VENV) PATH=$(WORKSPACE_VENV)/bin:$$PATH POETRY_VIRTUALENVS_CREATE=false POETRY_VIRTUALENVS_IN_PROJECT=false
-ORCHESTRATOR := $(POETRY_ENV) python scripts/workspace_orchestrator.py
+ORCHESTRATOR := $(POETRY_ENV) $(PY) scripts/workspace_orchestrator.py
 PYTEST_ARGS ?=
 VALIDATE_SCOPE ?= project
 DOCS_PHASE ?= all
@@ -47,9 +48,23 @@ ifdef VERBOSE
 Q :=
 endif
 
-# Project discovery: single source of truth via scripts/maintenance/_discover.py
-FLEXT_PROJECTS := $(shell python3 scripts/maintenance/_discover.py --kind submodule --format makefile 2>/dev/null)
-EXTERNAL_PROJECTS := $(shell python3 scripts/maintenance/_discover.py --kind external --format makefile 2>/dev/null)
+# Project discovery: parse .gitmodules directly - no Python needed, works before venv exists.
+# submodule paths: listed in .gitmodules path = <dir>
+# external projects: git repos with Makefile+pyproject.toml that are NOT in .gitmodules
+FLEXT_PROJECTS := $(shell \
+	if [ -f .gitmodules ]; then \
+		git config --file .gitmodules --get-regexp '\.path$$' 2>/dev/null \
+			| awk '{print $$2}' | tr '\n' ' '; \
+	fi)
+EXTERNAL_PROJECTS := $(shell \
+	submods=$$(git config --file .gitmodules --get-regexp '\.path$$' 2>/dev/null | awk '{print $$2}' | tr '\n' ' '); \
+	for d in */; do d="$${d%/}"; \
+		if [ -d "$$d/.git" ] && [ -f "$$d/Makefile" ] && [ -f "$$d/pyproject.toml" ]; then \
+			if ! echo " $$submods " | grep -qF " $$d "; then \
+				printf '%s ' "$$d"; \
+			fi; \
+		fi; \
+	done)
 
 ALL_PROJECTS := $(FLEXT_PROJECTS) $(EXTERNAL_PROJECTS)
 SELECTED_PROJECTS := $(strip $(if $(PROJECT),$(PROJECT),$(if $(PROJECTS),$(PROJECTS),$(ALL_PROJECTS))))
@@ -88,7 +103,7 @@ endef
 
 define AUTO_SYNC_ALL_PROJECTS
 for proj in $(ALL_PROJECTS); do \
-	python3 scripts/sync.py --project-root "$$proj" --canonical-root "$(CURDIR)" >/dev/null || exit 1; \
+	$(PY) scripts/sync.py --project-root "$$proj" --canonical-root "$(CURDIR)" >/dev/null || exit 1; \
 done
 endef
 
@@ -137,6 +152,30 @@ if [ -n "$$residual_venvs" ]; then \
 	printf '%s\n' "$$residual_venvs"; \
 	exit 1; \
 fi
+endef
+
+# Preflight: validate required tools before any destructive step
+define PREFLIGHT_CHECK
+	echo "--- Preflight checks ---"; \
+	ok=1; \
+	if ! command -v git >/dev/null 2>&1; then \
+		echo "  MISSING: git — install via your OS package manager (apt/brew/winget)"; ok=0; \
+	fi; \
+	if ! command -v python3 >/dev/null 2>&1; then \
+		echo "  MISSING: python3 — install Python 3.13+ from https://python.org"; ok=0; \
+	else \
+		py_minor=$$(python3 -c 'import sys; print(sys.version_info.minor)' 2>/dev/null || echo 0); \
+		if [ "$$py_minor" -lt 13 ] 2>/dev/null; then \
+			echo "  REQUIRES: Python 3.13+, found 3.$$py_minor — upgrade Python"; ok=0; \
+		fi; \
+	fi; \
+	if ! command -v poetry >/dev/null 2>&1; then \
+		echo "  MISSING: poetry — run: pip install poetry  or  pipx install poetry"; ok=0; \
+	fi; \
+	if [ "$$ok" -eq 0 ]; then \
+		echo ""; echo "Fix the above requirements and re-run: make setup"; exit 1; \
+	fi; \
+	echo "  OK: all required tools present"
 endef
 
 .PHONY: help setup upgrade build check security format docs test validate typings clean release pr
@@ -206,21 +245,35 @@ help: ## Show simple workspace verbs
 	$(Q)echo "  NOTE: External projects (not in .gitmodules) require manual clone."
 
 setup: ## Install all projects into workspace .venv
+	$(Q)$(PREFLIGHT_CHECK)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
-	$(Q)python3.13 --version >/dev/null 2>&1 || { echo "ERROR: Python 3.13 required"; exit 1; }
-	$(Q)echo "Initializing git submodules..."; \
-	if [ -f .gitmodules ]; then \
-		git submodule update --init --recursive 2>&1; \
+	$(Q)if [ -f .gitmodules ]; then \
+		echo "Registering git submodules (init only, no checkout)..."; \
+		git submodule init 2>&1; \
+		echo "Updating submodules (preserving local changes)..."; \
+		failed_subs=""; \
+		while IFS= read -r subpath; do \
+			if [ -z "$$subpath" ]; then continue; fi; \
+			if git submodule update --no-force "$$subpath" 2>/dev/null; then \
+				: ; \
+			else \
+				echo "  WARNING: $$subpath has local changes — skipped (data preserved)"; \
+				failed_subs="$$failed_subs $$subpath"; \
+			fi; \
+		done < <(git config --file .gitmodules --get-regexp '\.path$$' 2>/dev/null | awk '{print $$2}'); \
+		if [ -n "$$failed_subs" ]; then \
+			echo "  Hint: to update skipped submodules, run: git -C <submodule> stash"; \
+		fi; \
 		echo "Submodules initialized."; \
 	fi
-	$(Q)[ -d ".venv" ] || { echo "Creating .venv with Python 3.13..."; python3.13 -m venv .venv; }
+	$(Q)[ -d ".venv" ] || { echo "Creating .venv..."; python3 -m venv .venv; }
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)echo "Enforcing Python 3.13 version guards..."; python3.13 scripts/maintenance/enforce_python_version.py || exit 1
+	$(Q)echo "Enforcing Python version guards..."; $(PY) scripts/maintenance/enforce_python_version.py || exit 1
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)echo "Modernizing pyproject.toml files..."; \
-	$(POETRY_ENV) python scripts/dependencies/modernize_pyproject.py --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
+	$(POETRY_ENV) $(PY) scripts/dependencies/modernize_pyproject.py --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
 	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
 	echo "Starting workspace setup for $$total_steps item(s) ($(words $(SELECTED_PROJECTS)) projects + root)"; \
@@ -230,7 +283,7 @@ setup: ## Install all projects into workspace .venv
 			log_file="/tmp/flext-setup-$$proj.log"; \
 			start_ts=$$(date +%s); \
 			printf "[%2d/%2d] setup %s\n" $$step $$total_steps "$$proj"; \
-			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" python scripts/dependencies/sync_internal_deps.py --project-root "$$proj" >>"$$log_file" 2>&1; then \
+			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) scripts/dependencies/sync_internal_deps.py --project-root "$$proj" >>"$$log_file" 2>&1; then \
 				:; \
 			else \
 				echo "          sync    ... failed"; \
@@ -270,7 +323,7 @@ setup: ## Install all projects into workspace .venv
 	start_ts=$$(date +%s); \
 	root_lock_ok=0; \
 	printf "[%2d/%2d] setup %s\n" $$step $$total_steps "root"; \
-	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" python scripts/dependencies/sync_internal_deps.py --project-root . >"$$log_file" 2>&1; then \
+	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) scripts/dependencies/sync_internal_deps.py --project-root . >"$$log_file" 2>&1; then \
 		echo "          sync    ... failed"; \
 		cat "$$log_file"; \
 		failed=$$((failed + 1)); \
@@ -316,9 +369,9 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)echo "Enforcing Python 3.13 version guards..."; python3.13 scripts/maintenance/enforce_python_version.py || exit 1
+	$(Q)echo "Enforcing Python version guards..."; $(PY) scripts/maintenance/enforce_python_version.py || exit 1
 	$(Q)echo "Modernizing pyproject.toml files..."; \
-	$(POETRY_ENV) python scripts/dependencies/modernize_pyproject.py --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
+	$(POETRY_ENV) $(PY) scripts/dependencies/modernize_pyproject.py --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
 	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
 	echo "Upgrading Python dependencies for $(words $(SELECTED_PROJECTS)) project(s) + root"; \
@@ -328,7 +381,7 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 			log_file="/tmp/flext-upgrade-$$proj.log"; \
 			start_ts=$$(date +%s); \
 			printf "[%2d/%2d] upgrade %s\n" $$step $$total_steps "$$proj"; \
-			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" python scripts/dependencies/sync_internal_deps.py --project-root "$$proj" >>"$$log_file" 2>&1; then \
+			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) scripts/dependencies/sync_internal_deps.py --project-root "$$proj" >>"$$log_file" 2>&1; then \
 				:; \
 			else \
 				echo "          sync    ... failed"; \
@@ -368,7 +421,7 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	start_ts=$$(date +%s); \
 	root_update_ok=0; \
 	printf "[%2d/%2d] upgrade %s\n" $$step $$total_steps "root"; \
-	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" python scripts/dependencies/sync_internal_deps.py --project-root . >"$$log_file" 2>&1; then \
+	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) scripts/dependencies/sync_internal_deps.py --project-root . >"$$log_file" 2>&1; then \
 		echo "          sync    ... failed"; \
 		cat "$$log_file"; \
 		failed=$$((failed + 1)); \
@@ -408,7 +461,7 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	fi; \
 	if [ "$(DEPS_REPORT)" != "0" ]; then \
 		echo "Dependency report (deptry + pip check)..."; \
-		$(POETRY_ENV) python scripts/dependencies/detect_runtime_dev_deps.py -q --no-fail || true; \
+		$(POETRY_ENV) $(PY) scripts/dependencies/detect_runtime_dev_deps.py -q --no-fail || true; \
 	fi
 	$(Q)echo "Syncing GitHub workflow templates..."
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/github/sync_workflows.py --workspace-root "$(CURDIR)" --apply --prune --report .reports/workflows/sync.json
@@ -419,7 +472,7 @@ check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,p
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
-	$(Q)$(POETRY_ENV) python scripts/check/fix_pyrefly_config.py $(SELECTED_PROJECTS)
+	$(Q)$(POETRY_ENV) $(PY) scripts/check/fix_pyrefly_config.py $(SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb check \
 		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
 		$(if $(CHECK_GATES),--make-arg "CHECK_GATES=$(CHECK_GATES)") \
@@ -437,7 +490,7 @@ release: ## Interactive workspace release orchestration
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)python scripts/release/run.py \
+	$(Q)$(PY) scripts/release/run.py \
 		--root "$(CURDIR)" \
 		--phase "$(RELEASE_PHASE)" \
 		--interactive "$(INTERACTIVE)" \
@@ -456,7 +509,7 @@ pr: ## Manage pull requests for selected projects
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)python scripts/github/pr_workspace.py \
+	$(Q)$(PY) scripts/github/pr_workspace.py \
 		--workspace-root "$(CURDIR)" \
 		$(foreach proj,$(SELECTED_PROJECTS),--project "$(proj)") \
 		--include-root "$(PR_INCLUDE_ROOT)" \
@@ -521,7 +574,7 @@ ifeq ($(VALIDATE_SCOPE),workspace)
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)mkdir -p .reports
 	$(Q)echo "Running workspace validation (inventory + strict anti-drift gates)..."
-	$(Q)python3.13 scripts/maintenance/enforce_python_version.py --check || exit 1
+	$(Q)$(PY) scripts/maintenance/enforce_python_version.py --check || exit 1
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/generate_scripts_inventory.py --root .
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/core/check_base_mk_sync.py
 	$(Q)$(WORKSPACE_VENV)/bin/python scripts/github/lint_workflows.py --root . --report .reports/workflows/actionlint.json
@@ -553,10 +606,10 @@ typings: ## Run typings supply-chain (stub_supply_chain + dependency report with
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)$(POETRY_ENV) python scripts/core/stub_supply_chain.py --apply --idempotency-check \
+	$(Q)$(POETRY_ENV) $(PY) scripts/core/stub_supply_chain.py --apply --idempotency-check \
 		$(if $(PROJECT),--project $(PROJECT),$(if $(PROJECTS),$(addprefix --project ,$(PROJECTS)),--all))
 	$(Q)if [ "$(DEPS_REPORT)" != "0" ]; then \
-		$(POETRY_ENV) python scripts/dependencies/detect_runtime_dev_deps.py --typings -q --no-fail || true; \
+		$(POETRY_ENV) $(PY) scripts/dependencies/detect_runtime_dev_deps.py --typings -q --no-fail || true; \
 	fi
 
 clean: ## Clean all projects
