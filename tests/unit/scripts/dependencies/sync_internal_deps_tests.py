@@ -3,13 +3,14 @@ from __future__ import annotations
 import importlib.util
 import subprocess
 import sys
+import types
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any
 
 from _pytest.monkeypatch import MonkeyPatch
 
 
-def load_module() -> Any:
+def load_module() -> types.ModuleType:
     module_path = (
         Path(__file__).resolve().parents[4]
         / "scripts"
@@ -43,7 +44,7 @@ def _ref_main(_root: Path) -> str:
 
 def _capture_checkout(
     captured: list[tuple[Path, str, str]],
-) -> Any:
+) -> Callable[[Path, str, str], None]:
     def _inner(dep_path: Path, repo_url: str, ref_name: str) -> None:
         captured.append((dep_path, repo_url, ref_name))
 

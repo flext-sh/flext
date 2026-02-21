@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import importlib.util
 import sys
+import types
 from pathlib import Path
-from typing import Any
+
+import pytest
 
 
-def _load_module(module_name: str, relative_path: str) -> Any:
+def _load_module(module_name: str, relative_path: str) -> types.ModuleType:
     module_path = Path(__file__).resolve().parents[3] / relative_path
     spec = importlib.util.spec_from_file_location(module_name, module_path)
     assert spec is not None
@@ -36,7 +38,9 @@ def test_sync_tree_ignores_pycache_and_dot_paths(tmp_path: Path) -> None:
     assert not (target / ".hidden" / "keep.txt").exists()
 
 
-def test_main_syncs_scripts_and_libs(tmp_path: Path, monkeypatch: Any) -> None:
+def test_main_syncs_scripts_and_libs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     mod = _load_module("scripts_sync_main", "scripts/sync.py")
 
     canonical = tmp_path / "canonical"
