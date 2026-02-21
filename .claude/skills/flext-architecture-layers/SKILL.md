@@ -15,7 +15,7 @@ description: Layer map and dependency-direction contract for flext-core. Use whe
 
 # Flext Architecture Layers
 
-**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+**Reviewed**: 2026-02-21 | **Scope**: Added mandatory FlextMeltano composition rule, alias set, and composition matrix
 
 
 ## Scope
@@ -126,6 +126,74 @@ flext-dbt-ldif          → (FlextMeltanoModels, FlextLdifModels)
 | `ldif` | `FlextLdifModels` | `FlextLdapModels` |
 
 ALL integration projects (targets, taps, dbt) ALSO inherit `FlextMeltanoModels` for Singer protocol types (`m.Meltano.*`).
+
+### Mandatory Composition Rule (NON-NEGOTIABLE)
+
+Every `flext-(tap|target|dbt)-*` project MUST:
+
+1. **Inherit `FlextMeltanoModels`** as the first base class in its `[Project]Models`
+2. **Compose with the correct domain model** as the second base class
+3. **Export the full alias set** (`m`, `c`, `t`, `u`, `p`) in `__init__.py`
+4. **Use `m.Meltano.*` Singer models** from `FlextMeltanoModels` — NEVER redefine them locally
+
+```python
+# ✅ CORRECT — FlextMeltano + domain composition
+from flext_meltano import FlextMeltanoModels
+from flext_ldap import FlextLdapModels
+
+class FlextTargetLdapModels(FlextMeltanoModels, FlextLdapModels):
+    class TargetLdap:
+        class MyModel(FlextMeltanoModels.ArbitraryTypesModel): ...
+
+m = FlextTargetLdapModels
+# m.Meltano.* → Singer protocol models (inherited)
+# m.Ldap.*    → LDAP domain models (inherited)
+# m.TargetLdap.* → local target models (defined here)
+```
+
+```python
+# ❌ WRONG — missing domain composition
+class FlextTapLdifModels(FlextMeltanoModels):  # Where is FlextLdifModels?
+    ...
+
+# ❌ WRONG — missing FlextMeltanoModels
+class FlextTargetOracleModels(FlextModels):  # loses m.Meltano.*
+    ...
+
+# ❌ WRONG — redefining Singer models locally
+class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):
+    class Meltano:
+        class SingerSchemaMessage(BaseModel): ...  # Already in FlextMeltanoModels!
+```
+
+### Mandatory Alias Set for Integration Projects
+
+Every `flext-(tap|target|dbt)-*` project MUST export these aliases from its
+respective facade modules and `__init__.py`:
+
+| Alias | Facade Module | Class Pattern |
+|-------|---------------|---------------|
+| `m` | `models.py` | `Flext<Role><Domain>Models(FlextMeltanoModels, Flext<Domain>Models)` |
+| `c` | `constants.py` | `Flext<Role><Domain>Constants(FlextMeltanoConstants)` |
+| `t` | `typings.py` | `Flext<Role><Domain>Types(FlextMeltanoTypes)` |
+| `u` | `utilities.py` | `Flext<Role><Domain>Utilities(FlextMeltanoUtilities)` |
+| `p` | `protocols.py` | `Flext<Role><Domain>Protocols(FlextMeltanoProtocols)` |
+
+The `c`, `t`, `u`, `p` aliases follow the same composition pattern as `m`:
+inherit from the `FlextMeltano*` parent AND the domain parent.
+
+### Composition Matrix (canonical reference)
+
+| Domain | Models Mixin | Constants Mixin | Types Mixin |
+|--------|-------------|-----------------|-------------|
+| `*-ldap` | `FlextLdapModels` | `FlextLdapConstants` | `FlextLdapTypes` |
+| `*-ldif` | `FlextLdifModels` | `FlextLdifConstants` | `FlextLdifTypes` |
+| `*-oracle` (DB) | `FlextDbOracleModels` | `FlextDbOracleConstants` | `FlextDbOracleTypes` |
+| `*-oracle-wms` | `FlextWmsModels` | `FlextWmsConstants` | `FlextWmsTypes` |
+| `*-oracle-oic` | `FlextOracleOicModels` | `FlextOracleOicConstants` | `FlextOracleOicTypes` |
+
+Use `scripts.libs.discovery.discover_projects()` to enumerate all projects
+programmatically for workspace-wide composition audits.
 
 ## Workflow
 

@@ -3,6 +3,8 @@
 - [References](#references)
 - [Rules](#rules)
 - [Pattern Catalog](#pattern-catalog)
+- [Namespace Inheritance Pattern](#namespace-inheritance-pattern)
+- [MRO Integrity Rule (Zero Tolerance)](#mro-integrity-rule-zero-tolerance)
 - [Instructions](#instructions)
 - [Workflow](#workflow)
 - [Examples](#examples)
@@ -81,6 +83,30 @@ Anti-patterns:
 - `from flext_meltano import FlextMeltanoModels as m_meltano` — duplicate alias surface
 - `class Meltano: X = Parent.Meltano.X` — assignment not valid as type
 - Inheriting `FlextModels` when parent namespaces are needed — loses `m.Meltano.*`
+
+## MRO Integrity Rule (Zero Tolerance)
+
+Runtime classes **MUST NOT** redeclare or change anything they receive via MRO.
+If `FlextProjectConstants(FlextConstants)` already inherits `Platform` via MRO,
+do NOT create a subclass of it anywhere in the child hierarchy.
+
+```python
+# ❌ FORBIDDEN — redeclares Platform received via MRO
+class FlextDbOracleConstants(FlextConstants):
+    class DbOracle:
+        class Platform(FlextConstants.Platform):  # WRONG!
+            LOOPBACK_IP: Final[str] = "127.0.0.1"
+
+# ✅ CORRECT — new namespace class, no MRO shadowing
+class FlextDbOracleConstants(FlextConstants):
+    class DbOracle:
+        class Platform:  # plain class, independent namespace
+            LOOPBACK_IP: Final[str] = "127.0.0.1"
+```
+
+This applies to ALL facade hierarchies (`c`, `m`, `p`, `u`, `t`).
+The child class already has every parent inner class via MRO — re-inheriting
+from them creates confusing duplicates and breaks type identity.
 
 ## Instructions
 - Anchor new code to nearby proven implementations in same module family.
