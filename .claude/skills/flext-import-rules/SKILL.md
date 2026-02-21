@@ -13,9 +13,10 @@
   - [Verified violations (these exist but should not be referenced as patterns)](#verified-violations-these-exist-but-should-not-be-referenced-as-patterns)
 - [Rule 6: Private Module Convention](#rule-6-private-module-convention)
 - [Rule 7: The Facade Alias Pattern](#rule-7-the-facade-alias-pattern)
-- [Rule 8: TYPE_CHECKING Imports](#rule-8-typechecking-imports)
+- [Rule 8: TYPE_CHECKING Is FORBIDDEN](#rule-8-typechecking-is-forbidden)
 - [Rule 9: Ruff Configuration (from ruff-shared.toml)](#rule-9-ruff-configuration-from-ruff-sharedtoml)
 - [Rule 10: What NOT to Do](#rule-10-what-not-to-do)
+- [Rule 11: No Double-Assignment of Facade Aliases](#rule-11-no-double-assignment-of-facade-aliases)
 - [Verification](#verification)
 <!-- TOC END -->
 
@@ -178,12 +179,42 @@ class Meltano:
 
 This pattern applies identically to `p` (protocols), `c` (constants), `t` (types), `u` (utilities).
 
+### Rule 4E: Naming Convention for Integration Projects
+
+All `flext-(tap|target|dbt)-*` projects MUST follow this naming pattern for their
+facade classes:
+
+```
+Flext<Role><Domain>Models     — e.g., FlextTargetLdapModels, FlextTapOracleModels
+Flext<Role><Domain>Constants  — e.g., FlextTargetLdapConstants
+Flext<Role><Domain>Types      — e.g., FlextTargetLdapTypes
+Flext<Role><Domain>Utilities  — e.g., FlextTargetLdapUtilities
+Flext<Role><Domain>Protocols  — e.g., FlextTargetLdapProtocols
+```
+
+Where `<Role>` is one of: `Target`, `Tap`, `Dbt`, `MeltanoTap`, `MeltanoTarget`.
+
+The `Meltano` prefix in the class name is **optional** — what matters is the
+**inheritance** from `FlextMeltanoModels`. Both `FlextTargetLdapModels` and
+`FlextMeltanoTapLdapModels` are acceptable as long as they inherit correctly.
+
+```python
+# ✅ Both are correct:
+class FlextTargetLdapModels(FlextMeltanoModels, FlextLdapModels): ...
+class FlextMeltanoTapLdapModels(FlextMeltanoModels, FlextLdapModels): ...
+```
+
 ### What is NEVER done in subprojects
 
 ```python
 # ❌ NEVER import from _models/ or _utilities/ in subprojects
 from flext_core._models.base import FlextModelsBase  # Private API!
 from flext_core._utilities.guards import FlextUtilitiesGuards  # Private API!
+from flext_ldif._models.results import FlextLdifModelsResults  # Private API!
+
+# ✅ CORRECT — use public facade
+from flext_ldif import FlextLdifModels
+# Then access: FlextLdifModels.Ldif.EntryResult
 
 # Exception: flext_core._models.entity is imported by registry.py (internal to core)
 ```
@@ -253,22 +284,27 @@ class MyHandler(h.BaseCommandHandler[m.Cqrs.Command, r]):
 
 ---
 
-## Rule 8: TYPE_CHECKING Imports
+## Rule 8: TYPE_CHECKING Is FORBIDDEN
 
-Use `typing.TYPE_CHECKING` for imports needed ONLY at type-check time,
-especially to break circular dependencies:
+`typing.TYPE_CHECKING` is **prohibited** in the FLEXT ecosystem.
+It is a band-aid for circular imports — the real fix is proper module layering.
 
 ```python
-from __future__ import annotations
+# ❌ FORBIDDEN — TYPE_CHECKING block
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from flext_core.container import FlextContainer
-    from flext_core.context import FlextContext
+
+# ✅ CORRECT — move the dependency to the right tier or use protocols
+from flext_core.protocols import FlextProtocols
+# Use protocol-based decoupling instead of TYPE_CHECKING
 ```
 
-This is particularly important for Tier 5–6 modules that would otherwise
-create circular dependencies.
+If a circular import exists, fix the architecture:
+1. Move the offending code to a lower tier module.
+2. Use protocol-based decoupling (`protocols.py`).
+3. Use dependency injection via `FlextContainer`.
 
 ---
 
@@ -324,6 +360,43 @@ from typing import Sequence  # Use: from collections.abc import Sequence
 # ❌ Shadowing aliases inconsistently
 from flext_core import result  # Use: r (or just r)
 ```
+
+## Rule 11: No Double-Assignment of Facade Aliases
+
+In definition files (`constants.py`, `models.py`, `protocols.py`, `utilities.py`),
+the facade alias (`c`, `m`, `p`, `u`) MUST be assigned exactly **once** — at the
+bottom of the module. Never import the parent alias and then reassign it.
+
+```python
+# ❌ ANTI-PATTERN — double-assignment creates confusing scope
+from flext_core import c                   # c = FlextConstants at import time
+
+class FlextProjectConstants(c):            # uses c as FlextConstants
+    class Foo:
+        BAR = c.Something.VALUE            # c is still FlextConstants here
+
+c = FlextProjectConstants                  # REASSIGNS c — scope confusion!
+
+# ✅ CORRECT — import parent class by name, alias only at bottom
+from flext_core import FlextConstants
+
+class FlextProjectConstants(FlextConstants):
+    class Foo:
+        BAR = FlextConstants.Something.VALUE  # explicit parent reference
+
+c = FlextProjectConstants                  # single, clear assignment
+```
+
+This applies to ALL facade pairs:
+- `from flext_core import FlextConstants` + `c = FlextProjectConstants`
+- `from flext_core import FlextModels` + `m = FlextProjectModels`
+- `from flext_core import FlextProtocols` + `p = FlextProjectProtocols`
+- `from flext_core import FlextUtilities` + `u = FlextProjectUtilities`
+
+**Detection**: `grep -n "^from flext_core.*import.*\b[cmptu]\b" <file>` combined
+with `grep -n "^[cmptu] = " <file>` — if both match, it's a double-assignment.
+
+---
 
 ## Verification
 

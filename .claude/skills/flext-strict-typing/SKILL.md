@@ -25,6 +25,9 @@
 - [Rule 10: Return Types — ALWAYS Explicit](#rule-10-return-types-always-explicit)
 - [Rule 11: Callable Typing](#rule-11-callable-typing)
 - [Ruff Rules That Enforce Typing (from ruff-shared.toml)](#ruff-rules-that-enforce-typing-from-ruff-sharedtoml)
+- [Rule 14: NEVER Use `str | None` When Default Is `""`](#rule-14-never-use-str--none-when-default-is-)
+- [Rule 15: Pydantic Models Over Plain Helper Classes](#rule-15-pydantic-models-over-plain-helper-classes)
+- [Rule 16: Result Protocol for `is_success` Pattern](#rule-16-result-protocol-for-is_success-pattern)
 - [Rule 12: FlextResult Factory Method Typing](#rule-12-flextresult-factory-method-typing)
   - [`r` Alias — Universal Import Pattern](#r-alias-universal-import-pattern)
   - [`ok()` vs `fail()` — Asymmetric Generics](#ok-vs-fail-asymmetric-generics)
@@ -40,7 +43,7 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 
 # FLEXT Strict Typing Rules
 
-**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+**Reviewed**: 2026-02-21 | **Scope**: Added Rules 14-16 (str|None ban, helper class policy, is_success protocol)
 
 
 > **Source of truth**: Extracted from `flext-core/src/flext_core/typings.py` (534 lines)
@@ -401,6 +404,92 @@ Key rules in `[lint.ignore]`:
 - `ANN101` — Missing `self` annotation (ignored, obvious)
 - `ANN102` — Missing `cls` annotation (ignored, obvious)
 - `ANN401` — `Any` usage (currently ignored but SHOULD be enforced)
+
+---
+
+## Rule 14: NEVER Use `str | None` When Default Is `""`
+
+If a Pydantic field has a string default (including `""`), `None` MUST NOT be in
+the type unless `None` carries **distinct domain semantics** (e.g., "not yet configured"
+vs "explicitly empty").
+
+```python
+# ❌ WRONG — None is semantically meaningless when default is ""
+backup_path: str | None = Field(default="", description="Backup path.")
+target_dn: str | None = Field(default="", description="Target DN.")
+
+# ✅ CORRECT — just str with empty default
+backup_path: str = Field(default="", description="Backup path.")
+target_dn: str = Field(default="", description="Target DN.")
+
+# ✅ CORRECT — None has distinct meaning ("not configured at all")
+config_file: str | None = Field(default=None, description="Optional config override.")
+```
+
+**Decision tree**:
+1. Is `None` a valid domain state distinct from `""`? → Use `str | None = Field(default=None)`
+2. Is the field always a string, just sometimes empty? → Use `str = Field(default="")`
+3. Is the field required? → Use `str` (no default)
+
+---
+
+## Rule 15: Pydantic Models Over Plain Helper Classes
+
+Plain Python classes with `dict`/`MutableMapping` storage are **banned** for
+domain state. Use Pydantic models instead, even for mutable processing helpers.
+
+```python
+# ❌ WRONG — plain class with dict storage
+class PhaseResults:
+    def __init__(self) -> None:
+        self.results: MutableMapping[int, OperationStats] = {}
+
+# ✅ CORRECT — Pydantic model with proper typing
+class PhaseResults(BaseModel):
+    results: Mapping[int, OperationStats] = Field(default_factory=dict)
+
+    def with_result(self, phase: int, stats: OperationStats) -> PhaseResults:
+        """Immutable update — returns new instance with added result."""
+        updated = dict(self.results)
+        updated[phase] = stats
+        return self.model_copy(update={"results": updated})
+```
+
+**When plain classes ARE acceptable**:
+- Pure utility/helper functions with no state
+- Namespace classes (like `FlextModels`) that only organize nested types
+- Protocol classes (structural typing contracts)
+
+Everything else that holds state → Pydantic model.
+
+---
+
+## Rule 16: Result Protocol for `is_success` Pattern
+
+Result models that expose an `is_success` property MUST implement
+`FlextProtocols.SuccessCheckable` (or the project-level equivalent) instead
+of duplicating the property in every model.
+
+```python
+# In protocols.py:
+@runtime_checkable
+class SuccessCheckable(Protocol):
+    @property
+    def is_success(self) -> bool: ...
+
+# In models.py — base for all result models:
+class ResultBase(BaseModel):
+    """Base for result models with success tracking."""
+    success: bool = Field(default=False, description="Operation succeeded.")
+    message: str = Field(default="", description="Human-readable result.")
+
+    @property
+    def is_success(self) -> bool:
+        return self.success
+```
+
+This eliminates duplication across `MigrationResult`, `SyncResult`,
+`CleanResult`, `AclResult`, `ValidationResult`, etc.
 
 ---
 
