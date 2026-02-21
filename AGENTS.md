@@ -41,3 +41,11 @@ for project rules, architecture, and conventions: [`CLAUDE.md`](CLAUDE.md).
 3. For docs/governance changes, include `skill-format-universal` and `flext-docs-pointer-policy`.
 4. Run `make validate-scripts` and `make check-clean` before finalizing workspace-wide governance edits.
 5. In final reports, reference changed paths and provide validation evidence with concrete commands.
+
+## Alignment and anti-drift
+
+- Every project must stay aligned with `CLAUDE.md`, root `base.mk`, and the path-to-skill mapping (see CLAUDE.md § Skill Enforcement).
+- Before claiming completion for policy or automation changes, run `make validate VALIDATE_SCOPE=workspace` and fix any failures.
+- Before adding a new submodule or changing base.mk/scripts: run `make validate VALIDATE_SCOPE=workspace` and fix any failure.
+- Changes to `base.mk`, shared `scripts/`, or `scripts/dependencies/modernize_pyproject.py` must be validated with `make validate VALIDATE_SCOPE=workspace` and with `make check` / `make validate` on affected projects.
+- Baseline and per-project check status: see [.reports/validate/baseline-report.md](.reports/validate/baseline-report.md).

@@ -292,15 +292,20 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 	if echo "$$gates" | grep -qw format; then \
 		$(POETRY) run ruff format --check . --quiet || { echo "FAIL: format"; exit 1; }; \
 	fi; \
+	check_dirs=""; \
+	for d in src tests examples scripts; do \
+		if [ -d "$$d" ]; then check_dirs="$$check_dirs $$d"; fi; \
+	done; \
+	check_dirs=$${check_dirs:-$(SRC_DIR)}; \
 	if echo "$$gates" | grep -qw pyrefly; then \
-		$(POETRY) run pyrefly check $(SRC_DIR) --config pyproject.toml \
+		$(POETRY) run pyrefly check $$check_dirs --config pyproject.toml \
 			--count-errors=0 --summarize-errors=1 --summary full || { echo "FAIL: pyrefly"; exit 1; }; \
 	fi; \
 	if echo "$$gates" | grep -qw mypy; then \
-		$(POETRY) run mypy $(SRC_DIR) || { echo "FAIL: mypy"; exit 1; }; \
+		$(POETRY) run mypy $$check_dirs --config-file "$(WORKSPACE_ROOT)/pyproject.toml" || { echo "FAIL: mypy"; exit 1; }; \
 	fi; \
 	if echo "$$gates" | grep -qw pyright; then \
-		$(POETRY) run pyright $(SRC_DIR) || { echo "FAIL: pyright"; exit 1; }; \
+		$(POETRY) run pyright $$check_dirs || { echo "FAIL: pyright"; exit 1; }; \
 	fi; \
 	if echo "$$gates" | grep -qw security; then \
 		$(POETRY) run bandit -r $(SRC_DIR) -q -ll || { echo "FAIL: security"; exit 1; }; \

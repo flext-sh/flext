@@ -89,9 +89,7 @@ def _fix_search_paths(text: str, project_dir: Path) -> tuple[str, list[str]]:
 def _remove_ignore_sub_config(text: str) -> tuple[str, list[str]]:
     fixes: list[str] = []
     pattern = re.compile(
-        r"\s*\[\[tool\.pyrefly\.sub-config\]\]\s*\n"
-        r'\s*matches\s*=\s*"([^"]+)"\s*\n'
-        r"\s*ignore\s*=\s*true\s*\n?",
+        r'\s*\[\[tool\.pyrefly\.sub-config\]\]\s*\n\s*matches\s*=\s*"([^"]+)"\s*\n\s*ignore\s*=\s*true\s*\n?',
         flags=re.MULTILINE,
     )
     match = pattern.search(text)
@@ -146,7 +144,7 @@ def process_file(path: Path, *, dry_run: bool = False) -> list[str]:
         all_fixes.extend(fixes)
 
     if text != original and not dry_run:
-        path.write_text(text, encoding="utf-8")
+        _ = path.write_text(text, encoding="utf-8")
 
     return all_fixes
 
@@ -154,9 +152,9 @@ def process_file(path: Path, *, dry_run: bool = False) -> list[str]:
 def main() -> int:
     """Run pyrefly config fixes across discovered projects."""
     parser = argparse.ArgumentParser()
-    parser.add_argument("projects", nargs="*")
-    parser.add_argument("--dry-run", action="store_true")
-    parser.add_argument("--verbose", action="store_true")
+    _ = parser.add_argument("projects", nargs="*")
+    _ = parser.add_argument("--dry-run", action="store_true")
+    _ = parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
 
     dry_run = args.dry_run
