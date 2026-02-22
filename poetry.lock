@@ -2552,8 +2552,8 @@ develop = true
 [package.dependencies]
 cbor2 = ">=5.7"
 fastapi = ">=0.116"
-flext-core = {path = ".flext-deps/flext-core"}
-flext-web = {path = ".flext-deps/flext-web"}
+flext-core = {path = "../flext-core"}
+flext-web = {path = "../flext-web"}
 gql = ">=4"
 httpx = ">=0.28.1"
 msgpack = ">=1.1.2"
@@ -10391,14 +10391,14 @@ devenv = ["check-manifest", "pytest (>=4.3)", "pytest-cov", "pytest-mock (>=3.3)
 
 [[package]]
 name = "universal-pathlib"
-version = "0.3.9"
+version = "0.3.10"
 description = "pathlib api extended to use fsspec backends"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "universal_pathlib-0.3.9-py3-none-any.whl", hash = "sha256:e4c3bdfd7650f55fb47da0a8a48eae9da6ae7216ea628fe5e1cadcc82d591a0e"},
-    {file = "universal_pathlib-0.3.9.tar.gz", hash = "sha256:3a2225bc8cb0ca685a032ff885b945fdb0613b46e8c97d32df6afb6327c6c817"},
+    {file = "universal_pathlib-0.3.10-py3-none-any.whl", hash = "sha256:dfaf2fb35683d2eb1287a3ed7b215e4d6016aa6eaf339c607023d22f90821c66"},
+    {file = "universal_pathlib-0.3.10.tar.gz", hash = "sha256:4487cbc90730a48cfb64f811d99e14b6faed6d738420cd5f93f59f48e6930bfb"},
 ]
 
 [package.dependencies]
@@ -11105,4 +11105,4 @@ typings = ["django-stubs", "types-docker", "types-ldap3", "types-protobuf", "typ
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "3b77b16981e6a8500a4d228e2f67dc792ecba2901356f536e8492f0b33573eb2"
+content-hash = "f6c6473c73b6c039ad1bdf1ed34a26a8ae7193a8de810debdec549c333dcc7f7"

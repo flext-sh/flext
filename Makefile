@@ -297,6 +297,9 @@ setup: ## Install all projects into workspace .venv
 	$(Q)echo "Modernizing pyproject.toml files..."; \
 	$(POETRY_ENV) $(PY) -m scripts.dependencies.modernize_pyproject --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
+	$(Q)echo "Syncing dependency paths to workspace mode..."; \
+	$(PY) -m scripts.dependencies.sync_dep_paths --mode auto 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
+	echo ""
 	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
 	echo "Starting workspace setup for $$total_steps item(s) ($(words $(SELECTED_PROJECTS)) projects + root)"; \
 	failed=0; installed=0; step=1; failed_projects=""; \
@@ -396,6 +399,9 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	$(Q)echo "Modernizing pyproject.toml files..."; \
 	$(POETRY_ENV) $(PY) -m scripts.dependencies.modernize_pyproject --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
+	$(Q)echo "Syncing dependency paths to workspace mode..."; \
+	$(PY) -m scripts.dependencies.sync_dep_paths --mode auto 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
+	echo ""
 	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
 	echo "Upgrading Python dependencies for $(words $(SELECTED_PROJECTS)) project(s) + root"; \
 	failed=0; upgraded=0; step=1; failed_projects=""; \
@@ -408,6 +414,17 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 				:; \
 			else \
 				echo "          sync    ... failed"; \
+				cat "$$log_file"; \
+				failed=$$((failed + 1)); \
+				failed_projects="$$failed_projects $$proj"; \
+				step=$$((step + 1)); \
+				continue; \
+			fi; \
+			printf "          lock    ... "; \
+			if $(POETRY_ENV) $(POETRY_BIN) -C "$$proj" lock >"$$log_file" 2>&1; then \
+				echo "ok"; \
+			else \
+				echo "failed"; \
 				cat "$$log_file"; \
 				failed=$$((failed + 1)); \
 				failed_projects="$$failed_projects $$proj"; \
@@ -446,6 +463,15 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	printf "[%2d/%2d] upgrade %s\n" $$step $$total_steps "root"; \
 	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m scripts.dependencies.sync_internal_deps --project-root . >"$$log_file" 2>&1; then \
 		echo "          sync    ... failed"; \
+		cat "$$log_file"; \
+		failed=$$((failed + 1)); \
+		failed_projects="$$failed_projects root"; \
+	fi; \
+	printf "          lock    ... "; \
+	if $(POETRY_ENV) $(POETRY_BIN) lock >"$$log_file" 2>&1; then \
+		echo "ok"; \
+	else \
+		echo "failed"; \
 		cat "$$log_file"; \
 		failed=$$((failed + 1)); \
 		failed_projects="$$failed_projects root"; \
