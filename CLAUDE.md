@@ -106,3 +106,4 @@ alwaysApply: true
 - Keep changes minimal, explicit, root-cause oriented, and verifiable.
 - Never alter lint/gate semantics without explicit in-session user approval.
 - If governance corrections arise during work, update this file immediately before further implementation.
+- **CRITICAL** Deferring, skipping, or exempting any known violation is forbidden without explicit operator authorization in-session. Hiding scope exclusions inside plans or guardrails without operator approval is an extreme fault. When a violation cannot be fixed immediately, the agent must present the violation, explain why, and obtain explicit written approval before marking it deferred.
