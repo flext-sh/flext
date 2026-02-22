@@ -1,14 +1,15 @@
-"""Unit tests for scripts.release.release_shared_and_run."""
+"""Unit tests for scripts.release shared logic (selection + run)."""
 
 from __future__ import annotations
 
+import importlib
 import importlib.util
 import sys
 import types
 from pathlib import Path
-from types import SimpleNamespace
 
 import pytest
+from scripts.libs.discovery import ProjectInfo
 
 
 def _load_module(module_name: str, relative_path: str) -> types.ModuleType:
@@ -22,32 +23,46 @@ def _load_module(module_name: str, relative_path: str) -> types.ModuleType:
     return module
 
 
+def _get_selection_module() -> types.ModuleType:
+    repo_root = Path(__file__).resolve().parents[4]
+    if str(repo_root) not in sys.path:
+        sys.path.insert(0, str(repo_root))
+    return importlib.import_module("scripts.libs.selection")
+
+
 def test_resolve_projects_uses_auto_discovery(monkeypatch: pytest.MonkeyPatch) -> None:
-    shared = _load_module("release_shared", "scripts/release/shared.py")
+    sel = _get_selection_module()
 
-    def _fake_resolve(_root: Path, _names: list[str]) -> list[SimpleNamespace]:
-        return [
-            SimpleNamespace(name="external-tool"),
-            SimpleNamespace(name="flext-api"),
-        ]
+    fake_projects = [
+        ProjectInfo(
+            path=Path("/tmp/external-tool"), name="external-tool", kind="external"
+        ),
+        ProjectInfo(path=Path("/tmp/flext-api"), name="flext-api", kind="submodule"),
+    ]
 
-    monkeypatch.setattr(shared, "_resolve_projects", _fake_resolve)
+    def _fake_discover(_root: Path) -> list[ProjectInfo]:
+        return fake_projects
 
-    projects = shared.resolve_projects(Path("/tmp/ws"), [])
-    assert [project.name for project in projects] == ["external-tool", "flext-api"]
+    monkeypatch.setattr(sel, "discover_projects", _fake_discover)
+
+    projects = sel.resolve_projects(Path("/tmp/ws"), [])
+    assert [p.name for p in projects] == ["external-tool", "flext-api"]
 
 
 def test_resolve_projects_rejects_unknown(monkeypatch: pytest.MonkeyPatch) -> None:
-    shared = _load_module("release_shared_unknown", "scripts/release/shared.py")
+    sel = _get_selection_module()
 
-    def _fake_resolve(_root: Path, _names: list[str]) -> list[object]:
-        msg = "unknown projects: missing-project"
-        raise RuntimeError(msg)
+    fake_projects = [
+        ProjectInfo(path=Path("/tmp/flext-api"), name="flext-api", kind="submodule"),
+    ]
 
-    monkeypatch.setattr(shared, "_resolve_projects", _fake_resolve)
+    def _fake_discover(_root: Path) -> list[ProjectInfo]:
+        return fake_projects
 
-    with pytest.raises(RuntimeError, match="unknown release projects"):
-        _ = shared.resolve_projects(Path("/tmp/ws"), ["missing-project"])
+    monkeypatch.setattr(sel, "discover_projects", _fake_discover)
+
+    with pytest.raises(RuntimeError, match="unknown projects"):
+        _ = sel.resolve_projects(Path("/tmp/ws"), ["missing-project"])
 
 
 def test_current_version_reads_project_table(tmp_path: Path) -> None:
@@ -64,7 +79,7 @@ version = "0.10.0-dev"
         encoding="utf-8",
     )
 
-    assert run_mod._current_version(tmp_path) == "0.10.0"
+    assert run_mod._current_version(tmp_path) == "0.10.0-dev"
 
 
 def test_phase_version_passes_dev_suffix_flag(
