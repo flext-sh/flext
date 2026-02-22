@@ -45,7 +45,9 @@ def read_json(path: Path) -> dict[str, object]:
     """
     if not path.exists():
         return {}
-    return cast("dict[str, object]", json.loads(path.read_text(encoding=DEFAULT_ENCODING)))
+    return cast(
+        "dict[str, object]", json.loads(path.read_text(encoding=DEFAULT_ENCODING))
+    )
 
 
 __all__ = ["read_json", "write_json"]

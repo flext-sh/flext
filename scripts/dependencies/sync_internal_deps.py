@@ -287,7 +287,9 @@ def _collect_internal_deps(project_root: Path) -> dict[str, Path]:
         result[dep_name] = project_root / dep_path
 
     project_obj = data.get("project")
-    project_deps = project_obj.get("dependencies", []) if isinstance(project_obj, dict) else []
+    project_deps = (
+        project_obj.get("dependencies", []) if isinstance(project_obj, dict) else []
+    )
     if not isinstance(project_deps, list):
         project_deps = []
     dep_pattern = re.compile(r"@\s*\.\.?/\.flext-deps/([A-Za-z0-9_.-]+)")
