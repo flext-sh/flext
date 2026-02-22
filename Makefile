@@ -265,23 +265,25 @@ setup: ## Install all projects into workspace .venv
 	$(Q)$(PREFLIGHT_CHECK)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)if [ -f .gitmodules ]; then \
-		echo "Registering git submodules (init only, no checkout)..."; \
-		git submodule init 2>&1; \
-		echo "Updating submodules (preserving local changes)..."; \
-		failed_subs=""; \
-		while IFS= read -r subpath; do \
-			if [ -z "$$subpath" ]; then continue; fi; \
-			if git submodule update --no-force "$$subpath" 2>/dev/null; then \
-				: ; \
-			else \
-				echo "  WARNING: $$subpath has local changes — skipped (data preserved)"; \
-				failed_subs="$$failed_subs $$subpath"; \
-			fi; \
-		done < <(git config --file .gitmodules --get-regexp '\.path$$' 2>/dev/null | awk '{print $$2}'); \
-		if [ -n "$$failed_subs" ]; then \
-			echo "  Hint: to update skipped submodules, run: git -C <submodule> stash"; \
+		echo "Initializing and updating submodules..."; \
+		git submodule sync --recursive; \
+		if ! git submodule update --init --recursive --jobs $${JOBS:-8}; then \
+			echo "Submodule update with configured URLs failed. Retrying with HTTPS fallback..."; \
+			while IFS=' ' read -r key url; do \
+				name="$${key#submodule.}"; \
+				name="$${name%.url}"; \
+				if [[ "$$url" == git@github.com:* ]]; then \
+					https_url="https://github.com/$${url#git@github.com:}"; \
+					git config "submodule.$$name.url" "$$https_url"; \
+				fi; \
+			done < <(git config --file .gitmodules --get-regexp '^submodule\..*\.url$$'); \
+			git submodule sync --recursive; \
+			git submodule update --init --recursive --jobs $${JOBS:-8} || { \
+				echo "ERROR: failed to update submodules"; \
+				exit 1; \
+			}; \
 		fi; \
-		echo "Submodules initialized."; \
+		echo "Submodules ready."; \
 	fi
 	$(Q)[ -d ".venv" ] || { \
 		echo "Creating .venv..."; \
