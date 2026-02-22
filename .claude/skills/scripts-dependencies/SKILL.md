@@ -13,24 +13,26 @@
 
 ---
 name: scripts-dependencies
-description: Dependency management scripts — analysis, consolidation, discovery, caching, and synchronization. Use when editing scripts/dependencies/.
+description: Dependency management — analysis, consolidation, discovery, caching, and synchronization. Use when editing scripts/dependencies/ or using flext_infra.deps.
 ---
 
 # Scripts Dependencies
 
 ## Scope
 
-- `scripts/dependencies/analyze_dependencies.py`
-- `scripts/dependencies/consolidate_dependencies.py`
-- `scripts/dependencies/dependency_cache.py`
-- `scripts/dependencies/dependency_detection.py`
-- `scripts/dependencies/detect_runtime_dev_deps.py`
-- `scripts/dependencies/discover_missing_deps.py`
-- `scripts/dependencies/__init__.py`
-- `scripts/dependencies/sync_dependencies.py`
+- `flext_infra.deps` module — Dependency management services (Python module in flext-core)
+  - `flext_infra.deps.modernizer.PyprojectModernizer`
+  - `flext_infra.deps.detection.DependencyDetector`
+  - `flext_infra.deps.detector.RuntimeDevDetector`
+  - `flext_infra.deps.internal_sync.InternalDepsSyncer`
+  - `flext_infra.deps.extra_paths.ExtraPathsSyncer`
+  - `flext_infra.deps.path_sync.DepPathSyncer`
+- Legacy scripts (deprecated):
+  - `scripts/dependencies/` directory (being migrated to flext_infra.deps)
 
 ## References
 
+- `flext-core/src/flext_infra/deps/` — Module source
 - `.claude/skills/rules-scripts/SKILL.md`
 - `Makefile` (upgrade, typings)
 
@@ -45,7 +47,7 @@ description: Dependency management scripts — analysis, consolidation, discover
 
 - When adding dependency analysis, follow the pattern in `analyze_dependencies.py`.
 - When modifying sync logic, ensure idempotency.
-- Use `scripts/common.py:discover_projects` for project enumeration.
+- Use `flext_infra.discovery.DiscoveryService` for project enumeration.
 
 ## Workflow
 
