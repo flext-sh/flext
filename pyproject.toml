@@ -1,9 +1,15 @@
+# [MANAGED] FLEXT pyproject standardization
+# Sections with [MANAGED] are enforced by flext_infra.deps.modernizer.
+# Sections with [CUSTOM] are project-specific extension points.
+# Sections with [AUTO] are derived from workspace layout and dependencies.
+# [MANAGED] build system
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = [
   "poetry-core>=2.0",
 ]
 
+# [CUSTOM] project metadata
 [project]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -69,73 +75,64 @@ name = "FLEXT Team"
 
 [project.optional-dependencies]
 dev = [
-  "autoflake>=2.3.1",
-  "black>=25.1.0",
-  "codespell>=2.3.0",
-  "deptry>=0.23.0",
-  "isort>=6.0.1",
-  "pre-commit>=4.0.1",
-  "pylint>=3.3.0",
-  "pyupgrade>=3.19.0",
-  "radon>=6.0.1",
-  "ruff>=0.12.3",
-  "types-pyyaml>=6.0.12",
-  "vulture>=2.13",
-]
-docs = [
-  "mkdocs-awesome-pages-plugin>=2.9.0",
-  "mkdocs-encryptcontent-plugin>=2.0.0",
-  "mkdocs-exclude>=1.0.0",
-  "mkdocs-get-deps>=0.2.0",
-  "mkdocs-git-revision-date-localized-plugin>=1.2.0",
-  "mkdocs-literate-nav>=0.6.0",
-  "mkdocs-macros-plugin>=1.0.0",
-  "mkdocs-material-extensions>=1.3.1",
-  "mkdocs-material>=9.5.0",
-  "mkdocs-mermaid2-plugin>=1.1.0",
-  "mkdocs-minify-plugin>=0.7.0",
-  "mkdocs-newsletter>=0.1.0",
-  "mkdocs-print-site-plugin>=0.8.0",
-  "mkdocs-redirects>=1.2.0",
-  "mkdocs-section-index>=0.3.0",
-  "mkdocs-versioning>=0.2.0",
-  "mkdocs>=1.6.0",
-  "mkdocstrings-python>=1.7.0",
-  "mkdocstrings>=0.24.0",
-]
-security = [
-  "bandit>=1.8.0",
-  "pip-audit>=2.7.3",
-]
-test = [
-  "factory-boy>=3.3.1",
-  "faker>=37.4.0",
-  "hypothesis>=6.125.0",
-  "pytest-benchmark>=5.1.0",
-  "pytest-clarity>=1.0.1",
-  "pytest-cov>=6.2.0",
-  "pytest-deadfixtures>=2.2.1",
-  "pytest-env>=1.1.5",
-  "pytest-mock>=3.14.0",
-  "pytest-randomly>=3.16.0",
-  "pytest-sugar>=1.0.0",
-  "pytest-timeout>=2.4.0",
-  "pytest-xdist>=3.8.0",
-  "pytest>=8.4.0",
-]
-typings = [
-  "django-stubs>=5.2.2",
-  "types-docker>=7.1.0",
-  "types-ldap3>=2.9.13.20250622",
-  "types-protobuf>=6.30.2.20250703",
-  "types-psutil>=7.0.0",
-  "types-psycopg2>=2.9.21.20250718",
-  "types-python-dateutil>=2.9.0",
-  "types-pyyaml>=6.0.12",
-  "types-redis>=4.6.0",
-  "types-requests>=2.32.4",
-  "types-setuptools>=80.9.0",
-  "types-toml>=0.10.8.20240310",
+    "autoflake>=2.3.1",
+    "bandit>=1.8.0",
+    "black>=25.1.0",
+    "codespell>=2.3.0",
+    "deptry>=0.23.0",
+    "django-stubs>=5.2.2",
+    "factory-boy>=3.3.1",
+    "faker>=37.4.0",
+    "hypothesis>=6.125.0",
+    "isort>=6.0.1",
+    "mkdocs>=1.6.0",
+    "mkdocs-awesome-pages-plugin>=2.9.0",
+    "mkdocs-encryptcontent-plugin>=2.0.0",
+    "mkdocs-exclude>=1.0.0",
+    "mkdocs-get-deps>=0.2.0",
+    "mkdocs-git-revision-date-localized-plugin>=1.2.0",
+    "mkdocs-literate-nav>=0.6.0",
+    "mkdocs-macros-plugin>=1.0.0",
+    "mkdocs-material>=9.5.0",
+    "mkdocs-material-extensions>=1.3.1",
+    "mkdocs-mermaid2-plugin>=1.1.0",
+    "mkdocs-minify-plugin>=0.7.0",
+    "mkdocs-newsletter>=0.1.0",
+    "mkdocs-print-site-plugin>=0.8.0",
+    "mkdocs-redirects>=1.2.0",
+    "mkdocs-section-index>=0.3.0",
+    "mkdocs-versioning>=0.2.0",
+    "mkdocstrings>=0.24.0",
+    "mkdocstrings-python>=1.7.0",
+    "pip-audit>=2.7.3",
+    "pre-commit>=4.0.1",
+    "pylint>=3.3.0",
+    "pytest>=8.4.0",
+    "pytest-benchmark>=5.1.0",
+    "pytest-clarity>=1.0.1",
+    "pytest-cov>=6.2.0",
+    "pytest-deadfixtures>=2.2.1",
+    "pytest-env>=1.1.5",
+    "pytest-mock>=3.14.0",
+    "pytest-randomly>=3.16.0",
+    "pytest-sugar>=1.0.0",
+    "pytest-timeout>=2.4.0",
+    "pytest-xdist>=3.8.0",
+    "pyupgrade>=3.19.0",
+    "radon>=6.0.1",
+    "ruff>=0.12.3",
+    "types-docker>=7.1.0",
+    "types-ldap3>=2.9.13.20250622",
+    "types-protobuf>=6.30.2.20250703",
+    "types-psutil>=7.0.0",
+    "types-psycopg2>=2.9.21.20250718",
+    "types-python-dateutil>=2.9.0",
+    "types-pyyaml>=6.0.12",
+    "types-redis>=4.6.0",
+    "types-requests>=2.32.4",
+    "types-setuptools>=80.9.0",
+    "types-toml>=0.10.8.20240310",
+    "vulture>=2.13",
 ]
 
 [project.scripts]
@@ -148,6 +145,7 @@ Documentation = "https://docs.flext.sh"
 Homepage = "https://github.com/flext-sh/flext"
 Repository = "https://github.com/flext-sh/flext"
 [tool]
+# [MANAGED] deptry
 [tool.deptry]
 exclude = [
   ".archive",
@@ -178,13 +176,10 @@ known_first_party = [
   "flext_quality",
 ]
 pep621_dev_dependency_groups = [
-  "dev",
-  "docs",
-  "security",
-  "test",
-  "typings",
+    "dev",
 ]
 
+# [MANAGED] mypy
 [tool.mypy]
 cache_dir = ".mypy_cache"
 check_untyped_defs = true
@@ -286,7 +281,6 @@ module = "flext_core._models.base"
 
 packages = [
   {from = "src", include = "flext"},
-  {from = ".", include = "scripts"},
 ]
 
 [tool.poetry.dependencies]
@@ -341,6 +335,7 @@ flext-target-oracle-oic = {path = "flext-target-oracle-oic", develop = true}
 flext-target-oracle-wms = {path = "flext-target-oracle-wms", develop = true}
 flext-web = {path = "flext-web", develop = true}
 
+# [CUSTOM] poetry dev extensions
 [tool.poetry.group.dev.dependencies]
 aiohttp = ">=3.12.14"
 docker = ">=7.1.0"
@@ -371,8 +366,8 @@ rope = "^1.14.0"
 detect-secrets = "^1.5.0"
 safety = "^3.7.0"
 pyproject-fmt = "^2.16.1"
-
-[tool.poetry.group.typings.dependencies]
+matplotlib = "^3.10.7"
+seaborn = "^0.13.2"
 aiofiles = "^24.1.0"
 pyarrow-stubs = "^20.0.0.20250825"
 types-aiofiles = "^24.1.0.20250809"
@@ -387,22 +382,18 @@ types-mock = "^5.2.0.20250809"
 types-networkx = "^3.5.0.20250728"
 types-pymysql = "^1.1.0.20250711"
 types-pytz = "^2025.2.0.20250516"
-types-pyyaml = ">=6.0.12.20250516"
 types-simplejson = "^3.20.0.20250326"
 types-six = "^1.17.0.20250515"
 types-ujson = "^5.10.0.20250326"
 types-cachetools = "^6.2.0.20251022"
 types-tabulate = "^0.9.0.20241207"
 
-[tool.poetry.group.docs.dependencies]
-matplotlib = "^3.10.7"
-seaborn = "^0.13.2"
-
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
 
+# [MANAGED] pyright
 [tool.pyright]
 enableTypeIgnoreComments = false
 extraPaths = ["scripts", "src", "typings", "typings/generated", "flexcore/src", "flext-api/src", "flext-auth/src", "flext-cli/src", "flext-core/src", "flext-db-oracle/src", "flext-dbt-ldap/src", "flext-dbt-ldif/src", "flext-dbt-oracle/src", "flext-dbt-oracle-wms/src", "flext-grpc/src", "flext-ldap/src", "flext-ldif/src", "flext-meltano/src", "flext-observability/src", "flext-oracle-oic/src", "flext-oracle-wms/src", "flext-plugin/src", "flext-quality/src", "flext-tap-ldap/src", "flext-tap-ldif/src", "flext-tap-oracle/src", "flext-tap-oracle-oic/src", "flext-tap-oracle-wms/src", "flext-target-ldap/src", "flext-target-ldif/src", "flext-target-oracle/src", "flext-target-oracle-oic/src", "flext-target-oracle-wms/src", "flext-web/src"]
@@ -551,6 +542,7 @@ testpaths = [
   "tests/",
 ]
 
+# [MANAGED] pyrefly
 [tool.pyrefly]
 project-excludes = [ "**/*_pb2*.py", "**/*_pb2_grpc*.py" ]
 search-path = [
@@ -567,6 +559,7 @@ matches = "**/typings.py"
 [tool.pyrefly.sub-config.errors]
 unknown-name = false
 
+# [MANAGED] ruff
 [tool.ruff]
 extend = "./ruff-shared.toml"
 
@@ -640,6 +633,7 @@ output_format = "plain"
 # ============================================
 # CODESPELL - Spell Checking
 # ============================================
+# [MANAGED] codespell
 [tool.codespell]
 ignore-words-list = "dn,cn,ou,uid,sn,aci,acl,ldif,flext,FLEXT,dbt,oic,wms,grpc,meltano,protobuf,creds,assertIn"
 skip = ".git,*.lock,*.egg-info,dist,build,.venv,__pycache__,.mypy_cache,.pytest_cache,.ruff_cache,node_modules,typings,vendor,*.pb2*.py"
