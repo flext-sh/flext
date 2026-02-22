@@ -35,10 +35,10 @@ description: Repository-native implementation patterns for result flow, DI, logg
 - `flext-core/src/flext_core/runtime.py`
 
 ## Rules
-- Prefer existing repository patterns over ad-hoc abstractions.
-- Use `FlextResult` composition at error boundaries.
-- Keep DI through `FlextContainer` bridge methods.
-- Use structured logging via `FlextLogger` context APIs.
+
+> **Rule**: See `CLAUDE.md` §2 Architecture Law and §4 Import Law for canonical namespace alias and inheritance requirements.
+
+- This skill focuses on implementation-level patterns, anti-patterns, and concrete examples.
 
 ## Pattern Catalog
 
@@ -53,6 +53,8 @@ description: Repository-native implementation patterns for result flow, DI, logg
 - **Namespace Inheritance** (cross-project `m`, `c`, `t`, `u`, `p` composition via MRO)
 
 ## Namespace Inheritance Pattern
+
+> **Rule**: See `CLAUDE.md` §2 Architecture Law and §4 Import Law for normative alias and MRO composition requirements.
 
 Downstream projects inherit parent facade classes to compose namespaces. This avoids duplicate aliases, assignment-based type errors, and invariance issues.
 

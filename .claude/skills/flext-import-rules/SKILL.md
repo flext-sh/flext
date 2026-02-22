@@ -33,10 +33,11 @@ description: Exact import rules and patterns verified from the actual FLEXT code
 > **Verified from**: Static analysis of all `.py` files in `flext-core` and consuming
 > projects (`flext-auth`, `flext-cli`, `flext-ldap`) on 2026-02-17.
 
+> **Rule**: See `CLAUDE.md` §4 Import Law for canonical aliases, import order, and prohibited import forms.
+
 ## Rule 1: Always Use `from __future__ import annotations`
 
-Every single `.py` file in the codebase starts with this. It enables PEP 563
-string-based annotations, avoiding circular import issues at type-check time.
+This section provides concrete repository examples for the `from __future__ import annotations` requirement defined in `CLAUDE.md` §3 and §4.
 
 ```python
 # FIRST non-docstring import in EVERY file
@@ -47,7 +48,7 @@ from __future__ import annotations
 
 ## Rule 2: Import Order (enforced by ruff `I` rules)
 
-The exact order enforced by `ruff` with `isort` integration:
+This section provides the concrete ordering template; canonical policy remains in `CLAUDE.md` §4 Import Law.
 
 ```python
 from __future__ import annotations          # 1. FUTURE (always first)
@@ -285,6 +286,8 @@ class MyHandler(h.BaseCommandHandler[m.Cqrs.Command, r]):
 ---
 
 ## Rule 8: TYPE_CHECKING Is FORBIDDEN
+
+> **Rule**: See `CLAUDE.md` §3 Code Law for the normative `TYPE_CHECKING` prohibition.
 
 `typing.TYPE_CHECKING` is **prohibited** in the FLEXT ecosystem.
 It is a band-aid for circular imports — the real fix is proper module layering.

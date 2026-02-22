@@ -49,6 +49,8 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 > **Source of truth**: Extracted from `flext-core/src/flext_core/typings.py` (534 lines)
 > and cross-referenced with `models.py`, `protocols.py`, and `ruff-shared.toml`.
 
+> **Rule**: See `CLAUDE.md` §3 Code Law for canonical `FlextResult` and typing requirements.
+
 ## Python Version & Core Requirements
 
 - **Python 3.13+** — Verified in `pyproject.toml` (`requires-python = ">=3.13"`)
@@ -495,6 +497,8 @@ This eliminates duplication across `MigrationResult`, `SyncResult`,
 
 ## Rule 12: FlextResult Factory Method Typing
 
+This section keeps detailed generic behavior and edge cases; normative enforcement lives in `CLAUDE.md` §3 Code Law.
+
 ### `r` Alias — Universal Import Pattern
 
 ```python
@@ -563,4 +567,3 @@ def process(self) -> r[str]:
         .map(lambda v: f"Value: {v}")    # FlextResult[str]
     )
 ```
-

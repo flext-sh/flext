@@ -34,15 +34,13 @@ description: Layer map and dependency-direction contract for flext-core. Use whe
 
 ## Rules
 
-- Allowed direction only: `L3 -> L2 -> L1 -> L0`.
-- Never reverse dependency direction (no `L0/L1` imports from `L2/L3`).
-- Keep external dependency touchpoints in bridge modules (`runtime.py`, `container.py`).
-- Route consumer imports through `flext-core/src/flext_core/__init__.py` where possible.
-- Layer map (source-aligned):
-  - `L3 Application/Orchestration`: `dispatcher.py`, `handlers.py`, `decorators.py`.
-  - `L2 Domain & Infrastructure`: `models.py`, `mixins.py`, `service.py`, `utilities.py`, `loggings.py`, `container.py`.
-  - `L1 Foundation & Bridge`: `result.py`, `exceptions.py`, `registry.py`, `runtime.py`.
-  - `L0 Pure Contracts`: `constants.py`, `typings.py`, `protocols.py`.
+> **Rule**: See `CLAUDE.md` §2 Architecture Law for canonical tier system and dependency flow.
+
+Layer map (source-aligned reference for implementation work):
+- `L3 Application/Orchestration`: `dispatcher.py`, `handlers.py`, `decorators.py`.
+- `L2 Domain & Infrastructure`: `models.py`, `mixins.py`, `service.py`, `utilities.py`, `loggings.py`, `container.py`, `flext_infra`.
+- `L1 Foundation & Bridge`: `result.py`, `exceptions.py`, `registry.py`, `runtime.py`.
+- `L0 Pure Contracts`: `constants.py`, `typings.py`, `protocols.py`.
 
 ## Instructions
 
