@@ -30,6 +30,11 @@ from typing import cast
 import tomlkit
 from tomlkit.items import Table
 
+from scripts.dependencies.sync_extra_paths_from_deps import (
+    MYPY_BASE_PROJECT,
+    PYRIGHT_BASE_PROJECT,
+    get_dep_paths,
+)
 from scripts.libs.config import (
     DEFAULT_ENCODING,
     MAKEFILE_FILENAME,
@@ -129,9 +134,7 @@ def _read_min_coverage(project_dir: Path) -> int:
     pyproject = project_dir / PYPROJECT_FILENAME
     if pyproject.exists():
         doc = read_toml_document(pyproject)
-        if doc is None:
-            doc = tomlkit.parse(pyproject.read_text())
-        tool = doc.get("tool")
+        tool = doc.get("tool") if doc is not None else None
         if tool:
             cov = tool.get("coverage")
             if cov:
@@ -234,7 +237,9 @@ class SSOTRule:
 
 SSOT_RULES: dict[str, SSOTRule] = {
     "bandit": SSOTRule(),
-    "pyright": SSOTRule(root_only=frozenset({"executionEnvironments"})),
+    "pyright": SSOTRule(
+        root_only=frozenset({"executionEnvironments", "extraPaths"}),
+    ),
     "coverage": SSOTRule(
         from_root=False,
         prune_extras=False,
@@ -248,14 +253,16 @@ SSOT_RULES: dict[str, SSOTRule] = {
     "pytest": SSOTRule(entry_point="ini_options"),
     "pyrefly": SSOTRule(
         prune_extras=False,
-        root_only=frozenset({"sub-config"}),
-        per_project={"search-path": "pyrefly_sub_path"},
+        root_only=frozenset({"sub-config", "search-path"}),
     ),
     "ruff": SSOTRule(
         per_project={
             "extend": "ruff_extend",
             "lint.isort.known-first-party": "project_pkg_list",
         }
+    ),
+    "mypy": SSOTRule(
+        root_only=frozenset({"mypy_path", "files", "overrides", "plugins"}),
     ),
     "codespell": SSOTRule(),
     "complexipy": SSOTRule(),
@@ -330,6 +337,20 @@ def _enforce_one(
             target = nxt
         target[parts[-1]] = value
 
+    # Per-project paths from path deps (SSOT: do not copy from root; mass sync safe)
+    if tool_name == "pyright":
+        canonical["extraPaths"] = PYRIGHT_BASE_PROJECT + get_dep_paths(
+            doc, is_root=False
+        )
+    if tool_name == "mypy":
+        canonical["mypy_path"] = MYPY_BASE_PROJECT + get_dep_paths(doc, is_root=False)
+    if tool_name == "pyrefly":
+        canonical["search-path"] = [
+            "..",
+            *get_dep_paths(doc, is_root=False),
+            *_PYREFLY_SUB_PATH,
+        ]
+
     tool = _ensure_tool(doc)
     section = tool.get(tool_name)
 
@@ -394,6 +415,14 @@ class NormalizeRule:
     message: str
     path: tuple[str, ...] = ()
     fields: tuple[str, ...] = ()
+    skip_root: bool = False
+
+
+ALLOWED_TOOL_SECTIONS: frozenset[str] = frozenset(SSOT_RULES) | {
+    "poetry",
+    "django-stubs",
+}
+"""Tool sections allowed in subprojects.  Anything else is removed."""
 
 
 NORMALIZE_RULES: tuple[NormalizeRule, ...] = (
@@ -422,6 +451,12 @@ NORMALIZE_RULES: tuple[NormalizeRule, ...] = (
         kind="normalize_poetry_core",
         message="build-system: poetry-core>=2",
         path=("build-system",),
+    ),
+    NormalizeRule(
+        kind="remove_stale_tool_sections",
+        message="tool: removed stale sections",
+        path=("tool",),
+        skip_root=True,
     ),
 )
 
@@ -505,12 +540,25 @@ def _apply_normalize_rule(doc: tomlkit.TOMLDocument, rule: NormalizeRule) -> str
                 return rule.message
         return None
 
+    if rule.kind == "remove_stale_tool_sections":
+        tool = cast("MutableMapping[str, object]", target)
+        stale = sorted(k for k in tool if k not in ALLOWED_TOOL_SECTIONS)
+        if not stale:
+            return None
+        for k in stale:
+            del tool[k]
+        return f"tool: removed stale sections: {', '.join(stale)}"
+
     return None
 
 
-def _apply_normalize_rules(doc: tomlkit.TOMLDocument) -> list[str]:
+def _apply_normalize_rules(
+    doc: tomlkit.TOMLDocument, *, is_root: bool = False
+) -> list[str]:
     results: list[str] = []
     for rule in NORMALIZE_RULES:
+        if rule.skip_root and is_root:
+            continue
         result = _apply_normalize_rule(doc, rule)
         if result:
             results.append(result)
@@ -584,7 +632,7 @@ def process_file(path: Path, spec: ProjectSpec, *, dry_run: bool = False) -> lis
         if result:
             fixes.append(result)
 
-    fixes.extend(_apply_normalize_rules(doc))
+    fixes.extend(_apply_normalize_rules(doc, is_root=spec.is_root))
     test_msg, removed_pkgs = fix_test_deps_in_runtime(doc)
     _apply(test_msg)
     _apply(fix_deptry_ignores(doc, removed_pkgs))

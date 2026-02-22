@@ -19,8 +19,10 @@ from pathlib import Path
 import tomlkit
 from tomlkit.toml_document import TOMLDocument
 
+from scripts.dependencies.sync_dep_paths import extract_dep_name
 from scripts.libs.config import PYPROJECT_FILENAME
 from scripts.libs.paths import workspace_root_from_file
+from scripts.libs.toml_io import read_toml_document, write_toml_document
 
 ROOT = workspace_root_from_file(__file__)
 
@@ -29,7 +31,16 @@ PYRIGHT_BASE_ROOT = ["scripts", "src", "typings", "typings/generated"]
 MYPY_BASE_ROOT = ["typings", "typings/generated", "src"]
 
 # Base paths for subprojects (relative to project dir). ".." = workspace root for scripts.libs.
-PYRIGHT_BASE_PROJECT = ["..", "src", "tests", "examples", "scripts", "../typings", "../typings/generated"]
+# Exported for modernize_pyproject SSOT so mass sync does not overwrite per-project paths.
+PYRIGHT_BASE_PROJECT = [
+    "..",
+    "src",
+    "tests",
+    "examples",
+    "scripts",
+    "../typings",
+    "../typings/generated",
+]
 MYPY_BASE_PROJECT = ["..", "../typings", "../typings/generated", "src"]
 
 
@@ -86,6 +97,25 @@ def _path_dep_paths(doc: TOMLDocument) -> list[str]:
     return sorted(set(paths))
 
 
+def get_dep_paths(doc: TOMLDocument, *, is_root: bool = False) -> list[str]:
+    """Return type-checker src paths for path deps (SSOT for modernize_pyproject).
+
+    Handles both ``.flext-deps/X`` (standalone) and ``../X`` / ``X`` (workspace)
+    path formats by extracting the bare project name first.
+    """
+    raw_paths = _path_dep_paths(doc)
+    resolved: list[str] = []
+    for p in raw_paths:
+        if not p:
+            continue
+        name = extract_dep_name(p)
+        if is_root:
+            resolved.append(f"{name}/src")
+        else:
+            resolved.append(f"../{name}/src")
+    return resolved
+
+
 def _sync_one(
     pyproject_path: Path,
     *,
@@ -95,18 +125,10 @@ def _sync_one(
     """Update one pyproject.toml; return True if changed."""
     if not pyproject_path.exists():
         return False
-    text = pyproject_path.read_text(encoding="utf-8")
-    doc = tomlkit.parse(text)
-    raw_paths = _path_dep_paths(doc)
-    if is_root:
-        dep_paths = [f"{p}/src" for p in raw_paths if p]
-    else:
-        # Subprojects: resolve .flext-deps/* via workspace so type checkers find deps
-        dep_paths = [
-            f"../{p}/src" if p.startswith(".flext-deps/") else f"{p}/src"
-            for p in raw_paths
-            if p
-        ]
+    doc = read_toml_document(pyproject_path)
+    if doc is None:
+        return False
+    dep_paths = get_dep_paths(doc, is_root=is_root)
     if is_root:
         pyright_extra = PYRIGHT_BASE_ROOT + dep_paths
         mypy_path = MYPY_BASE_ROOT + dep_paths
@@ -158,7 +180,7 @@ def _sync_one(
                 changed = True
 
     if not dry_run and changed:
-        _ = pyproject_path.write_text(tomlkit.dumps(doc), encoding="utf-8")
+        write_toml_document(pyproject_path, doc)
     return changed
 
 
@@ -190,7 +212,9 @@ def main() -> int:
     """Entry point."""
     doc_desc = (__doc__ or "").split("\n\n")[1] if "\n\n" in (__doc__ or "") else ""
     parser = argparse.ArgumentParser(description=doc_desc)
-    _ = parser.add_argument("--dry-run", action="store_true", help="Print would-be changes only")
+    _ = parser.add_argument(
+        "--dry-run", action="store_true", help="Print would-be changes only"
+    )
     _ = parser.add_argument(
         "--project",
         action="append",
