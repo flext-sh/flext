@@ -43,7 +43,11 @@ DEFAULT_GATES = "lint,format,pyrefly,mypy,pyright,security,markdown,go"
 
 def _existing_check_dirs(project_dir: Path) -> list[str]:
     """Return check dirs that exist. Root: DEFAULT_CHECK_DIRS; subprojects: CHECK_DIRS_SUBPROJECT (SSOT)."""
-    dirs = DEFAULT_CHECK_DIRS if project_dir.resolve() == ROOT.resolve() else CHECK_DIRS_SUBPROJECT
+    dirs = (
+        DEFAULT_CHECK_DIRS
+        if project_dir.resolve() == ROOT.resolve()
+        else CHECK_DIRS_SUBPROJECT
+    )
     return [d for d in dirs if (project_dir / d).is_dir()]
 
 
@@ -110,7 +114,16 @@ def _run_ruff_lint(project_dir: Path, _src_dir: str) -> GateResult:
     check_dirs = _existing_check_dirs(project_dir)
     targets = check_dirs or ["."]
     result = _run(
-        [sys.executable, "-m", "ruff", "check", *targets, "--output-format", "json", "--quiet"],
+        [
+            sys.executable,
+            "-m",
+            "ruff",
+            "check",
+            *targets,
+            "--output-format",
+            "json",
+            "--quiet",
+        ],
         project_dir,
     )
     errors: list[CheckError] = []
@@ -300,7 +313,11 @@ def _run_mypy(project_dir: Path, _src_dir: str) -> GateResult:
         return GateResult(gate="mypy", project=project_dir.name, passed=True)
 
     proj_py = project_dir / PYPROJECT_FILENAME
-    cfg = proj_py if proj_py.exists() and "[tool.mypy]" in proj_py.read_text() else ROOT / PYPROJECT_FILENAME
+    cfg = (
+        proj_py
+        if proj_py.exists() and "[tool.mypy]" in proj_py.read_text()
+        else ROOT / PYPROJECT_FILENAME
+    )
     config_file = str(cfg)
     result = _run(
         [
