@@ -111,7 +111,7 @@ endef
 
 define AUTO_SYNC_ALL_PROJECTS
 for proj in $(ALL_PROJECTS); do \
-	$(PY) -m flext_infra.workspace.sync --project-root "$$proj" --canonical-root "$(CURDIR)" >/dev/null || exit 1; \
+	$(PY) -m flext_infra.workspace sync --project-root "$$proj" --canonical-root "$(CURDIR)" >/dev/null || exit 1; \
 done
 endef
 
