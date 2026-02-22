@@ -11,21 +11,26 @@
 
 ---
 name: scripts-validation
-description: Validation scripts — policy gates, automated checks, ast-grep enforcement, and the validation orchestrator. Use when editing scripts/validation/ and scripts/core/skill_validate.py.
+description: Validation services — policy gates, automated checks, ast-grep enforcement, and workspace validation. Use when using flext_infra.check or editing scripts/validation/.
 ---
 
 # Scripts Validation
 
 ## Scope
 
-- `scripts/validation/run_automated_validation.sh` — thin wrapper around `skill_validate.py --all`
-- `scripts/core/skill_validate.py`
+- `flext_infra.check` module — Validation services (Python module in flext-core)
+  - `flext_infra.check.services.WorkspaceChecker`
+  - `flext_infra.check.services.PyreflyConfigFixer`
+- Legacy scripts (deprecated):
+  - `scripts/validation/run_automated_validation.sh` — thin wrapper around `skill_validate.py --all`
+  - `scripts/core/skill_validate.py`
 - `.claude/skills/*/rules.yml`
 - `.claude/skills/*/rules/*.yml`
 - `.claude/skills/*/baseline.json`
 
 ## References
 
+- `flext-core/src/flext_infra/check/` — Module source
 - `.claude/skills/flext-automation-skill-pattern/SKILL.md`
 - `.claude/skills/flext-quality-gates/SKILL.md`
 - `Makefile`

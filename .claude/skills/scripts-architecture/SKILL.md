@@ -11,7 +11,7 @@
 
 ---
 name: scripts-architecture
-description: Architecture scripts — import analysis, violation detection, code reorganization, dead code scanning, and cross-project testing. Use when editing scripts/architecture/ or scripts/analysis/.
+description: Architecture services — import analysis, violation detection, code reorganization, dead code scanning, and cross-project testing. Use when using flext_infra or editing scripts/architecture/ or scripts/analysis/.
 ---
 
 # Scripts Architecture
@@ -53,6 +53,7 @@ description: Architecture scripts — import analysis, violation detection, code
 
 ## References
 
+- `flext-core/src/flext_infra/` — Infrastructure module (contains shared services for analysis and discovery)
 - `.claude/skills/flext-architecture-layers/SKILL.md`
 - `.claude/skills/flext-import-rules/SKILL.md`
 - `.claude/skills/rules-scripts/SKILL.md`

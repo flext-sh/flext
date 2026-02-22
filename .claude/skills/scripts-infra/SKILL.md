@@ -11,50 +11,59 @@
 
 ---
 name: scripts-infra
-description: Shared script infrastructure — bash/python libraries, core runner/registry, artifact naming, config utilities, and Makefile helpers. Use when editing scripts/lib/, scripts/core/, scripts/config/, scripts/makefiles/, or scripts/common.py.
+description: Core infrastructure services — validation, inventory, scanning, and skill orchestration. Use when using flext_infra.core or editing scripts/lib/, scripts/core/, scripts/config/, scripts/makefiles/, or scripts/common.py.
 ---
 
 # Scripts Infra
 
 ## Scope
 
-- `scripts/lib/common.sh`
-- `scripts/lib/message_formatter.sh`
-- `scripts/lib/runtime_detector.sh`
-- `scripts/lib/artifact_naming.sh`
-- `scripts/core/script_runner.py`
-- `scripts/core/script_registry.py`
-- `scripts/core/artifact_naming.py`
-- `.claude/skills/scripts-infra/validate_ownership.py`
-- `.claude/skills/scripts-infra/validate_artifact_naming.py`
-- `scripts/core/_add_owner_markers.py`
-- `scripts/core/__init__.py`
-- `scripts/common.py`
-- `scripts/config/load_staging_config.py`
-- `scripts/config/setup_workspace_links.py`
-- `scripts/config/standardize_pyproject.py`
-- `scripts/config/__init__.py`
-- `scripts/makefiles/simplify_makefiles.py`
-- `scripts/add-project.sh`
-- `scripts/remove-project.sh`
-- `scripts/deploy.sh`
-- `scripts/release.sh`
-- `scripts/commit.sh`
-- `scripts/setup.sh`
-- `scripts/setup_env.sh`
-- `scripts/flext-constants.sh`
-- `scripts/file_lock.sh`
-- `scripts/safe_command.sh`
-- `scripts/pre_command_validate.sh`
-- `scripts/push_all_repos.sh`
-- `scripts/push_repos_parallel.sh`
-- `scripts/push_submodules.sh`
-- `scripts/generate_all_reports.sh`
-- `scripts/web_scrape_local.py`
-- `scripts/standardize_version.py`
+- `flext_infra.core` module — Core infrastructure services (Python module in flext-core)
+  - `flext_infra.core.inventory.InventoryService`
+  - `flext_infra.core.skill_validator.SkillValidator`
+  - `flext_infra.core.scanner.TextPatternScanner`
+  - `flext_infra.core.basemk_validator.BaseMkValidator`
+  - `flext_infra.core.stub_chain.StubSupplyChain`
+  - `flext_infra.core.pytest_diag.PytestDiagExtractor`
+- Legacy scripts (deprecated):
+  - `scripts/lib/common.sh`
+  - `scripts/lib/message_formatter.sh`
+  - `scripts/lib/runtime_detector.sh`
+  - `scripts/lib/artifact_naming.sh`
+  - `scripts/core/script_runner.py`
+  - `scripts/core/script_registry.py`
+  - `scripts/core/artifact_naming.py`
+  - `.claude/skills/scripts-infra/validate_ownership.py`
+  - `.claude/skills/scripts-infra/validate_artifact_naming.py`
+  - `scripts/core/_add_owner_markers.py`
+  - `scripts/core/__init__.py`
+  - `scripts/common.py`
+  - `scripts/config/load_staging_config.py`
+  - `scripts/config/setup_workspace_links.py`
+  - `scripts/config/standardize_pyproject.py`
+  - `scripts/config/__init__.py`
+  - `scripts/makefiles/simplify_makefiles.py`
+  - `scripts/add-project.sh`
+  - `scripts/remove-project.sh`
+  - `scripts/deploy.sh`
+  - `scripts/release.sh`
+  - `scripts/commit.sh`
+  - `scripts/setup.sh`
+  - `scripts/setup_env.sh`
+  - `scripts/flext-constants.sh`
+  - `scripts/file_lock.sh`
+  - `scripts/safe_command.sh`
+  - `scripts/pre_command_validate.sh`
+  - `scripts/push_all_repos.sh`
+  - `scripts/push_repos_parallel.sh`
+  - `scripts/push_submodules.sh`
+  - `scripts/generate_all_reports.sh`
+  - `scripts/web_scrape_local.py`
+  - `scripts/standardize_version.py`
 
 ## References
 
+- `flext-core/src/flext_infra/core/` — Module source
 - `.claude/skills/rules-scripts/SKILL.md`
 - `.claude/skills/flext-automation-skill-pattern/SKILL.md`
 - `.sisyphus/plans/scripts-skill-standardization.md`

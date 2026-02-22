@@ -11,36 +11,40 @@
 
 ---
 name: scripts-maintenance
-description: Maintenance and git scripts — health checks, workspace status, git cleanup, and operational tooling. Use when editing scripts/maintenance/ or scripts/git/.
+description: Maintenance services — health checks, workspace status, git cleanup, and operational tooling. Use when using flext_infra.maintenance or editing scripts/maintenance/ or scripts/git/.
 ---
 
 # Scripts Maintenance
 
 ## Scope
 
-- `scripts/maintenance/health_check_service.py`
-- `scripts/maintenance/__init__.py`
-- `scripts/maintenance/workspace_status.py`
-- `scripts/git/git_ultimate_cleanup.py`
-- `scripts/cleanup_local_venvs.sh`
-- `scripts/cleanup_project_makefiles.py`
-- `scripts/clean_git_ignored_files.py`
-- `scripts/create_aggressive_gitignore.py`
-- `scripts/merge_aggressive_gitignore.py`
-- `scripts/add_missing_clean_targets.py`
-- `scripts/update_clean_targets.py`
-- `scripts/documentation/fix.py`
-- `scripts/documentation/audit.py`
-- `scripts/documentation/build.py`
-- `scripts/documentation/generate.py`
-- `scripts/documentation/validate.py`
-- `scripts/documentation/readme_standardizer.py`
-- `scripts/maintenance/check_workspace_hygiene.py`
-- `scripts/maintenance/check_dependabot_config.py`
-- `scripts/maintenance/check_poetry_health.py`
+- `flext_infra.maintenance` module — Maintenance services (Python module in flext-core)
+  - `flext_infra.maintenance.python_version.PythonVersionEnforcer`
+- Legacy scripts (deprecated):
+  - `scripts/maintenance/health_check_service.py`
+  - `scripts/maintenance/__init__.py`
+  - `scripts/maintenance/workspace_status.py`
+  - `scripts/git/git_ultimate_cleanup.py`
+  - `scripts/cleanup_local_venvs.sh`
+  - `scripts/cleanup_project_makefiles.py`
+  - `scripts/clean_git_ignored_files.py`
+  - `scripts/create_aggressive_gitignore.py`
+  - `scripts/merge_aggressive_gitignore.py`
+  - `scripts/add_missing_clean_targets.py`
+  - `scripts/update_clean_targets.py`
+  - `scripts/documentation/fix.py`
+  - `scripts/documentation/audit.py`
+  - `scripts/documentation/build.py`
+  - `scripts/documentation/generate.py`
+  - `scripts/documentation/validate.py`
+  - `scripts/documentation/readme_standardizer.py`
+  - `scripts/maintenance/check_workspace_hygiene.py`
+  - `scripts/maintenance/check_dependabot_config.py`
+  - `scripts/maintenance/check_poetry_health.py`
 
 ## References
 
+- `flext-core/src/flext_infra/maintenance/` — Module source
 - `.claude/skills/rules-scripts/SKILL.md`
 - `docs/architecture/adr/README.md`
 
@@ -55,7 +59,7 @@ description: Maintenance and git scripts — health checks, workspace status, gi
 
 - When adding maintenance scripts, ensure they report status without modifying state by default.
 - When modifying git cleanup, verify it respects protected branches.
-- Use `scripts/common.py:discover_projects` for workspace-wide operations.
+- Use `flext_infra.discovery.DiscoveryService` for workspace-wide operations.
 
 ## Workflow
 
