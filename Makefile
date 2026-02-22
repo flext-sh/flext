@@ -16,7 +16,8 @@ POETRY_BIN := $(WORKSPACE_VENV)/bin/poetry
 PIPX_BIN := $(WORKSPACE_VENV)/bin/pipx
 UV_BIN := $(WORKSPACE_VENV)/bin/uv
 POETRY_ENV := VIRTUAL_ENV=$(WORKSPACE_VENV) PATH=$(WORKSPACE_VENV)/bin:$$PATH POETRY_VIRTUALENVS_CREATE=false POETRY_VIRTUALENVS_IN_PROJECT=false
-ORCHESTRATOR := $(POETRY_ENV) $(PY) -m flext_infra.workspace.orchestrator
+INFRA_ENV := PYTHONPATH=$(CURDIR)/flext-core/src:$$PYTHONPATH
+ORCHESTRATOR := $(POETRY_ENV) $(INFRA_ENV) $(PY) -m flext_infra.workspace.orchestrator
 PYTEST_ARGS ?=
 VALIDATE_SCOPE ?= project
 DOCS_PHASE ?= all
@@ -111,7 +112,7 @@ endef
 
 define AUTO_SYNC_ALL_PROJECTS
 for proj in $(ALL_PROJECTS); do \
-	$(PY) -m flext_infra.workspace.sync --project-root "$$proj" --canonical-root "$(CURDIR)" >/dev/null || exit 1; \
+	$(INFRA_ENV) $(PY) -m flext_infra.workspace.sync --project-root "$$proj" --canonical-root "$(CURDIR)" >/dev/null || exit 1; \
 done
 endef
 
@@ -294,13 +295,13 @@ setup: ## Install all projects into workspace .venv
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)echo "Enforcing Python version guards..."; $(PY) -m flext_infra.maintenance || exit 1
+	$(Q)echo "Enforcing Python version guards..."; $(INFRA_ENV) $(PY) -m flext_infra.maintenance || exit 1
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)echo "Modernizing pyproject.toml files..."; \
-	$(POETRY_ENV) $(PY) -m flext_infra.deps.modernizer --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
+	$(POETRY_ENV) $(INFRA_ENV) $(PY) -m flext_infra.deps.modernizer --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
 	$(Q)echo "Syncing dependency paths to workspace mode..."; \
-	$(PY) -m flext_infra.deps.path_sync --mode auto 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
+	$(INFRA_ENV) $(PY) -m flext_infra.deps.path_sync --mode auto 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
 	echo ""
 	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
 	echo "Starting workspace setup for $$total_steps item(s) ($(words $(SELECTED_PROJECTS)) projects + root)"; \
@@ -310,7 +311,7 @@ setup: ## Install all projects into workspace .venv
 			log_file="/tmp/flext-setup-$$proj.log"; \
 			start_ts=$$(date +%s); \
 			printf "[%2d/%2d] setup %s\n" $$step $$total_steps "$$proj"; \
-			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra.deps.internal_sync --project-root "$$proj" >>"$$log_file" 2>&1; then \
+			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(INFRA_ENV) $(PY) -m flext_infra.deps.internal_sync --project-root "$$proj" >>"$$log_file" 2>&1; then \
 				:; \
 			else \
 				echo "          sync    ... failed"; \
@@ -350,7 +351,7 @@ setup: ## Install all projects into workspace .venv
 	start_ts=$$(date +%s); \
 	root_lock_ok=0; \
 	printf "[%2d/%2d] setup %s\n" $$step $$total_steps "root"; \
-	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra.deps.internal_sync --project-root . >"$$log_file" 2>&1; then \
+	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(INFRA_ENV) $(PY) -m flext_infra.deps.internal_sync --project-root . >"$$log_file" 2>&1; then \
 		echo "          sync    ... failed"; \
 		cat "$$log_file"; \
 		failed=$$((failed + 1)); \
@@ -397,12 +398,12 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)echo "Enforcing Python version guards..."; $(PY) -m flext_infra.maintenance || exit 1
+	$(Q)echo "Enforcing Python version guards..."; $(INFRA_ENV) $(PY) -m flext_infra.maintenance || exit 1
 	$(Q)echo "Modernizing pyproject.toml files..."; \
-	$(POETRY_ENV) $(PY) -m flext_infra.deps.modernizer --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
+	$(POETRY_ENV) $(INFRA_ENV) $(PY) -m flext_infra.deps.modernizer --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
 	$(Q)echo "Syncing dependency paths to workspace mode..."; \
-	$(PY) -m flext_infra.deps.path_sync --mode auto 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
+	$(INFRA_ENV) $(PY) -m flext_infra.deps.path_sync --mode auto 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
 	echo ""
 	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
 	echo "Upgrading Python dependencies for $(words $(SELECTED_PROJECTS)) project(s) + root"; \
@@ -412,7 +413,7 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 			log_file="/tmp/flext-upgrade-$$proj.log"; \
 			start_ts=$$(date +%s); \
 			printf "[%2d/%2d] upgrade %s\n" $$step $$total_steps "$$proj"; \
-			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra.deps.internal_sync --project-root "$$proj" >>"$$log_file" 2>&1; then \
+			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(INFRA_ENV) $(PY) -m flext_infra.deps.internal_sync --project-root "$$proj" >>"$$log_file" 2>&1; then \
 				:; \
 			else \
 				echo "          sync    ... failed"; \
@@ -463,7 +464,7 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	start_ts=$$(date +%s); \
 	root_update_ok=0; \
 	printf "[%2d/%2d] upgrade %s\n" $$step $$total_steps "root"; \
-	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra.deps.internal_sync --project-root . >"$$log_file" 2>&1; then \
+	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(INFRA_ENV) $(PY) -m flext_infra.deps.internal_sync --project-root . >"$$log_file" 2>&1; then \
 		echo "          sync    ... failed"; \
 		cat "$$log_file"; \
 		failed=$$((failed + 1)); \
@@ -512,10 +513,10 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	fi; \
 	if [ "$(DEPS_REPORT)" != "0" ]; then \
 		echo "Dependency report (deptry + pip check)..."; \
-		$(POETRY_ENV) $(PY) -m flext_infra.deps.detector -q --no-fail || true; \
+		$(POETRY_ENV) $(INFRA_ENV) $(PY) -m flext_infra.deps.detector -q --no-fail || true; \
 	fi
 	$(Q)echo "Syncing GitHub workflow templates..."
-	$(Q)$(PY) -m flext_infra.github.workflows --workspace-root "$(CURDIR)" --apply --prune --report .reports/workflows/sync.json
+	$(Q)$(INFRA_ENV) $(PY) -m flext_infra.github.workflows --workspace-root "$(CURDIR)" --apply --prune --report .reports/workflows/sync.json
 
 check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security)
 	$(Q)$(REQUIRE_VENV)
@@ -524,7 +525,7 @@ check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,p
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
-	$(Q)$(POETRY_ENV) $(PY) -m flext_infra.check.fix_pyrefly_config $(SELECTED_PROJECTS)
+	$(Q)$(POETRY_ENV) $(INFRA_ENV) $(PY) -m flext_infra.check.fix_pyrefly_config $(SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb check \
 		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
 		$(if $(CHECK_GATES),--make-arg "CHECK_GATES=$(CHECK_GATES)") \
@@ -544,7 +545,7 @@ release: ## Interactive workspace release orchestration
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)$(PY) -m flext_infra.release \
+	$(Q)$(INFRA_ENV) $(PY) -m flext_infra.release \
 		--root "$(CURDIR)" \
 		--phase "$(RELEASE_PHASE)" \
 		--interactive "$(INTERACTIVE)" \
@@ -564,7 +565,7 @@ pr: ## Manage pull requests for selected projects
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)$(PY) -m flext_infra.github.pr_workspace \
+	$(Q)$(INFRA_ENV) $(PY) -m flext_infra.github.pr_workspace \
 		--workspace-root "$(CURDIR)" \
 		$(foreach proj,$(SELECTED_PROJECTS),--project "$(proj)") \
 		--include-root "$(PR_INCLUDE_ROOT)" \
@@ -634,14 +635,14 @@ ifeq ($(VALIDATE_SCOPE),workspace)
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)mkdir -p .reports
 	$(Q)echo "Running workspace validation (inventory + strict anti-drift gates)..."
-	$(Q)$(PY) -m flext_infra.maintenance --check || exit 1
-	$(Q)$(PY) -m flext_infra.core.inventory --root .
-	$(Q)$(PY) -m flext_infra.core.basemk_validator
-	$(Q)$(PY) -m flext_infra.github.linter --root . --report .reports/workflows/actionlint.json
-	$(Q)$(PY) -m flext_infra.core.skill_validator --skill scripts-validation --mode strict
-	$(Q)$(PY) -m flext_infra.core.skill_validator --skill rules-github --mode strict
-	$(Q)$(PY) -m flext_infra.core.skill_validator --skill rules-docker --mode strict
-	$(Q)$(PY) -m flext_infra.deps.modernizer --audit
+	$(Q)$(INFRA_ENV) $(PY) -m flext_infra.maintenance --check || exit 1
+	$(Q)$(INFRA_ENV) $(PY) -m flext_infra.core.inventory --root .
+	$(Q)$(INFRA_ENV) $(PY) -m flext_infra.core.basemk_validator
+	$(Q)$(INFRA_ENV) $(PY) -m flext_infra.github.linter --root . --report .reports/workflows/actionlint.json
+	$(Q)$(INFRA_ENV) $(PY) -m flext_infra.core.skill_validator --skill scripts-validation --mode strict
+	$(Q)$(INFRA_ENV) $(PY) -m flext_infra.core.skill_validator --skill rules-github --mode strict
+	$(Q)$(INFRA_ENV) $(PY) -m flext_infra.core.skill_validator --skill rules-docker --mode strict
+	$(Q)$(INFRA_ENV) $(PY) -m flext_infra.deps.modernizer --audit
 	$(Q)if git grep -nE '/home/.*/flext|file:///home/.*/flext' -- . ':!Makefile' ':!scripts/doc_scripts_analysis.json' ':!scripts/doc_scripts_inventory.json'; then \
 		echo "ERROR: absolute workspace paths detected in tracked sources/config"; \
 		exit 1; \
@@ -668,10 +669,10 @@ typings: ## Run typings supply-chain (stub_supply_chain + dependency report with
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)$(POETRY_ENV) $(PY) -m flext_infra.core.stub_chain --apply --idempotency-check \
+	$(Q)$(POETRY_ENV) $(INFRA_ENV) $(PY) -m flext_infra.core.stub_chain --apply --idempotency-check \
 		$(if $(PROJECT),--project $(PROJECT),$(if $(PROJECTS),$(addprefix --project ,$(PROJECTS)),--all))
 	$(Q)if [ "$(DEPS_REPORT)" != "0" ]; then \
-		$(POETRY_ENV) $(PY) -m flext_infra.deps.detector --typings -q --no-fail || true; \
+		$(POETRY_ENV) $(INFRA_ENV) $(PY) -m flext_infra.deps.detector --typings -q --no-fail || true; \
 	fi
 
 clean: ## Clean all projects
