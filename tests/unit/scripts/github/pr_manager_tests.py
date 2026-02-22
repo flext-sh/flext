@@ -38,7 +38,7 @@ def test_status_reports_no_open_pr(
             return "[]"
         raise AssertionError(command)
 
-    monkeypatch.setattr(mod, "_run_capture", _fake_capture)
+    monkeypatch.setattr(mod, "run_capture", _fake_capture)
 
     exit_code = mod._print_status(Path("/tmp/repo"), "main", "0.11.0-dev")
     output = capsys.readouterr().out
@@ -76,7 +76,7 @@ def test_open_pr_for_head_parses_payload(monkeypatch: pytest.MonkeyPatch) -> Non
     def _fake_capture(_command: list[str], _cwd: Path) -> str:
         return json.dumps(payload)
 
-    monkeypatch.setattr(mod, "_run_capture", _fake_capture)
+    monkeypatch.setattr(mod, "run_capture", _fake_capture)
     pr = mod._open_pr_for_head(Path("/tmp/repo"), "0.11.0-dev")
     assert pr is not None
     assert pr.get("number") == 5
@@ -93,7 +93,7 @@ def test_checks_action_nonblocking_by_default(
     def _fake_run_stream(_command: list[str], _cwd: Path) -> int:
         return 8
 
-    monkeypatch.setattr(mod, "_current_branch", _fake_current_branch)
+    monkeypatch.setattr(mod, "current_branch", _fake_current_branch)
     monkeypatch.setattr(mod, "_run_stream", _fake_run_stream)
     monkeypatch.setattr(
         mod,
@@ -131,7 +131,7 @@ def test_checks_action_strict_mode_returns_failure(
     def _fake_run_stream(_command: list[str], _cwd: Path) -> int:
         return 8
 
-    monkeypatch.setattr(mod, "_current_branch", _fake_current_branch)
+    monkeypatch.setattr(mod, "current_branch", _fake_current_branch)
     monkeypatch.setattr(mod, "_run_stream", _fake_run_stream)
     monkeypatch.setattr(
         mod,
@@ -160,6 +160,7 @@ def test_release_tag_from_head_patterns() -> None:
     assert mod._release_tag_from_head("0.11.0-dev") == "v0.11.0"
     assert mod._release_tag_from_head("release/0.12.3") == "v0.12.3"
     assert mod._release_tag_from_head("feature/x") is None
+    assert mod._release_tag_from_head("main") is None
 
 
 def test_merge_triggers_release_dispatch_when_workspace_repo(

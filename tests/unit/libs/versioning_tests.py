@@ -25,7 +25,7 @@ def test_parse_and_bump_semver() -> None:
 
 def test_release_tag_from_branch_patterns() -> None:
     mod = _load_module()
-    assert mod.release_tag_from_branch("0.11.0-dev") == ""
+    assert mod.release_tag_from_branch("0.11.0-dev") == "v0.11.0"
     assert mod.release_tag_from_branch("release/0.12.3") == "v0.12.3"
     assert mod.release_tag_from_branch("feature/abc") == ""
 
