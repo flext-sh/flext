@@ -15,36 +15,36 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "flexcore @ ./.flext-deps/flexcore",
-  "flext-api @ ./.flext-deps/flext-api",
-  "flext-auth @ ./.flext-deps/flext-auth",
-  "flext-cli @ ./.flext-deps/flext-cli",
-  "flext-core @ ./.flext-deps/flext-core",
-  "flext-db-oracle @ ./.flext-deps/flext-db-oracle",
-  "flext-dbt-ldap @ ./.flext-deps/flext-dbt-ldap",
-  "flext-dbt-ldif @ ./.flext-deps/flext-dbt-ldif",
-  "flext-dbt-oracle @ ./.flext-deps/flext-dbt-oracle",
-  "flext-dbt-oracle-wms @ ./.flext-deps/flext-dbt-oracle-wms",
-  "flext-grpc @ ./.flext-deps/flext-grpc",
-  "flext-ldap @ ./.flext-deps/flext-ldap",
-  "flext-ldif @ ./.flext-deps/flext-ldif",
-  "flext-meltano @ ./.flext-deps/flext-meltano",
-  "flext-observability @ ./.flext-deps/flext-observability",
-  "flext-oracle-oic @ ./.flext-deps/flext-oracle-oic",
-  "flext-oracle-wms @ ./.flext-deps/flext-oracle-wms",
-  "flext-plugin @ ./.flext-deps/flext-plugin",
-  "flext-quality @ ./.flext-deps/flext-quality",
-  "flext-tap-ldap @ ./.flext-deps/flext-tap-ldap",
-  "flext-tap-ldif @ ./.flext-deps/flext-tap-ldif",
-  "flext-tap-oracle @ ./.flext-deps/flext-tap-oracle",
-  "flext-tap-oracle-oic @ ./.flext-deps/flext-tap-oracle-oic",
-  "flext-tap-oracle-wms @ ./.flext-deps/flext-tap-oracle-wms",
-  "flext-target-ldap @ ./.flext-deps/flext-target-ldap",
-  "flext-target-ldif @ ./.flext-deps/flext-target-ldif",
-  "flext-target-oracle @ ./.flext-deps/flext-target-oracle",
-  "flext-target-oracle-oic @ ./.flext-deps/flext-target-oracle-oic",
-  "flext-target-oracle-wms @ ./.flext-deps/flext-target-oracle-wms",
-  "flext-web @ ./.flext-deps/flext-web",
+  "flexcore @ ./flexcore",
+  "flext-api @ ./flext-api",
+  "flext-auth @ ./flext-auth",
+  "flext-cli @ ./flext-cli",
+  "flext-core @ ./flext-core",
+  "flext-db-oracle @ ./flext-db-oracle",
+  "flext-dbt-ldap @ ./flext-dbt-ldap",
+  "flext-dbt-ldif @ ./flext-dbt-ldif",
+  "flext-dbt-oracle @ ./flext-dbt-oracle",
+  "flext-dbt-oracle-wms @ ./flext-dbt-oracle-wms",
+  "flext-grpc @ ./flext-grpc",
+  "flext-ldap @ ./flext-ldap",
+  "flext-ldif @ ./flext-ldif",
+  "flext-meltano @ ./flext-meltano",
+  "flext-observability @ ./flext-observability",
+  "flext-oracle-oic @ ./flext-oracle-oic",
+  "flext-oracle-wms @ ./flext-oracle-wms",
+  "flext-plugin @ ./flext-plugin",
+  "flext-quality @ ./flext-quality",
+  "flext-tap-ldap @ ./flext-tap-ldap",
+  "flext-tap-ldif @ ./flext-tap-ldif",
+  "flext-tap-oracle @ ./flext-tap-oracle",
+  "flext-tap-oracle-oic @ ./flext-tap-oracle-oic",
+  "flext-tap-oracle-wms @ ./flext-tap-oracle-wms",
+  "flext-target-ldap @ ./flext-target-ldap",
+  "flext-target-ldif @ ./flext-target-ldif",
+  "flext-target-oracle @ ./flext-target-oracle",
+  "flext-target-oracle-oic @ ./flext-target-oracle-oic",
+  "flext-target-oracle-wms @ ./flext-target-oracle-wms",
+  "flext-web @ ./flext-web",
 ]
 
 description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
@@ -222,7 +222,7 @@ follow_imports = "silent"
 follow_imports_for_stubs = true
 incremental = true
 local_partial_types = true
-mypy_path = ["typings", "typings/generated", "src", ".flext-deps/flexcore/src", ".flext-deps/flext-api/src", ".flext-deps/flext-auth/src", ".flext-deps/flext-cli/src", ".flext-deps/flext-core/src", ".flext-deps/flext-db-oracle/src", ".flext-deps/flext-dbt-ldap/src", ".flext-deps/flext-dbt-ldif/src", ".flext-deps/flext-dbt-oracle/src", ".flext-deps/flext-dbt-oracle-wms/src", ".flext-deps/flext-grpc/src", ".flext-deps/flext-ldap/src", ".flext-deps/flext-ldif/src", ".flext-deps/flext-meltano/src", ".flext-deps/flext-observability/src", ".flext-deps/flext-oracle-oic/src", ".flext-deps/flext-oracle-wms/src", ".flext-deps/flext-plugin/src", ".flext-deps/flext-quality/src", ".flext-deps/flext-tap-ldap/src", ".flext-deps/flext-tap-ldif/src", ".flext-deps/flext-tap-oracle/src", ".flext-deps/flext-tap-oracle-oic/src", ".flext-deps/flext-tap-oracle-wms/src", ".flext-deps/flext-target-ldap/src", ".flext-deps/flext-target-ldif/src", ".flext-deps/flext-target-oracle/src", ".flext-deps/flext-target-oracle-oic/src", ".flext-deps/flext-target-oracle-wms/src", ".flext-deps/flext-web/src", "flext-deps/flexcore/src", "flext-deps/flext-api/src", "flext-deps/flext-auth/src", "flext-deps/flext-cli/src", "flext-deps/flext-core/src", "flext-deps/flext-db-oracle/src", "flext-deps/flext-dbt-ldap/src", "flext-deps/flext-dbt-ldif/src", "flext-deps/flext-dbt-oracle/src", "flext-deps/flext-dbt-oracle-wms/src", "flext-deps/flext-grpc/src", "flext-deps/flext-ldap/src", "flext-deps/flext-ldif/src", "flext-deps/flext-meltano/src", "flext-deps/flext-observability/src", "flext-deps/flext-oracle-oic/src", "flext-deps/flext-oracle-wms/src", "flext-deps/flext-plugin/src", "flext-deps/flext-quality/src", "flext-deps/flext-tap-ldap/src", "flext-deps/flext-tap-ldif/src", "flext-deps/flext-tap-oracle/src", "flext-deps/flext-tap-oracle-oic/src", "flext-deps/flext-tap-oracle-wms/src", "flext-deps/flext-target-ldap/src", "flext-deps/flext-target-ldif/src", "flext-deps/flext-target-oracle/src", "flext-deps/flext-target-oracle-oic/src", "flext-deps/flext-target-oracle-wms/src", "flext-deps/flext-web/src"]
+mypy_path = ["typings", "typings/generated", "src", "flexcore/src", "flext-api/src", "flext-auth/src", "flext-cli/src", "flext-core/src", "flext-db-oracle/src", "flext-dbt-ldap/src", "flext-dbt-ldif/src", "flext-dbt-oracle/src", "flext-dbt-oracle-wms/src", "flext-grpc/src", "flext-ldap/src", "flext-ldif/src", "flext-meltano/src", "flext-observability/src", "flext-oracle-oic/src", "flext-oracle-wms/src", "flext-plugin/src", "flext-quality/src", "flext-tap-ldap/src", "flext-tap-ldif/src", "flext-tap-oracle/src", "flext-tap-oracle-oic/src", "flext-tap-oracle-wms/src", "flext-target-ldap/src", "flext-target-ldif/src", "flext-target-oracle/src", "flext-target-oracle-oic/src", "flext-target-oracle-wms/src", "flext-web/src"]
 namespace_packages = true
 no_implicit_optional = true
 no_implicit_reexport = true
@@ -308,36 +308,36 @@ trio = ">=0.31.0"
 pydantic-core = ">=2.41.4"
 trafilatura = ">=2.0.0"
 # Path dependencies (editable installs - paths defined in [project.dependencies])
-flexcore = {path = ".flext-deps/flexcore", develop = true}
-flext-api = {path = ".flext-deps/flext-api", develop = true}
-flext-auth = {path = ".flext-deps/flext-auth", develop = true}
-flext-cli = {path = ".flext-deps/flext-cli", develop = true}
-flext-core = {path = ".flext-deps/flext-core", develop = true}
-flext-db-oracle = {path = ".flext-deps/flext-db-oracle", develop = true}
-flext-dbt-ldap = {path = ".flext-deps/flext-dbt-ldap", develop = true}
-flext-dbt-ldif = {path = ".flext-deps/flext-dbt-ldif", develop = true}
-flext-dbt-oracle = {path = ".flext-deps/flext-dbt-oracle", develop = true}
-flext-dbt-oracle-wms = {path = ".flext-deps/flext-dbt-oracle-wms", develop = true}
-flext-grpc = {path = ".flext-deps/flext-grpc", develop = true}
-flext-ldap = {path = ".flext-deps/flext-ldap", develop = true}
-flext-ldif = {path = ".flext-deps/flext-ldif", develop = true}
-flext-meltano = {path = ".flext-deps/flext-meltano", develop = true}
-flext-observability = {path = ".flext-deps/flext-observability", develop = true}
-flext-oracle-oic = {path = ".flext-deps/flext-oracle-oic", develop = true}
-flext-oracle-wms = {path = ".flext-deps/flext-oracle-wms", develop = true}
-flext-plugin = {path = ".flext-deps/flext-plugin", develop = true}
-flext-quality = {path = ".flext-deps/flext-quality", develop = true}
-flext-tap-ldap = {path = ".flext-deps/flext-tap-ldap", develop = true}
-flext-tap-ldif = {path = ".flext-deps/flext-tap-ldif", develop = true}
-flext-tap-oracle = {path = ".flext-deps/flext-tap-oracle", develop = true}
-flext-tap-oracle-oic = {path = ".flext-deps/flext-tap-oracle-oic", develop = true}
-flext-tap-oracle-wms = {path = ".flext-deps/flext-tap-oracle-wms", develop = true}
-flext-target-ldap = {path = ".flext-deps/flext-target-ldap", develop = true}
-flext-target-ldif = {path = ".flext-deps/flext-target-ldif", develop = true}
-flext-target-oracle = {path = ".flext-deps/flext-target-oracle", develop = true}
-flext-target-oracle-oic = {path = ".flext-deps/flext-target-oracle-oic", develop = true}
-flext-target-oracle-wms = {path = ".flext-deps/flext-target-oracle-wms", develop = true}
-flext-web = {path = ".flext-deps/flext-web", develop = true}
+flexcore = {path = "flexcore", develop = true}
+flext-api = {path = "flext-api", develop = true}
+flext-auth = {path = "flext-auth", develop = true}
+flext-cli = {path = "flext-cli", develop = true}
+flext-core = {path = "flext-core", develop = true}
+flext-db-oracle = {path = "flext-db-oracle", develop = true}
+flext-dbt-ldap = {path = "flext-dbt-ldap", develop = true}
+flext-dbt-ldif = {path = "flext-dbt-ldif", develop = true}
+flext-dbt-oracle = {path = "flext-dbt-oracle", develop = true}
+flext-dbt-oracle-wms = {path = "flext-dbt-oracle-wms", develop = true}
+flext-grpc = {path = "flext-grpc", develop = true}
+flext-ldap = {path = "flext-ldap", develop = true}
+flext-ldif = {path = "flext-ldif", develop = true}
+flext-meltano = {path = "flext-meltano", develop = true}
+flext-observability = {path = "flext-observability", develop = true}
+flext-oracle-oic = {path = "flext-oracle-oic", develop = true}
+flext-oracle-wms = {path = "flext-oracle-wms", develop = true}
+flext-plugin = {path = "flext-plugin", develop = true}
+flext-quality = {path = "flext-quality", develop = true}
+flext-tap-ldap = {path = "flext-tap-ldap", develop = true}
+flext-tap-ldif = {path = "flext-tap-ldif", develop = true}
+flext-tap-oracle = {path = "flext-tap-oracle", develop = true}
+flext-tap-oracle-oic = {path = "flext-tap-oracle-oic", develop = true}
+flext-tap-oracle-wms = {path = "flext-tap-oracle-wms", develop = true}
+flext-target-ldap = {path = "flext-target-ldap", develop = true}
+flext-target-ldif = {path = "flext-target-ldif", develop = true}
+flext-target-oracle = {path = "flext-target-oracle", develop = true}
+flext-target-oracle-oic = {path = "flext-target-oracle-oic", develop = true}
+flext-target-oracle-wms = {path = "flext-target-oracle-wms", develop = true}
+flext-web = {path = "flext-web", develop = true}
 
 [tool.poetry.group.dev.dependencies]
 aiohttp = ">=3.12.14"
@@ -403,7 +403,7 @@ warn_required_dynamic_aliases = true
 
 [tool.pyright]
 enableTypeIgnoreComments = false
-extraPaths = ["scripts", "src", "typings", "typings/generated", ".flext-deps/flexcore/src", ".flext-deps/flext-api/src", ".flext-deps/flext-auth/src", ".flext-deps/flext-cli/src", ".flext-deps/flext-core/src", ".flext-deps/flext-db-oracle/src", ".flext-deps/flext-dbt-ldap/src", ".flext-deps/flext-dbt-ldif/src", ".flext-deps/flext-dbt-oracle/src", ".flext-deps/flext-dbt-oracle-wms/src", ".flext-deps/flext-grpc/src", ".flext-deps/flext-ldap/src", ".flext-deps/flext-ldif/src", ".flext-deps/flext-meltano/src", ".flext-deps/flext-observability/src", ".flext-deps/flext-oracle-oic/src", ".flext-deps/flext-oracle-wms/src", ".flext-deps/flext-plugin/src", ".flext-deps/flext-quality/src", ".flext-deps/flext-tap-ldap/src", ".flext-deps/flext-tap-ldif/src", ".flext-deps/flext-tap-oracle/src", ".flext-deps/flext-tap-oracle-oic/src", ".flext-deps/flext-tap-oracle-wms/src", ".flext-deps/flext-target-ldap/src", ".flext-deps/flext-target-ldif/src", ".flext-deps/flext-target-oracle/src", ".flext-deps/flext-target-oracle-oic/src", ".flext-deps/flext-target-oracle-wms/src", ".flext-deps/flext-web/src", "flext-deps/flexcore/src", "flext-deps/flext-api/src", "flext-deps/flext-auth/src", "flext-deps/flext-cli/src", "flext-deps/flext-core/src", "flext-deps/flext-db-oracle/src", "flext-deps/flext-dbt-ldap/src", "flext-deps/flext-dbt-ldif/src", "flext-deps/flext-dbt-oracle/src", "flext-deps/flext-dbt-oracle-wms/src", "flext-deps/flext-grpc/src", "flext-deps/flext-ldap/src", "flext-deps/flext-ldif/src", "flext-deps/flext-meltano/src", "flext-deps/flext-observability/src", "flext-deps/flext-oracle-oic/src", "flext-deps/flext-oracle-wms/src", "flext-deps/flext-plugin/src", "flext-deps/flext-quality/src", "flext-deps/flext-tap-ldap/src", "flext-deps/flext-tap-ldif/src", "flext-deps/flext-tap-oracle/src", "flext-deps/flext-tap-oracle-oic/src", "flext-deps/flext-tap-oracle-wms/src", "flext-deps/flext-target-ldap/src", "flext-deps/flext-target-ldif/src", "flext-deps/flext-target-oracle/src", "flext-deps/flext-target-oracle-oic/src", "flext-deps/flext-target-oracle-wms/src", "flext-deps/flext-web/src"]
+extraPaths = ["scripts", "src", "typings", "typings/generated", "flexcore/src", "flext-api/src", "flext-auth/src", "flext-cli/src", "flext-core/src", "flext-db-oracle/src", "flext-dbt-ldap/src", "flext-dbt-ldif/src", "flext-dbt-oracle/src", "flext-dbt-oracle-wms/src", "flext-grpc/src", "flext-ldap/src", "flext-ldif/src", "flext-meltano/src", "flext-observability/src", "flext-oracle-oic/src", "flext-oracle-wms/src", "flext-plugin/src", "flext-quality/src", "flext-tap-ldap/src", "flext-tap-ldif/src", "flext-tap-oracle/src", "flext-tap-oracle-oic/src", "flext-tap-oracle-wms/src", "flext-target-ldap/src", "flext-target-ldif/src", "flext-target-oracle/src", "flext-target-oracle-oic/src", "flext-target-oracle-wms/src", "flext-web/src"]
 include = [ "src", "scripts", "tests", "examples" ]
 exclude = [
   "**/*.pb2.py",
