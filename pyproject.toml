@@ -67,6 +67,8 @@ dependencies = [
   "flext-target-oracle-wms @ ./flext-target-oracle-wms",
   "flext-web @ ./flext-web",
 ]
+# [MANAGED] consolidated development dependencies
+# [AUTO] merged from dev/docs/security/test/typings
 optional-dependencies.dev = [
   "autoflake>=2.3.1",
   "bandit>=1.8",
@@ -189,57 +191,6 @@ dependencies.flext-target-oracle = { path = "flext-target-oracle", develop = tru
 dependencies.flext-target-oracle-oic = { path = "flext-target-oracle-oic", develop = true }
 dependencies.flext-target-oracle-wms = { path = "flext-target-oracle-wms", develop = true }
 dependencies.flext-web = { path = "flext-web", develop = true }
-# [CUSTOM] poetry dev extensions
-group.dev.dependencies.aiohttp = ">=3.12.14"
-group.dev.dependencies.docker = ">=7.1.0"
-group.dev.dependencies.email-validator = "^2.3.0"
-group.dev.dependencies.jedi-language-server = "^0.45.1"
-group.dev.dependencies.ldap3 = ">=2.9.1"
-group.dev.dependencies.numpy = ">=2.3.2"
-group.dev.dependencies.psycopg2 = ">=2.9.10"
-group.dev.dependencies.pytest-benchmark = "^5.1.0"
-group.dev.dependencies.pytest-clarity = "^1.0.1"
-group.dev.dependencies.pytest-cov = "^7.0.0"
-group.dev.dependencies.pytest-json-report = "^1.5.0"
-group.dev.dependencies.pytest-randomly = "^4.0.1"
-group.dev.dependencies.pytest-xdist = "^3.8.0"
-group.dev.dependencies.redis = ">=5.0.0"
-group.dev.dependencies.twisted = "^25.5.0"
-group.dev.dependencies.types-pyyaml = "^6.0.12.20250809"
-group.dev.dependencies.beartype = "^0.22.5"
-group.dev.dependencies.commitizen = ">=4.8.3,<4.9"
-group.dev.dependencies.opentelemetry-exporter-prometheus = ">=0.60b1"
-group.dev.dependencies.opentelemetry-api = ">=1.39.1"
-group.dev.dependencies.opentelemetry-sdk = ">=1.39.1"
-group.dev.dependencies.prompt-toolkit = ">=3.0.52"
-group.dev.dependencies.sqlparse = ">=0.5.5"
-group.dev.dependencies.vulture = "^2.14"
-group.dev.dependencies.complexipy = "^5.1.0"
-group.dev.dependencies.rope = "^1.14.0"
-group.dev.dependencies.detect-secrets = "^1.5.0"
-group.dev.dependencies.safety = "^3.7.0"
-group.dev.dependencies.pyproject-fmt = "^2.16.1"
-group.dev.dependencies.matplotlib = "^3.10.7"
-group.dev.dependencies.seaborn = "^0.13.2"
-group.dev.dependencies.aiofiles = "^24.1.0"
-group.dev.dependencies.pyarrow-stubs = "^20.0.0.20250825"
-group.dev.dependencies.types-aiofiles = "^24.1.0.20250809"
-group.dev.dependencies.types-click-default-group = "^1.2.0.20250513"
-group.dev.dependencies.types-croniter = "^6.0.0.20250626"
-group.dev.dependencies.types-dateparser = "^1.2.2.20250627"
-group.dev.dependencies.types-factory-boy = "^0.4.1"
-group.dev.dependencies.types-greenlet = "^3.2.0.20250417"
-group.dev.dependencies.types-grpcio = "^1.0.0.20250914"
-group.dev.dependencies.types-ldap3 = "^2.9.13.20250622"
-group.dev.dependencies.types-mock = "^5.2.0.20250809"
-group.dev.dependencies.types-networkx = "^3.5.0.20250728"
-group.dev.dependencies.types-pymysql = "^1.1.0.20250711"
-group.dev.dependencies.types-pytz = "^2025.2.0.20250516"
-group.dev.dependencies.types-simplejson = "^3.20.0.20250326"
-group.dev.dependencies.types-six = "^1.17.0.20250515"
-group.dev.dependencies.types-ujson = "^5.10.0.20250326"
-group.dev.dependencies.types-cachetools = "^6.2.0.20251022"
-group.dev.dependencies.types-tabulate = "^0.9.0.20241207"
 
 # [MANAGED] ruff
 [tool.ruff]
@@ -294,6 +245,7 @@ pep621_dev_dependency_groups = [
   "dev",
 ]
 
+# [MANAGED] pytest
 [tool.pytest]
 ini_options.addopts = [
   "--strict-config",
@@ -342,6 +294,7 @@ ini_options.testpaths = [
   "tests/",
 ]
 
+# [MANAGED] coverage
 [tool.coverage]
 # ============================================
 
