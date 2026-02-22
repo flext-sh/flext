@@ -6,11 +6,26 @@
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = [
-  "poetry-core>=2.0",
+  "poetry-core>=2",
 ]
 
 # [CUSTOM] project metadata
 [project]
+name = "flext"
+version = "0.12.0-dev"
+description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
+readme = "README.md"
+keywords = [
+  "coordination",
+  "enterprise",
+  "flext",
+  "typed",
+  "workspace",
+]
+license = "MIT"
+maintainers = [ { email = "team@flext.sh", name = "FLEXT Team" } ]
+authors = [ { email = "team@flext.sh", name = "FLEXT Team" } ]
+requires-python = ">=3.13,<3.14"
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
@@ -52,99 +67,199 @@ dependencies = [
   "flext-target-oracle-wms @ ./flext-target-oracle-wms",
   "flext-web @ ./flext-web",
 ]
-
-description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
-keywords = [
-  "coordination",
-  "enterprise",
-  "flext",
-  "typed",
-  "workspace",
+optional-dependencies.dev = [
+  "autoflake>=2.3.1",
+  "bandit>=1.8",
+  "black>=25.1",
+  "codespell>=2.3",
+  "deptry>=0.23",
+  "django-stubs>=5.2.2",
+  "factory-boy>=3.3.1",
+  "faker>=37.4",
+  "hypothesis>=6.125",
+  "isort>=6.0.1",
+  "mkdocs>=1.6",
+  "mkdocs-awesome-pages-plugin>=2.9",
+  "mkdocs-encryptcontent-plugin>=2",
+  "mkdocs-exclude>=1",
+  "mkdocs-get-deps>=0.2",
+  "mkdocs-git-revision-date-localized-plugin>=1.2",
+  "mkdocs-literate-nav>=0.6",
+  "mkdocs-macros-plugin>=1",
+  "mkdocs-material>=9.5",
+  "mkdocs-material-extensions>=1.3.1",
+  "mkdocs-mermaid2-plugin>=1.1",
+  "mkdocs-minify-plugin>=0.7",
+  "mkdocs-newsletter>=0.1",
+  "mkdocs-print-site-plugin>=0.8",
+  "mkdocs-redirects>=1.2",
+  "mkdocs-section-index>=0.3",
+  "mkdocs-versioning>=0.2",
+  "mkdocstrings>=0.24",
+  "mkdocstrings-python>=1.7",
+  "pip-audit>=2.7.3",
+  "pre-commit>=4.0.1",
+  "pylint>=3.3",
+  "pytest>=8.4",
+  "pytest-benchmark>=5.1",
+  "pytest-clarity>=1.0.1",
+  "pytest-cov>=6.2",
+  "pytest-deadfixtures>=2.2.1",
+  "pytest-env>=1.1.5",
+  "pytest-mock>=3.14",
+  "pytest-randomly>=3.16",
+  "pytest-sugar>=1",
+  "pytest-timeout>=2.4",
+  "pytest-xdist>=3.8",
+  "pyupgrade>=3.19",
+  "radon>=6.0.1",
+  "ruff>=0.12.3",
+  "types-docker>=7.1",
+  "types-ldap3>=2.9.13.20250622",
+  "types-protobuf>=6.30.2.20250703",
+  "types-psutil>=7",
+  "types-psycopg2>=2.9.21.20250718",
+  "types-python-dateutil>=2.9",
+  "types-pyyaml>=6.0.12",
+  "types-redis>=4.6",
+  "types-requests>=2.32.4",
+  "types-setuptools>=80.9",
+  "types-toml>=0.10.8.20240310",
+  "vulture>=2.13",
 ]
-name = "flext"
-readme = "README.md"
-requires-python = ">=3.13,<3.14"
-version = "0.12.0-dev"
-license = "MIT"
-[[project.authors]]
-email = "team@flext.sh"
-name = "FLEXT Team"
-[[project.maintainers]]
-email = "team@flext.sh"
-name = "FLEXT Team"
+urls.Documentation = "https://docs.flext.sh"
+urls.Homepage = "https://github.com/flext-sh/flext"
+urls.Repository = "https://github.com/flext-sh/flext"
+scripts.flext-dev = "flext.dev:main"
+scripts.flext-docs = "flext.docs:main"
+scripts.flext-workspace = "flext.workspace:main"
 
-[project.optional-dependencies]
-dev = [
-    "autoflake>=2.3.1",
-    "bandit>=1.8.0",
-    "black>=25.1.0",
-    "codespell>=2.3.0",
-    "deptry>=0.23.0",
-    "django-stubs>=5.2.2",
-    "factory-boy>=3.3.1",
-    "faker>=37.4.0",
-    "hypothesis>=6.125.0",
-    "isort>=6.0.1",
-    "mkdocs>=1.6.0",
-    "mkdocs-awesome-pages-plugin>=2.9.0",
-    "mkdocs-encryptcontent-plugin>=2.0.0",
-    "mkdocs-exclude>=1.0.0",
-    "mkdocs-get-deps>=0.2.0",
-    "mkdocs-git-revision-date-localized-plugin>=1.2.0",
-    "mkdocs-literate-nav>=0.6.0",
-    "mkdocs-macros-plugin>=1.0.0",
-    "mkdocs-material>=9.5.0",
-    "mkdocs-material-extensions>=1.3.1",
-    "mkdocs-mermaid2-plugin>=1.1.0",
-    "mkdocs-minify-plugin>=0.7.0",
-    "mkdocs-newsletter>=0.1.0",
-    "mkdocs-print-site-plugin>=0.8.0",
-    "mkdocs-redirects>=1.2.0",
-    "mkdocs-section-index>=0.3.0",
-    "mkdocs-versioning>=0.2.0",
-    "mkdocstrings>=0.24.0",
-    "mkdocstrings-python>=1.7.0",
-    "pip-audit>=2.7.3",
-    "pre-commit>=4.0.1",
-    "pylint>=3.3.0",
-    "pytest>=8.4.0",
-    "pytest-benchmark>=5.1.0",
-    "pytest-clarity>=1.0.1",
-    "pytest-cov>=6.2.0",
-    "pytest-deadfixtures>=2.2.1",
-    "pytest-env>=1.1.5",
-    "pytest-mock>=3.14.0",
-    "pytest-randomly>=3.16.0",
-    "pytest-sugar>=1.0.0",
-    "pytest-timeout>=2.4.0",
-    "pytest-xdist>=3.8.0",
-    "pyupgrade>=3.19.0",
-    "radon>=6.0.1",
-    "ruff>=0.12.3",
-    "types-docker>=7.1.0",
-    "types-ldap3>=2.9.13.20250622",
-    "types-protobuf>=6.30.2.20250703",
-    "types-psutil>=7.0.0",
-    "types-psycopg2>=2.9.21.20250718",
-    "types-python-dateutil>=2.9.0",
-    "types-pyyaml>=6.0.12",
-    "types-redis>=4.6.0",
-    "types-requests>=2.32.4",
-    "types-setuptools>=80.9.0",
-    "types-toml>=0.10.8.20240310",
-    "vulture>=2.13",
-]
-
-[project.scripts]
-flext-dev = "flext.dev:main"
-flext-docs = "flext.docs:main"
-flext-workspace = "flext.workspace:main"
-
-[project.urls]
-Documentation = "https://docs.flext.sh"
-Homepage = "https://github.com/flext-sh/flext"
-Repository = "https://github.com/flext-sh/flext"
 [tool]
+[tool.poetry]
+packages = [
+  { from = "src", include = "flext" },
+]
+dependencies.python = ">=3.13,<3.14"
+# Regular dependencies (moved from [project.dependencies])
+dependencies.cachetools = ">=6.2.0"
+dependencies.cbor2 = ">=5.7.0"
+dependencies.click = ">=8.2.1"
+dependencies.docker = ">=7.1.0"
+dependencies.packaging = ">=25.0"
+dependencies.protobuf = ">=6.30.2"
+dependencies.pydantic = ">=2.12.3"
+dependencies.pydantic-settings = ">=2.10.1"
+dependencies.pyyaml = ">=6.0"
+dependencies.rich = ">=14.0.0"
+dependencies.structlog = ">=25.4.0"
+dependencies.toml = ">=0.10.2"
+dependencies.tomli-w = ">=1.2.0"
+dependencies.tomlkit = ">=0.13.3"
+dependencies.trio = ">=0.31.0"
+dependencies.pydantic-core = ">=2.41.4"
+dependencies.trafilatura = ">=2.0.0"
+# Path dependencies (editable installs - paths defined in [project.dependencies])
+dependencies.flexcore = { path = "flexcore", develop = true }
+dependencies.flext-api = { path = "flext-api", develop = true }
+dependencies.flext-auth = { path = "flext-auth", develop = true }
+dependencies.flext-cli = { path = "flext-cli", develop = true }
+dependencies.flext-core = { path = "flext-core", develop = true }
+dependencies.flext-db-oracle = { path = "flext-db-oracle", develop = true }
+dependencies.flext-dbt-ldap = { path = "flext-dbt-ldap", develop = true }
+dependencies.flext-dbt-ldif = { path = "flext-dbt-ldif", develop = true }
+dependencies.flext-dbt-oracle = { path = "flext-dbt-oracle", develop = true }
+dependencies.flext-dbt-oracle-wms = { path = "flext-dbt-oracle-wms", develop = true }
+dependencies.flext-grpc = { path = "flext-grpc", develop = true }
+dependencies.flext-ldap = { path = "flext-ldap", develop = true }
+dependencies.flext-ldif = { path = "flext-ldif", develop = true }
+dependencies.flext-meltano = { path = "flext-meltano", develop = true }
+dependencies.flext-observability = { path = "flext-observability", develop = true }
+dependencies.flext-oracle-oic = { path = "flext-oracle-oic", develop = true }
+dependencies.flext-oracle-wms = { path = "flext-oracle-wms", develop = true }
+dependencies.flext-plugin = { path = "flext-plugin", develop = true }
+dependencies.flext-quality = { path = "flext-quality", develop = true }
+dependencies.flext-tap-ldap = { path = "flext-tap-ldap", develop = true }
+dependencies.flext-tap-ldif = { path = "flext-tap-ldif", develop = true }
+dependencies.flext-tap-oracle = { path = "flext-tap-oracle", develop = true }
+dependencies.flext-tap-oracle-oic = { path = "flext-tap-oracle-oic", develop = true }
+dependencies.flext-tap-oracle-wms = { path = "flext-tap-oracle-wms", develop = true }
+dependencies.flext-target-ldap = { path = "flext-target-ldap", develop = true }
+dependencies.flext-target-ldif = { path = "flext-target-ldif", develop = true }
+dependencies.flext-target-oracle = { path = "flext-target-oracle", develop = true }
+dependencies.flext-target-oracle-oic = { path = "flext-target-oracle-oic", develop = true }
+dependencies.flext-target-oracle-wms = { path = "flext-target-oracle-wms", develop = true }
+dependencies.flext-web = { path = "flext-web", develop = true }
+# [CUSTOM] poetry dev extensions
+group.dev.dependencies.aiohttp = ">=3.12.14"
+group.dev.dependencies.docker = ">=7.1.0"
+group.dev.dependencies.email-validator = "^2.3.0"
+group.dev.dependencies.jedi-language-server = "^0.45.1"
+group.dev.dependencies.ldap3 = ">=2.9.1"
+group.dev.dependencies.numpy = ">=2.3.2"
+group.dev.dependencies.psycopg2 = ">=2.9.10"
+group.dev.dependencies.pytest-benchmark = "^5.1.0"
+group.dev.dependencies.pytest-clarity = "^1.0.1"
+group.dev.dependencies.pytest-cov = "^7.0.0"
+group.dev.dependencies.pytest-json-report = "^1.5.0"
+group.dev.dependencies.pytest-randomly = "^4.0.1"
+group.dev.dependencies.pytest-xdist = "^3.8.0"
+group.dev.dependencies.redis = ">=5.0.0"
+group.dev.dependencies.twisted = "^25.5.0"
+group.dev.dependencies.types-pyyaml = "^6.0.12.20250809"
+group.dev.dependencies.beartype = "^0.22.5"
+group.dev.dependencies.commitizen = ">=4.8.3,<4.9"
+group.dev.dependencies.opentelemetry-exporter-prometheus = ">=0.60b1"
+group.dev.dependencies.opentelemetry-api = ">=1.39.1"
+group.dev.dependencies.opentelemetry-sdk = ">=1.39.1"
+group.dev.dependencies.prompt-toolkit = ">=3.0.52"
+group.dev.dependencies.sqlparse = ">=0.5.5"
+group.dev.dependencies.vulture = "^2.14"
+group.dev.dependencies.complexipy = "^5.1.0"
+group.dev.dependencies.rope = "^1.14.0"
+group.dev.dependencies.detect-secrets = "^1.5.0"
+group.dev.dependencies.safety = "^3.7.0"
+group.dev.dependencies.pyproject-fmt = "^2.16.1"
+group.dev.dependencies.matplotlib = "^3.10.7"
+group.dev.dependencies.seaborn = "^0.13.2"
+group.dev.dependencies.aiofiles = "^24.1.0"
+group.dev.dependencies.pyarrow-stubs = "^20.0.0.20250825"
+group.dev.dependencies.types-aiofiles = "^24.1.0.20250809"
+group.dev.dependencies.types-click-default-group = "^1.2.0.20250513"
+group.dev.dependencies.types-croniter = "^6.0.0.20250626"
+group.dev.dependencies.types-dateparser = "^1.2.2.20250627"
+group.dev.dependencies.types-factory-boy = "^0.4.1"
+group.dev.dependencies.types-greenlet = "^3.2.0.20250417"
+group.dev.dependencies.types-grpcio = "^1.0.0.20250914"
+group.dev.dependencies.types-ldap3 = "^2.9.13.20250622"
+group.dev.dependencies.types-mock = "^5.2.0.20250809"
+group.dev.dependencies.types-networkx = "^3.5.0.20250728"
+group.dev.dependencies.types-pymysql = "^1.1.0.20250711"
+group.dev.dependencies.types-pytz = "^2025.2.0.20250516"
+group.dev.dependencies.types-simplejson = "^3.20.0.20250326"
+group.dev.dependencies.types-six = "^1.17.0.20250515"
+group.dev.dependencies.types-ujson = "^5.10.0.20250326"
+group.dev.dependencies.types-cachetools = "^6.2.0.20251022"
+group.dev.dependencies.types-tabulate = "^0.9.0.20241207"
+
+# [MANAGED] ruff
+[tool.ruff]
+extend = "./ruff-shared.toml"
+lint.isort.known-first-party = [
+  "flext",
+  "flext_tools",
+]
+
+# ============================================
+# CODESPELL - Spell Checking
+# ============================================
+# [MANAGED] codespell
+[tool.codespell]
+ignore-words-list = "dn,cn,ou,uid,sn,aci,acl,ldif,flext,FLEXT,dbt,oic,wms,grpc,meltano,protobuf,creds,assertIn"
+skip = """\
+  .git,*.lock,*.egg-info,dist,build,.venv,__pycache__,.mypy_cache,.pytest_cache,.ruff_cache,node_modules,typings,vendor\
+  ,*.pb2*.py\
+  """
+
 # [MANAGED] deptry
 [tool.deptry]
 exclude = [
@@ -176,8 +291,93 @@ known_first_party = [
   "flext_quality",
 ]
 pep621_dev_dependency_groups = [
-    "dev",
+  "dev",
 ]
+
+[tool.pytest]
+ini_options.addopts = [
+  "--strict-config",
+  "--strict-markers",
+  "--tb=short",
+  "-p no:sugar",
+  "-q",
+  "-ra",
+  "--timeout=30",
+  "--timeout-method=signal",
+  "--durations=0",
+]
+ini_options.filterwarnings = [
+  "ignore::DeprecationWarning:pyasn1(.*|$)",
+]
+ini_options.markers = [
+  "docker: marca testes que requerem Docker",
+  "e2e: marca testes como testes de integração end-to-end",
+  "edge_cases: marca testes de casos extremos",
+  "integration: marca testes como testes de integração",
+  "integrity: marca testes de integridade",
+  "oracle: marca testes específicos do Oracle",
+  "performance: marca testes de performance",
+  "resilience: marca testes de resiliência",
+  "slow: marca testes como execução lenta",
+  "stress: marca testes de stress",
+  "unit: marca testes como testes unitários",
+]
+ini_options.minversion = "8.0"
+ini_options.python_classes = [
+  "Test*",
+]
+ini_options.python_files = [
+  "*_test.py",
+  "*_tests.py",
+  "test_*.py",
+]
+ini_options.python_functions = [
+  "test_*",
+]
+ini_options.pythonpath = [
+  ".",
+  "src",
+]
+ini_options.testpaths = [
+  "tests/",
+]
+
+[tool.coverage]
+# ============================================
+
+# COVERAGE - Test Coverage Configuration
+
+# ============================================
+
+run.branch = true
+run.omit = [
+  "*/__pycache__/*",
+  "*/_pb2*.py",
+  "*/conftest.py",
+  "*/tests/*",
+]
+run.relative_files = true
+run.source = [ "src/flext" ]
+report.exclude_lines = [
+  "@abstractmethod",
+  "^\\s*\\.\\.\\.\\s*$",
+  "def __repr__",
+  "def __str__",
+  'if __name__ == "__main__":',
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+  "pragma: no cover",
+  "raise NotImplementedError",
+]
+report.fail_under = 100
+report.partial_branches = [
+  "pragma: no branch",
+]
+report.precision = 2
+report.show_missing = true
+report.skip_empty = true
+html.directory = "htmlcov"
+xml.output = "coverage.xml"
 
 # [MANAGED] mypy
 [tool.mypy]
@@ -219,7 +419,41 @@ follow_imports = "silent"
 follow_imports_for_stubs = true
 incremental = true
 local_partial_types = true
-mypy_path = ["typings", "typings/generated", "src", "flexcore/src", "flext-api/src", "flext-auth/src", "flext-cli/src", "flext-core/src", "flext-db-oracle/src", "flext-dbt-ldap/src", "flext-dbt-ldif/src", "flext-dbt-oracle/src", "flext-dbt-oracle-wms/src", "flext-grpc/src", "flext-ldap/src", "flext-ldif/src", "flext-meltano/src", "flext-observability/src", "flext-oracle-oic/src", "flext-oracle-wms/src", "flext-plugin/src", "flext-quality/src", "flext-tap-ldap/src", "flext-tap-ldif/src", "flext-tap-oracle/src", "flext-tap-oracle-oic/src", "flext-tap-oracle-wms/src", "flext-target-ldap/src", "flext-target-ldif/src", "flext-target-oracle/src", "flext-target-oracle-oic/src", "flext-target-oracle-wms/src", "flext-web/src"]
+mypy_path = [
+  "typings",
+  "typings/generated",
+  "src",
+  "flexcore/src",
+  "flext-api/src",
+  "flext-auth/src",
+  "flext-cli/src",
+  "flext-core/src",
+  "flext-db-oracle/src",
+  "flext-dbt-ldap/src",
+  "flext-dbt-ldif/src",
+  "flext-dbt-oracle/src",
+  "flext-dbt-oracle-wms/src",
+  "flext-grpc/src",
+  "flext-ldap/src",
+  "flext-ldif/src",
+  "flext-meltano/src",
+  "flext-observability/src",
+  "flext-oracle-oic/src",
+  "flext-oracle-wms/src",
+  "flext-plugin/src",
+  "flext-quality/src",
+  "flext-tap-ldap/src",
+  "flext-tap-ldif/src",
+  "flext-tap-oracle/src",
+  "flext-tap-oracle-oic/src",
+  "flext-tap-oracle-wms/src",
+  "flext-target-ldap/src",
+  "flext-target-ldif/src",
+  "flext-target-oracle/src",
+  "flext-target-oracle-oic/src",
+  "flext-target-oracle-wms/src",
+  "flext-web/src",
+]
 namespace_packages = true
 no_implicit_optional = true
 no_implicit_reexport = true
@@ -277,126 +511,57 @@ disable_error_code = [
 ]
 module = "flext_core._models.base"
 
-[tool.poetry]
-
-packages = [
-  {from = "src", include = "flext"},
+# [MANAGED] pyrefly
+[tool.pyrefly]
+project-excludes = [ "**/*_pb2*.py", "**/*_pb2_grpc*.py" ]
+search-path = [
+  "typings",
+  "typings/generated",
+  "src",
+  "examples",
+  "scripts",
 ]
-
-[tool.poetry.dependencies]
-python = ">=3.13,<3.14"
-# Regular dependencies (moved from [project.dependencies])
-cachetools = ">=6.2.0"
-cbor2 = ">=5.7.0"
-click = ">=8.2.1"
-docker = ">=7.1.0"
-packaging = ">=25.0"
-protobuf = ">=6.30.2"
-pydantic = ">=2.12.3"
-pydantic-settings = ">=2.10.1"
-pyyaml = ">=6.0"
-rich = ">=14.0.0"
-structlog = ">=25.4.0"
-toml = ">=0.10.2"
-tomli-w = ">=1.2.0"
-tomlkit = ">=0.13.3"
-trio = ">=0.31.0"
-pydantic-core = ">=2.41.4"
-trafilatura = ">=2.0.0"
-# Path dependencies (editable installs - paths defined in [project.dependencies])
-flexcore = {path = "flexcore", develop = true}
-flext-api = {path = "flext-api", develop = true}
-flext-auth = {path = "flext-auth", develop = true}
-flext-cli = {path = "flext-cli", develop = true}
-flext-core = {path = "flext-core", develop = true}
-flext-db-oracle = {path = "flext-db-oracle", develop = true}
-flext-dbt-ldap = {path = "flext-dbt-ldap", develop = true}
-flext-dbt-ldif = {path = "flext-dbt-ldif", develop = true}
-flext-dbt-oracle = {path = "flext-dbt-oracle", develop = true}
-flext-dbt-oracle-wms = {path = "flext-dbt-oracle-wms", develop = true}
-flext-grpc = {path = "flext-grpc", develop = true}
-flext-ldap = {path = "flext-ldap", develop = true}
-flext-ldif = {path = "flext-ldif", develop = true}
-flext-meltano = {path = "flext-meltano", develop = true}
-flext-observability = {path = "flext-observability", develop = true}
-flext-oracle-oic = {path = "flext-oracle-oic", develop = true}
-flext-oracle-wms = {path = "flext-oracle-wms", develop = true}
-flext-plugin = {path = "flext-plugin", develop = true}
-flext-quality = {path = "flext-quality", develop = true}
-flext-tap-ldap = {path = "flext-tap-ldap", develop = true}
-flext-tap-ldif = {path = "flext-tap-ldif", develop = true}
-flext-tap-oracle = {path = "flext-tap-oracle", develop = true}
-flext-tap-oracle-oic = {path = "flext-tap-oracle-oic", develop = true}
-flext-tap-oracle-wms = {path = "flext-tap-oracle-wms", develop = true}
-flext-target-ldap = {path = "flext-target-ldap", develop = true}
-flext-target-ldif = {path = "flext-target-ldif", develop = true}
-flext-target-oracle = {path = "flext-target-oracle", develop = true}
-flext-target-oracle-oic = {path = "flext-target-oracle-oic", develop = true}
-flext-target-oracle-wms = {path = "flext-target-oracle-wms", develop = true}
-flext-web = {path = "flext-web", develop = true}
-
-# [CUSTOM] poetry dev extensions
-[tool.poetry.group.dev.dependencies]
-aiohttp = ">=3.12.14"
-docker = ">=7.1.0"
-email-validator = "^2.3.0"
-jedi-language-server = "^0.45.1"
-ldap3 = ">=2.9.1"
-numpy = ">=2.3.2"
-psycopg2 = ">=2.9.10"
-pytest-benchmark = "^5.1.0"
-pytest-clarity = "^1.0.1"
-pytest-cov = "^7.0.0"
-pytest-json-report = "^1.5.0"
-pytest-randomly = "^4.0.1"
-pytest-xdist = "^3.8.0"
-redis = ">=5.0.0"
-twisted = "^25.5.0"
-types-pyyaml = "^6.0.12.20250809"
-beartype = "^0.22.5"
-commitizen = ">=4.8.3,<4.9"
-opentelemetry-exporter-prometheus = ">=0.60b1"
-opentelemetry-api = ">=1.39.1"
-opentelemetry-sdk = ">=1.39.1"
-prompt-toolkit = ">=3.0.52"
-sqlparse = ">=0.5.5"
-vulture = "^2.14"
-complexipy = "^5.1.0"
-rope = "^1.14.0"
-detect-secrets = "^1.5.0"
-safety = "^3.7.0"
-pyproject-fmt = "^2.16.1"
-matplotlib = "^3.10.7"
-seaborn = "^0.13.2"
-aiofiles = "^24.1.0"
-pyarrow-stubs = "^20.0.0.20250825"
-types-aiofiles = "^24.1.0.20250809"
-types-click-default-group = "^1.2.0.20250513"
-types-croniter = "^6.0.0.20250626"
-types-dateparser = "^1.2.2.20250627"
-types-factory-boy = "^0.4.1"
-types-greenlet = "^3.2.0.20250417"
-types-grpcio = "^1.0.0.20250914"
-types-ldap3 = "^2.9.13.20250622"
-types-mock = "^5.2.0.20250809"
-types-networkx = "^3.5.0.20250728"
-types-pymysql = "^1.1.0.20250711"
-types-pytz = "^2025.2.0.20250516"
-types-simplejson = "^3.20.0.20250326"
-types-six = "^1.17.0.20250515"
-types-ujson = "^5.10.0.20250326"
-types-cachetools = "^6.2.0.20251022"
-types-tabulate = "^0.9.0.20241207"
-
-[tool.pydantic-mypy]
-init_forbid_extra = true
-init_typed = true
-warn_required_dynamic_aliases = true
+sub-config = [ { matches = "**/typings.py", errors.unknown-name = false } ]
 
 # [MANAGED] pyright
 [tool.pyright]
 enableTypeIgnoreComments = false
-extraPaths = ["scripts", "src", "typings", "typings/generated", "flexcore/src", "flext-api/src", "flext-auth/src", "flext-cli/src", "flext-core/src", "flext-db-oracle/src", "flext-dbt-ldap/src", "flext-dbt-ldif/src", "flext-dbt-oracle/src", "flext-dbt-oracle-wms/src", "flext-grpc/src", "flext-ldap/src", "flext-ldif/src", "flext-meltano/src", "flext-observability/src", "flext-oracle-oic/src", "flext-oracle-wms/src", "flext-plugin/src", "flext-quality/src", "flext-tap-ldap/src", "flext-tap-ldif/src", "flext-tap-oracle/src", "flext-tap-oracle-oic/src", "flext-tap-oracle-wms/src", "flext-target-ldap/src", "flext-target-ldif/src", "flext-target-oracle/src", "flext-target-oracle-oic/src", "flext-target-oracle-wms/src", "flext-web/src"]
+extraPaths = [
+  "scripts",
+  "src",
+  "typings",
+  "typings/generated",
+  "flexcore/src",
+  "flext-api/src",
+  "flext-auth/src",
+  "flext-cli/src",
+  "flext-core/src",
+  "flext-db-oracle/src",
+  "flext-dbt-ldap/src",
+  "flext-dbt-ldif/src",
+  "flext-dbt-oracle/src",
+  "flext-dbt-oracle-wms/src",
+  "flext-grpc/src",
+  "flext-ldap/src",
+  "flext-ldif/src",
+  "flext-meltano/src",
+  "flext-observability/src",
+  "flext-oracle-oic/src",
+  "flext-oracle-wms/src",
+  "flext-plugin/src",
+  "flext-quality/src",
+  "flext-tap-ldap/src",
+  "flext-tap-ldif/src",
+  "flext-tap-oracle/src",
+  "flext-tap-oracle-oic/src",
+  "flext-tap-oracle-wms/src",
+  "flext-target-ldap/src",
+  "flext-target-ldif/src",
+  "flext-target-oracle/src",
+  "flext-target-oracle-oic/src",
+  "flext-target-oracle-wms/src",
+  "flext-web/src",
+]
 include = [ "src", "scripts", "tests", "examples" ]
 exclude = [
   "**/*.pb2.py",
@@ -485,89 +650,17 @@ strictListInference = true
 strictParameterNoneValue = true
 strictSetInference = true
 useLibraryCodeForTypes = true
-
-# Execution environment for specific directory with known pyright limitations
-# Known limitation: kwargs unpacking with type aliases (pyright issue #11136)
-# Dynamic attribute access with hasattr checks (pyright limitation)
-[[tool.pyright.executionEnvironments]]
-reportArgumentType = false
-reportAttributeAccessIssue = false
-root = "flext-ldif/tests/helpers"
-
-[tool.pytest.ini_options]
-addopts = [
-  "--strict-config",
-  "--strict-markers",
-  "--tb=short",
-  "-p no:sugar",
-  "-q",
-  "-ra",
-  "--timeout=30",
-  "--timeout-method=signal",
-  "--durations=0",
-]
-filterwarnings = [
-  "ignore::DeprecationWarning:pyasn1(.*|$)",
-]
-markers = [
-  "docker: marca testes que requerem Docker",
-  "e2e: marca testes como testes de integração end-to-end",
-  "edge_cases: marca testes de casos extremos",
-  "integration: marca testes como testes de integração",
-  "integrity: marca testes de integridade",
-  "oracle: marca testes específicos do Oracle",
-  "performance: marca testes de performance",
-  "resilience: marca testes de resiliência",
-  "slow: marca testes como execução lenta",
-  "stress: marca testes de stress",
-  "unit: marca testes como testes unitários",
-]
-minversion = "8.0"
-python_classes = [
-  "Test*",
-]
-python_files = [
-  "*_test.py",
-  "*_tests.py",
-  "test_*.py",
-]
-python_functions = [
-  "test_*",
-]
-pythonpath = [
-  ".",
-  "src",
-]
-testpaths = [
-  "tests/",
+executionEnvironments = [
+  # Execution environment for specific directory with known pyright limitations
+  # Known limitation: kwargs unpacking with type aliases (pyright issue #11136)
+  # Dynamic attribute access with hasattr checks (pyright limitation)
+  { reportArgumentType = false, reportAttributeAccessIssue = false, root = "flext-ldif/tests/helpers" },
 ]
 
-# [MANAGED] pyrefly
-[tool.pyrefly]
-project-excludes = [ "**/*_pb2*.py", "**/*_pb2_grpc*.py" ]
-search-path = [
-            "typings",
-            "typings/generated",
-            "src",
-            "examples",
-            "scripts",
-        ]
-
-[[tool.pyrefly.sub-config]]
-matches = "**/typings.py"
-
-[tool.pyrefly.sub-config.errors]
-unknown-name = false
-
-# [MANAGED] ruff
-[tool.ruff]
-extend = "./ruff-shared.toml"
-
-[tool.ruff.lint.isort]
-known-first-party = [
-  "flext",
-  "flext_tools",
-]
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
 
 [tool.bandit]
 # Skip known false positives for CLI tools and quality analysis
@@ -629,51 +722,3 @@ verbose = false
 [tool.complexipy]
 max_complexity = 15
 output_format = "plain"
-
-# ============================================
-# CODESPELL - Spell Checking
-# ============================================
-# [MANAGED] codespell
-[tool.codespell]
-ignore-words-list = "dn,cn,ou,uid,sn,aci,acl,ldif,flext,FLEXT,dbt,oic,wms,grpc,meltano,protobuf,creds,assertIn"
-skip = ".git,*.lock,*.egg-info,dist,build,.venv,__pycache__,.mypy_cache,.pytest_cache,.ruff_cache,node_modules,typings,vendor,*.pb2*.py"
-
-# ============================================
-# COVERAGE - Test Coverage Configuration
-# ============================================
-[tool.coverage.run]
-branch = true
-omit = [
-  "*/tests/*",
-  "*/__pycache__/*",
-  "*/_pb2*.py",
-  "*/conftest.py",
-]
-relative_files = true
-source = ["src/flext"]
-
-[tool.coverage.report]
-exclude_lines = [
-  "pragma: no cover",
-  'if __name__ == .__main__.:',
-  'if __name__ == "__main__":',
-  "if TYPE_CHECKING:",
-  "raise NotImplementedError",
-  "@abstractmethod",
-  "^\\s*\\.\\.\\.\\s*$",
-  "def __repr__",
-  "def __str__",
-]
-fail_under = 100
-partial_branches = [
-  "pragma: no branch",
-]
-precision = 2
-show_missing = true
-skip_empty = true
-
-[tool.coverage.html]
-directory = "htmlcov"
-
-[tool.coverage.xml]
-output = "coverage.xml"

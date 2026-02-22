@@ -43,7 +43,7 @@ PROJECT_ROOT := $(CURDIR)
 ifeq ($(FLEXT_STANDALONE),1)
 FLEXT_MODE := standalone
 else
-DETECTED_MODE := $(shell python3 "$(BASE_MK_DIR)/scripts/mode.py" --project-root "$(PROJECT_ROOT)" 2>/dev/null || printf standalone)
+DETECTED_MODE := $(shell python3 -m flext_infra.workspace detect --project-root "$(PROJECT_ROOT)" 2>/dev/null || printf standalone)
 FLEXT_MODE := $(DETECTED_MODE)
 endif
 
@@ -158,7 +158,7 @@ endef
 
 define AUTO_SYNC_BASE_AND_SCRIPTS
 if [ "$(FLEXT_MODE)" = "workspace" ] && [ "$(CURDIR)" != "$(WORKSPACE_ROOT)" ]; then \
-	python3 "$(WORKSPACE_ROOT)/scripts/sync.py" \
+	python3 -m flext_infra.workspace sync --project-root "$(WORKSPACE_ROOT)" \
 		--project-root "$(CURDIR)" \
 		--canonical-root "$(WORKSPACE_ROOT)" \
 		$(if $(filter 1,$(SYNC_PRUNE)),--prune,); \
@@ -199,9 +199,7 @@ setup: ## Complete setup
 		go mod tidy; \
 		exit 0; \
 	fi
-	$(Q)if [ -f "$(WORKSPACE_ROOT)/scripts/dependencies/sync_internal_deps.py" ]; then \
-		python3 "$(WORKSPACE_ROOT)/scripts/dependencies/sync_internal_deps.py" --project-root "$(CURDIR)"; \
-	fi
+	$(Q)$(VENV_PYTHON) -m flext_infra.deps.internal_sync --project-root "$(CURDIR)" || true
 	$(Q)$(POETRY) lock
 	$(Q)$(POETRY) install --all-extras --all-groups
 	$(Q)if git rev-parse --git-dir >/dev/null 2>&1; then \
@@ -275,15 +273,15 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 		gates="lint,format,pyrefly,mypy,pyright,security,markdown,go"; \
 	fi; \
 	gates=$$(echo "$$gates" | tr ',' ' ' | sed 's/\btype\b/pyrefly/g' | tr ' ' ','); \
-	if [ -f "$(WORKSPACE_ROOT)/scripts/check/workspace_check.py" ]; then \
+	if $(VENV_PYTHON) -c "import flext_infra.check.workspace_check" 2>/dev/null; then \
 		project_key="$(PROJECT_NAME)"; \
 		if [ "$(CURDIR)" = "$(WORKSPACE_ROOT)" ]; then \
 			project_key="."; \
 		fi; \
-		if [ -f "$(WORKSPACE_ROOT)/scripts/check/fix_pyrefly_config.py" ]; then \
-			$(POETRY) run python "$(WORKSPACE_ROOT)/scripts/check/fix_pyrefly_config.py" "$$project_key"; \
+		if $(VENV_PYTHON) -c "import flext_infra.check.fix_pyrefly_config" 2>/dev/null; then \
+			$(POETRY) run python -m flext_infra.check.fix_pyrefly_config "$$project_key"; \
 		fi; \
-		$(POETRY) run python "$(WORKSPACE_ROOT)/scripts/check/workspace_check.py" --gates "$$gates" --reports-dir "$(CURDIR)/.reports/check" "$$project_key"; \
+		$(POETRY) run python -m flext_infra.check.workspace_check --gates "$$gates" --reports-dir "$(CURDIR)/.reports/check" "$$project_key"; \
 		exit $$?; \
 	fi; \
 	if echo "$$gates" | grep -qw lint; then \
@@ -370,17 +368,8 @@ format: ## Run all formatting
 	fi
 
 docs: ## Build docs
-	$(Q)src="$(WORKSPACE_ROOT)/scripts/documentation"; \
-	dst="$(CURDIR)/scripts/documentation"; \
-	if [ "$(FLEXT_MODE)" = "workspace" ] && [ -d "$$src" ] && [ "$(CURDIR)" != "$(WORKSPACE_ROOT)" ]; then \
-		mkdir -p "$$(dirname "$$dst")"; \
-		rm -rf "$$dst"; \
-		cp -a "$$src" "$$dst"; \
-		echo "PROJECT=$(PROJECT_NAME) PHASE=sync RESULT=OK REASON=workspace-docs-scripts-synced"; \
-	elif [ -d "$$dst" ]; then \
-		echo "PROJECT=$(PROJECT_NAME) PHASE=sync RESULT=OK REASON=local-docs-scripts-present"; \
-	else \
-		echo "PROJECT=$(PROJECT_NAME) PHASE=sync RESULT=FAIL REASON=docs-scripts-missing"; \
+	$(Q)if ! $(VENV_PYTHON) -c "import flext_infra.docs" 2>/dev/null; then \
+		echo "PROJECT=$(PROJECT_NAME) PHASE=sync RESULT=FAIL REASON=flext-infra-docs-missing"; \
 		exit 1; \
 	fi
 	$(Q)if [ "$(DOCS_PHASE)" = "all" ]; then \
@@ -392,19 +381,15 @@ docs: ## Build docs
 	fi; \
 	for phase in $$phases; do \
 		case "$$phase" in \
-			audit) script="scripts/documentation/audit.py"; extra="--strict 1" ;; \
-			fix) script="scripts/documentation/fix.py"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
-			build) script="scripts/documentation/build.py"; extra="" ;; \
-			generate) script="scripts/documentation/generate.py"; extra="--apply" ;; \
-			validate) script="scripts/documentation/validate.py"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
+			audit) script="-m flext_infra.docs.auditor"; extra="--strict 1" ;; \
+			fix) script="-m flext_infra.docs.fixer"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
+			build) script="-m flext_infra.docs.builder"; extra="" ;; \
+			generate) script="-m flext_infra.docs.generator"; extra="--apply" ;; \
+			validate) script="-m flext_infra.docs.validator"; extra="$(if $(filter 1,$(FIX)),--apply,)" ;; \
 			*) echo "ERROR: invalid DOCS_PHASE=$$phase"; exit 2 ;; \
 		esac; \
 		if [ "$$phase" = "fix" ] && [ "$$all_mode" = "1" ]; then extra="--apply"; fi; \
-		if [ ! -f "$$script" ]; then \
-			echo "PROJECT=$(PROJECT_NAME) PHASE=$$phase RESULT=FAIL REASON=missing-script:$$script"; \
-			exit 1; \
-		fi; \
-		cmd="python $$script --root . --output-dir .reports/docs"; \
+		cmd="$(VENV_PYTHON) $$script --root . --output-dir .reports/docs"; \
 		if [ -n "$$extra" ]; then cmd="$$cmd $$extra"; fi; \
 		eval $$cmd || exit $$?; \
 	done
@@ -461,8 +446,8 @@ test: ## Run pytest only
 		echo "duration_seconds=0" >> "$$summary_file"; \
 	fi; \
 	counts_file="$$report_dir/counts.env"; \
-	$(VENV_PYTHON) "$(BASE_MK_DIR)/scripts/core/pytest_diag_extract.py" \
-		"$$junit_file" "$$log_file" "$$failed_file" "$$errors_file" "$$warnings_file" "$$slowest_file" "$$skips_file" > "$$counts_file"; \
+	$(VENV_PYTHON) -m flext_infra.core pytest-diag \
+		--junit "$$junit_file" --log "$$log_file" --failed "$$failed_file" --errors "$$errors_file" --warnings "$$warnings_file" --slowest "$$slowest_file" --skips "$$skips_file" > "$$counts_file"; \
 	. "$$counts_file"; \
 	if [ "$$rc" -eq 130 ] || [ "$$interrupted" = "1" ]; then run_state="INTERRUPTED"; else run_state="COMPLETED"; fi; \
 	echo "================================================" >&2; \
@@ -511,7 +496,7 @@ validate: ## Run validate gates (VALIDATE_GATES=complexity,docstring to select, 
 	fi
 
 pr: ## Manage pull requests for this repository
-	$(Q)python3 "$(WORKSPACE_ROOT)/scripts/github/pr_manager.py" \
+	$(Q)$(VENV_PYTHON) -m flext_infra.github.pr_workspace \
 		--repo-root "$(CURDIR)" \
 		--action "$(PR_ACTION)" \
 		--base "$(PR_BASE)" \
