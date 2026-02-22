@@ -47,14 +47,13 @@ def test_main_syncs_scripts_and_libs(
 
     canonical = tmp_path / "canonical"
     project = tmp_path / "project"
-    (canonical / "scripts").mkdir(parents=True)
-    (canonical / "libs").mkdir(parents=True)
+    (canonical / "scripts" / "libs").mkdir(parents=True)
     (project / "scripts").mkdir(parents=True)
     _ = (canonical / "base.mk").write_text("BASE\n", encoding="utf-8")
     _ = (canonical / "scripts" / "tool.py").write_text(
         "print('sync')\n", encoding="utf-8"
     )
-    _ = (canonical / "libs" / "versioning.py").write_text(
+    _ = (canonical / "scripts" / "libs" / "versioning.py").write_text(
         "VALUE = 'v'\n", encoding="utf-8"
     )
 
@@ -73,4 +72,4 @@ def test_main_syncs_scripts_and_libs(
     exit_code = mod.main()
     assert exit_code == 0
     assert (project / "scripts" / "tool.py").exists()
-    assert (project / "libs" / "versioning.py").exists()
+    assert (project / "scripts" / "libs" / "versioning.py").exists()
