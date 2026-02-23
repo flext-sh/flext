@@ -20,7 +20,6 @@
 # ============================================================================
 # WHITELIST: Workspace Directories
 # ============================================================================
-!scripts/
 !docker/
 !docs/
 !examples/
@@ -84,7 +83,6 @@
 # ============================================================================
 !flext-*/**
 !flexcore/**
-!scripts/**
 !docker/**
 !docs/**
 !examples/**
@@ -128,9 +126,7 @@ docs/plannings/
 .copilot/
 .codeium/
 
-# Temporary test/debug scripts (keep main scripts, block test_* pattern at root)
-scripts/test_*.py
-scripts/test-*.py
+
 
 # ============================================================================
 # BLOCK: Oracle Reference and Test Data
