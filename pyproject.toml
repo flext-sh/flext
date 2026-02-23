@@ -222,13 +222,12 @@ exclude = [
   ".ruff_cache",
   ".venv",
   "__pycache__",
-  "build",
-  "dist",
-  "htmlcov",
-  "node_modules",
-  "reports",
-  "scripts",
-  "tests",
+   "build",
+   "dist",
+   "htmlcov",
+   "node_modules",
+   "reports",
+   "tests",
   "typings",
   "vendor",
   "venv",
@@ -367,7 +366,7 @@ exclude = [
   "vendor/",
 ]
 extra_checks = true
-files = [ "src", "scripts", "tests", "examples" ]
+files = [ "src", "tests", "examples" ]
 follow_imports = "silent"
 follow_imports_for_stubs = true
 incremental = true
@@ -472,7 +471,6 @@ search-path = [
   "typings/generated",
   "src",
   "examples",
-  "scripts",
 ]
 sub-config = [ { matches = "**/typings.py", errors.unknown-name = false } ]
 
@@ -480,7 +478,6 @@ sub-config = [ { matches = "**/typings.py", errors.unknown-name = false } ]
 [tool.pyright]
 enableTypeIgnoreComments = false
 extraPaths = [
-  "scripts",
   "src",
   "typings",
   "typings/generated",
@@ -515,7 +512,7 @@ extraPaths = [
   "flext-target-oracle-wms/src",
   "flext-web/src",
 ]
-include = [ "src", "scripts", "tests", "examples" ]
+include = [ "src", "tests", "examples" ]
 exclude = [
   "**/*.pb2.py",
   "**/*.pb2_grpc.py",
