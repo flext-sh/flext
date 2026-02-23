@@ -316,3 +316,7 @@ secrets.yml
 .devcontainer/.host-gitconfig
 .devcontainer/.env
 .github/*.rej
+
+# --- workspace-sync: required ignores (auto-managed) ---
+.venv/
+__pycache__/
