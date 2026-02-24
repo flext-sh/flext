@@ -346,7 +346,7 @@ exclude = [
 ]
 extra_checks = true
 files = [ "src", "tests", "examples" ]
-follow_imports = "silent"
+follow_imports = "normal"
 follow_imports_for_stubs = true
 incremental = true
 local_partial_types = true
