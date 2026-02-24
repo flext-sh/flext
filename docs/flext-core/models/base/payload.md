@@ -24,7 +24,7 @@ Envelope fortemente tipado destinado a carregar entidades/comandos/respostas den
 
 - Herda de `FlextModelsEntity.ArbitraryTypesModel`, `IdentifiableMixin` e `TimestampableMixin`; portanto, todos os payloads possuem `unique_id`, `created_at`, `updated_at` e validação estrita (`extra="forbid"`).
 - `__class_getitem__`: cria subtipos dinamicamente (ex.: `Payload[User]`). Utiliza `u.Generators.create_dynamic_type_subclass` para definir `_expected_data_type` e preservar `__qualname__`.
-- `model_validator(mode="after")`: garante que `data` corresponda ao tipo esperado. Usa `isinstance` ou `beartype.door.is_bearable` para suportar `typing.Protocol`/`TypedDict`.
+- `model_validator(mode="after")`: garante que `data` corresponda ao tipo esperado. Usa `isinstance` para suportar `typing.Protocol`/`TypedDict`.
 - `computed_field is_expired`: compara `expires_at` com `u.Generators.generate_datetime_utc()`.
 
 | Campo                 | Tipo                               | Observações                                                                       |
