@@ -119,7 +119,7 @@ FLEXT Service coordinates the entire ecosystem as the central integration engine
 FLEXT_MODE=server ./flext        # Environment variable
 
 # CLI Mode (Automation)
-./flext pipeline list            # Auto-detects TTY + args → CLI Mode
+./flext pipeline list            # Auto-detects t + args → CLI Mode
 ./flext --mode cli system health # Explicit CLI mode
 
 # Interactive Mode (Development)
@@ -382,7 +382,7 @@ curl -X POST http://localhost:8081/api/v1/meltano/run \
 **Multi-Modal Issues:**
 
 - ❌ **Mode Detection**: Set explicit mode if auto-detection fails
-- ✅ **Environment**: Check TTY, container, and argument detection
+- ✅ **Environment**: Check t, container, and argument detection
 
 ### Diagnostic Commands
 

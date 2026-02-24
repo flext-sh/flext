@@ -130,16 +130,6 @@ from flext_core import r
 | `.from_validation(data, model)` | `from_validation(cls, data: t.GeneralValueType, model: type[T_Model]) -> FlextResult[T_Model]` | Validate data against Pydantic model |
 | `.to_model(model)` | `to_model[U: BaseModel](self, model: type[U]) -> FlextResult[U]` | Convert success value to Pydantic model |
 
-### Returns Library Interop (inside `result.py` only)
-
-| Method | Direction | Container |
-| -------- | ----------- | ----------- |
-| `.to_io()` | FlextResult → `IO[T]` | Raises on failure |
-| `.to_io_result()` | FlextResult → `IOResult[T, str]` | `IOSuccess` / `IOFailure` |
-| `.to_maybe()` | FlextResult → `Maybe[T]` | `Some` / `Nothing` |
-| `FlextResult.from_maybe(maybe)` | `Maybe[T]` → FlextResult | `Some` → ok, `Nothing` → fail |
-| `FlextResult.from_io_result(io_result)` | `IOResult[T, str]` → FlextResult | Unwraps nested IO wrappers |
-
 ### Resource Management
 
 ```python
