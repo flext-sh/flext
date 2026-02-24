@@ -269,6 +269,7 @@ split-on-trailing-comma = true
   "D107", # missing-docstring-in-init - __init__ methods in stubs don't need docstrings
   "F822", # undefined-name - lazy imports define names at runtime via __getattr__
   "N999", # invalid-module-name - project root uses 'flext-auth' for package distribution
+  "RUF067", # __init__-module-should-only-contain-docstrings-and-re-exports - re-exports of aliases (c, m, r, t, u, p, d, e, h, s, x) are standard FLEXT pattern
 ]
 "**/_utilities/parser.py" = [
   "ARG004", # unused-static-method-argument - overload implementations may not use all parameters

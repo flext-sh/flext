@@ -9,7 +9,7 @@ import types
 from pathlib import Path
 
 import pytest
-from scripts.libs.discovery import ProjectInfo
+from flext_infra.models import m
 
 
 def _load_module(module_name: str, relative_path: str) -> types.ModuleType:
@@ -34,13 +34,19 @@ def test_resolve_projects_uses_auto_discovery(monkeypatch: pytest.MonkeyPatch) -
     sel = _get_selection_module()
 
     fake_projects = [
-        ProjectInfo(
-            path=Path("/tmp/external-tool"), name="external-tool", kind="external"
+        m.ProjectInfo(
+            path=Path("/tmp/external-tool"),
+            name="external-tool",
+            stack="python/external",
         ),
-        ProjectInfo(path=Path("/tmp/flext-api"), name="flext-api", kind="submodule"),
+        m.ProjectInfo(
+            path=Path("/tmp/flext-api"),
+            name="flext-api",
+            stack="python/submodule",
+        ),
     ]
 
-    def _fake_discover(_root: Path) -> list[ProjectInfo]:
+    def _fake_discover(_root: Path) -> list[m.ProjectInfo]:
         return fake_projects
 
     monkeypatch.setattr(sel, "discover_projects", _fake_discover)
@@ -53,10 +59,14 @@ def test_resolve_projects_rejects_unknown(monkeypatch: pytest.MonkeyPatch) -> No
     sel = _get_selection_module()
 
     fake_projects = [
-        ProjectInfo(path=Path("/tmp/flext-api"), name="flext-api", kind="submodule"),
+        m.ProjectInfo(
+            path=Path("/tmp/flext-api"),
+            name="flext-api",
+            stack="python/submodule",
+        ),
     ]
 
-    def _fake_discover(_root: Path) -> list[ProjectInfo]:
+    def _fake_discover(_root: Path) -> list[m.ProjectInfo]:
         return fake_projects
 
     monkeypatch.setattr(sel, "discover_projects", _fake_discover)
