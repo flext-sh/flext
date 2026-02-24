@@ -51,8 +51,8 @@ description: Type narrowing techniques including isinstance, TypeIs, TypeGuard, 
 ```python
 def process(value: str | int) -> str:
     if isinstance(value, str):
-        return value.upper()  # type: str
-    return str(value)  # type: int
+        return value.upper()
+    return str(value)
 ```
 
 ### None Checks
