@@ -653,8 +653,8 @@ class Model(BaseModel):
     y: Annotated[
         str,
         GetPydanticSchema(
-            lambda tp, handler: core_schema.no_info_after_validator_function(
-                lambda x: x * 2, handler(tp)
+            lambda p, handler: core_schema.no_info_after_validator_function(
+                lambda x: x * 2, handler(p)
             )
         ),
     ]

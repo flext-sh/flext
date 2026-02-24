@@ -18,22 +18,22 @@ id: fix-test-utilities-alias
 language: python
 rule:
   pattern: u = TestsUtilities
-fix: tu = TestsUtilities
-message: "Rewrite u = TestsUtilities -> tu = TestsUtilities"
+fix: u = TestsUtilities
+message: "Rewrite u = TestsUtilities -> u = TestsUtilities"
 severity: warning
 ---
 id: fix-test-constants-alias
 language: python
 rule:
   pattern: c = TestsConstants
-fix: tc = TestsConstants
-message: "Rewrite c = TestsConstants -> tc = TestsConstants"
+fix: c = TestsConstants
+message: "Rewrite c = TestsConstants -> c = TestsConstants"
 severity: warning
 ---
 id: fix-test-protocols-alias
 language: python
 rule:
   pattern: p = TestsProtocols
-fix: tp = TestsProtocols
-message: "Rewrite p = TestsProtocols -> tp = TestsProtocols"
+fix: p = TestsProtocols
+message: "Rewrite p = TestsProtocols -> p = TestsProtocols"
 severity: warning

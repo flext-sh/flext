@@ -32,7 +32,7 @@ rules:
   severity: warning
   group: flext_core_style
   count_by: rule_id
-  description: Standardize test helper aliases to tm/tt/tu/tc/tp naming.
+  description: Standardize test helper aliases to tm/tt/u/c/p naming.
   fix_auto: true
   fix_type: ast-grep
   fix_file: rules/test-alias-fix.yml
