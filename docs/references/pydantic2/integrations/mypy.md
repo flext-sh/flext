@@ -162,7 +162,7 @@ A configuration file with all plugin strictness flags enabled (and some other my
     [tool.mypy]
     plugins = ["pydantic.mypy"]
 
-    follow_imports = "silent"
+    follow_imports = "normal"
     warn_redundant_casts = true
     warn_unused_ignores = true
     disallow_any_generics = true
