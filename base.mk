@@ -43,8 +43,13 @@ PROJECT_ROOT := $(CURDIR)
 ifeq ($(FLEXT_STANDALONE),1)
 FLEXT_MODE := standalone
 else
-DETECTED_MODE := $(shell python -m flext_infra workspace detect --project-root "$(PROJECT_ROOT)" 2>/dev/null || printf standalone)
-FLEXT_MODE := $(DETECTED_MODE)
+# Pure Make detection: if base.mk lives in a parent dir, we are inside a workspace.
+# No Python dependency — shell/Make only until venv is ready.
+ifneq ($(BASE_MK_DIR),$(PROJECT_ROOT))
+FLEXT_MODE := workspace
+else
+FLEXT_MODE := standalone
+endif
 endif
 
 ifeq ($(FLEXT_MODE),workspace)
@@ -272,7 +277,7 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 	fi; \
 	gates=$$(echo "$$gates" | tr ',' ' ' | sed 's/\btype\b/pyrefly/g' | tr ' ' ','); \
 	project_key="$(PROJECT_NAME)"; \
-	if [ "$(CURDIR)" = "$(WORKSPACE_ROOT)" ]; then \
+	if [ "$(CURDIR)" != "$(WORKSPACE_ROOT)" ]; then \
 		project_key="."; \
 	fi; \
 	$(POETRY) run python -m flext_infra check fix-pyrefly-config "$$project_key"; \

@@ -222,12 +222,12 @@ exclude = [
   ".ruff_cache",
   ".venv",
   "__pycache__",
-   "build",
-   "dist",
-   "htmlcov",
-   "node_modules",
-   "reports",
-   "tests",
+  "build",
+  "dist",
+  "htmlcov",
+  "node_modules",
+  "reports",
+  "tests",
   "typings",
   "vendor",
   "venv",
@@ -246,52 +246,31 @@ pep621_dev_dependency_groups = [
 
 # [MANAGED] pytest
 [tool.pytest]
-ini_options.addopts = [
-  "--strict-config",
-  "--strict-markers",
-  "--tb=short",
-  "-p no:sugar",
-  "-q",
-  "-ra",
-  "--timeout=30",
-  "--timeout-method=signal",
-  "--durations=0",
+[tool.pytest.ini_options]
+tool.pytest.ini_options.minversion = "8.0"
+tool.pytest.ini_options.python_classes = [
+    "Test*",
 ]
-ini_options.filterwarnings = [
-  "ignore::DeprecationWarning:pyasn1(.*|$)",
+tool.pytest.ini_options.python_files = [
+    "*_test.py",
+    "*_tests.py",
+    "test_*.py",
 ]
-ini_options.markers = [
-  "docker: marca testes que requerem Docker",
-  "e2e: marca testes como testes de integração end-to-end",
-  "edge_cases: marca testes de casos extremos",
-  "integration: marca testes como testes de integração",
-  "integrity: marca testes de integridade",
-  "oracle: marca testes específicos do Oracle",
-  "performance: marca testes de performance",
-  "resilience: marca testes de resiliência",
-  "slow: marca testes como execução lenta",
-  "stress: marca testes de stress",
-  "unit: marca testes como testes unitários",
+tool.pytest.ini_options.addopts = [
+    "--strict-markers",
 ]
-ini_options.minversion = "8.0"
-ini_options.python_classes = [
-  "Test*",
+tool.pytest.ini_options.markers = [
+    "unit: unit tests",
+    "integration: integration tests",
+    "performance: performance and benchmark tests",
+    "slow: slow-running tests",
+    "docker: tests requiring Docker",
+    "e2e: end-to-end integration tests",
+    "edge_cases: edge case tests",
+    "stress: stress tests",
+    "resilience: resilience tests",
 ]
-ini_options.python_files = [
-  "*_test.py",
-  "*_tests.py",
-  "test_*.py",
-]
-ini_options.python_functions = [
-  "test_*",
-]
-ini_options.pythonpath = [
-  ".",
-  "src",
-]
-ini_options.testpaths = [
-  "tests/",
-]
+
 
 # [MANAGED] coverage
 [tool.coverage]
