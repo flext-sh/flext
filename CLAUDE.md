@@ -19,8 +19,8 @@ alwaysApply: true
 - Layer ownership: `L3` orchestration, `L2` domain/infrastructure, `L1` foundation/bridge, `L0` contracts.
 - Bridge external infra through runtime/container boundaries, not direct framework imports.
 - Public contracts must be consumed from package facades and root exports.
-- Namespace aliases are canonical public API surfaces: `m`, `c`, `t`, `u`, `p`, `r`, `d`, `e`, `h`, `s`, `x`.
-- Cross-project composition must use inheritance via MRO, never assignment mirroring or alias duplication.
+- Namespace aliases are canonical public API surfaces: `m`, `c`, `t`, `u`, `p`, `r`, `d`, `e`, `h`, `s`, `x`. Use simple runtime aliases only (e.g. `c = FlextConstants`, `m = FlextModels` in __init__). Do not use FlextRuntime.Aliases or any alias registry; MRO protocol only.
+- Cross-project composition must use inheritance via MRO, never assignment mirroring or alias duplication. Subprojects expose flat namespace via class-level aliases on the facade (e.g. `ExecuteResult = TargetOracle.ExecuteResult` so usage is `m.ExecuteResult`).
 - Integration projects (`tap|target|dbt`) must include `FlextMeltano*` plus the correct domain mixin.
 - Domain boundaries are strict: `oracle-wms != db-oracle`, `ldap != ldif`.
 - Each public facade module defines exactly one primary facade class plus one canonical alias.
@@ -47,6 +47,8 @@ alwaysApply: true
 - Root-cause fixes only: no bypasses, no hidden suppressions, no fake-green reports.
 - Never claim checks passed without executable evidence.
 - For typing law and `FlextResult` details -> see skill: `flext-strict-typing`.
+- **Type narrowing**: use `isinstance` or `TypeGuard` only; `type(x) is T` for narrowing is forbidden.
+- **Polymorphic code**: dismantle into centralized Pydantic v2 models (single contract, validation in model).
 - For result/logging/DI coding patterns -> see skill: `flext-patterns`.
 
 ## §4 Import Law
@@ -107,3 +109,23 @@ alwaysApply: true
 - Never alter lint/gate semantics without explicit in-session user approval.
 - If governance corrections arise during work, update this file immediately before further implementation.
 - **CRITICAL** Deferring, skipping, or exempting any known violation is forbidden without explicit operator authorization in-session. Hiding scope exclusions inside plans or guardrails without operator approval is an extreme fault. When a violation cannot be fixed immediately, the agent must present the violation, explain why, and obtain explicit written approval before marking it deferred.
+
+## §9 Agent Instructions (Mandatory for All Coding Agents)
+
+- **Runtime aliases (subprojects)**  
+  In subprojects, all runtime access MUST use the project namespace only. Use the canonical runtime alias `x` (FlextMixins) for runtime helpers: `x.create_instance`, `x.is_dict_like`, `x.is_list_like`, `x.is_valid_json`, `x.is_valid_identifier`, `x.is_base_model`, `x.normalize_to_general_value`, `x.normalize_to_metadata_value`, `x.is_sequence_type`, `x.safe_get_attribute`, `x.extract_generic_args`, `x.ok`, `x.fail`. Do NOT subdivide namespaces (e.g. avoid `FlextRuntime.Bootstrap.*` or ad-hoc wrappers). Subprojects MUST NOT introduce extra alias layers; use `c`, `m`, `t`, `u`, `p`, `r`, `d`, `e`, `h`, `s`, `x` from the project/facade exports only.
+
+- **No loose aliases or pass-through methods**  
+  Remove compatibility aliases (e.g. `LegacyX = NewX`, `.data` for `.value`, `.and_then` for `.flat_map`). Use direct methods and single canonical names. No free-function wrappers that only call a class method; call the class/method directly.
+
+- **Type narrowing (strict)**  
+  Use correct typing for type narrowing. Do NOT use `type(x) is T` or `type(x) == T` for narrowing; use `isinstance(x, T)` or `TypeGuard` so the type checker can narrow. Replacing `isinstance` with `type()` is forbidden. Prefer Pydantic `model_validate` / `model_validate_json` for input validation and structured data.
+
+- **Polymorphic code → centralized Pydantic models**  
+  Dismantle polymorphic functions and methods: replace multiple branches on type/union with a single contract. Use centralized Pydantic v2 models with validation (discriminated unions, `Field`, `model_validator`, `field_validator`) so that one model (or a small set of models) defines the shape and validation; avoid ad-hoc `if isinstance(...)` chains over many types. Prefer overloads or discriminated unions over loose `Union` handling in function bodies.
+
+- **Scale and parallelism**  
+  When refactoring many call sites or modules, use multiple agents or batch passes in parallel (e.g. by package or by rule) to apply these rules consistently and quickly. Each change must remain minimal and verifiable.
+
+- **Skill (mandatory)**  
+  For detailed enforcement: see skill **flext-agent-strict-rules** (runtime aliases only, no type() for narrowing, no loose methods, polymorphic code → centralized Pydantic v2 models).

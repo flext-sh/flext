@@ -28,6 +28,7 @@
 - [Rule 14: NEVER Use `str | None` When Default Is `""`](#rule-14-never-use-str--none-when-default-is-)
 - [Rule 15: Pydantic Models Over Plain Helper Classes](#rule-15-pydantic-models-over-plain-helper-classes)
 - [Rule 16: Result Protocol for `is_success` Pattern](#rule-16-result-protocol-for-is_success-pattern)
+- [Rule 17: Type Narrowing and Polymorphic Contracts (Mandatory)](#rule-17-type-narrowing-and-polymorphic-contracts-mandatory)
 - [Rule 12: FlextResult Factory Method Typing](#rule-12-flextresult-factory-method-typing)
   - [`r` Alias — Universal Import Pattern](#r-alias-universal-import-pattern)
   - [`ok()` vs `fail()` — Asymmetric Generics](#ok-vs-fail-asymmetric-generics)
@@ -492,6 +493,68 @@ class ResultBase(BaseModel):
 
 This eliminates duplication across `MigrationResult`, `SyncResult`,
 `CleanResult`, `AclResult`, `ValidationResult`, etc.
+
+---
+
+## Rule 17: Type Narrowing and Polymorphic Contracts (Mandatory)
+
+**Type narrowing**  
+Use correct typing so the type checker can narrow. Do NOT use `type(x) is T` or `type(x) == T` for narrowing; use `isinstance(x, T)` or a `TypeGuard`. **Replacing `isinstance` with `type()` is FORBIDDEN** — it does not provide type narrowing and violates this rule.
+
+```python
+# ❌ FORBIDDEN — type() does not narrow for type checkers
+if type(obj) is str:
+    use(obj)  # type checker may not narrow
+
+# ✅ CORRECT — isinstance narrows
+if isinstance(obj, str):
+    use(obj)  # str
+
+# ✅ CORRECT — TypeGuard for custom predicates
+def is_config_map(val: t.ConfigMapValue) -> TypeGuard[t.ConfigMap]:
+    return isinstance(val, t.ConfigMap)
+```
+
+**Polymorphic code → centralized Pydantic models**  
+Dismantle polymorphic functions: replace multiple branches on type/union with a single contract. Use centralized Pydantic v2 models with validation (discriminated unions, `Field`, `model_validator`, `field_validator`). Prefer overloads or discriminated unions over loose `Union` handling in function bodies.
+
+```python
+# ❌ AVOID — many branches on type in one function
+def process(data: str | dict | list | BaseModel) -> Result:
+    if isinstance(data, str): ...
+    elif isinstance(data, dict): ...
+    elif isinstance(data, list): ...
+
+# ✅ PREFER — single model with validation
+class ProcessInput(BaseModel):
+    kind: Literal["str", "dict", "list"]
+    value: str | dict[str, t.ConfigMapValue] | list[t.ConfigMapValue]
+    @model_validator(mode="after")
+    def check_kind_match(self): ...
+
+def process(data: ProcessInput) -> Result: ...
+```
+
+---
+
+## Mandatory Agent Instructions (Exigent)
+
+Agents MUST apply the following when editing FLEXT code. No exceptions without explicit operator approval.
+
+1. **Runtime aliases only**  
+   Simple assignments only in package __init__: c = FlextConstants, m = FlextModels, etc. Never use FlextRuntime.Aliases or any alias registry. Access via project runtime alias only; no subdivision; MRO protocol only; direct methods.
+
+2. **No type() for type narrowing**  
+   Never use `type(x) is T` or `type(x) == T` to narrow types. Use `isinstance(x, T)` or a `TypeGuard` so the type checker narrows correctly. Swapping `isinstance` for `type()` is forbidden.
+
+3. **Dismantle polymorphic code**  
+   Replace functions/methods that branch on multiple types (str | dict | list | BaseModel, etc.) with a single contract: centralized Pydantic v2 models, discriminated unions, `Field`, `@field_validator`, `@model_validator`. One entry point, validation in the model.
+
+4. **No non-runtime aliases**  
+   Remove compatibility or duplicate aliases (e.g. `LegacyX = NewX`, extra module-level aliases that mirror facades). Keep only the canonical runtime alias per facade (e.g. one `m`, one `c`, one `t` at package/project root).
+
+5. **Direct methods only**  
+   Remove loose wrappers and pass-through functions; call the canonical implementation directly. Prefer methods on the owning class over free functions that only delegate.
 
 ---
 
