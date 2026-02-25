@@ -10,11 +10,11 @@
 //   - Communication Bus: Inter-FlexCore coordination via Redis/message queue
 //
 // Deployment Process:
-//   1. Plugin binary transfer to FlexCore instances
-//   2. Plugin loading and initialization
-//   3. Plugin configuration and validation
-//   4. Inter-plugin communication setup
-//   5. Health monitoring and status tracking
+//  1. Plugin binary transfer to FlexCore instances
+//  2. Plugin loading and initialization
+//  3. Plugin configuration and validation
+//  4. Inter-plugin communication setup
+//  5. Health monitoring and status tracking
 //
 // Author: FLEXT Development Team
 // Version: 2.0.0
@@ -40,30 +40,30 @@ import (
 
 // PluginDeploymentManager implements plugin deployment coordination
 type PluginDeploymentManager struct {
-	registry      *registry.PluginRegistry
-	flexcoreClient plugins.FlexCoreClient
-	communicator  plugins.PluginCommunicator
-	httpClient    *http.Client
+	registry        *registry.PluginRegistry
+	flexcoreClient  plugins.FlexCoreClient
+	communicator    plugins.PluginCommunicator
+	httpClient      *http.Client
 	deploymentQueue []DeploymentTask
-	mu            sync.RWMutex
-	ctx           context.Context
-	cancel        context.CancelFunc
+	mu              sync.RWMutex
+	ctx             context.Context
+	cancel          context.CancelFunc
 }
 
 // DeploymentTask represents a plugin deployment task
 type DeploymentTask struct {
-	ID              string                         `json:"id"`
-	PluginID        plugins.PluginID               `json:"plugin_id"`
-	FlexCoreNodes   []string                       `json:"flexcore_nodes"`
-	Action          string                         `json:"action"` // deploy, undeploy, update
-	Config          map[string]interface{}         `json:"config"`
-	Status          string                         `json:"status"`
-	Progress        float64                        `json:"progress"`
-	ErrorMessage    string                         `json:"error_message,omitempty"`
-	CreatedAt       time.Time                      `json:"created_at"`
-	StartedAt       *time.Time                     `json:"started_at,omitempty"`
-	CompletedAt     *time.Time                     `json:"completed_at,omitempty"`
-	Results         map[string]interface{}         `json:"results,omitempty"`
+	ID            string                 `json:"id"`
+	PluginID      plugins.PluginID       `json:"plugin_id"`
+	FlexCoreNodes []string               `json:"flexcore_nodes"`
+	Action        string                 `json:"action"` // deploy, undeploy, update
+	Config        map[string]interface{} `json:"config"`
+	Status        string                 `json:"status"`
+	Progress      float64                `json:"progress"`
+	ErrorMessage  string                 `json:"error_message,omitempty"`
+	CreatedAt     time.Time              `json:"created_at"`
+	StartedAt     *time.Time             `json:"started_at,omitempty"`
+	CompletedAt   *time.Time             `json:"completed_at,omitempty"`
+	Results       map[string]interface{} `json:"results,omitempty"`
 }
 
 // DeploymentResult represents the result of a deployment operation
@@ -81,7 +81,7 @@ type DeploymentResult struct {
 // NewPluginDeploymentManager creates a new deployment manager
 func NewPluginDeploymentManager(registry *registry.PluginRegistry) *PluginDeploymentManager {
 	ctx, cancel := context.WithCancel(context.Background())
-	
+
 	return &PluginDeploymentManager{
 		registry:        registry,
 		httpClient:      &http.Client{Timeout: 60 * time.Second},
@@ -255,7 +255,7 @@ func (dm *PluginDeploymentManager) GetDeploymentTask(taskID string) (*Deployment
 func (dm *PluginDeploymentManager) Start() error {
 	// Start deployment queue processor
 	go dm.deploymentQueueProcessor()
-	
+
 	// Start deployment health monitor
 	go dm.deploymentHealthMonitor()
 
@@ -307,18 +307,18 @@ func (dm *PluginDeploymentManager) executeDeploymentTask(ctx context.Context, ta
 		task.Status = "failed"
 		task.ErrorMessage = result.ErrorMessage
 	}
-	
+
 	dm.updateTask(*task)
 
 	// Notify via communicator if available
 	if dm.communicator != nil {
 		message := map[string]interface{}{
-			"operation":  "deployment.completed",
-			"task_id":    task.ID,
-			"plugin_id":  task.PluginID,
-			"action":     task.Action,
-			"success":    result.Success,
-			"timestamp":  time.Now(),
+			"operation": "deployment.completed",
+			"task_id":   task.ID,
+			"plugin_id": task.PluginID,
+			"action":    task.Action,
+			"success":   result.Success,
+			"timestamp": time.Now(),
 		}
 		dm.communicator.BroadcastMessage(ctx, plugins.PluginID("deployment-manager"), "", message)
 	}
@@ -581,7 +581,7 @@ func (dm *PluginDeploymentManager) undeployFromNode(ctx context.Context, nodeURL
 // updateConfigOnNode updates plugin configuration on a specific FlexCore node
 func (dm *PluginDeploymentManager) updateConfigOnNode(ctx context.Context, nodeURL string, pluginID plugins.PluginID, config map[string]interface{}) error {
 	configJSON, _ := json.Marshal(config)
-	
+
 	url := fmt.Sprintf("%s/api/v1/plugins/%s/config", nodeURL, pluginID)
 	req, err := http.NewRequestWithContext(ctx, "PUT", url, bytes.NewBuffer(configJSON))
 	if err != nil {

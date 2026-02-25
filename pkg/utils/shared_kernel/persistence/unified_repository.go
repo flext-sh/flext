@@ -62,8 +62,8 @@ func (r *UnifiedRepository[T]) Create(ctx context.Context, entity T) (T, error) 
 	id := entity.GetID()
 	if _, exists := r.store[id]; exists {
 		err := &errors.DomainError{
-			Code:        "ENTITY_ALREADY_EXISTS",
-			Message:     fmt.Sprintf("%s already exists", r.entityName),
+			Code:    "ENTITY_ALREADY_EXISTS",
+			Message: fmt.Sprintf("%s already exists", r.entityName),
 			Details: fmt.Sprintf("Entity with ID %s already exists", id),
 		}
 		r.recordOperation("create", startTime, err)
@@ -115,8 +115,8 @@ func (r *UnifiedRepository[T]) GetByID(ctx context.Context, id uuid.UUID) (T, er
 
 	if id == uuid.Nil {
 		err := &errors.DomainError{
-			Code:        "INVALID_ID",
-			Message:     "Invalid ID provided",
+			Code:    "INVALID_ID",
+			Message: "Invalid ID provided",
 			Details: "ID cannot be nil",
 		}
 		r.recordOperation("get_by_id", startTime, err)
@@ -137,8 +137,8 @@ func (r *UnifiedRepository[T]) GetByID(ctx context.Context, id uuid.UUID) (T, er
 
 	if !exists {
 		err := &errors.DomainError{
-			Code:        "ENTITY_NOT_FOUND",
-			Message:     fmt.Sprintf("%s not found", r.entityName),
+			Code:    "ENTITY_NOT_FOUND",
+			Message: fmt.Sprintf("%s not found", r.entityName),
 			Details: fmt.Sprintf("Entity with ID %s does not exist", id),
 		}
 		r.recordOperation("get_by_id", startTime, err)
@@ -207,8 +207,8 @@ func (r *UnifiedRepository[T]) Update(ctx context.Context, entity T) (T, error) 
 	oldEntity, exists := r.store[id]
 	if !exists {
 		err := &errors.DomainError{
-			Code:        "ENTITY_NOT_FOUND",
-			Message:     fmt.Sprintf("%s not found", r.entityName),
+			Code:    "ENTITY_NOT_FOUND",
+			Message: fmt.Sprintf("%s not found", r.entityName),
 			Details: fmt.Sprintf("Entity with ID %s does not exist", id),
 		}
 		r.recordOperation("update", startTime, err)
@@ -241,8 +241,8 @@ func (r *UnifiedRepository[T]) UpdatePartial(ctx context.Context, id uuid.UUID, 
 
 	if id == uuid.Nil {
 		err := &errors.DomainError{
-			Code:        "INVALID_ID",
-			Message:     "Invalid ID provided",
+			Code:    "INVALID_ID",
+			Message: "Invalid ID provided",
 			Details: "ID cannot be nil",
 		}
 		r.recordOperation("update_partial", startTime, err)
@@ -255,8 +255,8 @@ func (r *UnifiedRepository[T]) UpdatePartial(ctx context.Context, id uuid.UUID, 
 	entity, exists := r.store[id]
 	if !exists {
 		err := &errors.DomainError{
-			Code:        "ENTITY_NOT_FOUND",
-			Message:     fmt.Sprintf("%s not found", r.entityName),
+			Code:    "ENTITY_NOT_FOUND",
+			Message: fmt.Sprintf("%s not found", r.entityName),
 			Details: fmt.Sprintf("Entity with ID %s does not exist", id),
 		}
 		r.recordOperation("update_partial", startTime, err)
@@ -291,8 +291,8 @@ func (r *UnifiedRepository[T]) Delete(ctx context.Context, id uuid.UUID) error {
 
 	if id == uuid.Nil {
 		err := &errors.DomainError{
-			Code:        "INVALID_ID",
-			Message:     "Invalid ID provided",
+			Code:    "INVALID_ID",
+			Message: "Invalid ID provided",
 			Details: "ID cannot be nil",
 		}
 		r.recordOperation("delete", startTime, err)
@@ -305,8 +305,8 @@ func (r *UnifiedRepository[T]) Delete(ctx context.Context, id uuid.UUID) error {
 	_, exists := r.store[id]
 	if !exists {
 		err := &errors.DomainError{
-			Code:        "ENTITY_NOT_FOUND",
-			Message:     fmt.Sprintf("%s not found", r.entityName),
+			Code:    "ENTITY_NOT_FOUND",
+			Message: fmt.Sprintf("%s not found", r.entityName),
 			Details: fmt.Sprintf("Entity with ID %s does not exist", id),
 		}
 		r.recordOperation("delete", startTime, err)
@@ -337,8 +337,8 @@ func (r *UnifiedRepository[T]) Exists(ctx context.Context, id uuid.UUID) (bool, 
 
 	if id == uuid.Nil {
 		err := &errors.DomainError{
-			Code:        "INVALID_ID",
-			Message:     "Invalid ID provided",
+			Code:    "INVALID_ID",
+			Message: "Invalid ID provided",
 			Details: "ID cannot be nil",
 		}
 		r.recordOperation("exists", startTime, err)
@@ -453,8 +453,8 @@ func (r *UnifiedRepository[T]) validateBatchEntities(ctx context.Context, entiti
 		id := entity.GetID()
 		if _, exists := r.store[id]; exists {
 			return &errors.DomainError{
-				Code:        "ENTITY_ALREADY_EXISTS",
-				Message:     fmt.Sprintf("%s already exists", r.entityName),
+				Code:    "ENTITY_ALREADY_EXISTS",
+				Message: fmt.Sprintf("%s already exists", r.entityName),
 				Details: fmt.Sprintf("Entity with ID %s already exists", id),
 			}
 		}
@@ -654,8 +654,8 @@ func (r *UnifiedRepository[T]) validateEntity(ctx context.Context, entity T) err
 	// Basic validation - can be extended
 	if entity.GetID() == uuid.Nil {
 		return &errors.DomainError{
-			Code:        "INVALID_ENTITY_ID",
-			Message:     "Entity ID cannot be nil",
+			Code:    "INVALID_ENTITY_ID",
+			Message: "Entity ID cannot be nil",
 			Details: "Entity must have a valid UUID",
 		}
 	}
@@ -666,15 +666,15 @@ func (r *UnifiedRepository[T]) validateEntity(ctx context.Context, entity T) err
 func (r *UnifiedRepository[T]) validateListCriteria(criteria ListCriteria) error {
 	if criteria.Limit < 0 {
 		return &errors.DomainError{
-			Code:        "INVALID_LIMIT",
-			Message:     "Limit cannot be negative",
+			Code:    "INVALID_LIMIT",
+			Message: "Limit cannot be negative",
 			Details: fmt.Sprintf("Provided limit: %d", criteria.Limit),
 		}
 	}
 	if criteria.Offset < 0 {
 		return &errors.DomainError{
-			Code:        "INVALID_OFFSET",
-			Message:     "Offset cannot be negative",
+			Code:    "INVALID_OFFSET",
+			Message: "Offset cannot be negative",
 			Details: fmt.Sprintf("Provided offset: %d", criteria.Offset),
 		}
 	}

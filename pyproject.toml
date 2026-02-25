@@ -457,7 +457,6 @@ search-path = [
   "typings/generated",
   "src",
   "examples",
-  "tests",
 ]
 sub-config = [ { matches = "**/typings.py", errors.unknown-name = false } ]
 

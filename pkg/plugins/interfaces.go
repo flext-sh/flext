@@ -33,10 +33,10 @@ type PluginType string
 const (
 	// PluginTypeMeltano - Data integration plugin (Singer + DBT + Meltano)
 	PluginTypeMeltano PluginType = "meltano"
-	
-	// PluginTypeRay - Distributed computing plugin 
+
+	// PluginTypeRay - Distributed computing plugin
 	PluginTypeRay PluginType = "ray"
-	
+
 	// PluginTypeKubernetes - Container orchestration plugin
 	PluginTypeKubernetes PluginType = "kubernetes"
 )
@@ -47,19 +47,19 @@ type PluginStatus string
 const (
 	// PluginStatusRegistered - Plugin is registered but not deployed
 	PluginStatusRegistered PluginStatus = "registered"
-	
+
 	// PluginStatusDeployed - Plugin is deployed to FlexCore instances
 	PluginStatusDeployed PluginStatus = "deployed"
-	
+
 	// PluginStatusRunning - Plugin is actively running
 	PluginStatusRunning PluginStatus = "running"
-	
+
 	// PluginStatusStopped - Plugin is stopped but still deployed
 	PluginStatusStopped PluginStatus = "stopped"
-	
+
 	// PluginStatusError - Plugin is in error state
 	PluginStatusError PluginStatus = "error"
-	
+
 	// PluginStatusUndeploying - Plugin is being removed
 	PluginStatusUndeploying PluginStatus = "undeploying"
 )
@@ -81,14 +81,14 @@ type PluginMetadata struct {
 
 // PluginDeployment represents a plugin deployment to FlexCore instances
 type PluginDeployment struct {
-	PluginID        PluginID              `json:"plugin_id"`
-	FlexCoreNodes   []string              `json:"flexcore_nodes"`
-	Status          PluginStatus          `json:"status"`
+	PluginID        PluginID               `json:"plugin_id"`
+	FlexCoreNodes   []string               `json:"flexcore_nodes"`
+	Status          PluginStatus           `json:"status"`
 	Config          map[string]interface{} `json:"config"`
-	DeployedAt      time.Time             `json:"deployed_at"`
-	LastHealthCheck time.Time             `json:"last_health_check"`
-	HealthStatus    string                `json:"health_status"`
-	ErrorMessage    string                `json:"error_message,omitempty"`
+	DeployedAt      time.Time              `json:"deployed_at"`
+	LastHealthCheck time.Time              `json:"last_health_check"`
+	HealthStatus    string                 `json:"health_status"`
+	ErrorMessage    string                 `json:"error_message,omitempty"`
 }
 
 // PluginExecutionRequest represents a request to execute a plugin
@@ -103,15 +103,15 @@ type PluginExecutionRequest struct {
 
 // PluginExecutionResult represents the result of plugin execution
 type PluginExecutionResult struct {
-	PluginID      PluginID               `json:"plugin_id"`
-	FlexCoreNode  string                 `json:"flexcore_node"`
-	Operation     string                 `json:"operation"`
-	Success       bool                   `json:"success"`
-	Result        map[string]interface{} `json:"result"`
-	ErrorMessage  string                 `json:"error_message,omitempty"`
-	StartedAt     time.Time              `json:"started_at"`
-	CompletedAt   time.Time              `json:"completed_at"`
-	Duration      time.Duration          `json:"duration"`
+	PluginID     PluginID               `json:"plugin_id"`
+	FlexCoreNode string                 `json:"flexcore_node"`
+	Operation    string                 `json:"operation"`
+	Success      bool                   `json:"success"`
+	Result       map[string]interface{} `json:"result"`
+	ErrorMessage string                 `json:"error_message,omitempty"`
+	StartedAt    time.Time              `json:"started_at"`
+	CompletedAt  time.Time              `json:"completed_at"`
+	Duration     time.Duration          `json:"duration"`
 }
 
 // Plugin interface - ALL deployable plugins must implement this interface

@@ -34,7 +34,7 @@ func main() {
 			Error(msg string, fields ...interface{})
 		}
 	}
-	
+
 	// Use basic logging
 	appConfig.Logger = &basicLogger{}
 

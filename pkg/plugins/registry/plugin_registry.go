@@ -46,20 +46,20 @@ type PluginRegistry struct {
 
 // FlexCoreNode represents a FlexCore instance that can run plugins
 type FlexCoreNode struct {
-	URL             string                         `json:"url"`
-	Name            string                         `json:"name"`
-	Status          string                         `json:"status"`
-	LastSeen        time.Time                      `json:"last_seen"`
-	LoadedPlugins   []plugins.PluginID             `json:"loaded_plugins"`
-	Capabilities    []string                       `json:"capabilities"`
-	Resources       map[string]interface{}         `json:"resources"`
-	Configuration   map[string]interface{}         `json:"configuration"`
+	URL           string                 `json:"url"`
+	Name          string                 `json:"name"`
+	Status        string                 `json:"status"`
+	LastSeen      time.Time              `json:"last_seen"`
+	LoadedPlugins []plugins.PluginID     `json:"loaded_plugins"`
+	Capabilities  []string               `json:"capabilities"`
+	Resources     map[string]interface{} `json:"resources"`
+	Configuration map[string]interface{} `json:"configuration"`
 }
 
 // NewPluginRegistry creates a new plugin registry instance
 func NewPluginRegistry() *PluginRegistry {
 	ctx, cancel := context.WithCancel(context.Background())
-	
+
 	return &PluginRegistry{
 		plugins:        make(map[plugins.PluginID]plugins.PluginMetadata),
 		deployments:    make(map[plugins.PluginID][]plugins.PluginDeployment),
@@ -76,7 +76,7 @@ func (pr *PluginRegistry) RegisterPlugin(plugin plugins.Plugin) error {
 	defer pr.mu.Unlock()
 
 	metadata := plugin.Metadata()
-	
+
 	// Validate plugin metadata
 	if err := pr.validatePluginMetadata(metadata); err != nil {
 		return fmt.Errorf("plugin metadata validation failed: %w", err)
@@ -387,7 +387,7 @@ func (pr *PluginRegistry) SearchPlugins(query string) []plugins.PluginMetadata {
 	defer pr.mu.RUnlock()
 
 	result := make([]plugins.PluginMetadata, 0)
-	
+
 	for _, metadata := range pr.plugins {
 		// Search in name, description, type, and capabilities
 		if pr.matchesQuery(metadata, query) {
@@ -402,7 +402,7 @@ func (pr *PluginRegistry) SearchPlugins(query string) []plugins.PluginMetadata {
 func (pr *PluginRegistry) Start() error {
 	// Start node health checking
 	go pr.nodeHealthChecker()
-	
+
 	// Start deployment monitoring
 	go pr.deploymentMonitor()
 
@@ -456,18 +456,18 @@ func (pr *PluginRegistry) nodesMatch(nodes1, nodes2 []string) bool {
 	if len(nodes1) != len(nodes2) {
 		return false
 	}
-	
+
 	nodeMap := make(map[string]bool)
 	for _, node := range nodes1 {
 		nodeMap[node] = true
 	}
-	
+
 	for _, node := range nodes2 {
 		if !nodeMap[node] {
 			return false
 		}
 	}
-	
+
 	return true
 }
 
@@ -499,7 +499,7 @@ func (pr *PluginRegistry) getPluginsByType() map[string]int {
 
 func (pr *PluginRegistry) getDeploymentSummary() map[string]interface{} {
 	summary := make(map[string]interface{})
-	
+
 	for pluginID, deployments := range pr.deployments {
 		if len(deployments) > 0 {
 			summary[string(pluginID)] = map[string]interface{}{
@@ -508,7 +508,7 @@ func (pr *PluginRegistry) getDeploymentSummary() map[string]interface{} {
 			}
 		}
 	}
-	
+
 	return summary
 }
 
@@ -525,7 +525,7 @@ func (pr *PluginRegistry) getTotalNodesForPlugin(deployments []plugins.PluginDep
 func (pr *PluginRegistry) matchesQuery(metadata plugins.PluginMetadata, query string) bool {
 	// Simple contains matching - could be enhanced with fuzzy search
 	queryLower := strings.ToLower(query)
-	
+
 	if strings.Contains(strings.ToLower(metadata.Name), queryLower) {
 		return true
 	}
@@ -535,13 +535,13 @@ func (pr *PluginRegistry) matchesQuery(metadata plugins.PluginMetadata, query st
 	if strings.Contains(strings.ToLower(string(metadata.Type)), queryLower) {
 		return true
 	}
-	
+
 	for _, capability := range metadata.Capabilities {
 		if strings.Contains(strings.ToLower(capability), queryLower) {
 			return true
 		}
 	}
-	
+
 	return false
 }
 
@@ -597,7 +597,7 @@ func (pr *PluginRegistry) monitorDeployments() {
 		for i, deployment := range deployments {
 			// Update health check timestamp
 			deployment.LastHealthCheck = time.Now()
-			
+
 			// Check if all nodes are healthy
 			allNodesHealthy := true
 			for _, nodeURL := range deployment.FlexCoreNodes {
@@ -606,13 +606,13 @@ func (pr *PluginRegistry) monitorDeployments() {
 					break
 				}
 			}
-			
+
 			if allNodesHealthy {
 				deployment.HealthStatus = "healthy"
 			} else {
 				deployment.HealthStatus = "unhealthy"
 			}
-			
+
 			deployments[i] = deployment
 		}
 		pr.deployments[pluginID] = deployments

@@ -45,8 +45,8 @@ func (r *BaseRepository[T]) Update(ctx context.Context, entity T) error {
 	}
 	if result.RowsAffected == 0 {
 		return &errors.DomainError{
-			Code:        "ENTITY_NOT_FOUND",
-			Message:     "Entity not found for update",
+			Code:    "ENTITY_NOT_FOUND",
+			Message: "Entity not found for update",
 			Details: "No rows were affected during update operation",
 		}
 	}
@@ -62,8 +62,8 @@ func (r *BaseRepository[T]) Delete(ctx context.Context, id string) error {
 	}
 	if result.RowsAffected == 0 {
 		return &errors.DomainError{
-			Code:        "ENTITY_NOT_FOUND",
-			Message:     "Entity not found for deletion",
+			Code:    "ENTITY_NOT_FOUND",
+			Message: "Entity not found for deletion",
 			Details: "No rows were affected during delete operation",
 		}
 	}
@@ -77,8 +77,8 @@ func (r *BaseRepository[T]) FindByID(ctx context.Context, id string) (T, error) 
 	if result.Error != nil {
 		if stderrors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return entity, &errors.DomainError{
-				Code:        "ENTITY_NOT_FOUND",
-				Message:     "Entity not found",
+				Code:    "ENTITY_NOT_FOUND",
+				Message: "Entity not found",
 				Details: "No entity found with the provided ID",
 			}
 		}
@@ -209,32 +209,32 @@ func (r *BaseRepository[T]) handleError(err error) error {
 	// Tratar erros específicos do GORM
 	if stderrors.Is(err, gorm.ErrRecordNotFound) {
 		return &errors.DomainError{
-			Code:        "ENTITY_NOT_FOUND",
-			Message:     "Entity not found",
+			Code:    "ENTITY_NOT_FOUND",
+			Message: "Entity not found",
 			Details: "The requested entity does not exist",
 		}
 	}
 
 	if stderrors.Is(err, gorm.ErrDuplicatedKey) {
 		return &errors.DomainError{
-			Code:        "ENTITY_ALREADY_EXISTS",
-			Message:     "Entity already exists",
+			Code:    "ENTITY_ALREADY_EXISTS",
+			Message: "Entity already exists",
 			Details: "An entity with the same unique identifier already exists",
 		}
 	}
 
 	if stderrors.Is(err, gorm.ErrInvalidTransaction) {
 		return &errors.DomainError{
-			Code:        "TRANSACTION_ERROR",
-			Message:     "Transaction error",
+			Code:    "TRANSACTION_ERROR",
+			Message: "Transaction error",
 			Details: "Database transaction failed",
 		}
 	}
 
 	// Erro genérico
 	return &errors.DomainError{
-		Code:        "DATABASE_ERROR",
-		Message:     "Database operation failed",
+		Code:    "DATABASE_ERROR",
+		Message: "Database operation failed",
 		Details: err.Error(),
 	}
 }

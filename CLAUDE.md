@@ -19,7 +19,7 @@ alwaysApply: true
 - Layer ownership: `L3` orchestration, `L2` domain/infrastructure, `L1` foundation/bridge, `L0` contracts.
 - Bridge external infra through runtime/container boundaries, not direct framework imports.
 - Public contracts must be consumed from package facades and root exports.
-- Namespace aliases are canonical public API surfaces: `m`, `c`, `t`, `u`, `p`, `r`, `d`, `e`, `h`, `s`, `x`. Use simple runtime aliases only (e.g. `c = FlextConstants`, `m = FlextModels` in __init__). Do not use FlextRuntime.Aliases or any alias registry; MRO protocol only.
+- Namespace aliases are canonical public API surfaces: `m`, `c`, `t`, `u`, `p`, `r`, `d`, `e`, `h`, `s`, `x`. Use simple runtime aliases only (e.g. `c = FlextConstants`, `m = FlextModels` in **init**). Do not use FlextRuntime.Aliases or any alias registry; MRO protocol only.
 - Cross-project composition must use inheritance via MRO, never assignment mirroring or alias duplication. Subprojects expose flat namespace via class-level aliases on the facade (e.g. `ExecuteResult = TargetOracle.ExecuteResult` so usage is `m.ExecuteResult`).
 - Integration projects (`tap|target|dbt`) must include `FlextMeltano*` plus the correct domain mixin.
 - Domain boundaries are strict: `oracle-wms != db-oracle`, `ldap != ldif`.

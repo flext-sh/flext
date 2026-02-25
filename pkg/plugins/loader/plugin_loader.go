@@ -19,20 +19,20 @@ package loader
 import (
 	"context"
 	"fmt"
-	"plugin"
 	"path/filepath"
+	"plugin"
 
-	"github.com/flext-sh/flext/pkg/plugins"
-	"github.com/flext-sh/flext/pkg/plugins/registry"
-	"github.com/flext-sh/flext/pkg/plugins/communication"
 	"github.com/flext-sh/flext/pkg/logging"
+	"github.com/flext-sh/flext/pkg/plugins"
+	"github.com/flext-sh/flext/pkg/plugins/communication"
+	"github.com/flext-sh/flext/pkg/plugins/registry"
 )
 
 // PluginLoader handles dynamic plugin loading and registration
 type PluginLoader struct {
-	registry      *registry.PluginRegistry
-	communicator  *communication.FlexCoreCommunicationBus
-	logger        logging.Logger
+	registry        *registry.PluginRegistry
+	communicator    *communication.FlexCoreCommunicationBus
+	logger          logging.Logger
 	pluginFactories map[plugins.PluginType]PluginFactory
 }
 
@@ -63,7 +63,7 @@ func (pl *PluginLoader) RegisterPluginFactory(pluginType plugins.PluginType, fac
 	pl.logger.Info("📦 Registering plugin factory",
 		logging.F("plugin_type", pluginType),
 		logging.F("factory", "registered"))
-	
+
 	pl.pluginFactories[pluginType] = factory
 }
 
@@ -121,7 +121,9 @@ func (pl *PluginLoader) LoadPluginFromBinary(ctx context.Context, binaryPath str
 	}
 
 	// Set communicator if the plugin supports it
-	if communicatorSetter, ok := pluginInstance.(interface{ SetCommunicator(plugins.PluginCommunicator) }); ok {
+	if communicatorSetter, ok := pluginInstance.(interface {
+		SetCommunicator(plugins.PluginCommunicator)
+	}); ok {
 		communicatorSetter.SetCommunicator(pl.communicator)
 		pl.logger.Info("✅ Communicator set for plugin",
 			logging.F("plugin_id", pluginInstance.Metadata().ID))
@@ -153,7 +155,9 @@ func (pl *PluginLoader) CreatePluginFromFactory(pluginType plugins.PluginType) (
 	}
 
 	// Set communicator if the plugin supports it
-	if communicatorSetter, ok := pluginInstance.(interface{ SetCommunicator(plugins.PluginCommunicator) }); ok {
+	if communicatorSetter, ok := pluginInstance.(interface {
+		SetCommunicator(plugins.PluginCommunicator)
+	}); ok {
 		communicatorSetter.SetCommunicator(pl.communicator)
 		pl.logger.Info("✅ Communicator set for factory-created plugin",
 			logging.F("plugin_id", pluginInstance.Metadata().ID))
@@ -202,7 +206,7 @@ func (pl *PluginLoader) LoadAndRegisterPlugin(ctx context.Context, config Plugin
 			pl.logger.Warn("⚠️ Failed to load from binary, trying factory",
 				logging.F("binary_path", config.BinaryPath),
 				logging.F("error", err))
-			
+
 			// Fall back to factory
 			pluginInstance, err = pl.CreatePluginFromFactory(config.PluginType)
 			if err != nil {
@@ -278,12 +282,12 @@ func fileExists(path string) bool {
 	if path == "" {
 		return false
 	}
-	
+
 	absPath, err := filepath.Abs(path)
 	if err != nil {
 		return false
 	}
-	
+
 	// Check if file exists and is not a directory
 	// In a real implementation, you would use os.Stat
 	// For now, return false to force factory usage

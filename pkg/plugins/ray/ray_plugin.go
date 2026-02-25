@@ -35,29 +35,29 @@ import (
 
 // RayPlugin implements the deployable Ray distributed computing plugin
 type RayPlugin struct {
-	id               plugins.PluginID
-	config           map[string]interface{}
-	pythonVenv       string
-	rayClusterURL    string
-	initialized      bool
-	communicator     plugins.PluginCommunicator
-	flexcoreNodeURL  string
-	clusterNodes     []string
-	taskQueue        []RayTask
+	id              plugins.PluginID
+	config          map[string]interface{}
+	pythonVenv      string
+	rayClusterURL   string
+	initialized     bool
+	communicator    plugins.PluginCommunicator
+	flexcoreNodeURL string
+	clusterNodes    []string
+	taskQueue       []RayTask
 }
 
 // RayTask represents a distributed task
 type RayTask struct {
-	ID           string                 `json:"id"`
-	Type         string                 `json:"type"`
-	Parameters   map[string]interface{} `json:"parameters"`
-	RequesterID  plugins.PluginID       `json:"requester_id"`
-	Status       string                 `json:"status"`
-	Result       map[string]interface{} `json:"result,omitempty"`
-	Error        string                 `json:"error,omitempty"`
-	CreatedAt    time.Time              `json:"created_at"`
-	StartedAt    *time.Time             `json:"started_at,omitempty"`
-	CompletedAt  *time.Time             `json:"completed_at,omitempty"`
+	ID          string                 `json:"id"`
+	Type        string                 `json:"type"`
+	Parameters  map[string]interface{} `json:"parameters"`
+	RequesterID plugins.PluginID       `json:"requester_id"`
+	Status      string                 `json:"status"`
+	Result      map[string]interface{} `json:"result,omitempty"`
+	Error       string                 `json:"error,omitempty"`
+	CreatedAt   time.Time              `json:"created_at"`
+	StartedAt   *time.Time             `json:"started_at,omitempty"`
+	CompletedAt *time.Time             `json:"completed_at,omitempty"`
 }
 
 // NewRayPlugin creates a new Ray plugin instance
@@ -201,11 +201,11 @@ func (r *RayPlugin) Execute(ctx context.Context, operation string, params map[st
 // Health returns the current health status of the plugin
 func (r *RayPlugin) Health(ctx context.Context) (map[string]interface{}, error) {
 	health := map[string]interface{}{
-		"plugin_id":    r.id,
-		"initialized":  r.initialized,
-		"timestamp":    time.Now(),
-		"status":       "healthy",
-		"checks":       map[string]interface{}{},
+		"plugin_id":   r.id,
+		"initialized": r.initialized,
+		"timestamp":   time.Now(),
+		"status":      "healthy",
+		"checks":      map[string]interface{}{},
 	}
 
 	checks := health["checks"].(map[string]interface{})
@@ -283,7 +283,7 @@ func (r *RayPlugin) GetCapabilities() []string {
 // ValidateConfig validates the provided configuration
 func (r *RayPlugin) ValidateConfig(config map[string]interface{}) error {
 	required := []string{"python_venv", "flexcore_node_url"}
-	
+
 	for _, key := range required {
 		if _, exists := config[key]; !exists {
 			return fmt.Errorf("required configuration key missing: %s", key)
@@ -429,10 +429,10 @@ func (r *RayPlugin) handleDistributedExecutionRequest(ctx context.Context, messa
 
 	// Send acknowledgment back to requester
 	response := map[string]interface{}{
-		"operation":   "distributed.execution.accepted",
-		"task_id":     task.ID,
-		"ray_plugin":  r.id,
-		"timestamp":   time.Now(),
+		"operation":  "distributed.execution.accepted",
+		"task_id":    task.ID,
+		"ray_plugin": r.id,
+		"timestamp":  time.Now(),
 	}
 
 	return r.communicator.SendMessage(ctx, r.id, plugins.PluginID(requesterID), response)
@@ -526,13 +526,13 @@ print(json.dumps(result))
 	// Notify requester of completion
 	if r.communicator != nil {
 		response := map[string]interface{}{
-			"operation":   "distributed.execution.completed",
-			"task_id":     task.ID,
-			"status":      task.Status,
-			"result":      task.Result,
-			"error":       task.Error,
-			"ray_plugin":  r.id,
-			"timestamp":   time.Now(),
+			"operation":  "distributed.execution.completed",
+			"task_id":    task.ID,
+			"status":     task.Status,
+			"result":     task.Result,
+			"error":      task.Error,
+			"ray_plugin": r.id,
+			"timestamp":  time.Now(),
 		}
 		r.communicator.SendMessage(ctx, r.id, task.RequesterID, response)
 	}
@@ -542,11 +542,11 @@ print(json.dumps(result))
 
 func (r *RayPlugin) getClusterStatus(ctx context.Context, params map[string]interface{}) (map[string]interface{}, error) {
 	return map[string]interface{}{
-		"operation": "cluster.status",
+		"operation":   "cluster.status",
 		"cluster_url": r.rayClusterURL,
-		"nodes": r.clusterNodes,
-		"status": "healthy",
-		"timestamp": time.Now(),
+		"nodes":       r.clusterNodes,
+		"status":      "healthy",
+		"timestamp":   time.Now(),
 	}, nil
 }
 
@@ -554,17 +554,17 @@ func (r *RayPlugin) scaleCluster(ctx context.Context, params map[string]interfac
 	// Coordinate with Kubernetes plugin for auto-scaling
 	if r.communicator != nil {
 		message := map[string]interface{}{
-			"operation": "scale.cluster.request",
-			"requester": r.id,
+			"operation":  "scale.cluster.request",
+			"requester":  r.id,
 			"parameters": params,
-			"timestamp": time.Now(),
+			"timestamp":  time.Now(),
 		}
 		r.communicator.BroadcastMessage(ctx, r.id, plugins.PluginTypeKubernetes, message)
 	}
 
 	return map[string]interface{}{
 		"operation": "cluster.scale",
-		"status": "scaling",
+		"status":    "scaling",
 		"timestamp": time.Now(),
 	}, nil
 }
@@ -584,7 +584,7 @@ func (r *RayPlugin) cancelTask(ctx context.Context, params map[string]interface{
 func (r *RayPlugin) listTasks(ctx context.Context, params map[string]interface{}) (map[string]interface{}, error) {
 	return map[string]interface{}{
 		"operation": "task.list",
-		"tasks": r.taskQueue,
+		"tasks":     r.taskQueue,
 		"timestamp": time.Now(),
 	}, nil
 }

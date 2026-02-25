@@ -77,7 +77,7 @@ Downstream projects inherit parent facade classes to compose namespaces. This av
 
 ### Project runtime alias only; MRO protocol (subprojects)
 
-Access through **project runtime alias only**; no subdivision. Subprojects: nested classes for organization, then **class-level aliases at facade root** so call sites use `m.Foo`, `m.Bar` only (never `m.ProjectName.Foo` or `m.TargetOracle.Foo`). **Simple runtime aliases only** in __init__ (e.g. `c = FlextConstants`, `m = FlextModels`); never FlextRuntime.Aliases or any registry. MRO protocol only; direct methods.
+Access through **project runtime alias only**; no subdivision. Subprojects: nested classes for organization, then **class-level aliases at facade root** so call sites use `m.Foo`, `m.Bar` only (never `m.ProjectName.Foo` or `m.TargetOracle.Foo`). **Simple runtime aliases only** in **init** (e.g. `c = FlextConstants`, `m = FlextModels`); never FlextRuntime.Aliases or any registry. MRO protocol only; direct methods.
 
 ```python
 # models.py — inherit parent, define nested namespace, then alias at root
@@ -104,7 +104,7 @@ result = r[m.ExecuteResult].ok(m.ExecuteResult(name="x"))
 ```
 
 Anti-patterns:
-- **Defining runtime aliases via `FlextRuntime.Aliases.*`** — forbidden. Use simple aliases only: `c = FlextConstants`, `m = FlextModels`, `r = FlextResult`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`. No separate alias registry or staticmethod layer for package __init__.
+- **Defining runtime aliases via `FlextRuntime.Aliases.*`** — forbidden. Use simple aliases only: `c = FlextConstants`, `m = FlextModels`, `r = FlextResult`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`. No separate alias registry or staticmethod layer for package **init**.
 - Prefer `m.ExecuteResult` when a class-level alias exists; `m.TargetOracle.Foo` is allowed in subprojects
 - `from flext_meltano import FlextMeltanoModels as m_meltano` — duplicate alias surface
 - `class Meltano: X = Parent.Meltano.X` — assignment not valid as type

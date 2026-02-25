@@ -9,26 +9,26 @@ import (
 	"github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
 	"github.com/flext-sh/flext/pkg/controlpanel/handlers"
 	"github.com/flext-sh/flext/pkg/logging"
-	"github.com/flext-sh/flext/pkg/plugins/registry"
-	"github.com/flext-sh/flext/pkg/plugins/deployment"
 	"github.com/flext-sh/flext/pkg/plugins/communication"
+	"github.com/flext-sh/flext/pkg/plugins/deployment"
 	"github.com/flext-sh/flext/pkg/plugins/loader"
+	"github.com/flext-sh/flext/pkg/plugins/registry"
 )
 
 // Container manages dependency injection for FLEXT services
 type Container struct {
-	config               *config.Config
-	logger               logging.Logger
-	flexcoreHandler      *handlers.FlexCoreHandler
-	meltanoHandler       *handlers.MeltanoHandler
-	pluginHandler        interface{} // TODO: Implement when plugin system is ready
-	pipelineHandler      interface{} // TODO: Implement when pipeline system is ready
-	
+	config          *config.Config
+	logger          logging.Logger
+	flexcoreHandler *handlers.FlexCoreHandler
+	meltanoHandler  *handlers.MeltanoHandler
+	pluginHandler   interface{} // TODO: Implement when plugin system is ready
+	pipelineHandler interface{} // TODO: Implement when pipeline system is ready
+
 	// Plugin System Dependencies (injected via DI)
-	pluginRegistry       *registry.PluginRegistry
-	deploymentManager    *deployment.PluginDeploymentManager
-	communicationBus     *communication.FlexCoreCommunicationBus
-	pluginLoader         *loader.PluginLoader
+	pluginRegistry    *registry.PluginRegistry
+	deploymentManager *deployment.PluginDeploymentManager
+	communicationBus  *communication.FlexCoreCommunicationBus
+	pluginLoader      *loader.PluginLoader
 }
 
 // NewContainer creates a new DI container
@@ -57,18 +57,18 @@ func NewContainer(cfg *config.Config) (*Container, error) {
 		logging.F("pipeline_handler", "⏳ Future implementation"))
 
 	return &Container{
-		config:               cfg,
-		logger:               logger,
-		flexcoreHandler:      flexcoreHandler,
-		meltanoHandler:       meltanoHandler,
-		pluginHandler:        nil, // TODO: Implement when ready
-		pipelineHandler:      nil, // TODO: Implement when ready
-		
+		config:          cfg,
+		logger:          logger,
+		flexcoreHandler: flexcoreHandler,
+		meltanoHandler:  meltanoHandler,
+		pluginHandler:   nil, // TODO: Implement when ready
+		pipelineHandler: nil, // TODO: Implement when ready
+
 		// Plugin System Dependencies
-		pluginRegistry:       pluginRegistry,
-		deploymentManager:    deploymentManager,
-		communicationBus:     communicationBus,
-		pluginLoader:         pluginLoader,
+		pluginRegistry:    pluginRegistry,
+		deploymentManager: deploymentManager,
+		communicationBus:  communicationBus,
+		pluginLoader:      pluginLoader,
 	}, nil
 }
 
@@ -169,7 +169,7 @@ func (c *Container) GetPluginHandler() interface{} {
 		c.logger.Info("Plugin handler retrieved from DI container")
 		return c.pluginHandler
 	}
-	
+
 	c.logger.Info("Plugin handler not yet implemented - future expansion")
 	return nil
 }
@@ -182,7 +182,7 @@ func (c *Container) GetUnifiedMeltanoHandler() interface{} {
 			logging.F("features", "Meltano + Singer + DBT via flext-meltano"))
 		return c.meltanoHandler
 	}
-	
+
 	c.logger.Warn("Meltano handler is nil - initialization failed")
 	return nil
 }
@@ -195,7 +195,7 @@ func (c *Container) GetFlexcoreHandler() interface{} {
 			logging.F("features", "FlexCore coordination + plugin management"))
 		return c.flexcoreHandler
 	}
-	
+
 	c.logger.Warn("FlexCore handler is nil - initialization failed")
 	return nil
 }
@@ -206,7 +206,7 @@ func (c *Container) GetPipelineHandler() interface{} {
 		c.logger.Info("Pipeline handler retrieved from DI container")
 		return c.pipelineHandler
 	}
-	
+
 	c.logger.Info("Pipeline handler not yet implemented - future expansion")
 	return nil
 }
@@ -217,7 +217,7 @@ func (c *Container) GetPluginRegistry() *registry.PluginRegistry {
 		c.logger.Info("Plugin registry retrieved from DI container")
 		return c.pluginRegistry
 	}
-	
+
 	c.logger.Warn("Plugin registry is nil - initialization failed")
 	return nil
 }
@@ -228,7 +228,7 @@ func (c *Container) GetDeploymentManager() *deployment.PluginDeploymentManager {
 		c.logger.Info("Deployment manager retrieved from DI container")
 		return c.deploymentManager
 	}
-	
+
 	c.logger.Warn("Deployment manager is nil - initialization failed")
 	return nil
 }
@@ -239,7 +239,7 @@ func (c *Container) GetCommunicationBus() *communication.FlexCoreCommunicationBu
 		c.logger.Info("Communication bus retrieved from DI container")
 		return c.communicationBus
 	}
-	
+
 	c.logger.Warn("Communication bus is nil - initialization failed")
 	return nil
 }
@@ -250,7 +250,7 @@ func (c *Container) GetPluginLoader() *loader.PluginLoader {
 		c.logger.Info("Plugin loader retrieved from DI container")
 		return c.pluginLoader
 	}
-	
+
 	c.logger.Warn("Plugin loader is nil - initialization failed")
 	return nil
 }

@@ -1,8 +1,8 @@
 package container
 
 import (
-	"sync"
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
+	"sync"
 )
 
 // UnifiedContainer provides basic dependency injection
@@ -16,7 +16,7 @@ type UnifiedContainer struct {
 // NewUnifiedContainer creates a new container with basic dependencies
 func NewUnifiedContainer() (*UnifiedContainer, error) {
 	logger := logging.GetLogger()
-	
+
 	return &UnifiedContainer{
 		logger: logger,
 	}, nil

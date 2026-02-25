@@ -181,8 +181,8 @@ func (p *BasePipelineEntity) GetName() string {
 func (p *BasePipelineEntity) SetName(name string) error {
 	if name == "" {
 		return &errors.DomainError{
-			Code:        "INVALID_PIPELINE_NAME",
-			Message:     "Pipeline name cannot be empty",
+			Code:    "INVALID_PIPELINE_NAME",
+			Message: "Pipeline name cannot be empty",
 			Details: "All pipelines must have a valid name",
 		}
 	}
@@ -219,8 +219,8 @@ func (p *BasePipelineEntity) SetStatus(status string) error {
 	}
 
 	return &errors.DomainError{
-		Code:        "INVALID_PIPELINE_STATUS",
-		Message:     "Invalid pipeline status",
+		Code:    "INVALID_PIPELINE_STATUS",
+		Message: "Invalid pipeline status",
 		Details: "Pipeline status must be one of: active, inactive, running, failed, completed",
 	}
 }
@@ -301,8 +301,8 @@ func (p *BasePluginEntity) GetName() string {
 func (p *BasePluginEntity) SetName(name string) error {
 	if name == "" {
 		return &errors.DomainError{
-			Code:        "INVALID_PLUGIN_NAME",
-			Message:     "Plugin name cannot be empty",
+			Code:    "INVALID_PLUGIN_NAME",
+			Message: "Plugin name cannot be empty",
 			Details: "All plugins must have a valid name",
 		}
 	}
@@ -328,8 +328,8 @@ func (p *BasePluginEntity) SetType(pluginType string) error {
 	}
 
 	return &errors.DomainError{
-		Code:        "INVALID_PLUGIN_TYPE",
-		Message:     "Invalid plugin type",
+		Code:    "INVALID_PLUGIN_TYPE",
+		Message: "Invalid plugin type",
 		Details: "Plugin type must be one of: tap, target, transformer, extractor, loader",
 	}
 }
@@ -343,8 +343,8 @@ func (p *BasePluginEntity) GetPluginVersion() string {
 func (p *BasePluginEntity) SetPluginVersion(version string) error {
 	if version == "" {
 		return &errors.DomainError{
-			Code:        "INVALID_PLUGIN_VERSION",
-			Message:     "Plugin version cannot be empty",
+			Code:    "INVALID_PLUGIN_VERSION",
+			Message: "Plugin version cannot be empty",
 			Details: "All plugins must have a valid version",
 		}
 	}
@@ -452,8 +452,8 @@ func (e *BaseExecutionEntity) SetStatus(status string) error {
 	}
 
 	return &errors.DomainError{
-		Code:        "INVALID_EXECUTION_STATUS",
-		Message:     "Invalid execution status",
+		Code:    "INVALID_EXECUTION_STATUS",
+		Message: "Invalid execution status",
 		Details: "Execution status must be one of: pending, running, completed, failed, cancelled",
 	}
 }
@@ -489,8 +489,8 @@ func (e *BaseExecutionEntity) GetProgress() float64 {
 func (e *BaseExecutionEntity) SetProgress(progress float64) error {
 	if progress < 0.0 || progress > 100.0 {
 		return &errors.DomainError{
-			Code:        "INVALID_PROGRESS",
-			Message:     "Progress must be between 0 and 100",
+			Code:    "INVALID_PROGRESS",
+			Message: "Progress must be between 0 and 100",
 			Details: "Execution progress must be a valid percentage",
 		}
 	}
@@ -513,8 +513,8 @@ func (e *BaseExecutionEntity) GetStepsCompleted() int {
 func (e *BaseExecutionEntity) SetStepsCompleted(completed int) error {
 	if completed < 0 {
 		return &errors.DomainError{
-			Code:        "INVALID_STEPS_COMPLETED",
-			Message:     "Steps completed cannot be negative",
+			Code:    "INVALID_STEPS_COMPLETED",
+			Message: "Steps completed cannot be negative",
 			Details: "Steps completed must be a non-negative number",
 		}
 	}

@@ -9,10 +9,10 @@ import (
 
 // DatabaseManager manages all database repositories and operations
 type DatabaseManager struct {
-	db                  *Database
-	logger              logging.Logger
-	PipelineRepository  *PipelineRepository
-	PluginRepository    *PluginRepository
+	db                 *Database
+	logger             logging.Logger
+	PipelineRepository *PipelineRepository
+	PluginRepository   *PluginRepository
 	// ExecutionRepository *ExecutionRepository // Disabled - implementation not found
 }
 
@@ -30,10 +30,10 @@ func NewDatabaseManager(config *DatabaseConfig, logger logging.Logger) (*Databas
 	// executionRepo := NewExecutionRepository(db, logger) // Disabled - implementation not found
 
 	manager := &DatabaseManager{
-		db:                  db,
-		logger:              logger,
-		PipelineRepository:  pipelineRepo,
-		PluginRepository:    pluginRepo,
+		db:                 db,
+		logger:             logger,
+		PipelineRepository: pipelineRepo,
+		PluginRepository:   pluginRepo,
 		// ExecutionRepository: executionRepo, // Disabled - implementation not found
 	}
 

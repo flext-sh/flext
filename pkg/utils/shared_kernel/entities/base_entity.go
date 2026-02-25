@@ -136,8 +136,8 @@ func (e *BaseEntity) IsDeleted() bool {
 func (e *BaseEntity) Delete() error {
 	if e.IsDeleted() {
 		return &errors.DomainError{
-			Code:        "ENTITY_ALREADY_DELETED",
-			Message:     "Entity is already deleted",
+			Code:    "ENTITY_ALREADY_DELETED",
+			Message: "Entity is already deleted",
 			Details: "Cannot delete an entity that is already marked as deleted",
 		}
 	}
@@ -153,8 +153,8 @@ func (e *BaseEntity) Delete() error {
 func (e *BaseEntity) Restore() error {
 	if !e.IsDeleted() {
 		return &errors.DomainError{
-			Code:        "ENTITY_NOT_DELETED",
-			Message:     "Entity is not deleted",
+			Code:    "ENTITY_NOT_DELETED",
+			Message: "Entity is not deleted",
 			Details: "Cannot restore an entity that is not marked as deleted",
 		}
 	}
@@ -174,32 +174,32 @@ func (e *BaseEntity) GetDeletedAt() *time.Time {
 func (e *BaseEntity) Validate() error {
 	if e.ID == uuid.Nil {
 		return &errors.DomainError{
-			Code:        "INVALID_ENTITY_ID",
-			Message:     "Entity ID cannot be empty",
+			Code:    "INVALID_ENTITY_ID",
+			Message: "Entity ID cannot be empty",
 			Details: "All entities must have a valid UUID",
 		}
 	}
 
 	if e.CreatedAt.IsZero() {
 		return &errors.DomainError{
-			Code:        "INVALID_CREATED_AT",
-			Message:     "Created at cannot be zero",
+			Code:    "INVALID_CREATED_AT",
+			Message: "Created at cannot be zero",
 			Details: "All entities must have a valid creation timestamp",
 		}
 	}
 
 	if e.UpdatedAt.IsZero() {
 		return &errors.DomainError{
-			Code:        "INVALID_UPDATED_AT",
-			Message:     "Updated at cannot be zero",
+			Code:    "INVALID_UPDATED_AT",
+			Message: "Updated at cannot be zero",
 			Details: "All entities must have a valid update timestamp",
 		}
 	}
 
 	if e.Version <= 0 {
 		return &errors.DomainError{
-			Code:        "INVALID_VERSION",
-			Message:     "Version must be positive",
+			Code:    "INVALID_VERSION",
+			Message: "Version must be positive",
 			Details: "Entity version must be a positive number",
 		}
 	}
@@ -308,8 +308,8 @@ func (a *BaseAggregateRoot) CreateSnapshot() (*AggregateSnapshot, error) {
 func (a *BaseAggregateRoot) LoadFromSnapshot(snapshot *AggregateSnapshot) error {
 	if snapshot.AggregateID != a.ID {
 		return &errors.DomainError{
-			Code:        "SNAPSHOT_MISMATCH",
-			Message:     "Snapshot aggregate ID does not match",
+			Code:    "SNAPSHOT_MISMATCH",
+			Message: "Snapshot aggregate ID does not match",
 			Details: "Cannot load snapshot from different aggregate",
 		}
 	}
