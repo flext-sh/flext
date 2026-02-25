@@ -138,20 +138,6 @@ In those cases, there are several ways to disable or ignore strict errors in ver
 
 Below are several techniques to achieve it.
 
-#### Disable type checks in a line
-
-You can disable the errors for a specific line using a comment of:
-
-```python
-# type: ignore
-```
-
-or (to be specific to pylance/pyright):
-
-```python
-# pyright: ignore
-```
-
 ([pyright](https://github.com/microsoft/pyright) is the language server used by Pylance.).
 
 coming back to the example with `age='23'`, it would be:
