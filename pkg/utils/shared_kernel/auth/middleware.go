@@ -221,8 +221,8 @@ func (m *UnifiedAuthMiddleware) getUserContext(c echo.Context) (*UserContext, er
 	userContext, ok := c.Request().Context().Value("user_context").(*UserContext)
 	if !ok {
 		return nil, &errors.DomainError{
-			Code:        "USER_CONTEXT_NOT_FOUND",
-			Message:     "User context not found",
+			Code:    "USER_CONTEXT_NOT_FOUND",
+			Message: "User context not found",
 			Details: "Authentication middleware was not applied or user is not authenticated",
 		}
 	}
@@ -302,8 +302,8 @@ func GetUserFromContext(c echo.Context) (*UserContext, error) {
 	userContext, ok := c.Request().Context().Value("user_context").(*UserContext)
 	if !ok {
 		return nil, &errors.DomainError{
-			Code:        "USER_CONTEXT_NOT_FOUND",
-			Message:     "User context not found",
+			Code:    "USER_CONTEXT_NOT_FOUND",
+			Message: "User context not found",
 			Details: "No authenticated user found in request context",
 		}
 	}

@@ -73,22 +73,22 @@ func (h *MeltanoHandler) RegisterRoutes(router *gin.RouterGroup) {
 
 // MeltanoProject represents a Meltano project
 type MeltanoProject struct {
-	Name        string                 `json:"name"`
-	Version     string                 `json:"version"`
-	Status      string                 `json:"status"`
-	Plugins     []MeltanoPlugin        `json:"plugins"`
-	Schedules   []MeltanoSchedule      `json:"schedules"`
-	Metadata    map[string]interface{} `json:"metadata"`
+	Name      string                 `json:"name"`
+	Version   string                 `json:"version"`
+	Status    string                 `json:"status"`
+	Plugins   []MeltanoPlugin        `json:"plugins"`
+	Schedules []MeltanoSchedule      `json:"schedules"`
+	Metadata  map[string]interface{} `json:"metadata"`
 }
 
 // MeltanoPlugin represents a Meltano plugin
 type MeltanoPlugin struct {
-	Name      string                 `json:"name"`
-	Type      string                 `json:"type"`
-	Variant   string                 `json:"variant"`
-	Version   string                 `json:"version"`
-	Status    string                 `json:"status"`
-	Config    map[string]interface{} `json:"config"`
+	Name    string                 `json:"name"`
+	Type    string                 `json:"type"`
+	Variant string                 `json:"variant"`
+	Version string                 `json:"version"`
+	Status  string                 `json:"status"`
+	Config  map[string]interface{} `json:"config"`
 }
 
 // MeltanoSchedule represents a Meltano schedule
@@ -147,7 +147,7 @@ func (h *MeltanoHandler) ListMeltanoProjects(c *gin.Context) {
 	resp, err := h.httpClient.Do(req)
 	if err != nil {
 		h.logger.Error("Meltano projects request failed", logging.F("error", err))
-		
+
 		// Fallback to direct Meltano project discovery
 		projects := h.discoverMeltanoProjects()
 		c.JSON(http.StatusOK, gin.H{
@@ -262,7 +262,7 @@ func (h *MeltanoHandler) ExecuteMeltanoPipeline(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("Meltano pipeline execution coordinated successfully", 
+	h.logger.Info("Meltano pipeline execution coordinated successfully",
 		logging.F("correlation_id", pipelineRequest["coordination"].(map[string]interface{})["correlation_id"]))
 
 	c.JSON(resp.StatusCode, executionResponse)
@@ -284,7 +284,7 @@ func (h *MeltanoHandler) GetMeltanoStatus(c *gin.Context) {
 	resp, err := h.httpClient.Do(req)
 	if err != nil {
 		h.logger.Error("Meltano status request failed", logging.F("error", err))
-		
+
 		// Fallback status
 		c.JSON(http.StatusOK, gin.H{
 			"status":          "unknown",
@@ -356,7 +356,7 @@ func (h *MeltanoHandler) InstallMeltanoPlugin(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("Meltano plugin installation coordinated successfully", 
+	h.logger.Info("Meltano plugin installation coordinated successfully",
 		logging.F("correlation_id", installRequest["coordination"].(map[string]interface{})["correlation_id"]))
 
 	c.JSON(resp.StatusCode, installResponse)
@@ -442,7 +442,7 @@ func (h *MeltanoHandler) UpdateMeltanoConfig(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("Meltano config update coordinated successfully", 
+	h.logger.Info("Meltano config update coordinated successfully",
 		logging.F("correlation_id", configUpdate["coordination"].(map[string]interface{})["correlation_id"]))
 
 	c.JSON(resp.StatusCode, updateResponse)
@@ -528,7 +528,7 @@ func (h *MeltanoHandler) CreateMeltanoSchedule(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("Meltano schedule creation coordinated successfully", 
+	h.logger.Info("Meltano schedule creation coordinated successfully",
 		logging.F("correlation_id", scheduleRequest["coordination"].(map[string]interface{})["correlation_id"]))
 
 	c.JSON(resp.StatusCode, scheduleResponse)
@@ -550,35 +550,35 @@ func (h *MeltanoHandler) ListSingerTaps(c *gin.Context) {
 	resp, err := h.httpClient.Do(req)
 	if err != nil {
 		h.logger.Error("Singer taps request failed", logging.F("error", err))
-		
+
 		// Fallback to predefined FLEXT Singer taps
 		taps := []SingerTap{
 			{
-				Name:        "tap-oracle",
-				Description: "Oracle database extractor for FLEXT",
-				Variant:     "flext",
-				Version:     "1.0.0",
-				Status:      "available",
+				Name:         "tap-oracle",
+				Description:  "Oracle database extractor for FLEXT",
+				Variant:      "flext",
+				Version:      "1.0.0",
+				Status:       "available",
 				Capabilities: []string{"discovery", "schema", "stream"},
 			},
 			{
-				Name:        "tap-ldap",
-				Description: "LDAP directory extractor for FLEXT",
-				Variant:     "flext",
-				Version:     "1.0.0",
-				Status:      "available",
+				Name:         "tap-ldap",
+				Description:  "LDAP directory extractor for FLEXT",
+				Variant:      "flext",
+				Version:      "1.0.0",
+				Status:       "available",
 				Capabilities: []string{"discovery", "schema", "stream"},
 			},
 			{
-				Name:        "tap-ldif",
-				Description: "LDIF file extractor for FLEXT",
-				Variant:     "flext",
-				Version:     "1.0.0",
-				Status:      "available",
+				Name:         "tap-ldif",
+				Description:  "LDIF file extractor for FLEXT",
+				Variant:      "flext",
+				Version:      "1.0.0",
+				Status:       "available",
 				Capabilities: []string{"discovery", "schema", "stream"},
 			},
 		}
-		
+
 		c.JSON(http.StatusOK, gin.H{
 			"taps":    taps,
 			"source":  "fallback",
@@ -614,7 +614,7 @@ func (h *MeltanoHandler) ListSingerTargets(c *gin.Context) {
 	resp, err := h.httpClient.Do(req)
 	if err != nil {
 		h.logger.Error("Singer targets request failed", logging.F("error", err))
-		
+
 		// Fallback to predefined FLEXT Singer targets
 		targets := []SingerTarget{
 			{
@@ -639,7 +639,7 @@ func (h *MeltanoHandler) ListSingerTargets(c *gin.Context) {
 				Status:      "available",
 			},
 		}
-		
+
 		c.JSON(http.StatusOK, gin.H{
 			"targets": targets,
 			"source":  "fallback",
@@ -709,7 +709,7 @@ func (h *MeltanoHandler) ExecuteSingerExtraction(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("Singer extraction coordinated successfully", 
+	h.logger.Info("Singer extraction coordinated successfully",
 		logging.F("correlation_id", extractionRequest["coordination"].(map[string]interface{})["correlation_id"]))
 
 	c.JSON(resp.StatusCode, extractionResponse)
@@ -765,7 +765,7 @@ func (h *MeltanoHandler) ExecuteSingerLoad(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("Singer load coordinated successfully", 
+	h.logger.Info("Singer load coordinated successfully",
 		logging.F("correlation_id", loadRequest["coordination"].(map[string]interface{})["correlation_id"]))
 
 	c.JSON(resp.StatusCode, loadResponse)
@@ -774,7 +774,7 @@ func (h *MeltanoHandler) ExecuteSingerLoad(c *gin.Context) {
 // GetSingerSchema gets Singer tap schema
 func (h *MeltanoHandler) GetSingerSchema(c *gin.Context) {
 	tapName := c.Param("tap")
-	
+
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 30*time.Second)
 	defer cancel()
 
@@ -807,7 +807,7 @@ func (h *MeltanoHandler) GetSingerSchema(c *gin.Context) {
 // TestSingerTap tests Singer tap connection
 func (h *MeltanoHandler) TestSingerTap(c *gin.Context) {
 	tapName := c.Param("tap")
-	
+
 	var testRequest map[string]interface{}
 	if err := c.ShouldBindJSON(&testRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid test request", "details": err.Error()})
@@ -856,7 +856,7 @@ func (h *MeltanoHandler) TestSingerTap(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("Singer tap test coordinated successfully", 
+	h.logger.Info("Singer tap test coordinated successfully",
 		logging.F("tap_name", tapName),
 		logging.F("correlation_id", testRequest["coordination"].(map[string]interface{})["correlation_id"]))
 
@@ -866,7 +866,7 @@ func (h *MeltanoHandler) TestSingerTap(c *gin.Context) {
 // TestSingerTarget tests Singer target connection
 func (h *MeltanoHandler) TestSingerTarget(c *gin.Context) {
 	targetName := c.Param("target")
-	
+
 	var testRequest map[string]interface{}
 	if err := c.ShouldBindJSON(&testRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid test request", "details": err.Error()})
@@ -915,7 +915,7 @@ func (h *MeltanoHandler) TestSingerTarget(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("Singer target test coordinated successfully", 
+	h.logger.Info("Singer target test coordinated successfully",
 		logging.F("target_name", targetName),
 		logging.F("correlation_id", testRequest["coordination"].(map[string]interface{})["correlation_id"]))
 
@@ -938,7 +938,7 @@ func (h *MeltanoHandler) ListDBTModels(c *gin.Context) {
 	resp, err := h.httpClient.Do(req)
 	if err != nil {
 		h.logger.Error("DBT models request failed", logging.F("error", err))
-		
+
 		// Fallback to predefined FLEXT DBT models
 		models := []DBTModel{
 			{
@@ -956,7 +956,7 @@ func (h *MeltanoHandler) ListDBTModels(c *gin.Context) {
 				Dependencies: []string{"tap_ldap"},
 			},
 		}
-		
+
 		c.JSON(http.StatusOK, gin.H{
 			"models":  models,
 			"source":  "fallback",
@@ -1026,7 +1026,7 @@ func (h *MeltanoHandler) ExecuteDBTModels(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("DBT execution coordinated successfully", 
+	h.logger.Info("DBT execution coordinated successfully",
 		logging.F("correlation_id", dbtRequest["coordination"].(map[string]interface{})["correlation_id"]))
 
 	c.JSON(resp.StatusCode, dbtResponse)
@@ -1082,7 +1082,7 @@ func (h *MeltanoHandler) ExecuteDBTTests(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("DBT test execution coordinated successfully", 
+	h.logger.Info("DBT test execution coordinated successfully",
 		logging.F("correlation_id", testRequest["coordination"].(map[string]interface{})["correlation_id"]))
 
 	c.JSON(resp.StatusCode, testResponse)
@@ -1138,7 +1138,7 @@ func (h *MeltanoHandler) CompileDBTModels(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("DBT compilation coordinated successfully", 
+	h.logger.Info("DBT compilation coordinated successfully",
 		logging.F("correlation_id", compileRequest["coordination"].(map[string]interface{})["correlation_id"]))
 
 	c.JSON(resp.StatusCode, compileResponse)

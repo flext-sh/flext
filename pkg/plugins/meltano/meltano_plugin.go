@@ -35,13 +35,13 @@ import (
 
 // MeltanoPlugin implements the deployable Meltano plugin
 type MeltanoPlugin struct {
-	id               plugins.PluginID
-	config           map[string]interface{}
-	pythonVenv       string
-	meltanoProject   string
-	initialized      bool
-	communicator     plugins.PluginCommunicator
-	flexcoreNodeURL  string
+	id              plugins.PluginID
+	config          map[string]interface{}
+	pythonVenv      string
+	meltanoProject  string
+	initialized     bool
+	communicator    plugins.PluginCommunicator
+	flexcoreNodeURL string
 }
 
 // NewMeltanoPlugin creates a new Meltano plugin instance
@@ -64,7 +64,7 @@ func (m *MeltanoPlugin) Metadata() plugins.PluginMetadata {
 		Author:      "FLEXT Development Team",
 		Capabilities: []string{
 			"singer.tap.execution",
-			"singer.target.execution", 
+			"singer.target.execution",
 			"singer.schema.discovery",
 			"dbt.model.execution",
 			"dbt.test.execution",
@@ -179,11 +179,11 @@ func (m *MeltanoPlugin) Execute(ctx context.Context, operation string, params ma
 // Health returns the current health status of the plugin
 func (m *MeltanoPlugin) Health(ctx context.Context) (map[string]interface{}, error) {
 	health := map[string]interface{}{
-		"plugin_id":    m.id,
-		"initialized":  m.initialized,
-		"timestamp":    time.Now(),
-		"status":       "healthy",
-		"checks":       map[string]interface{}{},
+		"plugin_id":   m.id,
+		"initialized": m.initialized,
+		"timestamp":   time.Now(),
+		"status":      "healthy",
+		"checks":      map[string]interface{}{},
 	}
 
 	checks := health["checks"].(map[string]interface{})
@@ -250,7 +250,7 @@ func (m *MeltanoPlugin) GetCapabilities() []string {
 // ValidateConfig validates the provided configuration
 func (m *MeltanoPlugin) ValidateConfig(config map[string]interface{}) error {
 	required := []string{"python_venv", "meltano_project", "flexcore_node_url"}
-	
+
 	for _, key := range required {
 		if _, exists := config[key]; !exists {
 			return fmt.Errorf("required configuration key missing: %s", key)
@@ -404,7 +404,7 @@ func (m *MeltanoPlugin) executeSingerTap(ctx context.Context, params map[string]
 	}
 
 	config, _ := params["config"].(map[string]interface{})
-	
+
 	// Notify other plugins about tap execution
 	if m.communicator != nil {
 		message := map[string]interface{}{
@@ -432,7 +432,7 @@ print(json.dumps(result))
 		// Notify failure
 		if m.communicator != nil {
 			message := map[string]interface{}{
-				"operation": "singer.tap.failed", 
+				"operation": "singer.tap.failed",
 				"tap_name":  tapName,
 				"error":     err.Error(),
 				"timestamp": time.Now(),
@@ -547,11 +547,11 @@ print(json.dumps(result))
 	}
 
 	return map[string]interface{}{
-		"operation":     "data.pipeline.full",
-		"pipeline_name": pipelineName,
-		"result":        result,
+		"operation":      "data.pipeline.full",
+		"pipeline_name":  pipelineName,
+		"result":         result,
 		"execution_mode": execution_mode,
-		"timestamp":     time.Now(),
+		"timestamp":      time.Now(),
 	}, nil
 }
 

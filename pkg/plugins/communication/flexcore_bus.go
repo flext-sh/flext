@@ -30,8 +30,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/go-redis/redis/v8"
 	"github.com/flext-sh/flext/pkg/plugins"
+	"github.com/go-redis/redis/v8"
 )
 
 // FlexCoreCommunicationBus implements distributed communication between FlexCore instances
@@ -50,15 +50,15 @@ type FlexCoreCommunicationBus struct {
 
 // FlexCoreNodeInfo represents information about a discovered FlexCore node
 type FlexCoreNodeInfo struct {
-	NodeID          string                 `json:"node_id"`
-	NodeURL         string                 `json:"node_url"`
-	Status          string                 `json:"status"`
-	LastSeen        time.Time              `json:"last_seen"`
-	LoadedPlugins   []plugins.PluginID     `json:"loaded_plugins"`
-	Capabilities    []string               `json:"capabilities"`
-	Resources       map[string]interface{} `json:"resources"`
-	Location        string                 `json:"location,omitempty"`
-	Version         string                 `json:"version"`
+	NodeID        string                 `json:"node_id"`
+	NodeURL       string                 `json:"node_url"`
+	Status        string                 `json:"status"`
+	LastSeen      time.Time              `json:"last_seen"`
+	LoadedPlugins []plugins.PluginID     `json:"loaded_plugins"`
+	Capabilities  []string               `json:"capabilities"`
+	Resources     map[string]interface{} `json:"resources"`
+	Location      string                 `json:"location,omitempty"`
+	Version       string                 `json:"version"`
 }
 
 // DiscoveredPlugin represents a plugin discovered on the network
@@ -81,23 +81,23 @@ type MessageHandler struct {
 
 // FlexCoreMessage represents a message in the FlexCore communication bus
 type FlexCoreMessage struct {
-	ID              string                 `json:"id"`
-	Type            string                 `json:"type"`
-	Source          MessageSource          `json:"source"`
-	Destination     MessageDestination     `json:"destination"`
-	Payload         map[string]interface{} `json:"payload"`
-	Timestamp       time.Time              `json:"timestamp"`
-	TTL             time.Duration          `json:"ttl,omitempty"`
-	ReplyTo         string                 `json:"reply_to,omitempty"`
-	CorrelationID   string                 `json:"correlation_id,omitempty"`
-	Priority        int                    `json:"priority,omitempty"`
+	ID            string                 `json:"id"`
+	Type          string                 `json:"type"`
+	Source        MessageSource          `json:"source"`
+	Destination   MessageDestination     `json:"destination"`
+	Payload       map[string]interface{} `json:"payload"`
+	Timestamp     time.Time              `json:"timestamp"`
+	TTL           time.Duration          `json:"ttl,omitempty"`
+	ReplyTo       string                 `json:"reply_to,omitempty"`
+	CorrelationID string                 `json:"correlation_id,omitempty"`
+	Priority      int                    `json:"priority,omitempty"`
 }
 
 // MessageSource represents the source of a message
 type MessageSource struct {
-	NodeID    string           `json:"node_id"`
-	NodeURL   string           `json:"node_url"`
-	PluginID  plugins.PluginID `json:"plugin_id,omitempty"`
+	NodeID   string           `json:"node_id"`
+	NodeURL  string           `json:"node_url"`
+	PluginID plugins.PluginID `json:"plugin_id,omitempty"`
 }
 
 // MessageDestination represents the destination of a message
@@ -147,19 +147,19 @@ func NewFlexCoreCommunicationBus(redisURL, nodeID, nodeURL string) (*FlexCoreCom
 func (bus *FlexCoreCommunicationBus) Start() error {
 	// Start node discovery announcements
 	go bus.nodeDiscoveryAnnouncer()
-	
+
 	// Start node discovery listener
 	go bus.nodeDiscoveryListener()
-	
+
 	// Start plugin discovery announcer
 	go bus.pluginDiscoveryAnnouncer()
-	
+
 	// Start plugin discovery listener
 	go bus.pluginDiscoveryListener()
-	
+
 	// Start message routing service
 	go bus.messageRouter()
-	
+
 	// Start health monitoring
 	go bus.healthMonitor()
 
@@ -355,10 +355,10 @@ func (bus *FlexCoreCommunicationBus) RequestDistributedExecution(ctx context.Con
 			NodeURL: bus.nodeURL,
 		},
 		Payload: map[string]interface{}{
-			"request":           request,
-			"coordinator_node":  bus.nodeID,
-			"execution_id":      request.ExecutionID,
-			"target_nodes":      availableNodes,
+			"request":          request,
+			"coordinator_node": bus.nodeID,
+			"execution_id":     request.ExecutionID,
+			"target_nodes":     availableNodes,
 		},
 		Timestamp: time.Now(),
 		TTL:       request.Timeout,
@@ -370,7 +370,7 @@ func (bus *FlexCoreCommunicationBus) RequestDistributedExecution(ctx context.Con
 			NodeID:  node.NodeID,
 			NodeURL: node.NodeURL,
 		}
-		
+
 		if err := bus.publishMessage(ctx, message); err != nil {
 			return nil, fmt.Errorf("failed to send execution request to node %s: %w", node.NodeID, err)
 		}
@@ -378,11 +378,11 @@ func (bus *FlexCoreCommunicationBus) RequestDistributedExecution(ctx context.Con
 
 	// Wait for responses (simplified - would need proper coordination)
 	response := &DistributedExecutionResponse{
-		ExecutionID:    request.ExecutionID,
-		CoordinatorNode: bus.nodeID,
+		ExecutionID:      request.ExecutionID,
+		CoordinatorNode:  bus.nodeID,
 		ParticipantNodes: availableNodes,
-		Status:         "executing",
-		StartedAt:      time.Now(),
+		Status:           "executing",
+		StartedAt:        time.Now(),
 	}
 
 	return response, nil
@@ -390,26 +390,26 @@ func (bus *FlexCoreCommunicationBus) RequestDistributedExecution(ctx context.Con
 
 // DistributedExecutionRequest represents a request for distributed execution
 type DistributedExecutionRequest struct {
-	ExecutionID   string                 `json:"execution_id"`
-	PluginType    plugins.PluginType     `json:"plugin_type"`
-	Operation     string                 `json:"operation"`
-	Parameters    map[string]interface{} `json:"parameters"`
-	MinNodes      int                    `json:"min_nodes"`
-	MaxNodes      int                    `json:"max_nodes"`
-	Timeout       time.Duration          `json:"timeout"`
-	Requirements  map[string]interface{} `json:"requirements,omitempty"`
+	ExecutionID  string                 `json:"execution_id"`
+	PluginType   plugins.PluginType     `json:"plugin_type"`
+	Operation    string                 `json:"operation"`
+	Parameters   map[string]interface{} `json:"parameters"`
+	MinNodes     int                    `json:"min_nodes"`
+	MaxNodes     int                    `json:"max_nodes"`
+	Timeout      time.Duration          `json:"timeout"`
+	Requirements map[string]interface{} `json:"requirements,omitempty"`
 }
 
 // DistributedExecutionResponse represents a response to distributed execution
 type DistributedExecutionResponse struct {
-	ExecutionID      string                `json:"execution_id"`
-	CoordinatorNode  string                `json:"coordinator_node"`
-	ParticipantNodes []FlexCoreNodeInfo    `json:"participant_nodes"`
-	Status           string                `json:"status"`
+	ExecutionID      string                 `json:"execution_id"`
+	CoordinatorNode  string                 `json:"coordinator_node"`
+	ParticipantNodes []FlexCoreNodeInfo     `json:"participant_nodes"`
+	Status           string                 `json:"status"`
 	Results          map[string]interface{} `json:"results,omitempty"`
-	StartedAt        time.Time             `json:"started_at"`
-	CompletedAt      *time.Time            `json:"completed_at,omitempty"`
-	ErrorMessage     string                `json:"error_message,omitempty"`
+	StartedAt        time.Time              `json:"started_at"`
+	CompletedAt      *time.Time             `json:"completed_at,omitempty"`
+	ErrorMessage     string                 `json:"error_message,omitempty"`
 }
 
 // Helper methods
@@ -527,7 +527,7 @@ func (bus *FlexCoreCommunicationBus) subscribeToChannel(ctx context.Context, cha
 			if err := json.Unmarshal([]byte(msg.Payload), &flexCoreMessage); err != nil {
 				continue
 			}
-			
+
 			if err := handler(flexCoreMessage); err != nil {
 				// Log error but continue processing messages
 				fmt.Printf("Message handler error: %v\n", err)

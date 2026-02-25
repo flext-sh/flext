@@ -36,41 +36,41 @@ import (
 
 // KubernetesPlugin implements the deployable Kubernetes orchestration plugin
 type KubernetesPlugin struct {
-	id               plugins.PluginID
-	config           map[string]interface{}
-	kubeconfigPath   string
-	namespace        string
-	clusterName      string
-	initialized      bool
-	communicator     plugins.PluginCommunicator
-	flexcoreNodeURL  string
-	deployments      []KubernetesDeployment
-	services         []KubernetesService
-	pods             []KubernetesPod
+	id              plugins.PluginID
+	config          map[string]interface{}
+	kubeconfigPath  string
+	namespace       string
+	clusterName     string
+	initialized     bool
+	communicator    plugins.PluginCommunicator
+	flexcoreNodeURL string
+	deployments     []KubernetesDeployment
+	services        []KubernetesService
+	pods            []KubernetesPod
 }
 
 // KubernetesDeployment represents a Kubernetes deployment
 type KubernetesDeployment struct {
-	Name          string                 `json:"name"`
-	Namespace     string                 `json:"namespace"`
-	Replicas      int32                  `json:"replicas"`
-	Image         string                 `json:"image"`
-	Status        string                 `json:"status"`
-	Labels        map[string]string      `json:"labels"`
-	CreatedAt     time.Time              `json:"created_at"`
-	UpdatedAt     time.Time              `json:"updated_at"`
+	Name      string            `json:"name"`
+	Namespace string            `json:"namespace"`
+	Replicas  int32             `json:"replicas"`
+	Image     string            `json:"image"`
+	Status    string            `json:"status"`
+	Labels    map[string]string `json:"labels"`
+	CreatedAt time.Time         `json:"created_at"`
+	UpdatedAt time.Time         `json:"updated_at"`
 }
 
 // KubernetesService represents a Kubernetes service
 type KubernetesService struct {
-	Name        string                 `json:"name"`
-	Namespace   string                 `json:"namespace"`
-	Type        string                 `json:"type"`
-	ClusterIP   string                 `json:"cluster_ip"`
-	ExternalIP  string                 `json:"external_ip,omitempty"`
-	Ports       []ServicePort          `json:"ports"`
-	Status      string                 `json:"status"`
-	CreatedAt   time.Time              `json:"created_at"`
+	Name       string        `json:"name"`
+	Namespace  string        `json:"namespace"`
+	Type       string        `json:"type"`
+	ClusterIP  string        `json:"cluster_ip"`
+	ExternalIP string        `json:"external_ip,omitempty"`
+	Ports      []ServicePort `json:"ports"`
+	Status     string        `json:"status"`
+	CreatedAt  time.Time     `json:"created_at"`
 }
 
 // ServicePort represents a Kubernetes service port
@@ -83,14 +83,14 @@ type ServicePort struct {
 
 // KubernetesPod represents a Kubernetes pod
 type KubernetesPod struct {
-	Name        string                 `json:"name"`
-	Namespace   string                 `json:"namespace"`
-	Status      string                 `json:"status"`
-	NodeName    string                 `json:"node_name"`
-	PodIP       string                 `json:"pod_ip"`
-	Labels      map[string]string      `json:"labels"`
-	Containers  []ContainerStatus      `json:"containers"`
-	CreatedAt   time.Time              `json:"created_at"`
+	Name       string            `json:"name"`
+	Namespace  string            `json:"namespace"`
+	Status     string            `json:"status"`
+	NodeName   string            `json:"node_name"`
+	PodIP      string            `json:"pod_ip"`
+	Labels     map[string]string `json:"labels"`
+	Containers []ContainerStatus `json:"containers"`
+	CreatedAt  time.Time         `json:"created_at"`
 }
 
 // ContainerStatus represents a container status within a pod
@@ -259,11 +259,11 @@ func (k *KubernetesPlugin) Execute(ctx context.Context, operation string, params
 // Health returns the current health status of the plugin
 func (k *KubernetesPlugin) Health(ctx context.Context) (map[string]interface{}, error) {
 	health := map[string]interface{}{
-		"plugin_id":    k.id,
-		"initialized":  k.initialized,
-		"timestamp":    time.Now(),
-		"status":       "healthy",
-		"checks":       map[string]interface{}{},
+		"plugin_id":   k.id,
+		"initialized": k.initialized,
+		"timestamp":   time.Now(),
+		"status":      "healthy",
+		"checks":      map[string]interface{}{},
 	}
 
 	checks := health["checks"].(map[string]interface{})
@@ -290,9 +290,9 @@ func (k *KubernetesPlugin) Health(ctx context.Context) (map[string]interface{}, 
 		health["status"] = "unhealthy"
 	} else {
 		checks["cluster_connectivity"] = map[string]interface{}{
-			"status":      "healthy",
-			"cluster":     k.clusterName,
-			"namespace":   k.namespace,
+			"status":    "healthy",
+			"cluster":   k.clusterName,
+			"namespace": k.namespace,
 		}
 	}
 
@@ -341,7 +341,7 @@ func (k *KubernetesPlugin) GetCapabilities() []string {
 // ValidateConfig validates the provided configuration
 func (k *KubernetesPlugin) ValidateConfig(config map[string]interface{}) error {
 	required := []string{"flexcore_node_url"}
-	
+
 	for _, key := range required {
 		if _, exists := config[key]; !exists {
 			return fmt.Errorf("required configuration key missing: %s", key)
@@ -362,7 +362,7 @@ func (k *KubernetesPlugin) validateKubectlAccess(ctx context.Context) error {
 	if k.kubeconfigPath != "" {
 		cmd.Args = append(cmd.Args, "--kubeconfig", k.kubeconfigPath)
 	}
-	
+
 	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("kubectl not accessible: %w", err)
 	}
@@ -372,7 +372,7 @@ func (k *KubernetesPlugin) validateKubectlAccess(ctx context.Context) error {
 	if k.kubeconfigPath != "" {
 		cmd.Args = append(cmd.Args, "--kubeconfig", k.kubeconfigPath)
 	}
-	
+
 	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("cluster not accessible: %w", err)
 	}
@@ -469,11 +469,11 @@ func (k *KubernetesPlugin) handleClusterScaleRequest(ctx context.Context, messag
 func (k *KubernetesPlugin) executeKubectl(ctx context.Context, args ...string) ([]byte, error) {
 	cmd := exec.CommandContext(ctx, "kubectl")
 	cmd.Args = append(cmd.Args, args...)
-	
+
 	if k.kubeconfigPath != "" {
 		cmd.Args = append(cmd.Args, "--kubeconfig", k.kubeconfigPath)
 	}
-	
+
 	if k.namespace != "" && k.namespace != "default" {
 		cmd.Args = append(cmd.Args, "--namespace", k.namespace)
 	}
@@ -602,18 +602,18 @@ func (k *KubernetesPlugin) autoScale(ctx context.Context, params map[string]inte
 	}
 
 	// Execute scaling
-	output, err := k.executeKubectl(ctx, "scale", "deployment", deploymentName, 
+	output, err := k.executeKubectl(ctx, "scale", "deployment", deploymentName,
 		"--replicas", fmt.Sprintf("%.0f", targetReplicas))
 	if err != nil {
 		return nil, fmt.Errorf("failed to scale deployment: %w", err)
 	}
 
 	return map[string]interface{}{
-		"operation":        "auto.scale",
-		"deployment_name":  deploymentName,
-		"target_replicas":  targetReplicas,
-		"kubectl_output":   string(output),
-		"timestamp":        time.Now(),
+		"operation":       "auto.scale",
+		"deployment_name": deploymentName,
+		"target_replicas": targetReplicas,
+		"kubectl_output":  string(output),
+		"timestamp":       time.Now(),
 	}, nil
 }
 
@@ -629,7 +629,7 @@ func (k *KubernetesPlugin) deployRayCluster(ctx context.Context, params map[stri
 func (k *KubernetesPlugin) containerizeMeltano(ctx context.Context, params map[string]interface{}) (map[string]interface{}, error) {
 	// Containerize Meltano execution
 	return map[string]interface{}{
-		"operation": "meltano.containerize", 
+		"operation": "meltano.containerize",
 		"status":    "containerizing",
 		"timestamp": time.Now(),
 	}, nil

@@ -40,28 +40,28 @@ func (h *FlexCoreHandler) RegisterRoutes(router *gin.RouterGroup) {
 		flexcore.GET("/health", h.GetFlexCoreHealth)
 		flexcore.GET("/status", h.GetFlexCoreStatus)
 		flexcore.GET("/instances", h.ListFlexCoreInstances)
-		
+
 		// Plugin management
 		flexcore.GET("/plugins", h.ListFlexCorePlugins)
 		flexcore.POST("/plugins/:id/execute", h.ExecuteFlexCorePlugin)
 		flexcore.GET("/plugins/:id/status", h.GetPluginExecutionStatus)
 		flexcore.DELETE("/plugins/:id/stop", h.StopPluginExecution)
-		
+
 		// Runtime coordination
 		flexcore.GET("/runtimes", h.ListAvailableRuntimes)
 		flexcore.POST("/runtimes/:type/execute", h.ExecuteOnRuntime)
 		flexcore.GET("/runtimes/:type/status", h.GetRuntimeStatus)
-		
+
 		// Workflow management
 		flexcore.GET("/workflows", h.ListActiveWorkflows)
 		flexcore.POST("/workflows", h.CreateWorkflow)
 		flexcore.GET("/workflows/:id", h.GetWorkflowStatus)
 		flexcore.DELETE("/workflows/:id", h.StopWorkflow)
-		
+
 		// Configuration management
 		flexcore.POST("/config/update", h.UpdateFlexCoreConfig)
 		flexcore.GET("/config", h.GetFlexCoreConfig)
-		
+
 		// Coordination commands
 		flexcore.POST("/coordination/command", h.ExecuteCoordinationCommand)
 		flexcore.GET("/coordination/topology", h.GetServiceTopology)
@@ -74,10 +74,10 @@ type FlexCoreHealthResponse struct {
 	Version      string                 `json:"version"`
 	Uptime       string                 `json:"uptime"`
 	Runtimes     []RuntimeStatus        `json:"runtimes"`
-	Plugins      []PluginInfo          `json:"plugins"`
+	Plugins      []PluginInfo           `json:"plugins"`
 	Capabilities map[string]interface{} `json:"capabilities"`
-	Metrics      HealthMetrics         `json:"metrics"`
-	Timestamp    string                `json:"timestamp"`
+	Metrics      HealthMetrics          `json:"metrics"`
+	Timestamp    string                 `json:"timestamp"`
 }
 
 // RuntimeStatus represents the status of a runtime
@@ -129,11 +129,11 @@ func (h *FlexCoreHandler) GetFlexCoreHealth(c *gin.Context) {
 	if err != nil {
 		h.logger.Error("FlexCore health check failed", logging.F("error", err))
 		c.JSON(http.StatusServiceUnavailable, gin.H{
-			"status":      "unhealthy",
-			"error":       "FlexCore unreachable",
+			"status":       "unhealthy",
+			"error":        "FlexCore unreachable",
 			"flexcore_url": h.config.FlexCore.URL,
-			"details":     err.Error(),
-			"timestamp":   time.Now().Format(time.RFC3339),
+			"details":      err.Error(),
+			"timestamp":    time.Now().Format(time.RFC3339),
 		})
 		return
 	}
@@ -152,15 +152,15 @@ func (h *FlexCoreHandler) GetFlexCoreHealth(c *gin.Context) {
 	// Add FLEXT Service coordination metadata
 	response := gin.H{
 		"flext_service": gin.H{
-			"status":     "coordinating",
-			"timestamp":  time.Now().Format(time.RFC3339),
-			"version":    "2.0.0",
+			"status":    "coordinating",
+			"timestamp": time.Now().Format(time.RFC3339),
+			"version":   "2.0.0",
 		},
 		"flexcore": healthResponse,
 		"coordination": gin.H{
 			"active_connections": 1,
-			"last_sync":         time.Now().Format(time.RFC3339),
-			"coordination_mode": "active",
+			"last_sync":          time.Now().Format(time.RFC3339),
+			"coordination_mode":  "active",
 		},
 	}
 
@@ -186,7 +186,7 @@ func (h *FlexCoreHandler) GetFlexCoreStatus(c *gin.Context) {
 	if err != nil {
 		h.logger.Error("FlexCore status check failed", logging.F("error", err))
 		c.JSON(http.StatusServiceUnavailable, gin.H{
-			"error":       "FlexCore status unavailable",
+			"error":        "FlexCore status unavailable",
 			"flexcore_url": h.config.FlexCore.URL,
 		})
 		return
@@ -211,12 +211,12 @@ func (h *FlexCoreHandler) ListFlexCoreInstances(c *gin.Context) {
 	// In the future, this could discover multiple FlexCore instances via service discovery
 	instances := []gin.H{
 		{
-			"id":         "flexcore-primary",
-			"url":        h.config.FlexCore.URL,
-			"status":     "active",
-			"type":       "primary",
-			"version":    "2.0.0",
-			"last_seen":  time.Now().Format(time.RFC3339),
+			"id":        "flexcore-primary",
+			"url":       h.config.FlexCore.URL,
+			"status":    "active",
+			"type":      "primary",
+			"version":   "2.0.0",
+			"last_seen": time.Now().Format(time.RFC3339),
 			"capabilities": []string{
 				"meltano_runtime",
 				"plugin_system",
@@ -305,7 +305,7 @@ func (h *FlexCoreHandler) ExecuteFlexCorePlugin(c *gin.Context) {
 
 	resp, err := h.httpClient.Do(req)
 	if err != nil {
-		h.logger.Error("Plugin execution request failed", 
+		h.logger.Error("Plugin execution request failed",
 			logging.F("error", err),
 			logging.F("plugin_id", pluginID))
 		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "Plugin execution failed"})
@@ -320,7 +320,7 @@ func (h *FlexCoreHandler) ExecuteFlexCorePlugin(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("Plugin execution coordinated successfully", 
+	h.logger.Info("Plugin execution coordinated successfully",
 		logging.F("plugin_id", pluginID),
 		logging.F("correlation_id", executionRequest["coordination"].(map[string]interface{})["correlation_id"]))
 
@@ -400,7 +400,7 @@ func (h *FlexCoreHandler) StopPluginExecution(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("Plugin execution stop coordinated", 
+	h.logger.Info("Plugin execution stop coordinated",
 		logging.F("plugin_id", pluginID),
 		logging.F("execution_id", executionID))
 
@@ -481,7 +481,7 @@ func (h *FlexCoreHandler) ExecuteOnRuntime(c *gin.Context) {
 
 	resp, err := h.httpClient.Do(req)
 	if err != nil {
-		h.logger.Error("Runtime execution request failed", 
+		h.logger.Error("Runtime execution request failed",
 			logging.F("error", err),
 			logging.F("runtime_type", runtimeType))
 		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "Runtime execution failed"})
@@ -496,7 +496,7 @@ func (h *FlexCoreHandler) ExecuteOnRuntime(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("Runtime execution coordinated successfully", 
+	h.logger.Info("Runtime execution coordinated successfully",
 		logging.F("runtime_type", runtimeType),
 		logging.F("correlation_id", executionRequest["coordination"].(map[string]interface{})["correlation_id"]))
 
@@ -506,7 +506,7 @@ func (h *FlexCoreHandler) ExecuteOnRuntime(c *gin.Context) {
 // GetRuntimeStatus gets runtime status
 func (h *FlexCoreHandler) GetRuntimeStatus(c *gin.Context) {
 	runtimeType := c.Param("type")
-	
+
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
 
@@ -616,7 +616,7 @@ func (h *FlexCoreHandler) CreateWorkflow(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("Workflow creation coordinated successfully", 
+	h.logger.Info("Workflow creation coordinated successfully",
 		logging.F("correlation_id", workflowRequest["coordination"].(map[string]interface{})["correlation_id"]))
 
 	c.JSON(resp.StatusCode, workflowResponse)
@@ -625,7 +625,7 @@ func (h *FlexCoreHandler) CreateWorkflow(c *gin.Context) {
 // GetWorkflowStatus gets workflow status
 func (h *FlexCoreHandler) GetWorkflowStatus(c *gin.Context) {
 	workflowID := c.Param("id")
-	
+
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
 
@@ -658,7 +658,7 @@ func (h *FlexCoreHandler) GetWorkflowStatus(c *gin.Context) {
 // StopWorkflow stops a workflow
 func (h *FlexCoreHandler) StopWorkflow(c *gin.Context) {
 	workflowID := c.Param("id")
-	
+
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 30*time.Second)
 	defer cancel()
 
@@ -739,7 +739,7 @@ func (h *FlexCoreHandler) UpdateFlexCoreConfig(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("FlexCore config update coordinated successfully", 
+	h.logger.Info("FlexCore config update coordinated successfully",
 		logging.F("correlation_id", configUpdate["coordination"].(map[string]interface{})["correlation_id"]))
 
 	c.JSON(resp.StatusCode, updateResponse)
@@ -826,7 +826,7 @@ func (h *FlexCoreHandler) ExecuteCoordinationCommand(c *gin.Context) {
 		return
 	}
 
-	h.logger.Info("Coordination command executed successfully", 
+	h.logger.Info("Coordination command executed successfully",
 		logging.F("correlation_id", commandRequest["coordination"].(map[string]interface{})["correlation_id"]))
 
 	c.JSON(resp.StatusCode, commandResponse)
@@ -837,27 +837,27 @@ func (h *FlexCoreHandler) GetServiceTopology(c *gin.Context) {
 	// Return current service topology managed by FLEXT Service
 	topology := gin.H{
 		"flext_service": gin.H{
-			"id":       "flext-service-primary",
-			"status":   "active",
-			"role":     "control_panel",
-			"port":     h.config.Server.Port,
-			"version":  "2.0.0",
+			"id":      "flext-service-primary",
+			"status":  "active",
+			"role":    "control_panel",
+			"port":    h.config.Server.Port,
+			"version": "2.0.0",
 		},
 		"flexcore_instances": []gin.H{
 			{
-				"id":         "flexcore-primary",
-				"url":        h.config.FlexCore.URL,
-				"status":     "active",
-				"role":       "runtime_distribuida",
-				"version":    "2.0.0",
-				"runtimes":   []string{"meltano", "ray_future", "kubernetes_future"},
+				"id":       "flexcore-primary",
+				"url":      h.config.FlexCore.URL,
+				"status":   "active",
+				"role":     "runtime_distribuida",
+				"version":  "2.0.0",
+				"runtimes": []string{"meltano", "ray_future", "kubernetes_future"},
 			},
 		},
 		"coordination": gin.H{
-			"mode":           "active",
-			"connections":    1,
-			"last_sync":      time.Now().Format(time.RFC3339),
-			"health_status":  "operational",
+			"mode":          "active",
+			"connections":   1,
+			"last_sync":     time.Now().Format(time.RFC3339),
+			"health_status": "operational",
 		},
 		"infrastructure": gin.H{
 			"database": gin.H{

@@ -64,11 +64,11 @@ func (s *Server) RegisterHandler(handler interface{}) {
 		// Register routes for handlers that implement HandlerRegistrar interface
 		v1 := s.router.Group("/api/v1")
 		handlerRegistrar.RegisterRoutes(v1)
-		s.logger.Info("Handler registered with routes", 
+		s.logger.Info("Handler registered with routes",
 			logging.F("handler", fmt.Sprintf("%T", handler)),
 			logging.F("routes", "✅ Routes registered"))
 	} else {
-		s.logger.Info("Handler registered (no routes)", 
+		s.logger.Info("Handler registered (no routes)",
 			logging.F("handler", fmt.Sprintf("%T", handler)))
 	}
 }
@@ -129,7 +129,7 @@ func (s *Server) statusCheck(c *gin.Context) {
 			"status":   "/api/v1/status",
 			"info":     "/api/v1/info",
 			"meltano":  "/api/v1/meltano",
-			"singer":   "/api/v1/singer", 
+			"singer":   "/api/v1/singer",
 			"dbt":      "/api/v1/dbt",
 			"flexcore": "/api/v1/flexcore",
 		},
@@ -139,13 +139,13 @@ func (s *Server) statusCheck(c *gin.Context) {
 // getServiceInfo handles service info requests
 func (s *Server) getServiceInfo(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
-		"service":     "flext-control-panel",
-		"version":     "2.0.0",
-		"description": "FLEXT Service Control Panel - Manages and coordinates FlexCore distributed runtime services",
+		"service":      "flext-control-panel",
+		"version":      "2.0.0",
+		"description":  "FLEXT Service Control Panel - Manages and coordinates FlexCore distributed runtime services",
 		"architecture": "Clean Architecture + DDD + CQRS",
-		"environment": s.config.Server.Environment,
-		"debug":       s.config.Server.Debug,
-		"timestamp":   time.Now().Format(time.RFC3339),
+		"environment":  s.config.Server.Environment,
+		"debug":        s.config.Server.Debug,
+		"timestamp":    time.Now().Format(time.RFC3339),
 		"capabilities": []string{
 			"flexcore_coordination",
 			"meltano_orchestration",

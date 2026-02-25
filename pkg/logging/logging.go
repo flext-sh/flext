@@ -4,7 +4,7 @@ package logging
 import (
 	"log"
 	"os"
-	
+
 	"github.com/rs/zerolog"
 	zlog "github.com/rs/zerolog/log"
 )
@@ -44,21 +44,21 @@ func Initialize(service, level string) error {
 	if err != nil {
 		logLevel = zerolog.InfoLevel
 	}
-	
+
 	zerolog.SetGlobalLevel(logLevel)
-	
+
 	// Configure console writer for development
 	if os.Getenv("FLEXT_SERVER_ENVIRONMENT") == "development" {
 		zlog.Logger = zlog.Logger.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	}
-	
+
 	// Create logger with service context
 	logger := zlog.Logger.With().
 		Str("service", service).
 		Logger()
-	
+
 	globalLogger = &zerologLogger{logger: logger}
-	
+
 	return nil
 }
 

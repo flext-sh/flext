@@ -84,8 +84,8 @@ type OAuth2Config struct {
 func NewUnifiedAuthService(config UnifiedAuthConfig, logger logging.Logger) (*UnifiedAuthService, error) {
 	if config.JWTSecret == "" {
 		return nil, &errors.DomainError{
-			Code:        "AUTH_CONFIG_ERROR",
-			Message:     "JWT secret is required",
+			Code:    "AUTH_CONFIG_ERROR",
+			Message: "JWT secret is required",
 			Details: "JWT secret must be provided for token signing",
 		}
 	}
@@ -148,8 +148,8 @@ func (s *UnifiedAuthService) Authenticate(ctx context.Context, credentials Crede
 	provider, exists := s.providers[credentials.Type]
 	if !exists {
 		return nil, &errors.DomainError{
-			Code:        "AUTH_PROVIDER_NOT_FOUND",
-			Message:     fmt.Sprintf("Authentication provider '%s' not found", credentials.Type),
+			Code:    "AUTH_PROVIDER_NOT_FOUND",
+			Message: fmt.Sprintf("Authentication provider '%s' not found", credentials.Type),
 			Details: "The requested authentication provider is not registered",
 		}
 	}
@@ -216,8 +216,8 @@ func (s *UnifiedAuthService) ValidateToken(ctx context.Context, token string) (*
 	}
 
 	return nil, &errors.DomainError{
-		Code:        "TOKEN_VALIDATION_FAILED",
-		Message:     "Token validation failed",
+		Code:    "TOKEN_VALIDATION_FAILED",
+		Message: "Token validation failed",
 		Details: "The provided token is invalid or expired",
 	}
 }
@@ -234,8 +234,8 @@ func (s *UnifiedAuthService) RefreshToken(ctx context.Context, refreshToken stri
 
 	if err != nil || !token.Valid {
 		return nil, &errors.DomainError{
-			Code:        "INVALID_REFRESH_TOKEN",
-			Message:     "Invalid refresh token",
+			Code:    "INVALID_REFRESH_TOKEN",
+			Message: "Invalid refresh token",
 			Details: "The provided refresh token is invalid or expired",
 		}
 	}
@@ -243,8 +243,8 @@ func (s *UnifiedAuthService) RefreshToken(ctx context.Context, refreshToken stri
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
 		return nil, &errors.DomainError{
-			Code:        "INVALID_TOKEN_CLAIMS",
-			Message:     "Invalid token claims",
+			Code:    "INVALID_TOKEN_CLAIMS",
+			Message: "Invalid token claims",
 			Details: "Unable to parse token claims",
 		}
 	}
@@ -252,8 +252,8 @@ func (s *UnifiedAuthService) RefreshToken(ctx context.Context, refreshToken stri
 	userIDStr, ok := claims["sub"].(string)
 	if !ok {
 		return nil, &errors.DomainError{
-			Code:        "INVALID_USER_ID",
-			Message:     "Invalid user ID in token",
+			Code:    "INVALID_USER_ID",
+			Message: "Invalid user ID in token",
 			Details: "User ID not found in token claims",
 		}
 	}
@@ -261,8 +261,8 @@ func (s *UnifiedAuthService) RefreshToken(ctx context.Context, refreshToken stri
 	userID, err := uuid.Parse(userIDStr)
 	if err != nil {
 		return nil, &errors.DomainError{
-			Code:        "INVALID_USER_ID_FORMAT",
-			Message:     "Invalid user ID format",
+			Code:    "INVALID_USER_ID_FORMAT",
+			Message: "Invalid user ID format",
 			Details: "User ID is not a valid UUID",
 		}
 	}
@@ -330,8 +330,8 @@ func (s *UnifiedAuthService) GetUserContext(ctx context.Context) (*UserContext, 
 	}
 
 	return nil, &errors.DomainError{
-		Code:        "USER_CONTEXT_NOT_FOUND",
-		Message:     "User context not found",
+		Code:    "USER_CONTEXT_NOT_FOUND",
+		Message: "User context not found",
 		Details: "No authenticated user context found in request",
 	}
 }

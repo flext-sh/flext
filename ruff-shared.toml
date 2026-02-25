@@ -190,6 +190,14 @@ split-on-trailing-comma = true
   "SLF001",  # private member access within class hierarchy
   "PLC2801", # object.__setattr__ - necessary for Pydantic frozen models and session management
 ]
+"**/subprocess.py" = [
+  "S404", # Command runner abstraction: only place subprocess is allowed (CLAUDE.md §3).
+  "S603", # Command runner abstraction: only place subprocess is allowed (CLAUDE.md §3).
+]
+"**/services/prompts.py" = [
+  "D102", # missing-docstring-in-public-method - prompt methods are self-describing
+  "D107", # missing-docstring-in-init - Pydantic model init
+]
 "**/*subprocess_utils*" = [
   "S404", # suspicious-subprocess-import - controlled subprocess usage for quality checks
   "S603", # subprocess-without-shell-equals-true - safe subprocess calls with controlled input
@@ -282,6 +290,9 @@ split-on-trailing-comma = true
 ]
 "**/constants.py" = [
   "S105", # hardcoded-password-string - false positives in error messages and descriptions
+]
+"**/file_tools.py" = [
+  "D102", # missing-docstring-in-public-method - file operation methods are self-describing
 ]
 "**/container.py" = [
   #    "BLE001",  # blind-except - DI container executes user factories

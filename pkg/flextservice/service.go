@@ -27,7 +27,7 @@ type ServiceConfig struct {
 type FlextService struct {
 	config      *ServiceConfig
 	logger      logging.Logger
-	coordinator *coordination.FlexCoreCoordinator 
+	coordinator *coordination.FlexCoreCoordinator
 	container   *container.Container
 	server      *server.Server
 }

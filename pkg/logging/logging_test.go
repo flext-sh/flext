@@ -38,7 +38,7 @@ func TestInitialize(t *testing.T) {
 			if (err != nil) != tt.expectError {
 				t.Errorf("Initialize() error = %v, expectError %v", err, tt.expectError)
 			}
-			
+
 			// Verify logger is initialized
 			logger := GetLogger()
 			if logger == nil {
@@ -51,12 +51,12 @@ func TestInitialize(t *testing.T) {
 func TestGetLogger(t *testing.T) {
 	// Reset global logger
 	globalLogger = nil
-	
+
 	logger := GetLogger()
 	if logger == nil {
 		t.Error("GetLogger() should never return nil")
 	}
-	
+
 	// Test that it returns the same instance
 	logger2 := GetLogger()
 	if logger != logger2 {
@@ -66,11 +66,11 @@ func TestGetLogger(t *testing.T) {
 
 func TestFieldCreation(t *testing.T) {
 	field := F("test_key", "test_value")
-	
+
 	if field.Key != "test_key" {
 		t.Errorf("Expected key 'test_key', got '%s'", field.Key)
 	}
-	
+
 	if field.Value != "test_value" {
 		t.Errorf("Expected value 'test_value', got '%v'", field.Value)
 	}
@@ -82,9 +82,9 @@ func TestZerologLogger(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to initialize logger: %v", err)
 	}
-	
+
 	logger := GetLogger()
-	
+
 	// Test that methods don't panic
 	t.Run("Debug method", func(t *testing.T) {
 		defer func() {
@@ -94,7 +94,7 @@ func TestZerologLogger(t *testing.T) {
 		}()
 		logger.Debug("test debug message")
 	})
-	
+
 	t.Run("Info method", func(t *testing.T) {
 		defer func() {
 			if r := recover(); r != nil {
@@ -104,7 +104,7 @@ func TestZerologLogger(t *testing.T) {
 		logger.Info("test info message")
 		logger.Info("test info with field", F("key", "value"))
 	})
-	
+
 	t.Run("Warn method", func(t *testing.T) {
 		defer func() {
 			if r := recover(); r != nil {
@@ -114,7 +114,7 @@ func TestZerologLogger(t *testing.T) {
 		logger.Warn("test warn message")
 		logger.Warn("test warn with field", F("key", "value"))
 	})
-	
+
 	t.Run("Error method", func(t *testing.T) {
 		defer func() {
 			if r := recover(); r != nil {
@@ -130,12 +130,12 @@ func TestLoggingWithEnvironment(t *testing.T) {
 	// Test development environment
 	os.Setenv("FLEXT_SERVER_ENVIRONMENT", "development")
 	defer os.Unsetenv("FLEXT_SERVER_ENVIRONMENT")
-	
+
 	err := Initialize("test-dev", "info")
 	if err != nil {
 		t.Fatalf("Failed to initialize logger for development: %v", err)
 	}
-	
+
 	logger := GetLogger()
 	if logger == nil {
 		t.Error("Logger should not be nil in development mode")
@@ -147,16 +147,16 @@ func TestMultipleFields(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to initialize logger: %v", err)
 	}
-	
+
 	logger := GetLogger()
-	
+
 	// Test with multiple fields
 	defer func() {
 		if r := recover(); r != nil {
 			t.Errorf("Multiple fields logging panicked: %v", r)
 		}
 	}()
-	
+
 	logger.Info("test message with multiple fields",
 		F("string_field", "value"),
 		F("int_field", 42),
@@ -168,7 +168,7 @@ func TestMultipleFields(t *testing.T) {
 func TestLoggerInterface(t *testing.T) {
 	// Verify that zerologLogger implements Logger interface
 	var logger Logger = &zerologLogger{}
-	
+
 	// This should compile without error, proving interface compliance
 	_ = logger
 }
@@ -177,7 +177,7 @@ func TestLoggerInterface(t *testing.T) {
 func BenchmarkLoggerInfo(b *testing.B) {
 	Initialize("benchmark", "info")
 	logger := GetLogger()
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		logger.Info("benchmark message")
@@ -187,10 +187,10 @@ func BenchmarkLoggerInfo(b *testing.B) {
 func BenchmarkLoggerInfoWithFields(b *testing.B) {
 	Initialize("benchmark", "info")
 	logger := GetLogger()
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		logger.Info("benchmark message", 
+		logger.Info("benchmark message",
 			F("iteration", i),
 			F("service", "benchmark"),
 		)

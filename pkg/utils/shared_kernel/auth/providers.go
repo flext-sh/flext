@@ -70,8 +70,8 @@ func (p *FlextAuthBasicProvider) GetProviderType() string {
 func (p *FlextAuthBasicProvider) Authenticate(ctx context.Context, credentials Credentials) (*AuthResult, error) {
 	if credentials.Username == "" || credentials.Password == "" {
 		return nil, &errors.DomainError{
-			Code:        "INVALID_CREDENTIALS",
-			Message:     "Username and password are required",
+			Code:    "INVALID_CREDENTIALS",
+			Message: "Username and password are required",
 			Details: "Both username and password must be provided for basic authentication",
 		}
 	}
@@ -82,16 +82,16 @@ func (p *FlextAuthBasicProvider) Authenticate(ctx context.Context, credentials C
 			logging.F("username", credentials.Username),
 		)
 		return nil, &errors.DomainError{
-			Code:        "AUTHENTICATION_FAILED",
-			Message:     "Invalid username or password",
+			Code:    "AUTHENTICATION_FAILED",
+			Message: "Invalid username or password",
 			Details: "The provided credentials are incorrect",
 		}
 	}
 
 	if !user.IsActive {
 		return nil, &errors.DomainError{
-			Code:        "USER_INACTIVE",
-			Message:     "User account is inactive",
+			Code:    "USER_INACTIVE",
+			Message: "User account is inactive",
 			Details: "The user account has been deactivated",
 		}
 	}
@@ -102,8 +102,8 @@ func (p *FlextAuthBasicProvider) Authenticate(ctx context.Context, credentials C
 			logging.F("username", credentials.Username),
 		)
 		return nil, &errors.DomainError{
-			Code:        "AUTHENTICATION_FAILED",
-			Message:     "Invalid username or password",
+			Code:    "AUTHENTICATION_FAILED",
+			Message: "Invalid username or password",
 			Details: "The provided credentials are incorrect",
 		}
 	}
@@ -121,8 +121,8 @@ func (p *FlextAuthBasicProvider) Authenticate(ctx context.Context, credentials C
 func (p *FlextAuthBasicProvider) Validate(ctx context.Context, token string) (*UserContext, error) {
 	if !strings.HasPrefix(token, "Basic ") {
 		return nil, &errors.DomainError{
-			Code:        "INVALID_TOKEN_FORMAT",
-			Message:     "Invalid basic auth token format",
+			Code:    "INVALID_TOKEN_FORMAT",
+			Message: "Invalid basic auth token format",
 			Details: "Basic auth token must start with 'Basic '",
 		}
 	}
@@ -131,8 +131,8 @@ func (p *FlextAuthBasicProvider) Validate(ctx context.Context, token string) (*U
 	decodedBytes, err := base64.StdEncoding.DecodeString(encodedCredentials)
 	if err != nil {
 		return nil, &errors.DomainError{
-			Code:        "INVALID_TOKEN_ENCODING",
-			Message:     "Invalid token encoding",
+			Code:    "INVALID_TOKEN_ENCODING",
+			Message: "Invalid token encoding",
 			Details: "Failed to decode base64 credentials",
 		}
 	}
@@ -140,8 +140,8 @@ func (p *FlextAuthBasicProvider) Validate(ctx context.Context, token string) (*U
 	credentials := strings.SplitN(string(decodedBytes), ":", 2)
 	if len(credentials) != 2 {
 		return nil, &errors.DomainError{
-			Code:        "INVALID_CREDENTIALS_FORMAT",
-			Message:     "Invalid credentials format",
+			Code:    "INVALID_CREDENTIALS_FORMAT",
+			Message: "Invalid credentials format",
 			Details: "Credentials must be in format 'username:password'",
 		}
 	}
@@ -187,8 +187,8 @@ func (p *JWTProvider) GetProviderType() string {
 func (p *JWTProvider) Authenticate(ctx context.Context, credentials Credentials) (*AuthResult, error) {
 	if credentials.Token == "" {
 		return nil, &errors.DomainError{
-			Code:        "TOKEN_REQUIRED",
-			Message:     "JWT token is required",
+			Code:    "TOKEN_REQUIRED",
+			Message: "JWT token is required",
 			Details: "A valid JWT token must be provided",
 		}
 	}
@@ -218,16 +218,16 @@ func (p *JWTProvider) Validate(ctx context.Context, tokenString string) (*UserCo
 
 	if err != nil {
 		return nil, &errors.DomainError{
-			Code:        "TOKEN_PARSE_ERROR",
-			Message:     "Failed to parse JWT token",
+			Code:    "TOKEN_PARSE_ERROR",
+			Message: "Failed to parse JWT token",
 			Details: err.Error(),
 		}
 	}
 
 	if !token.Valid {
 		return nil, &errors.DomainError{
-			Code:        "INVALID_TOKEN",
-			Message:     "JWT token is invalid",
+			Code:    "INVALID_TOKEN",
+			Message: "JWT token is invalid",
 			Details: "The provided JWT token is not valid",
 		}
 	}
@@ -235,8 +235,8 @@ func (p *JWTProvider) Validate(ctx context.Context, tokenString string) (*UserCo
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
 		return nil, &errors.DomainError{
-			Code:        "INVALID_CLAIMS",
-			Message:     "Invalid JWT claims",
+			Code:    "INVALID_CLAIMS",
+			Message: "Invalid JWT claims",
 			Details: "Unable to parse JWT token claims",
 		}
 	}
@@ -244,8 +244,8 @@ func (p *JWTProvider) Validate(ctx context.Context, tokenString string) (*UserCo
 	// Verify token type (should be access token for authentication)
 	if tokenType, ok := claims["type"].(string); ok && tokenType != "access" {
 		return nil, &errors.DomainError{
-			Code:        "INVALID_TOKEN_TYPE",
-			Message:     "Invalid token type",
+			Code:    "INVALID_TOKEN_TYPE",
+			Message: "Invalid token type",
 			Details: fmt.Sprintf("Expected access token, got %s", tokenType),
 		}
 	}
@@ -253,8 +253,8 @@ func (p *JWTProvider) Validate(ctx context.Context, tokenString string) (*UserCo
 	userIDStr, ok := claims["sub"].(string)
 	if !ok {
 		return nil, &errors.DomainError{
-			Code:        "MISSING_USER_ID",
-			Message:     "User ID not found in token",
+			Code:    "MISSING_USER_ID",
+			Message: "User ID not found in token",
 			Details: "JWT token must contain a valid user ID in the 'sub' claim",
 		}
 	}
@@ -262,8 +262,8 @@ func (p *JWTProvider) Validate(ctx context.Context, tokenString string) (*UserCo
 	userID, err := uuid.Parse(userIDStr)
 	if err != nil {
 		return nil, &errors.DomainError{
-			Code:        "INVALID_USER_ID_FORMAT",
-			Message:     "Invalid user ID format",
+			Code:    "INVALID_USER_ID_FORMAT",
+			Message: "Invalid user ID format",
 			Details: "User ID must be a valid UUID",
 		}
 	}
@@ -359,8 +359,8 @@ func (p *APIKeyProvider) GetProviderType() string {
 func (p *APIKeyProvider) Authenticate(ctx context.Context, credentials Credentials) (*AuthResult, error) {
 	if credentials.Token == "" {
 		return nil, &errors.DomainError{
-			Code:        "API_KEY_REQUIRED",
-			Message:     "API key is required",
+			Code:    "API_KEY_REQUIRED",
+			Message: "API key is required",
 			Details: "A valid API key must be provided",
 		}
 	}
@@ -386,24 +386,24 @@ func (p *APIKeyProvider) Validate(ctx context.Context, apiKey string) (*UserCont
 			logging.F("key_prefix", apiKey[:min(len(apiKey), 10)]+"..."),
 		)
 		return nil, &errors.DomainError{
-			Code:        "INVALID_API_KEY",
-			Message:     "Invalid API key",
+			Code:    "INVALID_API_KEY",
+			Message: "Invalid API key",
 			Details: "The provided API key is not valid",
 		}
 	}
 
 	if !keyInfo.IsActive {
 		return nil, &errors.DomainError{
-			Code:        "API_KEY_INACTIVE",
-			Message:     "API key is inactive",
+			Code:    "API_KEY_INACTIVE",
+			Message: "API key is inactive",
 			Details: "The API key has been deactivated",
 		}
 	}
 
 	if time.Now().After(keyInfo.ExpiresAt) {
 		return nil, &errors.DomainError{
-			Code:        "API_KEY_EXPIRED",
-			Message:     "API key has expired",
+			Code:    "API_KEY_EXPIRED",
+			Message: "API key has expired",
 			Details: "The API key has passed its expiration date",
 		}
 	}
@@ -427,8 +427,8 @@ type OAuth2Provider struct {
 func NewOAuth2Provider(config OAuth2Config, logger logging.Logger) (*OAuth2Provider, error) {
 	if config.ClientID == "" || config.ClientSecret == "" {
 		return nil, &errors.DomainError{
-			Code:        "OAUTH2_CONFIG_ERROR",
-			Message:     "OAuth2 client ID and secret are required",
+			Code:    "OAUTH2_CONFIG_ERROR",
+			Message: "OAuth2 client ID and secret are required",
 			Details: "OAuth2 provider requires valid client credentials",
 		}
 	}
@@ -450,8 +450,8 @@ func (p *OAuth2Provider) Authenticate(ctx context.Context, credentials Credentia
 	// In production, you would validate the OAuth2 token with the provider
 	if credentials.Token == "" {
 		return nil, &errors.DomainError{
-			Code:        "OAUTH2_TOKEN_REQUIRED",
-			Message:     "OAuth2 token is required",
+			Code:    "OAUTH2_TOKEN_REQUIRED",
+			Message: "OAuth2 token is required",
 			Details: "A valid OAuth2 access token must be provided",
 		}
 	}

@@ -12,11 +12,11 @@
 package loader
 
 import (
+	"github.com/flext-sh/flext/pkg/logging"
 	"github.com/flext-sh/flext/pkg/plugins"
+	"github.com/flext-sh/flext/pkg/plugins/kubernetes"
 	"github.com/flext-sh/flext/pkg/plugins/meltano"
 	"github.com/flext-sh/flext/pkg/plugins/ray"
-	"github.com/flext-sh/flext/pkg/plugins/kubernetes"
-	"github.com/flext-sh/flext/pkg/logging"
 )
 
 // RegisterCorePluginFactories registers the core plugin factories with the loader
