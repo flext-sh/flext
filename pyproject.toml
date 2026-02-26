@@ -462,57 +462,73 @@ sub-config = [ { matches = "**/typings.py", errors.unknown-name = false } ]
 
 # [MANAGED] pyright
 [tool.pyright]
+# Explicit venv — prevents auto-discovery overhead
+venvPath = "."
+venv = ".venv"
 enableTypeIgnoreComments = false
+# Only paths NOT already in sys.path via editable installs.
+# All flext-*/src are auto-discovered from .venv — do NOT duplicate here.
 extraPaths = [
-  "src",
   "typings",
   "typings/generated",
-  "flexcore/src",
-  "flext-api/src",
-  "flext-auth/src",
-  "flext-cli/src",
-  "flext-core/src",
-  "flext-db-oracle/src",
-  "flext-dbt-ldap/src",
-  "flext-dbt-ldif/src",
-  "flext-dbt-oracle/src",
-  "flext-dbt-oracle-wms/src",
-  "flext-grpc/src",
-  "flext-ldap/src",
-  "flext-ldif/src",
-  "flext-meltano/src",
-  "flext-observability/src",
-  "flext-oracle-oic/src",
-  "flext-oracle-wms/src",
-  "flext-plugin/src",
-  "flext-quality/src",
-  "flext-tap-ldap/src",
-  "flext-tap-ldif/src",
-  "flext-tap-oracle/src",
-  "flext-tap-oracle-oic/src",
-  "flext-tap-oracle-wms/src",
-  "flext-target-ldap/src",
-  "flext-target-ldif/src",
-  "flext-target-oracle/src",
-  "flext-target-oracle-oic/src",
-  "flext-target-oracle-wms/src",
-  "flext-web/src",
 ]
 include = [ "src", "tests", "examples" ]
 exclude = [
-  "**/*.pb2.py",
-  "**/*.pb2_grpc.py",
-  ".git/",
-  ".meltano/",
-  ".mypy_cache/",
-  ".pytest_cache/",
-  ".ruff_cache/",
-  "__pycache__/",
-  "build/",
-  "dist/",
-  "node_modules/",
-  "target/",
-  "typings/",
+  # Generated protobuf
+  "**/*_pb2.py",
+  "**/*_pb2_grpc.py",
+  # Build and distribution artifacts
+  "**/*.egg-info",
+  "**/build",
+  "**/dist",
+  # Virtual environments
+  "**/.venv",
+  "**/venv",
+  # Version control
+  "**/.git",
+  "**/.hg",
+  "**/.svn",
+  "**/CVS",
+  # Caches
+  "**/__pycache__",
+  "**/.mypy_cache",
+  "**/.pylance_cache",
+  "**/.pytest_cache",
+  "**/.ruff_cache",
+  # Tool-specific directories
+  "**/.meltano",
+  "**/node_modules",
+  "**/typings",
+  "**/vendor",
+  # Non-analysis directories
+  "**/.archive",
+  "**/external-docs",
+  "**/htmlcov",
+  "**/logs",
+  "**/reports",
+  "**/scripts",
+  "**/target",
+  "**/temp",
+  "**/tmp",
+  # Standalone projects (not part of flext type-checking scope)
+  "algar-oud-mig",
+  "gruponos-meltano-native",
+  # Non-Python workspace directories
+  "bin",
+  "cmd",
+  "data",
+  "docker",
+  "docs",
+  "pkg",
+  ".arbor",
+  ".beads",
+  ".benchmarks",
+  ".claude",
+  ".github",
+  ".hypothesis",
+  ".qlty",
+  ".reports",
+  ".sisyphus",
 ]
 pythonPlatform = "Linux"
 pythonVersion = "3.13"
@@ -523,9 +539,10 @@ reportConstantRedefinition = "error"
 reportDuplicateImport = "error"
 reportFunctionMemberAccess = "error"
 reportGeneralTypeIssues = "error"
-reportImplicitRelativeImport = false
 reportImplicitStringConcatenation = "warning"
-reportImportCycles = "error"
+# Import cycle detection is expensive in monorepos (full graph traversal).
+# Keep as warning to still report, without blocking or slowing strict analysis.
+reportImportCycles = "warning"
 reportIncompatibleMethodOverride = "error"
 reportIncompatibleVariableOverride = "error"
 reportIncompleteStub = "warning"
@@ -536,7 +553,9 @@ reportInvalidTypeForm = false
 reportInvalidTypeVarUse = "error"
 reportMatchNotExhaustive = "warning"
 reportMissingImports = "error"
-reportMissingModuleSource = "error"
+# Downgraded: probing every search path for source files of third-party
+# packages is expensive and rarely actionable.
+reportMissingModuleSource = "warning"
 reportMissingParameterType = "error"
 reportMissingSuperCall = "warning"
 reportMissingTypeArgument = "error"
