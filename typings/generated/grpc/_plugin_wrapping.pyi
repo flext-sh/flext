@@ -1,9 +1,8 @@
 import _abc
-import grpc as grpc
-import grpc._common as _common
-import grpc._cython.cygrpc as cygrpc
 import typing
 from typing import ClassVar
+
+import grpc as grpc
 
 class _AuthMetadataContext(AuthMetadataContext, grpc.AuthMetadataContext):
     __abstractmethods__: ClassVar[frozenset] = ...

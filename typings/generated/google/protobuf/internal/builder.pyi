@@ -1,8 +1,3 @@
-import internal.invalid.enum_type_wrapper as enum_type_wrapper
-import internal.invalid.python_message as python_message
-import google.protobuf.message as _message
-import google.protobuf.reflection as _reflection
-import google.protobuf.symbol_database as _symbol_database
 
 def BuildMessageAndEnumDescriptors(file_des, module): ...
 def BuildTopDescriptorsAndMessages(file_des, module_name, module): ...

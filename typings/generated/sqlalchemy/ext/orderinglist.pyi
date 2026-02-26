@@ -1,5 +1,6 @@
 import typing
-from typing import Any, Callable, ClassVar, Iterable, OrderingFunc, SupportsIndex
+from collections.abc import Callable, Iterable
+from typing import Any, ClassVar, OrderingFunc, SupportsIndex
 
 __all__ = ['ordering_list']
 

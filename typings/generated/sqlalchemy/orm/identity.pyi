@@ -1,6 +1,5 @@
-import sqlalchemy.exc as sa_exc
-import sqlalchemy.orm.util as orm_util
-from typing import Any, Iterable, Iterator
+from collections.abc import Iterable, Iterator
+from typing import Any
 
 TYPE_CHECKING: bool
 

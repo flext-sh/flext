@@ -1,14 +1,12 @@
+from typing import ClassVar
+
 import sqlalchemy.cyextension.immutabledict
 import sqlalchemy.dialects.postgresql._psycopg_common
 import sqlalchemy.dialects.postgresql.base
 import sqlalchemy.dialects.postgresql.json
 import sqlalchemy.dialects.postgresql.ranges
-import sqlalchemy.dialects.postgresql.ranges as ranges
-import sqlalchemy.types as sqltypes
-import sqlalchemy.util as util
 import sqlalchemy.util.langhelpers
 from _typeshed import Incomplete
-from typing import ClassVar
 
 class _PGJSON(sqlalchemy.dialects.postgresql.json.JSON):
     __parameters__: ClassVar[tuple] = ...

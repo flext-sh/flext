@@ -1,17 +1,10 @@
 import re
+from collections.abc import Iterable, Iterator
+from typing import Any, ClassVar
+
 import roles as roles
-import sqlalchemy.exc as exc
-import sqlalchemy.inspection as inspection
-import sqlalchemy.sql.elements as elements
-import sqlalchemy.sql.lambdas as lambdas
 import sqlalchemy.sql.roles
-import sqlalchemy.sql.schema as schema
-import sqlalchemy.sql.selectable as selectable
-import sqlalchemy.sql.visitors as visitors
-import sqlalchemy.util as cls
-import sqlalchemy.util as util
 from _typeshed import Incomplete
-from typing import Any, ClassVar, Iterable, Iterator
 
 TYPE_CHECKING: bool
 def expect(role: type[_SR], element: Any, *, apply_propagate_attrs: ClauseElement | None = ..., argname: str | None = ..., post_inspect: bool = ..., disable_inspection: bool = ..., **kw: Any) -> Any: ...

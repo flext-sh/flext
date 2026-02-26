@@ -1,8 +1,9 @@
+from typing import Any, ClassVar, Literal
+
 import sqlalchemy.engine.interfaces
 import sqlalchemy.event.base
 from sqlalchemy.engine.base import Connection, Engine
 from sqlalchemy.engine.interfaces import DBAPIConnection, DBAPICursor, Dialect
-from typing import Any, ClassVar, Literal
 
 class ConnectionEvents(sqlalchemy.event.base.Events):
     _target_class_doc: ClassVar[str] = ...

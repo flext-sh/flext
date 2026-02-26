@@ -1,18 +1,13 @@
 import _abc
 import asyncio.events
-import grpc as grpc
-import grpc._common as _common
-import grpc._compression as _compression
-import grpc._cython.cygrpc
-import grpc._cython.cygrpc as cygrpc
-import grpc._grpcio_metadata as _grpcio_metadata
-import grpc.aio._base_call
-import grpc.aio._base_call as _base_call
-import grpc.aio._base_channel
-import grpc.aio._base_channel as _base_channel
-import grpc.aio._typing
 import typing
 from typing import ClassVar
+
+import grpc as grpc
+import grpc._cython.cygrpc
+import grpc.aio._base_call
+import grpc.aio._base_channel
+import grpc.aio._typing
 
 class _BaseMultiCallable:
     def __init__(self, channel: grpc._cython.cygrpc.AioChannel, method: bytes, request_serializer, response_deserializer, interceptors, references: list, loop: asyncio.events.AbstractEventLoop) -> None: ...

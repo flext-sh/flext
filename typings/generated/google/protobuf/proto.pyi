@@ -1,6 +1,5 @@
 import _io
-import internal.invalid.decoder as decoder
-import internal.invalid.encoder as encoder
+
 import google.protobuf.message
 
 def serialize(message: _MESSAGE, deterministic: bool = ...) -> bytes: ...

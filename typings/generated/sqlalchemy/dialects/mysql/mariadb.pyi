@@ -1,7 +1,7 @@
-import sqlalchemy.dialects.mysql.base
-import sqlalchemy.sql.sqltypes as sqltypes
-import sqlalchemy.sql.type_api
 from typing import Any, ClassVar
+
+import sqlalchemy.dialects.mysql.base
+import sqlalchemy.sql.type_api
 
 class INET4(sqlalchemy.sql.type_api.TypeEngine):
     __visit_name__: ClassVar[str] = ...

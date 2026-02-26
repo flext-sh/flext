@@ -1,5 +1,7 @@
+from collections.abc import Callable
+from typing import Any, ClassVar
+
 import sqlalchemy.ext.hybrid
-from typing import Any, Callable, ClassVar
 
 __all__ = ['index_property']
 

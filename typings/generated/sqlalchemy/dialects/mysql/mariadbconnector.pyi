@@ -1,12 +1,11 @@
-import DBAPIModule
 import re
+from collections.abc import Sequence
+from typing import Any, ClassVar
+
+import DBAPIModule
 import sqlalchemy.cyextension.immutabledict
 import sqlalchemy.dialects.mysql.base
-import sqlalchemy.sql as sql
 import sqlalchemy.sql.sqltypes
-import sqlalchemy.sql.sqltypes as sqltypes
-import sqlalchemy.util as util
-from typing import Any, ClassVar, Sequence
 
 TYPE_CHECKING: bool
 mariadb_cpy_minimum_version: tuple

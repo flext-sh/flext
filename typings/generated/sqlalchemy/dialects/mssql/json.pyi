@@ -1,6 +1,6 @@
-import sqlalchemy.sql.sqltypes
-import sqlalchemy.types as sqltypes
 from typing import ClassVar
+
+import sqlalchemy.sql.sqltypes
 
 class JSON(sqlalchemy.sql.sqltypes.JSON):
     __parameters__: ClassVar[tuple] = ...

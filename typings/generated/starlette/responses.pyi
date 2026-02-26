@@ -1,9 +1,10 @@
 import os
 from collections.abc import Callable, Mapping, Receive, Scope, Send, Sequence
 from datetime import datetime
+from typing import Any, ClassVar, ContentStream, Literal
+
 from starlette.background import BackgroundTask
 from starlette.datastructures import URL
-from typing import Any, ClassVar, ContentStream, Literal
 
 class Response:
     media_type: ClassVar[None] = ...

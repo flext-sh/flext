@@ -1,7 +1,3 @@
-import sqlalchemy.exc as sa_exc
-import sqlalchemy.orm.exc as orm_exc
-import sqlalchemy.sql.util as sql_util
-import sqlalchemy.util as util
 from _typeshed import Incomplete
 
 class Bakery:

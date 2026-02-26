@@ -1,12 +1,11 @@
 import _abc
 import dataclasses
-import sqlalchemy.orm.exc as orm_exc
-import sqlalchemy.orm.interfaces as interfaces
-import sqlalchemy.util as util
 import typing
+from collections.abc import Callable
+from typing import Any, ClassVar as _ClassVar
+
 from _typeshed import Incomplete
 from sqlalchemy.sql.schema import ForeignKeyConstraint
-from typing import Any, Callable, ClassVar as _ClassVar
 
 TYPE_CHECKING: bool
 

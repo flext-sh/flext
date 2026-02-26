@@ -1,17 +1,17 @@
-import TypeEngine
 import _abc
 import enum
+import typing
+from collections.abc import Mapping
+from typing import Any, ClassVar, Self
+
 import sqlalchemy.cyextension.immutabledict
-import sqlalchemy.exc as exc
 import sqlalchemy.sql.base
 import sqlalchemy.sql.operators
 import sqlalchemy.sql.visitors
-import sqlalchemy.util as util
 import sqlalchemy.util.langhelpers
-import typing
+import TypeEngine
 import typing_extensions
 from _typeshed import Incomplete
-from typing import Any, ClassVar, Mapping, Self
 
 TYPE_CHECKING: bool
 

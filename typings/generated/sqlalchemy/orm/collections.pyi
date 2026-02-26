@@ -1,14 +1,23 @@
 import _abc
-import sqlalchemy.exc as sa_exc
-import sqlalchemy.orm.base
-import sqlalchemy.util as util
 import typing
-from _typeshed import Incomplete
+from collections.abc import Callable, Iterable
 from operator import collection_adapter as collection_adapter
-from sqlalchemy.orm.mapped_collection import KeyFuncDict as KeyFuncDict, MappedCollection as MappedCollection, attribute_keyed_dict as attribute_keyed_dict, attribute_mapped_collection as attribute_mapped_collection, column_keyed_dict as column_keyed_dict, column_mapped_collection as column_mapped_collection, keyfunc_mapping as keyfunc_mapping, mapped_collection as mapped_collection
-from typing import Any, Callable, ClassVar, Iterable
+from typing import Any, ClassVar
 
-__all__ = ['collection', 'collection_adapter', 'keyfunc_mapping', 'column_keyed_dict', 'attribute_keyed_dict', 'KeyFuncDict', 'mapped_collection', 'column_mapped_collection', 'attribute_mapped_collection', 'MappedCollection']
+import sqlalchemy.orm.base
+from _typeshed import Incomplete
+from sqlalchemy.orm.mapped_collection import (
+    KeyFuncDict as KeyFuncDict,
+    MappedCollection as MappedCollection,
+    attribute_keyed_dict as attribute_keyed_dict,
+    attribute_mapped_collection as attribute_mapped_collection,
+    column_keyed_dict as column_keyed_dict,
+    column_mapped_collection as column_mapped_collection,
+    keyfunc_mapping as keyfunc_mapping,
+    mapped_collection as mapped_collection,
+)
+
+__all__ = ['KeyFuncDict', 'MappedCollection', 'attribute_keyed_dict', 'attribute_mapped_collection', 'collection', 'collection_adapter', 'column_keyed_dict', 'column_mapped_collection', 'keyfunc_mapping', 'mapped_collection']
 
 class _CollectionConverterProtocol(typing.Protocol):
     __parameters__: ClassVar[tuple] = ...

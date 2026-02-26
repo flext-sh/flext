@@ -1,5 +1,6 @@
 import typing
-from typing import Awaitable, ClassVar
+from collections.abc import Awaitable
+from typing import ClassVar
 
 __all__ = ['Empty', 'Full', 'Queue']
 

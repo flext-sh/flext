@@ -1,6 +1,7 @@
+from typing import Any
+
 import structlog._base
 from structlog.typing import FilteringBoundLogger
-from typing import Any
 
 CRITICAL: int
 DEBUG: int

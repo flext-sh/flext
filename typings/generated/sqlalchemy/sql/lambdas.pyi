@@ -1,20 +1,21 @@
 import _thread
+import weakref
+from typing import (
+    Any,
+    ClassVar,
+    _AnyLambdaType,
+    _LambdaCacheType,
+    _LambdaType,
+    _StmtLambdaElementType,
+    _StmtLambdaType,
+)
+
 import roles as roles
-import sqlalchemy.exc as exc
-import sqlalchemy.inspection as inspection
 import sqlalchemy.sql.base
-import sqlalchemy.sql.cache_key as _cache_key
-import sqlalchemy.sql.coercions as coercions
 import sqlalchemy.sql.elements
-import sqlalchemy.sql.elements as elements
 import sqlalchemy.sql.operators
 import sqlalchemy.sql.roles
-import sqlalchemy.sql.schema as schema
-import sqlalchemy.sql.visitors as visitors
-import sqlalchemy.util as util
-import weakref
 from _typeshed import Incomplete
-from typing import Any, ClassVar, _AnyLambdaType, _LambdaCacheType, _LambdaType, _StmtLambdaElementType, _StmtLambdaType
 
 __conditional_annotations__: set
 TYPE_CHECKING: bool

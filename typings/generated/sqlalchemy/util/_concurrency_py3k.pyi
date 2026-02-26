@@ -1,8 +1,9 @@
 import asyncio
+from collections.abc import Awaitable, Callable
+from typing import Any, ClassVar
+
 import greenlet
-import sqlalchemy.exc as exc
 from _typeshed import Incomplete
-from typing import Any, Awaitable, Callable, ClassVar
 
 TYPE_CHECKING: bool
 py311: bool
@@ -19,5 +20,5 @@ def greenlet_spawn(fn: Callable[..., _T], *args: Any, _require_await: bool = ...
 class AsyncAdaptedLock:
     mutex: Incomplete
     def __enter__(self) -> bool: ...
-    def __exit__(self, *arg: Any, **kw: Any) -> None: ...
+    def __exit__(self, *arg: object, **kw: Any) -> None: ...
 def get_event_loop() -> asyncio.AbstractEventLoop: ...

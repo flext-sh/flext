@@ -1,15 +1,19 @@
 import _abc
 import enum
-import sqlalchemy.cyextension.immutabledict
-import sqlalchemy.exc as exc
-import sqlalchemy.util as util
-import sqlalchemy.util.langhelpers
-import sqlalchemy.util.langhelpers as langhelpers
 import typing
-from sqlalchemy.cyextension.util import anon_map as anon_map
-from typing import Any, Callable, ClassVar as _ClassVar, Iterable, Iterator, Mapping, _TraverseCallableType, _TraverseInternalsType
+from collections.abc import Callable, Iterable, Iterator, Mapping
+from typing import (
+    Any,
+    ClassVar as _ClassVar,
+    _TraverseCallableType,
+    _TraverseInternalsType,
+)
 
-__all__ = ['iterate', 'traverse_using', 'traverse', 'cloned_traverse', 'replacement_traverse', 'Visitable', 'ExternalTraversal', 'InternalTraversal', 'anon_map']
+import sqlalchemy.cyextension.immutabledict
+import sqlalchemy.util.langhelpers
+from sqlalchemy.cyextension.util import anon_map as anon_map
+
+__all__ = ['ExternalTraversal', 'InternalTraversal', 'Visitable', 'anon_map', 'cloned_traverse', 'iterate', 'replacement_traverse', 'traverse', 'traverse_using']
 
 class _CompilerDispatchType(typing.Protocol):
     __parameters__: _ClassVar[tuple] = ...

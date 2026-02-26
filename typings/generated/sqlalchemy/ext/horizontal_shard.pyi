@@ -1,18 +1,24 @@
 import _abc
-import sqlalchemy.event as event
-import sqlalchemy.exc as exc
+import typing
+from builtins import ShardIdentifier
+from collections.abc import Callable, Iterable
+from typing import (
+    Any,
+    ClassVar,
+    OrmExecuteOptionsParameter,
+    Self,
+    _BindArguments,
+    _PKIdentityArgument,
+)
+
 import sqlalchemy.orm.interfaces
 import sqlalchemy.orm.query
 import sqlalchemy.orm.session
-import sqlalchemy.util as util
-import typing
 from _typeshed import Incomplete
-from builtins import ShardIdentifier
 from sqlalchemy.orm.mapper import Mapper
 from sqlalchemy.orm.query import Query
-from typing import Any, Callable, ClassVar, Iterable, OrmExecuteOptionsParameter, Self, _BindArguments, _PKIdentityArgument
 
-__all__ = ['ShardedSession', 'ShardedQuery']
+__all__ = ['ShardedQuery', 'ShardedSession']
 
 class ShardChooser(typing.Protocol):
     __parameters__: ClassVar[tuple] = ...

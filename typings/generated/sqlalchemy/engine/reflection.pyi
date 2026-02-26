@@ -1,11 +1,13 @@
 import dataclasses
 import enum
+from collections.abc import Callable, Collection, Sequence
+from typing import Any, ClassVar
+
 import exc
 import sa_schema
 import sqlalchemy.inspection
 from sqlalchemy.engine.base import Connection, Engine
 from sqlalchemy.sql.visitors import InternalTraversal
-from typing import Any, Callable, ClassVar, Collection, Sequence
 
 TYPE_CHECKING: bool
 def cache(fn: Callable[..., _R]) -> _R: ...

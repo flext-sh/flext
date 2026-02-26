@@ -1,3 +1,6 @@
+from collections.abc import Iterator, Mapping
+from typing import Any, ClassVar, IsolationLevel
+
 import exc
 import sqlalchemy.cyextension.immutabledict
 import sqlalchemy.engine.interfaces
@@ -6,7 +9,6 @@ import sqlalchemy.inspection
 import sqlalchemy.log
 from _typeshed import Incomplete
 from sqlalchemy.engine.interfaces import DBAPICursor, ExecutionContext
-from typing import Any, ClassVar, IsolationLevel, Iterator, Mapping
 
 __conditional_annotations__: set
 NO_OPTIONS: sqlalchemy.cyextension.immutabledict.immutabledict

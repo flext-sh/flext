@@ -1,7 +1,9 @@
+from collections.abc import Callable, Sequence
+from typing import Any, ClassVar, EventDict, TextIO, WrappedLogger
+
 import structlog._base
 import structlog.processors
 import zope.interface.declarations
-from typing import Any, Callable, ClassVar, EventDict, Sequence, TextIO, WrappedLogger
 
 class BoundLogger(structlog._base.BoundLoggerBase):
     def msg(self, event: str | None = ..., **kw: Any) -> Any: ...

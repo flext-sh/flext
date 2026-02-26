@@ -1,13 +1,10 @@
+from typing import ClassVar
+
 import sqlalchemy.connectors.pyodbc
 import sqlalchemy.dialects.mssql.base
 import sqlalchemy.dialects.mssql.json
-import sqlalchemy.engine.cursor as _cursor
-import sqlalchemy.exc as exc
 import sqlalchemy.sql.sqltypes
-import sqlalchemy.types as sqltypes
-import sqlalchemy.util as util
 from _typeshed import Incomplete
-from typing import ClassVar
 
 class _ms_numeric_pyodbc:
     def bind_processor(self, dialect): ...

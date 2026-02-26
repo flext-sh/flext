@@ -1,6 +1,7 @@
 import unittest.result
-from _typeshed import Incomplete
 from typing import ClassVar
+
+from _typeshed import Incomplete
 
 class LocalTestResult(unittest.result.TestResult):
     def __init__(self, parent_result) -> None: ...

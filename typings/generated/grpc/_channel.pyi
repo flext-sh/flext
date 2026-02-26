@@ -1,14 +1,10 @@
 import _abc
-import grpc as grpc
-import grpc._common as _common
-import grpc._compression as _compression
-import grpc._cython.cygrpc
-import grpc._cython.cygrpc as cygrpc
-import grpc._grpcio_metadata as _grpcio_metadata
-import grpc._observability as _observability
 import types
 import typing
 from typing import Any, ClassVar
+
+import grpc as grpc
+import grpc._cython.cygrpc
 
 class _RPCState:
     def __init__(self, due: typing.Sequence, initial_metadata, trailing_metadata, code, details) -> None: ...

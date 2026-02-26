@@ -1,5 +1,3 @@
-import google.protobuf.descriptor as descriptor
-import google.protobuf.message as message
 
 TAG_TYPE_BITS: int
 TAG_TYPE_MASK: int

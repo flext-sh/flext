@@ -1,7 +1,6 @@
-import sqlalchemy.util.compat as compat
 from argparse import ArgumentParser
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Iterator
 
 class code_writer_cmd:
     def __init__(self, tool_script: str) -> None: ...

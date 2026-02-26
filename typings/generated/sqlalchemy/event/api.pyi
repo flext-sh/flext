@@ -1,6 +1,5 @@
-import sqlalchemy.exc as exc
-import sqlalchemy.util as util
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 def listen(target: Any, identifier: str, fn: Callable[..., Any], *args: Any, **kw: Any) -> None: ...
 def listens_for(target: Any, identifier: str, *args: Any, **kw: Any) -> Callable[[Callable[..., Any]], Callable[..., Any]]: ...

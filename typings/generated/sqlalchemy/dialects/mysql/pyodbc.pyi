@@ -1,10 +1,10 @@
 import datetime
+from collections.abc import Callable
+from typing import ClassVar
+
 import sqlalchemy.connectors.pyodbc
 import sqlalchemy.dialects.mysql.base
 import sqlalchemy.dialects.mysql.types
-import sqlalchemy.exc as exc
-import sqlalchemy.util as util
-from typing import Callable, ClassVar
 
 TYPE_CHECKING: bool
 

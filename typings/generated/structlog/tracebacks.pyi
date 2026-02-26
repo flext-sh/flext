@@ -1,6 +1,7 @@
 import dataclasses
 from builtins import ModuleType, TracebackType
-from typing import Any, ClassVar, ExcInfo, Iterable
+from collections.abc import Iterable
+from typing import Any, ClassVar, ExcInfo
 
 __all__ = ['ExceptionDictTransformer', 'Frame', 'Stack', 'SyntaxError_', 'Trace', 'extract', 'safe_str', 'to_repr']
 

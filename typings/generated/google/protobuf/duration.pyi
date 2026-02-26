@@ -1,4 +1,5 @@
 import datetime
+
 import google.protobuf.duration_pb2
 
 def from_json_string(value: str) -> google.protobuf.duration_pb2.Duration: ...

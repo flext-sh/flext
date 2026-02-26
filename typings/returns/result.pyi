@@ -13,7 +13,6 @@ class Result(Generic[_ValueType_co, _ErrorType_co]):
     def unwrap(self) -> _ValueType_co: ...
     def failure(self) -> _ErrorType_co: ...
 
-
 class Success(Result[_ValueType_co, Any]):
     """Success result wrapper."""
 
@@ -26,7 +25,6 @@ class Success(Result[_ValueType_co, Any]):
     def unwrap(self) -> _ValueType_co: ...
 
     def failure(self) -> None: ...
-
 
 class Failure(Result[Any, _ErrorType_co]):
     """Failure result wrapper."""

@@ -1,6 +1,7 @@
 import _abc
-import grpc as grpc
 from typing import Any, ClassVar
+
+import grpc as grpc
 
 class GoogleCallCredentials(grpc.AuthMetadataPlugin):
     __abstractmethods__: ClassVar[frozenset] = ...

@@ -1,9 +1,8 @@
+from typing import ClassVar
+
 import sqlalchemy.connectors.asyncio
 import sqlalchemy.connectors.pyodbc
-import sqlalchemy.pool as pool
-import sqlalchemy.util as util
 from _typeshed import Incomplete
-from typing import ClassVar
 
 TYPE_CHECKING: bool
 

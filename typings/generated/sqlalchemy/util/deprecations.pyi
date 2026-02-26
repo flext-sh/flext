@@ -1,6 +1,7 @@
+from collections.abc import Callable, Sequence
+from typing import Any
+
 import exc as exc
-import sqlalchemy.util.compat as compat
-from typing import Any, Callable, Sequence
 
 def warn_deprecated(msg: str, version: str, stacklevel: int = ..., code: str | None = ...) -> None: ...
 def warn_deprecated_limited(msg: str, args: Sequence[Any], version: str, stacklevel: int = ..., code: str | None = ...) -> None: ...

@@ -1,5 +1,6 @@
-from _typeshed import Incomplete
 from typing import ClassVar
+
+from _typeshed import Incomplete
 
 class _Metadatum(tuple):
     _fields: ClassVar[tuple] = ...

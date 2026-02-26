@@ -1,7 +1,8 @@
-import ft as ft
-import t
 import typing
 from typing import ClassVar
+
+import ft as ft
+import t
 
 F: typing.TypeVar
 http_method_funcs: frozenset

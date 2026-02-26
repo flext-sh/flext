@@ -1,4 +1,3 @@
-import google.protobuf.json_format as json_format
 import google.protobuf.message
 
 def serialize(message: google.protobuf.message.Message, always_print_fields_with_no_presence: bool = ..., preserving_proto_field_name: bool = ..., use_integers_for_enums: bool = ..., descriptor_pool=..., float_precision: int = ...) -> dict: ...

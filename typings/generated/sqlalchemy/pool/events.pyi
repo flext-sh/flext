@@ -1,9 +1,12 @@
-import sqlalchemy.event as event
+from typing import ClassVar
+
 import sqlalchemy.event.base
 import sqlalchemy.pool.base
-import sqlalchemy.util as util
-from sqlalchemy.pool.base import ConnectionPoolEntry, PoolProxiedConnection, PoolResetState
-from typing import ClassVar
+from sqlalchemy.pool.base import (
+    ConnectionPoolEntry,
+    PoolProxiedConnection,
+    PoolResetState,
+)
 
 class PoolEvents(sqlalchemy.event.base.Events):
     _target_class_doc: ClassVar[str] = ...

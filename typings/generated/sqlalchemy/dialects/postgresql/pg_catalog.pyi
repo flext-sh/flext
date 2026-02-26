@@ -1,7 +1,8 @@
+from typing import ClassVar
+
 import sqlalchemy.dialects.postgresql.array
 import sqlalchemy.sql.sqltypes
 import sqlalchemy.sql.type_api
-from typing import ClassVar
 
 TYPE_CHECKING: bool
 

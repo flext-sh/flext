@@ -1,11 +1,11 @@
 import _abc
 import abc
-import grpc as grpc
-import grpc.aio._base_call
-import grpc.aio._base_call as _base_call
-import grpc.aio._typing
 import typing
 from typing import ClassVar
+
+import grpc as grpc
+import grpc.aio._base_call
+import grpc.aio._typing
 
 class UnaryUnaryMultiCallable(typing.Generic, abc.ABC):
     __orig_bases__: ClassVar[tuple] = ...

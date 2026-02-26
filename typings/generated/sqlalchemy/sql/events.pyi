@@ -1,8 +1,8 @@
-import sqlalchemy.event as event
+from typing import Any, ClassVar
+
 import sqlalchemy.event.base
 import sqlalchemy.sql.base
 from sqlalchemy.sql.base import SchemaEventTarget
-from typing import Any, ClassVar
 
 TYPE_CHECKING: bool
 

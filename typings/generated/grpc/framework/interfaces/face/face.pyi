@@ -1,12 +1,9 @@
 import _abc
 import abc
 import enum
-import grpc.framework.common.cardinality as cardinality
-import grpc.framework.common.style as style
-import grpc.framework.foundation.future as future
-import grpc.framework.foundation.stream as stream
-from _typeshed import Incomplete
 from typing import ClassVar
+
+from _typeshed import Incomplete
 
 class NoSuchMethodError(Exception):
     def __init__(self, group, method) -> None: ...

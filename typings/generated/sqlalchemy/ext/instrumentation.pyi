@@ -1,14 +1,8 @@
-import sqlalchemy.orm.attributes as attributes
-import sqlalchemy.orm.base as orm_base
-import sqlalchemy.orm.collections as collections
-import sqlalchemy.orm.exc as orm_exc
-import sqlalchemy.orm.instrumentation
-import sqlalchemy.orm.instrumentation as orm_instrumentation
-import sqlalchemy.orm.util as orm_util
-import sqlalchemy.util as util
 import weakref
-from _typeshed import Incomplete
 from typing import ClassVar
+
+import sqlalchemy.orm.instrumentation
+from _typeshed import Incomplete
 
 INSTRUMENTATION_MANAGER: str
 def find_native_user_instrumentation_hook(cls): ...

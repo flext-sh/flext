@@ -1,5 +1,17 @@
-from structlog.typing import BindableLogger as BindableLogger, ExceptionTransformer as ExceptionTransformer, FilteringBoundLogger as FilteringBoundLogger
-from typing import Context as Context, EventDict as EventDict, ExcInfo as ExcInfo, ExceptionRenderer as ExceptionRenderer, Processor as Processor, WrappedLogger as WrappedLogger
+from typing import (
+    Context as Context,
+    EventDict as EventDict,
+    ExceptionRenderer as ExceptionRenderer,
+    ExcInfo as ExcInfo,
+    Processor as Processor,
+    WrappedLogger as WrappedLogger,
+)
+
+from structlog.typing import (
+    BindableLogger as BindableLogger,
+    ExceptionTransformer as ExceptionTransformer,
+    FilteringBoundLogger as FilteringBoundLogger,
+)
 
 __all__ = ['BindableLogger', 'Context', 'EventDict', 'ExcInfo', 'ExceptionRenderer', 'ExceptionTransformer', 'FilteringBoundLogger', 'Processor', 'WrappedLogger']
 

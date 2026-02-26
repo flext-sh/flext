@@ -1,4 +1,5 @@
 import datetime
+
 import google.protobuf.timestamp_pb2
 
 def from_json_string(value: str) -> google.protobuf.timestamp_pb2.Timestamp: ...

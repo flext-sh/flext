@@ -1,8 +1,3 @@
-import google.protobuf.descriptor as descriptor
-import google.protobuf.descriptor_database as descriptor_database
-import internal.invalid.python_edition_defaults as python_edition_defaults
-import internal.invalid.python_message as python_message
-import google.protobuf.text_encoding as text_encoding
 from _typeshed import Incomplete
 
 class DescriptorPool:

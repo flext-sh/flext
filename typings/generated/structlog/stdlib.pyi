@@ -1,9 +1,19 @@
 import logging
+from collections.abc import Collection, Iterable, Sequence
+from typing import (
+    Any,
+    ClassVar,
+    Context,
+    EventDict,
+    ExcInfo,
+    Processor,
+    Self,
+    WrappedLogger,
+)
+
 import structlog._base
-import structlog._config as _config
 from _typeshed import Incomplete
 from structlog._log_levels import add_log_level as add_log_level
-from typing import Any, ClassVar, Collection, Context, EventDict, ExcInfo, Iterable, Processor, Self, Sequence, WrappedLogger
 
 __all__ = ['BoundLogger', 'ExtraAdder', 'LoggerFactory', 'PositionalArgumentsFormatter', 'ProcessorFormatter', 'add_log_level', 'add_log_level_number', 'add_logger_name', 'filter_by_level', 'get_logger', 'recreate_defaults', 'render_to_log_args_and_kwargs', 'render_to_log_kwargs']
 

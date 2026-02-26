@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # Owner-Skill: .claude/skills/scripts-infra/SKILL.md
+"""Validate gate contract conformance module."""
+
 from __future__ import annotations
 
 import argparse
@@ -39,14 +41,20 @@ FIXER_NAMES = re.compile(
 
 
 class UsageError(Exception):
+    """UsageError class."""
+
     pass
 
 
 class InfraError(Exception):
+    """InfraError class."""
+
     pass
 
 
 class Ansi:
+    """Ansi class."""
+
     RED = "\033[31m"
     GREEN = "\033[32m"
     YELLOW = "\033[33m"
@@ -56,6 +64,8 @@ class Ansi:
 
 @dataclass(frozen=True)
 class Violation:
+    """Violation class."""
+
     script: str
     check: str
     message: str
@@ -64,6 +74,8 @@ class Violation:
 
 @dataclass
 class ScriptInfo:
+    """ScriptInfo class."""
+
     path: str
     extension: str
     role: str
@@ -71,10 +83,12 @@ class ScriptInfo:
 
 
 def eprint(message: str) -> None:
+    """Eprint function."""
     print(message, file=sys.stderr)
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
+    """parse_args function."""
     parser = argparse.ArgumentParser(
         description="Validate gate contract conformance for validator/fixer scripts.",
     )
@@ -97,12 +111,14 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 
 def tracked_scripts(root: Path) -> list[Path]:
+    """tracked_scripts function."""
     scripts_root = root / "scripts"
     if not scripts_root.exists() or not scripts_root.is_dir():
         return []
 
     result = subprocess.run(
         [
+            "/usr/bin/env",
             "git",
             "ls-files",
             "scripts/*.sh",
@@ -132,11 +148,15 @@ def tracked_scripts(root: Path) -> list[Path]:
 
 
 def classify_role(script_path: Path) -> str:
+    """classify_role function."""
     name = script_path.stem
 
-    if script_path.as_posix().startswith(("scripts/lib/", "scripts/core/")):
-        if not VALIDATOR_NAMES.match(name) and not FIXER_NAMES.match(name):
-            return "other"
+    if (
+        script_path.as_posix().startswith(("scripts/lib/", "scripts/core/"))
+        and not VALIDATOR_NAMES.match(name)
+        and not FIXER_NAMES.match(name)
+    ):
+        return "other"
 
     if VALIDATOR_NAMES.match(name):
         return "validator"
@@ -146,6 +166,7 @@ def classify_role(script_path: Path) -> str:
 
 
 def read_content(root: Path, script_path: Path) -> str:
+    """read_content function."""
     full_path = root / script_path
     try:
         return full_path.read_text(encoding="utf-8")
@@ -154,10 +175,12 @@ def read_content(root: Path, script_path: Path) -> str:
 
 
 def read_header(content: str) -> list[str]:
+    """read_header function."""
     return content.splitlines()[:MAX_HEADER_LINES]
 
 
 def count_code_lines(content: str, extension: str) -> int:
+    """count_code_lines function."""
     count = 0
     for line in content.splitlines():
         stripped = line.strip()
@@ -172,6 +195,7 @@ def count_code_lines(content: str, extension: str) -> int:
 
 
 def check_shebang(header: list[str], extension: str) -> Violation | None:
+    """check_shebang function."""
     if not header:
         return Violation(
             script="",
@@ -186,17 +210,21 @@ def check_shebang(header: list[str], extension: str) -> Violation | None:
             check="shebang",
             message=f"expected '#!/usr/bin/env python3', got: {first!r}",
         )
-    if extension == ".sh" and not first.startswith("#!/usr/bin/env bash"):
-        if not first.startswith("#!/bin/bash"):
-            return Violation(
-                script="",
-                check="shebang",
-                message=f"expected '#!/usr/bin/env bash', got: {first!r}",
-            )
+    if (
+        extension == ".sh"
+        and not first.startswith("#!/usr/bin/env bash")
+        and not first.startswith("#!/bin/bash")
+    ):
+        return Violation(
+            script="",
+            check="shebang",
+            message=f"expected '#!/usr/bin/env bash', got: {first!r}",
+        )
     return None
 
 
 def check_owner_marker(header: list[str]) -> Violation | None:
+    """check_owner_marker function."""
     for line in header:
         if OWNER_MARKER_RE.match(line):
             return None
@@ -208,6 +236,7 @@ def check_owner_marker(header: list[str]) -> Violation | None:
 
 
 def check_exit_codes(content: str, extension: str) -> list[Violation]:
+    """check_exit_codes function."""
     if extension != ".sh":
         return []
 
@@ -231,6 +260,7 @@ def check_exit_codes(content: str, extension: str) -> list[Violation]:
 def check_interactive(
     content: str, extension: str, script_path: str
 ) -> list[Violation]:
+    """check_interactive function."""
     _ = script_path
     if INTERACTIVE_GATE_RE.search(content):
         return []
@@ -257,6 +287,7 @@ def check_interactive(
 
 
 def check_artifact_naming(content: str) -> list[Violation]:
+    """check_artifact_naming function."""
     violations: list[Violation] = []
     for i, line in enumerate(content.splitlines(), 1):
         for match in REPORTS_PATH_RE.finditer(line):
@@ -281,6 +312,7 @@ def check_artifact_naming(content: str) -> list[Violation]:
 
 
 def check_min_code_lines(content: str, extension: str, role: str) -> Violation | None:
+    """check_min_code_lines function."""
     if role == "other":
         return None
     code_lines = count_code_lines(content, extension)
@@ -297,7 +329,8 @@ def check_min_code_lines(content: str, extension: str, role: str) -> Violation |
     return None
 
 
-def validate_script(root: Path, script_path: Path, check_all: bool) -> ScriptInfo:
+def validate_script(root: Path, script_path: Path, *, check_all: bool) -> ScriptInfo:
+    """validate_script function."""
     extension = script_path.suffix
     role = classify_role(script_path)
     info = ScriptInfo(path=script_path.as_posix(), extension=extension, role=role)
@@ -382,6 +415,7 @@ def validate_script(root: Path, script_path: Path, check_all: bool) -> ScriptInf
 
 
 def print_results(scripts: list[ScriptInfo]) -> None:
+    """print_results function."""
     eprint(f"{Ansi.CYAN}Gate Contract Validation{Ansi.RESET}")
     eprint(f"{Ansi.CYAN}{'SCRIPT':<60} {'ROLE':<10} {'STATUS':<10} DETAILS{Ansi.RESET}")
 
@@ -414,10 +448,12 @@ def print_results(scripts: list[ScriptInfo]) -> None:
 
 
 def report_path_for(root: Path) -> Path:
+    """report_path_for function."""
     return root / ".claude" / "skills" / "scripts-infra" / "report.json"
 
 
 def write_report(root: Path, scripts: list[ScriptInfo], mode: str) -> Path:
+    """write_report function."""
     report_path = report_path_for(root)
     report_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -458,6 +494,7 @@ def write_report(root: Path, scripts: list[ScriptInfo], mode: str) -> Path:
 
 
 def run_main(argv: list[str]) -> tuple[int, int]:
+    """run_main function."""
     try:
         args = parse_args(argv)
     except SystemExit as exc:
@@ -476,7 +513,10 @@ def run_main(argv: list[str]) -> tuple[int, int]:
     except Exception as exc:
         raise InfraError(str(exc)) from exc
 
-    results = [validate_script(root, script, bool(args.all)) for script in scripts_list]
+    results = [
+        validate_script(root, script, check_all=bool(args.all))
+        for script in scripts_list
+    ]
 
     print_results(results)
     try:
@@ -509,6 +549,7 @@ def run_main(argv: list[str]) -> tuple[int, int]:
 
 
 def main() -> int:
+    """Main function."""
     try:
         code, violation_count = run_main(sys.argv[1:])
     except UsageError as exc:

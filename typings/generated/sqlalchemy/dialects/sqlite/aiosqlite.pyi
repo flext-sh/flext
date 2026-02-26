@@ -1,13 +1,14 @@
+from builtins import ModuleType
+from collections.abc import Iterator, Sequence
+from typing import Any, ClassVar
+
 import DBAPIModule
 import pool as pool
 import sqlalchemy.connectors.asyncio
 import sqlalchemy.dialects.sqlite.base
 import sqlalchemy.dialects.sqlite.pysqlite
 import sqlalchemy.engine.interfaces
-import sqlalchemy.util as util
 from _typeshed import Incomplete
-from builtins import ModuleType
-from typing import Any, ClassVar, Iterator, Sequence
 
 TYPE_CHECKING: bool
 

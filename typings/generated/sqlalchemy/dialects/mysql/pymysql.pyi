@@ -1,8 +1,8 @@
+from typing import Any, ClassVar, Literal
+
 import DBAPIModule
 import sqlalchemy.dialects.mysql.mysqldb
-import sqlalchemy.util.langhelpers as langhelpers
 from _typeshed import Incomplete
-from typing import Any, ClassVar, Literal
 
 TYPE_CHECKING: bool
 

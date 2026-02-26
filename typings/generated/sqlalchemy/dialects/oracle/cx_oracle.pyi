@@ -1,19 +1,13 @@
 import decimal
 import re
+from typing import ClassVar
+
 import sqlalchemy.cyextension.immutabledict
 import sqlalchemy.dialects.oracle.base
-import sqlalchemy.dialects.oracle.base as oracle
 import sqlalchemy.dialects.oracle.types
-import sqlalchemy.engine.cursor as _cursor
 import sqlalchemy.engine.interfaces
-import sqlalchemy.engine.interfaces as interfaces
-import sqlalchemy.engine.processors as processors
-import sqlalchemy.exc as exc
 import sqlalchemy.sql.sqltypes
-import sqlalchemy.sql.sqltypes as sqltypes
-import sqlalchemy.util as util
 from _typeshed import Incomplete
-from typing import ClassVar
 
 class _OracleInteger(sqlalchemy.sql.sqltypes.Integer):
     __parameters__: ClassVar[tuple] = ...

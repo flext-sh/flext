@@ -1,15 +1,11 @@
-import sqlalchemy.engine.result as result
-import sqlalchemy.orm.attributes as attributes
-import sqlalchemy.orm.exc as orm_exc
-import sqlalchemy.orm.query
-import sqlalchemy.orm.relationships as relationships
-import sqlalchemy.orm.util as orm_util
-import sqlalchemy.orm.writeonly
-import sqlalchemy.util as util
 import typing
+from collections.abc import Iterable
+from typing import Any, ClassVar
+
+import sqlalchemy.orm.query
+import sqlalchemy.orm.writeonly
 from _typeshed import Incomplete
 from sqlalchemy.orm.base import PassiveFlag
-from typing import Any, ClassVar, Iterable
 
 TYPE_CHECKING: bool
 

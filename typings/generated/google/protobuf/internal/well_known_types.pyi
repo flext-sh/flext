@@ -1,5 +1,5 @@
 import datetime
-import internal.invalid.field_mask as field_mask
+
 from _typeshed import Incomplete
 
 class Any:

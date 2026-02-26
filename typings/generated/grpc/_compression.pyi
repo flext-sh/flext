@@ -1,7 +1,6 @@
 import grpc as grpc
-import grpc._cython.cygrpc as cygrpc
 
-__all__ = ['NoCompression', 'Deflate', 'Gzip']
+__all__ = ['Deflate', 'Gzip', 'NoCompression']
 
 NoCompression: int
 Deflate: int

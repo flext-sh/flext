@@ -25,6 +25,8 @@ EXIT_INFRA = 3
 
 
 class Ansi:
+    """Ansi class."""
+
     RED = "\033[31m"
     GREEN = "\033[32m"
     YELLOW = "\033[33m"
@@ -33,15 +35,21 @@ class Ansi:
 
 
 class SkillUsageError(Exception):
+    """SkillUsageError class."""
+
     pass
 
 
 class SkillInfraError(Exception):
+    """SkillInfraError class."""
+
     pass
 
 
 @dataclass(frozen=True)
 class ScriptCheckResult:
+    """ScriptCheckResult class."""
+
     script: str
     status: str
     details: str
@@ -49,10 +57,12 @@ class ScriptCheckResult:
 
 
 def eprint(message: str) -> None:
+    """Eprint function."""
     print(message, file=sys.stderr)
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
+    """parse_args function."""
     parser = argparse.ArgumentParser(
         description=(
             "Validate that each tracked script under scripts/ has exactly one "
@@ -74,8 +84,10 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 
 def tracked_scripts(repo_root: Path) -> list[Path]:
+    """tracked_scripts function."""
     result = subprocess.run(
         [
+            "/usr/bin/env",
             "git",
             "ls-files",
             "scripts/*.sh",
@@ -105,6 +117,7 @@ def tracked_scripts(repo_root: Path) -> list[Path]:
 
 
 def read_header(repo_root: Path, script_path: Path) -> list[str]:
+    """read_header function."""
     full_path = repo_root / script_path
     try:
         with full_path.open("r", encoding="utf-8") as handle:
@@ -121,6 +134,7 @@ def read_header(repo_root: Path, script_path: Path) -> list[str]:
 
 
 def scripts_section(skill_file: Path) -> str:
+    """scripts_section function."""
     try:
         content = skill_file.read_text(encoding="utf-8")
     except OSError as exc:
@@ -146,6 +160,7 @@ def scripts_section(skill_file: Path) -> str:
 
 
 def script_listed_in_skill(skill_file: Path, script_path: Path) -> bool:
+    """script_listed_in_skill function."""
     section = scripts_section(skill_file)
     if not section.strip():
         return False
@@ -156,6 +171,7 @@ def script_listed_in_skill(skill_file: Path, script_path: Path) -> bool:
 
 
 def candidate_skill(script_path: Path) -> str:
+    """candidate_skill function."""
     path = script_path.as_posix()
     if path.startswith("scripts/validation/"):
         return "scripts-validation"
@@ -188,6 +204,7 @@ def validate_script(
     repo_root: Path,
     script_path: Path,
 ) -> tuple[ScriptCheckResult, dict[str, str] | None]:
+    """validate_script function."""
     header = read_header(repo_root, script_path)
     markers = [match for line in header if (match := OWNER_MARKER_RE.match(line))]
 
@@ -258,6 +275,7 @@ def validate_script(
 
 
 def status_color(status: str) -> str:
+    """status_color function."""
     if status == "OK":
         return Ansi.GREEN
     if status == "UNOWNED":
@@ -266,6 +284,7 @@ def status_color(status: str) -> str:
 
 
 def print_table(results: list[ScriptCheckResult]) -> None:
+    """print_table function."""
     eprint(f"{Ansi.CYAN}Script Ownership Validation{Ansi.RESET}")
     eprint(f"{Ansi.CYAN}{'SCRIPT':<55} {'STATUS':<10} DETAILS{Ansi.RESET}")
     for result in results:
@@ -279,6 +298,7 @@ def write_candidates(
     repo_root: Path,
     candidates: list[dict[str, str]],
 ) -> Path:
+    """write_candidates function."""
     report_path = repo_root / ".claude" / "skills" / "scripts-infra" / "report.json"
     try:
         report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -297,6 +317,7 @@ def write_candidates(
 
 
 def run_main(argv: list[str]) -> int:
+    """run_main function."""
     try:
         args = parse_args(argv)
     except SystemExit as exc:
@@ -355,6 +376,7 @@ def run_main(argv: list[str]) -> int:
 
 
 def main() -> None:
+    """Main function."""
     code = run_main(sys.argv[1:])
     if code not in {EXIT_PASS, EXIT_FAIL, EXIT_USAGE, EXIT_INFRA}:
         code = EXIT_INFRA

@@ -1,10 +1,7 @@
 import enum
-import psutil._common as _common
-import psutil._ntuples as ntp
-import psutil._psposix as _psposix
-import psutil._psutil_linux as cext
-from _typeshed import Incomplete
 from typing import ClassVar
+
+from _typeshed import Incomplete
 
 ENCODING: str
 __extra__all__: list

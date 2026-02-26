@@ -1,7 +1,8 @@
+from typing import ClassVar, RenderResult
+
 import rich.jupyter
 from rich.console import Console, ConsoleOptions
 from rich.measure import Measurement
-from typing import ClassVar, RenderResult
 
 class Tree(rich.jupyter.JupyterMixin):
     ASCII_GUIDES: ClassVar[tuple] = ...

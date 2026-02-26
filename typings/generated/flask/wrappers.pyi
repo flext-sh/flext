@@ -1,10 +1,10 @@
-import flask.json as json
+from types import ModuleType
+from typing import ClassVar
+
 import t
 import werkzeug.wrappers.request
 import werkzeug.wrappers.response
 from _typeshed import Incomplete
-from types import ModuleType
-from typing import ClassVar
 
 class Request(werkzeug.wrappers.request.Request):
     json_module: ClassVar[ModuleType] = ...

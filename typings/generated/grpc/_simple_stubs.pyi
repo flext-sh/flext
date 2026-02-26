@@ -1,8 +1,9 @@
 import _thread
-import grpc as grpc
 import threading
 import typing
 from typing import ClassVar
+
+import grpc as grpc
 
 RequestType: typing.TypeVar
 ResponseType: typing.TypeVar

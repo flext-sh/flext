@@ -1,14 +1,11 @@
+from typing import ClassVar
+
 import sqlalchemy.dialects.postgresql.array
 import sqlalchemy.dialects.postgresql.base
 import sqlalchemy.dialects.postgresql.hstore
 import sqlalchemy.dialects.postgresql.pg_catalog
-import sqlalchemy.engine.processors as processors
-import sqlalchemy.exc as exc
 import sqlalchemy.sql.sqltypes
-import sqlalchemy.types as sqltypes
-import sqlalchemy.util as util
 from _typeshed import Incomplete
-from typing import ClassVar
 
 class _PsycopgNumeric(sqlalchemy.sql.sqltypes.Numeric):
     __parameters__: ClassVar[tuple] = ...

@@ -1,10 +1,10 @@
-import sqlalchemy.exc as sa_exc
-import sqlalchemy.util as util
 import typing
+from collections.abc import Callable, Iterable, Iterator, Sequence
+from typing import Any, ClassVar
+
 from _typeshed import Incomplete
 from sqlalchemy.ext.asyncio.session import _AS, async_sessionmaker
 from sqlalchemy.orm.session import Session
-from typing import Any, Callable, ClassVar, Iterable, Iterator, Sequence
 
 TYPE_CHECKING: bool
 

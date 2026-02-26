@@ -1,22 +1,20 @@
-import clsregistry as clsregistry
-import sqlalchemy.exc as exc
-import sqlalchemy.inspection
-import sqlalchemy.inspection as inspection
-import sqlalchemy.orm.attributes as attributes
-import sqlalchemy.orm.base
-import sqlalchemy.orm.instrumentation as instrumentation
-import sqlalchemy.orm.interfaces as interfaces
-import sqlalchemy.orm.mapper as mapperlib
-import sqlalchemy.sql.sqltypes as sqltypes
-import sqlalchemy.util as util
-import sqlalchemy.util.typing as compat_typing
 import typing
+from collections.abc import Callable
+from typing import (
+    Any,
+    ClassVar as _ClassVar,
+    _DeclaredAttrDecorated,
+    _TypeAnnotationMapType,
+)
+
+import clsregistry as clsregistry
+import sqlalchemy.inspection
+import sqlalchemy.orm.base
 from sqlalchemy.orm.descriptor_props import Synonym
 from sqlalchemy.orm.mapper import Mapper
 from sqlalchemy.sql.base import _NoArg
 from sqlalchemy.sql.schema import MetaData
 from sqlalchemy.sql.selectable import FromClause
-from typing import Any, Callable, ClassVar as _ClassVar, _DeclaredAttrDecorated, _TypeAnnotationMapType
 
 TYPE_CHECKING: bool
 LITERAL_TYPES: tuple

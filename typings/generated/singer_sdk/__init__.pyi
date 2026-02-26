@@ -1,11 +1,10 @@
 """Generated type stubs for singer_sdk - Stream and Tap for type-checker resolution."""
 
-from __future__ import annotations
-
 from typing import Any
 
 class Tap:
     """Singer SDK Tap base (stub)."""
+
     def __init__(self, *args: Any, **kwargs: Any) -> None: ...
     @property
     def config(self) -> dict[str, Any]: ...
@@ -15,6 +14,7 @@ class Tap:
 
 class Stream:
     """Singer SDK Stream base (stub)."""
+
     def __init__(self, tap: Tap, name: str, schema: dict[str, Any] | None = None, **kwargs: Any) -> None: ...
     @property
     def name(self) -> str: ...

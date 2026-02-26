@@ -1,7 +1,8 @@
 import _abc
 import abc
-from _typeshed import Incomplete
 from typing import ClassVar
+
+from _typeshed import Incomplete
 
 class TimeoutError(Exception): ...
 class CancelledError(Exception): ...

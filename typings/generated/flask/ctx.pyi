@@ -1,7 +1,8 @@
-import ft as ft
-import t
 import typing
 from builtins import TracebackType
+
+import ft as ft
+import t
 
 class _AppCtxGlobals:
     def __getattr__(self, name: str) -> t.Any: ...

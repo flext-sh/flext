@@ -1,12 +1,17 @@
-import sqlalchemy.dialects.postgresql.ext as ext
-import sqlalchemy.sql.coercions as coercions
+from typing import (
+    ClassVar,
+    Self,
+    _DMLTableArgument,
+    _OnConflictConstraintT,
+    _OnConflictIndexElementsT,
+    _OnConflictIndexWhereT,
+    _OnConflictSetT,
+    _OnConflictWhereT,
+)
+
 import sqlalchemy.sql.dml
 import sqlalchemy.sql.elements
-import sqlalchemy.sql.roles as roles
-import sqlalchemy.sql.schema as schema
-import sqlalchemy.util as util
 from _typeshed import Incomplete
-from typing import ClassVar, Self, _DMLTableArgument, _OnConflictConstraintT, _OnConflictIndexElementsT, _OnConflictIndexWhereT, _OnConflictSetT, _OnConflictWhereT
 
 __all__ = ['Insert', 'insert']
 

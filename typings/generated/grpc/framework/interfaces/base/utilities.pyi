@@ -1,7 +1,7 @@
 import _abc
-import grpc.framework.interfaces.base.base
-import grpc.framework.interfaces.base.base as base
 from typing import ClassVar
+
+import grpc.framework.interfaces.base.base
 
 class _Completion(grpc.framework.interfaces.base.base.Completion, _Completion):
     __abstractmethods__: ClassVar[frozenset] = ...

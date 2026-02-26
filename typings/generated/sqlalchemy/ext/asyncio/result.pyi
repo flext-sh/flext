@@ -1,11 +1,11 @@
 import operator
+from collections.abc import AsyncIterator, Sequence
+from typing import Any, ClassVar, Self
+
 import sqlalchemy.engine.result
-import sqlalchemy.ext.asyncio.exc as async_exc
-import sqlalchemy.util as util
 import sqlalchemy.util.langhelpers
-from sqlalchemy.engine.result import FrozenResult, Result, _R
+from sqlalchemy.engine.result import _R, FrozenResult, Result
 from sqlalchemy.engine.row import Row, RowMapping
-from typing import Any, AsyncIterator, ClassVar, Self, Sequence
 
 TYPE_CHECKING: bool
 

@@ -1,16 +1,12 @@
+from collections.abc import Iterable, Mapping, Sequence
+from typing import Any
+
 import sqlalchemy.cyextension.immutabledict
-import sqlalchemy.exc as sa_exc
-import sqlalchemy.orm.attributes as attributes
-import sqlalchemy.orm.exc as orm_exc
-import sqlalchemy.orm.path_registry as path_registry
-import sqlalchemy.sql.util as sql_util
-import sqlalchemy.util as util
 from _typeshed import Incomplete
 from sqlalchemy.engine.result import FrozenResult
 from sqlalchemy.orm.base import PassiveFlag
 from sqlalchemy.orm.context import FromStatement, QueryContext
 from sqlalchemy.sql.selectable import ForUpdateArg
-from typing import Any, Iterable, Mapping, Sequence
 
 TYPE_CHECKING: bool
 EMPTY_DICT: sqlalchemy.cyextension.immutabledict.immutabledict

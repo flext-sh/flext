@@ -1,11 +1,11 @@
+from typing import Any, ClassVar, ConnectArgsType
+
 import interfaces as interfaces
 import pool as pool
 import sqlalchemy.connectors
-import sqlalchemy.util as util
 from sqlalchemy.engine.interfaces import ExecutionContext
 from sqlalchemy.engine.url import URL
 from sqlalchemy.sql.type_api import TypeEngine
-from typing import Any, ClassVar, ConnectArgsType
 
 class PyODBCConnector(sqlalchemy.connectors.Connector):
     driver: ClassVar[str] = ...

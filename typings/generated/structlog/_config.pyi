@@ -1,7 +1,9 @@
+from collections.abc import Callable, Iterable
+from typing import Any, ClassVar, Context, Processor, WrappedLogger
+
 import structlog._native
 import structlog._output
 from structlog.typing import BindableLogger
-from typing import Any, Callable, ClassVar, Context, Iterable, Processor, WrappedLogger
 
 __conditional_annotations__: set
 

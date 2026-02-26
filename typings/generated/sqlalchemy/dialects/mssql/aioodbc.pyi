@@ -1,6 +1,7 @@
+from typing import ClassVar
+
 import sqlalchemy.connectors.aioodbc
 import sqlalchemy.dialects.mssql.pyodbc
-from typing import ClassVar
 
 class MSExecutionContext_aioodbc(sqlalchemy.dialects.mssql.pyodbc.MSExecutionContext_pyodbc):
     def create_server_side_cursor(self): ...

@@ -1,10 +1,12 @@
 import abc
 import functools
 import weakref
+from collections.abc import Callable
+from typing import Any, ClassVar, Literal, NoReturn
+
 from pydantic._internal._config import ConfigWrapper
 from pydantic._internal._generics import PydanticGenericMetadata
 from pydantic._internal._namespace_utils import NsResolver
-from typing import Any, Callable, ClassVar, Literal, NoReturn
 
 TYPE_CHECKING: bool
 PydanticModelField: object

@@ -1,11 +1,13 @@
-import sqlalchemy.exc as exc
-import sqlalchemy.pool.base
-import sqlalchemy.util as util
-import sqlalchemy.util.queue
-import sqlalchemy.util.queue as sqla_queue
-from _typeshed import Incomplete
-from sqlalchemy.pool.base import PoolProxiedConnection, _CreatorFnType, _CreatorWRecFnType
 from typing import Any, ClassVar
+
+import sqlalchemy.pool.base
+import sqlalchemy.util.queue
+from _typeshed import Incomplete
+from sqlalchemy.pool.base import (
+    PoolProxiedConnection,
+    _CreatorFnType,
+    _CreatorWRecFnType,
+)
 
 TYPE_CHECKING: bool
 

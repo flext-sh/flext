@@ -1,7 +1,7 @@
 import _abc
-import grpc.framework.foundation.stream
-import grpc.framework.foundation.stream as stream
 from typing import ClassVar
+
+import grpc.framework.foundation.stream
 
 class TransformingConsumer(grpc.framework.foundation.stream.Consumer):
     __abstractmethods__: ClassVar[frozenset] = ...

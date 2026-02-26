@@ -5,13 +5,11 @@ from typing import Any, Generic, TypeVar
 T_co = TypeVar("T_co", covariant=True)
 E_co = TypeVar("E_co", covariant=True)
 
-
 class IOResult(Generic[T_co, E_co]):
     """IO Result base type - union of IOSuccess and IOFailure."""
 
     def unwrap(self) -> T_co: ...
     def failure(self) -> E_co: ...
-
 
 class IOSuccess(IOResult[T_co, Any]):
     """IO Success wrapper."""
@@ -26,7 +24,6 @@ class IOSuccess(IOResult[T_co, Any]):
 
     def failure(self) -> None: ...
 
-
 class IOFailure(IOResult[Any, E_co]):
     """IO Failure wrapper."""
 
@@ -39,7 +36,6 @@ class IOFailure(IOResult[Any, E_co]):
     def unwrap(self) -> E_co: ...
 
     def failure(self) -> E_co: ...
-
 
 class IO(Generic[T_co]):
     """IO monad wrapper."""

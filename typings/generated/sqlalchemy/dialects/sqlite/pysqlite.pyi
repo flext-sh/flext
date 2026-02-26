@@ -1,13 +1,12 @@
+import re
+from collections.abc import Callable
+from typing import Any, ClassVar
+
 import DBAPIModule
 import pool as pool
-import re
 import sqlalchemy.cyextension.immutabledict
 import sqlalchemy.dialects.sqlite.base
-import sqlalchemy.exc as exc
-import sqlalchemy.types as sqltypes
-import sqlalchemy.util as util
 from sqlalchemy.dialects.sqlite.base import SQLiteDialect
-from typing import Any, Callable, ClassVar
 
 TYPE_CHECKING: bool
 

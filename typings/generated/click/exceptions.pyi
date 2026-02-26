@@ -1,7 +1,8 @@
+from typing import ClassVar
+
 import cabc
 import t
 from _typeshed import Incomplete
-from typing import ClassVar
 
 class ClickException(Exception):
     exit_code: ClassVar[int] = ...

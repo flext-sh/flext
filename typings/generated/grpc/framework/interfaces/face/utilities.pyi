@@ -1,10 +1,7 @@
 import _abc
-import grpc.framework.common.cardinality as cardinality
-import grpc.framework.common.style as style
-import grpc.framework.foundation.stream as stream
-import grpc.framework.interfaces.face.face
-import grpc.framework.interfaces.face.face as face
 from typing import ClassVar
+
+import grpc.framework.interfaces.face.face
 
 class _MethodImplementation(grpc.framework.interfaces.face.face.MethodImplementation, _MethodImplementation):
     __abstractmethods__: ClassVar[frozenset] = ...

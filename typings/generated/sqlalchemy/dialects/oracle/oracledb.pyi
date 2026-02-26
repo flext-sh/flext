@@ -1,11 +1,8 @@
+from typing import Any, ClassVar
+
 import sqlalchemy.connectors.asyncio
 import sqlalchemy.dialects.oracle.cx_oracle
-import sqlalchemy.dialects.oracle.cx_oracle as _cx_oracle
-import sqlalchemy.engine.default as default
-import sqlalchemy.exc as exc
-import sqlalchemy.pool as pool
 from _typeshed import Incomplete
-from typing import Any, ClassVar
 
 TYPE_CHECKING: bool
 

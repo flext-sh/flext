@@ -1,7 +1,7 @@
-import grpc as grpc
-import grpc._cython.cygrpc as cygrpc
 import typing
 from typing import Any
+
+import grpc as grpc
 
 CYGRPC_CONNECTIVITY_STATE_TO_CHANNEL_CONNECTIVITY: dict
 CYGRPC_STATUS_CODE_TO_STATUS_CODE: dict

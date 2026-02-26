@@ -1,7 +1,7 @@
 import _abc
-import cachetools
-import cachetools.keys as keys
 from typing import ClassVar
+
+import cachetools
 
 __all__ = ['fifo_cache', 'lfu_cache', 'lru_cache', 'rr_cache', 'ttl_cache']
 

@@ -1,11 +1,10 @@
+from collections.abc import Callable
+from typing import TypingType
+
 import mypy.plugin
-import sqlalchemy.ext.mypy.decl_class as decl_class
-import sqlalchemy.ext.mypy.names as names
-import sqlalchemy.ext.mypy.util as util
 from mypy.nodes import MypyFile
 from mypy.plugin import AttributeContext, ClassDefContext, DynamicClassDefContext
 from mypy.types import Type
-from typing import Callable, TypingType
 
 GDEF: int
 

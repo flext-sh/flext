@@ -1,22 +1,20 @@
 import logging
+from typing import Any, ClassVar
+
 import roles as roles
-import sqlalchemy.exc as sa_exc
 import sqlalchemy.log
-import sqlalchemy.log as log
-import sqlalchemy.orm.attributes as attributes
 import sqlalchemy.orm.base
-import sqlalchemy.orm.exc as orm_exc
 import sqlalchemy.orm.interfaces
-import sqlalchemy.orm.strategy_options as strategy_options
-import sqlalchemy.sql.coercions as coercions
-import sqlalchemy.util as util
 import sqlalchemy.util.langhelpers
 from _typeshed import Incomplete
-from sqlalchemy.orm.descriptor_props import CompositeProperty as CompositeProperty, ConcreteInheritedProperty as ConcreteInheritedProperty, SynonymProperty as SynonymProperty
+from sqlalchemy.orm.descriptor_props import (
+    CompositeProperty as CompositeProperty,
+    ConcreteInheritedProperty as ConcreteInheritedProperty,
+    SynonymProperty as SynonymProperty,
+)
 from sqlalchemy.orm.interfaces import PropComparator, _AttributeOptions
 from sqlalchemy.orm.relationships import RelationshipProperty as RelationshipProperty
 from sqlalchemy.sql.schema import Column
-from typing import Any, ClassVar
 
 __all__ = ['ColumnProperty', 'CompositeProperty', 'ConcreteInheritedProperty', 'RelationshipProperty', 'SynonymProperty']
 

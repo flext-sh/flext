@@ -1,7 +1,8 @@
 import _pickle
+
 from _typeshed import Incomplete
 
-__all__ = ['Serializer', 'Deserializer', 'dumps', 'loads']
+__all__ = ['Deserializer', 'Serializer', 'dumps', 'loads']
 
 class Serializer(_pickle.Pickler):
     def persistent_id(self, obj): ...

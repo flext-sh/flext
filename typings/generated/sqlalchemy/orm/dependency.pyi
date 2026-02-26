@@ -1,11 +1,3 @@
-import sqlalchemy.exc as sa_exc
-import sqlalchemy.orm.attributes as attributes
-import sqlalchemy.orm.exc as exc
-import sqlalchemy.orm.sync as sync
-import sqlalchemy.orm.unitofwork as unitofwork
-import sqlalchemy.orm.util as mapperutil
-import sqlalchemy.sql as sql
-import sqlalchemy.util as util
 
 class DependencyProcessor:
     def __init__(self, prop) -> None: ...

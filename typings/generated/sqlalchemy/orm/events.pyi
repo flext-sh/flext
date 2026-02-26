@@ -1,23 +1,19 @@
-import sqlalchemy.event as event
-import sqlalchemy.event.attr
-import sqlalchemy.event.base
-import sqlalchemy.exc as exc
-import sqlalchemy.orm.attributes
-import sqlalchemy.orm.instrumentation
-import sqlalchemy.orm.instrumentation as instrumentation
-import sqlalchemy.orm.interfaces as interfaces
-import sqlalchemy.orm.mapper
-import sqlalchemy.orm.mapper as mapperlib
-import sqlalchemy.orm.query
-import sqlalchemy.orm.session
-import sqlalchemy.util as util
 import typing
 import weakref
+from collections.abc import Collection, Iterable, Sequence
+from typing import Any, ClassVar
+
+import sqlalchemy.event.attr
+import sqlalchemy.event.base
+import sqlalchemy.orm.attributes
+import sqlalchemy.orm.instrumentation
+import sqlalchemy.orm.mapper
+import sqlalchemy.orm.query
+import sqlalchemy.orm.session
 from sqlalchemy.event.registry import _ET
 from sqlalchemy.orm.instrumentation import ClassManager
 from sqlalchemy.orm.query import BulkDelete, BulkUpdate, Query
 from sqlalchemy.orm.session import Session
-from typing import Any, ClassVar, Collection, Iterable, Sequence
 
 __conditional_annotations__: set
 TYPE_CHECKING: bool

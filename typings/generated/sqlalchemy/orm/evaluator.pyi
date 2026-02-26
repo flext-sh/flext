@@ -1,8 +1,5 @@
 import sqlalchemy.exc
-import sqlalchemy.exc as exc
-import sqlalchemy.orm.exc as orm_exc
 import sqlalchemy.sql.operators
-import sqlalchemy.sql.operators as operators
 from _typeshed import Incomplete
 
 class UnevaluatableError(sqlalchemy.exc.InvalidRequestError): ...

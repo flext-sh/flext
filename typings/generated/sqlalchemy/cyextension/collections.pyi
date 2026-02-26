@@ -1,5 +1,6 @@
-import _cython_3_2_4
 from typing import ClassVar
+
+import _cython_3_2_4
 
 __test__: dict
 unique_list: _cython_3_2_4.cython_function_or_method

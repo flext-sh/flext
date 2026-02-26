@@ -1,7 +1,3 @@
-import google.protobuf.descriptor_pool as descriptor_pool
-import internal.invalid.api_implementation as api_implementation
-import google.protobuf.message as message
-import google.protobuf.pyext.cpp_message as message_impl
 from _typeshed import Incomplete
 
 def GetMessageClass(descriptor): ...

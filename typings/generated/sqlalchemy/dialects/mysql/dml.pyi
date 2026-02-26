@@ -1,10 +1,9 @@
-import sqlalchemy.exc as exc
+from typing import Any, ClassVar, Self, _DMLTableArgument, _UpdateArg
+
 import sqlalchemy.sql.dml
 import sqlalchemy.sql.elements
-import sqlalchemy.util as util
 from _typeshed import Incomplete
 from sqlalchemy.sql.selectable import NamedFromClause
-from typing import Any, ClassVar, Self, _DMLTableArgument, _UpdateArg
 
 __all__ = ['Insert', 'insert']
 
