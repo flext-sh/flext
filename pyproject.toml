@@ -28,36 +28,36 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "flexcore @ ./flexcore",
-  "flext-api @ ./flext-api",
-  "flext-auth @ ./flext-auth",
-  "flext-cli @ ./flext-cli",
-  "flext-core @ ./flext-core",
-  "flext-db-oracle @ ./flext-db-oracle",
-  "flext-dbt-ldap @ ./flext-dbt-ldap",
-  "flext-dbt-ldif @ ./flext-dbt-ldif",
-  "flext-dbt-oracle @ ./flext-dbt-oracle",
-  "flext-dbt-oracle-wms @ ./flext-dbt-oracle-wms",
-  "flext-grpc @ ./flext-grpc",
-  "flext-ldap @ ./flext-ldap",
-  "flext-ldif @ ./flext-ldif",
-  "flext-meltano @ ./flext-meltano",
-  "flext-observability @ ./flext-observability",
-  "flext-oracle-oic @ ./flext-oracle-oic",
-  "flext-oracle-wms @ ./flext-oracle-wms",
-  "flext-plugin @ ./flext-plugin",
-  "flext-quality @ ./flext-quality",
-  "flext-tap-ldap @ ./flext-tap-ldap",
-  "flext-tap-ldif @ ./flext-tap-ldif",
-  "flext-tap-oracle @ ./flext-tap-oracle",
-  "flext-tap-oracle-oic @ ./flext-tap-oracle-oic",
-  "flext-tap-oracle-wms @ ./flext-tap-oracle-wms",
-  "flext-target-ldap @ ./flext-target-ldap",
-  "flext-target-ldif @ ./flext-target-ldif",
-  "flext-target-oracle @ ./flext-target-oracle",
-  "flext-target-oracle-oic @ ./flext-target-oracle-oic",
-  "flext-target-oracle-wms @ ./flext-target-oracle-wms",
-  "flext-web @ ./flext-web",
+  "flexcore @ file://./flexcore",
+  "flext-api @ file://./flext-api",
+  "flext-auth @ file://./flext-auth",
+  "flext-cli @ file://./flext-cli",
+  "flext-core @ file://./flext-core",
+  "flext-db-oracle @ file://./flext-db-oracle",
+  "flext-dbt-ldap @ file://./flext-dbt-ldap",
+  "flext-dbt-ldif @ file://./flext-dbt-ldif",
+  "flext-dbt-oracle @ file://./flext-dbt-oracle",
+  "flext-dbt-oracle-wms @ file://./flext-dbt-oracle-wms",
+  "flext-grpc @ file://./flext-grpc",
+  "flext-ldap @ file://./flext-ldap",
+  "flext-ldif @ file://./flext-ldif",
+  "flext-meltano @ file://./flext-meltano",
+  "flext-observability @ file://./flext-observability",
+  "flext-oracle-oic @ file://./flext-oracle-oic",
+  "flext-oracle-wms @ file://./flext-oracle-wms",
+  "flext-plugin @ file://./flext-plugin",
+  "flext-quality @ file://./flext-quality",
+  "flext-tap-ldap @ file://./flext-tap-ldap",
+  "flext-tap-ldif @ file://./flext-tap-ldif",
+  "flext-tap-oracle @ file://./flext-tap-oracle",
+  "flext-tap-oracle-oic @ file://./flext-tap-oracle-oic",
+  "flext-tap-oracle-wms @ file://./flext-tap-oracle-wms",
+  "flext-target-ldap @ file://./flext-target-ldap",
+  "flext-target-ldif @ file://./flext-target-ldif",
+  "flext-target-oracle @ file://./flext-target-oracle",
+  "flext-target-oracle-oic @ file://./flext-target-oracle-oic",
+  "flext-target-oracle-wms @ file://./flext-target-oracle-wms",
+  "flext-web @ file://./flext-web",
 ]
 # [MANAGED] consolidated development dependencies
 # [AUTO] merged from dev/docs/security/test/typings
@@ -183,6 +183,9 @@ dependencies.flext-target-oracle-wms = {path = "flext-target-oracle-wms", develo
 dependencies.flext-web = {path = "flext-web", develop = true}
 
 # [MANAGED] ruff
+
+# [CUSTOM] poetry dev extensions
+[tool.poetry.group.dev.dependencies]
 [tool.ruff]
 extend = "./ruff-shared.toml"
 lint.isort.known-first-party = [ "flext", "flext_tools" ]
@@ -223,13 +226,22 @@ extend_exclude = [ "flexcore/", "flext-.*/" ]
 known_first_party = [ "flext", "flext_quality" ]
 pep621_dev_dependency_groups = [ "dev" ]
 
-# [MANAGED] pytest
 [tool.pytest]
+# [MANAGED] pytest
+
 [tool.pytest.ini_options]
 tool.pytest.ini_options.minversion = "8.0"
-tool.pytest.ini_options.python_classes = [ "Test*" ]
-tool.pytest.ini_options.python_files = [ "*_test.py", "*_tests.py", "test_*.py" ]
-tool.pytest.ini_options.addopts = [ "--strict-markers" ]
+tool.pytest.ini_options.python_classes = [
+  "Test*",
+]
+tool.pytest.ini_options.python_files = [
+  "*_test.py",
+  "*_tests.py",
+  "test_*.py",
+]
+tool.pytest.ini_options.addopts = [
+  "--strict-markers",
+]
 tool.pytest.ini_options.markers = [
   "unit: unit tests",
   "integration: integration tests",
@@ -243,14 +255,8 @@ tool.pytest.ini_options.markers = [
 ]
 
 # [MANAGED] coverage
+
 [tool.coverage]
-# ============================================
-
-# COVERAGE - Test Coverage Configuration
-
-# ============================================
-
-html.directory = "htmlcov"
 report.exclude_lines = [
   "@abstractmethod",
   "^\\s*\\.\\.\\.\\s*$",
@@ -271,6 +277,10 @@ run.branch = true
 run.omit = [ "*/__pycache__/*", "*/_pb2*.py", "*/conftest.py", "*/tests/*" ]
 run.relative_files = true
 run.source = [ "src/flext" ]
+# ============================================
+# COVERAGE - Test Coverage Configuration
+# ============================================
+html.directory = "htmlcov"
 xml.output = "coverage.xml"
 
 # [MANAGED] mypy
@@ -351,6 +361,29 @@ mypy_path = [
 namespace_packages = true
 no_implicit_optional = true
 no_implicit_reexport = true
+overrides = [
+  {disable_error_code = [
+    "call-overload",
+  ], module = "(models.py|result.py|service.py)"},
+  {disable_error_code = [
+    "comparison-overlap",
+    "truthy-function",
+  ], disallow_untyped_defs = false, module = "tests.*"},
+  {disable_error_code = [
+    "name-defined",
+  ], module = "*.protocols"},
+  {disable_error_code = [
+    "explicit-any",
+  ], module = "flext_core.typings"},
+  {disable_error_code = [
+    "prop-decorator",
+    "return-value",
+  ], module = "flext_core._models.base"},
+  {disable_error_code = [
+    "no-any-unimported",
+    "misc",
+  ], module = "flext_core.runtime"},
+]
 platform = "linux"
 plugins = [ "pydantic.mypy" ]
 pretty = true
@@ -370,71 +403,30 @@ warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = false
 
-[[tool.mypy.overrides]]
-disable_error_code = [ "call-overload" ]
-module = "(models.py|result.py|service.py)"
-
-[[tool.mypy.overrides]]
-disable_error_code = [ "comparison-overlap", "truthy-function" ]
-disallow_untyped_defs = false
-module = "tests.*"
-
-[[tool.mypy.overrides]]
-disable_error_code = [ "name-defined" ]
-module = "*.protocols"
-
-[[tool.mypy.overrides]]
-disable_error_code = [ "explicit-any" ]
-module = "flext_core.typings"
-
-[[tool.mypy.overrides]]
-disable_error_code = [ "prop-decorator", "return-value" ]
-module = "flext_core._models.base"
-
-[[tool.mypy.overrides]]
-disable_error_code = [ "no-any-unimported", "misc" ]
-module = "flext_core.runtime"
-
 # [MANAGED] pyrefly
 [tool.pyrefly]
 # [MANAGED] pyrefly type checking - STRICT MODE
-# All error categories enabled. No suppressions allowed.
+# Opt-in strict rules (default=ignore or warn). See https://pyrefly.org/en/docs/error-kinds/
 search-path = [ "." ]
+ignore-errors-in-generated-code = true
 
-# Per-file strict rules - enforce maximum rigor
-errors.bad-argument-count = true
-errors.bad-argument-type = true
-errors.bad-assignment = true
-errors.bad-context-manager = true
-errors.bad-index = true
-errors.bad-instantiation = true
-errors.bad-keyword-argument = true
-errors.bad-raise = true
-errors.bad-return = true
+# Opt-in strict rules (default=ignore or warn). See https://pyrefly.org/en/docs/error-kinds/
+# warn→error (2 rules)
+errors.deprecated = true
+errors.redundant-cast = true
+
+# ignore→error (11 rules)
 errors.implicit-any = true
-errors.implicit-import = true
-errors.inconsistent-inheritance = true
-errors.inconsistent-overload = true
-errors.invalid-annotation = true
-errors.invalid-inheritance = true
-errors.missing-attribute = true
-errors.missing-import = true
+errors.implicit-abstract-class = true
+errors.implicitly-defined-attribute = true
 errors.missing-override-decorator = true
-errors.no-matching-overload = true
-errors.not-a-type = true
-errors.not-callable = true
-errors.not-iterable = true
-errors.redundant-condition = true
+errors.missing-source = true
+errors.not-required-key-access = true
+errors.open-unpacking = true
+errors.protocol-implicitly-defined-attribute = true
 errors.unannotated-attribute = true
 errors.unannotated-parameter = true
 errors.unannotated-return = true
-errors.unbound-name = true
-errors.unknown-name = true
-errors.unreachable = true
-errors.unsafe-overlap = true
-errors.unsupported-operation = true
-errors.untyped-import = true
-errors.unused-coroutine = true
 
 # Fine-tune per-file exceptions only for generated code
 [[tool.pyrefly.sub-config]]
