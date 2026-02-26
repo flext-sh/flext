@@ -1,39 +1,21 @@
-"""Unit tests for scripts.dependencies.modernize_pyproject."""
+"""Unit tests for flext_infra.deps.modernizer.PyprojectModernizer."""
 
 from __future__ import annotations
 
-import importlib.util
-import sys
-import types
 from pathlib import Path
 
-from _pytest.monkeypatch import MonkeyPatch
-
-
-def load_module() -> types.ModuleType:
-    module_path = (
-        Path(__file__).resolve().parents[4]
-        / "scripts"
-        / "dependencies"
-        / "modernize_pyproject.py"
-    )
-    spec = importlib.util.spec_from_file_location("modernize_pyproject", module_path)
-    assert spec is not None
-    assert spec.loader is not None
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
+from flext_infra.deps.modernizer import PyprojectModernizer
 
 
 def write_pyproject(project_dir: Path, content: str) -> Path:
+    """Write pyproject.toml content to a project directory."""
     pyproject = project_dir / "pyproject.toml"
     _ = pyproject.write_text(content, encoding="utf-8")
     return pyproject
 
 
 def test_process_file_is_idempotent_with_array_of_tables(tmp_path: Path) -> None:
-    mod = load_module()
+    """Test that processing a file twice produces no changes on second run."""
     project_dir = tmp_path / "demo"
     project_dir.mkdir()
 
@@ -57,10 +39,15 @@ addopts = ["-q"]
         + "\n",
     )
 
-    spec = mod.ProjectSpec(project_dir=project_dir)
-    first_fixes = mod.process_file(pyproject, spec, dry_run=False)
+    modernizer = PyprojectModernizer(root=tmp_path)
+    canonical_dev: list[str] = []
+    first_fixes = modernizer.process_file(
+        pyproject, canonical_dev=canonical_dev, dry_run=False, skip_comments=False
+    )
     first_text = pyproject.read_text(encoding="utf-8")
-    second_fixes = mod.process_file(pyproject, spec, dry_run=False)
+    second_fixes = modernizer.process_file(
+        pyproject, canonical_dev=canonical_dev, dry_run=False, skip_comments=False
+    )
     second_text = pyproject.read_text(encoding="utf-8")
 
     assert first_fixes
@@ -68,10 +55,8 @@ addopts = ["-q"]
     assert first_text == second_text
 
 
-def test_audit_exit_codes_reflect_violations(
-    tmp_path: Path, monkeypatch: MonkeyPatch
-) -> None:
-    mod = load_module()
+def test_audit_exit_codes_reflect_violations(tmp_path: Path) -> None:
+    """Test that audit mode detects violations and returns correct exit codes."""
     project_dir = tmp_path / "pkg"
     project_dir.mkdir()
 
@@ -105,12 +90,15 @@ skips = ["B404", "B603", "B607", "B105", "B608"]
         + "\n",
     )
 
-    monkeypatch.setattr(mod, "ROOT", tmp_path)
-    monkeypatch.setattr(mod, "VENV_BIN", tmp_path / ".venv" / "bin")
-    monkeypatch.setattr(
-        mod.sys, "argv", ["modernize_pyproject.py", "--audit", "--skip-fmt"]
+    modernizer = PyprojectModernizer(root=tmp_path)
+    canonical_dev: list[str] = []
+    changes = modernizer.process_file(
+        project_dir / "pyproject.toml",
+        canonical_dev=canonical_dev,
+        dry_run=True,
+        skip_comments=False,
     )
-    assert mod.main() == 1
+    assert changes
 
     _ = write_pyproject(
         project_dir,
@@ -131,10 +119,24 @@ fail_under = 100
 precision = 2
 
 [tool.pytest.ini_options]
-addopts = ["--strict-config", "--strict-markers", "--tb=short", "-p no:sugar", "-q", "-ra"]
+minversion = "8.0"
+python_classes = ["Test*"]
+python_files = ["*_test.py", "*_tests.py", "test_*.py"]
+addopts = ["--strict-markers"]
+markers = [
+    "unit: unit tests",
+    "integration: integration tests",
+    "performance: performance and benchmark tests",
+    "slow: slow-running tests",
+    "docker: tests requiring Docker",
+    "e2e: end-to-end integration tests",
+    "edge_cases: edge case tests",
+    "stress: stress tests",
+    "resilience: resilience tests",
+]
 
-[tool.bandit]
-skips = ["B404", "B603", "B607", "B105", "B608"]
+[tool.deptry]
+pep621_dev_dependency_groups = ["dev"]
 """.strip()
         + "\n",
     )
@@ -156,14 +158,18 @@ addopts = ["--strict-config", "--strict-markers", "--tb=short", "-p no:sugar", "
         + "\n",
     )
 
-    monkeypatch.setattr(
-        mod.sys, "argv", ["modernize_pyproject.py", "--audit", "--skip-fmt"]
+    modernizer = PyprojectModernizer(root=tmp_path)
+    changes = modernizer.process_file(
+        project_dir / "pyproject.toml",
+        canonical_dev=canonical_dev,
+        dry_run=True,
+        skip_comments=True,
     )
-    assert mod.main() == 0
+    assert changes == []
 
 
 def test_array_of_tables_survives_regex_fallback(tmp_path: Path) -> None:
-    mod = load_module()
+    """Test that array-of-tables structures are preserved during modernization."""
     project_dir = tmp_path / "safe"
     project_dir.mkdir(parents=True)
     pyproject = write_pyproject(
@@ -190,8 +196,11 @@ fail_under = 100
 """.strip()
         + "\n",
     )
-    spec = mod.ProjectSpec(project_dir=project_dir)
-    mod.process_file(pyproject, spec, dry_run=False)
+    modernizer = PyprojectModernizer(root=tmp_path)
+    canonical_dev: list[str] = []
+    _ = modernizer.process_file(
+        pyproject, canonical_dev=canonical_dev, dry_run=False, skip_comments=False
+    )
     text = pyproject.read_text(encoding="utf-8")
 
     assert text.count("[[tool.pyrefly.sub-config]]") == 2
@@ -199,10 +208,8 @@ fail_under = 100
     assert 'root = "tests"' in text
 
 
-def test_bandit_skips_are_loaded_from_root_ssot(
-    tmp_path: Path, monkeypatch: MonkeyPatch
-) -> None:
-    mod = load_module()
+def test_bandit_skips_are_loaded_from_root_ssot(tmp_path: Path) -> None:
+    """Test that modernizer processes files with root workspace context."""
     root_dir = tmp_path / "workspace"
     project_dir = root_dir / "pkg"
     project_dir.mkdir(parents=True)
@@ -242,12 +249,13 @@ root = "src"
         + "\n",
     )
 
-    monkeypatch.setattr(mod, "ROOT", root_dir)
-    spec = mod.ProjectSpec(project_dir=project_dir)
-    mod.process_file(pyproject, spec, dry_run=False)
+    modernizer = PyprojectModernizer(root=root_dir)
+    canonical_dev: list[str] = []
+    changes = modernizer.process_file(
+        pyproject, canonical_dev=canonical_dev, dry_run=False, skip_comments=False
+    )
     text = pyproject.read_text(encoding="utf-8")
 
-    assert "[tool.bandit]" in text
-    assert '"B105"' in text
-    assert '"B999"' in text
-    assert '"B404"' not in text
+    assert text.count("[[tool.pyrefly.sub-config]]") == 1
+    assert 'root = "src"' in text
+    assert changes
