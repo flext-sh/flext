@@ -451,20 +451,70 @@ module = "flext_core.runtime"
 
 # [MANAGED] pyrefly
 [tool.pyrefly]
-project-excludes = [ "**/*_pb2*.py", "**/*_pb2_grpc*.py" ]
+# [MANAGED] pyrefly type checking - STRICT MODE
+# All error categories enabled. No suppressions allowed.
+project-excludes = [
+  "**/*_pb2*.py",
+  "**/*_pb2_grpc*.py",
+]
 search-path = [
   "typings",
   "typings/generated",
   "src",
   "examples",
 ]
-sub-config = [ { matches = "**/typings.py", errors.unknown-name = false } ]
+
+# Per-file strict rules - enforce maximum rigor
+errors.unknown-name = true
+errors.missing-import = true
+errors.no-matching-overload = true
+errors.bad-assignment = true
+errors.bad-argument-type = true
+errors.bad-argument-count = true
+errors.unused-coroutine = true
+errors.unreachable = true
+errors.missing-attribute = true
+errors.redundant-condition = true
+errors.unbound-name = true
+errors.unsupported-operation = true
+errors.bad-return = true
+errors.untyped-import = true
+errors.missing-override-decorator = true
+errors.unannotated-parameter = true
+errors.unannotated-return = true
+errors.unannotated-attribute = true
+errors.implicit-any = true
+errors.implicit-import = true
+errors.not-callable = true
+errors.not-iterable = true
+errors.bad-keyword-argument = true
+errors.bad-index = true
+errors.not-a-type = true
+errors.invalid-annotation = true
+errors.bad-instantiation = true
+errors.bad-raise = true
+errors.bad-context-manager = true
+errors.unsafe-overlap = true
+errors.invalid-inheritance = true
+errors.inconsistent-inheritance = true
+errors.inconsistent-overload = true
+
+# Fine-tune per-file exceptions only for generated code
+sub-config = [
+  { matches = "**/typings.py", errors.unknown-name = false },
+  { matches = "**/typings/generated/**/*.py", errors.unknown-name = false, errors.missing-import = false },
+  { matches = "**/_pb2*.py", errors.unknown-name = false, errors.missing-import = false },
+]
 
 # [MANAGED] pyright
+# [MANAGED] pyright - STRICT TYPE CHECKING
 [tool.pyright]
+# Type checking mode set to strict for maximum safety
+typeCheckingMode = "strict"
 # Explicit venv — prevents auto-discovery overhead
 venvPath = "."
 venv = ".venv"
+# Do NOT suppress type ignore comments - we want full strictness
 enableTypeIgnoreComments = false
 # Only paths NOT already in sys.path via editable installs.
 # All flext-*/src are auto-discovered from .venv — do NOT duplicate here.
@@ -577,18 +627,17 @@ reportPropertyTypeMismatch = "error"
 reportSelfClsParameterName = "error"
 reportTypedDictNotRequiredAccess = "error"
 reportUnboundVariable = "error"
-typeCheckingMode = "strict"
 # reportUndefinedVariable = false
 reportUninitializedInstanceVariable = "warning"
 # reportUnknownArgumentType = "error"
-reportUnknownArgumentType = false
+reportUnknownArgumentType = "error"
 reportUnknownLambdaType = "error"
 # reportUnknownMemberType = "error"
-reportUnknownMemberType = false
+reportUnknownMemberType = "error"
 # reportUnknownParameterType = "error"
-reportUnknownParameterType = false
+reportUnknownParameterType = "error"
 # reportUnknownVariableType = "error"
-reportUnknownVariableType = false
+reportUnknownVariableType = "error"
 reportUnnecessaryCast = "warning"
 reportUnnecessaryComparison = "warning"
 reportUnnecessaryIsInstance = "warning"
