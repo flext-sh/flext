@@ -137,6 +137,27 @@ markers = [
 
 [tool.deptry]
 pep621_dev_dependency_groups = ["dev"]
+
+[tool.pyrefly]
+python-version = "3.13"
+ignore-errors-in-generated-code = true
+search-path = ["."]
+project-excludes = ["**/_pb2.py", "**/_pb2_grpc.py"]
+
+[tool.pyrefly.errors]
+deprecated = true
+redundant-cast = true
+implicit-abstract-class = true
+implicit-any = true
+implicitly-defined-attribute = true
+missing-override-decorator = true
+missing-source = true
+not-required-key-access = true
+open-unpacking = true
+protocol-implicitly-defined-attribute = true
+unannotated-attribute = true
+unannotated-parameter = true
+unannotated-return = true
 """.strip()
         + "\n",
     )
