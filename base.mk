@@ -109,7 +109,7 @@ $(LINT_CACHE_DIR):
 	$(Q)mkdir -p $(LINT_CACHE_DIR)
 
 # === SIMPLE VERB SURFACE ===
-.PHONY: help setup build check security format docs docs-base docs-sync-scripts test validate clean pr _preflight daemon-start-mypy daemon-stop-mypy daemon-status-mypy daemon-start-pyright daemon-stop-pyright daemon-status-pyright daemon-start daemon-stop daemon-status daemon-restart check-lint check-format check-mypy-daemon check-pyright-daemon check-pyrefly check-security check-fast
+.PHONY: help setup build check security format docs docs-base docs-sync-scripts test validate clean pr _preflight daemon-start-mypy daemon-stop-mypy daemon-status-mypy daemon-start-pyright daemon-stop-pyright daemon-status-pyright daemon-start daemon-stop daemon-status daemon-restart
 STANDARD_VERBS := setup build check security format docs test validate clean pr
 $(STANDARD_VERBS): _preflight
 
@@ -246,7 +246,11 @@ daemon-stop-mypy: ## Stop dmypy daemon for this project
 	$(Q)rm -f "$(DMPY_SOCKET)"
 
 daemon-status-mypy: ## Show dmypy daemon status for this project
-	$(Q)$(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" status
+	$(Q)if $(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" status 2>/dev/null; then \
+		: ; \
+	else \
+		echo "dmypy daemon is not running"; \
+	fi
 
 daemon-start-pyright: ## Start pyright daemon in watch mode
 	$(Q)mkdir -p .pyright
@@ -280,14 +284,14 @@ daemon-stop-pyright: ## Stop pyright daemon
 daemon-status-pyright: ## Show pyright daemon status
 	$(Q)if [ ! -f "$(PYRIGHT_PIDFILE)" ]; then \
 		echo "Pyright daemon is not running"; \
-		exit 1; \
-	fi
-	$(Q)pid=$$(cat "$(PYRIGHT_PIDFILE)"); \
-	if [ -n "$$pid" ] && kill -0 "$$pid" >/dev/null 2>&1; then \
-		echo "Pyright daemon running (PID $$pid), log: $(PYRIGHT_LOG)"; \
 	else \
-		echo "Pyright daemon not running (stale PID file: $$pid)"; \
-		exit 1; \
+		pid=$$(cat "$(PYRIGHT_PIDFILE)"); \
+		if [ -n "$$pid" ] && kill -0 "$$pid" >/dev/null 2>&1; then \
+			echo "Pyright daemon running (PID $$pid), log: $(PYRIGHT_LOG)"; \
+		else \
+			echo "Pyright daemon not running (stale PID file cleaned)"; \
+			rm -f "$(PYRIGHT_PIDFILE)"; \
+		fi; \
 	fi
 
 daemon-start: daemon-start-mypy daemon-start-pyright ## Start all daemons
@@ -296,63 +300,11 @@ daemon-stop: daemon-stop-mypy daemon-stop-pyright ## Stop all daemons
 
 daemon-status: ## Show status of all daemons
 	$(Q)echo "== dmypy =="; \
-	$(MAKE) daemon-status-mypy || true; \
+	$(MAKE) daemon-status-mypy; \
 	echo "== pyright =="; \
-	$(MAKE) daemon-status-pyright || true
+	$(MAKE) daemon-status-pyright
 
 daemon-restart: daemon-stop daemon-start ## Restart all daemons
-
-check-lint: ## Run only ruff lint gate
-	$(Q)if [ "$(CORE_STACK)" = "go" ]; then echo "INFO: skipping python lint for go stack"; exit 0; fi
-	$(Q)$(POETRY) run ruff check . --quiet
-
-check-format: ## Run only ruff format check gate
-	$(Q)if [ "$(CORE_STACK)" = "go" ]; then echo "INFO: skipping python format for go stack"; exit 0; fi
-	$(Q)$(POETRY) run ruff format --check . --quiet
-
-check-mypy-daemon: ## Run mypy via dmypy when daemon available
-	$(Q)if [ "$(CORE_STACK)" = "go" ]; then echo "INFO: skipping mypy for go stack"; exit 0; fi
-	$(Q)check_dirs=""; \
-	for d in src tests examples scripts; do \
-		if [ -d "$$d" ]; then check_dirs="$$check_dirs $$d"; fi; \
-	done; \
-	check_dirs=$${check_dirs:-$(SRC_DIR)}; \
-	if $(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" status >/dev/null 2>&1; then \
-		$(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" check $$check_dirs; \
-	else \
-		$(POETRY) run mypy $$check_dirs --config-file "$(WORKSPACE_ROOT)/pyproject.toml"; \
-	fi
-
-check-pyright-daemon: ## Run pyright, preferring warm watch daemon
-	$(Q)if [ "$(CORE_STACK)" = "go" ]; then echo "INFO: skipping pyright for go stack"; exit 0; fi
-	$(Q)if [ -f "$(PYRIGHT_PIDFILE)" ]; then \
-		pid=$$(cat "$(PYRIGHT_PIDFILE)"); \
-		if [ -n "$$pid" ] && kill -0 "$$pid" >/dev/null 2>&1; then \
-			echo "Pyright watch daemon is running (PID $$pid)"; \
-		fi; \
-	fi
-	$(Q)check_dirs=""; \
-	for d in src tests examples scripts; do \
-		if [ -d "$$d" ]; then check_dirs="$$check_dirs $$d"; fi; \
-	done; \
-	check_dirs=$${check_dirs:-$(SRC_DIR)}; \
-	$(POETRY) run pyright $$check_dirs
-
-check-pyrefly: ## Run only pyrefly gate
-	$(Q)if [ "$(CORE_STACK)" = "go" ]; then echo "INFO: skipping pyrefly for go stack"; exit 0; fi
-	$(Q)check_dirs=""; \
-	for d in src tests examples scripts; do \
-		if [ -d "$$d" ]; then check_dirs="$$check_dirs $$d"; fi; \
-	done; \
-	check_dirs=$${check_dirs:-$(SRC_DIR)}; \
-	$(POETRY) run pyrefly check $$check_dirs --config pyproject.toml --count-errors=0 --summarize-errors=1 --summary full
-
-check-security: ## Run only security gate
-	$(Q)if [ "$(CORE_STACK)" = "go" ]; then echo "INFO: skipping bandit for go stack"; exit 0; fi
-	$(Q)$(POETRY) run bandit -r $(SRC_DIR) -q -ll
-
-check-fast: check-lint check-format check-mypy-daemon check-pyrefly check-security ## Run lint gates in parallel with make -j
-	$(Q)echo "check-fast completed (tip: use make -j4 check-fast)"
 
 check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,go,type to select)
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
@@ -417,60 +369,7 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 	fi; \
 	$(POETRY) run python -m flext_infra check fix-pyrefly-config "$$project_key"; \
 	$(POETRY) run python -m flext_infra check run --gates "$$gates" --reports-dir "$(CURDIR)/.reports/check" --project "$$project_key"; \
-	exit $$?; \
-	if echo "$$gates" | grep -qw lint; then \
-		$(POETRY) run ruff check . --quiet || { echo "FAIL: lint"; exit 1; }; \
-	fi; \
-	if echo "$$gates" | grep -qw format; then \
-		$(POETRY) run ruff format --check . --quiet || { echo "FAIL: format"; exit 1; }; \
-	fi; \
-	check_dirs=""; \
-	for d in src tests examples scripts; do \
-		if [ -d "$$d" ]; then check_dirs="$$check_dirs $$d"; fi; \
-	done; \
-	check_dirs=$${check_dirs:-$(SRC_DIR)}; \
-	if echo "$$gates" | grep -qw pyrefly; then \
-		$(POETRY) run pyrefly check $$check_dirs --config pyproject.toml \
-			--count-errors=0 --summarize-errors=1 --summary full || { echo "FAIL: pyrefly"; exit 1; }; \
-	fi; \
-	if echo "$$gates" | grep -qw mypy; then \
-		if $(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" status >/dev/null 2>&1; then \
-			$(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" check $$check_dirs || { echo "FAIL: mypy"; exit 1; }; \
-		else \
-			$(POETRY) run mypy $$check_dirs --config-file "$(WORKSPACE_ROOT)/pyproject.toml" || { echo "FAIL: mypy"; exit 1; }; \
-		fi; \
-	fi; \
-	if echo "$$gates" | grep -qw pyright; then \
-		$(POETRY) run pyright $$check_dirs || { echo "FAIL: pyright"; exit 1; }; \
-	fi; \
-	if echo "$$gates" | grep -qw security; then \
-		$(POETRY) run bandit -r $(SRC_DIR) -q -ll || { echo "FAIL: security"; exit 1; }; \
-	fi; \
-	if echo "$$gates" | grep -qw markdown; then \
-		md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.reports/*' ! -path './reports/*' ! -path './.venv/*' ! -path './node_modules/*' ! -path './.flext-deps/*' ! -path './.mypy_cache/*' ! -path './.pytest_cache/*' ! -path './.ruff_cache/*' ! -path './dist/*' ! -path './build/*'); \
-		md_config=""; \
-		if [ -f "$(WORKSPACE_ROOT)/.markdownlint.json" ]; then \
-			md_config="--config $(WORKSPACE_ROOT)/.markdownlint.json"; \
-		elif [ -f ".markdownlint.json" ]; then \
-			md_config="--config .markdownlint.json"; \
-		fi; \
-		if [ -n "$$md_files" ]; then \
-			markdownlint $$md_config $$md_files || { echo "FAIL: markdown"; exit 1; }; \
-		fi; \
-	fi; \
-	if echo "$$gates" | grep -qw go; then \
-		if [ -f go.mod ]; then \
-			go vet ./... || { echo "FAIL: go"; exit 1; }; \
-			if [ -n "$$(find . -type f -name '*.go' ! -path './.git/*')" ]; then \
-				gofmt_diff=$$(find . -type f -name '*.go' ! -path './.git/*' -print0 | xargs -0 gofmt -l); \
-				if [ -n "$$gofmt_diff" ]; then \
-					echo "FAIL: gofmt"; \
-					printf '%s\n' "$$gofmt_diff"; \
-					exit 1; \
-				fi; \
-			fi; \
-		fi; \
-	fi
+	exit $$?
 
 security: ## Run all security checks
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
