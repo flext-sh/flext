@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -14,8 +15,10 @@
 <!-- TOC END -->
 
 ---
+
 name: pep-703-free-threading
 description: Experimental GIL-free CPython for true parallelism. Use when evaluating free-threaded Python builds, writing thread-safe code, or optimizing CPU-bound parallel workloads.
+
 ---
 
 # PEP 703 — Free-Threaded CPython

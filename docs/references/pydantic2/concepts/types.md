@@ -1,11 +1,12 @@
 <!-- TOC START -->
+
 - [Custom Types](#custom-types)
   - [Using the annotated pattern](#using-the-annotated-pattern)
   - [Named type aliases](#named-type-aliases)
   - [Customizing validation with `__get_pydantic_core_schema__` <a name="customizing_validation_with_get_pydantic_core_schema"></a>](#customizing-validation-with-getpydanticcoreschema-a-namecustomizingvalidationwithgetpydanticcoreschemaa)
   - [Handling custom generic classes](#handling-custom-generic-classes)
   - [Access to field name](#access-to-field-name)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 Pydantic uses types to define how validation and serialization should be performed.
 [Built-in and standard library types](../api/standard_library_types.md) (such as [`int`][],

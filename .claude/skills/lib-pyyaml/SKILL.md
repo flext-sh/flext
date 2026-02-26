@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
   - [Subproject Usage Map](#subproject-usage-map)
 - [References](#references)
@@ -10,11 +11,14 @@
 <!-- TOC END -->
 
 ---
+
 name: lib-pyyaml
 description: Safe and deterministic YAML read/write patterns across FLEXT subprojects. Trigger when modifying YAML parsing, config files, CLI output formatting, or docs-maintenance tooling.
+
 ---
 
 ## Scope
+
 - Primary YAML-heavy areas:
   - `flext-quality/docs/maintenance/core/config_manager.py`
   - `flext-quality/src/flext_quality/utilities.py`
@@ -30,6 +34,7 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 - Dependency pinning: `flext-core/pyproject.toml`
 
 ### Subproject Usage Map
+
 - `flext-quality`: YAML config ingestion and persistence (`safe_load`, `dump` with explicit options).
 - `flext-cli`: YAML file IO and YAML output formatting for CLI response rendering.
 - `flext-meltano`: project config lifecycle (`save_yaml_config`, `load_yaml_config`, validation).
@@ -38,6 +43,7 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 - `flext-core/tests`: YAML fixture write/read for config integration tests.
 
 ## References
+
 - `flext-quality/docs/maintenance/core/config_manager.py`: `_load_config_file`, `save_config`
 - `flext-quality/src/flext_quality/utilities.py`: `load_yaml_rules`
 - `flext-cli/src/flext_cli/file_tools.py`: `read_yaml_file`, `write_yaml_file`
@@ -48,6 +54,7 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 - `https://pyyaml.org/wiki/PyYAMLDocumentation`
 
 ## Rules
+
 - Always prefer `yaml.safe_load(...)` when reading YAML from files or user-controlled content.
 - Never use `yaml.load(...)` without an explicit safe loader policy (current repo evidence shows zero `yaml.load(` occurrences).
 - Use explicit dump options for stable output (`default_flow_style=False`, and set `sort_keys` intentionally).
@@ -56,6 +63,7 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 - For CLI output serialization, keep YAML formatting deterministic and user-readable.
 
 ## Instructions
+
 - Use these in-repo declarations as templates:
 
 ```python
@@ -99,6 +107,7 @@ def validate_yaml_file(cls, file_path: Path) -> r[bool]:
 - Keep read/write flow symmetric when possible: `safe_load` on read, `safe_dump` on write.
 
 ## Workflow
+
 1. Find nearest YAML call-site in the touched subproject.
 2. Preserve that module's established style (`safe_load` + `dump/safe_dump` options).
 3. Add/keep shape checks after loading (`dict`/`list`) before model construction.
@@ -106,6 +115,7 @@ def validate_yaml_file(cls, file_path: Path) -> r[bool]:
 5. Validate that dump output options remain explicit for predictable diffs.
 
 ## Examples
+
 Good:
 
 ```python

@@ -1,7 +1,7 @@
 # Architecture Overview
 
-
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [System Architecture](#system-architecture)
   - [Core Principles](#core-principles)

@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -14,8 +15,10 @@
 <!-- TOC END -->
 
 ---
+
 name: python-313-typing
 description: Comprehensive Python 3.13 typing PEPs reference — PEP 696 (type defaults), PEP 702 (@deprecated), PEP 705 (ReadOnly), PEP 742 (TypeIs). Use when working with Python 3.13+ type features.
+
 ---
 
 # Python 3.13 Typing
@@ -158,12 +161,12 @@ def process(data: list[object]) -> None:
 
 **TypeIs vs TypeGuard**:
 
-| Feature | TypeIs (PEP 742) | TypeGuard (PEP 647) |
-|---|---|---|
-| Narrows positive branch | Yes | Yes |
-| Narrows negative branch | Yes | No |
-| Requires subtype relationship | Yes | No |
-| Use for | Exact type checks | Structural/duck-type checks |
+| Feature                       | TypeIs (PEP 742)  | TypeGuard (PEP 647)         |
+| ----------------------------- | ----------------- | --------------------------- |
+| Narrows positive branch       | Yes               | Yes                         |
+| Narrows negative branch       | Yes               | No                          |
+| Requires subtype relationship | Yes               | No                          |
+| Use for                       | Exact type checks | Structural/duck-type checks |
 
 **FLEXT pattern**:
 

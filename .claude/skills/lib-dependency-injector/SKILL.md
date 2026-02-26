@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
   - [Subproject Usage Map](#subproject-usage-map)
 - [References](#references)
@@ -10,8 +11,10 @@
 <!-- TOC END -->
 
 ---
+
 name: lib-dependency-injector
 description: dependency_injector bridge patterns for FLEXT runtime and container internals. Trigger when adding DI wiring, provider registration, or scoped test containers.
+
 ---
 
 ## Scope

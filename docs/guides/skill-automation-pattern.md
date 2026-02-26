@@ -1,7 +1,7 @@
 # Skill Automation Pattern
 
-
 <!-- TOC START -->
+
 - [Goal](#goal)
 - [Required Outputs](#required-outputs)
 - [Standard Skill Contract](#standard-skill-contract)
@@ -75,18 +75,21 @@ folder (`.claude/skills/<skill>/`) owns its own `rules.yml`, `rules/` ast-grep f
 discovers and executes everything.
 
 **Dict/Any Policy Gate**:
+
 - Skill: `.claude/skills/flext-strict-typing/SKILL.md`
 - Rules: `.claude/skills/flext-strict-typing/rules.yml` (10 rules: 8 ast-grep + 2 ripgrep)
 - AST rules: `.claude/skills/flext-strict-typing/rules/*.yml`
 - Baseline: `.claude/skills/flext-strict-typing/baseline.json`
 
 **Pydantic v2 Policy Gate**:
+
 - Skill: `.claude/skills/lib-pydantic-v2/SKILL.md`
 - Rules: `.claude/skills/lib-pydantic-v2/rules.yml` (8 ast-grep rules)
 - AST rules: `.claude/skills/lib-pydantic-v2/rules/*.yml`
 - Baseline: `.claude/skills/lib-pydantic-v2/baseline.json`
 
 **Generic runner**:
+
 - `scripts/core/skill_validate.py` — auto-discovers `.claude/skills/*/rules.yml`
 
 ## Verification Commands

@@ -1,7 +1,7 @@
 # FLEXT Projects Documentation
 
-
 <!-- TOC START -->
+
 - [Active project briefs](#active-project-briefs)
 - [Projects without a dedicated brief](#projects-without-a-dedicated-brief)
 - [Keeping the briefs accurate](#keeping-the-briefs-accurate)

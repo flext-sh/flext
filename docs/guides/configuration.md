@@ -1,7 +1,7 @@
 # FLEXT Configuration Guide
 
-
 <!-- TOC START -->
+
 - [Overview](#overview)
 - [Configuration Sources](#configuration-sources)
 - [Basic Configuration](#basic-configuration)

@@ -1,7 +1,7 @@
 # FLEXT Target Oracle
 
-
 <!-- TOC START -->
+
 - [Status & signals](#status-signals)
 - [Quick start](#quick-start)
 - [Architecture & patterns](#architecture-patterns)

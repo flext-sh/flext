@@ -1,10 +1,10 @@
 # FlextModels · Metadata Corporativo
 
-
 <!-- TOC START -->
+
 - [Componentes](#componentes)
   - [`Metadata`](#metadata)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 Envelope padronizado de metadados para rastrear operações e registrá-las em serviços. É o único módulo zero-dependência da stack justamente para evitar ciclos de import.
 

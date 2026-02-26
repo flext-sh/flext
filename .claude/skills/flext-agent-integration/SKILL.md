@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -13,8 +14,10 @@
 <!-- TOC END -->
 
 ---
+
 name: flext-agent-integration
 description: Guide for using MCP tools, skills, and agents in the FLEXT development workflow. Use at session start or when configuring agent tooling for FLEXT work.
+
 ---
 
 # FLEXT Agent Integration
@@ -53,17 +56,17 @@ description: Guide for using MCP tools, skills, and agents in the FLEXT developm
 
 ### Skill Selection by Path
 
-| Path Pattern | Skills to Load |
-|---|---|
-| `flext-core/` | `rules-flext-core`, `lib-returns`, `flext-strict-typing` |
-| `flext-core/src/flext_core/result.py` | `lib-returns` |
-| `flext-core/src/flext_core/settings.py` | `lib-pydantic-settings` |
-| `scripts/validation/` | `scripts-validation` |
-| `scripts/` | `rules-scripts`, `scripts-infra` |
-| `.claude/skills/` | `skill-format-universal` |
-| `docs/` | `rules-docs` |
-| `Makefile` | `flext-development-workflow` |
-| `*.py` (any model) | `lib-pydantic-v2` |
+| Path Pattern                            | Skills to Load                                           |
+| --------------------------------------- | -------------------------------------------------------- |
+| `flext-core/`                           | `rules-flext-core`, `lib-returns`, `flext-strict-typing` |
+| `flext-core/src/flext_core/result.py`   | `lib-returns`                                            |
+| `flext-core/src/flext_core/settings.py` | `lib-pydantic-settings`                                  |
+| `scripts/validation/`                   | `scripts-validation`                                     |
+| `scripts/`                              | `rules-scripts`, `scripts-infra`                         |
+| `.claude/skills/`                       | `skill-format-universal`                                 |
+| `docs/`                                 | `rules-docs`                                             |
+| `Makefile`                              | `flext-development-workflow`                             |
+| `*.py` (any model)                      | `lib-pydantic-v2`                                        |
 
 ### Memory Search Patterns
 

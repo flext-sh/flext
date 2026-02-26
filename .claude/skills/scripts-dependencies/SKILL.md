@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -8,12 +9,14 @@
 - [Verification](#verification)
 - [Scripts](#scripts)
 - [Runtime vs dev dependency detection (automatic)](#runtime-vs-dev-dependency-detection-automatic)
-- [Typing libraries (types-*) and dependency limits](#typing-libraries-types-and-dependency-limits)
+- [Typing libraries (types-\*) and dependency limits](#typing-libraries-types-and-dependency-limits)
 <!-- TOC END -->
 
 ---
+
 name: scripts-dependencies
 description: Dependency management — analysis, consolidation, discovery, caching, and synchronization. Use when editing scripts/dependencies/ or using flext_infra.deps.
+
 ---
 
 # Scripts Dependencies
@@ -102,16 +105,16 @@ Script-level checks (internal):
 
 ## Scripts
 
-| Path | Purpose | Invocation |
-|------|---------|------------|
-| `scripts/dependencies/__init__.py` | Package marker | — |
-| `scripts/dependencies/analyze_dependencies.py` | Analyze project dependencies | `python scripts/dependencies/analyze_dependencies.py` |
-| `scripts/dependencies/consolidate_dependencies.py` | Consolidate duplicate dependencies | `python scripts/dependencies/consolidate_dependencies.py` |
-| `scripts/dependencies/dependency_cache.py` | Dependency caching utilities | `python scripts/dependencies/dependency_cache.py` |
-| `scripts/dependencies/dependency_detection.py` | Helpers: deptry + pip check, discover_projects, classify | Imported by detect_runtime_dev_deps |
-| `scripts/dependencies/detect_runtime_dev_deps.py` | Detect runtime vs dev deps (deptry + pip check) | Invoked by `make upgrade` and `make typings`; or `python scripts/dependencies/detect_runtime_dev_deps.py` |
-| `scripts/dependencies/discover_missing_deps.py` | Discover missing dependencies | `python scripts/dependencies/discover_missing_deps.py` |
-| `scripts/dependencies/sync_dependencies.py` | Sync dependencies across projects | `python scripts/dependencies/sync_dependencies.py` |
+| Path                                               | Purpose                                                  | Invocation                                                                                                |
+| -------------------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `scripts/dependencies/__init__.py`                 | Package marker                                           | —                                                                                                         |
+| `scripts/dependencies/analyze_dependencies.py`     | Analyze project dependencies                             | `python scripts/dependencies/analyze_dependencies.py`                                                     |
+| `scripts/dependencies/consolidate_dependencies.py` | Consolidate duplicate dependencies                       | `python scripts/dependencies/consolidate_dependencies.py`                                                 |
+| `scripts/dependencies/dependency_cache.py`         | Dependency caching utilities                             | `python scripts/dependencies/dependency_cache.py`                                                         |
+| `scripts/dependencies/dependency_detection.py`     | Helpers: deptry + pip check, discover_projects, classify | Imported by detect_runtime_dev_deps                                                                       |
+| `scripts/dependencies/detect_runtime_dev_deps.py`  | Detect runtime vs dev deps (deptry + pip check)          | Invoked by `make upgrade` and `make typings`; or `python scripts/dependencies/detect_runtime_dev_deps.py` |
+| `scripts/dependencies/discover_missing_deps.py`    | Discover missing dependencies                            | `python scripts/dependencies/discover_missing_deps.py`                                                    |
+| `scripts/dependencies/sync_dependencies.py`        | Sync dependencies across projects                        | `python scripts/dependencies/sync_dependencies.py`                                                        |
 
 ## Runtime vs dev dependency detection (automatic)
 
@@ -119,14 +122,14 @@ Script-level checks (internal):
 - **make typings** — Runs `stub_supply_chain.py` (with PROJECT/PROJECTS/--all), then runs `detect_runtime_dev_deps.py --typings -q --no-fail` and writes the same report (including typings). Use **DEPS_REPORT=0** to skip the report step.
 - No separate `deps-detect` or `deps-detect-report` targets; dependency and typing reports are produced automatically by these Make verbs.
 
-## Typing libraries (types-*) and dependency limits
+## Typing libraries (types-\*) and dependency limits
 
 - **dependency_limits.toml** — Config under `scripts/dependencies/` to constrain dependency and typing maintenance:
   - `[python].version`: e.g. `">=3.13,<3.15"`; used when suggesting/updating deps.
   - `[limits]`: optional version caps per package (e.g. `django = ">=4,<6"`).
   - `[typing_libraries].exclude`: list of packages to never auto-add as typings.
-  - `[typing_libraries.module_to_package]`: override importable module name -> types-* PyPI name (e.g. `yaml = "types-pyyaml"`).
-- **Typing detection** — Uses mypy output ("Library stubs not installed for X", "Hint: pip install Y") to infer required types-* packages; maps module names to PyPI names via defaults and dependency_limits.toml. Internal modules (`flext_*`, `flext_*`, `flext_*`) are never suggested as typings.
+  - `[typing_libraries.module_to_package]`: override importable module name -> types-\* PyPI name (e.g. `yaml = "types-pyyaml"`).
+- **Typing detection** — Uses mypy output ("Library stubs not installed for X", "Hint: pip install Y") to infer required types-_ packages; maps module names to PyPI names via defaults and dependency*limits.toml. Internal modules (`flext*_`, `flext*\*`, `flext*\*`) are never suggested as typings.
 - **detect_runtime_dev_deps.py**:
   - `--typings` — Run mypy stub detection per project; add to report `projects.<name>.typings` (required_packages, to_add, current, limits_applied, python_version).
   - `--apply-typings` — Add missing typings to each project (`poetry add --group typings <pkg>`). Implies `--typings`. Use `--dry-run` to only report.

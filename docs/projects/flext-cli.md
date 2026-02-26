@@ -1,7 +1,7 @@
 # FLEXT CLI
 
-
 <!-- TOC START -->
+
 - [Status & health](#status-health)
 - [Quick start](#quick-start)
 - [Architecture & modules](#architecture-modules)

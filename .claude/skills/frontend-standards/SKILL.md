@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -13,8 +14,10 @@
 <!-- TOC END -->
 
 ---
+
 name: frontend-standards
 description: Frontend development standards — accessibility, component design, CSS methodology, responsive design. Use when building or modifying UI components, styles, or layouts.
+
 ---
 
 # Frontend Standards
@@ -50,9 +53,16 @@ description: Frontend development standards — accessibility, component design,
 ```html
 <!-- Good: semantic -->
 <nav aria-label="Main navigation">
-  <ul><li><a href="/home">Home</a></li></ul>
+  <ul>
+    <li><a href="/home">Home</a></li>
+  </ul>
 </nav>
-<main><article><h1>Title</h1><p>Content</p></article></main>
+<main>
+  <article>
+    <h1>Title</h1>
+    <p>Content</p>
+  </article>
+</main>
 
 <!-- Bad: div soup -->
 <div class="nav"><div class="link" onclick="go()">Home</div></div>
@@ -69,15 +79,15 @@ description: Frontend development standards — accessibility, component design,
 
 ```html
 <label for="email">Email</label>
-<input id="email" type="email" required aria-describedby="email-help">
+<input id="email" type="email" required aria-describedby="email-help" />
 <span id="email-help">We'll never share your email.</span>
 ```
 
 **Image alt text**:
 
 ```html
-<img src="chart.png" alt="Monthly revenue chart showing 15% growth in Q4">
-<img src="decorative-line.svg" alt="" role="presentation">
+<img src="chart.png" alt="Monthly revenue chart showing 15% growth in Q4" />
+<img src="decorative-line.svg" alt="" role="presentation" />
 ```
 
 ### Component Design
@@ -117,7 +127,10 @@ interface ButtonProps {
   --font-size-base: 1rem;
 }
 
-.button { background: var(--color-primary); padding: var(--spacing-sm) var(--spacing-md); }
+.button {
+  background: var(--color-primary);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
 ```
 
 **Avoid `!important`** — fix specificity issues instead.
@@ -128,13 +141,24 @@ interface ButtonProps {
 
 ```css
 /* Base: mobile */
-.container { padding: 1rem; }
+.container {
+  padding: 1rem;
+}
 
 /* Tablet */
-@media (min-width: 768px) { .container { padding: 2rem; max-width: 720px; } }
+@media (min-width: 768px) {
+  .container {
+    padding: 2rem;
+    max-width: 720px;
+  }
+}
 
 /* Desktop */
-@media (min-width: 1024px) { .container { max-width: 960px; } }
+@media (min-width: 1024px) {
+  .container {
+    max-width: 960px;
+  }
+}
 ```
 
 **Touch targets** — minimum 44x44px for interactive elements on mobile.
@@ -155,9 +179,7 @@ interface ButtonProps {
 Good:
 
 ```html
-<button type="button" aria-expanded="false" aria-controls="menu">
-  Toggle Menu
-</button>
+<button type="button" aria-expanded="false" aria-controls="menu">Toggle Menu</button>
 <nav id="menu" hidden>...</nav>
 ```
 
@@ -166,9 +188,7 @@ Why good: semantic button, ARIA state management, keyboard accessible by default
 Bad:
 
 ```html
-<div class="btn" onclick="toggleMenu()" style="color: #999; font-size: 11px;">
-  ☰
-</div>
+<div class="btn" onclick="toggleMenu()" style="color: #999; font-size: 11px;">☰</div>
 ```
 
 Why bad: not keyboard accessible, poor contrast, no ARIA, inline styles, icon-only without label.

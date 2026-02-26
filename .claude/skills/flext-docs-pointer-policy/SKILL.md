@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -10,14 +11,15 @@
 <!-- TOC END -->
 
 ---
+
 name: flext-docs-pointer-policy
 description: Canonical documentation-governance policy for agent configs: one root source, lightweight pointers everywhere else.
+
 ---
 
 # Flext Docs Pointer Policy
 
 **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
-
 
 ## Scope
 
@@ -65,13 +67,16 @@ description: Canonical documentation-governance policy for agent configs: one ro
 
 ```md
 <!-- Good: concise pointer -->
+
 Canonical source: `CLAUDE.md` at repository root.
 Use `.claude/skills/` for scoped behavior.
 ```
 
 ```md
 <!-- Bad: duplicated governance spec -->
+
 ## Full Policy
+
 <hundreds of lines copied from CLAUDE.md>
 ```
 
@@ -79,6 +84,7 @@ Why bad: duplicated policy drifts over time and breaks the single-source governa
 
 ```md
 <!-- Bad: agent-specific contradiction -->
+
 Use local rules in this file as priority over CLAUDE.md.
 ```
 

@@ -1,12 +1,12 @@
 # FlextModels · Container de Injeção de Dependências
 
-
 <!-- TOC START -->
+
 - [Componentes](#componentes)
   - [`ServiceRegistration`](#serviceregistration)
   - [`FactoryRegistration`](#factoryregistration)
   - [`ContainerConfig`](#containerconfig)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 Modelos do registro de serviços/fábricas e configuração do container.
 

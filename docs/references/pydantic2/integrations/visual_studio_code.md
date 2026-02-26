@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Configure VS Code](#configure-vs-code)
   - [Install Pylance](#install-pylance)
   - [Configure your environment](#configure-your-environment)

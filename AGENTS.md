@@ -1,14 +1,13 @@
 # AGENTS.md — AI Agent Configuration Index
 
-
 <!-- TOC START -->
+
 - [Agent Configuration Map](#agent-configuration-map)
 - [Maintenance Rules](#maintenance-rules)
 - [Practical Usage](#practical-usage)
 <!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Scope**: Pointer policy and mapping consistency
-
 
 This repository uses multiple AI coding agents. All share a **single source of truth**
 for project rules, architecture, and conventions: [`CLAUDE.md`](CLAUDE.md).

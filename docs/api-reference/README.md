@@ -1,7 +1,7 @@
 # API Reference
 
-
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [Core Components](#core-components)
   - [🚀 flext-core](#flext-core)
@@ -20,7 +20,6 @@
 <!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
-
 
 ## Table of Contents
 

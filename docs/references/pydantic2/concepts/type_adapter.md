@@ -1,7 +1,7 @@
 # Type Adapter
 
-
 <!-- TOC START -->
+
 - [Parsing data into a specified type](#parsing-data-into-a-specified-type)
 - [Rebuilding a `TypeAdapter`'s schema](#rebuilding-a-typeadapters-schema)
 <!-- TOC END -->

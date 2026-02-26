@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -10,8 +11,10 @@
 <!-- TOC END -->
 
 ---
+
 name: scripts-testing
 description: Testing scripts — pytest runners, test analysis, quality gates, stress tests, and distributed testing. Use when editing scripts/testing/.
+
 ---
 
 # Scripts Testing
@@ -104,16 +107,16 @@ Script-level checks (internal):
 
 ## Scripts
 
-| Path | Purpose | Invocation |
-|------|---------|------------|
-| `scripts/testing/quick_pytest_analysis.py` | Quick pytest analysis | `python scripts/testing/quick_pytest_analysis.py` |
-| `scripts/testing/run-all-tests.sh` | Run all tests across projects | `bash scripts/testing/run-all-tests.sh` |
+| Path                                                   | Purpose                       | Invocation                                                    |
+| ------------------------------------------------------ | ----------------------------- | ------------------------------------------------------------- |
+| `scripts/testing/quick_pytest_analysis.py`             | Quick pytest analysis         | `python scripts/testing/quick_pytest_analysis.py`             |
+| `scripts/testing/run-all-tests.sh`                     | Run all tests across projects | `bash scripts/testing/run-all-tests.sh`                       |
 | `scripts/testing/run_comprehensive_pytest_analysis.py` | Comprehensive pytest analysis | `python scripts/testing/run_comprehensive_pytest_analysis.py` |
-| `scripts/testing/run_pytest_all_projects.py` | Run pytest for all projects | `python scripts/testing/run_pytest_all_projects.py` |
-| `scripts/testing/run_tests.py` | General test runner | `python scripts/testing/run_tests.py` |
-| `scripts/testing/stress-test.sh` | Stress testing | `bash scripts/testing/stress-test.sh` |
-| `scripts/testing/test-distributed.sh` | Distributed testing | `bash scripts/testing/test-distributed.sh` |
-| `scripts/testing/test-end-to-end-pipeline.sh` | End-to-end pipeline testing | `bash scripts/testing/test-end-to-end-pipeline.sh` |
-| `scripts/testing/testing_metrics_dashboard.sh` | Testing metrics dashboard | `bash scripts/testing/testing_metrics_dashboard.sh` |
-| `scripts/testing/testing_quality_gates.sh` | Testing quality gates | `bash scripts/testing/testing_quality_gates.sh` |
-| `scripts/run_all_examples.py` | Run all example scripts | `python scripts/run_all_examples.py` |
+| `scripts/testing/run_pytest_all_projects.py`           | Run pytest for all projects   | `python scripts/testing/run_pytest_all_projects.py`           |
+| `scripts/testing/run_tests.py`                         | General test runner           | `python scripts/testing/run_tests.py`                         |
+| `scripts/testing/stress-test.sh`                       | Stress testing                | `bash scripts/testing/stress-test.sh`                         |
+| `scripts/testing/test-distributed.sh`                  | Distributed testing           | `bash scripts/testing/test-distributed.sh`                    |
+| `scripts/testing/test-end-to-end-pipeline.sh`          | End-to-end pipeline testing   | `bash scripts/testing/test-end-to-end-pipeline.sh`            |
+| `scripts/testing/testing_metrics_dashboard.sh`         | Testing metrics dashboard     | `bash scripts/testing/testing_metrics_dashboard.sh`           |
+| `scripts/testing/testing_quality_gates.sh`             | Testing quality gates         | `bash scripts/testing/testing_quality_gates.sh`               |
+| `scripts/run_all_examples.py`                          | Run all example scripts       | `python scripts/run_all_examples.py`                          |

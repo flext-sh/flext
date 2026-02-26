@@ -1,26 +1,26 @@
 skill: python-performance
-description: 'Detect performance anti-patterns: global imports of heavy modules, mutable defaults.'
+description: "Detect performance anti-patterns: global imports of heavy modules, mutable defaults."
 scan_targets:
   include:
-  - '**/*.py'
+    - "**/*.py"
   exclude: []
   projects: []
 rules:
-- id: no-mutable-default-arg
-  type: ast-grep
-  severity: warning
-  group: performance
-  description: "Mutable default argument \u2014 use None and create inside function."
-  fix_auto: false
-  fix_instruction: 'Replace def f(x=[]) with def f(x=None): x = x or [].'
-  file: rules/no-mutable-default-arg.yml
-- id: no-star-import
-  type: ast-grep
-  severity: warning
-  group: performance
-  description: "Wildcard import \u2014 pollutes namespace and prevents dead-code analysis."
-  fix_auto: false
-  fix_instruction: Import only needed names explicitly.
-  file: rules/no-star-import.yml
+  - id: no-mutable-default-arg
+    type: ast-grep
+    severity: warning
+    group: performance
+    description: "Mutable default argument \u2014 use None and create inside function."
+    fix_auto: false
+    fix_instruction: "Replace def f(x=[]) with def f(x=None): x = x or []."
+    file: rules/no-mutable-default-arg.yml
+  - id: no-star-import
+    type: ast-grep
+    severity: warning
+    group: performance
+    description: "Wildcard import \u2014 pollutes namespace and prevents dead-code analysis."
+    fix_auto: false
+    fix_instruction: Import only needed names explicitly.
+    file: rules/no-star-import.yml
 baseline:
   strategy: total

@@ -1,7 +1,7 @@
 # Performance tips
 
-
 <!-- TOC START -->
+
 - [In general, use `model_validate_json()` not `model_validate(json.loads(...))`](#in-general-use-modelvalidatejson-not-modelvalidatejsonloads)
 - [`TypeAdapter` instantiated once](#typeadapter-instantiated-once)
 - [`Sequence` vs `list` or `tuple` with `Mapping` vs `dict`](#sequence-vs-list-or-tuple-with-mapping-vs-dict)

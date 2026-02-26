@@ -7,8 +7,8 @@
 
 Full notes: `docs/releases/v0.11.0.md`
 
-
 <!-- TOC START -->
+
 - No sections found
 <!-- TOC END -->
 

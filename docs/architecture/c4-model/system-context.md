@@ -1,7 +1,7 @@
 # FLEXT System Context Diagram
 
-
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [System Context Diagram](#system-context-diagram)
@@ -20,7 +20,7 @@
   - [Data Storage](#data-storage)
   - [Integration Protocols](#integration-protocols)
   - [Monitoring and Observability](#monitoring-and-observability)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 ## Table of Contents
 

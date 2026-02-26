@@ -1,7 +1,7 @@
 # Custom Validators
 
-
 <!-- TOC START -->
+
 - [Custom `datetime` Validator via [`Annotated`][typing.Annotated] Metadata](#custom-datetime-validator-via-annotatedtypingannotated-metadata)
 - [Validating Nested Model Fields](#validating-nested-model-fields)
 <!-- TOC END -->

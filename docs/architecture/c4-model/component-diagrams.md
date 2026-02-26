@@ -1,7 +1,7 @@
 # FLEXT Component Diagrams
 
-
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [1. FlexCore Runtime Container Components](#1-flexcore-runtime-container-components)
@@ -19,10 +19,9 @@
   - [Go Components (FlexCore)](#go-components-flexcore)
   - [Python Components (FLEXT Services)](#python-components-flext-services)
   - [Common Patterns](#common-patterns)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
-
 
 ## Table of Contents
 

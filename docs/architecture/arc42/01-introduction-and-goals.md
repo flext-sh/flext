@@ -1,7 +1,7 @@
 # 1. Introduction and Goals
 
-
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [1.1 Requirements Overview](#11-requirements-overview)
   - [1.1.1 Functional Requirements](#111-functional-requirements)
@@ -20,10 +20,9 @@
   - [1.5.1 Technical Success Criteria](#151-technical-success-criteria)
   - [1.5.2 Business Success Criteria](#152-business-success-criteria)
   - [1.5.3 Operational Success Criteria](#153-operational-success-criteria)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
-
 
 ## Table of Contents
 

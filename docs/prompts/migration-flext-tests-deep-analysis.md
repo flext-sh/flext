@@ -1,7 +1,7 @@
 # Prompt: Migração Profunda de flext_tests - Análise e Correção Completa
 
-
 <!-- TOC START -->
+
 - [Objetivo](#objetivo)
 - [Escopo](#escopo)
   - [Projetos a Analisar](#projetos-a-analisar)

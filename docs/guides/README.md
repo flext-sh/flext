@@ -1,7 +1,7 @@
 # User Guides
 
-
 <!-- TOC START -->
+
 - [Getting Started](#getting-started)
   - [[Installation Guide](./getting-started.md) ✅](#installation-guidegetting-startedmd)
   - [Quick Start Tutorial (Coming Soon)](#quick-start-tutorial-coming-soon)
@@ -26,7 +26,7 @@
   - [Performance Optimization (Coming Soon)](#performance-optimization-coming-soon)
   - [Security Best Practices (Coming Soon)](#security-best-practices-coming-soon)
   - [Error Handling (Coming Soon)](#error-handling-coming-soon)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 ## Getting Started
 

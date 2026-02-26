@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -10,14 +11,15 @@
 <!-- TOC END -->
 
 ---
+
 name: flext-strict-refactoring
 description: Strict cleanup rules for removing duplication, stale policy text, and conflicting guidance in docs and skills. Use when normalizing documentation content.
+
 ---
 
 # Flext Strict Refactoring
 
 **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
-
 
 ## Scope
 
@@ -74,6 +76,7 @@ Bad:
 
 ```markdown
 ## Global Rules
+
 [copy of 150 lines from CLAUDE.md]
 ```
 
@@ -91,5 +94,5 @@ Make gates:
 Policy checks:
 
 - `rg -n "TODO|TBD|placeholder" .claude/skills/*/SKILL.md || true`
-- `rg -n "(^|[\"'`])/(Users|home)/" .claude/skills/*/SKILL.md || true`
+- `rg -n "(^|[\"'`])/(Users|home)/" .claude/skills/\*/SKILL.md || true`
 - `rg -n "Canonical source:`CLAUDE.md`|single source of truth" AGENTS.md codex.md .github/copilot-instructions.md .gemini/styleguide.md`

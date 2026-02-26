@@ -14,4 +14,4 @@ id: no-breakpoint-fix-import-pdb
 language: python
 rule:
   pattern: import pdb
-fix: ''
+fix: ""

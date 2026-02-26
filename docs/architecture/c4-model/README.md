@@ -1,7 +1,7 @@
 # FLEXT C4 Model Architecture Documentation
 
-
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [📋 C4 Model Levels](#c4-model-levels)
   - [1. [System Context Diagram](./system-context.md)](#1-system-context-diagramsystem-contextmd)

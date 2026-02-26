@@ -1,7 +1,7 @@
 # Pydantic 2 Migration Roadmap
 
-
 <!-- TOC START -->
+
 - [Executive Summary](#executive-summary)
 - [Key Decisions](#key-decisions)
 - [Migration Patterns](#migration-patterns)

@@ -1,7 +1,7 @@
 # ADR-001: Railway-Oriented Programming with FlextResult[T]
 
-
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [Status](#status)
 - [Context](#context)
@@ -26,7 +26,6 @@
 <!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
-
 
 ## Table of Contents
 

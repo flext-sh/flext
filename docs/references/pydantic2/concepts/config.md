@@ -1,7 +1,7 @@
 # Configuration
 
-
 <!-- TOC START -->
+
 - [Configuration on Pydantic models](#configuration-on-pydantic-models)
 - [Configuration on Pydantic dataclasses](#configuration-on-pydantic-dataclasses)
 - [Configuration on `TypeAdapter`](#configuration-on-typeadapter)

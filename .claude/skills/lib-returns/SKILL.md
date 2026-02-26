@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -28,14 +29,15 @@
 <!-- TOC END -->
 
 ---
+
 name: lib-returns
 description: FlextResult railway composition built on dry-python/returns. Use when implementing result-flow operations, error recovery chains, or converting between container types.
+
 ---
 
 # Lib Returns — FlextResult Railway Composition
 
 **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
-
 
 ## Scope
 
@@ -74,61 +76,61 @@ from flext_core import r
 
 ### Factory Methods
 
-| Method | Signature | Purpose |
-| -------- | ----------- | --------- |
-| `r[T].ok(value)` | `ok[T](cls, value: T) -> FlextResult[T]` | Wrap success value (raises `ValueError` if `None`) |
-| `r.fail(error)` | `fail[U](cls, error: str \| None, error_code: str \| None = None, error_data: t.ConfigMap \| None = None) -> FlextResult[U]` | Create failure with message, optional code and metadata |
-| `FlextResult.safe` | `safe[T](func: p.VariadicCallable[T]) -> p.VariadicCallable[FlextResult[T]]` | Decorator — catches exceptions, returns `.fail()` |
-| `create_from_callable` | `create_from_callable(cls, func: Callable[[], T_co], error_code: str \| None = None) -> FlextResult[T_co]` | Execute callable, wrap result or exception |
+| Method                 | Signature                                                                                                                    | Purpose                                                 |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `r[T].ok(value)`       | `ok[T](cls, value: T) -> FlextResult[T]`                                                                                     | Wrap success value (raises `ValueError` if `None`)      |
+| `r.fail(error)`        | `fail[U](cls, error: str \| None, error_code: str \| None = None, error_data: t.ConfigMap \| None = None) -> FlextResult[U]` | Create failure with message, optional code and metadata |
+| `FlextResult.safe`     | `safe[T](func: p.VariadicCallable[T]) -> p.VariadicCallable[FlextResult[T]]`                                                 | Decorator — catches exceptions, returns `.fail()`       |
+| `create_from_callable` | `create_from_callable(cls, func: Callable[[], T_co], error_code: str \| None = None) -> FlextResult[T_co]`                   | Execute callable, wrap result or exception              |
 
 ### Monadic Composition Chain
 
-| Method | Signature | When to use |
-| -------- | ----------- | ------------- |
-| `.map(func)` | `map[U](self, func: Callable[[T_co], U]) -> FlextResult[U]` | Transform success value with a pure function |
-| `.flat_map(func)` | `flat_map[U](self, func: Callable[[T_co], RuntimeResult[U]]) -> FlextResult[U]` | Chain operations returning `FlextResult` |
-| `.and_then(func)` | alias for `.flat_map()` | RFC-compliant name |
-| `.filter(pred)` | `filter(self, predicate: Callable[[T_co], bool]) -> FlextResult[T_co]` | Keep value if predicate passes, else fail |
+| Method            | Signature                                                                       | When to use                                  |
+| ----------------- | ------------------------------------------------------------------------------- | -------------------------------------------- |
+| `.map(func)`      | `map[U](self, func: Callable[[T_co], U]) -> FlextResult[U]`                     | Transform success value with a pure function |
+| `.flat_map(func)` | `flat_map[U](self, func: Callable[[T_co], RuntimeResult[U]]) -> FlextResult[U]` | Chain operations returning `FlextResult`     |
+| `.and_then(func)` | alias for `.flat_map()`                                                         | RFC-compliant name                           |
+| `.filter(pred)`   | `filter(self, predicate: Callable[[T_co], bool]) -> FlextResult[T_co]`          | Keep value if predicate passes, else fail    |
 
 ### Failure Recovery
 
-| Method | Signature | When to use |
-| -------- | ----------- | ------------- |
-| `.recover(func)` | `recover(self, func: Callable[[str], T_co]) -> FlextResult[T_co]` | Replace failure with computed fallback value |
-| `.lash(func)` | `lash(self, func: Callable[[str], RuntimeResult[T_co]]) -> FlextResult[T_co]` | Recover from failure by returning a new result |
-| `.or_else(func)` | alias for `.lash()` | RFC-standard name |
-| `.alt(func)` / `.map_error(func)` | `alt(self, func: Callable[[str], str]) -> FlextResult[T_co]` | Transform error message without recovering |
+| Method                            | Signature                                                                     | When to use                                    |
+| --------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------- |
+| `.recover(func)`                  | `recover(self, func: Callable[[str], T_co]) -> FlextResult[T_co]`             | Replace failure with computed fallback value   |
+| `.lash(func)`                     | `lash(self, func: Callable[[str], RuntimeResult[T_co]]) -> FlextResult[T_co]` | Recover from failure by returning a new result |
+| `.or_else(func)`                  | alias for `.lash()`                                                           | RFC-standard name                              |
+| `.alt(func)` / `.map_error(func)` | `alt(self, func: Callable[[str], str]) -> FlextResult[T_co]`                  | Transform error message without recovering     |
 
 ### Side Effects
 
-| Method | Signature | When to use |
-| -------- | ----------- | ------------- |
-| `.tap(func)` | `tap(self, func: Callable[[T_co], None]) -> FlextResult[T_co]` | Logging/metrics on success, result unchanged |
-| `.tap_error(func)` | `tap_error(self, func: Callable[[str], None]) -> Self` | Logging/metrics on failure, result unchanged |
+| Method             | Signature                                                      | When to use                                  |
+| ------------------ | -------------------------------------------------------------- | -------------------------------------------- |
+| `.tap(func)`       | `tap(self, func: Callable[[T_co], None]) -> FlextResult[T_co]` | Logging/metrics on success, result unchanged |
+| `.tap_error(func)` | `tap_error(self, func: Callable[[str], None]) -> Self`         | Logging/metrics on failure, result unchanged |
 
 ### Value Extraction
 
-| Method | Signature | When to use |
-| -------- | ----------- | ------------- |
-| `.unwrap_or(default)` | `unwrap_or(self, default: T_co) -> T_co` | Get value or default |
-| `.get_or_else(default)` | alias for `.unwrap_or()` | Haskell/Scala naming |
-| `.map_or(default, func)` | `map_or[U](self, default: U, func: Callable[[T_co], U] \| None = None) -> U \| T_co` | Transform + default in one call |
+| Method                          | Signature                                                                             | When to use                             |
+| ------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------- |
+| `.unwrap_or(default)`           | `unwrap_or(self, default: T_co) -> T_co`                                              | Get value or default                    |
+| `.get_or_else(default)`         | alias for `.unwrap_or()`                                                              | Haskell/Scala naming                    |
+| `.map_or(default, func)`        | `map_or[U](self, default: U, func: Callable[[T_co], U] \| None = None) -> U \| T_co`  | Transform + default in one call         |
 | `.fold(on_failure, on_success)` | `fold[U](self, on_failure: Callable[[str], U], on_success: Callable[[T_co], U]) -> U` | Catamorphism — collapse to single value |
 
 ### Collection Operations
 
-| Method | Signature | When to use |
-| -------- | ----------- | ------------- |
-| `FlextResult.traverse(items, func)` | `traverse[T, U](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> FlextResult[list[U]]` | Map over sequence, fail-fast or accumulate |
-| `FlextResult.accumulate_errors(*results)` | `accumulate_errors(cls, *results: FlextResult[U]) -> FlextResult[list[U]]` | Collect all successes, combine all errors |
-| `FlextResult.parallel_map(items, func)` | `parallel_map[T, U2](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> FlextResult[list[U2]]` | Same semantics as traverse |
+| Method                                    | Signature                                                                                                     | When to use                                |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `FlextResult.traverse(items, func)`       | `traverse[T, U](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> FlextResult[list[U]]`       | Map over sequence, fail-fast or accumulate |
+| `FlextResult.accumulate_errors(*results)` | `accumulate_errors(cls, *results: FlextResult[U]) -> FlextResult[list[U]]`                                    | Collect all successes, combine all errors  |
+| `FlextResult.parallel_map(items, func)`   | `parallel_map[T, U2](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> FlextResult[list[U2]]` | Same semantics as traverse                 |
 
 ### Pydantic Integration
 
-| Method | Signature | When to use |
-| -------- | ----------- | ------------- |
-| `.from_validation(data, model)` | `from_validation(cls, data: t.GeneralValueType, model: type[T_Model]) -> FlextResult[T_Model]` | Validate data against Pydantic model |
-| `.to_model(model)` | `to_model[U: BaseModel](self, model: type[U]) -> FlextResult[U]` | Convert success value to Pydantic model |
+| Method                          | Signature                                                                                      | When to use                             |
+| ------------------------------- | ---------------------------------------------------------------------------------------------- | --------------------------------------- |
+| `.from_validation(data, model)` | `from_validation(cls, data: t.GeneralValueType, model: type[T_Model]) -> FlextResult[T_Model]` | Validate data against Pydantic model    |
+| `.to_model(model)`              | `to_model[U: BaseModel](self, model: type[U]) -> FlextResult[U]`                               | Convert success value to Pydantic model |
 
 ### Resource Management
 
@@ -242,14 +244,14 @@ result = FlextResult(Success(value))
 
 ## Subproject Usage Map
 
-| Subproject | Files | Pattern |
-| ------------ | ------- | --------- |
-| `flext-auth` | `provider_service.py`, `token_service.py`, `registry.py`, `api.py` | `from flext_core import r` — service results, auth flows |
-| `flext-grpc` | `api.py` | FlextResult for gRPC operation results |
-| `flext-dbt-ldif` | `dbt_client.py`, `models.py`, `settings.py` | Business rule validation, DBT workflow results |
-| `flext-tap-ldif` | `utilities.py` | `from flext_core import FlextResult, t` |
-| `flext-meltano` | `dbt/service.py` | `from flext_core import r, FlextService` |
-| `flext-cli` | service modules | CLI operation results |
+| Subproject       | Files                                                              | Pattern                                                  |
+| ---------------- | ------------------------------------------------------------------ | -------------------------------------------------------- |
+| `flext-auth`     | `provider_service.py`, `token_service.py`, `registry.py`, `api.py` | `from flext_core import r` — service results, auth flows |
+| `flext-grpc`     | `api.py`                                                           | FlextResult for gRPC operation results                   |
+| `flext-dbt-ldif` | `dbt_client.py`, `models.py`, `settings.py`                        | Business rule validation, DBT workflow results           |
+| `flext-tap-ldif` | `utilities.py`                                                     | `from flext_core import FlextResult, t`                  |
+| `flext-meltano`  | `dbt/service.py`                                                   | `from flext_core import r, FlextService`                 |
+| `flext-cli`      | service modules                                                    | CLI operation results                                    |
 
 ## Verification
 

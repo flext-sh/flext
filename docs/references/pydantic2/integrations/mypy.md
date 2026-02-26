@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Enabling the Plugin](#enabling-the-plugin)
 - [Mypy plugin capabilities](#mypy-plugin-capabilities)
   - [Generate a `__init__` signature for Pydantic models](#generate-a-init-signature-for-pydantic-models)
@@ -11,7 +12,7 @@
   - [`init_typed`](#inittyped)
   - [`init_forbid_extra`](#initforbidextra)
   - [`warn_required_dynamic_aliases`](#warnrequireddynamicaliases)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 Pydantic works well with [mypy](http://mypy-lang.org) right out of the box.
 

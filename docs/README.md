@@ -1,7 +1,7 @@
 # FLEXT Documentation Portal
 
-
 <!-- TOC START -->
+
 - [Key Features](#key-features)
   - [Overview](#overview)
 - [Highlighted Content](#highlighted-content)

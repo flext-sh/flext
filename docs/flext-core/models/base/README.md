@@ -1,7 +1,7 @@
 # FlextModels · Base (Índice)
 
-
 <!-- TOC START -->
+
 - [Documentação por modelo](#documentao-por-modelo)
 - [Como aproveitar o guia](#como-aproveitar-o-guia)
 - [Resumo das mudanças e insights documentados](#resumo-das-mudanas-e-insights-documentados)

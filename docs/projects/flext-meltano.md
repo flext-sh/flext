@@ -1,7 +1,7 @@
 # FLEXT Meltano
 
-
 <!-- TOC START -->
+
 - [Status & health](#status-health)
 - [Quick start](#quick-start)
 - [Architecture snapshot](#architecture-snapshot)

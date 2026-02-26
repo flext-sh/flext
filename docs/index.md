@@ -1,7 +1,7 @@
 # FLEXT Ecosystem Documentation Portal
 
-
 <!-- TOC START -->
+
 - [Quick Start](#quick-start)
 - [Status & Quality](#status-quality)
 - [Documentation Sections](#documentation-sections)

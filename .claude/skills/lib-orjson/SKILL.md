@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
   - [Subproject Usage Map](#subproject-usage-map)
 - [References](#references)
@@ -10,27 +11,33 @@
 <!-- TOC END -->
 
 ---
+
 name: lib-orjson
 description: Deterministic high-performance JSON serialization with orjson in flext_core utilities. Trigger when editing sort keys, cache normalization, or JSON boundary conversion logic.
+
 ---
 
 ## Scope
+
 - Direct runtime usage: `flext-core/src/flext_core/_utilities/validation.py`
 - Dependency declaration: `flext-core/pyproject.toml`
 - Workspace-level package dependency context: `pyproject.toml`
 
 ### Subproject Usage Map
+
 - `flext-core`: only direct Python call-site (`import orjson`, `orjson.dumps(...)`).
 - `flext-api` and root packaging: declare `orjson` dependency, but do not directly import it in source from current evidence.
 - Other `flext-*` packages: rely on higher-level serialization helpers, not direct `orjson` calls.
 
 ## References
+
 - `flext-core/src/flext_core/_utilities/validation.py`: `FlextUtilitiesValidation.sort_key`
 - `flext-core/pyproject.toml`: `orjson (>=3.11.3)`
 - `pyproject.toml`: workspace dependency metadata where applicable
 - `https://github.com/ijl/orjson`
 
 ## Rules
+
 - Treat `orjson.dumps(...)` return type as `bytes` and decode explicitly before returning/ordering.
 - Always keep deterministic ordering: pass `option=orjson.OPT_SORT_KEYS`.
 - Preserve fallback path to stdlib JSON for unsupported types or serialization failures.
@@ -38,6 +45,7 @@ description: Deterministic high-performance JSON serialization with orjson in fl
 - Keep encoded string format consistent with `c.Utilities.DEFAULT_ENCODING`.
 
 ## Instructions
+
 - Anchor changes to the real declaration:
 
 ```python
@@ -63,6 +71,7 @@ def sort_key(value: t.GeneralValueType) -> tuple[str, str]:
 - If behavior changes, document deterministic ordering impact for cache keys and stable comparisons.
 
 ## Workflow
+
 1. Locate existing `orjson` imports and calls in the target module.
 2. Confirm deterministic options (`OPT_SORT_KEYS`) remain present.
 3. Confirm decoded text output remains `str` for tuple sorting and key comparison.
@@ -70,6 +79,7 @@ def sort_key(value: t.GeneralValueType) -> tuple[str, str]:
 5. Verify no raw `bytes` leak into callers expecting text.
 
 ## Examples
+
 Good:
 
 ```python

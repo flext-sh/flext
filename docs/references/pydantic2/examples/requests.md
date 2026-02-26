@@ -1,7 +1,7 @@
 # HTTP Requests
 
-
 <!-- TOC START -->
+
 - [`httpx` requests](#httpx-requests)
 <!-- TOC END -->
 

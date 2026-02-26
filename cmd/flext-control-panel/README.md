@@ -1,7 +1,7 @@
 # FLEXT Control Panel
 
-
 <!-- TOC START -->
+
 - [Quick Start](#quick-start)
 - [Current Reality](#current-reality)
 - [Architecture Role in FLEXT Ecosystem](#architecture-role-in-flext-ecosystem)
@@ -33,7 +33,6 @@
 <!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
-
 
 **FLEXT Control Panel** service launcher using the common flextservice framework. This service provides a standardized launch mechanism for control panel functionality within the FLEXT ecosystem.
 

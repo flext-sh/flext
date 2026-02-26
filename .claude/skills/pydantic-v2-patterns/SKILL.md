@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -15,14 +16,15 @@
 <!-- TOC END -->
 
 ---
+
 name: pydantic-v2-patterns
 description: Deep-dive patterns companion to lib-pydantic-v2 for advanced Pydantic v2 implementation in FLEXT.
+
 ---
 
 # Pydantic v2 Patterns
 
 **Reviewed**: 2026-02-17 | **Scope**: Implementation patterns that complement `lib-pydantic-v2`
-
 
 ## Scope
 
@@ -124,9 +126,11 @@ UUIDStr = Annotated[str, PlainValidator(validate_uuid_string)]
 ```
 
 Repository anchor:
+
 - `flext-core/src/flext_core/_models/base.py` (`StrippedString`, `ValidatedString`, `NormalizedList`, `UUIDStr`)
 
 Use when:
+
 - The same domain constraint appears in multiple models.
 - You need consistent behavior across subprojects.
 
@@ -157,9 +161,11 @@ class Metadata(BaseModel):
 ```
 
 Repository anchor:
+
 - `flext-core/src/flext_core/_models/base.py` (`Metadata._validate_attributes`)
 
 Use when:
+
 - Input source may provide dict-like structures, custom mappings, or nested models.
 
 #### Pattern C: Typed post-validation field validator
@@ -182,9 +188,11 @@ class RetryConfiguration(BaseModel):
 ```
 
 Repository anchor:
+
 - `flext-core/src/flext_core/_models/settings.py` (`validate_backoff_strategy`)
 
 Use when:
+
 - Field is already typed and the next step is domain-level acceptance/rejection.
 
 #### Pattern D: Cross-field model validator
@@ -207,10 +215,12 @@ class RetryWindow(BaseModel):
 ```
 
 Repository anchors:
+
 - `flext-core/src/flext_core/_models/settings.py` (`validate_delay_consistency`, `validate_batch`)
 - `flext-core/src/flext_core/_models/base.py` (audit/timestamp/id consistency validators)
 
 Use when:
+
 - One field’s validity depends on another field.
 
 ---
@@ -245,6 +255,7 @@ class TimestampedModel(BaseModel):
 ```
 
 Repository anchor:
+
 - `flext-core/src/flext_core/_models/base.py` (`TimestampableMixin`)
 
 #### Pattern B: Registry/service summaries
@@ -272,6 +283,7 @@ class RegistrationSummary(BaseModel):
 ```
 
 Repository anchor:
+
 - `flext-core/src/flext_core/registry.py`
 
 #### Pattern C: Runtime facade computed field
@@ -290,9 +302,11 @@ class ServiceRuntimeHolder:
 ```
 
 Repository anchor:
+
 - `flext-core/src/flext_core/service.py` (`runtime`)
 
 Guidance:
+
 - Keep computed fields side-effect free.
 - Avoid expensive I/O or mutation in computed field bodies.
 - Use them for observability and derived metadata, not command execution.
@@ -326,6 +340,7 @@ MessageUnion = Annotated[
 ```
 
 Repository anchors:
+
 - `flext-core/src/flext_core/_models/base.py` (`MessageUnion`)
 - `flext-core/src/flext_core/models.py` (`MessageUnion` alias)
 
@@ -355,9 +370,11 @@ OperationResult = Annotated[
 ```
 
 Repository anchor:
+
 - `flext-core/src/flext_core/_models/base.py` (`OperationResult`, `ValidationOutcome`)
 
 Guidance:
+
 - Discriminator field name must exist in every variant.
 - Literal values are wire-level contracts; change only with migration planning.
 - Keep each union family domain-scoped (messages vs results vs outcomes).
@@ -381,6 +398,7 @@ class AuditModel(BaseModel):
 ```
 
 Repository anchors:
+
 - `flext-core/src/flext_core/_models/base.py` (datetime serializers)
 - `flext-db-oracle/src/flext_db_oracle/models.py` (execution and time serializers)
 
@@ -400,6 +418,7 @@ class TimestampPair(BaseModel):
 ```
 
 Repository anchor:
+
 - `flext-core/src/flext_core/_models/base.py` (`serialize_timestamps`, `serialize_audit_timestamps`)
 
 #### Pattern C: Wildcard serializer for envelope enrichment
@@ -425,9 +444,11 @@ class EnvelopeModel(BaseModel):
 ```
 
 Repository anchor:
+
 - `flext-tap-oracle-oic/src/flext_tap_oracle_oic/models.py` (`serialize_with_oic_metadata`)
 
 Guidance:
+
 - Prefer specific field serializers first.
 - Use wildcard serializers only for transport-level cross-cutting concerns.
 - Keep payload shape changes explicit and documented.
@@ -453,9 +474,11 @@ class FrozenStrictModel(BaseModel):
 ```
 
 Repository anchor:
+
 - `flext-core/src/flext_core/_models/base.py` (`FrozenStrictModel`)
 
 Guidance:
+
 - Use strict mode on boundaries to prevent silent coercion.
 - Add `extra="ignore"` only when interoperability requires forward compatibility.
 - Pair strict mode with explicit validators for domain invariants.
@@ -479,6 +502,7 @@ def validate_runtime(data: object, type_: type[object]) -> tuple[bool, object | 
 ```
 
 Repository anchor:
+
 - `flext-core/src/flext_core/_utilities/validation.py` (`TypeAdapter.validate`)
 
 #### Pattern B: Runtime serialization wrapper
@@ -495,6 +519,7 @@ def serialize_runtime(value: object, type_: type[object]) -> dict[str, object]:
 ```
 
 Repository anchor:
+
 - `flext-core/src/flext_core/_utilities/validation.py` (`TypeAdapter.serialize`)
 
 #### Pattern C: JSON parse to typed value
@@ -512,6 +537,7 @@ def parse_json_runtime(json_str: str, type_: type[object]) -> tuple[bool, object
 ```
 
 Repository anchor:
+
 - `flext-core/src/flext_core/_utilities/validation.py` (`TypeAdapter.parse_json`)
 
 #### Pattern D: Fixture contract validation in tests
@@ -529,9 +555,11 @@ def load_fixture(path: Path) -> dict[str, object]:
 ```
 
 Repository anchor:
+
 - `flext-cli/tests/conftest.py` (`load_fixture_config`, `load_fixture_data`)
 
 Guidance:
+
 - Keep TypeAdapter in utilities and fixture loaders.
 - Do not replace rich domain models with TypeAdapter where model semantics are required.
 - Use adapter wrappers when runtime type is generic or dynamic.

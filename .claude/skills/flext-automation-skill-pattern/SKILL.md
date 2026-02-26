@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -9,8 +10,10 @@
 <!-- TOC END -->
 
 ---
+
 name: flext-automation-skill-pattern
 description: Canonical pattern for creating reusable automation skills with script-first validation, baseline/strict enforcement modes, and companion docs. Use for future automation work that must be repeatable across the repo.
+
 ---
 
 # Flext Automation Skill Pattern

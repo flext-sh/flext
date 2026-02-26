@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Parameter types](#parameter-types)
 - [Function signatures](#function-signatures)
 - [Using the [`Field()`][pydantic.Field] function to describe function parameters](#using-the-fieldpydanticfield-function-to-describe-function-parameters)
@@ -10,7 +11,7 @@
 - [Limitations](#limitations)
   - [Validation exception](#validation-exception)
   - [Performance](#performance)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 ??? api "API Documentation"
 [`pydantic.validate_call_decorator.validate_call`][pydantic.validate_call_decorator.validate_call]<br>

@@ -1,7 +1,7 @@
 # Linting Integration
 
-
 <!-- TOC START -->
+
 - [Flake8 plugin](#flake8-plugin)
 <!-- TOC END -->
 

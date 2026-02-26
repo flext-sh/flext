@@ -1,7 +1,7 @@
 # Flext CQRS Architecture – Migração Completa
 
-
 <!-- TOC START -->
+
 - [Documentação de destino](#documentao-de-destino)
 - [TODOs migrados para código](#todos-migrados-para-cdigo)
 - [Conteúdo restante (pendente de implementação)](#contedo-restante-pendente-de-implementao)

@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Pre-Refactoring Checklist](#pre-refactoring-checklist)
 - [Refactoring Steps](#refactoring-steps)
   - [Step 1: Analyze Before Editing](#step-1-analyze-before-editing)
@@ -23,14 +24,15 @@
 <!-- TOC END -->
 
 ---
+
 name: flext-refactoring-workflow
 description: Step-by-step refactoring process with verified quality gates and Make targets
+
 ---
 
 # FLEXT Refactoring Workflow
 
 **Reviewed**: 2026-02-19 | **Scope**: Coverage source-of-truth migration to pyproject.toml
-
 
 > **Source of truth**: Verified from `base.mk` (shared Makefile), `ruff-shared.toml`,
 > and actual `pyproject.toml` configurations across the monorepo on 2026-02-19.
@@ -131,31 +133,31 @@ make validate FIX=1
 
 ## Make Targets Quick Reference (from base.mk)
 
-| Target | What It Does |
-| --- | --- |
-| `make help` | Show available standardized commands |
-| `make setup` | Install dependencies and hooks |
-| `make check` | Fast quality gate (ruff + format check + pyrefly + bandit) |
-| `make security` | Security scan gate |
-| `make format` | Code formatting |
-| `make docs` | Build docs |
-| `make test` | Pytest with coverage gate |
-| `make validate` | Extended non-lint validation (`FIX=1` optional) |
-| `make clean` | Clean artifacts |
+| Target          | What It Does                                               |
+| --------------- | ---------------------------------------------------------- |
+| `make help`     | Show available standardized commands                       |
+| `make setup`    | Install dependencies and hooks                             |
+| `make check`    | Fast quality gate (ruff + format check + pyrefly + bandit) |
+| `make security` | Security scan gate                                         |
+| `make format`   | Code formatting                                            |
+| `make docs`     | Build docs                                                 |
+| `make test`     | Pytest with coverage gate                                  |
+| `make validate` | Extended non-lint validation (`FIX=1` optional)            |
+| `make clean`    | Clean artifacts                                            |
 
 ---
 
 ## Quality Gate Thresholds
 
-| Metric | Threshold | Config Source |
-| --- | --- | --- |
-| Coverage | Per-project `fail_under` | `pyproject.toml` `[tool.coverage.report] fail_under` |
-| Docstring coverage | >= 80% (`DOCSTRING_MIN`) | `base.mk` variable `DOCSTRING_MIN` |
-| Cognitive complexity | <= 15 | `base.mk` complexipy gate parameters |
-| Complexity | <= 10 (`COMPLEXITY_MAX`) | `base.mk` variable `COMPLEXITY_MAX` |
-| Dead code confidence | >= 80% | `base.mk` vulture gate parameters |
-| Line length | 88 chars | `ruff-shared.toml` `line-length` setting |
-| Python version | 3.13 | `ruff-shared.toml` `target-version` setting |
+| Metric               | Threshold                | Config Source                                        |
+| -------------------- | ------------------------ | ---------------------------------------------------- |
+| Coverage             | Per-project `fail_under` | `pyproject.toml` `[tool.coverage.report] fail_under` |
+| Docstring coverage   | >= 80% (`DOCSTRING_MIN`) | `base.mk` variable `DOCSTRING_MIN`                   |
+| Cognitive complexity | <= 15                    | `base.mk` complexipy gate parameters                 |
+| Complexity           | <= 10 (`COMPLEXITY_MAX`) | `base.mk` variable `COMPLEXITY_MAX`                  |
+| Dead code confidence | >= 80%                   | `base.mk` vulture gate parameters                    |
+| Line length          | 88 chars                 | `ruff-shared.toml` `line-length` setting             |
+| Python version       | 3.13                     | `ruff-shared.toml` `target-version` setting          |
 
 ---
 

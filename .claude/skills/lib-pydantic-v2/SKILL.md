@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -22,14 +23,15 @@
 <!-- TOC END -->
 
 ---
+
 name: lib-pydantic-v2
 description: Pydantic v2 model, validation, and serialization patterns used across FLEXT. Use when creating models, adding validators, using ConfigDict, TypeAdapter, or model_validate/model_dump.
+
 ---
 
 # Lib Pydantic V2 — Models, Validators, and Adapters
 
 **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
-
 
 ## Scope
 
@@ -267,18 +269,18 @@ class QueryModel(m.Query):
 
 ## Subproject Usage Map
 
-| Subproject | Key Files | Pattern |
-| ------------ | ----------- | --------- |
-| `flext-core` | `settings.py`, `_models/settings.py`, `typings.py` | SettingsConfigDict, ConfigDict, field_validator, model_validator, RootModel |
-| `flext-grpc` | `models.py`, `settings.py` | BaseModel + computed_field, SettingsConfigDict |
-| `flext-auth` | `settings.py`, `models.py` | SettingsConfigDict, ConfigDict |
-| `flext-cli` | `settings.py`, `file_tools.py` | SettingsConfigDict, yaml → model validation |
-| `flext-ldif` | `settings.py`, `_models/settings.py` | SettingsConfigDict, ConfigDict |
-| `flext-api` | `settings.py` | SettingsConfigDict |
-| `flext-web` | `settings.py` | SettingsConfigDict |
-| `flext-meltano` | `project_service.py` | yaml.safe_dump + BaseModel patterns |
-| `flext-quality` | `utilities.py`, `rules/loader.py` | yaml + model validation |
-| `flext-tap-*`, `flext-target-*` | `settings.py` | SettingsConfigDict |
+| Subproject                      | Key Files                                          | Pattern                                                                     |
+| ------------------------------- | -------------------------------------------------- | --------------------------------------------------------------------------- |
+| `flext-core`                    | `settings.py`, `_models/settings.py`, `typings.py` | SettingsConfigDict, ConfigDict, field_validator, model_validator, RootModel |
+| `flext-grpc`                    | `models.py`, `settings.py`                         | BaseModel + computed_field, SettingsConfigDict                              |
+| `flext-auth`                    | `settings.py`, `models.py`                         | SettingsConfigDict, ConfigDict                                              |
+| `flext-cli`                     | `settings.py`, `file_tools.py`                     | SettingsConfigDict, yaml → model validation                                 |
+| `flext-ldif`                    | `settings.py`, `_models/settings.py`               | SettingsConfigDict, ConfigDict                                              |
+| `flext-api`                     | `settings.py`                                      | SettingsConfigDict                                                          |
+| `flext-web`                     | `settings.py`                                      | SettingsConfigDict                                                          |
+| `flext-meltano`                 | `project_service.py`                               | yaml.safe_dump + BaseModel patterns                                         |
+| `flext-quality`                 | `utilities.py`, `rules/loader.py`                  | yaml + model validation                                                     |
+| `flext-tap-*`, `flext-target-*` | `settings.py`                                      | SettingsConfigDict                                                          |
 
 ## Verification
 

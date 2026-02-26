@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Serializing data](#serializing-data)
   - [Python mode](#python-mode)
   - [JSON mode](#json-mode)
@@ -16,7 +17,7 @@
 - [Field inclusion and exclusion](#field-inclusion-and-exclusion)
   - [At the field level](#at-the-field-level)
   - [As parameters to the serialization methods](#as-parameters-to-the-serialization-methods)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 Beyond accessing model attributes directly via their field names (e.g. `model.foobar`), models can be converted, dumped,
 serialized, and exported in a number of ways. Serialization can be customized for the whole model, or on a per-field

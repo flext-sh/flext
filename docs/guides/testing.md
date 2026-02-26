@@ -1,7 +1,7 @@
 # FLEXT Testing Guide
 
-
 <!-- TOC START -->
+
 - [Overview](#overview)
 - [Test Structure](#test-structure)
 - [Test Categories](#test-categories)

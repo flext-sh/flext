@@ -1,7 +1,7 @@
 # FLEXT Development Guide
 
-
 <!-- TOC START -->
+
 - [Prerequisites](#prerequisites)
 - [Development Environment Setup](#development-environment-setup)
   - [1. Clone the Repository](#1-clone-the-repository)
@@ -454,13 +454,16 @@ config = FlextNewlibSettings(new_setting="value")
 ### Common Issues
 
 1. **Import Errors**
+
    ```bash
    # Check PYTHONPATH
    export PYTHONPATH=src
 
    # Reinstall dependencies
    make clean && make setup
-```
+   ```
+
+````
 
 2. **Test Failures**
 
@@ -470,7 +473,7 @@ config = FlextNewlibSettings(new_setting="value")
 
    # Check specific test
    pytest tests/unit/test_specific.py::test_function -v
-   ```
+````
 
 3. **Build Issues**
 

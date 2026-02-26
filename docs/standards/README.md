@@ -1,7 +1,7 @@
 # Standards and Guidelines
 
-
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [Code Standards](#code-standards)
   - [Python Standards](#python-standards)

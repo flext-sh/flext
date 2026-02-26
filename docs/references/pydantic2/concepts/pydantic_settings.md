@@ -1,10 +1,11 @@
 <!-- TOC START -->
+
 - No sections found
 <!-- TOC END -->
 
 ---
-description: Support for loading a settings or config class from environment variables or secrets files.
----
+
+## description: Support for loading a settings or config class from environment variables or secrets files.
 
 # Settings Management
 

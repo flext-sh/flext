@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Rule 1: Always Use `from __future__ import annotations`](#rule-1-always-use-from-future-import-annotations)
 - [Rule 2: Import Order (enforced by ruff `I` rules)](#rule-2-import-order-enforced-by-ruff-i-rules)
 - [Rule 3: How to Import from flext-core (Inside flext-core)](#rule-3-how-to-import-from-flext-core-inside-flext-core)
@@ -21,14 +22,15 @@
 <!-- TOC END -->
 
 ---
+
 name: flext-import-rules
 description: Exact import rules and patterns verified from the actual FLEXT codebase
+
 ---
 
 # FLEXT Import Rules
 
 **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
-
 
 > **Verified from**: Static analysis of all `.py` files in `flext-core` and consuming
 > projects (`flext-auth`, `flext-cli`, `flext-ldap`) on 2026-02-17.
@@ -305,6 +307,7 @@ from flext_core.protocols import FlextProtocols
 ```
 
 If a circular import exists, fix the architecture:
+
 1. Move the offending code to a lower tier module.
 2. Use protocol-based decoupling (`protocols.py`).
 3. Use dependency injection via `FlextContainer`.
@@ -391,6 +394,7 @@ c = FlextProjectConstants                  # single, clear assignment
 ```
 
 This applies to ALL facade pairs:
+
 - `from flext_core import FlextConstants` + `c = FlextProjectConstants`
 - `from flext_core import FlextModels` + `m = FlextProjectModels`
 - `from flext_core import FlextProtocols` + `p = FlextProjectProtocols`

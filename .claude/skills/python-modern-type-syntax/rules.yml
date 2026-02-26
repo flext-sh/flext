@@ -2,47 +2,48 @@ skill: python-modern-type-syntax
 description: Detect legacy typing constructs (Union, Optional) replaceable by modern 3.10+ syntax.
 scan_targets:
   include:
-  - '**/*.py'
+    - "**/*.py"
   exclude:
-  - '**/typings.py'
+    - "**/typings.py"
   projects: []
 rules:
-- id: no-union-import
-  type: ast-grep
-  severity: warning
-  group: modern_syntax
-  description: "Import of Union from typing \u2014 use X | Y syntax instead."
-  fix_auto: false
-  fix_instruction: Remove Union import; use X | Y union syntax (Python 3.10+).
-  file: rules/no-union-import.yml
-- id: no-optional-import
-  type: ast-grep
-  severity: warning
-  group: modern_syntax
-  description: "Import of Optional from typing \u2014 use X | None syntax instead."
-  fix_auto: false
-  fix_instruction: Remove Optional import; use X | None syntax (Python 3.10+).
-  file: rules/no-optional-import.yml
-- id: no-union-annotation
-  type: ast-grep
-  severity: warning
-  group: modern_syntax
-  description: "Usage of Union[] \u2014 use X | Y syntax instead."
-  fix_auto: true
-  fix_type: ast-grep
-  fix_instruction: Auto-rewrites Union[X, Y] -> X | Y for two-type unions. Multi-type or nested unions require manual fix.
-  file: rules/no-union-annotation.yml
-  fix_file: rules/no-union-annotation-fix.yml
-- id: no-optional-annotation
-  type: ast-grep
-  severity: warning
-  group: modern_syntax
-  description: "Usage of Optional[] \u2014 use X | None syntax instead."
-  fix_auto: true
-  fix_type: ast-grep
-  fix_instruction: Auto-rewrites Optional[X] -> X | None for simple types. Nested generics (Optional[Dict[str, int]]) require
-    manual fix.
-  file: rules/no-optional-annotation.yml
-  fix_file: rules/no-optional-annotation-fix.yml
+  - id: no-union-import
+    type: ast-grep
+    severity: warning
+    group: modern_syntax
+    description: "Import of Union from typing \u2014 use X | Y syntax instead."
+    fix_auto: false
+    fix_instruction: Remove Union import; use X | Y union syntax (Python 3.10+).
+    file: rules/no-union-import.yml
+  - id: no-optional-import
+    type: ast-grep
+    severity: warning
+    group: modern_syntax
+    description: "Import of Optional from typing \u2014 use X | None syntax instead."
+    fix_auto: false
+    fix_instruction: Remove Optional import; use X | None syntax (Python 3.10+).
+    file: rules/no-optional-import.yml
+  - id: no-union-annotation
+    type: ast-grep
+    severity: warning
+    group: modern_syntax
+    description: "Usage of Union[] \u2014 use X | Y syntax instead."
+    fix_auto: true
+    fix_type: ast-grep
+    fix_instruction: Auto-rewrites Union[X, Y] -> X | Y for two-type unions. Multi-type or nested unions require manual fix.
+    file: rules/no-union-annotation.yml
+    fix_file: rules/no-union-annotation-fix.yml
+  - id: no-optional-annotation
+    type: ast-grep
+    severity: warning
+    group: modern_syntax
+    description: "Usage of Optional[] \u2014 use X | None syntax instead."
+    fix_auto: true
+    fix_type: ast-grep
+    fix_instruction:
+      Auto-rewrites Optional[X] -> X | None for simple types. Nested generics (Optional[Dict[str, int]]) require
+      manual fix.
+    file: rules/no-optional-annotation.yml
+    fix_file: rules/no-optional-annotation-fix.yml
 baseline:
   strategy: total

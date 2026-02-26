@@ -1,7 +1,7 @@
 # FLEXT Arc42 Architecture Documentation
 
-
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [📋 Arc42 Template Structure](#arc42-template-structure)
   - [1. [Introduction and Goals](./01-introduction-and-goals.md)](#1-introduction-and-goals01-introduction-and-goalsmd)
@@ -33,7 +33,6 @@
 <!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
-
 
 ## Table of Contents
 

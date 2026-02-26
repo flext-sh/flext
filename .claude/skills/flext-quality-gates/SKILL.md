@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Standardized Make Gate Surface](#standardized-make-gate-surface)
 - [Workspace Automation Selectors](#workspace-automation-selectors)
 - [Thresholds Summary](#thresholds-summary)
@@ -6,14 +7,15 @@
 <!-- TOC END -->
 
 ---
+
 name: flext-quality-gates
 description: Mandatory verification gates with exact tool commands, thresholds, and configuration sources from base.mk and pyproject.toml
+
 ---
 
 # FLEXT Quality Gates
 
 **Reviewed**: 2026-02-19 | **Scope**: Coverage source-of-truth migration to pyproject.toml
-
 
 > **Source of truth**: Verified from `base.mk` (`check`, `test`, and `validate` targets), `ruff-shared.toml`,
 > and individual `pyproject.toml` files on 2026-02-19.
@@ -67,25 +69,25 @@ Selector contract:
 
 ## Thresholds Summary
 
-| Metric | Value | Source |
-| --- | --- | --- |
-| Line length | 88 | `ruff-shared.toml` `line-length` setting |
-| Python target | 3.13 | `ruff-shared.toml` `target-version` setting |
-| Coverage min | Per-project (see `fail_under`) | `pyproject.toml` `[tool.coverage.report] fail_under` |
-| Docstring min | 80% | `base.mk` variable `DOCSTRING_MIN` |
-| Max cyclomatic complexity | 10 | `base.mk` variable `COMPLEXITY_MAX` |
-| Max cognitive complexity | 15 | `base.mk` complexipy gate parameters |
-| Dead code confidence | 80% | `base.mk` vulture gate parameters |
+| Metric                    | Value                          | Source                                               |
+| ------------------------- | ------------------------------ | ---------------------------------------------------- |
+| Line length               | 88                             | `ruff-shared.toml` `line-length` setting             |
+| Python target             | 3.13                           | `ruff-shared.toml` `target-version` setting          |
+| Coverage min              | Per-project (see `fail_under`) | `pyproject.toml` `[tool.coverage.report] fail_under` |
+| Docstring min             | 80%                            | `base.mk` variable `DOCSTRING_MIN`                   |
+| Max cyclomatic complexity | 10                             | `base.mk` variable `COMPLEXITY_MAX`                  |
+| Max cognitive complexity  | 15                             | `base.mk` complexipy gate parameters                 |
+| Dead code confidence      | 80%                            | `base.mk` vulture gate parameters                    |
 
 ---
 
 ## When to Run Which Gate
 
-| Change Type | Required Gates |
-| --- | --- |
-| Any code change | `make check` |
-| Before PR/commit | `make validate` |
-| Type/model changes | `make check && make test` |
+| Change Type        | Required Gates                    |
+| ------------------ | --------------------------------- |
+| Any code change    | `make check`                      |
+| Before PR/commit   | `make validate`                   |
+| Type/model changes | `make check && make test`         |
 | Security-sensitive | `make security` + `make validate` |
-| New public API | `make validate` + `make test` |
-| Docs only | `make docs` |
+| New public API     | `make validate` + `make test`     |
+| Docs only          | `make docs`                       |

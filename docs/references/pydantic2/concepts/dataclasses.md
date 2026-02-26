@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Dataclass config](#dataclass-config)
 - [Rebuilding dataclass schema](#rebuilding-dataclass-schema)
 - [Stdlib dataclasses and Pydantic dataclasses](#stdlib-dataclasses-and-pydantic-dataclasses)

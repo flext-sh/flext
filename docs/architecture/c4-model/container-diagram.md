@@ -1,7 +1,7 @@
 # FLEXT Container Diagram
 
-
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [Container Diagram](#container-diagram)
@@ -27,7 +27,7 @@
   - [Frameworks and Libraries](#frameworks-and-libraries)
   - [Data Storage](#data-storage)
   - [Integration Protocols](#integration-protocols)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 ## Table of Contents
 

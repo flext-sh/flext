@@ -1,7 +1,7 @@
 # Code Generation with datamodel-code-generator
 
-
 <!-- TOC START -->
+
 - [Installation](#installation)
 - [Example](#example)
 <!-- TOC END -->

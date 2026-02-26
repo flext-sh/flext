@@ -1,7 +1,7 @@
 # FLEXT Tap LDAP
 
-
 <!-- TOC START -->
+
 - [Status & health](#status-health)
 - [Quick start](#quick-start)
 - [Architecture & patterns](#architecture-patterns)

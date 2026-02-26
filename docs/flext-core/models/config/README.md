@@ -1,7 +1,7 @@
 # FlextModels · Configurações de Processamento
 
-
 <!-- TOC START -->
+
 - [Componentes](#componentes)
   - [`ProcessingRequest`](#processingrequest)
   - [`RetryConfiguration`](#retryconfiguration)
@@ -10,7 +10,7 @@
   - [`HandlerExecutionConfig`](#handlerexecutionconfig)
   - [`MiddlewareConfig`](#middlewareconfig)
   - [`RateLimiterState`](#ratelimiterstate)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 Essas estruturas encapsulam o contrato de configuração usado por orquestradores, handlers e middleware no FLEXT. Todas foram levantadas via AST em `flext_core/models.py` e auditadas com busca estática (testes ignorados) para confirmar o uso real.
 

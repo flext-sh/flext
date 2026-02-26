@@ -1,7 +1,7 @@
 # File Validation
 
-
 <!-- TOC START -->
+
 - [JSON data](#json-data)
 - [JSON lines files](#json-lines-files)
 - [CSV files](#csv-files)

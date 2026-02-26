@@ -2,30 +2,31 @@ skill: lib-pydantic-settings
 description: Enforce SettingsConfigDict patterns for FLEXT settings models.
 scan_targets:
   include:
-  - '**/settings.py'
+    - "**/settings.py"
   exclude: []
   projects: []
 rules:
-- id: ban-legacy-config-class
-  type: ast-grep
-  file: rules/legacy-config.yml
-  severity: error
-  group: pydantic_settings
-  description: Legacy Pydantic class Config is banned in settings modules.
-  count_by: rule_id
-  fix_auto: true
-  fix_type: ast-grep
-  fix_file: rules/legacy-config-fix.yml
-  fix_instruction: Auto-rewrite class Config blocks to model_config = SettingsConfigDict(); then fill explicit settings keys
-    as needed.
-- id: require-env-prefix
-  type: ast-grep
-  match: absent
-  severity: warning
-  group: pydantic_settings
-  description: Settings modules should define env_prefix explicitly.
-  fix_auto: false
-  fix_instruction: Define env_prefix in SettingsConfigDict for each settings model.
-  file: rules/require-env-prefix.yml
+  - id: ban-legacy-config-class
+    type: ast-grep
+    file: rules/legacy-config.yml
+    severity: error
+    group: pydantic_settings
+    description: Legacy Pydantic class Config is banned in settings modules.
+    count_by: rule_id
+    fix_auto: true
+    fix_type: ast-grep
+    fix_file: rules/legacy-config-fix.yml
+    fix_instruction:
+      Auto-rewrite class Config blocks to model_config = SettingsConfigDict(); then fill explicit settings keys
+      as needed.
+  - id: require-env-prefix
+    type: ast-grep
+    match: absent
+    severity: warning
+    group: pydantic_settings
+    description: Settings modules should define env_prefix explicitly.
+    fix_auto: false
+    fix_instruction: Define env_prefix in SettingsConfigDict for each settings model.
+    file: rules/require-env-prefix.yml
 baseline:
   strategy: total
