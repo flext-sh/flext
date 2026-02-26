@@ -117,24 +117,26 @@ define ENFORCE_WORKSPACE_VENV
 if [ "$(FLEXT_MODE)" = "workspace" ]; then \
 	if [ -d "$(WORKSPACE_ROOT)/.venv" ]; then \
 		if [ -d ".venv" ] && [ "$(CURDIR)" != "$(WORKSPACE_ROOT)" ]; then \
-			echo "Enforcing workspace venv: removing local .venv in $(CURDIR)"; \
+			echo "[preflight] Removing local .venv in $(CURDIR) (workspace venv enforced)"; \
 			rm -rf .venv; \
 			if [ -d ".venv" ]; then \
-				echo "ERROR: unable to remove local .venv in $(CURDIR)"; \
+				echo "ERROR: [preflight] Unable to remove local .venv in $(CURDIR)"; \
 				exit 1; \
 			fi; \
 		fi; \
 	elif [ "$(CURDIR)" = "$(WORKSPACE_ROOT)" ]; then \
-		echo "ERROR: workspace .venv not found at $(ACTIVE_VENV). Run 'make setup' in workspace root."; \
+		echo "ERROR: [preflight] Workspace venv not found. Run 'make setup' at workspace root."; \
 		exit 1; \
 	elif [ "$(filter setup,$(MAKECMDGOALS))" != "setup" ] && [ ! -d "$(ACTIVE_VENV)" ]; then \
-		echo "ERROR: workspace .venv not found; fallback local .venv missing at $(ACTIVE_VENV). Run 'make setup' in $(PROJECT_NAME)."; \
+		echo "ERROR: [preflight] No venv found (workspace or local). Run 'make setup' in $(PROJECT_NAME)."; \
 		exit 1; \
 	else \
-		echo "INFO: workspace .venv not found; using project-local fallback in $(PROJECT_NAME)."; \
+		echo "INFO: [preflight] Using project-local venv for $(PROJECT_NAME) (workspace venv not found)."; \
 	fi; \
+elif [ "$(FLEXT_MODE)" = "standalone" ]; then \
+	echo "INFO: [preflight] Running in standalone mode (workspace features unavailable)."; \
 elif [ "$(filter setup,$(MAKECMDGOALS))" != "setup" ] && [ ! -d "$(ACTIVE_VENV)" ]; then \
-	echo "ERROR: local .venv not found at $(ACTIVE_VENV). Run 'make setup' in $(PROJECT_NAME)."; \
+	echo "ERROR: [preflight] No venv found at $(ACTIVE_VENV). Run 'make setup' in $(PROJECT_NAME)."; \
 	exit 1; \
 fi
 endef
@@ -168,47 +170,50 @@ define AUTO_SYNC_BASE_AND_SCRIPTS
 if [ "$(FLEXT_MODE)" = "workspace" ] && [ "$(CURDIR)" != "$(WORKSPACE_ROOT)" ]; then \
 	python -m flext_infra workspace sync \
 		--project-root "$(CURDIR)"; \
+elif [ "$(FLEXT_MODE)" = "standalone" ]; then \
+	echo "INFO: [preflight] Standalone mode: skipping workspace dependency sync."; \
 fi
 endef
 
-_preflight: ## Internal preflight for standardized verbs
+_preflight: ## Preflight: sync base.mk, check venv, auto-adjust files
 	$(Q)$(AUTO_SYNC_BASE_AND_SCRIPTS)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(AUTO_ADJUST_PROJECT)
 
 help: ## Show commands
-	$(Q)echo "$(PROJECT_NAME) - FLEXT Project"
+	$(Q)echo "================================================"
+	$(Q)echo "  $(PROJECT_NAME)"
+	$(Q)echo "================================================"
 	$(Q)echo ""
 	$(Q)echo "Core verbs:"
-	$(Q)echo "  setup      Install dependencies and hooks (with automatic md/go adjustment)"
-	$(Q)echo "  build      Build distributable artifacts"
-	$(Q)echo "  check      Run the 8 lint gates"
-	$(Q)echo "  security   Run all security checks"
-	$(Q)echo "  format     Run all formatting (including automatic md/go adjustment)"
-	$(Q)echo "  docs       Build docs"
-	$(Q)echo "  test       Run pytest only"
-	$(Q)echo "  validate   Run validate gates only (use FIX=1 to auto-fix first)"
-	$(Q)echo "  daemon-start-mypy   Start dmypy daemon for this project"
-	$(Q)echo "  daemon-status-mypy  Show dmypy daemon status for this project"
-	$(Q)echo "  daemon-stop-mypy    Stop dmypy daemon for this project"
-	$(Q)echo "  daemon-start-pyright   Start pyright daemon in watch mode"
-	$(Q)echo "  daemon-status-pyright  Show pyright daemon status"
-	$(Q)echo "  daemon-stop-pyright    Stop pyright daemon"
-	$(Q)echo "  daemon-start        Start all daemons (mypy + pyright)"
-	$(Q)echo "  daemon-status       Show status of all daemons"
-	$(Q)echo "  daemon-stop         Stop all daemons (mypy + pyright)"
-	$(Q)echo "  daemon-restart      Restart all daemons"
-	$(Q)echo "  check-fast          Run lint gates in parallel (use: make -j4 check-fast)"
-	$(Q)echo "  pr         Manage this repository PR (default: status)"
-	$(Q)echo "  clean      Clean build/test/type artifacts"
+	$(Q)printf "  %-14s %s\n" "setup"     "Install dependencies and hooks"
+	$(Q)printf "  %-14s %s\n" "build"     "Build distributable artifacts"
+	$(Q)printf "  %-14s %s\n" "check"     "Run lint gates (CHECK_GATES= to select)"
+	$(Q)printf "  %-14s %s\n" "security"  "Run all security checks"
+	$(Q)printf "  %-14s %s\n" "format"    "Run all formatting"
+	$(Q)printf "  %-14s %s\n" "docs"      "Build docs (DOCS_PHASE= to select)"
+	$(Q)printf "  %-14s %s\n" "test"      "Run pytest (PYTEST_ARGS= for options)"
+	$(Q)printf "  %-14s %s\n" "validate"  "Run validate gates (FIX=1 to auto-fix)"
+	$(Q)printf "  %-14s %s\n" "clean"     "Clean build/test/type artifacts"
+	$(Q)echo ""
+	$(Q)echo "Daemon management:"
+	$(Q)printf "  %-16s %s\n" "daemon-start"   "Start all daemons (mypy + pyright)"
+	$(Q)printf "  %-16s %s\n" "daemon-stop"    "Stop all daemons"
+	$(Q)printf "  %-16s %s\n" "daemon-status"  "Show status of all daemons"
+	$(Q)printf "  %-16s %s\n" "daemon-restart" "Restart all daemons"
+	$(Q)echo "  Also: daemon-{start,stop,status}-{mypy,pyright}"
+	$(Q)echo ""
+	$(Q)echo "Other:"
+	$(Q)printf "  %-14s %s\n" "check-fast" "Parallel lint (make -j4 check-fast)"
+	$(Q)printf "  %-14s %s\n" "pr"         "Manage PRs (PR_ACTION=status)"
 	$(Q)echo ""
 	$(Q)echo "PR variables:"
 	$(Q)echo "  PR_ACTION=status|create|view|checks|merge|close"
-	$(Q)echo "  PR_BASE=main PR_HEAD=<branch> PR_NUMBER=<id>"
-	$(Q)echo "  PR_TITLE='title' PR_BODY='body' PR_DRAFT=0|1"
-	$(Q)echo "  PR_MERGE_METHOD=squash|merge|rebase PR_AUTO=0|1 PR_DELETE_BRANCH=0|1"
-	$(Q)echo "  PR_CHECKS_STRICT=0|1 (checks: fail command only when strict=1)"
-	$(Q)echo "  PR_RELEASE_ON_MERGE=0|1 (merge: dispatch release workflow when branch maps to semver)"
+	$(Q)echo "  PR_BASE=main  PR_HEAD=<branch>  PR_NUMBER=<id>"
+	$(Q)echo "  PR_TITLE='...'  PR_BODY='...'  PR_DRAFT=0|1"
+	$(Q)echo "  PR_MERGE_METHOD=squash|merge|rebase  PR_AUTO=0|1"
+	$(Q)echo "  PR_DELETE_BRANCH=0|1  PR_CHECKS_STRICT=0|1"
+	$(Q)echo "  PR_RELEASE_ON_MERGE=0|1"
 
 setup: ## Complete setup
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
@@ -228,10 +233,14 @@ setup: ## Complete setup
 build: ## Build distributable artifacts
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
 		mkdir -p .reports/build; \
+		build_start=$$(date +%s); \
 		go build -o .reports/build/$(PROJECT_NAME) ./...; \
+		echo "Build complete: $(PROJECT_NAME) ($$(($$(date +%s) - $$build_start))s)"; \
 		exit 0; \
 	fi
-	$(Q)$(POETRY) build
+	$(Q)build_start=$$(date +%s); \
+	$(POETRY) build; \
+	echo "Build complete: $(PROJECT_NAME) ($$(($$(date +%s) - $$build_start))s)"
 
 daemon-start-mypy: ## Start dmypy daemon for this project
 	$(Q)mkdir -p .dmypy
@@ -403,6 +412,7 @@ format: ## Run all formatting
 	$(Q)if [ -f go.mod ] && [ -n "$$(find . -type f -name '*.go' ! -path './.git/*')" ]; then \
 		find . -type f -name '*.go' ! -path './.git/*' -print0 | xargs -0 gofmt -w; \
 	fi
+	$(Q)echo "Format complete: $(PROJECT_NAME)"
 
 docs: ## Build docs
 	$(Q)if python3 -c "import flext_infra.docs" >/dev/null 2>&1; then \
@@ -563,3 +573,4 @@ clean: ## Clean artifacts
 		.pyright/ .pytype/ .pyrefly-report.json .pyrefly-output.txt
 	$(Q)find . -type d -name __pycache__ -exec rm -rf {} +
 	$(Q)find . -type f -name "*.pyc" -delete
+	$(Q)echo "Clean complete: $(PROJECT_NAME)"
