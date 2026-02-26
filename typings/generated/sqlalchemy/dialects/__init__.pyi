@@ -1,4 +1,3 @@
-import sqlalchemy.util as util
 
 __all__ = ['mssql', 'mysql', 'oracle', 'postgresql', 'sqlite']
 

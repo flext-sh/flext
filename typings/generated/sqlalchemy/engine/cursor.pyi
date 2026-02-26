@@ -1,7 +1,10 @@
+from collections import deque
+from collections.abc import Iterable, Sequence
+from typing import Any, ClassVar as _ClassVar, NoReturn, Self
+
 import sqlalchemy.engine.result
 from _typeshed import Incomplete
 from sqlalchemy.engine.result import IteratorResult, MergedResult, Result
-from typing import Any, ClassVar as _ClassVar, Deque, Iterable, NoReturn, Self, Sequence
 
 __conditional_annotations__: set
 TYPE_CHECKING: bool
@@ -51,7 +54,7 @@ class CursorFetchStrategy(ResultFetchStrategy):
     def fetchall(self, result: CursorResult[Any], dbapi_cursor: DBAPICursor) -> Any: ...
 
 class BufferedRowCursorFetchStrategy(CursorFetchStrategy):
-    def __init__(self, dbapi_cursor: DBAPICursor, execution_options: CoreExecuteOptionsParameter, growth_factor: int = ..., initial_buffer: Deque[Any] | None = ...) -> None: ...
+    def __init__(self, dbapi_cursor: DBAPICursor, execution_options: CoreExecuteOptionsParameter, growth_factor: int = ..., initial_buffer: deque[Any] | None = ...) -> None: ...
     @classmethod
     def create(cls, result: CursorResult[Any]) -> BufferedRowCursorFetchStrategy: ...
     def yield_per(self, result: CursorResult[Any], dbapi_cursor: DBAPICursor, num: int) -> None: ...

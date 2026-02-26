@@ -1,9 +1,10 @@
 import _io
-import click.core
-import click.types
 import inspect
 import typing
 from typing import Any, ClassVar
+
+import click.core
+import click.types
 
 TYPE_CHECKING: bool
 Required: ellipsis

@@ -1,10 +1,10 @@
-import sqlalchemy.event as event
-import sqlalchemy.types as types
 import typing
+from collections.abc import Iterable
+from typing import AbstractSet, Any, ClassVar, SupportsIndex, _TypeEngineArgument
+
 from sqlalchemy.orm._typing import _O, _T
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.type_api import TypeEngine
-from typing import AbstractSet, Any, ClassVar, Iterable, SupportsIndex, _TypeEngineArgument
 
 TYPE_CHECKING: bool
 

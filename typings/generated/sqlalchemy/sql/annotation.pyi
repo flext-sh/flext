@@ -1,14 +1,13 @@
+from typing import Any, ClassVar, _AnnotationDict
+
 import sqlalchemy.cyextension.immutabledict
 import sqlalchemy.sql.crud
 import sqlalchemy.sql.elements
 import sqlalchemy.sql.functions
-import sqlalchemy.sql.operators as operators
 import sqlalchemy.sql.schema
 import sqlalchemy.sql.selectable
 import sqlalchemy.sql.visitors
-import sqlalchemy.util as util
 from _typeshed import Incomplete
-from typing import Any, ClassVar, _AnnotationDict
 
 __conditional_annotations__: set
 TYPE_CHECKING: bool
@@ -28,7 +27,7 @@ class Annotated(SupportsAnnotations):
     def __init__(self, element: SupportsWrappingAnnotations, values: _AnnotationDict) -> None: ...
     def __reduce__(self) -> tuple[type[Annotated], tuple[Any, ...]]: ...
     def __hash__(self) -> int: ...
-    def __eq__(self, other: Any) -> bool: ...
+    def __eq__(self, other: object) -> bool: ...
 annotated_classes: dict
 
 class AnnotatedColumnElement(sqlalchemy.sql.elements.AnnotatedColumnElement, sqlalchemy.sql.elements.ColumnElement):

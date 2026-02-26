@@ -1,14 +1,26 @@
-import DBAPIModule
 import _abc
 import enum
+import typing
+from collections.abc import Awaitable, Callable, Collection, Iterable, Sequence
+from typing import (
+    Any,
+    ClassVar as _ClassVar,
+    ConnectArgsType,
+    CoreExecuteOptionsParameter,
+    IsolationLevel,
+    TableKey,
+    _DBAPIMultiExecuteParams,
+    _DBAPISingleExecuteParams,
+    _GenericSetInputSizesType,
+)
+
+import DBAPIModule
 import sqlalchemy.cyextension.immutabledict
 import sqlalchemy.event.base
 import sqlalchemy.event.registry
-import typing
 import typing_extensions
 from _typeshed import Incomplete
 from sqlalchemy.pool.base import Pool, PoolProxiedConnection
-from typing import Any, Awaitable, Callable, ClassVar as _ClassVar, Collection, ConnectArgsType, CoreExecuteOptionsParameter, IsolationLevel, Iterable, Sequence, TableKey, _DBAPIMultiExecuteParams, _DBAPISingleExecuteParams, _GenericSetInputSizesType
 
 TYPE_CHECKING: bool
 

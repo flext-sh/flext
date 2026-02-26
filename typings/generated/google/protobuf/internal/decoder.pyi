@@ -1,7 +1,3 @@
-import internal.invalid.containers as containers
-import internal.invalid.encoder as encoder
-import internal.invalid.wire_format as wire_format
-import google.protobuf.message as message
 
 def IsDefaultScalarValue(value): ...
 def ReadTag(buffer, pos): ...

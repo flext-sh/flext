@@ -1,7 +1,8 @@
-import google._upb._message
 import types
-from _typeshed import Incomplete
 from typing import ClassVar
+
+import google._upb._message
+from _typeshed import Incomplete
 
 class Error(Exception): ...
 class TypeTransformationError(Error): ...

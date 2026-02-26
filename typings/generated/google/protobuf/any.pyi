@@ -1,6 +1,5 @@
 import google.protobuf.any_pb2
 import google.protobuf.descriptor
-import google.protobuf.descriptor as descriptor
 import google.protobuf.message
 
 def pack(msg: google.protobuf.message.Message, type_url_prefix=..., deterministic=...) -> google.protobuf.any_pb2.Any: ...

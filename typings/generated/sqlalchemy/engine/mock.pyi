@@ -1,5 +1,5 @@
-import sqlalchemy.engine.url as _url
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 class MockConnection:
     def __init__(self, dialect: Dialect, execute: Callable[..., Any]) -> None: ...

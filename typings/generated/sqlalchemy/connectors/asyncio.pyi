@@ -1,9 +1,11 @@
 import _abc
+import typing
+from collections.abc import AsyncIterator, Iterator, Sequence
+from typing import Any, ClassVar
+
 import sqlalchemy.cyextension.immutabledict
 import sqlalchemy.engine.interfaces
-import typing
 from _typeshed import Incomplete
-from typing import Any, AsyncIterator, ClassVar, Iterator, Sequence
 
 TYPE_CHECKING: bool
 EMPTY_DICT: sqlalchemy.cyextension.immutabledict.immutabledict

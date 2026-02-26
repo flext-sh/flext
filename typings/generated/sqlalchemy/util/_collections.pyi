@@ -1,12 +1,26 @@
 import _abc
 import collections.abc
-import sqlalchemy.cyextension.collections
-import sqlalchemy.cyextension.immutabledict
 import types
 import typing
+from collections.abc import (
+    Callable,
+    Container,
+    Iterable,
+    Iterator,
+    Mapping,
+    Sequence,
+    ValuesView,
+)
+from typing import (
+    Any,
+    ClassVar,
+    NoReturn,
+)
+
+import sqlalchemy.cyextension.collections
+import sqlalchemy.cyextension.immutabledict
 from _typeshed import Incomplete
 from sqlalchemy.cyextension.immutabledict import immutabledict
-from typing import Any, Callable, ClassVar, Container, Iterable, Iterator, Mapping, NoReturn, Sequence, ValuesView
 
 __conditional_annotations__: set
 HAS_CYEXTENSION: bool

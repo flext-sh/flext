@@ -1,27 +1,17 @@
+from collections.abc import Iterable
+from typing import Any, ClassVar
+
 import QueryContext
 import sqlalchemy.cyextension.immutabledict
-import sqlalchemy.exc as sa_exc
-import sqlalchemy.future as future
-import sqlalchemy.orm.attributes as attributes
-import sqlalchemy.orm.interfaces as interfaces
-import sqlalchemy.orm.loading as loading
 import sqlalchemy.orm.path_registry
-import sqlalchemy.sql as sql
 import sqlalchemy.sql.base
-import sqlalchemy.sql.coercions as coercions
 import sqlalchemy.sql.elements
-import sqlalchemy.sql.expression as expression
-import sqlalchemy.sql.roles as roles
 import sqlalchemy.sql.selectable
-import sqlalchemy.sql.util as sql_util
-import sqlalchemy.sql.visitors as visitors
-import sqlalchemy.util as util
 from _typeshed import Incomplete
 from sqlalchemy.sql.base import CompileState, Executable
 from sqlalchemy.sql.dml import UpdateBase
 from sqlalchemy.sql.elements import TextClause
 from sqlalchemy.sql.selectable import Select
-from typing import Any, ClassVar, Iterable
 
 TYPE_CHECKING: bool
 

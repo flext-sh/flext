@@ -1,17 +1,13 @@
 import _abc
-import sqlalchemy.exc as exc
-import sqlalchemy.sql.coercions as coercions
-import sqlalchemy.sql.operators as operators
-import sqlalchemy.sql.roles as roles
-import sqlalchemy.sql.visitors
-import sqlalchemy.sql.visitors as visitors
-import sqlalchemy.util as util
 import typing
+from collections.abc import Callable, Collection, Iterator, Sequence
+from typing import AbstractSet, Any, ClassVar
+
+import sqlalchemy.sql.visitors
 from _typeshed import Incomplete
 from sqlalchemy.sql.elements import ClauseElement, ColumnClause, ColumnElement
 from sqlalchemy.sql.selectable import FromClause, TableClause
 from sqlalchemy.sql.visitors import _ET
-from typing import AbstractSet, Any, Callable, ClassVar, Collection, Iterator, Sequence
 
 TYPE_CHECKING: bool
 def join_condition(a: FromClause, b: FromClause, a_subset: FromClause | None = ..., consider_as_foreign_keys: AbstractSet[ColumnClause[Any]] | None = ...) -> ColumnElement[bool]: ...

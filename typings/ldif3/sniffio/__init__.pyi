@@ -1,4 +1,3 @@
-import threading
 from contextvars import ContextVar
 
 current_async_library_cvar: ContextVar[str | None] = ...

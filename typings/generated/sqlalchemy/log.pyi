@@ -1,5 +1,6 @@
-from _typeshed import Incomplete
 from typing import Any, ClassVar, _EchoFlagType
+
+from _typeshed import Incomplete
 
 __conditional_annotations__: set
 py311: bool

@@ -1,14 +1,14 @@
 import _thread
-import compat as compat
 import enum
 import re
-import sqlalchemy.cyextension.immutabledict
-import sqlalchemy.exc as exc
-import sqlalchemy.util._collections as _collections
 import types
 import typing
+from collections.abc import Callable, Iterator, Mapping, Sequence
+from typing import Any, ClassVar, NoReturn
+
+import compat as compat
+import sqlalchemy.cyextension.immutabledict
 from _typeshed import Incomplete
-from typing import Any, Callable, ClassVar, Iterator, Mapping, NoReturn, Sequence
 
 __conditional_annotations__: set
 TYPE_CHECKING: bool
@@ -184,7 +184,7 @@ class _hash_limit_string(str):
     @classmethod
     def __init__(cls, value: str, num: int, args: Sequence[Any]) -> _hash_limit_string: ...
     def __hash__(self) -> int: ...
-    def __eq__(self, other: Any) -> bool: ...
+    def __eq__(self, other: object) -> bool: ...
 def warn(msg: str, code: str | None = ...) -> None: ...
 def warn_limited(msg: str, args: Sequence[Any]) -> None: ...
 def tag_method_for_warnings(message: str, category: type[Warning]) -> Callable[[_F], _F]: ...

@@ -1,7 +1,7 @@
-import sqlalchemy.sql.sqltypes
-import sqlalchemy.types as sqltypes
-from sqlalchemy.dialects.postgresql.array import _pg_array
 from typing import Any, ClassVar
+
+import sqlalchemy.sql.sqltypes
+from sqlalchemy.dialects.postgresql.array import _pg_array
 
 __all__ = ['JSON', 'JSONB']
 

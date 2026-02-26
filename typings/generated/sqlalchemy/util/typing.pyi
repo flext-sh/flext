@@ -1,8 +1,16 @@
 import _abc
-import sqlalchemy.util.compat as compat
 import typing
+from collections.abc import Callable, Iterable, Mapping
+from typing import (
+    Any,
+    ClassVar,
+    NewType,
+    TypeAliasType,
+    TypeGuard,
+    _AnnotationScanType,
+)
+
 from annotationlib import ForwardRef
-from typing import Any, Callable, ClassVar, Iterable, Mapping, NewType, TypeAliasType, TypeGuard, _AnnotationScanType
 
 TYPE_CHECKING: bool
 def is_fwd_none(typ: Any) -> bool: ...

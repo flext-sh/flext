@@ -1,7 +1,6 @@
-import sqlalchemy.util as util
-from typing import Collection, Iterable, Iterator, Sequence
+from collections.abc import Collection, Iterable, Iterator, Sequence
 
-__all__ = ['sort', 'sort_as_subsets', 'find_cycles']
+__all__ = ['find_cycles', 'sort', 'sort_as_subsets']
 
 def sort_as_subsets(tuples: Collection[tuple[_T, _T]], allitems: Collection[_T]) -> Iterator[Sequence[_T]]: ...
 def sort(tuples: Collection[tuple[_T, _T]], allitems: Collection[_T], deterministic_order: bool = ...) -> Iterator[_T]: ...

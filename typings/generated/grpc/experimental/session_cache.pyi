@@ -1,4 +1,3 @@
-import grpc._cython.cygrpc as _cygrpc
 
 def ssl_session_cache_lru(capacity): ...
 

@@ -1,4 +1,6 @@
 import re
+from typing import ClassVar
+
 import sqlalchemy.cyextension.immutabledict
 import sqlalchemy.dialects.postgresql.array
 import sqlalchemy.dialects.postgresql.base
@@ -6,15 +8,9 @@ import sqlalchemy.dialects.postgresql.json
 import sqlalchemy.dialects.postgresql.named_types
 import sqlalchemy.dialects.postgresql.pg_catalog
 import sqlalchemy.dialects.postgresql.ranges
-import sqlalchemy.dialects.postgresql.ranges as ranges
 import sqlalchemy.dialects.postgresql.types
-import sqlalchemy.engine.processors as processors
-import sqlalchemy.exc as exc
 import sqlalchemy.sql.sqltypes
-import sqlalchemy.sql.sqltypes as sqltypes
-import sqlalchemy.util as util
 from _typeshed import Incomplete
-from typing import ClassVar
 
 class _PGString(sqlalchemy.sql.sqltypes.String):
     render_bind_cast: ClassVar[bool] = ...

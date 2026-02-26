@@ -1,33 +1,32 @@
+import logging
+import typing
+from collections.abc import Callable, Iterable, Iterator, Sequence
+from typing import (
+    Any,
+    ClassVar,
+    Literal,
+    Self,
+    _FromClauseArgument,
+)
+
 import _NoArg
 import attributes as attributes
-import logging
 import sqlalchemy.cyextension.immutabledict
 import sqlalchemy.event.base
 import sqlalchemy.event.registry
-import sqlalchemy.exc as sa_exc
-import sqlalchemy.inspection as inspection
 import sqlalchemy.log
-import sqlalchemy.log as log
 import sqlalchemy.orm.context
 import sqlalchemy.orm.interfaces
-import sqlalchemy.orm.interfaces as interfaces
-import sqlalchemy.orm.loading as loading
-import sqlalchemy.orm.util as orm_util
-import sqlalchemy.sql as sql
 import sqlalchemy.sql.annotation
 import sqlalchemy.sql.base
-import sqlalchemy.sql.coercions as coercions
-import sqlalchemy.sql.expression as expression
-import sqlalchemy.sql.roles as roles
 import sqlalchemy.sql.selectable
-import sqlalchemy.sql.util as sql_util
-import sqlalchemy.sql.visitors as visitors
-import sqlalchemy.util as util
-import typing
 from sqlalchemy.orm._typing import _O
-from sqlalchemy.orm.context import FromStatement, ORMCompileState, QueryContext as QueryContext
+from sqlalchemy.orm.context import (
+    FromStatement,
+    ORMCompileState,
+    QueryContext as QueryContext,
+)
 from sqlalchemy.sql.selectable import Exists, Select, SelectLabelStyle
-from typing import Any, Callable, ClassVar, Iterable, Iterator, Literal, Self, Sequence, _FromClauseArgument
 
 __all__ = ['Query', 'QueryContext']
 
@@ -72,7 +71,7 @@ class Query(sqlalchemy.sql.selectable._SelectFromElements, sqlalchemy.sql.annota
     def enable_assertions(self, value: bool) -> Self: ...
     def yield_per(self, count: int) -> Self: ...
     def get(self, ident: _PKIdentityArgument) -> _T | None: ...
-    def correlate(self, *fromclauses: Literal[None, False] | _FromClauseArgument) -> Self: ...
+    def correlate(self, *fromclauses: Literal[False] | None | _FromClauseArgument) -> Self: ...
     def autoflush(self, setting: bool) -> Self: ...
     def populate_existing(self) -> Self: ...
     def with_parent(self, instance: object, property: attributes.QueryableAttribute[Any] | None = ..., from_entity: _ExternalEntityType[Any] | None = ...) -> Self: ...
@@ -92,8 +91,8 @@ class Query(sqlalchemy.sql.selectable._SelectFromElements, sqlalchemy.sql.annota
     def where(self, *criterion: _ColumnExpressionArgument[bool]) -> Self: ...
     def filter(self, *criterion: _ColumnExpressionArgument[bool]) -> Self: ...
     def filter_by(self, **kwargs: Any) -> Self: ...
-    def order_by(self, _Query__first: Literal[None, False, _NoArg.NO_ARG] | _ColumnExpressionOrStrLabelArgument[Any] = ..., *clauses: _ColumnExpressionOrStrLabelArgument[Any]) -> Self: ...
-    def group_by(self, _Query__first: Literal[None, False, _NoArg.NO_ARG] | _ColumnExpressionOrStrLabelArgument[Any] = ..., *clauses: _ColumnExpressionOrStrLabelArgument[Any]) -> Self: ...
+    def order_by(self, _Query__first: Literal[False, _NoArg.NO_ARG] | None | _ColumnExpressionOrStrLabelArgument[Any] = ..., *clauses: _ColumnExpressionOrStrLabelArgument[Any]) -> Self: ...
+    def group_by(self, _Query__first: Literal[False, _NoArg.NO_ARG] | None | _ColumnExpressionOrStrLabelArgument[Any] = ..., *clauses: _ColumnExpressionOrStrLabelArgument[Any]) -> Self: ...
     def having(self, *having: _ColumnExpressionArgument[bool]) -> Self: ...
     def union(self, *q: Query[Any]) -> Self: ...
     def union_all(self, *q: Query[Any]) -> Self: ...

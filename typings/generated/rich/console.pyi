@@ -3,15 +3,16 @@ import _thread
 import abc
 import dataclasses
 import os
+import typing
+from typing import Any, ClassVar, RenderableType, RenderResult
+
 import rich.control
 import rich.measure
 import rich.style
 import rich.theme
-import typing
 from _typeshed import Incomplete
 from rich.measure import Measurement
 from rich.text import Text
-from typing import Any, ClassVar, RenderResult, RenderableType
 
 __conditional_annotations__: set
 TYPE_CHECKING: bool

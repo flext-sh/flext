@@ -1,15 +1,16 @@
-import annotated_types
 import dataclasses
-import pydantic._internal._repr
 import re
 import types
+from builtins import JsonDict
+from collections.abc import Callable, Mapping, MappingNamespace
+from typing import Any, ClassVar as _ClassVar, Literal, TypeVar, Unpack
+
+import annotated_types
+import pydantic._internal._repr
 import typing_extensions
 from _py_warnings import Deprecated
 from _typeshed import Incomplete
-from builtins import JsonDict
-from collections.abc import Callable, Mapping, MappingNamespace
 from pydantic.aliases import AliasChoices, AliasPath
-from typing import Any, ClassVar as _ClassVar, Literal, TypeVar, Unpack
 from typing_inspection.introspection import AnnotationSource
 
 __all__ = ['Field', 'FieldInfo', 'PrivateAttr', 'computed_field']
@@ -112,7 +113,7 @@ class ModelPrivateAttr(pydantic._internal._repr.Representation):
     def __getattr__(self, item: str) -> Any: ...
     def __set_name__(self, cls: type[Any], name: str) -> None: ...
     def get_default(self) -> Any: ...
-    def __eq__(self, other: Any) -> bool: ...
+    def __eq__(self, other: object) -> bool: ...
 def PrivateAttr(default: Any = ..., *, default_factory: Callable[[], Any] | None = ..., init: Literal[False] = ...) -> Any: ...
 
 class ComputedFieldInfo:

@@ -1,8 +1,8 @@
+from typing import Any, ClassVar
+
 import DBAPIModule
 import sqlalchemy.dialects.mysql.mysqldb
 import sqlalchemy.dialects.mysql.types
-import sqlalchemy.util as util
-from typing import Any, ClassVar
 
 TYPE_CHECKING: bool
 

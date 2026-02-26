@@ -1,8 +1,9 @@
 import _abc
 import abc
 import enum
-from _typeshed import Incomplete
 from typing import ClassVar
+
+from _typeshed import Incomplete
 
 class NoSuchMethodError(Exception):
     def __init__(self, code, details) -> None: ...

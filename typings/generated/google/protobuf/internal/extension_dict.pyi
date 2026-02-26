@@ -1,4 +1,3 @@
-import internal.invalid.type_checkers as type_checkers
 
 class _ExtensionDict:
     def __init__(self, extended_message) -> None: ...

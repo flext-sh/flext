@@ -1,9 +1,9 @@
 import enum
-import psutil._ntuples as ntp
-from _typeshed import Incomplete
 from typing import ClassVar
 
-__all__ = ['pid_exists', 'wait_pid', 'disk_usage', 'get_terminal_map']
+from _typeshed import Incomplete
+
+__all__ = ['disk_usage', 'get_terminal_map', 'pid_exists', 'wait_pid']
 
 def pid_exists(pid): ...
 

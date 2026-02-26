@@ -1,12 +1,13 @@
 import _abc
 import abc
+import typing
+from typing import ClassVar
+
 import rich.console
 import rich.highlighter
 import rich.region
-import typing
 from _typeshed import Incomplete
 from rich.console import Console
-from typing import ClassVar
 
 TYPE_CHECKING: bool
 

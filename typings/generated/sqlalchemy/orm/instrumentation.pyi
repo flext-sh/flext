@@ -1,17 +1,16 @@
 import _abc
-import base as base
 import collections as collections
+import typing
+from collections.abc import Callable, Collection
+from typing import Any, ClassVar
+
+import base as base
 import sqlalchemy.event.base
 import sqlalchemy.event.registry
-import sqlalchemy.orm.exc as exc
-import sqlalchemy.orm.interfaces as interfaces
-import sqlalchemy.util as util
 import sqlalchemy.util.langhelpers
 import state as state
-import typing
 from _typeshed import Incomplete
 from sqlalchemy.orm._typing import _O
-from typing import Any, Callable, ClassVar, Collection
 
 TYPE_CHECKING: bool
 
@@ -54,7 +53,7 @@ class ClassManager(sqlalchemy.util.langhelpers.HasMemoized, dict, typing.Generic
     mapper: Incomplete
     def __init__(self, class_) -> None: ...
     def __hash__(self) -> int: ...
-    def __eq__(self, other: Any) -> bool: ...
+    def __eq__(self, other: object) -> bool: ...
     def manage(self): ...
     def manager_getter(self): ...
     def state_getter(self): ...

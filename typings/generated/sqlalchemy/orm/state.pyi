@@ -1,17 +1,13 @@
 import _abc
-import sqlalchemy.cyextension.immutabledict
-import sqlalchemy.exc as sa_exc
-import sqlalchemy.inspection as inspection
-import sqlalchemy.orm.base
-import sqlalchemy.orm.base as base
-import sqlalchemy.orm.exc as orm_exc
-import sqlalchemy.orm.interfaces as interfaces
-import sqlalchemy.orm.path_registry
-import sqlalchemy.util as util
 import typing
+from collections.abc import Iterable
+from typing import Any, ClassVar
+
+import sqlalchemy.cyextension.immutabledict
+import sqlalchemy.orm.base
+import sqlalchemy.orm.path_registry
 from _typeshed import Incomplete
 from sqlalchemy.orm._typing import _O
-from typing import Any, ClassVar, Iterable
 
 __conditional_annotations__: set
 TYPE_CHECKING: bool

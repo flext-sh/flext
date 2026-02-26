@@ -1,19 +1,11 @@
 import _abc
-import grpc as grpc
-import grpc._common as _common
-import grpc.beta._metadata as _metadata
-import grpc.beta.interfaces
-import grpc.beta.interfaces as interfaces
-import grpc.framework.common.cardinality as cardinality
-import grpc.framework.common.style as style
-import grpc.framework.foundation.abandonment as abandonment
-import grpc.framework.foundation.logging_pool as logging_pool
-import grpc.framework.foundation.stream
-import grpc.framework.foundation.stream as stream
-import grpc.framework.interfaces.face.face
-import grpc.framework.interfaces.face.face as face
 import types
 from typing import ClassVar
+
+import grpc as grpc
+import grpc.beta.interfaces
+import grpc.framework.foundation.stream
+import grpc.framework.interfaces.face.face
 
 class _ServerProtocolContext(grpc.beta.interfaces.GRPCServicerContext):
     __abstractmethods__: ClassVar[frozenset] = ...

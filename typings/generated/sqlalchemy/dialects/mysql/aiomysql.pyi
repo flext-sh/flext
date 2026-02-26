@@ -1,10 +1,9 @@
+from builtins import ModuleType
+from typing import Any, ClassVar
+
 import DBAPIModule
 import sqlalchemy.connectors.asyncio
 import sqlalchemy.dialects.mysql.pymysql
-import sqlalchemy.pool as pool
-import sqlalchemy.util as util
-from builtins import ModuleType
-from typing import Any, ClassVar
 
 TYPE_CHECKING: bool
 

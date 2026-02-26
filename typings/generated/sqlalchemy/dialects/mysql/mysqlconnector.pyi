@@ -1,10 +1,11 @@
 import re
+from collections.abc import Sequence
+from typing import Any, ClassVar
+
 import sqlalchemy.cyextension.immutabledict
 import sqlalchemy.dialects.mysql.base
 import sqlalchemy.dialects.mysql.mariadb
 import sqlalchemy.dialects.mysql.types
-import sqlalchemy.util as util
-from typing import Any, ClassVar, Sequence
 
 TYPE_CHECKING: bool
 

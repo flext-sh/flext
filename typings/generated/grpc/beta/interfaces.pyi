@@ -1,8 +1,9 @@
 import _abc
 import abc
+from typing import ClassVar
+
 import grpc as grpc
 from _typeshed import Incomplete
-from typing import ClassVar
 
 class GRPCCallOptions:
     def __init__(self, disable_compression, subcall_of, credentials) -> None: ...

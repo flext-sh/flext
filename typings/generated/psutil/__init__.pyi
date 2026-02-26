@@ -1,10 +1,29 @@
-from . import _common as _common, _ntuples as _ntp, _ntuples as _ntuples, _pslinux as _pslinux, _pslinux as _psplatform, _psposix as _psposix, _psutil_linux as _psutil_linux
-from _typeshed import Incomplete
 from posix import getloadavg as getloadavg
-from psutil._common import NIC_DUPLEX_FULL as NIC_DUPLEX_FULL, NIC_DUPLEX_HALF as NIC_DUPLEX_HALF, NIC_DUPLEX_UNKNOWN as NIC_DUPLEX_UNKNOWN, POWER_TIME_UNKNOWN as POWER_TIME_UNKNOWN, POWER_TIME_UNLIMITED as POWER_TIME_UNLIMITED
-from psutil._pslinux import AF_LINK as AF_LINK, IOPRIO_CLASS_BE as IOPRIO_CLASS_BE, IOPRIO_CLASS_IDLE as IOPRIO_CLASS_IDLE, IOPRIO_CLASS_NONE as IOPRIO_CLASS_NONE, IOPRIO_CLASS_RT as IOPRIO_CLASS_RT
 
-__all__ = ['Error', 'NoSuchProcess', 'ZombieProcess', 'AccessDenied', 'TimeoutExpired', 'version_info', '__version__', 'STATUS_RUNNING', 'STATUS_IDLE', 'STATUS_SLEEPING', 'STATUS_DISK_SLEEP', 'STATUS_STOPPED', 'STATUS_TRACING_STOP', 'STATUS_ZOMBIE', 'STATUS_DEAD', 'STATUS_WAKING', 'STATUS_LOCKED', 'STATUS_WAITING', 'STATUS_PARKED', 'CONN_ESTABLISHED', 'CONN_SYN_SENT', 'CONN_SYN_RECV', 'CONN_FIN_WAIT1', 'CONN_FIN_WAIT2', 'CONN_TIME_WAIT', 'CONN_CLOSE', 'CONN_CLOSE_WAIT', 'CONN_LAST_ACK', 'CONN_LISTEN', 'CONN_CLOSING', 'CONN_NONE', 'AF_LINK', 'NIC_DUPLEX_FULL', 'NIC_DUPLEX_HALF', 'NIC_DUPLEX_UNKNOWN', 'POWER_TIME_UNKNOWN', 'POWER_TIME_UNLIMITED', 'BSD', 'FREEBSD', 'LINUX', 'NETBSD', 'OPENBSD', 'MACOS', 'OSX', 'POSIX', 'SUNOS', 'WINDOWS', 'AIX', 'Process', 'Popen', 'pid_exists', 'pids', 'process_iter', 'wait_procs', 'virtual_memory', 'swap_memory', 'cpu_times', 'cpu_percent', 'cpu_times_percent', 'cpu_count', 'cpu_stats', 'net_io_counters', 'net_connections', 'net_if_addrs', 'net_if_stats', 'disk_io_counters', 'disk_partitions', 'disk_usage', 'users', 'boot_time', 'PROCFS_PATH', 'IOPRIO_CLASS_NONE', 'IOPRIO_CLASS_RT', 'IOPRIO_CLASS_BE', 'IOPRIO_CLASS_IDLE', 'CONN_ESTABLISHED', 'CONN_SYN_SENT', 'CONN_SYN_RECV', 'CONN_FIN_WAIT1', 'CONN_FIN_WAIT2', 'CONN_TIME_WAIT', 'CONN_CLOSE', 'CONN_CLOSE_WAIT', 'CONN_LAST_ACK', 'CONN_LISTEN', 'CONN_CLOSING', 'RLIMIT_AS', 'RLIMIT_CORE', 'RLIMIT_CPU', 'RLIMIT_DATA', 'RLIMIT_FSIZE', 'RLIMIT_LOCKS', 'RLIMIT_MEMLOCK', 'RLIMIT_MSGQUEUE', 'RLIMIT_NICE', 'RLIMIT_NOFILE', 'RLIMIT_NPROC', 'RLIMIT_RSS', 'RLIMIT_RTPRIO', 'RLIMIT_RTTIME', 'RLIMIT_SIGPENDING', 'RLIMIT_STACK', 'RLIM_INFINITY', 'cpu_freq', 'getloadavg', 'sensors_temperatures', 'sensors_fans', 'sensors_battery', 'heap_info', 'heap_trim']
+from _typeshed import Incomplete
+from psutil._common import (
+    NIC_DUPLEX_FULL as NIC_DUPLEX_FULL,
+    NIC_DUPLEX_HALF as NIC_DUPLEX_HALF,
+    NIC_DUPLEX_UNKNOWN as NIC_DUPLEX_UNKNOWN,
+    POWER_TIME_UNKNOWN as POWER_TIME_UNKNOWN,
+    POWER_TIME_UNLIMITED as POWER_TIME_UNLIMITED,
+)
+from psutil._pslinux import (
+    AF_LINK as AF_LINK,
+    IOPRIO_CLASS_BE as IOPRIO_CLASS_BE,
+    IOPRIO_CLASS_IDLE as IOPRIO_CLASS_IDLE,
+    IOPRIO_CLASS_NONE as IOPRIO_CLASS_NONE,
+    IOPRIO_CLASS_RT as IOPRIO_CLASS_RT,
+)
+
+from . import (
+    _common as _common,
+    _ntuples as _ntuples,
+    _psposix as _psposix,
+    _psutil_linux as _psutil_linux,
+)
+
+__all__ = ['AF_LINK', 'AIX', 'BSD', 'CONN_CLOSE', 'CONN_CLOSE_WAIT', 'CONN_CLOSING', 'CONN_ESTABLISHED', 'CONN_FIN_WAIT1', 'CONN_FIN_WAIT2', 'CONN_LAST_ACK', 'CONN_LISTEN', 'CONN_NONE', 'CONN_SYN_RECV', 'CONN_SYN_SENT', 'CONN_TIME_WAIT', 'FREEBSD', 'IOPRIO_CLASS_BE', 'IOPRIO_CLASS_IDLE', 'IOPRIO_CLASS_NONE', 'IOPRIO_CLASS_RT', 'LINUX', 'MACOS', 'NETBSD', 'NIC_DUPLEX_FULL', 'NIC_DUPLEX_HALF', 'NIC_DUPLEX_UNKNOWN', 'OPENBSD', 'OSX', 'POSIX', 'POWER_TIME_UNKNOWN', 'POWER_TIME_UNLIMITED', 'PROCFS_PATH', 'RLIMIT_AS', 'RLIMIT_CORE', 'RLIMIT_CPU', 'RLIMIT_DATA', 'RLIMIT_FSIZE', 'RLIMIT_LOCKS', 'RLIMIT_MEMLOCK', 'RLIMIT_MSGQUEUE', 'RLIMIT_NICE', 'RLIMIT_NOFILE', 'RLIMIT_NPROC', 'RLIMIT_RSS', 'RLIMIT_RTPRIO', 'RLIMIT_RTTIME', 'RLIMIT_SIGPENDING', 'RLIMIT_STACK', 'RLIM_INFINITY', 'STATUS_DEAD', 'STATUS_DISK_SLEEP', 'STATUS_IDLE', 'STATUS_LOCKED', 'STATUS_PARKED', 'STATUS_RUNNING', 'STATUS_SLEEPING', 'STATUS_STOPPED', 'STATUS_TRACING_STOP', 'STATUS_WAITING', 'STATUS_WAKING', 'STATUS_ZOMBIE', 'SUNOS', 'WINDOWS', 'AccessDenied', 'Error', 'NoSuchProcess', 'Popen', 'Process', 'TimeoutExpired', 'ZombieProcess', '__version__', 'boot_time', 'cpu_count', 'cpu_freq', 'cpu_percent', 'cpu_stats', 'cpu_times', 'cpu_times_percent', 'disk_io_counters', 'disk_partitions', 'disk_usage', 'getloadavg', 'heap_info', 'heap_trim', 'net_connections', 'net_if_addrs', 'net_if_stats', 'net_io_counters', 'pid_exists', 'pids', 'process_iter', 'sensors_battery', 'sensors_fans', 'sensors_temperatures', 'swap_memory', 'users', 'version_info', 'virtual_memory', 'wait_procs']
 
 AIX: bool
 BSD: bool

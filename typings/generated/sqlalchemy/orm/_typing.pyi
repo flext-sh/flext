@@ -1,8 +1,8 @@
 import _abc
-import sqlalchemy.sql.roles as roles
 import typing
-import typing_extensions
 from typing import Any, ClassVar, TypeGuard
+
+import typing_extensions
 
 TYPE_CHECKING: bool
 

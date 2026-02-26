@@ -1,5 +1,12 @@
-import sqlalchemy.util as util
-from mypy.nodes import CallExpr, ClassDef, Expression, MemberExpr, NameExpr, SymbolNode, TypeInfo
+from mypy.nodes import (
+    CallExpr,
+    ClassDef,
+    Expression,
+    MemberExpr,
+    NameExpr,
+    SymbolNode,
+    TypeInfo,
+)
 from mypy.plugin import SemanticAnalyzerPluginInterface
 from mypy.types import UnboundType
 

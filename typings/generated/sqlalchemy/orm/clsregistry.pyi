@@ -1,10 +1,7 @@
-import sqlalchemy.exc as exc
-import sqlalchemy.inspection as inspection
-import sqlalchemy.orm.attributes as attributes
-import sqlalchemy.orm.interfaces as interfaces
-import sqlalchemy.util as util
+from collections.abc import Callable, Generator, Iterable, Mapping
+from typing import Any, _ClsRegistryType
+
 from _typeshed import Incomplete
-from typing import Any, Callable, Generator, Iterable, Mapping, _ClsRegistryType
 
 __conditional_annotations__: set
 TYPE_CHECKING: bool
@@ -18,7 +15,7 @@ class _MultipleClassMarker(ClsRegistryToken):
     on_remove: Incomplete
     def __init__(self, classes: Iterable[type[Any]], on_remove: Callable[[], None] | None = ...) -> None: ...
     def remove_item(self, cls: type[Any]) -> None: ...
-    def __iter__(self) -> Generator[type[Any] | None, None, None]: ...
+    def __iter__(self) -> Generator[type[Any] | None]: ...
     def attempt_get(self, path: list[str], key: str) -> type[Any]: ...
     def add_item(self, item: type[Any]) -> None: ...
 

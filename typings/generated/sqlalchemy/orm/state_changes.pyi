@@ -1,8 +1,8 @@
-import _StateChangeStates
 import enum
-import sqlalchemy.exc as sa_exc
-import sqlalchemy.util as util
-from typing import Callable, ClassVar, Literal
+from collections.abc import Callable
+from typing import ClassVar, Literal
+
+import _StateChangeStates
 
 class _StateChangeState(enum.Enum):
     _new_member_: ClassVar[builtin_function_or_method] = ...

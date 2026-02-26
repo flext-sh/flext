@@ -1,6 +1,7 @@
+import typing
+
 import rich.box
 import rich.jupyter
-import typing
 from rich.measure import Measurement
 
 TYPE_CHECKING: bool

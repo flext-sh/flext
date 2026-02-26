@@ -1,9 +1,19 @@
 import _abc
 import dataclasses
 import typing
-from _typeshed import Incomplete
 from builtins import ModuleType
-from typing import Callable, ClassVar, EventDict, ExcInfo, ExceptionRenderer, Literal, Sequence, TextIO, WrappedLogger
+from collections.abc import Callable, Sequence
+from typing import (
+    ClassVar,
+    EventDict,
+    ExceptionRenderer,
+    ExcInfo,
+    Literal,
+    TextIO,
+    WrappedLogger,
+)
+
+from _typeshed import Incomplete
 
 __all__ = ['ConsoleRenderer', 'RichTracebackFormatter', 'better_traceback', 'plain_traceback', 'rich_traceback']
 

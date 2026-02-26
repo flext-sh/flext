@@ -1,8 +1,8 @@
 from functools import lru_cache
 
 from hypothesis import strategies as st
-from internal.invalid.conjecture.data import ConjectureData
 from hypothesis.strategies._internal.utils import defines_strategy
+from internal.invalid.conjecture.data import ConjectureData
 
 """This module contains various provisional APIs and strategies.
 

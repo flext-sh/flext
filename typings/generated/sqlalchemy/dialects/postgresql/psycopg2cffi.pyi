@@ -1,6 +1,6 @@
-import sqlalchemy.dialects.postgresql.psycopg2
-import sqlalchemy.util as util
 from typing import ClassVar
+
+import sqlalchemy.dialects.postgresql.psycopg2
 
 class PGDialect_psycopg2cffi(sqlalchemy.dialects.postgresql.psycopg2.PGDialect_psycopg2):
     driver: ClassVar[str] = ...

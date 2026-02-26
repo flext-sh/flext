@@ -1,8 +1,6 @@
-import google.protobuf.descriptor_pool as descriptor_pool
-import internal.invalid.api_implementation as api_implementation
-import google.protobuf.message_factory as message_factory
-from _typeshed import Incomplete
 from typing import ClassVar
+
+from _typeshed import Incomplete
 
 class SymbolDatabase:
     _classes: ClassVar[dict] = ...

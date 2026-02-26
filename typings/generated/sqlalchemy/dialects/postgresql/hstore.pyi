@@ -1,11 +1,10 @@
+from typing import ClassVar
+
 import sqlalchemy.dialects.postgresql.array
 import sqlalchemy.sql.functions
-import sqlalchemy.sql.functions as sqlfunc
 import sqlalchemy.sql.sqltypes
 import sqlalchemy.sql.type_api
-import sqlalchemy.types as sqltypes
 from _typeshed import Incomplete
-from typing import ClassVar
 
 __all__ = ['HSTORE', 'hstore']
 

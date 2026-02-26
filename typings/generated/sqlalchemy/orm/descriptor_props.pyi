@@ -1,20 +1,13 @@
+from collections.abc import Callable, Sequence
+from typing import Any, ClassVar, _CompositeAttrType
+
 import CompositeProperty
-import sqlalchemy.event as event
-import sqlalchemy.exc as sa_exc
-import sqlalchemy.orm.attributes as attributes
 import sqlalchemy.orm.base
 import sqlalchemy.orm.interfaces
 import sqlalchemy.orm.util
-import sqlalchemy.orm.util as orm_util
-import sqlalchemy.schema as schema
-import sqlalchemy.sql as sql
-import sqlalchemy.sql.expression as expression
-import sqlalchemy.sql.operators as operators
-import sqlalchemy.util as util
 from _typeshed import Incomplete
 from sqlalchemy.orm.base import Mapped, PassiveFlag
 from sqlalchemy.orm.interfaces import PropComparator, _AttributeOptions
-from typing import Any, Callable, ClassVar, Sequence, _CompositeAttrType
 
 __conditional_annotations__: set
 TYPE_CHECKING: bool
@@ -40,8 +33,8 @@ class CompositeProperty(sqlalchemy.orm.interfaces._MapsColumns, sqlalchemy.orm.i
         clauses: Incomplete
         expression: Incomplete
         def __clause_element__(self) -> CompositeProperty.CompositeBundle[_PT]: ...
-        def __eq__(self, other: Any) -> ColumnElement[bool]: ...
-        def __ne__(self, other: Any) -> ColumnElement[bool]: ...
+        def __eq__(self, other: object) -> ColumnElement[bool]: ...
+        def __ne__(self, other: object) -> ColumnElement[bool]: ...
         def __lt__(self, other: Any) -> ColumnElement[bool]: ...
         def __gt__(self, other: Any) -> ColumnElement[bool]: ...
         def __le__(self, other: Any) -> ColumnElement[bool]: ...

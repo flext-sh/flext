@@ -1,9 +1,9 @@
+from typing import ClassVar
+
 import sqlalchemy.ext.compiler
 import sqlalchemy.sql.elements
-import sqlalchemy.sql.expression as expression
 import sqlalchemy.sql.sqltypes
 import sqlalchemy.sql.type_api
-from typing import ClassVar
 
 class CoerceUnicode(sqlalchemy.sql.type_api.TypeDecorator):
     impl: ClassVar[type[sqlalchemy.sql.sqltypes.Unicode]] = ...

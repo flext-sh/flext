@@ -1,6 +1,5 @@
-import sqlalchemy.exc as exc
-import sqlalchemy.sql.sqltypes as sqltypes
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 TYPE_CHECKING: bool
 def compiles(class_: type[Any], *specs: str) -> Callable[[_F], _F]: ...

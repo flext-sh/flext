@@ -1,9 +1,10 @@
 import re
+from collections.abc import Callable
+from typing import Any, ClassVar, Literal
+
 import sqlalchemy.cyextension.immutabledict
 import sqlalchemy.dialects.mysql.base
-import sqlalchemy.util as util
 from _typeshed import Incomplete
-from typing import Any, Callable, ClassVar, Literal
 
 TYPE_CHECKING: bool
 

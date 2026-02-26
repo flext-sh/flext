@@ -6,13 +6,13 @@ from returns.result import Failure, Result, Success
 
 __all__ = [
     "IO",
+    "Failure",
     "IOFailure",
     "IOResult",
     "IOSuccess",
     "Maybe",
     "Nothing",
-    "Some",
-    "Failure",
     "Result",
+    "Some",
     "Success",
 ]

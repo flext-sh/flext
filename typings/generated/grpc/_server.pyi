@@ -1,16 +1,22 @@
 import _abc
-import _interceptor as _interceptor
 import abc
-import cygrpc as cygrpc
 import enum
-import futures
-import grpc as grpc
-import grpc._common as _common
-import grpc._compression as _compression
-import grpc._observability as _observability
 import threading
 import typing
-from typing import Any, ChannelArgumentType, ClassVar, DeserializingFunction, Iterable, Mapping, MetadataType, NullaryCallbackType, Sequence
+from collections.abc import Iterable, Mapping, Sequence
+from typing import (
+    Any,
+    ChannelArgumentType,
+    ClassVar,
+    DeserializingFunction,
+    MetadataType,
+    NullaryCallbackType,
+)
+
+import _interceptor as _interceptor
+import cygrpc as cygrpc
+import futures
+import grpc as grpc
 
 class _HandlerCallDetails(_HandlerCallDetails, grpc.HandlerCallDetails):
     __abstractmethods__: ClassVar[frozenset] = ...

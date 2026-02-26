@@ -1,5 +1,7 @@
+from collections.abc import Iterable
+from typing import Any, Context, Processor, Self, WrappedLogger
+
 from structlog.typing import BindableLogger
-from typing import Any, Context, Iterable, Processor, Self, WrappedLogger
 
 class BoundLoggerBase:
     def __init__(self, logger: WrappedLogger, processors: Iterable[Processor], context: Context) -> None: ...

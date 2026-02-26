@@ -1,4 +1,3 @@
-import sqlalchemy.ext.mypy.infer as infer
 import util as util
 from mypy.nodes import AssignmentStmt, ClassDef, NameExpr, StrExpr
 from mypy.plugin import SemanticAnalyzerPluginInterface

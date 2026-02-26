@@ -1,10 +1,10 @@
+from typing import ClassVar
+
 import dt
-import sqlalchemy.exc as exc
 import sqlalchemy.sql.sqltypes
 import sqlalchemy.sql.type_api
 import sqltypes as sqltypes
 from _typeshed import Incomplete
-from typing import ClassVar
 
 TYPE_CHECKING: bool
 

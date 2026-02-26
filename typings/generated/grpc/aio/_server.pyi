@@ -1,12 +1,9 @@
 import _abc
-import grpc as grpc
-import grpc._common as _common
-import grpc._compression as _compression
-import grpc._cython.cygrpc as cygrpc
-import grpc.aio._base_server
-import grpc.aio._base_server as _base_server
 import typing
 from typing import ClassVar
+
+import grpc as grpc
+import grpc.aio._base_server
 
 class Server(grpc.aio._base_server.Server):
     __abstractmethods__: ClassVar[frozenset] = ...

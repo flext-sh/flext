@@ -1,15 +1,13 @@
 import _abc
 import collections.abc
-import sqlalchemy.event.legacy as legacy
-import sqlalchemy.event.registry as registry
-import sqlalchemy.exc as exc
-import sqlalchemy.util as util
-import sqlalchemy.util.langhelpers
 import typing
-from _typeshed import Incomplete
 from builtins import TracebackType
+from collections.abc import Iterator, Sequence
+from typing import Any, ClassVar, NoReturn, _ListenerFnType
+
+import sqlalchemy.util.langhelpers
+from _typeshed import Incomplete
 from sqlalchemy.event.registry import _ET, _EventKey
-from typing import Any, ClassVar, Iterator, NoReturn, Sequence, _ListenerFnType
 
 class RefCollection(sqlalchemy.util.langhelpers.MemoizedSlots, typing.Generic):
     __orig_bases__: ClassVar[tuple] = ...

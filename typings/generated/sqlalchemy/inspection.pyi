@@ -1,5 +1,4 @@
 import _abc
-import sqlalchemy.exc as exc
 import typing
 from typing import Any, ClassVar
 

@@ -1,4 +1,3 @@
-import sqlalchemy.exc as exc
 
 __test__: dict
 

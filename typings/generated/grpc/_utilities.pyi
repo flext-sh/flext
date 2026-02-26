@@ -1,8 +1,8 @@
 import _abc
-import grpc as grpc
-import grpc._common as _common
 import typing
 from typing import ClassVar
+
+import grpc as grpc
 
 class RpcMethodHandler(_RpcMethodHandler, grpc.RpcMethodHandler):
     __abstractmethods__: ClassVar[frozenset] = ...

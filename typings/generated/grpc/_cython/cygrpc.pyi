@@ -1,9 +1,10 @@
-import _cython_3_2_4
 import enum
+from collections.abc import Callable
+from typing import ClassVar
+
+import _cython_3_2_4
 import grpc as grpc
-import grpc._observability as _observability
 from _typeshed import Incomplete
-from typing import Callable, ClassVar
 
 EOF: _EOF
 GRPC_COMPRESSION_CHANNEL_DEFAULT_ALGORITHM: bytes

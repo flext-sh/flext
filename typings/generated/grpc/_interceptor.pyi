@@ -1,8 +1,9 @@
 import _abc
-import grpc as grpc
 import types
 import typing
 from typing import Any, ClassVar
+
+import grpc as grpc
 
 class _ServicePipeline:
     def __init__(self, interceptors: typing.Sequence) -> None: ...

@@ -1,7 +1,3 @@
-import google.protobuf.descriptor as descriptor
-import internal.invalid.decoder as decoder
-import internal.invalid.encoder as encoder
-import internal.invalid.wire_format as wire_format
 from typing import ClassVar
 
 def TruncateToFourByteFloat(original): ...

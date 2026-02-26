@@ -2,8 +2,8 @@ from collections.abc import Collection, Generator, Iterable, Sequence
 from typing import Any, TypeVar
 
 from attrs import Attribute, AttrsInstance
-from internal.invalid.compat import EllipsisType
 from hypothesis.strategies._internal.strategies import SearchStrategy
+from internal.invalid.compat import EllipsisType
 
 T = TypeVar("T")
 

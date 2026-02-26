@@ -1,12 +1,13 @@
+import os
+import typing
+from builtins import ModuleType
+from typing import ClassVar
+
 import click
 import click.core
 import click.exceptions
 import click.types
-import os
 import t
-import typing
-from builtins import ModuleType
-from typing import ClassVar
 
 class NoAppException(click.exceptions.UsageError): ...
 def find_best_app(module: ModuleType) -> Flask: ...

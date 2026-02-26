@@ -1,10 +1,12 @@
 import _io
 import enum
-from _typeshed import Incomplete
+from collections.abc import Callable
 from socket import AF_INET6 as AF_INET6
-from typing import Callable, ClassVar
+from typing import ClassVar
 
-__all__ = ['FREEBSD', 'BSD', 'LINUX', 'NETBSD', 'OPENBSD', 'MACOS', 'OSX', 'POSIX', 'SUNOS', 'WINDOWS', 'CONN_CLOSE', 'CONN_CLOSE_WAIT', 'CONN_CLOSING', 'CONN_ESTABLISHED', 'CONN_FIN_WAIT1', 'CONN_FIN_WAIT2', 'CONN_LAST_ACK', 'CONN_LISTEN', 'CONN_NONE', 'CONN_SYN_RECV', 'CONN_SYN_SENT', 'CONN_TIME_WAIT', 'NIC_DUPLEX_FULL', 'NIC_DUPLEX_HALF', 'NIC_DUPLEX_UNKNOWN', 'STATUS_DEAD', 'STATUS_DISK_SLEEP', 'STATUS_IDLE', 'STATUS_LOCKED', 'STATUS_RUNNING', 'STATUS_SLEEPING', 'STATUS_STOPPED', 'STATUS_SUSPENDED', 'STATUS_TRACING_STOP', 'STATUS_WAITING', 'STATUS_WAKE_KILL', 'STATUS_WAKING', 'STATUS_ZOMBIE', 'STATUS_PARKED', 'ENCODING', 'ENCODING_ERRS', 'AF_INET6', 'conn_tmap', 'deprecated_method', 'isfile_strict', 'memoize', 'parse_environ_block', 'path_exists_strict', 'usage_percent', 'supports_ipv6', 'sockfam_to_enum', 'socktype_to_enum', 'wrap_numbers', 'open_text', 'open_binary', 'cat', 'bcat', 'bytes2human', 'conn_to_ntuple', 'debug', 'hilite', 'term_supports_colors', 'print_color']
+from _typeshed import Incomplete
+
+__all__ = ['AF_INET6', 'BSD', 'CONN_CLOSE', 'CONN_CLOSE_WAIT', 'CONN_CLOSING', 'CONN_ESTABLISHED', 'CONN_FIN_WAIT1', 'CONN_FIN_WAIT2', 'CONN_LAST_ACK', 'CONN_LISTEN', 'CONN_NONE', 'CONN_SYN_RECV', 'CONN_SYN_SENT', 'CONN_TIME_WAIT', 'ENCODING', 'ENCODING_ERRS', 'FREEBSD', 'LINUX', 'MACOS', 'NETBSD', 'NIC_DUPLEX_FULL', 'NIC_DUPLEX_HALF', 'NIC_DUPLEX_UNKNOWN', 'OPENBSD', 'OSX', 'POSIX', 'STATUS_DEAD', 'STATUS_DISK_SLEEP', 'STATUS_IDLE', 'STATUS_LOCKED', 'STATUS_PARKED', 'STATUS_RUNNING', 'STATUS_SLEEPING', 'STATUS_STOPPED', 'STATUS_SUSPENDED', 'STATUS_TRACING_STOP', 'STATUS_WAITING', 'STATUS_WAKE_KILL', 'STATUS_WAKING', 'STATUS_ZOMBIE', 'SUNOS', 'WINDOWS', 'bcat', 'bytes2human', 'cat', 'conn_tmap', 'conn_to_ntuple', 'debug', 'deprecated_method', 'hilite', 'isfile_strict', 'memoize', 'open_binary', 'open_text', 'parse_environ_block', 'path_exists_strict', 'print_color', 'sockfam_to_enum', 'socktype_to_enum', 'supports_ipv6', 'term_supports_colors', 'usage_percent', 'wrap_numbers']
 
 POSIX: bool
 WINDOWS: bool

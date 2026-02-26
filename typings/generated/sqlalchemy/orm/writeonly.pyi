@@ -1,20 +1,17 @@
-import LoaderCallableStatus
-import attributes as attributes
 import logging
-import sqlalchemy.exc as exc
-import sqlalchemy.log
-import sqlalchemy.log as log
-import sqlalchemy.orm.attributes
-import sqlalchemy.orm.interfaces as interfaces
-import sqlalchemy.orm.relationships as relationships
-import sqlalchemy.orm.strategies
-import sqlalchemy.orm.strategies as strategies
 import typing
+from collections.abc import Collection, Iterable, Iterator
+from typing import Any, ClassVar, Literal, NoReturn
+
+import attributes as attributes
+import LoaderCallableStatus
+import sqlalchemy.log
+import sqlalchemy.orm.attributes
+import sqlalchemy.orm.strategies
 import util as util
 from _typeshed import Incomplete
 from sqlalchemy.orm.base import PassiveFlag
 from sqlalchemy.sql.dml import Delete, Insert, Update
-from typing import Any, ClassVar, Collection, Iterable, Iterator, Literal, NoReturn
 
 TYPE_CHECKING: bool
 

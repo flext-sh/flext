@@ -1,7 +1,6 @@
-import sqlalchemy.exc
-import sqlalchemy.exc as sa_exc
-import sqlalchemy.util as util
 from typing import Any, ClassVar
+
+import sqlalchemy.exc
 
 TYPE_CHECKING: bool
 NO_STATE: tuple

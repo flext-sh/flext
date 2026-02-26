@@ -1,4 +1,5 @@
-from typing import Any, Callable, Coroutine
+from collections.abc import Callable, Coroutine
+from typing import Any
 
 have_greenlet: bool
 greenlet_error: None

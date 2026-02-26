@@ -1,27 +1,29 @@
-import _NoArg
 import enum
-import operators as operators
 import re
+import typing
+from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
+from typing import (
+    Any,
+    ClassVar,
+    Literal,
+    Self,
+    typing_Tuple,
+)
+
+import _NoArg
+import operators as operators
 import roles as roles
 import sqlalchemy.cyextension.immutabledict
-import sqlalchemy.exc as exc
 import sqlalchemy.inspection
-import sqlalchemy.inspection as inspection
 import sqlalchemy.sql.annotation
 import sqlalchemy.sql.base
 import sqlalchemy.sql.cache_key
-import sqlalchemy.sql.coercions as coercions
 import sqlalchemy.sql.operators
 import sqlalchemy.sql.roles
 import sqlalchemy.sql.traversals
-import sqlalchemy.sql.traversals as traversals
-import sqlalchemy.sql.type_api as type_api
 import sqlalchemy.sql.visitors
-import sqlalchemy.util as util
 import sqlalchemy.util.langhelpers
-import typing
 from _typeshed import Incomplete
-from typing import Any, Callable, ClassVar, Iterable, Iterator, Literal, Mapping, Self, Sequence, typing_Tuple
 
 TYPE_CHECKING: bool
 def literal(value: Any, type_: _TypeEngineArgument[Any] | None = ..., literal_execute: bool = ...) -> BindParameter[Any]: ...

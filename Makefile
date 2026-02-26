@@ -195,7 +195,7 @@ define PREFLIGHT_CHECK
 	echo " OK: all required tools present"
 endef
 
-.PHONY: help setup upgrade build check security format docs test validate typings clean release pr
+.PHONY: help setup upgrade modernize build check security format docs test validate typings clean release pr
 
 help: ## Show simple workspace verbs
 	$(Q)echo "FLEXT Workspace"
@@ -206,6 +206,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo "Core verbs:"
 	$(Q)echo " setup   Install all projects into workspace .venv, then run validate VALIDATE_SCOPE=workspace"
 	$(Q)echo " upgrade  Upgrade deps + modernize + dependency report (.reports/dependencies/)"
+	$(Q)echo " modernize Modernize pyproject.toml configs only (no lock/install)"
 	$(Q)echo " build   Build/package all selected projects"
 	$(Q)echo " check   Run the 6 lint gates in all projects"
 	$(Q)echo " security  Run all security checks in all projects"
@@ -518,6 +519,19 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	fi
 	$(Q)echo "Syncing GitHub workflow templates..."
 	$(Q)$(PY) -m flext_infra github workflows --workspace-root "$(CURDIR)" --apply --prune --report .reports/workflows/sync.json
+
+modernize: ## Modernize pyproject.toml files (standardize configs without lock/install)
+	$(Q)$(REQUIRE_VENV)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)echo "Modernizing pyproject.toml files..."; \
+	$(POETRY_ENV) $(PY) -m flext_infra deps modernize --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
+	echo ""
+	$(Q)echo "Syncing dependency paths to workspace mode..."; \
+	$(PY) -m flext_infra deps path-sync --mode auto 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
+	echo ""
+	$(Q)echo "Modernization complete."
 
 check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security)
 	$(Q)$(REQUIRE_VENV)

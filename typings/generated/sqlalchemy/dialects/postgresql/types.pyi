@@ -1,9 +1,9 @@
+from typing import Any, ClassVar
+
 import dt
 import sqlalchemy.sql.sqltypes
 import sqlalchemy.sql.type_api
-import sqlalchemy.sql.type_api as type_api
 import sqltypes as sqltypes
-from typing import Any, ClassVar
 
 TYPE_CHECKING: bool
 

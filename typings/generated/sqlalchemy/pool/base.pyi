@@ -1,16 +1,14 @@
 import _abc
 import dataclasses
 import enum
+import typing
+from typing import Any, ClassVar, _ResetStyleArgType
+
 import log as log
-import sqlalchemy.event as event
 import sqlalchemy.event.base
 import sqlalchemy.event.registry
-import sqlalchemy.exc as exc
 import sqlalchemy.log
-import sqlalchemy.util as util
-import typing
 from _typeshed import Incomplete
-from typing import Any, ClassVar, _ResetStyleArgType
 
 __conditional_annotations__: set
 TYPE_CHECKING: bool

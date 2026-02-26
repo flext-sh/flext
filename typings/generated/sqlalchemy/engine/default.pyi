@@ -1,10 +1,11 @@
+from collections.abc import Callable, Mapping
+from typing import Any, ClassVar, Literal
+
 import DBAPIModule
 import interfaces as interfaces
 import pool
 import sqlalchemy.cyextension.immutabledict
-import sqlalchemy.engine.characteristics as characteristics
 import sqlalchemy.engine.cursor
-import sqlalchemy.engine.cursor as _cursor
 import sqlalchemy.engine.interfaces
 import sqlalchemy.sql.compiler
 import sqlalchemy.util.langhelpers
@@ -12,7 +13,6 @@ from _typeshed import Incomplete
 from sqlalchemy.engine.base import Connection
 from sqlalchemy.engine.interfaces import DBAPICursor
 from sqlalchemy.sql.base import _NoArg
-from typing import Any, Callable, ClassVar, Literal, Mapping
 
 TYPE_CHECKING: bool
 

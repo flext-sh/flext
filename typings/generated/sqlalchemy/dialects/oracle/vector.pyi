@@ -1,10 +1,10 @@
 import array
 import dataclasses
 import enum
-import sqlalchemy.sql.type_api
-import sqlalchemy.types as types
-from _typeshed import Incomplete
 from typing import ClassVar
+
+import sqlalchemy.sql.type_api
+from _typeshed import Incomplete
 
 class VectorIndexType(enum.Enum):
     _new_member_: ClassVar[builtin_function_or_method] = ...

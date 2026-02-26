@@ -1,6 +1,6 @@
-import sqlalchemy.sql.sqltypes
-import sqlalchemy.types as sqltypes
 from typing import Any, ClassVar
+
+import sqlalchemy.sql.sqltypes
 
 TYPE_CHECKING: bool
 

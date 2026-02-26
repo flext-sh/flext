@@ -1,9 +1,10 @@
 import _abc
 import abc
-import grpc as grpc
-import grpc.aio._typing
 import typing
 from typing import ClassVar
+
+import grpc as grpc
+import grpc.aio._typing
 
 class Server(abc.ABC):
     __abstractmethods__: ClassVar[frozenset] = ...

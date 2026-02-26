@@ -1,11 +1,10 @@
 import dataclasses
-import sqlalchemy.sql.operators as operators
-import sqlalchemy.sql.type_api
-import sqlalchemy.types as sqltypes
 import typing
+from typing import Any, ClassVar, _BoundsType
+
+import sqlalchemy.sql.type_api
 from _typeshed import Incomplete
 from sqlalchemy.sql.type_api import TypeEngine
-from typing import Any, ClassVar, _BoundsType
 
 TYPE_CHECKING: bool
 py310: bool
@@ -23,7 +22,7 @@ class Range(typing.Generic):
     lower: Incomplete
     upper: Incomplete
     def __bool__(self) -> bool: ...
-    def __eq__(self, other: Any) -> bool: ...
+    def __eq__(self, other: object) -> bool: ...
     def contained_by(self, other: Range[_T]) -> bool: ...
     def contains(self, value: _T | Range[_T]) -> bool: ...
     def __contains__(self, value: _T | Range[_T]) -> bool: ...

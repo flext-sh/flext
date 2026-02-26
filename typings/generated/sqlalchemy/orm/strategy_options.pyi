@@ -1,19 +1,21 @@
-import sqlalchemy.exc as sa_exc
-import sqlalchemy.orm.interfaces
-import sqlalchemy.orm.util as orm_util
-import sqlalchemy.sql.cache_key
-import sqlalchemy.sql.cache_key as cache_key
-import sqlalchemy.sql.coercions as coercions
-import sqlalchemy.sql.roles as roles
-import sqlalchemy.sql.traversals
-import sqlalchemy.sql.traversals as traversals
-import sqlalchemy.sql.visitors
-import sqlalchemy.sql.visitors as visitors
-import sqlalchemy.util as util
-from _typeshed import Incomplete
 from builtins import _StrPathToken
+from collections.abc import Iterable, Sequence
+from typing import (
+    Any,
+    ClassVar,
+    Self,
+    _AttrGroupType,
+    _AttrType,
+    _OptsType,
+    _WildcardKeyType,
+)
+
+import sqlalchemy.orm.interfaces
+import sqlalchemy.sql.cache_key
+import sqlalchemy.sql.traversals
+import sqlalchemy.sql.visitors
+from _typeshed import Incomplete
 from sqlalchemy.orm.path_registry import PathRegistry
-from typing import Any, ClassVar, Iterable, Self, Sequence, _AttrGroupType, _AttrType, _OptsType, _WildcardKeyType
 
 __conditional_annotations__: set
 

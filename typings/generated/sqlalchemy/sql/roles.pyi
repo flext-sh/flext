@@ -1,7 +1,7 @@
-import sqlalchemy.cyextension.immutabledict
-import sqlalchemy.util as util
 import typing
 from typing import ClassVar
+
+import sqlalchemy.cyextension.immutabledict
 
 TYPE_CHECKING: bool
 

@@ -4,12 +4,10 @@ from typing import Any, Generic, TypeVar
 
 T_co = TypeVar("T_co", covariant=True)
 
-
 class Maybe(Generic[T_co]):
     """Maybe base type - union of Some and Nothing."""
 
     def unwrap(self) -> T_co: ...
-
 
 class Some(Maybe[T_co]):
     """Some value wrapper."""
@@ -22,7 +20,6 @@ class Some(Maybe[T_co]):
 
     def unwrap(self) -> T_co: ...
 
-
 class _Nothing(Maybe[Any]):
     """Nothing/None value wrapper - singleton type."""
 
@@ -30,6 +27,5 @@ class _Nothing(Maybe[Any]):
     def value(self) -> None: ...
 
     def unwrap(self) -> None: ...
-
 
 Nothing: _Nothing

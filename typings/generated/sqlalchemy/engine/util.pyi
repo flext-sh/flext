@@ -1,6 +1,7 @@
 import _abc
 import typing
-from typing import Any, Callable, ClassVar, Self
+from collections.abc import Callable
+from typing import Any, ClassVar, Self
 
 HAS_CYEXTENSION: bool
 def connection_memoize(key: str) -> Callable[[_C], _C]: ...

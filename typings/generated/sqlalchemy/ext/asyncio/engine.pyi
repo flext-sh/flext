@@ -1,14 +1,12 @@
-import _P
 import _abc
-import sqlalchemy.exc as exc
+from collections.abc import AsyncIterator, Callable, Generator
+from typing import Any, ClassVar, Concatenate
+
+import _P
 import sqlalchemy.ext.asyncio.base
-import sqlalchemy.ext.asyncio.exc as async_exc
-import sqlalchemy.inspection as inspection
-import sqlalchemy.util as util
 from _typeshed import Incomplete
 from sqlalchemy.engine.base import Connection, Engine
 from sqlalchemy.ext.asyncio.result import AsyncResult, AsyncScalarResult
-from typing import Any, AsyncIterator, Callable, ClassVar, Concatenate, Generator
 
 TYPE_CHECKING: bool
 def create_async_engine(url: str | URL, **kw: Any) -> AsyncEngine: ...

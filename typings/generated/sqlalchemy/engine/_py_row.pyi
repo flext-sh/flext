@@ -1,4 +1,5 @@
-from typing import Any, Callable, Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping
+from typing import Any
 
 MD_INDEX: int
 

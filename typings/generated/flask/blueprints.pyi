@@ -1,5 +1,6 @@
-import flask
 import os
+
+import flask
 import t
 
 class Blueprint(flask.sansio.blueprints.Blueprint):

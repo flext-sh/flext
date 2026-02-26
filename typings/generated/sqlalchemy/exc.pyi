@@ -1,5 +1,3 @@
-import sqlalchemy.util.compat as compat
-import sqlalchemy.util.preloaded as _preloaded
 from typing import Any, ClassVar
 
 __conditional_annotations__: set

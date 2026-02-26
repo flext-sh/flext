@@ -1,11 +1,8 @@
 import _abc
-import grpc.beta.implementations as implementations
-import grpc.beta.interfaces as interfaces
-import grpc.framework.foundation.callable_util as callable_util
-import grpc.framework.foundation.future
-import grpc.framework.foundation.future as future
-from _typeshed import Incomplete
 from typing import ClassVar
+
+import grpc.framework.foundation.future
+from _typeshed import Incomplete
 
 class _ChannelReadyFuture(grpc.framework.foundation.future.Future):
     __abstractmethods__: ClassVar[frozenset] = ...

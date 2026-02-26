@@ -23,15 +23,21 @@ SKIPPED_FILES = {".gitkeep"}
 
 
 class UsageError(Exception):
+    """UsageError class."""
+
     pass
 
 
 class InfraError(Exception):
+    """InfraError class."""
+
     pass
 
 
 @dataclass(frozen=True)
 class NamingViolation:
+    """NamingViolation class."""
+
     path: str
     filename: str
     reason: str
@@ -39,18 +45,22 @@ class NamingViolation:
 
 
 def eprint(message: str) -> None:
+    """Eprint function."""
     print(message, file=sys.stderr)
 
 
 def artifact_name(skill: str, kind: str, slug: str) -> str:
+    """artifact_name function."""
     return f"{skill}--{kind}--{slug}.{kind}"
 
 
 def validate_artifact_name(filename: str) -> bool:
+    """validate_artifact_name function."""
     return bool(ARTIFACT_PATTERN.match(filename))
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
+    """parse_args function."""
     parser = argparse.ArgumentParser(
         description=(
             "Validate .reports artifact files follow "
@@ -75,6 +85,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 
 def should_validate(path: Path, reports_root: Path) -> bool:
+    """should_validate function."""
     if not path.is_file():
         return False
     if path.name in SKIPPED_FILES:
@@ -97,6 +108,7 @@ def should_validate(path: Path, reports_root: Path) -> bool:
 
 
 def collect_artifacts(reports_root: Path) -> list[Path]:
+    """collect_artifacts function."""
     if not reports_root.exists():
         return []
     return sorted(
@@ -105,6 +117,7 @@ def collect_artifacts(reports_root: Path) -> list[Path]:
 
 
 def slugify(value: str) -> str:
+    """Slugify function."""
     text = value.lower().replace("_", "-").replace(" ", "-")
     text = re.sub(r"[^a-z0-9-]+", "-", text)
     text = re.sub(r"-+", "-", text).strip("-")
@@ -112,6 +125,7 @@ def slugify(value: str) -> str:
 
 
 def suggest_filename(filename: str) -> str:
+    """suggest_filename function."""
     path = Path(filename)
     ext = path.suffix.lstrip(".").lower()
     stem = slugify(path.stem)
@@ -132,6 +146,7 @@ def validate(
     repo_root: Path,
     reports_root: Path,
 ) -> list[NamingViolation]:
+    """Validate function."""
     artifacts = collect_artifacts(reports_root)
     violations: list[NamingViolation] = []
 
@@ -165,6 +180,7 @@ def validate(
 
 
 def write_report(report_path: Path, violations: list[NamingViolation]) -> None:
+    """write_report function."""
     payload = {
         "total_violations": len(violations),
         "violations": [
@@ -190,6 +206,7 @@ def write_report(report_path: Path, violations: list[NamingViolation]) -> None:
 
 
 def run_main(argv: list[str]) -> int:
+    """run_main function."""
     violation_count = 0
     try:
         args = parse_args(argv)
@@ -222,6 +239,7 @@ def run_main(argv: list[str]) -> int:
 
 
 def main() -> None:
+    """Main function."""
     raise SystemExit(run_main(sys.argv[1:]))
 
 

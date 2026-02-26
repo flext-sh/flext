@@ -1,17 +1,12 @@
 import _abc
-import grpc as grpc
-import grpc._common as _common
-import grpc.beta._metadata as _metadata
-import grpc.beta.interfaces
-import grpc.beta.interfaces as interfaces
-import grpc.framework.common.cardinality as cardinality
-import grpc.framework.foundation.future
-import grpc.framework.foundation.future as future
-import grpc.framework.interfaces.face.face
-import grpc.framework.interfaces.face.face as face
 import types
-from _typeshed import Incomplete
 from typing import ClassVar
+
+import grpc as grpc
+import grpc.beta.interfaces
+import grpc.framework.foundation.future
+import grpc.framework.interfaces.face.face
+from _typeshed import Incomplete
 
 class _InvocationProtocolContext(grpc.beta.interfaces.GRPCInvocationContext):
     __abstractmethods__: ClassVar[frozenset] = ...

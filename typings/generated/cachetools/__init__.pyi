@@ -1,8 +1,11 @@
 import _abc
 import collections.abc
-from . import keys as keys
+from collections.abc import Callable
+from typing import ClassVar
+
 from _typeshed import Incomplete
-from typing import Callable, ClassVar
+
+from . import keys as keys
 
 __all__ = ['Cache', 'FIFOCache', 'LFUCache', 'LRUCache', 'RRCache', 'TLRUCache', 'TTLCache', 'cached', 'cachedmethod']
 

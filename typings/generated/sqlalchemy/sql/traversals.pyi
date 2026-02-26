@@ -1,11 +1,10 @@
-import sqlalchemy.sql.operators as operators
+from collections.abc import Callable as _Callable
+from typing import Any
+
 import sqlalchemy.sql.visitors
-import sqlalchemy.util as util
 import sqlalchemy.util.langhelpers
-import sqlalchemy.util.langhelpers as langhelpers
 from _typeshed import Incomplete
 from sqlalchemy.sql.visitors import ExternallyTraversible
-from typing import Any, Callable as _Callable
 
 COMPARE_FAILED: bool
 COMPARE_SUCCEEDED: bool

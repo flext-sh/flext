@@ -27,38 +27,7 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed",
 ]
-dependencies = [
-  "flexcore @ file://./flexcore",
-  "flext-api @ file://./flext-api",
-  "flext-auth @ file://./flext-auth",
-  "flext-cli @ file://./flext-cli",
-  "flext-core @ file://./flext-core",
-  "flext-db-oracle @ file://./flext-db-oracle",
-  "flext-dbt-ldap @ file://./flext-dbt-ldap",
-  "flext-dbt-ldif @ file://./flext-dbt-ldif",
-  "flext-dbt-oracle @ file://./flext-dbt-oracle",
-  "flext-dbt-oracle-wms @ file://./flext-dbt-oracle-wms",
-  "flext-grpc @ file://./flext-grpc",
-  "flext-ldap @ file://./flext-ldap",
-  "flext-ldif @ file://./flext-ldif",
-  "flext-meltano @ file://./flext-meltano",
-  "flext-observability @ file://./flext-observability",
-  "flext-oracle-oic @ file://./flext-oracle-oic",
-  "flext-oracle-wms @ file://./flext-oracle-wms",
-  "flext-plugin @ file://./flext-plugin",
-  "flext-quality @ file://./flext-quality",
-  "flext-tap-ldap @ file://./flext-tap-ldap",
-  "flext-tap-ldif @ file://./flext-tap-ldif",
-  "flext-tap-oracle @ file://./flext-tap-oracle",
-  "flext-tap-oracle-oic @ file://./flext-tap-oracle-oic",
-  "flext-tap-oracle-wms @ file://./flext-tap-oracle-wms",
-  "flext-target-ldap @ file://./flext-target-ldap",
-  "flext-target-ldif @ file://./flext-target-ldif",
-  "flext-target-oracle @ file://./flext-target-oracle",
-  "flext-target-oracle-oic @ file://./flext-target-oracle-oic",
-  "flext-target-oracle-wms @ file://./flext-target-oracle-wms",
-  "flext-web @ file://./flext-web",
-]
+dependencies = []
 # [MANAGED] consolidated development dependencies
 # [AUTO] merged from dev/docs/security/test/typings
 optional-dependencies.dev = [
@@ -185,7 +154,6 @@ dependencies.flext-web = {path = "flext-web", develop = true}
 # [MANAGED] ruff
 
 # [CUSTOM] poetry dev extensions
-[tool.poetry.group.dev.dependencies]
 [tool.ruff]
 extend = "./ruff-shared.toml"
 lint.isort.known-first-party = [ "flext", "flext_tools" ]
@@ -230,19 +198,19 @@ pep621_dev_dependency_groups = [ "dev" ]
 # [MANAGED] pytest
 
 [tool.pytest.ini_options]
-tool.pytest.ini_options.minversion = "8.0"
-tool.pytest.ini_options.python_classes = [
+minversion = "8.0"
+python_classes = [
   "Test*",
 ]
-tool.pytest.ini_options.python_files = [
+python_files = [
   "*_test.py",
   "*_tests.py",
   "test_*.py",
 ]
-tool.pytest.ini_options.addopts = [
+addopts = [
   "--strict-markers",
 ]
-tool.pytest.ini_options.markers = [
+markers = [
   "unit: unit tests",
   "integration: integration tests",
   "performance: performance and benchmark tests",
@@ -405,30 +373,29 @@ warn_unused_ignores = false
 
 # [MANAGED] pyrefly
 [tool.pyrefly]
-# [MANAGED] pyrefly type checking - STRICT MODE
-# Opt-in strict rules (default=ignore or warn). See https://pyrefly.org/en/docs/error-kinds/
-search-path = [ "." ]
+python-version = "3.13"
 ignore-errors-in-generated-code = true
+search-path = ["."]
+project-excludes = [
+    "**/_pb2.py",
+    "**/_pb2_grpc.py",
+]
 
-# Opt-in strict rules (default=ignore or warn). See https://pyrefly.org/en/docs/error-kinds/
-# warn→error (2 rules)
-errors.deprecated = true
-errors.redundant-cast = true
+[tool.pyrefly.errors]
+deprecated = true
+redundant-cast = true
+implicit-abstract-class = true
+implicit-any = true
+implicitly-defined-attribute = true
+missing-override-decorator = true
+missing-source = true
+not-required-key-access = true
+open-unpacking = true
+protocol-implicitly-defined-attribute = true
+unannotated-attribute = true
+unannotated-parameter = true
+unannotated-return = true
 
-# ignore→error (11 rules)
-errors.implicit-any = true
-errors.implicit-abstract-class = true
-errors.implicitly-defined-attribute = true
-errors.missing-override-decorator = true
-errors.missing-source = true
-errors.not-required-key-access = true
-errors.open-unpacking = true
-errors.protocol-implicitly-defined-attribute = true
-errors.unannotated-attribute = true
-errors.unannotated-parameter = true
-errors.unannotated-return = true
-
-# Fine-tune per-file exceptions only for generated code
 [[tool.pyrefly.sub-config]]
 errors.bad-argument-type = false
 errors.bad-assignment = false

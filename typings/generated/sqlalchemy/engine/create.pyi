@@ -1,6 +1,6 @@
-import _url as _url
-import sqlalchemy.engine.base as base
 from typing import Any
+
+import _url as _url
 
 def create_engine(url: str | _url.URL, **kwargs: Any) -> Engine: ...
 def engine_from_config(configuration: dict[str, Any], prefix: str = ..., **kwargs: Any) -> Engine: ...

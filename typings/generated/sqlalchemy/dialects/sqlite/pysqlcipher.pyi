@@ -1,6 +1,6 @@
-import sqlalchemy.dialects.sqlite.pysqlite
-import sqlalchemy.pool as pool
 from typing import ClassVar
+
+import sqlalchemy.dialects.sqlite.pysqlite
 
 class SQLiteDialect_pysqlcipher(sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite):
     driver: ClassVar[str] = ...

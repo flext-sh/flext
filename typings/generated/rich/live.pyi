@@ -1,10 +1,12 @@
 import _abc
-import rich.console
-import rich.jupyter
 import threading
 from builtins import TracebackType
+from collections.abc import Callable
+from typing import ClassVar, RenderableType, VerticalOverflowMethod
+
+import rich.console
+import rich.jupyter
 from rich.console import Console, ConsoleRenderable
-from typing import Callable, ClassVar, RenderableType, VerticalOverflowMethod
 
 __conditional_annotations__: set
 TYPE_CHECKING: bool

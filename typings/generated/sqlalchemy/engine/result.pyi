@@ -2,12 +2,24 @@ import _abc
 import collections.abc
 import enum
 import operator
+import typing
+from collections.abc import Callable, Iterable, Iterator, Sequence
+from typing import (
+    Any,
+    ClassVar,
+    Self,
+    _InterimRowType,
+    _InterimSupportsScalarsRowType,
+    _KeyIndexType,
+    _ProcessorsType,
+    _TupleGetterType,
+    _UniqueFilterType,
+)
+
 import sqlalchemy.cyextension.immutabledict
 import sqlalchemy.sql.base
 import sqlalchemy.util.langhelpers
-import typing
 from sqlalchemy.engine.row import Row, RowMapping
-from typing import Any, Callable, ClassVar, Iterable, Iterator, Self, Sequence, _InterimRowType, _InterimSupportsScalarsRowType, _KeyIndexType, _ProcessorsType, _TupleGetterType, _UniqueFilterType
 
 TYPE_CHECKING: bool
 NONE_SET: frozenset
@@ -29,8 +41,8 @@ class RMKeyView(collections.abc.KeysView, typing.Generic):
     def __len__(self) -> int: ...
     def __iter__(self) -> Iterator[str]: ...
     def __contains__(self, item: Any) -> bool: ...
-    def __eq__(self, other: Any) -> bool: ...
-    def __ne__(self, other: Any) -> bool: ...
+    def __eq__(self, other: object) -> bool: ...
+    def __ne__(self, other: object) -> bool: ...
 
 class SimpleResultMetaData(ResultMetaData):
     def __init__(self, keys: Sequence[str], extra: Sequence[Any] | None = ..., _processors: _ProcessorsType | None = ..., _tuplefilter: _TupleGetterType | None = ..., _translated_indexes: Sequence[int] | None = ..., _unique_filters: Sequence[Callable[[Any], Any]] | None = ...) -> None: ...

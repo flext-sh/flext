@@ -1,5 +1,3 @@
-import sqlalchemy.types as sqltypes
-import sqlalchemy.util as util
 from typing import ClassVar
 
 TYPE_CHECKING: bool

@@ -1,11 +1,4 @@
 import grpc as grpc
-import grpc._auth as _auth
-import grpc.beta._client_adaptations as _client_adaptations
-import grpc.beta._metadata as _metadata
-import grpc.beta._server_adaptations as _server_adaptations
-import grpc.beta.interfaces as interfaces
-import grpc.framework.common.cardinality as cardinality
-import grpc.framework.interfaces.face.face as face
 from _typeshed import Incomplete
 
 def metadata_call_credentials(metadata_plugin, name: Incomplete | None = ...): ...

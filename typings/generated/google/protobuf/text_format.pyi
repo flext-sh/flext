@@ -1,13 +1,9 @@
-import google.protobuf.descriptor as descriptor
-import internal.invalid.decoder as decoder
-import internal.invalid.type_checkers as type_checkers
-import google.protobuf.text_encoding as text_encoding
-import google.protobuf.unknown_fields as unknown_fields
 import re
-from _typeshed import Incomplete
 from typing import ClassVar
 
-__all__ = ['MessageToString', 'Parse', 'PrintMessage', 'PrintField', 'PrintFieldValue', 'Merge', 'MessageToBytes']
+from _typeshed import Incomplete
+
+__all__ = ['Merge', 'MessageToBytes', 'MessageToString', 'Parse', 'PrintField', 'PrintFieldValue', 'PrintMessage']
 
 class Error(Exception): ...
 

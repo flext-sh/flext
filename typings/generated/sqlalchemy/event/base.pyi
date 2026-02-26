@@ -1,10 +1,10 @@
-import sqlalchemy.util as util
 import typing
 import weakref
+from typing import Any, ClassVar
+
 from _typeshed import Incomplete
 from sqlalchemy.event.attr import _InstanceLevelDispatch, _JoinedListener
 from sqlalchemy.event.registry import _ET
-from typing import Any, ClassVar
 
 __conditional_annotations__: set
 

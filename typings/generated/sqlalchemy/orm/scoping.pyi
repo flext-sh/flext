@@ -1,10 +1,10 @@
 import _abc
-import sqlalchemy.exc as sa_exc
-import sqlalchemy.util as util
 import typing
+from collections.abc import Callable, Iterable, Iterator, Sequence
+from typing import Any, ClassVar
+
 from _typeshed import Incomplete
-from sqlalchemy.orm.session import Session, _S
-from typing import Any, Callable, ClassVar, Iterable, Iterator, Sequence
+from sqlalchemy.orm.session import _S, Session
 
 __all__ = ['scoped_session']
 

@@ -1,15 +1,14 @@
 import _abc
+import typing
+from collections.abc import Callable
+from typing import Any, ClassVar, Concatenate
+
 import roles as roles
 import sqlalchemy.orm.attributes
-import sqlalchemy.orm.attributes as attributes
 import sqlalchemy.orm.base
 import sqlalchemy.orm.interfaces
-import sqlalchemy.orm.interfaces as interfaces
-import sqlalchemy.util as util
-import typing
 from _typeshed import Incomplete
 from sqlalchemy.sql.elements import ColumnElement, SQLCoreOperations
-from typing import Any, Callable, ClassVar, Concatenate
 
 TYPE_CHECKING: bool
 

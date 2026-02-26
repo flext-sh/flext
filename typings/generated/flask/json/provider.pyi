@@ -1,5 +1,6 @@
-import t
 from typing import ClassVar
+
+import t
 
 class JSONProvider:
     def __init__(self, app: App) -> None: ...
