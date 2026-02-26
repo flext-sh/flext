@@ -162,5 +162,23 @@
     "**/tmp",
     "**/vectorbt.pro",
     "**/venv"
-  ]
+  ],
+  "python.analysis.typeCheckingMode": "strict",
+  "python.analysis.autoSearchPaths": true,
+  "python.analysis.useLibraryCodeForTypes": true,
+  "python.analysis.useImportCache": true,
+  "python.analysis.inlayHints.functionReturnTypes": true,
+  "python.analysis.inlayHints.variableTypes": true,
+  "python.analysis.extraPaths": [
+    "typings",
+    "typings/generated"
+  ],
+  "python.analysis.include": [
+    "*/src",
+    "*/tests",
+    "*/examples",
+    "*/scripts"
+  ],
+  "pyrefly.lsp.enabled": true,
+  "pyrefly.lsp.indexingMode": "lazy-non-blocking-background"
 }
