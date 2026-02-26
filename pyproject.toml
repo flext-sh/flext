@@ -399,7 +399,7 @@ module = "flext_core.runtime"
 [tool.pyrefly]
 # [MANAGED] pyrefly type checking - STRICT MODE
 # All error categories enabled. No suppressions allowed.
-search-path = [ ".", "typings", "typings/generated" ]
+search-path = [ "." ]
 
 # Per-file strict rules - enforce maximum rigor
 errors.bad-argument-count = true
