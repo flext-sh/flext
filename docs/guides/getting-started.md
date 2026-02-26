@@ -1,7 +1,7 @@
 # Getting Started with FLEXT
 
-
 <!-- TOC START -->
+
 - [What is FLEXT](#what-is-flext)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)

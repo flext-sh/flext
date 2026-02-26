@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
   - [Subproject Usage Map](#subproject-usage-map)
@@ -21,14 +22,15 @@
 <!-- TOC END -->
 
 ---
+
 name: lib-structlog
 description: FlextLogger structured logging with context propagation, DI factories, and result adapters. Use when adding logging, binding context, or configuring structlog processors.
+
 ---
 
 # Lib Structlog — FlextLogger and Context-Aware Logging
 
 **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
-
 
 ## Scope
 

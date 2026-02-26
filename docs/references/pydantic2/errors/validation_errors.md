@@ -1,7 +1,7 @@
 # Validation Errors
 
-
 <!-- TOC START -->
+
 - [`arguments_type`](#argumentstype)
 - [`assertion_error`](#assertionerror)
 - [`bool_parsing`](#boolparsing)

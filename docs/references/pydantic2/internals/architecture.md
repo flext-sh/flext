@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Model definition](#model-definition)
   - [Communicating between `pydantic` and `pydantic-core`: the core schema](#communicating-between-pydantic-and-pydantic-core-the-core-schema)
   - [JSON Schema generation](#json-schema-generation)

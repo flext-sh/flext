@@ -1,10 +1,10 @@
 # FlextModels · Roteamento de Mensagens
 
-
 <!-- TOC START -->
+
 - [Componentes](#componentes)
   - [`MessageUnion`](#messageunion)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 Tipos auxiliares como o discriminated union que habilita o roteamento automático de mensagens CQRS.
 

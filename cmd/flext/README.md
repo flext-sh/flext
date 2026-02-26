@@ -1,7 +1,7 @@
 # FLEXT Service - Enterprise Data Integration Engine
 
-
 <!-- TOC START -->
+
 - [Quick Start](#quick-start)
 - [Current Reality](#current-reality)
 - [Architecture Role in FLEXT Ecosystem](#architecture-role-in-flext-ecosystem)
@@ -36,7 +36,6 @@
 <!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
-
 
 **FLEXT Service** is the enterprise-grade data integration engine serving as the primary Python bridge and multi-modal interface for the entire FLEXT ecosystem. Built with Go/Python hybrid architecture, it implements Clean Architecture, Domain-Driven Design, and Railway-oriented programming for production scalability.
 

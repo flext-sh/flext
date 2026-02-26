@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Union Modes](#union-modes)
   - [Left to Right Mode](#left-to-right-mode)
   - [Smart Mode](#smart-mode)

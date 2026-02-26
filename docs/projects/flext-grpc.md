@@ -1,7 +1,7 @@
 # FLEXT gRPC
 
-
 <!-- TOC START -->
+
 - [Status & metrics](#status-metrics)
 - [Quick start](#quick-start)
 - [Architecture & integration](#architecture-integration)

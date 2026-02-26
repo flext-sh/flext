@@ -1,7 +1,7 @@
 # FLEXT DBT LDAP
 
-
 <!-- TOC START -->
+
 - [Status & metrics](#status-metrics)
 - [Quick start](#quick-start)
 - [Architecture & layers](#architecture-layers)

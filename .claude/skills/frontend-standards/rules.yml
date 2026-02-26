@@ -2,30 +2,30 @@ skill: frontend-standards
 description: Detect accessibility and HTML quality issues in frontend code.
 scan_targets:
   include:
-  - '**/*.html'
-  - '**/*.htm'
-  - '**/*.jinja2'
-  - '**/*.j2'
+    - "**/*.html"
+    - "**/*.htm"
+    - "**/*.jinja2"
+    - "**/*.j2"
   exclude: []
   projects: []
 rules:
-- id: img-requires-alt
-  type: ast-grep
-  severity: warning
-  group: accessibility
-  description: img tag without alt attribute — accessibility violation.
-  fix_auto: false
-  fix_instruction: Add alt='descriptive text' to all img elements.
-  file: rules/img-requires-alt.yml
-  count_by: rule_id
-- id: no-inline-style
-  type: ast-grep
-  severity: warning
-  group: frontend_quality
-  description: Inline style attribute — use CSS classes instead.
-  fix_auto: false
-  fix_instruction: Move styles to CSS class and use class attribute.
-  file: rules/no-inline-style.yml
-  count_by: rule_id
+  - id: img-requires-alt
+    type: ast-grep
+    severity: warning
+    group: accessibility
+    description: img tag without alt attribute — accessibility violation.
+    fix_auto: false
+    fix_instruction: Add alt='descriptive text' to all img elements.
+    file: rules/img-requires-alt.yml
+    count_by: rule_id
+  - id: no-inline-style
+    type: ast-grep
+    severity: warning
+    group: frontend_quality
+    description: Inline style attribute — use CSS classes instead.
+    fix_auto: false
+    fix_instruction: Move styles to CSS class and use class attribute.
+    file: rules/no-inline-style.yml
+    count_by: rule_id
 baseline:
   strategy: total

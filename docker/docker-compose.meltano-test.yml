@@ -87,14 +87,7 @@ services:
     volumes:
       - oracle_test_data:/opt/oracle/oradata
     healthcheck:
-      test:
-        [
-          "CMD",
-          "sqlplus",
-          "-L",
-          "system/Oracle123Test@//localhost:1521/XE",
-          "@/dev/null",
-        ]
+      test: ["CMD", "sqlplus", "-L", "system/Oracle123Test@//localhost:1521/XE", "@/dev/null"]
       interval: 30s
       timeout: 10s
       retries: 10

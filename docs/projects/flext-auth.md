@@ -1,7 +1,7 @@
 # FLEXT Auth
 
-
 <!-- TOC START -->
+
 - [Status & metrics](#status-metrics)
 - [Quick start](#quick-start)
 - [Architecture snapshot](#architecture-snapshot)

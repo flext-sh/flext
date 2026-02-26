@@ -1,7 +1,7 @@
 # Arquitetura FlextService - Padrão Zero Ceremony
 
-
 <!-- TOC START -->
+
 - [Documentação de destino](#documentao-de-destino)
 - [Conteúdo restante (preservado como referência)](#contedo-restante-preservado-como-referncia)
 - [~~**Versão:** 6.1 ⚠️ **VALIDAÇÃO EM PROGRESSO (2025-11-25)**~~](#verso-61-validao-em-progresso-2025-11-25)

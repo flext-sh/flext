@@ -1,7 +1,7 @@
 # Queue Integration
 
-
 <!-- TOC START -->
+
 - [Redis queue](#redis-queue)
 - [RabbitMQ](#rabbitmq)
 - [ARQ](#arq)

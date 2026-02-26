@@ -1,7 +1,7 @@
 # Usage Errors
 
-
 <!-- TOC START -->
+
 - [Class not fully defined {#class-not-fully-defined}](#class-not-fully-defined-class-not-fully-defined)
 - [Custom JSON Schema {#custom-JSON-schema}](#custom-json-schema-custom-json-schema)
 - [Decorator on missing field {#decorator-missing-field}](#decorator-on-missing-field-decorator-missing-field)

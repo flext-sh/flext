@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -9,8 +10,10 @@
 <!-- TOC END -->
 
 ---
+
 name: rules-typings
 description: Rules for typing support assets in `typings/` (stubs, compatibility shims, and local type metadata). Use when editing `.pyi` files or typing helper packages.
+
 ---
 
 # Rules Typings

@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Generating JSON Schema](#generating-json-schema)
   - [Configuring the `JsonSchemaMode`](#configuring-the-jsonschemamode)
 - [Customizing JSON Schema](#customizing-json-schema)

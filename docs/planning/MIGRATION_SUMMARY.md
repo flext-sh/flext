@@ -1,7 +1,7 @@
 # Pydantic 2 Migration: Complete Planning Summary
 
-
 <!-- TOC START -->
+
 - [Executive Summary](#executive-summary)
 - [Planning Documents](#planning-documents)
   - [1. Main Roadmap](#1-main-roadmap)

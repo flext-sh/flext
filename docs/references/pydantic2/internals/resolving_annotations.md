@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [The challenges of runtime evaluation](#the-challenges-of-runtime-evaluation)
 - [Resolving annotations at class definition](#resolving-annotations-at-class-definition)
   - [Limitations and backwards compatibility concerns](#limitations-and-backwards-compatibility-concerns)
@@ -254,7 +255,6 @@ Foo.__pydantic_core_schema__
 ```
 
 The [`model_rebuild()`][pydantic.BaseModel.model_rebuild] method uses a _rebuild namespace_, with the following semantics:
-
 
 - If an explicit `_types_namespace` argument is provided, it is used as the rebuild namespace.
 - If no namespace is provided, the namespace where the method is called will be used as the rebuild namespace.

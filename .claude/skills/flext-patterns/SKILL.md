@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -12,14 +13,15 @@
 <!-- TOC END -->
 
 ---
+
 name: flext-patterns
 description: Repository-native implementation patterns for result flow, DI, logging, and typed boundaries. Use when selecting or standardizing implementation style.
+
 ---
 
 # Flext Patterns
 
 **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
-
 
 ## Scope
 
@@ -30,6 +32,7 @@ description: Repository-native implementation patterns for result flow, DI, logg
   - `flext-core/src/flext_core/settings.py`
 
 ## References
+
 - `flext-core/docs/architecture/patterns.md`
 - `flext-core/docs/guides/railway-oriented-programming.md`
 - `flext-core/src/flext_core/runtime.py`
@@ -104,6 +107,7 @@ result = r[m.ExecuteResult].ok(m.ExecuteResult(name="x"))
 ```
 
 Anti-patterns:
+
 - **Defining runtime aliases via `FlextRuntime.Aliases.*`** — forbidden. Use simple aliases only: `c = FlextConstants`, `m = FlextModels`, `r = FlextResult`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`. No separate alias registry or staticmethod layer for package **init**.
 - Prefer `m.ExecuteResult` when a class-level alias exists; `m.TargetOracle.Foo` is allowed in subprojects
 - `from flext_meltano import FlextMeltanoModels as m_meltano` — duplicate alias surface
@@ -135,6 +139,7 @@ The child class already has every parent inner class via MRO — re-inheriting
 from them creates confusing duplicates and breaks type identity.
 
 ## Instructions
+
 - Anchor new code to nearby proven implementations in same module family.
 - For fallible operations use `ok/fail + map/flat_map/lash` chains.
 - For context-aware logging use bind/scope patterns instead of manual dict payload assembly.
@@ -151,12 +156,14 @@ def transform(value: str):
 ```
 
 ## Workflow
+
 1. Find closest existing pattern for the target behavior.
 2. Reuse pattern with minimal adaptation.
 3. Verify no anti-patterns (raw dict envelopes, direct external DI imports).
 4. Confirm consistency with tests/type checks.
 
 ## Examples
+
 Good:
 
 ```python

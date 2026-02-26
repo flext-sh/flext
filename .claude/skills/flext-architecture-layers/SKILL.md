@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -9,14 +10,15 @@
 <!-- TOC END -->
 
 ---
+
 name: flext-architecture-layers
 description: Layer map and dependency-direction contract for flext-core. Use when adding modules, moving responsibilities, or reviewing imports.
+
 ---
 
 # Flext Architecture Layers
 
 **Reviewed**: 2026-02-21 | **Scope**: Added mandatory FlextMeltano composition rule, alias set, and composition matrix
-
 
 ## Scope
 
@@ -37,6 +39,7 @@ description: Layer map and dependency-direction contract for flext-core. Use whe
 > **Rule**: See `CLAUDE.md` §2 Architecture Law for canonical tier system and dependency flow.
 
 Layer map (source-aligned reference for implementation work):
+
 - `L3 Application/Orchestration`: `dispatcher.py`, `handlers.py`, `decorators.py`.
 - `L2 Domain & Infrastructure`: `models.py`, `mixins.py`, `service.py`, `utilities.py`, `loggings.py`, `container.py`, `flext_infra`.
 - `L1 Foundation & Bridge`: `result.py`, `exceptions.py`, `registry.py`, `runtime.py`.
@@ -116,12 +119,12 @@ flext-dbt-ldif          → (FlextMeltanoModels, FlextLdifModels)
 
 ### Selection Rule
 
-| Project name contains | Inherits from (domain) | NEVER inherits from |
-|-----------------------|-----------------------|---------------------|
-| `oracle-wms` | `FlextOracleWmsModels` | `FlextDbOracleModels` |
-| `oracle` (no `-wms`) | `FlextDbOracleModels` | `FlextOracleWmsModels` |
-| `ldap` | `FlextLdapModels` | `FlextLdifModels` |
-| `ldif` | `FlextLdifModels` | `FlextLdapModels` |
+| Project name contains | Inherits from (domain) | NEVER inherits from    |
+| --------------------- | ---------------------- | ---------------------- |
+| `oracle-wms`          | `FlextOracleWmsModels` | `FlextDbOracleModels`  |
+| `oracle` (no `-wms`)  | `FlextDbOracleModels`  | `FlextOracleWmsModels` |
+| `ldap`                | `FlextLdapModels`      | `FlextLdifModels`      |
+| `ldif`                | `FlextLdifModels`      | `FlextLdapModels`      |
 
 ALL integration projects (targets, taps, dbt) ALSO inherit `FlextMeltanoModels` for Singer protocol types (`m.Meltano.*`).
 
@@ -169,26 +172,26 @@ class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):
 Every `flext-(tap|target|dbt)-*` project MUST export these aliases from its
 respective facade modules and `__init__.py`:
 
-| Alias | Facade Module | Class Pattern |
-|-------|---------------|---------------|
-| `m` | `models.py` | `Flext<Role><Domain>Models(FlextMeltanoModels, Flext<Domain>Models)` |
-| `c` | `constants.py` | `Flext<Role><Domain>Constants(FlextMeltanoConstants)` |
-| `t` | `typings.py` | `Flext<Role><Domain>Types(FlextMeltanoTypes)` |
-| `u` | `utilities.py` | `Flext<Role><Domain>Utilities(FlextMeltanoUtilities)` |
-| `p` | `protocols.py` | `Flext<Role><Domain>Protocols(FlextMeltanoProtocols)` |
+| Alias | Facade Module  | Class Pattern                                                        |
+| ----- | -------------- | -------------------------------------------------------------------- |
+| `m`   | `models.py`    | `Flext<Role><Domain>Models(FlextMeltanoModels, Flext<Domain>Models)` |
+| `c`   | `constants.py` | `Flext<Role><Domain>Constants(FlextMeltanoConstants)`                |
+| `t`   | `typings.py`   | `Flext<Role><Domain>Types(FlextMeltanoTypes)`                        |
+| `u`   | `utilities.py` | `Flext<Role><Domain>Utilities(FlextMeltanoUtilities)`                |
+| `p`   | `protocols.py` | `Flext<Role><Domain>Protocols(FlextMeltanoProtocols)`                |
 
 The `c`, `t`, `u`, `p` aliases follow the same composition pattern as `m`:
 inherit from the `FlextMeltano*` parent AND the domain parent.
 
 ### Composition Matrix (canonical reference)
 
-| Domain | Models Mixin | Constants Mixin | Types Mixin |
-|--------|-------------|-----------------|-------------|
-| `*-ldap` | `FlextLdapModels` | `FlextLdapConstants` | `FlextLdapTypes` |
-| `*-ldif` | `FlextLdifModels` | `FlextLdifConstants` | `FlextLdifTypes` |
-| `*-oracle` (DB) | `FlextDbOracleModels` | `FlextDbOracleConstants` | `FlextDbOracleTypes` |
-| `*-oracle-wms` | `FlextWmsModels` | `FlextWmsConstants` | `FlextWmsTypes` |
-| `*-oracle-oic` | `FlextOracleOicModels` | `FlextOracleOicConstants` | `FlextOracleOicTypes` |
+| Domain          | Models Mixin           | Constants Mixin           | Types Mixin           |
+| --------------- | ---------------------- | ------------------------- | --------------------- |
+| `*-ldap`        | `FlextLdapModels`      | `FlextLdapConstants`      | `FlextLdapTypes`      |
+| `*-ldif`        | `FlextLdifModels`      | `FlextLdifConstants`      | `FlextLdifTypes`      |
+| `*-oracle` (DB) | `FlextDbOracleModels`  | `FlextDbOracleConstants`  | `FlextDbOracleTypes`  |
+| `*-oracle-wms`  | `FlextWmsModels`       | `FlextWmsConstants`       | `FlextWmsTypes`       |
+| `*-oracle-oic`  | `FlextOracleOicModels` | `FlextOracleOicConstants` | `FlextOracleOicTypes` |
 
 Use `scripts.libs.discovery.discover_projects()` to enumerate all projects
 programmatically for workspace-wide composition audits.

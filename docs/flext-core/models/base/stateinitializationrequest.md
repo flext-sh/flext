@@ -1,7 +1,7 @@
 # StateInitializationRequest (`FlextModels.Base.StateInitializationRequest`)
 
-
 <!-- TOC START -->
+
 - [Visão geral](#viso-geral)
 - [Contrato detalhado](#contrato-detalhado)
 - [Arquitetura e dependências](#arquitetura-e-dependncias)

@@ -1,7 +1,7 @@
 # Architecture Decision Records (ADRs)
 
-
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [📋 ADR Index](#adr-index)
   - [Foundation Decisions](#foundation-decisions)
@@ -44,10 +44,9 @@
   - [Creating New ADRs](#creating-new-adrs)
   - [Updating ADRs](#updating-adrs)
   - [Review Process](#review-process)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
-
 
 ## Table of Contents
 

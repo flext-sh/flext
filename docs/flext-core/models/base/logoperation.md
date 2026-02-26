@@ -1,7 +1,7 @@
 # LogOperation (`FlextModels.Base.LogOperation`)
 
-
 <!-- TOC START -->
+
 - [Visão geral](#viso-geral)
 - [Contrato](#contrato)
 - [Arquitetura e dependências](#arquitetura-e-dependncias)

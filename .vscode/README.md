@@ -1,7 +1,7 @@
 # .vscode Directory
 
-
 <!-- TOC START -->
+
 - [Purpose](#purpose)
 - [Example Files](#example-files)
 - [Changelog](#changelog)

@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -10,8 +11,10 @@
 <!-- TOC END -->
 
 ---
+
 name: scripts-validation
 description: Validation services — policy gates, automated checks, ast-grep enforcement, and workspace validation. Use when using flext_infra.check or editing scripts/validation/.
+
 ---
 
 # Scripts Validation
@@ -109,7 +112,7 @@ Script-level checks (internal):
 
 ## Scripts
 
-| Path | Purpose | Invocation |
-|------|---------|------------|
+| Path                                             | Purpose                       | Invocation                                       |
+| ------------------------------------------------ | ----------------------------- | ------------------------------------------------ |
 | `scripts/validation/run_automated_validation.sh` | Internal orchestrator wrapper | `scripts/validation/run_automated_validation.sh` |
-| `scripts/core/skill_validate.py` | Internal generic skill runner | invoked through `make validate` policy flow |
+| `scripts/core/skill_validate.py`                 | Internal generic skill runner | invoked through `make validate` policy flow      |

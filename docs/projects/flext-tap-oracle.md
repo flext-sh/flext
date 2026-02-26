@@ -1,7 +1,7 @@
 # FLEXT Tap Oracle
 
-
 <!-- TOC START -->
+
 - [Status & signals](#status-signals)
 - [Quick start](#quick-start)
 - [Architecture overview](#architecture-overview)

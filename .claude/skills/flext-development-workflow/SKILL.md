@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Workspace Setup](#workspace-setup)
   - [Prerequisites](#prerequisites)
   - [Initial Setup](#initial-setup)
@@ -29,14 +30,15 @@
 <!-- TOC END -->
 
 ---
+
 name: flext-development-workflow
 description: Verified development workflow including toolchain, testing, and CI/CD for the FLEXT monorepo
+
 ---
 
 # FLEXT Development Workflow
 
 **Reviewed**: 2026-02-19 | **Scope**: Coverage source-of-truth migration to pyproject.toml
-
 
 > **Source of truth**: Verified from `base.mk`, `pyproject.toml`, `.pre-commit-config.yaml`,
 > and actual project structure on 2026-02-19.

@@ -1,7 +1,7 @@
 # FLEXT Demo Server
 
-
 <!-- TOC START -->
+
 - [Quick Start](#quick-start)
 - [Current Reality](#current-reality)
 - [Architecture Role in FLEXT Ecosystem](#architecture-role-in-flext-ecosystem)

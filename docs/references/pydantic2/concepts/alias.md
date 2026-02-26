@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [`AliasPath` and `AliasChoices`](#aliaspath-and-aliaschoices)
 - [Using alias generators](#using-alias-generators)
   - [Using a callable](#using-a-callable)
@@ -8,7 +9,7 @@
 - [Alias Configuration](#alias-configuration)
   - [`ConfigDict` Settings](#configdict-settings)
   - [Runtime Settings](#runtime-settings)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 An alias is an alternative name for a field, used when serializing and deserializing data.
 

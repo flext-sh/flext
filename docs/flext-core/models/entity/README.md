@@ -1,7 +1,7 @@
 # FlextModels · Entidades e Objetos de Valor
 
-
 <!-- TOC START -->
+
 - [Componentes](#componentes)
   - [`Entity`](#entity)
   - [`Value`](#value)
@@ -13,7 +13,7 @@
   - [`TimestampableMixin`](#timestampablemixin)
   - [`TimestampedModel`](#timestampedmodel)
   - [`VersionableMixin`](#versionablemixin)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 Camada central de DDD que expõe entidades, objetos de valor, agregados e eventos com validação Pydantic. Dados levantados via AST (`flext_core/models.py`) e uso confirmado com busca estática (testes ignorados).
 

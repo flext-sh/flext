@@ -2,17 +2,17 @@ skill: flext-type-system
 description: Enforce core type-system contracts and discourage overly broad dict return annotations.
 scan_targets:
   include:
-  - '**/*.py'
+    - "**/*.py"
   exclude: []
   projects: []
 rules:
-- id: ban-bare-dict-return
-  type: ast-grep
-  severity: warning
-  group: type_system
-  description: Bare dict return annotations are discouraged in favor of explicit aliases/contracts.
-  fix_auto: false
-  fix_instruction: Use specific mapping/value aliases (for example t.Dict, t.ConfigMap, or precise typed mappings).
-  file: rules/ban-bare-dict-return.yml
+  - id: ban-bare-dict-return
+    type: ast-grep
+    severity: warning
+    group: type_system
+    description: Bare dict return annotations are discouraged in favor of explicit aliases/contracts.
+    fix_auto: false
+    fix_instruction: Use specific mapping/value aliases (for example t.Dict, t.ConfigMap, or precise typed mappings).
+    file: rules/ban-bare-dict-return.yml
 baseline:
   strategy: total

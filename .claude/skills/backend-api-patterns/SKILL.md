@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -15,8 +16,10 @@
 <!-- TOC END -->
 
 ---
+
 name: backend-api-patterns
 description: REST API design and database query patterns — endpoint design, status codes, SQL injection prevention, N+1 prevention, indexing, transactions. Use when building or optimizing API endpoints or database queries.
+
 ---
 
 # Backend API & Query Patterns
@@ -58,18 +61,18 @@ DELETE /api/v1/users/{id}     # delete
 
 ### HTTP Status Codes
 
-| Code | Meaning | Use For |
-|---|---|---|
-| 200 | OK | Successful GET/PUT/PATCH |
-| 201 | Created | Successful POST |
-| 204 | No Content | Successful DELETE |
-| 400 | Bad Request | Malformed request |
-| 401 | Unauthorized | Missing/invalid auth |
-| 403 | Forbidden | Valid auth, insufficient permissions |
-| 404 | Not Found | Resource doesn't exist |
-| 422 | Unprocessable | Validation failed |
-| 429 | Too Many Requests | Rate limit exceeded |
-| 500 | Internal Error | Unexpected server failure |
+| Code | Meaning           | Use For                              |
+| ---- | ----------------- | ------------------------------------ |
+| 200  | OK                | Successful GET/PUT/PATCH             |
+| 201  | Created           | Successful POST                      |
+| 204  | No Content        | Successful DELETE                    |
+| 400  | Bad Request       | Malformed request                    |
+| 401  | Unauthorized      | Missing/invalid auth                 |
+| 403  | Forbidden         | Valid auth, insufficient permissions |
+| 404  | Not Found         | Resource doesn't exist               |
+| 422  | Unprocessable     | Validation failed                    |
+| 429  | Too Many Requests | Rate limit exceeded                  |
+| 500  | Internal Error    | Unexpected server failure            |
 
 ### SQL Injection Prevention
 

@@ -1,7 +1,7 @@
 # FLEXT DB Oracle
 
-
 <!-- TOC START -->
+
 - [Status & metrics](#status-metrics)
 - [Quick start](#quick-start)
 - [Architecture overview](#architecture-overview)

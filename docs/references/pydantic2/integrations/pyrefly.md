@@ -1,7 +1,7 @@
 # Pyrefly Integration
 
-
 <!-- TOC START -->
+
 - [IDE extension](#ide-extension)
 - [Type checker](#type-checker)
 <!-- TOC END -->

@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Python Version & Core Requirements](#python-version-core-requirements)
 - [FLEXT Mapping-First Policy (Contract Layer)](#flext-mapping-first-policy-contract-layer)
 - [Rule 1: NEVER Use `Any` or `object`](#rule-1-never-use-any-or-object)
@@ -35,17 +36,18 @@
   - [Internal Implementation Pattern (in `result.py`)](#internal-implementation-pattern-in-resultpy)
   - [Why `cast` Is Required](#why-cast-is-required)
   - [Usage Examples](#usage-examples)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 ---
+
 name: flext-strict-typing
 description: Verified type system rules, type hierarchy, and enforcement policies for the FLEXT ecosystem
+
 ---
 
 # FLEXT Strict Typing Rules
 
 **Reviewed**: 2026-02-21 | **Scope**: Added Rules 14-16 (str|None ban, helper class policy, is_success protocol)
-
 
 > **Source of truth**: Extracted from `flext-core/src/flext_core/typings.py` (534 lines)
 > and cross-referenced with `models.py`, `protocols.py`, and `ruff-shared.toml`.
@@ -73,23 +75,23 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 
 ### Replace with the appropriate type from the `FlextTypes` hierarchy
 
-| Instead of | Use | When |
-| --- | --- | --- |
-| `Any` | `t.GeneralValueType` | General-purpose value containers |
-| `Any` | `t.ScalarValue` | Primitives: `str \| int \| float \| bool \| datetime \| None` |
-| `Any` | `t.MetadataScalarValue` | Metadata: `str \| int \| float \| bool \| None` |
-| `Any` | `t.JsonPrimitive` | JSON primitives: `str \| int \| float \| bool \| None` |
-| `Any` | `t.JsonValue` | Full JSON values |
-| `object` | `t.GeneralValueType` | Method params that accept "anything" |
-| `dict[str, Any]` | `t.ConfigMap` | Configuration dictionaries |
-| `dict[str, Any]` | `t.Dict` | General dictionaries |
-| `dict[str, Any]` | `t.ServiceMap` | Service registry mappings |
-| `list[Any]` | `list[t.GeneralValueType]` | Generic lists |
-| `Sequence[Any]` | `t.ObjectList` | RootModel for batch operations |
+| Instead of       | Use                        | When                                                          |
+| ---------------- | -------------------------- | ------------------------------------------------------------- |
+| `Any`            | `t.GeneralValueType`       | General-purpose value containers                              |
+| `Any`            | `t.ScalarValue`            | Primitives: `str \| int \| float \| bool \| datetime \| None` |
+| `Any`            | `t.MetadataScalarValue`    | Metadata: `str \| int \| float \| bool \| None`               |
+| `Any`            | `t.JsonPrimitive`          | JSON primitives: `str \| int \| float \| bool \| None`        |
+| `Any`            | `t.JsonValue`              | Full JSON values                                              |
+| `object`         | `t.GeneralValueType`       | Method params that accept "anything"                          |
+| `dict[str, Any]` | `t.ConfigMap`              | Configuration dictionaries                                    |
+| `dict[str, Any]` | `t.Dict`                   | General dictionaries                                          |
+| `dict[str, Any]` | `t.ServiceMap`             | Service registry mappings                                     |
+| `list[Any]`      | `list[t.GeneralValueType]` | Generic lists                                                 |
+| `Sequence[Any]`  | `t.ObjectList`             | RootModel for batch operations                                |
 
 ### The Type Hierarchy (from `typings.py` lines 153-176)
 
-```
+````
 
 ## Verification
 
@@ -97,7 +99,7 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 make validate PROJECT=<name>
 make validate PROJECT=<name> FIX=1
 make validate PROJECTS="proj-a proj-b"
-```
+````
 
 Custom checks for this skill must live in `.claude/skills/flext-strict-typing/` and emit `{"violation_count": N}` when using `type: custom`.
 
@@ -183,17 +185,17 @@ from flext_core.typings import T, T_co, U, P, R, T_Model, T_Settings
 
 ### Always use modern syntax (with Mapping-first contracts)
 
-| Old (FORBIDDEN) | New (REQUIRED) | Ruff Rule |
-| --- | --- | --- |
-| `typing.List[X]` | `list[X]` | UP006 |
-| `typing.Dict[str, X]` | `Mapping[str, X]` (contract) / `dict[str, X]` (local mutation) | UP006 + FLEXT policy |
-| `typing.Tuple[X, ...]` | `tuple[X, ...]` | UP006 |
-| `typing.Optional[X]` | `X \| None` | UP007 |
-| `typing.Union[X, Y]` | `X \| Y` | UP007 |
-| `typing.Sequence` | `collections.abc.Sequence` | UP035 |
-| `typing.Mapping` | `collections.abc.Mapping` | UP035 |
-| `typing.Callable` | `collections.abc.Callable` | UP035 |
-| `isinstance(x, (A, B))` | `isinstance(x, A \| B)` | UP038 |
+| Old (FORBIDDEN)         | New (REQUIRED)                                                 | Ruff Rule            |
+| ----------------------- | -------------------------------------------------------------- | -------------------- |
+| `typing.List[X]`        | `list[X]`                                                      | UP006                |
+| `typing.Dict[str, X]`   | `Mapping[str, X]` (contract) / `dict[str, X]` (local mutation) | UP006 + FLEXT policy |
+| `typing.Tuple[X, ...]`  | `tuple[X, ...]`                                                | UP006                |
+| `typing.Optional[X]`    | `X \| None`                                                    | UP007                |
+| `typing.Union[X, Y]`    | `X \| Y`                                                       | UP007                |
+| `typing.Sequence`       | `collections.abc.Sequence`                                     | UP035                |
+| `typing.Mapping`        | `collections.abc.Mapping`                                      | UP035                |
+| `typing.Callable`       | `collections.abc.Callable`                                     | UP035                |
+| `isinstance(x, (A, B))` | `isinstance(x, A \| B)`                                        | UP038                |
 
 ### Use `typing.Self` for return self patterns
 
@@ -430,6 +432,7 @@ config_file: str | None = Field(default=None, description="Optional config overr
 ```
 
 **Decision tree**:
+
 1. Is `None` a valid domain state distinct from `""`? → Use `str | None = Field(default=None)`
 2. Is the field always a string, just sometimes empty? → Use `str = Field(default="")`
 3. Is the field required? → Use `str` (no default)
@@ -459,6 +462,7 @@ class PhaseResults(BaseModel):
 ```
 
 **When plain classes ARE acceptable**:
+
 - Pure utility/helper functions with no state
 - Namespace classes (like `FlextModels`) that only organize nested types
 - Protocol classes (structural typing contracts)
@@ -573,10 +577,10 @@ from flext_core import FlextResult, r
 
 ### `ok()` vs `fail()` — Asymmetric Generics
 
-| Factory | Call Pattern | Generic | Why |
-| --- | --- | --- | --- |
-| `ok` | `r[T].ok(value)` | Class-level `T` inferred from `value` | Type checker sees `value: T`, infers `T` |
-| `fail` | `r.fail("error")` | Method-level `[U]` inferred from return context | No success value → `U` comes from function return type |
+| Factory | Call Pattern      | Generic                                         | Why                                                    |
+| ------- | ----------------- | ----------------------------------------------- | ------------------------------------------------------ |
+| `ok`    | `r[T].ok(value)`  | Class-level `T` inferred from `value`           | Type checker sees `value: T`, infers `T`               |
+| `fail`  | `r.fail("error")` | Method-level `[U]` inferred from return context | No success value → `U` comes from function return type |
 
 ### Internal Implementation Pattern (in `result.py`)
 

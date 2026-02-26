@@ -1,26 +1,26 @@
 skill: python-type-narrowing
-description: 'Detect type narrowing anti-patterns: type() comparison, bare type checks.'
+description: "Detect type narrowing anti-patterns: type() comparison, bare type checks."
 scan_targets:
   include:
-  - '**/*.py'
+    - "**/*.py"
   exclude: []
   projects: []
 rules:
-- id: no-type-comparison
-  type: ast-grep
-  severity: warning
-  group: type_narrowing
-  description: "type() comparison \u2014 use isinstance() for type narrowing."
-  fix_auto: false
-  fix_instruction: Replace type(x) == SomeType with isinstance(x, SomeType).
-  file: rules/no-type-comparison.yml
-- id: no-type-in-condition
-  type: ast-grep
-  severity: warning
-  group: type_narrowing
-  description: "type() in condition \u2014 use isinstance() for proper type narrowing."
-  fix_auto: false
-  fix_instruction: Replace if type(x) is/== Y with if isinstance(x, Y).
-  file: rules/no-type-in-condition.yml
+  - id: no-type-comparison
+    type: ast-grep
+    severity: warning
+    group: type_narrowing
+    description: "type() comparison \u2014 use isinstance() for type narrowing."
+    fix_auto: false
+    fix_instruction: Replace type(x) == SomeType with isinstance(x, SomeType).
+    file: rules/no-type-comparison.yml
+  - id: no-type-in-condition
+    type: ast-grep
+    severity: warning
+    group: type_narrowing
+    description: "type() in condition \u2014 use isinstance() for proper type narrowing."
+    fix_auto: false
+    fix_instruction: Replace if type(x) is/== Y with if isinstance(x, Y).
+    file: rules/no-type-in-condition.yml
 baseline:
   strategy: total

@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
   - [Subproject Usage Map](#subproject-usage-map)
 - [References](#references)
@@ -10,11 +11,14 @@
 <!-- TOC END -->
 
 ---
+
 name: lib-pydantic-settings
 description: Pydantic SettingsConfigDict and singleton config patterns across FLEXT subprojects. Trigger when editing settings.py models, env bindings, or configuration validation behavior.
+
 ---
 
 ## Scope
+
 - Core canonical implementation: `flext-core/src/flext_core/settings.py`
 - Broad usage surface: `flext-*/src/*/settings.py`
 - Representative consumers:
@@ -26,6 +30,7 @@ description: Pydantic SettingsConfigDict and singleton config patterns across FL
 - Dependency pinning: `flext-core/pyproject.toml`
 
 ### Subproject Usage Map
+
 - `flext-core`: defines `FlextSettings` singleton + protocol integration + `AutoConfig` helper.
 - `flext-cli`: `FlextCliSettings(FlextSettings)` with `SettingsConfigDict(env_prefix="FLEXT_CLI_", ...)`.
 - `flext-meltano`: `FlextMeltanoSettings(FlextSettings)` with strict env-bound configuration.
@@ -34,6 +39,7 @@ description: Pydantic SettingsConfigDict and singleton config patterns across FL
 - `flext-dbt-oracle`: `FlextDbtOracleSettings(FlextSettings.AutoConfig)` for auto-configured namespace settings.
 
 ## References
+
 - `flext-core/src/flext_core/settings.py`: `class FlextSettings`, `model_config`, `_instances`, `_lock`, `validate_configuration`, `AutoConfig`
 - `flext-core/src/flext_core/_utilities/configuration.py`: env-file compatibility notes for `SettingsConfigDict`
 - `flext-cli/src/flext_cli/settings.py`: real namespaced settings extension
@@ -44,6 +50,7 @@ description: Pydantic SettingsConfigDict and singleton config patterns across FL
 - `https://github.com/pydantic/pydantic-settings`
 
 ## Rules
+
 - Always use `SettingsConfigDict` for settings models; do not use legacy `class Config`.
 - Always define `env_prefix` explicitly in each settings class.
 - Keep env parsing conventions explicit (`env_nested_delimiter`, `env_file`, `case_sensitive`, `extra`).
@@ -54,6 +61,7 @@ description: Pydantic SettingsConfigDict and singleton config patterns across FL
 - Keep `validate_assignment=True` in settings where runtime mutation safety matters.
 
 ## Instructions
+
 - Use these canonical declarations as baseline:
 
 ```python
@@ -102,6 +110,7 @@ class AutoConfig(BaseModel):
   - `from pydantic import Field, model_validator` (and related validators).
 
 ## Workflow
+
 1. Inspect nearest `settings.py` and match local project conventions.
 2. Ensure `model_config = SettingsConfigDict(...)` is present and explicit.
 3. Keep namespace-level env prefix stable (for example `FLEXT_CLI_`, `FLEXT_MELTANO_`).
@@ -110,6 +119,7 @@ class AutoConfig(BaseModel):
 6. Verify no new legacy `class Config` blocks are introduced.
 
 ## Examples
+
 Good:
 
 ```python

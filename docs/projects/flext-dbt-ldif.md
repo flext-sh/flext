@@ -1,7 +1,7 @@
 # FLEXT dbt LDIF
 
-
 <!-- TOC START -->
+
 - [Status & health](#status-health)
 - [Quick start](#quick-start)
 - [Architecture & patterns](#architecture-patterns)

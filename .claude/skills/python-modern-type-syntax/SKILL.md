@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -18,8 +19,10 @@
 <!-- TOC END -->
 
 ---
+
 name: python-modern-type-syntax
 description: Modern Python type annotation patterns for 3.10+ including union syntax, type aliases, generics, Self, ParamSpec, and TypeVarTuple. Use when writing or modernizing type annotations.
+
 ---
 
 # Python Modern Type Syntax

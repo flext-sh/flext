@@ -1,7 +1,7 @@
 # FLEXT LDIF
 
-
 <!-- TOC START -->
+
 - [Status & metrics](#status-metrics)
 - [Quick start](#quick-start)
 - [Key capabilities](#key-capabilities)

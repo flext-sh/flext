@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -10,8 +11,10 @@
 <!-- TOC END -->
 
 ---
+
 name: scripts-security
 description: Security scripts — secrets management, vault operations, and security auditing. Use when editing scripts/security/.
+
 ---
 
 # Scripts Security
@@ -94,11 +97,11 @@ Script-level checks (internal):
 
 ## Scripts
 
-| Path | Purpose | Invocation |
-|------|---------|------------|
-| `scripts/security/__init__.py` | Package marker | — |
-| `scripts/security/_base_security_script.py` | Base class for security scripts | (imported by other security scripts) |
-| `scripts/security/decrypt_secrets_vault.py` | Decrypt secrets from vault | `python scripts/security/decrypt_secrets_vault.py` |
-| `scripts/security/example_usage.py` | Security script usage examples | `python scripts/security/example_usage.py` |
-| `scripts/security/generate_production_secrets.py` | Generate production secrets | `python scripts/security/generate_production_secrets.py` |
-| `scripts/security/security_audit.py` | Run security audit | `python scripts/security/security_audit.py` |
+| Path                                              | Purpose                         | Invocation                                               |
+| ------------------------------------------------- | ------------------------------- | -------------------------------------------------------- |
+| `scripts/security/__init__.py`                    | Package marker                  | —                                                        |
+| `scripts/security/_base_security_script.py`       | Base class for security scripts | (imported by other security scripts)                     |
+| `scripts/security/decrypt_secrets_vault.py`       | Decrypt secrets from vault      | `python scripts/security/decrypt_secrets_vault.py`       |
+| `scripts/security/example_usage.py`               | Security script usage examples  | `python scripts/security/example_usage.py`               |
+| `scripts/security/generate_production_secrets.py` | Generate production secrets     | `python scripts/security/generate_production_secrets.py` |
+| `scripts/security/security_audit.py`              | Run security audit              | `python scripts/security/security_audit.py`              |

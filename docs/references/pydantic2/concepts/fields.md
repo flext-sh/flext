@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [The annotated pattern](#the-annotated-pattern)
 - [Inspecting model fields](#inspecting-model-fields)
 - [Default values](#default-values)

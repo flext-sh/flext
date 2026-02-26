@@ -1,7 +1,7 @@
 # FLEXT Type System Architecture Guide
 
-
 <!-- TOC START -->
+
 - [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [Type System Hierarchy](#type-system-hierarchy)

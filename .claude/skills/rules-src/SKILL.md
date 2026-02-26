@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -9,14 +10,15 @@
 <!-- TOC END -->
 
 ---
+
 name: rules-src
 description: Rules for shared source modules under top-level `src/`. Use when editing common source code that impacts multiple packages or utilities.
+
 ---
 
 # Rules Src
 
 **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
-
 
 ## Scope
 

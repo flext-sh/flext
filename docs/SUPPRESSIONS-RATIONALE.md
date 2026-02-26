@@ -10,7 +10,7 @@
 
 3. **Supressões inline** — Não usar `# pyright: ignore`, `# pyrefly: ignore` ou equivalentes para contornar o linter. Corrigir pela **causa raiz** usando os padrões e skills do flext e as regras de CLAUDE.md.
 
-4. **Dict em create_for_*** — Não usar `dict[str, t.GeneralValueType]` para construir settings. Usar `**overrides: object` e `dict[str, object]` com `model_validate(...)`, alinhado ao padrão de flext-core (`from_kwargs`, `merge_defaults`).
+4. **Dict em create*for*\*** — Não usar `dict[str, t.GeneralValueType]` para construir settings. Usar `**overrides: object` e `dict[str, object]` com `model_validate(...)`, alinhado ao padrão de flext-core (`from_kwargs`, `merge_defaults`).
 
 ---
 
@@ -33,7 +33,7 @@
 ## Atualizações (continuação do plano)
 
 - **flext-core**
-  - **FlextSettings.**init****: Mantido `cast("dict[str, Any]", kwargs)` para `BaseSettings.__init__` com comentário de exceção de política (CLAUDE.md): fronteira de biblioteca; pydantic_settings espera kwargs dinâmicos.
+  - **FlextSettings.**init\*\*\*\*: Mantido `cast("dict[str, Any]", kwargs)` para `BaseSettings.__init__` com comentário de exceção de política (CLAUDE.md): fronteira de biblioteca; pydantic_settings espera kwargs dinâmicos.
 - **flext-dbt-ldap**
   - **Unreachable**: Helper `_entry_attrs_mapping(entry)` no módulo; `normalize_attributes` / `_get_object_classes` e `dbt_client._matches_schema` usam esse helper. Import de `_entry_attrs_mapping` movido para o topo de `dbt_client.py` (lint PLC0415).
   - **Fronteira Pydantic (SSOT)**: Um único `[[tool.mypy.overrides]]` em `pyproject.toml` para `module = "flext_dbt_ldap.models"` com `disallow_any_explicit = false`. Causa: membro sintético `__mypy-replace` na cadeia ValueObject → BaseModel; limitação conhecida mypy/Pydantic. Override documentado no próprio `pyproject.toml` e aqui; não adicionar outros overrides fora desse padrão.

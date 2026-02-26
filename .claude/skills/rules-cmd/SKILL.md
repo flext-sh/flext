@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -9,16 +10,18 @@
 <!-- TOC END -->
 
 ---
+
 name: rules-cmd
 description: Rules for command entrypoints under `cmd/` and their package wiring. Use when modifying command bootstrap files, CLI wrappers, or command-path docs.
+
 ---
 
 # Rules Cmd
 
 **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
 
-
 ## Scope
+
 - `cmd/flext/`
 - `cmd/flext-cli/`
 - `cmd/flext-control-panel/`
@@ -26,18 +29,21 @@ description: Rules for command entrypoints under `cmd/` and their package wiring
 - `cmd/flext-server/`
 
 ## References
+
 - `AGENTS.md`
 - `Makefile`
 - `cmd/flext/`
 - `cmd/flext-cli/`
 
 ## Rules
+
 - Keep command entrypoints thin: parse/dispatch/bootstrap only.
 - Keep command paths and names consistent with directory names.
 - Avoid embedding business logic directly in command wrappers.
 - Ensure command examples are runnable from repository root.
 
 ## Instructions
+
 - Verify target command directory exists before adding references.
 - Anchor docs to actual command files/scripts under `cmd/<name>/`.
 - When moving command code, update all docs and call paths in same change.
@@ -47,6 +53,7 @@ ls -la cmd
 ```
 
 ## Workflow
+
 1. Identify command entrypoint being changed.
 2. Verify invocation path from repository root.
 3. Apply minimal bootstrap-level changes.
@@ -54,6 +61,7 @@ ls -la cmd
 5. Validate command directory structure remains coherent.
 
 ## Examples
+
 Good:
 
 ```bash

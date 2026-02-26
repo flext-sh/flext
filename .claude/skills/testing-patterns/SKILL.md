@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -16,8 +17,10 @@
 <!-- TOC END -->
 
 ---
+
 name: testing-patterns
 description: Testing patterns, anti-patterns, and guidelines for Python/pytest in FLEXT — fixtures, parameterization, mocking strategy, FlextResult testing, and TDD. Use when writing or reviewing tests.
+
 ---
 
 # Testing Patterns

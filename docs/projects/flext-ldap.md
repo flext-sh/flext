@@ -1,7 +1,7 @@
 # FLEXT LDAP
 
-
 <!-- TOC START -->
+
 - [Status & signals](#status-signals)
 - [Quick start](#quick-start)
 - [Architecture highlights](#architecture-highlights)

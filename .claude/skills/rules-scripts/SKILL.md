@@ -1,4 +1,5 @@
 <!-- TOC START -->
+
 - [Scope](#scope)
 - [References](#references)
 - [Rules](#rules)
@@ -9,8 +10,10 @@
 <!-- TOC END -->
 
 ---
+
 name: rules-scripts
 description: Rules for automation and maintenance scripts under `scripts/`. Use when editing shell/python scripts that drive validation, cleanup, release, or tooling workflows.
+
 ---
 
 # Rules Scripts

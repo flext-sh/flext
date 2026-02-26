@@ -1,7 +1,7 @@
 # FlextModels · Contexto e Observabilidade
 
-
 <!-- TOC START -->
+
 - [Componentes](#componentes)
   - [`StructlogProxyToken`](#structlogproxytoken)
   - [`StructlogProxyContextVar`](#structlogproxycontextvar)
@@ -12,7 +12,7 @@
   - [`ContextStatistics`](#contextstatistics)
   - [`ContextMetadata`](#contextmetadata)
   - [`ContextDomainData`](#contextdomaindata)
-<!-- TOC END -->
+  <!-- TOC END -->
 
 Modelos responsáveis por propagar dados de contexto, tokens e estatísticas de execução. Todos foram extraídos de `flext_core/models.py` via AST e tiveram seu uso real verificado com busca estática (testes ignorados).
 
