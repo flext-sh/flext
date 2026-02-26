@@ -472,7 +472,16 @@ extraPaths = [
   "typings",
   "typings/generated",
 ]
-include = [ "src", "tests", "examples" ]
+include = [
+  "src",
+  "tests",
+  "examples",
+  "scripts",
+  "*/src",
+  "*/tests",
+  "*/examples",
+  "*/scripts",
+]
 exclude = [
   # Generated protobuf
   "**/*_pb2.py",
@@ -510,9 +519,6 @@ exclude = [
   "**/target",
   "**/temp",
   "**/tmp",
-  # Standalone projects (not part of flext type-checking scope)
-  "algar-oud-mig",
-  "gruponos-meltano-native",
   # Non-Python workspace directories
   "bin",
   "cmd",

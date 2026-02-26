@@ -87,6 +87,9 @@ POETRY := poetry
 # Quality tool (flext-quality with fallback)
 QUALITY_CMD ?= flext-quality
 QUALITY_AVAILABLE := $(shell command -v $(QUALITY_CMD) 2>/dev/null)
+DMPY_SOCKET := .dmypy/socket.$(PROJECT_NAME)
+PYRIGHT_PIDFILE := .pyright/daemon.pid
+PYRIGHT_LOG := .pyright/daemon.log
 
 # Export for subprocesses
 export PROJECT_NAME PYTHON_VERSION
@@ -106,7 +109,7 @@ $(LINT_CACHE_DIR):
 	$(Q)mkdir -p $(LINT_CACHE_DIR)
 
 # === SIMPLE VERB SURFACE ===
-.PHONY: help setup build check security format docs docs-base docs-sync-scripts test validate clean pr _preflight
+.PHONY: help setup build check security format docs docs-base docs-sync-scripts test validate clean pr _preflight daemon-start-mypy daemon-stop-mypy daemon-status-mypy daemon-start-pyright daemon-stop-pyright daemon-status-pyright daemon-start daemon-stop daemon-status daemon-restart check-lint check-format check-mypy-daemon check-pyright-daemon check-pyrefly check-security check-fast
 STANDARD_VERBS := setup build check security format docs test validate clean pr
 $(STANDARD_VERBS): _preflight
 
@@ -185,6 +188,17 @@ help: ## Show commands
 	$(Q)echo "  docs       Build docs"
 	$(Q)echo "  test       Run pytest only"
 	$(Q)echo "  validate   Run validate gates only (use FIX=1 to auto-fix first)"
+	$(Q)echo "  daemon-start-mypy   Start dmypy daemon for this project"
+	$(Q)echo "  daemon-status-mypy  Show dmypy daemon status for this project"
+	$(Q)echo "  daemon-stop-mypy    Stop dmypy daemon for this project"
+	$(Q)echo "  daemon-start-pyright   Start pyright daemon in watch mode"
+	$(Q)echo "  daemon-status-pyright  Show pyright daemon status"
+	$(Q)echo "  daemon-stop-pyright    Stop pyright daemon"
+	$(Q)echo "  daemon-start        Start all daemons (mypy + pyright)"
+	$(Q)echo "  daemon-status       Show status of all daemons"
+	$(Q)echo "  daemon-stop         Stop all daemons (mypy + pyright)"
+	$(Q)echo "  daemon-restart      Restart all daemons"
+	$(Q)echo "  check-fast          Run lint gates in parallel (use: make -j4 check-fast)"
 	$(Q)echo "  pr         Manage this repository PR (default: status)"
 	$(Q)echo "  clean      Clean build/test/type artifacts"
 	$(Q)echo ""
@@ -218,6 +232,127 @@ build: ## Build distributable artifacts
 		exit 0; \
 	fi
 	$(Q)$(POETRY) build
+
+daemon-start-mypy: ## Start dmypy daemon for this project
+	$(Q)mkdir -p .dmypy
+	$(Q)if $(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" status >/dev/null 2>&1; then \
+		echo "dmypy already running for $(PROJECT_NAME) at $(DMPY_SOCKET)"; \
+	else \
+		$(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" start -- --config-file "$(WORKSPACE_ROOT)/pyproject.toml"; \
+	fi
+
+daemon-stop-mypy: ## Stop dmypy daemon for this project
+	$(Q)$(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" stop >/dev/null 2>&1 || true
+	$(Q)rm -f "$(DMPY_SOCKET)"
+
+daemon-status-mypy: ## Show dmypy daemon status for this project
+	$(Q)$(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" status
+
+daemon-start-pyright: ## Start pyright daemon in watch mode
+	$(Q)mkdir -p .pyright
+	$(Q)if [ -f "$(PYRIGHT_PIDFILE)" ]; then \
+		pid=$$(cat "$(PYRIGHT_PIDFILE)"); \
+		if [ -n "$$pid" ] && kill -0 "$$pid" >/dev/null 2>&1; then \
+			echo "Pyright daemon already running (PID $$pid)"; \
+			exit 0; \
+		fi; \
+		rm -f "$(PYRIGHT_PIDFILE)"; \
+	fi
+	$(Q)nohup pyright --watch --threads > "$(PYRIGHT_LOG)" 2>&1 & \
+		pid=$$!; \
+		echo "$$pid" > "$(PYRIGHT_PIDFILE)"; \
+		echo "Pyright daemon started (PID $$pid), log: $(PYRIGHT_LOG)"
+
+daemon-stop-pyright: ## Stop pyright daemon
+	$(Q)if [ ! -f "$(PYRIGHT_PIDFILE)" ]; then \
+		echo "Pyright daemon is not running"; \
+		exit 0; \
+	fi
+	$(Q)pid=$$(cat "$(PYRIGHT_PIDFILE)"); \
+	if [ -n "$$pid" ] && kill -0 "$$pid" >/dev/null 2>&1; then \
+		kill "$$pid" >/dev/null 2>&1 || true; \
+		echo "Stopped pyright daemon (PID $$pid)"; \
+	else \
+		echo "Pyright daemon PID file was stale"; \
+	fi; \
+	rm -f "$(PYRIGHT_PIDFILE)"
+
+daemon-status-pyright: ## Show pyright daemon status
+	$(Q)if [ ! -f "$(PYRIGHT_PIDFILE)" ]; then \
+		echo "Pyright daemon is not running"; \
+		exit 1; \
+	fi
+	$(Q)pid=$$(cat "$(PYRIGHT_PIDFILE)"); \
+	if [ -n "$$pid" ] && kill -0 "$$pid" >/dev/null 2>&1; then \
+		echo "Pyright daemon running (PID $$pid), log: $(PYRIGHT_LOG)"; \
+	else \
+		echo "Pyright daemon not running (stale PID file: $$pid)"; \
+		exit 1; \
+	fi
+
+daemon-start: daemon-start-mypy daemon-start-pyright ## Start all daemons
+
+daemon-stop: daemon-stop-mypy daemon-stop-pyright ## Stop all daemons
+
+daemon-status: ## Show status of all daemons
+	$(Q)echo "== dmypy =="; \
+	$(MAKE) daemon-status-mypy || true; \
+	echo "== pyright =="; \
+	$(MAKE) daemon-status-pyright || true
+
+daemon-restart: daemon-stop daemon-start ## Restart all daemons
+
+check-lint: ## Run only ruff lint gate
+	$(Q)if [ "$(CORE_STACK)" = "go" ]; then echo "INFO: skipping python lint for go stack"; exit 0; fi
+	$(Q)$(POETRY) run ruff check . --quiet
+
+check-format: ## Run only ruff format check gate
+	$(Q)if [ "$(CORE_STACK)" = "go" ]; then echo "INFO: skipping python format for go stack"; exit 0; fi
+	$(Q)$(POETRY) run ruff format --check . --quiet
+
+check-mypy-daemon: ## Run mypy via dmypy when daemon available
+	$(Q)if [ "$(CORE_STACK)" = "go" ]; then echo "INFO: skipping mypy for go stack"; exit 0; fi
+	$(Q)check_dirs=""; \
+	for d in src tests examples scripts; do \
+		if [ -d "$$d" ]; then check_dirs="$$check_dirs $$d"; fi; \
+	done; \
+	check_dirs=$${check_dirs:-$(SRC_DIR)}; \
+	if $(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" status >/dev/null 2>&1; then \
+		$(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" check $$check_dirs; \
+	else \
+		$(POETRY) run mypy $$check_dirs --config-file "$(WORKSPACE_ROOT)/pyproject.toml"; \
+	fi
+
+check-pyright-daemon: ## Run pyright, preferring warm watch daemon
+	$(Q)if [ "$(CORE_STACK)" = "go" ]; then echo "INFO: skipping pyright for go stack"; exit 0; fi
+	$(Q)if [ -f "$(PYRIGHT_PIDFILE)" ]; then \
+		pid=$$(cat "$(PYRIGHT_PIDFILE)"); \
+		if [ -n "$$pid" ] && kill -0 "$$pid" >/dev/null 2>&1; then \
+			echo "Pyright watch daemon is running (PID $$pid)"; \
+		fi; \
+	fi
+	$(Q)check_dirs=""; \
+	for d in src tests examples scripts; do \
+		if [ -d "$$d" ]; then check_dirs="$$check_dirs $$d"; fi; \
+	done; \
+	check_dirs=$${check_dirs:-$(SRC_DIR)}; \
+	$(POETRY) run pyright $$check_dirs
+
+check-pyrefly: ## Run only pyrefly gate
+	$(Q)if [ "$(CORE_STACK)" = "go" ]; then echo "INFO: skipping pyrefly for go stack"; exit 0; fi
+	$(Q)check_dirs=""; \
+	for d in src tests examples scripts; do \
+		if [ -d "$$d" ]; then check_dirs="$$check_dirs $$d"; fi; \
+	done; \
+	check_dirs=$${check_dirs:-$(SRC_DIR)}; \
+	$(POETRY) run pyrefly check $$check_dirs --config pyproject.toml --count-errors=0 --summarize-errors=1 --summary full
+
+check-security: ## Run only security gate
+	$(Q)if [ "$(CORE_STACK)" = "go" ]; then echo "INFO: skipping bandit for go stack"; exit 0; fi
+	$(Q)$(POETRY) run bandit -r $(SRC_DIR) -q -ll
+
+check-fast: check-lint check-format check-mypy-daemon check-pyrefly check-security ## Run lint gates in parallel with make -j
+	$(Q)echo "check-fast completed (tip: use make -j4 check-fast)"
 
 check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,go,type to select)
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
@@ -299,7 +434,11 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 			--count-errors=0 --summarize-errors=1 --summary full || { echo "FAIL: pyrefly"; exit 1; }; \
 	fi; \
 	if echo "$$gates" | grep -qw mypy; then \
-		$(POETRY) run mypy $$check_dirs --config-file "$(WORKSPACE_ROOT)/pyproject.toml" || { echo "FAIL: mypy"; exit 1; }; \
+		if $(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" status >/dev/null 2>&1; then \
+			$(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" check $$check_dirs || { echo "FAIL: mypy"; exit 1; }; \
+		else \
+			$(POETRY) run mypy $$check_dirs --config-file "$(WORKSPACE_ROOT)/pyproject.toml" || { echo "FAIL: mypy"; exit 1; }; \
+		fi; \
 	fi; \
 	if echo "$$gates" | grep -qw pyright; then \
 		$(POETRY) run pyright $$check_dirs || { echo "FAIL: pyright"; exit 1; }; \
