@@ -117,6 +117,8 @@ split-on-trailing-comma = true
   "PLR2004", # magic numbers in examples
   "S105", # hardcoded-password-string - false positives in error code constants
   "S106", # hardcoded-password-func-arg
+  "S404", # subprocess import - examples may demonstrate subprocess usage
+  "S603", # subprocess calls - examples demonstrate command execution patterns
   "T201", # print - examples demonstrate output
   "TID252", # relative-imports
 ]
