@@ -18,17 +18,22 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from enum import StrEnum
-from typing import ClassVar, override
+from typing import ClassVar, cast, override
 
-from flext_core import (
-    FlextService as service,
-    r,
-)
+from flext_core import r, s
 
-EntryDict = dict[str, str | int | float | bool | list[str] | dict[str, str | int | float | bool | list[str]]]
+EntryDict = dict[
+    str,
+    str
+    | int
+    | float
+    | bool
+    | list[str]
+    | dict[str, str | int | float | bool | list[str]],
+]
 ContextDict = dict[str, object]
 EntryWithServer = tuple[EntryDict, str]
 
@@ -148,7 +153,9 @@ class AclProcessingExample:
 
         for attr_name in acl_attrs:
             if attr_name in attributes:
-                acl_values: str | list[str] = attributes[attr_name]
+                acl_values: str | list[str] = cast(
+                    "str | list[str]", attributes[attr_name]
+                )
                 values_list: list[str] = (
                     acl_values if isinstance(acl_values, list) else [acl_values]
                 )
@@ -201,22 +208,29 @@ class AclProcessingExample:
         if "required_permissions" in rules:
             required_perms: list[str] | object = rules["required_permissions"]
             if isinstance(required_perms, list) and all(
-                isinstance(p, str) for p in required_perms
+                isinstance(p, str) for p in cast("list[str]", required_perms)
             ):
-                missing_perms: set[str] = set(required_perms) - set(acl_entry.permissions)
+                missing_perms: set[str] = set(cast("list[str]", required_perms)) - set(
+                    acl_entry.permissions
+                )
                 if missing_perms:
                     violations.append(
                         f"Missing required permissions: {list(missing_perms)}",
                     )
 
         if "forbidden_combinations" in rules:
-            forbidden_combos: list[tuple[str, ...]] | object = rules["forbidden_combinations"]
+            forbidden_combos: list[tuple[str, ...]] | object = rules[
+                "forbidden_combinations"
+            ]
             if isinstance(forbidden_combos, list):
                 violations.extend(
                     f"Forbidden permission combination: {combo}"
-                    for combo in forbidden_combos
+                    for combo in cast("list[tuple[str, ...]]", forbidden_combos)
                     if isinstance(combo, tuple)
-                    and all(perm in acl_entry.permissions for perm in combo)
+                    and all(
+                        perm in acl_entry.permissions
+                        for perm in cast("list[str]", combo)
+                    )
                 )
 
         if (
@@ -243,7 +257,7 @@ class AclProcessingExample:
             ),
         )
 
-    class AclProcessor(service[dict[str, object]]):
+    class AclProcessor(s[dict[str, object]]):
         """Monadic ACL processor with zero-ceremony execution."""
 
         auto_execute: bool = True
@@ -262,15 +276,15 @@ class AclProcessingExample:
             data = detect_result.value
             data["start_time"] = start_time
             extract_result = (
-                self._extract_acls(data)
+                cast("r[dict[str, object]]", self._extract_acls(data))
                 if self.parallel
-                else self._extract_sequential(data)
+                else cast("r[dict[str, object]]", self._extract_sequential(data))
             )
             if extract_result.is_failure:
                 return extract_result
 
             data = extract_result.value
-            validate_result = self._validate_batch(data)
+            validate_result = cast("r[dict[str, object]]", self._validate_batch(data))
             if validate_result.is_failure:
                 return validate_result
 
@@ -321,11 +335,18 @@ class AclProcessingExample:
                     for entry, server_type in entries_with_servers
                 ]
 
-all_acls: list[AclProcessingExample.AclEntry] = []
-                for future in as_completed(futures):
-                    result = future.result()
+                all_acls: list[AclProcessingExample.AclEntry] = []
+                for future in cast(
+                    "list[Future[r[list[AclProcessingExample.AclEntry]]]]",
+                    as_completed(futures),
+                ):
+                    result = cast(
+                        "r[list[AclProcessingExample.AclEntry]]", future.result()
+                    )
                     if result.is_success:
-                        all_acls.extend(result.value)
+                        all_acls.extend(
+                            cast("list[AclProcessingExample.AclEntry]", result.value)
+                        )
                     else:
                         return r.fail(
                             f"ACL extraction failed: {result.error}",
@@ -349,8 +370,10 @@ all_acls: list[AclProcessingExample.AclEntry] = []
                 if isinstance(item, tuple) and len(item) == 2
             ]
 
-all_acls: list[AclProcessingExample.AclEntry] = []
-            for entry, server_type in entries_with_servers:
+            all_acls: list[AclProcessingExample.AclEntry] = []
+            for entry, server_type in cast(
+                "list[EntryWithServer]", entries_with_servers
+            ):
                 result = AclProcessingExample.extract_acls_from_entry(
                     entry,
                     server_type,
