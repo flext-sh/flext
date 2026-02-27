@@ -222,6 +222,7 @@ markers = [
 ]
 
 # [MANAGED] coverage
+enable_assertion_pass_hook = true
 
 [tool.coverage]
 report.exclude_lines = [
