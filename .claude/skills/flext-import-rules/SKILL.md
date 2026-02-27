@@ -14,10 +14,16 @@
   - [Verified violations (these exist but should not be referenced as patterns)](#verified-violations-these-exist-but-should-not-be-referenced-as-patterns)
 - [Rule 6: Private Module Convention](#rule-6-private-module-convention)
 - [Rule 7: The Facade Alias Pattern](#rule-7-the-facade-alias-pattern)
-- [Rule 8: TYPE_CHECKING Is FORBIDDEN](#rule-8-typechecking-is-forbidden)
+- [Rule 8: TYPE_CHECKING & Lazy Import Policy](#rule-8-typechecking--lazy-import-policy)
 - [Rule 9: Ruff Configuration (from ruff-shared.toml)](#rule-9-ruff-configuration-from-ruff-sharedtoml)
 - [Rule 10: What NOT to Do](#rule-10-what-not-to-do)
 - [Rule 11: No Double-Assignment of Facade Aliases](#rule-11-no-double-assignment-of-facade-aliases)
+- [Rule 12: Ecosystem MRO & Namespace Composition Architecture](#rule-12-ecosystem-mro--namespace-composition-architecture)
+  - [L0 — Foundation](#l0--foundation)
+  - [L1 — Domain Libraries](#l1--domain-libraries)
+  - [L1 — Platform Libraries](#l1--platform-libraries)
+  - [L2 — Integration Projects (Taps/Targets/dbt)](#l2--integration-projects-tapstargetsdbt)
+  - [L2 — Custom Composition Projects](#l2--custom-composition-projects)
 - [Verification](#verification)
 <!-- TOC END -->
 
@@ -34,7 +40,6 @@ description: Exact import rules and patterns verified from the actual FLEXT code
 
 > **Verified from**: Static analysis of all `.py` files in `flext-core` and consuming
 > projects (`flext-auth`, `flext-cli`, `flext-ldap`) on 2026-02-17.
-
 > **Rule**: See `CLAUDE.md` §4 Import Law for canonical aliases, import order, and prohibited import forms.
 
 ## Rule 1: Always Use `from __future__ import annotations`
@@ -64,8 +69,7 @@ from typing import Annotated, Final, Self
 from pydantic import BaseModel, Field       # 3. THIRD-PARTY
 from structlog.typing import BindableLogger
 
-from flext_core.constants import c          # 4. FIRST-PARTY (flext_core.*)
-from flext_core.typings import t
+from flext_core import c, t                 # 4. FIRST-PARTY (flext_core.*)
 
 from flext_auth.models import AuthModels    # 5. LOCAL (same project, if applicable)
 ```
@@ -106,8 +110,8 @@ from flext_core import FlextConstants  # Don't do this within flext-core
 ```python
 class FlextModels:
     """Usage:
-    >>> from flext_core import FlextModels, r
-    >>> result = FlextModels.Base.create(...)
+    >>> from flext_core import m, r
+    >>> result = m.Base.create(...)
     """
 ```
 
@@ -118,8 +122,8 @@ class FlextModels:
 ### Pattern A: Import with alias (most common, used in 90%+ of files)
 
 ```python
-from flext_core import r, t
-from flext_core import FlextModels, u
+from flext_core import m, r, t
+from flext_core import m, u
 from flext_core import r, s, t, e  # pre-aliased letters
 ```
 
@@ -136,14 +140,17 @@ from flext_core.context import FlextContext
 
 ```python
 from flext_core import FlextConstants
+
 class FlextAuthConstants(FlextConstants):
     ...
 
 from flext_core import FlextService
-class AuthAdminService(FlextService.Admin):
+
+class FlextAuthAdminService(FlextService.Admin):
     ...
 
 from flext_core.protocols import FlextProtocols
+
 class FlextAuthProtocols(FlextProtocols):
     ...
 ```
@@ -182,30 +189,21 @@ class Meltano:
 
 This pattern applies identically to `p` (protocols), `c` (constants), `t` (types), `u` (utilities).
 
-### Rule 4E: Naming Convention for Integration Projects
+### Pattern E: Naming Convention for Integration Projects
 
-All `flext-(tap|target|dbt)-*` projects MUST follow this naming pattern for their
-facade classes:
+All `flext-(tap|target|dbt)-*` projects MUST follow an **EXACT** naming pattern for their facade classes to maintain ecosystem consistency without ambiguity.
 
-```
-Flext<Role><Domain>Models     — e.g., FlextTargetLdapModels, FlextTapOracleModels
-Flext<Role><Domain>Constants  — e.g., FlextTargetLdapConstants
-Flext<Role><Domain>Types      — e.g., FlextTargetLdapTypes
-Flext<Role><Domain>Utilities  — e.g., FlextTargetLdapUtilities
-Flext<Role><Domain>Protocols  — e.g., FlextTargetLdapProtocols
-```
+**Format**: `Flext<Role><Domain><Facade>`
+- **Role**: `Tap`, `Target`, or `Dbt`
+- **Domain**: CamelCase version of the domain (e.g., `Ldap`, `DbOracle`, `OracleWms`)
+- **Facade**: `Models`, `Constants`, `Types`, `Utilities`, `Protocols`
 
-Where `<Role>` is one of: `Target`, `Tap`, `Dbt`, `MeltanoTap`, `MeltanoTarget`.
+**Examples**:
+- `FlextTargetLdapModels`
+- `FlextTapOracleProtocols`
+- `FlextDbtOracleWmsUtilities`
 
-The `Meltano` prefix in the class name is **optional** — what matters is the
-**inheritance** from `FlextMeltanoModels`. Both `FlextTargetLdapModels` and
-`FlextMeltanoTapLdapModels` are acceptable as long as they inherit correctly.
-
-```python
-# ✅ Both are correct:
-class FlextTargetLdapModels(FlextMeltanoModels, FlextLdapModels): ...
-class FlextMeltanoTapLdapModels(FlextMeltanoModels, FlextLdapModels): ...
-```
+> **CRITICAL**: Do NOT include `Meltano` in the class name (e.g., use `FlextTapLdapProtocols`, **not** `FlextMeltanoTapLdapProtocols`). The Meltano integration is represented purely through **inheritance** `(FlextMeltanoProtocols, FlextLdapProtocols)`, not through the name. This strict consistency ensures predictable mapping across all 33 ecosystem projects.
 
 ### What is NEVER done in subprojects
 
@@ -279,7 +277,7 @@ exported in `__init__.py` and used throughout the codebase for concise code:
 # REAL code from the codebase:
 from flext_core.models import m
 from flext_core.result import r
-from flext_core.protocols import p
+from flext_core.handlers import h
 
 class MyHandler(h.BaseCommandHandler[m.Cqrs.Command, r]):
     ...
@@ -287,31 +285,107 @@ class MyHandler(h.BaseCommandHandler[m.Cqrs.Command, r]):
 
 ---
 
-## Rule 8: TYPE_CHECKING Is FORBIDDEN
+## Rule 8: TYPE_CHECKING & Lazy Import Policy
 
-> **Rule**: See `CLAUDE.md` §3 Code Law for the normative `TYPE_CHECKING` prohibition.
+> **Rule**: See `CLAUDE.md` §3 Code Law for the normative `TYPE_CHECKING` guidance.
 
-`typing.TYPE_CHECKING` is **prohibited** in the FLEXT ecosystem.
-It is a band-aid for circular imports — the real fix is proper module layering.
+The flext ecosystem strictly enforces how imports are resolved at runtime and type-checking time to maintain performance and avoid cyclic dependencies without polluting the codebase with bad practices.
+
+### TYPE_CHECKING (For Cyclic Type Dependencies ONLY)
+
+`typing.TYPE_CHECKING` is **STRICTLY RESTRICTED** to solving actual cyclic dependency problems for type-only imports in non-Pydantic files.
+
+It is **FORBIDDEN** to use `TYPE_CHECKING` in files containing Pydantic `BaseModel` or `RootModel` field annotations, because Pydantic requires runtime access to type annotations for validation.
 
 ```python
-# ❌ FORBIDDEN — TYPE_CHECKING block
+# ✅ CORRECT — TYPE_CHECKING for cyclic type-only imports (no Pydantic models here)
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from flext_core.container import FlextContainer
+    from flext_core.result import FlextResult
+
+# Runtime code uses protocols or deferred imports instead
+from flext_core.protocols import FlextProtocols
+```
+
+```python
+# ❌ FORBIDDEN — TYPE_CHECKING in Pydantic model file
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from flext_core.container import FlextContainer
 
-# ✅ CORRECT — move the dependency to the right tier or use protocols
-from flext_core.protocols import FlextProtocols
-# Use protocol-based decoupling instead of TYPE_CHECKING
+class MyModel(BaseModel):
+    container: FlextContainer  # ❌ Pydantic cannot validate at runtime!
 ```
 
-If a circular import exists, fix the architecture:
+### PROHIBITED Patterns (Zero Tolerance)
 
-1. Move the offending code to a lower tier module.
-2. Use protocol-based decoupling (`protocols.py`).
-3. Use dependency injection via `FlextContainer`.
+All forms of dynamic evaluation, runtime patching, and hidden imports are strictly prohibited:
 
+1. **`model_rebuild()`** — PROHIBITED. Fix the graph or use Protocols.
+2. **Inline Imports (Inside Functions/Methods)** — PROHIBITED. Imports must be top-level.
+3. **Lazy Generic Imports** — PROHIBITED in modules. (Exception: `__getattr__` in `__init__.py`).
+4. **Try-Except ImportErrors** — PROHIBITED for dependency bridging.
+5. **`eval()` / `exec()`** — PROHIBITED.
+6. **`getattr()` / `setattr()` / `globals()` / `locals()`** — PROHIBITED for routing, architecture, or dynamic import logic.
+7. **`importlib` hacks** — PROHIBITED to bypass tier boundaries.
+
+```python
+# ❌ NEVER DO THIS (Inline Import)
+def process() -> None:
+    from flext_core.container import FlextContainer  # STRICTLY PROHIBITED
+    ...
+
+# ❌ NEVER DO THIS (Try/Except)
+try:
+    import pandas  # STRICTLY PROHIBITED
+except ImportError:
+    pandas = None
+```
+
+### Circular Import Resolution Strategy
+
+If a circular import exists, you MUST resolve it using one of these two architectural patterns:
+
+1. **Protocol Decoupling (PREFERRED)** — Use structurally typed protocols (`protocols.py`) to break the cycle by depending on the contract rather than the concrete implementation.
+2. **TYPE_CHECKING** — If you only need the class for type hints and it isn't a Pydantic model, use the `TYPE_CHECKING` block.
+
+```python
+# Strategy 1: Protocol Decoupling (PREFERRED)
+from flext_core.protocols import FlextProtocols
+def process(container: FlextProtocols.ContainerLike) -> None: ...
+```
+
+### Module-Level Lazy Loading (`__init__.py` Optimization)
+
+All package `__init__.py` files **MUST** implement the module-level `__getattr__` lazy loading optimization to avoid circular import storms and optimize startup time. This is the **ONLY** form of lazy loading allowed.
+
+```python
+# __init__.py 
+from typing import TYPE_CHECKING
+
+# 1. Type hinting for IDEs
+if TYPE_CHECKING:
+    from .models import FlextModels
+    from .protocols import FlextProtocols
+
+# 2. Strict mapping
+__all__ = ["FlextModels", "FlextProtocols"]
+
+# 3. Native module-level lazy load strategy
+def __getattr__(name: str) -> object:
+    if name == "FlextModels":
+        from .models import FlextModels
+        return FlextModels
+    if name == "FlextProtocols":
+        from .protocols import FlextProtocols
+        return FlextProtocols
+    
+    msg = f"module {__name__!r} has no attribute {name!r}"
+    raise AttributeError(msg)
+```
 ---
 
 ## Rule 9: Ruff Configuration (from ruff-shared.toml)
@@ -340,9 +414,7 @@ Key enforced rules:
 
 - `I001` — Import sorting
 - `I002` — Required `from __future__ import annotations`
-- `TCH001/TCH002` — Type-checking block for type-only imports
-- `UP035/UP038` — Modern import forms (e.g., `collections.abc.Sequence` over `typing.Sequence`)
-- `F401` — Unused imports
+- `TCH001/TCH002/TCH003` — Type-checking imports (IGNORED in ruff-shared.toml lines 79-81 for Pydantic compatibility)
 
 ---
 
@@ -351,21 +423,22 @@ Key enforced rules:
 ```python
 # ❌ Wild imports
 from flext_core import *
-from flext_core.models import *
 
-# ❌ Relative imports (the codebase uses ZERO relative imports)
-from .models import FlextModels
-from ..constants import c
+# ❌ Relative imports
+from .models import FlextModels  # Use: from flext_project.models import m
 
-# ❌ Importing typing constructs the old way
-from typing import List, Dict, Optional, Union  # Use list, dict, X | None, X | Y
+# ❌ Legacy typing
+from typing import List, Dict, Optional, Union  # Use: list, dict, X | None, X | Y
 
-# ❌ Importing from collections.abc via typing
-from typing import Sequence  # Use: from collections.abc import Sequence
+# ❌ Evaluation hacks
+eval(user_input)
+getattr(obj, "dynamic_attr")  # For architecture logic
 
-# ❌ Shadowing aliases inconsistently
-from flext_core import result  # Use: r (or just r)
+# ❌ Shadowing aliases
+from flext_core import result  # Use: r
 ```
+
+> **Note on Relative Imports**: Relative imports exist in some projects (tracked separately). However, **all new code MUST use absolute imports**. Relative imports are not the preferred pattern and should not be used in new development.
 
 ## Rule 11: No Double-Assignment of Facade Aliases
 
@@ -402,6 +475,125 @@ This applies to ALL facade pairs:
 
 **Detection**: `grep -n "^from flext_core.*import.*\b[cmptu]\b" <file>` combined
 with `grep -n "^[cmptu] = " <file>` — if both match, it's a double-assignment.
+
+---
+
+## Rule 12: Ecosystem MRO & Namespace Composition Architecture
+
+The FLEXT ecosystem follows a strict, tier-based inheritance model. These are the **TARGET** MRO and Namespace resolution behaviors for all 33 ecosystem projects.
+
+> **CRITICAL - UNIVERSAL APPLICATION**: This architectural rule applies **IDENTICALLY** across all five core components in every project:
+> 1. `Protocols` (`p`)
+> 2. `Models` (`m`)
+> 3. `Types` (`t`)
+> 4. `Utilities` (`u`)
+> 5. `Constants` (`c`)
+>
+> If a project's `Protocols` inherit from `FlextCliProtocols`, its `Models` MUST correspondingly inherit from `FlextCliModels`, its `Utilities` from `FlextCliUtilities`, and so on.
+
+**NAMESPACE & MRO MECHANICS**: Each project defines **exactly ONE** inner class representing its own namespace (e.g., `class TapOracle:`). By inheriting parent facade classes, the project automatically gains access to all parent namespaces via Python's Method Resolution Order (MRO).
+Example: `AlgarOudMigProtocols(FlextLdapProtocols, FlextCliProtocols)` gives you access to `.AlgarOudMig` (its own), `.Cli` (from CLI), `.Ldap` (from LDAP), and `.Ldif` (because LDAP inherits from LDIF), plus all base methods from `flext-core`.
+
+**TARGET ARCHITECTURE**: The patterns below show what the architecture *should be* natively. Some projects currently inherit `FlextProtocols` directly instead of their intended platform dependency (e.g., `flext-meltano` currently uses `FlextProtocols` but should use `FlextCliProtocols`). When refactoring or building new modules, refer to this target state.
+
+### L0 — Foundation
+**`flext-core`** forms the basis of all ecosystem projects.
+- **Class**: `FlextProtocols` (same for Models `m`, Constants `c`, Utilities `u`, Types `t`)
+- **Inherits**: `(base)`
+- **Namespace**: Provides root-level base protocols (`.Result`, `.Service`, `.Config`, etc. without inner namespace class)
+
+---
+
+### L1 — Domain Libraries
+Domain libraries encapsulate logic applicable regardless of execution environment.
+- **Inheritance Pattern**: Domain libraries generally inherit from `FlextProtocols` (or a lower-tier domain library like Ldif).
+- **Namespaces**: Adds one dedicated namespace inner-class (e.g., `.DbOracle`).
+
+| Project | Class Name | TARGET Inherits | Own Namespace | Full Access |
+|---|---|---|---|---|
+| `flext-ldif` | `FlextLdifProtocols` | `(FlextProtocols)` | `.Ldif` | `.Ldif`, core root |
+| `flext-ldap` | `FlextLdapProtocols` | `(FlextLdifProtocols)` | `.Ldap` | `.Ldap`, `.Ldif`, core root |
+| `flext-db-oracle` | `FlextDbOracleProtocols` | `(FlextProtocols)` | `.DbOracle` | `.DbOracle`, core root |
+| `flext-oracle-wms` | `FlextOracleWmsProtocols` | `(FlextProtocols)` | `.OracleWms` | `.OracleWms`, core root |
+| `flext-oracle-oic` | `FlextOracleOicProtocols` | `(FlextProtocols)` | `.OracleOic` | `.OracleOic`, core root |
+
+---
+
+### L1 — Platform Libraries
+Base Tools provide infrastructure integrations.
+- **Standalone Tools**: Inherit directly from `FlextProtocols`
+- **Dependent Tools**: Inherit from other L1 Base Tools (e.g., UI needs Web, Tap needs CLI).
+
+| Project | Class Name | TARGET Inherits | Own Namespace | Full Access |
+|---|---|---|---|---|
+| *Base Tools* | | | | |
+| `flext-cli` | `FlextCliProtocols` | `(FlextProtocols)` | `.Cli` | `.Cli`, core |
+| `flext-web` | `FlextWebProtocols` | `(FlextProtocols)` | `.Web` | `.Web`, core |
+| `flext-grpc` | `FlextGrpcProtocols` | `(FlextProtocols)` | `.Grpc` | `.Grpc`, core |
+| `flext-plugin` | `FlextPluginProtocols` | `(FlextProtocols)` | `.Plugin` | `.Plugin`, core |
+| `flext-observability`| `FlextObservabilityProtocols` | `(FlextProtocols)` | `.Observability` | `.Observability`, core |
+| *Dependent Tools* | | | | |
+| `flext-meltano` | `FlextMeltanoProtocols` | `(FlextCliProtocols)` | `.Meltano` | `.Meltano`, `.Cli`, core |
+| `flext-api` | `FlextApiProtocols` | `(FlextWebProtocols)` | `.Api` | `.Api`, `.Web`, core |
+| `flext-auth` | `FlextAuthProtocols` | `(FlextWebProtocols)` | `.Auth` | `.Auth`, `.Web`, core |
+| `flext-quality` | `FlextQualityProtocols` | `(FlextWebProtocols, FlextCliProtocols)` | `.Quality` | `.Quality`, `.Web`, `.Cli`,  core |
+
+---
+
+### L2 — Integration Projects (Taps/Targets/dbt)
+Integrations MUST compose exactly ONE platform and ONE domain. Because `FlextMeltanoProtocols` inherits `FlextCliProtocols` in the target architecture, integrations naturally gain access to `.Cli` tools.
+
+**Pattern Formula**: `Flext<Role><Domain><Facade> (FlextMeltano<Facade>, Flext<Domain><Facade>)`
+
+| Sub-Tier | Project | TARGET Class Name | TARGET Inherits | Own Namespace | Full Access |
+|---|---|---|---|---|---|
+| **Taps** | `flext-tap-ldap` | `FlextTapLdapProtocols` | `(FlextMeltanoProtocols, FlextLdapProtocols)` | `.TapLdap` | `.TapLdap`, `.Meltano`, `.Cli`, `.Ldap`, `.Ldif`, core root |
+| | `flext-tap-ldif` | `FlextTapLdifProtocols` | `(FlextMeltanoProtocols, FlextLdifProtocols)` | `.TapLdif` | `.TapLdif`, `.Meltano`, `.Cli`, `.Ldif`, core root |
+| | `flext-tap-oracle` | `FlextTapOracleProtocols` | `(FlextMeltanoProtocols, FlextDbOracleProtocols)` | `.TapOracle` | `.TapOracle`, `.Meltano`, `.Cli`, `.DbOracle`, core root |
+| | `flext-tap-oracle-oic` | `FlextTapOracleOicProtocols` | `(FlextMeltanoProtocols, FlextOracleOicProtocols)` | `.TapOracleOic` | `.TapOracleOic`, `.Meltano`, `.Cli`, `.OracleOic`, core root |
+| | `flext-tap-oracle-wms` | `FlextTapOracleWmsProtocols` | `(FlextMeltanoProtocols, FlextOracleWmsProtocols)` | `.TapOracleWms` | `.TapOracleWms`, `.Meltano`, `.Cli`, `.OracleWms`, core root |
+| **Targets** | `flext-target-ldap` | `FlextTargetLdapProtocols` | `(FlextMeltanoProtocols, FlextLdapProtocols)` | `.TargetLdap` | `.TargetLdap`, `.Meltano`, `.Cli`, `.Ldap`, `.Ldif`, core root |
+| | `flext-target-ldif` | `FlextTargetLdifProtocols` | `(FlextMeltanoProtocols, FlextLdifProtocols)` | `.TargetLdif` | `.TargetLdif`, `.Meltano`, `.Cli`, `.Ldif`, core root |
+| | `flext-target-oracle` | `FlextTargetOracleProtocols` | `(FlextMeltanoProtocols, FlextDbOracleProtocols)` | `.TargetOracle` | `.TargetOracle`, `.Meltano`, `.Cli`, `.DbOracle`, core root |
+| | `flext-target-oracle-oic` | `FlextTargetOracleOicProtocols` | `(FlextMeltanoProtocols, FlextOracleOicProtocols)` | `.TargetOracleOic` | `.TargetOracleOic`, `.Meltano`, `.Cli`, `.OracleOic`, core root |
+| | `flext-target-oracle-wms` | `FlextTargetOracleWmsProtocols` | `(FlextMeltanoProtocols, FlextOracleWmsProtocols)` | `.TargetOracleWms` | `.TargetOracleWms`, `.Meltano`, `.Cli`, `.OracleWms`, core root |
+| **dbt** | `flext-dbt-ldap` | `FlextDbtLdapProtocols` | `(FlextMeltanoProtocols, FlextLdapProtocols)` | `.DbtLdap` | `.DbtLdap`, `.Meltano`, `.Cli`, `.Ldap`, `.Ldif`, core root |
+| | `flext-dbt-ldif` | `FlextDbtLdifProtocols` | `(FlextMeltanoProtocols, FlextLdifProtocols)` | `.DbtLdif` | `.DbtLdif`, `.Meltano`, `.Cli`, `.Ldif`, core root |
+| | `flext-dbt-oracle` | `FlextDbtOracleProtocols` | `(FlextMeltanoProtocols, FlextDbOracleProtocols)` | `.DbtOracle` | `.DbtOracle`, `.Meltano`, `.Cli`, `.DbOracle`, core root |
+| | `flext-dbt-oracle-wms` | `FlextDbtOracleWmsProtocols` | `(FlextMeltanoProtocols, FlextOracleWmsProtocols)` | `.DbtOracleWms` | `.DbtOracleWms`, `.Meltano`, `.Cli`, `.OracleWms`, core root |
+
+**Example (Tap):**
+```python
+# flext-tap-oracle/src/flext_tap_oracle/protocols.py
+class FlextTapOracleProtocols(FlextMeltanoProtocols, FlextDbOracleProtocols):
+    class TapOracle:
+        class DataExtractionProtocol(Protocol): ...
+
+p = FlextTapOracleProtocols
+# Gives access to: p.TapOracle.*, p.Meltano.*, p.Cli.*, p.DbOracle.*, and core root
+```
+
+---
+
+### L2 — Custom Composition Projects
+Business-specific projects use structural composition combining Domains and Platforms as needed.
+
+| Project | Class Name | TARGET Inherits | Access Gained via MRO |
+|---|---|---|---|
+| `algar-oud-mig` | `AlgarOudMigProtocols` | `(FlextLdapProtocols, FlextCliProtocols)` | `.AlgarOudMig`, `.Ldap`, `.Ldif`, `.Cli`, core |
+| `gruponos-meltano-native` | `GruponosMeltanoNativeProtocols`| `(FlextTapOracleProtocols, FlextTargetOracleWmsProtocols)`| `.GruponosMeltanoNative`, `.TapOracle`, `.TargetOracleWms`, `.Meltano`, `.Cli`, `.DbOracle`, `.OracleWms`, core |
+
+> **Namespacing Access Rule & Verification**:
+>
+> Every namespace mapped as "Full Access" is available transparently on the project's alias.
+> If `p = AlgarOudMigProtocols`:
+> - `p.AlgarOudMig.MutableEntryProtocol` (Own namespace)
+> - `p.Ldap.LdapEntryProtocol` (Inherited from `FlextLdapProtocols`)
+> - `p.Ldif.EntryProtocol` (Inherited transitively from `FlextLdifProtocols` -> `FlextLdapProtocols`)
+> - `p.Cli.Command` (Inherited from `FlextCliProtocols`)
+> - `p.Service` (Inherited transitively from `FlextProtocols` -> core root)
+>
+> **You do NOT need to import the parent aliases** (like `ldif_p` or `cli_p`). Simply import the local alias (`from .protocols import p`) and navigate the namespaces `p.Ldif.*`, `p.Cli.*`.
 
 ---
 

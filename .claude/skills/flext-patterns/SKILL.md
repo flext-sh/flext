@@ -37,11 +37,23 @@ description: Repository-native implementation patterns for result flow, DI, logg
 - `flext-core/docs/guides/railway-oriented-programming.md`
 - `flext-core/src/flext_core/runtime.py`
 
+## Zero Tolerance for "Hacks" (Mandatory — No Exception)
+
+All forms of dynamic evaluation, runtime patching, and hidden imports are strictly prohibited:
+
+1. **`model_rebuild()`** — PROHIBITED. Fix the graph or use Protocols.
+2. **Inline/Lazy Imports** — PROHIBITED. Imports must be top-level.
+3. **`try-except ImportError`** — PROHIBITED for dependency bridging.
+4. **`cast()`** — PROHIBITED in production code (except core `result.py`).
+5. **`eval()` / `exec()`** — PROHIBITED.
+6. **`getattr()` / `setattr()` / `globals()` / `locals()`** — PROHIBITED for architecture or dynamic logic.
+
 ## Rules
 
 > **Rule**: See `CLAUDE.md` §2 Architecture Law and §4 Import Law for canonical namespace alias and inheritance requirements.
 
 - This skill focuses on implementation-level patterns, anti-patterns, and concrete examples.
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 
 ## Pattern Catalog
 

@@ -47,6 +47,7 @@ description: Canonical documentation-governance policy for agent configs: one ro
 - Agent-specific files remain pointers, not policy mirrors.
 - Never duplicate governance rules across multiple agent files.
 - Pointer files must remain concise and reference scoped skills instead of restating them.
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 
 ## Instructions
 

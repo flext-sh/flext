@@ -45,6 +45,7 @@ description: Profile and optimize Python code using cProfile, memory profilers, 
 - Use list comprehensions and generator expressions over explicit loops for data transforms.
 - Avoid premature optimization — optimize only measured hot paths.
 - Use `__slots__` on high-frequency data classes to reduce memory overhead.
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 
 ## Instructions
 

@@ -45,7 +45,8 @@ description: Type narrowing techniques including isinstance, TypeIs, TypeGuard, 
 - Prefer `TypeIs` (PEP 742, 3.13+) over `TypeGuard` — it narrows both branches.
 - Use `isinstance` checks for simple type narrowing — no need for custom guards.
 - Use `assert_never` for exhaustiveness checking in match/if-else chains.
-- Never use `type()` comparison — use `isinstance()` for type checks.
+- Never use `type()` comparison for narrowing — use `isinstance()` for type checks. (Except for AST identity where narrowing is not intended).
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, and architectural `getattr()`.
 
 ## Instructions
 

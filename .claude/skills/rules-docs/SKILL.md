@@ -42,6 +42,7 @@ description: Rules for documentation under `docs/` to keep architecture and proj
 - Align architectural claims with current source files.
 - Prefer concrete file/symbol anchors over generic statements.
 - Avoid duplicating canonical policy text from root governance files.
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 
 ## Instructions
 

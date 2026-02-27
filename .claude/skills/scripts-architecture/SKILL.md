@@ -67,6 +67,7 @@ description: Architecture services — import analysis, violation detection, cod
 - Analysis output must go to `.reports/` using artifact naming contract.
 - Standard quality gates run via Make verbs (`make check`, `make validate`); architecture scripts are implementation details behind Make.
 - Cross-project tests run via `make test` (or `make test FAIL_FAST=1` to stop on first failure).
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 
 ## Instructions
 

@@ -47,6 +47,7 @@ description: Comprehensive Python 3.13 typing PEPs reference — PEP 696 (type d
 - Use `@deprecated` (PEP 702) instead of docstring-only deprecation notices.
 - Use `ReadOnly` (PEP 705) for immutable TypedDict fields — not for all fields.
 - Prefer `TypeIs` (PEP 742) over `TypeGuard` — it narrows both branches.
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 
 ## Instructions
 

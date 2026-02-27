@@ -37,6 +37,7 @@ description: Rules for shared source modules under top-level `src/`. Use when ed
 - Avoid package-internal imports that bypass public contracts.
 - Keep typing explicit for public/module-level APIs.
 - Preserve deterministic behavior and avoid hidden side effects.
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `inline imports`, and `cast()`.
 
 ## Instructions
 

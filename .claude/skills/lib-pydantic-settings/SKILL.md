@@ -59,7 +59,7 @@ description: Pydantic SettingsConfigDict and singleton config patterns across FL
 - Preserve source priority assumptions unless intentionally overridden:
   - init kwargs > environment variables > dotenv/env_file > secrets > field defaults
 - Keep `validate_assignment=True` in settings where runtime mutation safety matters.
-
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 ## Instructions
 
 - Use these canonical declarations as baseline:

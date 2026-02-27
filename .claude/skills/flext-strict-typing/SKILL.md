@@ -51,7 +51,7 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 
 > **Source of truth**: Extracted from `flext-core/src/flext_core/typings.py` (534 lines)
 > and cross-referenced with `models.py`, `protocols.py`, and `ruff-shared.toml`.
-
+>
 > **Rule**: See `CLAUDE.md` §3 Code Law for canonical `FlextResult` and typing requirements.
 
 ## Python Version & Core Requirements
@@ -400,7 +400,7 @@ Key rules in `[lint.select]`:
 
 - `ANN` — All annotation rules (requires type hints everywhere)
 - `UP` — pyupgrade (modern syntax enforcement)
-- `TCH` — Type checking imports (move type-only imports to `TYPE_CHECKING`)
+- `TCH` — Type checking imports (move strictly cyclic type-only imports to `TYPE_CHECKING` for non-Pydantic modules)
 - `PYI` — Stub file rules
 - `RUF013` — Implicit `Optional` forbidden (use `X | None` explicitly)
 
@@ -409,6 +409,13 @@ Key rules in `[lint.ignore]`:
 - `ANN101` — Missing `self` annotation (ignored, obvious)
 - `ANN102` — Missing `cls` annotation (ignored, obvious)
 - `ANN401` — `Any` usage (currently ignored but SHOULD be enforced)
+
+## Zero Tolerance for Hacks (Mandatory)
+
+1. **`model_rebuild()`** — PROHIBITED in all code. Resolve at definition time.
+2. **`cast()`** — PROHIBITED in project code. Use `isinstance` or `TypeGuard`. (Exception: Only allowed in core `result.py`).
+3. **`eval()` / `exec()`** — PROHIBITED.
+4. **`inline imports`** — PROHIBITED.
 
 ---
 

@@ -34,13 +34,13 @@ alwaysApply: true
 - Layer ownership: `L3` orchestration, `L2` domain/infrastructure, `L1` foundation/bridge, `L0` contracts.
 - Bridge external infra through runtime/container boundaries, not direct framework imports.
 - Public contracts must be consumed from package facades and root exports.
-- Namespace aliases are canonical public API surfaces: `m`, `c`, `t`, `u`, `p`, `r`, `d`, `e`, `h`, `s`, `x`. Use simple runtime aliases only (e.g. `c = FlextConstants`, `m = FlextModels` in **init**). Do not use FlextRuntime.Aliases or any alias registry; MRO protocol only.
-- Cross-project composition must use inheritance via MRO, never assignment mirroring or alias duplication. Subprojects expose flat namespace via class-level aliases on the facade (e.g. `ExecuteResult = TargetOracle.ExecuteResult` so usage is `m.ExecuteResult`).
-- Integration projects (`tap|target|dbt`) must include `FlextMeltano*` plus the correct domain mixin.
+- Namespace aliases are canonical public API surfaces: `m`, `c`, `t`, `u`, `p`, `r`, `d`, `e`, `h`, `s`, `x`. Use simple runtime aliases only (e.g. `c = FlextConstants`, `m = FlextModels` in **init**).
+- Cross-project composition MUST use inheritance via MRO across all components symmetrically (`Protocols`, `Models`, `Types`, `Utilities`, `Constants`). Subprojects define exactly ONE internal namespace class and transparently gain access to all parent namespaces via MRO.
+- Integration projects (`tap|target|dbt`) MUST compose one platform and one domain via inheritance (e.g., `FlextMeltanoProtocols` + `FlextLdapProtocols`). The integration class name MUST NOT contain the "Meltano" prefix (e.g. `FlextTapLdapProtocols`).
 - Domain boundaries are strict: `oracle-wms != db-oracle`, `ldap != ldif`.
 - Each public facade module defines exactly one primary facade class plus one canonical alias.
-- No backward-compat alias layers (`LegacyX = NewX`) and no namespace shadowing.
-- `__init__.py` files are exports-only: imports/re-exports and `__all__`, no runtime logic.
+- No backward-compat alias layers (`LegacyX = NewX`) and no namespace shadowing. You must never re-assign parent aliases.
+- `__init__.py` files are exports-only: type hints, `__all__`, and native `__getattr__` module-level lazy load strategy.
 - For architecture details and composition matrix -> see skill: `flext-architecture-layers`.
 - For namespace inheritance and anti-patterns -> see skill: `flext-patterns`.
 - For path-level architectural enforcement -> see skills: `rules-flext-core`, `rules-src`.
@@ -50,7 +50,8 @@ alwaysApply: true
 - **NEW** Fallible operations MUST use `FlextResult` (`r[T].ok(...)` / `r.fail(...)`), never ad-hoc dict envelopes.
 - **NEW** `sys.exit` is forbidden outside `__main__.py` entrypoint boundaries.
 - **NEW** Bare subprocess calls are forbidden; use standardized command runner abstractions.
-- **NEW** `typing.TYPE_CHECKING` blocks are forbidden; resolve layering via protocols/architecture.
+- **NEW** `typing.TYPE_CHECKING` blocks are STRICTLY RESTRICTED to resolving cyclic dependencies in non-Pydantic modules.
+- **NEW** **Zero Tolerance for Hacks**: `model_rebuild()`, `eval()`, `exec()`, architectural `getattr()`, inline imports, lazy generic imports, and `try/except ImportError` blocks are TOTALLY FORBIDDEN without exception.
 - **NEW** `print()` is forbidden in production paths; use structured logging with `FlextLogger`/structlog.
 - `from __future__ import annotations` is mandatory in Python modules.
 - Bare `except:` is forbidden; catch explicit exceptions and preserve typed failure boundaries.
@@ -62,13 +63,13 @@ alwaysApply: true
 - Root-cause fixes only: no bypasses, no hidden suppressions, no fake-green reports.
 - Never claim checks passed without executable evidence.
 - For typing law and `FlextResult` details -> see skill: `flext-strict-typing`.
-- **Type narrowing**: use `isinstance` or `TypeGuard` only; `type(x) is T` for narrowing is forbidden.
+- **Type narrowing**: use `isinstance` or `TypeGuard` only; `type(x) is T` for narrowing is forbidden. `cast()` is completely forbidden outside of `flext-core` result internals.
 - **Polymorphic code**: dismantle into centralized Pydantic v2 models (single contract, validation in model).
 - For result/logging/DI coding patterns -> see skill: `flext-patterns`.
 
 ## §4 Import Law
 
-- Canonical alias imports are mandatory at usage sites: `r,t,c,m,p,u,d,e,h,s,x`.
+- Canonical alias imports are mandatory at usage sites: `r,t,c,m,p,u,d,e,h,s,x`. You only ever import the local facade explicitly; parent facades are inherited seamlessly.
 - Keep import order: future, stdlib, third-party, first-party, local.
 - Within `flext-core`, import concrete submodules (`flext_core.<module>`) not package root.
 - From subprojects, consume public API/facade exports; never import private `_` internals.
@@ -210,7 +211,7 @@ Use EXACTLY this ownership matrix:
 
 Agents MUST execute in this order:
 
-- **Phase 0 (SOLO)**: Agent 4 completes Wave 0 (RuntimeResult.__slots__ + FlextResult.fail() + p.Result) and PUSHES. ALL other agents BLOCKED until Phase 0 complete.
+- **Phase 0 (SOLO)**: Agent 4 completes Wave 0 (RuntimeResult.**slots** + FlextResult.fail() + p.Result) and PUSHES. ALL other agents BLOCKED until Phase 0 complete.
 - **Phase 1**: Agent 4 continues (exception propagation, safe(), chaining) + Agent 5 starts (containers/decorators/handlers/mixins). Agent 5 must `git pull --rebase` before starting.
 - **Phase 2**: Agent 1 (Dispatcher) + Agent 3 (Service) start. Both must `git pull --rebase` before starting.
 - **Phase 3**: Agent 2 (Registry) starts. Must `git pull --rebase` before starting.
