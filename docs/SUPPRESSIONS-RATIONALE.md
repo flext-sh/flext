@@ -36,7 +36,7 @@
   - **FlextSettings.**init\*\*\*\*: Mantido `cast("dict[str, Any]", kwargs)` para `BaseSettings.__init__` com comentário de exceção de política (CLAUDE.md): fronteira de biblioteca; pydantic_settings espera kwargs dinâmicos.
 - **flext-dbt-ldap**
   - **Unreachable**: Helper `_entry_attrs_mapping(entry)` no módulo; `normalize_attributes` / `_get_object_classes` e `dbt_client._matches_schema` usam esse helper. Import de `_entry_attrs_mapping` movido para o topo de `dbt_client.py` (lint PLC0415).
-  - **Fronteira Pydantic (SSOT)**: Um único `[[tool.mypy.overrides]]` em `pyproject.toml` para `module = "flext_dbt_ldap.models"` com `disallow_any_explicit = false`. Causa: membro sintético `__mypy-replace` na cadeia ValueObject → BaseModel; limitação conhecida mypy/Pydantic. Override documentado no próprio `pyproject.toml` e aqui; não adicionar outros overrides fora desse padrão.
+  - **Fronteira Pydantic (SSOT)**: Um único `[[tool.mypy.overrides]]` em `pyproject.toml` para `module = "flext_dbt_ldap.models"` com `disallow_any_explicit = false`. Causa: membro sintético `__mypy-replace` na cadeia Value → BaseModel; limitação conhecida mypy/Pydantic. Override documentado no próprio `pyproject.toml` e aqui; não adicionar outros overrides fora desse padrão.
 - **flext-tap-ldif**
   - **Unreachable**: removido `return` inalcançável em `ldif_processor.py`. **tests**: `t` em `__all__` de `tests/typings.py`. **Singer\*Message**: `model_validate({...})` em `utilities.py`. **Stub**: `typings/generated/singer_sdk/__init__.pyi` com `Stream`, `Tap` e `Tap.cli`. **Check script**: `MYPYPATH` com `ROOT/typings/generated` para o stub ser usado. Check passa sem override adicional.
 

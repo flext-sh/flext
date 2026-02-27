@@ -147,12 +147,12 @@ classDiagram
         +from_dict(data) Entity
     }
 
-    class ValueObject {
+    class Value {
         <<Abstract Base Class>>
         +__eq__(other) bool
         +__hash__() int
         +to_dict() Dict
-        +from_dict(data) ValueObject
+        +from_dict(data) Value
     }
 
     class AggregateRoot {
@@ -204,12 +204,12 @@ classDiagram
     }
 
     FlextModels --> Entity
-    FlextModels --> ValueObject
+    FlextModels --> Value
     FlextModels --> AggregateRoot
     FlextModels --> DomainEvent
 
     Entity <|-- AggregateRoot
-    ValueObject <|-- Email
+    Value <|-- Email
     AggregateRoot <|-- User
     User --> Email : contains
     User --> Role : has many
