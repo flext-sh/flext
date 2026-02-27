@@ -546,6 +546,9 @@ check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,p
 		$(if $(CHECK_GATES),--make-arg "CHECK_GATES=$(CHECK_GATES)") \
 		$(SELECTED_PROJECTS)
 
+check-cqrs-compliance: ## Enforce strict CQRS/FlextModels patterns across ecosystem
+	$(Q).github/scripts/check-cqrs-compliance.sh
+
 build: ## Build/package all selected projects
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
