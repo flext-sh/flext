@@ -210,6 +210,7 @@ fix-report.json
 **/*.dylib
 **/*.test
 **/*.out
+vendor/
 
 # Node.js inside allowed directories
 **/node_modules/
