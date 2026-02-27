@@ -6,7 +6,8 @@ Uso: python .vscode/fix_pylance.py
 
 import os
 import shutil
-import subprocessimport sys
+import subprocess
+import sys
 from pathlib import Path
 
 
@@ -48,7 +49,8 @@ def main() -> None:
         mt5linux_dir = workspace_root / "mt5linux"
         if mt5linux_dir.exists():
             target_file = mt5linux_dir / "mt5linux" / "mt5_pb2_grpc.py"
-            result = subprocess.run(                [
+            result = subprocess.run(
+                [
                     sys.executable,
                     "-m",
                     "pyright",
