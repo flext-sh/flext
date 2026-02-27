@@ -142,7 +142,7 @@ pep621_dev_dependency_groups = ["dev"]
 python-version = "3.13"
 ignore-errors-in-generated-code = true
 search-path = ["."]
-project-excludes = ["**/_pb2.py", "**/_pb2_grpc.py"]
+project-excludes = ["**/_pb2.py", "**/_pb2_grpc.py", "**/*_pb2*.py", "**/*_pb2_grpc*.py"]
 
 [tool.pyrefly.errors]
 deprecated = true
