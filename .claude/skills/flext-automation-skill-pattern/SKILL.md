@@ -42,6 +42,7 @@ description: Canonical pattern for creating reusable automation skills with scri
 - Skills must provide concrete verification commands.
 - Prefer `ast-grep` for checks/fixes; use `custom` scripts only when AST cannot express the rule.
 - Place `custom` scripts in the owning skill directory, not in `scripts/core`.
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 
 ## Instructions
 

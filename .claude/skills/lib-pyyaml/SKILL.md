@@ -61,7 +61,7 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 - Validate loaded object shape (`dict`, `list`) before passing to typed models.
 - Keep encoding explicit (`encoding="utf-8"` or project constant) when opening files.
 - For CLI output serialization, keep YAML formatting deterministic and user-readable.
-
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 ## Instructions
 
 - Use these in-repo declarations as templates:

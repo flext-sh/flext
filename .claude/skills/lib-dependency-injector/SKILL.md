@@ -54,7 +54,7 @@ description: dependency_injector bridge patterns for FLEXT runtime and container
   - `_di_resources: containers.DynamicContainer`
   - `_di_container: containers.DynamicContainer`
 - Always use `Provide`/`inject` from runtime bridge (`FlextRuntime.DependencyIntegration.Provide`, `.inject`).
-
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 ## Instructions
 
 - Follow these declarations and signatures exactly when extending DI:

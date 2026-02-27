@@ -59,7 +59,7 @@ description: FlextResult railway composition built on dry-python/returns. Use wh
 - Compose with `.map()` for pure transforms and `.flat_map()` for result-returning transforms.
 - Use `.lash()` / `.recover()` for failure recovery — never imperative `if result.is_failure:` branching in composition chains.
 - Keep `returns` library types (`IOResult`, `Maybe`, `Result`) inside `result.py` only — subprojects must use `FlextResult` / `r` exclusively.
-
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 ## Instructions
 
 ### Public API Surface — `FlextResult[T_co]`

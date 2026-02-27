@@ -64,10 +64,23 @@ description: Mandatory rules for all coding agents — simple runtime aliases on
   - `.reports/typing-violations-report.md` — replace `type()` / `__class__` with `isinstance` or TypeGuard.
   - `.reports/polymorphic-refactor-targets.md` — refactor polymorphic functions to centralized Pydantic v2 models.
 - **Checklist**: `.reports/EXECUTION-CHECKLIST-aliases-typing-polymorphic.md`.
+- **Zero Tolerance**: No `model_rebuild()`, no `inline imports`, no `cast()`, no `try-except ImportError`.
 
 ---
 
-## 7. Exigent Instructions for Agents (Mandatory)
+## 8. Zero Tolerance for "Hacks" (Mandatory — No Exception)
+
+- **Forbidden: `model_rebuild()`**: Strictly prohibited in ALL code (src, tests, scripts). You must resolve type references at definition time by fixing import order or using protocol-based decoupling.
+- **Forbidden: `inline imports`**: Strictly prohibited inside any function, method, or class body. All imports MUST be at the top of the module.
+- **Forbidden: `lazy imports`**: Strictly prohibited inside any function or class. The ONLY exception is module-level `__getattr__` in `__init__.py` for package-level optimization.
+- **Forbidden: `try-except ImportError`**: Strictly prohibited for handling optional dependencies. Define clear architecture tiers and use protocols to bridge external dependencies.
+- **Forbidden: `cast()`**: Prohibited in all project code. Use `isinstance`, `TypeGuard`, or model-refinement to satisfy the type checker. Exception: Only allowed in foundational core implementation (e.g., `result.py`) where generics are physically impossible to satisfy without it.
+- **Forbidden: Dynamic Evaluation**: `eval()`, `exec()`, and architectural `getattr()`/`setattr()` are strictly prohibited. Architecture must be static and analyzable.
+
+---
+
+## 9. Exigent Instructions for Agents (Mandatory)
+
 
 1. **Tipagem**: Use **sempre** a tipagem correta para type narrowing: `isinstance(x, T)` ou `TypeGuard`. Nunca use `type(x) is T` nem `type(x) == T` para narrowing. Nunca troque `isinstance` por `type()`.
 2. **Polimorfismo**: Desmonte **todos** os modos polimórficos de funções e métodos: substitua ramificações em 3+ tipos por **modelos Pydantic v2 centralizados** (discriminated unions, `Field`, `@field_validator`, `@model_validator`). Máximo uso de modelos centralizados com validação Pydantic v2; mínimo de ramificações ad-hoc por tipo.
@@ -75,3 +88,4 @@ description: Mandatory rules for all coding agents — simple runtime aliases on
 4. **Remoção**: Remover todos os aliases não-runtime e métodos soltos (pass-through); usar apenas métodos diretos e nomes canônicos. Reforçar uso dos aliases de runtime.
 5. **Escala**: Use **múltiplos agentes em paralelo em larga escala** (um agente por projeto ou por seção do relatório) para aplicar refators o mais rápido possível nos 32 projetos. Cada agente: um projeto ou uma seção; mudanças mínimas e verificáveis; rodar `make check` e `make test` no projeto tocado.
 6. **Qualidade**: Código sem warnings/erros de ruff e pyright; estabilidade; remover código desnecessário. Não altere padrões estabelecidos pelos SKILLS e CLAUDE.md; mudanças cirúrgicas; não perca funcionalidade de negócio.
+7. **Hacks (Zero Tolerância)**: **Nunca** use `model_rebuild()`, `inline imports`, `cast()` (exceto no core `result.py`), `eval`/`exec`, ou `try-except ImportError`. Tudo deve ser resolvido via arquitetura, MRO, protocolos e ordem correta de declaração top-level.

@@ -158,10 +158,12 @@ Used via `t.ConfigMap`, `t.ServiceMap`, `t.ErrorMap`, `t.FactoryMap`, `t.Resourc
 
 ### Forward Reference Discipline (no model_rebuild)
 
+- **ABSOLUTELY FORBIDDEN**: `model_rebuild()` is a critical architecture violation.
 - Import referenced symbols before model declaration.
 - Keep type aliases and model dependencies declared before use.
 - Use postponed annotations (`from __future__ import annotations`) and real symbols in scope.
-- Do not rely on `_types_namespace` patching.
+- Do not rely on `_types_namespace` patching or post-definition rebuild.
+- If a circular dependency seems to require `model_rebuild`, you MUST use **Protocol-based decoupling** or move the models to a lower foundation tier.
 
 ### Serialization Patterns
 
@@ -249,10 +251,10 @@ class MyModel(BaseModel):
 
 ```python
 _types_namespace = {"t": t}
-MyModel.model_rebuild(_types_namespace=_types_namespace)
+MyModel.model_rebuild(_types_namespace=_types_namespace)  # ❌ CRITICAL VIOLATION - BANNED
 ```
 
-**Why bad**: this hides invalid declaration order and unresolved annotations. Fix the model graph so all referenced symbols exist at definition time.
+**Why banned**: `model_rebuild()` hides invalid declaration order and unresolved annotations. It is forbidden in all production, test, and script code. Fix the model graph so all referenced symbols exist at definition time or use structural typing (Protocols).
 
 ### Good: all references defined before model declaration
 

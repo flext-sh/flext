@@ -105,6 +105,7 @@ Follow the rules in these skill documents:
 - **Architecture**: `flext-architecture-layers/SKILL.md`
 - **Imports**: `flext-import-rules/SKILL.md`
 - **Types**: `flext-strict-typing/SKILL.md`
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 
 ### 3. Quick Feedback Loop
 

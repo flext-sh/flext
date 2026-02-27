@@ -44,6 +44,7 @@ description: Guide for using MCP tools, skills, and agents in the FLEXT developm
 - Start sessions by checking `CLAUDE.md` for current project rules and conventions.
 - Prefer `make validate` for verification over ad-hoc lint/type-check commands.
 - Use scoped root Make selectors to avoid workspace-wide runs when not required: `PROJECT=<name>`, `PROJECTS="a b"`, `PYTEST_ARGS="..."`.
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 
 ## Instructions
 

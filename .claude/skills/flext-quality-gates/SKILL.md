@@ -20,6 +20,9 @@ description: Mandatory verification gates with exact tool commands, thresholds, 
 > **Source of truth**: Verified from `base.mk` (`check`, `test`, and `validate` targets), `ruff-shared.toml`,
 > and individual `pyproject.toml` files on 2026-02-19.
 
+## Rules
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
+
 ## Standardized Make Gate Surface
 
 Project `base.mk` and workspace `Makefile` expose only these command verbs:

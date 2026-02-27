@@ -40,7 +40,7 @@ make validate                 # run lint/type/security/test pipeline
 Python usage:
 
 ```python
-from flext_ldap import FlextLdap, FlextLdapModels as m
+from flext_ldap import m
 
 api = FlextLdap()
 result = api.search_entries(
