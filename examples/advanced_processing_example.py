@@ -18,7 +18,7 @@ from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from enum import StrEnum
-from typing import cast
+from typing import cast, override
 
 from flext_core import (
     FlextService,
@@ -82,6 +82,7 @@ class AdvancedProcessingExample:
         items: list[ItemDict]
         stages: list[str]
 
+        @override
         def execute(
             self,
         ) -> r[

@@ -21,7 +21,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from enum import StrEnum
-from typing import ClassVar
+from typing import ClassVar, override
 
 from flext_core import (
     FlextService as service,
@@ -251,6 +251,7 @@ class AclProcessingExample:
         entries: list[EntryDict]
         parallel: bool = True
 
+        @override
         def execute(self) -> r[dict[str, object]]:
             """Execute ACL processing pipeline using monadic flow."""
             start_time = time.time()

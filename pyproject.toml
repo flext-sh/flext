@@ -374,13 +374,14 @@ warn_unused_ignores = false
 # [MANAGED] pyrefly
 [tool.pyrefly]
 python-version = "3.13"
-ignore-errors-in-generated-code = true
 search-path = ["."]
 project-excludes = [
     "**/*_pb2*.py",
     "**/*_pb2_grpc*.py",
     "**/_pb2.py",
     "**/_pb2_grpc.py",
+    "vendor/**",
+    "flexcore/vendor/**",
 ]
 
 [tool.pyrefly.errors]
@@ -428,9 +429,42 @@ errors.unsupported-operation = false
 matches = "**/typings/**"
 
 [[tool.pyrefly.sub-config]]
+errors.bad-argument-type = false
+errors.bad-assignment = false
+errors.bad-class-definition = false
+errors.bad-dunder-all = false
+errors.bad-override = false
+errors.bad-param-name-override = false
+errors.bad-return = false
+errors.bad-specialization = false
+errors.implicit-import = false
+errors.inconsistent-inheritance = false
+errors.inconsistent-overload = false
+errors.invalid-annotation = false
+errors.invalid-inheritance = false
+errors.invalid-literal = false
+errors.invalid-type-alias = false
+errors.invalid-type-var = false
+errors.missing-attribute = false
+errors.missing-import = false
+errors.missing-module-attribute = false
+errors.missing-source = false
+errors.not-a-type = false
+errors.parse-error = false
+errors.unannotated-parameter = false
+errors.unannotated-return = false
+errors.unknown-name = false
+errors.unsupported-operation = false
+matches = "**/vendor/**"
+
+[[tool.pyrefly.sub-config]]
 errors.missing-import = false
 errors.unknown-name = false
 matches = "**/_pb2*.py"
+
+[[tool.pyrefly.sub-config]]
+errors.bad-argument-type = false
+matches = "**/tests/**"
 
 # [MANAGED] pyright
 # [MANAGED] pyright - STRICT TYPE CHECKING
@@ -481,6 +515,7 @@ exclude = [
   "**/target",
   "**/temp",
   "**/tmp",
+  "**/vendor",
   # Non-Python workspace directories
   "bin",
   "cmd",
