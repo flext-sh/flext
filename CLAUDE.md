@@ -1,3 +1,18 @@
+<!-- TOC START -->
+
+- [§1 Identity](#1-identity)
+- [§2 Architecture Law](#2-architecture-law)
+- [§3 Code Law](#3-code-law)
+- [§4 Import Law](#4-import-law)
+- [§5 Make Contract](#5-make-contract)
+- [§6 Quality Gates](#6-quality-gates)
+- [§7 Skill System](#7-skill-system)
+- [§8 Change Management](#8-change-management)
+- [§9 Agent Instructions](#9-agent-instructions-mandatory-for-all-coding-agents)
+- [§10 Multi-Agent Parallel Execution Law](#10-multi-agent-parallel-execution-law-mandatory)
+
+<!-- TOC END -->
+
 ---
 description:
 alwaysApply: true
