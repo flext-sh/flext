@@ -65,7 +65,7 @@ graph TB
         %% Domain Layer
         DomainServices[Services<br/>Business Logic]
         Aggregates[Aggregates<br/>Domain Models]
-        ValueObjects[Value Objects<br/>Immutable Data]
+        Values[Value Objects<br/>Immutable Data]
 
         %% Infrastructure Layer
         EventStore[Event Store<br/>PostgreSQL]
@@ -94,7 +94,7 @@ graph TB
     EventHandlers --> DomainServices
 
     DomainServices --> Aggregates
-    DomainServices --> ValueObjects
+    DomainServices --> Values
 
     DomainServices --> EventStore
     DomainServices --> PluginManager
@@ -118,7 +118,7 @@ graph TB
 
     class HTTPRouter,Middleware http
     class CommandHandlers,QueryHandlers,EventHandlers app
-    class DomainServices,Aggregates,ValueObjects domain
+    class DomainServices,Aggregates,Values domain
     class EventStore,PluginManager,ServiceRegistry,DatabaseConn,RedisConn,PythonRuntime infra
     class PostgreSQL,Redis,PythonPlugins external
 ```

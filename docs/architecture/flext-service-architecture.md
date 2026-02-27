@@ -4169,14 +4169,14 @@ class FlextLdifModels:
 ```python
 
 # ❌ ANTI-PATTERN: Criar Value Object sem herdar de Value
-class MyValueObject(BaseModel):
+class MyValue(BaseModel):
     field1: str
     field2: int
     # ❌ Falta: frozen=True (immutability)
 
 
 # ✅ CORRETO: Herdar de m.Value
-class MyValueObject(m.Value):
+class MyValue(m.Value):
     field1: str
     field2: int
     # ✅ Herda: frozen=True automaticamente
@@ -4325,13 +4325,13 @@ grep -r "class.*BaseModel" src/ | grep -v "frozen=True"
 ```python
 
 # ANTES
-class MyValueObject(BaseModel):
+class MyValue(BaseModel):
     model_config = ConfigDict(frozen=True)
     field1: str
 
 
 # DEPOIS
-class MyValueObject(m.Value):
+class MyValue(m.Value):
     # Herda frozen=True
     field1: str
 ```
