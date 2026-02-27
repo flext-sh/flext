@@ -28,7 +28,7 @@ from flext_core import (
     r,
 )
 
-EntryDict = dict[str, object]
+EntryDict = dict[str, str | int | float | bool | list[str] | dict[str, str | int | float | bool | list[str]]]
 ContextDict = dict[str, object]
 EntryWithServer = tuple[EntryDict, str]
 
@@ -113,7 +113,7 @@ class AclProcessingExample:
         attributes = entry.get("attributes", {})
         if not isinstance(attributes, dict):
             return r.fail("Invalid entry attributes format")
-        attr_keys = set(attributes.keys())
+        attr_keys: set[str] = set(attributes.keys())
 
         for (
             server_type,
@@ -141,15 +141,15 @@ class AclProcessingExample:
                 f"No ACL attributes defined for server type: {server_type}",
             )
 
-        extracted_acls = []
+        extracted_acls: list[AclProcessingExample.AclEntry] = []
         attributes = entry.get("attributes", {})
         if not isinstance(attributes, dict):
             return r.fail("Invalid attributes format")
 
         for attr_name in acl_attrs:
             if attr_name in attributes:
-                acl_values = attributes[attr_name]
-                values_list = (
+                acl_values: str | list[str] = attributes[attr_name]
+                values_list: list[str] = (
                     acl_values if isinstance(acl_values, list) else [acl_values]
                 )
 
@@ -191,26 +191,26 @@ class AclProcessingExample:
     ) -> r[AclProcessingExample.AclValidationResult]:
         """Validate ACL entry with complex context evaluation."""
         start_time = time.time()
-        violations = []
-        warnings = []
+        violations: list[str] = []
+        warnings: list[str] = []
 
         rules = AclProcessingExample.Constants.VALIDATION_RULES.get(
             acl_entry.server_type,
             {},
         )
         if "required_permissions" in rules:
-            required_perms = rules["required_permissions"]
+            required_perms: list[str] | object = rules["required_permissions"]
             if isinstance(required_perms, list) and all(
                 isinstance(p, str) for p in required_perms
             ):
-                missing_perms = set(required_perms) - set(acl_entry.permissions)
+                missing_perms: set[str] = set(required_perms) - set(acl_entry.permissions)
                 if missing_perms:
                     violations.append(
                         f"Missing required permissions: {list(missing_perms)}",
                     )
 
         if "forbidden_combinations" in rules:
-            forbidden_combos = rules["forbidden_combinations"]
+            forbidden_combos: list[tuple[str, ...]] | object = rules["forbidden_combinations"]
             if isinstance(forbidden_combos, list):
                 violations.extend(
                     f"Forbidden permission combination: {combo}"
@@ -290,7 +290,7 @@ class AclProcessingExample:
                 else:
                     return r.fail(f"Server detection failed: {result.error}")
 
-            server_types_set = {s for _, s in detected_entries}
+            server_types_set: set[str] = {s for _, s in detected_entries}
             return r.ok({
                 "entries": detected_entries,
                 "server_types": sorted(server_types_set),
@@ -321,7 +321,7 @@ class AclProcessingExample:
                     for entry, server_type in entries_with_servers
                 ]
 
-                all_acls: list[AclProcessingExample.AclEntry] = []
+all_acls: list[AclProcessingExample.AclEntry] = []
                 for future in as_completed(futures):
                     result = future.result()
                     if result.is_success:
@@ -349,7 +349,7 @@ class AclProcessingExample:
                 if isinstance(item, tuple) and len(item) == 2
             ]
 
-            all_acls: list[AclProcessingExample.AclEntry] = []
+all_acls: list[AclProcessingExample.AclEntry] = []
             for entry, server_type in entries_with_servers:
                 result = AclProcessingExample.extract_acls_from_entry(
                     entry,
