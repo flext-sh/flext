@@ -13,6 +13,7 @@ exclude = [
   "htmlcov",
   "temp-backup",
   "typings",
+  "vendor",
   "venv",
 ]
 fix = true
@@ -163,6 +164,7 @@ split-on-trailing-comma = true
 ]
 "**/*result*" = [
   "PLC2701", # private-member-access - necessary for Pydantic model inheritance in result models
+  "SLF001", # private-member-access - FlextResult accesses _exception on same-class instances
   #    "BLE001", # broad-exception-catching - framework code executes user callables
 ]
 "**/*runtime*" = [
@@ -185,6 +187,7 @@ split-on-trailing-comma = true
   "TID252", # relative-imports
 ]
 "**/*service*" = [
+  "N815", # mixedCase-variable-in-class-scope - SARIF spec mandates camelCase field names
   "S404", # subprocess import for controlled test execution
   "S603", # subprocess calls for controlled testing operations
   "SLF001", # private member access within class hierarchy
@@ -295,10 +298,18 @@ split-on-trailing-comma = true
   "D102", # missing-docstring-in-public-method - file operation methods are self-describing
 ]
 "**/container.py" = [
+  "ANN401", # any-type - factory_wrapper *_args/**kwargs intentionally typed as Any for DI flexibility
+  "SLF001", # private-member-access - accesses _namespace_registry on own class for config bootstrap
   #    "BLE001",  # blind-except - DI container executes user factories
 ]
 "**/context.py" = [
   #    "BLE001",  # blind-except - context operations return FlextResult
+]
+"**/output.py" = [
+  "FBT001", # boolean-type-hint-positional-argument - status() result flag is an essential positional boolean
+]
+"**/settings.py" = [
+  "ANN401", # any-type - __new__ **_kwargs: Any required to match BaseSettings interface
 ]
 "**/managers.py" = [
   "S105", # hardcoded-password-string - false positives in event names (not passwords)
