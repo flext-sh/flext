@@ -191,7 +191,7 @@ inherit from the `FlextMeltano*` parent AND the domain parent.
 | `*-ldap`        | `FlextLdapModels`      | `FlextLdapConstants`      | `FlextLdapTypes`      |
 | `*-ldif`        | `FlextLdifModels`      | `FlextLdifConstants`      | `FlextLdifTypes`      |
 | `*-oracle` (DB) | `FlextDbOracleModels`  | `FlextDbOracleConstants`  | `FlextDbOracleTypes`  |
-| `*-oracle-wms`  | `FlextWmsModels`       | `FlextWmsConstants`       | `FlextWmsTypes`       |
+| `*-oracle-wms`  | `FlextOracleWmsModels` | `FlextWmsConstants`       | `FlextWmsTypes`       |
 | `*-oracle-oic`  | `FlextOracleOicModels` | `FlextOracleOicConstants` | `FlextOracleOicTypes` |
 
 Use `scripts.libs.discovery.discover_projects()` to enumerate all projects
