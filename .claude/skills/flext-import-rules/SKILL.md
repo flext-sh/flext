@@ -584,3 +584,4 @@ Pattern checks:
 - `rg -n "from flext_core\._" --glob "**/*.py" flext-*/src/` — detect private import violations
 - `rg -n "from typing import List|from typing import Dict|from typing import Optional" --glob "**/*.py" flext-core/src/` — detect legacy typing imports
 - `rg -n "import \*" --glob "**/*.py" flext-core/src/` — detect wildcard imports
+
