@@ -1,0 +1,29 @@
+# ast-grep configuration for skill rule testing
+# Reference: https://ast-grep.github.io/guide/test-rule.html
+
+# ruleDirs: directories containing rule YAML files
+# Each skill in .claude/skills/*/rules/ will have its rules discovered here
+ruleDirs:
+  - .claude/skills/flext-strict-typing/rules
+  - .claude/skills/flext-patterns/rules
+  - .claude/skills/flext-pyrefly-typecheck-fix/rules
+  - .claude/skills/python-modern-type-syntax/rules
+  - .claude/skills/testing-patterns/rules
+
+# testConfigs: directories containing test YAML files
+# Test files follow naming convention: {rule-id}-test.yml
+# Test structure:
+#   id: test-{rule-id}
+#   rule: {rule-id}
+#   language: {language}
+#   cases:
+#     - id: case-name
+#       valid: true/false
+#       code: |
+#         code snippet to test
+testConfigs:
+  - testDir: .claude/skills/flext-strict-typing/tests
+  - testDir: .claude/skills/flext-patterns/tests
+  - testDir: .claude/skills/flext-pyrefly-typecheck-fix/tests
+  - testDir: .claude/skills/python-modern-type-syntax/tests
+  - testDir: .claude/skills/testing-patterns/tests
