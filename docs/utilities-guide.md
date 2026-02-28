@@ -240,7 +240,7 @@ result = u.Mapper.find_callable(predicates, "no_match")
 **Example**:
 
 ```python
-from flext_ldif.utilities import u
+from flext_ldif import u
 
 # Use inherited methods from flext-core
 result = u.Conversion.to_str_list(values)  # Inherited

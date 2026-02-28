@@ -75,7 +75,7 @@ RUN python /app/create_mocks.py
 
 # Run comprehensive validation
 RUN echo "🧪 ENTERPRISE VALIDATION..." && \
-    python -c "from flext_quality.analyzer import CodeAnalyzer; from flext_quality.metrics import QualityMetrics; from flext_quality.reports import QualityReport; analyzer=CodeAnalyzer('/app/src'); results=analyzer.analyze_project(); score=analyzer.get_quality_score(); grade=analyzer.get_quality_grade(); metrics=QualityMetrics.from_analysis_results(results); report=QualityReport(results); json_report=report.generate_json_report(); html_report=report.generate_html_report(); print(f'✅ Validation: {grade} ({score:.1f}/100), {metrics.total_issues} issues, Reports: {len(json_report)+len(html_report)} chars')" && \
+    python -c "from flext_quality import CodeAnalyzer; from flext_quality import QualityMetrics; from flext_quality import QualityReport; analyzer=CodeAnalyzer('/app/src'); results=analyzer.analyze_project(); score=analyzer.get_quality_score(); grade=analyzer.get_quality_grade(); metrics=QualityMetrics.from_analysis_results(results); report=QualityReport(results); json_report=report.generate_json_report(); html_report=report.generate_html_report(); print(f'✅ Validation: {grade} ({score:.1f}/100), {metrics.total_issues} issues, Reports: {len(json_report)+len(html_report)} chars')" && \
     python -m flext_quality.cli --help > /dev/null && echo "✅ CLI working" && \
     python -m pytest tests/ --tb=no -q --maxfail=3 -x && echo "✅ Tests passed" && \
     echo "📊 VALIDATION COMPLETE!"
@@ -85,7 +85,7 @@ USER appuser
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD python -c "from flext_quality.analyzer import CodeAnalyzer; print('OK')" || exit 1
+    CMD python -c "from flext_quality import CodeAnalyzer; print('OK')" || exit 1
 
 # Default command
 CMD ["python", "-c", "print('🚀 FLEXT Quality Enterprise Container Ready!\\n\\nValidated Features:\\n✅ Core Analysis Engine\\n✅ Quality Metrics & Scoring\\n✅ Report Generation (JSON/HTML)\\n✅ CLI Interface\\n✅ Test Suite (90%+ coverage)\\n✅ Example Scripts\\n\\nCommands:\\n🔍 python -m flext_quality.cli analyze /app/src\\n📊 cd examples/basic/simple_analysis && python example.py\\n🧪 python -m pytest tests/\\n\\n🎯 All functionality validated in enterprise container!'); exec('/bin/bash')"]

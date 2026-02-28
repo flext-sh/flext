@@ -5643,7 +5643,7 @@ from typing import Annotated
 from pydantic import Field, field_validator
 from flext_core import FlextService
 from flext_core import FlextResult
-from flext_ldif.models import Entry
+from flext_ldif import Entry
 
 class FlextLdifParser(Flext[list[Entry]]):
     """Parse LDIF files - Python 3.13 + Pydantic v2.
@@ -7739,7 +7739,7 @@ class FlextCli:
 
 # flext-cli/src/flext_cli/api.py (REFATORADO)
 from flext_core import FlextService, FlextResult
-from flext_cli.settings import FlextCliSettings
+from flext_cli import FlextCliSettings
 from pathlib import Path
 from typing import Literal
 
@@ -8099,7 +8099,7 @@ data = read_json("data.json")  # .value automático
 
 
 # Monadic composition (se precisar de error handling)
-from flext_cli.services import CliFileService
+from flext_cli import CliFileService
 
 result = (
     CliFileService(operation="read", filepath=Path("input.json"))

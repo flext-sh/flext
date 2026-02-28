@@ -110,7 +110,7 @@ echo ""
 # CHECK 7: Verify centralized fixtures availability
 # ============================================================================
 echo -e "${BLUE}[7/8]${NC} Verifying centralized fixtures availability..."
-if python3 -c "from flext_tests.fixtures import flext_docker, flext_oud_container, ldap_container, oracle_container, postgres_container, redis_container; print('OK')" 2>/dev/null | grep -q "OK"; then
+if python3 -c "from flext_tests import flext_docker, flext_oud_container, ldap_container, oracle_container, postgres_container, redis_container; print('OK')" 2>/dev/null | grep -q "OK"; then
 	echo -e "${GREEN}✅ PASSED${NC}: Centralized fixtures are importable (including flext_oud_container)"
 else
 	echo -e "${YELLOW}⚠️  WARNING${NC}: Some centralized fixtures may not be available"
