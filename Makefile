@@ -725,7 +725,7 @@ commit: ## Commit all changes in selected projects (MESSAGE=)
 	fi
 	$(Q)committed=0; skipped=0; failed=0; \
 	for proj in $(SELECTED_PROJECTS); do \
-		if [ -d "$$proj/.git" ]; then \
+		if [ -e "$$proj/.git" ]; then \
 			changes=$$(cd "$$proj" && git status --porcelain 2>/dev/null | wc -l); \
 			if [ "$$changes" -gt 0 ]; then \
 				if (cd "$$proj" && git add -A && git commit -m "$(MESSAGE)") >/dev/null 2>&1; then \
@@ -758,7 +758,7 @@ tag: ## Create git tags for selected projects (TAG= optional, DRY_RUN=1)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)tagged=0; skipped=0; failed=0; \
 	for proj in $(SELECTED_PROJECTS); do \
-		if [ -d "$$proj/.git" ] && [ -f "$$proj/pyproject.toml" ]; then \
+		if [ -e "$$proj/.git" ] && [ -f "$$proj/pyproject.toml" ]; then \
 			ver=$$(grep '^version' "$$proj/pyproject.toml" | head -1 | awk -F'"' '{print $$2}'); \
 			tag_name="$${TAG:-v$$ver}"; \
 			existing=$$(cd "$$proj" && git tag -l "$$tag_name" 2>/dev/null); \
@@ -809,7 +809,7 @@ push: ## Push branches and tags for selected projects
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)pushed=0; failed=0; \
 	for proj in $(SELECTED_PROJECTS); do \
-		if [ -d "$$proj/.git" ]; then \
+		if [ -e "$$proj/.git" ]; then \
 			if [ "$(DRY_RUN)" = "1" ]; then \
 				echo "  ~ $$proj (dry-run)"; \
 				pushed=$$((pushed + 1)); \
