@@ -14,7 +14,7 @@
   - [Verified violations (these exist but should not be referenced as patterns)](#verified-violations-these-exist-but-should-not-be-referenced-as-patterns)
 - [Rule 6: Private Module Convention](#rule-6-private-module-convention)
 - [Rule 7: The Facade Alias Pattern](#rule-7-the-facade-alias-pattern)
-- [Rule 8: TYPE_CHECKING & Lazy Import Policy](#rule-8-typechecking--lazy-import-policy)
+- [Rule 8: TYPE_CHECKING Policy (Pragmatic Usage)](#rule-8-typechecking-policy-pragmatic-usage)
 - [Rule 9: Ruff Configuration (from ruff-shared.toml)](#rule-9-ruff-configuration-from-ruff-sharedtoml)
 - [Rule 10: What NOT to Do](#rule-10-what-not-to-do)
 - [Rule 11: No Double-Assignment of Facade Aliases](#rule-11-no-double-assignment-of-facade-aliases)
@@ -285,85 +285,59 @@ class MyHandler(h.BaseCommandHandler[m.Cqrs.Command, r]):
 
 ---
 
-## Rule 8: TYPE_CHECKING & Lazy Import Policy
+## Rule 8: TYPE_CHECKING Policy (Pragmatic Usage)
 
-> **Rule**: See `CLAUDE.md` §3 Code Law for the normative `TYPE_CHECKING` guidance.
+> **Rule**: See `CLAUDE.md` §3 Code Law for the normative `TYPE_CHECKING` policy.
 
-The flext ecosystem strictly enforces how imports are resolved at runtime and type-checking time to maintain performance and avoid cyclic dependencies without polluting the codebase with bad practices.
+`typing.TYPE_CHECKING` follows a pragmatic policy in the FLEXT ecosystem:
 
-### TYPE_CHECKING (For Cyclic Type Dependencies ONLY)
-
-`typing.TYPE_CHECKING` is allowed for non-Pydantic, type-only imports to avoid circular dependencies.
-
-It is **FORBIDDEN** to use `TYPE_CHECKING` in files containing Pydantic `BaseModel` or `RootModel` field annotations, because Pydantic requires runtime access to type annotations for validation.
+### ALLOWED
+- Type-only imports for IDE support and annotations that aren't needed at runtime
+- `__init__.py` lazy loading support (see `flext-core/__init__.py:24-59`)
+- Forward references in type annotations
 
 ```python
-# ✅ CORRECT — TYPE_CHECKING for cyclic type-only imports (no Pydantic models here)
+# ✅ ALLOWED — type-only import for IDE support
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from flext_core import FlextContainer
-    from flext_core import FlextResult
+    from flext_core.container import FlextContainer
 
-# Runtime code uses protocols or deferred imports instead
-from flext_core import FlextProtocols
-```
-
-```python
-# ❌ FORBIDDEN — TYPE_CHECKING in Pydantic model file
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from flext_core import FlextContainer
-
-class MyModel(BaseModel):
-    container: FlextContainer  # ❌ Pydantic cannot validate at runtime!
-```
-
-### PROHIBITED Patterns (Zero Tolerance)
-
-All forms of dynamic evaluation, runtime patching, and hidden imports are strictly prohibited:
-
-1. **`model_rebuild()`** — PROHIBITED. Fix the graph or use Protocols.
-2. **Inline Imports (Inside Functions/Methods)** — PROHIBITED. Imports must be top-level.
-3. **Lazy Generic Imports** — PROHIBITED in modules. (Exception: `__getattr__` in `__init__.py`).
-4. **Try-Except ImportErrors** — PROHIBITED for dependency bridging.
-5. **`eval()` / `exec()`** — PROHIBITED.
-6. **`getattr()` / `setattr()` / `globals()` / `locals()`** — PROHIBITED for routing, architecture, or dynamic import logic.
-7. **`importlib` hacks** — PROHIBITED to bypass tier boundaries.
-
-```python
-# ❌ NEVER DO THIS (Inline Import)
-def process() -> None:
-    from flext_core import FlextContainer  # STRICTLY PROHIBITED
+def get_container() -> FlextContainer:  # Annotation works, no runtime import
     ...
-
-# ❌ NEVER DO THIS (Try/Except)
-try:
-    import pandas  # STRICTLY PROHIBITED
-except ImportError:
-    pandas = None
 ```
 
-### Circular Import Resolution Strategy
-
-If a circular import exists, you MUST resolve it using one of these two architectural patterns:
-
-1. **Protocol Decoupling (PREFERRED)** — Use structurally typed protocols (`protocols.py`) to break the cycle by depending on the contract rather than the concrete implementation.
-2. **TYPE_CHECKING** — If you only need the class for type hints and it isn't a Pydantic model, use the `TYPE_CHECKING` block.
+### FORBIDDEN
+- Pydantic model imports (`BaseModel` subclasses need runtime access for validation)
+- Band-aid for circular imports (fix architecture instead)
+- Any import needed for `isinstance()`, `issubclass()`, or runtime type checks
 
 ```python
-# Strategy 1: Protocol Decoupling (PREFERRED)
-from flext_core import FlextProtocols
-def process(container: FlextProtocols.ContainerLike) -> None: ...
+# ❌ FORBIDDEN — Pydantic models need runtime access
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from flext_core.models import FlextModels
+
+class MyModel(FlextModels.Base):  # CRASHES — FlextModels not available at runtime
+    name: str
+
+# ❌ FORBIDDEN — hiding circular import instead of fixing architecture
+if TYPE_CHECKING:
+    from flext_core.utilities import FlextUtilities  # Fix the cycle instead
 ```
+
+If a circular import exists, fix the architecture:
+1. Move the offending code to a lower tier module.
+2. Use protocol-based decoupling (`protocols.py`).
+3. Use dependency injection via `FlextContainer`.
 
 ### Module-Level Lazy Loading (`__init__.py` Optimization)
 
 All package `__init__.py` files **MUST** implement the module-level `__getattr__` lazy loading optimization to avoid circular import storms and optimize startup time. This is the **ONLY** form of lazy loading allowed.
 
 ```python
-# __init__.py 
+# __init__.py
 from typing import TYPE_CHECKING
 
 # 1. Type hinting for IDEs
