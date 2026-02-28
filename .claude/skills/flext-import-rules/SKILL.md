@@ -293,7 +293,7 @@ The flext ecosystem strictly enforces how imports are resolved at runtime and ty
 
 ### TYPE_CHECKING (For Cyclic Type Dependencies ONLY)
 
-`typing.TYPE_CHECKING` is **STRICTLY RESTRICTED** to solving actual cyclic dependency problems for type-only imports in non-Pydantic files.
+`typing.TYPE_CHECKING` is allowed for non-Pydantic, type-only imports to avoid circular dependencies.
 
 It is **FORBIDDEN** to use `TYPE_CHECKING` in files containing Pydantic `BaseModel` or `RootModel` field annotations, because Pydantic requires runtime access to type annotations for validation.
 
