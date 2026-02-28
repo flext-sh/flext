@@ -98,7 +98,7 @@ Access through **project runtime alias only**; no subdivision. Subprojects: nest
 # models.py — inherit parent, define nested namespace, then alias at root
 from flext_meltano import FlextMeltanoModels
 
-class FlextTargetOracleModels(FlextMeltanoModels):
+class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):
     class TargetOracle:
         class ExecuteResult(FlextMeltanoModels.ArbitraryTypesModel):
             name: str
@@ -116,6 +116,29 @@ from flext_core import r
 
 schema = m.Meltano.SingerSchemaMessage.model_validate(data)
 result = r[m.ExecuteResult].ok(m.ExecuteResult(name="x"))
+```
+
+## .new/Swap Protocol for Large Modifications
+
+For large modifications to existing models or protocols, use the `.new` file pattern:
+
+1. Create a `.new` file with the modified version
+2. Verify the new version works correctly
+3. Swap the `.new` file with the original
+4. Delete the backup
+
+This prevents partial modifications and ensures atomic updates.
+
+## MRO Verification
+
+Verify inheritance chain with: `[c.__name__ for c in cls.__mro__]`
+
+Example:
+
+```python
+from .models import m
+print([c.__name__ for c in m.__mro__])
+# Output: ['FlextTargetOracleModels', 'FlextMeltanoModels', 'FlextDbOracleModels', 'FlextModels', 'object']
 ```
 
 Anti-patterns:
