@@ -679,3 +679,8 @@ verbose = false
 [tool.complexipy]
 max_complexity = 15
 output_format = "plain"
+
+[dependency-groups]
+dev = [
+    "types-flask (>=1.1.6,<2.0.0)"
+]

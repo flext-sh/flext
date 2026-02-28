@@ -178,7 +178,7 @@ respective facade modules and `__init__.py`:
 | `m`   | `models.py`    | `Flext<Role><Domain>Models(FlextMeltanoModels, Flext<Domain>Models)` |
 | `c`   | `constants.py` | `Flext<Role><Domain>Constants(FlextMeltanoConstants)`                |
 | `t`   | `typings.py`   | `Flext<Role><Domain>Types(FlextMeltanoTypes, Flext<Domain>Types)`                        |
-| `u`   | `utilities.py` | `Flext<Role><Domain>Utilities(FlextMeltanoUtilities)`                |
+| `u`   | `utilities.py` | `Flext<Role><Domain>Utilities(u)`                |
 | `p`   | `protocols.py` | `Flext<Role><Domain>Protocols(FlextMeltanoProtocols)`                |
 
 The `c`, `t`, `u`, `p` aliases follow the same composition pattern as `m`:

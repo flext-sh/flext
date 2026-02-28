@@ -18,7 +18,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from concurrent.futures import Future, ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import ClassVar, cast, override
@@ -207,11 +207,12 @@ class AclProcessingExample:
             {},
         )
         if "required_permissions" in rules:
-            required_perms: list[str] | object = rules["required_permissions"]
-            if isinstance(required_perms, list) and all(
-                isinstance(p, str) for p in cast("list[str]", required_perms)
-            ):
-                missing_perms: set[str] = set(cast("list[str]", required_perms)) - set(
+            required_perms_raw: list[str] | object = rules["required_permissions"]
+            if isinstance(required_perms_raw, list):
+                required_list: list[str] = [
+                    str(p) for p in required_perms_raw if isinstance(p, str)
+                ]
+                missing_perms: set[str] = set(required_list) - set(
                     acl_entry.permissions,
                 )
                 if missing_perms:
@@ -220,18 +221,17 @@ class AclProcessingExample:
                     )
 
         if "forbidden_combinations" in rules:
-            forbidden_combos: list[tuple[str, ...]] | object = rules[
+            forbidden_combos_raw: list[tuple[str, ...]] | object = rules[
                 "forbidden_combinations"
             ]
-            if isinstance(forbidden_combos, list):
+            if isinstance(forbidden_combos_raw, list):
+                forbidden_list: list[tuple[str, ...]] = [
+                    tuple(c) for c in forbidden_combos_raw if isinstance(c, tuple)
+                ]
                 violations.extend(
                     f"Forbidden permission combination: {combo}"
-                    for combo in cast("list[tuple[str, ...]]", forbidden_combos)
-                    if isinstance(combo, tuple)
-                    and all(
-                        perm in acl_entry.permissions
-                        for perm in cast("list[str]", combo)
-                    )
+                    for combo in forbidden_list
+                    if all(perm in acl_entry.permissions for perm in combo)
                 )
 
         if (
@@ -277,15 +277,15 @@ class AclProcessingExample:
             data = detect_result.value
             data["start_time"] = start_time
             extract_result = (
-                cast("r[dict[str, object]]", self._extract_acls(data))
+                self._extract_acls(data)
                 if self.parallel
-                else cast("r[dict[str, object]]", self._extract_sequential(data))
+                else self._extract_sequential(data)
             )
             if extract_result.is_failure:
                 return extract_result
 
             data = extract_result.value
-            validate_result = cast("r[dict[str, object]]", self._validate_batch(data))
+            validate_result = self._validate_batch(data)
             if validate_result.is_failure:
                 return validate_result
 
@@ -316,14 +316,16 @@ class AclProcessingExample:
             data: dict[str, object],
         ) -> r[dict[str, object]]:
             """Extract ACLs in parallel."""
-            entries_data = data.get("entries", [])
-            if not isinstance(entries_data, list):
+            entries_data_raw = data.get("entries", [])
+            if not isinstance(entries_data_raw, list):
                 return r.fail("Invalid entries format")
 
+            entries_data: list[object] = entries_data_raw
+
             entries_with_servers: list[EntryWithServer] = [
-                item
-                for item in entries_data
-                if isinstance(item, tuple) and len(item) == 2
+                entry
+                for entry in entries_data
+                if isinstance(entry, tuple) and len(entry) == 2
             ]
 
             with ThreadPoolExecutor(max_workers=4) as executor:
@@ -337,18 +339,10 @@ class AclProcessingExample:
                 ]
 
                 all_acls: list[AclProcessingExample.AclEntry] = []
-                for future in cast(
-                    "list[Future[r[list[AclProcessingExample.AclEntry]]]]",
-                    as_completed(futures),
-                ):
-                    result = cast(
-                        "r[list[AclProcessingExample.AclEntry]]",
-                        future.result(),
-                    )
+                for future in as_completed(futures):
+                    result = future.result()
                     if result.is_success:
-                        all_acls.extend(
-                            cast("list[AclProcessingExample.AclEntry]", result.value),
-                        )
+                        all_acls.extend(result.value)  # type: ignore[arg-type]
                     else:
                         return r.fail(
                             f"ACL extraction failed: {result.error}",
@@ -362,21 +356,20 @@ class AclProcessingExample:
             data: dict[str, object],
         ) -> r[dict[str, object]]:
             """Extract ACLs sequentially."""
-            entries_data = data.get("entries", [])
-            if not isinstance(entries_data, list):
+            entries_data_raw = data.get("entries", [])
+            if not isinstance(entries_data_raw, list):
                 return r.fail("Invalid entries format")
 
+            entries_data: list[object] = entries_data_raw
+
             entries_with_servers: list[EntryWithServer] = [
-                item
-                for item in entries_data
-                if isinstance(item, tuple) and len(item) == 2
+                entry
+                for entry in entries_data
+                if isinstance(entry, tuple) and len(entry) == 2
             ]
 
             all_acls: list[AclProcessingExample.AclEntry] = []
-            for entry, server_type in cast(
-                "list[EntryWithServer]",
-                entries_with_servers,
-            ):
+            for entry, server_type in entries_with_servers:
                 result = AclProcessingExample.extract_acls_from_entry(
                     entry,
                     server_type,
@@ -394,15 +387,16 @@ class AclProcessingExample:
             data: dict[str, object],
         ) -> r[dict[str, object]]:
             """Validate all extracted ACLs."""
-            acls_data = data.get("acls", [])
-            if not isinstance(acls_data, list):
+            acls_data_raw = data.get("acls", [])
+            if not isinstance(acls_data_raw, list):
                 return r.fail("Invalid ACLs format")
 
+            acls_data: list[object] = acls_data_raw
             validation_results: list[AclProcessingExample.AclValidationResult] = []
             acl_entries: list[AclProcessingExample.AclEntry] = [
-                acl
-                for acl in acls_data
-                if isinstance(acl, AclProcessingExample.AclEntry)
+                acl_item
+                for acl_item in acls_data
+                if isinstance(acl_item, AclProcessingExample.AclEntry)
             ]
             for acl in acl_entries:
                 result = AclProcessingExample.validate_acl_entry(
