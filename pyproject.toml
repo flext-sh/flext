@@ -383,6 +383,7 @@ project-excludes = [
     "vendor/**",
     "flexcore/vendor/**",
 ]
+ignore-errors-in-generated-code = true
 
 [tool.pyrefly.errors]
 deprecated = true
