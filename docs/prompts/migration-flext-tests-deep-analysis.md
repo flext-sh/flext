@@ -548,7 +548,7 @@ def test_database_connection():
 
    ```python
    # ~/flext/constants.py
-   from flext_tests.constants import FlextTestsConstants
+   from flext_tests import FlextTestsConstants
 
    class FlextConstants(FlextTestsConstants):
        """Constants base que estende flext_tests."""
@@ -576,7 +576,7 @@ def test_database_connection():
 
 ```python
 # ~/flext/models.py
-from flext_tests.models import FlextTestsModels
+from flext_tests import FlextTestsModels
 
 class FlextModels(FlextTestsModels):
     """Models base que estende flext_tests."""

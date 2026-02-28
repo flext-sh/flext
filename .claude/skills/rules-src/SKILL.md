@@ -69,7 +69,7 @@ Why good: uses stable public boundary from shared source logic.
 Bad:
 
 ```python
-from flext_core._utilities import *
+from flext_core import *
 ```
 
 Why bad: private/wildcard import makes source behavior fragile and hard to analyze.

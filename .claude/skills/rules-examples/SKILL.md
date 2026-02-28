@@ -70,7 +70,7 @@ Why good: stable public import with canonical alias.
 Bad:
 
 ```python
-from flext_core._models import m
+from flext_core import m
 ```
 
 Why bad: example couples to private internals and will drift quickly.

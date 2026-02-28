@@ -322,7 +322,7 @@ m.Cli.CliCommand                    # CLI command model
 m.Cli.CliSession                    # CLI session model
 
 # ✅ CORRECT: Module-level aliases for common classes
-from flext_cli.models import (
+from flext_cli import (
     SystemInfo,                     # alias for m.Cli.SystemInfo
     SessionStatistics,              # alias for m.Cli.SessionStatistics
     CommandStatistics,              # alias for m.Cli.CommandStatistics
@@ -470,7 +470,7 @@ class EntryProtocol(Protocol):
     attributes: Mapping[str, Sequence[str]]
 
 # ❌ WRONG: Don't import concrete classes
-from flext_ldif.models import Entry  # NO
+from flext_ldif import Entry  # NO
 
 @runtime_checkable
 class EntryProtocol(Protocol):
@@ -680,7 +680,7 @@ class FlextLdapTypes:
 
 ```python
 # ✅ CORRECT
-from flext_ldif.models import m
+from flext_ldif import m
 entry = m.Ldif.Entry(dn="cn=test")
 attributes = m.Ldif.AttributeDict()
 
@@ -702,7 +702,7 @@ def process_model(data: dict[str, object]) -> r[SomeModel]:
 
 # ❌ WRONG: TYPE_CHECKING (fix circular import instead)
 if TYPE_CHECKING:
-    from flext_ldif.services.parser import ParserService
+    from flext_ldif import ParserService
 ```
 
 ### 3. Covariant Protocols for Read-Only

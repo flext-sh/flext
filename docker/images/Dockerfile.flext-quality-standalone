@@ -84,9 +84,9 @@ sys.path.insert(0, '/app/src')
 
 # Test core imports work
 try:
-    from flext_quality.analyzer import CodeAnalyzer
-    from flext_quality.metrics import QualityMetrics
-    from flext_quality.reports import QualityReport
+    from flext_quality import CodeAnalyzer
+    from flext_quality import QualityMetrics
+    from flext_quality import QualityReport
     print('✅ Core imports successful')
 except Exception as e:
     print(f'❌ Import failed: {e}')
@@ -171,8 +171,8 @@ USER appuser
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD python -c "
 import sys; sys.path.insert(0, '/app/src')
-from flext_quality.analyzer import CodeAnalyzer
-from flext_quality.metrics import QualityMetrics
+from flext_quality import CodeAnalyzer
+from flext_quality import QualityMetrics
 print('✅ FLEXT Quality functional')
 " || exit 1
 

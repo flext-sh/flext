@@ -66,7 +66,7 @@ Ensure you have Docker and Docker Compose installed.
 All tests MUST use centralized fixtures from `flext_tests.fixtures`:
 
 ```python
-from flext_tests.fixtures import (
+from flext_tests import (
     flext_docker,          # Main Docker management fixture
     flext_oud_container,   # FLEXT OUD container (port 3389)
     ldap_container,        # Generic OpenLDAP (port 3390)
@@ -286,7 +286,7 @@ result = docker_mgr.start_container("flext-postgres-test")
 from tests.fixtures.docker_fixtures import postgres_container
 
 # ✅ NEW - Centralized fixtures
-from flext_tests.fixtures import postgres_container
+from flext_tests import postgres_container
 ```
 
 ---

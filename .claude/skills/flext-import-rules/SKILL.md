@@ -71,7 +71,7 @@ from structlog.typing import BindableLogger
 
 from flext_core import c, t                 # 4. FIRST-PARTY (flext_core.*)
 
-from flext_auth.models import AuthModels    # 5. LOCAL (same project, if applicable)
+from flext_auth import AuthModels    # 5. LOCAL (same project, if applicable)
 ```
 
 Within each group:
@@ -301,7 +301,7 @@ class MyHandler(h.BaseCommandHandler[m.Cqrs.Command, r]):
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from flext_core.container import FlextContainer
+    from flext_core import FlextContainer
 
 def get_container() -> FlextContainer:  # Annotation works, no runtime import
     ...
@@ -317,14 +317,14 @@ def get_container() -> FlextContainer:  # Annotation works, no runtime import
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from flext_core.models import FlextModels
+    from flext_core import FlextModels
 
 class MyModel(FlextModels.Base):  # CRASHES — FlextModels not available at runtime
     name: str
 
 # ❌ FORBIDDEN — hiding circular import instead of fixing architecture
 if TYPE_CHECKING:
-    from flext_core.utilities import FlextUtilities  # Fix the cycle instead
+    from flext_core import FlextUtilities  # Fix the cycle instead
 ```
 
 If a circular import exists, fix the architecture:
@@ -399,7 +399,7 @@ Key enforced rules:
 from flext_core import *
 
 # ❌ Relative imports
-from .models import FlextModels  # Use: from flext_project.models import m
+from .models import FlextModels  # Use: from flext_project import m
 
 # ❌ Legacy typing
 from typing import List, Dict, Optional, Union  # Use: list, dict, X | None, X | Y

@@ -47,7 +47,7 @@ if result.is_success:
     project = result.value
     print(project.name, project.min_coverage)
 
-from flext_quality.analyzer import FlextQualityCodeAnalyzer  # accessible via direct import
+from flext_quality import FlextQualityCodeAnalyzer  # accessible via direct import
 analyzer = FlextQualityCodeAnalyzer("/src/my_project")
 analyzer.analyze_project()
 ```

@@ -231,7 +231,7 @@ EOF
 # Run COMPREHENSIVE enterprise validation
 RUN echo "🧪 ENTERPRISE VALIDATION STARTING..." && \
     echo "1️⃣ Testing core imports and functionality..." && \
-    python -c "from flext_quality.analyzer import CodeAnalyzer; from flext_quality.metrics import QualityMetrics; from flext_quality.reports import QualityReport; print('✅ Core imports successful'); analyzer = CodeAnalyzer('/app/src'); results = analyzer.analyze_project(); score = analyzer.get_quality_score(); grade = analyzer.get_quality_grade(); print(f'✅ Analysis engine: {grade} ({score:.1f}/100)'); metrics = QualityMetrics.from_analysis_results(results); print(f'✅ Metrics system: {metrics.overall_score:.1f} score, {metrics.total_issues} issues'); report = QualityReport(results); json_report = report.generate_json_report(); html_report = report.generate_html_report(); print(f'✅ Report generation: JSON ({len(json_report)} chars), HTML ({len(html_report)} chars)')" && \
+    python -c "from flext_quality import CodeAnalyzer; from flext_quality import QualityMetrics; from flext_quality import QualityReport; print('✅ Core imports successful'); analyzer = CodeAnalyzer('/app/src'); results = analyzer.analyze_project(); score = analyzer.get_quality_score(); grade = analyzer.get_quality_grade(); print(f'✅ Analysis engine: {grade} ({score:.1f}/100)'); metrics = QualityMetrics.from_analysis_results(results); print(f'✅ Metrics system: {metrics.overall_score:.1f} score, {metrics.total_issues} issues'); report = QualityReport(results); json_report = report.generate_json_report(); html_report = report.generate_html_report(); print(f'✅ Report generation: JSON ({len(json_report)} chars), HTML ({len(html_report)} chars)')" && \
     echo "2️⃣ Testing CLI functionality..." && \
     python -m flext_quality.cli --help > /dev/null && \
     python -m flext_quality.cli analyze --help > /dev/null && \
@@ -251,7 +251,7 @@ USER appuser
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD python -c "from flext_quality.analyzer import CodeAnalyzer; analyzer = CodeAnalyzer('/app/src'); print('✅ Health OK')" || exit 1
+    CMD python -c "from flext_quality import CodeAnalyzer; analyzer = CodeAnalyzer('/app/src'); print('✅ Health OK')" || exit 1
 
 # Default command with comprehensive functionality demonstration
 CMD ["python", "-c", "print('🚀 FLEXT Quality Enterprise Container - VALIDATED!'); print('='*60); print(''); print('✅ VALIDATION COMPLETE:'); print('  📊 Core Analysis Engine: Fully functional'); print('  📈 Quality Metrics System: 90%+ coverage'); print('  📄 Report Generation: JSON + HTML formats'); print('  🔧 CLI Interface: All commands working'); print('  🧪 Test Suite: All 411 tests passing'); print('  📋 Examples: All 3 examples validated'); print('  🐳 Container: Enterprise-grade validation'); print(''); print('AVAILABLE COMMANDS:'); print('  🔍 python -m flext_quality.cli analyze /app/src'); print('  📊 cd examples/basic/simple_analysis && python example.py /app/src'); print('  🚀 cd examples/advanced/cli_integration && python example.py'); print('  🌐 cd examples/integration/api_usage && python example.py'); print('  🧪 python -m pytest tests/ --cov=src --cov-report=term-missing'); print(''); print('🎯 100% FUNCTIONALITY VALIDATED IN ENTERPRISE CONTAINER!'); print(''); exec('/bin/bash')"]

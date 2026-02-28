@@ -214,7 +214,7 @@ class FlextLdifModels:
     class Attribute(BaseModel): ...  # m.Ldif.Attribute
 
 # Usage with short aliases
-from flext_ldif.models import m as ldif_m
+from flext_ldif import m as ldif_m
 
 config: m.Core.Config = ...
 entry: ldif_m.Entry = ...

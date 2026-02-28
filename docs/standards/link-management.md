@@ -304,7 +304,7 @@ Consider implementing automated link registry using `flext-quality`:
 
 ```python
 # Future: Automated link registry
-from flext_quality.tools import link_registry
+from flext_quality import link_registry
 
 # Register all links
 registry = link_registry.scan_workspace("~/flext")
