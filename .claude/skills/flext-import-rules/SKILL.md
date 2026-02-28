@@ -163,7 +163,7 @@ When a project depends on another FLEXT project's namespaced types, it MUST inhe
 # ✅ CORRECT — inherit parent facade, namespaces cascade via MRO
 from flext_meltano import FlextMeltanoModels
 
-class FlextTargetOracleModels(FlextMeltanoModels):  # NOT FlextModels!
+class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):  # NOT FlextModels!
     class TargetOracle:
         class MyModel(FlextMeltanoModels.ArbitraryTypesModel): ...
 
@@ -205,6 +205,39 @@ All `flext-(tap|target|dbt)-*` projects MUST follow an **EXACT** naming pattern 
 
 > **CRITICAL**: Do NOT include `Meltano` in the class name (e.g., use `FlextTapLdapProtocols`, **not** `FlextMeltanoTapLdapProtocols`). The Meltano integration is represented purely through **inheritance** `(FlextMeltanoProtocols, FlextLdapProtocols)`, not through the name. This strict consistency ensures predictable mapping across all 33 ecosystem projects.
 
+
+### Pattern 4D: Integration Projects with Dual Inheritance (Before/After)
+
+**Before (WRONG)**: Single inheritance loses domain namespaces
+
+```python
+from flext_meltano import FlextMeltanoModels
+
+class FlextTargetOracleModels(FlextMeltanoModels):
+    class TargetOracle:
+        class ExecuteResult(FlextMeltanoModels.ArbitraryTypesModel):
+            name: str
+
+m = FlextTargetOracleModels
+# m.Meltano.* available, but m.DbOracle.* NOT available
+```
+
+**After (CORRECT)**: Dual inheritance gives full namespace access
+
+```python
+from flext_meltano import FlextMeltanoModels
+from flext_db_oracle import FlextDbOracleModels
+
+class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):
+    class TargetOracle:
+        class ExecuteResult(FlextMeltanoModels.ArbitraryTypesModel):
+            name: str
+
+m = FlextTargetOracleModels
+# m.Meltano.* available (from FlextMeltanoModels)
+# m.DbOracle.* available (from FlextDbOracleModels)
+# m.TargetOracle.* available (local)
+```
 ### What is NEVER done in subprojects
 
 ```python
