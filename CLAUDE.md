@@ -50,7 +50,7 @@ alwaysApply: true
 - **NEW** Fallible operations MUST use `FlextResult` (`r[T].ok(...)` / `r.fail(...)`), never ad-hoc dict envelopes.
 - **NEW** `sys.exit` is forbidden outside `__main__.py` entrypoint boundaries.
 - **NEW** Bare subprocess calls are forbidden; use standardized command runner abstractions.
-- **NEW** `typing.TYPE_CHECKING` blocks are STRICTLY RESTRICTED to resolving cyclic dependencies in non-Pydantic modules.
+- **NEW** `typing.TYPE_CHECKING` is allowed for non-Pydantic, type-only imports to avoid circular dependencies. NEVER use TYPE_CHECKING with Pydantic models (they require runtime type resolution).
 - **NEW** **Zero Tolerance for Hacks**: `model_rebuild()`, `eval()`, `exec()`, architectural `getattr()`, inline imports, lazy generic imports, and `try/except ImportError` blocks are TOTALLY FORBIDDEN without exception.
 - **NEW** `print()` is forbidden in production paths; use structured logging with `FlextLogger`/structlog.
 - `from __future__ import annotations` is mandatory in Python modules.
