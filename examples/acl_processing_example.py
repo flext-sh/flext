@@ -154,7 +154,8 @@ class AclProcessingExample:
         for attr_name in acl_attrs:
             if attr_name in attributes:
                 acl_values: str | list[str] = cast(
-                    "str | list[str]", attributes[attr_name]
+                    "str | list[str]",
+                    attributes[attr_name],
                 )
                 values_list: list[str] = (
                     acl_values if isinstance(acl_values, list) else [acl_values]
@@ -211,7 +212,7 @@ class AclProcessingExample:
                 isinstance(p, str) for p in cast("list[str]", required_perms)
             ):
                 missing_perms: set[str] = set(cast("list[str]", required_perms)) - set(
-                    acl_entry.permissions
+                    acl_entry.permissions,
                 )
                 if missing_perms:
                     violations.append(
@@ -341,11 +342,12 @@ class AclProcessingExample:
                     as_completed(futures),
                 ):
                     result = cast(
-                        "r[list[AclProcessingExample.AclEntry]]", future.result()
+                        "r[list[AclProcessingExample.AclEntry]]",
+                        future.result(),
                     )
                     if result.is_success:
                         all_acls.extend(
-                            cast("list[AclProcessingExample.AclEntry]", result.value)
+                            cast("list[AclProcessingExample.AclEntry]", result.value),
                         )
                     else:
                         return r.fail(
@@ -372,7 +374,8 @@ class AclProcessingExample:
 
             all_acls: list[AclProcessingExample.AclEntry] = []
             for entry, server_type in cast(
-                "list[EntryWithServer]", entries_with_servers
+                "list[EntryWithServer]",
+                entries_with_servers,
             ):
                 result = AclProcessingExample.extract_acls_from_entry(
                     entry,

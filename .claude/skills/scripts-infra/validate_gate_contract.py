@@ -18,14 +18,14 @@ EXIT_USAGE = 2
 EXIT_INFRA = 3
 
 OWNER_MARKER_RE = re.compile(
-    r"^# Owner-Skill:\s+(.claude/skills/[a-z0-9][-a-z0-9]*/SKILL\.md)\s*$"
+    r"^# Owner-Skill:\s+(.claude/skills/[a-z0-9][-a-z0-9]*/SKILL\.md)\s*$",
 )
 ARTIFACT_NAME_RE = re.compile(r"[a-z][-a-z0-9]*--[a-z]+--[a-z][-a-z0-9]*\.[a-z]+")
 REPORTS_PATH_RE = re.compile(r"\.reports/([^\s\"']+)")
 BASH_EXIT_RE = re.compile(r"^\s*exit\s+(\d+)")
 INTERACTIVE_PY_RE = re.compile(r"\binput\s*\(")
 INTERACTIVE_SH_RE = re.compile(
-    r"\bread\s+-p\b|\bselect\s+\w+\s+in\b|\bdialog\b|\bwhiptail\b"
+    r"\bread\s+-p\b|\bselect\s+\w+\s+in\b|\bdialog\b|\bwhiptail\b",
 )
 INTERACTIVE_GATE_RE = re.compile(r"--interactive")
 
@@ -33,23 +33,19 @@ MAX_HEADER_LINES = 10
 MIN_CODE_LINES = 20
 
 VALIDATOR_NAMES = re.compile(
-    r"^(enforce|check|validate|test|verify|audit|lint|scan)[-_]"
+    r"^(enforce|check|validate|test|verify|audit|lint|scan)[-_]",
 )
 FIXER_NAMES = re.compile(
-    r"^(fix|autofix|repair|correct|reorder|refactor|standardize)[-_]"
+    r"^(fix|autofix|repair|correct|reorder|refactor|standardize)[-_]",
 )
 
 
 class UsageError(Exception):
     """UsageError class."""
 
-    pass
-
 
 class InfraError(Exception):
     """InfraError class."""
-
-    pass
 
 
 class Ansi:
@@ -252,13 +248,15 @@ def check_exit_codes(content: str, extension: str) -> list[Violation]:
                     script="",
                     check="exit_code",
                     message=f"line {i}: exit {code} - only 0/1/2/3 allowed",
-                )
+                ),
             )
     return violations
 
 
 def check_interactive(
-    content: str, extension: str, script_path: str
+    content: str,
+    extension: str,
+    script_path: str,
 ) -> list[Violation]:
     """check_interactive function."""
     _ = script_path
@@ -281,7 +279,7 @@ def check_interactive(
                     check="interactive",
                     message=f"line {i}: interactive prompt without --interactive gate",
                     severity="warning",
-                )
+                ),
             )
     return violations
 
@@ -306,7 +304,7 @@ def check_artifact_naming(content: str) -> list[Violation]:
                             "<skill>--<kind>--<slug>.<ext>"
                         ),
                         severity="warning",
-                    )
+                    ),
                 )
     return violations
 
@@ -345,7 +343,7 @@ def validate_script(root: Path, script_path: Path, *, check_all: bool) -> Script
                 script=info.path,
                 check="readable",
                 message="could not read file",
-            )
+            ),
         )
         return info
 
@@ -358,7 +356,7 @@ def validate_script(root: Path, script_path: Path, *, check_all: bool) -> Script
                 script=info.path,
                 check=shebang_violation.check,
                 message=shebang_violation.message,
-            )
+            ),
         )
 
     owner_violation = check_owner_marker(header)
@@ -368,7 +366,7 @@ def validate_script(root: Path, script_path: Path, *, check_all: bool) -> Script
                 script=info.path,
                 check=owner_violation.check,
                 message=owner_violation.message,
-            )
+            ),
         )
 
     for violation in check_exit_codes(content, extension):
@@ -377,7 +375,7 @@ def validate_script(root: Path, script_path: Path, *, check_all: bool) -> Script
                 script=info.path,
                 check=violation.check,
                 message=violation.message,
-            )
+            ),
         )
 
     for violation in check_interactive(content, extension, info.path):
@@ -387,7 +385,7 @@ def validate_script(root: Path, script_path: Path, *, check_all: bool) -> Script
                 check=violation.check,
                 message=violation.message,
                 severity=violation.severity,
-            )
+            ),
         )
 
     for violation in check_artifact_naming(content):
@@ -397,7 +395,7 @@ def validate_script(root: Path, script_path: Path, *, check_all: bool) -> Script
                 check=violation.check,
                 message=violation.message,
                 severity=violation.severity,
-            )
+            ),
         )
 
     min_lines_violation = check_min_code_lines(content, extension, role)
@@ -408,7 +406,7 @@ def validate_script(root: Path, script_path: Path, *, check_all: bool) -> Script
                 check=min_lines_violation.check,
                 message=min_lines_violation.message,
                 severity=min_lines_violation.severity,
-            )
+            ),
         )
 
     return info

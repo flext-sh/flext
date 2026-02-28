@@ -693,12 +693,35 @@ else
 		$(SELECTED_PROJECTS)
 endif
 
-typings: ## Run typings supply-chain (stub_supply_chain + dependency report with typings). Use PROJECT= or PROJECTS= to scope.
+typings: ## Run typings supply-chain (stubgen + stub_supply_chain + dependency report). Use PROJECT= or PROJECTS= to scope.
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)echo "Regenerating typings/generated/ via stubgen..."
+	$(Q)gen_dir="$(CURDIR)/typings/generated"; \
+	tmp_dir=$$(mktemp -d); \
+	packages=$$(find "$$gen_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort); \
+	ok=0; fail=0; \
+	if [ -n "$$packages" ]; then \
+		for pkg in $$packages; do \
+			if $(POETRY_ENV) $(PY) -m mypy.stubgen -p "$$pkg" -o "$$tmp_dir" --include-private --export-less -q 2>/dev/null; then \
+				if [ -d "$$tmp_dir/$$pkg" ]; then \
+					rm -rf "$$gen_dir/$$pkg"; \
+					mv "$$tmp_dir/$$pkg" "$$gen_dir/$$pkg"; \
+					ok=$$((ok + 1)); \
+				fi; \
+			else \
+				fail=$$((fail + 1)); \
+				echo "  warning: stubgen failed for $$pkg (keeping existing)"; \
+			fi; \
+		done; \
+		echo "  stubgen: $$ok regenerated, $$fail failed"; \
+	else \
+		echo "  no packages to regenerate"; \
+	fi; \
+	rm -rf "$$tmp_dir"
 	$(Q)$(POETRY_ENV) $(PY) -m flext_infra core stub-validate \
 		$(if $(PROJECT),--project $(PROJECT),$(if $(PROJECTS),$(addprefix --project ,$(PROJECTS)),--all))
 	$(Q)if [ "$(DEPS_REPORT)" != "0" ]; then \

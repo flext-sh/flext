@@ -25,13 +25,9 @@ SKIPPED_FILES = {".gitkeep"}
 class UsageError(Exception):
     """UsageError class."""
 
-    pass
-
 
 class InfraError(Exception):
     """InfraError class."""
-
-    pass
 
 
 @dataclass(frozen=True)
@@ -166,7 +162,7 @@ def validate(
                 filename=filename,
                 reason="filename does not match <skill>--<kind>--<slug>.<ext>",
                 suggestion=suggest_filename(filename),
-            )
+            ),
         )
 
     if violations:
