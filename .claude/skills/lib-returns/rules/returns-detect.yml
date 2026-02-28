@@ -13,7 +13,7 @@ rule:
     inside:
       kind: module
       has:
-        pattern: from flext_core.result import $$$
+        pattern: from flext_core import $$$
       stopBy: end
 message: "Direct Success() constructor — use FlextResult[T].ok() factory"
 severity: error
@@ -26,7 +26,7 @@ rule:
     inside:
       kind: module
       has:
-        pattern: from flext_core.result import $$$
+        pattern: from flext_core import $$$
       stopBy: end
 message: "Direct Failure() constructor — use FlextResult.fail() factory"
 severity: error

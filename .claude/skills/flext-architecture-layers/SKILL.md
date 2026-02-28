@@ -62,7 +62,7 @@ Layer map (source-aligned reference for implementation work):
 ```python
 # Good: orchestration consumes bridge + public alias
 from flext_core import r
-from flext_core.runtime import FlextRuntime
+from flext_core import FlextRuntime
 
 bridge, services, resources = FlextRuntime.DependencyIntegration.create_layered_bridge()
 result = r[bool].ok(True)
@@ -79,7 +79,7 @@ Why bad: bypasses `runtime.py` and `container.py`, increases coupling, and break
 
 ```python
 # Bad: low-level contracts importing service layer
-from flext_core.service import FlextService
+from flext_core import FlextService
 ```
 
 Why bad: inverts `L1 -> L2` direction and violates the documented architecture topology.

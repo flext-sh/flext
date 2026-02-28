@@ -217,7 +217,7 @@ def process_data(provider: DataProvider) -> None:
 
 ```python
 # ✅ CORRECT: Use centralized TypeVars from flext-core
-from flext_core.typings import t
+from flext_core import t
 
 T = t.T            # Generic type variable
 M = t.M            # Generic mapping type

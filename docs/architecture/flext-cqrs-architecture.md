@@ -1137,7 +1137,7 @@ servir como referência futura para implementação:
 
 ~~```Python~~
 ~~# flext_core/\_managers/**init**.py~~
-~~from flext_core.container import FlextContainer~~
+~~from flext_core import FlextContainer~~
 
 ~~def register_default_managers() -> None:~~
 ~~ """Register default managers in global container."""~~
@@ -2263,7 +2263,7 @@ tests/
 """Tests for x.CQRS utilities."""
 
 import pytest
-from flext_core.mixins import x
+from flext_core import x
 
 
 class TestMetricsTracker:

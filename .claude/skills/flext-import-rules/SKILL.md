@@ -88,14 +88,14 @@ Within each group:
 
 ```python
 # ✅ CORRECT — Direct absolute import from the specific module
-from flext_core.constants import c
-from flext_core.typings import t
-from flext_core.protocols import p
-from flext_core.runtime import FlextRuntime
-from flext_core.models import m
-from flext_core.result import r
-from flext_core.utilities import u
-from flext_core.exceptions import e
+from flext_core import c
+from flext_core import t
+from flext_core import p
+from flext_core import FlextRuntime
+from flext_core import m
+from flext_core import r
+from flext_core import u
+from flext_core import e
 
 # ✅ CORRECT — Import from _models/ or _utilities/ (inside their own facades)
 from flext_core._models.base import FlextModelsBase
@@ -130,10 +130,10 @@ from flext_core import r, s, t, e  # pre-aliased letters
 ### Pattern B: Import specific class from submodule (used for non-aliased classes)
 
 ```python
-from flext_core.loggings import FlextLogger
-from flext_core.dispatcher import FlextDispatcher
-from flext_core.registry import FlextRegistry
-from flext_core.context import FlextContext
+from flext_core import FlextLogger
+from flext_core import FlextDispatcher
+from flext_core import FlextRegistry
+from flext_core import FlextContext
 ```
 
 ### Pattern C: Import for extension/inheritance
@@ -149,7 +149,7 @@ from flext_core import FlextService
 class FlextAuthAdminService(FlextService.Admin):
     ...
 
-from flext_core.protocols import FlextProtocols
+from flext_core import FlextProtocols
 
 class FlextAuthProtocols(FlextProtocols):
     ...
@@ -275,9 +275,9 @@ exported in `__init__.py` and used throughout the codebase for concise code:
 
 ```python
 # REAL code from the codebase:
-from flext_core.models import m
-from flext_core.result import r
-from flext_core.handlers import h
+from flext_core import m
+from flext_core import r
+from flext_core import h
 
 class MyHandler(h.BaseCommandHandler[m.Cqrs.Command, r]):
     ...
@@ -302,11 +302,11 @@ It is **FORBIDDEN** to use `TYPE_CHECKING` in files containing Pydantic `BaseMod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from flext_core.container import FlextContainer
-    from flext_core.result import FlextResult
+    from flext_core import FlextContainer
+    from flext_core import FlextResult
 
 # Runtime code uses protocols or deferred imports instead
-from flext_core.protocols import FlextProtocols
+from flext_core import FlextProtocols
 ```
 
 ```python
@@ -314,7 +314,7 @@ from flext_core.protocols import FlextProtocols
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from flext_core.container import FlextContainer
+    from flext_core import FlextContainer
 
 class MyModel(BaseModel):
     container: FlextContainer  # ❌ Pydantic cannot validate at runtime!
@@ -335,7 +335,7 @@ All forms of dynamic evaluation, runtime patching, and hidden imports are strict
 ```python
 # ❌ NEVER DO THIS (Inline Import)
 def process() -> None:
-    from flext_core.container import FlextContainer  # STRICTLY PROHIBITED
+    from flext_core import FlextContainer  # STRICTLY PROHIBITED
     ...
 
 # ❌ NEVER DO THIS (Try/Except)
@@ -354,7 +354,7 @@ If a circular import exists, you MUST resolve it using one of these two architec
 
 ```python
 # Strategy 1: Protocol Decoupling (PREFERRED)
-from flext_core.protocols import FlextProtocols
+from flext_core import FlextProtocols
 def process(container: FlextProtocols.ContainerLike) -> None: ...
 ```
 

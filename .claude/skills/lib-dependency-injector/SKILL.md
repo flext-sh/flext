@@ -102,7 +102,7 @@ class FlextContainer(FlextRuntime, p.DI):
 
 - Import patterns to keep:
   - `from flext_core import FlextContainer`
-  - `from flext_core.runtime import FlextRuntime`
+  - `from flext_core import FlextRuntime`
   - `from flext_core import inject` only where exported by package API.
 - Registration intent:
   - `register` -> concrete object provider (`providers.Object`)

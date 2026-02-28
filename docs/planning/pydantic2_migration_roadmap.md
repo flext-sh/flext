@@ -83,7 +83,7 @@ from typing import cast
 config = cast(ConfigDict, data)
 
 # AFTER: Using TypeGuard
-from flext_core.utilities import u
+from flext_core import u
 
 if u.Guards.is_config(data):
     config = data  # Type narrowed automatically

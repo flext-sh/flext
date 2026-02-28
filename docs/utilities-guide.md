@@ -52,7 +52,7 @@ FlextCliUtilities (flext-cli) - Extends with CLI-specific utilities
 
 ```python
 # ✅ CORRECT - Use short alias
-from flext_core.utilities import u
+from flext_core import u
 
 # Access centralized utilities
 result = u.Conversion.to_str("value")
@@ -117,7 +117,7 @@ def to_str_list_safe(
 **Usage**:
 
 ```python
-from flext_core.utilities import u
+from flext_core import u
 
 # Simple values
 result = u.Conversion.to_str_list_safe("hello")
@@ -155,7 +155,7 @@ def to_str_list_truthy(
 **Usage**:
 
 ```python
-from flext_core.utilities import u
+from flext_core import u
 
 # Filter falsy values
 result = u.Conversion.to_str_list_truthy(["a", "", "b", None])
@@ -194,7 +194,7 @@ def find_callable[T](
 **Usage**:
 
 ```python
-from flext_core.utilities import u
+from flext_core import u
 
 # Define predicates
 predicates = {
@@ -290,7 +290,7 @@ entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
 
 ### DO's ✅
 
-1. **Use short aliases**: `from flext_core.utilities import u`
+1. **Use short aliases**: `from flext_core import u`
 2. **Access via namespace**: `u.Conversion.method()`, `u.Mapper.method()`
 3. **Chain operations**: `u.Collection.filter(...).map(...)`
 4. **Inherit for domain extensions**: Extend `FlextUtilities` for project-specific utilities
@@ -301,7 +301,7 @@ entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
 
 1. **Don't import internal modules**: ❌ `from flext_core._utilities.conversion import ...`
 2. **Don't re-implement**: ❌ Create your own string conversion if `u.Conversion.*` exists
-3. **Don't mix namespaces**: ❌ `from flext_core.utilities import FlextUtilities`
+3. **Don't mix namespaces**: ❌ `from flext_core import FlextUtilities`
 4. **Don't use module imports**: ❌ `from flext_core import utilities as util`
 5. **Don't create new utility classes at same level**: ❌ Extend in your project, not flext-core root
 

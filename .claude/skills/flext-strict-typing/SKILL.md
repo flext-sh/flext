@@ -176,7 +176,7 @@ T_Settings = TypeVar("T_Settings", bound=BaseSettings)
 These are imported as:
 
 ```python
-from flext_core.typings import T, T_co, U, P, R, T_Model, T_Settings
+from flext_core import T, T_co, U, P, R, T_Model, T_Settings
 ```
 
 ---
@@ -269,7 +269,7 @@ class MyModel(BaseModel):
 Use `t.Validation.*` for constrained scalar fields:
 
 ```python
-from flext_core.typings import t
+from flext_core import t
 
 class ServerConfig(BaseModel):
     port: t.Validation.PortNumber         # Annotated[int, Field(ge=1, le=65535)]
