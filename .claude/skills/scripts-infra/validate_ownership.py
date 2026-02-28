@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 OWNER_MARKER_RE = re.compile(
-    r"^# Owner-Skill:\s+(.claude/skills/([a-z0-9][-a-z0-9]*)/SKILL\.md)\s*$"
+    r"^# Owner-Skill:\s+(.claude/skills/([a-z0-9][-a-z0-9]*)/SKILL\.md)\s*$",
 )
 MAX_HEADER_LINES = 10
 
@@ -37,13 +37,9 @@ class Ansi:
 class SkillUsageError(Exception):
     """SkillUsageError class."""
 
-    pass
-
 
 class SkillInfraError(Exception):
     """SkillInfraError class."""
-
-    pass
 
 
 @dataclass(frozen=True)

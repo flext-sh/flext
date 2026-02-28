@@ -42,11 +42,17 @@ addopts = ["-q"]
     modernizer = PyprojectModernizer(root=tmp_path)
     canonical_dev: list[str] = []
     first_fixes = modernizer.process_file(
-        pyproject, canonical_dev=canonical_dev, dry_run=False, skip_comments=False
+        pyproject,
+        canonical_dev=canonical_dev,
+        dry_run=False,
+        skip_comments=False,
     )
     first_text = pyproject.read_text(encoding="utf-8")
     second_fixes = modernizer.process_file(
-        pyproject, canonical_dev=canonical_dev, dry_run=False, skip_comments=False
+        pyproject,
+        canonical_dev=canonical_dev,
+        dry_run=False,
+        skip_comments=False,
     )
     second_text = pyproject.read_text(encoding="utf-8")
 
@@ -220,7 +226,10 @@ fail_under = 100
     modernizer = PyprojectModernizer(root=tmp_path)
     canonical_dev: list[str] = []
     _ = modernizer.process_file(
-        pyproject, canonical_dev=canonical_dev, dry_run=False, skip_comments=False
+        pyproject,
+        canonical_dev=canonical_dev,
+        dry_run=False,
+        skip_comments=False,
     )
     text = pyproject.read_text(encoding="utf-8")
 
@@ -273,7 +282,10 @@ root = "src"
     modernizer = PyprojectModernizer(root=root_dir)
     canonical_dev: list[str] = []
     changes = modernizer.process_file(
-        pyproject, canonical_dev=canonical_dev, dry_run=False, skip_comments=False
+        pyproject,
+        canonical_dev=canonical_dev,
+        dry_run=False,
+        skip_comments=False,
     )
     text = pyproject.read_text(encoding="utf-8")
 
