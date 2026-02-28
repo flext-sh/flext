@@ -11,10 +11,7 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from flext_core.constants import c
-from flext_core.models import m
-from flext_core.typings import t
-from flext_core.utilities import u
+from flext_core import c, m, t, u
 
 
 class FlextServiceBase:

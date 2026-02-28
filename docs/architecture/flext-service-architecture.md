@@ -5641,8 +5641,8 @@ class FlextApi(FlextService[dict[str, Any]]):
 from pathlib import Path
 from typing import Annotated
 from pydantic import Field, field_validator
-from flext_core.service import FlextService
-from flext_core.result import FlextResult
+from flext_core import FlextService
+from flext_core import FlextResult
 from flext_ldif.models import Entry
 
 class FlextLdifParser(Flext[list[Entry]]):
@@ -6721,8 +6721,8 @@ print(f"Processed {response.statistics.entries_written} users")
 
 from typing import Annotated, Any, Literal
 from pydantic import Field, model_validator
-from flext_core.service import FlextService
-from flext_core.result import FlextResult
+from flext_core import FlextService
+from flext_core import FlextResult
 import httpx
 
 class FlextApi(FlextService[dict[str, Any]]):
@@ -8459,7 +8459,7 @@ class FlextModels:
 
 - ❌ **God Class** - 3,200 linhas em um arquivo
 - ❌ **Difícil navegar** - 30+ nested classes para encontrar
-- ❌ **Import verbosity** - `from flext_core.models import FlextModels` → `FlextModels.Entity`
+- ❌ **Import verbosity** - `from flext_core import FlextModels` → `FlextModels.Entity`
 - ❌ **Manutenção difícil** - Mudança simples requer rolar 3000 linhas
 
 **Problema 3: project_config e project_models Por Convenção**
@@ -8806,7 +8806,7 @@ flext-core/src/flext_core/models/
 ```python
 
 # Backward compatibility
-from flext_core.models import FlextModels
+from flext_core import FlextModels
 FlextModels.Entity  # ✅ Still works
 FlextModels.Command  # ✅ Still works
 

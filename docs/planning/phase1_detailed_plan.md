@@ -83,7 +83,7 @@ from __future__ import annotations
 
 from typing import TypeGuard
 
-from flext_core.typings import t
+from flext_core import t
 
 
 class Guards:
@@ -269,7 +269,7 @@ Replace all TypedDict imports:
 
 ```python
 # BEFORE
-from flext_core.typings import DispatcherConfig, BatchResultDict
+from flext_core import DispatcherConfig, BatchResultDict
 
 # AFTER
 

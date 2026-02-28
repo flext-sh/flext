@@ -38,7 +38,7 @@ rules:
     fix_file: rules/fix-result-object.yml
     fix_instruction: "Rewrite FlextResult[object] to FlextResult[t.GeneralValueType] at boundaries."
     fix_imports:
-      - from flext_core.typings import t
+      - from flext_core import t
 
   - id: detect-jsondict-legacy
     type: ast-grep
@@ -52,7 +52,7 @@ rules:
     fix_file: rules/fix-jsondict-legacy.yml
     fix_instruction: "Rewrite dict[str, t.JsonValue] to t.JsonDict."
     fix_imports:
-      - from flext_core.typings import t
+      - from flext_core import t
 
   # =========================================================================
   # Cluster 3: Logger annotation drift (BindableLogger vs StructlogLogger)
@@ -69,7 +69,7 @@ rules:
     fix_file: rules/fix-bindable-logger.yml
     fix_instruction: "Rewrite BindableLogger type annotations to p.Log.StructlogLogger."
     fix_imports:
-      - from flext_core.protocols import p
+      - from flext_core import p
 
   # =========================================================================
   # Cluster 4: RootModel dict() coercion

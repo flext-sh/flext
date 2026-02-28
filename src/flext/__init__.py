@@ -25,11 +25,11 @@ from flext_core import (
     FlextResult,
     FlextRuntime,
     FlextService,
+    FlextService as FlextServiceBase,
     FlextSettings,
     FlextTypes,
     FlextUtilities,
 )
-from flext_core.service import FlextService as FlextServiceBase
 
 __all__ = [
     "FlextCliCommonParams",

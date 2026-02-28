@@ -171,7 +171,7 @@ from typing import Any
 def configure(self, config: dict[str, Any]) -> None: ...
 
 # After
-from flext_core.typings import t
+from flext_core import t
 def configure(self, config: t.ConfigMap) -> None: ...
 ```
 
