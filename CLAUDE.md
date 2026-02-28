@@ -44,6 +44,10 @@ alwaysApply: true
 - For architecture details and composition matrix -> see skill: `flext-architecture-layers`.
 - For namespace inheritance and anti-patterns -> see skill: `flext-patterns`.
 - For path-level architectural enforcement -> see skills: `rules-flext-core`, `rules-src`.
+- Per-tier inheritance lookup table: see skill `flext-architecture-layers` for complete MRO matrix and composition rules by layer.
+- L1 Platform Chains: Core→Cli→Meltano→Integration (orchestration), Core→Web→Api→Auth (API layer). Each chain defines clear ownership and composition boundaries.
+- Clarification: "exactly ONE internal namespace class" refers to LOCAL namespace class per subproject, not single inheritance. Parent namespaces are accessed transparently via MRO.
+- Integration naming: `Flext<Role><Domain><Facade>` pattern (NOT `FlextMeltano<Role>...`). Role is platform (Tap, Target, Dbt), Domain is connector (Ldap, Oracle, Wms), Facade is contract type (Protocols, Models, Types, etc.).
 
 ## §3 Code Law
 
@@ -66,6 +70,10 @@ alwaysApply: true
 - **Type narrowing**: use `isinstance` or `TypeGuard` only; `type(x) is T` for narrowing is forbidden. `cast()` is completely forbidden outside of `flext-core` result internals.
 - **Polymorphic code**: dismantle into centralized Pydantic v2 models (single contract, validation in model).
 - For result/logging/DI coding patterns -> see skill: `flext-patterns`.
+- `from __future__ import annotations` verification: MUST be present as first import in every Python module (after docstring/license). Verify with: `grep -n 'from __future__ import annotations' <file>`.
+- `model_rebuild()` is FORBIDDEN (explicit prohibition). Use Pydantic v2 patterns instead; if you think you need it, fix the model definition or import order instead.
+- `_LAZY_IMPORTS` string references MUST match actual class names exactly. Mismatch between string and runtime class causes silent failures.
+- Import parent by CLASS NAME for inheritance, never by alias. Example: `from flext_core.protocols import FlextProtocols` (correct), NOT `from flext_core import p` then inherit from `p.FlextProtocols` (wrong).
 
 ## §4 Import Law
 
@@ -145,6 +153,16 @@ alwaysApply: true
 
 - **Skill (mandatory)**  
   For detailed enforcement: see skill **flext-agent-strict-rules** (runtime aliases only, no type() for narrowing, no loose methods, polymorphic code → centralized Pydantic v2 models).
+- **Evidence requirements**  
+  Every verification claim ("tests pass", "linters clean", "grep found X") MUST include command output proof. Store evidence in `.sisyphus/evidence/` with timestamp and command used.
+- **Cross-session deduplication**  
+  Check recent commits for already-completed work before starting. Use: `git log --oneline --all --grep='<task-keyword>'` to find prior work. If found, verify completion and skip.
+- **.new/swap protocol**  
+  For large file modifications (>50 lines changed), create `.new` file first, verify all changes, then swap: `mv file.py file.py.old && mv file.py.new file.py`. Commit both the new file and the swap in one commit.
+- **Verify-before-implement**  
+  Before starting ANY task, check recent commits: `git log --oneline -5` and `git show HEAD`. Verify the task is not already complete or in-progress by another agent.
+- **Scope discipline**  
+  Agent MUST NOT modify files outside task boundary. If a task requires changes to a file owned by another agent, STOP and escalate. READ-ONLY access is allowed; WRITE access is forbidden.
 
 ## §10 Multi-Agent Parallel Execution Law (Mandatory)
 
@@ -241,3 +259,8 @@ Agents MUST execute in this order:
 - **Never rollback**: NO `git revert`. Fix forward only. If you break something, push a fix commit.
 - **Conflict resolution**: If conflict in YOUR file → resolve manually. If conflict in ANOTHER agent's file → `git checkout --theirs <file>` (accept their version, work around it).
 - **Commit frequency**: Every task completion = separate commit. Small commits, frequent pushes.
+
+### §10.6 Plan and Session Hygiene
+
+- **Plan hygiene**: Consolidate overlapping plans before creating new ones. Check `.sisyphus/plans/` for existing plans covering the same scope. Merge tasks into existing plan rather than creating duplicates.
+- **Cross-session deduplication protocol**: Before spawning new agents, verify no other agent is working on the same task. Use `git log --oneline -20` and check `.sisyphus/plans/` for active work. If found, coordinate or defer.
