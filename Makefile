@@ -29,6 +29,7 @@ INTERACTIVE ?= 1
 DRY_RUN ?=
 PUSH ?=
 VERSION ?=
+MESSAGE ?=
 TAG ?=
 BUMP ?=
 RELEASE_DEV_SUFFIX ?= 0
@@ -195,7 +196,7 @@ define PREFLIGHT_CHECK
 	echo " OK: all required tools present"
 endef
 
-.PHONY: help setup upgrade modernize build check security format docs test validate typings clean release pr
+.PHONY: help setup upgrade modernize build check security format docs test validate typings clean release pr commit tag push codegen
 
 help: ## Show simple workspace verbs
 	$(Q)echo "FLEXT Workspace"
@@ -218,6 +219,12 @@ help: ## Show simple workspace verbs
 	$(Q)echo " pr     Manage PRs for selected projects"
 	$(Q)echo " typings  Stub supply-chain + typing report (PROJECT/PROJECTS to scope)"
 	$(Q)echo " clean   Clean all projects"
+	$(Q)echo ""
+	$(Q)echo "Git workflow:"
+	$(Q)echo " commit  Commit all changes in selected projects (MESSAGE=)"
+	$(Q)echo " tag    Create git tags for selected projects (TAG=, DRY_RUN=1)"
+	$(Q)echo " push   Push branches and tags for selected projects"
+	$(Q)echo " codegen  Standardize __init__.py lazy imports (PEP 562)"
 	$(Q)echo ""
 	$(Q)echo "Selectors:"
 	$(Q)echo " PROJECT=<name>             Single project"
@@ -247,6 +254,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo " PR_INCLUDE_ROOT=0|1           include root repo in workspace PR automation"
 	$(Q)echo " PR_BRANCH=<name> PR_CHECKPOINT=0|1   normalize branch + checkpoint before action"
 	$(Q)echo " DEPS_REPORT=0              Skip dependency report after upgrade/typings"
+	$(Q)echo " MESSAGE='chore: ...'          Commit message for commit verb"
 	$(Q)echo ""
 	$(Q)echo "Examples:"
 	$(Q)echo " make check PROJECT=flext-core"
@@ -257,7 +265,11 @@ help: ## Show simple workspace verbs
 	$(Q)echo " make test PROJECT=flext-api PYTEST_ARGS=\"-k unit\" FAIL_FAST=1"
 	$(Q)echo " make validate VALIDATE_SCOPE=workspace"
 	$(Q)echo " make release BUMP=minor"
-	$(Q)echo " make release INTERACTIVE=0 CREATE_BRANCHES=0 VERSION=0.11.0 TAG=v0.11.0 RELEASE_PHASE=all RELEASE_NEXT_DEV=1"
+	$(Q)echo " make commit MESSAGE='chore: upgrade deps'"
+	$(Q)echo " make tag"
+	$(Q)echo " make tag TAG=v1.0.0"
+	$(Q)echo " make push"
+	$(Q)echo " make codegen PROJECT=flext-core"
 	$(Q)echo " make pr PROJECT=flext-core PR_ACTION=status"
 	$(Q)echo " make pr PROJECT=flext-core PR_ACTION=create PR_TITLE='release: 0.11.0-dev'"
 	$(Q)echo " NOTE: External projects (not in .gitmodules) require manual clone."
@@ -702,3 +714,132 @@ clean: ## Clean all projects
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb clean $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(SELECTED_PROJECTS)
 	$(Q)rm -rf .pytest_cache/ htmlcov/ .coverage* .mypy_cache/ .ruff_cache/
+
+commit: ## Commit all changes in selected projects (MESSAGE=)
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)if [ -z "$(MESSAGE)" ]; then \
+		echo "ERROR: MESSAGE is required. Usage: make commit MESSAGE='chore: your message'"; \
+		exit 1; \
+	fi
+	$(Q)committed=0; skipped=0; failed=0; \
+	for proj in $(SELECTED_PROJECTS); do \
+		if [ -d "$$proj/.git" ]; then \
+			changes=$$(cd "$$proj" && git status --porcelain 2>/dev/null | wc -l); \
+			if [ "$$changes" -gt 0 ]; then \
+				if (cd "$$proj" && git add -A && git commit -m "$(MESSAGE)") >/dev/null 2>&1; then \
+					echo "  ✓ $$proj"; \
+					committed=$$((committed + 1)); \
+				else \
+					echo "  ✗ $$proj (commit failed)"; \
+					failed=$$((failed + 1)); \
+				fi; \
+			else \
+				skipped=$$((skipped + 1)); \
+			fi; \
+		fi; \
+	done; \
+	root_changes=$$(git status --porcelain 2>/dev/null | wc -l); \
+	if [ "$$root_changes" -gt 0 ]; then \
+		if git add -A && git commit -m "$(MESSAGE)" >/dev/null 2>&1; then \
+			echo "  ✓ root"; \
+			committed=$$((committed + 1)); \
+		else \
+			echo "  ✗ root (commit failed)"; \
+			failed=$$((failed + 1)); \
+		fi; \
+	fi; \
+	echo "Commit: $$committed committed, $$skipped clean, $$failed failed"
+
+tag: ## Create git tags for selected projects (TAG= optional, DRY_RUN=1)
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)tagged=0; skipped=0; failed=0; \
+	for proj in $(SELECTED_PROJECTS); do \
+		if [ -d "$$proj/.git" ] && [ -f "$$proj/pyproject.toml" ]; then \
+			ver=$$(grep '^version' "$$proj/pyproject.toml" | head -1 | awk -F'"' '{print $$2}'); \
+			tag_name="$${TAG:-v$$ver}"; \
+			existing=$$(cd "$$proj" && git tag -l "$$tag_name" 2>/dev/null); \
+			if [ -n "$$existing" ]; then \
+				echo "  - $$proj: $$tag_name (already exists)"; \
+				skipped=$$((skipped + 1)); \
+			else \
+				if [ "$(DRY_RUN)" = "1" ]; then \
+					echo "  ~ $$proj: $$tag_name (dry-run)"; \
+					tagged=$$((tagged + 1)); \
+				else \
+					if (cd "$$proj" && git tag -a "$$tag_name" -m "release: $$tag_name") 2>/dev/null; then \
+						echo "  ✓ $$proj: $$tag_name"; \
+						tagged=$$((tagged + 1)); \
+					else \
+						echo "  ✗ $$proj: $$tag_name (failed)"; \
+						failed=$$((failed + 1)); \
+					fi; \
+				fi; \
+			fi; \
+		fi; \
+	done; \
+	root_ver=$$(grep '^version' pyproject.toml | head -1 | awk -F'"' '{print $$2}'); \
+	root_tag="$${TAG:-v$$root_ver}"; \
+	existing=$$(git tag -l "$$root_tag" 2>/dev/null); \
+	if [ -n "$$existing" ]; then \
+		echo "  - root: $$root_tag (already exists)"; \
+		skipped=$$((skipped + 1)); \
+	else \
+		if [ "$(DRY_RUN)" = "1" ]; then \
+			echo "  ~ root: $$root_tag (dry-run)"; \
+			tagged=$$((tagged + 1)); \
+		else \
+			if git tag -a "$$root_tag" -m "release: $$root_tag" 2>/dev/null; then \
+				echo "  ✓ root: $$root_tag"; \
+				tagged=$$((tagged + 1)); \
+			else \
+				echo "  ✗ root: $$root_tag (failed)"; \
+				failed=$$((failed + 1)); \
+			fi; \
+		fi; \
+	fi; \
+	echo "Tag: $$tagged tagged, $$skipped skipped, $$failed failed"
+
+push: ## Push branches and tags for selected projects
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)pushed=0; failed=0; \
+	for proj in $(SELECTED_PROJECTS); do \
+		if [ -d "$$proj/.git" ]; then \
+			if [ "$(DRY_RUN)" = "1" ]; then \
+				echo "  ~ $$proj (dry-run)"; \
+				pushed=$$((pushed + 1)); \
+			else \
+				if (cd "$$proj" && git push && git push --tags) >/dev/null 2>&1; then \
+					echo "  ✓ $$proj"; \
+					pushed=$$((pushed + 1)); \
+				else \
+					echo "  ✗ $$proj"; \
+					failed=$$((failed + 1)); \
+				fi; \
+			fi; \
+		fi; \
+	done; \
+	if [ "$(DRY_RUN)" = "1" ]; then \
+		echo "  ~ root (dry-run)"; \
+		pushed=$$((pushed + 1)); \
+	else \
+		if git push && git push --tags 2>/dev/null; then \
+			echo "  ✓ root"; \
+			pushed=$$((pushed + 1)); \
+		else \
+			echo "  ✗ root"; \
+			failed=$$((failed + 1)); \
+		fi; \
+	fi; \
+	echo "Push: $$pushed pushed, $$failed failed"
+
+codegen: ## Standardize __init__.py lazy imports (PEP 562)
+	$(Q)$(REQUIRE_VENV)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)echo "Standardizing __init__.py lazy imports..."
+	$(Q)$(PY) -m flext_infra codegen lazy-init --root "$(CURDIR)"
