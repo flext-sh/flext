@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from flext_core import cleanup_submodule_namespace, lazy_getattr
+from flext_core._utilities.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_cli import FlextCliCommonParams, FlextCliSettings
@@ -27,7 +27,6 @@ if TYPE_CHECKING:
         FlextResult,
         FlextRuntime,
         FlextService,
-        FlextService as FlextServiceBase,
         FlextSettings,
         FlextTypes,
         FlextUtilities,
@@ -49,7 +48,6 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "FlextResult": ("flext_core", "FlextResult"),
     "FlextRuntime": ("flext_core", "FlextRuntime"),
     "FlextService": ("flext_core", "FlextService"),
-    "FlextServiceBase": ("flext_core", "FlextService"),
     "FlextSettings": ("flext_core", "FlextSettings"),
     "FlextTypes": ("flext_core", "FlextTypes"),
     "FlextUtilities": ("flext_core", "FlextUtilities"),
@@ -70,7 +68,6 @@ __all__ = [
     "FlextResult",
     "FlextRuntime",
     "FlextService",
-    "FlextServiceBase",
     "FlextSettings",
     "FlextTypes",
     "FlextUtilities",

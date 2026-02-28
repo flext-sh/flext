@@ -105,10 +105,14 @@ class CompleteWorkflowExample:
 
         auto_execute: bool = True
 
-        data: list[ItemType] = field(default_factory=list)
-        workflow_config: dict[str, str | int | bool | float] = field(
-            default_factory=dict,
-        )
+        data: list[ItemType]
+        workflow_config: dict[str, str | int | bool | float]
+
+        def __init__(self) -> None:
+            """Initialize the workflow orchestrator."""
+            super().__init__()
+            self.data = []
+            self.workflow_config = {}
 
         def execute(self) -> r[dict[str, object]]:
             """Execute complete workflow with automatic resource management."""
@@ -145,7 +149,7 @@ class CompleteWorkflowExample:
         ) -> r[dict[str, object]]:
             """Execute workflow stages with parallel processing."""
             items = data
-            stage_results = []
+            stage_results: list[CompleteWorkflowExample.WorkflowStageResult] = []
             current_data = items
 
             stage_functions = {
@@ -242,7 +246,7 @@ class CompleteWorkflowExample:
                 except Exception as e:
                     return {"error": str(e), "item": item}
 
-            processed_results = []
+            processed_results: list[ItemType] = []
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
                 future_to_item = {
                     executor.submit(process_single_item, item): item for item in items
