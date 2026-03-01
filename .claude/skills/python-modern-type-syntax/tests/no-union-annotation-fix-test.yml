@@ -1,0 +1,17 @@
+id: no-union-annotation-fix
+valid:
+  - "x: str | int = 1"
+invalid:
+  - "x: Union[str, int] = 1"
+---
+id: no-union-annotation-fix-3
+valid:
+  - "x: str | int | float = 1"
+invalid:
+  - "x: Union[str, int, float] = 1"
+---
+id: no-union-annotation-fix-4
+valid:
+  - "x: str | int | float | bool = 1"
+invalid:
+  - "x: Union[str, int, float, bool] = 1"

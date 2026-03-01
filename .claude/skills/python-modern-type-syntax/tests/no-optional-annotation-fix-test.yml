@@ -1,0 +1,5 @@
+id: no-optional-annotation-fix
+valid:
+  - "str | None"
+invalid:
+  - "Optional[str]"
