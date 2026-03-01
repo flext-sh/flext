@@ -73,6 +73,10 @@
 !.gitmodules
 !.gitattributes
 
+# direnv environment (no secrets — venv activation only)
+!.envrc
+!.envrc.local
+
 # Environment templates (NOT .env - keep secrets out!)
 !.env.test
 !.env.example
