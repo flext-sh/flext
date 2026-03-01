@@ -8,11 +8,5 @@ rule:
     - pattern:
         context: "a: dict[$$$ARGS]"
         selector: generic_type
-    - all:
-        - kind: identifier
-        - regex: "^dict$"
-        - inside:
-            kind: type
-            stopBy: end
 message: dict in type annotations is banned for contracts
 severity: error
