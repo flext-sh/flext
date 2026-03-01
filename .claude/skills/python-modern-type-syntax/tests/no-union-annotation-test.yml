@@ -1,0 +1,8 @@
+id: no-union-annotation
+valid:
+  - "x: str | int = 1"
+  - "x: str | int | float = 1"
+  - "x: int = 1"
+invalid:
+  - "x: Union[str, int] = 1"
+  - "x: Union[str, int, float] = 1"

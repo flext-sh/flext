@@ -1,0 +1,7 @@
+id: no-optional-import
+valid:
+  - "from typing import List"
+  - "from typing import Mapping"
+invalid:
+  - "from typing import Optional"
+  - "from typing import Optional, List"

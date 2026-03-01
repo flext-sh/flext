@@ -1,0 +1,6 @@
+id: detect-result-object
+valid:
+  - "FlextResult[str]"
+  - "FlextResult[int]"
+invalid:
+  - "FlextResult[object]"
