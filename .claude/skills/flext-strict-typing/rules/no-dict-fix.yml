@@ -8,14 +8,6 @@ fix: Mapping
 message: "Rewrite typing.Dict -> Mapping"
 severity: error
 ---
-id: fix-typing-dict-import-solo
-language: python
-rule:
-  pattern: from typing import Dict
-fix: ""
-message: "Remove standalone 'from typing import Dict'"
-severity: error
----
 id: fix-typing-dict-import-head
 language: python
 rule:

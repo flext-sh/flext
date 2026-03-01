@@ -1,6 +1,8 @@
 id: ban-open-no-encoding
 language: python
 rule:
-  pattern: open($PATH)
+  any:
+    - pattern: open($PATH)
+    - pattern: open($PATH, $MODE)
 message: "open() without encoding — use open(path, encoding='utf-8')"
 severity: warning

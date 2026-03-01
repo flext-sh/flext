@@ -1,5 +1,23 @@
 id: no-union-annotation-fix
 language: python
 rule:
-  pattern: Union[$A, $B]
+  pattern:
+    context: "a: Union[$A, $B]"
+    selector: generic_type
 fix: $A | $B
+---
+id: no-union-annotation-fix-3
+language: python
+rule:
+  pattern:
+    context: "a: Union[$A, $B, $C]"
+    selector: generic_type
+fix: $A | $B | $C
+---
+id: no-union-annotation-fix-4
+language: python
+rule:
+  pattern:
+    context: "a: Union[$A, $B, $C, $D]"
+    selector: generic_type
+fix: $A | $B | $C | $D
