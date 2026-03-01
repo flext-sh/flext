@@ -1,0 +1,7 @@
+id: no-union-import
+valid:
+  - "from typing import List"
+  - "from typing import Mapping"
+invalid:
+  - "from typing import Union"
+  - "from typing import Union, List"

@@ -1,0 +1,10 @@
+id: ban-dict-type-annotation
+valid:
+  - "x: Mapping[str, int] = {}"
+  - "x: list[str] = []"
+  - "x: set[int] = set()"
+  - "from collections.abc import Mapping"
+invalid:
+  - "x: dict[str, int] = {}"
+  - "x: Dict[str, int] = {}"
+  - "y: dict[str, list[int]] = {}"
