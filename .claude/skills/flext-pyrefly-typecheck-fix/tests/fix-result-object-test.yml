@@ -1,0 +1,6 @@
+id: fix-result-object
+valid:
+  - "FlextResult[str]"
+  - "FlextResult[int]"
+invalid:
+  - "FlextResult[object]"

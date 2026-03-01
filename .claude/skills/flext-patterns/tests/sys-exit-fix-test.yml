@@ -1,0 +1,11 @@
+id: fix-sys-exit-with-arg
+valid:
+  - "raise SystemExit(1)"
+invalid:
+  - "sys.exit(1)"
+---
+id: fix-sys-exit-no-arg
+valid:
+  - "raise SystemExit()"
+invalid:
+  - "sys.exit()"
