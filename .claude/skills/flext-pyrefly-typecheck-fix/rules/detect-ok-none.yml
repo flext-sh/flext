@@ -1,4 +1,6 @@
 id: detect-ok-none
 language: python
 rule:
-  pattern: $EXPR.ok(None)
+  any:
+    - pattern: r[$T].ok(None)
+    - pattern: FlextResult[$T].ok(None)
