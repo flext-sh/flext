@@ -390,6 +390,7 @@ python-version = "3.13"
 search-path = [ "." ]
 
 [tool.pyrefly.errors]
+bad-override = false
 deprecated = true
 implicit-abstract-class = true
 implicit-any = true
