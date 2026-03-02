@@ -27,7 +27,7 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed",
 ]
-dependencies = ["pydantic (>=2.12.5,<3.0.0)", "importlib-resources (>=6.5.2,<7.0.0)"]
+dependencies = [ "pydantic (>=2.12.5,<3.0.0)", "importlib-resources (>=6.5.2,<7.0.0)" ]
 # [MANAGED] consolidated development dependencies
 # [AUTO] merged from dev/docs/security/test/typings
 optional-dependencies.dev = [
@@ -351,6 +351,10 @@ overrides = [
     "no-any-unimported",
     "misc",
   ], module = "flext_core.runtime"},
+  {disable_error_code = [
+    "override",
+    "return-value",
+  ], module = "flext_core.loggings"},
 ]
 platform = "linux"
 plugins = [ "pydantic.mypy" ]
@@ -373,21 +377,20 @@ warn_unused_ignores = false
 
 # [MANAGED] pyrefly
 [tool.pyrefly]
-python-version = "3.13"
-search-path = ["."]
-project-excludes = [
-    "**/*_pb2*.py",
-    "**/*_pb2_grpc*.py",
-    "**/_pb2.py",
-    "**/_pb2_grpc.py",
-    "vendor/**",
-    "flexcore/vendor/**",
-]
 ignore-errors-in-generated-code = true
+project-excludes = [
+  "**/*_pb2*.py",
+  "**/*_pb2_grpc*.py",
+  "**/_pb2.py",
+  "**/_pb2_grpc.py",
+  "vendor/**",
+  "flexcore/vendor/**",
+]
+python-version = "3.13"
+search-path = [ "." ]
 
 [tool.pyrefly.errors]
 deprecated = true
-redundant-cast = true
 implicit-abstract-class = true
 implicit-any = true
 implicitly-defined-attribute = true
@@ -396,6 +399,7 @@ missing-source = true
 not-required-key-access = true
 open-unpacking = true
 protocol-implicitly-defined-attribute = true
+redundant-cast = true
 unannotated-attribute = true
 unannotated-parameter = true
 unannotated-return = true
@@ -682,5 +686,5 @@ output_format = "plain"
 
 [dependency-groups]
 dev = [
-    "types-flask (>=1.1.6,<2.0.0)"
+  "types-flask (>=1.1.6,<2.0.0)",
 ]
