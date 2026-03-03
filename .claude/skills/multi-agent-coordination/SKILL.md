@@ -22,7 +22,7 @@ Quick reference for 5 agents executing parallel work on flext codebase with zero
 4. **Tests last per module** — Update tests AFTER implementation passes static checks
 5. **4 linters zero tolerance** — ruff, mypy, pyright, pyrefly MUST all pass, no `# type: ignore`
 6. **Stay in lane** — Only touch files in your ownership, READ-ONLY for others
-7. **Never rollback** — Fix forward only, no `git revert`, no deprecation shims
+#NP|7. **Never rollback — AXIOMATIC** — Fix forward ONLY. `git revert`, `git reset`, `git checkout <file>`, `git stash pop/apply` to discard any agent's work are TOTALLY FORBIDDEN. Every change by every agent is accepted, improved, and fixed forward. Violation = extreme fault.
 8. **Commit frequently** — Every task completion = separate commit + push
 9. **.new/.old owned-only** — Use .new/.old pattern ONLY for files you own exclusively
 10. **No automation scripts** — Manual changes only, no shell scripts for mass edits
@@ -100,8 +100,8 @@ Agents MUST execute in this order:
 
 - **Always rebase**: `git pull --rebase` before EVERY push. NEVER `git pull` without `--rebase`.
 - **Never force push**: NEVER `git push --force` to main/master.
-- **Never rollback**: NO `git revert`. Fix forward only. If you break something, push a fix commit.
-- **Conflict resolution**: If conflict in YOUR file → resolve manually. If conflict in ANOTHER agent's file → `git checkout --theirs <file>` (accept their version, work around it).
+#XT|- **Never rollback (AXIOMATIC)**: NO `git revert`, NO `git reset`, NO `git checkout <file>` to discard work, NO `git stash pop` to overwrite committed changes. Fix forward ONLY. Every change by every agent MUST be accepted, improved, standardized, and fixed forward. If a previous agent's change is wrong, push a NEW fix commit. There is no rollback. There is no undo. There is only forward.
+#ZX|- **Conflict resolution**: If conflict in YOUR file → resolve manually. If conflict in ANOTHER agent's file → `git checkout --theirs <file>` (accept their version — this is the ONLY permitted use of `git checkout <file>`, and ONLY to accept, never to discard).
 - **Commit frequency**: Every task completion = separate commit. Small commits, frequent pushes.
 
 ## Conflict Resolution Protocol
