@@ -80,7 +80,7 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 | `Any`            | `t.GeneralValueType`       | General-purpose value containers                              |
 | `Any`            | `t.ScalarValue`            | Primitives: `str \| int \| float \| bool \| datetime \| None` |
 | `Any`            | `t.MetadataScalarValue`    | Metadata: `str \| int \| float \| bool \| None`               |
-| `Any`            | `t.JsonPrimitive`          | JSON primitives: `str \| int \| float \| bool \| None`        |
+| `Any`            | `t.Scalar`          | JSON primitives: `str \| int \| float \| bool \| None`        |
 | `Any`            | `t.JsonValue`              | Full JSON values                                              |
 | `object`         | `t.GeneralValueType`       | Method params that accept "anything"                          |
 | `dict[str, Any]` | `t.ConfigMap`              | Configuration dictionaries                                    |
@@ -120,20 +120,43 @@ t.FieldValidatorMap  # RootModel[dict[str, Callable[[GVT], GVT]]]
 
 ## Rule 2: TypeAlias Declaration Format
 
+### CRITICAL: isinstance Incompatibility with PEP 695 `type` Statement
+
+PEP 695 `type X = str | int` creates a `TypeAliasType` object, **NOT** a `UnionType`. This means `isinstance(val, X)` **FAILS at runtime** with `TypeError`. This is a fundamental Python 3.12+ behavior that CANNOT be worked around with `__value__` (transitively poisoned for nested types) or `TypeAdapter` (4x slower, exception-driven).
+
+**Decision matrix:**
+
+| Type alias | Self-referencing? | Syntax | isinstance safe? |
+|------------|-------------------|--------|-----------------|
+| `Primitives = str \| int \| float \| bool` | No | `TypeAlias` | ✅ YES |
+| `Scalar = Primitives \| datetime` | No | `TypeAlias` | ✅ YES |
+| `GeneralValueType = ... \| Sequence[GeneralValueType]` | **Yes** | `type` statement | ❌ NO — use TypeGuard |
+| `ContainerValue = ... \| Mapping[str, ContainerValue]` | **Yes** | `type` statement | ❌ NO — use TypeGuard |
+
 ### Within the `FlextTypes` class — use `TypeAlias` annotation
 
 ```python
-# ✅ CORRECT — TypeAlias inside FlextTypes class
+# ✅ CORRECT — TypeAlias inside FlextTypes class (isinstance-safe)
 ScalarValue: TypeAlias = str | int | float | bool | datetime | None
 
-# ❌ WRONG — PEP 695 `type` statement inside class (basedpyright incompatible)
+# ❌ WRONG — PEP 695 `type` statement inside class (basedpyright incompatible + isinstance fails)
 # type ScalarValue = ...  # Don't use inside FlextTypes class
 ```
 
-### At module level — use PEP 695 `type` statement (required for recursive types)
+### At module level — non-recursive types use `TypeAlias`
 
 ```python
-# ✅ CORRECT — Module-level recursive type (PEP 695 required for Pydantic compat)
+# ✅ CORRECT — Non-recursive, isinstance-safe
+Primitives: TypeAlias = str | int | float | bool
+Scalar: TypeAlias = Primitives | datetime
+Container: TypeAlias = Sequence[Scalar] | Mapping[str, Scalar]
+ConfigurationMapping: TypeAlias = Mapping[str, Scalar | Sequence[Scalar]]
+```
+
+### At module level — recursive types MUST use PEP 695 `type` statement
+
+```python
+# ✅ CORRECT — Recursive type (PEP 695 required — ONLY syntax that supports self-reference)
 type GeneralValueType = (
     str | int | float | bool | datetime | None
     | BaseModel | Path
@@ -141,10 +164,24 @@ type GeneralValueType = (
     | Mapping[str, GeneralValueType]
 )
 
-# ✅ CORRECT — Module-level simple types
-type JsonPrimitive = str | int | float | bool | None
-type ServiceInstanceType = GeneralValueType
-type FactoryCallable = Callable[[], GeneralValueType]
+# ⚠️ WARNING — NEVER use isinstance() on these! Use TypeGuard functions instead.
+# isinstance(val, GeneralValueType)  # CRASHES at runtime!
+```
+
+### TypeGuard functions for runtime type checking
+
+When you need runtime type checks on types that are `TypeAliasType` (or any complex union), use the `TypeGuard` functions in `_utilities/guards.py`:
+
+```python
+from flext_core._utilities.guards import is_primitive, is_scalar, is_flexible_value
+
+# ✅ CORRECT — TypeGuard narrows the type safely
+if is_primitive(val):   # TypeGuard[str | int | float | bool]
+    ...
+if is_scalar(val):     # TypeGuard[str | int | float | bool | datetime]
+    ...
+if is_flexible_value(val):  # TypeGuard for general values
+    ...
 ```
 
 ---

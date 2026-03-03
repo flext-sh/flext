@@ -52,6 +52,23 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 - **AXIOMATIC**: Every type change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. ALL impacted references across ALL 33 projects MUST be updated via ast-grep (`sg`) search-and-replace immediately. Linter suppressions (`# type: ignore`, `# noqa`, etc.) are FORBIDDEN without real internet citations, business necessity in comments, and per-line only scope. Global suppressions are TOTALLY FORBIDDEN.
 - **Cross-project namespace inheritance**: downstream projects MUST inherit parent facade classes (e.g., `FlextMeltanoModels`, not `FlextModels`) so namespaces cascade via MRO. This applies to `m`, `c`, `t`, `u`, `p`.
 
+## TypeAliasType isinstance Incompatibility (CRITICAL — Python 3.12+)
+
+PEP 695 `type X = ...` creates `TypeAliasType`, NOT `UnionType`. `isinstance(val, X)` FAILS at runtime.
+
+**Rules:**
+1. Non-recursive aliases (`Primitives`, `Scalar`, `Container`, `ConfigurationMapping`) → `X: TypeAlias = ...` (isinstance-safe)
+2. Recursive aliases (`GeneralValueType`, `ContainerValue`, `JsonValue`, `Serializable`) → `type X = ...` (NEVER use with isinstance)
+3. `TypeAliasType.__value__` is transitively poisoned — do NOT use as isinstance workaround
+4. `TypeAdapter` is 4x slower than isinstance — do NOT use for type checking
+5. Use `TypeGuard` functions from `_utilities/guards.py`: `is_primitive()`, `is_scalar()`, `is_flexible_value()`
+
+**Quick reference:**
+
+| Syntax | Runtime type | isinstance? |
+|--------|-------------|-------------|
+| `X: TypeAlias = str \| int` | `UnionType` | ✅ |
+| `type X = str \| int` | `TypeAliasType` | ❌ |
 ## Cross-Project Namespace Inheritance (m, c, t, u, p)
 
 Each downstream project inherits its parent project's facade, gaining all parent namespaces via MRO:
@@ -121,7 +138,7 @@ Bad:
 JsonPrimitive = object  # ← FORBIDDEN: `object` erases all type constraints
 ```
 
-Why bad: `object` is AXIOMATIC FORBIDDEN — it erases constraints and degrades static analysis. Use `t.JsonPrimitive` or the explicit union type.
+Why bad: `object` is AXIOMATIC FORBIDDEN — it erases constraints and degrades static analysis. Use `t.Scalar` or the explicit union type.
 
 ## Verification
 
