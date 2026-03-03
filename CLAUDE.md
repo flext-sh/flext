@@ -149,6 +149,7 @@ alwaysApply: true
 - Never alter lint/gate semantics without explicit in-session user approval.
 - If governance corrections arise during work, update this file immediately before further implementation.
 - **CRITICAL** Deferring, skipping, or exempting any known violation is forbidden without explicit operator authorization in-session. Hiding scope exclusions inside plans or guardrails without operator approval is an extreme fault. When a violation cannot be fixed immediately, the agent must present the violation, explain why, and obtain explicit written approval before marking it deferred.
+#WF|- **AXIOMATIC Commit-After-Validation**: Every passing validation (linters, tests, `make check`, any quality gate) MUST be immediately followed by committing ALL pending changes across ALL touched projects and pushing to remote. No delay. No batching for later. No asking permission. Sequence: validation passes → `git add -A` (all projects) → `git commit` → `git pull --rebase` → `git push` → confirm clean `git status`. Uncommitted work after a passing validation is a VIOLATION. Unpushed work is LOST WORK — it does not exist.
 
 ## §9 Agent Instructions (Mandatory for All Coding Agents)
 
@@ -276,7 +277,8 @@ Agents MUST execute in this order:
 - **Never force push**: NEVER `git push --force` to main/master.
 #XT|- **Never rollback**: NO `git revert`, NO `git reset`, NO `git checkout <file>` to discard work, NO `git stash pop` to overwrite committed changes. Fix forward ONLY. If you break something, push a fix commit. Every change by every agent is accepted, improved, and fixed forward — never discarded.
 - **Conflict resolution**: If conflict in YOUR file → resolve manually. If conflict in ANOTHER agent's file → `git checkout --theirs <file>` (accept their version, work around it).
-- **Commit frequency**: Every task completion = separate commit. Small commits, frequent pushes.
+#YH|- **Commit frequency**: Every task completion = separate commit. Small commits, frequent pushes.
+#PF|- **AXIOMATIC Commit-After-Validation**: Immediately after ANY validation passes (linters, tests, `make check`, or any quality gate), the agent MUST commit ALL pending changes across ALL touched projects and push — without delay, without waiting for the next task, without asking permission. The sequence is MANDATORY and NON-NEGOTIABLE: (1) validation passes → (2) `git add -A` in every project with pending changes → (3) `git commit -m "<conventional message>"` → (4) `git pull --rebase` → (5) `git push` → (6) verify `git status` shows clean. This applies to ALL agents, ALL sessions, ALL projects simultaneously. Pending uncommitted work after a passing validation is a VIOLATION. Work that exists only locally and has not been pushed is LOST WORK — it does not exist. There is no "I'll commit later". There is no "commit at the end". Every stable state MUST be immediately persisted to remote.
 
 ### §10.6 Plan and Session Hygiene
 

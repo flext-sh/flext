@@ -115,7 +115,8 @@ Agents MUST execute in this order:
 - **Never force push**: NEVER `git push --force` to main/master.
 #XT|- **Never rollback (AXIOMATIC)**: NO `git revert`, NO `git reset`, NO `git checkout <file>` to discard work, NO `git stash pop` to overwrite committed changes. Fix forward ONLY. Every change by every agent MUST be accepted, improved, standardized, and fixed forward. If a previous agent's change is wrong, push a NEW fix commit. There is no rollback. There is no undo. There is only forward.
 #ZX|- **Conflict resolution**: If conflict in YOUR file → resolve manually. If conflict in ANOTHER agent's file → `git checkout --theirs <file>` (accept their version — this is the ONLY permitted use of `git checkout <file>`, and ONLY to accept, never to discard).
-- **Commit frequency**: Every task completion = separate commit. Small commits, frequent pushes.
+#YH|- **Commit frequency**: Every task completion = separate commit. Small commits, frequent pushes.
+#PF|- **Commit-After-Validation (AXIOMATIC)**: Immediately after ANY validation passes (linters, tests, `make check`, any quality gate), ALL pending changes across ALL touched projects MUST be committed and pushed — without delay, without waiting, without asking permission. Sequence: validation passes → `git add -A` (every project with changes) → `git commit` → `git pull --rebase` → `git push` → confirm clean `git status`. Uncommitted work after a passing validation is a VIOLATION. Unpushed work is LOST WORK — it does not exist.
 
 ## Instructions
 
