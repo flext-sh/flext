@@ -27,6 +27,42 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
 #VY|- **Compatibility wrappers, legacy code, and validation fallbacks are TOTALLY FORBIDDEN and ABOMINABLE**: No `def legacy_method(): return new_method()` wrappers. No `try: new_way() except: old_way()` fallbacks. No keeping dead code "for compatibility". No `OldName = NewName` aliases. Legacy code is DELETED and replaced with the canonical pattern on contact. There is no grace period, no deprecation path, no "we'll remove it later".
 #ZK|- **AXIOMATIC Git Immutability — NEVER ROLLBACK, ALWAYS FIX FORWARD**: `git checkout <file>`, `git reset`, `git revert`, `git stash pop/apply`, and ANY operation that discards, overwrites, or rolls back committed or staged work by ANY agent is TOTALLY FORBIDDEN. Every change made by any agent in this repository MUST be accepted, improved, standardized, and fixed forward. If a previous agent's change is wrong, the ONLY permitted response is a NEW forward commit that corrects it. Stash operations that discard another agent's work are FORBIDDEN. `git checkout --theirs` is ONLY permitted during a rebase conflict on a file you do NOT own — and ONLY to accept the other agent's version (never to discard it). The correct response to broken code is ALWAYS: read it, understand it, fix it forward, commit the fix. There is no rollback. There is no undo. There is only forward. Violation of this rule is an EXTREME FAULT equivalent to destroying another agent's work.
 #MB|- **AXIOMATIC ast-grep Supremacy — NEVER sed/find/custom scripts for code**: `mcp_ast_grep_search` / `mcp_ast_grep_replace` (MCP tools) are the SOLE mechanism for finding and rewriting code patterns. When MCP tools are available, they MUST be used first. When unavailable, the CLI `sg` command is the mandatory fallback. `grep`/`ripgrep` are ONLY permitted for plain-text content search (log lines, comments, string literals) — NEVER for locating code structure, symbols, imports, or type annotations. `find` is TOTALLY FORBIDDEN for locating code or information — use `glob` patterns or `ast-grep` instead. Custom Python/shell scripts written ad-hoc to fix, rewrite, or transform code are TOTALLY FORBIDDEN. `sed`, `awk`, and inline shell pipelines for code transformation are TOTALLY FORBIDDEN. The correct workflow: (1) `mcp_ast_grep_search` to locate all pattern instances, (2) `mcp_ast_grep_replace` (or `sg --rewrite`) to apply the transformation atomically, (3) verify with `make check`. Writing a one-off script to "fix" code is an EXTREME FAULT — it bypasses AST awareness, produces brittle text-level rewrites, and cannot be reviewed or audited.
+
+- **AXIOMATIC — typings.py ALIAS TABLE IS LOCKED — READ THIS BEFORE ANY EDIT TO typings.py**:
+  `type X = ...` (PEP 695) creates `TypeAliasType` — **crashes `isinstance()` at runtime with TypeError**.
+  `X: TypeAlias = ...` creates `UnionType` — **isinstance-safe, runtime-safe**.
+  They are NOT interchangeable. Changing `X: TypeAlias = ...` to `type X = ...` for a non-recursive alias = EXTREME FAULT.
+
+  **NON-RECURSIVE → MUST use `X: TypeAlias = ...` (DO NOT CHANGE):**
+  `Primitives`, `Scalar`, `Container`, `ConfigurationMapping`, `MetadataValue`,
+  `RegisterableService`, `JsonDict`, `FactoryCallable`, `ResourceCallable`,
+  `HandlerCallable`, `HandlerLike`, `RegistrablePlugin`, `ConstantValue`,
+  `FileContent`, `SortableObjectType`, `ConversionMode`, `TypeHintSpecifier`,
+  `GenericTypeArgument`, `MessageTypeSpecifier`, `IncEx`, `TYPE_CHECKING`.
+
+  **RECURSIVE → MUST use `type X = ...` (self-referential, NEVER with isinstance):**
+  `Serializable`, `ContainerValue`, `JsonValue`.
+
+  **MANDATORY CRASH TEST — run before AND after any edit to typings.py:**
+  ```bash
+  python3 -c "
+  import sys; [sys.modules.pop(k) for k in list(sys.modules) if 'flext' in k]
+  import flext_core; t = flext_core.t
+  for n in ['Primitives','Scalar','Container','MetadataValue','RegisterableService']:
+      try: isinstance('x', getattr(t,n)); print('PASS', n)
+      except TypeError as e: print('FAIL', n, e)
+  "
+  ```
+  **Expected output: 5 lines all starting with PASS. Any FAIL = typings.py is broken. Stop and fix.**
+
+  **FORBIDDEN patterns (will crash the runtime):**
+  ```python
+  type Primitives = str | int | float | bool   # FORBIDDEN — crashes isinstance()
+  type Scalar = str | int | float | bool | datetime  # FORBIDDEN
+  type ConfigurationMapping = Mapping[str, Container]  # FORBIDDEN
+  isinstance(val, t.Serializable)  # FORBIDDEN — recursive alias, always crashes
+  class Foo(t.ConfigurationMapping): ...  # FORBIDDEN — use Mapping[str, t.Container]
+  ```
 - **Every module MUST use a single nested class with MRO inheritance**: All domain logic MUST be organized into a nested class hierarchy. The most base class MUST inherit from Pydantic v2 `BaseModel` (or FLEXT base models like `FlextModels.ArbitraryTypesModel`, `FlextModels.FrozenModel`). Loose functions, standalone classes without MRO lineage, and modules without a nested class facade are FORBIDDEN. Subprojects MUST inherit from the parent project's facade class to cascade namespaces via MRO.
 - **ALL code MUST be "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features**: Every class extends `BaseModel` (or FLEXT base models) via MRO. `Field()` for ALL declarations with `description`, `title`, `examples`, `json_schema_extra` documenting business rules. `SecretStr`/`SecretBytes` for secrets. `ConfigDict(...)` for config — standalone `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). Minimize custom `@field_validator`/`@model_validator` — prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`, `constr`). FORBIDDEN in models: initialization helpers, unnecessary `@property`, simple getters/setters, line-reduction wrappers, pass-through methods — USE Pydantic built-ins (`@computed_field`, `model_post_init`, `PrivateAttr`). Enums/Mappings/Literals from `constants.py` (`c.*`), config from `settings.py` (`s.*`). JSON via `model_dump_json()`, `model_validate_json()`, `TypeAdapter`. Internal state via `PrivateAttr` — never bare `self._x`. Nested classes MAY have business logic methods but ALL properties MUST use `Field()`/`PrivateAttr`. `models.py`/`_models/` for model definitions ONLY. If not using a Pydantic v2 feature, REVIEW and USE it; if not needed, use a simpler base and USE it fully.
 - **Tests MUST follow the EXACT SAME rules as production code**: Test files are NOT exempt from ANY typing, Pydantic v2, FlextResult, or architectural rule. Test fixtures use `Field()`, typed models, `r[T]` returns. Test data uses `t.*` types. No "test-only" relaxation exists.
