@@ -221,6 +221,8 @@ Use EXACTLY this ownership matrix:
 | `__init__.py` | ❄️ FROZEN | Each agent appends own new exports only |
 | `context.py`, `settings.py`, `models.py`, `utilities.py`, `_utilities/*`, `_runtime_metadata.py`, `__version__.py` | ❄️ FROZEN | No agent modifies |
 
+**AXIOMATIC Exception**: FROZEN files are unfrozen for annotation-only changes required by AXIOMATIC rules (§3 Code Law). Type annotations, Field() metadata, PrivateAttr declarations, and import additions are permitted. Behavioral changes (logic, algorithms, control flow) remain FROZEN.
+
 **protocols.py Section Ownership Matrix**:
 
 | Section | A1 (Dispatcher) | A2 (Registry) | A3 (Service) | A4 (Result/Exceptions) | A5 (CDH/Mixins) |
