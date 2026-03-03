@@ -78,8 +78,8 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 | Instead of       | Use                        | When                                                          |
 | ---------------- | -------------------------- | ------------------------------------------------------------- |
 | `Any`            | `t.GeneralValueType`       | General-purpose value containers                              |
-| `Any`            | `t.ScalarValue`            | Primitives: `str \| int \| float \| bool \| datetime \| None` |
-| `Any`            | `t.MetadataScalarValue`    | Metadata: `str \| int \| float \| bool \| None`               |
+| `Any`            | `t.Scalar`            | Primitives: `str \| int \| float \| bool \| datetime \| None` |
+| `Any`            | `t.Metadat.Scalar`    | Metadata: `str \| int \| float \| bool \| None`               |
 | `Any`            | `t.Scalar`          | JSON primitives: `str \| int \| float \| bool \| None`        |
 | `Any`            | `t.JsonValue`              | Full JSON values                                              |
 | `object`         | `t.GeneralValueType`       | Method params that accept "anything"                          |
@@ -569,7 +569,7 @@ vs "explicitly empty").
 **AXIOMATIC**: `| None` MUST NEVER be baked into type alias definitions in `typings.py`.
 Type aliases are ALWAYS non-nullable. Consumers add `| None` inline at the usage site
 when business requires it. If a type needs nullable semantics, the developer writes
-`t.ScalarValue | None` at the field/parameter declaration, NOT by defining a
+`t.Scalar | None` at the field/parameter declaration, NOT by defining a
 `NullableScalarValue` alias in `typings.py`.
 
 ```python
@@ -594,7 +594,7 @@ config_file: str | None = Field(default=None, description="Optional config overr
 **`typings.py` definition rule**:
 
 4. Does the type alias definition in `typings.py` include `| None`? → VIOLATION. Remove `| None` from the alias. Consumers add `| None` inline at usage sites.
-5. Need a nullable variant? → Write `field: t.ScalarValue | None = Field(default=None)` at the usage site. NEVER create `NullableScalarValue` or `OptionalScalar` aliases.
+5. Need a nullable variant? → Write `field: t.Scalar | None = Field(default=None)` at the usage site. NEVER create `NullableScalarValue` or `OptionalScalar` aliases.
 ---
 
 ## Rule 15: Pydantic Models Over Plain Helper Classes
