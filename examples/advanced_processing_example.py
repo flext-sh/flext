@@ -23,6 +23,7 @@ from typing import override
 from flext_core import (
     FlextService,
     r,
+    t,
 )
 
 ItemDict = dict[str, t.JsonPrimitive]
